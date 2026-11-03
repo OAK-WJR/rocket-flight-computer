@@ -1,0 +1,2 @@
+# R8 routing reservations (m3_design/assembly_review/sources/r8_design/step4/make_keepclear.py; R8_DECISIONS D31). family: spike a/b/c/d, s4 (step 4) or s5 (step 5, D50); without the copper steps 5-7 build (r8_power.py, r8_route.py, r8_ground.py: D48, D60, D66)
+family	net	layer	w	x0	y0	x1	y1

@@ -1,0 +1,5 @@
+gcpw_coated    pass 2  50.3 ohm  solved  49.959 ohm  diff -0.341  eps_eff 3.2022 (pass 2 3.18)  6512 nodes
+gcpw_bare      pass 2  52.2 ohm  solved  51.995 ohm  diff -0.205  eps_eff 2.9524 (pass 2 2.95)  5740 nodes
+launch_coated  pass 2  49.0 ohm  solved  48.790 ohm  diff -0.210  eps_eff 2.7889 (pass 2 None)  10404 nodes
+validation against pass 2 (within 1 ohm): OK
+{"z_target": 52.3, "w": 0.3, "gap_max": 0.5796, "z0_at_gap": 52.294}

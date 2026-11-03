@@ -1,0 +1,165 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_parts",
+ "reviewer": "claude",
+ "target_commit": "c70d2614c9f187c46bce6225047ef4d03484848a",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "lens_angle": "Lifecycle, derating at a 70 C bay and consignment logistics (not the BOM-to-land match of round 22); U9 alternate C3662799 and U4 alternates C26633007 / C46898862 CPL rotation from their EasyEDA footprints.",
+ "totals": {"Critical": 0, "Major": 0, "Minor": 3},
+ "findings": [
+  {
+   "id": "R23-PARTS-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Hot-end derating compares 85 C-rated parts with the 70 C bay air, but the records' own board-heating estimate puts the board 26-66 C above the bay at full camera and port load",
+   "evidence": {
+    "records": [
+     "docs/REQUIREMENTS.md line 91 (Temperature row): 'Every other fitted part is rated -40...+85 C or wider'; bay -20...+70 C, 85 C unshaded (DESIGN_ASSURANCE 6.1).",
+     "docs/M3_R10.md 'Port LDO' bullet and docs/R10_VALIDATION.md owner row 26: 'U400 and L400 lose 1.2-2.2 W and logic and SD writes 1.4-2.2 W on a board with roughly 10-15 C/W to the bay air (Inference)'. The first-article power-knot measurement thermocouples only U401, U400 and L400."
+    ],
+    "calculation": "Board heat 2.6-4.4 W x 10-15 C/W = 26-66 C mean board rise (the records' own Inference inputs) -> 96-136 C board at the 70 C bay limit with the camera at 1 A and 0.56 A on PORT_4V8. Even 2 W x 10 C/W gives 90 C.",
+    "parts_rated_85C_or_less_on_power_paths": [
+     "X5R (-55...+85 C, Samsung MLCC catalogue, temperature-characteristic table, code A = X5R; cached r14_parts_pdf/samsung.pdf): C6, C7 (VLOGIC, CL21A226MAQNNNE C45783), C8, C9 (3V3), C10, C11 (3V3A), C80, C96 (BAT_IN, CL31A106KBHNNNE C13585), C89, C95 (BAT_IN damper, CL31A226KAHNNNE C12891), C19, C20 (VCAP, C23630), C22, C23, C28 (VBUS), C92",
+     "U2 AP63203WU-7 (3V3 logic buck) and U400 AP63201WU-7 (PORT_5V3 buck): TA -40...+85 C, 'device function is not guaranteed outside of the recommended operating conditions' (Diodes DS41326 Rev 3-2, Recommended Operating Conditions and Note 7, p4, https://www.diodes.com/part/view/AP63203 (datasheet DS41326 Rev 3-2; repo cache r14_parts_pdf/ap6320.pdf))",
+     "Also 85 C ambient/part ratings off the power path: Y1 NX3225GA, U3 W25Q128JVSIQ, U5 MS5611, J430 microSD, LED1/LED2 (JLC listings, 2026-11-01T05:01Z); LS120 +70 C (already recorded)."
+    ],
+    "jlc_attributes_utc": "2026-11-01T05:01:41Z-05:02:15Z (JLC component API, 82 codes, .supervisor/r23_parts/jlc_summary.tsv)"
+   },
+   "impact": "Bounded: no pyro path depends on these parts being in rating, and the case needs the camera and full port load at the 70 C bay limit for long enough to reach steady state. But the derating record treats an 85 C rating as 15 C of margin when, by its own heating Inference, the board can sit above 85 C; X5R capacitance and the AP6320x regulation (the 3V3 logic supply included) are then outside the maker's stated range. The planned first-article thermocouple run would not show it, because it measures only U401 / U400 / L400.",
+   "concrete_fix": "Text only. In REQUIREMENTS' Temperature row and owner row 26 / ORDERING 8.3, state that the hot-end ratings are judged against part (board) temperature, not bay air, and extend the first-article power-knot measurement to log board temperature at C6/C7 and U2, at one BAT_IN X5R (C89) and near Y1 / U3, at the 70 C allocation loads, with the pass criterion 'every 85 C-rated part <= 85 C'. If it fails, the remedy is a camera / port duty limit on the pad, or X7R parts on the same lands at the next board change."
+  },
+  {
+   "id": "R23-PARTS-02",
+   "severity": "Minor",
+   "status": "new (extends R22-PARTS-01, which covered franchised availability only)",
+   "title": "The 'consign franchised U4 / U9 to JLC' fallback does not record JLC's actual consignment process, the parts' moisture handling, the carrier or the quantity",
+   "evidence": {
+    "records": "docs/ORDERING.md section 8.1 (rows U4, U9 and owner choices (a)-(d)) and line 436 say 'consign franchised ... into JLC's parts inventory'; round22_alternates.md section 3 infers '1-2 weeks'. No fee, deposit, review, address, MSL or carrier rule is recorded (grep of ORDERING for consign/MSL/bake/cut tape).",
+    "jlc_process": "JLC help 'How to consign parts to JLCPCB' (https://jlcpcb.com/help/article/how-to-consign-parts-to-jlcpcb, read 2026-11-01T~05:00Z): parts from outside mainland China go to JLC's Hong Kong warehouse; register each part with unit price, maker, HS code, origin and unit weight plus purchase records; price review within two business days; the shipment must be approved before dispatch or it may be returned; duty + 13 % import VAT are a refundable deposit; handling fee 2 % of declared value, minimum USD 10 per shipment (non-refundable); retrieval 30 %, minimum USD 30; storage free for three years. Packaging rules are shown only in JLC's system (not public). The page states nothing on MSL handling, attrition or labels.",
+    "jlc_msl": "JLC help article 123 (https://jlcpcb.com/help/article/123-Moisture-Sensitivity-Level-MSL-for-Electronic-Parts): floor life MSL 2 = 1 year, MSL 3 = 168 h; no consigned-part bake rule.",
+    "u9": "TPS259470LRPWR and TPS259470ARPWR: MSL Level-2-260C-1 YEAR, 3000 / LARGE T&R, Active (TI SLVSFC9C Rev C packaging addendum p68; ti.com/product/TPS25947 OPN data 2026-11-01T04:55Z; TPS259470LRPWR availability OutOfStock, TPS259470ARPWR InStock). The product page's carrier dialog lists full reel, custom reel (continuous cut tape with 18-inch leader and trailer, reeling fee) and cut tape (generic TI text, not OPN-specific), which conflicts with ORDERING's 'sold only as a 3000-piece reel'.",
+    "u4": "ISM6HG256XTR: DS15034 Rev 1 section 18 p185 says only 'qualified for soldering heat resistance according to JEDEC J-STD-020'; no MSL level is stated; reel 330 mm (Table 548 p186); JLC encapsulationNumber 5000. st.com timed out, so the MSL could not be read from ST's product page (Inference: ST MEMS LGA is commonly MSL 3, which would give 168 h floor life and a bake if exceeded).",
+    "jlc_live_utc": "2026-11-01T04:57:42-44Z: C51931514 stock 9 / orderable 2 / min 1; C3662793 40 / -69 / min 7; C3662799 2547 / 2349 / min 1 (pre-order minimum 7); C26633007 0 / -20; C46898862 0 / -3 / min 2."
+   },
+   "impact": "Procedure gap. An owner following ORDERING would meet a customs registration, a price review, a deposit and a minimum fee they were not told about, and nothing tells them to ship the LGA in a sealed moisture-barrier bag with its MSL label, or to buy attrition spares for U9 (only the old R9 line 34 gives 7-10 for U4). Added lead time is at least two business days of review plus transit (the 1-2 weeks is still an Inference).",
+   "concrete_fix": "Text only: add a short 'Consigning U4 / U9' paragraph to ORDERING 8.1 with the JLC steps and fees above (dated, with the URL), 'buy 7-10 of each for 5 boards', 'ship in the maker's sealed moisture-barrier bag with HIC; U9 MSL 2 (1 year); confirm U4's MSL on ST's material declaration or packing label and request JLC's bake if the floor life is exceeded', 'cut tape or a TI custom reel with leader; confirm the accepted carrier in JLC's consignment form', and correct 'sold only as a 3000-piece reel' to what the TI store actually offers on order day."
+  },
+  {
+   "id": "R23-PARTS-03",
+   "severity": "Minor",
+   "status": "new (defect in the alternates analysis, not the board)",
+   "title": "round22_alternates.md section 2.2 says the LSM6DSV320X swap is 'BOM fields only'; it also needs the U4 CPL rotation changed 180 -> 0, and keeping 180 misplaces the LGA by 2.892 mm",
+   "evidence": {
+    "analysis_text": "m3_design/assembly_review/sources/r10_review/round22_alternates.md section 2.2 'Change: BOM fields only (Value / Manufacturer Part / LCSC -> C26633007), as a consigned part'; section 2.3 (LSM6DSV80X) lists BOM, verified_part_metadata and pads.json but not the CPL rotation. docs/ORDERING.md section 8.1 option (d) bullet for U4 does not mention the rotation (its table row and parts_qualification.md do: 0 deg, regenerate and re-verify).",
+    "easyeda_fetch": "lceda.cn /api/products/<code>/components, 2026-11-01T04:53:08-11Z (easyeda.com returned CloudFront 403). C26633007 and C46898862 both use LGA-14_L3.0-W2.5-P0.50-TL, pad strings identical to each other and to the cached pads.json C26633007 record; C51931514 (fitted ISM) uses LGA-14_L3.0-W2.5-P0.50-BR.",
+    "orientation_fit": "tools/jlc_orient.py run on a probe copy of pads.json (board unchanged, outputs in .supervisor/r23_parts/): ISM C51931514 theta 180, residual 0.040 mm; LSM6DSV320X and LSM6DSV80X footprints theta 0, residual 0.052 mm (next best 2.06 mm), 14/14 pads.",
+    "cpl_verify": "--verify-cpl on a probe CPL with U4 Bottom 0 and probe corrections: 205 rows, errors none, for both LSM footprints. With the shipped U4 Bottom 180 and the LSM footprint: error U4 2.892 mm pad residual (pins turned 180 deg)."
+   },
+   "impact": "If the owner adopted the LSM6DSV320X or 80X by editing BOM fields only, as section 2.2 says, JLC would place a pin-1-reversed LGA (wrong pins on every land; no X-ray-free inspection). The generator path (pads.json + jlc_orient) would catch it, and ORDERING's table row says to regenerate; the defect is in the analysis text and the option (d) bullet.",
+   "concrete_fix": "Text only: in round22_alternates.md 2.2 / 2.3 and ORDERING 8.1 option (d), add 'U4 CPL rotation becomes Bottom 0 (EasyEDA TL footprint, theta 0, residual 0.052 mm; round 23 parts lens); regenerate with r10_fab.sh and run jlc_orient --verify-cpl; for the 80X add C46898862 to tools/jlc_easyeda/pads.json first (same pads as C26633007)'. The claim '0 deg for the LSM6DSV320X' in parts_qualification.md and ORDERING's table row holds."
+  }
+ ],
+ "alternate_checks": {
+  "U9_C3662799_TPS259470ARPWR": "EasyEDA footprint VQFN-10_L2.0-W2.0-P0.45-TL, head (3999.941, 3000), all 10 pad strings identical to C3662793's (fresh and cached). jlc_orient: theta 0, residual 0.200 mm / next 1.81 mm, 10/10 pads, the same fit as the fitted part. --verify-cpl with the shipped CPL (U9 Bottom 180) and the alternate's footprint: 205 rows, errors none. No CPL correction is needed. TI: Active, MSL 2 / 260 C / 1 year, 3000 LARGE T&R (SLVSFC9C p68). JLC: 2547 in stock / 2349 orderable, minimum 1 (pre-order minimum 7), 2026-11-01T04:57:43Z. JLC's catalogue string 'QFN-10(2x2)' is only a label; the footprint is the same.",
+  "U4_C26633007_LSM6DSV320XTR": "EasyEDA TL footprint, theta 0, CPL Bottom 0 verified (205 rows, no error); the records' 0 deg holds. JLC 0 / -20 (04:57:44Z).",
+  "U4_C46898862_LSM6DSV80XTR": "Same EasyEDA footprint as C26633007 (identical pad strings), so the CPL is also Bottom 0, verified. Not in tools/jlc_easyeda/pads.json (would need adding). JLC 0 / -3, minimum 2 (04:57:44Z)."
+ },
+ "lifecycle": [
+  {"refs": "U9, U10/U402, U11, U12, U13, U401 (TI)", "status": "ACTIVE (marketingStatusDescription on ti.com product pages, 2026-11-01T04:55:08Z)", "msl": "U9 L2-260C-1yr, U401 L2-260C-1yr, U10/U402, U11, U12, U13 L1-260C-unlimited"},
+  {"refs": "U9 alternate TPS259470ARPWR", "status": "Active (SLVSFC9C p68; ti.com InStock)"},
+  {"refs": "U2, U400 (AP63203WU-7, AP63201WU-7), D9 (B340A-13-F), Diodes", "status": "Product pages live, no EOL PCN for these OPNs (2026-11-01T05:00Z). PCN-2623 (EOL, 2023) lists B340A-13-G-2477 and other '-2477' variants, not B340A-13-F (Diodes_PCN_2623_Rev1_EOL.pdf). The status field itself is rendered by script and was not read"},
+  {"refs": "Q120/Q121 AONR21357 (AOS)", "status": "Full Production (aosmd.com product page, via search result; the direct fetch rendered no status)"},
+  {"refs": "Q122/Q123 AO3400A, Q124 AON7524 (AOS)", "status": "not read (script-rendered page)"},
+  {"refs": "D400-D441 ESD103-B1-02EL (Infineon)", "status": "Active (infineon.com part page, 05:00Z)"},
+  {"refs": "D121 SRV05-4.TCT (Semtech)", "status": "Semtech product page live with 'Buy Now' and no NRND marking (05:00Z); one aggregator (trace-tec.vn) lists 'Not For New Designs', another (ciiva) 'Production'. Unresolved; Inference: active"},
+  {"refs": "L400 SRP5030T-6R8M (Bourns)", "status": "SRP5030T is not marked with Bourns' NRND symbol on the shielded power inductor list (05:00Z)"},
+  {"refs": "U4 ISM6HG256XTR (ST)", "status": "Active (st.com product page as indexed by search; direct fetch timed out)"},
+  {"refs": "U1, D4, LSM6DSV320X / 80X (ST)", "status": "not reached (st.com timed out twice)"},
+  {"refs": "U5 MS5611 (TE)", "status": "Active per distributors (Future Electronics, Lion Circuits); TE not reached"},
+  {"refs": "all 82 codes", "status": "JLC brand = original maker for every code (no clone listing; AONR21357 C431196 is AOS, not the MSKSEMI / HXY copies C17702945 / C5261065); every line except U4 / U9 in stock for 5 boards (2026-11-01T05:01:41Z-05:02:15Z)"}
+ ],
+ "derating_at_70C": [
+  {"part": "U9 TPS259470LRPWR", "stress": "IN 8.4 V (2S full); EN <= 2.06 V; load about 1.4 A", "rating": "IN -15...28 V abs, 23 V recommended; EN 6.5 V abs (SLVSFC9C p7); Tj -40...125 C (p68)", "ratio": "IN 30 % of abs; EN 32 %; I^2R about 0.09 W at 45 mOhm max", "verdict": "OK"},
+  {"part": "C80/C96 10 uF 50 V X5R 1206, C88 100 nF 50 V, C89/C95 22 uF 25 V X5R 1206 (BAT_IN)", "stress": "8.4 V; D8 clamp 19.9 V at 30.2 A transient (Littelfuse SMBJ row SMBJ12CA)", "rating": "50 V / 25 V; X5R to +85 C", "ratio": "17 % / 34 % DC; 80 % of 25 V at the clamp", "verdict": "Voltage OK; temperature see R23-PARTS-01"},
+  {"part": "C82, C400, C401 22 uF 25 V X7R 1210; C97 1 uF 25 V (RAW_PROTECTED)", "stress": "<= 9.98 V (OVLO max)", "rating": "25 V, X7R +125 C", "ratio": "40 %", "verdict": "OK"},
+  {"part": "C84 470 uF 25 V polymer (jieerrui MA25V470M8x10)", "stress": "8.4 V VLOGIC", "rating": "25 V, -55...+105 C, 2000-10000 h at 105 C (supplier sheet p1)", "ratio": "34 %", "verdict": "OK"},
+  {"part": "C6/C7 22 uF 25 V X5R 0805 (VLOGIC); C8-C11 (3V3 / 3V3A)", "stress": "8.4 V / 3.3 V", "rating": "25 V, X5R +85 C", "ratio": "34 % / 13 %", "verdict": "Voltage OK; temperature see R23-PARTS-01"},
+  {"part": "U2 AP63203, U400 AP63201", "stress": "VIN <= 9.98 V; U400 about 0.46 W (records)", "rating": "VIN 3.8-32 V recommended, 35 V abs; TA -40...+85 C; TJ abs +160 C (DS41326 p4)", "ratio": "VIN 31 %", "verdict": "Voltage OK; TA see R23-PARTS-01"},
+  {"part": "U401 TPS7A9101 (IN = PORT_5V3), U402 TPS2553 (IN = PORT_5V3)", "stress": "5.456 V nominal; <= 5.52 V static with VFB 792-808 mV (DS41326 p5)", "rating": "TPS7A91 VIN 1.4-6.5 V recommended, IN 7.0 V abs (SBVS282A sections 5.1 / 5.3 pp4-5); TPS2553 IN 2.5-6.5 V recommended, 7 V abs (SLVS841G section 6.1)", "ratio": "85 % of recommended, 79 % of abs; 0.98 V headroom", "verdict": "OK statically; load-release overshoot unmeasured (Inference)"},
+  {"part": "Q120/Q121 AONR21357", "stress": "VDS <= 8.4 V; |VGS| <= 7.0 V (100k||100k vs 10k); fire 4.2 A pulse", "rating": "VDS -30 V, VGS +/-25 V, IDSM -17 A at TA 70 C, PD 3.2 W at 70 C (AOS Rev 2.1 p1)", "ratio": "28 % / 28 % / 25 %", "verdict": "OK"},
+  {"part": "C120 1 uF 25 V X7R (Q120/121 gate-source)", "stress": "<= 7.0 V", "rating": "25 V", "ratio": "28 %", "verdict": "OK"},
+  {"part": "R134 CRM2512-FX-2R00ELF 2 Ohm", "stress": "shorted e-match: (8.4 V / 2 Ohm)^2 x 2 = 35.3 W (source and FET resistance ignored); 20 ms normal pulse, 34.853 ms watchdog bound", "rating": "2 W at 70 C derated to 0 at 155 C (Bourns CRM2512 p1); pulse chart >= 1 Ohm read by the records as 220 W / 1 ms, 90 W / 10 ms, 27 W / 100 ms (M3_ACTUATOR_MERGE line 109)", "ratio": "Log-log interpolation (Calculation): 62.6 W allowed at 20 ms (56 %), 46.9 W at 34.853 ms (75 %)", "verdict": "OK; chart not re-read (graph only in the text extraction); hot-start pulse derating unqualified, as recorded"},
+  {"part": "R166 0.36 Ohm 1 W 2512 (BAT_IN damper with C89/C95)", "stress": "no DC current; hot-plug ring only", "rating": "1 W, 200 V, -55...+155 C (JLC C168925)", "ratio": "-", "verdict": "OK (Inference: pulse energy small)"},
+  {"part": "R92 3.3 k 0603 (RAW bleed), R167 10 k 0603 (BAT_IN), R405 820 Ohm 0603 (PORT_4V8)", "stress": "21.4 mW (30.2 mW at 9.98 V), 7.1 mW, 28.0 mW", "rating": "100 mW at 70 C, -55...+155 C (UniOhm 0603WAF, JLC attributes; 70 C knee is the usual thick-film curve, Inference)", "ratio": "21-30 %, 7 %, 28 %", "verdict": "OK, also at a 110 C board (53 mW derated)"},
+  {"part": "R104 10 k 0402 (CAM_5V sense)", "stress": "33 mW at the D8 19.9 V clamp (transient only)", "rating": "62.5 mW", "ratio": "52 % transient", "verdict": "OK"},
+  {"part": "L400 SRP5030T-6R8M", "stress": "about 1.56 A DC + 0.56 A p-p ripple (500 kHz, Calculation) -> 1.84 A peak", "rating": "Irms 4 A, Isat 4.3 A, -40...+125 C including rise (Bourns SRP5030T p1)", "ratio": "39 % Irms, 43 % Isat", "verdict": "OK"},
+  {"part": "L1 SWPA4030S4R7MT", "stress": "3V3 load (records <= 0.55 A)", "rating": "2 A rated, 3.2 A Isat (JLC C57269; Sunlord PDF is image-only)", "ratio": "<= 28 %", "verdict": "OK"},
+  {"part": "J1 / J400 / J121 / ports DB125", "stress": "<= 4.2 A pulse on J1 / J121", "rating": "10 A (13.5 A J121), -40...+105 C (JLC listings)", "ratio": "42 %", "verdict": "OK"},
+  {"part": "D9 B340A, D8 SMBJ12CA", "stress": "8.4 V reverse / standoff", "rating": "B340A VR 40 V; SMBJ12CA VRWM 12.0 V, VBR 13.30 V min (Littelfuse row)", "ratio": "21 % / 70 %", "verdict": "OK at 2S"}
+ ],
+ "fix_verification": [
+  {"id": "D-R22 (all)", "claim": "No copper, BOM or CPL change", "measured": "Board SHA-256 5516eeec... at ec8cb98 and c70d261; m3_bom_jlc / m3_cpl_jlc / m3_bom_owner hashes unchanged in the manifest; m3_gerber.zip differs only in CreationDate / G04 timestamps (unzipped diff). The only schematic change is diagnostics.kicad_sch (D-R22-03 note text).", "verdict": "confirmed"},
+  {"id": "D-R22-03", "claim": "R104 10 k / R105 1 k = 1/11: 5.456 V -> 0.496 V, D8 19.9 V -> 1.81 V", "measured": "BOM R104 C25744 10 k 1 %, R105 C11702 1 k 1 %; 19.9 / 11 = 1.809 V; R104 dissipation at the clamp 33 mW on 62.5 mW (transient)", "verdict": "confirmed"},
+  {"id": "D-R22-04 (D-R21-01 J3 record)", "claim": "Both bases (barrel 1.375 / 1.345 mm, pad 1.225 / 1.194 mm) recorded", "measured": "Text read in R10_DECISIONS D-R22-04; geometry not re-measured in this lens", "verdict": "partly (text confirmed, geometry not re-measured)"},
+  {"id": "D-R21-05", "claim": "C87 stays at <= 2.06 V; values unchanged", "measured": "C87 = C21120 CL10B224KA8NNNC 25 V X7R (JLC live 05:01Z): 2.06 V is 8.2 % of rating; R81 = C23024 300 k 0.1 W, 14 uW; R80 / R165 = C23178 470 k, 75 V max working (8.4 V across R80 + R165 at most)", "verdict": "confirmed"},
+  {"id": "D-R19-11", "claim": "U4 ISM6HG256XTR CPL Bottom 180 from the EasyEDA BR footprint, residual 0.040 mm", "measured": "Fresh EasyEDA data (lceda.cn 04:53:10Z) identical to the cached pads.json record; jlc_orient theta 180, residual 0.040 mm; --verify-cpl on the shipped package passes 205 rows", "verdict": "confirmed"},
+  {"id": "D-R19-10", "claim": "C87 220 nF C21120", "measured": "BOM line C87,C126 C21120; netlist C87 BAT_ENABLE-GND", "verdict": "confirmed"},
+  {"id": "D-R19-14", "claim": "AUX port adds no new codes; DB125-4 x4 and ESD103 x8 per board", "measured": "BOM C2757925 qty 4, C535146 qty 8; JLC 37754 / 36976 and 201 / 194 (05:01Z), enough for 5 boards (20 and 40)", "verdict": "confirmed"}
+ ],
+ "fix_now_recommendations": [
+  {"id": "R23-PARTS-03", "change": "Add the U4 CPL rotation (Bottom 0) and the regenerate / verify step to round22_alternates.md 2.2 / 2.3 and ORDERING 8.1 option (d)", "board_change": false},
+  {"id": "R23-PARTS-02", "change": "Add the dated JLC consignment steps, fees, MSL and carrier notes and the 7-10 quantity to ORDERING 8.1", "board_change": false},
+  {"id": "R23-PARTS-01", "change": "State the board-temperature basis in REQUIREMENTS' Temperature row and extend owner row 26 / ORDERING 8.3's first-article measurement to C6/C7/U2/C89/Y1/U3 with a <= 85 C criterion", "board_change": false}
+ ],
+ "rejected_or_closed_candidates": [
+  "U9 alternate needs a CPL correction: closed, no (identical EasyEDA footprint, verify passes at Bottom 180).",
+  "Records' 0 deg for the LSM6DSV320X: holds (and for the LSM6DSV80X).",
+  "B340A-13-F end of life (Diodes PCN-2623 on its page): rejected, the PCN covers the '-2477' variants only.",
+  "SRV05-4 NRND: not filed; maker page sells it with no NRND mark, aggregators disagree (coverage limit).",
+  "AONR21357 clone risk: rejected, JLC C431196 brand is Alpha & Omega.",
+  "PORT_5V3 vs TPS7A91 / TPS2553 6.5 V: not filed, 0.98 V static headroom; overshoot unmeasured.",
+  "R134 pulse: not filed, 56 % of the interpolated chart at 20 ms, 75 % at the watchdog bound (as recorded, hot-start unqualified).",
+  "Round 22 Minors R22-PARTS-02 (DB125 1.30 mm holes) and R22-PARTS-03 (VCAP bound): outside this round's angle, not re-examined, not re-filed."
+ ],
+ "comparison_with_round22": "Written before reading round22_parts.md. R22-PARTS-01 covered franchised availability of U4 / U9 (no franchised stock); R23-PARTS-02 is the JLC-side process, moisture and carrier gap it did not cover. R23-PARTS-01 and -03 are not in round 22. Round 22 closed U9's land and rotation for the fitted part; this round extends that to C3662799.",
+ "checks_actually_executed": [
+  "shasum -a 256 on m3.kicad_pcb before and after; git show ec8cb98 board hash",
+  "pcbnew read-only pad-net dump of all 206 parts (.supervisor/r23_parts/nets.txt)",
+  "lceda.cn EasyEDA component fetch for C3662799, C3662793, C46898862, C26633007, C51931514 (04:53Z); pad-string comparison with tools/jlc_easyeda/pads.json",
+  "tools/jlc_orient.py on probe pads copies (--out into the probe dir) and --verify-cpl in a probe copy of tools/ with probe corrections, for the shipped CPL and for a probe CPL with U4 Bottom 0",
+  "JLC component API for all 82 codes (05:01:41Z-05:02:15Z) and the five U4 / U9 codes (04:57:42-44Z)",
+  "ti.com product pages for TPS25947, TPS2553, TPS2121, TXU0202, TPS709, TPS7A91 (04:55:08Z), OPN status and MSL parsed",
+  "Diodes AP63203 / AP63201 / B340A pages and PCN-2623 PDF; Infineon ESD103; Semtech SRV05-4; Bourns SRP inductor list (05:00Z)",
+  "JLC help pages on consignment and MSL (WebFetch)",
+  "Text extraction of cached datasheets: SLVSFC9C, DS41326, SBVS282A, SLVS841G, AONR21357, CRM2512, SRP5030T, C84 supplier sheet, Samsung MLCC, Littelfuse SMBJ, DS15034, DS14623",
+  "Gerber zip unzip and diff ec8cb98 vs c70d261"
+ ],
+ "sources": [
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C Rev C, p7 ratings, p68 packaging addendum)",
+  "https://www.ti.com/product/TPS25947 , /TPS2553 , /TPS2121 , /TXU0202 , /TPS709 , /TPS7A91 (2026-11-01T04:55Z)",
+  "https://www.ti.com/lit/ds/symlink/tps7a91.pdf (SBVS282A, sections 5.1 / 5.3)",
+  "https://www.ti.com/lit/ds/symlink/tps2553.pdf (SLVS841G, section 6.1)",
+  "https://www.diodes.com/part/view/AP63203 (datasheet DS41326 Rev 3-2; repo cache r14_parts_pdf/ap6320.pdf) (DS41326 Rev 3-2, pp4-5)",
+  "https://www.diodes.com/part/view/B340A and https://www.diodes.com/assets/PCN-Files/Diodes_PCN_2623_Rev1_EOL.pdf",
+  "AONR21357 datasheet Rev 2.1 p1 (repo cache r14_parts_pdf/aonr21357.pdf) and https://aosmd.com/products/mosfets/p-channel-mosfets-8v-60v/AONR21357",
+  "https://www.infineon.com/part/ESD103-B1-02EL",
+  "https://www.semtech.com/products/circuit-protection/low-capacitance/srv05-4",
+  "https://www.bourns.com/docs/product-datasheets/srp5030t5000502c90e165f58a72ff000066632f.pdf and https://www.bourns.com/docs/product-datasheets/crm.pdf (CRM2512 p1, pulse chart p3)",
+  "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (DS15034 Rev 1, pp185-186)",
+  "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1)",
+  "https://jlcpcb.com/help/article/how-to-consign-parts-to-jlcpcb",
+  "https://jlcpcb.com/help/article/123-Moisture-Sensitivity-Level-MSL-for-Electronic-Parts",
+  "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList (2026-11-01T04:57Z and 05:01-05:02Z)",
+  "https://lceda.cn/api/products/<code>/components (2026-11-01T04:53Z)"
+ ],
+ "coverage_limits": [
+  "st.com timed out (curl HTTP/2 error 92, HTTP/1.1 timeout, WebFetch 60 s timeout twice): no maker lifecycle or MSL for U1, D4, LSM6DSV320X / 80X; ISM6HG256X 'Active' comes from a search-engine snippet of ST's page.",
+  "easyeda.com API returned CloudFront 403; the lceda.cn mirror was used (its C51931514 / C26633007 / C3662793 data match the cached records exactly).",
+  "AOS (AO3400A, AON7524), Diodes status fields, Murata, Molex, TE, Winbond, NDK and the passive makers were not read at the maker (script-rendered or redirected pages); lifecycle for them rests on JLC listings only.",
+  "JLC's consignment packaging rules appear only inside its ordering system; the help page gives none, nor any MSL, attrition or carrier rule for consigned parts.",
+  "The CRM2512 pulse chart is graphical; the 220 / 90 / 27 W points are the records' reading, not re-read here.",
+  "Board self-heating figures are the records' Inference (10-15 C/W, 2.6-4.4 W); no thermal model or measurement was made.",
+  "DigiKey / Mouser not re-tried (blocked in round 22)."
+ ]
+}

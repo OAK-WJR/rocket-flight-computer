@@ -1,0 +1,42 @@
+{
+  "ok": true,
+  "scope": "Git integration and CAD/software gate; no hardware qualification",
+  "local_parent": "8819bd2abe2cc2aaca65804454f4366f6f37366b",
+  "github_parent": "deb179eb74183402895cc02b877ab8a24d078aa3",
+  "checked_staged_tree": "027359628a25543fd8d57444c475feb4c3eb32e2",
+  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "r10_cad_unchanged": true,
+  "kicad_cli_version": "10.0.6",
+  "check_sh_exit_code": 0,
+  "native_drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "test_groups_run_counts": [
+    11,
+    10,
+    34,
+    33,
+    16,
+    5,
+    72,
+    268,
+    6
+  ],
+  "unittest_cases_reported": 455,
+  "unittest_skips_reported": 12,
+  "gate_log_sha256": "8bebb09157eb3188ce409256d6364fa02fa55a67c9a4db4bca4c9a66ad680356",
+  "isolated_numeric_tests": {
+    "count": 6,
+    "skipped": 0,
+    "numpy": "2.0.2",
+    "log_sha256": "d7a418804aaceddfd3897a50dca74bd935494d11015f37de68e9341bc32ec32b"
+  },
+  "git_object_connectivity_verified": true,
+  "pre_merge_history_bundle_verified": true,
+  "native_sandbox_seed_crash_resolved_without_rule_changes": true,
+  "normalization": "Only design/tool Eeschema 10.0.x patch number; all other netlist bytes remain exact",
+  "r10_accepted": false,
+  "hardware_tested": false,
+  "remote_updated": false
+}

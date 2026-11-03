@@ -1,0 +1,23 @@
+test_check_shell.py (KiCad python): Ran 2 tests in 1.807s OK 
+test_dc_solve.py (KiCad python): Ran 3 tests in 0.008s OK 
+test_fab_validation.py (KiCad python): Ran 23 tests in 8.606s OK 
+test_fit_check.py (KiCad python): Ran 23 tests in 0.026s OK 
+test_maze_clearances.py (KiCad python): Ran 10 tests in 0.128s OK 
+test_paste_check.py (KiCad python): Ran 5 tests in 0.005s OK 
+test_procurement.py (KiCad python): Ran 15 tests in 0.024s OK 
+test_r5_repair.py (KiCad python): Ran 13 tests in 1.261s OK 
+test_r6_check.py (KiCad python): Ran 17 tests in 0.010s OK 
+test_r7_check.py (KiCad python): Ran 35 tests in 0.411s OK 
+test_r8_check.py (KiCad python): Ran 23 tests in 1.568s OK 
+test_r8_ground.py (KiCad python): Ran 11 tests in 9.584s OK 
+test_r8_place.py (KiCad python): Ran 13 tests in 2.786s OK 
+test_r8_power.py (KiCad python): Ran 7 tests in 9.443s OK 
+test_r8_route.py (KiCad python): Ran 12 tests in 3.289s OK 
+test_r9_check.py (KiCad python): Ran 52 tests in 139.544s OK 
+test_r9_place.py (KiCad python): Ran 18 tests in 0.944s OK 
+test_r9_sch.py (KiCad python): Ran 20 tests in 1.267s OK 
+test_reference_audit.py (KiCad python): Ran 3 tests in 2.061s OK 
+test_route_check.py (KiCad python): Ran 57 tests in 1.850s OK 
+quality_audit test_quality_tools (KiCad python3): Ran 21 tests in 0.113s OK 
+quality_audit test_quality_tools (/usr/bin/python3): Ran 21 tests in 0.114s OK 
+test_r9_sch.py (plain python3): Ran 20 tests in 0.310s OK (skipped=6) 

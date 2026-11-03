@@ -1,0 +1,75 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round29_gate",
+  "reviewer": "claude",
+  "target_commit": "09a564e",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 1},
+  "findings": [
+    {
+      "id": "R29-GATE-01",
+      "kind": "gate",
+      "severity": "Minor",
+      "title": "D-R28-03's Inference marking of the 30-130 ms EN turn-on delay is not pinned: reverting it to the round 27 text passes every check",
+      "contradicts": "AGENTS.md section 2.5 (an inference not measured or checked against the datasheet must be labelled as an inference). D-R28-03 (R10_DECISIONS.md) lists the turn-on delay among the figures that rest on an inferred input ('The 30-130 ms turn-on delay is marked as the same model', the C87 0.72-1.27 x factor whose X7R DC-bias loss is inferred, D-R19-10) and states 'Test: test_r23_binding_note_rules_and_pin_table pins each new label and rejects the old Calculation-only forms'. round28_fix_cad.md line 89 says the same.",
+      "evidence": "Seed F6 (.supervisor/r29_gate/seeds/F6_turnon_label.patch), on a git-archive copy of 09a564e: in m3_design/r10_sch_check.py, the chatter obligation 'reboots the board after a 30-130 ms EN turn-on delay (the same model over C87 0.72-1.27 x).' -> '... EN turn-on delay.', which is exactly the round 27 text (git show 19dd0b5:m3_design/r10_sch_check.py). With the saved note: test_r23_binding_note_rules_and_pin_table OK; K-binding FAIL (stale note). After regenerating the note as r10_build.sh's record step does (r10_sch_check.py --binding-note, rc 0): r10_sch_check (check.sh stage) rc 0, check_r10 --only K-binding OK, test_r23_binding_note_rules_and_pin_table OK, and the whole tools/test_r10_check.py suite on the seed: 268 tests OK (6 skipped). The test pins only 'after a 30-130 ms EN turn-on delay' (tools/test_r10_check.py line 452) and has no negative pin for the unlabelled form. Every other D-R28-03 / -04 label seeded the same way fails the pinned test (seeds B4, C4, E2, F1, F2, F4, F5, F7, F9).",
+      "impact": "A later generator edit of the chatter obligation can drop the marking and regenerate the binding note with a figure that rests on an inferred input stated as fact (the AGENTS section 2.5 class the round 28 triage promoted to Major as R28-TRI-09), and check.sh passes. D-R28-03's 'pins each new label' is not true for this label. The committed note itself is correct today.",
+      "concrete_fix": "In test_r23_binding_note_rules_and_pin_table, add 'after a 30-130 ms EN turn-on delay (the same model over C87 0.72-1.27 x)' to the D-R28-03 assertIn list and 'EN turn-on delay. Resume' to its assertNotIn list."
+    }
+  ],
+  "observations": [
+    "D-R28-01 seed A1 (loaded_pack power back to 5.456 V x (1.46 A + aux_A)): r10_parts --check fails 'stale: parts_budget.json' (rc 1) while the budget is not regenerated; after --budget-only regenerates it (the build does), --check rc 0 and test_r10_parts OK; lines 91-92 move to 5.881014 / 4.388745 V while STATUS / parts_qualification / R10_VALIDATION quote 5.880831 / 4.388491 V. Same class as R26-GATE obs 2 / R28-GATE obs 1: no stated rule binds a budget figure to a check.",
+    "D-R28-01 seed A2 (ports_w back to a 1.46 A literal): same pattern; c_camera_radio_gps_on moves 13.0641 -> 13.0572 W and the four-stall fire current 1.278747 -> 1.278789 A; loaded_pack keeps 5.880831 V, so ports_w and loaded_pack silently diverge again. Caught only as a stale budget.",
+    "Seed F3 (GAP-5: drop ', and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate charge are Inference') passes the pinned test; the remaining '(Calculation on allocations: the 0.2 / 0.5 / 1.5 ms need bench tests' still marks the figures as unmeasured allocations, so the reverted text would not state an inference as fact.",
+    "Seed F8 (chatter: drop ', and the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred') passes the pinned test; the obligation keeps its pinned 'Calculation / Inference' labels and the C87 inference, so it stays labelled.",
+    "Seed C5 (rule 4: drop \"against Q120's source at R120.1\") passes; the criterion still reads '|VGS| of at least 4.5 V', so the procedure is not made false.",
+    "The D-R28-02 negative pin 'reads above 0.9 kOhm both ways' uses 'kOhm' while the generator writes 'kΩ', so it can never match an interim 'kΩ' form; the positive pin catches that form anyway (seed B2 fails).",
+    "K-binding by design compares the saved note with the generator's output, so every generator seed passes K-binding once the note is regenerated; the pinned SchematicContract test is the guard (all B / C / D / E / F / G1 seeds).",
+    "RA10: a 0.02 mm chamfer (0.028 mm diagonal) on the non-critical BAT_FAULT_N F.Cu (22.175, 69.175) passes with an INFO non-critical micro_segment leftover; two 135-degree bends, so the letter of the 45-degree rule holds, and AGENTS section 3 counts non-critical leftovers without blocking (R28-GATE obs 3 class). On a critical net the same seed fails (RA5 short_segment, RA6 micro_segment).",
+    "RA12 / RA13: a square bend made a T with a 0.42 / 0.10 mm stub fails dead_copper; the T exemption of right_angle cannot be used to hide a bend.",
+    "P2 (R173 back 0.65 mm without its tracks) also fails route_check dead_copper; the spacing test fails it independently at 0.514 mm.",
+    "G3 (PORT_TERMINAL_PINS TXO / RXI swapped in r10_parts.py): the build stops in r10_sch.py ('kilib/m3.kicad_sym PortTerminal differs from r10_parts'); r10_sch_check's PORT_PIN_NAMES is an independent table, so a regenerated library would still fail the pin-name check (not run past r10_sch.py)."
+  ],
+  "fix_verification": [
+    {"change": "D-R28-01 port_A = 1.461 + aux_A shared by ports_w and loaded_pack", "measurement": "r10_parts.py lines 416-417 and 450; recomputed loaded_pack(7.4 / 6, 7.68 A) at 5.456 V x 1.561 A = 5.8808312 / 4.3884907 V, equal to parts_budget.json lines 91-92; budget SHA-256 4267634220f4254aef28dfc9756c68b29784560c11b994c14274790dd631fab2 equals D-R28-01; r10_parts --check on a 09a564e copy: 'native-board power budget current'", "verdict": "confirmed"},
+    {"change": "D-R28-01 seeds (literal in ports_w or loaded_pack)", "measurement": "caught only as 'stale: parts_budget.json' before regeneration; pass every check after regeneration (observations 1-2)", "verdict": "confirmed as the known uncovered class (observation, not a finding)"},
+    {"change": "D-R28-02 rule 3 meter criterion (unpowered, both polarities, 'or open', clamp Inference)", "measurement": "R127 || (R126 + R128) = 1 k || 10.22 k = 0.9109 kOhm; seeds B1 (full revert), B2 (drop 'or open'), B3 (drop 'unpowered'), B6 (drop the clamp Inference) each fail test_r23_binding_note_rules_and_pin_table with the note saved and regenerated", "verdict": "confirmed"},
+    {"change": "D-R28-03 rule 3 fight figures and label", "measurement": "seeds B4 (label dropped) and B5 ('with the MCU driving IO2 high' dropped) fail the pinned test", "verdict": "confirmed"},
+    {"change": "D-R28-03 sweep labels (port map, GAP-5, chatter, rule 4, rule 8, hold-up)", "measurement": "seeds F1, F2, F4, F5, F7, F9, C4 fail the pinned test; F3 and F8 (partial label text) pass but leave the figure labelled; F6 (turn-on delay marking) passes everything", "verdict": "partly (R29-GATE-01)"},
+    {"change": "D-R28-04 rule 4 Q120 criterion and rule 3 'before first power and coating'", "measurement": "seeds C1 (revert to 'probe ... and record the dummy-load drop'), C2 (4.5 -> 2.5 V), C3 (0.2 -> 1.0 V) fail the pinned test; C5 (source reference dropped) passes, not false", "verdict": "confirmed"},
+    {"change": "D-R28-04 obligation 15 port-supply lead", "measurement": "3.3 V / 196 V/s + 4 ms = 20.8 ms, 3.7 V / 166 V/s + 4 ms = 26.3 ms ('about 21-26 ms'); seeds E1 (revert to '44 ms or more') and E2 (label back to 'Calculation') fail the pinned test", "verdict": "confirmed"},
+    {"change": "D-R28-04 DS15034 Table 2 p. 11", "measurement": "seeds D1 (back to 'pp. 10-11') and D2 ('p. 10') fail the pinned test; the saved note's SHA-256 30796f5e... is reproduced byte for byte by --binding-note on the copy", "verdict": "confirmed"},
+    {"change": "D-R26-01 J440.3 / .4 GND partners", "measurement": "D1a (partner at (7.4, 16.5) removed) and D1b (moved to 1.56 mm) fail route_check critical_via_no_gnd J440.3 (2.0 / 1.56 mm) and test_r26_aux_pins_have_gnd_partner_vias", "verdict": "confirmed"},
+    {"change": "D-R26-02 PYRO1_OUT >= 1.0 mm from 3V3 / 3V3A", "measurement": "P1 (R13 3V3 via back to (9.2, 52.98)) fails test_r26_pyro1_out_clear at 0.62 mm; P2 (R173 back 0.65 mm) fails it at 0.514 mm; base passes", "verdict": "confirmed"},
+    {"change": "D-R26-04 gate nets >= 1.0 mm from 3V3 / 3V3A", "measurement": "P3 (R164 3V3 via back to (19.05, 55.9)) fails test_r26_gate_nets_clear at 0.676 mm (and route_check off_angle on the moved stub)", "verdict": "confirmed"},
+    {"change": "D-R27-02 binding-note revision sentence", "measurement": "G1 (exception clause removed) fails the pinned test with the note saved and regenerated", "verdict": "confirmed"},
+    {"change": "D-R27-03 M3:PortTerminal", "measurement": "G2 (circuit.json J410 back to M3:CameraTerminal, sheets and netlist regenerated) fails r10_sch_check: 'J410: pin names {5V_OUT, GND, RX_FROM_CAMERA_TX, TX_TO_CAMERA_RX}, expected {4V8, GND, TXO, RXI}' in the checked and the fresh export; G3 stops the build in r10_sch.py", "verdict": "confirmed"},
+    {"change": "D-R24-17 right_angle (owner 45-degree rule)", "measurement": "square corners on PYRO1_GATE, USB_DM, GND, BAT_FAULT_N and a duplicated PORT_5V3 leg fail right_angle; overlap / overshoot / partial variants fail overlap_only_joint, dead_copper, collinear_overlap or fold_back; 0.05 mm chamfer on SD_SCK fails short_segment; zero-length on USB_LIMITED fails micro_segment; T stubs fail dead_copper; only the 0.02 mm chamfer on a non-critical net passes (INFO leftover)", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "board SHA-256 before and after (shasum -a 256 m3_design/assembly_review/m3.kicad_pcb): a0ec075e... both times; git status shows no tracked change",
+    "git archive 09a564e into .supervisor/r29_gate/tree; every seed on a copy of that tree or of its board",
+    "r10_parts.py --check / --budget-only and tools/test_r10_parts.py (5 tests) on seeds A1, A2",
+    "r10_sch_check.py --binding-note (KiCad CLI 10.0.7) on the unmodified copy: binding note byte-identical (30796f5e...)",
+    "tools/test_r10_check.py SchematicContract.test_r23_binding_note_rules_and_pin_table and check_r10.py --only K-binding on 21 generator seeds (B1-B6, C1-C5, D1-D2, E1-E2, F1-F9, G1), each with the saved note and with the note regenerated",
+    "r10_parts --library-only, r10_sch.py --out and r10_sch_check.py on generator seeds G2, G3",
+    "F6 seed: note regenerated, r10_sch_check (check.sh stage) rc 0, K-binding OK, full tools/test_r10_check.py run with R10_BOARD on the seed copy: 268 tests OK (6 skipped)",
+    "tools/route_check.py --profile r10 on the base board copy and 14 right_angle seeds (RA1-RA14) and 6 D-R26 seeds",
+    "RealBoardSeeds.test_r26_aux_pins_have_gnd_partner_vias / test_r26_pyro1_out_clear_of_3v3_and_3v3a / test_r26_gate_nets_clear_of_3v3_and_3v3a with R10_BOARD set to each D-R26 seed and the base copy"
+  ],
+  "sources": [
+    "AGENTS.md section 2.5 and section 3 (commit 09a564e)",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R26-01 ... D-R28-04",
+    "m3_design/assembly_review/sources/r10_review/round28_triage.md / .json, round28_fix_cad.md",
+    "m3_design/r10_parts.py, m3_design/r10_sch_check.py, tools/test_r10_check.py, tools/route_check.py, tools/check_r10.py, tools/check.sh, m3_design/r10_build.sh",
+    "git show 19dd0b5:m3_design/r10_sch_check.py (round 27 text of the chatter obligation)",
+    "probe directory .supervisor/r29_gate/ (scripts/, seeds/*.patch and *.out, ra/, dr26/)"
+  ],
+  "coverage_limits": [
+    "No full tools/check.sh run on any copy (DRC, fab manifest and the other self-test suites were not re-run per seed); seeds were judged by the stage that guards them.",
+    "No datasheet re-read: the slew, soft-start and VSD figures were checked only for arithmetic.",
+    "The G3 seed was not carried past r10_sch.py (the library copy would also have to be edited).",
+    "Right-angle seeds at pads and vias were not repeated this round."
+  ]
+}

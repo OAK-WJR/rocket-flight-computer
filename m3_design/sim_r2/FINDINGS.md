@@ -31,7 +31,7 @@ As merged in PR #1, there was no series resistance in the pyro path. Firing into
 - Details are in `docs/M3_ACTUATOR_MERGE.md` §2.6.
 
 **Firmware rules the fix relies on:**
-- Every fire pulse must end after 20 ms. If the gate were left on into a dead short, R134 would reach its pulse limit after about 60 ms and fail open. That loses the channel, but it is not a fire hazard.
+- Every fire pulse must end after 20 ms. If the gate were left on into a dead short, R134 would reach its pulse limit after about 60 ms. Whether it then fails open (losing the channel) or overheats is not documented: an inference, not a finding (validation pass 5); bench-test one part at about 4 A DC.
 - Flight state must survive an MCU reset.
 
 ## Finding 2 (fixed) — plug-out self-test margin

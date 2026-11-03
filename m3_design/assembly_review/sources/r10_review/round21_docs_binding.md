@@ -1,0 +1,145 @@
+# Round 21 docs_binding review (Claude)
+
+Target commit `accfff4`, PCB `0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3` (SHA-256 identical before and after). Read-only.
+
+**Totals: 0 Critical / 0 Major / 8 Minor.** The current-state tables (AGENTS rows, STATUS, M3_R10 "The board", ORDERING 8.2, handoff terminal table) agree with the native board: hash, size, 215 / 985 / 302 (169) / 1874.854252 mm, 119 / 96 / 45, every connector position, pin role and legend, D440 / D441 / TP82, the pin map (100 / 100 pins, pin_table = board = binding note), the IMU map, BOM 81 (45 / 36), CPL 72 / 133, orientation 69 + 122 + 14, paste 253 / 375, cost $85.35 and the U4 stock failure. FMEA I-11 now states S-6 exactly as `check_r10.s6` implements it. The defects are stale or contradictory text in secondary sections.
+
+## Findings
+
+| ID | Severity | Title |
+|---|---|---|
+| R21-DOC-01 | Minor | Vehicle handoff per-flight check reads "3V3 at TP81"; TP81 is RAW_PROTECTED |
+| R21-DOC-02 | Minor | ORDERING 8.1 says "The stock check passes: no line is short", contradicting stock_check.json and its own U4 row |
+| R21-DOC-03 | Minor | Supplier evidence described as 08:22Z stock and "bound to the final ... CPL"; the stock file is 10:13Z and the cost file binds the superseded CPL |
+| R21-DOC-04 | Minor | Three records still say the pre-commit circuit check "is running"; the commit records PASS, 2 Minor |
+| R21-DOC-05 | Minor | Owner decision table header and inventory basis still name the superseded board 50a39de5 and "rounds 20 and 21" |
+| R21-DOC-06 | Minor | Stale counts and figures left from 50a39de5 in R10_VALIDATION sections 7 / 9, M3_R10 Power and ORDERING |
+| R21-DOC-07 | Minor | Plate-model provenance: AGENTS says "re-run on this board"; R10_VALIDATION row 11 says "not re-run" with old C431 figures |
+| R21-DOC-08 | Minor | C87 sentence "worst case 10.6 ms at 6.0 V ..., below the 10 ms criterion" reads as if 10.6 ms were below 10 ms |
+
+### R21-DOC-01
+
+Vehicle handoff per-flight check reads "3V3 at TP81"; TP81 is RAW_PROTECTED
+
+- Evidence: {"file": "docs/R10_VEHICLE_HANDOFF.md", "reference": "line 56, \"Power, arming and USB\"", "measured": "native board: TP81 pad 1 net RAW_PROTECTED at B(31.0,84.8); the 3V3 probe is C15.1 B(29.05,47.82) (net 3V3); no 3V3 test pad exists (TPs: TP74/TP88 GND, TP80 BAT_IN, TP81 RAW_PROTECTED, TP82 USB_LIMITED, TP83 VLOGIC, TP120 RAW_ACT, TP122 PYRO1_GATE)", "contradicts": "docs/ORDERING.md line 609 (8.3 per-flight check): \"RAW_PROTECTED at TP81 and 3V3 at C15.1 both below 0.3 V\"", "introduced": "commit 6628488 (git log -S)"}
+- Impact: The per-flight "board off with J400 open" check is a safety-procedure step (H-6, R19-SAF-02, R20-SAF-01). A technician following the handoff probes the right pad but under the wrong rail name and skips the 3V3 reading at C15.1; the two documents give different procedures for the same step.
+- Fix: Handoff line 56: replace "or 3V3 at TP81 below 0.3 V" with "or, with access, RAW_PROTECTED at TP81 and 3V3 at C15.1 both below 0.3 V (ORDERING 8.3)".
+
+### R21-DOC-02
+
+ORDERING 8.1 says "The stock check passes: no line is short", contradicting stock_check.json and its own U4 row
+
+- Evidence: {"file": "docs/ORDERING.md", "reference": "line 275 (8.1, after the cost table)", "measured": "m3_design/assembly_review/fab/stock_check.json: ok=false, short=[\"C51931514 U4 orderable 2 (stockCount 9, canPresaleNumber 2) < 5\"], checked_utc 2026-10-31T10:13:31Z", "contradicts": "the U4 row of the same section (\"fails: 2 against 5\"), AGENTS manufacturing row, STATUS, M3_R10 \"Cost and stock\", R10_VALIDATION row 14 and section 10"}
+- Impact: The ordering worksheet states a passing stock check in its procurement summary paragraph; a reader who stops there misses the U4 shortage (R20-BOM-01) that every other record calls a failing gate.
+- Fix: Replace "The stock check passes: no line is short." with "The stock check fails on U4: 2 orderable against 5 (stock_check.json 2026-10-31T10:13Z; row below)."
+
+### R21-DOC-03
+
+Supplier evidence described as 08:22Z stock and "bound to the final ... CPL"; the stock file is 10:13Z and the cost file binds the superseded CPL
+
+- Evidence: {"files": ["docs/M3_R10.md \"Cost and stock\" (line ~172: \"live JLC 2026-10-31T08:22Z (stock) and 08:23Z (cost), bound to the final JLC BOM, owner BOM and CPL\")", "docs/R10_VALIDATION.md section 10 (line ~2303: \"stock 2026-10-31T08:22:17Z ... bound to the final BOM, owner BOM and CPL\")", "docs/R10_VEHICLE_HANDOFF.md \"Cost\" (\"stock 2026-10-31T08:22Z, cost 08:23Z\")"], "measured": "cost_check.json checked_utc 2026-10-31T08:23:13Z, inputs_sha256.m3_cpl_jlc.csv dbb126a9b64d...; current m3_cpl_jlc.csv SHA-256 72b39a9bcbe0... (manifest outputs agree); stock_check.json checked_utc 2026-10-31T10:13:31Z with BOM/owner-BOM hashes only (no CPL hash). BOM and owner-BOM hashes match (df6c0fc2..., c48868b3...).", "correct_elsewhere": "docs/ORDERING.md line 263 correctly says the CPL changed and both runs must be re-run"}
+- Impact: Evidence-binding defect: three records claim a binding to the final CPL that the files do not carry, and quote a stock timestamp that is not the one in stock_check.json. Cost figure itself is unaffected (same parts and quantities).
+- Fix: In M3_R10, R10_VALIDATION section 10 and the handoff, use ORDERING line 263 wording: cost 08:23Z bound to the JLC BOM, owner BOM and the CPL of 50a39de5 (CPL since changed by the polish pass); stock 10:13Z bound to the BOM and owner BOM; re-run both on the final files before ordering.
+
+### R21-DOC-04
+
+Three records still say the pre-commit circuit check "is running"; the commit records PASS, 2 Minor
+
+- Evidence: {"files": ["STATUS.md line 17", "docs/M3_R10.md line 131", "docs/R10_VALIDATION.md line ~1756 (Round 20 polish pass)"], "measured": "commit accfff4 message: \"Circuit check (Opus, max effort, on the staged change): PASS, 2 Minor ... Netlist identical to HEAD (701 pads, 166 nets) ...\"; R10_DECISIONS D-R20-01 cites \"the pre-commit circuit check\" result (no legal second EN escape via)"}
+- Impact: Stale status text at the top-level status and validation records; the result and its two Minors are recorded only in the commit message, not in a tracked record.
+- Fix: Replace "An independent circuit check of the staged change is running." with "The pre-commit circuit check (on the staged change) passed with 2 Minor: the D-R20-01 F.Cu respin option, and stale C87 / inner-ring figures in REQUIREMENTS / AGENTS, both fixed in this commit." in all three files.
+
+### R21-DOC-05
+
+Owner decision table header and inventory basis still name the superseded board 50a39de5 and "rounds 20 and 21"
+
+- Evidence: {"file": "docs/R10_VALIDATION.md", "reference": "line 1765 (owner decision table preamble) and lines 1864-1867 (Inventory basis)", "measured": "line 1765: \"The board is PCB `50a39de5…` (round 19 fix pass) ... rounds 20 and 21 are planned.\" Line 1864: \"Inventory for PCB 50a39de5b76d...\"; line 1867: \"(D-R18-01 … 11 and D-R19-01 … 14 are in R10_DECISIONS.md and the table above, not yet in the JSON)\" omits D-R19-15 and D-R20-01..11.", "contradicts": "R10_VALIDATION head (current PCB 0dc84776, rounds 21 and 22), row 20 (\"rounds 21 and 22 on 0dc84776\", 37 later IDs), M3_R10 review-status table"}
+- Impact: The table the owner signs names the wrong board and review pair; the acceptance could be read as binding to 50a39de5.
+- Fix: Line 1765: "The board is PCB `0dc84776…` (round 20 polish pass, round20_fix_cad.md) ... rounds 21 and 22 are planned." Inventory basis: state that the inventory was carried to 0dc84776 with the D-R20 changes (or say which figures are 50a39de5-only) and list "D-R18-01 … 11, D-R19-01 … 15 and D-R20-01 … 11 (37 IDs)".
+
+### R21-DOC-06
+
+Stale counts and figures left from 50a39de5 in R10_VALIDATION sections 7 / 9, M3_R10 Power and ORDERING
+
+- Evidence: {"items": ["R10_VALIDATION line 2298: \"CPL 74 top + 131 bottom\" (m3_cpl_jlc.csv now 72 Top / 133 Bottom; 74/131 is the 50a39de5 figure, M3_R10 line 867)", "R10_VALIDATION line 2294 (C84 row): \"paste F 257 / B 371\" (Gerber flash count F 253 / B 375, D03 in m3-F_Paste.gbr / m3-B_Paste.gbr)", "R10_VALIDATION line 2299: \"Explicit thermals on all five DB125 GND contacts\" (six pads have local zone_connect=1 on the board: J1.2, J9.2, J410.2, J420.2, J440.2, J122.5; ORDERING line 418 says six)", "R10_VALIDATION line 2290 (DB125 row): \"ring copper 0.750 mm, section 1\" (J121.1 / J400.2 have no unconnected inner rings since D-R20-05; pad unconnected-layer mode 3 on J121.1, J400.2, J1.2, 0 on J121.2)", "R10_VALIDATION line 2179: \"All 94 hidden references are listed in the current M3 record\" (96; the M3_R10 list matches the board exactly, 96/96)", "R10_VALIDATION line 2223: \"All 166 visible silkscreen texts (121 references and 45 legends ...)\" (board: 119 visible references + 45 legends = 164)", "M3_R10 line 424 (Power, hot-plug): \"retained-OUT bound 5.877715 V after 2 s\" (hotplug_results.json retained_output.output_bound_V 5.914470 V; M3_R10 line 141 and R10_VALIDATION line 2014 say 5.914 V)", "ORDERING line 330: \"Of the 301 vias on 50a39de5…, 296 are 0.5 / 0.3 mm\" in the current VIPPO order text (board: 302 = 297 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5)", "ORDERING \"Historical snapshots\" table (line ~664) has no row for 50a39de5 (the round 20 board) although it lists a3144b15; M3_R10 Board history has it"]}
+- Impact: Documentation defects only; the current-state tables (M3_R10 "The board", ORDERING 8.2, AGENTS) carry the right values, but these sections contradict them.
+- Fix: Update each figure to the 0dc84776 value listed above (or mark it explicitly as a 50a39de5 figure), and add a 50a39de5 row to the ORDERING historical table (215 footprints / 205 CPL rows (74/131) / 81 codes, 257/371 paste, $85.35, U4 2 orderable).
+
+### R21-DOC-07
+
+Plate-model provenance: AGENTS says "re-run on this board"; R10_VALIDATION row 11 says "not re-run" with old C431 figures
+
+- Evidence: {"items": ["AGENTS.md line 23 (Mounting row): \"The optional plate model, re-run on this board in round 20, gives 180.8 Hz ... 0.261 mm under C431\"", "docs/R10_VALIDATION.md line 1790 (owner row 11): \"C431 keeps only 0.27–0.33 mm ... The plate model has not been re-run on the current board (J440 and its cell were added on the west edge).\""], "measured": "round 20 mechanics lens (R20-MEC-02) ran it on 50a39de5 (M3_R10 lines 159 / 653, handoff line 74, R10_VALIDATION line 2259 all say \"re-run on 50a39de5\"); the polish pass moved D440 / D441 / TP82 and did not re-run it (round20_fix_cad.md)", "rule": "AGENTS section 2.5 (an inference or calculation must not be stated beyond what was done)"}
+- Impact: AGENTS overstates the provenance (the polished board was not modelled); the owner acceptance row understates it and carries pre-round-20 numbers that contradict the R20-MEC-02 disposition in the same file.
+- Fix: AGENTS: "re-run on the previous board 50a39de5 in round 20 (not on 0dc84776; the polish pass moved only small parts)". Row 11: "re-run on 50a39de5 in round 20 (R20-MEC-02): 180.8 Hz, 78.6 g, 0.261 mm under C431, 0.320 mm under C421; not re-run on 0dc84776; strain values remain the 632a9ad3 run".
+
+### R21-DOC-08
+
+C87 sentence "worst case 10.6 ms at 6.0 V ..., below the 10 ms criterion" reads as if 10.6 ms were below 10 ms
+
+- Evidence: {"items": ["docs/M3_R10.md lines 148-150 (Switch network)", "docs/M3_R10.md lines 396-397 (Power, Logic and switch)", "docs/R10_VALIDATION.md line 1792 (owner row 21)"], "measured": "D-R20-11 figures: 10.6 ms at 6.0 V (meets 10 ms), 8.5 ms at 5.73 V and 6.6 ms at 5.5 V (below it); 10 ms needs >= 5.92 V. AGENTS, REQUIREMENTS F6 / line 102, ORDERING 8.3 and the binding note state this correctly."}
+- Impact: Readability only; the numbers are right, but the clause attaches "below the criterion" to the 6.0 V figure that passes it.
+- Fix: Rewrite as: "worst case 10.6 ms at 6.0 V (meets the 10 ms criterion); about 8.5 ms at the four-stall 5.73 V and 6.6 ms at 5.5 V fall below it, so 10 ms needs a loaded pack of at least 5.92 V (D-R20-11)".
+
+## Fix verification
+
+| ID | Verdict | Measurement |
+|---|---|---|
+| D-R20-01 | confirmed (records) | all seven records agree; three BAT_ENABLE vias (19.675,66.6), (21.3,68.9), (17.1,82.8) exist on the board (0.5/0.3); U9.1 net BAT_ENABLE |
+| D-R20-02 | confirmed (position/net; single-open graph not re-run by this lens) | via present, PORT_4V8 0.5/0.3; R402.1 net PORT_4V8; docs consistent (M3_R10 Power, ORDERING 8.3, AGENTS row not needed) |
+| D-R20-03 | confirmed (records) | records consistent; M3_R10 round 19 gate bullet and STATUS round 19 line keep the historical "admitted by a named entry" text, under round 19 headings |
+| D-R20-04 | confirmed | board TP82 B(11.2,20.7), net USB_LIMITED; ORDERING probe table, M3_R10, R10_VALIDATION, STATUS and AVA_LAYOUT agree |
+| D-R20-05 | partly (one stale record) | pad unconnected-layer mode 3 on J121.1, J400.2, J1.2; 0 on J121.2 and J1.1; AGENTS, M3_R10, R10_VALIDATION row 9 and section 1, handoff agree; R10_VALIDATION line 2290 still says ring copper 0.750 mm (R21-DOC-06). Ring-to-copper distances not re-measured by this lens |
+| D-R20-06 | partly (records) | board 119 shown / 96 hidden; M3_R10 hidden list equals the board set exactly; J440 3:TXO at B(10.5,17.5); R10_VALIDATION section 7 still says 94 / 166 (R21-DOC-06) |
+| D-R20-07 | confirmed (records only) | records consistent; Fab geometry not re-measured by this lens |
+| D-R20-08 | confirmed | rule area R20_TAB_KEEPOUT_WEST_AFT present; ORDERING tab table, M3_R10, R10_VALIDATION row 28 agree; row 16 does not cross-reference row 28 |
+| D-R20-09 | confirmed | all positions, rotations and via presence/absence match; D440.1 AUX_TX_WIRE, D441.1 AUX_RX_WIRE, as pin_table rows 63/64 say |
+| D-R20-10 | confirmed | recorded consistently (M3_R10, R10_VALIDATION rows 27 and dispositions) |
+| D-R20-11 | confirmed (wording Minor) | 10.6/20.5/26.4, 8.5, 6.6 ms, >= 5.92 V, 30-129 ms identical in AGENTS, STATUS, M3_R10, REQUIREMENTS F6, ORDERING 8.3, R10_VALIDATION row 21, binding note obligation and battery_entry sheet note; wording defect R21-DOC-08 |
+| FMEA I-11 (R20-SAF-02 docs) | confirmed | check_r10.s6: PORT_NET ^(GPS_|RADIO_|CAM_|PORT_|AUX_), SAFE_NET ^(PYRO1_|ARM1_|ACT_|RAW_ACT|BAT_ENABLE|BAT_SW_), U1 excepted, same-layer default-clearance copper; I-11 now states exactly this and that BAT_IN/BOOT0/NRST are outside S-6; no other document claims S-6 covers them |
+| D-R19-14 / D-R19-13 pin map | confirmed | pin_table r10_net equals U1 pad nets for all 100 pins; binding note u1_pins equals pin_table (port, net, mode) for all 100; binding note board_sha256 = 0dc84776 and pin_table_sha256 matches the file; J410/J420/J440 pins 3 -> R441/R471 -> PD8/PC6, pins 4 -> R440/R470 -> PD9/PC7; J9.3 CAM_RX_WIRE -> U12 -> PE7 |
+| IMU axis map | confirmed | board U4 B(17.0,45.9) rot 180; binding note imu block matches AGENTS, STATUS, M3_R10 |
+
+## Fix now
+
+- R21-DOC-01: handoff line 56 TP81 / C15.1 wording (one sentence).
+- R21-DOC-02: ORDERING line 275 stock sentence.
+- R21-DOC-04: replace the three "circuit check ... is running" sentences with its recorded PASS / 2 Minor.
+- R21-DOC-05: R10_VALIDATION line 1765 board / rounds and the inventory-basis ID list.
+- R21-DOC-03, -06, -07, -08: text-only updates listed in each concrete_fix (no CAD or gate change).
+
+## Rejected or closed candidates
+
+- M3_R10 "What the round 19 fix pass changed" C87 row now carries the D-R20-11 figures (10.6/20.5/26.4 ms, 30-129 ms) as the round 19 "after" values: a recalculation of the same part on the same land, cited to D-R20-11 elsewhere; not filed.
+- M3_R10 round 19 gate bullet and STATUS round 19 line describing the U1.74 named entry in present tense: under round 19 headings, and the round 20 rows say it is fixed; not filed.
+- ORDERING line 82 (SMA J30/J31, J123/J124, TP30): section 1-7 R9 text, labelled as R9; not filed.
+- AVA_LAYOUT line 402 (D440 F(13.9,17.2) etc.): inside the Round19 history section; the reading guide points to the round 20 section, which has the new poses; not filed.
+- AGENTS row "AUX may draw up to 100 mA" without "provisional": M3_R10, ORDERING and handoff carry the provisional label and AGENTS points there; not filed.
+- ORDERING 8.2 "Also confirm" positions (Q120/Q121, Q124, C126 and its GND via (15.8,59.425), C123, C411, C421, C431, C91, C92, C84, D9, U4, J430) re-read on 0dc84776: all match; the "last verified against 50a39de5" label is now merely conservative.
+- R10_DECISIONS: 163 unique D IDs counted (one D-R11-01 heading plus addenda); D-R20-06 mentions J430, which exists (microSD B(24,24.3)).
+- Probe worksheet coordinates (R119.1, R120.2, C120.2, C24.1/.2, C15.1, TP74, TP88, U9 pins 5/6, C88.1, C82.1, C84 pads, D9 pads) re-read: all match.
+
+## Checks executed
+
+- SHA-256 of m3.kicad_pcb before and after: 0dc84776... both times.
+- Native pcbnew read (KiCad Python, read-only): bytes 2,340,154; edge 46 x 90; 4 copper layers; 215 footprints; 985 segments; 302 vias (169 GND; 297 0.5/0.3, 4 0.6/0.3, 1 1.0/0.5); track 1874.854252 mm; 166 nets; 119 shown / 96 hidden references; 45 silk legends; rule areas incl. R20_TAB_KEEPOUT_WEST_AFT.
+- Positions, rotations, values, LCSC / MPN of all connectors, U1/U4/U5/U9/U10-U13/U401/U402, power, pyro and switch parts, D440/D441/D410/D411, TP82 and all test pads compared with AGENTS rows, M3_R10, ORDERING 8.2/8.3, handoff terminal table.
+- Connector pad nets for J1, J400, J121, J122, J9, J410, J420, J440, J2, J3; port resistor and clamp pad nets; camera UART nets.
+- Silkscreen legend texts and sides compared with handoff / ORDERING pin legends (1:E1- top / 2:E1+ bottom, 1:SW / 2:SW, J440 1:4V8 top and 2-4 bottom, J9 1:5V4).
+- Five Edge.Cuts support holes (3.2 mm) at (4,4), (42,4), (4,44.3), (3.7,86), (42,86).
+- pin_table.tsv r10_net vs U1 pad nets (100 pins); binding note u1_pins vs pin_table (100 pins); binding note hashes vs board and pin_table.
+- Hidden designator list in M3_R10 vs board (96 = 96, identical sets).
+- Fab package: CPL rows by layer (72 Top / 133 Bottom), BOM lines 81, owner BOM C84; paste flashes from the committed Gerber zip (unzipped into the probe dir): F 253 / B 375; SHA-256 of BOM, owner BOM, CPL vs cost_check / stock_check / manifest input and output hashes.
+- cost_check.json and stock_check.json fields vs every cost / stock statement ($85.35, $84.41, $16.79, $102.14, $105.13, U4 2 < 5, timestamps).
+- Local zone-connection override and unconnected-layer mode of the DB125 pads (GND thermals, D-R20-05 rings).
+- check_r10.py S-6 source vs FMEA I-11 text.
+- hotplug_results.json retained_output vs M3_R10 / R10_VALIDATION.
+- Decision-ID count in R10_DECISIONS.md (163) vs STATUS / M3_R10 / R10_VALIDATION row 20.
+- Token sweeps for stale hashes, counts, positions and figures across STATUS, AGENTS, M3_R10, ORDERING, handoff, R10_VALIDATION, FMEA, REQUIREMENTS, pin_table, binding note, parts_qualification, AVA_LAYOUT.
+
+## Coverage limits
+
+- Documentation lens: CAD geometry beyond positions, nets, pad modes, via presence and counts was not re-measured (S-8 distances, ring-to-copper, Fab-text crossings, courtyard tests, single-via-open graph, keep-out areas).
+- C87 timing, fire budget, hot-plug and thermal figures were checked for cross-document agreement only, not recalculated.
+- No kicad-cli DRC, check.sh, builds or supplier queries were run (read-only brief); no maker datasheet was re-read.
+- VEHICLE.md (parent repo) not reviewed beyond the brief note that its R10 row is stale.

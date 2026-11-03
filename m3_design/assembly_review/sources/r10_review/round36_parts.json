@@ -1,0 +1,55 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round36_parts",
+ "reviewer": "claude",
+ "target_commit": "c3c4249",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "J430 CPL centroid differs from the KiCad origin by (0, +1.55) mm; it is the jlc_corrections.json offset from 12 matched EasyEDA pads (residual 0.005 mm), so it is intended.",
+  "The session-context copy of AGENTS.md is stale ($85.60, 92c3ad59); the committed AGENTS.md at c3c4249 has $85.26 / 12:44:13Z and matches cost_check.json (already noted in round 34's triage).",
+  "R166 tolerance band 0.3378672-0.3825072 ohm applies +/-800 ppm/K over 65 K on both sides; this is conservative for -40...85 C, not wrong.",
+  "parts_qualification 'Historical R166' section keeps 8.525257 V/us and -14.497874 V tied to board 3b960b46; it is labelled historical and points to hotplug_results.json for current figures."
+ ],
+ "fix_verification": [
+  {
+   "id": "R34-TRI-01",
+   "correction": "parts_qualification no longer points to round 11 hotplug.md as the current results",
+   "measurement": "parts_qualification.md:1036-1037 and :1061-1063 name hotplug_results.json / hotplug_inputs.json and M3_R10 'Current state' as current; hotplug.md header gives the round 34 pointer (board a0ec075e, falling 8.995 V/us); the remaining 8.525257 V/us at :1070 is under a 'Historical' heading bound to 3b960b46",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: a0ec075e... both times",
+  "KiCad pcbnew probe (.supervisor/r36_parts/bomcpl.py): every BOM / owner-BOM / CPL designator against the board's LCSC, Manufacturer Part, footprint, side and position; Qty equals designator count on every line; 207 BOM refs (206 JLC + C84), 206 CPL rows, no missing or extra refs; no LCSC/MPN/footprint/side mismatch; only position difference J430 (JLC offset)",
+  "tools/jlc_orient.py --verify-cpl on the committed CPL with --out into the probe dir: 67 top + 125 bottom rebuilt, 14 placement-only, worst residual 0.491 mm, errors none, 206 rows (matches AGENTS / M3_R10)",
+  "Net dump of every C/R/D/Q/L/U (nets.txt): capacitor voltage ratings vs rail (max BAT_IN / RAW_PROTECTED 10.18 V OVLO corner vs 25/50 V parts; 16 V parts only on 3V3, VBUS, VCAP, CAM_IO_3V3); resistor power on bleeders (R92 3.1 mA, R405 28 mW, R167 7 mW); diode/TVS standoffs (SMBJ12CA, B340A, BAT54A reverse 5.1 V, SRV05-4 pin 5 on 3V3 with 3.3 V signals, 1N5819WS); FET ratings (AONR21357 -30 V/+-25 V, AO3400A, AON7524)",
+  "BOM MPN decode vs comment for all 81 lines (Samsung/Murata/Fenghua capacitor codes; UNI-ROYAL, Yageo RT/RC, Vishay MCT, Bourns CRM, FOJAN resistor codes incl. 0603WAF220KT5E = 2.2 ohm and 25121WF360LT4E = 0.36 ohm)",
+  "TPS25947 SLVSFC9C (cached PDF): OVLO rising 1.183/1.20/1.223 V, IOVLKG +-0.1 uA -> 1.223 x 8.1572 + 0.2002 = 10.18 V corner reproduced; ILIM 3.96-4.84 A at 750 ohm, +-0.35 % -> 3.946188-4.856999 A reproduced; RILM >= 549 ohm",
+  "TPS2553 eq. 1: R430 22.6 k +-2 % -> 1.041-1.249 A; R85 66.5 k +-2 % -> 347.7-453.0 mA; VLOGIC 514.1 uF x 4.7 V = 2.416 mC, 5.33-6.95 ms reproduced",
+  "TPS709 SBVS: EN has a 300 nA internal pull-up and may float (U13 pin 3 open is per datasheet); SRV05-4: pin 5 VRWM 5 V",
+  "L400 ripple 0.737-0.758 A at 8.4 V / 5.44 uH / 470 kHz reproduced",
+  "R134 CRM2512 chart interpolation 61.204 W @20 ms / 44.134 W @36 ms, 35.7975 W demand at 1.97109 ohm, 1.233x margin, 85 C 36.345 vs 35.851 W reproduced",
+  "Q120 gate |Vgs| >= 4.7444 V, 8.95 W linear, 0.706 W on; C126 discharge Rmax 1109.091 ohm, Cmax 278.3 nF, 0.67820 ms reproduced",
+  "Four-stall pack sag 5.880831 / 4.388491 V reproduced (logic as 0.6375 A constant current, peripherals 1.561 A x 5.456 V / 0.8 constant power, 0.15 ohm)"
+ ],
+ "sources": [
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (cached .supervisor/r14_parts_pdf/tps25947.pdf, Sec. 6.5 OVLO and ILIM table)",
+  "https://www.ti.com/lit/ds/symlink/tps2553.pdf (equation 1)",
+  "https://www.ti.com/lit/ds/symlink/tps709.pdf (cached; EN pin description)",
+  "SRV05-4 datasheet (cached .supervisor/r14_parts_pdf/srv05.pdf)",
+  "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+  "https://www.aosmd.com/res/datasheets/AONR21357.pdf"
+ ],
+ "coverage_limits": [
+  "No live LCSC/JLC page lookups this round; MPN-to-code identity relies on the committed BOM, jlc_corrections.json pad matches and earlier rounds' supplier checks",
+  "Datasheet rating checks were spot checks on the parts at the highest operating stress, not a re-read of every PDF",
+  "No physical, thermal or firmware qualification"
+ ]
+}

@@ -1,0 +1,13 @@
+bat_u9      BAT_IN         J1:1               -> U9:5       R = 2.32 mOhm  via 0.11 A
+raw_j124    RAW_ACT        Q121:5,6,7,8,9     -> J124:2     R = 10.45 mOhm via 1.62 A
+rp_u11      RAW_PROTECTED  U9:6               -> U11:2      R = 14.96 mOhm via 0.50 A
+rp_u7       RAW_PROTECTED  U9:6               -> U7:3,4     R = 74.96 mOhm via 1.00 A
+rp_tp81     RAW_PROTECTED  U9:6               -> TP81:1     R = 8.05 mOhm  via 0.55 A
+rp_r122     RAW_PROTECTED  U9:6               -> R122:1     R = 12.44 mOhm via 0.00 A
+vl_u2       VLOGIC         C84:1              -> U2:2,3     R = 9.84 mOhm  via 0.50 A
+vl_c99      VLOGIC         U11:1              -> C99:1      R = 1.23 mOhm  via 0.00 A
+cam_j9      CAM_5V         L3:2               -> J9:1       R = 2.88 mOhm  via 1.00 A
+v33_u1_75   3V3            L1:2               -> U1:75      R = 15.06 mOhm via 0.10 A
+v33_u1_100  3V3            L1:2               -> U1:100     R = 15.06 mOhm via 0.10 A
+v33_u1_27   3V3            L1:2               -> U1:27      R = 14.50 mOhm via 0.10 A
+v33_u3      3V3            L1:2               -> U3:8       R = 15.64 mOhm via 0.10 A

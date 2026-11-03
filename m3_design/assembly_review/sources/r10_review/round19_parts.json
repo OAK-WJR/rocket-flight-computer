@@ -1,0 +1,321 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round19_parts",
+ "reviewer": "claude",
+ "lens": "parts",
+ "target_commit": "1e604412015002be941f7056d0788d23f508e6ac",
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 5
+ },
+ "findings": [
+  {
+   "id": "R19-BOM-01",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R18-BOM-01",
+   "title": "U4 stock still blocks release; a JLC-stocked, pin- and land-identical ISM6HG256XTR now meets F1 and F2",
+   "evidence": {
+    "file": "m3_design/assembly_review/fab/m3_bom_jlc.csv",
+    "reference": "U4 LSM6DSV320XTR C26633007, footprint LGA-14_L3.0-W2.5-P0.50-TL, B.Cu (17.0, 45.9) mm, rotation 180",
+    "measured": {
+     "C26633007_jlc": "stockCount 0, canPresaleNumber -18, minPurchase 1, $9.2723 (1-9); exact-code query 2026-10-31T01:41-01:44Z",
+     "C26633007_lcsc": "stock 0, productCycle normal",
+     "C51931514_jlc": "ISM6HG256XTR (STMicroelectronics), stockCount 9, minPurchase 1, canPresaleNumber 2, isBuyComponent 1, $14.3262 (1-9), Extended; exact-code query 2026-10-31T01:54:28Z; LCSC warehouse 0",
+     "C46898862_jlc": "LSM6DSV80XTR stock 0 (no alternative)",
+     "board_U4_nets": "1 SPI1_MISO, 2 GND, 3 GND, 4 IMU_INT1, 5 3V3A, 6 GND, 7 GND, 8 3V3A, 9 NC, 10 NC, 11 NC, 12 IMU_CS, 13 SPI1_SCK, 14 SPI1_MOSI",
+     "ism6hg256x_compatibility": "DS15034 Rev 1: p1 low-g +/-2..16 g, high-g +/-32..256 g, gyro +/-250..4000 dps, -40..+105 C, LGA-14L 2.5 x 3.0 x 0.83 mm; p9 Figure 5 pin map and accelerometer/gyro axis directions identical to LSM6DSV320X DS14623 Rev 1 p9 Figure 5; p10-11 Table 2 mode 1: SDx/SCx to VDDIO or GND, OCS_aux/SDO_aux to VDDIO or unconnected, INT2 output (our 2/3 GND, 9/10/11 NC fit); p187 Figure 32 drawing DM01021587_2 (14x 0.475 +/-0.05 x 0.25 +/-0.05, 0.5 pitch) identical to DS14623 Rev 1 p187",
+     "cost_effect": "$79.12 -> $84.17 per board (+$5.0539) against the $84.41 cap",
+     "watch_list_unchanged_since_stock_check_2026-10-30T23:50:54Z": "U9 C3662793 45 (minimum 1, need 5); D400-D421 C535146 201 (need 30); J121 C52993880 186 (need 5); U1 C5271084 812 (need 5)",
+     "record_now_outdated": "docs/R10_VALIDATION.md row R18-m14: \"No JLC-stocked IMU meets both +/-4000 dps and at least +/-64 g\""
+    },
+    "maker_urls": [
+     "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1, pp. 9, 187)",
+     "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (read via LCSC copy https://datasheet.lcsc.com/datasheet/pdf/6d3b0ec6f545ce5dc4873ec229030cd4.pdf?productCode=C51931514, DS15034 Rev 1, pp. 1, 9-11, 187; sha256 c867695b...)"
+    ],
+    "supplier_urls": [
+     "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+     "https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>"
+    ]
+   },
+   "impact": "REQUIREMENTS M1 (every part in stock for 5 boards) still fails on U4 alone (0 < 5). The record that no JLC-stocked IMU meets F1 + F2 is out of date, so an assembly path without consignment is not visible to the owner. The alternative is thin (9 for 5) and changes the firmware driver (WHO_AM_I and high-g register map differ: Inference, registers not compared); package, pin functions and axis figure are identical, so copper, fit and the roll = -gyro_Y map carry over (Inference from the identical maker figures).",
+   "concrete_fix": "Owner decision, no copper change either way: (a) consign 7-10 LSM6DSV320XTR as ORDERING section 1 says (an undated DigiKey listing shows 0 with a 24-week lead; ST eStore and Farnell listings show stock: verify on order day); or (b) substitute U4 = ISM6HG256XTR C51931514 in the schematic and board fields (LCSC, Manufacturer, Manufacturer Part and the duplicate LCSC Part), regenerate its tools/jlc_corrections.json entry from a fresh EasyEDA fetch, rebuild and rebind (board hash changes), record +/-256 g / +/-4000 dps and the driver obligation in pin_table.tsv and the binding note, and buy the 9 at once. Either way correct the R18-m14 sentence and rerun stock within 24 h of ordering."
+  },
+  {
+   "id": "R19-BOM-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "C84's lands still get full stencil apertures although C84 is now hand-fitted after both reflows",
+   "evidence": {
+    "file": "m3_design/assembly_review/fab/m3_gerber.zip (m3-F_Paste.gbr), fab/m3_cpl_jlc.csv, fab/m3_bom_owner.csv, docs/ORDERING.md section 8.2",
+    "reference": "C84 MA25V470M8x10 C46550466, footprint M3_MA_8x10, F.Cu (27.5, 78.5) rotation 90; pad 1 VLOGIC (27.5, 81.75), pad 2 GND (27.5, 75.25), lands 3.5 x 1.7 mm",
+    "layer": "F.Paste",
+    "measured": {
+     "paste_flashes": "aperture D36 'R,1.700000X3.500000' flashed at X27.5 Y-81.75 and X27.5 Y-75.25 = 100 % of both lands (2 of the 245 F.Paste flashes)",
+     "upload_state": "C84 absent from m3_bom_jlc.csv and m3_cpl_jlc.csv; owner BOM row \"manual, after both reflow passes\"",
+     "order_text": "ORDERING 8.2: \"Use the supplied paste apertures exactly, with no aperture optimisation or added openings\" and \"C84 absent from both passes\"",
+     "paste_volume": "5.95 mm^2 x 0.10-0.12 mm stencil = 0.60-0.71 mm^3 per land (Calculation), reflowed bare on the top (last) pass (Inference)"
+    }
+   },
+   "impact": "Bounded: JLC prints and reflows paste on two bare lands, so C84 arrives on tinned domes that neither the manual-fit operation nor the first-article seating/height check mentions, and JLC may query paste at a site with no placement. No electrical effect; the D-R18-09 move itself is correct.",
+   "concrete_fix": "Now (docs only): state in ORDERING 8.2 and the order remark that the two C84 apertures are kept on purpose (lands pre-tinned) or ask JLC to block them, and require the manual operation to reflow both lands fully and check standoff and tilt. If the board is rebuilt for another reason: drop F.Paste from the M3_MA_8x10 pads in the generator and give paste_check the MANUAL_FIT exemption."
+  },
+  {
+   "id": "R19-BOM-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "REQUIREMENTS temperature row is wrong: LS120 is not the only part rated above -40 C at the cold end",
+   "evidence": {
+    "file": "docs/REQUIREMENTS.md, Operating assumptions, row \"Temperature\" (line 89)",
+    "reference": "text: \"The LS120 buzzer, rated -20...+70 C, is the only part with a cold rating tighter than -40 C\"; bay -20...+70 C, 85 C unshaded (DESIGN_ASSURANCE 6.1)",
+    "measured": {
+     "LED1 NCD0805R1 C84256": "TOPR -30...+85 C (Nationstar FGH/BD-0053.01-21B p1)",
+     "J3 HRO TYPE-C-31-M-12 C165948": "drawing note 5: operating -30...+80 C (HRO drawing 2020-12-08 rev A p1)",
+     "J430 Molex 472192001 C164170": "-20...+85 C in JLC and LCSC listings (2026-10-31) and Arrow; element14/Heilind list -40 C; Molex product spec not retrieved",
+     "all other fitted parts": "-40...+85 C or wider in maker or supplier data (82 codes scanned)"
+    },
+    "maker_urls": [
+     "https://datasheet.lcsc.com/datasheet/pdf/e3e35db60c068efe42b02d21fe498cf3.pdf?productCode=C84256 (p1)",
+     "https://datasheet.lcsc.com/lcsc/1903211732_Korean-Hroparts-Elec-TYPE-C-31-M-12_C165948.pdf (p1, note 5)",
+     "https://www.lcsc.com/product-detail/C164170.html"
+    ]
+   },
+   "impact": "Documentation defect in the review baseline. LED1 and J3 keep 10 C of cold margin; J430 (the in-flight secondary log) may have none at the -20 C bay floor; J3's +80 C is below the 85 C unshaded case, but J3 is unmated in flight (non-operating exposure). No flight-critical part is affected.",
+   "concrete_fix": "Rewrite the sentence to list LS120 (-20...+70 C), J430 (-20...+85 C per listings; confirm with the Molex product specification), LED1 (-30...+85 C) and J3 (-30...+80 C), with J430's zero cold margin and J3's 80 C ceiling against the 85 C unshaded case."
+  },
+  {
+   "id": "R19-BOM-04",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R18-BOM-02",
+   "title": "DB125 terminals: 1.30 mm finished holes against DORABO Ø1.20; fill and fabricator allocation still open",
+   "evidence": {
+    "file": "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_{2P_GN,2P_BK,4P_GN,5P_GN}.kicad_mod; board J1, J400, J121, J9, J410, J420, J122",
+    "measured": {
+     "geometry": "all 23 contacts 1.9 mm pads, 1.3 mm drill; unchanged from 632a9ad3 (footprint diff)",
+     "maker": "DORABO DB125-3.5-XXP-C-S drawing T0-1 p1: hole Ø1.20, pin 0.50 x 0.85, pitch 3.5, entry face 3.50 / back 3.90 from the pin row (third-angle views), 10 A UL / 13.5 A IEC, -40...+105 C",
+     "entry_direction": "fresh EasyEDA: C466970 / C52993880 3D outlines -3.9...+3.5 mm, C2757925 / C3646874 entry arrows on local +y (y down) = our +y entry; J1/J400/J121 face west, J9/J410/J420/J122 east; CPL pins reconstruct at 0.000 mm"
+    },
+    "maker_urls": [
+     "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf (p1)"
+    ]
+   },
+   "impact": "Unchanged and recorded (R10_VALIDATION R18-m11): no insertion failure shown; first-article seating/fill and the S-8 fabrication allocation remain.",
+   "concrete_fix": "No CAD change; keep R18-m11 and the JLC preview check of outward wire entry."
+  },
+  {
+   "id": "R19-BOM-05",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R18-BOM-04",
+   "title": "VCAP C19/C20 (X5R +/-10 %) still have no maker-bounded worst case against ST 2.2 uF +/-20 %",
+   "evidence": {
+    "file": "fab/m3_bom_jlc.csv line C23630 CL10A225KO8NNNC (2.2 uF 16 V X5R +/-10 %, JLC description 2026-10-31)",
+    "reference": "C19 B.Cu (28.35, 37.65) VCAP1, C20 B.Cu (19.8, 37.3) VCAP2; unchanged since 632a9ad3"
+   },
+   "impact": "Unchanged (R10_VALIDATION R18-m10): possible LDO margin loss at hot/aged corners, not demonstrated.",
+   "concrete_fix": "As R18-m10: bench-qualify, or adopt an X7R 2.2 uF part whose maker curves bound >= 1.76 uF."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R18-08 (L400)",
+   "claim": "Bourns SRP5030T recommended land: 2.0 x 1.8 mm pads at +/-2.25 mm (2.50 gap, 6.50 outer); proxy residual 0.15 -> 0.05 mm",
+   "measurement": "native pads 2.0 x 1.8 at (21.95, 5.55) PORT_SW and (26.45, 5.55) PORT_5V3 about F(24.2, 5.55); F.Cu/F.Mask/F.Paste flashes R 2.0 x 1.8 (aperture D41/D37); Bourns SRP5030T p1 Recommended Layout 6.50 / 2.50 / 1.8 mm; courtyard 7.0 x 6.0 over a 6.0 x 5.4 mm maximum body; fresh EasyEDA C1329837 (a direct record now exists) residual 0.050 mm; Isat 4.3 A > AP6320x HS peak limit 3.1 A max (Diodes datasheet)",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-08 (U4 mask)",
+   "claim": "mask expansion 0.025 -> 0, webs 0.100 -> 0.150 mm, paste 88.4 %",
+   "measurement": "B.Mask flashes 0.575 x 0.35 / 0.35 x 0.575 = land (D29/D30), minimum web 0.150 mm (0.5 pitch - 0.35); B.Paste 0.5405 x 0.329 (88.4 %, TN1383 Rev 1 p6 70-90 %); land = ST pad 0.475 x 0.25 + 0.1 (TN1383 p6, spacing 0.25 > 0.20); lib_footprint_mismatch 0",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-09 (R430)",
+   "claim": "FOJAN FRC0603F2262TS C2999509, 22.6 k 1 %, 100 ppm/C, 0.1 W, 75 V, stock 84,923, minimum 1",
+   "measurement": "fields, BOM, CPL and schematic agree; live JLC 84,923, minimum 1, $0.0021, Extended (2026-10-31T01:43Z); LCSC normal; FOJAN FJ-JS-3001-V3.0 p4 1/10 W at 70 C, 75 V; p5 +/-100 ppm/C (10 ohm-1 Mohm), -55...+155 C; p10 reflow 240-260 C <= 10 s; p12 0603 pad gap 0.80-1.10 / overall 2.00-2.50 / width 0.80-1.00 vs ours 0.85 / 2.45 / 0.95; EasyEDA reconstruction 0.072 mm",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-09 (C84 owner BOM)",
+   "claim": "C84 stays on schematic and board, leaves the JLC BOM and CPL, owner BOM only",
+   "measurement": "JLC BOM 81 lines / 197 parts and CPL 197 rows (66 top + 131 bottom) without C84; owner BOM C84 C46550466; schematic and board keep C84; F.Paste still has its two apertures (R19-BOM-02)",
+   "verdict": "confirmed (residual R19-BOM-02)"
+  },
+  {
+   "d_id": "D-R18-02 (R119 part)",
+   "claim": "R119 100 k 0402 C25741 (R120 line) at B(11.57, 71.1)",
+   "measurement": "BOM line 100k R60,R119,R120 qty 3; CPL R119 Bottom 180; EasyEDA R0402 reconstruction 0.003 mm; stress <= 7.0 V / 0.49 mW at 8.4 V (VGS settles near -0.833 VS), 16.6 V / 2.7 mW at the 19.9 V clamp, against 50 V / 62.5 mW",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-01 (R123, R62/R63)",
+   "claim": "R123 100 k -> 2 k C4109 on the same land; R62/R63 removed",
+   "measurement": "R123 fields/BOM (2k line qty 5)/CPL agree, land unchanged, <= 2.2 V / 2.4 mW; R62/R63 gone from schematic, board, BOM (C25744 17 -> 15) and CPL; U1.18 unconnected; 649 schematic pin nodes match the board",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-05 (R173 CPL)",
+   "claim": "R173 moved to B(16.87, 59.7) -90",
+   "measurement": "CPL R173 16.87 / -59.7 / Bottom / 270; reconstruction 0.003 mm",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-09 supplier refresh",
+   "claim": "only U4 short; U9 45; R430 84,923; $79.12 per board",
+   "measurement": "live 2026-10-31T01:41-01:44Z: only U4 short (0 < 5); U9 45 minimum 1; R430 84,923; recomputed parts $54.334 (incl. C84) + feeder 81 x $1.53 / 5 = $24.786 -> $79.12, no unit-price change since cost_check 23:51:50Z; 36 Basic / 45 Extended",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-11 (K-lands)",
+   "claim": "37 footprints pinned by SHA-256 plus 9 generated",
+   "measurement": "37 pins equal the library files at 1e60441; the 9 unpinned board footprints are the r10_parts-generated ones; 46 footprint names used",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R19-BOM-02",
+   "change": "Docs only, no CAD: add to ORDERING 8.2 and the order remark that the two C84 paste apertures (1.7 x 3.5 mm at (27.5, 81.75) and (27.5, 75.25)) print and reflow bare by design, or ask JLC to block them; the manual operation reflows both lands fully and checks standoff/tilt."
+  },
+  {
+   "id": "R19-BOM-03",
+   "change": "Docs only: correct REQUIREMENTS line 89 to list LS120, J430, LED1 and J3 with their ratings."
+  },
+  {
+   "id": "note",
+   "change": "No CAD change is recommended now: any board edit restarts the clean-review pair, and the U4 substitution (R19-BOM-01) is an owner procurement decision."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "Identity: kicad-cli 10.0.7 schematic netlist vs native board vs JLC BOM/CPL/owner BOM: 208 symbols = 208 footprints, 198 fitted (197 JLC + C84), 81 lines, 197 rows, 649 pin nodes; 0 mismatches in value, footprint, LCSC, Manufacturer, MPN, nets, quantity or side. 132 footprints carry a duplicate \"LCSC Part\" field, all equal to \"LCSC\" (AGENTS section 3 forbids only contradictory ones).",
+  "Supplier identity: all 81 JLC models equal the BOM MPN; JLC and LCSC packages equal our footprints; every resistor value/tolerance/TCR and capacitor value/voltage/dielectric/tolerance equals the supplier description; 36 Basic / 45 Extended as documented.",
+  "Orientation: all 197 CPL rows rebuilt from fresh EasyEDA records (82/82 codes, 2026-10-31) under the documented JLC convention: every EasyEDA pad lands on our same-numbered pad, none nearer another number. Worst: R134 0.491 mm (land size), LS120 0.45 (documented), Q120/Q121 pad 9 0.35 (paddle anchor; pins 0.100, fingers 0.005), Q124 pins 1-4 0.100 with EasyEDA drain pads 5-9 inside our merged pad 5 (pcbnew HitTest). EasyEDA now has direct records for C21190 and C1329837 (repo notes say none); they rebuild at 0.072 and 0.050 mm, so the 12 C21190 \"placement-only\" rows can be reconstructed (evidence note only).",
+  "Polarity: EasyEDA symbol pins vs our nets: C84256 pin 1 \"-\" = LED1.1 GND; C2296 pin 1 \"+\" = LED2.1 anode; C85098 pin 1 K = D9.1 RAW_PROTECTED; C191023 pin 1 K = D123.1 3V3; C94598 pin 1 \"+\" = LS120.1 3V3. C8591 EasyEDA labels pin 3 \"K\", but the JCET BAT54A sheet (and JLC \"Common Anode\") gives pin 3 common anode; placement is by pad number and our pin 3 = 3V3 anode, pin 1 = PYRO1_COLD cathode: correct.",
+  "R0402 land (R119, R123 and 33 others): 0.566 x 0.54 mm at +/-0.43 mm (gap 0.294, outer 1.426) vs UNI-ROYAL datasheet V.10 p8 section 11.3 0402 (gap 0.50 +/-0.05, length 0.45 +/-0.05, width 0.5 +/-0.05, outer 1.4 +/-0.05): gap/length depart, width/outer conform; identical to JLC/EasyEDA R0402 (0.566 x 0.54 at +/-0.433 for C25741/C4109); assessed as a retained generic land in round 14; no defect shown, not raised.",
+  "Ratings: C120 16.6 V (VGS at the 19.9 V clamp) vs 25 V; C89/C95 25 V vs 19.9 V; C80/C96/C88 50 V; D120 reverse <= 16.6 V vs 30 V; Q120/Q121 -30 V / +/-25 V; L1 Isat 3.2 A (supplier attribute) vs AP63203 3.1 A maximum peak limit; steady resistor loads within rating with margin (highest: R92 3.3 k on RAW_PROTECTED 21-29 mW and R405 820 ohm on PORT_4V8 28 mW, both 0603 rated 100 mW at 70 C / about 82 mW at 85 C); R134 (fire pulse, assessed in R18) and R166 (hot-plug damper) see pulses only; capacitor voltage ratings all >= 2x steady state. UNI-ROYAL allows 2 reflows; bottom-side UNI-ROYAL resistors see exactly 2 (at the limit; THT is selective/hand, not a reflow: Inference). R166 TCR +/-800 ppm/C (+/-3.6 % at 70 C) is left to the power lens.",
+  "Lifecycle: LCSC productCycle \"normal\" for 81 of 82 codes; C57269 (L1) has no LCSC detail record although JLC lists 40,726 buyable (lifecycle unverified for that one); no NRND/obsolete found.",
+  "Bottom-side JLC rotation convention: still the documented Inference (KiBot mirror_bottom); no JLC specification found, and KiBot reports JLC has changed it several times. The JLC placement preview stays the release check for the 131 bottom rows (recorded; not new).",
+  "C21190/C1329837 proxy notes, footprint-library drift (DRC lib_footprint_mismatch 0) and the CPL coordinate sign (y negated, bottom x not mirrored) checked: no defect."
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918 (git: working tree fab/BOM/CPL/zip/board equal to 1e60441).",
+  "pcbnew 10.0.6 (KiCad python) dump of all 208 footprints, fields, attributes and pads; same dump of 632a9ad3 (from dcbb6c8) and a footprint-by-footprint diff.",
+  "kicad-cli 10.0.7: schematic netlist export; pcb drc --severity-all --schematic-parity (0 violations, 0 unconnected, 0 parity); top and bottom 3D renders.",
+  "Identity script: schematic vs board vs JLC BOM/CPL/owner BOM.",
+  "Live JLC exact-code queries for 81 BOM codes + C84 + candidates (2026-10-31T01:41-01:44Z) and LCSC product detail (productCycle, stock, params); keyword searches LSM6DSV320X / LSM6DSV80X / ISM6HG256X / LSM6DSV (01:52Z); exact query C51931514 (01:54Z).",
+  "Independent cost recomputation from live price tiers.",
+  "Fresh EasyEDA records for all 82 codes; independent CPL reconstruction of 197 rows; Q124 merged-pad HitTest; EasyEDA silk/3D/symbol-pin polarity and DB125 entry checks.",
+  "Gerber flash parse of F/B Mask and Paste at U4, L400, R430, R119, R123 and C84.",
+  "K-lands: 37 FOOTPRINT_SHA256 pins vs library files at 1e60441.",
+  "Datasheets read: FOJAN FRC (pp. 4, 5, 10, 12), UNI-ROYAL chip resistors (pp. 4, 7, 8), Bourns SRP5030T (p1), ST LSM6DSV320X DS14623 (pp. 9, 187), ST ISM6HG256X DS15034 (pp. 1, 9-11, 187), ST TN1383 Rev 1 (p6), AOS PO-00047, JCET BAT54A, Nationstar NCD0805R1 (pp. 1-2), HRO TYPE-C-31-M-12, DORABO T0-1, Diodes AP6320x (limits table), Sunlord SWPA catalogue (land page)."
+ ],
+ "sources": [
+  {
+   "what": "FOJAN FRC series datasheet FJ-JS-3001-V3.0 (2026-04-25)",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/106fb934f95f063b695dad1b31b1eab8.pdf?productCode=C2999509",
+   "pages": "4, 5, 10, 12",
+   "sha256": "56042d128202b5f271f463df25503de8ecb937075b7c2c03a512ccf4e0823d31"
+  },
+  {
+   "what": "UNI-ROYAL thick film chip resistors V.10 (2025-07-28)",
+   "url": "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf",
+   "pages": "4, 7, 8",
+   "sha256": "ffeb8a25d4c2ffa490a28e0e00f70107f2cb94575d7e03365efc252d911ecf0c"
+  },
+  {
+   "what": "Bourns SRP5030T",
+   "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+   "pages": "1",
+   "sha256": "c52004cbb76ccf3275e5a94ca6c437fc5a0b81ca8c3643abf1fee902f83741d2"
+  },
+  {
+   "what": "ST LSM6DSV320X DS14623 Rev 1",
+   "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+   "pages": "9, 187",
+   "sha256": "1b3b1d497968a6dd54a8ce7875e84ff6579217733061617beb1f62a1ba7d9c1c"
+  },
+  {
+   "what": "ST ISM6HG256X DS15034 Rev 1 (LCSC copy)",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/6d3b0ec6f545ce5dc4873ec229030cd4.pdf?productCode=C51931514",
+   "pages": "1, 9, 10, 11, 187",
+   "sha256": "c867695b3b3a96cdb768a281889f24faf7f70ecf40dd5636bb130ed097415c50"
+  },
+  {
+   "what": "ST TN1383 Rev 1 (mirror copy; st.com timed out)",
+   "url": "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf",
+   "pages": "6",
+   "sha256": "3b8977f668c7b6f21e4ca7a1d46174553d033029e1e13e5afe66c1df9ae83111"
+  },
+  {
+   "what": "AOS DFN3x3A_8L_EP1_P PO-00047",
+   "url": "https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf",
+   "pages": "1",
+   "sha256": "221c5d11af8ebfacef185ef2c498a3d2681cab856afbff2dd144fa5ccb41fde2"
+  },
+  {
+   "what": "JCET BAT54/A/C/S",
+   "url": "https://jlcpcb.com/partdetail/C8591",
+   "pages": "1",
+   "sha256": "23d8e056fa034c1cc3ed84079768de74870882c47a60e4ed39020ab9b8e72e4b"
+  },
+  {
+   "what": "Nationstar NCD0805R1",
+   "url": "https://datasheet.lcsc.com/datasheet/pdf/e3e35db60c068efe42b02d21fe498cf3.pdf?productCode=C84256",
+   "pages": "1, 2",
+   "sha256": "3a6caf350b15816633bfee4b063cc7ad5a3f337d32b0366817f95e4b7b77eb76"
+  },
+  {
+   "what": "HRO TYPE-C-31-M-12 drawing",
+   "url": "https://datasheet.lcsc.com/lcsc/1903211732_Korean-Hroparts-Elec-TYPE-C-31-M-12_C165948.pdf",
+   "pages": "1 (note 5)",
+   "sha256": "6ae33d50ac47820114661138dc4e4659f40fdc5d4f485b46685dfec338da1a9e"
+  },
+  {
+   "what": "DORABO DB125-3.5-XXP-C-S T0-1",
+   "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+   "pages": "1",
+   "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a"
+  },
+  {
+   "what": "Diodes AP63200/1/3/5",
+   "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+   "pages": "electrical characteristics (IPEAK_LIMIT 2.5/2.8/3.1 A)",
+   "sha256": "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722"
+  },
+  {
+   "what": "JLC component API (stock, library type, price, attributes)",
+   "url": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+   "pages": "queries 2026-10-31T01:41Z-01:54Z"
+  },
+  {
+   "what": "LCSC product detail API (productCycle, stock, params, datasheet links)",
+   "url": "https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>",
+   "pages": "queries 2026-10-31T01:41Z-01:44Z"
+  },
+  {
+   "what": "EasyEDA component records",
+   "url": "https://easyeda.com/api/products/<code>/components?version=6.5.39",
+   "pages": "82 codes, 2026-10-31"
+  },
+  {
+   "what": "Distributor listings (undated search snippets; context only)",
+   "url": "DigiKey 26254547; Farnell 4690510; ST eStore lsm6dsv320x; Arrow/element14/Heilind 47219-2001",
+   "pages": "-"
+  }
+ ],
+ "coverage_limits": [
+  "No build, no tools/check.sh, no test suite; DRC and exports only into the probe directory.",
+  "JLC bottom-side rotation and coordinate convention remains an Inference; reconstruction proves consistency with the documented convention, not JLC behaviour. EasyEDA 3D-model orientation was read only from projected outlines.",
+  "ISM6HG256X: register map, WHO_AM_I, noise/bias and high-g behaviour not compared with LSM6DSV320X; JLC stock 9 is a snapshot; its EasyEDA footprint not fetched.",
+  "J430 temperature range from supplier/distributor listings only (Molex specification not reachable); LSM6DSV320X distributor stock from undated search snippets.",
+  "R18-BOM-04 (VCAP) carried without new curves; Samsung DC-bias/temperature data not fetched.",
+  "Maker lands outside the changed parts were re-checked only for AOS DFN, DORABO and the polarity set; the others are unchanged from 632a9ad3 by footprint diff and rely on earlier rounds plus DRC lib_footprint_mismatch 0.",
+  "Stock and prices are 2026-10-31T01:41-01:54Z snapshots; rerun within 24 h of ordering.",
+  "No physical, first-article, solderability, thermal, electrical or firmware qualification is claimed."
+ ],
+ "probe_directory": ".supervisor/r19_parts/ (ignored; scripts, raw supplier and EasyEDA responses, renders, DRC)"
+}

@@ -1,0 +1,73 @@
+r9_build.sh replayed stage by stage (D-S6-14 shim, no GUI session), run 1; per-stage rc, gate verdicts and family figures
+=== [0] rc=0 0s
+=== [1] rc=0 0s
+=== [2] rc=0 0s
+=== [3] rc=0 1s
+=== [4] rc=0 13s
+=== [5] rc=0 0s
+=== [6] rc=0 1s
+R9 placement gate: OK
+=== [7] rc=0 15s
+=== [8] rc=0 0s
+R9 RF strip gate: OK
+=== [9] rc=0 33s
+=== [10] rc=0 0s
+R9 pyro block gate: OK
+=== [11] rc=0 55s
+=== [12] rc=0 0s
+dc         OK
+supply     OK
+dc {'raw': 0.79, 'bat': 0.17, 'fet': 0.27} mOhm; {'raw': 12.7, 'bat': 12.1, 'fet': 20.8} C; via max 0.65 A
+supply {'rp_u7': 75.12, 'rp_u11': 15.11, 'cam_j9': 2.88, 'bat_u9': 2.32} mOhm
+R9 power gate: OK
+=== [13] rc=0 162s
+=== [14] rc=0 0s
+family rf_if {'signal_track_mm': 333.6, 'signal_vias': 0, 'critical_layer_changes': 0, 'bends': 61, 'worst_ratio': 1.257} budget {'length_mm': 420.0, 'vias': 0, 'critical_layer_changes': 0, 'ratio': 1.45}
+board signal vias 9 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 333.6, 'signal_vias': 0, 'critical_layer_changes': 0, 'bends': 61}
+R9 route gate (rf_if): OK
+=== [15] rc=0 67s
+=== [16] rc=0 0s
+family qspi_hse {'signal_track_mm': 43.5, 'signal_vias': 6, 'critical_layer_changes': 6, 'bends': 11, 'worst_ratio': 1.383} budget {'length_mm': 50.0, 'vias': 6, 'critical_layer_changes': 6, 'ratio': 1.4}
+board signal vias 15 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 377.1, 'signal_vias': 6, 'critical_layer_changes': 6, 'bends': 72}
+R9 route gate (qspi_hse): OK
+=== [17] rc=0 66s
+=== [18] rc=0 0s
+family pyro {'signal_track_mm': 17.6, 'signal_vias': 1, 'critical_layer_changes': 0, 'bends': 5, 'worst_ratio': 1.0} budget {'length_mm': 18.0, 'vias': 1, 'critical_layer_changes': 0, 'ratio': 1.45}
+board signal vias 16 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 394.7, 'signal_vias': 7, 'critical_layer_changes': 6, 'bends': 77}
+R9 route gate (pyro): OK
+=== [19] rc=0 67s
+=== [20] rc=0 0s
+family servo {'signal_track_mm': 48.5, 'signal_vias': 4, 'critical_layer_changes': 0, 'bends': 16, 'worst_ratio': 1.298} budget {'length_mm': 50.0, 'vias': 4, 'critical_layer_changes': 0, 'ratio': 1.4}
+board signal vias 20 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 443.2, 'signal_vias': 11, 'critical_layer_changes': 6, 'bends': 93}
+R9 route gate (servo): OK
+=== [21] rc=0 69s
+=== [22] rc=0 0s
+family imu_baro {'signal_track_mm': 64.0, 'signal_vias': 10, 'critical_layer_changes': 6, 'bends': 23, 'worst_ratio': 1.34} budget {'length_mm': 66.0, 'vias': 10, 'critical_layer_changes': 6, 'ratio': 1.45}
+board signal vias 30 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 507.2, 'signal_vias': 21, 'critical_layer_changes': 12, 'bends': 116}
+R9 route gate (imu_baro): OK
+=== [23] rc=0 71s
+=== [24] rc=0 0s
+family usb_swd {'signal_track_mm': 134.8, 'signal_vias': 8, 'critical_layer_changes': 0, 'bends': 40, 'worst_ratio': 1.495} budget {'length_mm': 140.0, 'vias': 8, 'critical_layer_changes': 0, 'ratio': 1.5}
+board signal vias 38 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 642.0, 'signal_vias': 29, 'critical_layer_changes': 12, 'bends': 156}
+R9 route gate (usb_swd): OK
+=== [25] rc=0 72s
+=== [26] rc=0 0s
+family camera {'signal_track_mm': 107.1, 'signal_vias': 7, 'critical_layer_changes': 0, 'bends': 28, 'worst_ratio': 1.332} budget {'length_mm': 110.0, 'vias': 7, 'critical_layer_changes': 0, 'ratio': 1.4}
+board signal vias 45 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 749.1, 'signal_vias': 36, 'critical_layer_changes': 12, 'bends': 184}
+R9 route gate (camera): OK
+=== [27] rc=0 74s
+=== [28] rc=0 0s
+family status {'signal_track_mm': 129.8, 'signal_vias': 5, 'critical_layer_changes': 0, 'bends': 34, 'worst_ratio': 1.494} budget {'length_mm': 140.0, 'vias': 5, 'critical_layer_changes': 0, 'ratio': 1.5}
+board signal vias 50 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 878.9, 'signal_vias': 41, 'critical_layer_changes': 12, 'bends': 218}
+R9 route gate (status): OK
+=== [29] rc=0 76s
+=== [30] rc=0 0s
+family power_ctl {'signal_track_mm': 174.9, 'signal_vias': 7, 'critical_layer_changes': 0, 'bends': 33, 'worst_ratio': 1.363} budget {'length_mm': 175.0, 'vias': 7, 'critical_layer_changes': 0, 'ratio': 1.4}
+board signal vias 57 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 1053.8, 'signal_vias': 48, 'critical_layer_changes': 12, 'bends': 251}
+R9 route gate (power_ctl): OK
+=== [31] rc=0 77s
+=== [32] rc=0 0s
+family links {'signal_track_mm': 10.9, 'signal_vias': 0, 'critical_layer_changes': 0, 'bends': 3, 'worst_ratio': 1.0} budget {'length_mm': 12.0, 'vias': 0, 'critical_layer_changes': 0, 'ratio': 1.3}
+board signal vias 57 (S4 done <= 70, stretch <= 55); families so far {'signal_track_mm': 1064.7, 'signal_vias': 48, 'critical_layer_changes': 12, 'bends': 254}
+R9 route gate (links): OK
+=== [33] rc=0 77s

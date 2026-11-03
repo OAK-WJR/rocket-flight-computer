@@ -1,0 +1,218 @@
+{
+ "schema": "r10-triage-v1",
+ "target_commit": "816038c",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "real_errors": [
+  {
+   "id": "R27-TRI-01",
+   "merged_ids": [
+    "R27-POWER-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The round 26 index says the 70 C TCR window limits 7.31 / 7.18 ms were both computed at 5.73 V and not re-run at 5.71 V; 7.18 ms is the 5.713 V figure",
+   "evidence": "Source round26_safety.md:68 gives 7.31 ms (5.73 V) / 7.18 ms (5.713 V). Triage model (.supervisor/r27_triage/tcr.py: periodic one-block-per-100 ms EN model, R80/R165 +tol, R81 -tol, C87 0.72 x 220 nF, 0.1 uA + 50 nA sinks, 1.116 V): 1 % corner 7.629 / 7.503 ms (reproduces D-R26-03); +/-1.45 % (1 % + 100 ppm/K x 45 K) 7.309 ms at 5.73 V and 7.183 ms at 5.7132 V. So the 5.71 V figure exists.",
+   "all_places": [
+    "docs/R10_VALIDATION.md:2181-2182",
+    "m3_design/assembly_review/sources/r10_review/round26_fix_docs.md:74-75"
+   ],
+   "concrete_fix": "R10_VALIDATION 2181-2182: replace \"(7.31 / 7.18 ms at 70 °C, computed at 5.73 V, still above 7 ms; not re-run at 5.71 V)\" with \"(7.31 ms at 5.73 V and 7.18 ms at 5.71 V, at 70 °C; still above 7 ms)\". round26_fix_docs.md item 5: add an erratum line \"R27-TRI-01: 7.18 ms is the 5.713 V figure; only 7.31 ms is at 5.73 V\".",
+   "board_change": false
+  },
+  {
+   "id": "R27-TRI-02",
+   "merged_ids": [
+    "R27-POWER-02",
+    "(sibling found by triage: stall-input pack sag on the pre-AUX 1.46 A port allocation)"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Current budget text and the generator still use the pre-AUX port allocation: the GAP-3 U401 thermal paragraph (460 mA, 0.406 W, 102.5-114.7 C, 135.4 C/W) and the four-stall pack-sag figures (1.46 A at 5.456 V)",
+   "evidence": "parts_budget.json (current, D-R19-14 AUX 0.1 A): ldo_full_load_loss_W 0.48965 = (5.54627-4.71150) x 0.56 + 5.54627 x 0.004; 70 C junction 109.17-123.86 C, 85 C 124.17-138.86 C; ceiling (125-70)/0.48965 = 112.32 C/W. The old 0.406177 W reproduces only with 0.46 A. No limit is crossed (123.9 C < 125 C at the inferred 110 C/W), so Minor. Sibling: parts_qualification.md:660-668 \"Inference, stall input\" uses 1.46 A at 5.456 V and gives 5.921 / 4.436 V; r10_parts.py:433 loaded_pack hard-codes 5.456 x 1.46 (no aux_A, unlike line 402 ports_w), so parts_budget.json:91-92 give 5.899 / 4.414 V; with the AUX 0.1 A they are 5.881 / 4.389 V (budget logic 0.6375 A) or 5.903 / 4.411 V (the paragraph's 0.5 A). Historical copies (R10_VALIDATION.md:2994 round10 section, audit_preflight.md:94-95 dated 2026-10-28, R10_DECISIONS.md:865/1212, r10_final_deviations.json:1043-1054 bound to 632a9ad3) predate D-R19-14 and are labelled to their boards.",
+   "all_places": [
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:673-686",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:660-668",
+    "m3_design/r10_parts.py:433",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json:91-92"
+   ],
+   "concrete_fix": "parts_qualification GAP-3: \"allocated 560 mA output (GPS 150, radio 300, AUX 100 mA, D-R19-14), extreme rail tolerances and 4 mA quiescent draw give 0.490 W (0.406 W before the AUX allowance) ... Junction estimate is 109.2-123.9 °C at the 70 °C bay ambient, below 125 °C ...; at 85 °C it is 124.2-138.9 °C ...; the inferred theta ceiling for 125 °C at 70 °C is 112.3 °C/W.\" r10_parts.py:433: power = 5.456 * (1.46 + aux_A); regenerate parts_budget.json (5.881 / 4.389 V) and refresh its bound SHA; restate the stall-input paragraph with 1.56 A and the budget figures.",
+   "board_change": false
+  },
+  {
+   "id": "R27-TRI-03",
+   "merged_ids": [
+    "R27-POWER-03"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "M3_R10 Power (current facts) gives the In2 3V3 fill as 1466.52 mm2; on a0ec075e it is 1430.05 mm2",
+   "evidence": "pcbnew filled polygons on a copy (.supervisor/r27_triage/areas.py): 3V3 In2.Cu one piece 1430.05 mm2; 92c3ad59 1431.06 (power lens); 1466.52 was D-R18-06's figure on a3144b15. Sweep of every mm2 figure in M3_R10, R10_VALIDATION, AVA_LAYOUT, ORDERING, STATUS, AGENTS: M3_R10:1267 (board-history table), R10_VALIDATION:802 (In1 3,778.91, round 9 section; now 3717.74), ORDERING:52 (R9), AVA_LAYOUT:127-150 (0c50b9fd hand-off) are historical; M3_R10:431 2.9 mm2 island measures 2.892 mm2; the In2 3V3 edge adjacency (132.0 / 35.9 / 34.6 mm, min 0.300 mm) is labelled to 0dc84776 and unchanged by the same method (138.84 -> 138.24 / 35.80 / 34.84 mm, min 0.300 mm both boards; length is method-dependent).",
+   "all_places": [
+    "docs/M3_R10.md:712"
+   ],
+   "concrete_fix": "M3_R10:712: \"The In2 3V3 fill is one piece, 1430.05 mm² on `a0ec075e…` (1466.52 mm² when D-R18-06 joined it; it was three pieces ... on `632a9ad3…` ...)\".",
+   "board_change": false
+  },
+  {
+   "id": "R27-TRI-04",
+   "merged_ids": [
+    "R27-MCU-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The binding note says every DS12110 citation in it is Rev 8, but its R5-MCU-04 obligation cites Rev 11 Table 109",
+   "evidence": "r10_binding_note.json:527 sources.mcu_revision \"every DS12110 citation in this note is Rev 8 ...\"; the same note line 601 (firmware_obligations, R5-MCU-04) \"the 4.0 V ADC-mode maximum and the 6.0 V FT cap were read from Rev 11 Table 109 in round 14 ...\". Generated from r10_sch_check.py:242-243 and :307. M3_R10:494-496, R10_VALIDATION:2633 and AGENTS:14 carry the Rev 11 carve-out, so only the note's sentence is false.",
+   "all_places": [
+    "m3_design/r10_sch_check.py:242-243",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json:527"
+   ],
+   "concrete_fix": "r10_sch_check.py mcu_revision: \"every DS12110 citation in this note is Rev 8 (April 2021), revision V electrical chapter (section 7; the LCSC copy is byte-identical), except the two design limits labelled as read from Rev 11 Table 109 in round 14 (the 6.0 V FT cap and the 4.0 V ADC-mode maximum; R5-MCU-04 obligation, Inference); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)\". Regenerate the note (K-binding) and optionally pin the words in test_r23_binding_note_rules_and_pin_table.",
+   "board_change": false
+  },
+  {
+   "id": "R27-TRI-05",
+   "merged_ids": [
+    "R27-SAFETY-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The 3V3 over-voltage clamp is labelled FMEA H-9, but H-9 is the load-switch gate-source capacitor (fitted on R10 as C120)",
+   "evidence": "FMEA_REDUNDANCY.md:385 defines H-9 as a 1 uF capacitor GATE_SW to the common-source node; R2_VERIFICATION.md:108 \"H-9 ... Done (C120)\"; netlist C120 1 uF 25 V X7R, pin 1 ACT_FET_S, pin 2 ACT_GATE. No H-1..H-10 is a 3V3 clamp. Cross-reference sweep (48 H/I/F/V/T references in FMEA R10 rows 30-68, R10_VALIDATION 2229-2903 and M3_R10 1-1212, .supervisor/r27_triage/xrefs.txt): every other reference matches its definition (I-11 is a row label used consistently since R7, not a mislabel).",
+   "all_places": [
+    "docs/FMEA_REDUNDANCY.md:37",
+    "docs/FMEA_REDUNDANCY.md:111",
+    "docs/R10_VALIDATION.md:2406",
+    "m3_design/assembly_review/sources/r10_review/round26_triage.md:128"
+   ],
+   "concrete_fix": "FMEA:37 replace \"(H-9)\" and R10_VALIDATION:2406 replace \"(the FMEA's optional H-9)\" with \"(not an FMEA change-list item; §4.2's H-9 is the load-switch gate-source capacitor, fitted on R10 as C120)\". FMEA:111: mark \"Optional H-9 (3.6 V clamp on 3V3 ...)\" as a mislabel (the clamp is not H-9). round26_triage.md:128: erratum note \"3V3 clamp, not H-9\".",
+   "board_change": false
+  },
+  {
+   "id": "R27-TRI-06",
+   "merged_ids": [
+    "R27-MECHANICS-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "J440 lead route says \"keep them south of y 23.5\", which in the records' compass (north = smaller y = aft) is forward, into the J3 zone the same row forbids",
+   "evidence": "Records use north = smaller y: R10_DECISIONS.md:4309 (GND via \"1.5 mm north\" of J440.3 at y 18.0 is (7.4,16.5)), :4357 (R173 \"0.65 mm north\" 59.7 -> 59.05), R10_VALIDATION.md:2196 (\"toward the aft edge (y - 0.65 mm)\"), M3_R10.md:394 / R10_DECISIONS.md:4515 (\"cannot go back south\"); ORDERING:7 / 322 put y = 0 at the aft edge. J440 body y 7.93-23.45, wire entries y 11.0-21.5 (mechanics lens, fit_check). Sweep of north/south/aft/forward in ORDERING 8.4 (689-709) and the whole handoff: only this phrase is inverted; the battery-lead route (forward edge y > 90) and the board-position rows are consistent.",
+   "all_places": [
+    "docs/ORDERING.md:695",
+    "docs/R10_VEHICLE_HANDOFF.md:63-64",
+    "m3_design/assembly_review/sources/r10_review/round20_mechanics.md:11 (origin; review record)",
+    "m3_design/assembly_review/sources/r10_review/round19_fix_docs.md:132 (fix record)"
+   ],
+   "concrete_fix": "ORDERING:695 and HANDOFF:63-64: replace \"keep them south of y 23.5\" with \"keep them aft of y 23.5 (y < 23.5; J440's forward body end is at y 23.45)\". Leave the two review records as written or add an erratum pointer to R27-TRI-06.",
+   "board_change": false
+  },
+  {
+   "id": "R27-TRI-07",
+   "merged_ids": [
+    "R27-REQUIREMENTS-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "J410 / J420 / J440 use the camera terminal symbol: pin names \"5V OUT\", \"RX FROM CAMERA TX\", \"TX TO CAMERA RX\" reverse F10's 3:TXO / 4:RXI and misstate the 4.8 V supply",
+   "evidence": "telemetry.kicad_sch:115-179 embedded M3:CameraTerminal (pin_names visible); instances J410 :586, J420 :1078, J440 :2466. schematic.net.xml: J410.3 RX_FROM_CAMERA_TX_3 on GPS_TX_WIRE (R441 <- PD8 USART3_TX), J420.3 on RADIO_TX_WIRE (PB13 UART5_TX), J440.3 on AUX_TX_WIRE (PC6 USART6_TX); pin 1 5V_OUT_1 on PORT_4V8. REQUIREMENTS F10 and the sheet note (telemetry.kicad_sch:2957) say 3 board TX, 4 board RX. The PCB file has 0 pinfunction strings, and BOM / CPL / Gerbers carry no pin names, so the names do not reach the board or the fab package. Sweep of every other symbol's pin names against its nets (.supervisor/r27_triage/pinfunctions.txt, U1 against pin_table 100/100): no other contradiction; the symbol is correct for J9.",
+   "all_places": [
+    "m3_design/assembly_review/telemetry.kicad_sch:115-179 (lib_symbols) and instances :586, :1078, :2466",
+    "m3_design/assembly_review/schematic.net.xml:8071, 8080, 8421, 8430, 8505-8507, 8621, 8630",
+    "m3_design/r10_sch.py:469 (refresh_embedded CameraTerminal, applied to the ports)"
+   ],
+   "concrete_fix": "Add a port symbol (e.g. M3:PortTerminal, pins 1 \"4V8\", 2 \"GND\", 3 \"TXO (board TX)\", 4 \"RXI (board RX)\") to kilib/m3.kicad_sym, have r10_sch.py instantiate it for J410 / J420 / J440 (CameraTerminal stays for J9), regenerate the schematic and schematic.net.xml, re-run ERC / parity, and assert the port pin names in sch_check. Nets, copper and placement are unchanged; verify the board hash stays a0ec075e after Update-PCB.",
+   "board_change": false
+  }
+ ],
+ "observations": [
+  {
+   "id": "R27-MANUFACTURING obs 17 (inner copper 0.030 mm vs 1 oz)",
+   "reason": "ORDERING.md:57 documents 0.030 mm as JLC041611-7628's finished 1 oz inner copper, and that the KiCad stackup and job file use it; dc_solve reads it (conservative); no rule or record contradicted."
+  },
+  {
+   "id": "R27-MECHANICS obs 5 (tools/test_r10_plate.py fails)",
+   "reason": "Reproduced: ValueError missing J430 / J440 masses. check.sh runs only test_r10_check Plate; no current doc tells the reader to run test_r10_plate.py or cites it as passing (round19_fix_cad.md:362 records it as stale; R10_VALIDATION:667 is the dated 2026-10-28 pass). Stale self-test, no procedure depends on it."
+  },
+  {
+   "id": "R27-SAFETY obs 2 (PYRO1_IGN-3V3 0.735 mm, RAW_ACT-3V3 0.837 mm)",
+   "reason": "Reproduced 0.7350 / 0.8370 mm (B.Cu, R134 / R132 to 3V3 vias). Owner row 1 lists I-5 members with \"include\"; FMEA I-5 says \"has R10 routes\"; R10_VALIDATION §1 bounds only PYRO1_OUT and the gate nets (>= 1.040 / 1.0585 mm) and scopes its scan to 0.6 mm; no document claims the class list is complete or gives a class minimum these pairs contradict."
+  },
+  {
+   "id": "R27-SAFETY obs 3, 5-14, 18-23",
+   "reason": "Reproductions or disclosed classes (row 2, I-5, fail-safe EN cases); no record contradicted."
+  },
+  {
+   "id": "R27-SAFETY obs 16 (4.74 V |VGS| at 6.0 V)",
+   "reason": "r10_parts.py:479 uses (6 - 4.2 x 0.040 - 0.1) = 5.73 V source, essentially the 5.71 V four-stall point (about 4.73 V there); still above 4.5 V; not a false worst case."
+  },
+  {
+   "id": "R27-SAFETY obs 17 (F6 vs F8)",
+   "reason": "Interpretation; AGENTS §2.1 governs."
+  },
+  {
+   "id": "R27-POWER obs 13 (In2 pinch 0.47 vs \"about 0.50 mm\")",
+   "reason": "Labelled approximate, dead-end finger with no landing; K-plane passes."
+  },
+  {
+   "id": "R27-POWER obs 14 (stall input pre-AUX)",
+   "reason": "Promoted into R27-TRI-02 as a sibling (pre-AUX 1.46 A allocation); its \"port enables\" wording is covered by parts_qualification's supersession note (line 8)."
+  },
+  {
+   "id": "R27-POWER obs 15 (USB_LIMITED 63.605 mm)",
+   "reason": "Labelled \"Calculation, Round 18\"; now 63.115 mm (triage), resistance change <1 %, 0.4596 A reproduces."
+  },
+  {
+   "id": "R27-POWER obs 1-12, 16-17",
+   "reason": "Reproductions, labelled historical figures or within the model definition."
+  },
+  {
+   "id": "R27-MCU obs 5 (0.93-1.01x vs 1.128 / 1.063 A)",
+   "reason": "The range and the \"at least 1.39x / 1.04x\" bounds are the round 23 envelope (1.043-1.137 A) and enclose 0.945-1.003x; conservative, not false."
+  },
+  {
+   "id": "R27-MCU obs 1-4, 6-8",
+   "reason": "Reproductions or recorded Inference."
+  },
+  {
+   "id": "R27-MECHANICS obs 1-4, 6-8",
+   "reason": "Plate, fit and strain figures reproduce or are labelled to their boards; M3_R10 historical C10 figure under a historical heading."
+  },
+  {
+   "id": "R27-DOCS_BINDING obs 1-5",
+   "reason": "Labelled to older boards or reproduce; no current false statement."
+  },
+  {
+   "id": "R27-ROUTING obs 1-16",
+   "reason": "route_check / scans reproduce; historical table (19.05,55.9) under a heading bound to b337fe63."
+  },
+  {
+   "id": "R27-GATE obs 1-5",
+   "reason": "Seeds fail their gates; repeats R26-GATE obs 5."
+  },
+  {
+   "id": "R27-PARTS obs 1-12",
+   "reason": "Reproductions; manufacturer spelling in verified_part_metadata.json is not a second part-number field; AP63201 table is a recommendation the records do not claim to follow."
+  },
+  {
+   "id": "R27-MANUFACTURING obs 1-16",
+   "reason": "Reproductions and probe artefacts."
+  },
+  {
+   "id": "R27-REQUIREMENTS obs 1-13",
+   "reason": "Reproductions; P2 Fab-outline room 5.453 mm vs recorded 5.003 mm is the conservative model figure."
+  }
+ ],
+ "not_reproducible": [],
+ "totals": {
+  "real_errors": 7,
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 7,
+  "board_changes": 0,
+  "lens_findings_in": 7,
+  "lens_findings_confirmed": 7,
+  "not_reproducible": 0,
+  "observation_entries": 19
+ },
+ "notes": "All seven lens findings reproduce; one sibling (pre-AUX pack-sag allocation) merged into R27-TRI-02. No real error changes copper or placement, so no board fix; round 27 is not a clean round."
+}

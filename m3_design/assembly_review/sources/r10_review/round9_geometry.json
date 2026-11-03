@@ -1,0 +1,3073 @@
+{
+  "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+  "board": "m3_design/assembly_review/m3.kicad_pcb",
+  "method": "Read-only native geometry; lengths sum saved tracks, without added vertical/pad lengths.",
+  "qspi": {
+    "QSPI_CLK": {
+      "track_length_mm": 7.8500000000000005,
+      "track_segments": 4,
+      "length_by_layer_mm": {
+        "F.Cu": 6.23,
+        "B.Cu": 1.62
+      },
+      "vias": 1,
+      "via_positions_mm": [
+        [
+          27.75,
+          40.57
+        ]
+      ]
+    },
+    "QSPI_IO0": {
+      "track_length_mm": 4.11095454429505,
+      "track_segments": 4,
+      "length_by_layer_mm": {
+        "F.Cu": 3.3609545442950504,
+        "B.Cu": 0.75
+      },
+      "vias": 1,
+      "via_positions_mm": [
+        [
+          26.13,
+          38.55
+        ]
+      ]
+    },
+    "QSPI_IO1": {
+      "track_length_mm": 9.714966081312811,
+      "track_segments": 3,
+      "length_by_layer_mm": {
+        "F.Cu": 1.95,
+        "B.Cu": 7.764966081312812
+      },
+      "vias": 1,
+      "via_positions_mm": [
+        [
+          25.0,
+          37.4
+        ]
+      ]
+    },
+    "QSPI_IO2": {
+      "track_length_mm": 14.524011537017762,
+      "track_segments": 7,
+      "length_by_layer_mm": {
+        "F.Cu": 12.954011537017761,
+        "B.Cu": 1.57
+      },
+      "vias": 1,
+      "via_positions_mm": [
+        [
+          17.5,
+          40.57
+        ]
+      ]
+    },
+    "QSPI_IO3": {
+      "track_length_mm": 9.760407640085656,
+      "track_segments": 5,
+      "length_by_layer_mm": {
+        "F.Cu": 8.140407640085655,
+        "B.Cu": 1.62
+      },
+      "vias": 1,
+      "via_positions_mm": [
+        [
+          27.75,
+          41.83
+        ]
+      ]
+    },
+    "QSPI_NCS": {
+      "track_length_mm": 6.1656349186104045,
+      "track_segments": 4,
+      "length_by_layer_mm": {
+        "F.Cu": 4.575634918610405,
+        "B.Cu": 1.59
+      },
+      "vias": 1,
+      "via_positions_mm": [
+        [
+          19.57,
+          43.9
+        ]
+      ]
+    }
+  },
+  "qspi_track_length_spread_mm": 10.413056992722712,
+  "Y1": {
+    "pose_mm": [
+      22.85,
+      46.6
+    ],
+    "rotation_deg": 90.0,
+    "side": "B",
+    "model_body_projection_mm": [
+      21.600066,
+      45.000054,
+      24.099934,
+      48.199946000000004
+    ],
+    "F_Cu_track_centreline_crossings": {
+      "NRST": [
+        {
+          "inside_length_mm": 0.7776477536777224,
+          "inside_endpoints_mm": [
+            [
+              23.550053999999996,
+              48.199946000000004
+            ],
+            [
+              24.099934,
+              47.650066
+            ]
+          ],
+          "track_endpoints_mm": [
+            [
+              23.5,
+              48.25
+            ],
+            [
+              25.3,
+              46.45
+            ]
+          ],
+          "width_mm": 0.2
+        }
+      ],
+      "BUZZ_DRV": [
+        {
+          "inside_length_mm": 0.28274937437950093,
+          "inside_endpoints_mm": [
+            [
+              21.600066,
+              47.649934
+            ],
+            [
+              21.8,
+              47.45
+            ]
+          ],
+          "track_endpoints_mm": [
+            [
+              20.5,
+              48.75
+            ],
+            [
+              21.8,
+              47.45
+            ]
+          ],
+          "width_mm": 0.2
+        },
+        {
+          "inside_length_mm": 2.449946000000004,
+          "inside_endpoints_mm": [
+            [
+              21.8,
+              47.45
+            ],
+            [
+              21.8,
+              45.000054
+            ]
+          ],
+          "track_endpoints_mm": [
+            [
+              21.8,
+              47.45
+            ],
+            [
+              21.8,
+              37.95
+            ]
+          ],
+          "width_mm": 0.2
+        }
+      ],
+      "HSE_OUT": [
+        {
+          "inside_length_mm": 1.5555415805152868,
+          "inside_endpoints_mm": [
+            [
+              23.0,
+              47.19
+            ],
+            [
+              24.099934,
+              46.090066
+            ]
+          ],
+          "track_endpoints_mm": [
+            [
+              23.0,
+              47.19
+            ],
+            [
+              24.69,
+              45.5
+            ]
+          ],
+          "width_mm": 0.2
+        },
+        {
+          "inside_length_mm": 1.0099460000000064,
+          "inside_endpoints_mm": [
+            [
+              23.0,
+              48.199946000000004
+            ],
+            [
+              23.0,
+              47.19
+            ]
+          ],
+          "track_endpoints_mm": [
+            [
+              23.0,
+              50.55
+            ],
+            [
+              23.0,
+              47.19
+            ]
+          ],
+          "width_mm": 0.2
+        }
+      ]
+    },
+    "F_Cu_track_copper_intersections": {
+      "NRST": [
+        [
+          [
+            23.5,
+            48.25
+          ],
+          [
+            25.3,
+            46.45
+          ]
+        ],
+        [
+          [
+            23.5,
+            49.1
+          ],
+          [
+            23.5,
+            48.25
+          ]
+        ]
+      ],
+      "BUZZ_DRV": [
+        [
+          [
+            20.5,
+            48.75
+          ],
+          [
+            21.8,
+            47.45
+          ]
+        ],
+        [
+          [
+            21.8,
+            47.45
+          ],
+          [
+            21.8,
+            37.95
+          ]
+        ]
+      ],
+      "HSE_OUT": [
+        [
+          [
+            23.0,
+            47.19
+          ],
+          [
+            24.69,
+            45.5
+          ]
+        ],
+        [
+          [
+            23.0,
+            50.55
+          ],
+          [
+            23.0,
+            47.19
+          ]
+        ]
+      ]
+    }
+  },
+  "supports": {
+    "centres_mm": [
+      [
+        3.7,
+        86.0
+      ],
+      [
+        4.0,
+        4.0
+      ],
+      [
+        4.0,
+        44.3
+      ],
+      [
+        42.0,
+        4.0
+      ],
+      [
+        42.0,
+        86.0
+      ]
+    ],
+    "nearest_bottom": [
+      3.8436050785688116,
+      "C88.1",
+      [
+        42.0,
+        86.0
+      ]
+    ],
+    "nearest_top": [
+      3.857542,
+      "J400. exposed top pad",
+      [
+        3.7,
+        86.0
+      ]
+    ],
+    "bottom_nearest_5": [
+      [
+        3.8436050785688116,
+        "C88.1",
+        [
+          42.0,
+          86.0
+        ]
+      ],
+      [
+        4.003041621064167,
+        "C88",
+        [
+          42.0,
+          86.0
+        ]
+      ],
+      [
+        4.536176804314399,
+        "C32.2",
+        [
+          4.0,
+          44.3
+        ]
+      ],
+      [
+        4.591699857348258,
+        "C32",
+        [
+          4.0,
+          44.3
+        ]
+      ],
+      [
+        4.59970651237663,
+        "C88.2",
+        [
+          42.0,
+          86.0
+        ]
+      ]
+    ],
+    "top_nearest_5": [
+      [
+        3.857542,
+        "J400. exposed top pad",
+        [
+          3.7,
+          86.0
+        ]
+      ],
+      [
+        3.879838,
+        "J2.1 exposed top pad",
+        [
+          4.0,
+          44.3
+        ]
+      ],
+      [
+        3.9249994,
+        "J400 top body",
+        [
+          3.7,
+          86.0
+        ]
+      ],
+      [
+        3.986965,
+        "J2.3 exposed top pad",
+        [
+          4.0,
+          44.3
+        ]
+      ],
+      [
+        4.399999999999999,
+        "R166 top body",
+        [
+          42.0,
+          86.0
+        ]
+      ]
+    ],
+    "bottom_radius_mm": 3.5,
+    "top_radius_mm": 3.8,
+    "issues": [],
+    "TP89_present": false
+  },
+  "footprint_silk": {
+    "TP88": {
+      "pose_mm": [
+        44.5,
+        76.3
+      ],
+      "items": [
+        {
+          "layer": "F.Silkscreen",
+          "ink_bbox_mm": [
+            43.425,
+            75.225,
+            45.575,
+            75.375
+          ],
+          "nearest_edge": "east",
+          "ink_edge_clearance_mm": 0.42499999999999716,
+          "class": "PCB_SHAPE",
+          "shape": "Line",
+          "stroke_mm": 0.15,
+          "stroke_centreline_edge_clearance_mm": 0.49999999999999717,
+          "start_mm": [
+            43.5,
+            75.3
+          ],
+          "end_mm": [
+            45.5,
+            75.3
+          ]
+        },
+        {
+          "layer": "F.Silkscreen",
+          "ink_bbox_mm": [
+            43.425,
+            77.225,
+            45.575,
+            77.375
+          ],
+          "nearest_edge": "east",
+          "ink_edge_clearance_mm": 0.42499999999999716,
+          "class": "PCB_SHAPE",
+          "shape": "Line",
+          "stroke_mm": 0.15,
+          "stroke_centreline_edge_clearance_mm": 0.49999999999999717,
+          "start_mm": [
+            43.5,
+            77.3
+          ],
+          "end_mm": [
+            45.5,
+            77.3
+          ]
+        }
+      ],
+      "nearest_item": {
+        "layer": "F.Silkscreen",
+        "ink_bbox_mm": [
+          43.425,
+          75.225,
+          45.575,
+          75.375
+        ],
+        "nearest_edge": "east",
+        "ink_edge_clearance_mm": 0.42499999999999716,
+        "class": "PCB_SHAPE",
+        "shape": "Line",
+        "stroke_mm": 0.15,
+        "stroke_centreline_edge_clearance_mm": 0.49999999999999717,
+        "start_mm": [
+          43.5,
+          75.3
+        ],
+        "end_mm": [
+          45.5,
+          75.3
+        ]
+      }
+    },
+    "J3": {
+      "pose_mm": [
+        4.6,
+        30.799999
+      ],
+      "items": [
+        {
+          "layer": "F.Silkscreen",
+          "ink_bbox_mm": [
+            0.5,
+            26.204999,
+            1.0851,
+            26.454999
+          ],
+          "nearest_edge": "west",
+          "ink_edge_clearance_mm": 0.5,
+          "class": "PCB_SHAPE",
+          "shape": "Line",
+          "stroke_mm": 0.25,
+          "stroke_centreline_edge_clearance_mm": 0.625,
+          "start_mm": [
+            0.625,
+            26.329999
+          ],
+          "end_mm": [
+            0.9601,
+            26.329999
+          ]
+        },
+        {
+          "layer": "F.Silkscreen",
+          "ink_bbox_mm": [
+            0.5,
+            35.144999,
+            1.0851,
+            35.394999
+          ],
+          "nearest_edge": "west",
+          "ink_edge_clearance_mm": 0.5,
+          "class": "PCB_SHAPE",
+          "shape": "Line",
+          "stroke_mm": 0.25,
+          "stroke_centreline_edge_clearance_mm": 0.625,
+          "start_mm": [
+            0.625,
+            35.269999
+          ],
+          "end_mm": [
+            0.9601,
+            35.269999
+          ]
+        },
+        {
+          "layer": "F.Silkscreen",
+          "ink_bbox_mm": [
+            3.175,
+            26.204999,
+            5.115,
+            26.454999
+          ],
+          "nearest_edge": "west",
+          "ink_edge_clearance_mm": 3.175,
+          "class": "PCB_SHAPE",
+          "shape": "Line",
+          "stroke_mm": 0.25,
+          "stroke_centreline_edge_clearance_mm": 3.3,
+          "start_mm": [
+            3.3,
+            26.329999
+          ],
+          "end_mm": [
+            4.99,
+            26.329999
+          ]
+        },
+        {
+          "layer": "F.Silkscreen",
+          "ink_bbox_mm": [
+            3.175,
+            35.144999,
+            5.115,
+            35.394999
+          ],
+          "nearest_edge": "west",
+          "ink_edge_clearance_mm": 3.175,
+          "class": "PCB_SHAPE",
+          "shape": "Line",
+          "stroke_mm": 0.25,
+          "stroke_centreline_edge_clearance_mm": 3.3,
+          "start_mm": [
+            3.3,
+            35.269999
+          ],
+          "end_mm": [
+            4.99,
+            35.269999
+          ]
+        }
+      ],
+      "nearest_item": {
+        "layer": "F.Silkscreen",
+        "ink_bbox_mm": [
+          0.5,
+          26.204999,
+          1.0851,
+          26.454999
+        ],
+        "nearest_edge": "west",
+        "ink_edge_clearance_mm": 0.5,
+        "class": "PCB_SHAPE",
+        "shape": "Line",
+        "stroke_mm": 0.25,
+        "stroke_centreline_edge_clearance_mm": 0.625,
+        "start_mm": [
+          0.625,
+          26.329999
+        ],
+        "end_mm": [
+          0.9601,
+          26.329999
+        ]
+      }
+    }
+  },
+  "physical_copper": {
+    "footprints": 225,
+    "pad_shapes": 739,
+    "pad_shapes_note": "All native pad objects, including paste-only/composite/unnumbered pads; not unique electrical pins.",
+    "track_objects": {
+      "PCB_TRACK": 882,
+      "PCB_VIA": 323
+    },
+    "non_rule_zone_objects": 9,
+    "all_copper_layer_representations": 2963,
+    "copper_graphics_and_text_inner": 0
+  },
+  "S8": {
+    "rule_issues": [],
+    "rule_evidence": {
+      "barrels": 4,
+      "gap_mm": 1.0,
+      "near": {}
+    },
+    "nearest_other_net_per_barrel": [
+      {
+        "barrel": "J121.1 hole",
+        "barrel_net": "PYRO1_OUT",
+        "other": "zone R10_3V3_In2",
+        "other_net": "3V3",
+        "layer": "In2.Cu",
+        "gap_mm": 1.458,
+        "class": "ZONE"
+      },
+      {
+        "barrel": "J121.2 hole",
+        "barrel_net": "PYRO1_IGN",
+        "other": "J121.1",
+        "other_net": "PYRO1_OUT",
+        "layer": "In1.Cu",
+        "gap_mm": 1.9,
+        "class": "PAD"
+      },
+      {
+        "barrel": "via (14.400, 53.300)",
+        "barrel_net": "PYRO1_GATE",
+        "other": "zone R10_3V3_In2",
+        "other_net": "3V3",
+        "layer": "In2.Cu",
+        "gap_mm": 2.106,
+        "class": "ZONE"
+      },
+      {
+        "barrel": "via (11.330, 55.100)",
+        "barrel_net": "PYRO1_OUT",
+        "other": "zone R10_3V3_In2",
+        "other_net": "3V3",
+        "layer": "In2.Cu",
+        "gap_mm": 2.479,
+        "class": "ZONE"
+      }
+    ],
+    "nearest_search_radius_mm": 8.0,
+    "non_GND_inner_layer_representations": 292,
+    "non_GND_inner_unique_objects": 148,
+    "non_GND_inner_by_layer_class": {
+      "In1.Cu/PAD": 11,
+      "In2.Cu/PAD": 11,
+      "In1.Cu/PCB_VIA": 133,
+      "In2.Cu/PCB_VIA": 133,
+      "In2.Cu/ZONE": 4
+    },
+    "barrels": [
+      {
+        "label": "via (11.330, 55.100)",
+        "net": "PYRO1_OUT",
+        "hole_bbox_mm": [
+          11.18,
+          54.95,
+          11.48,
+          55.25
+        ]
+      },
+      {
+        "label": "via (14.400, 53.300)",
+        "net": "PYRO1_GATE",
+        "hole_bbox_mm": [
+          14.25,
+          53.15,
+          14.55,
+          53.45
+        ]
+      },
+      {
+        "label": "J121.1 hole",
+        "net": "PYRO1_OUT",
+        "hole_bbox_mm": [
+          6.35,
+          53.45,
+          7.65,
+          54.75
+        ]
+      },
+      {
+        "label": "J121.2 hole",
+        "net": "PYRO1_IGN",
+        "hole_bbox_mm": [
+          6.35,
+          56.95,
+          7.65,
+          58.25
+        ]
+      }
+    ]
+  },
+  "board_unchanged": true,
+  "ordering_inventory": {
+    "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+    "footprints": {
+      "top": 89,
+      "bottom": 136
+    },
+    "parts": {
+      "top": 83,
+      "bottom": 132
+    },
+    "testpads": {
+      "TP81": {
+        "side": "top",
+        "at": [
+          44.3,
+          68.0
+        ],
+        "net": [
+          "RAW_PROTECTED"
+        ]
+      },
+      "TP80": {
+        "side": "top",
+        "at": [
+          13.8,
+          78.4
+        ],
+        "net": [
+          "BAT_IN"
+        ]
+      },
+      "TP74": {
+        "side": "top",
+        "at": [
+          41.9,
+          53.5
+        ],
+        "net": [
+          "GND"
+        ]
+      },
+      "TP88": {
+        "side": "top",
+        "at": [
+          44.5,
+          76.3
+        ],
+        "net": [
+          "GND"
+        ]
+      },
+      "TP121": {
+        "side": "top",
+        "at": [
+          16.2,
+          74.2
+        ],
+        "net": [
+          "ACT_GATE"
+        ]
+      },
+      "TP83": {
+        "side": "bottom",
+        "at": [
+          39.5,
+          67.0
+        ],
+        "net": [
+          "VLOGIC"
+        ]
+      },
+      "TP82": {
+        "side": "bottom",
+        "at": [
+          18.25,
+          33.25
+        ],
+        "net": [
+          "USB_LIMITED"
+        ]
+      },
+      "TP122": {
+        "side": "bottom",
+        "at": [
+          13.3,
+          53.3
+        ],
+        "net": [
+          "PYRO1_GATE"
+        ]
+      },
+      "TP120": {
+        "side": "bottom",
+        "at": [
+          18.0,
+          67.6
+        ],
+        "net": [
+          "RAW_ACT"
+        ]
+      }
+    },
+    "vias": {
+      "total": 323,
+      "ground": 190,
+      "sizes": [
+        [
+          [
+            0.5,
+            0.3
+          ],
+          317
+        ],
+        [
+          [
+            0.6,
+            0.3
+          ],
+          4
+        ],
+        [
+          [
+            0.8,
+            0.45
+          ],
+          1
+        ],
+        [
+          [
+            1.0,
+            0.5
+          ],
+          1
+        ]
+      ]
+    },
+    "tracks": 882,
+    "refs": {
+      "D9": {
+        "value": "B340A-13-F",
+        "side": "bottom",
+        "at": [
+          43.35,
+          73.45
+        ],
+        "rot": 90.0,
+        "land": "D_SMA",
+        "lcsc": "C85098",
+        "pads": {
+          "1": {
+            "at": [
+              43.35,
+              75.45
+            ],
+            "net": "RAW_PROTECTED"
+          },
+          "2": {
+            "at": [
+              43.35,
+              71.45
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "D120": {
+        "value": "BAT54A",
+        "side": "bottom",
+        "at": [
+          17.0,
+          60.2
+        ],
+        "rot": 180.0,
+        "land": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+        "lcsc": "C8591",
+        "pads": {
+          "1": {
+            "at": [
+              16.0,
+              61.15
+            ],
+            "net": "PYRO1_COLD"
+          },
+          "2": {
+            "at": [
+              16.0,
+              59.25
+            ],
+            "net": "unconnected-(D120-K2-Pad2)"
+          },
+          "3": {
+            "at": [
+              18.0,
+              60.2
+            ],
+            "net": "3V3"
+          }
+        }
+      },
+      "D123": {
+        "value": "1N5819WS",
+        "side": "bottom",
+        "at": [
+          20.6,
+          21.2
+        ],
+        "rot": 90.0,
+        "land": "SOD-323_L1.8-W1.3-LS2.5-RD",
+        "lcsc": "C191023",
+        "pads": {
+          "1": {
+            "at": [
+              20.6,
+              22.37
+            ],
+            "net": "3V3"
+          },
+          "2": {
+            "at": [
+              20.6,
+              20.03
+            ],
+            "net": "BUZZ_OUT"
+          }
+        }
+      },
+      "D4": {
+        "value": "USBLC6-2SC6",
+        "side": "top",
+        "at": [
+          9.95,
+          30.6
+        ],
+        "rot": -90.0,
+        "land": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+        "lcsc": "C7519",
+        "pads": {
+          "1": {
+            "at": [
+              8.8,
+              29.65
+            ],
+            "net": "USB_DM"
+          },
+          "2": {
+            "at": [
+              8.8,
+              30.6
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              8.8,
+              31.55
+            ],
+            "net": "USB_DP"
+          },
+          "4": {
+            "at": [
+              11.1,
+              31.55
+            ],
+            "net": "USB_DP"
+          },
+          "5": {
+            "at": [
+              11.1,
+              30.6
+            ],
+            "net": "VBUS"
+          },
+          "6": {
+            "at": [
+              11.1,
+              29.65
+            ],
+            "net": "USB_DM"
+          }
+        }
+      },
+      "D121": {
+        "value": "SRV05-4",
+        "side": "bottom",
+        "at": [
+          23.0,
+          71.6
+        ],
+        "rot": 90.0,
+        "land": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+        "lcsc": "C13612",
+        "pads": {
+          "1": {
+            "at": [
+              21.85,
+              72.55
+            ],
+            "net": "SERVO1_MCU"
+          },
+          "2": {
+            "at": [
+              21.85,
+              71.6
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              21.85,
+              70.65
+            ],
+            "net": "SERVO2_MCU"
+          },
+          "4": {
+            "at": [
+              24.15,
+              70.65
+            ],
+            "net": "SERVO3_MCU"
+          },
+          "5": {
+            "at": [
+              24.15,
+              71.6
+            ],
+            "net": "3V3"
+          },
+          "6": {
+            "at": [
+              24.15,
+              72.55
+            ],
+            "net": "SERVO4_MCU"
+          }
+        }
+      },
+      "LED1": {
+        "value": "RED",
+        "side": "top",
+        "at": [
+          11.05,
+          43.6
+        ],
+        "rot": 0.0,
+        "land": "M3_NCD0805R1_K1",
+        "lcsc": "C84256",
+        "pads": {
+          "1": {
+            "at": [
+              10.2,
+              43.6
+            ],
+            "net": "GND"
+          },
+          "2": {
+            "at": [
+              11.9,
+              43.6
+            ],
+            "net": "LED_RED_A"
+          }
+        }
+      },
+      "LED2": {
+        "value": "YEL",
+        "side": "top",
+        "at": [
+          11.85,
+          45.5
+        ],
+        "rot": 0.0,
+        "land": "M3_KT0805Y_A1",
+        "lcsc": "C2296",
+        "pads": {
+          "1": {
+            "at": [
+              10.9,
+              45.5
+            ],
+            "net": "LED_YEL_A"
+          },
+          "2": {
+            "at": [
+              12.8,
+              45.5
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "C82": {
+        "value": "22uF 25V X7R 10%",
+        "side": "bottom",
+        "at": [
+          39.8,
+          74.75
+        ],
+        "rot": 90.0,
+        "land": "M3_GRM32_1210",
+        "lcsc": "C21397",
+        "pads": {
+          "1": {
+            "at": [
+              39.8,
+              76.25
+            ],
+            "net": "RAW_PROTECTED"
+          },
+          "2": {
+            "at": [
+              39.8,
+              73.25
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "C92": {
+        "value": "4.7uF 16V X5R 10%",
+        "side": "bottom",
+        "at": [
+          34.2,
+          45.2
+        ],
+        "rot": -90.0,
+        "land": "C0603",
+        "lcsc": "C19666",
+        "pads": {
+          "1": {
+            "at": [
+              34.2,
+              44.5
+            ],
+            "net": "CAM_IO_3V3"
+          },
+          "2": {
+            "at": [
+              34.2,
+              45.9
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "C120": {
+        "value": "1uF 25V X7R 10%",
+        "side": "bottom",
+        "at": [
+          17.1,
+          71.525
+        ],
+        "rot": -90.0,
+        "land": "C_0603_1608Metric",
+        "lcsc": "C29936",
+        "pads": {
+          "1": {
+            "at": [
+              17.1,
+              70.75
+            ],
+            "net": "ACT_FET_S"
+          },
+          "2": {
+            "at": [
+              17.1,
+              72.3
+            ],
+            "net": "ACT_GATE"
+          }
+        }
+      },
+      "C84": {
+        "value": "470uF 25V polymer",
+        "side": "top",
+        "at": [
+          38.5,
+          74.0
+        ],
+        "rot": 90.0,
+        "land": "M3_MA_8x10",
+        "lcsc": "C46550466",
+        "pads": {
+          "1": {
+            "at": [
+              38.5,
+              77.25
+            ],
+            "net": "VLOGIC"
+          },
+          "2": {
+            "at": [
+              38.5,
+              70.75
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "Q120": {
+        "value": "AONR21357",
+        "side": "bottom",
+        "at": [
+          13.5,
+          72.6
+        ],
+        "rot": 0.0,
+        "land": "M3_AONR21357_DFN3x3A_EP1",
+        "lcsc": "C431196",
+        "pads": {
+          "1": {
+            "at": [
+              12.525,
+              71.2
+            ],
+            "net": "ACT_FET_S"
+          },
+          "2": {
+            "at": [
+              13.175,
+              71.2
+            ],
+            "net": "ACT_FET_S"
+          },
+          "3": {
+            "at": [
+              13.825,
+              71.2
+            ],
+            "net": "ACT_FET_S"
+          },
+          "4": {
+            "at": [
+              14.475,
+              71.2
+            ],
+            "net": "ACT_GATE"
+          },
+          "5": {
+            "at": [
+              14.475,
+              74.095
+            ],
+            "net": "BAT_IN"
+          },
+          "6": {
+            "at": [
+              13.825,
+              74.095
+            ],
+            "net": "BAT_IN"
+          },
+          "7": {
+            "at": [
+              13.175,
+              74.095
+            ],
+            "net": "BAT_IN"
+          },
+          "8": {
+            "at": [
+              12.525,
+              74.095
+            ],
+            "net": "BAT_IN"
+          },
+          "9": {
+            "at": [
+              13.5,
+              72.6
+            ],
+            "net": "BAT_IN"
+          }
+        }
+      },
+      "Q121": {
+        "value": "AONR21357",
+        "side": "bottom",
+        "at": [
+          13.5,
+          67.6
+        ],
+        "rot": 180.0,
+        "land": "M3_AONR21357_DFN3x3A_EP1",
+        "lcsc": "C431196",
+        "pads": {
+          "1": {
+            "at": [
+              14.475,
+              69.0
+            ],
+            "net": "ACT_FET_S"
+          },
+          "2": {
+            "at": [
+              13.825,
+              69.0
+            ],
+            "net": "ACT_FET_S"
+          },
+          "3": {
+            "at": [
+              13.175,
+              69.0
+            ],
+            "net": "ACT_FET_S"
+          },
+          "4": {
+            "at": [
+              12.525,
+              69.0
+            ],
+            "net": "ACT_GATE"
+          },
+          "5": {
+            "at": [
+              12.525,
+              66.105
+            ],
+            "net": "RAW_ACT"
+          },
+          "6": {
+            "at": [
+              13.175,
+              66.105
+            ],
+            "net": "RAW_ACT"
+          },
+          "7": {
+            "at": [
+              13.825,
+              66.105
+            ],
+            "net": "RAW_ACT"
+          },
+          "8": {
+            "at": [
+              14.475,
+              66.105
+            ],
+            "net": "RAW_ACT"
+          },
+          "9": {
+            "at": [
+              13.5,
+              67.6
+            ],
+            "net": "RAW_ACT"
+          }
+        }
+      },
+      "Q122": {
+        "value": "AO3400A",
+        "side": "top",
+        "at": [
+          16.8,
+          69.8
+        ],
+        "rot": 0.0,
+        "land": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+        "lcsc": "C20917",
+        "pads": {
+          "1": {
+            "at": [
+              17.8,
+              70.75
+            ],
+            "net": "ACT_EN"
+          },
+          "2": {
+            "at": [
+              17.8,
+              68.85
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              15.8,
+              69.8
+            ],
+            "net": "ACT_DRV"
+          }
+        }
+      },
+      "Q123": {
+        "value": "AO3400A",
+        "side": "bottom",
+        "at": [
+          20.85,
+          17.0
+        ],
+        "rot": 180.0,
+        "land": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+        "lcsc": "C20917",
+        "pads": {
+          "1": {
+            "at": [
+              19.85,
+              17.95
+            ],
+            "net": "BUZZ_G"
+          },
+          "2": {
+            "at": [
+              19.85,
+              16.05
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              21.85,
+              17.0
+            ],
+            "net": "BUZZ_OUT"
+          }
+        }
+      },
+      "Q124": {
+        "value": "AON7524",
+        "side": "top",
+        "at": [
+          13.6,
+          57.37
+        ],
+        "rot": 90.0,
+        "land": "M3_AON7524_DFN3x3A",
+        "lcsc": "C431195",
+        "pads": {
+          "1": {
+            "at": [
+              15.0,
+              58.345
+            ],
+            "net": "GND"
+          },
+          "2": {
+            "at": [
+              15.0,
+              57.695
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              15.0,
+              57.045
+            ],
+            "net": "GND"
+          },
+          "4": {
+            "at": [
+              15.0,
+              56.395
+            ],
+            "net": "PYRO1_GATE"
+          },
+          "5": {
+            "at": [
+              13.6,
+              57.37
+            ],
+            "net": "PYRO1_OUT"
+          }
+        }
+      },
+      "R134": {
+        "value": "2R 1% 2W pulse",
+        "side": "bottom",
+        "at": [
+          7.0,
+          65.025
+        ],
+        "rot": -90.0,
+        "land": "R2512",
+        "lcsc": "C3013496",
+        "pads": {
+          "1": {
+            "at": [
+              7.0,
+              62.45
+            ],
+            "net": "PYRO1_IGN"
+          },
+          "2": {
+            "at": [
+              7.0,
+              67.6
+            ],
+            "net": "RAW_ACT"
+          }
+        }
+      },
+      "R92": {
+        "value": "3.3k 1%",
+        "side": "top",
+        "at": [
+          33.9,
+          65.775
+        ],
+        "rot": 90.0,
+        "land": "R_0603_1608Metric",
+        "lcsc": "C22978",
+        "pads": {
+          "1": {
+            "at": [
+              33.9,
+              66.6
+            ],
+            "net": "RAW_PROTECTED"
+          },
+          "2": {
+            "at": [
+              33.9,
+              64.95
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "TP120": {
+        "value": "RAW_ACT",
+        "side": "bottom",
+        "at": [
+          18.0,
+          67.6
+        ],
+        "rot": 0.0,
+        "land": "M3_TestPad_1.5",
+        "lcsc": "",
+        "pads": {
+          "1": {
+            "at": [
+              18.0,
+              67.6
+            ],
+            "net": "RAW_ACT"
+          }
+        }
+      },
+      "U12": {
+        "value": "TXU0202DCUR",
+        "side": "top",
+        "at": [
+          35.2,
+          39.349999
+        ],
+        "rot": -90.0,
+        "land": "M3_TXU0202_DCU",
+        "lcsc": "C5186957",
+        "pads": {
+          "1": {
+            "at": [
+              35.95,
+              37.799999
+            ],
+            "net": "CAM_RX_BUFFER"
+          },
+          "2": {
+            "at": [
+              35.45,
+              37.799999
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              34.95,
+              37.799999
+            ],
+            "net": "3V3"
+          },
+          "4": {
+            "at": [
+              34.45,
+              37.799999
+            ],
+            "net": "CAM_MCU_RX"
+          },
+          "5": {
+            "at": [
+              34.45,
+              40.899999
+            ],
+            "net": "CAM_MCU_TX"
+          },
+          "6": {
+            "at": [
+              34.95,
+              40.899999
+            ],
+            "net": "CAM_UART_OE"
+          },
+          "7": {
+            "at": [
+              35.45,
+              40.899999
+            ],
+            "net": "CAM_IO_3V3"
+          },
+          "8": {
+            "at": [
+              35.95,
+              40.899999
+            ],
+            "net": "CAM_TX_BUFFER"
+          }
+        }
+      },
+      "U411": {
+        "value": "TXU0202DCUR",
+        "side": "top",
+        "at": [
+          35.2,
+          15.35
+        ],
+        "rot": -90.0,
+        "land": "M3_TXU0202_DCU",
+        "lcsc": "C5186957",
+        "pads": {
+          "1": {
+            "at": [
+              35.95,
+              13.8
+            ],
+            "net": "GPS_RX_BUFFER"
+          },
+          "2": {
+            "at": [
+              35.45,
+              13.8
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              34.95,
+              13.8
+            ],
+            "net": "3V3"
+          },
+          "4": {
+            "at": [
+              34.45,
+              13.8
+            ],
+            "net": "GPS_RX_MCU"
+          },
+          "5": {
+            "at": [
+              34.45,
+              16.9
+            ],
+            "net": "GPS_TX_MCU"
+          },
+          "6": {
+            "at": [
+              34.95,
+              16.9
+            ],
+            "net": "GPS_UART_OE"
+          },
+          "7": {
+            "at": [
+              35.45,
+              16.9
+            ],
+            "net": "3V3"
+          },
+          "8": {
+            "at": [
+              35.95,
+              16.9
+            ],
+            "net": "GPS_TX_BUFFER"
+          }
+        }
+      },
+      "U421": {
+        "value": "TXU0202DCUR",
+        "side": "top",
+        "at": [
+          35.2,
+          27.35
+        ],
+        "rot": -90.0,
+        "land": "M3_TXU0202_DCU",
+        "lcsc": "C5186957",
+        "pads": {
+          "1": {
+            "at": [
+              35.95,
+              25.8
+            ],
+            "net": "RADIO_RX_BUFFER"
+          },
+          "2": {
+            "at": [
+              35.45,
+              25.8
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              34.95,
+              25.8
+            ],
+            "net": "3V3"
+          },
+          "4": {
+            "at": [
+              34.45,
+              25.8
+            ],
+            "net": "RADIO_RX_MCU"
+          },
+          "5": {
+            "at": [
+              34.45,
+              28.9
+            ],
+            "net": "RADIO_TX_MCU"
+          },
+          "6": {
+            "at": [
+              34.95,
+              28.9
+            ],
+            "net": "RADIO_UART_OE"
+          },
+          "7": {
+            "at": [
+              35.45,
+              28.9
+            ],
+            "net": "3V3"
+          },
+          "8": {
+            "at": [
+              35.95,
+              28.9
+            ],
+            "net": "RADIO_TX_BUFFER"
+          }
+        }
+      },
+      "C443": {
+        "value": "100nF 50V X7R 10%",
+        "side": "bottom",
+        "at": [
+          34.675,
+          17.675
+        ],
+        "rot": 90.0,
+        "land": "C_0603_1608Metric",
+        "lcsc": "C14663",
+        "pads": {
+          "1": {
+            "at": [
+              34.675,
+              18.45
+            ],
+            "net": "3V3"
+          },
+          "2": {
+            "at": [
+              34.675,
+              16.9
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "C453": {
+        "value": "100nF 50V X7R 10%",
+        "side": "bottom",
+        "at": [
+          34.675,
+          29.675
+        ],
+        "rot": 90.0,
+        "land": "C_0603_1608Metric",
+        "lcsc": "C14663",
+        "pads": {
+          "1": {
+            "at": [
+              34.675,
+              30.45
+            ],
+            "net": "3V3"
+          },
+          "2": {
+            "at": [
+              34.675,
+              28.9
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "J1": {
+        "value": "DB125-3.5-2P-GN-S",
+        "side": "top",
+        "at": [
+          7.0,
+          75.85
+        ],
+        "rot": -90.0,
+        "land": "M3_DB125_2P_GN",
+        "lcsc": "C466970",
+        "pads": {
+          "1": {
+            "at": [
+              7.0,
+              74.1
+            ],
+            "net": "BAT_IN"
+          },
+          "2": {
+            "at": [
+              7.0,
+              77.6
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "J121": {
+        "value": "DB125-3.5-2P-BK-S",
+        "side": "top",
+        "at": [
+          7.0,
+          55.85
+        ],
+        "rot": -90.0,
+        "land": "M3_DB125_2P_BK",
+        "lcsc": "C52993880",
+        "pads": {
+          "1": {
+            "at": [
+              7.0,
+              54.1
+            ],
+            "net": "PYRO1_OUT"
+          },
+          "2": {
+            "at": [
+              7.0,
+              57.6
+            ],
+            "net": "PYRO1_IGN"
+          }
+        }
+      },
+      "J400": {
+        "value": "BM02B-GHS-TBT(LF)(SN)",
+        "side": "top",
+        "at": [
+          10.5,
+          85.5
+        ],
+        "rot": 0.0,
+        "land": "M3_GH_BM02B_GHS_TBT",
+        "lcsc": "C161690",
+        "pads": {
+          "": {
+            "at": [
+              12.975,
+              84.1
+            ],
+            "net": ""
+          },
+          "1": {
+            "at": [
+              9.875,
+              87.45
+            ],
+            "net": "BAT_SW_SOURCE"
+          },
+          "2": {
+            "at": [
+              11.125,
+              87.45
+            ],
+            "net": "BAT_SW_RETURN"
+          }
+        }
+      },
+      "J9": {
+        "value": "CAMERA 5V/GND/RX/TX",
+        "side": "top",
+        "at": [
+          42.7,
+          38.0
+        ],
+        "rot": -90.0,
+        "land": "M3_GH_BM04B_GHS_TBT",
+        "lcsc": "C161692",
+        "pads": {
+          "": {
+            "at": [
+              44.1,
+              41.725
+            ],
+            "net": ""
+          },
+          "1": {
+            "at": [
+              40.75,
+              36.125
+            ],
+            "net": "CAM_5V"
+          },
+          "2": {
+            "at": [
+              40.75,
+              37.375
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              40.75,
+              38.625
+            ],
+            "net": "CAM_RX_WIRE"
+          },
+          "4": {
+            "at": [
+              40.75,
+              39.875
+            ],
+            "net": "CAM_TX_WIRE"
+          }
+        }
+      },
+      "J410": {
+        "value": "GPS 4V8/GND/TX/RX",
+        "side": "top",
+        "at": [
+          42.7,
+          14.0
+        ],
+        "rot": -90.0,
+        "land": "M3_GH_BM04B_GHS_TBT",
+        "lcsc": "C161692",
+        "pads": {
+          "": {
+            "at": [
+              44.1,
+              17.725
+            ],
+            "net": ""
+          },
+          "1": {
+            "at": [
+              40.75,
+              12.125
+            ],
+            "net": "GPS_4V8"
+          },
+          "2": {
+            "at": [
+              40.75,
+              13.375
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              40.75,
+              14.625
+            ],
+            "net": "GPS_TX_WIRE"
+          },
+          "4": {
+            "at": [
+              40.75,
+              15.875
+            ],
+            "net": "GPS_RX_WIRE"
+          }
+        }
+      },
+      "J420": {
+        "value": "RADIO 4V8/GND/TX/RX",
+        "side": "top",
+        "at": [
+          42.7,
+          26.0
+        ],
+        "rot": -90.0,
+        "land": "M3_GH_BM04B_GHS_TBT",
+        "lcsc": "C161692",
+        "pads": {
+          "": {
+            "at": [
+              44.1,
+              29.725
+            ],
+            "net": ""
+          },
+          "1": {
+            "at": [
+              40.75,
+              24.125
+            ],
+            "net": "RADIO_4V8"
+          },
+          "2": {
+            "at": [
+              40.75,
+              25.375
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              40.75,
+              26.625
+            ],
+            "net": "RADIO_TX_WIRE"
+          },
+          "4": {
+            "at": [
+              40.75,
+              27.875
+            ],
+            "net": "RADIO_RX_WIRE"
+          }
+        }
+      },
+      "J122": {
+        "value": "SERVO 3x4",
+        "side": "top",
+        "at": [
+          23.0,
+          82.0
+        ],
+        "rot": 180.0,
+        "land": "HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR",
+        "lcsc": "C32713291",
+        "pads": {
+          "1": {
+            "at": [
+              19.19,
+              79.46
+            ],
+            "net": "SERVO1_OUT"
+          },
+          "2": {
+            "at": [
+              19.19,
+              82.0
+            ],
+            "net": "unconnected-(J122-Pad2)"
+          },
+          "3": {
+            "at": [
+              19.19,
+              84.54
+            ],
+            "net": "GND"
+          },
+          "4": {
+            "at": [
+              21.73,
+              79.46
+            ],
+            "net": "SERVO2_OUT"
+          },
+          "5": {
+            "at": [
+              21.73,
+              82.0
+            ],
+            "net": "unconnected-(J122-Pad5)"
+          },
+          "6": {
+            "at": [
+              21.73,
+              84.54
+            ],
+            "net": "GND"
+          },
+          "7": {
+            "at": [
+              24.27,
+              79.46
+            ],
+            "net": "SERVO3_OUT"
+          },
+          "8": {
+            "at": [
+              24.27,
+              82.0
+            ],
+            "net": "unconnected-(J122-Pad8)"
+          },
+          "9": {
+            "at": [
+              24.27,
+              84.54
+            ],
+            "net": "GND"
+          },
+          "10": {
+            "at": [
+              26.81,
+              79.46
+            ],
+            "net": "SERVO4_OUT"
+          },
+          "11": {
+            "at": [
+              26.81,
+              82.0
+            ],
+            "net": "unconnected-(J122-Pad11)"
+          },
+          "12": {
+            "at": [
+              26.81,
+              84.54
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "U9": {
+        "value": "TPS259470LRPWR",
+        "side": "bottom",
+        "at": [
+          39.0,
+          79.6
+        ],
+        "rot": 0.0,
+        "land": "M3_TPS25947_RPW",
+        "lcsc": "C3662793",
+        "pads": {
+          "1": {
+            "at": [
+              38.275,
+              80.475
+            ],
+            "net": "BAT_ENABLE"
+          },
+          "2": {
+            "at": [
+              38.1,
+              79.825
+            ],
+            "net": "BAT_OVLO"
+          },
+          "3": {
+            "at": [
+              38.1,
+              79.375
+            ],
+            "net": "unconnected-(U9-AUXOFF-Pad3)"
+          },
+          "4": {
+            "at": [
+              38.275,
+              78.725
+            ],
+            "net": "BAT_FAULT_N"
+          },
+          "5": {
+            "at": [
+              38.75,
+              79.6
+            ],
+            "net": "BAT_IN"
+          },
+          "6": {
+            "at": [
+              39.25,
+              79.6
+            ],
+            "net": "RAW_PROTECTED"
+          },
+          "7": {
+            "at": [
+              39.9,
+              78.9
+            ],
+            "net": "BAT_DVDT"
+          },
+          "8": {
+            "at": [
+              39.9,
+              79.375
+            ],
+            "net": "GND"
+          },
+          "9": {
+            "at": [
+              39.9,
+              79.825
+            ],
+            "net": "BAT_ILIM"
+          },
+          "10": {
+            "at": [
+              39.9,
+              80.3
+            ],
+            "net": "unconnected-(U9-ITIMER-Pad10)"
+          }
+        }
+      },
+      "C88": {
+        "value": "100nF 50V X7R 10%",
+        "side": "bottom",
+        "at": [
+          39.9,
+          81.95
+        ],
+        "rot": 90.0,
+        "land": "C0402",
+        "lcsc": "C307331",
+        "pads": {
+          "1": {
+            "at": [
+              39.9,
+              82.37
+            ],
+            "net": "BAT_IN"
+          },
+          "2": {
+            "at": [
+              39.9,
+              81.53
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "U4": {
+        "value": "LSM6DSV320X",
+        "side": "bottom",
+        "at": [
+          17.0,
+          45.9
+        ],
+        "rot": 180.0,
+        "land": "LGA-14_L3.0-W2.5-P0.50-TL",
+        "lcsc": "C26633007",
+        "pads": {
+          "1": {
+            "at": [
+              18.21,
+              45.15
+            ],
+            "net": "SPI1_MISO"
+          },
+          "2": {
+            "at": [
+              18.21,
+              45.65
+            ],
+            "net": "GND"
+          },
+          "3": {
+            "at": [
+              18.21,
+              46.15
+            ],
+            "net": "GND"
+          },
+          "4": {
+            "at": [
+              18.21,
+              46.65
+            ],
+            "net": "IMU_INT1"
+          },
+          "5": {
+            "at": [
+              17.5,
+              46.86
+            ],
+            "net": "3V3A"
+          },
+          "6": {
+            "at": [
+              17.0,
+              46.86
+            ],
+            "net": "GND"
+          },
+          "7": {
+            "at": [
+              16.5,
+              46.86
+            ],
+            "net": "GND"
+          },
+          "8": {
+            "at": [
+              15.79,
+              46.65
+            ],
+            "net": "3V3A"
+          },
+          "9": {
+            "at": [
+              15.79,
+              46.15
+            ],
+            "net": "unconnected-(U4-INT2-Pad9)"
+          },
+          "10": {
+            "at": [
+              15.79,
+              45.65
+            ],
+            "net": "unconnected-(U4-OCS_aux-Pad10)"
+          },
+          "11": {
+            "at": [
+              15.79,
+              45.15
+            ],
+            "net": "unconnected-(U4-SDO_aux-Pad11)"
+          },
+          "12": {
+            "at": [
+              16.5,
+              44.94
+            ],
+            "net": "IMU_CS"
+          },
+          "13": {
+            "at": [
+              17.0,
+              44.94
+            ],
+            "net": "SPI1_SCK"
+          },
+          "14": {
+            "at": [
+              17.5,
+              44.94
+            ],
+            "net": "SPI1_MOSI"
+          }
+        }
+      },
+      "U5": {
+        "value": "MS561101BA03",
+        "side": "bottom",
+        "at": [
+          10.6,
+          49.1
+        ],
+        "rot": 0.0,
+        "land": "SENSORS-SMD_MS5611-01BA03",
+        "lcsc": "C15639",
+        "pads": {
+          "1": {
+            "at": [
+              8.72,
+              48.0
+            ],
+            "net": "3V3A"
+          },
+          "2": {
+            "at": [
+              9.97,
+              48.0
+            ],
+            "net": "3V3A"
+          },
+          "3": {
+            "at": [
+              11.23,
+              48.0
+            ],
+            "net": "GND"
+          },
+          "4": {
+            "at": [
+              12.48,
+              48.0
+            ],
+            "net": "GND"
+          },
+          "5": {
+            "at": [
+              12.48,
+              50.925
+            ],
+            "net": "GND"
+          },
+          "6": {
+            "at": [
+              11.23,
+              50.925
+            ],
+            "net": "BARO_SDO"
+          },
+          "7": {
+            "at": [
+              9.97,
+              50.925
+            ],
+            "net": "I2C1_SDA"
+          },
+          "8": {
+            "at": [
+              8.72,
+              50.925
+            ],
+            "net": "I2C1_SCL"
+          }
+        }
+      },
+      "C24": {
+        "value": "100nF 50V X7R 10%",
+        "side": "bottom",
+        "at": [
+          25.75,
+          49.1
+        ],
+        "rot": 0.0,
+        "land": "C0402",
+        "lcsc": "C307331",
+        "pads": {
+          "1": {
+            "at": [
+              25.33,
+              49.1
+            ],
+            "net": "NRST"
+          },
+          "2": {
+            "at": [
+              26.17,
+              49.1
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "C15": {
+        "value": "100nF 50V X7R 10%",
+        "side": "bottom",
+        "at": [
+          29.2,
+          47.4
+        ],
+        "rot": 90.0,
+        "land": "C0402",
+        "lcsc": "C307331",
+        "pads": {
+          "1": {
+            "at": [
+              29.2,
+              47.82
+            ],
+            "net": "3V3"
+          },
+          "2": {
+            "at": [
+              29.2,
+              46.98
+            ],
+            "net": "GND"
+          }
+        }
+      },
+      "U401": {
+        "value": "TPS7A9101DSKR",
+        "side": "bottom",
+        "at": [
+          27.6,
+          13.6
+        ],
+        "rot": 180.0,
+        "land": "M3_TPS7A91_DSK10",
+        "lcsc": "C2878140",
+        "pads": {
+          "": {
+            "at": [
+              27.6,
+              13.045
+            ],
+            "net": ""
+          },
+          "1": {
+            "at": [
+              28.75,
+              12.6
+            ],
+            "net": "PORT_4V8"
+          },
+          "2": {
+            "at": [
+              28.75,
+              13.1
+            ],
+            "net": "PORT_4V8"
+          },
+          "3": {
+            "at": [
+              28.75,
+              13.6
+            ],
+            "net": "PORT_LDO_FB"
+          },
+          "4": {
+            "at": [
+              28.75,
+              14.1
+            ],
+            "net": "GND"
+          },
+          "5": {
+            "at": [
+              28.75,
+              14.6
+            ],
+            "net": "unconnected-(U401-PG-Pad5)"
+          },
+          "6": {
+            "at": [
+              26.45,
+              14.6
+            ],
+            "net": "GND"
+          },
+          "7": {
+            "at": [
+              26.45,
+              14.1
+            ],
+            "net": "PORT_5V3"
+          },
+          "8": {
+            "at": [
+              26.45,
+              13.6
+            ],
+            "net": "PORT_LDO_SS"
+          },
+          "9": {
+            "at": [
+              26.45,
+              13.1
+            ],
+            "net": "PORT_5V3"
+          },
+          "10": {
+            "at": [
+              26.45,
+              12.6
+            ],
+            "net": "PORT_5V3"
+          },
+          "11": {
+            "at": [
+              27.6,
+              13.6
+            ],
+            "net": "GND"
+          }
+        }
+      }
+    },
+    "in2_zones": [
+      {
+        "name": "R10_GND_In2_CH1",
+        "net": "GND",
+        "filled_mm2": 339.868204717471,
+        "outline_mm": [
+          0.3,
+          51.3,
+          21.8,
+          69.7
+        ]
+      },
+      {
+        "name": "R10_GND_In2_Y1",
+        "net": "GND",
+        "filled_mm2": 35.586656270515,
+        "outline_mm": [
+          18.9,
+          44.3,
+          28.6,
+          48.95
+        ]
+      },
+      {
+        "name": "R10_PORT_4V8_In2",
+        "net": "PORT_4V8",
+        "filled_mm2": 88.459843110369,
+        "outline_mm": [
+          28.15,
+          6.85,
+          33.6,
+          29.0
+        ]
+      },
+      {
+        "name": "R10_3V3_In2",
+        "net": "3V3",
+        "filled_mm2": 1533.7251072304534,
+        "outline_mm": [
+          0.3,
+          7.3,
+          39.7,
+          75.7
+        ]
+      },
+      {
+        "name": "R10_PORT_5V3_In2",
+        "net": "PORT_5V3",
+        "filled_mm2": 222.009350011999,
+        "outline_mm": [
+          24.5,
+          4.7,
+          39.7,
+          42.5
+        ]
+      },
+      {
+        "name": "R10_RAW_In2",
+        "net": "RAW_PROTECTED",
+        "filled_mm2": 1379.5519247690725,
+        "outline_mm": [
+          0.3,
+          0.3,
+          45.7,
+          89.7
+        ]
+      }
+    ],
+    "fit": {
+      "ok": true,
+      "issues": [],
+      "nearest_support": [
+        3.8436050785688116,
+        "C88.1",
+        [
+          42.0,
+          86.0
+        ]
+      ],
+      "nearest_top_support": [
+        3.857542,
+        "J400. exposed top pad",
+        [
+          3.7,
+          86.0
+        ]
+      ],
+      "supports": [
+        [
+          3.7,
+          86.0
+        ],
+        [
+          4.0,
+          4.0
+        ],
+        [
+          4.0,
+          44.3
+        ],
+        [
+          42.0,
+          4.0
+        ],
+        [
+          42.0,
+          86.0
+        ]
+      ]
+    },
+    "hidden_refs": [
+      "C10",
+      "C100",
+      "C11",
+      "C127",
+      "C13",
+      "C16",
+      "C18",
+      "C20",
+      "C22",
+      "C24",
+      "C25",
+      "C26",
+      "C30",
+      "C31",
+      "C406",
+      "C407",
+      "C430",
+      "C440",
+      "C450",
+      "C5",
+      "C8",
+      "C81",
+      "C88",
+      "C89",
+      "C90",
+      "C99",
+      "D121",
+      "D400",
+      "D401",
+      "D410",
+      "D411",
+      "D420",
+      "D421",
+      "LED1",
+      "R10",
+      "R120",
+      "R124",
+      "R125",
+      "R126",
+      "R129",
+      "R13",
+      "R130",
+      "R131",
+      "R132",
+      "R133",
+      "R150",
+      "R151",
+      "R152",
+      "R154",
+      "R155",
+      "R156",
+      "R164",
+      "R165",
+      "R170",
+      "R172",
+      "R178",
+      "R180",
+      "R182",
+      "R402",
+      "R420",
+      "R432",
+      "R440",
+      "R441",
+      "R442",
+      "R450",
+      "R451",
+      "R62",
+      "R64",
+      "R88",
+      "R9",
+      "TP122",
+      "TP88",
+      "U10",
+      "U11",
+      "U12",
+      "U13",
+      "U2",
+      "U4",
+      "U5",
+      "U9",
+      "Y1"
+    ]
+  },
+  "purpose": "Native geometry of the round-9 fix candidate; software/CAD evidence, not physical qualification.",
+  "native_baseline_comparison": {
+    "before_sha256": "877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d",
+    "after_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+    "footprints_compared": 225,
+    "pose_land_identity_and_pad_net_changes": 0,
+    "changed_value_labels": {
+      "C94": {
+        "before": "10nF",
+        "after": "10nF 50V X7R 10%"
+      },
+      "C87": {
+        "before": "2.2uF",
+        "after": "2.2uF 16V X5R 10%"
+      },
+      "C8": {
+        "before": "22uF",
+        "after": "22uF 25V X5R 20%"
+      },
+      "C25": {
+        "before": "10pF",
+        "after": "10pF 50V C0G 5%"
+      },
+      "C22": {
+        "before": "1uF",
+        "after": "1uF 50V X5R 10%"
+      },
+      "C19": {
+        "before": "2.2uF",
+        "after": "2.2uF 16V X5R 10%"
+      },
+      "C7": {
+        "before": "22uF",
+        "after": "22uF 25V X5R 20%"
+      },
+      "C28": {
+        "before": "4.7uF",
+        "after": "4.7uF 16V X5R 10%"
+      },
+      "C88": {
+        "before": "100nF 50V",
+        "after": "100nF 50V X7R 10%"
+      },
+      "C127": {
+        "before": "10nF",
+        "after": "10nF 50V X7R 10%"
+      },
+      "C10": {
+        "before": "22uF",
+        "after": "22uF 25V X5R 20%"
+      },
+      "C60": {
+        "before": "10nF",
+        "after": "10nF 50V X7R 10%"
+      },
+      "C11": {
+        "before": "22uF",
+        "after": "22uF 25V X5R 20%"
+      },
+      "C26": {
+        "before": "10pF",
+        "after": "10pF 50V C0G 5%"
+      },
+      "C122": {
+        "before": "10nF",
+        "after": "10nF 50V X7R 10%"
+      },
+      "C20": {
+        "before": "2.2uF",
+        "after": "2.2uF 16V X5R 10%"
+      },
+      "C23": {
+        "before": "4.7uF",
+        "after": "4.7uF 16V X5R 10%"
+      },
+      "C99": {
+        "before": "100nF 50V",
+        "after": "100nF 50V X7R 10%"
+      },
+      "C9": {
+        "before": "22uF",
+        "after": "22uF 25V X5R 20%"
+      },
+      "C129": {
+        "before": "10nF",
+        "after": "10nF 50V X7R 10%"
+      },
+      "C6": {
+        "before": "22uF",
+        "after": "22uF 25V X5R 20%"
+      }
+    }
+  },
+  "hardware_copper": {
+    "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+    "method": "Native straight-track and via radial extents within the maximum 3.5 mm nylon washer radius; GND excluded. Pad/body exclusions remain fit_check obligations.",
+    "supports": [
+      {
+        "support_mm": [
+          4,
+          4
+        ],
+        "radius_mm": 3.5,
+        "non_GND_surface_items": []
+      },
+      {
+        "support_mm": [
+          42,
+          4
+        ],
+        "radius_mm": 3.5,
+        "non_GND_surface_items": []
+      },
+      {
+        "support_mm": [
+          4,
+          44.3
+        ],
+        "radius_mm": 3.5,
+        "non_GND_surface_items": [
+          {
+            "net": "3V3",
+            "layer": "F.Cu",
+            "kind": "masked track",
+            "center_to_copper_mm": 3.4103988377390966,
+            "start": [
+              3.73,
+              40.35
+            ],
+            "end": [
+              3.73,
+              40.8
+            ],
+            "width_mm": 0.2
+          },
+          {
+            "net": "3V3",
+            "layer": "F.Cu/B.Cu",
+            "kind": "via",
+            "center_to_copper_mm": 3.2603988377390967,
+            "at": [
+              3.73,
+              40.8
+            ]
+          },
+          {
+            "net": "NRST",
+            "layer": "F.Cu",
+            "kind": "masked track",
+            "center_to_copper_mm": 3.421391602761608,
+            "start": [
+              5.0,
+              40.35
+            ],
+            "end": [
+              6.2021,
+              41.5521
+            ],
+            "width_mm": 0.2
+          },
+          {
+            "net": "NRST",
+            "layer": "F.Cu",
+            "kind": "masked track",
+            "center_to_copper_mm": 3.421391602761608,
+            "start": [
+              6.2021,
+              41.5521
+            ],
+            "end": [
+              8.2479,
+              41.5521
+            ],
+            "width_mm": 0.2
+          }
+        ]
+      },
+      {
+        "support_mm": [
+          3.7,
+          86
+        ],
+        "radius_mm": 3.5,
+        "non_GND_surface_items": []
+      },
+      {
+        "support_mm": [
+          42,
+          86
+        ],
+        "radius_mm": 3.5,
+        "non_GND_surface_items": [
+          {
+            "net": "BAT_IN",
+            "layer": "B.Cu",
+            "kind": "masked track",
+            "center_to_copper_mm": 2.9860364312496808,
+            "start": [
+              38.75,
+              84.32
+            ],
+            "end": [
+              39.9,
+              83.17
+            ],
+            "width_mm": 1.0
+          },
+          {
+            "net": "BAT_IN",
+            "layer": "B.Cu",
+            "kind": "masked track",
+            "center_to_copper_mm": 3.1740459701882426,
+            "start": [
+              39.9,
+              83.17
+            ],
+            "end": [
+              39.9,
+              82.37
+            ],
+            "width_mm": 0.7
+          },
+          {
+            "net": "BAT_IN",
+            "layer": "B.Cu",
+            "kind": "masked track",
+            "center_to_copper_mm": 2.804920573932147,
+            "start": [
+              36.725,
+              86.6
+            ],
+            "end": [
+              38.75,
+              86.6
+            ],
+            "width_mm": 1.0
+          },
+          {
+            "net": "BAT_IN",
+            "layer": "B.Cu",
+            "kind": "masked track",
+            "center_to_copper_mm": 2.75,
+            "start": [
+              38.75,
+              86.6
+            ],
+            "end": [
+              38.75,
+              84.32
+            ],
+            "width_mm": 1.0
+          }
+        ]
+      }
+    ],
+    "non_conductive_sled_and_nylon_hardware_required": true,
+    "physical_contact_not_verified": true
+  }
+}

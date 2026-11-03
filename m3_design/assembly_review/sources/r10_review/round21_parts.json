@@ -1,0 +1,109 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round21_parts",
+ "reviewer": "claude",
+ "target_commit": "accfff4947266a23cf60a63f3d92be047f5391b5",
+ "board_sha256_before": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "board_sha256_after": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "totals": {"Critical": 0, "Major": 0, "Minor": 4},
+ "findings": [
+  {
+   "id": "R21-BOM-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "D-R20-05 leaves two plated terminal holes 0.25 mm from foreign inner copper, under JLC's 0.3 mm inner-layer PTH-pad hole-to-copper minimum",
+   "evidence": {
+    "files": ["m3_design/assembly_review/m3.kicad_pcb", "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_GN.kicad_mod", "m3_design/assembly_review/m3.kicad_dru", "m3_design/assembly_review/fab/m3_gerber.zip"],
+    "measured": [
+     {"pad": "J400.2 BAT_SW_RETURN", "centre_mm": [7.4, 67.6], "layer": "In1.Cu", "inner_ring": false, "hole_mm": 1.30, "hole_wall_to_foreign_copper_mm": 0.250, "foreign_net": "GND"},
+     {"pad": "J1.2 GND", "centre_mm": [7.4, 77.6], "layer": "In2.Cu", "inner_ring": false, "hole_mm": 1.30, "hole_wall_to_foreign_copper_mm": 0.250, "foreign_net": "RAW_PROTECTED"}
+    ],
+    "method": "native pcbnew: every PAD_ATTRIB_PTH pad, each inner layer, distance from the finished-hole wall to the nearest different-net zone fill / track / via (probe pth_inner.py). Every other plated pad on the board measures >= 0.55 mm (it keeps a 1.9 mm inner ring 0.25 mm from foreign copper). The fab Gerbers confirm no In1 flash at J400.2 and no In2 flash at J1.2 / J400.2 / J121.1.",
+    "rule_in_project": "m3.kicad_dru 'General copper to hole clearance' min 0.25 mm, so DRC passes at exactly 0.250",
+    "maker_rule": "JLCPCB PCB capabilities, https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-10-31): 'Inner layer via hole to copper clearance' 0.2 mm; 'Inner layer PTH pad hole to copper clearance' 0.3 mm; plated hole tolerance +0.13 / -0.08 mm",
+    "history": "Before D-R20-05 both pads had inner rings, so wall-to-copper was 0.55 mm; the record (D-R20-05 'Side effect at J1.2') equates 0.25 mm with the via hole clearance, but JLC's via rule (0.2) does not apply to a component PTH pad (0.3)."
+   },
+   "impact": "A fab-capability breach at two plated holes, first created by the round 20 polish. JLC's DFM may query or silently pull back the copper; at worst a drill wander or the +0.13 mm hole tolerance (wall moves 0.065 mm) leaves about 0.185 mm to a pour on a 1.3 mm drilled hole. A GND-to-RAW_PROTECTED short at J1.2 leaves U9 current-limiting and the board not running; a BAT_SW_RETURN-to-GND short at J400.2 holds EN low and the board off (fail-safe, but the switch would be dead). No inadvertent-fire path.",
+   "concrete_fix": "Add a .kicad_dru rule for plated pad holes, e.g. (rule \"JLC inner PTH pad hole to copper\" (condition \"A.Type == 'Pad' && A.Pad_Type == 'Through-hole'\") (constraint hole_clearance (min 0.3mm))), refill zones (In1 GND at J400.2 and In2 RAW_PROTECTED at J1.2 each back off 0.05 mm), and have the gate assert >= 0.30 mm for component PTH pads. Alternatively give J1 its own 2P_GN footprint that keeps pad 2's rings. Check the RAW_PROTECTED neck near J1.2 after the refill (K-plane)."
+  },
+  {
+   "id": "R21-BOM-02",
+   "severity": "Minor",
+   "status": "carried (R20-BOM-01)",
+   "title": "U4 ISM6HG256XTR is still short at JLC, and the consigned alternate LSM6DSV320XTR is also unavailable at JLC / LCSC",
+   "evidence": {
+    "live_jlc_2026-10-31T13:40-13:43Z": {"C51931514 ISM6HG256XTR": {"stockCount": 9, "canPresaleNumber": 2, "need_5_boards": 5}, "C26633007 LSM6DSV320XTR": {"stockCount": 0, "canPresaleNumber": -18, "lcsc_stock": 0}},
+    "gate": "fab/stock_check.json (10:13Z) now reads min(stockCount, canPresaleNumber) and fails 'U4 orderable 2 < 5' (R20-BOM-01 gate fix confirmed)",
+    "docs": "docs/ORDERING.md line 423 still says 'U4 is the stocked ISM6HG256XTR (C51931514); use consigned LSM6DSV320XTR only if that stock is gone', whereas line 280 says it is short (2 orderable for 5)."
+   },
+   "impact": "Five boards cannot be assembled from JLC stock today. The documented fallback (consign the LSM6DSV320X) requires a CPL rotation change (0 deg from its own EasyEDA footprint), a re-verified CPL and the other register map; a mixed 2 + 3 build would leave two firmware variants.",
+   "concrete_fix": "Prefer buying ISM6HG256XTR from a franchised source and consigning it (CPL 180 deg and the fitted firmware map unchanged); keep the LSM path as second fallback. Reword ORDERING line 423 to 'short at JLC (2 orderable for 5); consign'. Order-day cart check remains."
+  },
+  {
+   "id": "R21-BOM-03",
+   "severity": "Minor",
+   "status": "carried (R20-BOM-02 / R19-BOM-04)",
+   "title": "DB125 holes 1.30 mm / lands 1.90 mm against DORABO's 1.20 mm recommendation on all 27 contacts",
+   "evidence": {"footprints": "M3_DB125_2P_BK / 2P_GN / 4P_GN / 5P_GN: drill 1.3, pad 1.9 (outer annulus 0.30 mm, above JLC's 0.15 / 0.20 mm multilayer minimum)", "maker": "DORABO T0-1 drawing p1, https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf", "cpl_residual": "J1 / J121 / J400 / J440 / J9 / J410 / J420 / J122 rebuild 0.000 mm from today's EasyEDA footprints"},
+   "impact": "Unchanged: first-article hole-fill and seating inspection.",
+   "concrete_fix": "No CAD change; first-article fill check on all eight bodies (already in ORDERING 8.2)."
+  },
+  {
+   "id": "R21-BOM-04",
+   "severity": "Minor",
+   "status": "carried (R20-BOM-03)",
+   "title": "VCAP C19 / C20 (C23630 X5R) still lack a maker-bounded worst-case capacitance / ESR",
+   "evidence": {"refs": "C19, C20", "lcsc": "C23630"},
+   "impact": "As recorded (AGENTS table, U1 row).",
+   "concrete_fix": "As R18-m10: bench-measure or select a part with a published DC-bias curve."
+  }
+ ],
+ "fix_verification": [
+  {"id": "D-R20-09", "claim": "D440 / D441 moved to B(4.45,19.45) / B(4.45,23.05) rot -90 under J440, as D410 / D411 under J410", "measured": "Native: both B.Cu, -90 deg, C535146 ESD103-B1-02EL E6327, pad 1 AUX_TX_WIRE / AUX_RX_WIRE, pad 2 GND. CPL rows D440 4.45,-19.45 Bottom 270 and D441 4.45,-23.05 Bottom 270 (same convention as D410 / D411 Bottom 270). EasyEDA TSLP-2-20 rebuild 0.005 mm both pads, pads land on their own numbers. B.Paste 0.28 x 0.45 apertures on all four pads. Pad-to-J440-barrel gap ~1.9 mm vs ~1.8 mm for D410 / D420 (accepted pattern; hand / selective THT soldering already required by ORDERING 8.2). Part is bidirectional, so a 180 deg placement error is electrically harmless. Note: they sit on the wire (outer) side, unlike D410 on the inner side; the record says so.", "verdict": "confirmed"},
+  {"id": "D-R20-04", "claim": "TP82 at B(11.2,20.7)", "measured": "B.Cu 1.5 mm pad, USB_LIMITED, B.Cu + B.Mask only, no B.Paste flash; excluded from BOM and POS (not in CPL), consistent with the other test pads.", "verdict": "confirmed"},
+  {"id": "D-R20-05", "claim": "J121.1 and J400.2 drop unconnected inner rings via the generated library; library parity holds", "measured": "Library diff: one line each in M3_DB125_2P_BK pad 1 / M3_DB125_2P_GN pad 2 (remove_unused_layers + keep_end_layers). DRC (kicad-cli 10.0.7, all severities, schematic parity) 0 / 0 / 0 including lib_footprint_mismatch. Gerbers: no In1 / In2 flash at J121.1 and J400.2; J1.2 keeps In1 (connected GND) and loses In2; J121.2 keeps both. But the ringless holes at J400.2 (In1 GND) and J1.2 (In2 RAW_PROTECTED) now sit 0.250 mm from foreign copper, below JLC's 0.3 mm PTH-pad rule (R21-BOM-01).", "verdict": "partly"},
+  {"id": "D-R20-06 / D-R20-07 (parts aspect)", "claim": "D440 / D441 designators shown on the bottom; Fab references clear", "measured": "Bottom render shows D440 / D441 legends beside their parts; no designator over a pad seen.", "verdict": "confirmed (render only; silkscreen geometry is another lens)"},
+  {"id": "D-R19-04", "claim": "C123 10 nF on Q122 gate-source", "measured": "F(18.22,71.85) 0 deg, pads ACT_EN / GND, C15195 CL05B103KB5NNNC 10 nF 50 V X7R, line C123,C408 qty 2, rebuild 0.000 mm, JLC 6.10 M in stock.", "verdict": "confirmed"},
+  {"id": "D-R19-07", "claim": "C84 lands have no paste; C84 on owner BOM only", "measured": "C84 pads F.Cu + F.Mask only; F_Paste Gerber has no flash near (27.5,75.25) / (27.5,81.75), F_Mask and F_Cu do. C84 absent from m3_bom_jlc.csv / m3_cpl_jlc.csv; owner BOM C46550466 MA25V470M8x10 qty 1. Paste totals 253 F / 375 B match ORDERING 8.2.", "verdict": "confirmed"},
+  {"id": "D-R19-11", "claim": "U4 ISM6HG256XTR on the LSM land, CPL Bottom 180", "measured": "Fresh EasyEDA C51931514 (LGA-14_L3.0-W2.5-P0.50-BR) rebuilds at Bottom 180 with 0.040 mm on all 14 pads; pads identical to the round 20 record. Stock still short (R21-BOM-02).", "verdict": "confirmed"},
+  {"id": "D-R19-14", "claim": "J440 cell copies J410 / J420", "measured": "J440 C2757925 rebuild 0.000 mm; schematic netlist vs board vs BOM identity 0 mismatches over 215 / 206 fitted / 205 CPL / 666 nodes; C2757925 37,797 in stock for 20.", "verdict": "confirmed"}
+ ],
+ "fix_now_recommendations": [
+  {"finding": "R21-BOM-01", "change": "Add .kicad_dru rule hole_clearance min 0.3 mm for through-hole pads (condition A.Type == 'Pad' && A.Pad_Type == 'Through-hole'), refill, confirm J400.2 In1 and J1.2 In2 read >= 0.30 mm and K-plane necks still pass; add the assertion to the gate. Vias keep 0.25 mm (JLC 0.2)."}
+ ],
+ "rejected_or_closed_candidates": [
+  {"candidate": "Removing non-functional inner rings weakens barrel anchoring at the J121.1 / J400.2 terminals", "reason": "Outer rings (0.30 mm annulus) remain on both faces and the pin is soldered through; IPC permits non-functional pad removal. Not a demonstrated defect; covered by the first-article fill inspection."},
+  {"candidate": "D441 near J3's hand-finished shell slots", "reason": "D441 pad 2 is 2.529 mm from J3.4's slot copper, farther than the already named C83 (1.958) and R8 (2.150); ORDERING could add it to the iron keep-off list, but it is not a defect."},
+  {"candidate": "Second part-number field", "reason": "130 parts carry an 'LCSC Part' field; every one equals the LCSC field (0 contradictions)."},
+  {"candidate": "CPL outliers", "reason": "Q124 1.789 (merged drain pads), R134 0.491, LS120 0.45, Q120 / Q121 0.35 mm are the known land-size cases, unchanged; no pad lands nearer another number."},
+  {"candidate": "U9 TPS259470LRPWR stock", "reason": "45 in stock / 29 orderable for 5: thin-ish but more than 2x need."}
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after (0dc84776... both)",
+  "Native pcbnew dump of 215 footprints; diff against the round 20 dump of 50a39de5: only D440, D441 (pose) and TP82 (pose) changed",
+  "kicad-cli 10.0.7 schematic netlist; identity compare schematic / board / JLC BOM / CPL / owner BOM: 215 symbols, 215 footprints, 206 fitted, 81 + 1 lines, 205 CPL rows, 666 pin nodes, 0 issues",
+  "kicad-cli 10.0.7 DRC all severities with schematic parity: 0 violations, 0 unconnected, 0 parity",
+  "CPL reconstruction of all 205 rows against EasyEDA footprints (13 focus codes fetched fresh today, pads identical to round 20 cache; remainder from the round 20 same-day cache)",
+  "Fab Gerber flash checks: DB125 inner rings per layer, C84 paste absence, D440 / D441 / TP82 paste, paste totals 253 / 375",
+  "Inner-layer hole-wall-to-foreign-copper measurement for every plated pad (pth_inner.py)",
+  "Manifest: outputs SHA-256 of BOM / CPL / Gerber zip / owner BOM match files; PCB and DB125 library hashes bound",
+  "Live JLC exact-code and LCSC detail queries for all 82 codes plus C26633007 (2026-10-31T13:40-13:43Z): 36 Basic / 45 Extended; models match BOM MPNs; only U4 below 2x need",
+  "kicad-cli 3D render of the bottom side (visual check of D440 / D441 / TP82)",
+  "Exact pad gaps from D440 / D441 / C83 / R8 to J3 shell slots"
+ ],
+ "sources": [
+  "https://jlcpcb.com/capabilities/pcb-capabilities (inner-layer PTH pad hole to copper 0.3 mm; via 0.2 mm; PTH tolerance +0.13/-0.08; annular ring 0.15/0.20 mm)",
+  "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList (live stock, 2026-10-31T13:40Z)",
+  "https://wmsc.lcsc.com/ftps/wm/product/detail (LCSC detail)",
+  "https://easyeda.com/api/products/<code>/components (EasyEDA footprints)",
+  "DORABO T0-1 drawing p1: https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+  "ST DS15034 (ISM6HG256X) p9 Fig. 5 / p187, as compared in round 20"
+ ],
+ "coverage_limits": [
+  "Maker-drawing land comparisons for unchanged lands (TSLP-2-20, U1, U5, U9, Q120 / Q121, USB-C, crystal, DB125) are carried from rounds 19-20; their pads are unchanged on this board and today's EasyEDA pads equal the cached ones.",
+  "JLC's bottom-side rotation convention and the meaning of canPresaleNumber remain Inferences; JLC's placement preview and cart are the release checks.",
+  "Cost was not recomputed live; cost_check.json (08:23Z, $85.35 vs $84.41 cap) has the same codes and quantities. Over-cap is an open owner decision, noted only.",
+  "Franchised-distributor stock for ISM6HG256XTR was not checked.",
+  "No physical, firmware or assembly qualification."
+ ]
+}

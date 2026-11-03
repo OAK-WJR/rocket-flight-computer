@@ -1,0 +1,3672 @@
+{
+  "kind": "R13 focused Fab-reference source correction and isolated candidate verification; not a full review or integrated build",
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "written_utc": "2026-10-30T09:45:22.665209+00:00",
+  "status": "source ready for root integrated build",
+  "source_file": "m3_design/r10_post.py",
+  "source_sha256_before": "94a467a2e823ca7e5160aceb7baf7d1f474b056ed54a608ee713690c6bf5eaeb",
+  "source_sha256_after": "13d953083d6673e806635536fb2facaea0f8e9077c9ec289d9a8f4637f23d21f",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "isolated_candidate_sha256": "2c6b53beca6896655549d729c8f3ff6ca112d892b84190459e126394f66ff961",
+  "frozen_input_and_immutable_review_hashes": {
+    "m3_design/assembly_review/m3.kicad_pcb": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "m3_design/assembly_review/sources/r10_review/round13_manufacturing.md": "dad82b0a1b86dcba3d0aaee2d3c12d19656cf335de0f4c202eb5836570fd897a",
+    "m3_design/assembly_review/sources/r10_review/round13_manufacturing.json": "1809e47563dbef6116c484211ecb1df187086361d817aea8b1c3fd0bdfdfa6dd",
+    "m3_design/r10_post.py before correction": "94a467a2e823ca7e5160aceb7baf7d1f474b056ed54a608ee713690c6bf5eaeb"
+  },
+  "scope": {
+    "closed_in_isolated_candidate": "R13-MFG-01, expanded complete scan: 27 rectangular-border cases,49 pin1-dot cases,1 LS120 own-polarity-text case",
+    "all_references": 209,
+    "all_rendered_reference_characters": 722,
+    "corrected_references": 77,
+    "corrected_rendered_characters": 284,
+    "preserved_clear_references": 132,
+    "reference_count_per_side": {
+      "F.Fab": 70,
+      "B.Fab": 139
+    },
+    "changed_reference_count_per_side": {
+      "B.Fab": 60,
+      "F.Fab": 17
+    },
+    "all_non_reference_objects_preserved": true,
+    "unchanged_previous_R12_labels": [
+      "R10",
+      "C29",
+      "C92",
+      "R8",
+      "C5"
+    ],
+    "out_of_scope_carried_finding": "R13-MFG-02 L400 maker-land/first-article disposition remains open."
+  },
+  "source_change": {
+    "method": "77 explicit parent-relative dx,dy,text-height overrides called after the existing Fab placement stage; fixed 15 percent stroke, no runtime placement search or global shrink",
+    "preserved": [
+      "all electrical connectivity and copper including filled zones",
+      "all footprint and model poses,fields,pads and model paths",
+      "all Silkscreen graphics and text",
+      "all Fab graphic primitives and LS120 + / - texts",
+      "all text content,UUID,layer,angle,mirroring,justification and other effects",
+      "132 already-clear Fab-reference objects"
+    ],
+    "helpers_executed_in_validation": [
+      "fab_reference_clearances only"
+    ],
+    "not_executed": [
+      "canonical post stage",
+      "canonical PCB save/refill",
+      "canonical full build",
+      "tools/check.sh"
+    ],
+    "AST_scope_verified": "Every pre-existing function is AST-identical after removing only the single fab_reference_clearances call from finish; exactly one new function and one explicit override table added."
+  },
+  "exact_native_comparison": {
+    "baseline_board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "candidate_board_sha256": "2c6b53beca6896655549d729c8f3ff6ca112d892b84190459e126394f66ff961",
+    "all_nonfootprint_native_nodes_identical": true,
+    "all_footprint_nodes_identical_except_named_Fab_reference_texts": true,
+    "changed_reference_count": 77,
+    "unchanged_reference_count": 132,
+    "only_changed_text_attributes": [
+      "at x/y",
+      "font size",
+      "font thickness"
+    ],
+    "all_other_text_attributes_identical": true,
+    "all_text_content_angle_layer_mirroring_UUID_unchanged": true,
+    "changed_refs": [
+      "C10",
+      "C100",
+      "C13",
+      "C14",
+      "C15",
+      "C16",
+      "C17",
+      "C18",
+      "C21",
+      "C24",
+      "C25",
+      "C26",
+      "C30",
+      "C31",
+      "C32",
+      "C407",
+      "C408",
+      "C411",
+      "C461",
+      "C88",
+      "C99",
+      "D400",
+      "D401",
+      "D410",
+      "D411",
+      "D420",
+      "D421",
+      "LED1",
+      "LED2",
+      "LS120",
+      "Q120",
+      "Q121",
+      "R104",
+      "R105",
+      "R11",
+      "R12",
+      "R120",
+      "R121",
+      "R122",
+      "R123",
+      "R127",
+      "R128",
+      "R129",
+      "R13",
+      "R130",
+      "R131",
+      "R132",
+      "R133",
+      "R154",
+      "R155",
+      "R156",
+      "R157",
+      "R163",
+      "R173",
+      "R175",
+      "R178",
+      "R180",
+      "R432",
+      "R60",
+      "R61",
+      "R62",
+      "R63",
+      "R64",
+      "TP120",
+      "TP121",
+      "TP122",
+      "TP74",
+      "TP80",
+      "TP81",
+      "TP82",
+      "TP83",
+      "TP88",
+      "U10",
+      "U11",
+      "U12",
+      "U13",
+      "U400"
+    ]
+  },
+  "source_replay": {
+    "helper_only_replay_no_finish_or_refill": true,
+    "candidate_sha256": "2c6b53beca6896655549d729c8f3ff6ca112d892b84190459e126394f66ff961",
+    "source_replay_once_sha256": "2c6b53beca6896655549d729c8f3ff6ca112d892b84190459e126394f66ff961",
+    "source_replay_twice_sha256": "2c6b53beca6896655549d729c8f3ff6ca112d892b84190459e126394f66ff961",
+    "byte_equal_candidate": true,
+    "idempotent": true,
+    "explicit_override_rows": 77
+  },
+  "native_geometry": {
+    "native_api_version": "10.0.6",
+    "method": "native glyph/graphics polygons TransformShapeToPolygon at0.001mm,ERROR_OUTSIDE; positive BooleanIntersection area threshold0.000001mm2; all209 references tested layerwise against all reference glyphs,1018 Fab nontext graphics,2 other visible Fab texts,37 drill/circular-cutout polygons; all77 changed glyph sets additionally inflated0.025mm",
+    "baseline_affected_reference_count": 77,
+    "after": {
+      "reference_count": 209,
+      "all_reference_vs_graphics_text_drill_cutout_intersections": [],
+      "affected_reference_count": 77,
+      "affected_minimum_0p025mm_inflation_failures": [],
+      "native_drill_and_cutout_shapes": 37,
+      "other_visible_Fab_texts": 2,
+      "sizes_mm": {
+        "1.0": 1,
+        "0.4": 49,
+        "0.6": 12,
+        "0.7": 6,
+        "0.8": 7,
+        "0.5": 2
+      },
+      "angles_mirroring_content_unchanged": true
+    },
+    "all_reference_ink_inside_46x90_board": true,
+    "all_changed_centres_nearest_own_courtyard": true,
+    "note": "The installed native API emits a wxApp traits assertion diagnostic on load; successful probes exit0 and all explicit assertions pass. Native API is10.0.6; actual PDF export uses the separately supplied official10.0.7 CLI."
+  },
+  "PDF_QA": {
+    "official_cli_version": "10.0.7",
+    "sequential_native_commands": [
+      {
+        "args": [
+          "version"
+        ],
+        "exit_code": 0,
+        "stdout": "10.0.7\n",
+        "stderr": ""
+      },
+      {
+        "args": [
+          "pcb",
+          "export",
+          "pdf",
+          "--mode-single",
+          "--black-and-white",
+          "--exclude-value",
+          "--scale",
+          "0",
+          "--layers",
+          "F.Fab,Edge.Cuts",
+          "-o",
+          ".supervisor/r13_fab_fix_prepare/candidate_top.pdf",
+          ".supervisor/r13_fab_fix_prepare/candidate.kicad_pcb"
+        ],
+        "exit_code": 0,
+        "stdout": "Plotted to '.supervisor/r13_fab_fix_prepare/candidate_top.pdf'.\nDone.\n",
+        "stderr": ""
+      },
+      {
+        "args": [
+          "pcb",
+          "export",
+          "pdf",
+          "--mode-single",
+          "--black-and-white",
+          "--exclude-value",
+          "--scale",
+          "0",
+          "--mirror",
+          "--layers",
+          "B.Fab,Edge.Cuts",
+          "-o",
+          ".supervisor/r13_fab_fix_prepare/candidate_bottom.pdf",
+          ".supervisor/r13_fab_fix_prepare/candidate.kicad_pcb"
+        ],
+        "exit_code": 0,
+        "stdout": "Plotted to '.supervisor/r13_fab_fix_prepare/candidate_bottom.pdf'.\nDone.\n",
+        "stderr": ""
+      }
+    ],
+    "files": [
+      {
+        "path": ".supervisor/r13_fab_fix_prepare/candidate_top.pdf",
+        "sha256": "d24290d555501f77019aba6ca738b72ff3089566e63ff7e61308c2770f0cddf1",
+        "pages": 1,
+        "page_size_points": [
+          841.896,
+          595.296
+        ]
+      },
+      {
+        "path": ".supervisor/r13_fab_fix_prepare/candidate_bottom.pdf",
+        "sha256": "3aa2e4c1a708598708592af832b77e270bc42435475ff396365d9c5e4d1e7c94",
+        "pages": 1,
+        "page_size_points": [
+          841.896,
+          595.296
+        ]
+      }
+    ],
+    "complete_pages_inspected": [
+      {
+        "side": "top",
+        "page": 1,
+        "dpi": 180,
+        "path": ".supervisor/r13_fab_fix_prepare/top_full_180.png"
+      },
+      {
+        "side": "bottom mirrored as seen from below",
+        "page": 1,
+        "dpi": 180,
+        "path": ".supervisor/r13_fab_fix_prepare/bottom_full_180.png"
+      }
+    ],
+    "changed_details_inspected": {
+      "dpi": 600,
+      "tile_count": 77,
+      "sheet_count": 5,
+      "paths": [
+        ".supervisor/r13_fab_fix_prepare/changed_details_1.png",
+        ".supervisor/r13_fab_fix_prepare/changed_details_2.png",
+        ".supervisor/r13_fab_fix_prepare/changed_details_3.png",
+        ".supervisor/r13_fab_fix_prepare/changed_details_4.png",
+        ".supervisor/r13_fab_fix_prepare/changed_details_5.png"
+      ],
+      "result": "All77 labels readable at detail zoom, assigned to their own body or nearest own courtyard; no clipping/overprinted glyphs in reviewed tiles. Top/bottom full pages have complete board outlines,holes and the expected assembly map."
+    }
+  },
+  "readability_and_coverage_limits": {
+    "corrected_height_mm_distribution": {
+      "1.0": 1,
+      "0.4": 49,
+      "0.6": 12,
+      "0.7": 6,
+      "0.8": 7,
+      "0.5": 2
+    },
+    "full_board_height_mm_distribution": {
+      "0.4": 138,
+      "0.8": 30,
+      "0.6": 12,
+      "1.0": 18,
+      "0.5": 3,
+      "0.3": 2,
+      "0.7": 6
+    },
+    "unchanged_0p3mm_labels": [
+      "C80",
+      "D8"
+    ],
+    "vector_zoom_required": true,
+    "small_text_limit": "Corrected Fab text0.4..1.0mm and preserved0.3mm C80/D8 require vector zoom or enlarged details; whole-board page raster and physical-size printing do not establish small-text readability. Fab text is assembly-only;>=1.0mm silkscreen unchanged. Tightest changed spacing is certified by0.025mm inflation at0.001mm polygon precision,not by printer capability.",
+    "review_scope": "Complete one-page top and mirrored bottom assembly PDFs inspected at180dpi plus all77 changed600dpi details; native scan covers every209 reference including unchanged labels. No full-board600dpi visual sweep or physical printing/test.",
+    "integration_pending": "Root must run complete regenerated builds,DRC/parity/ERC/gate,refresh hash binding/fab/manifest and repeat the native object/geometry checks on the integrated target before closing the finding for the new PCB. These receipts do not assert integrated acceptance or physical qualification."
+  },
+  "validation_probes": [
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/scan.py",
+      "sha256": "60a6305beb9c1089c99400dbcd198abe81d4c68962b1b887e9779fd650854e56"
+    },
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/baseline_full.py",
+      "sha256": "df93f533b729eecaf21efaa512e1021eb14ff509836f3c4e2b134e5c65a51ff2"
+    },
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/compare.py",
+      "sha256": "0be8abdfc3eeb4a94e0f1c2b13bb66d650d1c275df199ed964901c7c0eede784"
+    },
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/extended_check.py",
+      "sha256": "ab853c56c0f3d56ea5b064026e00320954f3821d9ad7707ba7c61c4a2a83e865"
+    },
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/metrics.py",
+      "sha256": "63f479a51d706bcfd56c550bd1e0b32522fa9bdbc95f3e46ff823d59190ca938"
+    },
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/replay.py",
+      "sha256": "408d6fde69246a5d6425a16115b6430d4380ce93f23dd5af1888bff6c0394051"
+    },
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/prepare_source.py",
+      "sha256": "f216962d35c9dc22b67f365bb672193d16fc44f1843ca5684e1a6269dbe499b6"
+    },
+    {
+      "path": ".supervisor/r13_fab_fix_prepare/r10_post.patch",
+      "sha256": "c5db76dd99ed6bd0fed59231a9cdc480f30ace220e0e3d0fa09fe914dbeaee33"
+    }
+  ],
+  "per_reference_before_after_and_baseline_collisions": [
+    {
+      "ref": "C10",
+      "layer": "B.Fab",
+      "text": "C10",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          17.5,
+          54.1
+        ],
+        "height": 1.0,
+        "stroke": 0.15,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          17.5,
+          54.2
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 1.0,
+        "stroke_mm": 0.15,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R164",
+        "nearest_other_courtyard_distance_mm": 0.9249999999999972
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C10",
+          "kind": "Circle",
+          "area_mm2": 0.004686524185
+        }
+      ]
+    },
+    {
+      "ref": "C100",
+      "layer": "B.Fab",
+      "text": "C100",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          28.85,
+          39.97
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          28.8,
+          39.97
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U12",
+        "nearest_other_courtyard_distance_mm": 0.5299999999999976
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C100",
+          "kind": "Circle",
+          "area_mm2": 0.0015596871385
+        }
+      ]
+    },
+    {
+      "ref": "C13",
+      "layer": "B.Fab",
+      "text": "C13",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          14.85,
+          50.1
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          14.8,
+          50.1
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C11",
+        "nearest_other_courtyard_distance_mm": 1.2384062338344375
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C13",
+          "kind": "Circle",
+          "area_mm2": 0.001489858346
+        }
+      ]
+    },
+    {
+      "ref": "C14",
+      "layer": "B.Fab",
+      "text": "C14",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          21.4,
+          52.15
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          21.4,
+          52.1
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C127",
+        "nearest_other_courtyard_distance_mm": 0.9257699498255484
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C14",
+          "kind": "Circle",
+          "area_mm2": 0.0014897651825
+        }
+      ]
+    },
+    {
+      "ref": "C15",
+      "layer": "B.Fab",
+      "text": "C15",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          29.05,
+          47.4
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          29.15,
+          47.4
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U13",
+        "nearest_other_courtyard_distance_mm": 0.7337744885181029
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C15",
+          "kind": "Circle",
+          "area_mm2": 0.004843117972
+        }
+      ]
+    },
+    {
+      "ref": "C16",
+      "layer": "B.Fab",
+      "text": "C16",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          26.6,
+          36.62
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          26.6,
+          36.57
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C23",
+        "nearest_other_courtyard_distance_mm": 0.5249999999999986
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C16",
+          "kind": "Circle",
+          "area_mm2": 0.001489849528
+        }
+      ]
+    },
+    {
+      "ref": "C17",
+      "layer": "B.Fab",
+      "text": "C17",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          17.0,
+          37.9
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          16.95,
+          37.9
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U3",
+        "nearest_other_courtyard_distance_mm": 0.7804165554369046
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C17",
+          "kind": "Circle",
+          "area_mm2": 0.001489858346
+        }
+      ]
+    },
+    {
+      "ref": "C18",
+      "layer": "B.Fab",
+      "text": "C18",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          18.3,
+          49.15
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          18.3,
+          49.1
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C30",
+        "nearest_other_courtyard_distance_mm": 0.7850000000000001
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C18",
+          "kind": "Circle",
+          "area_mm2": 0.001489849528
+        }
+      ]
+    },
+    {
+      "ref": "C21",
+      "layer": "B.Fab",
+      "text": "C21",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          28.1,
+          49.25
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          28.1,
+          49.35
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C22",
+        "nearest_other_courtyard_distance_mm": 0.7450167783345566
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C21",
+          "kind": "Circle",
+          "area_mm2": 0.004826541137
+        }
+      ]
+    },
+    {
+      "ref": "C24",
+      "layer": "B.Fab",
+      "text": "C24",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          25.45,
+          49.0
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          25.55,
+          48.9
+        ],
+        "parent_offset_mm": [
+          0.1,
+          -0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "Y1",
+        "nearest_other_courtyard_distance_mm": 0.7050000000000018
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C24",
+          "kind": "Circle",
+          "area_mm2": 0.0077021989275
+        }
+      ]
+    },
+    {
+      "ref": "C25",
+      "layer": "B.Fab",
+      "text": "C25",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          19.95,
+          47.7
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          19.95,
+          47.65
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "Y1",
+        "nearest_other_courtyard_distance_mm": 0.9050000000000011
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C25",
+          "kind": "Circle",
+          "area_mm2": 0.001489849528
+        }
+      ]
+    },
+    {
+      "ref": "C26",
+      "layer": "B.Fab",
+      "text": "C26",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          25.75,
+          45.5
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          25.75,
+          45.6
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C22",
+        "nearest_other_courtyard_distance_mm": 0.5899576255969566
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C26",
+          "kind": "Circle",
+          "area_mm2": 0.0048216353455
+        }
+      ]
+    },
+    {
+      "ref": "C30",
+      "layer": "B.Fab",
+      "text": "C30",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          17.05,
+          48.73
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          17.0,
+          48.73
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C18",
+        "nearest_other_courtyard_distance_mm": 0.4349999999999987
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C30",
+          "kind": "Circle",
+          "area_mm2": 0.001489858346
+        }
+      ]
+    },
+    {
+      "ref": "C31",
+      "layer": "B.Fab",
+      "text": "C31",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          14.7,
+          47.07
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          14.65,
+          47.07
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U4",
+        "nearest_other_courtyard_distance_mm": 0.45500000000000007
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C31",
+          "kind": "Circle",
+          "area_mm2": 0.001489858346
+        }
+      ]
+    },
+    {
+      "ref": "C32",
+      "layer": "B.Fab",
+      "text": "C32",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          8.72,
+          45.85
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          8.82,
+          45.85
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U5",
+        "nearest_other_courtyard_distance_mm": 0.9050000000000011
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C32",
+          "kind": "Circle",
+          "area_mm2": 0.004821590228
+        }
+      ]
+    },
+    {
+      "ref": "C407",
+      "layer": "F.Fab",
+      "text": "C407",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          31.8,
+          19.5
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          31.8,
+          19.5
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "J410",
+        "nearest_other_courtyard_distance_mm": 2.455000000000002
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C407",
+          "kind": "Rect",
+          "area_mm2": 0.1921928
+        }
+      ]
+    },
+    {
+      "ref": "C408",
+      "layer": "B.Fab",
+      "text": "C408",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          24.8,
+          13.6
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          24.8,
+          13.55
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U401",
+        "nearest_other_courtyard_distance_mm": 1.0549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C408",
+          "kind": "Circle",
+          "area_mm2": 0.001559687082
+        }
+      ]
+    },
+    {
+      "ref": "C411",
+      "layer": "B.Fab",
+      "text": "C411",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          34.2,
+          22.75
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          34.2,
+          22.75
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.7,
+        "stroke_mm": 0.105,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "J430",
+        "nearest_other_courtyard_distance_mm": 2.3050000000000033
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C411",
+          "kind": "Rect",
+          "area_mm2": 0.1921642
+        }
+      ]
+    },
+    {
+      "ref": "C461",
+      "layer": "F.Fab",
+      "text": "C461",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          27.0,
+          18.8
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          27.0,
+          18.8
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.7,
+        "stroke_mm": 0.105,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R464",
+        "nearest_other_courtyard_distance_mm": 2.6050000000000004
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C461",
+          "kind": "Rect",
+          "area_mm2": 0.1921642
+        }
+      ]
+    },
+    {
+      "ref": "C88",
+      "layer": "B.Fab",
+      "text": "C88",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          19.4,
+          83.95
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          19.5,
+          83.95
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U9",
+        "nearest_other_courtyard_distance_mm": 0.855000000000004
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C88",
+          "kind": "Circle",
+          "area_mm2": 0.004821590228
+        }
+      ]
+    },
+    {
+      "ref": "C99",
+      "layer": "B.Fab",
+      "text": "C99",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          25.42,
+          66.9
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          25.42,
+          67.0
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U2",
+        "nearest_other_courtyard_distance_mm": 0.7549999999999955
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "C99",
+          "kind": "Circle",
+          "area_mm2": 0.0048309595825
+        }
+      ]
+    },
+    {
+      "ref": "D400",
+      "layer": "B.Fab",
+      "text": "D400",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.75,
+          43.7
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          35.9,
+          44.8
+        ],
+        "parent_offset_mm": [
+          0.15,
+          1.1
+        ],
+        "height_mm": 0.8,
+        "stroke_mm": 0.12,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.40499999999999403,
+        "nearest_other_ref": "R100",
+        "nearest_other_courtyard_distance_mm": 0.413823633931173
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "D400",
+          "kind": "Rect",
+          "area_mm2": 0.122266356191
+        }
+      ]
+    },
+    {
+      "ref": "D401",
+      "layer": "B.Fab",
+      "text": "D401",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.75,
+          47.2
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          35.75,
+          48.3
+        ],
+        "parent_offset_mm": [
+          0.0,
+          1.1
+        ],
+        "height_mm": 0.8,
+        "stroke_mm": 0.12,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.40499999999999403,
+        "nearest_other_ref": "U13",
+        "nearest_other_courtyard_distance_mm": 1.7550000000000026
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "D401",
+          "kind": "Rect",
+          "area_mm2": 0.122266356191
+        }
+      ]
+    },
+    {
+      "ref": "D410",
+      "layer": "B.Fab",
+      "text": "D410",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.75,
+          12.3
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          35.8,
+          11.3
+        ],
+        "parent_offset_mm": [
+          0.05,
+          -1.0
+        ],
+        "height_mm": 0.8,
+        "stroke_mm": 0.12,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.3049999999999997,
+        "nearest_other_ref": "R440",
+        "nearest_other_courtyard_distance_mm": 0.38890872965260037
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "D410",
+          "kind": "Rect",
+          "area_mm2": 0.122266356191
+        }
+      ]
+    },
+    {
+      "ref": "D411",
+      "layer": "B.Fab",
+      "text": "D411",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.75,
+          8.7
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          35.75,
+          7.7
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.0
+        ],
+        "height_mm": 0.8,
+        "stroke_mm": 0.12,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.3050000000000006,
+        "nearest_other_ref": "R440",
+        "nearest_other_courtyard_distance_mm": 1.7892037335082884
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "D411",
+          "kind": "Rect",
+          "area_mm2": 0.122266356191
+        }
+      ]
+    },
+    {
+      "ref": "D420",
+      "layer": "B.Fab",
+      "text": "D420",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.75,
+          31.2
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          35.75,
+          32.3
+        ],
+        "parent_offset_mm": [
+          0.0,
+          1.1
+        ],
+        "height_mm": 0.8,
+        "stroke_mm": 0.12,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.4049999999999976,
+        "nearest_other_ref": "C420",
+        "nearest_other_courtyard_distance_mm": 1.125
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "D420",
+          "kind": "Rect",
+          "area_mm2": 0.122266356191
+        }
+      ]
+    },
+    {
+      "ref": "D421",
+      "layer": "B.Fab",
+      "text": "D421",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.75,
+          27.7
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          35.9,
+          28.8
+        ],
+        "parent_offset_mm": [
+          0.15,
+          1.1
+        ],
+        "height_mm": 0.8,
+        "stroke_mm": 0.12,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.40500000000000114,
+        "nearest_other_ref": "R451",
+        "nearest_other_courtyard_distance_mm": 0.4138236339311715
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "D421",
+          "kind": "Rect",
+          "area_mm2": 0.122266356191
+        }
+      ]
+    },
+    {
+      "ref": "LED1",
+      "layer": "F.Fab",
+      "text": "LED1",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          8.95,
+          42.6
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          7.5,
+          42.6
+        ],
+        "parent_offset_mm": [
+          -1.45,
+          0.0
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 90.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "J2",
+        "nearest_other_courtyard_distance_mm": 1.1550000000000011
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "LED1",
+          "kind": "Rect",
+          "area_mm2": 0.072787671532
+        }
+      ]
+    },
+    {
+      "ref": "LED2",
+      "layer": "F.Fab",
+      "text": "LED2",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          8.95,
+          46.5
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          7.5,
+          46.5
+        ],
+        "parent_offset_mm": [
+          -1.45,
+          0.0
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 90.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R33",
+        "nearest_other_courtyard_distance_mm": 2.1404321993466646
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "LED2",
+          "kind": "Rect",
+          "area_mm2": 0.04977757827
+        }
+      ]
+    },
+    {
+      "ref": "LS120",
+      "layer": "F.Fab",
+      "text": "LS120",
+      "glyph_count": 5,
+      "before": {
+        "xy": [
+          23.0,
+          58.5
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          23.0,
+          59.7
+        ],
+        "parent_offset_mm": [
+          0.0,
+          1.2
+        ],
+        "height_mm": 0.8,
+        "stroke_mm": 0.12,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "D123",
+        "nearest_other_courtyard_distance_mm": 2.5549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "LS120 +",
+          "kind": "text",
+          "area_mm2": 0.335018940828
+        },
+        {
+          "owner": "LS120 -",
+          "kind": "text",
+          "area_mm2": 0.072575448
+        }
+      ]
+    },
+    {
+      "ref": "Q120",
+      "layer": "B.Fab",
+      "text": "Q120",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          13.5,
+          73.6
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          13.5,
+          73.6
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.7,
+        "stroke_mm": 0.105,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "D9",
+        "nearest_other_courtyard_distance_mm": 2.155000000000001
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "Q120",
+          "kind": "Rect",
+          "area_mm2": 0.04125201976
+        }
+      ]
+    },
+    {
+      "ref": "Q121",
+      "layer": "B.Fab",
+      "text": "Q121",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          13.5,
+          68.6
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          13.5,
+          68.6
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.7,
+        "stroke_mm": 0.105,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R134",
+        "nearest_other_courtyard_distance_mm": 2.4549999999999983
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "Q121",
+          "kind": "Rect",
+          "area_mm2": 0.04112815182
+        }
+      ]
+    },
+    {
+      "ref": "R104",
+      "layer": "F.Fab",
+      "text": "R104",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          33.2,
+          46.5
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          33.2,
+          46.65
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.15
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "J9",
+        "nearest_other_courtyard_distance_mm": 1.0549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R104",
+          "kind": "Circle",
+          "area_mm2": 0.007873155856
+        }
+      ]
+    },
+    {
+      "ref": "R105",
+      "layer": "F.Fab",
+      "text": "R105",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          33.2,
+          48.6
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          33.2,
+          48.55
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C94",
+        "nearest_other_courtyard_distance_mm": 1.0549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R105",
+          "kind": "Circle",
+          "area_mm2": 0.001580965503
+        }
+      ]
+    },
+    {
+      "ref": "R11",
+      "layer": "B.Fab",
+      "text": "R11",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          14.2,
+          43.75
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          14.3,
+          43.75
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U4",
+        "nearest_other_courtyard_distance_mm": 0.9502894295950062
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R11",
+          "kind": "Circle",
+          "area_mm2": 0.0048265018245
+        }
+      ]
+    },
+    {
+      "ref": "R12",
+      "layer": "B.Fab",
+      "text": "R12",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          7.0,
+          49.37
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          7.1,
+          49.37
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "U5",
+        "nearest_other_courtyard_distance_mm": 0.7050000000000001
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R12",
+          "kind": "Circle",
+          "area_mm2": 0.004843117972
+        }
+      ]
+    },
+    {
+      "ref": "R120",
+      "layer": "B.Fab",
+      "text": "R120",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          18.5,
+          72.6
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          18.45,
+          72.6
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C120",
+        "nearest_other_courtyard_distance_mm": 0.5749999999999993
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R120",
+          "kind": "Circle",
+          "area_mm2": 0.001580965336
+        }
+      ]
+    },
+    {
+      "ref": "R121",
+      "layer": "F.Fab",
+      "text": "R121",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          14.5,
+          71.87
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          14.45,
+          71.87
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "D8",
+        "nearest_other_courtyard_distance_mm": 0.8349999999999937
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R121",
+          "kind": "Circle",
+          "area_mm2": 0.001580965336
+        }
+      ]
+    },
+    {
+      "ref": "R122",
+      "layer": "F.Fab",
+      "text": "R122",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          19.6,
+          69.8
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          19.7,
+          69.8
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R123",
+        "nearest_other_courtyard_distance_mm": 0.4350000000000023
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R122",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R123",
+      "layer": "F.Fab",
+      "text": "R123",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          20.6,
+          70.66
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          20.7,
+          70.66
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R122",
+        "nearest_other_courtyard_distance_mm": 0.634999999999998
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R123",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R127",
+      "layer": "F.Fab",
+      "text": "R127",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          19.8,
+          54.24
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          19.8,
+          54.19
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R126",
+        "nearest_other_courtyard_distance_mm": 0.9350000000000023
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R127",
+          "kind": "Circle",
+          "area_mm2": 0.001580965503
+        }
+      ]
+    },
+    {
+      "ref": "R128",
+      "layer": "F.Fab",
+      "text": "R128",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          18.3,
+          57.405
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          18.4,
+          57.405
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C126",
+        "nearest_other_courtyard_distance_mm": 0.8049999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R128",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R129",
+      "layer": "B.Fab",
+      "text": "R129",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          23.0,
+          57.4
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          23.1,
+          57.4
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R173",
+        "nearest_other_courtyard_distance_mm": 0.884999999999998
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R129",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R13",
+      "layer": "B.Fab",
+      "text": "R13",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          10.25,
+          52.55
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          10.2,
+          52.55
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R64",
+        "nearest_other_courtyard_distance_mm": 0.5650000000000013
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R13",
+          "kind": "Circle",
+          "area_mm2": 0.0011727340715
+        }
+      ]
+    },
+    {
+      "ref": "R130",
+      "layer": "B.Fab",
+      "text": "R130",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          23.43,
+          55.85
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          23.43,
+          55.95
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R129",
+        "nearest_other_courtyard_distance_mm": 0.5349999999999966
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R130",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R131",
+      "layer": "B.Fab",
+      "text": "R131",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          10.8,
+          61.15
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          10.8,
+          61.25
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R134",
+        "nearest_other_courtyard_distance_mm": 1.715240507917182
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R131",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R132",
+      "layer": "B.Fab",
+      "text": "R132",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          28.0,
+          57.6
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          28.1,
+          57.6
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R175",
+        "nearest_other_courtyard_distance_mm": 0.884999999999998
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R132",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R133",
+      "layer": "B.Fab",
+      "text": "R133",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          28.43,
+          54.25
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          28.43,
+          54.35
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R175",
+        "nearest_other_courtyard_distance_mm": 0.5349999999999966
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R133",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R154",
+      "layer": "B.Fab",
+      "text": "R154",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          32.45,
+          74.53
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          32.4,
+          74.53
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R150",
+        "nearest_other_courtyard_distance_mm": 0.8998055345462177
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R154",
+          "kind": "Circle",
+          "area_mm2": 0.001580965336
+        }
+      ]
+    },
+    {
+      "ref": "R155",
+      "layer": "B.Fab",
+      "text": "R155",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          30.55,
+          74.53
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          30.5,
+          74.53
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "D121",
+        "nearest_other_courtyard_distance_mm": 1.0450000000000017
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R155",
+          "kind": "Circle",
+          "area_mm2": 0.001580965336
+        }
+      ]
+    },
+    {
+      "ref": "R156",
+      "layer": "B.Fab",
+      "text": "R156",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          30.55,
+          68.4
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          30.65,
+          68.4
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "D121",
+        "nearest_other_courtyard_distance_mm": 1.1149999999999949
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R156",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R157",
+      "layer": "B.Fab",
+      "text": "R157",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          32.45,
+          68.4
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          32.55,
+          68.4
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R153",
+        "nearest_other_courtyard_distance_mm": 0.5250000000000057
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R157",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R163",
+      "layer": "B.Fab",
+      "text": "R163",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          21.8,
+          59.3
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          21.75,
+          59.3
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "Q123",
+        "nearest_other_courtyard_distance_mm": 0.5549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R163",
+          "kind": "Circle",
+          "area_mm2": 0.001580965336
+        }
+      ]
+    },
+    {
+      "ref": "R173",
+      "layer": "B.Fab",
+      "text": "R173",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          23.0,
+          59.2
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          23.1,
+          59.2
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R163",
+        "nearest_other_courtyard_distance_mm": 0.8350000000000009
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R173",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R175",
+      "layer": "B.Fab",
+      "text": "R175",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          28.0,
+          55.8
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          28.1,
+          55.8
+        ],
+        "parent_offset_mm": [
+          0.1,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R132",
+        "nearest_other_courtyard_distance_mm": 0.8850000000000051
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R175",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R178",
+      "layer": "B.Fab",
+      "text": "R178",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          23.43,
+          54.85
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          23.43,
+          54.95
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R130",
+        "nearest_other_courtyard_distance_mm": 0.43499999999999517
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R178",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R180",
+      "layer": "B.Fab",
+      "text": "R180",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          28.43,
+          53.25
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          28.43,
+          53.35
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R133",
+        "nearest_other_courtyard_distance_mm": 0.43499999999999517
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R180",
+          "kind": "Circle",
+          "area_mm2": 0.005644425371
+        }
+      ]
+    },
+    {
+      "ref": "R432",
+      "layer": "B.Fab",
+      "text": "R432",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.7,
+          57.8
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          35.7,
+          57.95
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.15
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R430",
+        "nearest_other_courtyard_distance_mm": 1.2749999999999986
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R432",
+          "kind": "Circle",
+          "area_mm2": 0.007873155856
+        }
+      ]
+    },
+    {
+      "ref": "R60",
+      "layer": "F.Fab",
+      "text": "R60",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          33.2,
+          58.6
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          33.2,
+          58.7
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C60",
+        "nearest_other_courtyard_distance_mm": 0.5050000000000026
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R60",
+          "kind": "Circle",
+          "area_mm2": 0.0048309595825
+        }
+      ]
+    },
+    {
+      "ref": "R61",
+      "layer": "F.Fab",
+      "text": "R61",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          33.2,
+          54.0
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          33.2,
+          53.95
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "J9",
+        "nearest_other_courtyard_distance_mm": 1.0549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R61",
+          "kind": "Circle",
+          "area_mm2": 0.0011727342385
+        }
+      ]
+    },
+    {
+      "ref": "R62",
+      "layer": "B.Fab",
+      "text": "R62",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          25.5,
+          55.7
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          25.5,
+          55.8
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.1
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R63",
+        "nearest_other_courtyard_distance_mm": 0.4350000000000023
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R62",
+          "kind": "Circle",
+          "area_mm2": 0.0048216353455
+        }
+      ]
+    },
+    {
+      "ref": "R63",
+      "layer": "B.Fab",
+      "text": "R63",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          25.5,
+          56.7
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          25.5,
+          56.65
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -0.05
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R62",
+        "nearest_other_courtyard_distance_mm": 0.48499999999999943
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R63",
+          "kind": "Circle",
+          "area_mm2": 0.0011727163335
+        }
+      ]
+    },
+    {
+      "ref": "R64",
+      "layer": "B.Fab",
+      "text": "R64",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          11.23,
+          52.28
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 90.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          11.18,
+          52.28
+        ],
+        "parent_offset_mm": [
+          -0.05,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "R13",
+        "nearest_other_courtyard_distance_mm": 0.46499999999999986
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "R64",
+          "kind": "Circle",
+          "area_mm2": 0.0011727340715
+        }
+      ]
+    },
+    {
+      "ref": "TP120",
+      "layer": "B.Fab",
+      "text": "TP120",
+      "glyph_count": 5,
+      "before": {
+        "xy": [
+          18.0,
+          68.6
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          18.0,
+          67.45
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10500000000000398,
+        "nearest_other_ref": "R134",
+        "nearest_other_courtyard_distance_mm": 1.3050000000000068
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP120",
+          "kind": "Rect",
+          "area_mm2": 0.184549
+        }
+      ]
+    },
+    {
+      "ref": "TP121",
+      "layer": "B.Fab",
+      "text": "TP121",
+      "glyph_count": 5,
+      "before": {
+        "xy": [
+          10.354999,
+          71.455
+        ],
+        "height": 0.3,
+        "stroke": 0.045,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          10.5,
+          70.35
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10500000000000398,
+        "nearest_other_ref": "Q121",
+        "nearest_other_courtyard_distance_mm": 1.0549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP121",
+          "kind": "Rect",
+          "area_mm2": 0.0347422
+        }
+      ]
+    },
+    {
+      "ref": "TP122",
+      "layer": "B.Fab",
+      "text": "TP122",
+      "glyph_count": 5,
+      "before": {
+        "xy": [
+          13.3,
+          53.3
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          13.3,
+          52.15
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10500000000000398,
+        "nearest_other_ref": "U5",
+        "nearest_other_courtyard_distance_mm": 0.7049999999999983
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP122",
+          "kind": "Rect",
+          "area_mm2": 0.0925138
+        }
+      ]
+    },
+    {
+      "ref": "TP74",
+      "layer": "B.Fab",
+      "text": "TP74",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          42.5,
+          58.0
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          42.5,
+          56.85
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10499999999999687,
+        "nearest_other_ref": "C431",
+        "nearest_other_courtyard_distance_mm": 1.5549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP74",
+          "kind": "Rect",
+          "area_mm2": 0.016094311736
+        }
+      ]
+    },
+    {
+      "ref": "TP80",
+      "layer": "F.Fab",
+      "text": "TP80",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          9.8,
+          83.8
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          9.8,
+          82.65
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10499999999998977,
+        "nearest_other_ref": "C96",
+        "nearest_other_courtyard_distance_mm": 1.8549999999999986
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP80",
+          "kind": "Rect",
+          "area_mm2": 0.1845452
+        }
+      ]
+    },
+    {
+      "ref": "TP81",
+      "layer": "B.Fab",
+      "text": "TP81",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          31.0,
+          84.8
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          31.0,
+          83.65
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10499999999998977,
+        "nearest_other_ref": "TP83",
+        "nearest_other_courtyard_distance_mm": 2.692220273306031
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP81",
+          "kind": "Rect",
+          "area_mm2": 0.184549
+        }
+      ]
+    },
+    {
+      "ref": "TP82",
+      "layer": "B.Fab",
+      "text": "TP82",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          10.8,
+          21.3
+        ],
+        "height": 0.4,
+        "stroke": 0.06,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          10.8,
+          20.15
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10500000000000043,
+        "nearest_other_ref": "R463",
+        "nearest_other_courtyard_distance_mm": 1.9342311133884695
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP82",
+          "kind": "Rect",
+          "area_mm2": 0.01213959753
+        }
+      ]
+    },
+    {
+      "ref": "TP83",
+      "layer": "B.Fab",
+      "text": "TP83",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          34.5,
+          81.5
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          34.5,
+          80.35
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10500000000000398,
+        "nearest_other_ref": "R150",
+        "nearest_other_courtyard_distance_mm": 3.674999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP83",
+          "kind": "Rect",
+          "area_mm2": 0.1845508
+        }
+      ]
+    },
+    {
+      "ref": "TP88",
+      "layer": "F.Fab",
+      "text": "TP88",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          35.5,
+          87.0
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          35.5,
+          85.85
+        ],
+        "parent_offset_mm": [
+          0.0,
+          -1.15
+        ],
+        "height_mm": 0.6,
+        "stroke_mm": 0.09,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.10500000000000398,
+        "nearest_other_ref": "R92",
+        "nearest_other_courtyard_distance_mm": 3.101007900667138
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "TP88",
+          "kind": "Rect",
+          "area_mm2": 0.1845452
+        }
+      ]
+    },
+    {
+      "ref": "U10",
+      "layer": "B.Fab",
+      "text": "U10",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          12.6,
+          27.5
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          12.6,
+          27.5
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.5,
+        "stroke_mm": 0.075,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C28",
+        "nearest_other_courtyard_distance_mm": 1.8550000000000004
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "U10",
+          "kind": "Rect",
+          "area_mm2": 0.184549
+        }
+      ]
+    },
+    {
+      "ref": "U11",
+      "layer": "B.Fab",
+      "text": "U11",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          24.65,
+          64.5
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 270.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          24.65,
+          64.5
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.7,
+        "stroke_mm": 0.105,
+        "angle_degrees": 270.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C98",
+        "nearest_other_courtyard_distance_mm": 1.5249999999999986
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "U11",
+          "kind": "Rect",
+          "area_mm2": 0.13048537045
+        }
+      ]
+    },
+    {
+      "ref": "U12",
+      "layer": "B.Fab",
+      "text": "U12",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          31.6,
+          39.8
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 180.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          31.6,
+          39.8
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.7,
+        "stroke_mm": 0.105,
+        "angle_degrees": 180.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C421",
+        "nearest_other_courtyard_distance_mm": 1.404999999999994
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "U12",
+          "kind": "Rect",
+          "area_mm2": 0.130820326885
+        }
+      ]
+    },
+    {
+      "ref": "U13",
+      "layer": "B.Fab",
+      "text": "U13",
+      "glyph_count": 3,
+      "before": {
+        "xy": [
+          31.85,
+          49.7
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": true
+      },
+      "after": {
+        "xy_mm": [
+          31.85,
+          49.7
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.5,
+        "stroke_mm": 0.075,
+        "angle_degrees": 0.0,
+        "mirrored": true
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C92",
+        "nearest_other_courtyard_distance_mm": 2.0549999999999997
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "U13",
+          "kind": "Rect",
+          "area_mm2": 0.1845508
+        }
+      ]
+    },
+    {
+      "ref": "U400",
+      "layer": "F.Fab",
+      "text": "U400",
+      "glyph_count": 4,
+      "before": {
+        "xy": [
+          16.9,
+          5.55
+        ],
+        "height": 0.8,
+        "stroke": 0.12,
+        "angle": 0.0,
+        "mirrored": false
+      },
+      "after": {
+        "xy_mm": [
+          16.9,
+          5.55
+        ],
+        "parent_offset_mm": [
+          0.0,
+          0.0
+        ],
+        "height_mm": 0.4,
+        "stroke_mm": 0.06,
+        "angle_degrees": 0.0,
+        "mirrored": false
+      },
+      "association": {
+        "own_courtyard_distance_mm": 0.0,
+        "nearest_other_ref": "C401",
+        "nearest_other_courtyard_distance_mm": 1.8050000000000006
+      },
+      "native_glyph_inflated_0p025mm_clear": true,
+      "baseline_collisions": [
+        {
+          "owner": "U400",
+          "kind": "Rect",
+          "area_mm2": 0.1921642
+        }
+      ]
+    }
+  ]
+}

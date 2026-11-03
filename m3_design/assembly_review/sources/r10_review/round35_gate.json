@@ -1,0 +1,59 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round35_gate",
+ "reviewer": "claude",
+ "target_commit": "c3c4249b89f1fe5a396cb6c4fd18fedb58d385e6",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "D-R28-01 seeds (in-memory exec of r10_parts.py, budget regenerated into the probe dir): loaded_pack back to 5.456 V x (1.46 A + aux_A) moves only pack_7V4/6V0_four_stall_loaded_V (5.880831 -> 5.881014, 4.388491 -> 4.388745 V); ports_w with the 1.46 A literal moves 53 budget values (fire 4-stall 5.713190 -> 5.713377 V). No check reads these budget values, so a regenerated budget passes; this is the class rounds 26/28 ruled not a gate miss (no stated rule binds a budget figure to a check). A hand-edited stale budget is caught: r10_parts --check --budget-only prints 'stale: parts_budget.json', rc 1.",
+  "Binding-note seed S19 (obligation 15's '166–196 V/s' changed to '16.6–19.6 V/s'): the pinned test passes; K-binding fails until the note is regenerated. The pins cover every D-R28/D-R29 label and qualifier, not every figure; no stated rule requires every figure to be pinned.",
+  "Right-angle seed at C80.2 (GND, F.Cu, chamfer (15.475,79.5)-(15.875,79.9) reverted to a corner at (15.475,79.9)): route_check does not flag it, correctly: the node and its inner corner (15.675,80.1) lie inside C80.2's 1.15 x 1.8 mm pad copper, which the rule exempts.",
+  "C10's 3 mm U5 coat-exclusion distance (ORDERING 8.3, 3.016596 mm) has no automated gate; it is a hand-measured procedure figure, not an AGENTS/REQUIREMENTS design rule. C10 alone moved 0.6 mm south keeps PYRO1_OUT/rails 1.040 mm and gates/rails 1.0585 mm, so test_r26_pyro1_out passing on that seed is correct."
+ ],
+ "fix_verification": [
+  {
+   "item": "R34-TRI-01 (docs fix, not a gate correction; checked for completeness)",
+   "measurement": "parts_qualification.md:1061-1062 now names hotplug_results.json / hotplug_inputs.json and M3_R10 'Current state' as the current results; hotplug.md keeps the model",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R29-02 pins (the round 28/29 gate corrections still in force)",
+   "measurement": "19 phrase-revert seeds each fail test_r23_binding_note_rules_and_pin_table",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after; commit c3c4249 HEAD; tree unchanged (git status shows only other lenses' untracked reports).",
+  "seed_r28_01.py: D-R28-01 port-current literal seeds in loaded_pack and ports_w; budget diffs.",
+  "seed_stale_budget.py: hand-edited budget vs r10_parts --check --budget-only (rc 1) and the committed copy (rc 0).",
+  "r10_parts.py --check on the canonical board: generated files and budget current.",
+  "seed_r28_note.py: 20 generator seeds (D-R28-02 rule 3 x6, D-R29-01 tau, D-R28-04 rule 4 x3 and obligation 15 x3, DS15034 page, D-R28-03 labels x6) against test_r23_binding_note_rules_and_pin_table and the committed note: 19/19 phrase reverts fail the pinned test; all 20 differ from the committed note.",
+  "seed_kbinding.py: check_r10.k_binding clean (OK, note c5cd0fa3) and with two seeded generators (fails: 'saved firmware_obligations differs').",
+  "seed_board.py: route_check r10 baseline 0 failing / 0 right_angle; D-R26-01 GND partner via (7.4,16.5) removed -> J440.3 fails; (7.4,20.0) removed -> J440.4 fails at 4.037 mm; D-R26-04 R164 3V3 via at (19.05,55.25)/(19.05,55.9)/(19.3,55.6) -> gate gap 0.331/0.676/0.745 mm; right_angle: 8 chamfer reverts on 8 net classes, 7 flagged 'free' (uart, other, pyro, portctl, spi, actuator, usb), the GND one exempt inside C80.2.",
+  "seed_r26_tests.py: RealBoardSeeds tests with load() returning seeded boards: gate-nets test fails (0.744 < 1.0), PYRO1_OUT test fails on R13 via (0.62 < 1.0), AUX partner test fails on via removal; C10-alone seed passes (gaps stay >= 1.0 mm, correct).",
+  "seed_ring.py + kicad-cli 10.0.7 DRC on a copy: J440.3/.4 inner rings restored -> 8 hole_clearance ('JLC inner-layer PTH pad hole to copper' 0.55 mm) errors (lib_footprint_issues are the copy's missing library table).",
+  "Targeted unittests on the canonical board: test_r10_check SchematicContract.test_r27_port_terminal_pin_names, .test_r23_binding_note_rules_and_pin_table, R4Synthetic.test_r26_own_pad_void_with_its_gnd_partner_via, RealBoardSeeds.test_r26_aux_pins / _pyro1_out / _gate_nets (6 OK); test_route_check RouteCheck.test_r24_right_angle and R10AuditScope.test_r26_plated_pad_layer_change_needs_a_gnd_via (2 OK)."
+ ],
+ "sources": [
+  ".supervisor/r35_review_brief.md",
+  ".supervisor/r35_lens_queue.md (## gate)",
+  "R10_DECISIONS.md D-R26-01 … D-R29-02",
+  "tools/check.sh, tools/check_r10.py (k_binding), tools/route_check.py (right_angle, pad_layer_changes), tools/test_r10_check.py, tools/test_route_check.py, tools/test_r10_parts.py",
+  "m3_design/r10_parts.py, m3_design/r10_sch_check.py",
+  "docs/ORDERING.md §8.3",
+  "round34_triage.md"
+ ],
+ "coverage_limits": [
+  "No full tools/check.sh run (brief forbids it on the canonical tree); seeds were in-memory or on probe copies.",
+  "Generator seeds were applied by exec of edited source in memory, not through a full r10_build.sh rebuild.",
+  "DRC seed copy lacked the library table, so its lib_footprint_issues are artefacts; only the hole_clearance result is read.",
+  "Did not re-seed D-R27-01/-02 separately; their text is covered by the pinned test run and K-binding."
+ ]
+}

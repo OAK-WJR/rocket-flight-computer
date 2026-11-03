@@ -1,0 +1,188 @@
+{
+  "rigid": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "outline": "9558fcd7d3bc9b97",
+      "m3_holes": "00605c61132c1574",
+      "j122_tie": "4ecfed731f5c5bc1",
+      "j1": "63a58164251c7035",
+      "pyro_block_area": "0571313b8489059d",
+      "ch1_parts": "23bcce687f97f89b",
+      "ch1_copper": "9412831952118349",
+      "strip_parts": "c71c1250c4f732ae",
+      "strip_rf_copper": "7a2598349ad81c5f",
+      "strip_gnd": "bfcbe417a3b45e12",
+      "strip_rule_areas": "d105af8bf59da746",
+      "strip_gcpw": "8b46f56919611ca6"
+    }
+  },
+  "drc": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "unconnected": 220,
+      "deferred": {
+        "silk_edge_clearance": 4,
+        "silk_overlap": 55,
+        "silk_over_copper": 115
+      },
+      "allowed": {
+        "rigid via dangling (step 6 connects it)": 4,
+        "3V3A trunk end (PENDING)": 1
+      }
+    }
+  },
+  "complete": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "nets": 20,
+      "partial": {
+        "3V3": 30,
+        "3V3A": 14,
+        "CAM_5V": 6,
+        "GND": 14
+      }
+    }
+  },
+  "pyro": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "inner_power_pyro": {
+        "nearest": [
+          2.65,
+          "BAT_IN zone R8_BAT_IN_In2 In2.Cu",
+          "R134.1 (PYRO1_IGN, F.Cu)"
+        ],
+        "items": 175,
+        "within_5mm": 41
+      },
+      "gate_servo": {
+        "nearest": null,
+        "under_limit": 0,
+        "layer_pairs": [
+          [
+            "B.Cu",
+            "B.Cu"
+          ],
+          [
+            "B.Cu",
+            "In2.Cu"
+          ],
+          [
+            "F.Cu",
+            "F.Cu"
+          ],
+          [
+            "F.Cu",
+            "In1.Cu"
+          ],
+          [
+            "In1.Cu",
+            "F.Cu"
+          ],
+          [
+            "In1.Cu",
+            "In1.Cu"
+          ],
+          [
+            "In2.Cu",
+            "B.Cu"
+          ],
+          [
+            "In2.Cu",
+            "In2.Cu"
+          ]
+        ]
+      }
+    }
+  },
+  "inner": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "rigid_inner_tracks": 1
+    }
+  },
+  "in2": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "islands": {
+        "RAW_ACT": 2,
+        "3V3": 1,
+        "BAT_IN": 1,
+        "GND": 1
+      },
+      "u1_field": [
+        13.86,
+        35.85,
+        32.14,
+        54.15
+      ],
+      "ch1_pads": 47,
+      "lane_segments": 34,
+      "u1_field_samples": 171
+    }
+  },
+  "route": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "failures": 20,
+      "allowed": {
+        "dangling_via on the rigid copper (step 6 continues it)": 4,
+        "critical_via_no_gnd on the rigid copper (step 6 continues it)": 2,
+        "dangling_via 3V3A (PENDING)": 1,
+        "dead_copper 3V3A (PENDING)": 4,
+        "dead_copper on the rigid copper (step 6 continues it)": 9
+      },
+      "information": {
+        "pad_end_offcentre": 7,
+        "passes_through_pad": 5,
+        "width_change_junction": 14,
+        "extra_bends": 1,
+        "short_layer_hop": 1,
+        "power_via_no_gnd": 18
+      }
+    }
+  },
+  "reserved": {
+    "ok": true,
+    "issues": [],
+    "evidence": {
+      "reservations": 343,
+      "copper_rules": [
+        "clearance",
+        "copper_edge_clearance",
+        "hole_clearance",
+        "hole_to_hole",
+        "items_not_allowed",
+        "shorting_items",
+        "solder_mask_bridge",
+        "tracks_crossing"
+      ]
+    }
+  },
+  "board": "m3_design/assembly_review/m3.kicad_pcb",
+  "board_sha256": "1818b05f43af53ec76cda0a26368b2aa325ef853bfeb6c5e0b39d1e46bff22ef",
+  "checker_sha256": "d1ab03caa7b07d83a034712a8cf766966706275ba38bcaba9ce29ec71f4ff0b1",
+  "pending": [
+    {
+      "net": "3V3A",
+      "segment": [
+        [
+          15.0,
+          62.2
+        ],
+        [
+          24.025,
+          62.2
+        ]
+      ],
+      "reason": "the 3V3A trunk's F.Cu hop over the pyro corridor ends at the via (15.0, 62.2); step 6 (imu_i2c) runs it on to U4 / U5 / C30-C32 (D48)"
+    }
+  ]
+}

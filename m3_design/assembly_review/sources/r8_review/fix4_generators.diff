@@ -1,0 +1,133 @@
+--- a/m3_design/r8_route_rf.py
++++ b/m3_design/r8_route_rf.py
+@@ -9,7 +9,7 @@
+     each group's pitch through the 45-degree runs.
+   - GNSS: straight down from the pins, one 45-degree run to a vertical section at 0.6 mm pitch (R306 inline on RXD),
+     a mitred turn west into four rows, each lane turning down into the strip at its module pin or series resistor.
+-  - Radio: the aft trio RXEN / BUSY / MISO at 0.5 mm pitch, one mitred 0.4 mm step east inside the strip mouth, then
++  - Radio: the aft trio RXEN / BUSY / MISO at 0.5 mm pitch, one mitred 0.5 mm step east inside the strip mouth, then
+     straight down to its module pins; MOSI (R315 inline) and NSS (R310 tapped at the MCU end, D4) at 0.6 mm; SCK
+     (R313 inline) passes the rigid GND via (23.8, 17.7) on its east side; DIO1 straight down to U31.20; NRST one
+     45-degree run east to x 40 and R7's strip path through R311 to U31.3.
+@@ -74,16 +74,20 @@
+ 
+ # ---------------------------------------------------------------------------------------------------------------------
+ # Radio bus. Aft-face pins (y 37.45): MOSI 53 x 28.0, MISO 54 27.5, BUSY 55 27.0, RXEN 56 26.5. East-face pins
+-# (x 30.55): NSS 47 y 40.5, SCK 46 41.0, DIO1 45 41.5, NRST 39 44.5. Above the fence: RXEN 20.6, BUSY 21.1, MISO 21.6
+-# (0.5 mm pitch), a 1.0 mm slot (a fence GND via, D16), MOSI 22.6 and NSS 23.2 (0.6 mm). Inside the strip the trio
+-# steps 0.4 mm east (RXEN 21.0, BUSY 21.5, MISO 22.0) so no GND finger is left between MISO and MOSI where no new GND
+-# via may go (strip_gnd is rigid); SCK 25.1 steps once to x 24.5 and passes the rigid GND via (23.8, 17.7) on its east
+-# side; the rigid via (20, 19) bounds RXEN.
++# (x 30.55): NSS 47 y 40.5, SCK 46 41.0, DIO1 45 41.5, NRST 39 44.5. Above the fence: RXEN 20.5, BUSY 21.0, MISO 21.5
++# (0.5 mm pitch), a 1.1 mm slot (the fence GND via (22.05, 23.3) and spike (d)'s stitch via (22.05, 26.7), D16), MOSI
++# 22.6 and NSS 23.2 (0.6 mm). Inside the strip the trio steps 0.5 mm east (one lane pitch: RXEN 21.0, BUSY 21.5, MISO
++# 22.0) so no GND finger is left between MISO and MOSI where no new GND via may go (strip_gnd is rigid); SCK 25.1 steps
++# once to x 24.5 and passes the rigid GND via (23.8, 17.7) on its east side; the rigid via (20, 19) bounds RXEN.
++# Fix pass 4 (R8P4-ROUTING-01, D110): the trio sat 0.1 mm east of centre in its fence opening (x 20.6 / 21.1 / 21.6,
++# step 0.4 mm), so MISO and MOSI were 0.150 mm from the fence and stitch vias then at x 22.1; with the trio 0.1 mm west
++# and those vias (and the west fence via) 0.05 mm west (step7/make_ground.py), RXEN, MISO and MOSI are each 0.200 mm
++# from the vias. The in-strip lanes and the 45-degree runs to U1 stay on the same lines
+ R_PIN_Y = 37.45
+ E_PIN_X = 30.55
+-TRIO = [('RADIO_RXEN', 56, 36.400, 20.6, 22.400), ('RADIO_BUSY', 55, 36.193, 21.1, 22.607),
+-        ('RADIO_MISO_MCU', 54, 35.986, 21.6, 22.814)]   # net, pin, 45-degree run start, x above the fence, step y
+-TRIO_STEP = 0.4
++TRIO = [('RADIO_RXEN', 56, 36.400, 20.5, 22.500), ('RADIO_BUSY', 55, 36.193, 21.0, 22.707),
++        ('RADIO_MISO_MCU', 54, 35.986, 21.5, 22.914)]   # net, pin, 45-degree run start, x above the fence, step y
++TRIO_STEP = 0.5
+ ROW_Y = 29.5                        # R315 / R310 / R313 centres
+ R_PADS = (ROW_Y + 0.43, ROW_Y - 0.43)
+ 
+@@ -95,7 +99,7 @@
+ 
+ def radio_lanes():
+     out = []
+-    # aft trio: one mitred 45-degree run (pitch 0.5 kept), down through the fence, one mitred 0.4 mm step east in the
++    # aft trio: one mitred 45-degree run (pitch 0.5 kept), down through the fence, one mitred 0.5 mm step east in the
+     # strip mouth, then straight down to the peel-offs; the trio's module-end corners are square (a 45-degree corner
+     # after the 45-degree step would make an S, SE, S, SE run with two segments under 1 mm: a route_check staircase)
+     for net, pin, top, fx, step_y in TRIO:
+--- a/m3_design/r8_power.py
++++ b/m3_design/r8_power.py
+@@ -313,15 +313,17 @@
+ # needs, so BAT_FAULT_N's reserved F.Cu lane (x 33.6, D50) crosses USB_LIMITED's B.Cu. 0.4 mm: the TPS2553 limit is
+ # 0.45 A. Fix pass 3 (R8P3-ROUTING-01, D106): the trunk sits on y 37.3, not 37.25, so CAM_PWR_EN's y 36.8 lane is
+ # 0.20 mm from it (was 0.150 mm); with R172 and the RAW_ACT_SENSE lane on x 30.65 the x 29.95 run is 0.23 mm from
+-# R172's pads (was 0.180 mm)
++# R172's pads (was 0.180 mm). Fix pass 4 (R8P4-ROUTING-02, D111): R87.1 (the OVLO divider top) lies straight below the
++# y 55.3 trunk, so its 0.25 mm branch is one T drop at x 32.2 (it left C98.1's centre at 45 degrees to the trunk's
++# diagonal and ran 2.55 mm back west under the trunk: an acute pair and a doubled run, 1.86 mm longer)
+ V_USB = ((29.95, 54.0), (31.25, 55.3))
+ USB_LIMITED_TRACKS = [
+     ('B', 0.4, [(13.7, 36.35), (15.4, 36.35), (16.35, 37.3), (19.4, 37.3), (29.95, 37.3), V_USB[0]]),
+     ('B', 0.4, [(15.4, 36.35), (15.4, 34.38)]),                 # C86.1
+     ('B', 0.3, [(19.4, 37.3), (19.4, 31.6)]),                   # TP82
+     ('F', 0.4, [V_USB[0], V_USB[1]]),                           # over the RAW_ACT_SENSE lane (B.Cu, x 30.65)
+-    ('B', 0.4, [V_USB[1], (34.35, 55.3), (35.25, 56.2), (35.25, 57.925)]),     # C98.1, U11.7
+-    ('B', 0.25, [(35.25, 56.2), (32.7, 56.2), (32.2, 56.7), (32.2, 57.775)]),   # R87.1 (OVLO divider top)
++    ('B', 0.4, [V_USB[1], (32.2, 55.3), (34.35, 55.3), (35.25, 56.2), (35.25, 57.925)]),     # C98.1, U11.7
++    ('B', 0.25, [(32.2, 55.3), (32.2, 57.775)]),                # R87.1 (OVLO divider top), a T off the trunk
+ ]
+ # VLOGIC (U11 OUT): one column x 36.75 through C99.1, C6.1, U2.3 (VIN) and U2.2 (EN), C7 west, one via to the hold-up
+ # C84's top pad, on to TP83; the sense divider's via (26.95, 60.5) (D33) joins at C7.1. Fix pass 1 (D85): the C84 via
+--- a/m3_design/r8_build.sh
++++ b/m3_design/r8_build.sh
+@@ -28,7 +28,7 @@
+ #               contract (later-step findings only), step 7's reservations
+ #   r8_ground.py the GND stitching of r8_ground.tsv (step 7, R8_DECISIONS D62 on): the strip fence row, spike (d)'s
+ #               stitches, C24's GND stub, GND vias beside power layer changes, the 4 mm stitching grid, island and
+-#               reach vias, six pour trims; native fill, the 12 rigid digests asserted
++#               reach vias, seven pour trims (D65, D90); native fill, the 12 rigid digests asserted
+ #   gate        r8_ground_check.py: rigid, the table built, DRC with parity (every net whole), route_check (no
+ #               failure; A8 and D51 only), outer GND islands >= 2 vias (D63), GND via reach (D64), no via in a power
+ #               pour or 7.7 A corridor or by pyro copper, trims on GND only, D18 / D19, inner, In2, the check_r8
+--- a/m3_design/r8_ground.tsv
++++ b/m3_design/r8_ground.tsv
+@@ -10,8 +10,8 @@
+ via	GND	FB	0.5/0.3	14.2	23.3			fence	
+ via	GND	FB	0.5/0.3	16.2	23.3			fence	
+ via	GND	FB	0.5/0.3	18.2	23.3			fence	
+-via	GND	FB	0.5/0.3	20	23.3			fence	
+-via	GND	FB	0.5/0.3	22.1	23.3			fence	
++via	GND	FB	0.5/0.3	19.95	23.3			fence	
++via	GND	FB	0.5/0.3	22.05	23.3			fence	
+ via	GND	FB	0.5/0.3	24.15	23.3			fence	
+ via	GND	FB	0.5/0.3	26	23.3			fence	
+ via	GND	FB	0.5/0.3	28	23.3			fence	
+@@ -25,7 +25,7 @@
+ via	GND	FB	0.5/0.3	40.6	23.3			fence	
+ via	GND	FB	0.5/0.3	42.6	23.3			fence	
+ via	GND	FB	0.5/0.3	44.6	23.3			fence	
+-via	GND	FB	0.5/0.3	22.1	26.7			stitch	
++via	GND	FB	0.5/0.3	22.05	26.7			stitch	
+ via	GND	FB	0.5/0.3	24.15	26.5			stitch	
+ track	GND	B	0.2	26.17	51.1	26.95	51.1	c24	
+ via	GND	FB	0.5/0.3	26.95	51.1			c24	
+@@ -176,8 +176,8 @@
+ via	GND	FB	0.5/0.3	44.875	30.875			cover	
+ via	GND	FB	0.5/0.3	26.625	38.875			cover	
+ via	GND	FB	0.5/0.3	9.375	80.625			cover	
+-via	GND	FB	0.5/0.3	19.125	25.875			cover	
+ via	GND	FB	0.5/0.3	25.125	64.375			cover	
++via	GND	FB	0.5/0.3	19.125	25.875			cover	
+ via	GND	FB	0.5/0.3	40.375	51.875			cover	
+ via	GND	FB	0.5/0.3	25.875	30.375			cover	
+ via	GND	FB	0.5/0.3	12.625	66.375			cover	
+--- a/m3_design/assembly_review/sources/r8_design/step7/make_ground.py
++++ b/m3_design/assembly_review/sources/r8_design/step7/make_ground.py
+@@ -89,9 +89,12 @@
+ LEFTOVER = 1.0                # mm2: unconnected GND crumbs a trim may leave (dropped by the fill)
+ 
+ FENCE_Y = 23.3
+-FENCE_X = (0.90, 2.90, 4.90, 6.40, 7.685, 9.70, 12.30, 14.20, 16.20, 18.20, 20.00, 22.10, 24.15, 26.00, 28.00, 30.00,
+-           31.80, 33.00, 34.40, 35.80, 37.80, 39.40, 40.60, 42.60, 44.60)            # spike (d) rf_route_r8.FENCE_X
+-STRIP_STITCH = ((22.10, 26.70), (24.15, 26.50))                                         # spike (d) rf_route_r8.STITCH
++# spike (d) rf_route_r8.FENCE_X / STITCH, but for fix pass 4 (R8P4-ROUTING-01, D110): the radio trio's opening
++# vias x 20.00 / 22.10 -> 19.95 / 22.05 and the MISO-MOSI slot's stitch via x 22.10 -> 22.05, centring the trio
++# (r8_route_rf.TRIO, 0.1 mm west) so RXEN, MISO and MOSI keep 0.200 mm from them (were 0.250 / 0.150 / 0.150 mm)
++FENCE_X = (0.90, 2.90, 4.90, 6.40, 7.685, 9.70, 12.30, 14.20, 16.20, 18.20, 19.95, 22.05, 24.15, 26.00, 28.00, 30.00,
++           31.80, 33.00, 34.40, 35.80, 37.80, 39.40, 40.60, 42.60, 44.60)
++STRIP_STITCH = ((22.05, 26.70), (24.15, 26.50))
+ C24_STUB = ((26.17, 51.1), (26.95, 51.1))       # spike (a) spike_geom: C24.2 -> its GND via, B.Cu 0.2 mm
+ # Pour trims (fill keep-out rule areas, one layer each): the GND pieces no second via can reach, which step 6's lanes
+ # enclose. Each outline runs on the centre lines of the lanes that bound the piece (or round a lone via), so it removes

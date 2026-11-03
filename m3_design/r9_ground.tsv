@@ -1,0 +1,189 @@
+# R9 GND stitching (m3_design/r9_ground_aid.py; R9_DECISIONS D-S8-*, D-F1-07): drawn by m3_design/r9_ground.py in this order. item via: layer FB, size diameter/drill; item track: size = width. basis: return NET, pad REF.PIN, grid, cover, island F|B, patch, finger F|B, strap REF.PIN, reach, copper pad REF.PIN, copper F|B
+item	net	layer	size	x0	y0	x1	y1	basis
+via	GND	FB	0.5/0.3	28.38	28.55			return 3V3
+via	GND	FB	0.5/0.3	7.95	30.55			return VBUS
+via	GND	FB	0.5/0.3	13.15	33.55			return VBUS
+via	GND	FB	0.5/0.3	8.1	37.95			return VBUS
+via	GND	FB	0.5/0.3	10.6	37.9			return 3V3
+via	GND	FB	0.5/0.3	12.9	39.5			return VCAP2
+via	GND	FB	0.5/0.3	17.6	39.25			return USB_LIMITED
+via	GND	FB	0.5/0.3	35.125	39.83			return 3V3
+via	GND	FB	0.5/0.3	26.8	51.05			return USB_LIMITED
+via	GND	FB	0.5/0.3	10.9	51.85			return 3V3
+via	GND	FB	0.5/0.3	42.5	78.2			return VLOGIC
+via	GND	FB	0.5/0.3	24.85	51.8			pad U1.26
+via	GND	FB	0.5/0.3	9.3	30.9			pad U10.2
+via	GND	FB	0.5/0.3	39.9	54.5			pad U13.2
+via	GND	FB	0.5/0.3	3.15	25.1			grid
+via	GND	FB	0.5/0.3	7	25.5			grid
+via	GND	FB	0.5/0.3	10.75	25.75			grid
+via	GND	FB	0.5/0.3	15.65	25.5			grid
+via	GND	FB	0.5/0.3	19.55	25.5			grid
+via	GND	FB	0.5/0.3	31.55	25.1			grid
+via	GND	FB	0.5/0.3	35	25.5			grid
+via	GND	FB	0.5/0.3	38.7	25.15			grid
+via	GND	FB	0.5/0.3	43	25.5			grid
+via	GND	FB	0.5/0.3	10.45	29.4			grid
+via	GND	FB	0.5/0.3	19.55	29.5			grid
+via	GND	FB	0.5/0.3	22.85	30			grid
+via	GND	FB	0.5/0.3	31	28.55			grid
+via	GND	FB	0.5/0.3	43	29.5			grid
+via	GND	FB	0.5/0.3	3	33.5			grid
+via	GND	FB	0.5/0.3	19.55	33			grid
+via	GND	FB	0.5/0.3	23.25	33.7			grid
+via	GND	FB	0.5/0.3	26.15	33.7			grid
+via	GND	FB	0.5/0.3	31.4	32.95			grid
+via	GND	FB	0.5/0.3	35.2	33.5			grid
+via	GND	FB	0.5/0.3	39	33.5			grid
+via	GND	FB	0.5/0.3	26.15	37.5			grid
+via	GND	FB	0.5/0.3	35	37.55			grid
+via	GND	FB	0.5/0.3	3.4	40.7			grid
+via	GND	FB	0.5/0.3	15.65	42.15			grid
+via	GND	FB	0.5/0.3	18.95	42.2			grid
+via	GND	FB	0.5/0.3	31	42.2			grid
+via	GND	FB	0.5/0.3	2.75	49.5			grid
+via	GND	FB	0.5/0.3	3	53.5			grid
+via	GND	FB	0.5/0.3	7	53.5			grid
+via	GND	FB	0.5/0.3	3	57.5			grid
+via	GND	FB	0.5/0.3	7	56.7			grid
+via	GND	FB	0.5/0.3	10.7	58			grid
+via	GND	FB	0.5/0.3	15	57.5			grid
+via	GND	FB	0.5/0.3	19.75	57.95			grid
+via	GND	FB	0.5/0.3	23	57.5			grid
+via	GND	FB	0.5/0.3	26.25	57.95			grid
+via	GND	FB	0.5/0.3	39	57.5			grid
+via	GND	FB	0.5/0.3	43.05	57.35			grid
+via	GND	FB	0.5/0.3	3	61.5			grid
+via	GND	FB	0.5/0.3	43.45	61.4			grid
+via	GND	FB	0.5/0.3	3	65.5			grid
+via	GND	FB	0.5/0.3	7	65.9			grid
+via	GND	FB	0.5/0.3	15	65.5			grid
+via	GND	FB	0.5/0.3	3	69.5			grid
+via	GND	FB	0.5/0.3	7	69.5			grid
+via	GND	FB	0.5/0.3	15	69.5			grid
+via	GND	FB	0.5/0.3	19.45	69.3			grid
+via	GND	FB	0.5/0.3	23	69.5			grid
+via	GND	FB	0.5/0.3	27	69.5			grid
+via	GND	FB	0.5/0.3	3	73.5			grid
+via	GND	FB	0.5/0.3	7	73.5			grid
+via	GND	FB	0.5/0.3	11.7	73.5			grid
+via	GND	FB	0.5/0.3	15	73.5			grid
+via	GND	FB	0.5/0.3	19	73.5			grid
+via	GND	FB	0.5/0.3	23	73.5			grid
+via	GND	FB	0.5/0.3	27	73.5			grid
+via	GND	FB	0.5/0.3	3	77.5			grid
+via	GND	FB	0.5/0.3	7	77.5			grid
+via	GND	FB	0.5/0.3	11.2	77.9			grid
+via	GND	FB	0.5/0.3	15	77.5			grid
+via	GND	FB	0.5/0.3	23	77.45			grid
+via	GND	FB	0.5/0.3	27.5	77.95			grid
+via	GND	FB	0.5/0.3	3	81.5			grid
+via	GND	FB	0.5/0.3	7	81.5			grid
+via	GND	FB	0.5/0.3	23	82.05			grid
+via	GND	FB	0.5/0.3	27	81.5			grid
+via	GND	FB	0.5/0.3	3	85.5			grid
+via	GND	FB	0.5/0.3	7	85.5			grid
+via	GND	FB	0.5/0.3	11.7	85			grid
+via	GND	FB	0.5/0.3	15	85.05			grid
+via	GND	FB	0.5/0.3	19	85.05			grid
+via	GND	FB	0.5/0.3	38.75	85.25			grid
+via	GND	FB	0.5/0.3	3	89.5			grid
+via	GND	FB	0.5/0.3	7	89.5			grid
+via	GND	FB	0.5/0.3	11	89.5			grid
+via	GND	FB	0.5/0.3	15	89.5			grid
+via	GND	FB	0.5/0.3	3	93.5			grid
+via	GND	FB	0.5/0.3	7	93.5			grid
+via	GND	FB	0.5/0.3	10.9	93.45			grid
+via	GND	FB	0.5/0.3	15	92.8			grid
+via	GND	FB	0.5/0.3	19	92.8			grid
+via	GND	FB	0.5/0.3	43	94.1			grid
+via	GND	FB	0.5/0.3	7	97.5			grid
+via	GND	FB	0.5/0.3	11	97.5			grid
+via	GND	FB	0.5/0.3	15	97.5			grid
+via	GND	FB	0.5/0.3	18.95	97.5			grid
+via	GND	FB	0.5/0.3	39.35	97.5			grid
+via	GND	FB	0.5/0.3	28.55	84.45			cover
+via	GND	FB	0.5/0.3	2.25	99.65			cover
+via	GND	FB	0.5/0.3	42.95	49.15			cover
+via	GND	FB	0.5/0.3	43.75	99.65			cover
+via	GND	FB	0.5/0.3	38.05	94.35			cover
+via	GND	FB	0.5/0.3	36.85	98.95			cover
+via	GND	FB	0.5/0.3	37.95	40.95			cover
+via	GND	FB	0.5/0.3	44.45	87.65			cover
+via	GND	FB	0.5/0.3	42.85	43.45			cover
+via	GND	FB	0.5/0.3	38.45	61.35			cover
+via	GND	FB	0.5/0.3	15.75	79.05			cover
+via	GND	FB	0.5/0.3	10.45	100.95			cover
+via	GND	FB	0.5/0.3	37.45	49.85			cover
+via	GND	FB	0.5/0.3	43.45	63.95			cover
+via	GND	FB	0.5/0.3	22.25	87.45			cover
+via	GND	FB	0.5/0.3	23.95	101.05			cover
+via	GND	FB	0.5/0.3	33.15	47.45			cover
+via	GND	FB	0.5/0.3	12.35	68.85			cover
+via	GND	FB	0.5/0.3	45.05	35.45			cover
+via	GND	FB	0.5/0.3	44.75	52.95			cover
+via	GND	FB	0.5/0.3	23.75	90.95			cover
+via	GND	FB	0.5/0.3	37.55	30.55			cover
+via	GND	FB	0.5/0.3	16.55	29.95			cover
+via	GND	FB	0.5/0.3	20.25	78.25			cover
+via	GND	FB	0.5/0.3	25.25	23.55			cover
+via	GND	FB	0.5/0.3	27.55	67.25			cover
+via	GND	FB	0.5/0.3	30.15	43.15			cover
+via	GND	FB	0.5/0.3	27.95	79.95			cover
+via	GND	FB	0.5/0.3	7.95	59.35			cover
+via	GND	FB	0.5/0.3	38.25	82.15			cover
+via	GND	FB	0.5/0.3	26.45	84.45			cover
+via	GND	FB	0.5/0.3	6.35	98.55			cover
+via	GND	FB	0.5/0.3	38.45	58.35			cover
+via	GND	FB	0.5/0.3	20.45	59.35			cover
+via	GND	FB	0.5/0.3	23.75	92.65			cover
+via	GND	FB	0.5/0.3	37.75	100.15			cover
+via	GND	FB	0.5/0.3	7.75	44.25			cover
+via	GND	FB	0.5/0.3	45.1755	61.3845			island F
+via	GND	FB	0.5/0.3	45.1755	50.9345			island F
+via	GND	FB	0.5/0.3	23.8255	45.7963			island F
+via	GND	FB	0.5/0.3	7.835	39.0255			island F
+via	GND	FB	0.5/0.3	36.8856	40.7255			island B
+via	GND	FB	0.5/0.3	10.0755	12.4505			island B
+via	GND	FB	0.5/0.3	40.1755	94.3755			island B
+via	GND	FB	0.5/0.3	41.7755	65.3255			island B
+via	GND	FB	0.5/0.3	41.2974	62.5455			island B
+via	GND	FB	0.5/0.3	39.7431	62.5955			island B
+via	GND	FB	0.5/0.3	32.0674	56.9755			island B
+via	GND	FB	0.5/0.3	22.1257	45.3455			island B
+via	GND	FB	0.5/0.3	38.15	87.75			patch
+via	GND	FB	0.5/0.3	25.75	53.05			patch
+via	GND	FB	0.5/0.3	44.55	85.45			patch
+via	GND	FB	0.5/0.3	44.55	93.85			patch
+via	GND	FB	0.5/0.3	44.75	43.45			patch
+via	GND	FB	0.5/0.3	38.45	57.15			patch
+via	GND	FB	0.5/0.3	0.85	93.45			patch
+via	GND	FB	0.5/0.3	20.35	48.75			patch
+via	GND	FB	0.5/0.3	36.55	50.45			patch
+via	GND	FB	0.5/0.3	16.75	57.85			patch
+via	GND	FB	0.5/0.3	38.45	62.55			patch
+via	GND	FB	0.5/0.3	27.55	68.55			patch
+via	GND	FB	0.5/0.3	42.05	76.15			patch
+via	GND	FB	0.5/0.3	27.95	77.55			patch
+via	GND	FB	0.5/0.3	12.75	78.35			patch
+via	GND	FB	0.5/0.3	27.95	81.25			patch
+via	GND	FB	0.5/0.3	32.25	101.05			patch
+via	GND	FB	0.5/0.3	14.15	33.05			patch
+via	GND	FB	0.5/0.3	42.55	79.05			patch
+via	GND	FB	0.5/0.3	38.65	84.65			patch
+via	GND	FB	0.5/0.3	38.55	85.85			patch
+via	GND	FB	0.5/0.3	4.75	31.65			patch
+via	GND	FB	0.5/0.3	38.55	58.95			patch
+via	GND	FB	0.5/0.3	25.55	59.15			patch
+via	GND	FB	0.5/0.3	27.95	78.35			patch
+via	GND	FB	0.5/0.3	38.05	95.05			patch
+via	GND	FB	0.5/0.3	19.8755	49.8595			island F
+via	GND	FB	0.5/0.3	20.42	49.6			strap C24.2
+track	GND	B	0.3	12	39.82	12.58	39.82	strap C17.2
+track	GND	B	0.3	12.58	39.82	12.9	39.5	strap C17.2
+track	GND	B	0.3	21.17	50.6	21.17	50.35	strap C24.2
+track	GND	B	0.3	21.17	50.35	20.42	49.6	strap C24.2
+via	GND	FB	0.5/0.3	31.05	51.25			reach
+via	GND	FB	0.5/0.3	35.6	64.8			copper F
+via	GND	FB	0.5/0.3	32.9	99.85			copper F
+via	GND	FB	0.5/0.3	41.4	41.1			copper F

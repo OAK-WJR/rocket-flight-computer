@@ -1,0 +1,50 @@
+# Round 14 manufacturing review
+
+Target commit `f5e4a5a94013514edb952fd328325341b63a98df`; PCB before and after: `e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6`.
+Fresh full lens 8, read-only. **0 Critical / 0 Major / 3 Minor**: two new and one carried.
+R10 remains unaccepted and unordered. CAD checks do not qualify assembly or flight.
+
+## Active findings
+
+| ID | Severity / state | Evidence and consequence | Concrete fix |
+|---|---|---|---|
+| R14-MFG-01 | Minor, carried (R4-BOM-01 / R12-BOM-01 / R13-MFG-02) | L400 F(24.2,5.55): native pads 1.8x2.5 mm at x +/-2.35, inner gap 2.90 mm. [Bourns SRP5030T p1](https://www.bourns.com/docs/product-datasheets/srp5030t.pdf) recommends 2.0x1.8 at +/-2.25, inner gap 2.50. A permitted heel reaches x1.30 versus native pad edge1.45: possible 0.15 mm uncovered strip. Nominal contact remains covered; no assembled failure is proved. | Adopt the maker land through a separately covered generator/CAD revision, or retain the explicit deviation until actual solder seating/joint and retention qualification is accepted. |
+| R14-MFG-02 | Minor, new | LS120 F(23,58.5): `sources/r10_design/masses.json:9` uses0.3 g; `docs/M3_R10.md:395` gives0.29 N/1.5 N retention loads. The exact [MLT-5020 maker sheet p2 item9](https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598) lists0.5 g, giving0.49033 N at100g and2.45166 N at5x. This is an input/evidence error; physical retention and optional plate behavior remain unqualified. | Use at least0.5 g pending weighing, correct the worksheet and refresh optional mass/plate diagnostics and provenance. Keep physical retention qualification open. |
+| R14-MFG-03 | Minor, new | `docs/ORDERING.md:505` calls7355ae1a the corrected current board. The active worksheet, following paragraph, exact native PCB and manifest bind e0e3ad84. The historical heading and mandatory manifest check bound the consequence. Maker page: not applicable. | Name7355 as the historical round12 fix board, or update the current-board pointer to e0e3ad84 without rewriting historical review targets. |
+
+## Independent checks actually executed
+
+- Official, unmodified KiCad10.0.7 under an exclusive CLI reservation: all-severity DRC with schematic parity **0 violations /0 unconnected /0 parity**; all-severity ERC **0 across15 sheets**. Both report no ignored checks and include error, warning and exclusion severities. Root's earlier DRC is separately attributed context, not this check.
+- Fresh `export_fab.py --out .supervisor/r14_manufacturing/fab` exits0. **82 BOM codes /199 fitted /199 unique CPL rows**,67 top/132 bottom, no missing identity/correction, owner-fit or DNP. All BOM quantities equal distinct designators. Fresh CSVs are byte-identical to canonical ones.
+- Canonical and fresh five-output manifests pass; all **193 CAD/export input hashes** still agree. All14 Gerber/drill/job members agree after creation-date fields are removed. No CAD output was written into the canonical folder.
+- Verification-only `jlc_orient.py` and a separately written raw-map/CSV transform both reconstruct **187 rows (66 top/121 bottom)**. Twelve nonpolar resistor rows receive placement-only checks. Largest supplier/native pad-centre difference0.491288 mm at R134 reflects a two-terminal land difference, not a claimed placement error. All eight distinct Q120/Q121 fingers are included.
+- `paste_check.py`: **245 top +373 bottom =618** actual apertures match native plotted geometry within1um. A separate scan of the actual Gerber polygons finds no ordinary ring/paste overlap or hole/paste gap below0.1 mm; minimum is approximately0.125001 mm at the C98 stitch(23.8,62.95). Only the two exact U401 vias against the split EP windows are exempt.
+- Native glyph scan: **209 references /722 characters**, versus1018 Fab graphics, two polarity texts and37 drill/cutout polygons: **zero intersections**. Silkscreen has118 shown/91 hidden references, minimum1.0 mm height/0.15 mm stroke; no size failure.
+- All five DB125 GND contacts have explicit thermal overrides and four sampled saved-fill spokes on F.Cu/In1.Cu/B.Cu; no In2 GND contact. Native U401.11 contains exactly the two0.5/0.3 mm filled/capped-intent GND vias at(27.3,13.6)/(27.9,13.6), with unchanged split paste. Intent does not prove manufactured VIPPO quality.
+- Native drill inventory:296 vias (291 at0.5/0.3, four0.6/0.3, one1.0/0.5 mm);23 terminal holes1.3 mm in1.9 mm copper; four J3 plated slots; five small NPTH drills; five3.2 mm mounting circles are milled profile features. Excellon contains319 round PTH hits plus four slots and five NPTH hits.
+- Selected existing contracts pass: S-4,LC-1,M-6,M-7,T-1,K-legends,K-copper,K-fill,K-rules,K-retained. This is **10 selected rules**, not a full check.sh run. In-memory refill leaves the saved PCB untouched. Metadata audit:209 footprints, zero conflicting fields, missing fitted identities/models/courtyards or absolute model paths.
+
+## PDF and maker-page QA
+
+Applied the PDF skill read-only. Independently inspected both complete single-page current assembly PDFs at180dpi and all eight overlapping enlarged360dpi tiles. Canonical and fresh PDF binaries differ, but their complete rendered pages are byte-identical. The R12 five-label and R13 Fab-intersection findings are closed on the current drawings. No label intersects a border, pin1 dot, LS120 polarity text or drill in the native scan and inspected details. Some inherited footprints carry only a reference/pin1 dot without a full Fab body outline: native pads and the required factory preview still govern orientation. Fab text0.3-1.0 mm needs vector zoom; it is separate from the1 mm silkscreen rule.
+
+Maker pages inspected include complete DB125 T0-1 sheet1, Molex SD-47219-001G sheet1, C84 MA pages1-4, TI DSK0010A land/stencil pages35-36, TI RUX0012A pages39-40, AOS PO-00047I sheet1, MLT-5020 pages1-4 and TE MS5611 pages15/17. Primary ST TN0018 Rev8 pages9-10 were read through the web PDF; the bounded local download timed out. Source URLs and hashes are in the JSON.
+
+| Manufactured feature | Fresh comparison / process limit |
+|---|---|
+| U4 |0.575x0.35 mm lands,0.50 mm pitch,+0.025 mm mask relief:0.100 mm nominal web. Actual Gerber paste0.5405x0.329 mm is88.36% of each land, within [TN0018 p9](https://www.st.com/resource/en/technical_note/tn0018-surface-mounting-guidelines-for-mems-sensors--in-an-lga-package--stmicroelectronics.pdf)'s recommendation. Mask/volume/alignment remain process qualification. |
+| U11 |Eight0.2x0.6 mm and four1.05x0.4 mm lands match [TI RUX0012A pp39-40](https://www.ti.com/lit/ds/symlink/tps2121.pdf); supplied paste and preferred0.10 mm stencil retain the explicit assembler check. |
+| U401 |EP1.2x2.0 mm; two1.13x0.89 paste windows,83.81% by rectangular area, consistent with [TI's84% example pp35-36](https://www.ti.com/lit/ds/symlink/tps7a91.pdf). Exactly two resin-filled, copper-capped planar VIPPO vias remain mandatory. |
+| J430 |Eight0.8x1.5 mm signal lands and four1.45x2.0 shell lands agree with [Molex sheet1](https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf); supplied100% apertures and0.10/0.12 mm stencil instruction retained. Closed envelope is not open-hinge qualification. |
+| Terminals |23 connected contacts,3.5 mm pitch,1.9/1.3 mm copper/drill. [DORABO T0-1](https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf) recommends1.2 mm holes; the retained1.3 mm choice is disclosed. Hand/selective assembly and hole-fill inspection remain required. |
+| C84 |Required-fitted in BOM/CPL, manual only after both reflows. The [MA sheet pp1-4](https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf) supplies no land/reflow/manual profile; its derived land and separate operation remain unqualified. Polarity, capacitance/ESR and seating checks are explicit. |
+
+## Mandates, procedure and limits
+
+Read the target/review packets, AGENTS, REQUIREMENTS, all113 D IDs through D-R13-03, AVA_LAYOUT, M3_R10, R10/R9 validation, current ORDERING/handoff, parts qualification, masses, STATUS and read-only VEHICLE source. The JSON lists source hashes, all113 IDs and22 mandate names considered. Current single-switch, always-on ports, all-DB125, audit2 and R13 amendments supersede earlier GH/header/RF/ARM hardware descriptions. D-AUD-10 does not waive wrong/missing legends, mask clearance or physical process requirements. AGENTS section2 remains unchanged.
+
+R9 provides severity precedents, not a literal definition table. These three items are bounded land/evidence/record defects; none establishes inadvertent fire or a failed required function. Known pending physical/FW/process work is not counted as a new hardware failure.
+
+The active process block still requires Standard two-side/no-clean assembly, bottom first/top last, C84 absent during reflow, no-wave DB125 fitting, all23 hole fills, J3 shell completion, exact VIPPO, supplied apertures, U4 mask, U5 port/coating protection, staking, panel approval and factory preview. The [live JLC capability page](https://jlcpcb.com/capabilities/pcb-assembly-capabilities) confirms Standard's two-side/rail and240+/-5C basis; it does not accept this particular job. No quote/process acceptance, physical assembly, firmware, thermal/transient/endurance, electrical/RF/ESD, e-match lot, harness/tool/card/bore/stack or retention test was performed. Supplier price/stock was not re-queried by this lens. The existing bound R430/U4 shortage and U9 minimum/quote obligations remain.
+
+Only this Markdown/JSON pair and ignored probes were written. No git action, source/CAD change, canonical build/full check.sh, peer-current-round crossreading or GUI retry occurred. Machine-specific paths and large PDFs/rasters are excluded from durable reports. Raw bounded evidence is under `.supervisor/r14_manufacturing/`; its compact hashes/results are preserved in [round14_manufacturing.json](round14_manufacturing.json).

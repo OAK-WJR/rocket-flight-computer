@@ -1,0 +1,203 @@
+(footprint "M3_DB128L_2P_BK_SW"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "DORABO DB128L-5.08-2P-BK-S (LCSC C430601, black; ARM terminals): 5.08 pitch; 1.6 finished hole; hole 5.00 from body face; body 10.16 wide (end-stackable, two make the 4P envelope) x 10.1 deep x 14.1 high; wire entry on local -y (arrows). R9 variant of M3_DB128L_2P_BK with pads 1 and 2 swapped (the base mirrored about its local y axis: same part, same land; pin 1, the square pad, at local +2.54)")
+	(property "Reference" "REF**"
+		(at 0 -6.6 0)
+		(layer "F.SilkS")
+		(uuid "45ce44f1-c895-57d2-a562-6e8fd0bda429")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "M3_DB128L_2P_BK_SW"
+		(at 0 6.8 0)
+		(layer "F.Fab")
+		(uuid "2f4bba5b-ef44-5825-943a-ca800cd125d5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "6ca36acc-c3a1-5c28-9cc5-ea22175b0890")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "503c66bd-4c8c-585c-b218-2a4f75c22589")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start 4.8 -5.5)
+		(end -4.8 -5.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "91c922aa-53b0-5e76-9835-5f7e93bce91a")
+	)
+	(fp_line
+		(start 4.8 5.7)
+		(end -4.8 5.7)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "df845d3c-c988-57eb-b736-63bd781e44d2")
+	)
+	(fp_line
+		(start 3.04 -2.6)
+		(end 2.54 -3.4)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "6c391d7b-f2b1-573f-bfec-caa73c200192")
+	)
+	(fp_line
+		(start 2.54 -3.4)
+		(end 2.04 -2.6)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "c2add1a7-bc73-5303-b46f-691eb0646879")
+	)
+	(fp_line
+		(start -2.04 -2.6)
+		(end -2.54 -3.4)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "dc32dc9a-08f8-5414-ac4e-7cc366e07285")
+	)
+	(fp_line
+		(start -2.54 -3.4)
+		(end -3.04 -2.6)
+		(stroke
+			(width 0.15)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "52277461-973a-5cbc-9d27-7d0f3c18fcf9")
+	)
+	(fp_rect
+		(start 5.07 -5.5)
+		(end -5.07 5.7)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "ee3df115-3f3c-56a9-b5b9-f61be17690a5")
+	)
+	(fp_line
+		(start 3.04 -2.6)
+		(end 2.54 -3.4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "e8acc274-1be1-5252-b646-e67a4b42df89")
+	)
+	(fp_line
+		(start 2.54 -3.4)
+		(end 2.04 -2.6)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "406121da-1660-5fc5-9c29-9bf6ea25effe")
+	)
+	(fp_line
+		(start -2.04 -2.6)
+		(end -2.54 -3.4)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "4167a86f-bd7c-5622-804d-595c0d8600d6")
+	)
+	(fp_line
+		(start -2.54 -3.4)
+		(end -3.04 -2.6)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "4e1a7811-151f-57cf-9cc5-ab15e108de88")
+	)
+	(fp_rect
+		(start 5.07 -5.25)
+		(end -5.07 5.45)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "8a3f3afb-c065-5b71-b4d7-b13b948d8840")
+	)
+	(pad "1" thru_hole rect
+		(at 2.54 0)
+		(size 2.6 2.6)
+		(drill 1.6)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "3db3648e-617c-5e4e-84dc-53333a55b035")
+	)
+	(pad "2" thru_hole circle
+		(at -2.54 0)
+		(size 2.6 2.6)
+		(drill 1.6)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "d4750a10-437f-527a-acfa-2db538f9bd1a")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/kilib/rocket.3dshapes/M3_DB128L_2P_BK.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

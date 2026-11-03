@@ -1,0 +1,640 @@
+{
+  "before_sha256": "647b7e2d4e2b3f3d19d79b7faed2f4422d01cd7f8b6bf09dd811398b60148ae1",
+  "after_sha256": "184a87e84e67576341244c82517de3e9f55f5c1c22995dfad83631d48c856680",
+  "all_250_footprints_and_pad_geometry_unchanged": true,
+  "nonsilk_geometry_models_rules_zone_boundaries_unchanged": true,
+  "project_and_dru_unchanged": true,
+  "old_pad_group_splits": [],
+  "removed_copper": [
+    {
+      "uuid": "031bc0c7-f778-43f9-87a3-01b2e8965bd9",
+      "type": "PCB_VIA",
+      "net": "CAM_MCU_TX",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        16950000,
+        20550000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "1d7c38e6-af8b-4f73-949f-5d429b513603",
+      "type": "PCB_TRACK",
+      "net": "SERVO3_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        35200000,
+        64200000
+      ],
+      "end_nm": [
+        35200000,
+        65300000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "2167e6fd-2abb-4cea-a383-a67e6850bafd",
+      "type": "PCB_VIA",
+      "net": "RADIO_M1_MCU",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        12600000,
+        37200000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "2907e210-67ca-4429-a056-ae1e40006006",
+      "type": "PCB_TRACK",
+      "net": "CAM_5V_SENSE",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        20550000,
+        26850000
+      ],
+      "end_nm": [
+        21350000,
+        26850000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "35dfb1db-27c8-425a-bc24-06ca97f063c3",
+      "type": "PCB_VIA",
+      "net": "3V3",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        21780000,
+        11800000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "36c58be0-8106-4247-a25d-2a8e32970b10",
+      "type": "PCB_VIA",
+      "net": "RADIO_RX_MCU",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        17500000,
+        34900000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "37d6b8e6-b13d-4ee5-89ae-150d48eb522e",
+      "type": "PCB_VIA",
+      "net": "PULLPIN",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        31400000,
+        37700000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "3bb7159c-720c-4ece-99ea-07978c690acc",
+      "type": "PCB_VIA",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        17413200,
+        79300000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "3cc7af2b-04ad-4bbc-a18f-eef180469e64",
+      "type": "PCB_TRACK",
+      "net": "RADIO_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        25970800,
+        31351000
+      ],
+      "end_nm": [
+        25656900,
+        31351000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "448f8abc-b504-467a-a9dc-6699e56b0c2c",
+      "type": "PCB_TRACK",
+      "net": "CAM_5V_SENSE",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        22650000,
+        28150000
+      ],
+      "end_nm": [
+        22650000,
+        28950000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "49ad1523-2bc7-497b-804b-8f0c1e27fa43",
+      "type": "PCB_TRACK",
+      "net": "CAM_5V_SENSE",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        22350000,
+        29250000
+      ],
+      "end_nm": [
+        22650000,
+        28950000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "5e5b4bea-669b-42f5-9b19-a92294fef759",
+      "type": "PCB_TRACK",
+      "net": "RADIO_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        25656900,
+        31351000
+      ],
+      "end_nm": [
+        24715600,
+        32292300
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "6184c300-7ba7-4995-9be7-d7070046ceda",
+      "type": "PCB_TRACK",
+      "net": "SERVO3_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        33900000,
+        66599999
+      ],
+      "end_nm": [
+        35200000,
+        65300000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "6427433a-4d9b-49db-b408-1ab1cca4507d",
+      "type": "PCB_VIA",
+      "net": "GPS_TX_MCU",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        12600000,
+        38400000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "74ba2a04-a5b2-4575-8d68-80cf3b75fb5c",
+      "type": "PCB_TRACK",
+      "net": "CAM_5V_SENSE",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        22550000,
+        29050000
+      ],
+      "end_nm": [
+        23050000,
+        29050000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "758f276e-3949-43d9-850a-2548eb7cd520",
+      "type": "PCB_TRACK",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        17413200,
+        81100000
+      ],
+      "end_nm": [
+        23313200,
+        87000000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "79a2a33e-21b1-4caf-a410-9844066cfcb3",
+      "type": "PCB_VIA",
+      "net": "CAM_5V_SENSE",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        22350000,
+        29250000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "7efb25f6-5d6a-4e69-a30b-07b4f3de9f0b",
+      "type": "PCB_TRACK",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        17413200,
+        79300000
+      ],
+      "end_nm": [
+        17413200,
+        81100000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "802eb81d-4e30-45c7-abe4-789ff8209451",
+      "type": "PCB_TRACK",
+      "net": "RADIO_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        35939200,
+        30807700
+      ],
+      "end_nm": [
+        35000900,
+        30807700
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "8a944b2b-41cf-40af-a1d9-ce0fe3446e14",
+      "type": "PCB_TRACK",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        24313200,
+        90600000
+      ],
+      "end_nm": [
+        26313200,
+        90600000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "8b4efd1d-9af5-4d35-aa74-22dc930d7a27",
+      "type": "PCB_VIA",
+      "net": "CAM_MCU_TX",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        19950000,
+        23550000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "94fe54ca-3d66-41e8-abde-84d292ecc43a",
+      "type": "PCB_TRACK",
+      "net": "CAM_5V_SENSE",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        21350000,
+        26850000
+      ],
+      "end_nm": [
+        22650000,
+        28150000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "956f2878-6df8-4537-bdf4-1765bf9dc71d",
+      "type": "PCB_TRACK",
+      "net": "RADIO_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        24715600,
+        32292300
+      ],
+      "end_nm": [
+        24715600,
+        33024500
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "9d5789d2-7895-464d-ac22-b9c2a03a593a",
+      "type": "PCB_TRACK",
+      "net": "SERVO3_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        33900000,
+        66600000
+      ],
+      "end_nm": [
+        33500000,
+        66600000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "a6808b86-e941-4960-a96d-22101bef8605",
+      "type": "PCB_TRACK",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        17413200,
+        79300000
+      ],
+      "end_nm": [
+        18013200,
+        78700000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "ab14f016-3970-4837-a869-0a0f95766680",
+      "type": "PCB_TRACK",
+      "net": "RADIO_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        37450000,
+        32318500
+      ],
+      "end_nm": [
+        35939200,
+        30807700
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "b057316b-298d-481b-9c2c-d36bf2602ee0",
+      "type": "PCB_TRACK",
+      "net": "SERVO3_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        33500000,
+        66600000
+      ],
+      "end_nm": [
+        33000000,
+        66100000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "b7df7de2-1e2e-4420-8c92-b547537cb4b5",
+      "type": "PCB_TRACK",
+      "net": "SERVO3_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        33000000,
+        66099999
+      ],
+      "end_nm": [
+        33500000,
+        66599999
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "bcf5ebc2-6550-49b3-9501-93ed5fdb57fe",
+      "type": "PCB_TRACK",
+      "net": "SERVO3_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        33500000,
+        66599999
+      ],
+      "end_nm": [
+        33900000,
+        66599999
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "c40644b2-4cf8-4ac5-bffb-4f8568bd78ab",
+      "type": "PCB_VIA",
+      "net": "RADIO_AUX_MCU",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        12100000,
+        37800000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "c65bb959-6f69-418f-b3af-bee49a8b9ec9",
+      "type": "PCB_VIA",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 600000,
+      "position_nm": [
+        23313200,
+        87000000
+      ],
+      "drill_nm": 300000,
+      "via_type": 4,
+      "top_layer": "F.Cu",
+      "bottom_layer": "B.Cu"
+    },
+    {
+      "uuid": "cf1fcc5c-0035-468c-9ef6-e1869e8bbd90",
+      "type": "PCB_TRACK",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        23313200,
+        87000000
+      ],
+      "end_nm": [
+        23313200,
+        89600000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "d2fd26cf-c549-477a-a937-4a267de4669e",
+      "type": "PCB_TRACK",
+      "net": "SERVO2_OUT",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        23313200,
+        89600000
+      ],
+      "end_nm": [
+        24313200,
+        90600000
+      ],
+      "layer": "In2.Cu"
+    },
+    {
+      "uuid": "da4a3330-40d9-494d-bc5e-efe7b3b7dce1",
+      "type": "PCB_TRACK",
+      "net": "CAM_PWR_EN",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        35245300,
+        70150600
+      ],
+      "end_nm": [
+        36745300,
+        68650600
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "dca37ab2-eec7-400f-a7f0-fc96ca829452",
+      "type": "PCB_TRACK",
+      "net": "RADIO_TX_MCU",
+      "locked": false,
+      "width_nm": 150000,
+      "start_nm": [
+        35000900,
+        30807700
+      ],
+      "end_nm": [
+        31803600,
+        27610400
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "dd21536a-637b-4edc-b499-8d9bd6c0a564",
+      "type": "PCB_TRACK",
+      "net": "CAM_MCU_TX",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        16950000,
+        20550000
+      ],
+      "end_nm": [
+        19950000,
+        23550000
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "uuid": "ded959c1-9b9d-44d1-b8e0-1f3191bed910",
+      "type": "PCB_TRACK",
+      "net": "CAM_5V_SENSE",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        22350000,
+        29250000
+      ],
+      "end_nm": [
+        22550000,
+        29050000
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "uuid": "dffff0b5-4c8e-4a09-babd-c2ac4a699137",
+      "type": "PCB_TRACK",
+      "net": "SERVO3_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        35200000,
+        64200000
+      ],
+      "end_nm": [
+        35700000,
+        63700000
+      ],
+      "layer": "B.Cu"
+    }
+  ],
+  "added_copper": [
+    {
+      "uuid": "dd428945-ff91-5018-8afc-80ce9ed04925",
+      "type": "PCB_TRACK",
+      "net": "RADIO_TX_MCU",
+      "locked": true,
+      "width_nm": 150000,
+      "start_nm": [
+        37450000,
+        32318500
+      ],
+      "end_nm": [
+        37454800,
+        32313700
+      ],
+      "layer": "F.Cu"
+    }
+  ],
+  "changed_retained_copper": [],
+  "removed_net_counts": {
+    "CAM_MCU_TX": 3,
+    "SERVO3_MCU": 7,
+    "RADIO_M1_MCU": 1,
+    "CAM_5V_SENSE": 7,
+    "3V3": 1,
+    "RADIO_RX_MCU": 1,
+    "PULLPIN": 1,
+    "SERVO2_OUT": 8,
+    "RADIO_TX_MCU": 6,
+    "GPS_TX_MCU": 1,
+    "RADIO_AUX_MCU": 1,
+    "CAM_PWR_EN": 1
+  }
+}

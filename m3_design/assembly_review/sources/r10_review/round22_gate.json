@@ -1,0 +1,155 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round22_gate",
+ "reviewer": "claude",
+ "target_commit": "ec8cb98",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 3
+ },
+ "findings": [
+  {
+   "id": "R22-GATE-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "K-rules JLC hole table parses only \"(min N mm)\" written first and layer-matches only the exact pinned word: a re-pinned DRU override in mil / um, with (opt) before (min), or on a named layer (In1.Cu, F.Cu) is invisible to it",
+   "evidence": {
+    "file": "tools/check_r10.py dru_rules() / jlc_hole_table() (lines ~946-1003)",
+    "gate_function_probe": ".supervisor/r22_gate/probe/table_parse.txt: jlc_hole_table(committed DRU + override) returns 1 issue for the control \"(layer inner) min 0.25mm\" and 0 issues for each of: (layer In1.Cu) min 0.25mm; min 6mil (0.152 mm); (opt 0.3mm) (min 0.15mm); hole_to_hole min 8mil (0.203 mm, JLC 0.45); (layer F.Cu) min 0.21mm (JLC 0.28); min 150um",
+    "seed_g01f": "generator-consistent seed (m3_design/r10_sch.py appends rule \"Terminal relief\" hole_clearance (min 10mil) for PTH pads; DRU regenerated; DRU_SHA256 re-pinned; refill): binding note regenerates (REGEN binding exit=0), KiCad honours the mil value (J1.2 In2 RAW_PROTECTED and J400.2 In1 GND fills move to 0.255 mm), the JLC table reports nothing; only pth_inner_copper fails (\"J1.2 (GND) hole wall is 0.255 mm ... under JLC 0.3 mm\")",
+    "seed_g01g": "generator-consistent via rule hole_clearance (min 6mil) = 0.152 mm < JLC 0.2 mm inner via hole to copper, re-pinned: every checker step exits 0 (drc, audit, silk, parts, fit, r10, route, fab); copper does not move today (inner via fills held at 0.250 mm by the 0.15 mm copper clearance to the unflashed via, probe/via_inner.py), so the DRU now permits sub-JLC via copper with no signal",
+    "seed_g01e": "(layer In1.Cu) override 0.25 mm: table silent; caught only by the board measure (J400.2 0.251 mm on In1)",
+    "jlc_source": "https://jlcpcb.com/capabilities/pcb-capabilities (figures as pinned in JLC_HOLE_TABLE, read by the round 21 CAD lane 2026-10-31)"
+   },
+   "impact": "D-R21-01 says the table is pinned \"so that a re-pinned DRU still cannot drop below it\". That holds only for overrides spelled exactly as the generator spells them. Inner PTH hole to copper is backstopped by the board measure (0.3 mm); via hole to inner copper (0.2), outer PTH to track (0.28) and pad hole to hole (0.45) have no board measure, so a reviewed DRU can allow sub-JLC geometry there and the gate stays green. No current board copper is below JLC.",
+   "concrete_fix": "checks only: in dru_rules() parse every (min V unit) inside each constraint body whatever its position, convert mm / mil / um / in, and treat an unparsable min as a failure; in jlc_hole_table() treat any later rule whose layer is not exactly the pinned word as able to override (any In*.Cu for inner, F.Cu / B.Cu for outer, any named layer for None); add a board-level measure for via hole wall to foreign inner copper (>= 0.2 mm) beside pth_inner_copper. Add the probe cases above as self-test seeds."
+  },
+  {
+   "id": "R22-GATE-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Fab designators are not held to their own part or against stray Fab ink: R134's Fab reference 8.4 mm away in open board, a board-level B.Fab \"Q121\" on Q120's body, and R119's reference drawn at a 0.005 mm stroke all pass every checker step",
+   "evidence": {
+    "file": "tools/check_r10.py fab_ref_crossings() (lines ~3974-4085)",
+    "g08a": "R134 (2 ohm fire resistor, B(16.5, 64.0)) B.Fab ${REFERENCE} moved to (8.2, 65.5), 8.4 mm away, clear of every Fab outline by about 4 mm: drc/audit/silk/parts/fit/r10/route/fab all exit 0",
+    "g08c": "board-level PCB_TEXT \"Q121\" on B.Fab at Q120's origin B(13.5, 73.6), 0.6 mm high: all steps exit 0 (fab_ref_crossings iterates footprint texts only)",
+    "g08d": "R119 B.Fab reference thickness 0.06 -> 0.005 mm, height 0.4 mm kept: all steps exit 0 (only height is checked)",
+    "caught_controls": "d06a (deleted), d06b (literal R143), d06d (on Q120's body), d06e (0.1 mm), g08e (R119 / R120 swapped) all fail K-legends; g08b (Q120 Fab outline deleted) fails DRC lib_footprint_mismatch",
+    "full_check": "copies queued for their own complete tools/check.sh (.supervisor/r22_gate/out/queue_FC.txt); not finished at hand-back, so the self-test layer is not shown to pass for these three (the R21 fab test pins only the listed seeds; Inference that it does not cover these)"
+   },
+   "impact": "The assembly PDFs are bound fab outputs and the hand-fit / rework reference (C84 by hand, fire-path parts). A designator far from its part, a stray wrong designator or an invisible one misleads the rework / inspection reader; JLC placement is from the CPL and is unaffected.",
+   "concrete_fix": "checks only: in fab_ref_crossings require each reference ink centre inside, or within e.g. 1.5 mm of, its own Fab outline (or courtyard) box; reject any board-level (non-footprint) text on F.Fab / B.Fab; require text thickness >= 0.1 x height (or >= 0.05 mm). The committed board should pass all three (measure before pinning)."
+  },
+  {
+   "id": "R22-GATE-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Port ESD clamp ground returns are not held: D420's dedicated GND stub and via (0.7 mm) removed passes every checker step",
+   "evidence": {
+    "file": "tools/check_r10.py port_clamps() / K-ports (lines ~2780-2837): only pin-to-clamp signal path length is measured",
+    "g07b": "D420 (J420.3 radio TX clamp, B(35.75, 31.2)) GND track (35.75, 31.525)-(35.75, 32.225) and via (35.75, 32.225) removed: all steps exit 0; D420.2 then reaches GND only through B.Cu pour, nearest GND vias (35.75, 28.725) 2.8 mm and (36.1, 34.2) 2.7 mm",
+    "board_now": "every port clamp has its own 0.2 mm GND stub to a GND via 0.7 mm away (D410 (36.45, 12.625), D411 (36.45, 9.025), D420 (35.75, 32.225), D440 (3.75, 19.775) ...)",
+    "pending": "g07c2 (pour kept off the pad, return re-fed through 2.8 mm of 0.2 mm track to a shared via) queued in queue M; not finished at hand-back. First attempt g07c collided with C421 copper (caught incidentally, not judged)."
+   },
+   "impact": "D-R20-09 / D-R21-07 hold the clamp beside the pin because ESD effectiveness depends on loop inductance; the clamp-to-GND leg is the other half of that loop and can regress (lose its via) silently. Bounded: the pour still connects it.",
+   "concrete_fix": "checks only: extend K-ports so each clamp's GND pad reaches a GND via (or GND plated barrel) within a recorded bound (e.g. <= 1.0 mm of track, measured 0.7 mm today) through tracks, not only through the pour."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R21-01",
+   "claim": "inner PTH 0.55 mm DRU rule; JLC table pinned in K-rules; board measure 0.3 mm",
+   "measurement": "g01a (0.25 no re-pin): K-rules SHA + table + J1.2 / J400.2 0.251; g01b (0.25 re-pinned): table + both walls; g01c (deleted, re-pinned): \"found 0\" + both walls; f02 (duplicate-name rule): \"found 2\"; g09a / g09b / g09d (gate table edits, coordinated weakening): checker passes, test_r21_jlc_hole_table_pinned_in_k_rules and test_r21_pth_holes_clear_inner_copper fail; g01e/f/g: override spellings bypass the table (R22-GATE-01)",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R21-02",
+   "claim": "U2.1 second path; 26 SINGLE_OPEN_TAPS; exact SINGLE_OPEN_EXCEPTIONS",
+   "measurement": "g02a (run dropped) and g02b (second link into the same via): K-power \"U2.1 hangs on one via (23.20, 68.60)\" (g02b also route off_angle / acute); g03a (R81.1 entry deleted) and g03b (U401.3 coords edited): K-power + stale entry; g03c (exception added) and g03d (tap dropped): checker passes, self-test fails (single-point map / 25 != 26); g03e (reason text replaced by \"ok\"): passes every checker step (reason not validated; closed as text-only)",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R21-04",
+   "claim": "arming nets critical in route_check; jog removed",
+   "measurement": "g05 (round 20 jog restored): route_check FAIL tiny_jog BAT_ENABLE B.Cu (21.0, 68.6) mid 0.424 / offset 0.3",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R21-05",
+   "claim": "R81 / C87 at U9 end, one via",
+   "measurement": "g04a (both back at the switch end with round 20 copper): K-power R81.1 / C87.1 hang on vias (19.68, 66.60) and (21.30, 68.90); g04b (R81 moved 10 mm up its own F.Cu run, still one via): single_via_opens passes, only the self-test exact-position pin (test_r21_en_pull_down_and_filter_at_u9) fails",
+   "verdict": "confirmed (distance held only by a self-test position pin)"
+  },
+  {
+   "d_id": "D-R21-06",
+   "claim": "tab keep-out pinned; band copper held",
+   "measurement": "d07: keep-out missing + 3V3 12.498 mm^2; g06b (In2 GND west edge to x 3.5): 3V3 3.745 + RAW_PROTECTED 7.447 mm^2 under west forward band; g06c (In2 PORT_5V3 stub east aft): 3.502 > 3.077 + stale RAW figure",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R21-07",
+   "claim": "port clamps <= 4.5 mm from pin, wire side",
+   "measurement": "d08: K-ports caught; g07d (D420 1.5 mm further): K-ports 5.475 mm; clamp GND leg not held (R22-GATE-03)",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R21-08",
+   "claim": "one visible Fab ${REFERENCE}, >= 0.3 mm, no neighbour crossing",
+   "measurement": "d06a / d06b / d06d / d06e / g08e caught by K-legends; g08a / g08c / g08d pass (R22-GATE-02)",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R19-15 / round 19 seeds",
+   "claim": "round 19 gate fixes hold",
+   "measurement": "69 round 19 seeds re-run on 5516eeec: 63 caught, 6 pass by design (b09c boundary, b12c, b16d, c02, c02b, c03), identical to round 21",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R22-GATE-01",
+   "change": "tools/check_r10.py dru_rules / jlc_hole_table: unit-aware, position-independent min parsing (unparsable = fail); any named-layer later rule counts as an override; add a board via-hole-to-inner-copper >= 0.2 mm measure; seeds from probe/table_parse.py into the self-test",
+   "board_change": false
+  },
+  {
+   "id": "R22-GATE-02",
+   "change": "fab_ref_crossings: own-part proximity, no board-level Fab text, stroke >= 0.1 x height",
+   "board_change": false
+  },
+  {
+   "id": "R22-GATE-03",
+   "change": "K-ports: each clamp GND pad to a GND via within a recorded track bound (0.7 mm today; bound e.g. 1.0 mm)",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "g01d (generator 0.30 mm, JLC figure, re-pinned): only K-binding failed in the first (non-generator) pass; a reviewed drop from 0.55 to JLC 0.30 is legal by the table and not a fault",
+  "g03e: exception reason text not validated; geometry is pinned exactly, reason is review evidence (closed, text-only)",
+  "g04b: R81 far up its own run passes K-power; held only by the self-test position pin (brittle, but check.sh fails it)",
+  "g09c: JLC_HOLE_FLOOR 0.20 -> 0.10 not caught by the self-tests; redundant, since the per-row override checks still flag any later hole rule under 0.2",
+  "g07c: first long-return seed collided with C421 copper; caught incidentally, not judged",
+  "f01b now duplicates the committed run (route_check collinear_overlap / fold_back): expected; c00 control passes every step"
+ ],
+ "checks_actually_executed": [
+  "board SHA-256 before / after (canonical): 5516eeec... both",
+  "base: git archive ec8cb98; c00 control passes drc, audit, silk, parts, fit, r10, route, fab",
+  "per seed: KiCad 10.0.7 pcbnew seed (refill), regen (budget, hot-plug extract + base reuse or NumPy solve, jlc_orient, export_fab --pending, fab_manifest --bind / verify, binding note) and every check.sh checker with the copy tools; 39 new / round 21 seeds and 69 round 19 seeds",
+  "targeted self-tests (test_r10_check RealBoardSeeds) on g03c, g03d, g04b, g09a, g09b, g09c, g09d copies",
+  "gate-function probes: probe/table_parse.py, probe/via_inner.py, probe/svo.py"
+ ],
+ "sources": [
+  "https://jlcpcb.com/capabilities/pcb-capabilities (hole table, as pinned in JLC_HOLE_TABLE)",
+  "round21_fix_cad.md",
+  "round21_gate.md",
+  "tools/check_r10.py, tools/test_r10_check.py, m3_design/r10_sch.py, m3_design/r10_sch_check.py at ec8cb98"
+ ],
+ "coverage_limits": [
+  "Complete copy check.sh (self-tests included) on the misses g01g, g03e, g08a, g08c, g08d, g07b was queued (.supervisor/r22_gate/out/queue_FC.txt) but not finished at hand-back: those are shown to pass every checker step, not the whole check.sh",
+  "Generator-consistent re-runs of g01b/c/d/e, g01h and g07c2 (queue M) not finished; first-pass g01b-e edited only the DRU, so r10_sch_check rejected the DRU and K-binding failed incidentally (the table / board results quoted are from those runs and from g01f, which was generator-consistent)",
+  "No canonical edit, build or check.sh; no git state change; seeds only in .supervisor/r22_gate/seeds/",
+  "g08d PDF appearance at 0.005 mm stroke not inspected (Inference that it is unreadable)"
+ ]
+}

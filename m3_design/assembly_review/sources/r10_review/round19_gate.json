@@ -1,0 +1,3130 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round19_gate",
+ "reviewer": "claude",
+ "lens": "gate adversary",
+ "target_commit": "1e60441",
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 7
+ },
+ "findings": [
+  {
+   "id": "R19-GATE-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Board-instance pad paste overrides bypass the land pins: Q124 (pyro FET) stencil apertures cut to 26 % pass every check.sh stage",
+   "evidence": {
+    "seed": "b19a_q124_paste_board_only",
+    "seed_board_sha256": "7ed4fa062574596ace602c134bce165a4d7f7007cfe871384fd7b1233a447f55",
+    "files": [
+     "tools/check_r10.py (K-lands, :3368)",
+     "tools/paste_check.py",
+     "kilib/rocket.pretty/M3_AON7524_DFN3x3A.kicad_mod",
+     "fab/m3_gerber.zip m3-F_Paste.gbr"
+    ],
+    "layer": "F.Paste (Q124 on F.Cu)",
+    "change": "board instance only (library file unchanged): Q124 pads 1-5 local solder-paste margin -0.1 mm; Q124 at F(13.9, 57.37) rotation 90, the AON7524 that switches the PYRO1 fire current",
+    "measured": "exported m3-F_Paste.gbr: aperture ADD28 R 0.500 x 0.350 mm -> R 0.300 x 0.150 mm on the gate and three source lands (0.045 of 0.175 mm2, 25.7 %); the drain macro polygon shrinks a further 0.04 mm per side (library pad 5 margin -0.06 -> -0.10 mm)",
+    "gate": "after full regeneration (budget, hot-plug, r10_fab sequence, binding note) every stage exits 0: DRC 0 (no lib_footprint_mismatch: KiCad 10.0.7 does not compare pad-local paste margins), audit OK, r10_parts, fit, check_r10 35/35 (K-lands passes: the library file hash is unchanged), route_check, fab --content (paste_check: \"F_Paste 245 flashes on 245 pasted pads\": it counts openings, not area)",
+    "complete_check_sh_exit": 0,
+    "current_board": "680 placed pads compared with kilib/rocket.pretty: 0 paste or mask margin differences; 91 GND pads carry a board-level thermal zone connection and 9 test pads a 1.0 mm local clearance (governed by K-copper and LC-1), so the board instances already differ from their library copies in ways DRC does not report",
+    "control": "b19b_u9_paste_ratio_board_only (U9.5 / U9.6 -60 %) is caught only because the apertures vanish (paste_check rule 2: \"U9.5 carries paste but has 0 flashes\")",
+    "code": "tools/check_r10.py:883 (K-lands comment: \"DRC's lib_footprint_mismatch ... holds each placed copy to its library file\"), tools/paste_check.py rules 2 / 3 (count-based)"
+   },
+   "impact": "The R18-GATE-09 chain (library file hash-pinned, placed copy held to it by DRC) does not cover pad-local paste or mask overrides, so a stencil change on a safety land reaches the bound package unseen. A quarter-volume paste deposit on the fire FET's source and gate lands is a solder-joint defect risk in the fire-current path (Inference; no assembly test).",
+   "concrete_fix": "tools/check_r10.py K-lands: load each footprint's library copy (pcbnew.FootprintLoad on kilib/rocket.pretty) and require every placed pad's local paste margin, paste ratio and mask margin, and the footprint-level paste / mask overrides, to equal the library's; leave zone connection and clearance overrides to K-copper / LC-1. The current board passes (0 differences of those kinds). Regression seed: b19a."
+  },
+  {
+   "id": "R19-GATE-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "LCSC codes are checked only by per-part pins: a source-level re-code of R131 (FMEA H-1 cold pull-up) to a 1 kohm part passes the complete gate and erases the ground continuity margin",
+   "evidence": {
+    "seed": "b08e_r131_lcsc_source",
+    "seed_board_sha256": "84d474b1bdae4f72bf8d0a8df03c137f01d305717217b0ebcca7f0cea87777ec",
+    "files": [
+     "m3_design/check_actuators.py:398",
+     "tools/check_r10.py S-4",
+     "sources/r10_design/circuit.json",
+     "m3_design/r10_parts.py passive_cold_screen"
+    ],
+    "reference": "R131 at B(10.8, 61.15), R0402, PYRO1_OUT -> PYRO1_COLD (cold pull-up with D120)",
+    "change": "circuit.json gains a replacement entry for R131 (Value \"10k\", LCSC C11702, MPN 0402WGF1001TCE); r10_sch.py regenerates the sheets and netlist in the copy (only pyro.kicad_sch and schematic.net.xml change); the board footprint fields follow (LCSC, LCSC Part, MPN)",
+    "part": "C11702 = UNI-ROYAL 0402WGF1001TCE, 1 kohm +/-1 % 0402 (https://www.lcsc.com/product-detail/C11702.html)",
+    "gate": "full regeneration incl. the binding note (r10_sch_check passes: schematic equals circuit.json), then every stage exits 0; S-4 compares the BOM with the board fields only; check_actuators pins R131's Value (\"10k\", m3_design/check_actuators.py:398) but not its code",
+    "complete_check_sh_exit": 0,
+    "effect": "r10_parts passive_cold_screen model (its own divider equations and tolerances) with R131 = 1 kohm: healthy CONT band 207.2-270.2 mV overlaps the open band 224.7-291.7 mV; designed 10 kohm: 87.0-115.2 vs 129.2-168.0 mV (Calculation, zero leakage as the budget assumes); the budget itself uses a hard-coded 10 kohm and does not change",
+    "controls": "the pinned parts are caught: R119 (b08, b08b: check_actuators.py:513), R123 (b07, b07b), R127 / R128 role swap (b02), board-only field edits (b08c: parity footprint_symbol_field_mismatch); a direct schematic edit (b08d) is caught only because the binding-note writer replays circuit.json and the stale board hash then fails K-binding",
+    "unpinned_safety_codes": "SAFETY_FITTED parts without a code pin: R131 (Value only), C127 and C129 (nets only)"
+   },
+   "impact": "The part JLC places is the LCSC code, but outside the per-part pins nothing relates a code to the part value or role, so a wrong code entered at the reviewed source passes. With R131 at 1 kohm the ground continuity reading can no longer separate an intact e-match from an open one, although AGENTS section 2 rule 3 makes that reading a hard ground refusal (Calculation on the seeded board; current board correct).",
+   "concrete_fix": "m3_design/check_actuators.py r10 block: pin R131 = C25744 / 0402WGF1002TCE and C127 / C129 = C57112 (value and code); optionally decode the UNI-ROYAL / Yageo resistor MPN value field against the Value for every resistor in the BOM. Regression seed: b08e."
+  },
+  {
+   "id": "R19-GATE-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "K-plane counts fill pieces, not necks: the 3V3 buck-output finger joined by a 0.30 mm In2 neck passes, where a split piece would need two >= 0.5 mm links",
+   "evidence": {
+    "seed": "b10b_3v3_finger_neck",
+    "seed_board_sha256": "07500cb157e1b46d23a28d8614e6d541133c693c171dd81f92672b43dd6c61c7",
+    "files": [
+     "tools/check_r10.py K-plane (:3292, :3346)"
+    ],
+    "layer": "In2.Cu (zone R10_3V3_In2)",
+    "change": "In2 fill keep-out x 21.9-23.39, y 72.4-72.8 across the 3V3 finger (fill x 22.0-23.69 there), leaving a 0.30 mm neck at the finger's east edge",
+    "measured": "3V3 In2 fill stays one piece (1465.96 mm2); polygon-deflation bottleneck between the lower finger (L1.2 output via (23.1, 78.1), the AP63203 buck) and the main plane at (22.0, 58.0): 1.00 mm on the current board, 0.30 mm on the seed; the other buck path (via (30.8, 79.26), east region) joins the main plane through 0.54 mm; In2 copper 0.030 mm (stackup)",
+    "control": "b10a_3v3_finger_split (full cut) fails K-plane: \"fills as 2 pieces; the 14.43 mm^2 piece at (22.85, 77.25) has 0 link(s) of >= 0.5 mm outer copper (minimum 2)\"",
+    "complete_check_sh_exit": 0,
+    "code": "tools/check_r10.py:3292 plane_pieces / :3346 plane_issues (OutlineCount only), PLANE_LINK_W :3288"
+   },
+   "impact": "D-R18-06 / R18-RTE-01 exist because 3V3 islands were joined only by thin copper; a fill neck thinner than one required link passes the rule that demands two 0.5 mm links for a split. Bounded: 3V3 also reaches the plane through the east path; no current-density failure is demonstrated.",
+   "concrete_fix": "K-plane: also deflate each non-GND inner fill by PLANE_LINK_W / 2 and treat any landing-via cluster that the deflation separates from the largest piece as a split piece needing the two links (calibrate against the current 0.54 mm east neck before adopting). Regression seed: b10b."
+  },
+  {
+   "id": "R19-GATE-04",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R18-GATE-02 / R18-GATE-03",
+   "title": "Other power rails still have no via (or width) floor: halving the PORT_5V3 buck output vias or removing the 3V3 buck output via passes every stage",
+   "evidence": {
+    "seeds": {
+     "b17b_port5v3_second_via": "4dd3aa7614c65333f77013ae410eead7dd3117a735c185874e329f6ebbdffd17",
+     "b17c_3v3_second_via": "42fdf7c2be3a269262220b8d6d303b1d50508474c650904fceab2edeb7f34232"
+    },
+    "b17b": "PORT_5V3 via (26.0, 8.0) and its 0.4 mm F.Cu link (26.8, 8.0)-(26.0, 8.0) removed: the AP63201 buck output (L400.2 / C403 / C404) reaches In2 PORT_5V3 through one 0.5 / 0.3 mm via (26.8, 8.0); parts_budget.json buck_camera_short_radio_gps_normal_A 1.710 A, camera switch limit 1.041-1.249 A",
+    "b17c": "3V3 via (23.1, 78.1) and its 0.4 mm B.Cu stub removed: L1.2 (AP63203 buck) reaches In2 3V3 only through the F/B via (26.4, 79.26), 4.4 mm of 0.4 mm F.Cu and via (30.8, 79.26) into the region whose neck to the main plane is 0.54 mm",
+    "gate": "both: full regeneration, every stage exits 0 (K-power covers only U9 IN / OUT and the Q124 return; route_check finds nothing dangling)",
+    "complete_check_sh_exit": {
+     "b17b": 0
+    },
+    "record": "D-R18-11 open items list missing width floors for VLOGIC / PORT_5V3 / CAM_5V / PORT_4V8 / 3V3, not via counts"
+   },
+   "impact": "The R18-GATE-03 class (current-carrying layer transitions) is fixed for U9 and Q124 only; the camera / port buck output can lose half its plane transition unnoticed (Inference: one 0.3 mm via at 1.7 A fault current is not shown to fail).",
+   "concrete_fix": "Add POWER_PATHS entries for the PORT_5V3 buck output (L400.2 -> its In2 vias, >= 2) and the 3V3 buck output (L1.2 -> In2, naming the F/B-only via (26.4, 79.26) leg as measured), plus width floors from tools/ipc2152.py for the rails D-R18-11 lists. Regression seeds: b17b, b17c."
+  },
+  {
+   "id": "R19-GATE-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "A legitimate second U9 IN via cannot pass with a one-line update: fire_path keeps the dangling loop as BAT_IN fire copper (r10_parts budget refuses), route_check r10 has no exception list, and K-power is stricter than its record",
+   "evidence": {
+    "seeds": {
+     "c01_second_in_via": "044f86eb61be941c5a68f287f478e3a4ad68e9d76a27f1706e4b3edc63fe9cdb",
+     "c01b_second_in_via_std": "6b36370666aad228750d389420af8c394c0b453002500b92592f9096797a5125"
+    },
+    "change": "a second U9 IN via V2 (18.9, 88.891) in parallel with (17.5, 87.3): F.Cu 1.0 mm (17.5, 88.891) -> V2, B.Cu 1.0 mm V2 -> (19.4, 88.391) -> (19.4, 85.4), upstream of C88; c01 V2 1.0 / 0.5 mm, c01b 0.6 / 0.3 mm",
+    "accepted": "K-power (c01) and F9-1 (real NumPy re-solve: all rows pass) accept it; S-9 still passes",
+    "fails": [
+     "r10_parts --budget-only: \"BAT_IN: series layer change requires a via-resistance model\" (m3_design/r10_parts.py:329), so the build stops and check.sh r10_parts --check reports a stale budget",
+     "cause: check_r10.fire_path (tools/check_r10.py:1805) prunes only degree-1 leaves, so the loop hanging off J1.1 survives: the BAT_IN fire path J1.1 -> Q120 grows from 1 segment (B.Cu) to 15 (F.Cu + B.Cu, the whole U9 feed); path_graph (:1937) prunes the same way",
+     "route_check: track_loop BAT_IN (unpoured net) and detour (64.67 mm against a 38.99 mm MST, ratio 1.66 > 1.6); profile r10 forces ALLOWLIST = [] (tools/route_check.py:318-319: \"no exception of any kind\"), so no allowlist line can admit it (the short_segment / acute_angle hits are this seed's drawing)",
+     "c01b: K-power \"via (18.900, 88.891) 0.600 / 0.300 mm; at least 1.0 / 0.5 mm\": via_issues (tools/check_r10.py:1966) sizes every via on the path, while D-R18-11 records \"at least one via of >= 1.0 / 0.5 mm\""
+    ],
+    "not_too_tight": "c03 (third U9 OUT via on a 0.7 mm run) passes every stage; c02 / c02b (RADIO moved 1.5 / 3.0 mm off the seam) fail only \"stale WORD_SEAMS entry\", a one-entry deletion"
+   },
+   "impact": "The fix R18-GATE-03 points toward (more feed vias) needs gate code changes, and the S-9 / native-budget path identification is wrong for any loop on a fire net's side branch (the budget would also sum non-fire copper if it accepted the layer change).",
+   "concrete_fix": "check_r10.fire_path / path_graph: after leaf pruning, drop every block that contains no terminal and meets the rest at one cut vertex (keep only copper on simple paths between the terminal sets); K-power: require >= 1 IN via of >= 1.0 / 0.5 mm and the others >= the 0.5 / 0.3 mm board minimum, as recorded; route_check r10: a measured-reason exception list (or treat parallel power-feed vias as not a loop). The current board's S-9 / K-power evidence is unchanged (no loops). Regression seeds: c01, c01b."
+  },
+  {
+   "id": "R19-GATE-06",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Word-legend identity rests on box gaps with a 0.01 mm tie: RADIO lies in J410's span and passes only through a named seam; BAT and SWITCH pass by 0.040 mm",
+   "evidence": {
+    "radio": "RADIO ink box (30.153, 22.905)-(34.255, 24.055) mm, F.Silkscreen; J410 courtyard box y 8.055-24.065, J420 y 24.055-40.065 (x 34.255-42.845, overlapping 0.010 mm): the whole ink box lies within J410's y-span and touches J420 only at its top edge; ink-box gap 0.000 mm to both, admitted by WORD_SEAMS (tools/check_r10.py:2845); by centre distance RADIO is 0.079 mm nearer J410",
+    "identical_ports": "J410 (GPS) and J420 (radio) are identical green DB125-4 terminals with identical pin legends 1:4V8 / 2:GND / 3:TXO / 4:RXI, so the word is their only identity cue; GPS sits inside the top of J410's span (ink y 9.005-10.155)",
+    "bat_switch": "BAT ink y 69.835-70.985 gaps J1 0.000 / J400 0.040 mm; SWITCH y 59.835-60.985 gaps J400 0.000 / J121 0.040 mm: each sits in the 1.19 mm gap between two DB125 courtyards (J121 y 50.985-59.795, J400 60.985-69.795, J1 70.985-79.795); these are disambiguated by the per-pin legends and J121's black body",
+    "generator": "m3_design/r10_post.py:668-669 places the words with r7_post.label_near (nearest gap), not put_subject with SUBJECT_MARGIN 1.0 mm (:85), which R3-REQ-06 introduced for notes",
+    "tightness": "c02 / c02b move RADIO 1.5 / 3.0 mm south: every stage passes except \"stale WORD_SEAMS entry\"; at 3.0 mm the centre margin over J410 is about 1.1 mm"
+   },
+   "impact": "A harness assembler can read RADIO as the lower end of the GPS block; swapped GPS / radio harnesses are electrically compatible but defeat telemetry or GPS until found at the pad check. The gate accepts the placement by construction.",
+   "concrete_fix": "CAD (r10_post.py): place RADIO inside J420's span, e.g. anchor (32.18, 26.53) (c02b), and delete the WORD_SEAMS entry; gate: compare centre distances with a legibility margin (e.g. 1.0 mm, as SUBJECT_MARGIN) for the GPS / RADIO pair at least."
+  },
+  {
+   "id": "R19-GATE-07",
+   "severity": "Minor",
+   "status": "new",
+   "title": "No silkscreen text allowlist: a contradictory \"BATT+\" legend beside the igniter terminal passes",
+   "evidence": {
+    "seed": "b21b_misleading_legend_clear",
+    "seed_board_sha256": "a46eb460ed3a04a43690660546beb1e65b96e14485e74369d0c3c42728631676",
+    "change": "F.Silkscreen text 'BATT+' (1.0 mm / 0.15 mm, vertical) at (1.55, 55.4), ink box (0.702, 52.965)-(2.398, 57.835), 0.76 mm west of the black J121 igniter terminal's courtyard",
+    "gate": "full regeneration, every stage exits 0; K-legends judges only pinned texts, designator-prefixed texts, the eight connector words, pin legends and obsolete ARM / fuse words (tools/check_r10.py:3106); AUD-10 review count 0",
+    "complete_check_sh_exit": 0,
+    "requirement": "AGENTS.md section 3: \"on silkscreen only designators, the terminal, arming and connector legends ..., the revision legend and JLC's order-number placeholder\""
+   },
+   "impact": "A legend that names the battery at the igniter terminal (or any other contradicting word) reaches the fab package; R18-GATE-08 pinned the words that exist but not the absence of others.",
+   "concrete_fix": "K-legends: every visible silkscreen text (board, footprint text and fields) must be a designator, a TERMINAL_PINS_R10 legend, a word of WORD_SUBJECTS_R10, a PORT_LEGENDS_R10 row, SERVO_HARNESS_NOTE, PINNED_TEXTS or the JLC placeholder; the current board's 40 board texts and 120 visible designators all are. Regression seed: b21b."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R18-11 (R18-GATE-05)",
+   "claim": "check.sh recognises the repository board by -ef; R10_SKIP_FAB_MANIFEST removed; a missing board fails first",
+   "measurement": "tools/check.sh: [[ \"$BOARD\" -ef \"$CANON\" ]], no skip flag (only tests and records mention it). a19b changes only a fab-manifest input (a 3D-model file), so every earlier stage passes: the copy's check.sh run through a case-variant (M3_DESIGN/...) and through a symlinked folder both reach the fab stage and exit 1 (\"fab package unbound, bound to a different board or failing its content checks\"); a19 (stale fab after a board nudge) is stopped earlier by r10_parts, F9-1 and K-binding",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-11 (R18-GATE-04)",
+   "claim": "export never binds; --bind runs S-4 / verify-cpl / paste_check before writing the manifest; check.sh runs --content",
+   "measurement": "a17 (D9 correction +180 deg, CPL 90 -> 270): bind refused, no manifest; a18 (R134 BOM code + hand-written manifest): --content S-4 fails; b13a (C8 / C9 code), b14a (D9 CPL row), b15a (owner BOM C84), b19b (paste) all fail; but aperture size is not checked (R19-GATE-01)",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-11 (R18-GATE-02 / -03, K-power)",
+   "claim": "U9 IN >= 1.0 mm, OUT >= 0.7 mm, named POWER_NARROW only, IN via 1.0 / 0.5, OUT >= 2 vias on In2, Q124 return >= 0.3 mm and >= 2 In1 vias",
+   "measurement": "baseline evidence: IN 15 segments, via (17.5, 87.3) 1.0 / 0.5; OUT 5 segments, vias (20.3, 79.1) and (21.1, 79.1) 0.5 / 0.3 on In2; return 3 x 0.3 mm to (15.85, 57.695) / (15.85, 58.345). Caught: a03, a03b, a03c, a11, a11b, a26, b17a. Not covered: other rails (R19-GATE-04); IN via rule stricter than recorded (R19-GATE-05)",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R18-11 (R18-GATE-06)",
+   "claim": "PRO_FLOORS adds text height / thickness, silk clearance, spokes",
+   "measurement": "a23 (floors lowered) fails K-rules; a23b (R134 reference 0.6 / 0.10 mm, floors kept) fails DRC text_height and text_thickness",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-11 (R18-GATE-07)",
+   "claim": "M-3 pins the five support centres within 0.01 mm",
+   "measurement": "a15 (3 mm), a15b (2.55 mm) fail M-3; b11 (radius 1.6 -> 1.4 mm) fails M-1 and fit",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-11 (R18-GATE-08)",
+   "claim": "each word once and beside its own connector; only named WORD_SEAMS ties",
+   "measurement": "a16, a16c, b12a, b12b caught; RADIO admitted only by the named seam, BAT / SWITCH by 0.040 mm (R19-GATE-06); extra free text not covered (R19-GATE-07)",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R18-11 (R18-GATE-09)",
+   "claim": "K-lands: project library only; every footprint generated or SHA-256 pinned; DRC holds placed copies to the library",
+   "measurement": "a25 (Q124 land, library + board) fails K-lands; b18a (generated J121 land) fails r10_parts --check; b19a (board-only paste margins) passes everything (R19-GATE-01)",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R18-11 (R18-MEC-01 / -03)",
+   "claim": "STRAIN_PARTS adds the east-edge terminals and C431 / C421 / C411; fit_check reports every DB125 wire room",
+   "measurement": "fit output lists J1, J121, J122, J400, J410, J420, J9 at 5.00-5.60 mm; the Plate self-test passes in the complete check.sh of the unmodified copy; R150-R155 not added (disclosed)",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-04 (R18-GATE-01, S-8)",
+   "claim": "keep-outs hold inner copper 1.05 mm from ACT_GATE / enable barrels; S-8 covers seven more nets, GND hazardous for ACT_GATE / ACT_DRV",
+   "measurement": "measured wall gaps: ACT_GATE (16.2, 73.3) and (11.14, 71.7) In1 GND 1.050, In2 RAW_PROTECTED 1.050; BAT_ENABLE In2 RAW / 3V3 1.050 at all three vias; J400.2 In2 1.050, In1 GND 0.551 (kept). a04 (In2 3V3 corridor) is held at 1.050 mm by the keep-out; b09a (keep-out shrunk) fails S-8 (GND 0.300 mm), b09b (BAT_ENABLE keep-out removed) fails S-8 (0.251 mm); b09c (keep-out at 1.01 mm) passes as intended",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-06 (K-plane)",
+   "claim": "3V3 In2 one piece; K-plane needs >= 2 links of >= 0.5 mm per extra piece",
+   "measurement": "baseline 3V3 1466.52 mm2 one piece; b10a split fails; b10b 0.30 mm neck passes (R19-GATE-03)",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R18-02 / D-R18-01 (S-3, K-actuators)",
+   "claim": "R119 via-free local bias, R123 2 kohm pinned",
+   "measurement": "b05 (R119 deleted) fails S-3 / S-4 / parity; b06 (R123 deleted), b07 (100 k), b07b (code only) fail S-3 / K-actuators; b08 / b08b (R119 code / value) fail K-actuators (check_actuators.py:513)",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-09 (MANUAL_FIT C84)",
+   "claim": "C84 only in the owner BOM; S-4 checks the owner row",
+   "measurement": "b15a (owner row re-coded, manifest hand-written) fails --content S-4",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R19-GATE-01",
+   "change": "tools/check_r10.py K-lands: compare each placed pad's paste margin / ratio and mask margin (and footprint-level overrides) with pcbnew.FootprintLoad(kilib/rocket.pretty) and fail on any difference; seed b19a as a regression",
+   "scope": "checks only; current board has 0 such differences"
+  },
+  {
+   "finding": "R19-GATE-02",
+   "change": "m3_design/check_actuators.py r10 block: pin R131 C25744 / 0402WGF1002TCE and C127, C129 C57112 (code and value); seed b08e",
+   "scope": "checks only; current board meets them"
+  },
+  {
+   "finding": "R19-GATE-05",
+   "change": "tools/check_r10.py: fire_path / path_graph drop terminal-free blocks hanging off one cut vertex; K-power IN vias: >= 1 of >= 1.0 / 0.5 mm, others >= 0.5 / 0.3 mm (the D-R18-11 wording); seeds c01 / c01b",
+   "scope": "checks only; current board evidence unchanged (no loops)"
+  },
+  {
+   "finding": "R19-GATE-07",
+   "change": "tools/check_r10.py K-legends: silkscreen text allowlist (designators, TERMINAL_PINS_R10, WORD_SUBJECTS_R10, PORT_LEGENDS_R10, SERVO_HARNESS_NOTE, PINNED_TEXTS, JLC placeholder); seed b21b",
+   "scope": "checks only; the current 40 board texts and 120 visible designators all qualify"
+  },
+  {
+   "finding": "R19-GATE-06",
+   "change": "m3_design/r10_post.py: place RADIO inside J420's span (anchor about (32.18, 26.53), as seed c02b) and delete the WORD_SEAMS entry in tools/check_r10.py",
+   "scope": "silkscreen-only CAD change (board hash changes; rebuild and rebind); gate cost one entry, as c02 / c02b show"
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "seed": "a03_rawprot_neck",
+   "fault": "R18 s03 again: every 0.7 mm U9-output RAW_PROTECTED track narrowed to 0.31 mm.",
+   "caught_by": [
+    "K-power"
+   ],
+   "result": "caught: r10 — FAIL K-power: U9 OUT: RAW_PROTECTED track 0.310 mm wide, 1.000 mm long on B.Cu (19.3, 78.25)-(19.3, 79.25); minimum 0.7 mm | FAIL K-power: U9 OUT: RAW_PROTECTED track 0.310 mm wide, 0.850 mm long on B.Cu (20.3, 78.25)-(20.3, 79.1); minimum 0.7 mm"
+  },
+  {
+   "seed": "a03b_batin_neck",
+   "fault": "R18 s03b again: every BAT_IN track >= 0.4 mm except the S-9 J1.1 -> Q120.9 B.Cu run, narrowed to 0.31 mm.",
+   "caught_by": [
+    "F9-1",
+    "K-power",
+    "route_check local_bump"
+   ],
+   "result": "caught: r10, route — FAIL F9-1: C88 local bypass path exceeds qualified R_ohm | FAIL F9-1: C88 local bypass path exceeds qualified L_gnd_nH"
+  },
+  {
+   "seed": "a03c_batin_upstream",
+   "fault": "R18 s03c again: BAT_IN feed upstream of C88 (>= 0.4 mm; S-9 run, C88-local path and the C95 -> via F.Cu window kept) narrowed to 0.31 mm.",
+   "caught_by": [
+    "K-power",
+    "route_check neck_down"
+   ],
+   "result": "caught: r10, route — FAIL K-power: U9 IN: BAT_IN track 0.310 mm wide, 2.600 mm long on F.Cu (12.53, 82.1)-(12.53, 84.7); minimum 1.0 mm | FAIL K-power: U9 IN: BAT_IN track 0.310 mm wide, 1.273 mm long on F.Cu (8.9, 74.1)-(9.8, 75.0); minimum 1.0 mm"
+  },
+  {
+   "seed": "a04_actgate_3v3",
+   "fault": "R18 s04 again: an In2 3V3 priority-3 corridor under the ACT_GATE via (16.2, 73.3) (the D-R18-04 keep-out stays).",
+   "caught_by": [],
+   "result": "R18 s04 again: the In2 3V3 corridor is held 1.050 mm from the ACT_GATE barrel by the D-R18-04 keep-out (S-8 near: none); the seed can no longer create the fault (closed: CAD fix works)"
+  },
+  {
+   "seed": "a05_move_pad",
+   "fault": "R18 s05 again: Q124 gate pad moved 0.08 mm on the board only.",
+   "caught_by": [
+    "DRC lib_footprint_mismatch",
+    "verify_board"
+   ],
+   "result": "caught: drc, audit — DRC: lib_footprint_mismatch | Footprint 'M3_AON7524_DFN3x3A' does not match copy in library 'rocket' | ['Footprint Q124'] | audit: - Unresolved DRC findings (including warnings/exclusions)"
+  },
+  {
+   "seed": "a06_pyrogate_3v3",
+   "fault": "R18 s06 again: In2 3V3 patch at the PYRO1_GATE via (14.4, 53.3).",
+   "caught_by": [
+    "S-8",
+    "K-reference",
+    "K-region",
+    "K-plane",
+    "DRC isolated_copper"
+   ],
+   "result": "caught: drc, audit, r10 — FAIL S-8: 3V3 copper on In2.Cu is 0.251 mm from the via (14.400, 53.300) barrel of PYRO1_GATE (minimum 1.0 mm) | FAIL K-reference: 67 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('PYRO1_GATE', 'B.Cu', 13.72, 53.45), ('PYRO1_GATE', 'B.Cu', 13.72, 53.15), ('PYRO1_GATE', 'B.Cu', 13.73, "
+  },
+  {
+   "seed": "a07_del_gnd_partner",
+   "fault": "R18 s07 again: delete the GND via (15.35, 52.15), the only GND partner within 1.5 mm of the PYRO1_GATE via.",
+   "caught_by": [
+    "route_check critical_via_no_gnd"
+   ],
+   "result": "caught: route — route_check FAIL critical_via_no_gnd PYRO1_GATE via (14.4, 53.3) {'gnd_mm': 1.901, 'into_pad': False}"
+  },
+  {
+   "seed": "a08_silk_over_pad",
+   "fault": "R18 s08 again: B.Silkscreen 'X' over R134.1 (13.925, 64.0).",
+   "caught_by": [
+    "K-legends",
+    "DRC silk_over_copper",
+    "verify_board"
+   ],
+   "result": "caught: drc, audit, r10 — FAIL K-legends: silkscreen board PCB_TEXT overlaps the solder mask opening of R134.1 (B.Mask) by 0.820 mm (R3-MFG-01) | DRC: silk_over_copper | Silkscreen clipped by solder mask | [\"PCB text 'X' on B.Silkscreen\", 'Pad 1 [PYRO1_IGN] of R134 on B.Cu']"
+  },
+  {
+   "seed": "a11_rawprot_single_via",
+   "fault": "R18 s11 again: delete U9 OUT via (21.1, 79.1) and its 0.4 mm link.",
+   "caught_by": [
+    "K-power"
+   ],
+   "result": "caught: r10 — FAIL K-power: U9 OUT: 1 via(s) on the path; at least 2 required | FAIL K-power: stale POWER_NARROW entry ('RAW_PROTECTED', 'B.Cu', 0.4, 0.8, (20.3, 79.1, 21.1, 79.1)) (link between the two U9 OUT In2 vias)"
+  },
+  {
+   "seed": "a11b_batin_via_shrink",
+   "fault": "R18 s11b again: U9 IN via (17.5, 87.3) 1.0/0.5 -> 0.5/0.3 mm.",
+   "caught_by": [
+    "K-power"
+   ],
+   "result": "caught: r10 — FAIL K-power: U9 IN: via (17.500, 87.300) 0.500 / 0.300 mm; at least 1.0 / 0.5 mm"
+  },
+  {
+   "seed": "a12_swap_gate_nets",
+   "fault": "R18 s12 again: U1.3 (PE4) <-> U1.16 (PC1) nets swapped on the board.",
+   "caught_by": [
+    "S-3",
+    "K-contract",
+    "K-actuators",
+    "DRC shorting_items",
+    "DRC solder_mask_bridge"
+   ],
+   "result": "caught: drc, audit, r10, route — FAIL S-3: independent load-switch enable U1.16 must be ACT_EN_MCU (is PYRO1_GATE_N) | FAIL K-contract: U1.3: must be PYRO1_GATE_N, got ACT_EN_MCU"
+  },
+  {
+   "seed": "a13_dnp_pulldown",
+   "fault": "R18 s13 again: R128 DNP + excluded from BOM / position files on the board.",
+   "caught_by": [
+    "S-4",
+    "fab --bind (S-4 BOM / CPL, paste openings)",
+    "fab --bind",
+    "DRC footprint_symbol_mismatch",
+    "fab manifest (unbound)"
+   ],
+   "result": "caught: drc, audit, r10, fab — FAIL S-4: R128: required fitted part excluded (dnp, exclude_from_bom, exclude_from_pos_files) | fab bind: Fab manifest: FAIL: content checks failed (S-4 BOM / CPL, paste openings): the package is not bound"
+  },
+  {
+   "seed": "a14_shrink_fire",
+   "fault": "R18 s14 again: every PYRO1_IGN track narrowed to 0.4 mm.",
+   "caught_by": [
+    "S-9"
+   ],
+   "result": "caught: r10 — FAIL S-9: PYRO1_IGN fire-path track 0.400 mm wide, 2.300 mm long on B.Cu (7.4, 57.6)-(7.4, 59.9); minimum 0.5 mm (AUD-6) | FAIL S-9: PYRO1_IGN fire-path track 0.400 mm wide, 5.798 mm long on B.Cu (7.4, 59.9)-(11.5, 64.0); minimum 0.5 mm (AUD-6)"
+  },
+  {
+   "seed": "a15_support_move",
+   "fault": "R18 15_support_move again: the middle support (4, 44.3) moved by (0, 3.0) mm.",
+   "caught_by": [
+    "M-3",
+    "M-5",
+    "M-6",
+    "fit_check"
+   ],
+   "result": "caught: fit, r10 — FAIL M-3: the P1 / P2 support (4, 44.3) needs one Edge.Cuts circle centred within 0.01 mm (found 0; nearest (4.000, 47.300), 3.000 mm away) | FAIL M-3: Edge.Cuts circle at (4.000, 47.300) is not a P1 / P2 support position"
+  },
+  {
+   "seed": "a15b_support_move_legal",
+   "fault": "R18 15b_support_move_legal again: the middle support (4, 44.3) moved by (-0.5, 2.5) mm.",
+   "caught_by": [
+    "M-3"
+   ],
+   "result": "caught: r10 — FAIL M-3: the P1 / P2 support (4, 44.3) needs one Edge.Cuts circle centred within 0.01 mm (found 0; nearest (3.500, 46.800), 2.550 mm away) | FAIL M-3: Edge.Cuts circle at (3.500, 46.800) is not a P1 / P2 support position"
+  },
+  {
+   "seed": "a16_legend_swap",
+   "fault": "R18 legend swap again: the BAT and SWITCH word legends exchange anchors.",
+   "caught_by": [
+    "K-legends",
+    "DRC silk_edge_clearance",
+    "DRC silk_overlap",
+    "verify_board"
+   ],
+   "result": "caught: drc, audit, silk, r10 — FAIL K-legends: J400: word legend 'SWITCH' at (-0.608, 69.835) is 0.000 mm from J1 and 0.040 mm from its own connector J400: it must sit beside J400 (nearer it by more than 0.01 mm) | FAIL K-legends: J1: word legend 'BAT' at (2.081, 59.835) is 0.000 mm from J400 and 10.000 mm from its own connector J1: it must sit beside J1 (nearer it by more than 0.01 mm)"
+  },
+  {
+   "seed": "a16c_legend_swap_bat_ign",
+   "fault": "R18 legend swap again: the BAT and IGN word legends exchange anchors.",
+   "caught_by": [
+    "K-legends"
+   ],
+   "result": "caught: r10 — FAIL K-legends: J121: word legend 'IGN' at (0.868, 69.835) is 0.089 mm from J1 and 10.040 mm from its own connector J121: it must sit beside J121 (nearer it by more than 0.01 mm) | FAIL K-legends: J121: word legend 'IGN' at (0.868, 69.835) is 0.098 mm from J400 and 10.040 mm from its own connector J121: it must sit beside J121 (nearer it by more than 0.01 mm)"
+  },
+  {
+   "seed": "a17_stale_correction",
+   "fault": "R18 s17 again: D9's JLC correction turned +180 deg in tools/jlc_corrections.json, then the r10_fab.sh export and bind (without re-running jlc_orient, which would regenerate the corrections). Board unchanged.",
+   "caught_by": [
+    "fab manifest (unbound)"
+   ],
+   "result": "R18 s17 again (D9 correction +180 deg; exported CPL row 90 -> 270 deg): fab_manifest --bind runs jlc_orient --verify-cpl, which fails, so no manifest is written and the fab stage fails"
+  },
+  {
+   "seed": "a18_bom_edit",
+   "fault": "R18 s18 again: production BOM edited after binding (R134 C3013496 -> C25744) and the manifest rewritten by hand (fab_manifest.write_manifest, bypassing --bind).",
+   "caught_by": [
+    "S-4",
+    "fab --content (S-4 BOM / CPL)"
+   ],
+   "result": "R18 s18 again (R134 BOM code C3013496 -> C25744, manifest rewritten by hand): fab_manifest --content S-4 fails (\"R134 LCSC Part # 'C25744' differs from native fitted part 'C3013496'\")"
+  },
+  {
+   "seed": "a19_stale_fab",
+   "fault": "R18 s19 again: SWD legend nudged 0.1 mm; no regeneration.",
+   "caught_by": [
+    "F9-1",
+    "fab manifest (stale inputs)",
+    "r10_parts --check (parts_budget.json)",
+    "K-binding"
+   ],
+   "result": "caught: parts, r10, fab — FAIL F9-1: stale board-derived model inputs | Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it"
+  },
+  {
+   "seed": "a20_binding_hash",
+   "fault": "R18 s20 again: binding note board hash forged.",
+   "caught_by": [
+    "K-binding"
+   ],
+   "result": "caught: r10 — FAIL K-binding: saved board_sha256 differs from native binding-note regeneration"
+  },
+  {
+   "seed": "a21_plane_split",
+   "fault": "R18 s21 again: In1 GND split by a full-width 0.3 mm keep-out slot at y 30.0-30.3.",
+   "caught_by": [
+    "K-reference"
+   ],
+   "result": "caught: r10 — FAIL K-reference: 1273 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('RADIO_RX_MCU', 'F.Cu', 31.1637, 30.2948), ('RADIO_RX_MCU', 'F.Cu', 31.1708, 30.2878), ('RADIO_RX_MCU',"
+  },
+  {
+   "seed": "a22_rule_severity",
+   "fault": "R18 s22 again: .kicad_pro severity lib_footprint_mismatch -> ignore.",
+   "caught_by": [
+    "K-rules",
+    "fab manifest (stale inputs)",
+    "verify_board"
+   ],
+   "result": "caught: audit, r10, fab — FAIL K-rules: DRC rule severities set to ignore: ['lib_footprint_mismatch'] | Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it"
+  },
+  {
+   "seed": "a23_text_floor",
+   "fault": "R18 s23 again: .kicad_pro text floors lowered (1.0 -> 0.5 mm, 0.15 -> 0.08 mm) and R134's reference 0.6 / 0.10 mm.",
+   "caught_by": [
+    "K-rules"
+   ],
+   "result": "caught: r10 — FAIL K-rules: .kicad_pro design rule min_text_height = 0.5, floor 1.0 mm | FAIL K-rules: .kicad_pro design rule min_text_thickness = 0.08, floor 0.15 mm"
+  },
+  {
+   "seed": "a23b_text_shrink_only",
+   "fault": "New: floors kept; R134's shown reference shrunk to 0.6 mm / 0.10 mm stroke (DRC text checks expected to hold it).",
+   "caught_by": [
+    "DRC text_thickness",
+    "DRC text_height",
+    "verify_board"
+   ],
+   "result": "caught: drc, audit — DRC: text_thickness | Text thickness out of range (board setup constraints silk text thickness min thickness 0.1500 mm; ac | ['Reference field of R134'] | DRC: text_height | Text height out of range (board setup constraints silk text height min height 1.0000 mm; actual 0.60 | ['Reference field of R134']"
+  },
+  {
+   "seed": "a25_land_edit",
+   "fault": "R18 s25 again: Q124 gate pad 4 +0.08 mm in x in the library file and the placed footprint (consistent edit).",
+   "caught_by": [
+    "K-lands"
+   ],
+   "result": "caught: r10 — FAIL K-lands: M3_AON7524_DFN3x3A (Q124) library file SHA-256 5a8e0db754194fbb4aa6ad071698c3fc742dcf5bd5d53108229013c7069c805a is not the pinned 4442bf5999c46d815f38f6a5e2c163bb656bab50b4e1e0a6c7d08e521828f8dc: a land cha"
+  },
+  {
+   "seed": "a26_q124_return",
+   "fault": "R18 s26 again: Q124's GND return bar and via stubs 0.3 -> 0.15 mm.",
+   "caught_by": [
+    "K-power"
+   ],
+   "result": "caught: r10 — FAIL K-power: Q124 fire return: GND track 0.150 mm wide on F.Cu (15.300, 58.345)-(15.850, 58.345); minimum 0.3 mm | FAIL K-power: Q124 fire return: GND track 0.150 mm wide on F.Cu (15.300, 57.695)-(15.850, 57.695); minimum 0.3 mm"
+  },
+  {
+   "seed": "b02_r127_r128_swap",
+   "fault": "New: the pyro gate pull-down and MCU-side pull exchange parts (R127 <-> R128 Value / LCSC / MPN) in sch + board: PYRO1_GATE gets 1 kohm to GND, PYRO1_GATE_N 10 kohm.",
+   "caught_by": [
+    "K-actuators",
+    "binding-note regeneration refused",
+    "K-binding",
+    "verify_board"
+   ],
+   "result": "caught: audit, r10 — FAIL K-actuators: check_actuators: R126/R127/R128 must be 220R / 1k / 10k | FAIL K-actuators: check_actuators: R127 must be LCSC C11702 (is C25744)"
+  },
+  {
+   "seed": "b05_del_r119",
+   "fault": "New: R119 deleted from the board (and its ACT_FET_S stub), schematic untouched.",
+   "caught_by": [
+    "S-3",
+    "S-4",
+    "K-actuators",
+    "fab --bind (S-4 BOM / CPL)",
+    "fab --bind"
+   ],
+   "result": "caught: drc, audit, r10, fab — FAIL S-3: load switch Q121: no gate-source resistor of 1 k - 100 k joined to its gate and source pads by B.Cu copper alone (an open via barrel would float the gate) | FAIL S-4: R119: required fitted part missing from the board"
+  },
+  {
+   "seed": "b06_del_r123",
+   "fault": "New: R123 deleted from the board (and its ACT_EN stub), schematic untouched.",
+   "caught_by": [
+    "S-3",
+    "S-4",
+    "K-actuators",
+    "fab --bind (S-4 BOM / CPL)",
+    "fab --bind"
+   ],
+   "result": "caught: drc, audit, r10, route, fab — FAIL S-3: independent load-switch enable ACT_EN must touch only ['Q122', 'R122', 'R123'] | FAIL S-3: independent load-switch enable R123 must be 2000 ohm"
+  },
+  {
+   "seed": "b07_r123_value",
+   "fault": "New: R123 (PC1 enable pull-down, D-R18-01) back to 100 kohm consistently (Value, LCSC C25741, MPN) in sch + board.",
+   "caught_by": [
+    "S-3",
+    "K-actuators",
+    "binding-note regeneration refused",
+    "K-binding"
+   ],
+   "result": "caught: r10 — FAIL S-3: independent load-switch enable R123 must be 2000 ohm | FAIL K-actuators: check_actuators: R10 R123 must be the 2k ACT_EN pull-down"
+  },
+  {
+   "seed": "b07b_r123_lcsc_only",
+   "fault": "New: R123 re-coded to 100 kohm C25741 (MPN too) in sch + board, Value '2k' kept.",
+   "caught_by": [
+    "K-actuators",
+    "binding-note regeneration refused",
+    "K-binding"
+   ],
+   "result": "caught: r10 — FAIL K-actuators: check_actuators: R123 must be LCSC C4109 (is C25741) | binding-note regen: AssertionError: binding note requires a passing schematic contract"
+  },
+  {
+   "seed": "b08_r119_lcsc",
+   "fault": "New: R119 (Q121 gate-source bias, SAFETY_FITTED, D-R18-02) re-coded to the 1 kohm part C11702 / 0402WGF1001TCE in the schematic and board (Value '100k' kept): JLC places 1 kohm; VGS(on) = -V_S x 0.99k / 10.99k (Calculation).",
+   "caught_by": [
+    "K-actuators",
+    "binding-note regeneration refused",
+    "K-binding"
+   ],
+   "result": "R119 re-coded to C11702: K-actuators (check_actuators.py:513) and K-binding fail; the R119 identity hypothesis is refuted"
+  },
+  {
+   "seed": "b08b_r119_value_1k",
+   "fault": "New: R119 changed to 1 kohm consistently (Value '1k', C11702 / 0402WGF1001TCE) in the schematic and board.",
+   "caught_by": [
+    "K-actuators",
+    "binding-note regeneration refused",
+    "K-binding"
+   ],
+   "result": "caught: r10 — FAIL K-actuators: check_actuators: R10 R119 must be the 100k 0402 (C25741) Q121 gate-source resistor | binding-note regen: AssertionError: binding note requires a passing schematic contract"
+  },
+  {
+   "seed": "b08c_r119_lcsc_board_only",
+   "fault": "New: R119's LCSC field changed on the board only (C25741 -> C11702), schematic untouched (does parity compare fields?).",
+   "caught_by": [
+    "K-actuators",
+    "fab --bind",
+    "DRC footprint_symbol_field_mismatch",
+    "fab manifest (unbound)",
+    "verify_board"
+   ],
+   "result": "caught: drc, audit, r10, fab — FAIL K-actuators: check_actuators: R10 R119 must be the 100k 0402 (C25741) Q121 gate-source resistor | fab bind: Fab manifest: FAIL: [Errno 2] No such file or directory: '.supervisor/r19_gate/out/b08c_r119_lcsc_board_only/export_record.json'"
+  },
+  {
+   "seed": "b08d_r131_lcsc",
+   "fault": "New: R131 (FMEA H-1 cold pull-up, SAFETY_FITTED; check_actuators pins its Value '10k' only) re-coded to the 1 kohm part C11702 / 0402WGF1001TCE in the schematic and board, Value '10k' kept: JLC places 1 kohm.",
+   "caught_by": [
+    "binding-note regeneration refused",
+    "K-binding"
+   ],
+   "result": "direct schematic + board re-code of R131: caught only through K-binding (the binding-note writer replays circuit.json and refuses, leaving a stale board hash); the source-level b08e is R19-GATE-02"
+  },
+  {
+   "seed": "b09a_keepout_actgate_shrink",
+   "fault": "New: D-R18-04 keep-out round the ACT_GATE via (16.2, 73.3) shrunk to an inscribed 0.45 mm (barrel wall + 0.3 mm).",
+   "caught_by": [
+    "S-8"
+   ],
+   "result": "caught: r10 — FAIL S-8: GND copper on In1.Cu is 0.300 mm from the via (16.200, 73.300) barrel of ACT_GATE (minimum 1.0 mm) | FAIL S-8: RAW_PROTECTED copper on In2.Cu is 0.300 mm from the via (16.200, 73.300) barrel of ACT_GATE (minimum 1.0 mm)"
+  },
+  {
+   "seed": "b09b_keepout_batenable_delete",
+   "fault": "New: D-R18-04 keep-out round the BAT_ENABLE via (17.1, 82.8) removed (In2 RAW_PROTECTED / 3V3 refill up to it).",
+   "caught_by": [
+    "S-8"
+   ],
+   "result": "caught: r10 — FAIL S-8: RAW_PROTECTED copper on In2.Cu is 0.251 mm from the via (17.100, 82.800) barrel of BAT_ENABLE (minimum 1.0 mm)"
+  },
+  {
+   "seed": "b09c_keepout_actgate_edge",
+   "fault": "New (boundary control): ACT_GATE_1 keep-out shrunk to an inscribed 1.16 mm (barrel wall + 1.01 mm): S-8's floor holds.",
+   "caught_by": [],
+   "result": "boundary control: keep-out shrunk to an inscribed 1.16 mm, fill stays >= 1.0 mm from the barrel and S-8 passes, as intended"
+  },
+  {
+   "seed": "b10a_3v3_finger_split",
+   "fault": "New: In2 3V3 finger (x 22.25-23.75) cut across at y 72.4-72.8 by a fill keep-out: the lower finger with the 3V3 buck output via (23.1, 78.1) becomes its own piece.",
+   "caught_by": [
+    "K-plane"
+   ],
+   "result": "caught: r10 — FAIL K-plane: 3V3 on In2.Cu fills as 2 pieces; the 14.43 mm^2 piece at (22.85, 77.25) has 0 link(s) of >= 0.5 mm outer copper (minimum 2)"
+  },
+  {
+   "seed": "b11_support_radius",
+   "fault": "New: the middle support hole (4, 44.3) radius 1.6 -> 1.4 mm (2.8 mm hole for an M3 screw).",
+   "caught_by": [
+    "M-1",
+    "M-5",
+    "fit_check"
+   ],
+   "result": "caught: fit, r10 — FAIL M-1: Edge.Cuts circle at (4, 44.3) is not a 3.2 mm hole | FAIL M-5: fit_check: expected five M3 supports, found 4"
+  },
+  {
+   "seed": "b12a_pin_legend_e1",
+   "fault": "New: J121's pin legends exchanged ('1:E1-' and '2:E1+' swap anchors).",
+   "caught_by": [
+    "K-legends",
+    "DRC silk_overlap",
+    "verify_board"
+   ],
+   "result": "caught: drc, audit, r10 — FAIL K-legends: J121.1: conflicting silkscreen pin legend '2:E1+': its strictly nearest connector pin must be labelled \"1:E1-\" | FAIL K-legends: J121.2: conflicting silkscreen pin legend '1:E1-': its strictly nearest connector pin must be labelled \"2:E1+\""
+  },
+  {
+   "seed": "b12b_pin_legend_bat",
+   "fault": "New: J1's pin legends exchanged ('1:BAT+' and its '2:GND').",
+   "caught_by": [
+    "K-legends"
+   ],
+   "result": "caught: r10 — FAIL K-legends: J1.2: conflicting silkscreen pin legend '1:BAT+': its strictly nearest connector pin must be labelled \"2:GND\" | FAIL K-legends: J1.1: conflicting silkscreen pin legend '2:GND': its strictly nearest connector pin must be labelled \"1:BAT+\""
+  },
+  {
+   "seed": "b12c_word_ign_to_bottom",
+   "fault": "New: the IGN word legend moved from F.Silkscreen to B.Silkscreen at the same place (still beside J121).",
+   "caught_by": [],
+   "result": "IGN moved to B.Silkscreen beside the through-hole J121: passes by design (THT terminals are on both faces); a legibility review item at most, not filed"
+  },
+  {
+   "seed": "b13a_bom_nonsafety_csv",
+   "fault": "New: a non-required part's BOM code edited after binding (C8 / C9 22 uF C45783 -> C19666, the 0603 C92 code) and the manifest rewritten by hand.",
+   "caught_by": [
+    "S-4",
+    "fab --content (S-4 BOM / CPL)"
+   ],
+   "result": "caught: fab — FAIL S-4: BOM: line 3: C10 LCSC Part # 'C19666' differs from native fitted part 'C45783' | FAIL S-4: BOM: line 3: C11 LCSC Part # 'C19666' differs from native fitted part 'C45783'"
+  },
+  {
+   "seed": "b14a_cpl_d9_rot",
+   "fault": "New: the CPL's D9 row turned 180 deg after binding (diode reversed at placement) and the manifest rewritten by hand.",
+   "caught_by": [
+    "fab --content (CPL rebuilt from JLC footprints)"
+   ],
+   "result": "caught: fab — fab content check CPL rebuilt from JLC footprints: FAIL (exit 1) | Fab manifest: FAIL: content checks failed: CPL rebuilt from JLC footprints"
+  },
+  {
+   "seed": "b15a_owner_bom_edit",
+   "fault": "New: the owner BOM's hand-fitted C84 row re-coded after binding (C46550466 -> C19666) and the manifest rewritten.",
+   "caught_by": [
+    "S-4",
+    "fab --content (S-4 BOM / CPL)"
+   ],
+   "result": "caught: fab — FAIL S-4: owner BOM: hand-fitted C84 missing or not the native part {'LCSC Part #': 'C46550466', 'Manufacturer Part': 'MA25V470M8x10', 'Footprint': 'M3_MA_8x10'} | fab content check S-4 BOM / CPL: FAIL (exit 1)"
+  },
+  {
+   "seed": "b16a_hotplug_hash",
+   "fault": "New: the hot-plug model inputs' board hash forged.",
+   "caught_by": [
+    "F9-1"
+   ],
+   "result": "caught: r10 — FAIL F9-1: stale board-derived model inputs | FAIL F9-1: stale model inputs"
+  },
+  {
+   "seed": "b16b_budget_hash",
+   "fault": "New: parts_budget.json's fire-current board hash forged.",
+   "caught_by": [
+    "r10_parts --check (parts_budget.json)"
+   ],
+   "result": "caught: parts — parts: r10_parts: stale: parts_budget.json"
+  },
+  {
+   "seed": "b16c_manifest_hash",
+   "fault": "New: the fab manifest's recorded board input hash forged.",
+   "caught_by": [
+    "fab manifest (stale inputs)"
+   ],
+   "result": "caught: fab — Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it"
+  },
+  {
+   "seed": "b16d_docs_hash",
+   "fault": "New: the board hash recorded in STATUS.md, AGENTS.md and docs/M3_R10.md replaced by R17's 632a9ad3... (wrong board).",
+   "caught_by": [],
+   "result": "STATUS.md / AGENTS.md / docs/M3_R10.md board hash replaced: passes; documents are outside check.sh by design, while the gated bindings (fab manifest, binding note, hot-plug, budget) all fail on a forged hash (a20, b16a-c)"
+  },
+  {
+   "seed": "b17a_q124_return_via",
+   "fault": "New: one of Q124's two In1 GND return vias (15.85, 58.345) and its stub removed.",
+   "caught_by": [
+    "K-power"
+   ],
+   "result": "caught: r10 — FAIL K-power: Q124 fire return: 1 via(s) on the path; at least 2 required"
+  },
+  {
+   "seed": "b18a_generated_land_edit",
+   "fault": "New: a consistent library + board edit of a generated land: J121 (M3_DB125_2P_BK, the igniter terminal) pad 2 moved +0.1 mm in x in kilib/rocket.pretty and in the placed footprint (r10_parts pins the generated file).",
+   "caught_by": [
+    "r10_parts --check (M3_DB125_2P_BK.kicad_mod)"
+   ],
+   "result": "caught: parts — parts: r10_parts: stale: M3_DB125_2P_BK.kicad_mod"
+  },
+  {
+   "seed": "b19b_u9_paste_ratio_board_only",
+   "fault": "New: U9 (eFuse) pads 5 / 6 (IN / OUT current bars) get a board-only paste ratio of -60 % (library unchanged).",
+   "caught_by": [
+    "fab --bind (paste openings)",
+    "fab --bind",
+    "fab manifest (unbound)"
+   ],
+   "result": "caught: fab — fab bind: Fab manifest: FAIL: content checks failed (paste openings): the package is not bound | fab bind: fab content check paste openings: FAIL (exit 1)"
+  },
+  {
+   "seed": "b20_global_mask_expansion",
+   "fault": "New: the board-level solder-mask expansion (Board Setup > pad_to_mask_clearance) 0 -> 0.04 mm: the U4 LGA-14 webs that D-R18-08 set to 0.150 mm become 0.070 mm (below the usual 0.1 mm fabricable web); no pad or library change.",
+   "caught_by": [
+    "K-copper"
+   ],
+   "result": "board-level mask expansion 0 -> 0.04 mm (U4 webs 0.150 -> 0.070 mm) caught incidentally by K-copper (via hole (23.8, 62.95) within 0.1 mm of the C97.2 / C98.2 mask openings; 0.125 mm at 0 mm expansion): that margin (0.025 mm) equals U4's web margin to JLC's 0.10 mm, so no web below 0.10 mm passes on this board; no direct mask-web rule exists"
+  },
+  {
+   "seed": "b21_misleading_legend",
+   "fault": "New: an extra free-text legend 'BATT+' on F.Silkscreen beside the black J121 igniter terminal (pin legends and the IGN word untouched): AGENTS section 3 allows only designators and the named terminal / connector legends.",
+   "caught_by": [
+    "DRC silk_overlap",
+    "verify_board"
+   ],
+   "result": "first placement clipped J121's silkscreen (DRC silk_overlap 0.115 mm); the clean placement b21b is R19-GATE-07"
+  },
+  {
+   "seed": "c02_radio_legend_move",
+   "fault": "Legitimate fix (tightness test): the RADIO word legend moved 1.5 mm south, off the J410 / J420 seam into J420's span.",
+   "caught_by": [
+    "K-legends"
+   ],
+   "result": "tightness probe for R19-GATE-06: only \"stale WORD_SEAMS entry\" fails (one-entry update)"
+  },
+  {
+   "seed": "c02b_radio_legend_move3",
+   "fault": "Legitimate fix (tightness test): the RADIO word legend moved 3.0 mm south (centre 2.4 mm inside J420 span: centre margin over J410 about 1.1 mm).",
+   "caught_by": [
+    "K-legends"
+   ],
+   "result": "as c02 at 3.0 mm: only \"stale WORD_SEAMS entry\" fails"
+  },
+  {
+   "seed": "c03_third_out_via",
+   "fault": "Legitimate fix (tightness test): a third U9 OUT via (21.1, 78.25) on a 0.7 mm B.Cu run from (20.3, 78.25).",
+   "caught_by": [],
+   "result": "legitimate-fix control: a third U9 OUT via on a 0.7 mm run passes every stage (not too tight)"
+  },
+  {
+   "seed": "c04_fire_return_third_via",
+   "fault": "Legitimate fix (tightness test): a third Q124 return via (15.85, 57.045) on a 0.3 mm F.Cu stub from Q124.3.",
+   "caught_by": [
+    "S-2",
+    "DRC shorting_items"
+   ],
+   "result": "legitimate-fix probe drawn on an illegal spot (its via shorted the PYRO1_OUT B.Cu diagonal: DRC shorting_items, S-2): no conclusion; by reading, FIRE_RETURN accepts any extra legal via"
+  }
+ ],
+ "checks_actually_executed": {
+  "method": "Each seed is an APFS clone of `git archive 1e60441` (tracked files, fab package included; no round-19 reports). One fault is applied with KiCad 10.0.7 pcbnew (zones refilled), a schematic / circuit.json text edit, or a fab / record file edit. Board seeds then get the regeneration m3_design/r10_build.sh runs after the board, with explicit copy paths (r10_build.sh / r10_fab.sh cd to the git top level): r10_parts --budget-only, r10_hotplug --extract and the NumPy solve, jlc_orient, export_fab --pending, fab_manifest --bind, fab_manifest, the binding note. Where the extracted hot-plug electrical signature is unchanged the base solve is reused with its inputs digest re-pointed (exploratory shortcut); every seed that changes the U9 input feed (a03b, a03c, a11b, c01, c01b) ran the real solve. Then the exact check.sh checker commands run one by one against the copy's own tools (DRC all severities + parity, ERC, verify_board, silk_check, r10_parts --check, fit_check, check_r10 full with --fit, route_check, fab_manifest --content). Controls: the unmodified copy and a regeneration-only copy pass every stage, regeneration reproduces BOM, owner BOM, CPL, corrections, budget, hot-plug inputs / results and binding note byte for byte, and the complete check.sh (self-tests included) exits 0 on the unmodified copy. For the misses the copy's complete check.sh was run.",
+  "controls": [
+   {
+    "seed": "s00_baseline",
+    "description": "",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/s00_baseline/log.txt",
+    "log_sha256": "65a582dcaf4d8ebab162f7e039c33bead1a0196f8c8ae8016aba775fe4a9ef23",
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "d426eecbf509eaec4823092cc6d88a200dc88abce6c4dcfdc227141d30fdfdb0",
+     "tail": [
+      "OK",
+      "CHECK.SH exit=0",
+      "== done 2026-10-31T03:19:21Z"
+     ]
+    }
+   },
+   {
+    "seed": "s01_regen_control",
+    "description": "",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/s01_regen_control/log.txt",
+    "log_sha256": "dbd8ae1ed9935a6afddbcc1ebc982d40d5eb478965f01639d54c9915698abfb0"
+   }
+  ],
+  "seeds": [
+   {
+    "seed": "a03_rawprot_neck",
+    "description": "R18 s03 again: every 0.7 mm U9-output RAW_PROTECTED track narrowed to 0.31 mm.",
+    "board_sha256": "9ac083e475491cc9285bd2007c8526bdd512004f92bffe529fb70d31026420af",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-power: U9 OUT: RAW_PROTECTED track 0.310 mm wide, 1.000 mm long on B.Cu (19.3, 78.25)-(19.3, 79.25); minimum 0.7 mm",
+     "FAIL K-power: U9 OUT: RAW_PROTECTED track 0.310 mm wide, 0.850 mm long on B.Cu (20.3, 78.25)-(20.3, 79.1); minimum 0.7 mm",
+     "FAIL K-power: U9 OUT: RAW_PROTECTED track 0.310 mm wide, 0.778 mm long on B.Cu (18.75, 79.8)-(19.3, 79.25); minimum 0.7 mm"
+    ],
+    "log": ".supervisor/r19_gate/out/a03_rawprot_neck/log.txt",
+    "log_sha256": "105f7198b6e0e50181f13e0acf75e3a09a964b3ffa6ad0482d9430a5c3c34977"
+   },
+   {
+    "seed": "a03b_batin_neck",
+    "description": "R18 s03b again: every BAT_IN track >= 0.4 mm except the S-9 J1.1 -> Q120.9 B.Cu run, narrowed to 0.31 mm.",
+    "board_sha256": "9d7f75931d12b9c3ad563e0843e6e633bfe44ebfc198e9006b393dfab4e1e4c1",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 1,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 1,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL F9-1: C88 local bypass path exceeds qualified R_ohm",
+     "FAIL F9-1: C88 local bypass path exceeds qualified L_gnd_nH",
+     "FAIL F9-1: model does not establish F9 compliance",
+     "FAIL K-power: U9 IN: BAT_IN track 0.310 mm wide, 2.250 mm long on F.Cu (12.53, 87.3)-(14.12, 88.89); minimum 1.0 mm"
+    ],
+    "log": ".supervisor/r19_gate/out/a03b_batin_neck/log.txt",
+    "log_sha256": "89ceef4f543945af3f02136dd702e1075e40ca648c44af50eff6871c58ad3b53"
+   },
+   {
+    "seed": "a03c_batin_upstream",
+    "description": "R18 s03c again: BAT_IN feed upstream of C88 (>= 0.4 mm; S-9 run, C88-local path and the C95 -> via F.Cu window kept) narrowed to 0.31 mm.",
+    "board_sha256": "0391fd26be6bced4e9d2f094f2843de12444299017665bffd79a1fe0474172ab",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 1,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-power: U9 IN: BAT_IN track 0.310 mm wide, 2.600 mm long on F.Cu (12.53, 82.1)-(12.53, 84.7); minimum 1.0 mm",
+     "FAIL K-power: U9 IN: BAT_IN track 0.310 mm wide, 1.273 mm long on F.Cu (8.9, 74.1)-(9.8, 75.0); minimum 1.0 mm",
+     "FAIL K-power: U9 IN: BAT_IN track 0.310 mm wide, 1.500 mm long on F.Cu (7.4, 74.1)-(8.9, 74.1); minimum 1.0 mm",
+     "FAIL K-power: U9 IN: BAT_IN track 0.310 mm wide, 3.675 mm long on F.Cu (12.53, 75.83)-(12.53, 79.5); minimum 1.0 mm"
+    ],
+    "log": ".supervisor/r19_gate/out/a03c_batin_upstream/log.txt",
+    "log_sha256": "5a1f0776b0f4d7ad2147a0af34bb3c7bdbe3d737d7e9d270c3a7d4b4ff1ec1bc"
+   },
+   {
+    "seed": "a04_actgate_3v3",
+    "description": "R18 s04 again: an In2 3V3 priority-3 corridor under the ACT_GATE via (16.2, 73.3) (the D-R18-04 keep-out stays).",
+    "board_sha256": "24e191dbc307e400fd2ae210c23686a65f77dd95f5608ac7a0d5604deff5536b",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/a04_actgate_3v3/log.txt",
+    "log_sha256": "b916f3fd96cc48a579683802d0965c024136b6897661f0c50870059fc76e8469"
+   },
+   {
+    "seed": "a05_move_pad",
+    "description": "R18 s05 again: Q124 gate pad moved 0.08 mm on the board only.",
+    "board_sha256": "e6fe095a8068ed6a78b98fa9685221c4b7a34b938a204ea9b5fe45949695c649",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: lib_footprint_mismatch | Footprint 'M3_AON7524_DFN3x3A' does not match copy in library 'rocket' | ['Footprint Q124']",
+     "audit: - Unresolved DRC findings (including warnings/exclusions)"
+    ],
+    "log": ".supervisor/r19_gate/out/a05_move_pad/log.txt",
+    "log_sha256": "8648d9dad1cbed2bd724a3d5c6e29383549ba6c347a34fe6b1faa435d5d80210"
+   },
+   {
+    "seed": "a06_pyrogate_3v3",
+    "description": "R18 s06 again: In2 3V3 patch at the PYRO1_GATE via (14.4, 53.3).",
+    "board_sha256": "12d9a783b46ea8e505f4db4e584a244f2d4b41c11549501c1fa9a5b324380b5c",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: isolated_copper | Isolated copper fill | [\"Zone 'R19_SEED_3V3_PATCH' [3V3] on In2.Cu, priority 3\"]",
+     "FAIL S-8: 3V3 copper on In2.Cu is 0.251 mm from the via (14.400, 53.300) barrel of PYRO1_GATE (minimum 1.0 mm)",
+     "FAIL K-reference: 67 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('PYRO1_GATE', 'B.Cu', 13.72, 53.45), ('PYRO1_GATE', 'B.Cu', 13.72, 53.15), ('PYRO1_GATE', 'B.Cu', 13.73, ",
+     "FAIL K-region: PYRO1_GATE B.Cu run (13.30, 53.30) - (14.40, 53.30) lies over In2 planes ['3V3', 'GND'] and 39 samples over no In2 copper, e.g. (13.68, 53.55) (one In2 plane region per signal-critical run)"
+    ],
+    "log": ".supervisor/r19_gate/out/a06_pyrogate_3v3/log.txt",
+    "log_sha256": "bc594b5c05b07c4b2f60ac23971523b29d8ece481c30479fb97c943ac72fec88"
+   },
+   {
+    "seed": "a07_del_gnd_partner",
+    "description": "R18 s07 again: delete the GND via (15.35, 52.15), the only GND partner within 1.5 mm of the PYRO1_GATE via.",
+    "board_sha256": "ee629666bc61d671a7f196b8d2703c5cc21680e667810979ef70ca241fdc83a3",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 1,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "route_check FAIL critical_via_no_gnd PYRO1_GATE via (14.4, 53.3) {'gnd_mm': 1.901, 'into_pad': False}"
+    ],
+    "log": ".supervisor/r19_gate/out/a07_del_gnd_partner/log.txt",
+    "log_sha256": "f8c85414aa8fd389c7e8a8b72921ffb6097065e03d348306d8454c7a3e4d2bb0"
+   },
+   {
+    "seed": "a08_silk_over_pad",
+    "description": "R18 s08 again: B.Silkscreen 'X' over R134.1 (13.925, 64.0).",
+    "board_sha256": "c3d170c8b353f89e8a61b3b745fd4c021e109d3b61779deda12224be2d4fc99f",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: silk_over_copper | Silkscreen clipped by solder mask | [\"PCB text 'X' on B.Silkscreen\", 'Pad 1 [PYRO1_IGN] of R134 on B.Cu']",
+     "FAIL K-legends: silkscreen board PCB_TEXT overlaps the solder mask opening of R134.1 (B.Mask) by 0.820 mm (R3-MFG-01)",
+     "audit: - Unresolved DRC findings (including warnings/exclusions)"
+    ],
+    "log": ".supervisor/r19_gate/out/a08_silk_over_pad/log.txt",
+    "log_sha256": "d2a6bbbbab296967862cfc0861dbbea43c6c0c28284246afb55a561c05e55295"
+   },
+   {
+    "seed": "a11_rawprot_single_via",
+    "description": "R18 s11 again: delete U9 OUT via (21.1, 79.1) and its 0.4 mm link.",
+    "board_sha256": "f929d4d3342a0eb062eb6b3dbe4f61e0deea8907a7cd317b87e7ff80460b6e15",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-power: U9 OUT: 1 via(s) on the path; at least 2 required",
+     "FAIL K-power: stale POWER_NARROW entry ('RAW_PROTECTED', 'B.Cu', 0.4, 0.8, (20.3, 79.1, 21.1, 79.1)) (link between the two U9 OUT In2 vias)"
+    ],
+    "log": ".supervisor/r19_gate/out/a11_rawprot_single_via/log.txt",
+    "log_sha256": "845e37711e64d574bb0c9ac9152c19b2efd52503a451437745708cfec6c30801"
+   },
+   {
+    "seed": "a11b_batin_via_shrink",
+    "description": "R18 s11b again: U9 IN via (17.5, 87.3) 1.0/0.5 -> 0.5/0.3 mm.",
+    "board_sha256": "78f12538163d08d8b5cc9b60d6f8c762fdb98e9a4b36d8df54c0a6c631031ba8",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-power: U9 IN: via (17.500, 87.300) 0.500 / 0.300 mm; at least 1.0 / 0.5 mm"
+    ],
+    "log": ".supervisor/r19_gate/out/a11b_batin_via_shrink/log.txt",
+    "log_sha256": "5f665c4da3f2ec87d59064abf4ead18e5914bd31343545a0e1fb414eb503bc26"
+   },
+   {
+    "seed": "a12_swap_gate_nets",
+    "description": "R18 s12 again: U1.3 (PE4) <-> U1.16 (PC1) nets swapped on the board.",
+    "board_sha256": "11fbca31864ce37ccc2fc1b81862fe07a88a1c3bb63def4796a9d5cddf02b006",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 1
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 1,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "binding-note regen: AssertionError: U1.3: board pin differs",
+     "DRC: shorting_items | Items shorting two nets (nets PYRO1_GATE_N and ACT_EN_MCU) | ['Pad 16 [PYRO1_GATE_N] of U1 on F.Cu', 'Track [ACT_EN_MCU] on F.Cu, length 1.0500 mm']",
+     "DRC: shorting_items | Items shorting two nets (nets PYRO1_GATE_N and ACT_EN_MCU) | ['Track [PYRO1_GATE_N] on F.Cu, length 3.6900 mm', 'Pad 3 [ACT_EN_MCU] of U1 on F.Cu']",
+     "DRC: solder_mask_bridge | Front solder mask aperture bridges items with different nets | ['Track [ACT_EN_MCU] on F.Cu, length 1.0500 mm', 'Pad 16 [PYRO1_GATE_N] of U1 on F.Cu']"
+    ],
+    "log": ".supervisor/r19_gate/out/a12_swap_gate_nets/log.txt",
+    "log_sha256": "67d54aa02b9d95610fe5b6e18aa31beb9a000a9917df231b73626a40e1156138"
+   },
+   {
+    "seed": "a13_dnp_pulldown",
+    "description": "R18 s13 again: R128 DNP + excluded from BOM / position files on the board.",
+    "board_sha256": "4a466646c55c23228d2a5f36e37c97d641892d05be7d3f6c120020737428171e",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 1,
+     "fab_verify": 1,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "fab bind: Fab manifest: FAIL: content checks failed (S-4 BOM / CPL, paste openings): the package is not bound",
+     "fab bind: fab content check S-4 BOM / CPL: FAIL (exit 1)",
+     "fab bind: S-4          FAIL required-fitted safety parts (R1-07) (3)",
+     "DRC: footprint_symbol_mismatch | Footprint attributes don't match symbol: 'Do not populate' settings differ | ['Footprint R128']"
+    ],
+    "log": ".supervisor/r19_gate/out/a13_dnp_pulldown/log.txt",
+    "log_sha256": "1a643082adca61e6ab5b9af321b478af0bde1259124da90ee0e1667bdf94840a"
+   },
+   {
+    "seed": "a14_shrink_fire",
+    "description": "R18 s14 again: every PYRO1_IGN track narrowed to 0.4 mm.",
+    "board_sha256": "5bd8296ca9f48dce51d0677ec88d3864cf645726ceeab09b6edcab41d64affae",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL S-9: PYRO1_IGN fire-path track 0.400 mm wide, 2.300 mm long on B.Cu (7.4, 57.6)-(7.4, 59.9); minimum 0.5 mm (AUD-6)",
+     "FAIL S-9: PYRO1_IGN fire-path track 0.400 mm wide, 5.798 mm long on B.Cu (7.4, 59.9)-(11.5, 64.0); minimum 0.5 mm (AUD-6)",
+     "FAIL S-9: PYRO1_IGN fire-path track 0.400 mm wide, 2.425 mm long on B.Cu (11.5, 64.0)-(13.93, 64.0); minimum 0.5 mm (AUD-6)"
+    ],
+    "log": ".supervisor/r19_gate/out/a14_shrink_fire/log.txt",
+    "log_sha256": "d62045f3a69e91ceae583d5a7e424c175e2924cc29286b9896a68583ef6a77bd"
+   },
+   {
+    "seed": "a15_support_move",
+    "description": "R18 15_support_move again: the middle support (4, 44.3) moved by (0, 3.0) mm.",
+    "board_sha256": "24fdfef25268f8332ff54917937e14c060a2cc555a4981c185b73d57035b964d",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 1,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL M-3: the P1 / P2 support (4, 44.3) needs one Edge.Cuts circle centred within 0.01 mm (found 0; nearest (4.000, 47.300), 3.000 mm away)",
+     "FAIL M-3: Edge.Cuts circle at (4.000, 47.300) is not a P1 / P2 support position",
+     "FAIL M-5: fit_check: R12 bottom/pin envelope 3.167 mm from support (4.0, 47.3); need >=3.5 mm",
+     "FAIL M-5: fit_check: R12.2 bottom/pin envelope 3.049 mm from support (4.0, 47.3); need >=3.5 mm"
+    ],
+    "log": ".supervisor/r19_gate/out/a15_support_move/log.txt",
+    "log_sha256": "9ade2a6a5ad0901e5348d715a3d1b8597ca0adc82ad490170d6e942d0ec5e991"
+   },
+   {
+    "seed": "a15b_support_move_legal",
+    "description": "R18 15b_support_move_legal again: the middle support (4, 44.3) moved by (-0.5, 2.5) mm.",
+    "board_sha256": "a287d171482d6ea4de900a5a4be75a30fe208fe619712d4d9a73b23041a61e43",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL M-3: the P1 / P2 support (4, 44.3) needs one Edge.Cuts circle centred within 0.01 mm (found 0; nearest (3.500, 46.800), 2.550 mm away)",
+     "FAIL M-3: Edge.Cuts circle at (3.500, 46.800) is not a P1 / P2 support position"
+    ],
+    "log": ".supervisor/r19_gate/out/a15b_support_move_legal/log.txt",
+    "log_sha256": "938437eb41b3d840759dd3a49157f0a11744602f894851357d28516fbaf52302"
+   },
+   {
+    "seed": "a16_legend_swap",
+    "description": "R18 legend swap again: the BAT and SWITCH word legends exchange anchors.",
+    "board_sha256": "85027a9f989881772e0253a5e7e3def5844014c766743f3258a1dfaa834237cc",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 1,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: silk_edge_clearance | Silkscreen clipped by board edge (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm | ['Segment on Edge.Cuts', \"PCB text 'SWITCH' on F.Silkscreen\"]",
+     "DRC: silk_overlap | Silkscreen clearance (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm) | [\"PCB text 'SWITCH' on F.Silkscreen\", \"PCB text '1:BAT+' on F.Silkscreen\"]",
+     "FAIL K-legends: J400: word legend 'SWITCH' at (-0.608, 69.835) is 0.000 mm from J1 and 0.040 mm from its own connector J400: it must sit beside J400 (nearer it by more than 0.01 mm)",
+     "FAIL K-legends: J1: word legend 'BAT' at (2.081, 59.835) is 0.000 mm from J400 and 10.000 mm from its own connector J1: it must sit beside J1 (nearer it by more than 0.01 mm)"
+    ],
+    "log": ".supervisor/r19_gate/out/a16_legend_swap/log.txt",
+    "log_sha256": "36c628557ee450267ac2a9e331fa8519d33f86850c6eb87ee78f8e60f3f6a029"
+   },
+   {
+    "seed": "a16c_legend_swap_bat_ign",
+    "description": "R18 legend swap again: the BAT and IGN word legends exchange anchors.",
+    "board_sha256": "e793aefeb82a08703e21fb03e446e818d8ad90c2d0d7d8c36cf84e87347dc7d2",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-legends: J121: word legend 'IGN' at (0.868, 69.835) is 0.089 mm from J1 and 10.040 mm from its own connector J121: it must sit beside J121 (nearer it by more than 0.01 mm)",
+     "FAIL K-legends: J121: word legend 'IGN' at (0.868, 69.835) is 0.098 mm from J400 and 10.040 mm from its own connector J121: it must sit beside J121 (nearer it by more than 0.01 mm)",
+     "FAIL K-legends: J1: word legend 'BAT' at (0.910, 49.835) is 0.000 mm from J121 and 20.000 mm from its own connector J1: it must sit beside J1 (nearer it by more than 0.01 mm)",
+     "FAIL K-legends: J1: word legend 'BAT' at (0.910, 49.835) is 8.390 mm from J2 and 20.000 mm from its own connector J1: it must sit beside J1 (nearer it by more than 0.01 mm)"
+    ],
+    "log": ".supervisor/r19_gate/out/a16c_legend_swap_bat_ign/log.txt",
+    "log_sha256": "c8e6273a37d240b45aaeee3e524d242c5d9387bc3ec1527d9d9c9b06c50658db"
+   },
+   {
+    "seed": "a17_stale_correction",
+    "description": "R18 s17 again: D9's JLC correction turned +180 deg in tools/jlc_corrections.json, then the r10_fab.sh export and bind (without re-running jlc_orient, which would regenerate the corrections). Board unchanged.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "Fab manifest: FAIL: [Errno 2] No such file or directory: '.supervisor/r19_gate/seeds/a17_stale_correction/m3_design/assembly_review/fab/m3_fab_manifest.json"
+    ],
+    "log": ".supervisor/r19_gate/out/a17_stale_correction/log.txt",
+    "log_sha256": "a7ae9d8b3de806f70c0a25ad88396bbf2958d131b1e31e24919b7c039e555632"
+   },
+   {
+    "seed": "a18_bom_edit",
+    "description": "R18 s18 again: production BOM edited after binding (R134 C3013496 -> C25744) and the manifest rewritten by hand (fab_manifest.write_manifest, bypassing --bind).",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "Fab manifest: FAIL: content checks failed: S-4 BOM / CPL",
+     "fab content check S-4 BOM / CPL: FAIL (exit 1)",
+     "S-4          FAIL required-fitted safety parts (R1-07) (1)",
+     "FAIL S-4: BOM: line 59: R134 LCSC Part # 'C25744' differs from native fitted part 'C3013496'"
+    ],
+    "log": ".supervisor/r19_gate/out/a18_bom_edit/log.txt",
+    "log_sha256": "3e6de2774e95da71f9cf70ee9de1efd34c284e6c6748629a8d75ea04fb9039e9"
+   },
+   {
+    "seed": "a19_stale_fab",
+    "description": "R18 s19 again: SWD legend nudged 0.1 mm; no regeneration.",
+    "board_sha256": "697c8ea19775dd81b77a5ea1dcb838db18bb022a23ef06a5e990b56dc9a01c00",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 1,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration",
+     "FAIL F9-1: stale board-derived model inputs",
+     "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+     "parts: r10_parts: stale: parts_budget.json"
+    ],
+    "log": ".supervisor/r19_gate/out/a19_stale_fab/log.txt",
+    "log_sha256": "7da99b529acdfd81376f9184268a1d81c93925c3ff85c345d53116d07c838a17",
+    "fullcheck_casevariant.txt": {
+     "exit": 1,
+     "sha256": "8fc926f1b2c76ff9e32c66a97bee50fd4ba5503fcb8d917a15203ecc3a53e10c",
+     "tail": [
+      "./src/common/stdpbase.cpp(59): assert \"\"traits\"\" failed in Get(): create wxApp before calling this",
+      "r10_parts: stale: parts_budget.json",
+      "CHECK.SH exit=1 (exit status recorded by the queue runner: out/queue_C.txt / out/queue_E.txt)"
+     ]
+    }
+   },
+   {
+    "seed": "a19b_stale_model",
+    "description": "R18-GATE-05 end-to-end control: only a fab-manifest input changes (one 3D model file gains a comment line), so every stage before the fab check passes; check.sh is then run through case-variant and symlinked spellings of the board.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it"
+    ],
+    "log": ".supervisor/r19_gate/out/a19b_stale_model/log.txt",
+    "log_sha256": "6b834a288be8191565aad6b8942c2cbb1cbd7915cd35761c6902741896610d37",
+    "fullcheck_casevariant.txt": {
+     "exit": 1,
+     "sha256": "b09620cbfb66728640a17c02eca7c3424cd0e27a62e03551ca0993b1a759ee45",
+     "tail": [
+      "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+      "fab package unbound, bound to a different board or failing its content checks: run m3_design/r10_fab.sh",
+      "CHECK.SH exit=1 (exit status recorded by the queue runner: out/queue_C.txt / out/queue_E.txt)"
+     ]
+    },
+    "fullcheck_symlink.txt": {
+     "exit": 1,
+     "sha256": "e3cf9b9979092bd488413cd54c7ce2ee25d081de9b2610dac44c7af8d704e5cd",
+     "tail": [
+      "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+      "fab package unbound, bound to a different board or failing its content checks: run m3_design/r10_fab.sh",
+      "CHECK.SH exit=1 (exit status recorded by the queue runner: out/queue_C.txt / out/queue_E.txt)"
+     ]
+    }
+   },
+   {
+    "seed": "a20_binding_hash",
+    "description": "R18 s20 again: binding note board hash forged.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration"
+    ],
+    "log": ".supervisor/r19_gate/out/a20_binding_hash/log.txt",
+    "log_sha256": "cc9f748006284d9dde4c5d80308c79ea19c0959b8f1bf752644ec4b3ee15038d"
+   },
+   {
+    "seed": "a21_plane_split",
+    "description": "R18 s21 again: In1 GND split by a full-width 0.3 mm keep-out slot at y 30.0-30.3.",
+    "board_sha256": "a2c5ed79b4551f009d80f6f2fa916487baf29460cc2d6bfec863cc807df007d8",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-reference: 1273 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('RADIO_RX_MCU', 'F.Cu', 31.1637, 30.2948), ('RADIO_RX_MCU', 'F.Cu', 31.1708, 30.2878), ('RADIO_RX_MCU',"
+    ],
+    "log": ".supervisor/r19_gate/out/a21_plane_split/log.txt",
+    "log_sha256": "2ce69a708130ff8d691107fc396684027f211aa34e88b9b64bcff1a5e2a047db"
+   },
+   {
+    "seed": "a22_rule_severity",
+    "description": "R18 s22 again: .kicad_pro severity lib_footprint_mismatch -> ignore.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-rules: DRC rule severities set to ignore: ['lib_footprint_mismatch']",
+     "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+     "audit: - DRC has disabled checks requiring explicit review"
+    ],
+    "log": ".supervisor/r19_gate/out/a22_rule_severity/log.txt",
+    "log_sha256": "b7a764fa296746187d351f03debd3351370713aa7c09198738092a8481153040"
+   },
+   {
+    "seed": "a23_text_floor",
+    "description": "R18 s23 again: .kicad_pro text floors lowered (1.0 -> 0.5 mm, 0.15 -> 0.08 mm) and R134's reference 0.6 / 0.10 mm.",
+    "board_sha256": "5ba734970ad05bfa2973b047afb5d17d4e352109be3d947c66ef0d9d369cf83b",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-rules: .kicad_pro design rule min_text_height = 0.5, floor 1.0 mm",
+     "FAIL K-rules: .kicad_pro design rule min_text_thickness = 0.08, floor 0.15 mm"
+    ],
+    "log": ".supervisor/r19_gate/out/a23_text_floor/log.txt",
+    "log_sha256": "4e622c6b6a0d10a93f7a25b43c8710e59b2af2c3b9cd34ed60a42a4ce9096eec"
+   },
+   {
+    "seed": "a23b_text_shrink_only",
+    "description": "New: floors kept; R134's shown reference shrunk to 0.6 mm / 0.10 mm stroke (DRC text checks expected to hold it).",
+    "board_sha256": "5ba734970ad05bfa2973b047afb5d17d4e352109be3d947c66ef0d9d369cf83b",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: text_thickness | Text thickness out of range (board setup constraints silk text thickness min thickness 0.1500 mm; ac | ['Reference field of R134']",
+     "DRC: text_height | Text height out of range (board setup constraints silk text height min height 1.0000 mm; actual 0.60 | ['Reference field of R134']",
+     "audit: - Unresolved DRC findings (including warnings/exclusions)"
+    ],
+    "log": ".supervisor/r19_gate/out/a23b_text_shrink_only/log.txt",
+    "log_sha256": "db9d6c5b9ad5f308922030b2f5c152608e4bfd1a787bcb8621e3accddd8c719d"
+   },
+   {
+    "seed": "a25_land_edit",
+    "description": "R18 s25 again: Q124 gate pad 4 +0.08 mm in x in the library file and the placed footprint (consistent edit).",
+    "board_sha256": "ca86d6d4e15913b08eb3b2e5aba8ec5933d32fd65b135566697014a91fcd214e",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-lands: M3_AON7524_DFN3x3A (Q124) library file SHA-256 5a8e0db754194fbb4aa6ad071698c3fc742dcf5bd5d53108229013c7069c805a is not the pinned 4442bf5999c46d815f38f6a5e2c163bb656bab50b4e1e0a6c7d08e521828f8dc: a land cha"
+    ],
+    "log": ".supervisor/r19_gate/out/a25_land_edit/log.txt",
+    "log_sha256": "b9b8825137140b8aee942d69b3c5bd1987d666f07f687d20f640f785c155cb06"
+   },
+   {
+    "seed": "a26_q124_return",
+    "description": "R18 s26 again: Q124's GND return bar and via stubs 0.3 -> 0.15 mm.",
+    "board_sha256": "88e770019d5ecf92f7b14716d4550a92565394e8f1587b18d4e308dd93202e53",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-power: Q124 fire return: GND track 0.150 mm wide on F.Cu (15.300, 58.345)-(15.850, 58.345); minimum 0.3 mm",
+     "FAIL K-power: Q124 fire return: GND track 0.150 mm wide on F.Cu (15.300, 57.695)-(15.850, 57.695); minimum 0.3 mm",
+     "FAIL K-power: Q124 fire return: GND track 0.150 mm wide on F.Cu (15.300, 57.045)-(15.300, 58.345); minimum 0.3 mm"
+    ],
+    "log": ".supervisor/r19_gate/out/a26_q124_return/log.txt",
+    "log_sha256": "ec91330b53f12056ed72c247aff37f4fb342affe345d4f7034512b0922203d60"
+   },
+   {
+    "seed": "b02_r127_r128_swap",
+    "description": "New: the pyro gate pull-down and MCU-side pull exchange parts (R127 <-> R128 Value / LCSC / MPN) in sch + board: PYRO1_GATE gets 1 kohm to GND, PYRO1_GATE_N 10 kohm.",
+    "board_sha256": "c2488cae416efcb6ba26840bf239219e018b9dadec93bf210d8d28a3a9983cac",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 1
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "binding-note regen: AssertionError: binding note requires a passing schematic contract",
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration",
+     "FAIL K-actuators: check_actuators: R126/R127/R128 must be 220R / 1k / 10k",
+     "FAIL K-actuators: check_actuators: R127 must be LCSC C11702 (is C25744)"
+    ],
+    "log": ".supervisor/r19_gate/out/b02_r127_r128_swap/log.txt",
+    "log_sha256": "d6c12c5858cd67629143b05ab11b0c2f3484296eaf554abd8bfc42c750997381"
+   },
+   {
+    "seed": "b05_del_r119",
+    "description": "New: R119 deleted from the board (and its ACT_FET_S stub), schematic untouched.",
+    "board_sha256": "9c808bf249552354d45f8f607efa1e29a36c20ccc25e3b9951fa8ee53dbaf926",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 1,
+     "fab_verify": 1,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "fab bind: Fab manifest: FAIL: content checks failed (S-4 BOM / CPL): the package is not bound",
+     "fab bind: fab content check S-4 BOM / CPL: FAIL (exit 1)",
+     "fab bind: S-4          FAIL required-fitted safety parts (R1-07) (3)",
+     "DRC: missing_footprint | Missing footprint R119 (100k) | []"
+    ],
+    "log": ".supervisor/r19_gate/out/b05_del_r119/log.txt",
+    "log_sha256": "903c4f52411296b7f66d1f0e6c18c3555a6af551dea3574c862ecb559c05992c"
+   },
+   {
+    "seed": "b06_del_r123",
+    "description": "New: R123 deleted from the board (and its ACT_EN stub), schematic untouched.",
+    "board_sha256": "9261efdf9c5a8ec21fc79be450a7743f7a5387767ad6c8e51f7f67a46a8751e2",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 1,
+     "fab_verify": 1,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 1,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "fab bind: Fab manifest: FAIL: content checks failed (S-4 BOM / CPL): the package is not bound",
+     "fab bind: fab content check S-4 BOM / CPL: FAIL (exit 1)",
+     "fab bind: S-4          FAIL required-fitted safety parts (R1-07) (3)",
+     "DRC: missing_footprint | Missing footprint R123 (2k) | []"
+    ],
+    "log": ".supervisor/r19_gate/out/b06_del_r123/log.txt",
+    "log_sha256": "58c011a2461eb225523496019f3537ece46fada5a1e63fe661f10ad6c3815b6e"
+   },
+   {
+    "seed": "b07_r123_value",
+    "description": "New: R123 (PC1 enable pull-down, D-R18-01) back to 100 kohm consistently (Value, LCSC C25741, MPN) in sch + board.",
+    "board_sha256": "632992825a2482b0658a29fb2e1664584b7151a9e20814a891adb90e1dd44206",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 1
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "binding-note regen: AssertionError: binding note requires a passing schematic contract",
+     "FAIL S-3: independent load-switch enable R123 must be 2000 ohm",
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration",
+     "FAIL K-actuators: check_actuators: R10 R123 must be the 2k ACT_EN pull-down"
+    ],
+    "log": ".supervisor/r19_gate/out/b07_r123_value/log.txt",
+    "log_sha256": "178d4ba7080af0e8af289114df9a146a556839f23db52df68ef6a6a7a0fffd24"
+   },
+   {
+    "seed": "b07b_r123_lcsc_only",
+    "description": "New: R123 re-coded to 100 kohm C25741 (MPN too) in sch + board, Value '2k' kept.",
+    "board_sha256": "52dc2393bde39732c35e1b27d350078e571edfeec1d8e17c4e9fa3223a30d8e8",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 1
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "binding-note regen: AssertionError: binding note requires a passing schematic contract",
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration",
+     "FAIL K-actuators: check_actuators: R123 must be LCSC C4109 (is C25741)"
+    ],
+    "log": ".supervisor/r19_gate/out/b07b_r123_lcsc_only/log.txt",
+    "log_sha256": "6e7a0cf30183f23fd446a75c699c67124d89304e2639b03addfe60cb7d47c742"
+   },
+   {
+    "seed": "b08_r119_lcsc",
+    "description": "New: R119 (Q121 gate-source bias, SAFETY_FITTED, D-R18-02) re-coded to the 1 kohm part C11702 / 0402WGF1001TCE in the schematic and board (Value '100k' kept): JLC places 1 kohm; VGS(on) = -V_S x 0.99k / 10.99k (Calculation).",
+    "board_sha256": "47230567a5c0fb7a5f8cffdd23aaba55b85e7c9277340d7168786a47dc200374",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 1
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "binding-note regen: AssertionError: binding note requires a passing schematic contract",
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration",
+     "FAIL K-actuators: check_actuators: R10 R119 must be the 100k 0402 (C25741) Q121 gate-source resistor"
+    ],
+    "log": ".supervisor/r19_gate/out/b08_r119_lcsc/log.txt",
+    "log_sha256": "9bb2418866ae36d41248e9c97095a6a7c6bd6b272a468b1499178a6e49249816"
+   },
+   {
+    "seed": "b08b_r119_value_1k",
+    "description": "New: R119 changed to 1 kohm consistently (Value '1k', C11702 / 0402WGF1001TCE) in the schematic and board.",
+    "board_sha256": "1170abd7b99e077cea5519610083c376178fb8a691f4e7ab28ac280251ecb66a",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 1
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "binding-note regen: AssertionError: binding note requires a passing schematic contract",
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration",
+     "FAIL K-actuators: check_actuators: R10 R119 must be the 100k 0402 (C25741) Q121 gate-source resistor"
+    ],
+    "log": ".supervisor/r19_gate/out/b08b_r119_value_1k/log.txt",
+    "log_sha256": "76b14642a8f32c330af1c691d3fef2c79c53a01419b9b241c4db94f37228f257"
+   },
+   {
+    "seed": "b08c_r119_lcsc_board_only",
+    "description": "New: R119's LCSC field changed on the board only (C25741 -> C11702), schematic untouched (does parity compare fields?).",
+    "board_sha256": "b35d74e105463d14790823a517ae670f87d3b4bc5fb85708c4e8f8d6654b02d7",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 1,
+     "fab_bind": 1,
+     "fab_verify": 1,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "fab bind: Fab manifest: FAIL: [Errno 2] No such file or directory: '.supervisor/r19_gate/out/b08c_r119_lcsc_board_only/export_record.json'",
+     "DRC: footprint_symbol_field_mismatch | Field 'LCSC' differs (PCB: 'C11702', Schematic: 'C25741') | ['Footprint R119']",
+     "FAIL K-actuators: check_actuators: R10 R119 must be the 100k 0402 (C25741) Q121 gate-source resistor",
+     "Fab manifest: FAIL: [Errno 2] No such file or directory: '.supervisor/r19_gate/seeds/b08c_r119_lcsc_board_only/m3_design/assembly_review/fab/m3_fab_manifest"
+    ],
+    "log": ".supervisor/r19_gate/out/b08c_r119_lcsc_board_only/log.txt",
+    "log_sha256": "f91d97257819c79b2a46c41a210a7e5a3dbd51d14172991a0e81588fe2a9ca89"
+   },
+   {
+    "seed": "b08d_r131_lcsc",
+    "description": "New: R131 (FMEA H-1 cold pull-up, SAFETY_FITTED; check_actuators pins its Value '10k' only) re-coded to the 1 kohm part C11702 / 0402WGF1001TCE in the schematic and board, Value '10k' kept: JLC places 1 kohm.",
+    "board_sha256": "84d474b1bdae4f72bf8d0a8df03c137f01d305717217b0ebcca7f0cea87777ec",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 1
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "binding-note regen: AssertionError: binding note requires a passing schematic contract",
+     "FAIL K-binding: saved board_sha256 differs from native binding-note regeneration"
+    ],
+    "log": ".supervisor/r19_gate/out/b08d_r131_lcsc/log.txt",
+    "log_sha256": "e06e4cf4e2122556947e7ef4c0bbf0eaacc6acf278d30bb570a0456f65700ff1"
+   },
+   {
+    "seed": "b08e_r131_lcsc_source",
+    "description": "New: the same R131 re-code made at the generator source: circuit.json gains a reviewed-style replacement entry for R131 (Value '10k', LCSC C11702 = UNI-ROYAL 0402WGF1001TCE, a 1 kohm part), r10_sch.py regenerates the sheets and netlist in the copy, and the board footprint's fields follow (LCSC, LCSC Part, Manufacturer Part).",
+    "board_sha256": "84d474b1bdae4f72bf8d0a8df03c137f01d305717217b0ebcca7f0cea87777ec",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b08e_r131_lcsc_source/log.txt",
+    "log_sha256": "1ead9dd2e972bc41f6379eb22dee4ba16e668722c414a9e1b7bfd540018cb6c1",
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "6ef1020d31f03d0e082dbf4ccebf7a0c00de148d32b7f944155cd60ca5db98c7",
+     "tail": [
+      "OK",
+      "CHECK.SH exit=0",
+      "== done 2026-10-31T03:48:36Z"
+     ]
+    }
+   },
+   {
+    "seed": "b09a_keepout_actgate_shrink",
+    "description": "New: D-R18-04 keep-out round the ACT_GATE via (16.2, 73.3) shrunk to an inscribed 0.45 mm (barrel wall + 0.3 mm).",
+    "board_sha256": "5b5cdc47cd58f4f93dbc47fa82a5892f29fe80efb26b202408891491ca259804",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL S-8: GND copper on In1.Cu is 0.300 mm from the via (16.200, 73.300) barrel of ACT_GATE (minimum 1.0 mm)",
+     "FAIL S-8: RAW_PROTECTED copper on In2.Cu is 0.300 mm from the via (16.200, 73.300) barrel of ACT_GATE (minimum 1.0 mm)"
+    ],
+    "log": ".supervisor/r19_gate/out/b09a_keepout_actgate_shrink/log.txt",
+    "log_sha256": "dee3db533fead0ebd7a1c97f96e7baac8e1bbf2b9a3380d375ba62805cfca0d3"
+   },
+   {
+    "seed": "b09b_keepout_batenable_delete",
+    "description": "New: D-R18-04 keep-out round the BAT_ENABLE via (17.1, 82.8) removed (In2 RAW_PROTECTED / 3V3 refill up to it).",
+    "board_sha256": "495eedff6c170d07a8ac655c349325cde7f25f94ee5ea41146edb0f411b36444",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL S-8: RAW_PROTECTED copper on In2.Cu is 0.251 mm from the via (17.100, 82.800) barrel of BAT_ENABLE (minimum 1.0 mm)"
+    ],
+    "log": ".supervisor/r19_gate/out/b09b_keepout_batenable_delete/log.txt",
+    "log_sha256": "43283128a0731c42c73317bd85edcce6279ecd4d4dcebcfedbd6578d2cb72aff"
+   },
+   {
+    "seed": "b09c_keepout_actgate_edge",
+    "description": "New (boundary control): ACT_GATE_1 keep-out shrunk to an inscribed 1.16 mm (barrel wall + 1.01 mm): S-8's floor holds.",
+    "board_sha256": "d5143c396e8833c5dc2dbe831919386daa59e2ef061d5c1cd00aaf0771473cd6",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b09c_keepout_actgate_edge/log.txt",
+    "log_sha256": "c60f1141175108828961a141324f04ed4a566ec589379561383331c847d4ec16"
+   },
+   {
+    "seed": "b10a_3v3_finger_split",
+    "description": "New: In2 3V3 finger (x 22.25-23.75) cut across at y 72.4-72.8 by a fill keep-out: the lower finger with the 3V3 buck output via (23.1, 78.1) becomes its own piece.",
+    "board_sha256": "46f5e098f4d41b9bd4b9182a558fae939568d8d4b797129b5577b5be5838ddd1",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-plane: 3V3 on In2.Cu fills as 2 pieces; the 14.43 mm^2 piece at (22.85, 77.25) has 0 link(s) of >= 0.5 mm outer copper (minimum 2)"
+    ],
+    "log": ".supervisor/r19_gate/out/b10a_3v3_finger_split/log.txt",
+    "log_sha256": "e5a7a0bac23d4c38035aeeee35024e0a44cda369f0999eb4f4335bfd5ed8bc28"
+   },
+   {
+    "seed": "b10b_3v3_finger_neck",
+    "description": "New: the same cut leaving a 0.30 mm fill neck at the finger's east edge (x 23.45-23.75): still one piece. east edge of the finger fill at y 72.6",
+    "board_sha256": "07500cb157e1b46d23a28d8614e6d541133c693c171dd81f92672b43dd6c61c7",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b10b_3v3_finger_neck/log.txt",
+    "log_sha256": "d39c8070976c99795cbaf0c6061436f5dedcfb2c6a31639589f8b1daa3f9af9d",
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "4146be0cef8c8a285ea8c795262ba14d4c834e2afa39ec377fc6c961ee5c812a",
+     "tail": [
+      "OK",
+      "CHECK.SH exit=0",
+      "== done 2026-10-31T03:31:27Z"
+     ]
+    }
+   },
+   {
+    "seed": "b11_support_radius",
+    "description": "New: the middle support hole (4, 44.3) radius 1.6 -> 1.4 mm (2.8 mm hole for an M3 screw).",
+    "board_sha256": "351ebf05c9302bc5cfd8af58275818c7d755e8510475e624cb4e2f7d5796ac6e",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 1,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL M-1: Edge.Cuts circle at (4, 44.3) is not a 3.2 mm hole",
+     "FAIL M-5: fit_check: expected five M3 supports, found 4",
+     "FAIL M-5: fit_check: one M3 support must lie in the middle third of board length",
+     "fit: FAIL expected five M3 supports, found 4"
+    ],
+    "log": ".supervisor/r19_gate/out/b11_support_radius/log.txt",
+    "log_sha256": "9fac8322d7541647ff0ee8def8d81d8b8c667918b0bc793cde15066f79727a07"
+   },
+   {
+    "seed": "b12a_pin_legend_e1",
+    "description": "New: J121's pin legends exchanged ('1:E1-' and '2:E1+' swap anchors).",
+    "board_sha256": "143c7c4483fe89f469bc48e4ab13b652d0334bcbf7ed4b9ae7d97b25f11a6789",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: silk_overlap | Silkscreen clearance (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm) | ['Reference field of LED2', \"PCB text '2:E1+' on F.Silkscreen\"]",
+     "DRC: silk_overlap | Silkscreen clearance (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm) | ['Rectangle of J400 on F.Silkscreen', \"PCB text '1:E1-' on F.Silkscreen\"]",
+     "DRC: silk_overlap | Silkscreen clearance (board setup constraints silk clearance 0.1500 mm; actual 0.0000 mm) | ['Rectangle of J121 on F.Silkscreen', \"PCB text '1:E1-' on F.Silkscreen\"]",
+     "FAIL K-legends: J121.1: conflicting silkscreen pin legend '2:E1+': its strictly nearest connector pin must be labelled \"1:E1-\""
+    ],
+    "log": ".supervisor/r19_gate/out/b12a_pin_legend_e1/log.txt",
+    "log_sha256": "5a025af7e7435f1a392fd7c0d0df2c5faec2a995803dfe7d07990cec76174efa"
+   },
+   {
+    "seed": "b12b_pin_legend_bat",
+    "description": "New: J1's pin legends exchanged ('1:BAT+' and its '2:GND').",
+    "board_sha256": "ebf547acaf54835f8c907dbad7fe7c0d325314c519ca8e8bf03905be91515e85",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-legends: J1.2: conflicting silkscreen pin legend '1:BAT+': its strictly nearest connector pin must be labelled \"2:GND\"",
+     "FAIL K-legends: J1.1: conflicting silkscreen pin legend '2:GND': its strictly nearest connector pin must be labelled \"1:BAT+\"",
+     "FAIL K-legends: J1.1: 0 legends \"1:BAT+\" nearest it, expected one",
+     "FAIL K-legends: J1.2: 0 legends \"2:GND\" nearest it, expected one"
+    ],
+    "log": ".supervisor/r19_gate/out/b12b_pin_legend_bat/log.txt",
+    "log_sha256": "a5fca6891ba93945bd517877a30858c6cde8f61e189c6244482a362cd8fb2563"
+   },
+   {
+    "seed": "b12c_word_ign_to_bottom",
+    "description": "New: the IGN word legend moved from F.Silkscreen to B.Silkscreen at the same place (still beside J121).",
+    "board_sha256": "7814617259c01fb2a2cec6028f3cb72f2dc2cc986989db879c6a49567e7167de",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b12c_word_ign_to_bottom/log.txt",
+    "log_sha256": "9b1ae6cfd068ed5621d9065aef00ae8f6801232696556fed573a5c38064c17c7"
+   },
+   {
+    "seed": "b13a_bom_nonsafety_csv",
+    "description": "New: a non-required part's BOM code edited after binding (C8 / C9 22 uF C45783 -> C19666, the 0603 C92 code) and the manifest rewritten by hand.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "Fab manifest: FAIL: content checks failed: S-4 BOM / CPL",
+     "fab content check S-4 BOM / CPL: FAIL (exit 1)",
+     "S-4          FAIL required-fitted safety parts (R1-07) (6)",
+     "FAIL S-4: BOM: line 3: C10 LCSC Part # 'C19666' differs from native fitted part 'C45783'"
+    ],
+    "log": ".supervisor/r19_gate/out/b13a_bom_nonsafety_csv/log.txt",
+    "log_sha256": "acd343f1e60ad6eb0bbe46f4ac87ae44f1b6a7112b220e96735340e6268e1beb"
+   },
+   {
+    "seed": "b14a_cpl_d9_rot",
+    "description": "New: the CPL's D9 row turned 180 deg after binding (diode reversed at placement) and the manifest rewritten by hand.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "Fab manifest: FAIL: content checks failed: CPL rebuilt from JLC footprints",
+     "fab content check CPL rebuilt from JLC footprints: FAIL (exit 1)"
+    ],
+    "log": ".supervisor/r19_gate/out/b14a_cpl_d9_rot/log.txt",
+    "log_sha256": "ca72ada03e57ba5f9d459c0b017cfbfae0e962c9dc377b4aa700c8e205f7dcf6"
+   },
+   {
+    "seed": "b15a_owner_bom_edit",
+    "description": "New: the owner BOM's hand-fitted C84 row re-coded after binding (C46550466 -> C19666) and the manifest rewritten.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "Fab manifest: FAIL: content checks failed: S-4 BOM / CPL",
+     "fab content check S-4 BOM / CPL: FAIL (exit 1)",
+     "S-4          FAIL required-fitted safety parts (R1-07) (1)",
+     "FAIL S-4: owner BOM: hand-fitted C84 missing or not the native part {'LCSC Part #': 'C46550466', 'Manufacturer Part': 'MA25V470M8x10', 'Footprint': 'M3_MA_8x10'}"
+    ],
+    "log": ".supervisor/r19_gate/out/b15a_owner_bom_edit/log.txt",
+    "log_sha256": "0d1007f4e91e5063df1acb84fc00fb8397ee0337537aab91cbfcf66601efbeb1"
+   },
+   {
+    "seed": "b16a_hotplug_hash",
+    "description": "New: the hot-plug model inputs' board hash forged.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL F9-1: stale board-derived model inputs",
+     "FAIL F9-1: stale model inputs"
+    ],
+    "log": ".supervisor/r19_gate/out/b16a_hotplug_hash/log.txt",
+    "log_sha256": "22ada2591b496f776ef0ed01f98d52438acb7ad2fa211eb32501d186197c1bdf"
+   },
+   {
+    "seed": "b16b_budget_hash",
+    "description": "New: parts_budget.json's fire-current board hash forged.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 1,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "parts: r10_parts: stale: parts_budget.json"
+    ],
+    "log": ".supervisor/r19_gate/out/b16b_budget_hash/log.txt",
+    "log_sha256": "a48ee060c485c179d046402cf32381b2a69c3dd50b13e081fbcca31df2ff8e54"
+   },
+   {
+    "seed": "b16c_manifest_hash",
+    "description": "New: the fab manifest's recorded board input hash forged.",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it"
+    ],
+    "log": ".supervisor/r19_gate/out/b16c_manifest_hash/log.txt",
+    "log_sha256": "a956285db2ae2f02c8be0150852cb64127bfe0fe5b141369f2238a5809be4415"
+   },
+   {
+    "seed": "b16d_docs_hash",
+    "description": "New: the board hash recorded in STATUS.md, AGENTS.md and docs/M3_R10.md replaced by R17's 632a9ad3... (wrong board).",
+    "board_sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+    "regen_exits": {},
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b16d_docs_hash/log.txt",
+    "log_sha256": "7a583f63603bfb15513d3f79217c053080ec775ef6fc933f110ede53859b06e1"
+   },
+   {
+    "seed": "b17a_q124_return_via",
+    "description": "New: one of Q124's two In1 GND return vias (15.85, 58.345) and its stub removed.",
+    "board_sha256": "bc905500a0b311a747a6444818353c35d7fdb30bd0e21ad69fa0ff55acd1bcb0",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-power: Q124 fire return: 1 via(s) on the path; at least 2 required"
+    ],
+    "log": ".supervisor/r19_gate/out/b17a_q124_return_via/log.txt",
+    "log_sha256": "95a7830896d45050c43fcddf1ca90ff77bf6baa4b1d58a7e7d7099c1e3e7170c"
+   },
+   {
+    "seed": "b17b_port5v3_second_via",
+    "description": "New: the PORT_5V3 buck output reaches In2 through one 0.3 mm via: (26.0, 8.0) and its 0.4 mm F.Cu link removed.",
+    "board_sha256": "4dd3aa7614c65333f77013ae410eead7dd3117a735c185874e329f6ebbdffd17",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b17b_port5v3_second_via/log.txt",
+    "log_sha256": "da28d250b376668241a64fc00103d7851e4c346311a4a25df69901ae8982b0bd",
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "7d6e6323779489cf2ffa2be9a34e7fb95c6bdabe3dfc58809d7ec6046dee4ab2",
+     "tail": [
+      "OK",
+      "CHECK.SH exit=0",
+      "== done 2026-10-31T03:36:31Z"
+     ]
+    }
+   },
+   {
+    "seed": "b17c_3v3_second_via",
+    "description": "New: the 3V3 buck output (L1.2) loses its direct In2 via (23.1, 78.1) and stub; only the F.Cu detour to (30.8, 79.26) remains.",
+    "board_sha256": "42fdf7c2be3a269262220b8d6d303b1d50508474c650904fceab2edeb7f34232",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b17c_3v3_second_via/log.txt",
+    "log_sha256": "779b85bbef271b2f2bd9295eac6326cb86d322b9a459e361be963350c5727e62"
+   },
+   {
+    "seed": "b18a_generated_land_edit",
+    "description": "New: a consistent library + board edit of a generated land: J121 (M3_DB125_2P_BK, the igniter terminal) pad 2 moved +0.1 mm in x in kilib/rocket.pretty and in the placed footprint (r10_parts pins the generated file).",
+    "board_sha256": "8f3a9303bf2216403f63d9839497e5c9dae0a14a3ca88d3843e4c33c5c214156",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 1,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "parts: r10_parts: stale: M3_DB125_2P_BK.kicad_mod"
+    ],
+    "log": ".supervisor/r19_gate/out/b18a_generated_land_edit/log.txt",
+    "log_sha256": "99b0b58d1c564888960d149671b05dd02c272b50c5412c3f9a98a9b29413ca55"
+   },
+   {
+    "seed": "b19a_q124_paste_board_only",
+    "description": "New: Q124's (pyro FET) pads get a board-only local solder-paste margin of -0.1 mm (library unchanged): the gate and source apertures shrink to about 26 % of the land. Does DRC's library comparison or paste_check see it?",
+    "board_sha256": "7ed4fa062574596ace602c134bce165a4d7f7007cfe871384fd7b1233a447f55",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b19a_q124_paste_board_only/log.txt",
+    "log_sha256": "04c0eb539068af99cf0e38bd2744f5826b8bcf9d3e341e52d97ec48bd7670145",
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "5907dd16b095a3d531e31a6afebed8016fc4ff633f97ee8b66af261c82c23997",
+     "tail": [
+      "OK",
+      "CHECK.SH exit=0",
+      "== done 2026-10-31T03:41:35Z"
+     ]
+    }
+   },
+   {
+    "seed": "b19b_u9_paste_ratio_board_only",
+    "description": "New: U9 (eFuse) pads 5 / 6 (IN / OUT current bars) get a board-only paste ratio of -60 % (library unchanged).",
+    "board_sha256": "08cc3d2a3d6c7e1611105e6747a55b83fa38d9d34302f7f96ec0a0c4ad2914dd",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 1,
+     "fab_verify": 1,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "fab bind: Fab manifest: FAIL: content checks failed (paste openings): the package is not bound",
+     "fab bind: fab content check paste openings: FAIL (exit 1)",
+     "fab bind: FAIL B_Paste: U9.5 carries paste but has 0 flashes (rule 2)",
+     "Fab manifest: FAIL: [Errno 2] No such file or directory: '.supervisor/r19_gate/seeds/b19b_u9_paste_ratio_board_only/m3_design/assembly_review/fab/m3_fab_man"
+    ],
+    "log": ".supervisor/r19_gate/out/b19b_u9_paste_ratio_board_only/log.txt",
+    "log_sha256": "ee4ad29e04717fbecac0664930f1bd0354a713fe1e5b51e997d6658255376b50"
+   },
+   {
+    "seed": "b20_global_mask_expansion",
+    "description": "New: the board-level solder-mask expansion (Board Setup > pad_to_mask_clearance) 0 -> 0.04 mm: the U4 LGA-14 webs that D-R18-08 set to 0.150 mm become 0.070 mm (below the usual 0.1 mm fabricable web); no pad or library change.",
+    "board_sha256": "e300bbbac8d9add45306c41fafe95418917edc789c24ca6e1fb3c95d7c44a247",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-copper: via hole at (23.8, 62.95) (GND) is within 0.1 mm of C97.2's mask opening",
+     "FAIL K-copper: via hole at (23.8, 62.95) (GND) is within 0.1 mm of C98.2's mask opening"
+    ],
+    "log": ".supervisor/r19_gate/out/b20_global_mask_expansion/log.txt",
+    "log_sha256": "32d55f2107d9e2fd0a4c66b08208e841df9e1db46390b27b35a62ac98d60afab"
+   },
+   {
+    "seed": "b21_misleading_legend",
+    "description": "New: an extra free-text legend 'BATT+' on F.Silkscreen beside the black J121 igniter terminal (pin legends and the IGN word untouched): AGENTS section 3 allows only designators and the named terminal / connector legends.",
+    "board_sha256": "f25497ef878acbda770ff366a54c416e406e4828cfa67ac02ae526a8e1c24348",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: silk_overlap | Silkscreen clearance (board setup constraints silk clearance 0.1500 mm; actual 0.1153 mm) | ['Rectangle of J121 on F.Silkscreen', \"PCB text 'BATT+' on F.Silkscreen\"]",
+     "audit: - Unresolved DRC findings (including warnings/exclusions)"
+    ],
+    "log": ".supervisor/r19_gate/out/b21_misleading_legend/log.txt",
+    "log_sha256": "63b950eb38dcd00045cbea2e051726ab05e784aa39334e47358770fdd6fab8e4"
+   },
+   {
+    "seed": "b21b_misleading_legend_clear",
+    "description": "New (clean placement of b21): a free-text legend 'BATT+' set vertically on F.Silkscreen in the clear strip beside the black J121 igniter terminal (x 1.5 mm, about 1.6 mm from its courtyard), pin legends and the IGN word untouched.",
+    "board_sha256": "a46eb460ed3a04a43690660546beb1e65b96e14485e74369d0c3c42728631676",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/b21b_misleading_legend_clear/log.txt",
+    "log_sha256": "4d28a09085dbb0f80de8b2b780879effd91d31e30611d9f22103f72f9e55f19c",
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "c664f677e3580f5b99e1b6d89732967235a79b449b7ec84734ff072f41a28d95",
+     "tail": [
+      "OK",
+      "CHECK.SH exit=0",
+      "== done 2026-10-31T03:53:41Z"
+     ]
+    }
+   },
+   {
+    "seed": "c01_second_in_via",
+    "description": "Legitimate fix (tightness test): a second 1.0 / 0.5 mm U9 IN via in parallel with (17.5, 87.3): F.Cu 1.0 mm (17.5, 88.891) -> V2 (18.9, 88.891); B.Cu 1.0 mm V2 -> (19.4, 88.391) -> (19.4, 85.4) (the existing C88 feed node).",
+    "board_sha256": "044f86eb61be941c5a68f287f478e3a4ad68e9d76a27f1706e4b3edc63fe9cdb",
+    "regen_exits": {
+     "budget": 1,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 1,
+     "fit": 0,
+     "r10": 0,
+     "route": 1,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "budget regen: ValueError: BAT_IN: series layer change requires a via-resistance model",
+     "route_check FAIL short_segment BAT_IN B.Cu (18.9, 88.891) {'len_mm': 0.7071, 'width': 1.0, 'end': (19.4, 88.391)}",
+     "route_check FAIL acute_angle BAT_IN B.Cu (19.4, 85.4) {'deg': 45.0, 'at': 'free'}",
+     "route_check FAIL track_loop BAT_IN B.Cu (19.4, 86.8955) {}"
+    ],
+    "log": ".supervisor/r19_gate/out/c01_second_in_via/log.txt",
+    "log_sha256": "159aef3546e7b148c039f9aad29fe0c9d6b9217e122d61c4d152225b1cb75976"
+   },
+   {
+    "seed": "c01b_second_in_via_std",
+    "description": "Legitimate fix (tightness test): a second 0.6 / 0.3 mm (board-standard) U9 IN via in parallel with (17.5, 87.3): F.Cu 1.0 mm (17.5, 88.891) -> V2 (18.9, 88.891); B.Cu 1.0 mm V2 -> (19.4, 88.391) -> (19.4, 85.4) (the existing C88 feed node).",
+    "board_sha256": "6b36370666aad228750d389420af8c394c0b453002500b92592f9096797a5125",
+    "regen_exits": {
+     "budget": 1,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 1,
+     "fit": 0,
+     "r10": 1,
+     "route": 1,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "budget regen: ValueError: BAT_IN: series layer change requires a via-resistance model",
+     "FAIL K-power: U9 IN: via (18.900, 88.891) 0.600 / 0.300 mm; at least 1.0 / 0.5 mm",
+     "route_check FAIL short_segment BAT_IN B.Cu (18.9, 88.891) {'len_mm': 0.7071, 'width': 1.0, 'end': (19.4, 88.391)}",
+     "route_check FAIL acute_angle BAT_IN B.Cu (19.4, 85.4) {'deg': 45.0, 'at': 'free'}"
+    ],
+    "log": ".supervisor/r19_gate/out/c01b_second_in_via_std/log.txt",
+    "log_sha256": "98d998fc403e91077d7838da5933a1a6a2abe08e0eff5d8bbdda0bba3dbc6675"
+   },
+   {
+    "seed": "c02_radio_legend_move",
+    "description": "Legitimate fix (tightness test): the RADIO word legend moved 1.5 mm south, off the J410 / J420 seam into J420's span.",
+    "board_sha256": "98ab01978e57b8b69d2042b8d84ad5c6b6b13034e8d6f027e25928c13be80237",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-legends: stale WORD_SEAMS entry ('RADIO', 'J420', 'J410') (heads J420 at its courtyard's top-left corner (as SERVO heads J122) where J410's west side ends: the J410 / J420 courtyards are 0.09 mm apart and the ink "
+    ],
+    "log": ".supervisor/r19_gate/out/c02_radio_legend_move/log.txt",
+    "log_sha256": "db6bd51f1e9b18e98bfe3e489f23c95ca2a71f725ca46ec6a3e5297ae4f74f38"
+   },
+   {
+    "seed": "c02b_radio_legend_move3",
+    "description": "Legitimate fix (tightness test): the RADIO word legend moved 3.0 mm south (centre 2.4 mm inside J420 span: centre margin over J410 about 1.1 mm).",
+    "board_sha256": "5a55383338cb1f63c8d2cceffe64ea1ad292daa88b79def08017356b744e8c14",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "FAIL K-legends: stale WORD_SEAMS entry ('RADIO', 'J420', 'J410') (heads J420 at its courtyard's top-left corner (as SERVO heads J122) where J410's west side ends: the J410 / J420 courtyards are 0.09 mm apart and the ink "
+    ],
+    "log": ".supervisor/r19_gate/out/c02b_radio_legend_move3/log.txt",
+    "log_sha256": "27fbdca3ae7d0eb49a2aa9b484716171f1bab4d24a8684f54e002800f4f51f36"
+   },
+   {
+    "seed": "c03_third_out_via",
+    "description": "Legitimate fix (tightness test): a third U9 OUT via (21.1, 78.25) on a 0.7 mm B.Cu run from (20.3, 78.25).",
+    "board_sha256": "1feeaca348e1b4bcab238375d7bfc8cfc6823970b363f2104b201e89fc3c46b6",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": true,
+    "first_failures": [],
+    "log": ".supervisor/r19_gate/out/c03_third_out_via/log.txt",
+    "log_sha256": "23801bccc98d26126b34419e99bd28bc392791fc2ab08583cfcab0a51bbdf8eb"
+   },
+   {
+    "seed": "c04_fire_return_third_via",
+    "description": "Legitimate fix (tightness test): a third Q124 return via (15.85, 57.045) on a 0.3 mm F.Cu stub from Q124.3.",
+    "board_sha256": "ea849fe81cd3f06982a386a4f0f1edef7e422cf57fda297481a9e01f134a6cfd",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_shortcut": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_bind": 0,
+     "fab_verify": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "gate_passes": false,
+    "first_failures": [
+     "DRC: shorting_items | Items shorting two nets (nets GND and PYRO1_OUT) | ['Via [GND] on F.Cu - B.Cu', 'Track [PYRO1_OUT] on B.Cu, length 1.9375 mm']",
+     "FAIL S-2: PYRO1_OUT copper touches C10.2 (GND) through GND fill on B.Cu",
+     "FAIL S-2: PYRO1_OUT copper touches C100.2 (GND) through GND fill on B.Cu",
+     "FAIL S-2: PYRO1_OUT copper touches C11.2 (GND) through GND fill on B.Cu"
+    ],
+    "log": ".supervisor/r19_gate/out/c04_fire_return_third_via/log.txt",
+    "log_sha256": "a7d15874ff48a43e39d9e25ee85cd3ad37069762c70e20bd020d11fafd50fbf3"
+   }
+  ],
+  "complete_check_sh": {
+   "a19_stale_fab": {
+    "fullcheck_casevariant.txt": {
+     "exit": 1,
+     "sha256": "8fc926f1b2c76ff9e32c66a97bee50fd4ba5503fcb8d917a15203ecc3a53e10c"
+    }
+   },
+   "a19b_stale_model": {
+    "fullcheck_casevariant.txt": {
+     "exit": 1,
+     "sha256": "b09620cbfb66728640a17c02eca7c3424cd0e27a62e03551ca0993b1a759ee45"
+    },
+    "fullcheck_symlink.txt": {
+     "exit": 1,
+     "sha256": "e3cf9b9979092bd488413cd54c7ce2ee25d081de9b2610dac44c7af8d704e5cd"
+    }
+   },
+   "b08e_r131_lcsc_source": {
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "6ef1020d31f03d0e082dbf4ccebf7a0c00de148d32b7f944155cd60ca5db98c7"
+    }
+   },
+   "b10b_3v3_finger_neck": {
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "4146be0cef8c8a285ea8c795262ba14d4c834e2afa39ec377fc6c961ee5c812a"
+    }
+   },
+   "b17b_port5v3_second_via": {
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "7d6e6323779489cf2ffa2be9a34e7fb95c6bdabe3dfc58809d7ec6046dee4ab2"
+    }
+   },
+   "b19a_q124_paste_board_only": {
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "5907dd16b095a3d531e31a6afebed8016fc4ff633f97ee8b66af261c82c23997"
+    }
+   },
+   "b21b_misleading_legend_clear": {
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "c664f677e3580f5b99e1b6d89732967235a79b449b7ec84734ff072f41a28d95"
+    }
+   },
+   "s00_baseline": {
+    "fullcheck.txt": {
+     "exit": 0,
+     "sha256": "d426eecbf509eaec4823092cc6d88a200dc88abce6c4dcfdc227141d30fdfdb0"
+    }
+   }
+  }
+ },
+ "sources": [
+  {
+   "item": "AONR21357 gate threshold and RDS(on)",
+   "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+   "page": "2 (Rev 2.1, November 2023)",
+   "value": "VGS(th) -1.3 / -1.7 / -2.3 V min / typ / max at VDS = VGS, ID = -250 uA; RDS(on) 9.8 / 12.3 mohm at VGS -4.5 V"
+  },
+  {
+   "item": "C11702 identity",
+   "url": "https://www.lcsc.com/product-detail/C11702.html",
+   "page": "product page",
+   "value": "UNI-ROYAL 0402WGF1001TCE, 1 kohm +/-1 %, 0402"
+  },
+  {
+   "item": "JLC solder-mask bridge minimum (used to judge b20)",
+   "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+   "page": "Solder mask section",
+   "value": "min. pad spacing for a mask bridge 0.10 mm (green, 1 oz); 0.13 mm black / white"
+  },
+  {
+   "item": "Continuity divider model",
+   "url": "m3_design/r10_parts.py passive_cold_screen",
+   "page": "-",
+   "value": "the native budget's own equations and tolerances (3V3 +/-5 %, Vf 0-0.32 V, resistors +/-1.45 %), re-evaluated with R131 = 1 kohm (Calculation)"
+  },
+  {
+   "item": "Camera switch limit and buck fault current",
+   "url": "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+   "page": "-",
+   "value": "switch_limit_A camera 1.041-1.249 A; buck_camera_short_radio_gps_normal_A 1.710 A (Calculation)"
+  }
+ ],
+ "coverage_limits": [
+  "No canonical-tree edit, build, git state change or canonical check.sh; complete check.sh runs only on probe copies.",
+  "m3_design/r10_build.sh and r10_fab.sh were not executed (they cd to the git top level); their post-board steps were replicated with explicit probe paths. r10_sch.py ran once inside a copy (b08e). r10_pcb.py / r10_route.py / r10_post.py were not run: seeds are post-generation edits.",
+  "Exploratory runs reused the base hot-plug solve when the extracted electrical signature was unchanged (digest re-pointed); seeds touching the U9 input feed ran the real NumPy solve.",
+  "KiCad CLI / pcbnew 10.0.7 throughout (the installed 10.0.6 was not used); one kicad-cli process at a time.",
+  "Temperatures, currents and continuity bands are calculations or inferences from the cited project models and maker data, not measurements; seeded misses are prospective gate gaps, not current-board defects.",
+  "Not seeded: pad-local solder-mask margin overrides (same class as R19-GATE-01), In1 GND splits under non-critical copper (R18 s21, by design), supplier-side pad numbering of polarised parts in tools/jlc_easyeda/pads.json (trusted input), stale cost / stock files (outside check.sh by design).",
+  "Other round-19 lenses were not read (independence rule); overlap with them is possible."
+ ]
+}

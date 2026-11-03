@@ -1,0 +1,93 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round25_mcu",
+ "reviewer": "claude",
+ "target_commit": "c4bb56b01e3431e5f4309a01321d18935038e707",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R25-MCU-01",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Firmware rule 8: the hold-up \"after the PA6 trip\" (0.157-0.182 ms / 0.44-0.48 ms) is computed from 5.3 V, above the stated trip window (VLOGIC 4.84-5.17 V); from the window it is 0.103-0.164 ms / 0.291-0.430 ms",
+   "contradicts": "The same rule's trip window: \"the PA6 trip window is VLOGIC about 4.8-5.2 V (PA6 0.44-0.47 V) ... PA6's lower edge 0.44 V x 11 = 4.84 V\" (r10_binding_note.json firmware_obligations[43]; docs/M3_R10.md Firmware rule 8, lines 1014-1018; REQUIREMENTS F6 line 60; R10_VALIDATION row 25 line 2164). Hold-up after the trip must start at VLOGIC at the trip, i.e. 0.44-0.47 V x 11 = 4.84-5.17 V (R60 100k / R61 10k on the board), not 5.3 V. M3_R10 line 616 even says \"from the trip at about 5.3 V\".",
+   "evidence": "Board: VLOGIC_SENSE = R60.2 (100k, F(32.77,58.6)) / R61.1 (10k, F(32.77,54.0)) / C60 / U1.30 (PA6), ratio 11. Calculation (.supervisor/r25_mcu/holdup.py on parts_budget.json battery_break_load_W, constant power, C84 counted as 300.8 uF, to the AP63203 3.8 V floor): it reproduces the record's figures exactly from the record's inputs (7.4 V: 0.464-0.539 ms all ports, 1.304-1.412 ms camera off; 5.3 V: 0.157-0.182 / 0.441-0.478 ms). From the stated window: trip at 5.17 V (PA6 0.47 V) 0.141-0.164 ms all ports / 0.397-0.430 ms camera off; trip at 4.84 V (PA6 0.44 V) 0.103-0.120 ms / 0.291-0.315 ms. The stated lower bound 0.157 ms overstates the window's worst case 0.103 ms by 52 % (camera off 0.44 vs 0.29 ms, 51 %). Even the 1 % divider spread puts the PA6 = 0.47 V point at VLOGIC <= 0.47 x 11.20 = 5.26 V, still below 5.3 V.",
+   "impact": "The owner's open hold-up question (R10_VALIDATION row 25, R19-REQ-07) and the shedding budget are decided on figures up to about 1.5x too long; firmware shedding latency would be sized against 0.157 ms when a trip at the window's lower edge leaves 0.103 ms with all ports on.",
+   "concrete_fix": "Text only. Quote the hold-up from the trip window: \"Hold-up after the trip is 0.10-0.16 ms with all ports on and 0.29-0.43 ms with the camera off / shed (Calculation, from VLOGIC 4.84-5.17 V at 300.8 uF)\" in m3_design/r10_sch_check.py rule 8 (regenerate r10_binding_note.json), docs/M3_R10.md lines 616 (\"from the trip at about 5.3 V\") and 1017-1018, docs/REQUIREMENTS.md F6, docs/ORDERING.md line 674, docs/R10_VALIDATION.md rows 5 (line 2134, \"about a third\" -> about a fifth to a third) and 25 (line 2164); update the test that pins the rule 8 words."
+  }
+ ],
+ "observations": [
+  "U1 pin map: all 100 pads on board 92c3ad59 equal pin_table.tsv r10_net, the binding note u1_pins (port, net and mode text) and schematic.net.xml; pad order is the DS12110 Rev 8 Figure 5 LQFP100 counter-clockwise sequence (pin 1 at F(17.0,50.55), footprint rotated so pins 1-25 run along the bottom edge).",
+  "Alternate functions spot-checked against DS12110 Rev 8 Tables 10-14: PB12/PB13 AF14 UART5_RX/TX, PB6 AF10 QUADSPI_BK1_NCS, PB2 AF9 QUADSPI_CLK, PE2/PD11/PD12/PD13 AF9 QSPI IO, PE7/PE8 AF7 UART7, PD8/PD9 AF7 USART3, PC6/PC7 AF7 USART6, PC10-12 AF6 SPI3; ADC channels PA6 ADC12_INP3, PC5 ADC12_INP8, PC0 ADC123_INP10; PC1 TRACED0 and RTC_TAMP3/WKUP5 (Table 9 p. 67).",
+  "Pin-table page citations (Table 9 pp. 64-87, Tables 10-14, 119, 120, 122, 126-128, 146, 147, 157, 159, 160, 189, 192, Figure 95) land on the cited Rev 8 pages; I/O structures (PE4 FT_h, PA4 TT_a, PA5 TT_ha, PA6 FT_a, PC5 TT_a, PB1 TT_u, PB12/13 FT_u, PD8/9 and PC6/7 FT_h) match.",
+  "Binding note hashes: board 92c3ad59, netlist 762bc13d, pin table b94133e6 and circuit aeb1674f all equal the committed files.",
+  "Port wiring: J410.3/.4 = PD8 TX / PD9 RX through R441/R440, J420 = PB13/PB12 through R451/R450, J440 = PC6/PC7 through R471/R470 (all 1k); camera J9.3 -> R100 -> U12.1 (B2 in) -> U12.4 (A2Y out) -> PE7 RX, PE8 -> U12.5 (A1 in), as TXU0202 Table 6-1 requires.",
+  "Copper behind other obligations: R123 2k / C123 at Q122, R127 1k at PE4 (0.116 V at a 30 kohm / 3.6 V pull-up), R431 100k on CAM_PWR_EN, R102 10k on CAM_UART_OE, R460-R464 10k to 3V3, R10/R11 10k on QSPI_NCS/IMU_CS, R12/R13 4.7k on I2C1, U5 PS = 3V3A and CSB = GND (0x77), R9/R110 1k/1k on PC8, R104/R105 = /11 on PB1, 10.2k/1k banks on PC0/PC5 (/11.2), R164 2.2 ohm 3V3 -> 3V3A with VREF+ = VDDA, VBAT = 3V3, U4 INT1 -> PE1.",
+  "IWDG arithmetic: (239 + 1) x 4 = 960 LSI cycles; 28.571-32.653 ms at 33.6-29.4 kHz (DS12110 Rev 8 Table 146 p. 238, TJ -40 to 125 C).",
+  "Rule 8's other figures reproduce: U9 off window 4.288-4.802 V (4.778 V without D402), on window 4.723-5.251 V, from SLVSFC9C p9 VUVLO(R) 1.183-1.223 V, VUVLO(F) 1.076-1.116 V, IENLKG +/-0.1 uA, 1 % resistors, D402 50 nA; obligation 17's 1.401 V and 10.3 ms at 6.0 V also reproduce.",
+  "DS12110 Rev 8 Table 120 allows no injected current (-0/0) on PA4 and PA5; both are open-drain status inputs pulled to 3V3 by R91 / R89 10k, so no injection path was found (U11 ST behaviour during reverse blocking stays the recorded Inference of rule 7).",
+  "The LOGIC_SOURCE_ST, ACT_GATE and BOOT0 parallel-via pairs sit 0.566 / 0.849 / 0.566 mm centre to centre (0.3 mm drills); hole-to-hole spacing against JLC limits is the manufacturing lens's item and was not judged here."
+ ],
+ "fix_verification": [
+  {
+   "change": "D-R24-19 rule 4 (two barrels per gate drive)",
+   "measurement": "ACT_GATE vias (16.2,73.3) + (15.4,72.85) both join Q120.4 B(14.475,72.2) to R121.1 F(14.5,72.3) in parallel (B.Cu (15.262,72.987) node, F.Cu (15.575,72.675) node); (11.14,71.7) + (11.74,72.3) joined on both F.Cu and B.Cu link Q121.4 / R119.1 to R121.1; ACT_GATE is on R120.2, C120.2 and R119.1, so the R120.2 / C120.2 probe point is valid",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-19 rule 5 (R91.1 and U1.28 second vias)",
+   "measurement": "3V3 vias (28.1,60.0) + (28.1,59.4) at R91.1 B(27.275,60.0); LOGIC_SOURCE_ST vias (30.85,51.8) + (30.45,51.4) linked on both layers between U1.28 F(30.55,48.0) and R91.2 / U11.9; coordinates match M3_R10 rule 5",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-19 rule 8 (4.80 V turn-off corner, 4.84 V PA6 edge)",
+   "measurement": "turn-off corner 4.802 V with D402 50 nA (4.778 V without); 0.44 x 11 = 4.84 V; the hold-up sentence of the same rule is not part of this change and is wrong (R25-MCU-01)",
+   "verdict": "confirmed (corner); see R25-MCU-01 for the hold-up sentence"
+  },
+  {
+   "change": "D-R24-19 obligation 17 (chatter)",
+   "measurement": "EN 1.4015 V at 6.0 V worst corner; drop-out 47.04 ms x ln(1.446/1.1606) = 10.35 ms; pack window on 4.72-5.25 / off 4.29-4.80 V",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-18 (BAT_FAULT_N / PA5 corner at the EN via)",
+   "measurement": "BAT_FAULT_N F.Cu legs 0.200-0.2005 mm and chamfer 0.2015-0.202 mm from BAT_ENABLE via (17.1,82.8) (pcbnew shape collision at 0.5 um steps)",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-21 (BOOT0 second via cited as D-R24-03)",
+   "measurement": "route_check.py:342, r10_route_core.py:108 and check_r10.py:3038 cite D-R24-03; no 'D-R24-05' left in route_check / r10_route_core / check_r10 / test_r10_check; BOOT0 vias (13.8,45.6) + (14.2,46.0) linked on both layers",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "pcbnew read-only dump of U1's 100 pads (.supervisor/r25_mcu/u1pads.py) and comparison with pin_table.tsv r10_net / mode_af, r10_binding_note.json u1_pins and schematic.net.xml",
+  "U1 pad order against DS12110 Rev 8 Figure 5 (counter-clockwise check)",
+  "pdftotext of the cached DS12110 Rev 8: AF tables, Table 9 rows, I/O structures, page mapping of every cited table, Tables 119/120/122/146/157 notes",
+  "pcbnew copper trace of ACT_GATE, LOGIC_SOURCE_ST, 3V3 at R91.1 and BOOT0 (tracks.py, near.py)",
+  "pad/net dumps of the parts behind the obligations (parts.py, netparts.py, fp.py)",
+  "BAT_FAULT_N to EN-via gap by shape collision (gap.py)",
+  "TPS25947 EN corner model (on/off windows, 6.0 V drop-out) from SLVSFC9C p9",
+  "hold-up from the trip window (holdup.py on parts_budget.json)",
+  "SHA-256 of board, pin table, circuit and netlist against the binding note",
+  "grep of tools for the D-R24-21 citations"
+ ],
+ "sources": [
+  "DS12110 Rev 8, https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (cached copy): Figure 5 p. 55, Table 9 pp. 64-87, Tables 10-14 pp. 89-96, Table 119 p. 212, Table 120 p. 213, Table 122 note 3 p. 215, Table 146 p. 238, Table 157 pp. 245-247",
+  "TI SLVSFC9C (TPS25947), https://www.ti.com/lit/ds/symlink/tps25947.pdf p. 9 (EN/UVLO thresholds, IENLKG)",
+  "TI TPS2121, https://www.ti.com/lit/ds/symlink/tps2121.pdf Pin Functions p. 4",
+  "TI TXU0202, https://www.ti.com/lit/ds/symlink/txu0202.pdf Table 6-1",
+  "m3_design/assembly_review/sources/r10_design/parts_budget.json (battery_break_load_W)"
+ ],
+ "coverage_limits": [
+  "AN2606 and RM0433 were not re-read; loader-role and RM0433-based statements were checked only for consistency with the copper.",
+  "AF tables were spot-checked for the assigned functions, not every column.",
+  "The PA6 divider and ADC tolerance, ADC latency and the load-power model are taken from the records; the finding uses the records' own load figures."
+ ]
+}

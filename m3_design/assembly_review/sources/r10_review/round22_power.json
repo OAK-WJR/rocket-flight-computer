@@ -1,0 +1,150 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round22_power",
+ "reviewer": "claude",
+ "target_commit": "ec8cb98",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2
+ },
+ "findings": [
+  {
+   "id": "R22-POWER-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The GND vias that SINGLE_OPEN_EXCEPTIONS allows as TPS2553 ILIM legs are each U10's and U402's only ground; the recorded reason leaves out the floating IC ground",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; tools/check_r10.py SINGLE_OPEN_EXCEPTIONS",
+    "items": [
+     "U402.2 (TPS2553 GND) B(30.70,59.00) sits in a 5.7 mm^2 B.Cu GND fill island reached through B.Cu 0.3 mm (30.7,59.0)-(31.8,59.0)-(32.3,59.5) and the single via (32.30,59.50); the island holds no other via (fill-piece survey, probe gndpins.py / gndisland.py).",
+     "U10.2 (TPS2553 GND, USB limiter) B(11.30,27.50) sits in a 2.9 mm^2 B.Cu GND island with R7.2 (CC1 Rd 5.1 k) whose only via is (9.00,27.837).",
+     "Seeded copies (kicad-cli 10.0.7 DRC, the via alone removed, fills not refilled = barrel-crack model): (32.30,59.50) -> 1 unconnected, B.Cu island vs main GND; (9.00,27.837) -> 1 unconnected, B.Cu island vs In1 GND.",
+     "check_r10.py lists them as ('R85.2','via GND (9.00, 27.84)',\"U10's ILIM to GND: \"+_ILIM_OPEN) and ('R430.2','via GND (32.30, 59.50)',\"U402's ILIM to GND: \"+_ILIM_OPEN): the reason is 'an open ILIM leg sets a lower limit (fail-safe)'. Opening either via cuts the IC's GND pin itself, not only R_ILIM's return. SINGLE_OPEN_TAPS has no IC-ground tap for U10.2 or U402.2.",
+     "Same pattern next door: R8.2 (CC2 Rd) B.Cu island with the single via (9.95,30.60) (seed: 2 unconnected). With both CC Rd islands open a USB-C source sees no sink; this is bench only.",
+     "For comparison the other power-IC grounds are on the main pours: U9.8's 0.2 mm track touches the main B.Cu GND piece (2592 mm^2, 138 vias); U2.4, U11.3/4/12, U401.4/6/11 sit on that piece and U400.4 on the main F.Cu piece; U11.6 is in a 20.9 mm^2 piece with 2 vias."
+    ],
+    "datasheets": [
+     "TPS2553 pin table: 'GND - Ground connection; connect externally to PowerPAD' (https://www.ti.com/lit/ds/symlink/tps2553.pdf SLVS841G Table 5-1 p4); layout guideline 9.4.1 p25: PowerPAD 'directly connected to PCB ground plane using wide and short copper trace' (the DBV package has no PowerPAD). TI states no behaviour for an open GND pin.",
+     "TPS2553 section 8.5.1 p16: 'The current-limit threshold is proportional to the current sourced out of ILIM'; recommended 15-232 kOhm 'to confirm stability of the internal regulation loop' (p16; RILIM range p5)."
+    ]
+   },
+   "impact": "Inference (not stated by TI): with its GND pin open, the switch's quiescent current has to return through the protection structures of EN / FAULT / ILIM into R430, R431, R432 or the MCU's CAM_PWR_EN pin. The IC then runs a few hundred mV to volts above board ground: the camera supply may drop out or switch unreliably, and an MCU pin may see injection current. The camera load current returns via J9.2 and not through U402.2, and U10 is bench-USB only, so there is no pyro, logic-rail or flight-safety effect. The defect is in the evidence: the gate accepts these two vias for a reason that describes a different, milder fault.",
+   "concrete_fix": "Now (text and check only): reword the two SINGLE_OPEN_EXCEPTIONS reasons to 'U402's / U10's only GND via (island with U402.2 / U10.2 + R7.2): open floats the IC ground (behaviour not stated by TI, Inference); camera / bench USB loss only'. Add taps ('GND','U402.2',('J1.2',)) and ('GND','U10.2',('J1.2',)) with exact exceptions, so the gate names them as IC-ground single points. Name both in docs/M3_R10.md 'Retained deviations'. At the next board change, add a second GND via to each island (and to R8.2's), then run DRC and route_check."
+  },
+  {
+   "id": "R22-POWER-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "PA6's VLOGIC sense tap (the brown-out shed trigger) hangs on one via; open, firmware would shed logging and UARTs for the rest of the flight",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; docs/M3_R10.md 'Firmware'",
+    "items": [
+     "R60 (100 k, VLOGIC -> VLOGIC_SENSE) F(33.2,58.6): R60.1 (33.63,58.60) reaches VLOGIC only through F.Cu (33.63,58.6)-(34.5,59.47)-(34.5,63.0) and the single via (34.50,63.00) to the B.Cu run (34.5,63.0)-(29.8,67.7). VLOGIC has no plane. R61 10 k and C60 10 nF to GND, so PA6 (U1.30) = VLOGIC/11.",
+     "Seeded copy, via (34.50,63.00) removed: DRC 1 unconnected (F.Cu R60 run vs B.Cu VLOGIC). With R60.1 open, PA6 is held at 0 V by R61.",
+     "Firmware rule (docs/M3_R10.md Firmware; ORDERING 8.3): 'PA6 ADC1/2 watchdog stops SD/QSPI writes and UART activity without blocking flush, lowers camera/clock/LEDs/buzzer'; PD8 / PB13 / PC6 are parked analog 'when PA4 rises or the PA6 shedding trigger fires'.",
+     "SINGLE_OPEN_TAPS (26 entries) covers regulator FB / OVLO / EN / ILIM nodes only; neither power-state monitor input is listed. The other one: PA4 (U1.28, LOGIC_SOURCE_ST) reaches U11.9 and its pull-up R91 only through the via (30.85,51.80) (seed: 1 unconnected, PA4 floats), and R91.1 reaches 3V3 only through the via (28.10,60.00) (seed: 1 unconnected, ST loses its pull-up)."
+    ]
+   },
+   "impact": "Inference from the documented firmware rule: a barrel crack at (34.50,63.00) after assembly, for example from vibration, reads as a permanent brown-out. QSPI / SD logging and UART telemetry stop and the port TX pins park for the rest of the flight. The rule keeps sensors, state and safety timing, so no pyro, deployment or servo-neutral effect follows. An open at PA4's via floats the pin, so the port UARTs may flap or stay off; an open at R91's 3V3 via can make PA4 read 'battery' on USB-only power. A manufacturing open shows on the bench (PA6 near 0 V while the MCU runs). A later open is caught by nothing.",
+   "concrete_fix": "Now (text only): add a firmware plausibility rule in docs/M3_R10.md Firmware. While the MCU runs, VLOGIC cannot be below the AP63203's 3.8 V minimum input with 3V3 in regulation, so a PA6 reading below a floor (for example 0.25 V = VLOGIC 2.75 V), or a trip with the MCU still running beyond the hold-up window, is a sense fault: log it and resume writes and UARTs. Add the same kind of rule for PA4 (a floating or contradictory ST, for example PA4 low while VBUS_SENSE shows USB and no pack, is logged and the last valid state kept). Add to ORDERING 8.3: on pack power, PA6 reads VLOGIC/11 within tolerance and PA4 reads low, before each flight. At the next board change, add a second via for R60.1's VLOGIC feed (or feed it on F.Cu from C84.1) and a second via each for LOGIC_SOURCE_ST and R91, and add the PA6 / PA4 taps to the single-open survey."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R21-01",
+   "claim": "Inner-layer PTH pad holes 0.55 mm from copper; J1.2 / J400.2 / J3.1-4 refilled; no fill splits; strips narrowed but nothing marginal",
+   "measurement": "Own hole-wall survey (pth.py, Collide bisection on fills / tracks / flashed vias / pads, both inner layers): all 31 plated pads >= 0.550 mm to foreign inner copper (J1.2 In2 RAW_PROTECTED 0.550, J400.2 In1 GND 0.550, J3.1-J3.4 In2 3V3 0.550); JLC 0.3 mm re-read live (https://jlcpcb.com/capabilities/pcb-capabilities: 'Inner layer PTH pad hole to copper clearance 0.3mm', hole tolerance +0.13/-0.08 mm). DRU rules present as recorded. Inner power fills one piece each (In2 3V3 1432.84, RAW_PROTECTED 1223.17, PORT_5V3 323.79, PORT_4V8 218.62 mm^2; In1 GND 3723.56). Current paths (dc_solve.py, 0.1 mm grid): RAW_PROTECTED U9.6->U400 37.77 mOhm (unchanged), neck 1.05 mm B.Cu at U9 (5.6 C at 1.6 A), median In2 cut 1.40 mm, none at J1; 3V3 L1.2->U1 7.31 mOhm (7.33 before), L1.2->J430.4 10.22 mOhm, necks at U1's fan-out / the SD socket, none at J3; BAT_IN unchanged 16.71 mOhm. The J1 (In2) and J400 (In1) strips are cross-links between wide north-south lanes (ASCII rasters), and the J3 strips feed no load. IPC-2152 upper bound with all of the current in one strip: 0.379 mm In2 at 0.8 A 5.2 C, 1.10 mm In2 at 1.6 A 6.0 C. None is marginal.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-02",
+   "claim": "U2.1 has a second sense path (B.Cu 0.4 mm (24.05,68.95)->(23.0,70.0)); every regulator tap held through one named list",
+   "measurement": "All 31 3V3 vias seeded open one at a time (DRC each): U2.1 never separated. (23.20,68.60) open: 0 unconnected; (23.00,70.00) open: 1 unconnected, R89's F.Cu stub only (R89 always hung on that via). Control with both open: 2 unconnected, U2.1 island cut (the test detects it). Run present as recorded, 0.4 mm; the 22.55 mm alternative's 0.886 / 0.986 mm S-8 figures re-derived (centre distance 1.2855 mm). Exceptions re-seeded: PORT_LDO_FB (29.75,13.60) 1 unconnected; USB_LIMITED (22.00,62.25) 1 and (16.00,28.00) 2; USB_ILIM (14.825,26.00) 1; BAT_ENABLE (17.10,82.80) 1. Reasons: U401.3 correct (TPS7A91 IFB +/-100 nA, https://www.ti.com/lit/ds/symlink/tps7a91.pdf SBVS282A p5; no open-FB behaviour stated: Inference). R87.1 correct (TPS2121 OV1 is an active-low enable supervisor, https://www.ti.com/lit/ds/symlink/tps2121.pdf SLVSEA3F p4: R87.1 open holds OV1 low through R88, so the IN1 OV cut-off is lost; bench only). R85.1 correct (SLVS841G p16, Inference; open is also outside the 15-232 kOhm stability range, p16). R85.2 and R430.2 are incomplete (R22-POWER-01). R81.1 / C87.1 correct as a respin item.",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R21-03 (battery_entry note)",
+   "claim": "No-fuse note names C88 and Q120 (drain on BAT_IN, R134 limits the fire path)",
+   "measurement": "battery_entry.kicad_sch text matches the board: Q120 pads 5-9 BAT_IN fed from J1.1 by the B.Cu 1.0 mm trunk (7.4,74.1)-(13.0,74.1)-(13.5,73.6), not through U9; C88 BAT_IN at B(19.4,83.95); U9 is TPS259470LRPWR (latch-off).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-04 (power side)",
+   "claim": "BAT_ENABLE B.Cu hop re-bent; F.Cu run re-drawn",
+   "measurement": "Copper diff 0dc84776 -> 5516eeec: B.Cu (19.675,66.6)-(20.7,67.625)-(20.7,68.3)-(21.3,68.9); F.Cu (16.3,66.0)-(19.075,66.0)-(19.675,66.6); nothing else on the arming nets. Nearest live copper to BAT_ENABLE unchanged: BAT_IN 0.200 mm (U9.1 / U9.5 pin pitch), RAW_PROTECTED 0.700, RAW_ACT 0.500 mm (via (19.675,66.6) / R134.2); 3V3 1.184 -> 1.350 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-05",
+   "claim": "R81 / C87 at U9's end of the EN run; EN timing unchanged",
+   "measurement": "R81 F(18.8482,80.0), C87 F(18.7232,81.8768); U9.1 -> R81.1 3.889 mm, -> C87.1 2.013 mm, one via (17.10,82.80) (seed: 1 unconnected, EN floats, recorded respin item and ORDERING JLC-ET / per-flight off check). Vias (20.706,65.619) and (16.639,63.939) gone. R81.2 / C87.2 GND piece (12.4 mm^2) has 2 vias; seeds of (20.20,81.00), (20.85,76.40), (17.20,79.90): 0 unconnected each. Timing recomputed independently (en_timing.py; SLVSFC9C p9 VUVLO(R) 1.183/1.20/1.223, VUVLO(F) 1.076/1.09/1.116 V, IENLKG +/-0.1 uA; 1 % R, C x0.72..1.27): turn-on 30.3-128.6 ms over 6.0-8.4 V (44.7/55.5/87.7 ms nominal); drop-out immunity worst 10.65/20.47/26.41 ms at 6.0/7.4/8.4 V, 8.50 ms at 5.73 V, 6.58 ms at 5.5 V; 10 ms needs 5.917 V. EN at most 2.063 V with J400 closed at 8.4 V (rec. max 5 V p8, abs max 6.5 V p7); a battery lead on J400.2 gives 3.27 V. Reverse pack: 940 kOhm pull-up >= TI's 350 kOhm (SLVSFC9C p7 note 2), 6.8 uA. A latched U9 fault clears only below VSD(F) 0.45 V min (p9, p38): after J400 opens EN passes 0.45 V within <= 135 ms (calc). Placement effect: same node and values; C87 now filters at the pin, so the long run from R165 is no longer an unfiltered EN antenna.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-11",
+   "claim": "C87 drop-out immunity including EN leakage",
+   "measurement": "Same figures reproduced by an independent script (above).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-09 / D-R20-02",
+   "claim": "Second vias on supply feeds; U401 FB tap after both OUT vias",
+   "measurement": "Seeds 0 unconnected each: VLOGIC (29.50,82.05) and (29.80,81.15); PORT_5V3 (42.00,61.80), (42.75,61.80), (25.90,8.60), (26.45,11.95), (25.65,14.90), (24.90,14.90), (26.00,8.00), (26.80,8.00); PORT_4V8 (29.75,12.60), (29.75,9.95), (30.575,11.60), (30.50,9.95), (35.30,35.25), (36.00,23.35); RAW_PROTECTED (20.30,79.10), (21.10,79.10), (14.10,7.60), (14.10,9.00). The carried single U11.2 feed (24.30,66.00): 2 unconnected (recorded).",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R22-POWER-01",
+   "change": "Text and check only: reword the R85.2 / R430.2 SINGLE_OPEN_EXCEPTIONS reasons as the IC's only GND via (open floats U10 / U402 ground; Inference; bench USB / camera loss only); add GND taps for U10.2 and U402.2 with exact exceptions; list them in M3_R10 Retained deviations. A second GND via per island waits for the next board change.",
+   "board_change": false
+  },
+  {
+   "finding": "R22-POWER-02",
+   "change": "Text only: add a PA6 plausibility rule to M3_R10 Firmware (PA6 below about 0.25 V, or a trip with the MCU still running past the hold-up window, is a sense fault: log it and resume writes and UARTs) and a PA4 consistency rule; add PA6 = VLOGIC/11 and PA4 low to the ORDERING 8.3 pack-power checks. Second vias (34.50,63.00) / (30.85,51.80) / (28.10,60.00) and the survey entries wait for the next board change.",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "BAT_IN single 1.0/0.5 mm via (17.50,87.30) carries U9's whole input (2.90 A in the solve, F.Cu neck 1.00 mm at 19.2 C, IPC-2152 no plane credit): unchanged, recorded and held by K-power; an open is fail-safe (board off). Closed.",
+  "R92 bleeder (RAW_PROTECTED) on the single via (30.175,86.50): an open removes the 3.3 k bleed that the retained-output bound (5.914 V after 2 s) assumes. After U9 turns off, U400 and the port loads still pull RAW_PROTECTED down to U400's falling UVLO of about 3.06 V (AP63201 VIN UVLO rising 3.30-3.70 V, 440 mV hysteresis, https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf DS41326 Rev 3-2 p5). OUT - 21 V is then below -15 V, so TI's -15 V floor governs (SLVSFC9C p7) and the -14.807 V model minimum still passes (Inference). Closed.",
+  "R89 (BAT_FAULT_N pull-up) loses 3V3 if (23.00,70.00) opens: a single point that predates round 21, diagnostic only; the new U2.1 run does not change it. Closed.",
+  "J1.2 thermal relief: 4 spokes of 0.3 mm on each of F / In1 / B (12 in total, ring sample at r 1.07 mm); unchanged by the refill (the rule applies to foreign copper only). Closed.",
+  "U9 ITIMER open and ILM R84 750 Ohm: 3.96-4.84 A (SLVSFC9C p9), matching F9's 3.946-4.857 A. Closed.",
+  "Fire path: Q120 drain on BAT_IN through the B.Cu 1.0 mm trunk from J1.1. Reverse pack is blocked by the back-to-back body diodes of Q120 / Q121 (common source ACT_FET_S). A shorted match (4.2 A through R134) heats the PYRO1_IGN 0.5 mm B.Cu by about 10 C adiabatic over 36 ms (calc). The copper is unchanged since round 20. Closed.",
+  "PORT_4V8 / CAM_5V / USB_LIMITED / RAW_PROTECTED single vias that only isolate a local capacitor, test point or sense resistor (C407 / R405 (30.30,20.30) / (33.725,17.30), C420 (33.725,33.30), R104 (34.20,49.325), C98 (25.60,63.00), TP81 (31.00,83.60)): the main output caps C406, C431 and C82 stay connected. Closed.",
+  "BAT_ENABLE adjacency after the move: R81.1 is 0.173 mm from a GND via (short = U9 off) and R81.2 is 0.307 mm from RAW_PROTECTED (short = U9 limit); no new approach to BAT_IN, RAW_PROTECTED or RAW_ACT. Closed."
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: canonical file and the probe copy (git archive of ec8cb98) both 5516eeec...; previous board git show accfff4 = 0dc84776....",
+  "kicad-cli 10.0.7 DRC with schematic parity on the probe copy: 0 violations, 0 unconnected, 0 parity.",
+  "300 single-via seeded copies (every via on the board), each through kicad-cli 10.0.7 DRC, run one CLI at a time (an early batch of about 90 ran 6 at a time before I switched to sequential); 117 open one item, none failed to seed. Plus one two-via control (U2.1).",
+  "Copper / footprint / fill diff 0dc84776 -> 5516eeec (cdiff.py).",
+  "Hole-wall to inner foreign copper on all 31 plated pads (pth.py); ASCII rasters of In2 at J1 / J3 and In1 at J400.",
+  "dc_solve.py (0.1 mm, --necks): BAT_IN J1.1->U9.5, RAW_PROTECTED U9.6->U400, 3V3 L1.2->U1, 3V3 L1.2->J430.4; GND fire return Q124->J1.2 (see coverage).",
+  "IPC-2152 bounds (tools/ipc2152.py) on the narrowed strips and the fire path.",
+  "Net-gap survey BAT_ENABLE vs live nets on both boards (netgap.py); GND fill-piece survey of the power-IC ground pins (gndpins.py / gndisland.py); thermal-relief ring sample (spokes.py).",
+  "Independent EN / UVLO timing (en_timing.py).",
+  "Datasheet reads from cached maker PDFs (pdftotext): TPS25947 SLVSFC9C, TPS2553 SLVS841G, TPS7A91 SBVS282A, TPS2121 SLVSEA3F, AP6320x DS41326 Rev 3-2; JLC capabilities page re-read live."
+ ],
+ "sources": [
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C, May 2026: pin table p5, abs max p7 with note 2, rec. op. p8, EN/ILIM p9, 7.3.1 p26, latch clear p38)",
+  "https://www.ti.com/lit/ds/symlink/tps2553.pdf (SLVS841G, Oct 2026: pins p4, RILIM p5, 8.5.1 p16, 9.4.1 p25)",
+  "https://www.ti.com/lit/ds/symlink/tps7a91.pdf (SBVS282A, Sep 2026: IFB p5)",
+  "https://www.ti.com/lit/ds/symlink/tps2121.pdf (SLVSEA3F, Aug 2020: pins p4)",
+  "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (DS41326 Rev 3-2: UVLO p5)",
+  "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-10-31)"
+ ],
+ "coverage_limits": [
+  "No thermal simulation or measurement; IPC-2152 figures are upper bounds with no plane credit.",
+  "The seeded opens keep the existing fills, so they model a barrel crack and are not a refill; the via-open survey uses DRC connectivity and does not judge which side of a split is functional, except where examined by hand (U2.1, U10.2, U402.2, R60, PA4).",
+  "Hot-plug and hold-up models not rerun (inputs re-extracted by the fix pass; parts unchanged).",
+  "The GND fire-return solve (window 0,50-30,90) had not finished when the report was written: the return path is not re-solved here; its copper changed only by the J400.2 In1 void and two removed GND vias near R81 / C87's old spot.",
+  "Open-pin behaviour of TPS2553 GND / ILIM and TPS7A91 FB is Inference; no maker states it.",
+  "No legal-spot scan for the second vias proposed in the fixes; no route_check on any candidate.",
+  "Panel-tab band copper (D-R21-06) not re-measured."
+ ]
+}

@@ -1,0 +1,301 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round19_safety",
+ "reviewer": "claude",
+ "target_commit": "acba1969b42973aaf8d348dc6d2fce6b465fc1dd",
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 6
+ },
+ "findings": [
+  {
+   "id": "R19-SAF-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "S-8 still exempts GND at the PYRO1_OUT barrels, the one inner neighbour that bypasses Q124 and fires an enabled match; the OUT via barrel is 0.251 mm from In1 GND and from In2 GND",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb (SHA-256 a3144b15...)",
+    "reference": "PYRO1_OUT via (11.630, 55.100), 0.5 mm ring / 0.3 mm drill, no inner pads; J121.1 (7.400, 54.100), 1.3 mm hole, 1.9 mm ring flashed on In1 and In2; Q124.5 drain; tools/check_r10.py at acba196 lines 868-874 (BARREL_GND_HAZARD = {ACT_GATE, ACT_DRV})",
+    "layer": "In1.Cu (R10_GND_In1) and In2.Cu (R10_GND_In2_CH1)",
+    "measured": "OUT via barrel wall to GND: 0.251 mm on In1 and 0.251 mm on In2. J121.1 hole wall to GND 0.550 mm on In1 and In2; its own inner ring to GND 0.250 mm. The same numbers come from three independent routes: pcbnew 10.0.7 geometry export + own numpy distances (s8_own_a3144b15.txt), the fabricated In1/In2 Gerbers parsed with their X2 net attributes (gerber_s8.json), and the committed check_r10.s8 re-run with GND counted for every barrel net (committed_s8.txt: 0.251 / 0.551 mm). As shipped, S-8 passes because GND is exempt for PYRO1_OUT.",
+    "rationale_text": "check_r10.py comment: 'GND on the N-FET gate, the enable chain (...) or the pyro bus nodes holds them off'. For PYRO1_OUT this is wrong: OUT is Q124's drain, so OUT-GND bypasses Q124. R10_VALIDATION section 1 itself says 'An OUT-to-GND bridge or failed-short Q124 can fire an enabled match' and also 'GND is permitted for the four original barrels'.",
+    "calculation": "With the bus enabled, OUT shorted to GND leaves the F7 fire loop (4.618 ohm native allocation) intact except Q124's RDS(on): about 1.5 A at the 7.4 V-equivalent source, above the 1.125 A floor and the J-Tek 0.75 A all-fire (REQUIREMENTS F7 and Igniters row).",
+    "maker": "https://www.aosmd.com/res/datasheets/AON7524.pdf (Rev 1.1) p2 (Q124 VGS(th) 0.4/0.8/1.2 V)"
+   },
+   "impact": "From the on-rail bus enable until apogee, one inner-layer short or CAF path at either OUT barrel fires the e-match. It cannot be inspected, coated or reworked. A static short is caught by the passive cold screen (CONT and BUS both near 0 V against 96/96 mV healthy; Calculation, sense_cases.txt), so it needs a defect that forms or becomes intermittent inside the armed window. This is the same 0.25 mm inner geometry that R18-SAF-01 / D-R18-04 cleared to 1.05 mm at the ACT_GATE barrels, where one fault only removes the first of two barriers; here it is the last barrier. The gate's stated reason for exempting GND is factually wrong for this net.",
+   "concrete_fix": "(1) tools/check_r10.py: BARREL_GND_HAZARD = {'ACT_GATE', 'ACT_DRV', 'PYRO1_OUT'} and correct the comment. (2) r10_route_ground.barrel_keepouts: add PYRO1_OUT barrels on In1 and In2, radius drill/2 + 1.05 mm: 1.20 mm round (11.630, 55.100) and 1.70 mm round J121.1 (7.400, 54.100) (2.00 mm if J121.1 keeps its inner ring, see R19-SAF-05). (3) Add PYRO1_OUT to critical_reference.R10_SLOW_RETURN_NETS (a DC fire/sense net) or exempt barrel keep-out voids in K-region / K-reference, because the OUT F.Cu and B.Cu tracks leaving the via and J121.1 cross the new voids. Checked: the GND partner via (10.300, 55.600) barrel edge is 1.271 mm from the OUT via centre, outside the 1.20 mm disc; its flashed In1/In2 ring then sits 1.021 mm from the OUT barrel. No other GND via or inner track lies inside either disc; the 1.42 mm partner-via distance is unchanged. Alternative without CAD: record the inner OUT-GND gaps explicitly as an accepted instance of the OUT-GND class and correct the gate comment."
+  },
+  {
+   "id": "R19-SAF-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Pad-arming switch J400: four neighbours of U9's high-impedance EN node within 0.2-0.33 mm, plus the J400.2 lead, can bypass or latch the switch. They are unrecorded, or recorded as fail-safe. The EN network is uncoated, and no per-flight step shows that J400 still turns the board off",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; docs/ORDERING.md section 8.3 / 8.4 and docs/M3_R10.md at acba196; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R18-03",
+    "reference": "EN node BAT_ENABLE: U9.1 B(17.600, 82.300); R81 300 kohm to GND, R80 + R165 = 940 kohm from BAT_IN through J400 when closed; C87 2.2 uF",
+    "layer": "B.Cu / F.Cu (surface)",
+    "measured": "(a) U9.1 (EN) to U9.5 (IN, BAT_IN) and to the BAT_IN feed track (18.250, 81.600)-(18.250, 83.400): 0.200 mm, B.Cu, under the QFN body. (b) BAT_ENABLE via (17.100, 82.800) to the BAT_FAULT_N F.Cu L (16.550, 80.900)-(16.550, 83.350)-(19.300, 83.350): 0.200 mm. (c) BAT_ENABLE via (19.675, 66.400) to R134.2 (RAW_ACT, bare 2512 pad): 0.300 mm, B.Cu. (d) R123.1 (ACT_EN) to the BAT_ENABLE F.Cu track (21.300, 68.900)-(21.300, 75.200): 0.330 mm. Inventory: adjacency_a3144b15.json.",
+    "calculation": "Thresholds (TPS25947 VUVLO rising 1.183-1.223 V, falling 1.076-1.116 V): (a) switch bypass, board on with J400 open, for a leak <= 1.52-1.83 Mohm from BAT_IN (7.4-8.4 V). (b) Once the board is on, BAT_FAULT_N (R89 10 kohm to 3V3) holds EN at 3.3 x 300/310 = 3.19 V, so J400 cannot turn it off; latch for a leak <= 0.58 Mohm. (c) Once PC1 has enabled the bus, RAW_ACT holds EN on; latch for a leak <= 1.69-1.96 Mohm. (d) D-R18-03 / M3_R10 say a bridge 'loads U9's 470 kohm-fed EN with 2 kohm, so U9 stays off'. That is true only while PC1 is low. With PC1 high, ACT_EN is 2.2 V through 667 ohm, so EN stays at about 2.2 V and J400 cannot turn the board off (leak <= 0.29 Mohm). Hard bridges (b)-(d) present at power-up stop the board starting (EN loaded by 10 kohm / 11.2 kohm / 2 kohm), so they are self-revealing. They defeat the switch only if they form, or conduct (moisture, unwashed flux; ORDERING asks JLC for no washing), after power-up. Harness: the J400.2 lead (BAT_SW_RETURN, at EN potential) touching any pack-voltage conductor (the J1.1 lead, servo pack-star +) gives EN = 7.4 x 300/770 = 2.88 V, i.e. the board is on with the switch open.",
+    "records": "ORDERING 8.3 coating worksheet selects R123's cell but not U9, R80, R81, R165, C87 or the BAT_ENABLE vias and tracks. The per-flight check (ORDERING 8.3, R10_VEHICLE_HANDOFF) measures J121.2 with J400 open, so it sees only a live bus, never a board that is on, and never exercises switch-off. The 20 switch cycles with 3V3 < 0.3 V are a first-article step. ORDERING 8.4 dresses only battery and igniter leads apart. The battery_entry note treats a chafed SW lead only as EN over-voltage. R8_VALIDATION recorded this 'BAT_ENABLE latch class' for R8; R10's section 1 carries only the inner-layer case (R18-SAF-01) and ACT_EN as fail-safe.",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C, rev. May 2026) p9 (VUVLO(R) 1.183/1.20/1.223 V, VUVLO(F) 1.076/1.09/1.116 V, IENLKG +/-0.1 uA), p5 (EN/UVLO pin)"
+   },
+   "impact": "J400 is the sole power and pad-arming device, and 'off first' is the safing step. A single surface leak or bridge at these sites, or one chafe of the J400.2 lead, can leave the board powered with the bus enabled after the crew opens the switch. Q124 and the firmware are then the only barriers while people are at the rocket. This never fires by itself.",
+   "concrete_fix": "CAD (fix-now): move the BAT_ENABLE via (19.675, 66.400) to (19.675, 66.600); F.Cu stub (19.675, 66.000)-(19.675, 66.600); B.Cu (19.675, 66.600)-(21.000, 67.925)-(21.000, 68.600). Checked against all fixed copper (pours re-flow): via ring to R134.2 0.300 -> 0.500 mm; the new segments are >= 0.425 mm from every other net; the GND partner via (20.706, 65.619) stays 1.42 mm centre to centre; the In2 keep-out follows the via. BAT_FAULT_N corner at (17.1, 82.8): no clean shift found, because x = 16.25 hits C96.2 (0.10 mm) and D9.2 (0.10 mm); record it instead. Records: add the four pairs and their leak thresholds to deviation section 1, and correct the D-R18-03 / M3_R10 'U9 stays off' wording. Coating: add U9, R80, R81, R165, C87 and the BAT_ENABLE vias and tracks. Procedure, per flight before the e-match goes in: with the pack connected and J400 open, confirm the board is off (no telemetry or buzzer, or 3V3 / TP81 < 0.3 V). After any closed-switch check, confirm that opening J400 turns it off. Harness: run the J400 pair twisted, on its own ties, away from the battery and servo power leads. Respin option: divide the EN network impedance by 10 (C87 x 10 keeps the bounce timing) to raise every leak threshold tenfold; this also helps the 7 uA dry contact."
+  },
+  {
+   "id": "R19-SAF-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Side effect of D-R18-02: TP121's new 7.14 mm B.Cu stub doubles the ACT_GATE copper at the 0.25 mm pour clearance from GND, and adds an ACT_GATE to BAT_SW_SOURCE pair at 0.400 mm",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "ACT_GATE B.Cu track (11.140, 70.000)-(4.000, 70.000), 0.3 mm wide, to TP121 B(4, 70); BAT_SW_SOURCE via (10.800, 69.200)",
+    "layer": "B.Cu",
+    "measured": "ACT_GATE track length within 0.30 mm of GND copper (sampled every 0.05 mm, act_gate_exposure.txt): 6.277 mm on 632a9ad3 -> 12.872 mm on a3144b15, of which the stub is 5.243 mm. The stub is 0.400 mm from the BAT_SW_SOURCE via; that pair did not exist on 632a9ad3 (adjacency diff). The stub is 1.300 mm from J400.2.",
+    "calculation": "Stub to GND bridge: VGS of Q120/Q121 about -6.8 V with J400 open, so the bus goes live (the per-flight J121.2 check catches it if it exists before the e-match goes in). Stub to BAT_SW_SOURCE bridge: with J400 closed and PC1 high, ACT_GATE is about 1.2 V, so EN is about 1.2 x 300/770 = 0.47 V and U9 turns off; the board resets at every bus enable (fail-safe, detectable). With J400 open the bridge has no effect.",
+    "records": "ORDERING 8.3: TP121 is 'coated with its cell', so after coating it is not a probe. R119.1 B(11.14, 71.1) and C120.2 B(17.1, 73.3) are bare ACT_GATE pads in the same cell for pre-coating measurement."
+   },
+   "impact": "The surface instance of R18-SAF-01's hazard (ACT_GATE to GND turns the series pair on with the switch open) grew 2.05x. Both sides are masked and the stub is coated, so the probability stays low. No function needs the stub.",
+   "concrete_fix": "Fix-now: delete TP121 (r10_place.tsv row 'TP121 4 70 0 B'), its schematic symbol and the B.Cu segment (11.140, 70.000)-(4.000, 70.000) (r10_route_pyro.py: t('ACT_GATE','B',P,[(11.14,70.0),p('TP121.1')])). Drop TP121.1 from check_actuators.ACT_NETS and from the ORDERING / handoff probe tables, and name R119.1 or C120.2 as the ACT_GATE probe point. Result: 12.872 -> 7.629 mm at the pour clearance, and no ACT_GATE to BAT_SW_SOURCE pair."
+  },
+  {
+   "id": "R19-SAF-04",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R18-SAF-04 (records part: deviation section 1 cites an inventory 'scoped to its original copper')",
+   "title": "Deviation section 1 still cites the post-R11 surface inventory (34 rows, min 0.150 mm). On this board the inventory is 49 rows (min 0.173 mm) and includes unrecorded pairs at the fire resistor and in the bus sense branch, plus an open-match masking residual",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; docs/R10_VALIDATION.md section 1 at acba196",
+    "reference": "Fresh inventory .supervisor/r19_safety/adjacency_a3144b15.json (15 pyro / arming nets; outer < 0.5 mm, inner < 1.0 mm)",
+    "layer": "B.Cu",
+    "measured": "49 protected/foreign outer-layer net-pair rows within 0.5 mm (27 without GND), minimum 0.173 mm (R129.1 MID to GND via (22.330, 58.250)). Unrecorded consequence-bearing pairs: R134.2 (RAW_ACT, (19.075, 64.000)) to GND via (20.706, 65.619), 0.196 mm; this is R81.2's fan-out via, and R81.2 already joins the F.Cu GND fill. The RAW_ACT feed (14.475, 67.105)-(17.580, 64.000), 0.5 mm wide, runs under R134's body 0.367 mm from R134.1 (IGN). The RAW_ACT sense branch (22.800, 61.400)-(22.800, 63.875) is 0.175 mm from the USB_OVLO track (22.500, 64.250)-(23.500, 64.250) and 0.225 mm from R87.1 (USB_LIMITED). The MID corridor is 0.250 mm from R134.2.",
+    "calculation": "R134.2 to GND with the bus enabled: the pack is shorted through Q120/Q121 without R134, the match or its leads, about 23 A (7.4 V over the ~0.32 ohm left of the 4.62 ohm F7 loop; unfused) until BAT_IN sag resets the logic. R134.1 to RAW_ACT removes R134 (about 12 A into a match that shorts after firing, instead of 4.2 A). RAW_ACT to USB_OVLO puts 7.4-8.4 V on U11.5 OV2, above its 6 V absolute maximum. RAW_ACT to R87.1 puts USB 5 V on the bus with PC1 low whenever USB is attached; the procedure forbids an e-match with USB. MID to RAW_ACT (sense_cases.txt): cold screen with an open match reads CONT/BUS 102.0 / 55.5 mV, against healthy 96.2 / 96.1 and open 141.5 / 0.0 mV; the powered CONT is 1.213 V at 7.4 V whether the match is open or intact. D-R18-05 says only that an upper bound can flag the bridge.",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps2121.pdf (SLVSEA3F) p6 (OV1/OV2 absolute maximum -0.3 to 6 V)"
+   },
+   "impact": "The owner is asked to accept a surface-fault list that belongs to older copper. With the MID bridge, continuity detection depends on firmware bands for both CONT and BUS, not on a CONT upper bound alone. None of these pairs fires the match by itself.",
+   "concrete_fix": "Replace the stale count in deviation section 1 with the current inventory (this review's JSON rows), stating each consequence above, and extend D-R18-05's residual text with the open-match masking case and the need for a BUS lower band in the cold screen. Optional CAD: re-space the RAW_ACT sense branch from USB_OVLO and R87 (it can leave R134.2 northward before x = 21.5)."
+  },
+  {
+   "id": "R19-SAF-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "S-8 measures from the hole wall and ignores the protected THT pads' own 1.9 mm inner rings: on In2, J400.2 to RAW_PROTECTED is 0.750 mm and J121.1 to 3V3 is 0.803 mm copper to copper, while the deviation list reports +0.050 / +0.103 mm over the 1.0 mm floor",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; tools/check_r10.py barrel_shapes() at acba196 (GetEffectiveHoleShape); docs/R10_VALIDATION.md row 9",
+    "reference": "J121 and J400 pads: thru_hole circle 1.9 mm, drill 1.3 mm, layers *.Cu, remove_unused_layers no; rings flashed on In1/In2 (pcbnew FlashLayer; Gerber In2 aperture C1.9 flashes)",
+    "layer": "In2.Cu",
+    "measured": "J400.2 (7.400, 67.600): hole to In2 RAW_PROTECTED 1.050 mm, ring 0.750 mm. J121.1 (7.400, 54.100): hole to In2 3V3 1.103 mm, ring 0.803 mm. The 3V3 via (9.200, 52.980) In2 ring is 0.92 mm from the J121.1 ring. D-R18-04 sized J400.2's keep-out as drill/2 + 1.05 = 1.70 mm (inscribed radius measured 1.7000 mm).",
+    "calculation": "J400.2 to RAW_PROTECTED latches U9 on: EN = 7.4 x 300/770 = 2.88 V. J121.1 to 3V3 with the bus enabled drives RAW_ACT through R134 and the match into the 3V3 rail. AP63203 runs PFM and does not sink current (Inference), so 3V3 rises toward the SRV05-4 clamp while the match carries roughly 0.3-0.8 A, against the J-Tek 0.30 A no-fire and 0.75 A all-fire (Calculation/Inference). The MCU sees over-voltage.",
+    "maker": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (Nov 2024) p1 (PFM: AP63200, AP63203, AP63205)"
+   },
+   "impact": "At the two terminal barrels the inner copper that S-8 is meant to isolate sits 0.20-0.25 mm inside the 1.0 mm floor, while the owner's decision table reports a positive margin.",
+   "concrete_fix": "Either set (remove_unused_layers yes)(keep_end_layers yes) on J121.1, J121.2, J400.1 and J400.2, which have no inner connections, so that the barrel figure becomes the copper figure (1.103 / 1.050 mm). This trades away non-functional-pad anchoring on screw terminals, so the mechanics lens should confirm it. Or make barrel_shapes() include the protected pad's own flashed inner copper and grow its keep-outs to pad radius + 1.05 mm; that also needs the 3V3 via (9.2, 52.98) moved about 0.1 mm. Either way, correct row 9 and section 1 to the copper figures."
+  },
+  {
+   "id": "R19-SAF-06",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R18-SAF-03 (scope question, not dispositioned in R18-m03)",
+   "title": "It is still not stated whether AGENTS section 2.4 covers Q122, the bus-enable driver. Q122 has pull-down R123 2 kohm and series resistor R122 1 kohm but no gate-source capacitor",
+   "evidence": {
+    "file": "AGENTS.md section 2.4; netlist (kicad-cli 10.0.7 export): Q122.1 ACT_EN = {R122.2, R123.1}, no capacitor",
+    "reference": "Q122 F(16.8, 69.8)",
+    "measured": "Gate node <= 2 kohm to GND (tau = 2 kohm x 630 pF, about 1.3 ns). With a 30 kohm PC1 pull-up at 3.6 V the gate is 0.218 V. R121 x C120 (10 ms) filters Q122 glitches.",
+    "maker": "https://www.aosmd.com/res/datasheets/AO3400A.pdf (Rev 3.1) p2 (VGS(th) 0.65/1.05/1.45 V, Ciss 630 pF)"
+   },
+   "impact": "Documentation only. The electrical intent (defined off in reset or unpowered) is met, but an absolute rule with an undefined scope invites a literal-Major reading in later rounds.",
+   "concrete_fix": "One line in REQUIREMENTS F8 (AGENTS section 2 untouched): 'AGENTS 2.4 pyro FET gates are Q124 and the Q120/Q121 pair; Q122 is their gate driver and needs only R122/R123'."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R18-01",
+   "claim": "R123 100 k -> 2 k (C4109): Q122 gate <= 0.220 V against a 30 k PC1 pull-up and 0.554 V with a BAT_FAULT_N bridge; V3V3_SENSE (R62/R63) removed",
+   "measurement": "Netlist R123 2k C4109 (BOM and schematic agree); 3.6 x 2/33 = 0.218 V; BAT_FAULT_N case 3.6 x 2/13 = 0.554 V; V3V3_SENSE net, R62 and R63 absent; DRC parity 0.",
+   "verdict": "confirmed",
+   "note": "0.65 V is AO3400A's 25 C VGS(th) minimum. At the 70 C bay limit the minimum is lower (typical tempco; Inference), so the 0.554 V bridge case keeps little margin hot. The bridge needs a 0.550 mm gap to close."
+  },
+  {
+   "d_id": "D-R18-02",
+   "claim": "R119 100 k at B(11.57,71.1), via-free on B.Cu; 'any single via or track open leaves both gates biased off'",
+   "measurement": "R119 netlist ACT_GATE/ACT_FET_S, C25741. Single-open connectivity on native copper (open_faults.txt): no single via open separates either gate from a gate-source resistor. But the two B.Cu segments in series Q121.4 -> (11.140,70.000) (1.385 mm) and (11.140,70.000) -> R119.1 (1.100 mm) are single points: an open in either leaves Q121's gate with no R119, R120, R121 or C120. This is the same pin-to-first-node exposure as every gate (Q124 1.7 mm, Q122 2.0 mm F.Cu).",
+   "verdict": "partly",
+   "note": "Via independence confirmed. The R10_VALIDATION R18-m02 wording 'any single via or track open' is too broad; read 'any single via open'. The TP121 stub side effect is R19-SAF-03."
+  },
+  {
+   "d_id": "D-R18-03",
+   "claim": "ACT_EN_MCU re-spaced: to BAT_FAULT_N 0.550, to BUZZ_OUT 0.520, to the USB_LIMITED via 0.670 mm; ACT_EN-BAT_ENABLE 0.330 mm fail-safe (U9 stays off)",
+   "measurement": "0.550 / 0.520 / 0.670 / NRST via 0.4246 / ACT_EN-BAT_ENABLE 0.330 mm reproduced (pairgap).",
+   "verdict": "partly",
+   "note": "The geometry is confirmed. 'U9 stays off' holds only while PC1 is low; with PC1 high the bridge holds EN at about 2.2 V and the switch cannot turn the board off (R19-SAF-02)."
+  },
+  {
+   "d_id": "D-R18-04",
+   "claim": "Fill-only keep-outs (16-gon, radius drill/2 + 1.05) hold In1/In2 1.050 mm from both ACT_GATE barrels, In2 1.050 mm from three BAT_ENABLE barrels and J400.2; S-8 covers them",
+   "measurement": "Six R18_BARREL_KEEPOUT_* areas, inscribed radius 1.2000 / 1.7000 mm. Own numpy code, own Gerber parser and committed S-8 all agree: ACT_GATE In1 GND and In2 RAW_PROTECTED 0.251 -> 1.050 mm; BAT_ENABLE In2 0.251 (RAW_PROTECTED) / 0.550 (3V3) -> 1.050 mm; J400.2 In2 RAW_PROTECTED 0.551 -> 1.050 mm and In2 GND 0.850 -> 1.050 mm. A zone refill of a copy changes nothing. Barrel-to-barrel: ACT_GATE to the nearest GND via 1.407 mm.",
+   "verdict": "confirmed",
+   "note": "Barrel-wall figures confirmed. Still open: GND remains exempt at PYRO1_OUT (R19-SAF-01), and J400.2's own inner ring leaves 0.750 mm copper to copper (R19-SAF-05)."
+  },
+  {
+   "d_id": "D-R18-05",
+   "claim": "R173 to B(16.87,59.7) at the OUT end: OUT-R134.2 2.825, OUT-Q123.1 1.577, IGN-R131.1 0.575 mm; residual MID 0.250 / 0.175 mm; OUT-GND 0.177 / 0.180 mm",
+   "measurement": "2.8254 / 1.5771 / 0.5752 mm; OUT-BUZZ_G 0.510, OUT-D120.3 0.5135, OUT-C126 via 0.550 mm; MID-R134.2 0.250, MID-Q123.1 0.175 mm; OUT-GND 0.1768 (B.Cu) / 0.180 (F.Cu) mm; the netlist puts R173 on PYRO1_OUT / PYRO1_CONT_MID.",
+   "verdict": "confirmed",
+   "note": "The residual consequence text omits that a MID-RAW_ACT bridge masks an open match (R19-SAF-04)."
+  },
+  {
+   "d_id": "D-R18-06",
+   "claim": "In2 3V3 fill is one piece, 1466.52 mm^2",
+   "measurement": "R10_3V3_In2: 1 piece, 1466.5 mm^2 (own polygon area). No pyro barrel lies near the new shoulder or bay.",
+   "verdict": "confirmed",
+   "note": "Area and piece count only; plane-neck current is outside this lens."
+  },
+  {
+   "d_id": "D-R18-10",
+   "claim": "Schematic arming-switch text: J400.1 / J400.2 and R166 0.36 ohm",
+   "measurement": "battery_entry.kicad_sch at acba196 carries the J400.1 / J400.2 text and 'R166 (0.36 ohm 2512)'; no 'J1.3' remains in any .kicad_sch. The R3-era renders in sheets/*.svg still show 'J1.3--4' but are recorded as historical (M3_R8 D82).",
+   "verdict": "confirmed",
+   "note": ""
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R19-SAF-01",
+   "risk": "low-moderate (two fill-only keep-outs plus a gate-scope entry)",
+   "change": "BARREL_GND_HAZARD += PYRO1_OUT (and correct its comment). barrel_keepouts: PYRO1_OUT barrels on In1 and In2, radius 1.20 mm at (11.630, 55.100) and 1.70 mm at J121.1 (7.400, 54.100), or 2.00 mm if its ring stays. Add PYRO1_OUT to R10_SLOW_RETURN_NETS (or exempt keep-out voids in K-region / K-reference).",
+   "expected": "OUT via to In1/In2 GND 0.251 -> 1.050 mm (the partner via ring 1.021 mm); J121.1 hole to GND 0.550 -> 1.050 mm; S-8 fails on the old geometry."
+  },
+  {
+   "finding": "R19-SAF-02",
+   "risk": "low (one via moves 0.2 mm)",
+   "change": "BAT_ENABLE via (19.675, 66.400) -> (19.675, 66.600); F.Cu (19.675, 66.000)-(19.675, 66.600); B.Cu (19.675, 66.600)-(21.000, 67.925) and (21.000, 67.925)-(21.000, 68.600); refill.",
+   "expected": "Via ring to R134.2 0.300 -> 0.500 mm; new copper >= 0.425 mm from every other net (candidate_eval.txt); the In2 keep-out follows the via; GND partner 1.42 mm centre to centre."
+  },
+  {
+   "finding": "R19-SAF-03",
+   "risk": "low (delete one test pad and its stub)",
+   "change": "Delete TP121 and the B.Cu stub (11.140, 70.000)-(4.000, 70.000); update check_actuators.ACT_NETS and the ORDERING / handoff probe tables (probe ACT_GATE at R119.1 or C120.2 before coating).",
+   "expected": "ACT_GATE copper within 0.30 mm of GND 12.872 -> 7.629 mm; the ACT_GATE to BAT_SW_SOURCE 0.400 mm pair is removed."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "Single fault that fires the e-match with the bus disabled",
+   "disposition": "Rejected: every fire path needs both an energised bus (Q121 on or bypassed) and a Q124 turn-on or bypass. No single pad, track, via or part fault does both. Checked on the netlist and on the inventory of 15 pyro and arming nets."
+  },
+  {
+   "candidate": "AGENTS 2.2: bus fed straight from the battery",
+   "disposition": "Rejected: RAW_ACT = {Q121.5-9, R132.1, R134.2, TP120.1}; it is fed only through Q120/Q121 (the R10 reading of 'load switch' recorded by R18)."
+  },
+  {
+   "candidate": "AGENTS 2.4 on Q124 and Q120/Q121",
+   "disposition": "Rejected: Q124 has R128 10 k gate-source, R126 220 ohm series and C126 220 nF gate-source, plus R127 1 k at PE4. The P-FET pair has R119 || R120 50 k gate-source, R121 10 k series and C120 1 uF. Defined off in reset: PE4 and PC1 are analog after reset; a 30 k PE4 pull-up gives a 0.104 V gate against AON7524 VGS(th) min 0.4 V. AON7524 IGSS +/-10 uA x 10 k = 0.1 V. Q122 IDSS 5 uA at 55 C x 50 k = 0.25 V against the P-FET's 1.3 V (100 k before R119: 0.5 V)."
+  },
+  {
+   "candidate": "Hot-plug or bus-enable dV/dt turn-on",
+   "disposition": "Rejected: C120 against Crss 365 pF gives about -10 mV VGS on a 7.4 V step; Q124 C126 against Crss 65 pF gives about 2 mV. The bus ramp (R121 x C120 about 10 ms) puts about 74 uA of C128 current through the match. Q122 Miller pulses lasting microseconds move VGS by under 1 mV through C120."
+  },
+  {
+   "candidate": "Positive copper near the Q124 gate nets",
+   "disposition": "Closed: no PYRO1_GATE or PYRO1_GATE_N copper within 0.5 mm outer or 1.0 mm inner of a positive net. The nearest is a 3V3 via, 0.676 / 0.835 mm on F.Cu; In2 3V3 is 2.751 mm from the gate via. Gate-to-own-drain 0.520 mm is inside the Q124 package."
+  },
+  {
+   "candidate": "ACT_GATE to BAT_IN (0.218 mm at Q120.9; 0.421 mm via-to-track) and ACT_FET_S to ACT_GATE (0.275 mm)",
+   "disposition": "Fail-safe: these hold the pair off, and the powered check refuses."
+  },
+  {
+   "candidate": "Barrel-to-barrel CAF at hazardous pairs",
+   "disposition": "Closed: OUT via to GND via 1.121 mm; ACT_GATE via to GND via 1.407 mm; BAT_ENABLE to GND via 0.993 mm (fail-safe); BAT_ENABLE to BAT_FAULT_N via 1.678 mm; J121.1 to 3V3 via 1.320 mm."
+  },
+  {
+   "candidate": "MID-BUZZ_G bridge over-stressing PC14",
+   "disposition": "Rejected: PC14 is FT (DS12110 Rev 8 pin table p65); MID stays <= 3.58 V with R163 loading (sense_cases.txt), below the record's 4.6 V bound."
+  },
+  {
+   "candidate": "Netlist / board / BOM / CPL mismatch on safety parts",
+   "disposition": "Rejected: 0 differences over 661 pad nets; 37 safety and arming parts match LCSC codes in m3_bom_jlc.csv and appear in m3_cpl_jlc.csv."
+  },
+  {
+   "candidate": "U9 AUXOFF (pin 3) and ITIMER (pin 10) unconnected",
+   "disposition": "Rejected: on TPS259470x AUXOFF is an open-drain output and ITIMER open gives the fastest response (SLVSFC9C p5-6). EN/UVLO and OVLO are driven."
+  },
+  {
+   "candidate": "EN to OVLO pin bridge at U9 (0.200 mm)",
+   "disposition": "Fail-safe: EN and OVLO become one node at about 1.37 V with J400 closed, OVLO trips and U9 stays off."
+  },
+  {
+   "candidate": "Single gate-network opens other than the R119 path",
+   "disposition": "Closed: no remaining via dependence (open_faults.txt). The pin-to-first-node segments are inherent: a PYRO1_GATE_N open disables firing, and a Q124 gate-pin segment open is the same class as the Q121 note in D-R18-02."
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918 (worktree file and git show acba196 identical; probe copies identical).",
+  "git archive acba196 of m3_design/assembly_review and tools/m3_design/quality_audit into .supervisor/r19_safety/ (snap/, tools_committed/); no tracked file edited.",
+  "kicad-cli 10.0.7: schematic netlist export (netlist.xml); pcb drc --severity-all --schematic-parity on a copy: 0 violations, 0 unconnected, 0 parity (drc_a3144b15.json).",
+  "pcbnew 10.0.7 (bundled Python) read-only geometry export of a3144b15 and 632a9ad3 (scripts/export_geom.py); all distances by own numpy code (scripts/geomlib.py, dist.py), with no pcbnew collision helpers.",
+  "Own S-8: every plated barrel of 18 pyro / arming nets, per inner layer, wall to every foreign copper item plus hole-to-hole (s8_own_*.txt/json), on the saved fill and on a refilled copy (identical).",
+  "Gerber S-8: In1/In2 Gerbers from the committed fab zip parsed with X2 net attributes (scripts/gerber_s8.py, gerber_s8.json).",
+  "Committed check_r10.s8 at acba196 re-run on the snapshot, as shipped (passes, 10 barrels) and with GND hazardous for every barrel net (committed_s8.txt).",
+  "Adjacency inventory (outer < 0.5 mm, inner < 1.0 mm) for 15 nets on both boards, with diff (adjacency_*.json/txt).",
+  "ACT_GATE track exposure to GND at the pour clearance, before and after (act_gate_exposure.txt).",
+  "Single-open connectivity on native copper for ACT_GATE, ACT_FET_S, PYRO1_GATE, PYRO1_GATE_N, ACT_EN, ACT_DRV (open_faults.txt).",
+  "Nodal solve of the cold and powered sense readings for MID-corridor faults (sense_cases.txt).",
+  "Pairwise gap checks of every round 18 claim in this lens (pairgap.py).",
+  "BOM/CPL cross-check of 37 safety parts against the netlist; schematic text check of the battery_entry switch note.",
+  "Candidate CAD evaluation of the BAT_ENABLE via move and of a BAT_FAULT_N shift (rejected), against fixed copper (candidate_eval.txt).",
+  "Datasheet reads of cached maker PDFs (pdftotext): TPS25947, TPS2121, AO3400A, AON7524, AONR21357, AP6320x, STM32H743 DS12110 Rev 8."
+ ],
+ "sources": [
+  {
+   "what": "TPS25947 EN/UVLO thresholds, EN leakage, pin functions (AUXOFF, ITIMER)",
+   "where": "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C, rev. May 2026) p5-6, p9"
+  },
+  {
+   "what": "AO3400A VGS(th), IDSS (1 uA; 5 uA at 55 C), Ciss/Crss",
+   "where": "https://www.aosmd.com/res/datasheets/AO3400A.pdf (Rev 3.1) p2"
+  },
+  {
+   "what": "AON7524 VGS(th) 0.4/0.8/1.2 V, IGSS +/-10 uA, Crss 65 pF",
+   "where": "https://www.aosmd.com/res/datasheets/AON7524.pdf (Rev 1.1) p2"
+  },
+  {
+   "what": "AONR21357 VGS(th) -1.3/-1.7/-2.3 V, Ciss 2830 pF, Crss 365 pF",
+   "where": "https://www.aosmd.com/res/datasheets/AONR21357.pdf (Rev 2.1) p2"
+  },
+  {
+   "what": "TPS2121 OV1/OV2 absolute maximum 6 V",
+   "where": "https://www.ti.com/lit/ds/symlink/tps2121.pdf (SLVSEA3F) p6"
+  },
+  {
+   "what": "AP63203 supports PFM (light-load, non-sinking: Inference)",
+   "where": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (Nov 2024) p1"
+  },
+  {
+   "what": "PC14 I/O type FT",
+   "where": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 8) pin definition table p65"
+  },
+  {
+   "what": "MJG J-Tek 0.75 A all-fire / 0.30 A no-fire; F7 fire-loop allocation",
+   "where": "docs/REQUIREMENTS.md Operating assumptions (Igniters) and F7 at acba196"
+  },
+  {
+   "what": "Project records",
+   "where": "AGENTS.md; docs/REQUIREMENTS.md; docs/R10_VALIDATION.md (Round 18, deviation sections 1 and 9); docs/M3_R10.md; docs/ORDERING.md 8.3-8.4; docs/R10_VEHICLE_HANDOFF.md; R10_DECISIONS.md D-R18-01..10; round18_fix_cad.md; round18_safety.md/.json (all as committed at acba196)"
+  }
+ ],
+ "coverage_limits": [
+  "No firmware exists. The screen bands, the PC1 policy and switch-off annunciation are procedure statements, not executed code.",
+  "No bench, transient, leakage, CAF or ESD testing. Leak thresholds are static calculations against TPS25947 limits; the 3V3 back-drive current is an estimate (PFM non-sinking is Inference).",
+  "Fabricated hole size, registration and plating were not allocated (deviation row 9 stays open). Distances are nominal CAD values.",
+  "Surface pairs involving a tented via or a masked track need a mask breach to bridge. Probabilities are not quantified.",
+  "Inventory limited to 15 pyro / arming nets (outer < 0.5 mm, inner < 1.0 mm). Other nets were not swept. Double faults were only spot-checked.",
+  "Candidate CAD changes were checked against fixed copper only (pours assumed to re-flow); not built, not run through route_check or the full gate.",
+  "Datasheets are the cached maker PDFs listed; the MJG no-fire figure comes from the project record.",
+  "Other agents were editing docs, tools and the fab outputs in the worktree during the review; every quoted record and every fab file is the committed acba196 version.",
+  "No other round19 report or .supervisor/r19_* directory was opened."
+ ],
+ "probe_dir": ".supervisor/r19_safety/"
+}

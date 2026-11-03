@@ -1,0 +1,176 @@
+{
+  "schema": "r10-review-v1",
+  "review": "round20_power",
+  "reviewer": "claude",
+  "target_commit": "6628488cf34bf33bdf104cb4383fcbe447c5da65",
+  "board_sha256_before": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+  "board_sha256_after": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "findings": [
+    {
+      "id": "R20-PWR-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "The AUX allowance (and the U401 GAP-3 estimate) treats U401 alone in 70 C air: the 1.1 C margin is smaller than the unmodelled heating from U400 / L400 and the rest of the board; U400 has no junction estimate at all",
+      "evidence": {
+        "file": "m3_design/r10_parts.py power_budget(); sources/r10_design/parts_budget.json; R10_DECISIONS D-R19-14 \"AUX allowance\"",
+        "reproduced": "Loss (5.546-4.7115) x (0.46+0.10) + 5.546 x 0.004 = 0.4897 W; 70 + 110 x 0.4897 = 123.86 C; the 0.5 W floor gives AUX <= 112.6 mA. Arithmetic confirmed.",
+        "maker": "TPS7A91 SBVS282A p4: RthetaJA 62.5 C/W (DSK, JEDEC board, self-heating only), TJ recommended max 125 C; p6 Tsd 160 C (reset 140 C). AP63201 DS41326 Rev 3-2 p4: thetaJA 89 C/W (TSOT26, single-layer board); p5 RDS(on) 125 / 68 mohm; p12 \"should not exceed +125 C\".",
+        "geometry": "U401 B(27.6,13.6); L400 F(24.2,5.55), 8.7 mm away; U400 F(16.9,5.55), 13.3 mm away; all three share the In1 GND plane (3724 mm^2) that is U401s only heat path (two VIPPO vias).",
+        "neighbour_power": "Same allocation case (camera 1 A + ports 0.561 A from U400): U400 + L400 loss 1.18 W at 88 % / 1.48 W at 85 % / 2.16 W at 80 % (the budget itself uses 80-85 %); unshed logic + SD writes 1.38-2.23 W at the converter input, almost all dissipated on the board. Board total about 3-5 W (Calculation from the budget allocations).",
+        "board_rise": "46 x 90 mm, both faces 8280 mm^2; with h 8-12 W/m^2K (still bay air, convection plus radiation, Inference) the board-to-air resistance is 10-15 C/W, so the mean board rise is about 30-75 C above bay air in that case (Inference). U401 sees some fraction of this on top of its own theta-JA term; any fraction above 1.1 C breaks the 125 C floor at 110 C/W.",
+        "u400": "No U400 junction estimate exists (grep of M3_R10, R10_VALIDATION, parts_qualification). At 1.561 A, 7.4 V: conduction about 0.38 W hot (x1.4) + switching about 0.07 W = 0.46 W, rise about 41 C at 89 C/W; at the 1.811 A camera-at-limit case about 0.60 W, rise about 54 C, before neighbour heating (Calculation / Inference)."
+      },
+      "impact": "The 100 mA AUX allowance is presented as derived from the GAP-3 floor, but the floor is met only if U401 is the sole heat source on the board. With the camera on in a hot bay, U401 (and U400) can run above 125 C; at Tsd (160 / 140 C) U401 cycles and GPS, radio and AUX drop together (tracking / telemetry loss, not a pyro hazard). The real port draw is probably far below the allocation (radio 200 mA average by MicoAir), which is why this is Minor.",
+      "concrete_fix": "No CAD change. (1) State the port limit as the total PORT_4V8 current (GPS + radio + AUX <= 0.56 A, any split) rather than a per-port 100 mA, since the thermal term depends only on the total. (2) Label the 109.2-123.9 C figure \"U401 self-heating only\" and add a coupled-board term (or a U400 estimate) in parts_budget, or say plainly that no thermal margin is claimed. (3) Make the AUX allowance conditional on the first-article power-knot measurement: thermocouples on U401, U400 and L400 at the allocation loads (camera 1 A dummy, 0.56 A on PORT_4V8, SD writing) at 70 C chamber air, steady state; pass if the U401 / U400 case temperatures imply TJ <= 125 C."
+    },
+    {
+      "id": "R20-PWR-02",
+      "severity": "Minor",
+      "status": "new",
+      "title": "U401s regulation tap R402.1 hangs on the first OUT via only; if that via opens, the doubled feed keeps power on but the LDO runs open loop and PORT_4V8 rises to about PORT_5V3 (5.37-5.55 V) on all three ports",
+      "evidence": {
+        "copper": "R402.1 (PORT_4V8, FB top 49.9 k) F(30.575,12.6) joins PORT_4V8 only through F.Cu (29.75,12.6)->(30.575,12.6), w 0.4, to via (29.75,12.6). No other F.Cu PORT_4V8 copper reaches it; GPS_RX_MCU F.Cu (28.8,11.0)->(32.0,11.0) blocks a direct F.Cu link to the new (30.5,9.95) via.",
+        "seeded": "Copy with via (29.75,12.6) removed, kicad-cli 10.0.7 DRC: 1 unconnected item, R402.1 F.Cu stub versus the U401.1 B.Cu run. Removing (29.75,9.95) alone: 0 unconnected (power redundancy confirmed). DC solve U401 -> J410 / J420: via (29.75,12.6) carries 0.25 A of 0.3 A, (29.75,9.95) 0.05 A.",
+        "behaviour": "With R402.1 open, FB is pulled to GND by R403 10 k (TPS7A91 IFB <= 100 nA, SBVS282A p5), so the pass device saturates: PORT_4V8 = PORT_5V3 minus dropout (< 200 mV at 1 A, p5), about 5.2-5.55 V over the buck band 5.37-5.546 V (parts_budget buck_V).",
+        "module_limits": "Project records: MicoAir LR900 4.5-5 V, HGLRC M100 Mini 3.3-5 V (r10_plan O5; parts_qualification R8-MCU-02). An unregulated 5.2-5.55 V exceeds both stated maxima."
+      },
+      "impact": "The D-R19-09 second via turns an open (29.75,12.6) from \"all three ports dead\" into \"all three ports over-voltage\", which is silent on the bench unless PORT_4V8 is measured. A manufacturing-defect path (one open via), Minor.",
+      "concrete_fix": "Now (docs): add a first-article and pre-flight check: PORT_4V8 at J410.1 / J420.1 / J440.1 to GND reads 4.71-4.87 V on pack power (ORDERING 8.3), which screens both U401 OUT vias and the sense tap. At the next board change: give R402.1 its own PORT_4V8 tap that does not depend on the (29.75,12.6) barrel, e.g. move R402 so pad 1 lands on the F.Cu run near (30.5,9.95), or reroute GPS_RX_MCU so a 0.2 mm F.Cu link (30.5,9.95)->(30.575,12.6) fits."
+    },
+    {
+      "id": "R20-PWR-03",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Two documents say the ports are off during hold-up because U11 blocks reverse current; the TPS2121 lets up to 0.2-2 A back-feed before it blocks, and the budget (correctly) assumes C84 does carry the ports",
+      "evidence": {
+        "statements": "docs/M3_R10.md line 323-324 (\"They are off ... during the hold-up interval after the switch opens, because TPS2121 U11 blocks reverse current into RAW_PROTECTED\"); docs/R10_VALIDATION.md line 1924 (\"during hold-up after the switch opens, PORT_4V8 is off while the MCU runs (U11 blocks reverse current)\").",
+        "contrary": "parts_budget.json battery_break_ride_through_note: \"No credit for RAW_PROTECTED capacitance or U11 reverse blocking\"; r10_parts.py comment: \"C84 on VLOGIC back-feeds RAW_PROTECTED through U11 (TPS2121 reverse blocking only above IRCB 0.2 / 1 / 2 A)\"; parts_qualification.md line 762. The 0.464-0.539 ms ports-on hold-up figure exists only because the ports are assumed to stay on.",
+        "maker": "TPS2121 SLVSEA3F p8: IRCB fast reverse current detection 0.2 / 1 / 2 A (VOUT > VINx), tRCB 10 us; section 9.3.6. The ports-on reverse demand is about 11.2-13.1 W / 6-7 V = 1.6-2.2 A, inside the detection spread."
+      },
+      "impact": "Firmware and bench readers get two contradictory models of the same interval: the TX-parking rule (R18-m07, R19-MCU-01) and the hold-up time both depend on whether PORT_4V8 is live then. Documentation defect only; the conservative number is the one used.",
+      "concrete_fix": "Reword both lines: \"On USB-only power the ports are off (U11s IN2 channel is off). After the switch opens, C84 may back-feed RAW_PROTECTED through U11 until the reverse current exceeds IRCB (0.2-2 A), so the ports may stay powered for part or all of the hold-up; the budget assumes they do.\""
+    }
+  ],
+  "fix_verification": [
+    {
+      "d_id": "D-R19-09 (C84 hold-up)",
+      "claim": "Second VLOGIC via (29.8,81.15) in parallel with (29.5,82.05)",
+      "measurement": "Seeded removal of either via: 0 unconnected; both: C84.1 isolated. DC U11 -> C84 25.9 mohm, vias share 0.56 / 0.44 A of 1 A. In2 walls 0.250 mm (RAW_PROTECTED) / 0.251 mm (3V3), In1 GND 0.250 mm.",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-09 (U402 IN)",
+      "claim": "Second PORT_5V3 via (42.75,61.8)",
+      "measurement": "Removal of either via: 0 unconnected; both: U402.1 isolated. Both vias in the In2 PORT_5V3 fill.",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-09 (U401 IN)",
+      "claim": "Second PORT_5V3 via (26.45,11.95)",
+      "measurement": "Removal of (25.9,8.6) or (26.45,11.95): 0 unconnected; both: U401 IN / C405 isolated. DC L400 -> U401 IN 6.08 mohm; (26.45,11.95) carries 0.45 of 0.6 A.",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-09 (U401 EN)",
+      "claim": "Second PORT_5V3 via (24.9,14.9)",
+      "measurement": "Removal of either: 0 unconnected; both: U401.7 isolated. (24.9,14.9) In2 wall to 3V3 0.550 mm.",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-09 (U401 OUT)",
+      "claim": "Second PORT_4V8 via (29.75,9.95)",
+      "measurement": "Power: removal of (29.75,9.95) 0 unconnected; of both (29.75,12.6) and (29.75,9.95), In2 PORT_4V8 isolated from U401. But removal of (29.75,12.6) alone isolates R402.1 (the FB tap): R20-PWR-02.",
+      "verdict": "partly"
+    },
+    {
+      "d_id": "D-R19-14 (J440 feed)",
+      "claim": "Two vias (29.75,9.95) and (30.5,9.95); 0.4 mm F.Cu, about 28 mohm, 8.5 mV at 300 mA",
+      "measurement": "Removal of either via: 0 unconnected; both: J440 run isolated. DC U401 -> J440.1 29.92 mohm, 9.0 mV at 0.3 A; IPC-2152 0.4 mm / 35 um: 0.07 C at 0.1 A, 0.59 C at 0.3 A, 23.7 C at the 1.9 A LDO limit (short, transient).",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-14 (AUX allowance)",
+      "claim": "U401 junction <= 125 C at 70 C with 110 C/W allows 112 mA; 100 mA documented",
+      "measurement": "Arithmetic reproduced (0.4897 W, 123.86 C, 112.6 mA); basis omits neighbour / board heating (R20-PWR-01).",
+      "verdict": "partly"
+    },
+    {
+      "d_id": "D-R19-14 (ride-through)",
+      "claim": "Ports-on 0.464-0.539 ms at 300.8 uF to 3.8 V; camera off 1.304-1.412 ms",
+      "measurement": "Reproduced: 0.5 x 300.8 uF x (7.4^2-3.8^2) = 6.064 mJ over 13.064 / 11.249 W = 0.464 / 0.539 ms. Conservative (no U11 blocking credit); docs contradict the model (R20-PWR-03).",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-10 (C87 220 nF)",
+      "claim": "tau 50 ms; turn-on 88 / 56 / 45 ms; drop-out ride-through 19 / 33 / 41 ms (worst 12 / 22 / 27)",
+      "measurement": "Thevenin 940 k || 300 k = 227.4 k, x 220 nF = 50.0 ms; turn-on to 1.20 V 87.6 / 55.5 / 44.6 ms at 6.0 / 7.4 / 8.4 V; discharge 300 k x 220 nF = 66 ms, to 1.09 V 19.2 / 32.7 / 41.2 ms (TPS25947 SLVSFC9C p9 thresholds). Worst 12 ms at 6.0 V leaves 1.2x over the F6 10 ms criterion (was about 12x): the F6 vibration chatter test now carries the margin.",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-04 (C123)",
+      "claim": "C123 10 nF on ACT_EN; fire path untouched",
+      "measurement": "Copper diff vs a3144b15: RAW_ACT, BAT_IN, PYRO1_IGN, ACT_FET_S, BAT_SW_* unchanged; only the ACT_EN stub and the C123 GND run added. GND fire return Q124 -> J1.2: 0.69 mohm at 0.1 mm grid over window x 0-46, y 45-90 (round 19: 0.88 mohm, window not compared); 1.1 mV at 1.6 A.",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-02 (BAT_ENABLE via)",
+      "claim": "Via moved (19.675,66.4) -> (19.675,66.6)",
+      "measurement": "Copper diff shows exactly this move and the B.Cu run (21.0,67.925); no power-net copper changed.",
+      "verdict": "confirmed"
+    },
+    {
+      "d_id": "D-R19-07 (C84 no paste)",
+      "claim": "C84 pads without F.Paste",
+      "measurement": "Both C84 pads report no paste layer; pad nets VLOGIC / GND unchanged. Note C84.2 joins the F.Cu GND fill solid (THT_THERMAL zone mode), so the hand fit heats a plane-tied pad; the separately validated operation already covers this.",
+      "verdict": "confirmed"
+    }
+  ],
+  "fix_now_recommendations": [
+    {
+      "id": "R20-PWR-02",
+      "change": "Docs / procedure only: add the PORT_4V8 4.71-4.87 V check at J410.1, J420.1 and J440.1 on pack power to ORDERING 8.3 first-article and pre-flight steps. No CAD change now (the F.Cu link is blocked by GPS_RX_MCU)."
+    },
+    {
+      "id": "R20-PWR-03",
+      "change": "Reword docs/M3_R10.md line 323-324 and docs/R10_VALIDATION.md line 1924 as given in the finding."
+    }
+  ],
+  "rejected_or_closed_candidates": [
+    "Second-via spots at U11.2 and the two 3V3A feeds: single vias confirmed by seeded removal (U11: 2 unconnected); already disclosed as respin items with measured reasons, not refiled.",
+    "J440.1 (PORT_4V8) barrel 0.550 mm from In2 3V3: same as J9.1 CAM_5V; standard clearance, not a pyro barrel (S-8 does not apply).",
+    "New VLOGIC vias at 0.250 mm to In2 RAW_PROTECTED / 3V3 and In1 GND: same as the existing (34.5,63.0); JLC-legal, DRC 0.",
+    "U401 soft-start inrush with C445 added: CNR/SS 10 nF, SS_CTRL = GND, INR/SS 4.0-9.0 uA (SBVS282A p5): ramp 0.89-2.0 ms; about 110 uF of board ceramics plus module caps give < 1 A, below the 1.45 A foldback.",
+    "IPC-2152 on the changed runs: U402 IN 0.4 mm B.Cu 10.25 C at 1.25 A; VLOGIC trunk 6.6 C at 1 A; U401 OUT 2.1 C at 0.56 A. Acceptable.",
+    "Hot-plug: the 2304-case model was not rerun; the D-R19-10 / -14 changes only add retained-output capacitance (C444, C445, C123) and C87 shrinks; BAT_IN, C88, R166, U9 and D8 copper are byte-unchanged in the copper diff.",
+    "L1.2 / 3V3 bridge via (26.4,79.26): seeded removal leaves 0 unconnected, as recorded."
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of the committed board (git archive 6628488) before and after: 50a39de5...",
+    "kicad-cli 10.0.7 DRC on a probe copy with the project rules: 0 violations, 0 unconnected.",
+    "Seeded via removals on probe copies (24 variants), DRC unconnected count for each: VLOGIC, U402 IN, U401 IN / EN / OUT, J440 feed, U9 OUT, L400 OUT, U11.2, L1 bridge.",
+    "Native pcbnew copper diff of power nets against 1e60441 (board a3144b15).",
+    "tools/dc_solve.py (committed) at 0.1 mm: U401 -> J410 / J420 / J440, L400 -> U401 IN, U11 -> C84, GND Q124 -> J1.2.",
+    "Barrel-wall-to-foreign-inner-copper scan for every power-net hole.",
+    "IPC-2152 fit (tools/ipc2152.py) on the changed runs.",
+    "Recalculation of D-R19-10 RC timing, the AUX thermal floor, the ride-through and an AP63201 loss estimate from maker tables."
+  ],
+  "sources": [
+    "https://www.ti.com/lit/ds/symlink/tps7a91.pdf (SBVS282A, cached copy): p4 thermal information and recommended TJ, p5 ILIM / IGND / INR/SS / IFB, p6 Tsd, p3 pin functions",
+    "https://www.ti.com/lit/ds/symlink/tps2121.pdf (SLVSEA3F): p8 IRCB / VRCB / tRCB, section 9.3.6",
+    "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C): p9 EN thresholds",
+    "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (DS41326 Rev 3-2, cached copy): p4 thetaJA 89 C/W, p5 RDS(on), p12 thermal derating",
+    "Project records for module supply ranges: r10_plan.md O5 (LR900 4.5-5 V, M100 Mini 3.3-5 V), parts_qualification.md R8-MCU-02"
+  ],
+  "coverage_limits": [
+    "No thermal simulation or measurement; board-rise and U400 figures are Calculation / Inference from maker tables and allocation loads.",
+    "Hot-plug transient model not rerun.",
+    "DC solves at room-temperature copper and 20 um plating; no transient or SPICE work.",
+    "Module input ranges taken from the project records, not re-read from the maker pages.",
+    "Working-tree edits after 6628488 not reviewed."
+  ]
+}

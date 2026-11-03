@@ -1,0 +1,10 @@
+{
+  "U1.40": [
+    "IMU_INT1",
+    "unconnected-(U1-PE10-Pad40)"
+  ],
+  "U1.98": [
+    "unconnected-(U1-PE1-Pad98)",
+    "IMU_INT1"
+  ]
+}

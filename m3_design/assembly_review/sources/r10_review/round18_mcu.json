@@ -1,0 +1,226 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round18_mcu",
+ "reviewer": "claude",
+ "lens": "MCU pin map and interfaces",
+ "target_commit": "dcbb6c8f040b7012f78934e1caf1b401db84d356",
+ "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 4
+ },
+ "findings": [
+  {
+   "id": "R18-MCU-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "PC1 pyro-bus enable: R123 100 kOhm does not dominate an STM32 weak pull-up (PE4's R127 does)",
+   "evidence": {
+    "files": [
+     "m3_design/assembly_review/m3.kicad_pcb (native pcbnew read)",
+     "fresh kicad-cli 10.0.7 schematic netlist (probe copy)",
+     "m3_design/assembly_review/sources/r10_design/pin_table.tsv line 17 (pin 16)"
+    ],
+    "circuit": "U1.16 PC1 pad F(24.50,50.55) -> ACT_EN_MCU (24.574 mm F.Cu, 0 vias) -> R122 1k F(19.6,69.8) -> ACT_EN -> Q122 AO3400A gate F(16.8,69.8); R123 100k 0402WGF1003TCE/C25741 F(20.6,70.66) ACT_EN-GND. Q122 drain ACT_DRV -> R121 10k F(14.5,71.87) -> ACT_GATE of Q120/Q121 AONR21357 B(13.5,73.6)/B(13.5,68.6), R120 100k B(18.5,72.6) and C120 1uF B(17.1,72.53) gate-source.",
+    "measured_value": "With a PC1 internal pull-up enabled: V(ACT_EN)=VDD*R123/(R123+R122+RPU) = 2.185/2.340/2.519 V at VDD 3.3 V and RPU 50/40/30 kOhm (2.748 V at 3.6 V, 30 kOhm). AO3400A VGS(th) 0.65/1.05/1.45 V -> Q122 on -> AONR21357 Vgs about -6.7..-7.6 V (VGS(th) -1.3..-2.3 V) -> RAW_ACT energised. Comparison PE4: R127 1k at U1.3 gives pin 0.106 V / gate 0.104 V at 3.6 V, 30 kOhm, below AON7524 VGS(th) min 0.4 V.",
+    "reset_state": "GPIOs are analog (no pull) after reset: DS12110 Rev 8 section 3.8 p32, so AGENTS section 2.4 (defined off in reset/unpowered) is met.",
+    "non_gpio_paths": "PC1 also carries RTC_TAMP3/WKUP5 additional functions (DS12110 Rev 8 Table 9 p67); RTC/TAMP is backup-domain state that survives NRST while VBAT is tied to 3V3. Whether these functions apply a pull or tamper precharge that overrides the GPIO configuration and GPIOC_LCKR is RM0433 behaviour not re-read here: Inference.",
+    "maker": [
+     "ST DS12110 Rev 8 (April 2021; allowed cache .supervisor/r14_parts_pdf/st_h743.pdf, current URL https://www.st.com/resource/en/datasheet/stm32h743vi.pdf): Table 157 p246 RPU 30/40/50 kOhm; section 3.8 p32; Table 9 p67 (PC1 FT_ha, TRACED0, RTC_TAMP3/WKUP5)",
+     "AOS AO3400A Rev 3.1 p2 VGS(th) 0.65/1.05/1.45 V, RDS(on) <=48 mOhm at 2.5 V (https://www.aosmd.com/res/datasheets/AO3400A.pdf)",
+     "AOS AONR21357 Rev 2.1 p2 VGS(th) -1.3/-1.7/-2.3 V (https://www.aosmd.com/res/datasheets/AONR21357.pdf)",
+     "AOS AON7524 Rev 1.1 p2 VGS(th) 0.4/0.8/1.2 V, RDS(on) <=5.8 mOhm at 2.5 V (https://www.aosmd.com/res/datasheets/AON7524.pdf)"
+    ]
+   },
+   "impact": "A single configuration error (a pull-up applied before the GPIOC_LCKR lock, a debugger register write, or a tamper/wakeup function on PC1) switches the pyro bus RAW_ACT on behind the screw switch, up to R134/J121.2. Firing still needs the independent PE4/Q124 path, so no single-fault fire is shown, but the two independent firing controls do not have the same hardware dominance. Not an AGENTS section 2 violation.",
+   "concrete_fix": "Change R123 from 100 kOhm to 2 kOhm using the BOM line already fitted for R130/R133/R178/R180 (UNI-ROYAL 0402WGF2001TCE, LCSC C4109), same R0402 land at F(20.6,70.66) rot -90, no copper change. Result: pull-up case gate <=0.218 V (3.6 V, 30 kOhm) against 0.65 V minimum threshold; PC1 high gives 2.2 V gate (above 1.45 V maximum threshold) at 1.1 mA PC1 load. Update the PC1 reset contract text, generator/S-3 expected value, parts_budget, BOM/CPL/manifest and binding provenance. Add a firmware obligation: never enable a PC1 pull-up, RTC_TAMP3 or the PWR wakeup function on PC1; keep the existing lock/readback."
+  },
+  {
+   "id": "R18-MCU-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "USB-only power (and switch-off hold-up) leaves PORT_4V8 off while the binding requires GPS/radio TX idle-high: the MCU back-drives both unpowered modules through 1 kOhm",
+   "evidence": {
+    "files": [
+     "m3_design/assembly_review/m3.kicad_pcb (native)",
+     "m3_design/assembly_review/sources/r10_design/r10_binding_note.json port_states.startup and firmware_obligations ('PC6/PB13 idle-high')",
+     "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md 'Always-on ports' ('ports powered whenever the board is on'), D-AUD-08, D-AUD-09",
+     "docs/M3_R10.md single-switch section ('Bench work uses USB with the pack disconnected')",
+     "docs/ORDERING.md section 8.3 ('GPS/radio stay powered')"
+    ],
+    "power_tree": "U400 AP63201 F(16.9,5.55) VIN pins 2/3 = RAW_PROTECTED is the only source of PORT_5V3 -> U401 TPS7A9101 B(27.6,13.6) -> PORT_4V8 -> J410.1 F(38.6,15.5) / J420.1 F(38.6,31.5). U11 TPS2121 B(24.65,64.5): IN1 pin 2 RAW_PROTECTED, IN2 pin 7 USB_LIMITED (U10 from VBUS), OUT pins 1/8 VLOGIC -> U2 -> 3V3. TPS2121 reverse-current blocking keeps RAW_PROTECTED off on USB-only power, so 3V3/MCU run while PORT_4V8 = 0.",
+    "drive_path": "U1.63 PC6 F(23.0,35.45) GPS_TX_MCU -> R441 1k B(34.0,13.75) -> J410.3 TXO (D410 ESD103 B(35.75,12.3) to GND only); U1.52 PB13 F(28.5,35.45) RADIO_TX_MCU -> R451 1k B(34.0,29.75) -> J420.3 TXO (D420 B(35.75,31.2)).",
+    "measured_value": "About (3.3 - 0.6)/1 kOhm = 2.7 mA per TX line into each unpowered module's RX clamp (Calculation; module input structure unmeasured: Inference), two modules, for the whole USB-only session and for the C84 hold-up interval after the switch opens.",
+    "record_gap": "D-AUD-08 accepted only an erroneous OE-high feeding an unpowered module and required 'firmware must hold OE low whenever its port is off'; with the GPS/radio translators removed there is no successor rule, and the records assume the ports are powered whenever logic runs.",
+    "maker": [
+     "u-blox MAX-M10S Integration manual UBX-20053088 R05 section 3.6.3.1 p46: 'As V_IO is not supplied, the PIOs cannot be driven by an external host processor. If driving of the PIOs cannot be avoided, buffers are required for isolating the PIOs.' (https://content.u-blox.com/sites/default/files/MAX-M10S_IntegrationManual_UBX-20053088.pdf; the HGLRC M100 Mini being M10-based is Inference)",
+     "TI TPS2121 SLVSEA3F features p1 and section 7.5 p8 (fast reverse-current blocking); section 9.4/9.5 pp17-18: ST pulled low when IN2 powers the output (https://www.ti.com/lit/ds/symlink/tps2121.pdf)"
+    ]
+   },
+   "impact": "Every USB-only bench or log-download session with the modules wired to J410/J420 (the installed configuration that D-AUD-09 keeps) back-powers both modules through their RX pins, against the GPS maker's guidance; unpowered-module behaviour (partial power, latch-up, configuration state) is unqualified. No MCU overstress (the MCU is the source) and current is bounded by 1 kOhm, so Minor (record and firmware-obligation gap).",
+   "concrete_fix": "Records and firmware obligations only, no CAD: (1) keep PC6/PB13 analog with no pull (or GPIO low) and USART6/UART5 disabled unless the ports are powered; with no direct PORT_4V8 sense, use PA4/LOGIC_SOURCE_ST high (TPS2121 IN1 selected) plus a settling delay as the proxy, and park PC6/PB13 in analog on PA4 falling or at the PA6 shedding trigger; (2) correct 'ports powered whenever the board is on' / 'GPS/radio stay powered' to exclude USB-only power and switch-off hold-up; (3) ORDERING section 8.3: for USB-only work either disconnect the J410/J420 module leads or verify J410.3/J420.3 stay near 0 V, and characterise module behaviour. Optional future CAD: a PORT_4V8 divider into a spare NC ADC pin (PA7 or PC4) for direct port-power sensing."
+  },
+  {
+   "id": "R18-MCU-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "PE4 fire-control record in the sole MCU map is the least explicit: active-low-looking net name, no polarity, no 'initialise low', stale R7 contract",
+   "evidence": {
+    "files": [
+     "m3_design/assembly_review/sources/r10_design/pin_table.tsv line 4 (pin 3: r10_net PYRO1_GATE_N, mode_af 'GPIO out', reset_contract 'as R7 (pass1/2/3_electrical, M3_R7 pin contract)')",
+     "m3_design/assembly_review/sources/r10_design/r10_binding_note.json u1_pins['3'] = {PE4, PYRO1_GATE_N, 'GPIO out'}"
+    ],
+    "comparison": "PC1 (pin 16) reads 'GPIO out (push-pull; initialise low before output mode)'; PD0 (pin 81) 'initialise high'. Other _N nets on this board (BAT_FAULT_N, USB_FAULT_N, CAM_FAULT_N) are active-low.",
+    "circuit": "U1.3 F(18.0,50.55) -> PYRO1_GATE_N (5.06 mm, 0 vias) -> R126 220R F(17.0,54.24) -> PYRO1_GATE -> Q124 AON7524 F(13.9,57.37) gate (source GND, drain PYRO1_OUT = J121.1); R127 1k F(19.8,54.24) at the pin; R128 10k F(18.3,57.41) and C126 220nF F(16.85,57.67) gate-source. PE4 HIGH turns Q124 on (fire).",
+    "measured_value": "Polarity is only implied elsewhere ('PE4 low before GPIO configuration'; schematic note 'Refresh IWDG immediately before PE4 rises').",
+    "maker": [
+     "ST DS12110 Rev 8 (April 2021; allowed cache .supervisor/r14_parts_pdf/st_h743.pdf, current URL https://www.st.com/resource/en/datasheet/stm32h743vi.pdf): Table 9 p64 (PE4 FT_h, AF0 TRACED1); Table 14 p95"
+    ]
+   },
+   "impact": "audit 2 item 11 makes this table the sole complete MCU map. Reading the _N suffix by the board's own convention would make PE4 high the inactive state at initialisation, a fire command whenever the board (and so the pyro channel) is on. The firmware obligations and dummy-load bench tests mitigate it; documentation defect, Minor.",
+   "concrete_fix": "Text only, no CAD: pin_table pin 3 mode_af -> 'GPIO out push-pull; ACTIVE-HIGH fire command (PE4 high turns Q124 on); set ODR low before output mode; lock GPIOE_LCKR'; reset_contract -> 'R127 1k to GND at the pin, R126 220R series, R128 10k + C126 220nF gate-source: off in reset/unpowered and against a 30 kOhm internal pull-up (gate <=0.104 V)'; mirror in binding u1_pins['3'] and refresh text provenance. Rename the net (for example PYRO1_FIRE_MCU) at the next CAD change."
+  },
+  {
+   "id": "R18-MCU-04",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R17-MCU-01",
+   "title": "VCAP C19/C20 operating capacitance/ESR not qualified (nominal selection passes)",
+   "evidence": {
+    "files": [
+     "m3_design/assembly_review/m3.kicad_pcb (native)"
+    ],
+    "parts": "C19 B(28.35,37.65) VCAP1/U1.48 (pad-to-pad 2.44 mm), C20 B(19.8,37.3) VCAP2/U1.73 (2.15 mm): Samsung CL10A225KO8NNNC / C23630, 2.2 uF +/-10% X5R 16 V 0603, each alone on its VCAP net.",
+    "measured_value": "Nominal 1.98-2.42 uF meets 2.2 uF +/-20% (1.76-2.64 uF); at about 1.0-1.35 V bias and moderate board temperature the part stays in range (Inference); only stacked corners (initial -10%, full X5R TCC, ageing) reach about 1.68 uF.",
+    "maker": [
+     "ST DS12110 Rev 8 (April 2021; allowed cache .supervisor/r14_parts_pdf/st_h743.pdf, current URL https://www.st.com/resource/en/datasheet/stm32h743vi.pdf): Table 124 p216 (CEXT 2.2 uF, +/-20% tolerated, ESR <100 mOhm); Figure 68 p211 (2 x 2.2 uF)"
+    ]
+   },
+   "impact": "Qualification residual only; no regulator instability demonstrated. Already recorded under D-R15-02.",
+   "concrete_fix": "No CAD change now. Keep D-R15-02 and qualify fitted parts (or select an X7R 2.2 uF part at a future revision)."
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R18-MCU-01",
+   "type": "CAD value swap (BOM/CPL/check updates, no copper change)",
+   "change": "R123 100 kOhm (C25741) -> 2 kOhm UNI-ROYAL 0402WGF2001TCE / LCSC C4109 (existing BOM line), same R0402 land F(20.6,70.66) rot -90.",
+   "benefit": "PC1 off-state holds against a 30 kOhm internal pull-up at 3.6 V (gate 0.218 V vs 0.65 V min threshold) while PC1 high still gives 2.2 V gate; matches PE4's existing dominance."
+  },
+  {
+   "finding": "R18-MCU-03",
+   "type": "record only (no CAD)",
+   "change": "pin_table.tsv pin 3 and binding u1_pins['3']: state ACTIVE-HIGH fire polarity, 'set ODR low before output mode', LCKR lock, and the current R127/R126/R128/C126 reset contract instead of 'as R7'.",
+   "benefit": "Removes the active-low misreading of the most safety-critical pin in the sole MCU map."
+  },
+  {
+   "finding": "R18-MCU-02",
+   "type": "record / firmware obligation only (no CAD)",
+   "change": "Add the 'park PC6/PB13 when ports are unpowered (PA4 proxy)' obligation, correct the always-powered premise for USB-only and hold-up, and add the ORDERING section 8.3 USB-only step.",
+   "benefit": "Stops routine back-powering of the GPS/radio during USB-only bench and log-download work."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "R17-MCU-02 BOOT0-low overstatement",
+   "disposition": "closed",
+   "reason": "pin_table.tsv line 25 (PA2) now states BOOT0 low selects BOOT_ADD0 and requires user-flash BOOT_ADD0 readback (AN2606 Rev70 Pattern10); R10_VALIDATION section 5 and ORDERING section 8.3 carry the readback/loader-preparation obligation."
+  },
+  {
+   "candidate": "Always-on GPS/radio TX injecting into an unpowered MCU",
+   "disposition": "rejected as a hardware defect (computed within ST ratings)",
+   "reason": "PC7 is FT_h and PB12 FT_u (DS12110 Rev 8 Table 9 pp74/78). With VDD=VDDA=VBAT=0 the FT absolute limit is Min(supplies)+4.0 = 4.0 V (Table 119 p212); a 3.3 V module output is inside it and Table 120 note 3 p213 states positive injection does not occur below that limit, so injected current is 0 mA (leakage is specified only for powered supplies, <=1.5 uA FT_xx / <=5 uA FT_u, Table 157 p246). 5 uA into the >=20 kOhm static 3V3 load (R62+R63) is <=0.1 V: VDD cannot be raised toward POR. The camera path is translator-isolated (TXU0202 partial power-down). Note: this window is not only the self-powered-module case: U11's 470 nF CSS sets roughly 0.17 V/ms VLOGIC slew (TI SLVSEA3F Table 9-1 p13, interpolated: Inference), so PORT_4V8 rises tens of ms before 3V3 at every battery power-up. Still within ratings provided module VOH <=3.6 V operating / 4.0 V absolute; the existing 'measure endpoint TX levels' obligation covers it."
+  },
+  {
+   "candidate": "PE4 inrush into R126/C126 exceeds the per-pin limit",
+   "disposition": "rejected",
+   "reason": "Peak with C126 discharged <=3.366 V/(220||1000 Ohm)=18.67 mA for an ideal driver (3V3 +2%), about 14.3-15.7 mA with a 30-50 Ohm driver (Inference), below the 20 mA IIO absolute limit (Table 120 p213); decays with tau about 47 us. Steady load 3.6 mA; gate >=2.84 V at VOH 2.9 V, AON7524 fully enhanced (RDS(on) <=5.8 mOhm at 2.5 V)."
+  },
+  {
+   "candidate": "PE4 pull dominance",
+   "disposition": "rejected (passes)",
+   "reason": "R127 1 kOhm at the pin holds the gate at <=0.104 V against a 30 kOhm pull-up at 3.6 V; reset-HiZ gate discharge tau 241.7 us, 502.5 us from 3.2 V to 0.4 V, inside the 1.5 ms tail allocation."
+  },
+  {
+   "candidate": "HSE load capacitors / startup margin",
+   "disposition": "rejected (passes); drive level noted",
+   "reason": "Y1 NDK NX3225GA STD-CRG-2 CL 8 pF, ESR <=50 Ohm (20-50 MHz), drive 10 uW typ / 200 uW max; pads 1/3 diagonal, 2/4 GND. C25/C26 10 pF C0G give 5 pF + 3-5 pF stray = 8-10 pF. gm_crit = 4*ESR*(2*pi*F)^2*(C0+CL)^2 = 0.49-0.71 mA/V (C0 2 pF assumed: Inference) vs Gm_critmax 1.5 mA/V (Table 141 p234). Observation: with a maximum-ESR crystal and a near-rail OSC_IN swing the AN2867-style drive-level estimate reaches about 242 uW (88.8 uW at 2 Vpp): add an OSC_IN amplitude / drive-level measurement to the existing HSE bench check; no Rext is fitted."
+  },
+  {
+   "candidate": "VBUS_SENSE = VBUS/2 threshold and USB hot-plug on an unpowered MCU",
+   "disposition": "rejected",
+   "reason": "Design-guaranteed VIH = 0.47*VDD+0.25 = 1.80 V at 3.3 V (Table 157 p246), so detection is guaranteed for VBUS >= 3.6 V; the binding's 0.7*VDD (4.62 V) criterion is conservative and its 'low PC8 is not proof of no USB' rule stays correct. USBLC6-2SC6 (VBR >= 6 V, Rd 0.5 Ohm) bounds VBUS ringing so PC8 stays near or below 3.3 V, inside the 4.0 V unpowered FT limit."
+  },
+  {
+   "candidate": "VREF+ tied to 3V3A versus VREFBUF",
+   "disposition": "rejected as a hardware defect; record note",
+   "reason": "VREF+ (U1.20) and VDDA share 3V3A via R164 2.2 Ohm with C21/C22 and 2 x 22 uF. VREFBUF's reset state is external-reference/high-impedance (RM0433, not re-read: Inference). The binding note has no 'never enable VREFBUF or clear HIZ' line; worth adding beside the LSEON rule, but no failure follows from the default configuration."
+  },
+  {
+   "candidate": "Analog sense pins over-voltage/injection",
+   "disposition": "rejected (normal ranges); single faults already recorded",
+   "reason": "PC0 FT_a and PC5 TT_a read 10.2k/1k dividers (8.4 V -> 0.75 V); PA6 FT_a 100k/10k (0.764 V); PB1 TT 10k/1k; PC3_C ANA TT_a 10k/10k (1.65 V) on ADC3_INP1. All below the 4.0 V TT/analog limit with VDD present or absent; single-fault cases are already owner deviations (R5-MCU-04). Table 156 p245 lists 0 mA negative-injection functional susceptibility for PA2/PA6/PE7/PE8/PE11; their sources (servo output, VLOGIC divider, TXU0202 A side, camera EN) do not go negative in normal operation."
+  },
+  {
+   "candidate": "ESD on external MCU lines",
+   "disposition": "rejected (topology correct)",
+   "reason": "GPS/radio/camera: ESD103-B1-02EL (VRWM +/-15 V, VCL 20/36/48 V at TLP 1/8/16 A, IEC 61000-4-2 +/-10 kV contact; Infineon Rev 1.3) on the wire side, then 1 kOhm to the MCU (or TXU0202): <=~48 mA for ~100 ns into the pin. Servos: 1 kOhm toward J122, SRV05-4 on the MCU side with VCC on 3V3. USB: USBLC6-2SC6. Installed ESD survival remains a recorded bench item."
+  },
+  {
+   "candidate": "Supply pins and decoupling",
+   "disposition": "rejected (passes)",
+   "reason": "Five VDD + VBAT on 3V3 with a 100 nF at each: U1.100 C13 0.91 mm, U1.6 C18 1.60 mm, U1.11 C14 1.61 mm, U1.27 C15 1.65 mm, U1.75 C17 2.03 mm, U1.50 C100 3.06 mm (C23 4.7 uF at 2.66 mm); pad-centre distances; VDDA/VREF+ on 3V3A with C21 100 nF (1.47-1.76 mm) and C22 1 uF (2.55-2.60 mm); VCAP 2 x 2.2 uF; VSS/VSSA on GND. Matches DS12110 Figure 68 p211 (N x 100 nF + 4.7 uF; VDDA/VREF+ 100 nF + 1 uF). LQFP100 has no VDD33USB pin (internally VDD; DS12110 Rev 8 section 2 p18 'dedicated USB supply inputs on all packages except LQFP100' and the Figure 5 revision-history note). BOOT0 R5 10 kOhm: 15 uA max BOOT0 leakage gives <=0.15 V vs VIL 0.73 V. NRST C24 100 nF per Figure 76 p253."
+  },
+  {
+   "candidate": "Pin map / AF / ADC / package errors",
+   "disposition": "rejected (no error found)",
+   "reason": "Symbol names match DS12110 Rev 8 Figure 5 p55 for 100/100 pins; footprint is CCW at 0.5 mm with pin 1 at F(17.0,50.55); 28 AF assignments match Tables 10-14 pp89-95; ADC: PC0 ADC123_INP10, PC5 ADC12_INP8, PA6 ADC12_INP3, PB1 ADC12_INP5, PC3_C ADC3_INP1 (Table 9). PA6 analog watchdog on ADC1/2 is feasible and leaves ADC2/ADC3 for the other channels. LCSC C5271084 = STM32H743VIT6TR LQFP-100 14x14."
+  },
+  {
+   "candidate": "SRV05-4 VCC on 3V3 as a back-feed path",
+   "disposition": "observation, not a finding",
+   "reason": "With the pack powering the servos and the board off, a servo whose signal input has an internal pull-up could feed 3V3 through R15x 1 kOhm and the SRV05-4 steering diode (about 0.4 mA per 10 kOhm pull-up: Inference). No MCU injection (FT pins) and the rail stays far below POR; include in the existing back-feed bench characterisation."
+  },
+  {
+   "candidate": "Brown-out reset level",
+   "disposition": "firmware choice, not a hardware finding",
+   "reason": "LQFP100 ties PDR_ON to VDD; option-byte BOR levels VBOR1-3 fall at 1.95-2.68 V (Rev 8 rev-V table). Running below 2.7 V takes the W25Q128JV and SD card out of their supply range, so the BOR choice belongs in the future 'relevant boot settings' readback; the F6 shedding stops writes earlier."
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: 632a9ad3... unchanged; git status shows no tracked change from this review.",
+  "Native pcbnew (KiCad 10.0.6 API) dump of 209 footprints, 164 nets and 651 numbered pad-net pairs (probe .supervisor/r18_mcu/board_dump.json).",
+  "kicad-cli 10.0.7 schematic netlist export on a probe copy: 651/651 reference-pin nets equal to the board; 0 mismatches.",
+  "pin_table.tsv r10_net vs native U1 pads: 100/100; binding u1_pins: 100/100; binding board/netlist/pin-table/circuit SHA-256 recomputed and equal.",
+  "U1 symbol pin names vs an independent DS12110 Rev 8 Figure 5 transcription: 100/100. Footprint pad sequence CCW, 0.5 mm pitch, pin 1 at F(17.0,50.55).",
+  "28 AF assignments vs DS12110 Rev 8 Tables 10-14; 5 ADC channel claims and I/O structure types vs Table 9.",
+  "32 NC U1 pads: one pad per net, no tracks or zones (native).",
+  "Decoupling distances U1 supply pads to nearest caps (native coordinates).",
+  "Pull-dominance, inrush, gate-discharge, back-feed, HSE gm/drive-level and VBUS threshold calculations (probe .supervisor/r18_mcu/calcs.json).",
+  "Power-tree trace for PORT_4V8/RAW_PROTECTED/VLOGIC on USB-only power (native nets plus TI TPS2121 datasheet).",
+  "Read AGENTS.md, REQUIREMENTS F5/F6, R10_DECISIONS always-on/AUD sections, M3_R10.md, R10_VALIDATION deviations sections 3-5, ORDERING section 8.3, parts_qualification MCU records and prior round11-17 MCU reports (context only)."
+ ],
+ "sources": [
+  "ST DS12110 Rev 8 (April 2021; allowed cache .supervisor/r14_parts_pdf/st_h743.pdf, current URL https://www.st.com/resource/en/datasheet/stm32h743vi.pdf)",
+  "AOS AO3400A Rev 3.1 (cached .supervisor/r14_parts_pdf/ao3400a.pdf; https://www.aosmd.com/res/datasheets/AO3400A.pdf)",
+  "AOS AON7524 Rev 1.1 (cached .supervisor/r14_parts_pdf/aon7524.pdf; https://www.aosmd.com/res/datasheets/AON7524.pdf)",
+  "AOS AONR21357 Rev 2.1 (cached .supervisor/r14_parts_pdf/aonr21357.pdf; https://www.aosmd.com/res/datasheets/AONR21357.pdf)",
+  "TI TPS2121 SLVSEA3F (cached .supervisor/r14_parts_pdf/tps2121.pdf; https://www.ti.com/lit/ds/symlink/tps2121.pdf)",
+  "TI TPS2553 SLVS841 (cached; https://www.ti.com/lit/ds/symlink/tps2553.pdf)",
+  "TI TXU0202 (cached; https://www.ti.com/lit/ds/symlink/txu0202.pdf)",
+  "NDK NX3225GA STD-CRG-2 sheet (cached .supervisor/r14_parts_pdf/ndk.pdf)",
+  "Infineon ESD103-B1-02 series data sheet Rev 1.3 2014-06-12 (cached .supervisor/r14_parts_pdf/infineon.pdf; https://www.infineon.com/part/ESD103-B1-02EL)",
+  "ST USBLC6-2 (cached .supervisor/r14_parts_pdf/usblc6.pdf)",
+  "u-blox MAX-M10S Integration manual UBX-20053088 R05, 28-Apr-2026, section 3.6.3.1 p46 (https://content.u-blox.com/sites/default/files/MAX-M10S_IntegrationManual_UBX-20053088.pdf, downloaded this round)",
+  "LCSC C5271084 product page (https://www.lcsc.com/product-detail/C5271084.html): STM32H743VIT6TR, LQFP-100 14x14"
+ ],
+ "coverage_limits": [
+  "st.com timed out for curl and WebFetch (datasheet, AN2606), so the allowed cached DS12110 Rev 8 was used, not Rev 11. Pin/AF/type facts used here are stable across revisions; Rev 11-only wording cited in the repository was not re-verified.",
+  "AN2606, RM0433, AN4938 and AN2867 were not re-read; bootloader pin roles rely on earlier rounds' citations, and RTC_TAMP3/WKUP5/VREFBUF reset behaviour is labelled Inference.",
+  "HGLRC M100 Mini and MicoAir LR900-F input structures and output levels are unknown; module back-power effects are Inference.",
+  "No DRC/ERC, full tools/check.sh, build, firmware, option-byte or bench measurement was run; no physical behaviour is claimed.",
+  "Other round18 reports and probe directories were not opened."
+ ]
+}

@@ -1,0 +1,118 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round29_parts",
+ "reviewer": "claude",
+ "target_commit": "09a564e582865e58b5a94f5823789356f88442c8",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "ORDERING 8.1 (l.287-289) and M3_R10 'Cost and stock' (l.358-359): the 'Plus JLC fixed fees' row ($102.05) is $85.26 + $16.79, i.e. added to the target basis, not to the 'Same, with JLC minimum purchases' row above it ($85.80 + $16.79 = $102.59); R10_VALIDATION l.2994 states the basis explicitly, so this is table composition, not a false figure.",
+  "LS120 (MLT-5020, coil 12 +/- 3 ohm, 'Max 100 mA' at 3.0 Vo-p rated, Huawha spec p2) sits directly between 3V3 and Q123's drain with no series resistor; a held-on drive would draw 220-367 mA DC. The records already disclose buzzer current and timing as pending firmware and bench qualification (AGENTS buzzer row), so not a finding.",
+  "D-SMA/SOD-323/LED polarity checked by net: D9 pad 1 (cathode) RAW_PROTECTED, D123 pad 1 (cathode) 3V3, LED1 pad 1 (K) GND, LED2 pad 1 (A, KENTO spec p2 pin 1 '+') LED_YEL_A, D120 BAT54A common anode pad 3 = 3V3 (FMEA H-1 intent), C84 pad 1 VLOGIC.",
+  "All 82 codes: JLC's exact-code model name in stock_check.json equals the BOM / owner-BOM Manufacturer Part, and the reference sets match; the 66 codes in tools/jlc_easyeda/supplier_snapshot.json match the BOM value, tolerance, voltage and package.",
+  "CPL: an independent re-computation of all 206 rows from the board footprints and tools/jlc_corrections.json (export_fab convention) reproduces every Mid X / Mid Y (to 0.001 mm), Layer and Rotation; all 82 correction entries are status OK. J3 / J430 rows are offset from the footprint origin by their recorded corrections (0.095 / 1.55 mm), as intended.",
+  "Board fields: every BOM-listed footprint's LCSC, Manufacturer Part and footprint name agrees with the BOM line; the 9 off-BOM footprints are the 8 test pads and J2 (TC2030), all exclude-from-BOM and exclude-from-position.",
+  "DS15034 Rev 1 (ISM6HG256X) is not in the cached PDF set, so audit A's 'Table 2 p11' correction (U4 row) was not re-read here.",
+  "The AGENTS.md text supplied in the session context quoted $85.60 / 01:43:55Z; the committed AGENTS.md at 09a564e already states $85.26 (12:44:13Z) with $85.60 as the earlier run, consistent with cost_check.json. No finding."
+ ],
+ "fix_verification": [
+  {
+   "item": "Audit A 1 / R28-TRI-02: GAP-1 converter load 13.064091 W",
+   "measurement": "5.546269 x 1.561 / 0.8 + 1.4 + 0.825 + 0.016933 = 13.064091 W; parts_budget other_converter_load_W 13.06409056783647",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 2 / R28-TRI-03 / D-R28-01: four-stall loaded pack 5.880831 / 4.388491 V",
+   "measurement": "parts_budget.json lines 91-92: 5.8808312447840425 / 4.388490666810671",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 3: GAP-1 budget SHA-256 4267634220f4...",
+   "measurement": "shasum of committed parts_budget.json = 4267634220f4254aef28dfc9756c68b29784560c11b994c14274790dd631fab2",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 4 / R28-TRI-04: five 22 uF on PORT_4V8 (C406, C407, C411, C421, C445) plus 100 nF C410, C420, C444; C21397 has 13 refs",
+   "measurement": "Board PORT_4V8 parts: C406 C407 C410 C411 C420 C421 C444 C445 (+J410/J420/J440, U401, R402, R405); BOM C21397 qty 13 incl. C82, C445, C461",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 5 / R28-TRI-06: PB1 is TT_u (DS12110 Rev 8 Table 9 p70), 4.0 V (Table 119 p212)",
+   "measurement": "Cached DS12110 Rev 8 p70 pin 35 PB1 I/O TT_u; p212 Table 119 VIN TT_xx 4.0 V",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 9: ten local lands and ten VRML envelopes",
+   "measurement": "r10_parts.py FOOTPRINTS 10 keys, MODELS 10 keys",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 10: U4 row DS15034 Table 2 p11",
+   "measurement": "DS15034 not in the cache; not re-read",
+   "verdict": "not checked"
+  },
+  {
+   "item": "Audit A 11: J440 clamp distances 3.157 / 3.194 mm straight line; ESD code 9 per board",
+   "measurement": "J440.3 (7.4,18.0) to D440.1 (4.45,19.125) = 3.157 mm; J440.4 (7.4,21.5) to D441.1 (4.45,22.725) = 3.194 mm; BOM C535146 qty 9",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 13/14/19: Table 120 p213, Table 159 p249 (3 mA), Table 124 p216",
+   "measurement": "Cached DS12110 Rev 8 PDF pages 213 / 249 / 216 carry those tables; Table 159 tests at IIO = 3 mA",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 17: J1 and J400 green 2-position C466970; 27 contacts",
+   "measurement": "BOM C466970 J1,J400; 2+2+2+4x4+5 = 27",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 18: value_overrides holds 19",
+   "measurement": "circuit.json value_overrides: 19 keys, matching the table refs; board values match the labels",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Audit A 20: C92 B(32.35,52.5) 0 deg; C120 B(17.1,72.525) -90 deg, pads (17.1,71.75) / (17.1,73.3) ACT_GATE on pad 2",
+   "measurement": "Board: C92 B.Cu (32.35,52.5) 0; C120 B.Cu (17.1,72.525) -90, pad 1 (17.1,71.75) ACT_FET_S, pad 2 (17.1,73.3) ACT_GATE",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D402 row: 5.7 mV EN shift, 5.2 V at J400.2, 14 mV on C87",
+   "measurement": "50 nA x 470k x 300k / 1240k = 5.69 mV; 8.4 x 770/1240 = 5.216 V; 21 V x 150 pF / 220 nF = 14.3 mV",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after: a0ec075e... both times; HEAD 09a564e",
+  "KiCad pcbnew (read-only): dumped 216 footprints (ref, value, FPID, LCSC, Manufacturer Part, position, rotation, layer, attributes) and pad nets (.supervisor/r29_parts/xbom.py, pol.py, nets.py, loc.py)",
+  "Cross-check of board fields against m3_bom_jlc.csv, m3_bom_owner.csv and m3_cpl_jlc.csv: no LCSC / MPN / footprint mismatch, no missing or extra reference",
+  "Independent re-computation of all 206 CPL rows from board positions and tools/jlc_corrections.json (xcpl.py): 0 mismatches, 0 uncorrected rows",
+  "EasyEDA pad data (tools/jlc_easyeda/pads.json) inspected for C13612 (theta 90, vertical-pin land), C7519, C84256, C2296",
+  "stock_check.json model name vs BOM MPN for all 82 codes; supplier_snapshot value/tolerance/voltage/package vs BOM comment and footprint for 66 codes",
+  "Polarity of D9, D123, D120, LED1, LED2, C84, D121, D4 pins against nets and datasheets (KENTO KT-0805Y p2 rendered)",
+  "Ratings vs operating points: capacitor voltages by net (max 8.4 V pack, SMBJ12CA 19.9 V clamp vs 25 V and 50 V parts), TPS25947 IN 23 V operating / 28 V abs, EN pull-up >= 350 kohm, dVdT cap rating, LED currents, CRM2512 2 W / TCR code X = 100 ppm",
+  "Recomputed: AP63201 PORT_5V3 0.8 x (1 + 58.2/10) = 5.456 V; TPS7A91 PORT_4V8 0.8 x 5.99 = 4.792 V; TPS2553 IOS bounds 1.041-1.249 A (R430) and 347.7-453.0 mA (R85); USB-only charge 2.416 mC / 5.33-6.95 ms; U400 demand 2.911 / 3.160 A; cold-check table 99.369 / 99.338 / 146.23 mV; R134 pulse chart interpolation 61.204 / 44.134 W, 35.7975 W, 0.716 / 1.289 J, 85 C derating 36.345 vs 35.851 W",
+  "Datasheet text re-read from cached PDFs: AP6320x (UVLO 3.30-3.70 V, IPEAK 3.1 A max, tSS 4 ms, VFB 792-808 mV), TPS7A91 ILIM 1.5-1.9 A, TPS25947 ILIM 3.96-4.84 A at 750 ohm, DS12110 Rev 8 Tables 9/119/120/124/159 page numbers, NDK NX3225GA CL 8 pF, SMBJ12CA Vc 19.9 V",
+  "cost_check.json / stock_check.json figures vs docs ($85.26, 45 Extended, U4 2/5, U9 30 / -81 / 7)"
+ ],
+ "sources": [
+  "AGENTS.md, docs/REQUIREMENTS.md, docs/M3_R10.md, docs/ORDERING.md section 8, docs/R10_VALIDATION.md",
+  "m3_design/assembly_review/sources/r10_design/parts_qualification.md, parts_budget.json, circuit.json",
+  "m3_design/assembly_review/sources/r10_review/round28_audit_pq.md",
+  "m3_design/assembly_review/fab/ (BOM, owner BOM, CPL, cost_check.json, stock_check.json)",
+  "tools/export_fab.py, tools/jlc_corrections.json, tools/jlc_easyeda/",
+  "Cached datasheets (.supervisor/primary_pdf_cache_paths.json): ST DS12110 Rev 8, TI TPS25947 (SLVSFC9), TPS7A91 (SBVS282), TPS2553, Diodes AP6320x (DS41326), Bourns CRM2512, UniOhm thick film, NDK NX3225GA, KENTO KT-0805Y, Huawha MLT-5020, Littelfuse/SMBJ"
+ ],
+ "coverage_limits": [
+  "No live supplier queries; JLC stock and prices taken from the committed fab evidence.",
+  "DS15034 (ISM6HG256X) and the Infineon ESD103 sheet are not in the cache, so their citations were not re-read.",
+  "Land geometry was not re-derived from every maker drawing; footprint identity relied on the JLC EasyEDA pad match plus earlier rounds' land records.",
+  "parts_qualification.md was sampled (audit A corrections, D402 row, port budget, ILIM, USB-only, cold check, R134 pulse), not re-read line by line."
+ ]
+}

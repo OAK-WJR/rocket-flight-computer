@@ -1,0 +1,60 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round34_safety",
+ "reviewer": "claude",
+ "target_commit": "c2a11fd",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "PYRO1_OUT (R173.1) to BUZZ_G track (17.75,58.87) is 0.510 mm on B.Cu (recorded in D-R18-05 / D-R26-02) and is not a row of R10_VALIDATION §1's pair table; with the bus enabled a bridge passes at most about 8.4 V / ~0.9 kOhm (R162 1k to PC14 || R163 10k), about 9 mA, far below the 0.30 A no-fire, so it cannot fire; the table does not claim completeness.",
+  "U9 IN (BAT_IN track (18.25,83.56)) to RAW_PROTECTED (18.75,81.6) is 0.200 mm under U9 (TI RPW land); a bridge bypasses U9 and turns the board on with J400 open. Owner row 2 does not name it explicitly, but no requirement claims single-fault immunity, and per-flight step 2 (board off with J400 open) detects it before the e-match goes in.",
+  "BAT_ENABLE to BAT_OVLO (U9.1-U9.2, 0.200 mm): with J400 open a bridge gives EN about 8.4 x (280k||300k)/(2M + 280k||300k) = 0.57 V < 1.183 V, so it cannot turn the board on; closed, it pulls OVLO up and holds U9 off (fail-safe).",
+  "ACT_GATE to BAT_IN 0.2177 mm (B.Cu, track (14.475,72.2) to Q120.9) and 0.422 mm (F.Cu): a bridge holds Q120/Q121 off (fail-safe; the powered-BUS refusal sees a dead bus).",
+  "Rule 3's reversed-polarity meter note ('open or slowly rising'): a finite path exists through the IO2 VDD clamp, 3V3, D120 and the ~21 kOhm cold-pull-up/CONT chain to GND and back through 0.91 kOhm, so a meter may settle at tens of kOhm plus two diode drops; this still meets the stated pass criterion (above 0.9 kOhm or open), and the meter reading is labelled Inference.",
+  "M3_R10 Firmware option paragraph: 'R121 x C120 = 10 ms time constant' is arithmetically true; the Thevenin constant is (R121 || 50 kOhm) x C120 = 8.3 ms nominal and parts_budget tau_max is 10.75 ms; 'turn on within a few ms' holds (about 3.9 ms to -2.3 V at 7.4 V).",
+  "Leak thresholds in §1 mix corners: the RAW_ACT / ACT_EN / BAT_FAULT_N latch figures use the 1.116 V falling maximum only, while the U9.1-IN row is an envelope over 1.183-1.223 V and 7.4-8.4 V; each figure is a correct calculation for its stated basis.",
+  "Rule 4's 0.96 x VLOGIC-derived pack band against a Q120-off body-diode feed depends on the diode drop at the ~0.7 mA divider current and on the U9/U11 drop between BAT_IN and VLOGIC; the record says to qualify the band on first articles, and the dummy-load BAT_IN - RAW_ACT > 0.2 V criterion is the deterministic check."
+ ],
+ "fix_verification": [
+  {
+   "item": "R33-TRI-01 (U9 pad exposure, ORDERING 8.3)",
+   "in_lens": false,
+   "measurement": "ORDERING.md:552 and :555 carry the corrected 0.15-0.25 mm wording at HEAD",
+   "verdict": "confirmed (text present; not a safety-lens item, geometry not re-measured)"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after (shasum): a0ec075e... both times; HEAD c2a11fd.",
+  "pcbnew footprint/pad-net dump of the fire chain, load switch, EN network and buzzer (.supervisor/r34_safety/dump.py, fp.txt).",
+  "Copper polygon export of all four layers incl. saved zone fills (.supervisor/r34_safety/export_polys.py) and nearest-neighbour scans (near.py / dist.py, NumPy) for PYRO1_OUT, PYRO1_GATE, PYRO1_GATE_N (1.2 mm), BAT_ENABLE, BAT_SW_RETURN, ACT_GATE, ACT_DRV, ACT_EN, ACT_EN_MCU, BAT_IN, BAT_SW_SOURCE, ACT_FET_S, BAT_OVLO (0.6 mm).",
+  "Re-measured R10_VALIDATION §1 / FMEA I-2 figures: OUT-GND 0.178 / 0.181 (doc 0.177 / 0.180), OUT-BUZZ_DRV 0.7935 (0.794), OUT-3V3 1.0511 / 1.0512 F / 1.0641 In2 (1.050 / 1.0511 / 1.061), OUT-3V3A 1.0422 (1.0400; polygonisation is ERROR_INSIDE, +2 um), R128.1-3V3 via 1.0587 (1.0585), R127.1 1.0662 (1.065), R126.1 1.0812 (1.081), C10.1-gate via 1.1462 (1.145), U1.3-U1.6 1.200, gate via barrel to In2 3V3 2.7505 (2.75), QSPI_IO2-U1.3 0.5513 (0.550), BAT_ENABLE-BAT_FAULT_N 0.2012 (0.200), ACT_EN-BAT_ENABLE 0.330, BAT_ENABLE via-RAW_ACT 0.5012 (0.500).",
+  "AGENTS §2.4 networks from the netlist: Q124 R126 220R series / R128 10k G-S / C126 220nF G-S (source GND); Q120/Q121 R121 10k series, R119 || R120 to ACT_FET_S, C120 G-S; Q122 R122 1k / R123 2k / C123 10nF. All present.",
+  "Recalculated: cold CONT healthy/open 99.4/146.2 mV and 3V3 bridge 0.295 V; MID-RAW_ACT bridge 102.0/55.5 mV and powered 1.213 V; MID-3V3 0.541 V; ARM1_SENSE-CAM_IO_3V3 RAW_ACT 2.19-2.21 V and 0.108 mA; gate 3.23 V hard-bridge; 0.91 kOhm meter figure; gate tau about 51-55 us nominal range; ACT_EN Thevenin 2.2 V / 667 Ohm and 0.29 MOhm; BAT_FAULT_N 3.19 V / 0.58 MOhm; RAW_ACT latch 1.69-1.96 MOhm; U9.1-IN 1.52-1.83 MOhm; J400.2 harness EN 2.88 / 1.87 / 1.28 V; OVLO bridge 0.57 V.",
+  "Rule 4 probe points (R120.1 ACT_FET_S, R120.2 / C120.2 ACT_GATE), per-flight steps 2-4 and the J121.2 < 0.1 V criterion checked against the netlist (RAW_ACT has no bulk capacitor; 11.2 kOhm to GND).",
+  "AGENTS §2.5 labels spot-checked in M3_R10 Firmware rules 3/4, R10_VALIDATION §1 and owner rows 1/2, FMEA I-2/H-2 row: inferred quantities labelled."
+ ],
+ "sources": [
+  "AGENTS.md §2",
+  "docs/REQUIREMENTS.md F6-F9",
+  "docs/M3_R10.md CH1 pyro, Firmware",
+  "docs/R10_VALIDATION.md owner rows 1/2, §1",
+  "docs/FMEA_REDUNDANCY.md I-2/H-2 row",
+  "docs/ORDERING.md 8.3 per-flight checklist",
+  "R10_DECISIONS.md D-R18-01",
+  "parts_budget.json load_switch_AUD3",
+  "TI SLVSFC9C p9 (EN thresholds, as quoted)",
+  "AONR21357 Rev 2.1 p2 (as quoted)"
+ ],
+ "coverage_limits": [
+  "No datasheet PDFs re-read; thresholds taken as quoted in the records.",
+  "No kicad-cli DRC, no seeded gate tests, no full check.sh.",
+  "Inner-layer scan only for the listed nets; whole-board every-net-pair audit not repeated.",
+  "Firmware does not exist; rules checked against the circuit only."
+ ]
+}

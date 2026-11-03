@@ -1,0 +1,99 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round25_power",
+  "reviewer": "claude",
+  "target_commit": "c4bb56b01e3431e5f4309a01321d18935038e707",
+  "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 4},
+  "findings": [
+    {
+      "id": "R25-POWER-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "REQUIREMENTS F6 still says '100-220 uF would do' for a 0.2 ms post-trip need; the records say this was struck, and from the trip it gives only 0.05-0.13 ms",
+      "contradicts": "docs/R10_VALIDATION.md R23-POWER-01 row (line 1905: 'Records fixed: ... (owner row 25, M3_R10, REQUIREMENTS F6); \"100-220 uF would do\" struck') and owner row 25 (line 2164: 'The earlier \"100-220 uF would do\" is struck: it was not computed from the trip voltage'); docs/M3_R10.md line 616 ('so the earlier \"100-220 uF would do\" is struck'); the correct calculation with parts_budget.json's constant-power loads.",
+      "evidence": "docs/REQUIREMENTS.md line 60 (F6), 'Hold-up requirement (open owner question, R19-REQ-07)': 'Record it as the time firmware needs after the PA6 watchdog fires ... If that is about 0.2 ms (Inference), 100-220 uF would do and C84 could be a reflow-rated part'. Calculation (parts_budget.json battery_break_load_W c_camera_radio_gps_on 11.249-13.064 W, the load until the shed completes; t = C (V0^2 - 3.8^2) / 2P from the records' own 5.3 V trip): 100 uF 0.052-0.061 ms, 220 uF 0.115-0.134 ms, all below 0.2 ms (.supervisor/r25_power/ovlo_holdup.py -> ovlo_holdup.txt). Even 300.8 uF gives only 0.157-0.182 ms (M3_R10).",
+      "impact": "The requirement row the owner answers R19-REQ-07 from still offers a capacitor range that cannot meet its own 0.2 ms premise, and invites replacing C84 with a reflow-rated 100-220 uF part; it contradicts the M3_R10 and R10_VALIDATION text that records it as struck.",
+      "concrete_fix": "Text only, REQUIREMENTS F6: replace 'If that is about 0.2 ms (Inference), 100-220 uF would do and C84 could be a reflow-rated part' with the M3_R10 / owner-row-25 wording: counted from the PA6 trip, 300.8 uF gives only (corrected per R25-POWER-02) ms with all ports on, so the earlier '100-220 uF would do' is struck."
+    },
+    {
+      "id": "R25-POWER-02",
+      "kind": "calc",
+      "severity": "Minor",
+      "title": "Post-trip hold-up is computed from 5.3 V, above the stated PA6 trip window (VLOGIC 4.84-5.17 V): it overstates the hold-up the firmware gets",
+      "contradicts": "The records' own trip window: 'The PA6 trip window is VLOGIC about 4.8-5.2 V (PA6 0.44-0.47 V)' and 'PA6's lower edge 0.44 V x 11 = 4.84 V' (M3_R10 Firmware rule 8, REQUIREMENTS F6, ORDERING 8.3 line 674, R10_VALIDATION row 25, binding note rule 8); 0.47 V x 11 = 5.17 V. A hold-up after the trip must start at the trip voltage (R23-POWER-01's own fix: 'quote hold-up from the trip voltage').",
+      "evidence": "Quoted 'Hold-up after the trip is 0.157-0.182 ms with all ports on and 0.44-0.48 ms with the camera off / shed (Calculation, from 5.3 V at 300.8 uF)' in docs/M3_R10.md lines 616 and 1017-1018, docs/ORDERING.md line 674, docs/REQUIREMENTS.md F6, docs/R10_VALIDATION.md rows 5 and 25, and the generated binding-note rule 8 (m3_design/r10_sch_check.py line 322 -> r10_binding_note.json firmware_obligations[43]). Reproduction: parts_budget.json loads (all ports 11.249-13.064 W, shed 4.295-4.650 W), 300.8 uF to 3.8 V: from 5.3 V 0.157-0.182 / 0.441-0.478 ms (the quoted figures, so the input is 5.3 V). Over the stated window: from 5.17 V 0.142-0.164 / 0.398-0.430 ms; from 4.84 V 0.103-0.120 / 0.291-0.315 ms. So the post-trip hold-up is 0.103-0.164 ms (all ports) and 0.29-0.43 ms (shed); the quoted shed range lies wholly above it and the quoted all-ports maximum 0.182 ms exceeds the window's 0.164 ms (.supervisor/r25_power/ovlo_holdup.txt). If 5.3 V was meant as the divider-tolerance top (0.47 x 11.20 = 5.26 V), it is the longest-hold-up corner, not a bound.",
+      "impact": "The open owner question R19-REQ-07 (row 25) and firmware rule 8 are given a hold-up after the trip up to 1.5x (4.84 V corner) the real figure; the bench 'PA6-to-shed time' will be judged against too much time. No safety effect.",
+      "concrete_fix": "Text only (M3_R10 Power 'Hold-up' and Firmware rule 8, ORDERING 8.3, REQUIREMENTS F6, R10_VALIDATION rows 5 and 25, and the rule 8 obligation in m3_design/r10_sch_check.py, regenerating r10_binding_note.json): 'Hold-up after the trip is 0.10-0.16 ms with all ports on and 0.29-0.43 ms with the camera off / shed (Calculation, from the 4.84-5.17 V trip window at 300.8 uF); the shortest, 0.10 ms / 0.29 ms, is at the window's lower edge'."
+    },
+    {
+      "id": "R25-POWER-03",
+      "kind": "calc",
+      "severity": "Minor",
+      "title": "The chatter-train trip fraction (about 20-24 %) is the fast-chatter limit, not the worst case: with millisecond drop-outs that pass both bench rules (< 10 ms each, < 18 % in any 100 ms window) U9 trips at 6.0 V",
+      "contradicts": "AGENTS.md section 1 power row ('The bench chatter pass line is an open fraction below 18 % in any 100 ms window (the worst-case trip is about 20 % at 5.73 V ...)'); REQUIREMENTS F6 ('with D402 the worst-case trip is about 20 % at 5.73 V, so the root set the pass line at 18 % from that physics'); docs/M3_R10.md line 260 ('a chatter train trips U9 above an open fraction of about 20-24 % (20.0 / 24.4 % at 5.73 / 6.0 V), so the bench pass line is below 18 %'); D-R24-19 ('The chatter trip fraction is 20.0 / 24.4 % at 5.73 / 6.0 V'); R10_VEHICLE_HANDOFF line 68. Basis: TI SLVSFC9C p9 (VUVLO(F) 1.076-1.116 V, IENLKG +-0.1 uA), the D-R24-19 corner model.",
+      "evidence": "Calculation, exact piecewise-exponential solution of the EN node (C87) over a periodic open/closed train, D-R24-19's worst corner (R80 / R165 +1 %, R81 -1 %, C87 0.72 x 220 nF, 0.1 uA EN leakage out of the node, D402 50 nA at J400.2 closed / through R165 open, falling threshold 1.116 V), steady state after 400 cycles (.supervisor/r25_power/chatter_sim.py -> chatter_sim.txt). The model reproduces the records' figures in the fast limit (0.1 ms drop-outs: 20.0 % at 5.73 V, 24.6 % at 6.0 V; the averaged formula gives 20.01 / 24.41 %, en_model.txt). Trip fraction against drop-out length at 6.0 V: 2 ms 22.3 %, 4 ms 20.0 %, 6 ms 17.2 %, 8 ms 13.7 %, 9.9 ms 8.3 %; at 5.73 V: 2 ms 17.7 %, 4 ms 15.1 %. Explicit train at 6.0 V: 8 ms open every 51 ms, every drop-out < 10 ms, at most 16 % open in any 100 ms window, EN falls to 1.098 V < 1.116 V: U9 turns off. Same train at 5.96 V (the records' pack floor for the 10 ms rule) with 8 ms every 57 ms: 1.106 V, trips. The averaged model ('does not depend on C87', round 23) holds only when each drop-out is much shorter than R81 x C87 (47 ms at this corner).",
+      "impact": "The F6 / ORDERING 8.3 acceptance lines (< 10 ms and < 18 %) are justified as having margin below the worst-case trip, but a switch whose chatter meets both lines can turn U9 off on a worst-case board at 5.96-6.0 V (and at 5.73 V with 2 ms drop-outs at 17.7 %). The functional 'U9 stays on' check catches it only on the board under test. Loss of power resets the primary computer; no fire hazard.",
+      "concrete_fix": "Text (AGENTS row, REQUIREMENTS F6, M3_R10 Power, ORDERING 8.3, R10_VEHICLE_HANDOFF): state that 20.0 / 24.4 % is the fast-chatter limit, give the trip fraction as a function of the longest drop-out (at 6.0 V worst case: 2 ms 22 %, 4 ms 20 %, 6 ms 17 %, 8 ms 14 %; at 5.73 V: 2 ms 18 %, 4 ms 15 %), and set the pass rule against the measured longest drop-out, e.g. the open fraction must stay below that line minus margin, or run the measured contact record through the worst-corner EN model; alternatively raise C87 (BOM only), which raises every drop-out-dependent line."
+    },
+    {
+      "id": "R25-POWER-04",
+      "kind": "calc",
+      "severity": "Minor",
+      "title": "U9's OVLO corner 9.97 V is called 'the highest RAW_PROTECTED can reach' but omits the OVLO pin leakage; with it the highest is 10.18 V",
+      "contradicts": "TI SLVSFC9C p9: IOVLKG OVLO pin leakage -0.1 to 0.1 uA (0.5 V < VOVLO < 1.5 V), VOV(R) 1.183-1.223 V. The records apply the same +-0.1 uA leakage to EN (D-R20-11) and to OVLO restart (M3_R4 A2, 'at least 8.56 V including pin leakage') but not to the OVLO trip.",
+      "evidence": "m3_design/r10_parts.py lines 378-379 ('9.97 V (U9's OVLO trip, 9.63-9.96 V, M3_R4 A2: the highest RAW_PROTECTED can reach)'), generating parts_budget.json buck_prospective_all_shorts_peak_inductor_without_limiting_A '9V97_*' and u9_port_fault_peak_bound_basis 'R92 at9.97V'; parts_qualification.md line 639 ('at the9.97 V OVLO corner (the highest RAW_PROTECTED U9 lets through, M3_R4 A2)'). Board: R82 2 M 0.1 % (BAT_IN-BAT_OVLO) B(16.325,83.9), R83 280 k 0.1 % (BAT_OVLO-GND) B(10.0,81.8), U9 B(18.5,81.6). Calculation: Thevenin 245.6 kOhm, 0.1 uA -> 24.6 mV at the pin -> 0.20 V at IN; trip 9.416-10.176 V with leakage (9.616-9.976 V without) (.supervisor/r25_power/ovlo_holdup.py -> ovlo_holdup.txt). At 10.176 V the prospective all-shorts peak becomes 3.657 / 3.627 A (470 / 500 kHz), was 3.645 / 3.616 A; R92's bleed 3.084 mA, was 3.021 mA.",
+      "impact": "A stated upper bound of the input voltage is low by 0.21 V; the figures built on it (buck prospective peak, U9 port-fault bound) are low by about 0.01 A and 0.06 mA. The conclusions (the buck limits / hiccups; U9's 3.744 A bound below its 3.946 A limit) do not change.",
+      "concrete_fix": "m3_design/r10_parts.py: take the OVLO corner as (1.223 V + 0.1 uA x R82||R83) x (R82+R83)/R83 at the 0.1 % corners = 10.18 V, rename the 9V97 keys, regenerate parts_budget.json; correct parts_qualification.md line 639 (and the M3_R4 A2 reference: trip 9.42-10.18 V with leakage)."
+    }
+  ],
+  "observations": [
+    "D-R24-19 EN figures independently reproduced to the quoted precision: drop-out worst 10.345 / 20.111 / 26.023 ms at 6.0 / 7.4 / 8.4 V, 8.204 ms at 5.73 V, 6.300 ms at 5.5 V; nominal 18.9 / 32.8 / 41.1 ms; pack floor 5.956 V; turn-on 30.31-130.27 ms, nominal 87.7 / 55.5 / 44.7 ms; EN 1.4014 V at 6.0 V; ramp on 4.723-5.251 V, off 4.288-4.802 V, nominal 4.960 / 4.505 V; fast-chatter trip 20.01 / 24.41 %; without D402 10.651 / 8.496 / 6.579 ms (D-R20-11).",
+    "D402: closed-switch EN shift 5.685 mV, J400.2 at 5.216 V (8.4 V), 25 nA EN-equivalent, ~14.3 mV C87 rise (150 pF x 21 V / 220 nF) and 'about 1 uA stops a 6.0 V pack' (0.229 V / 227 kOhm) all reproduce.",
+    "PA6 corner: 0.44 V x 11 = 4.84 V > 4.80 V BAT_IN turn-off corner, and VLOGIC < BAT_IN, so the nominal-ratio trip precedes U9 turn-off; with 1 % R60 / R61 the lower edge is 4.75 V, which the records leave to divider/ADC qualification (disclosed).",
+    "AGENTS '<= 2.06 V with 1 % parts, at 8.4 V' (2.063 V) excludes EN leakage; with -0.1 uA it is 2.086 V. The statement is scoped to the parts and both are far below the 5 V recommended / 6.5 V absolute EN limits.",
+    "Hot-plug: hotplug_inputs.json is digest-identical to a fresh extraction of 92c3ad59; r10_hotplug.validate returns no issues; 2304 rows, 0 failures, min -14.807373 V, fall 8.994764 V/us, rise 5.087664 V/us against TI's -15 V / 10 / 100 V/us (SLVSFC9C p7).",
+    "K-power (check_r10.power_paths, read-only on the committed board): 0 issues; every floor >= its IPC-2152 width (U9 IN/OUT 0.68 mm at 2.9 A, PORT rails 0.326 mm at 1.9 A, 3V3 0.356 mm at 2.0 A, VLOGIC 0.167 mm at 1.294 A); six POWER_NARROW entries all used.",
+    "Regulator taps: U400 FB top R400.1 taps C403.1 (output cap), 0.8 V x (1 + 58.2/10) = 5.456 V; U401 R402.1 on the OUT run's T 0.075 mm inside its land, 0.8 x 5.99 = 4.792 V, R403.2 straight to U401.4, no via; U2 (AP63203 fixed) senses In2 3V3 through two vias (23.2,68.6) / (23.0,70.0); U9 OVLO divider tapped from the IN trunk west of the C88 feed.",
+    "U401 IN / RAW_PROTECTED into U400 (0.4 mm F.Cu from two vias) carry about 1.94 A at a 6.0 V pack (1.81 A x 5.456 / (0.85 x 6.0)); 0.4 mm exceeds the 0.335 mm IPC width; this path is not in POWER_PATHS but meets the rule.",
+    "parts_qualification.md 'All three ports shorted' (2.022 A, 2.38-2.51 A, 'r10_parts.py asserts ... below 2.5 A') and 'U9 current about 2.92 A (below 2.95 A, asserted)' are port-switch-era figures; parts_budget.json now gives 3.160 A / 3.52-3.65 A / 3.744 A and r10_parts.py asserts neither; the file header supersedes port-switch records where they differ and 'Shared port fault budget' gives the current figures.",
+    "U9 IN 0.3 mm entry (1.96 mm, 0.76 mm from the bar end to C88.1's centre; 0.49 mm of bare track between pads) and the 0.3 mm OUT entry carry the 2.9 A sizing current at long-conductor IPC rises above 30 C; named POWER_NARROW exceptions with the hot-neck limits disclosed in M3_R10 'Retained limits'.",
+    "The ORDERING 8.3 chatter run also requires 'U9 stays on for the whole run', which screens the board under test directly; R25-POWER-03 concerns the margin claimed for the numeric lines."
+  ],
+  "fix_verification": [
+    {"change": "D-R24-05 U9 EN kept across one via", "measurement": "BAT_ENABLE via (17.10,82.80) 0.5/0.3, B.Cu 0.707 mm to U9.1; F.Cu 0.200 / 0.200 / 0.2015 mm to BAT_FAULT_N, B.Cu 0.350 mm to BAT_OVLO", "verdict": "confirmed"},
+    {"change": "D-R24-07 U402 GND second via", "measurement": "(32.3,60.1) GND; B.Cu 0.200 mm to U402.6, F.Cu 0.210 mm to SERVO4_MCU", "verdict": "confirmed"},
+    {"change": "D-R24-08 monitor-tap second vias", "measurement": "VLOGIC (34.5,62.4) B.Cu 0.150 mm to PORT_5V3; LOGIC_SOURCE_ST (30.45,51.4) 0.171 mm to GND via; 3V3 (28.1,59.4) 0.254 mm to R91.2", "verdict": "confirmed"},
+    {"change": "D-R24-09 U401 divider on B.Cu", "measurement": "R402 B(30.9,12.85), R403 B(30.9,14.6); FB (28.75,13.6)->(31.725,13.6) 0.2 mm, no via; R403.2 -> U401.4 B.Cu; OUT vias (29.75,11.65) and (29.75,9.95); 4.792 V nominal", "verdict": "confirmed"},
+    {"change": "D-R24-10 USB OV / ILIM legs", "measurement": "USB_LIMITED second via (16.6,28.0) on 0.2 mm B.Cu and 0.4 mm In2 links to (16.0,28.0)", "verdict": "confirmed"},
+    {"change": "D-R24-11 D402 at J400.2", "measurement": "D402 B(4.45,65.9) BAT_SW_RETURN / GND; tap (7.4,67.6)->(4.81,67.6)->(4.45,67.24)->(4.45,66.225) = 4.114 mm, separate from R165's F.Cu run; GND via (5.15,65.575) 0.371 mm from D402.1; EN shift 5.685 mV", "verdict": "confirmed"},
+    {"change": "D-R24-17 U9 input trunk / C88 / chamfers (power copper)", "measurement": "C88 B(18.67,83.56); BAT_IN 0.3 mm (18.25,81.6)-(18.25,83.56) 1.96 mm and 0.7 mm (18.25,83.56)-(18.25,85.3) 1.74 mm match POWER_NARROW; IN via (17.5,87.15) 1.0/0.5; K-power 0 issues; hot-plug inputs match the live board", "verdict": "confirmed"},
+    {"change": "D-R24-18 BAT_FAULT_N chamfer capped", "measurement": "BAT_ENABLE via (17.1,82.8) to BAT_FAULT_N F.Cu 0.200 / 0.200 / 0.2015 mm (pcbnew shape clearance)", "verdict": "confirmed"},
+    {"change": "D-R24-19 generated EN text", "measurement": "Every quoted figure reproduced (observation 1); the 20.0 / 24.4 % chatter figure is right as the fast-chatter limit but not as a worst case (R25-POWER-03); the post-trip hold-up text it left unchanged uses 5.3 V (R25-POWER-02)", "verdict": "confirmed (its figures); related errors outside its scope reported separately"}
+  ],
+  "checks_actually_executed": [
+    "Board SHA-256 before and after (shasum -a 256): 92c3ad59... both times; commit c4bb56b verified with git log",
+    "Independent EN corner model with D402 (.supervisor/r25_power/en_model.py -> en_model.txt): drop-out, pack floor, turn-on, EN level, ramp windows, averaged chatter fraction",
+    "Exact piecewise-exponential periodic chatter simulation at the worst corner, trip fraction vs drop-out length and explicit trains with sliding 100 ms window fraction (chatter_sim.py -> chatter_sim.txt)",
+    "OVLO trip with and without IOVLKG, buck prospective peak at both corners, post-trip hold-up over the trip window and for 100 / 220 uF (ovlo_holdup.py -> ovlo_holdup.txt)",
+    "pcbnew read-only dumps: nets and pads of the power parts (nets.py), regulator FB copper (netparts.py, region.py), RAW_PROTECTED / BAT_IN / BAT_DAMP / PORT_5V3 / BAT_SW_RETURN / BAT_ENABLE / USB_LIMITED copper (widths.py), pad extents of U9 / C88 / C82 (pads.py), shape clearances at the D-R24 vias (clr.py)",
+    "check_r10.power_paths (K-power) on the committed board, read-only (kpower.py)",
+    "r10_hotplug.extract on the committed board and r10_hotplug.validate against the committed inputs and results (f9.py)",
+    "Datasheet read: TI SLVSFC9C pp7-9 (abs max incl. slew limits, recommended EN/OVLO ranges and the 350 kOhm pull-up note, EN/OVLO thresholds and leakage, AUXOFF pin function)",
+    "Text cross-check of every quoted EN / hold-up / chatter / OVLO figure across AGENTS, STATUS, REQUIREMENTS, M3_R10, ORDERING 8.3, R10_VALIDATION, R10_VEHICLE_HANDOFF, battery_entry sheet note, r10_binding_note.json, r10_sch_check.py, parts_budget.json, parts_qualification.md, r10_parts.py"
+  ],
+  "sources": [
+    "TI TPS25947 SLVSFC9C (https://www.ti.com/lit/ds/symlink/tps25947.pdf) p7 abs max, p8 recommended, p9 EN/UVLO and OVLO thresholds and leakage (cached .supervisor/r14_parts_pdf/tps25947.pdf)",
+    "Infineon ESD103-B1-02 Rev 1.3 leakage (as cited by D-R24-11)",
+    "Diodes AP63201 DS41326 (peak-limit model as used by r10_parts.py)",
+    "R10_DECISIONS.md D-R20-11, D-R24-05 ... D-R24-19; round23_power.md (R23-POWER-01 / -02 basis); round24_power.md and round24_triage.json read after these findings were written",
+    "parts_budget.json, parts_qualification.md, hotplug_inputs.json / hotplug_results.json, tools/check_r10.py, tools/ipc2152.py, tools/r10_hotplug.py"
+  ],
+  "coverage_limits": [
+    "No physical, thermal or scope measurement; EN model linear with constant leakages (D402's 50 nA bound applied at all voltages, as the records do).",
+    "The chatter simulation uses ideal periodic trains; real contact records are irregular. The counterexamples need the worst component corner, which is the basis of every worst-case figure in the records.",
+    "The hot-plug model was validated (digest and validate), not re-run.",
+    "Fire path, AGENTS section 2 and routing-rule coverage are other lenses."
+  ]
+}

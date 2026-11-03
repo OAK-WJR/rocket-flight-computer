@@ -1,0 +1,44 @@
+# Round 33 safety review (claude)
+
+Commit `feed21f`; board `a0ec075e…` before and after (SHA-256 verified).
+
+**Totals: 0 Critical / 0 Major / 0 Minor real errors.**
+
+## Findings
+
+None.
+
+## Fix verification
+
+- R32-TRI-01 / -02 / -03: not in the safety lens (manufacturing / parts text); not re-measured.
+
+## Observations (not counted)
+
+- PYRO1_OUT has further GND surface gaps in the ordinary class (B.Cu PYRO1_OUT via (11.63,55.10) to GND via (10.30,55.60) 0.238 mm; C128.1 and R173.1 to the B.Cu GND pour 0.2505 mm); the row 1 / row 2 residual lists name the minima (0.177 / 0.180 mm) and the D-R26 change (0.500 mm) and put the rest in the ordinary class: not false.
+- ACT_EN_MCU track (26.62,53.72) is 0.52 mm from LS120.2 (BUZZ_OUT, held at 3V3 through the coil); a bridge can raise ACT_EN; this is the disclosed owner row 2 class (round 27 triage observation), and firing still needs Q124.
+- U9.1 (EN) to U9.2 (BAT_OVLO) is 0.200 mm (TI land); with J400 open a bridge gives EN about 0.57 V at 8.4 V (2 M / 280 k divider loaded by R81 300 k; Calculation), below the 1.116 V threshold: cannot turn the board on.
+- R10_VALIDATION §1 (line 2688) gives 'about 0.9–1.8 A if the rail held 3.3 V' without a label in that sentence; the §1 table row gives its derivation with an Inference label, and round 29 triage ruled this explicit hypothetical optional.
+- Firmware rule 4's 0.96 x band depends on how firmware derives the pack voltage from VLOGIC_SENSE (VLOGIC sits below BAT_IN by the U9 / U11 path drop); the record says 'qualify the band on first articles' (pending qualification).
+- Per-flight step 2 (J121.2 < 0.1 V, J400 open): intact board gives at most about 56 mV from Q121's IDSS (-5 µA max at 55 °C, specified at VDS -30 V) into the 11.2 kΩ ARM1_SENSE divider (Calculation); the check is executable as written.
+- M3_R10 CH1 S-8 sentence gives J121.2 as 2.1–2.2 mm 'wall to foreign'; J121.2's kept ring is 1.902 mm from J121.1 (ring figure); both are above the 1.0 mm floor and the sentence names its wall basis.
+
+## Checks actually executed
+
+- Board SHA-256 before and after (shasum): a0ec075e… both times; commit feed21f, tracked files unmodified.
+- pcbnew read-only netlist dump of the fire chain, load switch, EN network, buzzer and sense dividers: AGENTS §2.4 networks present (Q124: R126 220 Ω series, R128 10 kΩ gate-source, C126 220 nF gate-source, R127 1 kΩ at PE4; Q122: R122 1 kΩ, R123 2 kΩ, C123 10 nF; Q120/Q121: R121 10 kΩ series, R119/R120 100 kΩ, C120 1 µF gate-source); bus RAW_ACT only behind Q120/Q121 from BAT_IN; C128 is the only MLCC across Q124.
+- Own polygon export (pcbnew TransformShapeToPolygon / zone fills / unflashed barrel walls) and numpy net-pair distances on all four layers: PYRO1_OUT-GND 0.178 / 0.181 mm, R173.1-via (15.85,58.345) 0.501 mm; PYRO1_OUT-3V3/3V3A min 1.042 mm (B.Cu, R164.2); PYRO1_GATE-3V3 1.0587 mm (R128.1), PYRO1_GATE_N-3V3 1.0662 mm (R127.1), C10.1-PYRO1_GATE via 1.146 mm; PYRO1_OUT-BUZZ_DRV 0.7935 mm (R173.1-R162.1): all match the records.
+- EN-node neighbours (BAT_ENABLE, BAT_SW_RETURN, BAT_SW_SOURCE within 0.6 mm): GND 0.174, OVLO 0.200, BAT_IN 0.200, BAT_FAULT_N 0.201, ACT_EN 0.330, RAW_ACT 0.501, ACT_EN_MCU 0.521 mm: match owner row 24 and the §1 table.
+- ACT_EN / ACT_EN_MCU / ACT_DRV / ACT_GATE / gate-net neighbours within 0.6 mm reviewed for single faults that energise the bus with PC1 low or fire: all in the disclosed row 2 / §1 classes.
+- High-voltage nets to 3V3/3V3A (I-5 sources): RAW_PROTECTED, PORT_5V3, PORT_4V8, CAM_5V, VLOGIC at 0.2505–0.300 mm on In2: the I-5 list is ruled non-exhaustive (rounds 27/30/31 triage).
+- S-8 barrels: 12 barrels on 6 BARREL_NETS nets; inner wall/ring distances PYRO1_OUT via 1.022, J121.1 1.050 / 1.064 (3V3), J400.2 In2 1.050, J121.2 ring 1.902 (to J121.1), PYRO1_GATE via 2.1 (USB_LIMITED).
+- Arithmetic re-run: divider 1 k || 10.22 k = 0.9107 kΩ; gate time constant 47–58 µs; 3.3 x 10 / 10.22 = 3.229 V; cold screen 0.0994 / 0.146 / 0.2946 V; IWDG 960 / 29.4 kHz = 32.653 ms and 34.853 ms sum; LSI 29.4 kHz and Table 146 on p238 of DS12110 Rev 8 (cached PDF); D402 EN shift 5.69 mV; dry-contact current 6.8 µA at 8.4 V; rule 4 currents agree with round23_safety_severity_check (1.128 / 1.063 A) and parts_budget fire_current_GAP1 (5.713190 V / 4.467803 Ω).
+- Datasheet lines (cached maker PDFs): AON7524 VGS(th) 0.4–1.2 V; AO3400A 0.65–1.45 V; AONR21357 VGS(th) -1.3…-2.3 V, RDS(on) 12.3 mΩ max at -4.5 V, VSD -0.7 / -1.0 V at -1 A, IDSS -1 / -5 µA.
+- Firmware rules 3 and 4 compared across the binding note (obligations 38 / 39), M3_R10 'Firmware', ORDERING 8.3 and FMEA I-2 / H-2: wording and figures agree; AGENTS §2.1 / §2.3 rules present (obligation 7); §2.5 labels present on the safety figures in the committed AGENTS rows, rules 3 / 4, FMEA I-2 / H-2 and owner rows 1 / 2.
+- ORDERING 8.3 per-flight steps 2–4 checked against the circuit (J121.2 leakage, dummy-load CONT = BUS, meter current path at J400 open, BAT_IN - RAW_ACT 0.2 V criterion with 2 x 12.3 mΩ).
+
+## Coverage limits
+
+- No seeded gate runs this round; S-8 and route_check were not re-executed.
+- Distances use ERROR_INSIDE polygon approximation (2 µm): figures may read up to about 4 µm larger than pcbnew's exact distance.
+- Whole-board single-fault coverage concentrated on the fire chain, load-switch enable chain and EN node; the I-5 3V3 over-voltage class is taken as ruled non-exhaustive.
+- Firmware does not exist; rules were checked as text against the circuit only.

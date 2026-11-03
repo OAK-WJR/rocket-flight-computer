@@ -1,0 +1,54 @@
+# R10 round 33 — gate lens (Claude)
+
+Target `feed21f`, board `a0ec075e…` (SHA-256 identical before and after). Seeds only on a probe copy (since deleted).
+
+**Totals: 0 Critical / 0 Major / 0 Minor.** No realistic defect seeded in this lens passes the gate.
+
+## Findings
+
+None.
+
+## Fix verification
+
+| Item | Measurement | Verdict |
+|---|---|---|
+| R32-TRI-01 (R166-to-C84 courtyard gap, the only round 32 correction with a board measurement; none of the three is a gate change) | Board fp_rect courtyards (0.05 mm stroke): C84 (27.5, 78.5) rotated, south centreline y 83.75; R166 (23.5, 86.3), north centreline y 84.40: 0.65 mm centrelines, 0.60 mm outer edges; bounding boxes 0.56 mm | confirmed |
+| R32-TRI-02 / -03 (text only) | not in the gate lens; no check or generator touched by the round 32 fix pass (round32_fix_docs.md) | confirmed (no gate change to verify) |
+
+## Observations (not counted)
+
+1. D-R28-01 seeds C1 (loaded_pack power 5.456 x (1.46 + aux_A)), C2 (ports_w with the 1.46 + aux_A literal) and C3 (port_A without aux_A): r10_parts --check fails 'stale: parts_budget.json' until --budget-only regenerates the budget, then --check and test_r10_parts pass (C1 moves pack_7V4/6V0_four_stall_loaded_V to 5.881014 / 4.388745 V; C2 moves c_camera_radio_gps_on 13.0641 -> 13.0572 W). No stated rule binds a budget figure to a check and D-R28-01 claims no test: the known class (R29/R30 gate observations), not a gate miss.
+2. D-R28-02 ... -04 generator seeds S01-S17, S19, S22, S23 (rule 3 unpowered / both polarities / criterion / 'or open' / 0.91 kOhm / 100 Ohm / before first power / Simulation label / MCU-driving qualifier / 'all but one corner' / 47-58 us; rule 4 4.5 V / 0.2 V / reverted criterion / VSD p. 2 / body-diode tail; DS15034 'pp. 10-11' and 'p. 10'; '44 ms'; '21-26 ms') all fail SchematicContract.test_r23_binding_note_rules_and_pin_table; control passes.
+3. Seeds S18 (166-196 -> 160-196 V/s), S20 (SLVSEA3F p. 13 -> 14) and S21 (DS41326 p. 5 -> 6) inside obligation 15 pass the pinned test after regeneration (K-binding fails only a stale note). D-R28-04 pins the phrases it names, not every figure; no stated rule requires every generated figure to be pinned.
+4. Every positive string pinned in test_r23_binding_note_rules_and_pin_table occurs exactly once in the regenerated firmware_obligations, so no duplicate masks a reverted phrase.
+5. right_angle seeds on 7 real chamfers (4 critical: SW_NODE, BAT_SW_RETURN, ARM1_SENSE, CAM_MCU_TX; 3 non-critical: BUZZ_G, VLOGIC_SENSE, LOGIC_SOURCE_ST): the plain 90-degree corner fails right_angle on all 7; a 0.05 mm overshoot and a 0.002 mm gap fail (overlap_only_joint on critical, dead_copper on all).
+6. A 0.02 mm diagonal 'chamfer' fails micro_segment on critical nets and is counted, not failing, on the 3 non-critical nets (audit 2 item 7 hygiene scope); the generator's chamfer_right_angles asserts every chamfer >= max(width, 0.2 mm), so no generator edit produces it; contrived.
+7. A zero-length diagonal at the corner (chamfer collapsed) passes route_check on non-critical nets (micro_segment counted) but kicad-cli DRC reports track_dangling at the corner (BUZZ_G B.Cu (20.5, 58.87)), so check.sh fails it; same as round 25's DRC-caught zero-length observation.
+8. D-R26-01: the board's real-board test passes; moving the (7.4, 16.5) partner via 0.11 mm north (1.61 mm from J440.3) fails critical_via_no_gnd J440.3 1.61 mm; giving it net 3V3 fails critical_via_no_gnd (2.0 mm) plus dangling_via / dead_copper.
+9. D-R26-02 / -04: the three real-board tests pass (including their put-back seeds 0.5135 / 0.566 / 0.62 / 0.331 / 0.676 mm). Their copper_gap ignores unflashed via and pad barrels; my own measurement with barrels on both sides finds no 3V3 / 3V3A copper within 1.0 mm of PYRO1_OUT / PYRO1_GATE / PYRO1_GATE_N on any layer (least near pairs: J121.1 barrel to In2 3V3 fill 1.061 mm, PYRO1_GATE via (14.4, 53.3) B.Cu 1.145 mm), and S-8 already covers those nets' barrels on In1 / In2.
+10. D-R27-03: swapping PORT_TERMINAL_PINS pins 3 / 4 in r10_parts.py fails SchematicContract.test_r27_port_terminal_pin_names.
+11. Rule 4's '0.93-1.01x the 1.125 A floor' against 1.128 / 1.063 A was re-noticed; it is the R27-MCU observation (envelope of the round 23 case table), nothing new.
+
+## Checks executed
+
+- sha256 of the board before and after
+- git archive feed21f into the probe directory (copies since deleted); seeds only on that copy
+- D-R28-02 ... -04: 23 generator seeds in r10_sch_check.py, each running test_r10_check SchematicContract.test_r23_binding_note_rules_and_pin_table, plus control (scripts/seed_note.py, seed_note.out)
+- pinned-string occurrence count in the regenerated binding note (count.py)
+- D-R28-01: three r10_parts.py seeds with r10_parts --check, --budget-only, --check, test_r10_parts and a budget diff
+- right_angle: 7 chamfers x 5 kinds (plain 90, overshoot, gap, tiny chamfer, zero-length) scanned with route_check scan + evaluate, profile r10 (scripts/ra_seed.py, ra_seed.out, ra_zero.out)
+- kicad-cli 10.0.7 pcb drc --schematic-parity on the zero-length seed board copy
+- test_route_check RouteCheck.test_r24_right_angle and R10AuditScope.test_r26_plated_pad_layer_change_needs_a_gnd_via
+- test_r10_check RealBoardSeeds.test_r26_aux_pins_have_gnd_partner_vias, test_r26_pyro1_out_clear_of_3v3_and_3v3a, test_r26_gate_nets_clear_of_3v3_and_3v3a
+- D-R26-01 partner-via move / net seeds (scripts/partner.py, partner.out)
+- barrel-inclusive 3V3 / 3V3A clearance to PYRO1_OUT / GATE / GATE_N (scripts/barrels.py, barrels2.py)
+- D-R27-03 pin-swap seed with test_r27_port_terminal_pin_names
+- route_check --profile r10 on the unmodified copy: 0 failing (route_base.json)
+- R166 / C84 courtyard geometry (scripts/cy.py, cy2.py)
+
+## Coverage limits
+
+- Full tools/check.sh not run (brief); the zero-length seed board was checked with DRC and route_check only, not refilled (its zone-clearance DRC items come from the unrefilled fill)
+- right_angle seeds cover 7 of 56 single-net chamfer samples (seeded random choice), not every bend; via / pad corner cases rely on the synthetic test_r24_right_angle
+- r10_sch_check.py full run on the D-R27-03 seed was not completed (needs KICAD_CLI); the unit test was the caught signal
+- No physical, firmware or fabrication evidence

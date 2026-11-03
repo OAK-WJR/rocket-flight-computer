@@ -1,0 +1,372 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_mcu",
+ "reviewer": "claude",
+ "target_commit": "c70d261",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 4
+ },
+ "findings": [
+  {
+   "id": "R23-MCU-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The R10 firmware rule list omits the board-tied option-byte, supply, clock and USB settings that a first firmware needs and that its other rules presuppose",
+   "evidence": {
+    "files": [
+     "docs/M3_R10.md 'Firmware' (lines 818-889)",
+     "m3_design/assembly_review/sources/r10_design/r10_binding_note.json firmware_obligations[0..35]",
+     "docs/FMEA_REDUNDANCY.md F-2 (line 414), F-3 (line 416), section 2.2 'Start the IWDG in software' (line 162)"
+    ],
+    "option_bytes": "Only BOOT_ADD0 is named ('BOOT_ADD0/relevant boot settings'). The rule 'a ROM-loader jump is allowed only before IWDG starts' (binding obligation 8; M3_R10 line 871) holds only with IWDG1_SW = software start, which FMEA section 2.2 requires but the R10 list does not. Neither list names BOR_LEV (FMEA F-3 picks level 1; DS12110 Rev 8 rev V Table 126 p217: BOR1 falling 1.95/2.00/2.06 V, rising 2.04/2.10/2.15 V; BOR3 falling 2.54/2.61/2.68 V), SWAP_BANK_OPT, RDP or IO_HSLV. These option bits exist on the H743: CMSIS stm32h743xx.h FLASH_OPTSR_IWDG1_SW, _BOR_LEV, _SWAP_BANK_OPT, _IO_HSLV, _RDP (github.com/STMicroelectronics/cmsis-device-h7, lines 10883-10920). DS12110 Rev 8 p250 (rev V, before Table 160): HSLV is for supplies below 2.7 V; this board runs VDD = 3V3.",
+    "supply": "The board has only C19 / C20 (2.2 uF) on VCAP1 / VCAP2 (netlist) and no external VCORE, so the PWR supply configuration must be LDO (PWR_CR3 LDOEN = 1, BYPASS = 0; CMSIS PWR_CR3_LDOEN / _BYPASS / _SCUEN; community SVD reset 0x00000006). The binding fixes the clock at 200 MHz (obligation 11) but no rule names the VOS: DS12110 Rev 8 Table 122 pp214-215: VOS3 fCPU <= 200, fHCLK <= 100, fPCLK <= 50 MHz; VOS1 400 / 200 / 100 MHz; Table 123 p215 VOS0 TJ <= 105 C.",
+    "clock": "Y1 is a crystal (HSEBYP = 0). 25 MHz needs DIVM so that the PLL input is 2-16 MHz and the VCO 192-960 MHz (Table 147 p239, rev V), e.g. /5, x80, /2 = 200 MHz (Calculation). FMEA V-6 / F-2 (CSSHSEON, HSE-ready timeout, HSI fallback, re-scaled safety timers) is not carried into the R10 list; on R10 HSE_IN and HSE_OUT each reach Y1 through one via, (22.00, 49.10) and (24.69, 45.50) (board, B.Cu side), so a lost HSE is a credible single fault.",
+    "usb": "PA9 (OTG_FS_VBUS, DS12110 Rev 8 Table 9 p80, pin 68) is NC on R10; VBUS reaches only PC8 through R9 / R110. A device-mode USB stack must therefore not use OTG VBUS sensing (GCCFG VBDEN = 0, B-session valid override GOTGCTL BVALOEN / BVALOVAL; CMSIS names lines 24365 / 25167). The behaviour without the override is an Inference: RM0433 could not be downloaded (st.com timed out)."
+   },
+   "impact": "No firmware exists, so nothing fails now. A developer working from the R10 list alone could ship a hardware-started IWDG (which breaks the loader-jump rule and risks a reset loop), leave BOR at its default, run without CSS on a single-via crystal, or lose USB enumeration. Each is testable by register and option-byte readback.",
+   "concrete_fix": "Text only. Add a 'Bring-up configuration' bullet to docs/M3_R10.md 'Firmware' and to the binding note's obligations. Program and read back the option bytes BOOT_ADD0 = 0x0800, IWDG1_SW = software, BOR_LEV (state the level; DS12110 Table 126 p217), SWAP_BANK_OPT = 0, IO_HSLV = 0 and the RDP level. Set PWR_CR3 to LDO (never BYPASS), with the VOS matched to the 200 MHz clock (Table 122). Set HSEBYP = 0, a bounded HSE-ready wait, CSSHSEON with HSI fallback and safety-timer re-scaling (FMEA F-2), and PLL limits per Table 147. Set USB VBUS sensing off with a B-session override (PA9 NC). Label the RM0433 items as Inference until it is read."
+  },
+  {
+   "id": "R23-MCU-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "BOOT0's only pull-down (R5) and both VCAP capacitors (C19, C20) each hang on one via, outside SINGLE_OPEN_TAPS and unrecorded",
+   "evidence": {
+    "BOOT0": "U1.94 F(15.45, 46.00) -> F.Cu -> via BOOT0 (13.80, 45.60) -> B.Cu -> R5.1 B(13.00, 45.60); R5.2 B(13.00, 44.74) GND. BOOT0 has no other copper (pcbnew probe, scripts/netitems.py). DS12110 Rev 8 Table 157 p246 gives pull-up / pull-down values for I/Os but none for BOOT0, and Table 9 p86 lists BOOT0 as type B with VPP. That BOOT0 floats when the via opens is an Inference.",
+    "VCAP": "VCAP1 U1.48 F(30.55, 38.00) -> via (29.25, 38.00) -> C19.1 B(28.35, 36.95); VCAP2 U1.73 F(18.00, 35.45) -> via (18.00, 37.30) -> C20.1 B(19.10, 37.30). Each net has one via and no other path. DS12110 Rev 8 Table 124 p216: CEXT 2.2 uF (+/-20 %), ESR < 100 mOhm, 'the two 2.2 uF VCAP capacitors'.",
+    "gate": "tools/check_r10.py SINGLE_OPEN_TAPS (33 taps, D-R21-02 / D-R22-02) covers regulator FB / OV / EN / ILIM nodes, IC grounds and the PA4 / PA6 / 3V3 monitors; BOOT0, VCAP1 and VCAP2 are absent, and no record names these vias.",
+    "contrast": "The fire and arming pull-downs are via-free: R127 / R128 (PE4) and R123 (PC1, at Q122) are on F.Cu, and R163 (PC14) sits on the gate side of the buzzer's via (20.20, 52.10)."
+   },
+   "impact": "BOOT0 open: at the next reset the MCU may enter the ROM loader (BOOT_ADD1 0x1FF0, Inference), so the primary recovery and roll control go silent. Fire stays safe: PC1 / PE4 stay analog with R123 / R127. On the pad, the missing telemetry shows it; after an in-flight reset, Blue Jay is the only deployment. VCAP open: the LDO keeps one 2.2 uF instead of two, below DS12110's arrangement; its stability is an Inference.",
+   "concrete_fix": "Now, checks only: add ('BOOT0', U1.94, R5.1), ('VCAP1', U1.48, C19.1) and ('VCAP2', U1.73, C20.1) to SINGLE_OPEN_TAPS, with exact SINGLE_OPEN_EXCEPTIONS entries and measured reasons, and list them as respin items. At the next board change, add a second via per net or move R5 to F.Cu beside U1.94."
+  },
+  {
+   "id": "R23-MCU-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "round22_alternates.md says FS_XL_HG 010 on the LSM6DSV80X scales wrongly by 1.6x; DS14764 and ST's driver give the same 3.904 mg/LSB as the ISM's 010, so the only difference is an 80 g clip",
+   "evidence": {
+    "claim": "round22_alternates.md section 2.3 (line 161): with 010, firmware would scale +/-80 g data as +/-128 g, a 1.6x error; the binding note's 001 / 010 rule is 'unsafe'. Repeated in the summary table (line 15) and the docs note (line 172).",
+    "datasheets": "DS14764 Rev 1 Table 3 p12 (LSM6DSV80X): high-g sensitivity FS +/-64 g 1.952 mg/LSB, FS +/-80 g 3.904 mg/LSB; Table 138 p81: 010 = 80 g. DS15034 Rev 1 Table 3 p12 (ISM6HG256X): +/-128 g 3.904 mg/LSB; Table 150 p93: 010 = +/-128 g. DS14623 Rev 1 Table 3 p12 and Table 150 p93 (LSM6DSV320X): the same.",
+    "driver": "ST lsm6dsv80x-pid lsm6dsv80x_reg.c lines 85-93: from_fs64_to_mg x1.952, from_fs80_to_mg x3.904; ism6hg256x_reg.c line 90: from_fs128_to_mg x3.904 (raw.githubusercontent.com/STMicroelectronics/*-pid/master).",
+    "also": "ST's ism6hg256x_reg.h maps ISM6HG256X_256g = 0x3, but DS15034 Table 150 p93 gives 011 = Reserved and 100 = +/-256 g. The 001 / 010 rule correctly keeps firmware away from both codes.",
+    "F2": "docs/REQUIREMENTS.md F2: >= +/-64 g. 001 meets it on all three parts, and so does 010 (>= +/-80 g)."
+   },
+   "impact": "An analysis defect, not a board defect. ORDERING section 8.1's 'LSM6DSV80XTR with FS_XL_HG 001 only' is safe but rests on a wrong reason. A firmware author reading the analysis would think the binding note's 001 / 010 rule is dangerous on the 80X. In fact one 001 / 010 driver with 1.952 / 3.904 mg/LSB serves all three parts; on the 80X, 010 clips at +/-80 g instead of +/-128 g, still above F2.",
+   "concrete_fix": "Text only. In round22_alternates.md section 2.3, the summary row and the docs note, replace the 1.6x claim with: 010 is 3.904 mg/LSB on all three parts (DS14764 Table 3 p12); on the 80X it clips at +/-80 g. Keep '001 only' as the conservative rule, or allow 001 / 010 with the 80 g clip noted. In the M3_R10 / binding IMU rule, add: do not use ST's ism6hg256x driver 256 g enum (0x3, reserved per DS15034 Table 150)."
+  },
+  {
+   "id": "R23-MCU-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Binding obligation 29 calls PB1 a TT_a pin; DS12110 gives TT_u",
+   "evidence": {
+    "binding": "r10_binding_note.json firmware_obligations[29]: 'open R105 puts CAM_5V on a TT_a pin through R104 10 kOhm, limit 4.0 V'.",
+    "datasheet": "DS12110 Rev 8 Table 9 p70, LQFP100 pin 35 PB1: I/O structure TT_u (Table 8 p63: _u = USB option, supplied by VDD33USB); additional functions ADC12_INP5, COMP1_INM. The diagnostics sheet note already says 'TT_u 4.0 V max'."
+   },
+   "impact": "Text inconsistency between two records. The 4.0 V TT limit is unchanged, so there is no electrical effect.",
+   "concrete_fix": "Text only: change 'TT_a' to 'TT_u' in obligation 29 (its generator in m3_firmware/assembly_binding.py or r10 binding source) and regenerate the evidence note."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R22-03",
+   "claim": "Diagnostics note line 2 now reads 5.456 V -> 0.496 V, failed U400 about 0.89 V (OVLO 9.77 V), D8 19.9 V -> 1.81 V; netlist and board unchanged",
+   "measurement": "git diff ec8cb98..c70d261 of diagnostics.kicad_sch shows exactly that text replacement. Divider R104 10k / R105 1k (netlist): 5.456/11 = 0.496 V, 9.77/11 = 0.888 V, 19.9/11 = 1.809 V. The PB1 row in DS12110 Table 9 p70 is TT_u, ADC12_INP5, as the note says.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22-02",
+   "claim": "PA6 (R60.1), PA4 (U1.28) and R91.1 are single-open taps with exact entries; vias VLOGIC (34.50, 63.00), LOGIC_SOURCE_ST (30.85, 51.80), 3V3 (28.10, 60.00)",
+   "measurement": "pcbnew: a 0.3 mm via of the named net at each coordinate; the three tuples are in SINGLE_OPEN_TAPS (33 entries). The firmware plausibility rule (M3_R10 'Sense plausibility', R22-POWER-02) covers a floating PA4 and a stuck-low PA6. I did not run single_via_opens.",
+   "verdict": "confirmed (presence and firmware handling; path uniqueness not re-run)"
+  },
+  {
+   "id": "D-R22 (all)",
+   "claim": "The between-rounds pass changed no copper",
+   "measurement": "Board SHA-256 identical at ec8cb98 and c70d261 (5516eeec...). The Gerber zip differs only in the 54 CreationDate / 'Created by' lines (unzipped diff). The only schematic change is the diagnostics note text.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-03 (sensors note)",
+   "claim": "ISM6HG256X high-g +/-32..256 g; FS_XL_HG 001 / 010 only; pins 10 / 11 open on internal pull-ups",
+   "measurement": "DS15034 Table 150 p93: 000 32 / 001 64 / 010 128 / 100 256 / 011 reserved. DS14623 Table 150 p93: 011 = 256, 100 = 320. Sensitivities at 001 / 010 are 1.952 / 3.904 mg/LSB on both (Table 3 p12). ISM pins 10 / 11 input with pull-up (internal pin status table). On the LSM6DSV80X, pins 10 / 11 are NC with a fixed pull-up (DS14764 Table 22 p43), so 'keep OIS_PU_DIS = 0' is moot there (PIN_CTRL bit 7 unused in ST's 80X header).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-11",
+   "claim": "ISM6HG256X fitted, LSM6DSV320X alternate, WHO_AM_I 0x73, FS codes 001 / 010 shared",
+   "measurement": "WHO_AM_I fixed at 73h: DS15034 p66, DS14623 p66, DS14764 p55 (all three, indistinguishable). ST headers: every register address and every bit layout of the 279 typedef'd registers is identical for the ISM and the 320X. FS_G 101 = +/-4000 dps (140 mdps/LSB) and FS_XL 11 = +/-16 g on all three. High-g ODR codes, IF_CFG defaults (H_LACTIVE = 0, PP_OD = 0), INT1_CTRL, CTRL7 INT1_DRDY_XL_HG and CTRL1_XL_HG are identical on all three. 80X differences are only in OIS / EIS / IF2 bits.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-13 / R19-MCU-04 VREFBUF",
+   "claim": "VREF+ tied to VDDA; keep VREFBUF_CSR at reset (HIZ = 1); ENVR = 0 with HIZ = 0 pulls VREF+ to VSSA",
+   "measurement": "Netlist: U1.20 and U1.21 both on 3V3A (R164 2.2 Ohm from 3V3). Community SVD STM32H743x: VREFBUF CSR reset 0x00000002. The pull-down row is reported from ST AN5690 by a web search summary; RM0433 and AN5690 downloads timed out. DS12110 Table 9 note 7 p88 is TFBGA100-specific.",
+   "verdict": "partly (the mode table is still second-hand: Inference)"
+  },
+  {
+   "id": "D-R19-04 / R18-MCU-01 / R18-MCU-03 (gate pins)",
+   "claim": "PC1 and PE4 defined off in reset; pull-down networks",
+   "measurement": "Netlist and board: R123 2k ACT_EN to GND on F.Cu beside Q122.1 (no via); R127 1k at U1.3 and R128 10k / C126 at Q124.4 on F.Cu (no via); R163 10k on BUZZ_G at Q123.1. 3.6 V x 2/33 = 0.218 V; 3.6 V x (1k || 10.22k)/(30k + 0.911k) = 0.106 V. PE4 AF list includes TRACED1 and TIM15_CH1N, PC1 TRACED0 / RTC_TAMP3 / WKUP5 (DS12110 Rev 8 Table 9 pp64, 67; Table 12 p93; Table 14 p95).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-GAP-05 IWDG",
+   "claim": "PR /4, RLR 239: 960 LSI cycles, 28.571-32.653 ms",
+   "measurement": "DS12110 Rev 8 Table 146 p238: fLSI 29.4-33.6 kHz at TJ -40..125 C; 960/33.6 = 28.571 ms, 960/29.4 = 32.653 ms.",
+   "verdict": "confirmed"
+  }
+ ],
+ "rule_inventory": [
+  {
+   "rule": "PC1 and PE4 low before output mode, loader entry and fault shutdown",
+   "source": "M3_R10 Firmware; AGENTS 2.4; pin_table rows 3, 16",
+   "stated_testable": "stated, testable (ODR then MODER; readback)",
+   "consistency": "consistent: R123 / R127 / R128 on board, no vias"
+  },
+  {
+   "rule": "PE4 is active high; never enable a PE4 pull-up",
+   "source": "M3_R10; pin_table row 3",
+   "stated_testable": "stated, testable",
+   "consistency": "consistent: R126 / R127 / R128 / C126 / Q124 (netlist)"
+  },
+  {
+   "rule": "Never enable a PC1 pull-up, RTC_TAMP3 or WKUP5",
+   "source": "M3_R10; pin_table row 16",
+   "stated_testable": "stated, testable",
+   "consistency": "consistent with DS12110 Table 9 p67 (RTC_TAMP3/WKUP5 on PC1); whether those functions apply a pull is an Inference (RM0433 not read)"
+  },
+  {
+   "rule": "Lock PC1 (GPIOC_LCKR) and PE4 (GPIOE_LCKR), read back LCKK and the pin bit",
+   "source": "binding 30",
+   "stated_testable": "stated, testable",
+   "consistency": "consistent"
+  },
+  {
+   "rule": "Never enable synchronous trace (PE2 / PC1 / PE4)",
+   "source": "binding 30, 32",
+   "stated_testable": "stated, bench test defined",
+   "consistency": "consistent; PC8 TRACED1 and PC12 TRACED3 are also trace pins (DS12110 Rev 8 Table 12 p93), named for PC12 in the telemetry note"
+  },
+  {
+   "rule": "Passive cold screen before PC1; >= 1 s after prior enable; PC1 then >= 100 ms before powered checks",
+   "source": "binding 9; M3_R10",
+   "stated_testable": "stated; thresholds need bench",
+   "consistency": "consistent"
+  },
+  {
+   "rule": "No fire before accel + baro launch detection; ground readings are refusals, flight readings never veto",
+   "source": "AGENTS 2.1 / 2.3; binding 7",
+   "stated_testable": "stated",
+   "consistency": "consistent"
+  },
+  {
+   "rule": "IWDG /4, RLR 239; no refresh during fire; SAFETY pass within 5 ms",
+   "source": "binding fire_timing, 7",
+   "stated_testable": "stated, testable",
+   "consistency": "consistent with Table 146 p238; assumes IWDG1_SW software start (not stated: R23-MCU-01)"
+  },
+  {
+   "rule": "ROM-loader jump only before IWDG starts, gates locked low, camera EN/OE low, SD_CS high",
+   "source": "binding 8; M3_R10",
+   "stated_testable": "stated",
+   "consistency": "consistent; depends on IWDG1_SW (R23-MCU-01)"
+  },
+  {
+   "rule": "BOOT_ADD0 readback; BOOT0 low alone does not exclude ROM",
+   "source": "M3_R10; pin_table row 24",
+   "stated_testable": "stated",
+   "consistency": "consistent; BOOT0 pull-down on one via (R23-MCU-02)"
+  },
+  {
+   "rule": "LSEON = 0; PC14 is the buzzer; VBAT tied to 3V3",
+   "source": "binding 27; buzzer note",
+   "stated_testable": "stated, testable",
+   "consistency": "consistent: DS12110 Table 9 note 1 p88 (oscillator function kept through non-POR resets)"
+  },
+  {
+   "rule": "PC14 buzzer at <= 2 MHz, 4 kHz toggle, never DC",
+   "source": "binding 16; buzzer note",
+   "stated_testable": "stated",
+   "consistency": "consistent: Table 159 p249, Table 160 note 2 p251; drives a MOSFET gate through 1 kOhm, no DC source current"
+  },
+  {
+   "rule": "PA15 to analog, no pull, explicitly; no-net pins analog, never outputs",
+   "source": "binding 6, 26",
+   "stated_testable": "stated",
+   "consistency": "consistent; DS12110 Table 8 p63 says I/Os are 'floating inputs during and after reset'; 'analog' as the MODER reset is from RM0433 (not read): Inference"
+  },
+  {
+   "rule": "Port TX only while PA4 low; park PD8 / PB13 / PC6 analog when PA4 rises or PA6 trips",
+   "source": "binding 20; port_states",
+   "stated_testable": "stated, testable",
+   "consistency": "consistent: all six port pins FT (Table 9 pp74-79); PA4 TT_a"
+  },
+  {
+   "rule": "Unmapped port: USART off, pins analog",
+   "source": "binding 3",
+   "stated_testable": "stated",
+   "consistency": "consistent"
+  },
+  {
+   "rule": "Port devices drive TX <= 3.6 V; RX pulls off",
+   "source": "binding 15",
+   "stated_testable": "stated",
+   "consistency": "consistent with Table 119 p212 / Table 122 note 3 p215"
+  },
+  {
+   "rule": "PA6 ADC1/2 watchdog shedding; plausibility of PA6 / PA4",
+   "source": "binding 12, 13; M3_R10 R22-POWER-02",
+   "stated_testable": "stated; threshold and latency need bench",
+   "consistency": "consistent: PA6 ADC12_INP3 (Table 9 p69)"
+  },
+  {
+   "rule": "ADC map PC0 ADC123_INP10, PC5 ADC12_INP8, PA6 ADC12_INP3, PB1 ADC12_INP5",
+   "source": "binding 21; mcu note",
+   "stated_testable": "stated",
+   "consistency": "consistent with Table 9 pp67-70; PB1 is TT_u (R23-MCU-04)"
+  },
+  {
+   "rule": "VDDA from VREFINT / VREFIN_CAL; 3V3 from VBAT/4 on ADC3",
+   "source": "binding 21",
+   "stated_testable": "stated",
+   "consistency": "consistent: VREFIN_CAL 0x1FF1E860 (Table 128 p219), Q = 4 +/-10 % (Table 192 p293); 'ADC3' is from RM0433 (Inference)"
+  },
+  {
+   "rule": "Never write VREFBUF_CSR",
+   "source": "binding 35",
+   "stated_testable": "stated, testable (readback 0x2)",
+   "consistency": "consistent; the mode table is still an Inference"
+  },
+  {
+   "rule": "PE1 input with pull-down, EXTI1, INT1 push-pull active high",
+   "source": "binding 5; pin_table row 98",
+   "stated_testable": "stated",
+   "consistency": "consistent on all three IMUs (IF_CFG defaults; INT1 'output forced to ground')"
+  },
+  {
+   "rule": "IMU FS_XL_HG 001 / 010 only; SPI <= 10 MHz; ignore gyro 40 ms",
+   "source": "binding 34",
+   "stated_testable": "stated",
+   "consistency": "consistent for ISM / 320X; also valid for the 80X (R23-MCU-03)"
+  },
+  {
+   "rule": "IMU roll = -gyro_Y, lever arm (+6.0, ., +2.06) mm IMU frame",
+   "source": "binding imu",
+   "stated_testable": "stated; bench sign check",
+   "consistency": "consistent (not re-measured this round)"
+  },
+  {
+   "rule": "QSPI QE set; bounded erase; SD CS high before SPI3 AF6; 74 clocks",
+   "source": "binding 22, 33",
+   "stated_testable": "stated",
+   "consistency": "consistent: R460 on SD_CS; R10 on QSPI_NCS"
+  },
+  {
+   "rule": "Maximum normal-flight clock 200 MHz",
+   "source": "binding 11",
+   "stated_testable": "stated",
+   "consistency": "VOS, PLL and CSS not stated (R23-MCU-01)"
+  },
+  {
+   "rule": "First servo output neutral 1520 us, command within 50 ms",
+   "source": "binding 8",
+   "stated_testable": "stated; bench",
+   "consistency": "consistent: R154-R157 pull-downs"
+  },
+  {
+   "rule": "Radio uplink never arms or fires",
+   "source": "binding 18; AGENTS",
+   "stated_testable": "stated",
+   "consistency": "firmware obligation"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R23-MCU-01",
+   "change": "Add the 'Bring-up configuration' bullet (option bytes and readback, LDO supply and VOS, HSE / PLL / CSS, USB VBUS-sense override) to docs/M3_R10.md Firmware and the binding-note obligations",
+   "board_change": false
+  },
+  {
+   "id": "R23-MCU-02",
+   "change": "Add BOOT0 / U1.94-R5.1, VCAP1 / U1.48-C19.1 and VCAP2 / U1.73-C20.1 to SINGLE_OPEN_TAPS with exact SINGLE_OPEN_EXCEPTIONS entries (vias (13.80, 45.60), (29.25, 38.00), (18.00, 37.30)) and list them as respin items",
+   "board_change": false
+  },
+  {
+   "id": "R23-MCU-03",
+   "change": "Correct round22_alternates.md section 2.3, its summary row and the docs note: 010 is 3.904 mg/LSB on all three parts, and on the 80X it clips at +/-80 g. Add the ST ISM driver 256 g enum caution to the IMU rule",
+   "board_change": false
+  },
+  {
+   "id": "R23-MCU-04",
+   "change": "TT_a -> TT_u for PB1 in binding obligation 29 (generator), then regenerate",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "item": "HSE load capacitors 10 pF with CL 8 pF crystal",
+   "reason": "Series 5 pF plus stray; frequency pull is ppm-level, far inside USB FS +/-500 ppm. gm check: 4 x 50 Ohm x (2 pi 25 MHz)^2 x (10 pF)^2 = 0.49 mA/V <= Gmcritmax 1.5 mA/V (DS12110 Table 141 p234; NDK NX3225GA ESR <= 50 Ohm for 20-50 MHz; C0 + CL taken as 10 pF, Inference). Already discussed in CIRCUIT_REVIEW."
+  },
+  {
+   "item": "VCAP C19 / C20 operating capacitance and ESR",
+   "reason": "Known open qualification (AGENTS U1 row); 2.2 uF +/-20 %, ESR < 100 mOhm, Table 124 p216. Not re-filed. The single-via aspect is new (R23-MCU-02)."
+  },
+  {
+   "item": "PC14 sourcing current into the buzzer",
+   "reason": "PC14 drives the AO3400A gate through 1 kOhm with R163 10k to GND: DC about 0.3 mA, transient <= 3.3 mA, against a characterised +/-3 mA (Table 159 p249). Recorded in binding 16."
+  },
+  {
+   "item": "PC0 = ADC123_INP10 and PC1 = ADC123_INN10",
+   "reason": "Differential channel 10 would connect PC1's pad to the ADC; PC1 is a locked push-pull output, so sampling cannot change its level. Single-ended use is the plan; no hazard."
+  },
+  {
+   "item": "IMU in I2C mode while CS is high",
+   "reason": "SPI1 serves only U4 (netlist), so no traffic reaches it with CS high. Setting I2C_I3C_disable = 1 is optional good practice."
+  },
+  {
+   "item": "Register-count wording in round22_alternates ('285' / '239' shared addresses)",
+   "reason": "My parse counts 258 / 219 addressable register typedefs with zero address or layout differences beyond OIS / EIS / IF2. The count depends on the parsing method; the substance holds."
+  },
+  {
+   "item": "LSM6DSV80X pins 10 / 11",
+   "reason": "DS14764 Table 22 p43: NC, leave unconnected, fixed pull-up; the board leaves them open. Compatible."
+  },
+  {
+   "item": "BOOT0 floating detection on the pad",
+   "reason": "The on-rail telemetry check (ORDERING 8.3) shows a ROM-loader boot before launch; only an in-flight reset after a via open is undetected (R23-MCU-02)."
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after (identical); also at ec8cb98 and c70d261 via git show",
+  "kicad-cli 10.0.7 sch export netlist (kicadxml) into the probe dir; U1's 100 pins against pin_table.tsv r10_net: 0 mismatches",
+  "pcbnew read-only probes: copper on ACT_EN_MCU, ACT_EN, PYRO1_GATE_N, PYRO1_GATE, BUZZ_DRV, BUZZ_G, BOOT0, NRST, IMU_CS, SD_CS, HSE_IN, HSE_OUT, VCAP1, VCAP2, IMU_INT1; D-R22-02 via coordinates",
+  "Unzipped Gerber diff ec8cb98 vs c70d261: only timestamp lines differ",
+  "pdftotext of DS12110 Rev 8, DS15034 Rev 1, DS14623 Rev 1, DS14764 Rev 1, NDK NX3225GA; page-resolved table reads",
+  "ST register headers and drivers (ism6hg256x / lsm6dsv320x / lsm6dsv80x -pid) parsed: bit layouts of every typedef'd register compared; FS / ODR enums and mg/LSB conversions compared",
+  "CMSIS stm32h743xx.h bit names; community STM32H743x SVD reset values for VREFBUF_CSR and PWR_CR3",
+  "Schematic text notes extracted from all 15 sheets for firmware rules",
+  "Compared with round22_mcu.md after writing these findings: none of R23-MCU-01..04 was in round 22 (its only finding, R22-MCU-01, is fixed by D-R22-03)"
+ ],
+ "sources": [
+  "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 8; Tables 8 p63, 9 pp64-86 and note 1 / 7 p88, 122-124 pp214-216, 126 p217, 128 p219, 141 p234, 146 p238, 147 p239, 157 p246, 159 p249, 160 note 2 p251, 192 p293)",
+  "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (DS15034 Rev 1: Table 3 p12, WHO_AM_I p66, IF_CFG p60, Table 150 p93)",
+  "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1: Table 3 p12, p66, Table 150 p93)",
+  "https://www.st.com/resource/en/datasheet/lsm6dsv80x.pdf (DS14764 Rev 1: Table 3 p12, Table 22 p43, IF_CFG p49, WHO_AM_I p55, Tables 137-138 p81)",
+  "https://github.com/STMicroelectronics/ism6hg256x-pid, lsm6dsv320x-pid, lsm6dsv80x-pid (master, *_reg.h / *_reg.c)",
+  "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/master/Include/stm32h743xx.h",
+  "https://raw.githubusercontent.com/cmsis-svd/cmsis-svd-data/main/data/STMicro/STM32H743x.svd (community SVD; used only for VREFBUF / PWR_CR3 reset values)",
+  "ST AN5690 VREFBUF mode table, via web-search summary only (st.com timed out): Inference",
+  "NDK NX3225GA datasheet (cached .supervisor/r14_parts_pdf/ndk.pdf)"
+ ],
+ "coverage_limits": [
+  "RM0433 and AN2606 could not be downloaded (st.com timed out three times); every RM0433-dependent statement (GPIO MODER reset values, VREFBUF mode table, OTG VBUS-sense behaviour, TAMP / WKUP pulls, ADC3 internal channels, option-byte defaults) remains an Inference",
+  "No firmware exists; no hardware measured; DRC / ERC not re-run (board unchanged since round 22, which ran them)",
+  "single_via_opens was not re-run; via-path uniqueness for R23-MCU-02 was read from the net's complete copper list (no zones on BOOT0 / VCAP1 / VCAP2)"
+ ]
+}

@@ -1,0 +1,486 @@
+{
+ "schema": 1,
+ "lane": "round 28 fix pass, CAD lane (generators, generated text, checks)",
+ "date": "2026-11-02",
+ "brief": ".supervisor/r28_fix_brief.md items 1-3 on round28_triage.md / .json (R28-TRI-03, R28-TRI-05, R28-TRI-09, the AGENTS 2.5 sweep of the generated obligations, records), with the root's addition to item 2 (rule 3 says what docs/M3_R10.md and ORDERING 8.3 now say)",
+ "base": {
+  "commit": "19dd0b5",
+  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c"
+ },
+ "board": {
+  "sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "changed": false
+ },
+ "builds": {
+  "1": {
+   "exit": 0,
+   "seconds": 1677,
+   "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+   "note": "the brief's items with the triage's rule 3 wording; superseded by the root's additions"
+  },
+  "2": {
+   "stopped_after_s": 207,
+   "note": "stopped when the root's second addition arrived (port lead, rule 4, before first power); its tree was not final"
+  },
+  "3": {
+   "exit": 0,
+   "seconds": 1671,
+   "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+   "note": "the final tree"
+  }
+ },
+ "final_tree_check": {
+  "tools_check_sh": "exit 0, as the last step of build 3. After build 3: R10_DECISIONS.md and the hand-back; item 7 changed r10_sch_check.py, test_r10_check.py and the regenerated binding note (K-binding OK, SchematicContract / BindingEvidence 11 tests OK); per the root no check.sh or full build for item 7, root runs check.sh on the final tree",
+  "r10_sch_check": "OK",
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "check_r10": "37 / 37 OK",
+  "k_binding": "OK",
+  "route_check": "0 failing, 0 allowlisted, 5 unrecorded noncritical leftovers as before",
+  "fab_manifest": "OK; content checks pass"
+ },
+ "parts_budget": {
+  "sha256": [
+   "ecc45417a4b9ec6ad021f52153cf2f59b547ac8e1afbd39dbd7d6e4c39f9a8bb",
+   "4267634220f4254aef28dfc9756c68b29784560c11b994c14274790dd631fab2"
+  ],
+  "line_91": "\"pack_7V4_four_stall_loaded_V\": 5.8808312447840425,",
+  "line_92": "\"pack_6V0_four_stall_loaded_V\": 4.388490666810671,",
+  "before": {
+   "line_91": 5.881013614959047,
+   "line_92": 4.388744837110238
+  },
+  "matches_brief": "5.880831 / 4.388491 V",
+  "other_changes": "none (ports_w is the same expression, so every other budget value is unchanged)",
+  "binders": "no code binds its SHA (check.sh regenerates and compares it); parts_qualification.md:475 quotes the old one (audit lane A)"
+ },
+ "binding_note": {
+  "sha256": [
+   "e8f10fb3ef1c4bd8428035dc17a08accde8b69675f1449bbc30c037b6cf37a3b",
+   "30796f5ece9f3660264ca855dd6e4c1dbd8f97ee3f37983aed200ea27ef32ede"
+  ],
+  "interim_build_1": "757b8a8753d87f651f80d007db01cbffbc8fb26052d9a470587d2c21fce191e5",
+  "changed": "eight obligations: the port map, GAP-5, obligation 15 (port supply lead), the chatter text, the IMU obligation (DS15034 Table 2 p. 11) and rules 3, 4 and 8 (indices 2, 7, 15, 17, 34, 38, 39, 43); the board, netlist, pin table and circuit hashes are unchanged",
+  "k_binding": "OK",
+  "build_3": "a40e21a4c115d88bcfdfecedada26e5253a0fef8c8b0972b6bba5c5aeabce046"
+ },
+ "rule_3_final": "R23 firmware rule 3, QSPI_IO2 / PE4 bridge (R23-SAFETY-08 (1); verified Minor by round23_safety_severity_check.md). Physics: Q124's gate capacitor is C126, 220 nF, not C128 (100 nF, on the drain); the gate time constant is 47–53 µs; a steady IO2-against-PE4 fight with the MCU driving IO2 high puts 1.19–1.98 V on the gate and fires the match after about 0.55 ms in all but one modelled corner; page-program logging at a QSPI clock of 25 MHz or more stays at most 6 mA RMS, at least 50× below the 0.30 A no-fire (Calculation / Simulation; driver resistances, flash drive, the AON7524 sub-amp curve and the match thermal model are Inference); firing needs a sustained IO2-high pattern. Ground refusal: before PC1 goes high, run a QSPI quad read-verify of a known pattern, and refuse on any mismatch: the bridge corrupts quad reads. QSPI use while PC1 is high: PE2 stays in its QSPI alternate function, never a GPIO driven high; no memory-mapped or parked quad reads; no long all-ones writes at a low clock; the flash output drive is not at 100 %. Cold screen: during part of the passive cold screen, run sustained QSPI traffic and toggle PC14 and the servo PWM; refuse if CONT or BUS moves out of band. First article, before first power and coating: inspect U1 pins 1–5 for bridges, and, with the board unpowered (pack and USB disconnected), meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network) in resistance mode, both polarities: an intact board reads above 0.9 kΩ, or open, both ways (red lead on R127.1: a diode drop plus about 0.91 kΩ through the U1 / U3 input clamps; reversed: open or slowly rising); a continuity beep or under 100 Ω in either polarity is a bridge: reject (0.91 kΩ is R127's 1 kΩ in parallel with R126 + R128, Calculation; the meter's reading through the clamps is an Inference).",
+ "rule_4_final": "R23 firmware rule 4, bus voltage (R23-SAFETY-05): on the ground, after PC1 goes high and a 100 ms settle, the powered BUS must read at least 0.96 × the pack voltage derived from VLOGIC_SENSE, else refuse (this catches Q120 left off and the bus fed through its body diode). Qualify the band on first articles. Verified Minor: four stalls give 1.128 / 1.063 A (0.7 / 1.0 V drop: AONR21357 VSD typical / maximum at 1 A, p. 2; Calculation / Inference: the fire budget's hot Q124 factor is inferred), 0.93–1.01× the 1.125 A floor but at least 1.39× the maker's 0.75 A all-fire and at least 1.04× its 1.00 A recommended minimum. A first-order thermal model fires the match in 4–5 ms, inside the 20 ms pulse (Inference). At first article, before coating, with PC1 high and a dummy load in J121: ACT_GATE at R120.2 / C120.2, against Q120's source at R120.1, must settle at |VGS| of at least 4.5 V (a Q120 gate cut off from R121 sits near 0 V), and during the dummy-load fire BAT_IN − RAW_ACT above 0.2 V fails the board (R23-SAFETY-05's criterion: Q120's body diode adds 0.7–1.0 V). Since D-R24-02 each gate drive has a second barrel (Q120 (16.2, 73.3) + (15.4, 72.85), Q121 (11.14, 71.7) + (11.74, 72.3)): leaving Q120 off this way takes two opens (D-R24-19).",
+ "obligation_15_final": "On VLOGIC undervoltage/shutdown drop camera EN/OE and park PD8 / PB13 / PC6 in analog mode, no pull; the GPS/radio/AUX ports stay powered whenever the battery path is on (firmware cannot switch them; off on USB-only power). J400 has no state sensor; retain the no-self-powered-port/e-match restriction. Direct port UARTs are FT digital inputs only, RX pulls always disabled; a device on J410 / J420 / J440 must drive its TX high at no more than 3.6 V, because PORT_4V8 can rise tens of ms before 3V3 (the 470 nF U11 soft-start (C85) slews VLOGIC at about 166–196 V/s after its settling time, TI SLVSEA3F Table 9-1 p. 13 scaled to 470 nF, and U2 (AP63203) starts at 3.3–3.7 V with a 4 ms soft-start, Diodes DS41326 p. 5, so 3V3 regulates about 21–26 ms into the slew; Calculation / Inference: the table is scaled linearly and the settling time is not quantified; measure the PORT_4V8-to-3V3 lag on first articles) and an FT pin allows only 4.0 V while VDD = 0 (DS12110 Rev 8 Table 119 p. 212; R20-MCU-02). ST DS12110 Rev 8 Table 122 note 3 p. 215 / Table 157 note 7 p. 247 requires pulls off above Min(VDD, VDDA, VDD33USB) + 0.3 V in operation; Table 119 note 4 p. 213 gives a separate 4 V absolute-stress condition. No powered-off isolation or positive injected current allowance.",
+ "fab": {
+  "changed": "creation dates only (Gerber zip and the two assembly PDFs); BOM, owner BOM, CPL and paste byte-identical; manifest inputs unchanged, outputs re-bound",
+  "r10_fab_sh": "run by the builds only; no networked run (BOM / CPL unchanged, supplier evidence still binds)"
+ },
+ "hotplug": {
+  "inputs_changed": false,
+  "results_changed": false,
+  "cases": 2304,
+  "failures": 0,
+  "minimum_V": -14.807,
+  "steepest_fall_V_per_us": 8.995,
+  "steepest_rise_V_per_us": 5.088,
+  "limits": {
+   "minimum_V": -15.0,
+   "falling_V_per_us": 10.0,
+   "rising_V_per_us": 100.0
+  }
+ },
+ "items": [
+  {
+   "n": 1,
+   "triage": "R28-TRI-03",
+   "decision": "D-R28-01",
+   "status": "done",
+   "before": "loaded_pack power 5.456 * (1.46 + aux_A); ports_w used 1.461 + aux_A",
+   "after": "port_A = 1.461 + aux_A, defined once; ports_w = [buck_min * port_A / .85, buck_max * port_A / .80]; loaded_pack power 5.456 * port_A",
+   "figures": {
+    "pack_7V4_four_stall_loaded_V": [
+     5.881013614959047,
+     5.8808312447840425
+    ],
+    "pack_6V0_four_stall_loaded_V": [
+     4.388744837110238,
+     4.388490666810671
+    ]
+   },
+   "files": [
+    "m3_design/r10_parts.py",
+    "regenerated: m3_design/assembly_review/sources/r10_design/parts_budget.json"
+   ]
+  },
+  {
+   "n": 2,
+   "triage": "R28-TRI-05",
+   "decision": "D-R28-02",
+   "status": "done",
+   "before": "meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network): it must read open",
+   "after": "with the board unpowered (pack and USB disconnected), meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network) in resistance mode, both polarities: an intact board reads above 0.9 kΩ, or open, both ways (red lead on R127.1: a diode drop plus about 0.91 kΩ through the U1 / U3 input clamps; reversed: open or slowly rising); a continuity beep or under 100 Ω in either polarity is a bridge: reject (0.91 kΩ is R127's 1 kΩ in parallel with R126 + R128, Calculation; the meter's reading through the clamps is an Inference)",
+   "root_addition": [
+    "with the board unpowered (pack and USB disconnected)",
+    "above 0.9 kΩ, or open, both ways",
+    "the reading through the clamps labelled Inference, as M3_R10 does"
+   ],
+   "files": [
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "regenerated: m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+   ]
+  },
+  {
+   "n": 3,
+   "triage": "R28-TRI-09 and the sweep",
+   "decision": "D-R28-03",
+   "status": "done",
+   "rule_3": {
+    "label": "(Calculation / Simulation; driver resistances, flash drive, the AON7524 sub-amp curve and the match thermal model are Inference)",
+    "root_addition": [
+     "with the MCU driving IO2 high",
+     "in all but one modelled corner"
+    ]
+   },
+   "sweep_scope": "all 49 firmware obligations, port_states, imu and fire_timing, each read against its inputs",
+   "labelled": {
+    "port map (AUX allowance)": "(U401 thermal floor, parts_budget.json) -> (U401 thermal floor: junction <= 125 C at the 70 C bay with the inferred 110 C/W theta-JA, Inference; parts_budget.json)",
+    "GAP-5 34.853 ms bound": "+ (Calculation on allocations: the 0.2 / 0.5 / 1.5 ms need bench tests, and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate charge are Inference; parts_budget.json pyro_fault_GAP5)",
+    "chatter": "Calculation -> Calculation / Inference (C87 0.72 x minimum: X7R DC-bias loss taken as <= 6 % without the maker's curve, D-R19-10; the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred); the 30-130 ms turn-on marked as the same model",
+    "rule 4": "1.128 / 1.063 A: AONR21357 VSD (p. 2) cited; Calculation / Inference: the fire budget's hot Q124 factor is inferred",
+    "rule 8": "fire-model corner and hold-up: Calculation -> Calculation / Inference (hot Q124 factor; loads are the budget's allocations and C84 has no cold-capacitance factor)"
+   },
+   "unchanged": "already labelled (PA15, trace override, VREFBUF, back-feed, R5-MCU-04 Rev 11 limits, rules 7 / 10 / 12, the IMU lever arm z) and datasheet or plain-arithmetic figures (watchdog, deglitch, W25Q erase, IMU codes, VIH, dividers)",
+   "missed_by_this_sweep": "the port supply lead over 3V3 (obligation 15): taken for a datasheet calculation; audit lane B showed its 44 ms was VLOGIC's full slew, not a lower bound; D-R28-04 corrects and labels it",
+   "files": [
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "regenerated: m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+   ]
+  },
+  {
+   "n": 4,
+   "item": "root's siblings from audit lane B (round28_audit_proc.md)",
+   "decision": "D-R28-04",
+   "status": "done",
+   "port_supply_lead": {
+    "before": "PORT_4V8 rises about 44 ms or more before 3V3 (U11 C85 slew, TI SLVSEA3F Table 9-1 p. 13, Calculation)",
+    "after": "PORT_4V8 can rise tens of ms before 3V3, with the labelled derivation: 3V3 regulates about 21-26 ms into the slew (Calculation / Inference)",
+    "check": "3.3 V / 196 V/s + 4 ms = 20.8 ms; 3.7 V / 166 V/s + 4 ms = 26.3 ms"
+   },
+   "rule_4": {
+    "before": "At first article, probe ACT_GATE at R120.2 / C120.2 and record the dummy-load drop.",
+    "after": "the Q120 pass criterion: |VGS| at least 4.5 V against R120.1; BAT_IN - RAW_ACT above 0.2 V during the dummy-load fire fails the board (R23-SAFETY-05)"
+   },
+   "rule_3": "First article, before coating -> First article, before first power and coating",
+   "files": [
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "regenerated: m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+   ]
+  },
+  {
+   "n": 5,
+   "item": "records",
+   "status": "done",
+   "decisions": [
+    "D-R28-01",
+    "D-R28-02",
+    "D-R28-03",
+    "D-R28-04"
+   ],
+   "annotated": [
+    "D-R27-01 (What: its code used 1.46 A; figures: 5.880831 / 4.388491 V on 1.561 A)"
+   ],
+   "files": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+   ]
+  },
+  {
+   "n": 6,
+   "item": "D-R21-07 annotation (root, from audit lane A round28_audit_pq.md section 4)",
+   "status": "done",
+   "annotation": "dated 2026-11-02: 3.157 / 3.194 mm is the straight-line pad-centre distance, not a pad-edge gap; pad edge to pad edge 1.865 / 1.900 mm; J440 clamp paths on a0ec075e 3.864 / 3.964 mm of track (4.075 / 4.175 mm on 5516eeec, before D-R24-17)",
+   "measured": {
+    "tool": "pcbnew: check_r10 port_clamps on the board, pad shapes on B.Cu",
+    "a0ec075e": {
+     "path_mm": [
+      3.864,
+      3.964
+     ],
+     "centre_mm": [
+      3.1572,
+      3.1942
+     ],
+     "edge_mm": [
+      1.8651,
+      1.9004
+     ]
+    },
+    "5516eeec": {
+     "path_mm": [
+      4.075,
+      4.175
+     ]
+    }
+   },
+   "build_needed": false,
+   "files": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+   ]
+  },
+  {
+   "n": 7,
+   "item": "DS15034 Table 2 citation (root, from the docs lane)",
+   "status": "done",
+   "before": "(DS15034 Rev 1 Figure 5 p. 9 and Table 2 pp. 10-11; DS14623 Rev 1 p. 9)",
+   "after": "(DS15034 Rev 1 Figure 5 p. 9 and Table 2 p. 11; DS14623 Rev 1 p. 9)",
+   "pdf_check": "ism6hg256x.pdf (DS15034 Rev 1): Figure 5 p. 9; p. 10 section 3.1 / Figure 6; Table 2 (pins 1-14 and notes) p. 11 alone; p. 12 starts section 4",
+   "regeneration": "the build's own step: r10_sch_check.py --project --board --binding-note with the pinned 10.0.7 CLI (schematic contract ok); only line 606 changed",
+   "checks": {
+    "k_binding": "OK",
+    "tests": "test_r10_check SchematicContract + BindingEvidence: 11 OK",
+    "check_sh": "not run, per the root",
+    "full_build": "not run, per the root"
+   },
+   "binding_note_sha256": "30796f5ece9f3660264ca855dd6e4c1dbd8f97ee3f37983aed200ea27ef32ede",
+   "records": "D-R28-04 one-line note; D-R19-11 line annotated",
+   "residual_hits": [
+    "round19_fix_cad.md:80, :287 (history)",
+    "round20_parts.json:78, :111 (history)"
+   ],
+   "files": [
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+    "regenerated: m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+   ]
+  }
+ ],
+ "tests": {
+  "counts": {
+   "shell": 11,
+   "procurement": "OK",
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 72,
+   "r10": 268,
+   "r10_numpy_skips": 6,
+   "numpy_hotplug_plate": 6
+  },
+  "all_ok": true,
+  "ran": "in build 3 (final tree); build 1 also all OK",
+  "extended": [
+   "test_r10_check.SchematicContract.test_r23_binding_note_rules_and_pin_table"
+  ],
+  "not_run": "no physical test",
+  "extended_detail": "16 required phrases added (rule 3 criterion and qualifiers, rule 4 Q120 criterion, the port supply lead, nine labels) and 12 old forms rejected"
+ },
+ "decisions": [
+  "D-R28-01",
+  "D-R28-02",
+  "D-R28-03",
+  "D-R28-04"
+ ],
+ "record_index": "227 unique D IDs through D-R28-04",
+ "residual_grep_hits": {
+  "phrases": [
+   "5.456 * (1.46",
+   "1.46 + aux_A",
+   "5.881014",
+   "4.388745",
+   "4.389",
+   "ecc45417",
+   "e8f10fb3",
+   "it must read open",
+   "U401 thermal floor, parts_budget.json)",
+   "fire_current_GAP1 model, Calculation,",
+   "Calculation, D-R25-02",
+   "Calculation, R26-TRI-03)",
+   "cannot trip U9 (Calculation, R20",
+   "(0.7 / 1.0 V drop),",
+   "44 ms or more",
+   "record the dummy-load drop",
+   "First article, before coating",
+   "pad edge to pad edge, D-R20-09",
+   "3.16 / 3.19 mm pad edge",
+   "within the 36ms contract."
+  ],
+  "hits_by_phrase": {
+   "5.456 * (1.46": [
+    "m3_design/assembly_review/sources/r10_review/round27_triage.json:39"
+   ],
+   "1.46 + aux_A": [
+    "m3_design/assembly_review/sources/r10_review/round27_triage.json:39"
+   ],
+   "5.881014": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4555",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4640",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:493",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:700",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:294",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:149",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:45"
+   ],
+   "4.388745": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4556",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4641",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:493",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:700",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:294",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:149",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:45"
+   ],
+   "4.389": [
+    "STATUS.md:28",
+    "docs/R10_VALIDATION.md:2244",
+    "docs/R10_VALIDATION.md:2288",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4556",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4641",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:493",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:97",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:294",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:36",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:46",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:149",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:24",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:45",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:54",
+    "m3_design/assembly_review/sources/r10_review/round27_triage.json:32",
+    "m3_design/assembly_review/sources/r10_review/round27_triage.json:39",
+    "m3_design/assembly_review/sources/r10_review/round27_triage.md:19",
+    "tools/jlc_easyeda/pads.json:104",
+    "tools/jlc_easyeda/pads.json:246",
+    "tools/jlc_easyeda/pads.json:247",
+    "tools/jlc_easyeda/pads.json:248",
+    "tools/jlc_easyeda/pads.json:249"
+   ],
+   "ecc45417": [
+    "docs/R10_VALIDATION.md:2262",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4557",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4642",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:493",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:92",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:293",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:43",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:147",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:17",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:45"
+   ],
+   "e8f10fb3": [
+    "docs/R10_VALIDATION.md:2263",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4585",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4707",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:122",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.json:295",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:65",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_cad.md:151",
+    "m3_design/assembly_review/sources/r10_review/round27_fix_docs.md:20"
+   ],
+   "it must read open": [
+    "docs/R10_VALIDATION.md:2290",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4654",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4666",
+    "tools/test_r10_check.py:483"
+   ],
+   "U401 thermal floor, parts_budget.json)": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4683",
+    "tools/test_r10_check.py:488"
+   ],
+   "fire_current_GAP1 model, Calculation,": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4694",
+    "tools/test_r10_check.py:487"
+   ],
+   "Calculation, D-R25-02": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4695",
+    "tools/test_r10_check.py:487"
+   ],
+   "Calculation, R26-TRI-03)": [],
+   "cannot trip U9 (Calculation, R20": [
+    "tools/test_r10_check.py:486"
+   ],
+   "(0.7 / 1.0 V drop),": [
+    "docs/M3_R10.md:1109",
+    "docs/R10_VALIDATION.md:2532"
+   ],
+   "44 ms or more": [
+    "docs/M3_R10.md:1179",
+    "docs/R10_VALIDATION.md:2637",
+    "docs/REQUIREMENTS.md:64",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4715",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4728",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:106",
+    "tools/test_r10_check.py:485"
+   ],
+   "record the dummy-load drop": [
+    "docs/M3_R10.md:1112",
+    "docs/R10_VALIDATION.md:2532",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4729",
+    "tools/test_r10_check.py:484"
+   ],
+   "First article, before coating": [
+    "docs/FMEA_REDUNDANCY.md:38",
+    "docs/M3_R10.md:1100",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4727",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4729",
+    "tools/test_r10_check.py:484"
+   ],
+   "pad edge to pad edge, D-R20-09": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:3563"
+   ],
+   "3.16 / 3.19 mm pad edge": [
+    "docs/M3_R10.md:132",
+    "docs/R10_VALIDATION.md:1756",
+    "docs/R10_VALIDATION.md:2735",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:36"
+   ],
+   "within the 36ms contract.": [
+    "tools/test_r10_check.py:488"
+   ]
+  },
+  "other_lanes_for_root": {
+   "docs lane (STATUS, AGENTS, M3_R10, FMEA, REQUIREMENTS, R10_VALIDATION, AVA_LAYOUT)": [
+    "STATUS.md:28 (4.389)",
+    "docs/M3_R10.md:132 (3.16 / 3.19 mm pad edge)",
+    "docs/M3_R10.md:1100 (First article, before coating)",
+    "docs/M3_R10.md:1109 ((0.7 / 1.0 V drop),)",
+    "docs/M3_R10.md:1112 (record the dummy-load drop)",
+    "docs/M3_R10.md:1179 (44 ms or more)",
+    "docs/REQUIREMENTS.md:64 (44 ms or more)",
+    "docs/FMEA_REDUNDANCY.md:38 (First article, before coating)",
+    "docs/R10_VALIDATION.md:1756, :2735 (3.16 / 3.19 mm pad edge)",
+    "docs/R10_VALIDATION.md:2244, :2288 (4.389)",
+    "docs/R10_VALIDATION.md:2262 (ecc45417)",
+    "docs/R10_VALIDATION.md:2263 (e8f10fb3)",
+    "docs/R10_VALIDATION.md:2290 (it must read open)",
+    "docs/R10_VALIDATION.md:2532 ((0.7 / 1.0 V drop), record the dummy-load drop)",
+    "docs/R10_VALIDATION.md:2637 (44 ms or more)"
+   ],
+   "audit lane A (parts_qualification.md)": [
+    "parts_qualification.md:36 (3.16 / 3.19 mm pad edge)",
+    "parts_qualification.md:106 (\"about 44 ms or more\", quoted as the earlier figure: history)",
+    "parts_qualification.md:493 (5.881014 / 4.388745 / 4.389 V and the budget SHA ecc45417)",
+    "parts_qualification.md:700 (5.881014 / 4.388745 V)"
+   ],
+   "audit lane B (ORDERING 8, handoff)": [
+    "none"
+   ]
+  },
+  "cad_lane": {
+   "R10_DECISIONS.md": "history: D-R27-01 lines 4555-4557 and 4585 (annotated), the D-R28 records' before figures (4640-4642, 4654, 4666, 4683, 4694-4695, 4707, 4715, 4727-4729), D-R21-07 line 3563 (annotated)",
+   "tools/test_r10_check.py": "deliberate: the rejected old forms (lines 483-488)",
+   "tools/jlc_easyeda/pads.json": "coincidence: 4.389 inside pad coordinates",
+   "round27_* review records": "history (sealed)",
+   "r10_binding_note.json": "none (regenerated)"
+  }
+ },
+ "git_state_changed": false,
+ "native_cad_hand_edited": false,
+ "off_limits_untouched": [
+  "docs lane: STATUS.md, AGENTS.md, docs/M3_R10.md, docs/FMEA_REDUNDANCY.md, docs/REQUIREMENTS.md, docs/R10_VALIDATION.md, AVA_LAYOUT.md",
+  "audit lane A: parts_qualification.md",
+  "audit lane B: docs/ORDERING.md, docs/R10_VEHICLE_HANDOFF.md",
+  "review records other than this hand-back"
+ ],
+ "jobs_left_running": false
+}

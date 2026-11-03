@@ -1,0 +1,157 @@
+{
+  "schema": "r10-round15-qualification-fix-v1",
+  "prepared_utc": "2026-10-30T14:32:05.243044+00:00",
+  "scope": "Prose corrections for R15-BOM-02 and R15-MCU-01; no CAD, component, drill, generator or gate change",
+  "source_review_target": {
+    "commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+    "basis": "Supplied root task and sealed fresh-verifier receipts; no git command executed",
+    "board_sha256": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+    "measurement_scope": "Terminal/VCAP facts belong to this reviewed board. This record does not bind or qualify a future rebuilt PCB."
+  },
+  "disposition": {
+    "R15-BOM-02": "Minor; unclosed insertion/fabrication process allocation, not demonstrated insertion failure",
+    "R15-MCU-01": "Minor; nominal selection complies, combined operating C/ESR remains unqualified",
+    "confirmed_critical_from_fresh_verifiers": 0,
+    "confirmed_major_from_fresh_verifiers": 0,
+    "drills_retained_mm": 1.3,
+    "lands_retained_mm": 1.9,
+    "C19_C20_retained": "Samsung CL10A225KO8NNNC / C23630, 2.2uF 16V X5R +/-10%",
+    "enlarged_drill_approved": false,
+    "replacement_capacitor_qualified": false,
+    "owner_acceptance_claimed": false,
+    "full_review_credit": false
+  },
+  "terminal_facts": {
+    "contacts": 23,
+    "pitch_mm": 3.5,
+    "nominal_pin_mm": [
+      0.5,
+      0.85
+    ],
+    "conditional_sharp_max_pin_mm": [
+      0.7,
+      1.05
+    ],
+    "conditional_sharp_max_diagonal_mm": 1.2619429464123963,
+    "standard_min_finished_hole_mm": 1.22,
+    "conditional_size_only_allowance_mm": -0.041942946412396376,
+    "metal_pin_general_tolerance_applicability": "Unresolved; cited GB/T14486-2008 concerns moulded plastic parts",
+    "native_s8_minimum_mm": 1.1025015761924428,
+    "native_s8_governing_pair": "J121.1 nominal hole wall to In2 3V3 fill",
+    "illustrative_fab_corner_s8_mm": 0.9625015761924429,
+    "fab_corner_limit": "Independent-envelope illustration; hole-position datum/correlation, layer registration and maximum outer barrel require process allocation. Not a nominal CAD or measured manufactured violation.",
+    "nominal_annulus_mm": 0.3,
+    "closure": "Maker/assembler insertion profile, relative pattern/form, approved seating method; fabricator finished-hole/pattern/annulus/barrel-to-inner-copper allocation; all23 first-article seating, plating/barrel and solder-fill inspections; existing clamp/harness/staking/retention checks."
+  },
+  "vcap_facts": {
+    "nominal_initial_range_uF": [
+      1.98,
+      2.42
+    ],
+    "ST_basis": "DS12110 Rev11 Table114 p211: 2.2uF typical, +/-20% tolerated, ESR <0.1 ohm; C/ESR measurement frequency/amplitude and nominal-versus-combined interpretation unresolved",
+    "numerical_window_uF": [
+      1.76,
+      2.64
+    ],
+    "zero_bias_tolerance_TCC_allowed_envelope_uF": [
+      1.683,
+      2.783
+    ],
+    "separate_typical_curve_inference_70C_1V_uF": 1.7165253532281144,
+    "joint_corner_guaranteed": false,
+    "temperature_bias_separability_established": false,
+    "AC_and_aging_limits_resolved": false,
+    "3p3uF_10percent_nominal_range_uF": [
+      2.97,
+      3.63
+    ],
+    "closure": "Resolve ST conditions, record silicon revision and actual startup/operating regulator modes; maker combined bounds or exact-part post-process/rework/defined-aging qualification across bias/local temperature/frequency/ripple; both capacitance limits, ESR, startup and load/clock transients."
+  },
+  "patch_scope": {
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": [
+      "Replace current unbounded conservative-hole claim with nominal geometry/open allocation",
+      "Add Round-15 qualification section with primary sources and both fresh verifier MD/JSON links",
+      "Replace current local-land conservative selection claim, preserving older drawing report"
+    ],
+    "docs/ORDERING.md": [
+      "Add terminal insertion qualification paragraph inside section8.2",
+      "Add VCAP bench qualification paragraph inside section8.2"
+    ],
+    "ordering_outside_section8p2_unchanged_at_validation": true
+  },
+  "validation": [
+    "Read complete fresh terminal and VCAP MD/JSON; read original parts/MCU narratives and relevant structured findings",
+    "Independent arithmetic reproduces pin diagonal, min finished hole, negative allowance, annulus, native-gap process-corner illustration, C tolerance/TCC window, typical-curve inference and replacement nominal range",
+    "New local links and qualification heading anchor resolve",
+    "Diff inspection: parts_qualification three scoped hunks; ORDERING two insertion hunks, both inside section8.2",
+    "Live primary text confirms JLC drilling tolerances, official GB/T scope, ST Rev11 Table114 and Samsung exact nominal part/typical-data label",
+    "No tests were needed for prose. No build/full gate, native CLI, GUI, git action, firmware or physical experiment was performed."
+  ],
+  "primary_sources": [
+    {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "page": "T0-1 sheet1/1, 2022-11-26",
+      "validation": "Fresh verifier exact PDF hash/full-page render; current web open succeeded but screenshot returned cache miss"
+    },
+    {
+      "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+      "page": "Drilling / Hole size Tolerance and Hole Position Tolerance",
+      "validation": "Live text checked +0.13/-0.08mm and +/-0.075mm"
+    },
+    {
+      "url": "https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=D13DCBFC8E64A2B32F77B4CE9EBD4B92",
+      "page": "Official GB/T14486-2008 record",
+      "validation": "Live scope checked: moulded plastic parts"
+    },
+    {
+      "url": "https://jlcpcb.com/blog/pcb-header-design",
+      "page": "PCB Quality Control and Inspection",
+      "validation": "Live text checked finished-hole/plating/seating/solder-fill distinctions"
+    },
+    {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "page": "DS12110 Rev11 Table114 p211",
+      "validation": "Live text checked 2.2uF typical +/-20%, ESR<100mohm; no stated C/ESR frequency/amplitude"
+    },
+    {
+      "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+      "page": "Exact part packaging list and Characteristics",
+      "validation": "Live text confirms fitted C suffix, 2.2uF/16V/X5R/+/-10% and typical-data limitation"
+    },
+    {
+      "url": "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+      "page": "2024-05-08 issue, p2 and manual pp12-17",
+      "validation": "Fresh verifier direct specification hash/p2 render and conditions; this web open rejected application/download content type"
+    }
+  ],
+  "sealed_review_sha256": {
+    "m3_design/assembly_review/sources/r10_review/round15_parts.md": "c4ae42f6dcdf2c30b956197da3d1cab76e48a387f44262153280e2004975e02c",
+    "m3_design/assembly_review/sources/r10_review/round15_parts.json": "097f888298ae696c9806d443ca7ea1094e59007cdbef4106ed20ecc60ce1a2e1",
+    "m3_design/assembly_review/sources/r10_review/round15_mcu.md": "cf83be841e91ed9239342988e490281e5cfeaa797ceb880faf1cf3159e10d05b",
+    "m3_design/assembly_review/sources/r10_review/round15_mcu.json": "79f277cef973e4a24b12d4adec12f7892d3109516d430dd82f072599129aba94",
+    "m3_design/assembly_review/sources/r10_review/round15_terminal_verification.md": "8b155026c2d74750cc69b503e6e2fff186cf06dac5cb6f9efa9d912c4a055c75",
+    "m3_design/assembly_review/sources/r10_review/round15_terminal_verification.json": "7e44cf5de5321053abfcd42e090023881a961467c555ab7e2333412b95606a75",
+    "m3_design/assembly_review/sources/r10_review/round15_vcap_verification.md": "9dfe7d31709534cf78706bd804d205d22a66d0709ff1217ace43da30f22b40d0",
+    "m3_design/assembly_review/sources/r10_review/round15_vcap_verification.json": "db32bf37bda8c68bd5e3c23001d0c6181a79a8981f7eb4be114068f7a55200c4"
+  },
+  "document_sha256_at_validation": {
+    "before": {
+      "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "ed83868a4054ec043b07d9d244dd2b1cbcf21d8ace83fcd16bf45bb7a6a56b6f",
+      "docs/ORDERING.md": "2b29a562d6af2083674ee906289fdb8f633a99e7b887070a5d2d04596a3284fb"
+    },
+    "after": {
+      "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "d8d737bb37d7c4e77c5e66908afef94d0cd0456d268626f6584161202693d884",
+      "docs/ORDERING.md": "b4840bc5fef79a48b808261e345f246188ffe8131962bbaffa366a4eb50d23a3"
+    },
+    "ORDERING_section8p2_after": "b2afa68ed3e75eaccb434938051e3f4187941d6b0da70e1d76accf15d799a37a",
+    "limit": "Observed text hashes at this validation point. Root owns subsequent board/evidence/procurement state updates and may change these documents."
+  },
+  "native_board_sha256_observed_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "residual_limits": [
+    "Maker/fabricator insertion and manufacturing correlation not closed",
+    "No physical seating/plating/solder-fill, harness/tool/retention or first-article qualification",
+    "No supported combined effective-C/ESR bound or measured regulator waveform/local capacitor temperature/aging state",
+    "No future board, whole-board, firmware, electrical, thermal or flight qualification inferred",
+    "Original sealed reviews and their Major hypotheses remain unedited"
+  ]
+}

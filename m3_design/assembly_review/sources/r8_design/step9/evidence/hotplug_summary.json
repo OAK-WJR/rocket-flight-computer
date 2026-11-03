@@ -1,0 +1,63 @@
+{
+ "cases": 384,
+ "feed_estimate_nH": 4.22,
+ "by_feed_nH": {
+  "5": {
+   "extra_negative_V": 0.002,
+   "slew_ratio": 1.008
+  },
+  "15": {
+   "extra_negative_V": 0.009,
+   "slew_ratio": 1.045
+  },
+  "30": {
+   "extra_negative_V": 0.026,
+   "slew_ratio": 1.095
+  }
+ },
+ "worst_extra_negative_V": 0.025,
+ "worst_extra_slew_V_per_us": 0.458,
+ "max_instant_b_minus_a_V": 0.064,
+ "lowest_b": {
+  "lh_uH": 2.0,
+  "rh": 0.03,
+  "lb_nH": 5,
+  "ca_uF": 20.0,
+  "cd_uF": 16.7,
+  "cb_nF": 100,
+  "vbr": 13.3,
+  "a_min": -14.114,
+  "b_min": -14.114,
+  "a_slew": 1.09,
+  "b_slew": 1.09,
+  "ab_max": 0.002
+ },
+ "fastest_b": {
+  "lh_uH": 0.09999999999999999,
+  "rh": 0.03,
+  "lb_nH": 30,
+  "ca_uF": 9.4,
+  "cd_uF": 16.7,
+  "cb_nF": 100,
+  "vbr": 12.65,
+  "a_min": -11.886,
+  "b_min": -11.904,
+  "a_slew": 7.07,
+  "b_slew": 7.51,
+  "ab_max": 0.064
+ },
+ "lowest_a": {
+  "lh_uH": 2.0,
+  "rh": 0.03,
+  "lb_nH": 5,
+  "ca_uF": 20.0,
+  "cd_uF": 16.7,
+  "cb_nF": 100,
+  "vbr": 13.3,
+  "a_min": -14.114,
+  "b_min": -14.114,
+  "a_slew": 1.09,
+  "b_slew": 1.09,
+  "ab_max": 0.002
+ }
+}

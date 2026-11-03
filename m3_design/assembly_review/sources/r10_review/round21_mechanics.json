@@ -1,0 +1,129 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round21_mechanics",
+ "reviewer": "claude",
+ "target_commit": "accfff4947266a23cf60a63f3d92be047f5391b5",
+ "board_sha256_before": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "board_sha256_after": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R21-MEC-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "R10 THT procedure allows selective soldering and names no bottom-side keep-offs, though U5's open port and every port ESD clamp sit 1.76-2.17 mm from DB125 holes",
+   "evidence": {
+    "file": "docs/ORDERING.md section 8.2 ('Hand/selective solder all eight DB125 bodies, not wave'); board m3_design/assembly_review/m3.kicad_pcb",
+    "measured_bottom_pad_to_THT_pad_copper_mm (B.Cu edge to edge)": {
+     "J121": "R13.2 1.763, U5.8 2.172 (U5 B(10.6,49.1), body centre 5.94 mm from J121.1 at (7.4,54.1))",
+     "J440": "D440.1 1.867, D441.1 1.905, R90.1 1.956, TP82 2.105",
+     "J410": "D410.2 1.774, D411.2 1.812",
+     "J420": "D420.1 / D421.1 1.774, C421.1 1.855",
+     "J9": "D400.1 / D401.1 1.774, C91.1 1.805",
+     "J122": "R153.2 1.830, R150-152 1.894-1.898"
+    },
+    "gate": "check_r10 M-6 requires only >= 1.5 mm (all pass)",
+    "contrast": "R9's ORDERING section 4 (J3 legs) names iron keep-offs (C83 1.54 mm, R8 1.94 mm); the R10 section 8.2 DB125 bullet names none and 'protect U5's open pressure ports' appears only in the no-washing bullet",
+    "maker": "TE MS5611-01BA03 datasheet, 'Mounting and assembly considerations', Cleaning (p16-17 of the cached PDF): protect the sensor opening from particles during assembly; no cleaning. Max soldering 250 C / 40 s (p3). https://www.te.com/commerce/DocumentDelivery/DDEController?Action=showdoc&DocId=Data+Sheet%7FMS5611-01BA03%7FB3%7Fpdf%7FEnglish%7FENG_DS_MS5611-01BA03_B3.pdf",
+    "selective_keepout": "Inference from industry guidance (no JLC figure found): mini-wave nozzle keep-outs to bottom SMD are typically 3-6 mm (forum.kicad.info/t/selective-soldering-kicad-rule/34977; eevblog mixed SMD/PTH thread: assembler asks 4 mm)"
+   },
+   "impact": "If JLC chooses selective soldering (permitted by the remark), the 1.76-2.17 mm spacing is inside typical nozzle keep-outs: the TSLP-2-20 clamps (D400/D401/D410/D411/D420/D421/D440/D441) can reflow, shift or bridge, and solder/flux spatter can enter U5's open pressure port 6 mm from J121.1 on the same face, with no wash permitted to remove it. Bounded: hand soldering at this spacing is normal practice and first-article inspection would catch shifted parts; U5 contamination may not be visible.",
+   "concrete_fix": "Docs only: in ORDERING 8.2 change the remark to 'Hand-solder the eight DB125 bodies (no selective or wave)' unless JLC confirms its nozzle keep-out is < 1.7 mm; add a keep-off list (U5 and R13 at J121; D440/D441/R90/TP82 at J440; D410/D411 at J410; D420/D421/C421 at J420; D400/D401/C91 at J9; R150-R153 at J122) and require U5's port to be masked (e.g. a Kapton dot, removed afterwards) during J121's soldering; add 'inspect the TSLP clamps for shift/bridges after THT' to first-article inspection."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R20-09",
+   "claim": "D440/D441 moved to B(4.45,19.45)/B(4.45,23.05) rot -90 under J440 on the wire side; pin-to-clamp 3.157/3.194 mm; M-6 1.681/1.713",
+   "measurement": "Poses confirmed (pose diff vs 50a39de5: only D440, D441, TP82 moved). B.Cu pad-to-THT-pad edge 1.867 (J440.3) / 1.905 (J440.4) mm, same class as D410/D411 (1.774/1.812) under J410. Hang 0.32 mm below the bottom face (fit_check z -1.92), bore margin 5.60 mm; > 4.5 mm from every support (nearest bottom envelope to a support is still C32.2 4.536 mm); 4.15 mm from the west-aft tab corner (0,17.5); new GND vias (3.75,19.775)/(3.75,23.375) tented both sides; DRC 0. No sled, standoff or wire conflict (wires are on the top face).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-04",
+   "claim": "TP82 B(11.0,17.6) -> B(11.2,20.7); M-6 1.855 mm",
+   "measurement": "Pose confirmed; 1.5 mm bare bottom pad 2.105 mm (copper edge) from J440.4; 3.9 mm from J430's courtyard, so outside the microSD hinge window; far from all supports; covered by the non-conductive sled requirement. Bench-only access (board off the sled), as before.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-02 (mechanical side)",
+   "claim": "New PORT_4V8 via (30.575,11.6)",
+   "measurement": "Tented both sides, 2.7 mm from J410's courtyard; no mechanical effect.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-06 (J440 legend)",
+   "claim": "3:TXO moved to B(10.5,17.5) east of pin 3",
+   "measurement": "Centre 3.14 mm from J440.3 vs 4.31 mm from J440.2, so it reads to pin 3; R463's designator ink is 0.203 mm away (recorded by the CAD lane).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-14",
+   "claim": "J440 placement, wire room 5.003 mm, body/bore 2.98 mm",
+   "measurement": "fit_check on 0dc84776: wire room 5.003-5.603 mm on all eight terminals; DB125 body margin 2.976 mm; J3 0.886 mm worst; tails 7.558 mm, 1.80 mm to a 4 mm standoff plane; top hardware 3.808 mm (LED2.2) vs 3.8 mm gate at (4,44.3).",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-11",
+   "claim": "U4 ISM6HG256X at B(17,45.9) rot 180; roll = -gyro_Y; lever arm x = -6 mm",
+   "measurement": "Pad centroids: sensor +X (pads 1-4 -> 8-11) = board -x (-2.42,0); +Y (5-7 -> 12-14) = board -y (0,-1.92); bottom side so +Z = -z. Pad nets match DS15034 Rev 1 p9 Fig. 5 (1 SDO, 4 INT1, 5 VDDIO, 8 VDD, 12 CS, 13 SCL, 14 SDA). Lever arm 17.0 - 23.0 = -6.0 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-07",
+   "claim": "C84 lands have no paste",
+   "measurement": "Both pads F.Paste false; top neighbour R166 courtyard 2.655 mm from a land centre; nothing moved near C84 in round 20.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-03",
+   "claim": "TP121 removed",
+   "measurement": "Not on the board.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "R20-MEC-01 / -02 (docs)",
+   "claim": "J440 lead route row; plate figures refreshed",
+   "measurement": "ORDERING 8.4 row and handoff carry the aft route; M3_R10 / VALIDATION carry 180.8 Hz, 78.6 g, 0.261/0.320 mm. Clamp relocation changes mass by milligrams (Inference); plate not re-run.",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R21-MEC-01",
+   "change": "Docs only (ORDERING 8.2): hand-solder DB125 (no selective/wave) unless JLC confirms nozzle keep-out < 1.7 mm; add the bottom keep-off list; mask U5's port during J121 soldering; inspect TSLP clamps after THT."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "D440/D441 under J440 vs sled/standoffs: hang 0.32 mm, far from supports, non-conductive sled required: no issue.",
+  "D441 near J3 shell legs (hand-finished): not within 2.3 mm of any J3 copper; J3's nearest bottom pads remain C83 1.958, R7 2.011, R8 2.15 mm.",
+  "3:TXO legend beside R463 designator (0.203 mm ink gap): reads to pin 3, passes rules, already recorded; continuity check covers lead identity.",
+  "Tallest parts, microSD hinge window, U5 venting gap (about 2.9 mm at 4 mm standoffs), C84 hand-fit access, screwdriver access: no part in these zones moved; documented physical qualifications stand.",
+  "Plate model: clamp relocation changes mass negligibly (Inference); no re-run needed."
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the canonical board before and after (equal); git archive of accfff4 tools/kilib/board into the probe dir (same SHA).",
+  "tools/fit_check.py --profile r10 on the probe copy (OK; report .supervisor/r21_mechanics/fit.json).",
+  "kicad-cli 10.0.7 pcb drc --severity-all on the probe copy: 0 violations, 0 unconnected.",
+  "Pose / via / tenting diff against 50a39de5 (diff.py).",
+  "Bottom-pad-to-THT-pad copper distances for all DB125 and J3 (tht.py); J440 / clamps / TP82 geometry (geo.py).",
+  "U4 axis derivation from pad centroids vs DS15034 p9 (u4.py); U5 / J121 geometry (u5.py); C84 paste and neighbours (misc.py).",
+  "MS5611 datasheet text extraction (cached PDF)."
+ ],
+ "sources": [
+  "ST DS15034 Rev 1 p9 Figure 5 (ISM6HG256X pin connections / axes), https://www.st.com/resource/en/datasheet/ism6hg256x.pdf",
+  "TE MS5611-01BA03 datasheet p3 (250 C/40 s) and Mounting and assembly considerations / Cleaning p16-17",
+  "https://forum.kicad.info/t/selective-soldering-kicad-rule/34977 (selective soldering keep-out practice, Inference)",
+  "https://www.eevblog.com/forum/eda/mixed-smd-and-pth-board-(smd-both-sides)/msg1683284/ (assembler 4 mm keep-out, Inference)",
+  "../../docs/VEHICLE.md coupler bore 50.8 mm, stack and shroud rows"
+ ],
+ "coverage_limits": [
+  "No physical harness, sled, screwdriver or nozzle fit; JLC's actual THT method and keep-out unknown.",
+  "Plate model not re-run.",
+  "microSD open-lid sweep not re-measured (no part moved near J430).",
+  "No 3D render; geometry from pcbnew and model boxes."
+ ]
+}

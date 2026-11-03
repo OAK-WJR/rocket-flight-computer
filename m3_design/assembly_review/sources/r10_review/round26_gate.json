@@ -1,0 +1,48 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 26, gate lens",
+  "reviewer": "claude",
+  "target_commit": "3d8e845",
+  "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Unpinned figures in the generated text: 9.59 ms -> 10.59 ms in the chatter obligation and turn-on 88/56/45 -> 98/56/45 ms in the battery_entry note, both regenerated, pass r10_sch_check, K-binding and the three binding / sheet-note tests (seed c1). 300.8 uF -> 470 uF in rule 8, regenerated, also passes (f2). The tests pin the headline figures only. This is the text-pin coverage class that R25-GATE observations 2-6 already covered.",
+    "Figures derived from the budget are hand-typed. Seed e1 raises the port load by 0.1 A in r10_parts.py, and --budget-only regenerates the budget: r10_parts --check, test_r10_parts, K-binding and K-actuators all pass. The all-ports-on break-to-3.8 V hold-up becomes 0.441-0.510 ms, while AGENTS still says 0.46-0.54 ms and rule 8 still gives 0.103-0.164 ms. No stated rule asks the gate to tie the text to parts_budget.json, so a generator change has to carry its own text update.",
+    "kp_u9out: RAW_PROTECTED B.Cu (18.75,79.8)-(16.25,77.3), U9.6's branch to D9.1 (B340A clamp), narrowed from 0.7 to 0.6 mm, passes K-power. That branch is not on U9 OUT's path to its In2 vias, and D9 carries transient current only. No stated width floor applies.",
+    "check_r10 S-6 takes the clearance from the project (0.15 mm). A board copied without its .kicad_pro reads 0.2 mm and shows a false S-6 hit (CAM_IO_3V3 U13.5 to ARM1_SENSE, 0.150 mm). This only affects copies: check.sh always runs with the project. All seeds were re-run on full project clones.",
+    "right_angle: an L with one leg overshooting the corner (0.003 / 0.01 / 0.1 mm) or stopping short of it (0.003 / 0.01 / 0.05 mm) fails route_check through dead_copper and / or overlap_only_joint, on the non-critical LED_YEL and the critical RAW_ACT."
+  ],
+  "fix_verification": [
+    {"change": "D-R25-01 chatter obligation (r10_sch_check.py -> r10_binding_note.json)", "measurement": "Seed a1: 'under 7 ms' -> 'under 8 ms' without regenerating the note. K-binding FAIL: 'saved firmware_obligations differs from native binding-note regeneration'. Seed a2, the same edit with the note regenerated: K-binding OK, and test_r23_binding_note_rules_and_pin_table FAILS (pinned phrase). The committed note equals its regeneration (K-binding OK on the base).", "verdict": "confirmed"},
+    {"change": "D-R25-01 battery_entry sheet note (r10_sch.py)", "measurement": "Seed b1, generator edited (10.3 -> 12.3 ms) without regenerating, and b3, the .kicad_sch hand-edited (4.80 -> 4.60 V): r10_sch_check FAILS with 'nonreproducible generated artifact: battery_entry.kicad_sch'. Seed b2, regenerated: the replay passes (only battery_entry.kicad_sch differs from the base) and test_r21_sheet_notes FAILS.", "verdict": "confirmed"},
+    {"change": "D-R25-02 rule 8 hold-up", "measurement": "Seed f1, the old 0.157-0.182 / 0.44-0.48 ms put back: K-binding FAILS before regeneration; after it, test_r23 FAILS. Recomputed: C(V1^2-3.8^2)/2P at 300.8 uF and V1 4.84-5.17 V over the budget's 11.249-13.064 W / 4.295-4.650 W gives 0.1034-0.1643 / 0.2906-0.4303 ms. The fractions are 0.223-0.305 (stated 0.22-0.31, rounded outward).", "verdict": "confirmed"},
+    {"change": "D-R25-03 OVLO corner with IOVLKG", "measurement": "Seed d1, VOV(R) 1.223 -> 1.224 V (still 10.18 V, so the assert holds) with no regeneration: r10_parts --check exits 1, 'stale: parts_budget.json'. Seed d2, regenerated: passes; the 10V18 peaks move 3.65652 -> 3.65697 A. Recomputed: (1.223 + 0.1 uA x 245.43 k) x 8.15716 = 10.1764 V; 10V18 peaks 3.6565 / 3.6268 A; U9 bound 3.743861 A (budget).", "verdict": "confirmed"},
+    {"change": "D-R24-20 M-8", "measurement": "R92 moved 0.03 mm forward: M-8 FAILS at 2.495 mm.", "verdict": "confirmed"},
+    {"change": "D-R24-17 right_angle", "measurement": "A chamfer replaced by a plain 90-degree corner on LED_YEL F.Cu (14.4,43.0) and on RAW_ACT B.Cu (22.8,63.875): route_check FAILS right_angle. The overshoot and short variants fail as listed in the observations.", "verdict": "confirmed"},
+    {"change": "D-R24-02 / -08 / -03 second vias", "measurement": "Second via deleted with its stubs. ACT_GATE (15.4,72.85): K-power FAILS (Q120.4 hangs on (16.20,73.30)) and route_check FAILS parallel_via. LOGIC_SOURCE_ST (30.45,51.4): K-power FAILS (U1.28) and so does parallel_via. BOOT0 (14.2,46.0): K-power FAILS, as do route_check dangling_via, dead_copper and parallel_via.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after: 92c3ad59... both times.",
+    "git archive of 3d8e845 into .supervisor/r26_gate/base. Unseeded copy: r10_parts --check, fit_check r10, check_r10 full and route_check r10 all OK.",
+    "Generator seeds a1 / a2 / c1 / f1 / f2 (r10_sch_check.py) and b1 / b2 / b3 (r10_sch.py and the sheet): r10_sch_check (replay), --binding-note regeneration, check_r10 --only K-binding, and the named test_r10_check tests.",
+    "Seeds d1 / d2 / e1 (r10_parts.py): r10_parts --check / --budget-only, test_r10_parts, and check_r10 --only K-binding,K-actuators.",
+    "Board seeds on full project clones, refilled with ZONE_FILLER, then check_r10 --only on the named rules. S-1 R173.1 to RAW_ACT; S-2 C128.1 to BAT_IN; S-3 R123 at 20k; S-4 / K-actuators R134 at 1R; S-5 R165 at 47k; S-6 D410.1 to PYRO1_OUT; S-7 J122.5 to RAW_PROTECTED. S-8: the PYRO1_OUT, ACT_GATE and BAT_ENABLE vias moved 0.4 mm and refilled. S-9 PYRO1_IGN / RAW_ACT at 0.45 mm. K-power: BAT_IN at 0.9 mm, C88 feed at 0.5 mm, U9-to-D9 branch at 0.6 mm, three second vias deleted. M-8 R92 +0.03 mm. A refill-only control passed every one of these rules.",
+    "route_check r10 on 10 right_angle seeds and 3 second-via deletions.",
+    "Full test_r10_check.py and test_route_check.py on the base copy (R10_BOARD = the copy's board)."
+  ],
+  "sources": [
+    ".supervisor/r26_review_brief.md",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R24-17 ... D-R25-03)",
+    "m3_design/r10_sch_check.py, m3_design/r10_sch.py, m3_design/r10_parts.py, m3_design/r10_build.sh",
+    "tools/check.sh, tools/check_r10.py, tools/route_check.py, tools/test_r10_check.py, tools/test_route_check.py",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json, r10_binding_note.json",
+    "round24_triage.json / round25_triage.json observations"
+  ],
+  "coverage_limits": [
+    "The full r10_build.sh was not run on a seeded generator. Regeneration was staged with the build's own commands (r10_sch.py --out, r10_sch_check --binding-note, r10_parts --budget-only).",
+    "DRC was not run on the board seeds. Each seed was already failing the check_r10 / route_check rule under test, so DRC could only add failures.",
+    "No new chatter or EN-model simulation; the D-R25-01 7.63 / 5.87 / 9.59 ms limits were not recomputed in this lens."
+  ]
+}

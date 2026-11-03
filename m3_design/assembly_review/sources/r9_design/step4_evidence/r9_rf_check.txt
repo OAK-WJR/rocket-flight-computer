@@ -1,0 +1,10 @@
+frames     OK
+r7         OK
+launch     OK
+contract   OK
+gcpw       OK
+route      OK
+drc        OK
+corridors  OK
+gcpw 79 line samples, Z0 [50.16, 51.08] ohm; launch XOR {'J30': 0.0008, 'J31': 0.0008}
+R9 RF strip gate: OK

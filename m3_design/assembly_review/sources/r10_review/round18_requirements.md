@@ -1,0 +1,126 @@
+# Round 18 - requirements traceability (Claude)
+
+Target commit dcbb6c8; board SHA-256 632a9ad3... unchanged before and after.
+
+Totals: 0 Critical / 0 Major / 12 Minor. Every AGENTS section 2 rule and the owner single-switch decisions trace to the board; no requirement is contradicted by hardware. Findings are stale text that still describes removed hardware, inherited margins without a flight root, and one process contradiction.
+
+## R18-REQ-01 (Minor, new): MCU sheet notes contradict the R10 pin map (camera enable/fault swapped, stale radio/loader pins)
+
+Evidence: mcu.kicad_sch line 4020: "CAM_PWR_EN on PE12 / pin42, CAM_FAULT_N on PE11 / pin41". Board U1 pad 41 net = CAM_PWR_EN, pad 42 = CAM_FAULT_N (pcbnew); pin_table.tsv r10_net: 41 PE11 CAM_PWR_EN, 42 PE12 CAM_FAULT_N; REQUIREMENTS F10 EXTI12 = CAM fault (PE12). Line 4513: "CAM_FAULT_N PE11, CAM_PWR_EN PE12 ... Freed, NC: PB12, PB13" while R10 uses PB12 = RADIO_RX_MCU, PB13 = RADIO_TX_MCU (pads 51/52). Line 4520: bootloader-driven pins "RADIO_SCK PB10, RADIO_MOSI PB14" but U1 pads 46 (PB10) and 53 (PB14) are unconnected on R10; the bootloader list omits the real PB12/PB13 UART5 and PE7/PE8 pins. Symbol ki_fp_filters in camera_connector.kicad_sch:71 and telemetry.kicad_sch:174 still list the removed footprint M3_GH_BM04B_GHS_TBT.
+
+Impact: A firmware author reading the schematic sheet would drive the TPS2553 open-drain FAULT pin (PE12) as the camera enable and read the enable pin as a fault. The R10 binding note and pin table are right, so this is a documentation trap, not a board fault.
+
+Fix: Edit the schematic generator text (not the board): line 4020 -> "R10: camera enable CAM_PWR_EN on PE11 / pin41, fault input CAM_FAULT_N (EXTI12) on PE12 / pin42"; line 4513 -> delete the R8 sentence or rewrite from r10_net (PB12/PB13 = UART5, PD0 = SD_CS, PC13 NC); line 4520 -> list the R10 loader-driven pins (SERVO3 PA2, USB PA11/PA12, QSPI_NCS PB6, I2C1_SDA PB9, plus UART5 PB12/PB13 if read from AN2606 Table 135) and drop RADIO_SCK/RADIO_MOSI; drop M3_GH_BM04B_GHS_TBT from the two ki_fp_filters. Text-only; refresh the schematic provenance hash, no PCB change.
+
+## R18-REQ-02 (Minor, new): Hot-plug damper note states R166 = 0.33 ohm; the part is 0.36 ohm
+
+Evidence: battery_entry.kicad_sch line 2864: "R166 (0.33 ohm 2512)". fab BOM line 63: 0.36R 1% 2512 R166 C168925; REQUIREMENTS F9 and the OQ-2 model use R166 0.36 ohm.
+
+Impact: The note is the text beside the safety-relevant U9 reverse-hot-plug damper; a reader checking the damper by hand gets the wrong value.
+
+Fix: Change "0.33 ohm" to "0.36 ohm" in the generator text for battery_entry; text-only.
+
+## R18-REQ-03 (Minor, new): REQUIREMENTS.md still carries removed hardware in current-looking rows
+
+Evidence: docs/REQUIREMENTS.md: line 24 (Owner decisions) "external GPS ... on GH-4 J410 ... radio on GH-4 J420" (they are DB125 4-pos); line 67 P1 "maximum 120 mm ... with the on-board radio and GPS", SMA overhang and coax loop zone, R9 stack-row discussion; line 75 M1 "SMA jacks J30/J31 ... through-hole step", MAX-F10S MSL 4 / 245 C profile, E22 reflow window, 50 ohm GCPW stack-up reasoning, C121 and OS-CON 250 C text; line 83 Pack row "on-board GPS and radio add 0.15-0.17 A at 3V3 ... about 0.1 A at the pack" and "(and the battery-lead fuse on R7-R9)" and the "radio transmits continuously on the pad" sizing; line 86 Pad arming row "R6-R9: one CH1 2-wire ARM link with a 5 A fuse"; line 90 Camera row "turns on the actuator rail" (no actuator rail remains: servo power is off-board); lines 100-105 accepted risks "No on-board servo-fault containment. R7-R9" and "Gate-net spacing ... R9 ... five bare B.Cu pads ... ORDERING 5 step" (R9 geometry; R10 has Q120/Q121 on BAT_IN with ACT_GATE leakage as the residual).
+
+Impact: Each reviewer must read around R7-R9 text to find the R10 requirement; contradictions are easy to miss (for example P1 allows 120 mm for hardware that no longer exists, M1 keeps a stack-up justification for GCPW lines that are gone). Nothing here changes hardware.
+
+Fix: Move R6-R9 clauses to docs/HISTORY.md or the matching M3_R* file and leave one R10 sentence per row: Sources line 24 -> "DB125 4-pos J410/J420"; P1 -> "46 x 90 mm; maximum 120 mm retained as an upper bound only"; M1 -> delete SMA/MAX-F10S/E22/GCPW/C121/OS-CON text and keep: Standard PCBA, 240 C reflow, U5/LS120 250 C ratings, C84 manual (see R18-REQ-10), U4 consignment; Pack row -> delete the on-board GPS/radio sentence and the R7-R9 fuse parenthesis; Camera row -> "turns on the camera port and can boot the logic"; delete the R7-R9 servo-containment and R9 gate-spacing bullets, keeping the R10 servo-harness bullet and one R10 sentence "ACT_GATE leakage can turn Q120/Q121 on with the switch open; mandatory conformal coat and the RAW_ACT-dead-with-switch-open bench step (ORDERING 8) screen it".
+
+## R18-REQ-04 (Minor, new): Parent docs/VEHICLE.md main-section stack row still describes R9 and old R10 intermediate hardware
+
+Evidence: ../../docs/VEHICLE.md line 39: "battery leads and RF coax loop zone ~44-48 (two straight SMA plugs and RG316 loops...)", "GH-4 ports on the x = 46 edge", "battery terminal and ARM / IGN terminals on the x = 0 edge", "GH-2 power-switch connector J400 near the forward edge at (10.5, 85.5)", "GH ports mated 0.03 mm inside the bore". Board: J400 is DB125-2 at (7.4, 65.85) on the west edge, J1 (7.4, 75.85), J121 (7.4, 55.85), ports DB125-4 at x 38.6; no ARM terminal. REQUIREMENTS "Board position" derives joint + 79-83 mm from the same 44-48 mm lead zone, which included the removed coax loops (REQUIREMENTS says VEHICLE.md was not re-read).
+
+Impact: The OQ-7 stack arithmetic (aft edge about joint + 79-83 mm, 32 mm margin to the +47 mm shroud limit) uses a coax-inclusive zone; the margin is therefore conservative, but the vehicle record names connectors and positions that do not exist. The tie to R10_VEHICLE_HANDOFF.md is also broken. (Known as "the separate vehicle mirror" in R16-R17; listed here because it is a requirement-traceability break, not a new measurement.)
+
+Fix: In the parent repository replace the R10 clause with the R10_VEHICLE_HANDOFF.md terminal table (J121/J400/J1 at x 7.4, y 55.85/65.85/75.85; J410/J420/J9/J122 at x 38.6, y 15.5/31.5/47.5/71.5), delete the coax/SMA phrases, and restate the lead zone as battery leads only; re-derive the joint + 79-83 mm figure from that.
+
+## R18-REQ-05 (Minor, new): Pack-size requirement is stated three incompatible ways, and the pad-energy basis allocates loads the flight does not use
+
+Evidence: REQUIREMENTS line 83 Pack row: >= 1.0 Ah (flight 1), >= 1.5 Ah (flight 2), >= 2 Ah if the radio transmits continuously. Line 84 Pad time row (D-R17-01): board-only capacities 2.265821 / 2.987991 / 5.154503 Ah at camera 0 / 0.5 / 2 h. D-CIR-02 (R10_DECISIONS): choose >= 2.6 Ah / >= 4 Ah (superseded by D-R17-01 but the Pack row never changed). D-R17-01 basis: two hours of continuous SD write 3.3 V x 0.2 A / 0.8 = 0.825 W, i.e. 0.825 / 6 V x 2 h = 0.275 Ah of the 1.813 Ah (15 %), although F5 logs only from launch with a pre-launch ring buffer in RAM, and 1.4 W "unshed logic" although the Temperature row fixes firmware at 200 MHz (up to 300 MHz), where the MCU draws a fraction of the 0.4-1.1 W quoted at 480 MHz. The pad wait itself (two hours) is the owner-stated assumption and is kept.
+
+Impact: A reader sizing the pack from the Pack row gets 1.0-1.5 Ah, which fails the worksheet by 1.3-3.7x; a reader using the worksheet over-buys capacity (bay length is limited: about 80 mm battery bay) because of a continuous-SD-write case that firmware does not run on the pad.
+
+Fix: Replace the Pack row capacity clause with "tested usable capacity per the Pad time worksheet; no fixed Ah figure". In D-R17-01 / ORDERING 8.1.1 split the SD term: pad = 0 W (ring buffer only), flight = 0.825 W for launch to apogee + 30 s (about 1 minute) and <= 50 Hz thereafter; and use the Temperature-row 200 MHz logic power (take it from parts_budget.json or the datasheet at 200 MHz) in place of 1.4 W. Re-issue the three capacities; expect about 1.5 Ah board-only at camera off before reserve (Inference), still above the old Pack row.
+
+## R18-REQ-06 (Minor, new): P3 retention margin "5x at 100 g" (500 g-equivalent) is not rooted in the flights
+
+Evidence: REQUIREMENTS line 70 P3 and M3_R10.md line 430: every connector and tall part holds >= 5x its load at 100 g. VEHICLE-derived flight loads: axial 28-37 g for L1000W (REQUIREMENTS flight table, lines 33-42), 100 g is already the stated design load (about 2.7x the 37 g peak, covering ejection and landing). 5 x 100 g = 500 g is 13.5x the peak boost load. M3_R10 line 433 admits the margin "is not shown by calculation" for any row.
+
+Impact: An unachievable-by-inspection requirement that every release must carry as open. It drives staking, standoff and terminal-retention rework with no physical reason beyond inherited margin.
+
+Fix: Restate P3: design load 100 g (ejection / landing / boost), retention factor >= 2 (200 g-equivalent) for C84, DB125 bodies, J3 shell, LS120, verified by staking plus a pull / mass test of the first article; keep the "open until measured" label. Update M3_R10 lines 430-433 to 2x.
+
+## R18-REQ-07 (Minor, new): Port UART nets are treated as fast interfaces for the GND-partner-via / one-reference-region rules, and dead RF classes remain
+
+Evidence: tools/critical_reference.py: R10_SLOW_RETURN_NETS (the AUD-2 whitelist) lists sense, ACT_* and CAM_PWR_EN / FAULT_N / UART_OE but not GPS_/RADIO_/CAM_ UART nets; tools/route_check.py R10_CLASSES puts R10_PORT_UART in SIGNAL_CRITICAL and return_required() is false only for the whitelist, so critical_via_no_gnd applies to them. D-AUD-02 lists "UARTs" as fast. Physics: the GPS (M10) and the LR900-F run <= 115200 baud; each net is 1 kohm in series plus ESD to an unshielded multi-cm harness, so the board-side edge is set by the RC and the wire, not by a layer-change return discontinuity. AGENTS.md section 3 still names "the other RADIO_*/GNSS_* nets" (no GNSS_ net exists; RADIO_ nets are the same slow UARTs) and route_check keeps CLASSES entries rfif ^(RADIO_|GNSS_) and critical_reference.EXTENDED lists RADIO_SCK / MOSI / MISO (no such nets).
+
+Impact: Redundant constraint: extra GND vias and In2 region cuts around GPS / radio / camera UART lines that carry no fast edge. No AGENTS section 2 effect.
+
+Fix: Add GPS_TX_MCU, GPS_RX_MCU, GPS_TX_WIRE, GPS_RX_WIRE, RADIO_* equivalents and CAM_(TX|RX)_(MCU|WIRE|BUFFER) / CAM_MCU_(TX|RX) to R10_SLOW_RETURN_NETS under AUD-2 (keep their hygiene classes); remove the dead rfif / RADIO_SCK / GNSS_ entries and the AGENTS section 3 RADIO_*/GNSS_* phrase. Do not remove existing vias from the frozen board; apply only to the gate and to a future respin.
+
+## R18-REQ-08 (Minor, new): Several board functions have no requirement ID; one sensing divider is redundant with an internal ADC channel; the cold-end temperature is set by the buzzer
+
+Evidence: REQUIREMENTS has no F-ID for the two status LEDs (LED1/LED2 + R32/R33), the buzzer LS120 + Q123 + D123 + R162/R163, USB-C bench power and log download (U10/U11/J3, kept by AUD-9), the camera supply sense CAM_5V_SENSE (PB1) or V3V3_SENSE (PC3_C). They appear only inside F6 (shedding), the Temperature row and Static ports. Temperature row: "the buzzer sets the cold end" (-20 C) while IMU, barometer and flash are rated -40 C. V3V3_SENSE (diagnostics.kicad_sch: 3V3 / 2 divider R62 + R63 10k, note "ADC ratios alone cannot verify their own supply"): the ADC reference VREF+ is 3V3A fed from 3V3, so the pin reads VDDA / 2 whatever 3V3 is; the 3V3 level is available from the internal VREFINT channel. FMEA V-20 itself computes the buzzer at about 30 dB at 30 m.
+
+Impact: Functions that exist but cannot be traced to a project need or a physics root; the next reviewer cannot tell a required annunciator from leftover hardware. R62/R63/PC3_C add nothing the MCU cannot measure alone.
+
+Fix: Add one functional row F11 "Pad and post-landing annunciation: LED1/LED2 and buzzer (owner AVA-layout follow-up: buzzer retained), dark in flight per Static ports; bench power and log download by USB-C (AUD-9)". Rewrite the Temperature cold end as the site limit and state the buzzer as the only part below -40 C. Record V3V3_SENSE as redundant with VREFINT: delete R62, R63 and the PC3_C net in a future respin (no change to the frozen board), or keep with the stated purpose "detect 3V3 vs 3V3A divider fault".
+
+## R18-REQ-09 (Minor, new): microSD (F5/J430) has no recorded physics root; QSPI alone holds the flight about 7 times over
+
+Evidence: F5: 500 Hz from launch to apogee + 30 s and <= 50 Hz under parachute, flight duration 460-525 s (REQUIREMENTS line 33). Inference with 40 B per sample (IMU + baro + state): about 60 s x 500 Hz x 40 B = 1.2 MB plus about 450 s x 50 Hz x 40 B = 0.9 MB, about 2.1 MB, against the 16 MB W25Q128. The owner added the card on 2026-10-28 as "the large, removable log". But F5 and AGENTS section 1 require card removal with the board off and out of the bay (unbolt the PCB), the same access as the USB-C J3 download, so the card does not save bay access. It adds J430, R460-R464, C460/C461, a 0.825 W write allocation, SD latency / power-loss qualification and a hold-up shedding item.
+
+Impact: Not a defect: a project (owner) choice. The requirement file should say why it exists so it is not later defended on physics it lacks.
+
+Fix: In F5 add one sentence: "microSD is an owner-chosen convenience log (2026-10-28), not required by flight volume (about 2 MB in Inference vs 16 MB QSPI); QSPI is the crash-safe record." No hardware change; if the owner drops it, remove J430, R460-R464, C460, C461, the SD_* nets and the SD terms in F5, F6, pad energy.
+
+## R18-REQ-10 (Minor, new): C84 is "required-fitted" in the JLC BOM/CPL but must be absent from both reflow passes
+
+Evidence: ORDERING.md lines 367-370: "C84 absent from both passes ... fit C84 manually after all reflow ... keep it required-fitted in the BOM/CPL"; fab/m3_bom_jlc.csv line 13 lists C84 C46550466 qty 1 SMT and fab/m3_cpl_jlc.csv line 33 places it (27.5, -78.5, Top, 90). REQUIREMENTS M1 (R10 amendment) and GAP-4 say the same. The part has no maker land or reflow profile (R1-m09). No order remark, DNP column or separate CPL exclusion is in the package.
+
+Impact: Following the upload files, JLC would reflow C84 on the top side, the opposite of the written process; following the remark, the BOM/CPL cost, count and stock checks include a part that is not assembled. One of the two statements will be wrong at order time.
+
+Fix: Choose one: (a) keep C84 in JLC BOM/CPL and replace the manual-fit rule with a maker reflow rating (select a capacitor with a datasheet reflow profile, for example the SVPK-type OS-CON part of the old BOM, accepting its height / ESR check); or (b) mark C84 do-not-place in the JLC upload (separate row group or exclusion in the CPL) while the native BOM keeps it, and write the order remark. State the chosen route in REQUIREMENTS M1 and ORDERING 8.2.
+
+## R18-REQ-11 (Minor, carried (R3-BOM-04, R7-BOM-03)): M1 stock requirement is unmet by one resistor that has a stocked Basic equivalent
+
+Evidence: fab/stock_check.json / parts_stock.json C185349 (R430, Yageo RC0603FR-0722K6L, 22.6 kohm): stockCount 17, minPurchaseNum 3610. ORDERING 8.1 lists the 22 kohm C31850 fallback as "unadopted"; R7-BOM-03 and R3-BOM-04 carried it since R7. R430 is the TPS2553 ILIM resistor of the camera switch U402. With the datasheet equations quoted in parts_qualification.md (IOSmin = 25230 / R^1.016, IOSmax = 22980 / R^0.94, R +-2 %): 22.6 k gives 1041-1249 mA; 22 k gives 1070-1282 mA (computed here).
+
+Impact: REQUIREMENTS M1 "every part in stock for 5 boards" fails on one common value for four review cycles. The camera draws <= 1 A, so the 22 k lower limit (1070 mA) is better, and the upper limit rises 33 mA (2.6 %).
+
+Fix: Change R430 to 22 kohm 1 % 0603 (LCSC C31850 per ORDERING; verify live stock and the part number at the supplier before use) in the generator; recheck the camera / shared-port short budget in parts_budget.json (gps_or_radio_short_camera_normal_prospective_buck_A = 2.911 A) with +33 mA; regenerate BOM/CPL and the fab manifest. No PCB geometry change (same 0603 footprint).
+
+## R18-REQ-12 (Minor, new): REQUIREMENTS F6 switch-bounce immunity (>= 0.15 s) has no measured root
+
+Evidence: F6: "Preserve >= 0.15 s switch-bounce immunity from 7.4 V (R80/R165 470 kohm, C87 2.2 uF, R81 300 kohm; inherited 0.21 s calculation is Inference)". battery_entry.kicad_sch line 2362: (R80+R165)||R81 = 227k charges C87 so turn-on takes 0.4-1.1 s. A closed screw terminal dry contact chatters in microseconds to milliseconds under vibration; a 150 ms drop-out is a different event (a loosened screw), which then forces the board to reboot (about 1.1 s per Accepted risks). No measurement or vibration spectrum supports 0.15 s; it also fixes the 0.4-1.1 s power-on delay.
+
+Impact: Inherited number, rooted in neither a flight load nor a measurement; its cost is a slow power-up and a 2.2 uF capacitor plus 300 kohm network that is part of the EN divider.
+
+Fix: Keep the hardware (frozen board). In F6 relabel the figure as an inherited design point and add a bench acceptance: measure contact chatter of the chosen screw switch at flight vibration and pass if the longest drop-out is < 10 ms; if the owner wants the board to ride a longer break, say so as a project need. No action on the board.
+
+## Fix now
+- R18-REQ-11: R430 22.6 kohm (C185349) -> 22 kohm 0603 1 % (C31850, verify live stock); recheck camera short budget (+33 mA); regenerate BOM/CPL/manifest. Removes the only remaining stock-blocking resistor.
+- R18-REQ-01/02: Text-only corrections to mcu.kicad_sch notes (lines 4020, 4513, 4520), the two ki_fp_filters, and battery_entry R166 0.33 -> 0.36 ohm; regenerate schematic provenance, no PCB change.
+- R18-REQ-10: Resolve C84 BOM/CPL vs absent-from-reflow before any quote; at minimum add a do-not-place marker in the JLC upload and the order remark.
+
+## Closed candidates
+- No J124, J123, SMA, JST GH, RF-module, port-switch (U410/U420) or translator (U411/U421/U412/U422) footprint, net or part exists in m3.kicad_pcb (pcbnew listing of all 209 footprints); schematic mentions of J124/J123/R160/C160/D122 are only "removed" notes.
+- AUD-4/5/8 deletions verified on the board: TP74/80-83/88/120-122 remain, TP84-87/89/92 absent; R160/R161/C160/D122 absent.
+- F7 "BAT_IN fire feed >= 1 mm": B.Cu 1.0 mm (7.4,74.1)->(13.0,74.1)->(13.5,73.6) from J1 to the Q120 pads; 0.4 mm BAT_IN tracks go to U9, not the fire path. ACT_FET_S 0.4 mm bridges and RAW_ACT 0.5 mm / PYRO1_IGN, PYRO1_OUT 0.5 mm match F7 and D-AUD-06; 0.2-0.3 mm branches are sense / gate drive.
+- P1/P2: outline 46.05 x 90.05 mm; five Edge.Cuts supports (4,4) (42,4) (4,44.3) (3.7,86) (42,86) match; no sixth.
+- F4/F8/F10 connector set: J121 DB125-2 BK, J1/J400 DB125-2 GN, J122 DB125-5 GN, J9/J410/J420 DB125-4 GN; silkscreen pin legends 1:4V8 2:GND 3:TXO 4:RXI (GPS/radio), 1:5V4 2:GND 3:RXI 4:TXO (camera), J122 1:S1..4:S4 5:GND present.
+- AGENTS section 2.1/2.2 replacement text matches R10_DECISIONS "Single screw switch"; Q124 gate network (R126 220R series, R128 10k pull-down, C126 220 nF) and Q120/Q121 gate pull-down network present.
+- ARM1_SENSE net name kept after J124 removal: documented as historical in mcu/pyro notes; renaming would invalidate the hash-bound binding for no electrical gain. Not a finding.
+- F3 barometer >= 10 km (flight 2 apogee about 3.6 km) is a free margin: MS5611 range covers it and no component choice depends on it. Not a finding.
+- F6 hold-up 0.49-0.57 ms ports-on figure and C84 470 uF: owner-decided (OQ-5, AUD list "not adopted: deletion of C84"), disclosed as conditional.
+- Camera back-feed isolation (U402/U12/U13) retained by owner mandate; GPS/radio back-feed accepted risk is recorded.
+- Three adjacent identical green DB125-4 terminals (J9 camera has RX/TX order reversed vs J410/J420) is an owner-mandated all-DB125 choice (Steer 1); harness-miswiring accepted risk already records it.
+
+## Coverage limits
+- No datasheet was re-fetched; TPS2553 equations are taken from parts_qualification.md.
+- Flight data volume, MCU 200 MHz power and chatter durations are Inference, not measured.
+- Part stock numbers are from the committed 2026-10-30 snapshot, not live.
+- Only requirements text and board contents were traced; electrical, routing and mechanical lenses were not repeated.
+- Deviation lists in R10_VALIDATION were not re-audited line by line.

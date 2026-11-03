@@ -1,0 +1,30 @@
+# m3_design/assembly_review/m3.kicad_pcb sha256 4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14 (tool suites, R9 review pass 1 fix pass, 2026-10-26 01:01-01:05Z (2026-10-25 PDT); KiCad python3 -B -m unittest per suite in tools/, KICAD_CLI = the real kicad-cli (a GUI session logged in, no shim), KICAD_PY = KiCad's python3, NUMPY_PY = <cfd/venv python3>; git status and the board / DRU / project / fab files' SHA-256 identical before and after the run)
+test_check_shell: 2 tests OK 
+test_dc_solve: 3 tests OK 
+test_fab_validation: 23 tests OK 
+test_fit_check: 23 tests OK 
+test_maze_clearances: 10 tests OK 
+test_paste_check: 5 tests OK 
+test_procurement: 15 tests OK 
+test_r5_repair: 13 tests OK 
+test_r6_check: 17 tests OK 
+test_r7_check: 35 tests OK 
+test_r8_check: 23 tests OK 
+test_r8_ground: 11 tests OK 
+test_r8_place: 13 tests OK 
+test_r8_power: 7 tests OK 
+test_r8_route: 12 tests OK 
+test_r9_check: 53 tests OK 
+test_r9_ground: 21 tests OK 
+test_r9_place: 21 tests OK 
+test_r9_post: 13 tests OK 
+test_r9_power: 21 tests OK 
+test_r9_pyro: 19 tests OK 
+test_r9_rf: 16 tests OK 
+test_r9_route: 21 tests OK 
+test_r9_sch: 21 tests OK 
+test_reference_audit: 3 tests OK 
+test_route_check: 57 tests OK 
+Ran 478 tests in 26 suites: 26 suites OK, 0 failing, none skipped
+quality_audit (KICAD_PY and KICAD_CLI unset): python3: Ran 21 tests in 0.121s  OK ; KiCad python3: Ran 21 tests in 0.120s  OK 
+audit_artifacts on the finished board: m3.kicad_pcb: footprints=249, conflicting part fields=0, missing models=0, absolute model paths=0, no courtyard=0, missing fitted part identities=0 exit 0

@@ -1,0 +1,6869 @@
+{
+  "schema": 1,
+  "lens": "5 MCU map/electrical/interfaces/reset/loader/backfeed/ESD",
+  "round": 15,
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "prepared_utc": "2026-10-30T13:33:18Z",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "findings": [
+    {
+      "id": "R15-MCU-01",
+      "severity": "Minor",
+      "status": "new",
+      "active": true,
+      "title": "VCAP effective-capacitance qualification does not reconcile fitted parts with the MCU capacitor window",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "references": [
+            "C19",
+            "C20"
+          ],
+          "coordinates_mm": [
+            [
+              28.35,
+              37.65
+            ],
+            [
+              19.8,
+              37.3
+            ]
+          ],
+          "layer": "B.Cu",
+          "value": "2.2uF16V X5R +/-10%, Samsung CL10A225KO8NNNC",
+          "nodes": [
+            "VCAP1/U1.48",
+            "VCAP2/U1.73"
+          ]
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+          "line": 187,
+          "observation": "Nominal retained-capacitor inventory; no explicit C19/C20 effective C/ESR window closure."
+        },
+        {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "maker_revision": "DS12110 Rev11 January2026",
+          "pages": [
+            206,
+            209,
+            210,
+            211
+          ],
+          "tables": [
+            "112",
+            "114"
+          ],
+          "figure": "66",
+          "value": "CEXT2.2uF typical,+/-20% tolerated; ESR<100mOhm; two separate VCAP capacitors in regulator-on scheme."
+        },
+        {
+          "file": "docs/REQUIREMENTS.md",
+          "line": 88,
+          "value": "Bay -20..70C. The70C capacitor sensitivity is not measured local component temperature."
+        },
+        {
+          "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+          "value": {
+            "TCC70C_percent": -9.724665079784364,
+            "DCBias1V_percent": -3.968011046866707,
+            "inferred1V_uF": 1.7165253532281144,
+            "inferred1p05V_uF": 1.706001653083994
+          },
+          "classification": "Calculation/Inference, not guaranteed or measured installed behavior"
+        }
+      ],
+      "window_interpretation": {
+        "nominal_part_selection_complies": true,
+        "effective_capacitance_interpretation_uF": [
+          1.76,
+          2.64
+        ],
+        "interpretation_limit": "Table114 does not explicitly specify a capacitance measurement method or resolve nominal/test-value versus combined effective-in-circuit interpretation. This interpretation needs separate fresh verification; no demonstrated component-limit violation is claimed."
+      },
+      "actual_VCAP_scope": {
+        "measured": false,
+        "fitted_silicon_revision": "Unidentified; RevV electrical table is a conditional basis",
+        "intended_hardware_mode": "Internal LDO; separate output decouplers, no external core supply",
+        "VOS3_core_V": [
+          0.95,
+          1,
+          1.05
+        ],
+        "all_supported_LDO_scale_core_V": [
+          0.95,
+          1.4
+        ],
+        "normal_flight_clock_obligation_MHz": 200,
+        "implemented_or_measured_VOS_selection": false
+      },
+      "concrete_fix": "Explicitly qualify C19/C20 against the reviewed CEXT/ESR requirement using maker-supported combined-condition bounds or biased temperature/aging/post-process measurements at selected regulator modes. If it fails, qualify a replacement against both capacitance limits and ESR; do not assume that increasing nominal capacitance complies.",
+      "reason_not_Major": "Separate typical curves and an ambiguous test-value/effective-capacitance interpretation do not demonstrate an installed part outside a required limit or a regulator/required-function failure.",
+      "fresh_verification": "Root to obtain a separate fresh verifier after all10 full lenses; no expected outcome supplied."
+    }
+  ],
+  "candidates": [
+    {
+      "id": "R15-MCU-CAND-VCAP",
+      "proposed_severity": "Major",
+      "status": "narrowed_to_Minor_pending_separate_fresh_verification",
+      "finding_id": "R15-MCU-01",
+      "hypothesis": "Fitted C19/C20 may leave the regulator without the required output capacitance at the hot/biased/tolerance corner and threaten MCU functions.",
+      "evidence": {
+        "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+        "html_sha256": "c364f3646e98811f9386d5703b332b056aa128c5da18aa087c82bc5121d23f22",
+        "page_created_KST": "2026/10/30 22:27:09",
+        "characterization_units_source_url": "https://product.samsungsem.com/resources/js/datasheet/setting_mlcc_datasheet.js",
+        "characterization_units_source_sha256": "afafa4aa46c975b41454eff2c1de73189ef1e200870a9ec0293018c8cdd181b3",
+        "TCC_conditions": {
+          "vdc": 0.0,
+          "adc": 0.0,
+          "degC": 25.0,
+          "graphType": "TCC",
+          "dsTccFre": 1000,
+          "dsTccSign": 1.0,
+          "tccType": "X5R",
+          "partsName": "CL10A225KO8NNN"
+        },
+        "DCBias_conditions": {
+          "vdc": 0.0,
+          "adc": 0.0,
+          "degC": 25.0,
+          "graphType": "DCBias",
+          "dsDcFre": 1000,
+          "dsDcSign": 1.0,
+          "partsName": "CL10A225KO8NNN"
+        },
+        "curve_test_conditions": "TCC at zero DC bias; DCBias at25C; both1kHz and1Vrms, per maker page metadata and chart-unit JavaScript. Biased-TCC example is8V, not VCAP.",
+        "TCC_70C_percent": {
+          "x": 70,
+          "y": -9.724665079784364,
+          "bracket": [
+            [
+              69.52147731614818,
+              -9.583329654358977
+            ],
+            [
+              71.41740303996299,
+              -10.143306177505952
+            ]
+          ]
+        },
+        "DCBias_percent": {
+          "0.95": {
+            "x": 0.95,
+            "y": -3.424249655654564,
+            "bracket": [
+              [
+                0.92975,
+                -3.2040262922136464
+              ],
+              [
+                1.0,
+                -3.968011046866707
+              ]
+            ]
+          },
+          "1": {
+            "x": 1,
+            "y": -3.968011046866707,
+            "bracket": [
+              [
+                0.92975,
+                -3.2040262922136464
+              ],
+              [
+                1.0,
+                -3.968011046866707
+              ]
+            ]
+          },
+          "1.05": {
+            "x": 1.05,
+            "y": -4.556765447776471,
+            "bracket": [
+              [
+                1.0,
+                -3.968011046866707
+              ],
+              [
+                1.079075,
+                -4.899126131905498
+              ]
+            ]
+          },
+          "1.4": {
+            "x": 1.4,
+            "y": -9.09959548165852,
+            "bracket": [
+              [
+                1.3568,
+                -8.505812323461855
+              ],
+              [
+                1.4593749999999999,
+                -9.91570369966609
+              ]
+            ]
+          }
+        },
+        "formula_inference": "2.2uF *0.9 initial tolerance *(1+TCC70/100) *(1+DCBias/100); no aging factor",
+        "inferred_combined_capacitance_uF_by_bias_V": {
+          "0.95": 1.7262448250863693,
+          "1": 1.7165253532281144,
+          "1.05": 1.706001653083994,
+          "1.4": 1.6248007635307193
+        },
+        "correlation_limits": [
+          "Separate typical curves; multiplicative combination is an Inference, not a maker-guaranteed combined condition.",
+          "1kHz/1Vrms LCR characterization does not establish actual VCAP DC-bias/small-ripple/frequency-dependent capacitance or regulator stability.",
+          "Temperature and initial/DC-bias variation correlations are not bounded by these curves.",
+          "No measured local capacitor temperature, VCAP waveform, capacitance, ESR or post-reflow/aging state.",
+          "Samsung labels page data typical design-reference data."
+        ]
+      },
+      "not_demonstrated": [
+        "Effective-versus-nominal ST window interpretation",
+        "Guaranteed combined temperature/bias/tolerance/AC-condition bound",
+        "Installed C/ESR below the required window",
+        "Regulator instability or required-function failure"
+      ],
+      "disposition": "Retain the full candidate; no source/board change and no confirmed Major asserted."
+    }
+  ],
+  "closed_findings": [
+    {
+      "id": "R14-MCU-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": [
+        "circuit.json notes.telemetry1 now names Rev11 Table10 p91/p92",
+        "telemetry.kicad_sch lines2472/2479 repeat correct current AF citation and pulls-disabled-throughout-use instruction"
+      ],
+      "concrete_fix": "Already applied before this review; current source/native notes inspected directly."
+    },
+    {
+      "id": "R13-MCU-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": [
+        "Direct PC7/PB12 RX pulls remain disabled throughout operation",
+        "Operating supply+0.3V condition is kept separate from absolute stress"
+      ],
+      "concrete_fix": "Retain current contract; firmware remains unimplemented."
+    },
+    {
+      "id": "R12-MCU-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": [
+        "Former2.9mA proof withdrawn",
+        "Resistor-only3.363636mA initial-tolerance corner disclosed, no minimum-driver-resistance claim"
+      ],
+      "concrete_fix": "Retain current evidence and qualify actual dynamics."
+    }
+  ],
+  "rejected_C_M_candidates": [
+    {
+      "id": "MCU-PIN-AF",
+      "severity_considered": "Major",
+      "status": "rejected",
+      "reason": "100 package/board/native/XML/table/binding nets and ports agree;28 assigned AFs agree."
+    },
+    {
+      "id": "MCU-LOADER-FIRE",
+      "severity_considered": "Critical",
+      "status": "rejected",
+      "reason": "Current AN2606 resources exclude PC1/PE4; native separate default-off networks retained. Loader-drive branches inspected; no new arming/fire path found. Runtime preparation remains unimplemented."
+    },
+    {
+      "id": "MCU-TRACE-OVERRIDE",
+      "severity_considered": "Critical",
+      "status": "unproven_disclosed_qualification",
+      "reason": "Potential trace override is already explicitly conditional; no hardware experiment or firmware exists to prove an override. Current lock/readback/disabled-trace/dummy-load restrictions remain."
+    },
+    {
+      "id": "MCU-DIRECT-PORT-ESD",
+      "severity_considered": "Major",
+      "status": "rejected_as_demonstrated_failure",
+      "reason": "1k/ground clamps do not guarantee pin clamp voltage, isolation or installed ESD survival. Current records correctly disclose this and owner operating restrictions; no actual failure or claimed qualification was found."
+    },
+    {
+      "id": "MCU-DIAGNOSTIC-ADC-FAULT",
+      "severity_considered": "Major",
+      "status": "retained_disclosed_residual",
+      "reason": "PA6 top-short and PB1 bottom-open can overstress ordinary diagnostic inputs. Already disclosed single-string residual; no new normal-operation violation or required extra single-fault containment established."
+    }
+  ],
+  "checks_actually_executed": [
+    {
+      "check": "Read-only native board plus independent S-expression MCU schematic wire/label/NC graph",
+      "probe": ".supervisor/r15_mcu/probe.py",
+      "final_exit_code": 0,
+      "result": "100/100 port identities and nets agree with current maker package transcription, XML, table, binding; four provenance SHA fields agree."
+    },
+    {
+      "check": "Read-only AF/ADC/EXTI/loader/NC/component-map/pitch probe and independent arithmetic",
+      "probe": ".supervisor/r15_mcu/detail.py",
+      "final_exit_code": 0,
+      "result": "28 AFs,5 ADC inputs,6 distinct EXTI lines,26 loader package resources,32 isolated NC nets;0.5mm pitch."
+    },
+    {
+      "check": "Current official primary-source reads",
+      "result": "DS12110 Rev11 Jan2026; AN2606 Rev70 Feb2026; current TI camera parts; exact Infineon EL page; ST CMSIS/HAL; radio/GPS makers; Samsung exact-part page and embedded curves."
+    },
+    {
+      "check": "Samsung embedded characterization data",
+      "result": "Fresh HTML and chart-unit script fetched; JSON parsed, bracket interpolation and conditional combination calculated; correlation limits preserved."
+    },
+    {
+      "check": "Cached IMU primary PDF",
+      "result": "Metadata/text read; DS14623 Rev1 p17 rendered with Poppler and viewed, SPI maximum10MHz; table4 typical gyro turn-on40ms and IF_CFG defaults read."
+    },
+    {
+      "check": "Current closure source notes",
+      "result": "Canonical circuit telemetry notes and native telemetry.kicad_sch2472/2479 directly inspected; prior AF citation/pull scope corrected."
+    },
+    {
+      "check": "Target PCB SHA before/after",
+      "result": "Exact7866d6b8 hash unchanged."
+    }
+  ],
+  "native_evidence": {
+    "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+    "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+    "u1_pose": {
+      "xy_mm": [
+        23.0,
+        43.0
+      ],
+      "orientation_deg": 0.0,
+      "layer": "F.Cu",
+      "footprint": "LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL"
+    },
+    "u1_pads_count": 100,
+    "native_symbol_pin_count": 100,
+    "table_count": 100,
+    "xml_count": 100,
+    "binding_count": 100,
+    "maker_package_map": "DS12110 Rev11 Figure5 p55,100 independently transcribed ports",
+    "errors": [],
+    "pins": [
+      {
+        "pin": 1,
+        "port": "PE2",
+        "net": "QSPI_IO2",
+        "pad_mm": [
+          17.0,
+          50.55
+        ],
+        "board_net": "QSPI_IO2",
+        "xml": {
+          "net": "QSPI_IO2",
+          "port": "PE2"
+        },
+        "native_schematic": {
+          "port": "PE2",
+          "net": "QSPI_IO2",
+          "pin_end_mm": [
+            63.5,
+            69.85
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE2",
+          "net": "QSPI_IO2",
+          "mode": "AF9 QUADSPI_BK1_IO2"
+        }
+      },
+      {
+        "pin": 2,
+        "port": "PE3",
+        "net": "NC",
+        "pad_mm": [
+          17.5,
+          50.55
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE3"
+        },
+        "native_schematic": {
+          "port": "PE3",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            72.39
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE3",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 3,
+        "port": "PE4",
+        "net": "PYRO1_GATE_N",
+        "pad_mm": [
+          18.0,
+          50.55
+        ],
+        "board_net": "PYRO1_GATE_N",
+        "xml": {
+          "net": "PYRO1_GATE_N",
+          "port": "PE4"
+        },
+        "native_schematic": {
+          "port": "PE4",
+          "net": "PYRO1_GATE_N",
+          "pin_end_mm": [
+            63.5,
+            194.31
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE4",
+          "net": "PYRO1_GATE_N",
+          "mode": "GPIO out"
+        }
+      },
+      {
+        "pin": 4,
+        "port": "PE5",
+        "net": "NC",
+        "pad_mm": [
+          18.5,
+          50.55
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE5"
+        },
+        "native_schematic": {
+          "port": "PE5",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            69.85
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE5",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 5,
+        "port": "PE6",
+        "net": "NC",
+        "pad_mm": [
+          19.0,
+          50.55
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE6"
+        },
+        "native_schematic": {
+          "port": "PE6",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            72.39
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE6",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 6,
+        "port": "VBAT",
+        "net": "3V3",
+        "pad_mm": [
+          19.5,
+          50.55
+        ],
+        "board_net": "3V3",
+        "xml": {
+          "net": "3V3",
+          "port": "VBAT"
+        },
+        "native_schematic": {
+          "port": "VBAT",
+          "net": "3V3",
+          "pin_end_mm": [
+            63.5,
+            74.93
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VBAT",
+          "net": "3V3",
+          "mode": "VBAT"
+        }
+      },
+      {
+        "pin": 7,
+        "port": "PC13",
+        "net": "NC",
+        "pad_mm": [
+          20.0,
+          50.55
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PC13"
+        },
+        "native_schematic": {
+          "port": "PC13",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            77.47
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PC13",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 8,
+        "port": "PC14",
+        "net": "BUZZ_DRV",
+        "pad_mm": [
+          20.5,
+          50.55
+        ],
+        "board_net": "BUZZ_DRV",
+        "xml": {
+          "net": "BUZZ_DRV",
+          "port": "PC14"
+        },
+        "native_schematic": {
+          "port": "PC14",
+          "net": "BUZZ_DRV",
+          "pin_end_mm": [
+            119.38,
+            74.93
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC14",
+          "net": "BUZZ_DRV",
+          "mode": "GPIO out"
+        }
+      },
+      {
+        "pin": 9,
+        "port": "PC15",
+        "net": "NC",
+        "pad_mm": [
+          21.0,
+          50.55
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PC15"
+        },
+        "native_schematic": {
+          "port": "PC15",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            77.47
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PC15",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 10,
+        "port": "VSS",
+        "net": "GND",
+        "pad_mm": [
+          21.5,
+          50.55
+        ],
+        "board_net": "GND",
+        "xml": {
+          "net": "GND",
+          "port": "VSS"
+        },
+        "native_schematic": {
+          "port": "VSS",
+          "net": "GND",
+          "pin_end_mm": [
+            63.5,
+            80.01
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VSS",
+          "net": "GND",
+          "mode": "VSS"
+        }
+      },
+      {
+        "pin": 11,
+        "port": "VDD",
+        "net": "3V3",
+        "pad_mm": [
+          22.0,
+          50.55
+        ],
+        "board_net": "3V3",
+        "xml": {
+          "net": "3V3",
+          "port": "VDD"
+        },
+        "native_schematic": {
+          "port": "VDD",
+          "net": "3V3",
+          "pin_end_mm": [
+            63.5,
+            82.55
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VDD",
+          "net": "3V3",
+          "mode": "VDD"
+        }
+      },
+      {
+        "pin": 12,
+        "port": "PH0",
+        "net": "HSE_IN",
+        "pad_mm": [
+          22.5,
+          50.55
+        ],
+        "board_net": "HSE_IN",
+        "xml": {
+          "net": "HSE_IN",
+          "port": "PH0"
+        },
+        "native_schematic": {
+          "port": "PH0",
+          "net": "HSE_IN",
+          "pin_end_mm": [
+            63.5,
+            85.09
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PH0",
+          "net": "HSE_IN",
+          "mode": "HSE"
+        }
+      },
+      {
+        "pin": 13,
+        "port": "PH1",
+        "net": "HSE_OUT",
+        "pad_mm": [
+          23.0,
+          50.55
+        ],
+        "board_net": "HSE_OUT",
+        "xml": {
+          "net": "HSE_OUT",
+          "port": "PH1"
+        },
+        "native_schematic": {
+          "port": "PH1",
+          "net": "HSE_OUT",
+          "pin_end_mm": [
+            63.5,
+            87.63
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PH1",
+          "net": "HSE_OUT",
+          "mode": "HSE"
+        }
+      },
+      {
+        "pin": 14,
+        "port": "NRST",
+        "net": "NRST",
+        "pad_mm": [
+          23.5,
+          50.55
+        ],
+        "board_net": "NRST",
+        "xml": {
+          "net": "NRST",
+          "port": "NRST"
+        },
+        "native_schematic": {
+          "port": "NRST",
+          "net": "NRST",
+          "pin_end_mm": [
+            63.5,
+            90.17
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "NRST",
+          "net": "NRST",
+          "mode": "NRST"
+        }
+      },
+      {
+        "pin": 15,
+        "port": "PC0",
+        "net": "PYRO1_CONT",
+        "pad_mm": [
+          24.0,
+          50.55
+        ],
+        "board_net": "PYRO1_CONT",
+        "xml": {
+          "net": "PYRO1_CONT",
+          "port": "PC0"
+        },
+        "native_schematic": {
+          "port": "PC0",
+          "net": "PYRO1_CONT",
+          "pin_end_mm": [
+            119.38,
+            80.01
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC0",
+          "net": "PYRO1_CONT",
+          "mode": "ADC"
+        }
+      },
+      {
+        "pin": 16,
+        "port": "PC1",
+        "net": "ACT_EN_MCU",
+        "pad_mm": [
+          24.5,
+          50.55
+        ],
+        "board_net": "ACT_EN_MCU",
+        "xml": {
+          "net": "ACT_EN_MCU",
+          "port": "PC1"
+        },
+        "native_schematic": {
+          "port": "PC1",
+          "net": "ACT_EN_MCU",
+          "pin_end_mm": [
+            119.38,
+            82.55
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC1",
+          "net": "ACT_EN_MCU",
+          "mode": "GPIO out (push-pull; initialise low before output mode)"
+        }
+      },
+      {
+        "pin": 17,
+        "port": "PC2_C",
+        "net": "NC",
+        "pad_mm": [
+          25.0,
+          50.55
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PC2_C"
+        },
+        "native_schematic": {
+          "port": "PC2_C",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            92.71
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PC2_C",
+          "net": "NC",
+          "mode": "NC (firmware: analog)"
+        }
+      },
+      {
+        "pin": 18,
+        "port": "PC3_C",
+        "net": "V3V3_SENSE",
+        "pad_mm": [
+          25.5,
+          50.55
+        ],
+        "board_net": "V3V3_SENSE",
+        "xml": {
+          "net": "V3V3_SENSE",
+          "port": "PC3_C"
+        },
+        "native_schematic": {
+          "port": "PC3_C",
+          "net": "V3V3_SENSE",
+          "pin_end_mm": [
+            63.5,
+            95.25
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC3_C",
+          "net": "V3V3_SENSE",
+          "mode": "ADC"
+        }
+      },
+      {
+        "pin": 19,
+        "port": "VSSA",
+        "net": "GND",
+        "pad_mm": [
+          26.0,
+          50.55
+        ],
+        "board_net": "GND",
+        "xml": {
+          "net": "GND",
+          "port": "VSSA"
+        },
+        "native_schematic": {
+          "port": "VSSA",
+          "net": "GND",
+          "pin_end_mm": [
+            63.5,
+            97.79
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VSSA",
+          "net": "GND",
+          "mode": "VSSA"
+        }
+      },
+      {
+        "pin": 20,
+        "port": "VREF+",
+        "net": "3V3A",
+        "pad_mm": [
+          26.5,
+          50.55
+        ],
+        "board_net": "3V3A",
+        "xml": {
+          "net": "3V3A",
+          "port": "VREF+"
+        },
+        "native_schematic": {
+          "port": "VREF+",
+          "net": "3V3A",
+          "pin_end_mm": [
+            63.5,
+            100.33
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VREF+",
+          "net": "3V3A",
+          "mode": "VREF+"
+        }
+      },
+      {
+        "pin": 21,
+        "port": "VDDA",
+        "net": "3V3A",
+        "pad_mm": [
+          27.0,
+          50.55
+        ],
+        "board_net": "3V3A",
+        "xml": {
+          "net": "3V3A",
+          "port": "VDDA"
+        },
+        "native_schematic": {
+          "port": "VDDA",
+          "net": "3V3A",
+          "pin_end_mm": [
+            63.5,
+            102.87
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VDDA",
+          "net": "3V3A",
+          "mode": "VDDA"
+        }
+      },
+      {
+        "pin": 22,
+        "port": "PA0",
+        "net": "SERVO1_MCU",
+        "pad_mm": [
+          27.5,
+          50.55
+        ],
+        "board_net": "SERVO1_MCU",
+        "xml": {
+          "net": "SERVO1_MCU",
+          "port": "PA0"
+        },
+        "native_schematic": {
+          "port": "PA0",
+          "net": "SERVO1_MCU",
+          "pin_end_mm": [
+            119.38,
+            85.09
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA0",
+          "net": "SERVO1_MCU",
+          "mode": "AF2 TIM5_CH1"
+        }
+      },
+      {
+        "pin": 23,
+        "port": "PA1",
+        "net": "SERVO2_MCU",
+        "pad_mm": [
+          28.0,
+          50.55
+        ],
+        "board_net": "SERVO2_MCU",
+        "xml": {
+          "net": "SERVO2_MCU",
+          "port": "PA1"
+        },
+        "native_schematic": {
+          "port": "PA1",
+          "net": "SERVO2_MCU",
+          "pin_end_mm": [
+            119.38,
+            87.63
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA1",
+          "net": "SERVO2_MCU",
+          "mode": "AF2 TIM5_CH2"
+        }
+      },
+      {
+        "pin": 24,
+        "port": "PA2",
+        "net": "SERVO3_MCU",
+        "pad_mm": [
+          28.5,
+          50.55
+        ],
+        "board_net": "SERVO3_MCU",
+        "xml": {
+          "net": "SERVO3_MCU",
+          "port": "PA2"
+        },
+        "native_schematic": {
+          "port": "PA2",
+          "net": "SERVO3_MCU",
+          "pin_end_mm": [
+            119.38,
+            90.17
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA2",
+          "net": "SERVO3_MCU",
+          "mode": "AF2 TIM5_CH3"
+        }
+      },
+      {
+        "pin": 25,
+        "port": "PA3",
+        "net": "SERVO4_MCU",
+        "pad_mm": [
+          29.0,
+          50.55
+        ],
+        "board_net": "SERVO4_MCU",
+        "xml": {
+          "net": "SERVO4_MCU",
+          "port": "PA3"
+        },
+        "native_schematic": {
+          "port": "PA3",
+          "net": "SERVO4_MCU",
+          "pin_end_mm": [
+            119.38,
+            92.71
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA3",
+          "net": "SERVO4_MCU",
+          "mode": "AF2 TIM5_CH4"
+        }
+      },
+      {
+        "pin": 26,
+        "port": "VSS",
+        "net": "GND",
+        "pad_mm": [
+          30.55,
+          49.0
+        ],
+        "board_net": "GND",
+        "xml": {
+          "net": "GND",
+          "port": "VSS"
+        },
+        "native_schematic": {
+          "port": "VSS",
+          "net": "GND",
+          "pin_end_mm": [
+            63.5,
+            105.41
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VSS",
+          "net": "GND",
+          "mode": "VSS"
+        }
+      },
+      {
+        "pin": 27,
+        "port": "VDD",
+        "net": "3V3",
+        "pad_mm": [
+          30.55,
+          48.5
+        ],
+        "board_net": "3V3",
+        "xml": {
+          "net": "3V3",
+          "port": "VDD"
+        },
+        "native_schematic": {
+          "port": "VDD",
+          "net": "3V3",
+          "pin_end_mm": [
+            63.5,
+            107.95
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VDD",
+          "net": "3V3",
+          "mode": "VDD"
+        }
+      },
+      {
+        "pin": 28,
+        "port": "PA4",
+        "net": "LOGIC_SOURCE_ST",
+        "pad_mm": [
+          30.55,
+          48.0
+        ],
+        "board_net": "LOGIC_SOURCE_ST",
+        "xml": {
+          "net": "LOGIC_SOURCE_ST",
+          "port": "PA4"
+        },
+        "native_schematic": {
+          "port": "PA4",
+          "net": "LOGIC_SOURCE_ST",
+          "pin_end_mm": [
+            119.38,
+            95.25
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA4",
+          "net": "LOGIC_SOURCE_ST",
+          "mode": "GPIO in"
+        }
+      },
+      {
+        "pin": 29,
+        "port": "PA5",
+        "net": "BAT_FAULT_N",
+        "pad_mm": [
+          30.55,
+          47.5
+        ],
+        "board_net": "BAT_FAULT_N",
+        "xml": {
+          "net": "BAT_FAULT_N",
+          "port": "PA5"
+        },
+        "native_schematic": {
+          "port": "PA5",
+          "net": "BAT_FAULT_N",
+          "pin_end_mm": [
+            119.38,
+            97.79
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA5",
+          "net": "BAT_FAULT_N",
+          "mode": "GPIO in"
+        }
+      },
+      {
+        "pin": 30,
+        "port": "PA6",
+        "net": "VLOGIC_SENSE",
+        "pad_mm": [
+          30.55,
+          47.0
+        ],
+        "board_net": "VLOGIC_SENSE",
+        "xml": {
+          "net": "VLOGIC_SENSE",
+          "port": "PA6"
+        },
+        "native_schematic": {
+          "port": "PA6",
+          "net": "VLOGIC_SENSE",
+          "pin_end_mm": [
+            119.38,
+            100.33
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA6",
+          "net": "VLOGIC_SENSE",
+          "mode": "ADC (ADC12_INP3)"
+        }
+      },
+      {
+        "pin": 31,
+        "port": "PA7",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          46.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PA7"
+        },
+        "native_schematic": {
+          "port": "PA7",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            102.87
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PA7",
+          "net": "NC",
+          "mode": "NC (firmware: analog)"
+        }
+      },
+      {
+        "pin": 32,
+        "port": "PC4",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          46.0
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PC4"
+        },
+        "native_schematic": {
+          "port": "PC4",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            105.41
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PC4",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 33,
+        "port": "PC5",
+        "net": "ARM1_SENSE",
+        "pad_mm": [
+          30.55,
+          45.5
+        ],
+        "board_net": "ARM1_SENSE",
+        "xml": {
+          "net": "ARM1_SENSE",
+          "port": "PC5"
+        },
+        "native_schematic": {
+          "port": "PC5",
+          "net": "ARM1_SENSE",
+          "pin_end_mm": [
+            119.38,
+            107.95
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC5",
+          "net": "ARM1_SENSE",
+          "mode": "ADC"
+        }
+      },
+      {
+        "pin": 34,
+        "port": "PB0",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          45.0
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PB0"
+        },
+        "native_schematic": {
+          "port": "PB0",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            110.49
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PB0",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 35,
+        "port": "PB1",
+        "net": "CAM_5V_SENSE",
+        "pad_mm": [
+          30.55,
+          44.5
+        ],
+        "board_net": "CAM_5V_SENSE",
+        "xml": {
+          "net": "CAM_5V_SENSE",
+          "port": "PB1"
+        },
+        "native_schematic": {
+          "port": "PB1",
+          "net": "CAM_5V_SENSE",
+          "pin_end_mm": [
+            119.38,
+            113.03
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB1",
+          "net": "CAM_5V_SENSE",
+          "mode": "ADC"
+        }
+      },
+      {
+        "pin": 36,
+        "port": "PB2",
+        "net": "QSPI_CLK",
+        "pad_mm": [
+          30.55,
+          44.0
+        ],
+        "board_net": "QSPI_CLK",
+        "xml": {
+          "net": "QSPI_CLK",
+          "port": "PB2"
+        },
+        "native_schematic": {
+          "port": "PB2",
+          "net": "QSPI_CLK",
+          "pin_end_mm": [
+            63.5,
+            110.49
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB2",
+          "net": "QSPI_CLK",
+          "mode": "AF9 QUADSPI_CLK"
+        }
+      },
+      {
+        "pin": 37,
+        "port": "PE7",
+        "net": "CAM_MCU_RX",
+        "pad_mm": [
+          30.55,
+          43.5
+        ],
+        "board_net": "CAM_MCU_RX",
+        "xml": {
+          "net": "CAM_MCU_RX",
+          "port": "PE7"
+        },
+        "native_schematic": {
+          "port": "PE7",
+          "net": "CAM_MCU_RX",
+          "pin_end_mm": [
+            63.5,
+            113.03
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE7",
+          "net": "CAM_MCU_RX",
+          "mode": "AF7 UART7_RX"
+        }
+      },
+      {
+        "pin": 38,
+        "port": "PE8",
+        "net": "CAM_MCU_TX",
+        "pad_mm": [
+          30.55,
+          43.0
+        ],
+        "board_net": "CAM_MCU_TX",
+        "xml": {
+          "net": "CAM_MCU_TX",
+          "port": "PE8"
+        },
+        "native_schematic": {
+          "port": "PE8",
+          "net": "CAM_MCU_TX",
+          "pin_end_mm": [
+            119.38,
+            115.57
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE8",
+          "net": "CAM_MCU_TX",
+          "mode": "AF7 UART7_TX"
+        }
+      },
+      {
+        "pin": 39,
+        "port": "PE9",
+        "net": "CAM_UART_OE",
+        "pad_mm": [
+          30.55,
+          42.5
+        ],
+        "board_net": "CAM_UART_OE",
+        "xml": {
+          "net": "CAM_UART_OE",
+          "port": "PE9"
+        },
+        "native_schematic": {
+          "port": "PE9",
+          "net": "CAM_UART_OE",
+          "pin_end_mm": [
+            119.38,
+            118.11
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE9",
+          "net": "CAM_UART_OE",
+          "mode": "GPIO out"
+        }
+      },
+      {
+        "pin": 40,
+        "port": "PE10",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          42.0
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE10"
+        },
+        "native_schematic": {
+          "port": "PE10",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            115.57
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE10",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 41,
+        "port": "PE11",
+        "net": "CAM_PWR_EN",
+        "pad_mm": [
+          30.55,
+          41.5
+        ],
+        "board_net": "CAM_PWR_EN",
+        "xml": {
+          "net": "CAM_PWR_EN",
+          "port": "PE11"
+        },
+        "native_schematic": {
+          "port": "PE11",
+          "net": "CAM_PWR_EN",
+          "pin_end_mm": [
+            119.38,
+            120.65
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE11",
+          "net": "CAM_PWR_EN",
+          "mode": "GPIO out"
+        }
+      },
+      {
+        "pin": 42,
+        "port": "PE12",
+        "net": "CAM_FAULT_N",
+        "pad_mm": [
+          30.55,
+          41.0
+        ],
+        "board_net": "CAM_FAULT_N",
+        "xml": {
+          "net": "CAM_FAULT_N",
+          "port": "PE12"
+        },
+        "native_schematic": {
+          "port": "PE12",
+          "net": "CAM_FAULT_N",
+          "pin_end_mm": [
+            119.38,
+            123.19
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE12",
+          "net": "CAM_FAULT_N",
+          "mode": "GPIO in"
+        }
+      },
+      {
+        "pin": 43,
+        "port": "PE13",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          40.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE13"
+        },
+        "native_schematic": {
+          "port": "PE13",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            125.73
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE13",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 44,
+        "port": "PE14",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          40.0
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE14"
+        },
+        "native_schematic": {
+          "port": "PE14",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            128.27
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE14",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 45,
+        "port": "PE15",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          39.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE15"
+        },
+        "native_schematic": {
+          "port": "PE15",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            130.81
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE15",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 46,
+        "port": "PB10",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          39.0
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PB10"
+        },
+        "native_schematic": {
+          "port": "PB10",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            118.11
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PB10",
+          "net": "NC",
+          "mode": "NC"
+        }
+      },
+      {
+        "pin": 47,
+        "port": "PB11",
+        "net": "NC",
+        "pad_mm": [
+          30.55,
+          38.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PB11"
+        },
+        "native_schematic": {
+          "port": "PB11",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            120.65
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PB11",
+          "net": "NC",
+          "mode": "NC"
+        }
+      },
+      {
+        "pin": 48,
+        "port": "VCAP",
+        "net": "VCAP1",
+        "pad_mm": [
+          30.55,
+          38.0
+        ],
+        "board_net": "VCAP1",
+        "xml": {
+          "net": "VCAP1",
+          "port": "VCAP"
+        },
+        "native_schematic": {
+          "port": "VCAP",
+          "net": "VCAP1",
+          "pin_end_mm": [
+            63.5,
+            123.19
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VCAP",
+          "net": "VCAP1",
+          "mode": "VCAP"
+        }
+      },
+      {
+        "pin": 49,
+        "port": "VSS",
+        "net": "GND",
+        "pad_mm": [
+          30.55,
+          37.5
+        ],
+        "board_net": "GND",
+        "xml": {
+          "net": "GND",
+          "port": "VSS"
+        },
+        "native_schematic": {
+          "port": "VSS",
+          "net": "GND",
+          "pin_end_mm": [
+            63.5,
+            125.73
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VSS",
+          "net": "GND",
+          "mode": "VSS"
+        }
+      },
+      {
+        "pin": 50,
+        "port": "VDD",
+        "net": "3V3",
+        "pad_mm": [
+          30.55,
+          37.0
+        ],
+        "board_net": "3V3",
+        "xml": {
+          "net": "3V3",
+          "port": "VDD"
+        },
+        "native_schematic": {
+          "port": "VDD",
+          "net": "3V3",
+          "pin_end_mm": [
+            63.5,
+            128.27
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VDD",
+          "net": "3V3",
+          "mode": "VDD"
+        }
+      },
+      {
+        "pin": 51,
+        "port": "PB12",
+        "net": "RADIO_RX_MCU",
+        "pad_mm": [
+          29.0,
+          35.45
+        ],
+        "board_net": "RADIO_RX_MCU",
+        "xml": {
+          "net": "RADIO_RX_MCU",
+          "port": "PB12"
+        },
+        "native_schematic": {
+          "port": "PB12",
+          "net": "RADIO_RX_MCU",
+          "pin_end_mm": [
+            119.38,
+            133.35
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB12",
+          "net": "RADIO_RX_MCU",
+          "mode": "AF14 UART5_RX"
+        }
+      },
+      {
+        "pin": 52,
+        "port": "PB13",
+        "net": "RADIO_TX_MCU",
+        "pad_mm": [
+          28.5,
+          35.45
+        ],
+        "board_net": "RADIO_TX_MCU",
+        "xml": {
+          "net": "RADIO_TX_MCU",
+          "port": "PB13"
+        },
+        "native_schematic": {
+          "port": "PB13",
+          "net": "RADIO_TX_MCU",
+          "pin_end_mm": [
+            119.38,
+            135.89
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB13",
+          "net": "RADIO_TX_MCU",
+          "mode": "AF14 UART5_TX"
+        }
+      },
+      {
+        "pin": 53,
+        "port": "PB14",
+        "net": "NC",
+        "pad_mm": [
+          28.0,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PB14"
+        },
+        "native_schematic": {
+          "port": "PB14",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            138.43
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PB14",
+          "net": "NC",
+          "mode": "NC"
+        }
+      },
+      {
+        "pin": 54,
+        "port": "PB15",
+        "net": "NC",
+        "pad_mm": [
+          27.5,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PB15"
+        },
+        "native_schematic": {
+          "port": "PB15",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            140.97
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PB15",
+          "net": "NC",
+          "mode": "NC"
+        }
+      },
+      {
+        "pin": 55,
+        "port": "PD8",
+        "net": "NC",
+        "pad_mm": [
+          27.0,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD8"
+        },
+        "native_schematic": {
+          "port": "PD8",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            143.51
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD8",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 56,
+        "port": "PD9",
+        "net": "NC",
+        "pad_mm": [
+          26.5,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD9"
+        },
+        "native_schematic": {
+          "port": "PD9",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            146.05
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD9",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 57,
+        "port": "PD10",
+        "net": "NC",
+        "pad_mm": [
+          26.0,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD10"
+        },
+        "native_schematic": {
+          "port": "PD10",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            148.59
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD10",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 58,
+        "port": "PD11",
+        "net": "QSPI_IO0",
+        "pad_mm": [
+          25.5,
+          35.45
+        ],
+        "board_net": "QSPI_IO0",
+        "xml": {
+          "net": "QSPI_IO0",
+          "port": "PD11"
+        },
+        "native_schematic": {
+          "port": "PD11",
+          "net": "QSPI_IO0",
+          "pin_end_mm": [
+            63.5,
+            130.81
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PD11",
+          "net": "QSPI_IO0",
+          "mode": "AF9 QUADSPI_BK1_IO0"
+        }
+      },
+      {
+        "pin": 59,
+        "port": "PD12",
+        "net": "QSPI_IO1",
+        "pad_mm": [
+          25.0,
+          35.45
+        ],
+        "board_net": "QSPI_IO1",
+        "xml": {
+          "net": "QSPI_IO1",
+          "port": "PD12"
+        },
+        "native_schematic": {
+          "port": "PD12",
+          "net": "QSPI_IO1",
+          "pin_end_mm": [
+            63.5,
+            133.35
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PD12",
+          "net": "QSPI_IO1",
+          "mode": "AF9 QUADSPI_BK1_IO1"
+        }
+      },
+      {
+        "pin": 60,
+        "port": "PD13",
+        "net": "QSPI_IO3",
+        "pad_mm": [
+          24.5,
+          35.45
+        ],
+        "board_net": "QSPI_IO3",
+        "xml": {
+          "net": "QSPI_IO3",
+          "port": "PD13"
+        },
+        "native_schematic": {
+          "port": "PD13",
+          "net": "QSPI_IO3",
+          "pin_end_mm": [
+            63.5,
+            135.89
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PD13",
+          "net": "QSPI_IO3",
+          "mode": "AF9 QUADSPI_BK1_IO3"
+        }
+      },
+      {
+        "pin": 61,
+        "port": "PD14",
+        "net": "NC",
+        "pad_mm": [
+          24.0,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD14"
+        },
+        "native_schematic": {
+          "port": "PD14",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            151.13
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD14",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 62,
+        "port": "PD15",
+        "net": "NC",
+        "pad_mm": [
+          23.5,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD15"
+        },
+        "native_schematic": {
+          "port": "PD15",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            138.43
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD15",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 63,
+        "port": "PC6",
+        "net": "GPS_TX_MCU",
+        "pad_mm": [
+          23.0,
+          35.45
+        ],
+        "board_net": "GPS_TX_MCU",
+        "xml": {
+          "net": "GPS_TX_MCU",
+          "port": "PC6"
+        },
+        "native_schematic": {
+          "port": "PC6",
+          "net": "GPS_TX_MCU",
+          "pin_end_mm": [
+            63.5,
+            140.97
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC6",
+          "net": "GPS_TX_MCU",
+          "mode": "AF7 USART6_TX"
+        }
+      },
+      {
+        "pin": 64,
+        "port": "PC7",
+        "net": "GPS_RX_MCU",
+        "pad_mm": [
+          22.5,
+          35.45
+        ],
+        "board_net": "GPS_RX_MCU",
+        "xml": {
+          "net": "GPS_RX_MCU",
+          "port": "PC7"
+        },
+        "native_schematic": {
+          "port": "PC7",
+          "net": "GPS_RX_MCU",
+          "pin_end_mm": [
+            63.5,
+            143.51
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC7",
+          "net": "GPS_RX_MCU",
+          "mode": "AF7 USART6_RX"
+        }
+      },
+      {
+        "pin": 65,
+        "port": "PC8",
+        "net": "VBUS_SENSE",
+        "pad_mm": [
+          22.0,
+          35.45
+        ],
+        "board_net": "VBUS_SENSE",
+        "xml": {
+          "net": "VBUS_SENSE",
+          "port": "PC8"
+        },
+        "native_schematic": {
+          "port": "PC8",
+          "net": "VBUS_SENSE",
+          "pin_end_mm": [
+            119.38,
+            153.67
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC8",
+          "net": "VBUS_SENSE",
+          "mode": "GPIO in"
+        }
+      },
+      {
+        "pin": 66,
+        "port": "PC9",
+        "net": "NC",
+        "pad_mm": [
+          21.5,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PC9"
+        },
+        "native_schematic": {
+          "port": "PC9",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            156.21
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PC9",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 67,
+        "port": "PA8",
+        "net": "NC",
+        "pad_mm": [
+          21.0,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PA8"
+        },
+        "native_schematic": {
+          "port": "PA8",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            158.75
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PA8",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 68,
+        "port": "PA9",
+        "net": "NC",
+        "pad_mm": [
+          20.5,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PA9"
+        },
+        "native_schematic": {
+          "port": "PA9",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            161.29
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PA9",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 69,
+        "port": "PA10",
+        "net": "NC",
+        "pad_mm": [
+          20.0,
+          35.45
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PA10"
+        },
+        "native_schematic": {
+          "port": "PA10",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            163.83
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PA10",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 70,
+        "port": "PA11",
+        "net": "USB_DM",
+        "pad_mm": [
+          19.5,
+          35.45
+        ],
+        "board_net": "USB_DM",
+        "xml": {
+          "net": "USB_DM",
+          "port": "PA11"
+        },
+        "native_schematic": {
+          "port": "PA11",
+          "net": "USB_DM",
+          "pin_end_mm": [
+            63.5,
+            146.05
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA11",
+          "net": "USB_DM",
+          "mode": "AF10 OTG_FS_DM"
+        }
+      },
+      {
+        "pin": 71,
+        "port": "PA12",
+        "net": "USB_DP",
+        "pad_mm": [
+          19.0,
+          35.45
+        ],
+        "board_net": "USB_DP",
+        "xml": {
+          "net": "USB_DP",
+          "port": "PA12"
+        },
+        "native_schematic": {
+          "port": "PA12",
+          "net": "USB_DP",
+          "pin_end_mm": [
+            63.5,
+            148.59
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA12",
+          "net": "USB_DP",
+          "mode": "AF10 OTG_FS_DP"
+        }
+      },
+      {
+        "pin": 72,
+        "port": "PA13",
+        "net": "SWDIO",
+        "pad_mm": [
+          18.5,
+          35.45
+        ],
+        "board_net": "SWDIO",
+        "xml": {
+          "net": "SWDIO",
+          "port": "PA13"
+        },
+        "native_schematic": {
+          "port": "PA13",
+          "net": "SWDIO",
+          "pin_end_mm": [
+            63.5,
+            151.13
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA13",
+          "net": "SWDIO",
+          "mode": "AF0 SWDIO"
+        }
+      },
+      {
+        "pin": 73,
+        "port": "VCAP",
+        "net": "VCAP2",
+        "pad_mm": [
+          18.0,
+          35.45
+        ],
+        "board_net": "VCAP2",
+        "xml": {
+          "net": "VCAP2",
+          "port": "VCAP"
+        },
+        "native_schematic": {
+          "port": "VCAP",
+          "net": "VCAP2",
+          "pin_end_mm": [
+            63.5,
+            153.67
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VCAP",
+          "net": "VCAP2",
+          "mode": "VCAP"
+        }
+      },
+      {
+        "pin": 74,
+        "port": "VSS",
+        "net": "GND",
+        "pad_mm": [
+          17.5,
+          35.45
+        ],
+        "board_net": "GND",
+        "xml": {
+          "net": "GND",
+          "port": "VSS"
+        },
+        "native_schematic": {
+          "port": "VSS",
+          "net": "GND",
+          "pin_end_mm": [
+            63.5,
+            156.21
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VSS",
+          "net": "GND",
+          "mode": "VSS"
+        }
+      },
+      {
+        "pin": 75,
+        "port": "VDD",
+        "net": "3V3",
+        "pad_mm": [
+          17.0,
+          35.45
+        ],
+        "board_net": "3V3",
+        "xml": {
+          "net": "3V3",
+          "port": "VDD"
+        },
+        "native_schematic": {
+          "port": "VDD",
+          "net": "3V3",
+          "pin_end_mm": [
+            63.5,
+            158.75
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VDD",
+          "net": "3V3",
+          "mode": "VDD"
+        }
+      },
+      {
+        "pin": 76,
+        "port": "PA14",
+        "net": "SWCLK",
+        "pad_mm": [
+          15.45,
+          37.0
+        ],
+        "board_net": "SWCLK",
+        "xml": {
+          "net": "SWCLK",
+          "port": "PA14"
+        },
+        "native_schematic": {
+          "port": "PA14",
+          "net": "SWCLK",
+          "pin_end_mm": [
+            63.5,
+            161.29
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PA14",
+          "net": "SWCLK",
+          "mode": "AF0 SWCLK"
+        }
+      },
+      {
+        "pin": 77,
+        "port": "PA15",
+        "net": "NC",
+        "pad_mm": [
+          15.45,
+          37.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PA15"
+        },
+        "native_schematic": {
+          "port": "PA15",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            166.37
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PA15",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 78,
+        "port": "PC10",
+        "net": "SD_SCK",
+        "pad_mm": [
+          15.45,
+          38.0
+        ],
+        "board_net": "SD_SCK",
+        "xml": {
+          "net": "SD_SCK",
+          "port": "PC10"
+        },
+        "native_schematic": {
+          "port": "PC10",
+          "net": "SD_SCK",
+          "pin_end_mm": [
+            119.38,
+            168.91
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC10",
+          "net": "SD_SCK",
+          "mode": "AF6 SPI3_SCK"
+        }
+      },
+      {
+        "pin": 79,
+        "port": "PC11",
+        "net": "SD_MISO",
+        "pad_mm": [
+          15.45,
+          38.5
+        ],
+        "board_net": "SD_MISO",
+        "xml": {
+          "net": "SD_MISO",
+          "port": "PC11"
+        },
+        "native_schematic": {
+          "port": "PC11",
+          "net": "SD_MISO",
+          "pin_end_mm": [
+            119.38,
+            171.45
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC11",
+          "net": "SD_MISO",
+          "mode": "AF6 SPI3_MISO"
+        }
+      },
+      {
+        "pin": 80,
+        "port": "PC12",
+        "net": "SD_MOSI",
+        "pad_mm": [
+          15.45,
+          39.0
+        ],
+        "board_net": "SD_MOSI",
+        "xml": {
+          "net": "SD_MOSI",
+          "port": "PC12"
+        },
+        "native_schematic": {
+          "port": "PC12",
+          "net": "SD_MOSI",
+          "pin_end_mm": [
+            119.38,
+            173.99
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PC12",
+          "net": "SD_MOSI",
+          "mode": "AF6 SPI3_MOSI"
+        }
+      },
+      {
+        "pin": 81,
+        "port": "PD0",
+        "net": "SD_CS",
+        "pad_mm": [
+          15.45,
+          39.5
+        ],
+        "board_net": "SD_CS",
+        "xml": {
+          "net": "SD_CS",
+          "port": "PD0"
+        },
+        "native_schematic": {
+          "port": "PD0",
+          "net": "SD_CS",
+          "pin_end_mm": [
+            119.38,
+            176.53
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PD0",
+          "net": "SD_CS",
+          "mode": "GPIO output push-pull; initialise high before output mode"
+        }
+      },
+      {
+        "pin": 82,
+        "port": "PD1",
+        "net": "NC",
+        "pad_mm": [
+          15.45,
+          40.0
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD1"
+        },
+        "native_schematic": {
+          "port": "PD1",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            179.07
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD1",
+          "net": "NC",
+          "mode": "NC (firmware: analog)"
+        }
+      },
+      {
+        "pin": 83,
+        "port": "PD2",
+        "net": "NC",
+        "pad_mm": [
+          15.45,
+          40.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD2"
+        },
+        "native_schematic": {
+          "port": "PD2",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            181.61
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD2",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 84,
+        "port": "PD3",
+        "net": "NC",
+        "pad_mm": [
+          15.45,
+          41.0
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD3"
+        },
+        "native_schematic": {
+          "port": "PD3",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            163.83
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD3",
+          "net": "NC",
+          "mode": "NC (firmware: analog)"
+        }
+      },
+      {
+        "pin": 85,
+        "port": "PD4",
+        "net": "NC",
+        "pad_mm": [
+          15.45,
+          41.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PD4"
+        },
+        "native_schematic": {
+          "port": "PD4",
+          "net": "NC",
+          "pin_end_mm": [
+            63.5,
+            166.37
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PD4",
+          "net": "NC",
+          "mode": "NC (firmware: analog)"
+        }
+      },
+      {
+        "pin": 86,
+        "port": "PD5",
+        "net": "LED_RED",
+        "pad_mm": [
+          15.45,
+          42.0
+        ],
+        "board_net": "LED_RED",
+        "xml": {
+          "net": "LED_RED",
+          "port": "PD5"
+        },
+        "native_schematic": {
+          "port": "PD5",
+          "net": "LED_RED",
+          "pin_end_mm": [
+            119.38,
+            184.15
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PD5",
+          "net": "LED_RED",
+          "mode": "GPIO out"
+        }
+      },
+      {
+        "pin": 87,
+        "port": "PD6",
+        "net": "USB_FAULT_N",
+        "pad_mm": [
+          15.45,
+          42.5
+        ],
+        "board_net": "USB_FAULT_N",
+        "xml": {
+          "net": "USB_FAULT_N",
+          "port": "PD6"
+        },
+        "native_schematic": {
+          "port": "PD6",
+          "net": "USB_FAULT_N",
+          "pin_end_mm": [
+            119.38,
+            186.69
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PD6",
+          "net": "USB_FAULT_N",
+          "mode": "GPIO in"
+        }
+      },
+      {
+        "pin": 88,
+        "port": "PD7",
+        "net": "LED_YEL",
+        "pad_mm": [
+          15.45,
+          43.0
+        ],
+        "board_net": "LED_YEL",
+        "xml": {
+          "net": "LED_YEL",
+          "port": "PD7"
+        },
+        "native_schematic": {
+          "port": "PD7",
+          "net": "LED_YEL",
+          "pin_end_mm": [
+            119.38,
+            189.23
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PD7",
+          "net": "LED_YEL",
+          "mode": "GPIO out"
+        }
+      },
+      {
+        "pin": 89,
+        "port": "PB3",
+        "net": "SPI1_SCK",
+        "pad_mm": [
+          15.45,
+          43.5
+        ],
+        "board_net": "SPI1_SCK",
+        "xml": {
+          "net": "SPI1_SCK",
+          "port": "PB3"
+        },
+        "native_schematic": {
+          "port": "PB3",
+          "net": "SPI1_SCK",
+          "pin_end_mm": [
+            63.5,
+            168.91
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB3",
+          "net": "SPI1_SCK",
+          "mode": "AF5 SPI1_SCK"
+        }
+      },
+      {
+        "pin": 90,
+        "port": "PB4",
+        "net": "SPI1_MISO",
+        "pad_mm": [
+          15.45,
+          44.0
+        ],
+        "board_net": "SPI1_MISO",
+        "xml": {
+          "net": "SPI1_MISO",
+          "port": "PB4"
+        },
+        "native_schematic": {
+          "port": "PB4",
+          "net": "SPI1_MISO",
+          "pin_end_mm": [
+            63.5,
+            171.45
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB4",
+          "net": "SPI1_MISO",
+          "mode": "AF5 SPI1_MISO"
+        }
+      },
+      {
+        "pin": 91,
+        "port": "PB5",
+        "net": "SPI1_MOSI",
+        "pad_mm": [
+          15.45,
+          44.5
+        ],
+        "board_net": "SPI1_MOSI",
+        "xml": {
+          "net": "SPI1_MOSI",
+          "port": "PB5"
+        },
+        "native_schematic": {
+          "port": "PB5",
+          "net": "SPI1_MOSI",
+          "pin_end_mm": [
+            63.5,
+            173.99
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB5",
+          "net": "SPI1_MOSI",
+          "mode": "AF5 SPI1_MOSI"
+        }
+      },
+      {
+        "pin": 92,
+        "port": "PB6",
+        "net": "QSPI_NCS",
+        "pad_mm": [
+          15.45,
+          45.0
+        ],
+        "board_net": "QSPI_NCS",
+        "xml": {
+          "net": "QSPI_NCS",
+          "port": "PB6"
+        },
+        "native_schematic": {
+          "port": "PB6",
+          "net": "QSPI_NCS",
+          "pin_end_mm": [
+            63.5,
+            176.53
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB6",
+          "net": "QSPI_NCS",
+          "mode": "AF10 QUADSPI_BK1_NCS"
+        }
+      },
+      {
+        "pin": 93,
+        "port": "PB7",
+        "net": "IMU_CS",
+        "pad_mm": [
+          15.45,
+          45.5
+        ],
+        "board_net": "IMU_CS",
+        "xml": {
+          "net": "IMU_CS",
+          "port": "PB7"
+        },
+        "native_schematic": {
+          "port": "PB7",
+          "net": "IMU_CS",
+          "pin_end_mm": [
+            63.5,
+            179.07
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB7",
+          "net": "IMU_CS",
+          "mode": "GPIO out"
+        }
+      },
+      {
+        "pin": 94,
+        "port": "BOOT0",
+        "net": "BOOT0",
+        "pad_mm": [
+          15.45,
+          46.0
+        ],
+        "board_net": "BOOT0",
+        "xml": {
+          "net": "BOOT0",
+          "port": "BOOT0"
+        },
+        "native_schematic": {
+          "port": "BOOT0",
+          "net": "BOOT0",
+          "pin_end_mm": [
+            63.5,
+            181.61
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "BOOT0",
+          "net": "BOOT0",
+          "mode": "BOOT0"
+        }
+      },
+      {
+        "pin": 95,
+        "port": "PB8",
+        "net": "I2C1_SCL",
+        "pad_mm": [
+          15.45,
+          46.5
+        ],
+        "board_net": "I2C1_SCL",
+        "xml": {
+          "net": "I2C1_SCL",
+          "port": "PB8"
+        },
+        "native_schematic": {
+          "port": "PB8",
+          "net": "I2C1_SCL",
+          "pin_end_mm": [
+            63.5,
+            184.15
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB8",
+          "net": "I2C1_SCL",
+          "mode": "AF4 I2C1_SCL"
+        }
+      },
+      {
+        "pin": 96,
+        "port": "PB9",
+        "net": "I2C1_SDA",
+        "pad_mm": [
+          15.45,
+          47.0
+        ],
+        "board_net": "I2C1_SDA",
+        "xml": {
+          "net": "I2C1_SDA",
+          "port": "PB9"
+        },
+        "native_schematic": {
+          "port": "PB9",
+          "net": "I2C1_SDA",
+          "pin_end_mm": [
+            63.5,
+            186.69
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PB9",
+          "net": "I2C1_SDA",
+          "mode": "AF4 I2C1_SDA"
+        }
+      },
+      {
+        "pin": 97,
+        "port": "PE0",
+        "net": "NC",
+        "pad_mm": [
+          15.45,
+          47.5
+        ],
+        "board_net": "NC",
+        "xml": {
+          "net": "NC",
+          "port": "PE0"
+        },
+        "native_schematic": {
+          "port": "PE0",
+          "net": "NC",
+          "pin_end_mm": [
+            119.38,
+            191.77
+          ],
+          "no_connect": true
+        },
+        "binding": {
+          "port": "PE0",
+          "net": "NC",
+          "mode": "NC (firmware: analog, never driven)"
+        }
+      },
+      {
+        "pin": 98,
+        "port": "PE1",
+        "net": "IMU_INT1",
+        "pad_mm": [
+          15.45,
+          48.0
+        ],
+        "board_net": "IMU_INT1",
+        "xml": {
+          "net": "IMU_INT1",
+          "port": "PE1"
+        },
+        "native_schematic": {
+          "port": "PE1",
+          "net": "IMU_INT1",
+          "pin_end_mm": [
+            119.38,
+            194.31
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "PE1",
+          "net": "IMU_INT1",
+          "mode": "GPIO in, internal pull-down, EXTI1 data-ready interrupt (LSM6DSV320X INT1 push-pull, active high by default)"
+        }
+      },
+      {
+        "pin": 99,
+        "port": "VSS",
+        "net": "GND",
+        "pad_mm": [
+          15.45,
+          48.5
+        ],
+        "board_net": "GND",
+        "xml": {
+          "net": "GND",
+          "port": "VSS"
+        },
+        "native_schematic": {
+          "port": "VSS",
+          "net": "GND",
+          "pin_end_mm": [
+            63.5,
+            189.23
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VSS",
+          "net": "GND",
+          "mode": "VSS"
+        }
+      },
+      {
+        "pin": 100,
+        "port": "VDD",
+        "net": "3V3",
+        "pad_mm": [
+          15.45,
+          49.0
+        ],
+        "board_net": "3V3",
+        "xml": {
+          "net": "3V3",
+          "port": "VDD"
+        },
+        "native_schematic": {
+          "port": "VDD",
+          "net": "3V3",
+          "pin_end_mm": [
+            63.5,
+            191.77
+          ],
+          "no_connect": false
+        },
+        "binding": {
+          "port": "VDD",
+          "net": "3V3",
+          "mode": "VDD"
+        }
+      }
+    ],
+    "net_inventory": {
+      "3V3": [
+        {
+          "ref": "C100",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            28.85,
+            39.97
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C13",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            14.85,
+            50.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C14",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            21.4,
+            52.15
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C15",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            29.05,
+            47.4
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C16",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            26.6,
+            36.62
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C17",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            17.0,
+            37.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C18",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            18.3,
+            49.15
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C23",
+          "pin": "1",
+          "value": "4.7uF 16V X5R 10%",
+          "xy_mm": [
+            27.8,
+            35.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C29",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            28.0,
+            43.52
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C460",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            22.48,
+            21.7
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "C461",
+          "pin": "1",
+          "value": "22uF 25V X7R 10%",
+          "xy_mm": [
+            27.0,
+            18.8
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "C8",
+          "pin": "1",
+          "value": "22uF 25V X5R 20%",
+          "xy_mm": [
+            26.4,
+            78.28
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C9",
+          "pin": "1",
+          "value": "22uF 25V X5R 20%",
+          "xy_mm": [
+            26.4,
+            80.24
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C90",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            25.6,
+            31.3
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "D120",
+          "pin": "3",
+          "value": "BAT54A",
+          "xy_mm": [
+            14.7,
+            60.2
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "D121",
+          "pin": "5",
+          "value": "SRV05-4",
+          "xy_mm": [
+            31.5,
+            71.5
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "D123",
+          "pin": "1",
+          "value": "1N5819WS",
+          "xy_mm": [
+            21.7,
+            63.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "J2",
+          "pin": "1",
+          "value": "TC2030-IDC-NL SWD",
+          "xy_mm": [
+            5.0,
+            39.4
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "J430",
+          "pin": "4",
+          "value": "472192001",
+          "xy_mm": [
+            24.0,
+            24.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "L1",
+          "pin": "2",
+          "value": "4.7uH",
+          "xy_mm": [
+            25.0,
+            74.6
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "LS120",
+          "pin": "1",
+          "value": "MLT-5020",
+          "xy_mm": [
+            23.0,
+            58.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R10",
+          "pin": "2",
+          "value": "10k",
+          "xy_mm": [
+            20.0,
+            44.69
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R11",
+          "pin": "2",
+          "value": "10k",
+          "xy_mm": [
+            14.2,
+            43.75
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R12",
+          "pin": "2",
+          "value": "4.7k",
+          "xy_mm": [
+            7.0,
+            49.37
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R13",
+          "pin": "2",
+          "value": "4.7k",
+          "xy_mm": [
+            10.25,
+            52.55
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R164",
+          "pin": "1",
+          "value": "2.2R 1%",
+          "xy_mm": [
+            17.325,
+            55.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R432",
+          "pin": "2",
+          "value": "10k 1%",
+          "xy_mm": [
+            35.7,
+            57.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R460",
+          "pin": "2",
+          "value": "10k 1%",
+          "xy_mm": [
+            27.8,
+            16.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R461",
+          "pin": "2",
+          "value": "10k 1%",
+          "xy_mm": [
+            24.2,
+            16.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R462",
+          "pin": "2",
+          "value": "10k 1%",
+          "xy_mm": [
+            14.2,
+            16.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R463",
+          "pin": "2",
+          "value": "10k 1%",
+          "xy_mm": [
+            14.2,
+            18.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R464",
+          "pin": "2",
+          "value": "10k 1%",
+          "xy_mm": [
+            25.55,
+            22.18
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R62",
+          "pin": "1",
+          "value": "10k",
+          "xy_mm": [
+            25.5,
+            55.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R89",
+          "pin": "1",
+          "value": "10k 1%",
+          "xy_mm": [
+            23.0,
+            70.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R90",
+          "pin": "1",
+          "value": "10k 1%",
+          "xy_mm": [
+            7.8,
+            23.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R91",
+          "pin": "1",
+          "value": "10k 1%",
+          "xy_mm": [
+            28.1,
+            60.0
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "100",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "11",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "27",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "50",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "6",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "75",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U12",
+          "pin": "3",
+          "value": "TXU0202DCUR",
+          "xy_mm": [
+            31.6,
+            39.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U2",
+          "pin": "1",
+          "value": "AP63203WU-7",
+          "xy_mm": [
+            25.0,
+            69.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U3",
+          "pin": "8",
+          "value": "W25Q128JVSIQ",
+          "xy_mm": [
+            22.6,
+            41.2
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "3V3A": [
+        {
+          "ref": "C10",
+          "pin": "1",
+          "value": "22uF 25V X5R 20%",
+          "xy_mm": [
+            17.5,
+            54.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C11",
+          "pin": "1",
+          "value": "22uF 25V X5R 20%",
+          "xy_mm": [
+            17.5,
+            52.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C21",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            28.1,
+            49.25
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C22",
+          "pin": "1",
+          "value": "1uF 50V X5R 10%",
+          "xy_mm": [
+            27.0,
+            47.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C30",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            17.05,
+            48.73
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C31",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            14.7,
+            47.07
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C32",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            8.72,
+            45.85
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R164",
+          "pin": "2",
+          "value": "2.2R 1%",
+          "xy_mm": [
+            17.325,
+            55.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "20",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "21",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U4",
+          "pin": "5",
+          "value": "LSM6DSV320X",
+          "xy_mm": [
+            17.0,
+            45.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U4",
+          "pin": "8",
+          "value": "LSM6DSV320X",
+          "xy_mm": [
+            17.0,
+            45.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U5",
+          "pin": "1",
+          "value": "MS561101BA03",
+          "xy_mm": [
+            10.6,
+            49.1
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U5",
+          "pin": "2",
+          "value": "MS561101BA03",
+          "xy_mm": [
+            10.6,
+            49.1
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "ACT_EN": [
+        {
+          "ref": "Q122",
+          "pin": "1",
+          "value": "AO3400A",
+          "xy_mm": [
+            16.8,
+            69.8
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R122",
+          "pin": "2",
+          "value": "1k",
+          "xy_mm": [
+            19.6,
+            69.8
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R123",
+          "pin": "1",
+          "value": "100k",
+          "xy_mm": [
+            20.6,
+            70.66
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "ACT_EN_MCU": [
+        {
+          "ref": "R122",
+          "pin": "1",
+          "value": "1k",
+          "xy_mm": [
+            19.6,
+            69.8
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "16",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "ARM1_SENSE": [
+        {
+          "ref": "C129",
+          "pin": "1",
+          "value": "10nF 50V X7R 10%",
+          "xy_mm": [
+            28.25,
+            51.6
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R133",
+          "pin": "1",
+          "value": "2k",
+          "xy_mm": [
+            28.43,
+            54.25
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R175",
+          "pin": "2",
+          "value": "5.1k",
+          "xy_mm": [
+            28.0,
+            55.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R180",
+          "pin": "1",
+          "value": "2k",
+          "xy_mm": [
+            28.43,
+            53.25
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "33",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "BOOT0": [
+        {
+          "ref": "R5",
+          "pin": "1",
+          "value": "10k",
+          "xy_mm": [
+            13.0,
+            45.17
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "94",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "CAM_5V_SENSE": [
+        {
+          "ref": "C94",
+          "pin": "1",
+          "value": "10nF 50V X7R 10%",
+          "xy_mm": [
+            33.47,
+            51.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R104",
+          "pin": "2",
+          "value": "10k",
+          "xy_mm": [
+            33.2,
+            46.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R105",
+          "pin": "1",
+          "value": "1k",
+          "xy_mm": [
+            33.2,
+            48.6
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "35",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "CAM_IO_3V3": [
+        {
+          "ref": "C92",
+          "pin": "1",
+          "value": "4.7uF 16V X5R 10%",
+          "xy_mm": [
+            32.35,
+            52.5
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "C93",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            33.4,
+            39.275
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R103",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            31.2,
+            54.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U12",
+          "pin": "7",
+          "value": "TXU0202DCUR",
+          "xy_mm": [
+            31.6,
+            39.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U13",
+          "pin": "5",
+          "value": "TPS70933DBVR",
+          "xy_mm": [
+            31.85,
+            49.7
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_MCU_RX": [
+        {
+          "ref": "U1",
+          "pin": "37",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U12",
+          "pin": "4",
+          "value": "TXU0202DCUR",
+          "xy_mm": [
+            31.6,
+            39.8
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_MCU_TX": [
+        {
+          "ref": "U1",
+          "pin": "38",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U12",
+          "pin": "5",
+          "value": "TXU0202DCUR",
+          "xy_mm": [
+            31.6,
+            39.8
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_PWR_EN": [
+        {
+          "ref": "R431",
+          "pin": "1",
+          "value": "100k 1%",
+          "xy_mm": [
+            38.0,
+            59.6
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "41",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U402",
+          "pin": "3",
+          "value": "TPS2553DBVR",
+          "xy_mm": [
+            32.0,
+            59.0
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_RX_BUFFER": [
+        {
+          "ref": "R100",
+          "pin": "2",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            45.75
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U12",
+          "pin": "1",
+          "value": "TXU0202DCUR",
+          "xy_mm": [
+            31.6,
+            39.8
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_RX_WIRE": [
+        {
+          "ref": "D401",
+          "pin": "1",
+          "value": "ESD103-B1-02EL",
+          "xy_mm": [
+            35.75,
+            47.2
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "J9",
+          "pin": "3",
+          "value": "DB125-3.5-4P-GN-S",
+          "xy_mm": [
+            38.6,
+            47.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R100",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            45.75
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_TX_BUFFER": [
+        {
+          "ref": "R101",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            42.25
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U12",
+          "pin": "8",
+          "value": "TXU0202DCUR",
+          "xy_mm": [
+            31.6,
+            39.8
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_TX_WIRE": [
+        {
+          "ref": "D400",
+          "pin": "1",
+          "value": "ESD103-B1-02EL",
+          "xy_mm": [
+            35.75,
+            43.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "J9",
+          "pin": "4",
+          "value": "DB125-3.5-4P-GN-S",
+          "xy_mm": [
+            38.6,
+            47.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R101",
+          "pin": "2",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            42.25
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "CAM_UART_OE": [
+        {
+          "ref": "R102",
+          "pin": "1",
+          "value": "10k 1%",
+          "xy_mm": [
+            35.4,
+            39.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "39",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U12",
+          "pin": "6",
+          "value": "TXU0202DCUR",
+          "xy_mm": [
+            31.6,
+            39.8
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "GPS_RX_MCU": [
+        {
+          "ref": "R440",
+          "pin": "2",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            10.25
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "64",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "GPS_RX_WIRE": [
+        {
+          "ref": "D411",
+          "pin": "1",
+          "value": "ESD103-B1-02EL",
+          "xy_mm": [
+            35.75,
+            8.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "J410",
+          "pin": "4",
+          "value": "DB125-3.5-4P-GN-S",
+          "xy_mm": [
+            38.6,
+            15.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R440",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            10.25
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "GPS_TX_MCU": [
+        {
+          "ref": "R441",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            13.75
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "63",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "GPS_TX_WIRE": [
+        {
+          "ref": "D410",
+          "pin": "1",
+          "value": "ESD103-B1-02EL",
+          "xy_mm": [
+            35.75,
+            12.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "J410",
+          "pin": "3",
+          "value": "DB125-3.5-4P-GN-S",
+          "xy_mm": [
+            38.6,
+            15.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R441",
+          "pin": "2",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            13.75
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "HSE_IN": [
+        {
+          "ref": "C25",
+          "pin": "1",
+          "value": "10pF 50V C0G 5%",
+          "xy_mm": [
+            19.95,
+            47.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "12",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "Y1",
+          "pin": "1",
+          "value": "25MHz CL8pF",
+          "xy_mm": [
+            22.85,
+            46.6
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "HSE_OUT": [
+        {
+          "ref": "C26",
+          "pin": "1",
+          "value": "10pF 50V C0G 5%",
+          "xy_mm": [
+            25.75,
+            45.5
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "13",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "Y1",
+          "pin": "3",
+          "value": "25MHz CL8pF",
+          "xy_mm": [
+            22.85,
+            46.6
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "I2C1_SCL": [
+        {
+          "ref": "R12",
+          "pin": "1",
+          "value": "4.7k",
+          "xy_mm": [
+            7.0,
+            49.37
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "95",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U5",
+          "pin": "8",
+          "value": "MS561101BA03",
+          "xy_mm": [
+            10.6,
+            49.1
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "I2C1_SDA": [
+        {
+          "ref": "R13",
+          "pin": "1",
+          "value": "4.7k",
+          "xy_mm": [
+            10.25,
+            52.55
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "96",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U5",
+          "pin": "7",
+          "value": "MS561101BA03",
+          "xy_mm": [
+            10.6,
+            49.1
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "IMU_CS": [
+        {
+          "ref": "R11",
+          "pin": "1",
+          "value": "10k",
+          "xy_mm": [
+            14.2,
+            43.75
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "93",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U4",
+          "pin": "12",
+          "value": "LSM6DSV320X",
+          "xy_mm": [
+            17.0,
+            45.9
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "IMU_INT1": [
+        {
+          "ref": "U1",
+          "pin": "98",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U4",
+          "pin": "4",
+          "value": "LSM6DSV320X",
+          "xy_mm": [
+            17.0,
+            45.9
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "NRST": [
+        {
+          "ref": "C24",
+          "pin": "1",
+          "value": "100nF 50V X7R 10%",
+          "xy_mm": [
+            25.45,
+            49.0
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "J2",
+          "pin": "3",
+          "value": "TC2030-IDC-NL SWD",
+          "xy_mm": [
+            5.0,
+            39.4
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "14",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "PYRO1_CONT": [
+        {
+          "ref": "C127",
+          "pin": "1",
+          "value": "10nF 50V X7R 10%",
+          "xy_mm": [
+            23.65,
+            53.2
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R129",
+          "pin": "2",
+          "value": "5.1k",
+          "xy_mm": [
+            23.0,
+            57.4
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R130",
+          "pin": "1",
+          "value": "2k",
+          "xy_mm": [
+            23.43,
+            55.85
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R178",
+          "pin": "1",
+          "value": "2k",
+          "xy_mm": [
+            23.43,
+            54.85
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "15",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "PYRO1_GATE": [
+        {
+          "ref": "C126",
+          "pin": "1",
+          "value": "220nF 25V X7R",
+          "xy_mm": [
+            16.85,
+            57.675
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "Q124",
+          "pin": "4",
+          "value": "AON7524",
+          "xy_mm": [
+            13.9,
+            57.37
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R126",
+          "pin": "2",
+          "value": "220R",
+          "xy_mm": [
+            17.0,
+            54.24
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R128",
+          "pin": "1",
+          "value": "10k",
+          "xy_mm": [
+            18.3,
+            57.405
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "TP122",
+          "pin": "1",
+          "value": "PYRO1_GATE",
+          "xy_mm": [
+            13.3,
+            53.3
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "PYRO1_GATE_N": [
+        {
+          "ref": "R126",
+          "pin": "1",
+          "value": "220R",
+          "xy_mm": [
+            17.0,
+            54.24
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R127",
+          "pin": "1",
+          "value": "1k",
+          "xy_mm": [
+            19.8,
+            54.24
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "3",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "RADIO_RX_MCU": [
+        {
+          "ref": "R450",
+          "pin": "2",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            26.25
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "51",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "RADIO_RX_WIRE": [
+        {
+          "ref": "D421",
+          "pin": "1",
+          "value": "ESD103-B1-02EL",
+          "xy_mm": [
+            35.75,
+            27.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "J420",
+          "pin": "4",
+          "value": "DB125-3.5-4P-GN-S",
+          "xy_mm": [
+            38.6,
+            31.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R450",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            26.25
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "RADIO_TX_MCU": [
+        {
+          "ref": "R451",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            29.75
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "52",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "RADIO_TX_WIRE": [
+        {
+          "ref": "D420",
+          "pin": "1",
+          "value": "ESD103-B1-02EL",
+          "xy_mm": [
+            35.75,
+            31.2
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "J420",
+          "pin": "3",
+          "value": "DB125-3.5-4P-GN-S",
+          "xy_mm": [
+            38.6,
+            31.5
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R451",
+          "pin": "2",
+          "value": "1k 1%",
+          "xy_mm": [
+            34.0,
+            29.75
+          ],
+          "layer": "B.Cu"
+        }
+      ],
+      "SD_CS": [
+        {
+          "ref": "J430",
+          "pin": "2",
+          "value": "472192001",
+          "xy_mm": [
+            24.0,
+            24.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R460",
+          "pin": "1",
+          "value": "10k 1%",
+          "xy_mm": [
+            27.8,
+            16.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "81",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "SD_MISO": [
+        {
+          "ref": "J430",
+          "pin": "7",
+          "value": "472192001",
+          "xy_mm": [
+            24.0,
+            24.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R462",
+          "pin": "1",
+          "value": "10k 1%",
+          "xy_mm": [
+            14.2,
+            16.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "79",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "SD_MOSI": [
+        {
+          "ref": "J430",
+          "pin": "3",
+          "value": "472192001",
+          "xy_mm": [
+            24.0,
+            24.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R461",
+          "pin": "1",
+          "value": "10k 1%",
+          "xy_mm": [
+            24.2,
+            16.8
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "80",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "SD_SCK": [
+        {
+          "ref": "J430",
+          "pin": "5",
+          "value": "472192001",
+          "xy_mm": [
+            24.0,
+            24.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "78",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "V3V3_SENSE": [
+        {
+          "ref": "R62",
+          "pin": "2",
+          "value": "10k",
+          "xy_mm": [
+            25.5,
+            55.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "R63",
+          "pin": "1",
+          "value": "10k",
+          "xy_mm": [
+            25.5,
+            56.7
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "18",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "VBUS_SENSE": [
+        {
+          "ref": "R110",
+          "pin": "1",
+          "value": "1k 1%",
+          "xy_mm": [
+            10.775,
+            25.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R9",
+          "pin": "2",
+          "value": "1k",
+          "xy_mm": [
+            9.95,
+            28.9
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "65",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "VCAP1": [
+        {
+          "ref": "C19",
+          "pin": "1",
+          "value": "2.2uF 16V X5R 10%",
+          "xy_mm": [
+            28.35,
+            37.65
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "48",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "VCAP2": [
+        {
+          "ref": "C20",
+          "pin": "1",
+          "value": "2.2uF 16V X5R 10%",
+          "xy_mm": [
+            19.8,
+            37.3
+          ],
+          "layer": "B.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "73",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ],
+      "VLOGIC_SENSE": [
+        {
+          "ref": "C60",
+          "pin": "1",
+          "value": "10nF 50V X7R 10%",
+          "xy_mm": [
+            33.2,
+            56.8
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R60",
+          "pin": "2",
+          "value": "100k",
+          "xy_mm": [
+            33.2,
+            58.6
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "R61",
+          "pin": "1",
+          "value": "10k",
+          "xy_mm": [
+            33.2,
+            54.0
+          ],
+          "layer": "F.Cu"
+        },
+        {
+          "ref": "U1",
+          "pin": "30",
+          "value": "STM32H743VIT6",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "layer": "F.Cu"
+        }
+      ]
+    },
+    "binding_sha_matches": {
+      "board_sha256": true,
+      "netlist_sha256": true,
+      "pin_table_sha256": true,
+      "circuit_sha256": true
+    }
+  },
+  "interface_and_calculation_evidence": {
+    "af_checked": [
+      {
+        "pin": 1,
+        "port": "PE2",
+        "actual": "AF9 QUADSPI_BK1_IO2",
+        "maker": "AF9 QUADSPI_BK1_IO2",
+        "agree": true
+      },
+      {
+        "pin": 22,
+        "port": "PA0",
+        "actual": "AF2 TIM5_CH1",
+        "maker": "AF2 TIM5_CH1",
+        "agree": true
+      },
+      {
+        "pin": 23,
+        "port": "PA1",
+        "actual": "AF2 TIM5_CH2",
+        "maker": "AF2 TIM5_CH2",
+        "agree": true
+      },
+      {
+        "pin": 24,
+        "port": "PA2",
+        "actual": "AF2 TIM5_CH3",
+        "maker": "AF2 TIM5_CH3",
+        "agree": true
+      },
+      {
+        "pin": 25,
+        "port": "PA3",
+        "actual": "AF2 TIM5_CH4",
+        "maker": "AF2 TIM5_CH4",
+        "agree": true
+      },
+      {
+        "pin": 36,
+        "port": "PB2",
+        "actual": "AF9 QUADSPI_CLK",
+        "maker": "AF9 QUADSPI_CLK",
+        "agree": true
+      },
+      {
+        "pin": 37,
+        "port": "PE7",
+        "actual": "AF7 UART7_RX",
+        "maker": "AF7 UART7_RX",
+        "agree": true
+      },
+      {
+        "pin": 38,
+        "port": "PE8",
+        "actual": "AF7 UART7_TX",
+        "maker": "AF7 UART7_TX",
+        "agree": true
+      },
+      {
+        "pin": 51,
+        "port": "PB12",
+        "actual": "AF14 UART5_RX",
+        "maker": "AF14 UART5_RX",
+        "agree": true
+      },
+      {
+        "pin": 52,
+        "port": "PB13",
+        "actual": "AF14 UART5_TX",
+        "maker": "AF14 UART5_TX",
+        "agree": true
+      },
+      {
+        "pin": 58,
+        "port": "PD11",
+        "actual": "AF9 QUADSPI_BK1_IO0",
+        "maker": "AF9 QUADSPI_BK1_IO0",
+        "agree": true
+      },
+      {
+        "pin": 59,
+        "port": "PD12",
+        "actual": "AF9 QUADSPI_BK1_IO1",
+        "maker": "AF9 QUADSPI_BK1_IO1",
+        "agree": true
+      },
+      {
+        "pin": 60,
+        "port": "PD13",
+        "actual": "AF9 QUADSPI_BK1_IO3",
+        "maker": "AF9 QUADSPI_BK1_IO3",
+        "agree": true
+      },
+      {
+        "pin": 63,
+        "port": "PC6",
+        "actual": "AF7 USART6_TX",
+        "maker": "AF7 USART6_TX",
+        "agree": true
+      },
+      {
+        "pin": 64,
+        "port": "PC7",
+        "actual": "AF7 USART6_RX",
+        "maker": "AF7 USART6_RX",
+        "agree": true
+      },
+      {
+        "pin": 70,
+        "port": "PA11",
+        "actual": "AF10 OTG_FS_DM",
+        "maker": "AF10 OTG_FS_DM",
+        "agree": true
+      },
+      {
+        "pin": 71,
+        "port": "PA12",
+        "actual": "AF10 OTG_FS_DP",
+        "maker": "AF10 OTG_FS_DP",
+        "agree": true
+      },
+      {
+        "pin": 72,
+        "port": "PA13",
+        "actual": "AF0 SWDIO",
+        "maker": "AF0 SWDIO",
+        "agree": true
+      },
+      {
+        "pin": 76,
+        "port": "PA14",
+        "actual": "AF0 SWCLK",
+        "maker": "AF0 SWCLK",
+        "agree": true
+      },
+      {
+        "pin": 78,
+        "port": "PC10",
+        "actual": "AF6 SPI3_SCK",
+        "maker": "AF6 SPI3_SCK",
+        "agree": true
+      },
+      {
+        "pin": 79,
+        "port": "PC11",
+        "actual": "AF6 SPI3_MISO",
+        "maker": "AF6 SPI3_MISO",
+        "agree": true
+      },
+      {
+        "pin": 80,
+        "port": "PC12",
+        "actual": "AF6 SPI3_MOSI",
+        "maker": "AF6 SPI3_MOSI",
+        "agree": true
+      },
+      {
+        "pin": 89,
+        "port": "PB3",
+        "actual": "AF5 SPI1_SCK",
+        "maker": "AF5 SPI1_SCK",
+        "agree": true
+      },
+      {
+        "pin": 90,
+        "port": "PB4",
+        "actual": "AF5 SPI1_MISO",
+        "maker": "AF5 SPI1_MISO",
+        "agree": true
+      },
+      {
+        "pin": 91,
+        "port": "PB5",
+        "actual": "AF5 SPI1_MOSI",
+        "maker": "AF5 SPI1_MOSI",
+        "agree": true
+      },
+      {
+        "pin": 92,
+        "port": "PB6",
+        "actual": "AF10 QUADSPI_BK1_NCS",
+        "maker": "AF10 QUADSPI_BK1_NCS",
+        "agree": true
+      },
+      {
+        "pin": 95,
+        "port": "PB8",
+        "actual": "AF4 I2C1_SCL",
+        "maker": "AF4 I2C1_SCL",
+        "agree": true
+      },
+      {
+        "pin": 96,
+        "port": "PB9",
+        "actual": "AF4 I2C1_SDA",
+        "maker": "AF4 I2C1_SDA",
+        "agree": true
+      }
+    ],
+    "adc_instances_checked": {
+      "15": "ADC123_INP10",
+      "18": "ADC3_INP1",
+      "30": "ADC12_INP3",
+      "33": "ADC12_INP8",
+      "35": "ADC12_INP5"
+    },
+    "exti_pin_ownership": {
+      "28": "EXTI4",
+      "29": "EXTI5",
+      "42": "EXTI12",
+      "65": "EXTI8",
+      "87": "EXTI6",
+      "98": "EXTI1"
+    },
+    "nc_pin_count": 32,
+    "nc_pins": [
+      2,
+      4,
+      5,
+      7,
+      9,
+      17,
+      31,
+      32,
+      34,
+      40,
+      43,
+      44,
+      45,
+      46,
+      47,
+      53,
+      54,
+      55,
+      56,
+      57,
+      61,
+      62,
+      66,
+      67,
+      68,
+      69,
+      77,
+      82,
+      83,
+      84,
+      85,
+      97
+    ],
+    "nc_copper": [
+      {
+        "pin": 2,
+        "native_net": "unconnected-(U1-PE3-Pad2)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 4,
+        "native_net": "unconnected-(U1-PE5-Pad4)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 5,
+        "native_net": "unconnected-(U1-PE6-Pad5)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 7,
+        "native_net": "unconnected-(U1-PC13-Pad7)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 9,
+        "native_net": "unconnected-(U1-PC15-Pad9)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 17,
+        "native_net": "unconnected-(U1-PC2_C-Pad17)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 31,
+        "native_net": "unconnected-(U1-PA7-Pad31)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 32,
+        "native_net": "unconnected-(U1-PC4-Pad32)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 34,
+        "native_net": "unconnected-(U1-PB0-Pad34)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 40,
+        "native_net": "unconnected-(U1-PE10-Pad40)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 43,
+        "native_net": "unconnected-(U1-PE13-Pad43)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 44,
+        "native_net": "unconnected-(U1-PE14-Pad44)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 45,
+        "native_net": "unconnected-(U1-PE15-Pad45)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 46,
+        "native_net": "unconnected-(U1-PB10-Pad46)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 47,
+        "native_net": "unconnected-(U1-PB11-Pad47)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 53,
+        "native_net": "unconnected-(U1-PB14-Pad53)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 54,
+        "native_net": "unconnected-(U1-PB15-Pad54)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 55,
+        "native_net": "unconnected-(U1-PD8-Pad55)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 56,
+        "native_net": "unconnected-(U1-PD9-Pad56)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 57,
+        "native_net": "unconnected-(U1-PD10-Pad57)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 61,
+        "native_net": "unconnected-(U1-PD14-Pad61)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 62,
+        "native_net": "unconnected-(U1-PD15-Pad62)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 66,
+        "native_net": "unconnected-(U1-PC9-Pad66)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 67,
+        "native_net": "unconnected-(U1-PA8-Pad67)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 68,
+        "native_net": "unconnected-(U1-PA9-Pad68)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 69,
+        "native_net": "unconnected-(U1-PA10-Pad69)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 77,
+        "native_net": "unconnected-(U1-PA15-Pad77)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 82,
+        "native_net": "unconnected-(U1-PD1-Pad82)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 83,
+        "native_net": "unconnected-(U1-PD2-Pad83)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 84,
+        "native_net": "unconnected-(U1-PD3-Pad84)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 85,
+        "native_net": "unconnected-(U1-PD4-Pad85)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      },
+      {
+        "pin": 97,
+        "native_net": "unconnected-(U1-PE0-Pad97)",
+        "pad_members": 1,
+        "tracks_vias": 0,
+        "zones": 0
+      }
+    ],
+    "loader_current_AN2606_rev70_table135_p320_323": {
+      "count": 26,
+      "connected": 14,
+      "NC": 12,
+      "pins": [
+        {
+          "pin": 24,
+          "port": "PA2",
+          "net": "SERVO3_MCU",
+          "pad_mm": [
+            28.5,
+            50.55
+          ]
+        },
+        {
+          "pin": 25,
+          "port": "PA3",
+          "net": "SERVO4_MCU",
+          "pad_mm": [
+            29.0,
+            50.55
+          ]
+        },
+        {
+          "pin": 28,
+          "port": "PA4",
+          "net": "LOGIC_SOURCE_ST",
+          "pad_mm": [
+            30.55,
+            48.0
+          ]
+        },
+        {
+          "pin": 29,
+          "port": "PA5",
+          "net": "BAT_FAULT_N",
+          "pad_mm": [
+            30.55,
+            47.5
+          ]
+        },
+        {
+          "pin": 30,
+          "port": "PA6",
+          "net": "VLOGIC_SENSE",
+          "pad_mm": [
+            30.55,
+            47.0
+          ]
+        },
+        {
+          "pin": 31,
+          "port": "PA7",
+          "net": "NC",
+          "pad_mm": [
+            30.55,
+            46.5
+          ]
+        },
+        {
+          "pin": 41,
+          "port": "PE11",
+          "net": "CAM_PWR_EN",
+          "pad_mm": [
+            30.55,
+            41.5
+          ]
+        },
+        {
+          "pin": 42,
+          "port": "PE12",
+          "net": "CAM_FAULT_N",
+          "pad_mm": [
+            30.55,
+            41.0
+          ]
+        },
+        {
+          "pin": 43,
+          "port": "PE13",
+          "net": "NC",
+          "pad_mm": [
+            30.55,
+            40.5
+          ]
+        },
+        {
+          "pin": 44,
+          "port": "PE14",
+          "net": "NC",
+          "pad_mm": [
+            30.55,
+            40.0
+          ]
+        },
+        {
+          "pin": 46,
+          "port": "PB10",
+          "net": "NC",
+          "pad_mm": [
+            30.55,
+            39.0
+          ]
+        },
+        {
+          "pin": 47,
+          "port": "PB11",
+          "net": "NC",
+          "pad_mm": [
+            30.55,
+            38.5
+          ]
+        },
+        {
+          "pin": 53,
+          "port": "PB14",
+          "net": "NC",
+          "pad_mm": [
+            28.0,
+            35.45
+          ]
+        },
+        {
+          "pin": 54,
+          "port": "PB15",
+          "net": "NC",
+          "pad_mm": [
+            27.5,
+            35.45
+          ]
+        },
+        {
+          "pin": 66,
+          "port": "PC9",
+          "net": "NC",
+          "pad_mm": [
+            21.5,
+            35.45
+          ]
+        },
+        {
+          "pin": 67,
+          "port": "PA8",
+          "net": "NC",
+          "pad_mm": [
+            21.0,
+            35.45
+          ]
+        },
+        {
+          "pin": 68,
+          "port": "PA9",
+          "net": "NC",
+          "pad_mm": [
+            20.5,
+            35.45
+          ]
+        },
+        {
+          "pin": 69,
+          "port": "PA10",
+          "net": "NC",
+          "pad_mm": [
+            20.0,
+            35.45
+          ]
+        },
+        {
+          "pin": 70,
+          "port": "PA11",
+          "net": "USB_DM",
+          "pad_mm": [
+            19.5,
+            35.45
+          ]
+        },
+        {
+          "pin": 71,
+          "port": "PA12",
+          "net": "USB_DP",
+          "pad_mm": [
+            19.0,
+            35.45
+          ]
+        },
+        {
+          "pin": 77,
+          "port": "PA15",
+          "net": "NC",
+          "pad_mm": [
+            15.45,
+            37.5
+          ]
+        },
+        {
+          "pin": 78,
+          "port": "PC10",
+          "net": "SD_SCK",
+          "pad_mm": [
+            15.45,
+            38.0
+          ]
+        },
+        {
+          "pin": 79,
+          "port": "PC11",
+          "net": "SD_MISO",
+          "pad_mm": [
+            15.45,
+            38.5
+          ]
+        },
+        {
+          "pin": 80,
+          "port": "PC12",
+          "net": "SD_MOSI",
+          "pad_mm": [
+            15.45,
+            39.0
+          ]
+        },
+        {
+          "pin": 92,
+          "port": "PB6",
+          "net": "QSPI_NCS",
+          "pad_mm": [
+            15.45,
+            45.0
+          ]
+        },
+        {
+          "pin": 96,
+          "port": "PB9",
+          "net": "I2C1_SDA",
+          "pad_mm": [
+            15.45,
+            47.0
+          ]
+        }
+      ]
+    },
+    "component_maps": {
+      "J410": {
+        "value": "DB125-3.5-4P-GN-S",
+        "layer": "F.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          38.6,
+          15.5
+        ],
+        "pins": {
+          "1": "PORT_4V8",
+          "2": "GND",
+          "3": "GPS_TX_WIRE",
+          "4": "GPS_RX_WIRE"
+        }
+      },
+      "J420": {
+        "value": "DB125-3.5-4P-GN-S",
+        "layer": "F.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          38.6,
+          31.5
+        ],
+        "pins": {
+          "1": "PORT_4V8",
+          "2": "GND",
+          "3": "RADIO_TX_WIRE",
+          "4": "RADIO_RX_WIRE"
+        }
+      },
+      "R440": {
+        "value": "1k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": 180.0,
+        "xy_mm": [
+          34.0,
+          10.25
+        ],
+        "pins": {
+          "1": "GPS_RX_WIRE",
+          "2": "GPS_RX_MCU"
+        }
+      },
+      "R441": {
+        "value": "1k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          34.0,
+          13.75
+        ],
+        "pins": {
+          "1": "GPS_TX_MCU",
+          "2": "GPS_TX_WIRE"
+        }
+      },
+      "R450": {
+        "value": "1k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": 180.0,
+        "xy_mm": [
+          34.0,
+          26.25
+        ],
+        "pins": {
+          "1": "RADIO_RX_WIRE",
+          "2": "RADIO_RX_MCU"
+        }
+      },
+      "R451": {
+        "value": "1k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          34.0,
+          29.75
+        ],
+        "pins": {
+          "1": "RADIO_TX_MCU",
+          "2": "RADIO_TX_WIRE"
+        }
+      },
+      "D410": {
+        "value": "ESD103-B1-02EL",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          35.75,
+          12.3
+        ],
+        "pins": {
+          "": "NC",
+          "1": "GPS_TX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D411": {
+        "value": "ESD103-B1-02EL",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          35.75,
+          8.7
+        ],
+        "pins": {
+          "": "NC",
+          "1": "GPS_RX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D420": {
+        "value": "ESD103-B1-02EL",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          35.75,
+          31.2
+        ],
+        "pins": {
+          "": "NC",
+          "1": "RADIO_TX_WIRE",
+          "2": "GND"
+        }
+      },
+      "D421": {
+        "value": "ESD103-B1-02EL",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          35.75,
+          27.7
+        ],
+        "pins": {
+          "": "NC",
+          "1": "RADIO_RX_WIRE",
+          "2": "GND"
+        }
+      },
+      "U12": {
+        "value": "TXU0202DCUR",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          31.6,
+          39.8
+        ],
+        "pins": {
+          "1": "CAM_RX_BUFFER",
+          "2": "GND",
+          "3": "3V3",
+          "4": "CAM_MCU_RX",
+          "5": "CAM_MCU_TX",
+          "6": "CAM_UART_OE",
+          "7": "CAM_IO_3V3",
+          "8": "CAM_TX_BUFFER"
+        }
+      },
+      "U13": {
+        "value": "TPS70933DBVR",
+        "layer": "B.Cu",
+        "orientation_deg": 180.0,
+        "xy_mm": [
+          31.85,
+          49.7
+        ],
+        "pins": {
+          "1": "CAM_5V",
+          "2": "GND",
+          "3": "unconnected-(U13-EN_LEAVE_OPEN-Pad3)",
+          "4": "unconnected-(U13-NC-Pad4)",
+          "5": "CAM_IO_3V3"
+        }
+      },
+      "U402": {
+        "value": "TPS2553DBVR",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          32.0,
+          59.0
+        ],
+        "pins": {
+          "1": "PORT_5V3",
+          "2": "GND",
+          "3": "CAM_PWR_EN",
+          "4": "CAM_FAULT_N",
+          "5": "CAM_ILIM",
+          "6": "CAM_5V"
+        }
+      },
+      "R102": {
+        "value": "10k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          35.4,
+          39.7
+        ],
+        "pins": {
+          "1": "CAM_UART_OE",
+          "2": "GND"
+        }
+      },
+      "R103": {
+        "value": "1k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          31.2,
+          54.8
+        ],
+        "pins": {
+          "1": "CAM_IO_3V3",
+          "2": "GND"
+        }
+      },
+      "R430": {
+        "value": "22.6k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          36.0,
+          60.0
+        ],
+        "pins": {
+          "1": "CAM_ILIM",
+          "2": "GND"
+        }
+      },
+      "R431": {
+        "value": "100k 1%",
+        "layer": "F.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          38.0,
+          59.6
+        ],
+        "pins": {
+          "1": "CAM_PWR_EN",
+          "2": "GND"
+        }
+      },
+      "R432": {
+        "value": "10k 1%",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          35.7,
+          57.8
+        ],
+        "pins": {
+          "1": "CAM_FAULT_N",
+          "2": "3V3"
+        }
+      },
+      "C91": {
+        "value": "1uF 50V X7R 10%",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          34.95,
+          53.9
+        ],
+        "pins": {
+          "1": "CAM_5V",
+          "2": "GND"
+        }
+      },
+      "C92": {
+        "value": "4.7uF 16V X5R 10%",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          32.35,
+          52.5
+        ],
+        "pins": {
+          "1": "CAM_IO_3V3",
+          "2": "GND"
+        }
+      },
+      "C93": {
+        "value": "100nF 50V X7R 10%",
+        "layer": "F.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          33.4,
+          39.275
+        ],
+        "pins": {
+          "1": "CAM_IO_3V3",
+          "2": "GND"
+        }
+      },
+      "C100": {
+        "value": "100nF 50V X7R 10%",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          28.85,
+          39.97
+        ],
+        "pins": {
+          "1": "3V3",
+          "2": "GND"
+        }
+      },
+      "U3": {
+        "value": "W25Q128JVSIQ",
+        "layer": "B.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          22.6,
+          41.2
+        ],
+        "pins": {
+          "1": "QSPI_NCS",
+          "2": "QSPI_IO1",
+          "3": "QSPI_IO2",
+          "4": "GND",
+          "5": "QSPI_IO0",
+          "6": "QSPI_CLK",
+          "7": "QSPI_IO3",
+          "8": "3V3"
+        }
+      },
+      "U4": {
+        "value": "LSM6DSV320X",
+        "layer": "B.Cu",
+        "orientation_deg": 180.0,
+        "xy_mm": [
+          17.0,
+          45.9
+        ],
+        "pins": {
+          "1": "SPI1_MISO",
+          "2": "GND",
+          "3": "GND",
+          "4": "IMU_INT1",
+          "5": "3V3A",
+          "6": "GND",
+          "7": "GND",
+          "8": "3V3A",
+          "9": "unconnected-(U4-INT2-Pad9)",
+          "10": "unconnected-(U4-OCS_aux-Pad10)",
+          "11": "unconnected-(U4-SDO_aux-Pad11)",
+          "12": "IMU_CS",
+          "13": "SPI1_SCK",
+          "14": "SPI1_MOSI"
+        }
+      },
+      "U5": {
+        "value": "MS561101BA03",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          10.6,
+          49.1
+        ],
+        "pins": {
+          "1": "3V3A",
+          "2": "3V3A",
+          "3": "GND",
+          "4": "GND",
+          "5": "GND",
+          "6": "BARO_SDO",
+          "7": "I2C1_SDA",
+          "8": "I2C1_SCL"
+        }
+      },
+      "Y1": {
+        "value": "25MHz CL8pF",
+        "layer": "B.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          22.85,
+          46.6
+        ],
+        "pins": {
+          "1": "HSE_IN",
+          "2": "GND",
+          "3": "HSE_OUT",
+          "4": "GND"
+        }
+      },
+      "D121": {
+        "value": "SRV05-4",
+        "layer": "B.Cu",
+        "orientation_deg": 180.0,
+        "xy_mm": [
+          31.5,
+          71.5
+        ],
+        "pins": {
+          "1": "SERVO1_MCU",
+          "2": "GND",
+          "3": "SERVO2_MCU",
+          "4": "SERVO3_MCU",
+          "5": "3V3",
+          "6": "SERVO4_MCU"
+        }
+      },
+      "R150": {
+        "value": "1k 0603",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          34.6,
+          75.9
+        ],
+        "pins": {
+          "1": "SERVO1_MCU",
+          "2": "SERVO1_OUT"
+        }
+      },
+      "R151": {
+        "value": "1k 0603",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          34.7,
+          72.77
+        ],
+        "pins": {
+          "1": "SERVO2_MCU",
+          "2": "SERVO2_OUT"
+        }
+      },
+      "R152": {
+        "value": "1k 0603",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          34.7,
+          70.23
+        ],
+        "pins": {
+          "1": "SERVO3_MCU",
+          "2": "SERVO3_OUT"
+        }
+      },
+      "R153": {
+        "value": "1k 0603",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          34.6,
+          68.0
+        ],
+        "pins": {
+          "1": "SERVO4_MCU",
+          "2": "SERVO4_OUT"
+        }
+      },
+      "R154": {
+        "value": "10k",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          32.45,
+          74.53
+        ],
+        "pins": {
+          "1": "SERVO1_MCU",
+          "2": "GND"
+        }
+      },
+      "R155": {
+        "value": "10k",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          30.55,
+          74.53
+        ],
+        "pins": {
+          "1": "SERVO2_MCU",
+          "2": "GND"
+        }
+      },
+      "R156": {
+        "value": "10k",
+        "layer": "B.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          30.55,
+          68.4
+        ],
+        "pins": {
+          "1": "SERVO3_MCU",
+          "2": "GND"
+        }
+      },
+      "R157": {
+        "value": "10k",
+        "layer": "B.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          32.45,
+          68.4
+        ],
+        "pins": {
+          "1": "SERVO4_MCU",
+          "2": "GND"
+        }
+      },
+      "R122": {
+        "value": "1k",
+        "layer": "F.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          19.6,
+          69.8
+        ],
+        "pins": {
+          "1": "ACT_EN_MCU",
+          "2": "ACT_EN"
+        }
+      },
+      "R123": {
+        "value": "100k",
+        "layer": "F.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          20.6,
+          70.66
+        ],
+        "pins": {
+          "1": "ACT_EN",
+          "2": "GND"
+        }
+      },
+      "Q122": {
+        "value": "AO3400A",
+        "layer": "F.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          16.8,
+          69.8
+        ],
+        "pins": {
+          "1": "ACT_EN",
+          "2": "GND",
+          "3": "ACT_DRV"
+        }
+      },
+      "R126": {
+        "value": "220R",
+        "layer": "F.Cu",
+        "orientation_deg": 180.0,
+        "xy_mm": [
+          17.0,
+          54.24
+        ],
+        "pins": {
+          "1": "PYRO1_GATE_N",
+          "2": "PYRO1_GATE"
+        }
+      },
+      "R127": {
+        "value": "1k",
+        "layer": "F.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          19.8,
+          54.24
+        ],
+        "pins": {
+          "1": "PYRO1_GATE_N",
+          "2": "GND"
+        }
+      },
+      "R128": {
+        "value": "10k",
+        "layer": "F.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          18.3,
+          57.405
+        ],
+        "pins": {
+          "1": "PYRO1_GATE",
+          "2": "GND"
+        }
+      },
+      "C126": {
+        "value": "220nF 25V X7R",
+        "layer": "F.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          16.85,
+          57.675
+        ],
+        "pins": {
+          "1": "PYRO1_GATE",
+          "2": "GND"
+        }
+      },
+      "Q124": {
+        "value": "AON7524",
+        "layer": "F.Cu",
+        "orientation_deg": 90.0,
+        "xy_mm": [
+          13.9,
+          57.37
+        ],
+        "pins": {
+          "1": "GND",
+          "2": "GND",
+          "3": "GND",
+          "4": "PYRO1_GATE",
+          "5": "PYRO1_OUT"
+        }
+      },
+      "C19": {
+        "value": "2.2uF 16V X5R 10%",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          28.35,
+          37.65
+        ],
+        "pins": {
+          "1": "VCAP1",
+          "2": "GND"
+        }
+      },
+      "C20": {
+        "value": "2.2uF 16V X5R 10%",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          19.8,
+          37.3
+        ],
+        "pins": {
+          "1": "VCAP2",
+          "2": "GND"
+        }
+      },
+      "R162": {
+        "value": "1k 0805",
+        "layer": "B.Cu",
+        "orientation_deg": 0.0,
+        "xy_mm": [
+          19.5,
+          57.7
+        ],
+        "pins": {
+          "1": "BUZZ_DRV",
+          "2": "BUZZ_G"
+        }
+      },
+      "R163": {
+        "value": "10k",
+        "layer": "B.Cu",
+        "orientation_deg": -90.0,
+        "xy_mm": [
+          21.8,
+          59.3
+        ],
+        "pins": {
+          "1": "BUZZ_G",
+          "2": "GND"
+        }
+      }
+    },
+    "physical_package_pitch_mm": [
+      0.5,
+      0.5
+    ],
+    "calculations_inferences": {
+      "pyro_single_top_short_at_19p9_V": 3.3421708288152567,
+      "pyro_single_bottom_open_at_19p9_V": 3.3421708288152567,
+      "pyro_nominal_source_ohm": 910.7142857142857,
+      "pyro_nominal_filter_tau_us": 9.107142857142858,
+      "pa6_normal_at8p4_V": 0.7636363636363637,
+      "pb1_normal_at5p456_V": 0.49600000000000005,
+      "pc8_nominal_USB_high_boundary_V": 4.619999999999999,
+      "pc14_resistor_only_initial_at3p33V_990ohm_mA": 3.3636363636363638,
+      "pc14_nominal_steady_mA": 0.3,
+      "iwdg_min_ms": 28.57142857142857,
+      "iwdg_max_ms": 32.6530612244898,
+      "iwdg_fault_alloc_ms": 34.8530612244898,
+      "first_neutral_allocation_ms": 48.6530612244898,
+      "nrst_ratio_at250k_50k_pullup_with10M_meter": 0.8298755186721991,
+      "nrst_leak_floor_for_ratio0p90_with30k_pullup_and10M_meter_ohm": 277492.29188078106,
+      "VCAP_required_uF_range": [
+        1.7600000000000002,
+        2.64
+      ],
+      "VCAP_unproven_generic_initial_temp_corner_uF": 1.683
+    },
+    "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783"
+  },
+  "maker_curve_evidence": {
+    "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+    "html_sha256": "c364f3646e98811f9386d5703b332b056aa128c5da18aa087c82bc5121d23f22",
+    "page_created_KST": "2026/10/30 22:27:09",
+    "characterization_units_source_url": "https://product.samsungsem.com/resources/js/datasheet/setting_mlcc_datasheet.js",
+    "characterization_units_source_sha256": "afafa4aa46c975b41454eff2c1de73189ef1e200870a9ec0293018c8cdd181b3",
+    "TCC_conditions": {
+      "vdc": 0.0,
+      "adc": 0.0,
+      "degC": 25.0,
+      "graphType": "TCC",
+      "dsTccFre": 1000,
+      "dsTccSign": 1.0,
+      "tccType": "X5R",
+      "partsName": "CL10A225KO8NNN"
+    },
+    "DCBias_conditions": {
+      "vdc": 0.0,
+      "adc": 0.0,
+      "degC": 25.0,
+      "graphType": "DCBias",
+      "dsDcFre": 1000,
+      "dsDcSign": 1.0,
+      "partsName": "CL10A225KO8NNN"
+    },
+    "curve_test_conditions": "TCC at zero DC bias; DCBias at25C; both1kHz and1Vrms, per maker page metadata and chart-unit JavaScript. Biased-TCC example is8V, not VCAP.",
+    "TCC_70C_percent": {
+      "x": 70,
+      "y": -9.724665079784364,
+      "bracket": [
+        [
+          69.52147731614818,
+          -9.583329654358977
+        ],
+        [
+          71.41740303996299,
+          -10.143306177505952
+        ]
+      ]
+    },
+    "DCBias_percent": {
+      "0.95": {
+        "x": 0.95,
+        "y": -3.424249655654564,
+        "bracket": [
+          [
+            0.92975,
+            -3.2040262922136464
+          ],
+          [
+            1.0,
+            -3.968011046866707
+          ]
+        ]
+      },
+      "1": {
+        "x": 1,
+        "y": -3.968011046866707,
+        "bracket": [
+          [
+            0.92975,
+            -3.2040262922136464
+          ],
+          [
+            1.0,
+            -3.968011046866707
+          ]
+        ]
+      },
+      "1.05": {
+        "x": 1.05,
+        "y": -4.556765447776471,
+        "bracket": [
+          [
+            1.0,
+            -3.968011046866707
+          ],
+          [
+            1.079075,
+            -4.899126131905498
+          ]
+        ]
+      },
+      "1.4": {
+        "x": 1.4,
+        "y": -9.09959548165852,
+        "bracket": [
+          [
+            1.3568,
+            -8.505812323461855
+          ],
+          [
+            1.4593749999999999,
+            -9.91570369966609
+          ]
+        ]
+      }
+    },
+    "formula_inference": "2.2uF *0.9 initial tolerance *(1+TCC70/100) *(1+DCBias/100); no aging factor",
+    "inferred_combined_capacitance_uF_by_bias_V": {
+      "0.95": 1.7262448250863693,
+      "1": 1.7165253532281144,
+      "1.05": 1.706001653083994,
+      "1.4": 1.6248007635307193
+    },
+    "correlation_limits": [
+      "Separate typical curves; multiplicative combination is an Inference, not a maker-guaranteed combined condition.",
+      "1kHz/1Vrms LCR characterization does not establish actual VCAP DC-bias/small-ripple/frequency-dependent capacitance or regulator stability.",
+      "Temperature and initial/DC-bias variation correlations are not bounded by these curves.",
+      "No measured local capacitor temperature, VCAP waveform, capacitance, ESR or post-reflow/aging state.",
+      "Samsung labels page data typical design-reference data."
+    ]
+  },
+  "primary_sources": [
+    {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "revision": "DS12110 Rev11 January2026",
+      "pages": [
+        55,
+        63,
+        64,
+        67,
+        68,
+        69,
+        70,
+        74,
+        75,
+        79,
+        80,
+        81,
+        82,
+        83,
+        85,
+        86,
+        88,
+        89,
+        90,
+        91,
+        92,
+        93,
+        94,
+        206,
+        207,
+        208,
+        209,
+        210,
+        211,
+        233,
+        240,
+        241,
+        242,
+        244,
+        246,
+        248
+      ],
+      "scope": "Package/AF/ADC/FT/reset/supply/current/VCAP/LSI/NRST/current limits, source text; no full PDF-page visual verification."
+    },
+    {
+      "url": "https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+      "revision": "AN2606 Rev70 February2026",
+      "pages": [
+        320,
+        321,
+        322,
+        323
+      ],
+      "table": "135"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+      "revision": "SCES942A March2022",
+      "pages": [
+        4,
+        5,
+        6,
+        20,
+        21,
+        23,
+        24,
+        25,
+        26
+      ]
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+      "revision": "SBVS186H July2021",
+      "pages": [
+        3,
+        13,
+        14,
+        15
+      ]
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+      "revision": "SLVS841G October2026",
+      "pages": [
+        4,
+        6,
+        7,
+        15
+      ]
+    },
+    {
+      "url": "https://www.infineon.com/part/ESD103-B1-02EL",
+      "scope": "Exact fitted EL part;15V working,48V typical16A clamp, not ELS substitution."
+    },
+    {
+      "url": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+      "scope": "3.3V LVTTL, serial direction, supply and baud limits."
+    },
+    {
+      "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+      "scope": "Supply and baud; no reviewed UART VOH/VOL guarantee."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/master/Include/stm32h743xx.h",
+      "scope": "Current official trace-clock bit20 and EXTI register definitions."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32h7xx-hal-driver/master/Src/stm32h7xx_hal_gpio.c",
+      "scope": "Configuration lock procedure/readback, output data remains writable."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32h7xx-hal-driver/master/Inc/stm32h7xx_hal_dma.h",
+      "scope": "Separate selected-peripheral DMA requests; no actual stream schedule qualified."
+    },
+    {
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "revision_read": "Cached DS14623 Rev1 March2025,212pages; current online fetch rejected over size limit",
+      "pages": [
+        11,
+        15,
+        16,
+        17,
+        60
+      ],
+      "scope": "IMU interface pin functions, gyro turn-on typical40ms, SPI10MHz, interrupt defaults."
+    },
+    {
+      "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+      "scope": "Exact current C19/C20 identity/nominal/tolerance and typical characteristic curves."
+    }
+  ],
+  "mandatory_context": {
+    "files": [
+      "AGENTS.md",
+      ".supervisor/r15_target_packet.md",
+      ".supervisor/r10_review_packet.md",
+      "docs/REQUIREMENTS.md",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+      "docs/M3_R10.md",
+      "docs/R10_VALIDATION.md",
+      "docs/R9_VALIDATION.md",
+      "../../docs/VEHICLE.md",
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md",
+      "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json"
+    ],
+    "reading_scope": "Full current owner/amendment inventory considered; long historical records read by headings/inventory and lens-relevant passages, not a claim that every historical line was re-read.",
+    "decision_ids_considered": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R14-01",
+      "D-R14-02",
+      "D-R14-03"
+    ],
+    "owner_mandates_considered": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16"
+    ]
+  },
+  "coverage_limits": [
+    "No CLI/DRC/ERC, full build, check.sh, generator, GUI, firmware, electrical, thermal, RF/ESD, physical, assembly or flight test ran.",
+    "Official current ST text was used; direct ST PDF downloads timed out and web screenshot calls returned metadata without usable images. Cached H743 PDF is Rev8/2021 and was not used as current-limit authority.",
+    "RM0433 fetch rejected for size; official CMSIS/HAL checks do not establish silicon/debugger override behavior.",
+    "Current online IMU PDF exceeded size limit. Cached maker DS14623 Rev1 was read freshly but latest IMU revision was not verified here.",
+    "VCAP candidate remains an inference/evidence gap pending separate fresh verifier; nominal part selection itself meets the nominal Table114 window.",
+    "No R10 executable firmware binding exists; R1-bound assembly_binding.py/v0.8.1/diagnostics cannot qualify this board.",
+    "AF/DMAMUX feasibility does not prove DMA stream allocation, cache/memory safety, latency, storage recovery, watchdog/fire timing, neutral response or flight behavior.",
+    "Native probes initially needed corrections for PCx_C names and individually named unconnected nets; final probes exit0 with a nonfatal KiCad wx diagnostic.",
+    "Only assigned new reports and own ignored probes were written. No preexisting source/CAD/fab/docs or old reports edited; no git actions.",
+    "No current-round peer report/probe read; no findings shared with peers. Prior MCU report read after independent native checks as context."
+  ],
+  "probe_receipt_sha256": {
+    ".supervisor/r15_mcu/probe.py": "79d99fdbae26e2bd639f87e8755ee78623efdc88587f70eac9049ceff2269e7b",
+    ".supervisor/r15_mcu/native.json": "65cdbe947d3c8a7f246d6cb3db3987c2c8c657fdbb8a7eb6594aee38adb3ecb7",
+    ".supervisor/r15_mcu/detail.py": "0c503b0cc4c60b1091e3f44ad6da481d88854c5f470c9037041e177c40f29e69",
+    ".supervisor/r15_mcu/detail.json": "5a5e864e7de9881292d05cdcb039856b1e1d4f0381527257a774a8cf4d503da7",
+    ".supervisor/r15_mcu/samsung.html": "c364f3646e98811f9386d5703b332b056aa128c5da18aa087c82bc5121d23f22",
+    ".supervisor/r15_mcu/setting_mlcc_datasheet.js": "afafa4aa46c975b41454eff2c1de73189ef1e200870a9ec0293018c8cdd181b3"
+  }
+}

@@ -1,0 +1,539 @@
+{
+  "schema": 1,
+  "review_round": 16,
+  "lens": "power_electrical_full_independent",
+  "target_commit": "b1b8658d5bf541795b7e7636c09f2e886ea8c67a",
+  "board_file": "m3_design/assembly_review/m3.kicad_pcb",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "totals_scope": "Active findings only:0new,1carried. Closed historical item and rejected hypotheses excluded.",
+  "findings": [
+    {
+      "id": "R16-PWR-01",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "L400 retains the reduced heel land",
+      "historical_ids": [
+        "R15-PWR-02",
+        "R14-PWR-01",
+        "R13-BOM-01",
+        "R13-MFG-02"
+      ],
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "ref": "L400",
+          "coordinate_mm": [
+            24.2,
+            5.55
+          ],
+          "side": "F.Cu",
+          "part": "Bourns SRP5030T-6R8M/C1329837",
+          "footprint": "rocket:M3_SRP5030TA",
+          "native_pad_size_mm": [
+            1.8,
+            2.5
+          ],
+          "local_pad_center_abs_x_mm": 2.35,
+          "native_inner_gap_mm": 2.9,
+          "source": "BOURNS-L p1",
+          "maker_recommended_pad_size_mm": [
+            2,
+            1.8
+          ],
+          "maker_recommended_center_abs_x_mm": 2.25,
+          "maker_inner_gap_mm": 2.5,
+          "maximum_uncovered_heel_mm_inference": 0.15,
+          "calculation": "(5.7-0.3)/2-(1.1+0.3)=1.30mm permitted heel; native inner copper begins1.45mm"
+        }
+      ],
+      "impact": "Native land differs from maker recommendation and can leave0.15mm heel uncovered at a permitted dimensional corner. Nominal contact remains; a required electrical failure or physical solder defect is not demonstrated.",
+      "concrete_fix": "Adopt the exact maker land in a covered generator/layout revision with DRC/routing/paste/orientation/provenance checks, or retain this exact owner/assembler deviation and qualify real contact coverage, fillets, seating and tolerance on first articles."
+    }
+  ],
+  "closed_historical_findings": [
+    {
+      "id": "R15-PWR-01",
+      "severity": "Minor",
+      "status": "closed",
+      "title": "UVLO prose now scopes resistor temperature correctly",
+      "evidence": {
+        "file": "docs/REQUIREMENTS.md",
+        "section": "Operating assumptions/Pack",
+        "calculated_25C_V": 4.778382424242425,
+        "calculated_70C_V": 4.811061770584144,
+        "separate_125C_sensitivity_V": 4.851401368166513,
+        "source": "TI-U9 p9; UNI-ROYAL pp2/6"
+      },
+      "disposition": "Current prose states4.778V at25C and4.811V at70C; excludes physical leakage/gradients/transients. No circuit change needed."
+    }
+  ],
+  "rejected_or_unconfirmed_Critical_Major_hypotheses": [
+    {
+      "id": "H1",
+      "candidate_severity": "Critical",
+      "status": "rejected_on_reviewed_CAD",
+      "hypothesis": "Battery/port bypass or missing off networks defeats the two firing controls",
+      "evidence": "Native90-component274-pad map has0mismatches; S1-9 pass. PC1/R122/Q122/PMOS bus and PE4/R126/Q124 remain separate; gates retain required series/pull/cap networks. Shared MCU, single switch and surface fault residuals remain owner scope.",
+      "source_files": [
+        "m3_design/assembly_review/m3.kicad_pcb",
+        "m3_design/assembly_review/schematic.net.xml"
+      ]
+    },
+    {
+      "id": "H2",
+      "candidate_severity": "Major",
+      "status": "rejected_with_stated_conditional_envelope",
+      "hypothesis": "Four persistent servo stalls reduce selected fire current below1.125A",
+      "evidence": {
+        "native_series_vias": 0,
+        "loop_ohm": 4.617458126128065,
+        "currents_A": [
+          1.5443660716989063,
+          1.4794377872063396,
+          1.4142637760577872,
+          1.348804955060497,
+          1.2830130390490941
+        ],
+        "four_stall_gate_magnitude_using_max_branch_drop_V": 4.946502874200512,
+        "Q124_min_gate_V": 2.8057539603367783
+      },
+      "limits": "7.4V-equivalent fire-time source,Rpack<=0.15ohm,2ohm match,0.3ohm external leads,40mohm per PMOS,stated copper/contact/hot assumptions. MJG0.5s datum is not20ms qualification.",
+      "sources": [
+        "MJG p1",
+        "AOS-P pp1-4",
+        "AOS-N pp1-2"
+      ]
+    },
+    {
+      "id": "H3",
+      "candidate_severity": "Major",
+      "status": "rejected_as_demonstrated_static_brownout",
+      "hypothesis": "Shorted match plus four stalls necessarily crosses U9 turn-off",
+      "evidence": {
+        "battery_lower_estimate_V": 5.492178948307261,
+        "adverse70C_turnoff_V": 4.811061770584144,
+        "port_fault_peak_bound_A": 3.7437971552257268,
+        "U9_min_limit_A": 3.9461883408071747
+      },
+      "limits": "No actual dynamic, fault-tail, U9 dip/selectivity or thermal behavior is proven by static source/threshold arithmetic.",
+      "sources": [
+        "TI-U9 p9",
+        "DIODES p5"
+      ]
+    },
+    {
+      "id": "H4",
+      "candidate_severity": "Major",
+      "status": "rejected_as_required_numerical_failure",
+      "hypothesis": "Final native actual-feed reverse hot-plug violates contracted voltage/slew/cold-OUT limits",
+      "evidence": {
+        "required_cases": 2304,
+        "required_failures": 0,
+        "local_cases": 60,
+        "convergence_pass": true,
+        "additional_pair_mismatch_cases": 64,
+        "pair_mismatch_failures": 0,
+        "minimum_IN_V": -14.80737323571109,
+        "maximum_falling_V_per_us": 8.991477108041046,
+        "maximum_refined_rising_V_per_us": 5.091052576178257,
+        "retained_OUT_2s_V": 5.877715488614672,
+        "C88_cut_vertex": true,
+        "bypass_negative_control_detected": true
+      },
+      "limits": "Ideal ground/pads, typical C(V)/temperature combination, inferred trace/package/edge behavior and >=0.03ohm0.1-2uH harness domain remain unmeasured. No physical guarantee follows from0.193V nominal negative margin.",
+      "sources": [
+        "TI-U9 pp7/62-63"
+      ]
+    },
+    {
+      "id": "H5",
+      "candidate_severity": "Major",
+      "status": "not_demonstrated",
+      "hypothesis": "R134 or switch/copper pulse stress demonstrably fails the20/36ms contract",
+      "evidence": {
+        "R134_W": 35.79745217113374,
+        "R134_20_36ms_J": [
+          0.7159490434226748,
+          1.2887082781608146
+        ],
+        "graph_20_36ms_W_inference": [
+          61.20385393838324,
+          44.13366936349395
+        ],
+        "fault_watchdog_allocation_ms": 34.8530612244898,
+        "copper_0p5mm_deltaT_C": {
+          "35": [
+            7.1586055067739816,
+            13.006491942958037
+          ],
+          "28": [
+            11.259038503132137,
+            20.565326760376614
+          ]
+        }
+      },
+      "limits": "Bourns/AOS graphs and copper estimates are conditional, not hot/repetitive endurance or real current-tail qualification. Failed-short hardware is outside intact-hardware watchdog cutoff.",
+      "sources": [
+        "BOURNS-R pp1-3",
+        "AOS-P pp2/4-5",
+        "ST p233"
+      ]
+    },
+    {
+      "id": "H6",
+      "candidate_severity": "Major",
+      "status": "not_demonstrated_pending_combined_condition_qualification",
+      "hypothesis": "C19/C20 necessarily violate ST VCAP requirement",
+      "evidence": "Native exact SamsungCL10A225KO8NNNC2.2uF+/-10% gives1.98..2.42uF nominal. ST Rev11Table114p211 says2.2uF typical+/-20%/ESR<0.1ohm. Separate typical curve products do not establish a guaranteed joint operating corner; process/bias/local-temperature/AC/aging/ESR and actual regulator modes remain unresolved.",
+      "limits": "Retain current disclosed R15 qualification gap. No arbitrary larger-cap substitution or false regulator-stability proof.",
+      "sources": [
+        "ST p211",
+        "SAMSUNG"
+      ]
+    },
+    {
+      "id": "H7",
+      "candidate_severity": "Major",
+      "status": "not_demonstrated",
+      "hypothesis": "Wrong3S OVLO necessarily fails because OVLO pin exceeds recommended1.5V",
+      "evidence": "Native2M/280k divider gives1.547V at12.6V and2.444V at19.9V, above1.5V recommendation but below6.5V absolute ceiling. Current qualification/ordering records disclose this fault-state range departure.",
+      "limits": "Actual fault response is unqualified; this existing disclosed departure is not proof of a failed required response.",
+      "sources": [
+        "TI-U9 pp7-9"
+      ]
+    }
+  ],
+  "checks_actually_run": [
+    {
+      "name": "native_power.py",
+      "kind": "read_only_native_API",
+      "interpreter": "installed KiCad Python/pcbnew10.0.6 -I -B",
+      "exit_code": 0,
+      "result": "90components274numbered physicalpads agree with native XML; independent five-path graph0seriesvias; fresh budget and normalized hot-plug inputs equal canonical"
+    },
+    {
+      "name": "tools/check_r10.py selected15rules",
+      "kind": "read_only_native_API",
+      "interpreter": "installed KiCad Python10.0.6 -I -B",
+      "arguments": "--only S-1,S-2,S-3,S-4,S-5,S-6,S-7,S-8,S-9,K-contract,K-copper,K-inner,K-width,F9-1,F9-2 --bom m3_design/assembly_review/fab/m3_bom_jlc.csv --cpl m3_design/assembly_review/fab/m3_cpl_jlc.csv",
+      "exit_code": 0,
+      "result": "15rules pass; no full check.sh or CLI executed"
+    },
+    {
+      "name": "tools/r10_hotplug.py",
+      "kind": "simulation_inference",
+      "interpreter": "supplied NumPy Python -I -B",
+      "arguments": "--inputs .supervisor/r16_power_probe/hotplug_inputs.json --output .supervisor/r16_power_probe/hotplug_results.json",
+      "exit_code": 0,
+      "result": "2304required+60local cases and all refinements/convergence/cold-OUT/no-clamp controls pass; fresh results exactly equal canonical"
+    },
+    {
+      "name": "tools/test_r10_check.py HotplugNumerics",
+      "kind": "software_numerical_controls",
+      "interpreter": "supplied NumPy Python -I -B",
+      "exit_code": 0,
+      "tests": 2,
+      "result": "Independent Python MNA vs compiled charge solver on historical split-feed constant-C diagnostic; invalid integration/input rejection. This is not a second independent full nonlinear model."
+    },
+    {
+      "name": "mismatch_probe.py",
+      "kind": "additional_exploratory_simulation",
+      "interpreter": "supplied NumPy Python -I -B",
+      "exit_code": 0,
+      "result": "64independent C80/C96/C89/C95 low/high pair-mismatch cases at required extreme source corners plus refined extrema pass; unchanged production C solver/graph, own scale-call layer"
+    },
+    {
+      "name": "feed_graph.py",
+      "kind": "independent_graph_and_negative_control",
+      "exit_code": 0,
+      "result": "Removing C88 disconnects U9 from all other model terminals; in-memory direct J1-U9 bypass is detected"
+    },
+    {
+      "name": "calculations.py",
+      "kind": "independent_scalar_calculation_inference",
+      "exit_code": 0,
+      "result": "Supply/current/pack/fire/gate/UVLO/bounce/energy/pulse/copper/thermal/watchdog/USB/star-return arithmetic; numerical results in own calculations.json"
+    },
+    {
+      "name": "maker_PDF_text_and_complete_page_visual_inspection",
+      "kind": "primary_source_review",
+      "result": "Named static primary PDFs freshly extracted; complete Bourns SRP5030Tp1,CRM2512p3,AONR21357p4 raster pages inspected. Current official primary websites/PDFs reread, including decisive ST Rev11/updated TI. Temporary rasters/text removed."
+    }
+  ],
+  "coverage_limits": [
+    "No full check.sh/build, nativeCLI/DRC/parity/ERC, GUI, firmware, physical/first-article/flight test, git mutation/action, order or external message performed. Root owns complete1942tracked-file freeze and integrated gates.",
+    "Read-only API checks cover CAD and defined contracts; source calculations and all simulations remain conditional Inference. No full power-track/via DC/thermal/field solve was run.",
+    "Hot-plug uses ideal common ground/pads, typical maker capacitance data and estimated parasitics. Extra64mismatch cases do not replace measured pin/harness/package/ESR/ESL/edge/bounce/endurance bounds; low-resistance0/0.01ohm controls remain outside domain.",
+    "No actual PA6 threshold/latency/shedding/current decay, C84 cold/aged/process performance, C87 bounce, C92 stability, VCAP combined-condition/ESR, USB-host startup/source transfer, U9 fault selectivity, port ESD/peaks/back-feed, hot copper/FET/R134 behavior or installed source/harness qualification.",
+    "Normal physical20ms firing,36ms intact-hardware guard, real gate/current tails, launch/ground/in-flight policy, SD busy/power-loss recovery, selected MJG lot/charge reliability and firmware remain unimplemented/unqualified.",
+    "Owner choices for no fuse/single switch/direct always-on ports/shared servo source remain; review does not infer hidden AVA circuit or copper choices, owner acceptance, procurement release or physical certification.",
+    "Initial own graph probe omitted explicit common-drain package aliases and stopped on RAW_ACT; corrected using maker pinout. Initial raw Python tuple/list extraction comparison was normalized through JSON. Own via-layer indices were corrected to native TopLayer/BottomLayer before final graph evidence. No canonical file was modified by these probe corrections.",
+    "No current-round16 peer report/probe was read; prior round15 power report and current canonical deviation ledger were used only as historical context after native/source examination."
+  ],
+  "sources": [
+    {
+      "id": "TI-U9",
+      "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+      "version": "SLVSFC9C, May2026",
+      "pages": [
+        7,
+        8,
+        9,
+        32,
+        62,
+        63
+      ],
+      "used_for": "Input absolute/dVdt limits, threshold/leakage/current limits, local OUT protection"
+    },
+    {
+      "id": "TI-SW",
+      "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+      "version": "SLVS841G, October2026",
+      "pages": [
+        6,
+        7,
+        19,
+        20,
+        21
+      ],
+      "used_for": "Camera/USB limit, resistance, fault deglitch and reverse timing"
+    },
+    {
+      "id": "TI-MUX",
+      "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+      "version": "SLVSEA3F, August2020",
+      "pages": [
+        7,
+        8,
+        12,
+        13,
+        33
+      ],
+      "used_for": "Logic mux current/reverse behavior, startup/bypass guidance"
+    },
+    {
+      "id": "DIODES",
+      "url": "https://www.diodes.com/datasheet/download/AP63200-AP63201-AP63203-AP63205.pdf",
+      "version": "DS41326 Rev3-2, November2024",
+      "pages": [
+        4,
+        5,
+        10,
+        11,
+        13,
+        14,
+        15
+      ],
+      "used_for": "Regulation/current/UVLO/dropout/switching and local layout"
+    },
+    {
+      "id": "TI-LDO",
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "version": "SBVS282A, September2026",
+      "pages": [
+        4,
+        5,
+        6,
+        15,
+        16,
+        25,
+        26
+      ],
+      "used_for": "LDO feedback/leakage/current/dropout/capacitance/thermal"
+    },
+    {
+      "id": "TI-IO",
+      "url": "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+      "version": "SBVS186H, July2021",
+      "pages": [
+        5,
+        14,
+        16
+      ],
+      "used_for": "Camera IO LDO minimum effective capacitance and layout"
+    },
+    {
+      "id": "AOS-P",
+      "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+      "version": "Rev2.1, November2023",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "used_for": "Pinout, gate/drain rating, RDS(on), gate charge and qualified SOA scope"
+    },
+    {
+      "id": "AOS-N",
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+      "version": "Rev1.1, October2023",
+      "pages": [
+        1,
+        2
+      ],
+      "used_for": "Q124 pinout, 2.5V on-resistance and charge"
+    },
+    {
+      "id": "BOURNS-L",
+      "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+      "version": "SRP5030T series; complete page1 rendered and inspected",
+      "pages": [
+        1
+      ],
+      "used_for": "L400 contact/land dimensions, electrical current/DCR"
+    },
+    {
+      "id": "BOURNS-R",
+      "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+      "version": "CRM2512 series; complete page3 rendered and inspected",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "used_for": "R134 tolerance/TCR and pulse chart; graph interpretation is Inference"
+    },
+    {
+      "id": "ST",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "version": "DS12110 Rev11, January2026, current official web PDF",
+      "pages": [
+        207,
+        208,
+        209,
+        210,
+        211,
+        233
+      ],
+      "used_for": "Supply/IO/VCAP modes and limits, LSI range; cached Rev8 not decisive"
+    },
+    {
+      "id": "SAMSUNG",
+      "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+      "version": "Exact package code CL10A225KO8NNNC, current maker page",
+      "used_for": "VCAP/C87 identity and nominal selection; joint curves not guaranteed"
+    },
+    {
+      "id": "YAGEO",
+      "url": "https://www.yageo.com/upload/media/product/productsearch/datasheet/rchip/PYu-RT_51_RoHS_L.pdf",
+      "version": "RT series V16, May6 2025; named cached primary PDF freshly extracted",
+      "pages": [
+        2
+      ],
+      "used_for": "B tolerance0.1%, D TCR25ppm/K ordering identity"
+    },
+    {
+      "id": "UNI-ROYAL",
+      "url": "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf",
+      "version": "SMD-SP-001 V10, July28 2025; named cached primary PDF freshly extracted",
+      "pages": [
+        2,
+        6
+      ],
+      "used_for": "F tolerance1%, 0603 >10ohm100ppm/K and 2512 subohm800ppm/K"
+    },
+    {
+      "id": "MJG",
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "version": "J-Tek LEAD-FREE technical information sheet",
+      "pages": [
+        1
+      ],
+      "used_for": "0.75A all-fire definition is0.5s, not an actual20ms lot qualification"
+    },
+    {
+      "id": "RUNCAM",
+      "url": "https://www.runcam.com/download/split4k/RC_Split_4k_Manual_EN.pdf",
+      "pages": [
+        1
+      ],
+      "used_for": "5V minimum, regulated camera input"
+    },
+    {
+      "id": "MICOAIR",
+      "url": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+      "used_for": "LR900-F4.5-5V,3.3VLVTTL,1W max average; no published peak bound assumed"
+    },
+    {
+      "id": "HGLRC",
+      "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+      "used_for": "M100 Mini3.3-5V; installed levels/startup load remain qualification"
+    }
+  ],
+  "mandatory_scope": {
+    "AGENTS_read_first": true,
+    "packets": [
+      ".supervisor/r16_target_packet.md",
+      ".supervisor/r10_review_packet.md",
+      ".supervisor/steer.md"
+    ],
+    "requirements_and_current_records": [
+      "docs/REQUIREMENTS.md",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+      "docs/M3_R10.md",
+      "docs/R10_VALIDATION.md",
+      "docs/R9_VALIDATION.md",
+      "../../docs/VEHICLE.md",
+      "docs/R10_VEHICLE_HANDOFF.md"
+    ],
+    "decision_IDs_considered": 119,
+    "owner_mandate_records_considered": 22,
+    "amendments": "Current single-switch/always-on/DB125/microSD/audit2/AVA/R11-R15 scope supersedes old instructions; AGENTSsection2 unchanged."
+  },
+  "evidence_files": {
+    ".supervisor/r16_power_probe/native_power.py": {
+      "sha256": "522660d5fafa5fbd8d9d79069dad2269198cb81bafd1326cd4b843755be8cceb",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/native_power.json": {
+      "sha256": "4af22cf1936ed17a7c0da8d4bf9989e3a09fb8b5e37568bff13dd134aefe2a5e",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/calculations.py": {
+      "sha256": "9314cdf94f4f95e9bfd85b75b9b46c6499ec91f0fd60658b7214fa3e53dc0af4",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/calculations.json": {
+      "sha256": "cdffcb5485c2a18c9016a6dea64f7aa868432d639c029134e2ad5fe5bb2c3f5b",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/selected_rules.json": {
+      "sha256": "f011857c9bb86abb7437f8787a7e78b7054e20c5071c39eaa68073975f3b09c9",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/hotplug_inputs.json": {
+      "sha256": "f965302694ba339a4d3566548f0343ccb14c2e96e9b4b7175f28c3af6bdddaef",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/hotplug_results.json": {
+      "sha256": "a3d21d692dbaa9d613c90725f76d73d6cb508d8fd33f539a2c82ad8c2631140f",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/capacitor_pair_mismatch.json": {
+      "sha256": "3c32c323ec7e156794246b4ca063141fb0142cda7131cc711d08fe6aad90661f",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/mismatch_probe.py": {
+      "sha256": "a02fbf03f6d73dae2274dfc14f69e3214f2c5ca38d9838944f526792c18b5594",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/feed_graph.py": {
+      "sha256": "bd1f3217d3aab389051662df08ce0b088bb939d67c162baad1789c30cf5f87df",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    },
+    ".supervisor/r16_power_probe/feed_graph.json": {
+      "sha256": "d15460ba0b395585d111456f98f5732d7cdfb8547173dbf81bb5ea0035312c68",
+      "scope": "ignored own reproducible probe/evidence; not canonical build output"
+    }
+  },
+  "final_state": "Read-only frozen-board full assigned lens complete; report pair immutable after handoff."
+}

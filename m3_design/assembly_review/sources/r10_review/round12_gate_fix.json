@@ -1,0 +1,617 @@
+{
+  "schema": 1,
+  "round": 12,
+  "kind": "checker-only implementation and regression receipt",
+  "created_utc": "2026-10-30T07:30:14.842650+00:00",
+  "status": "implemented; native regressions complete; four owned sources frozen; root integration in progress",
+  "fixed_findings": [
+    {
+      "id": "R12-GATE-01",
+      "status": "implemented and regression-validated; production integration belongs to root"
+    },
+    {
+      "id": "R12-GATE-02",
+      "status": "implemented and regression-validated; production integration belongs to root"
+    },
+    {
+      "id": "R12-GATE-03",
+      "status": "implemented and regression-validated; production integration belongs to root"
+    }
+  ],
+  "files_owned_and_modified": [
+    "tools/check_r10.py",
+    "tools/fit_check.py",
+    "tools/test_r10_check.py",
+    "tools/test_fit_check.py"
+  ],
+  "source_before_sha256": {
+    "tools/check_r10.py": "003c0e88d643d8be9d14fb5dff4101296bed5892cf22a344070a71b184d65a55",
+    "tools/fit_check.py": "3cab47f0de8ff8b170d4288236a3f7b7b9abc42a08ef7b775d2b51d329e75abd",
+    "tools/test_r10_check.py": "140545e401500ffb9d7ee6f5409459449a322422f0d77fee08edd4d8c34bfa1a",
+    "tools/test_fit_check.py": "3a85ad45bbd83704b02880106792839f15880ef0c912bd04ce217087dbd1d861"
+  },
+  "source_after_sha256": {
+    "tools/check_r10.py": "b129c1b06dbedeb6bdfcea1f17f662a35e796ce00d63c0eb1ba3760c16804856",
+    "tools/fit_check.py": "52f780c61feca88cd436de84a333fe53acf672b5ab1b6b8dfe394956b2ea129c",
+    "tools/test_r10_check.py": "35b2cbd731fc7818fe688e8934504109713fc8564455fdd66e1157a4c028597d",
+    "tools/test_fit_check.py": "752d8536d0c913c18fcf87ca423b161f7c8abaa3de0d3f0a22c3bb41c1632795"
+  },
+  "reviewed_patch_sha256": "c8798607cbc1a410c0042a7690dbbf9e4a3588e24862f6cc26c612d7147c3b8e",
+  "tested_board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "board_after_last_recorded_native_test_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "root_integration_may_advance_board_after_tests": true,
+  "model_rounding": {
+    "rows": [
+      {
+        "ref": "J1",
+        "model": "M3_DB125_2P_GN",
+        "normalized_box_mm": [
+          -4.6199996500000005,
+          -4.09999942,
+          3.7000014899999996,
+          3.99999962,
+          1.2700000001775181e-06,
+          8.90000125
+        ],
+        "reviewed_box_mm": [
+          -4.62,
+          -4.1,
+          3.7,
+          4.0,
+          0.0,
+          8.9
+        ],
+        "coordinate_abs_errors_mm": [
+          3.49999999649242e-07,
+          5.800000000277805e-07,
+          1.4899999993822632e-06,
+          3.799999999110071e-07,
+          1.2700000001775181e-06,
+          1.250000000396767e-06
+        ],
+        "max_coordinate_abs_error_mm": 1.4899999993822632e-06
+      },
+      {
+        "ref": "J121",
+        "model": "M3_DB125_2P_BK",
+        "normalized_box_mm": [
+          -4.6199996500000005,
+          -4.09999942,
+          3.7000014899999996,
+          3.99999962,
+          1.2700000001775181e-06,
+          8.90000125
+        ],
+        "reviewed_box_mm": [
+          -4.62,
+          -4.1,
+          3.7,
+          4.0,
+          0.0,
+          8.9
+        ],
+        "coordinate_abs_errors_mm": [
+          3.49999999649242e-07,
+          5.800000000277805e-07,
+          1.4899999993822632e-06,
+          3.799999999110071e-07,
+          1.2700000001775181e-06,
+          1.250000000396767e-06
+        ],
+        "max_coordinate_abs_error_mm": 1.4899999993822632e-06
+      },
+      {
+        "ref": "J400",
+        "model": "M3_DB125_2P_GN",
+        "normalized_box_mm": [
+          -4.6199996500000005,
+          -4.09999942,
+          3.7000014899999996,
+          3.99999962,
+          1.2700000001775181e-06,
+          8.90000125
+        ],
+        "reviewed_box_mm": [
+          -4.62,
+          -4.1,
+          3.7,
+          4.0,
+          0.0,
+          8.9
+        ],
+        "coordinate_abs_errors_mm": [
+          3.49999999649242e-07,
+          5.800000000277805e-07,
+          1.4899999993822632e-06,
+          3.799999999110071e-07,
+          1.2700000001775181e-06,
+          1.250000000396767e-06
+        ],
+        "max_coordinate_abs_error_mm": 1.4899999993822632e-06
+      },
+      {
+        "ref": "J410",
+        "model": "M3_DB125_4P_GN",
+        "normalized_box_mm": [
+          -8.3199986,
+          -4.09999942,
+          7.2000008399999995,
+          3.99999962,
+          1.2700000001775181e-06,
+          8.90000125
+        ],
+        "reviewed_box_mm": [
+          -8.32,
+          -4.1,
+          7.2,
+          4.0,
+          0.0,
+          8.9
+        ],
+        "coordinate_abs_errors_mm": [
+          1.4000000003733248e-06,
+          5.800000000277805e-07,
+          8.399999993358165e-07,
+          3.799999999110071e-07,
+          1.2700000001775181e-06,
+          1.250000000396767e-06
+        ],
+        "max_coordinate_abs_error_mm": 1.4000000003733248e-06
+      },
+      {
+        "ref": "J420",
+        "model": "M3_DB125_4P_GN",
+        "normalized_box_mm": [
+          -8.3199986,
+          -4.09999942,
+          7.2000008399999995,
+          3.99999962,
+          1.2700000001775181e-06,
+          8.90000125
+        ],
+        "reviewed_box_mm": [
+          -8.32,
+          -4.1,
+          7.2,
+          4.0,
+          0.0,
+          8.9
+        ],
+        "coordinate_abs_errors_mm": [
+          1.4000000003733248e-06,
+          5.800000000277805e-07,
+          8.399999993358165e-07,
+          3.799999999110071e-07,
+          1.2700000001775181e-06,
+          1.250000000396767e-06
+        ],
+        "max_coordinate_abs_error_mm": 1.4000000003733248e-06
+      },
+      {
+        "ref": "J9",
+        "model": "M3_DB125_4P_GN",
+        "normalized_box_mm": [
+          -8.3199986,
+          -4.09999942,
+          7.2000008399999995,
+          3.99999962,
+          1.2700000001775181e-06,
+          8.90000125
+        ],
+        "reviewed_box_mm": [
+          -8.32,
+          -4.1,
+          7.2,
+          4.0,
+          0.0,
+          8.9
+        ],
+        "coordinate_abs_errors_mm": [
+          1.4000000003733248e-06,
+          5.800000000277805e-07,
+          8.399999993358165e-07,
+          3.799999999110071e-07,
+          1.2700000001775181e-06,
+          1.250000000396767e-06
+        ],
+        "max_coordinate_abs_error_mm": 1.4000000003733248e-06
+      },
+      {
+        "ref": "J122",
+        "model": "M3_DB125_5P_GN",
+        "normalized_box_mm": [
+          -10.06999891,
+          -4.09999942,
+          8.95000115,
+          3.99999962,
+          1.2700000001775181e-06,
+          8.90000125
+        ],
+        "reviewed_box_mm": [
+          -10.07,
+          -4.1,
+          8.95,
+          4.0,
+          0.0,
+          8.9
+        ],
+        "coordinate_abs_errors_mm": [
+          1.0899999995928056e-06,
+          5.800000000277805e-07,
+          1.1500000010045142e-06,
+          3.799999999110071e-07,
+          1.2700000001775181e-06,
+          1.250000000396767e-06
+        ],
+        "max_coordinate_abs_error_mm": 1.2700000001775181e-06
+      },
+      {
+        "ref": "J430",
+        "model": "M3_MICROSD_MOLEX_472192001",
+        "normalized_box_mm": [
+          -6.99999997,
+          -9.49999878,
+          6.99999997,
+          6.000000700000001,
+          0.0,
+          2.10000088
+        ],
+        "reviewed_box_mm": [
+          -7.0,
+          -9.5,
+          7.0,
+          6.0,
+          0.0,
+          2.1
+        ],
+        "coordinate_abs_errors_mm": [
+          2.999999981767587e-08,
+          1.2199999996909128e-06,
+          2.999999981767587e-08,
+          7.000000010748408e-07,
+          0.0,
+          8.799999999808961e-07
+        ],
+        "max_coordinate_abs_error_mm": 1.2199999996909128e-06
+      }
+    ],
+    "model_count": 8,
+    "max_observed_coordinate_abs_error_mm": 1.4899999993822632e-06,
+    "six_decimal_translation_or_size_rounding_model_unit": 5e-07,
+    "endpoint_error_bound_mm": 1.905e-06,
+    "proposed_tolerance_mm": 2e-05,
+    "numeric_margin_to_quantization_bound": 10.498687664041995,
+    "explanation": "Each WRL box endpoint is translation plus/minus half size; each six-decimal literal rounds by at most 0.5e-6 model units. Thus endpoint error <= (0.5 + 0.25)e-6 * 2.54 mm. The proposed tolerance adds a numeric guard above this bound; it is no physical fit allowance.",
+    "board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d"
+  },
+  "implementation": {
+    "model_guard_tolerance_mm": 2e-05,
+    "normalization": "model scale/rotation/offset, then model-y to footprint-y conversion; compare physical local envelope before footprint placement/flip",
+    "small_positive_scale_fault": {
+      "axis": "y",
+      "scale": 0.99999
+    },
+    "small_offset_fault": {
+      "axis": "y",
+      "offset_mm": 3e-05
+    },
+    "model_fault_cases_rejected": 40,
+    "physically_equivalent_model_conversion_cases_passed": 8,
+    "inner_copper": "existing complete copper_nodes geometry for non-track drawings/text/filled zones; original track check retained; pads/vias are not newly restricted",
+    "population": "existing S-4 CSV walk; Qty positive integer equals distinct row designators; require Qty for BOM, permit quantity-free CPL",
+    "fixture_trailing_space_removed": true
+  },
+  "validation": {
+    "fit": {
+      "command": [
+        "KICAD_PY",
+        "tools/test_fit_check.py"
+      ],
+      "tests": 29,
+      "passed": 29,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    "r10_noncli": {
+      "command": [
+        "KICAD_PY",
+        "-I",
+        ".supervisor/r12_gate_fix_draft/run_native_suite.py"
+      ],
+      "tests": 170,
+      "passed": 167,
+      "failed": 0,
+      "errors": 0,
+      "initial_skips": [
+        [
+          "test_r10_check.HotplugNumerics.test_charge_solver_matches_constant_capacitance_control",
+          "numpy required"
+        ],
+        [
+          "test_r10_check.HotplugNumerics.test_invalid_circuit_and_integration_inputs_fail",
+          "numpy required"
+        ],
+        [
+          "test_r10_check.Plate.test_mated_allowance_on_parent_and_unmatched_key_refused",
+          "optional plate diagnostic: NumPy unavailable"
+        ]
+      ],
+      "pending_method": "test_r10_check.RealBoardSeeds.test_drc_debug_and_probe_clearance_survive_the_duplicate_walk_removal",
+      "exact_test_ids": [
+        "test_r10_check.Assembly.test_bom_and_cpl_omissions",
+        "test_r10_check.Assembly.test_bom_quantities_and_quantity_free_cpl",
+        "test_r10_check.Assembly.test_direct_uart_series_esd_and_obsolete_parts_seeds",
+        "test_r10_check.Assembly.test_micro_sd_pinout_supply_pullups_and_retention_part_seeds",
+        "test_r10_check.Assembly.test_port_supply_enable_fault_and_limit_seeds",
+        "test_r10_check.Assembly.test_required_safety_part_exclusion_flags_and_omission",
+        "test_r10_check.Assembly.test_reviewed_fitted_population_includes_core_and_support",
+        "test_r10_check.Assembly.test_schematic_required_part_flags",
+        "test_r10_check.Audit2.test_a_tap_exemption_does_not_continue_through_a_capacitor_feed",
+        "test_r10_check.Audit2.test_clearance_overrides_cannot_lower_probe_debug_or_board_floors",
+        "test_r10_check.Audit2.test_direct_adc_inputs_are_the_only_named_mcu_supply_ties",
+        "test_r10_check.Audit2.test_in1_only_ground_and_in2_only_power_are_kept",
+        "test_r10_check.Audit2.test_only_named_resistor_dead_ends_get_the_015_width_and_no_length_cap",
+        "test_r10_check.Audit2.test_pin_table_is_complete_and_optional_plate_has_no_release_threshold",
+        "test_r10_check.Audit2.test_source_path_05_passes_below_floor_fails_and_battery_stays_10",
+        "test_r10_check.AuditScope.test_aud10_distance_only_is_review_missing_subject_still_blocks",
+        "test_r10_check.AuditScope.test_aud2_exact_whitelist_and_fast_reference_boundary",
+        "test_r10_check.AuditScope.test_gap2_actual_routes_and_missing_return_not_pad_distance",
+        "test_r10_check.AuditScope.test_gap3_exact_vippo_is_the_only_pad_paste_exception",
+        "test_r10_check.AuditScope.test_gap3_rigid_pose_preserves_only_the_maker_local_exception",
+        "test_r10_check.AuditScope.test_gap3_wrong_net_extra_moved_size_pad_or_unfilled_is_rejected",
+        "test_r10_check.AuditScope.test_micro_sd_local_bypass_missing_or_remote_fails",
+        "test_r10_check.AuditScope.test_port_and_servo_tables_require_each_correct_pin_once",
+        "test_r10_check.AuditScope.test_servo_harness_note_is_required_unique_and_without_conflicts",
+        "test_r10_check.FabScript.test_r10_fab_checks_required_fitted_on_the_exported_lists",
+        "test_r10_check.FabScript.test_r10_fab_selects_the_r10_procurement_limits",
+        "test_r10_check.HotplugEvidence.test_component_substitution_cannot_be_qualified_by_refreshing_hashes",
+        "test_r10_check.HotplugEvidence.test_failing_corner_cannot_hide_behind_pass_summary",
+        "test_r10_check.HotplugEvidence.test_impossible_extrema_fail_even_when_all_controls_agree",
+        "test_r10_check.HotplugEvidence.test_local_path_topology_and_sensitivity_cannot_be_bypassed",
+        "test_r10_check.HotplugEvidence.test_numerical_convergence_is_checked_not_just_its_boolean",
+        "test_r10_check.HotplugEvidence.test_retained_output_and_no_clamp_control_are_required",
+        "test_r10_check.HotplugEvidence.test_stale_or_incomplete_artifacts",
+        "test_r10_check.HotplugNumerics.test_charge_solver_matches_constant_capacitance_control",
+        "test_r10_check.HotplugNumerics.test_invalid_circuit_and_integration_inputs_fail",
+        "test_r10_check.Native.test_fifth_support_and_all_new_plug_refs",
+        "test_r10_check.Native.test_new_uart_split_reference_seed",
+        "test_r10_check.Native.test_route_profile_restores_r9_and_has_no_exceptions",
+        "test_r10_check.Plate.test_mated_allowance_on_parent_and_unmatched_key_refused",
+        "test_r10_check.R3Synthetic.test_arc_segment_fails_r10_only",
+        "test_r10_check.R3Synthetic.test_aud6_does_not_narrow_the_continuous_battery_feed",
+        "test_r10_check.R3Synthetic.test_fast_uart_layer_change_needs_gnd_via",
+        "test_r10_check.R3Synthetic.test_loader_pins",
+        "test_r10_check.R3Synthetic.test_needless_hop",
+        "test_r10_check.R3Synthetic.test_reference_samples_follow_the_arc",
+        "test_r10_check.R3Synthetic.test_s1_copper_text_bridge",
+        "test_r10_check.R3Synthetic.test_s1_multi_net_part",
+        "test_r10_check.R3Synthetic.test_s8_inner_copper_near_pyro_barrel",
+        "test_r10_check.R3Synthetic.test_s8_plated_pad_and_raw_act_barrel",
+        "test_r10_check.R3Synthetic.test_s9_fire_path_and_sense_tap",
+        "test_r10_check.R3Synthetic.test_s9_small_pad_anchor_does_not_exempt_a_current_path",
+        "test_r10_check.R3Synthetic.test_silk_over_mask_opening",
+        "test_r10_check.R4Synthetic.test_fill_hole_slot_between_vias_is_no_via_hole",
+        "test_r10_check.R4Synthetic.test_k_reference_samples_the_pyro_class",
+        "test_r10_check.R4Synthetic.test_k_region_arc_beside_plane_edge_and_arc_in_chain",
+        "test_r10_check.R4Synthetic.test_k_region_chain_crossing",
+        "test_r10_check.R4Synthetic.test_k_region_foreign_via_hole_geometry",
+        "test_r10_check.R4Synthetic.test_k_region_in_rule_list",
+        "test_r10_check.R4Synthetic.test_k_region_margin_isolated",
+        "test_r10_check.R4Synthetic.test_k_region_margin_pad_and_chain",
+        "test_r10_check.R4Synthetic.test_k_region_no_in2_copper_and_own_via_antipad",
+        "test_r10_check.R4Synthetic.test_k_region_one_plane_per_run",
+        "test_r10_check.R4Synthetic.test_k_region_own_pad_void_disc_radius",
+        "test_r10_check.R4Synthetic.test_k_region_own_pad_void_needs_a_real_void",
+        "test_r10_check.R4Synthetic.test_k_region_step_catches_a_narrow_plane_gap",
+        "test_r10_check.R4Synthetic.test_k_region_track_end_on_smd_pad_joins_a_pad_only_chain",
+        "test_r10_check.R4Synthetic.test_m7_lever_arm_and_pad1",
+        "test_r10_check.R4Synthetic.test_npth_pad_with_copper_joins_connectivity",
+        "test_r10_check.R4Synthetic.test_own_pad_void_exit_slot_of_0_03",
+        "test_r10_check.R4Synthetic.test_parse_and_tables_in_report",
+        "test_r10_check.R4Synthetic.test_sd_returns_cannot_use_the_slow_control_exemption",
+        "test_r10_check.R4Synthetic.test_signal_critical_nets_share_route_check_definition",
+        "test_r10_check.RealBoardSeeds.test_armed_side_extra_parts",
+        "test_r10_check.RealBoardSeeds.test_ava_removed_duplicate_bus_and_freed_pin_seeds",
+        "test_r10_check.RealBoardSeeds.test_bypass_r134_with_a_track",
+        "test_r10_check.RealBoardSeeds.test_cli_end_to_end_on_a_saved_seed",
+        "test_r10_check.RealBoardSeeds.test_conflicting_silkscreen_textboxes",
+        "test_r10_check.RealBoardSeeds.test_connected_foreign_inner_drawings_and_zones_fail_k_inner",
+        "test_r10_check.RealBoardSeeds.test_copper_text_and_multi_net_part_bridge",
+        "test_r10_check.RealBoardSeeds.test_external_port_and_servo_legend_faults",
+        "test_r10_check.RealBoardSeeds.test_f9_1_changed_feed_copper_invalidates_model",
+        "test_r10_check.RealBoardSeeds.test_f9_1_d8_moved_away",
+        "test_r10_check.RealBoardSeeds.test_fast_uart_layer_change_without_gnd_via",
+        "test_r10_check.RealBoardSeeds.test_fire_loop_width_floor",
+        "test_r10_check.RealBoardSeeds.test_functional_core_native_dnp_and_export_omission_seeds",
+        "test_r10_check.RealBoardSeeds.test_gap2_real_output_detour_and_absent_return",
+        "test_r10_check.RealBoardSeeds.test_gap3_real_vippo_wrong_net_and_extra_via",
+        "test_r10_check.RealBoardSeeds.test_gate_pull_down_moved",
+        "test_r10_check.RealBoardSeeds.test_gps_net_next_to_pyro_bus",
+        "test_r10_check.RealBoardSeeds.test_imu_pad1_offset_and_lever_arm",
+        "test_r10_check.RealBoardSeeds.test_imu_rotation_and_terminal_entry",
+        "test_r10_check.RealBoardSeeds.test_independent_load_enable_default_off",
+        "test_r10_check.RealBoardSeeds.test_individual_terminal_textbox_conflicts_and_duplicates",
+        "test_r10_check.RealBoardSeeds.test_inner_copper_near_igniter_barrel",
+        "test_r10_check.RealBoardSeeds.test_inner_copper_text_near_pyro_barrel",
+        "test_r10_check.RealBoardSeeds.test_inner_graphics_near_pyro_barrel",
+        "test_r10_check.RealBoardSeeds.test_invalid_models_fail_fit_and_p11",
+        "test_r10_check.RealBoardSeeds.test_j122_middle_pin_given_a_net",
+        "test_r10_check.RealBoardSeeds.test_j1_wire_entry",
+        "test_r10_check.RealBoardSeeds.test_k_rules_seeds",
+        "test_r10_check.RealBoardSeeds.test_loader_pin_seeds",
+        "test_r10_check.RealBoardSeeds.test_micro_sd_topology_and_local_bypass_seeds",
+        "test_r10_check.RealBoardSeeds.test_misnamed_armed_net_is_caught",
+        "test_r10_check.RealBoardSeeds.test_native_bom_zero_and_missing_qty_fail_s4_but_quantity_free_cpl_passes",
+        "test_r10_check.RealBoardSeeds.test_needless_hop_on_a_critical_net",
+        "test_r10_check.RealBoardSeeds.test_obsolete_arm_and_fuse_legends_rejected",
+        "test_r10_check.RealBoardSeeds.test_p11_all_db125_wire_room",
+        "test_r10_check.RealBoardSeeds.test_p11_j121_moved_west_loses_wire_room",
+        "test_r10_check.RealBoardSeeds.test_r8_gate_text_hidden_width",
+        "test_r10_check.RealBoardSeeds.test_raw_act_fed_from_raw_protected",
+        "test_r10_check.RealBoardSeeds.test_required_fitted_seeds",
+        "test_r10_check.RealBoardSeeds.test_reviewed_models_allow_equivalent_metre_to_mm_conversion",
+        "test_r10_check.RealBoardSeeds.test_reviewed_models_reject_positive_shrinkage_and_pose_drift",
+        "test_r10_check.RealBoardSeeds.test_round5_gate_seeds",
+        "test_r10_check.RealBoardSeeds.test_round6_gate_seeds",
+        "test_r10_check.RealBoardSeeds.test_s3_series_resistor_moved_to_3v3",
+        "test_r10_check.RealBoardSeeds.test_s9_custom_pad_anchor_cannot_exempt_long_supply_tracks",
+        "test_r10_check.RealBoardSeeds.test_screw_switch_contacts_and_protection",
+        "test_r10_check.RealBoardSeeds.test_silk_over_mask_opening",
+        "test_r10_check.RealBoardSeeds.test_single_switch_feed_and_bus_sense",
+        "test_r10_check.RealBoardSeeds.test_spi1_sck_arc_across_split_fails_k_reference",
+        "test_r10_check.RealBoardSeeds.test_stale_zone_fill",
+        "test_r10_check.RealBoardSeeds.test_supply_ties_seeds",
+        "test_r10_check.RealBoardSeeds.test_usb_dp_arc_fails_route_check",
+        "test_r10_check.RuleSelection.test_cli_rejects_invalid_scope_before_loading_cad",
+        "test_r10_check.RuleSelection.test_invalid_explicit_scope_fails_before_context",
+        "test_r10_check.RuleSelection.test_valid_selection_and_default_stages_keep_their_scope",
+        "test_r10_check.SchematicContract.test_assembly_groups_match_separate_owner_and_jlc_boms",
+        "test_r10_check.SchematicContract.test_binding_note_has_pad_policy_and_both_trace_locks",
+        "test_r10_check.SchematicContract.test_single_switch_contract_and_seeds",
+        "test_r10_check.Synthetic.test_direct_adc_contract_has_no_series_tail_or_mandatory_plate",
+        "test_r10_check.Synthetic.test_entry_direction_from_footprint_description",
+        "test_r10_check.Synthetic.test_m1_outline",
+        "test_r10_check.Synthetic.test_one_port_definition_for_both_gates",
+        "test_r10_check.Synthetic.test_parse_value_infix_and_whole_token",
+        "test_r10_check.Synthetic.test_parse_value_spaced_unit_and_mu",
+        "test_r10_check.Synthetic.test_route_profile_r10_critical_nets",
+        "test_r10_check.Synthetic.test_rule_list_and_stages",
+        "test_r10_check.Synthetic.test_s1_any_part_on_armed_copper",
+        "test_r10_check.Synthetic.test_s1_clean_unified_bus",
+        "test_r10_check.Synthetic.test_s1_divider_feet_on_gnd_do_not_bridge",
+        "test_r10_check.Synthetic.test_s1_feed_and_bus_sense_must_be_on_raw_act",
+        "test_r10_check.Synthetic.test_s1_part_bypass_through_another_net",
+        "test_r10_check.Synthetic.test_s1_part_bypasses_r134",
+        "test_r10_check.Synthetic.test_s1_removed_terminal_and_separate_bus",
+        "test_r10_check.Synthetic.test_s1_s2_chain_through_3v3_and_big_part",
+        "test_r10_check.Synthetic.test_s1_s2_multinet_part_bridge",
+        "test_r10_check.Synthetic.test_s1_s2_unnamed_supply_ties",
+        "test_r10_check.Synthetic.test_s1_test_pad_on_armed_copper",
+        "test_r10_check.Synthetic.test_s1_track_bypasses_r134",
+        "test_r10_check.Synthetic.test_s1_track_chain_and_via_bridge",
+        "test_r10_check.Synthetic.test_s2_armed_bus_fed_from_battery",
+        "test_r10_check.Synthetic.test_s2_copper_short_to_supply",
+        "test_r10_check.Synthetic.test_s2_load_switch_topology",
+        "test_r10_check.Synthetic.test_s2_raw_act_fed_from_raw_protected",
+        "test_r10_check.Synthetic.test_s3_gate_networks",
+        "test_r10_check.Synthetic.test_s3_independent_mcu_enable_and_reset_pull",
+        "test_r10_check.Synthetic.test_s3_mcu_side_gate_node_only_u1_series_and_gnd_resistors",
+        "test_r10_check.Synthetic.test_s3_round5_values_and_mcu_pull",
+        "test_r10_check.Synthetic.test_s3_series_resistor_far_net_and_values",
+        "test_r10_check.Synthetic.test_s4_board_flags_and_omission",
+        "test_r10_check.Synthetic.test_s5_switch_contact_cannot_be_bypassed",
+        "test_r10_check.Synthetic.test_s5_switch_topology_and_resistor_values",
+        "test_r10_check.Synthetic.test_s6_port_net_beside_pyro_bus",
+        "test_r10_check.Synthetic.test_s6_shared_copper_and_shared_part",
+        "test_r10_check.Synthetic.test_s7_common_signal_reference",
+        "test_r10_check.Synthetic.test_s7_five_signal_reference_contacts",
+        "test_r10_check.Synthetic.test_spi3_sd_nets_keep_critical_returns_and_qspi",
+        "test_r10_check.TerminalLegends.test_correct_individual_labels_support_every_representation",
+        "test_r10_check.TerminalLegends.test_wrong_duplicate_missing_or_ambiguous_pin_labels_fail"
+      ],
+      "exit_code": 0
+    },
+    "r10_contact_drc": {
+      "command": [
+        "KICAD_PY",
+        "-I",
+        "tools/test_r10_check.py",
+        "RealBoardSeeds.test_drc_debug_and_probe_clearance_survive_the_duplicate_walk_removal"
+      ],
+      "cli_environment": "KICAD_CLI selects the verified official 10.0.7 vendor CLI recorded by .supervisor/r11_vendor_dir.txt",
+      "tests": 1,
+      "passed": 1,
+      "exit_code": 0,
+      "real_cli_invocations": 3,
+      "cases": [
+        "unmodified exact-board baseline: DRC/unconnected/parity zero",
+        "J2 contact foreign-copper clearance fault at 0.30 mm, seeded UUID must match named rule",
+        "TP122 foreign-copper clearance fault at 0.60 mm, seeded UUID must match named rule"
+      ]
+    },
+    "numpy": {
+      "command": [
+        ".supervisor/venv/bin/python",
+        "-I",
+        "tools/test_r10_check.py",
+        "HotplugNumerics",
+        "Plate"
+      ],
+      "tests": 3,
+      "passed": 3,
+      "exit_code": 0,
+      "resolves_all_initial_native_skips": true
+    },
+    "r10_unique_tests_covered": 171,
+    "unresolved_skips": 0,
+    "focused_patch_comparison": {
+      "proposed_tests": 42,
+      "proposed_failures": 0,
+      "proposed_errors": 0,
+      "old_tests": 41,
+      "old_seeded_subtest_failures": 46,
+      "old_errors": 0,
+      "old_API_only_test_excluded": "The new require_qty keyword unit test is omitted from the old-code run; actual native BOM mutations prove the old miss without API errors."
+    }
+  },
+  "scope_limits": [
+    "No canonical CAD/model/fab saves, generator edit, pin/decision/status edit, Git mutation, commit or external write by this agent. Temporary native test fixtures were saved only in isolated test directories.",
+    "No canonical build or complete tools/check.sh invocation by this agent. Root started its integration build after the tested source files were frozen.",
+    "This receipt covers the tested 0ad0135c board; it does not certify the later integration output, fabrication regeneration or byte reproducibility.",
+    "No firmware, bench, electrical/thermal, e-match, vibration, harness or physical fit qualification.",
+    "Native filler does not produce filled footprint-owned copper zones in the probe; meaningful connected regression coverage uses a board zone and board/footprint drawings. Existing complete-node traversal still inspects any stored actual footprint-zone fill."
+  ],
+  "coordination": {
+    "base_hashes_verified_before_apply": true,
+    "source_files_frozen": true,
+    "exclusive_cli_reservation_released": true,
+    "no_further_source_edits_without_coordination": true
+  },
+  "markdown_sha256": "747c8b2dc0c8a56d61b9975b5ff67d80824c9b6e7d21ac982ab05065983486d6",
+  "logs": {
+    "full_fit.log": {
+      "path": ".supervisor/r12_gate_fix_draft/full_fit.log",
+      "sha256": "2a86a6c0477f9fa75f654b0d6dfbd75148e8a56e33f31b955fafcb3d39422ec5",
+      "bytes": 227,
+      "test_result_lines": [
+        "Ran 29 tests in 0.032s",
+        "OK"
+      ],
+      "runtime_warning_lines": []
+    },
+    "native_noncli.log": {
+      "path": ".supervisor/r12_gate_fix_draft/native_noncli.log",
+      "sha256": "0d58c0a033ee74e849b03ec6ab2df3631f2bf19a343a0cf264e5ed0d2436862c",
+      "bytes": 285966,
+      "test_result_lines": [
+        "Ran 170 tests in 186.282s",
+        "OK (skipped=3)"
+      ],
+      "runtime_warning_lines": []
+    },
+    "native_cli_test.log": {
+      "path": ".supervisor/r12_gate_fix_draft/native_cli_test.log",
+      "sha256": "9da300c78b6f32279ab85818bf02e9ef62d59426bb136e6af092812cf49c1380",
+      "bytes": 1913,
+      "test_result_lines": [
+        "Ran 1 test in 7.282s",
+        "OK"
+      ],
+      "runtime_warning_lines": []
+    },
+    "numpy_cases.log": {
+      "path": ".supervisor/r12_gate_fix_draft/numpy_cases.log",
+      "sha256": "bbbbaea792444ba6e66d4efc3fbfb2afbbf573f1e05698a951f32342dd6384f3",
+      "bytes": 661,
+      "test_result_lines": [
+        "Ran 3 tests in 0.810s",
+        "OK"
+      ],
+      "runtime_warning_lines": [
+        "..tools/plate_model.py:56: RuntimeWarning: divide by zero encountered in matmul",
+        "tools/plate_model.py:56: RuntimeWarning: invalid value encountered in matmul",
+        "tools/plate_model.py:56: RuntimeWarning: overflow encountered in matmul"
+      ]
+    }
+  }
+}

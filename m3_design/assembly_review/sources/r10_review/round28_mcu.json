@@ -1,0 +1,93 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round28_mcu",
+ "reviewer": "claude",
+ "target_commit": "19dd0b52482c6cb2648de206715ab02a9a4b5394",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2
+ },
+ "findings": [
+  {
+   "id": "R28-MCU-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The first-article U3.3-to-R127.1 meter check says 'it must read open', but an intact board reads a diode drop plus 0.91 kOhm in one polarity",
+   "contradicts": "The procedure's own source, round23_safety_severity_check.md 'Recommended fix' item 1 (lines 212-213): 'Require no beep and > 100 Ohm. The expected readings ... a diode-plus-1 kOhm path or open if intact'. Also the copper (R127 to GND on PE4's net) and ST DS12110 Rev 8 Table 120 p. 213 (FT_xxx pins: injected current -5/+0 mA; note 4: a negative injection is induced by VIN < VSS, so the pin conducts from VSS when pulled below it).",
+   "evidence": "Same sentence ('meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network): it must read open') at docs/ORDERING.md:651 (section 8 first-article list), docs/M3_R10.md:1088-1089 (Firmware rule 3), docs/FMEA_REDUNDANCY.md:38 (I-2 row) and the binding note's rule 3 (generated from m3_design/r10_sch_check.py:366 into r10_binding_note.json). Board a0ec075e (pcbnew): PYRO1_GATE_N = {U1.3, R126.1, R127.1}; R127 1k R127.1 -> GND; R126 220R to PYRO1_GATE, R128 10k to GND; QSPI_IO2 = {U1.1, U3.3} only. DC resistance R127.1 -> GND = 1k || (220 + 10k) = 910.9 Ohm. From GND to QSPI_IO2 the VSS-side input clamps of U1.1 (PE2, FT_h, Table 9 p. 64) and U3.3 conduct forward when R127.1 is the positive probe. Diode test (about 1 mA): about 0.6 V + 0.91 V = about 1.5 V displayed, not OL; ohms mode on any meter whose test voltage exceeds a junction drop: a finite kOhm reading. Reverse polarity: open. So an intact board fails 'must read open' in one polarity on common meters, while a sub-0.45 V ohms meter shows open both ways: the result depends on instrument and polarity. Not raised in round 24-27 triage observations.",
+   "impact": "A required first-article check can reject good boards (or invite the technician to pick the polarity that passes). No safety impact: the failure direction is a false reject.",
+   "concrete_fix": "In all four places replace 'it must read open' with the source's criterion, e.g. 'no continuity beep and > 100 Ohm in both polarities (intact: open one way, about a diode drop plus 0.91 kOhm the other; bridged: near 0 Ohm)'; regenerate the binding note from r10_sch_check.py."
+  },
+  {
+   "id": "R28-MCU-02",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "parts_qualification.md still calls PB1 a TT_a pin; DS12110 gives TT_u, and R10_VALIDATION says the docs already say TT_u",
+   "contradicts": "ST DS12110 Rev 8 Table 9 p. 70 (LQFP100 pin 35, PB1: I/O, TT_u, ADC12_INP5); pin_table.tsv row 35 and the binding note obligation (R5-MCU-04) both say TT_u; R23-MCU-04 / D-R23 (R10_DECISIONS.md:3767) corrected the same phrase in the binding note only. docs/R10_VALIDATION.md:1915 states 'CAD lane (binding note); docs already say TT_u'.",
+   "evidence": "m3_design/assembly_review/sources/r10_design/parts_qualification.md:913-914 (committed 19dd0b5): 'An open R105 puts CAM_5V (5.456 V nominal) on PB1 through R104 10 kOhm; PB1 is a TT_a pin with a 4.0 V limit (reviewer)'. Datasheet text extracted from the cached DS12110 Rev 8 PDF (.supervisor/r14_parts_pdf/st_h743.pdf), page 70: '35 ... PB1 I/O TT_u ... ADC12_INP5, COMP1_INM'. Board: CAM_5V_SENSE = {U1.35, R104.2, R105.1, C94.1}. The 4.0 V limit is unchanged (Table 119 p. 212 gives 4.0 V for all TT_xx pins), so only the pin-type statement is false.",
+   "impact": "A false datasheet fact in the parts record, and a false 'docs already say TT_u' line in the validation record.",
+   "concrete_fix": "parts_qualification.md:914: 'TT_a pin' -> 'TT_u pin (DS12110 Rev 8 Table 9 p. 70)'; R10_VALIDATION.md:1915: note that parts_qualification was corrected in the round 28 fix pass (or drop 'docs already say TT_u')."
+  }
+ ],
+ "observations": [
+  "U1: all 100 pads on a0ec075e, the fresh kicad-cli schematic netlist and the binding note u1_pins equal pin_table.tsv r10_net / mode_af (0 mismatches); netlist pin functions equal the pin_table port names (0 mismatches).",
+  "pin_table port-to-pin-number column matches DS12110 Rev 8 Table 9 LQFP100 for all 100 pins; every cited Table 9 page and AF-table page (Tables 10-14, pp. 89-96) contains the cited row.",
+  "AF numbers checked against Tables 10-14: TIM5 AF2 (PA0-3), QUADSPI AF9 (PB2, PD11-13, PE2) and AF10 (PB6 NCS), SPI1 AF5, SPI3 AF6, I2C1 AF4, USART3 AF7 (PD8/9), UART5 AF14 (PB12/13), USART6 AF7 (PC6/7), UART7 AF7 (PE7/8), OTG_FS AF10; PC1 AF0 TRACED0, PE4 AF0 TRACED1, PE2 AF0 TRACECLK; PC1 additional function RTC_TAMP3/WKUP5.",
+  "Pin types as cited: PA4 TT_a, PA5 TT_ha, PA6 FT_a ADC12_INP3, PC0 FT_a ADC123_INP10, PC5 TT_a ADC12_INP8, PB1 TT_u ADC12_INP5, PB12/13 FT_u, PD8/9 and PC6/7 FT_h, PE4 FT_h. PE7/PE8 are TT_ha (no doc claims otherwise).",
+  "U1 footprint numbering is counter-clockwise (a rotation of the standard LQFP100 order, not a mirror); pin 1 is adjacent to pin 100.",
+  "Binding-note hashes: board a0ec075e, netlist 535a8fdf (schematic.net.xml), pin table b94133e6, circuit 3220e5f9 all match the files; native K-binding regeneration (tools/check_r10.k_binding) returns no issues; note SHA e8f10fb3 as D-R27-02 records.",
+  "Every DS12110 citation in the binding note checked against the Rev 8 PDF text: Table 146 p. 238 (LSI 29.4-33.6 kHz), Tables 11/12/13 pp. 91/92/94, Table 119 pp. 212-213 and notes 3-4, Table 120 note 3 p. 213, Table 122 note 3 p. 215, Table 157 note 7 p. 247 (VIH 0.7 VDD, RPU 30-50 k), Table 159 p. 249, Table 160 note 2 p. 251, Tables 127-128 pp. 218-219, Table 192 p. 293, Figure 95 p. 286, Table 189 p. 291, Table 9 note 7 p. 88, Table 126 p. 217, Table 147 p. 239: all Rev 8 and as stated.",
+  "Copper facts in obligations confirmed: R127 1k, R126 220R, R128 10k, C126 220 nF (gate), C128 100 nF (drain); R122 1k / R123 2k / C123 10 nF on Q122; R162 1k / R163 10k on Q123; R60 100k / R61 10k / C60 10 nF (PA6 /11); R104 10k / R105 1k (PB1 /11); 2x5.1k over 2k||2k (PC0 / PC5 /11.2); R9 / R110 1k (PC8 VBUS/2); R460-R464 10k to 3V3; R10 / R11 10k; R12 / R13 4.7k; R5 BOOT0 10k; R431 100k, R102 10k, R432 10k; U5 PS high CSB low (0x77); U3.3 = QSPI_IO2, R127.1 = PYRO1_GATE_N; VBAT and VREF+ tied as stated.",
+  "Second barrels as stated: R91.1 3V3 (28.1,59.4)+(28.1,60.0); U1.28 LOGIC_SOURCE_ST (30.45,51.4)+(30.85,51.8); ACT_GATE (16.2,73.3)/(15.4,72.85) and (11.14,71.7)/(11.74,72.3); BOOT0 (13.8,45.6)/(14.2,46.0); VCAP2 (18.0,37.3)/(18.3,36.8); VCAP1 single (29.25,38.0) as disclosed.",
+  "Calculations re-run: IWDG 960 LSI cycles 28.571-32.653 ms, fault bound 34.853 ms; PE4 gate 0.104 V and PC1 gate 0.218 V against a 30 k pull-up at 3.6 V; PC1 high 2.2 V / 1.1 mA; PC8 2.20 V at VBUS 4.4 V vs VIH 2.31 V; PA6 loader drive <= 0.36 mA; PA3 <= 0.83 V; R162 <= 3.36 mA; PB1 fault 0.15-0.19 mA: all correct.",
+  "Clearances re-measured: 3V3/3V3A to PYRO1_GATE_N/PYRO1_GATE >= 1.059 mm (F.Cu, R128.1 to via (19.55,55.825)); BUZZ_DRV to PYRO1_OUT 0.794 mm (B.Cu, R162.1-R173.1, disclosed); ACT_EN_MCU to NRST via 0.425 mm; QSPI_IO2 track to U1.3 0.550 mm (disclosed).",
+  "TPS2121 ST meaning (low = IN2 = pin 2 RAW_PROTECTED; high = IN1 / Hi-Z), Table 9-3 on PDF p. 18 and Table 9-1 on p. 13 as cited; TXU0202 U12 pin use (A1 in from PE8, A2Y out to PE7) correct.",
+  "docs/M3_R10.md:423 'U1.15 / U1.17 pitch 0.200 mm' describes U1.16's 0.200 mm pad gaps to its neighbours (measured 0.2007 mm); the word 'pitch' is loose but the figure is right.",
+  "docs/FMEA_REDUNDANCY.md:359 'VBUS_SENSE (PD15)' is in the historical R1-baseline hardware change list (section 4), not an R10 statement."
+ ],
+ "fix_verification": [
+  {
+   "item": "D-R27-02 (binding note mcu_revision sentence)",
+   "measurement": "The note's only non-Rev 8 DS12110 citation is the R5-MCU-04 obligation's 'read from Rev 11 Table 109 in round 14' (6.0 V FT cap, 4.0 V ADC-mode maximum), exactly the exception the sentence names; all other DS12110 table/page citations in the note resolve to Rev 8 (April 2021, verified on p. 1) pages; section 7 header reads 'Electrical characteristics (rev V)'. Generator text at r10_sch_check.py:289; test_r23_binding_note_rules_and_pin_table passes; K-binding regeneration matches; note SHA e8f10fb3.",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R27-03 (port terminal symbol, as it touches the U1 UART pins)",
+   "measurement": "Fresh netlist: J410/J420/J440 pins 4V8_1 / GND_2 / TXO_3 / RXI_4 on PORT_4V8 / GND / *_TX_WIRE / *_RX_WIRE; TX_WIRE reaches PD8 / PB13 / PC6 (TX) through R441 / R451 / R471, RX_WIRE reaches PD9 / PB12 / PC7 through R440 / R450 / R470; J9 keeps the camera names.",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R26-04 (3V3 / 3V3A to PE4's gate nets)",
+   "measurement": "Minimum 1.059 mm on F.Cu (R128.1 to the 3V3 via (19.55,55.825)); B.Cu 1.146 mm (C10.1 to PYRO1_GATE via (14.4,53.3)); In2 2.751 mm.",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "sha256 of the board before and after review",
+  "pcbnew: U1 pad nets vs pin_table r10_net (100 pins); U1 pad geometry / numbering order",
+  "kicad-cli 10.0.7 sch export netlist (probe dir) and U1 node nets and pin functions vs pin_table",
+  "binding note u1_pins vs pin_table (port, net, mode)",
+  "pdftotext of the cached DS12110 Rev 8; scripted Table 9 LQFP100 pin-number match; scripted page check of every Table 9 / Tables 10-14 citation in pin_table; AF-row extraction for all used pins",
+  "manual reading of DS12110 Rev 8 Tables 119, 120, 122, 123, 126-128, 146, 147, 157, 159, 160, 189, 192, Figure 95, Table 9 notes",
+  "pcbnew dumps of every part on U1's signal nets; second-via coordinates; clearance measurement by binary search on SHAPE Collide (3V3/3V3A vs PE4 gate nets, BUZZ_DRV vs PYRO1_OUT, ACT_EN_MCU vs NRST/PYRO1_CONT, QSPI_IO2 vs PE4 gate nets)",
+  "tools/test_r10_check SchematicContract.test_r23_binding_note_rules_and_pin_table (passes)",
+  "tools/check_r10.k_binding native regeneration (no issues)",
+  "TPS2121 and TXU0202 pin tables from cached TI PDFs",
+  "grep of docs for pin-to-net statements against pin_table"
+ ],
+ "sources": [
+  "ST DS12110 Rev 8 (April 2021), https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (cached .supervisor/r14_parts_pdf/st_h743.pdf)",
+  "TI SLVSEA3F TPS2121, https://www.ti.com/lit/ds/symlink/tps2121.pdf (cached)",
+  "TI SCES942A TXU0202, https://www.ti.com/lit/ds/symlink/txu0202.pdf (cached)",
+  "m3_design/assembly_review/sources/r10_review/round23_safety_severity_check.md (lines 205-216)"
+ ],
+ "coverage_limits": [
+  "AN2606 (Rev 64 / Rev 70) and RM0433 were not available locally; loader pin roles, BOOT_ADD0 behaviour, JTDI pull-up and trace override were not re-read (the records label them Inference where relevant).",
+  "DS12110 Rev 11 was not read; the two Rev 11 limits stay as the records label them.",
+  "No gate seeds were run: U1's pin map is enforced by check_r10 contract() against pin_table and by K-binding, both read and exercised read-only.",
+  "IMU axis/frame, power-budget, chatter and hold-up figures were left to their lenses except where an MCU obligation quotes them."
+ ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round27_requirements",
+  "reviewer": "claude",
+  "target_commit": "816038c46b95c78b7286b10fe555f3bbe38a3fa5",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 1},
+  "findings": [
+    {
+      "id": "R27-REQUIREMENTS-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "Schematic pin names on J410 / J420 / J440 say pin 3 is the board's receive input from a camera; F10 says pin 3 is the board's TXO",
+      "contradicts": "docs/REQUIREMENTS.md F10: 'Board pin order on all three is 1:4V8, 2:GND, 3:TXO, 4:RXI, where TXO and RXI are the board's directions: the module's RX goes on pin 3 and its TX on pin 4.' The same schematic sheet's own note (telemetry.kicad_sch, PDF page 15): 'DB125 4pos pins 1 PORT_4V8, 2 GND, 3 board TX, 4 board RX; harness crosses TX to endpoint RX.' AGENTS.md section 3: the KiCad project is the single source of truth.",
+      "evidence": "m3_design/assembly_review/telemetry.kicad_sch lib_symbols 'M3:CameraTerminal' (lines 115-179) has visible pin names (pin_names not hidden): pin 1 '5V OUT', pin 3 'RX FROM CAMERA TX', pin 4 'TX TO CAMERA RX'. J410 (line 586), J420 (line 1078) and J440 (line 2466) all instantiate M3:CameraTerminal. kicad-cli 10.0.7 'sch export pdf' of m3.kicad_sch, page 15 (pdftotext -bbox): 'RX_FROM_CAMERA_TX' printed at x 182.9 pt, y 252.5 pt beside GPS_TX_WIRE at y 252.7 pt; the same text beside RADIO_TX_WIRE and AUX_TX_WIRE; '5V_OUT' on pin 1 of each. Exported netlist: J410.3 pinfunction 'RX_FROM_CAMERA_TX_3' on net GPS_TX_WIRE, which is R441.2, whose R441.1 is GPS_TX_MCU = U1 PD8 (USART3_TX): pin 3 is the board's transmit output, not a receive input. Likewise J420.3 RADIO_TX_WIRE <- R451 <- PB13 (UART5_TX), J440.3 AUX_TX_WIRE <- R471 <- PC6 (USART6_TX); pin 4 of each is the board's RX (R440 / R450 / R470 to PD9 / PB12 / PC7). Pin 1 is PORT_4V8 (TPS7A91 output, nominal 4.792 V), not 5 V. Copper, PCB pads and silkscreen agree with F10 (B.SilkS '3:TXO' at (41.7,13.25), (41.7,29.25), (10.5,17.5); '4:RXI' F/B at (36.9,7.05), (44.85,25.45), (4.2,21.5); '1:4V8' at each port); the PCB file carries no CameraTerminal pin-function strings. The symbol is correct for J9 (pin 3 CAM_RX_WIRE, board RX).",
+      "impact": "The design source states the opposite UART direction for pins 3 / 4 of the three port terminals (and 5 V on a 4.8 V pin). Anyone wiring or reviewing the GPS / radio / AUX harness from the schematic would cross the module TX onto pin 3 contrary to F10. The board copper and the printed legends are correct, so no board change is needed; the error is in the schematic text only.",
+      "concrete_fix": "In m3_design/r10_sch.py give J410 / J420 / J440 their own embedded symbol (for example 'M3:PortTerminal') with pin names '4V8', 'GND', 'TXO (board TX)', 'RXI (board RX)', keeping CameraTerminal for J9 only; regenerate the schematic, re-run ERC / parity (the pinfunction strings change, not the nets), and add a sch_check assertion that each port terminal's pin 3 name contains 'TX' and pin 1 name contains '4V8'."
+    }
+  ],
+  "observations": [
+    "F6 chatter figures reproduced with the worst-corner model (R80 / R165 +1 %, R81 -1 %, C87 0.72 x 220 nF, EN sink 0.1 uA + D402 50 nA, VUVLO(F) 1.116 V): single drop-out 6.30 / 8.04 (8.07 at 5.713 V) / 8.20 / 10.03 / 10.35 / 20.11 / 26.02 ms at 5.5 / 5.71 / 5.73 / 5.96 / 6.0 / 7.4 / 8.4 V; pack for a 10 ms single drop-out 5.956 V; late-block limit 7.50 ms at 5.713 V (7.48 at 5.710), 7.63 at 5.73, 9.59 at 6.0, 5.87 at 5.5; EN at the 7 ms line 1.1295 V at 5.713 V, 1.1330 V at 5.73 V; 7 ms holds down to 5.65 V (EN 1.1167 V). Matches F6.",
+    "F4 / F6: 8 ms open every 50 ms gives EN 1.0878 V at 5.96 V and 1.0953 V at 6.0 V (F4 1.088, F6 1.095). The 3 x 4 ms / 0.2 ms train's 1.028 / 1.025 V are single-burst figures; repeated every 100 ms it reaches 1.006 / 1.002 V, so 'takes it to' remains true (lower still). Trip fractions at 5.713 V: 14.8 % at 4 ms, 4.5 % at 8 ms (F6 quotes these; at exactly 5.710 V they are 14.7 / 4.1 %). Not errors.",
+    "F4 and F6 agree on the 5.71 V four-stall point; parts_budget fire_current_GAP1 four-stall loaded_pack_V 5.7132 = 7.4 - (9.967 + 1.279) A x 0.15 ohm. Pack row 4.802 / 4.835 V turn-off and F6 PA6 lower edge 4.84 V consistent.",
+    "F4's option (b), a pack whose four-stall BAT_IN stays >= 5.71 V, is only meaningful together with F6's bench run at that voltage, which F6 requires anyway; not a contradiction.",
+    "M2 plated-pin layer change: independent audit of every PTH pad on a0ec075e: pads joining a net's tracks on two copper layers are J440.3 AUX_TX_WIRE and J440.4 AUX_RX_WIRE (GND via 1.500 mm, at (7.4,16.5) and (7.4,20.0)), J400.2 BAT_SW_RETURN (AUD-2 slow net, exempt and disclosed) and J1.1 BAT_IN (power). No other critical signal net changes layer through a plated pin.",
+    "P3 quotes boost loads '28-37 g' while the derived envelope gives max specific force 25.5-34.6 g (flight 1) and 27.7-36.6 g (flight 2); 28-37 g is flight 2's range rounded, and P3's argument (boost loads do not cover ejection pulls) holds either way.",
+    "Board position row: -44.6 + 80 = 35.4 mm (battery bay top) and 35.4 + 44...48 = 79.4...83.4 mm reproduce VEHICLE.md; 79 - 47 = 32 mm margin; shroud +4...+47 mm matches VEHICLE.md.",
+    "F1 / F3 / F5 / P3 / Pack / Storage / M3 figures reproduce: ISA apogee temperatures -7.8 / -27.2 and -16.2 / -42.2 C; 8.8 km MSL = 7.6 km AGL + 1.2 km; log 1.86-3.52 MB; landing 98-163 g; radio + GPS 1.66 W / 0.224 A at 7.4 V; R167 10 k -> 0.84 mA, 1 Ah in 7.1 weeks; R3 cap $84.41, $85.26 - $84.41 = $0.85.",
+    "F6 nominal turn-on 88 / 56 / 45 ms reproduces with a 1.20 V rising threshold and tau 50.0 ms; nominal single drop-out 19 / 33 / 41 ms reproduces with tau 66 ms and about 1.09 V falling.",
+    "Board-to-requirement map confirmed: outline 46 x 90 mm, 1.6 mm, 4 layers; five 3.2 mm holes at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); J1 / J400 / J121 / J440 at x 7.4 and J9 / J410 / J420 / J122 at x 38.6 at the AGENTS positions; J122 pins 1-4 SERVO1-4_OUT, pin 5 GND; J121.1 PYRO1_OUT (E1-), J121.2 PYRO1_IGN (E1+); BAT_SW_RETURN = {J400.2, R165.1, D402.1}, D402 at B(4.45,65.9), tap 2.59 + 0.509 + 1.015 = 4.114 mm, GND via 0.700 mm; switch network R80 / R165 470 k, R81 300 k, C87 220 nF C21120; Q122 network R122 1 k, R123 2 k, C123 10 nF; Q124 R126 220 R, R128 10 k, C126 220 nF; F8 dividers 5.1 k + 5.1 k over 2 k || 2 k with 10 nF on PC0 / PC5; port UART map PD8/PD9, PB13/PB12, PC6/PC7, PE8/PE7 as F10; C84 absent from the JLC BOM / CPL and on the owner BOM.",
+    "F7 widths: ACT_FET_S carries exactly seven 0.4 mm segments (the source-pin bridges) and 0.3 mm branches to R119 / R120 / C120 (gate bias); PYRO1_OUT 0.2 mm and RAW_ACT 0.2 / 0.4 mm segments go only to R173 / R131 / C128 and R132 / TP120 (sense / test branches). Consistent with 'sense/control branches are not fire paths'.",
+    "Silkscreen: no visible text below 1.0 mm or stroke below 0.15 mm.",
+    "P2 wire room: the DB125 F.Fab outline puts the wire face 3.55 mm from the pin centre (5.453 mm room by the stated method), versus the recorded 5.003 mm (face 4.0 mm from the pin); the recorded figure is the smaller and was measured from the terminal model in earlier rounds; the Fab outline is not the authoritative body, so no error is claimed."
+  ],
+  "fix_verification": [
+    {"change": "D-R26-01", "measurement": "PTH audit: J440.3 (7.4,18.0) and J440.4 (7.4,21.5) join F.Cu and B.Cu tracks; GND vias at (7.4,16.5) and (7.4,20.0), exactly 1.500 mm. Pads 3 / 4 of J9 / J410 / J420 / J440 have remove_unused_layers and keep_end_layers. route_check --profile r10 on a copy: 0 failing. Seed: GND via (7.4,16.5) moved to (7.4,16.3) -> FAIL critical_via_no_gnd AUX_TX_WIRE pad (7.4,18.0) gnd_mm 1.7.", "verdict": "confirmed"},
+    {"change": "D-R26-02", "measurement": "Copper-shape bisection on every layer: PYRO1_OUT to 3V3 / 3V3A minimum 1.040 mm (B.Cu, R164.2); PYRO1_OUT via barrel to the In2 3V3 pour 2.699 mm, J121.1 barrel 1.061 mm.", "verdict": "confirmed"},
+    {"change": "D-R26-03", "measurement": "Independent worst-corner EN model reproduces 5.71 V (5.713 V) four-stall point, 8.07 ms single drop-out, 7.50 ms late-block limit, 1.1295 V at 7 ms, 5.65 V hold-down, 1.088 / 1.095 V trains, and the 19.6 / 14.8 / 4.5 % fractions (at 5.713 V).", "verdict": "confirmed"},
+    {"change": "D-R26-04", "measurement": "PYRO1_GATE / PYRO1_GATE_N to 3V3 / 3V3A minimum 1.059 mm (F.Cu, R128.1); PYRO1_GATE via barrel to the In2 3V3 pour 2.751 mm.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of m3.kicad_pcb before and after (a0ec075e... both times)",
+    "kicad-cli 10.0.7 sch export netlist (kicadxml) and sch export pdf into the probe dir; pdftotext -bbox page 15",
+    "KiCad Python read-only scripts: PTH layer-change audit, board map (outline, holes, connector poses, fire-path widths, silkscreen sizes and legends), D402 tap, pad-stack rings, PYRO1 / gate vs 3V3 copper clearance including the In2 pour",
+    "route_check.py --profile r10 on a copy of the board (0 failing) and on a seeded copy (1 failing as expected)",
+    "NumPy-free Python worst-corner EN / chatter model (.supervisor/r27_requirements/en_model.py, hold.py)",
+    "Arithmetic re-derivations of the VEHICLE.md-based board-position row, flight-envelope temperatures, log size, landing g, port power and cost figures"
+  ],
+  "sources": [
+    "docs/REQUIREMENTS.md, AGENTS.md (commit 816038c)",
+    "../../docs/VEHICLE.md",
+    "m3_design/assembly_review/telemetry.kicad_sch, m3.kicad_pcb, kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R25-01, D-R26-03), parts_budget.json",
+    "tools/route_check.py, tools/critical_reference.py",
+    "TI TPS25947 SLVSFC9C p9 (EN thresholds, as recorded)"
+  ],
+  "coverage_limits": [
+    "Datasheets not re-read; EN thresholds and leakages taken from the records' cited values.",
+    "Hinge-moment (F4 73-84 %) and derived flight-envelope figures not re-simulated; only their arithmetic consequences checked.",
+    "P2 wire room not re-measured against the DB125 3D model.",
+    "Full tools/check.sh not run (read-only rule); route_check run on copies only."
+  ]
+}

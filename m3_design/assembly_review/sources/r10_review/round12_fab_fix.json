@@ -1,0 +1,586 @@
+{
+  "schema": 1,
+  "finding": "R12-MFG-01",
+  "status": "source fix and focused proof ready; full integration pending",
+  "ownership": [
+    "m3_design/r10_post.py",
+    "m3_design/assembly_review/sources/r10_review/round12_fab_fix.md",
+    "m3_design/assembly_review/sources/r10_review/round12_fab_fix.json"
+  ],
+  "source": {
+    "file": "m3_design/r10_post.py",
+    "sha256_before": "c084a24768c59949790d65768e654f2737aee58a74ff141a1aa9b4fc569bdbb0",
+    "sha256_after": "94a467a2e823ca7e5160aceb7baf7d1f474b056ed54a608ee713690c6bf5eaeb",
+    "helper": "fab_reference_details",
+    "helper_line": 543,
+    "call_line": 680,
+    "call_order": [
+      "silk.fab_refs",
+      "existing J122 Fab placement",
+      "fab_reference_details",
+      "r9_post.fab_clear"
+    ]
+  },
+  "exact_changed_properties": {
+    "references": [
+      "R10",
+      "C29",
+      "C92",
+      "R8",
+      "C5"
+    ],
+    "layer": "B.Fab",
+    "text": "${REFERENCE}",
+    "text_size_mm_before": [
+      1.0,
+      1.0
+    ],
+    "text_size_mm_after": [
+      0.4,
+      0.4
+    ],
+    "stroke_mm_before": 0.15,
+    "stroke_mm_after": 0.06,
+    "position_offsets_from_footprint_native_mm": {
+      "R10": [
+        0.0,
+        0.1
+      ],
+      "C29": [
+        -0.05,
+        0.0
+      ],
+      "C92": [
+        0.0,
+        0.0
+      ],
+      "R8": [
+        0.0,
+        0.0
+      ],
+      "C5": [
+        0.0,
+        0.0
+      ]
+    },
+    "before": {
+      "R10": {
+        "position_mm": [
+          20.0,
+          44.69
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C29": {
+        "position_mm": [
+          28.0,
+          43.52
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 90.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C92": {
+        "position_mm": [
+          32.35,
+          52.5
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "R8": {
+        "position_mm": [
+          9.0,
+          32.5
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 270.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C5": {
+        "position_mm": [
+          22.2,
+          71.43
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      }
+    },
+    "after": {
+      "R10": {
+        "position_mm": [
+          20.0,
+          44.79
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C29": {
+        "position_mm": [
+          27.95,
+          43.52
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C92": {
+        "position_mm": [
+          32.35,
+          52.5
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "R8": {
+        "position_mm": [
+          9.0,
+          32.5
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C5": {
+        "position_mm": [
+          22.2,
+          71.43
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      }
+    }
+  },
+  "preserved": [
+    "all silkscreen items/fields/positions/sizes/strokes",
+    "all copper, pads, net assignments and filled/outline zones",
+    "all footprint poses, model data and nonselected Fab content",
+    "all five selected text angles, mirroring, B.Fab layer and ${REFERENCE} content"
+  ],
+  "focused_proof": {
+    "source_file": "m3_design/r10_post.py",
+    "source_sha256": "94a467a2e823ca7e5160aceb7baf7d1f474b056ed54a608ee713690c6bf5eaeb",
+    "original_board_sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "canonical_board_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "candidate_sha256": "3c1b7c436bbfc761b121e8c9d297339c5e0a3f4edd8e5794e2a68702abc35ac4",
+    "retained_candidate_sha256": "3c1b7c436bbfc761b121e8c9d297339c5e0a3f4edd8e5794e2a68702abc35ac4",
+    "byte_identical_to_retained_candidate": true,
+    "only_five_Fab_text_diff_hunks": true,
+    "diff": [
+      "--- \n",
+      "+++ \n",
+      "@@ -31479,11 +31479,11 @@\n",
+      " \t\t)",
+      " \t\t(fp_text user \"${REFERENCE}\"",
+      "-\t\t\t(at 0 0 90)",
+      "+\t\t\t(at 0 0.05 90)",
+      " \t\t\t(layer \"B.Fab\")",
+      " \t\t\t(uuid \"118e26d1-dbcb-435e-a037-4eab98fea752\")",
+      " \t\t\t(effects",
+      " \t\t\t\t(font",
+      "-\t\t\t\t\t(size 1 1)",
+      "-\t\t\t\t\t(thickness 0.15)",
+      "+\t\t\t\t\t(size 0.4 0.4)",
+      "+\t\t\t\t\t(thickness 0.06)",
+      " \t\t\t\t)",
+      " \t\t\t\t(justify mirror)",
+      "@@ -37342,6 +37342,6 @@\n",
+      " \t\t\t(effects",
+      " \t\t\t\t(font",
+      "-\t\t\t\t\t(size 1 1)",
+      "-\t\t\t\t\t(thickness 0.15)",
+      "+\t\t\t\t\t(size 0.4 0.4)",
+      "+\t\t\t\t\t(thickness 0.06)",
+      " \t\t\t\t)",
+      " \t\t\t\t(justify mirror)",
+      "@@ -37923,11 +37923,11 @@\n",
+      " \t\t)",
+      " \t\t(fp_text user \"${REFERENCE}\"",
+      "-\t\t\t(at 0 0 180)",
+      "+\t\t\t(at 0 0.1 180)",
+      " \t\t\t(layer \"B.Fab\")",
+      " \t\t\t(uuid \"4ac1359a-2e2a-4cb1-8fbc-3bb6e8716127\")",
+      " \t\t\t(effects",
+      " \t\t\t\t(font",
+      "-\t\t\t\t\t(size 1 1)",
+      "-\t\t\t\t\t(thickness 0.15)",
+      "+\t\t\t\t\t(size 0.4 0.4)",
+      "+\t\t\t\t\t(thickness 0.06)",
+      " \t\t\t\t)",
+      " \t\t\t\t(justify mirror)",
+      "@@ -39273,6 +39273,6 @@\n",
+      " \t\t\t(effects",
+      " \t\t\t\t(font",
+      "-\t\t\t\t\t(size 1 1)",
+      "-\t\t\t\t\t(thickness 0.15)",
+      "+\t\t\t\t\t(size 0.4 0.4)",
+      "+\t\t\t\t\t(thickness 0.06)",
+      " \t\t\t\t)",
+      " \t\t\t\t(justify mirror)",
+      "@@ -46395,6 +46395,6 @@\n",
+      " \t\t\t(effects",
+      " \t\t\t\t(font",
+      "-\t\t\t\t\t(size 1 1)",
+      "-\t\t\t\t\t(thickness 0.15)",
+      "+\t\t\t\t\t(size 0.4 0.4)",
+      "+\t\t\t\t\t(thickness 0.06)",
+      " \t\t\t\t)",
+      " \t\t\t\t(justify mirror)"
+    ],
+    "idempotent_second_application": true,
+    "copper_zone_pad_pose_digest_before": "c198efe388d556984cdf3cfe80183eb271ddb7ccc6dac92f16a9d326ab2dc14c",
+    "copper_zone_pad_pose_digest_after": "c198efe388d556984cdf3cfe80183eb271ddb7ccc6dac92f16a9d326ab2dc14c",
+    "before": {
+      "R10": {
+        "position_mm": [
+          20.0,
+          44.69
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C29": {
+        "position_mm": [
+          28.0,
+          43.52
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 90.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C92": {
+        "position_mm": [
+          32.35,
+          52.5
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "R8": {
+        "position_mm": [
+          9.0,
+          32.5
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 270.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C5": {
+        "position_mm": [
+          22.2,
+          71.43
+        ],
+        "size_mm": [
+          1.0,
+          1.0
+        ],
+        "stroke_mm": 0.15,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      }
+    },
+    "after": {
+      "R10": {
+        "position_mm": [
+          20.0,
+          44.79
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C29": {
+        "position_mm": [
+          27.95,
+          43.52
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 90.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C92": {
+        "position_mm": [
+          32.35,
+          52.5
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "R8": {
+        "position_mm": [
+          9.0,
+          32.5
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 270.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      },
+      "C5": {
+        "position_mm": [
+          22.2,
+          71.43
+        ],
+        "size_mm": [
+          0.4,
+          0.4
+        ],
+        "stroke_mm": 0.06,
+        "angle_degrees": 180.0,
+        "mirrored": true,
+        "layer": "B.Fab",
+        "text": "${REFERENCE}"
+      }
+    },
+    "rendered_glyph_clearances": {
+      "R10": {
+        "own_Fab_graphics": {
+          "gap_mm": 0.041759,
+          "subject": "R10:Circle"
+        },
+        "all_Fab_graphics": {
+          "gap_mm": 0.041759,
+          "subject": "R10:Circle"
+        },
+        "other_Fab_references": {
+          "gap_mm": 1.644133,
+          "subject": "U4"
+        },
+        "drills_and_support_holes": null,
+        "clearance_search_reach_mm": 5.0
+      },
+      "C29": {
+        "own_Fab_graphics": {
+          "gap_mm": 0.02796,
+          "subject": "C29:Circle"
+        },
+        "all_Fab_graphics": {
+          "gap_mm": 0.02796,
+          "subject": "C29:Circle"
+        },
+        "other_Fab_references": {
+          "gap_mm": 1.854713,
+          "subject": "C26"
+        },
+        "drills_and_support_holes": null,
+        "clearance_search_reach_mm": 5.0
+      },
+      "C92": {
+        "own_Fab_graphics": {
+          "gap_mm": 0.245426,
+          "subject": "C92:Circle"
+        },
+        "all_Fab_graphics": {
+          "gap_mm": 0.245426,
+          "subject": "C92:Circle"
+        },
+        "other_Fab_references": {
+          "gap_mm": 1.439265,
+          "subject": "R103"
+        },
+        "drills_and_support_holes": null,
+        "clearance_search_reach_mm": 5.0
+      },
+      "R8": {
+        "own_Fab_graphics": {
+          "gap_mm": 0.095604,
+          "subject": "R8:Circle"
+        },
+        "all_Fab_graphics": {
+          "gap_mm": 0.095604,
+          "subject": "R8:Circle"
+        },
+        "other_Fab_references": {
+          "gap_mm": 2.911147,
+          "subject": "R7"
+        },
+        "drills_and_support_holes": {
+          "gap_mm": 2.663123,
+          "subject": "J3.1"
+        },
+        "clearance_search_reach_mm": 5.0
+      },
+      "C5": {
+        "own_Fab_graphics": {
+          "gap_mm": 0.095604,
+          "subject": "C5:Circle"
+        },
+        "all_Fab_graphics": {
+          "gap_mm": 0.095604,
+          "subject": "C5:Circle"
+        },
+        "other_Fab_references": {
+          "gap_mm": 1.786898,
+          "subject": "U2"
+        },
+        "drills_and_support_holes": null,
+        "clearance_search_reach_mm": 5.0
+      }
+    },
+    "fab_clear_moves": {},
+    "call_order_checked": [
+      "silk.fab_refs",
+      "fab_reference_details",
+      "r9_post.fab_clear"
+    ],
+    "retained_vector_PDF_sha256": "b3337298592c3dc26995b07c8885a2c9fdfb6452a4216538793e105c1c347027",
+    "new_PDF_export_needed_for_focused_proof": false,
+    "physical_or_firmware_qualification": false
+  },
+  "canonical_artifacts": {
+    "pcb_sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "pcb_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+    "pcb_bytes": 2263730,
+    "five_fab_outputs_unchanged": true,
+    "outputs_sha256": {
+      "m3_assembly_bottom.pdf": "68c208f6aecc8014c358661c9cece0bec4a8d90b38b009a42fd38fe96d38dddf",
+      "m3_assembly_top.pdf": "991025f8ca52800bf4d188302272b1482a0705dbc207586b6532d0b5d83e35c0",
+      "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+      "m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7",
+      "m3_gerber.zip": "63b923bbac33df175e35f337085fecbde9b66bb04b5561e527e1e244f7dc7720"
+    },
+    "canonical_board_saved_or_rebuilt": false,
+    "canonical_fab_regenerated": false
+  },
+  "vector_zoom_limit": "0.4 mm/0.06 mm applies only to the zoomable vector Fab assembly aid; detail zoom/high-resolution rendering may be needed. The minimum 1.0 mm/0.15 mm production silkscreen rules and properties are unchanged.",
+  "retained_visual_proof": {
+    "candidate_pcb_sha256": "3c1b7c436bbfc761b121e8c9d297339c5e0a3f4edd8e5794e2a68702abc35ac4",
+    "candidate_PDF_sha256": "b3337298592c3dc26995b07c8885a2c9fdfb6452a4216538793e105c1c347027",
+    "board_byte_identity_transfers_the_previously_inspected_candidate_PDF_proof": true,
+    "root_previously_inspected_complete_page_and_all_five_labels": true,
+    "temporary_candidate_board_and_PDF_retained_for_integration": true,
+    "new_GUI_launch_or_PDF_export": false
+  },
+  "validation_commands": [
+    "KiCad Python -I <temporary>/source_fix_probe.py: import actual edited module, run existing Fab-reference setup, narrow helper and fab_clear on an in-memory board; save only temporary copies; compare exact bytes with retained candidate",
+    "AST parse and Fab-stage call order assertions",
+    "native rendered glyph polygons at 0.0001 mm polygon error; gap search resolution 0.00001 mm against all B.Fab graphics, other B.Fab references and drilled/support holes",
+    "idempotent second application produces identical temporary board bytes",
+    "canonical PCB/five-output fab hash comparison"
+  ],
+  "limitations": [
+    "Root alone must integrate with all other workers and run complete builds/check.sh, refreshed provenance/fab and reproducibility checks.",
+    "No canonical build, complete gate, git action, physical assembly or firmware qualification was performed.",
+    "Null nearest-hole entries mean no drilled/support hole is within the 5 mm search reach, not an unmeasured collision."
+  ],
+  "temporary_probe_sha256": "ac89aa5f12a8a631a1af41ee948954949ac57541c4a84cc5abf01b0e433212a1"
+}

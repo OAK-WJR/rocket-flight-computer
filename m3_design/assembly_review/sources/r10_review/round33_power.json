@@ -1,0 +1,71 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round33_power",
+ "reviewer": "claude",
+ "target_commit": "feed21f",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "parts_budget.json reproduces exactly: r10_parts.power_budget() run read-only (KiCad 10 pcbnew) on a probe copy of a0ec075e matches every key of the committed JSON within 1e-9 relative (no key or value differences).",
+  "Four-stall pack sag reproduces: logic 0.6375 A, ports 5.456 V x 1.561 A / 0.8 = 10.646 W, R 0.15 ohm -> 5.880831 V from 7.4 V and 4.388491 V from 6 V; parts_qualification stall paragraph and STATUS agree.",
+  "Battery-break table reproduces (case c ports 9.856-10.822 W; R92 16.93 mW; 300.8 uF to 3.8 V 0.464-0.539 ms; case d 1.304-1.412 ms); OQ-5 VOFF 5.7265/6.0115/6.2965 V, VON 6.4845-6.9405 V, ride-through 3.84/6.00/1.57/2.46 ms match parts_qualification.",
+  "The r10_parts.py OQ-5 comment's 'VON 6.49-6.94 V' (computed 6.4845 V) was already raised in round 30 power and triaged as not counted; not re-reported.",
+  "C120 off tau: 50 k x 1.02 x 1.265 uF = 64.5 ms (129 ms with one resistor open); 1 s = 15.5 / 7.75 tau, as stated.",
+  "USB attach inventory: R85 66.5 k +/-2 % in SLVS841F eq. 1 gives 347.7-453.0 mA; 514.1 uF to 4.7 V = 2.416 mC, 5.33-6.95 ms; with C86 / C98 516.1 uF, 2.426 mC, 5.35-6.98 ms; all as stated.",
+  "USB-only draw (M3_R10 Power): 2.225 W through 0.3462 ohm gives 0.4596 A at 5.00 V (VLOGIC 4.84 V) and 0.4856 A at 4.75 V; 1.61 W guaranteed at the 0.3477 A minimum, 0.785 W left; 0.281-0.296 A for the lower allocation; all reproduce.",
+  "USB_LIMITED In2 0.4 mm length is 63.115 mm on a0ec075e against the labelled round 18 63.605 mm; already a round 27/28 observation (R10_VALIDATION:2259).",
+  "Q122 gate 0.218 V nominal vs 0.2203 V with 1 % parts: already a round 28 observation (R10_VALIDATION:2301).",
+  "GAP-3: (5.546270 - 4.711504) x 0.56 A + 5.546 x 4 mA = 0.4897 W; 109.2-123.9 C at 70 C; 112.3 C/W ceiling; TPS7A91 SBVS282A p4-5: VIN 1.4-6.5 V, IOUT <= 1 A, COUT >= 10 uF (five 22 uF on PORT_4V8), ILIM 1.5-1.9 A, IGND <= 4 mA, IFB +/-100 nA, VDO <= 200 mV vs 443 mV headroom, all consistent with the budget.",
+  "AP6320x DS41326: VFB 792-808 mV (AP63201), IPEAK 2.5-3.1 A, VEN_H 1.15-1.23 V, VEN_L 1.05-1.15 V, 1.5 uA EN pull-up, as cited by the budget.",
+  "GAP-1 fire branch 4.467803 ohm (R134 hot 2.02909 + 2 + 0.3 + copper 0.035477 + 0.015 + 2 x 0.04 + Q124 0.008236); four-stall 1.2787 A >= 1.125 A; GAP-5 bound 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms < 36 ms.",
+  "U11 (TPS2121) R86 80.6 k: SLVSEA3F eq. 2 gives 1.489 A typical (80 k row 1-2 A), above the 0.38-0.46 A logic allocation; pin map (IN1 7 USB_LIMITED, IN2 2 RAW_PROTECTED, OUT 1/8, PR1/OV2/CP2 GND, OV1 USB_OVLO) matches the datasheet table (highest-voltage mode).",
+  "IPC-2152 K-power floors re-derived with tools/ipc2152.py at 30 C: 2.9 A 0.680 mm, 1.9 A 0.326 mm, 1.81 A 0.299 mm, 1.249 A 0.157 mm, 2.0 A 0.356 mm, 1.294 A 0.167 mm; every named floor meets its width; the 0.3 mm U9 bar entries are named POWER_NARROW items already observed (rounds 24-26, 31).",
+  "Regulator taps: U400's R400.1 tap runs from C403.1 (28.6, 3.6) F.Cu 0.2 mm; U401's R402.1 sits on U401's B.Cu OUT run with no via between U401 and its divider (M3_R10 claim confirmed); U2 (fixed 3.3 V) senses at U2.1 into In2 3V3 vias (23.2, 68.6) / (23.0, 70.0); none contradicts a stated rule.",
+  "Hot-plug: hotplug_inputs.json binds a0ec075e; results use the TPS25947 limit max(-15, VOUT-21) = -15 V with the 5.9 V retained OUT and pass; SRIN(F) 10 V/us vs 8.99 V/us.",
+  "U400 input feed width and FB-component distance (DS41326 layout item 5, a recommendation the records do not claim to follow) are previously observed or non-rule items."
+ ],
+ "fix_verification": [
+  {
+   "item": "R32-TRI-01 (R166-to-C84 courtyard gap, ORDERING 8.2 / R10_VALIDATION)",
+   "measurement": "KiCad courtyard polygons on a0ec075e: C84 y <= 83.745, R166 y >= 84.405 (polygon gap 0.66 mm; 0.65 mm centreline with 0.05 mm lines); ORDERING:435 now reads 0.65 mm / 0.60 mm",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R32-TRI-02 (C84 heat-limit summary)",
+   "measurement": "R10_VALIDATION now says 'no preheat and no temperature limit; R32-TRI-02', matching ORDERING 8.2",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R32-TRI-03 (fitted 85 C parts list)",
+   "measurement": "M3_R10 reads 'among them ... C95, C96; the U4 alternates if fitted; R32-TRI-03' (1 hit); not a power-lens item, text check only",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after (unchanged)",
+  "r10_parts.power_budget() on a probe copy, deep compare with committed parts_budget.json",
+  "Hand recomputation of pack sag, ride-through, OQ-5, USB attach and USB-only draw, C120 tau, GAP-1/3/5",
+  "pcbnew read-only probes: regulator FB taps, PORT_5V3 / PORT_4V8 / 3V3 / VLOGIC / USB_LIMITED / RAW_PROTECTED / BAT_IN tracks by layer and width, U9 / U10 / U11 pin nets, courtyard polygons for C84 / R166",
+  "tools/ipc2152.py widths for every K-power design current",
+  "Datasheet reads (cached PDFs): TPS7A91 SBVS282A, AP6320x DS41326, TPS2121 SLVSEA3F, TPS25947 SLVSFC9C abs max",
+  "hotplug_inputs/results.json binding and limits"
+ ],
+ "sources": [
+  "https://www.ti.com/lit/ds/symlink/tps7a91.pdf (SBVS282A pp. 4-5)",
+  "Diodes AP63200/1/3/5 DS41326 (Electrical Characteristics, EN section, Layout)",
+  "https://www.ti.com/lit/ds/symlink/tps2121.pdf (SLVSEA3F pp. 4-8, eq. 2)",
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C section 6.1)",
+  "m3_design/r10_parts.py, parts_budget.json, parts_qualification.md, docs/M3_R10.md, tools/check_r10.py, tools/ipc2152.py"
+ ],
+ "coverage_limits": [
+  "No transient or hot-plug re-simulation; hotplug results checked for binding and limits only",
+  "No full DC/thermal copper solve; IPC widths are the tool's long-conductor fit",
+  "No full check.sh run (read-only rule); previous lens reports for this round not opened"
+ ]
+}

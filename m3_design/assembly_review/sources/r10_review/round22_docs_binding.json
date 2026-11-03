@@ -1,0 +1,128 @@
+{
+  "schema": "r10-review-v1",
+  "review": "round22_docs_binding",
+  "reviewer": "claude",
+  "target_commit": "ec8cb98",
+  "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 4},
+  "findings": [
+    {
+      "id": "R22-DOCS_BINDING-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Stale supplier figures survive the 23:23Z / 23:24Z refresh: fee totals $102.14 / $105.13, U4 stock-check stamp 10:13Z, DB125-4 stock 37,827",
+      "evidence": {
+        "file_1": "docs/R10_VALIDATION.md line 2370 (section 10): 'about $102.14; with the handling fee ... about $105.13'",
+        "contradicts_1": "same file owner row 14, docs/M3_R10.md lines 204-205 and docs/ORDERING.md lines 269-270: $102.16 / $105.15; fab/cost_check.json total_usd_per_board 85.37 + fixed 83.96/5 = 16.792 -> 102.16; + 14.93/5 = 2.986 -> 105.15. $102.14 / $105.13 are the $85.35 (50a39de5) figures.",
+        "file_2": "docs/ORDERING.md line 279 (U4 row): 'fails: 2 against 5 (`stock_check.json` 2026-10-31T10:13Z)'",
+        "contradicts_2": "fab/stock_check.json checked_utc 2026-10-31T23:23:18Z; the same row's opening and line 274 already cite 23:23Z",
+        "file_3": "docs/ORDERING.md line 283 and docs/R10_VALIDATION.md line 2373: C2757925 '37,827 in stock (2026-10-31)'",
+        "measured_3": "fab/stock_check.json C2757925 jlc_stock 37757, jlc_presale 36979, orderable 36979 (need 20); C535146 201 / 194 orderable (need 40). Not a shortage; an undated stale figure."
+      },
+      "impact": "The owner reads two different all-in per-board estimates for the same snapshot, and an order-day reader sees a superseded stock-check timestamp beside the current one. No cost or stock decision changes.",
+      "concrete_fix": "Text only. R10_VALIDATION section 10: '$102.14' -> '$102.16', '$105.13' -> '$105.15'. ORDERING U4 row: '(`stock_check.json` 2026-10-31T10:13Z)' -> '(`stock_check.json` 2026-10-31T23:23Z)'. ORDERING line 283 and R10_VALIDATION section 10: '37,827 and 201 in stock (2026-10-31)' -> '37,757 and 201 in stock, 36,979 and 194 orderable (2026-10-31T23:23Z)'."
+    },
+    {
+      "id": "R22-DOCS_BINDING-02",
+      "severity": "Minor",
+      "status": "new (residual of R21-BOM-02)",
+      "title": "parts_qualification.md U4 rows still say '9 in stock for 5 (thin: buy at once)' and 'consign the LSM6DSV320X only if the ISM stock is gone'",
+      "evidence": {
+        "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md lines 22-23 (Round 19 component amendments table)",
+        "text_fitted_row": "'Live JLC 2026-10-31: 9 in stock for 5 (thin: buy at once), $14.34 at 1-9.'",
+        "text_alternate_row": "'U4 (alternate) | ST LSM6DSV320XTR, LCSC C26633007 | Consign only if the ISM stock is gone: ...'",
+        "contradicts": "the same file's line 18 (U4 2 orderable against 5; consign franchised ISM6HG256XTR first, LSM6DSV320X only as a second fallback, R21-BOM-02); fab/stock_check.json short list 'C51931514 U4 orderable 2 (stockCount 9, canPresaleNumber 2) < 5'; ORDERING line 280 (LSM6DSV320XTR 0 at JLC, -18 orderable, 0 at LCSC, 13:40Z)",
+        "round21_fix_claim": "R10_VALIDATION Round 21 dispositions: 'R21-BOM-02 (carried) ... Records fixed: consign franchised ISM6HG256XTR first'"
+      },
+      "impact": "The maker-linked parts record still points an order-day reader at the LSM alternate as the consignment path and calls 9 parts adequate for 5 boards; the current order instruction is elsewhere. Documentation only.",
+      "concrete_fix": "Text only. Fitted row: replace '9 in stock for 5 (thin: buy at once)' with '9 in stock but 2 orderable for 5 (stock_check.json 2026-10-31T23:23Z): consign franchised ISM6HG256XTR if the JLC cart is short (R21-BOM-02)'. Alternate row: replace 'Consign only if the ISM stock is gone' with 'Second fallback only, after consigned franchised ISM6HG256XTR; also 0 at JLC (-18 orderable) and LCSC (2026-10-31T13:40Z)'."
+    },
+    {
+      "id": "R22-DOCS_BINDING-03",
+      "severity": "Minor",
+      "status": "new",
+      "title": "REQUIREMENTS lags two round 21 facts: the R10 acceptance criterion names only U4 for stock, and the no-fuse residual omits C88 (D-R21-03)",
+      "evidence": {
+        "file_1": "docs/REQUIREMENTS.md line 124 (R10 acceptance): '... with M1 stock met and U4 in JLC stock or consigned'",
+        "contradicts_1": "fab/stock_check.json short list now has U9 too ('C3662793 U9 orderable -69 (stockCount 40, canPresaleNumber -69) < 7'); REQUIREMENTS M1 line 78, AGENTS, STATUS, M3_R10, ORDERING 8.1 and owner row 14 all require U9 to be confirmed or consigned",
+        "file_2": "docs/REQUIREMENTS.md line 101 (Accepted risks, no battery-lead fuse): 'the lead, J1, BAT_IN copper, D8, C80 / C96 / C89 / C95'",
+        "contradicts_2": "battery_entry.kicad_sch note (D-R21-03, R21_SHEET_NOTES): 'the lead, J1, the BAT_IN copper, D8, C80 / C96, C88 (100 nF) and C89 / C95 ... Q120's drain is on BAT_IN, so the RAW_ACT fire path bypasses U9; R134 (2 Ohm) limits it'. The round 21 circuit check's Minor 2 added C88 / Q120 to the sheet note only. Board: C88 is BAT_IN to GND (D-OA-07, fed before U9)."
+      },
+      "impact": "The governing requirements file under-states the acceptance stock condition (U9) and the unlimited-short inventory (C88), while every other record carries both. Documentation only.",
+      "concrete_fix": "Text only. Line 124: 'U4 in JLC stock or consigned' -> 'every short part (now U4 and U9) in JLC stock or consigned'. Line 101: 'D8, C80 / C96 / C89 / C95' -> 'D8, C80 / C96, C88 and C89 / C95; Q120's drain is on BAT_IN, so the RAW_ACT path bypasses U9 and only R134 (2 Ohm) limits it (D-R21-03)'."
+    },
+    {
+      "id": "R22-DOCS_BINDING-04",
+      "severity": "Minor",
+      "status": "new",
+      "title": "'C87 / EN never exceeds the divider's 2.03 V' is stated as an absolute in seven records, beside 'EN stays <= 2.06 V' in the same files; it is a nominal, intact-R81 figure",
+      "evidence": {
+        "files": "STATUS.md line 18; AGENTS.md line 13; docs/M3_R10.md lines 42 and 259; docs/R10_VALIDATION.md line 1859 (owner row 29); docs/FMEA_REDUNDANCY.md line 36; parts_qualification.md line 24 (also R10_DECISIONS D-R21-05 'never charges above')",
+        "same_files_other_figure": "STATUS line 19, M3_R10 line 149, R10_VALIDATION line 1806, parts_qualification line 24: 'EN stays <= 2.06 V' (round 21 circuit check)",
+        "calculation": "8.4 V x 300k / (300k + 940k) = 2.032 V nominal; with 1 % resistors 8.4 x 303 / (303 + 930.6) = 2.063 V. Both hold only with R81 intact: an R81 open (body or joint) lets C87 and EN charge toward BAT_IN through R80 + R165 (940 kOhm) with J400 closed, as on every revision (Inference from the circuit; TI SLVSFC9C section 6.1 p7 EN/UVLO abs max 6.5 V).",
+        "ambiguity": "parts_qualification line 24: 'EN stays <= 2.06 V (8 % of rating)' directly after the 6.5 V EN rating; 2.06 / 6.5 = 32 %, 2.06 / 25 V (C87's rating) = 8 %",
+        "rule": "AGENTS section 2.5 (a calculation or inference must not be written as an unconditional fact)"
+      },
+      "impact": "Readers get two different bounds for the same node, and 'never' reads as a fault-independent guarantee. No design change follows; the D-R21-05 argument (no C87-to-EN dump after an open between them) is unaffected.",
+      "concrete_fix": "Text only. In each listed place: 'EN never exceeds the divider's 2.03 V' -> 'EN stays at the divider's 2.03 V nominal (<= 2.06 V with 1 % parts, at 8.4 V; Calculation) while R81 is intact'. parts_qualification: '(8 % of rating)' -> '(8 % of C87's 25 V rating)'."
+    }
+  ],
+  "fix_verification": [
+    {"id": "D-R21-01", "claim": "Every plated pad hole >= 0.55 mm from inner copper; J1.2 In2 / J400.2 In1 0.251 -> 0.550; AGENTS / ORDERING / M3_R10 / R10_VALIDATION row 9 record it", "measurement": "pcbnew: J1.2 In2 RAW_PROTECTED 0.5505, J400.2 In1 GND 0.5505, J400.1 In1/In2 GND 0.5505, J121.2 0.5505, J121.1 1.05; DB125 rings on J1.1/J400.1/J121.2/J440/J9/J410/J420/J122 0.2505 mm to foreign fill (ring copper, hole >= 0.55). Docs consistent; row 9's 'J400.2 1.050 / 1.050 mm' is the S-8 (non-GND, In2) figure, In1 GND is 0.550 (GND exempt).", "verdict": "confirmed"},
+    {"id": "D-R21-02", "claim": "U2.1 second path; 26 taps / 8 exceptions recorded in M3_R10, owner row 27, section 6", "measurement": "Records agree with round21_fix_cad.md/.json and R10_DECISIONS; 31 3V3 vias on the board (circuit check's '31 3V3 vias opened')", "verdict": "confirmed (records)"},
+    {"id": "D-R21-03", "claim": "Three schematic notes corrected", "measurement": "sensors.kicad_sch and battery_entry.kicad_sch notes read as recorded (ISM6HG256X fitted; C88 and Q120 path named). REQUIREMENTS line 101 not aligned (R22-DOCS_BINDING-03).", "verdict": "partly (schematic confirmed; REQUIREMENTS text lags)"},
+    {"id": "D-R21-04", "claim": "J400 chain critical and AUD-2 slow; AGENTS section 3 and owner row 30 updated", "measurement": "critical_reference.R10_SLOW_RETURN_NETS contains BAT_ENABLE / BAT_SW_SOURCE / BAT_SW_RETURN; route_check imports it; AGENTS section 3 names the chain and row 30. Row 30 distances reproduced: (21.3,68.9) 1.866, (19.675,66.6) 1.875 (1.423 on 0dc84776, git show accfff4), (17.1,82.8) 2.902, BAT_SW_SOURCE (10.8,69.2) 7.467 mm; BAT_SW_RETURN has no via.", "verdict": "confirmed"},
+    {"id": "D-R21-05", "claim": "R81 F(18.8482,80.0) / C87 F(18.7232,81.8768); one via (17.10,82.80); single opens U9.1 -> R81 13 -> 4; 3.890 mm", "measurement": "pcbnew poses match; graph single-point removal U9.1 -> R81.1: 4 items (1 via) on 5516eeec, 13 (3 vias) on 0dc84776; C87.1 3 items. CPL rows R81 / C87 match. EN-node adjacencies of owner row 24 still hold (U9.1-BAT_IN 0.200, via-BAT_FAULT_N 0.200, ACT_EN-R123.1 0.330 mm). '2.03 V never' wording: R22-DOCS_BINDING-04.", "verdict": "confirmed (wording Minor)"},
+    {"id": "D-R21-06 .. -08", "claim": "Checks only; recorded in M3_R10, R10_VALIDATION, AVA_LAYOUT", "measurement": "Records consistent with round21_fix_cad.json (tab bands 7.497 / 3.077 / 12.244 mm^2, K-ports 3.975-4.388 mm, 215 Fab references)", "verdict": "confirmed (records)"},
+    {"id": "D-R21-09", "claim": "C126/Q122/R122 shown; C80/C87/C89/D123/D8/R81 moved; 96 -> 93 hidden", "measurement": "All nine reference positions on the board match the record; 93 hidden / 122 visible; M3_R10 line 625 hidden list equals the board's 93 exactly", "verdict": "confirmed"},
+    {"id": "R21 docs Minors", "claim": "DOC-01..08, SAF-03, SAF-04, MEC-01, BOM-02, MFG-02, REQ-03/-05/-06, MCU-01 fixed", "measurement": "DOC-01/SAF-04 handoff TP81 + C15.1: fixed. DOC-02 'stock check passes' gone: fixed. DOC-03 08:22Z wording gone from current text: fixed. DOC-04 'is running' gone: fixed. DOC-05 header / inventory basis bound to 5516eeec: fixed. DOC-06 CPL / paste / six thermals / hidden list / ring 0.750 / 5.914 V / 50a39de5 row: fixed. DOC-07 plate provenance (AGENTS, row 11, handoff): fixed. DOC-08 C87 sentence (M3_R10 x2, row 21): fixed. SAF-03 FMEA I-5 R10 row, owner row 1, C128: fixed. MEC-01 ORDERING 8.2 hand-solder, keep-offs, U5 port mask, clamp inspection: fixed. BOM-02: fixed in ORDERING / M3_R10 / AGENTS / handoff / REQUIREMENTS, not in parts_qualification rows 22-23 (R22-DOCS_BINDING-02). MFG-02 ORDERING 300 = 295 / 4 / 1: fixed (board 295 / 4 / 1). REQ-03 camera row names J440: fixed. REQ-05 flight-2 envelope marked pre-Mach-1.9: fixed. REQ-06 R7-R9 M2 / pour / coax text moved to HISTORY section 3: fixed. MCU-01 cited by content: fixed.", "verdict": "partly (BOM-02 residual in parts_qualification)"},
+    {"id": "Board binding / owner list", "claim": "Deviation list and owner rows 1-30 bound to 5516eeec", "measurement": "R10_VALIDATION head, owner-table preamble and inventory basis name 5516eeec; rows 1-30 all present (accept 1-7, 13, 22, 23; test 8-12, 21, 24; do 14-20, 25-30); row 20's 172 / 126 / 46 IDs reproduced (172 unique headings, 126 IDs in r10_final_deviations.json, 46 D-R18..D-R21); all 35 round 21 IDs dispositioned; detour table BAT_ENABLE 25.58 mm / 3 vias matches the board (25.583).", "verdict": "confirmed"},
+    {"id": "Circuit-check line", "claim": "PASS, 6 Minor; netlist identical (701 pad nets); 13 -> 4; S-8 >= 1.021; EN <= 2.06 V; 31 3V3 vias; 0.5505 mm", "measurement": "Binding-note netlist SHA e5fbfc92... identical at accfff4 and ec8cb98; 701 pads; 13 -> 4 reproduced; 31 3V3 vias; 0.5505 mm reproduced on fills; 2.063 V reproduced (1 % parts at 8.4 V). S-8 1.021 and the JLC page not re-measured here.", "verdict": "confirmed (as far as reproduced)"}
+  ],
+  "fix_now_recommendations": [
+    {"finding": "R22-DOCS_BINDING-01", "change": "R10_VALIDATION section 10 $102.14 / $105.13 -> $102.16 / $105.15; ORDERING U4 row 10:13Z -> 23:23Z; DB125-4 stock 37,827 -> 37,757 (36,979 orderable, 23:23Z) in ORDERING and R10_VALIDATION", "scope": "text only"},
+    {"finding": "R22-DOCS_BINDING-02", "change": "parts_qualification U4 fitted and alternate rows reworded to the R21-BOM-02 order (franchised ISM first, LSM second fallback; 2 orderable for 5)", "scope": "text only"},
+    {"finding": "R22-DOCS_BINDING-03", "change": "REQUIREMENTS R10 acceptance 'every short part (now U4 and U9)'; no-fuse list adds C88 and the Q120 / R134 path", "scope": "text only"},
+    {"finding": "R22-DOCS_BINDING-04", "change": "'never exceeds 2.03 V' -> '2.03 V nominal (<= 2.06 V with 1 % parts, at 8.4 V; Calculation) while R81 is intact' in the seven places; '(8 % of C87's 25 V rating)'", "scope": "text only"}
+  ],
+  "rejected_or_closed_candidates": [
+    {"candidate": "AGENTS section 3 says the AUD-2 list is 'in tools/route_check.py' but it is defined in tools/critical_reference.py", "reason": "route_check.py imports it (_cr.r10_slow_return_net) and applies it; the sentence names the tool that enforces it. Not filed."},
+    {"candidate": "Owner row 9 'J400.2 1.050 / 1.050 mm' contradicts the 0.550 mm In1 GND figure", "reason": "1.050 / 1.050 are the In2 GND / RAW_PROTECTED S-8 figures (measured 1.05 / 1.05); In1 is GND only (0.5505 mm), which S-8 exempts there. Consistent, if terse."},
+    {"candidate": "M3_R10 line 53 (round 20 table) still says EN reaches R81 through three vias", "reason": "It sits in the labelled 'What the round 20 polish pass changed (50a39de5 -> 0dc84776)' history table; the current text (line 257) is right."},
+    {"candidate": "STATUS 'Round 20 polish pass' paragraph cites $85.35, 96 hidden, 35 / 35", "reason": "Labelled history paragraph for 0dc84776; the current paragraph above it carries the 5516eeec figures."},
+    {"candidate": "Wire room 5.003 mm (AGENTS / handoff) vs fix_cad 'eight wire rooms 5.00-5.60 mm'", "reason": "fit_check prints a per-terminal low-high range; the low is 5.00 (5.003), so both agree."},
+    {"candidate": "Owner row 8 '25 required critical-signal vias' not updated for the four J400-chain vias", "reason": "The chain is AUD-2 exempt from the partner-via rule, so its vias are not 'required' partner-via layer changes; count not re-derived here (coverage limit)."},
+    {"candidate": "Pin map, IMU axis map, connector pinouts, port map, legends", "reason": "pin_table r10_net, r10_binding_note u1_pins and the board's U1 pad nets agree on all 100 pins; binding note board / netlist / pin_table hashes match; IMU pose and lever arm agree across AGENTS, STATUS, M3_R10 and the note; J1/J400/J121/J122/J410/J420/J440/J9 pad nets and all 45 silkscreen legends match the handoff terminal table."},
+    {"candidate": "BOM / CPL / cost / stock binding", "reason": "cost_check.json and stock_check.json input hashes equal the current m3_bom_jlc.csv (df6c0fc2), m3_bom_owner.csv (c48868b3) and m3_cpl_jlc.csv (905e4314); manifest binds board 5516eeec and DRU 1d2dbe77; CPL 72 top / 133 bottom; owner BOM is C84 only; $85.37 = 60.58 + 123.93/5; $85.91 = 61.12 + 24.79."}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after (5516eeec... both times); git status (no tracked change)",
+    "pcbnew (KiCad Python, read-only): footprints 215, segments 983, arcs 0, vias 300 (167 GND; 295 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5), track 1871.611826 mm, 93 hidden / 122 visible references, file size 2,336,572 bytes; poses of R81, C87, U9, J1, J400, J121, J122, J410, J420, J440, J9, J3, U1, U4, U5, LS120, R166, C84, TP81, C15",
+    "U1 pad nets vs pin_table.tsv r10_net vs r10_binding_note u1_pins: 100 pins, 0 mismatches; connector pad nets; 45 silkscreen texts",
+    "BAT_ENABLE / BAT_SW_* via-to-nearest-GND-via distances on 5516eeec and on accfff4's 0dc84776 (git show into the probe dir)",
+    "Single-point-open graph (tracks, vias, pads) U9.1 -> R81.1 / C87.1 / R165.2 on both boards",
+    "BAT_ENABLE nearest foreign copper per net (shape collision bisection)",
+    "Inner-layer hole-wall / ring distance to foreign fills on all DB125 pads (centre-distance approximation)",
+    "Reference text positions for the nine D-R21-09 designators; hidden list in M3_R10 line 625 vs board",
+    "SHA-256 of fab BOM / owner BOM / CPL / Gerber vs cost_check / stock_check / manifest; parts_budget.json hash; binding-note netlist hash at accfff4 vs ec8cb98",
+    "Decision-ID count in R10_DECISIONS.md (172 unique headings) and r10_final_deviations.json (126)",
+    "Round 21 finding IDs (35; 6 carried) vs the R10_VALIDATION round 21 disposition table (all covered)",
+    "Text sweeps (grep) over STATUS, AGENTS, docs/M3_R10, ORDERING, R10_VEHICLE_HANDOFF, R10_VALIDATION, FMEA_REDUNDANCY, REQUIREMENTS, HISTORY, parts_qualification, AVA_LAYOUT for superseded hashes, counts, costs, timestamps and R81/C87 text"
+  ],
+  "sources": [
+    "m3_design/assembly_review/m3.kicad_pcb (5516eeec...) and git show accfff4:m3_design/assembly_review/m3.kicad_pcb (0dc84776...)",
+    "m3_design/assembly_review/fab/cost_check.json (2026-10-31T23:24:13Z), stock_check.json (2026-10-31T23:23:18Z), m3_fab_manifest.json, m3_cpl_jlc.csv, m3_bom_owner.csv",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R21-01..09), pin_table.tsv, r10_binding_note.json, parts_qualification.md, AVA_LAYOUT.md, parts_budget.json",
+    "m3_design/assembly_review/sources/r10_review/round21_fix_cad.md / .json and round21_*.json",
+    "m3_design/assembly_review/battery_entry.kicad_sch, sensors.kicad_sch (sheet notes)",
+    "TI SLVSFC9C (https://www.ti.com/lit/ds/symlink/tps25947.pdf) section 6.1 p7, as cited by the records (not re-fetched)"
+  ],
+  "coverage_limits": [
+    "Docs and binding lens only; no electrical, routing or DRC judgement beyond the figures the documents state.",
+    "No datasheet or JLC page was re-fetched; the JLC hole table and TI figures are taken as cited.",
+    "Inner-layer distances use pad-centre-to-outline distance minus the drill or pad radius (good for round pads and holes; DB125 pads treated as round).",
+    "Owner row 8's 21-of-25 layer-change count, the S-8 1.021 mm figure and the section 1 surface inventory were not re-derived.",
+    "HISTORY.md and the historical sections of the other files were read only for current-tense claims about the current board."
+  ]
+}

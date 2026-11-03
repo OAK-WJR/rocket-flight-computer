@@ -1,0 +1,528 @@
+{
+  "round": 17,
+  "prepared_utc": "2026-10-30T18:16:56.508818+00:00",
+  "scope": "Completed same-board full review pair and record/check/evidence closing corrections; no physical or firmware qualification.",
+  "review": {
+    "target_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+    "totals": {
+      "Critical": 0,
+      "Major": 0,
+      "Minor": 13
+    },
+    "raw": 23,
+    "new_groups": 4,
+    "carried_groups": 9,
+    "frozen_preexisting_files": 1966,
+    "all_ten_full_lenses_closed_before_first_mutation": true,
+    "original_reports_immutable": true,
+    "source": "round17_reconciliation.json",
+    "original_decisions": 122,
+    "original_owner_mandates": 23
+  },
+  "board": {
+    "sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "bytes": 2256162,
+    "footprints": 209,
+    "segments": 951,
+    "vias": 296,
+    "gnd_vias": 168,
+    "track_length_mm": 1788.675664582984,
+    "size_mm": [
+      46,
+      90
+    ]
+  },
+  "final_check": {
+    "DRC_unconnected_parity_ERC": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "all_R10_rules": 32,
+    "rules": {
+      "S-1": {
+        "title": "single screw switch: RAW_ACT pyro bus, no J124",
+        "ok": true,
+        "issues": []
+      },
+      "S-2": {
+        "title": "pyro feed only through the load switch",
+        "ok": true,
+        "issues": []
+      },
+      "S-3": {
+        "title": "gate networks defined off",
+        "ok": true,
+        "issues": []
+      },
+      "S-4": {
+        "title": "required-fitted safety parts (R1-07)",
+        "ok": true,
+        "issues": []
+      },
+      "S-5": {
+        "title": "J400 screw arming switch and protected EN contacts",
+        "ok": true,
+        "issues": []
+      },
+      "S-6": {
+        "title": "external ports apart from pyro / arming copper",
+        "ok": true,
+        "issues": []
+      },
+      "S-7": {
+        "title": "J122 five signal/reference terminal contacts (O3/O6)",
+        "ok": true,
+        "issues": []
+      },
+      "S-8": {
+        "title": "In1 / In2 copper >= 1.0 mm from pyro barrels (R3-SAF-01)",
+        "ok": true,
+        "issues": []
+      },
+      "S-9": {
+        "title": "fire/source copper >= 0.5 mm; BAT_IN >= 1.0 mm (AUD-6 / audit 2)",
+        "ok": true,
+        "issues": []
+      },
+      "K-contract": {
+        "title": "R10 netlist contract",
+        "ok": true,
+        "issues": []
+      },
+      "K-binding": {
+        "title": "saved record-only binding evidence matches native board",
+        "ok": true,
+        "issues": []
+      },
+      "K-loader": {
+        "title": "ROM-loader pins (AN2606 Rev70 Table135; R3-MCU-01/R17-MCU-02)",
+        "ok": true,
+        "issues": []
+      },
+      "K-actuators": {
+        "title": "check_actuators --profile r10",
+        "ok": true,
+        "issues": []
+      },
+      "LC-1": {
+        "title": "local overrides respect the applicable floors",
+        "ok": true,
+        "issues": []
+      },
+      "M-1": {
+        "title": "outline 46 mm wide, length <= 120 mm",
+        "ok": true,
+        "issues": []
+      },
+      "M-3": {
+        "title": "five supports, former servo plug tie holes absent",
+        "ok": true,
+        "issues": []
+      },
+      "M-5": {
+        "title": "fit (profile r10)",
+        "ok": true,
+        "issues": []
+      },
+      "M-6": {
+        "title": "bottom keep-outs",
+        "ok": true,
+        "issues": []
+      },
+      "M-7": {
+        "title": "IMU and MEMS",
+        "ok": true,
+        "issues": []
+      },
+      "P-11": {
+        "title": "terminal entry and owner-accepted 4.95 mm wire room",
+        "ok": true,
+        "issues": []
+      },
+      "F9-1": {
+        "title": "R10 reverse hot-plug model pass (OQ-2)",
+        "ok": true,
+        "issues": []
+      },
+      "F9-2": {
+        "title": "GAP-2 U9 output capacitor and Schottky local copper loops",
+        "ok": true,
+        "issues": []
+      },
+      "T-1": {
+        "title": "panel-tab windows (R10)",
+        "ok": true,
+        "issues": []
+      },
+      "K-legends": {
+        "title": "legends and ids",
+        "ok": true,
+        "issues": []
+      },
+      "K-copper": {
+        "title": "copper hygiene, exact GAP-3 U401 VIPPO condition",
+        "ok": true,
+        "issues": []
+      },
+      "K-inner": {
+        "title": "In1 GND only, In2 power and GND only",
+        "ok": true,
+        "issues": []
+      },
+      "K-reference": {
+        "title": "critical signal reference copper",
+        "ok": true,
+        "issues": []
+      },
+      "K-region": {
+        "title": "critical B.Cu runs over one In2 plane region (R4-RTE-02)",
+        "ok": true,
+        "issues": []
+      },
+      "K-fill": {
+        "title": "saved zone fills are current (refill a copy, R4-GATE-05)",
+        "ok": true,
+        "issues": []
+      },
+      "K-rules": {
+        "title": "m3.kicad_dru pinned, board design rules floor (R4-GATE-01)",
+        "ok": true,
+        "issues": []
+      },
+      "K-width": {
+        "title": "BAT_IN / RAW_PROTECTED width floor (R8-GATE-04)",
+        "ok": true,
+        "issues": []
+      },
+      "K-retained": {
+        "title": "flash/camera/microSD bypass, TP122",
+        "ok": true,
+        "issues": []
+      }
+    },
+    "saved_binding": {
+      "note_sha256": "35bb0629a289891ffdcfd697eeb6d93648e1d45a07bcbdabf61e26b23d77eefc",
+      "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+      "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
+      "u1_board_map_checked": true
+    },
+    "reference": {
+      "samples": 158499,
+      "unreferenced": 10051,
+      "inside_own_antipad": 10045,
+      "recorded_stray": 5,
+      "loose": 0,
+      "b_cu_planes": [
+        "GND",
+        "3V3",
+        "3V3A",
+        "PORT_5V3",
+        "PORT_4V8",
+        "RAW_PROTECTED"
+      ],
+      "by_net_layer": {
+        "SPI1_MISO B.Cu": {
+          "samples": 2,
+          "box": [
+            17.79,
+            43.88,
+            17.8,
+            43.89
+          ]
+        },
+        "SPI1_MISO F.Cu": {
+          "samples": 1,
+          "box": [
+            17.3,
+            43.89,
+            17.3,
+            43.89
+          ]
+        },
+        "SPI1_SCK B.Cu": {
+          "samples": 3,
+          "box": [
+            17.1,
+            43.4,
+            17.1,
+            43.42
+          ]
+        }
+      }
+    },
+    "region": {
+      "items": 161,
+      "samples": 62176,
+      "nets": [
+        "CAM_MCU_RX",
+        "CAM_MCU_TX",
+        "CAM_RX_BUFFER",
+        "CAM_RX_WIRE",
+        "CAM_TX_BUFFER",
+        "CAM_TX_WIRE",
+        "GPS_RX_MCU",
+        "GPS_RX_WIRE",
+        "GPS_TX_MCU",
+        "GPS_TX_WIRE",
+        "HSE_IN",
+        "HSE_OUT",
+        "IMU_CS",
+        "PYRO1_COLD",
+        "PYRO1_GATE",
+        "PYRO1_GATE_N",
+        "PYRO1_IGN",
+        "PYRO1_OUT",
+        "QSPI_CLK",
+        "QSPI_IO0",
+        "QSPI_IO1",
+        "QSPI_IO2",
+        "QSPI_IO3",
+        "QSPI_NCS",
+        "RADIO_RX_MCU",
+        "RADIO_RX_WIRE",
+        "RADIO_TX_MCU",
+        "RADIO_TX_WIRE",
+        "SD_CS",
+        "SD_DAT1",
+        "SD_DAT2",
+        "SD_MISO",
+        "SD_MOSI",
+        "SD_SCK",
+        "SPI1_MISO",
+        "SPI1_MOSI",
+        "SPI1_SCK",
+        "USB_DM",
+        "USB_DP"
+      ]
+    },
+    "fill": {
+      "zones": 9,
+      "stale": 0,
+      "tolerance_mm2": 0.01,
+      "comparison": "symmetric_difference",
+      "maximum_difference_mm2": 0.0,
+      "changed": []
+    },
+    "routing": {
+      "instances": 140,
+      "categories": {
+        "pad_end_offcentre": 59,
+        "segment_inside_pad": 23,
+        "passes_through_pad": 1,
+        "short_segment": 1,
+        "width_change_junction": 11,
+        "collinear_unmerged": 1,
+        "short_layer_hop": 3,
+        "extra_bends": 7,
+        "u_turn": 4,
+        "tiny_jog": 4,
+        "power_via_no_gnd": 24,
+        "via_on_track_in_fill": 1,
+        "detour": 1
+      },
+      "failures": 0,
+      "critical_allowed": 0,
+      "stale": 0,
+      "noncritical_unrecorded": 6
+    },
+    "fit": {
+      "rows": 223,
+      "ok": true,
+      "width_mm": 46.0,
+      "length_mm": 90.0,
+      "physical_fit_verified": false
+    },
+    "raw_report_hashes": {
+      "drc": "42dfe85193a318abb18aaac8bd6ded32668631d62d382ef81ba7bbf07e8ab7f8",
+      "erc": "e8b9bedf992047304220556778ae4d144d78527ddb20a5c0d55e967d5e1e0922",
+      "r10": "1d4a30558084269dd080839fd004975c3b8888c09b196cbf85b7872c9bbb13f3",
+      "route": "30195a919b0891c2e3e3048de1439b32c9c7786a84c6d6c418f01e26cc936153",
+      "fit": "06a35d1ec26080d506de8d59049008d34ca54f91d0444bec8c0e63a32ec5fc47",
+      "audit": "f5da31487abdded084f5ca153e56863533150748399ebd64b947e2c7786a19eb"
+    },
+    "command": "tools/check.sh with official CLI10.0.7,installed native API10.0.6,supplied NUMPY_PY; no skips or fakeCLI",
+    "log": ".supervisor/r17_final_check.log",
+    "log_sha256": "4d86f7b1e6e65e3d5fb0e2bd440e783c4cde865c46645fa0078a8af373690e30",
+    "exit_code": 0,
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "genuine_five_output_manifest_checked": true,
+    "four_native_NumPy_skips_separately_resolved": true
+  },
+  "test_counts": {
+    "shell": 7,
+    "R10_unique_tests": 180,
+    "fit": 31,
+    "paste": 16,
+    "parts": 5,
+    "routing": 67,
+    "numpy_resolution": {
+      "cases": 4,
+      "passed": 4,
+      "unresolved_skips": 0,
+      "log_sha256": "24760fb27854788e89ca996d68315d04f6e2e94ebfe78df18d5a9cc4e8db3330"
+    }
+  },
+  "source_preservation": {
+    "frozen_files": 1966,
+    "changed_paths": [
+      "AGENTS.md",
+      "STATUS.md",
+      "docs/M3_R10.md",
+      "docs/ORDERING.md",
+      "docs/R10_VALIDATION.md",
+      "docs/R10_VEHICLE_HANDOFF.md",
+      "docs/REQUIREMENTS.md",
+      "m3_design/assembly_review/fab/cost_check.json",
+      "m3_design/assembly_review/fab/stock_check.json",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+      "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+      "m3_design/assembly_review/sources/r10_design/pin_table.tsv",
+      "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md",
+      "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json",
+      "tools/check.sh",
+      "tools/check_r10.py",
+      "tools/test_check_shell.py"
+    ],
+    "all_changes_in_explicit_docs_checks_evidence_allowlist": true,
+    "PCB_circuit_layout_generators_unchanged": true,
+    "AGENTS_sections2_to5_byte_identical": true,
+    "checker_explanations_only": {
+      "changed_string_constants": 3,
+      "all_other_AST_equal": true,
+      "strings": [
+        {
+          "before": "USART2_TX drives the servo-3 signal through R152 1k: R8's allowance (frozen 3.2; a servo never sends 0x7F); servo power is off the board (O3), so a byte at most twitches an unpowered or harness-powered servo on the bench (BOOT0 is a bench-only state)",
+          "after": "USART2_TX drives the servo-3 signal through R152 1k: R8's allowance (frozen 3.2; a servo never sends 0x7F); servo power is off the board (O3), so a byte at most twitches an unpowered or harness-powered servo on the servicing bench. BOOT0 low also enters ROM when BOOT_ADD0=0x1FF0 (AN2606 Rev70 Table2 Pattern10); record/read back the intended user-flash boot configuration before flight"
+        },
+        {
+          "before": "SPI3_MISO is driven by the loader only during a host transfer; PD0 SD_CS is independent of the loader SPI3_NSS PA15 and is held high by R460 10k, so the card data output stays high impedance. R462 draws at most 3.3V/10k=0.33mA if PC11 drives low; bench BOOT0 use only",
+          "after": "SPI3_MISO is driven by the loader only during a host transfer; PD0 SD_CS is independent of the loader SPI3_NSS PA15 and is held high by R460 10k, so the card data output stays high impedance. R462 draws at most 3.3V/10k=0.33mA if PC11 drives low; serviced ROM use only, with intended user-flash BOOT_ADD0 readback before flight"
+        },
+        {
+          "before": "ROM-loader pins (AN2606 Table 119, R3-MCU-01)",
+          "after": "ROM-loader pins (AN2606 Rev70 Table135; R3-MCU-01/R17-MCU-02)"
+        }
+      ]
+    }
+  },
+  "reproducibility": {
+    "prior_complete_builds": "two R15 and one R16 full native builds/check0; source round16_fix_validation.json",
+    "new_R17_full_builds": 0,
+    "prior_generated_files": 42,
+    "unchanged_generated_files": 41,
+    "changed_record_only_file": [
+      "m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+    ],
+    "binding_refresh": {
+      "status": "COMPLETED native record-only provenance refresh",
+      "source": "D-R17-02 / R17-MCU-02",
+      "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+      "before_note_sha256": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+      "after_note_sha256": "35bb0629a289891ffdcfd697eeb6d93648e1d45a07bcbdabf61e26b23d77eefc",
+      "only_changed_note_field": [
+        "pin_table_sha256"
+      ],
+      "two_independent_regenerations_equal": true,
+      "u1_pin_count": 100,
+      "u1_pin_fields_unchanged": true,
+      "IMU_fields_unchanged": true,
+      "status_unchanged": "record only; R1 binding invalid; no R10 firmware or flight approval",
+      "pin_table_sha256": "56b7734ae4f05ff3a6d88023b87416f5658b40e0e0fca4e21080d86f9f5c6f34",
+      "source_generator_changed": false,
+      "firmware_or_physical_qualification": false
+    },
+    "physical_CAD_preserved": true
+  },
+  "record_corrections": {
+    "pad_energy": "round17_pad_energy.json / D-R17-01",
+    "boot": "D-R17-02;100pin/axis fields identical;future option-byte readback only",
+    "mechanical_labels": "D-R17-03;TE1.0mm+0/-0.10 versus retained1.1mm allocation;actual0.050mm combined courtyard half-strokes",
+    "manifest": "round17_gate_fix.json / D-R17-04",
+    "fully_corrected_groups": 4,
+    "partly_corrected_retained_graphic_group": 1,
+    "retained_groups": 9
+  },
+  "fabrication": {
+    "manifest_inputs": 193,
+    "manifest_outputs": 5,
+    "manifest_sha256": "cab5778f6a6f3041750044e3e5613bdfb982de452fcbed0fa92993c97c423a32",
+    "outputs_sha256": {
+      "m3_assembly_bottom.pdf": "c84f1965ddcaa2095d9718e4b609f4e88646274f4d5c19a628031555c677cf05",
+      "m3_assembly_top.pdf": "97f1c6498d4c0f1c034348489581c016aae62f77765eef8b0d3c450342dfc2c8",
+      "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+      "m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7",
+      "m3_gerber.zip": "64d363adb29375dc5ef60e218078aa298df7e10ee93ccacdfa20fba71be88dec"
+    },
+    "fresh_full_review_source": "round17_manufacturing.json",
+    "orientation": {
+      "reconstructed": 187,
+      "placement_only": 12
+    },
+    "paste": {
+      "F": 245,
+      "B": 373,
+      "total": 618
+    },
+    "CAD_fab_inputs_changed": false
+  },
+  "simulation_inference": {
+    "hotplug_fresh_full_R17_source": "round17_power.json;2304required+60local and independent controls;unchanged extracted feed",
+    "plate_fresh_R17_source": "round17_mechanics.json;181.1Hz pinnedD5/70.4976g;C431h4gap0.270913mm",
+    "physical_qualification": false
+  },
+  "procurement": {
+    "original_query_start_utc": "2026-10-30T17:15:34.705395Z",
+    "original_query_end_utc": "2026-10-30T17:15:45.842149Z",
+    "snapshot_sha256": "b8a5a145db87273db0ba127b689d3c8a69864f207987d29c8e0860b3ea1943e5",
+    "placed_plus_feeder_usd_per_board": 79.5232,
+    "minimum_purchase_plus_feeder_usd_per_board": 81.8636,
+    "production_cost_report_rounded_total_usd": 79.52,
+    "cost_target_usd": 84.41,
+    "cost_model_pass": true,
+    "stock_release_pass": false,
+    "short": [
+      "C185349 R430 stock 17 < 3610",
+      "C26633007 U4 stock 0 < 5"
+    ],
+    "cost_artifact_sha256": "5d3e76c48685d9ea30ad3330d8655ee4e46c037c5b1607e3c1cba64fab238426",
+    "stock_artifact_sha256": "73c00f551d6fa3bf8337312492b951eb484cfacc67117686c5079e701f7c9447",
+    "supplier_times_preserved": true,
+    "full_quote_process_owner_acceptance": false,
+    "order_placed": false
+  },
+  "decisions": 126,
+  "owner_mandates": 23,
+  "AGENTS_section2_unchanged": true,
+  "clean_pair": {
+    "round16_clean": true,
+    "round17_clean": true,
+    "pair_earned": true,
+    "same_board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "round16_commit": "b1b8658d5bf541795b7e7636c09f2e886ea8c67a",
+    "round17_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+    "post_pair_CAD_change": false
+  },
+  "unverified": [
+    "R10firmware and physical safety/launch/ground/inflight/reset/trace/watchdog/pulse-tail behavior",
+    "e-match lot20ms firing and charge qualification",
+    "SD current/latency/busy/power-loss",
+    "electrical/transient/thermal/endurance and installed RF/ESD",
+    "real harness,switch,retention,hardware,screwdriver/card and bore/sled/shroud/stack fit",
+    "MEMS bias/temperature/vibration/completeTN1383 and modal/flight",
+    "DB125 insertion/fabrication allocation,VCAP combined conditions/ESR,L400 heel,VIPPO/manualC84/panel/factory preview/first article",
+    "owner deviation/cost/process acceptance and stock release",
+    "Actual BOOT_ADD0/boot option-byte programming and readback;installed-pack pad/endurance/source qualification"
+  ],
+  "handover_before_final_request": {
+    "received_utc": "2026-10-30T18:22:22.225451+00:00",
+    "instruction": "Commit completedR17 and clean-round closing records through supervisor request;then stop/report. No round18 or new board change.",
+    "steer_prefix_bytes": 4827,
+    "steer_prefix_sha256": "333b223d5df6750114b4734ef3a8688d0d9311a82fed026d6a4180d4c8189d12",
+    "source": "D-R17-04 closing addendum",
+    "design_or_AGENTS2_change": false
+  }
+}

@@ -1,0 +1,1036 @@
+{
+ "schema": 1,
+ "lane": "round 19 fix pass, CAD lane",
+ "date": "2026-10-30",
+ "brief": ".supervisor/r19_fix_cad_brief.md (13 items), the coordinator additions to items 6 and 8, and item 14 (.supervisor/r19_aux_port_brief.md)",
+ "board_before": {
+  "sha256": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+  "bytes": 2250842,
+  "footprints": 208,
+  "segments": 947,
+  "vias": 292,
+  "gnd_vias": 166,
+  "track_mm": 1788.737627
+ },
+ "board_after": {
+  "sha256": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+  "bytes": 2336742,
+  "footprints": 215,
+  "segments": 984,
+  "vias": 301,
+  "gnd_vias": 169,
+  "track_mm": 1870.487095,
+  "rule_areas": [
+   "R18_BARREL_KEEPOUT_ACT_GATE_0",
+   "R18_BARREL_KEEPOUT_ACT_GATE_1",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_2",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_3",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_4",
+   "R18_BARREL_KEEPOUT_BAT_SW_RETURN_5",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_6",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_7"
+  ]
+ },
+ "builds": {
+  "kicad_cli": "10.0.7",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": [
+   {
+    "name": "9",
+    "exit": 0,
+    "check_sh_exit": 0,
+    "board_sha256": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976"
+   },
+   {
+    "name": "10",
+    "exit": 0,
+    "check_sh_exit": 0,
+    "board_sha256": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976"
+   }
+  ],
+  "build9_vs_build10": "Snapshot compare of the two builds: 922 files identical, 4 differ only by their date stamps (m3_assembly_top.pdf, m3_assembly_bottom.pdf, m3_gerber.zip, m3_fab_manifest.json), none only in one.",
+  "earlier_builds": {
+   "1": "stopped at the record step: a sheet note (12/22/27 ms) was corrected while it ran",
+   "2": "check.sh failed 6 S-3 synthetic tests whose shared fixture had no C123; fixture fixed",
+   "3, 4": "complete, exit 0, PCB 3370552d5f9d167596a610b63716a7a929aeedab63bdbf2df7f16036ee7ba622; superseded by the render-driven legend layout (D-R19-08)",
+   "5, 6": "complete, exit 0, PCB 814f1504fd7b5caf627fc672d1c97554eb3f28f76e69e8f3710ffadb60fbd2ea; superseded by J122 designator move (D-R19-12)",
+   "7": "complete, exit 0, check.sh exit 0, PCB f33587f2c69f82db91f216887378c2fd457e8f04df9620fc8d008e29177ad917: items 1-13 checked before item 14",
+   "8": "made the final PCB; check.sh stopped on two self-tests that still expected seven DB125 terminals and the old GPS segment (updated)"
+  },
+  "stage_gates": {
+   "core": "OK",
+   "usb": "OK",
+   "pyro": "OK",
+   "power": "OK",
+   "signals": "OK",
+   "ground": "OK (DRC 0, unconnected 0, route_check 0)"
+  },
+  "check_sh": {
+   "drc_violations": 0,
+   "unconnected": 0,
+   "schematic_parity": 0,
+   "erc": 0,
+   "metadata_3d_audit": "OK",
+   "r10_parts_check": "OK",
+   "fit": "OK",
+   "check_r10_full_rules": 35,
+   "check_r10_full": "OK",
+   "route_check_r10_failing": 0,
+   "fab_manifest_outputs": 6
+  },
+  "self_tests": {
+   "test_check_shell": 10,
+   "test_procurement": 20,
+   "test_fab_validation": 34,
+   "test_fit_check": 33,
+   "test_paste_check": 16,
+   "test_r10_parts": 5,
+   "test_route_check": 68,
+   "test_r10_check": 212,
+   "test_r10_check_native_skips": 5,
+   "HotplugNumerics_Plate_numpy": 5,
+   "all": "OK"
+  },
+  "fab": {
+   "jlc_bom_lines": 81,
+   "placed": 205,
+   "cpl_top": 71,
+   "cpl_bottom": 120,
+   "placement_only_checks": 14,
+   "worst_pad_residual_mm": 0.491,
+   "paste": "F 257 / B 371 flashes on as many pasted pads",
+   "owner_bom": [
+    "C84 C46550466"
+   ],
+   "orientation": "CHECK: none"
+  },
+  "supplier_refresh": {
+   "checked": "2026-10-31 (live JLC, after the AUX BOM)",
+   "codes": 82,
+   "extended": 46,
+   "basic": 36,
+   "short": [],
+   "thin": [
+    "C51931514 U4 9 for 5"
+   ],
+   "usd_per_board_placed_plus_feeder": 85.35,
+   "usd_per_board_parts_with_minimums": 60.57,
+   "target_usd": 84.41,
+   "target_met": false,
+   "items_1_13_usd_per_board": 84.21,
+   "aux_port_adds_usd_per_board": 1.14,
+   "note": "M3 not met with item 14: owner decision; check_procurement --cost-only fails and was not weakened"
+  },
+  "hotplug": {
+   "cases": 2304,
+   "passed": true,
+   "retained_output_capacitance_mF": 1.644,
+   "cold_input_minimum_V": -15.0
+  }
+ },
+ "items": {
+  "1_pyro1_out_barrels": {
+   "decision": "D-R19-01",
+   "status": "done",
+   "out_via_gnd_wall_mm": [
+    0.251,
+    1.021
+   ],
+   "j121_1_gnd_wall_mm": [
+    0.551,
+    1.05
+   ],
+   "j121_1_ring_to_gnd_mm": [
+    0.251,
+    0.75
+   ],
+   "neck_note": "0.5 mm opening keeps In1 GND and In2 GND_CH1 one piece; cusps <= 0.038 mm^2",
+   "check_changes": [
+    "BARREL_GND_HAZARD += PYRO1_OUT",
+    "K-reference / K-region own-barrel void (BARREL_VOID_REACH 1.071 mm)"
+   ]
+  },
+  "2_bat_enable_via": {
+   "decision": "D-R19-02",
+   "status": "done",
+   "via": [
+    [
+     19.675,
+     66.4
+    ],
+    [
+     19.675,
+     66.6
+    ]
+   ],
+   "to_R134_2_mm": [
+    0.3,
+    0.5
+   ],
+   "u9_en_in_mm": 0.2,
+   "u9_en_in": "not opened: TI RPW pad pitch"
+  },
+  "3_tp121": {
+   "decision": "D-R19-03",
+   "status": "done",
+   "act_gate_outer_within_0_30mm_of_gnd_mm": [
+    12.896,
+    7.996
+   ],
+   "act_gate_to_bat_sw_source_mm": [
+    0.4,
+    0.47
+   ]
+  },
+  "4_c123": {
+   "decision": "D-R19-04",
+   "status": "done",
+   "part": "C15195 CL05B103KB5NNNC 10 nF 50 V X7R 0402",
+   "at": "F(18.22,71.85) 0",
+   "tau_us": 7.1,
+   "on_us": 7.6,
+   "off_us": 8.6,
+   "reset_off_us": 26,
+   "r122_2_to_c123_gnd_run_mm": 0.436
+  },
+  "5_u1_19": {
+   "decision": "D-R19-05",
+   "status": "done",
+   "fragment_mm2": [
+    1.693,
+    0
+   ],
+   "zone_connection": "NONE (board pad override)"
+  },
+  "6_words": {
+   "decision": "D-R19-06",
+   "status": "done",
+   "single_list": "check_r10.WORD_LEGENDS_R10",
+   "seams": [],
+   "span_rule": {
+    "GPS": "J410",
+    "RADIO": "J420",
+    "margin_mm": 0.5
+   },
+   "before": {
+    "BAT": {
+     "centre_to_own_mm": 1.256,
+     "centre_to_nearest_other_mm": 1.275,
+     "nearest_other": "J400",
+     "ink_gap_margin_mm": 0.04,
+     "ink_inside_own_y_span_margin_mm": -1.15
+    },
+    "IGN": {
+     "centre_to_own_mm": 1.24,
+     "centre_to_nearest_other_mm": 8.965,
+     "nearest_other": "J2",
+     "ink_gap_margin_mm": 8.39,
+     "ink_inside_own_y_span_margin_mm": -1.15
+    },
+    "SWITCH": {
+     "centre_to_own_mm": 0.575,
+     "centre_to_nearest_other_mm": 0.615,
+     "nearest_other": "J121",
+     "ink_gap_margin_mm": 0.04,
+     "ink_inside_own_y_span_margin_mm": -1.15
+    },
+    "SWD": {
+     "centre_to_own_mm": 1.278,
+     "centre_to_nearest_other_mm": 4.131,
+     "nearest_other": "J3",
+     "ink_gap_margin_mm": 3.155,
+     "ink_inside_own_y_span_margin_mm": 0.89
+    },
+    "SERVO": {
+     "centre_to_own_mm": 2.337,
+     "centre_to_nearest_other_mm": 6.101,
+     "nearest_other": "J9",
+     "ink_gap_margin_mm": 5.09,
+     "ink_inside_own_y_span_margin_mm": -1.15
+    },
+    "RADIO": {
+     "centre_to_own_mm": 2.13,
+     "centre_to_nearest_other_mm": 2.051,
+     "nearest_other": "J410",
+     "ink_gap_margin_mm": 0.0,
+     "ink_inside_own_y_span_margin_mm": -1.15
+    },
+    "GPS": {
+     "centre_to_own_mm": 1.361,
+     "centre_to_nearest_other_mm": 14.539,
+     "nearest_other": "J420",
+     "ink_gap_margin_mm": 13.9,
+     "ink_inside_own_y_span_margin_mm": 0.95
+    },
+    "CAM": {
+     "centre_to_own_mm": 1.361,
+     "centre_to_nearest_other_mm": 4.811,
+     "nearest_other": "J420",
+     "ink_gap_margin_mm": 4.04,
+     "ink_inside_own_y_span_margin_mm": 4.05
+    }
+   },
+   "after": {
+    "IGN": {
+     "centre_to_own_mm": 2.194,
+     "centre_to_nearest_other_mm": 7.46,
+     "nearest_other": "J2",
+     "ink_gap_margin_mm": 5.38,
+     "ink_inside_own_y_span_margin_mm": -2.655
+    },
+    "SWITCH": {
+     "centre_to_own_mm": 0.575,
+     "centre_to_nearest_other_mm": 0.615,
+     "nearest_other": "J121",
+     "ink_gap_margin_mm": 0.04,
+     "ink_inside_own_y_span_margin_mm": -1.15
+    },
+    "BAT": {
+     "centre_to_own_mm": 0.555,
+     "centre_to_nearest_other_mm": 0.635,
+     "nearest_other": "J400",
+     "ink_gap_margin_mm": 0.06,
+     "ink_inside_own_y_span_margin_mm": -1.13
+    },
+    "SWD": {
+     "centre_to_own_mm": 1.278,
+     "centre_to_nearest_other_mm": 4.131,
+     "nearest_other": "J3",
+     "ink_gap_margin_mm": 3.155,
+     "ink_inside_own_y_span_margin_mm": 0.89
+    },
+    "SERVO": {
+     "centre_to_own_mm": 2.337,
+     "centre_to_nearest_other_mm": 6.101,
+     "nearest_other": "J9",
+     "ink_gap_margin_mm": 5.09,
+     "ink_inside_own_y_span_margin_mm": -1.15
+    },
+    "RADIO": {
+     "centre_to_own_mm": 2.051,
+     "centre_to_nearest_other_mm": 5.767,
+     "nearest_other": "J410",
+     "ink_gap_margin_mm": 4.815,
+     "ink_inside_own_y_span_margin_mm": 4.825
+    },
+    "GPS": {
+     "centre_to_own_mm": 1.361,
+     "centre_to_nearest_other_mm": 14.539,
+     "nearest_other": "J420",
+     "ink_gap_margin_mm": 13.9,
+     "ink_inside_own_y_span_margin_mm": 0.95
+    },
+    "CAM": {
+     "centre_to_own_mm": 1.361,
+     "centre_to_nearest_other_mm": 4.811,
+     "nearest_other": "J420",
+     "ink_gap_margin_mm": 4.04,
+     "ink_inside_own_y_span_margin_mm": 4.05
+    }
+   }
+  },
+  "7_c84_paste": {
+   "decision": "D-R19-07",
+   "status": "done",
+   "method": "generated library footprint M3_MA_8x10 without F.Paste (no board override)",
+   "paste_flashes": {
+    "F": [
+     245,
+     245
+    ],
+    "B": [
+     371,
+     371
+    ]
+   }
+  },
+  "8_pin_legends": {
+   "decision": "D-R19-08 / D-R19-12",
+   "status": "done",
+   "pin_spots": 12,
+   "ink_to_vrml_envelope_mm_round18_to_now": {
+    "1:E1- (J121)": [
+     -0.716,
+     0.245
+    ],
+    "1:SW (J400)": [
+     -0.03,
+     0.47
+    ],
+    "1:BAT+ (J1)": [
+     -0.7,
+     0.55
+    ],
+    "1:S1 (J122)": [
+     -0.92,
+     0.18
+    ],
+    "1:5V4 (J9)": [
+     -0.937,
+     0.213
+    ],
+    "4:RXI (J410)": [
+     0.22,
+     0.72
+    ],
+    "1:4V8 (J410), 4:TXO (J9)": [
+     -0.067,
+     0.133
+    ],
+    "4:RXI (J420)": [
+     -0.067,
+     1.583
+    ],
+    "1:4V8 (J420)": [
+     1.333,
+     1.583
+    ]
+   },
+   "moved_to_bottom": [
+    "2:E1+ beside J121.2",
+    "2:SW beside J400.2"
+   ],
+   "owner_margin_mm": {
+    "1:E1-": 3.32,
+    "2:E1+": 1.83,
+    "1:SW": 0.65,
+    "2:SW": 1.77,
+    "1:BAT+": 0.38,
+    "1:S1": 3.5,
+    "1:5V4": 3.44,
+    "J410 4:RXI": 3.5,
+    "J410 1:4V8 / J9 4:TXO": 0.31,
+    "J420 4:RXI": 0.45,
+    "J420 1:4V8": 0.32
+   },
+   "smallest_top_legend_to_envelope_mm": 0.133,
+   "designators": {
+    "J121": "held at round 18 spot (2.957, 57.041, 90)",
+    "J400": "top board-edge strip (2.937, 67.617, 90); round 18 on the bottom",
+    "J122": {
+     "spot": [
+      33.3,
+      78.6,
+      90
+     ],
+     "under_envelope_mm": {
+      "round18": 0.772,
+      "builds5_6": 0.91,
+      "now": 0.0
+     },
+     "to_own_courtyard_mm": 0.395,
+     "to_c84_courtyard_mm": 0.705
+    },
+    "J1 J121 J400 J410 J420 J9": "vertical, touch envelope edge by 0.060-0.087 mm, read whole"
+   }
+  },
+  "9_second_vias": {
+   "decision": "D-R19-09",
+   "status": "done for five feeds",
+   "added": {
+    "VLOGIC (29.8, 81.15)": {
+     "F.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "F.Cu non-GND": [
+      1.44,
+      "track 3V3"
+     ],
+     "B.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "B.Cu non-GND": [
+      1.638,
+      "via 3V3 (30.800,79.260)"
+     ],
+     "hole_to_hole_min": 0.649,
+     "in2_joined": false
+    },
+    "PORT_5V3 (42.75, 61.8)": {
+     "F.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "F.Cu non-GND": null,
+     "B.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "B.Cu non-GND": [
+      2.831,
+      "C431.1"
+     ],
+     "hole_to_hole_min": 0.45,
+     "in2_joined": true
+    },
+    "PORT_5V3 (26.45, 11.95)": {
+     "F.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "F.Cu non-GND": [
+      2.0,
+      "track GPS_RX_MCU"
+     ],
+     "B.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "B.Cu non-GND": [
+      1.275,
+      "U401.8"
+     ],
+     "hole_to_hole_min": 1.556,
+     "in2_joined": true
+    },
+    "PORT_5V3 (24.9, 14.9)": {
+     "F.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "F.Cu non-GND": null,
+     "B.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "B.Cu non-GND": [
+      0.783,
+      "C408.1"
+     ],
+     "hole_to_hole_min": 0.45,
+     "in2_joined": true
+    },
+    "PORT_4V8 (29.75, 9.95)": {
+     "F.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "F.Cu non-GND": [
+      0.7,
+      "track GPS_RX_MCU"
+     ],
+     "B.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "B.Cu non-GND": [
+      1.983,
+      "via GPS_RX_MCU (32.000,11.000)"
+     ],
+     "hole_to_hole_min": 2.183,
+     "in2_joined": true
+    },
+    "BAT_ENABLE (19.675, 66.6)": {
+     "F.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "F.Cu non-GND": [
+      1.556,
+      "track ACT_EN_MCU"
+     ],
+     "B.Cu": [
+      0.251,
+      "GND fill"
+     ],
+     "B.Cu non-GND": [
+      0.5,
+      "R134.2"
+     ],
+     "hole_to_hole_min": 1.123,
+     "in2_joined": false
+    }
+   },
+   "not_doubled": {
+    "U11.2 RAW_PROTECTED (24.3, 66.0)": "no spot within 1.5 mm keeps 0.5 mm from ACT_EN_MCU (22 spots at 0.15-0.35 mm)",
+    "3V3A (16.0, 50.2)": "USB_LIMITED In2 run 0.65 mm south; north spots 0.15 mm from U1.100 / U1.1 and off the trunk",
+    "3V3A (27.0, 49.25)": "F.Cu spots <= 0.10 mm from U1.19 GND stub / pin row; B.Cu spots need stubs on F, In2 and B"
+   },
+   "k_power_paths_added": [
+    "U401 IN",
+    "U401 EN",
+    "U401 OUT",
+    "U402 IN",
+    "C84 hold-up",
+    "U400 OUT",
+    "U2 OUT"
+   ],
+   "route_check": "PARALLEL_VIAS (VLOGIC (29.8, 81.15)); parallel_via category"
+  },
+  "10_c87": {
+   "decision": "D-R19-10",
+   "status": "done",
+   "part": "C21120 CL10B224KA8NNNC 220 nF 25 V X7R 0603",
+   "turn_on_ms": {
+    "nominal": [
+     88,
+     56,
+     45
+    ],
+    "range": [
+     31,
+     122
+    ]
+   },
+   "chatter_immunity_ms": {
+    "nominal": [
+     19,
+     33,
+     41
+    ],
+    "worst": [
+     12,
+     22,
+     27
+    ]
+   },
+   "source": "TI SLVSFC9C p9"
+  },
+  "11_u4": {
+   "decision": "D-R19-11",
+   "status": "done",
+   "part": "ISM6HG256XTR C51931514",
+   "alternate": "LSM6DSV320X C26633007 (consigned)",
+   "cpl_rotation": [
+    0,
+    180
+   ],
+   "jlc_residual_mm": 0.04,
+   "cost_usd_per_board": 84.21,
+   "cap_usd": 84.41,
+   "stock": 9
+  },
+  "12_notes": {
+   "decision": "D-R19-13",
+   "status": "done"
+  },
+  "13_binding": {
+   "decision": "D-R19-13",
+   "status": "done",
+   "pin_table_rows_recited": 82,
+   "revision": "DS12110 Rev 8 rev V"
+  },
+  "14_aux_port": {
+   "decision": "D-R19-14",
+   "status": "done",
+   "owner_approval": "2026-10-30 (\"Add spare port\")",
+   "parts": {
+    "J440": "C2757925",
+    "R470": "C21190",
+    "R471": "C21190",
+    "D440": "C535146",
+    "D441": "C535146",
+    "C444": "C14663",
+    "C445": "C21397"
+   },
+   "new_codes": 0,
+   "uart": {
+    "J410": "USART3 PD8 TX / PD9 RX (U1.55 / U1.56), AF7, DS12110 Rev 8 Table 13 p94",
+    "J420": "UART5 PB13 TX / PB12 RX (U1.52 / U1.51), AF14, unchanged",
+    "J440": "USART6 PC6 TX / PC7 RX (U1.63 / U1.64), AF7, DS12110 Rev 8 Table 12 p92",
+    "why": "option A (USART3 PD8 / PD9) is used, on J410: a PD8 / PD9 route to the north-west corner must cross the GPS pair over the microSD contacts and SD bus at the In2 3V3 / PORT_4V8 boundary (measured infeasible for two nets; detour 80 mm); option B moves IMU_INT1; PC6 / PC7 face the corner, so both routes are F.Cu only and the AUX pair has no layer change",
+    "default_map": "GPS J410, radio J420, AUX spare; J9 excluded"
+   },
+   "placement": {
+    "J440": "F(7.4,16.25) rot -90, wires west",
+    "top_washer_mm": 3.93,
+    "j3_courtyard_gap_mm": 1.67,
+    "wire_room_mm": 5.003,
+    "wire_room_floor_mm": 4.95,
+    "cell": "top: C444 F(12.5,12.6), C445 F(15.2,13.4), D440 F(13.9,17.2), R471 F(16.1,18.0), D441 F(13.9,21.4), R470 F(16.1,20.6)",
+    "moved": {
+     "R90": [
+      "B(7.8,23.1)",
+      "B(11.275,23.0)"
+     ],
+     "TP82": [
+      "B(10.8,21.3)",
+      "B(11.0,17.6)"
+     ],
+     "C23.2 fan-out via": [
+      "(27.1,34.2)",
+      "(25.95,34.15)"
+     ]
+    }
+   },
+   "feed": {
+    "width_mm": 0.4,
+    "length_mm": 22.8,
+    "vias": [
+     [
+      29.75,
+      9.95
+     ],
+     [
+      30.5,
+      9.95
+     ]
+    ],
+    "drop_mV_at_300mA": 8.5
+   },
+   "aux_allowance": {
+    "mA": 100,
+    "limit_by_gap3_mA": 112,
+    "source": "TI SBVS282A p1 (1 A), p5 (1.5-1.9 A limit); GAP-3 Tj <= 125 C at 70 C bay, theta-JA 80-110 C/W Inference"
+   },
+   "budget_changes": {
+    "ldo_loss_W": [
+     0.406,
+     0.49
+    ],
+    "tj_70C": [
+     [
+      102.5,
+      114.7
+     ],
+     [
+      109.2,
+      123.9
+     ]
+    ],
+    "tj_85C": [
+     [
+      117.5,
+      129.7
+     ],
+     [
+      124.2,
+      138.9
+     ]
+    ],
+    "buck_camera_short_A": [
+     1.71,
+     1.81
+    ],
+    "ride_through_ports_on_300uF_ms": [
+     [
+      0.49,
+      0.571
+     ],
+     [
+      0.464,
+      0.539
+     ]
+    ],
+    "ride_through_camera_off_300uF_ms": [
+     [
+      1.533,
+      1.655
+     ],
+     [
+      1.304,
+      1.412
+     ]
+    ],
+    "fire_A_0_and_4_stalls": [
+     [
+      1.544,
+      1.283
+     ],
+     [
+      1.541,
+      1.279
+     ]
+    ],
+    "ldo_limited_short_cases": "unchanged"
+   },
+   "legends": {
+    "AUX": "F(13.4,10.2) inside J440 span 1.895 mm",
+    "pin_1": "F(2.4,10.6,90) owner margin 0.33",
+    "pins_2_3_4": "bottom: 2:GND 1.41, 3:TXO 0.30, 4:RXI B(4.2,21.5) 1.74 (no top spot for 4:RXI)"
+   },
+   "cost": {
+    "usd_per_board": 85.35,
+    "cap": 84.41,
+    "adds": 1.14,
+    "met": false
+   },
+   "stock": {
+    "C2757925": "4 per board, 37827 in stock",
+    "C535146": "8 per board, 201 in stock",
+    "short": "none"
+   },
+   "designators_hidden_new": [
+    "C28",
+    "R110",
+    "D440",
+    "D441"
+   ],
+   "k_power_gap": "counts the via behind (29.75, 9.95); losing (30.5, 9.95) alone would pass"
+  }
+ },
+ "s8_barrels": {
+  "wall": {
+   "PYRO1_GATE via (14.400, 53.300)": {
+    "In1.Cu GND": [
+     0.251,
+     "GND"
+    ],
+    "In2.Cu GND": [
+     0.251,
+     "GND"
+    ],
+    "In2.Cu other": [
+     2.1,
+     "USB_LIMITED"
+    ]
+   },
+   "PYRO1_OUT via (11.630, 55.100)": {
+    "In1.Cu GND": [
+     1.021,
+     "GND"
+    ],
+    "In1.Cu other": [
+     2.925,
+     "3V3"
+    ],
+    "In2.Cu GND": [
+     1.021,
+     "GND"
+    ],
+    "In2.Cu other": [
+     2.699,
+     "3V3"
+    ]
+   },
+   "BAT_ENABLE via (19.675, 66.600)": {
+    "In1.Cu GND": [
+     0.251,
+     "GND"
+    ],
+    "In2.Cu GND": [
+     1.123,
+     "GND"
+    ],
+    "In2.Cu other": [
+     1.05,
+     "RAW_PROTECTED"
+    ]
+   },
+   "BAT_ENABLE via (21.300, 68.900)": {
+    "In1.Cu GND": [
+     0.251,
+     "GND"
+    ],
+    "In1.Cu other": [
+     1.624,
+     "3V3"
+    ],
+    "In2.Cu GND": [
+     1.566,
+     "GND"
+    ],
+    "In2.Cu other": [
+     1.05,
+     "3V3"
+    ]
+   },
+   "BAT_ENABLE via (17.100, 82.800)": {
+    "In1.Cu GND": [
+     0.251,
+     "GND"
+    ],
+    "In1.Cu other": [
+     1.678,
+     "BAT_FAULT_N"
+    ],
+    "In2.Cu GND": [
+     2.602,
+     "GND"
+    ],
+    "In2.Cu other": [
+     1.05,
+     "RAW_PROTECTED"
+    ]
+   },
+   "ACT_GATE via (16.200, 73.300)": {
+    "In1.Cu GND": [
+     1.05,
+     "GND"
+    ],
+    "In2.Cu GND": [
+     1.407,
+     "GND"
+    ],
+    "In2.Cu other": [
+     1.05,
+     "RAW_PROTECTED"
+    ]
+   },
+   "ACT_GATE via (11.140, 71.700)": {
+    "In1.Cu GND": [
+     1.05,
+     "GND"
+    ],
+    "In1.Cu other": [
+     2.223,
+     "BAT_SW_SOURCE"
+    ],
+    "In2.Cu other": [
+     1.05,
+     "RAW_PROTECTED"
+    ]
+   },
+   "PYRO1_OUT J121.1 hole": {
+    "In1.Cu GND": [
+     1.05,
+     "GND"
+    ],
+    "In1.Cu other": [
+     1.32,
+     "3V3"
+    ],
+    "In2.Cu GND": [
+     1.05,
+     "GND"
+    ],
+    "In2.Cu other": [
+     1.061,
+     "3V3"
+    ]
+   },
+   "PYRO1_IGN J121.2 hole": {
+    "In1.Cu GND": [
+     0.551,
+     "GND"
+    ],
+    "In1.Cu other": [
+     1.9,
+     "PYRO1_OUT"
+    ],
+    "In2.Cu GND": [
+     0.551,
+     "GND"
+    ],
+    "In2.Cu other": [
+     1.9,
+     "PYRO1_OUT"
+    ]
+   },
+   "BAT_SW_RETURN J400.2 hole": {
+    "In1.Cu GND": [
+     0.551,
+     "GND"
+    ],
+    "In1.Cu other": [
+     1.9,
+     "BAT_SW_SOURCE"
+    ],
+    "In2.Cu GND": [
+     1.05,
+     "GND"
+    ],
+    "In2.Cu other": [
+     1.05,
+     "RAW_PROTECTED"
+    ]
+   }
+  },
+  "ring": {
+   "PYRO1_OUT J121.1 In1.Cu": [
+    0.75,
+    "GND"
+   ],
+   "PYRO1_OUT J121.1 In2.Cu": [
+    0.75,
+    "GND"
+   ],
+   "PYRO1_IGN J121.2 In1.Cu": [
+    0.251,
+    "GND"
+   ],
+   "PYRO1_IGN J121.2 In2.Cu": [
+    0.251,
+    "GND"
+   ],
+   "BAT_SW_RETURN J400.2 In1.Cu": [
+    0.251,
+    "GND"
+   ],
+   "BAT_SW_RETURN J400.2 In2.Cu": [
+    0.75,
+    "GND"
+   ]
+  }
+ },
+ "render_check": {
+  "renders": [
+   ".supervisor/r10_renders/r10_top.png",
+   ".supervisor/r10_renders/r10_bottom.png"
+  ],
+  "made_by": "r10_fab.sh in builds 8-10 (same PCB): kicad-cli 10.0.7 pcb render --quality high, 1016 x 1988",
+  "also_checked": "2032 x 3976 top / bottom renders cropped to the west and east terminals, the north-west corner (J440), the bottom J121 / J400 / J440 pins and the microSD area",
+  "seen": [
+   "every pin legend whole, incl. 1:BAT+, 1:5V4, 1:S1, J410 4:RXI and 1:E1-",
+   "SWITCH and BAT alone on their gap lines (in the ambient-occlusion shade, legible)",
+   "E1+ only on the bottom (2:E1+ beside J121.2), 2:SW beside J400.2",
+   "word legends at the same terminal ends as round 18",
+   "J122 designator whole after its move (build 6 render: a sliver)",
+   "J440: 1:4V8, AUX and its designator whole on the top; 2:GND / 3:TXO / 4:RXI beside its pins on the bottom"
+  ],
+  "leftovers_unchanged_since_round18": [
+   "J430 designator mostly under the microSD socket model (bottom)",
+   "R461 designator lower half under the same model edge (bottom)"
+  ]
+ },
+ "tests_added": [
+  "R19Gate.test_r19_s8_gnd_is_a_hazard_at_pyro1_out",
+  "R19Gate.test_r19_named_bridge_via",
+  "R19Gate.test_r19_port_words_inside_their_own_span",
+  "R4Synthetic.test_r19_own_barrel_void_is_exempt_for_hazard_nets_only",
+  "Synthetic.test_r19_s3_q122_gate_source_capacitor",
+  "RealBoardSeeds.test_r19_load_switch_enable_cap_and_removed_probe",
+  "RealBoardSeeds.test_r19_doubled_feeds_keep_two_vias",
+  "RealBoardSeeds.test_r19_hand_fitted_c84_has_no_paste",
+  "RealBoardSeeds.test_r19_pyro_out_barrels_clear_gnd",
+  "test_route_check.R10AuditScope.test_r19_named_parallel_via_closes_only_its_own_loop",
+  "R19Gate.test_r19_aux_word_inside_j440_span",
+  "RealBoardSeeds.test_r19_aux_port_feed_and_contract"
+ ],
+ "tests_changed": [
+  "Synthetic gates() fixture (C123)",
+  "R3Synthetic.test_s8_load_switch_gate_and_enable_barrels",
+  "R18Gate.test_word_legend_face_and_subject_map",
+  "RealBoardSeeds.test_r18_word_legends_are_beside_their_own_terminal",
+  "SchematicContract.test_binding_note_has_pad_policy_and_both_trace_locks",
+  "Contract.test_direct_uart_series_esd_and_obsolete_parts_seeds (AUX)",
+  "test_one_port_definition_for_both_gates (AUX)",
+  "Plate tests (J440 / C445)",
+  "RealBoardSeeds.test_conflicting_silkscreen_textboxes (free spot)",
+  "test_fit_check (eight wire rooms)",
+  "test_route_check exact-duplicate target (GPS_RX run)"
+ ],
+ "decisions": [
+  "D-R19-01",
+  "D-R19-02",
+  "D-R19-03",
+  "D-R19-04",
+  "D-R19-05",
+  "D-R19-06",
+  "D-R19-07",
+  "D-R19-08",
+  "D-R19-09",
+  "D-R19-10",
+  "D-R19-11",
+  "D-R19-12",
+  "D-R19-13",
+  "D-R19-14"
+ ],
+ "not_mine_left": [
+  "R19-GATE-01",
+  "R19-GATE-02",
+  "R19-GATE-03",
+  "R19-GATE-05's K-power IN-via wording",
+  "R19-GATE-07",
+  "other rails width floors",
+  "V3V3_SENSE stale slow-return entry",
+  "R150-R155 strain rows"
+ ],
+ "not_mine_done_on_request": [
+  "SWITCH single word list"
+ ],
+ "git_state_changed": false,
+ "native_cad_hand_edited": false
+}

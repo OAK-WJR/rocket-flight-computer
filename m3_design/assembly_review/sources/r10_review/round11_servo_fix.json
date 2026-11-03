@@ -1,0 +1,1670 @@
+{
+  "task": "Round11 servo-cell integration fix",
+  "date": "2026-10-29",
+  "status": "servo source fix validated on an isolated generated prototype; integrated build pending",
+  "evidence_level": "Software / CAD",
+  "qualifying_review_round": false,
+  "canonical_pcb_written": false,
+  "canonical_sha256_at_probe": "419a8f49f39ea748a1622ecb5858ba060d1eb2fac7df7e3cca37a72dc6d8fd15",
+  "prototype_sha256": "175b8544fee35ef43ed6d5d27e999726ec43976de3eabbbd141e2fae8f599c2e",
+  "native_pcbnew_version": "10.0.6",
+  "drc_cli_version": "10.0.7",
+  "scoped_source_sha256": "4b21f6ac258ae0877cff27e284d34efb92e41c7a3dc0692f214309371150c17e",
+  "owned_sources": [
+    "m3_design/r10_place.tsv: D121 and R150-R157 rows only",
+    "m3_design/r10_route_signals.py: servos_local and servos only",
+    "m3_design/r10_fanout.tsv: R154.2 return row only"
+  ],
+  "unchanged_contracts": [
+    "circuit and MCU pin map",
+    "J122 terminal at F(38.6,71.5),90 degrees",
+    "supports and board outline",
+    "IMU pose",
+    "AGENTS section 2",
+    "all clearance floors and allowlists"
+  ],
+  "method": [
+    "Apply current placement TSV poses/orientations to the frozen PCB in memory; regenerate core/usb/pyro/power/signals/ground copper and fill, run the normal post stage, and fill again; save only an isolated prototype.",
+    "Regenerate the final SERVO1-SERVO4 output routes from the same servo generator after the resistor-side elbow improvement; assert every servo track tuple in the prototype equals the generator dry output; refill.",
+    "Build native courtyard caches explicitly for measurement and focused checking, without changing the canonical post-stage cache behavior.",
+    "Run the official KiCad 10.0.7 DRC, focused native checks, foreign copper/hole pair scan, and route_check profile r10 on the isolated prototype."
+  ],
+  "poses": {
+    "D121": {
+      "side": "B",
+      "xy_mm": [
+        31.5,
+        71.5
+      ],
+      "rotation_deg": 180.0
+    },
+    "R150": {
+      "side": "B",
+      "xy_mm": [
+        34.6,
+        75.9
+      ],
+      "rotation_deg": 0.0
+    },
+    "R151": {
+      "side": "B",
+      "xy_mm": [
+        34.7,
+        72.77
+      ],
+      "rotation_deg": 0.0
+    },
+    "R152": {
+      "side": "B",
+      "xy_mm": [
+        34.7,
+        70.23
+      ],
+      "rotation_deg": 0.0
+    },
+    "R153": {
+      "side": "B",
+      "xy_mm": [
+        34.6,
+        68.0
+      ],
+      "rotation_deg": 0.0
+    },
+    "R154": {
+      "side": "B",
+      "xy_mm": [
+        32.45,
+        74.53
+      ],
+      "rotation_deg": 270.0
+    },
+    "R155": {
+      "side": "B",
+      "xy_mm": [
+        30.55,
+        74.53
+      ],
+      "rotation_deg": 270.0
+    },
+    "R156": {
+      "side": "B",
+      "xy_mm": [
+        30.55,
+        68.4
+      ],
+      "rotation_deg": 90.0
+    },
+    "R157": {
+      "side": "B",
+      "xy_mm": [
+        32.45,
+        68.4
+      ],
+      "rotation_deg": 90.0
+    }
+  },
+  "clearance_floors_mm": {
+    "bottom_courtyard_to_foreign_THT_pad": 1.5,
+    "accepted_wire_room": 4.95,
+    "foreign_copper": 0.15,
+    "general_foreign_hole_to_copper": 0.25
+  },
+  "nearest_THT": {
+    "D121": {
+      "gap_mm": 4.445,
+      "pad": "J122.3"
+    },
+    "R150": {
+      "gap_mm": 1.581,
+      "pad": "J122.2"
+    },
+    "R151": {
+      "gap_mm": 1.536,
+      "pad": "J122.3"
+    },
+    "R152": {
+      "gap_mm": 1.536,
+      "pad": "J122.3"
+    },
+    "R153": {
+      "gap_mm": 1.575,
+      "pad": "J122.4"
+    },
+    "R154": {
+      "gap_mm": 4.785,
+      "pad": "J122.2"
+    },
+    "R155": {
+      "gap_mm": 6.685,
+      "pad": "J122.2"
+    },
+    "R156": {
+      "gap_mm": 6.685,
+      "pad": "J122.4"
+    },
+    "R157": {
+      "gap_mm": 4.785,
+      "pad": "J122.4"
+    }
+  },
+  "minimum_M6_gap_mm": 1.536,
+  "courtyard_pairs_below_1mm": [
+    {
+      "parts": [
+        "D121",
+        "R151"
+      ],
+      "gap_mm": 0.02
+    },
+    {
+      "parts": [
+        "D121",
+        "R152"
+      ],
+      "gap_mm": 0.02
+    },
+    {
+      "parts": [
+        "D121",
+        "R153"
+      ],
+      "gap_mm": 0.84
+    },
+    {
+      "parts": [
+        "D121",
+        "R154"
+      ],
+      "gap_mm": 0.23
+    },
+    {
+      "parts": [
+        "D121",
+        "R155"
+      ],
+      "gap_mm": 0.23
+    },
+    {
+      "parts": [
+        "D121",
+        "R156"
+      ],
+      "gap_mm": 0.3
+    },
+    {
+      "parts": [
+        "D121",
+        "R157"
+      ],
+      "gap_mm": 0.3
+    },
+    {
+      "parts": [
+        "R150",
+        "R154"
+      ],
+      "gap_mm": 0.26
+    },
+    {
+      "parts": [
+        "R151",
+        "R154"
+      ],
+      "gap_mm": 0.398
+    },
+    {
+      "parts": [
+        "R152",
+        "R153"
+      ],
+      "gap_mm": 0.78
+    },
+    {
+      "parts": [
+        "R152",
+        "R157"
+      ],
+      "gap_mm": 0.433
+    },
+    {
+      "parts": [
+        "R153",
+        "R157"
+      ],
+      "gap_mm": 0.26
+    }
+  ],
+  "minimum_servo_courtyard_gap_mm": 0.02,
+  "J122_wire_room_mm": 5.003,
+  "shared_return": {
+    "pad": "R154.2",
+    "track_mm": [
+      [
+        32.45,
+        74.96
+      ],
+      [
+        33.4,
+        74.96
+      ]
+    ],
+    "width_mm": 0.3,
+    "via_xy_mm": [
+      33.4,
+      74.96
+    ],
+    "via_diameter_mm": 0.5,
+    "drill_mm": 0.3,
+    "minimum_foreign_gaps": {
+      "F.Cu": {
+        "ring_min": [
+          0.522,
+          "SERVO1_MCU PCB_VIA [33.0, 75.9]"
+        ],
+        "hole_min": [
+          0.622,
+          "SERVO1_MCU PCB_VIA [33.0, 75.9]"
+        ]
+      },
+      "B.Cu": {
+        "ring_min": [
+          0.238,
+          "R150.1"
+        ],
+        "hole_min": [
+          0.338,
+          "R150.1"
+        ]
+      }
+    }
+  },
+  "PWM_nearest_GND": {
+    "SERVO1_MCU": {
+      "signal_xy_mm": [
+        33.0,
+        75.9
+      ],
+      "GND_xy_mm": [
+        33.4,
+        74.96
+      ],
+      "centre_distance_mm": 1.021567
+    },
+    "SERVO2_MCU": {
+      "signal_xy_mm": [
+        34.325,
+        73.8
+      ],
+      "GND_xy_mm": [
+        33.4,
+        74.96
+      ],
+      "centre_distance_mm": 1.483653
+    },
+    "SERVO3_MCU": {
+      "signal_xy_mm": [
+        33.675,
+        69.05
+      ],
+      "GND_xy_mm": [
+        32.968,
+        67.452
+      ],
+      "centre_distance_mm": 1.747413
+    },
+    "SERVO4_MCU": {
+      "signal_xy_mm": [
+        34.0,
+        66.5
+      ],
+      "GND_xy_mm": [
+        32.968,
+        67.452
+      ],
+      "centre_distance_mm": 1.40404
+    }
+  },
+  "servo_generator_tracks": [
+    {
+      "net": "SERVO1_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        32.45,
+        72.65
+      ],
+      "to_mm": [
+        32.45,
+        74.1
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.55,
+        72.65
+      ],
+      "to_mm": [
+        30.55,
+        74.1
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.55,
+        70.35
+      ],
+      "to_mm": [
+        30.55,
+        68.83
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        32.45,
+        70.35
+      ],
+      "to_mm": [
+        32.45,
+        68.83
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        32.45,
+        74.1
+      ],
+      "to_mm": [
+        33.5,
+        74.1
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        33.5,
+        74.1
+      ],
+      "to_mm": [
+        34,
+        74.6
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        34,
+        74.6
+      ],
+      "to_mm": [
+        34,
+        75.6
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.55,
+        72.65
+      ],
+      "to_mm": [
+        30.55,
+        71.85
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.55,
+        71.85
+      ],
+      "to_mm": [
+        32.955,
+        71.85
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        32.955,
+        71.85
+      ],
+      "to_mm": [
+        33.875,
+        72.77
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.55,
+        70.35
+      ],
+      "to_mm": [
+        30.55,
+        71.2
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.55,
+        71.2
+      ],
+      "to_mm": [
+        32.905,
+        71.2
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        32.905,
+        71.2
+      ],
+      "to_mm": [
+        33.875,
+        70.23
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        32.45,
+        68.83
+      ],
+      "to_mm": [
+        32.945,
+        68.83
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        32.945,
+        68.83
+      ],
+      "to_mm": [
+        33.775,
+        68.0
+      ]
+    },
+    {
+      "net": "GND",
+      "layer": "B",
+      "width_mm": 0.3,
+      "from_mm": [
+        31.5,
+        72.65
+      ],
+      "to_mm": [
+        31.5,
+        73.6
+      ]
+    },
+    {
+      "net": "3V3",
+      "layer": "B",
+      "width_mm": 0.3,
+      "from_mm": [
+        31.5,
+        70.35
+      ],
+      "to_mm": [
+        31.5,
+        69.4
+      ]
+    },
+    {
+      "net": "SERVO1_OUT",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        35.425,
+        75.9
+      ],
+      "to_mm": [
+        36.0,
+        75.9
+      ]
+    },
+    {
+      "net": "SERVO1_OUT",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        36.0,
+        75.9
+      ],
+      "to_mm": [
+        38.6,
+        78.5
+      ]
+    },
+    {
+      "net": "SERVO2_OUT",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        35.525,
+        72.77
+      ],
+      "to_mm": [
+        36.37,
+        72.77
+      ]
+    },
+    {
+      "net": "SERVO2_OUT",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        36.37,
+        72.77
+      ],
+      "to_mm": [
+        38.6,
+        75.0
+      ]
+    },
+    {
+      "net": "SERVO3_OUT",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        35.525,
+        70.23
+      ],
+      "to_mm": [
+        36.795,
+        71.5
+      ]
+    },
+    {
+      "net": "SERVO3_OUT",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        36.795,
+        71.5
+      ],
+      "to_mm": [
+        38.6,
+        71.5
+      ]
+    },
+    {
+      "net": "SERVO4_OUT",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        35.425,
+        68.0
+      ],
+      "to_mm": [
+        38.6,
+        68.0
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        27.5,
+        50.55
+      ],
+      "to_mm": [
+        27.5,
+        52
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        27.5,
+        52
+      ],
+      "to_mm": [
+        30.3,
+        54.8
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.3,
+        54.8
+      ],
+      "to_mm": [
+        30.3,
+        73.2
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.3,
+        73.2
+      ],
+      "to_mm": [
+        33,
+        75.9
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        28.0,
+        50.55
+      ],
+      "to_mm": [
+        28.0,
+        52
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        28.0,
+        52
+      ],
+      "to_mm": [
+        30.78,
+        54.78
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.78,
+        54.78
+      ],
+      "to_mm": [
+        30.78,
+        70.255
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        30.78,
+        70.255
+      ],
+      "to_mm": [
+        34.325,
+        73.8
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        28.5,
+        50.55
+      ],
+      "to_mm": [
+        28.5,
+        52
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        28.5,
+        52
+      ],
+      "to_mm": [
+        31.26,
+        54.76
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        31.26,
+        54.76
+      ],
+      "to_mm": [
+        31.26,
+        66.635
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        31.26,
+        66.635
+      ],
+      "to_mm": [
+        33.675,
+        69.05
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        29.0,
+        50.55
+      ],
+      "to_mm": [
+        29.0,
+        52
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        29.0,
+        52
+      ],
+      "to_mm": [
+        31.74,
+        54.74
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        31.74,
+        54.74
+      ],
+      "to_mm": [
+        31.74,
+        64.24
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "F",
+      "width_mm": 0.2,
+      "from_mm": [
+        31.74,
+        64.24
+      ],
+      "to_mm": [
+        34,
+        66.5
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        33,
+        75.9
+      ],
+      "to_mm": [
+        33.775,
+        75.9
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        34.325,
+        73.8
+      ],
+      "to_mm": [
+        33.875,
+        73.35
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        33.875,
+        73.35
+      ],
+      "to_mm": [
+        33.875,
+        72.77
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        33.675,
+        69.05
+      ],
+      "to_mm": [
+        33.675,
+        70.23
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "layer": "B",
+      "width_mm": 0.2,
+      "from_mm": [
+        34,
+        66.5
+      ],
+      "to_mm": [
+        34,
+        68
+      ]
+    }
+  ],
+  "servo_generator_vias": [
+    {
+      "net": "GND",
+      "xy_mm": [
+        31.5,
+        73.6
+      ]
+    },
+    {
+      "net": "3V3",
+      "xy_mm": [
+        31.5,
+        69.4
+      ]
+    },
+    {
+      "net": "SERVO1_MCU",
+      "xy_mm": [
+        33,
+        75.9
+      ]
+    },
+    {
+      "net": "SERVO2_MCU",
+      "xy_mm": [
+        34.325,
+        73.8
+      ]
+    },
+    {
+      "net": "SERVO3_MCU",
+      "xy_mm": [
+        33.675,
+        69.05
+      ]
+    },
+    {
+      "net": "SERVO4_MCU",
+      "xy_mm": [
+        34,
+        66.5
+      ]
+    }
+  ],
+  "route_counts": {
+    "servo_generator_segments": 45,
+    "servo_generator_vias": 6,
+    "pull_down_fanout_segments": 4,
+    "pull_down_fanout_vias": 4,
+    "total_servo_cell_segments": 49,
+    "total_servo_cell_vias": 10,
+    "added_vias": 0
+  },
+  "drc": {
+    "servo_violations": [],
+    "servo_violation_count": 0,
+    "all_snapshot_violation_count": 15,
+    "all_snapshot_violation_types": {
+      "shorting_items": 5,
+      "clearance": 4,
+      "hole_clearance": 3,
+      "solder_mask_bridge": 3
+    },
+    "unconnected_items": 0,
+    "schematic_parity_items": 0,
+    "courtyard_overlap_count": 0,
+    "remaining_snapshot_violations": [
+      {
+        "description": "Items shorting two nets (nets CAM_FAULT_N and GND)",
+        "items": [
+          {
+            "description": "Track [CAM_FAULT_N] on F.Cu, length 15.3000 mm",
+            "pos": {
+              "x": 36.0,
+              "y": 41.0
+            },
+            "uuid": "f403588b-c24b-4640-8242-1aa6c72d34d2"
+          },
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 35.75,
+              "y": 44.725
+            },
+            "uuid": "fe820df9-be7e-4d51-b61b-3b661c65e3e6"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      {
+        "description": "Clearance violation (netclass 'Default' clearance 0.1500 mm; actual 0.1243 mm)",
+        "items": [
+          {
+            "description": "Pad 2 [CAM_TX_WIRE] of R101 on B.Cu",
+            "pos": {
+              "x": 34.825,
+              "y": 42.25
+            },
+            "uuid": "275bf1ee-b8ec-4d53-bcef-ca6ad900f067"
+          },
+          {
+            "description": "Track [CAM_UART_OE] on B.Cu, length 0.5657 mm",
+            "pos": {
+              "x": 34.4,
+              "y": 41.6
+            },
+            "uuid": "e996caff-a9e2-4ae8-bf76-91862aa8708a"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      {
+        "description": "Clearance violation (netclass 'Default' clearance 0.1500 mm; actual 0.1373 mm)",
+        "items": [
+          {
+            "description": "Track [CAM_UART_OE] on B.Cu, length 1.9000 mm",
+            "pos": {
+              "x": 34.4,
+              "y": 39.7
+            },
+            "uuid": "12c6571b-4280-434c-a8ba-2273fffac189"
+          },
+          {
+            "description": "Pad 2 [CAM_TX_WIRE] of R101 on B.Cu",
+            "pos": {
+              "x": 34.825,
+              "y": 42.25
+            },
+            "uuid": "275bf1ee-b8ec-4d53-bcef-ca6ad900f067"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      {
+        "description": "Clearance violation (netclass 'Default' clearance 0.1500 mm; actual 0.1036 mm)",
+        "items": [
+          {
+            "description": "Via [LOGIC_SOURCE_ST] on F.Cu - B.Cu",
+            "pos": {
+              "x": 31.0,
+              "y": 51.8
+            },
+            "uuid": "43952d86-5bb7-46c6-8a07-f1d3455c5c8d"
+          },
+          {
+            "description": "Pad 1 [CAM_IO_3V3] of C92 on B.Cu",
+            "pos": {
+              "x": 31.65,
+              "y": 52.5
+            },
+            "uuid": "996eeaa3-dc3c-47a3-994f-a3b8fb393055"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      {
+        "description": "Clearance violation (netclass 'Default' clearance 0.1500 mm; actual 0.1000 mm)",
+        "items": [
+          {
+            "description": "Track [CAM_PWR_EN] on F.Cu, length 15.9000 mm",
+            "pos": {
+              "x": 35.5,
+              "y": 41.5
+            },
+            "uuid": "cfe3f1db-0292-4c95-86b4-30c5ab64715c"
+          },
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 35.05,
+              "y": 47.525
+            },
+            "uuid": "e48920d5-34cb-460d-af1f-aac65417e8c3"
+          }
+        ],
+        "severity": "error",
+        "type": "clearance"
+      },
+      {
+        "description": "Items shorting two nets (nets PORT_4V8 and GND)",
+        "items": [
+          {
+            "description": "Track [PORT_4V8] on B.Cu, length 2.8284 mm",
+            "pos": {
+              "x": 34.2,
+              "y": 22.75
+            },
+            "uuid": "18752448-7c27-46c1-a5fa-1e1509c3ab6b"
+          },
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 34.0,
+              "y": 22.4
+            },
+            "uuid": "5d5302df-1053-4aa8-bdcd-7fa4bf403578"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      {
+        "description": "Items shorting two nets (nets GND and PORT_4V8)",
+        "items": [
+          {
+            "description": "Track [GND] on B.Cu, length 3.1250 mm",
+            "pos": {
+              "x": 30.875,
+              "y": 22.4
+            },
+            "uuid": "5997e4fe-540d-4adc-aae8-d2c0231a608a"
+          },
+          {
+            "description": "Pad 1 [PORT_4V8] of C411 on B.Cu",
+            "pos": {
+              "x": 34.2,
+              "y": 22.75
+            },
+            "uuid": "9bb4d612-6485-4d18-9ea5-95b0f6a272df"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      {
+        "description": "Items shorting two nets (nets GND and CAM_5V)",
+        "items": [
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 38.825,
+              "y": 58.775
+            },
+            "uuid": "c9a0e527-63a9-4cb3-a247-f9920fba1c6b"
+          },
+          {
+            "description": "Track [CAM_5V] on B.Cu, length 2.8284 mm",
+            "pos": {
+              "x": 39.3,
+              "y": 59.25
+            },
+            "uuid": "e36293d1-f765-4339-ba0b-e537f5a13d14"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      {
+        "description": "Items shorting two nets (nets GND and PORT_4V8)",
+        "items": [
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 34.0,
+              "y": 22.4
+            },
+            "uuid": "5d5302df-1053-4aa8-bdcd-7fa4bf403578"
+          },
+          {
+            "description": "Pad 1 [PORT_4V8] of C411 on B.Cu",
+            "pos": {
+              "x": 34.2,
+              "y": 22.75
+            },
+            "uuid": "9bb4d612-6485-4d18-9ea5-95b0f6a272df"
+          }
+        ],
+        "severity": "error",
+        "type": "shorting_items"
+      },
+      {
+        "description": "Hole clearance violation (rule 'General copper to hole clearance' clearance 0.2500 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [PORT_4V8] of C411 on B.Cu",
+            "pos": {
+              "x": 34.2,
+              "y": 22.75
+            },
+            "uuid": "9bb4d612-6485-4d18-9ea5-95b0f6a272df"
+          },
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 34.0,
+              "y": 22.4
+            },
+            "uuid": "5d5302df-1053-4aa8-bdcd-7fa4bf403578"
+          }
+        ],
+        "severity": "error",
+        "type": "hole_clearance"
+      },
+      {
+        "description": "Hole clearance violation (rule 'General copper to hole clearance' clearance 0.2500 mm; actual 0.2036 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [CAM_IO_3V3] of C92 on B.Cu",
+            "pos": {
+              "x": 31.65,
+              "y": 52.5
+            },
+            "uuid": "996eeaa3-dc3c-47a3-994f-a3b8fb393055"
+          },
+          {
+            "description": "Via [LOGIC_SOURCE_ST] on F.Cu - B.Cu",
+            "pos": {
+              "x": 31.0,
+              "y": 51.8
+            },
+            "uuid": "43952d86-5bb7-46c6-8a07-f1d3455c5c8d"
+          }
+        ],
+        "severity": "error",
+        "type": "hole_clearance"
+      },
+      {
+        "description": "Hole clearance violation (rule 'General copper to hole clearance' clearance 0.2500 mm; actual 0.0000 mm)",
+        "items": [
+          {
+            "description": "Pad 1 [CAM_5V] of C431 on B.Cu",
+            "pos": {
+              "x": 39.3,
+              "y": 59.25
+            },
+            "uuid": "b524d9a9-bdf5-4665-804f-880e4e43ab77"
+          },
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 38.825,
+              "y": 58.775
+            },
+            "uuid": "c9a0e527-63a9-4cb3-a247-f9920fba1c6b"
+          }
+        ],
+        "severity": "error",
+        "type": "hole_clearance"
+      },
+      {
+        "description": "Rear solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 34.0,
+              "y": 22.4
+            },
+            "uuid": "5d5302df-1053-4aa8-bdcd-7fa4bf403578"
+          },
+          {
+            "description": "Pad 1 [PORT_4V8] of C411 on B.Cu",
+            "pos": {
+              "x": 34.2,
+              "y": 22.75
+            },
+            "uuid": "9bb4d612-6485-4d18-9ea5-95b0f6a272df"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      {
+        "description": "Rear solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Track [GND] on B.Cu, length 3.1250 mm",
+            "pos": {
+              "x": 30.875,
+              "y": 22.4
+            },
+            "uuid": "5997e4fe-540d-4adc-aae8-d2c0231a608a"
+          },
+          {
+            "description": "Pad 1 [PORT_4V8] of C411 on B.Cu",
+            "pos": {
+              "x": 34.2,
+              "y": 22.75
+            },
+            "uuid": "9bb4d612-6485-4d18-9ea5-95b0f6a272df"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      },
+      {
+        "description": "Rear solder mask aperture bridges items with different nets",
+        "items": [
+          {
+            "description": "Via [GND] on F.Cu - B.Cu",
+            "pos": {
+              "x": 38.825,
+              "y": 58.775
+            },
+            "uuid": "c9a0e527-63a9-4cb3-a247-f9920fba1c6b"
+          },
+          {
+            "description": "Pad 1 [CAM_5V] of C431 on B.Cu",
+            "pos": {
+              "x": 39.3,
+              "y": 59.25
+            },
+            "uuid": "b524d9a9-bdf5-4665-804f-880e4e43ab77"
+          }
+        ],
+        "severity": "error",
+        "type": "solder_mask_bridge"
+      }
+    ],
+    "context": "The remaining snapshot violations are port-area work owned by the parallel port fix. This prototype predates those final corrections and is not a full-board pass.",
+    "schematic_parity_requested": false,
+    "schematic_parity_context": "The focused CLI command did not request schematic parity. The empty reported array is not a parity-check pass; integrated check.sh must verify it."
+  },
+  "focused_native": {
+    "rules": {
+      "M-5": {
+        "ok": true,
+        "issues": []
+      },
+      "M-6": {
+        "ok": true,
+        "issues": []
+      },
+      "M-7": {
+        "ok": true,
+        "issues": []
+      },
+      "P-11": {
+        "ok": true,
+        "issues": []
+      },
+      "F9-2": {
+        "ok": true,
+        "issues": []
+      },
+      "K-copper": {
+        "ok": false,
+        "issues": [
+          "via hole at (34.0, 22.4) (GND) is within 0.1 mm of C411.1's mask opening",
+          "via hole at (38.825, 58.775) (GND) is within 0.1 mm of C431.1's mask opening",
+          "via (34.0, 22.4) (GND) and C411.1's paste (B): the via ring overlaps the paste aperture (D87)",
+          "via (38.825, 58.775) (GND) and C431.1's paste (B): the via ring overlaps the paste aperture (D87)"
+        ]
+      },
+      "K-reference": {
+        "ok": true,
+        "issues": []
+      },
+      "K-region": {
+        "ok": true,
+        "issues": []
+      },
+      "K-retained": {
+        "ok": true,
+        "issues": []
+      }
+    },
+    "servo_issues": [],
+    "context": "Eight of nine whole-board focused rules pass; K-copper reports only two port via/paste groups (four messages), not servo geometry."
+  },
+  "foreign_pair_scan": {
+    "checked_foreign_pairs": 86015,
+    "minimum_copper_clearance_mm": 0.15,
+    "minimum_hole_clearance_mm": 0.25,
+    "issues": [],
+    "nearest_foreign_pairs": [
+      [
+        0.154,
+        "F.Cu",
+        "SERVO1_MCU PCB_TRACK (27.5, 52.0)",
+        "SERVO2_MCU PCB_TRACK (28.0, 50.55)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO1_MCU PCB_TRACK (27.5, 52.0)",
+        "SERVO2_MCU PCB_TRACK (28.0, 52.0)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO1_MCU PCB_TRACK (30.3, 54.8)",
+        "SERVO2_MCU PCB_TRACK (28.0, 52.0)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO2_MCU PCB_TRACK (28.0, 52.0)",
+        "SERVO3_MCU PCB_TRACK (28.5, 50.55)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO2_MCU PCB_TRACK (28.0, 52.0)",
+        "SERVO3_MCU PCB_TRACK (28.5, 52.0)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO2_MCU PCB_TRACK (30.78, 54.78)",
+        "SERVO3_MCU PCB_TRACK (28.5, 52.0)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO3_MCU PCB_TRACK (28.5, 52.0)",
+        "SERVO4_MCU PCB_TRACK (29.0, 50.55)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO3_MCU PCB_TRACK (28.5, 52.0)",
+        "SERVO4_MCU PCB_TRACK (29.0, 52.0)"
+      ],
+      [
+        0.154,
+        "F.Cu",
+        "SERVO3_MCU PCB_TRACK (31.26, 54.76)",
+        "SERVO4_MCU PCB_TRACK (29.0, 52.0)"
+      ],
+      [
+        0.164,
+        "B.Cu",
+        "D121.1",
+        "SERVO2_MCU PCB_TRACK (30.55, 71.85)"
+      ],
+      [
+        0.164,
+        "B.Cu",
+        "D121.2",
+        "SERVO2_MCU PCB_TRACK (30.55, 71.85)"
+      ],
+      [
+        0.203,
+        "F.Cu",
+        "GND PCB_VIA (31.333, 67.97)",
+        "SERVO2_MCU PCB_TRACK (30.78, 54.78)"
+      ],
+      [
+        0.21,
+        "F.Cu",
+        "GND PCB_VIA (32.3, 59.5)",
+        "SERVO4_MCU PCB_TRACK (31.74, 54.74)"
+      ],
+      [
+        0.214,
+        "B.Cu",
+        "D121.5",
+        "SERVO3_MCU PCB_TRACK (30.55, 71.2)"
+      ],
+      [
+        0.214,
+        "B.Cu",
+        "D121.6",
+        "SERVO3_MCU PCB_TRACK (30.55, 71.2)"
+      ],
+      [
+        0.216,
+        "B.Cu",
+        "R153.1",
+        "GND PCB_VIA (32.968, 67.452)"
+      ],
+      [
+        0.216,
+        "F.Cu",
+        "GND PCB_VIA (31.5, 73.6)",
+        "SERVO1_MCU PCB_TRACK (30.3, 73.2)"
+      ],
+      [
+        0.23,
+        "B.Cu",
+        "R156.2",
+        "VLOGIC PCB_TRACK (29.8, 67.7)"
+      ],
+      [
+        0.238,
+        "B.Cu",
+        "R150.1",
+        "GND PCB_VIA (33.4, 74.96)"
+      ],
+      [
+        0.25,
+        "B.Cu",
+        "GND PCB_VIA (33.4, 74.96)",
+        "SERVO1_MCU PCB_TRACK (34.0, 74.6)"
+      ]
+    ]
+  },
+  "routing_hygiene": {
+    "servo_failures": [],
+    "servo_instance_counts": {
+      "pad_end_offcentre": 3,
+      "extra_bends": 4
+    },
+    "servo_review_inventory": [
+      {
+        "cat": "pad_end_offcentre",
+        "net": "SERVO1_MCU",
+        "cls": "actuator",
+        "layer": "B.Cu",
+        "x": 34.0,
+        "y": 75.6,
+        "pad": "R150.1",
+        "off_mm": 0.375
+      },
+      {
+        "cat": "pad_end_offcentre",
+        "net": "SERVO3_MCU",
+        "cls": "actuator",
+        "layer": "B.Cu",
+        "x": 33.675,
+        "y": 70.23,
+        "pad": "R152.1",
+        "off_mm": 0.2
+      },
+      {
+        "cat": "pad_end_offcentre",
+        "net": "SERVO4_MCU",
+        "cls": "actuator",
+        "layer": "B.Cu",
+        "x": 34.0,
+        "y": 68.0,
+        "pad": "R153.1",
+        "off_mm": 0.225
+      },
+      {
+        "cat": "extra_bends",
+        "net": "SERVO1_MCU",
+        "cls": "actuator",
+        "layer": "F.Cu",
+        "x": 27.5,
+        "y": 50.55,
+        "end": [
+          33.0,
+          75.9
+        ],
+        "seglens": [
+          1.45,
+          3.96,
+          18.4,
+          3.818
+        ]
+      },
+      {
+        "cat": "extra_bends",
+        "net": "SERVO2_MCU",
+        "cls": "actuator",
+        "layer": "F.Cu",
+        "x": 28.0,
+        "y": 50.55,
+        "end": [
+          34.325,
+          73.8
+        ],
+        "seglens": [
+          1.45,
+          3.932,
+          15.475,
+          5.013
+        ]
+      },
+      {
+        "cat": "extra_bends",
+        "net": "SERVO3_MCU",
+        "cls": "actuator",
+        "layer": "F.Cu",
+        "x": 28.5,
+        "y": 50.55,
+        "end": [
+          33.675,
+          69.05
+        ],
+        "seglens": [
+          1.45,
+          3.903,
+          11.875,
+          3.415
+        ]
+      },
+      {
+        "cat": "extra_bends",
+        "net": "SERVO4_MCU",
+        "cls": "actuator",
+        "layer": "F.Cu",
+        "x": 29.0,
+        "y": 50.55,
+        "end": [
+          34.0,
+          66.5
+        ],
+        "seglens": [
+          1.45,
+          3.875,
+          9.5,
+          3.196
+        ]
+      }
+    ],
+    "all_snapshot_failures": [
+      {
+        "cat": "local_bump",
+        "net": "CAM_5V",
+        "cls": "power",
+        "layer": "B.Cu",
+        "x": 33.3,
+        "y": 59.95,
+        "end": [
+          39.3,
+          59.25
+        ],
+        "path_mm": 8.468,
+        "octile_mm": 6.29,
+        "nseg": 3,
+        "redraw_mm": 7.051,
+        "candidate": [
+          [
+            33.3,
+            59.95
+          ],
+          [
+            34.2192,
+            60.8692
+          ],
+          [
+            37.6808,
+            60.8692
+          ],
+          [
+            39.3,
+            59.25
+          ]
+        ]
+      }
+    ],
+    "all_allowlist_entries": 0,
+    "stale_allowlist_entries": 0,
+    "servo_missing_leftovers": [],
+    "context": "Only the pre-correction CAM_5V bump blocks this snapshot. Servo nets have no micro/short segment, tiny jog, crossing, overlap, acute/off-angle, whole-in-pad segment, or required-partner failure."
+  },
+  "limitations": [
+    "SERVO3 nearest return remains the existing 1.747413 mm pair; PWM nets are outside the project 1.5 mm critical-signal partner list. No extra stitch is added solely for that unapplied threshold.",
+    "Three in-land series-resistor entry endpoints and the four inherited F.Cu MCU escape extra-bend inventories remain reported for owner routing-deviation acceptance.",
+    "Full integrated build/check.sh, final fabrication/binding, reproducibility and subsequent independent review remain with the supervisor.",
+    "No firmware, electrical, thermal, harness, screwdriver, bore, stack, or other physical qualification is claimed."
+  ],
+  "proof_sha256": {
+    "drc-final.json": "f16eee009c04021ef2bc6a1fd9d079fb4f3af48f404f393dc44b251070e4e8d8",
+    "focused-final.json": "6d2bac9ea644b468eb1a13ce44014a694df9e4d68b870fe2d08ddd37732299ff",
+    "hygiene-final.json": "59d9a81968ede63d1c9739286dd52463f502c2906f339e6aa43f4623b0101b23",
+    "probe.json": "c077c5921991f1559efde8929bdc37262a9cbff50c0c37f4c8d4e1dac6240bb7",
+    "servo_pair_scan.json": "3a262535e06417fc6ee22d303b81f7c69ac29b5a9169fba3eda7eee3df81e092"
+  }
+}

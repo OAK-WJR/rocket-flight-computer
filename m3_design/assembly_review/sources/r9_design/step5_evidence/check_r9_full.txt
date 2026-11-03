@@ -1,0 +1,68 @@
+LC-1         OK   local clearance overrides
+P-0          OK   pyro spacing rules, geometric
+P-1          OK   PYRO_BLOCK area by content (+ P-1b rule G scope)
+P-2          OK   armed-live copper confined
+P-3          OK   block purity
+P-4          OK   rule H live
+P-5          OK   solder-bridge table
+P-6          OK   bare gate pads
+P-7          OK   gate guard (reset voltage)
+P-8          OK   sense resistors at the MCU end
+P-9          OK   test pads and pyro vias
+P-10         OK   coat region
+P-11         OK   terminal entry
+R-1          OK   strip extent
+R-2          OK   strip layers
+R-3          OK   jacks
+R-4          OK   launch congruent
+R-5          OK   GCPW cross-section
+R-6          OK   RF line length
+R-7          OK   RF stitching and fence
+R-8          OK   module keep-outs
+R-9          OK   chain topology
+R-10         OK   RF separation
+R-11         OK   coexistence geometry
+R-12         OK   RF supply
+R-13         OK   radio to pyro
+M-2          FAIL vibration (plate model) (1)
+M-3          OK   J122 tie holes
+M-4          OK   J1
+M-5          OK   fit
+M-6          OK   bottom keep-outs
+M-7          OK   IMU and MEMS
+F9-1         OK   input protection at J1
+T-1          OK   panel-tab windows
+K-contract   FAIL contract (pin map, connectors, series, outline) (4)
+K-legends    FAIL legends and ids (22)
+K-copper     OK   copper hygiene (vias in pads, joints, thermals, paste)
+K-power-pyro OK   D18 / D85 / D19 (strengthened)
+K-inner      OK   D20 In1 / In2 signal tracks
+K-actuators  OK   check_actuators.py pinned
+FAIL M-2: plate model (tools/plate_model.py on this board's fit report, --plate) not run
+FAIL K-contract: C29 requires a direct same-layer route <=3 mm to U3.8; found None
+FAIL K-contract: C100: requires local bypass within 3 mm of U12.3 and direct copper <= 3 mm; distance 1.212, route None
+FAIL K-contract: C100: requires direct local GND return <= 3 mm to U12.2; found None
+FAIL K-contract: C93: requires local bypass within 3 mm of U12.7 and direct copper <= 5 mm; distance 2.577, route None
+FAIL K-legends: J9.1: silkscreen must identify 5V (UART names at module)
+FAIL K-legends: J9.2: silkscreen must identify GND (UART names at module)
+FAIL K-legends: J9.3: silkscreen must identify TX (UART names at module)
+FAIL K-legends: J9.4: silkscreen must identify RX (UART names at module)
+FAIL K-legends: J2.1: silkscreen must identify 3V3 (UART names at module)
+FAIL K-legends: J2.2: silkscreen must identify SWDIO (UART names at module)
+FAIL K-legends: J2.3: silkscreen must identify NRST (UART names at module)
+FAIL K-legends: J2.4: silkscreen must identify SWCLK (UART names at module)
+FAIL K-legends: J2.5: silkscreen must identify GND (UART names at module)
+FAIL K-legends: J2.6: silkscreen must identify NC (UART names at module)
+FAIL K-legends: J30: silkscreen legend "GNSS" required beside the jack
+FAIL K-legends: J31: silkscreen legend "RADIO" required beside the jack
+FAIL K-legends: J124.1: 0 legends "1:BUS1" nearest it, expected one (D92)
+FAIL K-legends: J124.2: 0 legends "2:RAW" nearest it, expected one (D92)
+FAIL K-legends: J121.1: 0 legends "1:E1-" nearest it, expected one (D92)
+FAIL K-legends: J121.2: 0 legends "2:E1+" nearest it, expected one (D92)
+FAIL K-legends: J1.1: 0 legends "1:BAT+" nearest it, expected one (D92)
+FAIL K-legends: J1.2: 0 legends "2:GND" nearest it, expected one (D92)
+FAIL K-legends: J1.3: 0 legends "3:SW" nearest it, expected one (D92)
+FAIL K-legends: J1.4: 0 legends "4:SW" nearest it, expected one (D92)
+FAIL K-legends: J123.1: 0 legends "1:PULL" nearest it, expected one (D92)
+FAIL K-legends: J123.2: 0 legends "2:GND" nearest it, expected one (D92)
+R9 CAD contract: FAIL (27 findings in 3 rules: M-2, K-contract, K-legends)

@@ -1,0 +1,2295 @@
+{
+  "target_commit": "21bc3b2",
+  "hashes": {
+    "pcb": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+    "xml": "8382c140f77dd8a0d3fefc0b7fc7125a84db282e5c06870fc744d1c5c89598f5",
+    "pin_table": "038917b7400a3758ae29ae3d624197f063c6d4435271f6903f5944bd55092cbb",
+    "circuit": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f"
+  },
+  "coverage": {
+    "physical_pins": 100,
+    "connected": 68,
+    "NC": 32,
+    "AF": 28,
+    "ADC": 5,
+    "EXTI": 6,
+    "issues": [],
+    "symbol_pin_names": 100,
+    "symbol_pin_name_mismatches": 0,
+    "NC_tracks_or_vias": 0,
+    "NC_single_pad_nets": 32,
+    "binding_hashes_match": 4,
+    "loader_package_pins": 26,
+    "loader_connected_pins": 14,
+    "loader_NC_pins": 12,
+    "camera_translator_pins": 8,
+    "camera_switch_pins": 6,
+    "camera_IO_regulator_pins": 5
+  },
+  "maker_sources": {
+    "MCU": "DS12110 Rev11 Fig5 p55, Table9 pp64-88, Table10 pp89-94, Tables109-110 pp207-208; https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+    "loader": "AN2606 Rev70 Table135 pp320-323; https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf"
+  },
+  "pins": [
+    {
+      "pin": 1,
+      "port": "PE2",
+      "nets": {
+        "pcb": "QSPI_IO2",
+        "xml": "QSPI_IO2",
+        "pin_table": "QSPI_IO2",
+        "binding": "QSPI_IO2"
+      },
+      "mode": "AF9 QUADSPI_BK1_IO2",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 17.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 2,
+      "port": "PE3",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 17.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 3,
+      "port": "PE4",
+      "nets": {
+        "pcb": "PYRO1_GATE_N",
+        "xml": "PYRO1_GATE_N",
+        "pin_table": "PYRO1_GATE_N",
+        "binding": "PYRO1_GATE_N"
+      },
+      "mode": "GPIO out",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 18.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 4,
+      "port": "PE5",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 18.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 5,
+      "port": "PE6",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 19.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 6,
+      "port": "VBAT",
+      "nets": {
+        "pcb": "3V3",
+        "xml": "3V3",
+        "pin_table": "3V3",
+        "binding": "3V3"
+      },
+      "mode": "VBAT",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 19.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 7,
+      "port": "PC13",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 20.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 8,
+      "port": "PC14",
+      "nets": {
+        "pcb": "BUZZ_DRV",
+        "xml": "BUZZ_DRV",
+        "pin_table": "BUZZ_DRV",
+        "binding": "BUZZ_DRV"
+      },
+      "mode": "GPIO out",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 20.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 9,
+      "port": "PC15",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 21.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 10,
+      "port": "VSS",
+      "nets": {
+        "pcb": "GND",
+        "xml": "GND",
+        "pin_table": "GND",
+        "binding": "GND"
+      },
+      "mode": "VSS",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 21.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 11,
+      "port": "VDD",
+      "nets": {
+        "pcb": "3V3",
+        "xml": "3V3",
+        "pin_table": "3V3",
+        "binding": "3V3"
+      },
+      "mode": "VDD",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 22.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 12,
+      "port": "PH0",
+      "nets": {
+        "pcb": "HSE_IN",
+        "xml": "HSE_IN",
+        "pin_table": "HSE_IN",
+        "binding": "HSE_IN"
+      },
+      "mode": "HSE",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 22.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 13,
+      "port": "PH1",
+      "nets": {
+        "pcb": "HSE_OUT",
+        "xml": "HSE_OUT",
+        "pin_table": "HSE_OUT",
+        "binding": "HSE_OUT"
+      },
+      "mode": "HSE",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 23.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 14,
+      "port": "NRST",
+      "nets": {
+        "pcb": "NRST",
+        "xml": "NRST",
+        "pin_table": "NRST",
+        "binding": "NRST"
+      },
+      "mode": "NRST",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 23.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 15,
+      "port": "PC0",
+      "nets": {
+        "pcb": "PYRO1_CONT",
+        "xml": "PYRO1_CONT",
+        "pin_table": "PYRO1_CONT",
+        "binding": "PYRO1_CONT"
+      },
+      "mode": "ADC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": "ADC123_INP10",
+      "x_mm": 24.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 16,
+      "port": "PC1",
+      "nets": {
+        "pcb": "ACT_EN_MCU",
+        "xml": "ACT_EN_MCU",
+        "pin_table": "ACT_EN_MCU",
+        "binding": "ACT_EN_MCU"
+      },
+      "mode": "GPIO out (push-pull; initialise low before output mode)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 24.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 17,
+      "port": "PC2_C",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 25.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 18,
+      "port": "PC3_C",
+      "nets": {
+        "pcb": "V3V3_SENSE",
+        "xml": "V3V3_SENSE",
+        "pin_table": "V3V3_SENSE",
+        "binding": "V3V3_SENSE"
+      },
+      "mode": "ADC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": "ADC3_INP1",
+      "x_mm": 25.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 19,
+      "port": "VSSA",
+      "nets": {
+        "pcb": "GND",
+        "xml": "GND",
+        "pin_table": "GND",
+        "binding": "GND"
+      },
+      "mode": "VSSA",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 26.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 20,
+      "port": "VREF+",
+      "nets": {
+        "pcb": "3V3A",
+        "xml": "3V3A",
+        "pin_table": "3V3A",
+        "binding": "3V3A"
+      },
+      "mode": "VREF+",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 26.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 21,
+      "port": "VDDA",
+      "nets": {
+        "pcb": "3V3A",
+        "xml": "3V3A",
+        "pin_table": "3V3A",
+        "binding": "3V3A"
+      },
+      "mode": "VDDA",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 27.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 22,
+      "port": "PA0",
+      "nets": {
+        "pcb": "SERVO1_MCU",
+        "xml": "SERVO1_MCU",
+        "pin_table": "SERVO1_MCU",
+        "binding": "SERVO1_MCU"
+      },
+      "mode": "AF2 TIM5_CH1",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 27.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 23,
+      "port": "PA1",
+      "nets": {
+        "pcb": "SERVO2_MCU",
+        "xml": "SERVO2_MCU",
+        "pin_table": "SERVO2_MCU",
+        "binding": "SERVO2_MCU"
+      },
+      "mode": "AF2 TIM5_CH2",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 28.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 24,
+      "port": "PA2",
+      "nets": {
+        "pcb": "SERVO3_MCU",
+        "xml": "SERVO3_MCU",
+        "pin_table": "SERVO3_MCU",
+        "binding": "SERVO3_MCU"
+      },
+      "mode": "AF2 TIM5_CH3",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 28.5,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 25,
+      "port": "PA3",
+      "nets": {
+        "pcb": "SERVO4_MCU",
+        "xml": "SERVO4_MCU",
+        "pin_table": "SERVO4_MCU",
+        "binding": "SERVO4_MCU"
+      },
+      "mode": "AF2 TIM5_CH4",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 29.0,
+      "y_mm": 50.55
+    },
+    {
+      "pin": 26,
+      "port": "VSS",
+      "nets": {
+        "pcb": "GND",
+        "xml": "GND",
+        "pin_table": "GND",
+        "binding": "GND"
+      },
+      "mode": "VSS",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 49.0
+    },
+    {
+      "pin": 27,
+      "port": "VDD",
+      "nets": {
+        "pcb": "3V3",
+        "xml": "3V3",
+        "pin_table": "3V3",
+        "binding": "3V3"
+      },
+      "mode": "VDD",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 48.5
+    },
+    {
+      "pin": 28,
+      "port": "PA4",
+      "nets": {
+        "pcb": "LOGIC_SOURCE_ST",
+        "xml": "LOGIC_SOURCE_ST",
+        "pin_table": "LOGIC_SOURCE_ST",
+        "binding": "LOGIC_SOURCE_ST"
+      },
+      "mode": "GPIO in",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 48.0
+    },
+    {
+      "pin": 29,
+      "port": "PA5",
+      "nets": {
+        "pcb": "BAT_FAULT_N",
+        "xml": "BAT_FAULT_N",
+        "pin_table": "BAT_FAULT_N",
+        "binding": "BAT_FAULT_N"
+      },
+      "mode": "GPIO in",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 47.5
+    },
+    {
+      "pin": 30,
+      "port": "PA6",
+      "nets": {
+        "pcb": "VLOGIC_SENSE",
+        "xml": "VLOGIC_SENSE",
+        "pin_table": "VLOGIC_SENSE",
+        "binding": "VLOGIC_SENSE"
+      },
+      "mode": "ADC (ADC12_INP3)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": "ADC12_INP3",
+      "x_mm": 30.55,
+      "y_mm": 47.0
+    },
+    {
+      "pin": 31,
+      "port": "PA7",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 46.5
+    },
+    {
+      "pin": 32,
+      "port": "PC4",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 46.0
+    },
+    {
+      "pin": 33,
+      "port": "PC5",
+      "nets": {
+        "pcb": "ARM1_SENSE",
+        "xml": "ARM1_SENSE",
+        "pin_table": "ARM1_SENSE",
+        "binding": "ARM1_SENSE"
+      },
+      "mode": "ADC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": "ADC12_INP8",
+      "x_mm": 30.55,
+      "y_mm": 45.5
+    },
+    {
+      "pin": 34,
+      "port": "PB0",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 45.0
+    },
+    {
+      "pin": 35,
+      "port": "PB1",
+      "nets": {
+        "pcb": "CAM_5V_SENSE",
+        "xml": "CAM_5V_SENSE",
+        "pin_table": "CAM_5V_SENSE",
+        "binding": "CAM_5V_SENSE"
+      },
+      "mode": "ADC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": "ADC12_INP5",
+      "x_mm": 30.55,
+      "y_mm": 44.5
+    },
+    {
+      "pin": 36,
+      "port": "PB2",
+      "nets": {
+        "pcb": "QSPI_CLK",
+        "xml": "QSPI_CLK",
+        "pin_table": "QSPI_CLK",
+        "binding": "QSPI_CLK"
+      },
+      "mode": "AF9 QUADSPI_CLK",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 44.0
+    },
+    {
+      "pin": 37,
+      "port": "PE7",
+      "nets": {
+        "pcb": "CAM_MCU_RX",
+        "xml": "CAM_MCU_RX",
+        "pin_table": "CAM_MCU_RX",
+        "binding": "CAM_MCU_RX"
+      },
+      "mode": "AF7 UART7_RX",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 43.5
+    },
+    {
+      "pin": 38,
+      "port": "PE8",
+      "nets": {
+        "pcb": "CAM_MCU_TX",
+        "xml": "CAM_MCU_TX",
+        "pin_table": "CAM_MCU_TX",
+        "binding": "CAM_MCU_TX"
+      },
+      "mode": "AF7 UART7_TX",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 43.0
+    },
+    {
+      "pin": 39,
+      "port": "PE9",
+      "nets": {
+        "pcb": "CAM_UART_OE",
+        "xml": "CAM_UART_OE",
+        "pin_table": "CAM_UART_OE",
+        "binding": "CAM_UART_OE"
+      },
+      "mode": "GPIO out",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 42.5
+    },
+    {
+      "pin": 40,
+      "port": "PE10",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 42.0
+    },
+    {
+      "pin": 41,
+      "port": "PE11",
+      "nets": {
+        "pcb": "CAM_PWR_EN",
+        "xml": "CAM_PWR_EN",
+        "pin_table": "CAM_PWR_EN",
+        "binding": "CAM_PWR_EN"
+      },
+      "mode": "GPIO out",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 41.5
+    },
+    {
+      "pin": 42,
+      "port": "PE12",
+      "nets": {
+        "pcb": "CAM_FAULT_N",
+        "xml": "CAM_FAULT_N",
+        "pin_table": "CAM_FAULT_N",
+        "binding": "CAM_FAULT_N"
+      },
+      "mode": "GPIO in",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 41.0
+    },
+    {
+      "pin": 43,
+      "port": "PE13",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 40.5
+    },
+    {
+      "pin": 44,
+      "port": "PE14",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 40.0
+    },
+    {
+      "pin": 45,
+      "port": "PE15",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 39.5
+    },
+    {
+      "pin": 46,
+      "port": "PB10",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 39.0
+    },
+    {
+      "pin": 47,
+      "port": "PB11",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 38.5
+    },
+    {
+      "pin": 48,
+      "port": "VCAP",
+      "nets": {
+        "pcb": "VCAP1",
+        "xml": "VCAP1",
+        "pin_table": "VCAP1",
+        "binding": "VCAP1"
+      },
+      "mode": "VCAP",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 38.0
+    },
+    {
+      "pin": 49,
+      "port": "VSS",
+      "nets": {
+        "pcb": "GND",
+        "xml": "GND",
+        "pin_table": "GND",
+        "binding": "GND"
+      },
+      "mode": "VSS",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 37.5
+    },
+    {
+      "pin": 50,
+      "port": "VDD",
+      "nets": {
+        "pcb": "3V3",
+        "xml": "3V3",
+        "pin_table": "3V3",
+        "binding": "3V3"
+      },
+      "mode": "VDD",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 30.55,
+      "y_mm": 37.0
+    },
+    {
+      "pin": 51,
+      "port": "PB12",
+      "nets": {
+        "pcb": "RADIO_RX_MCU",
+        "xml": "RADIO_RX_MCU",
+        "pin_table": "RADIO_RX_MCU",
+        "binding": "RADIO_RX_MCU"
+      },
+      "mode": "AF14 UART5_RX",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 29.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 52,
+      "port": "PB13",
+      "nets": {
+        "pcb": "RADIO_TX_MCU",
+        "xml": "RADIO_TX_MCU",
+        "pin_table": "RADIO_TX_MCU",
+        "binding": "RADIO_TX_MCU"
+      },
+      "mode": "AF14 UART5_TX",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 28.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 53,
+      "port": "PB14",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 28.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 54,
+      "port": "PB15",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 27.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 55,
+      "port": "PD8",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 27.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 56,
+      "port": "PD9",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 26.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 57,
+      "port": "PD10",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 26.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 58,
+      "port": "PD11",
+      "nets": {
+        "pcb": "QSPI_IO0",
+        "xml": "QSPI_IO0",
+        "pin_table": "QSPI_IO0",
+        "binding": "QSPI_IO0"
+      },
+      "mode": "AF9 QUADSPI_BK1_IO0",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 25.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 59,
+      "port": "PD12",
+      "nets": {
+        "pcb": "QSPI_IO1",
+        "xml": "QSPI_IO1",
+        "pin_table": "QSPI_IO1",
+        "binding": "QSPI_IO1"
+      },
+      "mode": "AF9 QUADSPI_BK1_IO1",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 25.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 60,
+      "port": "PD13",
+      "nets": {
+        "pcb": "QSPI_IO3",
+        "xml": "QSPI_IO3",
+        "pin_table": "QSPI_IO3",
+        "binding": "QSPI_IO3"
+      },
+      "mode": "AF9 QUADSPI_BK1_IO3",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 24.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 61,
+      "port": "PD14",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 24.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 62,
+      "port": "PD15",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 23.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 63,
+      "port": "PC6",
+      "nets": {
+        "pcb": "GPS_TX_MCU",
+        "xml": "GPS_TX_MCU",
+        "pin_table": "GPS_TX_MCU",
+        "binding": "GPS_TX_MCU"
+      },
+      "mode": "AF7 USART6_TX",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 23.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 64,
+      "port": "PC7",
+      "nets": {
+        "pcb": "GPS_RX_MCU",
+        "xml": "GPS_RX_MCU",
+        "pin_table": "GPS_RX_MCU",
+        "binding": "GPS_RX_MCU"
+      },
+      "mode": "AF7 USART6_RX",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 22.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 65,
+      "port": "PC8",
+      "nets": {
+        "pcb": "VBUS_SENSE",
+        "xml": "VBUS_SENSE",
+        "pin_table": "VBUS_SENSE",
+        "binding": "VBUS_SENSE"
+      },
+      "mode": "GPIO in",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 22.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 66,
+      "port": "PC9",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 21.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 67,
+      "port": "PA8",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 21.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 68,
+      "port": "PA9",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 20.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 69,
+      "port": "PA10",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 20.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 70,
+      "port": "PA11",
+      "nets": {
+        "pcb": "USB_DM",
+        "xml": "USB_DM",
+        "pin_table": "USB_DM",
+        "binding": "USB_DM"
+      },
+      "mode": "AF10 OTG_FS_DM",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 19.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 71,
+      "port": "PA12",
+      "nets": {
+        "pcb": "USB_DP",
+        "xml": "USB_DP",
+        "pin_table": "USB_DP",
+        "binding": "USB_DP"
+      },
+      "mode": "AF10 OTG_FS_DP",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 19.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 72,
+      "port": "PA13",
+      "nets": {
+        "pcb": "SWDIO",
+        "xml": "SWDIO",
+        "pin_table": "SWDIO",
+        "binding": "SWDIO"
+      },
+      "mode": "AF0 SWDIO",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 18.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 73,
+      "port": "VCAP",
+      "nets": {
+        "pcb": "VCAP2",
+        "xml": "VCAP2",
+        "pin_table": "VCAP2",
+        "binding": "VCAP2"
+      },
+      "mode": "VCAP",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 18.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 74,
+      "port": "VSS",
+      "nets": {
+        "pcb": "GND",
+        "xml": "GND",
+        "pin_table": "GND",
+        "binding": "GND"
+      },
+      "mode": "VSS",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 17.5,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 75,
+      "port": "VDD",
+      "nets": {
+        "pcb": "3V3",
+        "xml": "3V3",
+        "pin_table": "3V3",
+        "binding": "3V3"
+      },
+      "mode": "VDD",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 17.0,
+      "y_mm": 35.45
+    },
+    {
+      "pin": 76,
+      "port": "PA14",
+      "nets": {
+        "pcb": "SWCLK",
+        "xml": "SWCLK",
+        "pin_table": "SWCLK",
+        "binding": "SWCLK"
+      },
+      "mode": "AF0 SWCLK",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 37.0
+    },
+    {
+      "pin": 77,
+      "port": "PA15",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 37.5
+    },
+    {
+      "pin": 78,
+      "port": "PC10",
+      "nets": {
+        "pcb": "SD_SCK",
+        "xml": "SD_SCK",
+        "pin_table": "SD_SCK",
+        "binding": "SD_SCK"
+      },
+      "mode": "AF6 SPI3_SCK",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 38.0
+    },
+    {
+      "pin": 79,
+      "port": "PC11",
+      "nets": {
+        "pcb": "SD_MISO",
+        "xml": "SD_MISO",
+        "pin_table": "SD_MISO",
+        "binding": "SD_MISO"
+      },
+      "mode": "AF6 SPI3_MISO",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 38.5
+    },
+    {
+      "pin": 80,
+      "port": "PC12",
+      "nets": {
+        "pcb": "SD_MOSI",
+        "xml": "SD_MOSI",
+        "pin_table": "SD_MOSI",
+        "binding": "SD_MOSI"
+      },
+      "mode": "AF6 SPI3_MOSI",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 39.0
+    },
+    {
+      "pin": 81,
+      "port": "PD0",
+      "nets": {
+        "pcb": "SD_CS",
+        "xml": "SD_CS",
+        "pin_table": "SD_CS",
+        "binding": "SD_CS"
+      },
+      "mode": "GPIO output push-pull; initialise high before output mode",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 39.5
+    },
+    {
+      "pin": 82,
+      "port": "PD1",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 40.0
+    },
+    {
+      "pin": 83,
+      "port": "PD2",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 40.5
+    },
+    {
+      "pin": 84,
+      "port": "PD3",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 41.0
+    },
+    {
+      "pin": 85,
+      "port": "PD4",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 41.5
+    },
+    {
+      "pin": 86,
+      "port": "PD5",
+      "nets": {
+        "pcb": "LED_RED",
+        "xml": "LED_RED",
+        "pin_table": "LED_RED",
+        "binding": "LED_RED"
+      },
+      "mode": "GPIO out",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 42.0
+    },
+    {
+      "pin": 87,
+      "port": "PD6",
+      "nets": {
+        "pcb": "USB_FAULT_N",
+        "xml": "USB_FAULT_N",
+        "pin_table": "USB_FAULT_N",
+        "binding": "USB_FAULT_N"
+      },
+      "mode": "GPIO in",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 42.5
+    },
+    {
+      "pin": 88,
+      "port": "PD7",
+      "nets": {
+        "pcb": "LED_YEL",
+        "xml": "LED_YEL",
+        "pin_table": "LED_YEL",
+        "binding": "LED_YEL"
+      },
+      "mode": "GPIO out",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 43.0
+    },
+    {
+      "pin": 89,
+      "port": "PB3",
+      "nets": {
+        "pcb": "SPI1_SCK",
+        "xml": "SPI1_SCK",
+        "pin_table": "SPI1_SCK",
+        "binding": "SPI1_SCK"
+      },
+      "mode": "AF5 SPI1_SCK",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 43.5
+    },
+    {
+      "pin": 90,
+      "port": "PB4",
+      "nets": {
+        "pcb": "SPI1_MISO",
+        "xml": "SPI1_MISO",
+        "pin_table": "SPI1_MISO",
+        "binding": "SPI1_MISO"
+      },
+      "mode": "AF5 SPI1_MISO",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 44.0
+    },
+    {
+      "pin": 91,
+      "port": "PB5",
+      "nets": {
+        "pcb": "SPI1_MOSI",
+        "xml": "SPI1_MOSI",
+        "pin_table": "SPI1_MOSI",
+        "binding": "SPI1_MOSI"
+      },
+      "mode": "AF5 SPI1_MOSI",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 44.5
+    },
+    {
+      "pin": 92,
+      "port": "PB6",
+      "nets": {
+        "pcb": "QSPI_NCS",
+        "xml": "QSPI_NCS",
+        "pin_table": "QSPI_NCS",
+        "binding": "QSPI_NCS"
+      },
+      "mode": "AF10 QUADSPI_BK1_NCS",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 45.0
+    },
+    {
+      "pin": 93,
+      "port": "PB7",
+      "nets": {
+        "pcb": "IMU_CS",
+        "xml": "IMU_CS",
+        "pin_table": "IMU_CS",
+        "binding": "IMU_CS"
+      },
+      "mode": "GPIO out",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 45.5
+    },
+    {
+      "pin": 94,
+      "port": "BOOT0",
+      "nets": {
+        "pcb": "BOOT0",
+        "xml": "BOOT0",
+        "pin_table": "BOOT0",
+        "binding": "BOOT0"
+      },
+      "mode": "BOOT0",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 46.0
+    },
+    {
+      "pin": 95,
+      "port": "PB8",
+      "nets": {
+        "pcb": "I2C1_SCL",
+        "xml": "I2C1_SCL",
+        "pin_table": "I2C1_SCL",
+        "binding": "I2C1_SCL"
+      },
+      "mode": "AF4 I2C1_SCL",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 46.5
+    },
+    {
+      "pin": 96,
+      "port": "PB9",
+      "nets": {
+        "pcb": "I2C1_SDA",
+        "xml": "I2C1_SDA",
+        "pin_table": "I2C1_SDA",
+        "binding": "I2C1_SDA"
+      },
+      "mode": "AF4 I2C1_SDA",
+      "maker_pin_match": true,
+      "maker_af_match": true,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 47.0
+    },
+    {
+      "pin": 97,
+      "port": "PE0",
+      "nets": {
+        "pcb": "NC",
+        "xml": "NC",
+        "pin_table": "NC",
+        "binding": "NC"
+      },
+      "mode": "NC (firmware: analog, never driven)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 47.5
+    },
+    {
+      "pin": 98,
+      "port": "PE1",
+      "nets": {
+        "pcb": "IMU_INT1",
+        "xml": "IMU_INT1",
+        "pin_table": "IMU_INT1",
+        "binding": "IMU_INT1"
+      },
+      "mode": "GPIO in, internal pull-down, EXTI1 data-ready interrupt (LSM6DSV320X INT1 push-pull, active high by default)",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 48.0
+    },
+    {
+      "pin": 99,
+      "port": "VSS",
+      "nets": {
+        "pcb": "GND",
+        "xml": "GND",
+        "pin_table": "GND",
+        "binding": "GND"
+      },
+      "mode": "VSS",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 48.5
+    },
+    {
+      "pin": 100,
+      "port": "VDD",
+      "nets": {
+        "pcb": "3V3",
+        "xml": "3V3",
+        "pin_table": "3V3",
+        "binding": "3V3"
+      },
+      "mode": "VDD",
+      "maker_pin_match": true,
+      "maker_af_match": null,
+      "adc": null,
+      "x_mm": 15.45,
+      "y_mm": 49.0
+    }
+  ],
+  "parts": {
+    "U1": {
+      "value": "STM32H743VIT6",
+      "x_mm": 23.0,
+      "y_mm": 43.0,
+      "side": "F.Cu",
+      "pins": {
+        "1": "QSPI_IO2",
+        "2": "NC",
+        "3": "PYRO1_GATE_N",
+        "4": "NC",
+        "5": "NC",
+        "6": "3V3",
+        "7": "NC",
+        "8": "BUZZ_DRV",
+        "9": "NC",
+        "10": "GND",
+        "11": "3V3",
+        "12": "HSE_IN",
+        "13": "HSE_OUT",
+        "14": "NRST",
+        "15": "PYRO1_CONT",
+        "16": "ACT_EN_MCU",
+        "17": "NC",
+        "18": "V3V3_SENSE",
+        "19": "GND",
+        "20": "3V3A",
+        "21": "3V3A",
+        "22": "SERVO1_MCU",
+        "23": "SERVO2_MCU",
+        "24": "SERVO3_MCU",
+        "25": "SERVO4_MCU",
+        "26": "GND",
+        "27": "3V3",
+        "28": "LOGIC_SOURCE_ST",
+        "29": "BAT_FAULT_N",
+        "30": "VLOGIC_SENSE",
+        "31": "NC",
+        "32": "NC",
+        "33": "ARM1_SENSE",
+        "34": "NC",
+        "35": "CAM_5V_SENSE",
+        "36": "QSPI_CLK",
+        "37": "CAM_MCU_RX",
+        "38": "CAM_MCU_TX",
+        "39": "CAM_UART_OE",
+        "40": "NC",
+        "41": "CAM_PWR_EN",
+        "42": "CAM_FAULT_N",
+        "43": "NC",
+        "44": "NC",
+        "45": "NC",
+        "46": "NC",
+        "47": "NC",
+        "48": "VCAP1",
+        "49": "GND",
+        "50": "3V3",
+        "51": "RADIO_RX_MCU",
+        "52": "RADIO_TX_MCU",
+        "53": "NC",
+        "54": "NC",
+        "55": "NC",
+        "56": "NC",
+        "57": "NC",
+        "58": "QSPI_IO0",
+        "59": "QSPI_IO1",
+        "60": "QSPI_IO3",
+        "61": "NC",
+        "62": "NC",
+        "63": "GPS_TX_MCU",
+        "64": "GPS_RX_MCU",
+        "65": "VBUS_SENSE",
+        "66": "NC",
+        "67": "NC",
+        "68": "NC",
+        "69": "NC",
+        "70": "USB_DM",
+        "71": "USB_DP",
+        "72": "SWDIO",
+        "73": "VCAP2",
+        "74": "GND",
+        "75": "3V3",
+        "76": "SWCLK",
+        "77": "NC",
+        "78": "SD_SCK",
+        "79": "SD_MISO",
+        "80": "SD_MOSI",
+        "81": "SD_CS",
+        "82": "NC",
+        "83": "NC",
+        "84": "NC",
+        "85": "NC",
+        "86": "LED_RED",
+        "87": "USB_FAULT_N",
+        "88": "LED_YEL",
+        "89": "SPI1_SCK",
+        "90": "SPI1_MISO",
+        "91": "SPI1_MOSI",
+        "92": "QSPI_NCS",
+        "93": "IMU_CS",
+        "94": "BOOT0",
+        "95": "I2C1_SCL",
+        "96": "I2C1_SDA",
+        "97": "NC",
+        "98": "IMU_INT1",
+        "99": "GND",
+        "100": "3V3"
+      }
+    },
+    "U12": {
+      "value": "TXU0202DCUR",
+      "x_mm": 31.6,
+      "y_mm": 39.8,
+      "side": "B.Cu",
+      "pins": {
+        "1": "CAM_RX_BUFFER",
+        "2": "GND",
+        "3": "3V3",
+        "4": "CAM_MCU_RX",
+        "5": "CAM_MCU_TX",
+        "6": "CAM_UART_OE",
+        "7": "CAM_IO_3V3",
+        "8": "CAM_TX_BUFFER"
+      }
+    },
+    "U13": {
+      "value": "TPS70933DBVR",
+      "x_mm": 31.85,
+      "y_mm": 49.7,
+      "side": "B.Cu",
+      "pins": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "NC",
+        "4": "NC",
+        "5": "CAM_IO_3V3"
+      }
+    },
+    "U402": {
+      "value": "TPS2553DBVR",
+      "x_mm": 32.0,
+      "y_mm": 59.0,
+      "side": "B.Cu",
+      "pins": {
+        "1": "PORT_5V3",
+        "2": "GND",
+        "3": "CAM_PWR_EN",
+        "4": "CAM_FAULT_N",
+        "5": "CAM_ILIM",
+        "6": "CAM_5V"
+      }
+    },
+    "J9": {
+      "value": "DB125-3.5-4P-GN-S",
+      "x_mm": 39.0,
+      "y_mm": 47.5,
+      "side": "F.Cu",
+      "pins": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "CAM_RX_WIRE",
+        "4": "CAM_TX_WIRE"
+      }
+    },
+    "J410": {
+      "value": "DB125-3.5-4P-GN-S",
+      "x_mm": 39.0,
+      "y_mm": 15.5,
+      "side": "F.Cu",
+      "pins": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "GPS_TX_WIRE",
+        "4": "GPS_RX_WIRE"
+      }
+    },
+    "J420": {
+      "value": "DB125-3.5-4P-GN-S",
+      "x_mm": 39.0,
+      "y_mm": 31.5,
+      "side": "F.Cu",
+      "pins": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "RADIO_TX_WIRE",
+        "4": "RADIO_RX_WIRE"
+      }
+    },
+    "J430": {
+      "value": "472192001",
+      "x_mm": 24.0,
+      "y_mm": 24.3,
+      "side": "B.Cu",
+      "pins": {
+        "1": "SD_DAT2",
+        "2": "SD_CS",
+        "3": "SD_MOSI",
+        "4": "3V3",
+        "5": "SD_SCK",
+        "6": "GND",
+        "7": "SD_MISO",
+        "8": "SD_DAT1",
+        "9": "GND",
+        "10": "GND",
+        "11": "GND",
+        "12": "GND"
+      }
+    },
+    "R122": {
+      "value": "1k",
+      "x_mm": 19.6,
+      "y_mm": 69.8,
+      "side": "F.Cu",
+      "pins": {
+        "1": "ACT_EN_MCU",
+        "2": "ACT_EN"
+      }
+    },
+    "R123": {
+      "value": "100k",
+      "x_mm": 20.6,
+      "y_mm": 70.66,
+      "side": "F.Cu",
+      "pins": {
+        "1": "ACT_EN",
+        "2": "GND"
+      }
+    },
+    "R126": {
+      "value": "220R",
+      "x_mm": 17.0,
+      "y_mm": 54.24,
+      "side": "F.Cu",
+      "pins": {
+        "1": "PYRO1_GATE_N",
+        "2": "PYRO1_GATE"
+      }
+    },
+    "R127": {
+      "value": "1k",
+      "x_mm": 19.8,
+      "y_mm": 54.24,
+      "side": "F.Cu",
+      "pins": {
+        "1": "PYRO1_GATE_N",
+        "2": "GND"
+      }
+    },
+    "R128": {
+      "value": "10k",
+      "x_mm": 18.3,
+      "y_mm": 57.405,
+      "side": "F.Cu",
+      "pins": {
+        "1": "PYRO1_GATE",
+        "2": "GND"
+      }
+    },
+    "C126": {
+      "value": "220nF 25V X7R",
+      "x_mm": 16.7,
+      "y_mm": 57.675,
+      "side": "F.Cu",
+      "pins": {
+        "1": "PYRO1_GATE",
+        "2": "GND"
+      }
+    },
+    "R162": {
+      "value": "1k 0805",
+      "x_mm": 19.5,
+      "y_mm": 57.7,
+      "side": "B.Cu",
+      "pins": {
+        "1": "BUZZ_DRV",
+        "2": "BUZZ_G"
+      }
+    },
+    "R163": {
+      "value": "10k",
+      "x_mm": 21.8,
+      "y_mm": 59.3,
+      "side": "B.Cu",
+      "pins": {
+        "1": "BUZZ_G",
+        "2": "GND"
+      }
+    },
+    "R102": {
+      "value": "10k 1%",
+      "x_mm": 35.5,
+      "y_mm": 39.8,
+      "side": "B.Cu",
+      "pins": {
+        "1": "CAM_UART_OE",
+        "2": "GND"
+      }
+    },
+    "R103": {
+      "value": "1k 1%",
+      "x_mm": 31.2,
+      "y_mm": 54.8,
+      "side": "B.Cu",
+      "pins": {
+        "1": "CAM_IO_3V3",
+        "2": "GND"
+      }
+    },
+    "R431": {
+      "value": "100k 1%",
+      "x_mm": 38.0,
+      "y_mm": 59.6,
+      "side": "F.Cu",
+      "pins": {
+        "1": "CAM_PWR_EN",
+        "2": "GND"
+      }
+    },
+    "R432": {
+      "value": "10k 1%",
+      "x_mm": 35.7,
+      "y_mm": 57.8,
+      "side": "B.Cu",
+      "pins": {
+        "1": "CAM_FAULT_N",
+        "2": "3V3"
+      }
+    },
+    "R440": {
+      "value": "1k 1%",
+      "x_mm": 34.0,
+      "y_mm": 10.25,
+      "side": "B.Cu",
+      "pins": {
+        "1": "GPS_RX_WIRE",
+        "2": "GPS_RX_MCU"
+      }
+    },
+    "R441": {
+      "value": "1k 1%",
+      "x_mm": 34.0,
+      "y_mm": 13.75,
+      "side": "B.Cu",
+      "pins": {
+        "1": "GPS_TX_MCU",
+        "2": "GPS_TX_WIRE"
+      }
+    },
+    "R450": {
+      "value": "1k 1%",
+      "x_mm": 34.0,
+      "y_mm": 26.25,
+      "side": "B.Cu",
+      "pins": {
+        "1": "RADIO_RX_WIRE",
+        "2": "RADIO_RX_MCU"
+      }
+    },
+    "R451": {
+      "value": "1k 1%",
+      "x_mm": 34.0,
+      "y_mm": 29.75,
+      "side": "B.Cu",
+      "pins": {
+        "1": "RADIO_TX_MCU",
+        "2": "RADIO_TX_WIRE"
+      }
+    },
+    "R460": {
+      "value": "10k 1%",
+      "x_mm": 27.8,
+      "y_mm": 16.8,
+      "side": "B.Cu",
+      "pins": {
+        "1": "SD_CS",
+        "2": "3V3"
+      }
+    },
+    "R461": {
+      "value": "10k 1%",
+      "x_mm": 24.2,
+      "y_mm": 16.8,
+      "side": "B.Cu",
+      "pins": {
+        "1": "SD_MOSI",
+        "2": "3V3"
+      }
+    },
+    "R462": {
+      "value": "10k 1%",
+      "x_mm": 14.2,
+      "y_mm": 16.9,
+      "side": "B.Cu",
+      "pins": {
+        "1": "SD_MISO",
+        "2": "3V3"
+      }
+    },
+    "R463": {
+      "value": "10k 1%",
+      "x_mm": 14.2,
+      "y_mm": 18.9,
+      "side": "B.Cu",
+      "pins": {
+        "1": "SD_DAT1",
+        "2": "3V3"
+      }
+    },
+    "R464": {
+      "value": "10k 1%",
+      "x_mm": 25.55,
+      "y_mm": 22.18,
+      "side": "F.Cu",
+      "pins": {
+        "1": "SD_DAT2",
+        "2": "3V3"
+      }
+    },
+    "C460": {
+      "value": "100nF 50V X7R 10%",
+      "x_mm": 22.48,
+      "y_mm": 21.7,
+      "side": "F.Cu",
+      "pins": {
+        "1": "3V3",
+        "2": "GND"
+      }
+    },
+    "C461": {
+      "value": "22uF 25V X7R 10%",
+      "x_mm": 27.0,
+      "y_mm": 18.8,
+      "side": "F.Cu",
+      "pins": {
+        "1": "3V3",
+        "2": "GND"
+      }
+    },
+    "C17": {
+      "value": "100nF 50V X7R 10%",
+      "x_mm": 17.0,
+      "y_mm": 37.9,
+      "side": "B.Cu",
+      "pins": {
+        "1": "3V3",
+        "2": "GND"
+      }
+    },
+    "C18": {
+      "value": "100nF 50V X7R 10%",
+      "x_mm": 18.3,
+      "y_mm": 49.15,
+      "side": "B.Cu",
+      "pins": {
+        "1": "3V3",
+        "2": "GND"
+      }
+    },
+    "R5": {
+      "value": "10k",
+      "x_mm": 13.0,
+      "y_mm": 45.17,
+      "side": "B.Cu",
+      "pins": {
+        "1": "BOOT0",
+        "2": "GND"
+      }
+    }
+  },
+  "net_members": {
+    "GPS_RX_MCU": [
+      "U1.64",
+      "R440.2"
+    ],
+    "GPS_TX_MCU": [
+      "U1.63",
+      "R441.1"
+    ],
+    "GPS_RX_WIRE": [
+      "J410.4",
+      "D411.1",
+      "R440.1"
+    ],
+    "GPS_TX_WIRE": [
+      "J410.3",
+      "D410.1",
+      "R441.2"
+    ],
+    "RADIO_RX_MCU": [
+      "U1.51",
+      "R450.2"
+    ],
+    "RADIO_TX_MCU": [
+      "U1.52",
+      "R451.1"
+    ],
+    "RADIO_RX_WIRE": [
+      "J420.4",
+      "R450.1",
+      "D421.1"
+    ],
+    "RADIO_TX_WIRE": [
+      "J420.3",
+      "R451.2",
+      "D420.1"
+    ],
+    "CAM_MCU_RX": [
+      "U1.37",
+      "U12.4"
+    ],
+    "CAM_MCU_TX": [
+      "U1.38",
+      "U12.5"
+    ],
+    "CAM_RX_BUFFER": [
+      "U12.1",
+      "R100.2"
+    ],
+    "CAM_TX_BUFFER": [
+      "R101.1",
+      "U12.8"
+    ],
+    "CAM_RX_WIRE": [
+      "J9.3",
+      "D401.1",
+      "R100.1"
+    ],
+    "CAM_TX_WIRE": [
+      "J9.4",
+      "R101.2",
+      "D400.1"
+    ],
+    "ACT_EN_MCU": [
+      "U1.16",
+      "R122.1"
+    ],
+    "ACT_EN": [
+      "Q122.1",
+      "R123.1",
+      "R122.2"
+    ],
+    "PYRO1_GATE_N": [
+      "R126.1",
+      "U1.3",
+      "R127.1"
+    ],
+    "PYRO1_GATE": [
+      "R126.2",
+      "R128.1",
+      "Q124.4",
+      "C126.1",
+      "TP122.1"
+    ],
+    "BOOT0": [
+      "U1.94",
+      "R5.1"
+    ],
+    "VCAP1": [
+      "U1.48",
+      "C19.1"
+    ],
+    "VCAP2": [
+      "U1.73",
+      "C20.1"
+    ]
+  },
+  "verdict": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "limitations": [
+    "Read-only native CAD and maker-document review; no direct KiCad CLI, gate or build was run by this lens.",
+    "Firmware is not implemented; power-transition behavior, GPIO-lock/trace interaction, UART/ESD, SD latency/current and flight performance are not measured.",
+    "Root owns fresh full-gate evidence. No historical build result is represented as a fresh gate result."
+  ],
+  "loader": {
+    "source": "AN2606 Rev70 Table135 pp320-323",
+    "LQFP100_connected": [
+      "PA2",
+      "PA3",
+      "PA4",
+      "PA5",
+      "PA6",
+      "PB6",
+      "PB9",
+      "PC10",
+      "PC11",
+      "PC12",
+      "PE11",
+      "PE12",
+      "PA11",
+      "PA12"
+    ],
+    "LQFP100_NC": [
+      "PA9",
+      "PA10",
+      "PB14",
+      "PB15",
+      "PB10",
+      "PB11",
+      "PA8",
+      "PC9",
+      "PA7",
+      "PA15",
+      "PE13",
+      "PE14"
+    ],
+    "critical_controls_not_in_loader": [
+      "PC1",
+      "PE4"
+    ],
+    "direct_uart_pins_not_in_loader": [
+      "PC6",
+      "PC7",
+      "PB12",
+      "PB13"
+    ]
+  },
+  "source_access": {
+    "date": "2026-10-29",
+    "ST_datasheet": "Current official PDF text read through web; direct download timed out. No local ST PDF rendering claimed.",
+    "ST_loader": "Current official PDF text read through web; direct download timed out.",
+    "TI_TXU0202": "Official SCES942A PDF downloaded; p4 rendered and visually inspected; state and supply sections read.",
+    "ST_RM0433": "Full web fetch refused for document size; no fresh full-RM reading claimed. Trace and lock bit names independently checked in official H743 CMSIS header.",
+    "Infineon": "Exact EL official product page read. Existing project 20/36/48V TLP details treated as historical maker-data record; not independently claimed as a measured endpoint voltage."
+  },
+  "retrieved_file_hashes": {
+    "tps2553.pdf": "edd76d150b073ae8d4addbf85f6845b8c722fbd0b35ef025ac3c9e704a6a3385",
+    "txu0202.pdf": "f8e3f51edcccf12c7e991bec54cf1747a7fd84dccd23b875f326a3e631241ef2",
+    "tps709.pdf": "8c14e3efae738a27b857b789aa87369de9037a8ef3616a9f71a423587cdc6949",
+    "stm32h743xx.h": "9a4ea0860707868a1cc562140ba214d535fb5a64fde91b451b2767276eef7e03"
+  },
+  "findings": [
+    {
+      "id": "R11-MCU-01",
+      "severity": "Minor",
+      "subject": "ESD rationale still assumes GPS/radio translators",
+      "path": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+      "line": 504,
+      "design_violation_demonstrated": false
+    },
+    {
+      "id": "R11-MCU-02",
+      "severity": "Minor",
+      "subject": "Current maker citations mix AF table numbering and PC1 reset terminology",
+      "path": "m3_design/assembly_review/sources/r10_design/pin_table.tsv",
+      "lines": [
+        17,
+        52,
+        53,
+        64,
+        65,
+        79,
+        80,
+        81
+      ],
+      "design_violation_demonstrated": false
+    }
+  ]
+}

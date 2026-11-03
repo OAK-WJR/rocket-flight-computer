@@ -1,15 +1,17 @@
 # M3-ASSY-R2 — verification record (2026-09-27)
 
-This record answers three questions for the current board:
+This historical record answers three questions for the R2 board:
 1. Does it meet the requirements?
 2. Where is it redundant, and where is it not?
 3. Is every footprint, pinout and part number right?
 
 It is CAD, datasheet and simulation evidence only. **No board has been built or measured.**
 
+**Revision scope:** the ARM-break safety rule, fused ARM links and open H-6 decision below are the R2 record, not current R10 requirements. The R10 owner decision of 2026-10-28 replaces J124 and its fused link with one external screw switch on J400 for power and pad arming, on last and off first. The post-load-switch feed, R134 limit, gate networks and bus / continuity measurements stay. Current R10 requirements and pending qualification are in `REQUIREMENTS.md` F7–F9, `FMEA_REDUNDANCY.md` "R10 applicability" and `M3_R10.md`; current AGENTS §2.1 supersedes R2's rule 1.
+
 ## 1. Requirements
 
-The governing requirements are the original brief as recorded in `ROCKET_FC_FROZEN_DESIGN.md` §1, the table in `STATUS.md`, the functions in `AGENTS.md` §1 and the safety rules in `AGENTS.md` §2. Items of the original brief that were dropped are dropped with a written reason in the frozen design: microSD, ADXL375, LoRa, LSE, RGB LED, BOOT/reset buttons, and the 40 × 85 mm size. None was dropped silently.
+The governing requirements at the R2 review were the original brief as recorded in `ROCKET_FC_FROZEN_DESIGN.md` §1, the table in `STATUS.md`, the functions in `AGENTS.md` §1 and the safety rules in `AGENTS.md` §2. Items of the original brief that were dropped are dropped with a written reason in the frozen design: microSD, ADXL375, LoRa, LSE, RGB LED, BOOT/reset buttons, and the 40 × 85 mm size. None was dropped silently.
 
 | Requirement | Status on R2 | Evidence |
 |---|---|---|

@@ -1,0 +1,934 @@
+{
+  "schema": 1,
+  "round": 14,
+  "lens": 8,
+  "name": "manufacturing",
+  "prepared_utc": "2026-10-30T11:40:46.036288+00:00",
+  "target_commit": "f5e4a5a94013514edb952fd328325341b63a98df",
+  "board_sha256_before": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "board_sha256_after": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "target_metrics": {
+    "width_mm": 46,
+    "length_mm": 90,
+    "thickness_mm": 1.6,
+    "bytes": 2259597,
+    "footprints": 209,
+    "segments": 966,
+    "vias": 296
+  },
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "finding_counts": {
+    "new": 2,
+    "carried": 1,
+    "active": 3,
+    "closed_not_counted": 3
+  },
+  "findings": [
+    {
+      "id": "R14-MFG-01",
+      "severity": "Minor",
+      "status": "active",
+      "classification": "carried",
+      "prior_ids": [
+        "R4-BOM-01",
+        "R12-BOM-01",
+        "R13-MFG-02"
+      ],
+      "title": "L400 retains a non-maker land with possible uncovered heel",
+      "files": [
+        "m3_design/assembly_review/m3.kicad_pcb",
+        "m3_design/assembly_review/kilib/rocket.pretty/M3_SRP5030TA.kicad_mod"
+      ],
+      "coordinates": {
+        "reference": "L400",
+        "face": "F",
+        "x_mm": 24.2,
+        "y_mm": 5.55
+      },
+      "measured": {
+        "native_pad_size_mm": [
+          1.8,
+          2.5
+        ],
+        "native_local_pad_centres_x_mm": [
+          -2.35,
+          2.35
+        ],
+        "native_inner_gap_mm": 2.9,
+        "maker_land_pad_size_mm": [
+          2.0,
+          1.8
+        ],
+        "maker_land_centres_x_mm": [
+          -2.25,
+          2.25
+        ],
+        "maker_inner_gap_mm": 2.5,
+        "possible_heel_x_mm": 1.3,
+        "native_inner_pad_edge_x_mm": 1.45,
+        "possible_uncovered_heel_strip_mm": 0.15
+      },
+      "maker_source": {
+        "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+        "page": 1,
+        "basis": "Recommended layout and body/termination tolerance drawing."
+      },
+      "assessment": "Nominal contact is covered; the permitted tolerance calculation leaves a 0.15 mm heel strip outside copper. No assembled failure is demonstrated. Retained owner/assembler qualification deviation.",
+      "concrete_fix": "Adopt the Bourns land through the generator in a separately covered PCB revision, then recheck local copper, export and assembly; otherwise retain the explicit deviation until actual seating/solder-joint and retention qualification is accepted."
+    },
+    {
+      "id": "R14-MFG-02",
+      "severity": "Minor",
+      "status": "active",
+      "classification": "new",
+      "title": "LS120 mass allowance contradicts the exact maker sheet",
+      "files": [
+        "m3_design/assembly_review/sources/r10_design/masses.json:9",
+        "docs/M3_R10.md:395"
+      ],
+      "coordinates": {
+        "reference": "LS120",
+        "face": "F",
+        "x_mm": 23.0,
+        "y_mm": 58.5
+      },
+      "measured": {
+        "recorded_mass_g": 0.3,
+        "maker_mass_g": 0.5,
+        "understatement_g": 0.2,
+        "recorded_100g_force_N": 0.2941995,
+        "maker_nominal_100g_force_N": 0.4903325,
+        "recorded_five_times_force_N": 1.4709975,
+        "maker_nominal_five_times_force_N": 2.4516625
+      },
+      "maker_source": {
+        "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+        "page": 2,
+        "item": "General specification, item 9",
+        "pdf_sha256": "db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9"
+      },
+      "assessment": "The model calls 0.3 g a conservative inference despite the exact MLT-5020 sheet listing 0.5 g. This understates the retention worksheet and optional mass model. Retention and plate behavior are explicitly unqualified; no physical failure or modal-limit failure is established.",
+      "concrete_fix": "Use at least the maker nominal 0.5 g pending actual weighing, update the retention worksheet to approximately 0.49 N/2.45 N, and refresh optional plate/mass diagnostics and provenance. Keep physical retention qualification open."
+    },
+    {
+      "id": "R14-MFG-03",
+      "severity": "Minor",
+      "status": "active",
+      "classification": "new",
+      "title": "Ordering history still names the prior PCB as current",
+      "files": [
+        "docs/ORDERING.md:505"
+      ],
+      "coordinates": {
+        "artifact": "Historical snapshots table, 0c50b9fd row",
+        "line": 505
+      },
+      "measured": {
+        "stale_current_prefix": "7355ae1a",
+        "actual_current_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6"
+      },
+      "maker_source": {
+        "url": null,
+        "page": null,
+        "applicability": "Not applicable: internal board-binding statement."
+      },
+      "assessment": "The row says the corrected current board is 7355ae1a, whereas the active worksheet, following paragraph, native PCB and manifest bind e0e3ad84. Historical context and manifest verification bound the consequence; no wrong production package was uploaded.",
+      "concrete_fix": "Describe 7355ae1a as the historical round12 fix board or point this current-board phrase to e0e3ad84. Preserve the earlier review targets and their historical counts."
+    }
+  ],
+  "closed_findings": [
+    {
+      "id": "R11-MFG-01",
+      "status": "closed_in_native_geometry",
+      "evidence": "All five terminal GND pads explicitly thermal; four saved-fill spokes on F/In1/B. Hole-fill/process qualification remains pending."
+    },
+    {
+      "id": "R12-MFG-01",
+      "status": "closed_in_current_drawing",
+      "evidence": "All five previously obscured labels are present and collision-free in the all-209 native scan and enlarged PDF views."
+    },
+    {
+      "id": "R13-MFG-01",
+      "status": "closed_in_current_drawing",
+      "evidence": "All 209 references/722 characters have zero intersections with all 1018 Fab graphics, two polarity texts and 37 drill/cutout polygons; full pages/details inspected."
+    }
+  ],
+  "checks": [
+    {
+      "id": "M14-C01",
+      "name": "Independent official native DRC/parity and ERC",
+      "commands": [
+        "kicad-cli pcb drc --severity-all --schematic-parity --format json",
+        "kicad-cli sch erc --severity-all --format json"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "tool": "Official unmodified KiCad 10.0.7 under exclusive root reservation",
+      "result": {
+        "DRC": 0,
+        "unconnected": 0,
+        "schematic_parity": 0,
+        "ERC": 0,
+        "ERC_sheets": 15,
+        "DRC_ignored_checks": 0,
+        "ERC_ignored_checks": 0,
+        "included_severities": [
+          "error",
+          "warning",
+          "exclusion"
+        ]
+      },
+      "raw_reports": {
+        "drc": "a2742f885ea427d0eb3e81a9a0bbffd1c534510338a39bf7ba2dbdd20dcfb291",
+        "erc": "bce6d62bb1aa3f5966fd888a5744d8eb206a2e6bea213dabe6bb9d9208f45bb7"
+      }
+    },
+    {
+      "id": "M14-C02",
+      "name": "Independent ignored fabrication export",
+      "command": "KICAD_CLI=<official 10.0.7> python3 tools/export_fab.py --out .supervisor/r14_manufacturing/fab",
+      "exit_code": 0,
+      "result": {
+        "BOM_codes": 82,
+        "fitted_parts": 199,
+        "missing_LCSC": 0,
+        "owner_fitted": 0,
+        "DNP_placeholders": 0,
+        "unverified_CPL_corrections": 0,
+        "BOM_quantity_sum": 199,
+        "unique_BOM_designators": 199,
+        "CPL_top": 67,
+        "CPL_bottom": 132
+      },
+      "canonical_BOM_equal": true,
+      "canonical_CPL_equal": true,
+      "Gerber_normalized_comparison": {
+        "same_members": true,
+        "member_count": 14,
+        "differences_after_creation_dates_removed": []
+      }
+    },
+    {
+      "id": "M14-C03",
+      "name": "Canonical and fresh manifest checks",
+      "command": "python3 tools/fab_manifest.py [--out .supervisor/r14_manufacturing/fab]",
+      "exit_codes": [
+        0,
+        0
+      ],
+      "result": {
+        "outputs_each": 5,
+        "inputs_each": 193,
+        "current_inputs_still_match": true,
+        "canonical_output_sha256": {
+          "m3_assembly_bottom.pdf": "1b21eca6d0e043f02a3b02c2768c52ad455bfaca0559696d618c53d84867e8f6",
+          "m3_assembly_top.pdf": "123e841c39a6221d0eb30d1e2f1a44d70efd461a511105fb74168fd3ec629f11",
+          "m3_bom_jlc.csv": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+          "m3_cpl_jlc.csv": "75ae408d078701f84e87e28ed35fcc1327801a9bf0142a8a859da82074f9f3d7",
+          "m3_gerber.zip": "90966328ca7339095590a4397545f418c6fa407f4f25e0964e53e7aaac9f2007"
+        }
+      },
+      "manifest_sha256": "217bca54460af1a8fc4eb3510be8c4219fbf4969ba39637e5b951bb972e407a2"
+    },
+    {
+      "id": "M14-C04",
+      "name": "CPL supplier-pad reconstruction",
+      "commands": [
+        "KiCad Python tools/jlc_orient.py tools/jlc_easyeda/pads.json --verify-cpl .supervisor/r14_manufacturing/fab/m3_cpl_jlc.csv",
+        "Independent raw supplier-map reconstruction from actual CSV rows"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "result": {
+        "rows": 199,
+        "duplicate_rows": 0,
+        "reconstructed": 187,
+        "reconstructed_top": 66,
+        "reconstructed_bottom": 121,
+        "placement_only": [
+          "R100",
+          "R101",
+          "R103",
+          "R110",
+          "R150",
+          "R151",
+          "R152",
+          "R153",
+          "R440",
+          "R441",
+          "R450",
+          "R451"
+        ],
+        "worst_pad_residual_mm": 0.49128800000002926,
+        "worst_reference": "R134"
+      },
+      "scope": "Supplier-library geometry, not factory-preview or physical placement acceptance; two-terminal land differences have the existing nonpolar tolerance. All eight distinct high-side MOSFET fingers are covered; custom EP anchors are not package origins."
+    },
+    {
+      "id": "M14-C05",
+      "name": "Actual exported paste geometry and via clearance",
+      "command": "KiCad Python tools/paste_check.py <board> <ignored Gerber zip> --json <probe>; independent actual-aperture/via scan",
+      "exit_codes": [
+        0,
+        0
+      ],
+      "result": {
+        "top_flashes": 245,
+        "bottom_flashes": 373,
+        "actual_geometry_matches": 618,
+        "dry_pad_errors": 0,
+        "actual_paste_via_scan": {
+          "F": {
+            "apertures": 245,
+            "near_pairs_checked": 202,
+            "VIPPO_pairs_exempt": 0,
+            "violations": [],
+            "nearest_hole_to_actual_paste": {
+              "mm": 0.1397846221923828,
+              "comp": "C97",
+              "via": [
+                23.8,
+                62.95
+              ]
+            },
+            "U4_actual_areas_mm2": []
+          },
+          "B": {
+            "apertures": 373,
+            "near_pairs_checked": 345,
+            "VIPPO_pairs_exempt": 4,
+            "violations": [],
+            "nearest_hole_to_actual_paste": {
+              "mm": 0.1250011444091797,
+              "comp": "C98",
+              "via": [
+                23.8,
+                62.95
+              ]
+            },
+            "U4_actual_areas_mm2": [
+              0.1778245
+            ]
+          }
+        },
+        "U4_each_aperture_mm": [
+          0.5405,
+          0.329
+        ],
+        "U4_area_fraction": 0.8836,
+        "U401_windows_each_mm": [
+          1.13,
+          0.89
+        ],
+        "U401_EP_size_mm": [
+          1.2,
+          2.0
+        ],
+        "U401_EP_paste_fraction": 0.8380833333333332
+      },
+      "limits": {
+        "flash_position_nm": 1000,
+        "geometry_nm": 1000,
+        "ordinary_via_hole_to_paste_mm": 0.1,
+        "ordinary_via_ring_overlap_allowed": false,
+        "exception": "Only the two exact U401 thermal vias against the two split EP paste windows."
+      }
+    },
+    {
+      "id": "M14-C06",
+      "name": "Native Fab glyph, silk, via, land and thermal probes",
+      "exit_code": 0,
+      "result": {
+        "Fab": {
+          "references": 209,
+          "missing": [],
+          "graphics": 1018,
+          "othertexts": 2,
+          "drill_and_cutouts": 37,
+          "intersections": [],
+          "text_heights": {
+            "0.4": 138,
+            "0.8": 30,
+            "0.6": 12,
+            "1.0": 18,
+            "0.5": 3,
+            "0.3": 2,
+            "0.7": 6
+          },
+          "characters": 722,
+          "no_Fab_graphics": [
+            "Q122",
+            "J2",
+            "D123",
+            "D120",
+            "Q123"
+          ]
+        },
+        "silk": {
+          "shown": 118,
+          "hidden": 91,
+          "minimum_height_mm": 1.0,
+          "minimum_stroke_mm": 0.15,
+          "bad_size": []
+        },
+        "via_sizes": {
+          "(0.5, 0.3)": 291,
+          "(1.0, 0.5)": 1,
+          "(0.6, 0.3)": 4
+        },
+        "drilled_pads": {
+          "(0, (1.9, 1.9), (1.3, 1.3))": 23,
+          "(3, (0.9906, 0.9906), (0.9906, 0.9906))": 3,
+          "(3, (0.6, 0.6), (0.6, 0.6))": 2,
+          "(0, (1.2, 2.1), (0.6, 1.7))": 2,
+          "(0, (1.2, 1.8), (0.6, 1.4))": 2
+        },
+        "U401": {
+          "issues": [],
+          "evidence": {
+            "centres_mm": [
+              [
+                27.900000000000002,
+                13.6
+              ],
+              [
+                27.3,
+                13.6
+              ]
+            ],
+            "local_centres_mm": [
+              [
+                -0.3,
+                0.0
+              ],
+              [
+                0.3,
+                0.0
+              ]
+            ],
+            "qualified": 2,
+            "local_exposed_pad_mm": [
+              -0.599999999999998,
+              -1.0,
+              0.6000000000000015,
+              1.0
+            ],
+            "local_paste_windows_mm": [
+              [
+                -0.5649999999999978,
+                -1.0,
+                0.5650000000000013,
+                -0.11000000000000114
+              ],
+              [
+                -0.5649999999999977,
+                0.10999999999999936,
+                0.5650000000000014,
+                1.0
+              ]
+            ],
+            "manufacturing_condition": "resin-filled, copper-capped, planar VIPPO; physical fabrication unverified"
+          }
+        },
+        "terminal_GND": [
+          {
+            "pad": "J122.5",
+            "xy": [
+              38.6,
+              64.5
+            ],
+            "local_connection": 1,
+            "layers": {
+              "F.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In1.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In2.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.0,
+                "spoke_arcs": 0
+              },
+              "B.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              }
+            }
+          },
+          {
+            "pad": "J1.2",
+            "xy": [
+              7.4,
+              77.6
+            ],
+            "local_connection": 1,
+            "layers": {
+              "F.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In1.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In2.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.0,
+                "spoke_arcs": 0
+              },
+              "B.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              }
+            }
+          },
+          {
+            "pad": "J9.2",
+            "xy": [
+              38.6,
+              49.25
+            ],
+            "local_connection": 1,
+            "layers": {
+              "F.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In1.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In2.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.0,
+                "spoke_arcs": 0
+              },
+              "B.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              }
+            }
+          },
+          {
+            "pad": "J410.2",
+            "xy": [
+              38.6,
+              17.25
+            ],
+            "local_connection": 1,
+            "layers": {
+              "F.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In1.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In2.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.0,
+                "spoke_arcs": 0
+              },
+              "B.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              }
+            }
+          },
+          {
+            "pad": "J420.2",
+            "xy": [
+              38.6,
+              33.25
+            ],
+            "local_connection": 1,
+            "layers": {
+              "F.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In1.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              },
+              "In2.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.0,
+                "spoke_arcs": 0
+              },
+              "B.Cu": {
+                "fill_fraction_on_r1p15_circle": 0.16111111111111112,
+                "spoke_arcs": 4
+              }
+            }
+          }
+        ]
+      },
+      "scope": "Glyph intersections use native stroked polygons at 1 um approximation, not text boxes. Four thermal arcs sampled at r=1.15 mm in 720 angular steps per pad/layer; this checks saved fill geometry, not solderability."
+    },
+    {
+      "id": "M14-C07",
+      "name": "Selected existing contracts on exact native board and fresh BOM/CPL",
+      "command": "KiCad Python tools/check_r10.py --only S-4,LC-1,M-6,M-7,T-1,K-legends,K-copper,K-fill,K-rules,K-retained --bom <ignored BOM> --cpl <ignored CPL> --report <probe>",
+      "exit_code": 0,
+      "result": {
+        "S-4": true,
+        "LC-1": true,
+        "M-6": true,
+        "M-7": true,
+        "T-1": true,
+        "K-legends": true,
+        "K-copper": true,
+        "K-fill": true,
+        "K-rules": true,
+        "K-retained": true
+      },
+      "complete_full_gate": false,
+      "scope": "Ten selected contracts only. No canonical build or check.sh was run by this lens; in-memory refill writes no PCB."
+    },
+    {
+      "id": "M14-C08",
+      "name": "Metadata/model-path audit",
+      "command": "python3 quality_audit/audit_artifacts.py <board> --output <probe>",
+      "exit_code": 0,
+      "result": {
+        "footprints": 209,
+        "conflicting_identity_fields": 0,
+        "missing_models": 0,
+        "absolute_model_paths": 0,
+        "missing_courtyards": 0,
+        "missing_fitted_identities": 0
+      }
+    },
+    {
+      "id": "M14-C09",
+      "name": "PDF skill visual QA",
+      "commands": [
+        "pdfinfo <current top and bottom assembly PDFs>",
+        "pdftoppm -png -r 180 -singlefile <each PDF> <probe>",
+        "pdftoppm -png -r 360 -singlefile <each PDF> <probe>"
+      ],
+      "result": {
+        "pages_inspected": "Complete single page on both sides, plus four overlapping enlarged vertical tiles per side. Also inspected relevant complete maker pages.",
+        "native_vs_canonical_PDF_render_comparison": {
+          "top": {
+            "canonical_pdf_sha256": "123e841c39a6221d0eb30d1e2f1a44d70efd461a511105fb74168fd3ec629f11",
+            "fresh_pdf_sha256": "3e05ce3a385e77c96ef34df075c2f40f771e83f4c3a184177e13343a7a8a3134",
+            "render_equal": true,
+            "render_sha256": "15364ebe76fc3a900076f7615f59b80661ba7d0c6a360a46073ab369f9324e34"
+          },
+          "bottom": {
+            "canonical_pdf_sha256": "1b21eca6d0e043f02a3b02c2768c52ad455bfaca0559696d618c53d84867e8f6",
+            "fresh_pdf_sha256": "7fcae2700f6a428140dfcc77e44611d9dd2c319f9bc16bcc71c0b39c4645756d",
+            "render_equal": true,
+            "render_sha256": "f55ce7fc8d4b5bdcc210daee59130d8dd723842429c2206896fd039d2f1864a6"
+          }
+        },
+        "reference_intersections": 0,
+        "all_209_Fab_references_present": true
+      },
+      "scope": "Fab text is 0.3-1.0 mm and needs vector zoom. Several inherited footprints have reference/pin-1 dots without full Fab body outlines; use native pads and mandated factory preview for orientation. PDF byte differences do not change the identical rendered pages."
+    },
+    {
+      "id": "M14-C10",
+      "name": "Process/order instructions and primary-maker comparison",
+      "result": "Reviewed current ORDERING section8, all 113 decisions, 22 mandates and current handoff. Standard two-side/no-clean/top-last, exact VIPPO, manual post-reflow C84, no-wave seven DB125s, 23 contacts, J3 shell fill, U4 mask/stencil, U5/coating exclusions, staking, panel and preview obligations remain explicit.",
+      "scope": "Acceptance of a quote, panel/DFM plan, two U5 reflows, VIPPO and manual C84 is still pending. No physical or supplier process qualification follows."
+    }
+  ],
+  "requirements_and_decisions": {
+    "mandatory_sources_sha256": {
+      "AGENTS.md": "0ce3e6e22e968e206316355f27a1ecb343eb625de66b192904434cce7c46f22d",
+      ".supervisor/r14_target_packet.md": "e0522baeb0aef7092f0ebd334abc6d2c42bfc149e4cbc071ac2bca0774338ded",
+      ".supervisor/r10_review_packet.md": "70c48551c6736fa21890cb216a51fb24debec079bc9c6f527e748b7ff2321535",
+      "docs/REQUIREMENTS.md": "327e4361052e413a4a7dcb6be5b686f0c92373f275f213b374e81a6c96548c31",
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md": "ebe8d71ce1b5a1cb3768df3d2fcccc0969870590a027b6e86494c9b9a6c139c3",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "f93da61053b2019504aa05a621389644842030b4548163bcdf9f0a758a3333f7",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "3fb173c963be8e2ccaf666e1baa11221d488ac5994f2fe89d4aceed3e928a5b9",
+      "docs/M3_R10.md": "2f3918d0ee7f9f2cd3c44db304983ad723c21e4085edc865f73b3f90067dc634",
+      "docs/R10_VALIDATION.md": "5dfc344da26865e228c4e217c34eeb77778a2588ff8c9a6835ba4a48b4cf6bb0",
+      "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+      "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+      "docs/ORDERING.md": "57023ad390970e7d5801933ab36d6ff10b62be1149bcdb3e9ec1d2b5dadbc4b8",
+      "docs/R10_VEHICLE_HANDOFF.md": "f0f3ed2d5b22c78f65482b9e7a3d0807564fb4b7f5d7dadba91fa43246ffdba3",
+      "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "51fd7fe359a152b9e22c6efed840560d3355773c291069239cfbe6dd2d449fa0",
+      "m3_design/assembly_review/sources/r10_design/masses.json": "b6f15a1746315bd6de45c3aa522c30b423b66626ca345cd5ba1dcd86305c4366",
+      "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": "f6224aa62494376d717dfa8d326d88df0a8bdf7b8546624785d4c6caf37ceccd",
+      "STATUS.md": "f72f62f12d82dead2c83f52259ac5cadc59ba2411a6c8b0d7e7a32f8c598b744"
+    },
+    "all_decision_ids_considered": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03"
+    ],
+    "decision_count": 113,
+    "owner_mandates_considered": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16"
+    ],
+    "owner_mandate_count": 22,
+    "scope": "Manufacturing implications of each record considered under the latest single-switch/always-on/all-DB125/audit2/R13 amendments. Historical hardware descriptions and circuit-only stop instructions do not govern this full lens. AGENTS section2 unchanged."
+  },
+  "primary_sources": [
+    {
+      "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+      "pages": [
+        1
+      ],
+      "use": "L400 dimensions, land, reflow; active carried finding.",
+      "pdf_sha256": "c52004cbb76ccf3275e5a94ca6c437fc5a0b81ca8c3643abf1fee902f83741d2"
+    },
+    {
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+      "pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "use": "Exact MLT-5020 identity, mass, soldering and polarity.",
+      "pdf_sha256": "db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9"
+    },
+    {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "pages": [
+        1
+      ],
+      "use": "DB125 terminals: pitch, holes, contacts, tails and process/wire limits.",
+      "pdf_sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a"
+    },
+    {
+      "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+      "pages": [
+        1
+      ],
+      "use": "All 12 J430 lands, hinge and 100% aperture/stencil instructions.",
+      "pdf_sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "pages": [
+        35,
+        36
+      ],
+      "use": "DSK0010A native land and split EP windows; 84% example.",
+      "pdf_sha256": "1ab38416ceb4a3cd22b9e7665acc4409ac28f7c3a95c71ea195620f7d1ad7924"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+      "pages": [
+        39,
+        40
+      ],
+      "use": "RUX0012A fine signal/power lands and 0.1 mm stencil example.",
+      "pdf_sha256": "b2f5950f596dc2c4ca33e4ebac27fd35e4dcc68ea63e173466123e1118e91a06"
+    },
+    {
+      "url": "https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf",
+      "pages": [
+        1
+      ],
+      "use": "Opposed Q120/Q121 asymmetric DFN3x3A land.",
+      "pdf_sha256": "221c5d11af8ebfacef185ef2c498a3d2681cab856afbff2dd144fa5ccb41fde2"
+    },
+    {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+      "pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "use": "Exact C84 dimensions/electrical basis; no reflow or land profile supplied.",
+      "pdf_sha256": "5ab3c478e90f1826a614a56af8164bb4bab3143affaae1ad7aa69fc0c1981997"
+    },
+    {
+      "url": "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50",
+      "pages": [
+        15,
+        17
+      ],
+      "use": "U5 package/pins, port protection and no-clean handling."
+    },
+    {
+      "url": "https://www.st.com/resource/en/technical_note/tn0018-surface-mounting-guidelines-for-mems-sensors--in-an-lga-package--stmicroelectronics.pdf",
+      "pages": [
+        9,
+        10
+      ],
+      "use": "U4 90-150 um stencil and 70-90% aperture guidance; no ultrasonic process. Read primary web PDF; local download timed out."
+    },
+    {
+      "url": "https://jlcpcb.com/capabilities/pcb-assembly-capabilities",
+      "section": "PCBA capabilities",
+      "use": "Live primary confirmation of Standard two-side, rails and 240 +/-5 C; factory-specific acceptance remains required."
+    }
+  ],
+  "provenance": {
+    "no_peer_current_round_reports_read": true,
+    "no_git_actions": true,
+    "no_CAD_or_source_edits": true,
+    "no_canonical_build_or_full_check": true,
+    "only_assigned_durable_reports_written": true,
+    "root_DRC_receipt": "Separately read as context only; own DRC/ERC/export were executed under an exclusive CLI reservation.",
+    "probe_directory": ".supervisor/r14_manufacturing/",
+    "probe_sha256": {
+      "native_probe.py": "8c305280ca3c4148d74714b200e0734a21c422a4e49e054ff1b4d7ae859117c8",
+      "native_probe.json": "abaf7c1f91dc2e4358713558721fe9d3dabcf0a4b98d395b8e67ff054c71cbf8",
+      "supplier_reconstruct.py": "b21b1b94a5c1bac69481a7dd5faca614211a8f79702614ff5977004cf22ce63e",
+      "supplier_reconstruct.json": "0700485d37309120a558ddc9f261ad876f5c84c2fe6603df175646399855f482",
+      "actual_paste_vias.py": "6df8d078ba6a02f668404f6a7ef58c07dc457fada2cf5f42ba8672b532e11dd3",
+      "actual_paste_vias.json": "0ee693e0767429d95806f2bd833024215acaafbea4b13f6d4f9ec0162f09af56",
+      "contracts.json": "e6b6bb55519e29bcf6f95fa6df4ab53808bfd540d603abeaf9266cddf4d30d1d",
+      "paste.json": "81839fa0d27179e5865cba3eea78ea46db68f4b21a51cef3c3e1adcd6b7c919d",
+      "cli_receipt.json": "27f2e52214a7183d96869affeaaa6096df6526062467c1777c4b972e1a7223d9",
+      "export_comparison.json": "ae75558f30d121df7a047941569dc7cd349c816ac76504c828963a8cc1022645"
+    }
+  },
+  "coverage_limits": [
+    "No physical board, solder joint, hole fill, mask process, VIPPO fill/cap/planarity, stencil transfer or first article was measured.",
+    "No firmware, flight, installed RF/ESD, thermal/transient, endurance, e-match lot, harness/switch/screwdriver/card/bore/stack or retention qualification.",
+    "No fresh all-code supplier availability or cost query in this lens; read the existing bound supplier snapshot and its disclosed R430/U4 shortages, U9 minimum and quote/cost acceptance limits.",
+    "Factory preview and bottom-side convention acceptance remain required; 12 nonpolar resistor rows have placement-only checks because raw supplier pad maps are absent.",
+    "No canonical build/check.sh rerun. Selected existing rules, official DRC/ERC, independent native probes, raw supplier reconstruction, export/manifest and complete PDF visual QA are the evidence actually executed.",
+    "Current Fab-only drawings aid identification; native pads/silkscreen and factory preview govern pin roles/polarity. Small vector Fab labels are not 1 mm silkscreen.",
+    "113 decisions and 22 mandates were reviewed for this lens; this is not a duplicate electrical/firmware/whole-vehicle qualification."
+  ]
+}

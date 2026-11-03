@@ -1,0 +1,13 @@
+# R9 test suites on board 8504c2c6c74b601b009f22d0f1dd41aa27e7035b44614282b9560a70cb0a0230
+# cd tools && KiCad python -B -m unittest test_r9_route test_r9_rf test_r9_place test_r9_pyro test_r9_power test_r9_sch test_r9_check
+tools/dc_solve.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='m3_design/assembly_review/m3.kicad_pcb' mode='r' encoding='utf-8'>
+  text = open(path, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+tools/dc_solve.py:57: ResourceWarning: unclosed file <_io.TextIOWrapper name='<tmp>' mode='r' encoding='utf-8'>
+  text = open(path, encoding='utf-8').read()
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.
+----------------------------------------------------------------------
+Ran 167 tests in 167.923s
+
+OK

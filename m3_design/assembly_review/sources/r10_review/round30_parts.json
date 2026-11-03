@@ -1,0 +1,49 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 30, parts lens",
+  "reviewer": "claude",
+  "target_commit": "0afaed38dafa86edf4453a8bf7b55f9337e41ae1",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Board vs JLC BOM / owner BOM / CPL: all 206 CPL rows and 82 codes (81 JLC + C84) agree with the board footprints' LCSC, Manufacturer Part and footprint names; CPL side and position agree except the two deliberate JLC centroid offsets (J3 4.600 -> 4.505 mm, J430 y 24.30 -> 25.85 mm) that jlc_corrections.json records.",
+    "Schematic vs board: all 216 board footprints have a schematic symbol (222 symbols with power flags) with identical Value, LCSC, Manufacturer, Manufacturer Part and Footprint; the 130 parts carrying a second 'LCSC Part' field give the same code as 'LCSC' (no contradictory part-number field).",
+    "Value vs maker part number decoded for every line (Samsung, Murata, Yageo CC/RC/RT, FH, UNI-ROYAL including 0603WAF220KT5E = 2.2 ohm and 25121WF360LT4E = 0.36 ohm, Vishay MCT0603MD2004BP500 = 2 Mohm 0.1 % 25 ppm/K inside its 47 ohm-2 Mohm range, FOJAN FRC0603F2262TS): no value, tolerance, dielectric or voltage code disagrees with the Comment.",
+    "jlc_orient --verify-cpl on the committed board and CPL: 67 top + 125 bottom rows rebuilt from JLC footprints, worst residual 0.491 mm, errors none, 14 placement-only (C21190 rows); matches the records' 192 + 14.",
+    "Pinout spot checks against maker pin maps: BAT54A (pin 3 common anode on 3V3, pin 1 cathode on PYRO1_COLD), SRV05-4 (pin 5 VCC on 3V3, pin 2 GND), USBLC6-2SC6, D9 / D123 cathodes on RAW_PROTECTED / 3V3, LS120 + on 3V3 (MLT-5020 p4 polarity vs EasyEDA C94598 pad 1): all consistent.",
+    "Voltage ratings vs operating points: every capacitor on BAT_IN / RAW_PROTECTED / VLOGIC is 25 V or 50 V against <= 10.18 V (OVLO corner); 5 V and 3.3 V rails use >= 16 V parts; D8 SMBJ12CA VRWM 12 V > 8.4 V; ESD103 VRWM 15 V > 5.2 V at J400.2; AON7524 / AO3400A VGS 12 V and AONR21357 25 V not exceeded.",
+    "Resistor dissipation: R92 31 mW at 10.18 V, R405 28 mW, R134 pulse 35.80 W at 70 C vs the 61.2 W 20 ms chart read (records reproduce: 1.97109 ohm, 0.71595 J, 1.23x).",
+    "Recalculated records reproduce: R430 1.041-1.249 A (SLVS841 eq. 1), R405 >= 5.63 mA, GAP-3 0.490 W / 109.2-123.9 C / 112.3 C/W, loaded-pack 5.880831 V, continuity 99.369 / 99.338 / 146.23 mV, divider fault 3.342 V, C126 discharge 0.6782 ms, IWDG 28.571-32.653 ms and 34.853 ms guard, DB125 diagonal 1.2619 mm, VCAP 1.683-2.783 uF, D402 leakage 5.7 mV and 14 mV ESD step.",
+    "Datasheet facts in parts_qualification re-read from cached maker PDFs: AONR21357 (+-25 V, 12.3 mohm, Qg10 70 nC), AON7524 (Qg4.5 22 nC), AO3400A Ciss 630 pF, TPS7A91 (200 mV, 1.5-1.9 A, +-100 nA), TPS2553 rev G (135 mohm, 3-11 ms / 2-7 ms), TPS2121 IRCB 0.2/1/2 A, AP6320x (2.5-3.1 A, 3.3-3.7 V UVLO, 4 ms, -40..85 C), SRP5030T-6R8M (76.2 mohm, 4 A, 4.3 A), ESD103 (15 V, 50 nA, 21 V), BAT54 0.32 V at 1 mA, Yageo RT D = 25 ppm, DB125 T0-1 drawing (7.4 / 8.6 mm, 28-16 AWG, 10 / 13.5 A, M2 0.2 N m, 4-5 mm strip, 0.50x0.85 pins, 1.20 mm hole): all agree.",
+    "Supplier figures in AGENTS, M3_R10, ORDERING 8.1, R10_VALIDATION and parts_qualification ($85.26, $60.47 + $24.79, $85.80 / $61.01, $102.05, $105.04; U4 9 / 2, U9 30 / -81 / min 7, C535146 196 / 189 / 45) match cost_check.json and stock_check.json; both bind the committed BOM hashes 00af5358... / c48868b3....",
+    "LED2 (KT-0805Y, footprint A1) and LED1 (NCD0805R1, K1) map by pad number to EasyEDA footprints whose pad 1 sits on opposite ends; polarity therefore rests on JLC's library pin numbering, which the records already leave to the placement preview. Not a demonstrated error."
+  ],
+  "fix_verification": [
+    {"item": "R29-TRI-04 (LS120 +70 C part; docs lane)", "measurement": "MLT-5020 spec p2 item 6 reads -20..+70 C operating, storage -30..+85 C; parts_qualification round 29 note and cold-end list, REQUIREMENTS Temperature row, M3_R10 lines 492-496 (chamber pass needs LS120 <= 70 C) and R10_VALIDATION owner row 36 all state it; 70 - 22 = 48 C best-effort limit reproduces.", "verdict": "confirmed"},
+    {"item": "D-R29-01 / D-R29-02", "measurement": "Not parts-lens items (gate time-constant label and test pins); no part, code or BOM change; BOM / CPL hashes unchanged and bound.", "verdict": "confirmed (no parts impact)"}
+  ],
+  "checks_actually_executed": [
+    "Board SHA-256 before and after (identical).",
+    "KiCad pcbnew dump of all 216 footprints with fields and pad nets (.supervisor/r30_parts/dump.py, fps.json).",
+    "Board vs m3_bom_jlc.csv / m3_bom_owner.csv / m3_cpl_jlc.csv field, footprint, side and position comparison (cmp.py).",
+    "Schematic (15 sheets) vs board field comparison (sch.py).",
+    "tools/jlc_orient.py --verify-cpl on the committed board and CPL (read-only, output to stdout).",
+    "Doc scan of every reference-plus-LCSC-code mention in AGENTS, STATUS, docs and parts_qualification against the board (only historical or seed contexts differ).",
+    "pdftotext reads of the cached maker datasheets and the DB125 / MLT-5020 drawing images.",
+    "Hand recalculation of the parts_qualification figures listed in observations."
+  ],
+  "sources": [
+    "m3_design/assembly_review/m3.kicad_pcb, *.kicad_sch, fab/*.csv, fab/cost_check.json, fab/stock_check.json",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md, R10_DECISIONS.md",
+    "tools/jlc_orient.py, tools/jlc_easyeda/pads.json, tools/jlc_corrections.json",
+    "Cached maker PDFs in .supervisor/r14_parts_pdf/ (AOS AONR21357 Rev2.1, AON7524 Rev1.1, AO3400A; TI SBVS282A, SLVS841G, SLVSEA3F; Diodes DS41326; Bourns SRP5030T, CRM; Infineon ESD103 Rev1.3; JSCJ BAT54; Yageo RT; Vishay MCT; DORABO T0-1; Huawha MLT-5020)",
+    "AGENTS.md, docs/M3_R10.md, docs/ORDERING.md section 8, docs/R10_VALIDATION.md, docs/REQUIREMENTS.md"
+  ],
+  "coverage_limits": [
+    "No live JLC / LCSC queries: LCSC code-to-part identity and EasyEDA pin numbering rest on the committed snapshots.",
+    "Historical sections of parts_qualification (round 5-8, R92 / R166 histories) were not re-audited line by line.",
+    "Local land dimensions were checked through the EasyEDA residual check and the records, not re-drawn from every maker land pattern."
+  ]
+}

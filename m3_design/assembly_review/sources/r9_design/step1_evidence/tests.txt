@@ -1,0 +1,20 @@
+test_check_shell.py: Ran 2 tests in 1.871s OK 
+test_dc_solve.py: Ran 3 tests in 0.010s OK 
+test_fab_validation.py: Ran 23 tests in 8.681s OK 
+test_fit_check.py: Ran 23 tests in 0.028s OK 
+test_maze_clearances.py: Ran 10 tests in 0.127s OK 
+test_paste_check.py: Ran 5 tests in 0.005s OK 
+test_procurement.py: Ran 15 tests in 0.024s OK 
+test_r5_repair.py: Ran 13 tests in 1.253s OK 
+test_r6_check.py: Ran 17 tests in 0.010s OK 
+test_r7_check.py: Ran 35 tests in 0.402s OK 
+test_r8_check.py: Ran 23 tests in 1.546s OK 
+test_r8_ground.py: Ran 11 tests in 9.807s OK 
+test_r8_place.py: Ran 13 tests in 2.725s OK 
+test_r8_power.py: Ran 7 tests in 9.444s OK 
+test_r8_route.py: Ran 12 tests in 3.310s OK 
+test_r9_check.py: Ran 52 tests in 139.661s OK 
+test_reference_audit.py: Ran 3 tests in 2.057s OK 
+test_route_check.py: Ran 57 tests in 1.824s OK 
+quality_audit.test_quality_tools (KiCad python): Ran 21 tests in 0.117s OK 
+quality_audit.test_quality_tools (python3): Ran 21 tests in 0.120s OK 

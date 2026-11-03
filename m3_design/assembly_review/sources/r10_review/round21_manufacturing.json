@@ -1,0 +1,95 @@
+{
+  "schema": "r10-review-v1",
+  "review": "round21_manufacturing",
+  "reviewer": "claude",
+  "target_commit": "accfff4947266a23cf60a63f3d92be047f5391b5",
+  "board_sha256_before": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+  "board_sha256_after": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 2},
+  "findings": [
+    {
+      "id": "R21-MFG-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "D-R20-05 removed the unconnected inner rings of two 1.3 mm terminal PTHs, leaving their hole walls 0.25 mm from foreign inner-plane copper; JLC's published minimum for inner-layer PTH hole to copper is 0.30 mm, and no DRC rule checks it",
+      "evidence": {
+        "file": "m3_design/assembly_review/m3.kicad_pcb; m3_design/assembly_review/m3.kicad_dru; m3_design/assembly_review/fab/m3_gerber.zip",
+        "references": [
+          "J1.2 (GND), hole 1.3 mm at (7.4, 77.6): In2 RAW_PROTECTED fill 0.250 mm from the drawn hole wall; no In2 flash (Gerber In2_Cu has no D03 at X7.4 Y-77.6)",
+          "J400.2 (BAT_SW_RETURN, U9 EN), hole 1.3 mm at (7.4, 67.6): In1 GND fill 0.250 mm from the drawn hole wall; no In1 / In2 flash"
+        ],
+        "measured": "Every plated hole against every foreign-net inner copper edge (zone fills, tracks, pads, via flashes; pcbnew polygons, NumPy segment distance; probe hole_cu.py / hole_cu.txt): 62 PTH pad holes, 2 below 0.30 mm (the two above, 0.250 mm each); the next smallest PTH is J3's shell slots at 0.45 mm and every other DB125 hole is >= 0.55 mm. All 604 via-hole/inner-layer pairs are >= 0.25 mm against JLC's 0.20 mm via rule (pass). Before D-R20-05 both holes were 0.551 mm from that copper (their rings were the nearer copper). The only hole-clearance rule is m3.kicad_dru 'General copper to hole clearance' min 0.25 mm, applied to vias and PTH pads alike, so DRC (0 violations) passes them.",
+        "maker": "JLCPCB PCB capabilities, https://jlcpcb.com/capabilities/pcb-capabilities (fetched 2026-10-31): 'Inner layer PTH pad hole to copper clearance 0.3mm'; 'Inner layer via hole to copper clearance 0.2mm'; 'Hole size Tolerance, Through-holes: +0.13 / -0.08 mm'",
+        "records": "docs/M3_R10.md line 42 and R10_VALIDATION row 9 / line 1926 record the J1.2 0.25 mm as 'the hole clearance of every GND via in a RAW region', i.e. they apply the via figure to a 1.3 mm component hole; the J400.2 In1 0.250 mm is recorded as S-8-exempt (safe direction) but not against the fabricator rule."
+      },
+      "impact": "A DFM shortfall, not a hazard. A 1.3 mm plated component hole is drilled oversize and its finished size may be up to +0.13 mm, so the drilled wall can come to about 0.18 mm or closer from the plane with registration. If JLC's DFM flags it, the order is held. If it is built as drawn, a smear or wicking short would tie GND to RAW_PROTECTED (U9 current-limits it, so the board cannot power up) or tie U9 EN to GND (the board stays off, which fails safe). Either short shows up at JLC's bare-board E-test as a scrapped board, not as a field fault.",
+      "concrete_fix": "Add a PTH-specific rule to the generated DRU (r10_sch.py writes m3.kicad_dru): (rule \"PTH hole to inner copper (JLC 0.30 mm)\" (layer inner) (condition \"A.Type == 'Pad' && A.Pad_Type == 'Through-hole'\") (constraint hole_clearance (min 0.35mm))). Then refill. The In2 RAW_PROTECTED pour pulls back to 0.35 mm at J1.2 and the In1 GND pour does the same at J400.2; S-8 is unaffected because it only grows. Re-run K-plane / K-region / DRC. The alternative is to restore J1.2's In2 ring with a distinct GND-pad footprint, which still leaves J400.2. Until it is fixed, record it as a deviation and ask JLC to accept 0.25 mm in writing."
+    },
+    {
+      "id": "R21-MFG-02",
+      "severity": "Minor",
+      "status": "new",
+      "title": "ORDERING 8.1's VIPPO / via-covering paragraph still gives the previous board's via inventory (301 vias, 296 at 0.5/0.3 on 50a39de5), though section 8 says it describes 0dc84776",
+      "evidence": {
+        "file": "docs/ORDERING.md lines 330-331",
+        "measured": "Board 0dc84776: 302 vias = 297 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5 (pcbnew); PTH drill file T1 0.300 mm 301 hits + T2 0.500 mm 1 hit. M3_R10 line 24 and R10_VALIDATION line 12 already say 302."
+      },
+      "impact": "Records only. The paragraph is the via list the owner pastes into the JLC order remark and uses to ask about the whole-board fill option. A stale count invites a wrong quantity or a query to JLC. The two VIPPO coordinates and the BAT_IN via are unchanged and correct.",
+      "concrete_fix": "Docs lane: change it to 'Of the 302 vias on 0dc84776..., 297 are 0.5 / 0.3 mm, 4 are 0.6 / 0.3 mm and one, the BAT_IN via at (17.5,87.3), is 1.0 / 0.5 mm'."
+    }
+  ],
+  "fix_verification": [
+    {"id": "D-R20-05", "claim": "J121.1 and J400.2 carry no unconnected inner rings (library BK pad 1 / GN pad 2); J121.2 keeps its rings; J1.2 loses its In2 ring", "measurement": "Gerber flash scan at the six terminal positions. In1: J121.1 and J400.2 absent, J1.2 present (thermal), J121.2 present. In2: J121.1, J400.2 and J1.2 absent, J121.2 present. F/B pads present on all six. Drill T4 1.30 mm has 27 hits, including (7.4,-67.6) and (7.4,-77.6). Hole wall to foreign inner copper: J121.1 1.050 mm; J400.2 In1 GND 0.250 mm; J1.2 In2 RAW_PROTECTED 0.250 mm.", "verdict": "partly (it does what it claims, but the side effect at J1.2, and J400.2's In1 wall, fall below JLC's 0.30 mm PTH rule: R21-MFG-01)"},
+    {"id": "D-R20-06", "claim": "Courtyard designator offenders 3 -> 0; C400 moved, C94 / R461 hidden; 96 hidden", "measurement": "Ink-to-courtyard polygon test over every same-side footprint, no centre pre-filter: no visible designator is nearer another part's courtyard than its own. C400 is 0.118 mm from its own courtyard and 0.172 mm from J440's (it no longer overlaps). The tie at 0 is R166 / C84, carried. C94, R461, C404, R90 and U401 are hidden. The board's hidden set (96) is identical to M3_R10 line 589. Every hidden reference keeps a Fab text.", "verdict": "confirmed"},
+    {"id": "D-R20-07", "claim": "Fab references of C445, D440, D441, C123, R119 and R173 no longer cross their own Fab outlines", "measurement": "Text polygons of all 217 visible Fab texts (fields included) intersected with their own Fab strokes: 0 crossings. R119 reads 'R119' at 1200 dpi in m3_assembly_bottom.pdf; D440 and D441 are legible beside their bodies.", "verdict": "confirmed"},
+    {"id": "D-R20-08", "claim": "West aft tab: In2 3V3 under the 5 x 3 mm band 12.498 -> 0 mm2; east tabs unchanged", "measurement": "Rule area R20_TAB_KEEPOUT_WEST_AFT (In2, fill-only), x -0.5..3.0, y 12.5..17.5. Fill area in band x 0-3, y 12.5-17.5: F/In1/B GND 12.498 mm2 each, In2 0. East aft In2: RAW_PROTECTED 7.497 and PORT_5V3 3.077 mm2. East forward In2: RAW_PROTECTED 12.244 mm2. T-1 windows are unchanged (west 0.5-23.25 / 43.0-89.5; east 0.5-89.5). Smallest tab margins are 1.155 mm over each rule; the moved D440 is 2.649 mm over its rule at the west aft tab.", "verdict": "confirmed (east tabs remain an owner decision)"},
+    {"id": "D-R20-09", "claim": "D440 / D441 moved to the bottom under J440", "measurement": "CPL: D440 4.45/-19.45 Bottom 270 and D441 4.45/-23.05 Bottom 270, the same as D410 / D411 (bidirectional ESD103-B1-02EL, so polarity cannot be wrong). BOM line C535146 qty 8. CPL 72 top / 133 bottom = 205. Paste pads F 253 / B 375 (the 4 apertures moved side).", "verdict": "confirmed"},
+    {"id": "D-R20-02", "claim": "PORT_4V8 FB via at (30.575,11.6)", "measurement": "Present (0.5/0.3). DRC 0. The via inventory is 302; the drill file agrees (301 x 0.30 + 1 x 0.50).", "verdict": "confirmed (manufacturing aspect only)"},
+    {"id": "R20-MFG-04 (docs)", "claim": "ORDERING 8.1 gives the R10 order-number location", "measurement": "ORDERING 8.1 'Order-number mark' gives 'Specify a location' and B(20.35,35.6). The board placeholder JLCJLCJLCJLC is B.Silkscreen, 1.0/0.15 mm, bbox x 15.08-25.62, y 34.75-36.45, unchanged.", "verdict": "confirmed"},
+    {"id": "Fab manifest", "claim": "Package bound to 0dc84776", "measurement": "193 input SHA-256 and 6 output SHA-256 recomputed from the commit: 0 mismatches; the cad/m3.kicad_pcb input is 0dc84776. Gerbers and drills re-exported with export_fab.py's options (kicad-cli 10.0.7) are identical except for the date lines.", "verdict": "confirmed"}
+  ],
+  "fix_now_recommendations": [
+    {"id": "R21-MFG-01", "change": "Add to the generated m3.kicad_dru: (rule \"PTH hole to inner copper (JLC 0.30 mm)\" (layer inner) (condition \"A.Type == 'Pad' && A.Pad_Type == 'Through-hole'\") (constraint hole_clearance (min 0.35mm))). Refill zones and rebuild. Expect only J1.2 (In2 RAW_PROTECTED) and J400.2 (In1 GND) pours to retreat by 0.10 mm. Re-run DRC, K-plane, K-region and S-8."},
+    {"id": "R21-MFG-02", "change": "Docs: ORDERING 8.1 via inventory -> 302 vias on 0dc84776 (297 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5)."}
+  ],
+  "rejected_or_closed_candidates": [
+    "DRC (kicad-cli 10.0.7, --severity-all --schematic-parity --all-track-errors): 0 violations, 0 unconnected, 0 parity. No rule severity is set to ignore and there are no exclusions. Closed.",
+    "Gerber zip vs board: all 11 Gerbers are identical to a fresh export except the date lines; PTH.drl, NPTH.drl and the job file are identical byte for byte. Closed.",
+    "Stackup / job file: 4 layers, 1.6 mm, ENIG, outer 0.035, inner 0.030 (1 oz, matching ORDERING '1 oz outer and inner'), prepreg 0.203, core 1.03. Closed.",
+    "Tracks: minimum 0.20 mm against the 0.15 rule and JLC's 0.09 mm. Vias: 0.5/0.3 (ring 0.10 mm; JLC needs diameter >= hole + 0.1). PTH 1.9/1.3 (ring 0.30 >= 0.20). Closed.",
+    "Hole-to-hole: minimum via-via 0.259 mm (JLC 0.20). The only pad-involved pair below 0.45 mm is J3's NPTH locating pins to its shell slots, 0.37 mm (HRO vendor land; carried, closed in earlier rounds).",
+    "NPTH to copper: J3 locating pins 0.200 mm on F (DRU 'HRO M-12' rule; JLC NPTH to track 0.2) and J2 0.25 mm. Closed.",
+    "VIPPO: exactly two vias, (27.3,13.6) and (27.9,13.6), carry filling yes / capping yes; the order remark is the only carrier, as ORDERING 8.1 states. Closed as documented.",
+    "BOM / CPL / owner BOM: 81 lines, 205 refs, Qty sums 205. Every LCSC and Manufacturer Part matches the board fields. No excluded part is listed. The only CPL offsets are J3 (-0.095 x) and J430 (-1.55 y), both reviewed corrections. The owner BOM lists only C84 (it uses CRLF line endings where the JLC BOM uses LF; it is not uploaded, so this is harmless). Closed.",
+    "Cost / stock files predate the CPL change (cost_check input CPL hash dbb126a9 vs current 72b39a9b); U4 is 2 orderable against 5. This is disclosed and an owner decision, so it is not filed.",
+    "Silkscreen: every text 1.0 / 0.15 mm. The smallest gap from ink to a mask opening is 0.156 mm (C90 ref; JLC 0.15). The smallest bbox gap to the edge is 0.302 mm. The smallest text-to-text ink gap is 0.155 mm (R431 / 1:5V4). Closed.",
+    "R463's designator sits 0.216 mm below J440's 3:TXO legend (B.Silkscreen). In the bottom render they read as two separate lines. It is cosmetic, it is noted in the round 20 fix hand-back, and no rule is broken. Not filed.",
+    "tools/tab_windows.in2_under still reports 3V3 under the west aft tab because it samples at exactly 3.0 mm, the keep-out's boundary. It is an R9 tool that the R10 gates do not use, and a polygon measurement shows 0 mm2. Not filed.",
+    "Fiducials: none on the board; JLC Standard rails add them (ORDERING section 4). Closed.",
+    "Renders (kicad-cli 10.0.7, high, top and bottom): every silkscreen word is legible. 'SWITCH', 'BAT', '3:S3' and 'J122' sit in body shadows, as recorded under D-R19-08 (mechanics lens)."
+  ],
+  "checks_actually_executed": [
+    "Board SHA-256 before and after (canonical file and a git-archive snapshot of accfff4 in the probe dir)",
+    "kicad-cli 10.0.7 pcb drc --format json --severity-all --schematic-parity --all-track-errors on the snapshot (drc.json); .kicad_pro rule severities and exclusions",
+    "Fab manifest: 193 inputs and 6 outputs re-hashed (chk_manifest.py)",
+    "Gerber (11 layers, export_fab.py options) and drill re-export with kicad-cli 10.0.7; diff against the unzipped package",
+    "Gerber D03 flash scan of In1 / In2 / F / B at the J1, J400 and J121 holes; drill T-code hit counts",
+    "pcbnew dump of every inner and outer copper polygon edge and every hole (dump_inner.py) -> NumPy hole-wall-to-foreign-copper distances for vias, PTH and NPTH (hole_cu*.py, hole_npth.py); hole-to-hole spacing",
+    "Via size / fill / cap inventory; track width histogram",
+    "BOM / owner BOM / CPL vs board fields and positions (probe_bom.py); CSV hashes vs the stock / cost input hashes",
+    "Silkscreen: text sizes, legends, hidden list vs M3_R10 (probe_silk.py); ink to mask openings and edge (probe_silkpad.py); ink to courtyard on all same-side footprints (probe_refcy.py); text-to-text ink gaps (probe_txt2txt.py)",
+    "Fab reference text vs own Fab strokes, including fields (probe_fabx2.py)",
+    "T-1 windows and per-tab margins (check_r10.t1, t1probe.py); per-net fill area under each tab band",
+    "Assembly PDFs rasterised (pdftoppm 300 dpi full, 1200 dpi crops at R119 / Q120-Q121 and D440 / D441) and inspected; kicad-cli pcb render top and bottom (high) inspected",
+    "JLC capabilities page fetched (inner-layer via / PTH hole-to-copper, tolerances, tabs, VIPPO)"
+  ],
+  "sources": [
+    "https://jlcpcb.com/capabilities/pcb-capabilities (fetched 2026-10-31): inner-layer via hole to copper 0.2 mm, inner-layer PTH pad hole to copper 0.3 mm, through-hole tolerance +0.13/-0.08 mm, min breakaway tab with mouse bites 5 mm, epoxy fill and cap 0.15-0.55 mm vias (not the 4-layer default), silkscreen 1.0 mm / 0.15 mm, pad to silkscreen 0.15 mm"
+  ],
+  "coverage_limits": [
+    "No JLC DFM upload or quote: whether JLC flags 0.25 mm at J1.2 / J400.2 is not tested; per-via VIPPO, tab acceptance and template availability remain JLC questions.",
+    "Hole-to-copper is measured from the drawn finished hole; the drill oversize and registration that JLC applies are not modelled.",
+    "The fix proposed for R21-MFG-01 was not trialled on a copy (no refill and no K-rule re-run).",
+    "Supplier stock and cost were not re-queried."
+  ]
+}

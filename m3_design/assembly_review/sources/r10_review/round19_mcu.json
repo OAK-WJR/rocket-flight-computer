@@ -1,0 +1,357 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round19_mcu",
+ "reviewer": "claude",
+ "target_commit": "1e604412015002be941f7056d0788d23f508e6ac",
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 5
+ },
+ "findings": [
+  {
+   "id": "R19-MCU-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Round 18 USB-only UART rule is keyed to the inverted TPS2121 status polarity: U11 IN1 is USB, not the battery",
+   "evidence": [
+    {
+     "file": "docs/M3_R10.md",
+     "lines": "592-593 (commit 1e60441)",
+     "text": "Enable the UARTs only when PA4 (LOGIC_SOURCE_ST) shows U11's IN1 (the battery) selected, after a settling delay, and park PC6 and PB13 again when PA4 falls or the PA6 shedding trigger fires."
+    },
+    {
+     "file": "native netlist (kicad-cli 10.0.7 export, equal to schematic.net.xml) and board",
+     "reference": "U11 TPS2121RUXR at B(24.65,64.5) rot 90",
+     "measured": "U11.7 symbol pin IN1_USB = USB_LIMITED (pad (24.3,63.825)); U11.2 IN2_BAT = RAW_PROTECTED (pad (24.3,65.175)); U11.6 PR1 = GND; U11.3 CP2 = GND; U11.9 ST = LOGIC_SOURCE_ST -> U1.28 PA4 (30.55,48.0) with R91 10 kohm to 3V3 at B(28.1,60.0)"
+    },
+    {
+     "maker": "TI TPS2120/TPS2121 SLVSEA3F (Aug 2020)",
+     "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+     "pages": "p4 pin functions: RUX pin 7 = IN1, pin 2 = IN2, pin 9 = ST; p18 Table 9-3: with CP2 and PR1 low (VCOMP mode) IN2 >= IN1 -> OUT = IN2, ST = L; IN2 invalid -> OUT = IN1, ST = H; 'ST is pulled high when the output is Hi-Z or IN1. It is pulled low when IN2 is powering the output'; p21 'If the status pin is high, IN1 is the output. If the pin is low, IN2 is the output'"
+    },
+    {
+     "file": "m3_design/assembly_review/logic_power_path.kicad_sch",
+     "sheet_xy_mm": [
+      20.32,
+      274.32
+     ],
+     "text": "U11 IN1=USB_LIMITED, IN2=RAW_PROTECTED ... ST LOW = IN2 battery. ST HIGH = IN1 USB OR both sources invalid"
+    },
+    {
+     "file": "m3_design/assembly_review/sources/r10_review/round18_mcu.json",
+     "pointer": "R18-MCU-02 evidence power_tree / concrete_fix",
+     "text": "origin of the error: 'U11 TPS2121 ... IN1 pin 2 RAW_PROTECTED, IN2 pin 7 USB_LIMITED' and 'use PA4/LOGIC_SOURCE_ST high (TPS2121 IN1 selected) ... park ... on PA4 falling' (pins swapped against SLVSEA3F p4)"
+    },
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+     "pointers": "/port_states/startup and /firmware_obligations/19 give no battery-path test for 'ports powered'; /port_states/shutdown_shedding and obligation 12 stop the UARTs but do not park PC6/PB13; /firmware_obligations/14 still says 'GPS/radio are always powered'",
+     "note": "pin_table rows 52/63 say 'park as an input (no pull) or drive it low'; M3_R10 and ORDERING 8.3 say 'analog'"
+    }
+   ],
+   "impact": "Documentation defect in the firmware obligations (no firmware exists; hardware is correct). Implemented as written, the rule inverts R18-MCU-02's intent: with the pack on (U11 IN2, ST low) the GPS and radio UARTs would never be enabled, so no GPS or telemetry on battery power (REQUIREMENTS F10), and with USB only (IN1, ST high) the UARTs would be enabled with TX idle-high into the unpowered modules (about 2.7 mA per line through 1 kohm), the back-drive the rule was written to prevent. 'Park when PA4 falls' parks exactly when the battery path comes on.",
+   "concrete_fix": "Text only, no CAD: in docs/M3_R10.md replace the sentence with 'Enable the GPS and radio UARTs only while PA4 (LOGIC_SOURCE_ST) reads low, i.e. U11 has selected IN2 = RAW_PROTECTED, the battery path (TI SLVSEA3F Table 9-3 p18; ST is high for IN1 = USB or no valid input), after a settling delay; park PC6 and PB13 in analog mode with no pull when PA4 rises or the PA6 shedding trigger fires.' Carry the same PA4-low condition and the park step into the binding note (port_states.startup, shutdown_shedding, obligations 12 and 19; regenerate with r10_sch_check.py --binding-note) and change obligation 14's 'GPS/radio are always powered' to 'GPS/radio stay powered whenever the battery path is on (firmware cannot switch them)'. Use one parking mode (analog, no pull) in pin_table rows 52/63, M3_R10 and ORDERING 8.3. Optional, owner decision: the same PA4-low test can gate PC1 (refuse the load-switch enable while PA4 is high), which blocks the documented USB-powered, switch-open case in firmware (it does not cover back-feed from a self-powered module)."
+  },
+  {
+   "id": "R19-MCU-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "DS12110 cites in the pin table and binding note mix revisions and electrical sections; several page and note cites cannot all be right",
+   "evidence": [
+    {
+     "source": "DS12110 Rev 8 (only copy reachable: the repository cache and the LCSC mirror are byte-identical, SHA-256 0c4f0169...cafc; st.com timed out on HTTP/1.1 and HTTP/2 and via WebFetch)",
+     "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+     "mirror": "https://www.lcsc.com/datasheet/C5271084.pdf",
+     "measured": "Rev 8 has two electrical chapters: section 6 'Electrical characteristics (rev Y)' pp104-209 and section 7 '(rev V)' pp210-320. Port AF tables are Tables 10-14 on pp89-96."
+    },
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R18-01; pin_table.tsv row 18; r10_binding_note.json obligation 20",
+     "measured": "cite rev Y tables: Table 60 p139 (RPU), Table 61 p141 (VOH), Tables 28-29 pp111-112 (VREFINT), Table 94 p180 (VBAT/4). The binding note's other cites (Rev 11 Tables 109/112/136/147/149/150) are the rev V chapter (Rev 8 Tables 119/122/146/157/159/160). Rev V equivalents: Table 157 p246, Table 158 p248, Tables 127-128 pp218-219, Table 192 p293. Values compared: identical (RPU 30/40/50 kohm, VOH >= VDD-0.4 V at -8 mA, VREFINT 1.180/1.216/1.255 V, VREFIN_CAL 0x1FF1E860, VBAT ratio error +/-10 %)."
+    },
+    {
+     "file": "pin_table.tsv (unchanged rows)",
+     "measured": "several unchanged AF page cites are one page below Rev 8 (PB2 p. 90 is not): PA0-PA3, PA11, PA12 'Table 10 p. 88' (Rev 8 p89); PA13, PA14, PB3-PB6 'p. 89' (p90); PB8/PB9 'p. 90' (p91); PD11-PD13 'p. 93' (p94); PE2 'p. 94' (p95); PE7/PE8 'pp. 89-94' (p95, outside the range). The rows harmonised in 1e60441 cite PB12/PB13 p. 91 and PC6/PC7/PC10-PC12 p. 92, equal to Rev 8. In Rev 8, PB8/PB9 and PB12/PB13 sit on the same page (p91, Table 11 continued, page image af-091.png); the table puts them on p90 and p91 of one 'Table 10'."
+    },
+    {
+     "file": "pin_table.tsv rows 51-52, 63-64; binding obligation 14; telemetry.kicad_sch note",
+     "measured": "'Table 147 note 6 p. 242' for the pull-off rule: in Rev 8 that rule is Table 157 note 7 (p247); note 6 there is 'VIN must be less than Max(VDDXXX) + 3.6 V'. 'Table 112 note 3' matches Rev 8 Table 122 note 3 (p215)."
+    },
+    {
+     "file": "pin_table.tsv rows 7, 17, 28-31, 39, 41-42, 45-47, 53-57, 61-62, 82",
+     "measured": "still cite 'Rev10' tables (row 7: 'Table63 note 2 pp142-143', a rev Y table) while the binding note cites the same 2 MHz limit as Rev 11 Table 150 note 2 p246."
+    }
+   ],
+   "impact": "Evidence and navigation only. Every pin, AF, ADC channel and parameter this lens relies on was checked against Rev 8 and is correct; no numeric consequence (rev Y and rev V values are identical for the cited parameters). The Rev 11 numbers remain an Inference, as D-R18-10 already states.",
+   "concrete_fix": "When st.com is reachable, do one cite pass against a single DS12110 revision: cite the rev V chapter consistently (the design's conditional basis), re-read the page and note numbers for every AF row and for the pull-off note, and record the revision and download date in the binding note sources. No CAD change."
+  },
+  {
+   "id": "R19-MCU-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Two retained R8-era schematic notes contradict the R10 MCU map (camera OE on PA7; sentinels driven low)",
+   "evidence": [
+    {
+     "file": "m3_design/assembly_review/camera_uart.kicad_sch",
+     "line": 1583,
+     "sheet_xy_mm": [
+      20.32,
+      231.14
+     ],
+     "text": "'R8: PE8/pin38 UART7_TX and PE7/pin37 UART7_RX use AF7 ... PA7/pin31 controls OE as GPIO.'",
+     "netlist": "U12.6 OE = CAM_UART_OE = U1.39 PE9 with R102 10 kohm to GND; U1.31 PA7 has no net (pin_table row 31: 'CAM_UART_OE moved to PE9, D-R2-07')"
+    },
+    {
+     "file": "m3_design/assembly_review/mcu.kicad_sch",
+     "line": 4204,
+     "sheet_xy_mm": [
+      20.32,
+      280.0
+     ],
+     "text": "'R2: PE3 (pin 2) and PE6 (pin 5) are pyro-gate sentinels - no net, firmware drives them low.'",
+     "conflict": "pin_table rows 2/4/5 and binding obligation 5: 'Keep sentinel pins PE3/PE5/PE6/PC4 without nets and in analog mode ..., never driven' (R5-MCU-03); PE4's neighbours are PE3 (pin 2) and PE5 (pin 4), not PE6"
+    },
+    {
+     "file": "m3_design/check_actuators.py",
+     "line": 431,
+     "text": "comment '(firmware drives them low)'"
+    },
+    {
+     "generator": "m3_design/r10_sch.py retains R8 notes (r8_sch.py lines 214-216, 249-251); R18's R10_MCU_NOTES replaced three mcu-sheet notes but not these two",
+     "prior_reviews": "no round 10-18 report mentions either note (searched)"
+    }
+   ],
+   "impact": "Documentation defect in the schematic, which AGENTS section 3 makes the source of truth. A firmware author following the camera note would drive PA7 and leave PE9 analog, so R102 keeps the camera UART isolated (function lost, not a hazard). Following the sentinel note would drive PE3 low; a PE3-PE4 solder bridge (0.2 mm pin gap) would then fight the fire command instead of floating (fire inhibited; no inadvertent fire).",
+   "concrete_fix": "In m3_design/r10_sch.py (as R18 did with R10_MCU_NOTES), replace the camera_uart note's last sentence with 'PE9/pin39 CAM_UART_OE controls OE as GPIO; R102 10 k holds it low.' and the mcu note's first sentence with 'PE3 (pin 2) and PE5 (pin 4) flank PE4: no net, analog, never driven (R5-MCU-03).', keeping the R8 LED sentence; fix the check_actuators.py comment; regenerate the sheets. Netlist, binding hashes and board are unchanged."
+  },
+  {
+   "id": "R19-MCU-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "No firmware obligation keeps the internal VREFBUF disabled although VREF+ is hard-wired to VDDA (3V3A, the sensor rail)",
+   "evidence": [
+    {
+     "netlist": "U1.20 VREF+ and U1.21 VDDA both on 3V3A = 3V3 through R164 2.2 ohm (B(17.325,55.9)), with C21 100 nF (1.47-1.76 mm) and C22 1 uF; 3V3A also supplies U4 (VDD/VDDIO) and U5 (VDD, PS)"
+    },
+    {
+     "maker": "DS12110 Rev 8",
+     "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+     "pages": "Figure 95 p285 'Power supply and reference decoupling (VREF+ connected to VDDA)' (supported); Table 189 pp291-292 VREFBUF output 2.5/2.049/1.804/1.5015 V, static load <= 4 mA; Table 9 note 7 p88: where VREF+ is double-bonded to VDDA (TFBGA100) 'the internal voltage reference buffer is not available and must be kept disabled'"
+    },
+    {
+     "maker": "ST SVD STM32H743 v2.4 (modm-io mirror) and cmsis-svd-data STM32H743x",
+     "url": "https://raw.githubusercontent.com/modm-io/cmsis-svd-stm32/main/stm32h7/STM32H743.svd",
+     "measured": "VREFBUF_CSR reset 0x00000002 (HIZ = 1, ENVR = 0: external VREF+ mode at reset)"
+    },
+    {
+     "maker": "ST STM32H7 HAL (master, 2026-09-29)",
+     "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32h7xx-hal-driver/master/Src/stm32h7xx_hal.c",
+     "lines": "530-542: HAL_SYSCFG_VREFBUF_HighImpedanceConfig DISABLE = 'VREF+ pin is internally connect to VREFINT output'; 561-565 HAL_SYSCFG_EnableVREFBUF sets ENVR"
+    },
+    {
+     "records": "grep of docs/, r10_binding_note.json, pin_table.tsv, schematic notes: no VREFBUF or VREF+ mode rule (obligation 20 reads VDDA from VREFINT only)"
+    }
+   ],
+   "impact": "Bounded firmware-obligation gap; the reset state is correct. A firmware that enables the buffer (one HAL call) would connect a 1.5-2.5 V regulator output to a pin held at about 3.3 V by 3V3A through 2.2 ohm, outside the buffer's specified load (Inference: RM0433's VREFBUF mode table not re-read), and any code that then assumes VREF+ = 2.5 V scales every ADC reading (continuity, bus, PA6 shedding) by about 0.76.",
+   "concrete_fix": "Add one binding-note obligation and a line under M3_R10 'Sensors': 'VREF+ is tied to VDDA (3V3A): keep VREFBUF_CSR at its reset value (ENVR = 0, HIZ = 1, external reference); never call HAL_SYSCFG_EnableVREFBUF or clear HIZ; scale the ADC from VREFINT / VREFIN_CAL.' Can ride on the same binding-note regeneration as R19-MCU-01. No CAD change."
+  },
+  {
+   "id": "R19-MCU-05",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R18-MCU-04 (R17-MCU-01; deviation D-R15-02)",
+   "title": "VCAP capacitors meet ST's nominal value; their operating C and ESR remain unqualified",
+   "evidence": [
+    {
+     "board": "C19 (VCAP1, U1.48) at 2.44 mm and C20 (VCAP2, U1.73) at 2.15 mm, both CL10A225KO8NNNC (C23630) 2.2 uF +/-10 % X5R 16 V 0603, bottom"
+    },
+    {
+     "maker": "DS12110 Rev 8 Table 124 p216 (rev V)",
+     "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+     "value": "CEXT 2.2 uF, +/-20 % tolerated; ESR < 100 mohm"
+    }
+   ],
+   "impact": "Nominal selection passes; tolerance, temperature, bias and ageing corners can fall below 1.76 uF (Inference, not maker curves). Disclosed in the owner deviation list; not a demonstrated failure.",
+   "concrete_fix": "No CAD change now. Keep D-R15-02: bench-qualify the fitted parts, or adopt a reviewed X7R 2.2 uF part whose maker curves bound >= 1.76 uF at the VCAP bias and bay temperature."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R18-01",
+   "finding": "R18-MCU-01",
+   "claim": "R123 100 k -> 2 k (C4109, same land) keeps Q122 off against a PC1 pull-up and still turns it on: gate 2.19 V nominal, 1.92 V at the VOH floor; <= 0.220 V against 30 kohm at 3.6 V",
+   "measurement": "Board: R123 2k, LCSC C4109 / 0402WGF2001TCE, F(20.6,70.66) rot -90, pads ACT_EN / GND; JLC BOM line C4109 x5 includes R123; parts_budget values 2.1853 / 1.9204 / 0.2203 V reproduced (calcs.json). With AP63203 VFB minimum 3.27 V (Diodes DS41326 Rev 3-2 p5, CCM, -40..85 C) the VOH floor (DS12110 Rev 8 Table 158 p248: VDD-0.4 V at -8 mA; PC1 sources 1.1 mA) gives 1.900 V, 0.45 V above AO3400A VGS(th) max 1.45 V (Rev 3.1 p2). Q122's initial drain current is 0.84 mA while C120 discharges (8.4 V / R121), settling to 0.14 mA; saturation at 1.90-2.19 V stays Inference, as recorded. A BAT_ENABLE bridge at R123.1 (0.330 mm) now holds U9 off (fail-safe), where 100 k gave about 0.8 V at the Q122 gate.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-01",
+   "finding": "R18-REQ-08 (MCU side)",
+   "claim": "V3V3_SENSE (R62/R63) removed; PC3_C (U1.18) NC; VDDA from VREFINT and 3V3 from VBAT/4",
+   "measurement": "R62/R63 absent; U1.18 pad (25.5,50.55) has no net and no track or via (33 U1 NC pads; 100/100 pins agree across board, fresh netlist, pin_table and binding note). LQFP100 PC3_C is joined to GPIO PC3 by the SYSCFG_PMCR analog switch (DS12110 Rev 8 Table 9 note 6 p88); ST's SVD lists PMCR reset 0x00000000 (switch closed; HAL: PC3SO = 1 opens) and GPIO PC3 resets to analog (DS section 3.8 p32), so the floating pad has no enabled digital input in either switch state; 'analog, never driven' is sufficient. The removed divider read 0.5007-0.5034 of full scale for 2-10 mA of 3V3A load, so it carried no 3V3 information. Note: VBAT/4 is also ratiometric to VREF+ and has a +/-10 % ratio error (Rev 8 Table 94 p180 / Table 192 p293), so the 3V3 figure really comes from VREFINT (3V3A is 3V3 minus mV across R164).",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-03",
+   "finding": "R18-SAF-03 (PC1 run)",
+   "claim": "ACT_EN_MCU 0.550 mm to BAT_FAULT_N, 0.520 mm to LS120.2, 0.425 mm NRST via, GND 0.251 mm, U1.15/U1.17 0.200 mm; ACT_EN-BAT_ENABLE 0.330 mm",
+   "measurement": "pcbnew SHAPE.Collide edge gaps (neighbors.json): 0.5500, 0.5200, 0.4247, 0.2506, 0.2001, 0.3301 mm - all reproduced. Not listed in the record: PYRO1_CONT track (24.0,52.15)-(24.0,50.55) 0.2501 mm from U1.16 and the PYRO1_CONT via (24.0,52.15) 0.393 mm from the ACT_EN_MCU diagonal, and a GND via (22.825,67.825) 0.275 mm. A PYRO1_CONT bridge is fail-safe: with PC1 in reset the Q122 gate reaches 0.38 V (0.59 V only with a bottom resistor also open), and CONT is only high when the bus is already live.",
+   "verdict": "confirmed (record incomplete, no hazard)"
+  },
+  {
+   "d_id": "D-R18-10",
+   "finding": "R18-MCU-03",
+   "claim": "PE4 recorded as active-high fire: ODR low before output mode, GPIOE_LCKR lock and read-back, R127/R126/R128/C126 contract, gate <= 0.104 V against 30 kohm at 3.6 V, AON7524 VGS(th) min 0.4 V",
+   "measurement": "pin_table row 3, binding obligation 5, mcu and actuator_power sheet notes carry it. Netlist: U1.3 -> R127 1k to GND at F(19.8,54.24), R126 220R F(17.0,54.24) -> PYRO1_GATE, R128 10k and C126 220 nF to GND, Q124 AON7524 gate. Gate 0.1038 V nominal, 0.1048 V with 1 % parts; AON7524 Rev 1.1 p2 VGS(th) 0.4/0.8/1.2 V. PE4 high: 18.65 mA initial at 3.33 V (IIO 20 mA, Rev 8 Table 120 p213), 3.62 mA steady, gate >= 2.81 V at VDD 3.27 V; reset Hi-Z discharge to 0.4 V in 0.50 ms.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-10 follow-up",
+   "finding": "R18-MCU-02",
+   "claim": "TX idles high only while the GPS/radio ports are powered; parked on USB-only power; wording corrected",
+   "measurement": "pin_table rows 52/63, binding port_states / obligation 19, ORDERING 8.3 and R10_VALIDATION state the rule; resistor/ESD names (R441/D410, R440/D411, R451/D420, R450/D421) match the netlist. But M3_R10 lines 592-593 key the enable to 'PA4 shows U11's IN1 (the battery)', which is USB (R19-MCU-01); the binding note gives no test for 'ports powered', does not park on shedding, and obligation 14 still says 'always powered'.",
+   "verdict": "partly"
+  },
+  {
+   "d_id": "D-R18-10 follow-up",
+   "finding": "pin 33 (PC5) and DS12110 cite harmonisation",
+   "claim": "PC5 is the bus sense on R132/R175 over R133/R180 with C129; binding cites Rev 11 Table 10 p91/p92",
+   "measurement": "Netlist matches (R132 RAW_ACT->MID, R175 MID->ARM1_SENSE, R133/R180 2k to GND, C129 10 nF); Rev 8 Table 9 p70: PC5 TT_a, ADC12_INP8. Rev 11 not reachable; p91/p92 equal Rev 8's pages, but unchanged rows are one page lower and one note number differs (R19-MCU-02).",
+   "verdict": "partly"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R19-MCU-01",
+   "change": "Text only: correct docs/M3_R10.md lines 592-593 to 'enable the GPS/radio UARTs only while PA4 reads low (U11 IN2 = RAW_PROTECTED selected), park PC6/PB13 analog/no-pull when PA4 rises or the PA6 trigger fires'; add the same condition and park step to the binding note (port_states.startup, shutdown_shedding, obligations 12/19), change obligation 14's 'always powered', and use one parking mode in pin_table rows 52/63; regenerate the binding note with r10_sch_check.py --binding-note. No board change.",
+   "benefit": "Removes an instruction that, if implemented, disables GPS/telemetry on battery power and back-drives the modules on USB."
+  },
+  {
+   "finding": "R19-MCU-03",
+   "change": "r10_sch.py: replace the camera_uart note 'PA7/pin31 controls OE as GPIO' with 'PE9/pin39 CAM_UART_OE controls OE as GPIO; R102 10 k holds it low', and the mcu note 'R2: PE3 (pin 2) and PE6 (pin 5) are pyro-gate sentinels - no net, firmware drives them low.' with 'PE3 (pin 2) and PE5 (pin 4) flank PE4: no net, analog, never driven (R5-MCU-03).'; fix the check_actuators.py comment at line 431; rebuild the sheets (netlist and board unchanged).",
+   "benefit": "The schematic stops contradicting the pin table on two firmware-facing pins."
+  },
+  {
+   "finding": "R19-MCU-04",
+   "change": "Optional, with the R19-MCU-01 binding-note regeneration: add 'keep VREFBUF_CSR at reset (ENVR = 0, HIZ = 1); never enable VREFBUF; VREF+ = VDDA = 3V3A' to the obligations and M3_R10 'Sensors'.",
+   "benefit": "Closes a board-specific configuration trap at no CAD cost."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "PC3_C left floating after D-R18-01",
+   "disposition": "closed: analog-mode GPIO behind either analog-switch state; no digital buffer enabled; firmware rule 'analog, never driven' suffices"
+  },
+  {
+   "candidate": "Q122 gate 1.92 V floor overstated",
+   "disposition": "not a finding: 1.90 V at AP63203 VFB min 3.27 V; 0.45 V above VGS(th) max; saturation already labelled Inference"
+  },
+  {
+   "candidate": "ACT_EN_MCU 0.250 mm from the PYRO1_CONT track and 0.393 mm from its via",
+   "disposition": "not a finding: bridge cannot raise the Q122 gate above 0.38 V (0.59 V with a second fault) unless the bus is already live; noted in D-R18-03 verification"
+  },
+  {
+   "candidate": "GPS/radio TX into PC7/PB12 with VDD = 0 (U11 soft start makes 3V3 lag PORT_4V8)",
+   "disposition": "closed: FT_h/FT_u VIN abs max = min(VDD...) + 4.0 V = 4.0 V at VDD = 0 (Rev 8 Table 119 p212); FT pins have no positive injection path (Table 120 note 3 p213); module TX is 3.3 V LVTTL (maker, per records)"
+  },
+  {
+   "candidate": "Native OTG_FS VBUS sensing on NC PA9",
+   "disposition": "closed: usb_sense sheet note 'Use software attach/detach from PC8. Do NOT enable native PA9 VBUS sensing (VBDEN)' is present"
+  },
+  {
+   "candidate": "Stray RTC_TAMP3 on PC1 persisting across NRST (VBAT = 3V3, backup domain)",
+   "disposition": "not raised: the pin table already forbids TAMP3/WKUP on PC1, R123 2 k holds the gate <= 0.22 V against any pull, and a PC1 that cannot drive fails the pad powered-bus check (hard refusal), so it is fail-safe and caught on the ground (Inference: RM0433 not re-read)"
+  },
+  {
+   "candidate": "U1 land 0.3 x 1.6 mm at +/-7.55 mm vs ST Figure 121 p322 0.3 x 1.2 mm at +/-7.75 mm",
+   "disposition": "not a finding: same 16.7 mm toe span, 0.4 mm longer heel, the EasyEDA/JLC LQFP-100 library land used since the first M3 board (2026-09-25)"
+  },
+  {
+   "candidate": "HSE crystal margin / drive level",
+   "disposition": "not a finding: gm_crit 0.40-0.71 mA/V (ESR 50 ohm, C0 1-2 pF, CL 8-10 pF) vs Gmcritmax 1.5 mA/V (Rev 8 Table 141 p234); the HSE is a bias-controlled-gain oscillator; NDK NX3225GA drive 10 uW typ / 200 uW max - R18's bench amplitude check stands"
+  },
+  {
+   "candidate": "PB3/PB4 reset as JTDO / NJTRST (pull-up) on SPI1",
+   "disposition": "not a finding: IMU CS held high by R11 10 k, SDO high-Z; harmless until firmware reassigns AF5"
+  },
+  {
+   "candidate": "USB attached with J400 open powers the MCU, and PC1 can enable RAW_ACT from BAT_IN",
+   "disposition": "not raised: owner-accepted single-switch limitation recorded in AGENTS, REQUIREMENTS F8 and the binding note; an optional PA4 firmware interlock is offered in R19-MCU-01's fix"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: a3144b15... (unchanged); git HEAD 1e60441; m3_design/ and tools/ identical to the commit",
+  "kicad-cli 10.0.7 schematic netlist export (.supervisor/r19_mcu/fresh_netlist.xml): 658 board pads vs fresh netlist 0 mismatches; fresh vs committed schematic.net.xml 0 differences",
+  "Native pcbnew (KiCad 10.0.6 Python, read-only) dump of all footprints, pads, tracks, vias, zones (board_dump.json)",
+  "U1: 100/100 pins agree across board pads, fresh netlist, pin_table r10_net and binding u1_pins (net, port, mode); binding board/netlist/pin_table/circuit SHA-256 match the committed files",
+  "U1 package: LCSC C5271084 = STM32H743VIT6TR LQFP-100 14x14 (LCSC page); footprint pitch 0.5 mm, pin 1 at F(17.0,50.55), counter-clockwise top view; land vs DS Figure 121 p322",
+  "DS12110 Rev 8 Figure 5 p55: pin names vs pin_table port column and U1 symbol pin names, 100/100",
+  "AF check from rendered Rev 8 pages 89-95: PA0-PA3 AF2 TIM5, PA11/PA12 AF10 OTG_FS, PA13/PA14 AF0, PB2 AF9, PB3-PB5 AF5 SPI1, PB6 AF10, PB8/PB9 AF4 I2C1, PB12/PB13 AF14 UART5, PC6/PC7 AF7 USART6, PC10-PC12 AF6 SPI3, PD11-PD13 AF9, PE2 AF9, PE7/PE8 AF7 UART7; trace AF0 on PC1/PC8/PC12/PE2-PE6",
+  "ADC channels from Rev 8 Table 9 pp67-70: PC0 ADC123_INP10, PC5 ADC12_INP8 (TT_a), PA6 ADC12_INP3 (FT_a), PB1 ADC12_INP5 (TT_u)",
+  "Peripheral wiring: U3 W25Q128 pins, U4 LSM6DSV320X SPI pins and CS pull-up R11, U5 MS5611 PS/CSB, I2C pull-ups, J2 TC2030 map, Y1/C25/C26, NRST/BOOT0/VCAP/VDD/VREF+/VDDA decoupling distances",
+  "Nearest foreign copper for ACT_EN_MCU, ACT_EN, PYRO1_GATE_N, PYRO1_GATE (neighbors.py, pcbnew SHAPE.Collide, 0.2 um resolution)",
+  "Calculations (calcs.py / calcs.json): Q122 gate on/off cases, PE4 network, UART back-drive, HSE gm_crit, removed-divider reading, CONT bridge",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity: 0 violations, 0 unconnected, 0 parity (drc.json)",
+  "Schematic note scan: every port mention in all sheets compared with pin_table (two conflicts: R19-MCU-03)",
+  "Record scan for TPS2121 ST / PA4 polarity statements (only M3_R10 592-593 and the logic_power_path note)",
+  "Maker reads: DS12110 Rev 8 (cache = LCSC mirror), TI SLVSEA3F, Diodes DS41326 Rev 3-2, AOS AO3400A Rev 3.1, AON7524 Rev 1.1, NDK NX3225GA; ST SVD (two mirrors) and STM32H7 HAL for SYSCFG_PMCR / VREFBUF semantics"
+ ],
+ "sources": [
+  {
+   "doc": "ST DS12110 Rev 8 (April 2021)",
+   "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+   "mirror": "https://www.lcsc.com/datasheet/C5271084.pdf",
+   "pages": "Fig 5 p55; Table 9 pp64-88 (notes 5-7 p88); Tables 10-14 pp89-96; section 3.8 p32; section 3.19 p37; Tables 28-29 pp111-112, 60-61 pp139-141, 94 p180 (rev Y); Tables 119-120 pp212-213, 122 pp214-215, 124 p216, 127-128 pp218-219, 141 p234, 146 p238, 157-158 pp246-248, 189 pp291-292, 192 p293 (rev V); Fig 95 p285; Fig 121 / Table 217 pp321-322"
+  },
+  {
+   "doc": "TI TPS2120/TPS2121 SLVSEA3F",
+   "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+   "pages": "p4 pin functions; p18 Table 9-3; p21 status pin text"
+  },
+  {
+   "doc": "Diodes AP63200/1/3/5 DS41326 Rev 3-2",
+   "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+   "pages": "p5 VFB 3.27/3.30/3.33 V (AP63203, CCM)"
+  },
+  {
+   "doc": "AOS AO3400A Rev 3.1",
+   "url": "https://www.aosmd.com/res/datasheets/AO3400A.pdf",
+   "pages": "p2 VGS(th) 0.65/1.05/1.45 V; RDS(on) <= 48 mohm at 2.5 V"
+  },
+  {
+   "doc": "AOS AON7524 Rev 1.1",
+   "url": "https://www.aosmd.com/res/datasheets/AON7524.pdf",
+   "pages": "p2 VGS(th) 0.4/0.8/1.2 V; RDS(on) <= 5.8 mohm at 2.5 V"
+  },
+  {
+   "doc": "NDK NX3225GA",
+   "url": "https://www.ndk.com/images/products/catalog/c_NX3225GA_e.pdf",
+   "pages": "p1 ESR <= 50 ohm (20-50 MHz), CL 8 pF, drive 10 (max 200) uW"
+  },
+  {
+   "doc": "ST STM32H743 SVD v2.4 (modm-io mirror) and STM32H743x SVD (cmsis-svd-data)",
+   "url": "https://raw.githubusercontent.com/modm-io/cmsis-svd-stm32/main/stm32h7/STM32H743.svd",
+   "url2": "https://raw.githubusercontent.com/cmsis-svd/cmsis-svd-data/main/data/STMicro/STM32H743x.svd",
+   "items": "SYSCFG_PMCR reset 0x00000000 (PC3SO bit 27); VREFBUF_CSR reset 0x00000002; GPIO reset values in these SVDs are known-unreliable and were not used"
+  },
+  {
+   "doc": "ST STM32H7 HAL driver (master 7e541d92, 2026-09-29)",
+   "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32h7xx-hal-driver/master/Src/stm32h7xx_hal.c",
+   "url2": "https://raw.githubusercontent.com/STMicroelectronics/stm32h7xx-hal-driver/master/Inc/stm32h7xx_hal.h",
+   "items": "stm32h7xx_hal.c 530-565 VREFBUF; 631-638 analog switch; stm32h7xx_hal.h 191-192 PC3SO open/close"
+  },
+  {
+   "doc": "LCSC C5271084",
+   "url": "https://www.lcsc.com/product-detail/C5271084.html",
+   "items": "STM32H743VIT6TR, LQFP-100 (14x14)"
+  }
+ ],
+ "coverage_limits": [
+  "st.com timed out (curl HTTP/1.1 and HTTP/2, WebFetch), so DS12110 Rev 11, RM0433 and AN2606 were not re-read; Rev 11 cites are judged only for internal consistency against Rev 8, and RM0433-dependent behaviour (PMCR reset state, VREFBUF mode table, RTC tamper override) is Inference",
+  "The fitted silicon revision (Y or V) is unknown; parameters were compared in both Rev 8 chapters and are identical where used",
+  "No firmware, bench, ERC or check.sh run; module UART levels and input structures are taken from the records, not measured",
+  "Geometry checks limited to the PC1/PE4 control nets and U1.18; routing, power and safety lenses own the rest",
+  "Other round19 reports and .supervisor/r19_* directories were not opened"
+ ],
+ "probe_dir": ".supervisor/r19_mcu/"
+}

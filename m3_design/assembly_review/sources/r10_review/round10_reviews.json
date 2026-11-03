@@ -1,0 +1,4021 @@
+{
+  "round": 10,
+  "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+  "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+  "board_bytes": 2366509,
+  "board_mm": [
+    46,
+    90
+  ],
+  "independent_lenses": 10,
+  "phase_A_canonical_changes": false,
+  "counts": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 8,
+    "new_Minor": 4,
+    "re_raised_routing_Minor": 4
+  },
+  "count_convention": "Same as round9: new deduplicated finding groups plus the four explicitly re-raised routing groups. Other existing adopted architecture, qualification and procurement deviations are inventoried, not recounted as new discoveries. Manufacturing coating duplicate counted once.",
+  "fresh_critical_major_verifiers_required": 0,
+  "new_findings_and_re_raised_groups": [
+    {
+      "id": "R10-GATE-01",
+      "severity": "Minor",
+      "title": "A conflicting port label in PCB_TEXTBOX bypasses K-legends",
+      "location": "tools/check_r10.py:2216 (port_legends)",
+      "requirement": "R10_DECISIONS D-R9-03 and D-AUD-10; REQUIREMENTS M2: required/correct/unique connector legends remain blocking",
+      "seed": {
+        "artifact": "conflicting_port_textbox.kicad_pcb",
+        "operation": "Add a PCB_TEXTBOX with text J420 3:RXI, F.Silkscreen, box (2,10)-(14,12) mm, 1.0 mm text, 0.15 mm strokes, border disabled. Leave existing correct J420 3:TXO table present.",
+        "measured_value": "Two conflicting pin-3 names, TXO and RXI, are present."
+      },
+      "before": "Unmodified board K-legends passes; it contains no PCB_TEXTBOX in board or footprint items.",
+      "fault_result": "Original K-legends passes because port_legends recognizes PCB_TEXT but omits PCB_TEXTBOX. Native all-severity DRC reports 0 violations / 0 unconnected.",
+      "duplicate_gate_coverage": {
+        "native_DRC": "passes",
+        "silk_mask_overlaps": "passes on final seed",
+        "manifest": "Changed PCB intentionally invalidates its old manifest; regenerated candidate would require a new binding. No complete seeded check.sh pass is claimed."
+      },
+      "concrete_fix": "Extend port_legends text-type recognition to (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX); retain visibility/layer filters. Add conflicting and duplicate textbox regressions for port tables and the servo harness note.",
+      "proposed_after": "Baseline K-legends still passes. Identical textbox seed fails with J420.3: silkscreen must identify TXO exactly once.",
+      "independently_reproduced": true,
+      "current_board_instance": false,
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change."
+    },
+    {
+      "id": "R10-GATE-02",
+      "severity": "Minor",
+      "title": "Inner copper graphics bypass S-8 barrel exclusion",
+      "location": "tools/check_r10.py:1483 (s8); tools/check_r8.py:584 (net_items)",
+      "requirement": "AGENTS section 1 pyro row / R10_DECISIONS D-R3-02, D-AUD-02 and REQUIREMENTS M2: S-8 >=1.0 mm barrel-to-non-GND inner copper stays blocking",
+      "seed": {
+        "artifact": "inner_graphic_near_pyro_barrel.kicad_pcb",
+        "operation": "Add a no-net PCB_SHAPE segment on In2.Cu from (5.75,53.7) to (5.75,54.5) mm, 0.2 mm wide, then native-refill and save.",
+        "measured_value": "Copper edge is 0.500 mm from the J121.1 PYRO1_OUT plated barrel, versus required >=1.000 mm.",
+        "variant": "PCB_SHAPE can also carry and persist a 3V3 net; that variant likewise passes original S-8."
+      },
+      "before": "Unmodified board S-8 passes; it contains no inner-layer graphical copper.",
+      "fault_result": "S-8, S-2 and K-inner pass. S-8 uses track/pad/board-zone-only net_items and excludes graphics. After native refill, native all-severity DRC reports 0 violations / 0 unconnected.",
+      "duplicate_gate_coverage": {
+        "S-2": "passes; no physical short to foreign pad exists",
+        "K-inner": "passes; item is a copper drawing",
+        "native_DRC": "passes at 0.500 mm, above board default clearance",
+        "manifest": "Old manifest rejects any changed PCB until fabrication is regenerated; this is not fault-specific coverage."
+      },
+      "concrete_fix": "Build S-8 inner-copper candidates from existing copper_nodes(ctx.board), including drawings/text/fields/footprint zones; exclude only GND and the barrel own net. Keep no-net copper in the checked set. Add board and footprint graphic/text regressions.",
+      "proposed_after": "Baseline S-8 still passes. Identical no-net and persisted-3V3 graphic variants fail S-8 with the measured 0.500 mm gap.",
+      "independently_reproduced": true,
+      "current_board_instance": false,
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change."
+    },
+    {
+      "id": "R10-MCU-01",
+      "severity": "Minor",
+      "classification": "new documentation correction to a carried fault case",
+      "location": [
+        "m3_design/assembly_review/sources/r10_design/parts_qualification.md:548",
+        "m3_design/r10_sch_check.py:265",
+        "m3_design/assembly_review/sources/r10_design/r10_binding_note.json:591"
+      ],
+      "measured": "Native R60=100k,R61=10k, PA6 ADC12_INP3. Recorded7.3V ceiling omits both6V digital cap and ADC-mode4V maximum. Normal8.4V input gives0.764V. Short R60 exposes PA6 directly to VLOGIC; open R61 also raises its steady-state voltage toward VLOGIC through100k (Inference; pin leakage dependent).",
+      "source": "ST DS12110 Rev11 (January2026), Table109 pp207-208 notes3-5, Table110 p208; RevY Table11 pp103-104 same limits. FT digital limit min(min(relevant supplies)+4V,6V), so supplies3.3V gives6V; note4 requires pulls disabled above4V; note5 limits FT_a used by ADC to4V. Positive injected current allowance0mA.",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "fix": "Correct PA6 limit to4V for ADC operation, distinguish6V digital ceiling with powered3.3V supplies, and regenerate binding note. Preserve existing single-fault damage deviation; include lower-resistor-open example if enumerating fault cases. No board, normal divider, watchdog or damage conclusion changes.",
+      "independently_reproduced": true,
+      "related_historical_text": "docs/MARGIN_PRESCRIPTION.md:81 and docs/FMEA_REDUNDANCY.md:327/:356 also quote7.3V; docs/R5_VALIDATION.md:124 already states historical claims are superseded. Keep history explicit rather than applying a global number replacement.",
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change."
+    },
+    {
+      "id": "R10-MEC-01",
+      "severity": "Minor",
+      "status": "new; independently reproduced",
+      "files": [
+        "docs/ORDERING.md:248",
+        "docs/ORDERING.md:250",
+        "docs/ORDERING.md:354",
+        "docs/M3_R10.md:310"
+      ],
+      "native_coordinates": "U5 B(10.6,49.1), nominal body x8.1..13.1,y47.6..50.6; C11.1 B pad x15.795..17.205,y51.425..52.775.",
+      "measured": "C11.1 native rectangular copper-to-U5 nominal body2.818449mm; to pad bounding extent3.027515mm. C11 is explicitly whole-coated, while3mm applies to both body and pads. The published 3.03mm is valid only for pads. C11 is the sole unintended whole-coated item <3mm from the union.",
+      "requirement": "ORDERING R10 coating text requires>=3mm from U5 body and pads. TE06/2017 pp1/15 supplies5x3mm body; p17 requires opening protection. 3mm is the project process rule, not a TE numerical clearance.",
+      "primary_source_url": "https://my.avnet.com/wcm/connect/83d782cc-0b60-4045-a710-a8a2daf90b20/TE-Connectivity-MS5611-Series-EN-Datasheet.pdf?CACHE=NONE&CVID=oMx6Zo2&ContentCache=NONE&MOD=AJPERES",
+      "primary_source_revision_pages": "TE MS5611-01BA03,06/2017,pp1/15/17",
+      "impact": "Residual assembly-instruction contradiction with0.182mm shortfall to nominal body. No actual sensor damage, port contact or firing mechanism established; U5 whole-part tape remains required. Distinct from earlier direct0.42/0.69mm coating of R64/R13.",
+      "fix": "Mask C11 whole as a non-pyro bypass; remove it from whole-coat/straddler and nearest-coated-part lists. Keep >=3mm around union(U5body,pads), whole-U5 tape and controlled TP122 exception. Next coated C10 clears3.777017mm. No PCB move required.",
+      "independently_reproduced": true,
+      "evidence": [
+        "coating.json",
+        "coating_inventory.json",
+        "calculations.json"
+      ],
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change.",
+      "independent_duplicate": "R10-MFG-01; root native collision/control also reproduced; counted once."
+    },
+    {
+      "id": "R9-RTE-04",
+      "severity": "Minor",
+      "new_discovery": false,
+      "title": "Noncritical return companions outside 1.5 mm",
+      "native_coordinates_mm": [
+        [
+          22.54,
+          38.5
+        ],
+        [
+          24.3,
+          49.1
+        ],
+        [
+          12.4,
+          37.9
+        ],
+        [
+          13.8,
+          45.6
+        ],
+        [
+          7.75,
+          49.8
+        ],
+        [
+          9.97,
+          51.5
+        ]
+      ],
+      "measurement": [
+        {
+          "net": "NRST",
+          "xy": [
+            22.54,
+            38.5
+          ],
+          "changing": true,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ],
+          "nearest_gnd_mm": 1.655173706896049,
+          "nearest_gnd_xy": [
+            21.4,
+            37.3
+          ],
+          "fast_required": false
+        },
+        {
+          "net": "NRST",
+          "xy": [
+            24.3,
+            49.1
+          ],
+          "changing": true,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ],
+          "nearest_gnd_mm": 1.4866068747318493,
+          "nearest_gnd_xy": [
+            24.8,
+            47.7
+          ],
+          "fast_required": false
+        },
+        {
+          "net": "NRST",
+          "xy": [
+            12.4,
+            37.9
+          ],
+          "changing": true,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ],
+          "nearest_gnd_mm": 3.3533565274214427,
+          "nearest_gnd_xy": [
+            9.05,
+            37.75
+          ],
+          "fast_required": false
+        },
+        {
+          "net": "BOOT0",
+          "xy": [
+            13.8,
+            45.6
+          ],
+          "changing": true,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ],
+          "nearest_gnd_mm": 1.6620770138594676,
+          "nearest_gnd_xy": [
+            13.35,
+            44.0
+          ],
+          "fast_required": false
+        },
+        {
+          "net": "I2C1_SCL",
+          "xy": [
+            7.75,
+            49.8
+          ],
+          "changing": true,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ],
+          "nearest_gnd_mm": 1.4430869689661867,
+          "nearest_gnd_xy": [
+            7.4,
+            51.2
+          ],
+          "fast_required": false
+        },
+        {
+          "net": "I2C1_SDA",
+          "xy": [
+            9.97,
+            51.5
+          ],
+          "changing": true,
+          "layers": [
+            "F.Cu",
+            "B.Cu"
+          ],
+          "nearest_gnd_mm": 1.88057118982505,
+          "nearest_gnd_xy": [
+            10.712,
+            53.228
+          ],
+          "fast_required": false
+        }
+      ],
+      "source": [
+        "AGENTS.md section 3",
+        "docs/R10_VALIDATION.md:782"
+      ],
+      "reason": "NRST, BOOT0 and I2C are outside the named partner-via scope. NRST is still sampled by K-reference; zero loose reference samples. No untested assertion that every new GND stitch is impossible.",
+      "concrete_disposition": "Keep these measured return deviations in the acceptance list; a cleanup requires legal GND stitches within 1.5 mm and fresh fill/DRC/reference checks.",
+      "disposition": "Retained in final owner-acceptance inventory; existing measured routing group."
+    },
+    {
+      "id": "R9-RTE-05",
+      "severity": "Minor",
+      "new_discovery": false,
+      "title": "Retained MOSI offset and between-pad routes",
+      "native_coordinates_mm": [
+        [
+          17.55,
+          44.94
+        ],
+        [
+          17.5,
+          44.94
+        ]
+      ],
+      "measurement": {
+        "mosi_landing_x_mm": 17.55,
+        "imu_pad14_x_mm": 17.5,
+        "offset_mm": 0.05,
+        "between_pad_routes": {
+          "LED1": {
+            "gapbox": [
+              10.6,
+              43.0,
+              11.5,
+              44.2
+            ],
+            "net": "LED_YEL_A",
+            "tracks": [
+              {
+                "layer": "F.Cu",
+                "a": [
+                  10.9,
+                  45.5
+                ],
+                "z": [
+                  10.9,
+                  41.6
+                ],
+                "w": 0.2,
+                "between_length_mm": 1.200000000000003
+              }
+            ]
+          },
+          "R33": {
+            "gapbox": [
+              11.4665,
+              40.9115,
+              12.3335,
+              42.2885
+            ],
+            "net": "LED_RED_A",
+            "tracks": [
+              {
+                "layer": "F.Cu",
+                "a": [
+                  11.9,
+                  39.65
+                ],
+                "z": [
+                  11.9,
+                  43.6
+                ],
+                "w": 0.2,
+                "between_length_mm": 1.3770000000000024
+              }
+            ]
+          },
+          "C86": {
+            "gapbox": [
+              16.4,
+              28.425,
+              17.05,
+              29.375
+            ],
+            "net": "BUZZ_DRV",
+            "tracks": [
+              {
+                "layer": "B.Cu",
+                "a": [
+                  16.8,
+                  29.55
+                ],
+                "z": [
+                  16.8,
+                  18.85
+                ],
+                "w": 0.2,
+                "between_length_mm": 0.9499999999999993
+              }
+            ]
+          }
+        },
+        "fixed_entries": {
+          "U411.7": {
+            "pad": [
+              35.45,
+              16.9
+            ],
+            "ends": [
+              {
+                "xy": [
+                  35.45,
+                  16.9
+                ],
+                "layer": "F.Cu"
+              }
+            ],
+            "vias": [
+              [
+                35.45,
+                17.8
+              ],
+              [
+                35.45,
+                29.8
+              ]
+            ]
+          },
+          "U421.7": {
+            "pad": [
+              35.45,
+              28.9
+            ],
+            "ends": [
+              {
+                "xy": [
+                  35.45,
+                  28.9
+                ],
+                "layer": "F.Cu"
+              }
+            ],
+            "vias": [
+              [
+                35.45,
+                17.8
+              ],
+              [
+                35.45,
+                29.8
+              ]
+            ]
+          },
+          "U10.1": {
+            "pad": [
+              11.3,
+              28.45
+            ],
+            "ends": [
+              {
+                "xy": [
+                  11.3,
+                  28.45
+                ],
+                "layer": "B.Cu"
+              }
+            ],
+            "vias": []
+          }
+        }
+      },
+      "source": [
+        "docs/REQUIREMENTS.md M2",
+        "docs/R10_VALIDATION.md:783",
+        "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R9-04"
+      ],
+      "reason": "Native on-axis candidate via (17.50,44.30), after refill, produces IMU_body_B DRC error and 11 loose adjacent SPI1_SCK reference samples; two MISO stray entries become stale. Between-pad tracks remain inside legal native gaps: LED1 gap0.900 mm/track0.200; R33 gap0.867/track0.200; C86 gap0.650/track0.200, nearest x-edge clearance0.150. IO entries and U10.1 VBUS are now on-axis and are no longer carried offsets.",
+      "concrete_disposition": "Retain the proven 0.05 mm MOSI residual and three measured between-pad routes; any on-axis revision must redraw the adjoining SPI fan-out while preserving the MEMS keepout/reference contract.",
+      "disposition": "Retained in final owner-acceptance inventory; existing measured routing group."
+    },
+    {
+      "id": "R9-RTE-06",
+      "severity": "Minor",
+      "new_discovery": false,
+      "title": "Slow routes cross In2 plane boundaries",
+      "native_coordinates_mm": [
+        [
+          21.73,
+          74.425
+        ],
+        [
+          33.8,
+          57.85
+        ]
+      ],
+      "measurement": {
+        "sample_step_mm": 0.01,
+        "SERVO2_MCU": {
+          "tail_a_mm": [
+            22.7,
+            73.455
+          ],
+          "tail_z_mm": [
+            21.73,
+            74.425
+          ],
+          "planes": [
+            "3V3",
+            "gap",
+            "RAW_PROTECTED"
+          ],
+          "gap_sampled_length_mm": 0.42
+        },
+        "LOGIC_SOURCE_ST": {
+          "crossing_bounds_mm": [
+            33.65,
+            57.7,
+            33.8,
+            58.01
+          ],
+          "planes": [
+            "3V3",
+            "gap",
+            "RAW_PROTECTED"
+          ]
+        },
+        "full_samples": "native_metrics.json:slow_plane_crossings"
+      },
+      "source": [
+        "docs/R10_VALIDATION.md:784",
+        "AGENTS.md section 3"
+      ],
+      "reason": "Independent 0.01 mm centreline sampling finds SERVO2_MCU tail 3V3 -> gap -> RAW_PROTECTED, gap length0.42 mm by samples (0.85–1.27 mm along diagonal). LOGIC_SOURCE_ST changes from3V3 near (33.65,57.70), through (33.8,57.85), to RAW_PROTECTED by y58.01. These slow/noncritical nets are not fast-interface reference claims.",
+      "concrete_disposition": "Carry measured slow split crossings. A local GND/reference-plane redraw needs power-plane and return requalification before replacing the deviation.",
+      "disposition": "Retained in final owner-acceptance inventory; existing measured routing group."
+    },
+    {
+      "id": "R9-RTE-07",
+      "severity": "Minor",
+      "new_discovery": false,
+      "title": "BUZZ routing and crystal-neighbour projections",
+      "native_coordinates_mm": [
+        [
+          17.8,
+          30.55
+        ],
+        [
+          20.3,
+          33.85
+        ],
+        [
+          23.1,
+          36.65
+        ],
+        [
+          22.85,
+          46.6
+        ]
+      ],
+      "measurement": {
+        "buzz_track_mm": 36.376450491675,
+        "buzz_via_count": 3,
+        "crystal_body_box_mm": [
+          21.600066,
+          45.000054,
+          24.099934,
+          48.199946000000004
+        ],
+        "F_Cu_body_projection_crossing_mm": {
+          "NRST": 0.7776477536777241,
+          "BUZZ_DRV": 2.732695374379505,
+          "HSE_OUT": 2.565487580515294
+        }
+      },
+      "source": [
+        "docs/M3_R10.md Current routing records",
+        "docs/R10_VALIDATION.md:785",
+        "docs/ORDERING.md section 8"
+      ],
+      "reason": "Native foreign F.Cu centreline projections over Y1 are BUZZ_DRV2.732695 mm and NRST0.777648 mm; own HSE_OUT2.565488 mm. Solid In1 GND intervenes. Fresh native collision tests of simple BUZZ layer swaps hit VBUS_SENSE/U1 pads on F.Cu or USB_LIMITED/R110.1 on B.Cu at0.15 mm clearance.",
+      "concrete_disposition": "Keep measured route/projection deviations and the HSE cold-start/frequency test with buzzer and QSPI active; broader part/fan-out movement would require requalification. No HSE interference measurement exists.",
+      "disposition": "Retained in final owner-acceptance inventory; existing measured routing group."
+    }
+  ],
+  "coverage": "Round9 clean at8bccb07; round10 freshly covers complete619db7e Minor fix target. PCB frozen afterward. Only gate coverage/regressions and records/binding-obligation correction follow; final rebuild/check evidence recorded separately.",
+  "reviews": [
+    {
+      "lens": "requirements",
+      "mode": "slice",
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "board_bytes": 2366509,
+      "verdict": "PASS for new CAD/design-review findings in this lens; this is not owner acceptance, ordering or flight release.",
+      "counts": {
+        "new_Critical": 0,
+        "new_Major": 0,
+        "new_Minor": 0,
+        "carried_Minor_groups_rechecked": 6
+      },
+      "findings": [],
+      "checks": [
+        {
+          "check": "Read AGENTS, REQUIREMENTS, r10_plan, current R10_DECISIONS amendments, M3_R10, R10_VALIDATION, relevant source records and R9 severity precedents. Read only the three allowed parent documents.",
+          "result": "Current single-switch and AUD/GAP amendments explicitly supersede old ARM-link, RF, pull-pin, servo-power and watchdog text. Historical deviation skeleton is explicitly non-authoritative pending the clean pair."
+        },
+        {
+          "check": "Read this worktree HEAD/ref metadata without Git commands; SHA-256 and byte count at start/completion.",
+          "result": "Assigned commit and board match; board remains unchanged at completion."
+        },
+        {
+          "check": "Native pcbnew inspection plus XML/TSV/binding comparison; native_contracts.json.",
+          "result": "All 100 U1 pads agree across PCB, XML, pin table and binding after explicit unconnected-net normalization. Every U1 NC has one pad and no track/zone copper. All four binding hashes match. J122 power pads 2/5/8/11 are singleton NC with no copper."
+        },
+        {
+          "check": "Native component/pad-net inspection.",
+          "result": "U1 (23,43), U4 B(17,45.9), 180 degrees. U30/U31/J30/J31/J123/J124/C121/C150/C151 and audited removed parts absent. U400 feeds PORT_5V3, U401 PORT_4V8, separate U402/U410/U420 switch outputs reach J9/J410/J420. U411/U421 both IO supplies are main 3V3 with C443/C453 retained. PC1/R122/R123/Q122 enable is separate from PE4/R126/R127/R128/C126/Q124; RAW_ACT is post-Q120/Q121 through R134 to J121. Native radio-port parts touch none of the listed firing/arming/BAT_IN/BOOT0/NRST nets."
+        },
+        {
+          "check": "KICAD_PY tools/fit_check.py --profile r10 --report fit.json",
+          "exit_code": 0,
+          "result": "46 x 90 mm; five supports correct. Mated GH envelopes minimum margin 0.028 mm, J122 0.50 mm. Bottom support clearance 3.844 mm, top 3.858 mm. J1/J121 wire room 4.95-5.55 mm. CAD envelopes only."
+        },
+        {
+          "check": "NUMPY_PY tools/plate_model.py fit.json --profile r10 --mass-spec m3_design/assembly_review/sources/r10_design/masses.json --json plate.json",
+          "exit_code": 0,
+          "result": "Pinned 280.9 Hz, modeled mass 45.5 g; assumed masses/stiffness, no modal test."
+        },
+        {
+          "check": "KICAD_PY tools/check_r10.py --only S-1,S-2,S-3,S-4,S-5,S-6,M-1,M-2,M-3,M-5,M-6,M-7,P-8,P-11,T-1,K-contract,K-legends with fresh fit/plate reports",
+          "exit_code": 0,
+          "result": "17/17 selected rules pass; scoped_checks.json."
+        },
+        {
+          "check": "KICAD_PY tools/check_r10.py --only F9-1 --report f9.json",
+          "exit_code": 0,
+          "result": "Fresh native extraction matches schema-3 inputs and board/model binding; 2304 recorded corners, refinement/cold-output/local-path evidence accepted. No sweep rerun and no physical transient claim."
+        },
+        {
+          "check": "Independent endpoint/pad graph on native tracks; shortest fire path in squares; fire_geometry.json.",
+          "result": "BAT_IN 7.121320 mm/1.0 mm; one ACT_FET_S path 2.2/0.4; RAW_ACT 6.5/0.5; IGN 4.85/0.5; OUT 7.954478/0.5. These reproduce current budget lengths without credit for parallel paths."
+        },
+        {
+          "check": "Independent arithmetic, independent_calculations.json.",
+          "result": "Hot track resistance 30.1231 mOhm; coupled fire current at 7.4 V equivalent and 11.545807 W normal other load: idle/1/2/3/4 stalls = 1.550071/1.485263/1.420229/1.354934/1.289335 A. O6 board-reference bound 0.6144 A. C84 ports-off/shed energy gives 8.6758/13.5560 ms; ports-on interval remains disclosed. Watchdog 28.571-32.653 ms, fault allocation 34.853 ms <36, neutral-command allocation 48.653 ms <50."
+        },
+        {
+          "check": "Independent F5 capacity/throughput arithmetic.",
+          "result": "128 B x500 Hz=64,000 B/s; 256 B/3 ms=85,333 B/s, 25% program-time headroom before command/bus overhead. 525 s at 50 Hz consumes 3.36 MB; a 60 s high-rate +465 s low-rate example consumes 6.816 MB. A 525 s flight fits 16 MiB for high-rate duration <=232.94 s before reserved space; updated trajectory and actual logging/erase scheduling still require firmware validation."
+        },
+        {
+          "check": "Compare R80/R165/R81/C87/R82/R83/R84/C81 against pinned r9_input XML.",
+          "result": "All eight exact maker identities and pin-net mappings unchanged. This supports carrying the EN/OVLO circuit calculation; it does not measure J400 or switch behavior."
+        },
+        {
+          "check": "python3 tools/fab_manifest.py",
+          "exit_code": 0,
+          "result": "All five fabrication outputs match current CAD/export inputs."
+        },
+        {
+          "check": "Independently sum current cost_check line totals plus 82x1.53/5; inspect stock/input bindings.",
+          "result": "$84.43 vs $84.41; 46 Extended codes. R430 C185349 stock17 vs minimum3610; U4 stock0 vs5. Both cost/stock marked fail, as disclosed. Supplier snapshot 2026-10-28 23:24-23:25Z, not refreshed here."
+        },
+        {
+          "check": "Read committed round9_fix_validation.json and round9_fix_check.txt.",
+          "result": "Root evidence reports two complete byte-identical builds and unskipped gate exit0. Not rerun by this reviewer."
+        },
+        {
+          "check": "Primary manufacturer lookups",
+          "result": "ST product page confirms dual low/high-g and +/-4000 dps; indexed ST DS14623 Rev3 p13 confirms 960 Hz available and typical drift qualifications. Winbond current exact-part page confirms128Mb; Jan2026 W25Q-RV comparison p1 confirms old JV max3ms programming /400ms sector erase. TE selection guide08/26 p4 confirms10-1200mbar. MicoAir current manual and HGLRC product page confirm module envelopes/limits. Direct full IMU/flash/TE-datasheet fetches hit size/time/403 limits; no unsupported worst-case sensor claim substituted."
+        },
+        {
+          "check": "Validation setup corrections",
+          "result": "First native script used an unavailable footprint-field method; corrected native inspection completed. Initial literal NC comparison was replaced by explicit unconnected-net normalization and no-copper verification. First plate invocation omitted required --mass-spec and failed closed; corrected command passed. These were reviewer invocation errors, not design failures."
+        }
+      ],
+      "traceability": [
+        {
+          "id": "F1",
+          "status": "CAD part/axis PASS; control accuracy OPEN",
+          "evidence": "U4 LSM6DSV320X B180 at x17; roll=-gyro_Y, lever arm x=-6 mm. ST +/-4000dps. Typical drift is not a high-g/vibration error guarantee; updated K850DM/L1000W model and <=5 degree validation open."
+        },
+        {
+          "id": "F2",
+          "status": "CAD capability PASS; flight envelope OPEN",
+          "evidence": "ST low-g +/-2/4/8/16g and high-g through +/-320g cover >=64g selection; actual flight acceleration/clipping qualification remains open."
+        },
+        {
+          "id": "F3",
+          "status": "CAD capability PASS; installed performance OPEN",
+          "evidence": "U5 MS561101BA03; TE10-1200mbar covers approx264mbar ISA10km. This proves range, not full accuracy at10km or transonic vent performance."
+        },
+        {
+          "id": "F4",
+          "status": "O3/O6 CAD PASS; harness OPEN",
+          "evidence": "Four PA0-PA3 signals via1k/pull-down/clamp; J122 + row NC, GND reference connected. O6 bound0.6144A conditional on star<=1mOhm and each reference>=50mOhm. Servo power switching loss disclosed."
+        },
+        {
+          "id": "F5",
+          "status": "Conditional part/time capacity PASS; firmware OPEN",
+          "evidence": "U3 W25Q128JVSIQ128Mb, 64kB/s logging vs85.33kB/s max-program ceiling. 960Hz IMU capability; buffer/erase-suspend/clock/runtime implementation absent."
+        },
+        {
+          "id": "F6",
+          "status": "Adopted hardware/records PASS; behavior OPEN",
+          "evidence": "Gate and servo pull-down topology; unchanged EN timing network; C84/shedding and ports-on0.55-1.0ms loss disclosed. GAP5 explicitly replaces earlier nominal32ms allocation. Firmware/latency/reset/neutral motion unmeasured."
+        },
+        {
+          "id": "F7",
+          "status": "Idle-servo calculated criterion PASS; persistent-stall margin FAIL disclosed",
+          "evidence": "One J121 primary channel, R1342Ohm, source through Q120/Q121; final current1.550A idle vs1.5A criterion, one stall1.485A. Source/harness reserve and20/36ms pulses unmeasured; isolated Blue Jay remains external."
+        },
+        {
+          "id": "F8",
+          "status": "Single-switch CAD PASS; operational safety OPEN",
+          "evidence": "J124 absent; J400 external switch; PC1 enable and PE4 fire independent GPIOs with off networks. Ground cold screen precedes enable; in-flight sensing never vetoes recovery. No powered physical break/backfeed limitation explicitly adopted; bench/firmware absent."
+        },
+        {
+          "id": "F9",
+          "status": "CAD/model PASS; physical fault qualification OPEN",
+          "evidence": "J1 battery/J400 switch separated; wrong/reverse-pack protection retained; F9-1 fresh extraction/binding pass. AUD4 pull-pin removed, PC13 NC. OQ6 unfused stretch and tin dry-circuit J400 qualification disclosed."
+        },
+        {
+          "id": "F10",
+          "status": "O1/O2/O4/O5 CAD PASS; modules/firmware/RF OPEN",
+          "evidence": "External switched GPS/radio on GH4, translators/1k/ESD; camera regulated with U12/U13 kept. UART maps/EXTI agree. L5 lost; LR900 band/setup, peak demand and installed immunity open."
+        },
+        {
+          "id": "P1",
+          "status": "CAD PASS",
+          "evidence": "Native outline centerlines46x90mm (<120); five supports. No aft RF overhang; J3 west-shell extension0.45mm explicitly disclosed in M3_R10."
+        },
+        {
+          "id": "P2",
+          "status": "Conditional CAD PASS; physical fit OPEN",
+          "evidence": "Fresh fit/plate pass; OQ1 4.95mm wire floor and OQ7 forward-of-joint+47mm selection respected. Recomputed nut h+t maxima6.018413/5.365256mm support conservative<6/<5.3 with4mm standoffs and<=1mm plate."
+        },
+        {
+          "id": "P3",
+          "status": "Retention plan present; physical strength OPEN",
+          "evidence": "Current two-terminal/GH inventory and100g retention table corrected; staking/ties/coating required. No measured joint/retention strength, modules/harness or modal qualification."
+        },
+        {
+          "id": "M1",
+          "status": "CAD/package PASS; stock/process NOT MET",
+          "evidence": "4-layer1.6mm; current five-output manifest verifies. R430/U4 shortages; VIPPO, manual C84 process and JLC panel acceptance outstanding."
+        },
+        {
+          "id": "M2",
+          "status": "CAD checks PASS; deviation acceptance OPEN",
+          "evidence": "Root full gate and current manifest pass;17 focused rules+F9pass here. AUD2/AUD10/GAP3 scopes explicit and narrow. Current final deviation inventory and owner acceptance follow full clean pair."
+        },
+        {
+          "id": "M3",
+          "status": "Known $0.02 miss; owner acceptance OPEN",
+          "evidence": "Independent sum84.43 vs84.41;46Extended<=52; minimum purchase cost and shortages disclosed. This is explicitly nonblocking for a clean review, not met cost acceptance."
+        }
+      ],
+      "owner_decisions": {
+        "O1": "PASS external GH4 GPS; O5 supersedes original3V3 with switched4.8V.",
+        "O2": "PASS external GH4 radio; no U31/J31. UART isolation and no direct hazardous-net touch verified; installed RF behavior remains open.",
+        "O3": "PASS board servo positive power removed; Q120/Q121 retained solely for pyro, as plan§7/current amendment requires.",
+        "O4": "PASS regulated camera supply; U12/U13 retained.",
+        "O5": "PASS two setpoints5.456V/4.792V nominal. Conditional minimum module calculations5.032V camera,4.561V radio,4.611V GPS; supply/harness transients unmeasured.",
+        "O6": "PASS native reference/power separation;0.6144A conditional residual bound reproduced.",
+        "OQ1": "PASS4.95mm CAD floor; physical16-22AWG fit open.",
+        "OQ2": "PASS current schema3 board-bound model contract; harness>=0.03Ohm,0.1-2uH and simultaneous U9IN/OUT physical qualification open.",
+        "OQ3": "OPEN known84.43vs84.41 cost acceptance, nonblocking for clean review.",
+        "OQ4": "PASS selected aft tab/rail; JLC acceptance open.",
+        "OQ5": "PASS no hardware cutoff; firmware shedding/short loaded hold-up limitation disclosed.",
+        "OQ6": "PASS no lead fuse and no removed ARM-link fuse remains; unfused hard-short risk disclosed.",
+        "OQ7": "PASS selected wholly-forward-of+47mm axial rule; stack/harness fit remains open."
+      },
+      "carried_Minors": [
+        {
+          "ids": [
+            "R3-REQ-08"
+          ],
+          "where": "m3_design/assembly_review/sources/r10_design/parts_qualification.md:403",
+          "current_measured_reason": "Native camera still uses U402/J9. Conditional module floor5.031682V uses135mOhm switch plus<=150mOhm total harness/contact/board loop and50mV transient. Installed resistance not measured; old loop-length measurements not transferred.",
+          "concrete_disposition": "Four-wire installed camera loop and scope startup/supply corners; retain<=1A allocation and verify5V minimum."
+        },
+        {
+          "ids": [
+            "R3-REQ-09"
+          ],
+          "where": "m3_design/assembly_review/sources/r10_design/parts_qualification.md:417; docs/REQUIREMENTS.md:61",
+          "current_measured_reason": "Native R420 remains66.5k; recorded minimum limit0.348A. Current maker manual confirms4.5-5V,27dBm,1W maximum average,890-915MHz and3.3V UART; peak current is still unspecified.",
+          "concrete_disposition": "Measure full-power TX peak against limit and installed voltage; configure manual channels12-25 or maker-confirmed hop set, then perform installed dummy-load immunity test."
+        },
+        {
+          "ids": [
+            "R3-REQ-12"
+          ],
+          "where": "docs/REQUIREMENTS.md:60; m3_design/assembly_review/sources/r10_design/parts_qualification.md:469",
+          "current_measured_reason": "Native J400 remains BM02B-GHS-TBT tin-contact part; native/pinned XML retains470k on both switch sides. Closed-loop current is only about6-7uA over7.4-8.4V. Contact intermittency has not been measured.",
+          "concrete_disposition": "Qualify external screw switch and mated J400 by vibration while logging VLOGIC/3V3; retain external plug strain relief."
+        },
+        {
+          "ids": [
+            "R4-REQ-06"
+          ],
+          "where": "docs/M3_R10.md:267; docs/REQUIREMENTS.md:61",
+          "current_measured_reason": "Native J9 pin3=CAM_RX_WIRE/pin4=CAM_TX_WIRE; J410/J420 pin3=TX_WIRE/pin4=RX_WIRE. Current complete legends pass K-legends; cable compatibility is not uniform.",
+          "concrete_disposition": "Keep explicit per-port end-to-end cable/polarity checks before mating; do not treat identical GH4 bodies as interchangeable harnesses."
+        },
+        {
+          "ids": [
+            "R7-MCU-04"
+          ],
+          "where": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json:595; docs/M3_R10.md:376",
+          "current_measured_reason": "Native U3 remains W25Q128JVSIQ; manufacturer Jan2026 comparison confirms400ms max sector erase versus28.571ms fastest watchdog interval. F5 program-only margin cannot include blocking erase.",
+          "concrete_disposition": "Pre-erase or use bounded erase-suspend and prove ring-buffer/log timing under safety-task supervision; firmware absent."
+        },
+        {
+          "ids": [
+            "R8-MCU-02"
+          ],
+          "where": "m3_design/assembly_review/sources/r10_design/parts_qualification.md:596",
+          "current_measured_reason": "Current HGLRC maker page still gives3.3-5V supply and SH1.0-4pin cable, without a UART-level guarantee; native U411 port side is main3V3 after AUD8. Old voltage measurements have not been rechecked; no measured module IO level exists.",
+          "concrete_disposition": "Verify actual module UART high/low and unpowered behavior, and qualify SH-to-GH adapter before flight; preserve Inference label."
+        }
+      ],
+      "other_carried_deviations_and_obligations": [
+        "F7 persistent-stall fire margin and retained source voltage at deployment;20ms normal/36ms guarded fault physical timing; no repeated-pulse qualification.",
+        "O3 no board servo-power cutoff, O6 conditional return-current bound, OQ5 loaded-break interval and unimplemented shedding.",
+        "O1/O2 L5 loss, external module volume/retention, tracking-only GPS500m/s/4g limits; no flight estimator depends on GPS.",
+        "OQ1 physical terminal wire bends, OQ4 panel acceptance, OQ6 unfused stretch, OQ7 physical stack; all explicitly open.",
+        "M1 current R430/U4 shortages, VIPPO and post-reflow C84 process; M3 known cost miss. Supplier freshness must be renewed before order.",
+        "docs/M3_R10.md:405 already discloses allowed parent VEHICLE candidate row still naming ARM terminals. Native J124 absent. Concrete pending parent correction: remove ARM-terminal/link description and describe J400 as sole power/arming switch; no canonical file edited here.",
+        "Final current deviation inventory must replace the explicitly historical skeleton after the clean pair; its old J124, pull-pin, cost, labels and geometry are not current measurements. This planned update is not a new contradiction.",
+        "Routing residuals remain for routing lens; this lens does not independently remeasure all routing Minors or claim their old measurements current."
+      ],
+      "AVA_scope": "The allowed parent AVA report establishes photographs and placement/outer-layer inspiration only. No private netlist, inner-plane, fuse, firmware, capacitor or protection performance is inferred as a proven AVA fact. Owner-adopted OQ5/OQ6/AUD decisions are assessed as explicit R10 choices with their documented risks, not electrical qualification transferred from AVA.",
+      "flight_physics": "Current allowed parent goals agree on K850DM~M1.45 and L1000W~M1.9, one main section and isolated Blue Jay. Requirements explicitly require updated vehicle simulation/weighing; old I500T mass and roll predictions are historical. Linear scaling1850dps fromM0.9 toM1.9 gives3905.6dps (Inference), so +/-4000dps is capability rather than demonstrated margin. At4000dps the native6mm/2.06mm lever arm gives about3.15g centripetal acceleration (Inference). Typical0.006dps/C drift integrates to5degrees over30s for27.78C uncompensated temperature shift; the accuracy budget remains unqualified, as disclosed.",
+      "limitations": [
+        "No firmware, bench, hardware, flight, RF-immunity or real sled/harness test performed. Native CAD and calculations cannot establish these outcomes.",
+        "No complete build/full gate rerun; committed root evidence inspected and final manifest independently verified. No repeated full hot-plug sweep.",
+        "No other worktree/branch accessed, no Git command, no canonical edit, no agent delegation. Scratch artifacts only.",
+        "No GUI app was opened in this requirements lens; native KiCad API and focused geometry checks supply direct CAD evidence. No web demo is part of this task."
+      ],
+      "primary_sources": [
+        {
+          "url": "https://www.st.com/content/st_com/en/products/mems-and-sensors/inemo-inertial-modules/lsm6dsv320x.html",
+          "locator": "All features; current product page",
+          "use": "Gyro/high-g/low-g capabilities"
+        },
+        {
+          "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+          "locator": "DS14623 Rev3 p13, indexed manufacturer excerpt; full download unavailable",
+          "use": "960Hz gyro ODR and typical-only drift qualifications"
+        },
+        {
+          "url": "https://www.winbond.com/hq/product/code-storage-flash/qspi-nor/w25q-jv/?__locale=en&partNo=W25Q128JVSIQ",
+          "locator": "Exact-part Product Spec",
+          "use": "128Mb density and2.7-3.6V"
+        },
+        {
+          "url": "https://www.winbond.com/productResource-files/Winbond%20W25Q-RV%20Series%20Flash%20Product%20Brief%202026.pdf",
+          "locator": "Version Jan2026 p1",
+          "use": "W25Q128JV comparison max program3ms and sector erase400ms"
+        },
+        {
+          "url": "https://www.te.com/content/dam/te-com/documents/sensors/global/te-sensors-board-mount-pressure-selection-guide.pdf",
+          "locator": "08/26 Original p4",
+          "use": "MS5611 range10-1200mbar"
+        },
+        {
+          "url": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+          "locator": "Specifications, Interfaces, Communication Frequency; current manual",
+          "use": "Radio power, supply, UART and band"
+        },
+        {
+          "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+          "locator": "Specification; current maker page",
+          "use": "GPS supply, size, SH cable, L1,500m/s and4g limits; UART level not specified"
+        }
+      ],
+      "known_acceptance_failures": [
+        {
+          "criterion": "M3",
+          "evidence": "84.43 >84.41 by0.02, 46Extended<=52",
+          "cause": "Current82-code component prices plus Standard feeder share; not a CAD regression",
+          "next_vector": "Refresh supplier snapshot before order; retain OQ3 cost-miss disposition/acceptance, or qualify a concrete lower-cost substitution without silently editing target",
+          "smallest_experiment": "A new read-only supplier cost/stock run on this bound BOM",
+          "inside_lens": true,
+          "new_finding": false
+        },
+        {
+          "criterion": "M1 stock",
+          "evidence": "R43017 <minimum3610; U4 stock0 vs5",
+          "cause": "Supplier inventory/minimum purchase",
+          "next_vector": "Confirm R430 quote/minimum and secure U4 stock or consignment before order",
+          "smallest_experiment": "Refresh exact-code supplier availability and quote",
+          "inside_lens": true,
+          "new_finding": false
+        }
+      ]
+    },
+    {
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "board_bytes": 2366509,
+      "counts": {
+        "new_Critical": 0,
+        "new_Major": 0,
+        "new_Minor": 0
+      },
+      "findings": [],
+      "delivery": "Root transcription of independently returned inline report; no original report file written by validator.",
+      "target_unchanged": true,
+      "lens": "safety",
+      "checks": [
+        {
+          "check": "Native topology, S-1 through S-9 and actuator rules",
+          "result": "Pass; 101 safety pad/net mappings across 41 components agree with XML and fitted BOM/CPL. PC1 and PE4 independent controls, both off through retained pull networks; R134 downstream of Q120/Q121."
+        },
+        {
+          "check": "Independent 65536 passive cold corner/state solves at +/-1.45% resistors",
+          "result": "Healthy 1 ohm CONT 65.582-87.644mV (nominal75.262); bus65.547-87.597mV (nominal75.222). Open CONT129.162-168.020mV, bus0 before leakage. Shorted match indistinguishable from healthy by passive test. Both controls low, passive screen BEFORE PC1, verified discharge after prior enable, then PC1 high/PE4low >=100ms. Leakage/ADC/temperature bands unqualified."
+        },
+        {
+          "check": "Sense-divider one-resistor faults",
+          "result": "Each top2x5.1k/bottom2x2k parallel/4.7k ADC series. Worst top short/bottom open1.4108V at8.4V,3.3422V at19.9V; continuity1.3973mA. ADC series open floats input; diagnostic required."
+        },
+        {
+          "check": "Static gate bias and watchdog/pulse arithmetic",
+          "result": "Q122<=0.1116V, Q124<=0.0122V; deliberate ACT_EN>=2.8408V. Watchdog28.571-32.653ms; allocated fault34.853<36ms. Gate float estimate0.739ms to0.4V/1.014ms to0.2V. R13435.797W/0.716J20ms/1.289J36ms. All Calc/Inference intact hardware, no physical timing proof."
+        },
+        {
+          "check": "Current native surface fault distances",
+          "result": "Q124 gate-drain own pads0.5200mm/external track0.6200. R128.1 and R126.1 to3V3via(19.05,55.9)0.6761/0.8352mm. U1.3 to NC sentinel2/4=0.2000,QSPIIO2track0.5500,U1.1pad0.7000. OUT-to-GND0.2370 at B track(11.33,55.1)-(10.37,56.06),GNDvia(10,55.6). IGN/RAW_ACT-to-GNDpour0.2505. ACT_FET_S-to-RAW_ACT Q121pads0.5200/sourcebridge0.5700. ACT_GATE/ACT_DRV-to-GNDpour0.2505/0.2506."
+        },
+        {
+          "check": "Current native S-8 barrel clearance",
+          "result": "Four barrels: J121.1OUT-to-In2 3V3=1.4583mm;J121.2IGN-to-OUTinner1.9000;OUTvia(11.33,55.1)-3V3=2.4788;GATEvia(14.4,53.3)-3V3=2.1061. ACT_GATE excluded barrels(16.2,72.3)/(11.8,69) toRAW_PROTECTED0.2505/0.8055; positive bridge biases P-FET off."
+        }
+      ],
+      "carried_deviations": [
+        {
+          "ids": [
+            "R4-SAF-03",
+            "R6-SAF-04"
+          ],
+          "reason": "Default surface gaps permit live-to-gate or OUT-to-GND defects to fire an enabled igniter; cold screening detects some static pre-enable defects only. Inspection/coating/dummy-load tests remain."
+        },
+        {
+          "ids": [
+            "R5-SAF-03"
+          ],
+          "reason": "Old separate BUS/J124 window geometry retired. Current Q121 source-drain0.5200/0.5700mm surface gaps can bypass deliberate RAW_ACT enabling; PC1 cannot clear a hard FET bridge."
+        },
+        {
+          "ids": [
+            "R6-SAF-03"
+          ],
+          "reason": "Four current pyro barrels meet1mm; ACT_GATE vias outside protected set retain0.2505/0.8055mm inner gaps. No blanket pyro fault immunity."
+        },
+        {
+          "ids": [
+            "R3-SAF-02"
+          ],
+          "reason": "Single-switch powered physical break lost. Port backfeed can hide opening and retain MCU/ACT_EN/RAW_ACT. No USB/self-powered source at e-match connection; bench tests pending."
+        }
+      ],
+      "primary_sources": [
+        {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "locator": "DS12110 Rev11 Table8p63/Table9pp64,67,70/Tables109,110pp207-208/Table136p233"
+        },
+        {
+          "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+          "locator": "Rev1.1pp1-2"
+        },
+        {
+          "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AO3400A.pdf",
+          "locator": "Rev3.1pp1-2"
+        },
+        {
+          "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+          "locator": "Rev2.1pp1-2"
+        },
+        {
+          "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+          "locator": "pp1-3; pulse graph rendered p3"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/STMicroelectronics/stm32h7xx-hal-driver/master/Inc/stm32h7xx_hal_iwdg.h",
+          "locator": "lines75-81 PR0 divide4"
+        }
+      ],
+      "limitations": [
+        "No firmware, physical, startup/reset/Miller, RF, hot-leakage, gate-tail, backfeed or switch qualification.",
+        "RM0433 full fetch failed; no invented reference substituted. TPS2553 safety fetch was RevF; independent power lens verified current RevG.",
+        "No canonical changes, other worktrees, Git mutation or subagents."
+      ]
+    },
+    {
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "board_bytes": 2366509,
+      "counts": {
+        "new_Critical": 0,
+        "new_Major": 0,
+        "new_Minor": 0
+      },
+      "findings": [],
+      "delivery": "Root transcription of independently returned inline report; no original report file written by validator.",
+      "target_unchanged": true,
+      "lens": "power",
+      "checks": [
+        {
+          "check": "Native extraction/topology and signature",
+          "result": "13edges, exact inputs; validation/topology noissues; signaturec424a714ef94e2e03b9148aeab28beefcc3460cd8999d3c6702721118ce90d66. C88-U9 3.920mm/4.436898mOhm/1.176695nH near+2.424048nH GND; bypass feed fault rejected."
+        },
+        {
+          "check": "Four fresh nonlinear extrema with half-step refinement",
+          "result": "Minimum-14.497873371V,max+2V; fall8.525257186V/us main, refinedrise4.523495972V/us; tolerances pass."
+        },
+        {
+          "check": "Independent row-scaled descriptor-MNA on all13edges; maker C at+2V,100pFU9,1nscontact",
+          "result": "50/25/12.5ps fall4.143600577/4.143718519/4.143724623V/us; compiledsolver discrepancy6.6e-10V/us. Parasitic assumptions unqualified."
+        },
+        {
+          "check": "R166 refined stress and out-of-domain controls",
+          "result": "504.293235W peak,2.888489824mJ/150us in differentcorners. 0/0.01ohm harness minima-15.969336/-15.660145V fail as disclosed."
+        },
+        {
+          "check": "Independent budgets",
+          "result": "Buck5.366682-5.546269V,LDO4.711504-4.873250; camera limit1.040891-1.249498A,radio0.347690-0.453049,GPS0.229710-0.308743; allshortsbuck2.022290A; inductor2.401272A at8.4/2.506859A at9.97; LDOloss0.406177W. Firehotcopper30.123110mOhm; firecurrentidle/1/2/3/4stall1.550071/1.485263/1.420229/1.354934/1.289335A. R13435.797452W/0.715949J20ms/1.288708J36ms vs graph61.2/44.1W. Watchdog28.571-32.653ms,fault34.853ms."
+        },
+        {
+          "check": "Native GAP2 loops",
+          "result": "C82(39.8,74.75):OUT3.390990+GND9.177817=12.568808mm,area2.315313mm2. D9(43.35,73.45):OUT6.873402+GND9.818377=16.691778mm,area17.419688mm2. No loop-rule issue."
+        },
+        {
+          "check": "Native GAP3",
+          "result": "Exactly2GNDthroughvias(27.3,13.6)/(27.9,13.6),0.5/0.3filled/capped intent,whollyinsideU401.11,pasteunchanged. PhysicalVIPPOunverified."
+        },
+        {
+          "check": "Live maker curves/limits",
+          "result": "Three Samsung hotplug families sorted graphs match; C92curve at3.4V0.683275726retained,2.211046uFeffective>1.5uF. C120native1uF25VX7R about0.586953uF at4.5V withallowances. Cache-busted TI SLVS841G Oct2026 confirms FAULT3-11ms/maxturnoff3ms."
+        }
+      ],
+      "carried_deviations": [
+        {
+          "ids": [
+            "R3-PWR-07"
+          ],
+          "reason": "Native bypass distancesU402-C4304.309655mm,U420-C4204.878332,U410-C4100.456207. U402input one0.5/0.3via(35.45,40.05),0.4x0.85mmfeed. Retain layoutdeviation; no fresh secondvia impossibilityproof; loadtransienttest."
+        },
+        {
+          "ids": [
+            "R4-PWR-01",
+            "R6-PWR-01"
+          ],
+          "reason": "U9entries0.3x1.8mm,0.6mmoutsidepad;OUT4vias x40.8/41.35/41.9/42.45 y77.1,0.4mmladder. U4000.4mmfeeds; C88neck0.7mm,total2.92mm. In2notch conservative1.20mm. IPCfit7.412/19.238C at1.8/2.9A outer1mm;3.416/8.502C at1.25/2.02A inner1.2mm. NofullDC/thermalmeasurement."
+        },
+        {
+          "ids": [
+            "R7-PWR-02"
+          ],
+          "reason": "USBnominal514.1uF/2.416mCto4.7V; currentlimit347.7-453.0mA,idealno-load5.33-6.95ms; hostattach/startup/complianceopen."
+        },
+        {
+          "ids": [
+            "OQ-5"
+          ],
+          "reason": "Ports-off/shed8.6758-13.5560ms; ports-on0.55375-0.86524ms, turnoffup3ms. Threshold/latency/decayandcoldESRopen; nohardwarecutoff."
+        },
+        {
+          "ids": [
+            "GAP-1",
+            "O6"
+          ],
+          "reason": "Idlefire1.550071A;1stall1.485263miss1.5A. Starreturnbound0.6144Aonlywith<=1mOhmtransfer/>=50mOhmbranches. Measuredeploymentreserveandharness."
+        },
+        {
+          "ids": [
+            "GAP-3",
+            "R9-PWR-01"
+          ],
+          "reason": "U4010.406177W,80-110C/WInference gives102.494-114.679C at70C/117.494-129.679at85C. VIAs do notprove actualtheta. Wholepowerknotthermalopen."
+        },
+        {
+          "ids": [
+            "AUD-1",
+            "AUD-3a",
+            "GAP-4"
+          ],
+          "reason": "C92effective2.211uF;C12025Vratingfixed;C84supplierendpoint300.8uF/37.5mOhm. Typicalcurves/agingInference. C21397bias/stabilitynotindependentlycompleted. C84coldESR/manualfitopen."
+        },
+        {
+          "ids": [
+            "OQ-2"
+          ],
+          "reason": "R1661W V10 has no microsecondpulsecurve;504W/2.888mJ simulateddoesnotprovepulseendurance. Actualunfusedharness>=0.03ohm,0.1-2uH andU9IN/OUTwaveformsmeasure."
+        },
+        {
+          "ids": [
+            "GAP-5"
+          ],
+          "reason": "Physicalnormalcurrent<=20msincltail;intacthardwarefault<=36ms;85Cpulsemarginnegligible/unqualified. Provewatchdognofeed,hotgate,resistorrepeatdriftandfittedRevV. Firmwareabsent."
+        }
+      ],
+      "primary_sources": [
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+          "locator": "SLVSFC9Cpp7-9,62-63"
+        },
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+          "locator": "SLVS841GOct2026pp6-7,17,21,25"
+        },
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+          "locator": "SBVS282App4-5,23,25"
+        },
+        {
+          "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+          "locator": "DS41326Rev3-2pp1,4-5,11-14"
+        },
+        {
+          "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "locator": "p1"
+        },
+        {
+          "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+          "locator": "pp1-3,renderedpulsechart"
+        },
+        {
+          "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+          "locator": "Rev2.1pp1-4,renderedSOA"
+        },
+        {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "locator": "DS12110Rev11Table136p233"
+        },
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+          "locator": "SLVSEA3Fp8"
+        },
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+          "locator": "SBVS186Hsection8.1.1p16"
+        },
+        {
+          "url": "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf",
+          "locator": "SMD-SP-001V10pp4-6"
+        },
+        {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+          "locator": "MAseriespp1,4"
+        }
+      ],
+      "limitations": [
+        "No full2304sweep/build/gate duplicated; root committed evidence inspected, selected corners fresh.",
+        "No physical/firmware/thermal/flight orcompleteDCsolve. C21397bias/stabilitynot independentlycompleted.",
+        "InitialunscaledindependentMNA warningsdiscarded; row-scaledsolutionfiniteandverified.",
+        "DownloadedPDFs/rendersremoved byreviewer; no canonical changes."
+      ]
+    },
+    {
+      "lens": "4 parts/BOM/footprints/LCSC/stock/orientation",
+      "round": 10,
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "target_verified_at_start_and_end": true,
+      "new_counts": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 0
+      },
+      "carried_counts": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor_groups": 6
+      },
+      "findings": [],
+      "checks": [
+        {
+          "command": "native_audit.py under KiCad Python, native board and schematic XML plus current BOM",
+          "result": "225 footprints; 215 fitted; 82 BOM rows/codes; no missing/extra/duplicate fitted reference; LCSC, maker MPN, footprint and Value agree between native PCB/XML/BOM. No duplicate field name or contradictory alternate identity. Existing LCSC Part aliases agree with LCSC; Yageo/YAGEO is case only. All model paths are project-relative."
+        },
+        {
+          "command": "supplier_audit.py; 82 exact JLC selectSmtComponentList queries",
+          "result": "2026-10-28T23:51:13Z: all 82 exact MPNs match, manufacturer names agree after recognized brand abbreviations/case. R430 stock 17 versus 3610 minimum, U4 stock 0 versus 5. No other shortage or thin line. Standard 5-board cost $84.43 ($59.34 parts plus $25.092 feeder share), 46 Extended/36 Basic; target $84.41 missed by $0.02; minimum purchases increase components to $61.14, approximately $86.23 including feeder share before fixed fees."
+        },
+        {
+          "command": "independent_cpl.py; standalone placement-matrix reconstruction using native pad centres and supplier numbered pads",
+          "result": "215 rows: 203 rebuilt from supplier geometry plus 12 nonpolar resistor placement-only rows; no error; maximum residual 0.491288 mm at R134. No same-code pad-geometry split. TXU0202 residual approximately 0.147 mm; Q120/Q121 numbered fingers align within approximately 0.100 mm."
+        },
+        {
+          "command": "tools/jlc_orient.py --verify-cpl m3_design/assembly_review/fab/m3_cpl_jlc.csv",
+          "result": "exit 0; 77 top and 126 bottom supplier reconstructions, 12 placement-only, 215 expected; no error. This production checker supplements the independent reconstruction."
+        },
+        {
+          "command": "fresh exact C431196 EasyEDA package fetch, sanitized numbered-pad comparison",
+          "result": "Fresh head and all nine numbered pad records exactly equal tools/jlc_easyeda/pads.json. Native Q120/Q121 pins 1-3 source, 4 gate, 5-9 drain agree with AOS Rev2.1 p1. Bottom poses are (13.5,72.6)/0 and (13.5,67.6)/180; CPL rotations 180/0. Maker PO-00047 rev I land dimensions agree with native union, including 0.01 mm drain-finger overlap."
+        },
+        {
+          "command": "Round-9 label audit: seven capacitor source groups across 21 references",
+          "result": "C6-C11, C19/C20/C87, C22, C23/C28, C25/C26, C60/C94/C122/C127/C129, C88/C99 now carry full capacitance/voltage/dielectric/tolerance. Fresh supplier attributes confirm all seven; no identity, net or land change is inferred from a label."
+        },
+        {
+          "command": "native AUD/GAP part geometry and primary maker/supplier sources",
+          "result": "C120 CL10B105KA8NNNC/C29936 is 1 uF 25 V X7R 10%, mass-production 0603; native metric land matches the other three C29936 locations. C92 CL10A475KO8NNNC/C19666 is 4.7 uF 16 V X5R 10%, NRND, and matches C23/C28 land. U401 pad11 is 1.2 x 2.0 mm, maker 1.13 x 0.89 mm split paste unchanged; exactly two GND 0.5/0.3 mm vias at (27.3,13.6)/(27.9,13.6). C84 is fitted and in CPL; current ORDERING 8.2 explicitly excludes C84 from both reflows and requires separately validated manual fitting."
+        },
+        {
+          "command": "python3 tools/check_procurement.py --profile r10 --cost-only",
+          "result": "exit 1 as required: cost_check.json procurement target not met. R10 profile explicitly selects $84.41/52 and is called by r10_fab.sh; the legacy R9 default does not silently grant R10 the RF allowance."
+        }
+      ],
+      "carried_deviations": [
+        {
+          "id": "R10-PARTS-C01",
+          "prior_ids": [
+            "OQ-3",
+            "R3-BOM-04",
+            "R7-BOM-03"
+          ],
+          "severity": "Minor",
+          "location": "m3_design/assembly_review/fab/m3_bom_jlc.csv; R430/U4",
+          "measured_reason": "Fresh 23:51:13Z query reproduces cost $84.43 > $84.41, R430 17 < minimum 3610 and U4 0 < 5. This is disclosed, is not owner cost acceptance and is not an order release.",
+          "fix": "Obtain a compliant quote/owner cost acceptance; obtain U4 stock or accepted consignment; resolve R430 actual minimum-order availability or qualify a replacement and recompute port limits.",
+          "independently_reproduced": true
+        },
+        {
+          "id": "R10-PARTS-C02",
+          "prior_ids": [
+            "R4-BOM-01"
+          ],
+          "severity": "Minor",
+          "location": "m3_design/assembly_review/kilib/rocket.pretty/M3_SRP5030TA.kicad_mod; L400 F(24.2,5.55)",
+          "measured_reason": "Fresh Bourns SRP5030T p1 drawing shows outer land span 6.50 mm, inner gap 2.50 mm and pad height 1.8 mm, implying 2.0 x 1.8 mm lands at x +/-2.25. Native land is 1.8 x 2.5 mm at +/-2.35: same outer span, 2.90 mm inner gap and 0.7 mm extra pad height. Supplier proxy residual remains 0.15 mm. Nominal contact projection is covered; full tolerance coverage is unproven. Minimum body span 5.4 and maximum terminal depth 1.4 can place the heel at x1.30 versus native land edge1.45. This sharpens the already recorded original-land qualification item; failed assembly is not proven.",
+          "source": {
+            "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+            "page": 1,
+            "revision": "Current maker PDF read 2026-10-28"
+          },
+          "fix": "Use the exact maker land (2.0 x 1.8 at +/-2.25), reroute/verify paste and CPL, or obtain assembly qualification for the retained land. Retain explicit preview qualification of the C189932 orientation proxy.",
+          "independently_reproduced": true
+        },
+        {
+          "id": "R10-PARTS-C03",
+          "prior_ids": [
+            "R4-BOM-02"
+          ],
+          "severity": "Minor",
+          "location": "m3_design/assembly_review/m3.kicad_pcb; U411/U12/U421",
+          "measured_reason": "All three top TXU0202s use native -90 degrees and CPL90; all eight supplier pins reconstruct with approximately0.147 mm worst residual. Geometry agrees, but the physical factory placement preview/pin1 has not been inspected.",
+          "fix": "Confirm pin1 on all three in the factory preview before order and inspect first articles.",
+          "independently_reproduced": true
+        },
+        {
+          "id": "R10-PARTS-C04",
+          "prior_ids": [
+            "R4-BOM-03",
+            "R5-BOM-02",
+            "GAP-4"
+          ],
+          "severity": "Minor",
+          "location": "m3_design/assembly_review/m3.kicad_pcb; C84 F(38.5,74.0)",
+          "measured_reason": "Native plus pad1 is VLOGIC at (38.5,77.25), minus pad2 GND at (38.5,70.75); CPL rotation90 and supplier geometry residual approximately0.045 mm. Supplier MA sheet pp1/2/4 confirms 470uF25V, 25mOhm100kHz, 4.1A, +/-20%, 8x10 body, base8.3+/-0.2, P3.1+/-0.2 and terminal width0.8-1.1. It gives no land, reflow profile or manual-solder qualification. The derived native 3.5x1.7 pads at +/-3.25 are an inference. Current JLC brand jieerrui matches native; LCSC and sheet use JIERR, so the existing naming alias remains to reconcile.",
+          "source": {
+            "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+            "pages": [
+              1,
+              2,
+              4
+            ],
+            "revision": "Undated supplier-hosted MA series"
+          },
+          "fix": "Validate the separate post-reflow manual operation and derived land; confirm physical positive orientation in preview/first article and measure height/capacitance/ESR. Reconcile supplier maker aliases without substituting parts.",
+          "independently_reproduced": true
+        },
+        {
+          "id": "R10-PARTS-C05",
+          "prior_ids": [
+            "R6-BOM-02"
+          ],
+          "severity": "Minor",
+          "location": "m3_design/assembly_review/m3.kicad_pcb; U4 B(17.0,45.9)",
+          "measured_reason": "Native adjacent lands are0.35 mm wide on0.50 pitch, with0.025 mm mask relief each: individual mask web0.100 mm. This is the recorded JLC-limit condition; actual fabricated web is unmeasured.",
+          "fix": "Preserve supplied openings/webs and obtain fabricator acceptance; inspect first articles.",
+          "independently_reproduced": true
+        },
+        {
+          "id": "R10-PARTS-C06",
+          "prior_ids": [
+            "R7-BOM-01"
+          ],
+          "severity": "Minor",
+          "location": "m3_design/assembly_review/fab/m3_bom_jlc.csv; C86/C97/C98/C120",
+          "measured_reason": "C29936 remains one Extended code across four parts; C15849 is an incumbent Basic 1uF50V X5R0603. Fresh 5-board prices are0.0177 versus0.0146 each; merging would remove one1.53/order feeder charge, approximately$0.3184/board apparent saving. This is not a qualified substitution: dielectric changes X7R to X5R and C120 is gate-slew/Miller sensitive.",
+          "fix": "If pursuing cost reduction, qualify effective capacitance/temperature/aging and gate behavior at every affected location, standardize land and regenerate checks/BOM/CPL. Do not credit savings before qualification.",
+          "independently_reproduced": true
+        }
+      ],
+      "release_obligations_not_new_findings": [
+        "GAP-3: native vias and paste satisfy the adopted CAD contract, but resin-filled/copper-capped/planar VIPPO fabrication acceptance and measured U401 thermal behavior remain unverified. Maker DSK0010A drawing4218903/C09/2025 pp35-37 supports the land and84% split paste; CAD flags are not process evidence.",
+        "C92 effective-capacitance allowance2.211uF is a typical-curve inference, not a production minimum; electrical stability/aging/temperature qualification was not repeated in this parts lens. The maker marks C19666 NRND.",
+        "Bottom-side JLC angle convention, DB125 wire-entry body direction, every physical pin1/polarity and final preview remain factory/first-article obligations. Native GH numbered pads and tabs, header aliases, and fitted row inventory agree with supplied corrections.",
+        "The recorded R8-BOM-01/-02 model-envelope comments are historical/low-impact: GH2 uses a7.3 mm mated envelope and its current VRML header says fit envelope, not maker model. This review did not repeat a full semantic audit of every inherited VRML comment."
+      ],
+      "sources": [
+        {
+          "url": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+          "scope": "All82 exact current BOM codes; POST keyword per code; snapshot2026-10-28T23:51:13Z"
+        },
+        {
+          "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+          "revision": "Rev2.1 November2023",
+          "pages": [
+            1,
+            2
+          ],
+          "scope": "Pin roles, voltage limits and ratings"
+        },
+        {
+          "url": "https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf",
+          "revision": "PO-00047 I",
+          "page": 1,
+          "scope": "New AONR land union"
+        },
+        {
+          "url": "https://easyeda.com/api/products/C431196/components",
+          "scope": "Fresh exact numbered package pads, sanitized; matches stored map"
+        },
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+          "revision": "SBVS282A September2026; DSK4218903/C09/2025",
+          "pages": [
+            35,
+            36,
+            37
+          ],
+          "scope": "U401 land and split paste"
+        },
+        {
+          "url": "https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do",
+          "scope": "C120 exact C29936 identity/25V/X7R and mass-production status"
+        },
+        {
+          "url": "https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do",
+          "scope": "C92 exact C19666 identity/16V/X5R and NRND"
+        },
+        {
+          "url": "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf",
+          "pages": [
+            1,
+            2,
+            3
+          ],
+          "scope": "GH pitch, tabs, current/contact ratings; local download403, official web PDF read available"
+        },
+        {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+          "revision": "DORABO T0-1,2022-11-26",
+          "page": 1,
+          "scope": "DB1253.5mm pitch,8.6mm height,1.2mm recommended hole vs native1.3mm retained deviation"
+        },
+        {
+          "url": "https://www.lcsc.com/product-detail/C46550466.html",
+          "scope": "C84 MPN/code and JIERR brand alias; stock used only from fresh JLC query"
+        }
+      ],
+      "evidence_files": [
+        "native_audit.py",
+        "native_inventory.json",
+        "supplier_audit.py",
+        "supplier_audit.json",
+        "supplier_snapshot.json",
+        "independent_cpl.py",
+        "independent_cpl.json",
+        "c431196_padmap.json",
+        "sources.json"
+      ],
+      "limitations": [
+        "No canonical file changed; no Git mutation, full build, full check.sh, simulation sweep or physical test performed.",
+        "All82 live supplier mappings were checked; original manufacturer dimensional drawings were freshly read for the new/uncertain packages, not re-read for every inherited footprint.",
+        "CPL is checked against supplier geometry, not factory preview or an assembled board. The12 nonpolar1k0603 rows lack supplier pad maps and received population/side/corrected-placement checks only.",
+        "All reported electrical/assembly inferences remain conditional; no unqualified alternate part has been adopted."
+      ]
+    },
+    {
+      "lens": "MCU pin map, back-feed, ESD and peripheral/fault contracts",
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "verified_at_start_and_end": true,
+      "summary": {
+        "new_critical": 0,
+        "new_major": 0,
+        "new_minor": 1,
+        "electrical_or_copper_changes_required": false
+      },
+      "checks": [
+        {
+          "check": "Independent native inventory and original maker pin transcription",
+          "result": "100 native U1 pads and 100 pin_table rows; every package pin name matches independently transcribed DS12110 Rev11 Figure5 p55. Native nets match all rows; 29 NC pins remain unconnected. Fresh KiCad schematic XML export matches all 100 native U1 pad nets.",
+          "evidence": [
+            "native.json",
+            "independent_pin_checks.json",
+            "fresh.net.xml"
+          ]
+        },
+        {
+          "check": "AF, ADC and interrupt assignments",
+          "result": "All 25 AF assignments reviewed against DS12110 Rev11 Table10 pp89-94; USART6 PC6/7, UART5 PB13/12, UART7 PE8/7, TIM5 PA0-3, SPI1 PB3-5, I2C1 PB8/9, QSPI PE2/PB2/PD11-13/PB6 and USB/SWD consistent. Six sense ADC instance/channel assignments match Table9 pp67,69-70. EXTI1/4/5/6/8/9/10/12 are distinct; PE1 IMU interrupt and PC13 NC agree."
+        },
+        {
+          "check": "Scoped native CAD contract",
+          "command": "KiCad Python tools/check_r10.py --only S-3,K-contract,K-loader,P-8,M-7",
+          "result": "Exit0; five selected rules pass. No full build or whole check was run.",
+          "evidence": [
+            "scoped_gate.json",
+            "scoped_gate.log"
+          ]
+        },
+        {
+          "check": "Original current loader resources",
+          "result": "AN2606 Rev70 Table135 pp320-323 matches the implemented Rev64 allowance set. PC1/PE4 absent from loader resources; PA6 remains loader-driven sense-only, PA2 servo3 and PB6/PB9 shared loader cases stay carried allowances."
+        },
+        {
+          "check": "Default-off native gate networks",
+          "result": "PC1 U1.16 reaches Q122 through R122 1k; R123100k to GND. PE4 U1.3 reaches Q124 through R126220ohm, R1271k on MCU side, R12810k and C126220nF gate-to-GND. Load-switch R120100k/C1201uF return to common source; R121 series retained. Logical default-off supported; transients unmeasured."
+        },
+        {
+          "check": "Round9 trace correction",
+          "result": "Fresh original ST CMSIS header confirms DBGMCU_CR_DBG_TRACECKEN_Pos20 and mask0x00100000. ORDERING266 and binding note require active PE2 clock, PC1/PE4 low GPIO state, and both GPIOC/GPIOE LCKK plus individual pin-bit readbacks. Procedure correct; trace override behavior remains Inference until measured. Full RM0433 download was unavailable; no claim of fresh complete RM reading."
+        },
+        {
+          "check": "Port isolation, USB and servo native paths",
+          "result": "U411/U421 both supplies3V3, OE pulled low; U12 A supply3V3 and B supplyCAM_IO_3V3 from U13. Three TX/RX directions and 1k wire resistors correct. USB D4 USBLC6 pin1/6DM,3/4DP,2GND,5VBUS correct. D121 pin2GND,5main3V3,1/3/4/6servo signals; each connector signal behind1k, each NC positive row unconnected. Native QSPI flash and IMU/barometer pin identities consistent; crystal PH0/PH1 with two10pF loads."
+        },
+        {
+          "check": "Scoped seed faults on scratch/in-memory copies",
+          "result": "Removing R123 rejected by S-3; connecting PA9 to ACT_EN_MCU rejected by K-loader; moving U421 VCCB to PORT_4V8 rejected by K-contract. K-contract reads saved board text, so that seed was saved and checked in scratch, then removed.",
+          "evidence": [
+            "remove_R123.json",
+            "loader_PA9_on_ACT_EN.json",
+            "radio_VCCB_on_PORT_4V8.json"
+          ]
+        }
+      ],
+      "findings": [
+        {
+          "id": "R10-MCU-01",
+          "severity": "Minor",
+          "classification": "new documentation correction to a carried fault case",
+          "location": [
+            "m3_design/assembly_review/sources/r10_design/parts_qualification.md:548",
+            "m3_design/r10_sch_check.py:265",
+            "m3_design/assembly_review/sources/r10_design/r10_binding_note.json:591"
+          ],
+          "measured": "Native R60=100k,R61=10k, PA6 ADC12_INP3. Recorded7.3V ceiling omits both6V digital cap and ADC-mode4V maximum. Normal8.4V input gives0.764V. Short R60 exposes PA6 directly to VLOGIC; open R61 also raises its steady-state voltage toward VLOGIC through100k (Inference; pin leakage dependent).",
+          "source": "ST DS12110 Rev11 (January2026), Table109 pp207-208 notes3-5, Table110 p208; RevY Table11 pp103-104 same limits. FT digital limit min(min(relevant supplies)+4V,6V), so supplies3.3V gives6V; note4 requires pulls disabled above4V; note5 limits FT_a used by ADC to4V. Positive injected current allowance0mA.",
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "fix": "Correct PA6 limit to4V for ADC operation, distinguish6V digital ceiling with powered3.3V supplies, and regenerate binding note. Preserve existing single-fault damage deviation; include lower-resistor-open example if enumerating fault cases. No board, normal divider, watchdog or damage conclusion changes.",
+          "independently_reproduced": true,
+          "related_historical_text": "docs/MARGIN_PRESCRIPTION.md:81 and docs/FMEA_REDUNDANCY.md:327/:356 also quote7.3V; docs/R5_VALIDATION.md:124 already states historical claims are superseded. Keep history explicit rather than applying a global number replacement."
+        }
+      ],
+      "carried_deviations": [
+        {
+          "id": "R5-MCU-04",
+          "severity": "Minor",
+          "current_reason": "Rechecked native PA6 divider lacks pin resistor and R60-short violates4V ADC stress limit; PB1 divider10k/1k, lower-open gives5.456V through10k against4V TT limit. Existing fault-damage classification persists; exact pin current/damage unmeasured."
+        },
+        {
+          "id": "R8-MCU-02",
+          "severity": "Minor",
+          "current_reason": "Fresh HGLRC maker page specifies3.3-5V supply/SH1.0 cable but no UART voltage. Native GPS TXU B supply nowmain3V3, input tolerant5.5V; module TX high and acceptance of3.3V drive remain unqualified.3.3V UART level is Inference; SH-to-GH harness remains necessary."
+        },
+        {
+          "id": "R3-MCU-05",
+          "severity": "Minor",
+          "current_reason": "All six native UART ESD clamps are ESD103-B1-02EL toGND ahead of1k/TXU.15V working/48V clamp supplier ratings still cannot establish3.3V pin IEC immunity; handling-level protection remains Inference. Exact olderEL datasheet curves not re-read; current maker URL servesELS variant."
+        },
+        {
+          "id": "R3-SAF-02 / AUD-8",
+          "severity": "Minor",
+          "current_reason": "Native GPS/radio translators share3V3, so switched peripheral power alone cannot disable UART. OE-low-before-EN-low remains firmware obligation. TXU original SCES942A guarantees outputs high-Z with OE low or supply below100mV; module-off/OE-high back-power and enabled power-switch back-feed remain accepted, unmeasured behaviors."
+        },
+        {
+          "id": "R4-MCU-01 / R8-MCU-01",
+          "severity": "Minor",
+          "current_reason": "Native RX pins connect only to disabled translator outputs in reset; startup pull-ups/idle-TX-before-OE remain firmware. TI documents internal5Mohm input pulls; enabled/unplugged module RX break remains Inference, with DMA/error containment unimplemented."
+        },
+        {
+          "id": "R6-MCU-04 / R7-MCU-04 / R8-SAF-01",
+          "severity": "Minor",
+          "current_reason": "Trace prohibition, both GPIO locks/readback, low-output loader sequence, flashQE/pre-erase/suspend, and IMU SPI/startup obligations remain binding-note requirements. Firmware and bench tests are unimplemented; no timing or trace override measurement credited."
+        },
+        {
+          "id": "R5-MCU-02 / R5-MCU-05",
+          "severity": "Minor",
+          "current_reason": "Native PC14 buzzer sharesOSC32_IN; LSE remains forbidden. PC8 has1k:1k VBUS divider and is explicitly not a safety input. Earlier4.62V detection statement is conservative versus the additional TTL guarantee; exact threshold is unmeasured."
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "revision": "DS12110 Rev11 January2026",
+          "pages": "55,67,69-70,89-94,207-208",
+          "scope": "package/AF/ADC/absolute limits"
+        },
+        {
+          "url": "https://www.st.com/resource/en/application_note/cd00167594-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+          "revision": "AN2606 Rev70 February2026",
+          "pages": "320-323",
+          "scope": "current H74x loader resource table"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/master/Include/stm32h743xx.h",
+          "revision": "fresh retrieval2026-10-28",
+          "pages": "native downloaded lines21245-21247",
+          "scope": "TRACECLKEN macro bit20"
+        },
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+          "revision": "SCES942A March2022",
+          "pages": "1,4-7",
+          "scope": "translator pinout, isolation, input/output ratings"
+        },
+        {
+          "url": "https://www.st.com/resource/en/datasheet/usblc6-2.pdf",
+          "revision": "DS4260 Rev7 December2021",
+          "pages": "1",
+          "scope": "USB ESD pinout"
+        },
+        {
+          "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+          "revision": "maker page checked2026-10-28",
+          "pages": "Specification/Include",
+          "scope": "no UART-level specification; SH1.0 cable"
+        },
+        {
+          "url": "https://jlcpcb.com/partdetail/555530-ESD103_B1_02ELE6327/C535146",
+          "revision": "supplier page",
+          "pages": "part ratings",
+          "scope": "exactEL15V/48V"
+        },
+        {
+          "url": "https://www.semtech.com/products/circuit-protection/low-capacitance/srv05-4",
+          "revision": "maker product page",
+          "pages": "overview/features",
+          "scope": "servo rail-clamp topology family; no system test qualification"
+        }
+      ],
+      "limitations": [
+        "No physical tests, system ESD pulses, unpowered injection measurements, GPIO lock/trace override measurements or firmware execution.",
+        "RM0433 original PDF fetch exceeded browser size and direct downloads failed; bit20 independently verified from original ST CMSIS header, prior GPIO-lock source details not freshly re-read in full.",
+        "IMU SPI10MHz/40ms startup, flash erase maxima and crystal startup/drive margins remain carried obligations; native wiring checked but original peripheral timing PDFs not freshly re-read in this lens.",
+        "Only scoped CAD rules/seed faults run; parent owns full build, fab and gate evidence."
+      ]
+    },
+    {
+      "lens": "mechanics",
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "target_verified_start": true,
+      "target_verified_end": true,
+      "scope": "Independent ROUND10 lens6 native placement/mechanics; read-only canonical tree; writes only lens scratch; no whole build/check.",
+      "summary": {
+        "new_critical": 0,
+        "new_major": 0,
+        "new_minor": 1,
+        "carried_minor_groups": 6
+      },
+      "checks": [
+        {
+          "command": "<KICAD_PY> tools/fit_check.py --profile r10 --report fit.json",
+          "exit": 0,
+          "result": "CAD envelopes pass;225 native footprints,46x90mm; five supports; fresh fit.json."
+        },
+        {
+          "command": "<NUMPY_PY> tools/plate_model.py fit.json --profile r10 --mass-spec m3_design/assembly_review/sources/r10_design/masses.json --json plate.json",
+          "exit": 0,
+          "result": "280.9/397.3Hz pinned D5/D10;449.4/635.5Hz clamped;45.5g;100g peak0.55mm; U4/U5 surface strain289/404 microstrain. Same model assumptions, not physical validation."
+        },
+        {
+          "command": "<KICAD_PY> tools/check_r10.py --only M-1,M-2,M-3,M-5,M-6,M-7,P-11 --fit fit.json --plate plate.json --report scoped.json",
+          "exit": 0,
+          "result": "All seven selected rules pass."
+        },
+        {
+          "command": "native_geometry.py",
+          "exit": 0,
+          "result": "225/225 native poses match m3_design/r10_place.tsv;89F/136B; no J123/J124; independent swept bounds and washer-disc surface-copper inventory in geometry.json."
+        },
+        {
+          "command": "extra_calcs.py",
+          "exit": 0,
+          "result": "Independent mass sum45.479582g; degree12/16/20 first modes281.276967/281.027662/280.922401Hz. L1 static100g center displacement0.268858mm; 81x81 raster over L1 model yields maximum0.296664mm, leaving0.687511mm with h4mm and actual model hang3.015825mm. Local deflection calculation uses existing plate model."
+        },
+        {
+          "command": "coating_inventory.py plus native effective-shape collision",
+          "exit": 0,
+          "result": "C11 only unintended whole-coated item inside3mm union(U5body,pads); C10 next3.777017mm; all others>=5.380001mm. R13/R64 masked and TP122 explicit exception preserved."
+        }
+      ],
+      "findings": [
+        {
+          "id": "R10-MEC-01",
+          "severity": "Minor",
+          "status": "new; independently reproduced",
+          "files": [
+            "docs/ORDERING.md:248",
+            "docs/ORDERING.md:250",
+            "docs/ORDERING.md:354",
+            "docs/M3_R10.md:310"
+          ],
+          "native_coordinates": "U5 B(10.6,49.1), nominal body x8.1..13.1,y47.6..50.6; C11.1 B pad x15.795..17.205,y51.425..52.775.",
+          "measured": "C11.1 native rectangular copper-to-U5 nominal body2.818449mm; to pad bounding extent3.027515mm. C11 is explicitly whole-coated, while3mm applies to both body and pads. The published 3.03mm is valid only for pads. C11 is the sole unintended whole-coated item <3mm from the union.",
+          "requirement": "ORDERING R10 coating text requires>=3mm from U5 body and pads. TE06/2017 pp1/15 supplies5x3mm body; p17 requires opening protection. 3mm is the project process rule, not a TE numerical clearance.",
+          "primary_source_url": "https://my.avnet.com/wcm/connect/83d782cc-0b60-4045-a710-a8a2daf90b20/TE-Connectivity-MS5611-Series-EN-Datasheet.pdf?CACHE=NONE&CVID=oMx6Zo2&ContentCache=NONE&MOD=AJPERES",
+          "primary_source_revision_pages": "TE MS5611-01BA03,06/2017,pp1/15/17",
+          "impact": "Residual assembly-instruction contradiction with0.182mm shortfall to nominal body. No actual sensor damage, port contact or firing mechanism established; U5 whole-part tape remains required. Distinct from earlier direct0.42/0.69mm coating of R64/R13.",
+          "fix": "Mask C11 whole as a non-pyro bypass; remove it from whole-coat/straddler and nearest-coated-part lists. Keep >=3mm around union(U5body,pads), whole-U5 tape and controlled TP122 exception. Next coated C10 clears3.777017mm. No PCB move required.",
+          "independently_reproduced": true,
+          "evidence": [
+            "coating.json",
+            "coating_inventory.json",
+            "calculations.json"
+          ]
+        }
+      ],
+      "carried_deviations": [
+        {
+          "id": "MEC-C01",
+          "severity": "Minor",
+          "prior": "R3-MEC-02/-04/-05;OQ-1",
+          "current_measured_reason": "GH4 mated conservative corner margin0.028128mm; J1220.499500mm; terminal legacy bare-bore floor4.953012mm at5mm wire height. J400 GH2 envelope10.3mm includes3mm inferred wire allowance. JST7.3mm housing with actual wire bends is unqualified; GH cables dress inward, mated board backed.",
+          "fix_or_obligation": "Physical bore check with final16-22AWG terminal leads and GH AWG26 harness; preserve owner accepted wire-room floor. Historical4.44-5.39mm actual-opening range not independently rechecked."
+        },
+        {
+          "id": "MEC-C02",
+          "severity": "Minor",
+          "prior": "R9-MEC-01;support hardware/insulation",
+          "current_measured_reason": "Both0.3mm centering tolerances reproduced: h+t bounds6.018413mm atx4/42,5.365256mm atx3.7; default h4/t1 worst nut radius24.754608mm vs24.9mm. Atwest support only0.157946mm additional outward eccentricity is available under nominal nut assumptions. Nearest top exposed padJ4003.857542mm; nearest bottomC88.1 3.843605mm. Washer discs contain3V3 F.Cu/via atminr3.410399/3.260399 and NRST F.Cu3.421392 at(4,44.3), BAT_IN B.Cu2.750000 at(42,86). Otherthree discs no non-GND surface track/via.",
+          "fix_or_obligation": "Measured nylon hardware only; <=7mm maximum washerOD; nut below sled; whole-bottom nonconductive insulation and ordinary-via covering. Recalculate actual hardware maxima, protrusion and eccentricity before release; nominal arithmetic is not fit qualification."
+        },
+        {
+          "id": "MEC-C03",
+          "severity": "Minor",
+          "prior": "R8-MEC-02/-03/-04; thermal/foam/static clearance",
+          "current_measured_reason": "L1 hangs3.015825mm below PCB;100g plate model maximum over L1 model0.296664mm leaves0.687511mm with4mm standoffs. U5 model hang1.100074mm gives2.899926mm nominal plate gap at4mm. U4 B(17,45.9),180deg; sensor-west offset-6mm; model centerz-2.059994mm(Inference); roll=-gyroY,1850deg/s centripetal0.637865g. U4 sits below U1 west pinrow; no thermal measurement.",
+          "fix_or_obligation": "Use measured4mm standoffs/<=1mm plate; keep foam withinU5 outline+1mm, unloaded pressure port and offU4; log U4/U5 thermal behavior againstU1 load, sign-check axes and vibration-check. Current courtyard1.71mm old number not independently rechecked."
+        },
+        {
+          "id": "MEC-C04",
+          "severity": "Minor",
+          "prior": "R4-MEC-01;R5-MEC-01/-03;P3 retention",
+          "current_measured_reason": "Fresh additive explicit masses26.4g, small-body volume estimate3.968582g, substrate15.111g,total45.479582g. C84m3g requires14.710N5x100g, each DB125mated4g19.613N, J122mated6g29.420N, GH4mated2.2g10.787N, GH2mated1.5g7.355N. No measured retention capacities; records explicitly label inference.",
+          "fix_or_obligation": "Stake C84,J1,J121,J122,LS120,J3 shell; external retentionGH/J400 and J122 plugs; off-board lead strain relief; weigh and bench qualify. These are conditional requirements, not demonstrated5x capacity."
+        },
+        {
+          "id": "MEC-C05",
+          "severity": "Minor",
+          "prior": "R6-MEC-01;OQ-7;external modules",
+          "current_measured_reason": "Fresh allowed parentVEHICLE gives shroudjoint+4..+47mm,r18.4mm,45mmwide. Boardedge23mm transverse offset penetrates4.6mm; J3shell23.45 ->5.05mm; GH4east22.2 ->3.8mm; topJ12223.5 ->5.1mm. Stack-44.6+80+(44..48)=+79.4..83.4mm aftedge leaves32.4..36.4mm before+47 under stated inferred stack. Full-board-forward+47 rule prevents clocking conflict.",
+          "fix_or_obligation": "Preserve selected axial rule including sled tolerance; qualify real sled, shroud,harness and externally mountedGPS/radio envelopes/antenna/retention. ShorterPCB alone does not qualify wholebay fit."
+        },
+        {
+          "id": "MEC-C06",
+          "severity": "Minor",
+          "prior": "GAP-3/GAP-4; manual C84/VIPPO",
+          "current_measured_reason": "C84 F(38.5,74),90deg: model34.25..42.75 x69.75..78.25,z10.8; pads37.65..39.35 x69..72.5/75.5..79 give0.75mm toes beyond body envelope. U401 two exact thermal vias(27.3,13.6)/(27.9,13.6) are fabrication-filled/capped before component placement; no physical process/inspection qualification.",
+          "fix_or_obligation": "Retain manual C84 fit AFTERbothreflows and separately validate solder process, height,polarity,capacitance/ESR. Require resin-filled,copper-capped,planarizedVIPPO for twoU401vias; coordinate assembler acceptance and inspection. Local toe geometry does not prove hand-tool access or process yield."
+        }
+      ],
+      "sources": [
+        {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+          "pages": "1/1",
+          "revision": "DORABO T0-1, 2022-11-26",
+          "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a",
+          "bytes": 381230,
+          "inspection": "Relevant drawing rendered and visually read; temporary PDF/PNG removed after review."
+        },
+        {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+          "pages": "2,4",
+          "revision": "JIERRUI MA series; revision/date unstated",
+          "sha256": "5ab3c478e90f1826a614a56af8164bb4bab3143affaae1ad7aa69fc0c1981997",
+          "bytes": 259366,
+          "inspection": "Relevant drawing rendered and visually read; temporary PDF/PNG removed after review."
+        },
+        {
+          "url": "https://www.jst-mfg.com/product/pdf/eng/eGH.pdf",
+          "pages": "1-3",
+          "revision": "eGH current 6-page sheet, revision/date unstated",
+          "inspection": "Fresh web primary-source text: GH4 8.25mm width, GH2 5.75mm, mated height7.3mm; wire OD0.76-1.0mm, AWG30-26. Local download403."
+        },
+        {
+          "url": "https://my.avnet.com/wcm/connect/83d782cc-0b60-4045-a710-a8a2daf90b20/TE-Connectivity-MS5611-Series-EN-Datasheet.pdf?CACHE=NONE&CVID=oMx6Zo2&ContentCache=NONE&MOD=AJPERES",
+          "pages": "1,15-17",
+          "revision": "TE MS5611-01BA03, 06/2017",
+          "inspection": "Primary manufacturer PDF mirrored by distributor: nominal body5x3x1mm; p16 reserved pad area; p17 protect sensor opening, no-clean process. Official TE DocumentDelivery endpoint timed out."
+        },
+        {
+          "url": "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf",
+          "pages": "8,10-12",
+          "revision": "ST TN1383 Rev1, August2023",
+          "inspection": "Fresh primary-source web read: component-side copper/via avoidance, fastener and heat-source stress, resin/underfill cautions."
+        }
+      ],
+      "limitations": [
+        "No physical fit,vibration,retention,thermal,coating or manual-solder experiment. No full build/check repeated.",
+        "LSM6DSV320X original datasheet fresh fetch failed(size limit/HTTP403); absoluteaxis directions checked against retainedR9map/currentnativepad1, not newly read maker axis drawing.",
+        "Fixed material properties and conservative engineering masses remain unmeasured. Degree sensitivity checks the same plate implementation, not an independent FEA.",
+        "Canonical files unchanged; only lens scratch written."
+      ]
+    },
+    {
+      "lens": "routing_cleanliness_AVA_M2_planes_return_paths",
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "target_verified_start": true,
+      "target_verified_end": true,
+      "counts": {
+        "new_critical": 0,
+        "new_major": 0,
+        "new_minor": 0,
+        "carried_minor_groups": 4
+      },
+      "findings": [],
+      "carried_deviations": [
+        {
+          "id": "R9-RTE-04",
+          "severity": "Minor",
+          "new_discovery": false,
+          "title": "Noncritical return companions outside 1.5 mm",
+          "native_coordinates_mm": [
+            [
+              22.54,
+              38.5
+            ],
+            [
+              24.3,
+              49.1
+            ],
+            [
+              12.4,
+              37.9
+            ],
+            [
+              13.8,
+              45.6
+            ],
+            [
+              7.75,
+              49.8
+            ],
+            [
+              9.97,
+              51.5
+            ]
+          ],
+          "measurement": [
+            {
+              "net": "NRST",
+              "xy": [
+                22.54,
+                38.5
+              ],
+              "changing": true,
+              "layers": [
+                "F.Cu",
+                "B.Cu"
+              ],
+              "nearest_gnd_mm": 1.655173706896049,
+              "nearest_gnd_xy": [
+                21.4,
+                37.3
+              ],
+              "fast_required": false
+            },
+            {
+              "net": "NRST",
+              "xy": [
+                24.3,
+                49.1
+              ],
+              "changing": true,
+              "layers": [
+                "F.Cu",
+                "B.Cu"
+              ],
+              "nearest_gnd_mm": 1.4866068747318493,
+              "nearest_gnd_xy": [
+                24.8,
+                47.7
+              ],
+              "fast_required": false
+            },
+            {
+              "net": "NRST",
+              "xy": [
+                12.4,
+                37.9
+              ],
+              "changing": true,
+              "layers": [
+                "F.Cu",
+                "B.Cu"
+              ],
+              "nearest_gnd_mm": 3.3533565274214427,
+              "nearest_gnd_xy": [
+                9.05,
+                37.75
+              ],
+              "fast_required": false
+            },
+            {
+              "net": "BOOT0",
+              "xy": [
+                13.8,
+                45.6
+              ],
+              "changing": true,
+              "layers": [
+                "F.Cu",
+                "B.Cu"
+              ],
+              "nearest_gnd_mm": 1.6620770138594676,
+              "nearest_gnd_xy": [
+                13.35,
+                44.0
+              ],
+              "fast_required": false
+            },
+            {
+              "net": "I2C1_SCL",
+              "xy": [
+                7.75,
+                49.8
+              ],
+              "changing": true,
+              "layers": [
+                "F.Cu",
+                "B.Cu"
+              ],
+              "nearest_gnd_mm": 1.4430869689661867,
+              "nearest_gnd_xy": [
+                7.4,
+                51.2
+              ],
+              "fast_required": false
+            },
+            {
+              "net": "I2C1_SDA",
+              "xy": [
+                9.97,
+                51.5
+              ],
+              "changing": true,
+              "layers": [
+                "F.Cu",
+                "B.Cu"
+              ],
+              "nearest_gnd_mm": 1.88057118982505,
+              "nearest_gnd_xy": [
+                10.712,
+                53.228
+              ],
+              "fast_required": false
+            }
+          ],
+          "source": [
+            "AGENTS.md section 3",
+            "docs/R10_VALIDATION.md:782"
+          ],
+          "reason": "NRST, BOOT0 and I2C are outside the named partner-via scope. NRST is still sampled by K-reference; zero loose reference samples. No untested assertion that every new GND stitch is impossible.",
+          "concrete_disposition": "Keep these measured return deviations in the acceptance list; a cleanup requires legal GND stitches within 1.5 mm and fresh fill/DRC/reference checks."
+        },
+        {
+          "id": "R9-RTE-05",
+          "severity": "Minor",
+          "new_discovery": false,
+          "title": "Retained MOSI offset and between-pad routes",
+          "native_coordinates_mm": [
+            [
+              17.55,
+              44.94
+            ],
+            [
+              17.5,
+              44.94
+            ]
+          ],
+          "measurement": {
+            "mosi_landing_x_mm": 17.55,
+            "imu_pad14_x_mm": 17.5,
+            "offset_mm": 0.05,
+            "between_pad_routes": {
+              "LED1": {
+                "gapbox": [
+                  10.6,
+                  43.0,
+                  11.5,
+                  44.2
+                ],
+                "net": "LED_YEL_A",
+                "tracks": [
+                  {
+                    "layer": "F.Cu",
+                    "a": [
+                      10.9,
+                      45.5
+                    ],
+                    "z": [
+                      10.9,
+                      41.6
+                    ],
+                    "w": 0.2,
+                    "between_length_mm": 1.200000000000003
+                  }
+                ]
+              },
+              "R33": {
+                "gapbox": [
+                  11.4665,
+                  40.9115,
+                  12.3335,
+                  42.2885
+                ],
+                "net": "LED_RED_A",
+                "tracks": [
+                  {
+                    "layer": "F.Cu",
+                    "a": [
+                      11.9,
+                      39.65
+                    ],
+                    "z": [
+                      11.9,
+                      43.6
+                    ],
+                    "w": 0.2,
+                    "between_length_mm": 1.3770000000000024
+                  }
+                ]
+              },
+              "C86": {
+                "gapbox": [
+                  16.4,
+                  28.425,
+                  17.05,
+                  29.375
+                ],
+                "net": "BUZZ_DRV",
+                "tracks": [
+                  {
+                    "layer": "B.Cu",
+                    "a": [
+                      16.8,
+                      29.55
+                    ],
+                    "z": [
+                      16.8,
+                      18.85
+                    ],
+                    "w": 0.2,
+                    "between_length_mm": 0.9499999999999993
+                  }
+                ]
+              }
+            },
+            "fixed_entries": {
+              "U411.7": {
+                "pad": [
+                  35.45,
+                  16.9
+                ],
+                "ends": [
+                  {
+                    "xy": [
+                      35.45,
+                      16.9
+                    ],
+                    "layer": "F.Cu"
+                  }
+                ],
+                "vias": [
+                  [
+                    35.45,
+                    17.8
+                  ],
+                  [
+                    35.45,
+                    29.8
+                  ]
+                ]
+              },
+              "U421.7": {
+                "pad": [
+                  35.45,
+                  28.9
+                ],
+                "ends": [
+                  {
+                    "xy": [
+                      35.45,
+                      28.9
+                    ],
+                    "layer": "F.Cu"
+                  }
+                ],
+                "vias": [
+                  [
+                    35.45,
+                    17.8
+                  ],
+                  [
+                    35.45,
+                    29.8
+                  ]
+                ]
+              },
+              "U10.1": {
+                "pad": [
+                  11.3,
+                  28.45
+                ],
+                "ends": [
+                  {
+                    "xy": [
+                      11.3,
+                      28.45
+                    ],
+                    "layer": "B.Cu"
+                  }
+                ],
+                "vias": []
+              }
+            }
+          },
+          "source": [
+            "docs/REQUIREMENTS.md M2",
+            "docs/R10_VALIDATION.md:783",
+            "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R9-04"
+          ],
+          "reason": "Native on-axis candidate via (17.50,44.30), after refill, produces IMU_body_B DRC error and 11 loose adjacent SPI1_SCK reference samples; two MISO stray entries become stale. Between-pad tracks remain inside legal native gaps: LED1 gap0.900 mm/track0.200; R33 gap0.867/track0.200; C86 gap0.650/track0.200, nearest x-edge clearance0.150. IO entries and U10.1 VBUS are now on-axis and are no longer carried offsets.",
+          "concrete_disposition": "Retain the proven 0.05 mm MOSI residual and three measured between-pad routes; any on-axis revision must redraw the adjoining SPI fan-out while preserving the MEMS keepout/reference contract."
+        },
+        {
+          "id": "R9-RTE-06",
+          "severity": "Minor",
+          "new_discovery": false,
+          "title": "Slow routes cross In2 plane boundaries",
+          "native_coordinates_mm": [
+            [
+              21.73,
+              74.425
+            ],
+            [
+              33.8,
+              57.85
+            ]
+          ],
+          "measurement": {
+            "sample_step_mm": 0.01,
+            "SERVO2_MCU": {
+              "tail_a_mm": [
+                22.7,
+                73.455
+              ],
+              "tail_z_mm": [
+                21.73,
+                74.425
+              ],
+              "planes": [
+                "3V3",
+                "gap",
+                "RAW_PROTECTED"
+              ],
+              "gap_sampled_length_mm": 0.42
+            },
+            "LOGIC_SOURCE_ST": {
+              "crossing_bounds_mm": [
+                33.65,
+                57.7,
+                33.8,
+                58.01
+              ],
+              "planes": [
+                "3V3",
+                "gap",
+                "RAW_PROTECTED"
+              ]
+            },
+            "full_samples": "native_metrics.json:slow_plane_crossings"
+          },
+          "source": [
+            "docs/R10_VALIDATION.md:784",
+            "AGENTS.md section 3"
+          ],
+          "reason": "Independent 0.01 mm centreline sampling finds SERVO2_MCU tail 3V3 -> gap -> RAW_PROTECTED, gap length0.42 mm by samples (0.85–1.27 mm along diagonal). LOGIC_SOURCE_ST changes from3V3 near (33.65,57.70), through (33.8,57.85), to RAW_PROTECTED by y58.01. These slow/noncritical nets are not fast-interface reference claims.",
+          "concrete_disposition": "Carry measured slow split crossings. A local GND/reference-plane redraw needs power-plane and return requalification before replacing the deviation."
+        },
+        {
+          "id": "R9-RTE-07",
+          "severity": "Minor",
+          "new_discovery": false,
+          "title": "BUZZ routing and crystal-neighbour projections",
+          "native_coordinates_mm": [
+            [
+              17.8,
+              30.55
+            ],
+            [
+              20.3,
+              33.85
+            ],
+            [
+              23.1,
+              36.65
+            ],
+            [
+              22.85,
+              46.6
+            ]
+          ],
+          "measurement": {
+            "buzz_track_mm": 36.376450491675,
+            "buzz_via_count": 3,
+            "crystal_body_box_mm": [
+              21.600066,
+              45.000054,
+              24.099934,
+              48.199946000000004
+            ],
+            "F_Cu_body_projection_crossing_mm": {
+              "NRST": 0.7776477536777241,
+              "BUZZ_DRV": 2.732695374379505,
+              "HSE_OUT": 2.565487580515294
+            }
+          },
+          "source": [
+            "docs/M3_R10.md Current routing records",
+            "docs/R10_VALIDATION.md:785",
+            "docs/ORDERING.md section 8"
+          ],
+          "reason": "Native foreign F.Cu centreline projections over Y1 are BUZZ_DRV2.732695 mm and NRST0.777648 mm; own HSE_OUT2.565488 mm. Solid In1 GND intervenes. Fresh native collision tests of simple BUZZ layer swaps hit VBUS_SENSE/U1 pads on F.Cu or USB_LIMITED/R110.1 on B.Cu at0.15 mm clearance.",
+          "concrete_disposition": "Keep measured route/projection deviations and the HSE cold-start/frequency test with buzzer and QSPI active; broader part/fan-out movement would require requalification. No HSE interference measurement exists."
+        }
+      ],
+      "checks": [
+        {
+          "command": "KiCad Python -I tools/route_check.py --profile r10 --routes --bumps-all --report route.json",
+          "exit_code": 0,
+          "result": "82 instances; 8 inside-pad review +74 information; zero failing/allowlisted/stale/leftover/missing/measured/alt entries; zero removable critical or noncritical local bumps;17 windows searched",
+          "category_counts": {
+            "pad_end_offcentre": 35,
+            "passes_through_pad": 1,
+            "segment_inside_pad": 8,
+            "width_change_junction": 11,
+            "short_layer_hop": 6,
+            "u_turn": 2,
+            "extra_bends": 4,
+            "power_via_no_gnd": 14,
+            "via_on_track_in_fill": 1
+          }
+        },
+        {
+          "command": "KiCad Python -I tools/check_r10.py --only K-reference,K-region,K-retained --report contracts.json",
+          "exit_code": 0,
+          "result": {
+            "K-reference": {
+              "ok": true,
+              "evidence": {
+                "samples": 110625,
+                "unreferenced": 7146,
+                "inside_own_antipad": 7139,
+                "recorded_stray": 6,
+                "loose": 0,
+                "b_cu_planes": [
+                  "GND",
+                  "3V3",
+                  "3V3A",
+                  "PORT_5V3",
+                  "PORT_4V8",
+                  "RAW_PROTECTED"
+                ],
+                "by_net_layer": {
+                  "SPI1_MISO B.Cu": {
+                    "samples": 2,
+                    "box": [
+                      17.79,
+                      43.88,
+                      17.8,
+                      43.89
+                    ]
+                  },
+                  "SPI1_MISO F.Cu": {
+                    "samples": 1,
+                    "box": [
+                      17.3,
+                      43.89,
+                      17.3,
+                      43.89
+                    ]
+                  },
+                  "SPI1_SCK B.Cu": {
+                    "samples": 3,
+                    "box": [
+                      17.1,
+                      43.4,
+                      17.1,
+                      43.42
+                    ]
+                  },
+                  "USB_DM F.Cu": {
+                    "samples": 1,
+                    "box": [
+                      8.08,
+                      29.58,
+                      8.08,
+                      29.58
+                    ]
+                  }
+                }
+              }
+            },
+            "K-region": {
+              "ok": true,
+              "evidence": {
+                "items": 57,
+                "samples": 21777,
+                "nets": [
+                  "CAM_MCU_RX",
+                  "CAM_MCU_TX",
+                  "CAM_RX_BUFFER",
+                  "CAM_RX_WIRE",
+                  "CAM_TX_BUFFER",
+                  "CAM_TX_WIRE",
+                  "GPS_RX_BUFFER",
+                  "GPS_RX_MCU",
+                  "GPS_RX_WIRE",
+                  "GPS_TX_BUFFER",
+                  "GPS_TX_MCU",
+                  "GPS_TX_WIRE",
+                  "HSE_IN",
+                  "HSE_OUT",
+                  "IMU_CS",
+                  "PYRO1_COLD",
+                  "PYRO1_GATE",
+                  "PYRO1_GATE_N",
+                  "PYRO1_IGN",
+                  "PYRO1_OUT",
+                  "QSPI_CLK",
+                  "QSPI_IO0",
+                  "QSPI_IO1",
+                  "QSPI_IO2",
+                  "QSPI_IO3",
+                  "QSPI_NCS",
+                  "RADIO_RX_BUFFER",
+                  "RADIO_RX_MCU",
+                  "RADIO_RX_WIRE",
+                  "RADIO_TX_BUFFER",
+                  "RADIO_TX_MCU",
+                  "RADIO_TX_WIRE",
+                  "SPI1_MISO",
+                  "SPI1_MOSI",
+                  "SPI1_SCK",
+                  "USB_DM",
+                  "USB_DP"
+                ]
+              }
+            },
+            "K-retained": {
+              "ok": true,
+              "evidence": {
+                "camera_bypass": {
+                  "C100": {
+                    "supply_pin": "U12.3",
+                    "pad_distance_mm": 1.211981848048892,
+                    "direct_copper_route_mm": 1.029999999999994,
+                    "direct_ground_return_mm": 1.1999999999999957
+                  },
+                  "C93": {
+                    "supply_pin": "U12.7",
+                    "pad_distance_mm": 1.7329535769895899,
+                    "direct_copper_route_mm": 4.1371320343559725
+                  }
+                },
+                "flash": {
+                  "pad_distance_mm": 1.87,
+                  "direct_route_mm": 1.870000000000001
+                }
+              }
+            }
+          }
+        },
+        {
+          "command": "Independent native_metrics.py: saved-track sums, native pad/via coordinates, nearest GND distances, per-net plane sampling, native Y1 model projection",
+          "exit_code": 0,
+          "result": {
+            "fast_changing_vias": 22,
+            "fast_max_gnd_mm": 1.4916433890176284,
+            "fixed_route_lengths": {
+              "BAT_SW_SOURCE_mm": 6.257106781186554,
+              "NRST_prefix_mm": 5.516562924776055,
+              "USB_FAULT_N_prefix_mm": 13.110660171779816
+            },
+            "qspi_mm": {
+              "QSPI_CLK": 7.8500000000000005,
+              "QSPI_IO0": 4.11095454429505,
+              "QSPI_IO1": 9.714966081312811,
+              "QSPI_IO2": 14.524011537017762,
+              "QSPI_IO3": 9.760407640085656,
+              "QSPI_NCS": 6.1656349186104045
+            },
+            "qspi_spread_mm": 10.413056992722712
+          }
+        },
+        {
+          "command": "Scratch native on-axis MOSI redraw -> native zone refill -> all-severity native DRC; references()",
+          "result": {
+            "drc_errors": 1,
+            "unconnected": 0,
+            "error_types": [
+              "items_not_allowed"
+            ],
+            "reference": {
+              "issues": [
+                "11 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('SPI1_SCK', 'B.Cu', 17.1, 44.25), ('SPI1_SCK', 'B.Cu', 17.1, 44.26), ('SPI1_SCK', 'B.Cu', 17.1, 44.27)]",
+                "stale REF_STRAY entry ('SPI1_MISO', 'B.Cu', 17.7904, 43.8818)",
+                "stale REF_STRAY entry ('SPI1_MISO', 'B.Cu', 17.7975, 43.8889)"
+              ],
+              "evidence": {
+                "samples": 110592,
+                "unreferenced": 7153,
+                "inside_own_antipad": 7137,
+                "recorded_stray": 4,
+                "loose": 11,
+                "b_cu_planes": [
+                  "GND",
+                  "3V3",
+                  "3V3A",
+                  "PORT_5V3",
+                  "PORT_4V8",
+                  "RAW_PROTECTED"
+                ],
+                "by_net_layer": {
+                  "SPI1_MISO F.Cu": {
+                    "samples": 1,
+                    "box": [
+                      17.3,
+                      43.89,
+                      17.3,
+                      43.89
+                    ]
+                  },
+                  "SPI1_SCK B.Cu": {
+                    "samples": 14,
+                    "box": [
+                      17.1,
+                      43.4,
+                      17.1,
+                      44.35
+                    ]
+                  },
+                  "USB_DM F.Cu": {
+                    "samples": 1,
+                    "box": [
+                      8.08,
+                      29.58,
+                      8.08,
+                      29.58
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "expected_rejection": true
+        },
+        {
+          "command": "Native shape collision tests for simple BUZZ layer swaps at 0.15 mm clearance",
+          "result": [
+            {
+              "proposed_layer": "F.Cu",
+              "a": [
+                23.1,
+                36.65
+              ],
+              "z": [
+                20.3,
+                33.85
+              ],
+              "clearance_mm": 0.15,
+              "blockers": [
+                {
+                  "net": "VBUS_SENSE",
+                  "kind": "PCB_TRACK",
+                  "xy": [
+                    22.0,
+                    33.925
+                  ]
+                },
+                {
+                  "pad": "U1.63",
+                  "net": "GPS_TX_MCU"
+                },
+                {
+                  "pad": "U1.64",
+                  "net": "GPS_RX_MCU"
+                },
+                {
+                  "pad": "U1.65",
+                  "net": "VBUS_SENSE"
+                },
+                {
+                  "pad": "U1.66",
+                  "net": "unconnected-(U1-PC9-Pad66)"
+                },
+                {
+                  "pad": "U1.67",
+                  "net": "unconnected-(U1-PA8-Pad67)"
+                }
+              ]
+            },
+            {
+              "proposed_layer": "B.Cu",
+              "a": [
+                20.3,
+                33.85
+              ],
+              "z": [
+                20.3,
+                33.049999
+              ],
+              "clearance_mm": 0.15,
+              "blockers": [
+                {
+                  "net": "USB_LIMITED",
+                  "kind": "PCB_TRACK",
+                  "xy": [
+                    18.25,
+                    33.25
+                  ]
+                }
+              ]
+            },
+            {
+              "proposed_layer": "B.Cu",
+              "a": [
+                20.3,
+                33.049999
+              ],
+              "z": [
+                17.8,
+                30.55
+              ],
+              "clearance_mm": 0.15,
+              "blockers": [
+                {
+                  "net": "USB_LIMITED",
+                  "kind": "PCB_TRACK",
+                  "xy": [
+                    18.25,
+                    33.25
+                  ]
+                },
+                {
+                  "pad": "R110.1",
+                  "net": "VBUS_SENSE"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "scopes": {
+        "AUD2": "Exact shared 25-name slow list only; fast companion/reference and all critical hygiene remain blocking.",
+        "AUD10": "Only exact collinear/duplicate/inside-pad representations and legend distance relaxed; partial overlaps/crossings remain blocking. Current hygiene list has8 inside-pad and0 duplicate/collinear instances.",
+        "GAP3": "No general soldered-pad via waiver inferred; exactly two U401 thermal VIPPO vias remain the separately gated manufacturing exception."
+      },
+      "AVA_assessment": {
+        "source": "../../reports/AVA board layout images.md",
+        "native_review": "Current native geometry and repository r10_bottom.png show central MCU/core, perimeter connectors, dense back-side passives, short local IMU/HSE/QSPI cells and no RF strip. This is consistent with the supplied visible-photo placement basis.",
+        "limit": "No inference about AVA netlist, hidden routing, inner planes or superior signal integrity; no new photo measurements claimed."
+      },
+      "routing_residuals": [
+        {
+          "cat": "pad_end_offcentre",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 16.625,
+          "y": 86.6,
+          "pad": "R80.1",
+          "off_mm": 0.2828,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "GND",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 35.45,
+          "y": 36.6,
+          "pad": "C100.2",
+          "off_mm": 0.17,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "GND",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 6.27,
+          "y": 40.35,
+          "pad": "J2.5",
+          "off_mm": 0.315,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "GND",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 21.28,
+          "y": 53.65,
+          "pad": "R63.2",
+          "off_mm": 0.23,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 3.73,
+          "y": 40.35,
+          "pad": "J2.1",
+          "off_mm": 0.315,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 34.425,
+          "y": 12.375,
+          "pad": "C440.1",
+          "off_mm": 0.375,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 34.425,
+          "y": 12.375,
+          "pad": "C440.1",
+          "off_mm": 0.375,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 34.95,
+          "y": 36.77,
+          "pad": "C100.1",
+          "off_mm": 0.2404,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 34.95,
+          "y": 36.77,
+          "pad": "C100.1",
+          "off_mm": 0.2404,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 33.0,
+          "y": 74.88,
+          "pad": "C8.1",
+          "off_mm": 0.5657,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 14.85,
+          "y": 49.8,
+          "pad": "C13.1",
+          "off_mm": 0.12,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 33.0,
+          "y": 74.88,
+          "pad": "C8.1",
+          "off_mm": 0.5657,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "CAM_IO_3V3",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 40.695,
+          "y": 46.02,
+          "pad": "R103.1",
+          "off_mm": 0.396,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "CAM_IO_3V3",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 40.695,
+          "y": 46.02,
+          "pad": "R103.1",
+          "off_mm": 0.396,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "PORT_4V8",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 30.225,
+          "y": 22.725,
+          "pad": "C420.1",
+          "off_mm": 0.225,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "PORT_4V8",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 30.225,
+          "y": 22.725,
+          "pad": "C420.1",
+          "off_mm": 0.225,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "SWDIO",
+          "cls": "other",
+          "layer": "F.Cu",
+          "x": 3.73,
+          "y": 38.45,
+          "pad": "J2.2",
+          "off_mm": 0.315,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "NRST",
+          "cls": "other",
+          "layer": "F.Cu",
+          "x": 5.0,
+          "y": 40.35,
+          "pad": "J2.3",
+          "off_mm": 0.315,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "SWCLK",
+          "cls": "other",
+          "layer": "F.Cu",
+          "x": 5.0,
+          "y": 38.45,
+          "pad": "J2.4",
+          "off_mm": 0.315,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "QSPI_IO2",
+          "cls": "spi",
+          "layer": "F.Cu",
+          "x": 17.0,
+          "y": 50.05,
+          "pad": "U1.1",
+          "off_mm": 0.5,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "RAW_ACT_SENSE_MCU",
+          "cls": "pyro",
+          "layer": "F.Cu",
+          "x": 31.88,
+          "y": 45.0,
+          "pad": "R172.2",
+          "off_mm": 0.3536,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "RAW_ACT_SENSE_MCU",
+          "cls": "pyro",
+          "layer": "F.Cu",
+          "x": 31.88,
+          "y": 45.0,
+          "pad": "R172.2",
+          "off_mm": 0.3536,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "VCAP1",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 28.35,
+          "y": 38.0,
+          "pad": "C19.1",
+          "off_mm": 0.25,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "VBUS",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 7.45,
+          "y": 28.4,
+          "pad": "J3.A4B9",
+          "off_mm": 0.57,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "VBUS",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 7.45,
+          "y": 28.4,
+          "pad": "J3.A4B9",
+          "off_mm": 0.57,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "VBUS",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 9.3,
+          "y": 25.1,
+          "pad": "C83.1",
+          "off_mm": 0.2358,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "CAM_5V",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 40.43,
+          "y": 42.45,
+          "pad": "C91.1",
+          "off_mm": 0.6946,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "CAM_5V",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 40.43,
+          "y": 42.45,
+          "pad": "C91.1",
+          "off_mm": 0.6946,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "VLOGIC",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 35.75,
+          "y": 65.6,
+          "pad": "C6.1",
+          "off_mm": 0.15,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "VLOGIC",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 35.75,
+          "y": 65.6,
+          "pad": "C6.1",
+          "off_mm": 0.15,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "ACT_GATE",
+          "cls": "pyro",
+          "layer": "B.Cu",
+          "x": 18.23,
+          "y": 72.3,
+          "pad": "R120.2",
+          "off_mm": 0.3818,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "ACT_GATE",
+          "cls": "pyro",
+          "layer": "B.Cu",
+          "x": 18.23,
+          "y": 72.3,
+          "pad": "R120.2",
+          "off_mm": 0.3818,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "ACT_FET_S",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 17.37,
+          "y": 71.17,
+          "pad": "C120.1",
+          "off_mm": 0.4993,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "ACT_FET_S",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 17.37,
+          "y": 71.17,
+          "pad": "C120.1",
+          "off_mm": 0.4993,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "pad_end_offcentre",
+          "net": "BUZZ_G",
+          "cls": "other",
+          "layer": "B.Cu",
+          "x": 18.1,
+          "y": 17.95,
+          "pad": "R162.2",
+          "off_mm": 0.2,
+          "reason_key": "pad_end_offcentre"
+        },
+        {
+          "cat": "passes_through_pad",
+          "net": "GND",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 15.0,
+          "y": 57.045,
+          "pad": "Q124.2",
+          "reason_key": "passes_through_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 34.425,
+          "y": 12.375,
+          "pad": "C440.1",
+          "len_mm": 0.375,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 34.95,
+          "y": 36.77,
+          "pad": "C100.1",
+          "len_mm": 0.24,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 33.0,
+          "y": 74.88,
+          "pad": "C8.1",
+          "len_mm": 0.566,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "CAM_IO_3V3",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 40.695,
+          "y": 46.02,
+          "pad": "R103.1",
+          "len_mm": 0.396,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "PORT_4V8",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 30.225,
+          "y": 22.5,
+          "pad": "C420.1",
+          "len_mm": 0.225,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "RAW_ACT_SENSE_MCU",
+          "cls": "pyro",
+          "layer": "F.Cu",
+          "x": 32.13,
+          "y": 45.25,
+          "pad": "R172.2",
+          "len_mm": 0.354,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "VBUS",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 6.88,
+          "y": 28.4,
+          "pad": "J3.A4B9",
+          "len_mm": 0.57,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "segment_inside_pad",
+          "net": "ACT_GATE",
+          "cls": "pyro",
+          "layer": "B.Cu",
+          "x": 18.23,
+          "y": 72.3,
+          "pad": "R120.2",
+          "len_mm": 0.382,
+          "reason_key": "segment_inside_pad"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 13.8,
+          "y": 76.8,
+          "at": "T",
+          "widths": [
+            0.4,
+            1.0
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 39.9,
+          "y": 83.17,
+          "at": "free",
+          "widths": [
+            0.7,
+            1.0
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 36.725,
+          "y": 86.6,
+          "at": "T",
+          "widths": [
+            0.4,
+            1.0
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 38.75,
+          "y": 81.4,
+          "at": "free",
+          "widths": [
+            0.3,
+            0.7
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 29.825,
+          "y": 86.6,
+          "at": "free",
+          "widths": [
+            0.4,
+            1.0
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "RAW_PROTECTED",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 39.25,
+          "y": 77.8,
+          "at": "free",
+          "widths": [
+            0.3,
+            1.0
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "RAW_PROTECTED",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 40.8,
+          "y": 77.1,
+          "at": "via",
+          "widths": [
+            0.4,
+            0.7
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "GND",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 18.85,
+          "y": 6.5,
+          "at": "via",
+          "widths": [
+            0.3,
+            0.4
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "GND",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 17.5,
+          "y": 39.3,
+          "at": "via",
+          "widths": [
+            0.2,
+            0.3
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 34.425,
+          "y": 24.825,
+          "at": "via",
+          "widths": [
+            0.2,
+            0.3
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "width_change_junction",
+          "net": "ACT_FET_S",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 14.475,
+          "y": 70.1,
+          "at": "T",
+          "widths": [
+            0.3,
+            0.4
+          ],
+          "reason_key": "width_change_junction"
+        },
+        {
+          "cat": "short_layer_hop",
+          "net": "RAW_PROTECTED",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 14.1,
+          "y": 7.6,
+          "hop_mm": 1.4,
+          "reason_key": "short_layer_hop"
+        },
+        {
+          "cat": "short_layer_hop",
+          "net": "RAW_PROTECTED",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 41.9,
+          "y": 77.1,
+          "hop_mm": 0.55,
+          "reason_key": "short_layer_hop"
+        },
+        {
+          "cat": "short_layer_hop",
+          "net": "RAW_PROTECTED",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 41.35,
+          "y": 77.1,
+          "hop_mm": 0.55,
+          "reason_key": "short_layer_hop"
+        },
+        {
+          "cat": "short_layer_hop",
+          "net": "RAW_PROTECTED",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 40.8,
+          "y": 77.1,
+          "hop_mm": 0.55,
+          "reason_key": "short_layer_hop"
+        },
+        {
+          "cat": "short_layer_hop",
+          "net": "PORT_5V3",
+          "cls": "power",
+          "layer": "F.Cu",
+          "x": 27.6,
+          "y": 8.0,
+          "hop_mm": 0.8,
+          "reason_key": "short_layer_hop"
+        },
+        {
+          "cat": "u_turn",
+          "net": "SWDIO",
+          "cls": "other",
+          "layer": "F.Cu",
+          "x": 3.73,
+          "y": 38.45,
+          "path_mm": 19.418,
+          "reason_key": "u_turn"
+        },
+        {
+          "cat": "extra_bends",
+          "net": "GPS_RX_MCU",
+          "cls": "uart",
+          "layer": "F.Cu",
+          "x": 22.5,
+          "y": 35.45,
+          "end": [
+            34.45,
+            13.8
+          ],
+          "seglens": [
+            7.35,
+            15.132,
+            2.35,
+            1.768
+          ],
+          "reason_key": "extra_bends"
+        },
+        {
+          "cat": "extra_bends",
+          "net": "BUZZ_DRV",
+          "cls": "other",
+          "layer": "F.Cu",
+          "x": 20.5,
+          "y": 50.55,
+          "end": [
+            23.1,
+            36.65
+          ],
+          "seglens": [
+            1.8,
+            1.838,
+            9.5,
+            1.838
+          ],
+          "reason_key": "extra_bends"
+        },
+        {
+          "cat": "extra_bends",
+          "net": "RADIO_RX_MCU",
+          "cls": "uart",
+          "layer": "F.Cu",
+          "x": 29.0,
+          "y": 35.45,
+          "end": [
+            33.55,
+            25.8
+          ],
+          "seglens": [
+            1.05,
+            1.414,
+            4.05,
+            5.02
+          ],
+          "reason_key": "extra_bends"
+        },
+        {
+          "cat": "short_layer_hop",
+          "net": "RADIO_TX_MCU",
+          "cls": "uart",
+          "layer": "B.Cu",
+          "x": 28.5,
+          "y": 32.4,
+          "hop_mm": 2.45,
+          "reason_key": "short_layer_hop"
+        },
+        {
+          "cat": "extra_bends",
+          "net": "RADIO_PWR_EN",
+          "cls": "portctl",
+          "layer": "F.Cu",
+          "x": 27.0,
+          "y": 35.45,
+          "end": [
+            31.25,
+            27.35
+          ],
+          "seglens": [
+            1.1,
+            1.344,
+            2.75,
+            4.667
+          ],
+          "reason_key": "extra_bends"
+        },
+        {
+          "cat": "u_turn",
+          "net": "USB_DM",
+          "cls": "usb",
+          "layer": "F.Cu",
+          "x": 6.88,
+          "y": 31.05,
+          "path_mm": 3.26,
+          "reason_key": "u_turn"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "via",
+          "x": 17.35,
+          "y": 86.6,
+          "gnd_mm": 3.628,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "BAT_IN",
+          "cls": "power",
+          "layer": "via",
+          "x": 34.7,
+          "y": 84.0,
+          "gnd_mm": 3.276,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "via",
+          "x": 15.45,
+          "y": 49.8,
+          "gnd_mm": 1.616,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "via",
+          "x": 35.45,
+          "y": 17.8,
+          "gnd_mm": 1.937,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "via",
+          "x": 29.25,
+          "y": 37.0,
+          "gnd_mm": 2.083,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "via",
+          "x": 35.45,
+          "y": 29.8,
+          "gnd_mm": 1.825,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "3V3",
+          "cls": "power",
+          "layer": "via",
+          "x": 17.0,
+          "y": 36.75,
+          "gnd_mm": 2.599,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "CAM_IO_3V3",
+          "cls": "power",
+          "layer": "via",
+          "x": 35.6,
+          "y": 41.9,
+          "gnd_mm": 2.797,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "PORT_4V8",
+          "cls": "power",
+          "layer": "via",
+          "x": 29.75,
+          "y": 12.6,
+          "gnd_mm": 2.103,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "VCAP2",
+          "cls": "power",
+          "layer": "via",
+          "x": 18.0,
+          "y": 37.3,
+          "gnd_mm": 2.062,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "VBUS",
+          "cls": "power",
+          "layer": "via",
+          "x": 8.0,
+          "y": 33.7,
+          "gnd_mm": 2.343,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "VBUS",
+          "cls": "power",
+          "layer": "via",
+          "x": 11.95,
+          "y": 30.6,
+          "gnd_mm": 2.0,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "CAM_5V",
+          "cls": "power",
+          "layer": "via",
+          "x": 40.43,
+          "y": 44.6,
+          "gnd_mm": 2.308,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "power_via_no_gnd",
+          "net": "PORT_LDO_FB",
+          "cls": "power",
+          "layer": "via",
+          "x": 29.75,
+          "y": 13.6,
+          "gnd_mm": 1.834,
+          "into_pad": false,
+          "reason_key": "power_via_no_gnd"
+        },
+        {
+          "cat": "via_on_track_in_fill",
+          "net": "GND",
+          "cls": "power",
+          "layer": "B.Cu",
+          "x": 26.0,
+          "y": 48.5,
+          "off_mm": 0.17,
+          "track": [
+            26.17,
+            49.1,
+            26.17,
+            47.38
+          ],
+          "reason_key": "via_on_track_in_fill"
+        }
+      ],
+      "limitations": [
+        "Focused routing/CAD review only; no whole build/check.sh rerun. Root supplies final board/fabrication gates.",
+        "Local bump search and simple alternate-layer tests do not prove global route optimality. Owner acceptance of remaining measured M2 deviations is pending.",
+        "QSPI lengths are saved-track sums excluding vertical barrel and package lengths. No clock-rate setup/hold, SI, HSE noise or flight/bench measurement claimed.",
+        "Own-antipad/stray allowances are reproduced as the current geometric contract, not a physical return-current guarantee.",
+        "No canonical repository files changed; scratch native candidate is intentionally rejected."
+      ],
+      "evidence_files": [
+        "route.json",
+        "contracts.json",
+        "native_metrics.json",
+        "native_metrics.py",
+        "buzz_swaps.json",
+        "mosi-drc.json",
+        "mosi_reference.json"
+      ],
+      "routing_residual_reasons": {
+        "pad_end_offcentre": "Native endpoint remains inside the named same-net pad; this is an information count, including repeated endpoints of inside-pad segments. The current scan found no open tiny jog, neck-down, overlap-only joint or connectivity failure. Values and coordinates are recorded per instance; no blanket claim that every entry is irreducible.",
+        "passes_through_pad": "GND track crosses native Q124.2 GND land and is electrically joined by the pad copper; no foreign pad is traversed.",
+        "segment_inside_pad": "The whole segment lies inside one same-net pad. Removing its drawing representation cannot remove pad copper. AUD-10 expressly makes this review-counted; length remains recorded for owner acceptance.",
+        "width_change_junction": "The measured width change occurs at a branch/via/pad-entry topology, retained as information; the independent R10 scan finds no gated plain-node neck-down. This does not adopt a general width waiver.",
+        "short_layer_hop": "Measured close via spacing is retained. The three RAW_PROTECTED 0.55 mm instances are adjacent power-bank vias rather than a needless signal-layer excursion; other entries retain the power-feed/UART routing. The R10 needless-hop and pour-net-hop checks found zero failures.",
+        "u_turn": "Measured endpoint-to-endpoint run retained: SWDIO escapes the Tag-Connect pole/hole field; USB_DM joins the native USB pad arrangement. No removable local bump or prohibited fold-back was found.",
+        "extra_bends": "Current legal run has the recorded headings/lengths. Independent complete-board critical and noncritical local-bump searches found no removable 1–3 segment redraw under their strict obstacle model; this is bounded search evidence, not proof of global optimality.",
+        "power_via_no_gnd": "Measured nearest GND via exceeds 1.5 mm on a power rail; the AGENTS named critical-signal companion-via rule is not extended to every power via. This remains information for return-path/decoupling review.",
+        "via_on_track_in_fill": "GND via (26,48.5) is 0.17 mm from the B.Cu GND track centreline and independently joins the same GND fill; the via is not joined solely by track overlap. No via_on_track failure occurs."
+      }
+    },
+    {
+      "lens": "manufacturing / DRC / silkscreen / fabrication",
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "immutability": {
+        "start_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+        "end_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+        "start_board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+        "end_board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+        "canonical_edits": false
+      },
+      "checks": [
+        {
+          "command": "kicad-cli pcb drc --severity-all --all-track-errors --schematic-parity --format json -o <scratch>/drc-all.json m3_design/assembly_review/m3.kicad_pcb",
+          "result": {
+            "violations": 0,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "evidence": "drc-all.json"
+        },
+        {
+          "command": "kicad-cli sch erc --severity-all --format json -o <scratch>/erc-all.json m3_design/assembly_review/m3.kicad_sch",
+          "result": {
+            "violations": 0
+          },
+          "evidence": "erc-all.json"
+        },
+        {
+          "command": "python3 quality_audit/audit_artifacts.py <board> --output <scratch>/metadata.json",
+          "result": "225 footprints; zero missing required identities, conflicts, unresolved/missing models, absolute model paths or missing courtyards",
+          "evidence": "metadata.json"
+        },
+        {
+          "command": "python3 tools/fab_manifest.py <board>",
+          "result": "PASS: all five fabrication outputs match current CAD/export inputs"
+        },
+        {
+          "command": "KiCad Python -I tools/paste_check.py <board> m3_design/assembly_review/fab/m3_gerber.zip --json <scratch>/paste.json",
+          "result": "PASS: 317 F / 365 B flashes, all pasted pads matched, zero dry pads",
+          "evidence": "paste.json"
+        },
+        {
+          "command": "KiCad Python -I tools/jlc_orient.py tools/jlc_easyeda/pads.json <board> --verify-cpl m3_design/assembly_review/fab/m3_cpl_jlc.csv",
+          "result": "PASS: 77 top / 126 bottom rows reconstructed, 12 placement-only nonpolar resistors, 215 expected rows, worst residual 0.491 mm",
+          "evidence": "orient.stdout"
+        },
+        {
+          "command": "KiCad Python -I tools/check_r10.py <board> --only S-4,T-1,K-legends,K-copper --bom <BOM> --cpl <CPL> --report <scratch>/scoped-gates.json",
+          "result": "All four scoped rules PASS. 125 required fitted contract parts. 81 hidden refs. Zero silk-mask overlaps, AUD-10 legend-distance review entries zero. 677 SMD pads checked for ordinary via holes; only exact two U401 VIPPO exceptions qualify.",
+          "evidence": "scoped-gates.json"
+        },
+        {
+          "command": "python3 tools/silk_check.py <board> --cli <headless-wrapper>",
+          "result": "PASS: zero exported silk stroke points outside 46 x 90 mm outline",
+          "evidence": "silk.stdout"
+        },
+        {
+          "command": "KiCad Python -I <scratch>/geometry.py",
+          "result": {
+            "silk_min_text_mm": 1.0,
+            "silk_min_stroke_mm": 0.15,
+            "hidden_refs": 81,
+            "VIPPO": [
+              {
+                "pos_mm": [
+                  27.9,
+                  13.6
+                ],
+                "diameter_mm": 0.5,
+                "drill_mm": 0.3,
+                "net": "GND",
+                "filled": true,
+                "capped": true
+              },
+              {
+                "pos_mm": [
+                  27.3,
+                  13.6
+                ],
+                "diameter_mm": 0.5,
+                "drill_mm": 0.3,
+                "net": "GND",
+                "filled": true,
+                "capped": true
+              }
+            ],
+            "U4_pad_mm": [
+              0.575,
+              0.35
+            ],
+            "U4_mask_relief_mm": 0.025,
+            "U4_adjacent_individual_mask_web_mm": 0.1
+          },
+          "evidence": "geometry.json"
+        },
+        {
+          "command": "Read bound Gerber zip and BOM/CPL",
+          "result": "14 archive entries: 11 Gerbers, separate PTH/NPTH Excellon and job file. 82 BOM codes and 215 CPL rows (83 top,132 bottom). Supports/tie holes are routed in Edge.Cuts; the Excellon files separately carry vias/part holes and J2/J3 locating holes. No independent CAM rendering or full drill-coordinate reconstruction performed."
+        },
+        {
+          "command": "python3 tools/check_procurement.py --profile r10",
+          "result": "Expected FAIL: cost_check.json procurement target not met. Bound 2026-10-28 snapshot: $84.43 vs $84.41, 46 extended codes; stock report short R430 C185349 (17 vs minimum purchase3610) and U4 C26633007 (0 vs5). Existing disclosed ordering conditions, not new findings.",
+          "evidence": "procurement.stderr"
+        },
+        {
+          "command": "Read ORDERING section8, current requirements, r10_plan, R10_DECISIONS AUD/GAP and current source qualification records; current primary TE/JLC pages",
+          "result": "C84 explicitly absent from BOTH reflows and manually fitted afterward using a validated process; two exact U401 vias require resin-filled, copper-capped planar VIPPO before assembly; no cleaning, unchanged paste/mask apertures, bottom-first/top-last with TE two-reflow confirmation, JLC tab acceptance and placement-preview checks remain explicit release conditions."
+        }
+      ],
+      "findings": [
+        {
+          "id": "R10-MFG-01",
+          "severity": "Minor",
+          "title": "Whole-part C11 coating instruction breaches U5 body keep-out",
+          "location": [
+            "docs/ORDERING.md:249",
+            "docs/ORDERING.md:251",
+            "docs/ORDERING.md:354",
+            "docs/M3_R10.md:310"
+          ],
+          "native_coordinates_mm": {
+            "U5_center": [
+              10.6,
+              49.1
+            ],
+            "U5_nominal_maker_body": [
+              8.1,
+              47.6,
+              13.1,
+              50.6
+            ],
+            "U5_pad_union_extents": [
+              8.42,
+              47.05,
+              12.78,
+              51.15
+            ],
+            "C11_center": [
+              17.5,
+              52.1
+            ],
+            "C11_pad1": [
+              15.795,
+              51.425,
+              17.205,
+              52.775
+            ]
+          },
+          "measured_value": "Minimum C11.1 copper-to-U5 nominal body gap sqrt(2.695^2+0.825^2)=2.8184481546 mm (<3 mm by0.1815518454 mm). Pads-only distance3.0275154830 mm is insufficient to prove the stated body+pad keep-out. Even the native conservative C11 Fab/pad envelope is only2.4225709484 mm from nominal U5 body.",
+          "requirement": "ORDERING section8 requires coating/resin >=3 mm from U5 body AND pads and names TP122 as the only exception, but also commands whole C11 coating. This is the project numeric keep-out, not a claimed TE numeric rule.",
+          "source": {
+            "url": "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50",
+            "revision": "06/2017",
+            "pages": [
+              1,
+              15,
+              17
+            ],
+            "verified": "Maker nominal5x3x1 mm package, outline and open-port/no-clean handling. Current TE product page independently lists5x3x1 mm."
+          },
+          "severity_reason": "Narrow process-record contradiction at a nominal 3 mm project exclusion boundary. U5 whole-part tape is already required; no demonstrated contamination or failure from the0.18 mm shortfall. Distinct from the earlier0.42/0.69 mm R13/R64 defects, which remain masked. No CAD change is required.",
+          "concrete_fix": "Mask C11 whole, retain >=3 mm coating-edge clearance from union(U5 actual body,pads), and update the coat inventory and nearest-clearance claims. Correct the pads-only3.03 mm statement; keep R13/R64 masked and the separate TP122 brush exception. Control edge position against the actual fitted body, allowing package/placement tolerances.",
+          "other_coated_parts": "Nearest OTHER prescribed whole-part envelope is C10: conservative B.Fab top-west arc bounding rectangle x15.465..15.765,y53.125..53.425 to U5.5 pad x12.18..12.78,y50.70..51.15 gives3.3331441613 mm. C10 copper-pad gap3.7770160180 mm. Every other prescribed bottom coated ref besides C11 and explicit TP122 exception has conservative native Fab/pad-union gap>=5.075 mm. R13/R64 are masked; TP122 conservative Fab envelope1.35 mm / copper pad1.40 mm is its carried exception.",
+          "independently_reproduced": true,
+          "evidence": "geometry.py and geometry.json"
+        }
+      ],
+      "carried_deviations": [
+        {
+          "item": "U4 minimum mask web",
+          "current_measurement": "0.575x0.35 mm copper land, +0.025 mm relief,0.5 mm pitch =>0.100 mm individual mask web; matches current JLC green1oz minimum. Preserve apertures; fabrication acceptance not claimed."
+        },
+        {
+          "item": "Silkscreen minima/hidden refs",
+          "current_measurement": "Minimum1.0 mm text and0.15 mm stroke;81 hidden refs, list matches K-legends. Zero current mask overlaps/outline escapes; TP88 historical0.426 mm edge figure not independently recomputed."
+        },
+        {
+          "item": "J1/J121 same terminal family, role numbering",
+          "current_measurement": "Both native3.5 mm pitch,1.9 mm copper/1.3 mm drill, rotation-90. J1 green C466970 pad1 BAT_IN at(7,74.1),pad2 GND at(7,77.6); J121 black C52993880 pad1 OUT at(7,54.1),pad2 IGN at(7,57.6). Physical preview/orientation remains required."
+        },
+        {
+          "item": "GAP-3 VIPPO",
+          "current_measurement": "Exactly GND(27.3,13.6)/(27.9,13.6),0.5/0.3 mm, filled+capped flags true. U401.11 EP27.0..28.2/12.6..14.6 and two maker split paste windows unchanged; supplier process/price acceptance pending."
+        },
+        {
+          "item": "C84 GAP-4 manual fitting",
+          "current_measurement": "Current instructions explicitly require manual fitting after both reflows and preserve required BOM/CPL identity. Supplier land/reflow profile unavailable; manual process, polarity/height/capacitance/ESR qualification remain open."
+        },
+        {
+          "item": "Panel tabs OQ-4",
+          "current_measurement": "T-1 PASS; legal windows west0.5..23.25/43..89.5, east49.25..64.5/83.5..89.5,aft0.5..7/37..45.5,forward0.5..5.75 mm. Aft rail/frame and exact production spans still require JLC acceptance."
+        },
+        {
+          "item": "Procurement and process release",
+          "current_measurement": "Bound snapshot fails disclosed $0.02 cost target and R430/U4 availability. Supplier live full-82-code refresh not rerun. No order placed, no process acceptance, two-reflow U5 qualification and physical measurements not claimed."
+        }
+      ],
+      "primary_sources": [
+        {
+          "url": "https://www.te.com/en/product-MS561101BA03-50.html",
+          "read": "2026-10-28",
+          "supports": "5x3x1 mm body, official datasheet link"
+        },
+        {
+          "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+          "read": "2026-10-28",
+          "sections": "Soldermask;Legend;Outline",
+          "supports": "Green1oz0.10 mm mask bridge;1.0 mm text/0.15 mm line; VIPPO process;5 mm mouse-bite tab minimum"
+        },
+        {
+          "url": "https://jlcpcb.com/capabilities/pcb-assembly-capabilities",
+          "read": "2026-10-28",
+          "section": "Reflow temperature",
+          "supports": "Standard240+/-5 C vs Economic255+/-5 C"
+        },
+        {
+          "url": "https://jlcpcb.com/partdetail/STMicroelectronics-LSM6DSV320XTR/C26633007",
+          "read": "2026-10-28",
+          "supports": "Current supplier identity/package; page did not expose stock, so bound stock snapshot used rather than inventing live availability"
+        }
+      ],
+      "limitations": [
+        "Focused independent review; no full build/check.sh, CAM rendering, mechanical/bench/process qualification or firmware validation.",
+        "Other-part Fab envelope checks intentionally include stroke and bounding-corner excess, not only body dimensions; they conservatively prove clearance for C10 and farther parts.",
+        "U5 maker body is nominal; package and placement tolerances and actual coating spread are not qualified.",
+        "Headless CLI uses the packet-provided wx mouse-position wrapper; native DRC/ERC/rules unchanged.",
+        "No downloaded PDFs or renders retained; TE PDF was read through the web tool, direct local download returned403."
+      ],
+      "counts": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      }
+    },
+    {
+      "lens": "9 gate adversary",
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "counts": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "canonical_files_modified": false,
+      "verification_at_start_and_completion": {
+        "commit_and_pcb_sha_match": true
+      },
+      "current_board_instances": {
+        "conflicting_textboxes": 0,
+        "inner_copper_graphics": 0,
+        "inventory": "baseline_omission_inventory.json"
+      },
+      "checks": [
+        {
+          "command": "KiCad Python -I native_seeds.py",
+          "actual_result": "Fresh unmodified baseline passes S-1 through S-9, K-legends, K-copper, K-width, K-rules. Source-bridge split fails S-9; duplicate footprint-field port legend and wrong multiline port legend fail K-legends; uncapped and third U401 thermal via fail K-copper.",
+          "evidence": "native_results.json"
+        },
+        {
+          "command": "KiCad Python -I native_seeds.py (selected_rules controls)",
+          "actual_result": "Six additional invalid selectors, including null/Unicode/trailing whitespace variants, are rejected before CAD loading.",
+          "evidence": "selection_results.json"
+        },
+        {
+          "command": "Native KiCad pcb drc --severity-all --format json (two scratch boards, valid copied project and library context)",
+          "actual_result": {
+            "conflicting_port_textbox": {
+              "violations": 0,
+              "unconnected": 0,
+              "schematic_parity_requested": false,
+              "native_exit_code": 0,
+              "report": "conflicting_port_textbox_drc.json"
+            },
+            "inner_graphic_near_pyro_barrel": {
+              "violations": 0,
+              "unconnected": 0,
+              "schematic_parity_requested": false,
+              "native_exit_code": 0,
+              "report": "inner_graphic_near_pyro_barrel_drc.json"
+            }
+          }
+        },
+        {
+          "command": "KiCad Python -I test_proposed_fix.py",
+          "actual_result": "Proposed narrow source changes pass baseline S-8/K-legends and reject both exact seeds; additional persisted 3V3-net graphic variant is rejected. Current final fab manifest verifies all five outputs.",
+          "evidence": "proposed_fix_results.json"
+        },
+        {
+          "command": "Focused procurement API and unit-price controls",
+          "actual_result": "Actual bound R10 $84.43 report is rejected at the $84.41 profile. Unknown profile and non-finite/negative supplier prices rejected. R10 fab script and ORDERING explicitly use r10; legacy r9 default remains documented.",
+          "evidence": "procurement_results.json"
+        },
+        {
+          "command": "Read-only scope audit",
+          "actual_result": "AUD-2 imports one exact shared whitelist and retains critical-hygiene classification; AUD-10 exempts only the three named representation categories and subject distance. Partial overlaps and crossings remain blocking. GAP-3 checks exact two vias, local geometry, GND, filled/capped intent and paste windows. Source-bridge exception list remains seven exact measured entries. K-fill remains area-based with 0.01 mm2 tolerance; source-input binding is checked in main and final manifest.",
+          "qualification": "These remaining source paths were inspected; full route/fill regression suites were not repeated."
+        }
+      ],
+      "findings": [
+        {
+          "id": "R10-GATE-01",
+          "severity": "Minor",
+          "title": "A conflicting port label in PCB_TEXTBOX bypasses K-legends",
+          "location": "tools/check_r10.py:2216 (port_legends)",
+          "requirement": "R10_DECISIONS D-R9-03 and D-AUD-10; REQUIREMENTS M2: required/correct/unique connector legends remain blocking",
+          "seed": {
+            "artifact": "conflicting_port_textbox.kicad_pcb",
+            "operation": "Add a PCB_TEXTBOX with text J420 3:RXI, F.Silkscreen, box (2,10)-(14,12) mm, 1.0 mm text, 0.15 mm strokes, border disabled. Leave existing correct J420 3:TXO table present.",
+            "measured_value": "Two conflicting pin-3 names, TXO and RXI, are present."
+          },
+          "before": "Unmodified board K-legends passes; it contains no PCB_TEXTBOX in board or footprint items.",
+          "fault_result": "Original K-legends passes because port_legends recognizes PCB_TEXT but omits PCB_TEXTBOX. Native all-severity DRC reports 0 violations / 0 unconnected.",
+          "duplicate_gate_coverage": {
+            "native_DRC": "passes",
+            "silk_mask_overlaps": "passes on final seed",
+            "manifest": "Changed PCB intentionally invalidates its old manifest; regenerated candidate would require a new binding. No complete seeded check.sh pass is claimed."
+          },
+          "concrete_fix": "Extend port_legends text-type recognition to (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX); retain visibility/layer filters. Add conflicting and duplicate textbox regressions for port tables and the servo harness note.",
+          "proposed_after": "Baseline K-legends still passes. Identical textbox seed fails with J420.3: silkscreen must identify TXO exactly once.",
+          "independently_reproduced": true,
+          "current_board_instance": false
+        },
+        {
+          "id": "R10-GATE-02",
+          "severity": "Minor",
+          "title": "Inner copper graphics bypass S-8 barrel exclusion",
+          "location": "tools/check_r10.py:1483 (s8); tools/check_r8.py:584 (net_items)",
+          "requirement": "AGENTS section 1 pyro row / R10_DECISIONS D-R3-02, D-AUD-02 and REQUIREMENTS M2: S-8 >=1.0 mm barrel-to-non-GND inner copper stays blocking",
+          "seed": {
+            "artifact": "inner_graphic_near_pyro_barrel.kicad_pcb",
+            "operation": "Add a no-net PCB_SHAPE segment on In2.Cu from (5.75,53.7) to (5.75,54.5) mm, 0.2 mm wide, then native-refill and save.",
+            "measured_value": "Copper edge is 0.500 mm from the J121.1 PYRO1_OUT plated barrel, versus required >=1.000 mm.",
+            "variant": "PCB_SHAPE can also carry and persist a 3V3 net; that variant likewise passes original S-8."
+          },
+          "before": "Unmodified board S-8 passes; it contains no inner-layer graphical copper.",
+          "fault_result": "S-8, S-2 and K-inner pass. S-8 uses track/pad/board-zone-only net_items and excludes graphics. After native refill, native all-severity DRC reports 0 violations / 0 unconnected.",
+          "duplicate_gate_coverage": {
+            "S-2": "passes; no physical short to foreign pad exists",
+            "K-inner": "passes; item is a copper drawing",
+            "native_DRC": "passes at 0.500 mm, above board default clearance",
+            "manifest": "Old manifest rejects any changed PCB until fabrication is regenerated; this is not fault-specific coverage."
+          },
+          "concrete_fix": "Build S-8 inner-copper candidates from existing copper_nodes(ctx.board), including drawings/text/fields/footprint zones; exclude only GND and the barrel own net. Keep no-net copper in the checked set. Add board and footprint graphic/text regressions.",
+          "proposed_after": "Baseline S-8 still passes. Identical no-net and persisted-3V3 graphic variants fail S-8 with the measured 0.500 mm gap.",
+          "independently_reproduced": true,
+          "current_board_instance": false
+        }
+      ],
+      "patch_proposal": "gate_hardening.patch",
+      "regression_recipe": "Run test_proposed_fix.py with KiCad Python after creating the exact scratch seeds. proposed_fix_results.json records original/proposed gate outcomes. Native DRC reports preserve all-severity evidence; seed schematic parity is unchanged by added drawings/text but was not rerun.",
+      "carried_deviations": [
+        {
+          "item": "Cost and stock",
+          "current_reason": "Bound $84.43 exceeds $84.41 by $0.02; focused procurement verifier rejects it. Existing R430/U4 stock shortages are recorded in round9_fix_validation.json; inventory was not freshly queried."
+        },
+        {
+          "item": "AUD-2 slow returns / AUD-10 representation residuals",
+          "current_reason": "Intentional scope is preserved by source inspection. Current individual route measurements and counts from the root two-build evidence were not independently rechecked in this lens."
+        },
+        {
+          "item": "GAP-3 process",
+          "current_reason": "Fresh native K-copper baseline passes and both negative via controls fail. Resin filling, copper capping and planarity remain physical manufacture/inspection obligations."
+        }
+      ],
+      "limitations": [
+        "No entire build or check.sh run was duplicated; root committed two-build/final-gate evidence was read.",
+        "No firmware, physical, electrical or assembler process qualification is inferred.",
+        "Both findings concern gate coverage; neither fault exists on the immutable target board.",
+        "K-fill and stale-input source paths were inspected; no additional stale-fill bypass was qualified in this lens."
+      ]
+    },
+    {
+      "lens": "10 documentation/firmware binding and historical Minor reconciliation",
+      "target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+      "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+      "result": {
+        "new_critical": 0,
+        "new_major": 0,
+        "new_minor": 0
+      },
+      "findings": [],
+      "checks": [
+        {
+          "check": "immutable target",
+          "actual": "HEAD and PCB SHA/2366509 bytes verified at start and completion"
+        },
+        {
+          "check": "four binding hashes",
+          "actual": {
+            "board_sha256": {
+              "actual": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+              "note": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+              "match": true
+            },
+            "netlist_sha256": {
+              "actual": "ca70b6dd4716de166d5efb190638006aef3e16928928a130079d469810ba5c38",
+              "note": "ca70b6dd4716de166d5efb190638006aef3e16928928a130079d469810ba5c38",
+              "match": true
+            },
+            "pin_table_sha256": {
+              "actual": "86a87b677e574e4778a103673673115a1002f747496d8b6a1e128e6439cf64a5",
+              "note": "86a87b677e574e4778a103673673115a1002f747496d8b6a1e128e6439cf64a5",
+              "match": true
+            },
+            "circuit_sha256": {
+              "actual": "846a4da005632808eed475f9332f717a6df1db67088e004c814f884eab8468d4",
+              "note": "846a4da005632808eed475f9332f717a6df1db67088e004c814f884eab8468d4",
+              "match": true
+            }
+          }
+        },
+        {
+          "check": "100 U1 pins",
+          "actual": "100/100 PCB/XML/table/note nets agree; table port/mode matches note; complete schematic circuit/source contract has0 issues"
+        },
+        {
+          "check": "generator determinism",
+          "actual": "r10_sch_check.binding_note(project,board) in memory equals committed note exactly; no regeneration writes"
+        },
+        {
+          "check": "EXTI/loader/ADC",
+          "actual": "EXTI1,4,5,6,8,9,10,12 distinct; shared vectors require pending-bit demux. PA6 ADC12_INP3 and PC3_C ADC3_INP1 confirmed ST Rev11; other recorded ADC mappings match native nets. All allowed loader net member tuples preserved, PA6 current <=0.363 mA, PE11 R431 pulldown. Official AN2606 Rev70 Table135 pp320-323 independently confirms no UART5/USART6 interface and PA4/5/6/PE11/12 loader roles."
+        },
+        {
+          "check": "trace/watchdog/reset",
+          "actual": "ST CMSIS confirms H743 bit20 DBG_TRACECKEN. PC1/GPIOC and PE4/GPIOE separate locks/readback correctly specified.960 LSI cycles ->28.5714..32.6531ms; fault allocations sum34.8531ms<36ms; normal20+postfire5ms<minimum period. No-refresh interval and physical-current-tail obligations explicitly unimplemented."
+        },
+        {
+          "check": "native sensor/port/topology",
+          "actual": {
+            "positions": {
+              "U1": {
+                "position_mm": [
+                  23.0,
+                  43.0
+                ],
+                "rotation": 0.0,
+                "side": "F.Cu"
+              },
+              "U4": {
+                "position_mm": [
+                  17.0,
+                  45.9
+                ],
+                "rotation": 180.0,
+                "side": "B.Cu"
+              },
+              "U5": {
+                "position_mm": [
+                  10.6,
+                  49.1
+                ],
+                "rotation": 0.0,
+                "side": "B.Cu"
+              }
+            },
+            "removed": {
+              "J123": true,
+              "J124": true,
+              "U30": true,
+              "U31": true,
+              "J30": true,
+              "J31": true,
+              "U412": true,
+              "U422": true,
+              "R443": true,
+              "R453": true,
+              "C441": true,
+              "C442": true,
+              "C451": true,
+              "C452": true
+            },
+            "evidence": "binding_audit.json contains exact native gate/sense/port nets and values"
+          }
+        },
+        {
+          "check": "legacy firmware fail closed",
+          "actual": [
+            {
+              "board": "power",
+              "returncode": 1,
+              "last_lines": [
+                "FileNotFoundError: [Errno 2] No such file or directory: 'm3_design/power_review/diagnostics_binding.json'"
+              ],
+              "result": "fails before OUT.mkdir/compilation; missing archived baseline/reference dependency"
+            },
+            {
+              "board": "uart",
+              "returncode": 1,
+              "last_lines": [
+                "FileNotFoundError: [Errno 2] No such file or directory: 'm3_firmware/research/stm32h743_ds12110_rev5.pdf'"
+              ],
+              "result": "fails before OUT.mkdir/compilation; missing archived baseline/reference dependency"
+            },
+            {
+              "board": "usb",
+              "returncode": 1,
+              "last_lines": [
+                "FileNotFoundError: [Errno 2] No such file or directory: 'm3_firmware/research/stm32h743_ds12110_rev5.pdf'"
+              ],
+              "result": "fails before OUT.mkdir/compilation; missing archived baseline/reference dependency"
+            },
+            {
+              "board": "gnss",
+              "returncode": 1,
+              "last_lines": [
+                "FileNotFoundError: [Errno 2] No such file or directory: 'm3_firmware/research/gnss/sam_m10q_ds.pdf'"
+              ],
+              "result": "fails before OUT.mkdir/compilation; missing archived baseline/reference dependency"
+            },
+            {
+              "board": "status",
+              "returncode": 1,
+              "last_lines": [
+                "FileNotFoundError: [Errno 2] No such file or directory: 'm3_firmware/research/gnss/sam_m10q_ds.pdf'"
+              ],
+              "result": "fails before OUT.mkdir/compilation; missing archived baseline/reference dependency"
+            },
+            {
+              "board": "assembly",
+              "returncode": 1,
+              "last_lines": [
+                "FileNotFoundError: [Errno 2] No such file or directory: 'm3_firmware/research/gnss/sam_m10q_ds.pdf'"
+              ],
+              "result": "fails before OUT.mkdir/compilation; missing archived baseline/reference dependency"
+            }
+          ]
+        },
+        {
+          "check": "current documents and history",
+          "actual": "Current single-switch/AUD/GAP/R9 scope reviewed in M3_R10, REQUIREMENTS, FMEA, ORDERING, STATUS, AGENTS and plan. Earlier R10/R9 rows and final skeleton explicitly historical; scheduled final inventory completion is not a defect. AGENTS section2 five constraints match current firmware obligations."
+        },
+        {
+          "check": "history coverage",
+          "actual": {
+            "indexed_round3_to9_rows": 229,
+            "all_rows_present_in_canonical": true,
+            "decision_headings": 93,
+            "all_headings_present_in_canonical": true
+          }
+        },
+        {
+          "check": "XML U1 pinfunctions versus table ports",
+          "actual": {
+            "compared": 100,
+            "normalization": "XML generated pinfunction suffix _<pad-number> removed, preserving PC2_C/PC3_C",
+            "mismatches": []
+          }
+        }
+      ],
+      "commands": [
+        "read-only git rev-parse HEAD; SHA256 and byte-size checks",
+        "KiCad Python -B scratch audit_binding.py (native pcbnew + in-memory schematic contract/binding generator)",
+        "python3 -B m3_firmware/build.py --board {power,uart,usb,gnss,status,assembly}; valid sample/storage arguments on modern targets",
+        "canonical docs/decision/history reads; official ST datasheet/application note/CMSIS source checks"
+      ],
+      "primary_sources": [
+        {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "revision": "DS12110 Rev11 January2026",
+          "pages": "Table9 pp67/69/70/79/82; Table10 pp90-92; Table136 p233",
+          "checked": "ADC/trace pins/AF and LSI limits; all100 package pins cross-compared native/XML/table/note rather than separately rereading every datasheet pin row"
+        },
+        {
+          "url": "https://www.st.com.cn/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+          "revision": "AN2606 Rev70 February2026",
+          "pages": "Table135 pp320-323",
+          "checked": "H74x ROM interfaces and PA4/5/6/PE11/12 direction/pull containment match recorded Rev64 roles"
+        },
+        {
+          "url": "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/master/Include/stm32h743xx.h",
+          "checked": "DBGMCU_CR_DBG_TRACECKEN_Pos20, IWDG PR/RLR register fields"
+        }
+      ],
+      "limitations": [
+        "No physical/firmware/flight/installed-RF qualification. No new firmware implementation or hash bypass.",
+        "Root committed two-build/full-gate/fab evidence is cited, not rerun concurrently by this lens.",
+        "Non-lens geometry measurements in Minor groups come from named canonical decision/review records and root geometry; expressly not independently remeasured here.",
+        "Historical fixed findings are marked recorded closed; this lens does not rerun every prior engineering seed. Exact residuals and new measurements should be combined with routing/mechanics/power/manufacturing lenses for final prose.",
+        "RM0433/LSM6DSV320X full PDFs could not be retrieved in this session; their reset/default/IMU timings retain recorded-source/Inference status and bench obligations.",
+        "Legacy builder fail-closed executions stop at missing archived dependencies; independent static inspection also confirms no R10 target, old profile/hash checks before output creation, and R1 assembly_binding profile."
+      ],
+      "completion_target_verified": true,
+      "historical_inventory": "round10_deviations.json"
+    }
+  ],
+  "compact_supporting_evidence": "round10_evidence.json (selected files indexed by lens/filename; other scratch inventories reproducible from commands)"
+}

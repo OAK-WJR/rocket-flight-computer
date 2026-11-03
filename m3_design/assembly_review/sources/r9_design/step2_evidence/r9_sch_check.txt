@@ -1,0 +1,23 @@
+OK   ERC: 0 violations, severities error/warning/exclusion
+OK   footprint variants: M3_DB128L_2P_BK_SW (pad alias 1:2 2:1); HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR (pad alias 1:10 2:11 3:12 4:7 5:8 6:9 7:4 8:5 9:6 10:1 11:2 12:3)
+OK   m3.kicad_dru R8 -> R9: sha16 5aa63b0aeabb43eb (check_actuators DRU_SHA 5aa63b0aeabb43eb), rule G P-1b scope, RAW_ACT pin rule before the pyro rules, test-pad rule last
+OK   R9 netlist current: sha256 8b0e04ea565ecf1b
+OK   R8 netlist reproduced: 9c8179b sheets exported again and compared with its committed netlist
+OK   netlist diff R8 -> R9: 249 parts, 749 pins, libparts, libraries and sheets compared; 4 differences, all decided
+      J121  footprint  rocket:M3_DB128L_2P_BK -> rocket:M3_DB128L_2P_BK_SW  (<footprint> and the Footprint field)
+      J122  footprint  rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54 -> rocket:HDR-TH_12P-P2.54-V-M-R3-C4-S2.54_MIR  (<footprint> and the Footprint field)
+      J124  footprint  rocket:M3_DB128L_2P_BK -> rocket:M3_DB128L_2P_BK_SW  (<footprint> and the Footprint field)
+      15 sheets  rev M3-ASSY-R8 -> M3-ASSY-R9
+OK   RF pins off safety nets: 39 RF parts, 32 RF nets, RF nets on U1 pins 39, 45, 46, 47, 53, 54, 55, 56, 61, 62, 63, 64 (none a contract pin)
+OK   BOM codes: R8 BOM 92 lines / 219 parts reproduced code by code; extended codes 52 <= 52 (R8 supplier check 2026-10-19T23:51:04Z, bound to BOM sha be711876530a88a8)
+OK   parity, R8 board vs R9 schematic: 3 items: the decided footprint changes of J121, J122, J124
+OK   variants applied: J121, J122, J124 exchanged in place; 29 local clearances cleared (24 test pads 1.0 mm, 5 RAW_ACT pins 0.3 mm); LC-1 0; pad nets unchanged
+OK   parity, variant board vs R9 schematic: 0 parity items, 0 library-footprint findings (KiCad DRC)
+OK   check_actuators (schematic contracts): rules 1-14, 16 and the DRU pins on the R9 netlist and DRU; board-only, for step 3: 1 (15b, R8 placement)
+OK   pin table and U1 map: 100 pins against sources/r8_design/pin_table.tsv r8_net (R9 keeps it, D-S1-07); loader pins (D5)
+OK   pad roles at the planned orientations: J121 / J124 rot 90: entry -x, pin 2 (RAW / IGN) forward of pin 1 (BUS / OUT); J122 rot 180: SIG row aft, SERVO1-4 west to east; check_r9 R9_FOOTPRINTS
+OK   pad roles, control (base footprints): the bases at the same orientations fail all three role checks: J121: pin 2 (PYRO1_IGN) not forward of pin 1 (PYRO1_OUT) at rotation 90; J124: pin 2 (RAW_ACT) not forward of pin 1 (PYRO1_BUS) at rotation 90; J122 at rotation 180: SERVO1-4 not west to east
+OK   DRU liveness (seeded): Pyro G: gate nets in the pyro block: 2 hit(s) under R9, 0 under R8; R9 bare test pads to foreign copper: 1 hit(s) under R9, 0 under R8; R9 RAW_ACT pins to foreign copper: 1 hit(s) under R9, 0 under R8
+OK   fill equivalence (overrides -> rules): 14 zone-layer fills of R8's board refilled with its 29 overrides cleared under R8's rules + the two LC-1 rules equal R8's committed fills exactly (boolean difference both ways 0 nm2)
+OK   JLC placement of the variants: tools/jlc_orient.py through PAD_ALIAS: theta 0, offset 0, OK, equal to R8's base entries (tools/jlc_corrections.json itself is regenerated on the final board, step 9)
+r9_sch_check: OK

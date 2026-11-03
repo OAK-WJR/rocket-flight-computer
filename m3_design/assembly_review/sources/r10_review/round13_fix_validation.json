@@ -1,0 +1,221 @@
+{
+  "round": 13,
+  "kind": "Full generator integration fix validation; not an independent full round",
+  "board": {
+    "sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+    "bytes": 2259597,
+    "footprints": 209,
+    "segments": 966,
+    "vias": 296,
+    "gnd_vias": 168,
+    "track_length_mm": 1802.12522017822,
+    "size_mm": [
+      46,
+      90
+    ]
+  },
+  "full_builds_passed": 2,
+  "check_sh_exit_code": 0,
+  "builds": {
+    "a": {
+      "command": "Official KiCad10.0.7; native Python; NUMPY_PY supplied; m3_design/r10_build.sh",
+      "exit_code": 0,
+      "full_check_sh_exit_code": 0,
+      "log": ".supervisor/r13_build_a.log",
+      "log_sha256": "e5161778451e5d797c9e4441724125a7dc1e1d990f62f8d30af63c13266d22bf",
+      "native_R10_tests": 172,
+      "native_NumPy_skips": 3
+    },
+    "b": {
+      "command": "Official KiCad10.0.7; native Python; NUMPY_PY supplied; m3_design/r10_build.sh",
+      "exit_code": 0,
+      "full_check_sh_exit_code": 0,
+      "log": ".supervisor/r13_build_b.log",
+      "log_sha256": "8f6be84fd9d764e496ed9e25acdb99242ce2e1070d49fd2c61571818d11086e4",
+      "native_R10_tests": 173,
+      "native_NumPy_skips": 4
+    }
+  },
+  "reproducibility": {
+    "generated_file_count": 42,
+    "byte_identical": true,
+    "generated_sha256": {
+      "m3_design/assembly_review/actuator_power.kicad_sch": "54ed8859d0d0d77f05724df8052962258eb240fcbdf38910e2d7ef2bf0e5d6bc",
+      "m3_design/assembly_review/battery_entry.kicad_sch": "984d524d93f87852803f524b7041d3c1d9eadca4f775a717e1cb2241da0fec69",
+      "m3_design/assembly_review/camera_connector.kicad_sch": "84069d1f115d9a3c331e38ec5e0c73733b6f00432c79ea42d95e616dbf48f162",
+      "m3_design/assembly_review/camera_power.kicad_sch": "cd8a5a352bea9a9c80211d511b9d78c3aafd2816bec6a6db9c1a9beb53ba15d0",
+      "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+      "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+      "m3_design/assembly_review/kilib/m3.kicad_sym": "eae1338782216a005145b430e198f7cb19fa61cf92e1d906e1d68fd8c5b00664",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_AONR21357_DFN3x3A_EP1.wrl": "93e8ba4cae28023b19542d8f6b9e4194da6fdabc4bd3071e791a74620ed953f3",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_2P_BK.wrl": "efab17f431f377ab6318d1cc151901eda5c070e525bd79a23448963f43aa53d0",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_2P_GN.wrl": "949835401190a4182f9cb7d9268d42cc6d59886a4ad246b27d085055678e507c",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_4P_GN.wrl": "ff19ffd9b2c61765b655e3f885fad407f3445c38a5cc797daa8d840166d27f17",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_DB125_5P_GN.wrl": "4123f68eb0c390da876c64c2d764ffffa9ceffb3e433450c7e2dbed7348f608d",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_GH_BM02B_GHS_TBT.wrl": "f27ad581dcbb5ca4ad16a3bc34481a689d6198301463486288b8eea5fb76805f",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_MA_8x10.wrl": "8969c393340692a96a03cd804c70720747d9adc62146d0757f266fe5a2a12902",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_MICROSD_MOLEX_472192001.wrl": "9a074b83b2f579d4aeb38b5c3a4e557e184cd93aea4a38acde6f4ef7c59f1e30",
+      "m3_design/assembly_review/kilib/rocket.3dshapes/M3_TPS7A91_DSK10.wrl": "70bf43d3dc6293d6b658ff8e0dd38f8526a70fc243421c11834c41f2608b0f80",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_AONR21357_DFN3x3A_EP1.kicad_mod": "98b34fd0b10c91fc0da1b4c3d45d92d8b8bb3ae4f6823ec7a751e82986fccc59",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_BK.kicad_mod": "7cb3c1e4e590fab8abe7ea0191aace6c4078952205f14214880b3c8df8135dd0",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_2P_GN.kicad_mod": "e7cd78cfa9f62841ec4d2035c56b2e679a08eb3d41b3d1a9cbc116b0b5eb2317",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod": "747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_5P_GN.kicad_mod": "ca2aada63759dc14a4f130b89c3f264a28159c535bf0f4e5967a952782c07b5b",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_GH_BM02B_GHS_TBT.kicad_mod": "0d8a27c223081d11ad282328b59e57fc34b37501bc8425b6bc72223c140a650a",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_MA_8x10.kicad_mod": "f11bd91ea91f130a2b974ed82ddb6b425710359341b5c2a454df2adda5e9fce0",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_MICROSD_MOLEX_472192001.kicad_mod": "ff60b0babf97df08f58030a70b4f929976b469ea4f131455be6c8d2cf310a97d",
+      "m3_design/assembly_review/kilib/rocket.pretty/M3_TPS7A91_DSK10.kicad_mod": "4d4f03f099a74f3a576cce028c3ff91cbe698e7bd22c2d573ca73d072321629d",
+      "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+      "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+      "m3_design/assembly_review/m3.kicad_pcb": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+      "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+      "m3_design/assembly_review/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+      "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+      "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+      "m3_design/assembly_review/pyro.kicad_sch": "d3a6fde39e5a5df3a93a7a2c60bd7e90c24b28de1fe281a9bcfa03babc35e056",
+      "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+      "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+      "m3_design/assembly_review/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
+      "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json": "8e7bf8ff377f629a93b50cec92104b4a07ae3fc8ac885eb8439646a1bcac4ee3",
+      "m3_design/assembly_review/sources/r10_design/hotplug_results.json": "f703851c7e88fcf50264d6c28dc128ca75ec73fb0bc7d1478d065c7a81b5ad2d",
+      "m3_design/assembly_review/sources/r10_design/parts_budget.json": "e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba",
+      "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "2e2ab94f2302977b99baa0c670143114eacf23b6a7082d412960ea1419fff661",
+      "m3_design/assembly_review/telemetry.kicad_sch": "16145d6f1b32a8cc90356996d7a5d364d05bc7c99501e7f6809f5eea7ce711f8",
+      "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865"
+    },
+    "fab_scope": "Export PDF/Gerber binaries are separately manifest-bound; byte reproducibility claim covers42 listed generated files. Final assembly rasters equal inspected focused-source drawings."
+  },
+  "optional_plate_receipt": {
+    "path": "round13_plate.json",
+    "sha256": "aae4de3b039b5e99b22bdb80b726d1196dd96671b0817927e6e61550419107ee"
+  },
+  "post_build_A_calculator_only_change": "Exclude23 terminal-tail collision boxes from already lumped connector mass; one new positive/negative bookkeeping regression. BuildB includes final173tests;42 CAD/generated artifacts are unaffected.",
+  "native_evidence": {
+    "path": "round13_fix_native.json",
+    "sha256": "d639b8c7ab34738e140154a15a50bc7d73f8817a1d30a2a8edb44c159ab42020"
+  },
+  "native_DRC_unconnected_parity_ERC": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "all_R10_rules_pass": 31,
+  "native_gate_tests": {
+    "R10_unique_tests": 173,
+    "fit": 30,
+    "paste": 11,
+    "routing": 60,
+    "quality_focused": 22,
+    "assembly_population_focused": 9,
+    "numpy_resolution": {
+      "cases": 4,
+      "passed": 4,
+      "unresolved_skips": 0,
+      "log_sha256": "27216caf8f87bd77ce8ac2bb9e15dc1af82c5bdd6846060933b93cb2fee5a427"
+    }
+  },
+  "simulation_inference": {
+    "hotplug_required_pass": 2304,
+    "hotplug_local_pass": 60,
+    "optional_plate_Hz_pinned_D5": 181.3,
+    "estimated_mass_g": 70.3,
+    "physical_qualification": false
+  },
+  "visual_QA": {
+    "kind": "Integrated buildA PDF raster parity to inspected focused Fab pages and77 detail tiles",
+    "board_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+    "full_pages": [
+      {
+        "side": "top",
+        "final_build_A_render": ".supervisor/r13_pdf_qa/a_top.png",
+        "focused_inspected_render": ".supervisor/r13_fab_fix_prepare/top_full_180.png",
+        "dpi": 180,
+        "PNG_byte_identical": true,
+        "render_sha256": "15364ebe76fc3a900076f7615f59b80661ba7d0c6a360a46073ab369f9324e34",
+        "final_pdf_sha256": "c1723f4990482d78d732c21a9dd930ab83329be901de56a2c63d9874d2cfd4ba"
+      },
+      {
+        "side": "bottom",
+        "final_build_A_render": ".supervisor/r13_pdf_qa/a_bottom.png",
+        "focused_inspected_render": ".supervisor/r13_fab_fix_prepare/bottom_full_180.png",
+        "dpi": 180,
+        "PNG_byte_identical": true,
+        "render_sha256": "f55ce7fc8d4b5bdcc210daee59130d8dd723842429c2206896fd039d2f1864a6",
+        "final_pdf_sha256": "b8ffacb0f63d9ee6e0f170f363545049b6108cf52a0a5382ff6f91da8e39d6fe"
+      }
+    ],
+    "focused_visual_receipt": "round13_fab_fix.json#/PDF_QA",
+    "root_full_page_inspection": true,
+    "detail_scope": "All77 corrected Fab labels inspected in focused source candidate; native text coordinate/size/stroke identity and identical full-page PNGs carry coverage to integrated assembly drawing.",
+    "limitations": "Assembly drawing QA only,not physical fit,soldering or first-article identification. Both final assembly rasters exactly match the completely inspected focused source drawings.",
+    "final_pdf_sha256": {
+      "m3_design/assembly_review/fab/m3_assembly_top.pdf": "123e841c39a6221d0eb30d1e2f1a44d70efd461a511105fb74168fd3ec629f11",
+      "m3_design/assembly_review/fab/m3_assembly_bottom.pdf": "1b21eca6d0e043f02a3b02c2768c52ad455bfaca0559696d618c53d84867e8f6"
+    },
+    "final_build_B_raster_byte_parity": true
+  },
+  "fabrication": {
+    "BOM_codes": 82,
+    "fitted": 199,
+    "CPL_top_bottom": [
+      67,
+      132
+    ],
+    "reconstructed_top_bottom": [
+      66,
+      121
+    ],
+    "placement_only_checks": 12,
+    "paste_F_B": [
+      245,
+      373
+    ],
+    "native_paste_geometry_matched": 618,
+    "manifest_outputs": 5,
+    "orientation_paste_manifest_pass": true
+  },
+  "procurement": {
+    "supplier_checked_utc": "2026-10-30T08:38:52.797802+00:00",
+    "supplier_snapshot_sha256": "8e15e2fb2d261f176ee0221da9de20f3fb7fba31c2c6e11be2c1b88f4a73378e",
+    "placed_and_feeders_USD": 82.6458,
+    "including_minimum_purchases_USD": 84.9862,
+    "target_USD": 84.41,
+    "minimum_purchase_excess_USD": 0.5762,
+    "stock_blockers": [
+      "R43017<3610 minimum",
+      "U4 0<5"
+    ],
+    "U9_minimum": "7 for5 fitted",
+    "BOM_CPL_hashes_verified": true,
+    "cost_target_model_pass": true,
+    "stock_release_pass": false,
+    "quote_process_owner_acceptance": false
+  },
+  "full_round_13": {
+    "reviewed_board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "reviewed_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+    "confirmed_C_M_minor_groups": [
+      0,
+      0,
+      17
+    ],
+    "active_raw_minor_findings": 24
+  },
+  "same_board_clean_pair_credit": false,
+  "fresh_full_rounds_required": [
+    14,
+    15
+  ],
+  "limitations": "Firmware,selected SD/e-match lot,electrical/thermal/transient/endurance,installed RF/ESD,physical access/harness/fit/retention/flight and factory/process remain unverified. R10 is not accepted or ordered; AGENTS section2 exact.",
+  "final_standalone_check": {
+    "command": "tools/check.sh with official10.0.7,native KiCad Python,supplied NumPy interpreter",
+    "exit_code": 0,
+    "log": ".supervisor/r13_final_check.log",
+    "log_sha256": "22fe3c2967e8b2cff04910f5845ed3e8ae48439912cb5e529b711f94895157fe",
+    "R10_unique_tests": 173,
+    "native_NumPy_skips": 4,
+    "all_NumPy_cases_separately_passed": 4,
+    "source_or_CAD_change_after_check": false
+  }
+}

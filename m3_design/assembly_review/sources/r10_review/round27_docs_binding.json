@@ -1,0 +1,79 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round27_docs_binding",
+ "reviewer": "claude",
+ "target_commit": "816038c",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "docs/M3_R10.md line 997 (under 'Historical mechanical record') still gives C10's coat envelope as 3.333144 mm from U5 and C11's gap as 2.818449 mm; these are 92c3ad59-era figures in a section headed historical; the current figure (3.016596 mm) is in ORDERING 8.3, M3_R10 'What the round 26 fix pass changed' and STATUS.",
+  "R10_VALIDATION §1 surface inventory cites the ARM1_SENSE track as (29.75,45.5)-(29.75,49.4) on 5516eeec; on a0ec075e the segment is (29.75,45.85)-(29.75,49.4) (round 24 chamfer); the 0.150 mm minimum to U13.5 is unchanged (measured 0.1501 mm). Labelled to the older board, so not false.",
+  "BAT_FAULT_N's nearest 3V3 item on a0ec075e is R89.2 to the 3V3 via (23.0,70.0), 0.175 mm; M3_R10 cites the specific 3V3 via (28.1,60.0) at 0.380 mm, which is correct for that via (measured 0.3800 mm); no claim of a net-pair minimum is made.",
+  "In2 3V3 fill to RAW_PROTECTED is quoted at 0.300 mm minimum measured on 0dc84776 (labelled); item-to-fill minimum on a0ec075e is 0.4743 mm (zone-to-zone not measured here).",
+  "ORDERING 8.3's C10 figure (3.016596 mm) and my bounding-box approximation are consistent only to method; the conservative Fab/pad envelope method of the docs lane was not re-implemented exactly."
+ ],
+ "fix_verification": [
+  {
+   "change": "D-R26-01",
+   "measurement": "GND vias at (7.4,16.5) and (7.4,20.0), 0.5/0.3 mm present; J410/J420/J440/J9 pins 3/4 flash no inner layer, pins 1/2 flash In1/In2; J440.1 and J9.1 In2 rings 0.2506 mm from In2 3V3 (docs: 0.2505)",
+   "verdict": "confirmed (docs agree with board)"
+  },
+  {
+   "change": "D-R26-02",
+   "measurement": "R173 B(16.87,59.05), C11 B(17.5,51.45), R164 B(17.325,55.25), R13 3V3 via (9.2,52.55); PYRO1_OUT-3V3 min 1.0500 mm (F.Cu run to via 9.2,52.55), R173.1-D120.3 1.0511 mm; PYRO1_OUT-3V3A 1.0400 mm; R173.1 to Q124 source via (15.85,58.345) 0.5001 mm; R173.2-D120.3 0.4155 mm; CPL rows match; C18 hidden; 123 visible / 93 hidden; hidden list in M3_R10 identical to board",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-03",
+   "measurement": "binding note and docs quote 5.71 V (budget four-stall loaded_pack_V 5.713190), 8.07 ms single drop-out (recomputed 8.07 ms with R80/R165 +1 %, R81 -1 %, 0.72 x 220 nF, 0.15 uA total sink, VUVLO(F) 1.116 V), 7.50 ms window limit, rule 8 corner 5.71/5.55-5.56/5.50 V",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-04",
+   "measurement": "R164 3V3 via (19.55,55.825); 3V3-PYRO1_GATE_N 1.0650 mm (R127.1), R126.1 1.0809 mm; 3V3-PYRO1_GATE 1.0585 mm (R128.1); 3V3A-PYRO1_GATE 1.1450 mm (C10.1 to via 14.4,53.3); 3V3A-PYRO1_GATE_N 1.6001 mm; C10 B(17.5,53.5); CONT_MID diagonal (16.87,60.82)-(17.85,61.8) 0.2006 mm from Q123.1, 0.3862 mm from R134.2; BUZZ_DRV-PYRO1_OUT 0.7936 mm; BUZZ_DRV-CONT_MID 1.1329 mm; new via to BUZZ_DRV 0.2334 mm, to R162.2 0.9970 mm; 220 decision IDs (126 + 94) reproduced",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the board before and after (unchanged), commit 816038c",
+  "pcbnew (KiCad 10 Python, read-only) counts: 216 footprints, 1059 segments, 309 vias (170 GND; 304/4/1 by size), 1866.793965 mm track, 123 visible / 93 hidden references, 44 silkscreen texts, 2,369,507 bytes",
+  "hidden-reference list from M3_R10 line 880 diffed against the board: identical (93)",
+  "positions of 24 footprints against AGENTS/handoff/ORDERING/AVA_LAYOUT coordinates; 13 probe-pad positions against ORDERING 8.3 worksheet; five Edge.Cuts mounting holes",
+  "net-pair minimum distances (pcbnew shape collide, binary search, all four copper layers, pads/tracks/vias/fills) for 24 net pairs and 6 via-specific distances quoted in AGENTS, STATUS, M3_R10, R10_VALIDATION §1, FMEA, AVA_LAYOUT",
+  "track/via geometry in the D-R26 region against the AVA_LAYOUT round 26 table",
+  "terminal pad inner-layer flashing for all eight DB125 terminals",
+  "silkscreen legends against the handoff terminal table",
+  "pin_table.tsv r10_net vs board U1 pad nets: 100/100 match; binding note board/pin_table hashes match",
+  "fab: CPL 206 rows (70 top / 136 bottom), C10/C11/R164/R173 rows; BOM 81 lines; cost_check.json (total 85.26, 12:44:13Z, fixed fees 83.96) and stock_check.json (12:43:17Z, U9 30/-81/7, U4 9/2) against every cost/stock statement; manifest board hash a0ec075e",
+  "parts_budget.json SHA (5204280e) and its predecessor (f92611a8 at 3d8e845) against parts_qualification",
+  "check_r10 RULES count 37; decision ID count 220 (126 + 94)",
+  "markdown link and anchor check over the 10 Markdown files in scope: 0 broken",
+  "EN single drop-out recomputation at 5.713 V"
+ ],
+ "sources": [
+  "AGENTS.md",
+  "STATUS.md",
+  "docs/M3_R10.md",
+  "docs/ORDERING.md",
+  "docs/R10_VEHICLE_HANDOFF.md",
+  "docs/R10_VALIDATION.md",
+  "docs/FMEA_REDUNDANCY.md",
+  "docs/REQUIREMENTS.md",
+  "m3_design/assembly_review/sources/r10_design/{parts_qualification.md,AVA_LAYOUT.md,pin_table.tsv,r10_binding_note.json,parts_budget.json,R10_DECISIONS.md}",
+  "m3_design/assembly_review/fab/*",
+  "m3_design/assembly_review/m3.kicad_pcb",
+  "TI SLVSFC9C p.9 (VUVLO(F))"
+ ],
+ "coverage_limits": [
+  "The documents total about 1.35 MB; current-state sections, round 26 sections, owner table, §1 inventory, ORDERING 8 probe and coating text and the handoff were checked against the board; historical round sections were not re-verified line by line.",
+  "Routing-detour table (§6), S-8 barrel minima, K-plane neck widths, hot-plug figures and plate-model figures were not re-measured.",
+  "Price-movement attribution ($0.34 on eight lines) was not reproduced (old cost file not compared).",
+  "Datasheet citations were not re-read (outside this lens)."
+ ]
+}

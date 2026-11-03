@@ -1,0 +1,48 @@
+# Round 36 — requirements lens (Claude)
+
+Target commit `c3c4249`; board SHA-256 `a0ec075e…` before and after (unchanged).
+
+## Totals
+Critical 0 / Major 0 / Minor 0. No real errors found.
+
+## Findings
+None.
+
+## Fix verification
+- R34-TRI-01 (parts_qualification hot-plug pointer): confirmed.
+
+## Observations (not counted)
+- P1: Edge.Cuts bounding box 46.05 x 90.05 mm (0.05 mm line width), i.e. 46 x 90 mm; five r 1.6 mm Edge.Cuts holes at (4,4), (42,4), (4,44.3), (3.7,86), (42,86) match P1 / P2 / AGENTS.
+- F4: J122 pins 1-4 SERVO1-4_OUT, pin 5 GND; R150-R153 1 k series, R154-R157 10 k pull-downs, D121 SRV05-4 on SERVO1-4_MCU: matches F4.
+- F4 hinge: VEHICLE.md control tab 8 mm span x 26.5 mm chord, HV6120; linear theory CN = 4*delta/beta at 15 deg, hinge arm c/2, 5.4 kg cm stall: 81 % at 286 kPa / M 2.2, 67 % at 142 kPa / M 1.54; consistent with F4's 64-84 % (not re-run on the full envelope script).
+- F8: two-bank cold CONT reproduced: 3.1 V through R131 10 k into two 11.2 k dividers gives 99.36 mV healthy, 146.2 mV open; Q122 gate 3.6 V x 2/(30+1+2) = 0.218 V.
+- F8: nominal single top-short / bottom-open reading is 3.262 V at 19.9 V; the 3.342171 V ceiling is the labelled conditional tolerance figure (with 1 % and TCR, about 3.32-3.35 V); not a contradiction.
+- F9: D402 50 nA leakage shifts EN by 50 nA x (470k||770k) x 300/770 = 5.69 mV, matching 5.7 mV; PA6 lower edge 0.44 V x 11 = 4.84 V.
+- F9 / F10: 3V3 regulation 21-26 ms into the slew reproduced (3.3/196 + 4 = 20.8 ms; 3.7/166 + 4 = 26.3 ms).
+- F10: U1 pads 55/56 GPS_TX/RX (PD8/PD9), 52/51 RADIO_TX/RX (PB13/PB12), 63/64 AUX_TX/RX (PC6/PC7); EXTI pins PE1 (98), PA4 (28), PA5 (29), PD6 (87), PC8 (65), PE12 (42) match pin_table.tsv r10_net.
+- F11: VBAT (U1.6) is on 3V3, so the VBAT/4 channel reads 3V3 as stated.
+- F1: ΔT allowance (5 - 0.9 - 0.03)/0.45 = 9.04 C; apogee ambient -7.75 to -27.25 C (K850DM) and -16.2 to -42.2 C (L1000W) ISA reproduce.
+- F3: 7.6 km AGL + 1.2 km site = 8.8 km MSL; ISA 316.7 hPa, above the 300 hPa requirement.
+- F2: 36.6 g max specific force < 37 g; 64 g requirement and U4 256 g high-g range consistent.
+- F5: log volume 1.9-3.5 MB (40 B/sample, 500 Hz to apogee + 30 s, 50 Hz under canopy) reproduces 'about 2-3.5 MB'.
+- P3: v^2/2s with s = 20 mm: 6.2 m/s -> 98 g, 8.0 m/s -> 163 g.
+- Board position: -44.6 + 80 + 44-48 = 79.4-83.4 mm, matching joint + 79-83 mm; camera shroud joint + 4...+47 and Ø50.8 mm coupler bore match VEHICLE.md.
+- Flight envelope: VEHICLE.md gives a 721 mm booster and 54 x 635 mm motors for both flights, matching REQUIREMENTS (the parent CLAUDE.md's 'flight 1's is shorter' is outside this repo).
+- Storage: R167 10 k at 8.4 V = 0.84 mA; 1 Ah / 0.84 mA = 49.6 days, about 7 weeks.
+- Pack row: (1 W + 0.05 A x 4.8 V) / 4.8 V x 5.456 V / 0.85 = 1.66 W, 0.224 A at 7.4 V, matching about 1.7 W / 0.23 A.
+- M3: 54.94 + 48 x 3.07/5 = 84.41.
+- F1's 30 s window versus the envelope's 35 s is disclosed in F1 itself ('recompute the ΔT allowance'); prior ruling, not a contradiction.
+
+## Checks executed
+- sha256 of the board before and after
+- pcbnew read-only: outline bounding box, Edge.Cuts holes, key footprint positions/values/pad nets, servo network parts, CH1 sense net membership, U1 pad-to-net map
+- pin_table.tsv r10_net cross-check
+- hand calculations listed in observations
+- grep of VEHICLE.md for vehicle dimensions, tab and servo
+- prior triage observations searched for AGENTS-status rulings
+
+## Coverage limits
+- The derived-envelope script and the hinge-moment script were not re-run; spot checks only.
+- F6 EN-timing, chatter and hold-up figures and F7 fire-current figures belong to the power/safety lenses and were spot-checked only.
+- Datasheets not re-read in this round; cited values taken from the records.
+- No physical, firmware or bench item verified.

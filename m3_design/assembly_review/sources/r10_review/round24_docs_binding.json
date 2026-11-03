@@ -1,0 +1,144 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round 24, lens docs_binding",
+ "reviewer": "claude",
+ "target_commit": "f2b8251f34e6e84dbf28bfa686a8f79aafc56045",
+ "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+ "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 5
+ },
+ "findings": [
+  {
+   "id": "R24-DOCS_BINDING-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "BAT_ENABLE via (17.1,82.8) to BAT_FAULT_N is 0.173 mm on 1407e850, not 0.200 mm; docs call it re-measured and unchanged",
+   "contradicts": "M3_R10.md lines 292 and 306-307 ('the ... BAT_FAULT_N clearances below were re-measured on 1407e850... and are unchanged'; 'the BAT_ENABLE via (17.1,82.8) to BAT_FAULT_N 0.200 mm'); R10_VALIDATION.md line 2252 (§1 inventory for PCB 1407e850: '0.200 mm ... Inside U9's fan-out; not changed') and line 2092 (owner row 24: '0.200 mm from BAT_FAULT_N ... fixed by ... U9's fan-out and stay'); FMEA_REDUNDANCY.md line 36 (H-6: 'the BAT_ENABLE via to BAT_FAULT_N 0.200 mm'); ORDERING.md line 570 (coating worksheet: 'the (17.1,82.8) via 0.200 mm from BAT_FAULT_N')",
+   "evidence": "pcbnew shape clearance on m3_design/assembly_review/m3.kicad_pcb (sha 1407e850...): BAT_ENABLE via (17.10,82.80) 0.5/0.3 mm on F.Cu to the BAT_FAULT_N F.Cu track (16.55,82.99)-(16.91,83.35), width 0.20 mm: 0.1733 mm (segment-to-centre distance minus half widths; probe .supervisor/r24_docs_binding/tr.py and clr.py). On 5516eeec (git show 9b27268) the same run turned a 90-degree corner at (16.55,83.35) and the gap was 0.200 mm; the D-R24-17 chamfer added the diagonal that brings it to 0.173 mm. DRC still passes (0.15 mm floor).",
+   "impact": "The safety inventory, owner row 24, the FMEA and the coating worksheet state a gap that the current board does not have, and M3_R10 says it was re-measured unchanged. The leak-threshold arithmetic (0.58 Mohm latch) does not depend on the gap, so no calculation changes.",
+   "concrete_fix": "Replace 0.200 mm with 0.173 mm (F.Cu, chamfer segment (16.55,82.99)-(16.91,83.35), since D-R24-17) in the five places; drop 'unchanged' for this pair in M3_R10 line 292 and 'not changed' in R10_VALIDATION line 2252."
+  },
+  {
+   "id": "R24-DOCS_BINDING-02",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "ORDERING 8.2 says 14 pin legends are on the bottom; its own list and the board have 13",
+   "contradicts": "ORDERING.md line 416: '14 pin legends are on the bottom beside their pins (R23-DOCS_BINDING-09): J121 2:E1+, J400 2:SW, J440 2:GND / 3:TXO / 4:RXI, J410 2:GND / 3:TXO, J420 2:GND / 3:TXO, J9 2:GND / 3:RXI and J122 2:S2 / 4:S4'",
+   "evidence": "The enumerated list has 1+1+3+2+2+2+2 = 13 entries. B.Silkscreen board texts (probe silk.py): 2:E1+ (4.0,57.6), 2:GND (4.1,14.0), 4:RXI (4.2,21.5), 2:SW (4.4,67.6), 3:TXO (10.5,17.5), 2:S2 (41.3,74.5), 3:RXI (41.5,45.25), 3:TXO (41.7,13.25), 3:TXO (41.7,29.25), 2:GND (41.9,16.75 / 32.75 / 48.75), 4:S4 (40.4,67.2) = 13 terminal pin legends; the other 5 bottom texts are J2's four pin legends and M3-ASSY-R10. Top has 14 terminal pin legends; 14 + 13 = 27 contacts, as M3_R10 states.",
+   "impact": "The pin-identity inspection count is wrong (an inspector looking for 14 bottom legends finds 13).",
+   "concrete_fix": "Change '14 pin legends' to '13 pin legends' in ORDERING.md line 416."
+  },
+  {
+   "id": "R24-DOCS_BINDING-03",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R10_VALIDATION §9 C84 row gives the superseded paste totals 253 / 375",
+   "contradicts": "R10_VALIDATION.md line 2659 (§9 'Parts, lands and fabrication process', C84 row): 'its lands have no stencil aperture since D-R19-07 (paste F 253 / B 375)'; the same table's 'Part identities/options' row and M3_R10 'The board' give the 1407e850 package",
+   "evidence": "fab/m3_gerber.zip (manifest-bound to 1407e850): m3-F_Paste.gbr 249 D03 flashes, m3-B_Paste.gbr 381; tools/check_r10.py PASTE_TOTALS = {'F.Paste': 249, 'B.Paste': 381}. 253 / 375 were the 0dc84776 / 5516eeec totals (D-R24-09 moved R402 / R403 to B.Cu, D-R24-11 added D402).",
+   "impact": "A current-state row quotes the previous board's paste totals.",
+   "concrete_fix": "Write '(paste F 249 / B 381 on 1407e850)' in that row."
+  },
+  {
+   "id": "R24-DOCS_BINDING-04",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "round24_board_cad record calls the orientation-reconstruction counts 'rows per side' of the CPL",
+   "contradicts": "round24_board_cad.md line 56 (CPL bullet: 'Rows per side go from 69 top + 122 bottom to 67 + 125') and round24_board_cad.json manufacturing.cpl.sides ('69 top + 122 bottom -> 67 top + 125 bottom'); M3_R10.md 'The board' (206 CPL rows, 70 top + 136 bottom)",
+   "evidence": "fab/m3_cpl_jlc.csv at f2b8251: 70 Top + 136 Bottom rows (206); at 9b27268: 72 Top + 133 Bottom (205). 67 + 125 (and 69 + 122 before) are jlc_orient --verify-cpl's reconstructed parts, which exclude the 14 placement-only rows (run read-only: '67 top and 125 bottom rows rebuilt ... placement-only checks: 14 ... expected rows: 206').",
+   "impact": "The board-pass record misstates the CPL's per-side row counts (it would mislead a reader checking JLC's upload, 70 / 136).",
+   "concrete_fix": "Write 'CPL rows per side 72 + 133 -> 70 + 136; orientation reconstruction 69 + 122 -> 67 + 125 (+ 14 placement-only)' in the .md and the JSON 'sides' field."
+  },
+  {
+   "id": "R24-DOCS_BINDING-05",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "STATUS.md says it was last updated 2026-10-31 for the R10 section, which carries 2026-11-01 entries",
+   "contradicts": "STATUS.md line 5: 'Last updated 2026-10-31 (R10 candidate section below; the rest as of 2026-10-25)'",
+   "evidence": "STATUS.md line 10 'Status (2026-11-01)' and line 16 'Round 24 board pass (2026-11-01)', both written by commit f2b8251 (2026-11-01), as were the round 22 / 23 entries (lines 21, 39).",
+   "impact": "The file's own date line is false.",
+   "concrete_fix": "Change line 5 to 'Last updated 2026-11-01 (R10 candidate section below; ...)'."
+  }
+ ],
+ "observations": [
+  "round24_board_cad.md item 7 / R10_VALIDATION line 2012 / round24_board_cad.json say U10's island 'already holds two vias'; per D-R24-07 these are one GND via (9.0,27.837) and one VBUS_SENSE via (9.95,27.7) (measured: the 2.892 mm2 B.Cu GND piece holds one GND via). Literally true per the decision, but reads as two ground vias next to 'only GND via' elsewhere.",
+  "round24_board_cad.json r10_fab_sh: 'CPL rebuilt from JLC footprints (67 top + 125 bottom, 206 rows)' - 67 + 125 = 192; the 14 placement-only rows make 206.",
+  "RAW_ACT to USB_OVLO is now 0.177 mm (B.Cu (22.8,63.535)); R10_VALIDATION §1 gives 0.175 mm under its 'on a3144b15 unless noted' header (labelled history).",
+  "ACT_GATE to BAT_SW_SOURCE is now 0.663 mm (was 0.469 on 5516eeec); R10_VALIDATION §1 gives 0.470 labelled 'CAD lane, 50a39de5' (history).",
+  "35 two-end nodes at pads / vias still meet at 90 degrees (route_check's right_angle passes them when pad / via copper covers the inner corner); routing lens scope, not checked here.",
+  "D402.1 (BAT_SW_RETURN, at EN potential with J400 open) is not named in ORDERING 8.3's switch-enable coating list (R165 is); a suggestion, not a stated rule.",
+  "R10_VALIDATION row 24 gives ACT_EN_MCU to BAT_ENABLE 0.5205 mm and RAW_ACT 0.5008 mm; pcbnew shape distance gives 0.5197 / 0.500 on both boards (approximation level, unchanged)."
+ ],
+ "fix_verification": [
+  {
+   "change": "D-R24-02 (docs: S-8 12 barrels on 6 nets; ACT_GATE second vias)",
+   "measurement": "12 plated barrels on ACT_GATE 4, BAT_ENABLE 3, PYRO1_OUT 2, PYRO1_GATE 1, BAT_SW_RETURN 1, PYRO1_IGN 1; vias (15.4,72.85), (11.74,72.3) present; wall to foreign inner copper 1.050 mm at all four ACT_GATE vias, 1.021 PYRO1_OUT via, 2.1 PYRO1_GATE via, 2.2 J121.2 (to J121.1's barrel)",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-03/-04/-07/-08/-10 (docs: second via positions)",
+   "measurement": "vias BOOT0 (14.2,46.0), VCAP2 (18.3,36.8), GND (32.3,60.1), VLOGIC (34.5,62.4), LOGIC_SOURCE_ST (30.45,51.4), 3V3 (28.1,59.4), USB_LIMITED (16.6,28.0) all present; BOOT0 0.150 mm to I2C1_SCL; SINGLE_OPEN_EXCEPTIONS 11 entries",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-09 (docs: R402 / R403 to B.Cu, three vias removed, OUT via moved)",
+   "measurement": "R402 B(30.9,12.85), R403 B(30.9,14.6); no vias at (29.75,13.6), (30.575,11.6), (31.4,14.4); PORT_4V8 via (29.75,11.65)",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-11 (docs: D402)",
+   "measurement": "D402 B(4.45,65.9) rot 90, ESD103-B1-02EL C535146; BAT_SW_RETURN = {J400.2, R165.1, D402.1}; tap 2.59 + 0.509 + 1.015 = 4.114 mm; return 0.7 mm to GND via (5.15,65.575); BOM line 9 per board; 50 nA x 470k x 300k / 1240k = 5.69 mV; 21 V x 150 pF / 220 nF = 14.3 mV; Infineon Rev 1.3 IR max 50 nA at 15 V, VTrig 21 V typ",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-13 (docs: no order mark)",
+   "measurement": "no JLCJLCJLCJLC text on either silkscreen; 44 board legends",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-15 (docs: R92 / TP88)",
+   "measurement": "R92 F(31,86.7), TP88 F(35.5,86.4)",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-17 (docs: counts, C88, bends)",
+   "measurement": "216 fp / 1057 segments / 307 vias (168 GND; 302/4/1) / 1867.022756 mm; C88 B(18.67,83.56); 0 plain 90-degree two-end nodes (53 on 5516eeec); but the chamfer moved BAT_FAULT_N to 0.173 mm from the BAT_ENABLE via and the docs still say 0.200 (finding 01)",
+   "verdict": "partly"
+  },
+  {
+   "change": "Fab package and supplier evidence docs",
+   "measurement": "BOM 81 lines (45 Extended); CPL 206 rows 70 / 136; orientation 67 + 125 + 14 (jlc_orient --verify-cpl run read-only); paste 249 / 381; manifest binds pcb 1407e850 and all six outputs (hashes match); cost 60.81 + 81 x 1.53 / 5 = 85.60, min-purchase 86.14, +16.79 = 102.39, +2.99 = 105.38; stock U4 9 / 2, U9 28 / -83 / min 7, C535146 201 / 194 / 45, C2757925 37722 / 36879 / 20",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the board before and after; git status (no tracked change)",
+  "pcbnew (KiCad Python, read-only): every footprint pose / side / value / LCSC / pad nets on 1407e850 and 5516eeec (git show 9b27268), diffed: only C88, R402, R403, R92, TP88 changed and D402 added",
+  "pcbnew counts: footprints, segments, vias by class and net, track length, visible / hidden references (hidden list compared with M3_R10 line 761: identical 92), board silkscreen texts (44), DB125 contacts (27), Edge.Cuts support circles",
+  "U1 pad nets against pin_table.tsv r10_net (100 / 100 match); binding-note board / netlist / pin-table / circuit hashes against the files",
+  "S-8 barrel count and wall-to-foreign inner copper for all 12 barrels",
+  "Net-to-net shape clearances for the residual and §1 inventory pairs on both boards (BAT_ENABLE / BAT_FAULT_N / BAT_IN / ACT_EN / RAW_ACT / USB_OVLO / USB_LIMITED / PYRO1_OUT / PYRO1_CONT_MID / ARM1_SENSE / ACT_GATE)",
+  "Plain 90-degree two-end bend count on both boards",
+  "Gerber zip: paste flash counts, PTH / NPTH drill counts by tool",
+  "fab CSVs: BOM lines, CPL rows by side, owner BOM; cost_check / stock_check figures and input hashes; manifest output hashes",
+  "tools/jlc_orient.py --verify-cpl (read-only) on the committed CPL",
+  "test counts by grep of def test in tools/test_*.py; SINGLE_OPEN_EXCEPTIONS entries; PASTE_TOTALS",
+  "relative Markdown links and anchors in the in-scope files (0 broken); backtick file references",
+  "Infineon ESD103-B1-02 datasheet Rev 1.3 (cached) for IR and VTrig; EN-shift and C87 arithmetic"
+ ],
+ "sources": [
+  "AGENTS.md, STATUS.md, docs/M3_R10.md, docs/ORDERING.md, docs/R10_VEHICLE_HANDOFF.md, docs/R10_VALIDATION.md, docs/FMEA_REDUNDANCY.md, docs/REQUIREMENTS.md at f2b8251",
+  "m3_design/assembly_review/sources/r10_design/{parts_qualification.md, AVA_LAYOUT.md, pin_table.tsv, r10_binding_note.json, R10_DECISIONS.md}",
+  "m3_design/assembly_review/sources/r10_review/round24_board_cad.md / .json, round24_docs.md",
+  "m3_design/assembly_review/m3.kicad_pcb (1407e850) and 9b27268's board (5516eeec); m3_design/assembly_review/fab/*",
+  "Infineon ESD103-B1-02 Series datasheet Rev 1.3 (2014-06-12), electrical characteristics p6"
+ ],
+ "coverage_limits": [
+  "Docs-binding lens only; routing, safety and manufacturing judgements not re-done",
+  "Not every historical section of R10_VALIDATION (2958 lines) and M3_R10 was read line by line; current-state sections, round 24 sections, owner table, §1, §6 head, §9, §10 were",
+  "Plate model, hot-plug model and route_check were not re-run; their records were checked for internal consistency only",
+  "Supplier figures checked against the committed JSON, not live JLC"
+ ]
+}

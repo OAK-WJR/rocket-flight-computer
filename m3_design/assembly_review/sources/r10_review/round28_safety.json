@@ -1,0 +1,87 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 28, safety lens (independent; strict real-errors-only rule)",
+  "reviewer": "claude",
+  "target_commit": "19dd0b5",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 1},
+  "findings": [
+    {
+      "id": "R28-SAFETY-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "FMEA's current R10 disposition row says the bus / continuity dividers keep 'ADC series protection'; R10 has none (R168 / R170 removed by audit 2, PC0 / PC5 read the divider nodes directly)",
+      "contradicts": [
+        "The board: PYRO1_CONT and ARM1_SENSE end directly on U1.15 (PC0) and U1.33 (PC5); no ADC series part exists.",
+        "REQUIREMENTS.md F8 (line 62): 'continuity PYRO1_CONT PC0 directly read filtered 10.2 kOhm/1 kOhm dividers ... Delete duplicate RAW_ACT_SENSE/PB0 and R168 / R170 4.7 kOhm tails ... Double faults can damage the MCU; no double-fault current guarantee.'",
+        "FMEA_REDUNDANCY.md's own R10 circuit amendment (lines 3-8): 'Both filtered nodes connect directly to the MCU: R168 / R170 and the duplicate bank are removed ... The historical double-fault 9.4 mA limit is withdrawn; double faults can damage the MCU.'",
+        "M3_R10.md lines 584-585 (CH1 pyro): 'ARM1_SENSE directly feeds PC5 and PYRO1_CONT directly feeds PC0; audit 2 removes R168 / R170.'",
+        "tools/check_r10.py mcu_side_issues (S-1, line 1921) fails any 'obsolete MCU-side sense tail; connect the filtered node directly to PC0 / PC5'.",
+        "The FMEA's own vocabulary: 'ADC series protection' is the 4.7 kOhm pin resistor layer, listed separately from 'split sense dividers' in the R6-R9 row (line 80) and described in I-9 (line 115) as 'Second layer, passes 9-10: R168-R171, 4.7 kOhm between each divider node and its ADC pin'."
+      ],
+      "evidence": {
+        "statement": "docs/FMEA_REDUNDANCY.md:39, row 'I-1 / I-2 / I-5; H-1 / H-2; T-3 / T-4' of the table under '## R10 applicability: one screw switch' (column 'Current R10 disposition'): 'Keep R134 2 Ohm, Q124's pull-down / series resistor / gate-source capacitor, reset-safe gate, cold pull-up and bus / continuity dividers with ADC series protection.'",
+        "board": "pcbnew (KiCad 10 Python, read-only) on the committed PCB a0ec075e: PYRO1_CONT = {C127.1, R129.2, R130.1, R178.1, U1.15}; ARM1_SENSE = {C129.1, R133.1, R175.2, R180.1, U1.33}; R168, R170 and R172 are absent from the 216 footprints. PYRO1_CONT copper runs U1.15 -> F.Cu (24.0,50.55)-(24.0,52.15) -> via (24.0,52.15) -> B.Cu to C127.1 / R129.2 / R130.1 / R178.1 with no series part.",
+        "history": "git log -S: the phrase was written in 73af96b (2026-10-28, single screw-switch pass) while R168 / R170 were still fitted (they are in 8bccb07's netlist); audit 2 (ff15523, 2026-10-29) removed them; the FMEA header was amended in 6628488 (round 19) but row 39 kept the old phrase. Not in any round 24-27 triage observation (grep 'series protection' / 'ADC series' over sources/r10_review).",
+        "probe": ".supervisor/r28_safety/f01_evidence.txt (dump.py output board.json)"
+      },
+      "impact": "The FMEA's current disposition for the I-1 / I-2 / I-5 class credits PC0 / PC5 with the I-9 'second layer' that limits pin current under a double fault. R10 withdrew that layer (double faults can damage the MCU), so this row overstates the sense-pin protection that a reviewer or the owner reads as current. No board change; no new fire path (the single-resistor rule, <= 3.342171 V at 19.9 V, still holds).",
+      "concrete_fix": "docs/FMEA_REDUNDANCY.md:39: replace 'and bus / continuity dividers with ADC series protection' with 'and the bus / continuity dividers (two 5.1 kOhm tops, two 2 kOhm bottoms, 10 nF) read directly by PC0 / PC5: audit 2 removed the 4.7 kOhm ADC series resistors R168 / R170, so one resistor fault stays within the pin ratings (<= 3.342171 V at 19.9 V) but there is no double-fault current limit (REQUIREMENTS F8)'. Text only."
+    }
+  ],
+  "observations": [
+    "VLOGIC onto 3V3 (the I-5 mechanism) on the surface: U2.1 (3V3, AP63203 FB) to U2.2 (VLOGIC, EN) 0.400 mm (B.Cu, adjacent TSOT-26 pins) and C84.1 (VLOGIC) to the 3V3 via (26.4,79.26) 0.531 mm (F.Cu); not named in the I-5 route lists (owner row 1, FMEA I-5 (R10), R10_VALIDATION section 1 (a)). Not counted: round 27's triage ruled that these lists are not claimed complete (PYRO1_IGN-3V3 0.735 mm, RAW_ACT-3V3 0.837 mm).",
+    "Owner row 24 quotes ACT_EN_MCU 0.5205 mm and RAW_ACT 0.5008 mm to BAT_ENABLE; exact pcbnew shape distance on a0ec075e is 0.5197 / 0.5000 mm (section 1's table says 0.500). Sub-micron method difference, no consequence.",
+    "ORDERING 8.3 per-flight step 2's diagnosis ('A board that is on with J400 open means ...') does not name a U9 IN-OUT short (U9.5-U9.6 0.200 mm, TI land), a switch or J400 contact that is not actually open, or the J1.1 BAT_IN In2 ring 0.2505 mm from In2 RAW_PROTECTED (rounds 20 / 21: not filed). The required action (do not insert the e-match) is unchanged.",
+    "M3_R10 Firmware rule 3 and the binding note state '1.19-1.98 V on the gate ... fires the match after about 0.55 ms' without the 'driver resistances are Inference' label that R10_VALIDATION section 1 and FMEA I-2 / H-2 (R10) carry; ORDERING 8.3 labels it 'Calculation'. Conservative direction and labelled at its source (round23_safety_severity_check.md coverage limits); not a false statement.",
+    "Single faults that energise RAW_ACT with J400 open by themselves: Q121.4-Q121.9 gate-drain 0.520 mm (RAW_ACT settles about |VGS(th)| below the source), Q121 source-drain 0.520 mm (through Q120's body diode), ACT_DRV and ACT_GATE copper 0.2505 mm from GND fill, and a Q122 gate-drain short (R123 then pulls ACT_GATE to about 50/62 of the source voltage, VGS about -5.4 V). All are in owner row 2's disclosed load-switch class; per-flight step 2 (J121.2 < 0.1 V) screens a pre-existing one; firing still needs Q124.",
+    "AGENTS section 2 on the board: 2.1 / 2.2 J400 -> U9 EN, RAW_ACT reached only through Q120 / Q121 (S-2; the R10 reading of 'load switch' recorded in rounds 18 / 19); 2.3 the firmware and per-flight texts keep ground refusals and in-flight never-veto; 2.4 Q124 R128 10 k gate-source, R126 220 Ohm series, C126 220 nF gate-source, R127 1 k at PE4; Q120 / Q121 R119 || R120 50 k, R121 10 k, C120 1 uF; Q122 R123 2 k, R122 1 k, C123 10 nF; all defined off with U1 in reset or unpowered. No violation found.",
+    "Every section 1 / owner row 1-2 / FMEA I-5 / M3_R10 deviation figure re-measured on a0ec075e reproduces: OUT-GND 0.1768 / 0.1800, R173.1-Q124 source via 0.500, OUT-BUZZ_DRV 0.7935, OUT-3V3A 1.0400, OUT-3V3 1.0500 (F.Cu) / 1.0511 (B.Cu), gate nets 1.065 / 1.0585 / 1.145, CONT_MID-Q123.1 0.175 (diagonal 0.2005), CONT_MID-R134.2 0.250 (diagonal 0.3862), R173.2-D120.3 0.4154, R173.2-R162.1 1.1328, ARM1_SENSE-U13.5 0.150, RAW_ACT-GND 0.3162 (non-fill), U9.1-BAT_IN 0.200, EN via-BAT_FAULT_N 0.200, R123.1-BAT_ENABLE 0.330, EN via-R134.2 0.500, R81.1-GND via 0.1732, RAW_ACT-R134.1 0.3672, RAW_ACT-R87.1 0.225, J440.1 / J9.1 In2 rings 0.2505 and In2 3V3 fill edges 0.300 mm, BAT_FAULT_N 0.180 / 0.380 mm.",
+    "Cold-screen arithmetic reproduces: healthy CONT / BUS 99.370 / 99.339 mV, open 146.226 / 0 mV (Vf 0.2 V); 96.2 / 96.1 and 141.5 mV at Vf 0.30 V; CONT_MID-RAW_ACT bridge with an open match 102.0 / 55.5 mV; OUT-3V3 bridge 0.295 V; CONT_MID-3V3 0.541 V; 'at most about 4.6 V on PC14' is the bound 8.4 x 6.1 / 11.2 V without R163.",
+    "D-R26-04's whole-board audit reproduced in the changed regions (x 5-26 / y 45-67 and x 4-11.5 / y 12-25, every net pair, with and without fills, 92c3ad59 vs a0ec075e): exactly the seven (no fills) / six (fills) rows the records list.",
+    "Barrels on a0ec075e reproduce S-8: PYRO1_OUT via 1.0209 mm to its GND partner's inner pads, 2.698 mm to In2 3V3; J121.1 1.050 / 1.050 / 1.0612 mm (In2 3V3) and 1.5754 mm to R13's 3V3 via barrel; ACT_GATE and BAT_ENABLE barrels 1.050 mm; PYRO1_GATE via 2.100 mm (In2 USB_LIMITED) and 2.7505 mm (In2 3V3); J121.2 rings 0.2505 mm from GND (exempt).",
+    "BAT_SW_SOURCE's via (10.8,69.2) is 0.2505 mm from In2 RAW_PROTECTED and J400.1 keeps In1 / In2 rings 0.2505 mm from GND; BAT_SW_SOURCE is outside BARREL_NETS, and a short there only shifts EN while J400 is closed (no latch once J400 opens) or holds the board off.",
+    "AON7524 VGS(th) is 0.4-1.2 V (AOS Rev 1.1 p2), so any 3.3 V logic bridge to Q124's gate nets is a fire command; the only such neighbours within 1.2 mm are QSPI_IO2 (0.550 mm, disclosed), 3V3 / 3V3A (>= 1.0585 mm) and PYRO1_OUT (Q124 G-D 0.520 mm, round 25 observation). BARO_SDO (TP122-R64.1 1.130 mm) is pulled to GND by R64 (fail-safe)."
+  ],
+  "fix_verification": [
+    {"item": "D-R26-01 (R26-TRI-09)", "measurement": "GND vias at (7.4,16.5) and (7.4,20.0), pads on F.Cu / In1 / B.Cu (In2 3V3 cleared); J410 / J420 / J440 / J9 pins 3 and 4 flash on no inner layer, pins 1 and 2 keep In1 / In2 rings (pcbnew FlashLayer).", "verdict": "confirmed"},
+    {"item": "D-R26-02 (R26-TRI-01 respin item)", "measurement": "PYRO1_OUT to 3V3 1.0500 mm (F.Cu, J121.1 run to R13's via (9.2,52.55)) and 1.0511 mm (B.Cu, R173.1-D120.3); to 3V3A 1.0400 mm (B.Cu, run to R164.2); inner: J121.1 barrel 1.0612 mm to In2 3V3, 1.5754 mm to the 3V3 via barrel; before (92c3ad59) 0.5135 / 0.5662 mm.", "verdict": "confirmed"},
+    {"item": "D-R26-04 (root's follow-up)", "measurement": "3V3 to PYRO1_GATE_N 1.065 mm (R127.1), to PYRO1_GATE 1.0585 mm (R128.1), both to via (19.55,55.825); 3V3A to PYRO1_GATE 1.145 mm (C10.1-via (14.4,53.3)); gate via barrel 2.7505 mm from In2 3V3; regional audit 92c3ad59 vs a0ec075e gives exactly the recorded rows (BUZZ_DRV-PYRO1_OUT 0.9635 -> 0.7935, BUZZ_DRV-CONT_MID none -> 1.1328, 3V3A-PYRO1_GATE 1.1506 -> 1.145, 3V3-BUZZ_DRV 0.5339 -> 0.2334, 3V3-LS120.3 0.700 -> 0.2062, BUZZ_DRV-GND 0.280 -> 0.200, GND-U1.5 1.1438 -> 0.8469 without fills only).", "verdict": "confirmed"},
+    {"item": "D-R26-03 (text in the firmware rules this lens reads)", "measurement": "Rule 8's corner (5.71 / 5.55-5.56 / 5.50 V) and the 5.71 V bench point read the same in M3_R10 Firmware, the binding note, ORDERING 8.3, AGENTS and owner rows 21 / 25; figures not re-computed here (power lens).", "verdict": "partly (consistency only)"},
+    {"item": "R27-TRI-05 fix (round 27 docs lane, records of D-R27)", "measurement": "FMEA:37 (I-5 R10) and R10_VALIDATION section 1 (a) now read '(not an FMEA change-list item; section 4.2's H-9 is the load-switch gate-source capacitor, fitted on R10 as C120)'; FMEA:111 marks the old label as a mislabel; round26_triage.md carries the erratum; git grep 'H-9' over docs, AGENTS, STATUS and r10_design finds no other mislabel. C120 is 1 uF ACT_FET_S-ACT_GATE on the board.", "verdict": "confirmed"},
+    {"item": "D-R27-01 / -02 / -03", "measurement": "Outside this lens (budget pack sag, binding-note revision sentence, port symbol); not re-measured.", "verdict": "not checked (out of lens)"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after: a0ec075e... both times; git status: no tracked change.",
+    "Read the brief, AGENTS.md (HEAD), REQUIREMENTS F7 / F8, R10_VALIDATION owner table, Row 2 residuals, Inventory basis and section 1, M3_R10 Firmware / CH1 pyro / Retained deviations, ORDERING 8.3-8.4, R10_VEHICLE_HANDOFF, FMEA R10 rows, section 1, section 4, section 6.3, round 26 / 27 triage and fix reports.",
+    "pcbnew (KiCad 10 Python, -I -B, read-only) dump of the committed board: 216 footprints, 1059 tracks, 309 vias, 27 zones (.supervisor/r28_safety/dump.py -> board.json).",
+    "Same-layer copper adjacency (exact KiCad shape Collide, bisected to < 1 um) for the 18 pyro / arming / gate / sense / switch nets plus BUZZ_DRV, BUZZ_G, 3V3, BAT_IN, RAW_PROTECTED, VLOGIC, USB_LIMITED, VBUS, PORT_4V8, CAM_5V, BAT_FAULT_N (adj.py, adj_lib.py).",
+    "Barrel (hole wall) to foreign inner copper and barrel-to-barrel distances for every fire-chain via and plated hole (barrel.py).",
+    "Regional net-pair comparison 92c3ad59 (git show 3d8e845) vs a0ec075e, with and without fills (pairs.py).",
+    "U9 pad-to-pad gaps (padgap.py); terminal inner-ring flashing and the D-R26-01 vias (rings.py); coat-selection parts to the U5 exclusion union (c10.py).",
+    "Netlist checks of the gate networks (Q124, Q120 / Q121, Q122), the sense banks, PE4 / PC1 / PC0 / PC5 / PC14 neighbours on U1, and the absence of R168 / R170 / R172, TP121, J123 / J124, R62 / R63.",
+    "Calculations: cold-screen readings, bridge consequences (OUT-3V3, CONT_MID-RAW_ACT, CONT_MID-BUZZ_G, R123.1-BAT_ENABLE latch thresholds 0.29 / 1.69-1.96 / 0.58 / 1.52-1.83 MOhm, EN 2.03 / 2.06 V), J400-open turn-off timing (about 0.1-0.2 s against the 1 s check), Q122 G-D and Q121 G-D bus-energising cases.",
+    "pdftotext of the cached DS12110 Rev 8 (Table 119 p212, Table 159 p249, PC14 pin row: FT) and AON7524 Rev 1.1 (VGS(th) 0.4-1.2 V p2).",
+    "git log -S / git grep for the FMEA phrase, R168 / R170 mentions, H-n / I-n / F-n cross-references and absent-part references in the current R10 safety texts."
+  ],
+  "sources": [
+    "AGENTS.md section 2 (absolute rules) and section 1 rows (HEAD 19dd0b5)",
+    "docs/FMEA_REDUNDANCY.md lines 3-8, 30-43, 99-116, 319-392, 517-549",
+    "docs/REQUIREMENTS.md F7, F8 (lines 61-62)",
+    "docs/R10_VALIDATION.md owner decision table, Row 2 residuals, Inventory basis and section 1",
+    "docs/M3_R10.md Retained deviations (374-500), CH1 pyro (579-660), Firmware (1065-1196)",
+    "docs/ORDERING.md 8.3-8.4; docs/R10_VEHICLE_HANDOFF.md",
+    "tools/check_r10.py S-1 / S-3 / S-8 docstrings and gate_network / local_gate_bias / mcu_side_issues; tools/critical_reference.py R10_SLOW_RETURN_NETS; tools/test_r10_check.py copper_gap and the D-R26 seeds",
+    "ST DS12110 Rev 8 (https://www.st.com/resource/en/datasheet/stm32h743vi.pdf): Table 119 p212, Table 120 p213, Table 159 p249, Table 9 PC14 row (FT)",
+    "AOS AON7524 Rev 1.1 (October 2023) p2: VGS(th) 0.4 / 0.8 / 1.2 V",
+    "sources/r10_review/round26_triage.md, round26_fix_cad.md, round26_fix_docs.md, round27_triage.md, round27_fix_cad.md, round27_fix_docs.md, round23_safety_severity_check.md, round20_safety.json / round21_safety.json (BAT_IN-RAW_PROTECTED disposition)"
+  ],
+  "coverage_limits": [
+    "No DRC, route_check, check_r10 or tools/check.sh run (read-only brief); adjacency used pcbnew shapes of flashed copper plus explicit barrel-wall measurements, not KiCad's DRC engine.",
+    "The 92c3ad59 / a0ec075e comparison covered the regions the round 26 fix pass changed, not the whole board.",
+    "Harness chafe cases, ESD, leakage, CAF, solder-bridge likelihood and MCU pin survival are reasoned (Calculation / Inference), not measured; no bench, firmware or physical test exists.",
+    "FMEA historical rows (R6-R9 and earlier) were read only for cross-reference definitions, not reviewed as current statements.",
+    "Other lenses' round 28 reports and probe directories were not opened."
+  ]
+}

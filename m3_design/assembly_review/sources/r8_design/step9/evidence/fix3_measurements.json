@@ -1,0 +1,343 @@
+{
+ "board_sha256": "c84f00b88f5fb9409de40f33b2d51a48fb29fb66c386c869b7f93ea791e37c54",
+ "f9_pad_edge_to_J1.1": {
+  "R167": [
+   1.905,
+   "R167.2",
+   3.86
+  ],
+  "D8": [
+   3.8,
+   "D8.1",
+   6.57
+  ],
+  "C95": [
+   5.339,
+   "C95.1",
+   7.93
+  ],
+  "C80": [
+   5.703,
+   "C80.1",
+   8.41
+  ],
+  "R166": [
+   5.75,
+   "R166.1",
+   8.87
+  ],
+  "C89": [
+   6.702,
+   "C89.1",
+   9.47
+  ],
+  "C96": [
+   7.817,
+   "C96.1",
+   10.6
+  ]
+ },
+ "J1.1_shape": {
+  "shape": 1,
+  "size": [
+   2.6,
+   2.6
+  ]
+ },
+ "J122": {
+  "2": {
+   "at": [
+    23.0,
+    79.51
+   ],
+   "bbox_y": [
+    78.71,
+    80.31
+   ]
+  },
+  "3": {
+   "at": [
+    20.46,
+    79.51
+   ],
+   "bbox_y": [
+    78.71,
+    80.31
+   ]
+  }
+ },
+ "gnd_near_bare_pads": [
+  {
+   "pad": "Q122.3",
+   "net": "ACT_DRV",
+   "layer": "F.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": null
+  },
+  {
+   "pad": "R121.1",
+   "net": "ACT_GATE",
+   "layer": "F.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": null
+  },
+  {
+   "pad": "R121.2",
+   "net": "ACT_DRV",
+   "layer": "F.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": null
+  },
+  {
+   "pad": "J123.1",
+   "net": "PULLPIN_EXT",
+   "layer": "F.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": [
+    0.2,
+    [
+     10.05,
+     75.3
+    ]
+   ]
+  },
+  {
+   "pad": "J123.1",
+   "net": "PULLPIN_EXT",
+   "layer": "B.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": [
+    0.2,
+    [
+     10.05,
+     75.3
+    ]
+   ]
+  },
+  {
+   "pad": "J1.4",
+   "net": "BAT_SW_RETURN",
+   "layer": "F.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": [
+    0.189,
+    [
+     14.7,
+     112.0
+    ]
+   ]
+  },
+  {
+   "pad": "J1.4",
+   "net": "BAT_SW_RETURN",
+   "layer": "B.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": [
+    0.189,
+    [
+     14.7,
+     112.0
+    ]
+   ]
+  },
+  {
+   "pad": "R160.1",
+   "net": "PULLPIN_EXT",
+   "layer": "B.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": [
+    0.859,
+    [
+     9.125,
+     71.125
+    ]
+   ]
+  },
+  {
+   "pad": "C120.2",
+   "net": "ACT_GATE",
+   "layer": "B.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": null
+  },
+  {
+   "pad": "R165.1",
+   "net": "BAT_SW_RETURN",
+   "layer": "B.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": [
+    0.887,
+    [
+     15.0,
+     107.3
+    ]
+   ]
+  },
+  {
+   "pad": "R120.2",
+   "net": "ACT_GATE",
+   "layer": "B.Cu",
+   "gnd_fill": 0.151,
+   "gnd_via": [
+    0.18,
+    [
+     15.0,
+     107.3
+    ]
+   ]
+  },
+  {
+   "pad": "Q121.4",
+   "net": "ACT_GATE",
+   "layer": "B.Cu",
+   "gnd_fill": 0.667,
+   "gnd_via": null
+  }
+ ],
+ "R81.2-J121.1": 1.825,
+ "viacheck_pairs": [
+  {
+   "pad": "C90.1",
+   "gap": 0.025,
+   "via": [
+    34.8,
+    53.68
+   ],
+   "size": 0.6,
+   "net": "3V3"
+  },
+  {
+   "pad": "C7.1",
+   "gap": 0.033,
+   "via": [
+    35.65,
+    66.6
+   ],
+   "size": 0.6,
+   "net": "VLOGIC"
+  },
+  {
+   "pad": "C60.2",
+   "gap": 0.05,
+   "via": [
+    26.3,
+    56.85
+   ],
+   "size": 0.5,
+   "net": "GND"
+  },
+  {
+   "pad": "U10.3",
+   "gap": 0.05,
+   "via": [
+    11.1,
+    33.8
+   ],
+   "size": 0.6,
+   "net": "VBUS"
+  },
+  {
+   "pad": "D4.2",
+   "gap": 0.064,
+   "via": [
+    9.0,
+    33.8
+   ],
+   "size": 0.5,
+   "net": "GND"
+  },
+  {
+   "pad": "C300.2",
+   "gap": 0.07,
+   "via": [
+    9.7,
+    23.3
+   ],
+   "size": 0.5,
+   "net": "GND"
+  },
+  {
+   "pad": "R71.2",
+   "gap": 0.071,
+   "via": [
+    38.25,
+    33.1
+   ],
+   "size": 0.6,
+   "net": "CAM_FB"
+  },
+  {
+   "pad": "R72.1",
+   "gap": 0.071,
+   "via": [
+    38.25,
+    33.1
+   ],
+   "size": 0.6,
+   "net": "CAM_FB"
+  },
+  {
+   "pad": "R76.1",
+   "gap": 0.075,
+   "via": [
+    34.425,
+    37.4
+   ],
+   "size": 0.6,
+   "net": "3V3"
+  },
+  {
+   "pad": "C93.1",
+   "gap": 0.075,
+   "via": [
+    35.45,
+    48.5
+   ],
+   "size": 0.5,
+   "net": "CAM_IO_3V3"
+  },
+  {
+   "pad": "R310.1",
+   "gap": 0.087,
+   "via": [
+    24.1,
+    28.45
+   ],
+   "size": 0.5,
+   "net": "3V3"
+  },
+  {
+   "pad": "C76.2",
+   "gap": 0.09,
+   "via": [
+    34.4,
+    38.27
+   ],
+   "size": 0.6,
+   "net": "GND"
+  }
+ ],
+ "viacheck_vias": 11,
+ "Q123_dot_on_R162.2_mask_mm2": 0.01198,
+ "CAM_PWR_EN-USB_LIMITED_B": 0.2,
+ "R172.1-USB_LIMITED": 0.23,
+ "R172.2-USB_LIMITED": 0.23,
+ "Q120.9-BAT_ENABLE": 0.23,
+ "BAT_ENABLE_vias": [
+  [
+   [
+    16.6,
+    104.5
+   ],
+   0.5
+  ],
+  [
+   [
+    40.42,
+    93.5
+   ],
+   0.5
+  ]
+ ],
+ "script": "fix pass 3 scratch measure3.py (pcbnew, check_r8.min_gap bisection to 0.001 mm)"
+}

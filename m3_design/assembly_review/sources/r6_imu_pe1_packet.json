@@ -1,0 +1,523 @@
+{
+  "status": "Independent routing/pin review PASS; guarded helper and startup input installed; root integrates actual PCB/schematic/contracts",
+  "source_sha256": "d361bd4bdf10d1562d1da38d2ff52562f72fe0075854b6675126352093ed4174",
+  "candidate_sha256": "254964435c526a251f29466682af43a1766b193af8b53e020ae5d36357c355b2",
+  "candidate": "<scratch>/r6-imu-pin98-pnzpv4l6/m3.kicad_pcb",
+  "baseline": "<scratch>/r6-imu-pin98-pnzpv4l6/baseline.kicad_pcb",
+  "mapping": {
+    "U1.40": {
+      "from": "IMU_INT1",
+      "to": "unconnected-(U1-PE10-Pad40)"
+    },
+    "U1.98": {
+      "from": "unconnected-(U1-PE1-Pad98)",
+      "to": "IMU_INT1"
+    },
+    "U4.4": "unchanged IMU_INT1"
+  },
+  "actuator_sentinels_preserved": [
+    "U1.2",
+    "U1.4",
+    "U1.5",
+    "U1.16",
+    "U1.32"
+  ],
+  "removed": [
+    {
+      "uuid": "49cd1cef-2a3f-4783-aaf0-5b0e191576c8",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        20.85,
+        29.45
+      ],
+      "end": [
+        21.15,
+        29.75
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "a7cc48e7-f9fb-4fcc-8a39-8922232207c4",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        20.85,
+        27.95
+      ],
+      "end": [
+        20.85,
+        29.45
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "caa4bc3c-b304-4485-9c81-f7d10acd2e21",
+      "net": "IMU_INT1",
+      "kind": "via",
+      "at": [
+        21.15,
+        29.75
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    }
+  ],
+  "added": [
+    {
+      "uuid": "71750581-4675-43b4-9706-d8f7c9680cb5",
+      "net": "IMU_INT1",
+      "kind": "via",
+      "at": [
+        26.3,
+        44.65
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "0b780cc4-adc9-44e5-ae70-9e54c7a682e0",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        26.8,
+        46.35
+      ],
+      "end": [
+        26.7,
+        46.45
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "4aa12d48-cbf1-4328-a8d8-f44ed074e7e5",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        26.8,
+        45.15
+      ],
+      "end": [
+        26.8,
+        46.35
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "1c3d0295-b8f4-45e3-872a-7adfab9ad27f",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        26.3,
+        44.65
+      ],
+      "end": [
+        26.8,
+        45.15
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "855227b9-303c-4db5-81d6-6dc92cb7fe20",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.85,
+        44.1
+      ],
+      "end": [
+        26.3,
+        44.65
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "01eac096-df5c-46f5-9227-ad41b6e371f2",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.85,
+        43.05
+      ],
+      "end": [
+        26.85,
+        44.1
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "e83dadd1-982d-4236-88aa-9bd98e11ebb2",
+      "net": "IMU_INT1",
+      "kind": "via",
+      "at": [
+        26.65,
+        48.25
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "7f90af1a-0159-43a9-8385-00a89a16f033",
+      "net": "IMU_INT1",
+      "kind": "via",
+      "at": [
+        26.7,
+        46.45
+      ],
+      "diameter": 0.5,
+      "drill": 0.3
+    },
+    {
+      "uuid": "4c40a1f5-e44c-43b5-ba12-943daefb9f03",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        34.8,
+        59.55
+      ],
+      "end": [
+        34.79,
+        59.55
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "9cc3bec7-ff74-428b-8453-9b12ab3c1352",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        34.65,
+        59.4
+      ],
+      "end": [
+        34.8,
+        59.55
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "40517c9c-678f-4539-a7f4-8d3547be0bda",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        34.3,
+        59.4
+      ],
+      "end": [
+        34.65,
+        59.4
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "65842906-5a15-4e9a-b13e-5f17fdd0c133",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        33.7,
+        60.0
+      ],
+      "end": [
+        34.3,
+        59.4
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "f811857b-a3c1-4248-b47f-efecb1f2be75",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        33.049999,
+        60.0
+      ],
+      "end": [
+        33.7,
+        60.0
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "814a1e15-f9ed-47a4-a9a5-22e2ad723dd1",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        28.75,
+        55.7
+      ],
+      "end": [
+        33.049999,
+        60.0
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "33db467e-2bc7-4542-934b-844fdd2d88c4",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        28.75,
+        53.65
+      ],
+      "end": [
+        28.75,
+        55.7
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "4ccf588d-73af-4185-b1d2-1ff94552ff46",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        26.55,
+        51.45
+      ],
+      "end": [
+        28.75,
+        53.65
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "fdd8d561-c1e2-46e7-8863-d9a73145f5b3",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        26.55,
+        49.95
+      ],
+      "end": [
+        26.55,
+        51.45
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "aa1f808d-02e0-4662-9df1-94fa72104a92",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        27.25,
+        49.25
+      ],
+      "end": [
+        26.55,
+        49.95
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "a9283ca9-ce3d-41a8-9e13-ed7c0675330c",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        27.25,
+        48.85
+      ],
+      "end": [
+        27.25,
+        49.25
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "cf83ef84-fe01-4e71-9831-c674bac0205d",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 2,
+      "start": [
+        26.65,
+        48.25
+      ],
+      "end": [
+        27.25,
+        48.85
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "56228d19-bbb3-4547-96dd-472e98e2b69c",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.65,
+        47.55
+      ],
+      "end": [
+        26.65,
+        48.25
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "1293cd19-b48c-47ca-8198-d827a86d03ec",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.85,
+        47.35
+      ],
+      "end": [
+        26.65,
+        47.55
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "2834786b-320d-4594-a65c-5d0c866e1e8c",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.85,
+        46.6
+      ],
+      "end": [
+        26.85,
+        47.35
+      ],
+      "width": 0.15
+    },
+    {
+      "uuid": "dd84c040-70fa-4393-9544-90e3e6860505",
+      "net": "IMU_INT1",
+      "kind": "track",
+      "layer": 0,
+      "start": [
+        26.7,
+        46.45
+      ],
+      "end": [
+        26.85,
+        46.6
+      ],
+      "width": 0.15
+    }
+  ],
+  "opens_before": 3,
+  "opens_after": 2,
+  "hard_errors": 0,
+  "old_pad_splits": [],
+  "new_In1_tracks": 0,
+  "firmware": {
+    "PE1": "GPIO_MODE_INPUT, GPIO_NOPULL. May be sampled as a digital level; no GPIO consumer is currently implemented. Never enable EXTI1 for PE1.",
+    "PE3": "unchanged output-low actuator sentinel",
+    "EXTI1_owner": "PD1 power-status mux signal",
+    "SPI_polling": "Unchanged existing sensor driver polls SPI status/data; no IMU GPIO interrupt consumer."
+  },
+  "helper_replay": {
+    "source_sha": "d361bd4bdf10d1562d1da38d2ff52562f72fe0075854b6675126352093ed4174",
+    "candidate_sha": "5e6baad9382c240ac5573769c70d34c53e89774eb5a3366515bc3fae4c6deedc",
+    "first": {
+      "applied": true,
+      "added": [
+        "4200f632-a21d-5124-a93a-e0c9f9bd89b6",
+        "d6e2389b-4c22-58a2-a842-c2196aaa27dd",
+        "1cb93116-ab7f-53c6-bcf3-377636c3081d",
+        "4d506ce5-80c7-5601-9dc5-41027e649064",
+        "ee192146-a611-55c3-ab11-d398bf328395",
+        "5e5354b5-aa1b-5597-a8b6-67c882b9f57f",
+        "c9f4bfb4-c8df-54c3-bb8d-021459b13111",
+        "999fa588-aaf9-5773-a8fa-d90696daf1b3",
+        "338326c3-d5e4-5414-8f36-302c246ac250",
+        "97c13b29-ff41-53fb-9e74-c4e6b134ade6",
+        "d3fb7897-4d2c-534d-94b0-4a136cd3fe64",
+        "7dffe00b-8888-59a2-8882-09f458ada868",
+        "1d3e2d02-b5dc-5835-aefd-043296a4f4df",
+        "ac809db0-ab40-5248-bcd7-5d199308c421",
+        "30f4f1ca-cdc3-517b-8410-42493bc2c00a",
+        "dbb6c835-d4a2-517c-adb6-458227d7f99f",
+        "ea78504d-1d5a-5db7-9ebb-2291f830efe9",
+        "a18fd725-aef3-573b-ae03-8b90efc69748",
+        "166a6a55-060c-5bfd-ab80-0df772f754f9",
+        "8641f900-edd7-586f-84e6-83895aaa16f5",
+        "21dad7bb-e79a-5fb1-994d-b21d11a9feec",
+        "700b4bb4-be43-5800-8a2c-b504513c323b",
+        "7c8470df-f186-51b4-8008-b28a1292823f",
+        "338ca080-716c-542f-96f3-2bcb1af1bfe6"
+      ],
+      "removed": [
+        "49cd1cef-2a3f-4783-aaf0-5b0e191576c8",
+        "a7cc48e7-f9fb-4fcc-8a39-8922232207c4",
+        "caa4bc3c-b304-4485-9c81-f7d10acd2e21"
+      ],
+      "zones_require_refill": true,
+      "native_drc_required": true,
+      "schematic_and_firmware_sync_required": true,
+      "imu_status_mode": "PE1_INPUT_POLLING_ONLY",
+      "exti1_owner": "PD1"
+    },
+    "geometry_matches_review_candidate": true,
+    "old_other_copper_unchanged": true,
+    "pad_changes_only": [
+      "U1.40",
+      "U1.98"
+    ],
+    "old_pad_splits_excluding_retired_PE10": [],
+    "idempotent_reload": true,
+    "sentinel_guard": true,
+    "atomic_rejections": [
+      "changed own",
+      "partial own",
+      "partial old escape",
+      "unexpected pad mapping",
+      "changed old via layers",
+      "partial new mapping with old escape"
+    ],
+    "project_sha": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf"
+  },
+  "native_replay": {
+    "drc": "<scratch>/r6-imu-pe1-helper-1gn2l_fi/drc.json",
+    "opens": 2,
+    "dangling": 13,
+    "hard": 0
+  },
+  "helper_replay_path": "<scratch>/r6-imu-pe1-helper-5u1xoz4_/m3.kicad_pcb",
+  "firmware_tests": {
+    "command": "python3 -m unittest m3_firmware.test_imu m3_firmware.test_firmware m3_firmware.test_power_status",
+    "passed": 42,
+    "startup_assertions": [
+      "PE1 GPIO input/no-pull exactly once",
+      "PE3 push-pull/output latch low exactly once"
+    ],
+    "ARM_build": "Not run: local ARM GCC toolchain absent; no release firmware generated",
+    "hardware_tested": false
+  },
+  "independent_review": {
+    "critical": 0,
+    "major": 0,
+    "minor": 1,
+    "minor_detail": "Auxiliary VSS99-to-R5 stitch return path grows 3.373 to 5.080 mm; local ground remains connected after 0.25 mm erosion",
+    "critical_reference_samples": 104241,
+    "critical_reference_losses": 0,
+    "direct_decoupling_returns": "C18 B.Cu and U1.99 F.Cu unchanged",
+    "interrupt_constraint": "PE1 input/polling only; existing PD1 retains EXTI1"
+  },
+  "installed_sources_sha256": {
+    "m3_design/r6_imu_finish.py": "e4ba8458c1438bc0756c9f5bf8e565ee998f9b4069882438416d97fe0eeda0a9",
+    "m3_firmware/src/main.c": "db0eff61df6917b2383d47618ca5d51e84fc8a6ce7f43cd28cf181f48213d740",
+    "m3_firmware/tests/stm32h7xx_hal.h": "438fa019ad6e0a9e798d055ea57abb357fb275d597aab60130c95697c1e69da5",
+    "m3_firmware/tests/bus_harness.c": "e01d3c9b14e83ce945d77a0013403fefc37a9e5eff7a76c3da4b77c79cddb1b7"
+  }
+}

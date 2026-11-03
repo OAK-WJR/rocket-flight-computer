@@ -1,0 +1,44 @@
+# Round 26 — parts lens (Claude)
+
+Target commit `3d8e845`, board `92c3ad59…` (SHA-256 identical before and after). Rule: only real errors count.
+
+## Totals
+
+Critical 0 / Major 0 / Minor 0. No findings.
+
+## Fix verification
+
+- **D-R25-03 OVLO corner** — confirmed: (1.223 + 0.1 uA x (2.002M || 0.27972M)) x 2.28172/0.27972 = 10.1764 V; without leakage 9.9762 V; nominal-R no-leakage 9.633-9.959 V = M3_R4 A2's 9.63-9.96 V; TI SLVSFC9C sec 6.5 VOV(R) 1.183/1.20/1.223 V and IOVLKG -0.1..0.1 uA re-read from the cached datasheet text
+- **D-R25-03 buck prospective all-shorts peak** — confirmed: all_shorts 3.16050 A + ripple/2 at Vin 10.1764 V, L 5.44 uH, Vo 5.3667/5.5463 V: 3.6565 A (470 kHz), 3.6268 A (500 kHz); 8.4 V keys unchanged
+- **D-R25-03 U9 port-fault bound** — confirmed: 3.1 + 2.225/3.5 + 10.1764/(3300 x 0.98) + 0.005 = 3.743861 A; U9 min 3.96/1.0035 = 3.946188 A; margin 0.202327 A (parts_qualification 138-140, R10_VALIDATION 2473 agree); R92 bleed 3.147 mA (was 3.083 mA at 9.97 V)
+- **D-R25-03 parts_budget.json regenerated / SHA** — confirmed: parts_budget.json SHA-256 f92611a8...d298 equals parts_qualification line 475's figure; keys 10V18_* present, 9V97_* absent
+- **D-R25-02 rule 8 hold-up (parts_budget loads)** — confirmed: 0.5 x 300.8 uF x (V^2 - 3.8^2)/P: 0.1035-0.1643 ms all ports on (4.84-5.17 V, 13.064-11.249 W), 0.2906-0.4303 ms shed; ratio to break-to-3.8 V 0.223-0.305
+- **D-R24-11 D402 (parts lens)** — confirmed: BOM line C535146 qty 9 incl. D402; footprint M3_TSLP_2_20 pads 1 BAT_SW_RETURN / 2 GND; CPL B rot via --verify-cpl OK; ESD103-B1-02 Table 3 VRWM +/-15 V, IR 50 nA at 15 V against J400.2 <= 5.2 V closed / 8.4 V open; EN shift 50 nA x 470k x 300k / 1240k = 5.69 mV
+
+## Observations (not counted)
+
+- parts_qualification 'Historical R166' states 0.3378672-0.3825072 ohm 'over -40...85 C'; the upper bound uses a 65 K rise (90 C), not 60 K (0.38105 ohm). hotplug.md states the method correctly (+/-65 K about 25 C); conservative widening of a historical input, not a false current figure.
+- L1 SWPA4030S4R7MT Isat 2.90 A max-column / 3.20 A typ (Sunlord catalogue p8) sits below AP63203's 3.1 A maximum HS peak limit only in a 3V3 hard-short fault; no record claims a fault-current inductor rating, normal load is far below Irms 2.0 A.
+- docs/M3_R4.md lines 28 and 422 keep the R4 no-leakage OVLO range 9.63-9.96 V; M3_R4 is the R4 revision record and r10_parts.py / parts_qualification now label it the no-leakage figure (D-R25-03).
+- parts_qualification 'Historical (removed per-port switch budget)' paragraph splices the current 3.657 / 3.627 A figures into a parenthesis before the historical 2.48 / 2.51 A; readable, both labelled.
+- CPL J3 and J430 rows are offset from the KiCad origin (J3 x -0.095 mm, J430 y +1.55 mm): these are the reviewed EasyEDA body-origin corrections in tools/jlc_corrections.json, and --verify-cpl rebuilds their pads within tolerance.
+- fab stock/cost snapshot (2026-11-02T01:42:53Z / 01:43:55Z) agrees with parts_qualification round 24 amendment: U4 2 orderable vs 5, U9 -83, $85.60/board; ordering facts, not findings.
+
+## Checks actually executed
+
+- SHA-256 of m3.kicad_pcb before and after: 92c3ad59... both
+- pcbnew extraction of 216 footprints; every BOM (JLC + owner) designator compared with board LCSC / Manufacturer Part / footprint / value fields and Qty: 0 mismatches; 9 non-BOM items are excluded test pads and J2 (TC2030)
+- CPL 206 rows: side and position vs board for every row (only J3 / J430 differ, by their reviewed body corrections); 70 top / 136 bottom
+- tools/jlc_orient.py --verify-cpl (read-only) on the committed CPL: 67 top + 125 bottom rebuilt, worst residual 0.491 mm, 14 placement-only (nonpolar 1 k resistors), errors none; matches ORDERING 8 / M3_R10 counts
+- pad-to-net map of polarized / multi-pin parts (D8, D9, D120, D121, D123, D4, D402, LED1, LED2, Q120-Q124, LS120, U2, U400, Y1, L1, L400, R134, R166, C84) against maker pinouts
+- capacitor / resistor net map vs voltage ratings (all caps on <= 8.4 V rails are 25 V or 50 V; 16 V parts only on 3V3, VCAP, VBUS, CAM_IO_3V3)
+- decoded every BOM MPN against value/tolerance/voltage/dielectric (Samsung, Yageo, UniOhm incl. 0603WAF220KT5E = 2.2 ohm, Vishay MCT0603, FOJAN, Bourns CRM2512 2 W)
+- re-computed parts_budget: OVLO corner, buck peaks, U9 bound, camera TPS2553 IOS 1.0409-1.2495 A (SLVS841 eq.1), LDO loss 0.4897 W and junction 109.2-123.9 C, fire loop 4.6178 ohm and 0-4 stall currents, R134 fault 35.80 W / 0.716 J, watchdog bound 34.853 ms, hold-up figures
+- datasheet re-reads from the cached PDFs: TPS25947 OVLO / ILIM table, TPS2553 eq.1, ESD103-B1-02 Table 3, AONR21357 / AON7524 / AO3400A VGS and VDS, Bourns CRM2512 rating, Sunlord SWPA4030S table
+
+## Coverage limits
+
+- No live LCSC / JLC page fetch this round; MPN-to-code identity relies on the committed fields, cached datasheets and pads.json
+- EasyEDA pin-number-to-function agreement for LEDs taken from ASSEMBLY_REVIEW's maker-drawing citations, not re-read from the LED drawings
+- Hot-plug, chatter and EN timing figures (power lens) not re-run beyond D402's EN shift
+- No physical, firmware or supplier-cart verification

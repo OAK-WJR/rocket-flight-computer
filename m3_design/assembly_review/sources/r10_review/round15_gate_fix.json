@@ -1,0 +1,1070 @@
+{
+  "schema": 1,
+  "round": 15,
+  "kind": "checker-only implementation and focused regression receipt",
+  "created_utc": "2026-10-30T14:30:30.725050+00:00",
+  "status": "implemented and focused-validated; owned sources frozen; final integration belongs to root",
+  "target_commit_from_supervisor": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_bytes": 2257812,
+  "fixed_findings": [
+    "R15-GATE-01",
+    "R15-GATE-02",
+    "R15-GATE-03"
+  ],
+  "owned_source_before_sha256": {
+    "tools/check_r10.py": "8ae9b668aeeefa9d7d6301faaff09d45c1045bb1e0286f3fad45023ef7cf9fb3",
+    "tools/fit_check.py": "c3a8ea5535a74589922cdd544bd7875b1598781d0d2ff00f86ef4a7210187011",
+    "tools/test_r10_check.py": "cfa1168e118458e9183e0100a011690c9f9d334bf29f28ff3dd106bd41245a3c",
+    "tools/test_fit_check.py": "3c9fb1a8f3f90a3b13edad1d8b5c1ad526a7c1a46b50633c853fd0da5f9e1d70"
+  },
+  "owned_source_after_sha256": {
+    "tools/check_r10.py": "ca7728f1ee41d09753e44165effef8ac5e24d569407d0aedea400966ed068cd6",
+    "tools/fit_check.py": "83ccb635e7ec88339d1e887653b1c17414f9107a5140034ef05c76a632340641",
+    "tools/test_r10_check.py": "cef2cbfae3aeec52fec777e6954e9fdf5d0c64330cb4bbce1938d9c291a2f995",
+    "tools/test_fit_check.py": "ffe24484c1a3803d13bd1ee8579c1525e7ad6bb73171e9624cdd69595034390f"
+  },
+  "sealed_inputs": {
+    "native_results": {
+      "sha256": "dc68e238af1657cd6c5b57a3caa6d896252aa08205c255149f934801eacfbca8",
+      "keys": [
+        "target_sha256",
+        "cases",
+        "board_sha256_after"
+      ]
+    },
+    "api_results": {
+      "sha256": "58e5a0c25220429e8e7c0084bbed44dee36466077b77a3882063a86a920fcbac",
+      "keys": [
+        "board_sha256_before",
+        "checks",
+        "fire_width_seeds",
+        "bom_cases",
+        "paste_cases",
+        "wrong_bom_manifest",
+        "board_sha256_after"
+      ]
+    },
+    "all31": {
+      "sha256": "d000b7ab4c602eab96486456603d4545a5f2ea82fedac2da36abca3c2926e5e8",
+      "keys": [
+        "profile",
+        "stage",
+        "complete",
+        "ok",
+        "rules",
+        "issues",
+        "failing"
+      ]
+    },
+    "geometry_matrix_results": {
+      "sha256": "d3dd330f57f845ccd51ea2f4c7414541e1d06aab7f36c1abab7a28c6b1b4553e",
+      "keys": [
+        "controls",
+        "seeds",
+        "board_sha256_after"
+      ]
+    },
+    "fill_recheck": {
+      "sha256": "63952c292100215aac57e12b3bb90be4928ddc1edee62cbafc1fdc791de64fd8",
+      "keys": [
+        "changed_fill",
+        "r10_inner_issues",
+        "s8_issues",
+        "k_fill",
+        "native_budget_rejects",
+        "correction"
+      ]
+    },
+    "route_control": {
+      "sha256": "ffd189085ce47e4f4e5c2e0cf3e34276dbaae1d9a4f74830aa8fd8f184f15f3c",
+      "keys": [
+        "profile",
+        "detour_baseline",
+        "instances",
+        "failures",
+        "allowed",
+        "review",
+        "stale",
+        "nognd_audit",
+        "leftovers",
+        "leftovers_missing",
+        "leftovers_informational",
+        "leftovers_stale",
+        "measured_check",
+        "alt_audit"
+      ]
+    },
+    "focused_suites": {
+      "sha256": "4947c51cfb4366d7b462c63d0db5b9e9faa98c8baef24c95ccfaa85244ec2c86",
+      "keys": 4
+    },
+    "m3_design/assembly_review/sources/r10_review/round15_gate.md": {
+      "sha256": "b47f95954d2ed3909145ddb0fa0eb2698d7fa2f83d6e3cde7f1f752529c804ec"
+    },
+    "m3_design/assembly_review/sources/r10_review/round15_gate.json": {
+      "sha256": "8e701aa90c161290bd7623bdec64e85f61fc1c773cc53fc47c8f93b500f30001"
+    }
+  },
+  "implementation": {
+    "BOM": "Existing assembly_population CSV walk compares every row member to native fitted canonical LCSC/Manufacturer Part/footprint; missing identity and unexpected members fail. Quantity-free CPL semantics, merged rows, positive BOM Qty and duplicate-row rejection remain.",
+    "C84": {
+      "reviewed_local_box_mm": [
+        -4.25,
+        -4.25,
+        4.25,
+        4.25,
+        0.0,
+        10.8
+      ],
+      "tolerance_mm": 2e-05,
+      "scope": "Existing normalized physical model guard; no terminal/SD or maker allocation change",
+      "source_url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+      "source_pdf_sha256_from_sealed_review": "5ab3c478e90f1826a614a56af8164bb4bab3143affaae1ad7aa69fc0c1981997",
+      "qualification": "Retained conservative CAD allocation; 0.3mm projection is Inference, not physical fit qualification"
+    },
+    "K_fill": {
+      "comparison": "Area(saved minus refilled) plus Area(refilled minus saved), using native polygon Boolean geometry",
+      "keys": [
+        "zone UUID",
+        "layer",
+        "net"
+      ],
+      "tolerance_mm2": 0.01,
+      "synthetic_boundary_mm2": {
+        "accepted": 0.01,
+        "rejected": 0.01002
+      },
+      "existing_tolerance_preserved": true
+    }
+  },
+  "validation": {
+    "production_api_version": "10.0.6",
+    "logs": {
+      ".supervisor/r15_gate_fix_probes/old_r10_final.log": {
+        "sha256": "91fa15721ffbd677a6277d21aaba7eee6ff8d6760f92d6fb4ee9e16e547c10ab",
+        "exit_code": 1,
+        "tests_run": 5,
+        "seconds": 19.37,
+        "failures": 18,
+        "errors": 0,
+        "skipped": 0
+      },
+      ".supervisor/r15_gate_fix_probes/old_fit_final.log": {
+        "sha256": "cc606600a22e6fd5a1b7e387a66b02972d8fcf5e0c1e1d02c244bac1a866abba",
+        "exit_code": 1,
+        "tests_run": 1,
+        "seconds": 0.005,
+        "failures": 3,
+        "errors": 0,
+        "skipped": 0
+      },
+      ".supervisor/r15_gate_fix_probes/new_r10_focused.log": {
+        "sha256": "a75bb82c8c51054d2a3c410756ab1545bdae7536e3fed02dd6ed5aee2b8e7a42",
+        "exit_code": 0,
+        "tests_run": 18,
+        "seconds": 26.796,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      ".supervisor/r15_gate_fix_probes/new_fit_full.log": {
+        "sha256": "ac0ad06a5d8ef37151e58b9a7fc99f6c55cac2d13c7619207124db11213c4ae3",
+        "exit_code": 0,
+        "tests_run": 31,
+        "seconds": 0.039,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      ".supervisor/r15_gate_fix_probes/native_proof.log": {
+        "sha256": "684c50a4fc56e55f8df626624cea8063539cd597d6eb071779c8a1c9ff146904",
+        "exit_code": 0
+      },
+      ".supervisor/r15_gate_fix_probes/fill_environment_10.0.6.log": {
+        "sha256": "fbfda9773b5222bf6f1ec56f887efda10e2ab71c30b842bbaea4ae3e9ea7911c",
+        "exit_code": 0
+      },
+      ".supervisor/r15_gate_fix_probes/fill_environment_10.0.7.log": {
+        "sha256": "b54674c6dc2384ca9405aa9beebe500d272afcf6eede42e79fc85ba15ad08938",
+        "exit_code": 0
+      }
+    },
+    "native_proof": {
+      "api_version": "10.0.6",
+      "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+      "native_positive": {
+        "S-4": {
+          "issues": [],
+          "evidence": {
+            "required": 199,
+            "safety": [
+              "C120",
+              "C126",
+              "C127",
+              "C128",
+              "C129",
+              "D120",
+              "J121",
+              "J400",
+              "Q120",
+              "Q121",
+              "Q122",
+              "Q124",
+              "R120",
+              "R121",
+              "R122",
+              "R123",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R130",
+              "R131",
+              "R132",
+              "R133",
+              "R134",
+              "R165",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R80"
+            ],
+            "schematic": "m3.kicad_sch",
+            "BOM_native_identities": 199
+          }
+        },
+        "K-fill": {
+          "issues": [],
+          "evidence": {
+            "zones": 9,
+            "stale": 0,
+            "tolerance_mm2": 0.01,
+            "comparison": "symmetric_difference",
+            "maximum_difference_mm2": 0.0,
+            "changed": []
+          }
+        },
+        "P-11": {
+          "issues": [],
+          "evidence": {
+            "J1": {
+              "entry": "-x",
+              "wire_room_mm": 5.003,
+              "r8_floor_mm": 6.25,
+              "r10_accepted_floor_mm": 4.95,
+              "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+            },
+            "J121": {
+              "entry": "-x",
+              "wire_room_mm": 5.003,
+              "r8_floor_mm": 6.25,
+              "r10_accepted_floor_mm": 4.95,
+              "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+            },
+            "J400": {
+              "entry": "-x",
+              "wire_room_mm": 5.003,
+              "r8_floor_mm": 6.25,
+              "r10_accepted_floor_mm": 4.95,
+              "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+            },
+            "J410": {
+              "entry": "+x",
+              "wire_room_mm": 5.003,
+              "r8_floor_mm": 6.25,
+              "r10_accepted_floor_mm": 4.95,
+              "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+            },
+            "J420": {
+              "entry": "+x",
+              "wire_room_mm": 5.003,
+              "r8_floor_mm": 6.25,
+              "r10_accepted_floor_mm": 4.95,
+              "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+            },
+            "J9": {
+              "entry": "+x",
+              "wire_room_mm": 5.003,
+              "r8_floor_mm": 6.25,
+              "r10_accepted_floor_mm": 4.95,
+              "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+            },
+            "J122": {
+              "entry": "+x",
+              "wire_room_mm": 5.003,
+              "r8_floor_mm": 6.25,
+              "r10_accepted_floor_mm": 4.95,
+              "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+            }
+          }
+        },
+        "fit": {
+          "ok": true,
+          "issues": []
+        }
+      },
+      "BOM": [
+        {
+          "name": "bom_control",
+          "issues": []
+        },
+        {
+          "name": "bom_r134_wrong_identity",
+          "issues": [
+            "S-4: BOM: line 60: R134 Footprint 'M3_R2512_UR' differs from native fitted part 'R2512'",
+            "S-4: BOM: line 60: R134 LCSC Part # 'C168925' differs from native fitted part 'C3013496'",
+            "S-4: BOM: line 60: R134 Manufacturer Part '25121WF360LT4E' differs from native fitted part 'CRM2512-FX-2R00ELF'"
+          ]
+        },
+        {
+          "name": "bom_c126_zero_qty",
+          "issues": [
+            "S-4: BOM: line 18: Qty '0' must be a positive integer"
+          ]
+        },
+        {
+          "name": "bom_r134_duplicate",
+          "issues": [
+            "S-4: BOM: line 84: R134 already appears on line 60"
+          ]
+        },
+        {
+          "name": "unexpected_J2",
+          "issues": [
+            "S-4: BOM: line 60: J2 is not a native fitted part"
+          ]
+        },
+        {
+          "name": "wrong_second_merged_member_U1",
+          "issues": [
+            "S-4: BOM: line 60: U1 Footprint 'R2512' differs from native fitted part 'LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL'",
+            "S-4: BOM: line 60: U1 LCSC Part # 'C3013496' differs from native fitted part 'C5271084'",
+            "S-4: BOM: line 60: U1 Manufacturer Part 'CRM2512-FX-2R00ELF' differs from native fitted part 'STM32H743VIT6TR'"
+          ]
+        },
+        {
+          "name": "blank_LCSC Part #",
+          "issues": [
+            "S-4: BOM: line 60: R134 LCSC Part # '' differs from native fitted part 'C3013496'"
+          ]
+        },
+        {
+          "name": "blank_Manufacturer Part",
+          "issues": [
+            "S-4: BOM: line 60: R134 Manufacturer Part '' differs from native fitted part 'CRM2512-FX-2R00ELF'"
+          ]
+        },
+        {
+          "name": "blank_Footprint",
+          "issues": [
+            "S-4: BOM: line 60: R134 Footprint '' differs from native fitted part 'R2512'"
+          ]
+        }
+      ],
+      "C84": {
+        "native_box_mm": [
+          23.24999961,
+          74.24999961,
+          31.75000039,
+          82.75000039,
+          -1.2700000001775181e-06,
+          10.799999990000002
+        ],
+        "reviewed_local_box_mm": [
+          -4.25,
+          -4.25,
+          4.25,
+          4.25,
+          0.0,
+          10.8
+        ],
+        "tolerance_mm": 2e-05,
+        "scale_xyz_001": {
+          "ok": false,
+          "issues": [
+            "C84: model envelope differs from reviewed dimensions/pose of M3_MA_8x10: (-0.04250000390000001, -0.04250000390000001, 0.04250000390000001, 0.04250000390000001, -1.2700000001775182e-08, 0.10799999990000002), expected (-4.25, -4.25, 4.25, 4.25, 0.0, 10.8) mm"
+          ]
+        },
+        "equivalent_metre_units": {
+          "ok": true,
+          "issues": [],
+          "maximum_board_box_delta_mm": 0.0
+        }
+      },
+      "fill": {
+        "sealed_equal_area_01mm_translation": {
+          "issues": [
+            "zone 0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8 (GND) on In2.Cu: saved fill geometry differs from refill (symmetric difference 5.694234392076 mm^2; refill the zones and save the board)"
+          ],
+          "evidence": {
+            "zones": 9,
+            "stale": 1,
+            "tolerance_mm2": 0.01,
+            "comparison": "symmetric_difference",
+            "maximum_difference_mm2": 5.694234392076,
+            "changed": [
+              {
+                "uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+                "layer": "In2.Cu",
+                "net": "GND",
+                "saved_area_mm2": 237.869754823186,
+                "refilled_area_mm2": 237.869754823186,
+                "symmetric_difference_mm2": 5.694234392076
+              }
+            ]
+          }
+        }
+      },
+      "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783"
+    },
+    "native_proof_receipt": ".supervisor/r15_gate_fix_probes/native_proof.json",
+    "native_proof_sha256": "d20035858c5da5e865a2c451cd020fa519ae46ab457da3d1987d67114ad8e9ca",
+    "refill_environment_controls": [
+      {
+        "api_version": "10.0.6",
+        "board_sha256": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+        "cases": {
+          "canonical": [
+            {
+              "uuid": "0e487547-7c72-4f2b-92b7-51e915a58969",
+              "zone": "R10_GND_F",
+              "layer": "F.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2939.4524604894623,
+              "refilled_area_mm2": 2939.4524604894623,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "eb25f0ce-f4d1-4ab6-b892-156775e225d8",
+              "zone": "R10_GND_B",
+              "layer": "B.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2769.0413434240263,
+              "refilled_area_mm2": 2769.0413434240263,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "a2c1d6af-3058-4dd4-8936-9d2a6c3cb7ea",
+              "zone": "R10_GND_In1",
+              "layer": "In1.Cu",
+              "net": "GND",
+              "saved_area_mm2": 3760.5419553378047,
+              "refilled_area_mm2": 3760.5419553378047,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+              "zone": "R10_GND_In2_CH1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 237.869754823186,
+              "refilled_area_mm2": 237.869754823186,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "06152c8e-044e-4af1-9ea8-0136a078a811",
+              "zone": "R10_GND_In2_Y1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 37.1760624060765,
+              "refilled_area_mm2": 37.1760624060765,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "832115cc-3bfa-4026-a840-220b73476f65",
+              "zone": "R10_PORT_4V8_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_4V8",
+              "saved_area_mm2": 323.7911612071605,
+              "refilled_area_mm2": 323.7911612071605,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "8fb06106-fc39-46d5-9b03-729f35f81b34",
+              "zone": "R10_3V3_In2",
+              "layer": "In2.Cu",
+              "net": "3V3",
+              "saved_area_mm2": 1447.8797356256255,
+              "refilled_area_mm2": 1447.8797356256255,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "a4297920-911d-421a-a6b3-99a6ccd66143",
+              "zone": "R10_PORT_5V3_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_5V3",
+              "saved_area_mm2": 218.615257050242,
+              "refilled_area_mm2": 218.615257050242,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "d5e5626c-f853-461f-968d-cdff1cc4693f",
+              "zone": "R10_RAW_In2",
+              "layer": "In2.Cu",
+              "net": "RAW_PROTECTED",
+              "saved_area_mm2": 1253.9855817111404,
+              "refilled_area_mm2": 1253.9855817111404,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            }
+          ],
+          "complete_copy": [
+            {
+              "uuid": "0e487547-7c72-4f2b-92b7-51e915a58969",
+              "zone": "R10_GND_F",
+              "layer": "F.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2939.4524604894623,
+              "refilled_area_mm2": 2939.4524604894623,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "eb25f0ce-f4d1-4ab6-b892-156775e225d8",
+              "zone": "R10_GND_B",
+              "layer": "B.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2769.0413434240263,
+              "refilled_area_mm2": 2769.0413434240263,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "a2c1d6af-3058-4dd4-8936-9d2a6c3cb7ea",
+              "zone": "R10_GND_In1",
+              "layer": "In1.Cu",
+              "net": "GND",
+              "saved_area_mm2": 3760.5419553378047,
+              "refilled_area_mm2": 3760.5419553378047,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+              "zone": "R10_GND_In2_CH1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 237.869754823186,
+              "refilled_area_mm2": 237.869754823186,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "06152c8e-044e-4af1-9ea8-0136a078a811",
+              "zone": "R10_GND_In2_Y1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 37.1760624060765,
+              "refilled_area_mm2": 37.1760624060765,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "832115cc-3bfa-4026-a840-220b73476f65",
+              "zone": "R10_PORT_4V8_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_4V8",
+              "saved_area_mm2": 323.7911612071605,
+              "refilled_area_mm2": 323.7911612071605,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "8fb06106-fc39-46d5-9b03-729f35f81b34",
+              "zone": "R10_3V3_In2",
+              "layer": "In2.Cu",
+              "net": "3V3",
+              "saved_area_mm2": 1447.8797356256255,
+              "refilled_area_mm2": 1447.8797356256255,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "a4297920-911d-421a-a6b3-99a6ccd66143",
+              "zone": "R10_PORT_5V3_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_5V3",
+              "saved_area_mm2": 218.615257050242,
+              "refilled_area_mm2": 218.615257050242,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "d5e5626c-f853-461f-968d-cdff1cc4693f",
+              "zone": "R10_RAW_In2",
+              "layer": "In2.Cu",
+              "net": "RAW_PROTECTED",
+              "saved_area_mm2": 1253.9855817111404,
+              "refilled_area_mm2": 1253.9855817111404,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            }
+          ],
+          "incomplete_copy": [
+            {
+              "uuid": "0e487547-7c72-4f2b-92b7-51e915a58969",
+              "zone": "R10_GND_F",
+              "layer": "F.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2939.4524604894623,
+              "refilled_area_mm2": 2940.977558542995,
+              "area_delta_mm2": 1.5250980535325,
+              "symmetric_difference_mm2": 1.5250997953055
+            },
+            {
+              "uuid": "eb25f0ce-f4d1-4ab6-b892-156775e225d8",
+              "zone": "R10_GND_B",
+              "layer": "B.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2769.0413434240263,
+              "refilled_area_mm2": 2769.0413434240263,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "a2c1d6af-3058-4dd4-8936-9d2a6c3cb7ea",
+              "zone": "R10_GND_In1",
+              "layer": "In1.Cu",
+              "net": "GND",
+              "saved_area_mm2": 3760.5419553378047,
+              "refilled_area_mm2": 3760.5419553378047,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+              "zone": "R10_GND_In2_CH1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 237.869754823186,
+              "refilled_area_mm2": 237.869754823186,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "06152c8e-044e-4af1-9ea8-0136a078a811",
+              "zone": "R10_GND_In2_Y1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 37.1760624060765,
+              "refilled_area_mm2": 37.1760624060765,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "832115cc-3bfa-4026-a840-220b73476f65",
+              "zone": "R10_PORT_4V8_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_4V8",
+              "saved_area_mm2": 323.7911612071605,
+              "refilled_area_mm2": 323.7911612071605,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "8fb06106-fc39-46d5-9b03-729f35f81b34",
+              "zone": "R10_3V3_In2",
+              "layer": "In2.Cu",
+              "net": "3V3",
+              "saved_area_mm2": 1447.8797356256255,
+              "refilled_area_mm2": 1447.8797356256255,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "a4297920-911d-421a-a6b3-99a6ccd66143",
+              "zone": "R10_PORT_5V3_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_5V3",
+              "saved_area_mm2": 218.615257050242,
+              "refilled_area_mm2": 218.615257050242,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "d5e5626c-f853-461f-968d-cdff1cc4693f",
+              "zone": "R10_RAW_In2",
+              "layer": "In2.Cu",
+              "net": "RAW_PROTECTED",
+              "saved_area_mm2": 1253.9855817111404,
+              "refilled_area_mm2": 1253.9855817111404,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            }
+          ]
+        },
+        "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+        "interpreter": "Installed KiCad Python; existing production build-helper selector",
+        "receipt": ".supervisor/r15_gate_fix_probes/fill_environment_10.0.6.json",
+        "receipt_sha256": "efe5b701bc4efacf7c72e4098317e74f284c442dcee4a27b3e46c87263008167",
+        "comparison_summary": {
+          "canonical": {
+            "zone_layer_net_entries": 9,
+            "maximum_area_delta_mm2": 0.0,
+            "maximum_symmetric_difference_mm2": 0.0,
+            "pass_at_0_01_mm2": true
+          },
+          "complete_copy": {
+            "zone_layer_net_entries": 9,
+            "maximum_area_delta_mm2": 0.0,
+            "maximum_symmetric_difference_mm2": 0.0,
+            "pass_at_0_01_mm2": true
+          },
+          "incomplete_copy": {
+            "zone_layer_net_entries": 9,
+            "maximum_area_delta_mm2": 1.5250980535325,
+            "maximum_symmetric_difference_mm2": 1.5250997953055,
+            "pass_at_0_01_mm2": false
+          }
+        }
+      },
+      {
+        "api_version": "10.0.7",
+        "board_sha256": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+        "cases": {
+          "canonical": [
+            {
+              "uuid": "0e487547-7c72-4f2b-92b7-51e915a58969",
+              "zone": "R10_GND_F",
+              "layer": "F.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2939.4524604894623,
+              "refilled_area_mm2": 2939.4524604894623,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "eb25f0ce-f4d1-4ab6-b892-156775e225d8",
+              "zone": "R10_GND_B",
+              "layer": "B.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2769.0413434240263,
+              "refilled_area_mm2": 2769.0412615677446,
+              "area_delta_mm2": -8.1856282e-05,
+              "symmetric_difference_mm2": 8.186989e-05
+            },
+            {
+              "uuid": "a2c1d6af-3058-4dd4-8936-9d2a6c3cb7ea",
+              "zone": "R10_GND_In1",
+              "layer": "In1.Cu",
+              "net": "GND",
+              "saved_area_mm2": 3760.5419553378047,
+              "refilled_area_mm2": 3760.5419553378047,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+              "zone": "R10_GND_In2_CH1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 237.869754823186,
+              "refilled_area_mm2": 237.869754823186,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "06152c8e-044e-4af1-9ea8-0136a078a811",
+              "zone": "R10_GND_In2_Y1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 37.1760624060765,
+              "refilled_area_mm2": 37.1760624060765,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "832115cc-3bfa-4026-a840-220b73476f65",
+              "zone": "R10_PORT_4V8_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_4V8",
+              "saved_area_mm2": 323.7911612071605,
+              "refilled_area_mm2": 323.7911612071605,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "8fb06106-fc39-46d5-9b03-729f35f81b34",
+              "zone": "R10_3V3_In2",
+              "layer": "In2.Cu",
+              "net": "3V3",
+              "saved_area_mm2": 1447.8797356256255,
+              "refilled_area_mm2": 1447.879793902505,
+              "area_delta_mm2": 5.82768795e-05,
+              "symmetric_difference_mm2": 0.000155117521
+            },
+            {
+              "uuid": "a4297920-911d-421a-a6b3-99a6ccd66143",
+              "zone": "R10_PORT_5V3_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_5V3",
+              "saved_area_mm2": 218.615257050242,
+              "refilled_area_mm2": 218.615257050242,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "d5e5626c-f853-461f-968d-cdff1cc4693f",
+              "zone": "R10_RAW_In2",
+              "layer": "In2.Cu",
+              "net": "RAW_PROTECTED",
+              "saved_area_mm2": 1253.9855817111404,
+              "refilled_area_mm2": 1253.9855817111404,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            }
+          ],
+          "complete_copy": [
+            {
+              "uuid": "0e487547-7c72-4f2b-92b7-51e915a58969",
+              "zone": "R10_GND_F",
+              "layer": "F.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2939.4524604894623,
+              "refilled_area_mm2": 2939.4524604894623,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "eb25f0ce-f4d1-4ab6-b892-156775e225d8",
+              "zone": "R10_GND_B",
+              "layer": "B.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2769.0413434240263,
+              "refilled_area_mm2": 2769.0412615677446,
+              "area_delta_mm2": -8.1856282e-05,
+              "symmetric_difference_mm2": 8.186989e-05
+            },
+            {
+              "uuid": "a2c1d6af-3058-4dd4-8936-9d2a6c3cb7ea",
+              "zone": "R10_GND_In1",
+              "layer": "In1.Cu",
+              "net": "GND",
+              "saved_area_mm2": 3760.5419553378047,
+              "refilled_area_mm2": 3760.5419553378047,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+              "zone": "R10_GND_In2_CH1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 237.869754823186,
+              "refilled_area_mm2": 237.869754823186,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "06152c8e-044e-4af1-9ea8-0136a078a811",
+              "zone": "R10_GND_In2_Y1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 37.1760624060765,
+              "refilled_area_mm2": 37.1760624060765,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "832115cc-3bfa-4026-a840-220b73476f65",
+              "zone": "R10_PORT_4V8_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_4V8",
+              "saved_area_mm2": 323.7911612071605,
+              "refilled_area_mm2": 323.7911612071605,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "8fb06106-fc39-46d5-9b03-729f35f81b34",
+              "zone": "R10_3V3_In2",
+              "layer": "In2.Cu",
+              "net": "3V3",
+              "saved_area_mm2": 1447.8797356256255,
+              "refilled_area_mm2": 1447.879793902505,
+              "area_delta_mm2": 5.82768795e-05,
+              "symmetric_difference_mm2": 0.000155117521
+            },
+            {
+              "uuid": "a4297920-911d-421a-a6b3-99a6ccd66143",
+              "zone": "R10_PORT_5V3_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_5V3",
+              "saved_area_mm2": 218.615257050242,
+              "refilled_area_mm2": 218.615257050242,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "d5e5626c-f853-461f-968d-cdff1cc4693f",
+              "zone": "R10_RAW_In2",
+              "layer": "In2.Cu",
+              "net": "RAW_PROTECTED",
+              "saved_area_mm2": 1253.9855817111404,
+              "refilled_area_mm2": 1253.9855817111404,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            }
+          ],
+          "incomplete_copy": [
+            {
+              "uuid": "0e487547-7c72-4f2b-92b7-51e915a58969",
+              "zone": "R10_GND_F",
+              "layer": "F.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2939.4524604894623,
+              "refilled_area_mm2": 2940.977558542995,
+              "area_delta_mm2": 1.5250980535325,
+              "symmetric_difference_mm2": 1.5250997767865
+            },
+            {
+              "uuid": "eb25f0ce-f4d1-4ab6-b892-156775e225d8",
+              "zone": "R10_GND_B",
+              "layer": "B.Cu",
+              "net": "GND",
+              "saved_area_mm2": 2769.0413434240263,
+              "refilled_area_mm2": 2769.0412615677446,
+              "area_delta_mm2": -8.1856282e-05,
+              "symmetric_difference_mm2": 8.186989e-05
+            },
+            {
+              "uuid": "a2c1d6af-3058-4dd4-8936-9d2a6c3cb7ea",
+              "zone": "R10_GND_In1",
+              "layer": "In1.Cu",
+              "net": "GND",
+              "saved_area_mm2": 3760.5419553378047,
+              "refilled_area_mm2": 3760.5419553378047,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+              "zone": "R10_GND_In2_CH1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 237.869754823186,
+              "refilled_area_mm2": 237.869754823186,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "06152c8e-044e-4af1-9ea8-0136a078a811",
+              "zone": "R10_GND_In2_Y1",
+              "layer": "In2.Cu",
+              "net": "GND",
+              "saved_area_mm2": 37.1760624060765,
+              "refilled_area_mm2": 37.1760624060765,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "832115cc-3bfa-4026-a840-220b73476f65",
+              "zone": "R10_PORT_4V8_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_4V8",
+              "saved_area_mm2": 323.7911612071605,
+              "refilled_area_mm2": 323.7911612071605,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "8fb06106-fc39-46d5-9b03-729f35f81b34",
+              "zone": "R10_3V3_In2",
+              "layer": "In2.Cu",
+              "net": "3V3",
+              "saved_area_mm2": 1447.8797356256255,
+              "refilled_area_mm2": 1447.879793902505,
+              "area_delta_mm2": 5.82768795e-05,
+              "symmetric_difference_mm2": 0.000155117521
+            },
+            {
+              "uuid": "a4297920-911d-421a-a6b3-99a6ccd66143",
+              "zone": "R10_PORT_5V3_In2",
+              "layer": "In2.Cu",
+              "net": "PORT_5V3",
+              "saved_area_mm2": 218.615257050242,
+              "refilled_area_mm2": 218.615257050242,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            },
+            {
+              "uuid": "d5e5626c-f853-461f-968d-cdff1cc4693f",
+              "zone": "R10_RAW_In2",
+              "layer": "In2.Cu",
+              "net": "RAW_PROTECTED",
+              "saved_area_mm2": 1253.9855817111404,
+              "refilled_area_mm2": 1253.9855817111404,
+              "area_delta_mm2": 0.0,
+              "symmetric_difference_mm2": 0.0
+            }
+          ]
+        },
+        "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+        "interpreter": "Official vendor KiCad Python; .supervisor/r11_vendor_dir.txt locates the existing package",
+        "receipt": ".supervisor/r15_gate_fix_probes/fill_environment_10.0.7.json",
+        "receipt_sha256": "47ddbbcf2faec9bd3e3b20ea097791ad7db95f221b45cdb0223f745854127219",
+        "comparison_summary": {
+          "canonical": {
+            "zone_layer_net_entries": 9,
+            "maximum_area_delta_mm2": 8.1856282e-05,
+            "maximum_symmetric_difference_mm2": 0.000155117521,
+            "pass_at_0_01_mm2": true
+          },
+          "complete_copy": {
+            "zone_layer_net_entries": 9,
+            "maximum_area_delta_mm2": 8.1856282e-05,
+            "maximum_symmetric_difference_mm2": 0.000155117521,
+            "pass_at_0_01_mm2": true
+          },
+          "incomplete_copy": {
+            "zone_layer_net_entries": 9,
+            "maximum_area_delta_mm2": 1.5250980535325,
+            "maximum_symmetric_difference_mm2": 1.5250997767865,
+            "pass_at_0_01_mm2": false
+          }
+        }
+      }
+    ],
+    "new_test_method_count": {
+      "R10": 3,
+      "fit": 1
+    },
+    "old_code_comparison": {
+      "definitive_R10_tests": 5,
+      "failed_detector_assertions": 18,
+      "errors": 0,
+      "definitive_fit_tests": 1,
+      "failed_fit_assertions": 3,
+      "fit_errors": 0
+    },
+    "initial_diagnostics_excluded": [
+      "HoleCount requires explicit outline index0",
+      "C84 synthetic fixture uses its existing five-support fit profile",
+      "Saved real-board fill fixture must include m3.kicad_pro/m3.kicad_dru",
+      "Production installed API6 and official API7 were both measured; no interpreter migration used"
+    ],
+    "native_CLI_invocations": 0,
+    "unresolved_skips": 0,
+    "numpy_tests_needed_for_changed_paths": false
+  },
+  "limits": [
+    "No canonical PCB/schematic/model/fab, generator, firmware, pin/axis, safety-constraint or other-worker edits by this agent.",
+    "No native CLI, canonical build, complete tools/check.sh, fabrication export, Git action, GUI retry or subagent used by this agent.",
+    "These focused tests qualify checker behavior on unchanged7866 only; final integrated builds, complete gates, fabrication and reproduction belong to root.",
+    "Original BOM manifest and native-budget bindings already reject the sealed mutants; no complete-gate escape or current wrong hardware is claimed.",
+    "No physical fit, soldering, electrical/thermal/transient/endurance, firmware, SD, e-match, installed RF/ESD, harness/retention or flight qualification.",
+    "R10 remains unaccepted and unapproved for ordering."
+  ],
+  "markdown_sha256": "a959291354994ef88b9bf0cecbd36fe90f9217b851f5b33f4ab37cdcbc6cb5a4"
+}

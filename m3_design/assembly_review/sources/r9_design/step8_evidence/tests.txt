@@ -1,0 +1,30 @@
+Tool suites on the built board 89ddea8d... (session 2; KiCad python3; kicad-cli DRC through the headless shim, r9_step6_handoff.md section 6)
+test_check_shell: 2 test functions
+test_dc_solve: 3 test functions
+test_fab_validation: 23 test functions
+test_fit_check: 23 test functions
+test_maze_clearances: 10 test functions
+test_paste_check: 5 test functions
+test_procurement: 15 test functions
+test_r5_repair: 13 test functions
+test_r6_check: 17 test functions
+test_r7_check: 35 test functions
+test_r8_check: 23 test functions
+test_r8_ground: 11 test functions
+test_r8_place: 13 test functions
+test_r8_power: 7 test functions
+test_r8_route: 12 test functions
+test_r9_check: 52 test functions
+test_r9_ground: 18 test functions
+test_r9_place: 18 test functions
+test_r9_power: 21 test functions
+test_r9_pyro: 19 test functions
+test_r9_rf: 16 test functions
+test_r9_route: 21 test functions
+test_r9_sch: 21 test functions
+test_reference_audit: 3 test functions
+test_route_check: 57 test functions
+Ran 458 tests in 251.661s
+OK
+quality_audit: Ran 21 tests OK (python3); Ran 21 tests OK (KiCad python3)
+audit_artifacts on the built board: exit 0 (249 footprints, 0 conflicting part fields, 0 missing models, 0 absolute model paths)

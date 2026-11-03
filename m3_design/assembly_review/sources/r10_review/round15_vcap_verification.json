@@ -1,0 +1,263 @@
+{
+  "schema": "r10-round15-vcap-independent-verification-v1",
+  "mode": "slice",
+  "prepared_utc": "2026-10-30T14:10:49.507641Z",
+  "target_commit_before": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "target_commit_after": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_bytes": 2257812,
+  "assessment": {
+    "status": "PASS_focused_independent_assessment",
+    "finding_id": "R15-MCU-01",
+    "severity": "Minor",
+    "classification": "qualification_gap",
+    "confirmed_critical": 0,
+    "confirmed_major": 0,
+    "new_separate_finding": false,
+    "nominal_selection_complies": true,
+    "combined_effective_C_ESR_qualification_closed": false,
+    "demonstrated_installed_limit_violation": false,
+    "demonstrated_regulator_failure": false,
+    "electrical_qualification_implied": false
+  },
+  "native_evidence": {
+    "MCU": {
+      "reference": "U1",
+      "manufacturer_part": "STM32H743VIT6TR",
+      "position_mm": [23, 43],
+      "side": "F.Cu",
+      "rotation_deg": 0,
+      "silicon_revision_identified": false
+    },
+    "capacitor_common": {
+      "manufacturer": "Samsung Electro-Mechanics",
+      "manufacturer_part": "CL10A225KO8NNNC",
+      "LCSC": "C23630",
+      "value": "2.2uF 16V X5R 10%",
+      "footprint": "rocket:C0603",
+      "fitted": true,
+      "excluded_from_BOM": false,
+      "excluded_from_placement": false,
+      "native_land_size_mm": [0.8, 0.9],
+      "land_centre_pitch_mm": 1.4
+    },
+    "C19": {
+      "position_mm": [28.35, 37.65],
+      "side": "B.Cu",
+      "rotation_deg": -90,
+      "pad1_mm": [28.35, 36.95],
+      "pad2_mm": [28.35, 38.35],
+      "net": "VCAP1",
+      "MCU_pin": "48",
+      "track_centreline_mm": 2.5727922061357855,
+      "via_mm": [29.25, 38],
+      "via_diameter_drill_mm": [0.5, 0.3]
+    },
+    "C20": {
+      "position_mm": [19.8, 37.3],
+      "side": "B.Cu",
+      "rotation_deg": 0,
+      "pad1_mm": [19.1, 37.3],
+      "pad2_mm": [20.5, 37.3],
+      "net": "VCAP2",
+      "MCU_pin": "73",
+      "track_centreline_mm": 2.95,
+      "via_mm": [18, 37.3],
+      "via_diameter_drill_mm": [0.5, 0.3]
+    },
+    "schematic_and_export_agree": true
+  },
+  "ST_basis": {
+    "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+    "revision": "DS12110 Rev11 January2026",
+    "table114_page": 211,
+    "typical_C_uF": 2.2,
+    "variation_percent": 20,
+    "numerical_window_uF": [1.76, 2.64],
+    "ESR_requirement_ohm": "<0.1",
+    "C_ESR_test_frequency_amplitude": "unspecified in Table114",
+    "nominal_vs_combined_effective_definition": "not explicitly resolved",
+    "revV_LDO_modes": {
+      "VOS3": {"core_V": [0.95, 1, 1.05], "max_MHz": 200},
+      "VOS2": {"core_V": [1.05, 1.1, 1.15], "max_MHz": 300},
+      "VOS1": {"core_V": [1.15, 1.2, 1.26], "max_MHz": 400},
+      "VOS0": {"core_V": [1.26, 1.35, 1.4], "max_MHz": 480}
+    },
+    "application_of_revV_limits": "conditional on fitted silicon",
+    "visual_table_inspection_completed": false
+  },
+  "project_scope": {
+    "bay_temperature_C": [-20, 70],
+    "normal_clock_MHz": 200,
+    "unmonitored_maximum_policy_MHz": 300,
+    "400MHz_requires_temperature_monitoring_throttling": true,
+    "480MHz_is_not_active_flight_policy": true,
+    "firmware_VOS_selection_implemented_or_measured": false,
+    "local_capacitor_temperature_measured": false,
+    "VCAP_waveform_measured": false
+  },
+  "Samsung_specification": {
+    "url": "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+    "issue_date": "2024-05-08",
+    "bytes": 3011426,
+    "pages": 38,
+    "sha256": "7ad029052a9bd944e0fd77e7d8e814676dfb7285a5e18b8760a538d5a978e49e",
+    "page2_visually_checked": true,
+    "capacitance_test": {
+      "frequency_Hz": 1000,
+      "frequency_tolerance_percent": 10,
+      "AC_Vrms": 1,
+      "AC_tolerance_Vrms": 0.2,
+      "pretreatment_C": 150,
+      "pretreatment_hours": 1,
+      "recovery_hours": 24,
+      "recovery_tolerance_hours": 2
+    },
+    "TCC_limit_percent": 15,
+    "temperature_rating_C": [-55, 85],
+    "DF_max": 0.1,
+    "body_L_W_T_mm": [
+      [1.6, 0.1],
+      [0.8, 0.1],
+      [0.8, 0.1]
+    ],
+    "manual_pages_reviewed": [12, 13, 14, 15, 16, 17, 36],
+    "exact_part_guaranteed_aging_coefficient_found": false,
+    "combined_operating_C_ESR_guarantee_found": false
+  },
+  "Samsung_typical_characterization": {
+    "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+    "units_source": "https://product.samsungsem.com/resources/js/datasheet/setting_mlcc_datasheet.js",
+    "raw_chart_JSON_sha256": "379285c821b5ab4da8c47381d9baedd1bf21bc46078520bf195efb4a40a54db1",
+    "classification": "typical_reference_data",
+    "TCC_conditions": "zero DC bias,1kHz,1Vrms",
+    "DCBias_conditions": "25C,1kHz,1Vrms",
+    "ACVolt_conditions": "25C,zero DC bias,1kHz",
+    "TCC70C_percent": -9.724665079784364,
+    "DCBias_percent": {
+      "0.95V": -3.424249655654564,
+      "1.0V": -3.968011046866707,
+      "1.05V": -4.556765447776471,
+      "1.15V": -5.783884958733541,
+      "1.26V": -7.2068550655486865,
+      "1.4V": -9.09959548165852
+    },
+    "ACVolt10mVrms_percent": -32.05780981805698,
+    "ESR_25C_zero_bias_100kHz_ohm": 0.026937788718609783,
+    "ESR_25C_zero_bias_1MHz_ohm": 0.007253006132054607,
+    "bias_TCC_8V_25C_percent": -73.31507786607749,
+    "bias_TCC_8V_70C_percent": -72.78869635901692
+  },
+  "fresh_calculations": {
+    "nominal_initial_tolerance_uF": [1.98, 2.42],
+    "no_bias_tolerance_TCC_allowed_envelope_uF": [1.683, 2.783],
+    "allowed_envelope_proves_actual_failure": false,
+    "inference_formula": "2.2uF*0.9*(1+TCC70/100)*(1+DCBias/100)",
+    "inferred_combined_uF": {
+      "0.95V": 1.7262448250863693,
+      "1.0V": 1.7165253532281144,
+      "1.05V": 1.706001653083994,
+      "1.15V": 1.6840674853659154,
+      "1.26V": 1.6586325829770254,
+      "1.4V": 1.6248007635307193
+    },
+    "inferred_1V_lower_window_gap_uF": 0.04347464677188562,
+    "zero_bias_25C_10mVrms_typical_uF": 1.4947281840027464,
+    "8V_typical_relative_C_change_25to70C_percent": 1.972580262437451,
+    "separability_demonstrated": false,
+    "AC_factor_combined_with_other_curves": false,
+    "DF0p1_at1kHz_and1p98uF_series_R_ohm": 8.038128438984614,
+    "DF_conversion_is_operating_ESR_guarantee": false,
+    "3p3uF_10percent_nominal_range_uF": [2.97, 3.63]
+  },
+  "preserved_major_hypothesis": {
+    "hypothesis": "Insufficient regulator stabilization could impair MCU functions.",
+    "disposition": "narrowed_to_Minor_qualification_gap",
+    "reasons": [
+      "Nominal selection complies.",
+      "ST measurement interpretation remains unresolved.",
+      "Separate typical curves do not prove a guaranteed combined corner.",
+      "No installed C/ESR or regulator failure measurement exists."
+    ],
+    "risk_disproved": false,
+    "reopen_if": "Supported combined bounds or measurements establish a required-limit violation."
+  },
+  "closure": {
+    "CAD_part_retention": "bounded_to_unqualified_candidate",
+    "required_actions": [
+      "Resolve ST C/ESR measurement conditions.",
+      "Record silicon revision and allowed startup/operating regulator modes.",
+      "Obtain exact-part combined bounds or qualify process/aging/bias/local-temperature/frequency conditions.",
+      "Check lower and upper capacitance limits, ESR, startup and load/clock transients.",
+      "Verify capacitor surface temperature stays within rating."
+    ],
+    "replacement_required_by_present_evidence": false,
+    "qualified_replacement_identified": false,
+    "automatic_larger_nominal_fix_rejected": true,
+    "replacement_requirements": "Exact maker identity, land/process compatibility, both capacitance limits and ESR."
+  },
+  "checks": [
+    {
+      "check": "Context and current amendments",
+      "result": "Read required context; corrected initially missing docs/R10_DECISIONS.md path to native source path."
+    },
+    {
+      "check": "Python hashlib and raw HEAD/ref inspection",
+      "result": "Assigned commit and board hash match before/after; no git commands."
+    },
+    {
+      "check": "KiCad bundled Python -I -B; pcbnew.LoadBoard/GetFields/Pads/GetTracks",
+      "result": "Passed after unsupported GetProperties call was corrected. Nonfatal headless wx warnings disclosed."
+    },
+    {
+      "check": "mcu.kicad_sch and schematic.net.xml inspection",
+      "result": "Identity and net agreement confirmed; root-sheet reference lookup corrected to MCU subsheet."
+    },
+    {
+      "check": "Samsung direct GET/POST specification and pdftotext",
+      "result": "Exact primary bytes and relevant pages read."
+    },
+    {
+      "check": "pdftoppm in-memory rendering",
+      "result": "Page2 JPEG visually checked; initial PNG output transfer truncated."
+    },
+    {
+      "check": "Samsung chart JSON and unit JavaScript",
+      "result": "Fresh interpolation and calculations completed."
+    },
+    {
+      "check": "Current official ST web extraction",
+      "result": "Rev11 table, footnotes and mode limits read."
+    },
+    {
+      "check": "Direct current ST datasheet/application-note fetches",
+      "result": "Timed out; no cached older revision substituted. ST visual inspection remains unchecked."
+    }
+  ],
+  "scope_controls": {
+    "own_primary_native_check_before_assigned_report": true,
+    "other_current_peer_reports_or_probes_read": false,
+    "file_edits": false,
+    "git_commands": false,
+    "native_CLI_invocations": 0,
+    "build_or_full_gate_runs": 0,
+    "GUI_operations": 0,
+    "subagents_spawned": 0,
+    "physical_or_firmware_tests": false
+  },
+  "final_source_hashes": {
+    "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+    "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "ed83868a4054ec043b07d9d244dd2b1cbcf21d8ace83fcd16bf45bb7a6a56b6f",
+    "m3_design/assembly_review/sources/r10_review/round15_mcu.md": "cf83be841e91ed9239342988e490281e5cfeaa797ceb880faf1cf3159e10d05b",
+    "m3_design/assembly_review/sources/r10_review/round15_mcu.json": "79f277cef973e4a24b12d4adec12f7892d3109516d430dd82f072599129aba94"
+  },
+  "residual_limits": [
+    "No combined effective-C/ESR qualification.",
+    "No measured local temperature, aging state, VCAP waveform or regulator stability.",
+    "Current ST PDF visuals unavailable.",
+    "No whole-board, physical or firmware qualification implied.",
+    "Original full MCU reports remain unedited."
+  ]
+}

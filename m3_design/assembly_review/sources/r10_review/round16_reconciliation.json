@@ -1,0 +1,1848 @@
+{
+  "round": 16,
+  "prepared_utc": "2026-10-30T16:24:46.147377+00:00",
+  "reviewed_commit": "b1b8658d5bf541795b7e7636c09f2e886ea8c67a",
+  "reviewed_board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "review_scope": "Ten fresh independent full lenses in batches of at most3; exact committed files frozen throughout; original reports immutable. No focused prototype supplies full-round credit.",
+  "canonical_freeze": {
+    "preexisting_tracked_files": 1942,
+    "all_byte_identical_through_final_handoff": true,
+    "receipt_sha256": "23fc8f931f8bd7dbe507a7fcd6d42991da6a3a87df9678ca48c7ebcd7780952e",
+    "sealed_reports": 20
+  },
+  "reports": [
+    {
+      "lens": "requirements",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 3
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_requirements.json",
+        "sha256": "cb93fbed61753702fd22dd24bdb27168a92ce4acb5fa03e544a07922919079ed",
+        "bytes": 110755
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_requirements.md",
+        "sha256": "95c6264525a062e91616ffc4d3ab74ab4aebb360ebc4563333f6d65b5eea0071",
+        "bytes": 6951
+      }
+    },
+    {
+      "lens": "safety",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 0
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_safety.json",
+        "sha256": "981fc9a16d06976375038a8f9617129374b144b82a045a837266d2bbeac1b9e2",
+        "bytes": 73387
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_safety.md",
+        "sha256": "88f6af33ee59a83577841413e159711edc2c06556dc982ba66da0c370c1777a9",
+        "bytes": 6515
+      }
+    },
+    {
+      "lens": "power",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_power.json",
+        "sha256": "213d11008c4a8137250376649f113d571f6f1f7df9459326465985a9f5efe26f",
+        "bytes": 22490
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_power.md",
+        "sha256": "c16af9203095451eda45edb916c6bb7ec0a29672a71395f018ba6247d4ed409d",
+        "bytes": 10100
+      }
+    },
+    {
+      "lens": "parts",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_parts.json",
+        "sha256": "ee3bbfce78a2651760193c3ebc12720baa440f78c4ee4c061421148ba7d77ca7",
+        "bytes": 100317
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_parts.md",
+        "sha256": "ff60d20b0a5d811b4450c738f0b4301de5a571e52fc3a0da61ece176b5d1980f",
+        "bytes": 8272
+      }
+    },
+    {
+      "lens": "mcu",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_mcu.json",
+        "sha256": "b513a5a600631d91c452e94ecb9016186903525d4b45a9b86cb16e83939deb46",
+        "bytes": 162764
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_mcu.md",
+        "sha256": "92b95acaaaabe0060480186b5e5c10ee454870890a7e7c6849793c54daf21b30",
+        "bytes": 11374
+      }
+    },
+    {
+      "lens": "mechanics",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_mechanics.json",
+        "sha256": "806d9dfb21392d2e37c00ec6e500031db443250ea6061360b7bc585a961db1f5",
+        "bytes": 62461
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_mechanics.md",
+        "sha256": "0b564cf7e9d8eb2df6b7480f322f2608b2e4cb6b18a1d25716f9a64a39ee143e",
+        "bytes": 12796
+      }
+    },
+    {
+      "lens": "routing",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_routing.json",
+        "sha256": "b354cfbea0be43660043a274f2c76f98eec4b5fb354e7dc6c5eee6b45fd36c67",
+        "bytes": 186047
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_routing.md",
+        "sha256": "fa3733e430683f161121f4ee437da8639da2085767e402e30e863e9e4b1e5540",
+        "bytes": 9637
+      }
+    },
+    {
+      "lens": "manufacturing",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_manufacturing.json",
+        "sha256": "aea49133227c05a403679e6fa16db01e67c8429da44a1b6e4c65d80f99e7ad69",
+        "bytes": 111564
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_manufacturing.md",
+        "sha256": "d46c4186a6cd8077064e85af0765261e31d9e2bcc12d6d4b9c92430930beaad8",
+        "bytes": 8508
+      }
+    },
+    {
+      "lens": "gate",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_gate.json",
+        "sha256": "e18699305e58e288573927d4ae0047a566b7f6bc428451fe49875712e5bdd5cb",
+        "bytes": 121779
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_gate.md",
+        "sha256": "555e845d8f632a75d762aaa07c0f869aac7b04c0056c10094ec88e87f6820777",
+        "bytes": 7839
+      }
+    },
+    {
+      "lens": "docs_binding",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "json": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_docs_binding.json",
+        "sha256": "be20266347ec2beba7db8f4b0eae68d88d41dbff3da2ea0211d7dc3a5df7b7a0",
+        "bytes": 121037
+      },
+      "markdown": {
+        "path": "m3_design/assembly_review/sources/r10_review/round16_docs_binding.md",
+        "sha256": "53b6d3bda30923997e272924d4045e565b804b466c3130302193c07008813f61",
+        "bytes": 6247
+      }
+    }
+  ],
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 11
+  },
+  "raw_observations": 17,
+  "new_groups": 5,
+  "carried_groups": 6,
+  "raw_findings": [
+    {
+      "id": "R16-REQ-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-REQ-01",
+        "severity": "Minor",
+        "status": "active",
+        "origin": "carried",
+        "prior_ids": [
+          "R15-REQ-01",
+          "R14-REQ-02",
+          "R13-REQ-03"
+        ],
+        "title": "Separately owned vehicle mirror still instructs removed R10 hardware",
+        "evidence": [
+          {
+            "file": "../../docs/VEHICLE.md",
+            "line": 39,
+            "observed": "Candidate entry still gives GH4 ports,ARM terminals,GH2 J400(10.5,85.5),and0.03mm GH margin."
+          },
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "coordinates_mm": [
+              7.4,
+              65.85
+            ],
+            "measured": "J400 is DB1252P west; all seven wired connectors are DB125; J123/J124 absent; native support/port map in evidence N/F."
+          },
+          {
+            "file": "docs/R10_VEHICLE_HANDOFF.md",
+            "line": 9,
+            "measured": "Current632a9ad3 handoff already supplies replacement geometry and open qualification limits."
+          }
+        ],
+        "concrete_fix": "Apply the exact in-worktree R10 vehicle handoff through the separately authorized parent workflow,preserving accepted R9. Do not edit that worktree during this review or infer fit/owner acceptance."
+      },
+      "source": {
+        "file": "round16_requirements.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/0"
+    },
+    {
+      "id": "R16-REQ-02",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-REQ-02",
+        "severity": "Minor",
+        "status": "active",
+        "origin": "carried",
+        "prior_ids": [
+          "R15-REQ-02"
+        ],
+        "title": "M2 drawing and noncritical routing compromises remain pending owner acceptance",
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "coordinates_mm": [
+              14.825,
+              27.2
+            ],
+            "measured": "USB_ILIM3.33mm vs1.05mm baseline,ratio3.18; BAT_OVLO B(16.4,83)0.150mm segment; complete six-item list in evidence R."
+          },
+          {
+            "file": "tools/route_check.py",
+            "measured": "Fresh --profile r10 --bumps-all:140 instances=111ordinary+23inside-pad+6noncritical;46windows,zero blocking/allowed/stale/critical bumps."
+          },
+          {
+            "file": "docs/REQUIREMENTS.md",
+            "line": 76,
+            "measured": "AUD2/AUD10 and audit2 make only specified scopes informational; M2 compromises still require dated owner acceptance."
+          }
+        ],
+        "concrete_fix": "Retain this exact current-board partition and six location/end tuples in the final owner deviation inventory,or adopt separately covered native-qualified generator redraws. Keep actual rules and fast-return limits unchanged."
+      },
+      "source": {
+        "file": "round16_requirements.json",
+        "json_pointer": "/findings/1"
+      },
+      "consolidated_group": "#/findings/1"
+    },
+    {
+      "id": "R16-REQ-03",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-REQ-03",
+        "severity": "Minor",
+        "status": "active",
+        "origin": "new",
+        "title": "Active plan status still points to the R14 predecessor and wrong required review pair",
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/sources/r10_design/r10_plan.md",
+            "line": 5,
+            "measured": "Current status names7866d6b8,957segments,D-R14 and fresh15/16; current exact target is632a9ad3,951segments,throughD-R15-03,requiring16/17."
+          },
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "measured": "Native inventory951segments/296vias/1788.675664583mm,boardSHA632a9ad3."
+          },
+          {
+            "file": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+            "line": 2270,
+            "measured": "D-R15-01..03 and final requirements/STATUS/validation explicitly require16/17 on the changed PCB."
+          }
+        ],
+        "concrete_fix": "Update only the active plan status/supersession block to the current R15-fix board and16/17 pair,or label the old block historical. Preserve immutable earlier round reports and do not transfer clean-round credit."
+      },
+      "source": {
+        "file": "round16_requirements.json",
+        "json_pointer": "/findings/2"
+      },
+      "consolidated_group": "#/findings/2"
+    },
+    {
+      "id": "R16-PWR-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-PWR-01",
+        "severity": "Minor",
+        "status": "carried",
+        "title": "L400 retains the reduced heel land",
+        "historical_ids": [
+          "R15-PWR-02",
+          "R14-PWR-01",
+          "R13-BOM-01",
+          "R13-MFG-02"
+        ],
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "ref": "L400",
+            "coordinate_mm": [
+              24.2,
+              5.55
+            ],
+            "side": "F.Cu",
+            "part": "Bourns SRP5030T-6R8M/C1329837",
+            "footprint": "rocket:M3_SRP5030TA",
+            "native_pad_size_mm": [
+              1.8,
+              2.5
+            ],
+            "local_pad_center_abs_x_mm": 2.35,
+            "native_inner_gap_mm": 2.9,
+            "source": "BOURNS-L p1",
+            "maker_recommended_pad_size_mm": [
+              2,
+              1.8
+            ],
+            "maker_recommended_center_abs_x_mm": 2.25,
+            "maker_inner_gap_mm": 2.5,
+            "maximum_uncovered_heel_mm_inference": 0.15,
+            "calculation": "(5.7-0.3)/2-(1.1+0.3)=1.30mm permitted heel; native inner copper begins1.45mm"
+          }
+        ],
+        "impact": "Native land differs from maker recommendation and can leave0.15mm heel uncovered at a permitted dimensional corner. Nominal contact remains; a required electrical failure or physical solder defect is not demonstrated.",
+        "concrete_fix": "Adopt the exact maker land in a covered generator/layout revision with DRC/routing/paste/orientation/provenance checks, or retain this exact owner/assembler deviation and qualify real contact coverage, fillets, seating and tolerance on first articles."
+      },
+      "source": {
+        "file": "round16_power.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/3"
+    },
+    {
+      "id": "R16-BOM-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-BOM-01",
+        "severity": "Minor",
+        "status": "carried",
+        "active": true,
+        "carried_from": [
+          "R15-BOM-01"
+        ],
+        "title": "L400 retains a land with less worst-corner heel coverage than the maker land",
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "reference": "L400",
+            "coordinates_mm": [
+              24.2,
+              5.55
+            ],
+            "side": "F",
+            "footprint": "M3_SRP5030TA",
+            "measured": {
+              "native_pad_size_mm": [
+                1.8,
+                2.5
+              ],
+              "native_pad_centres_x_mm": [
+                -2.35,
+                2.35
+              ],
+              "native_inner_edge_abs_x_mm": 1.45,
+              "maker_pad_size_mm": [
+                2.0,
+                1.8
+              ],
+              "maker_pad_centres_x_mm": [
+                -2.25,
+                2.25
+              ],
+              "maker_inner_edge_abs_x_mm": 1.25,
+              "conditional_metal_heel_abs_x_mm": 1.3,
+              "conditional_uncovered_heel_mm": 0.15
+            }
+          },
+          {
+            "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+            "maker_page": "SRP5030T, p1, Product Dimensions/Recommended Layout",
+            "basis": "Minimum body width5.4/2 minus maximum terminal width1.4 gives1.30mm. The native inner pad starts1.45mm from centre. Independent permitted dimension corners are an Inference; no failed solder joint or required function is demonstrated."
+          }
+        ],
+        "concrete_fix": "Qualify actual SRP5030T-6R8M seating, solder/heel coverage and retention on first articles, or adopt Bourns recommended land through the generator with covered CAD/fab/reproducibility review. Do not count the proxy orientation fit as maker-land qualification."
+      },
+      "source": {
+        "file": "round16_parts.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/3"
+    },
+    {
+      "id": "R16-BOM-02",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-BOM-02",
+        "severity": "Minor",
+        "status": "carried",
+        "active": true,
+        "carried_from": [
+          "R15-BOM-02",
+          "D-R15-02"
+        ],
+        "title": "DB125 insertion and protected-barrel process allocation remains unresolved",
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "references": [
+              "J1",
+              "J121",
+              "J400",
+              "J9",
+              "J410",
+              "J420",
+              "J122"
+            ],
+            "coordinates": "All seven terminal poses in terminal_review below",
+            "measured": {
+              "contacts": 23,
+              "pitch_mm": 3.5,
+              "nominal_hole_mm": 1.3,
+              "nominal_land_mm": 1.9,
+              "nominal_annulus_mm": 0.3,
+              "nominal_interpad_gap_mm": 1.6,
+              "conditional_pin_section_mm": [
+                0.7,
+                1.05
+              ],
+              "conditional_sharp_diagonal_mm": 1.2619429464123963,
+              "conditional_minimum_finished_hole_mm": 1.22,
+              "conditional_size_only_allowance_mm": -0.041942946412396376
+            }
+          },
+          {
+            "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+            "maker_page": "DORABO T0-1,2022-11-26,sheet1/1",
+            "basis": "Nominal0.50x0.85mm pin,1.20mm recommended hole; independent +/-0.20mm general dimensions would yield the sharp rectangle above, but the table cites GB/T14486 for moulded plastics. Metal-pin applicability, corners/form and relative pattern errors require maker/assembler clarification."
+          },
+          {
+            "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+            "maker_page": "Drilling: Hole size tolerance and Hole Position Tolerance",
+            "basis": "Current public table specifies through-hole +0.13/-0.08mm and position +/-0.075mm. This does not establish correlation/datum/outer-barrel/registration allocation."
+          },
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "reference": "J121.1",
+            "coordinates_mm": [
+              7.4,
+              54.1
+            ],
+            "measured": {
+              "native_hole_wall_to_In2_3V3_fill_mm": 1.102501,
+              "native_distance_quantization_mm": 1e-06,
+              "conditional_plus_diameter_and_position_consumption_mm": 0.14,
+              "conditional_remaining_mm": 0.962501
+            },
+            "basis": "Independent native point-to-saved-fill distance less0.65mm hole radius. The +0.065mm radial size and0.075mm displacement example is conditional, not a fabricated S8 failure."
+          }
+        ],
+        "concrete_fix": "Obtain authoritative maximum insertion profile, relative pin/form limits and approved seating method; allocate finished hole/pattern/annulus and protected barrel-to-inner-copper realization with fabricator. Inspect all23 contacts for full seating, intact plating/barrels and solder fill. If allocation fails, revise holes/lands and protected inner copper together through covered generators; no blind drill enlargement or reaming."
+      },
+      "source": {
+        "file": "round16_parts.json",
+        "json_pointer": "/findings/1"
+      },
+      "consolidated_group": "#/findings/4"
+    },
+    {
+      "id": "R16-MCU-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-MCU-01",
+        "severity": "Minor",
+        "status": "carried_active",
+        "prior_ids": [
+          "R15-MCU-01",
+          "D-R15-02"
+        ],
+        "title": "Exact VCAP parts still lack a closed combined operating C/ESR qualification",
+        "classification": "Disclosed CAD-stage qualification gap; no demonstrated regulator instability or required-function failure",
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "reference": "C19/C20",
+            "coordinates_mm": {
+              "C19": {
+                "side": "B",
+                "x": 28.35,
+                "y": 37.65
+              },
+              "C20": {
+                "side": "B",
+                "x": 19.8,
+                "y": 37.3
+              }
+            },
+            "measured_value": "Native exact identity CL10A225KO8NNNC/C23630,2.2uF16VX5R+/-10%; separate VCAP1/U1.48 and VCAP2/U1.73 nets, each only its capacitor and MCU pad"
+          },
+          {
+            "source_url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+            "maker_version": "DS12110Rev11 January2026",
+            "maker_page": "211 Table114/notes1-2",
+            "measured_value": "2.2uF typical,+/-20% tolerated,ESR<100mOhm; table does not state an AC-frequency/amplitude or combined bias/process interpretation"
+          },
+          {
+            "source_url": "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+            "maker_version": "Exact Samsung reference sheet issued2024-05-08; downloaded2026-10-30,38PDFpages",
+            "maker_page": "PDF2,12,16,17",
+            "source_sha256": "7ad029052a9bd944e0fd77e7d8e814676dfb7285a5e18b8760a538d5a978e49e",
+            "measured_value": "Initial capacitance measured at1kHz+/-10%,1.0+/-0.2Vrms after heat treatment/recovery; X5R TCC+/-15%; manual requires actual DC/AC/temperature/aging and frequency-dependent impedance consideration"
+          },
+          {
+            "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+            "location": "VCAP C19/C20 operating qualification",
+            "measured_value": "Current record explicitly retains combined C/ESR/process and actual regulator-mode qualification as open"
+          }
+        ],
+        "calculation": {
+          "nominal_selection_uF": [
+            1.98,
+            2.42
+          ],
+          "ST_typical_plusminus20_interpretation_uF": [
+            1.76,
+            2.64
+          ],
+          "initial_tolerance_times_full_X5R_TCC_uF": [
+            1.683,
+            2.783
+          ],
+          "interpretation": "The latter is a conservative envelope calculation,not a supported simultaneous operating corner or a measured failure. No multiplication of separate typical bias/temperature curves is credited."
+        },
+        "concrete_fix": "Before operating qualification, resolve ST C/ESR test conditions and actual fitted silicon/regulator modes; obtain maker-supported combined bounds or qualify exact fitted parts after reflow/rework and defined aging at actual local temperature,VCAP bias/relevant ripple/frequency,checking both C limits,ESR,startup and load/clock transients. If these fail,qualify an exact compatible replacement through a covered CAD/build/review change; a larger nominal value alone is not a fix."
+      },
+      "source": {
+        "file": "round16_mcu.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/5"
+    },
+    {
+      "id": "R16-MEC-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-MEC-01",
+        "severity": "Minor",
+        "status": "new",
+        "state": "active",
+        "title": "Remaining U4 signal/supply component-side traces need a specific stress-guidance disposition",
+        "evidence": {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "body_nominal_maker_xy_mm": [
+            15.5,
+            44.65,
+            18.5,
+            47.15
+          ],
+          "paths": [
+            {
+              "net": "3V3A",
+              "start": [
+                15.79,
+                46.65
+              ],
+              "end": [
+                15.79,
+                47.6
+              ],
+              "width_mm": 0.25,
+              "centreline_length_inside_nominal_body_outside_U4_pad_union_mm": 0.32565720294427014
+            },
+            {
+              "net": "SPI1_MISO",
+              "start": [
+                18.21,
+                44.16
+              ],
+              "end": [
+                18.21,
+                45.15
+              ],
+              "width_mm": 0.2,
+              "centreline_length_inside_nominal_body_outside_U4_pad_union_mm": 0.32567103935418834
+            },
+            {
+              "net": "IMU_CS",
+              "start": [
+                14.2,
+                44.7
+              ],
+              "end": [
+                16.26,
+                44.7
+              ],
+              "width_mm": 0.2,
+              "centreline_length_inside_nominal_body_outside_U4_pad_union_mm": 0.7596312469674923
+            },
+            {
+              "net": "IMU_CS",
+              "start": [
+                16.26,
+                44.7
+              ],
+              "end": [
+                16.5,
+                44.94
+              ],
+              "width_mm": 0.2,
+              "centreline_length_inside_nominal_body_outside_U4_pad_union_mm": 0.09184069252116912
+            },
+            {
+              "net": "IMU_INT1",
+              "start": [
+                18.21,
+                47.65
+              ],
+              "end": [
+                18.21,
+                46.65
+              ],
+              "width_mm": 0.2,
+              "centreline_length_inside_nominal_body_outside_U4_pad_union_mm": 0.325
+            }
+          ],
+          "maker_sources": [
+            {
+              "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+              "version": "DS14623 Rev1",
+              "page": 187,
+              "figure": 32
+            },
+            {
+              "url": "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf",
+              "version": "TN1383 Rev1 August2023",
+              "pages": [
+                7,
+                8,
+                9
+              ],
+              "scope": "Primary web text freshly read; no screenshot image or successful binary download returned."
+            }
+          ],
+          "sampling": "0.001mm midpoint centerline portions inside nominal body and outside all U4 native pad shapes; diagnostic, not copper area or stress solve",
+          "M7_issues": [],
+          "section2_violation_demonstrated": false,
+          "required_performance_failure_demonstrated": false
+        },
+        "concrete_fix": "Record these exact retained signal/supply traces as a sensor-stress guidance deviation and qualify first-article zero/bias/temperature/vibration behavior, or redraw pad-axis outward escapes through the generators with full native DRC/reference/region/fill/reproducibility coverage. No alternative is prequalified.",
+        "relation_to_previous": "R15-MEC-01 named GND straps are closed; these separate remaining paths were not its specific finding."
+      },
+      "source": {
+        "file": "round16_mechanics.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/6"
+    },
+    {
+      "id": "R16-MEC-02",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-MEC-02",
+        "severity": "Minor",
+        "status": "carried",
+        "state": "active",
+        "previous_ids": [
+          "R15-MEC-03",
+          "R14-MEC-02",
+          "R13-MEC-02"
+        ],
+        "title": "Separate parent vehicle candidate entry still describes removed R10 hardware",
+        "evidence": {
+          "file": "../../docs/VEHICLE.md",
+          "line": 40,
+          "obsolete_items": [
+            "GH ports",
+            "ARM terminal",
+            "GH2 J400(10.5,85.5)",
+            "0.03mm mated clearance"
+          ],
+          "native_file": "m3_design/assembly_review/m3.kicad_pcb",
+          "native_J400_pose_mm": [
+            7.4,
+            65.849999,
+            -90.0,
+            "F"
+          ],
+          "old_to_current_J400_distance_mm": 19.893027404093154,
+          "native_current_terminal_count": 7,
+          "native_current_terminal_contact_count": 23,
+          "bounded_by_current_handoff": "docs/R10_VEHICLE_HANDOFF.md",
+          "physical_failure_demonstrated": false
+        },
+        "concrete_fix": "Replace only the parent R10 candidate entry using the current in-worktree handoff within its separately authorized repository workflow; preserve R9 history. No other-worktree edit is authorized by this read-only review."
+      },
+      "source": {
+        "file": "round16_mechanics.json",
+        "json_pointer": "/findings/1"
+      },
+      "consolidated_group": "#/findings/0"
+    },
+    {
+      "id": "R16-RTE-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-RTE-01",
+        "severity": "Minor",
+        "status": "new",
+        "state": "open",
+        "title": "Avoidable SD_MOSI fixed-anchor routing length",
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "layer": "B.Cu",
+            "net": "SD_MOSI",
+            "width_nm": 200000,
+            "coordinates_nm": [
+              [
+                20100000,
+                32799999
+              ],
+              [
+                20100000,
+                27700000
+              ],
+              [
+                21600000,
+                26200000
+              ],
+              [
+                25005000,
+                26200000
+              ],
+              [
+                25005000,
+                24300000
+              ]
+            ],
+            "measured_old_length_mm": 12.526319343559642,
+            "measured_new_length_mm": 10.531716523440032,
+            "measured_saving_mm": 1.99460282011961,
+            "old_segments": 4,
+            "new_segments": 2,
+            "primary_page": "docs/REQUIREMENTS.md:M2, clean routing over the whole board. This is the owner criterion; no maker numerical route-length limit is asserted."
+          },
+          {
+            "file": "m3_design/r10_route_sd.py",
+            "line": 24,
+            "source_family": "signals / r10_route_sd",
+            "statement": "The native-qualified redraw preserves the exact original width, endpoints, vias, pin map and branch contacts."
+          }
+        ],
+        "concrete_fix": "Replace the four indicated B.Cu SD_MOSI segments in the source generator by the recorded diagonal/vertical pair, preserving exact integer anchors and200000nm width. Rebuild and freshly qualify the generated result, including reference, region, DRC, routing, fabrication and provenance. The present four-decimal generator rounds coordinates: the exact qualified candidate bend is(25005000,27894999)nm; a nominal27.895mm source bend needs regenerated native verification. Retained production code is unchanged by this review.",
+        "qualification": {
+          "candidate_sha256": "24a5880c0b1ceab27273dc101cec6225e87af25dea8f89eb88ec86b9d193bc5b",
+          "native_api": "10.0.6",
+          "native_cli": "10.0.7",
+          "native_refill": true,
+          "pad_group_changes": [],
+          "reference": {
+            "issues": [],
+            "evidence": {
+              "samples": 157893,
+              "unreferenced": 10051,
+              "inside_own_antipad": 10045,
+              "recorded_stray": 5,
+              "loose": 0,
+              "b_cu_planes": [
+                "GND",
+                "3V3",
+                "3V3A",
+                "PORT_5V3",
+                "PORT_4V8",
+                "RAW_PROTECTED"
+              ],
+              "by_net_layer": {
+                "SPI1_MISO B.Cu": {
+                  "samples": 2,
+                  "box": [
+                    17.79,
+                    43.88,
+                    17.8,
+                    43.89
+                  ]
+                },
+                "SPI1_MISO F.Cu": {
+                  "samples": 1,
+                  "box": [
+                    17.3,
+                    43.89,
+                    17.3,
+                    43.89
+                  ]
+                },
+                "SPI1_SCK B.Cu": {
+                  "samples": 3,
+                  "box": [
+                    17.1,
+                    43.4,
+                    17.1,
+                    43.42
+                  ]
+                }
+              }
+            }
+          },
+          "region": {
+            "issues": [],
+            "evidence": {
+              "items": 159,
+              "samples": 61867,
+              "nets": [
+                "CAM_MCU_RX",
+                "CAM_MCU_TX",
+                "CAM_RX_BUFFER",
+                "CAM_RX_WIRE",
+                "CAM_TX_BUFFER",
+                "CAM_TX_WIRE",
+                "GPS_RX_MCU",
+                "GPS_RX_WIRE",
+                "GPS_TX_MCU",
+                "GPS_TX_WIRE",
+                "HSE_IN",
+                "HSE_OUT",
+                "IMU_CS",
+                "PYRO1_COLD",
+                "PYRO1_GATE",
+                "PYRO1_GATE_N",
+                "PYRO1_IGN",
+                "PYRO1_OUT",
+                "QSPI_CLK",
+                "QSPI_IO0",
+                "QSPI_IO1",
+                "QSPI_IO2",
+                "QSPI_IO3",
+                "QSPI_NCS",
+                "RADIO_RX_MCU",
+                "RADIO_RX_WIRE",
+                "RADIO_TX_MCU",
+                "RADIO_TX_WIRE",
+                "SD_CS",
+                "SD_DAT1",
+                "SD_DAT2",
+                "SD_MISO",
+                "SD_MOSI",
+                "SD_SCK",
+                "SPI1_MISO",
+                "SPI1_MOSI",
+                "SPI1_SCK",
+                "USB_DM",
+                "USB_DP"
+              ]
+            }
+          },
+          "all_severity_parity_DRC": {
+            "violations": 0,
+            "unconnected": 0,
+            "parity": 0,
+            "ignored_checks": 0,
+            "exit": 0
+          },
+          "full_route_gate": {
+            "exit": 0,
+            "failures": 0,
+            "information": 140,
+            "allowlist": 0,
+            "critical_local_bumps": 0,
+            "bump_windows": 46
+          },
+          "fresh_comparison": {
+            "hash": "24a5880c0b1ceab27273dc101cec6225e87af25dea8f89eb88ec86b9d193bc5b",
+            "selected_original_tracks": 4,
+            "unchanged_unselected_tracks": 947,
+            "expected_unselected_tracks": 947,
+            "unexpected_changed_unselected_tracks": [],
+            "all_vias_identical": true,
+            "all_footprint_poses_pads_nets_identical": true,
+            "all_zone_outlines_identical": true,
+            "track_delta": -2,
+            "total_length_before_mm": 1788.675664582984,
+            "total_length_after_mm": 1786.6810617628641
+          },
+          "raw_object_comparison": {
+            "footprint": {
+              "before": 209,
+              "after": 209,
+              "raw_blocks_identical": true
+            },
+            "via": {
+              "before": 296,
+              "after": 296,
+              "raw_blocks_identical": true
+            },
+            "gr_line": {
+              "before": 4,
+              "after": 4,
+              "raw_blocks_identical": true
+            },
+            "gr_text": {
+              "before": 40,
+              "after": 40,
+              "raw_blocks_identical": true
+            },
+            "gr_rect": {
+              "before": 0,
+              "after": 0,
+              "raw_blocks_identical": true
+            },
+            "gr_arc": {
+              "before": 0,
+              "after": 0,
+              "raw_blocks_identical": true
+            },
+            "dimension": {
+              "before": 0,
+              "after": 0,
+              "raw_blocks_identical": true
+            },
+            "layers": {
+              "before": 1,
+              "after": 1,
+              "raw_blocks_identical": true
+            },
+            "setup": {
+              "before": 1,
+              "after": 1,
+              "raw_blocks_identical": true
+            },
+            "net": {
+              "before": 0,
+              "after": 0,
+              "raw_blocks_identical": true
+            },
+            "property": {
+              "before": 0,
+              "after": 0,
+              "raw_blocks_identical": true
+            }
+          }
+        },
+        "why_minor": "A bounded clean-routing residual; neither a demonstrated SD failure nor an AGENTS section2 violation. The gate turning-back/ratio criteria do not constitute global optimization."
+      },
+      "source": {
+        "file": "round16_routing.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/7"
+    },
+    {
+      "id": "R16-RTE-02",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-RTE-02",
+        "severity": "Minor",
+        "status": "carried",
+        "state": "open_owner_deviation",
+        "title": "Complete current M2/return inventory remains to be accepted",
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "measured": "140actual information instances=111ordinary+23inside-pad+6noncritical hygiene; no blocking/allowlisted/stale instance. Counts and exact locations are below.",
+            "coordinates": "Whole board; notable retained USB_ILIM net starts R85.1 F(14.825,27.2); its via is(14.825,26.0).",
+            "primary_page": "docs/REQUIREMENTS.md:M2; R10_DECISIONS D-AUD-02/D-AUD-10 and requirements audit2 item7."
+          },
+          {
+            "file": "tools/route_check.py",
+            "measured": "USB_ILIM3.332106781mm against1.049264069mm octilinear pad MST, ratio3.17566; one layer transition is needed because the two pads are on opposite faces.",
+            "primary_page": "TI TPS2121 SLVSEA3F p33 / TPS25947 SLVSFC9C pp62-63 / TPS7A91 SBVS282A p25 give qualitative locality/return guidance; geometry does not prove noise, transient or thermal performance."
+          }
+        ],
+        "concrete_fix": "Keep the current count/location inventory bound to this exact board, simplify practical residuals in their existing generators while preserving T contacts, exact widths, returns and power/safety behavior, and obtain dated owner acceptance of those retained. USB_ILIM needs either accepted routing or a broader R85/U10/via redesign followed by qualification; this fixed-anchor search proves no impossibility. Reset/I2C/HSE, bypass/ground, power-transfer and installed-interface tests remain physical/firmware work.",
+        "why_minor": "Bounded and disclosed drawing/return compromises remain deviations from M2. AUD-2 and AUD-10 permit their narrow numeric/count treatment, and no current required-function or section2 failure is demonstrated."
+      },
+      "source": {
+        "file": "round16_routing.json",
+        "json_pointer": "/findings/1"
+      },
+      "consolidated_group": "#/findings/1"
+    },
+    {
+      "id": "R16-MFG-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-MFG-01",
+        "severity": "Minor",
+        "status": "carried",
+        "active": true,
+        "title": "L400 retained proxy land can leave a 0.15 mm heel strip uncovered",
+        "prior_ids": [
+          "R15-MFG-01",
+          "R14-MFG-01",
+          "R13-MFG-02",
+          "R12-BOM-01",
+          "R4-BOM-01"
+        ],
+        "evidence": {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "L400",
+          "side": "F",
+          "position_mm": [
+            24.2,
+            5.55
+          ],
+          "part": "Bourns SRP5030T-6R8M / C1329837",
+          "native_land_mm": {
+            "pad_size": [
+              1.8,
+              2.5
+            ],
+            "pad_center_x": [
+              -2.35,
+              2.35
+            ],
+            "inner_gap": 2.9,
+            "outer_span": 6.5
+          },
+          "maker": {
+            "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+            "page": 1,
+            "recommended_pad_size_mm": [
+              2.0,
+              1.8
+            ],
+            "recommended_center_x_mm": [
+              -2.25,
+              2.25
+            ],
+            "recommended_inner_gap_mm": 2.5
+          },
+          "conditional_heel_mm": 1.3,
+          "native_inner_edge_mm": 1.45,
+          "possible_uncovered_heel_mm": 0.15,
+          "calculation": "(5.7 - 0.3)/2 - (1.1 + 0.3) = 1.30 mm; native inner edge 2.35 - 1.8/2 = 1.45 mm"
+        },
+        "concrete_fix": "Adopt the maker land through a covered generator/CAD revision, or retain this exact deviation for owner/assembler acceptance and first-article seating, fillet, tolerance and retention qualification.",
+        "severity_reason": "A bounded land-pattern compromise persists. Nominal contact remains; a failed converter or violated required electrical function is not demonstrated."
+      },
+      "source": {
+        "file": "round16_manufacturing.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/3"
+    },
+    {
+      "id": "R16-MFG-02",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-MFG-02",
+        "severity": "Minor",
+        "status": "carried",
+        "active": true,
+        "title": "Sixteen literal courtyard-stroke intersections remain",
+        "prior_ids": [
+          "R15-MFG-02",
+          "D-R14-02"
+        ],
+        "evidence": {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "all_footprints_examined": 209,
+          "pair_count": 16,
+          "top_pairs": 6,
+          "bottom_pairs": 10,
+          "ink_penetration_mm_range": [
+            0.02,
+            0.05
+          ],
+          "native_collision_polygon_gap_mm_range": [
+            0.01,
+            0.04
+          ],
+          "pairs": [
+            {
+              "pair": [
+                "C97",
+                "D123"
+              ],
+              "side": "F",
+              "xy_mm": [
+                23.56,
+                63.31
+              ],
+              "ink_penetration_mm": 0.03,
+              "collision_polygon_gap_mm": 0.03
+            },
+            {
+              "pair": [
+                "R32",
+                "LED1"
+              ],
+              "side": "F",
+              "xy_mm": [
+                10.465,
+                42.1199995
+              ],
+              "ink_penetration_mm": 0.02,
+              "collision_polygon_gap_mm": 0.04
+            },
+            {
+              "pair": [
+                "R400",
+                "L400"
+              ],
+              "side": "F",
+              "xy_mm": [
+                21.04,
+                2.54
+              ],
+              "ink_penetration_mm": 0.03,
+              "collision_polygon_gap_mm": 0.03
+            },
+            {
+              "pair": [
+                "LED2",
+                "R33"
+              ],
+              "side": "F",
+              "xy_mm": [
+                10.065,
+                45.545
+              ],
+              "ink_penetration_mm": 0.04,
+              "collision_polygon_gap_mm": 0.02
+            },
+            {
+              "pair": [
+                "R121",
+                "D8"
+              ],
+              "side": "F",
+              "xy_mm": [
+                14.5,
+                72.745
+              ],
+              "ink_penetration_mm": 0.04,
+              "collision_polygon_gap_mm": 0.02
+            },
+            {
+              "pair": [
+                "C60",
+                "R60"
+              ],
+              "side": "F",
+              "xy_mm": [
+                33.2,
+                58.165
+              ],
+              "ink_penetration_mm": 0.02,
+              "collision_polygon_gap_mm": 0.04
+            },
+            {
+              "pair": [
+                "C421",
+                "U12"
+              ],
+              "side": "B",
+              "xy_mm": [
+                32.6875,
+                38.35
+              ],
+              "ink_penetration_mm": 0.05,
+              "collision_polygon_gap_mm": 0.01
+            },
+            {
+              "pair": [
+                "R152",
+                "D121"
+              ],
+              "side": "B",
+              "xy_mm": [
+                33.215,
+                70.26
+              ],
+              "ink_penetration_mm": 0.04,
+              "collision_polygon_gap_mm": 0.02
+            },
+            {
+              "pair": [
+                "C83",
+                "C28"
+              ],
+              "side": "B",
+              "xy_mm": [
+                11.69,
+                24.9
+              ],
+              "ink_penetration_mm": 0.03,
+              "collision_polygon_gap_mm": 0.03
+            },
+            {
+              "pair": [
+                "C85",
+                "R86"
+              ],
+              "side": "B",
+              "xy_mm": [
+                27.8999995,
+                64.9874995
+              ],
+              "ink_penetration_mm": 0.035001,
+              "collision_polygon_gap_mm": 0.024999
+            },
+            {
+              "pair": [
+                "C22",
+                "C26"
+              ],
+              "side": "B",
+              "xy_mm": [
+                26.435,
+                45.935
+              ],
+              "ink_penetration_mm": 0.02,
+              "collision_polygon_gap_mm": 0.04
+            },
+            {
+              "pair": [
+                "D121",
+                "R151"
+              ],
+              "side": "B",
+              "xy_mm": [
+                33.215,
+                72.74
+              ],
+              "ink_penetration_mm": 0.04,
+              "collision_polygon_gap_mm": 0.02
+            },
+            {
+              "pair": [
+                "R64",
+                "U5"
+              ],
+              "side": "B",
+              "xy_mm": [
+                11.23,
+                51.405
+              ],
+              "ink_penetration_mm": 0.04,
+              "collision_polygon_gap_mm": 0.02
+            },
+            {
+              "pair": [
+                "U4",
+                "C31"
+              ],
+              "side": "B",
+              "xy_mm": [
+                15.135,
+                46.8749995
+              ],
+              "ink_penetration_mm": 0.02,
+              "collision_polygon_gap_mm": 0.04
+            },
+            {
+              "pair": [
+                "Y1",
+                "R10"
+              ],
+              "side": "B",
+              "xy_mm": [
+                20.885,
+                44.7049995
+              ],
+              "ink_penetration_mm": 0.02,
+              "collision_polygon_gap_mm": 0.04
+            },
+            {
+              "pair": [
+                "C18",
+                "C30"
+              ],
+              "side": "B",
+              "xy_mm": [
+                17.475,
+                49.14
+              ],
+              "ink_penetration_mm": 0.04,
+              "collision_polygon_gap_mm": 0.02
+            }
+          ],
+          "maker_page": "Not applicable: these are project drawing/collision polygons, not maker body-tolerance measurements."
+        },
+        "concrete_fix": "Retain the complete per-pair owner/assembler first-article and access disposition. Any drawing or placement correction must use deliberate source geometry and covered rebuild/review; do not shrink a physical courtyard solely to remove ink.",
+        "severity_reason": "Native collision polygons remain separate and DRC is zero. Stroked drawing overlap does not establish a physical body collision."
+      },
+      "source": {
+        "file": "round16_manufacturing.json",
+        "json_pointer": "/findings/1"
+      },
+      "consolidated_group": "#/findings/8"
+    },
+    {
+      "id": "R16-GATE-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-GATE-01",
+        "severity": "Minor",
+        "status": "new",
+        "disposition": "open prospective evidence-validation defect",
+        "title": "Complete check.sh accepts a corrupted saved R10 binding note",
+        "evidence": {
+          "files": [
+            {
+              "path": "tools/check.sh",
+              "line": 47
+            },
+            {
+              "path": "tools/test_r10_check.py",
+              "line": 285
+            },
+            {
+              "path": "m3_design/r10_sch_check.py",
+              "line": 215
+            },
+            {
+              "path": "tools/fab_manifest.py",
+              "line": 14
+            },
+            {
+              "path": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+              "line": 4
+            }
+          ],
+          "seed": {
+            "seed": {
+              "board_sha256": {
+                "before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+                "after": "0000000000000000000000000000000000000000000000000000000000000000"
+              },
+              "u1_pins/3/net": {
+                "before": "PYRO1_GATE_N",
+                "after": "GND"
+              },
+              "imu/roll_about_forward_axis": {
+                "before": "-gyro_Y",
+                "after": "+gyro_Y"
+              }
+            },
+            "before_sha256": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+            "after_sha256": "2cdacaf68d383f78645efa6e2c912a43a3f045be3718da775df818aa6a75dc62",
+            "board_unchanged": true
+          },
+          "unchanged_saved_note_equals_fresh_native_regeneration": true,
+          "complete_copied_gate_positive_returncode": 0,
+          "complete_copied_gate_negative_returncode": 0,
+          "copied_frozen_inputs": 1942,
+          "only_copied_frozen_input_changed": [
+            {
+              "path": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+              "expected": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+              "actual": "2cdacaf68d383f78645efa6e2c912a43a3f045be3718da775df818aa6a75dc62"
+            }
+          ],
+          "unchanged_control_log_sha256": "a75c833eecb87bc10f9b215d4446b07c65a4a7594635025166927b94c3520279",
+          "negative_log_sha256": "06fc727b6056cfcfe655052700ba56f2f8e6d0e6300aeabf3ba3a89146a14e19",
+          "manifest_scope": "Both runs checked all five outputs at copied ROOT canonical-board path; no copy exemption.",
+          "scope": "Genuine full check.sh artifact escape. Source build was not run and would regenerate the note. No executable R10 firmware exists; the current saved note is correct."
+        },
+        "concrete_fix": "Compare the saved note with fresh r10_sch_check.binding_note(project, board) in the final gate. Independently seed missing/stale hash, wrong MCU net and wrong IMU sign. Preserve record-only status and current electrical/policy checks.",
+        "severity_rationale": "Prospective artifact-check defect; no current required-function failure or executed unsafe firmware is demonstrated."
+      },
+      "source": {
+        "file": "round16_gate.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/9"
+    },
+    {
+      "id": "R16-GATE-02",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-GATE-02",
+        "severity": "Minor",
+        "status": "new",
+        "disposition": "open prospective false rejection",
+        "title": "AUD-10 exact duplicate segments produce blocking fold_back and track_loop findings",
+        "evidence": {
+          "files": [
+            {
+              "path": "tools/route_check.py",
+              "line": 1894
+            },
+            {
+              "path": "tools/route_check.py",
+              "line": 2173
+            },
+            {
+              "path": "tools/route_check.py",
+              "line": 2202
+            },
+            {
+              "path": "tools/test_route_check.py",
+              "line": 955
+            }
+          ],
+          "authority": "D-AUD-10 / REQUIREMENTS M2: exact duplicate representations count for review; partial overlap, crossing and real routing defects remain blocking.",
+          "real_target_seed": {
+            "net": "GPS_RX_MCU",
+            "layer": "F.Cu",
+            "start_mm": [
+              28.8,
+              24.2
+            ],
+            "end_mm": [
+              28.8,
+              11.0
+            ],
+            "width_mm": 0.2,
+            "length_mm": 13.2,
+            "copper_union_unchanged": true
+          },
+          "positive_failure_count": 0,
+          "negative_failures": [
+            {
+              "cat": "fold_back",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 24.2,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 11.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "GPS_RX_MCU",
+              "cls": "uart",
+              "layer": "F.Cu",
+              "x": 28.8,
+              "y": 17.6
+            }
+          ],
+          "synthetic_positive_failures": [],
+          "synthetic_duplicate_failures": [
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 0.0,
+              "y": 0.0,
+              "at": "pad/via"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.5,
+              "y": 0.0
+            }
+          ],
+          "partial_overlap_control_failures": [
+            {
+              "cat": "collinear_overlap",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "end": [
+                8.0,
+                0.0
+              ],
+              "other": [
+                5.0,
+                0.0,
+                10.0,
+                0.0
+              ],
+              "overlap_mm": 3.0
+            },
+            {
+              "cat": "collinear_overlap",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "end": [
+                8.0,
+                0.0
+              ],
+              "other": [
+                0.0,
+                0.0,
+                5.0,
+                0.0
+              ],
+              "overlap_mm": 3.0
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 2.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 8.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "fold_back",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 5.0,
+              "y": 0.0,
+              "at": "free"
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 6.5,
+              "y": 0.0
+            },
+            {
+              "cat": "track_loop",
+              "net": "3V3",
+              "cls": "power",
+              "layer": "F.Cu",
+              "x": 3.5,
+              "y": 0.0
+            }
+          ],
+          "scope": "Native scan/evaluate on actual target and fresh synthetic geometry. Local false rejection, not whole-gate escape; no seeded-board DRC/full-gate claim."
+        },
+        "concrete_fix": "Canonicalize only identical net/layer/unordered-endpoints/width geometry for topology, length and loops while retaining duplicate review counts. Evaluate the complete scan in the AUD-10 regression; preserve partial overlaps, crossings and genuine loops.",
+        "severity_rationale": "The present board passes; this is a bounded prospective validation-policy defect, not a physical copper failure."
+      },
+      "source": {
+        "file": "round16_gate.json",
+        "json_pointer": "/findings/1"
+      },
+      "consolidated_group": "#/findings/10"
+    },
+    {
+      "id": "R16-DOC-01",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-DOC-01",
+        "severity": "Minor",
+        "status": "new",
+        "title": "The plan labels the previous R14 integration as the current review target",
+        "requirements": [
+          "AGENTS section3 current status/provenance",
+          "r10_plan section5",
+          "D-R15-03 current record correction"
+        ],
+        "evidence": [
+          {
+            "file": "m3_design/assembly_review/sources/r10_design/r10_plan.md",
+            "line": 5,
+            "coordinate": "Current review status header, lines5-11",
+            "measured_or_observed": "Still says fullR14 onf5/e0, successor7866d6b8,957segments, fresh15/16 and only D-R11..D-R14; links round14_fix_validation as its current proof."
+          },
+          {
+            "file": "docs/R10_VALIDATION.md",
+            "line": 1300,
+            "coordinate": "FullR15 and successor record",
+            "measured_or_observed": "FullR15 reviewed789f4d5/7866d6b8; current successor632a9ad3 has951segments and requires fresh16/17. D-R15-01..03 are present and indexed."
+          },
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "coordinate_mm": [
+              23,
+              43
+            ],
+            "measured_or_observed": "Fresh API10.0.6:632a9ad3,209footprints,951segments,296vias,1788.675664583mm."
+          }
+        ],
+        "maker_page": "Not applicable: internal current-status/provenance mismatch; no maker parameter inferred.",
+        "impact": "A reviewer opening the plan is directed to the predecessor board, preceding round pair and incomplete amendment range. Other current summaries and actual bindings are correct; no transferred clean credit or hardware-function failure is demonstrated.",
+        "concrete_fix": "Update only the explicitly current plan header to fullR15 on789f4d5/7866d6b8, current632a9ad3/951segments, complete D-R15 scope, fresh16/17 and round15_fix_validation. Preserve its dated historical plan/body."
+      },
+      "source": {
+        "file": "round16_docs_binding.json",
+        "json_pointer": "/findings/0"
+      },
+      "consolidated_group": "#/findings/2"
+    },
+    {
+      "id": "R16-DOC-02",
+      "severity": "Minor",
+      "original_finding": {
+        "id": "R16-DOC-02",
+        "severity": "Minor",
+        "status": "carried",
+        "prior_ids": [
+          "R15-DOC-02",
+          "R15-REQ-01",
+          "R14-REQ-01",
+          "R13-REQ-03",
+          "R12-REQ-02",
+          "R11-REQ-03"
+        ],
+        "title": "The separately owned vehicle candidate entry still describes removed R10 hardware",
+        "requirements": [
+          "P1",
+          "P2",
+          "OQ-7",
+          "all wired screw-terminal amendment"
+        ],
+        "evidence": [
+          {
+            "file": "../../docs/VEHICLE.md",
+            "line": 39,
+            "coordinate_mm": [
+              7.4,
+              65.85
+            ],
+            "measured_or_observed": "R10 candidate still names GH-4 ports, ARM/IGN terminals, GH-2 J400 at(10.5,85.5) and0.03mm mated-GH margin."
+          },
+          {
+            "file": "m3_design/assembly_review/m3.kicad_pcb",
+            "coordinate_mm": [
+              7.4,
+              65.85
+            ],
+            "measured_or_observed": "Fresh API J400 is DB125-2 F(7.4,65.849999),-90degrees. All seven wired terminals are DB125; J123/J124 are absent. J9/J410/J420 are the east4P row and J122 is5P."
+          },
+          {
+            "file": "docs/R10_VEHICLE_HANDOFF.md",
+            "line": 15,
+            "coordinate": "Seven-terminal table and current integration rules",
+            "measured_or_observed": "The in-worktree replacement correctly supplies current roles/poses, single switch, always-on ports, SD service/support/hardware limits and OQ-7."
+          }
+        ],
+        "maker_page": "Not applicable: native geometry versus project integration record; no physical collision alleged.",
+        "impact": "A vehicle integrator using the parent candidate entry can allocate removed connectors and the wrong switch location. The explicit local handoff mitigates this; physical fit is not established.",
+        "concrete_fix": "Apply the R10-only replacement from docs/R10_VEHICLE_HANDOFF.md through the separately authorized parent-document workflow, preserving accepted R9 facts/OQ-7 and pending physical fit. Do not edit that worktree during this frozen review."
+      },
+      "source": {
+        "file": "round16_docs_binding.json",
+        "json_pointer": "/findings/1"
+      },
+      "consolidated_group": "#/findings/0"
+    }
+  ],
+  "findings": [
+    {
+      "id": "R16-m01",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "Separately owned vehicle mirror",
+      "source_ids": [
+        "R16-REQ-01",
+        "R16-MEC-02",
+        "R16-DOC-02"
+      ],
+      "disposition": "Retain explicit local handoff; do not edit the other worktree. Parent candidate entry still names removed GH/ARM hardware; separately authorized mirror update remains due.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m02",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "M2 drawing and noncritical return compromises",
+      "source_ids": [
+        "R16-REQ-02",
+        "R16-RTE-02"
+      ],
+      "disposition": "Retain the complete current measured M2/return inventory for owner acceptance; no blocking rule or critical exception is waived.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m03",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Stale active plan header",
+      "source_ids": [
+        "R16-REQ-03",
+        "R16-DOC-01"
+      ],
+      "disposition": "Correct active plan to current R16 full review and PCB632a9ad3; keep historical source executions distinct.",
+      "integration_status": "CORRECTED_IN_GATE_OR_RECORD"
+    },
+    {
+      "id": "R16-m04",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "L400 heel-land residual",
+      "source_ids": [
+        "R16-PWR-01",
+        "R16-BOM-01",
+        "R16-MFG-01"
+      ],
+      "disposition": "Retain possible0.15mm uncovered heel with maker-land/process and first-article qualification; no unqualified power-land change.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m05",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "DB125 insertion and protected-barrel process allocation",
+      "source_ids": [
+        "R16-BOM-02"
+      ],
+      "disposition": "Retain nominal1.30mm holes/1.90mm lands, native S8 minimum1.102502mm and conditional1.261943mm sharp-profile concern; maker/assembler/fabricator allocation and all23contact first articles remain required.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m06",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "VCAP combined-condition and ESR qualification",
+      "source_ids": [
+        "R16-MCU-01"
+      ],
+      "disposition": "Retain exact nominal2.2uF16VX5R Samsung parts in unqualified CAD candidate. Resolve ST2.2uF\u00b120% measurement meaning, both effective-C limits/ESR, combined process/aging/temperature/bias/regulator conditions and startup/load transients.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m07",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Remaining MEMS component-side signal and supply traces",
+      "source_ids": [
+        "R16-MEC-01"
+      ],
+      "disposition": "Retain the specific measured IMU_CS,SPI1_MISO,IMU_INT1,3V3A component-side stress-guidance departure and first-article bias/temperature/vibration/process qualification. Bounded combined source redraw rejected: initial supply0.106949mm gap; revised local-screen positive still has45degree free CS junctionB(14.2,44.7). No native CLI/full-build qualification credited to that rejected sketch. See round16_minor_prototypes.json.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m08",
+      "severity": "Minor",
+      "status": "new",
+      "title": "SD_MOSI fixed-anchor cleanup",
+      "source_ids": [
+        "R16-RTE-01"
+      ],
+      "disposition": "RETAINED per new supervisor steer2026-10-30afterround16 and D-R16-03. Qualified ignored native copy/source recipe saves1.994602820mm/two segments, but no PCB/routing/placement/circuit-generator change is authorized for Minors. Record measured M2 deviation for owner acceptance; original candidate proofs remain scoped engineering evidence only.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m09",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "Courtyard stroke intersections",
+      "source_ids": [
+        "R16-MFG-02"
+      ],
+      "disposition": "Retain16 literal rendered-ink intersections with positive native polygon gaps0.010..0.040mm and process/first-article qualification; no physical collision demonstrated.",
+      "integration_status": "RETAINED_MINOR_WITH_MEASURED_REASON; no CAD change for Minors"
+    },
+    {
+      "id": "R16-m10",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Saved binding-note validation",
+      "source_ids": [
+        "R16-GATE-01"
+      ],
+      "disposition": "Compare saved note to fresh native regeneration without rewriting it; reject missing/malformed/hash/pin/axis corruption. Generate record-only note before full build gate; retain unchanged positive and genuine mutated controls.",
+      "integration_status": "CORRECTED_IN_GATE_OR_RECORD"
+    },
+    {
+      "id": "R16-m11",
+      "severity": "Minor",
+      "status": "new",
+      "title": "AUD10 exact-duplicate topology semantics",
+      "source_ids": [
+        "R16-GATE-02"
+      ],
+      "disposition": "Collapse only exact net/layer/endpoints/width duplicates for topology/path/loop analysis in R10 while retaining review annotations. Keep partial overlaps,different widths,crossings,genuine loops and connectivity blocking; test the entire scan/evaluate result.",
+      "integration_status": "CORRECTED_IN_GATE_OR_RECORD"
+    }
+  ],
+  "severity_reconciliation": "All ten authored reports have0Critical/0Major. Rejected severity hypotheses are retained verbatim in the original reports; no unresolved C/M candidate is suppressed or accepted without a fresh verifier.",
+  "same_board_pair": {
+    "round16_full_clean": true,
+    "round17_full_clean": false,
+    "pair_earned": false,
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982"
+  },
+  "method_limits": [
+    "Software/CAD gates and primary-source checks do not establish physical,firmware,thermal,flight,assembly-process or supplier release qualification.",
+    "The separately owned parent VEHICLE worktree is read-only; local handoff explicitly bounds stale hardware descriptions.",
+    "New supervisor steer2026-10-30afterround16 forbids PCB,placement,routing,circuit-generator changes for Minors. The SD/MEMS copy/source explorations are not adopted. FullR17same632a9ad3then final records if0C0M; only confirmedC/M permits a board change.",
+    "Owner acceptance and quote/order are not inferred. AGENTS section2 is unchanged."
+  ],
+  "post_review_owner_steer": {
+    "source": "D-R16-03",
+    "scope": "Received after full review,before commit; original full lens reports and reviewed119DIDs/22owner scopes remain immutable. Current record indexes122DIDs/23owner scopes for R17."
+  }
+}

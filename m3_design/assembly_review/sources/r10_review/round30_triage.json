@@ -1,0 +1,130 @@
+{
+ "schema": "r10-triage-v1",
+ "target_commit": "0afaed3",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "real_errors": [
+  {
+   "id": "R30-TRI-01",
+   "merged_ids": [
+    "R30-SAFETY-01"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Section 1's ARM1_SENSE-to-CAM_IO_3V3 bridge figures (about 1.73 V on RAW_ACT, about 0.15 mA in the match) leave out the D120 / R131 cold pull-up, which is live whenever CAM_IO_3V3 is; with it RAW_ACT is about 2.19-2.21 V and the match current about 0.11 mA. Sibling: the same section gives the RAW_ACT bridge's EN load as 11.2 kOhm, leaving out the e-match path (5.6 kOhm with a match or the step-3 dummy fitted)",
+   "evidence": "Reproduced on a0ec075e (pcbnew read-only, .supervisor/r30_triage/netpads.py). CAM_IO_3V3 = U13.5 (TPS70933), fed only from CAM_5V (U402 TPS2553, IN = PORT_5V3, EN = CAM_PWR_EN = U1.41 with R431 100 k pull-down), so it is up only while the battery path and the MCU run, i.e. while 3V3 is up. D120 BAT54A pin 3 (common anode) = 3V3, pin 1 = PYRO1_COLD; R131 10 k PYRO1_COLD-PYRO1_OUT. ARM1_SENSE = R175.2 / R133 2k / R180 2k / C129 / U1.33; R175 + R132 5.1 k each to RAW_ACT; PYRO1_OUT: R173 + R129 5.1 k each to PYRO1_CONT, R130 / R178 2 k each. Own 3-node solve (bridge stiff 3.3 V via 10.2 k into RAW_ACT, R134 2 Ohm, match 2 Ohm, CONT bank 11.2 k, cold pull-up 10 k from 3.3 V - Vf; FETs off): without the pull-up RAW_ACT 1.7274 V, I_match 0.154 mA (the record's figures); with it, Vf 0.20 / 0.24 / 0.30 V: RAW_ACT 2.2052 / 2.1913 / 2.1704 V, I_match 0.1073 / 0.1087 / 0.1107 mA, CONT 196.9 / 195.6 / 193.7 mV. The sentence's own condition ('the cold screen then reads the bus as live and refuses') is the board-on state. Conclusion unchanged (0.11 mA << 0.30 A no-fire; PC5 at 3.3 V refuses). Sibling (same omission class, own sweep of the section 1 pair table): R10_VALIDATION:2636 'EN is loaded by 10 kOhm, 11.2 kOhm or 2 kOhm' for a RAW_ACT-to-BAT_ENABLE bridge at power-up; RAW_ACT also reaches the 11.2 k CONT bank through R134 and the match (no other DC path: D120 blocks toward an unpowered 3V3, Q124 off), so with the e-match fitted (per-flight steps 4-5: e-match in, then J400 closed) or the step-3 1-2 Ohm dummy, EN sees 11.2 k || (11.2 k + about 4 Ohm) = 5.6 kOhm. Conclusion unchanged (EN about 0.05-0.1 V, board does not start). The other section 1 bridge figures reproduce with every live source: CONT_MID-R134.2 open-match cold 102.0 / 55.5 mV (includes the pull-up), R173.2-D120.3 0.54 V, OUT-3V3 0.295 V, CONT_MID-BUZZ_G 'at most about 4.6 V' (8.4 x 6.1 / 11.2 = 4.58 V, an upper bound without R163), R173.2-R162.1 1.6 mA. No FMEA R10 row (I-5, I-2 / H-2) gives a bridge voltage of this kind.",
+   "all_places": [
+    "docs/R10_VALIDATION.md:2603 (1.73 V / 0.15 mA, ARM1_SENSE to U13.5)",
+    "docs/R10_VALIDATION.md:2636 (sibling: RAW_ACT bridge EN load 11.2 kOhm)"
+   ],
+   "frozen_history_not_edited": [
+    "m3_design/assembly_review/sources/r10_review/round22_safety.json:38",
+    "m3_design/assembly_review/sources/r10_review/round22_safety.md:128 (round 22 lens record, the source of the figure)"
+   ],
+   "concrete_fix": "Text only. R10_VALIDATION:2603: 'benign: at most 3.3 V on PC5 and, with the board on (CAM_IO_3V3 is up only then, so the D120 / R131 cold pull-up is live), about 2.2 V on RAW_ACT with the bus off and about 0.11 mA through the match against the J-Tek 0.30 A no-fire (Calculation / Inference: the BAT54 drop at about 0.1 mA); the cold screen then reads the bus as live and refuses'. R10_VALIDATION:2636: '(EN is loaded by 10 kOhm, 11.2 kOhm (5.6 kOhm with the e-match or the step-3 dummy fitted) or 2 kOhm)'.",
+   "board_change": false
+  },
+  {
+   "id": "R30-TRI-02",
+   "merged_ids": [
+    "R30-SAFETY-02",
+    "R30-REQUIREMENTS obs 20"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The first-article 70 C chamber test cannot pass as written: round 29 added 'LS120 <= 70 C' to its pass criterion, but in a 70 C chamber at the pad load every board part runs above chamber air (the same records put LS120 at 80-92 C), none of the listed failure remedies addresses LS120, so the 'interim' 55 C site limit could never be lifted; this contradicts owner row 36, which accepts LS120 as best-effort rather than a gate",
+   "evidence": "Reproduced from the text. REQUIREMENTS:94, M3_R10:496-497, ORDERING:608 and owner row 33 (R10_VALIDATION:2460) make the 55 C limit last 'until the first-article 70 C chamber test at the pad load passes (every 85 C part <= 85 C, and LS120 <= 70 C)'; owner row 36 (R10_VALIDATION:2427) states the pass as 'LS120 <= 70 C'. The same rows state the pad load (1.0-1.5 W, all on the board) gives +10-22 K over the bay, LS120 at about 80-92 C in a 70 C bay (Inference). Physically, with 1.0-1.5 W dissipated on the board in a 70 C chamber, LS120 (soldered at F(23,58.5), itself driven from 3V3) sits above 70 C in steady state on any board, so the clause fails by construction; the remedies ('a camera / port duty limit on the pad, or X7R parts on the same lands') do not change LS120's rating or its pad-load rise. Row 36 and AGENTS:21 treat LS120's hot end as accepted best-effort annunciation above about 48 C bay air, not as a gate. The requirements lens read the permanent 55 C limit as consistent; it is not, because every place calls the limit interim and the remedies imply the test can pass. Introduced by the round 29 fix pass (R29-TRI-04).",
+   "all_places": [
+    "docs/REQUIREMENTS.md:94 (Temperature row)",
+    "docs/M3_R10.md:496-498 (Hot-end temperature)",
+    "docs/ORDERING.md:608 (8.3 Board temperature at the pad load)",
+    "docs/R10_VALIDATION.md:2460 (owner row 33)",
+    "docs/R10_VALIDATION.md:2427 (owner row 36, Needed column)",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:40 (Round 29 note)",
+    "STATUS.md:20 (LS120 hot end bullet)",
+    "docs/R10_VALIDATION.md:2365 (R29-TRI-04 record row: history, add a pointer to R30-TRI-02)"
+   ],
+   "concrete_fix": "Text only, in every place listed: the pass criterion is 'every 85 C-rated part <= 85 C' alone. Replace the LS120 clause with: 'also record LS120's measured rise over chamber air at the pad load (thermocouple on LS120); LS120 is not a pass / fail gate: the bay-air limit above which buzzer annunciation is best-effort is 70 C minus that measured rise, which replaces the inferred 48 C (owner row 36)'. Owner row 36 'Needed': 'the first-article 70 C chamber test records LS120's rise (thermocouple on LS120); respin option a +85 C buzzer'. STATUS:20 and the R29-TRI-04 row: note the criterion was replaced by R30-TRI-02.",
+   "board_change": false
+  }
+ ],
+ "observations": [
+  {
+   "id": "R30-MCU obs 1 (root flag)",
+   "reason": "M3_R10:444 'U1.15 / U1.17 pitch 0.200 mm': measured pad gap U1.15-U1.16 and U1.16-U1.17 0.200 mm (0.3 mm pads at 0.5 mm centres); the figure is right and the round 28 triage already ruled this wording an observation (round28_triage.md:104); nothing new shown, no figure or procedure depends on it."
+  },
+  {
+   "id": "R30-POWER obs 4 (root flag)",
+   "reason": "check_r10.py:2737 'Diodes DS41271' for the AP63203 2.0 A: the fitted U2 is AP63203WU-7 (C780769, JLC BOM) and its cached datasheet's footer is DS41326 Rev 3-2 (p1: 2 A continuous); the 2.0 A is right. DS41271 could not be identified (two web searches); it could be another Diodes document (for example the AP6320xQ sheet), so the citation is not shown to be false. Not counted; the fix pass may change it to DS41326 at no cost."
+  },
+  {
+   "id": "R30-SAFETY obs 1-2",
+   "reason": "BAT_ENABLE-BAT_OVLO 0.200 mm and ACT_GATE-BAT_IN 0.218 mm are fail-safe pairs; the section 1 table does not claim to list every pair (round 27 triage ruling on list completeness)."
+  },
+  {
+   "id": "R30-SAFETY obs 3, 6-10",
+   "reason": "Confirmations of copper, figures and gate networks; obs 6: 3.3 x 300 / 771 = 1.284 V, so the stated 1.28 V is the correct rounding of the circuit value."
+  },
+  {
+   "id": "R30-SAFETY obs 4",
+   "reason": "U9.1-U9.5 1.52-1.83 MOhm is the full corner span (V and VUVLO(R)), the latch rows use the max falling threshold; each range is true under its stated use, conservative, not false."
+  },
+  {
+   "id": "R30-SAFETY obs 5",
+   "reason": "R134 22-29 W: exact 21.8-28.4 W; an outward-rounded bound, conclusion (R134 opens) unchanged."
+  },
+  {
+   "id": "R30-POWER obs 1-3, 5-9",
+   "reason": "Already-observed classes (pad-energy AUX, outward rounding 0.31, U400 input feed, GAP-3 disclosure) or confirmations; obs 3 r10_parts.py:435 VON 6.49 vs 6.4845 V is a half-unit rounding in a comment on the not-adopted OQ-5 option whose computed value and record (6.48 V) are right."
+  },
+  {
+   "id": "R30-ROUTING obs 1-12",
+   "reason": "Confirmations (route_check, 45-degree audit, track ends, layer changes, detour table, USB pair, counts, DRC); obs 11 In2 edge length 138 vs 132 mm is a sampling-method difference present on the labelled board, not shown wrong."
+  },
+  {
+   "id": "R30-MCU obs 2-8",
+   "reason": "Fail-safe NRST bridge effect, a not-adopted option product, conservative thresholds, prior-ruled ratios, an unavailable AN2606, and a confirmed injection limit."
+  },
+  {
+   "id": "R30-GATE obs 1-16",
+   "reason": "Seed results show every pinned change caught; budget-figure binding is the previously ruled class; the about-47 us lower figure is the rounding class."
+  },
+  {
+   "id": "R30-PARTS obs 1-11",
+   "reason": "BOM / CPL / schematic / ratings / datasheet / supplier confirmations; LED polarity rests on JLC library numbering, already left to the placement preview."
+  },
+  {
+   "id": "R30-MECHANICS obs 1-10",
+   "reason": "Plate model, fit, hardware bounds and positions reproduce; contact loads within 0.7 % of figures labelled to earlier boards; tail allocations inside the recorded relief window."
+  },
+  {
+   "id": "R30-MANUFACTURING obs 1-6",
+   "reason": "ORDERING title (sections 1-7 are explicitly R9), THT remark, 0.005 mm polygon approximations, conservative U4 box, mask webs, Gerber stackup default: none states a false current fact."
+  },
+  {
+   "id": "R30-REQUIREMENTS obs 1-19",
+   "reason": "Requirement mapping and recomputations reproduce (obs 12 land distances within polygon approximation). Obs 20 is merged into R30-TRI-02."
+  },
+  {
+   "id": "R30-DOCS_BINDING obs 1-6",
+   "reason": "Dated history paragraphs, provenance notes for untracked probe files, an I-5 list already ruled non-exhaustive, two counts of different things, abbreviated relative paths that resolve."
+  }
+ ],
+ "not_reproducible": [],
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2,
+  "real_errors": 2,
+  "raw_findings": 2,
+  "raw_findings_confirmed": 2,
+  "promoted_observations": 0,
+  "merged_observations": 1,
+  "lens_observations_raw": 108,
+  "observations_not_counted": 107,
+  "observation_entries": 15,
+  "not_reproducible": 0,
+  "board_changes": 0
+ },
+ "method": "Each lens finding re-derived from the committed files: pad / net dump of a0ec075e with pcbnew (read-only), an independent nodal solve, the cited datasheet PDFs and text greps; git grep sweeps for the same figures, derived figures and wording over tracked text. Probe scripts in .supervisor/r30_triage/."
+}

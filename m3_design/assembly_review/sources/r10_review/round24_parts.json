@@ -1,0 +1,51 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 24, parts lens",
+  "reviewer": "claude",
+  "target_commit": "f2b8251f34e6e84dbf28bfa686a8f79aafc56045",
+  "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "All 81 JLC BOM lines: every designator's board footprint, LCSC, Manufacturer Part and Qty agree with the line; the only Comment differences are merged-value comments on C25744 (10k) and C21190 (1k) lines, same code and MPN (pre-existing JLC grouping, not an error).",
+    "All 82 stock-check lines (81 JLC + C84): JLC's model string equals the BOM Manufacturer Part and the refs equal the BOM designators.",
+    "CPL: 206 rows (70 Top / 136 Bottom), all positions equal the board except the documented J3 (x 4.505 vs 4.6) and J430 (y 25.85 vs 24.3) JLC body-origin offsets; rotation relation is uniform per footprint family (bottom TSLP-2-20, 0402, 0603: CPL = 180 - board rot), and D402 (board 90 -> CPL 90) and C88 / R402 / R403 (0 -> 180, 0 -> 180, 180 -> 0) follow their families.",
+    "D402 schematic (battery_entry sheet), circuit.json, r10_place.tsv, board fields, BOM and CPL all give ESD103-B1-02EL / ESD103-B1-02EL E6327 / C535146 / rocket:M3_TSLP_2_20 / B(4.45, 65.9) rot 90; pad 1 BAT_SW_RETURN, pad 2 GND.",
+    "M-6 courtyard-to-barrel-copper gaps for D402, my centreline estimate 1.762 / 1.802 mm to J400.2 / J400.1 against the recorded 1.768 / 1.808 mm (difference is polygon vs circle approximation); both well above 1.5 mm.",
+    "D402's B.Cu tap as built is (7.4,67.6)->(4.81,67.6)->(4.45,67.24)->(4.45,66.225), 4.114 mm, 0.2 mm wide, already chamfered; generator draws the L and the chamfer pass cuts it, as recorded.",
+    "hotplug.md is explicitly bound to the round 11 board 0ad0135c... (historical); its path table (C88.1 -> U9.5 3.92 mm) is not a statement about 1407e850 and the current results file binds new inputs.",
+    "Cost arithmetic checks: line sum 60.8123 + 81 x 1.53 / 5 = 85.596 -> $85.60; fixed fees 83.96 / 5 = $16.79; C535146 9 x 0.2306 = 2.0754."
+  ],
+  "fix_verification": [
+    {"id": "D-R24-11", "item": "D402 ESD103-B1-02EL C535146 at J400.2", "measurement": "Land: copper 0.35 x 0.6 mm at 0.65 mm pitch, paste 0.28 x 0.45 at 0.66 mm pitch, per Infineon ESD103-B1-02 Rev 1.3 Fig. 14 (copper 0.35/0.6/gap 0.3; stencil 0.28/0.45/gap 0.38); package 1.0 x 0.6, terminals 0.25 x 0.5 (Fig. 13) inside the lands. B.Paste gerber flashes at (4.45, 66.23) / (4.45, 65.57), 0.45 x 0.28. Ratings: VRWM +/-15 V vs J400.2 = 8.4 x 770/1240 = 5.216 V nominal, 5.256 V with 1 % parts (also 7.8 V for a wrong 3S pack, bidirectional for a reversed pack); IEC 61000-4-2 contact +/-10 kV; TOP -55..125 C; IR <= 50 nA at 15 V. EN shift 50 nA x 470k x 300k / 1240k = 5.69 mV, = 25 nA x 227.4 kOhm EN Thevenin: matches 5.7 mV / 25 nA. C87 rise 21 V x 150 pF / 220 nF = 14.3 mV (labelled Inference). BOM line 8 -> 9, still 81 codes.", "verdict": "confirmed"},
+    {"id": "D-R24-17 (C88)", "item": "C88 to B(18.67, 83.56) rot 0", "measurement": "Board, CPL (180), place.tsv agree; C0402 C307331 CL05B104KB54PNC 100 nF 50 V X7R on BAT_IN (<= 8.4 V; hot-plug minimum -14.81 V, non-polar): within rating. Paste 0.5 x 0.54 at (18.25 / 19.09, 83.56).", "verdict": "confirmed"},
+    {"id": "D-R24-09", "item": "R402 / R403 to B.Cu", "measurement": "R402 B(30.9,12.85) rot 0 (CPL 180) PORT_4V8 / PORT_LDO_FB, 49.9k 0.1 % RT0603BRD0749K9L C705780; R403 B(30.9,14.6) rot 180 (CPL 0) PORT_LDO_FB / GND, 10k 0.1 % RT0603BRD0710KL C95204. Vout = 0.8 x (1 + 49.9/10) = 4.792 V, matching the 4.792 V nominal. Four B.Paste flashes present; paste 253/375 -> 249/381 = -4 F / +4 +2 B.", "verdict": "confirmed"},
+    {"id": "D-R24-15", "item": "R92 / TP88 moved", "measurement": "R92 F(31, 86.7) rot 0, 3.3k 1 % 0603WAF3301T5E C22978, RAW_PROTECTED / GND, 8.4^2/3.3k = 21 mW against 0.1 W; TP88 F(35.5, 86.4) GND test pad, excluded from BOM and CPL as before.", "verdict": "confirmed"},
+    {"id": "D-R24-12", "item": "No Fab outlines added", "measurement": "No footprint library or land changed for the 14 listed parts in this lens's check; D402 uses the existing M3_TSLP_2_20 footprint (with its own Fab rect).", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "sha256 of the board before and after (KiCad file unchanged)",
+    "pcbnew dump of D402, C88, R92, R402, R403, TP88, D440, R80, R81, R165, C87: footprint, side, position, rotation, value, LCSC / Manufacturer / MPN, DNP / BOM / pos flags, pad nets, sizes",
+    "BOM cross-check script: every JLC BOM designator vs board footprint, LCSC, MPN, value, Qty; every board footprint not excluded is in the BOM (C84 on owner BOM)",
+    "CPL cross-check script: every row's position, side and rotation vs the board, grouped by footprint family",
+    "stock_check.json model vs BOM MPN for all lines; cost_check.json arithmetic",
+    "Infineon ESD103-B1-02 Rev 1.3 (cached PDF) Tables 2, 3, 5 and Figs. 13, 14 read with pdftotext",
+    "M3_TSLP_2_20.kicad_mod land vs Fig. 14",
+    "B.Paste gerber flashes at D402, C88, R402, R403 (unzipped into the probe directory, then removed)",
+    "J400 pad positions and D402 courtyard gap; D402 tap geometry from the board tracks",
+    "Schematic battery_entry D402 fields; r10_place.tsv rows; manifest output hashes vs files",
+    "Docs statements about D402, counts and cost in AGENTS.md, STATUS.md, M3_R10.md, ORDERING.md, parts_qualification.md, R10_VALIDATION.md read against the files"
+  ],
+  "sources": [
+    "Infineon ESD103-B1-02 Series data sheet Rev 1.3, 2014-06-12 (LCSC C535146 datasheet; cached copy), Table 2 p5, Table 3 / Table 5 p6, Figs. 13-14 p12",
+    "TI TPS25947 SLVSFC9C (EN absolute maximum 6.5 V, via the records)",
+    "TI TPS7A91 FB reference 0.8 V (via the records)",
+    "fab/m3_bom_jlc.csv, m3_cpl_jlc.csv, m3_bom_owner.csv, stock_check.json, cost_check.json, m3_fab_manifest.json, m3_gerber.zip at f2b8251"
+  ],
+  "coverage_limits": [
+    "Unchanged BOM lines were checked for internal agreement (board fields, BOM, JLC model string) but their LCSC pages and datasheet lands were not re-read this round.",
+    "No live LCSC / JLC page fetched; supplier figures taken from the committed evidence files.",
+    "ESD survival, 85 C leakage and trigger tolerance of D402 are not determinable from the datasheet (recorded as Inference)."
+  ]
+}

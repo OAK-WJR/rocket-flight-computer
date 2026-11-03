@@ -1,0 +1,216 @@
+{
+  "checked_placed": 214,
+  "placement_only": [
+    [
+      "R74",
+      "C21190",
+      "R_0603_1608Metric",
+      "no independent supplier pad record"
+    ],
+    [
+      "R77",
+      "C21190",
+      "R_0603_1608Metric",
+      "no independent supplier pad record"
+    ],
+    [
+      "R72",
+      "C861313",
+      "R_0603_1608Metric",
+      "no independent supplier pad record"
+    ],
+    [
+      "J1",
+      "C2915641",
+      "M3_DB128V_4P_Entry",
+      "maker/body correction"
+    ],
+    [
+      "R101",
+      "C21190",
+      "R_0603_1608Metric",
+      "no independent supplier pad record"
+    ],
+    [
+      "R100",
+      "C21190",
+      "R_0603_1608Metric",
+      "no independent supplier pad record"
+    ],
+    [
+      "R110",
+      "C21190",
+      "R_0603_1608Metric",
+      "no independent supplier pad record"
+    ],
+    [
+      "R103",
+      "C21190",
+      "R_0603_1608Metric",
+      "no independent supplier pad record"
+    ]
+  ],
+  "errors": [],
+  "r6_parts": [
+    {
+      "ref": "U16",
+      "code": "C1849463",
+      "footprint": "M3_TPS2595_DSG",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "residual_mm": 0.049951,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "J131",
+      "code": "C160390",
+      "footprint": "M3_SH_BM04B_SRSS_TB",
+      "side": "F",
+      "supplier_pad_ids": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "residual_mm": 3.2e-05,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "J130",
+      "code": "C160393",
+      "footprint": "M3_SH_BM07B_SRSS_TB",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9"
+      ],
+      "residual_mm": 3.5e-05,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "D130",
+      "code": "C13612",
+      "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "residual_mm": 0.20001,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "LS120",
+      "code": "C94598",
+      "footprint": "M3_MLT5020_3pad",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3"
+      ],
+      "residual_mm": 0.44997,
+      "tolerance_mm": 0.451
+    },
+    {
+      "ref": "J9",
+      "code": "C161692",
+      "footprint": "M3_GH_BM04B_GHS_TBT",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "residual_mm": 0.00048,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "U14",
+      "code": "C2158003",
+      "footprint": "M3_AP63200_TSOT26",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "residual_mm": 0.100023,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "D131",
+      "code": "C13612",
+      "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "residual_mm": 0.20001,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "U15",
+      "code": "C55266",
+      "footprint": "M3_TPS2553_DBV",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "residual_mm": 0.05001,
+      "tolerance_mm": 0.35
+    },
+    {
+      "ref": "R194",
+      "code": "C137691",
+      "footprint": "R_0603_1608Metric",
+      "side": "F",
+      "supplier_pad_ids": [
+        "1",
+        "2"
+      ],
+      "residual_mm": 0.071636,
+      "tolerance_mm": 0.6
+    }
+  ],
+  "corrections_sha256": "a1f5a80a73a26ea9f986833f9a2a35ef65f84b861c3fb99953bfdd58afcb0bc6",
+  "board_sha256_at_read": "d557bee3f37854ea9219f7d01e97b3e7274e90acabf91df65e8021e155266341"
+}

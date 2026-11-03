@@ -1,0 +1,197 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round24_safety",
+ "reviewer": "claude",
+ "target_commit": "f2b8251",
+ "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+ "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 6
+ },
+ "findings": [
+  {
+   "id": "R24-SAFETY-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The BAT_ENABLE via (17.1,82.8) is 0.173 mm from BAT_FAULT_N on 1407e850, not the 0.200 mm the records (and M3_R10's \"re-measured, unchanged\") state; the D-R24-17 chamfer moved it",
+   "contradicts": [
+    "docs/M3_R10.md \"Retained deviations and Minors\" l.291-292: \"the PYRO1_CONT_MID, PYRO1_OUT, ACT_EN and BAT_FAULT_N clearances below were re-measured on 1407e850... and are unchanged\", and l.306-307 \"the BAT_ENABLE via (17.1,82.8) to BAT_FAULT_N 0.200 mm (U9's fan-out)\"",
+    "docs/ORDERING.md 8.3 coating worksheet l.570: \"and the (17.1,82.8) via 0.200 mm from BAT_FAULT_N\"",
+    "docs/FMEA_REDUNDANCY.md H-6 / V-18 row l.36: \"the BAT_ENABLE via to BAT_FAULT_N 0.200 mm\"",
+    "docs/R10_VALIDATION.md owner row 24 l.2092 (\"the BAT_ENABLE via (17.1,82.8) is 0.200 mm from BAT_FAULT_N ... fixed by TI's land or U9's fan-out and stay\") and the section 1 pair table l.2252"
+   ],
+   "evidence": {
+    "board": "m3_design/assembly_review/m3.kicad_pcb, SHA-256 1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+    "layer": "F.Cu",
+    "items": "via (17.100,82.800) BAT_ENABLE, 0.500 / 0.300 mm; BAT_FAULT_N chamfer segment (16.550,82.990)-(16.910,83.350), 0.200 mm wide, cut by D-R24-17 into the former corner (16.55,83.35) of the run (16.55,80.9)-(16.55,83.35)-(19.3,83.35)",
+    "calculation": "via centre to the chamfer centre line |(82.8-17.1)-(82.99-16.55)|/sqrt2 = 0.74/sqrt2 = 0.5233 mm (foot inside the segment); minus via radius 0.25 and half width 0.10 = 0.173 mm edge to edge",
+    "measured": "pcbnew polygon distance 0.174 mm on 1407e850 (.supervisor/r24_safety/via_neigh_new.txt, pairs_safety.json); 0.201 mm on 5516eeec to the vertical run x 16.55 (via_neigh_old.txt; exact 0.550-0.350 = 0.200 mm). DRC floor 0.15 mm is met.",
+    "other_safety_nets": "neigh_diff.py over 18 pyro / arming / switch nets, 1.0 mm reach, old vs new: this is the only reduced gap (diff_safety.txt)."
+   },
+   "impact": "The owner acceptance row 24, the coating worksheet and the FMEA describe this latch path (once the board is on, a leak of up to 0.58 MOhm from BAT_FAULT_N, R89 10 kOhm to 3V3, holds EN at up to 3.19 V so J400 cannot turn the board off) at a gap 15 % wider than built, and M3_R10 says it was re-measured unchanged. The board change that narrowed it is not disclosed. The hazard class, coating and the per-flight closed-switch check are unchanged.",
+   "concrete_fix": "Either correct the five statements to 0.173 mm (and strike \"unchanged\" in M3_R10 l.291-292), or at the next board change give BAT_FAULT_N's (16.55,83.35) corner a CHAMFER_CUTS entry of at most 0.32 mm (0.30 mm leaves the chamfer 0.216 mm from the via, so the 0.200 mm of the straight run governs again)."
+  },
+  {
+   "id": "R24-SAFETY-02",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "D402's specified leakage is left out of U9's EN worst cases: \"the EN timing figures stand\" is wrong (10 ms needs 5.94-5.96 V, not 5.92 V; 8.5 -> 8.2-8.3 ms at 5.73 V; turn-off corner 4.78 -> 4.80 V)",
+   "contradicts": [
+    "R10_DECISIONS.md D-R24-11 l.4021-4024: \"That is the same as 25 nA at the EN node, a quarter of the 0.1 uA EN leakage D-R20-11's timing already carries. The EN timing figures are kept.\"",
+    "docs/REQUIREMENTS.md F9 l.63 (\"so the EN timing figures stand (Calculation ...)\"); docs/ORDERING.md 8.3 l.648 (same); docs/M3_R10.md l.344 and l.541 (\"so the EN figures below stand\"); docs/R10_VALIDATION.md l.2023; parts_qualification.md D402 row (\"so the EN figures stand\")",
+    "the worst cases kept as current: AGENTS.md row 1 (10.6 / 8.5 / 6.6 ms, \"a pack of at least 5.92 V\", 30-129 ms); REQUIREMENTS F4 l.58 (\"a flight-2 pack that holds >= 5.92 V under four stalls\"), F6 l.60 (\"above U9's 4.78 V BAT_IN turn-off corner\", \"a pack of at least 5.92 V is needed for 10 ms\"), Pack row l.88 (\"4.778 V at 25 C\"); M3_R10 l.231-233 and l.545-546; R10_VALIDATION owner row 21 l.2091; the battery_entry sheet C87 note"
+   ],
+   "evidence": {
+    "method": ".supervisor/r24_safety/en_timing.py: D-R20-11's own basis (C87 0.72-1.27 x 220 nF, 1 % divider, TPS25947 SLVSFC9C p9 thresholds 1.183-1.223 / 1.076-1.116 V, I_ENLKG +/-0.1 uA) plus D402 I_R <= 50 nA (Infineon ESD103-B1-02 Rev 1.3 Table 3 p6), the bound D-R24-11 itself uses for its 5.7 mV",
+    "reproduces_record": "no D402 term: 10.65 / 20.47 / 26.41 ms at 6.0 / 7.4 / 8.4 V, 8.50 ms at 5.73 V, 6.58 ms at 5.5 V, 10 ms at 5.917 V, turn-on <= 128.6 ms, turn-off corner 4.778 V (= the recorded 10.6 / 20.5 / 26.4, 8.5, 6.6 ms, 5.92 V, 129 ms, 4.778 V)",
+    "record_shift_only": "adding only the record's own closed-switch EN shift (50 nA x R80 x R81 / (R80+R165+R81) = 5.66 mV at the 1 % corner): 10.47 / 20.32 / 26.28 ms, 8.30 ms at 5.73 V, 6.38 ms at 5.5 V, 10 ms at 5.941 V, turn-on 130.3 ms, turn-off corner 4.802 V",
+    "with_open_state_path": "the same 50 nA also flowing from EN through R165 into D402 while J400 is open: 10.35 / 20.11 / 26.02 ms, 8.20 ms, 6.30 ms, 10 ms at 5.956 V",
+    "at_recorded_5p92V": "worst-case drop-out immunity 9.83 ms (< the 10 ms criterion)",
+    "why_not_inside_0p1uA": "D-R20-11's +/-0.1 uA is U9's own EN/UVLO leakage limit (TI p9); D402's leakage is a second, independent current on the same node, so the two add."
+   },
+   "impact": "The stated worst cases are no longer worst cases on 1407e850. REQUIREMENTS F4's 5.92 V pack option (and owner row 21) no longer meets the 10 ms chatter criterion in the worst case, and the 4.78 V turn-off corner used by F6's PA6 window and the Pack row is 4.80 V. No safety barrier changes; the error is in the calculated figures the owner decides on.",
+   "concrete_fix": "Recompute D-R20-11 with D402's 50 nA in both switch states and replace the figures (drop-out worst 10.3 / 20.1 / 26.0 ms, 8.2 ms at 5.73 V, 6.3 ms at 5.5 V; minimum loaded pack 5.96 V; turn-on 30-130 ms; turn-off corner 4.80 V at 25 C) in AGENTS, REQUIREMENTS F4 / F6 / F9 / Pack, ORDERING 8.3, M3_R10, owner row 21, the battery_entry note and the binding-note obligation; strike \"the EN timing figures stand / are kept\". Alternatively cite a lower, sourced D402 leakage bound at 2-5 V."
+  },
+  {
+   "id": "R24-SAFETY-03",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The J400 first-article / post-discharge bench-ramp windows (turn-off 4.5-4.8 V, turn-on 4.9-5.2 V) reject in-spec boards and contradict the schematic note (on 4.89-5.05 V, off 4.45-4.61 V)",
+   "contradicts": [
+    "TI TPS25947 SLVSFC9C (Rev C) p9: VUVLO(R) 1.183-1.223 V, VUVLO(F) 1.076-1.116 V, I_ENLKG -0.1 to 0.1 uA",
+    "m3_design/assembly_review/battery_entry.kicad_sch C87 note: \"UVLO on 4.89-5.05 V, off 4.45-4.61 V\"",
+    "D-R20-11's 1 % divider basis (R80, R165 470 kOhm 1 %, R81 300 kOhm 1 %)"
+   ],
+   "evidence": {
+    "statements": "docs/ORDERING.md 8.3 J400 ESD paragraph l.648 (\"expect turn-off 4.5-4.8 V and turn-on 4.9-5.2 V\"); REQUIREMENTS F9 l.63 (\"turn-off 4.5-4.8 V, turn-on 4.9-5.2 V\"); M3_R10 l.346-347; FMEA H-6 row l.36",
+    "calculation": "J400 closed: V_pack = V_threshold x (R80+R165+R81)/R81 (+ leakage terms). Nominal resistors: turn-on 1.183-1.223 x 4.1333 = 4.890-5.055 V, turn-off 1.076-1.116 x 4.1333 = 4.447-4.613 V (the sheet note). With the 1 % divider and +/-0.1 uA EN leakage: turn-on 4.723-5.227 V, turn-off 4.288-4.778 V; D402's 50 nA lifts the upper ends to 5.251 / 4.802 V (.supervisor/r24_safety/en_timing.out).",
+    "example": "an in-spec U9 with VUVLO(F) = 1.08 V on nominal resistors turns off at 4.46 V, below the 4.5 V floor; one with VUVLO(R) = 1.183 V turns on at 4.89 V, below 4.9 V"
+   },
+   "impact": "A healthy first-article or post-event board can fail the check and be judged EN-damaged; the window is neither the TI tolerance band nor the schematic's own figures, so the required check cannot be applied correctly as written.",
+   "concrete_fix": "State the bands from the limits (turn-on 4.72-5.25 V, turn-off 4.29-4.80 V with 1 % parts, +/-0.1 uA EN leakage and D402's 50 nA) in ORDERING 8.3, F9, M3_R10 and FMEA H-6, or record each board's first-article ramp as its baseline and treat a post-event shift (turn-off rising, e.g. by more than 0.1 V) as EN or D402 damage."
+  },
+  {
+   "id": "R24-SAFETY-04",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "Safety records not carried to D-R24-02 / -08: Q120's gate and R91.1 / U1.28 still \"on one via\", the new Q121 barrel's \"nearest foreign copper\" misstated (GND is 0.251 mm), and the barrel keep-outs counted as eight (ten)",
+   "contradicts": [
+    "(a) docs/R10_VALIDATION.md section 1 pair table l.2250: \"Q120's gate via (16.2,73.3), the only link from R121 to Q120.4 ... | single via | ... Respin: a second via\" (the inventory heading binds the section to 1407e850; ORDERING 8.3 l.650 and M3_R10 l.348-351 say the second via is done)",
+    "(b) docs/M3_R10.md Firmware rule 4 l.963-964: \"Respin: a second via at Q120's gate (16.2,73.3).\"",
+    "(c) docs/M3_R10.md Firmware rule 5 l.966-967: \"R91.1 and U1.28 each hang on one via (D-R22-02), so this is an extra barrier, not a guarantee\" (FMEA I-7 l.41 says the opposite: \"since D-R24-08 R91.1 and U1.28 each have a second via, so they no longer hang on one\")",
+    "(d) docs/R10_VALIDATION.md \"Round 24 board pass\" l.1994: \"Q120 (15.4, 72.85) and Q121 (11.74, 72.3) gate drive (B.Cu 0.361 / 0.342 mm from the nearest foreign copper)\"",
+    "(e) docs/M3_R10.md S-8 paragraph l.482-483: \"Fill-only keep-outs (R18_BARREL_KEEPOUT_*, eight in all ...)\""
+   ],
+   "evidence": {
+    "a_b": ".supervisor/r24_safety/conn.py on ACT_GATE (conn_new.txt): no single via removal splits the net; vias (16.2,73.3) and (15.4,72.85) both join the F.Cu T (15.575,72.675) to Q120.4's B.Cu chain, (11.14,71.7) and (11.74,72.3) both join the F.Cu run to Q121.4 (parallel F.Cu and B.Cu diagonals (11.14,71.7)-(11.74,72.3)).",
+    "c": "LOGIC_SOURCE_ST: no via removal isolates U1.28 (vias (30.85,51.8) and (30.45,51.4) in parallel); 3V3 at R91.1 (conn_r91.py): removing (28.1,60.0) or (28.1,59.4) alone leaves R91.1 in the 3V3 network (146 items), removing both isolates it.",
+    "d": "via (11.74,72.3): B.Cu nearest foreign copper is the GND fill R10_GND_B at 0.251 mm (fill vertex (11.8745,72.7821), 0.5005 mm from the via centre; fill_near.py), F.Cu GND fill also 0.251 mm; ACT_FET_S at 0.342 mm is second (via_neigh_new.txt). GND is the neighbour S-8 counts as hazardous at ACT_GATE.",
+    "e": "rule_areas.py: 1407e850 has ten R18_BARREL_KEEPOUT_* areas (ACT_GATE_0..3, BAT_ENABLE_4..6, BAT_SW_RETURN_7, PYRO1_OUT_8, _9); 5516eeec had eight. The two new ones are the same named family."
+   },
+   "impact": "The owner deviation inventory and the firmware rules list single points the board no longer has, and the round 24 summary understates the GND exposure of the new Q121 gate barrel.",
+   "concrete_fix": "(a) mark the row closed by D-R24-02 (two barrels; the Q120-off case needs both open); (b) drop the respin sentence; (c) \"each has two vias since D-R24-08\"; (d) \"B.Cu 0.361 mm (BAT_IN) / 0.251 mm (GND fill) from the nearest foreign copper; 0.342 mm to ACT_FET_S\"; (e) \"ten in all\"."
+  },
+  {
+   "id": "R24-SAFETY-05",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "(Outside the safety lens, found incidentally) M3_R10 Power still says via (30.575,11.6) joins U401's sense R402.1 to the In2 output plane; D-R24-09 removed it",
+   "contradicts": [
+    "docs/M3_R10.md Power, \"U401 feedback tap\" bullet l.614-617: \"A new PORT_4V8 via (30.575,11.6) now joins R402.1 to the In2 output plane that both OUT vias feed\"",
+    "R10_DECISIONS D-R24-09 (\"Removed: ... R402.1's own via (30.575, 11.6)\")"
+   ],
+   "evidence": {
+    "board": "1407e850: R402 B(30.900,12.850) rot 0 (pad 1 PORT_4V8 on the B.Cu OUT run, pad 2 PORT_LDO_FB); vias in x 28-32, y 9-15.5 are only (29.75,9.95), (29.75,11.65), (30.5,9.95) PORT_4V8; on 5516eeec also (30.575,11.6), (29.75,12.6), (29.75,13.6) PORT_LDO_FB, (31.4,14.4) GND"
+   },
+   "impact": "The current Power section describes a sense path the board no longer has (the conclusion, that no single via open cuts the sense, still holds, now with no via in the loop).",
+   "concrete_fix": "Rewrite the bullet to D-R24-09: R402 / R403 on B.Cu beside U401, FB and both divider ends with no via."
+  },
+  {
+   "id": "R24-SAFETY-06",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "(Outside the safety lens, found incidentally) REQUIREMENTS M1 cites stock_check.json 2026-10-31T23:23Z with U9 40 in stock / -69 orderable; the committed file is 2026-11-02T01:42:53Z with 28 / -83",
+   "contradicts": [
+    "docs/REQUIREMENTS.md M1 l.80: \"the stock check (stock_check.json 2026-10-31T23:23Z) fails on U4 ... and now also on U9 (TPS259470LRPWR C3662793: 40 in stock, -69 orderable, minimum purchase 7)\"",
+    "m3_design/assembly_review/fab/stock_check.json: checked_utc 2026-11-02T01:42:53Z, C3662793 jlc_stock 28, orderable -83; REQUIREMENTS M3 and M3_R10 cite the 2026-11-02 run"
+   ],
+   "evidence": {
+    "file": "m3_design/assembly_review/fab/stock_check.json (committed at f2b8251)"
+   },
+   "impact": "The requirement row states a superseded snapshot as the file's content.",
+   "concrete_fix": "Update M1 to the committed snapshot (2026-11-02T01:42:53Z; U9 28 in stock, -83 orderable; U4 9 / 2)."
+  }
+ ],
+ "observations": [
+  "D402 cannot turn the board on or hold it on: it joins only BAT_SW_RETURN to GND (bidirectional, VRWM +/-15 V, V_Trig 21 V typ; Infineon Rev 1.3 Table 3), its new copper (tap, pads, via) has only GND within 0.6 mm on B.Cu (0.250-0.451 mm), and its GND via is 1.790 / 2.127 mm from the J400.1 / J400.2 barrel walls. Shorted, EN sits at 0 V with J400 closed (BAT_IN draws <= 17.9 uA through R80) and the board cannot start: steps 3 and 5 of the per-flight list see it. Open, the board is back to the unclamped state.",
+  "A D402 left leaky (not shorted or open) by a discharge it absorbed has the consequence of outcome (b): about 2.0 uA from J400.2 to GND (x 113.1 kOhm = 0.227 V on EN) lifts the worst-case turn-off to the 5.73 V four-stall BAT_IN. The records list only the shorted and open modes; the post-event bench ramp would show it, the per-flight list would not (same coverage as the disclosed (a)-(c)).",
+  "D402 is rated +/-10 kV IEC 61000-4-2 contact (Infineon Rev 1.3 Table 2 p5); beyond that the disclosed \"overwhelmed\" outcomes apply. Its 4.1 mm tap adds a few nH in series; R165 (470 kOhm) still limits what reaches C87 (Inference).",
+  "D-R24-02 adds two more ACT_GATE via lands 0.251 mm from the outer GND fills (both faces at (11.74,72.3), F.Cu at (15.4,72.85)): the accepted 0.15 mm surface class (owner row 2), coated; inner copper is 1.051 mm away (S-8). The \"ACT_GATE outer copper within 0.30 mm of GND 7.996 mm\" figure is bound to 50a39de5 and was not re-measured.",
+  "The chamfer pass improved two safety gaps: ACT_GATE to BAT_SW_SOURCE 0.470 -> 0.663 mm (B.Cu, via (10.8,69.2)), and the U9 0.7 mm IN trunk to U9.1 (EN) 0.345 -> 0.487 mm; C88.1 is 0.500 mm from U9.1. All other pyro / arming / switch-net gaps within 1.0 mm are unchanged (diff_safety.txt).",
+  "RAW_ACT gained a 3V3 neighbour, the D-R24-08 via (28.1,59.4), 0.838 mm from R132.1 on B.Cu: benign spacing. NRST 0.211 mm from the VCAP2 via and VLOGIC 0.150 mm from PORT_5V3 are recorded in D-R24-04 / -08.",
+  "AGENTS section 2 holds on the built board: check_r10 S-1 ... S-9, K-actuators and K-ports OK (read-only run, report in the probe dir); gate networks on the board and in the netlist (Q124 R126 220 Ohm / R128 10 kOhm / C126 220 nF; Q120 / Q121 R121 10 kOhm / R119 || R120 100 kOhm / C120 1 uF; Q122 R122 1 kOhm / R123 2 kOhm / C123 10 nF); Q120.4 reaches R120 / C120 and Q121.4 reaches R119 on B.Cu with no barrel in between.",
+  "S-8 re-measured independently: 12 barrels on 6 nets; minimum 1.021 mm (PYRO1_OUT via to its GND partner), 1.051 mm at all four ACT_GATE vias (In1 GND, In2 RAW_PROTECTED), the three BAT_ENABLE vias (In2) and J400.2 (In2).",
+  "No new single fault energises the bus, fires, or turns the board on with J400 open: the switch-chain, gate-drive and pyro-net neighbours on 1407e850 are the disclosed classes (U9 land 0.200 mm, EN via, ACT_GATE / ACT_DRV to GND at 0.25 mm, Q121 / Q122 shorts, OUT to GND 0.177 / 0.180 mm, I-5, QSPI_IO2 / PE4), each screened by the per-flight steps 2-3 or owner rows 1-2 / 18 / 24 / 29.",
+  "The per-flight list is executable on 1407e850: every probe and part it names (TP80, TP81, TP83, TP120, TP122, R119.1, R120.2, C120.2, C15.1, C24, TP74, TP88, C88.1, C82.1, R84.1) sits where ORDERING 8.3 says.",
+  "The R10_VALIDATION section 1 pair table is labelled \"on a3144b15... unless noted\" while its section heading binds the inventory to 1407e850; some of its gaps moved slightly on 1407e850 (RAW_ACT sense to USB_OVLO 0.175 -> 0.177 mm, RAW_ACT to U11.6 0.300 -> 0.317 mm). Only the rows in R24-SAFETY-01 / -04 are counted."
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R24-02",
+   "claim": "Second barrels for Q120 / Q121 gate drive, (15.4,72.85) and (11.74,72.3); gate networks local on via-free B.Cu; S-8 holds",
+   "measurement": "No single via removal splits ACT_GATE (conn_new.txt); S-8 1.051 mm In1 GND / In2 RAW_PROTECTED at both new barrels (s8_new.txt); R18_BARREL_KEEPOUT_ACT_GATE_1 / _2 present; Q120.4-R120 / C120 and Q121.4-R119 on B.Cu without a barrel; recorded gaps reproduce: 0.361 mm to Q120.9, 0.342 mm to ACT_FET_S, 0.422 mm to F.Cu BAT_IN, hole edges 0.618 / 0.549 mm. GND fill is 0.251 mm from the (11.74,72.3) lands (R24-SAFETY-04 d).",
+   "verdict": "confirmed (records partly: R24-SAFETY-04)"
+  },
+  {
+   "id": "D-R24-05 (with D-R24-17 at U9)",
+   "claim": "U9 west cell re-laid (C88 B(18.67,83.56) on U9.5's axis, its GND via (19.59,84.06)); EN still crosses one via",
+   "measurement": "EN reaches R81 / C87 / R165 only through via (17.10,82.80): removing it, its B.Cu stub or the F.Cu run splits U9.1 off (4 single opens between U9.1 and R81, as recorded). BAT_IN to EN: 0.200 mm (U9 land), 0.401 mm (EN stub to the 0.3 mm trunk), 0.487 mm (0.7 mm trunk, was 0.345), 0.500 mm (C88.1). But the D-R24-17 chamfer of BAT_FAULT_N's corner (16.55,83.35) put BAT_FAULT_N 0.173 mm from the EN via (was 0.200).",
+   "verdict": "partly (R24-SAFETY-01)"
+  },
+  {
+   "id": "D-R24-11",
+   "claim": "D402 ESD103-B1-02EL (C535146) from J400.2 to GND at B(4.45,65.9), ahead of R165; cannot turn the board on; shorted holds it off; open = unclamped; EN shift <= 5.7 mV, timing figures kept",
+   "measurement": "Board, netlist, BOM line 26 and CPL row 82 agree; BAT_SW_RETURN = {J400.2, R165.1, D402.1}, D402.2 GND; tap 4.114 mm, GND via 0.7 mm; only GND copper within 0.6 mm of the new BAT_SW_RETURN copper; 5.7 mV reproduces (5.66 mV at the 1 % corner). The electrical claims hold; \"the EN timing figures are kept\" does not (R24-SAFETY-02), and the leaky failure mode is not listed (observation).",
+   "verdict": "partly (R24-SAFETY-02)"
+  },
+  {
+   "id": "D-R24-15",
+   "claim": "R92 to F(31,86.7) and TP88 to F(35.5,86.4) with their vias; tabs unchanged (D-R24-14)",
+   "measurement": "R92 F(31.000,86.700) (RAW_PROTECTED / GND), TP88 F(35.500,86.400) GND, as in ORDERING 8.3's probe worksheet; R20_TAB_KEEPOUT_WEST_AFT and TAB_BANDS_R10 unchanged; no pyro or switch-chain copper within 1 mm of the moved parts.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R24-17 (safety nets)",
+   "claim": "Every 90-degree bend chamfered; safety copper otherwise unchanged",
+   "measurement": "S-9 passes; over 18 pyro / arming / switch nets and 9 power nets (1.0 / 0.6 mm reach, old vs new) the only reduced gap is BAT_ENABLE via to BAT_FAULT_N 0.201 -> 0.174 mm; two gaps improved (observation).",
+   "verdict": "partly (R24-SAFETY-01)"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after (1407e850...), and of git show f2b8251:...m3.kicad_pcb; previous board extracted from 9b27268 (5516eeec...) into the probe dir",
+  "pcbnew (KiCad 10 Python, -I -B) polygon clearance inventory, geom.py / neigh.py / neigh_diff.py / pairs_diff.py: every foreign net within 1.0 mm (0.6 mm for power nets) of 18 pyro / arming / switch nets and 9 power nets on both boards, diffed",
+  "Independent S-8 measurement (s8_check.py): barrel wall to foreign In1 / In2 copper for all 12 barrels of BARREL_NETS",
+  "Single-open connectivity (conn.py, conn_pad.py, conn_r91.py): ACT_GATE, ACT_FET_S, BAT_ENABLE, BAT_SW_RETURN, LOGIC_SOURCE_ST, VLOGIC_SENSE, 3V3 at R91.1, BAT_IN with C88.1 removed",
+  "tools/check_r10.py --only S-1..S-9,K-actuators,K-ports on the committed board, read-only, report to .supervisor/r24_safety/check_r10_safety.json: all OK",
+  "Schematic netlist (schematic.net.xml) nets of D402, BAT_SW_*, BAT_ENABLE, ACT_GATE; battery_entry.kicad_sch notes; fab BOM / CPL rows for D402",
+  "Datasheet text extraction (pdftotext) of the cached Infineon ESD103-B1-02 Rev 1.3 and TI TPS25947 SLVSFC9C Rev C; page lookup for the EN limits (p7, p9)",
+  "EN timing replication (en_timing.py): D-R20-11 reproduced exactly, then with D402's 50 nA; bench-ramp tolerance bands",
+  "Rule-area (tab and barrel keep-out) comparison old vs new (rule_areas.py); probe-worksheet part positions (dump_parts.py)"
+ ],
+ "sources": [
+  "AGENTS.md section 2-3; docs/REQUIREMENTS.md F4, F6, F8, F9, M1, Pack row; docs/ORDERING.md 8.3, 8.4; docs/M3_R10.md; docs/R10_VALIDATION.md (Round 24 board pass, owner table, section 1); docs/FMEA_REDUNDANCY.md H-6, I-7; docs/R10_VEHICLE_HANDOFF.md",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R18-03, D-R18-04, D-R19-02, D-R19-10, D-R20-11, D-R24-01 ... D-R24-17; sources/r10_review/round24_board_cad.md; parts_qualification.md",
+  "Infineon ESD103-B1-02 Series data sheet Rev 1.3, 2014-06-12 (LCSC C535146): Table 2 p5 (+/-10 kV contact), Table 3 p6 (VRWM +/-15 V, V_Trig 21 V typ, I_R 50 nA max at 15 V), Table 4 (C_L 0.2 pF max)",
+  "TI TPS25947xx SLVSFC9C (Rev C), https://www.ti.com/lit/ds/symlink/tps25947.pdf: p7 EN/UVLO -0.3 to 6.5 V; p9 VUVLO(R) 1.183-1.223 V, VUVLO(F) 1.076-1.116 V, I_ENLKG +/-0.1 uA",
+  "m3_design/assembly_review/m3.kicad_pcb (1407e850...), schematic.net.xml, battery_entry.kicad_sch, fab/m3_bom_jlc.csv, fab/m3_cpl_jlc.csv, fab/stock_check.json at f2b8251"
+ ],
+ "coverage_limits": [
+  "No DRC, kicad-cli or full check.sh run (DRC 0 taken from the gate record); no hot-plug re-run; no simulation of the ESD event (tap inductance, clamping at 30 A) or of D402 leakage at 85 C (no maker figure)",
+  "Clearance work covers the listed safety and power nets on outer and inner layers within 1.0 / 0.6 mm; routing hygiene, M2 and the fab package beyond D402 were not reviewed (other lenses)",
+  "TI threshold spread at 25 C alone is not published; the bench-ramp bands use the full p9 limits",
+  "Firmware rules are text only; no firmware exists; no physical, coating or harness test",
+  "Previous-round safety reports not consulted before these findings were written"
+ ]
+}

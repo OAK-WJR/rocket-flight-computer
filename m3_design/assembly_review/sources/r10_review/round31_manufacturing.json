@@ -1,0 +1,74 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 31, manufacturing lens",
+  "reviewer": "claude",
+  "target_commit": "3366287193ec7988fbc0fe41cb66b5f2a55791fa",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "DRC (kicad-cli 10.0.7, --severity-all --severity-exclusions, schematic parity, all track errors) on a byte-identical copy: 0 violations, 0 unconnected, 0 parity; no rule severity is set to ignore (29 are warnings, all reported, none present).",
+    "Fresh Gerber / drill export of the copy (export_fab.py's exact options) is identical to every file in fab/m3_gerber.zip apart from creation-date lines; both assembly PDFs regenerate identically apart from the 5-byte CreationDate.",
+    "fab_manifest.py --content: 6 outputs bound to the current CAD and export inputs; S-4, the JLC-footprint CPL rebuild (67 top + 125 bottom, worst 0.491 mm, 14 placement-only) and the paste check (249 / 381 flashes, 0 dry pads) pass, matching ORDERING 8.2 and M3_R10.",
+    "C403's short-edge distance is 1.955 mm in check_r10 M-8 and 1.96 mm in ORDERING 8.2: a correct rounding, not an error.",
+    "ORDERING 8.2's D402 figures (1.768 / 1.808 mm) are labelled as M-6 (courtyard to THT pad); D402's copper-to-copper gaps are 1.962 / 2.003 mm, inside the stated 1.76-2.17 mm range, so the list heading and the labelled M-6 figures are both true.",
+    "R166-to-C84 courtyard gap is 0.56 mm between the courtyard lines' outer edges (0.60 mm centreline); the text's 0.56 mm matches the outer-edge reading recorded by audit B.",
+    "J3's four plated shell pads carry paste (pin-in-paste) while ORDERING 8.2 asks for hand finishing of the slot fill; consistent, not a conflict.",
+    "D400/D401/D402/D410/D411/D420/D421/D440/D441, U5 and U401.11 have paste only through separate paste-only pads; each has its flashes in B.Paste (e.g. D402 0.45 x 0.28 mm at y 65.57 / 66.23; U5 8 x 0.6 x 1.1 mm), and the paste check covers them.",
+    "Silkscreen 1.0 mm / 0.15 mm (1:6.7 against JLC's recommended 1:6) was already closed in rounds 18 / 19 as JLC's floor; not repeated.",
+    "J440 forward-body figures and the 3.155 mm tab-to-courtyard figures differ by about 0.02-0.05 mm depending on whether a courtyard / silk line's centre or outer edge is read; the T-1 rule passes with the recorded windows, so no stated figure is shown wrong."
+  ],
+  "fix_verification": [
+    {
+      "item": "R30-TRI-02 (ORDERING 8.3 chamber test, and REQUIREMENTS:94, M3_R10:496-505, R10_VALIDATION owner rows 33 / 36, parts_qualification:40, STATUS)",
+      "measurement": "grep finds no remaining 'LS120 <= 70 C' pass clause outside history; ORDERING:608 now passes on 'every 85 C-rated part <= 85 C' and records LS120's rise as a non-gate; owner row 33 and parts_qualification:40 say the same and cite R30-TRI-02",
+      "verdict": "confirmed"
+    },
+    {
+      "item": "R30-TRI-01 (R10_VALIDATION section 1 bridge figures; safety lens, checked for completeness)",
+      "measurement": "R10_VALIDATION:2637 now gives about 2.19-2.21 V / 0.107-0.109 mA with the cold pull-up live; the EN-load sentence reads '10 kOhm, 11.2 kOhm (5.6 kOhm with the e-match or the step-3 dummy fitted, R30-TRI-01) or 2 kOhm'",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of the board before and after: a0ec075e... both times; manifest's cad/m3.kicad_pcb input hash equals it; git HEAD 3366287.",
+    "kicad-cli pcb drc --severity-all --severity-exclusions --all-track-errors, then again with --schematic-parity, on a copy in .supervisor/r31_manufacturing/drc/: 0 / 0 / 0.",
+    "Rule-severity and DRU review: m3.kicad_pro rules (clearance 0.15, track 0.15, via 0.5/0.3, annulus 0.1, copper-edge 0.5, silk 1.0/0.15), m3.kicad_dru JLC hole rules (0.55 inner PTH, 0.28 outer PTH, 0.45 pad hole-to-hole).",
+    "check_r10.py (full stage) on the copy with --bom/--cpl: every rule OK except K-binding, which fails only because the copy's directory has no sources/r10_design/r10_binding_note.json (path artefact of the copy); T-1 windows, M-6, M-8 (R400/R401/R404 1.025, C403 1.955, C95 1.505, R166 1.755) and S-4 read.",
+    "kicad-cli Gerber/drill re-export with export_fab.py's options and diff against the zip (all 14 files identical except dates); PDF re-export and byte compare (dates only).",
+    "Drill parse: PTH T1 0.300 x 308, T2 0.500 x 1, T3 0.600 plated slots x 4 (J3, 0.6 x 1.4 / 1.7), T4 1.300 x 27; NPTH 0.600 x 2, 0.991 x 3. Vias 309 = 304 (0.5/0.3) + 4 (0.6/0.3) + 1 (1.0/0.5 BAT_IN at (17.5,87.15)); exactly two vias carry (filling yes)(capping yes): (27.3,13.6) and (27.9,13.6), GND.",
+    "Paste / mask Gerber parse: F_Paste 249 and B_Paste 381 flashes; U401 split windows 1.13 x 0.89 mm at y 13.045 / 14.155, 0.22 mm gap, 0.04 mm overlap of each 0.3 mm via drill; U4 lands 0.575 x 0.35, mask = land, webs 0.150 mm, paste 0.5405 x 0.329 = 88.4 %; U11 apertures 0.2 x 0.6 mm; J430 paste = mask = land (100 %); C84 lands 3.5 x 1.7 mm at (27.5,75.25) / (27.5,81.75) with mask and no paste.",
+    "BOM / CPL / owner BOM: 81 lines, Qty = designator count on every line, 206 refs = 206 CPL rows (70 Top / 136 Bottom), CPL side and LCSC agree with every native footprint, only J430's CPL point is 1.55 mm off its footprint origin (JLC-corrected body centre, verified by the CPL rebuild); 10 footprints not in the CPL: C84 (owner BOM) and J2 / 8 TPs (exclude-from-BOM and POS); 4 THT lines (DB125) marked 'THT (JLC THT assembly)'.",
+    "Supplier evidence: cost_check.json (12:44:13Z: 81 codes, 45 Extended, parts 60.47, feeder 123.93/order, 85.26/board, min-purchase parts 61.01, fixed 83.96, handling 14.93) and stock_check.json (12:43:17Z: U4 9 / 2 / 5, U9 30 / -81 / min 7, C2757925 35895 / 35052, C535146 196 / 189) agree with ORDERING 8.1, M3_R10 'Cost and stock', REQUIREMENTS M3 and AGENTS; input hashes match the fab files.",
+    "Native-geometry checks of ORDERING 8.1-8.3 and the handoff: every F(x,y) / B(x,y) in ORDERING 8 and R10_VEHICLE_HANDOFF matched to a footprint, pad or via within 0.006 mm (the only misses are history or exposed-pad-end probe points); terminal table positions, rotations and LCSCs; probe table contacts; Q120 / Q121 / Q124 / C126 / C123 / C411 / C421 / C431 / C91 / C92 / C84 / D9 / U4 / J430 poses.",
+    "Distances: bottom parts to DB125 pads 1.763-2.172 mm (stated 1.76-2.17); R102 2.001, C431 2.055, C410 / C420 2.011 mm (stated 1.997 / 2.050 / 2.003, inside polygon approximation); J440 partner vias 0.300 mm from J440.3 / .4; J3 slot pads to C83 / R7 / R8 1.958 / 2.011 / 2.150 (stated 1.952 / 2.010 / 2.145); C84 land projections onto L1.1, L1.2, C7.1, C7.2, C9.2 overlap, C9.1 0.545, C8.2 0.605, C8.1 0.814 mm; R166-C84 courtyards 0.56 mm; D402 tap 4.114 mm and GND via 0.700 mm; via (17.1,82.8) 0.200 mm from BAT_FAULT_N; U9 pads 5 / 6 exposed 0.10 mm beyond the body; TP122 box and its 1.400 mm to U5; U5 pad extent; C10 pads 3.449 mm from U5 pads.",
+    "M2: every via drill >= 0.1 mm from every pad mask opening except the two GAP-3 U401.11 vias; every pad inside its footprint's courtyard; six GND terminal contacts zone_connect 1 with four spokes on F / In1 / B and no In2 connection (J440.2 included).",
+    "Silkscreen / Fab: 123 visible / 93 hidden references (hidden list equals M3_R10's 93 names), 44 board legends, 13 bottom pin legends and 27 terminal pin labels in all, 14 parts without a Fab body (5 with nothing, 9 with a pin-1 dot only), as ORDERING 8.2 states; 216 footprints, 1059 segments, 1866.794 mm of track, 170 GND vias, file size 2,369,507 bytes as M3_R10 'The board' states.",
+    "Mounting holes: five Edge.Cuts circles r 1.6 mm at (3.7,86), (4,4), (4,44.3), (42,4), (42,86)."
+  ],
+  "sources": [
+    "AGENTS.md",
+    "docs/REQUIREMENTS.md (M1-M3)",
+    "docs/ORDERING.md section 8",
+    "docs/M3_R10.md ('The board', 'Cost and stock', 'Silkscreen and assembly identification')",
+    "docs/R10_VEHICLE_HANDOFF.md",
+    "docs/R10_VALIDATION.md (owner table rows 14-16, 28, 33, 36; section 1)",
+    "m3_design/assembly_review/sources/r10_review/round30_triage.md",
+    "m3_design/assembly_review/sources/r10_review/round28_audit_proc.md",
+    "m3_design/assembly_review/fab/* (all nine files)",
+    "m3_design/assembly_review/m3.kicad_pcb, m3.kicad_pro, m3.kicad_dru",
+    "tools/check_r10.py, tools/export_fab.py, tools/fab_manifest.py"
+  ],
+  "coverage_limits": [
+    "JLC's capabilities, assembly-terms and order-form pages were not re-read live this round; the cited figures (hole table, plug maximum, Standard minimum size, order-form fields) were taken as recorded by earlier rounds.",
+    "No factory DFM, Gerber-viewer or placement-preview run; the CPL orientation rests on jlc_orient's EasyEDA reconstruction.",
+    "Distances use polygonised pads (KiCad max_error 0.005 mm), so figures agree with the records to about 0.01 mm.",
+    "check_r10's K-binding could not run on the copy (path artefact); the canonical tree was not gated with tools/check.sh, per the brief.",
+    "Mechanical (fit, standoffs, washer distances) and electrical figures in ORDERING 8.3 / 8.4 were checked only where they are manufacturing or geometry facts."
+  ]
+}

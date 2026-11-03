@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-13",
+  "scope": "R6 schematic implementation; PCB placement/routing reviewed separately",
+  "erc_violations": 0,
+  "schematic_transform_idempotent": true,
+  "changes": {
+    "LS120": "MLT-5020 C94598, custom 3-pad footprint from maker drawing; pad 1 positive, 2 negative, 3 isolated mechanical tab; 4 kHz, 50% PWM",
+    "J121": "Black C430601, identical geometry to former orange part; distinct ARM/IGN board legends required",
+    "R165": "470k 1% C23178 0603; same electrical value, higher package ratings",
+    "R194": "66.5k 1% C137691 0603, reuses R85 code",
+    "feedback": "R190 and R206 each 300k 1% C23024 in parallel; 150k equivalent over R191 30k 1%",
+    "decoupling": "All former C1525 100nF 16V X7R 10% 0402 changed to C307331 100nF 50V X7R 10% 0402"
+  },
+  "calculations": {
+    "port_supply_nominal_V": 4.8,
+    "port_supply_dc_min_V": 4.673584158415841,
+    "port_supply_dc_max_V": 4.9296161616161625,
+    "TPS2553_current_min_mA": 351.18822267138546,
+    "TPS2553_current_max_mA": 448.74600457236346,
+    "input_current_at_max_load_mA": 433.7878044199514,
+    "input_current_assumptions": "6.0 V protected input, 4.93 V output, assumed 85% conversion efficiency; includes neither wiring drop nor startup inrush",
+    "U16_input_limit_min_mA": 458
+  },
+  "sources": {
+    "AP63301": "https://www.diodes.com/datasheet/download/AP63300_AP63301.pdf",
+    "TPS2553": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+    "TPS2595": "https://www.ti.com/lit/ds/symlink/tps2595.pdf",
+    "STM32_pinmap": "https://github.com/STMicroelectronics/STM32_open_pin_data/blob/master/mcu/STM32H743VITx.xml",
+    "SWD": "https://www.tag-connect.com/wp-content/uploads/bsk-pdf-manager/ARM20-CTX_19.pdf",
+    "MLT5020": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf",
+    "E22_2026_manual": "https://www.cdebyte.com/pdf-down.aspx?id=4217",
+    "HGLRC_GPS": "https://www.hglrc.com/products/hglrc-m100_mini-gps"
+  },
+  "limits": [
+    "HGLRC M100 MINI product specification gives 3.3-5 V input and no maximum current. 4.8 V branch target leaves DC tolerance margin below 5 V; startup and load-transient overshoot need bench measurement.",
+    "EBYTE 2026 manual specifies 2.6-5.5 V input and >=3.3 V for rated 22 dBm output, instantaneous TX current range 100-140 mA. Older product webpage differs; use current maker manual.",
+    "J131 pin 1=power, 2=GND, 3=GPS TX, 4=GPS RX. Stock HGLRC cable cavity orientation is unverified. Use a verified custom harness; do not assume supplied lead is plug compatible.",
+    "CAD/ERC cannot qualify thermal rise, shock/vibration, RF performance, or actual power transient behavior."
+  ]
+}

@@ -1,0 +1,121 @@
+{
+ "schema": "r10-triage-v1",
+ "review": "round32_triage",
+ "reviewer": "claude",
+ "target_commit": "3366287193ec7988fbc0fe41cb66b5f2a55791fa",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "real_errors": [
+  {
+   "id": "R32-TRI-01",
+   "merged_ids": [
+    "R32-MANUFACTURING-01 (first part)"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R166-to-C84 courtyard gap stated as 0.56 mm; the board gives 0.65 mm (centrelines), 0.60 mm (line outer edges), 0.66 mm (KiCad courtyard polygon)",
+   "evidence": "Own pcbnew probe (.supervisor/r32_triage/cy.py) on a0ec075e: C84 F(27.5,78.5) rot 90, F.CrtYd rect y 73.25-83.75, stroke 0.05; R166 F(23.5,86.3) rot 0, F.CrtYd rect y 84.40-88.20, x 19.15-27.85 (overlaps C84's x 23.0-32.0). Gap 84.40-83.75 = 0.650 mm centreline; 84.375-83.775 = 0.600 mm outer edges; GetCourtyard polygon 83.745 / 84.405 = 0.660 mm. Only SHAPE_POLY_SET.BBox() (83.795 / 84.355, each inflated about 0.05 mm) gives 0.56 mm, the inputs round28_audit_proc row 3 quotes. No courtyard convention gives 0.56; 0.04-0.10 mm is not rounding. Conservative direction; the inspection list is unaffected.",
+   "all_places": [
+    "docs/ORDERING.md:435",
+    "docs/R10_VALIDATION.md:3063",
+    "docs/R10_VALIDATION.md:1685 (R19-MEC-02 history row)",
+    "historical review records (leave as written, cite the correction): m3_design/assembly_review/sources/r10_review/round19_mechanics.json:27-28, round19_mechanics.md:6, round28_audit_proc.md:59, round29_mechanics.json:34, round29_mechanics.md:48"
+   ],
+   "concrete_fix": "ORDERING 8.2:435 and R10_VALIDATION:3063: 0.56 mm -> 0.65 mm (courtyard centrelines; 0.60 mm between the courtyard lines' outer edges). R10_VALIDATION:1685: append 'R166's courtyard is 0.65 mm from C84's (round 32 correction, R32-TRI-01; 0.56 mm was a bounding-box figure)'. Record the correction in the round 32 fix record.",
+   "board_change": false
+  },
+  {
+   "id": "R32-TRI-02",
+   "merged_ids": [
+    "R32-MANUFACTURING-01 (second part)"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R10_VALIDATION:3063 says ORDERING 8.2 'limits the time and temperature' and 'asks for top-side preheat'; ORDERING asks for neither a preheat nor a temperature limit",
+   "evidence": "ORDERING 8.2:436 (C84 heat limit): support the bottom face on a heat-sinking fixture, 'heat only from the top', minimum dwell per land, cool between lands, do not reflow the bottom side, 'Record the tip temperature and time used'. git log -S on ORDERING.md: the text has had this form since 6628488 (round 19); the word 'preheat' never appeared in the C84 paragraph (the only ORDERING preheats are LS120's reflow rating at :83 and the R9 J30/J31 / J1 THT notes at :95-96). So no preheat and no temperature limit (only a dwell limit and a recorded temperature) exist to be 'asked for'. round19_fix_docs.md:38 records the same non-existent 'top preheat' as applied.",
+   "all_places": [
+    "docs/R10_VALIDATION.md:3063",
+    "m3_design/assembly_review/sources/r10_review/round19_fix_docs.md:38 (historical fix record; leave, cite the correction)"
+   ],
+   "concrete_fix": "R10_VALIDATION:3063: 'ORDERING 8.2 now limits the time and temperature, asks for top-side preheat with the bottom supported, and re-inspection ...' -> 'ORDERING 8.2 now limits the dwell time and asks for the tip temperature and time to be recorded, for top-only heating with the bottom supported on a heat-sinking fixture, and for re-inspection ...'.",
+   "board_change": false
+  },
+  {
+   "id": "R32-TRI-03",
+   "merged_ids": [
+    "R32-PARTS-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The named sets of fitted 85 C parts (MS5611, AP6320x, J430 [, U4 alternates]) omit U3, Y1, LED1, LED2 and the 16 fitted X5R MLCCs, which are also +85 C parts",
+   "evidence": "Ratings from the cached maker sheets (.supervisor/r14_parts_pdf): Winbond W25Q128JV txt:190 '-40C to +85C operating range', :3553 'I = Industrial (-40C to +85C)' (U3 W25Q128JVSIQ, C97521); NDK NX3225GA txt:27 operating -40 to +85 C (Y1 NX3225GA-25.000M-STD-CRG-2, C1985619); Samsung MLCC txt:165 X5R (code A) 55 / 85 C (C6-C11 CL21A226MAQNNNE, C19/C20 CL10A225KO8NNNC, C22 CL10A105KB8NNNC, C23/C28/C92 CL10A475KO8NNNC, C80/C96 CL31A106KBHNNNE, C89/C95 CL31A226KAHNNNE: 16 parts, fab/m3_bom_jlc.csv); NCD0805R1 txt:20 TOPR -30..+85 (LED1); KT-0805Y txt:105 Topr -40..+85 (LED2). The sentences are definite enumerations ('The fitted 85 C parts (MS5611, the AP6320x bucks, J430) therefore have no margin'), with no 'include' / 'e.g.' (unlike the round 27 'include' rulings), so they claim to identify the set; the same owner row 33 logs C6 / C7, C89 and Y1 / U3 and proposes X7R parts as the remedy, i.e. treats these as 85 C parts. The pass rule ('every 85 C part <= 85 C') is unaffected. No earlier triage ruled on it.",
+   "all_places": [
+    "docs/R10_VALIDATION.md:2494 (owner row 33)",
+    "docs/M3_R10.md:496",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:40"
+   ],
+   "concrete_fix": "In all three: 'The fitted 85 C parts (among them MS5611, the AP6320x bucks, J430, U3, Y1, LED1 / LED2 and the 16 X5R MLCCs C6-C11, C19, C20, C22, C23, C28, C80, C89, C92, C95, C96; the U4 alternates if fitted) ...'. Optionally note U1 (STM32H743VIT6, suffix 6) is judged by junction temperature (REQUIREMENTS Temperature).",
+   "board_change": false
+  }
+ ],
+ "observations": [
+  {
+   "id": "R32-GATE-obs2",
+   "reason": "Obligation 15's 166-196 V/s reproduces (TPS2121 SLVSEA3F Table 9-1: 780 V/s x 100/470 = 166, 92 V/s x 1000/470 = 196); DS15034 / DS41326 citations correct. Unpinned sub-figures are arbitrary edits, not a realistic defect a gate must catch."
+  },
+  {
+   "id": "R32-PARTS-obs4",
+   "reason": "cost_check.json total 85.26 matches AGENTS:24/:32, STATUS:12, ORDERING:287; the $85.60 figures (M3_R10:1291/1298, ORDERING:721, R10_VALIDATION:2060) are dated 01:43:55Z history."
+  },
+  {
+   "id": "R32-MECHANICS-obs1",
+   "reason": "ORDERING 8.4's contact list does not claim completeness; 210 g is above the landing range."
+  },
+  {
+   "id": "R32-MECHANICS-obs3",
+   "reason": "Stated < 6.0 / < 5.3 mm limits are stricter than the exact 6.018 / 5.365 mm: conservative, not false."
+  },
+  {
+   "id": "R32-SAFETY-obs9",
+   "reason": "0.175 mm row is headed 'on a3144b15 unless noted'; 0.1772 on a0ec075e does not change the consequence."
+  },
+  {
+   "id": "R32-SAFETY-obs10",
+   "reason": "0.5199 / 0.5001 vs 0.5205 / 0.5008 mm: shape-approximation, rounding class."
+  },
+  {
+   "id": "R32-POWER-obs4",
+   "reason": "SLVS841F citation: Rev G carries the same constants; the cited revision exists and is right."
+  },
+  {
+   "id": "R32-ROUTING-obs11",
+   "reason": "116 vs 117 nets, 0.2 mm: net-membership method difference."
+  },
+  {
+   "id": "R32-REQUIREMENTS-obs7 / obs16",
+   "reason": "5.71 V is the stated rounding of 5.713 V; 3.987 vs 3.989 mm polygon approximation."
+  },
+  {
+   "id": "R32-MCU-obs15",
+   "reason": "<= 0.83 V is correct at the stated nominal VDD 3.3 V."
+  },
+  {
+   "id": "remaining observations",
+   "reason": "The other 121 observations across the ten lenses are reproductions that agree with the records, previously ruled classes (rounds 24-31 triage) or disclosed residuals; none contradicts a record on its face."
+  }
+ ],
+ "not_reproducible": [],
+ "totals": {
+  "raw_findings": 2,
+  "real_errors": 3,
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 3,
+  "board_changes": 0,
+  "observations_in_reports": 132,
+  "observations_reexamined": 11,
+  "not_reproducible": 0
+ },
+ "round_clean": false,
+ "notes": "R32-MANUFACTURING-01 holds two independent false statements and is split into R32-TRI-01 / -02. No fix changes copper or placement, so no board restart; round 32 is not clean, so round 33 becomes the next first-of-pair candidate after the text fix pass."
+}

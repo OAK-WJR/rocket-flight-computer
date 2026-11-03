@@ -1,0 +1,31 @@
+# Non-critical nets routed by ncroute.py into the AUTO table of m3_design/r10_route_signals.py (order = routing order).
+# Hand-routed in that module instead: the port UARTs and IO rails, port wires, camera control, GPS_UART_OE, servo cell.
+# Still open (R10_DECISIONS D-R2-07): SERVO1-4_MCU lanes U1 -> cell vias, VLOGIC_SENSE, LOGIC_SOURCE_ST, BAT_FAULT_N.
+GPS_RX_BUFFER
+GPS_TX_BUFFER
+RADIO_RX_BUFFER
+RADIO_TX_BUFFER
+CAM_RX_BUFFER
+CAM_TX_BUFFER
+CAM_RX_WIRE
+CAM_TX_WIRE
+RADIO_UART_OE
+LED_RED_A
+LED_YEL_A
+LED_RED
+LED_YEL
+BUZZ_G
+BUZZ_OUT
+PULLPIN_EXT
+SERVO1_OUT
+SERVO2_OUT
+SERVO3_OUT
+SERVO4_OUT
+CAM_5V_SENSE
+GPS_FAULT_N
+GPS_PWR_EN
+RADIO_FAULT_N path=U1.56;R422.1;32.3,24.5;U420.4
+RADIO_PWR_EN
+V3V3_SENSE
+BUZZ_DRV
+PULLPIN

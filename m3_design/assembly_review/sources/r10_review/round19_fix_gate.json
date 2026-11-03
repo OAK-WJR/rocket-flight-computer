@@ -1,0 +1,450 @@
+{
+ "schema": 1,
+ "lane": "round 19 fix pass, gate implementer C",
+ "date": "2026-10-31",
+ "brief": ".supervisor/r19_fix_gate_brief.md",
+ "findings": [
+  "R19-GATE-01",
+  "R19-GATE-02",
+  "R19-GATE-03",
+  "R19-GATE-04",
+  "R19-GATE-05",
+  "R19-GATE-06",
+  "R19-GATE-07",
+  "R19-REQ-10",
+  "R19-RTE-01 (gate note)",
+  "R18-MEC-01 (rest)",
+  "AUX feed via (CAD hand-back open item)"
+ ],
+ "board_sha256_before": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "board_sha256_after": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "board_changed": false,
+ "base_commit": "6628488 (the round 19 CAD pass); every change here is unstaged",
+ "files_edited": [
+  "tools/check_r10.py",
+  "tools/critical_reference.py",
+  "tools/plate_model.py",
+  "m3_design/check_actuators.py",
+  "tools/test_r10_check.py",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md (D-R19-15 appended)"
+ ],
+ "files_not_edited_note": "tools/route_check.py unchanged: the CAD lane's PARALLEL_VIAS_R10 (D-R19-09) is the measured-reason list R19-GATE-05 asks for",
+ "files_regenerated": {
+  "rebound": false,
+  "reason": "no fab-manifest input changed (export_fab.py, jlc_orient.py, jlc_corrections.json, jlc_easyeda/pads.json, fab_manifest.py, quality_audit/sexpr.py, CAD files)",
+  "changed": []
+ },
+ "gate": {
+  "command": "KICAD_CLI=<10.0.7> NUMPY_PY=.supervisor/venv/bin/python tools/check.sh (canonical tree, after the last edit)",
+  "exit": 0,
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "audit": "OK",
+  "silk_outline_points": 0,
+  "r10_parts_check": "OK (generated files and native budget current)",
+  "fit": "OK",
+  "check_r10_full_rules": 35,
+  "check_r10_new_rules": [],
+  "check_r10_titles_updated": [
+   "S-4",
+   "K-legends",
+   "K-copper",
+   "K-reference",
+   "K-lands",
+   "K-power"
+  ],
+  "route_check_failing": 0,
+  "fab_content_checks": "3/3 OK",
+  "fab_manifest_outputs": 6,
+  "self_tests": {
+   "shell": 10,
+   "procurement": 20,
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 68,
+   "r10": {
+    "run": 234,
+    "new": 22,
+    "before": 212,
+    "skipped_numpy_under_kicad_python": 6
+   },
+   "numpy_HotplugNumerics_Plate": {
+    "run": 6,
+    "before": 5
+   }
+  },
+  "runs": "two, the second after the last edit (a docstring line); both exit 0, board SHA-256 identical before and after each"
+ },
+ "gaps": [
+  {
+   "gap": 1,
+   "finding": "R19-GATE-01",
+   "check": "K-lands land_overrides: every placed footprint's paste margin / ratio and mask margin, and every pad's local paste margin, paste ratio, mask margin and paste / mask layers, equal the library copy (pcbnew.FootprintLoad on kilib/rocket.pretty); pads paired by number + local position (2 um, mirrored when flipped); zone-connection / clearance overrides stay with K-copper / LC-1",
+   "real_board": "701 pads compared, 0 differences; C84 has no named exception (its paste removal is the generated library variant, D-R19-07)",
+   "seeds_now_failing": [
+    "b19a: Q124 pads at a -0.1 mm board paste margin",
+    "U9.5 / U9.6 board paste ratio -0.6",
+    "R134 footprint mask margin 0.05 mm",
+    "Q124.1 loses F.Paste"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_board_paste_and_mask_overrides_fail_k_lands"
+   ]
+  },
+  {
+   "gap": 2,
+   "finding": "R19-GATE-02",
+   "check": "check_actuators r10 block pins R131 = 10k C25744 / 0402WGF1002TCE / rocket:R0402 and C127, C129 = 10nF 50V X7R 10% C57112; S-4 mpn_values decodes every fitted R / C Manufacturer Part (the field the JLC BOM is exported from; S-4 --bom holds the BOM code / MPN / footprint to it) and requires the value, and any tolerance, voltage or dielectric the Value states, to match",
+   "real_board": "157 decoded (UNI-ROYAL 73, Samsung CL 44, Murata GRM 14, Yageo CC 9, Yageo RT 7, Fenghua 4, Yageo RC 2, Bourns CRM 1, FOJAN FRC 1, Murata GCJ 1, Vishay MCT 1); not decoded: C84 (MA25V470M8x10, aluminium polymer)",
+   "seeds_now_failing": [
+    "b08e: R131 LCSC C11702 / MPN 0402WGF1001TCE with Value 10k (K-actuators and S-4)",
+    "C127 / C129 LCSC C15195 (K-actuators)"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_r131_recode_fails_k_actuators_and_s4",
+    "R19GateFix.test_mpn_values"
+   ]
+  },
+  {
+   "gap": 3,
+   "finding": "R19-GATE-03",
+   "check": "K-plane plane_necks: each non-GND inner fill unfractured, deflated by PLANE_LINK_W / 2 (0.25 mm); a landing-via cluster cut off from the largest deflated piece is a split piece needing >= 2 outer links of >= 0.5 mm; necks under 1.0 mm reported (bisection)",
+   "real_board": {
+    "3V3 In2.Cu": [
+     {
+      "width_mm": 0.549,
+      "landings": [
+       "(18.8, 60.25)",
+       "(22.6, 52.15)",
+       "(19.05, 55.9)"
+      ]
+     },
+     {
+      "width_mm": 0.549,
+      "landings": [
+       "(23.1, 78.1)",
+       "(23.0, 70.0)",
+       "(23.2, 68.6)"
+      ]
+     },
+     {
+      "width_mm": 0.589,
+      "landings": [
+       "(9.2, 52.98)"
+      ]
+     },
+     {
+      "width_mm": 0.706,
+      "landings": [
+       "(19.5, 49.15)"
+      ]
+     }
+    ],
+    "PORT_4V8 In2.Cu": [],
+    "PORT_5V3 In2.Cu": [],
+    "RAW_PROTECTED In2.Cu": [],
+    "note": "unfracture first: the fracture slits gave a false 0.474 mm neck"
+   },
+   "seeds_now_failing": [
+    "b10b: an In2 keep-out leaving a 0.30 mm neck on the 3V3 buck finger (via (23.1, 78.1))"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_plane_neck_seed",
+    "R19GateFix.test_plane_neck_counts_as_a_split",
+    "R19GateFix.test_plane_neck_over_half_a_millimetre_passes"
+   ]
+  },
+  {
+   "gap": 4,
+   "finding": "R19-GATE-04 (rest)",
+   "check": "K-power: every path names its design current; floor >= ipc2152.ipc_width(30 C, layer, amps) or the table fails; new paths VLOGIC trunk, CAM_5V out, J410 feed, J420 feed; U401 IN / OUT pin links (0.25 mm at the 0.5 mm DSK pitch) are named POWER_NARROW entries (8 in all, stale fails)",
+   "real_board": {
+    "U9 IN": "1.0 mm floor, 2.9 A -> 0.680 mm",
+    "U9 OUT": "0.7, 2.9 A -> 0.680",
+    "U401 IN / OUT": "0.4, 1.9 A -> 0.326",
+    "U402 IN": "0.4, 1.249 A -> 0.157",
+    "J440 / J410 / J420 feed": "0.4, 1.9 A -> 0.326",
+    "CAM_5V out": "0.4, 1.249 A -> 0.157",
+    "C84 hold-up / VLOGIC trunk": "0.4, 1.294 A -> 0.167",
+    "U400 OUT": "0.4, 1.81 A -> 0.299",
+    "U2 OUT": "0.4, 2.0 A -> 0.356"
+   },
+   "seeds_now_failing": [
+    "a 0.2 mm run on VLOGIC trunk, U400 OUT (PORT_5V3), CAM_5V out, J410 feed (PORT_4V8), U2 OUT (3V3) and U401 IN (PORT_5V3)",
+    "synthetic: a floor below its IPC width"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_rail_runs_at_0_2_mm_fail_k_power",
+    "R19GateFix.test_power_floor_must_hold_the_ipc_width"
+   ]
+  },
+  {
+   "gap": 5,
+   "finding": "R19-GATE-05",
+   "check": "track_graph + simple_path_edges (biconnected blocks on the block-cut tree path between the terminal hubs) under fire_path and path_graph: only copper on simple paths between the terminal sets; U9 IN >= 1 via of >= 1.0 / 0.5 mm, further vias >= 0.5 / 0.3 mm; route_check: the existing PARALLEL_VIAS_R10 list, no generic exemption",
+   "real_board": "all 6 fire paths and every earlier K-power path identical (segments, vias, joined, pads); the J440 feed changed only by item 11",
+   "c01_probe": {
+    "method": "full copies of the post-CAD tree (git archive 6628488 + this lane's tool files); seed; the one-line PARALLEL_VIAS_R10 update; the r10_build.sh post-board regeneration (budget, r10_hotplug --extract + real NumPy solve, jlc_orient, export_fab --pending, fab_manifest --bind / verify, binding note); then every check.sh checker step with the copy's own tools (the gate lens's regen.sh / gate.sh)",
+    "control": {
+     "board": "50a39de5",
+     "regen": "all exit 0",
+     "steps": "all exit 0",
+     "note": "regeneration byte-identical except the timestamped Gerber zip, PDFs and manifest"
+    },
+    "c01_clean": {
+     "via": "(17.5, 88.891) 1.0 / 0.5 mm, B.Cu 1.0 mm to (17.5, 87.3)",
+     "board": "d5e584e5",
+     "regen": "all exit 0",
+     "steps": "all exit 0 (drc, audit, silk, parts, fit, r10, route, fab)",
+     "evidence": "S-9 identical to the control; K-power only U9 IN (15 -> 16 segments, 2 vias); parts_budget.json differs only in board_sha256; hot-plug passed / pass"
+    },
+    "c01b_clean": {
+     "via": "(17.5, 88.891) 0.6 / 0.3 mm",
+     "board": "b8404e05",
+     "regen": "all exit 0",
+     "steps": "all exit 0",
+     "evidence": "as c01"
+    },
+    "c01_adversary_drawing": {
+     "via": "(18.9, 88.891) with a 0.707 mm B.Cu diagonal to (19.4, 88.391) and north to (19.4, 85.4)",
+     "boards": [
+      "16199359 (1.0 / 0.5)",
+      "6c711d82 (0.6 / 0.3)"
+     ],
+     "regen": "all exit 0 (the budget no longer refuses)",
+     "steps": "all exit 0 except route_check",
+     "route_check_failures": [
+      "short_segment BAT_IN B.Cu (18.9, 88.891) 0.7071 mm",
+      "acute_angle BAT_IN B.Cu (19.4, 85.4) 45 deg at a free node",
+      "detour BAT_IN 64.67 mm > 1.6 x MST 38.99 mm = 62.38 mm (base 59.57, clean drawing 61.16)"
+     ],
+     "note": "drawing faults M2 rejects; track_loop admitted by the PARALLEL_VIAS line"
+    }
+   },
+   "tests": [
+    "R19GateFix.test_simple_paths_drop_a_side_branch_loop",
+    "R19GateFix.test_u9_in_one_sized_via_and_board_minimum_parallel_vias",
+    "RealBoardSeeds.test_r19_second_u9_in_via_passes",
+    "RealBoardSeeds.test_r19_adversary_c01_drawing_keeps_fire_and_budget_copper",
+    "RealBoardSeeds.test_r18_u9_power_path_seeds (expectation updated to the new via text)"
+   ]
+  },
+  {
+   "gap": 6,
+   "finding": "R19-GATE-06 (rest)",
+   "check": "K-legends word_legends centre_margin: the word ink-box centre >= 1.0 mm nearer its own courtyard than any other; blocking for WORD_CENTRE_BLOCKING (GPS, RADIO, AUX, IGN, SERVO, CAM, SWD), reported for BAT and SWITCH",
+   "real_board": {
+    "GPS": 13.178,
+    "RADIO": 3.716,
+    "AUX": 14.465,
+    "IGN": 5.265,
+    "SERVO": 3.764,
+    "CAM": 3.451,
+    "SWD": 2.853,
+    "BAT": 0.08,
+    "SWITCH": 0.04
+   },
+   "seeds_now_failing": [
+    "RADIO moved 4.2 mm north toward the J410 / J420 seam",
+    "synthetic word ties"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_word_centre_margins",
+    "R19GateFix.test_word_centre_margin_blocks_named_words_only"
+   ]
+  },
+  {
+   "gap": 7,
+   "finding": "R19-GATE-07",
+   "check": "K-legends silk_allowlist: every visible silkscreen text (board text, text box, footprint text and fields, both faces) is a designator, a TERMINAL_PINS_R10 legend, a word, a PORT_LEGENDS_R10 row, SERVO_HARNESS_NOTE, a PINNED_TEXTS entry or the JLC mark",
+   "real_board": {
+    "legend": 39,
+    "port row": 6,
+    "designator": 121
+   },
+   "seeds_now_failing": [
+    "b21b: \"BATT+\" on F.Silkscreen beside J121",
+    "R134 Value field shown on F.Silkscreen"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_silk_text_allowlist",
+    "R19GateFix.test_silk_allowlist"
+   ]
+  },
+  {
+   "gap": 8,
+   "finding": "R19-REQ-10",
+   "check": "critical_reference: V3V3_SENSE dropped; EXTENDED_R10 = SWDIO / SWCLK / NRST (the radio SPI names stay in EXTENDED for the R7-R9 record tools); CAM_TX_MCU / CAM_RX_MCU dropped from R10_PORT_UART / R10_PORT_NETS; r10_stale_names; K-reference fails on any listed name that is no board net",
+   "decision": "D-R19-15: the GPS / RADIO / AUX / CAM port UART nets stay under the stricter 1.5 mm GND-partner-via and one-In2-region rules (the frozen board meets them; relaxing needs a reason it does not give)",
+   "seeds_now_failing": [
+    "V3V3_SENSE back in R10_SLOW_RETURN_NETS"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_stale_critical_reference_name_fails_k_reference",
+    "CriticalReferenceNames.test_r10_lists_hold_only_live_names_and_stale_ones_fail"
+   ]
+  },
+  {
+   "gap": 9,
+   "finding": "R19-RTE-01 (gate note)",
+   "check": "K-copper pour_debris: every zone fill piece of any size holds a via of its net or touches >= 2 of its net's pads; only exact, measured POUR_DEBRIS entries excepted; an entry fails as stale once its piece is gone",
+   "real_board": "35 pieces; one fails: GND F.Cu 0.282 mm^2 at (17.50, 34.48) touching only U1.74 (also on the round 18 board beside the 1.693 mm^2 U1.19 piece); admitted by the one named entry",
+   "seeds_now_failing": [
+    "U1.19 pour connection restored: 1.693 mm^2 piece at (26.13, 52.34)",
+    "the U1.74 piece without its entry"
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_pour_debris_seed",
+    "R19GateFix.test_pour_debris"
+   ]
+  },
+  {
+   "gap": 10,
+   "finding": "R18-MEC-01 (rest)",
+   "check": "plate_model.STRAIN_PARTS += R150-R155",
+   "tests": [
+    "Plate.test_r19_servo_resistors_in_the_strain_table (NumPy)"
+   ]
+  },
+  {
+   "gap": 11,
+   "finding": "AUX feed via",
+   "check": "POWER_PATHS 'J440 feed' layers=('F.Cu',): its vias are (29.75, 9.95) and (30.5, 9.95); the via (29.75, 12.6) behind on U401's B.Cu run no longer counts",
+   "seeds_now_failing": [
+    "via (30.5, 9.95) removed: \"J440 feed: 1 via(s) on the path; at least 2 required\""
+   ],
+   "tests": [
+    "RealBoardSeeds.test_r19_aux_feed_second_via"
+   ]
+  }
+ ],
+ "not_done": [
+  "U1.74 GND pour piece (0.282 mm^2, F.Cu, (17.50, 34.48)) is a real R19-RTE-01 instance: needs the CAD fix ZONE_CONNECTION_NONE on U1.74 (as D-R19-05 for U1.19), then delete its POUR_DEBRIS entry (stale fails)",
+  "BAT (0.08 mm) and SWITCH (0.04 mm) word centre margins are below 1.0 mm: reported only, per the brief; test_r19_word_centre_margins fails if either later clears 1.0 mm, prompting it into WORD_CENTRE_BLOCKING",
+  "the adversary's literal c01 / c01b drawing still fails route_check (0.707 mm short segment, 45 deg junction, BAT_IN copper detour 64.67 > 62.38 mm): M2 drawing faults, not gate false positives; the clean drawing passes every stage",
+  "check_procurement --cost-only still fails ($85.35 > $84.41): owner decision, outside check.sh, untouched",
+  "K-actuators docstring said check.sh also runs check_actuators on its own (it does not); corrected"
+ ],
+ "for_docs_lane": [
+  "check_r10 still 35 rules; titles of S-4, K-legends, K-copper, K-reference, K-lands and K-power now name the round 19 checks",
+  "check.sh self-test counts as in gate.self_tests (R10 234, NumPy HotplugNumerics Plate 6)",
+  "K-power: 14 paths, each with a design current and its IPC-2152 width; POWER_NARROW 8 entries",
+  "D-R19-15 records the gate changes and the R19-REQ-10 decision (port UARTs stay strict)",
+  "the U1.74 pour piece is a CAD item for the next board change"
+ ],
+ "follow_up_r20_bom_01": {
+  "date": "2026-10-31",
+  "files_edited": [
+   "tools/jlc_stock.py",
+   "tools/test_procurement.py"
+  ],
+  "files_refreshed": [
+   "m3_design/assembly_review/fab/stock_check.json (live query 2026-10-31T10:13:31Z)"
+  ],
+  "rule": "orderable = min(stockCount, canPresaleNumber) when both are present, else stockCount; a present but unreadable canPresaleNumber fails closed; lines report jlc_stock, jlc_presale and orderable (Inference: JLC documents neither field)",
+  "test": "ProcurementValidation.test_presale_number_caps_the_orderable_quantity (fails on the old tool: U4 9 / 2 read thin); procurement self-tests 20 -> 21",
+  "live_result": {
+   "ok": false,
+   "short": [
+    "C51931514 U4 orderable 2 (stockCount 9, canPresaleNumber 2) < 5"
+   ],
+   "thin": [],
+   "codes": 82
+  },
+  "rebind": "not needed: jlc_stock.py and stock_check.json are neither fab-manifest inputs nor outputs; manifest OK"
+ },
+ "follow_up_round20": {
+  "date": "2026-10-31",
+  "files_edited": [
+   "tools/jlc_stock.py",
+   "tools/test_procurement.py",
+   "tools/check_r10.py",
+   "tools/test_r10_check.py",
+   "m3_design/r7_post.py",
+   "m3_design/r8_post.py"
+  ],
+  "files_refreshed": [
+   "m3_design/assembly_review/fab/stock_check.json"
+  ],
+  "not_touched": [
+   "m3_design/r10_sch_check.py and r10_binding_note.json (coordinator edits)"
+  ],
+  "board_sha256": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+  "items": [
+   {
+    "finding": "R20-MFG-02",
+    "generator_fix": "r7_post.courtyard_offenders / r8_post.courtyard_fails: the 8 mm box-centre pre-filter is replaced by a box-gap test (a courtyard is skipped only when its box lies at least the own gap from the ink box); affects the next build only; on the current board both now find C400, C94, R461 (before: none)",
+    "check": "K-legends designator_courtyards: every visible designator vs every courtyard on its face (121 / 215)",
+    "named_entries": [
+     {
+      "ref": "C400",
+      "other": "J440",
+      "own_mm": 0.082,
+      "overlap_mm2": 0.151
+     },
+     {
+      "ref": "C94",
+      "other": "U1",
+      "own_mm": 0.142,
+      "overlap_mm2": 0.266
+     },
+     {
+      "ref": "R461",
+      "other": "J430",
+      "own_mm": 0.018,
+      "overlap_mm2": 0.306
+     }
+    ],
+    "test": "RealBoardSeeds.test_r20_designators_inside_a_large_neighbours_courtyard"
+   },
+   {
+    "finding": "R20-MFG-03",
+    "check": "K-legends fab_ref_crossings: a footprint's ${REFERENCE} Fab text must not intersect its own Fab shapes (210 checked)",
+    "named_entries_mm2": {
+     "C123": 0.0013,
+     "C445": 0.1915,
+     "D440": 0.0479,
+     "D441": 0.0479,
+     "R119": 0.6935,
+     "R173": 0.011
+    },
+    "note": "R173 (carried; its R13 entry still leaves 0.011 mm^2) is a sixth crossing beyond the five briefed",
+    "test": "RealBoardSeeds.test_r20_fab_reference_crosses_its_own_fab_outline"
+   },
+   {
+    "finding": "R20-SAF-02",
+    "check": "S-6 PORT_NET += AUX_; SAFE_NET += BAT_ENABLE, BAT_SW_; S-6 / S-8 header and s8 docstring corrected",
+    "real_board": "passes",
+    "test": "RealBoardSeeds.test_r20_s6_sees_aux_and_the_switch_enable_chain (AUX_TX_WIRE 0.100 mm from PYRO1_OUT; GPS tracks 0.100 mm from BAT_ENABLE and BAT_SW_RETURN; R165 AUX pad with BAT_ENABLE; R80 GPS pad with BAT_SW_SOURCE)",
+    "for_docs_lane": "FMEA I-11 still claims BAT_IN / NRST / BOOT0 protection that S-6 does not implement"
+   }
+  ],
+  "final_gate": {
+   "command": "KICAD_CLI=<10.0.7> NUMPY_PY=.supervisor/venv/bin/python tools/check.sh (canonical tree, after every edit)",
+   "exit": 0,
+   "board_sha256_before_after": "50a39de5 / 50a39de5",
+   "check_r10_full_rules": 35,
+   "route_check_failing": 0,
+   "fab_content_checks": "3/3 OK",
+   "fab_manifest_outputs": 6,
+   "self_tests": {
+    "shell": 10,
+    "procurement": 21,
+    "fab_validation": 34,
+    "fit": 33,
+    "paste": 16,
+    "r10_parts": 5,
+    "route": 68,
+    "r10": {
+     "run": 237,
+     "skipped_numpy_under_kicad_python": 6
+    },
+    "numpy_HotplugNumerics_Plate": 6
+   }
+  }
+ }
+}

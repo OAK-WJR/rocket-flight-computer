@@ -1,0 +1,13 @@
+A   min 0.5  closest 0.820 margin +0.320  J122.11 (RAW_ACT) / track (28.53, 75.64) (ARM1_SENSE) F.Cu
+B   min 0.5  closest 0.820 margin +0.320  Q124.5 (PYRO1_OUT) / track (9.125, 61.955) (PYRO1_GATE) F.Cu
+C   min 0.3  closest 0.577 margin +0.277  R131.1 (PYRO1_OUT) / track (15.43, 67.66) (PYRO1_COLD) F.Cu
+D   min 0.5  closest 0.770 margin +0.270  track (10.425, 63.05) (GND) / Q124.5 (PYRO1_OUT) F.Cu
+E   min 1.0  no pair within reach
+F   min 0.5  no pair within reach
+G   min 0.3  closest 0.412 margin +0.112  track (13.0, 53.35) (PYRO1_GATE_N) / U1.2 (unconnected-(U1-PE3-Pad2)) F.Cu
+A2  min 0.3  no pair within reach
+H   min 1.0  closest 1.225 margin +0.225  Q124.5 (PYRO1_OUT) / R129.2 (PYRO1_CONT) F.Cu
+H+  min 1.2  closest 1.225 margin +0.025  Q124.5 (PYRO1_OUT) / R129.2 (PYRO1_CONT) F.Cu
+GS  min 1.2  closest 1.680 margin +0.480  R128.1 (PYRO1_GATE) / C127.1 (PYRO1_CONT) F.Cu
+AG  min 1.2  closest 1.362 margin +0.162  Q122.3 (ACT_DRV) / R123.2 (GND) B.Cu
+pyro probe: OK

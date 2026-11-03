@@ -1,0 +1,4495 @@
+{
+  "round": 15,
+  "lens": "requirements/all-owner-and-agent-decisions",
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "target_commit_source": ".supervisor/r15_target_packet.md;root owns exact commit/tracked-file freeze verification;no git action executed in this lens",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "findings": [
+    {
+      "id": "R15-REQ-01",
+      "severity": "Minor",
+      "status": "active",
+      "provenance": "carried",
+      "prior_ids": [
+        "R14-REQ-01",
+        "R13-REQ-03",
+        "R12-REQ-02",
+        "R11-REQ-03"
+      ],
+      "title": "Parent vehicle candidate mirror still describes removed R10 hardware",
+      "requirements": [
+        "P1",
+        "P2",
+        "OQ-7",
+        "all-wired screw-terminal amendment"
+      ],
+      "evidence": [
+        {
+          "file": "../../docs/VEHICLE.md",
+          "line": 39,
+          "coordinate_mm": [
+            7.4,
+            65.85
+          ],
+          "measured_or_observed": "Parent candidate still names GH ports, ARM/IGN terminals, and GH-2 J400 at(10.5,85.5). Fresh native J400 is DB125-2 at(7.4,65.85); all seven wired connectors are DB125 and J123/J124 are absent."
+        },
+        {
+          "file": "docs/R10_VEHICLE_HANDOFF.md",
+          "line": 12,
+          "measured_or_observed": "Local replacement facts agree with fresh native poses and connector net maps."
+        }
+      ],
+      "concrete_fix": "Apply the exact local vehicle handoff through the separately authorized parent-repository workflow; preserve accepted R9 facts. Do not edit the parent during this frozen review.",
+      "maker_scope": "Internal integration-record mismatch; no new maker limit or physical collision is alleged."
+    },
+    {
+      "id": "R15-REQ-02",
+      "severity": "Minor",
+      "status": "active",
+      "provenance": "carried",
+      "prior_ids": [
+        "R14-REQ-02",
+        "R13-REQ-04",
+        "R12-REQ-03"
+      ],
+      "title": "Current M2 routing compromises still require dated owner acceptance",
+      "requirements": [
+        "M2",
+        "AUD-10",
+        "requirements audit2 item7"
+      ],
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "coordinate_mm": [
+            14.825,
+            27.2
+          ],
+          "measured_or_observed": "Fresh native route scan: USB_ILIM copper3.33mm versus1.05mm octilinear baseline,ratio3.18,one via."
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "coordinate_mm": [
+            16.4,
+            83.0
+          ],
+          "measured_or_observed": "BAT_OVLO B.Cu retains0.150mm short segment; BUZZ_DRV F(20.5,51.8) retains0.300mm offset/0.424mm middle."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json",
+          "measured_or_observed": "Freshly reproduced139instances=109ordinary+22AUD10inside-pad+8noncritical leftovers. Category counts and every location/end tuple match;0blocking/allowed/stale.54bump windows searched.",
+          "json_pointer": "/routing_inventory"
+        }
+      ],
+      "concrete_fix": "Retain the complete measured M2 deviations for dated owner acceptance, or use separately covered generator redraws qualified by unchanged native clearance/reference/hygiene controls. Preserve the count/location-only scope for the eight noncritical leftovers.",
+      "maker_scope": "Owner cleanliness/acceptance requirement; no electrical failure or maker clearance breach is established."
+    },
+    {
+      "id": "R15-REQ-03",
+      "severity": "Minor",
+      "status": "active",
+      "provenance": "new",
+      "title": "Subordinate active status and decision/procurement records retain predecessor facts",
+      "requirements": [
+        "M2",
+        "M3",
+        "requirements audit2 item14",
+        "D-R14-01",
+        "D-R14-02"
+      ],
+      "evidence": [
+        {
+          "file": "docs/M3_R10.md",
+          "line": 100,
+          "measured_or_observed": "Active source index says all113 D IDs throughD-R13-03; fresh source-heading/index comparison gives116 IDs throughD-R14-03,with no missing ledger entry."
+        },
+        {
+          "file": "STATUS.md",
+          "line": 43,
+          "measured_or_observed": "Active decision-source pointer stops atD-R13-03."
+        },
+        {
+          "file": "docs/M3_R10.md",
+          "line": 147,
+          "measured_or_observed": "Placement section calls R13 fixes current and still requests14/15; current opening/owner decision require fresh15/16 on7866d6b8."
+        },
+        {
+          "file": "docs/M3_R10.md",
+          "line": 476,
+          "measured_or_observed": "Open-items row carries08:38 supplier82.65/84.99 and U9 minimum7,while opening/current bound11:03 snapshot is82.6434/84.4456 and U9minimum1. The old numbers are dated,but their active open-item placement is not scoped as superseded."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json",
+          "measured_or_observed": "Current OQ-3 summary still gives82.65/84.99 and0.58 excess instead of current82.6434/84.4456 and0.0356.",
+          "json_pointer": "/owner_mandates/10/disposition"
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json",
+          "measured_or_observed": "R14-INT-01 says full integration pending although the same ledger and42fresh matching generated-file hashes record completed integration.",
+          "json_pointer": "/post_review_integration_findings_R14/0/status"
+        }
+      ],
+      "concrete_fix": "Update active M3/STATUS decision pointers to116/throughD-R14-03,scope the R13 placement paragraph as historical,and replace active OQ-3/U9 and integration-state summaries with current bound facts or explicit dated-history labels. Preserve all immutable original review reports and retain pending owner/process/stock acceptance.",
+      "maker_scope": "Bounded current-record consistency defect; correct opening status and current electrical/native facts remain available. No hidden missing decision or procurement release is alleged."
+    }
+  ],
+  "native_inventory": {
+    "footprints": 209,
+    "segments": 957,
+    "vias": 296,
+    "track_mm": 1797.1401775940153,
+    "bytes": 2257812,
+    "xml_raw_nodes": 651,
+    "xml_unique_pairs": 651,
+    "physical_numbered_pads": 663,
+    "physical_unique_pairs": 651
+  },
+  "key_native_poses": {
+    "U1": {
+      "x_mm": 23.0,
+      "y_mm": 43.0,
+      "rotation_deg": 0.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "QSPI_IO2",
+        "2": "unconnected-(U1-PE3-Pad2)",
+        "3": "PYRO1_GATE_N",
+        "4": "unconnected-(U1-PE5-Pad4)",
+        "5": "unconnected-(U1-PE6-Pad5)",
+        "6": "3V3",
+        "7": "unconnected-(U1-PC13-Pad7)",
+        "8": "BUZZ_DRV",
+        "9": "unconnected-(U1-PC15-Pad9)",
+        "10": "GND",
+        "11": "3V3",
+        "12": "HSE_IN",
+        "13": "HSE_OUT",
+        "14": "NRST",
+        "15": "PYRO1_CONT",
+        "16": "ACT_EN_MCU",
+        "17": "unconnected-(U1-PC2_C-Pad17)",
+        "18": "V3V3_SENSE",
+        "19": "GND",
+        "20": "3V3A",
+        "21": "3V3A",
+        "22": "SERVO1_MCU",
+        "23": "SERVO2_MCU",
+        "24": "SERVO3_MCU",
+        "25": "SERVO4_MCU",
+        "26": "GND",
+        "27": "3V3",
+        "28": "LOGIC_SOURCE_ST",
+        "29": "BAT_FAULT_N",
+        "30": "VLOGIC_SENSE",
+        "31": "unconnected-(U1-PA7-Pad31)",
+        "32": "unconnected-(U1-PC4-Pad32)",
+        "33": "ARM1_SENSE",
+        "34": "unconnected-(U1-PB0-Pad34)",
+        "35": "CAM_5V_SENSE",
+        "36": "QSPI_CLK",
+        "37": "CAM_MCU_RX",
+        "38": "CAM_MCU_TX",
+        "39": "CAM_UART_OE",
+        "40": "unconnected-(U1-PE10-Pad40)",
+        "41": "CAM_PWR_EN",
+        "42": "CAM_FAULT_N",
+        "43": "unconnected-(U1-PE13-Pad43)",
+        "44": "unconnected-(U1-PE14-Pad44)",
+        "45": "unconnected-(U1-PE15-Pad45)",
+        "46": "unconnected-(U1-PB10-Pad46)",
+        "47": "unconnected-(U1-PB11-Pad47)",
+        "48": "VCAP1",
+        "49": "GND",
+        "50": "3V3",
+        "51": "RADIO_RX_MCU",
+        "52": "RADIO_TX_MCU",
+        "53": "unconnected-(U1-PB14-Pad53)",
+        "54": "unconnected-(U1-PB15-Pad54)",
+        "55": "unconnected-(U1-PD8-Pad55)",
+        "56": "unconnected-(U1-PD9-Pad56)",
+        "57": "unconnected-(U1-PD10-Pad57)",
+        "58": "QSPI_IO0",
+        "59": "QSPI_IO1",
+        "60": "QSPI_IO3",
+        "61": "unconnected-(U1-PD14-Pad61)",
+        "62": "unconnected-(U1-PD15-Pad62)",
+        "63": "GPS_TX_MCU",
+        "64": "GPS_RX_MCU",
+        "65": "VBUS_SENSE",
+        "66": "unconnected-(U1-PC9-Pad66)",
+        "67": "unconnected-(U1-PA8-Pad67)",
+        "68": "unconnected-(U1-PA9-Pad68)",
+        "69": "unconnected-(U1-PA10-Pad69)",
+        "70": "USB_DM",
+        "71": "USB_DP",
+        "72": "SWDIO",
+        "73": "VCAP2",
+        "74": "GND",
+        "75": "3V3",
+        "76": "SWCLK",
+        "77": "unconnected-(U1-PA15-Pad77)",
+        "78": "SD_SCK",
+        "79": "SD_MISO",
+        "80": "SD_MOSI",
+        "81": "SD_CS",
+        "82": "unconnected-(U1-PD1-Pad82)",
+        "83": "unconnected-(U1-PD2-Pad83)",
+        "84": "unconnected-(U1-PD3-Pad84)",
+        "85": "unconnected-(U1-PD4-Pad85)",
+        "86": "LED_RED",
+        "87": "USB_FAULT_N",
+        "88": "LED_YEL",
+        "89": "SPI1_SCK",
+        "90": "SPI1_MISO",
+        "91": "SPI1_MOSI",
+        "92": "QSPI_NCS",
+        "93": "IMU_CS",
+        "94": "BOOT0",
+        "95": "I2C1_SCL",
+        "96": "I2C1_SDA",
+        "97": "unconnected-(U1-PE0-Pad97)",
+        "98": "IMU_INT1",
+        "99": "GND",
+        "100": "3V3"
+      }
+    },
+    "U4": {
+      "x_mm": 17.0,
+      "y_mm": 45.9,
+      "rotation_deg": 180.0,
+      "side": "B.Cu",
+      "pads": {
+        "1": "SPI1_MISO",
+        "2": "GND",
+        "3": "GND",
+        "4": "IMU_INT1",
+        "5": "3V3A",
+        "6": "GND",
+        "7": "GND",
+        "8": "3V3A",
+        "9": "unconnected-(U4-INT2-Pad9)",
+        "10": "unconnected-(U4-OCS_aux-Pad10)",
+        "11": "unconnected-(U4-SDO_aux-Pad11)",
+        "12": "IMU_CS",
+        "13": "SPI1_SCK",
+        "14": "SPI1_MOSI"
+      }
+    },
+    "J1": {
+      "x_mm": 7.4,
+      "y_mm": 75.85,
+      "rotation_deg": -90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "BAT_IN",
+        "2": "GND"
+      }
+    },
+    "J121": {
+      "x_mm": 7.4,
+      "y_mm": 55.85,
+      "rotation_deg": -90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "PYRO1_OUT",
+        "2": "PYRO1_IGN"
+      }
+    },
+    "J400": {
+      "x_mm": 7.4,
+      "y_mm": 65.849999,
+      "rotation_deg": -90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "BAT_SW_SOURCE",
+        "2": "BAT_SW_RETURN"
+      }
+    },
+    "J410": {
+      "x_mm": 38.6,
+      "y_mm": 15.5,
+      "rotation_deg": 90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "GPS_TX_WIRE",
+        "4": "GPS_RX_WIRE"
+      }
+    },
+    "J420": {
+      "x_mm": 38.6,
+      "y_mm": 31.5,
+      "rotation_deg": 90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "RADIO_TX_WIRE",
+        "4": "RADIO_RX_WIRE"
+      }
+    },
+    "J9": {
+      "x_mm": 38.6,
+      "y_mm": 47.5,
+      "rotation_deg": 90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "CAM_RX_WIRE",
+        "4": "CAM_TX_WIRE"
+      }
+    },
+    "J122": {
+      "x_mm": 38.6,
+      "y_mm": 71.5,
+      "rotation_deg": 90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "SERVO1_OUT",
+        "2": "SERVO2_OUT",
+        "3": "SERVO3_OUT",
+        "4": "SERVO4_OUT",
+        "5": "GND"
+      }
+    },
+    "J430": {
+      "x_mm": 24.0,
+      "y_mm": 24.3,
+      "rotation_deg": 0.0,
+      "side": "B.Cu",
+      "pads": {
+        "1": "SD_DAT2",
+        "2": "SD_CS",
+        "3": "SD_MOSI",
+        "4": "3V3",
+        "5": "SD_SCK",
+        "6": "GND",
+        "7": "SD_MISO",
+        "8": "SD_DAT1",
+        "9": "GND",
+        "10": "GND",
+        "11": "GND",
+        "12": "GND"
+      }
+    },
+    "Q120": {
+      "x_mm": 13.5,
+      "y_mm": 73.6,
+      "rotation_deg": 0.0,
+      "side": "B.Cu",
+      "pads": {
+        "1": "ACT_FET_S",
+        "2": "ACT_FET_S",
+        "3": "ACT_FET_S",
+        "4": "ACT_GATE",
+        "5": "BAT_IN",
+        "6": "BAT_IN",
+        "7": "BAT_IN",
+        "8": "BAT_IN",
+        "9": "BAT_IN"
+      }
+    },
+    "Q121": {
+      "x_mm": 13.5,
+      "y_mm": 68.6,
+      "rotation_deg": 180.0,
+      "side": "B.Cu",
+      "pads": {
+        "1": "ACT_FET_S",
+        "2": "ACT_FET_S",
+        "3": "ACT_FET_S",
+        "4": "ACT_GATE",
+        "5": "RAW_ACT",
+        "6": "RAW_ACT",
+        "7": "RAW_ACT",
+        "8": "RAW_ACT",
+        "9": "RAW_ACT"
+      }
+    },
+    "Q124": {
+      "x_mm": 13.9,
+      "y_mm": 57.37,
+      "rotation_deg": 90.0,
+      "side": "F.Cu",
+      "pads": {
+        "1": "GND",
+        "2": "GND",
+        "3": "GND",
+        "4": "PYRO1_GATE",
+        "5": "PYRO1_OUT"
+      }
+    },
+    "R134": {
+      "x_mm": 16.5,
+      "y_mm": 64.0,
+      "rotation_deg": 0.0,
+      "side": "B.Cu",
+      "pads": {
+        "1": "PYRO1_IGN",
+        "2": "RAW_ACT"
+      }
+    }
+  },
+  "checks_actually_executed": [
+    {
+      "id": "E-S",
+      "check": "Read AGENTS, review packets, REQUIREMENTS, complete R10_DECISIONS and addenda, r10_plan, AVA_LAYOUT, M3_R10, R10_VALIDATION, R9 severity precedents and read-only parent VEHICLE; cross-check current handoff, ORDERING, FMEA, STATUS and ledger.",
+      "result": "All 116 unique decision IDs and 22 owner mandate groups considered under the newest amendments. No peer round 15 report or probe read."
+    },
+    {
+      "id": "E-N",
+      "check": "Fresh read-only KiCad 10.0.6 native PCB versus XML/table/binding, part identities, BOM and CPL.",
+      "result": {
+        "mcu_comparisons": 100,
+        "mcu_issues": [],
+        "xml_native_net_issues": [],
+        "extra_connected_native_pairs": [],
+        "identity_issues": [],
+        "bom_codes": 82,
+        "bom_total_refs": 199,
+        "bom_duplicate_refs": [],
+        "bom_qty_issues": [],
+        "cpl_rows": 199,
+        "cpl_duplicate_refs": [],
+        "required_missing_bom": [],
+        "required_missing_cpl": [],
+        "bom_cpl_difference": [],
+        "binding_regeneration_identical": true,
+        "budget_regeneration_identical": true
+      }
+    },
+    {
+      "id": "E-C",
+      "check": "Thirty explicit native R10 contracts, excluding K-fill and full check.sh; native fit and saved reference/region geometry.",
+      "result": {
+        "pass": true,
+        "rules": [
+          "S-1",
+          "S-2",
+          "S-3",
+          "S-4",
+          "S-5",
+          "S-6",
+          "S-7",
+          "S-8",
+          "S-9",
+          "K-contract",
+          "K-loader",
+          "K-actuators",
+          "LC-1",
+          "M-1",
+          "M-3",
+          "M-5",
+          "M-6",
+          "M-7",
+          "P-11",
+          "F9-1",
+          "F9-2",
+          "T-1",
+          "K-legends",
+          "K-copper",
+          "K-inner",
+          "K-reference",
+          "K-region",
+          "K-rules",
+          "K-width",
+          "K-retained"
+        ],
+        "reference_samples": 159810,
+        "reference_loose": 0,
+        "region_items": 163,
+        "region_samples": 62590,
+        "fit_ok": true
+      },
+      "probe_setup_correction": "Initial fit-check API object lacked SHA metadata; binding it to the freshly hashed same board makes M-5 pass. This was a probe setup error, not a product finding."
+    },
+    {
+      "id": "E-F",
+      "check": "Independent wire-face formula, C88 graph articulation, coupled-source quadratic, 80 divider corners, O6 bound and watchdog/fault/neutral arithmetic.",
+      "result": {
+        "m5_bound_pass": true,
+        "m5_original_probe_fixture": "Initial fit-check API object lacked SHA metadata; binding it to the freshly hashed same board makes M-5 pass. This was a probe setup error, not a product finding.",
+        "c88_removed_reachable_terminals": [],
+        "c88_removed_component": [
+          "U9.5"
+        ],
+        "fire_closed_quadratic": [
+          {
+            "stalls": 0,
+            "loaded_pack_V": 6.899390756727756,
+            "fire_A": 1.5443660716989063,
+            "stored_delta_A": 0.0
+          },
+          {
+            "stalls": 1,
+            "loaded_pack_V": 6.609326364555884,
+            "fire_A": 1.4794377872063396,
+            "stored_delta_A": 0.0
+          },
+          {
+            "stalls": 2,
+            "loaded_pack_V": 6.318164198837923,
+            "fire_A": 1.4142637760577872,
+            "stored_delta_A": 0.0
+          },
+          {
+            "stalls": 3,
+            "loaded_pack_V": 6.025729657046817,
+            "fire_A": 1.348804955060497,
+            "stored_delta_A": 0.0
+          },
+          {
+            "stalls": 4,
+            "loaded_pack_V": 5.7318070272281405,
+            "fire_A": 1.2830130390490941,
+            "stored_delta_A": 0.0
+          }
+        ],
+        "fire_min_A": 1.2830130390490941,
+        "fire_floor_A": 1.125,
+        "divider_cases": 80,
+        "divider_max_V": 3.342170828815256,
+        "one_fault_max_current_8V4_A": 0.001397310177907528,
+        "watchdog_min_ms": 28.57142857142857,
+        "watchdog_max_ms": 32.6530612244898,
+        "fault_ms": 34.8530612244898,
+        "neutral_ms": 48.6530612244898,
+        "postfire_refresh_latest_ms": 25,
+        "wire_room_mm": 5.003011866037409,
+        "wire_margin_mm": 0.053011866037408595,
+        "servo_reference_bound_A": 0.6144,
+        "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783"
+      }
+    },
+    {
+      "id": "E-Q",
+      "check": "Fresh all-net native route/bump scan; 16 paste regressions; two NumPy Plate regressions; exact source/index comparison; fresh primary maker retrieval.",
+      "result": {
+        "route_failures": 0,
+        "route_allowed": 0,
+        "route_stale": 0,
+        "route_instances": 139,
+        "route_category_counts": {
+          "pad_end_offcentre": 57,
+          "segment_inside_pad": 22,
+          "passes_through_pad": 1,
+          "short_segment": 1,
+          "width_change_junction": 11,
+          "short_layer_hop": 3,
+          "u_turn": 6,
+          "extra_bends": 6,
+          "tiny_jog": 6,
+          "power_via_no_gnd": 24,
+          "via_on_track_in_fill": 1,
+          "detour": 1
+        },
+        "bump_windows_searched": 54,
+        "noncritical_locations": [
+          {
+            "cat": "short_segment",
+            "net": "BAT_OVLO",
+            "cls": "other",
+            "layer": "B.Cu",
+            "x": 16.4,
+            "y": 83.0,
+            "len_mm": 0.15,
+            "width": 0.2,
+            "end": [
+              16.4,
+              83.15
+            ]
+          },
+          {
+            "cat": "tiny_jog",
+            "net": "BAT_FAULT_N",
+            "cls": "other",
+            "layer": "B.Cu",
+            "x": 26.0,
+            "y": 47.3,
+            "end": [
+              26.4,
+              51.95
+            ],
+            "seglens": [
+              1.45,
+              0.4,
+              3.2
+            ]
+          },
+          {
+            "cat": "tiny_jog",
+            "net": "BUZZ_DRV",
+            "cls": "other",
+            "layer": "F.Cu",
+            "x": 20.5,
+            "y": 51.8,
+            "end": [
+              20.2,
+              52.1
+            ],
+            "mid_mm": 0.424,
+            "offset_mm": 0.3,
+            "at": "plain/via",
+            "via": true
+          },
+          {
+            "cat": "tiny_jog",
+            "net": "BAT_FAULT_N",
+            "cls": "other",
+            "layer": "B.Cu",
+            "x": 28.2,
+            "y": 47.5,
+            "end": [
+              28.0,
+              47.3
+            ],
+            "mid_mm": 0.283,
+            "offset_mm": 0.2,
+            "at": "via/plain",
+            "via": true
+          },
+          {
+            "cat": "tiny_jog",
+            "net": "I2C1_SDA",
+            "cls": "other",
+            "layer": "B.Cu",
+            "x": 9.97,
+            "y": 51.5,
+            "end": [
+              10.25,
+              51.78
+            ],
+            "mid_mm": 0.396,
+            "offset_mm": 0.28,
+            "at": "via/plain",
+            "via": false
+          },
+          {
+            "cat": "tiny_jog",
+            "net": "BAT_ENABLE",
+            "cls": "other",
+            "layer": "F.Cu",
+            "x": 19.675,
+            "y": 66.0,
+            "end": [
+              19.675,
+              66.4
+            ],
+            "mid_mm": 0.4,
+            "offset_mm": 0.4,
+            "at": "T/via",
+            "via": true
+          },
+          {
+            "cat": "tiny_jog",
+            "net": "BAT_ENABLE",
+            "cls": "other",
+            "layer": "B.Cu",
+            "x": 21.0,
+            "y": 68.6,
+            "end": [
+              21.3,
+              68.9
+            ],
+            "mid_mm": 0.424,
+            "offset_mm": 0.3,
+            "at": "plain/via",
+            "via": true
+          },
+          {
+            "cat": "detour",
+            "net": "USB_ILIM",
+            "cls": "other",
+            "layer": "net",
+            "x": 14.825,
+            "y": 27.2,
+            "pads": 2,
+            "first": "R85.1",
+            "len_mm": 3.33,
+            "mst_mm": 1.05,
+            "ratio": 3.18,
+            "vias": 1,
+            "need": 1
+          }
+        ],
+        "ledger_category_count_match": true,
+        "paste_tests": {
+          "run": 16,
+          "pass": 16
+        },
+        "Plate_tests": {
+          "run": 2,
+          "pass": 2
+        },
+        "decision_count": 116,
+        "missing_decision_ids": [],
+        "extra_decision_ids": [],
+        "owner_count": 22
+      }
+    },
+    {
+      "id": "E-A",
+      "check": "Fresh checksums against the current fabrication manifest, 42-file integration receipt and source catalog.",
+      "result": {
+        "manifest_claims_checked": {
+          "inputs_sha256": 193,
+          "outputs_sha256": 5
+        },
+        "manifest_failures": [],
+        "integration_receipt_generated_files_checked": 42,
+        "integration_receipt_generated_file_failures": [],
+        "note": "Fresh checksum comparisons only; no export/build/gate execution is inferred. Initial probe used wrong root for six tooling inputs; corrected to manifest source semantics."
+      },
+      "source_catalog": {
+        "entries": 96,
+        "matching_current_or_retained_hashes": 86,
+        "explicit_archived_path_hashes": [
+          {
+            "name": "decisions",
+            "path": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+            "hash_matches": false,
+            "scope": "First171320 bytes: exact R12/7355 source snapshot; current source appends D-R13-01..03. Use decisions_R13 for the complete current file."
+          },
+          {
+            "name": "decisions_R13",
+            "path": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+            "hash_matches": false,
+            "scope": "Exact archived R13/f5e4a5a blob; not the successor execution."
+          },
+          {
+            "name": "hotplug_inputs_7355",
+            "path": "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json",
+            "hash_matches": false,
+            "scope": "Historical full R13/7355 snapshot at the recorded path; root regenerated this path for the successor. Exact old hash is preserved in reconciliation_R13 freeze evidence; current bytes use the separate R13_integrated alias."
+          },
+          {
+            "name": "hotplug_results_7355",
+            "path": "m3_design/assembly_review/sources/r10_design/hotplug_results.json",
+            "hash_matches": false,
+            "scope": "Historical full R13/7355 snapshot at the recorded path; root regenerated this path for the successor. Exact old hash is preserved in reconciliation_R13 freeze evidence; current bytes use the separate R13_integrated alias."
+          },
+          {
+            "name": "evidence_note_7355",
+            "path": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+            "hash_matches": false,
+            "scope": "Historical full R13/7355 snapshot at the recorded path; root regenerated this path for the successor. Exact old hash is preserved in reconciliation_R13 freeze evidence; current bytes use the separate R13_integrated alias."
+          },
+          {
+            "name": "hotplug_inputs_R13_integrated",
+            "path": "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json",
+            "hash_matches": false,
+            "scope": "Exact archived R13/f5e4a5a blob; not the successor execution."
+          },
+          {
+            "name": "hotplug_results_R13_integrated",
+            "path": "m3_design/assembly_review/sources/r10_design/hotplug_results.json",
+            "hash_matches": false,
+            "scope": "Exact archived R13/f5e4a5a blob; not the successor execution."
+          },
+          {
+            "name": "evidence_note_R13_integrated",
+            "path": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+            "hash_matches": false,
+            "scope": "Exact archived R13/f5e4a5a blob; not the successor execution."
+          },
+          {
+            "name": "parts_budget_R13",
+            "path": "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+            "hash_matches": false,
+            "scope": "Exact archived R13/f5e4a5a blob; not the successor execution."
+          },
+          {
+            "name": "ledger_R13_archive",
+            "path": "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json",
+            "hash_matches": false,
+            "scope": "Exact prior R13 ledger; all historical scopes preserved."
+          }
+        ]
+      },
+      "limits": "Checksum comparison is not a rebuild, export, DRC/ERC execution or physical inspection."
+    }
+  ],
+  "selected_native_contracts": {
+    "S-1": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "raw_act_reaches_without_r134_r132": [
+          "ACT_DRV",
+          "ACT_EN",
+          "ACT_EN_MCU",
+          "ACT_FET_S",
+          "ACT_GATE",
+          "BAT_DAMP",
+          "BAT_ENABLE",
+          "BAT_IN",
+          "BAT_OVLO",
+          "BAT_SW_RETURN",
+          "BAT_SW_SOURCE",
+          "GND",
+          "RAW_ACT"
+        ],
+        "armed_parts": [
+          "C128",
+          "J121",
+          "Q121",
+          "Q124",
+          "R131",
+          "R132",
+          "R134",
+          "R173",
+          "TP120"
+        ],
+        "raw_act_copper_items": 16
+      }
+    },
+    "S-2": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "Q120": {
+          "S": [
+            "ACT_FET_S"
+          ],
+          "G": [
+            "ACT_GATE"
+          ],
+          "D": [
+            "BAT_IN"
+          ]
+        },
+        "Q121": {
+          "S": [
+            "ACT_FET_S"
+          ],
+          "G": [
+            "ACT_GATE"
+          ],
+          "D": [
+            "RAW_ACT"
+          ]
+        },
+        "pyro_side": [
+          "3V3",
+          "ARM1_SENSE",
+          "ARM1_SENSE_MID",
+          "GND",
+          "PYRO1_COLD",
+          "PYRO1_CONT",
+          "PYRO1_CONT_MID",
+          "PYRO1_GATE",
+          "PYRO1_GATE_N",
+          "PYRO1_IGN",
+          "PYRO1_OUT",
+          "RAW_ACT"
+        ],
+        "named_ties": {
+          "gnd": 11,
+          "supply": [
+            [
+              "D120",
+              "PYRO1_COLD",
+              "3V3"
+            ],
+            [
+              "Q121",
+              "RAW_ACT",
+              "ACT_FET_S"
+            ]
+          ]
+        },
+        "RAW_ACT_copper_items": 16,
+        "PYRO1_IGN_copper_items": 5,
+        "PYRO1_OUT_copper_items": 19
+      }
+    },
+    "S-3": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "Q124": {
+          "gate": "PYRO1_GATE",
+          "source": "GND",
+          "values": {
+            "R128": "10k",
+            "C126": "220nF 25V X7R"
+          },
+          "pull": [
+            "R128"
+          ],
+          "cap": [
+            "C126"
+          ],
+          "series": [
+            [
+              "R126",
+              "PYRO1_GATE_N"
+            ]
+          ],
+          "mcu_pull": {
+            "PYRO1_GATE_N": [
+              "R127"
+            ]
+          }
+        },
+        "Q120": {
+          "gate": "ACT_GATE",
+          "source": "ACT_FET_S",
+          "values": {
+            "R120": "100k",
+            "C120": "1uF 25V X7R 10%"
+          },
+          "pull": [
+            "R120"
+          ],
+          "cap": [
+            "C120"
+          ],
+          "series": [
+            [
+              "R121",
+              "ACT_DRV"
+            ]
+          ]
+        },
+        "Q121": {
+          "gate": "ACT_GATE",
+          "source": "ACT_FET_S",
+          "values": {
+            "R120": "100k",
+            "C120": "1uF 25V X7R 10%"
+          },
+          "pull": [
+            "R120"
+          ],
+          "cap": [
+            "C120"
+          ],
+          "series": [
+            [
+              "R121",
+              "ACT_DRV"
+            ]
+          ]
+        },
+        "load_enable": {
+          "U1.16": "ACT_EN_MCU",
+          "R122.1": "ACT_EN_MCU",
+          "R122.2": "ACT_EN",
+          "R123.1": "ACT_EN",
+          "R123.2": "GND",
+          "Q122.1": "ACT_EN",
+          "Q122.2": "GND",
+          "Q122.3": "ACT_DRV"
+        }
+      }
+    },
+    "S-4": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "required": 199,
+        "safety": [
+          "C120",
+          "C126",
+          "C127",
+          "C128",
+          "C129",
+          "D120",
+          "J121",
+          "J400",
+          "Q120",
+          "Q121",
+          "Q122",
+          "Q124",
+          "R120",
+          "R121",
+          "R122",
+          "R123",
+          "R126",
+          "R127",
+          "R128",
+          "R129",
+          "R130",
+          "R131",
+          "R132",
+          "R133",
+          "R134",
+          "R165",
+          "R173",
+          "R175",
+          "R178",
+          "R180",
+          "R80"
+        ],
+        "schematic": "m3.kicad_sch",
+        "BOM": "m3_design/assembly_review/fab/m3_bom_jlc.csv",
+        "CPL": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+      }
+    },
+    "S-5": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "BAT_SW_SOURCE_copper_items": 6,
+        "BAT_SW_RETURN_copper_items": 4
+      }
+    },
+    "S-6": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "clearance_mm": 0.15,
+        "closest_violation": null
+      }
+    },
+    "S-7": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "pads": {
+          "1": "SERVO1_OUT",
+          "2": "SERVO2_OUT",
+          "3": "SERVO3_OUT",
+          "4": "SERVO4_OUT",
+          "5": "GND"
+        }
+      }
+    },
+    "S-8": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "barrels": 4,
+        "gap_mm": 1.0,
+        "near": {}
+      }
+    },
+    "S-9": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "PYRO1_IGN": {
+          "terminals": [
+            [
+              "R134.1"
+            ],
+            [
+              "J121.2"
+            ]
+          ],
+          "path_segments": 3,
+          "widths_mm": [
+            0.5
+          ],
+          "joined": true,
+          "minimum_mm": 0.5
+        },
+        "PYRO1_OUT": {
+          "terminals": [
+            [
+              "J121.1"
+            ],
+            [
+              "Q124.5"
+            ]
+          ],
+          "path_segments": 3,
+          "widths_mm": [
+            0.5
+          ],
+          "joined": true,
+          "minimum_mm": 0.5
+        },
+        "RAW_ACT": {
+          "terminals": [
+            [
+              "Q121.5",
+              "Q121.6",
+              "Q121.7",
+              "Q121.8",
+              "Q121.9"
+            ],
+            [
+              "R134.2"
+            ]
+          ],
+          "path_segments": 2,
+          "widths_mm": [
+            0.5
+          ],
+          "joined": true,
+          "minimum_mm": 0.5
+        },
+        "ACT_FET_S": {
+          "terminals": [
+            [
+              "Q120.1",
+              "Q120.2",
+              "Q120.3"
+            ],
+            [
+              "Q121.1",
+              "Q121.2",
+              "Q121.3"
+            ]
+          ],
+          "path_segments": 7,
+          "widths_mm": [
+            0.4
+          ],
+          "joined": true,
+          "minimum_mm": 0.5
+        },
+        "BAT_IN": {
+          "terminals": [
+            [
+              "J1.1"
+            ],
+            [
+              "Q120.5",
+              "Q120.6",
+              "Q120.7",
+              "Q120.8",
+              "Q120.9"
+            ]
+          ],
+          "path_segments": 1,
+          "widths_mm": [
+            1.0
+          ],
+          "joined": true,
+          "minimum_mm": 1.0
+        },
+        "narrow_used": [
+          "AONR21357 source bridge bar",
+          "Q120.1 source leg",
+          "Q120.2 source leg",
+          "Q120.3 source leg",
+          "Q121.1 source leg",
+          "Q121.2 source leg",
+          "Q121.3 source leg"
+        ]
+      }
+    },
+    "K-contract": {
+      "ok": true,
+      "issues": [],
+      "evidence": {}
+    },
+    "K-loader": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "PA10": "NC",
+        "PA11": {
+          "net": "USB_DM",
+          "role": "USB_DM (DFU)",
+          "use": "od",
+          "reason": "DFU is the loader interface itself (R8 allowance); members not pinned (USB contract)"
+        },
+        "PA12": {
+          "net": "USB_DP",
+          "role": "USB_DP (DFU)",
+          "use": "od",
+          "reason": "DFU is the loader interface itself (R8 allowance); members not pinned (USB contract)"
+        },
+        "PA15": "NC",
+        "PA2": {
+          "net": "SERVO3_MCU",
+          "role": "USART2_TX",
+          "use": "out",
+          "reason": "USART2_TX drives the servo-3 signal through R152 1k: R8's allowance (frozen 3.2; a servo never sends 0x7F); servo power is off the board (O3), so a byte at most twitches an unpowered or harness-powered servo on the bench (BOOT0 is a bench-only state)"
+        },
+        "PA3": {
+          "net": "SERVO4_MCU",
+          "role": "USART2_RX",
+          "use": "in-pu",
+          "reason": "USART2_RX: an input (AN2606 p. 278 lists both no pull and pull-up), never driven; the line is held by R157 10k and driven only by U1 itself in flight"
+        },
+        "PA4": {
+          "net": "LOGIC_SOURCE_ST",
+          "role": "SPI1_NSS",
+          "use": "in",
+          "reason": "SPI1_NSS: a slave input, no pull (p. 279), never driven; U11 ST with its R91 10k pull-up (R8 pin table) is the only driver"
+        },
+        "PA5": {
+          "net": "BAT_FAULT_N",
+          "role": "SPI1_SCK",
+          "use": "in",
+          "reason": "SPI1_SCK: a slave input, no pull (p. 279), never driven; U9 FLT with its R89 10k pull-up (R8 pin table) is the only driver"
+        },
+        "PA6": {
+          "net": "VLOGIC_SENSE",
+          "role": "SPI1_MISO",
+          "use": "out",
+          "reason": "SPI1_MISO is driven push-pull by the loader into the VLOGIC divider node (R60 100k from VLOGIC, R61 10k to GND, C60 10 nF): the pin current is at most 3.3 V / (10k || 100k) = 0.36 mA (VLOGIC at 0 V, pin high), far below the 20 mA absolute-maximum I/O current (DS12110 Rev 10 Table 22, p. 105); VLOGIC (<= 8.4 V) reaches the pin only through R60 (<= 84 uA into a low pin); the reading is wrong only while in the loader"
+        },
+        "PA7": "NC",
+        "PA8": "NC",
+        "PA9": "NC",
+        "PB10": "NC",
+        "PB11": "NC",
+        "PB14": "NC",
+        "PB15": "NC",
+        "PB6": {
+          "net": "QSPI_NCS",
+          "role": "I2C1_SCL",
+          "use": "od",
+          "reason": "I2C1_SCL open drain, no pull: R8's allowance (frozen 3.5): the R10 10k pull-up keeps the flash deselected; the loader as an I2C slave pulls SCL low only to stretch a clock it receives"
+        },
+        "PB9": {
+          "net": "I2C1_SDA",
+          "role": "I2C1_SDA",
+          "use": "od",
+          "reason": "I2C1_SDA open drain, no pull: R8's allowance (frozen 3.6): the barometer's own I2C data line with its 4.7k pull-up; the loader answers only address 0b1001110x, which the barometer (0x76 / 0x77) does not use"
+        },
+        "PC10": {
+          "net": "SD_SCK",
+          "role": "SPI3_SCK",
+          "use": "in",
+          "reason": "SPI3_SCK is a loader slave input, never driven; J430.5 is the card clock input. PD0 SD_CS has R460 10k to 3V3, keeping the card deselected while all GPIOs are reset inputs"
+        },
+        "PC11": {
+          "net": "SD_MISO",
+          "role": "SPI3_MISO",
+          "use": "out",
+          "reason": "SPI3_MISO is driven by the loader only during a host transfer; PD0 SD_CS is independent of the loader SPI3_NSS PA15 and is held high by R460 10k, so the card data output stays high impedance. R462 draws at most 3.3V/10k=0.33mA if PC11 drives low; bench BOOT0 use only"
+        },
+        "PC12": {
+          "net": "SD_MOSI",
+          "role": "SPI3_MOSI",
+          "use": "in",
+          "reason": "SPI3_MOSI is a loader slave input, never driven; J430.3 is the card command input and R461 10k holds it high while the card stays deselected by SD_CS"
+        },
+        "PC9": "NC",
+        "PE11": {
+          "net": "CAM_PWR_EN",
+          "role": "SPI4_NSS",
+          "use": "in",
+          "reason": "SPI4_NSS: a slave input, no pull (AN2606 p. 280): R431 100k holds U402 EN low, so the camera supply stays off in the loader"
+        },
+        "PE12": {
+          "net": "CAM_FAULT_N",
+          "role": "SPI4_SCK",
+          "use": "in",
+          "reason": "SPI4_SCK: a slave input, no pull (p. 280), never driven; U402 FAULT is open drain (TPS2553 data sheet) with the R432 10k pull-up"
+        },
+        "PE13": "NC",
+        "PE14": "NC",
+        "PF0": "not on this package",
+        "PF1": "not on this package",
+        "PH13": "not on this package",
+        "PH14": "not on this package",
+        "PI0": "not on this package",
+        "PI1": "not on this package",
+        "PI2": "not on this package",
+        "PI3": "not on this package"
+      }
+    },
+    "K-actuators": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "sha256": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0"
+      }
+    },
+    "LC-1": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "overrides": [
+          {
+            "item": "TP80",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP88",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP81",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP83",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP82",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP74",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP122",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP121",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          },
+          {
+            "item": "TP120",
+            "clearance_mm": 1.0,
+            "floor_mm": 1.0
+          }
+        ]
+      }
+    },
+    "M-1": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "outline_mm": [
+          0.0,
+          0.0,
+          46.0,
+          90.0
+        ],
+        "width_mm": 46.0,
+        "length_mm": 90.0
+      }
+    },
+    "M-3": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "support_circles": 5,
+        "servo_plug_tie_holes_required": false
+      }
+    },
+    "M-5": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "width_mm": 46.0,
+        "length_mm": 90.0,
+        "supports": [
+          [
+            3.7,
+            86.0
+          ],
+          [
+            4.0,
+            4.0
+          ],
+          [
+            4.0,
+            44.3
+          ],
+          [
+            42.0,
+            4.0
+          ],
+          [
+            42.0,
+            86.0
+          ]
+        ],
+        "nearest_support": [
+          4.536176804314399,
+          "C32.2",
+          [
+            4.0,
+            44.3
+          ]
+        ],
+        "nearest_top_support": [
+          3.807887,
+          "LED2.2 exposed top pad",
+          [
+            4.0,
+            44.3
+          ]
+        ]
+      }
+    },
+    "M-6": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "supports": [
+          [
+            3.7,
+            86.0
+          ],
+          [
+            4.0,
+            4.0
+          ],
+          [
+            4.0,
+            44.3
+          ],
+          [
+            42.0,
+            4.0
+          ],
+          [
+            42.0,
+            86.0
+          ]
+        ]
+      }
+    },
+    "M-7": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "imu_rotation": {
+          "revision": "M3-ASSY-R10",
+          "required": 180.0,
+          "axis_map": "R9 D-S7-06 axis map: roll = -gyro_Y"
+        },
+        "imu_lever_arm_mm": 6.0,
+        "U4": {
+          "body": [
+            15.355,
+            44.505,
+            18.645,
+            47.295
+          ],
+          "interior": [
+            16.078,
+            45.227,
+            17.922,
+            46.572
+          ]
+        },
+        "U5": {
+          "body": [
+            8.055,
+            47.005,
+            13.145,
+            51.195
+          ],
+          "interior": [
+            9.02,
+            48.55,
+            12.18,
+            49.65
+          ]
+        },
+        "imu_lever_arm_signed_mm": -6.0,
+        "imu_pad1_offset_mm": [
+          1.21,
+          -0.75
+        ],
+        "board_axis_map": {
+          "side": "bottom",
+          "rotation": 180.0,
+          "map": "R9 D-S7-06 axis map: +X_imu = -x_board, +Y_imu = -y_board; roll = -gyro_Y"
+        }
+      }
+    },
+    "P-11": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "J1": {
+          "entry": "-x",
+          "wire_room_mm": 5.003,
+          "r8_floor_mm": 6.25,
+          "r10_accepted_floor_mm": 4.95,
+          "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+        },
+        "J121": {
+          "entry": "-x",
+          "wire_room_mm": 5.003,
+          "r8_floor_mm": 6.25,
+          "r10_accepted_floor_mm": 4.95,
+          "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+        },
+        "J400": {
+          "entry": "-x",
+          "wire_room_mm": 5.003,
+          "r8_floor_mm": 6.25,
+          "r10_accepted_floor_mm": 4.95,
+          "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+        },
+        "J410": {
+          "entry": "+x",
+          "wire_room_mm": 5.003,
+          "r8_floor_mm": 6.25,
+          "r10_accepted_floor_mm": 4.95,
+          "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+        },
+        "J420": {
+          "entry": "+x",
+          "wire_room_mm": 5.003,
+          "r8_floor_mm": 6.25,
+          "r10_accepted_floor_mm": 4.95,
+          "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+        },
+        "J9": {
+          "entry": "+x",
+          "wire_room_mm": 5.003,
+          "r8_floor_mm": 6.25,
+          "r10_accepted_floor_mm": 4.95,
+          "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+        },
+        "J122": {
+          "entry": "+x",
+          "wire_room_mm": 5.003,
+          "r8_floor_mm": 6.25,
+          "r10_accepted_floor_mm": 4.95,
+          "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+        }
+      }
+    },
+    "F9-1": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "board_sha256": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+        "electrical_sha256": "e4f13accbe3011affc9e9f748c0f72c48eb4f444536248a25903b8c6a0a25ed3",
+        "model_sha256": "a7079e1a3ce189031ab28f8538a8c02b4bd8adcdf4cfc45877a0405935656883",
+        "qualification": "pass",
+        "limits": {
+          "minimum_V": -15.0,
+          "maximum_V": 28.0,
+          "falling_V_per_us": 10.0,
+          "rising_V_per_us": 100.0
+        },
+        "convergence": {
+          "step_scale": 0.5,
+          "rows": [
+            {
+              "corner": {
+                "lh_uH": 2.0,
+                "rh_ohm": 0.03,
+                "bulk": "high",
+                "damper": "low",
+                "bypass": "high",
+                "vbr_V": 15.6,
+                "reference": "gnd",
+                "rdamp_ohm": 0.3378672,
+                "copper_r_scale": 0.75
+              },
+              "minimum_V": -14.807371821838256,
+              "maximum_V": 2.0,
+              "falling_V_per_us": 1.33379516817822,
+              "rising_V_per_us": 0.7514522440320803,
+              "falling_peak_us": 12.51050000000135,
+              "falling_peak_voltage_V": -7.83137185230593,
+              "damper_peak_W": 207.64276036423405,
+              "damper_energy_J": 0.0022150295766594956
+            },
+            {
+              "corner": {
+                "lh_uH": 0.1,
+                "rh_ohm": 0.03,
+                "bulk": "low",
+                "damper": "low",
+                "bypass": "low",
+                "vbr_V": 12.4,
+                "reference": "near",
+                "rdamp_ohm": 0.3378672,
+                "copper_r_scale": 0.75
+              },
+              "minimum_V": -13.246410232715347,
+              "maximum_V": 2.0,
+              "falling_V_per_us": 8.494914701849153,
+              "rising_V_per_us": 4.169275538149719,
+              "falling_peak_us": 2.2855000000001313,
+              "falling_peak_voltage_V": -8.679043244818356,
+              "damper_peak_W": 539.9969597900987,
+              "damper_energy_J": 0.0017370529701768245
+            },
+            {
+              "corner": {
+                "lh_uH": 0.1,
+                "rh_ohm": 0.03,
+                "bulk": "low",
+                "damper": "low",
+                "bypass": "low",
+                "vbr_V": 12.4,
+                "reference": "gnd",
+                "rdamp_ohm": 0.3825072,
+                "copper_r_scale": 0.75
+              },
+              "minimum_V": -13.60649565671625,
+              "maximum_V": 2.0,
+              "falling_V_per_us": 8.990752844734827,
+              "rising_V_per_us": 4.415782661203238,
+              "falling_peak_us": 2.26650000000013,
+              "falling_peak_voltage_V": -8.774337487463198,
+              "damper_peak_W": 515.1409213312938,
+              "damper_energy_J": 0.001747956806769483
+            },
+            {
+              "corner": {
+                "lh_uH": 0.1,
+                "rh_ohm": 0.03,
+                "bulk": "low",
+                "damper": "low",
+                "bypass": "low",
+                "vbr_V": 15.6,
+                "reference": "gnd",
+                "rdamp_ohm": 0.3825072,
+                "copper_r_scale": 0.75
+              },
+              "minimum_V": -13.98016708864968,
+              "maximum_V": 2.0,
+              "falling_V_per_us": 8.990752844734827,
+              "rising_V_per_us": 5.091052576178257,
+              "falling_peak_us": 2.26650000000013,
+              "falling_peak_voltage_V": -8.774337487463198,
+              "damper_peak_W": 536.9692353458656,
+              "damper_energy_J": 0.0017644219864600902
+            }
+          ],
+          "max_abs_delta": {
+            "minimum_V": 3.4453867382211456e-05,
+            "maximum_V": 0.0,
+            "falling_V_per_us": 0.0007242633062194415,
+            "rising_V_per_us": 0.0005811151160273198
+          },
+          "limits": {
+            "minimum_V": 0.002,
+            "maximum_V": 0.002,
+            "falling_V_per_us": 0.01,
+            "rising_V_per_us": 0.01
+          }
+        },
+        "inference": "Maker curves are typical; temperature/bias combination and PCB parasitics estimated. Bench qualification outstanding.",
+        "owner_decision": "OQ-2, 2026-10-28"
+      }
+    },
+    "F9-2": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "bounds_mm": {
+          "C82": [
+            4.0,
+            10.0,
+            13.5
+          ],
+          "D9": [
+            7.0,
+            10.5,
+            17.0
+          ]
+        },
+        "out_detour_ratio_max": 1.25,
+        "ground_grid_mm": 0.05,
+        "basis": "GAP-2 engineering local-copper bounds; physical qualification pending",
+        "area_method": "projected OUT/GND paths joined through component pad centres; 0.05mm GND raster, not inductance",
+        "C82": {
+          "out_route_mm": 3.5778174593052023,
+          "out_endpoints": [
+            "U9.6",
+            "C82.1"
+          ],
+          "out_layer": "B.Cu",
+          "out_path": {
+            "distance_mm": 3.5778174593052023,
+            "path_mm": [
+              [
+                18.75,
+                81.6
+              ],
+              [
+                18.75,
+                79.8
+              ],
+              [
+                19.3,
+                79.25
+              ],
+              [
+                19.3,
+                78.25
+              ]
+            ]
+          },
+          "out_octilinear_mm": 3.577817459305197,
+          "out_detour_ratio": 1.0000000000000016,
+          "local_ground_route_mm": 9.426345596729048,
+          "ground_path": {
+            "distance_mm": 9.426345596729048,
+            "path_mm": [
+              [
+                "B.Cu",
+                20.425,
+                75.725
+              ],
+              [
+                "B.Cu",
+                20.425,
+                75.825
+              ],
+              [
+                "B.Cu",
+                20.475,
+                75.875
+              ],
+              [
+                "B.Cu",
+                20.475,
+                76.175
+              ],
+              [
+                "B.Cu",
+                20.625,
+                76.325
+              ],
+              [
+                "In1.Cu",
+                20.625,
+                76.325
+              ],
+              [
+                "In1.Cu",
+                20.625,
+                78.125
+              ],
+              [
+                "In1.Cu",
+                19.925,
+                78.825
+              ],
+              [
+                "In1.Cu",
+                19.925,
+                78.875
+              ],
+              [
+                "In1.Cu",
+                19.875,
+                78.925
+              ],
+              [
+                "In1.Cu",
+                19.875,
+                80.975
+              ],
+              [
+                "In1.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.175
+              ],
+              [
+                "B.Cu",
+                19.875,
+                81.275
+              ],
+              [
+                "B.Cu",
+                19.675,
+                81.275
+              ]
+            ],
+            "layers": [
+              "B.Cu",
+              "In1.Cu"
+            ],
+            "endpoints": [
+              "C82.2",
+              "U9.8"
+            ]
+          },
+          "loop_mm": 13.004163056034251,
+          "projected_loop_area_mm2": 6.591562500000009
+        },
+        "D9": {
+          "out_route_mm": 6.5855339059327385,
+          "out_endpoints": [
+            "U9.6",
+            "D9.1"
+          ],
+          "out_layer": "B.Cu",
+          "out_path": {
+            "distance_mm": 6.5855339059327385,
+            "path_mm": [
+              [
+                18.75,
+                81.6
+              ],
+              [
+                18.75,
+                79.8
+              ],
+              [
+                16.25,
+                77.3
+              ],
+              [
+                15.0,
+                77.3
+              ]
+            ]
+          },
+          "out_octilinear_mm": 5.853300858899104,
+          "out_detour_ratio": 1.125097456065389,
+          "local_ground_route_mm": 8.176345596729053,
+          "ground_path": {
+            "distance_mm": 8.176345596729053,
+            "path_mm": [
+              [
+                "B.Cu",
+                15.875,
+                80.225
+              ],
+              [
+                "B.Cu",
+                16.725,
+                80.225
+              ],
+              [
+                "B.Cu",
+                16.825,
+                80.125
+              ],
+              [
+                "B.Cu",
+                17.225,
+                80.125
+              ],
+              [
+                "In1.Cu",
+                17.225,
+                80.125
+              ],
+              [
+                "In1.Cu",
+                19.025,
+                80.125
+              ],
+              [
+                "In1.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.175
+              ],
+              [
+                "B.Cu",
+                19.875,
+                81.275
+              ],
+              [
+                "B.Cu",
+                19.675,
+                81.275
+              ]
+            ],
+            "layers": [
+              "B.Cu",
+              "In1.Cu"
+            ],
+            "endpoints": [
+              "D9.2",
+              "U9.8"
+            ]
+          },
+          "loop_mm": 14.761879502661792,
+          "projected_loop_area_mm2": 7.012187499999868
+        }
+      }
+    },
+    "T-1": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "windows": {
+          "west": [
+            [
+              0.5,
+              23.25
+            ],
+            [
+              43.0,
+              89.5
+            ]
+          ],
+          "east": [
+            [
+              0.5,
+              89.5
+            ]
+          ],
+          "aft": [
+            [
+              0.5,
+              7.0
+            ],
+            [
+              37.0,
+              45.5
+            ]
+          ],
+          "forward": [
+            [
+              0.5,
+              6.75
+            ],
+            [
+              32.75,
+              45.5
+            ]
+          ]
+        },
+        "rule": "R10_DECISIONS D-R2-13"
+      }
+    },
+    "K-legends": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "terminal_legends": {
+          "2:GND (2.937, 79.552)": [
+            "J1.2",
+            1.952
+          ],
+          "1:BAT+ (3.232, 70.552)": [
+            "J1.1",
+            1.852
+          ],
+          "2:E1+ (6.213, 59.552)": [
+            "J121.2",
+            1.952
+          ],
+          "3:S3 (30.908, 70.152)": [
+            "J122.3",
+            4.108
+          ],
+          "4:RXI (34.846, 6.702)": [
+            "J410.4",
+            1.852
+          ],
+          "5:GND (34.637, 60.952)": [
+            "J122.5",
+            1.852
+          ],
+          "1:5V4 (39.480, 54.702)": [
+            "J9.1",
+            2.141
+          ],
+          "1:SW (2.052, 61.413)": [
+            "J400.1",
+            3.652
+          ],
+          "2:SW (2.052, 65.613)": [
+            "J400.2",
+            3.652
+          ],
+          "1:E1- (7.952, 47.413)": [
+            "J121.1",
+            1.991
+          ],
+          "1:S1 (37.252, 80.408)": [
+            "J122.1",
+            1.908
+          ],
+          "1:4V8 (42.352, 18.830)": [
+            "J410.1",
+            3.752
+          ],
+          "4:RXI (42.352, 23.396)": [
+            "J420.4",
+            3.752
+          ],
+          "4:TXO (42.352, 38.330)": [
+            "J9.4",
+            3.752
+          ],
+          "1:4V8 (43.752, 35.130)": [
+            "J420.1",
+            5.152
+          ],
+          "2:S2 (39.508, 73.652)": [
+            "J122.2",
+            0.908
+          ],
+          "3:RXI (39.446, 44.402)": [
+            "J9.3",
+            0.846
+          ],
+          "3:TXO (39.480, 12.402)": [
+            "J410.3",
+            0.88
+          ],
+          "3:TXO (39.480, 28.402)": [
+            "J420.3",
+            0.88
+          ],
+          "2:GND (39.537, 15.902)": [
+            "J410.2",
+            0.937
+          ],
+          "2:GND (39.537, 31.902)": [
+            "J420.2",
+            0.937
+          ],
+          "2:GND (39.537, 47.902)": [
+            "J9.2",
+            0.937
+          ],
+          "4:S4 (39.552, 65.408)": [
+            "J122.4",
+            0.952
+          ]
+        },
+        "silk_mask_overlaps": 0,
+        "aud10_review": [],
+        "aud10_review_count": 0,
+        "hidden": [
+          "C10",
+          "C100",
+          "C11",
+          "C126",
+          "C127",
+          "C129",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C19",
+          "C20",
+          "C21",
+          "C22",
+          "C23",
+          "C24",
+          "C25",
+          "C26",
+          "C30",
+          "C31",
+          "C32",
+          "C410",
+          "C411",
+          "C421",
+          "C6",
+          "C7",
+          "C81",
+          "C82",
+          "C85",
+          "C88",
+          "C92",
+          "C99",
+          "D121",
+          "D400",
+          "D401",
+          "D410",
+          "D420",
+          "D421",
+          "LED1",
+          "Q122",
+          "Q123",
+          "R10",
+          "R100",
+          "R101",
+          "R103",
+          "R104",
+          "R105",
+          "R120",
+          "R121",
+          "R122",
+          "R126",
+          "R127",
+          "R128",
+          "R129",
+          "R13",
+          "R130",
+          "R132",
+          "R133",
+          "R151",
+          "R152",
+          "R155",
+          "R162",
+          "R163",
+          "R164",
+          "R173",
+          "R175",
+          "R178",
+          "R180",
+          "R32",
+          "R403",
+          "R405",
+          "R432",
+          "R441",
+          "R450",
+          "R451",
+          "R5",
+          "R62",
+          "R63",
+          "R64",
+          "R87",
+          "R9",
+          "TP120",
+          "TP122",
+          "TP82",
+          "U11",
+          "U12",
+          "U2",
+          "U4",
+          "U402",
+          "U5",
+          "U9"
+        ],
+        "hidden_count": 91
+      }
+    },
+    "K-copper": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "smd_pads_checked_for_via_holes": 613,
+        "track_endpoints_checked": 1914,
+        "small_ground_pads": 78,
+        "via_paste": {
+          "pairs_checked": 768,
+          "nearest_ring_mm": [
+            0.014,
+            "via (11.95, 30.6) (VBUS) and D4.5's paste (F)"
+          ]
+        },
+        "gap3": {
+          "centres_mm": [
+            [
+              27.900000000000002,
+              13.6
+            ],
+            [
+              27.3,
+              13.6
+            ]
+          ],
+          "local_centres_mm": [
+            [
+              -0.3,
+              0.0
+            ],
+            [
+              0.3,
+              0.0
+            ]
+          ],
+          "qualified": 2,
+          "local_exposed_pad_mm": [
+            -0.599999999999998,
+            -1.0,
+            0.6000000000000015,
+            1.0
+          ],
+          "local_paste_windows_mm": [
+            [
+              -0.5649999999999978,
+              -1.0,
+              0.5650000000000013,
+              -0.11000000000000114
+            ],
+            [
+              -0.5649999999999977,
+              0.10999999999999936,
+              0.5650000000000014,
+              1.0
+            ]
+          ],
+          "manufacturing_condition": "resin-filled, copper-capped, planar VIPPO; physical fabrication unverified"
+        }
+      }
+    },
+    "K-inner": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "length_mm": {},
+        "other_inner_copper_items": 9
+      }
+    },
+    "K-reference": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "samples": 159810,
+        "unreferenced": 10051,
+        "inside_own_antipad": 10045,
+        "recorded_stray": 5,
+        "loose": 0,
+        "b_cu_planes": [
+          "GND",
+          "3V3",
+          "3V3A",
+          "PORT_5V3",
+          "PORT_4V8",
+          "RAW_PROTECTED"
+        ],
+        "by_net_layer": {
+          "SPI1_MISO B.Cu": {
+            "samples": 2,
+            "box": [
+              17.79,
+              43.88,
+              17.8,
+              43.89
+            ]
+          },
+          "SPI1_MISO F.Cu": {
+            "samples": 1,
+            "box": [
+              17.3,
+              43.89,
+              17.3,
+              43.89
+            ]
+          },
+          "SPI1_SCK B.Cu": {
+            "samples": 3,
+            "box": [
+              17.1,
+              43.4,
+              17.1,
+              43.42
+            ]
+          }
+        }
+      }
+    },
+    "K-region": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "items": 163,
+        "samples": 62590,
+        "nets": [
+          "CAM_MCU_RX",
+          "CAM_MCU_TX",
+          "CAM_RX_BUFFER",
+          "CAM_RX_WIRE",
+          "CAM_TX_BUFFER",
+          "CAM_TX_WIRE",
+          "GPS_RX_MCU",
+          "GPS_RX_WIRE",
+          "GPS_TX_MCU",
+          "GPS_TX_WIRE",
+          "HSE_IN",
+          "HSE_OUT",
+          "IMU_CS",
+          "PYRO1_COLD",
+          "PYRO1_GATE",
+          "PYRO1_GATE_N",
+          "PYRO1_IGN",
+          "PYRO1_OUT",
+          "QSPI_CLK",
+          "QSPI_IO0",
+          "QSPI_IO1",
+          "QSPI_IO2",
+          "QSPI_IO3",
+          "QSPI_NCS",
+          "RADIO_RX_MCU",
+          "RADIO_RX_WIRE",
+          "RADIO_TX_MCU",
+          "RADIO_TX_WIRE",
+          "SD_CS",
+          "SD_DAT1",
+          "SD_DAT2",
+          "SD_MISO",
+          "SD_MOSI",
+          "SD_SCK",
+          "SPI1_MISO",
+          "SPI1_MOSI",
+          "SPI1_SCK",
+          "USB_DM",
+          "USB_DP"
+        ]
+      }
+    },
+    "K-rules": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "dru_sha256": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+        "dru_sha256_expected": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+        "pro_rules": {
+          "min_clearance": 0.15,
+          "min_track_width": 0.15,
+          "min_via_diameter": 0.5,
+          "min_via_annular_width": 0.1,
+          "min_through_hole_diameter": 0.3,
+          "min_hole_clearance": 0.2,
+          "min_hole_to_hole": 0.25,
+          "min_copper_edge_clearance": 0.5,
+          "min_microvia_diameter": 0.2,
+          "min_microvia_drill": 0.1
+        },
+        "netclass_clearance": {
+          "Default": 0.15
+        },
+        "ignored_severities": []
+      }
+    },
+    "K-width": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "resistor_only_taps": {
+          "R80.1": {
+            "net": "BAT_IN",
+            "segments": 4,
+            "length_mm": 10.394,
+            "minimum_mm": 0.15
+          },
+          "R92.1": {
+            "net": "RAW_PROTECTED",
+            "segments": 1,
+            "length_mm": 1.0,
+            "minimum_mm": 0.15
+          }
+        },
+        "BAT_IN": {
+          "tracks": 28,
+          "min_width_mm": 0.2,
+          "longest_narrow_run_mm": 1.8
+        },
+        "RAW_PROTECTED": {
+          "tracks": 18,
+          "min_width_mm": 0.3,
+          "longest_narrow_run_mm": 1.8
+        }
+      }
+    },
+    "K-retained": {
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "camera_bypass": {
+          "C100": {
+            "supply_pin": "U12.3",
+            "pad_distance_mm": 1.1999999999999993,
+            "direct_copper_route_mm": 1.1999999999999993,
+            "direct_ground_return_mm": 1.373969696196701
+          },
+          "C93": {
+            "supply_pin": "U12.7",
+            "pad_distance_mm": 0.25,
+            "direct_copper_route_mm": 3.7499999999999916
+          }
+        },
+        "microSD_bypass": {
+          "C460": {
+            "vdd_pad_distance_mm": 2.680018656651479,
+            "maximum_mm": 3.0
+          },
+          "C461": {
+            "vdd_pad_distance_mm": 5.057571057335725,
+            "maximum_mm": 6.0
+          }
+        },
+        "flash": {
+          "pad_distance_mm": 1.87,
+          "direct_route_mm": 1.870000000000001
+        }
+      }
+    }
+  },
+  "agent_decision_coverage": [
+    {
+      "id": "D-R1-01",
+      "title": "Review the plan before changing CAD",
+      "source_line": 6,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R1-02",
+      "title": "O1 needs a voltage decision",
+      "source_line": 17,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R1-03",
+      "title": "Separate camera and radio voltage budgets",
+      "source_line": 34,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R1-04",
+      "title": "Review concurrency limit",
+      "source_line": 53,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R1-05",
+      "title": "Baseline environment",
+      "source_line": 61,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R1-06",
+      "title": "Close round 1 at the owner-decision boundary",
+      "source_line": 70,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R1-07",
+      "title": "Implement O5 and O6",
+      "source_line": 92,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-01",
+      "title": "Placement legalised by moves, not rebuilt",
+      "source_line": 116,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R2-02",
+      "title": "Pyro channel and USB / SWD routing redrawn from the pads",
+      "source_line": 127,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-03",
+      "title": "Port supply re-planned for routability",
+      "source_line": 136,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-04",
+      "title": "Hand-routing kept for critical nets (owner, 2026-10-26)",
+      "source_line": 153,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-05",
+      "title": "U9 cell moved; In2 split into four rails",
+      "source_line": 159,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R2-06",
+      "title": "Rail fan-out finished; radio UART on UART5 (PB12 / PB13)",
+      "source_line": 195,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-07",
+      "title": "Signal routing: pin re-map, re-placements, hand-routed escapes and a frozen router table",
+      "source_line": 225,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-08",
+      "title": "Owner: hand-route every signal (2026-10-27)",
+      "source_line": 276,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R2-09",
+      "title": "Placement relieved south and east of U1; three status pins re-mapped",
+      "source_line": 284,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-10",
+      "title": "K-reference re-derived on R10's planes; via inner pads removed",
+      "source_line": 338,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-11",
+      "title": "Copper fixes for K-copper, K-retained and schematic parity",
+      "source_line": 359,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-12",
+      "title": "Placement relief for the supports, J122's pins and the tie channel",
+      "source_line": 377,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-13",
+      "title": "T-1 re-derived for R10",
+      "source_line": 392,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-14",
+      "title": "P-11 and F9-1: owner questions, R10 figures held meanwhile",
+      "source_line": 402,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R2-15",
+      "title": "Build and fab scripts",
+      "source_line": 413,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R2-16",
+      "title": "Silkscreen",
+      "source_line": 421,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-01",
+      "title": "R410 (GPS ILIM) stays 100 kΩ; the port budget re-derived on it",
+      "source_line": 435,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R3-02",
+      "title": "In2 is GND under the CH1 pyro column (R3-SAF-01)",
+      "source_line": 445,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-03",
+      "title": "U9's power path widened (R3-PWR-01)",
+      "source_line": 456,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-04",
+      "title": "In2 regions re-cut for the port control nets (R3-RTE-01, R3-PWR-04)",
+      "source_line": 465,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R3-05",
+      "title": "Buck input loop (R3-PWR-05)",
+      "source_line": 475,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R3-06",
+      "title": "Crystal In2 GND restored (R3-RTE-02)",
+      "source_line": 480,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R3-07",
+      "title": "Camera supply vias, ACT_GATE partner, J122 relief",
+      "source_line": 486,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-08",
+      "title": "GND stitching (R3-RTE-05)",
+      "source_line": 493,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-09",
+      "title": "Port-signal layer changes and hops (R3-RTE-01, -03, -04, -06, -07)",
+      "source_line": 499,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-10",
+      "title": "Gates",
+      "source_line": 508,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-11",
+      "title": "Silkscreen and footprint graphics",
+      "source_line": 523,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R3-12",
+      "title": "R162 1 kΩ (PC14's 3 mA)",
+      "source_line": 534,
+      "current_scope": "current_resistor_with_corrected_evidence",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R3-13",
+      "title": "Records",
+      "source_line": 541,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R4-01",
+      "title": "In2 under the CH1 sense runs re-cut to one region (R4-RTE-01)",
+      "source_line": 561,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R4-02",
+      "title": "Pad entries straightened (R4-RTE-05)",
+      "source_line": 576,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R4-03",
+      "title": "Gates (R4-RTE-01/-02, R4-GATE-01 … -06, R4-SAF-01/-02, R4-MEC-05)",
+      "source_line": 586,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R4-04",
+      "title": "Records (R4-REQ-01 … -06, R4-MEC-01 … -04, R4-PWR-01/-02, R4-BOM-01 … -03, R4-MCU-01 … -04, R4-DOC-*)",
+      "source_line": 609,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R5-01",
+      "title": "In2 edges re-cut for pads, margins and chains (R5-RTE-01 / -02 / -06)",
+      "source_line": 628,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R5-02",
+      "title": "Pad entries, stubs and silkscreen edge margin (R5-RTE-03 / -04 / -07, R5-MFG-02)",
+      "source_line": 641,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R5-03",
+      "title": "Gates (R5-RTE-01 / -02 / -05 / -06, R5-SAF-01 / -02, R5-GATE-01 … -03)",
+      "source_line": 655,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R5-04",
+      "title": "Records (R5-MFG-01, R5-REQ-01 … -04, R5-PWR-01 … -04, R5-MCU-01 … -05, R5-MEC-01 … -05, R5-DOC-01 / -02)",
+      "source_line": 672,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R6-01",
+      "title": "CH1 In2 GND arms widened round the sense vias (R6-RTE-01)",
+      "source_line": 690,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R6-02",
+      "title": "Gates and the fit tool (R6-RTE-02, R6-SAF-01 / -02, R6-GATE-01 … -08, R6-MEC-04 / -05)",
+      "source_line": 700,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R6-03",
+      "title": "Records (R6-MEC-01 … -06, R6-REQ-01 … -08, R6-PWR-01 … -03, R6-MCU-01 … -05, R6-SAF-03 / -04, R6-MFG-02, R6-RTE-03)",
+      "source_line": 715,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R7-01",
+      "title": "Gates (R7-GATE-01 … -04, R7-SAF-01 / -02)",
+      "source_line": 735,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R7-02",
+      "title": "Records (R7-REQ-01 / -02, R7-PWR-02, R7-SAF-03, R7-MCU-01 … -04, R7-MEC-01 … -07, R7-MFG-01 … -04, R7-BOM-03, R7-DOC-01 / -02)",
+      "source_line": 745,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R8-01",
+      "title": "Copper clean-ups (R7-RTE-01 / -02 / -03, R8-RTE-03)",
+      "source_line": 764,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-R8-02",
+      "title": "Gates (R8-GATE-01 … -05)",
+      "source_line": 773,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R8-03",
+      "title": "Records (R8-MEC-01, R8-MFG-01 / -02 / -03, R8-REQ-01 … -04, R8-SAF-01, R8-MCU-01 / -02, R8-MEC-02 … -05, R8-RTE-01 / -02, R8-DOC-01 / -02)",
+      "source_line": 783,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-OA-01",
+      "title": "Harness, fit and assembly records (OQ-1 / -4 / -6 / -7)",
+      "source_line": 840,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-OA-02",
+      "title": "Firmware shedding and thermal estimate (OQ-5 / R9-PWR-01)",
+      "source_line": 853,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-OA-03",
+      "title": "Historical routing aids",
+      "source_line": 865,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-OA-04",
+      "title": "OQ-2 failure confirmation",
+      "source_line": 871,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-OA-05",
+      "title": "Retained U9 output voltage",
+      "source_line": 879,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-OA-06",
+      "title": "Input feed and damper requalification",
+      "source_line": 896,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-OA-07",
+      "title": "C88 intercepts the feed; local copper remains in the model",
+      "source_line": 916,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-OA-08",
+      "title": "Record corrections before the fresh full round 9",
+      "source_line": 940,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-OA-09",
+      "title": "Complete the interrupted pass before audit implementation",
+      "source_line": 956,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-SS-01",
+      "title": "Implement the two independent MCU controls in the recorded decision",
+      "source_line": 1046,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-SS-02",
+      "title": "One named post-switch net and a shorter fire path",
+      "source_line": 1065,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-SS-03",
+      "title": "Keep required assembly references visible",
+      "source_line": 1075,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-AUD-01",
+      "title": "Size the surviving IO-LDO capacitor for its electrical load",
+      "source_line": 1092,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-02",
+      "title": "Keep fast returns constrained; simplify slow returns by explicit name",
+      "source_line": 1101,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-03",
+      "title": "Use a qualified smaller post-switch pair",
+      "source_line": 1111,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-04",
+      "title": "Delete the advisory pull-pin as a complete function",
+      "source_line": 1126,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-05",
+      "title": "Remove redundant probe branches",
+      "source_line": 1134,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-06",
+      "title": "Size fire-only copper for bounded pulse energy",
+      "source_line": 1141,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-AUD-07",
+      "title": "Use ordinary digital pull-ups and fault-rated servo resistors",
+      "source_line": 1150,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-AUD-08",
+      "title": "Share 3V3 for GPS / radio UART IO; retain local bypasses",
+      "source_line": 1158,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-AUD-09",
+      "title": "Keep USB-only programming and log download",
+      "source_line": 1168,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-10",
+      "title": "Report harmless drawing artifacts without blocking the electrical gate",
+      "source_line": 1174,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-GAP-01",
+      "title": "Superpose all pack loads at the fire instant",
+      "source_line": 1183,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-GAP-02",
+      "title": "Make U9's output-protection loop local",
+      "source_line": 1194,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-GAP-03",
+      "title": "Add two explicitly manufactured U401 thermal vias",
+      "source_line": 1202,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-GAP-04",
+      "title": "Fit C84 after all reflow",
+      "source_line": 1213,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-GAP-05",
+      "title": "One physical-current duration contract",
+      "source_line": 1223,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-03a",
+      "title": "Correct the retained gate-slew capacitor's voltage rating",
+      "source_line": 1250,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AUD-03b",
+      "title": "Verify new assembly orientation against the supplier",
+      "source_line": 1263,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-SS-04",
+      "title": "Recalculate passive cold readings before enabling the merged bus",
+      "source_line": 1271,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-GAP-01a",
+      "title": "Final track-based conservative fire envelope",
+      "source_line": 1283,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-GAP-02a",
+      "title": "Reject the nearer diode position on measured clearance",
+      "source_line": 1298,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-AUD-03c",
+      "title": "Match orientation by distinct fingers, not an arbitrary EP anchor",
+      "source_line": 1306,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-GAP-02b",
+      "title": "Freeze the actual output and return paths",
+      "source_line": 1322,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-AUD-01a",
+      "title": "Keep one assembly land per supplier code",
+      "source_line": 1335,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R9-01",
+      "title": "Complete existing capacitor labels and use the current fault-delay bound",
+      "source_line": 1363,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R9-02",
+      "title": "Put the cold screen before enabling the bus",
+      "source_line": 1379,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R9-03",
+      "title": "Reject unmeasured gate exceptions and select R10 procurement explicitly",
+      "source_line": 1398,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R9-04",
+      "title": "Remove demonstrated detours and align three supply entries",
+      "source_line": 1414,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-R9-05",
+      "title": "Include both transverse sled tolerances",
+      "source_line": 1431,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R9-06",
+      "title": "Cover the Minor fix pass in the fresh round 10",
+      "source_line": 1446,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R10-01",
+      "title": "Close two representation gaps without changing CAD",
+      "source_line": 1470,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R10-02",
+      "title": "Correct PA6 limits and preserve the barometer coating exclusion",
+      "source_line": 1480,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R10-03",
+      "title": "Freeze the reviewed board and finish the complete acceptance inventory",
+      "source_line": 1495,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-CIR-01",
+      "title": "Select the real e-match before choosing the all-fire margin",
+      "source_line": 1610,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-CIR-02",
+      "title": "Switched camera pad energy",
+      "source_line": 1624,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-CIR-03",
+      "title": "Circuit-pass placement and routing (minimum for a connected DRC-clean board)",
+      "source_line": 1635,
+      "current_scope": "superseded",
+      "review_assessment": "Read the original and later amendments. Removed parts, coordinates and premises are superseded. Fresh native connector, removal, MCU and population comparisons test the current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-B"
+      ]
+    },
+    {
+      "id": "D-CIR-04",
+      "title": "Gate fixes",
+      "source_line": 1661,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-AVA-01",
+      "title": "AVA terminal rows and local cells (2026-10-29; CAD layout complete)",
+      "source_line": 1683,
+      "current_scope": "owner_amended",
+      "review_assessment": "Apply surviving constraints after single-switch, AUD/GAP, always-on ports/SD, all-terminal and audit 2 amendments. Fresh native contracts, connectivity, fit and calculations test that scope; physical and firmware obligations remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q"
+      ]
+    },
+    {
+      "id": "D-AVA-02",
+      "title": "Gates and reproducibility support",
+      "source_line": 1737,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R11-01",
+      "title": "Maximum DB125 envelopes and row clearance (2026-10-29)",
+      "source_line": 1747,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R11-02",
+      "title": "Close the demonstrated gate gaps",
+      "source_line": 1786,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R11-03",
+      "title": "Bind electrical calculations to native firing copper",
+      "source_line": 1803,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R11-04",
+      "title": "Current assembly records and retained qualification limits",
+      "source_line": 1827,
+      "current_scope": "current_applicable",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R11-05",
+      "title": "Use the vendor's headless DRC fix",
+      "source_line": 1871,
+      "current_scope": "process_record",
+      "review_assessment": "Process provenance only. No inherited build, review or DRC credit; the exact current target and freeze protocol govern this review.",
+      "evidence": [
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R12-01",
+      "title": "Correct the evidence without an unsupported circuit change",
+      "source_line": 1973,
+      "current_scope": "current_evidence_and_records_correction",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R12-02",
+      "title": "Local return, direct control route and readable Fab references",
+      "source_line": 1999,
+      "current_scope": "current_CAD_changes_with_retained_M2_and_qualification_limits",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R12-03",
+      "title": "Gate the manufactured geometry and fitted quantities",
+      "source_line": 2043,
+      "current_scope": "current_gate_hardening",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R13-01",
+      "title": "Allocate actual tails and socket nails; clear Fab references",
+      "source_line": 2065,
+      "current_scope": "current_model_and_Fab_source_corrections",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R13-02",
+      "title": "Reject contradictory identities, duplicate BOM rows and wrong paste",
+      "source_line": 2109,
+      "current_scope": "current_gate_hardening_scoped_verified",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R13-03",
+      "title": "Correct operating evidence and adopt only qualified local redraws",
+      "source_line": 2127,
+      "current_scope": "current_operating_evidence_and_qualified_routing_source_work",
+      "review_assessment": "Considered against the fresh native and source checks. A passing baseline does not independently reproduce historical fault seeds or build executions. Current qualifications and owner acceptance remain separate.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R14-01",
+      "title": "Apply twelve individually qualified local route corrections",
+      "source_line": 2183,
+      "current_scope": "current_R14_source_or_evidence_correction_and_pending_qualification",
+      "review_assessment": "Fresh target has 957 segments, 296 vias and 1797.140178 mm track. The 139-item route partition matches; fast reference/region checks and current extracted hot-plug evidence pass. Earlier redraw DRC and full sweep executions were not rerun. Fresh rounds 15/16 remain required.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R14-02",
+      "title": "Correct maker mass, operating citations and current records",
+      "source_line": 2207,
+      "current_scope": "current_R14_source_or_evidence_correction_and_pending_qualification",
+      "review_assessment": "Read the maker 0.5 g mass, AF and record amendments; all 100 MCU mappings agree and primary maker sources were reopened. The 116-ID ledger is complete. Subordinate active status inconsistencies are R15-REQ-03; assembly and physical qualification remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R14-03",
+      "title": "Fail closed on ambiguous paste commands and collision-only masses",
+      "source_line": 2238,
+      "current_scope": "current_R14_source_or_evidence_correction_and_pending_qualification",
+      "review_assessment": "Sixteen paste regressions and two NumPy Plate tests pass freshly. The 651 XML mappings agree with 663 numbered physical pads collapsed to 651 pairs. Original erratum and method disclosure are preserved; no corrupt package or historical whole-gate escape is inferred.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-Q",
+        "E-A"
+      ]
+    }
+  ],
+  "owner_mandate_coverage": [
+    {
+      "id": "Initial plan items1-4",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Ordinary 0.15 mm clearance with retained S-8; black 3.5 mm IGN and separate BAT/SWITCH terminals; C84 470 uF/25 V. Later amendments supersede J124 and keyed-switch/fuse wording.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "O1",
+      "authority": "Owner mandate, amended",
+      "current_scope_assessment": "External HGLRC GPS remains; current DB125, shared 4V8 and direct protected UART replace GH and switched 3V3. L5 loss remains explicit.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "O2",
+      "authority": "Owner mandate, amended",
+      "current_scope_assessment": "External LR900-F remains; no onboard RF or SMA. Current DB125, shared 4V8 and UART5 pass native maps. Uplink must never arm/fire; installed immunity remains open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "O3",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Servo motor positive and return stay off board. Four protected signals remain. Q120/Q121 serve pyro only; loss of servo power cutoff is explicit.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "O4",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Regulated camera supply and U402/U12/U13 remain. The 5.456 V agent setpoint addresses tolerance/loss; endpoint and transient qualification remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "O5",
+      "authority": "Owner mandate, amended",
+      "current_scope_assessment": "Buck plus approximately 4.8 V LDO remain. Later owner cuts remove GPS/radio switches and translators; camera retains switch and isolation.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "O6",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Pack-star motor pairs and signal reference branches remain. Independent board-share arithmetic gives 0.6144 A with a 1 A allowance; installed branch/star impedances are unmeasured.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "D-R2-04 then D-R2-08",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Later owner decision requires all signals hand-routed. The production source uses explicit polylines; earlier autorouter work is historical feasibility context.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "OQ-1",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Accepted wire-room floor remains 4.95 mm. Fresh maximum-envelope native fit and independent formula give 5.003011866 mm at seven terminals. Physical wire/tool fit remains open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "OQ-2",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Fresh schema-3 extraction validates against stored inputs and 2304 rows. Removing C88 isolates U9 from every other modeled terminal. Full sweep not rerun; parasitic, harness and waveform assumptions remain unmeasured.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "OQ-3",
+      "authority": "Owner item, pending",
+      "current_scope_assessment": "Current dated 11:03 snapshot gives $82.6434 placed/feeder and $84.4456 including minimum purchases, $0.0356 above $84.41. R430/U4 supply and quote/process/deviation acceptance remain pending. Old active summary is R15-REQ-03; no live refresh here.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "OQ-4",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Aft-edge tab and rail/frame remain selected. Actual panel and process acceptance are required before ordering.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "OQ-5",
+      "authority": "Owner mandate, amended",
+      "current_scope_assessment": "C84 and firmware shedding remain; no hardware port-buck cutoff. GPS/radio/card stay powered and cannot be credited as shed loads.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "OQ-6",
+      "authority": "Owner mandate, revised",
+      "current_scope_assessment": "No battery-lead fuse. Entry lead/copper/TVS/cap risk and harness mitigations remain explicit. The later single switch also removes the ARM-link fuse.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "OQ-7",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Whole board including axial mounting tolerance stays forward of joint +47 mm in every roll orientation. Freed length stays slack; actual stack fit remains open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "Single switch and keep-one-switch reaffirmation",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "J400 is sole power/pad arming switch; no J124. PC1 and PE4 separately control series firing devices. On rail, on last/off first, launch detection, ground refusals and in-flight never-veto remain.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "AUD-1..10 and GAP-1..5",
+      "authority": "Owner direction; implementation choices remain agent choices",
+      "current_scope_assessment": "All narrow AUD/GAP changes were considered. Later port/terminal/audit 2 amendments supersede old cells and header clauses. S-8, fast interfaces, gate networks, R134, VIPPO and manual C84 obligations remain.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "AVA comparison10 layout items",
+      "authority": "Owner layout direction",
+      "current_scope_assessment": "AVA terminal rows, local power/port/sense/buzzer cells, bottom rows, references, escapes, stitching and probes are implemented with documented constraints. Photos do not prove hidden circuitry or safety behavior.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "Always-on ports plus microSD",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Always-on GPS/radio and retained camera isolation/switch pass native maps. Hinged SPI3 microSD complements primary QSPI. Startup, card current, latency, power-loss and lid-access qualifications remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "All wired screw terminals / Steer1",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "All seven wired connectors are DB125; USB-C and microSD remain separate. Complete individual terminal legends pass. Earlier circuit-only stop is superseded by the full review assignment.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "Requirements audit2 items1-13,15",
+      "authority": "Owner mandate",
+      "current_scope_assessment": "Audit 2 removals, two direct ADC banks, limited thin taps, In1 GND policy, optional plate, location-only leftovers, NRST metric, no Extended cap, sole reviewed map and clearance floors remain under current scope.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    },
+    {
+      "id": "Requirements audit2 item14/16",
+      "authority": "Owner mandate, conditional",
+      "current_scope_assessment": "Full check.sh zero before commits and refreshed hash provenance remain required. Electrical/axis review follows actual changes. LEDs stay dark until the installed opaque-cover test passes; no test is claimed.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-S",
+        "E-A"
+      ]
+    }
+  ],
+  "requirements_coverage": [
+    {
+      "id": "F1",
+      "assessment": "Native U4 identity/pose agrees. Fresh ST source supports ±4000 dps capability. The ≤5 degree error budget and thermal, vibration and current vehicle model remain unqualified.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F2",
+      "assessment": "Native dual low/high-g sensor supports the required precise low-g and ≥64 g capability. Fresh maker source specifies high-g ranges through ±320 g; actual flight clipping remains unqualified.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F3",
+      "assessment": "Native MS5611 and fresh TE 06/2017 range of 10–1200 mbar support the required altitude capability. Vents, transonic estimator, opaque cover and coating remain open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F4",
+      "assessment": "Native J122 has four protected signals plus reference GND, with series resistors, pull-downs and clamp. Independent O6 bound is 0.6144 A; actual harness, stalls and PWM behavior remain unmeasured.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F5",
+      "assessment": "Native SPI3/J430 and QSPI maps, pulls and bypasses pass. Record-only binding agrees. Rates, throughput, erase/busy latency, buffering and selected-card power loss remain firmware/bench obligations.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F6",
+      "assessment": "Native C84/switch network, PA6 and always-on architecture agree. Independent watchdog/neutral allocations are 28.571–32.653/48.653 ms. Hold-up and ≥150 ms bounce are conditional, unmeasured obligations.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F7",
+      "assessment": "Native post-switch RAW_ACT, R134 2 ohm, J121 and PC1/PE4 controls pass. Independent coupled-source solve gives 1.544366–1.283013 A versus 1.125 A under stated assumptions. MJG 0.5 s data do not prove 20 ms lot firing.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F8",
+      "assessment": "J124/pull-pin/fuse are absent. All 23 individual terminal labels and direct PC0/PC5 banks pass. Eighty corners reproduce 3.342171 V. Cold-before-enable, launch, ground refusal and in-flight never-veto remain unimplemented obligations.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F9",
+      "assessment": "Fresh feed extraction/stored evidence and C88 articulation pass; model-domain and retained-OUT assumptions remain unmeasured. USB-only, camera isolation and direct GPS/radio architecture pass. Back-feed, shorts, contacts and endurance need qualification.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "F10",
+      "assessment": "No RF parts/jacks. Native GPS USART6, radio UART5, camera UART7 and former control NC pins agree. Fresh radio maker source supports 3.3 V LVTTL, 4.5–5 V and specified band; channel setup, uplink prohibition and installed immunity remain obligations.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "P1",
+      "assessment": "Fresh native board is 46 ×90 ×1.6 mm with five supports. P1 now discloses the J3 west shell projection of approximately 0.45 mm. Actual stack integration remains open.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "P2",
+      "assessment": "Fresh fit passes: seven terminal faces at 5.003011866 mm versus 4.95 mm, 23 tails, closed SD and support floors. Forward-of-joint +47 mm and hardware bounds remain; wires, tools, hinge, sled and real bore are unqualified.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "P3",
+      "assessment": "Current staking, coating, MEMS/barometer exclusions, NRST metric and conditional LED cover obligations remain. Optional Plate guard tests pass; neither mass/modes nor retention are physically qualified, and no 209 Hz floor applies.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "M1",
+      "assessment": "Native 199 fitted parts, 82 codes, positive BOM quantities, unique CPL and identity checks pass; all 193 input/five output hashes match. Build/export/assembly receipts are scoped history. VIPPO, manual C84, THT, no-clean and R430/U4 supply remain pre-order conditions.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "M2",
+      "assessment": "Fresh native contracts and blocking route rules pass. All 139 information items and eight locations match the current ledger. Carried M2 acceptance and parent mirror plus new active record drift remain three Minor groups.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    },
+    {
+      "id": "M3",
+      "assessment": "Current bound snapshot model is $82.6434 versus $84.41, with $84.4456 including minima. Stock, process/quote and owner acceptance remain pending. No Extended-code cap or unqualified substitution is introduced.",
+      "evidence": [
+        "E-N",
+        "E-C",
+        "E-F",
+        "E-Q",
+        "E-A",
+        "E-S"
+      ]
+    }
+  ],
+  "closed_prior_findings": [
+    {
+      "id": "R14-REQ-03",
+      "status": "closed",
+      "evidence": "Current P1 states no SMA/aft overhang and J3 approximately 0.45 mm west. Fresh native fit model reaches x = -0.449880 mm."
+    },
+    {
+      "id": "R14-REQ-04",
+      "status": "closed",
+      "evidence": "Current eight-row labels, partition and all eight location/end tuples match the fresh 139-item route inventory."
+    },
+    {
+      "id": "R14-INT-02",
+      "status": "closed_count_erratum_preserved",
+      "evidence": "Fresh 651 raw XML nodes =651 unique XML pairs. Native 663 numbered pads collapse to 651 unique pairs; all 100 MCU maps agree."
+    },
+    {
+      "id": "R11-BOM-01/R11-MEC-01",
+      "status": "closed_earlier_major_rechecked",
+      "evidence": "Fresh maximum-envelope fit and independent formula give 5.003011866 mm at all seven terminal faces versus the unchanged 4.95 mm floor; no physical fit claimed."
+    }
+  ],
+  "rejected_or_narrowed_Critical_Major_candidates": [
+    {
+      "candidate": "No executable R10 firmware binding or safety firmware",
+      "disposition": "Correctly disclosed pending implementation, not demonstrated hardware failure. Record-only note regenerates and the R1 chain is explicitly forbidden for R10."
+    },
+    {
+      "candidate": "No physical ARM break while powered or GPS/radio port isolation",
+      "disposition": "Explicit newer owner amendments apply. Native post-switch bus, two controls and off-bias pass. Prior architecture requirements are superseded."
+    },
+    {
+      "candidate": "GPS 4 g tracking limit versus boost",
+      "disposition": "Maker limit confirmed. GPS is not the flight estimator and installed qualification remains explicit; no estimator failure proved."
+    },
+    {
+      "candidate": "MJG 0.5 s datum versus 20 ms pulse",
+      "disposition": "Maker datum and lot-specific test are explicitly separate. Conditional current margin passes; neither physical 20 ms success nor failure was proved."
+    },
+    {
+      "candidate": "Optional plate frequency below old 209 Hz floor",
+      "disposition": "Audit 2 deleted that release floor. Physical shock and clearance are still unqualified."
+    },
+    {
+      "candidate": "Stock, minimum purchase and process acceptance pending",
+      "disposition": "Candidate is explicitly unaccepted and unordered; no false procurement release was found."
+    },
+    {
+      "candidate": "Initial M-5 fit binding failure",
+      "disposition": "Initial raw API fit object lacked SHA metadata. Fresh same-board bound repeat passes; this was probe setup, not a product defect."
+    }
+  ],
+  "primary_sources": [
+    {
+      "id": "ST-IMU",
+      "url": "https://www.st.com/en/mems-and-sensors/lsm6dsv320x.html",
+      "scope": "Fresh maker webpage: low-g 16 g, high-g 320 g and gyro 4000 dps capability only."
+    },
+    {
+      "id": "ST-MCU",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "version": "DS12110 Rev11 January2026",
+      "pages": [
+        "91-94 selectedAF",
+        "208-210/242 I/O limits",
+        "233 Table136 LSI"
+      ],
+      "scope": "Reopened primary source; 29.4–33.6 kHz LSI and selected mux/control/I/O scope checked. No complete independent 100-pin mux rederivation."
+    },
+    {
+      "id": "TE",
+      "url": "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50",
+      "version": "06/2017",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "scope": "Fresh pressure range, supply and operating specifications; no installed calibration or vent qualification."
+    },
+    {
+      "id": "MJG",
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "pages": [
+        1
+      ],
+      "scope": "Fresh 0.75 A all-fire/0.5 s definition, shroud, test-current and energy source. Actual 20 ms chosen-lot qualification remains open."
+    },
+    {
+      "id": "HGLRC",
+      "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+      "scope": "Fresh 3.3–5 V, L1 and 500 m/s/4 g maker specifications; no installed flight qualification."
+    },
+    {
+      "id": "MicoAir",
+      "url": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+      "scope": "Fresh LR900-F 4.5–5 V, 3.3 V LVTTL, 1 W average, 27 dBm and 890–915 MHz/channel mapping. Actual peaks and RF immunity remain open."
+    }
+  ],
+  "coverage_limits": [
+    "No canonical/source/CAD/fab/prior-report edit, git action, other-worktree write, GUI action or subagent. No peer round 15 report or probe read.",
+    "No KiCad CLI DRC/ERC/export/render, canonical build or full check.sh run. K-fill not rerun. The 30 selected contracts partly reuse production logic and do not independently implement DRC.",
+    "No complete maker rederivation of all 100 pin muxes. All 100 native/XML/table/binding nets were compared and selected primary mux, control, LSI and I/O facts were reopened.",
+    "Hot-plug inputs freshly extracted and validated against stored 2304 cases; complete sweep/refinements not rerun. No harness, pin waveform, endurance or power-loss test.",
+    "Manifest/integration/source checksum comparisons confirm current bytes, not a new build, export, orientation run, assembly-PDF visual QA or first article.",
+    "No live 82-code procurement refresh, quote, order, messages, owner acceptance, firmware or physical electrical/thermal/RF/ESD/harness/sled/bore/shock/vibration/flight qualification.",
+    "New status drift is a bounded record finding. Correct opening status and complete current native evidence were found.",
+    "Exact commit and 1909-file freeze are supplied by root protocol. This lens independently checks PCB before/after and writes only assigned new reports plus ignored probes."
+  ]
+}

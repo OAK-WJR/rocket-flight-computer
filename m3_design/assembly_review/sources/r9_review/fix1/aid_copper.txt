@@ -1,0 +1,142 @@
+# r9_ground_aid.py on the fix pass's step-7 board (stage 34, SHA 7274f29cf553...), 2026-10-25 16:52-16:57: the island, reach and copper stages' log (the frozen table m3_design/r9_ground.tsv is its output; --check reproduces it)
+  island F.Cu (31.11, 73.31)-(31.70, 73.89), 0.27 mm2: fewer than two GND vias, no legal spot
+  island F.Cu (11.32, 45.79)-(14.75, 49.61), 6.03 mm2: fewer than two GND vias, no legal spot
+  island F.Cu (7.94, 33.40)-(10.54, 34.80), 2.82 mm2: fewer than two GND vias, no legal spot
+  island F.Cu (23.85, 14.25)-(24.85, 15.04), 0.71 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (11.07, 48.79)-(12.22, 49.53), 0.78 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (38.10, 36.30)-(42.76, 37.23), 3.51 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (30.20, 73.28)-(32.60, 73.92), 0.88 mm2: fewer than two GND vias, no legal spot
+  island B.Cu (29.54, 52.20)-(32.77, 58.00), 7.71 mm2: fewer than two GND vias, no legal spot
+  reach: P9 3.498 mm -> via (31.05, 51.25) (26 points)
+  copper: spot (34.6, 61.5) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.6, 61.55) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.6, 61.6) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.6, 61.65) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.6, 61.7) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.6, 61.75) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.6, 61.8) would leave a new weak B.Cu island at (34.96, 61.53): next spot
+  copper: spot (34.6, 61.85) would leave a new weak B.Cu island at (34.97, 61.56): next spot
+  copper: spot (34.6, 61.9) would leave a new weak B.Cu island at (34.98, 61.58): next spot
+  copper: spot (34.6, 61.95) would leave a new weak B.Cu island at (34.99, 61.61): next spot
+  copper: spot (34.6, 62.0) would leave a new weak B.Cu island at (35.01, 61.63): next spot
+  copper: spot (34.6, 62.05) would leave a new weak B.Cu island at (35.03, 61.66): next spot
+  copper: spot (34.6, 62.1) would leave a new weak B.Cu island at (35.05, 61.68): next spot
+  copper: spot (34.6, 62.15) would leave a new weak B.Cu island at (35.08, 61.71): next spot
+  copper: spot (34.6, 62.2) would leave a new weak B.Cu island at (35.12, 61.73): next spot
+  copper: spot (34.6, 62.25) would leave a new weak B.Cu island at (35.14, 61.76): next spot
+  copper: spot (34.6, 62.3) would leave a new weak B.Cu island at (34.62, 62.29): next spot
+  copper: spot (34.6, 62.35) would leave a new weak B.Cu island at (34.61, 62.34): next spot
+  copper: spot (34.6, 62.4) would leave a new weak B.Cu island at (34.60, 62.40): next spot
+  copper: spot (34.6, 62.45) would leave a new weak B.Cu island at (34.60, 62.45): next spot
+  copper: spot (34.6, 62.5) would leave a new weak B.Cu island at (34.60, 62.50): next spot
+  copper: spot (34.6, 62.55) would leave a new weak B.Cu island at (34.60, 62.55): next spot
+  copper: spot (34.6, 62.6) would leave a new weak B.Cu island at (34.60, 62.60): next spot
+  copper: spot (34.6, 62.65) would leave a new weak B.Cu island at (34.60, 62.65): next spot
+  copper: spot (34.6, 62.7) would leave a new weak B.Cu island at (34.60, 62.70): next spot
+  copper: spot (34.6, 62.75) would leave a new weak B.Cu island at (34.60, 62.75): next spot
+  copper: spot (34.6, 62.8) would leave a new weak B.Cu island at (34.60, 62.80): next spot
+  copper: spot (34.6, 62.85) would leave a new weak B.Cu island at (34.60, 62.85): next spot
+  copper: spot (34.6, 62.9) would leave a new weak B.Cu island at (34.60, 62.90): next spot
+  copper: spot (34.6, 62.95) would leave a new weak B.Cu island at (34.60, 62.95): next spot
+  copper: spot (34.6, 63.0) would leave a new weak B.Cu island at (34.60, 63.00): next spot
+  copper: spot (34.6, 63.05) would leave a new weak B.Cu island at (34.60, 63.05): next spot
+  copper: spot (34.6, 63.1) would leave a new weak B.Cu island at (34.60, 63.10): next spot
+  copper: spot (34.6, 63.15) would leave a new weak B.Cu island at (34.60, 63.15): next spot
+  copper: spot (34.6, 63.2) would leave a new weak B.Cu island at (34.60, 63.20): next spot
+  copper: spot (34.6, 63.25) would leave a new weak B.Cu island at (34.60, 63.25): next spot
+  copper: spot (34.6, 63.3) would leave a new weak B.Cu island at (34.60, 63.30): next spot
+  copper: spot (34.6, 63.35) would leave a new weak B.Cu island at (34.60, 63.35): next spot
+  copper: spot (34.6, 63.4) would leave a new weak B.Cu island at (34.60, 63.40): next spot
+  copper: spot (34.6, 63.45) would leave a new weak B.Cu island at (34.60, 63.45): next spot
+  copper: spot (34.6, 63.5) would leave a new weak B.Cu island at (34.60, 63.50): next spot
+  copper: spot (34.6, 63.55) would leave a new weak B.Cu island at (34.60, 63.55): next spot
+  copper: spot (34.6, 63.6) would leave a new weak B.Cu island at (34.60, 63.60): next spot
+  copper: spot (34.6, 63.65) would leave a new weak B.Cu island at (34.60, 63.65): next spot
+  copper: spot (34.6, 63.7) would leave a new weak B.Cu island at (34.60, 63.70): next spot
+  copper: spot (34.6, 63.75) would leave a new weak B.Cu island at (34.60, 63.75): next spot
+  copper: spot (34.6, 63.8) would leave a new weak B.Cu island at (34.60, 63.80): next spot
+  copper: spot (34.6, 63.85) would leave a new weak B.Cu island at (34.60, 63.85): next spot
+  copper: spot (34.6, 63.9) would leave a new weak B.Cu island at (34.60, 63.90): next spot
+  copper: spot (34.6, 63.95) would leave a new weak B.Cu island at (34.60, 63.95): next spot
+  copper: spot (34.6, 64.0) would leave a new weak B.Cu island at (34.60, 64.00): next spot
+  copper: spot (34.6, 64.05) would leave a new weak B.Cu island at (34.60, 64.05): next spot
+  copper: spot (34.6, 64.1) would leave a new weak B.Cu island at (34.60, 64.10): next spot
+  copper: spot (34.6, 64.15) would leave a new weak B.Cu island at (34.60, 64.15): next spot
+  copper: spot (34.6, 64.2) would leave a new weak B.Cu island at (34.60, 64.20): next spot
+  copper: spot (34.6, 64.25) would leave a new weak B.Cu island at (34.60, 64.25): next spot
+  copper: spot (34.6, 64.3) would leave a new weak B.Cu island at (34.60, 64.30): next spot
+  copper: spot (34.6, 64.35) would leave a new weak B.Cu island at (34.60, 64.35): next spot
+  copper: spot (34.6, 64.4) would leave a new weak B.Cu island at (34.60, 64.40): next spot
+  copper: spot (34.6, 64.45) would leave a new weak B.Cu island at (34.60, 64.45): next spot
+  copper: pad C121.2 (33.40, 63.30) 16.10 mm of copper; no legal spot
+  copper: pad J9.2 (40.75, 47.58) 6.99 mm of copper; no legal spot
+  copper: F.Cu 28.41 mm at (37.45, 73.75) -> via (35.6, 64.8) (9.65 mm along the copper)
+  copper: F.Cu 12.45 mm at (33.15, 100.05) -> via (32.9, 99.85) (0.28 mm along the copper)
+  copper: F.Cu cluster at (37.45, 73.75), 9.50 mm of copper from a GND via: no legal spot 2.0 mm out within its reach
+  copper: F.Cu cluster at (28.95, 68.35), 9.37 mm of copper from a GND via: no legal spot 2.0 mm out within its reach
+  copper: F.Cu 9.28 mm at (41.75, 45.95) -> via (41.4, 41.1) (4.92 mm along the copper)
+  copper: F.Cu cluster at (41.75, 48.45), 8.95 mm of copper from a GND via: no legal spot 2.0 mm out within its reach
+  copper: spot (34.6, 61.45) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.65, 61.45) would leave a new weak B.Cu island at (34.98, 61.53): next spot
+  copper: spot (34.6, 61.5) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.65, 61.5) would leave a new weak B.Cu island at (34.97, 61.53): next spot
+  copper: spot (34.6, 61.55) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.65, 61.55) would leave a new weak B.Cu island at (34.97, 61.53): next spot
+  copper: spot (34.6, 61.6) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.65, 61.6) would leave a new weak B.Cu island at (34.97, 61.53): next spot
+  copper: spot (34.6, 61.65) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.65, 61.65) would leave a new weak B.Cu island at (34.97, 61.53): next spot
+  copper: spot (34.7, 61.4) would leave a new weak B.Cu island at (35.01, 61.53): next spot
+  copper: spot (34.7, 61.45) would leave a new weak B.Cu island at (35.00, 61.53): next spot
+  copper: spot (34.75, 61.45) would leave a new weak B.Cu island at (35.03, 61.53): next spot
+  copper: spot (34.6, 61.7) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.65, 61.7) would leave a new weak B.Cu island at (34.97, 61.53): next spot
+  copper: spot (34.6, 61.75) would leave a new weak B.Cu island at (34.95, 61.53): next spot
+  copper: spot (34.65, 61.75) would leave a new weak B.Cu island at (34.98, 61.53): next spot
+  copper: spot (34.7, 61.5) would leave a new weak B.Cu island at (35.00, 61.53): next spot
+  copper: spot (34.75, 61.5) would leave a new weak B.Cu island at (35.02, 61.53): next spot
+  copper: spot (34.7, 61.55) would leave a new weak B.Cu island at (35.00, 61.53): next spot
+  copper: spot (34.75, 61.55) would leave a new weak B.Cu island at (35.02, 61.53): next spot
+  copper: spot (34.6, 61.8) would leave a new weak B.Cu island at (34.96, 61.53): next spot
+  copper: spot (34.65, 61.8) would leave a new weak B.Cu island at (34.99, 61.53): next spot
+  copper: spot (34.6, 61.85) would leave a new weak B.Cu island at (34.97, 61.56): next spot
+  copper: spot (34.65, 61.85) would leave a new weak B.Cu island at (34.99, 61.56): next spot
+  copper: spot (34.7, 61.6) would leave a new weak B.Cu island at (35.00, 61.53): next spot
+  copper: spot (34.75, 61.6) would leave a new weak B.Cu island at (35.02, 61.53): next spot
+  copper: spot (34.7, 61.65) would leave a new weak B.Cu island at (35.00, 61.53): next spot
+  copper: spot (34.75, 61.65) would leave a new weak B.Cu island at (35.02, 61.53): next spot
+  copper: spot (34.8, 61.45) would leave a new weak B.Cu island at (35.05, 61.53): next spot
+  copper: spot (34.6, 61.9) would leave a new weak B.Cu island at (34.98, 61.58): next spot
+  copper: spot (34.65, 61.9) would leave a new weak B.Cu island at (35.01, 61.58): next spot
+  copper: spot (34.6, 61.95) would leave a new weak B.Cu island at (34.99, 61.61): next spot
+  copper: spot (34.65, 61.95) would leave a new weak B.Cu island at (35.02, 61.61): next spot
+  copper: spot (34.7, 61.7) would leave a new weak B.Cu island at (35.00, 61.53): next spot
+  copper: spot (34.75, 61.7) would leave a new weak B.Cu island at (35.02, 61.53): next spot
+  copper: spot (34.7, 61.75) would leave a new weak B.Cu island at (35.00, 61.53): next spot
+  copper: spot (34.75, 61.75) would leave a new weak B.Cu island at (35.03, 61.53): next spot
+  copper: spot (34.8, 61.5) would leave a new weak B.Cu island at (35.05, 61.53): next spot
+  copper: spot (34.85, 61.5) would leave a new weak B.Cu island at (35.07, 61.53): next spot
+  copper: spot (34.8, 61.55) would leave a new weak B.Cu island at (35.05, 61.53): next spot
+  copper: spot (34.85, 61.55) would leave a new weak B.Cu island at (35.07, 61.53): next spot
+  copper: spot (34.6, 62.0) would leave a new weak B.Cu island at (35.01, 61.63): next spot
+  copper: spot (34.65, 62.0) would leave a new weak B.Cu island at (35.03, 61.63): next spot
+  copper: spot (34.6, 62.05) would leave a new weak B.Cu island at (35.03, 61.66): next spot
+  copper: spot (34.65, 62.05) would leave a new weak B.Cu island at (35.05, 61.66): next spot
+  copper: spot (34.7, 61.8) would leave a new weak B.Cu island at (35.01, 61.53): next spot
+  copper: spot (34.75, 61.8) would leave a new weak B.Cu island at (35.04, 61.53): next spot
+  copper: spot (34.7, 61.85) would leave a new weak B.Cu island at (35.02, 61.56): next spot
+  copper: spot (34.75, 61.85) would leave a new weak B.Cu island at (35.04, 61.56): next spot
+  copper: spot (34.8, 61.6) would leave a new weak B.Cu island at (35.05, 61.53): next spot
+  copper: spot (34.85, 61.6) would leave a new weak B.Cu island at (35.07, 61.53): next spot
+  copper: spot (34.8, 61.65) would leave a new weak B.Cu island at (35.05, 61.53): next spot
+  copper: spot (34.85, 61.65) would leave a new weak B.Cu island at (35.07, 61.53): next spot
+  copper: spot (34.6, 62.1) would leave a new weak B.Cu island at (35.05, 61.68): next spot
+  copper: spot (34.65, 62.1) would leave a new weak B.Cu island at (35.08, 61.68): next spot
+  copper: spot (34.6, 62.15) would leave a new weak B.Cu island at (35.08, 61.71): next spot
+  copper: spot (34.65, 62.15) would leave a new weak B.Cu island at (35.10, 61.71): next spot
+  copper: spot (34.7, 61.9) would leave a new weak B.Cu island at (35.03, 61.58): next spot
+  copper: spot (34.75, 61.9) would leave a new weak B.Cu island at (35.06, 61.58): next spot
+  copper: F.Cu cluster at (28.85, 59.95), 8.61 mm of copper from a GND via: no legal spot 2.0 mm out within its reach
+  copper: F.Cu cluster at (31.15, 87.75), 8.48 mm of copper from a GND via: no legal spot 2.0 mm out within its reach
+  copper: F.Cu cluster at (39.85, 48.45), 8.05 mm of copper from a GND via: no legal spot 2.0 mm out within its reach
+r9_ground_aid: 187 rows {'return': 11, 'pad': 3, 'grid': 88, 'cover': 37, 'island': 13, 'patch': 26, 'strap': 5, 'reach': 1, 'copper': 3}

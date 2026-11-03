@@ -1,0 +1,290 @@
+{
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-10-13T17:56:07",
+    "ignored_checks": [],
+    "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+    ],
+    "kicad_version": "10.0.6",
+    "schematic_parity": [],
+    "source": "m3.kicad_pcb",
+    "unconnected_items": [
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [GPS_TX_MCU] on F.Cu, length 1.2000 mm",
+                    "pos": {
+                        "x": 14.3,
+                        "y": 38.0
+                    },
+                    "uuid": "0585bf91-af8a-4ac8-b017-b113d9711fd6"
+                },
+                {
+                    "description": "Track [GPS_TX_MCU] on F.Cu, length 0.4694 mm",
+                    "pos": {
+                        "x": 37.45,
+                        "y": 44.8673
+                    },
+                    "uuid": "d19166a4-75f0-448e-bf2f-900c9bab8af5"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [RADIO_M1_MCU] on F.Cu, length 1.5000 mm",
+                    "pos": {
+                        "x": 14.3,
+                        "y": 37.0
+                    },
+                    "uuid": "ff81b997-1716-4f19-954b-23d81ce29297"
+                },
+                {
+                    "description": "Track [RADIO_M1_MCU] on In2.Cu, length 1.1200 mm",
+                    "pos": {
+                        "x": 37.07,
+                        "y": 35.45
+                    },
+                    "uuid": "42f3d680-8443-5a4d-8c9a-aedf072bdbf1"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Track [IMU_INT1] on B.Cu, length 0.0400 mm",
+                    "pos": {
+                        "x": 34.75,
+                        "y": 59.55
+                    },
+                    "uuid": "e6e6ccc9-62cf-4678-b783-ec922960079f"
+                },
+                {
+                    "description": "Via [IMU_INT1] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 21.15,
+                        "y": 29.75
+                    },
+                    "uuid": "caa4bc3c-b304-4485-9c81-f7d10acd2e21"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        },
+        {
+            "description": "Missing connection between items",
+            "items": [
+                {
+                    "description": "Via [RADIO_AUX_MCU] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 35.75,
+                        "y": 40.85
+                    },
+                    "uuid": "a4f40d78-d81a-42f7-9432-7cf0d1ea8739"
+                },
+                {
+                    "description": "Track [RADIO_AUX_MCU] on F.Cu, length 1.2000 mm",
+                    "pos": {
+                        "x": 14.3,
+                        "y": 37.5
+                    },
+                    "uuid": "fb7035a0-b4e4-4840-9d0a-19fef584441e"
+                }
+            ],
+            "severity": "error",
+            "type": "unconnected_items"
+        }
+    ],
+    "violations": [
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [3V3] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 21.78,
+                        "y": 11.8
+                    },
+                    "uuid": "35dfb1db-27c8-425a-bc24-06ca97f063c3"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [GPS_TX_MCU] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 12.6,
+                        "y": 38.4
+                    },
+                    "uuid": "6427433a-4d9b-49db-b408-1ab1cca4507d"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [PULLPIN] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 31.4,
+                        "y": 37.7
+                    },
+                    "uuid": "37d6b8e6-b13d-4ee5-89ae-150d48eb522e"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [RADIO_M1_MCU] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 12.6,
+                        "y": 37.2
+                    },
+                    "uuid": "2167e6fd-2abb-4cea-a383-a67e6850bafd"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [RADIO_RX_MCU] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 17.5,
+                        "y": 34.9
+                    },
+                    "uuid": "36c58be0-8106-4247-a25d-2a8e32970b10"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [SERVO3_MCU] on B.Cu, length 0.7071 mm",
+                    "pos": {
+                        "x": 35.2,
+                        "y": 64.2
+                    },
+                    "uuid": "dffff0b5-4c8e-4a09-babd-c2ac4a699137"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [CAM_5V_SENSE] on In2.Cu, length 0.8000 mm",
+                    "pos": {
+                        "x": 20.55,
+                        "y": 26.85
+                    },
+                    "uuid": "2907e210-67ca-4429-a056-ae1e40006006"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [IMU_INT1] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 21.15,
+                        "y": 29.75
+                    },
+                    "uuid": "caa4bc3c-b304-4485-9c81-f7d10acd2e21"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [CAM_MCU_TX] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 16.95,
+                        "y": 20.55
+                    },
+                    "uuid": "031bc0c7-f778-43f9-87a3-01b2e8965bd9"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Via is not connected or connected on only one layer",
+            "items": [
+                {
+                    "description": "Via [RADIO_AUX_MCU] on F.Cu - B.Cu",
+                    "pos": {
+                        "x": 12.1,
+                        "y": 37.8
+                    },
+                    "uuid": "c40644b2-4cf8-4ac5-bffb-4f8568bd78ab"
+                }
+            ],
+            "severity": "warning",
+            "type": "via_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [CAM_PWR_EN] on F.Cu, length 2.1213 mm",
+                    "pos": {
+                        "x": 35.2453,
+                        "y": 70.1506
+                    },
+                    "uuid": "da4a3330-40d9-494d-bc5e-efe7b3b7dce1"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        },
+        {
+            "description": "Track has unconnected end",
+            "items": [
+                {
+                    "description": "Track [SERVO2_OUT] on In2.Cu, length 2.0000 mm",
+                    "pos": {
+                        "x": 24.3132,
+                        "y": 90.6
+                    },
+                    "uuid": "8a944b2b-41cf-40af-a1d9-ce0fe3446e14"
+                }
+            ],
+            "severity": "warning",
+            "type": "track_dangling"
+        }
+    ]
+}

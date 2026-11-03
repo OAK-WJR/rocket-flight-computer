@@ -1,0 +1,61 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round36_power",
+ "reviewer": "claude",
+ "target_commit": "c3c4249",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "Ride-through ratio '0.22-0.31 of the break-to-3.8 V hold-up' (M3_R10:754/1173, ORDERING 8.3:677, R10_VALIDATION row 5, rule 8): exact range 0.2229-0.3048 ((V_trip^2-3.8^2)/(7.4^2-3.8^2) at 4.84 / 5.17 V); 0.22 / 0.31 is outward rounding of a bound, so it encloses the values and is not false.",
+  "U11.2 IN2 RAW_PROTECTED fed by one 0.5/0.3 mm via (24.3, 66.0) with 0.3 mm F/B stubs of 0.825 mm: disclosed as a measured not-doubled single via (D-R19-09, D-R24-06, owner row 22, M3_R10:459).",
+  "R167 10 k bleed on BAT_IN draws 0.84 mA with J400 open: disclosed (REQUIREMENTS line 98 storage row, ORDERING R167 row).",
+  "VLOGIC sense tap to R60.1 runs through two vias (34.5, 62.4) / (34.5, 63.0) with F.Cu and B.Cu tracks between them: a deliberate doubled tap, carries no load current.",
+  "Generator comment in r10_parts.py power_budget says OQ-5 VON '6.49-6.94 V' while the code gives 6.4845 V and parts_qualification prints 6.48-6.94 V; a comment in a hypothetical, not-adopted option, no record states 6.49 as a result.",
+  "C84 hold-up path is sized for 1.294 A steady state, while in a battery-break back-feed it briefly carries the port buck's ~13 W (about 2.6-3.4 A for under 1 ms); IPC-2152 is a steady-state rule, so this is no violation."
+ ],
+ "fix_verification": [
+  {
+   "item": "R34-TRI-01 (parts_qualification pointed at the stale round 11 hotplug.md as current results)",
+   "measurement": "parts_qualification.md:1036-1037 and :1061-1062 now name hotplug_results.json (inputs hotplug_inputs.json) and M3_R10 'Current state'; hotplug_inputs.json board_sha256 = a0ec075e...; the results' inputs_sha256 f4d1b57d... reproduces as the canonical JSON digest (tools/r10_hotplug.py digest()); retained_output 1643.90 uF / 5.914 V.",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before / after (shasum): a0ec075e... both; HEAD c3c4249.",
+  "Recomputed parts_budget.json from first principles: buck_V 5.36668-5.54627 V, ldo_V 4.71150-4.87325 V (DS41326 VFB 792-808 mV; SBVS282A +/-1 %, IFB +/-100 nA), LDO loss 0.48965 W, junction 109.17-123.86 C at 70 C, 112.3 C/W ceiling, 112 mA AUX limit, 0.406 W pre-AUX.",
+  "Recomputed pack_7V4/6V0_four_stall_loaded_V 5.880831 / 4.388491 V (port_A 1.561 A at 5.456 V / 0.8, logic 0.6375 A, 7.68 A servos, 0.15 ohm).",
+  "Recomputed GAP-1 fire loop 4.467803 / 4.617803 ohm and four-stall fire current 1.27875 A at 5.7132 V (13.064 W other load); R134 hot 2.02909 ohm.",
+  "Recomputed U9 bounds: OVLO corner 10.176 V (with IOVLKG), port fault peak 3.7439 A < U9 limit min 3.946 A, prospective 4.420 A; TPS25947 SLVSFC9C EC table thresholds re-read.",
+  "Recomputed U9 turn-off corner 4.802 V (1 % parts, 0.1 uA EN + 50 nA D402), 4.778 V without D402.",
+  "Recomputed ride-through table (cases a-d, 300.8 / 470 uF, to 3.5 / 3.8 V), OQ-5 VOFF 5.73/6.01/6.30, VON 6.48/6.66/6.94 V, OQ-5 ride-through 3.84/6.00 and 1.57/2.46 ms, 0.13 mA divider.",
+  "Recomputed D-R25-02 post-trip hold-up 0.103-0.164 ms (ports on) / 0.291-0.430 ms (shed) from VLOGIC 4.84-5.17 V.",
+  "Recomputed USB-only attach: R85 66.5 k -> 347.7-453.0 mA (SLVS841G eq. 1/3, +/-2 %), 514.1 uF -> 2.416 mC, 5.33-6.95 ms; 516.1 uF -> 5.35-6.98 ms; capacitor inventory on VLOGIC (C84, C6, C7, C99) and USB_LIMITED (C86, C98) matched against the board netlist.",
+  "C120 network from board netlist (C120 ACT_FET_S-ACT_GATE, R119/R120 100 k, R121 10 k to ACT_DRV): on tau 10.7525 ms, off tau 64.52 ms (129.03 ms one open), 1 s = 15.5 / 7.75 tau.",
+  "Camera switch limit 1.0409-1.2495 A for R430 22.6 k; TPS2553 DBV rDS(on) 135 mohm max re-read; camera minimum 5.0317 V.",
+  "IPC-2152 floors via tools/ipc2152.py: 0.68 mm @2.9 A, 0.356 @2.0, 0.326 @1.9, 0.299 @1.81, 0.167 @1.294, 0.157 @1.249 (outer); every POWER_PATHS floor meets its value.",
+  "Board survey (KiCad pcbnew, read-only) of every track under 0.4 mm on BAT_IN, RAW_PROTECTED, VLOGIC, PORT_5V3, PORT_4V8, CAM_5V, 3V3, VBUS, USB_LIMITED, RAW_ACT, ACT_FET_S, PYRO1_OUT/IGN: each is a named POWER_NARROW entry, a tap / sense branch, or a sub-0.5 A feed.",
+  "Regulator FB taps: R400.1 on PORT_5V3 joins at C403.1; R402.1 at U401 OUT; divider values R400 56.2 k + R404 2 k / R401 10 k and R402 49.9 k / R403 10 k match the budget.",
+  "Rail voltage ratings vs maxima: BAT_IN parts 25/50 V vs SMBJ12CA 19.9 V clamp; RAW_PROTECTED <= 10.18 V vs TPS2121/AP63201/AP63203 limits; PORT_5V3 5.546 V vs TPS7A91 / TPS2553 6.5 V.",
+  "R34-TRI-01: hotplug_results.json inputs_sha256 equals the canonical digest of hotplug_inputs.json (f4d1b57d...), whose board_sha256 is a0ec075e...; parts_qualification lines 1036-1037 / 1061-1062 point to the current files."
+ ],
+ "sources": [
+  "TI SBVS282A TPS7A91 (cached .supervisor/r14_parts_pdf/tps7a91.pdf): sec. 5.3 p4, 5.5 p5, eq. 3-4 p20, 7.1.4, 7.4",
+  "Diodes DS41326 Rev 3-2 AP63200/1/3/5 (cached ap6320.pdf): EC table p5 (VFB, IPEAK_LIMIT, VEN_H/L), Enable section (1.5 uA / 4 uA), eq. 6 p12",
+  "TI SLVS841G TPS2553 (cached tps2553.pdf): sec. 6.5 rDS(on), toff, IOS, eqs. 1 / 3",
+  "TI SLVSFC9C TPS25947 (cached tps25947.pdf): sec. 6.5 VUVLO(R/F), IENLKG, VOV(R), IOVLKG",
+  "m3_design/r10_parts.py, parts_budget.json, parts_qualification.md, tools/check_r10.py K-power, tools/ipc2152.py, tools/r10_hotplug.py, hotplug_inputs/results.json",
+  "docs/M3_R10.md, docs/ORDERING.md 8.3, docs/REQUIREMENTS.md, docs/R10_VALIDATION.md, AGENTS.md (committed c3c4249)"
+ ],
+ "coverage_limits": [
+  "Did not re-run the 2304-case hot-plug simulation or the full check.sh (read-only brief); hot-plug checked by input/result binding only.",
+  "IPC-2152 checked by the tool fit and track survey, not by an independent thermal model or plane credit.",
+  "Did not re-derive the J400 chatter EN train figures (verified by rounds 26-31); the turn-off corner and single PA6 window were re-derived.",
+  "No physical, firmware or bench evidence exists to compare against."
+ ]
+}

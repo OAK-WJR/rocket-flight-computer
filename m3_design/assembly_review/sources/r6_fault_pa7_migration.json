@@ -1,0 +1,16 @@
+{
+  "pin_changes": {
+    "U1.31": [
+      "unconnected-(U1-PA7-Pad31)",
+      "TLM_FAULT_N"
+    ],
+    "U1.97": [
+      "TLM_FAULT_N",
+      "unconnected-(U1-PE0-Pad97)"
+    ]
+  },
+  "native_erc": 0,
+  "native_parity": 0,
+  "opens": 4,
+  "PA6_NC_preserved": true
+}

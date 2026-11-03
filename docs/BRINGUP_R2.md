@@ -1,5 +1,7 @@
 # M3-ASSY-R2 first power-up (bench)
 
+> **R4 note (validation pass 9):** this R2 procedure is stale for M3-ASSY-R4 in at least these points: TP124 no longer exists (use TP88 or J2 pin 1 for GND); RAW_ACT to GND reads about 11.2 kΩ (R177 + R124 over R125 ∥ R182), not about 15 kΩ; J2.6 is unconnected (BOOT0 stays on R5 at the MCU). The R4 bench steps and gates are in `docs/M3_R4.md` §4 and `docs/ORDERING.md` §5.
+
 Do these steps in order on each new board. **Stop at the first step that fails**, and record the reading with the board ID. Nothing in this document needs R2 firmware. The MCU is blank from the factory. **Do not flash v0.8.1** (it is R1 firmware).
 
 Equipment:

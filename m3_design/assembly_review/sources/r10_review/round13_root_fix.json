@@ -1,0 +1,93 @@
+{
+  "kind": "Root focused source/model/calculation correction; not an independent full round or integrated build",
+  "review_board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "canonical_board_unchanged": true,
+  "source_sha256": {
+    "m3_design/r10_parts.py": "a832add1ca3d61cfd652162d4ec67d78e09f97ac9f90509a8a88007f0151d08b",
+    "tools/fit_check.py": "c3a8ea5535a74589922cdd544bd7875b1598781d0d2ff00f86ef4a7210187011",
+    "tools/test_fit_check.py": "3c9fb1a8f3f90a3b13edad1d8b5c1ad526a7c1a46b50633c853fd0da5f9e1d70",
+    "m3_design/r10_sch_check.py": "1f0e114eccf8df43025729ac1871d5078be246fc9da88bea6bed896f97944deb",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd"
+  },
+  "fit": {
+    "exit_code": 0,
+    "rows": 223,
+    "issues": [],
+    "terminal_tails": {
+      "count": 23,
+      "max_below_seating_mm": 3.8,
+      "transverse_allocation": "Inference: native copper-pad AABB, not a pin/solder model",
+      "minimum_bore_margin_mm": 7.5583593625055165,
+      "max_projection_below_board_mm": 2.1999999999999997,
+      "nominal_4mm_standoff_plate_clearance_mm": 1.8000000000000003,
+      "source": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+    },
+    "SD_rows": [
+      [
+        15.210798000170454,
+        "J430",
+        "B",
+        [
+          16.47499981,
+          18.2999993,
+          31.52500019,
+          33.99999838,
+          -3.70000088,
+          -1.6
+        ]
+      ],
+      [
+        15.210798536514993,
+        "J430 mated",
+        "B",
+        [
+          16.475,
+          18.3,
+          31.525,
+          34.0,
+          -3.7,
+          -1.6
+        ]
+      ]
+    ],
+    "nearest_bottom": [
+      4.536176804314399,
+      "C32.2",
+      [
+        4.0,
+        44.3
+      ]
+    ],
+    "nearest_top": [
+      3.807887,
+      "LED2.2 exposed top pad",
+      [
+        4.0,
+        44.3
+      ]
+    ]
+  },
+  "fit_tests": {
+    "exit_code": 0,
+    "count": 30,
+    "new_regression": "Native synthetic bottom-body/tail collision rejects; clear positive control passes.",
+    "log_sha256": "d82930a67192f7c52895e8433cc3a897f7d5ac75288a5c6d8554f0e33e048985"
+  },
+  "conditional_U9_budget": {
+    "u9_port_fault_peak_bound_inference_A": 3.7437971552257268,
+    "u9_current_limit_min_A": 3.9461883408071747,
+    "u9_current_limit_max_A": 4.856999498243853,
+    "u9_current_limit_basis": "Calc/Inference: exact750ohm TI table3.96..4.84A scaled inversely with R84 +/-0.35% (0.1% initial +25ppm/K x100K); not a new TI characterization or transient guarantee"
+  },
+  "UART": {
+    "operating": "direct GPS/radio RX pulls always disabled; relevant I/O supply+0.3V is operating condition",
+    "absolute": "separate Table1094V stress condition",
+    "DS12110_Rev11_pages": [
+      208,
+      210,
+      242
+    ],
+    "pins_nets_AF_unchanged": true
+  },
+  "limitations": "Pad-AABB transverse tail allocation/common SD seating/card front are Inference; no assembled maximum, solder/bent-tail, physical/firmware/electrical/transient qualification. Root must re-extract final native fit/budget and run complete build/check twice."
+}

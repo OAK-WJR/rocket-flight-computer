@@ -1,0 +1,2674 @@
+{
+  "schema": 1,
+  "review": "R10 round 11 gate adversary",
+  "target_commit": "21bc3b2",
+  "board_path": "m3_design/assembly_review/m3.kicad_pcb",
+  "board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "totals": {
+    "critical": 0,
+    "major": 0,
+    "minor": 3
+  },
+  "scope": "Native in-memory pcbnew checks, text/netlist contract faults, synthetic reference/region fixtures and isolated fab-manifest copies. No CLI DRC/ERC, check.sh or build executed by this lens. No full-gate seed survival claim.",
+  "canonical_board_unchanged": true,
+  "findings": [
+    {
+      "id": "R11-GATE-01",
+      "severity": "Minor",
+      "title": "Individual textbox legends and plus/minus polarity evade terminal conflict checks",
+      "source": [
+        "tools/check_r8.py:758",
+        "tools/check_r10.py:2293",
+        "tools/check_r10.py:2304"
+      ],
+      "probes": [
+        "near_GPS_conflicting_RXI_textbox",
+        "conflicting_polarity_combined_textbox",
+        "bare_textbox_3:RXI",
+        "bare_textbox_1:BAT-",
+        "bare_textbox_1:E1+"
+      ],
+      "present_on_canonical_board": false
+    },
+    {
+      "id": "R11-GATE-02",
+      "severity": "Minor",
+      "title": "Required-population set omits the functional core",
+      "source": [
+        "tools/check_r10.py:127",
+        "tools/check_r10.py:200",
+        "tools/check_r10.py:1439"
+      ],
+      "probes": [
+        "native_dnp_U1",
+        "native_dnp_U2",
+        "native_dnp_U3",
+        "native_dnp_U4",
+        "native_dnp_L1"
+      ],
+      "other_coverage": "r10_sch_check.contract rejects each mirrored schematic DNP fault; manifest catches an unrebound PCB change. Full build preflight dispatches the schematic contract.",
+      "present_on_canonical_board": false
+    },
+    {
+      "id": "R11-GATE-03",
+      "severity": "Minor",
+      "title": "Nonfinite or degenerate model transforms can pass fit and wire-room checks",
+      "source": [
+        "tools/fit_check.py:129",
+        "tools/fit_check.py:146",
+        "tools/check_r9.py:812",
+        "tools/check_r10.py:1881"
+      ],
+      "probes": [
+        "indexed_moved_terminal_model_scale_0.0",
+        "indexed_moved_terminal_fit_scale_0.0",
+        "microSD_model_nan_scale"
+      ],
+      "present_on_canonical_board": false
+    }
+  ],
+  "excluded_exploration": "Unscored fixtures were discarded when a mask collision, unrouted-board guard, unchanged model copy, or a gate-bias branch confounded the intended fault. Corrected native faults and paired controls are recorded here.",
+  "probes": [
+    {
+      "name": "native_baseline",
+      "checker": "check_r10.check_board only=S-1,S-2,S-3,S-4,S-5,S-6,S-7,S-9,K-contract,K-actuators,K-loader,K-width,K-legends,K-inner,K-retained,K-rules,M-1,M-3,M-6,M-7,P-11",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "S-1": {
+          "ok": true,
+          "issues": []
+        },
+        "S-2": {
+          "ok": true,
+          "issues": []
+        },
+        "S-3": {
+          "ok": true,
+          "issues": []
+        },
+        "S-4": {
+          "ok": true,
+          "issues": []
+        },
+        "S-5": {
+          "ok": true,
+          "issues": []
+        },
+        "S-6": {
+          "ok": true,
+          "issues": []
+        },
+        "S-7": {
+          "ok": true,
+          "issues": []
+        },
+        "S-9": {
+          "ok": true,
+          "issues": []
+        },
+        "K-contract": {
+          "ok": true,
+          "issues": []
+        },
+        "K-loader": {
+          "ok": true,
+          "issues": []
+        },
+        "K-actuators": {
+          "ok": true,
+          "issues": []
+        },
+        "M-1": {
+          "ok": true,
+          "issues": []
+        },
+        "M-3": {
+          "ok": true,
+          "issues": []
+        },
+        "M-6": {
+          "ok": true,
+          "issues": []
+        },
+        "M-7": {
+          "ok": true,
+          "issues": []
+        },
+        "P-11": {
+          "ok": true,
+          "issues": []
+        },
+        "K-legends": {
+          "ok": true,
+          "issues": []
+        },
+        "K-inner": {
+          "ok": true,
+          "issues": []
+        },
+        "K-rules": {
+          "ok": true,
+          "issues": []
+        },
+        "K-width": {
+          "ok": true,
+          "issues": []
+        },
+        "K-retained": {
+          "ok": true,
+          "issues": []
+        }
+      }
+    },
+    {
+      "name": "fit_baseline",
+      "checker": "fit_check.check_board(profile=r10)",
+      "issue_count": 0,
+      "issues": [],
+      "minimum_bore_margin_mm": 0.8861286438584379
+    },
+    {
+      "name": "schematic_baseline",
+      "checker": "r10_sch_check.contract",
+      "issue_count": 0,
+      "issues": []
+    },
+    {
+      "name": "bare_textbox_3:RXI",
+      "checker": "check_r10.check_board only=K-legends",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "K-legends": {
+          "title": "legends and ids",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "terminal_legends": {
+              "2:GND (4.9, 80.399999)": [
+                "J1.2",
+                1.95,
+                "J1.1",
+                5.45
+              ],
+              "1:BAT+ (6.3, 71.399999)": [
+                "J1.1",
+                1.85,
+                "J400.2",
+                2.95
+              ],
+              "2:E1+ (8.199999, 60.4)": [
+                "J121.2",
+                1.95,
+                "J400.1",
+                2.85
+              ],
+              "3:S3 (33.1, 71.0)": [
+                "J122.3",
+                4.11,
+                "J122.4",
+                4.64
+              ],
+              "4:RXI (37.3, 7.55)": [
+                "J410.4",
+                1.85,
+                "J410.3",
+                5.35
+              ],
+              "5:GND (37.4, 61.8)": [
+                "J122.5",
+                1.85,
+                "J122.4",
+                5.35
+              ],
+              "1:5V4 (40.7, 55.55)": [
+                "J9.1",
+                1.95,
+                "J9.2",
+                5.45
+              ],
+              "1:SW (2.5, 64.199998)": [
+                "J400.1",
+                3.65,
+                "J400.2",
+                3.95
+              ],
+              "2:SW (2.5, 68.199998)": [
+                "J400.2",
+                3.65,
+                "J400.1",
+                4.27
+              ],
+              "1:E1- (8.8, 49.8)": [
+                "J121.1",
+                2.14,
+                "J121.2",
+                5.5
+              ],
+              "1:S1 (38.4, 82.2)": [
+                "J122.1",
+                1.91,
+                "J122.2",
+                5.41
+              ],
+              "1:4V8 (43.6, 21.05)": [
+                "J410.1",
+                3.75,
+                "J410.2",
+                4.07
+              ],
+              "4:RXI (43.6, 25.45)": [
+                "J420.4",
+                3.75,
+                "J420.3",
+                4.37
+              ],
+              "4:TXO (43.6, 40.55)": [
+                "J9.4",
+                3.75,
+                "J420.1",
+                4.07
+              ],
+              "2:S2 (41.7, 74.5)": [
+                "J122.2",
+                0.91,
+                "J122.3",
+                2.34
+              ],
+              "3:RXI (41.9, 45.25)": [
+                "J9.3",
+                0.85,
+                "J9.4",
+                2.31
+              ],
+              "3:TXO (42.1, 13.25)": [
+                "J410.3",
+                0.88,
+                "J410.4",
+                2.32
+              ],
+              "3:TXO (42.1, 29.25)": [
+                "J420.3",
+                0.88,
+                "J420.4",
+                2.32
+              ],
+              "1:4V8 (42.1, 36.25)": [
+                "J420.1",
+                0.88,
+                "J420.2",
+                2.32
+              ],
+              "2:GND (42.3, 48.75)": [
+                "J9.2",
+                0.94,
+                "J9.3",
+                2.35
+              ],
+              "2:GND (37.3, 16.95)": [
+                "J410.2",
+                0.85,
+                "J410.3",
+                1.19
+              ],
+              "2:GND (37.3, 32.95)": [
+                "J420.2",
+                0.85,
+                "J420.3",
+                1.19
+              ],
+              "4:S4 (40.8, 67.2)": [
+                "J122.4",
+                0.95,
+                "J122.5",
+                1.32
+              ]
+            },
+            "silk_mask_overlaps": 0,
+            "aud10_review": [],
+            "aud10_review_count": 0,
+            "hidden": [
+              "C10",
+              "C100",
+              "C11",
+              "C126",
+              "C127",
+              "C129",
+              "C13",
+              "C14",
+              "C15",
+              "C16",
+              "C19",
+              "C20",
+              "C21",
+              "C22",
+              "C23",
+              "C24",
+              "C25",
+              "C26",
+              "C30",
+              "C31",
+              "C32",
+              "C410",
+              "C421",
+              "C6",
+              "C7",
+              "C81",
+              "C82",
+              "C85",
+              "C88",
+              "C92",
+              "C94",
+              "C99",
+              "D121",
+              "D400",
+              "D401",
+              "D410",
+              "D420",
+              "LED1",
+              "Q122",
+              "Q123",
+              "R10",
+              "R100",
+              "R101",
+              "R103",
+              "R104",
+              "R105",
+              "R120",
+              "R121",
+              "R122",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R13",
+              "R130",
+              "R132",
+              "R133",
+              "R151",
+              "R152",
+              "R155",
+              "R162",
+              "R163",
+              "R164",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R32",
+              "R403",
+              "R405",
+              "R441",
+              "R451",
+              "R5",
+              "R62",
+              "R63",
+              "R64",
+              "R87",
+              "R9",
+              "TP120",
+              "TP122",
+              "TP82",
+              "U11",
+              "U2",
+              "U4",
+              "U402",
+              "U5",
+              "U9"
+            ],
+            "hidden_count": 87
+          }
+        }
+      },
+      "mask_overlap_delta": 0,
+      "box_mm": [
+        9,
+        12,
+        21,
+        14
+      ]
+    },
+    {
+      "name": "bare_textbox_1:BAT-",
+      "checker": "check_r10.check_board only=K-legends",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "K-legends": {
+          "title": "legends and ids",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "terminal_legends": {
+              "2:GND (4.9, 80.399999)": [
+                "J1.2",
+                1.95,
+                "J1.1",
+                5.45
+              ],
+              "1:BAT+ (6.3, 71.399999)": [
+                "J1.1",
+                1.85,
+                "J400.2",
+                2.95
+              ],
+              "2:E1+ (8.199999, 60.4)": [
+                "J121.2",
+                1.95,
+                "J400.1",
+                2.85
+              ],
+              "3:S3 (33.1, 71.0)": [
+                "J122.3",
+                4.11,
+                "J122.4",
+                4.64
+              ],
+              "4:RXI (37.3, 7.55)": [
+                "J410.4",
+                1.85,
+                "J410.3",
+                5.35
+              ],
+              "5:GND (37.4, 61.8)": [
+                "J122.5",
+                1.85,
+                "J122.4",
+                5.35
+              ],
+              "1:5V4 (40.7, 55.55)": [
+                "J9.1",
+                1.95,
+                "J9.2",
+                5.45
+              ],
+              "1:SW (2.5, 64.199998)": [
+                "J400.1",
+                3.65,
+                "J400.2",
+                3.95
+              ],
+              "2:SW (2.5, 68.199998)": [
+                "J400.2",
+                3.65,
+                "J400.1",
+                4.27
+              ],
+              "1:E1- (8.8, 49.8)": [
+                "J121.1",
+                2.14,
+                "J121.2",
+                5.5
+              ],
+              "1:S1 (38.4, 82.2)": [
+                "J122.1",
+                1.91,
+                "J122.2",
+                5.41
+              ],
+              "1:4V8 (43.6, 21.05)": [
+                "J410.1",
+                3.75,
+                "J410.2",
+                4.07
+              ],
+              "4:RXI (43.6, 25.45)": [
+                "J420.4",
+                3.75,
+                "J420.3",
+                4.37
+              ],
+              "4:TXO (43.6, 40.55)": [
+                "J9.4",
+                3.75,
+                "J420.1",
+                4.07
+              ],
+              "2:S2 (41.7, 74.5)": [
+                "J122.2",
+                0.91,
+                "J122.3",
+                2.34
+              ],
+              "3:RXI (41.9, 45.25)": [
+                "J9.3",
+                0.85,
+                "J9.4",
+                2.31
+              ],
+              "3:TXO (42.1, 13.25)": [
+                "J410.3",
+                0.88,
+                "J410.4",
+                2.32
+              ],
+              "3:TXO (42.1, 29.25)": [
+                "J420.3",
+                0.88,
+                "J420.4",
+                2.32
+              ],
+              "1:4V8 (42.1, 36.25)": [
+                "J420.1",
+                0.88,
+                "J420.2",
+                2.32
+              ],
+              "2:GND (42.3, 48.75)": [
+                "J9.2",
+                0.94,
+                "J9.3",
+                2.35
+              ],
+              "2:GND (37.3, 16.95)": [
+                "J410.2",
+                0.85,
+                "J410.3",
+                1.19
+              ],
+              "2:GND (37.3, 32.95)": [
+                "J420.2",
+                0.85,
+                "J420.3",
+                1.19
+              ],
+              "4:S4 (40.8, 67.2)": [
+                "J122.4",
+                0.95,
+                "J122.5",
+                1.32
+              ]
+            },
+            "silk_mask_overlaps": 0,
+            "aud10_review": [],
+            "aud10_review_count": 0,
+            "hidden": [
+              "C10",
+              "C100",
+              "C11",
+              "C126",
+              "C127",
+              "C129",
+              "C13",
+              "C14",
+              "C15",
+              "C16",
+              "C19",
+              "C20",
+              "C21",
+              "C22",
+              "C23",
+              "C24",
+              "C25",
+              "C26",
+              "C30",
+              "C31",
+              "C32",
+              "C410",
+              "C421",
+              "C6",
+              "C7",
+              "C81",
+              "C82",
+              "C85",
+              "C88",
+              "C92",
+              "C94",
+              "C99",
+              "D121",
+              "D400",
+              "D401",
+              "D410",
+              "D420",
+              "LED1",
+              "Q122",
+              "Q123",
+              "R10",
+              "R100",
+              "R101",
+              "R103",
+              "R104",
+              "R105",
+              "R120",
+              "R121",
+              "R122",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R13",
+              "R130",
+              "R132",
+              "R133",
+              "R151",
+              "R152",
+              "R155",
+              "R162",
+              "R163",
+              "R164",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R32",
+              "R403",
+              "R405",
+              "R441",
+              "R451",
+              "R5",
+              "R62",
+              "R63",
+              "R64",
+              "R87",
+              "R9",
+              "TP120",
+              "TP122",
+              "TP82",
+              "U11",
+              "U2",
+              "U4",
+              "U402",
+              "U5",
+              "U9"
+            ],
+            "hidden_count": 87
+          }
+        }
+      },
+      "mask_overlap_delta": 0,
+      "box_mm": [
+        9,
+        12,
+        21,
+        14
+      ]
+    },
+    {
+      "name": "bare_textbox_1:E1+",
+      "checker": "check_r10.check_board only=K-legends",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "K-legends": {
+          "title": "legends and ids",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "terminal_legends": {
+              "2:GND (4.9, 80.399999)": [
+                "J1.2",
+                1.95,
+                "J1.1",
+                5.45
+              ],
+              "1:BAT+ (6.3, 71.399999)": [
+                "J1.1",
+                1.85,
+                "J400.2",
+                2.95
+              ],
+              "2:E1+ (8.199999, 60.4)": [
+                "J121.2",
+                1.95,
+                "J400.1",
+                2.85
+              ],
+              "3:S3 (33.1, 71.0)": [
+                "J122.3",
+                4.11,
+                "J122.4",
+                4.64
+              ],
+              "4:RXI (37.3, 7.55)": [
+                "J410.4",
+                1.85,
+                "J410.3",
+                5.35
+              ],
+              "5:GND (37.4, 61.8)": [
+                "J122.5",
+                1.85,
+                "J122.4",
+                5.35
+              ],
+              "1:5V4 (40.7, 55.55)": [
+                "J9.1",
+                1.95,
+                "J9.2",
+                5.45
+              ],
+              "1:SW (2.5, 64.199998)": [
+                "J400.1",
+                3.65,
+                "J400.2",
+                3.95
+              ],
+              "2:SW (2.5, 68.199998)": [
+                "J400.2",
+                3.65,
+                "J400.1",
+                4.27
+              ],
+              "1:E1- (8.8, 49.8)": [
+                "J121.1",
+                2.14,
+                "J121.2",
+                5.5
+              ],
+              "1:S1 (38.4, 82.2)": [
+                "J122.1",
+                1.91,
+                "J122.2",
+                5.41
+              ],
+              "1:4V8 (43.6, 21.05)": [
+                "J410.1",
+                3.75,
+                "J410.2",
+                4.07
+              ],
+              "4:RXI (43.6, 25.45)": [
+                "J420.4",
+                3.75,
+                "J420.3",
+                4.37
+              ],
+              "4:TXO (43.6, 40.55)": [
+                "J9.4",
+                3.75,
+                "J420.1",
+                4.07
+              ],
+              "2:S2 (41.7, 74.5)": [
+                "J122.2",
+                0.91,
+                "J122.3",
+                2.34
+              ],
+              "3:RXI (41.9, 45.25)": [
+                "J9.3",
+                0.85,
+                "J9.4",
+                2.31
+              ],
+              "3:TXO (42.1, 13.25)": [
+                "J410.3",
+                0.88,
+                "J410.4",
+                2.32
+              ],
+              "3:TXO (42.1, 29.25)": [
+                "J420.3",
+                0.88,
+                "J420.4",
+                2.32
+              ],
+              "1:4V8 (42.1, 36.25)": [
+                "J420.1",
+                0.88,
+                "J420.2",
+                2.32
+              ],
+              "2:GND (42.3, 48.75)": [
+                "J9.2",
+                0.94,
+                "J9.3",
+                2.35
+              ],
+              "2:GND (37.3, 16.95)": [
+                "J410.2",
+                0.85,
+                "J410.3",
+                1.19
+              ],
+              "2:GND (37.3, 32.95)": [
+                "J420.2",
+                0.85,
+                "J420.3",
+                1.19
+              ],
+              "4:S4 (40.8, 67.2)": [
+                "J122.4",
+                0.95,
+                "J122.5",
+                1.32
+              ]
+            },
+            "silk_mask_overlaps": 0,
+            "aud10_review": [],
+            "aud10_review_count": 0,
+            "hidden": [
+              "C10",
+              "C100",
+              "C11",
+              "C126",
+              "C127",
+              "C129",
+              "C13",
+              "C14",
+              "C15",
+              "C16",
+              "C19",
+              "C20",
+              "C21",
+              "C22",
+              "C23",
+              "C24",
+              "C25",
+              "C26",
+              "C30",
+              "C31",
+              "C32",
+              "C410",
+              "C421",
+              "C6",
+              "C7",
+              "C81",
+              "C82",
+              "C85",
+              "C88",
+              "C92",
+              "C94",
+              "C99",
+              "D121",
+              "D400",
+              "D401",
+              "D410",
+              "D420",
+              "LED1",
+              "Q122",
+              "Q123",
+              "R10",
+              "R100",
+              "R101",
+              "R103",
+              "R104",
+              "R105",
+              "R120",
+              "R121",
+              "R122",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R13",
+              "R130",
+              "R132",
+              "R133",
+              "R151",
+              "R152",
+              "R155",
+              "R162",
+              "R163",
+              "R164",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R32",
+              "R403",
+              "R405",
+              "R441",
+              "R451",
+              "R5",
+              "R62",
+              "R63",
+              "R64",
+              "R87",
+              "R9",
+              "TP120",
+              "TP122",
+              "TP82",
+              "U11",
+              "U2",
+              "U4",
+              "U402",
+              "U5",
+              "U9"
+            ],
+            "hidden_count": 87
+          }
+        }
+      },
+      "mask_overlap_delta": 0,
+      "box_mm": [
+        9,
+        12,
+        21,
+        14
+      ]
+    },
+    {
+      "name": "native_dnp_U1",
+      "checker": "check_r10.check_board only=S-4,K-contract,K-actuators",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "S-4": {
+          "title": "required-fitted safety parts (R1-07)",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "required": 113,
+            "safety": [
+              "C120",
+              "C126",
+              "C127",
+              "C128",
+              "C129",
+              "D120",
+              "J121",
+              "J400",
+              "Q120",
+              "Q121",
+              "Q122",
+              "Q124",
+              "R120",
+              "R121",
+              "R122",
+              "R123",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R130",
+              "R131",
+              "R132",
+              "R133",
+              "R134",
+              "R165",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R80"
+            ],
+            "schematic": "m3.kicad_sch",
+            "BOM": "not supplied (board and schematic flags checked)",
+            "CPL": "not supplied (board and schematic flags checked)"
+          }
+        },
+        "K-contract": {
+          "title": "R10 netlist contract",
+          "ok": true,
+          "issues": [],
+          "evidence": {}
+        },
+        "K-actuators": {
+          "title": "check_actuators --profile r10",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "sha256": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0"
+          }
+        }
+      }
+    },
+    {
+      "name": "schematic_dnp_U1",
+      "checker": "r10_sch_check.contract",
+      "issue_count": 1,
+      "issues": [
+        "U1: changed assembly flag dnp"
+      ]
+    },
+    {
+      "name": "native_dnp_U2",
+      "checker": "check_r10.check_board only=S-4,K-contract,K-actuators",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "S-4": {
+          "title": "required-fitted safety parts (R1-07)",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "required": 113,
+            "safety": [
+              "C120",
+              "C126",
+              "C127",
+              "C128",
+              "C129",
+              "D120",
+              "J121",
+              "J400",
+              "Q120",
+              "Q121",
+              "Q122",
+              "Q124",
+              "R120",
+              "R121",
+              "R122",
+              "R123",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R130",
+              "R131",
+              "R132",
+              "R133",
+              "R134",
+              "R165",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R80"
+            ],
+            "schematic": "m3.kicad_sch",
+            "BOM": "not supplied (board and schematic flags checked)",
+            "CPL": "not supplied (board and schematic flags checked)"
+          }
+        },
+        "K-contract": {
+          "title": "R10 netlist contract",
+          "ok": true,
+          "issues": [],
+          "evidence": {}
+        },
+        "K-actuators": {
+          "title": "check_actuators --profile r10",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "sha256": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0"
+          }
+        }
+      }
+    },
+    {
+      "name": "schematic_dnp_U2",
+      "checker": "r10_sch_check.contract",
+      "issue_count": 1,
+      "issues": [
+        "U2: changed assembly flag dnp"
+      ]
+    },
+    {
+      "name": "native_dnp_U3",
+      "checker": "check_r10.check_board only=S-4,K-contract,K-actuators",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "S-4": {
+          "title": "required-fitted safety parts (R1-07)",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "required": 113,
+            "safety": [
+              "C120",
+              "C126",
+              "C127",
+              "C128",
+              "C129",
+              "D120",
+              "J121",
+              "J400",
+              "Q120",
+              "Q121",
+              "Q122",
+              "Q124",
+              "R120",
+              "R121",
+              "R122",
+              "R123",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R130",
+              "R131",
+              "R132",
+              "R133",
+              "R134",
+              "R165",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R80"
+            ],
+            "schematic": "m3.kicad_sch",
+            "BOM": "not supplied (board and schematic flags checked)",
+            "CPL": "not supplied (board and schematic flags checked)"
+          }
+        },
+        "K-contract": {
+          "title": "R10 netlist contract",
+          "ok": true,
+          "issues": [],
+          "evidence": {}
+        },
+        "K-actuators": {
+          "title": "check_actuators --profile r10",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "sha256": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0"
+          }
+        }
+      }
+    },
+    {
+      "name": "schematic_dnp_U3",
+      "checker": "r10_sch_check.contract",
+      "issue_count": 1,
+      "issues": [
+        "U3: changed assembly flag dnp"
+      ]
+    },
+    {
+      "name": "native_dnp_U4",
+      "checker": "check_r10.check_board only=S-4,K-contract,K-actuators",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "S-4": {
+          "title": "required-fitted safety parts (R1-07)",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "required": 113,
+            "safety": [
+              "C120",
+              "C126",
+              "C127",
+              "C128",
+              "C129",
+              "D120",
+              "J121",
+              "J400",
+              "Q120",
+              "Q121",
+              "Q122",
+              "Q124",
+              "R120",
+              "R121",
+              "R122",
+              "R123",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R130",
+              "R131",
+              "R132",
+              "R133",
+              "R134",
+              "R165",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R80"
+            ],
+            "schematic": "m3.kicad_sch",
+            "BOM": "not supplied (board and schematic flags checked)",
+            "CPL": "not supplied (board and schematic flags checked)"
+          }
+        },
+        "K-contract": {
+          "title": "R10 netlist contract",
+          "ok": true,
+          "issues": [],
+          "evidence": {}
+        },
+        "K-actuators": {
+          "title": "check_actuators --profile r10",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "sha256": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0"
+          }
+        }
+      }
+    },
+    {
+      "name": "schematic_dnp_U4",
+      "checker": "r10_sch_check.contract",
+      "issue_count": 1,
+      "issues": [
+        "U4: changed assembly flag dnp"
+      ]
+    },
+    {
+      "name": "native_dnp_L1",
+      "checker": "check_r10.check_board only=S-4,K-contract,K-actuators",
+      "issue_count": 0,
+      "issues": [],
+      "rules": {
+        "S-4": {
+          "title": "required-fitted safety parts (R1-07)",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "required": 113,
+            "safety": [
+              "C120",
+              "C126",
+              "C127",
+              "C128",
+              "C129",
+              "D120",
+              "J121",
+              "J400",
+              "Q120",
+              "Q121",
+              "Q122",
+              "Q124",
+              "R120",
+              "R121",
+              "R122",
+              "R123",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R130",
+              "R131",
+              "R132",
+              "R133",
+              "R134",
+              "R165",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R80"
+            ],
+            "schematic": "m3.kicad_sch",
+            "BOM": "not supplied (board and schematic flags checked)",
+            "CPL": "not supplied (board and schematic flags checked)"
+          }
+        },
+        "K-contract": {
+          "title": "R10 netlist contract",
+          "ok": true,
+          "issues": [],
+          "evidence": {}
+        },
+        "K-actuators": {
+          "title": "check_actuators --profile r10",
+          "ok": true,
+          "issues": [],
+          "evidence": {
+            "sha256": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0"
+          }
+        }
+      }
+    },
+    {
+      "name": "schematic_dnp_L1",
+      "checker": "r10_sch_check.contract",
+      "issue_count": 1,
+      "issues": [
+        "L1: changed assembly flag dnp"
+      ]
+    },
+    {
+      "name": "SD shield floating",
+      "checker": "check_r10.functional(seed text)",
+      "issue_count": 2,
+      "issues": [
+        "J430: microSD pin mapping must be {'J430.1': 'SD_DAT2', 'J430.2': 'SD_CS', 'J430.3': 'SD_MOSI', 'J430.4': '3V3', 'J430.5': 'SD_SCK', 'J430.6': 'GND', 'J430.7': 'SD_MISO', 'J430.8': 'SD_DAT1', 'J430.9': 'GND', 'J430.10': 'GND', 'J430.11': 'GND', 'J430.12': 'GND'}, got {'J430.1': 'SD_DAT2', 'J430.2': 'SD_CS', 'J430.3': 'SD_MOSI', 'J430.4': '3V3', 'J430.5': 'SD_SCK', 'J430.6': 'GND', 'J430.7': 'SD_MISO', 'J430.8': 'SD_DAT1', 'J430.9': 'SD_DAT1', 'J430.10': 'GND', 'J430.11': 'GND', 'J430.12': 'GND'}",
+        "SD_DAT1: microSD members must be ['J430.8', 'R463.1'], got ['J430.8', 'J430.9', 'R463.1']"
+      ],
+      "ref": "J430",
+      "pin": "9",
+      "seeded_net": "SD_DAT1"
+    },
+    {
+      "name": "GPS direct RX series bypass",
+      "checker": "check_r10.functional(seed text)",
+      "issue_count": 2,
+      "issues": [
+        "GPS_RX_MCU: must touch only U1 and its 1k resistor",
+        "U1.64: must be GPS_RX_MCU, got GPS_RX_WIRE"
+      ],
+      "ref": "U1",
+      "pin": "64",
+      "seeded_net": "GPS_RX_WIRE"
+    },
+    {
+      "name": "RADIO always-on feed split",
+      "checker": "check_r10.functional(seed text)",
+      "issue_count": 2,
+      "issues": [
+        "J420.1: direct UART requires PORT_4V8, got CAM_5V",
+        "J420: connector pin mapping must be ('PORT_4V8', 'GND', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE')"
+      ],
+      "ref": "J420",
+      "pin": "1",
+      "seeded_net": "CAM_5V"
+    },
+    {
+      "name": "direct ADC moved from PC5",
+      "checker": "check_r10.functional(seed text)",
+      "issue_count": 3,
+      "issues": [
+        "PYRO1_CONT must be only R129, R130, R178, C127 and U1.15",
+        "ARM1_SENSE must be only R175, R133, R180, C129 and U1.33",
+        "U1.33: must be ARM1_SENSE, got PYRO1_CONT"
+      ],
+      "ref": "U1",
+      "pin": "33",
+      "seeded_net": "PYRO1_CONT"
+    },
+    {
+      "name": "SD unused DAT2 wrong pull supply",
+      "checker": "check_r10.functional(seed text)",
+      "issue_count": 1,
+      "issues": [
+        "R464: microSD pin mapping must be {'R464.1': 'SD_DAT2', 'R464.2': '3V3'}, got {'R464.1': 'SD_DAT2', 'R464.2': 'PORT_4V8'}"
+      ],
+      "ref": "R464",
+      "pin": "2",
+      "seeded_net": "PORT_4V8"
+    },
+    {
+      "name": "critical_scope",
+      "checker": "route_check.net_class/return_required and critical_reference.r10_slow_return_net",
+      "issue_count": 0,
+      "issues": [],
+      "nets": {
+        "ACT_DRV": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "ACT_EN": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "ACT_EN_EXTRA": {
+          "cls": "actuator",
+          "return_required": true,
+          "slow": false
+        },
+        "ACT_EN_MCU": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "ACT_GATE": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "ARM1_SENSE": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "ARM1_SENSE_EXTRA": {
+          "cls": "pyro",
+          "return_required": true,
+          "slow": false
+        },
+        "ARM1_SENSE_MID": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "CAM_5V_SENSE": {
+          "cls": "other",
+          "return_required": false,
+          "slow": true
+        },
+        "CAM_FAULT_N": {
+          "cls": "portctl",
+          "return_required": false,
+          "slow": true
+        },
+        "CAM_MCU_RX": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_MCU_TX": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_PWR_EN": {
+          "cls": "portctl",
+          "return_required": false,
+          "slow": true
+        },
+        "CAM_RX_BUFFER": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_RX_MCU": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_RX_WIRE": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_TX_BUFFER": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_TX_MCU": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_TX_WIRE": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "CAM_UART_OE": {
+          "cls": "portctl",
+          "return_required": false,
+          "slow": true
+        },
+        "GPS_RX_MCU": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "GPS_RX_WIRE": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "GPS_TX_MCU": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "GPS_TX_WIRE": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "PYRO1_CONT": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "PYRO1_CONT_MID": {
+          "cls": "pyro",
+          "return_required": false,
+          "slow": true
+        },
+        "PYRO1_GATE": {
+          "cls": "pyro",
+          "return_required": true,
+          "slow": false
+        },
+        "PYRO1_GATE_N": {
+          "cls": "pyro",
+          "return_required": true,
+          "slow": false
+        },
+        "RADIO_RX_MCU": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "RADIO_RX_WIRE": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "RADIO_TX_MCU": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "RADIO_TX_WIRE": {
+          "cls": "uart",
+          "return_required": true,
+          "slow": false
+        },
+        "SD_CS": {
+          "cls": "spi",
+          "return_required": true,
+          "slow": false
+        },
+        "SD_DAT1": {
+          "cls": "spi",
+          "return_required": true,
+          "slow": false
+        },
+        "SD_DAT2": {
+          "cls": "spi",
+          "return_required": true,
+          "slow": false
+        },
+        "SD_MISO": {
+          "cls": "spi",
+          "return_required": true,
+          "slow": false
+        },
+        "SD_MOSI": {
+          "cls": "spi",
+          "return_required": true,
+          "slow": false
+        },
+        "SD_SCK": {
+          "cls": "spi",
+          "return_required": true,
+          "slow": false
+        },
+        "SD_SCK_MCU": {
+          "cls": "other",
+          "return_required": true,
+          "slow": false
+        },
+        "V3V3_SENSE": {
+          "cls": "other",
+          "return_required": false,
+          "slow": true
+        },
+        "VLOGIC_SENSE": {
+          "cls": "other",
+          "return_required": false,
+          "slow": true
+        }
+      }
+    },
+    {
+      "name": "control_wrong_known_plain_text",
+      "checker": "check_r10.check_board only=K-legends",
+      "issue_count": 1,
+      "issues": [
+        "K-legends: terminal pin legend \"3:RXI\" at (15.0, 13.0): its nearest connector pin is J430.11 (7.85 mm; next J430.8 10.74 mm), not a pin it names (D92)"
+      ],
+      "mask_overlap_delta": 0
+    },
+    {
+      "name": "control_unknown_bare_textbox",
+      "checker": "check_r10.check_board only=K-legends",
+      "issue_count": 1,
+      "issues": [
+        "K-legends: J410.3: conflicting silkscreen pin legend '2:RXI': the nearest terminal pin is labelled \"3:TXO\""
+      ],
+      "mask_overlap_delta": 0
+    },
+    {
+      "name": "conflicting_polarity_combined_textbox",
+      "checker": "check_r10.check_board only=K-legends",
+      "issue_count": 0,
+      "issues": [],
+      "mask_overlap_delta": 0
+    },
+    {
+      "name": "assembly_control_m3_bom_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": []
+    },
+    {
+      "name": "assembly_omit_U1_m3_bom_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": [],
+      "ref": "U1"
+    },
+    {
+      "name": "assembly_omit_U3_m3_bom_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": [],
+      "ref": "U3"
+    },
+    {
+      "name": "assembly_omit_U4_m3_bom_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": [],
+      "ref": "U4"
+    },
+    {
+      "name": "assembly_control_m3_cpl_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": []
+    },
+    {
+      "name": "assembly_omit_U1_m3_cpl_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": [],
+      "ref": "U1"
+    },
+    {
+      "name": "assembly_omit_U3_m3_cpl_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": [],
+      "ref": "U3"
+    },
+    {
+      "name": "assembly_omit_U4_m3_cpl_jlc.csv",
+      "checker": "check_r10.assembly_population",
+      "issue_count": 0,
+      "issues": [],
+      "ref": "U4"
+    },
+    {
+      "name": "reference_removed_SD_SCK",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('SD_SCK', 'B.Cu', 10.0, 10.0), ('SD_SCK', 'B.Cu', 10.0, 10.1), ('SD_SCK', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "SD_SCK B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_SD_SCK",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "SD_SCK: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_SD_MISO",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('SD_MISO', 'B.Cu', 10.0, 10.0), ('SD_MISO', 'B.Cu', 10.0, 10.1), ('SD_MISO', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "SD_MISO B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_SD_MISO",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "SD_MISO: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_SD_MOSI",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('SD_MOSI', 'B.Cu', 10.0, 10.0), ('SD_MOSI', 'B.Cu', 10.0, 10.1), ('SD_MOSI', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "SD_MOSI B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_SD_MOSI",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "SD_MOSI: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_SD_CS",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('SD_CS', 'B.Cu', 10.0, 10.0), ('SD_CS', 'B.Cu', 10.0, 10.1), ('SD_CS', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "SD_CS B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_SD_CS",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "SD_CS: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_SD_DAT1",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('SD_DAT1', 'B.Cu', 10.0, 10.0), ('SD_DAT1', 'B.Cu', 10.0, 10.1), ('SD_DAT1', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "SD_DAT1 B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_SD_DAT1",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "SD_DAT1: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_SD_DAT2",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('SD_DAT2', 'B.Cu', 10.0, 10.0), ('SD_DAT2', 'B.Cu', 10.0, 10.1), ('SD_DAT2', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "SD_DAT2 B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_SD_DAT2",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "SD_DAT2: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_GPS_TX_MCU",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('GPS_TX_MCU', 'B.Cu', 10.0, 10.0), ('GPS_TX_MCU', 'B.Cu', 10.0, 10.1), ('GPS_TX_MCU', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "GPS_TX_MCU B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_GPS_TX_MCU",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "GPS_TX_MCU: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_GPS_TX_WIRE",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('GPS_TX_WIRE', 'B.Cu', 10.0, 10.0), ('GPS_TX_WIRE', 'B.Cu', 10.0, 10.1), ('GPS_TX_WIRE', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "GPS_TX_WIRE B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_GPS_TX_WIRE",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "GPS_TX_WIRE: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_GPS_RX_MCU",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('GPS_RX_MCU', 'B.Cu', 10.0, 10.0), ('GPS_RX_MCU', 'B.Cu', 10.0, 10.1), ('GPS_RX_MCU', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "GPS_RX_MCU B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_GPS_RX_MCU",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "GPS_RX_MCU: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_GPS_RX_WIRE",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('GPS_RX_WIRE', 'B.Cu', 10.0, 10.0), ('GPS_RX_WIRE', 'B.Cu', 10.0, 10.1), ('GPS_RX_WIRE', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "GPS_RX_WIRE B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_GPS_RX_WIRE",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "GPS_RX_WIRE: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_RADIO_TX_MCU",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('RADIO_TX_MCU', 'B.Cu', 10.0, 10.0), ('RADIO_TX_MCU', 'B.Cu', 10.0, 10.1), ('RADIO_TX_MCU', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "RADIO_TX_MCU B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_RADIO_TX_MCU",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "RADIO_TX_MCU: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_RADIO_TX_WIRE",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('RADIO_TX_WIRE', 'B.Cu', 10.0, 10.0), ('RADIO_TX_WIRE', 'B.Cu', 10.0, 10.1), ('RADIO_TX_WIRE', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "RADIO_TX_WIRE B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_RADIO_TX_WIRE",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "RADIO_TX_WIRE: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_RADIO_RX_MCU",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('RADIO_RX_MCU', 'B.Cu', 10.0, 10.0), ('RADIO_RX_MCU', 'B.Cu', 10.0, 10.1), ('RADIO_RX_MCU', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "RADIO_RX_MCU B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_RADIO_RX_MCU",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "RADIO_RX_MCU: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_RADIO_RX_WIRE",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('RADIO_RX_WIRE', 'B.Cu', 10.0, 10.0), ('RADIO_RX_WIRE', 'B.Cu', 10.0, 10.1), ('RADIO_RX_WIRE', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "RADIO_RX_WIRE B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_RADIO_RX_WIRE",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "RADIO_RX_WIRE: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_PYRO1_GATE",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('PYRO1_GATE', 'B.Cu', 10.0, 10.0), ('PYRO1_GATE', 'B.Cu', 10.0, 10.1), ('PYRO1_GATE', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "PYRO1_GATE B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_PYRO1_GATE",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "PYRO1_GATE: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "reference_removed_PYRO1_GATE_N",
+      "checker": "check_r10.references (native track, fixture reference fill)",
+      "issue_count": 1,
+      "issues": [
+        "603 critical signal samples lack adjacent reference copper outside their own via antipads, e.g. [('PYRO1_GATE_N', 'B.Cu', 10.0, 10.0), ('PYRO1_GATE_N', 'B.Cu', 10.0, 10.1), ('PYRO1_GATE_N', 'B.Cu', 10.0, 9.9)]"
+      ],
+      "baseline_issue_count": 0,
+      "samples": {
+        "PYRO1_GATE_N B.Cu": {
+          "samples": 603,
+          "box": [
+            10.0,
+            9.9,
+            12.0,
+            10.1
+          ]
+        }
+      }
+    },
+    {
+      "name": "partner_removed_PYRO1_GATE_N",
+      "checker": "route_check.critical_transitions",
+      "issue_count": 1,
+      "issues": [
+        "PYRO1_GATE_N: no GND partner"
+      ],
+      "baseline_distances_mm": [
+        1.0
+      ],
+      "seeded_distances_mm": [
+        null
+      ]
+    },
+    {
+      "name": "slow_partner_control_ARM1_SENSE",
+      "checker": "route_check.critical_transitions (AUD-2 expected exemption)",
+      "issue_count": 0,
+      "issues": [],
+      "transitions": []
+    },
+    {
+      "name": "slow_partner_control_PYRO1_CONT",
+      "checker": "route_check.critical_transitions (AUD-2 expected exemption)",
+      "issue_count": 0,
+      "issues": [],
+      "transitions": []
+    },
+    {
+      "name": "slow_partner_control_ACT_GATE",
+      "checker": "route_check.critical_transitions (AUD-2 expected exemption)",
+      "issue_count": 0,
+      "issues": [],
+      "transitions": []
+    },
+    {
+      "name": "slow_partner_control_CAM_UART_OE",
+      "checker": "route_check.critical_transitions (AUD-2 expected exemption)",
+      "issue_count": 0,
+      "issues": [],
+      "transitions": []
+    },
+    {
+      "name": "fab_manifest_control",
+      "checker": "fab_manifest.verify_manifest",
+      "issue_count": 0,
+      "issues": [],
+      "output_count": 5
+    },
+    {
+      "name": "fab_output_changed_m3_bom_jlc.csv",
+      "checker": "fab_manifest.verify_manifest",
+      "issue_count": 1,
+      "issues": [
+        "fabrication output missing or changed: m3_bom_jlc.csv"
+      ]
+    },
+    {
+      "name": "fab_output_changed_m3_cpl_jlc.csv",
+      "checker": "fab_manifest.verify_manifest",
+      "issue_count": 1,
+      "issues": [
+        "fabrication output missing or changed: m3_cpl_jlc.csv"
+      ]
+    },
+    {
+      "name": "fab_manifest_missing_cpl",
+      "checker": "fab_manifest.verify_manifest",
+      "issue_count": 1,
+      "issues": [
+        "fabrication manifest is missing required outputs"
+      ]
+    },
+    {
+      "name": "indexed_moved_terminal_model_scale_1.0",
+      "checker": "check_r10.p11",
+      "issue_count": 1,
+      "issues": [
+        "P-11: J410 has 3.95 mm of wire room to the bore wall (owner-accepted R10 floor 4.95; R8 6.25)"
+      ],
+      "actual_scale_xyz": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "J410": {
+        "entry": "+x",
+        "wire_room_mm": 3.953,
+        "r8_floor_mm": 6.25,
+        "r10_accepted_floor_mm": 4.95,
+        "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+      }
+    },
+    {
+      "name": "indexed_moved_terminal_fit_scale_1.0",
+      "checker": "fit_check.check_board(profile=r10)",
+      "issue_count": 0,
+      "issues": [],
+      "J410": [
+        [
+          2.018948092187678,
+          "J410",
+          "F",
+          [
+            35.95000048,
+            7.99999976,
+            43.650000320000004,
+            23.00000024,
+            1.2700000001775181e-06,
+            8.90000125
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "indexed_moved_terminal_model_scale_0.0",
+      "checker": "check_r10.p11",
+      "issue_count": 0,
+      "issues": [],
+      "actual_scale_xyz": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "J410": {
+        "entry": "+x",
+        "wire_room_mm": 7.603,
+        "r8_floor_mm": 6.25,
+        "r10_accepted_floor_mm": 4.95,
+        "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+      }
+    },
+    {
+      "name": "indexed_moved_terminal_fit_scale_0.0",
+      "checker": "fit_check.check_board(profile=r10)",
+      "issue_count": 0,
+      "issues": [],
+      "J410": [
+        [
+          7.5973990394507425,
+          "J410",
+          "F",
+          [
+            40.0,
+            15.5,
+            40.0,
+            15.5,
+            0.0,
+            0.0
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "microSD_model_nan_scale",
+      "checker": "fit_check.check_board(profile=r10)",
+      "issue_count": 0,
+      "issues": [],
+      "J430": [
+        [
+          15.686423061590029,
+          "J430 mated",
+          "B",
+          [
+            17.0,
+            18.3,
+            31.0,
+            33.8,
+            -3.7,
+            -1.6
+          ]
+        ],
+        [
+          "nan",
+          "J430",
+          "B",
+          [
+            "nan",
+            "nan",
+            "nan",
+            "nan",
+            "nan",
+            "nan"
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "native_width_BAT_IN",
+      "checker": "check_r10.check_board only=S-9",
+      "issue_count": 1,
+      "issues": [
+        "S-9: BAT_IN fire-path track 0.500 mm wide, 6.000 mm long on B.Cu (7.0, 74.1)-(13.0, 74.1); minimum 1.0 mm (D-R2-02)"
+      ],
+      "previous_width_mm": 1.0,
+      "seed_width_mm": 0.5,
+      "length_mm": 6.0,
+      "start_mm": [
+        7.0,
+        74.1
+      ],
+      "end_mm": [
+        13.0,
+        74.1
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "name": "native_width_RAW_PROTECTED",
+      "checker": "check_r10.check_board only=K-width",
+      "issue_count": 1,
+      "issues": [
+        "K-width: RAW_PROTECTED: 0.3 mm-wide run 5.34 mm long on B.Cu near (18.75, 81.60); limit 2.0 mm"
+      ],
+      "previous_width_mm": 0.7,
+      "seed_width_mm": 0.3,
+      "length_mm": 3.535533905932738,
+      "start_mm": [
+        18.75,
+        79.8
+      ],
+      "end_mm": [
+        16.25,
+        77.3
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "name": "slow_hygiene_jog_ARM1_SENSE",
+      "checker": "route_check.scan/evaluate (native synthetic track chain)",
+      "issue_count": 2,
+      "issues": [
+        "{'cat': 'short_segment', 'net': 'ARM1_SENSE', 'cls': 'pyro', 'layer': 'B.Cu', 'x': 12.0, 'y': 10.0, 'len_mm': 0.1414, 'width': 0.2, 'end': (12.1, 10.1)}",
+        "{'cat': 'tiny_jog', 'net': 'ARM1_SENSE', 'cls': 'pyro', 'layer': 'B.Cu', 'x': 10.0, 'y': 10.0, 'end': (14.0, 10.1), 'seglens': [2.0, 0.141, 1.9]}"
+      ],
+      "critical_class": "pyro"
+    },
+    {
+      "name": "slow_hygiene_jog_PYRO1_CONT",
+      "checker": "route_check.scan/evaluate (native synthetic track chain)",
+      "issue_count": 2,
+      "issues": [
+        "{'cat': 'short_segment', 'net': 'PYRO1_CONT', 'cls': 'pyro', 'layer': 'B.Cu', 'x': 12.0, 'y': 10.0, 'len_mm': 0.1414, 'width': 0.2, 'end': (12.1, 10.1)}",
+        "{'cat': 'tiny_jog', 'net': 'PYRO1_CONT', 'cls': 'pyro', 'layer': 'B.Cu', 'x': 10.0, 'y': 10.0, 'end': (14.0, 10.1), 'seglens': [2.0, 0.141, 1.9]}"
+      ],
+      "critical_class": "pyro"
+    },
+    {
+      "name": "slow_hygiene_jog_ACT_GATE",
+      "checker": "route_check.scan/evaluate (native synthetic track chain)",
+      "issue_count": 2,
+      "issues": [
+        "{'cat': 'short_segment', 'net': 'ACT_GATE', 'cls': 'pyro', 'layer': 'B.Cu', 'x': 12.0, 'y': 10.0, 'len_mm': 0.1414, 'width': 0.2, 'end': (12.1, 10.1)}",
+        "{'cat': 'tiny_jog', 'net': 'ACT_GATE', 'cls': 'pyro', 'layer': 'B.Cu', 'x': 10.0, 'y': 10.0, 'end': (14.0, 10.1), 'seglens': [2.0, 0.141, 1.9]}"
+      ],
+      "critical_class": "pyro"
+    },
+    {
+      "name": "slow_hygiene_jog_CAM_UART_OE",
+      "checker": "route_check.scan/evaluate (native synthetic track chain)",
+      "issue_count": 2,
+      "issues": [
+        "{'cat': 'short_segment', 'net': 'CAM_UART_OE', 'cls': 'portctl', 'layer': 'B.Cu', 'x': 12.0, 'y': 10.0, 'len_mm': 0.1414, 'width': 0.2, 'end': (12.1, 10.1)}",
+        "{'cat': 'tiny_jog', 'net': 'CAM_UART_OE', 'cls': 'portctl', 'layer': 'B.Cu', 'x': 10.0, 'y': 10.0, 'end': (14.0, 10.1), 'seglens': [2.0, 0.141, 1.9]}"
+      ],
+      "critical_class": "portctl"
+    },
+    {
+      "name": "current_core_population_coordinates",
+      "checker": "native pcbnew footprint inspection",
+      "issue_count": 0,
+      "issues": [],
+      "footprints": {
+        "U1": {
+          "x_mm": 23.0,
+          "y_mm": 43.0,
+          "side": "top",
+          "dnp": false
+        },
+        "U2": {
+          "x_mm": 25.0,
+          "y_mm": 69.8,
+          "side": "bottom",
+          "dnp": false
+        },
+        "L1": {
+          "x_mm": 25.0,
+          "y_mm": 74.6,
+          "side": "bottom",
+          "dnp": false
+        },
+        "U3": {
+          "x_mm": 22.6,
+          "y_mm": 41.2,
+          "side": "bottom",
+          "dnp": false
+        },
+        "U4": {
+          "x_mm": 17.0,
+          "y_mm": 45.9,
+          "side": "bottom",
+          "dnp": false
+        },
+        "U5": {
+          "x_mm": 10.6,
+          "y_mm": 49.1,
+          "side": "bottom",
+          "dnp": false
+        },
+        "Y1": {
+          "x_mm": 22.85,
+          "y_mm": 46.6,
+          "side": "bottom",
+          "dnp": false
+        },
+        "J410": {
+          "x_mm": 39.0,
+          "y_mm": 15.5,
+          "side": "top",
+          "dnp": false
+        },
+        "J430": {
+          "x_mm": 24.0,
+          "y_mm": 24.3,
+          "side": "bottom",
+          "dnp": false
+        }
+      }
+    },
+    {
+      "name": "native_fire_width_ACT_FET_S",
+      "checker": "check_r10.s9 (native fire_path member)",
+      "issue_count": 2,
+      "issues": [
+        "S-9: ACT_FET_S fire-path track 0.200 mm wide, 1.950 mm long on B.Cu (12.53, 71.1)-(14.47, 71.1); minimum 0.5 mm (AUD-6)",
+        "S-9: stale FIRE_NARROW entry ('ACT_FET_S', 'B.Cu', 0.4, 1.95, (12.525, 71.1, 14.475, 71.1)) (AONR21357 source bridge bar)"
+      ],
+      "previous_width_mm": 0.4,
+      "seed_width_mm": 0.2,
+      "length_mm": 1.95,
+      "start_mm": [
+        12.525,
+        71.1
+      ],
+      "end_mm": [
+        14.475,
+        71.1
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "name": "native_fire_width_RAW_ACT",
+      "checker": "check_r10.s9 (native fire_path member)",
+      "issue_count": 1,
+      "issues": [
+        "S-9: RAW_ACT fire-path track 0.490 mm wide, 4.391 mm long on B.Cu (14.47, 67.11)-(17.58, 64.0); minimum 0.5 mm (AUD-6)"
+      ],
+      "previous_width_mm": 0.5,
+      "seed_width_mm": 0.49,
+      "length_mm": 4.39113311116846,
+      "start_mm": [
+        14.475,
+        67.105
+      ],
+      "end_mm": [
+        17.58,
+        64.0
+      ],
+      "layer": "B.Cu"
+    },
+    {
+      "name": "native_fire_width_PYRO1_OUT",
+      "checker": "check_r10.s9 (native fire_path member)",
+      "issue_count": 1,
+      "issues": [
+        "S-9: PYRO1_OUT fire-path track 0.490 mm wide, 3.330 mm long on F.Cu (7.0, 54.1)-(10.33, 54.1); minimum 0.5 mm (AUD-6)"
+      ],
+      "previous_width_mm": 0.5,
+      "seed_width_mm": 0.49,
+      "length_mm": 3.33,
+      "start_mm": [
+        7.0,
+        54.1
+      ],
+      "end_mm": [
+        10.33,
+        54.1
+      ],
+      "layer": "F.Cu"
+    },
+    {
+      "name": "slow_reference_corrected_control_ARM1_SENSE",
+      "checker": "check_r10.references (referenced fast control + exempt slow track)",
+      "issue_count": 0,
+      "issues": [],
+      "sample_count": 603,
+      "loose_count": 0
+    },
+    {
+      "name": "slow_reference_corrected_control_PYRO1_CONT",
+      "checker": "check_r10.references (referenced fast control + exempt slow track)",
+      "issue_count": 0,
+      "issues": [],
+      "sample_count": 603,
+      "loose_count": 0
+    },
+    {
+      "name": "slow_reference_corrected_control_ACT_GATE",
+      "checker": "check_r10.references (referenced fast control + exempt slow track)",
+      "issue_count": 0,
+      "issues": [],
+      "sample_count": 603,
+      "loose_count": 0
+    },
+    {
+      "name": "slow_reference_corrected_control_CAM_UART_OE",
+      "checker": "check_r10.references (referenced fast control + exempt slow track)",
+      "issue_count": 0,
+      "issues": [],
+      "sample_count": 603,
+      "loose_count": 0
+    },
+    {
+      "name": "split_region_SD_SCK",
+      "checker": "check_r10.region_issues (native filled In2 fixture)",
+      "issue_count": 2,
+      "issues": [
+        "SD_SCK B.Cu run (10.00, 10.00) - (14.00, 10.00) lies over In2 planes ['3V3', 'GND'] and 75 samples over no In2 copper, e.g. (11.7, 10.0) (one In2 plane region per signal-critical run)",
+        "SD_SCK connected B.Cu chain (B.Cu run (10.00, 10.00) - (14.00, 10.00)) lies over In2 planes ['3V3', 'GND'] (one In2 plane region per connected chain)"
+      ],
+      "baseline_issue_count": 0
+    },
+    {
+      "name": "split_region_GPS_RX_WIRE",
+      "checker": "check_r10.region_issues (native filled In2 fixture)",
+      "issue_count": 2,
+      "issues": [
+        "GPS_RX_WIRE B.Cu run (10.00, 10.00) - (14.00, 10.00) lies over In2 planes ['3V3', 'GND'] and 75 samples over no In2 copper, e.g. (11.7, 10.0) (one In2 plane region per signal-critical run)",
+        "GPS_RX_WIRE connected B.Cu chain (B.Cu run (10.00, 10.00) - (14.00, 10.00)) lies over In2 planes ['3V3', 'GND'] (one In2 plane region per connected chain)"
+      ],
+      "baseline_issue_count": 0
+    },
+    {
+      "name": "split_region_RADIO_TX_MCU",
+      "checker": "check_r10.region_issues (native filled In2 fixture)",
+      "issue_count": 2,
+      "issues": [
+        "RADIO_TX_MCU B.Cu run (10.00, 10.00) - (14.00, 10.00) lies over In2 planes ['3V3', 'GND'] and 78 samples over no In2 copper, e.g. (11.8, 10.0) (one In2 plane region per signal-critical run)",
+        "RADIO_TX_MCU connected B.Cu chain (B.Cu run (10.00, 10.00) - (14.00, 10.00)) lies over In2 planes ['3V3', 'GND'] (one In2 plane region per connected chain)"
+      ],
+      "baseline_issue_count": 0
+    },
+    {
+      "name": "near_GPS_conflicting_RXI_textbox",
+      "checker": "check_r10.check_board only=K-legends",
+      "issue_count": 0,
+      "issues": [],
+      "box_mm": [
+        29,
+        10,
+        34,
+        12
+      ],
+      "mask_overlap_delta": 0
+    },
+    {
+      "name": "canonical_model_transform_control",
+      "checker": "native pcbnew model inspection",
+      "issue_count": 0,
+      "issues": [],
+      "nonunit_scales": {
+        "L1": [
+          1.0,
+          1.0,
+          1.5789
+        ]
+      },
+      "footprints": 209
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "mounts": {
+    "moved": [
+      {
+        "ref": "C177",
+        "old_mm": [
+          7.0,
+          7.0
+        ],
+        "new_mm": [
+          7.75,
+          7.2
+        ]
+      },
+      {
+        "ref": "C178",
+        "old_mm": [
+          8.0,
+          4.5
+        ],
+        "new_mm": [
+          9.1,
+          4.5
+        ]
+      },
+      {
+        "ref": "TP89",
+        "old_mm": [
+          5.0,
+          41.5
+        ],
+        "new_mm": [
+          5.0,
+          41.4
+        ]
+      }
+    ],
+    "detached": [
+      {
+        "uuid": "6fc5d48e-d381-40e3-a7be-83a9ca27f54a",
+        "net": "TLM_DVDT",
+        "layer": "F.Cu",
+        "width_mm": 0.15,
+        "start_mm": [
+          7.225,
+          4.5
+        ],
+        "end_mm": [
+          8.5533,
+          5.8283
+        ]
+      },
+      {
+        "uuid": "935bc4a5-67f8-41c7-b5f3-9b0526078518",
+        "net": "RAW_PROTECTED",
+        "layer": "F.Cu",
+        "width_mm": 0.3,
+        "start_mm": [
+          7.0,
+          7.775
+        ],
+        "end_mm": [
+          9.025,
+          7.775
+        ]
+      }
+    ],
+    "added": [
+      {
+        "net": "RAW_PROTECTED",
+        "layer": "F.Cu",
+        "width_mm": 0.3,
+        "start_mm": [
+          7.75,
+          7.975
+        ],
+        "end_mm": [
+          7.75,
+          7.775
+        ]
+      },
+      {
+        "net": "RAW_PROTECTED",
+        "layer": "F.Cu",
+        "width_mm": 0.3,
+        "start_mm": [
+          7.75,
+          7.775
+        ],
+        "end_mm": [
+          9.025,
+          7.775
+        ]
+      }
+    ],
+    "connections_to_recheck": [
+      {
+        "ref": "C177",
+        "pad": "2",
+        "net": "GND",
+        "position_mm": [
+          7.75,
+          6.425
+        ]
+      },
+      {
+        "ref": "C178",
+        "pad": "1",
+        "net": "TLM_DVDT",
+        "position_mm": [
+          8.325,
+          4.5
+        ]
+      },
+      {
+        "ref": "C178",
+        "pad": "2",
+        "net": "GND",
+        "position_mm": [
+          9.875,
+          4.5
+        ]
+      },
+      {
+        "ref": "TP89",
+        "pad": "1",
+        "net": "BAT_ILIM",
+        "position_mm": [
+          5.0,
+          41.4
+        ]
+      }
+    ],
+    "hidden_references": [
+      "C178"
+    ],
+    "zones_require_refill": true,
+    "native_drc_required": true
+  },
+  "debug": {
+    "removed": [
+      "875bf54e-2563-40bd-8909-7c6c08c60050",
+      "79916b63-04cc-41ee-ad05-9989d72fcf75"
+    ],
+    "added": [
+      {
+        "uuid": "0f0b5554-3a2a-543f-aeb8-ed1acc4bac08",
+        "kind": "PCB_TRACK"
+      },
+      {
+        "uuid": "61f46183-b893-5b69-9931-255838d180b9",
+        "kind": "PCB_TRACK"
+      },
+      {
+        "uuid": "00c219a3-ea4c-5c56-8f0b-b3c500bbb2e7",
+        "kind": "PCB_TRACK"
+      },
+      {
+        "uuid": "6e9ab800-35eb-56bc-9d6e-559bedebd20b",
+        "kind": "PCB_TRACK"
+      },
+      {
+        "uuid": "85f1b783-7c6b-5cdc-ad5e-a0829cfd3e19",
+        "kind": "PCB_TRACK"
+      },
+      {
+        "uuid": "5e2e694e-2d2b-54de-b67e-026dd596c019",
+        "kind": "PCB_TRACK"
+      },
+      {
+        "uuid": "d78a2b6c-492f-560a-a9bd-1fe6bfa1b925",
+        "kind": "PCB_TRACK"
+      },
+      {
+        "uuid": "0c69e2e6-26f4-53aa-8104-977cc87290e3",
+        "kind": "PCB_VIA"
+      },
+      {
+        "uuid": "8d3138dc-f84a-55c5-b614-4e654fbf689f",
+        "kind": "PCB_VIA"
+      },
+      {
+        "uuid": "91f65af6-34e4-5ba1-8862-15d42b262c0f",
+        "kind": "PCB_VIA"
+      },
+      {
+        "uuid": "5e52d2b7-9823-59ee-91a8-0ec0e12cc921",
+        "kind": "ZONE"
+      },
+      {
+        "uuid": "0be4e0fa-ece1-5f15-89c0-ae1d31d6c990",
+        "kind": "ZONE"
+      },
+      {
+        "uuid": "019f3a5d-b6ba-576f-ae5c-89467f181550",
+        "kind": "ZONE"
+      },
+      {
+        "uuid": "746416ee-7022-5c9e-b075-f6327e8e3a37",
+        "kind": "ZONE"
+      },
+      {
+        "uuid": "b350fdfe-938e-5ce3-b971-7a9d4ade3116",
+        "kind": "ZONE"
+      },
+      {
+        "uuid": "ec936174-e03d-5930-821e-1a5f8098ea9c",
+        "kind": "ZONE"
+      }
+    ],
+    "zones_require_refill": true,
+    "native_drc_required": true
+  }
+}

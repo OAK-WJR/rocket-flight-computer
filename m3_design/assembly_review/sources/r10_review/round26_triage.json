@@ -1,0 +1,287 @@
+{
+ "schema": "r10-triage-v1",
+ "target_commit": "3d8e845",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "real_errors": [
+  {
+   "id": "R26-TRI-01",
+   "merged_ids": [
+    "R26-SAFETY-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R10_VALIDATION section 1 says 'None of the pairs below fires the match by itself' and owner row 2 says 'Firing still needs a second fault at Q124'; both are false for PYRO1_OUT to 3V3 (R173.1-D120.3, 0.5135 mm) and to 3V3A (R164.2, 0.5662 mm), and row 2's sentence is also false for the OUT-to-GND residuals it lists",
+   "evidence": "Geometry (pcbnew, .supervisor/r26_triage/adjacent.py -> adj_pyro1_out.out, board 92c3ad59): PYRO1_OUT R173.1 B(16.87,59.27) to 3V3 D120.3 B(15.7,60.2) 0.5135 mm B.Cu; PYRO1_OUT track (15.5,56.6)-(16.87,57.97) to 3V3A R164.2 (16.5,55.9) 0.5662 mm B.Cu (rounded-rect corner); also PYRO1_OUT-GND 0.1768 / 0.1800 mm, PYRO1_OUT-3V3 via (9.2,52.98) 0.620 mm on F.Cu, BUZZ_G 0.510 mm (no fire, mA). Circuit (board netlist): RAW_ACT -> R134 2 R -> J121.2 -> match -> J121.1 = PYRO1_OUT -> Q124 drain; cold pull-up 3V3 -> D120 (BAT54A, anode pin 3) -> R131 10 k -> PYRO1_OUT; CONT and BUS dividers 11.2 k (5.1 k + 5.1 k over 2 k || 2 k); R164 2.2 R from 3V3 to 3V3A. Cold screen (PC1 and PE4 low; Calculation): healthy CONT / BUS 96.2-99.4 / 96.1-99.3 mV (Vf 0.3-0.2 V), open CONT 141.5-146.2 mV / BUS 0; with a bridge present at power-up PYRO1_OUT = 3.3 V, so CONT = BUS = 3.3 / 11.2 = 0.295 V (open match: CONT 0.295 V, BUS 0), 2.96x healthy and 2.0x open, and the match carries <= 0.29 mA (3.3 V into the 11.2 k bus divider; Q120 / Q121 body diodes back-to-back): the mandated CONT-upper / BUS bands (F8, M3_R10 Firmware 'any ground fault is a hard refusal before PC1', R19-SAF-04) refuse before PC1. Any bridge able to fire (< about 10 ohm) reads this way. Procedure: after per-flight step 5 closes J400 on the rail with the e-match in, the board powers up, runs the cold screen (>= 1 s, rule 2) and raises PC1, and 'the accepted single-switch design leaves the bus enabled from the on-rail check until the switch is opened' (M3_R10 Firmware) or LANDED (rule 6): pad wait and flight. Step 3 raises PC1 only with the 1-2 ohm dummy. A bridge that forms after PC1 is high is not screened: with 3V3 held at 3.3 V the match carries (7.4-8.4 - 3.3) V over a 2.8-4.5 ohm loop (R134 1.97-2.03, match 0.73-2.0, leads 0-0.3, FETs and copper) = about 0.9-1.8 A against the J-Tek 0.75 A all-fire; AP63203 does not sink in PFM (DS41326 Rev 3-2, 'Pulse Frequency Modulation'), so otherwise the rail is driven past U1's 4.0 V absolute maximum (I-5). For 3V3A the loop adds R164 2.2 R: about 0.6-1.0 A until R164 (0603, 0.8-2.3 W) opens, then VDDA / U4 / U5 over-voltage. So the section 1 table rows (lines 2354-2355: 'about 0.3-0.8 A') and the J440.1 / J440.2 harness row (line 2363: 'Joins the existing OUT-to-GND fire class') contradict line 2340's summary; row 2 (line 2169) covers 'the fire path' and its residual list (lines 2218-2219) includes the OUT-GND approaches that line 2340 itself says fire an enabled match. FMEA I-5 (R10) and owner row 1 omit the two pairs.",
+   "severity_reasoning": "Minor, not Critical / Major. The defect a 0.51 mm pad pair can carry from assembly (a bridge present at power-up) cannot fire: the cold screen reads 0.295 V against 0.099 V and refuses before PC1. A bridge that forms after PC1 is high (pad wait or flight) can fire, but that later-fault case is the single-string class the records already put to the owner: line 2340's own first sentence, owner row 1 ('Q124 and the firmware that drives it alone keep the e-match from firing'; row 18 is the pad lever) and FMEA I-5; its disclosed members are more likely (OUT-GND 0.177 / 0.180 mm, Q124 gate-drain 0.520 mm per R25 triage, C128 at 991 microstrain, In2 3V3 0.300 mm from RAW_PROTECTED over 132 mm); R173, D120, R164 and their copper are in the mandatory coat selection (ORDERING 8.3); the R10 fault model is single-string (FMEA line 58, F8, owner decision 2026-10-28). The board breaks no AGENTS section 2 rule or stated requirement; the error is that the record denies two members of a disclosed class.",
+   "concrete_fix": "Text only. (1) R10_VALIDATION line 2340: replace 'None of the pairs below fires the match by itself.' with 'Rows below that put PYRO1_OUT onto a lower-potential net also fire an enabled match by themselves: PYRO1_OUT to 3V3 (R173.1-D120.3, 0.5135 mm, B.Cu) and to 3V3A (the track (15.5,56.6)-(16.87,57.97) to R164.2, 0.5662 mm, B.Cu) drive the bus through R134 and the match into the rail (about 0.9-1.8 A if the rail held 3.3 V; otherwise past U1's 4.0 V, the I-5 mechanism), and the J440.1 / J440.2 harness row joins the OUT-to-GND class; QSPI_IO2-PE4 needs a sustained IO2-high pattern; the other rows cannot. A bridge present at power-up reads CONT = BUS = 0.295 V cold (healthy 0.099 V, open CONT 0.146 V) and is refused before PC1; one that forms after PC1 is high is not screened (owner row 18 covers the pad).' (2) Owner row 2: 'For the load-switch, PC1 enable-chain, EN-node and sense-branch defects firing still needs a second fault at Q124; the PYRO1_OUT residuals (GND 0.177 / 0.180 mm, 3V3 0.5135 mm, 3V3A 0.5662 mm) fire an enabled match by themselves (row 1).' (3) Owner row 1 and FMEA I-5 (R10): add 'a PYRO1_OUT bridge to GND, 3V3 or 3V3A' (bus voltage onto 3V3 / 3V3A through the match). (4) Respin list: PYRO1_OUT >= 1 mm from 3V3 / 3V3A (D120 about 0.55 mm west; R164 about 0.45 mm north or the diagonal re-drawn); a GND guard is not a fix at PYRO1_OUT (GND is foreign there, S-8), and H-9's 3V3 clamp does not close these routes (a clamped rail lets about 1 A through the match). No new refusal rule is needed: the existing CONT-upper / BUS bands refuse a pre-existing bridge at about 3x the healthy reading. A board-spacing change is an owner respin option: it would close two members of a class whose closer OUT-GND members remain, and restart the clean-round count.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-02",
+   "merged_ids": [
+    "R26-POWER-02",
+    "R26-SAFETY-02",
+    "R26-REQUIREMENTS-01"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "'The fire budget's four-stall BAT_IN of 5.73 V' is the pre-AUX value: the bound budget gives 5.713 V, so the single drop-out is 8.07 ms (not 8.2), the one-block-per-100 ms window limit 7.50 ms (not 7.63), the 7 ms line's margin 0.50 ms (not 0.63), the fast-chatter fraction 19.7 % (not 20.0), and the bench run should be at 5.71 V",
+   "evidence": "parts_budget.json (board_sha256 92c3ad59) fire_current_GAP1.primary_40mohm_FETs.pack_7V4_by_stall_count['4'].loaded_pack_V = 5.713190 V (typical-hot FETs 5.711161 V); the same r10_parts.py fire_case with other_converter_load_W 12.371 W (before D-R19-14's 100 mA AUX allowance) gives 5.731822 V, and git history shows 5.7318 V at acba196 / 6628488^ and 5.7132 V from 6628488 (round 19) to 3d8e845. Own worst-corner EN model (.supervisor/r26_triage/en_model.py: R80 = R165 = 474.7 k, R81 = 297 k, C87 0.72 x 220 nF, U9 EN sink 0.1 uA, D402 50 nA, VUVLO(F) 1.116 V, TI SLVSFC9C p9), which reproduces 8.204 / 10.345 / 20.111 / 26.023 / 6.300 ms, 7.629 / 9.594 / 5.871 ms, EN0 1.4014 V and the 5.956 V floor: at 5.7132 V single drop-out 8.067 ms, window limit 7.503 ms, worst-train EN at 7 ms 1.1295 V; at 5.7112 V 8.051 / 7.488 ms; fast-chatter trip 19.72 % (frac.py; 5.73 V gives 20.01 %); periodic fractions 19.6 / 18.6 / 17.4 / 14.8 / 11.4 / 4.5 % at 0.1 / 1 / 2 / 4 / 6 / 8 ms. The 7 ms line holds down to 5.6465 V. Current places that quote 5.73 V as the four-stall corner or the bench voltage: AGENTS.md section 1 battery row (line 13); STATUS.md lines 11, 16 (and 19's limit list); REQUIREMENTS F4 (line 58), F6 (line 60) and line 106; M3_R10 lines 270, 590-591; ORDERING 8.3 line 617 (twice: 'U9 stays on ... at 5.73 V' and 'run this test at 5.73 V'); R10_VEHICLE_HANDOFF lines 68-69; R10_VALIDATION row 21 (line 2188) and section 4 C87 row (line 2476); parts_qualification.md line 20 (D402 row); m3_design/r10_sch_check.py line 295 -> r10_binding_note.json line 589, pinned by tools/test_r10_check.py lines 399-402; R10_DECISIONS D-R24-19 (line 4149) and D-R25-01 (lines 4240-4253, '0.63 ms margin at 5.73 V'). Dated history (R20-SAF-04, R23-POWER-02, R23-REQUIREMENTS-05, R24-TRI-02, R25-TRI-01 rows, STATUS line 78, M3_R10 line 103, D-R19-10, D-R20-11) stays as recorded.",
+   "concrete_fix": "Text, generated text and test pins only. Quote the bound point: four-stall BAT_IN 5.71 V (5.713 V, parts_budget.json); single drop-out about 8.1 ms (8.07 ms); worst-corner limit 7.50 ms per 100 ms window at 5.71 V (9.59 ms at 6.0 V and 5.87 ms at 5.5 V unchanged); 7 ms line margin 0.50 ms; fast-chatter trip 19.7 % (5.71 V: 19.6 % at 0.1 ms, 14.8 % at 4 ms, 4.5 % at 8 ms); bench condition 'U9 stays on for the whole run at 5.71 V' and 'run this test at 5.71 V'. The 3 x 4 ms counter-example stays valid (1.025 V at 5.71 V). Edit r10_sch_check.py line 295 and its pins in test_r10_check.py, regenerate the binding note, update every place listed, and record a D-R26 decision annotating D-R24-19 / D-R25-01. Optional: export the four-stall BAT_IN and the window limit from r10_parts.py so the text cannot drift again.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-03",
+   "merged_ids": [
+    "R26-POWER-01",
+    "R26-SAFETY observation 2"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "'An adversarial search over 4000 trains under 7.62 ms per window kept EN >= 1.1173 V' is a sampled result, not the worst case: the admissible one-block-per-100 ms train reaches 1.1162 V at 7.62 ms and 1.1168 V on the search's own 0.1 ms grid (7.6 ms)",
+   "evidence": "en_model.py (same corner as R26-TRI-02) at 5.73 V: one open block of 7.6199 ms at the end of every 100 ms, from closed steady state, EN after blocks 1 / 2 / 3 / 12 = 1.13050 / 1.11716 / 1.11629 / 1.11623 V; 7.6 ms (76 x 0.1 ms, the budget of .supervisor/r25_triage/window_rule.py, Xn = int(0.999 x 7.6287 / 0.1)) gives 1.11677 V < 1.1173 V. Every sliding 100 ms window of that train holds exactly the block length. Exchange argument: with the affine open / closed maps O(v) = vo + (v - vo)a and C(v) = vc + (v - vc)b, C(O(v)) - O(C(v)) = (1 - a)(1 - b)(vc - vo) > 0, so moving open time later lowers EN and the latest packing (one block per 100 ms) is the worst admissible train. The 7.629 ms limit itself is right. Quoted in REQUIREMENTS F6 (line 60), M3_R10 line 270, ORDERING 8.3 line 617, R10_VALIDATION row 21, r10_sch_check.py line 295 -> binding note line 589, D-R25-01 (line 4251); STATUS line 19 names the search.",
+   "concrete_fix": "Replace the search clause with: 'the worst admissible train is one open block per 100 ms placed late in the window (exchange argument); at the corner it trips U9 at 7.50 ms at 5.71 V (7.63 ms at 5.73 V), and at the 7 ms pass line it holds EN at 1.1295 V at 5.71 V (1.1330 V at 5.73 V) against 1.116 V (Calculation)'. Same files as R26-TRI-02 (fix together); the test pin that matches the search text moves with it. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-04",
+   "merged_ids": [
+    "R26-SAFETY-03"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Rule 8's '5.37 V four-stall-plus-fire corner' subtracts the fire current again from a four-stall point that already carries it; the budget model gives 5.71 V (healthy match), 5.55-5.56 V (match shorted) and 5.50 V (match and leads shorted)",
+   "evidence": "Derivation (round23_power.json R23-POWER-01): 5.73 - 0.15 x 2.41 = 5.3685 V and 5.73 - 0.15 x 1.24 = 5.544 V; but fire_case's loaded_pack_V already solves V = 7.4 - 0.15 (V / rest + 1.92 n + P / V) with the fire branch drawing (parts_budget.json: 5.7132 V at 1.2787 A). Same equation (P 13.064 W, 0.15 ohm, four 1.92 A stalls): shorted match, hot R134 (rest 2.4678 ohm) 5.5576 V / 2.252 A; cold R134 and 20 C copper (2.4329 ohm) 5.5527 V / 2.282 A; match and 0.3 ohm leads shorted, cold (2.1329 ohm) 5.5049 V / 2.581 A. 5.37 V would need 13.53 A from the pack against 12.28-12.63 A. Quoted in r10_sch_check.py line 322 -> binding note line 615, M3_R10 line 1029, REQUIREMENTS F6 (line 60), R10_VALIDATION owner row 25 (line 2202). Effect on rules: none. The PA6 window (VLOGIC about 4.8-5.2 V; 0.47 V x 10.80-11.20 = 5.08-5.27 V with the 1 % R60 / R61) stays below the corrected corner's VLOGIC, about 5.34-5.47 V with a shorted match after U9 (<= 45 mOhm, SLVSFC9C) carrying about 2.4 A and U11 (<= 85 mOhm, SLVSEA3F) about 0.4 A (Calculation); the old 5.37 V figure was the pessimistic one.",
+   "concrete_fix": "Replace 'below the 5.37 V four-stall-plus-fire corner' with 'below the four-stall-plus-fire corner: BAT_IN 5.71 V with a healthy match (the fire budget's four-stall point, which includes the 1.28 A fire current), 5.55-5.56 V with the match shorted and 5.50 V with the match and leads shorted; VLOGIC is 0.09-0.16 V lower (fire_current_GAP1 model, Calculation)' in r10_sch_check.py line 322 (regenerate the binding note), M3_R10 rule 8, REQUIREMENTS F6 and R10_VALIDATION row 25. The PA6 window and hold-up figures stay. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-05",
+   "merged_ids": [
+    "R26-SAFETY-04"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R10_VALIDATION line 2350 calls U11.5 'OV2'; on the TPS2121 VQFN-HR pin 5 is OV1 (IN1 = USB_LIMITED), and OV2 (pin 4) is tied to GND",
+   "evidence": "TI SLVSEA3F (Aug 2020) Pin Functions p4 (cached tps2121.pdf): VQFN-HR pin 5 OV1 'Active Low Enable Supervisor for IN1 Overvoltage Protection', pin 4 OV2. Board netlist: U11.5 USB_OVLO, U11.4 GND, U11.7 USB_LIMITED (IN1), U11.2 RAW_PROTECTED (IN2). The 6 V absolute maximum is shared by OV1 / OV2 (p6), so the row's consequence holds.",
+   "concrete_fix": "Change 'U11.5 (OV2)' to 'U11.5 (OV1, IN1's USB over-voltage input)'. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-06",
+   "merged_ids": [
+    "R26-REQUIREMENTS-02",
+    "R26-SAFETY observation 8"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "REQUIREMENTS F4 still accepts 'a flight-2 pack that holds >= 5.96 V under four stalls' (the single 10 ms drop-out criterion) for stall during boost, although F6 replaces that criterion; at 5.96 V trains of shorter drop-outs trip a worst-case U9",
+   "evidence": "trains.py on the R26-TRI-02 corner: at 5.96 V a single drop-out up to 10.034 ms cannot trip U9 (so the pack meets F4's option), yet 8 ms open every 50 ms gives EN 1.0878 V, 9.5 ms / 50 ms 1.0351 V and 9.9 ms / 100 ms 1.1002 V, all below VUVLO(F) 1.116 V (the window limit at 5.96 V is 9.31 ms). F6: 'This one rule replaces both the < 10 ms single-drop-out rule and the < 18 % open-fraction rule ... repeated drop-outs add up'. ORDERING 8.3 runs the window test anyway, so no procedure is unsafe; the two requirements disagree.",
+   "concrete_fix": "F4: delete the 5.96 V option, or restate it as 'a flight-2 pack whose four-stall BAT_IN stays at or above the voltage of the F6 sliding-window bench run (5.71 V, R26-TRI-02)'; keep 5.96 V only as the labelled single-drop-out figure. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-07",
+   "merged_ids": [
+    "R26-ROUTING-01",
+    "R26-ROUTING observation 7 (promoted)"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "Owner row 8's counts are stale: 'six 0603 resistors with a fanout via under the body' (five since D-R24-09 removed R403's) and 'detours and extra vias on ten nets' (the section 6 table it cites lists 22 nets of at least +3.5 mm)",
+   "evidence": "Board 92c3ad59 scan of every two-pad part for a via between its pads (board.json): 0603 resistors R86 GND (27.9,64.25), R89 3V3 (23.0,70.0), R91 3V3 (28.1,60.0), R101 CAM_UART_OE (34.0,42.0), R401 GND (13.0,1.8); R403 is B(30.9,14.6) with no via at (31.4,14.4) (D-R24-09). Row 8 (line 2183, owner table bound to 92c3ad59) says six and cites section 6. Section 6 per-net table (lines 2612-2632: 'Every net with an excess of at least +3.5 mm is listed') has 22 nets (USB_LIMITED ... ACT_EN_MCU); row 8's 'ten nets' is round 18's 'ten nets hold 136 mm of the 260 mm excess' (R18-m20). The R19-RTE-04 list in section 6 (line 2567) sits under 'Round 19 routing records (measured on a3144b15)' and is history (docs_binding observation 1); REQUIREMENTS M2's 'round 19's routing items (... the six 0603 fan-out vias ...)' is attributed to round 19 and is not a current count.",
+   "concrete_fix": "Row 8: 'Detours and extra vias on the 22 nets the section 6 table lists (at least +3.5 mm), five 0603 resistors with a fanout via under the body (R86, R89, R91, R101, R401; R403's went with D-R24-09), BAT_FAULT_N 0.180 mm from a GND via (table and list in section 6)'. Add to R19-RTE-04: 'R403's via (31.4,14.4) was removed by D-R24-09 on 1407e850; five remain'. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-08",
+   "merged_ids": [
+    "R26-ROUTING-02"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Section 6 layer-change returns: '12 of the 21 are beyond 4 mm' is 13 by the metric that gives every other figure in the sentence",
+   "evidence": "caps.py on 92c3ad59: 25 return-required critical vias, 21 over an In2 power rail (3V3 x17, PORT_4V8 x4); via centre to the rail-side pad centre of the nearest rail-to-GND capacitor: 1.294-6.190 mm, SD_MISO 6.190, SD_SCK 5.325, SD_MOSI 5.065, SD_CS 4.837 (C17), SPI1 5.038-5.770, QSPI_NCS 5.318 (all as quoted); beyond 4 mm: 13 (CAM_MCU_RX 4.020 mm to C29 is the 13th). The part-centre metric gives SD_MISO 6.100, not 6.19.",
+   "concrete_fix": "R10_VALIDATION line 2640: '13 of the 21 are beyond 4 mm (CAM_MCU_RX 4.02 mm)'; optionally the same in the R18-m21 ledger row. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-09",
+   "merged_ids": [
+    "R26-ROUTING-03"
+   ],
+   "kind": "rule",
+   "severity": "Minor",
+   "title": "AUX_TX_WIRE / AUX_RX_WIRE change layer through J440.3 / J440.4 with the nearest GND via 3.900 / 4.037 mm away, although D-R19-15 keeps the port UART nets under the 1.5 mm partner-via rule; route_check tests vias only, so it passes",
+   "evidence": "Rule: AGENTS section 3 / REQUIREMENTS M2 'a GND via within 1.5 mm of every layer change of a critical signal net'; M2 says route_check fails 'a critical-signal-net layer change ... with no GND via within 1.5 mm'; D-R19-15 (R10_DECISIONS line 3190): 'the GPS / RADIO / AUX / CAM port UART nets stay under the stricter 1.5 mm GND-partner-via and one-In2-region rules ... the frozen board meets them' (then 50a39de5, AUX pair F.Cu only); route_check R10_CLASSES puts them in 'uart' (SIGNAL_CRITICAL, return_required; not in R10_SLOW_RETURN_NETS); M3_R10 line 175 repeats the decision. Rounds 24 / 25 judged AUX by AGENTS' net list alone, without D-R19-15. Board 92c3ad59 (board.json, tht_layers.py): AUX_TX_WIRE F.Cu R471.2 (15.275,18.0) -> J440.3 (7.4,18.0), B.Cu J440.3 -> (4.81,18.0) -> (4.45,18.36) -> D440.1; AUX_RX_WIRE F.Cu R470.1 -> (12.4,20.6) -> (11.5,21.5) -> J440.4, B.Cu J440.4 -> (4.81,21.5) -> (4.45,21.86) -> D441.1; no vias on either net; nearest GND vias (3.5,18.0) 3.900 mm and (3.75,19.775) 4.037 mm. Every other plated pin carries one copper layer except J400.2 (BAT_SW_RETURN, AUD-2 slow list, exempt) and J1.1 (BAT_IN, power): J121, J122, J410, J420, J9, J3 and J2 checked. route_check --profile r10 on a copy (rc/route.log): 0 failing, no critical_via_no_gnd instance; its loop (route_check.py lines 2231-2250) iterates PCB_VIA items only. The layer change came with D-R20-09 (clamps under J440 on B.Cu), a generator change that passed every gate. Legality of a fix (via_spot.py, 0.5 / 0.3 mm GND via): at (7.4,16.5) and (7.4,20.0), 1.500 mm from J440.3 / J440.4: 0.300 mm to the pin's pad on F.Cu, In1, In2 and B.Cu (>= 0.15), inner-layer hole clearance 1.5 - 0.25 - 0.65 = 0.60 mm (DRU 'JLC inner-layer PTH pad hole to copper' 0.55), 0.70 mm hole to hole (>= 0.25), 0.80 mm to J440.3 for the J440.4 spot, no other foreign copper within 1 mm on F.Cu / B.Cu; on In2 it sits in the 3V3 fill (the refill clears an antipad). M-6 (bottom parts vs foreign THT pads) and S-8 (protected barrels; none near J440) are not affected; D440 / D441 are >= 2.9 mm away.",
+   "concrete_fix": "Board: add one GND via within 1.5 mm of each pin, at about (7.4,16.5) for J440.3 and (7.4,20.0) or (7.4,23.0) for J440.4, joined to In1 GND; refill and re-run DRC, K-plane / K-copper (In2 3V3 round J440), K-legends and route_check. Gate: count a plated pad that carries a return-required critical signal net's tracks on two copper layers as a layer change in critical_via_no_gnd (J400.2 stays AUD-2-exempt; J1.1 is power), with a seed. Alternative without a board change: a recorded decision moving AUX_TX_WIRE / AUX_RX_WIRE to AUD-2's slow list with a reason (it reverses D-R19-15 for two nets and needs owner acceptance; an allowlist entry would fail route_check's spot search, which finds the legal spots above).",
+   "board_change": true
+  },
+  {
+   "id": "R26-TRI-10",
+   "merged_ids": [
+    "R26-MECHANICS-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R10_VALIDATION line 2752 gives the wall-allowance wire room as 4.503 mm; it is 4.493 mm",
+   "evidence": "sqrt(24.9^2 - 5^2) - |3.40 - 23| - 0.3 = 24.3928 - 19.6 - 0.3 = 4.4928 mm (bare bore 25.4 mm: 5.0030 mm); 4.503 is 5.003 - 0.5. M3_R10 line 860, owner row 31 and the R23-MECHANICS-01 disposition (line 1915) give 4.493 mm.",
+   "concrete_fix": "Line 2752: '(4.503 mm with it)' -> '(4.493 mm with it; R23-MECHANICS-01)'. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-11",
+   "merged_ids": [
+    "R26-MANUFACTURING-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The C84 hand-fit heat limit names the wrong bottom joints: C9.1 is not under a land, L1.1 and C7.1 are, and C8 (0.605 mm) is missing",
+   "evidence": "c84.py (XY projection of C84's F.Cu lands onto every B.Cu pad, 92c3ad59): C84.1 VLOGIC x 26.65-28.35, y 80.00-83.50; C84.2 GND y 73.50-77.00. Overlaps: C9.2 1.290 mm2, C7.2 1.022, L1.2 0.160, L1.1 0.030, C7.1 0.0036 mm2; gaps: C9.1 0.545 mm, C8.2 0.605, C8.1 0.814 mm. ORDERING 8.2 line 435: 'Four bottom joints sit directly under C84's lands (L1.2 3V3, C7.2 GND, C9.1 3V3, C9.2 GND; also L1.1 at 0.60 mm and C7.1 at 0.90 mm)'; R10_VALIDATION line 2755 repeats it; the fixture and inspection lists name L1, C7, C9 and R166 only.",
+   "concrete_fix": "ORDERING 8.2 and R10_VALIDATION line 2755: 'Five bottom joints sit under C84's lands (L1.1 SW_NODE, L1.2 3V3, C7.1 VLOGIC at its edge and C7.2 GND under land 2; C9.2 GND under land 1); C9.1 3V3 is 0.545 mm and C8.2 / C8.1 0.605 / 0.814 mm away'; add C8 to the fixture keep-off and post-fit inspection lists. Text only.",
+   "board_change": false
+  },
+  {
+   "id": "R26-TRI-12",
+   "merged_ids": [
+    "R26-MANUFACTURING-02"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The J3 slot hand-finish neighbours (C83, R8) omit R7, which is nearer than R8",
+   "evidence": "j3.py (B.Cu copper edge to edge from the J3 shell slot pads, 92c3ad59): C83.1 VBUS 1.952 mm (J3.4), R7.2 GND 2.010 mm (J3.4), R8.1 CC2 2.145 mm (J3.1), then D441.2 2.529 mm. ORDERING 8.2 line 461 'keeping the iron off bottom C83 and R8'; R10_VALIDATION R7-MFG-03 (line 518) 'Fixed: C83 / R8, 1.95 / 2.15 mm copper gap'.",
+   "concrete_fix": "ORDERING 8.2: 'keeping the iron off bottom C83, R7 and R8 (1.952 / 2.010 / 2.145 mm copper gap)'; R7-MFG-03: 'C83 / R7 / R8, 1.95 / 2.01 / 2.15 mm'. Text only.",
+   "board_change": false
+  }
+ ],
+ "observations": [
+  {
+   "id": "R26-SAFETY obs 1, 6, 7, 9, 10, 11, 12, 13, 16",
+   "reason": "Reproductions and confirmations on the built board (chatter corner, hold-up, OVLO, pack change, ramp window, AGENTS section 2 networks, single-fault sweep, adjacency diff, S-8); no record contradicted. Obs 12's 'all but the last are disclosed' last item is R26-TRI-01."
+  },
+  {
+   "id": "R26-SAFETY obs 3 (TCR outside the chatter corner)",
+   "reason": "The 7.63 ms limit is stated for the D-R24-19 1 % corner; with +/-100 ppm/K at 70 C the limit is 7.31 / 7.18 ms, still above the 7 ms pass line, so no rule or statement fails; resistor temperature is a disclosed basis."
+  },
+  {
+   "id": "R26-SAFETY obs 4 (contact resistance)",
+   "reason": "Suggestion: no stated rule defines the open / closed threshold; F9's dry-contact qualification covers it."
+  },
+  {
+   "id": "R26-SAFETY obs 5 (step 3 timing)",
+   "reason": "The practical rail method (telemetry / buzzer, J121.2) meets 1 s; the TP81 / C15.1 alternative needs access that the rail does not give, and its 0.9-1.35 s rests on an Inference and errs fail-safe."
+  },
+  {
+   "id": "R26-SAFETY obs 14, 15 (BUZZ_OUT / BAT_FAULT_N next to the PC1 chain)",
+   "reason": "Disclosed row 2 class (PC1 enable chain can switch the bus on; firing then needs Q124); (c') states a 25 C datasheet threshold correctly."
+  },
+  {
+   "id": "R26-SAFETY obs 17",
+   "reason": "Duplicated phrase in ORDERING 8.3; wording only, the procedure is usable."
+  },
+  {
+   "id": "R26-POWER obs 1-4, 7-12, 14",
+   "reason": "Reproductions of D-R24-19 / D-R25 figures, K-power, hot-plug binding and regulator taps; obs 14 is the round 25 rounding observation."
+  },
+  {
+   "id": "R26-POWER obs 5 (7 ms rule at 5.5 V)",
+   "reason": "5.5 V is a labelled sensitivity point; the shorted-match corner (5.50-5.56 V, R26-TRI-04) lasts only the <= 20 ms pulse and needs four stalls plus J400 chatter in the same window: more conditions than the fault model, and no record claims coverage."
+  },
+  {
+   "id": "R26-POWER obs 6, R26-MCU obs 2 (PA6 lower edge 4.753 V)",
+   "reason": "Disclosed: rule 8 leaves the window 'to be qualified with the divider and ADC tolerances', and round 25 triage listed 4.7529 V; VLOGIC 4.753 V still corresponds to a BAT_IN above U9's 4.80 V turn-off."
+  },
+  {
+   "id": "R26-POWER obs 13",
+   "reason": "1.294 A is U2's rated-output copper basis, not a stated load; U11's 1-2 A limit is above the ~0.4 A logic allocation."
+  },
+  {
+   "id": "R26-ROUTING obs 1-6, 10, 11, 13, 14",
+   "reason": "route_check and independent scans reproduce the records (0 failing, headings, partners 0.77-1.43 mm, references, detour table, USB pair, counts, recorded residuals)."
+  },
+  {
+   "id": "R26-ROUTING obs 8 (D8 under-body via)",
+   "reason": "Same-net GND fan-out, DRC and M2's 0.1 mm via-hole rule pass; an M2 review item for the final review report, which no record claims is complete yet."
+  },
+  {
+   "id": "R26-ROUTING obs 9 (row 30 distances)",
+   "reason": "Figures are labelled as 5516eeec measurements and the inventory basis says such rows were not re-measured; the exemption is unaffected."
+  },
+  {
+   "id": "R26-ROUTING obs 12",
+   "reason": "Recorded review-only residual, reproduced."
+  },
+  {
+   "id": "R26-MCU obs 1, 3, 5, 6",
+   "reason": "0.31 encloses 0.305 (outward rounding); PA4 / PA5 injection and TT_a facts are not contradicted; LSM6DSV80X is a coverage limit."
+  },
+  {
+   "id": "R26-MCU obs 4 (PA3 <= 0.83 V)",
+   "reason": "3V3 at its +1 % edge (3.333 V) with the 30 k pull-up gives 0.833 V, which the two-figure bound covers; no requirement depends on it."
+  },
+  {
+   "id": "R26-GATE obs 1, 3, 4, 5",
+   "reason": "Text-pin coverage class already in round 25's observations; D9's transient branch has no stated width floor; S-6 copy-only artefact; right_angle variants are caught by other rules."
+  },
+  {
+   "id": "R26-GATE obs 2 (budget-derived figures hand-typed)",
+   "reason": "Not a real error: no stated rule binds the text to parts_budget.json, so a pass on a stale figure is not a gate miss under the brief. It is the cause of the stale-figure class, and one such figure is stale now: the 5.73 V four-stall point and its 8.2 / 7.63 / 0.63 ms (R26-TRI-02; R26-TRI-04's 5.37 V is derived from it). The other budget-derived figures checked are current: hold-up 0.464-0.539 / 1.304-1.412 ms and post-trip 0.103-0.164 / 0.291-0.430 ms, F7 1.541 / 1.476 / 1.279 A, U9 bound 3.743861 A, OVLO 10.18 V, buck peaks 3.6565 / 3.6268 A."
+  },
+  {
+   "id": "R26-PARTS obs 2 (L1 Isat 2.90 A vs AP63203 3.1 A)",
+   "reason": "Not a real error: DS41326 Rev 3-2 section 10 ties the saturation rating to the operating peak (ILOAD + dIL/2, Eq. 8) and asks for a DC rating >= 1.35 x the maximum load, not Isat above the 2.5-3.1 A HS limit; the 3V3 operating peak is about 0.6-0.85 A (dIL about 0.48 A at 8.4 V, 1.1 MHz, 3.76 uH) against 2.90 A, and no record claims a fault-current rating for L1. A 3V3 hard short may saturate L1 briefly inside the cycle-by-cycle limit and 2 ms hiccup."
+  },
+  {
+   "id": "R26-PARTS obs 1, 3, 4, 5, 6",
+   "reason": "Historical, labelled or reviewed items (R166 historical bound, M3_R4 record, spliced historical paragraph, CPL body corrections, stock / cost facts)."
+  },
+  {
+   "id": "R26-MECHANICS obs 1-10",
+   "reason": "Plate model, gaps, tails, standoffs, nut bounds, wire room, supports and retention reproduce; obs 3 was judged in round 25; obs 9 is in the dated 2026-10-28 owner-answer section."
+  },
+  {
+   "id": "R26-MANUFACTURING obs 1-13",
+   "reason": "Fab package, DRC, JLC capabilities, BOM / CPL, VIPPO, tabs, edges, neighbours, PDFs, probe positions and cost / stock match the board and files."
+  },
+  {
+   "id": "R26-REQUIREMENTS obs 1-21",
+   "reason": "Requirement figures reproduce (F1-F12, P1-P3, Pack, Storage, M1 / M3, OVLO); obs 9's 10 km capability vs 300 hPa bench floor is no contradiction."
+  },
+  {
+   "id": "R26-DOCS_BINDING obs 1-4",
+   "reason": "Obs 1: the R19-RTE-04 list is history under its a3144b15 heading (the current count error is owner row 8, R26-TRI-07); obs 2 typography; obs 3 consistent to rounding; obs 4 documented name."
+  }
+ ],
+ "not_reproducible": [],
+ "totals": {
+  "raw_lens_findings": 14,
+  "reproduced": 14,
+  "real_errors": 12,
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 12,
+  "real_errors_with_board_change": 1,
+  "lens_observations_raw": 110,
+  "observations_promoted_or_folded": 3,
+  "observations_remaining": 107,
+  "observation_entries": 24,
+  "not_reproducible": 0,
+  "note": "14 raw lens findings all reproduced and merged into 12 real errors; safety observations 2 and 8 folded into R26-TRI-03 / -06, routing observation 7 promoted into R26-TRI-07; R26-SAFETY-01 settled as Minor (doc) after the circuit, cold-screen and procedure analysis in R26-TRI-01."
+ },
+ "checks_actually_executed": [
+  "shasum -a 256 of m3_design/assembly_review/m3.kicad_pcb before (92c3ad59...), during and after; git status clean apart from the round 26 reports",
+  ".supervisor/r26_triage/dump.py (pcbnew read-only) -> board.json: 216 footprints, 1057 tracks, 307 vias",
+  "adjacent.py: every foreign net within 0.8 mm of PYRO1_OUT on all four layers",
+  "nets.py: pyro / sense / D120 / R164 / U11 / R166 pad nets",
+  "en_model.py, trains.py, frac.py (NumPy venv): worst-corner EN model, single drop-out, periodic window limits, block-by-block trains, F4 trains, trip fractions, burst counter-example",
+  "fire-budget re-solve on parts_budget.json (healthy / shorted-match corners, pre-AUX point) and git history of loaded_pack_V",
+  "tht_layers.py: every plated pad with same-net tracks on two copper layers, nearest GND via",
+  "via_spot.py: GND-via legality at 1.45 / 1.5 mm from J440.3 / J440.4 against the DRU and design rules",
+  "route_check.py --profile r10 on a copy (rc/route.log, route.json): 0 failing, no AUX instance",
+  "caps.py: critical vias over In2 rails and nearest rail-to-GND capacitor distances",
+  "under-body via scan of two-pad parts; c84.py land / pad projection; j3.py slot neighbour gaps; wire-room arithmetic",
+  "pdftotext of cached TI SLVSEA3F (pin functions, RON), TI SLVSFC9C (RON, EN thresholds), Diodes DS41326 Rev 3-2 (PFM, current limit, inductor section)",
+  "git grep of tracked files for 5.73 V / 8.2 ms / 7.63 ms / 1.1173 / 5.37 V; reads of ORDERING 8.3, M3_R10 Firmware, R10_VALIDATION owner table and section 1, FMEA I-5, REQUIREMENTS F4 / F6 / F8 / M2, D-R19-15, D-R20-09"
+ ]
+}

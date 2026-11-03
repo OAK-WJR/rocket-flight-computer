@@ -1,0 +1,27 @@
+# r9_place_check on a copy of the built board with two seeded defects: C301 moved to y 22.4 (past y_f, and
+# 3.6 mm from U30's VCC pins: R-12) and R310 moved to (27.5, 39.5), beside U1 (R-10). Expected: legaliser, f10 and contract fail.
+legaliser  FAIL (5)
+     C301: R-1: RF part courtyard reaches y 22.86 (strip boundary y_f 22.0)
+     R310: R-10: 5.94 mm RF separation to U1; R-10: 5.94 mm RF separation to U7; R-10: 5.94 mm RF separation to U3; R-10: RF part R310 within 5.0 mm of fast-net pad QSPI_
+     U1: R-10: 5.94 mm RF separation to R310
+     U3: R-10: 5.94 mm RF separation to R310; R-10: RF part R310 within 5.0 mm of fast-net pad QSPI_IO0
+     U7: R-10: 5.94 mm RF separation to R310
+drc        OK
+fit        OK
+plate      OK
+f9         OK
+f10        FAIL (3)
+     R-10: F10 separation: RF part R310 is 0.49 mm from U1 (courtyards; minimum 5.0 mm)
+     R-10: F10 separation: RF part R310 is 4.85 mm from fast line QSPI_IO0 (U3.5 B.Cu; minimum 5.0 mm)
+     R-10: RF part R310 is 0.49 mm from U1 (r9_plan hard X9 >= 5.94 mm)
+j1         OK
+tabs       OK
+pyro_pads  OK
+mst        OK
+contract   FAIL (2)
+     R-1: strip part C301 reaches y 22.86 (strip boundary y_f 22.0)
+     R-12: C301 is 3.60 mm from U30's VCC pin (R7/R8 2.18 mm)
+actuators  OK
+areas      OK
+mst 1469.2 mm; f1 252.1 Hz; tabs {'west': [(0.5, 7.25), (12.0, 26.75), (55.75, 101.5)], 'east': [(0.5, 27.0), (95.5, 101.5)]}
+R9 placement gate: FAIL

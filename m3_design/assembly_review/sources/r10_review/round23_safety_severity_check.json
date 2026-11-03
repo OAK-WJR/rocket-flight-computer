@@ -1,0 +1,244 @@
+{
+ "schema": "r10-verify-v1",
+ "review": "round 23 safety severity check (independent verifier)",
+ "target_commit": "c70d2614c9f187c46bce6225047ef4d03484848a",
+ "board_file": "m3_design/assembly_review/m3.kicad_pcb",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "labels": "Calc = arithmetic on board values / maker figures; Sim = numerical gate + e-match model; Inf = inference not checked against an original datasheet or measurement",
+ "verdicts": [
+  {
+   "id": "R23-SAFETY-08(a)",
+   "filed_severity": "Minor",
+   "verified_severity": "Minor",
+   "reasoning": "Bounded residual coverable by a screen, not a credible inadvertent fire. Geometry re-measured on the native board: QSPI_IO2 track (17.0,49.1)-(18.9,49.1) w0.2 is 0.550 mm from U1.3's inner pad end, mask-covered and under the U1 body; U1.1-U1.3 pad edges 0.700 mm with the analog-only no-net U1.2 between (0.200 mm webs), so only a three-lead bridge (or a mask void) joins QSPI_IO2 to PE4. The board's gate network is R127 1k to GND at PE4, R126 220R series, R128 10k and C126 220 nF gate-source (C128 is 100 nF on the drain, PYRO1_OUT); the reviewer's calculation omits C126. With the bridge a DC fight gives 1.19-1.98 V at the gate (MCU drivers) and fires the match after about 0.55 ms of continuous fight, but C126 makes the gate an RC average (tau 47-53 us): page-program logging at >= 25 MHz keeps the e-match RMS current <= 6 mA (>= 50x below the 0.30 A no-fire) at any page rate. Fire needs a sustained IO2-high fight (PE2 driven high as GPIO, long or parked memory-mapped quad reads with the flash at 100 % drive, or slow-clock <= 10 MHz quad page programs of IO2-dense data at high rates with a low-VGS(th) FET). The defect is AOI-visible (Inf) and corrupts quad QSPI bits 6/2 deterministically at the flash's default 25 % drive (fight level 0.57-0.84 V below the MCU VIL max 0.99 V), so the bench QSPI qualification would expose it with dummy loads, but no explicit documented gate does; the passive cold screen does not dependably see it. Intact board meets F7/F8; AGENTS 2.4 holds even with the bridge (reset: both pins analog, no pull-up on QSPI_IO2, R127/R128 hold the gate off). Single-bridge cases are an inventoried residual class (R10_VALIDATION section 1 lists this pair). Hence Minor: bounded residual plus a gate gap.",
+   "key_numbers": {
+    "U1.3_to_QSPI_IO2_track_mm": {
+     "value": 0.55,
+     "label": "Calc"
+    },
+    "U1.1_to_U1.3_pad_edge_mm": {
+     "value": 0.7,
+     "label": "Calc"
+    },
+    "U1_mask_web_mm": {
+     "value": 0.2,
+     "label": "Calc (CAD; board mask expansion 0)"
+    },
+    "gate_tau_us": {
+     "value": "47-50 (C126 -10 % + Ciss), 53.0 nominal",
+     "label": "Calc"
+    },
+    "dc_fight_gate_V_MCU_drivers": {
+     "value": "1.571 (equal 50/50 ohm), range 1.186-1.977",
+     "label": "Calc/Inf"
+    },
+    "dc_fight_gate_V_flash_25pct_default": {
+     "value": "0.555-0.817",
+     "label": "Calc/Inf"
+    },
+    "dc_fight_gate_V_flash_100pct": {
+     "value": 1.857,
+     "label": "Calc/Inf"
+    },
+    "gate_V_for_0p30A_typ25C_minVth60C": {
+     "value": [
+      1.33,
+      0.82
+     ],
+     "label": "Inf (AON7524 curves, rigid VGS(th) shift)"
+    },
+    "dc_fight_time_to_0p30A_us": {
+     "value": "28-89",
+     "label": "Sim"
+    },
+    "dc_fight_time_to_4mJ_ms": {
+     "value": "0.54-0.64",
+     "label": "Sim"
+    },
+    "page_program_worst_rms_A_at_25MHz_any_rate": {
+     "value": 0.006,
+     "label": "Sim"
+    },
+    "page_program_worst_rms_A_at_25MHz_F5_rate": {
+     "value": 0.0011,
+     "label": "Sim"
+    },
+    "page_program_worst_rms_A_at_50MHz": {
+     "value": 0.00011,
+     "label": "Sim"
+    },
+    "page_program_10MHz_all_ones_minVth60C_rms_A": {
+     "value": "0.08-0.80 (80/s to max rate); exceeds 0.30 from about 400-1000 pages/s",
+     "label": "Sim"
+    },
+    "long_read_flash_25pct_worst_A": {
+     "value": 0.274,
+     "label": "Sim/Inf"
+    },
+    "long_read_flash_100pct_64KB_bridge_energy_mJ": {
+     "value": "10-41 (vs 4 mJ all-fire energy)",
+     "label": "Sim/Inf"
+    },
+    "readback_fight_level_V_default_drive": {
+     "value": "0.57-0.84 (MCU VIL max 0.99)",
+     "label": "Calc/Inf"
+    },
+    "hazard_loop_Imax_A": {
+     "value": 2.805,
+     "label": "Calc (8.4 V, 0.73 ohm match, no leads)"
+    },
+    "fight_current_mA_vs_IIO_abs_max": {
+     "value": "33-66 vs 20",
+     "label": "Calc/Inf"
+    }
+   },
+   "recommended_fix": {
+    "summary": "Make the screen explicit before an e-match meets the live bus. (1) ORDERING 8.3 first article, before coating and first power: inspect U1 pins 1-5 at >= 10x and meter U3.3 (QSPI_IO2) to R127.1 (PYRO1_GATE_N); require no beep / > 100 ohm (bridge ~0 ohm, intact diode-plus-1k or open; Inf). (2) Firmware ground refusal before PC1 enable, PC1/PE4 locked low: quad-mode read-verify of a known all-ones region at the default W25Q DRV, or a >= 1 ms PE2-high aggressor with the bus off refusing if CONT leaves band. (3) Firmware rules while PC1 is high: keep W25Q DRV at default, no parked memory-mapped mode without the QUADSPI timeout, no bulk quad reads, never drive PE2 high as GPIO, Quad Page Program only at >= 25 MHz (or use 0x02). (4) Add the mechanism and screen to the R10_VALIDATION section 1 row for this pair.",
+    "board_change": false,
+    "respin_option": "None required."
+   }
+  },
+  {
+   "id": "R23-SAFETY-05",
+   "filed_severity": "Minor",
+   "verified_severity": "Minor",
+   "reasoning": "Bounded margin residual. The native ACT_GATE copper graph confirms via (16.200,73.300) 0.50/0.30 mm is the only link from R121.1 (F.Cu) to Q120.4/C120.2/R120.2 (B.Cu): opening it in memory splits the net into {R121.1, Q121.4, R119.1} and {Q120.4, C120.2, R120.2}; Q120 is then held off by R120 100k / C120 1 uF (VGS = 0) and, with PC1 high, the bus is fed through Q120's body diode and Q121. Opening the other via (11.14,71.7) kills the bus instead (fail-safe, refused by the powered check). Neither open creates a fire path. The parts_budget.json fire_current_GAP1 model reproduces exactly (branch 4.4678 ohm recomposed from its parts; 1.5409/1.4758/1.4104/1.3448/1.2787 A for 0-4 stalls); adding VSD 0.7 / 1.0 V gives 1.128 / 1.063 A at four stalls (1.137 / 1.072 A if Q120's 0.04 ohm channel is removed), 1.194 / 1.129 A at three, 1.390 / 1.325 A idle, matching the finding. That is 0.93-1.01x the project's 1.125 A floor but 1.39-1.52x the maker's 0.75 A all-fire and 1.04-1.14x the maker's 1.00 A recommended minimum firing current; a first-order bridgewire model bounded by the maker's no-fire / all-fire / 4 mJ figures fires the least sensitive admissible match in 4.1-5.2 ms (intact 3.0 ms), inside the 20 ms pulse (Inf). F7's floor is the intact-board budget, so a shortfall that needs a single via fault plus the conditional four-stall case is not a demonstrated failure of F7, and AGENTS section 2 is untouched. Detection is incomplete but available: probing ACT_GATE on Q120's side (R120.2 / C120.2, already in the ORDERING 8.3 probe worksheet) or recording the dummy-load fire drop catches a pre-existing open; the idle BUS reads 5.4-7.4 % low for a later one.",
+   "key_numbers": {
+    "via": {
+     "value": "(16.200,73.300) 0.50/0.30 mm, flashed F.Cu and B.Cu",
+     "label": "Calc"
+    },
+    "intact_fire_A_0_to_4_stalls": {
+     "value": [
+      1.5409,
+      1.4758,
+      1.4104,
+      1.3448,
+      1.2787
+     ],
+     "label": "Calc (reproduces parts_budget.json)"
+    },
+    "four_stall_fire_A_VSD_0p7_1p0": {
+     "value": [
+      1.128,
+      1.063
+     ],
+     "label": "Calc"
+    },
+    "four_stall_fire_A_Q120_channel_removed": {
+     "value": [
+      1.137,
+      1.072
+     ],
+     "label": "Calc"
+    },
+    "three_stall_fire_A": {
+     "value": [
+      1.194,
+      1.129
+     ],
+     "label": "Calc"
+    },
+    "idle_fire_A": {
+     "value": [
+      1.39,
+      1.325
+     ],
+     "label": "Calc"
+    },
+    "four_stall_cold_minus20C_A": {
+     "value": "1.043-1.118",
+     "label": "Calc/Inf (VSD +0.09 V)"
+    },
+    "ratio_to_all_fire_0p75A": {
+     "value": "1.39-1.52",
+     "label": "Calc"
+    },
+    "ratio_to_maker_recommended_min_1p00A": {
+     "value": "1.04-1.14",
+     "label": "Calc"
+    },
+    "ratio_to_floor_1p125A": {
+     "value": "0.93-1.01",
+     "label": "Calc"
+    },
+    "least_sensitive_match_time_to_fire_ms": {
+     "value": "4.1-5.2 (intact 3.0) vs 20 ms pulse",
+     "label": "Inf"
+    },
+    "idle_bus_drop_V_and_shift_pct": {
+     "value": "0.45-0.55 V, 5.4-7.4 %",
+     "label": "Calc/Inf (AONR21357 Fig 6 at ~1.5 mA)"
+    }
+   },
+   "recommended_fix": {
+    "summary": "Now (text): ORDERING 8.3 first article - probe ACT_GATE at both R119.1 and R120.2 / C120.2 with PC1 high and record |VGS| for each FET; record BAT_IN - RAW_ACT (or the fire current) during the dummy-load fire, failing a drop above 0.2 V; adopt the powered BUS-vs-VLOGIC band per flight once qualified. Respin: a second F.Cu-B.Cu via at Q120's gate.",
+    "board_change": false,
+    "respin_option": "Second F.Cu-B.Cu via in parallel with (16.2,73.3) on Q120's gate net (next board change)."
+   }
+  }
+ ],
+ "notes": [
+  "The brief's 'C128 gate-source' is a mislabel: on 5516eeec the Q124 gate-source capacitor is C126 220 nF (PYRO1_GATE to GND); C128 100 nF sits on PYRO1_OUT (drain) to GND.",
+  "The R23-SAFETY-08(a) statement 'with the bus enabled that fires the match during QSPI logging' is overstated for page-program logging at >= 25 MHz; it holds for sustained IO2-high fights of >= about 0.55 ms."
+ ],
+ "sources": [
+  {
+   "doc": "AOS AON7524 Rev 1.1 (October 2023)",
+   "url": "https://www.aosmd.com/res/datasheets/AON7524.pdf",
+   "pages": "p2 VGS(th) 0.4/0.8/1.2 V at 250 uA, Ciss 2250 pF; p3 Fig 1 (VGS 1.5 V and 2 V curves), Fig 2 transfer"
+  },
+  {
+   "doc": "AOS AONR21357 Rev 2.1 (November 2023)",
+   "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+   "pages": "p2 VSD -0.7/-1.0 V at IS -1 A; p3 Fig 6 body-diode curve"
+  },
+  {
+   "doc": "ST DS12110 Rev 8 (STM32H742/743)",
+   "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+   "pages": "p107 Table 22 (IIO 20 mA); p139 Table 60 (VIL 0.3 VDD, VIH 0.7 VDD); p140 output driving current; p141 Table 61 (VOL/VOH at 8 and 20 mA)"
+  },
+  {
+   "doc": "Winbond W25Q128JV Rev G (April 2019)",
+   "url": "https://www.winbond.com/resource-files/w25q128jv%20revg%2004082019%20plus.pdf",
+   "pages": "p16 QE (IQ parts QE=1 fixed); p17 DRV default 25 %; p37 Quad Input Page Program 32h; p62 DC characteristics (VIL/VIH, VOH at -100 uA only); p65 tPP 0.4/3 ms; p74 ordering code Q"
+  },
+  {
+   "doc": "MJG Technologies J-Tek LEAD-FREE technical information sheet",
+   "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+   "pages": "p1 no-fire 0.30 A (30 s), all-fire 0.75 A (0.5 s), recommended min 1.00 A, min all-fire energy 4 mJ, bridgewire 1.0 ohm (SD 0.09)"
+  },
+  {
+   "doc": "RM0433 QUADSPI single/dual-line IO2 behaviour",
+   "url": "https://community.st.com/stm32-mcus-products-25/quadspi-single-spi-mode-io2-state-82532",
+   "pages": "forum discussion only; RM0433 itself not re-read (Inf)"
+  }
+ ],
+ "probes": {
+  "dir": ".supervisor/r23_verify/ (git-excluded, local)",
+  "scripts": [
+   "scripts/u1_geom.py",
+   "scripts/u1_mask.py",
+   "scripts/nets.py",
+   "scripts/refs.py",
+   "scripts/act_gate_graph.py",
+   "calc/s08a_gate_model.py",
+   "calc/s05_body_diode.py"
+  ],
+  "outputs": [
+   "u1_geom.json",
+   "act_gate_graph.json",
+   "calc/s08a_gate_model.json",
+   "calc/s05_body_diode.json"
+  ]
+ },
+ "coverage_limits": [
+  "RM0433 was not re-read: QUADSPI IO2 single-line (forced low or released) and idle behaviour are Inf; neither fights PE4's low.",
+  "MCU and flash driver resistances under a 33-66 mA fight, W25Q drive at mA levels, AON7524 sub-amp transfer (typical curves shifted rigidly with VGS(th)), its -3 mV/K threshold coefficient and the J-Tek first-order thermal model are Inf.",
+  "JLC AOI coverage and three-lead bridge rates are not documented in this repository; the likelihood statements are Inf.",
+  "No bench measurement, SPICE, firmware or physical test; no measurement of first-article resistance readings.",
+  "Only part (a) of R23-SAFETY-08 was verified; PYRO1_GATE's own neighbours and parts (b) and (c) were not re-measured.",
+  "Via-open probability is not quantified; cold VSD is Inf."
+ ]
+}

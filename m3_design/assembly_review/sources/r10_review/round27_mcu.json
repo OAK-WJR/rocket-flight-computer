@@ -1,0 +1,62 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round27_mcu",
+  "reviewer": "claude",
+  "target_commit": "816038c46b95c78b7286b10fe555f3bbe38a3fa5",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 1},
+  "findings": [
+    {
+      "id": "R27-MCU-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "The binding note says every DS12110 citation in it is Rev 8, but its own R5-MCU-04 obligation cites Rev 11 Table 109",
+      "contradicts": "r10_binding_note.json sources.mcu_revision (line 527): 'every DS12110 citation in this note is Rev 8 (April 2021), revision V electrical chapter (section 7; the LCSC copy is byte-identical); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)'. The same note, firmware_obligations[29] (line 601, 'Audit2 direct PC0/PC5 ... Other unprotected sense faults (R5-MCU-04)'): '... the 4.0 V ADC-mode maximum and the 6.0 V FT cap were read from Rev 11 Table 109 in round 14 and are kept as design limits (Inference: not in Rev 8, Rev 11 not re-read)'. docs/M3_R10.md 'Sources and datasheet revisions' itself lists these two limits as labelled Rev 11 exceptions, so the note's 'every ... is Rev 8' has no carve-out and is false.",
+      "evidence": "git show 816038c:m3_design/assembly_review/sources/r10_design/r10_binding_note.json: sources.mcu_revision (generated from m3_design/r10_sch_check.py lines 242-243) and firmware_obligations[29] (generated from r10_sch_check.py line 307) both present; the note's board_sha256 is a0ec075e..., so this is the current generated note. Text search: 'Rev 11 Table 109' occurs once in the note, inside a DS12110 limit citation. Not raised in round 23 (R23-DOCS_BINDING-04 dealt with AGENTS / ORDERING / parts_qualification, and its fix narrowed AGENTS to 'pin_table and the binding note cite Rev 8' while M3_R10 lists the Rev 11 limits as labelled), and absent from the round 24-26 triage observations (grep 'Rev 11', 'Table 109', 'every DS12110 citation' in sources/r10_review/round2[3-6]_triage*: no hit).",
+      "impact": "Low: a reader trusting the sources line would look up 'Table 109' in the Rev 8 copy, where it is a different table; the FT 6.0 V and ADC-mode 4.0 V limits are the only Rev 11 basis in the note. No hardware or firmware behaviour changes.",
+      "concrete_fix": "Generator text only (r10_sch_check.py, regenerate the note; the board is unchanged): 'every DS12110 citation in this note is Rev 8 (April 2021) ..., except the two design limits labelled as read from Rev 11 Table 109 in round 14 (the 6.0 V FT cap and the 4.0 V ADC-mode maximum, R5-MCU-04 obligation; Inference, not re-read)'. Optionally pin the new words in test_r23_binding_note_rules_and_pin_table."
+    }
+  ],
+  "observations": [
+    "U1 pad nets on the board (100 pads), the schematic netlist (schematic.net.xml) and pin_table.tsv r10_net agree on all 100 pins; the binding note's u1_pins port / net / mode equal pin_table port / r10_net / mode_af on all 100 rows; pin_table and circuit.json hashes in the note match the files, netlist hash 762bc13d... matches.",
+    "Every LQFP100 pin number to pin name in pin_table matches DS12110 Rev 8 Table 9 (pp. 64-88); every 'Table 9 p. N' and 'Table 10-14 p. M' page citation in pin_table's source column matches the page on which that pin's row appears.",
+    "AFs and ADC channels used (TIM5 AF2, USART3 / USART6 / UART7 AF7, UART5 AF14, QUADSPI AF9 / AF10, SPI1 AF5, SPI3 AF6, I2C1 AF4, OTG_FS AF10; PC0 ADC123_INP10, PA6 ADC12_INP3, PC5 ADC12_INP8, PB1 ADC12_INP5) match DS12110 Rev 8; PC1 RTC_TAMP3 / WKUP5 and the trace pins (PE2 TRACECLK, PC1 TRACED0, PE4 TRACED1) as the note states.",
+    "Every reset_contract part named in pin_table (R127/R126/R128/C126, R122/R123/C123, R162/R163, R150-R157, R89/R91/R90, R102, R104/R105, R9/R110, R10/R11/R12/R13, R431/R432, R460-R464, R440/R441/R450/R451/R470/R471 with D410/D411/D420/D421/D440/D441, R132/R175/R133/R180/C129, R129/R173/R130/R178/C127) has the stated value and nets on the board.",
+    "R23 rule 4 (and M3_R10 Firmware rule 4) pairs '1.128 / 1.063 A' with '0.93-1.01x the 1.125 A floor'; those two currents give 0.945-1.003x; the 0.93-1.01x range is the envelope of round23_safety_severity_check.md's wider case table (including -20 C and Q120's 0.04 ohm removed: 1.043-1.137 A), so it is a conservative envelope, not counted.",
+    "Rule 12's harmonic rule names SPI3 / QSPI / timer clocks; the 25 MHz HSE crystal itself has its 63rd harmonic at 1575.0 MHz (0.42 MHz from L1). R10 has no on-board GNSS and the rule is labelled Inference; noted only.",
+    "PC14 drives R162 1 kohm into Q123's gate (3.3 mA initial edge current against Table 159's 3 mA test point); already recorded as unmeasured in parts_qualification.md (D-R12-01), not counted.",
+    "The PA6 window's lower edge with 1 % R60 / R61 is VLOGIC 4.75 V (BAT_IN about 4.84-4.91 V with the 0.09-0.16 V drop), still above U9's 4.80 V BAT_IN corner; rule 8 already says the window is to be qualified with divider and ADC tolerances."
+  ],
+  "fix_verification": [
+    {"change": "D-R26-03 chatter obligation (firmware_obligations[17])", "measurement": "Independent worst-corner EN model (R80 / R165 474.7 k, R81 297 k, C87 0.72 x 220 nF, EN 0.1 uA out, D402 50 nA, VUVLO(F) 1.116 V; TI SLVSFC9C p. 9 thresholds read from the cached PDF): single drop-out 10.345 / 20.111 / 26.023 ms at 6.0 / 7.4 / 8.4 V, 8.066 ms at 5.713 V, 6.300 ms at 5.5 V; EN 1.4014 V at 6.0 V; nominal 18.9 / 32.8 / 41.1 ms; late-block limit 7.501 ms at 5.713 V, 7.629 at 5.73, 5.871 at 5.5, 9.594 at 6.0; EN at the 7 ms line 1.1295 V (5.713) / 1.1330 V (5.73); the 7 ms line holds down to 5.6465 V; periodic trip fractions at 5.713 V 19.7 % (fast limit) / 19.6 / 18.6 / 17.4 / 14.8 / 11.4 / 4.5 % at 0.1 / 1 / 2 / 4 / 6 / 8 ms, at 6.0 V 24.4 % / 24.3 % to 8.3 % at 9.9 ms; 3 x 4 ms with 0.2 ms closures 1.0245 V at 5.713 V; exchange identity C(O(v)) - O(C(v)) = (1-a)(1-b)(vc-vo) verified algebraically; turn-on 30.3-130.3 ms.", "verdict": "confirmed"},
+    {"change": "D-R26-03 rule 8 (firmware_obligations[43])", "measurement": "Re-solved V = 7.4 - 0.15 (V / R + 7.68 + 13.06409 / V): healthy 5.7132 V at 1.2787 A (R 4.4678 ohm), match shorted 5.5576 V (2.4678 ohm), cold 5.5555 V (2.4528 ohm), match and leads shorted cold 5.5084 V (2.1528 ohm); parts_budget four-stall loaded_pack_V 5.71319 (primary FETs) / 5.71116 (typical hot); U9 BAT_IN turn-off corner 4.802 V (4.778 V without D402); PA6 0.44-0.47 V x 11 = 4.84-5.17 V; hold-up 0.1034-0.1643 ms (11.249-13.064 W) and 0.2906-0.4303 ms shed (4.295-4.650 W) at 300.8 uF to 3.8 V; ratios to break-to-3.8 V hold-up 0.22-0.31.", "verdict": "confirmed"},
+    {"change": "D-R26-04 / D-R26-02 (MCU fire-control nets)", "measurement": "pcbnew GetEffectiveShape / Collide bisection on all four copper layers incl. zone fills: 3V3 to PYRO1_GATE 1.0588 mm (R164's via (19.55, 55.825) to R128.1, F.Cu), 3V3 to PYRO1_GATE_N 1.0652 mm (same via to R127.1) and 1.0811 mm (R126.1), 3V3A to PYRO1_GATE 1.1455 mm (C10.1 to via (14.4, 53.3), B.Cu); PYRO1_OUT to 3V3A 1.0400 mm (R164.2 to the OUT run, B.Cu), to 3V3 1.0506 mm (via (9.2, 52.55)); no other 3V3 / 3V3A pair under 1.2 mm.", "verdict": "confirmed"},
+    {"change": "D-R26-01 (AUX UART layer change)", "measurement": "GND vias 0.5 / 0.3 mm present at (7.4, 16.5) and (7.4, 20.0); U1 PC6 / PC7 nets AUX_TX_MCU / AUX_RX_MCU unchanged through R471 / R470 to J440.3 / J440.4; port pin order pin 3 board TXO, pin 4 board RXI as the note states.", "verdict": "confirmed (MCU-side map only; routing rule not re-judged in this lens)"}
+  ],
+  "checks_actually_executed": [
+    "sha256 of m3.kicad_pcb before and after (a0ec075e... both); HEAD 816038c.",
+    "KiCad pcbnew (read-only): U1 100 pad nets vs pin_table r10_net (0 mismatches); part values / nets of every reset_contract part; nets of J410 / J420 / J440 / J9 / J122 / J400 / J121 / J430 / J3 / U3 / U4 / U5 / U11 / U12 / U13 / U402; cited vias (Q120 / Q121 gate barrels, R91 / U1.28 second vias, AUX partner vias, EN via); U1 and U4 pad geometry; 3V3 / 3V3A clearance to PYRO1_GATE_N / PYRO1_GATE / PYRO1_OUT.",
+    "schematic.net.xml U1 nodes vs pin_table (0 mismatches); netlist / pin_table / circuit hashes vs the binding note.",
+    "binding note u1_pins vs pin_table (100 rows, 0 differences).",
+    "DS12110 Rev 8 (cached .supervisor/r14_parts_pdf/st_h743.pdf) text extraction: Table 9 LQFP100 pin names and I/O structures, AF tables 10-14, ADC channels, Table 146 LSI, Tables 119 / 120 / 122 / 126 / 127 / 128 / 147 / 157 / 159 / 160 / 189 / 192 page numbers and notes, Table 9 note 7 p. 88, sections 3.8 / 3.19 pages; every pin_table page citation.",
+    "TI SLVSFC9C (TPS25947) EN thresholds and leakage; TI SLVSEA3F (TPS2121) pin functions and Table 9-3 ST semantics; TI SLVS841G (TPS2553) FAULT deglitch / reverse-voltage timing; TI TXU0202 pin functions and input pull-downs; AON7524 / AO3400A VGS(th); LSM6DSV320X DS14623 Figure 5 (rendered) for pin map and axis directions vs U4 placement.",
+    "Python recomputation of the chatter, late-block, trip-fraction, turn-on, four-stall-plus-fire, U9 turn-off and hold-up figures (probe scripts in .supervisor/r27_mcu/).",
+    "IWDG arithmetic: 960 / 33.6 kHz = 28.571 ms, 960 / 29.4 kHz = 32.653 ms; 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms."
+  ],
+  "sources": [
+    "ST DS12110 Rev 8, https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (Table 9 pp. 64-88, Tables 10-14 pp. 89-96, Table 146 p. 238, Table 157 pp. 246-247, Table 159 p. 249, Table 160 p. 251, Table 189 p. 291, Table 192 p. 293)",
+    "TI SLVSFC9C (TPS25947), https://www.ti.com/lit/ds/symlink/tps25947.pdf, section 6.5 p. 9 (VUVLO(R) 1.183-1.223 V, VUVLO(F) 1.076-1.116 V, IENLKG +/-0.1 uA)",
+    "TI SLVSEA3F (TPS2121), https://www.ti.com/lit/ds/symlink/tps2121.pdf, Pin Functions and Table 9-3",
+    "TI SLVS841G (TPS2553), https://www.ti.com/lit/ds/symlink/tps2553.pdf, p. 7",
+    "TI SCES942A (TXU0202), https://www.ti.com/lit/ds/symlink/txu0202.pdf, Table 6-1",
+    "ST DS14623 Rev 1 (LSM6DSV320X), https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf, Figure 5 p. 9",
+    "AOS AON7524 and AO3400A datasheets (cached), VGS(th)"
+  ],
+  "coverage_limits": [
+    "AN2606 (Rev 64 / Rev 70), RM0433, DS15034 (ISM6HG256X) and DS12110 Rev 11 were not available offline and not re-read; loader-pin roles, option-byte, VREFBUF mode-table and IMU timing statements were checked only for internal consistency.",
+    "The IMU sign derivation from DS14623 Figure 5 is from a rendered isometric drawing; a bench sign check stays required.",
+    "Power-lens figures in the firmware text (VLOGIC drop 0.09-0.16 V, PORT_4V8 44 ms lead, Q120 gate 4.74 V / 31.9 ms) were not re-derived.",
+    "Other lenses' round 27 reports were not opened."
+  ]
+}

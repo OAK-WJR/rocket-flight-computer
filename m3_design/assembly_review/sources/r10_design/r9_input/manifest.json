@@ -1,0 +1,23 @@
+{
+  "source": "R9 accepted input, captured before R10 CAD integration",
+  "files": {
+    "actuator_power.kicad_sch": "34058c72916fc1980d09e1cf821be9c518d8541c57f14da9ef76cfb3bd4442af",
+    "battery_entry.kicad_sch": "a6215a346e499f921223da2c6d5423c5dbe82ce615beb02a262ce04da4ec1676",
+    "camera_connector.kicad_sch": "8f59bcb9474bc3c045cea9941c2d9f83789b62337bd8c9d979b4518812fcaded",
+    "camera_power.kicad_sch": "53e392f8be02036a2c58a895dae550f1082f55c7b871ac28a8cd3766391fd05a",
+    "camera_uart.kicad_sch": "f3c771ba8f8514e41591d1df1602416ee31441bb88381741ae4292e5e2b65ed2",
+    "diagnostics.kicad_sch": "fa346dd68b6f5c48c4b31a9efdef5ef1eb072b00ab7f9de5a0c2f45024dc95fe",
+    "logic_power_path.kicad_sch": "94117bec9df916f164262101af2d0e42d38627bb8417fd1132275f4d0426db48",
+    "m3.kicad_sch": "5672d00aa797afefc8ed8ab4f877cf980c54089e2baab2b07693fc04745d473f",
+    "mcu.kicad_sch": "6b640530b4918ea752d202d2206dcec3e1b7dcc233acabea0e89257decb2633e",
+    "pullpin_buzzer.kicad_sch": "3b9e265c2d74243a83c0df738539cd59b8a88a4f0fa673a7d25f6cca1493b05e",
+    "pyro.kicad_sch": "24fec7df173cf6f47a755f443eee1ae695826f397448706622fc22888aca6467",
+    "sensors.kicad_sch": "b8304e1c5432c6e9dd979fae2429d135e3ad67b74fc07a4f325321912ec834db",
+    "servos.kicad_sch": "09e2633eb3cec2b628311c2749ca1b844a00ed691835db90bc9c4a8df1d86a06",
+    "telemetry.kicad_sch": "49e8287398f1ee180d49b4809464b38849f6e6e6286d836f1acf2d468f02349f",
+    "usb_sense.kicad_sch": "6d2b39d5281ecdb7d97006c9bb33c9b7038596e890f3faf1c47ffbbf44db5f39",
+    "schematic.net.xml": "8b0e04ea565ecf1bd9d20c0490109307c7200b72f4862a83158b2b23b2903af4",
+    "m3.kicad_dru": "ea77b791eaa4026dddb2dea34a77cceb03f6ed5ace0977643b455ff8c311f58c",
+    "m3.kicad_pro": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf"
+  }
+}

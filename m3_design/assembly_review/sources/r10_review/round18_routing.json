@@ -1,0 +1,731 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round18_routing",
+ "reviewer": "claude",
+ "target_commit": "dcbb6c8f040b7012f78934e1caf1b401db84d356",
+ "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 6
+ },
+ "findings": [
+  {
+   "id": "R18-RTE-01",
+   "severity": "Minor",
+   "status": "new",
+   "related_earlier": "R14 routing replay noted \"3 actual 3V3 In2 pieces\" inside a K-region check without raising it",
+   "title": "In2 3V3 plane is cut into three fill pieces by In2 power tracks; a 63.1 mm2 island carrying U1 pin-11 decoupling and the buzzer supply hangs on one 0.3 mm B.Cu link",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "zone": "R10_3V3_In2 (In2.Cu), native saved fill",
+    "pieces_mm2": {
+     "main": {
+      "area": 1354.2,
+      "bbox": [
+       0.5,
+       7.3,
+       40.7,
+       81.7
+      ]
+     },
+     "island": {
+      "area": 63.1,
+      "bbox": [
+       17.71,
+       51.3,
+       25.75,
+       61.35
+      ],
+      "own_vias": [
+       [
+        22.6,
+        52.15
+       ],
+       [
+        25.07,
+        54.7
+       ],
+       [
+        19.05,
+        55.9
+       ],
+       [
+        18.8,
+        60.25
+       ]
+      ]
+     },
+     "finger": {
+      "area": 30.5,
+      "bbox": [
+       22.0,
+       62.25,
+       23.7,
+       81.7
+      ],
+      "own_vias": [
+       [
+        23.1,
+        78.1
+       ],
+       [
+        23.2,
+        68.6
+       ],
+       [
+        23.0,
+        70.0
+       ]
+      ]
+     },
+     "raster_cross_check_total": 1447.0
+    },
+    "cause_in2_tracks": {
+     "USB_LIMITED_0.4mm": {
+      "length_mm": 63.6,
+      "path": [
+       [
+        16.0,
+        28.0
+       ],
+       [
+        15.0,
+        29.0
+       ],
+       [
+        8.5,
+        29.0
+       ],
+       [
+        8.5,
+        30.3
+       ],
+       [
+        9.6,
+        31.4
+       ],
+       [
+        9.6,
+        50.85
+       ],
+       [
+        26.2,
+        50.85
+       ],
+       [
+        26.2,
+        61.8
+       ],
+       [
+        26.2,
+        62.4
+       ],
+       [
+        25.6,
+        63.0
+       ]
+      ],
+      "branch": [
+       [
+        26.2,
+        61.8
+       ],
+       [
+        22.45,
+        61.8
+       ],
+       [
+        22.0,
+        62.25
+       ]
+      ]
+     },
+     "3V3A_0.25mm": {
+      "length_mm": 11.4,
+      "path": [
+       [
+        16.0,
+        50.2
+       ],
+       [
+        26.05,
+        50.2
+       ],
+       [
+        27.0,
+        49.25
+       ]
+      ]
+     },
+     "section_at_x24": "In2 copper along x=24 from y=48.5: GND (Y1 island) to 48.82, none to 50.08, 3V3A track 50.08-50.32, none, USB_LIMITED track 50.64-51.06, none, 3V3 from 51.30: no 3V3 plane across a 2.48 mm band under U1 south pin row"
+    },
+    "island_link": {
+     "only_copper_path_to_main": "via (22.6,52.15) - B.Cu 3V3 0.3 mm (22.6,52.15)-(21.82,52.15)-(21.82,51.47)-(19.5,49.15) [4.741 mm] - via (19.5,49.15)",
+     "method": "copper contact graph of net 3V3 (tracks, vias, pads, fill pieces; anchor rule with 2 um pad-edge tolerance); same single path with U1 pads removed",
+     "parallel_path_through_part": "U1 pin 11 VDD (22.0,50.55) F.Cu 0.3 mm to via (22.6,52.15): island current can also flow through U1 internal VDD ring (Inference)",
+     "loads_on_island": "C14 100 nF (U1 pin-11 decoupler, 3V3 pad (21.82,52.15)); LS120 buzzer supply via (18.8,60.25); R62/R164 sense feeds"
+    },
+    "finger_link": "only through the buck output node: via (23.1,78.1) - B.Cu 0.4 mm (23.1,78.1)-(24.2,77.0) (ends on L1.2 pad edge) - L1.2 - via (26.4,79.26) - F.Cu 0.4 mm (26.4,79.26)-(30.8,79.26) - via (30.8,79.26); finger carries only U2.1 FB and R89.1",
+    "bcu_over_cut_pieces_mm": {
+     "island": {
+      "GND": 7.85,
+      "BUZZ_G": 6.23,
+      "BUZZ_DRV": 5.9,
+      "PYRO1_CONT": 4.87,
+      "3V3": 3.51,
+      "RAW_ACT": 2.16,
+      "BUZZ_OUT": 0.96,
+      "PYRO1_CONT_MID": 0.94
+     },
+     "finger": {
+      "USB_OVLO": 3.13,
+      "RAW_ACT": 2.42,
+      "GND": 2.14,
+      "SW_NODE": 1.71,
+      "3V3": 1.35,
+      "BST": 1.26
+     }
+    },
+    "slow_bcu_nets_on_slots": [
+     "USB_FAULT_N B(9.3,34.1)-(9.3,40.7117): 6.6 mm entirely over the x=9.6 slot (no In2 copper)",
+     "V3V3_SENSE B(25.5,51.75)-(25.93,52.18)-(25.93,56.7): ~4.6 mm along the x=26.2 slot",
+     "BAT_FAULT_N B(26.0,49.69..51.55)-(26.9,52.45) over the y=50.2/50.85 slot",
+     "crossings: I2C1_SDA B(9.97,50.93-51.5), BARO_SDO B(11.23,50.93-51.85), CC1 B(7.93-9.0,29.33), VBUS B(7.25-9.95,30.0)"
+    ],
+    "fast_nets": "no QSPI/SPI1/SD/IMU_CS/USB/HSE B.Cu sample over a slot (consistent with K-region pass)",
+    "gate_scope": "tools/check_r10.py region_issues merges every In2 fill of a net (BooleanAdd per net name) and tests one plane net per B.Cu chain of the non-AUD-2 critical nets; no rule requires a rail fill to be one piece or measures its bridge",
+    "record_claim": "D-AVA-01 / AVA_LAYOUT section 6 item 5: \"wider contiguous rail regions\"; the 3V3 rail is not contiguous",
+    "maker": "Diodes DS41326 Rev 3-2 p15 (https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf): place feedback components close to FB; make the layer under the device GND. U2 FB reaches its output only through the cut-off finger, 0.203 mm under SW_NODE/BST (coupling is Inference, not measured)",
+    "probe_image": ".supervisor/r18_routing/png/in2_3v3_pieces.png"
+   },
+   "impact": "Plane/decoupling quality defect: B.Cu runs over the island or finger reference copper joined to the main 3V3 plane through one 0.3 mm trace or the buck output node; buzzer pulses and U1 pin-11 decoupling share that island (part of the current may pass through U1, Inference); slow nets ride unreferenced along 75 mm of In2 slots. No functional, timing or safety failure is demonstrated; fast-net K-region continuity still holds.",
+   "concrete_fix": "Re-plan In2 so no rail is cut: (a) take the USB_LIMITED south leg off the 3V3 interior - run it in the existing 3V3/CH1-GND boundary gap (y~51.3) or on an outer layer, and feed R87.1 (22.0,63.1) from the C98/U11.7 side instead of the In2 branch (26.2,61.8)-(22.45,61.8)-(22.0,62.25) that severs the finger; (b) move the 3V3A trunk off the y=50.2 strip under U1; (c) refill and require one 3V3 In2 piece. Gate (records/checks only, allowed under D-R16-03): report every In2 rail fill piece with its plane-copper bridge width and make K-region piece-aware. Requalify K-reference/K-region and the C98/USB startup records after any change."
+  },
+  {
+   "id": "R18-RTE-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Gate gap: 21 of 25 critical-signal layer changes swap reference from In1 GND to an In2 power rail; the gated 1.5 mm GND via does not close that return and the nearest rail-to-GND capacitor is 1.29-6.19 mm away",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "stackup_from_board": "F.Cu / 0.203 prepreg / In1 / 1.03 core (er 4.38) / In2 / 0.203 prepreg / B.Cu: B.Cu is 0.203 mm from In2 and ~1.26 mm from In1",
+    "vias_over_GND_in2": [
+     "HSE_IN (22.0,49.1)",
+     "HSE_OUT (24.69,45.5)",
+     "PYRO1_OUT (11.63,55.1)",
+     "PYRO1_GATE (14.4,53.3)"
+    ],
+    "via_table_mm": [
+     [
+      "SD_MISO",
+      [
+       11.0,
+       39.0
+      ],
+      "3V3",
+      "C17",
+      6.19
+     ],
+     [
+      "SPI1_MISO",
+      [
+       17.55,
+       43.5
+      ],
+      "3V3",
+      "C18",
+      5.77
+     ],
+     [
+      "SPI1_SCK",
+      [
+       16.7,
+       43.1
+      ],
+      "3V3",
+      "C17",
+      5.63
+     ],
+     [
+      "SD_SCK",
+      [
+       11.7,
+       38.0
+      ],
+      "3V3",
+      "C17",
+      5.33
+     ],
+     [
+      "QSPI_NCS",
+      [
+       19.57,
+       43.9
+      ],
+      "3V3",
+      "C18",
+      5.32
+     ],
+     [
+      "RADIO_TX_MCU",
+      [
+       31.2,
+       28.4
+      ],
+      "PORT_4V8",
+      "C411",
+      5.12
+     ],
+     [
+      "SD_MOSI",
+      [
+       12.4,
+       39.6
+      ],
+      "3V3",
+      "C17",
+      5.07
+     ],
+     [
+      "SPI1_MOSI",
+      [
+       17.55,
+       44.25
+      ],
+      "3V3",
+      "C18",
+      5.04
+     ],
+     [
+      "IMU_CS",
+      [
+       14.0,
+       44.9
+      ],
+      "3V3",
+      "C13",
+      4.86
+     ],
+     [
+      "SD_CS",
+      [
+       13.0,
+       40.2
+      ],
+      "3V3",
+      "C17",
+      4.84
+     ],
+     [
+      "GPS_RX_MCU",
+      [
+       32.0,
+       11.0
+      ],
+      "PORT_4V8",
+      "C406",
+      4.33
+     ],
+     [
+      "CAM_MCU_TX",
+      [
+       32.2,
+       42.85
+      ],
+      "3V3",
+      "C29",
+      4.21
+     ],
+     [
+      "CAM_MCU_RX",
+      [
+       32.0,
+       43.5
+      ],
+      "3V3",
+      "C29",
+      4.02
+     ],
+     [
+      "GPS_TX_MCU",
+      [
+       34.0,
+       15.0
+      ],
+      "PORT_4V8",
+      "C410",
+      3.21
+     ],
+     [
+      "QSPI_IO2",
+      [
+       17.5,
+       40.57
+      ],
+      "3V3",
+      "C17",
+      3.13
+     ],
+     [
+      "RADIO_RX_MCU",
+      [
+       32.0,
+       26.25
+      ],
+      "PORT_4V8",
+      "C411",
+      2.97
+     ],
+     [
+      "QSPI_IO1",
+      [
+       25.0,
+       37.4
+      ],
+      "3V3",
+      "C16",
+      2.17
+     ],
+     [
+      "QSPI_IO0",
+      [
+       26.13,
+       38.55
+      ],
+      "3V3",
+      "C16",
+      2.13
+     ],
+     [
+      "SD_DAT2",
+      [
+       27.205,
+       22.18
+      ],
+      "3V3",
+      "C461",
+      1.89
+     ],
+     [
+      "QSPI_CLK",
+      [
+       27.75,
+       40.57
+      ],
+      "3V3",
+      "C100",
+      1.5
+     ],
+     [
+      "QSPI_IO3",
+      [
+       27.75,
+       41.83
+      ],
+      "3V3",
+      "C29",
+      1.29
+     ]
+    ],
+    "via_table_columns": [
+     "net",
+     "via (mm)",
+     "In2 rail around B.Cu side",
+     "nearest rail-GND capacitor",
+     "via-to-capacitor rail pad (mm)"
+    ],
+    "gnd_companions": "0.77-1.43 mm for these vias (gate passes)",
+    "sd_bcu_over_3v3_mm": {
+     "SD_CS": 31.0,
+     "SD_MISO": 30.2,
+     "SD_MOSI": 32.5,
+     "SD_SCK": 20.8,
+     "SD_DAT1": 8.1
+    },
+    "interplane_capacitance": "In1-In2 sheet capacitance ~3.8 pF/cm2 (4.38 x e0 / 1.03 mm), ~3 pF inside a 5 mm radius (Calculation)",
+    "basis_in_records": "R10_DECISIONS D-R2-10: In2 rails act as AC reference through their bypass capacitors (Inference); no gate measures that capacitor proximity",
+    "screened_candidate": "0402 100 nF 3V3-GND at B(11.25,41.25) (pads (10.83,41.25)/(11.67,41.25), vias (10.18,41.25) 3V3 / (12.32,41.25) GND, 0.3 mm stubs) clears all copper by >=0.164 mm in a diagnostic screen; it brings the SD cluster transfer to 2.26-3.36 mm"
+   },
+   "impact": "Larger return loops and more radiated/crosstalk energy at SD, SPI1, QSPI_NCS and UART transitions than the \"GND via within 1.5 mm\" rule implies. No timing or functional failure is demonstrated (SD/QSPI timing is unqualified anyway).",
+   "concrete_fix": "Add a counted review rule to route_check/check_r10: for each required critical via whose B.Cu side lies over a non-GND In2 rail, report the distance to the nearest rail-to-GND capacitor (threshold e.g. 2 mm) and list the 21 current instances in the deviation list. CAD (not fix-now): one existing-code 100 nF 0402 3V3-GND at the screened SD-cluster spot above and one near the SPI1 cluster, or an In2 GND island under the SD fan."
+  },
+  {
+   "id": "R18-RTE-03",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R17-RTE-02 (M2 and return compromises); new per-net evidence",
+   "title": "M2 detours and extra vias outside the gate: ten nets hold 136 mm (52%) of the 260 mm excess over the octilinear minimum, mostly placement- or pin-map-bound",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "route_check": "tools/route_check.py --profile r10 --routes --bumps-all: exit 0; 140 information instances (59 pad_end_offcentre, 24 power_via_no_gnd, 23 segment_inside_pad, 11 width_change_junction, 7 extra_bends, 4 u_turn, 4 tiny_jog, 3 short_layer_hop, 1 each passes_through_pad, short_segment, collinear_unmerged, via_on_track_in_fill, detour); 6 noncritical leftovers (BAT_OVLO short B(16.4,83.0); tiny jogs BUZZ_DRV F(20.5,51.8), BAT_FAULT_N B(28.2,47.5), I2C1_SDA B(9.97,51.5), BAT_ENABLE B(21.0,68.6); USB_ILIM detour 3.33 vs 1.05 mm)",
+    "board_totals": "114 non-pour nets: 1454.6 mm routed vs 1194.3 mm octilinear MST (1.218x, +260.3 mm); 17 extra vias on 11 nets; 951/951 segments octilinear; 0 acute turns; 15 segments <0.3 mm (12 inside pads or via-alignment kinks)",
+    "top_nets": [
+     "USB_LIMITED 81.66/53.54 mm, 3 vias (1 needed); 63.6 mm on In2 (see R18-RTE-01)",
+     "BAT_IN 59.57/38.99 mm (hot-plug-qualified feed); F.Cu 1.0 mm U-loop (12.525,87.3)-(14.116,88.891)-(17.5,88.891)-(17.5,87.3) = 7.23 mm exists only to pass C95.2/C89.2",
+     "NRST 39.69/25.27 mm, 3 vias (1), 11 bends; 13.84 mm on F.Cu inside U1 pad ring; J2.3 (5,40.035) -> B.Cu y=36.24 north of U1 -> via (22.54,38.5) -> F.Cu (25.3,41.26)-(25.3,46.45)-(23.5,48.25) -> U1.14",
+     "USB_FAULT_N 37.18/23.30 mm (1.60x): U-turn round the SD via cluster B(9.3,34.1)-(9.3,40.71)-(15.04,40.71)-via (16.7,39.05), then 3.45 mm F.Cu under U1 to the pin-87 heel",
+     "BAT_FAULT_N 50.95/38.76 mm, 3 vias (1)",
+     "PYRO1_OUT 33.13/22.00 mm: 17.9 mm 0.2 mm sense branch to R173 at the MCU-side sense column",
+     "SD_MOSI/MISO/SCK/CS +9.27/+9.11/+8.17/+6.63 mm; pull-ups R460-R463 north of J430 add 7.9-9.7 mm stubs",
+     "CAM_IO_3V3 25.09/15.89 mm (1.58x), 2 vias (1); VBUS_SENSE 25.27/18.41, 3 vias (1); BAT_ENABLE 27.93/23.44, 3 vias (1) with a 3.2 mm B.Cu hop (19.675,66.4)-(21.0,67.725)-(21.0,68.6)-(21.3,68.9); VBUS 24.47/18.26, 3 vias (1)"
+    ],
+    "diagnostic_router": "0.05 mm octilinear A* (placement and every other net fixed; no reference/partner constraints; pad-centre corrected): USB_FAULT_N ~29.0 mm (-8.2; needs its via at ~(13.65,42.7) beside R32), VBUS_SENSE ~20.6 mm/1 via (-4.7 mm, -2 vias), BAT_ENABLE ~25.3 mm/1 via (-2.6, -2 vias), NRST ~29.9 mm/3 vias (-9.8 but threads U3 pins), SD lines -2.0..-3.6 mm each, QSPI_IO2 -2.1, BAT_FAULT_N -2.2",
+    "redraw_screen": "all non-GND chains, 2-12 segment windows, 1-2 segment octilinear replacements, >=0.155 mm clearance: only SD_MOSI survives (R18-RTE-04)",
+    "jog_scan": "7 A-B-A jogs beyond the gate thresholds (offset 0.36-0.63 mm), e.g. IMU_INT1 F(16.3,48.0)-(16.66,48.36)",
+    "deviation_list_scope": "docs/R10_VALIDATION.md section 6 lists counts only; no per-net detour/extra-via table"
+   },
+   "impact": "Octilinear, staircase-free routing, but several long noncritical routes and 17 avoidable vias remain. With placement fixed the recoverable length per net is <=10 mm; AVA-level directness needs re-placement, not redraws. M2 deviations pending owner acceptance; no function failure.",
+   "concrete_fix": "Records now: add this per-net table to R10_VALIDATION section 6. CAD (re-plan, not fix-now): SD pull-ups R460-R463 beside the bus on the MCU side; rotate the C80/C96/C89/C95 column so pad 1 faces U9 (removes the 7.23 mm edge loop; F9-1 hot-plug re-extraction required); move R32 ~0.3 mm so USB_FAULT_N can drop its via at ~(13.65,42.5) and enter pin 87 axially; single-via redraws for BAT_ENABLE and VBUS_SENSE."
+  },
+  {
+   "id": "R18-RTE-04",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R17-RTE-01 (R16-RTE-01)",
+   "title": "SD_MOSI keeps an avoidable 1.995 mm / two-segment dogleg",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "B.Cu",
+    "width_mm": 0.2,
+    "current": [
+     [
+      20.1,
+      32.8
+     ],
+     [
+      20.1,
+      27.7
+     ],
+     [
+      21.6,
+      26.2
+     ],
+     [
+      25.005,
+      26.2
+     ],
+     [
+      25.005,
+      24.3
+     ]
+    ],
+    "current_len_mm": 12.526319,
+    "alternative": [
+     [
+      20.1,
+      32.8
+     ],
+     [
+      25.005,
+      27.895
+     ],
+     [
+      25.005,
+      24.3
+     ]
+    ],
+    "alternative_len_mm": 10.531717,
+    "independent_screen": "found again as the only surviving window; minimum clearance 0.79 mm; In2 under the new diagonal is the main 3V3 piece",
+    "prior_qualification": "R16 saved copy 24a5880c...: refill, route_check, K-reference/K-region and KiCad 10.0.7 DRC 0/0/0"
+   },
+   "impact": "Avoidable length and two extra bends on the SD bus; no timing failure.",
+   "concrete_fix": "In m3_design/r10_route_sd.py replace the four SD_MOSI B.Cu segments above with (20.1,32.8)-(25.005,27.894999)-(25.005,24.3), 0.2 mm; regenerate and run the full gate."
+  },
+  {
+   "id": "R18-RTE-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "USB D+/D- are routed as two uncoupled traces with a VBUS via and a GND via between them",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "F.Cu",
+    "width_mm": 0.2,
+    "DM": [
+     [
+      8.8,
+      29.65
+     ],
+     [
+      15.85,
+      29.65
+     ],
+     [
+      19.5,
+      33.3
+     ],
+     [
+      19.5,
+      35.45
+     ]
+    ],
+    "DP": [
+     [
+      8.8,
+      31.55
+     ],
+     [
+      16.75,
+      31.55
+     ],
+     [
+      19.0,
+      33.8
+     ],
+     [
+      19.0,
+      35.45
+     ]
+    ],
+    "spacing": "1.90 mm centre spacing over x 11.1-15.85; 0.707 mm on the diagonals; 0.5 mm only at U1.70/71",
+    "between_pair": "VBUS via (11.95,30.6) 0.6 mm + 0.3 mm VBUS track from D4.5; GND via (15.6,30.5)",
+    "lengths_mm": {
+     "USB_DM": 19.708,
+     "USB_DP": 16.461,
+     "DM_A7_B7_tie": 3.26,
+     "DP_A6_B6_tie": 1.76,
+     "J3_row_to_U1_trunk_DM": 16.45,
+     "J3_row_to_U1_trunk_DP": 14.7
+    },
+    "note": "the DM A7/B7 tie loops to x=5.75 under the receptacle body"
+   },
+   "impact": "Electrically benign at USB 2.0 full speed (Inference); not the coupled, matched pair a hand-quality USB route implies.",
+   "concrete_fix": "After D4 (x=11.1) bring DP to 0.4 mm centre spacing beside DM, e.g. DP (11.1,31.55)-(11.6,31.55)-(13.1,30.05)-(15.684,30.05)-(19.0,33.366)-(19.0,35.45); this first needs the VBUS via (11.95,30.6) and GND via (15.6,30.5) moved out of the corridor (the screened candidate fails only on that VBUS via, 0.024 mm). Not fix-now."
+  },
+  {
+   "id": "R18-RTE-06",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R17-RTE-03 (R16-MEC-01)",
+   "title": "B.Cu runs under the U4 IMU body outside its lands",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "B.Cu",
+    "u4_nominal_body": [
+     15.5,
+     44.65,
+     18.5,
+     47.15
+    ],
+    "fresh_lengths_mm": {
+     "IMU_CS": "0.760 + 0.092",
+     "SPI1_MISO": 0.325,
+     "IMU_INT1": 0.325,
+     "3V3A": 0.325
+    },
+    "method": "0.001 mm centre-line sampling minus same-net U4 lands",
+    "maker": "guidance as cited in R17-RTE-03 (ST TN1383 Rev1 pp7-9, https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf); not re-read this round (fetch timed out)"
+   },
+   "impact": "Retained stress-guidance departure; no measured sensor error.",
+   "concrete_fix": "Retain as owner deviation with first-article bias/temperature/vibration checks (unchanged)."
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R18-RTE-04",
+   "change": "Adopt the SD_MOSI redraw: B.Cu 0.2 mm (20.1,32.8)-(25.005,27.894999)-(25.005,24.3) replacing (20.1,32.8)-(20.1,27.7)-(21.6,26.2)-(25.005,26.2)-(25.005,24.3) via r10_route_sd.py; regenerate and run the full gate.",
+   "why": "Zero-risk 1.995 mm / two-segment cleanup on a fast bus, already saved-copy qualified in R16; it is the only fixed-anchor redraw that survives an independent whole-board screen."
+  },
+  {
+   "finding": "R18-RTE-01 / R18-RTE-02",
+   "change": "Records/checks only (board byte-identical, allowed under D-R16-03): (a) report In2 rail fill pieces and their bridge width, make K-region piece-aware, and list the current 3V3 island/finger as deviations; (b) report, for each required critical via over a non-GND In2 rail, the distance to the nearest rail-GND capacitor and list the 21 instances.",
+   "why": "Closes two gate gaps that let the current plane fragmentation and the plane-to-plane return transfer go unmeasured; no CAD risk."
+  },
+  {
+   "finding": "R18-RTE-03",
+   "change": "Add the per-net detour / extra-via table (USB_LIMITED, NRST, USB_FAULT_N, BAT_FAULT_N, SD_*, CAM_IO_3V3, VBUS_SENSE, BAT_ENABLE, VBUS, BAT_IN loop) to R10_VALIDATION section 6.",
+   "why": "The owner-acceptance list currently shows only counts; the owner cannot accept what is not named."
+  }
+ ],
+ "not_fix_now_but_recommended": [
+  "In2 re-plan so 3V3 is one piece (R18-RTE-01).",
+  "One 100 nF 3V3-GND 0402 at the screened B(11.25,41.25) spot and one at the SPI1 cluster (R18-RTE-02).",
+  "SD pull-up relocation, input-cap column rotation (hot-plug requalification), R32 nudge for USB_FAULT_N, single-via BAT_ENABLE/VBUS_SENSE (R18-RTE-03).",
+  "Coupled USB pair after moving two vias (R18-RTE-05)."
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "BUZZ_G redraw (20.5,57.7)-(21.67,58.87), -0.685 mm",
+   "reason": "removes the T at (20.5,58.7) and disconnects the Q123.1 branch (same as R16)"
+  },
+  {
+   "candidate": "PYRO1_GATE corner (16.0,55.395)-(15.3,56.095)-(15.3,56.395), -0.41 mm",
+   "reason": "creates a 45 degree acute junction at the T (16.0,55.395)"
+  },
+  {
+   "candidate": "QSPI_IO3 (24.5,35.45)-(24.5,38.58)-(27.75,41.83), -0.414 mm/-2 segments",
+   "reason": "clearance drops from 0.25 to 0.150 mm against the QSPI_IO1 via (25.0,37.4) on a fast bus"
+  },
+  {
+   "candidate": "ACT_FET_S corner, -0.644 mm",
+   "reason": "qualified 0.4 mm source bridge (S-9 records)"
+  },
+  {
+   "candidate": "3V3A U1.20/21 corner, -0.29 mm",
+   "reason": "diagonal between adjacent 0.5 mm-pitch LQFP pads"
+  },
+  {
+   "candidate": "U11.3/U11.12 0.3 mm GND tracks wider than the 0.2 mm pad dimension",
+   "reason": "they leave through the 0.6 mm long edge of corner pins, away from neighbours; no bridging geometry"
+  },
+  {
+   "candidate": "F.Cu GND sliver 0.28 mm2 at (17.10-17.90, 34.20-34.76) with no via",
+   "reason": "touches U1.74 GND pad (SMD pads connect solidly under thru_hole_only) which has its own via track"
+  },
+  {
+   "candidate": "In1 merged antipads",
+   "reason": "11 small multi-via voids <=1.6 mm2 (largest SPI1 cluster under U1, already REF_STRAY in K-reference); no slot under a fast F.Cu run"
+  },
+  {
+   "candidate": "Traces under the J430 microSD body",
+   "reason": "Molex SD-47219-001 sheet 1 recommended layout shows no copper keep-out"
+  },
+  {
+   "candidate": "ACT_EN_MCU parallel to BAT_FAULT_N 12.4 mm at 0.20 mm gap (F.Cu x 26.5-26.9, y 53.6-66)",
+   "reason": "push-pull MCU output vs a slow open-drain flag; coupled charge is negligible against the gate network (Inference); not an AGENTS section 2 item"
+  },
+  {
+   "candidate": "Outer GND stitching",
+   "reason": "max 12.31 mm from a GND via/PTH at the east edge strip (45.3,78.1), p99 9 mm; no signals there - observation only"
+  },
+  {
+   "candidate": "Any Critical/Major",
+   "reason": "no AGENTS section 2 or required-function failure found in the routing lens; all M2 items are disclosed deviations pending owner acceptance or are new Minor quality/gate gaps"
+  }
+ ],
+ "checks_actually_executed": [
+  "shasum -a 256 of the PCB before and after (unchanged)",
+  "native pcbnew read-only dump (951 tracks, 296 vias, 682 pads, 16 zones, 209 footprints, saved fills)",
+  "kicad-cli 10.0.7 pcb export svg of F.Cu/In1.Cu/In2.Cu/B.Cu into the probe, plus own 20-120 px/mm rasters of every copper layer, composites and zooms; all viewed",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity --all-track-errors: 0 violations / 0 unconnected / 0 parity / 0 ignored",
+  "tools/route_check.py --profile r10 --report and --routes --bumps-all (exit 0)",
+  "segment angle/length/turn scan; jog scan beyond gate thresholds",
+  "pad-entry scan of 681 track ends (offset, approach angle, crossed edge, overhang, fine-pitch diagonals)",
+  "0.02 mm raster reference scan of every outer-layer track against In1/In2 fills and In2 tracks",
+  "In1/In2 void (merged antipad) scan; In2 fill-piece areas and per-piece via sets",
+  "3V3 copper-contact graph with and without U1 pads; BFS of the island and finger links",
+  "return-transfer table for the 25 required critical-signal vias",
+  "fixed-anchor redraw screen of all non-GND chains; diagnostic 0.05 mm octilinear router for 10 nets",
+  "same-layer parallel-coupling scan (gap <=0.3 mm); outer GND stitching distance scan",
+  "native F.Cu length inside the U1 pad ring (73.2 mm; NRST 13.84, QSPI_IO2 12.55)",
+  "datasheet/drawing reads: Diodes DS41326 Rev3-2 p15, Molex SD-47219-001 sheet 1, ST DS12110 Rev8 Table 9 p66 (LQFP100 pin 10 VSS / 11 VDD / 14 NRST), LS120 sheet (max 100 mA)"
+ ],
+ "sources": [
+  "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (DS41326 Rev 3-2, p15 PCB Layout items 3-5)",
+  "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf (SD-47219-001 sheet 1, recommended PCB layout)",
+  "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 8, Table 9 p66: LQFP100 pin 11 VDD, pin 14 NRST; Figure 5 p55)",
+  "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf (carried citation for R18-RTE-06 only; not re-read)",
+  "Board file stack-up section (dielectric thicknesses and er)"
+ ],
+ "coverage_limits": [
+  "CAD/geometry review only: no canonical build, full check.sh, simulation, firmware or physical test.",
+  "Diagnostic router and redraw screen honour copper clearance, edge, NPTH and track keep-outs only; they do not apply K-reference/K-region, GND-partner, acute-junction or assembly rules, so their lengths are indicative bounds, not qualified alternatives (except SD_MOSI, qualified in R16).",
+  "The 0402 stitching-cap spot is a clearance screen only (no courtyard/silk/assembly/DRC qualification).",
+  "Return-path statements are geometric; no field solve or EMI/SI measurement. In2-rail AC-reference behaviour remains Inference as recorded in D-R2-10.",
+  "AVA comparison limited to the owner brief criteria; no AVA copper or stack-up was available or inferred.",
+  "TN1383 could not be fetched (timeout); R18-RTE-06 relies on the earlier round citation.",
+  "No peer round18 report or probe was opened."
+ ],
+ "probe_directory": ".supervisor/r18_routing/"
+}

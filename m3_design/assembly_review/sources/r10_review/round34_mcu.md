@@ -1,0 +1,55 @@
+# R10 round 34: mcu lens
+
+Target commit `c2a11fd`; board SHA-256 `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c` before and after (unchanged).
+
+## Totals
+
+Critical 0 / Major 0 / Minor 0. No real errors found.
+
+## Findings
+
+None.
+
+## Fix verification
+
+- R33-TRI-01 (U9 exposed pad, ORDERING 8.3): not in this lens; no round 33 change touched U1, the pin table or the binding note.
+
+## Observations (not counted)
+
+- ORDERING/M3_R10 load-switch settle figure 31.9 ms to -4.5 V was not re-derived here (simple single-pole estimate gives about 25-28 ms, so the record is on the conservative side); not a finding.
+- DS12110 Rev 8 table-of-contents page numbers are one lower than the printed page footers (e.g. Table 146 TOC 237, footer 238); the records cite footer pages, which is correct.
+- R91 has a 3V3 via at (28.1, 60.0) between its pads in addition to (28.1, 59.4); outside this lens (routing / DFM), not assessed.
+
+## Checks executed
+
+- U1: all 100 board pad nets (pcbnew) equal pin_table.tsv r10_net (0 mismatches; probe .supervisor/r34_mcu/pins.py)
+- U1: all 100 schematic.net.xml U1 nodes equal pin_table r10_net (0 mismatches)
+- Binding note u1_pins port/net/mode equal pin_table for all 100 rows (0 mismatches)
+- Binding note hashes: board a0ec075e..., netlist 535a8fdf... (schematic.net.xml), pin_table b94133e6..., circuit 3220e5f9... all recomputed and match; note file itself c5cd0fa3...
+- LQFP100 pin order and AFs (QUADSPI AF9/AF10, UART7 AF7, UART5 AF14, USART3/6 AF7, TIM5 AF2, SPI1 AF5, SPI3 AF6, I2C1 AF4, OTG_FS AF10) against DS12110 Rev 8 Table 9 and AF Tables 11-14 (pp. 90-96)
+- Pin-type statements vs DS12110 Rev 8 Table 9: PE4 FT_h, PC14 FT, PA4 TT_a, PA5 TT_ha, PA6 FT_a, PC5 TT_a, PB1 TT_u, PB12/PB13 FT_u, PD8/PD9/PC6/PC7 FT_h, PD15 FT_h, PC2_C/PC3_C ANA TT_a (p. 67); every pin_table 'Table 9 p. NN' citation located on its page
+- DS12110 Rev 8 cited lines read: Table 119 p. 212 (FT ceiling Min(...)+4.0 V, TT 4.0 V) and notes 3-4 p. 213; Table 120 note 3 p. 213 (PA4/PA5 0 injection, FT +0); Table 122 note 3 p. 215; Table 157 note 7 p. 247; Table 159 p. 249 (+/-3 mA); Table 160 note 2 p. 251 (2 MHz); Table 146 p. 238 (LSI 29.4-33.6 kHz, -40..125 C); Table 192 p. 293 (Er +/-10 %); Table 9 note 7 p. 88; Figure 95 p. 286; Tables 126-128, 147, 189 page locations
+- IWDG: (239+1) x 4 = 960 LSI cycles -> 30.000 / 28.571 / 32.653 ms at 32 / 33.6 / 29.4 kHz; 32.653+0.2+0.5+1.5 = 34.853 ms < 36 ms
+- Rule 3 copper: Q124.4 = PYRO1_GATE; C126 220 nF (CL10B224KA8NNNC, K = +/-10 %) PYRO1_GATE-GND; C128 100 nF on PYRO1_OUT; R126 220 R PYRO1_GATE_N-PYRO1_GATE; R127 1 k PYRO1_GATE_N-GND; R128 10 k PYRO1_GATE-GND; U3.3 = QSPI_IO2; R127.1 = PYRO1_GATE_N = U1.3. 1 k || (220 + 10 k) = 0.911 kOhm; tau = 220 nF x ~243 Ohm = 53 us, 47.6-58.5 us over +/-10 %
+- Rule 3 pull-up figure (pin_table row 3): 3.6 V x 0.911/30.911 x 10/10.22 = 0.104 V; AON7524 VGS(th) min 0.4 V (cached datasheet)
+- Rule 4 copper: R120.1 = ACT_FET_S (Q120 source pins 1-3), R120.2 = C120.2 = ACT_GATE, R121 ACT_GATE-ACT_DRV, Q120 drain BAT_IN, Q121 drain RAW_ACT; ACT_GATE vias exactly (11.14,71.7), (11.74,72.3), (15.4,72.85), (16.2,73.3); AONR21357 VSD -0.7 typ / -1 max at IS -1 A
+- Rule 5: LOGIC_SOURCE_ST vias (30.45,51.4)+(30.85,51.8); 3V3 via (28.1,59.4) beside R91
+- PC1 network: R122 1 k, R123 2 k, C123 10 nF; 3.6 x 2/33 = 0.218 V; 3.3 x 2/3 = 2.2 V, 1.1 mA; former 100 k case 2.19-2.52 V
+- DS15034 Rev 1 citations: Figure 5 p. 9, Table 2 p. 11 (pin map matches U4 nets; SDx/SCx to GND allowed), Ton 40 ms p. 15, SPI 10 MHz p. 17, IF_CFG PP_OD/H_LACTIVE default 0 p. 60, WHO_AM_I 73h p. 66, Table 150 p. 93 (100 = +/-256 g, 011 reserved)
+- Rule 11 facts: U5 PS (pin 2) on 3V3A, CSB (4/5) GND -> 0x77; R12/R13 4.7 k on I2C1; R10/R11 10 k pull-ups on QSPI_NCS/IMU_CS; dividers R60/R61 = /11, R104/R105 = /11, (R129+R173)/(R130||R178) and (R132+R175)/(R133||R180) = /11.2; R9/R110 = VBUS/2
+- TXU0202 pin map (SCES942A Table 6-1) vs U12 nets: A2Y pin 4 = CAM_MCU_RX, A1 pin 5 = CAM_MCU_TX, OE pin 6 = CAM_UART_OE with R102 10 k pull-down
+- Loader-role column: servo 3/4 pull-downs R156/R157 10 k and series R152/R153 1 k on board; PA6 drive 3.3/10k + 3.3/100k = 0.363 mA; PA3 pull-up vs 10 k <= 0.825 V
+- Board SHA-256 before and after: a0ec075e... (unchanged); no tracked file modified
+
+## Sources
+
+- ST DS12110 Rev 8 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (cached .supervisor/r14_parts_pdf/st_h743.pdf)
+- ST DS15034 Rev 1 https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (cached)
+- TI SCES942A TXU0202 https://www.ti.com/lit/ds/symlink/txu0202.pdf (cached)
+- AOS AONR21357 https://www.aosmd.com/res/datasheets/AONR21357.pdf and AON7524 (cached)
+
+## Coverage limits
+
+- AN2606 and RM0433 not re-read (loader roles and RM0433-based items stay as the records label them).
+- Electrical calculations outside the MCU obligations (chatter, hold-up, fire budget, gate-settle 31.9 ms) were not re-derived.
+- No firmware exists; obligations were checked only for consistency with copper and datasheets.

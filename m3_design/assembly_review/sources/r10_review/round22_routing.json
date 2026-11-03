@@ -1,0 +1,138 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round22_routing",
+ "reviewer": "claude",
+ "target_commit": "ec8cb98",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R22-ROUTING-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "R10_VALIDATION section 6 per-net detour table is called \"the largest excesses\" but leaves out nine larger ones",
+   "evidence": {
+    "file": "docs/R10_VALIDATION.md, section 6, the paragraph \"Per-net detours and extra vias\" and the table after it (line ~2208)",
+    "method": "routed track length per net against the octilinear minimum spanning tree of its pad centres, for non-pour nets with at least two pads (.supervisor/r22_routing/scripts/dump.py then detour.py, an independent implementation)",
+    "measured": "The headline is right: 116 nets, 1505.5 / 1236.9 mm, 1.217x, +268.6 mm. All 16 rows match to 0.01 mm. ACT_GATE (+3.9 mm) ranks 20th and PYRO1_CONT_MID (+3.4 mm) ranks 25th. Nine nets with a larger excess are left out: VLOGIC +5.69 (3 vias), CAM_PWR_EN +5.66, CAM_FAULT_N +5.30, SERVO2_MCU +5.06, SERVO1_MCU +4.66, SERVO3_MCU +3.90, QSPI_IO2 +3.69, USB_DM +3.52 and ACT_EN_MCU +3.51 mm. The table covers 165.6 of the 268.6 mm excess.",
+    "also": "The section 6 \"Current PCB\" sentence lists U2.1 pad_end_offcentre and the BAT_ENABLE short_layer_hop as counted, ungated items. It does not list the other new INFO item, power_via_no_gnd on 3V3 via (23.0,70.0) at 2.182 mm. D-R21-02 does record it."
+   },
+   "impact": "A reader who takes the list as complete would miss the four SERVOn_MCU / CAM control and QSPI_IO2 detours when deciding on M2 acceptance (REQUIREMENTS M2 binds the deviation list to the final board). No electrical effect.",
+   "concrete_fix": "Docs only, no board change. Either retitle the table \"the largest excesses, plus the pyro / arming nets ACT_GATE and PYRO1_CONT_MID\", or add the nine rows (VLOGIC, CAM_PWR_EN, CAM_FAULT_N, SERVO1..3_MCU, QSPI_IO2, USB_DM, ACT_EN_MCU) with the figures above. Add \"and R89's via (23.0,70.0) power_via_no_gnd 2.182 mm\" to the counted-items sentence."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R21-01",
+   "claim": "The inner-layer PTH pad hole-to-copper rule is 0.55 mm. J1.2 (In2) and J400.2 (In1) go from 0.251 to 0.550 mm and J3.1-4 from 0.451 to 0.550 mm. No fill splits.",
+   "measured": "Hole wall to the nearest foreign In1 / In2 fill, all 31 plated pads: at least 0.550 mm everywhere (J3 slots measured from the centre less the half-width), J121.1 1.05 mm. The fill XOR against 0dc84776 changes inner copper only at the J400.2 In1 annulus, the J1.2 In2 annulus and eight lunes at J3's shell slots (In2 3V3). The neck census (opening at 0.2 / 0.25 / 0.3 mm) is identical on both boards, so no new neck splits a fill. K-plane, K-inner and S-8 are OK on the probe copy. JLC page re-read 2026-10-31: inner PTH pad hole to copper 0.3 mm, via 0.2 mm, PTH to track 0.28 mm (0.35 mm recommended), pad hole to hole 0.45 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-02",
+   "claim": "A 0.4 mm B.Cu 3V3 run (24.05,68.95) -> (23.0,70.0) goes into R89's via, so no single via cuts U2.1 off. route_check gains two INFO items.",
+   "measured": "The copper diff adds exactly that segment: 1.485 mm, 45 degrees, width 0.4. Both of U2.1's vias, (23.2,68.6) and (23.0,70.0), land in the one In2 3V3 fill. L1.2 reaches the rail through via (23.1,78.1) and through C8.1 -> via (26.4,79.26) -> F.Cu. The route_check instance diff against 0dc84776 is +pad_end_offcentre U2.1 (0.35 mm) and +power_via_no_gnd (23.0,70.0) at 2.182 mm. The offcentre start is the same path as a centred entry, with its 0.35 mm vertical piece inside the pad. B.Cu GND loses 0.555 mm2 there; no new GND piece with two or fewer vias. Least clearance to BST / U2.6 is about 0.63 mm. K-power OK.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-04",
+   "claim": "BAT_ENABLE's B.Cu hop is redrawn (19.675,66.6) -> (20.7,67.625) -> (20.7,68.3) -> (21.3,68.9). The tiny jog is gone and the F.Cu corner is now a 45 degree piece from (19.075,66.0). The arming nets are pyro-class and AUD-2 slow.",
+   "measured": "The geometry matches. Running route_check r10 --bumps-all on 0dc84776 gives 1 failing (the 0.424 mm BAT_ENABLE tiny_jog). On 5516eeec it gives 0 failing and 148 INFO; only the BAT_ENABLE extra_bends and tiny_jog are gone. The remaining hop is A-B-A: 1.449 / 0.675 / 0.849 mm, offset 0.477 mm, above the tiny-jog thresholds. A one-segment 45 degree hop would need the via at (19.0,66.6), with the S-8 keep-out moved by -0.675 mm. Seeded on a copy, it fails DRC: TP120 1.0 mm footprint clearance, actual 0.9607 mm. Every 45 degree line into (21.3,68.9) is the same line, so the record's 3-segment shape is the legal one.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-05",
+   "claim": "R81 / C87 move to U9's end of the EN run, with pads 1 on the run and pads 2 in the F.Cu GND piece of via (20.2,81.0). The old stubs and GND vias (20.706,65.619) and (16.639,63.939) are removed. One series via remains.",
+   "measured": "The copper diff removes exactly the two stubs, the C87 tap, two GND stubs and two GND vias. The F.Cu run is split at R81.1's centre, and C87.1 sits on the run's last bend. U9.1 -> C87.1 is 2.013 mm and U9.1 -> R81.1 is 3.889 mm, over one via (17.1,82.8). R81.1 edge to GND via (17.2,79.9) is 0.173 mm. R81.2 and C87.2 are in F.Cu GND piece 1 (12.42 mm2, 2 vias). The pour gained at the old spot (2.98 + 1.96 mm2) joins pieces with more than 2 vias: F.Cu GND is 13 pieces before and after, and no piece lacks a via. The node at (16.3,66.0) is now a plain 45 degree bend. BAT_ENABLE vias to the nearest GND via: (19.675,66.6) 1.423 -> 1.875 mm. That is allowed because BAT_ENABLE is AUD-2 exempt.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-06",
+   "claim": "K-plane holds the tab keep-out and the tab-band copper.",
+   "measured": "K-plane is OK on the probe copy. Inner fills are unchanged under the tabs (the fill XOR shows no change there).",
+   "verdict": "confirmed (check only)"
+  },
+  {
+   "id": "D-R19-02 / D-R20-01",
+   "claim": "The BAT_ENABLE via (19.675,66.6) and the S-8 keep-outs are unchanged. EN still crosses one via to U9.1.",
+   "measured": "Via, rule area R18_BARREL_KEEPOUT_BAT_ENABLE_3 and S-8 are unchanged (S-8 OK). One via, (17.1,82.8), between U9.1 and R81.1 / C87.1, as recorded.",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R22-ROUTING-01",
+   "change": "Edit R10_VALIDATION section 6 as given in concrete_fix: retitle the table or add the nine rows, and add the R89 via INFO item.",
+   "scope": "text only (no board, no check change)"
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "item": "One-segment BAT_ENABLE B.Cu hop (via (19.0,66.6) -> (21.3,68.9))",
+   "reason": "Seeded copy fails DRC: TP120 clearance 0.9607 against 1.0 mm. Rejected."
+  },
+  {
+   "item": "BAT_ENABLE detour, routed 25.58 mm against an MST of 17.36 mm, 3 vias",
+   "reason": "Placement-forced. F.Cu has to pass north of Q122's GND via / stub (17.8,66.6)-(17.8,68.85), then cross under the F.Cu ACT_EN_MCU diagonal (21.77,67.2)-(19.6,69.37). The (21.3,68.9) -> R81.1 leg is exactly octilinear-minimal (12.457 mm). Already a section 6 table row."
+  },
+  {
+   "item": "U2.1 run starts 0.35 mm off the pad centre",
+   "reason": "Same copper as a centred entry plus a 0.35 mm vertical piece inside the pad. INFO, as recorded."
+  },
+  {
+   "item": "U2.1 two-via parallel pair",
+   "reason": "Intentional redundancy for a sense tap. The in-line via (22.55,68.6) is 0.886 mm (In2) from the BAT_ENABLE barrel, inside S-8 (record; not re-seeded)."
+  },
+  {
+   "item": "R89 via (23.0,70.0) with no GND via within 2.182 mm",
+   "reason": "Power via carrying sense current only. The 1.5 mm partner rule covers critical signal vias. INFO, 27 instances on the board."
+  },
+  {
+   "item": "Plane strips narrowed by the 0.55 mm rule (J1 / J400 1.10 mm, J3 slot to edge 0.379 mm)",
+   "reason": "Parallel paths. The neck census is unchanged and no piece splits. 0.379 mm is well above JLC's 0.09 mm inner track minimum."
+  },
+  {
+   "item": "L1.2 3V3 track ending on the pad edge at (24.2,77.0)",
+   "reason": "Recorded R14 near-edge endpoint. The contact chord equals the 0.4 mm track width."
+  },
+  {
+   "item": "USB_DM u_turn (6.88,31.05)",
+   "reason": "USB-C A7 / B7 tie. Carried with the USB pair item (R18-RTE-05)."
+  },
+  {
+   "item": "Carried R20-RTE-03 / -04 / -06, R19-RTE-03 / -04, 6 noncritical leftovers",
+   "reason": "Copper unchanged (diff) and none worse than recorded."
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after (canonical file and probe copy): 5516eeec... both times.",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity --refill-zones on a probe copy: 0 / 0 / 0.",
+  "route_check --profile r10 --bumps-all on copies of 5516eeec (0 failing, 148 INFO, 6 unrecorded leftovers, 45 windows) and of 0dc84776 (1 failing: the old BAT_ENABLE tiny_jog); instance diff.",
+  "check_r10 --only S-8, K-reference, K-region, K-plane, K-copper, K-power, K-inner on the probe copy: all OK.",
+  "Independent copper diff, track / via / pad / fill-area, 0dc84776 -> 5516eeec.",
+  "Independent hygiene scan over all 983 segments and 300 vias: angles all 0 / 45 / 90, no arc, no zero-length, no duplicate or contained overlap, no overlap-only tee, no via joined on fewer than 2 layers, 1 pad-edge end (L1.2, recorded), 2 collinear nodes (AUD-10), 11 exact tees (unchanged), no acute angle outside a pad.",
+  "GND partner via distance for all 36 critical-signal vias: the 25 non-AUD-2 vias are all at or under 1.492 mm (PYRO1_GATE is the worst). Exempt: BAT_SW_SOURCE 7.467, ACT_GATE 5.916, BAT_ENABLE 2.902 / 1.875 / 1.866 mm and others.",
+  "Fast-net reference scan, sampling centreline and both edges every 0.05 mm, own antipads excluded: each fast net sits over one In1 / In2 net per layer. Voids only at its own terminal holes and one 2-sample edge touch (CAM_PWR_EN at (34.0,41.5)). Identical on both boards.",
+  "In2 net beside each of the 25 required critical vias: 3V3 17, PORT_4V8 4, GND 3, S-8 void 1. This matches section 6's \"21 of 25\".",
+  "Fill XOR, neck census and per-piece via counts on both boards.",
+  "Detour MST on both boards, independent code: 0dc84776 116 / 1507.8 / 1243.0 / 1.213x; 5516eeec 116 / 1505.5 / 1236.9 / 1.217x.",
+  "Seeded hop candidate on a copy (refilled), with a refilled control copy: control DRC 0, candidate 1 clearance error.",
+  "Rasterised copper views of the EN area, the U2 area (before / after), J3, and the J1 / J400 inner layers (.supervisor/r22_routing/png/)."
+ ],
+ "sources": [
+  "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-10-31): inner-layer via hole to copper 0.2 mm; inner-layer PTH pad hole to copper 0.3 mm; PTH to track min 0.28 mm, 0.35 mm recommended; pad hole-to-hole 0.45 mm; multilayer track / space 0.09 / 0.09 mm.",
+  "AGENTS.md section 3; docs/REQUIREMENTS.md M2; R10_DECISIONS.md D-R19-02, D-R21-01..08; round21_fix_cad.md; round21_routing.md; AVA_LAYOUT.md (round 20 / 21 sections, section 6 table); docs/R10_VALIDATION.md section 6."
+ ],
+ "coverage_limits": [
+  "Geometry only: no SI, ESD or current-density simulation, and no physical test.",
+  "Full tools/check.sh and the full check_r10 were not run; only the listed rules were.",
+  "J3 slot hole-wall figures use the centre-to-copper distance less the slot half-width.",
+  "The one-segment hop is the only alternative seeded. The U2.1 in-line via rejection is taken from the record.",
+  "AVA comparison is from AVA_LAYOUT.md and the visible copper, not new AVA imagery."
+ ]
+}

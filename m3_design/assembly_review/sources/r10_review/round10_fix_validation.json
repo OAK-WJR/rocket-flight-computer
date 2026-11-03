@@ -1,0 +1,125 @@
+{
+  "round": 10,
+  "phase": "Final low-risk gate and record fix; no PCB change",
+  "reviewed_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+  "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+  "board_bytes": 2366509,
+  "board_mm": [
+    46,
+    90
+  ],
+  "canonical_builds": [
+    {
+      "command": "m3_design/r10_build.sh",
+      "exit_code": 0
+    },
+    {
+      "command": "m3_design/r10_build.sh",
+      "exit_code": 0
+    }
+  ],
+  "byte_identical_generated_files_sha256": {
+    "m3_design/assembly_review/actuator_power.kicad_sch": "8cc73bde6034cf6d349c2d240e5e71d2a9d7b4e2ba8fcbdf9ca9bf0933e1781f",
+    "m3_design/assembly_review/battery_entry.kicad_sch": "b397ce870d86a1c27a519758686da0e5981b454d4f5768df664a9f197fb8e813",
+    "m3_design/assembly_review/camera_connector.kicad_sch": "6a4fcb67cda63d818a4d805c3aed38e473f5c6e74b2c47908d04fae2bb88c5e3",
+    "m3_design/assembly_review/camera_power.kicad_sch": "ca947c2a1a3c2a4a22658898b65ca4404efb7530c9e3bf6405e932bde68f77ad",
+    "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+    "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+    "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+    "m3_design/assembly_review/m3.kicad_sch": "2b4dce42647b70bc6eef8a972809defb72704e9da84dffe352884fd13516a0a5",
+    "m3_design/assembly_review/mcu.kicad_sch": "84b50be1251545bbb29077faafb0bbb8941739fd67e9531a4452fec0337b64a0",
+    "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+    "m3_design/assembly_review/pyro.kicad_sch": "cd409773865c634ea9bb9d6d04ba72f2bc75d71e9e1acc97a6eae00bd76cf3d8",
+    "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+    "m3_design/assembly_review/servos.kicad_sch": "f56edc8fa8472171b7ed1d92efbaeacb9087b0a0289c2cfb6cd82be3704329c8",
+    "m3_design/assembly_review/telemetry.kicad_sch": "2d4c1ab9819306c0cd131520ed267f160fe1a177ca5f548510de1a151e682baa",
+    "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865",
+    "m3_design/assembly_review/m3.kicad_pcb": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+    "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+    "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+    "m3_design/assembly_review/schematic.net.xml": "ca70b6dd4716de166d5efb190638006aef3e16928928a130079d469810ba5c38",
+    "m3_design/assembly_review/kilib/m3.kicad_sym": "4259c3fb8326caafe333c7df40cd9799cd1b421a1e47f162149a8e077ba5abb8",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "ea136f4a63f3df877f7b9fbad300e2dba2949c803a312f428491c09f88b6e686"
+  },
+  "changed_generated_files_from_reviewed_commit": [
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+  ],
+  "binding_note_changed_paths": [
+    [
+      "firmware_obligations",
+      24
+    ]
+  ],
+  "binding_delta_scope": "One PA6 stress-limit obligation corrected to4VADC/6Vdigital. All four CAD/input hashes and every pin/net/pose remain unchanged.",
+  "unskipped_check": {
+    "command": "tools/check.sh",
+    "exit_code": 0,
+    "output": "round10_fix_check.txt",
+    "rules": 33,
+    "all_rules_ok": true,
+    "failing_rules": [],
+    "checker_sha256": "2c4205a6840265a391d403a60db37135cf1393f998fe8a7997d5df894d3f2967"
+  },
+  "drc": {
+    "violations": 0,
+    "unconnected": 0,
+    "schematic_parity": 0,
+    "erc": 0
+  },
+  "selftests": {
+    "shell": 4,
+    "procurement": 19,
+    "fit": 24,
+    "paste": 5,
+    "route": 59,
+    "r10": 143,
+    "numpy_cases_rerun": 3,
+    "unresolved_skips": 0
+  },
+  "routing": {
+    "failures": 0,
+    "allowlist": 0,
+    "leftovers": 0,
+    "instances": 82
+  },
+  "fabrication": {
+    "cpl_rows": 215,
+    "bom_codes": 82,
+    "manifest_outputs": 5,
+    "paste_flashes": {
+      "F": 317,
+      "B": 365
+    },
+    "pad_reconstructions": 203,
+    "placement_only": 12,
+    "status": "Current bound package verifies; CAD/export inputs unchanged after review. No order/assembler process approval."
+  },
+  "hotplug": {
+    "required_cases": 2304,
+    "failures": 0,
+    "electrical_sha256": "c424a714ef94e2e03b9148aeab28beefcc3460cd8999d3c6702721118ce90d66",
+    "status": "Both fresh complete builds passed required sweep/refinement/cold/local checks; simulation/Inference only."
+  },
+  "review_counts": {
+    "round9": {
+      "Critical": 0,
+      "Major": 0,
+      "Minor": 21
+    },
+    "round10": {
+      "Critical": 0,
+      "Major": 0,
+      "Minor": 8,
+      "new_Minor": 4,
+      "re_raised_routing_Minor": 4
+    }
+  },
+  "owner_acceptance": "pending; OQ-3 $84.43 vs$84.41; R430/U4 shortage unchanged",
+  "not_verified": [
+    "R10 firmware and physical gate/sense/reset/trace/watchdog/current-tail/shedding timing",
+    "Physical transient/R166 pulse endurance/thermal/ESD/RF immunity",
+    "Actual harness/switch/sled/shroud/retention/modal/flight tests",
+    "JLC panel, exact two VIPPO and manual post-reflow C84 process acceptance"
+  ],
+  "coverage": "Ten-lens round10 covers entire619db7e PCB. Frozen b337fe63 PCB matches both final complete builds; only gate coverage/regressions and records/binding text changed afterward. AGENTS section2 unchanged."
+}

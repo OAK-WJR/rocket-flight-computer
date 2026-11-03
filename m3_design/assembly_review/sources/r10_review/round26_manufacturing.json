@@ -1,0 +1,81 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 26, manufacturing lens",
+  "reviewer": "claude",
+  "target_commit": "3d8e845",
+  "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 2},
+  "findings": [
+    {
+      "id": "R26-MANUFACTURING-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "C84 hand-fit heat limit names the wrong bottom joints under C84's lands",
+      "contradicts": "docs/ORDERING.md 8.2 (line 435, R19-MEC-02): \"Four bottom joints sit directly under C84's lands (L1.2 3V3, C7.2 GND, C9.1 3V3, C9.2 GND; also L1.1 at 0.60 mm and C7.1 at 0.90 mm)\"; docs/R10_VALIDATION.md line 2755 repeats it (\"L1.2, C7.2, C9.1, C9.2; L1.1 0.60 mm and C7.1 0.90 mm away\").",
+      "evidence": "Read-only pcbnew on a copy of 92c3ad59 (copper polygons, top land vs bottom pad, XY projection). C84 F(27.5,78.5) 90 deg: land 1 (VLOGIC) x 26.65-28.35, y 80.00-83.50; land 2 (GND) x 26.65-28.35, y 73.50-77.00 (also F_Mask/F_Cu Gerber flashes R 1.7x3.5 at (27.5,81.75)/(27.5,75.25)). Bottom pads (all rectangles): L1.1 SW_NODE x 23.25-26.75, y 72.20-73.80 overlaps land 2 by 0.03 mm2 (not 0.60 mm away); C7.1 VLOGIC y 72.095-73.505 overlaps land 2 by 0.0036 mm2 (abuts; not 0.90 mm away); C9.1 3V3 x 24.695-26.105 is 0.545 mm from land 1 (not directly under); L1.2 0.16 mm2, C7.2 1.022 mm2, C9.2 1.290 mm2 under (correct). Also near and unlisted: C8.2 GND 0.605 mm and C8.1 3V3 0.814 mm from land 2. Positions unchanged in r10_place.tsv since the D-AVA placement (L1 B(25,74.6) -90, C7 B(28.3,73.8) -90, C8 B(26.4,78.28) 0, C9 B(26.4,80.24) 0). Probe: .supervisor/r26_manufacturing (c84 polygon intersection script output in this review).",
+      "impact": "The heat-limit procedure tells the fitter which bottom joints get conducted heat and which to inspect; it lists C9.1 as under the land when it is not, places L1.1 and C7.1 at a distance when both are under the lands, and omits C8 (0.605 mm), which is as near as the stated L1.1 figure and is not in the fixture or inspection list (L1, C7, C9, R166).",
+      "concrete_fix": "In ORDERING 8.2 and R10_VALIDATION line 2755: \"Five bottom joints sit under C84's lands (L1.1 SW_NODE, L1.2 3V3, C7.1 VLOGIC at its edge, C7.2 GND, C9.2 GND); C9.1 3V3 is 0.545 mm and C8.2 / C8.1 0.605 / 0.814 mm away.\" Add C8 to the fixture keep-off and post-fit inspection lists."
+    },
+    {
+      "id": "R26-MANUFACTURING-02",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "J3 slot hand-finish neighbours omit R7, which is nearer than R8",
+      "contradicts": "docs/ORDERING.md 8.2 line 461: \"Hand-finish all four J3 shell slots for hole fill, keeping the iron off bottom C83 and R8.\"; docs/R10_VALIDATION.md line 518 (R7-MFG-03): \"Fixed: C83 / R8, 1.95 / 2.15 mm copper gap\".",
+      "evidence": "Read-only pcbnew, B.Cu effective shapes, copper edge to edge from the J3 shell slot pads (J3.1 x 5.26-7.36 y 34.525-35.725; J3.4 x 5.26-7.36 y 25.875-27.075, oval): C83.1 1.952 mm (J3.4), R7.2 (GND, x 8.73-9.27 y 28.187-28.753, R7 B(9,28.9) 90 deg) 2.010 mm (J3.4), R8.1 2.145 mm (J3.1), then R9.2 2.785 mm. R7 is the second-nearest bottom part and nearer than R8; it is in neither statement. R7's pose is unchanged in r10_place.tsv since the D-AVA placement.",
+      "impact": "The bottom-side hand-finish instruction protects C83 and R8 but not R7 (USB CC1 pull-down), which sits closer to the J3.4 slot than R8 does to J3.1.",
+      "concrete_fix": "ORDERING 8.2: \"keeping the iron off bottom C83, R7 and R8 (1.952 / 2.010 / 2.145 mm copper gap)\"; R10_VALIDATION R7-MFG-03 row: \"C83 / R7 / R8, 1.95 / 2.01 / 2.15 mm copper gap\"."
+    }
+  ],
+  "observations": [
+    "Fab package: the 11 Gerbers re-exported with kicad-cli 10.0.7 from 92c3ad59 differ from the zip only in the creation-date lines; PTH.drl, NPTH.drl and the job file are byte-identical. The manifest's 193 input hashes and 6 output hashes all match the committed files.",
+    "DRC with all severities and exclusions, with schematic parity, on a full project copy: 0 violations, 0 unconnected, 0 parity, both as saved and with --refill-zones; the refilled copper differs from the shipped Gerbers by sub-10 um vertex shifts only.",
+    "JLC capabilities (read 2026-11-01): min track 0.20 mm (JLC 0.09); via 0.3/0.5 mm and one 0.5/1.0 mm (JLC 0.15/0.25); via hole-to-hole 0.259 mm (JLC 0.2); PTH annular ring 0.30 mm on the DB125s, 0.20 mm on the J3 slots (JLC 0.15 minimum); plated slots 0.6 x 1.4 / 1.7 mm (JLC 0.35 mm wide, length >= 2x width); NPTH 0.6 / 0.991 mm (JLC 0.5); silk strokes all >= 0.15 mm; silk to mask opening >= 0.15 mm on both sides (Gerber measurement); mask dams between different pads >= 0.150 mm (U4), JLC 0.10.",
+    "Q120/Q121 pads 5-8 overlap EP pad 9 by 0.01 mm (same net, intentional merged land); no mask web there.",
+    "BOM 81 lines / 206 refs (77 SMT + 4 THT lines), CPL 206 rows (70 Top / 136 Bottom), identical ref sets; every BOM ref's LCSC and Manufacturer Part match the board fields; owner BOM is C84 only; 9 footprints are excluded from BOM and position files.",
+    "jlc_orient --verify-cpl: 67 + 125 rebuilt, worst residual 0.491 mm (R134 2512, 2-pad tolerance 0.6), 14 placement-only, 206 rows; paste_check OK, 249 / 381 flashes; C84 lands have no paste flash.",
+    "U401.11 VIPPO: only (27.3,13.6) and (27.9,13.6) carry capping/filling yes; drill groups 306 x 0.300 + 1 x 0.500 (307 vias: 302 0.5/0.3, 4 0.6/0.3, BAT_IN 1.0/0.5 at (17.5,87.15)); B.Paste windows 1.13 x 0.89 at y 13.045 / 14.155 leave a 0.22 mm gap and overlap each drill by 0.04 mm, as ORDERING states.",
+    "Tab plan: tab_windows on 92c3ad59 gives west 0.5-23.25 / 43.0-89.5 and east 0.5-89.5; nearest obstacles J440 3.155, J400 3.155, J410 3.155, J122 3.155 mm against 2.0 mm (D402 3.96 mm from the west forward tab); In2 under the west forward band is GND on all four layers, east bands RAW_PROTECTED / PORT_5V3 as recorded (D-R24-14).",
+    "Short-edge courtyards: R400/R401/R404 1.025, C403 1.955, C95 1.505, R166 1.755 mm (the six recorded DFM queries); next L400 2.505, R92 2.525, TP88 2.555 mm.",
+    "DB125 bottom neighbours: the parts and figures in ORDERING 8.2 (1.762-2.171 mm; R102 1.997, C410/C420 2.003, C431 2.050) match; next unlisted is R405 2.24 mm, outside the stated range.",
+    "Assembly PDFs: one A4 page each; every top (74) and bottom (142) reference is present; the bottom view is mirrored. 92 hidden silkscreen designators; 5 parts without any Fab mark and 9 with only a pin-1 dot, as recorded (D-R24-12).",
+    "All 18 probe-worksheet contact positions in ORDERING 8.3 and the terminal pin-net table in 8.2 match the board.",
+    "cost_check.json / stock_check.json figures quoted in ORDERING 8.1 (85.60, 61.35, 83.96, 14.93; U4 9/2, U9 28/-83/7, C2757925, C535146) match the files; cost inputs bind the current BOM, owner BOM and CPL."
+  ],
+  "fix_verification": [
+    {"change": "D-R24-11 D402 fitted", "measurement": "D402 B(4.45,65.9) 90 deg in BOM line C535146 (9 refs) and CPL; copper gap to J400.2 1.959 mm; 3.96 mm from the west forward tab", "verdict": "confirmed"},
+    {"change": "D-R24-12 Fab outlines deferred", "measurement": "no Fab mark: D120 D123 J2 Q122 Q123; pin-1 dot only: D121 D4 J3 U1-U5 Y1 (14 parts)", "verdict": "confirmed"},
+    {"change": "D-R24-13 order-number placeholder removed", "measurement": "no JLCJLCJLCJLC in the board or either silkscreen; order form says Mark on PCB none", "verdict": "confirmed"},
+    {"change": "D-R24-14 east tabs over In2 power kept", "measurement": "east aft band In2: RAW_PROTECTED / PORT_5V3; east forward band: RAW_PROTECTED; west forward band GND on all four layers", "verdict": "confirmed"},
+    {"change": "D-R24-15 R92 / TP88 moved", "measurement": "R92 F(31,86.7) courtyard 2.525 mm, TP88 F(35.5,86.4) 2.555 mm from the forward edge", "verdict": "confirmed"},
+    {"change": "D-R24-20 M-8 short-edge list", "measurement": "R400/R401/R404 1.025, C403 1.955, C95 1.505, R166 1.755 mm; nothing else under 2.5 mm", "verdict": "confirmed"},
+    {"change": "D-R24-23 CPL counts", "measurement": "70 Top + 136 Bottom = 206 rows; jlc_orient 67 + 125 rebuilt + 14 placement-only", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 on the board before and after; manifest input/output hash comparison (193 inputs, 6 outputs)",
+    "kicad-cli 10.0.7 pcb export gerbers / drill with export_fab.py's options into the probe dir; diff against the shipped zip",
+    "kicad-cli pcb drc --severity-all --severity-exclusions --schematic-parity on a full project copy, with and without --refill-zones",
+    "pcbnew geometry: track widths, via classes, annular rings, hole-to-hole, NPTH list, mask openings and dams, VIPPO flags, zone min width",
+    "Gerber parsing: silk aperture widths, silk-to-mask distance (both sides), B.Paste windows at U401 and U4, F.Paste at C84",
+    "BOM / CPL / owner BOM against board fields and positions; cost and stock JSON fields",
+    "tools/jlc_orient.py --verify-cpl and tools/paste_check.py (read-only) on the committed package",
+    "tab_windows / T-1 windows and per-tab margins; In2 sampling under the four tab bands",
+    "short-edge and long-edge courtyard distances; DB125 and J3 bottom neighbour copper gaps; C84 land vs bottom pad polygon intersection",
+    "assembly PDF text extraction and render; probe-worksheet, terminal and part pose checks against ORDERING 8.2 / 8.3",
+    "JLC capabilities and assembly terms pages fetched 2026-11-01"
+  ],
+  "sources": [
+    "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-01)",
+    "https://jlcpcb.com/help/article/61-Terms-and-Conditions-of-JLCPCB-Assembly-Service (updated 2026-09-09, read 2026-11-01)",
+    "https://jlcpcb.com/impedance (stackup names; read 2026-11-01)",
+    "docs/ORDERING.md section 8; docs/R10_VALIDATION.md; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R24 / D-R25",
+    "m3_design/assembly_review/fab/* at 3d8e845"
+  ],
+  "coverage_limits": [
+    "JLC's quote form is script-driven and was not read; the form-field values in ORDERING 8.1 were checked only against the capabilities and assembly-terms pages.",
+    "JLC041611-7628 stackup naming was not confirmed on JLC's stackup page (it lists JLC04161H-* variants); it is the long-standing M1 requirement.",
+    "Mask analysis approximated custom (FreePoly) pads; KiCad DRC covers them.",
+    "No physical, DFM-upload or JLC-viewer check."
+  ]
+}

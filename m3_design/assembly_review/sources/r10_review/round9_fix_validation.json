@@ -1,0 +1,221 @@
+{
+  "round": 9,
+  "phase": "Minor fix pass completion after reboot",
+  "baseline_commit": "8bccb07",
+  "baseline_board_sha256": "877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d",
+  "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+  "board_bytes": 2366509,
+  "board_mm": [
+    46,
+    90
+  ],
+  "canonical_builds": [
+    {
+      "command": "m3_design/r10_build.sh",
+      "exit_code": 0
+    },
+    {
+      "command": "m3_design/r10_build.sh",
+      "exit_code": 0
+    }
+  ],
+  "byte_identical_generated_files_sha256": {
+    "m3_design/assembly_review/actuator_power.kicad_sch": "8cc73bde6034cf6d349c2d240e5e71d2a9d7b4e2ba8fcbdf9ca9bf0933e1781f",
+    "m3_design/assembly_review/battery_entry.kicad_sch": "b397ce870d86a1c27a519758686da0e5981b454d4f5768df664a9f197fb8e813",
+    "m3_design/assembly_review/camera_connector.kicad_sch": "6a4fcb67cda63d818a4d805c3aed38e473f5c6e74b2c47908d04fae2bb88c5e3",
+    "m3_design/assembly_review/camera_power.kicad_sch": "ca947c2a1a3c2a4a22658898b65ca4404efb7530c9e3bf6405e932bde68f77ad",
+    "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+    "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+    "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+    "m3_design/assembly_review/m3.kicad_sch": "2b4dce42647b70bc6eef8a972809defb72704e9da84dffe352884fd13516a0a5",
+    "m3_design/assembly_review/mcu.kicad_sch": "84b50be1251545bbb29077faafb0bbb8941739fd67e9531a4452fec0337b64a0",
+    "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+    "m3_design/assembly_review/pyro.kicad_sch": "cd409773865c634ea9bb9d6d04ba72f2bc75d71e9e1acc97a6eae00bd76cf3d8",
+    "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+    "m3_design/assembly_review/servos.kicad_sch": "f56edc8fa8472171b7ed1d92efbaeacb9087b0a0289c2cfb6cd82be3704329c8",
+    "m3_design/assembly_review/telemetry.kicad_sch": "2d4c1ab9819306c0cd131520ed267f160fe1a177ca5f548510de1a151e682baa",
+    "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865",
+    "m3_design/assembly_review/m3.kicad_pcb": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+    "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+    "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+    "m3_design/assembly_review/schematic.net.xml": "ca70b6dd4716de166d5efb190638006aef3e16928928a130079d469810ba5c38",
+    "m3_design/assembly_review/kilib/m3.kicad_sym": "4259c3fb8326caafe333c7df40cd9799cd1b421a1e47f162149a8e077ba5abb8",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "1f8214ec5374fb8bca7b326b441bfdea84b0049716b6ab9e926af2584d04ce9e"
+  },
+  "unskipped_check": {
+    "command": "tools/check.sh",
+    "exit_code": 0,
+    "output": "round9_fix_check.txt",
+    "rules": 33,
+    "all_rules_ok": true,
+    "failing_rules": []
+  },
+  "selftests": {
+    "shell": 4,
+    "procurement": 19,
+    "fit": 24,
+    "paste": 5,
+    "route": 59,
+    "r10": 140,
+    "numpy_cases_rerun": 3,
+    "unresolved_skips": 0
+  },
+  "hotplug": {
+    "required_cases": 2304,
+    "failures": 0,
+    "passed": true,
+    "convergence_passed": true,
+    "cold_limit_passed": true,
+    "numeric_results_unchanged_from_baseline": true,
+    "qualification": "simulation / Inference; no physical qualification"
+  },
+  "fabrication": {
+    "script": "m3_design/r10_fab.sh",
+    "cad_exports_orientation_paste_manifest": "pass",
+    "cpl_rows": 215,
+    "bom_codes": 82,
+    "pad_reconstructions": 203,
+    "placement_only_checks": 12,
+    "paste_flashes": {
+      "F": 317,
+      "B": 365
+    },
+    "supplier_script_exit_code": 1,
+    "supplier_failure_reason": "Known cost and stock deviations; no CAD export failure",
+    "cost_utc": "2026-10-28T23:25:10Z",
+    "stock_utc": "2026-10-28T23:24:17Z",
+    "usd_per_board": 84.43,
+    "cap_usd_per_board": 84.41,
+    "extended_codes": 46,
+    "short": [
+      "R430: 17 pieces vs minimum purchase 3610",
+      "U4: 0 vs 5 needed"
+    ]
+  },
+  "routing": {
+    "failures": 0,
+    "allowlist": 0,
+    "leftovers": 0,
+    "all_instances": {
+      "pad_end_offcentre": 35,
+      "passes_through_pad": 1,
+      "segment_inside_pad": 8,
+      "width_change_junction": 11,
+      "short_layer_hop": 6,
+      "u_turn": 2,
+      "extra_bends": 4,
+      "power_via_no_gnd": 14,
+      "via_on_track_in_fill": 1
+    },
+    "aud10_review": {
+      "segment_inside_pad": 8
+    },
+    "reference": {
+      "samples": 110625,
+      "unreferenced": 7146,
+      "inside_own_antipad": 7139,
+      "recorded_stray": 6,
+      "loose": 0,
+      "b_cu_planes": [
+        "GND",
+        "3V3",
+        "3V3A",
+        "PORT_5V3",
+        "PORT_4V8",
+        "RAW_PROTECTED"
+      ],
+      "by_net_layer": {
+        "SPI1_MISO B.Cu": {
+          "samples": 2,
+          "box": [
+            17.79,
+            43.88,
+            17.8,
+            43.89
+          ]
+        },
+        "SPI1_MISO F.Cu": {
+          "samples": 1,
+          "box": [
+            17.3,
+            43.89,
+            17.3,
+            43.89
+          ]
+        },
+        "SPI1_SCK B.Cu": {
+          "samples": 3,
+          "box": [
+            17.1,
+            43.4,
+            17.1,
+            43.42
+          ]
+        },
+        "USB_DM F.Cu": {
+          "samples": 1,
+          "box": [
+            8.08,
+            29.58,
+            8.08,
+            29.58
+          ]
+        }
+      }
+    },
+    "region": {
+      "items": 57,
+      "samples": 21777,
+      "nets": [
+        "CAM_MCU_RX",
+        "CAM_MCU_TX",
+        "CAM_RX_BUFFER",
+        "CAM_RX_WIRE",
+        "CAM_TX_BUFFER",
+        "CAM_TX_WIRE",
+        "GPS_RX_BUFFER",
+        "GPS_RX_MCU",
+        "GPS_RX_WIRE",
+        "GPS_TX_BUFFER",
+        "GPS_TX_MCU",
+        "GPS_TX_WIRE",
+        "HSE_IN",
+        "HSE_OUT",
+        "IMU_CS",
+        "PYRO1_COLD",
+        "PYRO1_GATE",
+        "PYRO1_GATE_N",
+        "PYRO1_IGN",
+        "PYRO1_OUT",
+        "QSPI_CLK",
+        "QSPI_IO0",
+        "QSPI_IO1",
+        "QSPI_IO2",
+        "QSPI_IO3",
+        "QSPI_NCS",
+        "RADIO_RX_BUFFER",
+        "RADIO_RX_MCU",
+        "RADIO_RX_WIRE",
+        "RADIO_TX_BUFFER",
+        "RADIO_TX_MCU",
+        "RADIO_TX_WIRE",
+        "SPI1_MISO",
+        "SPI1_MOSI",
+        "SPI1_SCK",
+        "USB_DM",
+        "USB_DP"
+      ]
+    }
+  },
+  "geometry_evidence": "round9_geometry.json",
+  "environment": "Native KiCad 10.0.6; external mouse-query interposer per D-R1-05 for headless macOS. Initial plain CLI abort received no passing-build credit. Repository gates/CAD rules unchanged by the workaround.",
+  "coverage": "Round 9 clean on baseline; round 10 must freshly review the committed fix-pass bytes, including all local routing and label changes. Freeze PCB after clean round 10.",
+  "not_verified": [
+    "R10 firmware implementation and real board binding",
+    "physical gate/sense/reset/watchdog and port-shedding timings",
+    "physical hot-plug/R166 pulse durability/thermal behavior",
+    "installed radio immunity and harness",
+    "physical sled, plug, screw-switch and retention fit",
+    "assembler acceptance of tabs, VIPPO and manual C84 process"
+  ]
+}

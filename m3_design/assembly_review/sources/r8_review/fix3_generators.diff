@@ -1,0 +1,318 @@
+--- a/m3_design/r8_power.py
++++ b/m3_design/r8_power.py
+@@ -308,16 +308,18 @@
+ # ======================================================================================================================
+ # 4. Logic supplies
+ # ======================================================================================================================
+-# USB_LIMITED (U10 -> U11 IN2): B.Cu under U1's aft pad row (y 37.25), north on x 29.95, one 45-degree F.Cu hop over
+-# the RAW_ACT_SENSE lane (x 30.6), B.Cu east on y 55.3 into C98.1 and U11.7 (D42); the hop is no longer than the lane
++# USB_LIMITED (U10 -> U11 IN2): B.Cu under U1's aft pad row (y 37.3), north on x 29.95, one 45-degree F.Cu hop over
++# the RAW_ACT_SENSE lane (x 30.65), B.Cu east on y 55.3 into C98.1 and U11.7 (D42); the hop is no longer than the lane
+ # needs, so BAT_FAULT_N's reserved F.Cu lane (x 33.6, D50) crosses USB_LIMITED's B.Cu. 0.4 mm: the TPS2553 limit is
+-# 0.45 A
++# 0.45 A. Fix pass 3 (R8P3-ROUTING-01, D106): the trunk sits on y 37.3, not 37.25, so CAM_PWR_EN's y 36.8 lane is
++# 0.20 mm from it (was 0.150 mm); with R172 and the RAW_ACT_SENSE lane on x 30.65 the x 29.95 run is 0.23 mm from
++# R172's pads (was 0.180 mm)
+ V_USB = ((29.95, 54.0), (31.25, 55.3))
+ USB_LIMITED_TRACKS = [
+-    ('B', 0.4, [(13.7, 36.35), (15.4, 36.35), (16.3, 37.25), (19.4, 37.25), (29.95, 37.25), V_USB[0]]),
++    ('B', 0.4, [(13.7, 36.35), (15.4, 36.35), (16.35, 37.3), (19.4, 37.3), (29.95, 37.3), V_USB[0]]),
+     ('B', 0.4, [(15.4, 36.35), (15.4, 34.38)]),                 # C86.1
+-    ('B', 0.3, [(19.4, 37.25), (19.4, 31.6)]),                  # TP82
+-    ('F', 0.4, [V_USB[0], V_USB[1]]),                           # over the RAW_ACT_SENSE lane (B.Cu, x 30.6)
++    ('B', 0.3, [(19.4, 37.3), (19.4, 31.6)]),                   # TP82
++    ('F', 0.4, [V_USB[0], V_USB[1]]),                           # over the RAW_ACT_SENSE lane (B.Cu, x 30.65)
+     ('B', 0.4, [V_USB[1], (34.35, 55.3), (35.25, 56.2), (35.25, 57.925)]),     # C98.1, U11.7
+     ('B', 0.25, [(35.25, 56.2), (32.7, 56.2), (32.2, 56.7), (32.2, 57.775)]),   # R87.1 (OVLO divider top)
+ ]
+@@ -466,13 +468,13 @@
+     ('CAM_5V', 'F', 0.6, [V_CAM_5V, (40.75, 42.325)]),
+     ('CAM_5V', 'F', 0.25, [(40.3, 33.9), (40.3, 35.5), (40.3, 40.95), V_CAM_5V]),
+ ]
+-# pad -> via (B.Cu unless F), via size. Fix pass 2 (R8P2-ROUTING-01, D98): C75.2's and C76.2's GND vias are the
++# pad -> via (B.Cu unless F), via size. Fix pass 2 (R8P2-ROUTING-01, D98): C75.2's and R78.2's GND vias are the
+ # board's 0.5 / 0.3 mm via (same drill and barrel): their 0.150 mm gaps to CAM_5V and CAM_MCU_TX open to 0.20 mm
+ CAMERA_GND = [
+     ('B', (43.41, 36.45), (43.41, 37.6), VIA), ('B', (43.41, 28.85), (43.41, 27.8), VIA),
+     ('B', (41.4, 46.07), (41.4, 47.8), SMALL_VIA),
+     ('B', (35.29, 39.16), (34.4, 38.27), VIA),
+-    ('B', (34.675, 45.2), (33.9, 45.2), SMALL_VIA),                    # C76.2 north-west of the radio lanes
++    ('B', (34.675, 45.2), (33.9, 45.2), SMALL_VIA),                    # R78.2 (CAM_5V bleed) north-west of the radio lanes
+ ]
+ 
+ 
+--- a/m3_design/r8_place.tsv
++++ b/m3_design/r8_place.tsv
+@@ -27,7 +27,7 @@
+ # --- Pyro sense series resistors at the ADC pins (F8): R168 (CONT, pin 15) forward of U1, R170 (ARM, pin 33) and R172 (RAW_ACT_SENSE, pin 34) under U1's east pad row (spike a; D33)
+ R168	23.6	54.6	0	B	seed
+ R170	28	47.93	90	B	spike-a
+-R172	30.6	48.1	90	B	D33
++R172	30.65	48.1	90	B	D33 D106
+ # --- RAW_ACT_SENSE divider at J122's aft end, tapped from J122.11 (D32)
+ R177	25.92	68.6	90	B	D32
+ R124	25.92	66.7	90	B	D32
+--- a/m3_design/r8_route_pyro.py
++++ b/m3_design/r8_route_pyro.py
+@@ -11,7 +11,7 @@
+   - CONT: B.Cu from its exit via west, forward on x 19.25, then east under C14 to R168.1 (series 4.7k at pin 15);
+     R168.2 -> pin 15 by one via (D33).
+   - RAW_ACT_SENSE (D32, D45): the divider at J122's aft end (R177 / R124, R125 / R182 / C122 on the spine x 25.92),
+-    the lane under the servo rows' F.Cu (y 58.1) and down x 30.6, east of ARM1_SENSE, to R172.1 under U1's east pad
++    the lane under the servo rows' F.Cu (y 58.1) and down x 30.65, east of ARM1_SENSE, to R172.1 under U1's east pad
+     row; pin 34 leaves outward to a via and back under the pad row to R172.2 (D33). Not a pyro net: it crosses nothing.
+ Every layer change of a pyro net has a GND via within 1.5 mm (AGENTS section 3): the dives' partners, R7's partners
+ of the exit vias (not rigid: rebuilt here, none touching a block GND track end, which would join ch1_copper), and the
+@@ -43,12 +43,13 @@
+     ('PYRO1_CONT_MCU', 'F', [u1_pin(15), V_CONT_MCU]),
+     ('PYRO1_CONT_MCU', 'B', [V_CONT_MCU, (24.0, 54.6)]),                                 # R168.2 (0.03 mm off centre)
+     # RAW_ACT_SENSE (D32 / D45): the spine x 25.92 through R124.2, R125.1, R182.1, C122.1 (pad centres x 25.97), the
+-    # chamfer, under the servo lanes on y 58.1, down x 30.6 to R172.1
++    # chamfer, under the servo lanes on y 58.1, down x 30.65 to R172.1 (fix pass 3, D106: x 30.6 -> 30.65 with R172,
++    # 0.23 mm from USB_LIMITED's x 29.95 run)
+     ('RAW_ACT_SENSE', 'B', [(25.92, 66.27), (25.92, 65.25), (25.92, 64.25), (25.92, 63.0), (25.92, 60.0),
+-                            (27.82, 58.1), (30.0, 58.1), (30.6, 57.5), (30.6, 48.53)]),
++                            (27.82, 58.1), (30.0, 58.1), (30.65, 57.45), (30.65, 48.53)]),
+     ('RAW_ACT_SENSE_MID', 'B', [(25.92, 68.17), (25.92, 67.13)]),                        # R177.2 -> R124.1
+     ('RAW_ACT_SENSE_MCU', 'F', [u1_pin(34), V_RAS_MCU]),
+-    ('RAW_ACT_SENSE_MCU', 'B', [V_RAS_MCU, (31.08, 47.67), (30.6, 47.67)]),             # R172.2
++    ('RAW_ACT_SENSE_MCU', 'B', [V_RAS_MCU, (31.08, 47.67), (30.65, 47.67)]),            # R172.2
+ ]
+ SIGNAL_VIAS = [('ARM1_SENSE_MCU', V_ARM_MCU), ('PYRO1_GATE_N', V_GATE), ('PYRO1_CONT_MCU', V_CONT_MCU),
+                ('RAW_ACT_SENSE_MCU', V_RAS_MCU)]
+@@ -64,7 +65,7 @@
+         ('R168', '1', 'PYRO1_CONT', (23.17, 54.6)), ('R168', '2', 'PYRO1_CONT_MCU', (24.03, 54.6)),
+         ('R124', '2', 'RAW_ACT_SENSE', (25.92, 66.27)), ('R125', '1', 'RAW_ACT_SENSE', (25.97, 65.25)),
+         ('R182', '1', 'RAW_ACT_SENSE', (25.97, 64.25)), ('C122', '1', 'RAW_ACT_SENSE', (25.97, 63.0)),
+-        ('R172', '1', 'RAW_ACT_SENSE', (30.6, 48.53)), ('R172', '2', 'RAW_ACT_SENSE_MCU', (30.6, 47.67)),
++        ('R172', '1', 'RAW_ACT_SENSE', (30.65, 48.53)), ('R172', '2', 'RAW_ACT_SENSE_MCU', (30.65, 47.67)),
+         ('R177', '2', 'RAW_ACT_SENSE_MID', (25.92, 68.17)), ('R124', '1', 'RAW_ACT_SENSE_MID', (25.92, 67.13))]
+ 
+ 
+--- a/m3_design/r8_route_camera.py
++++ b/m3_design/r8_route_camera.py
+@@ -24,7 +24,8 @@
+   - CAM_IO_3V3 on B.Cu: C93 -> forward on x 36.225 -> east on y 51.2 under U13's forward edge to TP90, with R103, C92
+     and U13.5 tapped off it.
+   - CAM_FAULT_N / CAM_PWR_EN (pins 41 / 42): the step-4 escapes (D33) to vias and B.Cu aft; FAULT_N to R76 (its
+-    pull-up, 3V3 via) and R77 (to U7's FLT); PWR_EN round U7's west end (x 28.0) to R74 (D37).
++    pull-up, 3V3 via) and R77 (to U7's FLT); PWR_EN round U7's west end (x 28.25) and one 45-degree run
++    into R74.1 (D37, D107).
+   - U7's local network (EN, DVDT, ILIM, FLT_RAW) on B.Cu beside the part.
+ """
+ from r8_route import W, VIA_PWR, VIA_SIG, u1_pin
+@@ -34,7 +35,9 @@
+         'CAM_5V')
+ CONTINUES = ('CAM_5V',)        # step 5 drew the buck output (L3 / C75 / C76 / TP72) and J9.1's feed
+ RAILS = ('GND', '3V3')
+-BUDGET = dict(length_mm=95.0, vias=6, critical_layer_changes=0, ratio=1.55)       # 91.9 mm; PWR_EN 1.50 (D37's loop)
++# 89.9 mm; worst ratio 1.375, CAM_PWR_EN (D37's loop), since fix pass 3's one-diagonal entry into R74.1 (D107; it was
++# 91.9 mm and 1.50 against a 1.55 budget, tightened to 1.40)
++BUDGET = dict(length_mm=95.0, vias=6, critical_layer_changes=0, ratio=1.40)
+ W_PWR = 0.3
+ 
+ # U12 (rotation 270): aft row y 44.0 (pins 4, 3, 2, 1 west to east), forward row y 47.1 (pins 5, 6, 7, 8)
+@@ -96,9 +99,10 @@
+     # one 45-degree run through R76.2 (pull-up) to above R77.1
+     ('CAM_FAULT_N', 'B', W, [V_FAULT, (32.35, 36.975), (34.05, 35.275), (34.05, 34.575)]),
+     ('3V3', 'B', W, [(34.425, 36.55), V_R76]),                                        # R76.1
+-    # CAM_PWR_EN: pin 42 -> via -> B.Cu south, round U7's west end to R74.1 (D37)
++    # CAM_PWR_EN: pin 42 -> via -> B.Cu south, round U7's west end (x 28.25) and one 45-degree run into R74.1 (D37;
++    # fix pass 3, R8P3-ROUTING-03, D107: was x 28.0 with an L and a 2.78 mm stub into R74.1, 1.98 mm longer)
+     ('CAM_PWR_EN', 'F', W, [u1_pin(42), V_PWR_EN]),
+-    ('CAM_PWR_EN', 'B', W, [V_PWR_EN, (31.85, 36.8), (28.0, 36.8), (28.0, 27.5), (30.775, 27.5)]),
++    ('CAM_PWR_EN', 'B', W, [V_PWR_EN, (31.85, 36.8), (28.25, 36.8), (28.25, 30.025), (30.775, 27.5)]),
+     # U7's network (B.Cu)
+     ('CAM_EN', 'B', W, [(32.425, 25.9), (32.425, 27.5), (32.425, 28.0), (33.55, 29.125), (33.55, 29.75)]),
+     ('CAM_DVDT', 'B', W, [(31.655, 29.9), (33.05, 29.9)]),
+--- a/m3_design/r8_route_status.py
++++ b/m3_design/r8_route_status.py
+@@ -87,8 +87,10 @@
+ ]
+ SIGNAL_VIAS = [('BUZZ_DRV', V_BD), ('PULLPIN', V_PP), ('BUZZ_OUT', V_BO), ('V3V3_SENSE', V_V3),
+                ('BAT_FAULT_N', V_BF), ('LOGIC_SOURCE_ST', V_LG)]
+-SIGNAL_VIAS += [('BAT_ENABLE', V_BE2)]
+-ENABLE_VIA = ('BAT_ENABLE', V_BE1)                    # spike (c)'s size beside Q120's drain pour (0.6 mm)
++# BAT_ENABLE (U9's EN divider, uA) takes the board's 0.5 / 0.3 mm signal via at both ends. Fix pass 3 (R8P3-ROUTING-02,
++# D108): V_BE1 was spike (c)'s 0.6 mm power via, 0.180 mm from Q120.9 (the bare BAT_IN drain pad); same drill and
++# barrel, now 0.23 mm
++SIGNAL_VIAS += [('BAT_ENABLE', V_BE2), ('BAT_ENABLE', V_BE1)]
+ POWER_VIAS = [('3V3', xy) for xy in V_3V3] + [('GND', V_STRIP_GND)]
+ PADS = [('R32', '1', 'LED_RED', (12.1, 41.8)), ('R32', '2', 'LED_RED_A', (10.1, 41.8)),
+         ('LED1', '2', 'LED_RED_A', (7.45, 41.8)), ('R33', '1', 'LED_YEL', (12.3, 44.0)),
+@@ -120,5 +122,5 @@
+         d.track(net, layer, w, pts)
+     for net, xy in SIGNAL_VIAS:
+         d.via(net, *xy)
+-    for net, xy in POWER_VIAS + [ENABLE_VIA]:
++    for net, xy in POWER_VIAS:
+         d.via(net, *xy, VIA_PWR)
+--- a/m3_design/r8_route_check.py
++++ b/m3_design/r8_route_check.py
+@@ -258,7 +258,8 @@
+ L10_PYRO_VIA = 1.0
+ # (via net, position): {bottom part: measured courtyard-to-via gap, mm}. D61: spike (a)'s dives (D33) on the MCU side of
+ # the 4.7 k sense resistors; R170 / R168 are those resistors, R172 / C15 the RAS divider and VDD bypass beside the dive
+-L10_EXCEPT = {('ARM1_SENSE_MCU', (29.3, 47.5)): {'R170': 0.635, 'R172': 0.635, 'C15': 0.835},
++# (R172 0.685 since fix pass 3 moved it 0.05 mm east, D106; 0.635 before)
++L10_EXCEPT = {('ARM1_SENSE_MCU', (29.3, 47.5)): {'R170': 0.635, 'R172': 0.685, 'C15': 0.835},
+               ('PYRO1_CONT_MCU', (24.0, 53.7)): {'R168': 0.235}}
+ 
+ 
+--- a/m3_design/r8_ground.tsv
++++ b/m3_design/r8_ground.tsv
+@@ -174,10 +174,10 @@
+ via	GND	FB	0.5/0.3	9.125	108.625			cover	
+ via	GND	FB	0.5/0.3	12.875	45.625			cover	
+ via	GND	FB	0.5/0.3	44.875	30.875			cover	
++via	GND	FB	0.5/0.3	26.625	38.875			cover	
+ via	GND	FB	0.5/0.3	9.375	80.625			cover	
+ via	GND	FB	0.5/0.3	19.125	25.875			cover	
+ via	GND	FB	0.5/0.3	25.125	64.375			cover	
+-via	GND	FB	0.5/0.3	26.625	38.875			cover	
+ via	GND	FB	0.5/0.3	40.375	51.875			cover	
+ via	GND	FB	0.5/0.3	25.875	30.375			cover	
+ via	GND	FB	0.5/0.3	12.625	66.375			cover	
+@@ -187,7 +187,7 @@
+ via	GND	FB	0.5/0.3	22.375	38.875			cover	
+ via	GND	FB	0.5/0.3	41.125	64.375			cover	
+ via	GND	FB	0.5/0.3	16.625	70.875			cover	
+-via	GND	FB	0.5/0.3	28.875	32.875			cover	
++via	GND	FB	0.5/0.3	29.125	32.625			cover	
+ via	GND	FB	0.5/0.3	44.625	92.375			cover	
+ via	GND	FB	0.5/0.3	42.375	101.875			cover	
+ via	GND	FB	0.5/0.3	40.875	60.625			cover	
+--- a/m3_design/assembly_review/sources/r8_design/step9/m2_sweep.py
++++ b/m3_design/assembly_review/sources/r8_design/step9/m2_sweep.py
+@@ -35,6 +35,14 @@
+   via_fold          a non-GND via two of whose arms, on different layers, leave it within 45 degrees of each other (a
+                     run that passes its target on one layer and comes back on the other; R8 pass 1 routing's viaturn)
+   short_hop         route_check's short_layer_hop and power_via_no_gnd information instances (listed for part E / C8)
++  margin_free       the gate's bump and redraw searches once more at DRC's own threshold (fix pass 3, R8P3-ROUTING-03,
++                    R8_DECISIONS D107): RedrawCheck tests every candidate at the rule + 0.01 mm
++                    (r7_hygiene.rule_clearance), so a window whose present copper already sits at the DRC minimum
++                    fails every candidate that keeps that copper, and chain_detour / bumps_all report nothing there.
++                    Here the margin is taken off (rule - 0.0005 mm): route_check.bump_audit on every net and alt_audit
++                    on every chain_detour row. A candidate found here is for review, not a defect by itself: one that
++                    adds a new pair at the DRC minimum, or is a known false positive, is not a clean redraw. The gate
++                    keeps its margin (its own bump search, on the critical nets, is unchanged)
+ """
+ import argparse
+ from collections import defaultdict
+@@ -60,6 +68,7 @@
+ FINE_PITCH = 0.65             # mm: a part's pad pitch at or below this is fine pitch (QFN / LGA / QFP / SOT-563 class)
+ RIGID_REFS = set(check_r8.STRIP_PARTS) | set(check_r8.CH1_PARTS) | {'J1', 'J122'}   # the rigid R7 parts (D11, D15)
+ STRIP_GND_Y = 23.25           # mm: GND vias aft of the fence row (y 23.3) are the rigid strip_gnd group (D15)
++DRC_EPS = 0.0105              # mm: rule_clearance adds 0.01; less this is just under DRC's own threshold (margin_free)
+ 
+ 
+ def r3(v):
+@@ -321,6 +330,21 @@
+                                      via=(r3(mm(p.x)), r3(mm(p.y))), arms=(la, r3(La), lb, r3(Lb)),
+                                      angle=round(ang, 1), fold_mm=r3(min(La, Lb) * math.cos(math.radians(ang)))))
+     return sorted(rows, key=lambda d: -d['fold_mm'])
++
++
++def margin_free(board, chain_rows):
++    """bump_audit (every net) and alt_audit (the chain_detour rows) with RedrawCheck at DRC's threshold (see the module
++    docstring): {windows, bumps, redraws}."""
++    import r7_hygiene as hy
++    orig = hy.rule_clearance
++    hy.rule_clearance = lambda a, c, gate_in_block=True: orig(a, c, gate_in_block) - DRC_EPS
++    try:
++        bumps, searched = rc.bump_audit(board, nets=lambda n: True)
++        redraws = [dict(net=d['net'], layer=d['layer'], x=d['x'], y=d['y'], end=d['end'], candidate=pts)
++                   for d, pts in rc.alt_audit(board, chain_rows) if pts is not None]
++    finally:
++        hy.rule_clearance = orig
++    return dict(windows=searched, bumps=bumps, redraws=redraws)
+ 
+ 
+ def main():
+@@ -345,6 +369,7 @@
+     out['via_fold'] = via_folds(board)
+     inst = rc.scan(board)
+     out['short_hop'] = [d for d in inst if d['cat'] in ('short_layer_hop', 'power_via_no_gnd')]
++    out['margin_free'] = margin_free(board, out['chain_detour'])
+     print(f'M2 review sweep on {a.board.name} ({sha[:12]}...)')
+     for key in ('chain_detour', 'adjacency', 'adjacency_pad', 'via_step', 'poured_hop', 'routes', 'pad_edge',
+                 'via_fold', 'short_hop'):
+@@ -354,6 +379,11 @@
+     print(f"bumps_all: {len(bumps)} candidates in {searched} windows")
+     for d in bumps:
+         print('   ', json.dumps(d, default=str))
++    mf = out['margin_free']
++    print(f"margin_free: {len(mf['bumps'])} bump candidates in {mf['windows']} windows (every net), "
++          f"{len(mf['redraws'])} chain-detour redraws (at DRC's threshold; review each)")
++    for d in mf['bumps'] + mf['redraws']:
++        print('   ', json.dumps(d, default=str))
+     if a.json:
+         a.json.write_text(json.dumps(out, indent=1, default=str) + '\n')
+     return 0
+--- a/m3_design/assembly_review/sources/r8_design/step9/binding_note.py
++++ b/m3_design/assembly_review/sources/r8_design/step9/binding_note.py
+@@ -48,15 +48,19 @@
+     'Unchanged from R7: the pyro gate and sense pins, the servo pins and the sentinels (check_actuators); fire pulses end '
+     'at 20 ms; neutral is the first servo output after any reset (REQUIREMENTS F6, F7).',
+     'Before any jump to the ROM bootloader (the only way in: BOOT0 is tied low by R5 and is not on J2, so AN2606 Table 2 '
+-    'pattern 10 needs BOOT0 = 1 and cannot be selected): first drive PE4 (PYRO1_GATE_N) low, or reset GPIOE through '
+-    'RCC_AHB4RSTR, which also returns PE4 to analog so R127 holds the gate off; then put the SX1262 to sleep, drive '
+-    'RADIO_NRST (PE9) low, then return PE9 to analog mode (or the same GPIOE reset) so R311 holds NRST low in the '
+-    'bootloader. AN2606 Rev 70 Table 135 configures only the bootloader\'s own interface pins, so PE4 and PE9 would '
+-    'otherwise keep their last application state, and GPIOE_LCKR freezes PE4\'s configuration registers, not its output '
+-    'data (RM0433 section 11.4.8): a jump made with PE4 high would hold an armed gate on for as long as the bootloader '
+-    'runs, outside the application\'s 20 ms fire limit (Inference). NSS stays high through R310, so the loader-capture '
+-    'safety of D2 / D5 holds either way; the "radio cannot transmit in the bootloader" property of F10 rests on this '
+-    'step (D6.8; fix pass 1, R8P1-REQUIREMENTS-02; fix pass 2, R8P2-PYRO-03).',
++    'pattern 10 needs BOOT0 = 1 and cannot be selected), in this order: (1) drive PE4 (PYRO1_GATE_N) low (GPIOE_LCKR '
++    'freezes PE4\'s configuration registers, not its output data, RM0433 section 11.4.8); (2) put the SX1262 to sleep '
++    '(the radio is still out of reset, so BUSY can go low) and drive RADIO_NRST (PE9) low; (3) last, reset GPIOE through '
++    'RCC_AHB4RSTR, which clears the lock and returns PE4 and PE9 to analog, so R127 holds the gate off and R311 holds NRST '
++    'low in the bootloader (without that reset, keep PE4 driven low and return PE9 to analog mode). Never reset GPIOE '
++    'before step 2: it returns PE9 to analog, R311 asserts NRST, the SX1262 holds BUSY high in reset, and a driver that '
++    'waits for BUSY low before SetSleep hangs, so the jump is never made (fail-safe, but the order matters; fix pass 3, '
++    'R8P3-RF-01). AN2606 Rev 70 Table 135 configures only the bootloader\'s own interface pins, so PE4 and PE9 would '
++    'otherwise keep their last application state: a jump made with PE4 high would hold an armed gate on for as long as '
++    'the bootloader runs, outside the application\'s 20 ms fire limit (Inference). NSS stays high through R310, so the '
++    'loader-capture safety of D2 / D5 holds either way; the "radio cannot transmit in the bootloader" property of F10 and '
++    'the gate held off there rest on this step (D6.8; fix pass 1, R8P1-REQUIREMENTS-02; fix pass 2, R8P2-PYRO-03; bench: '
++    'ORDERING section 5, the bootloader repeat of the radio-reset step).',
+ ]
+ 
+ 
+--- a/m3_design/assembly_review/sources/r8_design/step9/hotplug_feed.py
++++ b/m3_design/assembly_review/sources/r8_design/step9/hotplug_feed.py
+@@ -6,8 +6,8 @@
+ The R4 hot-plug model (docs/M3_R4.md X1 / Y1 / Y8, its section 5 table) lumps the harness (0.1-2 uH, >= 0.03 ohm) into
+ one input node that holds C80 + C96, the C89 + C95 / R166 damper, D8 and U9's IN pin, and found U9 IN >= -14.6 V and
+ <= 9.2 V/us for a reversed 2S pack plugged onto <= 2.0 V left on the input (TPS25947: -15 V, 10 V/us). That model and
+-its DC-bias data are not in the repository. R8 puts D8, C80, C96, the damper and R167 within 4.6-10.6 mm of J1.1 (one
+-node, the model's premise) and U9 27 mm away on the BAT_IN feed, with C88 (100 nF) at U9's IN pin (D36).
++its DC-bias data are not in the repository. R8 puts D8, C80, C96, the damper and R167 within 3.9-10.6 mm of J1.1 (centre to
++nearest pad centre; 1.9-7.8 mm pad edge to pad edge, R8P3-POWER-04: one node, the model's premise) and U9 27 mm away on the BAT_IN feed, with C88 (100 nF) at U9's IN pin (D36).
+ 
+ This script does not re-derive the R4 figures. It answers the narrower question the re-placement raises: how far U9's
+ IN pin, behind the feed's series inductance and resistance, departs from the input node the R4 model describes. A
+@@ -17,8 +17,8 @@
+ 
+ with constant (derated) capacitances, which is not the R4 model's voltage-dependent one: the absolute minima here are
+ not the qualification figures, only the B - A differences are used. Sweep: harness 0.1 / 0.5 / 1 / 2 uH at 0.03 /
+-0.1 ohm; feed L_b 5 / 15 / 30 nH (an upper bound for about 30 mm of 0.5 mm track and two vias over the In2 BAT_IN island
+-and In1 GND, Inference); C_A 9.4 (47 % of 20 uF, pass-4 DC-bias figure at 8.4 V) and 20 uF; C_d 16.7 (38 % of 44 uF) and
++0.1 ohm; feed L_b 5 / 15 / 30 nH (an upper bound for about 30 mm of 0.5 mm track and two vias over In2 GND (its first
++2.1 mm crossed the In2 BAT_IN island until fix pass 2, D97) and In1 GND, Inference); C_A 9.4 (47 % of 20 uF, pass-4 DC-bias figure at 8.4 V) and 20 uF; C_d 16.7 (38 % of 44 uF) and
+ 44 uF; C88 50 and 100 nF; D8 breakdown 12.65 V (-40 C) and 13.3 V, 0.2 ohm above it (SMBJ12CA: 19.9 V at 30 A).
+ R_b 17.3 mOhm is the dc_solve figure BAT_IN J1:1 -> U9:5 (R8_DECISIONS D49). Every value but R_b and the part
+ values is an Inference.
+--- a/tools/test_fab_validation.py
++++ b/tools/test_fab_validation.py
+@@ -1,4 +1,8 @@
+-"""Manufacturing regressions: missing or corrupt placements must block release."""
++"""Manufacturing regressions: missing or corrupt placements must block release.
++
++Some tests (test_current_package) judge the fab package in m3_design/assembly_review/fab/ against the current board,
++so after any copper or placement change run the fab step (m3_design/r8_fab.sh) before this suite (R8P3-INTEGRITY-02).
++"""
+ from contextlib import redirect_stdout
+ import csv
+ import importlib.util

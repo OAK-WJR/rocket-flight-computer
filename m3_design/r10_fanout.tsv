@@ -1,0 +1,80 @@
+# r10_fanout_aid.py output (frozen): net, pad, pad layer, via x, via y; stub 0.3 mm pad centre -> via
+# D-R19-14: C23.2 moves from (27.1, 34.2) to (25.95, 34.15), freeing U1.55 (PD8, J410 TX); C444.2 / C445.2 are the AUX cell returns
+# D-R21-05: R81.2 / C87.2's returns (20.706, 65.619) / (16.639, 63.939) go with the parts to U9's end (F.Cu pour, U9.8's via)
+# D-R24-09: R403.2's F.Cu return (31.4, 14.4) goes: R403 sits on B.Cu beside U401 and returns straight to U401.4
+# D-R24-15: R92.2's and TP88.1's returns move with the parts, 0.8 / 0.6 mm aft of the forward edge
+# D-R26-02: C11 / C10 move 0.65 mm north with R164; C11.2's return keeps its diagonal, C10.2's goes 1.15 mm east (the diagonal spot (19.423, 54.373) lies under R127.1, PYRO1_GATE_N, on F.Cu)
+# D-R26-04: C10 sits 0.60 mm north (pad 2 at (18.5, 53.5)); C10.2's return keeps its via (19.65, 53.45), its stub leaving the pad 0.05 mm north of centre (r10_route_ground), so the via stays 0.27 mm from R127.1
+net	pad	layer	x	y
+3V3	C90.1	F	26.425	32.075
+3V3	R89.1	F	23.0	70.0
+3V3	R91.1	B	28.1	60.0
+GND	C10.2	B	19.65	53.45
+GND	C11.2	B	19.423	52.373
+GND	C126.2	F	15.8	59.425
+GND	C128.2	B	12.775	59.025
+GND	C22.2	B	27.8	46.6
+GND	C23.2	B	25.95	34.15
+GND	C28.2	B	13.75	24.1
+GND	C29.2	B	28.62	43.94
+GND	C400.2	F	12.6	5.55
+GND	C401.2	F	20.35	9.0
+GND	C403.2	F	33.1	3.6
+GND	C404.2	F	33.1	7.0
+GND	C405.2	B	24.4	10.3
+GND	C406.2	B	32.9	8.6
+GND	C407.2	F	30.3	18.0
+GND	C408.2	B	23.76	13.6
+GND	C410.2	B	36.1	18.2
+GND	C411.2	B	34.2	19.75
+GND	C444.2	F	12.5	14.25
+GND	C445.2	F	15.2	15.85
+GND	C420.2	B	36.1	34.2
+GND	C421.2	B	33.8	36.75
+GND	C430.2	B	29.1	61.8
+GND	C431.2	B	39.3	55.25
+GND	C461.2	F	27.0	15.8
+GND	C6.2	B	28.805	70.75
+GND	C7.2	B	26.295	74.8
+GND	C8.2	B	28.455	78.28
+GND	C81.2	B	22.994	80.719
+GND	C83.2	B	10.975	25.725
+GND	C84.2	F	28.985	76.735
+GND	C85.2	B	28.675	66.55
+GND	C90.2	F	26.425	30.525
+GND	C97.2	F	22.903	65.022
+GND	C99.2	B	26.384	67.444
+GND	D8.2	F	16.05	75.0
+GND	Q122.2	F	17.8	66.6
+GND	Q123.2	B	19.35	59.3
+GND	R102.2	B	37.05	39.7
+GND	R123.2	F	19.967	71.09
+GND	R127.2	F	20.863	54.24
+GND	R154.2	B	33.4	74.96
+GND	R155.2	B	31.183	74.96
+GND	R156.2	B	31.333	67.97
+GND	R157.2	B	32.968	67.452
+GND	R167.2	B	13.536	85.161
+GND	R401.2	F	13.0	1.8
+GND	R430.2	B	36.825	59.175
+GND	R431.2	F	37.1	57.875
+GND	R64.2	B	11.23	53.343
+GND	R7.2	B	9.0	27.837
+GND	R83.2	B	8.35	81.8
+GND	R84.2	B	23.25	81.825
+GND	R86.2	B	27.9	64.25
+GND	R88.2	B	22.825	67.825
+GND	R92.2	F	32.65	86.7
+GND	TP74.1	B	43.6	58.0
+GND	TP88.1	F	36.6	86.4
+GND	U1.19	F	26.0	46.75
+GND	U1.49	F	31.85	38.25
+GND	U1.99	F	13.75	48.5
+GND	U11.3	B	23.5	65.9
+GND	U2.4	B	25.95	70.1
+GND	U400.4	F	17.15	6.5
+GND	U401.6	B	26.45	15.25
+GND	Y1.2	B	20.95	45.5
+GND	Y1.4	B	24.8	47.7
+GND	C24.2	B	25.45	47.8
+GND	C21.2	B	29.14	49.25
