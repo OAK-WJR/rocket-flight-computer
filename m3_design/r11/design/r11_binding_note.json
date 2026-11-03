@@ -1,0 +1,1105 @@
+{
+  "profile": "M3-ASSY-R11",
+  "status": "record only; not an executable binding; the R1 and R10 bindings are invalid for R11; no R11 firmware or flight approval",
+  "board_sha256": "b7e2decb49bce5b24d124e24dd886d38a8e634ad7c2d203885f7125a6771bbb5",
+  "board_note": "the board file this note was generated from (U1 / U4 pads only; zone fill does not change them)",
+  "netlist_sha256": "23d6f05ea86f39cf21ed748f9b3e00a3b00b26f72ede2171539992b17e93f254",
+  "pin_table_sha256": "983ad90b277238e52e22d56309fe808c257bc2bc666bffc7c414f74e021fd5ae",
+  "circuit_sha256": "fded5ba4d19e471c3e26b28537fa04b7a943a78deb0cd3489d9c7ed1fc17b63e",
+  "u1_package": "STM32H743VIH6 TFBGA-100 (D-R11-04); keys are balls, r10_lqfp_pin is the R10 LQFP100 pin",
+  "u1_balls": {
+    "A3": {
+      "port": "PE2",
+      "net": "QSPI_IO2",
+      "mode": "AF9 QUADSPI_BK1_IO2",
+      "r10_lqfp_pin": "1"
+    },
+    "B3": {
+      "port": "PE3",
+      "net": "IMU_CS",
+      "mode": "GPIO output push-pull; initialise high before output mode",
+      "r10_lqfp_pin": "2",
+      "r10_net": "NC"
+    },
+    "C3": {
+      "port": "PE4",
+      "net": "PYRO1_GATE_N",
+      "mode": "GPIO output, push-pull; ACTIVE-HIGH fire command: PE4 high turns Q124 on (the _N in the historical net name PYRO1_GATE_N does not mean active low); write ODR low before selecting output mode; lock with GPIOE_LCKR and read back",
+      "r10_lqfp_pin": "3"
+    },
+    "D3": {
+      "port": "PE5",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "4"
+    },
+    "E3": {
+      "port": "PE6",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "5"
+    },
+    "B2": {
+      "port": "VBAT",
+      "net": "3V3",
+      "mode": "VBAT",
+      "r10_lqfp_pin": "6"
+    },
+    "A2": {
+      "port": "PC13",
+      "net": "CAM_FAULT_N",
+      "mode": "GPIO in (U402 FAULT open drain, R432 10k pull-up)",
+      "r10_lqfp_pin": "7",
+      "r10_net": "NC"
+    },
+    "A1": {
+      "port": "PC14",
+      "net": "CAM_PWR_EN",
+      "mode": "GPIO out (push-pull, low speed; PC14 sources at most 3 mA and toggles at most 2 MHz)",
+      "r10_lqfp_pin": "8",
+      "r10_net": "BUZZ_DRV"
+    },
+    "B1": {
+      "port": "PC15",
+      "net": "CAM_UART_OE",
+      "mode": "GPIO out (push-pull, low speed; PC15 sources at most 3 mA and toggles at most 2 MHz)",
+      "r10_lqfp_pin": "9",
+      "r10_net": "NC"
+    },
+    "C2": {
+      "port": "VSS",
+      "net": "GND",
+      "mode": "VSS",
+      "r10_lqfp_pin": "10"
+    },
+    "D2": {
+      "port": "VDD",
+      "net": "3V3",
+      "mode": "VDD",
+      "r10_lqfp_pin": "11"
+    },
+    "C1": {
+      "port": "PH0",
+      "net": "HSE_IN",
+      "mode": "HSE",
+      "r10_lqfp_pin": "12"
+    },
+    "D1": {
+      "port": "PH1",
+      "net": "HSE_OUT",
+      "mode": "HSE",
+      "r10_lqfp_pin": "13"
+    },
+    "E1": {
+      "port": "NRST",
+      "net": "NRST",
+      "mode": "NRST",
+      "r10_lqfp_pin": "14"
+    },
+    "F1": {
+      "port": "PC0",
+      "net": "PYRO1_CONT",
+      "mode": "ADC",
+      "r10_lqfp_pin": "15"
+    },
+    "F2": {
+      "port": "PC1",
+      "net": "ACT_EN_MCU",
+      "mode": "GPIO out (push-pull; initialise low before output mode)",
+      "r10_lqfp_pin": "16"
+    },
+    "E2": {
+      "port": "PC2_C",
+      "net": "CAM_5V_SENSE",
+      "mode": "ADC (ADC3_INP0, PC2_C analog pad)",
+      "r10_lqfp_pin": "17",
+      "r10_net": "NC"
+    },
+    "F3": {
+      "port": "PC3_C",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "18"
+    },
+    "G1": {
+      "port": "VSSA",
+      "net": "GND",
+      "mode": "VSSA",
+      "r10_lqfp_pin": "19"
+    },
+    "H1": {
+      "port": "VDDA",
+      "net": "3V3A",
+      "mode": "VDDA",
+      "r10_lqfp_pin": "21"
+    },
+    "G2": {
+      "port": "PA0",
+      "net": "SERVO3_MCU",
+      "mode": "AF2 TIM5_CH1 (servo PWM, 50-400 Hz)",
+      "r10_lqfp_pin": "22",
+      "r10_net": "SERVO1_MCU"
+    },
+    "H2": {
+      "port": "PA1",
+      "net": "SERVO4_MCU",
+      "mode": "AF2 TIM5_CH2 (servo PWM, 50-400 Hz)",
+      "r10_lqfp_pin": "23",
+      "r10_net": "SERVO2_MCU"
+    },
+    "J2": {
+      "port": "PA2",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "24",
+      "r10_net": "SERVO3_MCU"
+    },
+    "K2": {
+      "port": "PA3",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "25",
+      "r10_net": "SERVO4_MCU"
+    },
+    "J1": {
+      "port": "VSS",
+      "net": "GND",
+      "mode": "VSS",
+      "r10_lqfp_pin": "26"
+    },
+    "K1": {
+      "port": "VDD",
+      "net": "3V3",
+      "mode": "VDD",
+      "r10_lqfp_pin": "27"
+    },
+    "G3": {
+      "port": "PA4",
+      "net": "LOGIC_SOURCE_ST",
+      "mode": "GPIO in",
+      "r10_lqfp_pin": "28"
+    },
+    "H3": {
+      "port": "PA5",
+      "net": "BAT_FAULT_N",
+      "mode": "GPIO in",
+      "r10_lqfp_pin": "29"
+    },
+    "J3": {
+      "port": "PA6",
+      "net": "VLOGIC_SENSE",
+      "mode": "ADC (ADC12_INP3)",
+      "r10_lqfp_pin": "30"
+    },
+    "K3": {
+      "port": "PA7",
+      "net": "NC",
+      "mode": "NC (firmware: analog)",
+      "r10_lqfp_pin": "31"
+    },
+    "G4": {
+      "port": "PC4",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "32"
+    },
+    "H4": {
+      "port": "PC5",
+      "net": "ARM1_SENSE",
+      "mode": "ADC (ADC12_INP8)",
+      "r10_lqfp_pin": "33"
+    },
+    "J4": {
+      "port": "PB0",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "34"
+    },
+    "K4": {
+      "port": "PB1",
+      "net": "LED_RED",
+      "mode": "GPIO out",
+      "r10_lqfp_pin": "35",
+      "r10_net": "CAM_5V_SENSE"
+    },
+    "G5": {
+      "port": "PB2",
+      "net": "QSPI_CLK",
+      "mode": "AF9 QUADSPI_CLK",
+      "r10_lqfp_pin": "36"
+    },
+    "H5": {
+      "port": "PE7",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "37",
+      "r10_net": "CAM_MCU_RX"
+    },
+    "J5": {
+      "port": "PE8",
+      "net": "BUZZ_DRV",
+      "mode": "GPIO out (push-pull; initialise low before output mode)",
+      "r10_lqfp_pin": "38",
+      "r10_net": "CAM_MCU_TX"
+    },
+    "K5": {
+      "port": "PE9",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "39",
+      "r10_net": "CAM_UART_OE"
+    },
+    "G6": {
+      "port": "PE10",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "40"
+    },
+    "H6": {
+      "port": "PE11",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "41",
+      "r10_net": "CAM_PWR_EN"
+    },
+    "J6": {
+      "port": "PE12",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "42",
+      "r10_net": "CAM_FAULT_N"
+    },
+    "K6": {
+      "port": "PE13",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "43"
+    },
+    "G7": {
+      "port": "PE14",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "44"
+    },
+    "H7": {
+      "port": "PE15",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "45"
+    },
+    "J7": {
+      "port": "PB10",
+      "net": "I2C1_SCL",
+      "mode": "AF4 I2C2_SCL (the R10 net I2C1_SCL, now on peripheral I2C2)",
+      "r10_lqfp_pin": "46",
+      "r10_net": "NC"
+    },
+    "K7": {
+      "port": "PB11",
+      "net": "I2C1_SDA",
+      "mode": "AF4 I2C2_SDA (the R10 net I2C1_SDA, now on peripheral I2C2)",
+      "r10_lqfp_pin": "47",
+      "r10_net": "NC"
+    },
+    "F8": {
+      "port": "VCAP",
+      "net": "VCAP1",
+      "mode": "VCAP",
+      "r10_lqfp_pin": "48"
+    },
+    "E4": {
+      "port": "VSS",
+      "net": "GND",
+      "mode": "VSS",
+      "r10_lqfp_pin": "49"
+    },
+    "F5": {
+      "port": "VDD",
+      "net": "3V3",
+      "mode": "VDD",
+      "r10_lqfp_pin": "50"
+    },
+    "K8": {
+      "port": "PB12",
+      "net": "RADIO_RX_MCU",
+      "mode": "AF14 UART5_RX",
+      "r10_lqfp_pin": "51"
+    },
+    "J8": {
+      "port": "PB13",
+      "net": "RADIO_TX_MCU",
+      "mode": "AF14 UART5_TX",
+      "r10_lqfp_pin": "52"
+    },
+    "H10": {
+      "port": "PB14",
+      "net": "NC",
+      "mode": "NC",
+      "r10_lqfp_pin": "53"
+    },
+    "G10": {
+      "port": "PB15",
+      "net": "NC",
+      "mode": "NC",
+      "r10_lqfp_pin": "54"
+    },
+    "K9": {
+      "port": "PD8",
+      "net": "GPS_TX_MCU",
+      "mode": "AF7 USART3_TX",
+      "r10_lqfp_pin": "55"
+    },
+    "J9": {
+      "port": "PD9",
+      "net": "GPS_RX_MCU",
+      "mode": "AF7 USART3_RX",
+      "r10_lqfp_pin": "56"
+    },
+    "H9": {
+      "port": "PD10",
+      "net": "USB_FAULT_N",
+      "mode": "GPIO in",
+      "r10_lqfp_pin": "57",
+      "r10_net": "NC"
+    },
+    "G9": {
+      "port": "PD11",
+      "net": "QSPI_IO0",
+      "mode": "AF9 QUADSPI_BK1_IO0",
+      "r10_lqfp_pin": "58"
+    },
+    "K10": {
+      "port": "PD12",
+      "net": "QSPI_IO1",
+      "mode": "AF9 QUADSPI_BK1_IO1",
+      "r10_lqfp_pin": "59"
+    },
+    "J10": {
+      "port": "PD13",
+      "net": "QSPI_IO3",
+      "mode": "AF9 QUADSPI_BK1_IO3",
+      "r10_lqfp_pin": "60"
+    },
+    "H8": {
+      "port": "PD14",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "61"
+    },
+    "G8": {
+      "port": "PD15",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "62"
+    },
+    "F10": {
+      "port": "PC6",
+      "net": "AUX_TX_MCU",
+      "mode": "AF7 USART6_TX",
+      "r10_lqfp_pin": "63"
+    },
+    "E10": {
+      "port": "PC7",
+      "net": "AUX_RX_MCU",
+      "mode": "AF7 USART6_RX",
+      "r10_lqfp_pin": "64"
+    },
+    "F9": {
+      "port": "PC8",
+      "net": "VBUS_SENSE",
+      "mode": "GPIO in",
+      "r10_lqfp_pin": "65"
+    },
+    "E9": {
+      "port": "PC9",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "66"
+    },
+    "D9": {
+      "port": "PA8",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "67"
+    },
+    "C9": {
+      "port": "PA9",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "68"
+    },
+    "D10": {
+      "port": "PA10",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "69"
+    },
+    "C10": {
+      "port": "PA11",
+      "net": "USB_DM",
+      "mode": "AF10 OTG_FS_DM",
+      "r10_lqfp_pin": "70"
+    },
+    "B10": {
+      "port": "PA12",
+      "net": "USB_DP",
+      "mode": "AF10 OTG_FS_DP",
+      "r10_lqfp_pin": "71"
+    },
+    "A10": {
+      "port": "PA13",
+      "net": "SWDIO",
+      "mode": "AF0 SWDIO",
+      "r10_lqfp_pin": "72"
+    },
+    "E7": {
+      "port": "VCAP",
+      "net": "VCAP2",
+      "mode": "VCAP",
+      "r10_lqfp_pin": "73"
+    },
+    "E5": {
+      "port": "VSS",
+      "net": "GND",
+      "mode": "VSS",
+      "r10_lqfp_pin": "74"
+    },
+    "F6": {
+      "port": "VDD",
+      "net": "3V3",
+      "mode": "VDD",
+      "r10_lqfp_pin": "75"
+    },
+    "A9": {
+      "port": "PA14",
+      "net": "SWCLK",
+      "mode": "AF0 SWCLK",
+      "r10_lqfp_pin": "76"
+    },
+    "A8": {
+      "port": "PA15",
+      "net": "SERVO2_MCU",
+      "mode": "AF1 TIM2_CH1 (servo PWM, 50-400 Hz)",
+      "r10_lqfp_pin": "77",
+      "r10_net": "NC"
+    },
+    "B9": {
+      "port": "PC10",
+      "net": "SD_SCK",
+      "mode": "AF6 SPI3_SCK",
+      "r10_lqfp_pin": "78"
+    },
+    "B8": {
+      "port": "PC11",
+      "net": "SD_MISO",
+      "mode": "AF6 SPI3_MISO",
+      "r10_lqfp_pin": "79"
+    },
+    "C8": {
+      "port": "PC12",
+      "net": "SD_MOSI",
+      "mode": "AF6 SPI3_MOSI",
+      "r10_lqfp_pin": "80"
+    },
+    "D8": {
+      "port": "PD0",
+      "net": "SD_CS",
+      "mode": "GPIO output push-pull; initialise high before output mode",
+      "r10_lqfp_pin": "81"
+    },
+    "E8": {
+      "port": "PD1",
+      "net": "NC",
+      "mode": "NC (firmware: analog)",
+      "r10_lqfp_pin": "82"
+    },
+    "B7": {
+      "port": "PD2",
+      "net": "LED_YEL",
+      "mode": "GPIO out",
+      "r10_lqfp_pin": "83",
+      "r10_net": "NC"
+    },
+    "C7": {
+      "port": "PD3",
+      "net": "NC",
+      "mode": "NC (firmware: analog)",
+      "r10_lqfp_pin": "84"
+    },
+    "D7": {
+      "port": "PD4",
+      "net": "NC",
+      "mode": "NC (firmware: analog)",
+      "r10_lqfp_pin": "85"
+    },
+    "B6": {
+      "port": "PD5",
+      "net": "IMU_INT1",
+      "mode": "GPIO in, internal pull-down, EXTI5 data-ready interrupt (U4 INT1 push-pull, active high)",
+      "r10_lqfp_pin": "86",
+      "r10_net": "LED_RED"
+    },
+    "C6": {
+      "port": "PD6",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "87",
+      "r10_net": "USB_FAULT_N"
+    },
+    "D6": {
+      "port": "PD7",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "88",
+      "r10_net": "LED_YEL"
+    },
+    "A7": {
+      "port": "PB3",
+      "net": "SPI1_SCK",
+      "mode": "AF5 SPI1_SCK",
+      "r10_lqfp_pin": "89"
+    },
+    "A6": {
+      "port": "PB4",
+      "net": "SPI1_MISO",
+      "mode": "AF5 SPI1_MISO",
+      "r10_lqfp_pin": "90"
+    },
+    "C5": {
+      "port": "PB5",
+      "net": "SPI1_MOSI",
+      "mode": "AF5 SPI1_MOSI",
+      "r10_lqfp_pin": "91"
+    },
+    "B5": {
+      "port": "PB6",
+      "net": "QSPI_NCS",
+      "mode": "AF10 QUADSPI_BK1_NCS",
+      "r10_lqfp_pin": "92"
+    },
+    "A5": {
+      "port": "PB7",
+      "net": "SERVO1_MCU",
+      "mode": "AF2 TIM4_CH2 (servo PWM, 50-400 Hz)",
+      "r10_lqfp_pin": "93",
+      "r10_net": "IMU_CS"
+    },
+    "D5": {
+      "port": "BOOT0",
+      "net": "BOOT0",
+      "mode": "BOOT0",
+      "r10_lqfp_pin": "94"
+    },
+    "B4": {
+      "port": "PB8",
+      "net": "CAM_MCU_RX",
+      "mode": "AF8 UART4_RX",
+      "r10_lqfp_pin": "95",
+      "r10_net": "I2C1_SCL"
+    },
+    "A4": {
+      "port": "PB9",
+      "net": "CAM_MCU_TX",
+      "mode": "AF8 UART4_TX",
+      "r10_lqfp_pin": "96",
+      "r10_net": "I2C1_SDA"
+    },
+    "D4": {
+      "port": "PE0",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "97"
+    },
+    "C4": {
+      "port": "PE1",
+      "net": "NC",
+      "mode": "NC (firmware: analog, never driven)",
+      "r10_lqfp_pin": "98",
+      "r10_net": "IMU_INT1"
+    },
+    "E6": {
+      "port": "VSS",
+      "net": "GND",
+      "mode": "VSS",
+      "r10_lqfp_pin": "99"
+    },
+    "F4": {
+      "port": "VDD",
+      "net": "3V3",
+      "mode": "VDD",
+      "r10_lqfp_pin": "100"
+    },
+    "F7": {
+      "port": "PDR_ON",
+      "net": "3V3",
+      "mode": "input, tied high",
+      "r10_lqfp_pin": "-",
+      "r10_net": "-"
+    }
+  },
+  "u1_signal_nets": {
+    "CAM_PWR_EN": {
+      "ball": "A1",
+      "port": "PC14",
+      "mode": "GPIO out (push-pull, low speed; PC14 sources at most 3 mA and toggles at most 2 MHz)"
+    },
+    "SWDIO": {
+      "ball": "A10",
+      "port": "PA13",
+      "mode": "AF0 SWDIO"
+    },
+    "CAM_FAULT_N": {
+      "ball": "A2",
+      "port": "PC13",
+      "mode": "GPIO in (U402 FAULT open drain, R432 10k pull-up)"
+    },
+    "QSPI_IO2": {
+      "ball": "A3",
+      "port": "PE2",
+      "mode": "AF9 QUADSPI_BK1_IO2"
+    },
+    "CAM_MCU_TX": {
+      "ball": "A4",
+      "port": "PB9",
+      "mode": "AF8 UART4_TX"
+    },
+    "SERVO1_MCU": {
+      "ball": "A5",
+      "port": "PB7",
+      "mode": "AF2 TIM4_CH2 (servo PWM, 50-400 Hz)"
+    },
+    "SPI1_MISO": {
+      "ball": "A6",
+      "port": "PB4",
+      "mode": "AF5 SPI1_MISO"
+    },
+    "SPI1_SCK": {
+      "ball": "A7",
+      "port": "PB3",
+      "mode": "AF5 SPI1_SCK"
+    },
+    "SERVO2_MCU": {
+      "ball": "A8",
+      "port": "PA15",
+      "mode": "AF1 TIM2_CH1 (servo PWM, 50-400 Hz)"
+    },
+    "SWCLK": {
+      "ball": "A9",
+      "port": "PA14",
+      "mode": "AF0 SWCLK"
+    },
+    "CAM_UART_OE": {
+      "ball": "B1",
+      "port": "PC15",
+      "mode": "GPIO out (push-pull, low speed; PC15 sources at most 3 mA and toggles at most 2 MHz)"
+    },
+    "USB_DP": {
+      "ball": "B10",
+      "port": "PA12",
+      "mode": "AF10 OTG_FS_DP"
+    },
+    "IMU_CS": {
+      "ball": "B3",
+      "port": "PE3",
+      "mode": "GPIO output push-pull; initialise high before output mode"
+    },
+    "CAM_MCU_RX": {
+      "ball": "B4",
+      "port": "PB8",
+      "mode": "AF8 UART4_RX"
+    },
+    "QSPI_NCS": {
+      "ball": "B5",
+      "port": "PB6",
+      "mode": "AF10 QUADSPI_BK1_NCS"
+    },
+    "IMU_INT1": {
+      "ball": "B6",
+      "port": "PD5",
+      "mode": "GPIO in, internal pull-down, EXTI5 data-ready interrupt (U4 INT1 push-pull, active high)"
+    },
+    "LED_YEL": {
+      "ball": "B7",
+      "port": "PD2",
+      "mode": "GPIO out"
+    },
+    "SD_MISO": {
+      "ball": "B8",
+      "port": "PC11",
+      "mode": "AF6 SPI3_MISO"
+    },
+    "SD_SCK": {
+      "ball": "B9",
+      "port": "PC10",
+      "mode": "AF6 SPI3_SCK"
+    },
+    "HSE_IN": {
+      "ball": "C1",
+      "port": "PH0",
+      "mode": "HSE"
+    },
+    "USB_DM": {
+      "ball": "C10",
+      "port": "PA11",
+      "mode": "AF10 OTG_FS_DM"
+    },
+    "PYRO1_GATE_N": {
+      "ball": "C3",
+      "port": "PE4",
+      "mode": "GPIO output, push-pull; ACTIVE-HIGH fire command: PE4 high turns Q124 on (the _N in the historical net name PYRO1_GATE_N does not mean active low); write ODR low before selecting output mode; lock with GPIOE_LCKR and read back"
+    },
+    "SPI1_MOSI": {
+      "ball": "C5",
+      "port": "PB5",
+      "mode": "AF5 SPI1_MOSI"
+    },
+    "SD_MOSI": {
+      "ball": "C8",
+      "port": "PC12",
+      "mode": "AF6 SPI3_MOSI"
+    },
+    "HSE_OUT": {
+      "ball": "D1",
+      "port": "PH1",
+      "mode": "HSE"
+    },
+    "SD_CS": {
+      "ball": "D8",
+      "port": "PD0",
+      "mode": "GPIO output push-pull; initialise high before output mode"
+    },
+    "AUX_RX_MCU": {
+      "ball": "E10",
+      "port": "PC7",
+      "mode": "AF7 USART6_RX"
+    },
+    "CAM_5V_SENSE": {
+      "ball": "E2",
+      "port": "PC2_C",
+      "mode": "ADC (ADC3_INP0, PC2_C analog pad)"
+    },
+    "PYRO1_CONT": {
+      "ball": "F1",
+      "port": "PC0",
+      "mode": "ADC"
+    },
+    "AUX_TX_MCU": {
+      "ball": "F10",
+      "port": "PC6",
+      "mode": "AF7 USART6_TX"
+    },
+    "ACT_EN_MCU": {
+      "ball": "F2",
+      "port": "PC1",
+      "mode": "GPIO out (push-pull; initialise low before output mode)"
+    },
+    "VBUS_SENSE": {
+      "ball": "F9",
+      "port": "PC8",
+      "mode": "GPIO in"
+    },
+    "SERVO3_MCU": {
+      "ball": "G2",
+      "port": "PA0",
+      "mode": "AF2 TIM5_CH1 (servo PWM, 50-400 Hz)"
+    },
+    "LOGIC_SOURCE_ST": {
+      "ball": "G3",
+      "port": "PA4",
+      "mode": "GPIO in"
+    },
+    "QSPI_CLK": {
+      "ball": "G5",
+      "port": "PB2",
+      "mode": "AF9 QUADSPI_CLK"
+    },
+    "QSPI_IO0": {
+      "ball": "G9",
+      "port": "PD11",
+      "mode": "AF9 QUADSPI_BK1_IO0"
+    },
+    "SERVO4_MCU": {
+      "ball": "H2",
+      "port": "PA1",
+      "mode": "AF2 TIM5_CH2 (servo PWM, 50-400 Hz)"
+    },
+    "BAT_FAULT_N": {
+      "ball": "H3",
+      "port": "PA5",
+      "mode": "GPIO in"
+    },
+    "ARM1_SENSE": {
+      "ball": "H4",
+      "port": "PC5",
+      "mode": "ADC (ADC12_INP8)"
+    },
+    "USB_FAULT_N": {
+      "ball": "H9",
+      "port": "PD10",
+      "mode": "GPIO in"
+    },
+    "QSPI_IO3": {
+      "ball": "J10",
+      "port": "PD13",
+      "mode": "AF9 QUADSPI_BK1_IO3"
+    },
+    "VLOGIC_SENSE": {
+      "ball": "J3",
+      "port": "PA6",
+      "mode": "ADC (ADC12_INP3)"
+    },
+    "BUZZ_DRV": {
+      "ball": "J5",
+      "port": "PE8",
+      "mode": "GPIO out (push-pull; initialise low before output mode)"
+    },
+    "I2C1_SCL": {
+      "ball": "J7",
+      "port": "PB10",
+      "mode": "AF4 I2C2_SCL (the R10 net I2C1_SCL, now on peripheral I2C2)"
+    },
+    "RADIO_TX_MCU": {
+      "ball": "J8",
+      "port": "PB13",
+      "mode": "AF14 UART5_TX"
+    },
+    "GPS_RX_MCU": {
+      "ball": "J9",
+      "port": "PD9",
+      "mode": "AF7 USART3_RX"
+    },
+    "QSPI_IO1": {
+      "ball": "K10",
+      "port": "PD12",
+      "mode": "AF9 QUADSPI_BK1_IO1"
+    },
+    "LED_RED": {
+      "ball": "K4",
+      "port": "PB1",
+      "mode": "GPIO out"
+    },
+    "I2C1_SDA": {
+      "ball": "K7",
+      "port": "PB11",
+      "mode": "AF4 I2C2_SDA (the R10 net I2C1_SDA, now on peripheral I2C2)"
+    },
+    "RADIO_RX_MCU": {
+      "ball": "K8",
+      "port": "PB12",
+      "mode": "AF14 UART5_RX"
+    },
+    "GPS_TX_MCU": {
+      "ball": "K9",
+      "port": "PD8",
+      "mode": "AF7 USART3_TX"
+    }
+  },
+  "u1_board_map_checked": true,
+  "u1_board_map_mismatches": [],
+  "imu": {
+    "x_mm": 23.0,
+    "y_mm": 20.5,
+    "rotation_deg": 180.0,
+    "side": "bottom",
+    "part": "ISM6HG256X",
+    "lever_arm_x_mm": 0.0,
+    "lever_arm_z_mm": -2.06,
+    "lever_arm_z_basis": "Inference: centre of the U4 3D model box on a 1.6 mm board, as R10 (same footprint, model and board thickness); not measured",
+    "lever_arm_frame": "board frame: x east (+x toward the x = 46 edge), y forward, z up from the top face, the roll axis at x 23 on the top face as R10 (Inference: same sled datum); in the IMU frame (+X_imu = -x, +Y_imu = -y, +Z_imu = -z) the lever arm is (+0.0, ., +2.06) mm",
+    "bench_sign_check": "required",
+    "axis_basis": "same signed frame as R9 / R10: bottom, rotation 180 (D-R11-11)",
+    "roll_about_forward_axis": "-gyro_Y",
+    "forward_thrust": "-a_Y",
+    "centripetal_note": "x lever arm 0: the roll centripetal term on a_X is nominally zero; the 2.06 mm z offset puts it on a_Z (Inference)"
+  },
+  "sources": {
+    "mcu": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+    "mcu_revision": "every DS12110 citation in this note is Rev 8 (April 2021), revision V electrical chapter (section 7; the LCSC copy is byte-identical), except the two design limits labelled as read from Rev 11 Table 109 in round 14 (the 6.0 V FT cap and the 4.0 V ADC-mode maximum; R5-MCU-04 obligation, Inference); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)",
+    "imu": "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf",
+    "imu_alternate": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+    "source_selector": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+    "mcu_reference": "https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+    "mcu_cmsis": "https://raw.githubusercontent.com/STMicroelectronics/cmsis-device-h7/master/Include/stm32h743xx.h",
+    "translator": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+    "switch": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+    "microsd_socket": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+    "sd_physical_layer": "https://www.sdcard.org/downloads/pls/"
+  },
+  "port_states": {
+    "reset_boot": "GPS/radio/AUX ports (J410/J420/J440, electrically identical, D-R19-14) powered directly by PORT_4V8 whenever the battery path is on (off on USB-only power); their UARTs reach FT digital MCU pins through 1 kohm and a ground-only ESD clamp. Keep direct UART RX internal pulls disabled throughout operation; the FT operating pull-off condition is the relevant I/O supply + 0.3 V. Camera EN100k/OE10k pulldowns retain power/isolation default-off.",
+    "off_external_uart_active": "GPS/radio/AUX ports have no powered-off isolation. An externally powered module can inject through the kept 1 kohm into an unpowered MCU; no self-powered GPS/radio with the board off. The SD card remains on main3V3, with CS held high by R460 (10 kohm) at reset.",
+    "startup": "Port UART TX (J410 PD8 USART3, J420 PB13 UART5, J440 PC6 USART6): select the TX alternate function (idle high) only while PA4 LOGIC_SOURCE_ST reads low after a settling delay (U11 ST low = IN2 = RAW_PROTECTED, the battery path that powers PORT_4V8; ST high = IN1 = USB or no valid input; TI SLVSEA3F Table 9-3 p. 18, p. 21); while PA4 reads high the modules may be unpowered (USB-only), so PD8 / PB13 / PC6 stay in analog mode, no pull (R19-MCU-01). Camera: EN high, verified rail settling, RX pull-up and TX idle-high, then OE high. SD_CS high before SPI3 AF6 configuration.",
+    "shutdown_shedding": "GPS/radio/AUX port supply cannot be switched or power-cycled by firmware. When PA4 rises or the PA6 VLOGIC watchdog trips, park PD8 / PB13 / PC6 in analog mode, no pull (R19-MCU-01). Stop UARTs and SD/QSPI writes, disable camera OE then EN, lower MCU clock, extinguish LEDs/buzzer. Faulted cards must not block safety/flight tasks.",
+    "port_device_backfeed": "Always-on GPS/radio/AUX port power pins directly back-feed PORT_4V8; U401/U400 can then feed RAW_PROTECTED/VLOGIC (Inference). The retained camera TPS2553 blocks reverse current when disabled, but an enabled part trips only beyond95-190mV after3-7ms (TI SLVS841G section6.5p7); UART isolation does not qualify its power pin. J400 has no state sensor, so back-feed can hide switch opening. Connect the e-match only with no USB/self-powered port source attached; bench USB with pack disconnected or e-match disconnected. No firmware mitigation replaces this restriction."
+  },
+  "arming_policy": {
+    "decision": "owner single screw switch, 2026-10-28; J124 and its ARM-link fuse removed",
+    "hardware": "J400 is the pad power/arming device, connected to U9 EN with no switch-state sensor. Q120/Q121 feed RAW_ACT directly to R134 and R132. PC1 independently enables Q122 through R122; PE4 separately drives Q124. Both MCU controls default off in reset.",
+    "pad": "Turn the screw switch on last and off first, only with the vehicle on the pad / rail. GPS, telemetry and IMU pad checks occur on the rail.",
+    "bench": "Use USB with the pack disconnected, or disconnect the e-match. Connect the e-match only with no USB or self-powered port back-feed source attached.",
+    "limits": "No physical ARM break while powered; a back-feed source can keep logic powered with J400 open. Continuity and ARM1_SENSE measure the firing return and RAW_ACT bus, not a separate ARM-link state."
+  },
+  "fire_timing": {
+    "basis": "GAP-5; DS12110 Rev 8 Table 146 p. 238: LSI 29.4-33.6 kHz at TJ -40 to 125 C; firmware obligations, not implemented",
+    "watchdog": {
+      "prescaler_divisor": 4,
+      "PR_register": 0,
+      "RLR": 239,
+      "LSI_cycles": 960,
+      "nominal_ms": 30.0,
+      "minimum_ms": 28.57142857142857,
+      "maximum_ms": 32.6530612244898
+    },
+    "normal_physical_current_max_ms": 20.0,
+    "fault_physical_current_max_ms": 36.0,
+    "prefire_sync_max_ms": 0.2,
+    "reset_HiZ_max_ms": 0.5,
+    "actual_gate_current_tail_max_ms": 1.5,
+    "postfire_safety_pass_and_refeed_max_ms": 5.0,
+    "refresh_contract": "No IWDG refresh from prefire through firing until physical firing current has ended (including tail); then require the SAFETY pass and refeed within 5ms. A failed safety task never refreshes."
+  },
+  "r10_firmware_obligations": [
+    "Build a new reviewed binding through the assembly_binding design process; never substitute a board hash into the R1 chain.",
+    "Port UARTs (D-R19-14): J410 USART3 PD8 TX/PD9 RX AF7 (DS12110 Rev 8 Table 13 p. 94), J420 UART5 PB13 TX/PB12 RX AF14 (Rev 8 Table 11 p. 91), J440 USART6 PC6 TX/PC7 RX AF7 (Rev 8 Table 12 p. 92); the same cites as pin_table.tsv rows 55-56, 51-52 and 63-64.",
+    "Configurable port map (D-R19-14, owner 2026-10-30): J410, J420 and J440 are electrically identical (pin 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI; 1 kohm series, ground-only ESD clamp, 100 nF + 22 uF local supply), so the GPS and the radio may each be wired to any of the three. Firmware maps each device to a port UART (baud, protocol and receive handling follow the device, not the port); default GPS J410 (USART3), radio J420 (UART5), J440 AUX spare (USART6). The camera port J9 is not part of the set (5.4 V supply, reversed TX/RX order, isolated UART). The three ports share PORT_4V8: the spare port (AUX by default) may draw up to 100 mA at 4.8 V beyond the GPS 150 mA and radio 300 mA allocations (U401 thermal floor: junction <= 125 C at the 70 C bay with the inferred 110 C/W theta-JA, Inference; parts_budget.json). A port with no mapped device keeps its USART disabled and both pins in analog mode, no pull, so an open RX never floats as a digital input (R20-MCU-03).",
+    "Camera UART7 PE8 TX/PE7 RX AF7 without flow control. UART5/USART6 and USART3 on PD8/PD9 are separate from the loader USART interfaces (AN2606 Rev64 Table119 pp277-280: no UART5, PB12 or PB13; the loader USART3 is PB10/PB11 only).",
+    "Re-mapped loader pins (AN2606 Rev64 Table119 pp279-280; pin_table an2606_t119_loader_role): PA4 / PA5 / PA6 are SPI1 NSS / SCK / MISO and PE11 / PE12 SPI4 NSS / SCK. In the ROM loader PA6 is driven push-pull into the VLOGIC_SENSE divider only (<= 0.36 mA) and PE11 is an input that R431 holds low (camera port off); before a loader jump drive camera EN/OE low, PC1/PE4 low and SD_CS high. PC11 is loader SPI3_MISO output; R460 keeps the card deselected.",
+    "Always-on GPS/radio/AUX ports have no FAULT/EN/OE GPIOs; PD10/PD14/PD15/PE15 are NC/analog. EXTI12 CAM_FAULT_N (PE12); EXTI4 LOGIC_SOURCE_ST (PA4) and EXTI5 BAT_FAULT_N (PA5), swapped for routing (D-R2-09); EXTI6 USB_FAULT_N (PD6), EXTI8 VBUS_SENSE (PC8). AUD-4 removes PULLPIN; PC13 is NC. One port per EXTI line; lines5/6/8 share EXTI9_5 and line12 uses EXTI15_10, so each handler checks its pending bit. PE1 IMU_INT1 is on EXTI1 (free on R10; R6-MCU-01): configure PE1 as an input with the internal pull-down and take the roll-loop data-ready interrupt on it; U4 INT1 is push-pull and active high by default (IF_CFG PP_OD = 0, H_LACTIVE = 0 on the fitted ISM6HG256X and the alternate LSM6DSV320X: DS15034 / DS14623 Rev 1 p. 60), so no pull-up is wanted. EXTI1 has its own vector.",
+    "PE4 (U1.3, net PYRO1_GATE_N; the _N is historical) is the ACTIVE-HIGH fire command: PE4 high turns Q124 on. Write its output data low before output mode and keep it low except during a permitted fire (R18-MCU-03). R123 2k (R18-MCU-01) and R127 1k hold Q122 / Q124 off against a 30-50 kOhm internal pull-up; never enable a PC1 or PE4 pull-up, and never route RTC_TAMP3 or WKUP5 to PC1. PC1 ACT_EN_MCU and PE4 pyro gate low before GPIO configuration, port shutdown, ROM-loader entry or reset. PC1 is the independent Q120/Q121 enable through R122, not a sentinel. Keep sentinel pins PE3/PE5/PE6/PC4 without nets and in analog mode (their reset state), never driven: every no-net pin, the sentinels included, stays analog (R5-MCU-03). PA15 is the one no-net pin whose reset state is NOT analog (R7-MCU-01): it resets to JTDI with the internal pull-up (STM32H743 debug-pin reset state, DS12110 / RM0433 as the reviewer read it, not re-read here: Inference), so set PA15 to analog mode with no pull explicitly at start-up; \"reset state\" wording applies only to the other no-net pins.",
+    "GAP-5: keep the independent safety task and IWDG divide-by-4 (PR register 0) / RLR 239 (960 LSI cycles): 30ms nominal, 28.571-32.653ms at LSI 33.6-29.4kHz (DS12110 Rev 8 Table 146 p. 238, TJ -40 to 125 C). Never refresh from prefire through firing until physical firing current has ended (including tail); require the postfire SAFETY pass and refeed within 5ms. Limit NORMAL PHYSICAL igniter current, including the actual gate-discharge tail, to 20ms; a 20ms GPIO-high command alone is insufficient. Worst-fault physical current is bounded by 32.653ms watchdog +0.2ms prefire/synchronization +0.5ms reset HiZ +1.5ms actual gate-current tail =34.853ms, within the 36ms contract (Calculation on allocations: the 0.2 / 0.5 / 1.5 ms need bench tests, and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate charge are Inference; parts_budget.json pyro_fault_GAP5). These are firmware and bench obligations, not implemented. Never fire before launch is detected using accelerometer and barometer. On the ground continuity / bus readings are hard refusals; in flight they are logged and annunciated and never veto a fire. The screw switch is the pad arming device; no separate ARM plug or ARM-link state exists.",
+    "F6 / FMEA F-1: the first SERVO1-4 output after reset is neutral 1520us, with a command within 50ms. GAP-5 uses the 960-LSI-cycle IWDG period specified above; only the SAFETY task may refresh it, subject to the no-refresh firing interval. A ROM-loader jump is allowed only before IWDG starts: it cannot be stopped afterward; keep both firing controls low.",
+    "D-SS-04 / AUD-3: hold BOTH PC1 ACT_EN_MCU and PE4 low for passive cold screening. After a prior load-switch enable, wait at least 1s and verify RAW_ACT discharged / ACT_GATE off before classifying readings. Bench-qualify passive low/healthy/open bands, leakage and unexpected powered-bus readings using parts_qualification.md; any ground fault is a hard refusal BEFORE PC1 enable, especially a failed-short Q124. Only after a valid passive check may PC1 go high, with PE4 still low for at least 100ms before powered-bus checks or any permitted fire. This settling wait is not the no-refresh firing interval; in-flight sense readings never veto fire.",
+    "J122 DB1255pos pins1-4SERVO1-4_OUT,pin5GND signal reference; servo positive and motor return direct to pack. Board cannot cut servo power; qualify neutral-on-reset and measured shared return. J400 DB1252pos is power/arming switch; J9/J410/J420/J440 DB1254pos unkeyed, explicit per-pin power/GND/UART legends and end-to-end harness check; clamps28-16AWG with qualified ferrules/splices for thinner module leads.",
+    "Maximum normal-flight MCU clock200MHz for the retained-load budget. Firmware not implemented.",
+    "F6 battery-break response (always-on port owner decision2026-10-28): C84 plus firmware shedding, no hardware U400 cutoff and no GPS/radio switches. Use PA6 ADC12_INP3 watchdog on ADC1/2. Ports-on ride-through includes the always-on GPS/radio, the 100 mA AUX allowance and the card allocation; no software power cutoff can be credited. Bench-verify detection latency, selected-card current, camera current decay and retained load. Loaded battery-break continuity is not guaranteed.",
+    "On shedding stop SD and QSPI writes immediately without a blocking flush, stop UARTs, lower camera OE then EN, lower MCU clock, extinguish LEDs/buzzer; retain IMU/barometer/flight state and safety. The SD card may stay busy and powered after host clocks stop; budget its<=200mA write allocation until its actual current falls. No in-flight wait for filesystem/card completion.",
+    "Camera TPS2553 FAULT deglitch is3-11ms, turn-off up to3ms (TI SLVS841G p7). FAULT is not battery-break detection. GPS/radio/AUX ports rely on shared LDO/buck current and thermal limits; a short can remove all three port loads, with no independent fault flag or firmware recovery power-cycle.",
+    "On VLOGIC undervoltage/shutdown drop camera EN/OE and park PD8 / PB13 / PC6 in analog mode, no pull; the GPS/radio/AUX ports stay powered whenever the battery path is on (firmware cannot switch them; off on USB-only power). J400 has no state sensor; retain the no-self-powered-port/e-match restriction. Direct port UARTs are FT digital inputs only, RX pulls always disabled; a device on J410 / J420 / J440 must drive its TX high at no more than 3.6 V, because PORT_4V8 can rise tens of ms before 3V3 (the 470 nF U11 soft-start (C85) slews VLOGIC at about 166\u2013196 V/s after its settling time, TI SLVSEA3F Table 9-1 p. 13 scaled to 470 nF, and U2 (AP63203) starts at 3.3\u20133.7 V with a 4 ms soft-start, Diodes DS41326 p. 5, so 3V3 regulates about 21\u201326 ms into the slew; Calculation / Inference: the table is scaled linearly and the settling time is not quantified; measure the PORT_4V8-to-3V3 lag on first articles) and an FT pin allows only 4.0 V while VDD = 0 (DS12110 Rev 8 Table 119 p. 212; R20-MCU-02). ST DS12110 Rev 8 Table 122 note 3 p. 215 / Table 157 note 7 p. 247 requires pulls off above Min(VDD, VDDA, VDD33USB) + 0.3 V in operation; Table 119 note 4 p. 213 gives a separate 4 V absolute-stress condition. No powered-off isolation or positive injected current allowance.",
+    "PC14 drives the buzzer gate through R162 1 kOhm: VBAT-domain PC13/PC14/PC15 are characterised at +/-3 mA only (DS12110 Rev 8 Table 159 p. 249); GPIO speed low (2 MHz limit, Rev 8 Table 160 note 2 p. 251), as pin_table.tsv row 8.",
+    "Switch-chatter immunity is hardware only (C87 220 nF, R19-REQ-02 / D-R19-10 / D-R20-11 / D-R24-19 / D-R25-01 / D-R26-03): a single J400 drop-out shorter than 10.3/20.1/26.0 ms worst case (19/33/41 ms nominal) at 6.0/7.4/8.4 V, about 8.1 ms (8.07 ms) at the fire budget four-stall BAT_IN of 5.71 V (5.713 V, parts_budget.json, with the 100 mA AUX allowance; R26-TRI-02) and 6.3 ms at 5.5 V cannot trip U9 (Calculation / Inference, R20-SAF-04 / R24-TRI-02: 297 kOhm x 0.72 x 220 nF from EN 1.401 V at 6.0 V (1 % divider, 0.1 uA EN leakage out of the node and D402's 50 nA at J400.2) falling to 1.116 V with the same leakages on R81, D402's through R165; TPS25947 SLVSFC9C p. 9 EN thresholds and leakage, Infineon ESD103 Rev 1.3 leakage; Inference: C87's 0.72 x minimum takes its X7R DC-bias loss as at most 6 % without the maker's curve (D-R19-10), and the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred). Repeated drop-outs add up (R25-TRI-01): the worst-corner trip fraction of periodic chatter falls from 19.6 % at 0.1 ms drop-outs to 14.8 % at 4 ms and 4.5 % at 8 ms (5.71 V) and from 24.3 % to 8.3 % at 9.9 ms (6.0 V); 19.7 / 24.4 % is only the fast-chatter limit, and these fractions are guidance only. REQUIREMENTS F6 bench acceptance: record the J400 contact state at 10 kS/s or faster under flight-level vibration and pass only if the total open time in every sliding 100 ms window is under 7 ms and U9 stays on for the whole run at 5.71 V (worst-corner limit 7.50 ms per 100 ms window at 5.71 V, a 0.50 ms margin over the 7 ms line, which holds down to 5.65 V; 5.87 ms at 5.5 V, 9.59 ms at 6.0 V). The worst admissible train is one open block per 100 ms placed late in the window (exchange argument: C(O(v)) - O(C(v)) = (1 - a)(1 - b)(vc - vo) > 0): at the corner it trips U9 at 7.50 ms at 5.71 V (7.63 ms at 5.73 V), and at the 7 ms pass line it holds EN at 1.1295 V at 5.71 V (1.1330 V at 5.73 V) against 1.116 V (Calculation / Inference, R26-TRI-03: the same EN model). A switch that fails may still pass on a replay of its recorded contact waveform through the worst-corner EN model. Re-size C87 (BOM only, same land) if a real switch cannot meet it; keep it separate from battery-lead-break ride-through. A longer drop-out reboots the board after a 30-130 ms EN turn-on delay (the same model over C87 0.72-1.27 x). Resume flight state from live evidence after reset.",
+    "Radio uplink cannot arm or fire; LR900-F band is 890-915 MHz: use manual channels 12-25 (902-915 MHz) or a maker-confirmed FHSS set inside 902-928 MHz; qualify installed maximum-power radio/GPS immunity.",
+    "PC14 buzzer GPIO-toggled; PC13, PE10 and PE0 remain NC (AUD-4 removes the pull-pin). Audit2: PC0 PYRO1_CONT and PC5 ARM1_SENSE directly read their retained split dividers and10nF filters, withoutR168/R170 tails; duplicate bus bank/PB0 removed. Sensor functions unchanged.",
+    "UART start-up: camera retains U12 isolation and OE pull-down; before camera OE goes high, RX PE7 pull-up and TX PE8 idle-high. The three port UARTs connect directly through 1 kohm; PD9/PB12/PC7 are digital AF inputs with internal pulls always disabled; PD8/PB13/PC6 take their TX alternate function (idle high) only while PA4 LOGIC_SOURCE_ST reads low after a settling delay (U11 ST low = IN2 = RAW_PROTECTED, the battery path that powers PORT_4V8; ST high = IN1 = USB or no valid input; TI SLVSEA3F Table 9-3 p. 18, p. 21), and return to analog mode, no pull when PA4 rises or the PA6 watchdog trips: on USB-only power the port modules are unpowered, so the MCU cannot back-feed a module through the 1 kohm (R19-MCU-01). Never connect a self-powered port module with the board off; measure endpoint TX levels.",
+    "Per-sense ADC instances: PC0 PYRO1_CONT ADC123_INP10, PA6 VLOGIC_SENSE ADC12_INP3, PC5 ARM1_SENSE ADC12_INP8 (sole RAW_ACT bus reading), PB1 CAM_5V_SENSE ADC12_INP5. PB0 and PC3_C are NC/analog (R18-REQ-08 removes the V3V3_SENSE divider R62/R63: it read 3V3 against VREF+ = 3V3A from the same rail); read VDDA from VREFINT (VREFIN_CAL, DS12110 Rev 8 Tables 127-128 pp. 218-219) and 3V3 from the internal VBAT/4 bridge (VBAT tied to 3V3; Rev 8 Table 192 p. 293, ratio error +/-10%) on ADC3, as pin_table.tsv row 18. Delete duplicate RAW_ACT_SENSE readings and thresholds. Ground continuity and sole bus readings remain hard refusals; in flight neither vetoes fire. PA6 watchdog uses ADC1/2.",
+    "microSD J430 locking hinge, no card-detect: SPI3 AF6 PC10 SCK/PC11 MISO/PC12 MOSI, PD0 software CS. CS high before GPIO/AF setup; >= 74 clocks with CS/MOSI high at 100-400 kHz, then CMD0; run at <= 25 MHz. The R460-R464 (10 kohm) pull-ups to 3V3 and the 3V3 bypass are physical. Select and bench-qualify a card with <= 200 mA write and <= 30 mA idle; keep locked during flight, insert/remove only off with board out.",
+    "F5: nominal whole-flight storage spans retained QSPI plus secondary removable microSD, with adequate bounded buffering and at least25% measured throughput margin. No requirement that a whole flight fit16MB QSPI alone. A missing/faulted/full/slow card or corrupt filesystem never delays control, safety, watchdog or fire. Use nonblocking bounded transfers and preallocated files; drop secondary SD records only as fault/overload fallback, not the normal capacity plan. Power loss may corrupt the card; no blocking flush during F6 or firing.",
+    "Audit2 item16: keep both LEDs dark from arming to landing until the installed opaque U5 cover passes LED-toggle/ambient-light checkout; the CAD cannot certify the cover.",
+    "Selected MJG J-Tek LEAD-FREE maker all-fire0.75A times1.5 gives1.125A current criterion; the maker0.5s test does not certify20ms. Retain R1342ohm, normal physical20ms/fault36ms and qualify selected-lot20ms firing/source/harness/charge before flight.",
+    "No-net U1 pins (R4-MCU-04): every U1 pin with no net stays in analog mode (the reset state) and is never configured as an output; the K-loader no-net pins (pin_table an2606_t119_loader_role) are never outputs, so a ROM-loader drive or a stray configuration cannot reach copper.",
+    "LSE (R5-MCU-02): keep RCC_BDCR.LSEON = 0 and never set up the backup domain for the LSE: PC14 is OSC32_IN and drives BUZZ_DRV through R162, and VBAT is tied to 3V3, so a stray LSEON persists across NRST.",
+    "VBUS_SENSE (R5-MCU-05): PC8 = VBUS / 2 (R9 1 kOhm / R110 1 kOhm); at 4.4 V VBUS the node is 2.20 V, below VIH = 0.7 x VDD = 2.31 V, so VBUS detection needs VBUS >= 4.62 V at VDD 3.3 V. A low PC8 is not proof of no USB: never use it as the sole input to a safety decision.",
+    "Audit2 direct PC0/PC5 filtered ADCs retain single-resistor protection; duplicate PB0 bank andR168/R170 tails are removed. Other unprotected sense faults (R5-MCU-04): PA6 VLOGIC_SENSE (shorted R60 puts VLOGIC on an FT_a pin; positive injection allowance 0 mA (DS12110 Rev 8 Table 120 note 3 p. 213). Rev 8 Table 119 pp. 212-213 (notes 3-4) gives the FT ceiling Min(VDD, VDDA, VDD33USB, VBAT) + 4.0 V with pulls disabled above 4 V and 4.0 V on TT pins; the 4.0 V ADC-mode maximum and the 6.0 V FT cap were read from Rev 11 Table 109 in round 14 and are kept as design limits (Inference: not in Rev 8, Rev 11 not re-read)) and PB1 CAM_5V_SENSE (open R105 puts CAM_5V on a TT_u pin through R104 10 kOhm, limit 4.0 V); single-fault pin-damage cases recorded in parts_qualification.md, no firmware mitigation.",
+    "Trace (R6-MCU-03): never enable synchronous trace (PE2 TRACECLK, PC1 TRACED0, PE4 TRACED1) in any debug configuration: PC1 enables the load switch and PE4 is the pyro gate (PYRO1_GATE); trace would drive both firing controls. After PC1 and PE4 are configured as low outputs, lock PC1 with GPIOC_LCKR and PE4 with GPIOE_LCKR (the locks hold until the next reset), then read both registers back: bit 16 (LCKK) and the pin lock bit (PC1 bit 1, PE4 bit 4) must read 1, and the firmware refuses to arm otherwise (D-SS-02 / R7-MCU-02). A locked pin's output data can still be written, its configuration cannot: in a loader-jump sequence PC1 and PE4 stay locked low outputs, because GPIOC / GPIOE resets (RCC_AHB4RSTR) clear the locks and only R123 / R127 then hold the controls off. R10 locks PC1 and PE4: PE3 / PE5 / PE6 are analog sentinels, PE12 is the CAM_FAULT_N input and PE13 / PE14 are NC. Disconnect the e-match before connecting a trace-capable debugger session: whether the DBGMCU trace pin assignment overrides the GPIO configuration (and the lock) on the H743 is not checked (Inference; R7-SAF-03).",
+    "UART break storm: camera retains the TXU0202 input pull-down and can report a continuous break if enabled while unplugged. Direct port UARTs (GPS/radio/AUX) can float/noise when unplugged. Receive by DMA/IDLE with bounded error handling; mask FE/NE/ORE per-frame storms and disable the affected UART after a bounded error threshold. Port modules cannot be isolated or power-cycled in software; camera OE may be lowered.",
+    "Trace override bench step (R8-SAF-01 / R9-MCU-01): no e-match connected. Use a debugger-supported STM32H743 synchronous 4-bit ETM setup; RM0433 Rev8 pp3209/543 uses DBGMCU_CR at 0x5C001004 bit20 TRACECLKEN (CMSIS DBGMCU_CR_DBG_TRACECKEN), not TRACE_IOEN or TRACE_MODE. With QSPI idle, set PE2 AF0 TRACECLK; keep PC1 and PE4 locked low GPIO outputs, not trace alternate functions. Read back both GPIOC_LCKR and GPIOE_LCKR: LCKK bit16 plus PC1 bit1 / PE4 bit4 must remain set. Verify the debugger did not reset GPIOC/GPIOE or clear either lock. Observe a running PE2 trace clock before quiet PC1 / PE4 / TP122 counts as evidence; absent clock or lost lock invalidates the test. If either control toggles with valid clock/locks, enforce trace-clock disable and readback before arming and report it (override behavior remains Inference until measured).",
+    "W25Q128JV (R6-MCU-04): set the QE bit in status register 2 before QSPI quad mode is used; no blocking flash erase in flight: pre-erase before flight or use erase-suspend, so that the GAP-5 28.571ms minimum IWDG period holds (W25Q128JV Rev I AC characteristics, read in round 7: 4 KB sector erase 45 ms typical / 400 ms maximum, 32 KB block 120 / 1,600 ms, 64 KB block 150 / 2,000 ms, erase-suspend latency tSUS 20 us). The pad ring buffer must be erased in erase-suspend slices or sized for a single pre-erase before arming; erase time is added to the F5 timing-margin statement. This is an open firmware design obligation (R7-MCU-04).",
+    "IMU (R6-MCU-05, D-R19-11): U4 is fitted as the ISM6HG256X (JLC C51931514); the LSM6DSV320X is the second-fallback alternate (needs part fields, BOM and CPL regenerated: ORDERING 8.1) on the same land with the same pins and axis directions (DS15034 Rev 1 Figure 5 p. 9 and Table 2 p. 11; DS14623 Rev 1 p. 9). WHO_AM_I reads 0x73 on both (p. 66), so it cannot identify the part. Their high-g full-scale codes differ (FS_XL_HG, Table 150 p. 93 of both: ISM6HG256X 100 = +/-256 g and 011 reserved; LSM6DSV320X 011 = +/-256 g and 100 = +/-320 g): use only 001 (+/-64 g) or 010 (+/-128 g), which mean the same on both and meet F2. IMU SPI clock <= 10 MHz (DS15034 p. 17); ignore gyro data for 40 ms after an IMU power-up (Ton, DS15034 p. 15).",
+    "VREFBUF (R19-MCU-04): VREF+ (U1.20) is tied to VDDA (U1.21) on 3V3A (DS12110 Rev 8 Figure 95 p. 286). Keep VREFBUF_CSR at its reset value (ENVR = 0, HIZ = 1 per the ST SVD) and never write it: never enable the buffer (no HAL_SYSCFG_EnableVREFBUF) and never clear HIZ, since ENVR = 0 with HIZ = 0 pulls VREF+ to VSSA and would load 3V3A (VDDA, U4, U5) through R164 (RM0433 mode table as quoted on the ST community forum; Inference, R20-MCU-01). Scale ADC readings from VREFINT: an enabled buffer would drive its 1.5-2.5 V output (Table 189 p. 291, 4 mA static load) against 3V3A. Table 9 note 7 p. 88 requires the buffer kept disabled where VREF+ is tied to VDDA inside the package; applying it to this board-level tie is an Inference (RM0433 not re-read).",
+    "R23 firmware rule 1, launch (R23-SAFETY-07): the fire path needs LIFTOFF from the accelerometer AND a barometric altitude gain (LAUNCH_CORROBORATED), as AGENTS \u00a72.1 requires. There is no inertial-only fire path on R10. With the barometer invalid, the primary channel does not fire and the independent Blue Jay covers recovery. FMEA F-6's accelerometer-only latch is not enough on R10.",
+    "R23 firmware rule 2, cold screen after every power-up or reset (R23-SAFETY-09): wait at least 1 s, and verify that RAW_ACT has discharged and ACT_GATE is off, before classifying. This covers both U9 variants.",
+    "R23 firmware rule 3, QSPI_IO2 / PE4 bridge (R23-SAFETY-08 (1); verified Minor by round23_safety_severity_check.md). Physics: Q124's gate capacitor is C126, 220 nF, not C128 (100 nF, on the drain); the gate time constant is about 47\u201358 \u00b5s over C126's \u00b110 % (53 \u00b5s nominal; Calculation, driver resistances Inference); a steady IO2-against-PE4 fight with the MCU driving IO2 high puts 1.19\u20131.98 V on the gate and fires the match after about 0.55 ms in all but one modelled corner; page-program logging at a QSPI clock of 25 MHz or more stays at most 6 mA RMS, at least 50\u00d7 below the 0.30 A no-fire (Calculation / Simulation; driver resistances, flash drive, the AON7524 sub-amp curve and the match thermal model are Inference); firing needs a sustained IO2-high pattern. Ground refusal: before PC1 goes high, run a QSPI quad read-verify of a known pattern, and refuse on any mismatch: the bridge corrupts quad reads. QSPI use while PC1 is high: PE2 stays in its QSPI alternate function, never a GPIO driven high; no memory-mapped or parked quad reads; no long all-ones writes at a low clock; the flash output drive is not at 100 %. Cold screen: during part of the passive cold screen, run sustained QSPI traffic and toggle PC14 and the servo PWM; refuse if CONT or BUS moves out of band. First article, before first power and coating: inspect U1 pins 1\u20135 for bridges, and, with the board unpowered (pack and USB disconnected), meter U3.3 (QSPI_IO2) to R127.1 (the PE4 gate network) in resistance mode, both polarities: an intact board reads above 0.9 k\u03a9, or open, both ways (red lead on R127.1: a diode drop plus about 0.91 k\u03a9 through the U1 / U3 input clamps; reversed: open or slowly rising); a continuity beep or under 100 \u03a9 in either polarity is a bridge: reject (0.91 k\u03a9 is R127's 1 k\u03a9 in parallel with R126 + R128, Calculation; the meter's reading through the clamps is an Inference).",
+    "R23 firmware rule 4, bus voltage (R23-SAFETY-05): on the ground, after PC1 goes high and a 100 ms settle, the powered BUS must read at least 0.96 \u00d7 the pack voltage derived from VLOGIC_SENSE, else refuse (this catches Q120 left off and the bus fed through its body diode). Qualify the band on first articles. Verified Minor: four stalls give 1.128 / 1.063 A (0.7 / 1.0 V drop: AONR21357 VSD typical / maximum at 1 A, p. 2; Calculation / Inference: the fire budget's hot Q124 factor is inferred), 0.93\u20131.01\u00d7 the 1.125 A floor but at least 1.39\u00d7 the maker's 0.75 A all-fire and at least 1.04\u00d7 its 1.00 A recommended minimum. A first-order thermal model fires the match in 4\u20135 ms, inside the 20 ms pulse (Inference). At first article, before coating, with PC1 high and a dummy load in J121: ACT_GATE at R120.2 / C120.2, against Q120's source at R120.1, must settle at |VGS| of at least 4.5 V (a Q120 gate cut off from R121 sits near 0 V), and during the dummy-load fire BAT_IN \u2212 RAW_ACT above 0.2 V fails the board (R23-SAFETY-05's criterion: Q120's body diode adds 0.7\u20131.0 V). Since D-R24-02 each gate drive has a second barrel (Q120 (16.2, 73.3) + (15.4, 72.85), Q121 (11.14, 71.7) + (11.74, 72.3)): leaving Q120 off this way takes two opens (D-R24-19).",
+    "R23 firmware rule 5, PC1 source rule (R23-SAFETY-02 (4)): PC1 may go high only while PA4 reads low (U11 on the battery path, so U9 and J400 are on) and VBUS_SENSE does not contradict it. R91.1 and U1.28 each have a second via since D-R24-08 (no single point; the D-R22-02 entries are gone), and the rule stays an extra barrier, not a guarantee.",
+    "R23 firmware rule 6, LANDED (R23-SAFETY-04, R23-REQUIREMENTS-06): use FMEA 7.4'.9's criteria with a T_min floor. Then PE4 and PC1 go low and stay latched until power-off; PC1 never re-enables in the same power session. The IWDG keeps being serviced until power-off. The GPS and radio keep beaconing position: the ports are always on, so FMEA F-8's \"GNSS off\" does not apply to R10; park the GNSS UART instead if power must be shed. The locator tone sounds; logging stops or drops to 1 Hz.",
+    "R23 firmware rule 7, PA5 (R23-POWER-04): PA5 low also means U9 is blocking reverse current (SLVSFC9C Table 7-3 p38). Treat it as a U9 fault only when it stays low longer than a qualified time with RAW_PROTECTED collapsed. Rate-limit EXTI5, and never reset or refuse readiness on one pulse. PA4 during U11's own reverse blocking is unstated (Inference): deglitch PA4 before re-enabling the port UARTs.",
+    "R23 firmware rule 8, PA6 trip and hold-up (R23-POWER-01): the PA6 trip window is VLOGIC about 4.8\u20135.2 V (PA6 0.44\u20130.47 V): above U9's 4.80 V BAT_IN turn-off corner (D402's 50 nA included, D-R24-19; the PA6 lower edge 0.44 V x 11 = 4.84 V stays above it) and below the four-stall-plus-fire corner: BAT_IN 5.71 V with a healthy match (the fire budget's four-stall point, which includes the 1.28 A fire current), 5.55\u20135.56 V with the match shorted and 5.50 V with the match and leads shorted; VLOGIC is 0.09\u20130.16 V lower (fire_current_GAP1 model, Calculation / Inference: its hot Q124 factor is inferred; R26-TRI-04, D-R26-03). The window is to be qualified with the divider and ADC tolerances. Hold-up after the trip is 0.103\u20130.164 ms with all ports on and 0.291\u20130.430 ms with the camera off / shed, 0.22\u20130.31 of the break-to-3.8 V hold-up (Calculation / Inference, D-R25-02: constant power at 300.8 \u00b5F to 3.8 V from VLOGIC 4.84\u20135.17 V, the PA6 0.44\u20130.47 V window; the shortest at the window's lower edge; the loads are the budget's allocations, and C84 has no cold-capacitance factor).",
+    "R23 firmware rule 9, pad readiness. Pack (R23-REQUIREMENTS-07): firmware reads PA6, and PC5 after the cold screen. It telemeters the pack voltage and refuses the pad READY state below 7.4 V plus the measured PA6 divider error. Temperature (R23-MECHANICS-03): announce, and refuse arming-dependent checks, above an MS5611 TEMP of about 80 \u00b0C.",
+    "R23 firmware rule 10, bring-up configuration (R23-MCU-01): program and read back these option bytes: BOOT_ADD0 = 0x0800, IWDG1_SW software start, BOR_LEV (state the level, DS12110 Table 126 p217), SWAP_BANK = 0, IO_HSLV = 0, and the RDP level. Also: LDO supply (never bypass), with VOS matched to 200 MHz (Table 122); HSEBYP = 0, a bounded HSE-ready wait, and CSSHSEON with HSI fallback and safety-timer rescaling (FMEA F-2); PLL limits per Table 147; USB VBUS sensing off with a B-session override (PA9 NC). The RM0433 items are an Inference until RM0433 is read.",
+    "R23 firmware rule 11, bring-up facts (R23-DOCS_BINDING-03): U5 MS5611 on I2C1 PB8 / PB9 at 0x77 (PS high, CSB low), with R12 / R13 4.7 k\u03a9 pull-ups. IMU_CS (PB7, R11) and QSPI_NCS (PB6, R10) idle high: write the ODR high before switching to output / AF. Scales: PA6 = VLOGIC / 11, PB1 = CAM_5V / 11, PC0 / PC5 = node / 11.2. The PA6 trip from rule 8, and a PA4 settling time to qualify on the bench.",
+    "R23 firmware rule 12, clocks (R23-ROUTING-01): avoid SPI3, QSPI and timer clocks with an integer harmonic within \u00b11.023 MHz of 1575.42 MHz (25 and 75 MHz, for example). This is an Inference until the installed GNSS check has run.",
+    "R23 firmware rule 13, IMU (R23-MCU-03): FS_XL_HG code 010 is 3.904 mg/LSB on all three parts and clips at \u00b180 g on the LSM6DSV80X, so 001 / 010 serve all three. Never use ST's ism6hg256x driver's 256 g enum (0x3 is reserved in DS15034 Table 150)."
+  ],
+  "r10_firmware_obligations_note": "R10 text, carried verbatim (R10 pin names, LQFP pin numbers and DB125 terminals); r11_obligation_deltas overrides each obligation it names",
+  "r11_obligation_deltas": [
+    {
+      "r10_obligation": 3,
+      "r11": "Camera UART is UART4 AF8: CAM_MCU_TX PB9 (ball A4), CAM_MCU_RX PB8 (ball B4), no flow control (D-R11-49), not UART7 PE8 / PE7. PB9 is a ROM-loader pin (I2C1_SDA, open drain): stageC1b.md section 8.4 case; drive PB9 push-pull only after the UART4 binding."
+    },
+    {
+      "r10_obligation": 4,
+      "r11": "PE11 / PE12 (loader SPI4) are NC on R11. Camera EN is PC14 (CAM_PWR_EN, ball A1), held low by R431 100 k while PC14 is an input; camera OE is PC15 (ball B1), held low by R102 10 k. New loader members: PA15 (SPI3_NSS) carries SERVO2_MCU (R155 holds it low) and PB9 carries CAM_MCU_TX (stageC1b.md section 8.4)."
+    },
+    {
+      "r10_obligation": 5,
+      "r11": "EXTI map on R11: CAM_FAULT_N PC13 (EXTI13, EXTI15_10), USB_FAULT_N PD10 (EXTI10, EXTI15_10), LOGIC_SOURCE_ST PA4 (EXTI4), BAT_FAULT_N PA5 (EXTI5), VBUS_SENSE PC8 (EXTI8), IMU_INT1 PD5 (EXTI5). CONFLICT: PA5 and PD5 are both line 5, and SYSCFG_EXTICR2 routes one port to a line, so BAT_FAULT_N and IMU_INT1 cannot both interrupt (Inference: RM0433 not re-read). Open design item D-R11-77: one of them must be polled or re-mapped. PC13 is used on R11 (it was NC)."
+    },
+    {
+      "r10_obligation": 6,
+      "r11": "PE3 carries IMU_CS on R11 (ball B3), so it is no longer an analog sentinel; the sentinels are PE5 / PE6 / PC4. PA15 carries SERVO2_MCU (TIM2_CH1 AF1): it resets as JTDI with its internal pull-up, which against R155 10 k gives at most 0.83 V on the line until firmware selects TIM2 (stageC1b.md section 8.4, Calculation with a 30 k minimum pull-up, Inference); configure PA15 early, as R10 required for the no-net PA15."
+    },
+    {
+      "r10_obligation": 8,
+      "r11": "Servo timers on R11: SERVO1 PB7 TIM4_CH2 AF2 (ball A5), SERVO2 PA15 TIM2_CH1 AF1 (A8), SERVO3 PA0 TIM5_CH1 AF2 (G2), SERVO4 PA1 TIM5_CH2 AF2 (H2): three timers, so the neutral-first-pulse and 50 ms rules apply to each timer start."
+    },
+    {
+      "r10_obligation": 10,
+      "r11": "R11 connectors (D-R11-05): J122 / J400 / J410 / J420 / J440 / J9 are latching JST GH (J9 six-pin: 1-2 CAM_5V, 3-4 GND, 5 RXI, 6 TXO); J1 (battery) and J121 (igniter) are hand-soldered AWG 20 wire pads. The DB125 text is R10 only."
+    },
+    {
+      "r10_obligation": 16,
+      "r11": "The buzzer gate is driven by PE8 (BUZZ_DRV, ball J5) through R162, initialised low; PC14 now drives CAM_PWR_EN (U402 EN, R431 100 k; at most 0.04 mA, Calculation in pin_table.tsv), still a VBAT-domain pin at 3 mA / 2 MHz."
+    },
+    {
+      "r10_obligation": 19,
+      "r11": "Buzzer on PE8, not PC14. PC13 carries CAM_FAULT_N (input). PE0 and PE10 stay NC."
+    },
+    {
+      "r10_obligation": 20,
+      "r11": "Camera start-up: RX PB8 pull-up and TX PB9 idle high before OE (PC15) goes high."
+    },
+    {
+      "r10_obligation": 21,
+      "r11": "CAM_5V_SENSE is PC2_C (ball E2), ADC3_INP0 (the analog-only _C pad), not PB1 ADC12_INP5; ADC3 also carries the VBAT/4 bridge reading. PB1 carries LED_RED."
+    },
+    {
+      "r10_obligation": 24,
+      "r11": "LEDs: LED_RED PB1 (ball K4), LED_YEL PD2 (ball B7)."
+    },
+    {
+      "r10_obligation": 27,
+      "r11": "LSE: PC14 (OSC32_IN) now drives CAM_PWR_EN; keep RCC_BDCR.LSEON = 0 as on R10."
+    },
+    {
+      "r10_obligation": 29,
+      "r11": "CAM_5V_SENSE moved to PC2_C, an analog-only switch pad: the R10 TT_u 4.0 V single-fault limit for an open R105 does not carry over; the PC2_C limit is to be read from DS12110 (not re-read here: open item)."
+    },
+    {
+      "r10_obligation": 30,
+      "r11": "PE3 is IMU_CS: synchronous trace (TRACED0 on PE3) would also drive the IMU chip select; the trace prohibition stands. The lock list is unchanged (PC1, PE4)."
+    },
+    {
+      "r10_obligation": 38,
+      "r11": "Rule 3 on R11: QSPI_IO2 is PE2 (ball A3) and PE4 is ball C3, with PE3 / IMU_CS (B3) between them; a BGA bridge cannot be seen, so the visual \"U1 pins 1-5\" inspection becomes X-ray of U1, and the U3.3-to-R127.1 meter check stays. The cold-screen toggle list is the buzzer PE8 (not PC14) and the servo PWM."
+    },
+    {
+      "r10_obligation": 39,
+      "r11": "The R10 second-barrel coordinates are R10 records; R11 gate barrels are in the R11 board and S-8 data."
+    },
+    {
+      "r10_obligation": 40,
+      "r11": "The R91.1 / U1.28 second vias are R10 records. On R11 PA4 (LOGIC_SOURCE_ST, ball G3) has two single-via points, its dog-bone (21.60, 28.80) and its In3-to-B.Cu via (14.65, 39.90) (D-R11-45, D-R11-48, single_open_exceptions): an open leaves PA4 floating, so rule 5 (PC1 only while PA4 reads low) stays an extra barrier, not a guarantee."
+    },
+    {
+      "r10_obligation": 42,
+      "r11": "EXTI5 is shared with IMU_INT1 on R11 (see the delta for obligation 5)."
+    },
+    {
+      "r10_obligation": 46,
+      "r11": "U5 (MS5611) is on I2C2, PB10 SCL (ball J7) / PB11 SDA (ball K7), AF4 (D-R11-41; the nets keep the names I2C1_SCL / I2C1_SDA); PB10 / PB11 are loader USART3 pins (stageC1b.md section 7). IMU_CS is PE3 (ball B3). CAM_5V scale: PC2_C = CAM_5V / 11."
+    }
+  ],
+  "r11_firmware_rules": [
+    "An R11 binding changes the TIM, UART, ADC and EXTI assignments together (stageC1b.md section 8.2); R10 firmware cannot run on R11.",
+    "EXTI line 5 is claimed by both BAT_FAULT_N (PA5) and IMU_INT1 (PD5): firmware must poll one of them until the open design item D-R11-77 is decided (Inference on RM0433 SYSCFG_EXTICR, not re-read)."
+  ],
+  "physical_tests": "not performed",
+  "stage_d": {
+    "budget_board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
+    "source_board_sha256": "b7e2decb49bce5b24d124e24dd886d38a8e634ad7c2d203885f7125a6771bbb5",
+    "four_stall_BAT_IN_V": 5.7133083377425455,
+    "four_stall_fire_A": 1.278004129045164,
+    "physical_fault_bound_ms": 34.8530612244898,
+    "combined_tail_model_ms_inference": 0.7391953380405974,
+    "basis": "m3_design/r11_stageD.py; stageD_analysis.md (Calculation / Inference labels there)"
+  }
+}

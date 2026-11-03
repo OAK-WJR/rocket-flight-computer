@@ -41,7 +41,8 @@ Rules (R10's id where it is R10's rule):
   M-7  U4 side, rotation and lever arm as R11_DATA 'imu' records; no via or fill under U4 / U5 on their side
   M-8  courtyards >= 2.5 mm from the rail-less short edges (y = 0 and the outline's far edge; check_r10.m8 with R11_DATA
        'short_edge_queries', empty by default)
-  K-legends  check_r10's legend rules with the R11 revision text pinned (PINNED_TEXTS_R11)
+  K-legends  check_r10's legend rules on R11 data (D-R11-64): J9's six GH contacts (TERMINAL_PINS_R11), M3-ASSY-R11 the
+             only revision (pinned_texts_r11), GPS / RADIO / AUX inside their span along the pin-row axis
   K-copper   vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper, no GAP-3 exemption on
              R11 unless R11_DATA adds one), no pour debris (check_r10.pour_debris)
   K-inner    In1 and In4 GND only; In2 power and GND only; In3 signal routing (no rule on its nets)
@@ -524,9 +525,73 @@ def m8(ctx):
     return r10.m8(ctx, queries={k: tuple(v) for k, v in ctx.data.get('short_edge_queries', {}).items()})
 
 
+# D-R11-64: K-legends on R11. R10's rules run unchanged except where they encode R10 geometry or R10 text:
+#  * TERMINAL_PINS_R11: J9 is a JST GH 6-pin on R11 (D-R11-05: 1-2 CAM_5V, 3-4 GND, 5 CAM_RX_WIRE, 6 CAM_TX_WIRE), so
+#    R10's four-pin J9 legends would name the wrong contacts; every other terminal keeps R10's words and pins.
+#  * the revision: check_r10.pinned_texts binds R10's PINNED_TEXTS as its default argument and names M3-ASSY-R10 as
+#    the only revision, so patching the module constant alone never checked R11's text (R11 must carry exactly
+#    M3-ASSY-R11 on B.Silkscreen and no other revision legend).
+#  * WORD_SPAN: R10's GPS / RADIO / AUX words must lie inside their terminal's courtyard span along the pin row; R10's
+#    rows run along y, R11's GH rows along x (D-R11-12), so the span is taken on each connector's own pin-row axis.
+TERMINAL_PINS_R11 = tuple((ref, (('1', '5V4'), ('2', '5V4'), ('3', 'GND'), ('4', 'GND'), ('5', 'RXI'), ('6', 'TXO'))
+                           if ref == 'J9' else pins) for ref, pins in r10.TERMINAL_PINS_R10)
+WORD_SPAN_R11 = dict(r10.WORD_SPAN_R10)                          # GPS J410, RADIO J420, AUX J440
+
+
+def pinned_texts_r11(board, _base=r10.pinned_texts):
+    """check_r10.pinned_texts with R11's pinned text and R11 as the only revision legend."""
+    import pcbnew
+    out = [i for i in _base(board, pinned=PINNED_TEXTS_R11) if not i.startswith('revision legends ')]
+    revs = set()
+    for item in r10.legend_items(board):
+        if isinstance(item, pcbnew.PCB_TEXT) and (not hasattr(item, 'IsVisible') or item.IsVisible()) \
+                and re.match(r'^M3-ASSY-R\d+$', item.GetText()):
+            revs.add(item.GetText())
+    return out + [f'revision legends {sorted(revs)}: only {REVISION} allowed' for _ in [0] if sorted(revs) != [REVISION]]
+
+
+def word_spans_r11(board, spans=WORD_SPAN_R11, margin=None):
+    """(issues, evidence): each span word's ink lies inside its own connector's courtyard span along that connector's
+    pin-row axis (the axis along which its numbered pads spread) by WORD_SPAN_MARGIN (D-R19-06's rule, R11 axis)."""
+    import pcbnew
+    margin = r10.WORD_SPAN_MARGIN if margin is None else margin
+    mm = pcbnew.ToMM
+    issues, ev = [], {}
+    for item in r10.legend_items(board):
+        if (not isinstance(item, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX))
+                or item.GetLayer() not in (pcbnew.F_SilkS, pcbnew.B_SilkS)
+                or (hasattr(item, 'IsVisible') and not item.IsVisible())):
+            continue
+        word = item.GetText().strip()
+        f = board.FindFootprintByReference(spans.get(word, ''))
+        if f is None:
+            continue
+        pads = [p.GetPosition() for p in f.Pads() if p.GetNumber()]
+        axis = 0 if max(p.x for p in pads) - min(p.x for p in pads) >= max(p.y for p in pads) - min(p.y for p in pads) \
+            else 1
+        c = f.GetCourtyard(pcbnew.B_CrtYd if f.IsFlipped() else pcbnew.F_CrtYd).BBox()
+        lo, hi = (mm(c.GetLeft()), mm(c.GetRight())) if axis == 0 else (mm(c.GetTop()), mm(c.GetBottom()))
+        poly = pcbnew.SHAPE_POLY_SET()
+        item.TransformShapeToPolygon(poly, item.GetLayer(), 0, pcbnew.FromMM(0.005), pcbnew.ERROR_INSIDE)
+        q = poly.BBox()
+        a, z = (mm(q.GetLeft()), mm(q.GetRight())) if axis == 0 else (mm(q.GetTop()), mm(q.GetBottom()))
+        inside = min(a - lo, hi - z)
+        ev[word] = dict(connector=f.GetReference(), axis='xy'[axis], inside_mm=round(inside, 3))
+        if inside < margin - r10.EPS:
+            issues.append(f'{f.GetReference()}: word legend {word!r} lies {inside:.3f} mm inside its courtyard span '
+                          f'along the pin row ({"xy"[axis]} {lo:.3f} .. {hi:.3f}); it must be inside by {margin} mm '
+                          '(D-R19-06, R11 axis: D-R11-64)')
+    return issues, ev
+
+
 def k_legends(ctx):
-    with patched(r10, PINNED_TEXTS=PINNED_TEXTS_R11):
-        return r10.k_legends(ctx)
+    words = r10.word_legends
+    with patched(r10, PINNED_TEXTS=PINNED_TEXTS_R11, TERMINAL_PINS_R10=TERMINAL_PINS_R11,
+                 pinned_texts=pinned_texts_r11,
+                 word_legends=lambda board, **kw: words(board, spans={}, **kw)):
+        issues, ev = r10.k_legends(ctx)
+        spans, span_ev = word_spans_r11(ctx.board)
+    return issues + spans, dict(ev, word_spans=span_ev)
 
 
 def k_copper(ctx):

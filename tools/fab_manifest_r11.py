@@ -20,18 +20,30 @@ R11_BOARD = ROOT / 'm3_design/r11/m3.kicad_pcb'
 _base_inputs, _base_checks = fm.input_hashes, fm.content_checks
 
 
+# D-R11-67: R11's export runs R10's export_fab.py / jlc_orient.py through the R11 wrappers on R11's corrections and pad
+# files (R10's are bound inputs of R10's frozen package and stay unchanged); every one is an input of the R11 binding.
+R11_TOOLS = ('check_r11.py', 'fab_manifest_r11.py', 'export_fab_r11.py', 'jlc_orient_r11.py', 'jlc_corrections_r11.json',
+             'jlc_easyeda/pads_r11.json')
+
+
 def input_hashes(board):
     result = _base_inputs(board)
-    for name in ('check_r11.py', 'fab_manifest_r11.py'):
+    for name in R11_TOOLS:
         result['tools/' + name] = fm.sha256(ROOT / 'tools' / name)
     return result
 
 
 def content_checks(board, out, kicad_py):
     checks = _base_checks(board, out, kicad_py)
-    label, argv = checks[0]
-    assert label == 'S-4 BOM / CPL' and argv[2].endswith('check_r10.py'), checks[0]
-    return [(label, argv[:2] + [str(ROOT / 'tools/check_r11.py')] + argv[3:])] + checks[1:]
+    (s4, argv), (cpl, orient), paste = checks
+    assert s4 == 'S-4 BOM / CPL' and argv[2].endswith('check_r10.py'), checks[0]
+    assert cpl == 'CPL rebuilt from JLC footprints' and orient[2].endswith('jlc_orient.py') \
+        and orient[3].endswith('jlc_easyeda/pads.json'), checks[1]
+    assert paste[0] == 'paste openings', checks[2]
+    return [(s4, argv[:2] + [str(ROOT / 'tools/check_r11.py')] + argv[3:]),
+            (cpl, orient[:2] + [str(ROOT / 'tools/jlc_orient_r11.py'), str(ROOT / 'tools/jlc_easyeda/pads_r11.json')]
+             + orient[4:]),
+            paste]
 
 
 def install():

@@ -738,6 +738,58 @@ def real_board():
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11Legends(unittest.TestCase):
+    """D-R11-64: K-legends' R11 data: J9's six GH contacts, R11's revision, the word span on the pin-row axis."""
+
+    def text(self, s, words, x, y, layer=None, angle=0):
+        t = pcbnew.PCB_TEXT(s.board); t.SetText(words); t.SetLayer(pcbnew.F_SilkS if layer is None else layer)
+        t.SetTextSize(s.P(1.0, 1.0)); t.SetTextThickness(pcbnew.FromMM(0.15)); t.SetTextAngleDegrees(angle)
+        t.SetPosition(s.P(x, y)); s.board.Add(t)
+        return t
+
+    def test_j9_legends_name_r11s_six_contacts(self):
+        pins = dict(r11.TERMINAL_PINS_R11)
+        self.assertEqual(pins['J9'], (('1', '5V4'), ('2', '5V4'), ('3', 'GND'), ('4', 'GND'), ('5', 'RXI'), ('6', 'TXO')))
+        self.assertEqual({k: v for k, v in pins.items() if k != 'J9'},
+                         {k: v for k, v in r10.TERMINAL_PINS_R10 if k != 'J9'})
+        s = Six()
+        s.gh('J9', 30.0, 4.0, ['CAM_5V', 'CAM_5V', 'GND', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE'], mouth=(0, -1))
+        x3 = s.board.FindFootprintByReference('J9').FindPadByNumber('3').GetPosition()
+        self.text(s, '3:RXI', pcbnew.ToMM(x3.x), pcbnew.ToMM(x3.y) + 3.0, angle=90)   # R10's J9 pin 3 word
+        with r10.patched(r10, TERMINAL_PINS_R10=r11.TERMINAL_PINS_R11):
+            issues, _ = r10.terminal_legends(s.board)
+        self.assertTrue(any('J9.3' in i and 'conflicting' in i for i in issues), issues)
+
+    def test_revision_legend_is_r11s_alone(self):
+        s = Six()
+        self.text(s, r11.REVISION, 20.0, 25.0, pcbnew.B_SilkS)
+        self.assertEqual(r11.pinned_texts_r11(s.board), [])
+        self.text(s, 'M3-ASSY-R10', 20.0, 30.0, pcbnew.B_SilkS)
+        self.assertTrue(any('only M3-ASSY-R11' in i for i in r11.pinned_texts_r11(s.board)))
+        s2 = Six()
+        self.text(s2, r11.REVISION, 20.0, 25.0)                      # on the top: the pinned text is the bottom's
+        self.assertTrue(any('missing on B.Silkscreen' in i for i in r11.pinned_texts_r11(s2.board)))
+
+    def test_word_span_follows_the_pin_row_axis(self):
+        s = Six()
+        f = s.gh('J410', 23.0, 46.0, ['PORT_4V8', 'GND', 'GPS_TX_WIRE', 'GPS_RX_WIRE'], mouth=(0, 1))
+        yard = pcbnew.SHAPE_POLY_SET(); yard.NewOutline()
+        for x, y in ((18.5, 43.5), (27.5, 43.5), (27.5, 49.5), (18.5, 49.5)):
+            yard.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        for a, c in zip(((18.5, 43.5), (27.5, 43.5), (27.5, 49.5), (18.5, 49.5)),
+                        ((27.5, 43.5), (27.5, 49.5), (18.5, 49.5), (18.5, 43.5))):
+            e = pcbnew.PCB_SHAPE(f); e.SetShape(pcbnew.SHAPE_T_SEGMENT); e.SetLayer(pcbnew.F_CrtYd)
+            e.SetStart(s.P(*a)); e.SetEnd(s.P(*c)); e.SetWidth(pcbnew.FromMM(0.05)); f.Add(e)
+        f.BuildCourtyardCaches()
+        t = self.text(s, 'GPS', 23.0, 41.0)                          # behind the row, centred along x
+        issues, ev = r11.word_spans_r11(s.board)
+        self.assertEqual((issues, ev['GPS']['axis']), ([], 'x'))
+        t.SetPosition(s.P(17.5, 46.0))                               # beside the row: inside R10's y-span, not x's
+        issues, _ = r11.word_spans_r11(s.board)
+        self.assertTrue(issues and 'along the pin row (x' in issues[0], issues)
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
 class R11RealBoard(unittest.TestCase):
     """Seeds on temporary copies of the R11 board (R11_BOARD); skipped without it unless R11_BOARD_REQUIRED=1."""
 

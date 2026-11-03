@@ -679,3 +679,117 @@ Clears route_check r11's last finding, `extra_vias SD_MOSI` (4 vias against 1 + 
 Result (Measured): route_check r11 0 failing, 2 allowlisted, 0 stale; the only change in its full listing is the removed
 `extra_vias SD_MOSI` instance. Every check_r11 rule but K-legends OK; DRC 0, unconnected 0; the build's final stage
 check passes (exit 0).
+
+## D-R11-64 Gate: K-legends carries R11's J9 contacts, revision and pin-row axis
+`tools/check_r11.py` K-legends ran three R10 encodings that no correct R11 board can meet: R10's four-pin J9 legends
+(R11's J9 is a GH 6-pin, D-R11-05: `3:RXI` would label a GND contact), `check_r10.pinned_texts`' default argument and
+hard-coded M3-ASSY-R10 (check_r11's patch of PINNED_TEXTS never reached it), and the GPS / RADIO / AUX span taken along
+y (R10's rows; R11's GH rows run along x, D-R11-12). Now `TERMINAL_PINS_R11`, `pinned_texts_r11` (exactly one
+M3-ASSY-R11 on B.Silkscreen, no other revision) and `word_spans_r11` (the span on the connector's own pin-row axis,
+R10's 0.5 mm margin). Every other K-legends test runs as R10's. Seeded tests: `tools/test_r11_check.py` R11Legends (3).
+stageD.md section 4.
+
+## D-R11-65 Post stage from a frozen table
+`m3_design/r11_post.py` (stage D hook of `r11_build.sh`) applies `m3_design/r11_legends.tsv` (integer nm positions and
+expected ink boxes) with no search: board legends, pin-1 dots, designators (1.0 / 0.15 mm, or hidden and kept on Fab),
+one Fab `${REFERENCE}` per footprint, the part-number fields on Fab hidden, title-block revision M3-ASSY-R11, the zone
+fill saved (filled before and after; R8's digest must not change). `m3_design/r11_legends_aid.py` drafted the table
+offline with R10's post-stage helpers (order: wire-pad / switch terminal legends, revision, SHOWN_REFS designators,
+words, GH pin legends, J2 rows, note, dots, other designators, Fab references). The post contract fails the build on
+anything but the table's open rows (D-R11-66). Result on the stage C5 copper: 25 legends, 53 designators shown, 163
+hidden (listed in stageD.md section 2), every Fab rule clean, K-fill OK (Measured).
+
+## D-R11-66 K-legends open rows: 22 required legends with no legal spot (placement, not this lane)
+On this placement no legal silkscreen spot exists, on either face, for: the middle GH contacts J122.2–.4, J9.2–.4,
+J410.2–.3, J420.2–.3, J440.2–.3; the words SERVO, RADIO, AUX, SWITCH; J2's rows 3:NRST, 4:SWCLK, 5:GND, 6:NC; J122's
+note; Q120's designator (Measured by the aid's search; stageD.md section 3 has the figures and two tests: a per-port
+pin table instead, 11 of 13 rows still without a spot; every via removed, 9 of the 12 contacts still without one). They
+are written as `open` rows; `r11_post.py` accepts exactly those K-legends findings, and `tools/check.sh` keeps failing on
+them. Resolution needs room made by the placement / routing lane or an owner decision on R11's legend set; no rule was
+changed for them. U12's library pin-1 circle 0.025 mm from U13 pad 5's opening is reported for the placement lane.
+
+## D-R11-67 R11 fab tools beside R10's
+R10's `export_fab.py`, `jlc_orient.py`, `jlc_corrections.json`, `jlc_easyeda/pads.json` and `fab_manifest.py` are
+bound inputs of R10's frozen package, so they stay unchanged. R11 adds `tools/export_fab_r11.py` and
+`tools/jlc_orient_r11.py` (R10's sources executed with asserted replacements: six copper layers, R11's corrections file,
+GH fixing-tab numbers SM02B 4 / 3, SM04B 6 / 5, SM05B 7 / 6, SM06B 7 / 8 from EasyEDA's pads),
+`tools/jlc_easyeda/pads_r11.json` (R10's plus 13 codes fetched 2026-11-03 by `tools/jlc_easyeda_r11.py`; source:
+JLCEDA / EasyEDA Official Library, https://lceda.cn/, https://easyeda.com/), `tools/jlc_corrections_r11.json` (every
+code OK), and `tools/fab_manifest_r11.py` binds all four and runs its content checks with them.
+
+## D-R11-68 R11 fab package
+`m3_design/r11_fab.sh` (run by `r11_build.sh` after the post stage) writes `m3_design/r11/fab/`: Gerber zip (six
+copper layers, 16 files), JLC BOM 75 lines / 204 placed parts, CPL (81 top, 118 bottom, all rebuilt from JLC footprints,
+worst 0.491 mm), assembly PDFs, owner BOM (C84), and binds the manifest only after S-4 (check_r11), `--verify-cpl` and
+`paste_check` pass; renders `m3_design/r11/r11_top.png` / `r11_bottom.png`. `FAB_NET=1` adds stock and cost for 5
+boards at the $84.41 cap (`jlc_cost.py --profile r10`).
+
+## D-R11-69 Cost and stock, 2026-11-03 (live JLC data)
+5 boards, standard PCBA: parts $56.78 + 75 × $1.53 / 5 = **$79.73 per board** against $84.41 (under by $4.68); fixed
+fees $83.96 per order ($16.79 per board) plus a possible $14.93 handling fee (cost_check.json 2026-11-03T20:48:00Z).
+Stock (stock_check.json 2026-11-03T20:47:10Z) short on U9 C3662793 (stock 18, orderable −93), U4 C51931514 (stock 4,
+orderable −3) and U2 C780769 (stock 86, orderable −360); the orderable figure is an Inference about JLC's
+canPresaleNumber (R20-BOM-01). Confirm in the cart on order day, else consign (ORDERING §8.1).
+
+## D-R11-70 Metadata audit: 21 contradictory LCSC Part fields (stage A, not changed here)
+`quality_audit/verify_board.py` fails: C83, C90, C93, R80, R81, R84–R91, R100–R103, R110, R162, R165, R167 keep R10's
+code in `LCSC Part` beside R11's `LCSC` (AGENTS §3). Present before the post stage; `r11_sch.py` updates LCSC /
+Manufacturer / Manufacturer Part on a changed part but not `LCSC Part`. Reported to stage A.
+
+## D-R11-71 The R11 board is not staged while check.sh fails
+Staging `m3_design/r11/m3.kicad_pcb` turns on check.sh's R11 section, which fails at the audit (D-R11-70) and K-legends
+(D-R11-66); another lane's commit in this worktree would then carry an R11 board that fails its gate (r11_plan section 4:
+not committed until it passes). The board and `m3_design/r11/fab/` stay untracked until both are resolved.
+
+## D-R11-72 Stage D reproducibility
+`m3_design/r11_build.sh` run twice from the same tree gives the same board SHA-256 (stageD.md section 8, Measured);
+the aid rerun gives a byte-identical table. The Gerbers carry their creation date, so the fab package is bound by its
+manifest, not byte-reproducible (as R10).
+
+## D-R11-73 Stage D power budget, rails and EN on R11 copper
+
+`m3_design/r11_stageD.py` runs R10's `r10_parts.power_budget` unchanged on the R11 board, after checking that every
+fire path is on one 35 µm outer layer (all five are on F.Cu, so R10's 35 µm formula holds), and adds the rail paths
+(series R at R11's copper, IPC-2152 per width with `ipc2152.py` th_mm), DC solves with the new six-layer
+`tools/r11_dc_net.py` (R10's four-layer `dc_solve.py` unchanged), R10's EN model, hold-up and PA6 corners. Output
+`stageD_budget.json`; record `stageD_analysis.md`. Results (Calculation / Inference): four-stall BAT_IN 5.7133 V (R10
+5.7132); EN, chatter and hold-up figures identical to R10's (same inputs; the re-implemented EN model reproduces every
+R10 figure); K-power widths within the 30 °C basis except the recorded narrow pin entries; USB-only draw 0.4582 A at
+5.00 V (R10 0.4596), still over U10's 0.453 A limit, so R10's bench rule stands. **Why:** r11_plan section 1 (a figure
+not re-run is not quoted for R11). The board must be zone-filled first; the analysis used a filled scratch copy of
+`b7e2decb…` (copper identical, Measured).
+
+## D-R11-74 Hot-plug on R11: the In2 BAT_IN pour modelled; the falling-slew limit fails (design issue)
+
+`tools/r11_hotplug.py` runs R10's model (corners, limits, solver unchanged) on R11's six-layer copper. R11 joins J1's
+B.Cu trunk to D8 and the C80 / C96 / C89 / C95 bank through the In2 BAT_IN pour, which R10's extractor refused; the
+filled pour is Kron-reduced from a DC sheet solve to an exact network between its via terminals, each edge's L = R ·
+µ0 h t / ρ with h to In1 ('gnd') or In1 ∥ In4 ('near') (Inference). Result (Simulation / Inference): **576 of the 2304
+required cases fail** the 10 V/µs falling-slew limit, all at the 0.1 µH harness corners (max 15.04 V/µs; R10 8.995);
+minimum −14.586 V and rise 12.53 V/µs pass. A worst-corner sensitivity fails down to 0.4 × the plane L and passes only
+near 0.3 × plane and via L. **Not fixed here** (copper frozen): bulk capacitance on the trunk beside C88 / U9, R10's
+feed order through the bank, or a ≥ 0.5 µH harness floor are the owner's options. check_r11's F9 rule stays absent.
+
+## D-R11-75 Fire budget and shorted-igniter guard on R11; U401 thermal basis lost
+
+Fire loop 4.620493 Ω (R10 4.617803): +2.69 mΩ, mostly ACT_FET_S (6.456 mm × 0.5 mm side-by-side bar, R10 2.2 × 0.4).
+Fire current 1.539955 A idle, 1.278004 A at four stalls (R10 1.278747), above the 1.125 A MJG floor (Calculation /
+Inference). GND fire return Q124 → J1.2 solved at 2.47 mΩ, inside the 5 mΩ allowance. R134 2 Ω, the 20 ms pulse, the
+34.853 ms vs 36 ms guard and the 0.739 ms gate-discharge model have no copper input and are unchanged; R11's gate
+copper is via-free F.Cu (≤ 5.3 nH, negligible). **U401:** its thermal pad has no via on R11 (R10: two VIPPO vias, the
+basis of the inferred 80–110 °C/W and of the 100 mA AUX allowance with 1.1 °C margin), so the AUX allowance is not
+established on R11 (Inference; open layout item, not a pyro hazard).
+
+## D-R11-76 IMU axis map and the record-only binding note
+
+U4 bottom, rotation 180 at (23.0, 20.5): roll = −gyro_Y, thrust −a_Y (as R10); lever arm x 0.0 mm (R10 −6.0), z −2.06
+mm (Inference, R10's model-box basis). `m3_design/r11_binding_note.py` writes `r11_binding_note.json`: 100 balls, the
+51 MCU signal nets (port, ball, AF), U1's pads checked (0 mismatches), R10's obligations carried verbatim and 19 R11
+deltas. Record only; `m3_firmware/assembly_binding.py` (R1 chain) and `tools/check_r11.py` (K-binding dropped) expect
+no R11 binding check, and neither was changed.
+
+## D-R11-77 EXTI line 5 claimed by BAT_FAULT_N (PA5) and IMU_INT1 (PD5) — open
+
+D-R11-49 moved IMU_INT1 to PD5 (EXTI5); BAT_FAULT_N stays on PA5, also line 5, and R10's rule 7 rate-limits an EXTI5
+interrupt there. SYSCFG_EXTICR routes one port per line (Inference: RM0433 not re-read), so one of the two must be
+polled or re-mapped. Recorded in the binding note's R11 firmware rules; the pin map is not changed here.
