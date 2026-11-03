@@ -489,3 +489,82 @@ in 3V3A's clearance ring). BOOT0 gets a second barrel at R5's end, (28.30, 33.10
 `single_open_exceptions` entry (it replaces the D-R11-45 site (27.20, 26.40), which now carries SD_MOSI's GND partner).
 The board stays 46 × 50 mm. **Why:** greedy per-family escapes walled the field (stageC1b.md sections 1, 5 and 7); with
 targets grouped by side every ball has an exit (count table in stageC1b.md section 8).
+
+## D-R11-50 Family `ground`: solid In1 / In4 planes and a via for every GND pad (stage C4)
+
+`m3_design/r11_route_ground.py` pours In1 and In4 as one GND zone each over the whole board (outline inset 0.3 mm,
+priority 0, island removal always, thermal reliefs 0.25 / 0.3 mm on pads as the DRU's small-GND-pad rule) with 0.12 mm
+clearance and 0.1 mm minimum width, as D-R11-46's In2 3V3 base fill, so the planes stay continuous between two vias
+0.8 mm apart in the ball field. Every GND pad that had no via (stageC3.md O-C3-7, stageC1b.md O-C1b-6) gets a straight
+or one-bend stub from its centre to its own via, or to a GND pad or via already joined (tables PAD_RUNS / PAD_VIAS,
+frozen from a scratch drafting aid; HAND_RUNS / HAND_VIAS drawn by hand where the aid found no site). Every joint keeps
+at least 135 degrees between the tracks that meet at a via or pad centre and no leg shorter than max(width, 0.2) + 0.05
+mm, so route_check finds no acute angle, right angle, short segment or jog. No F.Cu / B.Cu GND pour: every GND pad has
+its own path, and an outer pour at R11's 0.1 mm rules would leave pieces with one pad and no via (K-copper pour debris,
+Inference). **Why:** stage C4 of r11_plan.md section 4; the planes are the K-reference planes of D-R11-03.
+
+## D-R11-51 ARM1_SENSE on one In3 diagonal; C26.2's via moved to the ground family
+
+ARM1_SENSE's In3 run is one diagonal (19.50, 30.90) to (11.65, 23.05) (x - y = -11.4); its bank end via moves from
+(11.40, 23.05) to (11.65, 23.05). The core family's C26.2 via (18.00, 29.20), which forced the 0.15 mm jog, is removed;
+C26.2 is joined by the ground family. **Why:** stageC1b.md section 8.6 (two tiny jogs and a short segment).
+
+## D-R11-52 GPS_TX_MCU: the jog's middle run lengthened to 0.5 mm
+
+(26.30, 38.65) - (25.45, 39.50) - (24.95, 39.50) - (24.30, 40.15) - (24.30, 43.45): the middle segment is 0.50 mm, the
+offset 0.35 mm, so route_check's tiny-jog test (middle < 0.5 mm or offset < 0.25 mm) passes; a single diagonal is forced
+out by C99.2 and C9.1 (stageC1b.md section 8.6). Clearances checked with the drafting aid and DRC (Measured).
+
+## D-R11-53 SD_MOSI: straight B.Cu after the In3 via; the R46x 3V3 via moved
+
+The In3 run stays on x 28.6 (on x 28.75 its copper edge leaves the In2 3V3 fill beside SD_CS's via (29.15, 20.75):
+K-region, Measured) to its via (28.60, 19.75); B.Cu runs straight on x 28.6 to (28.60, 18.25) and diagonally to (29.80,
+17.05), with no jog. For that, the R460-R464 column's 3V3 via moves from (28.27, 19.25) to (28.05, 19.22) (R464.2 -
+(28.27, 19.00) - via). Still forced (Measured): 4 vias against route_check's 1 + 2 and no GND partner within 1.5 mm of
+(29.80, 17.05) (stageC4.md section 4): allowlist requests to the gate lane.
+
+## D-R11-54 CAM_RX_BUFFER keeps four vias (allowlist request)
+
+U12.1 and R100.2 are both B.Cu pads, so route_check allows 0 + 2 vias. A two-via route exists only through In3 from the
+3V3 region (y > 9.95) into the RAW_PROTECTED region (y < 9.95), which K-region forbids for a port UART net; with the In3
+run held in one region the drafting router finds none, and F / B alone need four (stageC1b.md section 8.6; Measured on
+the scratch board). Allowlist request to the gate lane (stageC4.md section 4).
+
+## D-R11-55 3V3 power runs and the In2 sliver
+
+The power family's 3V3 findings are removed: L1.2 - U2.1 runs (17.0, 37.0) - (18.1, 38.1) east with the two In2 vias
+dropped straight from (19.4, 38.1) and (20.2, 38.1) (no side-by-side overlap, acute or right angle; chain detour
+1.18 / 1.13, Calculation); D120.3 reaches R164.1's pad by the shortest B.Cu run; R12.2 and R164.1 turn by 45 degrees.
+PORT_5V3's In2 polygon starts at y 10.15 (was 10.30), so the 3V3 base fill no longer leaves a 0.138 mm sliver between it
+and RAW_PROTECTED (route_check pour_sliver, Measured). The USB family's C86.2 via sits on the F.Cu C83.2 - C28.2 strap's
+bend node (36.56, 33.80) (route_check via_on_track).
+
+## D-R11-56 VLOGIC trunk through C6.1; LOGIC_SOURCE_ST's escape ends at R91.2
+
+The F.Cu VLOGIC trunk turns at (15.6, 39.0) through C6.1's centre and back to y 39.35 at (18.05, 39.35); C6.1's TP83
+branch leaves from inside the pad straight to its via. This frees (16.40, 39.00) for the only GND via of C85.2 / R86.2
+(D-R11-58). LOGIC_SOURCE_ST's escape B.Cu run ends at R91.2 instead of running a second path to U11.9 beside the power
+family's run (a duplicate loop route_check listed as a leftover).
+
+## D-R11-57 Placement and escape changes for the last GND pads
+
+R103 and R155 rotate 90 -> 270 (B.Cu), so their GND pads face free copper: R103.2 to its via (20.50, 12.03), R155.2
+south to R105.2. CAM_IO_3V3 reaches R103.1 by (19.97, 10.80); SERVO2_MCU's two B.Cu runs end inside R155.1 from the north
+and from the south-east (with a 45-degree corner at (20.6, 7.5)). CAM_TX_BUFFER's B.Cu corner moves from (24.30, 6.25) -
+(26.50, 4.05) to (24.30, 5.35) - (25.60, 4.05), so D121.2 gets its via (24.80, 5.60). U4.6 / U4.7's run gets a node at
+(21.20, 21.85) for a second barrel (21.20, 22.50).
+
+## D-R11-58 Second barrels and five single_open_exceptions
+
+check_r11 K-power's single-via-open taps: second barrels for U400.4, R401.2, R403.2, R81.2, R83.2 (ground family
+SECOND_RUNS), U4.6 / U4.7, U9.8 tied to R84.2 by B.Cu and C87.2 tied to R81.2's run. No legal site exists for R86.2
+(with C85.2), R88.2, R430.2 (two entries) and U402.2: five `single_open_exceptions` entries in `r11_gate_data.json` with
+the measured reasons (drafting-aid scans on the scratch board). K-power OK (Measured).
+
+## D-R11-59 K-reference open items (not changed here)
+
+On the poured board K-reference finds 869 samples (Measured): 621 on NRST's B.Cu run and 3 on HSE_OUT's, over the S-8
+keep-out of the ACT_DRV barrel (15.40, 29.70) on In4 (pre-existing routes, now visible); 245 at copper edges of critical
+runs that sit exactly at the 0.25 mm hole clearance from a foreign via, where the plane's antipad ends (with a 0.2 mm
+inner-layer plane hole clearance in a scratch DRU copy those 245 vanish, Measured). Owner of the fix: the NRST / ACT_DRV
+re-plan (design) and the plane antipad rule (gate lane, `m3.kicad_dru` is pinned). stageC4.md section 6.

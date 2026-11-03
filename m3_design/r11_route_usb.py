@@ -136,8 +136,9 @@ def cc_vbus(d):
     t('VBUS', 'In3', 0.2, [VB1, (38.6, 27.6), (38.9, 27.9), (38.9, 31.5), VB2])
     # GND vias of the USB support parts
     t('GND', 'B', PWR, [p('C86', '2', net='GND'), p('C98', '2', net='GND')])
-    t('GND', 'B', PWR, [p('C86', '2', net='GND'), (36.5, 33.275)])
-    v('GND', (36.5, 33.275), PV)
+    # C4 (stageC4.md): the via sits on the F.Cu C83.2 - C28.2 strap's bend node (36.56, 33.8), not under the strap
+    t('GND', 'B', PWR, [(35.975, 33.8), (36.56, 33.8)])                  # starts inside C86.2
+    v('GND', (36.56, 33.8), PV)
     t('GND', 'B', 0.2, [p('R110', '2', net='GND'), (31.23, 37.27), (31.0, 37.5)])
     v('GND', (31.0, 37.5), SV)
 

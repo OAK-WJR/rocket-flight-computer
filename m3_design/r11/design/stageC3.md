@@ -136,3 +136,10 @@ M-8, **K-copper** (D4.2 fixed, D-R11-31), K-inner, **K-region**, K-plane, K-fill
 * O-C3-6 (CAM_IO_3V3, CAM_RX / TX_BUFFER): drawn (U13 rotated, D-R11-43), pending (O-C1b-5).
 * O-C3-7 (GND): the list is extended in stageC1b.md O-C1b-6 (65 GND vias now).
 * O-C3-8 (K-rules): check_r11 K-rules OK on the C1b board (the gate lane's fix).
+
+## 7. Status after stage C4 (2026-11-03, stageC4.md)
+
+* O-C3-7 (GND): **closed.** The ground family (D-R11-50) pours In1 / In4 and gives every GND pad a via or a link to one;
+  0 unconnected items (Measured). Q124's fire return lands on the planes (K-power OK).
+* K-reference, K-power, K-ports, K-plane: see stageC4.md section 3 (K-power, K-ports, K-plane OK; K-reference open).
+

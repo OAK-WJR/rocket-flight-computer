@@ -236,3 +236,11 @@ r11_stage_check after pyro and power OK (unconnected 379 and 239); check_r11 res
 * BOOT0 / VCAP2 / PA4 single barrels: in-field dog-bones excepted (D-R11-45); PA4's via (14.65, 39.90) open (O-C1b-4).
 * LOGIC_SOURCE_ST and NRST were re-drawn by the escape table (D-R11-44); USB_FAULT_N re-drawn, pending (acute join at
   U10.4); QSPI_NCS lost its route and is open (O-C1b-1).
+
+## 11. Status after stage C4 (2026-11-03, stageC4.md)
+
+* O-C2-8 (D402.2's GND via): **closed**, check_r11 K-ports OK (Measured).
+* The 3V3 runs' route_check findings (L1.2 - U2.1, the In2 drops, D120.3, R12 / R13, R164): **closed** (D-R11-55).
+* In2 3V3 sliver between RAW_PROTECTED and PORT_5V3 (y 10.05-10.24, route_check pour_sliver): **closed**, PORT_5V3's north
+  edge at y 10.15 (D-R11-55).
+

@@ -2,7 +2,8 @@
 pull-up column R460-R464 and J430, and the two data lines DAT1 / DAT2 from their pull-ups to J430. Explicit tables only
 (D-R11-07), frozen in r11_escape.py; the escapes are pinned in r11_fanout.tsv (stageC1b.md)."""
 
-NETS = ('SD_SCK', 'SD_MISO', 'SD_CS', 'SD_DAT1', 'SD_DAT2')
+NETS = ('SD_SCK', 'SD_MISO', 'SD_CS', 'SD_DAT1', 'SD_DAT2')   # SD_MOSI pending: forced via count and GND partner, an
+# allowlist request to the gate lane (stageC4.md section 4)
 
 
 def draw(d):

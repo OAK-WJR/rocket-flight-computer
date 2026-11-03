@@ -237,6 +237,31 @@
    "U1.G3",
    "via LOGIC_SOURCE_ST (14.65, 39.90)",
    "D-R11-48: PA4's In3-to-B.Cu via south of L1. Measured on the board: I2C1_SCL / I2C1_SDA vias at (14.20, 39.55) / (14.20, 40.45) (0.57 mm), the 3V3 via (14.82, 40.90), R86.1 (B.Cu, 15.09-15.65 x 39.53-40.07), C85.2 and LOGIC_ILIM's B.Cu run to the north-east and VLOGIC's F.Cu run leave no second barrel site that joins both the In3 run and the B.Cu run (a trial at (16.05, 38.50) shorted LOGIC_ILIM and C85.2). Open, U11's ST reads floating at PA4 (advisory, Inference)"
+  ],
+  [
+   "R86.2",
+   "via GND (16.40, 39.00)",
+   "D-R11-58 (stageC4.md section 5): C85.2 / R86.2 share one via in the pocket bounded by LOGIC_ILIM (B.Cu x 15.85), USB_LIMITED (B.Cu x 17.6), U11's south row and R86 / R91; the drafting aid found no legal second via site in x 15.3-17.5, y 36.6-40.2 (F.Cu VLOGIC trunk and C6.1, In3 I2C1_SDA, hole clearance 0.25 mm; Measured on the scratch board). Open, U11's current-limit pin loses its resistor to GND (its limit then follows U11's open-ILIM behaviour, not re-read from the data sheet in this pass: Inference)"
+  ],
+  [
+   "R88.2",
+   "via GND (18.95, 32.47)",
+   "D-R11-58: R88.2's stub leaves north-east to its via; every other legal via site within 1.2 mm (Measured: (18.95, 33.2-33.4), (19.35-19.45, 32.9-32.95), (18.25, 32.45)) joins the pad or the via at 45 or 90 degrees (route_check acute / right angle), and the 3V3 B.Cu trunk (y 31.7) and USB_OVLO (y 33.43) close the rest. Open, U11's USB over-voltage divider reads high and U11 blocks USB power (fail-safe direction, Inference)"
+  ],
+  [
+   "R430.2",
+   "via GND (22.15, 9.75)",
+   "D-R11-58: R430.2 (F.Cu) reaches U402.2 only through the planes; the one legal site beside it, (24.70, 11.55), is its own via (shared with C93.2); no direct F.Cu run passes U402's east pads (0.35 mm gaps). Measured on the scratch board"
+  ],
+  [
+   "R430.2",
+   "via GND (24.70, 11.55)",
+   "D-R11-58: as the entry above; (24.70, 11.55) is the only legal via site within 1.5 mm of R430.2 (drafting aid scan, Measured). Open, U402's ILIM resistor loses GND (behaviour not re-read from the data sheet in this pass: Inference)"
+  ],
+  [
+   "U402.2",
+   "via GND (22.15, 9.75)",
+   "D-R11-58: U402.2 / C430.2 / C92.2 share one via; the drafting aid found no legal second site in x 18.4-20.4, y 8.6-10.4 or x 20.0-23.2, y 8.6-11.0 (U402's pads, CAM_5V_SENSE, servo In3 runs, BAT_IN vias; Measured). U402.2 carries U402's quiescent current only; the camera's return is J9.3 / J9.4 (Inference from the circuit)"
   ]
  ],
  "supports": [

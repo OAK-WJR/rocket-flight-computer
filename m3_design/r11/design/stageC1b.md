@@ -284,6 +284,15 @@ pre-flight item.
   * Members: R151 1 k to SERVO2_OUT, R155 10 k pull-down, a D121 channel.
   * The loader only reads PA15, and R155 holds it low (0 V). The servo sees a constant low level and no pulses.
   * An SPI3 frame needs SCK edges on PC10 (SD_SCK). With no card activity there are none, so no command forms.
+  * With PA15 held low the loader's SPI3 slave is selected for as long as the loader runs. Whether the loader then
+    drives MISO (PC11, SD_MISO) with NSS low and no SCK was not re-read from AN2606's SPI section in this pass
+    (Inference: an SPI slave shifts only on SCK edges, so at most it holds PC11 at a static level). That is harmless:
+    the other members of SD_MISO are the card's DO and R462 (10 k pull-up to 3V3). The card's CS (SD_CS, PD0) is held
+    high by R460 (10 k 1 % to 3V3; Measured on the R11 netlist, `schematic.net.xml`, and on the C4 board: R460.1
+    SD_CS, R460.2 3V3), PD0 is not a loader pin and stays a reset-state input, and no SD_SCK edges reach the card,
+    so its DO stays high-impedance and nothing contends with PC11 (Inference; SD card data sheet not re-read). A
+    static PC11 level into R462 sources or sinks at most 3.3 V / 10 k = 0.33 mA (Calculation). Added in stage C4 at
+    the gate lane's request (stageC4.md section 9).
   * PA15 resets as JTDI with an internal pull-up (DS12110 Table 9 note). Against R155 10 k that pull-up gives at most
     3.3 V × 10 k / (10 k + 30 k) = 0.83 V (Calculation, 30 kΩ the minimum pull-up, Inference). That stays below a
     servo's logic threshold (Inference) until firmware sets the pin to TIM2.
@@ -295,6 +304,9 @@ pre-flight item.
   * stale allowances for PA2, PA3, PE11 and PE12.
 
   All eight are gate-lane edits in `tools/`, which this lane does not change.
+
+  **Status after stage C4 (stageC4.md):** the gate lane's LOADER_R11 is committed; check_r11 K-loader is OK on the C4
+  board (Measured).
 
 ### 8.5 Gate results (Measured)
 
@@ -349,6 +361,16 @@ pre-flight item.
 * **Ground family:** In1 / In4 pours and the GND joints (unchanged list in O-C1b-6, plus the moved C21.2 via
   (19.45, 22.52)).
 * **Gate lane:** the `tools/` LOADER_R10 edits (section 8.4).
+
+### 8.6a Status after stage C4 (2026-11-03, stageC4.md)
+
+* ARM1_SENSE: **closed** (one In3 diagonal, D-R11-51); in pyro's NETS.
+* GPS_TX_MCU: **closed** (jog middle 0.5 mm, D-R11-52); in ports' NETS.
+* SD_MOSI: jog **closed** (D-R11-53); the via count (4 against 1 + 2) and the missing GND partner at (29.80, 17.05) are
+  forced (Measured) and are allowlist requests to the gate lane (stageC4.md section 4).
+* CAM_RX_BUFFER: forced (4 vias against 0 + 2, Measured), an allowlist request (stageC4.md section 4).
+* Ground family: written (D-R11-50); 0 unconnected items.
+* Gate lane: K-loader OK on the C4 board.
 
 ### 8.7 Checks run
 

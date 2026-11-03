@@ -117,7 +117,7 @@ R10	30.8	29.1	0	B	QSPI_NCS pull-up
 R100	31.6	2	90	B	camera RX series
 R101	32.8	2	90	B	camera TX series
 R102	19.6	14.6	90	B	CAM_UART_OE pull-down
-R103	19.6	11.6	90	B	CAM_IO_3V3 load
+R103	19.6	11.6	270	B	CAM_IO_3V3 load; C4: rotated so R103.2 (GND) faces its via (stageC4.md)
 R104	28	12.4	0	F	CAM_5V sense
 R105	19.6	8.6	90	B	CAM_5V sense
 R11	19.8	19.6	90	B	IMU_CS pull-up
@@ -143,7 +143,7 @@ R151	21	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east
 R152	19.2	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
 R153	17.4	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
 R154	21	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
-R155	19.8	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R155	19.8	6.6	270	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin; C4: rotated so R155.2 (GND) leaves south (stageC4.md)
 R156	18.6	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
 R157	17.4	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
 R162	44.4	38.6	90	B	buzzer gate series

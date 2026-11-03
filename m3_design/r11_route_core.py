@@ -44,7 +44,6 @@ RAIL_VIAS = (
     ('GND', (18.95, 25.15)),    # Y1.2 / C25.2; HSE_IN partner
     ('GND', (19.0, 27.5)),      # HSE_OUT partner
     ('GND', (14.2, 26.85)),     # Y1.4
-    ('GND', (18.0, 29.2)),      # C26.2
     # D-R11-43: the decoupling and pull-down moved out of the ball field get their own vias
     ('3V3', (29.88, 24.7)),     # C17.1
     ('GND', (30.72, 24.7)),     # C17.2
@@ -65,7 +64,6 @@ RAIL_TRACKS = (
     ('GND', 'B', PWR, [(26.4, 29.2), (26.4, 30.4)]),                        # C18.2
     ('GND', 'B', PWR, [(17.02, 23.4), (17.02, 23.9), (17.7, 24.58), (17.7, 25.15), (18.95, 25.15)]),  # C25.2, Y1.2
     ('GND', 'B', PWR, [(15.5, 26.85), (14.2, 26.85)]),                      # Y1.4
-    ('GND', 'B', PWR, [(17.02, 28.6), (17.4, 28.6), (18.0, 29.2)]),         # C26.2
     ('3V3', 'B', PWR, [(29.88, 25.3), (29.88, 24.7)]),                      # C17.1
     ('GND', 'B', PWR, [(30.72, 25.3), (30.72, 24.7)]),                      # C17.2
     ('3V3A', 'F', PWR, [(18.85, 21.68), (18.57, 21.4), (18.57, 21.12)]),     # C21.1
@@ -205,7 +203,7 @@ def imu(d):
     # D-R11-49: U4.8's via at (19.6, 21.25) (was (19.9, 21.0)), so CAM_PWR_EN's In3 run x 20.0 passes it straight
     d.track('3V3A', 'B', PWR, [d.pad('U4.8', net='3V3A'), (19.6, 21.25)])
     d.via('3V3A', (19.6, 21.25))
-    d.track('GND', 'B', PWR, [d.pad('U4.6', net='GND'), d.pad('U4.7', net='GND'), (22.11, 21.85), (20.4, 21.85)])
+    d.track('GND', 'B', PWR, [d.pad('U4.6', net='GND'), d.pad('U4.7', net='GND'), (22.11, 21.85), (21.2, 21.85), (20.4, 21.85)])   # C4: node for the ground family's second barrel
     d.via('GND', (20.4, 21.85))
     d.track('GND', 'B', PWR, [d.pad('U4.2', net='GND'), (24.75, 20.25), (25.0, 20.5)])
     d.track('GND', 'B', PWR, [d.pad('U4.3', net='GND'), (24.75, 20.75), (25.0, 20.5)])
