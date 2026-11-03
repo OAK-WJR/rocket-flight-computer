@@ -1,5 +1,6 @@
 """Check the candidate voltage core's actual R10 divider and reference wiring."""
 import hashlib
+import json
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -8,6 +9,21 @@ NETLIST='m3_design/assembly_review/schematic.net.xml'
 NET_SHA='6ee0a063d14a3b9b977b09e0315df1d758ef13a4118d436b55443befd1b55bc4'
 PIN_TABLE='m3_design/assembly_review/sources/r10_design/pin_table.tsv'
 PIN_SHA='b94133e61d553f5febb07c7c97977cd8b124634c6c19d0a2ce5b7fead304564a'
+
+def verify_native_sources(root=ROOT,provenance=None):
+    if provenance is None:
+        provenance=json.loads(Path(__file__).with_name('provenance.json').read_text())
+    names={
+        'm3_firmware/vendor/hal/Src/stm32h7xx_hal_adc.c',
+        'm3_firmware/vendor/hal/Inc/stm32h7xx_ll_adc.h',
+        'm3_firmware/vendor/device/Include/stm32h743xx.h'}
+    if (provenance.get('schema')!='r10-bench-adc-provenance/v1' or
+            set(provenance.get('pinned_sources',{}))!=names):
+        raise ValueError('Missing native ADC source provenance')
+    for name,expected in provenance['pinned_sources'].items():
+        if hashlib.sha256((root/name).read_bytes()).hexdigest()!=expected:
+            raise ValueError('Native ADC reference changed; review before using: '+name)
+    return True
 
 def voltage_contract(tree):
     expected={tuple(p.split('.')):net for net,pins in {
@@ -41,6 +57,7 @@ def voltage_contract(tree):
     return actual
 
 def verify(root=ROOT):
+    verify_native_sources(root)
     for name,expected in ((NETLIST,NET_SHA),(PIN_TABLE,PIN_SHA)):
         if hashlib.sha256((root/name).read_bytes()).hexdigest()!=expected:
             raise ValueError('Reviewed R10 voltage input changed: '+name)

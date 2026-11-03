@@ -21,9 +21,10 @@ not the complete board firmware.
 
 A separate [voltage acquisition core](voltage/README.md) now has executable
 software tests for serial samples, reference/calibration math, partial evidence,
-timeouts and recovery. It is not linked, has no native ADC adapter yet, and adds
-no voltage fields to this ABI-v3 image. ADC integration and physical accuracy
-remain open work.
+timeouts and recovery. A bounded ADC register adapter now has fake-MMIO fault
+tests and pinned-CMSIS cross-compilation checks. Neither module is linked yet,
+and no voltage fields are added to this ABI-v3 image. Image/protocol integration
+and physical accuracy remain open work.
 
 Both sensors run outside the publication critical section: IMU every 20 nominal
 ms, and the nonblocking barometer state machine on each main-loop wake.

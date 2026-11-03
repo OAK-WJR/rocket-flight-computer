@@ -1,0 +1,71 @@
+{
+  "schema": "r10-bench-adc-provenance/v1",
+  "reviewed_utc_date": "2026-11-03",
+  "sources": [
+    {
+      "document": "RM0433 Rev8, January2023",
+      "url": "https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+      "manufacturer_pdf_mirror": "https://ucilnica.fri.uni-lj.si/pluginfile.php/216967/mod_folder/content/0/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf?forcedownload=1",
+      "mirror_sha256": "9ba54135736a47a302cdc28fdc7ca8f23c6eed5a646fa0a639af6ed2ad71336e",
+      "sections_reviewed": [
+        "25.3",
+        "25.4.3",
+        "25.4.6",
+        "25.4.8",
+        "25.4.9",
+        "25.4.10",
+        "25.4.11",
+        "25.4.12",
+        "25.4.13",
+        "25.4.14",
+        "25.4.16",
+        "25.4.17",
+        "25.4.18",
+        "25.4.34",
+        "25.4.35",
+        "25.6.1",
+        "25.6.3 selected control fields",
+        "25.7.2"
+      ]
+    },
+    {
+      "document": "DS12110 Rev11, January2026",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "tables": [
+        "9",
+        "19/118",
+        "84/182",
+        "174"
+      ]
+    },
+    {
+      "document": "ES0392 Rev16, October2026",
+      "url": "https://www.st.com/resource/en/errata_sheet/es0392-stm32h742x743xig-st32h750xb-and-stm32h753xi-device-errata-stmicroelectronics.pdf",
+      "sections": [
+        "Table2",
+        "Table3 ADC entries",
+        "2.9.7",
+        "2.9.10"
+      ]
+    }
+  ],
+  "pinned_sources": {
+    "m3_firmware/vendor/hal/Src/stm32h7xx_hal_adc.c": "ad1e7d96de6472718730e35aab4b2e796fff010bad74cb8b43a955fc3fea0707",
+    "m3_firmware/vendor/hal/Inc/stm32h7xx_ll_adc.h": "0de1d50a9dd51caca179a2b761f43b24880149516ba3e884b01cbfadc77721a1",
+    "m3_firmware/vendor/device/Include/stm32h743xx.h": "9a4ea0860707868a1cc562140ba214d535fb5a64fde91b451b2767276eef7e03"
+  },
+  "official_hal_url": "https://github.com/STMicroelectronics/stm32h7xx-hal-driver/blob/master/Src/stm32h7xx_hal_adc.c",
+  "nominal_clock_model": "Explicit ES0392 revision allowlist 0x1003/0x2001/0x2003/0x2007; HSI64 PER_CK divided16. For the post-Y IDs, the nominal extra divide2 follows the pinned ST ADC_ConfigureBoostMode algorithm. This is an inference from manufacturer implementation, not a measured clock or silicon qualification.",
+  "regulator_policy": "A 1-nominal-ms guard applies to all IDs. LDORDY is additionally required for revisionV/0x2003 only, as RM0433 Rev8 documents. IDs without that explicit flag guarantee use the timed guard.",
+  "calibration_policy": "ADC1 andADC3 single-ended offset plus linearity, serialized; observe ADCAL clear and all six linearity-ready flags, then guard 1nominalms before enabling. Each wait is bounded, with a separate500ms core initialization bound.",
+  "adc_configuration": "10bit, single software-triggered conversion,810.5-cycle sampling, no DMA/interrupt/multimode; ADC2 remains deep-power-down. ADC3 VREFINT andVBAT paths are enabled only while dependent ADCs are disabled.",
+  "external_gpio": "Only PA6/PB1 MODER and PUPDR fields become analog/no-pull; other pin fields and RCC fields are preserved.",
+  "w1c_policy": "Stale EOC/OVR cause failure before a new conversion. Read DR, retain it, recheck OVR/EOC, then acknowledge EOS/EOSMP and verify. Cleanup preserves original core error history and resets only exclusively owned ADC12/ADC3.",
+  "image_linked": false,
+  "physical_hardware_tested": false,
+  "open_items": [
+    "Link into a versioned image and diagnostic record, with historical decoder and exact read-window tests.",
+    "Physical ADC timing, settling, calibration accuracy, noise, temperature and reference/divider uncertainty remain unqualified.",
+    "The model does not simulate analog behavior, undocumented silicon effects, or all applicable device errata."
+  ]
+}

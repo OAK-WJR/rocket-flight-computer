@@ -1,9 +1,12 @@
-"""Execute real portable C. No native ADC adapter, probe, or board access."""
+"""Execute acquisition and ADC MMIO models. No probe or board access."""
 import ctypes
 from fractions import Fraction
 import importlib.util
+import json
+import os
 from pathlib import Path
 import random
+import shutil
 import subprocess
 import tempfile
 import unittest
@@ -45,6 +48,29 @@ class Voltage(unittest.TestCase):
         self.assertEqual(run.returncode,0,run.stderr)
         self.assertEqual(run.stderr,'')
         self.assertIn('scripted voltage acquisition, timing and recovery cases passed',run.stdout)
+    def test_native_adc_state_machine_and_faults_against_fake_mmio(self):
+        exe=Path(self.temp.name)/'adc'
+        run=subprocess.run(['/usr/bin/clang','-O1','-g','-std=c11','-Wall','-Wextra','-Werror',
+            '-fsanitize=address,undefined','-fno-sanitize-recover=all',
+            str(HERE/'test_adc.c'),str(HERE/'adc_port.c'),str(HERE/'voltage_core.c'),'-o',str(exe)],
+            capture_output=True,text=True)
+        self.assertEqual(run.returncode,0,run.stderr)
+        run=subprocess.run([str(exe)],capture_output=True,text=True,timeout=10)
+        self.assertEqual(run.returncode,0,run.stderr);self.assertEqual(run.stderr,'')
+        self.assertIn('ADC MMIO sequencing and fault cases passed',run.stdout)
+    def test_native_register_constants_cross_compile_against_pinned_cmsis(self):
+        gcc=os.environ.get('R10_ARM_GCC') or shutil.which('arm-none-eabi-gcc')
+        if not gcc:self.skipTest('Arm compiler unavailable; native bridge compilation not tested')
+        version=subprocess.check_output([gcc,'--version'],text=True)
+        self.assertIn('15.2.1',version,'Review a compiler change explicitly')
+        root=HERE.parents[2]
+        for name in ('voltage_core','adc_port','native_adc'):
+            run=subprocess.run([gcc,'-mcpu=cortex-m7','-mthumb','-mfloat-abi=soft','-Os','-std=c11',
+                '-ffreestanding','-fno-builtin','-Wall','-Wextra','-Werror','-DSTM32H743xx',
+                '-I'+str(root/'m3_firmware/vendor/cmsis'),'-I'+str(root/'m3_firmware/vendor/device/Include'),
+                '-c',str(HERE/(name+'.c')),'-o',str(Path(self.temp.name)/(name+'.o'))],
+                capture_output=True,text=True)
+            self.assertEqual(run.returncode,0,run.stderr)
     def test_nominal_conversions_match_independent_fraction_oracle(self):
         rng=random.Random(0xadc10)
         def rounded(x):return (2*x.numerator+x.denominator)//(2*x.denominator)
@@ -96,6 +122,12 @@ class Voltage(unittest.TestCase):
             self.assertEqual(self.compute(config=Config(rev,24000,10,2000000,2000000))[0],0)
     def test_native_source_parts_reference_and_sense_wiring(self):
         self.assertTrue(binding.verify())
+    def test_changed_manufacturer_register_or_clock_reference_is_rejected(self):
+        original=json.loads((HERE/'provenance.json').read_text())
+        for name in original['pinned_sources']:
+            changed=json.loads(json.dumps(original))
+            changed['pinned_sources'][name]='00'*32
+            with self.assertRaises(ValueError):binding.verify_native_sources(provenance=changed)
     def test_changed_divider_or_legacy_pin_is_rejected(self):
         raw=(binding.ROOT/binding.NETLIST).read_bytes()
         for ref in ('R60','R61','R104','R105','U1'):

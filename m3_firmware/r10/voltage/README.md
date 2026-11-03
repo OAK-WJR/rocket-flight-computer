@@ -1,9 +1,10 @@
 # R10 bench voltage acquisition core
 
 This portable C module is a tested implementation step towards power diagnostics.
-It is **not linked into the bench image**. There is no native ADC adapter yet,
-and no ADC observations are available in the current ABI-v3 RAM record. No probe,
-programming, load output or hardware test is involved in its tests.
+It and its register adapter are **not linked into the bench image**. No ADC
+observations are available in the current ABI-v3 RAM record. The adapter is now
+cross-compiled against pinned CMSIS and tested through a fake-MMIO model; these
+tests do not open a probe, program a device or measure physical hardware.
 
 The candidate adapter contract serializes five observations: ADC3 VREFINT before
 the inputs, ADC1 PA6/VLOGIC, ADC1 PB1/camera, ADC3 VBAT, and VREFINT again.
@@ -19,7 +20,9 @@ Each read is confirmed on the following poll, so callback latency is included
 in the deadline checks. Freshness starts at the conservative read-entry time,
 not the later commit time.
 Unsuccessful cancellation and a backwards timebase stop automatic retry.
-Callbacks must themselves be bounded; a future adapter must prove that property.
+Callbacks must themselves be bounded. The adapter uses a fixed number of MMIO
+operations per call and has no wait loops; the scripted model also checks the
+operation count, initialization guards and exclusive ADC ownership.
 
 Nominal conversion uses 10-bit samples and the 16-bit factory reference word:
 
@@ -52,12 +55,33 @@ Table2 provides the explicit revision allowlist. Sections2.9.7 and2.9.10 motivat
 serial conversions and the conservative 10-bit configuration, including Y/W
 above3.3 V. Recognizing an ID in this math module does not qualify its hardware.
 
-Before integration: verify the complete applicable RM0433 initialization,
-clock/regulator/calibration and channel-switch sequence, input settling, cleanup
-and silicon-specific restrictions; implement/test the native adapter; version
-the RAM protocol and preserve historical decode/address bounds. The official
-manual's regulator/calibration/on-off sections were consulted, but direct full
-PDF downloads failed. No complete initialization review is claimed.
+`adc_port.c` initializes ADC1 and ADC3 through regulator, serialized offset and
+linearity calibration, guarded enable, and regular single-conversion phases.
+Only PA6/PB1 become analog/no-pull. ADC2 stays in deep power-down. Configuration
+and clock readback, stale data flags, overruns, failed writes and failed cleanup
+produce explicit errors. If configuration changes during acquisition, it is
+rejected before another conversion starts. A completed conversion can occur
+between CR and ISR reads; the adapter re-observes CR rather than misclassifying
+that normal transition. Failed cleanup stops automatic retry.
+
+The initialization and read/ack sequence was reviewed against the relevant
+RM0433 Rev8 sections listed in [provenance.json](provenance.json). Direct ST PDF
+downloads failed; the complete manufacturer PDF was retrieved from the named
+university mirror and its hash is recorded there. It remains a mirror copy, not
+a claim that its hash was authenticated by ST.
+
+Nominal clock metadata follows ST's pinned `ADC_ConfigureBoostMode`: HSI64 MHz,
+asynchronous divide16, with its post-Y extra divide2 model. Only the explicit
+ES0392 IDs are accepted; this is an inference from manufacturer implementation,
+not proof that every physical revision has been tested. The 1 nominal ms
+regulator guard applies to all accepted IDs; LDORDY is additionally required
+only for V/0x2003, the version for which RM0433 documents that flag. A second
+1 nominal ms guard separates calibration completion and enable. No VREFBUF,
+DMA, conversion interrupts or control outputs are configured.
+
+Before integration: version the RAM protocol, preserve full raw and last-good
+evidence, and test historical decoders and exact read windows. Input settling,
+silicon behavior and the complete physical uncertainty budget remain open.
 
 Run the actual C state-machine fault cases under AddressSanitizer/UBSan and
 compare nominal conversion against 2,000 independent rational-arithmetic vectors:
@@ -66,5 +90,12 @@ compare nominal conversion against 2,000 independent rational-arithmetic vectors
 python3 -B m3_firmware/r10/voltage/test_voltage.py
 ```
 
-The same tests are required by `tools/check.sh`. All inputs are scripted; passing
-them establishes software behavior, not physical voltage acquisition or accuracy.
+The same tests are required by `tools/check.sh`. The native constant checks
+cross-compile with Arm GNU15.2.1 when `arm-none-eabi-gcc` is on PATH or
+`R10_ARM_GCC` names it; otherwise that one test explicitly skips. The host tests
+exercise the actual adapter plus core under AddressSanitizer/UBSan, including
+all four known revision IDs, tick wrap, ignored writes, calibration/ready
+timeouts, configuration drift and retained last-good data after an overrun.
+The model restricts writes to the ADC register set and the two analog pin/clock
+fields. It does not emulate analog timing or accuracy. Passing is software
+evidence, not physical acquisition or qualification.
