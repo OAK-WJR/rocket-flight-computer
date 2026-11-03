@@ -109,7 +109,7 @@ def mcu_local(d):
     # beside J2.3 (Tag-Connect contacts keep 0.508 mm from foreign copper)
     d.via('NRST', (19.6, 27.6))
     stub(d, 'NRST', 'E1', (19.6, 27.6), SIG)
-    d.track('NRST', 'B', SIG, [(19.6, 27.6), (19.6, 30.32), (18.9, 31.02)])
+    d.track('NRST', 'B', SIG, [(19.6, 27.6), (19.0, 28.2), (19.0, 28.48)])          # C24.1 (D-R11-27)
     d.track('NRST', 'In3', SIG, [(19.6, 27.6), (19.6, 33.1), (20.0, 33.5), (33.1, 33.5), (33.5, 33.9), (33.5, 40.7),
                                  (32.9, 41.3)])
     d.via('NRST', (32.9, 41.3))

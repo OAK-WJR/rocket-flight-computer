@@ -6,6 +6,104 @@
   "side": "B",
   "tol_mm": 0.05
  },
+ "parallel_vias": [
+  {
+   "net": "VLOGIC",
+   "reason": "D-R11-26: C84 hold-up / VLOGIC trunk side change beside U11.1 (C84.1 F.Cu to U11.1 / U11.8 B.Cu): two 0.6 / 0.3 mm barrels joined on F.Cu and B.Cu, so one open barrel does not stop U2 (D-R19-09, K-power count 2)",
+   "vias": [
+    [
+     14.2,
+     35.65
+    ],
+    [
+     14.2,
+     36.45
+    ]
+   ]
+  },
+  {
+   "net": "VLOGIC",
+   "reason": "D-R11-26: R60.1 (PA6's VLOGIC sense divider top, B.Cu) from U2.2 (F.Cu): two 0.45 / 0.25 mm barrels joined on F.Cu and B.Cu (SINGLE_OPEN_TAPS VLOGIC R60.1)",
+   "vias": [
+    [
+     23.6,
+     38.45
+    ],
+    [
+     24.3,
+     38.45
+    ]
+   ]
+  },
+  {
+   "net": "CAM_5V",
+   "reason": "D-R11-26: CAM_5V from C431.1 (F.Cu) to its B.Cu run to J9.1 / J9.2 (1.249 A): two 0.6 / 0.3 mm barrels joined on F.Cu and B.Cu",
+   "vias": [
+    [
+     26.1,
+     7.85
+    ],
+    [
+     26.9,
+     7.85
+    ]
+   ]
+  },
+  {
+   "net": "ACT_GATE",
+   "reason": "D-R11-29 (R10 D-R24-02): Q120's gate island (F.Cu) to the B.Cu trunk to R121.1 by two barrels joined on both layers, so one open barrel leaves Q120.4 on R121 (SINGLE_OPEN_TAPS Q120.4); each barrel keeps a 1.3 mm S-8 keep-out on In1..In4",
+   "vias": [
+    [
+     14.6,
+     15.9
+    ],
+    [
+     14.6,
+     15.1
+    ]
+   ]
+  },
+  {
+   "net": "ACT_GATE",
+   "reason": "D-R11-29 (R10 D-R24-02): Q121's gate island (F.Cu) to the B.Cu trunk by two barrels joined on both layers (SINGLE_OPEN_TAPS Q121.4); the second barrel's ring is 1.10 mm from In3 I2C1_SDA (y 23.0), S-8 1.0 mm",
+   "vias": [
+    [
+     13.95,
+     21.0
+    ],
+    [
+     13.95,
+     21.65
+    ]
+   ]
+  }
+ ],
+ "power_narrow": [
+  {
+   "layer": "B.Cu",
+   "max_len_mm": 2.0,
+   "net": "BAT_IN",
+   "pad": "U9.5",
+   "reason": "D-R11-25: U9's 0.30 mm IN bar to C88.1 at the bar width (2.0 mm, bar centre to C88.1, Measured on the drawing)",
+   "width_mm": 0.3
+  },
+  {
+   "layer": "B.Cu",
+   "max_len_mm": 1.5,
+   "net": "RAW_PROTECTED",
+   "pad": "U9.6",
+   "reason": "D-R11-25: U9's 0.30 mm OUT bar entry, bar centre to the 0.7 mm run (1.5 mm)",
+   "width_mm": 0.3
+  },
+  {
+   "layer": "F.Cu",
+   "max_len_mm": 0.5,
+   "net": "PORT_5V3",
+   "pad": "U401.9",
+   "reason": "D-R11-26: U401.9 to U401.10 IN pin link at the 0.5 mm DSK pitch (0.25 mm pads)",
+   "width_mm": 0.25
+  }
+ ],
  "short_edge_basis": "D-R11-12: the JLC assembly panel carries 5 mm rails on both short edges, so the board short edges are not conveyor edges; courtyards hold >= 0.5 mm there",
  "short_edge_queries": {
   "C411": [
@@ -105,5 +203,6 @@
    1.955
   ]
  },
+ "single_open_exceptions": [],
  "supports_basis": "D-R11-10: four corner M3 supports, nylon hardware (check_r11 M-3 pins them within 0.01 mm)"
 }

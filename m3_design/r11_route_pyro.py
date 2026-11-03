@@ -15,8 +15,8 @@ Q121's drain tab to R134.2; PYRO1_IGN 0.5 mm R134.1 to J121.2; PYRO1_OUT 0.5 mm 
 The gate islands: Q120.4 with R120 (its own 100 k to its sources) and C120 on F.Cu; Q121.4 with R119 on F.Cu; R121 (from
 Q122's drain) south of PE4's lane. Q120's and Q121's islands each drop by one ACT_GATE barrel to a B.Cu trunk ending at R121 (on B.Cu); Q122's drain
 reaches R121 by one ACT_DRV barrel (route_check r11 allows no parallel barrel, D-R11-22); every barrel keeps a 1.3 mm keep-out on In1..In4 (S-8: 1.0 mm from its inner ring;
-ACT_GATE counts GND). J121's barrels keep 2.3 mm keep-outs (their 2.5 mm inner rings, S-8), on In2 / In3 for J121.2 (IGN,
-GND exempt) and on In1..In4 for J121.1 (PYRO1_OUT counts GND).
+ACT_GATE counts GND). J121's barrels keep 1.75 mm keep-outs (no inner rings since D-R11-28: the 0.65 mm barrel wall plus
+1.0585 mm), on In2 / In3 for J121.2 (IGN, GND exempt) and on In1..In4 for J121.1 (PYRO1_OUT counts GND).
 """
 import math
 
@@ -30,7 +30,9 @@ SV, PV, BV = (0.4, 0.2), (0.45, 0.25), (0.6, 0.3)
 
 # ACT_GATE barrels: Q120's island (north line) and Q121's island; R121 sits on B.Cu at the trunk's end. ACT_DRV's barrel
 VG_X, VG_B, VD = (14.6, 15.9), (13.95, 21.0), (15.4, 29.7)
-BARRELS_GND = (VG_X, VG_B, VD)
+# D-R11-29: each FET island's second ACT_GATE barrel, joined to the first on F.Cu and B.Cu (R10 D-R24-02)
+VG_X2, VG_B2 = (14.6, 15.1), (13.95, 21.65)
+BARRELS_GND = (VG_X, VG_B, VD, VG_X2, VG_B2)
 G_COLD = (7.35, 24.0)                                  # GND partner of the COLD via (critical net, AGENTS section 3)
 # Q124 fire return vias, the COLD and CONT_MID vias, local GND vias
 V_RET1, V_RET2 = (6.925, 31.6), (8.225, 31.6)
@@ -63,12 +65,15 @@ def keepout(board, centre, radius, layers, name):
 
 
 INNER = (pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.In3_Cu, pcbnew.In4_Cu)
+# D-R11-28: J121's pads keep no inner ring (remove_unused_layers, R10 D-R20-05), so the keep-out is measured from the
+# 1.30 mm barrel wall: 0.65 + 1.0585 (D-R26-04's gate-net spacing, which also covers S-8's 1.0 mm) = 1.7085, held at 1.75
+J121_KEEPOUT = 1.75
 
 
 def fire(d):
     t, p, v = d.track, d.pad, d.via
     # BAT_IN: J1.1 to Q120's drain (west tab), 1.0 mm (S-9 BAT_IN floor); the rest of BAT_IN is the power family's
-    t('BAT_IN', 'F', BAT, [p('J1', '1', net='BAT_IN'), (4.6, 16.6), (4.6, 19.1), (5.1, 19.6), (6.7, 19.6)])
+    t('BAT_IN', 'F', BAT, [p('J1', '1', net='BAT_IN'), (4.6, 16.6), (4.6, 18.6), (5.6, 19.6), (6.7, 19.6)])
     # ACT_FET_S: Q120's sources (north row) along the row, through the gap, Q121's sources (south row)
     t('ACT_FET_S', 'F', FIRE, [p('Q120', '3', net='ACT_FET_S'), p('Q120', '2'), p('Q120', '1'), (9.6, 18.2)])
     t('ACT_FET_S', 'F', FIRE, [(9.6, 18.2), (10.15, 18.75), (10.15, 20.45), (10.7, 21.0), p('Q121', '1', net='ACT_FET_S'),
@@ -111,8 +116,14 @@ def gates(d):
     t('ACT_GATE', 'F', PWR, [p('Q121', '4'), VG_B])
     v('ACT_GATE', VG_X, SV)
     v('ACT_GATE', VG_B, SV)
+    v('ACT_GATE', VG_X2, SV)
+    v('ACT_GATE', VG_B2, SV)
+    t('ACT_GATE', 'F', PWR, [VG_X, VG_X2])
+    t('ACT_GATE', 'B', PWR, [VG_X2, VG_X])
+    t('ACT_GATE', 'F', 0.2, [VG_B, VG_B2])
+    t('ACT_GATE', 'B', PWR, [VG_B2, (13.6, 21.65)])
     # B.Cu trunk: Q120's barrel, Q121's barrel, south west of the crystal to R121.1 (B.Cu)
-    t('ACT_GATE', 'B', PWR, [VG_X, (14.5, 16.0), (14.5, 20.45), VG_B, (13.6, 21.35), (13.6, 28.77), (14.0, 29.17),
+    t('ACT_GATE', 'B', PWR, [VG_X, (14.6, 20.35), VG_B, (13.6, 21.35), (13.6, 21.65), (13.6, 28.77), (14.0, 29.17),
                              p('R121', '1', net='ACT_GATE')])
     # Q122: PC1 lane (F2) to R122, ACT_EN to Q122's gate and its pull-down R123 / 10 nF C123, ACT_DRV to R121
     t('ACT_EN_MCU', 'F', 0.1, [p('U1', 'F2', net='ACT_EN_MCU'), (20.8, 28.0), p('R122', '1', net='ACT_EN_MCU')])
@@ -129,7 +140,9 @@ def gates(d):
     v('GND', G_Q122, PV)
     # Q124's gate network: PE4 lane (C3) west at y 26.4 / 27.3 to R126.1 and R127.1; gate column x 10.97 (R126.2,
     # R128.1, C126.1, TP122) with Q124.4 on its own branch; GND column to one via
-    t('PYRO1_GATE_N', 'F', 0.1, [p('U1', 'C3', net='PYRO1_GATE_N'), (21.6, 26.4), (16.5, 26.4), (15.6, 27.3), (12.9, 27.3)])
+    # D-R11-23 (corrected): the lane hugs C2 (GND) at the 0.1 mm floor, so D2 (3V3) gets the rest of the 0.8 mm row gap
+    t('PYRO1_GATE_N', 'F', 0.1, [p('U1', 'C3', net='PYRO1_GATE_N'), (21.65, 26.35), (16.55, 26.35), (15.6, 27.3),
+                                 (12.9, 27.3)])
     t('PYRO1_GATE_N', 'F', 0.15, [(12.9, 27.3), (12.53, 27.3), p('R126', '1', net='PYRO1_GATE_N')])
     t('PYRO1_GATE_N', 'F', 0.15, [(12.9, 27.3), p('R127', '1', net='PYRO1_GATE_N')])
     t('PYRO1_GATE', 'F', PWR, [p('R126', '2', net='PYRO1_GATE'), p('R128', '1'), p('C126', '1'), (10.97, 31.2),
@@ -143,13 +156,11 @@ def gates(d):
 
 def sense(d):
     t, p, v = d.track, d.pad, d.via
-    # cold pull-up: R131.2 by a via to D120.1 (B.Cu); D120.3's 3V3 north to its via (the power family's In2 3V3)
+    # cold pull-up: R131.2 by a via to D120.1 (B.Cu); D120.3's 3V3 is the power family's (a B.Cu run to R164.1, D-R11-27)
     t('PYRO1_COLD', 'F', SIG, [p('R131', '2', net='PYRO1_COLD'), V_COLD])
     v('PYRO1_COLD', V_COLD, SV)
     t('PYRO1_COLD', 'B', SIG, [V_COLD, (7.9, 25.82), (9.12, 25.82), (9.95, 26.65), p('D120', '1', net='PYRO1_COLD')])
     v('GND', G_COLD, PV)
-    t('3V3', 'B', 0.2, [p('D120', '3', net='3V3'), (9.0, 24.4), (10.6, 22.8), (10.6, 21.8)])
-    v('3V3', (10.6, 21.8), SV)
     # continuity divider middle: R173.2 by a via to R129.1 (B.Cu), west of the bus-sense bank
     t('PYRO1_CONT_MID', 'F', SIG, [p('R173', '2', net='PYRO1_CONT_MID'), V_CMID])
     v('PYRO1_CONT_MID', V_CMID, SV)
@@ -158,13 +169,14 @@ def sense(d):
 
 def keepouts(d):
     for k, at in enumerate(BARRELS_GND):
-        keepout(d.board, at, 1.3, INNER, f'S8_ACT_GATE_{k}')
+        # 1.0 mm from the 0.4 mm ring (0.2 + 1.0) plus margin; VG_B2 at 1.25 so In3 I2C1_SDA (y 23.0) stays outside
+        keepout(d.board, at, 1.25 if at == VG_B2 else 1.3, INNER, f'S8_ACT_GATE_{k}')
     j121 = d.board.FindFootprintByReference('J121')
     for pad in j121.Pads():
         c = pad.GetPosition()
         at = (pcbnew.ToMM(c.x), pcbnew.ToMM(c.y))
         lays = INNER if pad.GetNetname() == 'PYRO1_OUT' else (pcbnew.In2_Cu, pcbnew.In3_Cu)
-        keepout(d.board, at, 2.3, lays, f'S8_J121_{pad.GetNumber()}')
+        keepout(d.board, at, J121_KEEPOUT, lays, f'S8_J121_{pad.GetNumber()}')
 
 
 def draw(d):

@@ -137,7 +137,8 @@ def wirepads():
                   'F.CrtYd', .05)
     for num, px in (('1', -x), ('2', x)):
         body += (f'\t(pad "{num}" thru_hole circle\n\t\t(at {g(px)} 0)\n\t\t(size {g(WIRE_PAD)} {g(WIRE_PAD)})\n'
-                 f'\t\t(drill {g(WIRE_HOLE)})\n\t\t(layers "*.Cu" "*.Mask"))\n')
+                 f'\t\t(drill {g(WIRE_HOLE)})\n\t\t(layers "*.Cu" "*.Mask")\n'
+                 '\t\t(remove_unused_layers yes)\n\t\t(keep_end_layers yes))\n')
     return name, make_fp(name, 'Two plated AWG 20 stranded wire pads, 1.30 mm finished hole, 2.50 mm land, 3.80 mm '
                          'pitch; hand-soldered, no paste, not in the JLC BOM or CPL (parts_r11.md)',
                          body, -2.6, None, attr='through_hole exclude_from_pos_files exclude_from_bom')
@@ -323,6 +324,8 @@ def geometry_checks():
     assert wire == {'1': [-1.9, 0, 2.5, 2.5], '2': [1.9, 0, 2.5, 2.5]}
     fp = pcbnew.FootprintLoad(str(PRETTY), 'M3_WIREPAD_2P_AWG20')
     for p in fp.Pads():
+        # D-R11-28 (R10 D-R20-05): an inner layer keeps a ring only where the pad's own net has copper on it
+        assert p.GetRemoveUnconnected() and p.GetKeepTopBottom(), 'wire pad must drop unconnected inner rings'
         assert round(mm(p.GetDrillSize().x), 4) == 1.3 and not p.IsOnLayer(pcbnew.F_Paste) and not p.IsOnLayer(pcbnew.B_Paste)
     assert fp.GetAttributes() & pcbnew.FP_EXCLUDE_FROM_BOM and fp.GetAttributes() & pcbnew.FP_EXCLUDE_FROM_POS_FILES
     return result

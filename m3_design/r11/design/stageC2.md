@@ -5,9 +5,10 @@ Stage C of `r11_plan.md` §4, second part. Nothing is committed or ordered. Deci
 KiCad's y). Every route was drafted with a scratch maze aid or by hand and is frozen as explicit tables in
 `m3_design/r11_route_{usb,pyro,power}.py` (D-R11-07: the build never searches).
 
-**State.** `usb` and `pyro` route every net they own except the three sense nets of O-C2-1; `power` routes only the
-regulator-local control nets. The distributed rails, the J400 / EN chain and every In2 region are not drawn (section 6:
-each needs a placement change first). Stage C2 is therefore **not complete**.
+**State (after C2b, section 8).** `usb` and `pyro` route every net they own except the three sense nets of O-C2-1;
+`power` routes every rail and In2 region, the J400 / EN chain and the regulator cells. Not routed: the sense lines
+(O-C2-1), BAT_FAULT_N / LOGIC_SOURCE_ST / VLOGIC_SENSE (O-C2-4) and with them R89.1 (3V3). Stage C2 is therefore **not
+complete**; sections 1-7 are the first part's record, section 8 is C2b's and supersedes them where they differ.
 
 ## 1. Gate results (Measured)
 
@@ -134,3 +135,59 @@ north of R166's GND pad); U402's ILIM (R430, under the switch body); U11's ILIM 
 * Full `m3_design/r11_build.sh` twice (stage A gate, fit_check r11, every stage check OK): identical SHA-256
   `34d5d839bbe4ac507f1a2ddce1dcb276e8e6f3ca57ec7a8573ac3eda5a4154c3`.
 * Not run: check_r11 full (In1 / In2 / In4 not poured), K-region, K-power, plate model, any electrical test.
+
+## 8. Stage C2b (2026-11-02): power placement, rails, In2 regions, barrels, PE4
+
+Decisions D-R11-25 ... -30 (and D-R11-23 corrected) in `R11_DECISIONS.md`. Everything below is Measured on the board built by
+`m3_design/r11_build.sh` unless labelled.
+
+### 8.1 What was done
+
+| Item | Result |
+|---|---|
+| O-C2-2 a, U9 west cell | U9 rotated 180; EN U9.1 -> R81 -> C87 -> R165.2 one B.Cu run, no via; U9 IN J1.1 -> C88.1 -> U9.5 B.Cu, no via (D-R11-25) |
+| O-C2-2 b-e | L1 / U400 / L400 rotated, C5 / C402 at the BST / SW pins, U402 fed from L400.2 through C430.1, U401's divider and SS cap re-sided, PORT_4V8 to the ports through one In2 piece under J3 (D-R11-26) |
+| Rails and In2 | BAT_IN, RAW_PROTECTED, VLOGIC, CAM_5V, PORT_5V3, PORT_4V8, 3V3A complete; 3V3 complete but R89.1 (D-R11-27) |
+| O-C1-3 / K-region | SCK's In3 run under 3V3A only, NRST's under 3V3 only: check_r11 K-region OK |
+| O-C2-3 | every 3V3 / 3V3A pad but R89.1 has its via to its region |
+| O-C2-7 | J1 / J121 drop unconnected inner rings; J121 keep-outs 1.75 mm; S-8 OK (D-R11-28) |
+| O-C2-5 | second barrels and `parallel_vias` entries (D-R11-29) |
+| D-R11-23 | PE4 0.200 mm from D2 (was 0.150), every other gate-net copper >= 3.105 mm from 3V3 / 3V3A (D-R11-23, -30) |
+| Gate data | `r11_gate_data.json`: `parallel_vias` (5 pairs), `power_narrow` (U9.5, U9.6, U401.9), `single_open_exceptions` empty |
+
+Placement changes (r11_place.tsv): U9, C88, R81, C87, R82, R83, R84, C81, D402, TP80 (U9 cell); L1, C5, U400, L400, C402,
+R400, R401, R404, R430, C430, C431, C99, TP83 (bucks / U402 / VLOGIC); R402, R403, R405, C408 (U401); C24 (NRST cap, core's
+stub shortened to it). Fit, courtyards and DRC re-checked in the build.
+
+### 8.2 Gate results
+
+* `r11_build.sh` end to end, twice: every stage check OK; core 461, usb 428, pyro 387, power **252** unconnected (all on
+  pending nets: GND 162 and the signal families). Identical SHA-256 both runs:
+  `58371a74c08fbc9e431ed25b988c996f1c01802171f163e910f06b681d3910f4`.
+* `tools/check_r11.py` on a zone-filled copy (In1 / In4 not poured): OK S-1, S-2, S-3, S-3c, S-5, S-6, S-7, S-8, S-9, W-1,
+  W-2, LC-1, M-1, M-5, M-6, M-7, M-8, K-inner, K-region, K-plane, K-fill, K-lands, K-width, K-loader. Failing and why:
+  K-power (23: 19 GND taps and Q124's return wait for the ground pours; U1.G3 / LOGIC_SOURCE_ST is O-C2-4; BOOT0, VCAP1,
+  VCAP2 hang on core's single dog-bone vias, O-C2-12); K-copper (2: usb's GND via (35.15, 30.4) at D4.2's mask / paste,
+  O-C2-13); K-ports (17, ports family); K-reference (ground family); K-legends (stage D); K-rules (14) and M-3 (1) are
+  gate-lane / gate-data items (DRU floors, supports pin); S-4 cannot read the schematic from a scratch copy (run in place).
+* check_r11 K-power power paths (U9 IN / OUT, U401 IN / EN / OUT, U402 IN, port feeds, CAM_5V, C84 hold-up, VLOGIC
+  trunk, U400 OUT, U2 OUT): no finding.
+
+### 8.3 Open items (not verified)
+
+* O-C2-1 the sense lines (unchanged). A viable In3 corridor (Inference): y 18.5 from x 16 west to x 6.6 runs between the
+  ACT_GATE keep-outs (VG_X / VG_X2 to y 17.2, VG_B / VG_B2 from y 19.7) and north of I2C's In3 run; the bank-side via is
+  the hard part (R173 / PYRO1_OUT and the bank pads leave no legal site at x 6-7, y 22-24 on first look).
+* O-C2-4 BAT_FAULT_N, LOGIC_SOURCE_ST, VLOGIC_SENSE; R89 (FAULT pull-up) is still at the aft edge in the BAT_IN In2 region
+  and needs moving to a 3V3 area with the FAULT run. Every path from U9's side to U1's south / west balls crosses core's
+  I2C In3 wall (x 13.2 / 13.75, y 23.0 / 23.6) and NRST's In3 run; the crossing has to be on F.Cu or B.Cu.
+* O-C2-12 core's BOOT0 / VCAP1 / VCAP2 single vias fail K-power's single-open taps (core family).
+* O-C2-13 usb's D4.2 GND via (35.15, 30.4) fails K-copper (mask / paste).
+* O-C2-8 (GND, ground family): the local GND copper drawn here ends in pads with no via yet: U9.8 / R84.2 / C81.2 joint,
+  R81.2, C87.2, R83.2, C88.2, R401.2, R403.2, C408.2, C430.2, R430.2, C402's neighbour U400.4, U401.4 / .6 / .11, C406.2,
+  C407.2, and every decoupling cap's GND pad; Q124's two return vias wait for In1.
+* D8 (input TVS) reaches In2 BAT_IN by one 0.6 / 0.3 mm via beside D8.1; its surge path impedance is not assessed
+  (Inference).
+* J400.2's BAT_SW_RETURN is one barrel: open, the board stays off (fail-safe, Inference).
+* PE4 / D2 0.200 mm stays an owner deviation (D-R11-23).
+

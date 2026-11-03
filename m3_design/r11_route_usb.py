@@ -63,12 +63,15 @@ def limiter(d):
     t('VBUS', 'B', 0.4, [VB1, (38.3, 24.3), (37.8, 23.8), p('U10', '3', net='VBUS')])
     t('VBUS', 'B', PWR, [p('U10', '3', net='VBUS'), (35.85, 24.4), (35.45, 24.8), (34.35, 24.8), (33.95, 24.4),
                          p('U10', '1', net='VBUS')])
-    t('GND', 'B', PWR, [p('U10', '2', net='GND'), (34.9, 22.85)])
+    t('GND', 'B', PWR, [p('U10', '2', net='GND'), (34.9, 22.85), (34.9, 22.25)])
     v('GND', (34.9, 22.85), PV)
+    v('GND', (34.9, 22.25), SV)          # D-R11-29: U10.2's second GND barrel (SINGLE_OPEN_TAPS U10.2 / R7.2)
     # ILIM to R85 in the strip; R85.2's GND via
     t('USB_ILIM', 'B', 0.15, [p('U10', '5', net='USB_ILIM'), (34.9, 27.5), p('R85', '1', net='USB_ILIM')])
     t('GND', 'B', PWR, [p('R85', '2', net='GND'), V_ILIM_G])
     v('GND', V_ILIM_G, SV)
+    t('GND', 'B', PWR, [p('R85', '2'), (35.33, 27.43)])
+    v('GND', (35.33, 27.43), SV)         # D-R11-29: R85.2's second GND barrel
     # FAULT: R90 (pull-up) and a via to In3, west along y 25.6 to C6's dog-bone
     t('USB_FAULT_N', 'B', 0.15, [p('U10', '4', net='USB_FAULT_N'), (36.45, 27.0), V_FLT])
     t('USB_FAULT_N', 'B', 0.15, [V_FLT, (36.75, 27.6), p('R90', '2', net='USB_FAULT_N')])
@@ -129,6 +132,8 @@ def cc_vbus(d):
     t('GND', 'B', PWR, [(37.55, 38.43), p('R8', '2', net='GND')])
     t('GND', 'B', PWR, [(37.55, 38.43), (37.55, 39.1)])
     v('GND', (37.55, 39.1), PV)
+    t('GND', 'B', PWR, [p('R7', '2'), (37.0, 39.08)])
+    v('GND', (37.0, 39.08), SV)          # D-R11-29: the R7.2 / R8.2 island's second GND barrel
     # D4.5 (VBUS) by its own via to C28.1; J3's two VBUS pins joined on In3 east of V_A7 and the CC vias
     t('VBUS', 'B', PWR, [p('D4', '5', net='VBUS'), (37.4, 30.4), (37.65, 30.65), (37.65, 32.05), VB2])
     v('VBUS', VB2, PV)

@@ -200,13 +200,22 @@ the price is that check_r11 K-power's single-via-open taps Q120.4 / Q121.4 → R
 entry (stageC2.md O-C2-5, owner / gate lane). S-8 Measured: nearest foreign inner copper 1.218 mm (ACT_DRV to a GND via
 ring) before the pours; the rule areas keep the pours out (Inference until poured).
 
-## D-R11-23 PE4's gate-net spacing at the TFBGA (owner deviation)
+## D-R11-23 PE4's gate-net spacing at the TFBGA (owner deviation; corrected in stage C2b)
 
-PYRO1_GATE_N's copper is 0.150 mm from U1.D2 (3V3) on F.Cu (Measured), against R10's 1.0585 mm (D-R26-04). The ball C3
-itself is 0.73 mm edge to edge from the 3V3 balls B2 and D2, so no route can meet it on the TFBGA-100 (stage A's package).
-Every other PYRO1_GATE_N / PYRO1_GATE / PYRO1_OUT copper keeps ≥ 4.1 mm from 3V3 / 3V3A (Measured, no inner 3V3 copper
-yet). **Why recorded:** a 3V3 bridge to PE4's net drives Q124's gate through R126 against R128 and may fire an enabled
-match (R10's reasoning, Inference); it is a package-level deviation for the owner, as R10 D-R26-04's retained pairs.
+What the package forces: ball C3 (PE4, PYRO1_GATE_N) is 0.731 mm edge to edge from the 3V3 balls B2 and D2 (0.8 mm pitch,
+0.40 mm lands, diagonal neighbours: Calculation on DS12110 Rev 8's TFBGA-100 pitch and stage A's land). What the routing
+forces on this board (Inference from the copper, not a package fact): C3's two east interstitial sites (22.4, 25.6) /
+(22.4, 26.4) are closed by C13 / C15's GND pads on B.Cu directly below, so PE4 has no via near the ball, and every F.Cu
+exit from C3 to its targets west of U1 passes between column-2 balls, one of which is B2 or D2. The best F.Cu lane is the
+row gap between C2 (GND) and D2 (3V3) with the 0.1 mm track held at the 0.1 mm clearance floor from C2: track edge to D2's
+land 0.200 mm (Measured on the routed board; was 0.150 mm before stage C2b). So PYRO1_GATE_N's nearest 3V3 copper is
+D2's land at 0.200 mm (track) and B2 / D2 at 0.731 mm (ball), against R10's 1.0585 mm (D-R26-04). Only a change of core's
+fan-out (moving C13 / C15 off the east sites) or of the pin assignment could reach the ball-adjacency limit. Every other
+PYRO1_GATE_N copper and all PYRO1_GATE / PYRO1_OUT copper keeps at least 3.105 mm from 3V3 / 3V3A on every layer, the
+In2 fills included (Measured: PYRO1_GATE 3.105 mm to a 3V3A via, PYRO1_OUT 4.370 mm; J121.1's barrel keeps no inner ring
+and its nearest inner fill is In2 RAW_PROTECTED at 1.10 mm, no 3V3 / 3V3A fill within 3 mm, Measured). **Why recorded:** a
+3V3 bridge to PE4's net drives Q124's gate through R126 against R128 and may fire an enabled match (R10's reasoning,
+Inference); it stays a deviation for the owner, as R10 D-R26-04's retained pairs.
 
 ## D-R11-24 power family split
 
@@ -215,3 +224,68 @@ soft-start). The rails, the J400 / EN chain and the In2 regions wait for the pla
 (U9's west cell, L1 / C5 at U2, U400's orientation, U402's feed, PORT_4V8's path to the forward ports). **Why:** each of
 them needs a part moved or rotated before any legal copper exists; drawing partial rails would only create copper to
 remove.
+
+## D-R11-25 U9's cell: EN chain on one B.Cu run, IN without a via (O-C2-2 a)
+
+U9 (TPS25947, B.Cu) is rotated 180 so EN (pin 1) is its aft-east corner facing J400 / R165. EN runs from U9.1 north on
+B.Cu to R165.2 with R81 (pull-down) and C87 (filter) tapped 1.3 mm and 2.5 mm from U9.1 (Measured on the table), so R81 / C87
+sit at U9's end of the run as R10 D-R21-05 intended, and the EN chain has no via at all (R10 kept one, D-R20-01). OVLO goes
+east to R83 / R82, ILIM and dV/dt west to R84 / C81. C88 sits on the IN bar's aft end: IN runs from the bar straight through
+C88.1 and on B.Cu to J1.1 (0.7 mm; the bar entry 0.3 mm for 2.0 mm, a power_narrow entry) with no via on the J1.1 -> C88.1 ->
+U9.5 path (check_r11 U9 IN); its In2 BAT_IN vias hang off it as stubs. OUT leaves the OUT bar's forward end to two
+0.6 / 0.3 mm vias into In2 RAW_PROTECTED. J400.2 reaches R165.1 / D402.1 by one BAT_SW_RETURN barrel (D402 rotated so its
+pin 1 is beside R165.1) with a 1.3 mm S-8 keep-out on In2 / In3 (1.205 mm nearest foreign inner copper, Measured); one open
+barrel there leaves EN low through R81 (board off: fail-safe, Inference). TP80 moved beside J1 on the IN run. **Why:** at
+rotation 0 EN faced away from R165 and crossed the OVLO / FAULT / IN / OUT exits (stageC2.md O-C2-2 a), and a via on U9 IN
+would break check_r11's no-via path rule (gate_C2.md).
+
+## D-R11-26 The bucks' switch loops, U402's feed and U401's divider (O-C2-2 b-e)
+
+L1 rotated 180 so L1.1 (SW) faces U2: SW runs from U2.5 under U2's body between its pin rows to L1.1 (4.0 mm of track, Calculation on the table); C5 sits
+over U2.5 / U2.6 (BST). U400 and L400 rotated 180: U400.5 (SW) reaches L400.1 by 2.5 mm of 0.7 mm track (Calculation on the table; the stage C2 aid had found a 12 mm detour), C402 (BST) at
+U400.6, and the feedback column R401 / R404 / R400 at U400.1. U402's PORT_5V3 comes from L400.2 by an F.Cu run along the aft
+strip through C430.1 (C430 moved to U402.1, R430 to U402.5); CAM_5V runs U402.6 -> C431.1 -> two vias -> B.Cu -> J9.2 / J9.1.
+U401's divider R402 / R403 moved to the FB side (west), C408 to the SS side (east), R405 onto the PORT_4V8 run west of U401;
+PORT_4V8 leaves U401 by two 0.6 / 0.3 mm vias into one In2 PORT_4V8 piece that runs under J3 (x 40.7-43.25, between its
+shell barrels) to the forward port band, and each port pin drops into it by one 0.6 / 0.3 mm via (one piece, so K-plane
+needs no links). VLOGIC: C84.1 to U11 by two vias west of U11.1, the trunk on F.Cu under C84's / L1's gap to C99 (moved to
+F.Cu at U2.3) and U2; TP83 and C99 moved. **Why:** each item of stageC2.md O-C2-2 needed a part moved or rotated before legal
+copper existed; the VLOGIC trunk changes side because USB_LIMITED's B.Cu run encloses U11.8.
+
+## D-R11-27 In2 power regions, rail taps and the 3V3A / NRST / SCK layout (O-C1-3, O-C2-3)
+
+In2 carries a 3V3 base fill (priority 0) and BAT_IN, RAW_PROTECTED, PORT_5V3, PORT_4V8 and 3V3A polygons (priority 1),
+clearance 0.2 mm, solid connections, island removal on (r11_route_power.ZONES). BAT_IN takes the aft-west block, RAW the
+block under U9's outputs, the west corridor to U11 and the aft band to U400, PORT_5V3 the east block, PORT_4V8 the strip
+under J3 and the forward band, 3V3A a column west of NRST's In3 run (x 19.6, which lies under 3V3) and a block over U4 that
+covers SCK's whole In3 run, so SCK's chain sees only 3V3A and NRST's only 3V3 (check_r11 K-region OK, K-plane OK: every
+rail one piece, Measured). H1 (VDDA) reaches R164.2 by B.Cu (C24 moved north of H1, core's NRST stub shortened to it); R164.1,
+D120.3 and K1's via are joined by a B.Cu 3V3 run (D120's In2 3V3 via removed from the pyro family). Every 3V3 / 3V3A / rail
+pad has its own via to its region (drafted with a scratch via finder), except R89.1 (3V3), which waits for BAT_FAULT_N
+(O-C2-4). Inner copper is 15.2 um (JLC06161H-3313): the narrowest current-carrying In2 neck, RAW's column at x 19.2-20.6
+to U400, is 1.4 mm against gate_C2.md's 0.88 mm inner floor for 1.9 A (Calculation, the fit's Inference inputs).
+**Why:** In2 is power and GND only (K-inner), and the K-region conflict of O-C1-3 needed SCK and NRST each under one net.
+
+## D-R11-28 J1 / J121 wire pads keep no unconnected inner ring (O-C2-7)
+
+The AWG 20 wire-pad footprint (r11_parts.py) now sets remove_unused_layers / keep_end_layers, as R10 D-R20-05: an inner
+layer keeps a ring only where the pad's own net has copper there (none on R11). J121's S-8 keep-outs shrink from 2.3 to
+1.75 mm (0.65 mm barrel wall + 1.0585 mm, D-R26-04's gate-net spacing, which also covers S-8's 1.0 mm). S-8 Measured on the
+routed board: J121's barrels have no foreign inner copper within 1.0 mm (nearest In2 fill 1.10 mm); check_r11 S-8 OK.
+**Why:** a 2.5 mm ring on four inner layers only brought foreign copper nearer to PYRO1_OUT / PYRO1_IGN.
+
+## D-R11-29 Second barrels on single-via taps (O-C2-5)
+
+Q120's and Q121's ACT_GATE islands each get a second barrel joined to the first on F.Cu and B.Cu ((14.6, 15.1), (13.95,
+21.65)), each with its S-8 keep-out (the second Q121 barrel 1.100 mm from In3 I2C1_SDA, Measured, against 1.0 mm); U10.2,
+R85.2 and the R7.2 / R8.2 island get a second GND barrel; R400.1, R82.1 / R80.1, R91.1 and the BAT_IN trunk get a second via
+into their In2 region. The no-pour pairs are listed in r11_gate_data.json 'parallel_vias' (ACT_GATE x2, VLOGIC x2, CAM_5V)
+with their reasons; single_open_exceptions stays empty. **Why:** check_r11 K-power fails any tap on one via (R10's
+SINGLE_OPEN_TAPS) and route_check r11 now accepts listed parallel pairs (gate_C2.md).
+
+## D-R11-30 PE4's lane moved to the C2 side of the D2 gap (D-R11-23)
+
+PYRO1_GATE_N leaves C3 diagonally to (21.65, 26.35) and runs west at y 26.35 instead of 26.4, 0.1 mm from C2 (GND) at the
+clearance floor, so D2 (3V3) gets 0.200 mm instead of 0.150 mm (Measured). **Why:** the most the row gap allows with no via
+(D-R11-23 as corrected).
+
