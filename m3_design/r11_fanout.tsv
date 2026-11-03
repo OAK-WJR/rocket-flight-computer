@@ -30,7 +30,7 @@ C1	HSE_IN	core	routed	F-B	20.0	25.6	W	B	26	Y1.1	15.5	25.15
 C2	GND	core	routed	F-plane	20.8	25.6	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 C3	PYRO1_GATE_N	pyro	routed	F	-	-	W	F	26.35	R126.1	11.83	28	
 C5	SPI1_MOSI	core	routed	F	24.0	18.7	N	F	24	U4.14	23.5	19.54	
-C8	SD_MOSI	sd	routed	F-In3	27.2	25.6	N	In3	28.6	R461.1	29.13	16.7	D-R11-49: re-routed
+C8	SD_MOSI	sd	routed	F	-	-	N	F	27.25	R461.1	29.13	16.7	D-R11-63: F.Cu north between A9 / A10 (was F-In3 via 27.2, 25.6)
 C10	USB_DM	usb	routed	F	-	-	E	F	25.6	J3.A7	39.12	29.75	
 D1	HSE_OUT	core	routed	F-B	20.0	27.2	W	B	26.85	Y1.3	17.7	26.85	
 D2	3V3	core	routed	F-plane	20.8	27.2	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor

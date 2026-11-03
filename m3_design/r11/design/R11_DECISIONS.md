@@ -644,3 +644,38 @@ to copper clearance" and R11_DRU_FLOORS' hole_clearance exactly, with no margin;
 `r11_sch.py` and pinned to it by `r11_sch_check.py` ("DRU differs from the generator"), so the change would need a
 generator edit; and it would refill every plane round every via to fix a 0.5 um reading. `m3.kicad_dru` and
 R11_DRU_SHA256 (`b483f287…`) are unchanged.
+
+## D-R11-63 SD_MOSI: F.Cu escape north between A9 / A10, three vias; SD_SCK / SD_MISO leave their balls off-centre
+
+Clears route_check r11's last finding, `extra_vias SD_MOSI` (4 vias against 1 + 2), without the 0.2 mm `short_segment`
+/ `tiny_jog` of D-R11-61's counter-example (stageC5.md section 6).
+* **SD_MOSI** (`r11_escape.py`, sd): F.Cu U1.C8 - (26.35, 25.65) - (26.35, 24.9936) - (26.5836, 24.76) - (27.0964,
+  24.76) - (27.25, 24.6064) - (27.25, 23.15): north through the B8 / B9 gap, east 0.513 mm along the A / B row gap,
+  north between A9 and A10 to a via outside the field. B.Cu (27.25, 23.15) - (28.60, 21.80) - (28.60, 18.25) - via
+  (29.80, 17.05); the F.Cu runs to R461.1 and east to (36.35, 16.75) and the B.Cu run to J430.3 are unchanged. Vias
+  (27.25, 23.15), (29.80, 17.05), (36.35, 16.75): 3 (was 4: the field via (27.20, 25.60) and the In3 run to (28.60,
+  19.75) are gone, so SD_MOSI has no In3 copper and no K-region run). 22.65 mm (was 22.82, Measured).
+* **SD_SCK / SD_MISO** keep their routes but start 0.0999 mm off their ball centres (under route_check's 0.1 mm
+  `pad_end_offcentre` line): SCK at (26.8707, 25.2707), south-east of B9's centre, so its diagonal is x + y = 52.1414
+  (was 52.0) and its A / B-gap run is y 24.82 (was 24.8), 0.509 mm long, into the unchanged diagonal to (29.50, 23.15);
+  MISO at (25.9293, 25.1293), north-west of B8's centre, so its diagonal is x + y = 51.0586 (was 51.2) and its corner
+  (26.40, 24.6586). Each keeps three segments (no staircase). Lengths 15.53 / 23.85 mm (were 15.57 / 23.89, Measured).
+  **Why:** SD_MOSI's run must pass between MISO's diagonal and SCK's diagonal with 0.2 mm centre-line spacing (0.1 mm
+  tracks, 0.1 mm clearance), turn 45 degrees twice, and keep its A / B-gap run at least 0.5 mm (route_check tiny_jog) and
+  its chamfer at least 0.2 mm (short_segment). From the ball centres the window is 0.283 mm short; with both off-centre
+  starts it is 0.5128 mm against 0.5 (Calculation on the tables). Every other arrangement was blocked (stageC5.md
+  section 6): MOSI through the B9 / B10 gap leaves SCK no exit; SCK on a field via is closed in on In3 by SD_CS's run and
+  on B.Cu by QSPI_IO2's.
+* **GND partner** (`r11_escape.py`, sd vias): a GND via (28.25, 23.00), 1.01 mm from SD_MOSI's via (27.25, 23.15), at a
+  site `tools/r11_gnd_spots.py` lists as legal (811 legal 0.4 / 0.2 mm sites within 1.5 mm; Measured). SD_MOSI's via
+  (29.80, 17.05) is unchanged, so `ALLOWLIST_R11`'s critical_via_no_gnd entry stays as D-R11-61 wrote it and its
+  no-GND audit still finds no site (route_check: 0 out of date).
+* `r11_fanout.tsv` C8: path F, exit N on F.Cu, slot 27.25 (was F-In3, via (27.20, 25.60), In3 slot 28.60).
+  `r11_route_sd.py` NETS now includes SD_MOSI.
+* `r11_stage_check.py`: a `FAIL stale allowlist entry` line is keyed by the net its entry names, so an ALLOWLIST_R11
+  entry for a net whose family has not run yet counts as pending. Without it the build stopped at the `core` stage on
+  D-R11-61's two entries (SD_MOSI, CAM_RX_BUFFER), which match nothing until their families have run (Measured on
+  `ad7b500`).
+Result (Measured): route_check r11 0 failing, 2 allowlisted, 0 stale; the only change in its full listing is the removed
+`extra_vias SD_MOSI` instance. Every check_r11 rule but K-legends OK; DRC 0, unconnected 0; the build's final stage
+check passes (exit 0).

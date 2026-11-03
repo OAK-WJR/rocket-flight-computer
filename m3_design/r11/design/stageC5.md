@@ -85,3 +85,62 @@ check_r11 (full) on a zone-filled copy with its fit report:
 
 * O-C4-2's second cause (248 antipad boundary samples) stays with the gate lane.
 * Signal integrity of NRST and HSE_OUT, JLC DFM and any electrical test: not run.
+
+## 6. SD_MOSI's escape: three vias, no jog (D-R11-63)
+
+Board `ad7b500`'s build (`4e552ef4…`) left one route_check finding: `extra_vias SD_MOSI` (4 vias, 1 + 2 allowed).
+D-R11-61's 3-via counter-example needed a 0.2 mm F.Cu piece between U1's B8 / B9 and A9 / A10 balls (gated
+`short_segment` and `tiny_jog`). Coordinates below are board mm; U1's balls are 0.4 mm pads on a 0.8 mm pitch (A9
+(26.8, 24.4), A10 (27.6, 24.4), B8 (26.0, 25.2), B9 (26.8, 25.2), B10 (27.6, 25.2), C8 (26.0, 26.0)).
+
+**Why the escape has to pass between SCK and MISO** (Calculation on the board's copper, then confirmed with DRC on scratch
+copies):
+* C8 can leave only by its north-east corner (C9, an NC pad, closes the C row; the B / C gap east is closed at USB_DM's
+  corner (28.0, 25.6); the C / D gap by the GND via (27.2, 26.4)). From there it goes north through the B8 / B9 gap or the
+  B9 / B10 gap.
+* Through the B9 / B10 gap, SD_SCK (B9) would have no exit: its north-west corner is MISO's, its other three are on
+  MOSI's path.
+* SCK on a field via at B9's south-east corner (27.2, 25.6): B.Cu there is closed by QSPI_IO2 (y 24.4, then x 29.0);
+  In3 by SD_CS's run (27.2, 27.2) - (28.95, 25.45) - x 28.95 to y 20.95 to the east and SERVO2_MCU (x 26.1) to the west;
+  further north, K-region holds a 3V3-region run west of PORT_5V3 (x >= 29.4), and the B.Cu drop sites there lead into
+  SD_MISO's loop, CAM_RX_BUFFER's x 29.45 run and J430's pads. The gate lane's grid router (scratch, clearances relaxed
+  0.035 mm) found only a 2-via SCK route that wanders through the field on F.Cu, runs In3 to y 11 and B.Cu along y 11-12
+  under J430 (Measured on the scratch board): rejected.
+* So MOSI goes north through the B8 / B9 gap, east in the A / B row gap (one 0.1 mm track: the pads leave 0.4 mm), north
+  between A9 and A10 (x 27.25: 0.1 mm to A10, and the hole clearance to SWCLK's via (26.8, 23.6)). Its first diagonal
+  must keep 0.2 mm (centre lines) from MISO's diagonal, its chamfer 0.2 mm from SCK's, its A / B-gap run must be at least
+  0.5 mm (tiny_jog) and its chamfer at least 0.2 mm long (short_segment). With MISO and SCK leaving from their ball
+  centres the run can be at most 0.23 mm (Calculation). Starting each 0.0999 mm off its ball centre, inside the pad and
+  under route_check's 0.1 mm `pad_end_offcentre` line, gives 0.5128 mm against 0.5 (an in-pad stub instead makes a
+  gated `staircase`, Measured on a scratch copy).
+
+**Copper** (D-R11-63):
+
+| Net | Layer | Points |
+|---|---|---|
+| SD_MOSI | F.Cu | C8 (26.0, 26.0) - (26.35, 25.65) - (26.35, 24.9936) - (26.5836, 24.76) - (27.0964, 24.76) - (27.25, 24.6064) - via (27.25, 23.15) |
+| SD_MOSI | B.Cu | (27.25, 23.15) - (28.60, 21.80) - (28.60, 18.25) - via (29.80, 17.05) (the rest of the net unchanged) |
+| SD_SCK | F.Cu | (26.8707, 25.2707) - (27.3214, 24.82) - (27.83, 24.82) - via (29.50, 23.15) |
+| SD_MISO | F.Cu | (25.9293, 25.1293) - (26.40, 24.6586) - (26.40, 23.40) - (27.90, 21.90) - via (29.45, 21.90) |
+| GND | via | (28.25, 23.00), SD_MOSI (27.25, 23.15)'s partner, 1.01 mm |
+
+Clearances at the narrow points (Calculation, centre-line spacing for 0.1 mm tracks, 0.2 mm needed): MOSI's first
+diagonal to MISO's 0.2015 mm; MOSI's chamfer to SCK's diagonal 0.2015 mm; MOSI's A / B-gap run (y 24.76) to A9 0.11 mm and
+to B9 0.19 mm (copper gaps); MOSI's turn (27.25, 24.6064) to SCK's corner (27.3214, 24.82) 0.225 mm; SCK's diagonal to
+B10 0.216 mm and its A / B-gap run to A10 / B10 0.17 / 0.13 mm (copper gaps). DRC is the measurement: 0 violations.
+B.Cu: MOSI's x 28.6 run keeps 0.275 mm from the 3V3 via (28.05, 19.22) and 0.30 mm from the SD_CS / SD_DAT2 vias at
+x 29.15 (copper gaps).
+
+**Results (Measured).** `m3_design/r11_build.sh` twice: every stage check OK, the final `ground` check OK (exit 0, 0
+route_check failures), `r11_escape_check` OK (69 rows; F N exits 9, In3 N 6); SHA-256
+`b7e2decb49bce5b24d124e24dd886d38a8e634ad7c2d203885f7125a6771bbb5` both times. On a zone-filled copy: DRC 0, unconnected
+0; check_r11 every rule OK except K-legends (stage D), K-reference OK; S-8 minimum 1.01 mm, ACT_DRV 1.069 mm
+(unchanged); PYRO1_GATE / _N to 3V3 / 3V3A minimum unchanged (0.386 mm, D-R11-23). route_check `--profile r11`: 0
+failing, 2 allowlisted, 0 stale, 0 out of date, 25 unrecorded non-critical leftovers; its full `--list` output differs
+from `4e552ef4…`'s only by the removed `extra_vias SD_MOSI` instance (every category, INFO included). SD_MOSI 22.65 mm,
+3 vias; SD_SCK 15.53 mm, SD_MISO 23.85 mm (lengths Measured). `tools/test_route_check.py` (85 tests) and
+`tools/test_r11_check.py` (40 tests, R11_BOARD on the zone-filled copy) pass.
+
+**Open (not verified).** The 0.0015 mm margins over the 0.1 mm clearance and the 0.0128 mm over route_check's 0.5 mm
+jog line are drawing margins only (Calculation); JLC's DFM on the BGA escapes, signal integrity of the SD bus and any
+electrical test are not run.

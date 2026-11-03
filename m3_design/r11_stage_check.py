@@ -50,10 +50,15 @@ def net_of(item):
 
 
 def route_failures(stdout):
-    """(category, net, line) of every FAIL line of route_check."""
+    """(category, net, line) of every FAIL line of route_check. A stale allowlist entry (D-R11-61's ALLOWLIST_R11) is
+    keyed by the net it names, so an entry for a net whose family has not run yet counts as pending (D-R11-63)."""
     out = []
     for line in stdout.splitlines():
         if line.startswith('FAIL '):
+            stale = re.match(r"FAIL stale allowlist entry .*?\('([^']*)', '([^']*)'", line)
+            if stale:
+                out.append((stale.group(1), stale.group(2), line))
+                continue
             parts = line.split()
             out.append((parts[1], parts[2] if len(parts) > 2 else '', line))
     return out
