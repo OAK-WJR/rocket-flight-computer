@@ -1,0 +1,201 @@
+{
+ "board_sha256": "990c8040c5b8457bd2bd1717ed3e5c2725f32c1dda1cd7f826a0c2b458d28b18",
+ "neighbours": [
+  {
+   "net": "PYRO1_COLD",
+   "layer": "F.Cu",
+   "mm": 0.294,
+   "live": "R131.1 (PYRO1_OUT, bare)",
+   "other": "R131.2 (bare)"
+  },
+  {
+   "net": "ARM1_SENSE_MID",
+   "layer": "F.Cu",
+   "mm": 0.294,
+   "live": "R132.1 (PYRO1_BUS, bare)",
+   "other": "R132.2 (bare)"
+  },
+  {
+   "net": "PYRO1_CONT_MID",
+   "layer": "F.Cu",
+   "mm": 0.294,
+   "live": "R173.1 (PYRO1_OUT, bare)",
+   "other": "R173.2 (bare)"
+  },
+  {
+   "net": "ARM1_SENSE",
+   "layer": "F.Cu",
+   "mm": 0.41,
+   "live": "track (19.238, 95.36) (PYRO1_BUS, covered)",
+   "other": "via (14.55, 94.15) (covered)"
+  },
+  {
+   "net": "GND",
+   "layer": "F.Cu",
+   "mm": 0.501,
+   "live": "R131.1 (PYRO1_OUT, bare)",
+   "other": "zone GND_F (covered)"
+  },
+  {
+   "net": "GND",
+   "layer": "B.Cu",
+   "mm": 0.501,
+   "live": "J124.1 (PYRO1_BUS, bare)",
+   "other": "zone GND_B (covered)"
+  },
+  {
+   "net": "GND",
+   "layer": "In1.Cu",
+   "mm": 0.501,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "zone GND_In1 (covered)"
+  },
+  {
+   "net": "GND",
+   "layer": "In2.Cu",
+   "mm": 0.501,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "zone R8_GND_In2 (covered)"
+  },
+  {
+   "net": "PYRO1_GATE",
+   "layer": "F.Cu",
+   "mm": 0.52,
+   "live": "Q124.5 (PYRO1_OUT, bare)",
+   "other": "Q124.4 (bare)"
+  },
+  {
+   "net": "BAT_ENABLE",
+   "layer": "F.Cu",
+   "mm": 0.7,
+   "live": "R134.1 (PYRO1_IGN, bare)",
+   "other": "track (17.4, 98.45) (covered)"
+  },
+  {
+   "net": "PYRO1_CONT",
+   "layer": "F.Cu",
+   "mm": 0.715,
+   "live": "Q124.5 (PYRO1_OUT, bare)",
+   "other": "via (28.4, 88.61) (covered)"
+  },
+  {
+   "net": "ACT_FET_S",
+   "layer": "B.Cu",
+   "mm": 1.089,
+   "live": "J124.1 (PYRO1_BUS, bare)",
+   "other": "zone R8_ACT_FET_S_B (covered)"
+  },
+  {
+   "net": "RAW_ACT",
+   "layer": "F.Cu",
+   "mm": 1.3,
+   "live": "J124.1 (PYRO1_BUS, bare)",
+   "other": "zone R8_RAW_ACT_F (covered)"
+  },
+  {
+   "net": "RAW_ACT",
+   "layer": "B.Cu",
+   "mm": 1.3,
+   "live": "J124.1 (PYRO1_BUS, bare)",
+   "other": "zone R8_RAW_ACT_B_west (covered)"
+  },
+  {
+   "net": "BAT_ENABLE",
+   "layer": "B.Cu",
+   "mm": 1.825,
+   "live": "J121.1 (PYRO1_OUT, bare)",
+   "other": "R81.1 (bare)"
+  },
+  {
+   "net": "BAT_OVLO",
+   "layer": "B.Cu",
+   "mm": 1.922,
+   "live": "J121.1 (PYRO1_OUT, bare)",
+   "other": "R82.2 (bare)"
+  },
+  {
+   "net": "RAW_PROTECTED",
+   "layer": "F.Cu",
+   "mm": 1.975,
+   "live": "R134.1 (PYRO1_IGN, bare)",
+   "other": "track (20.3, 99.75) (covered)"
+  },
+  {
+   "net": "unconnected-(D120-K2-Pad2)",
+   "layer": "F.Cu",
+   "mm": 2.208,
+   "live": "R131.1 (PYRO1_OUT, bare)",
+   "other": "D120.2 (bare)"
+  },
+  {
+   "net": "BAT_DAMP",
+   "layer": "F.Cu",
+   "mm": 2.45,
+   "live": "R134.1 (PYRO1_IGN, bare)",
+   "other": "C89.2 (bare)"
+  },
+  {
+   "net": "RAW_ACT",
+   "layer": "In1.Cu",
+   "mm": 2.48,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "J124.2 (covered)"
+  },
+  {
+   "net": "RAW_ACT",
+   "layer": "In2.Cu",
+   "mm": 2.48,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "J124.2 (covered)"
+  },
+  {
+   "net": "ACT_GATE",
+   "layer": "B.Cu",
+   "mm": 2.521,
+   "live": "J124.1 (PYRO1_BUS, bare)",
+   "other": "via (13.48, 98.95) (covered)"
+  },
+  {
+   "net": "ACT_GATE",
+   "layer": "F.Cu",
+   "mm": 2.521,
+   "live": "J124.1 (PYRO1_BUS, bare)",
+   "other": "via (13.48, 98.95) (covered)"
+  },
+  {
+   "net": "ACT_GATE",
+   "layer": "In1.Cu",
+   "mm": 2.521,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "via (13.48, 98.95) (covered)"
+  },
+  {
+   "net": "ACT_GATE",
+   "layer": "In2.Cu",
+   "mm": 2.521,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "via (13.48, 98.95) (covered)"
+  },
+  {
+   "net": "ARM1_SENSE",
+   "layer": "In1.Cu",
+   "mm": 2.974,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "via (14.55, 97.55) (covered)"
+  },
+  {
+   "net": "ARM1_SENSE",
+   "layer": "In2.Cu",
+   "mm": 2.974,
+   "live": "J124.1 (PYRO1_BUS, covered)",
+   "other": "via (14.55, 97.55) (covered)"
+  },
+  {
+   "net": "ARM1_SENSE",
+   "layer": "B.Cu",
+   "mm": 2.974,
+   "live": "J124.1 (PYRO1_BUS, bare)",
+   "other": "via (14.55, 97.55) (covered)"
+  }
+ ]
+}

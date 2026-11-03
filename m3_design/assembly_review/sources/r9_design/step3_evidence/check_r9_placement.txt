@@ -1,0 +1,198 @@
+LC-1         OK   local clearance overrides
+P-0          OK   pyro spacing rules, geometric
+P-1          OK   PYRO_BLOCK area by content (+ P-1b rule G scope)
+P-2          OK   armed-live copper confined
+P-3          OK   block purity
+P-4          FAIL rule H live (1)
+P-5          OK   solder-bridge table
+P-6          OK   bare gate pads
+P-7          OK   gate guard (reset voltage)
+P-8          OK   sense resistors at the MCU end
+P-9          OK   test pads and pyro vias
+P-10         OK   coat region
+P-11         OK   terminal entry
+R-1          OK   strip extent
+R-2          FAIL strip layers (4)
+R-3          OK   jacks
+R-4          FAIL launch congruent (20)
+R-5          FAIL GCPW cross-section (13)
+R-6          FAIL RF line length (2)
+R-7          FAIL RF stitching and fence (79)
+R-8          FAIL module keep-outs (9)
+R-9          FAIL chain topology (2)
+R-10         OK   RF separation
+R-11         OK   coexistence geometry
+R-12         OK   RF supply
+R-13         OK   radio to pyro
+M-2          FAIL vibration (plate model) (1)
+M-3          OK   J122 tie holes
+M-4          OK   J1
+M-5          OK   fit
+M-6          OK   bottom keep-outs
+M-7          OK   IMU and MEMS
+F9-1         OK   input protection at J1
+T-1          OK   panel-tab windows
+K-contract   FAIL contract (pin map, connectors, series, outline) (4)
+K-legends    FAIL legends and ids (22)
+K-copper     OK   copper hygiene (vias in pads, joints, thermals, paste)
+K-power-pyro OK   D18 / D85 / D19 (strengthened)
+K-inner      OK   D20 In1 / In2 signal tracks
+K-actuators  OK   check_actuators.py pinned
+FAIL P-4: the seeded rule-H suite (tools/rule_h_seed.py) was not run on this board (--seed)
+FAIL R-2: In1: no GND pour spans the RF strip (x 0-46, y 0.5-22.0)
+FAIL R-2: In2: no GND pour spans the RF strip (x 0-46, y 0.5-22.0)
+FAIL R-2: U30_KEEPOUT: rule area on F.Cu, In1.Cu required (m3.kicad_dru keep-out rules use it)
+FAIL R-2: U31_KEEPOUT: rule area on F.Cu, In1.Cu, In2.Cu, B.Cu required (m3.kicad_dru keep-out rules use it)
+FAIL R-4: J30: exactly one In1-only, no-fill cut-out at x +-0.9, y 0.0-4.6 in the jack frame required (found 0)
+FAIL R-4: J30: In2 GND missing under the launch cut-out at 1025 of 1025 samples, e.g. [(11.65, 0.6), (11.75, 0.6), (11.85, 0.6)]
+FAIL R-4: J30: no GND via at the qualified spot (-1.45, 1.00) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J30: no GND via at the qualified spot (+1.45, 1.00) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J30: no GND via at the qualified spot (-1.45, 2.30) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J30: no GND via at the qualified spot (+1.45, 2.30) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J30: no GND via at the qualified spot (-1.45, 3.60) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J30: no GND via at the qualified spot (+1.45, 3.60) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J30: no GND via at the qualified spot (-1.25, 4.15) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J30: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: exactly one In1-only, no-fill cut-out at x +-0.9, y 0.0-4.6 in the jack frame required (found 0)
+FAIL R-4: J31: In2 GND missing under the launch cut-out at 1025 of 1025 samples, e.g. [(30.34, 0.6), (30.44, 0.6), (30.54, 0.6)]
+FAIL R-4: J31: no GND via at the qualified spot (-1.45, 1.00) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: no GND via at the qualified spot (+1.45, 1.00) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: no GND via at the qualified spot (-1.45, 2.30) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: no GND via at the qualified spot (+1.45, 2.30) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: no GND via at the qualified spot (-1.45, 3.60) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: no GND via at the qualified spot (+1.45, 3.60) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: no GND via at the qualified spot (-1.25, 4.15) in the jack frame (nearest 99.000 mm)
+FAIL R-4: J31: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 99.000 mm)
+FAIL R-5: In1 GND missing under C303.1 (+0.3 mm): 1.180 mm2
+FAIL R-5: In1 GND missing under C305.1 (+0.3 mm): 1.180 mm2
+FAIL R-5: In1 GND missing under C313.1 (+0.3 mm): 1.180 mm2
+FAIL R-5: In1 GND missing under C314.1 (+0.3 mm): 1.180 mm2
+FAIL R-5: In1 GND missing under D30.1 (+0.3 mm): 1.066 mm2
+FAIL R-5: In1 GND missing under D31.1 (+0.3 mm): 1.066 mm2
+FAIL R-5: In1 GND missing under L30.2 (+0.3 mm): 1.220 mm2
+FAIL R-5: In1 GND missing under R304.1 (+0.3 mm): 1.255 mm2
+FAIL R-5: In1 GND missing under R304.2 (+0.3 mm): 1.255 mm2
+FAIL R-5: In1 GND missing under R316.1 (+0.3 mm): 1.255 mm2
+FAIL R-5: In1 GND missing under R316.2 (+0.3 mm): 1.255 mm2
+FAIL R-5: In1 GND missing under U30.11 (+0.3 mm): 3.286 mm2
+FAIL R-5: In1 GND missing under U31.6 (+0.3 mm): 3.076 mm2
+FAIL R-6: GNSS: no RF path from the jack to U30.11
+FAIL R-6: RADIO: no RF path from the jack to U31.6
+FAIL R-7: GNSS: no RF path
+FAIL R-7: RADIO: no RF path
+FAIL R-7: no GND fence vias within 0.3 mm of y_f 22.0
+FAIL R-7: F.Cu GND copper at (9.73, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (14.83, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (28.43, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (33.53, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (10.88, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (15.98, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (29.58, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (34.68, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (9.73, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (14.83, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (28.43, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (33.53, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (10.88, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (15.98, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (29.58, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (34.68, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (9.73, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (14.83, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (28.43, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (33.53, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (13.33, 4.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (32.03, 4.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (9.93, 5.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (25.58, 6.48) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (11.13, 6.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (15.28, 6.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (29.53, 7.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (33.98, 7.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (30.73, 8.33) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (12.98, 8.43) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (15.23, 8.43) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (31.58, 9.58) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (13.73, 9.73) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (15.78, 9.83) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (36.78, 14.63) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (34.08, 14.83) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (35.48, 15.38) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (37.38, 16.28) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (37.78, 17.73) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (6.43, 17.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (26.88, 18.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (38.68, 18.93) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (6.98, 19.33) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (27.73, 19.48) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (39.43, 20.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (13.38, 20.68) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: F.Cu GND copper at (10.73, 20.78) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (9.73, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (14.83, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (28.43, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (33.53, 0.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (10.88, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (15.98, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (29.58, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (34.68, 1.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (9.73, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (14.83, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (28.43, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (33.53, 2.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (10.88, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (15.98, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (29.58, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (34.68, 3.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (9.73, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (14.83, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (28.43, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (33.53, 4.23) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (12.03, 11.08) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (12.53, 14.88) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: B.Cu GND copper at (7.93, 16.68) in the strip is unreachable of copper from a GND via (maximum 4.0 mm)
+FAIL R-7: D30.2: no GND via within 0.6 mm of the pad (nearest None)
+FAIL R-7: D31.2: no GND via within 0.6 mm of the pad (nearest None)
+FAIL R-7: C303.2: no GND via within 0.6 mm of the pad (nearest None)
+FAIL R-7: C305.2: no GND via within 0.6 mm of the pad (nearest None)
+FAIL R-7: C313.2: no GND via within 0.6 mm of the pad (nearest None)
+FAIL R-7: C314.2: no GND via within 0.6 mm of the pad (nearest None)
+FAIL R-8: U30 In1.Cu: GND missing at 1938 of 1938 samples, e.g. [(6.1, 10.35), (6.3, 10.35), (6.5, 10.35)]
+FAIL R-8: U30_KEEPOUT leaves 74.740 mm2 of U30's required region uncovered on F.Cu
+FAIL R-8: U30_KEEPOUT leaves 74.740 mm2 of U30's required region uncovered on In1.Cu
+FAIL R-8: U31 In1.Cu: GND missing at 1681 of 1681 samples, e.g. [(25.81, 9.95), (26.01, 9.95), (26.21, 9.95)]
+FAIL R-8: U31 In2.Cu: GND missing at 2601 of 2601 samples, e.g. [(24.86, 9.0), (25.06, 9.0), (25.26, 9.0)]
+FAIL R-8: U31_KEEPOUT leaves 100.000 mm2 of U31's required region uncovered on B.Cu
+FAIL R-8: U31_KEEPOUT leaves 100.000 mm2 of U31's required region uncovered on In2.Cu
+FAIL R-8: U31_KEEPOUT leaves 65.610 mm2 of U31's required region uncovered on F.Cu
+FAIL R-8: U31_KEEPOUT leaves 65.610 mm2 of U31's required region uncovered on In1.Cu
+FAIL R-9: GNSS: no RF path
+FAIL R-9: RADIO: no RF path
+FAIL M-2: plate model (tools/plate_model.py on this board's fit report, --plate) not run
+FAIL K-contract: C29 requires a direct same-layer route <=3 mm to U3.8; found None
+FAIL K-contract: C100: requires local bypass within 3 mm of U12.3 and direct copper <= 3 mm; distance 1.212, route None
+FAIL K-contract: C100: requires direct local GND return <= 3 mm to U12.2; found None
+FAIL K-contract: C93: requires local bypass within 3 mm of U12.7 and direct copper <= 5 mm; distance 2.577, route None
+FAIL K-legends: J9.1: silkscreen must identify 5V (UART names at module)
+FAIL K-legends: J9.2: silkscreen must identify GND (UART names at module)
+FAIL K-legends: J9.3: silkscreen must identify TX (UART names at module)
+FAIL K-legends: J9.4: silkscreen must identify RX (UART names at module)
+FAIL K-legends: J2.1: silkscreen must identify 3V3 (UART names at module)
+FAIL K-legends: J2.2: silkscreen must identify SWDIO (UART names at module)
+FAIL K-legends: J2.3: silkscreen must identify NRST (UART names at module)
+FAIL K-legends: J2.4: silkscreen must identify SWCLK (UART names at module)
+FAIL K-legends: J2.5: silkscreen must identify GND (UART names at module)
+FAIL K-legends: J2.6: silkscreen must identify NC (UART names at module)
+FAIL K-legends: J30: silkscreen legend "GNSS" required beside the jack
+FAIL K-legends: J31: silkscreen legend "RADIO" required beside the jack
+FAIL K-legends: J124.1: 0 legends "1:BUS1" nearest it, expected one (D92)
+FAIL K-legends: J124.2: 0 legends "2:RAW" nearest it, expected one (D92)
+FAIL K-legends: J121.1: 0 legends "1:E1-" nearest it, expected one (D92)
+FAIL K-legends: J121.2: 0 legends "2:E1+" nearest it, expected one (D92)
+FAIL K-legends: J1.1: 0 legends "1:BAT+" nearest it, expected one (D92)
+FAIL K-legends: J1.2: 0 legends "2:GND" nearest it, expected one (D92)
+FAIL K-legends: J1.3: 0 legends "3:SW" nearest it, expected one (D92)
+FAIL K-legends: J1.4: 0 legends "4:SW" nearest it, expected one (D92)
+FAIL K-legends: J123.1: 0 legends "1:PULL" nearest it, expected one (D92)
+FAIL K-legends: J123.2: 0 legends "2:GND" nearest it, expected one (D92)
+R9 CAD contract: FAIL (157 findings in 11 rules: P-4, R-2, R-4, R-5, R-6, R-7, R-8, R-9, M-2, K-contract, K-legends)

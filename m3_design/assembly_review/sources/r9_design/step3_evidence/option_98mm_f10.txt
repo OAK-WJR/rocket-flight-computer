@@ -1,0 +1,10 @@
+98 mm, MCU-end resistors at U1's pins, counted in R-10: 8 parts illegal
+    C76 R-10: 5.94 mm RF separation to R310; R-10: 5.94 mm RF separation to R313
+    R306 R-10: 5.94 mm RF separation to U1; R-10: RF part R306 within 5.0 mm of fast-net pad QSPI_IO0; R-10: RF part R306 within 5.0 mm of fast-net pad QSPI_IO1; R-10: RF part R306 within 5.0 mm of fast-net pa
+    R310 R-10: 5.94 mm RF separation to U1; R-10: 5.94 mm RF separation to C76; R-10: 5.94 mm RF separation to U7; R-10: 5.94 mm RF separation to U3; R-10: RF part R310 within 5.0 mm of fast-net pad QSPI_IO0; 
+    R313 R-10: 5.94 mm RF separation to U1; R-10: RF part R313 within 5.0 mm of fast-net pad QSPI_CLK; R-10: 5.94 mm RF separation to C76; R-10: 5.94 mm RF separation to U7; R-10: 5.94 mm RF separation to U3; 
+    R315 R-10: 5.94 mm RF separation to U1; R-10: RF part R315 within 5.0 mm of fast-net pad QSPI_IO0; R-10: RF part R315 within 5.0 mm of fast-net pad QSPI_IO1; R-10: RF part R315 within 5.0 mm of fast-net pa
+    U1 R-10: 5.94 mm RF separation to R310; R-10: 5.94 mm RF separation to R313; R-10: RF part R313 within 5.0 mm of fast-net pad QSPI_CLK; R-10: 5.94 mm RF separation to R315; R-10: RF part R315 within 5.0 
+    U3 R-10: 5.94 mm RF separation to R310; R-10: RF part R310 within 5.0 mm of fast-net pad QSPI_IO0; R-10: RF part R310 within 5.0 mm of fast-net pad QSPI_CLK; R-10: 5.94 mm RF separation to R313; R-10: RF
+    U7 R-10: 5.94 mm RF separation to R310; R-10: 5.94 mm RF separation to R313
+98 mm, MCU-end resistors at U1's pins, exempt from R-10: 0 parts illegal

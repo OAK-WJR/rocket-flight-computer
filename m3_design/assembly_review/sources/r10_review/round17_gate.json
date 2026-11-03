@@ -1,0 +1,1365 @@
+{
+  "schema": 1,
+  "round": 17,
+  "lens": 9,
+  "lens_name": "gate adversary and seeded faults",
+  "prepared_utc": "2026-10-30T17:53:35.516627+00:00",
+  "target_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "findings": [
+    {
+      "id": "R17-GATE-01",
+      "severity": "Minor",
+      "status": "new_active",
+      "title": "Missing canonical fabrication manifest silently disables its complete-gate check",
+      "class": "prospective complete-gate artifact-completeness escape; target package is intact",
+      "evidence": [
+        {
+          "file": "tools/check.sh",
+          "line": 59,
+          "observation": "Only an existing manifest enters the verification branch; there is no absent-manifest failure or diagnostic at lines54-66."
+        },
+        {
+          "file": "tools/check_r10.py",
+          "line": 1498,
+          "observation": "The normal check.sh S-4 run receives neither --bom nor --cpl; it checks native/schematic fitting, leaving actual output binding to the manifest stage."
+        },
+        {
+          "file": "docs/REQUIREMENTS.md",
+          "section": "R10 acceptance",
+          "observation": "R10 acceptance separately requires regenerated fabrication outputs bound to the board."
+        },
+        {
+          "probe": ".supervisor/r17_gate_probe/complete_gate_receipt.json",
+          "observation": "Copied all1966 frozen files, including project/rules/libs and the canonical ROOT/BOARD relationship. Unchanged complete gate exits0 and actually checks all5manifest outputs. After deleting only fab/m3_fab_manifest.json, complete gate again exits0 with no manifest-stage output. All1965 remaining files still equal the frozen inputs; PCB SHA is unchanged.",
+          "positive_exit": 0,
+          "missing_manifest_exit": 0,
+          "positive_log_sha256": "1d91ae1798d3d343dbbe9fe963c057743151b7371cb550fd9bcfc06eb2a8ba07",
+          "negative_log_sha256": "8d04c2792abde99f2e6555e951d7959dc0ac8653f81127df3150b97293d23dcc"
+        },
+        {
+          "probe": ".supervisor/r17_gate_probe/saved_controls.json",
+          "observation": "Restoring the original manifest validates5outputs; appending bytes to only the copied bottom assemblyPDF is rejected by verify_manifest. This control is focused, not a third complete gate."
+        }
+      ],
+      "effect": "Deletion or omission of required binding evidence can receive a zero complete board-gate result. No corrupted production output or actual target defect is claimed: target manifest is present and all five outputs match.",
+      "concrete_fix": "For canonical repository-board full checks, require the fabrication manifest unless the explicit documented build-stage mode applies; invoke its verifier and fail closed on absence. Add a canonical missing-manifest regression to test_check_shell. Preserve noncanonical board-copy behavior and actual fabrication checks. No PCB, placement, routing or circuit-generator edit is needed."
+    }
+  ],
+  "scope": {
+    "full_lens": true,
+    "delta_only": false,
+    "frozen_preexisting_files": 1966,
+    "canonical_mismatches_before": [],
+    "canonical_mismatches_after": [],
+    "reviewed_decision_ids": [
+      "D-AUD-01",
+      "D-AUD-01a",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-AUD-03c",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-GAP-01",
+      "D-GAP-01a",
+      "D-GAP-02",
+      "D-GAP-02a",
+      "D-GAP-02b",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R14-01",
+      "D-R14-02",
+      "D-R14-03",
+      "D-R15-01",
+      "D-R15-02",
+      "D-R15-03",
+      "D-R16-01",
+      "D-R16-02",
+      "D-R16-03",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-SS-04"
+    ],
+    "owner_mandates_considered": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16",
+      "Supervisor2026-10-30afterround16: no Minor CAD changes"
+    ],
+    "latest_steer": "D-R16-03: retain632a9ad3; no Minor PCB/placement/routing/circuit-generator changes",
+    "source_hashes": {
+      "AGENTS.md": "c02a8aad64f7cd305c1faacdcfa542dd68f93742ec0751ca0c8a111a7d4ba73e",
+      ".supervisor/r17_target_packet.md": "824dca42fb362111c74454d9d3341e2d60cf1a067e1ae5d3c77c75518f8a5478",
+      ".supervisor/r10_review_packet.md": "c173b9f0a45236954d5ccbc3b6d6c97a9d40286bc8fa7887d1d65b49ad30a8d3",
+      "docs/REQUIREMENTS.md": "f5f827d49e746142e0fc10f680714c27d16339d7e5ea117bcc5fbab2d5779664",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "79deffd07861a1048cf317854cd64a1ace3039698d0361f39ae1592ff7b9041d",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "514f8b12c48c07c43682c573b70e2e34fb6a2a2606e0dec436e020f5b5f45109",
+      "docs/M3_R10.md": "855b7a2c1e3bf4712a5e2a244b19242c28a1d3498222b377e13af8b3e2bd26d5",
+      "docs/R10_VALIDATION.md": "f2a3a375f8f365e9fda4307fa40cc413b4d56589763f3b04c95a1052a2ccbb75",
+      "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+      "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md": "a414e6b33a8a586080a9796ed4deee712f84d67907bff778757a5ad0cae8a5c4",
+      "docs/R10_VEHICLE_HANDOFF.md": "f75cec52ea9862f787f293755b71709e6c35554647fb0b7259272ca5b781665b",
+      "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+      "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+      "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": "f3c3b5ad9294a95810ed80b63756ef79eae5227ac67ed601439e31d113ad0c7c",
+      "tools/check.sh": "3edcd2f63f51999fde57d45d171e5cc0cf939bd578e34c980aac1825f839cea1",
+      "tools/check_r10.py": "7c01f55fefbca1d1c4fc07d4f950c406ed5873b6f8748c24c63d9190b69e1488",
+      "tools/fab_manifest.py": "9319ae89ee6ecd087c981596ee08294965892ba030eeb3ed9f7ccb9d1b593aaf",
+      "tools/test_check_shell.py": "0a6e38c51ee035783e7886bd544a2e1da6200c78622d92cc9687f0edac9c7ff3",
+      "tools/test_r10_check.py": "6e1a2d3832bbd553000980b670e152175e4804124a573025f79c97987784935e",
+      "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3"
+    }
+  },
+  "checks_actually_executed": {
+    "unchanged_complete_gate": {
+      "exit": 0,
+      "copy_files": 1966,
+      "canonical_ROOT_BOARD_condition_preserved": true,
+      "manifest_outputs_actually_checked": 5,
+      "kicad_cli_version": "10.0.7",
+      "native_python_version": "10.0.6",
+      "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+      ],
+      "ignored_checks": [],
+      "DRC_unconnected_parity_ERC": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "all_R10_rules": 32,
+      "all_R10_rules_pass": true,
+      "metadata_models_silkscreen_fit_parts_budget_routing": "pass",
+      "regression_invocations": [
+        "test_check_shell:5pass",
+        "test_procurement:exit0",
+        "test_fit_check:31pass",
+        "test_paste_check:16pass",
+        "test_r10_parts:5pass",
+        "test_route_check:67pass",
+        "test_r10_check:180run/4NumPyskips",
+        "HotplugNumerics:2pass"
+      ],
+      "separate_supplied_NumPy_Plate": {
+        "tests": 2,
+        "exit": 0,
+        "all_four_native_skips_resolved": true
+      },
+      "rule_results": {
+        "S-1": {
+          "ok": true,
+          "issues": []
+        },
+        "S-2": {
+          "ok": true,
+          "issues": []
+        },
+        "S-3": {
+          "ok": true,
+          "issues": []
+        },
+        "S-4": {
+          "ok": true,
+          "issues": []
+        },
+        "S-5": {
+          "ok": true,
+          "issues": []
+        },
+        "S-6": {
+          "ok": true,
+          "issues": []
+        },
+        "S-7": {
+          "ok": true,
+          "issues": []
+        },
+        "S-8": {
+          "ok": true,
+          "issues": []
+        },
+        "S-9": {
+          "ok": true,
+          "issues": []
+        },
+        "K-contract": {
+          "ok": true,
+          "issues": []
+        },
+        "K-binding": {
+          "ok": true,
+          "issues": []
+        },
+        "K-loader": {
+          "ok": true,
+          "issues": []
+        },
+        "K-actuators": {
+          "ok": true,
+          "issues": []
+        },
+        "LC-1": {
+          "ok": true,
+          "issues": []
+        },
+        "M-1": {
+          "ok": true,
+          "issues": []
+        },
+        "M-3": {
+          "ok": true,
+          "issues": []
+        },
+        "M-5": {
+          "ok": true,
+          "issues": []
+        },
+        "M-6": {
+          "ok": true,
+          "issues": []
+        },
+        "M-7": {
+          "ok": true,
+          "issues": []
+        },
+        "P-11": {
+          "ok": true,
+          "issues": []
+        },
+        "F9-1": {
+          "ok": true,
+          "issues": []
+        },
+        "F9-2": {
+          "ok": true,
+          "issues": []
+        },
+        "T-1": {
+          "ok": true,
+          "issues": []
+        },
+        "K-legends": {
+          "ok": true,
+          "issues": []
+        },
+        "K-copper": {
+          "ok": true,
+          "issues": []
+        },
+        "K-inner": {
+          "ok": true,
+          "issues": []
+        },
+        "K-reference": {
+          "ok": true,
+          "issues": []
+        },
+        "K-region": {
+          "ok": true,
+          "issues": []
+        },
+        "K-fill": {
+          "ok": true,
+          "issues": []
+        },
+        "K-rules": {
+          "ok": true,
+          "issues": []
+        },
+        "K-width": {
+          "ok": true,
+          "issues": []
+        },
+        "K-retained": {
+          "ok": true,
+          "issues": []
+        }
+      },
+      "selected_evidence": {
+        "S-3": {
+          "Q124": {
+            "gate": "PYRO1_GATE",
+            "source": "GND",
+            "values": {
+              "R128": "10k",
+              "C126": "220nF 25V X7R"
+            },
+            "pull": [
+              "R128"
+            ],
+            "cap": [
+              "C126"
+            ],
+            "series": [
+              [
+                "R126",
+                "PYRO1_GATE_N"
+              ]
+            ],
+            "mcu_pull": {
+              "PYRO1_GATE_N": [
+                "R127"
+              ]
+            }
+          },
+          "Q120": {
+            "gate": "ACT_GATE",
+            "source": "ACT_FET_S",
+            "values": {
+              "R120": "100k",
+              "C120": "1uF 25V X7R 10%"
+            },
+            "pull": [
+              "R120"
+            ],
+            "cap": [
+              "C120"
+            ],
+            "series": [
+              [
+                "R121",
+                "ACT_DRV"
+              ]
+            ]
+          },
+          "Q121": {
+            "gate": "ACT_GATE",
+            "source": "ACT_FET_S",
+            "values": {
+              "R120": "100k",
+              "C120": "1uF 25V X7R 10%"
+            },
+            "pull": [
+              "R120"
+            ],
+            "cap": [
+              "C120"
+            ],
+            "series": [
+              [
+                "R121",
+                "ACT_DRV"
+              ]
+            ]
+          },
+          "load_enable": {
+            "U1.16": "ACT_EN_MCU",
+            "R122.1": "ACT_EN_MCU",
+            "R122.2": "ACT_EN",
+            "R123.1": "ACT_EN",
+            "R123.2": "GND",
+            "Q122.1": "ACT_EN",
+            "Q122.2": "GND",
+            "Q122.3": "ACT_DRV"
+          }
+        },
+        "S-4": {
+          "required": 199,
+          "safety": [
+            "C120",
+            "C126",
+            "C127",
+            "C128",
+            "C129",
+            "D120",
+            "J121",
+            "J400",
+            "Q120",
+            "Q121",
+            "Q122",
+            "Q124",
+            "R120",
+            "R121",
+            "R122",
+            "R123",
+            "R126",
+            "R127",
+            "R128",
+            "R129",
+            "R130",
+            "R131",
+            "R132",
+            "R133",
+            "R134",
+            "R165",
+            "R173",
+            "R175",
+            "R178",
+            "R180",
+            "R80"
+          ],
+          "schematic": "m3.kicad_sch",
+          "BOM": "not supplied (board and schematic flags checked)",
+          "CPL": "not supplied (board and schematic flags checked)"
+        },
+        "S-8": {
+          "barrels": 4,
+          "gap_mm": 1.0,
+          "near": {}
+        },
+        "S-9": {
+          "PYRO1_IGN": {
+            "terminals": [
+              [
+                "R134.1"
+              ],
+              [
+                "J121.2"
+              ]
+            ],
+            "path_segments": 3,
+            "widths_mm": [
+              0.5
+            ],
+            "joined": true,
+            "minimum_mm": 0.5
+          },
+          "PYRO1_OUT": {
+            "terminals": [
+              [
+                "J121.1"
+              ],
+              [
+                "Q124.5"
+              ]
+            ],
+            "path_segments": 3,
+            "widths_mm": [
+              0.5
+            ],
+            "joined": true,
+            "minimum_mm": 0.5
+          },
+          "RAW_ACT": {
+            "terminals": [
+              [
+                "Q121.5",
+                "Q121.6",
+                "Q121.7",
+                "Q121.8",
+                "Q121.9"
+              ],
+              [
+                "R134.2"
+              ]
+            ],
+            "path_segments": 2,
+            "widths_mm": [
+              0.5
+            ],
+            "joined": true,
+            "minimum_mm": 0.5
+          },
+          "ACT_FET_S": {
+            "terminals": [
+              [
+                "Q120.1",
+                "Q120.2",
+                "Q120.3"
+              ],
+              [
+                "Q121.1",
+                "Q121.2",
+                "Q121.3"
+              ]
+            ],
+            "path_segments": 7,
+            "widths_mm": [
+              0.4
+            ],
+            "joined": true,
+            "minimum_mm": 0.5
+          },
+          "BAT_IN": {
+            "terminals": [
+              [
+                "J1.1"
+              ],
+              [
+                "Q120.5",
+                "Q120.6",
+                "Q120.7",
+                "Q120.8",
+                "Q120.9"
+              ]
+            ],
+            "path_segments": 1,
+            "widths_mm": [
+              1.0
+            ],
+            "joined": true,
+            "minimum_mm": 1.0
+          },
+          "narrow_used": [
+            "AONR21357 source bridge bar",
+            "Q120.1 source leg",
+            "Q120.2 source leg",
+            "Q120.3 source leg",
+            "Q121.1 source leg",
+            "Q121.2 source leg",
+            "Q121.3 source leg"
+          ]
+        },
+        "K-binding": {
+          "note_sha256": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+          "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+          "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
+          "u1_board_map_checked": true
+        },
+        "K-copper": {
+          "smd_pads_checked_for_via_holes": 613,
+          "track_endpoints_checked": 1902,
+          "small_ground_pads": 78,
+          "via_paste": {
+            "pairs_checked": 768,
+            "nearest_ring_mm": [
+              0.014,
+              "via (11.95, 30.6) (VBUS) and D4.5's paste (F)"
+            ]
+          },
+          "gap3": {
+            "centres_mm": [
+              [
+                27.900000000000002,
+                13.6
+              ],
+              [
+                27.3,
+                13.6
+              ]
+            ],
+            "local_centres_mm": [
+              [
+                -0.3,
+                0.0
+              ],
+              [
+                0.3,
+                0.0
+              ]
+            ],
+            "qualified": 2,
+            "local_exposed_pad_mm": [
+              -0.599999999999998,
+              -1.0,
+              0.6000000000000015,
+              1.0
+            ],
+            "local_paste_windows_mm": [
+              [
+                -0.5649999999999978,
+                -1.0,
+                0.5650000000000013,
+                -0.11000000000000114
+              ],
+              [
+                -0.5649999999999977,
+                0.10999999999999936,
+                0.5650000000000014,
+                1.0
+              ]
+            ],
+            "manufacturing_condition": "resin-filled, copper-capped, planar VIPPO; physical fabrication unverified"
+          }
+        },
+        "K-reference": {
+          "samples": 158499,
+          "unreferenced": 10051,
+          "inside_own_antipad": 10045,
+          "recorded_stray": 5,
+          "loose": 0,
+          "b_cu_planes": [
+            "GND",
+            "3V3",
+            "3V3A",
+            "PORT_5V3",
+            "PORT_4V8",
+            "RAW_PROTECTED"
+          ],
+          "by_net_layer": {
+            "SPI1_MISO B.Cu": {
+              "samples": 2,
+              "box": [
+                17.79,
+                43.88,
+                17.8,
+                43.89
+              ]
+            },
+            "SPI1_MISO F.Cu": {
+              "samples": 1,
+              "box": [
+                17.3,
+                43.89,
+                17.3,
+                43.89
+              ]
+            },
+            "SPI1_SCK B.Cu": {
+              "samples": 3,
+              "box": [
+                17.1,
+                43.4,
+                17.1,
+                43.42
+              ]
+            }
+          }
+        },
+        "K-region": {
+          "items": 161,
+          "samples": 62176,
+          "nets": [
+            "CAM_MCU_RX",
+            "CAM_MCU_TX",
+            "CAM_RX_BUFFER",
+            "CAM_RX_WIRE",
+            "CAM_TX_BUFFER",
+            "CAM_TX_WIRE",
+            "GPS_RX_MCU",
+            "GPS_RX_WIRE",
+            "GPS_TX_MCU",
+            "GPS_TX_WIRE",
+            "HSE_IN",
+            "HSE_OUT",
+            "IMU_CS",
+            "PYRO1_COLD",
+            "PYRO1_GATE",
+            "PYRO1_GATE_N",
+            "PYRO1_IGN",
+            "PYRO1_OUT",
+            "QSPI_CLK",
+            "QSPI_IO0",
+            "QSPI_IO1",
+            "QSPI_IO2",
+            "QSPI_IO3",
+            "QSPI_NCS",
+            "RADIO_RX_MCU",
+            "RADIO_RX_WIRE",
+            "RADIO_TX_MCU",
+            "RADIO_TX_WIRE",
+            "SD_CS",
+            "SD_DAT1",
+            "SD_DAT2",
+            "SD_MISO",
+            "SD_MOSI",
+            "SD_SCK",
+            "SPI1_MISO",
+            "SPI1_MOSI",
+            "SPI1_SCK",
+            "USB_DM",
+            "USB_DP"
+          ]
+        },
+        "K-fill": {
+          "zones": 9,
+          "stale": 0,
+          "tolerance_mm2": 0.01,
+          "comparison": "symmetric_difference",
+          "maximum_difference_mm2": 0.0,
+          "changed": []
+        },
+        "P-11": {
+          "J1": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J121": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J400": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J410": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J420": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J9": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J122": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        },
+        "M-5": {
+          "width_mm": 46.0,
+          "length_mm": 90.0,
+          "supports": [
+            [
+              3.7,
+              86.0
+            ],
+            [
+              4.0,
+              4.0
+            ],
+            [
+              4.0,
+              44.3
+            ],
+            [
+              42.0,
+              4.0
+            ],
+            [
+              42.0,
+              86.0
+            ]
+          ],
+          "nearest_support": [
+            4.536176804314399,
+            "C32.2",
+            [
+              4.0,
+              44.3
+            ]
+          ],
+          "nearest_top_support": [
+            3.807887,
+            "LED2.2 exposed top pad",
+            [
+              4.0,
+              44.3
+            ]
+          ]
+        },
+        "M-7": {
+          "imu_rotation": {
+            "revision": "M3-ASSY-R10",
+            "required": 180.0,
+            "axis_map": "R9 D-S7-06 axis map: roll = -gyro_Y"
+          },
+          "imu_lever_arm_mm": 6.0,
+          "U4": {
+            "body": [
+              15.355,
+              44.505,
+              18.645,
+              47.295
+            ],
+            "interior": [
+              16.078,
+              45.227,
+              17.922,
+              46.572
+            ]
+          },
+          "U5": {
+            "body": [
+              8.055,
+              47.005,
+              13.145,
+              51.195
+            ],
+            "interior": [
+              9.02,
+              48.55,
+              12.18,
+              49.65
+            ]
+          },
+          "imu_lever_arm_signed_mm": -6.0,
+          "imu_pad1_offset_mm": [
+            1.21,
+            -0.75
+          ],
+          "board_axis_map": {
+            "side": "bottom",
+            "rotation": 180.0,
+            "map": "R9 D-S7-06 axis map: +X_imu = -x_board, +Y_imu = -y_board; roll = -gyro_Y"
+          }
+        }
+      },
+      "fit_terminal_tails": {
+        "count": 23,
+        "max_below_seating_mm": 3.8,
+        "transverse_allocation": "Inference: native copper-pad AABB, not a pin/solder model",
+        "minimum_bore_margin_mm": 7.5583593625055165,
+        "max_projection_below_board_mm": 2.1999999999999997,
+        "nominal_4mm_standoff_plate_clearance_mm": 1.8000000000000003,
+        "source": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      },
+      "route_information_instances": 140,
+      "route_count_only_noncritical_leftovers": 6
+    },
+    "missing_manifest_complete_gate": {
+      "exit": 0,
+      "only_change": [
+        "m3_design/assembly_review/fab/m3_fab_manifest.json"
+      ],
+      "remaining_copied_file_mismatches": [],
+      "manifest_invoked": false,
+      "full_R10_rules_fit_and_route_JSONs_equal_to_unchanged_run": true,
+      "selftests_finished": "180R10/4nativeNumPyskips plus2HotplugNumerics; same earlier suites pass",
+      "classification": "actual complete-gate escape for missing artifact evidence, not an actual target package defect"
+    },
+    "native_controls": {
+      "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+      "pcbnew_version": "10.0.6",
+      "controls": [
+        {
+          "id": "S-3",
+          "kind": "unchanged positive",
+          "issues": [],
+          "evidence": {
+            "Q124": {
+              "gate": "PYRO1_GATE",
+              "source": "GND",
+              "values": {
+                "R128": "10k",
+                "C126": "220nF 25V X7R"
+              },
+              "pull": [
+                "R128"
+              ],
+              "cap": [
+                "C126"
+              ],
+              "series": [
+                [
+                  "R126",
+                  "PYRO1_GATE_N"
+                ]
+              ],
+              "mcu_pull": {
+                "PYRO1_GATE_N": [
+                  "R127"
+                ]
+              }
+            },
+            "Q120": {
+              "gate": "ACT_GATE",
+              "source": "ACT_FET_S",
+              "values": {
+                "R120": "100k",
+                "C120": "1uF 25V X7R 10%"
+              },
+              "pull": [
+                "R120"
+              ],
+              "cap": [
+                "C120"
+              ],
+              "series": [
+                [
+                  "R121",
+                  "ACT_DRV"
+                ]
+              ]
+            },
+            "Q121": {
+              "gate": "ACT_GATE",
+              "source": "ACT_FET_S",
+              "values": {
+                "R120": "100k",
+                "C120": "1uF 25V X7R 10%"
+              },
+              "pull": [
+                "R120"
+              ],
+              "cap": [
+                "C120"
+              ],
+              "series": [
+                [
+                  "R121",
+                  "ACT_DRV"
+                ]
+              ]
+            },
+            "load_enable": {
+              "U1.16": "ACT_EN_MCU",
+              "R122.1": "ACT_EN_MCU",
+              "R122.2": "ACT_EN",
+              "R123.1": "ACT_EN",
+              "R123.2": "GND",
+              "Q122.1": "ACT_EN",
+              "Q122.2": "GND",
+              "Q122.3": "ACT_DRV"
+            }
+          }
+        },
+        {
+          "id": "S-4",
+          "kind": "unchanged positive",
+          "issues": [],
+          "evidence": {
+            "required": 199,
+            "safety": [
+              "C120",
+              "C126",
+              "C127",
+              "C128",
+              "C129",
+              "D120",
+              "J121",
+              "J400",
+              "Q120",
+              "Q121",
+              "Q122",
+              "Q124",
+              "R120",
+              "R121",
+              "R122",
+              "R123",
+              "R126",
+              "R127",
+              "R128",
+              "R129",
+              "R130",
+              "R131",
+              "R132",
+              "R133",
+              "R134",
+              "R165",
+              "R173",
+              "R175",
+              "R178",
+              "R180",
+              "R80"
+            ],
+            "schematic": "m3.kicad_sch",
+            "BOM": "not supplied (board and schematic flags checked)",
+            "CPL": "not supplied (board and schematic flags checked)"
+          }
+        },
+        {
+          "id": "K-rules",
+          "kind": "unchanged positive",
+          "issues": [],
+          "evidence": {
+            "dru_sha256": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+            "dru_sha256_expected": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+            "pro_rules": {
+              "min_clearance": 0.15,
+              "min_track_width": 0.15,
+              "min_via_diameter": 0.5,
+              "min_via_annular_width": 0.1,
+              "min_through_hole_diameter": 0.3,
+              "min_hole_clearance": 0.2,
+              "min_hole_to_hole": 0.25,
+              "min_copper_edge_clearance": 0.5,
+              "min_microvia_diameter": 0.2,
+              "min_microvia_drill": 0.1
+            },
+            "netclass_clearance": {
+              "Default": 0.15
+            },
+            "ignored_severities": []
+          }
+        },
+        {
+          "id": "K-binding",
+          "kind": "unchanged positive",
+          "issues": [],
+          "evidence": {
+            "note_sha256": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+            "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+            "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
+            "u1_board_map_checked": true
+          }
+        },
+        {
+          "id": "S-3 gate-source capacitance",
+          "kind": "in-memory negative",
+          "mutation": "C126: 220nF 25V X7R -> 1nF",
+          "rejected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a gate-source capacitor >= 100 nF (PYRO1_GATE to GND)"
+          ]
+        },
+        {
+          "id": "S-3 independent ACT enable bias",
+          "kind": "in-memory negative",
+          "mutation": "R123: 100k -> 1k",
+          "rejected": true,
+          "issues": [
+            "S-3: independent load-switch enable R123 must be 100000 ohm"
+          ]
+        },
+        {
+          "id": "S-4 required firing resistor",
+          "kind": "in-memory negative",
+          "mutation": "R134 DNP/excluded from BOM and positions",
+          "rejected": true,
+          "issues": [
+            "S-4: R134: required fitted part excluded (dnp, exclude_from_bom, exclude_from_pos_files)"
+          ]
+        },
+        {
+          "id": "GAP-3 actual manufacturing intent",
+          "kind": "in-memory negative",
+          "mutation": "U401.11 via (27.3,13.6) no longer filled",
+          "rejected": true,
+          "issues": [
+            "GAP-3: thermal via at (27.3, 13.6) must be 0.5/0.3 GND through-via, filled and capped, inside U401.11"
+          ]
+        }
+      ],
+      "geometry": {
+        "footprints": 209,
+        "segments": 951,
+        "vias": 296,
+        "gnd_vias": 168,
+        "track_length_mm": 1788.675664582984,
+        "thickness_mm": 1.6,
+        "terminals": {
+          "J1": {
+            "x_mm": 7.4,
+            "y_mm": 75.85,
+            "angle_deg": -90.0,
+            "pins": {
+              "1": "BAT_IN",
+              "2": "GND"
+            }
+          },
+          "J121": {
+            "x_mm": 7.4,
+            "y_mm": 55.85,
+            "angle_deg": -90.0,
+            "pins": {
+              "1": "PYRO1_OUT",
+              "2": "PYRO1_IGN"
+            }
+          },
+          "J400": {
+            "x_mm": 7.4,
+            "y_mm": 65.849999,
+            "angle_deg": -90.0,
+            "pins": {
+              "1": "BAT_SW_SOURCE",
+              "2": "BAT_SW_RETURN"
+            }
+          },
+          "J410": {
+            "x_mm": 38.6,
+            "y_mm": 15.5,
+            "angle_deg": 90.0,
+            "pins": {
+              "1": "PORT_4V8",
+              "2": "GND",
+              "3": "GPS_TX_WIRE",
+              "4": "GPS_RX_WIRE"
+            }
+          },
+          "J420": {
+            "x_mm": 38.6,
+            "y_mm": 31.5,
+            "angle_deg": 90.0,
+            "pins": {
+              "1": "PORT_4V8",
+              "2": "GND",
+              "3": "RADIO_TX_WIRE",
+              "4": "RADIO_RX_WIRE"
+            }
+          },
+          "J9": {
+            "x_mm": 38.6,
+            "y_mm": 47.5,
+            "angle_deg": 90.0,
+            "pins": {
+              "1": "CAM_5V",
+              "2": "GND",
+              "3": "CAM_RX_WIRE",
+              "4": "CAM_TX_WIRE"
+            }
+          },
+          "J122": {
+            "x_mm": 38.6,
+            "y_mm": 71.5,
+            "angle_deg": 90.0,
+            "pins": {
+              "1": "SERVO1_OUT",
+              "2": "SERVO2_OUT",
+              "3": "SERVO3_OUT",
+              "4": "SERVO4_OUT",
+              "5": "GND"
+            }
+          }
+        }
+      },
+      "mcu_map": {
+        "checked": 100,
+        "mismatches": []
+      },
+      "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982"
+    },
+    "focused_saved_copy_controls": {
+      "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+      "controls": [
+        {
+          "id": "K-binding saved stale evidence",
+          "kind": "focused saved-copy negative",
+          "mutation": "only saved binding note board_sha256 is replaced by 64 zeroes",
+          "rejected": true,
+          "issues": [
+            "K-binding: saved board_sha256 differs from native binding-note regeneration"
+          ]
+        },
+        {
+          "id": "fabrication manifest restored positive",
+          "outputs": 5
+        },
+        {
+          "id": "present manifest output mismatch",
+          "kind": "focused saved-copy negative",
+          "mutation": "append bytes to only m3_assembly_bottom.pdf with unchanged manifest",
+          "rejected": true,
+          "issues": [
+            "fabrication output missing or changed: m3_assembly_bottom.pdf"
+          ]
+        }
+      ],
+      "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982"
+    },
+    "primary_source_check": {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "version": "DS12110Rev11,January2026",
+      "pages_text_inspected": [
+        207,
+        208,
+        209,
+        210,
+        211
+      ],
+      "scope": "Separate absolute/operating pin conditions and VCAP table114; no fitted-part qualification inferred",
+      "old_cache_excluded": "Named static st_h743.pdf was Rev8; it was not used as Rev11 evidence. Direct curl retrieval did not produce a retainedPDF; official parsed PDF text was checked instead."
+    },
+    "receipts": {
+      "positive_exit": 0,
+      "copied_files_before": 1966,
+      "copy_matches_frozen_before_seed": true,
+      "positive_log_sha256": "1d91ae1798d3d343dbbe9fe963c057743151b7371cb550fd9bcfc06eb2a8ba07",
+      "seed": {
+        "removed": [
+          "m3_design/assembly_review/fab/m3_fab_manifest.json"
+        ],
+        "only_change": true,
+        "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982"
+      },
+      "positive_reports": {
+        "audit.json": "523d6c06feb4f682a5bdc1437bb319b6d9e511a9736d1ff7186e7a813d2fcca5",
+        "drc.json": "5bd80c7c4d0a4a6e4e2c7000166fcbfbb05be7de59550629a1635b12e1170190",
+        "erc.json": "3f21553a719fc40e154c50b5657b3ac53ee78bf17958262036b394ac31e33b01",
+        "fit.json": "06a35d1ec26080d506de8d59049008d34ca54f91d0444bec8c0e63a32ec5fc47",
+        "r10.json": "cb413d20273397f66acef0b05874a67288e3ca86c5ef98691a7bb0dc9689b376",
+        "route.json": "30195a919b0891c2e3e3048de1439b32c9c7786a84c6d6c418f01e26cc936153"
+      },
+      "missing_manifest_exit": 0,
+      "missing_manifest_log_sha256": "8d04c2792abde99f2e6555e951d7959dc0ac8653f81127df3150b97293d23dcc",
+      "missing_manifest_only_change_after": [
+        "m3_design/assembly_review/fab/m3_fab_manifest.json"
+      ],
+      "other_copied_changes_after": [],
+      "missing_manifest_invoked": false,
+      "missing_manifest_reports": {
+        "audit.json": "beb2afd9ef84f4f9a78ab30a51334c79b68b6118dc6528d9468bdb478f109ff8",
+        "drc.json": "bab3dcf3ac7ef4f28980818e880838205cdf77368a26c5a2b28b54f13be2b268",
+        "erc.json": "2f6fa261c8e487117683c27c75d91339e929fc2a13787ccb766c68c7659eb598",
+        "fit.json": "06a35d1ec26080d506de8d59049008d34ca54f91d0444bec8c0e63a32ec5fc47",
+        "r10.json": "cb413d20273397f66acef0b05874a67288e3ca86c5ef98691a7bb0dc9689b376",
+        "route.json": "30195a919b0891c2e3e3048de1439b32c9c7786a84c6d6c418f01e26cc936153"
+      }
+    },
+    "restoration_check": {
+      "all_1966_copy_files_restored_to_frozen_hashes": true,
+      "all_1966_canonical_files_still_frozen": true
+    }
+  },
+  "rejected_or_unproven_Critical_Major_hypotheses": [
+    {
+      "hypothesis": "The current board bypasses the load switch or loses defined-off firing controls.",
+      "status": "rejected_as_current_Critical_or_Major",
+      "evidence": "Fresh complete S-1/S-2/S-3/S-4 pass; native topology has Q120 BAT_IN/ACT_FET_S and Q121 RAW_ACT/ACT_FET_S. Independent C1261nF, R1231k and excludedR134 negatives reject. Static/netlist checks do not establish physical reset waveforms or firmware policy."
+    },
+    {
+      "hypothesis": "Wrong MCU pins, signed IMU map or stale saved binding are currently accepted as correct evidence.",
+      "status": "rejected_as_current_Major",
+      "evidence": "All100nativeU1 pad nets match the sole r10_net map. Full K-binding and fresh native regeneration pass. A saved zero board hash is rejected by K-binding. IMU remains bottom180/roll=-gyro_Y/x=-6mm. No executable R10 firmware is inferred."
+    },
+    {
+      "hypothesis": "Ignored DRC, weakened rules, foreign inner copper or stale fills conceal a current CAD failure.",
+      "status": "rejected_in_executed_CAD_scope",
+      "evidence": "Real10.0.7 CLI includes error/warning/exclusion severities and schematic parity: DRC/unconnected/parity/ERC0, ignored checks[]. K-rules, LC-1, K-inner and S-8 pass. K-fill compares9saved/refilled zone geometries by symmetric difference, maximum0.0mm2 at unchanged0.01mm2 threshold. Fabricated barrel/registration allocation remains unqualified."
+    },
+    {
+      "hypothesis": "Fast return, actual geometry, fit or critical routing already violates the narrowed owner contracts.",
+      "status": "rejected_in_executed_CAD_scope",
+      "evidence": "Fresh fit and all32rules pass; K-reference158499samples/0loose, K-region161items/62176samples, route0failing/0allowlisted/0stale with140information annotations and6count-only noncritical leftovers. AUD-2/AUD-10/GAP-3 remain narrow; passing M-7 does not establish complete TN1383 compliance."
+    },
+    {
+      "hypothesis": "Current production artifacts have an undetected output mismatch or false filled-via intent.",
+      "status": "rejected_as_current_Major",
+      "evidence": "Positive complete gate verifies5outputs; present-manifest PDF byte mutation rejects. U401.11 via at(27.3,13.6) changed to unfilled rejects. Actual VIPPO fabrication, paste volume/process and assembly are unqualified. Missing-manifest prospective escape is the Minor above."
+    },
+    {
+      "hypothesis": "Disclosed VCAP, hot-plug, retention or missing firmware qualification proves a present hardware failure.",
+      "status": "not_demonstrated",
+      "evidence": "The gate checks specified CAD/source/evidence constraints. Official ST DS12110Rev11 pp207-211 retains separate absolute and operating limits and VCAP conditions; none supplies combined fitted-capacitor/process data or actual firmware/transient/physical tests. No required-function failure is established by a disclosed qualification obligation alone."
+    }
+  ],
+  "coverage_limits": [
+    "One unchanged complete copied-project positive and one complete single-file-absence seed; no canonical builds, edits, git operations, fakeCLI, environment gate skips or source-check substitutes.",
+    "Focused API/file controls are not represented as extra complete gate runs. A first read-only census attempt failed on an unsupported PAD.GetZoneConnection accessor before mutations; corrected probe exits0.",
+    "No fresh r10_build.sh reproducibility execution, complete2304case transient sweep, independent orientation reconstruction or re-export/comparison of618paste polygons. F9-1 validates the saved board-bound evidence; numerical selftests are narrower.",
+    "No manufacturing assembly-PDF visual QA is claimed here. Manifest checks byte bindings; paste regressions do not establish stencil volume or physical process.",
+    "No actual firmware, current-tail/watchdog timing, chosen SD, e-match lot20ms firing, thermal/transient/endurance, RF/ESD, harness/switch/retention, insertion/fabricatedS-8, VCAPcombinedC/ESR, bore/sled/tool/card access or physical/flight qualification.",
+    "No new supplier query/order or procurement release. Correctly disclosed stock/process/owner obligations are not turned into demonstrated hardware failures.",
+    "Primary MCU text check does not reopen every maker drawing. wx/duplicate-image-handler and optional NumPy warnings are preserved in raw logs; completed command exits and explicit assertions determine the stated software results.",
+    "No peer current-round17 report/probe access, other-worktree mutation, subagent, GUI retry or original-report amendment."
+  ]
+}

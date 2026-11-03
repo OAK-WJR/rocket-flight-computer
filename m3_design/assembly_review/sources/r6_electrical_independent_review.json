@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "reviewer": "electrical_review independent validator",
+  "recorded_utc": "2026-10-13T23:43:55.337243+00:00",
+  "board_sha256": "85211df4e37ff122ac716847c068b70b85d03e20cd2fed3e60b8ca7909990448",
+  "scope": "Electrical design, pin assignments, component metadata and part compatibility; excludes incomplete routing and fabrication acceptance.",
+  "findings": {
+    "Critical": 0,
+    "Major": 0
+  },
+  "checks": {
+    "fresh_native_erc_violations": 0,
+    "fresh_exported_netlist_unique_pins_matched": 732,
+    "physical_pcb_pad_net_instances_matched": 744,
+    "component_value_footprint_supplier_metadata_matches": 247,
+    "pyro2_references_nets_removed": true,
+    "mcu_pins_4_16_32_nc": true,
+    "j9_numbered_nets_match_r5": true,
+    "radio_usart6_pins": [
+      "PC6",
+      "PC7"
+    ],
+    "gps_usart1_pins": [
+      "PA9",
+      "PA10"
+    ],
+    "radio_control_pins": [
+      "PC8",
+      "PC9",
+      "PA8"
+    ],
+    "series_1k_signals_with_srv05_protection": 7,
+    "port_enable": "PE1 through R192; R193 reset pull-down",
+    "fault": "PE0 wired-OR open-drain with 3V3 pull-up",
+    "port_voltage_v_min_max": [
+      4.674,
+      4.93
+    ],
+    "port_output_limit_ma_min_max": [
+      351,
+      449
+    ],
+    "port_input_limit_ma_min_max": [
+      458,
+      523
+    ]
+  },
+  "manufacturer_sources": {
+    "stm32": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+    "ap63301": "https://www.diodes.com/datasheet/download/AP63300_AP63301.pdf",
+    "tps2553": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+    "tps2595": "https://www.ti.com/lit/ds/symlink/tps2595.pdf",
+    "ebyte_2026_manual": "https://www.cdebyte.com/pdf-down.aspx?id=4217",
+    "gps": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+    "tag_connect": "https://www.tag-connect.com/wp-content/uploads/bsk-pdf-manager/ARM20-CTX_19.pdf"
+  },
+  "ebyte_manual_sha256": "2c015ad5f99a58371fe02b671591245190a74126b58e089ed38f6ec54c9ef0ba",
+  "confirmed_radio_limits": {
+    "logic_v": 3.3,
+    "minimum_supply_for_rated_22dbm_v": 3.3,
+    "tx_current_ma_range": [
+      100,
+      140
+    ]
+  },
+  "limits": [
+    "GPS maximum supply current is unpublished; combined startup/TX-peak current and supply transient measurements remain required.",
+    "GPS supply maximum is 5V; reset discharge and actual harness continuity need bench checks.",
+    "GPS manufacturer rates acceleration to 4G and speed to 500m/s; navigation beyond those limits is unqualified.",
+    "No system ESD or hardware testing was performed.",
+    "Buzzer detailed drive limits were not reverified in this independent pass because its datasheet server returned HTTP403; earlier part review remains separate."
+  ],
+  "cad_mutations": 0,
+  "markdown_context_reads": 0,
+  "git_actions": 0
+}

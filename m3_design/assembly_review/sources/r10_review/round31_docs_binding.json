@@ -1,0 +1,75 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round31_docs_binding",
+ "reviewer": "claude",
+ "target_commit": "3366287",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "R10_VALIDATION §6 R19-RTE-04 keeps R101 at B(34.0,42.0) (round 19 position; part now B(34.0,42.25)); the line is dated history and its current-board sentence (five under-body vias remain: R86, R89, R91, R101, R401) is true: R101's CAM_UART_OE via (34.0,42.0) still sits between its pads.",
+  "R10_VALIDATION §1 (d') gives R173 at B(16.87,59.70), the a3144b15 fix-pass position; it is labelled 'After the fix pass (a3144b15…)' history; R173 is B(16.87,59.05) since D-R26-02, as M3_R10 and AVA_LAYOUT state.",
+  "ORDERING 8.3 coating worksheet: U4 'bottom outline x15.1–19.1, y44.3–47.5' is wider in +x than the courtyard (x15.125–18.875) and matches the silkscreen extent (to 19.065); conservative for a 3 mm keep-out, not false.",
+  "ORDERING 8.3 lists R150–R157 as whole-part coating selections and states 'R62 and R63 are removed': R150–R157 exist (servo series / pull-downs); R62 / R63 are absent from the board, as stated.",
+  "Legend '1:E1-' on the board uses ASCII hyphen; docs write E1− (U+2212); typography only.",
+  "Provenance mentions of untracked probe files (adjacency_a3144b15.json, detour.py, pads.json) name files under .supervisor/ or tools paths; previously ruled observation class (round 30 docs-binding obs).",
+  "My polygon-based clearances (5 µm ERROR_INSIDE approximation) read 0.002–0.005 mm above the documented exact figures (e.g. PYRO1_OUT–3V3 1.0548 vs 1.0500 mm, PYRO1_GATE–3V3 1.0613 vs 1.0585 mm, PYRO1_OUT–GND 0.1816 / 0.1848 vs 0.177 / 0.180 mm); consistent with the records, not a discrepancy."
+ ],
+ "fix_verification": [
+  {
+   "item": "R30-TRI-01 (R10_VALIDATION §1 ARM1_SENSE-to-CAM_IO_3V3 bridge)",
+   "measurement": "Board nets: ARM1_SENSE→R175 5.1k→ARM1_SENSE_MID→R132 5.1k→RAW_ACT; RAW_ACT→R134→PYRO1_IGN→J121; PYRO1_OUT→R173/R129 5.1k→PYRO1_CONT→R130||R178 2k||2k; D120.3 (3V3)→PYRO1_COLD→R131 10k→PYRO1_OUT. Own solve (3.3−V)/10.2k+(3.3−Vf−V)/10k=V/11.2k: V=2.2049 / 2.1910 V, I=0.1074 / 0.1087 mA at Vf 0.20 / 0.24 V. Doc (R10_VALIDATION:2637) states 2.19–2.21 V, 0.107–0.109 mA; EN load sibling (:2670) 11.2k||(11.2k+~4 Ω)=5.6 kΩ.",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R30-TRI-02 (chamber-test pass criterion, LS120 recorded rise)",
+   "measurement": "REQUIREMENTS:94, M3_R10 hot-end (:499–505), ORDERING 8.3 (:608), owner rows 33 and 36, parts_qualification:40, STATUS round 29 entry, R29-TRI-04 row and AGENTS buzzer row all state 'every 85 °C part ≤ 85 °C' as the pass criterion and LS120's measured rise as recorded, not gating; residual 'LS120 ≤ 70 °C' occurrences (STATUS:10/18/31, AGENTS:32, M3_R10:42, R10_VALIDATION:8/2366/2417, parts_qualification:40) are quoted history with the R30-TRI-02 pointer.",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Round 30 records (counts)",
+   "measurement": "Per-lens round30_*.json totals: safety 0/0/2, other nine 0/0/0; observations 6+16+6+8+10+11+9+20+12+10 = 108, 107 not counted after one merge, matching M3_R10 review-status row, R10_VALIDATION 'Latest review' and STATUS. Rounds 24–29 per-lens counts in the M3_R10 table also reproduce.",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R29-01 / -02 binding note",
+   "measurement": "r10_binding_note.json SHA-256 c5cd0fa3…; board_sha256 a0ec075e…, pin_table_sha256 b94133e6… and circuit_sha256 3220e5f9… match the files; 100/100 u1_pins nets match U1's pad nets on the board; rule 3 text carries the 47–58 µs range and Inference labels.",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the board before and after (a0ec075e…, unchanged); binding note c5cd0fa3…, parts_budget 4267634…",
+  "pcbnew read-only extraction: 216 footprints, 1059 segments, 0 arcs, 309 vias (170 GND; 304 0.5/0.3, 4 0.6/0.3, 1 1.0/0.5), 1866.794 mm track, file 2,369,507 bytes, 123 visible / 93 hidden references, 44 board legends (26 F, 18 B): all as M3_R10 'The board' and AVA_LAYOUT 'Round 26 fix pass'",
+  "Regex sweep of every '<ref> F/B(x,y)' statement in the ten docs against board poses (31 mismatches, all dated history or a non-part coordinate)",
+  "Relative link and anchor check over the ten docs: 184 links, 0 broken; backtick file references resolved (unresolved ones are R9 history or .supervisor provenance)",
+  "Binding note u1_pins and pin_table r10_net vs U1 pad nets (100/100 each), IMU pose, watchdog arithmetic, 49 firmware obligations' board facts (ACT_GATE second vias, R9/R110, R10/R11/R12/R13, R104/R105, C85, R460–R464, U5 PS/CSB, port 100 nF + 22 µF)",
+  "Net membership checks: BAT_SW_RETURN = {J400.2, R165.1, D402.1}; J121 1 OUT / 2 IGN; terminal pin maps; gate and sense network values",
+  "Copper polygon dump (4 layers) and numpy segment distances: PYRO1_OUT to GND / BUZZ_DRV / 3V3 / 3V3A, gate nets to 3V3 / 3V3A, U9.1–BAT_IN, EN via–BAT_FAULT_N, ACT_EN–BAT_ENABLE 0.330 mm, J440.1 / J9.1 In2 rings 0.2505 mm, mid-support land distances",
+  "Fab package: BOM 81 lines / 45 Extended, 206 CPL rows (70 top / 136 bottom), C535146 ×9, manifest bound to a0ec075e… with matching output hashes, cost_check / stock_check inputs bound to current BOM / CPL; cost arithmetic ($85.26, $85.80, $102.05, $105.04, $16.79) and the 01:43:55Z→12:44:13Z eight-line price movement (−$0.337) against git f2b8251",
+  "Decision counts: 103 rows in 'Decisions after the ledger' + 126 ledger = 229 through D-R29-02",
+  "Edge.Cuts support circles (4,4), (42,4), (4,44.3), (3.7,86), (42,86)"
+ ],
+ "sources": [
+  "AGENTS.md",
+  "STATUS.md",
+  "docs/M3_R10.md",
+  "docs/ORDERING.md §8",
+  "docs/R10_VEHICLE_HANDOFF.md",
+  "docs/R10_VALIDATION.md",
+  "docs/FMEA_REDUNDANCY.md",
+  "docs/REQUIREMENTS.md",
+  "m3_design/assembly_review/sources/r10_design/{parts_qualification.md,AVA_LAYOUT.md,pin_table.tsv,r10_binding_note.json,parts_budget.json,circuit.json,R10_DECISIONS.md}",
+  "m3_design/assembly_review/fab/*",
+  "m3_design/assembly_review/sources/r10_review/round30_*.json, round30_triage.md, round30_fix_docs.md"
+ ],
+ "coverage_limits": [
+  "Not every sentence of the 7,364 doc lines was re-derived; current-state sections, the round 30 diff, probe / coating worksheets, terminal table, binding note and parts_qualification current rows were checked; dated history sections were checked only where they make a current-board claim.",
+  "Check-run records (route_check leftovers, check_r10 rule counts, self-test counts) were not re-run (read-only rule; no full gate on the canonical tree).",
+  "Datasheet page citations were not re-opened; the schematic netlist hash (schematic.net.xml, a build intermediate) was not reproduced."
+ ]
+}

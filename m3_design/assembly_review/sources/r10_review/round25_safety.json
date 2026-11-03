@@ -1,0 +1,146 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round25_safety",
+ "reviewer": "claude",
+ "target_commit": "c4bb56b",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 3
+ },
+ "findings": [
+  {
+   "id": "R25-SAFETY-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "FMEA H-6 still gives the superseded J400 bench-ramp window (turn-off 4.5-4.8 V, turn-on 4.9-5.2 V); the round 24 fix (R24-TRI-03 / D-R24-19) corrected the other records but not this one",
+   "contradicts": [
+    "docs/ORDERING.md 8.3 J400 ESD bullet, line 648: \"expect turn-off 4.29-4.80 V and turn-on 4.72-5.25 V (nominal 4.51 / 4.96 V; Calculation over TI SLVSFC9C p9's thresholds, 1 % resistors, +/-0.1 uA EN leakage and D402 <= 50 nA, R24-TRI-03, D-R24-19)\"; the same window in REQUIREMENTS F9 (line 63), M3_R10 (line 376) and the battery_entry.kicad_sch C87 note (\"on at 4.72-5.25 V and off at 4.29-4.80 V\")",
+    "TI TPS25947 SLVSFC9C p9 (https://www.ti.com/lit/ds/symlink/tps25947.pdf): VUVLO(R) 1.183-1.223 V, VUVLO(F) 1.076-1.116 V, IENLKG -0.1 to 0.1 uA; Infineon ESD103-B1-02 Rev 1.3 Table 3 p5: IR <= 50 nA at 15 V",
+    "STATUS.md line 16: \"the generated EN text and every record carry D402's leakage, the corrected bench-ramp window (off 4.29-4.80 V, on 4.72-5.25 V) and the 18 % chatter line\""
+   ],
+   "evidence": {
+    "statement": "docs/FMEA_REDUNDANCY.md line 36, H-6 / V-18 row of the \"R10 applicability\" current-disposition table: \"After a suspected discharge, repeat the bench supply ramp (turn-off 4.5-4.8 V, turn-on 4.9-5.2 V) with the switch-off and J121.2 checks.\"",
+    "calculation": "J400 closed: V_pack = VT x (R80+R165+R81)/R81 + I_EN x (R80+R165) + I_D402 x R80, over 1 % parts, TI thresholds, +/-0.1 uA and D402 0-50 nA (.supervisor/r25_safety/en_model.py, en_model.out): turn-off 4.2876-4.8021 V (nominal 4.5053 V), turn-on 4.7233-5.2512 V (nominal 4.960 V). The FMEA window rejects healthy boards that turn off at 4.29-4.50 V (the nominal 4.505 V sits on its edge) or turn on at 4.72-4.90 V or 5.20-5.25 V.",
+    "history": "R24-SAFETY-03 (round24_safety.json) listed FMEA H-6 l.36 and named it in its fix; R24-TRI-03 narrowed the fix to ORDERING 8.3, REQUIREMENTS F9, M3_R10 and the sheet note, and commit c4bb56b changed only H-6's BAT_FAULT_N clause (git show c4bb56b --stat: FMEA 1 line). The R24-TRI-03 disposition row (R10_VALIDATION line 2074) lists only those three records; STATUS line 16 says \"every record\"."
+   },
+   "impact": "AGENTS section 1 points to FMEA H-6 for pad arming (row \"Pad arming access in flight configuration (FMEA H-6, V-18)\"). Applied after a suspected discharge, its window can judge a healthy board EN-damaged, so the post-event check cannot be carried out correctly from this record, and STATUS's \"every record\" statement is false while it stands. No fire consequence: the 4.80 V upper turn-off edge that screens extra EN leakage to GND is the same in both windows.",
+   "concrete_fix": "Text only. In FMEA H-6 replace \"(turn-off 4.5-4.8 V, turn-on 4.9-5.2 V)\" with \"(turn-off 4.29-4.80 V, turn-on 4.72-5.25 V, nominal 4.51 / 4.96 V; ORDERING 8.3, D-R24-19; or compare with the board's own first-article values)\". STATUS line 16 is then true."
+  },
+  {
+   "id": "R25-SAFETY-02",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Hold-up after the PA6 trip is computed from 5.3 V, above the trip window the same records define (VLOGIC about 4.8-5.2 V, PA6 0.44-0.47 V): from that window it is 0.103-0.164 ms with all ports on and 0.291-0.430 ms with the camera off / shed, not 0.157-0.182 / 0.44-0.48 ms",
+   "contradicts": [
+    "M3_R10 Firmware rule 8 (lines 1014-1016), REQUIREMENTS F6 (line 60), ORDERING 8.3 (line 674), R10_VALIDATION owner row 25 (line 2164) and r10_binding_note.json firmware_obligations[43]: \"the PA6 trip window is VLOGIC about 4.8-5.2 V (PA6 0.44-0.47 V)\"; rule 11: PA6 = VLOGIC / 11 (board: R60 100 kOhm VLOGIC-VLOGIC_SENSE, R61 10 kOhm to GND)",
+    "REQUIREMENTS F6: the hold-up need is \"the time firmware needs after the PA6 watchdog fires\"; M3_R10 Power: \"the hold-up must be counted from the PA6 trip, not from the battery break\""
+   ],
+   "evidence": {
+    "statements": [
+     "docs/M3_R10.md line 616 (Power, Hold-up): \"from the trip at about 5.3 V, 300.8 uF gives only 0.157-0.182 ms with all ports on and 0.44-0.48 ms with the camera off / shed (R23-POWER-01, Calculation)\"",
+     "docs/M3_R10.md lines 1014-1018 (Firmware rule 8): window 4.8-5.2 V, then \"Hold-up after the trip is 0.157-0.182 ms with all ports on and 0.44-0.48 ms with the camera off / shed (Calculation, from 5.3 V at 300.8 uF)\"",
+     "docs/REQUIREMENTS.md F6 line 60 (same sentence pair)",
+     "docs/ORDERING.md line 674: \"From the PA6 trip (VLOGIC about 4.8-5.2 V, PA6 0.44-0.47 V; R23-POWER-01) the hold-up is only 0.157-0.182 ms with all ports on and 0.44-0.48 ms with the camera off / shed (Calculation, from 5.3 V at 300.8 uF)\"",
+     "docs/R10_VALIDATION.md line 2134 (owner row 5: \"Counted from the PA6 trip ... about a third of that: 0.157-0.182 ms ... 0.44-0.48 ms\") and line 2164 (owner row 25)",
+     "m3_design/r10_sch_check.py line 322, regenerated into r10_binding_note.json firmware_obligations[43]"
+    ],
+    "calculation": "Constant power, t = C (V_trip^2 - 3.8^2) / (2 P), C = 300.8 uF, P from parts_budget.json battery_break_load_W (c, all ports on: 11.249-13.064 W; d, camera off / shed: 4.295-4.650 W) (.supervisor/r25_safety/holdup.py, holdup.out). From 5.3 V: 0.157-0.182 / 0.441-0.478 ms (reproduces the records). From VLOGIC = 11 x PA6 = 4.84-5.17 V: 0.103-0.164 ms and 0.291-0.430 ms; over \"4.8-5.2 V\": 0.099-0.168 / 0.278-0.441 ms. The post-trip energy is 22-31 % of the break-to-3.8 V figure (34 % only at 5.3 V), not \"about a third\".",
+    "origin": "R23-POWER-01 (round23_power.json) computed 5.3 V and 5.0 V trips (5.0 V: 0.122-0.141 ms) and stated the 4.8-5.2 V window; the records kept the 5.3 V figures beside that window."
+   },
+   "impact": "The open owner question R19-REQ-07 / row 25 (how long the logic must stay up after PA6 fires, and whether C84 suffices) is answered with a post-trip hold-up overstated by up to 1.5x at the window's lower edge; against the records' own 0.2 ms shed estimate the camera-off case drops from 2.2x to 1.5x margin. No pyro or deployment effect.",
+   "concrete_fix": "Text, plus the rule-8 string in m3_design/r10_sch_check.py (regenerate the binding note): quote the post-trip hold-up over the stated window, e.g. \"0.10-0.16 ms with all ports on and 0.29-0.43 ms with the camera off / shed (Calculation, from VLOGIC 4.84-5.17 V, PA6 0.44-0.47 V, at 300.8 uF)\"; strike \"the trip at about 5.3 V\" in M3_R10 Power; owner rows 5 / 25 \"a fifth to a third\". No board change."
+  },
+  {
+   "id": "R25-SAFETY-03",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "FMEA row I-11 / V-19 / H-6 (R10) names 1407e850 as the current R10 board; the current board is 92c3ad59",
+   "contradicts": [
+    "The committed board m3_design/assembly_review/m3.kicad_pcb, SHA-256 92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+    "M3_R10 \"The board\" table and AGENTS section 1 \"R10 status\" (PCB 92c3ad59...); FMEA line 36 itself, which binds its BAT_FAULT_N figure to 92c3ad59..."
+   ],
+   "evidence": {
+    "statement": "docs/FMEA_REDUNDANCY.md line 86: \"**Current R10 (`1407e850...`; the ports since the round 19 fix pass):** the GPS (J410, USART3), radio (J420, UART5) and spare AUX port ...\"",
+    "history": "git show: 9b27268 named 5516eeec (then current), f2b8251 changed it to 1407e850 (then current), c4bb56b (board -> 92c3ad59) left it unchanged.",
+    "board": "The row's port content still holds on 92c3ad59: the copper diff from 1407e850 is BAT_FAULT_N's three F.Cu pieces only (.supervisor/r25_safety/diffboards.py)."
+   },
+   "impact": "The FMEA's current R10 port / uplink / back-feed disposition is bound to a superseded board. Record binding only.",
+   "concrete_fix": "Text only: \"Current R10 (`92c3ad59...`; the ports since the round 19 fix pass)\"."
+  }
+ ],
+ "observations": [
+  "AGENTS section 2 holds on the built board: S-1 to S-9, K-actuators, K-ports and the full check_r10 contract (37 rules) pass on a probe copy; route_check --profile r10 0 failing. Gate networks by netlist: Q124 R126 220 Ohm series, R128 10 kOhm and R127 1 kOhm pull-downs, C126 220 nF gate-source; Q120 / Q121 R121 10 kOhm series, R119 || R120 100 kOhm gate-source, C120 1 uF; Q122 R122 1 kOhm, R123 2 kOhm, C123 10 nF. RAW_ACT pads are only Q121.5-9, R132.1, R134.2 and TP120 (bus after the load switch).",
+  "Q124's gate-to-drain pad gap (Q124.4 / Q124.5, F.Cu, 0.520 mm, recorded) is a single-bridge fire route with the bus enabled: gate = OUT puts Q124 in linear conduction and about 1.3-1.4 A through the match (Calculation; AON7524 VGS(th) 0.4-1.2 V, transfer curve not re-read: Inference). It is in the disclosed Q124-side class (\"a failed-short Q124 can fire an enabled match\"), and a pre-existing bridge reads CONT about 7 mV in the cold screen and is refused; the records state the gap but not this consequence.",
+  "U9 bypass paths give \"board on with J400 open\" without involving EN: U9.5-U9.6 (IN-OUT) 0.200 mm under the QFN, J1.1's kept In2 ring and the BAT_IN via (17.5,87.15) 0.251 mm from In2 RAW_PROTECTED (hole walls 0.551 mm, within JLC). Per-flight step 2 catches the symptom; its list of causes names only EN-network leaks, the J400.2 lead and the EN via open, with the same action, so not counted.",
+  "The outer-layer adjacency of 21 pyro / arming / switch / pack-live nets within 0.6 mm (109 pairs) compared on 5516eeec, 1407e850 and 92c3ad59: only BAT_ENABLE via - BAT_FAULT_N changed (0.200 -> 0.173 -> 0.200 mm), RAW_ACT - USB_OVLO 0.175 -> 0.177 mm, and ACT_GATE - BAT_SW_SOURCE left the window. Every pair with a consequence is a disclosed class (EN leak / latch, ACT_GATE or ACT_DRV to a 0 V net, Q121 / Q122 shorts, OUT to GND, R134 bypass, QSPI_IO2 / PE4, I-5).",
+  "M3_R10 Firmware \"Sense plausibility (R22-POWER-02)\" calls a PA6 trip that persists with the MCU running a sense fault; a genuine low pack between U9's turn-off (BAT_IN 4.29-4.80 V) and the trip (VLOGIC 4.84-5.17 V) does the same, since the AP63203 runs down to 3.8 V. The prescribed action (log and resume) is harmless in both cases; wording, not counted.",
+  "The M3_R10 CH1 and R10_VALIDATION section 1 S-8 tables (labelled 50a39de5 \"updated for D-R20-05\") give J400.2 In1 GND \"0.250 since D-R20-05\"; on 92c3ad59 it is 0.550 mm (D-R21-01; GND is exempt there). Labelled history; the re-measured sentence above the M3_R10 table is correct (1.021 / 1.050 / 2.1-2.2 mm, reproduced).",
+  "R10_VALIDATION section 1 S-8 paragraph says \"on this board (`1407e850...`)\" under a 92c3ad59 inventory basis; its counts (6 nets, 12 barrels) are also true on 92c3ad59.",
+  "D-R18-03's 0.5 mm floor for strong nodes beside the PC1 enable (BUZZ_OUT at LS120.2 0.520 mm, BAT_FAULT_N 0.550 mm, NRST via 0.425 mm weak) holds on the board but no check gates it; F8 sets 0.15 mm, so not a rule miss.",
+  "Owner row 21 says \"pass if the longest drop-out is < 10 ms and below the 5.73 V figure\" while ORDERING 8.3 says \"Keep the < 10 ms single-drop-out rule\"; F6 and the ORDERING C87 bullet carry the 8.2 ms / 5.96 V limit, and U9 staying on at 5.73 V is measured directly, so the pass rules agree in effect.",
+  "Per-flight list (ORDERING 8.3) against the D-R24-19 timing: opening J400 turns U9 off within about 57 ms at the slowest corner (8.4 V, C87 1.27 x, R81 +1 %, EN leakage sourcing) and the ACT_GATE decay (50 kOhm x 1 uF) takes Q120 / Q121 off within about 0.1 s, inside step 3's 1 s; step 5's fresh power-up follows the 30-130 ms turn-on; every probe position in the worksheet matches the board.",
+  "Rounding only: D-R24-02 quotes 1.042 mm (Q120 barrel to R121.2) and 0.342 mm (Q121 barrel to ACT_FET_S); pcbnew gives 1.041 and 0.341 mm."
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R24-18",
+   "claim": "BAT_FAULT_N chamfer at (16.55,83.35) capped at 0.32 mm; BAT_ENABLE via (17.1,82.8) gap back to 0.200 mm (legs), chamfer 0.2015 mm, diagonal 0.453 mm; nothing else changed",
+   "measurement": "pcbnew shape distance (near.py): via (17.1,82.8) F.Cu to BAT_FAULT_N 0.2000 mm (both legs) and 0.2015 mm (chamfer (16.55,83.03)-(16.87,83.35), 0.4525 mm long); closed form (1.1 - 0.32)/sqrt2 - 0.35 = 0.2015. diffboards.py 1407e850 -> 92c3ad59: exactly the three BAT_FAULT_N F.Cu pieces, no via or footprint change, F.Cu GND fill -0.022 mm2. Adjacency over 21 safety nets: no other gap changed. route_check (copy) 0 failing, right_angle 0. Records (M3_R10, ORDERING 8.3, FMEA H-6, R10_VALIDATION row 24 and section 1) state 0.200 mm on 92c3ad59.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R24-19",
+   "claim": "EN timing with D402 (10.3 / 20.1 / 26.0 ms, 8.2 ms at 5.73 V, 6.3 ms at 5.5 V, 5.96 V, 30-130 ms), ramp window 4.29-4.80 / 4.72-5.25 V, rule 8 corner 4.80 V, rules 4 and 5; docs lane: chatter < 18 %",
+   "measurement": "en_model.py reproduces every figure: 10.345 / 20.111 / 26.023 ms, 8.204 ms, 6.300 ms, 5.9556 V, turn-on 30.31-130.27 ms, EN 1.4014 V at 6.0 V, ramp 4.2876-4.8021 / 4.7233-5.2512 V, chatter trip 20.01 / 24.41 % (20.62 / 25.01 % without D402), PA6 edge 4.84 V > 4.802 V. Sheet note and binding note obligations 17, 39, 40, 43 match; opens.py shows no single via open on ACT_GATE, LOGIC_SOURCE_ST or VLOGIC at R60.1 (rules 4 and 5). The 18 % line is in F6, ORDERING 8.3, the handoff and R10_VALIDATION. The per-flight steps 2, 3 and 5 are consistent with the timing. Not carried: FMEA H-6 keeps the old ramp window (R25-SAFETY-01). Rule 8's post-trip hold-up uses 5.3 V, outside its window (R25-SAFETY-02, from round 23).",
+   "verdict": "partly (R25-SAFETY-01; R25-SAFETY-02 predates D-R24-19)"
+  },
+  {
+   "id": "D-R24-02 (re-checked on 92c3ad59)",
+   "claim": "Second barrels for Q120 / Q121 gate drive; gate networks local on B.Cu; S-8 holds",
+   "measurement": "opens.py: removing any one via leaves R121.1, Q120.4, Q121.4, R119.1, R120.2 and C120.2 joined. S-8 (s8probe.py): the four ACT_GATE barrels 1.050 mm from In1 GND and In2 RAW_PROTECTED. Gaps: (15.4,72.85) B.Cu 0.3609 mm to Q120.9; (11.74,72.3) B.Cu 0.3413 mm to ACT_FET_S, F.Cu 0.4207 mm to BAT_IN.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R24-11 (re-checked on 92c3ad59)",
+   "claim": "D402 at J400.2 to GND ahead of R165; BAT_SW_RETURN exactly {J400.2, R165.1, D402.1}",
+   "measurement": "Netlist on the board: BAT_SW_RETURN pads {D402.1, J400.2, R165.1}, D402.2 GND, D402 ESD103-B1-02EL C535146. Tap 4.114 mm (2.59 + 0.509 + 1.015), GND via (5.15,65.575) 0.700 mm. Only GND copper within 0.6 mm of BAT_SW_RETURN on either face. No path from BAT_SW_SOURCE to BAT_SW_RETURN within 0.6 mm. Datasheet Table 3: IR <= 50 nA at VR 15 V, VTrig 21 V typ, at 25 C.",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R24-22",
+   "claim": "check_actuators r10 messages name J400.1 / J400.2",
+   "measurement": "m3_design/check_actuators.py item 12 uses switch_a / switch_b = J400.1 / J400.2 on r10; K-actuators passes on the copy.",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after the review (both 92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f), equal to git show c4bb56b:; no tracked file changed (git status).",
+  "pcbnew (KiCad 10.0.6 Python, read-only) outer-layer adjacency sweep, adjacency.py: 21 protected nets, 0.6 mm window, exact SHAPE.Collide bisection to 1 nm, on 5516eeec, 1407e850 and 92c3ad59 (copies from git show), and their diff.",
+  "near.py: nearest foreign copper per layer at the BAT_ENABLE, ACT_GATE and residual-gap vias.",
+  "diffboards.py: track, via, footprint and zone-fill diff 1407e850 -> 92c3ad59.",
+  "opens.py: single-open connectivity on ACT_GATE, ACT_FET_S, BAT_ENABLE, BAT_SW_RETURN, PYRO1_GATE, PYRO1_GATE_N, ACT_EN, LOGIC_SOURCE_ST and VLOGIC.",
+  "s8probe.py / barrel_any.py: barrel wall (or kept ring) to In1 / In2 copper for the 12 protected barrels and the BAT_IN / BAT_SW_SOURCE barrels.",
+  "dump_nets.py / netpads.py: gate networks, switch chain, sense banks, monitors, OVLO divider and probe-worksheet parts.",
+  "tools/route_check.py --profile r10, tools/fit_check.py --profile r10 and tools/check_r10.py (full, 37 rules) on a probe copy of the project: all OK.",
+  "en_model.py (EN corner model with and without D402) and holdup.py (post-trip hold-up from parts_budget.json loads).",
+  "Datasheets (pdftotext of the cached PDFs): TI SLVSFC9C pp. 7 and 9; Infineon ESD103-B1-02 Rev 1.3 Table 3; AOS AONR21357 and AON7524 static tables.",
+  "Record reads and greps across AGENTS, STATUS, REQUIREMENTS, M3_R10, ORDERING 8, FMEA_REDUNDANCY, R10_VALIDATION, R10_VEHICLE_HANDOFF, parts_qualification, the battery_entry sheet note and r10_binding_note.json for superseded EN, ramp, chatter, PA6 and board figures; git history of the FMEA lines.",
+  "round24_safety.md / .json and round24_triage were read only after the findings were drafted."
+ ],
+ "sources": [
+  "TI TPS25947 datasheet SLVSFC9C (https://www.ti.com/lit/ds/symlink/tps25947.pdf) p7 (EN/UVLO absolute maximum 6.5 V) and p9 (VUVLO(R) 1.183-1.223 V, VUVLO(F) 1.076-1.116 V, IENLKG +/-0.1 uA)",
+  "Infineon ESD103-B1-02 series datasheet Rev 1.3, 2014-06-12 (LCSC C535146), Table 3 p5: VRWM +/-15 V, VTrig 21 V typ at 1 mA, IR < 0.1 nA typ / 50 nA max at VR 15 V",
+  "AOS AONR21357 datasheet (IDSS -1 uA at 25 C, -5 uA at 55 C; VGS(th) -1.3 to -2.3 V); AOS AON7524 datasheet (VGS(th) 0.4-1.2 V at 250 uA)",
+  "Repository records at c4bb56b: AGENTS.md, STATUS.md, docs/REQUIREMENTS.md, docs/M3_R10.md, docs/ORDERING.md, docs/FMEA_REDUNDANCY.md, docs/R10_VALIDATION.md, docs/R10_VEHICLE_HANDOFF.md, m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md, parts_qualification.md, parts_budget.json, r10_binding_note.json, round24_*.md / .json, round23_power.md / .json"
+ ],
+ "coverage_limits": [
+  "No DRC or kicad-cli run by this lens; DRC results are taken from the records (route_check, fit_check and check_r10 were run on a copy).",
+  "Inner layers were checked at the protected barrels and the BAT_IN / BAT_SW_SOURCE barrels only, not as a full plane-to-plane inventory.",
+  "No hot-plug or transient simulation; the EN and hold-up results are calculations on datasheet limits.",
+  "D402 and Q121 leakage above 25 / 55 C are not specified by the makers.",
+  "Harness faults were considered as recorded; no firmware exists and no physical test was run."
+ ]
+}

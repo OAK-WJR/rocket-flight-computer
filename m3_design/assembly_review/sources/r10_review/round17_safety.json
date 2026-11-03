@@ -1,0 +1,1208 @@
+{
+  "schema": 1,
+  "round": 17,
+  "lens": "safety",
+  "target_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "frozen_inventory": {
+    "count": 1966,
+    "mismatches_before": [],
+    "mismatches_after": []
+  },
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "disposition": "No demonstrated current safety defect found within the stated CAD-stage scope; this is not acceptance or physical/firmware qualification.",
+  "new_carried_closed": {
+    "new_findings": 0,
+    "carried_defects_reraised": 0,
+    "closed_findings": 0,
+    "retained_qualification_limits": "Carried in current canonical deviations; not recast as demonstrated hardware failures."
+  },
+  "checks_actually_executed": [
+    {
+      "name": "Initial/final immutable target verification",
+      "result": "pass",
+      "evidence": {
+        "commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+        "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+        "frozen_files": 1966,
+        "mismatches_before": 0,
+        "mismatches_after": 0
+      }
+    },
+    {
+      "name": "Fresh official KiCad schematic XML export",
+      "result": "pass",
+      "exit": 0,
+      "scope": "Single reserved official CLI invocation; Fontconfig warnings; no canonical export writes"
+    },
+    {
+      "name": "Fresh native schematic/PCB parity",
+      "result": "pass",
+      "schematic_ref_pin_pairs": 651,
+      "pcb_unique_ref_pin_pairs": 651,
+      "differences": []
+    },
+    {
+      "name": "Native safety rules S-1..S-9",
+      "result": "pass",
+      "rules": 9,
+      "scope": "Read-only native API selected rules; no fullcheck/build/DRC or firmware execution credited"
+    },
+    {
+      "name": "Required safety population including actual production BOM/CPL",
+      "result": "pass",
+      "evidence": "S-4 with actual fab CSVs;27 inspected safety-component rows fitted and matched"
+    },
+    {
+      "name": "Native negative controls",
+      "result": "pass",
+      "completed": 15,
+      "detected": 15,
+      "controls": [
+        {
+          "name": "physical copper shunt across R134",
+          "failing_rules": [
+            "S-1",
+            "S-2"
+          ],
+          "detected": true,
+          "issues": [
+            "S-1: RAW_ACT copper reaches J121.2 (PYRO1_IGN) through track PYRO1_IGN (7.40, 57.60): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches R134.1 (PYRO1_IGN) through track PYRO1_IGN (13.93, 64.00): firing / sense chain is bypassed",
+            "S-2: RAW_ACT copper touches C10.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C100.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C11.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C126.2 (GND) through GND fill on F.Cu",
+            "S-2: RAW_ACT copper touches C127.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C128.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C129.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C13.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C14.2 (GND) through GND fill on B.Cu",
+            "S-2: RAW_ACT copper touches C15.2 (GND) through GND fill on B.Cu"
+          ]
+        },
+        {
+          "name": "physical copper shunt across J400 contact",
+          "failing_rules": [
+            "S-5"
+          ],
+          "detected": true,
+          "issues": [
+            "S-5: BAT_SW_SOURCE copper touches C10.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C100.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C11.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C126.2 (GND) through GND fill on F.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C127.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C128.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C129.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C13.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C14.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C15.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C16.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass",
+            "S-5: BAT_SW_SOURCE copper touches C17.2 (GND) through GND fill on B.Cu: switch contact / resistor bypass"
+          ]
+        },
+        {
+          "name": "pyro feed taken from battery",
+          "failing_rules": [
+            "S-1",
+            "S-2"
+          ],
+          "detected": true,
+          "issues": [
+            "S-1: R134.2 must be on RAW_ACT (RAW_ACT bus behind Q120/Q121)",
+            "S-1: R134 has pads on the armed / RAW_ACT side net PYRO1_IGN and on the supply BAT_IN: not a named tie (GND_TIES / SUPPLY_TIES in tools/check_r10.py)",
+            "S-2: RAW_ACT copper touches R134.2 (BAT_IN) through track RAW_ACT (17.58, 64.00)"
+          ]
+        },
+        {
+          "name": "Q124 gate-source capacitor pad disconnected",
+          "failing_rules": [
+            "S-3"
+          ],
+          "detected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a gate-source capacitor >= 100 nF (PYRO1_GATE to GND)"
+          ]
+        },
+        {
+          "name": "Q124 gate pulled to 3V3",
+          "failing_rules": [
+            "S-3"
+          ],
+          "detected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no a resistor from the gate (PYRO1_GATE) to the source (GND) of 1 k - 100 k"
+          ]
+        },
+        {
+          "name": "Q124 MCU pull-down pad disconnected",
+          "failing_rules": [
+            "S-3"
+          ],
+          "detected": true,
+          "issues": [
+            "S-3: pyro FET Q124: no resistor of 100 ohm - 100 k from the MCU-side gate node PYRO1_GATE_N to GND (it must be defined off while the MCU pin floats)"
+          ]
+        },
+        {
+          "name": "ACT enable held by logic supply",
+          "failing_rules": [
+            "S-3"
+          ],
+          "detected": true,
+          "issues": [
+            "S-3: independent load-switch enable ACT_EN_MCU must touch only ['R122', 'U1']",
+            "S-3: independent load-switch enable R122.1 must be ACT_EN_MCU (is RAW_PROTECTED)"
+          ]
+        },
+        {
+          "name": "ACT enable pull-down pad disconnected",
+          "failing_rules": [
+            "S-3"
+          ],
+          "detected": true,
+          "issues": [
+            "S-3: independent load-switch enable ACT_EN must touch only ['Q122', 'R122', 'R123']",
+            "S-3: independent load-switch enable R123.1 must be ACT_EN (is unconnected-(U1-PC13-Pad7))"
+          ]
+        },
+        {
+          "name": "high-side gate restore resistor pad disconnected",
+          "failing_rules": [
+            "S-3"
+          ],
+          "detected": true,
+          "issues": [
+            "S-3: load switch Q120: no a resistor from the gate (ACT_GATE) to the source (ACT_FET_S) of 1 k - 100 k",
+            "S-3: load switch Q121: no a resistor from the gate (ACT_GATE) to the source (ACT_FET_S) of 1 k - 100 k"
+          ]
+        },
+        {
+          "name": "high-side gate-source capacitor pad disconnected",
+          "failing_rules": [
+            "S-3"
+          ],
+          "detected": true,
+          "issues": [
+            "S-3: load switch Q120: no a gate-source capacitor >= 100 nF (ACT_GATE to ACT_FET_S)",
+            "S-3: load switch Q121: no a gate-source capacitor >= 100 nF (ACT_GATE to ACT_FET_S)"
+          ]
+        },
+        {
+          "name": "new port to pyro copper bridge",
+          "failing_rules": [
+            "S-6"
+          ],
+          "detected": true,
+          "issues": [
+            "S-6: R450 joins port nets ['RADIO_RX_MCU'] to pyro / arming nets ['PYRO1_GATE']",
+            "S-6: RADIO_RX_WIRE track (34.825, 26.25) to PYRO1_GATE R450.1 on B.Cu: 0.000 mm (shared copper)"
+          ]
+        },
+        {
+          "name": "servo motor supply wrongly present",
+          "failing_rules": [
+            "S-7"
+          ],
+          "detected": true,
+          "issues": [
+            "S-7: J122.2 must be SERVO2_OUT (is RAW_ACT)"
+          ]
+        },
+        {
+          "name": "R134 excluded from fitted population",
+          "failing_rules": [
+            "S-4"
+          ],
+          "detected": true,
+          "issues": [
+            "S-4: R134: required fitted part excluded (dnp)"
+          ]
+        },
+        {
+          "name": "foreign inner copper 0.375mm from OUT hole wall",
+          "failing_rules": [
+            "S-8"
+          ],
+          "detected": true,
+          "issues": [
+            "S-8: 3V3 copper on In2.Cu is 0.375 mm from the J121.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+          ]
+        },
+        {
+          "name": "IGN current path reduced to 0.3mm",
+          "failing_rules": [
+            "S-9"
+          ],
+          "detected": true,
+          "issues": [
+            "S-9: PYRO1_IGN fire-path track 0.300 mm wide, 1.800 mm long on B.Cu (7.4, 57.6)-(7.4, 59.4); minimum 0.5 mm (AUD-6)",
+            "S-9: PYRO1_IGN fire-path track 0.300 mm wide, 6.505 mm long on B.Cu (7.4, 59.4)-(12.0, 64.0); minimum 0.5 mm (AUD-6)",
+            "S-9: PYRO1_IGN fire-path track 0.300 mm wide, 1.925 mm long on B.Cu (12.0, 64.0)-(13.93, 64.0); minimum 0.5 mm (AUD-6)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Independent KCL and single-resistor boundary",
+      "result": "pass_conditional_calculation",
+      "evidence": {
+        "one_top_short_max_V": 3.3421708288152567,
+        "one_bottom_open_max_V": 3.3421708288152567,
+        "both_tops_short_V": 19.9,
+        "analog_absmax_V": 4.0,
+        "one_top_short_current_8V4_mA": 1.3973101779075279,
+        "R_source_ohm": 910.7142857142857,
+        "RC_us": 9.107142857142858,
+        "cold_states": {
+          "healthy": {
+            "CONT_mV": 99.36892406659268,
+            "BUS_mV": 99.33788097878681,
+            "OUT_V": 1.1129319495458383,
+            "RAW_V": 1.1125842669624124,
+            "cold_current_mA": 0.19870680504541618
+          },
+          "open_match": {
+            "CONT_mV": 146.22641509433961,
+            "BUS_mV": 0.0,
+            "OUT_V": 1.6377358490566036,
+            "RAW_V": 0.0,
+            "cold_current_mA": 0.14622641509433965
+          },
+          "short_Q124": {
+            "CONT_mV": 2.767857142086174e-08,
+            "BUS_mV": 2.7669924569433792e-08,
+            "OUT_V": 3.099999999136515e-10,
+            "RAW_V": 3.0990315517765847e-10,
+            "cold_current_mA": 0.309999999969
+          },
+          "short_match": {
+            "CONT_mV": 99.3646604264076,
+            "BUS_mV": 99.34691989612733,
+            "OUT_V": 1.112884196775765,
+            "RAW_V": 1.112685502836626,
+            "cold_current_mA": 0.1987115803224235
+          }
+        },
+        "worst_cold_test_current_mA": 0.36529680365296807,
+        "max_test_current_mA": 40.0
+      }
+    },
+    {
+      "name": "Independent normal/fault/watchdog/resistor arithmetic",
+      "result": "pass_conditional_calculation",
+      "evidence": {
+        "IWDG_cycles": 960,
+        "LSI_min_Hz": 29400,
+        "LSI_max_Hz": 33600,
+        "IWDG_min_ms": 28.57142857142857,
+        "IWDG_max_ms": 32.6530612244898,
+        "normal_current_ms": 20.0,
+        "postfire_refresh_ms": 5.0,
+        "reset_sync_ms": 0.2,
+        "reset_HiZ_ms": 0.5,
+        "allocated_current_tail_ms": 1.5,
+        "fault_total_ms": 34.8530612244898,
+        "fault_guard_ms": 36.0,
+        "normal_plus_refresh_margin_ms": 3.5714285714285694,
+        "float_gate_R_ohm": 1087.3440285204993,
+        "gate_Cmax_nF": 278.3,
+        "RC_3V6_to_0V4_ms": 0.6781953380405976,
+        "refresh_during_fire_bad_late_hang_ms": 54.7530612244898,
+        "R134_min_at70C_ohm": 1.97109,
+        "R134_power_upper_W": 35.79745217113374,
+        "R134_20ms_J": 0.7159490434226748,
+        "R134_36ms_J": 1.2887082781608146,
+        "neutral_command_allocation_ms": 48.6530612244898
+      }
+    },
+    {
+      "name": "Fresh native fire path plus independent coupled-source quadratic",
+      "result": "pass_conditional_calculation",
+      "evidence": {
+        "paths_length_width_mm": {
+          "PYRO1_IGN": [
+            10.230382386916238,
+            0.5
+          ],
+          "PYRO1_OUT": [
+            7.85447834896002,
+            0.5
+          ],
+          "RAW_ACT": [
+            5.88613311116846,
+            0.5
+          ],
+          "ACT_FET_S": [
+            2.2,
+            0.4
+          ],
+          "BAT_IN": [
+            6.3071067811865476,
+            1.0
+          ]
+        },
+        "inside_pad_entries_mm": {
+          "PYRO1_IGN": 0,
+          "PYRO1_OUT": 0,
+          "RAW_ACT": 0,
+          "ACT_FET_S": 0,
+          "BAT_IN": 0.7071067811865476
+        },
+        "copper_20C_ohm": 0.029362412142135627,
+        "copper_70C_ohm": 0.03513212612806527,
+        "branch_without_pack_ohm": 4.467458126128065,
+        "full_loop_ohm": 4.617458126128065,
+        "quadratic_results": [
+          {
+            "stalls": 0,
+            "loaded_pack_V": 6.899390756727756,
+            "fire_A": 1.5443660716989063,
+            "above_1p125A": true,
+            "high_side_Vgs_estimate_V": 6.181264324297961
+          },
+          {
+            "stalls": 1,
+            "loaded_pack_V": 6.609326364555884,
+            "fire_A": 1.4794377872063396,
+            "above_1p125A": true,
+            "high_side_Vgs_estimate_V": 5.917569422323532
+          },
+          {
+            "stalls": 2,
+            "loaded_pack_V": 6.318164198837923,
+            "fire_A": 1.4142637760577872,
+            "above_1p125A": true,
+            "high_side_Vgs_estimate_V": 5.652876544398112
+          },
+          {
+            "stalls": 3,
+            "loaded_pack_V": 6.025729657046817,
+            "fire_A": 1.348804955060497,
+            "above_1p125A": true,
+            "high_side_Vgs_estimate_V": 5.387026960951653
+          },
+          {
+            "stalls": 4,
+            "loaded_pack_V": 5.7318070272281405,
+            "fire_A": 1.2830130390490941,
+            "above_1p125A": true,
+            "high_side_Vgs_estimate_V": 5.119824570207401
+          }
+        ],
+        "assumptions": "Conditional 7.4V equivalent source at fire; Rpack<=0.15ohm, 35um copper, hot 40mohm each high side, hot Q1248.236mohm, match<=2ohm, harness<=0.3ohm, stated other12.370807W; no physical or 20ms lot firing proof"
+      }
+    },
+    {
+      "name": "All protected barrel minimum distances",
+      "result": "pass_nominal_CAD",
+      "evidence": [
+        {
+          "barrel": "via (11.630, 55.100)",
+          "net": "PYRO1_OUT",
+          "closest": [
+            2.698436,
+            "3V3",
+            "In2.Cu",
+            "3V3 fill on In2.Cu"
+          ]
+        },
+        {
+          "barrel": "via (14.400, 53.300)",
+          "net": "PYRO1_GATE",
+          "closest": [
+            2.100001,
+            "USB_LIMITED",
+            "In2.Cu",
+            "track USB_LIMITED (9.60, 50.85)"
+          ]
+        },
+        {
+          "barrel": "J121.1 hole",
+          "net": "PYRO1_OUT",
+          "closest": [
+            1.102502,
+            "3V3",
+            "In2.Cu",
+            "3V3 fill on In2.Cu"
+          ]
+        },
+        {
+          "barrel": "J121.2 hole",
+          "net": "PYRO1_IGN",
+          "closest": [
+            1.900001,
+            "PYRO1_OUT",
+            "In1.Cu",
+            "J121.1"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Primary maker parameters and complete-page pulse/gate QA",
+      "result": "read_and_checked",
+      "evidence": [
+        {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "edition": "DS12110 Rev11, January2026",
+          "pages": "207-208 Tables109/110;233 Table136;67/91/92 pin and alternate-function maps",
+          "used_for": "ADC4.0V stress limit/zero positive injection; RevV LSI29.4-33.6kHz; separate PC1/PE4 roles",
+          "fresh_access": "Primary web PDF read. Named static st_h743.pdf is Rev8 and was excluded from Rev11 limit/page evidence."
+        },
+        {
+          "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+          "edition": "Rev1.1, October2023",
+          "pages": "1-2",
+          "used_for": "Q124 gate/source/drain pin roles, +/-12V gate rating,0.4V minimum threshold at25C,22nC maximum4.5V gate charge; hot turn-off unqualified",
+          "cached_pdf_sha256": "f062570cdd7382ee0fb23cb77e4522e538a098918f4ac06d0d38521efd543547",
+          "visual_QA": "Complete p2 rendered with Poppler and inspected; microamp symbols checked visually."
+        },
+        {
+          "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+          "edition": "Rev2.1, November2023",
+          "pages": "1-2",
+          "used_for": "P-channel orientation; +/-25V gate rating;12.3mohm max at-4.5V; source restoring bias",
+          "cached_pdf_sha256": "95786edcc78744297555a01e7ab21bf9d5443d9b063bf3204c4d600e8d05d516",
+          "visual_QA": "Complete p2 rendered with Poppler and inspected."
+        },
+        {
+          "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AO3400A.pdf",
+          "edition": "Rev3.1, July2023",
+          "pages": "1-2",
+          "used_for": "Q122 low-side driver pin roles and2.5V rated drive; external ACT_EN pull-down"
+        },
+        {
+          "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+          "edition": "CRM2512 maker sheet",
+          "pages": "1,3",
+          "used_for": "2W at70C; +/-1% and100ppm/K; >=1ohm pulse chart. Graph interpolation is Inference, not repeated/hot assembly qualification.",
+          "cached_pdf_sha256": "dd72c578f48227dbc38ed5c531d965920166b267da3cf4d0494253143732a94d",
+          "visual_QA": "Complete p3 pulse chart rendered with Poppler and inspected."
+        },
+        {
+          "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+          "edition": "MJG J-Tek LEAD-FREE technical sheet",
+          "pages": "1",
+          "used_for": "0.75A all-fire is0.5s test;40mA maximum test current; protective shroud. Current margin does not qualify20ms firing."
+        },
+        {
+          "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+          "edition": "SLVS841G",
+          "pages": "7,13-14",
+          "used_for": "Camera reverse blocking/delay differs from a physical break; no unconditional switch-off safety claim."
+        }
+      ]
+    },
+    {
+      "name": "Current source authority",
+      "result": "reviewed",
+      "decision_ids_considered": 122,
+      "owner_mandate_records_considered": 23,
+      "scope": "All indexed decisions considered under current amendment; D-R16-03 cancels Minor CAD adoption; AGENTS2 unchanged"
+    }
+  ],
+  "rejected_or_narrowed_critical_major_candidates": [
+    {
+      "candidate": "Critical/Major: pyro bypasses the load switch or R134",
+      "status": "rejected",
+      "evidence": "Fresh exported schematic and all651 PCB ref/pin pairs agree. Q120 D=BAT_IN,S=ACT_FET_S; Q121 D=RAW_ACT,S=ACT_FET_S; R1342=RAW_ACT,1=IGN; J121.2=IGN/1=OUT; Q124D=OUT/S=GND. S-1/S-2 include physical copper reach; actual R134 copper-shunt and BAT_IN-feed controls reject.",
+      "limit": "Does not claim every possible later hardware fault is contained."
+    },
+    {
+      "candidate": "Critical: power-up/reset leaves a firing gate driven on",
+      "status": "rejected_as_demonstrated_failure",
+      "evidence": "Q124F(13.9,57.37): R12810k tosourceGND,C126220nF tosource,R126220ohm toPE4 withR1271k MCU-side pull-down. Q120/Q121B(13.5,73.6)/(13.5,68.6): R120100k andC1201uF between common source/gate,R12110k toQ122. PC1->R1221k->Q122 gate withR123100k toGND. Native disconnection/pull-up controls reject.",
+      "limit": "P-channel source-restoring bias must hold VGS near0; grounding its gate would turn it on. This is the polarity-correct load-switch network, while Q124 has the literal source-GND pull-down. Static topology is checked; hot/transient/reset waveforms remain unmeasured."
+    },
+    {
+      "candidate": "Major: one pyro sense resistor fault violates the analog limit",
+      "status": "rejected",
+      "evidence": "Independent resistor-network calculation from native two5.1k series/two2k parallel banks gives3.342170829V at19.9V with+/-1.45% corners for either one top short or one bottom open, below4.0V. One-top-short current at8.4V is1.397310178mA.",
+      "limit": "A double-top short yields19.9V and is outside the explicit single-resistor envelope.19.9V clamp and component/temperature premises are conditional, not measured input waveforms."
+    },
+    {
+      "candidate": "Critical/Major: a failed-short Q124 fires during the required ground screen",
+      "status": "rejected_for_current_procedure",
+      "evidence": "Current binding/M3/ORDERING require both PC1/PE4low,>=1s discharge check after prior enable, passive screen before PC1, then PE4low/>=100ms settling. Independent healthy CONT/BUS99.368924/99.337881mV; short-Q124 approximately0/0; open146.226415/0. Cold current upper0.365297mA versus maker40mA test maximum.",
+      "limit": "Thresholds/ADC/leakage bands and firmware absent; a fault occurring after enabling can still fire and is a retained architecture risk."
+    },
+    {
+      "candidate": "Critical/Major: J400 open always removes pyro energy despite USB/port back-feed",
+      "status": "rejected_as_a_design_claim",
+      "evidence": "U10/U11 preserve USB-only power. J410/J420 supplies directly share PORT_4V8; their UARTs reach U1 through1k without powered-off isolation. M3/REQUIREMENTS/ORDERING explicitly prohibit e-match connection with USB/self-powered back-feed and require pack or e-match disconnected for USB bench work.",
+      "limit": "No direct J400 state sensor; enabled camera and direct ports can back-feed. Off-first means remove back-feed and verify dead, not guaranteed de-energization from contact alone."
+    },
+    {
+      "candidate": "Major: watchdog period contradicts20ms normal current limit",
+      "status": "rejected",
+      "evidence": "Independent960-cycle arithmetic gives28.571429-32.653061ms. Normal current<=20ms plus<=5ms SAFETY refresh leaves3.571429ms against fastest expiry. Separate intact-hardware guard=32.653061+0.2+0.5+1.5=34.853061ms<36ms. Invalid refresh at19.9ms before hang extends calculation to54.753061ms, demonstrating why no-refresh is mandatory.",
+      "limit": "Timer/DMA abort, actual silicon/LSI/reset/current tail are obligations; no executable firmware or physical guarantee is claimed. Failed-short FET hardware is outside timed cutoff."
+    },
+    {
+      "candidate": "Major: fabricated S-8 or shorted-match survival is proven by CAD",
+      "status": "rejected_as_a_claim",
+      "evidence": "Fresh nominal minimum1.102502mm atJ121.1F(7.4,54.1) OUT hole toIn2 3V3; all four protected barrels pass1.0mm. Fresh coupled fire calculation predicts1.283013039A with four stalls versus1.125A selected floor. Short-current upper4.262A and R13436ms energy1.288708J are conditional calculations.",
+      "limit": "Fabricated barrel/position allocation, actual source/harness, hot resistor/logic survival and chosen-lot20ms charge firing remain explicitly unqualified."
+    },
+    {
+      "candidate": "Critical/Major: inherited two-channel FMEA wording establishes executable R10 behavior",
+      "status": "rejected",
+      "evidence": "The current R10 applicability paragraph, binding and M3/ORDERING explicitly supersede ARM-link/two-channel/pull-pin history and retain launch(accelerometer+barometer), ground refusal and in-flight never-veto. Native J124/J123/duplicate bank absent. assembly_binding.py is still explicitlyR1; the R10 note is record-only.",
+      "limit": "No R10 firmware exists to exercise the policy. Historical reset-recovery text must not be treated as R10 execution or permission to bypass AGENTS2."
+    }
+  ],
+  "primary_sources": [
+    {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "edition": "DS12110 Rev11, January2026",
+      "pages": "207-208 Tables109/110;233 Table136;67/91/92 pin and alternate-function maps",
+      "used_for": "ADC4.0V stress limit/zero positive injection; RevV LSI29.4-33.6kHz; separate PC1/PE4 roles",
+      "fresh_access": "Primary web PDF read. Named static st_h743.pdf is Rev8 and was excluded from Rev11 limit/page evidence."
+    },
+    {
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+      "edition": "Rev1.1, October2023",
+      "pages": "1-2",
+      "used_for": "Q124 gate/source/drain pin roles, +/-12V gate rating,0.4V minimum threshold at25C,22nC maximum4.5V gate charge; hot turn-off unqualified",
+      "cached_pdf_sha256": "f062570cdd7382ee0fb23cb77e4522e538a098918f4ac06d0d38521efd543547",
+      "visual_QA": "Complete p2 rendered with Poppler and inspected; microamp symbols checked visually."
+    },
+    {
+      "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+      "edition": "Rev2.1, November2023",
+      "pages": "1-2",
+      "used_for": "P-channel orientation; +/-25V gate rating;12.3mohm max at-4.5V; source restoring bias",
+      "cached_pdf_sha256": "95786edcc78744297555a01e7ab21bf9d5443d9b063bf3204c4d600e8d05d516",
+      "visual_QA": "Complete p2 rendered with Poppler and inspected."
+    },
+    {
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AO3400A.pdf",
+      "edition": "Rev3.1, July2023",
+      "pages": "1-2",
+      "used_for": "Q122 low-side driver pin roles and2.5V rated drive; external ACT_EN pull-down"
+    },
+    {
+      "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+      "edition": "CRM2512 maker sheet",
+      "pages": "1,3",
+      "used_for": "2W at70C; +/-1% and100ppm/K; >=1ohm pulse chart. Graph interpolation is Inference, not repeated/hot assembly qualification.",
+      "cached_pdf_sha256": "dd72c578f48227dbc38ed5c531d965920166b267da3cf4d0494253143732a94d",
+      "visual_QA": "Complete p3 pulse chart rendered with Poppler and inspected."
+    },
+    {
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "edition": "MJG J-Tek LEAD-FREE technical sheet",
+      "pages": "1",
+      "used_for": "0.75A all-fire is0.5s test;40mA maximum test current; protective shroud. Current margin does not qualify20ms firing."
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+      "edition": "SLVS841G",
+      "pages": "7,13-14",
+      "used_for": "Camera reverse blocking/delay differs from a physical break; no unconditional switch-off safety claim."
+    }
+  ],
+  "source_catalog": [
+    {
+      "source": "AGENTS.md",
+      "sha256": "c02a8aad64f7cd305c1faacdcfa542dd68f93742ec0751ca0c8a111a7d4ba73e",
+      "lines": 107
+    },
+    {
+      "source": "docs/REQUIREMENTS.md",
+      "sha256": "f5f827d49e746142e0fc10f680714c27d16339d7e5ea117bcc5fbab2d5779664",
+      "lines": 213
+    },
+    {
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+      "sha256": "79deffd07861a1048cf317854cd64a1ace3039698d0361f39ae1592ff7b9041d",
+      "lines": 2478
+    },
+    {
+      "source": "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+      "sha256": "514f8b12c48c07c43682c573b70e2e34fb6a2a2606e0dec436e020f5b5f45109",
+      "lines": 320
+    },
+    {
+      "source": "docs/M3_R10.md",
+      "sha256": "855b7a2c1e3bf4712a5e2a244b19242c28a1d3498222b377e13af8b3e2bd26d5",
+      "lines": 542
+    },
+    {
+      "source": "docs/R10_VALIDATION.md",
+      "sha256": "f2a3a375f8f365e9fda4307fa40cc413b4d56589763f3b04c95a1052a2ccbb75",
+      "lines": 2021
+    },
+    {
+      "source": "docs/R9_VALIDATION.md",
+      "sha256": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+      "lines": 422
+    },
+    {
+      "source": "../../docs/VEHICLE.md",
+      "sha256": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+      "lines": 70
+    },
+    {
+      "source": "docs/R10_VEHICLE_HANDOFF.md",
+      "sha256": "f75cec52ea9862f787f293755b71709e6c35554647fb0b7259272ca5b781665b",
+      "lines": 118
+    },
+    {
+      "source": "docs/FMEA_REDUNDANCY.md",
+      "sha256": "a5541a9dee1c0a5fc664f2f73d70d3fb8cc8087effd60e105e44f9dfdff06205",
+      "lines": 610
+    },
+    {
+      "source": "docs/ORDERING.md",
+      "sha256": "7461ca98b1e5821984c0a2b5e24e3c06c2ac5416a8fd5a89fd8ca48cef40be6b",
+      "lines": 565
+    }
+  ],
+  "decision_scope": [
+    {
+      "id": "D-R1-01",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-R1-02",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R1-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R1-04",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-R1-05",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-R1-06",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-R1-07",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-01",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R2-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-04",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-05",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R2-06",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-07",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-08",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R2-09",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-10",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-11",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-12",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-13",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-14",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R2-15",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R2-16",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-01",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R3-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-04",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R3-05",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R3-06",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R3-07",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-08",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-09",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-10",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-11",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R3-12",
+      "current_applicability": "current_resistor_with_corrected_evidence"
+    },
+    {
+      "id": "D-R3-13",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R4-01",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R4-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R4-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R4-04",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R5-01",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R5-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R5-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R5-04",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R6-01",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R6-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R6-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R7-01",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R7-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R8-01",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-R8-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R8-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-OA-01",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-OA-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-OA-03",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-OA-04",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-OA-05",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-OA-06",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-OA-07",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-OA-08",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-OA-09",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-SS-01",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-SS-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-SS-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-AUD-01",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-02",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-03",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-04",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-05",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-06",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-AUD-07",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-AUD-08",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-AUD-09",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-10",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-GAP-01",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-GAP-02",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-GAP-03",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-GAP-04",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-GAP-05",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-03a",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AUD-03b",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-SS-04",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-GAP-01a",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-GAP-02a",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-AUD-03c",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-GAP-02b",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-AUD-01a",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R9-01",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R9-02",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R9-03",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R9-04",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-R9-05",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R9-06",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-R10-01",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R10-02",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R10-03",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-CIR-01",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-CIR-02",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-CIR-03",
+      "current_applicability": "superseded"
+    },
+    {
+      "id": "D-CIR-04",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-AVA-01",
+      "current_applicability": "owner_amended"
+    },
+    {
+      "id": "D-AVA-02",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R11-01",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R11-02",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R11-03",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R11-04",
+      "current_applicability": "current_applicable"
+    },
+    {
+      "id": "D-R11-05",
+      "current_applicability": "process_record"
+    },
+    {
+      "id": "D-R12-01",
+      "current_applicability": "current_evidence_and_records_correction"
+    },
+    {
+      "id": "D-R12-02",
+      "current_applicability": "current_CAD_changes_with_retained_M2_and_qualification_limits"
+    },
+    {
+      "id": "D-R12-03",
+      "current_applicability": "current_gate_hardening"
+    },
+    {
+      "id": "D-R13-01",
+      "current_applicability": "current_model_and_Fab_source_corrections"
+    },
+    {
+      "id": "D-R13-02",
+      "current_applicability": "current_gate_hardening_scoped_verified"
+    },
+    {
+      "id": "D-R13-03",
+      "current_applicability": "current_operating_evidence_and_qualified_routing_source_work"
+    },
+    {
+      "id": "D-R14-01",
+      "current_applicability": "current_R14_source_or_evidence_correction_and_pending_qualification"
+    },
+    {
+      "id": "D-R14-02",
+      "current_applicability": "current_R14_source_or_evidence_correction_and_pending_qualification"
+    },
+    {
+      "id": "D-R14-03",
+      "current_applicability": "current_R14_source_or_evidence_correction_and_pending_qualification"
+    },
+    {
+      "id": "D-R15-01",
+      "current_applicability": "R15_generator_or_evidence_correction_and_retained_qualification"
+    },
+    {
+      "id": "D-R15-02",
+      "current_applicability": "R15_generator_or_evidence_correction_and_retained_qualification"
+    },
+    {
+      "id": "D-R15-03",
+      "current_applicability": "R15_generator_or_evidence_correction_and_retained_qualification"
+    },
+    {
+      "id": "D-R16-01",
+      "current_applicability": "R16_validation_record_fix_and_explicit_final_delta_coverage_policy"
+    },
+    {
+      "id": "D-R16-02",
+      "current_applicability": "Freeze_and_retained_MEMS_scope_active; queued_post_pair_Minor_CAD_adoption_SUPERSEDED_BY_D-R16-03"
+    },
+    {
+      "id": "D-R16-03",
+      "current_applicability": "Current_owner_directed_unchanged_PCB_Minor_policy"
+    }
+  ],
+  "owner_mandates_considered": [
+    "Initial plan items1-4",
+    "O1",
+    "O2",
+    "O3",
+    "O4",
+    "O5",
+    "O6",
+    "D-R2-04 then D-R2-08",
+    "OQ-1",
+    "OQ-2",
+    "OQ-3",
+    "OQ-4",
+    "OQ-5",
+    "OQ-6",
+    "OQ-7",
+    "Single switch and keep-one-switch reaffirmation",
+    "AUD-1..10 and GAP-1..5",
+    "AVA comparison10 layout items",
+    "Always-on ports plus microSD",
+    "All wired screw terminals / Steer1",
+    "Requirements audit2 items1-13,15",
+    "Requirements audit2 item14/16",
+    "Supervisor2026-10-30afterround16: no Minor CAD changes"
+  ],
+  "coverage_limits": [
+    "No R10 firmware, assembled board, physical timing, electrical/thermal/transient/endurance, actual20ms lot firing or flight tests exist; none executed or inferred here.",
+    "The safety lens is full for the current firing/switch/sense/reset/policy/back-feed/backup path. It does not replace other lenses, native whole-project DRC/ERC/build or procurement/process acceptance.",
+    "Static gate topology and nominal geometry do not prove hot leakage/Miller/reset waveforms, RF immunity, conformal-coat leakage, fabricated barrel allocation, DB125 retention or accessible rail/tool fit.",
+    "Source/harness resistances, fire-time pack reserve, converter allocation, FET resistance/copper temperature and capacitor behavior are conditional calculation inputs. Shorted-match logic survival remains a bench gate.",
+    "The independent Blue Jay is required to have its own battery/deployment circuit and zero shared copper. No board connector/interface to it exists; actual vehicle harness isolation cannot be proved from CAD.",
+    "Normal20ms and fault36ms are separate contracts. No automatic retry/repetitive pulse qualification follows from a single-pulse graph.",
+    "Named static ST cache was Rev8, so fresh maker Rev11 web contents supplied the actual Rev11 limits. A direct PDF download attempt timed out; no successful local Rev11 download is claimed. RM0433 web retrieval exceeded service size; trace override remains explicitly unverified.",
+    "An initial multi-board native mutation fixture crashed with SWIG lifetime errors after seven detections; five isolated footprint-removal fixtures also segfaulted. No crash is counted as a detection. Repaired native pad-disconnection controls completed with exit0; all15 final controls have explicit rejection evidence.",
+    "No peer current-round reports/probes read, no subagents, no GUI retry, no source/CAD/fab mutations, no Git command/mutation, no canonical build/check invocation."
+  ],
+  "evidence_directory": ".supervisor/r17_safety_probe",
+  "evidence_sha256": {
+    "native.net.xml": "1a4beca87fa9df1160e99b43716de4d27401ad619133e94672ad06c06a7bc50d",
+    "native.json": "ddb52419a2bc4b7cc38132a82ff35c0dff2982106422be658b8e9cb66b04a593",
+    "adversary.json": "60d7663d117bf74eae30c9db5f5f844765c69706841901bb0806b3cd197c164e",
+    "fire.json": "705f0f5c21f197fea7f61622ca5df1e26b06fa6938f9ccd18d0f0bc5a6288157",
+    "metrics.json": "ae5ced648f7b23133de4ffbabbf955f83b3ddb74b119ebc3c8a891c84e846189",
+    "control_executions.json": "14b6c92ffbc27b92cfcb4a999baee18be184d0b6b09f5cbb65d639e7f3282bf8",
+    "repaired_control_executions.json": "8acb5d28c259f163b4d078e02515dde3b95803aa07f3ef7c14c6b332a50e3b5f",
+    "additional_control_executions.json": "91fd6539c79b8b1775c4a59775a82e7ff2305a2eab76a954ba94abe2a81d9a6f"
+  },
+  "report_immutable_after_handoff": true
+}

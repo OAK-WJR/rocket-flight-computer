@@ -1,0 +1,523 @@
+{
+ "board": "m3.kicad_pcb",
+ "board_sha256": "4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14",
+ "script_sha256": "d6713da8db34ca012951e3b3fab81b0fc8f64b7b54270c5ea9ae0d256cf25e1f",
+ "length_mm": 102.0,
+ "windows": {
+  "west": [
+   [
+    0.5,
+    7.25
+   ],
+   [
+    12.0,
+    20.5
+   ],
+   [
+    53.5,
+    101.5
+   ]
+  ],
+  "east": [
+   [
+    0.5,
+    27.0
+   ],
+   [
+    92.75,
+    101.5
+   ]
+  ]
+ },
+ "pyro_block_outline": [
+  [
+   8.3,
+   54.2
+  ],
+  [
+   8.3,
+   55.5
+  ],
+  [
+   8.7,
+   55.5
+  ],
+  [
+   8.7,
+   57.4
+  ],
+  [
+   8.8,
+   57.4
+  ],
+  [
+   8.8,
+   57.7
+  ],
+  [
+   12.5,
+   57.7
+  ],
+  [
+   12.5,
+   57.6
+  ],
+  [
+   12.6,
+   57.6
+  ],
+  [
+   12.6,
+   57.5
+  ],
+  [
+   13.1,
+   57.5
+  ],
+  [
+   13.1,
+   57.7
+  ],
+  [
+   14.4,
+   57.7
+  ],
+  [
+   14.4,
+   57.8
+  ],
+  [
+   16.6,
+   57.8
+  ],
+  [
+   16.6,
+   66.099999
+  ],
+  [
+   17.0,
+   66.099999
+  ],
+  [
+   17.0,
+   67.5
+  ],
+  [
+   20.7,
+   67.5
+  ],
+  [
+   20.7,
+   73.2
+  ],
+  [
+   21.4,
+   73.2
+  ],
+  [
+   21.4,
+   75.2
+  ],
+  [
+   26.2,
+   75.2
+  ],
+  [
+   26.2,
+   76.9
+  ],
+  [
+   28.4,
+   76.9
+  ],
+  [
+   28.4,
+   85.1
+  ],
+  [
+   21.6,
+   85.1
+  ],
+  [
+   21.6,
+   84.4
+  ],
+  [
+   20.5,
+   84.4
+  ],
+  [
+   20.5,
+   83.6
+  ],
+  [
+   17.0,
+   83.6
+  ],
+  [
+   17.0,
+   89.8
+  ],
+  [
+   3.4,
+   89.8
+  ],
+  [
+   3.4,
+   67.099999
+  ],
+  [
+   4.099999,
+   67.099999
+  ],
+  [
+   4.099999,
+   63.1
+  ],
+  [
+   2.9,
+   63.1
+  ],
+  [
+   2.9,
+   62.8
+  ],
+  [
+   1.2,
+   62.8
+  ],
+  [
+   1.2,
+   55.5
+  ],
+  [
+   1.6,
+   55.5
+  ],
+  [
+   1.6,
+   54.2
+  ]
+ ],
+ "rules": {
+  "length": 5.0,
+  "part": 1.5,
+  "soft": 5.0,
+  "connector": 2.0,
+  "hole": 1.5,
+  "band_mm": [
+   0.5,
+   3.0
+  ],
+  "pyro_block": 5.0
+ },
+ "slots": {
+  "west aft": {
+   "candidates": 23,
+   "legal": 23,
+   "legal_starts": [
+    0.5,
+    15.5
+   ],
+   "rejected_live_copper": 0,
+   "rejected_pyro_block": 0
+  },
+  "west forward": {
+   "candidates": 115,
+   "legal": 13,
+   "legal_starts": [
+    93.5,
+    96.5
+   ],
+   "rejected_live_copper": 0,
+   "rejected_pyro_block": 102
+  },
+  "east aft": {
+   "candidates": 87,
+   "legal": 87,
+   "legal_starts": [
+    0.5,
+    22.0
+   ],
+   "rejected_live_copper": 0,
+   "rejected_pyro_block": 0
+  },
+  "east forward": {
+   "candidates": 16,
+   "legal": 6,
+   "legal_starts": [
+    95.25,
+    96.5
+   ],
+   "rejected_live_copper": 10,
+   "rejected_pyro_block": 0
+  }
+ },
+ "chosen": {
+  "west aft": {
+   "edge": "west",
+   "kicad_y": [
+    0.5,
+    5.5
+   ],
+   "gerber_y": [
+    -5.5,
+    -0.5
+   ],
+   "jack_courtyard_mm": {
+    "J31": 28.745,
+    "J30": 10.045
+   },
+   "nearest": {
+    "part_or_pad": {
+     "mm": 3.201,
+     "ref": "TP30"
+    },
+    "part": {
+     "mm": 3.201,
+     "ref": "TP30"
+    },
+    "soft": {
+     "mm": 5.568,
+     "ref": "U30"
+    },
+    "connector": {
+     "mm": 23.325,
+     "ref": "J3"
+    }
+   },
+   "nearest_hole": {
+    "mm": 2.4,
+    "at": [
+     4.0,
+     4.0
+    ]
+   },
+   "margins": {
+    "part_or_pad": 1.701,
+    "soft": 0.568,
+    "connector": 21.325,
+    "hole": 0.9
+   },
+   "min_margin": 0.568,
+   "pyro_block_mm": 48.726,
+   "band_copper": {
+    "F.Cu": [
+     "GND"
+    ],
+    "In1.Cu": [
+     "GND"
+    ],
+    "In2.Cu": [
+     "GND"
+    ],
+    "B.Cu": [
+     "GND"
+    ]
+   },
+   "gnd_only": true
+  },
+  "west forward": {
+   "edge": "west",
+   "kicad_y": [
+    96.5,
+    101.5
+   ],
+   "gerber_y": [
+    -101.5,
+    -96.5
+   ],
+   "jack_courtyard_mm": {
+    "J31": 96.2,
+    "J30": 92.353
+   },
+   "nearest": {
+    "part_or_pad": {
+     "mm": 8.905,
+     "ref": "J1"
+    },
+    "part": {
+     "mm": 12.921,
+     "ref": "R165"
+    },
+    "soft": {
+     "mm": 16.655,
+     "ref": "C80"
+    },
+    "connector": {
+     "mm": 8.905,
+     "ref": "J1"
+    }
+   },
+   "nearest_hole": {
+    "mm": 2.4,
+    "at": [
+     4.0,
+     98.0
+    ]
+   },
+   "margins": {
+    "part_or_pad": 7.405,
+    "soft": 11.655,
+    "connector": 6.905,
+    "hole": 0.9
+   },
+   "min_margin": 0.9,
+   "pyro_block_mm": 7.513,
+   "band_copper": {
+    "F.Cu": [
+     "GND"
+    ],
+    "In1.Cu": [
+     "GND"
+    ],
+    "In2.Cu": [
+     "GND"
+    ],
+    "B.Cu": [
+     "GND"
+    ]
+   },
+   "gnd_only": true
+  },
+  "east aft": {
+   "edge": "east",
+   "kicad_y": [
+    8.75,
+    13.75
+   ],
+   "gerber_y": [
+    -13.75,
+    -8.75
+   ],
+   "jack_courtyard_mm": {
+    "J31": 10.944,
+    "J30": 29.148
+   },
+   "nearest": {
+    "part_or_pad": {
+     "mm": 7.323,
+     "ref": "C310"
+    },
+    "part": {
+     "mm": 7.785,
+     "ref": "R311"
+    },
+    "soft": {
+     "mm": 7.323,
+     "ref": "C310"
+    },
+    "connector": {
+     "mm": 14.068,
+     "ref": "J123"
+    }
+   },
+   "nearest_hole": {
+    "mm": 3.96,
+    "at": [
+     42.0,
+     4.0
+    ]
+   },
+   "margins": {
+    "part_or_pad": 5.823,
+    "soft": 2.323,
+    "connector": 12.068,
+    "hole": 2.46
+   },
+   "min_margin": 2.323,
+   "pyro_block_mm": 52.96,
+   "band_copper": {
+    "F.Cu": [
+     "GND"
+    ],
+    "In1.Cu": [
+     "GND"
+    ],
+    "In2.Cu": [
+     "GND"
+    ],
+    "B.Cu": [
+     "GND"
+    ]
+   },
+   "gnd_only": true
+  },
+  "east forward": {
+   "edge": "east",
+   "kicad_y": [
+    96.5,
+    101.5
+   ],
+   "gerber_y": [
+    -101.5,
+    -96.5
+   ],
+   "jack_courtyard_mm": {
+    "J31": 92.366,
+    "J30": 96.236
+   },
+   "nearest": {
+    "part_or_pad": {
+     "mm": 3.305,
+     "ref": "R83"
+    },
+    "part": {
+     "mm": 3.305,
+     "ref": "R83"
+    },
+    "soft": {
+     "mm": 6.109,
+     "ref": "C87"
+    },
+    "connector": {
+     "mm": 14.905,
+     "ref": "J1"
+    }
+   },
+   "nearest_hole": {
+    "mm": 2.4,
+    "at": [
+     42.0,
+     98.0
+    ]
+   },
+   "margins": {
+    "part_or_pad": 1.805,
+    "soft": 1.109,
+    "connector": 12.905,
+    "hole": 0.9
+   },
+   "min_margin": 0.9,
+   "pyro_block_mm": 20.97,
+   "band_copper": {
+    "F.Cu": [
+     "GND"
+    ],
+    "In1.Cu": [
+     "GND"
+    ],
+    "In2.Cu": [
+     "GND"
+    ],
+    "B.Cu": [
+     "GND"
+    ]
+   },
+   "gnd_only": true
+  }
+ },
+ "middle_third": {
+  "west": {
+   "positions": 58,
+   "max_pyro_block_mm": 3.4,
+   "usable": 0
+  },
+  "east": {
+   "positions": 0,
+   "max_pyro_block_mm": null,
+   "usable": 0
+  }
+ },
+ "ok": true
+}

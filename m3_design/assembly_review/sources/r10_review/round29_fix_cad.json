@@ -1,0 +1,112 @@
+{
+ "schema": "round29_fix_cad/1",
+ "lane": "CAD",
+ "base_commit": "09a564e",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "binding_note_sha256_before": "30796f5ece9f3660264ca855dd6e4c1dbd8f97ee3f37983aed200ea27ef32ede",
+ "binding_note_sha256_after": "c5cd0fa313d3e973bf0542e806f82ae1bfea357943ec49d3c84e522449836cca",
+ "parts_budget_changed": false,
+ "build": {
+  "script": "m3_design/r10_build.sh",
+  "runs": 1,
+  "seconds": 1668,
+  "exit": 0,
+  "reproduced_board": true,
+  "check_sh_exit": 0,
+  "note": "R10_DECISIONS.md was edited during the build; no gate reads it."
+ },
+ "fab": "Only creation dates changed in m3_gerber.zip (27 date lines) and the two assembly PDFs; BOM, owner BOM, CPL, paste byte-identical; manifest inputs unchanged.",
+ "items": [
+  {
+   "id": "R29-TRI-02",
+   "decision": "D-R29-01",
+   "files": [
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+   ],
+   "before": "the gate time constant is 47–53 µs",
+   "after": "the gate time constant is about 47–58 µs over C126's ±10 % (53 µs nominal; Calculation, driver resistances Inference)"
+  },
+  {
+   "id": "R29-TRI-05",
+   "decision": "D-R29-02",
+   "files": [
+    "tools/test_r10_check.py"
+   ],
+   "before": "pin 'after a 30-130 ms EN turn-on delay'; (a)-(f) unpinned",
+   "after_pins": [
+    "after a 30-130 ms EN turn-on delay (the same model over C87 0.72-1.27 x)",
+    "and the 1.5 ms covers a 0.74 ms gate-discharge model whose 0.4 V off criterion and hot gate charge are Inference",
+    "and the 5.71 V point is the fire budget's, whose hot Q124 factor is inferred",
+    "; the loads are the budget's allocations, and C84 has no cold-capacitance factor",
+    "Calculation / Inference: the table is scaled linearly and the settling time is not quantified; measure the PORT_4V8-to-3V3 lag on first articles",
+    "At first article, before coating, with PC1 high and a dummy load in J121:",
+    "against Q120's source at R120.1, must settle",
+    "(R23-SAFETY-05's criterion: Q120's body diode adds 0.7–1.0 V)",
+    "(0.7 / 1.0 V drop: AONR21357 VSD typical / maximum at 1 A, p. 2;",
+    "junction <= 125 C at the 70 C bay with the inferred 110 C/W theta-JA, Inference",
+    "the gate time constant is about 47–58 µs over C126's ±10 % (53 µs nominal; Calculation, driver resistances Inference)"
+   ],
+   "after_rejected": [
+    "47–53 µs",
+    "EN turn-on delay. Resume"
+   ]
+  },
+  {
+   "id": "R29-TRI-01 (generated text)",
+   "result": "Only rule 3's time constant is generated text among the triage's places; labelled by D-R29-01. No other R10 generated text carries 9.6 V, 991 microstrain, 3.23 V, 'Calculations on the budget', 1.540851 or 'calculated 34.853'."
+  },
+  {
+   "id": "records",
+   "files": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+   ],
+   "after": "D-R29-01, D-R29-02 added (index 229 through D-R29-02); D-R28-03 test line annotated 'Corrected by D-R29-02'."
+  }
+ ],
+ "tests": {
+  "shell": 11,
+  "procurement": "OK",
+  "fab_validation": 34,
+  "fit": 33,
+  "paste": 16,
+  "r10_parts": 5,
+  "route": 72,
+  "r10": 268,
+  "r10_skipped_numpy": 6,
+  "numpy_hotplug_plate": 6,
+  "all_ok": true,
+  "d_r28_03_block": {
+   "required_before": 9,
+   "required_after": 20,
+   "rejected_before": 12,
+   "rejected_after": 14
+  }
+ },
+ "residual_grep": {
+  "patterns": [
+   "47–53 µs",
+   "47-53 µs",
+   "EN turn-on delay. Resume",
+   "pins each new label",
+   "30796f5e"
+  ],
+  "this_lane": {
+   "tools/test_r10_check.py:507": "deliberate rejected forms",
+   "R10_DECISIONS.md": "4707 (D-R28-03, annotated), 4736 (D-R28-04 old hash), 4755/4763/4784/4786/4788 (D-R29 before text)",
+   "round28_fix_cad.md/.json, round28_fix_docs.md": "sealed history",
+   "round23_safety_severity_check.json": "source history"
+  },
+  "docs_lane_to_route": {
+   "STATUS.md:35, docs/M3_R10.md:233, docs/R10_VALIDATION.md:2314": "binding note 30796f5e given as current; now c5cd0fa3",
+   "docs/R10_VALIDATION.md:2264": "history",
+   "STATUS.md:18/:21, docs/R10_VALIDATION.md:2363/2366/2379": "round 29 change rows quoting old form",
+   "docs/ORDERING.md:152": "coincidence (y 47–53)"
+  }
+ },
+ "not_run": [
+  "physical tests"
+ ]
+}

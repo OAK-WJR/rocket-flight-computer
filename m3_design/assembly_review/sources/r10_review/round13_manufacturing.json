@@ -1,0 +1,627 @@
+{
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "review_utc": "2026-10-30T09:17:36.535875+00:00",
+  "lens": "8 manufacturing, metadata, silkscreen, assembly drawings and fab/process/panel",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "findings": [
+    {
+      "id": "R13-MFG-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Other Fab references still intersect their own outline strokes",
+      "evidence": {
+        "files": [
+          "m3_design/assembly_review/m3.kicad_pcb",
+          "m3_design/assembly_review/fab/m3_assembly_top.pdf",
+          "m3_design/assembly_review/fab/m3_assembly_bottom.pdf"
+        ],
+        "method": "Fresh official10.0.7 export to ignored output; existing and fresh PDFs render pixel-identically at180dpi. Full pages inspected at180dpi, native600dpi crops inspected. Independent pcbnew TransformShapeToPolygon glyph/own-graphic intersections at0.001mm polygon accuracy; positive intersection area threshold0.000001mm2.",
+        "rectangular_border_intersections": [
+          {
+            "ref": "TP80",
+            "layer": "F.Fab",
+            "text_center_mm": [
+              9.8,
+              83.8
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1845452
+          },
+          {
+            "ref": "LED2",
+            "layer": "F.Fab",
+            "text_center_mm": [
+              8.95,
+              46.5
+            ],
+            "text_height_mm": 0.4,
+            "stroke_mm": 0.06,
+            "intersection_mm2": 0.0497776
+          },
+          {
+            "ref": "U400",
+            "layer": "F.Fab",
+            "text_center_mm": [
+              16.9,
+              5.55
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1921642
+          },
+          {
+            "ref": "LED1",
+            "layer": "F.Fab",
+            "text_center_mm": [
+              8.95,
+              42.6
+            ],
+            "text_height_mm": 0.4,
+            "stroke_mm": 0.06,
+            "intersection_mm2": 0.0727877
+          },
+          {
+            "ref": "C461",
+            "layer": "F.Fab",
+            "text_center_mm": [
+              27.0,
+              18.8
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1921642
+          },
+          {
+            "ref": "C407",
+            "layer": "F.Fab",
+            "text_center_mm": [
+              31.8,
+              19.5
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1921928
+          },
+          {
+            "ref": "TP88",
+            "layer": "F.Fab",
+            "text_center_mm": [
+              35.5,
+              87.0
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1845452
+          },
+          {
+            "ref": "D400",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              35.75,
+              43.7
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1222664
+          },
+          {
+            "ref": "TP81",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              31.0,
+              84.8
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.184549
+          },
+          {
+            "ref": "U12",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              31.6,
+              39.8
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1308203
+          },
+          {
+            "ref": "C411",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              34.2,
+              22.75
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1921642
+          },
+          {
+            "ref": "TP83",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              34.5,
+              81.5
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1845508
+          },
+          {
+            "ref": "Q121",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              13.5,
+              68.6
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.0411282
+          },
+          {
+            "ref": "D411",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              35.75,
+              8.7
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1222664
+          },
+          {
+            "ref": "D410",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              35.75,
+              12.3
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1222664
+          },
+          {
+            "ref": "D401",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              35.75,
+              47.2
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1222664
+          },
+          {
+            "ref": "U13",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              31.85,
+              49.7
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1845508
+          },
+          {
+            "ref": "D421",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              35.75,
+              27.7
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1222664
+          },
+          {
+            "ref": "TP82",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              10.8,
+              21.3
+            ],
+            "text_height_mm": 0.4,
+            "stroke_mm": 0.06,
+            "intersection_mm2": 0.0121396
+          },
+          {
+            "ref": "TP74",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              42.5,
+              58.0
+            ],
+            "text_height_mm": 0.4,
+            "stroke_mm": 0.06,
+            "intersection_mm2": 0.0160943
+          },
+          {
+            "ref": "U10",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              12.6,
+              27.5
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.184549
+          },
+          {
+            "ref": "Q120",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              13.5,
+              73.6
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.041252
+          },
+          {
+            "ref": "TP122",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              13.3,
+              53.3
+            ],
+            "text_height_mm": 0.4,
+            "stroke_mm": 0.06,
+            "intersection_mm2": 0.0925138
+          },
+          {
+            "ref": "U11",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              24.65,
+              64.5
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1304854
+          },
+          {
+            "ref": "TP121",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              10.354999,
+              71.455
+            ],
+            "text_height_mm": 0.3,
+            "stroke_mm": 0.045,
+            "intersection_mm2": 0.0347422
+          },
+          {
+            "ref": "TP120",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              18.0,
+              68.6
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.184549
+          },
+          {
+            "ref": "D420",
+            "layer": "B.Fab",
+            "text_center_mm": [
+              35.75,
+              31.2
+            ],
+            "text_height_mm": 0.8,
+            "stroke_mm": 0.12,
+            "intersection_mm2": 0.1222664
+          }
+        ],
+        "additional_pin1_dot_intersections": {
+          "count": 49,
+          "max_area_mm2": 0.0078732,
+          "classification": "Counted graphical grazes; not all classified as obscured text."
+        },
+        "visually_confirmed_examples": [
+          "U400: F(16.9,5.55),0.1921642mm2",
+          "C461: F(27,18.8),0.1921642mm2",
+          "C407: F(31.8,19.5),0.1921928mm2",
+          "U11: B(24.65,64.5),0.1304854mm2",
+          "Q121: B(13.5,68.6),0.0411282mm2",
+          "Q120: B(13.5,73.6),0.0412520mm2"
+        ],
+        "relationship": "The five R12-MFG-01 labels R10,C29,C92,R8,C5 now have zero intersections with their own Fab graphics. This finding concerns additional current instances.",
+        "impact": "Bounded assembly/inspection drawing readability defect, including hidden-on-silk U11 and U12; no demonstrated electrical or placement failure.",
+        "maker_page": "Not applicable: generated annotation geometry, not a package/land/electrical claim."
+      },
+      "fix": "Extend the Fab-reference generator fit pass to move or shrink the affected labels clear of their own outline and pin1 strokes, retaining designator, mirroring, angle and association. Re-export and bind both PDFs after a covered CAD revision. Otherwise explicitly retain these additional drawing residuals in the board-bound deviation inventory and use the native CPL/placement preview for assembly inspection."
+    },
+    {
+      "id": "R13-MFG-02",
+      "severity": "Minor",
+      "status": "carried",
+      "title": "L400 retains a land differing from the maker recommendation",
+      "evidence": {
+        "file": "m3_design/assembly_review/m3.kicad_pcb",
+        "reference": "L400",
+        "center_mm": [
+          24.2,
+          5.55
+        ],
+        "layer": "F.Cu",
+        "footprint": "rocket:M3_SRP5030TA",
+        "supplier_code": "C1329837",
+        "mpn": "SRP5030T-6R8M",
+        "native_land": {
+          "pad_centers_mm": [
+            [
+              21.85,
+              5.55
+            ],
+            [
+              26.55,
+              5.55
+            ]
+          ],
+          "pad_size_mm": [
+            1.8,
+            2.5
+          ],
+          "local_centers_mm": [
+            -2.35,
+            2.35
+          ],
+          "inner_gap_mm": 2.9,
+          "outer_span_mm": 6.5
+        },
+        "maker_land": {
+          "pad_size_mm": [
+            2.0,
+            1.8
+          ],
+          "local_centers_mm": [
+            -2.25,
+            2.25
+          ],
+          "inner_gap_mm": 2.5,
+          "outer_span_mm": 6.5,
+          "source": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "page": 1
+        },
+        "tolerance_calculation": "Product width minimum(5.7-0.3)/2=2.7mm; termination length maximum1.1+0.3=1.4mm; heel may reach local1.3mm. Native pad starts1.45mm from centre, leaving a possible0.15mm heel strip without underlying copper. Calculation, not an observed solder joint.",
+        "prior": "R12-BOM-01 and docs/R10_VALIDATION.md current deviation section9; retained in D-R10-03.",
+        "impact": "Maker-land departure remains unqualified physically; nominal contact remains on copper. No failed required function is demonstrated."
+      },
+      "fix": "Retain explicit owner/assembler disposition and qualify solder coverage, seating and mechanical retention on actual first articles, or adopt Bourns recommended land through the generator with fresh copper, paste, DRC, orientation, fit and board-binding review."
+    }
+  ],
+  "closed_items": [
+    {
+      "id": "R12-MFG-01",
+      "status": "closed_for_its_five_named_labels",
+      "evidence": "R10,C29,C92,R8,C5 remain0.4/0.06mm, clear their own Fab graphics in independent native walk, and are readable at detailed zoom. Separate additional overlaps are R13-MFG-01."
+    },
+    {
+      "id": "R11-MFG-01",
+      "status": "closed",
+      "evidence": "All five current terminal GND contacts have explicit local thermal setting1; native refilled all-severity DRC0."
+    },
+    {
+      "id": "R11-MFG-02",
+      "status": "closed",
+      "evidence": "J122 Fab reference no longer intersects centre drill in complete top page and enlarged inspection."
+    }
+  ],
+  "checks_executed": [
+    {
+      "check": "Exact identity",
+      "result": "PCB SHA256 matched before and after; read-only HEAD/ref files resolve to assigned target commit; no git command/mutation."
+    },
+    {
+      "check": "Official native CLI",
+      "version": "10.0.7",
+      "reservation": "Explicit exclusive root reservation; all invocations sequential; released after native audit/silk checks."
+    },
+    {
+      "check": "Direct native DRC",
+      "args": "pcb drc --severity-all --schematic-parity --format json",
+      "exit": 0,
+      "violations": 0,
+      "unconnected": 0,
+      "schematic_parity": 0,
+      "included_severities": [
+        "error",
+        "warning",
+        "exclusion"
+      ]
+    },
+    {
+      "check": "Direct native ERC",
+      "args": "sch erc --severity-all --format json",
+      "exit": 0,
+      "violations": 0
+    },
+    {
+      "check": "quality_audit/verify_board.py",
+      "exit": 0,
+      "native_refill": "pcbnew.ZONE_FILLER on isolated project; canonical CAD not saved",
+      "drc_args": "--severity-all --all-track-errors --exit-code-violations --schematic-parity",
+      "drc_erc_parity": {
+        "violations": 0,
+        "unconnected": 0,
+        "parity": 0,
+        "erc": 0,
+        "ignored_checks": 0
+      },
+      "metadata": {
+        "footprints": 209,
+        "fitted": 199,
+        "missing_identity_fields": 0,
+        "conflicting_identity_fields": 0,
+        "models": 199,
+        "missing_models": 0,
+        "absolute_model_paths": 0
+      }
+    },
+    {
+      "check": "tools/silk_check.py",
+      "exit": 0,
+      "outside_outline_stroke_points": 0,
+      "outline_mm": [
+        46,
+        90
+      ]
+    },
+    {
+      "check": "Fresh temp tools/export_fab.py --out ignored-output",
+      "exit": 0,
+      "BOM_lines": 82,
+      "placed": 199,
+      "unknown_orientations": 0
+    },
+    {
+      "check": "Fresh package comparison",
+      "BOM_byte_equal": true,
+      "CPL_byte_equal": true,
+      "Gerber_drill_job_members": 14,
+      "all_members_equal_after_timestamp_normalization": true,
+      "assembly_pdf_render_pixel_equal_at180dpi": [
+        true,
+        true
+      ],
+      "note": "PDF binary bytes differ; image equality is only for the stated Poppler render. Canonical binaries separately match their manifest."
+    },
+    {
+      "check": "tools/fab_manifest.py",
+      "exit": 0,
+      "outputs": 5,
+      "result": "All five outputs match current CAD/export inputs."
+    },
+    {
+      "check": "tools/jlc_orient.py --verify-cpl",
+      "exit": 0,
+      "top_reconstructed": 66,
+      "bottom_reconstructed": 121,
+      "placement_only_nonpolar_resistors": 12,
+      "total": 199,
+      "worst_pad_residual_mm": 0.491,
+      "errors": 0
+    },
+    {
+      "check": "tools/paste_check.py",
+      "exit": 0,
+      "top_flashes_and_pasted_pads": 245,
+      "bottom_flashes_and_pasted_pads": 373,
+      "stray_missing_duplicate": 0
+    },
+    {
+      "check": "Selected native tools/check_r10.py",
+      "rules": [
+        "S-4",
+        "T-1",
+        "K-legends",
+        "K-copper",
+        "K-inner"
+      ],
+      "exit": 0,
+      "required_fitted": 199,
+      "mask_overlaps": 0,
+      "legend_distance_review": 0,
+      "terminal_pin_labels": 23,
+      "visible_refs": 118,
+      "hidden_refs": 91,
+      "reference_height_mm": 1.0,
+      "reference_stroke_mm": 0.15,
+      "ordinary_pad_via_checks": 613,
+      "via_paste_pairs": 768
+    },
+    {
+      "check": "Independent Fab/native walk",
+      "Fab_references": 209,
+      "missing_Fab_references": 0,
+      "five_R12_repaired_labels_have_no_own_graphic_collision": true,
+      "all_visible_silk_refs_size_and_stroke": "1.0/0.15mm",
+      "all_five_terminal_GND_local_zone_connections": 1
+    },
+    {
+      "check": "Cached supplier snapshot agreement",
+      "codes": 82,
+      "exact_BOM_MPN_mismatches": 0,
+      "snapshot_utc": "2026-10-30T06:11:29Z",
+      "live_refresh_in_this_lens": false,
+      "short": [
+        "R430/C18534917<3610",
+        "U4/C266330070<5"
+      ],
+      "qualification": "Snapshot and process acceptance are procurement obligations, not a new clean-round hardware failure."
+    },
+    {
+      "check": "Maker geometry spot checks",
+      "U401": "Two1.13x0.89 paste windows over1.2x2.0mm pad11; approx83.808% rectangular area, agrees with maker84% example. Only two exact0.5/0.3 GND vias at(27.3,13.6)/(27.9,13.6); VIPPO remains a physical process condition.",
+      "J430": "Eight0.8x1.5mm signal and four1.45x2.0mm GND shell lands; included on B.Paste; supplied100% aperture rule checked.",
+      "DB125": "1.9mm copper/1.3mm drill and3.5mm pitch; drawing recommends1.2mm hole, with departure and seating inspection already stated in ORDERING.",
+      "C84": "Exact MA sheet has no soldering profile; active ORDERING correctly requires absence from both reflows and separate validated manual fit."
+    },
+    {
+      "check": "PDF visual QA",
+      "skill": "PDF skill read and applied read-only",
+      "pages": "Complete single-page top and mirrored bottom assembly PDFs; complete source pages listed under primary_sources.",
+      "raster": "180dpi full pages plus600dpi details for core, power, pyro and aft/port regions; 5 prior repairs and new overlap examples independently inspected."
+    },
+    {
+      "check": "Process/panel review",
+      "result": "Active ORDERING8 has current23 THT contacts/five explicit thermals, no-clean, bottom-first/top-last, C84 absent during both reflows, U5 two-pass confirmation,0.10mm preferred stencil, supplied apertures, U401 VIPPO and consignment requirements. T-1 yields legal5mm windows including aft east37.0-45.5mm. Actual rail/tab artwork, factory quote/acceptance and first article remain pending."
+    }
+  ],
+  "primary_sources": {
+    "bourns": {
+      "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+      "page": 1,
+      "read": "Complete page visually inspected after Poppler rendering; Recommended Layout and Product Dimensions."
+    },
+    "ti_u401": {
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "page": 36,
+      "read": "Complete Example Stencil Design page, DSK0010A 4218903/C 09/2025, visually inspected. Two 1.13 x 0.89 mm windows; 84% example coverage."
+    },
+    "db125": {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "page": 1,
+      "read": "Complete T0-1 sheet1 visually inspected. 3.5 mm pitch; 1.20 mm recommended hole; 28-16 AWG; 4-5 mm strip; 0.2 Nm maximum torque."
+    },
+    "c84": {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+      "pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "read": "All four pages visually inspected. Dimensions and electrical table identify MA25V470M8X10; no reflow or manual soldering profile supplied."
+    },
+    "molex": {
+      "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+      "original_document_mirror": "https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf",
+      "page": 1,
+      "read": "Complete SD-47219-001 sheet1 visually inspected from original maker drawing at mirror after maker HTTP/2 failure and 30 s HTTP/1.1 timeout. 0.80 x 1.50 signal lands; 1.45 x 2.00 shell lands; 0.10/0.12 mm stencil with 100% apertures; 0.08 mm discouraged."
+    }
+  },
+  "qualification_obligations": [
+    "Owner deviation/cost acceptance; R430 supply/U4 stock or consignment; quote including minimum purchases, VIPPO/manual C84/panel/rails/THT and fixed costs; refresh within24h of any order.",
+    "JLC actual panel/tab/rail, both-side placements/colours/polarities, no-clean and U5two-pass acceptance; supplied stencil apertures and first-article inspection."
+  ],
+  "coverage_limits": [
+    "Fresh independent full manufacturing lens; no peer round13 report read and no current-round finding shared with peer reviewers.",
+    "Only this report pair and ignored probes/renders were written. Existing canonical source/CAD/fab files were not edited. No canonical build, full check.sh, GUI launch/native CAD save, git mutation or other-worktree edit.",
+    "No physical or firmware qualification: solderability/yield, actual hole fill, VIPPO fill/cap/planarity, U5 two-reflow process, manual C84 operation, mask/tenting, panel/rails, vibration/retention/coating, actual wire/tool/card/stack fit, electrical/thermal/transient/endurance, selected-card/e-match lot and installed RF/ESD remain open.",
+    "Orientation reconstruction uses supplier footprint/proxy evidence and12 symmetric resistor placement-only checks; it is not factory placement approval. No live82-code price/stock refresh in this lens.",
+    "Maker dimensions/stencil checked selectively as listed; not an exhaustive new datasheet requalification of every82 BOM code.",
+    "Native glyph-intersection sweep identifies ink geometry; tiny pin1-dot grazes are not all classified as unreadable. Full-page180dpi and detailed600dpi raster review does not prove every print scale or first-article readability.",
+    "Preexisting unbound r10_top.png/r10_bottom.png in the assembly directory show pre-relayout hardware and were excluded from current evidence; active documentation does not link them. Current manifest-bound PDFs match fresh target exports.",
+    "Molex maker direct download failed HTTP/2 and timed out once with HTTP/1.1; original maker drawing was inspected at the recorded mirror. No GUI denial bypass or fake CLI."
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round36_docs_binding",
+  "reviewer": "claude",
+  "target_commit": "c3c4249",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "R10_VALIDATION:2751 and :3033 name adjacency_a3144b15.json and detour.py, which are earlier lenses' untracked probe artifacts, not repository files; the text presents them as the method's tools in dated sections, not as links (not a broken link).",
+    "Docs at c3c4249 state rounds 35 and 36 as the planned closing pair; true at commit time."
+  ],
+  "fix_verification": [
+    {"id": "R34-TRI-01", "check": "parts_qualification.md :1036-1037 (R92) and :1061-1063 (R166) point to hotplug_results.json / hotplug_inputs.json and M3_R10 Current state; hotplug.md top paragraph is the round 34 pointer and the round-11 section is labelled historical. hotplug_inputs.json board_sha256 = a0ec075e... (equal to board); hotplug_results.json inputs_sha256 starts f4d1b57d; retained_output 0.0016439031 F, output_bound 5.9145 V.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after (a0ec075e...); r10_binding_note.json SHA-256 c5cd0fa3... and its board_sha256 / pin_table_sha256 fields equal the files (pin_table b94133e6...); parts_budget.json SHA-256 4267634...",
+    "Relative link and anchor check (GitHub slug rules) over STATUS, AGENTS, M3_R10, ORDERING, handoff, R10_VALIDATION, FMEA, REQUIREMENTS, parts_qualification, AVA_LAYOUT, hotplug.md: 205 links, 0 bad",
+    "Backtick file-path existence check over the eight top-level docs",
+    "pcbnew dump of 40 cited part positions/sides/rotations vs the AGENTS table rows: all match; LS120 F(23,58.5); five Edge.Cuts M3 holes at (4,4),(42,4),(4,44.3),(3.7,86),(42,86); outline 46 x 90; J3 courtyard bbox x -1.015",
+    "pin_table.tsv r10_net vs U1 pad nets on the board: 0 mismatches; cited pin roles (USART3 PD8/PD9, UART5 PB13/PB12, USART6 PC6/PC7, UART7 PE8/PE7, PC1, PE4, PC5, PC0, SPI3 + PD0, PC3_C NC, PC13 NC, PC14 buzzer) confirmed",
+    "Fab package: JLC BOM 81 codes, 206 placed, C535146 x9; stock_check libraries 45 expand / 36 base (+C84 owner); CPL 206 rows 70 top / 136 bottom; Gerber paste flashes F 249 / B 381; manifest output hashes match files and input board hash a0ec075e...",
+    "cost_check.json $85.26 / parts $60.47 at 2026-11-02T12:44:13Z and stock_check.json 12:43:17Z (U4 9/2, U9 30/-81, min 7) vs AGENTS, STATUS, M3_R10, ORDERING, handoff, REQUIREMENTS, parts_qualification: consistent; $85.60 occurrences are labelled as the earlier 01:43:55Z run",
+    "Board metrics: 216 footprints, 309 vias (304 0.5/0.3, 4 0.6/0.3, 1 1.0/0.5), 1866.794 mm track, 2,369,507 bytes vs M3_R10:52, R10_VALIDATION:12, AVA_LAYOUT:521",
+    "parts_budget four-stall loaded pack 5.713 V vs the 5.71 V figures in STATUS / M3_R10; 5.73 V occurrences are labelled as pre-allowance history"
+  ],
+  "sources": [
+    "m3_design/assembly_review/m3.kicad_pcb (a0ec075e...)",
+    "m3_design/assembly_review/fab/ (BOM, CPL, Gerber zip, manifest, cost_check.json, stock_check.json)",
+    "m3_design/assembly_review/sources/r10_design/ (pin_table.tsv, r10_binding_note.json, parts_budget.json, hotplug_*.json, hotplug.md, parts_qualification.md, AVA_LAYOUT.md)",
+    "AGENTS.md, STATUS.md, docs/M3_R10.md, docs/ORDERING.md, docs/R10_VEHICLE_HANDOFF.md, docs/R10_VALIDATION.md, docs/FMEA_REDUNDANCY.md, docs/REQUIREMENTS.md"
+  ],
+  "coverage_limits": [
+    "Sampled check: not every numeric statement in R10_VALIDATION (3000+ lines), FMEA and parts_qualification was recomputed; focus was current-board identity, positions, pin map, fab counts, cost/stock, metrics, budget and links.",
+    "Anchor check uses GitHub slug rules as implemented in the probe script; datasheet re-reads were not performed."
+  ]
+}

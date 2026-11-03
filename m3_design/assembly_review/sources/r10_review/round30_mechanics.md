@@ -1,0 +1,46 @@
+# R10 round 30 — mechanics lens (Claude)
+
+Target commit `0afaed3`, board `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c` (SHA-256 identical before and after).
+
+## Totals
+
+Critical 0 / Major 0 / Minor 0. No real error found.
+
+## Findings
+
+None.
+
+## Fix verification
+
+- R29-TRI-03 / round 29 docs: R10_VALIDATION section 8 tail allocation now says all 27 tails of the eight terminals, minimum 7.558359 mm, with the 'not re-run' sentence deleted: fit_check on a0ec075e: terminal_tails.count 27, minimum_bore_margin_mm 7.5583593625; R10_VALIDATION lines 2981-2983 read 'all 27 tails of the eight terminals ... 7.558359 mm (unchanged on a0ec075e)' — **confirmed**.
+- Round 29 docs: plate-model 'not re-run' lines kept as true: My re-run gives identical f1 180.8 Hz / 78.6 g; the records attribute 0.261 / 0.320 mm to earlier boards — **confirmed**.
+- D-R29-01 / D-R29-02 (generated text, binding note): Outside the mechanics lens; no mechanical figure changed — **not applicable to this lens**.
+
+## Observations (not counted)
+
+- Plate model re-run on a0ec075e (tools/plate_model.py --profile r10, sources/r10_design/masses.json): f1 180.8 Hz pinned D5 / 255.6 D10 / 287.8 / 407.0 Hz clamped, 78.6 g, max 100 g deflection 1.27 mm at (46, 44.5); f1 and mass identical to the recorded 5516eeec figures.
+- 100 g D5 gap at 4 mm standoffs on a0ec075e: C431 0.2603 mm (0.5 mm raster, the plate tool's own) / 0.257 mm (box maximum), C421 0.3203 / 0.318 mm; the records' 0.261 / 0.320 mm are labelled to 50a39de5 / 5516eeec and 'not re-run on a0ec075e', so true as stated (round 26 moved four small bottom passives).
+- Contact loads on a0ec075e (box-maximum deflection, D5 pinned [D10]): C431 124.7 [249.3] g, C421 132.4 [264.8], C411 174.5 [348.9], L1 212.6 [425.3]; the records' 125 [250] / 133 [265] / 175 [351] / 214 [428] differ by at most 0.7 % (sampling method and earlier board); Calculation/Inference figures, not counted.
+- The J9 (161.8-167.2 g) and J420.1 (167.5 g) terminal-tail allocations reach a 4 mm sled before C411 and L1 in the same model; ORDERING 8.4's contact list names only bodies, makes no completeness claim, and the tails lie inside the recorded relief-pocket window (x 31.5-41, y 20-60); the 4.5 mm alternative moves J9.3 to 206.7 g.
+- fit_check --profile r10 on a0ec075e: OK, 0 issues; J3 0.89 mm, DB125 bodies 2.976 mm, 27 tails 7.558359 mm, L1 3.015825 mm below the bottom face, wire room 5.003-5.603 mm on all eight terminals, C32.2 4.536177 mm and LED2.2 3.807887 mm from (4,44.3); all match ORDERING 8.4, the handoff, M3_R10 and P2.
+- Hardware bounds re-derived: plate-only h+t < 6.882 mm; nut-inclusive 6.0184 mm at x 4/42 and 5.3653 mm at x 3.7 (D = 4.7 + h + t, radius 24.9, ±0.3 both axes); wire room sqrt(25.4^2-5^2)-19.6-0.3 = 5.003 mm, 4.493 mm at 24.9 mm radius, 5.32 / 4.82 mm at 3 mm height; lead-bend arithmetic 3.9 / 4.1 / 5.1 / 5.7-6.5 mm; landing 98.0-163.2 g: all agree with the records.
+- Terminal centres, rotations, wire-entry directions (-90 deg = west, +90 deg = east from DORABO's wire-entry +y), pin order, the top / bottom legend split and D402 B(4.45,65.9), J430 B(24,24.3), U4 B(17,45.9) r180, U5 B(10.6,49.1), L1 B(25,74.6), LS120 F(23,58.5), J3 west overhang 0.45 mm and J440's forward body end y 23.45 all match the handoff and ORDERING 8.4 under the records' compass (x east, y forward, aft edge y 0).
+- Support keep-outs: copper pours stop 0.5 mm from all five Ø3.2 mm hole edges on all four layers; vias within 3.8 mm of (4,44.3) (GND (6.5,46.5), 3V3 (3.73,40.8)) are tented (board tenting front/back yes, no per-via override); nearest top courtyard bodies clear the 3.5 mm washer radius plus 0.3 mm (J440 envelope 3.93 mm from (4,4); LED1/LED2 bodies 4.09 / 4.25 mm).
+- R16-MEC-01 U4 body crossings re-measured on a0ec075e: IMU_CS 0.760 + 0.092 mm, SPI1_MISO 0.325 mm, IMU_INT1 0.325 mm, 3V3A 0.325 mm, as recorded.
+- East-column mass 34 g (J122 10 + J410 / J420 / J9 8 each with local-wire allowances), J9/J122 body gap 6.73 mm, and the retention worksheet loads (9.80665 m/s^2) reproduce from masses.json.
+
+## Checks executed
+
+- shasum -a 256 of the board before and after (a0ec075e both times)
+- tools/fit_check.py --profile r10 --report .supervisor/r30_mechanics/fit.json (KiCad Python): OK, 0 issues
+- tools/plate_model.py --profile r10 --mass-spec sources/r10_design/masses.json (.supervisor/r30_mechanics/plate.json)
+- .supervisor/r30_mechanics/gap.py, gap_raster.py, gap_sweep.py: 100 g gaps and contact loads for every bottom body / tail at 3.5 / 4.0 / 4.5 mm, three sampling methods
+- .supervisor/r30_mechanics/probe.py ... probe10.py (pcbnew, read-only): footprint poses, terminal pads and drills, support holes, exposed pads and courtyards near supports, vias and tenting, copper-to-hole clearance per layer, silkscreen pin legends and layers, J430 / C23 / J3 / J440 courtyard gaps, U4 body crossings
+- Hand re-derivation of the wire-room, hardware h+t, lead-bend, landing-g and retention-load arithmetic
+
+## Coverage limits
+
+- CAD envelopes and the optional plate model only; no physical fit, hardware, harness or vibration evidence exists
+- Plate model inputs (D, masses) are the records' Inferences; not independently validated
+- Did not re-run kicad-cli DRC or the full check.sh on the canonical tree (read-only rule)
+- ORDERING 8.3 procedures outside the mechanics directions were not reviewed

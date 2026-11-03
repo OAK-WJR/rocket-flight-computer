@@ -1,0 +1,82 @@
+{
+  "scope": "r6_post.finish isolated snapshot validation; root continues routing shared board",
+  "essential_legends_missing": [],
+  "labels_placed": 40,
+  "hidden_references_on_snapshot": 80,
+  "text_size_violations": 0,
+  "new_board_text_silk_over_copper": 0,
+  "silkscreen_outside_outline_stroke_points": 0,
+  "segments_vias_zones_unchanged": true,
+  "existing_footprint_silk_issues": [
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of TP84 on F.Silkscreen",
+          "pos": {
+            "x": 1.4,
+            "y": 20.9
+          },
+          "uuid": "d5c419c3-57fb-499d-ba51-cc14d5bcaa85"
+        },
+        {
+          "description": "Pad 1 [BAT_SW_RETURN] of R165 on F.Cu",
+          "pos": {
+            "x": 3.3,
+            "y": 21.125
+          },
+          "uuid": "26195623-9ce4-4e56-ac83-78bae7852928"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of TP89 on F.Silkscreen",
+          "pos": {
+            "x": 9.4,
+            "y": 15.6
+          },
+          "uuid": "fad5e2bb-d6dd-46d7-9222-f85b44fccd2d"
+        },
+        {
+          "description": "Pad 1 [TLM_5V] of C176 on F.Cu",
+          "pos": {
+            "x": 9.3,
+            "y": 15.5
+          },
+          "uuid": "359c9f44-ca7f-438c-b7f3-f2a54689133e"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    },
+    {
+      "description": "Silkscreen clipped by solder mask",
+      "items": [
+        {
+          "description": "Segment of TP89 on F.Silkscreen",
+          "pos": {
+            "x": 9.4,
+            "y": 15.6
+          },
+          "uuid": "fad5e2bb-d6dd-46d7-9222-f85b44fccd2d"
+        },
+        {
+          "description": "Pad 2 [GND] of C176 on F.Cu",
+          "pos": {
+            "x": 10.7,
+            "y": 15.5
+          },
+          "uuid": "315e8cb9-46b5-40ad-83e7-03205f153be2"
+        }
+      ],
+      "severity": "warning",
+      "type": "silk_over_copper"
+    }
+  ],
+  "note": "Three existing TP84/TP89 footprint silk clashes on snapshot; root is moving those test pads. Copper DRC and unconnected counts on this routing-in-progress snapshot are not final qualification."
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round34_power",
+  "reviewer": "claude",
+  "target_commit": "c2a11fd",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Four-stall pack sag recomputed from r10_parts.py loaded_pack (port_A 1.561 A, logic 0.6375 A, 0.15 ohm, 80 %): 5.8808312 / 4.3884907 V, equal to parts_budget.json lines 91-92 and to parts_qualification 'Inference, stall input', STATUS and M3_R10.",
+    "GAP-3 recomputed: (5.546269 - 4.711504) x 0.56 + 5.546269 x 0.004 = 0.48965 W; 109.17-123.86 C at 70 C, 124.17-138.86 C at 85 C, theta ceiling 112.3 C/W: all match the budget and parts_qualification.",
+    "C120 off time constant: 50 k x 1.02 x 1.265 uF = 64.515 ms (129.03 ms one resistor open), 1 s = 15.5 / 7.75 tau; on-side tau 10.7525 ms and 31.89 ms to |VGS| 4.5 V (settled 4.744 V) reproduce.",
+    "GAP-5 reproduces: 1087.344 / 1109.091 ohm, RC tail 0.6782 ms, +0.061 ms gate charge = 0.7392 ms, bound 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms vs 36 ms; R134 35.797 W, 0.716 / 1.289 J, chart 61.20 / 44.13 W, 85 C 36.345 vs 35.851 W.",
+    "GAP-1 loop reproduces from the budget's copper (BAT_IN 6.307/1.0, RAW_ACT 5.886/0.5 (4.391 + 1.495 mm on B.Cu, measured), IGN 10.523/0.5, OUT 7.854/0.5, ACT_FET_S 2.2/0.4): 29.650 / 35.477 mOhm, quadratic root as stated; four-stall 1.2787 A > 1.125 A.",
+    "Battery-break ride-through table (cases a-d, 300.8 / 470 uF, 3.5 / 3.8 V) and the R92 16.93 mW allowance reproduce from loads_w; case (c) ports 9.86-10.82 W at 1.561 A reproduce.",
+    "OQ-5 (not adopted): VOFF 5.7265 / 6.0115 / 6.2965 V, VON 6.4845 / 6.6555 / 6.9405 V, ports-to-VOFF 0.253 / 0.395 ms, ride-through 3.84 / 6.00 ms shed and 1.57 / 2.46 ms unshed reproduce (doc's 'VON 6.48' and code comment's '6.49' are both roundings of 6.4845).",
+    "USB attach inventory checked against board pads: VLOGIC carries C84, C6, C7, C99 (514.1 uF) and USB_LIMITED C86, C98 (1 uF each): 516.1 uF, 2.426 mC to 4.7 V, 5.35-6.98 ms at 347.7-453.0 mA (R85 66.5 k +/-2 %, SLVS841F eq. 1) reproduce.",
+    "USB-only draw figures reproduce (0.4597 A at 4.84 V, 0.4858 A at 4.58 V, 1.61 W at the minimum limit). The 63.605 mm In2 USB_LIMITED length (63.116 mm in all on a0ec075e, about 58.1 mm in series) is a labelled Round 18 figure, already a round 27/29/31/33 observation.",
+    "Port endpoint minima reproduce (camera 5.031682 V, radio 4.601504 V, GPS 4.631504 V, AUX 4.641504 V), LDO headroom 0.44343 V, camera limit 1.0409-1.2495 A, buck all-shorts peaks 3.539 / 3.517 / 3.657 / 3.627 A, U9 limit 3.946-4.857 A and port-fault bound 3.7439 A.",
+    "PA6-trip hold-up 0.103-0.164 ms (ports on) and 0.291-0.430 ms (shed) from VLOGIC 4.84-5.17 V at 300.8 uF reproduce.",
+    "Power-net copper survey: every sub-floor segment on BAT_IN, RAW_PROTECTED, VLOGIC, PORT_5V3, PORT_4V8, CAM_5V, RAW_ACT, ACT_FET_S, PYRO1_OUT and USB_LIMITED is a sense / divider / bias branch or a named POWER_NARROW entry; K-power floors meet tools/ipc2152.py widths at their design currents (e.g. 1.9 A needs 0.326 mm external, floor 0.4 mm; 2.9 A needs 0.680 mm, floor 0.7 / 1.0 mm).",
+    "U400's PORT_5V3 design current 1.81 A (camera short) is below the 2.911 A prospective LDO-short-plus-camera demand; that is a hiccup / current-limit state, not a continuous operating point, as the budget states (not a finding).",
+    "Regulator taps: R400.1 senses PORT_5V3 at C403.1 (F.Cu 0.2 mm), R404/R401 return to U400.1 FB; U2.1 (AP63203 FB) joins 3V3 by two 0.4 mm B.Cu runs; U401's R402.1 sits on the B.Cu OUT run with no via between U401 and its divider (M3_R10 'U401 feedback tap' confirmed).",
+    "Hot-plug: hotplug_inputs.json binds a0ec075e; hotplug_results.json passes 2304 rows, min IN -14.8074 V, falling 8.9948 V/us, rising 5.0877 V/us, retained 1643.90 uF / 5.914 V, matching M3_R10. hotplug.md's dated 'Round-11 fix-pass target' header still quotes 0ad0135c... and 1616.12 uF / 5.878 V; it is a dated historical section and M3_R10 carries the current figures (not counted).",
+    "Q122 gate under a 30 k PC1 pull-up: docs' 0.218 V is the nominal-resistor figure; 0.2203 V with 1 % parts (budget) - already a round 28-30 observation, both far below 0.65 V."
+  ],
+  "fix_verification": [
+    {"item": "R33-TRI-01 (ORDERING 8.3 U9 exposed-pad figures)", "measurement": "pcbnew on a0ec075e: U9 B(18.5,81.6); pads 5 / 6 y 80.40-82.80, x 18.10-18.40 / 18.60-18.90 (0.30 mm wide); pad 9 x 19.10-19.70, y 81.70-81.95 (0.25 mm). With the RPW0010A body 1.9-2.1 mm centred on the part, the exposure is 0.15-0.25 mm (0.20 nominal) at each pad end and for pad 9. ORDERING.md lines 552 / 555 now say exactly this; the probe point B(18.25,80.45) lies in the exposed end for every body tolerance.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of m3.kicad_pcb before and after (both a0ec075e...)",
+    "Recomputed loaded_pack, GAP-3, C120 tau, GAP-5, GAP-1, ride-through, OQ-5, USB attach and USB-only figures by hand / python from r10_parts.py's formulas and parts_budget.json values",
+    "KiCad pcbnew (read-only) probes in .supervisor/r34_power/: widths.py (per-net width histogram, fire-path and USB_LIMITED / VLOGIC segment lists, IPC-2152 widths via tools/ipc2152.py), narrow.py (every sub-floor power-net segment with its end pads), caps.py (pad inventory of the power nets), fb.py (regulator feedback taps), u9.py (U9 pad extents)",
+    "Read hotplug_inputs.json / hotplug_results.json summaries with NumPy venv python",
+    "Read tools/check_r10.py K-power tables (POWER_PATHS / POWER_NARROW / FIRE_RETURN) and tools/ipc2152.py"
+  ],
+  "sources": [
+    "m3_design/r10_parts.py (power_budget, native_fire_copper)",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json, parts_qualification.md, hotplug.md, hotplug_inputs.json, hotplug_results.json",
+    "docs/M3_R10.md 'Power', docs/ORDERING.md 8.3, STATUS.md, AGENTS.md",
+    "tools/check_r10.py, tools/ipc2152.py",
+    "round33_triage.md, round33_fix_docs.md; earlier triage observations (rounds 27-33) for duplicates"
+  ],
+  "coverage_limits": [
+    "No transient or SPICE re-run of the hot-plug model; its results were read, not regenerated.",
+    "Datasheet limits were taken as cited in the records (TI SLVSFC9C, SLVS841F, SBVS282A, Diodes DS41326); PDFs were not re-read this round.",
+    "The J400 chatter-train figures (8.07 ms, 7.50 ms window limit) were not re-simulated.",
+    "No full tools/check.sh run (read-only rule)."
+  ]
+}

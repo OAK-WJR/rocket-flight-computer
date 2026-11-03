@@ -1,0 +1,1750 @@
+{
+  "schema": 1,
+  "lens": 9,
+  "review": "round14 full independent gate adversary",
+  "target_commit": "f5e4a5a94013514edb952fd328325341b63a98df",
+  "target_commit_authority": ".supervisor/r14_target_packet.md; no git command executed",
+  "board_sha256_before": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "board_sha256_after": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "geometry": {
+    "footprints": 209,
+    "segments": 966,
+    "vias": 296,
+    "track_length_mm": 1802.12522017822
+  },
+  "native_python_version": "10.0.6",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "findings": [
+    {
+      "id": "R14-GATE-01",
+      "severity": "Minor",
+      "status": "active",
+      "novelty": "new",
+      "title": "Paste checker silently accepts noncanonical legacy image controls",
+      "kind": "prospective checker/evidence gap; no seeded command exists in the current package",
+      "files": [
+        {
+          "path": "tools/paste_check.py",
+          "line": 148
+        },
+        {
+          "path": "tools/paste_check.py",
+          "line": 235
+        },
+        {
+          "path": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+          "line": 2109
+        }
+      ],
+      "original_fault": {
+        "source": "actual current m3_gerber.zip F_Paste text",
+        "insert_after": "%MOMM*%",
+        "command": "%OFA1.0B0*%",
+        "direct_check_accepts": true,
+        "repacked_actual_zip_check_accepts": true
+      },
+      "measured": {
+        "current_top_flashes": 245,
+        "current_bottom_flashes": 373,
+        "current_geometry_matches": 618,
+        "nondefault_legacy_controls_accept": [
+          "%OFA1.0B0*%",
+          "%MIA1B0*%",
+          "%IR90*%",
+          "%SFA2B1*%"
+        ],
+        "each_legacy_case_geometry_matches": 618,
+        "all_native_paste_count": 618,
+        "example_native_pad": {
+          "ref": "U1.1",
+          "xy_mm": [
+            17.0,
+            50.55
+          ],
+          "size_mm": [
+            0.3,
+            1.6
+          ]
+        },
+        "legacy_commands_in_current_paste": {
+          "F": [],
+          "B": []
+        }
+      },
+      "source": {
+        "url": "https://www.ucamco.com/files/downloads/file_en/554/gerber-layer-format-specification-revision-2026-05_en.pdf",
+        "sha256": "ac9e9899f573d69e472b2112f1ae879c70f6cd13e17db41a1c885caf69961662",
+        "revision": "2026.05",
+        "pages": [
+          186,
+          187,
+          188,
+          190,
+          191,
+          193,
+          194,
+          195
+        ]
+      },
+      "calibration": "Ucamco p187 permits ignoring the legacy image-transform family. AS has no computer-to-computer image effect; IP overview permits warning/skip. This finding concerns the project's advertised closed subset and interpretation ambiguity, not a universally required reader rejection or guaranteed CAM displacement.",
+      "controls": {
+        "native_and_zero_default_controls_accept": true,
+        "modern_LPC_LM_LR_LS_reject": true,
+        "metadata_IN_LN_G04_accept": true,
+        "expanded_case_count": 28,
+        "mixed_G70_G91_and_M00": "accepted robustness observations only; not independently certified valid manufacturing files"
+      },
+      "integrated_protection": {
+        "original_manifest_accepts_current": true,
+        "original_manifest_rejects_changed_zip": true,
+        "full_gate_escape_demonstrated": false,
+        "faulty_reissued_manifest_executed": false
+      },
+      "fix": "Define the native Gerber command subset explicitly. Reject non-default legacy IR/MI/OF/SF and unsupported unit/notation/stop changes, or implement and compare their effective image. State AS/IP policy explicitly. Preserve native/neutral and metadata controls, modern-transform rejection, reviewed margins and EP windows. No new stencil-coverage rule is needed.",
+      "hardware_failure_proved": false,
+      "section2_change_required": false
+    }
+  ],
+  "closed_findings": [
+    {
+      "id": "R13-GATE-01",
+      "severity_at_discovery": "Minor",
+      "status": "closed",
+      "proof": "Fresh native-copy conflicting R134 MPN is rejected by metadata conflict walk; matching alias control accepted."
+    },
+    {
+      "id": "R13-GATE-02",
+      "severity_at_discovery": "Minor",
+      "status": "closed",
+      "proof": "Actual current BOM control accepted; second R134 row rejected; zero and mismatched Qty rejected."
+    },
+    {
+      "id": "R13-GATE-03",
+      "severity_at_discovery": "Minor",
+      "status": "closed",
+      "proof": "Actual F_Paste D28 changed0.566x0.540 to0.001x0.001mm now rejects ten pad geometries; original618 apertures accepted."
+    }
+  ],
+  "checks_actually_executed": [
+    {
+      "name": "native_R10_contract",
+      "result": "pass",
+      "rules": 31,
+      "board_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+      "BOM_CPL_supplied": true,
+      "rule_results": {
+        "S-1": true,
+        "S-2": true,
+        "S-3": true,
+        "S-4": true,
+        "S-5": true,
+        "S-6": true,
+        "S-7": true,
+        "S-8": true,
+        "S-9": true,
+        "K-contract": true,
+        "K-loader": true,
+        "K-actuators": true,
+        "LC-1": true,
+        "M-1": true,
+        "M-3": true,
+        "M-5": true,
+        "M-6": true,
+        "M-7": true,
+        "P-11": true,
+        "F9-1": true,
+        "F9-2": true,
+        "T-1": true,
+        "K-legends": true,
+        "K-copper": true,
+        "K-inner": true,
+        "K-reference": true,
+        "K-region": true,
+        "K-fill": true,
+        "K-rules": true,
+        "K-width": true,
+        "K-retained": true
+      }
+    },
+    {
+      "name": "full_existing_R10_regression_suite",
+      "result": "pass",
+      "tests": 173,
+      "native_executed": 169,
+      "native_numpy_skips": 4,
+      "seconds": 200.881,
+      "CLI": "official10.0.7 selected through reserved vendor pointer",
+      "actual_CLI_scope": "existing real baseline/J2/TP copied DRC cases: --severity-all --schematic-parity; no separate all-track-errors run",
+      "no_fake_actual_board_CLI": true
+    },
+    {
+      "name": "all_four_numpy_cases",
+      "result": "pass",
+      "classes": [
+        "HotplugNumerics",
+        "Plate"
+      ],
+      "tests": 4,
+      "skips": 0,
+      "seconds": 0.979,
+      "interpreter": "supplied .supervisor/venv/bin/python; two hot-plug controls and two optional plate controls"
+    },
+    {
+      "name": "native_safety_population_interface_seeds",
+      "result": "all rejected",
+      "seeds": [
+        {
+          "label": "pyro_feed_direct_pack",
+          "rules": [
+            "S-1",
+            "S-2",
+            "K-actuators"
+          ],
+          "reference": "R134",
+          "xy_mm": [
+            16.5,
+            64.0
+          ],
+          "rejected": true,
+          "mutant_sha256": "a116b887a289f7cc9f60515fa57bb06a233f98e7db37a88f543ed9351c61bd5e",
+          "issue_count": 5,
+          "proof_issues": [
+            "S-1: R134.2 must be on RAW_ACT (RAW_ACT bus behind Q120/Q121)",
+            "S-1: R134 has pads on the armed / RAW_ACT side net PYRO1_IGN and on the supply BAT_IN: not a named tie (GND_TIES / SUPPLY_TIES in tools/check_r10.py)",
+            "S-2: RAW_ACT copper touches R134.2 (BAT_IN) through track RAW_ACT (19.20, 63.88)"
+          ]
+        },
+        {
+          "label": "real_R134_copper_bypass",
+          "rules": [
+            "S-1"
+          ],
+          "reference": "R134",
+          "xy_mm": [
+            16.5,
+            64.0
+          ],
+          "rejected": true,
+          "mutant_sha256": "6073c63452d19cdf1e9c6c9fd51605b06a73e4c979f7d932c45ca10312c74358",
+          "issue_count": 2,
+          "proof_issues": [
+            "S-1: RAW_ACT copper reaches J121.2 (PYRO1_IGN) through track PYRO1_IGN (7.40, 57.60): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches R134.1 (PYRO1_IGN) through track RAW_ACT (13.93, 64.00): firing / sense chain is bypassed"
+          ]
+        },
+        {
+          "label": "real_J400_contact_copper_bypass",
+          "rules": [
+            "S-5"
+          ],
+          "reference": "J400",
+          "xy_mm": [
+            7.4,
+            65.849999
+          ],
+          "rejected": true,
+          "mutant_sha256": "c15d5c6094bd9f5594d0b0f7959a1ecfb1ec830423ae23f84a0f27a1c36c1808",
+          "issue_count": 337,
+          "proof_issues": [
+            "S-5: BAT_SW_SOURCE copper touches J400.2 (BAT_SW_RETURN) through track BAT_SW_SOURCE (7.40, 64.10): switch contact / resistor bypass",
+            "S-5: BAT_SW_RETURN copper touches J400.1 (BAT_SW_SOURCE) through track BAT_SW_SOURCE (7.40, 64.10): switch contact / resistor bypass"
+          ],
+          "fixture_scope": "Added straight B.Cu bridge also intersects saved GND fill; the reported proof requires the specific opposite-J400-contact markers, not unrelated GND findings."
+        },
+        {
+          "label": "automatic_load_enable_from_RAW",
+          "rules": [
+            "S-3"
+          ],
+          "reference": "R122",
+          "xy_mm": [
+            19.6,
+            69.8
+          ],
+          "rejected": true,
+          "mutant_sha256": "0265c75e6261020225033605e597976f0c100680f0b80cfc1e61eaa52f0bb0e5",
+          "issue_count": 2,
+          "proof_issues": [
+            "S-3: independent load-switch enable ACT_EN_MCU must touch only ['R122', 'U1']",
+            "S-3: independent load-switch enable R122.1 must be ACT_EN_MCU (is RAW_PROTECTED)"
+          ]
+        },
+        {
+          "label": "load_enable_pulldown_removed",
+          "rules": [
+            "S-3"
+          ],
+          "reference": "R123",
+          "xy_mm": [
+            20.6,
+            70.66
+          ],
+          "rejected": true,
+          "mutant_sha256": "e73112f349aca4b88b2a5bc3f6718634e86aa41ea0aef21291d2de1c847aecbc",
+          "issue_count": 4,
+          "proof_issues": [
+            "S-3: independent load-switch enable ACT_EN must touch only ['Q122', 'R122', 'R123']",
+            "S-3: independent load-switch enable R123 must be 100000 ohm",
+            "S-3: independent load-switch enable R123.1 must be ACT_EN (is None)"
+          ]
+        },
+        {
+          "label": "pyro_gate_pulldown_removed",
+          "rules": [
+            "S-3"
+          ],
+          "reference": "R128",
+          "xy_mm": [
+            18.3,
+            57.405
+          ],
+          "rejected": true,
+          "mutant_sha256": "bb6e391a0e78105bbf9450c623b12b9566da8bf95a5b00bd10f7f758e16ff4f2",
+          "issue_count": 1,
+          "proof_issues": [
+            "S-3: pyro FET Q124: no a resistor from the gate (PYRO1_GATE) to the source (GND) of 1 k - 100 k"
+          ]
+        },
+        {
+          "label": "pyro_gate_cap_99nF",
+          "rules": [
+            "S-3"
+          ],
+          "reference": "C126",
+          "xy_mm": [
+            16.85,
+            57.675
+          ],
+          "rejected": true,
+          "mutant_sha256": "816a4848c7806f16dc9ad510ec08eef28729cb908b2a6171cfdace0a4e70cbce",
+          "issue_count": 1,
+          "proof_issues": [
+            "S-3: pyro FET Q124: no a gate-source capacitor >= 100 nF (PYRO1_GATE to GND)"
+          ]
+        },
+        {
+          "label": "gate_network_dnp",
+          "rules": [
+            "S-4"
+          ],
+          "reference": "C126",
+          "xy_mm": [
+            16.85,
+            57.675
+          ],
+          "rejected": true,
+          "mutant_sha256": "a240428212ccd0d2e0cb6a564291d3e0f20cf63438531acf833d55f0772654a8",
+          "issue_count": 1,
+          "proof_issues": [
+            "S-4: C126: required fitted part excluded (dnp)"
+          ]
+        },
+        {
+          "label": "limiter_excluded_from_position_files",
+          "rules": [
+            "S-4"
+          ],
+          "reference": "R134",
+          "xy_mm": [
+            16.5,
+            64.0
+          ],
+          "rejected": true,
+          "mutant_sha256": "f1574218107d7373adc7734edc0f3b94ed7c5b9d75a424b8315ae713a7c48824",
+          "issue_count": 1,
+          "proof_issues": [
+            "S-4: R134: required fitted part excluded (exclude_from_pos_files)"
+          ]
+        },
+        {
+          "label": "direct_bus_ADC_restores_tail",
+          "rules": [
+            "S-1",
+            "K-contract"
+          ],
+          "reference": "U1",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "rejected": true,
+          "mutant_sha256": "617c223c7bbb3d9b1c38c102ab8b3693412805fda31a275b3305c2e6ff687a54",
+          "issue_count": 1,
+          "proof_issues": [
+            "K-contract: U1.33: must be ARM1_SENSE, got RAW_PROTECTED"
+          ]
+        },
+        {
+          "label": "sense_bottom_20k",
+          "rules": [
+            "K-actuators"
+          ],
+          "reference": "R133",
+          "xy_mm": [
+            28.43,
+            54.25
+          ],
+          "rejected": true,
+          "mutant_sha256": "dae7794322da58e756fe6914b74643ae1437ce997bdeaba53949023a38cf021b",
+          "issue_count": 1,
+          "proof_issues": [
+            "K-actuators: check_actuators: R133 must be 2k from ARM1_SENSE to GND"
+          ]
+        },
+        {
+          "label": "GPS_RX_series_bypass",
+          "rules": [
+            "K-contract"
+          ],
+          "reference": "U1",
+          "xy_mm": [
+            23.0,
+            43.0
+          ],
+          "rejected": true,
+          "mutant_sha256": "b078f70d94843a88e73817d7767da1978eedf695176ad9be059a6d213feeacb1",
+          "issue_count": 2,
+          "proof_issues": [
+            "K-contract: GPS_RX_MCU: must touch only U1 and its 1k resistor",
+            "K-contract: U1.64: must be GPS_RX_MCU, got GPS_RX_WIRE"
+          ]
+        },
+        {
+          "label": "radio_ESD_ground_to_fire_gate",
+          "rules": [
+            "S-6"
+          ],
+          "reference": "D420",
+          "xy_mm": [
+            35.75,
+            31.2
+          ],
+          "rejected": true,
+          "mutant_sha256": "16428a845af570e0d16cfb2af1fea5c2a53fe55cff93440943022fa293bdb32d",
+          "issue_count": 1,
+          "proof_issues": [
+            "S-6: D420 joins port nets ['RADIO_TX_WIRE'] to pyro / arming nets ['PYRO1_GATE']"
+          ]
+        },
+        {
+          "label": "servo_terminal_power_contact",
+          "rules": [
+            "S-7"
+          ],
+          "reference": "J122",
+          "xy_mm": [
+            38.6,
+            71.5
+          ],
+          "rejected": true,
+          "mutant_sha256": "11f5d5799ec21b4560fdc1aa6827392128e6ae601174756a6a3381ad052d90bf",
+          "issue_count": 1,
+          "proof_issues": [
+            "S-7: J122.1 must be SERVO1_OUT (is RAW_ACT)"
+          ]
+        },
+        {
+          "label": "microSD_supply_to_port",
+          "rules": [
+            "K-contract"
+          ],
+          "reference": "J430",
+          "xy_mm": [
+            24.0,
+            24.3
+          ],
+          "rejected": true,
+          "mutant_sha256": "fcd83a31a702ce68a8d2db720faf1cb1dc9c4226db86433e9794236ea2755c5f",
+          "issue_count": 1,
+          "proof_issues": [
+            "K-contract: J430: microSD pin mapping must be {'J430.1': 'SD_DAT2', 'J430.2': 'SD_CS', 'J430.3': 'SD_MOSI', 'J430.4': '3V3', 'J430.5': 'SD_SCK', 'J430.6': 'GND', 'J430.7': 'SD_MISO', 'J430.8': 'SD_DAT1', 'J430.9': 'GND', 'J430.10': 'GND', 'J430.11': 'GND', 'J430.12': 'GND'}, got {'J430.1': 'SD_DAT2', 'J430.2': 'SD_CS', 'J430.3': 'SD_MOSI', 'J430.4': 'PORT_4V8', 'J430.5': 'SD_SCK', 'J430.6': 'GND', 'J430.7': 'SD_MISO', 'J430.8': 'SD_DAT1', 'J430.9': 'GND', 'J430.10': 'GND', 'J430.11': 'GND', 'J430.12': 'GND'}"
+          ]
+        },
+        {
+          "label": "IMU_excluded_from_BOM",
+          "rules": [
+            "S-4"
+          ],
+          "reference": "U4",
+          "xy_mm": [
+            17.0,
+            45.9
+          ],
+          "rejected": true,
+          "mutant_sha256": "3420bb3da7fe28276e2742e91191885e40fa3918bd0779a4c7bcd68c06ddfb29",
+          "issue_count": 1,
+          "proof_issues": [
+            "S-4: U4: required fitted part excluded (exclude_from_bom)"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "stored_schematic_source_contract",
+      "result": "pass",
+      "components": 209,
+      "pins": 651,
+      "source_seeds": 34,
+      "source_seeds_rejected": 34,
+      "actual_limit": "read_netlist/contract/seeds and archived source_check; no schematic rebuild/CLI re-export"
+    },
+    {
+      "name": "native_vs_stored_XML_pins",
+      "result": "pass",
+      "counts": {
+        "xml_node_elements": 651,
+        "unique_xml_ref_pin_pairs": 651,
+        "native_physical_pads": 682,
+        "native_numbered_physical_pads": 663,
+        "unique_native_numbered_ref_pin_pairs": 651,
+        "unique_native_numbered_pairs_not_in_xml": [],
+        "native_MCU_numbered_pads": 100,
+        "all_numbered_physical_pad_mismatches": []
+      },
+      "normalization": "empty/unconnected-* normalized to NC; all663 numbered physical pads additionally checked individually"
+    },
+    {
+      "name": "R10_binding_evidence",
+      "result": "fresh regeneration exactly equal",
+      "pins": 100,
+      "imu": {
+        "x_mm": 17.0,
+        "y_mm": 45.9,
+        "rotation_deg": 180.0,
+        "side": "bottom",
+        "lever_arm_x_mm": -6.0,
+        "lever_arm_z_mm": -2.06,
+        "lever_arm_z_basis": "Inference: centre of the U4 3D model box, not measured",
+        "lever_arm_frame": "board frame: x east (+x toward the x = 46 edge), y forward, z up from the top face; lever_arm_x_mm and lever_arm_z_mm are the sensor position relative to the roll axis in that frame; in the IMU frame (+X_imu = -x, +Y_imu = -y, +Z_imu = -z) the lever arm is (+6.0, ., +2.06) mm",
+        "bench_sign_check": "required",
+        "axis_basis": "same signed frame as R9: bottom180",
+        "roll_about_forward_axis": "-gyro_Y",
+        "forward_thrust": "-a_Y"
+      },
+      "executable_R10_firmware_binding": false
+    },
+    {
+      "name": "native_bound_library_and_power_budget_check",
+      "result": "pass",
+      "entrypoint": "r10_parts.py --check --board target"
+    },
+    {
+      "name": "actual_BOM_identity_and_manifest",
+      "result": "pass",
+      "rows": 82,
+      "native_fitted": 199,
+      "BOM_refs": 199,
+      "exact_LCSC_MPN_footprint_mismatches": 0,
+      "manifest_inputs": 193,
+      "manifest_outputs": 5
+    },
+    {
+      "name": "actual_CPL",
+      "result": "pass",
+      "top_pad_reconstructions": 66,
+      "bottom_pad_reconstructions": 121,
+      "placement_only_checks": 12,
+      "expected_total": 199,
+      "worst_source_pad_residual_mm": 0.491
+    },
+    {
+      "name": "actual_paste_and_paste_regression_suite",
+      "result": "pass",
+      "top": 245,
+      "bottom": 373,
+      "geometry_matches": 618,
+      "regression_tests": 11,
+      "skips": 0
+    },
+    {
+      "name": "legacy_command_boundary",
+      "cases": [
+        {
+          "label": "native",
+          "command": null,
+          "family": "native",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "AS_default",
+          "command": "%ASAXBY*%",
+          "family": "legacy_axis_neutral",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "AS_swap",
+          "command": "%ASAYBX*%",
+          "family": "legacy_device_axis_only",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "IR_neutral",
+          "command": "%IR0*%",
+          "family": "legacy_rotation_neutral",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "IR90",
+          "command": "%IR90*%",
+          "family": "legacy_rotation",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "MI_neutral",
+          "command": "%MIA0B0*%",
+          "family": "legacy_mirror_neutral",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "MI_A",
+          "command": "%MIA1B0*%",
+          "family": "legacy_mirror",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "OF_neutral",
+          "command": "%OFA0B0*%",
+          "family": "legacy_offset_neutral",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "OF_A1",
+          "command": "%OFA1.0B0*%",
+          "family": "legacy_offset",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "SF_neutral",
+          "command": "%SFA1B1*%",
+          "family": "legacy_scale_neutral",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "SF_A2",
+          "command": "%SFA2B1*%",
+          "family": "legacy_scale",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "IP_positive",
+          "command": "%IPPOS*%",
+          "family": "legacy_image_positive",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "IP_negative",
+          "command": "%IPNEG*%",
+          "family": "legacy_image_negative_overview_says_warn_skip",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "IN_metadata",
+          "command": "%INR14_control*%",
+          "family": "metadata_no_image_effect",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "LN_metadata",
+          "command": "%LNR14_control*%",
+          "family": "metadata_no_image_effect",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "G04_metadata",
+          "command": "G04 R14 harmless comment*",
+          "family": "metadata_no_image_effect",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "G71_mm",
+          "command": "G71*",
+          "family": "legacy_unit_mm",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "G70_inch",
+          "command": "G70*",
+          "family": "legacy_unit_change_noncanonical_mixed_fixture",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "G90_absolute",
+          "command": "G90*",
+          "family": "legacy_absolute_notation",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "G91_incremental",
+          "command": "G91*",
+          "family": "legacy_notation_change_noncanonical_mixed_fixture",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "M01_optional_stop",
+          "command": "M01*",
+          "family": "legacy_no_effect",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "M00_stop",
+          "command": "M00*",
+          "family": "legacy_program_stop",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "LPD_dark",
+          "command": "%LPD*%",
+          "family": "native_polarity",
+          "accepted": true,
+          "issue_count": 0,
+          "issues": [],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "LPC_clear",
+          "command": "%LPC*%",
+          "family": "modern_polarity",
+          "accepted": false,
+          "issue_count": 246,
+          "issues": [
+            "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)",
+            "F_Paste: R85.1 aperture D10 differs from native paste geometry (rule 5)"
+          ],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 0,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "LM_neutral",
+          "command": "%LMN*%",
+          "family": "modern_mirror_neutral_unsupported",
+          "accepted": false,
+          "issue_count": 246,
+          "issues": [
+            "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)",
+            "F_Paste: R85.1 aperture D10 differs from native paste geometry (rule 5)"
+          ],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 0,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "LM_X",
+          "command": "%LMX*%",
+          "family": "modern_mirror",
+          "accepted": false,
+          "issue_count": 246,
+          "issues": [
+            "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)",
+            "F_Paste: R85.1 aperture D10 differs from native paste geometry (rule 5)"
+          ],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 0,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "LR90",
+          "command": "%LR90*%",
+          "family": "modern_rotation",
+          "accepted": false,
+          "issue_count": 246,
+          "issues": [
+            "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)",
+            "F_Paste: R85.1 aperture D10 differs from native paste geometry (rule 5)"
+          ],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 0,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "LS2",
+          "command": "%LS2*%",
+          "family": "modern_scaling",
+          "accepted": false,
+          "issue_count": 246,
+          "issues": [
+            "F_Paste: unsupported paste polarity/transform/repeat/block operation (rule 5)",
+            "F_Paste: R85.1 aperture D10 differs from native paste geometry (rule 5)"
+          ],
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "geometry_matched": 0,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "geometry_matched": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        }
+      ],
+      "primary_scope_ref": "#/findings/0/calibration"
+    },
+    {
+      "name": "fresh_route_scan",
+      "result": "pass",
+      "instances": 140,
+      "failures": 0,
+      "allowed": 0,
+      "stale": 0,
+      "AUD10_inside_pad_review": 22,
+      "noncritical_leftovers": 8
+    },
+    {
+      "name": "shell_failure_propagation_protocol",
+      "result": "pass",
+      "tests": 5,
+      "seconds": 11.612,
+      "scope": "Existing test_check_shell.py uses isolated synthetic stub tools only; no real-board DRC/check credit. No actual-board CLI was stubbed."
+    },
+    {
+      "name": "native_exact_SaveBoard_control",
+      "result": "byte identical",
+      "sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6"
+    },
+    {
+      "name": "frozen_snapshot_after_review",
+      "result": "all22 initial files unchanged",
+      "before": {
+        "m3_design/assembly_review/m3.kicad_pcb": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+        "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+        "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+        "m3_design/assembly_review/camera_connector.kicad_sch": "84069d1f115d9a3c331e38ec5e0c73733b6f00432c79ea42d95e616dbf48f162",
+        "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+        "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+        "m3_design/assembly_review/battery_entry.kicad_sch": "984d524d93f87852803f524b7041d3c1d9eadca4f775a717e1cb2241da0fec69",
+        "m3_design/assembly_review/telemetry.kicad_sch": "16145d6f1b32a8cc90356996d7a5d364d05bc7c99501e7f6809f5eea7ce711f8",
+        "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865",
+        "m3_design/assembly_review/camera_power.kicad_sch": "cd8a5a352bea9a9c80211d511b9d78c3aafd2816bec6a6db9c1a9beb53ba15d0",
+        "m3_design/assembly_review/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
+        "m3_design/assembly_review/pyro.kicad_sch": "d3a6fde39e5a5df3a93a7a2c60bd7e90c24b28de1fe281a9bcfa03babc35e056",
+        "m3_design/assembly_review/actuator_power.kicad_sch": "54ed8859d0d0d77f05724df8052962258eb240fcbdf38910e2d7ef2bf0e5d6bc",
+        "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+        "m3_design/assembly_review/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+        "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+        "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+        "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+        "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+        "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "2e2ab94f2302977b99baa0c670143114eacf23b6a7082d412960ea1419fff661",
+        "m3_design/assembly_review/sources/r10_design/parts_budget.json": "e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba",
+        "m3_design/assembly_review/fab/m3_fab_manifest.json": "217bca54460af1a8fc4eb3510be8c4219fbf4969ba39637e5b951bb972e407a2"
+      },
+      "after": {
+        "m3_design/assembly_review/m3.kicad_pcb": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+        "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+        "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+        "m3_design/assembly_review/camera_connector.kicad_sch": "84069d1f115d9a3c331e38ec5e0c73733b6f00432c79ea42d95e616dbf48f162",
+        "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+        "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+        "m3_design/assembly_review/battery_entry.kicad_sch": "984d524d93f87852803f524b7041d3c1d9eadca4f775a717e1cb2241da0fec69",
+        "m3_design/assembly_review/telemetry.kicad_sch": "16145d6f1b32a8cc90356996d7a5d364d05bc7c99501e7f6809f5eea7ce711f8",
+        "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865",
+        "m3_design/assembly_review/camera_power.kicad_sch": "cd8a5a352bea9a9c80211d511b9d78c3aafd2816bec6a6db9c1a9beb53ba15d0",
+        "m3_design/assembly_review/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
+        "m3_design/assembly_review/pyro.kicad_sch": "d3a6fde39e5a5df3a93a7a2c60bd7e90c24b28de1fe281a9bcfa03babc35e056",
+        "m3_design/assembly_review/actuator_power.kicad_sch": "54ed8859d0d0d77f05724df8052962258eb240fcbdf38910e2d7ef2bf0e5d6bc",
+        "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+        "m3_design/assembly_review/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+        "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+        "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+        "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+        "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+        "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "2e2ab94f2302977b99baa0c670143114eacf23b6a7082d412960ea1419fff661",
+        "m3_design/assembly_review/sources/r10_design/parts_budget.json": "e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba",
+        "m3_design/assembly_review/fab/m3_fab_manifest.json": "217bca54460af1a8fc4eb3510be8c4219fbf4969ba39637e5b951bb972e407a2"
+      }
+    }
+  ],
+  "coverage_limits": [
+    "No canonical build, full tools/check.sh, native CAD/source save, git action, GUI attempt, other-worktree edit or child agent. Only assigned new reports and ignored probes were written.",
+    "The full R10 suite supplied genuine all-severity/parity baseline and J2/TP CLI fault controls. No standalone all-track-errors DRC, ERC rerun, schematic CLI regeneration or full fab regeneration was executed by this lens.",
+    "F9-1 freshly extracted and validated stored board-bound hot-plug evidence through the31-rule check; full2304-case nonlinear sweep was not rerun. Numerical controls are simulation/software evidence.",
+    "Legacy syntax handling is a bounded prospective evidence-policy gap. Current package has no such commands; its193-input/five-output manifest catches the changed ZIP. No reissued-manifest or whole-gate escape was executed.",
+    "No R10 firmware, reset/trace/launch/ground/in-flight behavior, actual20ms e-match lot firing, current tail, thermal/transient/endurance, SD latency/power-loss, RF/ESD, switch/harness/retention, bore/stack/sled/access, first article, process or flight qualification is established.",
+    "Correctly disclosed qualification/procurement and owner-accepted architecture risks are not counted as proven current hardware failures. R10 remains unaccepted and unordered; AGENTS section2 remains unchanged."
+  ],
+  "source_coverage": {
+    "mandatory_paths": [
+      "AGENTS.md",
+      ".supervisor/r14_target_packet.md",
+      ".supervisor/r10_review_packet.md",
+      "docs/REQUIREMENTS.md",
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+      "docs/M3_R10.md",
+      "docs/R10_VALIDATION.md",
+      "docs/R9_VALIDATION.md",
+      "docs/R10_VEHICLE_HANDOFF.md",
+      "../../docs/VEHICLE.md"
+    ],
+    "all_decision_IDs_considered": [
+      "D-AUD-01",
+      "D-AUD-01a",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-AUD-03c",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-GAP-01",
+      "D-GAP-01a",
+      "D-GAP-02",
+      "D-GAP-02a",
+      "D-GAP-02b",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-SS-04"
+    ],
+    "decision_count": 113,
+    "decision_source_sha256": "f93da61053b2019504aa05a621389644842030b4548163bcdf9f0a758a3333f7",
+    "owner_mandates_considered": [
+      {
+        "id": "Initial plan items1-4",
+        "authority": "Owner mandate",
+        "disposition": "Ordinary0.15 mm clearance retained with S-8; black3.5 mm IGN and separate battery/switch terminals; C84470 uF/25 V. J124/keyed switch and original fuse wording superseded.",
+        "evidence": "E-N/E-F/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/0"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "O1",
+        "authority": "Owner mandate, amended",
+        "disposition": "External HGLRC GPS retained; final DB125/4V8 direct supply+1kUART replaces original GH/switched3V3;L5 loss accepted.",
+        "evidence": "E-N/E-B",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/1"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "O2",
+        "authority": "Owner mandate, amended",
+        "disposition": "External LR900-F, no on-board RF; final DB125/direct4V8 and UART5; uplink arm/fire prohibition and installed immunity remain.",
+        "evidence": "E-N/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/2"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "O3",
+        "authority": "Owner mandate",
+        "disposition": "Servo motor power/return off board, protected signals retained; Q120/Q121 serve pyro only; loss of servo power cutoff explicitly retained.",
+        "evidence": "E-N/E-F",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/3"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "O4",
+        "authority": "Owner mandate",
+        "disposition": "Regulated camera5 V-class supply; U402/U12/U13 retained. Actual5.456 V setpoint is an agent-selected tolerance solution, not a new owner voltage mandate.",
+        "evidence": "E-N/E-B",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/4"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "O5",
+        "authority": "Owner mandate, amended",
+        "disposition": "Separate buck/LDO voltage architecture retained; later owner cut removes GPS/radio switches/translators while camera isolation/switch survives.",
+        "evidence": "E-N/E-B",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/5"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "O6",
+        "authority": "Owner mandate",
+        "disposition": "Pack-star motor pairs and bounded reference return retained;0.6144 A is an unmeasured harness inference, qualified with 1 A allowance.",
+        "evidence": "E-N/E-B/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/6"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "D-R2-04 then D-R2-08",
+        "authority": "Owner mandate",
+        "disposition": "All current signals hand-routed; old permission for noncritical autorouting superseded.",
+        "evidence": "E-R",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/7"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "OQ-1",
+        "authority": "Owner mandate",
+        "disposition": "4.95 mm floor accepted; current maximum terminal unions give 5.003012 mm. Physical16-22AWG fit stays open.",
+        "evidence": "E-F/E-B",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/8"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "OQ-2",
+        "authority": "Owner mandate",
+        "disposition": "Actual-feed distributed model implemented with C88 intercept; new native extraction matches and four refined extrema rerun. Full2304 stored evidence validated, not rerun wholesale here.",
+        "evidence": "E-H",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/9"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "OQ-3",
+        "authority": "Owner item, pending",
+        "disposition": "USD82.65 placed/feeder model passes USD84.41; minimum purchases give USD84.99,USD0.58 excess. Complete quote/cost and full deviation-list owner acceptance are pending; historical misses do not change cap.",
+        "evidence": "E-M/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/10"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "OQ-4",
+        "authority": "Owner mandate",
+        "disposition": "Aft-edge tab/rail selected; panel acceptance before ordering remains open even though current tab windows permit other locations.",
+        "evidence": "E-F/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/11"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "OQ-5",
+        "authority": "Owner mandate, amended",
+        "disposition": "Keep C84/firmware shedding, no hardware cutoff. Always-on GPS/radio/card mean no claim that software can shed them.",
+        "evidence": "E-N/E-B/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/12"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "OQ-6",
+        "authority": "Owner mandate, revised",
+        "disposition": "No battery-lead fuse; unfused lead/copper/TVS/cap risk retained. Later single-switch decision also removes ARM-link fuse.",
+        "evidence": "E-N/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/13"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "OQ-7",
+        "authority": "Owner mandate",
+        "disposition": "Board plus axial mounting tolerance wholly forward of joint+47 mm, all roll orientations; freed length remains slack.",
+        "evidence": "E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/14"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "Single switch and keep-one-switch reaffirmation",
+        "authority": "Owner mandate",
+        "disposition": "J400 powers/arms, no J124; two separately driven series firing controls, on-rail/on-last/off-first, launch/ground/in-flight policy retained. AVA photo correction does not restore ARM terminal.",
+        "evidence": "E-N/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/15"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "AUD-1..10 and GAP-1..5",
+        "authority": "Owner direction; implementation choices remain agent choices",
+        "disposition": "Adopted narrow reductions and real gaps traced individually in the complete current decision index. Later always-on/terminal/audit2 decisions supersede old port/header clauses. No AGENTS section2 rule relaxed.",
+        "evidence": "E-N/E-F/E-B/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/16"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "AVA comparison10 layout items",
+        "authority": "Owner layout direction",
+        "disposition": "Rows/local cells/battery/buzzer/sense/probes implemented, with actual camera/SD/THT constraints. Exact translated cells/old coordinates are not frozen requirements.",
+        "evidence": "E-N/E-F/E-R",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/17"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "Always-on ports plus microSD",
+        "authority": "Owner mandate",
+        "disposition": "Direct GPS/radio supply/UART; camera switch/isolation; hinged SD alongside primary QSPI, no card-detect promise; current startup/latency/lid obligations explicit.",
+        "evidence": "E-N/E-F/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/18"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "All wired screw terminals / Steer1",
+        "authority": "Owner mandate",
+        "disposition": "All seven DB125s correct; USB-C and hinged card remain separate. Legacy circuit-only stop superseded by current full review assignment.",
+        "evidence": "E-N/E-F",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/19"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "Requirements audit2 items1-13,15",
+        "authority": "Owner mandate",
+        "disposition": "Direct two-bank ADCs/removals, limited thin taps, In1GND routing allowance, optional plate, count-only leftovers, NRST metric, no Extended cap, single reviewed map, local floors and always-on obligations retained.",
+        "evidence": "E-N/E-F/E-R/E-O",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/20"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      },
+      {
+        "id": "Requirements audit2 item14/16",
+        "authority": "Owner mandate, conditional",
+        "disposition": "check.sh zero before each commit retained; STATUS is current. Hash provenance refreshed, electrical/axes review when changed. LEDs stay dark until actual opaque-cover test passes; no test is claimed.",
+        "evidence": "E-N/E-O/E-P",
+        "source": {
+          "source": "requirements",
+          "json_pointer": "/owner_mandates/21"
+        },
+        "qualification": "No owner acceptance of remaining agent choices/quote or physical/firmware results is inferred."
+      }
+    ],
+    "owner_mandate_count": 22,
+    "applicability": "All113 IDs and22 mandate records considered with current supersessions. The canonical ledger indexes scope only; target/source/geometry checks above supply fresh proof. Old circuit-only stop instructions are superseded by this full review.",
+    "current_peer_round14_reports_read": false,
+    "current_peer_findings_used": false,
+    "severity": "R9 precedents plus packet meanings; R9 has no literal severity-definition table."
+  },
+  "source_hashes": {
+    "AGENTS.md": "0ce3e6e22e968e206316355f27a1ecb343eb625de66b192904434cce7c46f22d",
+    ".supervisor/r14_target_packet.md": "e0522baeb0aef7092f0ebd334abc6d2c42bfc149e4cbc071ac2bca0774338ded",
+    ".supervisor/r10_review_packet.md": "70c48551c6736fa21890cb216a51fb24debec079bc9c6f527e748b7ff2321535",
+    "docs/REQUIREMENTS.md": "327e4361052e413a4a7dcb6be5b686f0c92373f275f213b374e81a6c96548c31",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": "ebe8d71ce1b5a1cb3768df3d2fcccc0969870590a027b6e86494c9b9a6c139c3",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "f93da61053b2019504aa05a621389644842030b4548163bcdf9f0a758a3333f7",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "3fb173c963be8e2ccaf666e1baa11221d488ac5994f2fe89d4aceed3e928a5b9",
+    "docs/M3_R10.md": "2f3918d0ee7f9f2cd3c44db304983ad723c21e4085edc865f73b3f90067dc634",
+    "docs/R10_VALIDATION.md": "5dfc344da26865e228c4e217c34eeb77778a2588ff8c9a6835ba4a48b4cf6bb0",
+    "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+    "docs/R10_VEHICLE_HANDOFF.md": "f0f3ed2d5b22c78f65482b9e7a3d0807564fb4b7f5d7dadba91fa43246ffdba3",
+    "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+    "tools/check.sh": "3edcd2f63f51999fde57d45d171e5cc0cf939bd578e34c980aac1825f839cea1",
+    "tools/check_r10.py": "55c69e8d21d807725a01706fb696c4184f663f325f99d859da62f19cf056db1f",
+    "tools/route_check.py": "d8070ccbb4a9ef21d2adc442577ac93110822e54d708a884b1c225896ae670f0",
+    "tools/fit_check.py": "c3a8ea5535a74589922cdd544bd7875b1598781d0d2ff00f86ef4a7210187011",
+    "tools/paste_check.py": "c13ebf135a233b4d678d15fb61cc4cdf0d24dea93e3576732a71ef2854f059f2",
+    "tools/export_fab.py": "4348552af1f11285a85ec2b4828d17d836623463585e0092ac2f270523c653b5",
+    "tools/fab_manifest.py": "9319ae89ee6ecd087c981596ee08294965892ba030eeb3ed9f7ccb9d1b593aaf",
+    "tools/jlc_orient.py": "75b36799b732384eac5ac0f0d4e5ae3a9a2e8b2b1d230421ff791e76e77619ae",
+    "tools/test_r10_check.py": "ce24f8ab80e12403971c50a247402840ed3e726ef0147f679c9639718044f083",
+    "tools/test_paste_check.py": "69086e5cb4b7f05a320cc82cc91bf6964c2deabf374876b35bbdd2956d6d5c83",
+    "tools/test_check_shell.py": "0a6e38c51ee035783e7886bd544a2e1da6200c78622d92cc9687f0edac9c7ff3",
+    "quality_audit/audit_artifacts.py": "2bdd5d1a7b4d915c9dc9c764836a42871bf8e084907e15b8b1b2160f9004676d",
+    "quality_audit/verify_board.py": "04a95655d8a1e69c42f0e4af257597718fa13a2d9ca896c8f6a42dfdb19a0f94",
+    "m3_design/check_actuators.py": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0",
+    "m3_design/r10_sch.py": "f4b98a0c390862f3924da610d31844ba42a44e02aed369c4e292da6990b30950",
+    "m3_design/r10_sch_check.py": "1f0e114eccf8df43025729ac1871d5078be246fc9da88bea6bed896f97944deb",
+    "m3_design/r10_parts.py": "a832add1ca3d61cfd652162d4ec67d78e09f97ac9f90509a8a88007f0151d08b",
+    "m3_design/r10_build.sh": "5b2d2edec296ece28b0175dbedbdc4f1a338134788ba36e718a249590747eada",
+    "m3_design/r10_fab.sh": "350e4e8e7960dc47a0d12509ddebffdac10675e736b7b23f93e889a916c4bfe9",
+    "m3_firmware/assembly_binding.py": "2a7a1391950a7c629861c5c0c93e6335cfe55c38d8a2f4ccf1d481ebdecf89e9",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "2e2ab94f2302977b99baa0c670143114eacf23b6a7082d412960ea1419fff661",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json": "e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba"
+  },
+  "ignored_reproduction": {
+    "directory": ".supervisor/r14_gate",
+    "scripts": [
+      "probe_gate.py",
+      "probe_legacy.py",
+      "final_native.py"
+    ],
+    "primary_PDF": "temporary download/extraction removed after exact hash/page verification"
+  },
+  "raw_check_log_sha256": {
+    "baseline_native.log": "14c0b4f8d8b939151bf7dca430e77b7ae6915d90eb8d629c8b3d11d02f6018f7",
+    "r10_suite.log": "1b9368bb6f8d1c2d3dbe8861e3b16e830c8ca3723cd50d1ef5e9109446f6a43f",
+    "numerical_controls.log": "1fb1be75687557bd07fda674a9d0df06f447170991ebd17f7a7fe5871b59c0c2",
+    "own_probes.log": "7cc6c6e2f9ea2c0171fc6f585ea258a74977703a06e733196ac08df05221ca5a",
+    "legacy_transforms.log": "31e89cc964aa6628416fcaf8ff94b7c67e5aada3516dbf662c266b8ffefecedf",
+    "orientation.log": "093cdae1459e5fc5922a9b8240257425cbf16ea512c3d4822a2847af3c983565",
+    "paste_suite.log": "8726b23376a6590cfa218f421e2e13c0dd12aec0617ccb8598233a58997202dc",
+    "route.log": "d5cbe2d4ed143bbba9fb1424c6b918bf89acd0055ce742983b388b70f9221d21",
+    "shell_protocol_suite.log": "ab88e0c3ec3844f9a9dc117a2f1a793a9b3ae8eaba5bf6970ffc3e2a97fb8244",
+    "native_budget_check.log": "05c57a1cd6deb4cad596971be3a54c529eb2eb1e3bb99611a60e325b09be466a"
+  }
+}

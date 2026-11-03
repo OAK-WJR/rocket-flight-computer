@@ -1,0 +1,2919 @@
+{
+  "schema": 1,
+  "review_round": 16,
+  "lens": "parts/BOM/footprints/LCSC-JLC/orientation",
+  "scope": "Fresh full assigned lens,not delta review. Native board and current source were challenged independently; prior R15 report used only after primary/native work for carried/closed status. No current R16 peer reports/probes read.",
+  "target_commit": "b1b8658d5bf541795b7e7636c09f2e886ea8c67a",
+  "board_path": "m3_design/assembly_review/m3.kicad_pcb",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "findings": [
+    {
+      "id": "R16-BOM-01",
+      "severity": "Minor",
+      "status": "carried",
+      "active": true,
+      "carried_from": [
+        "R15-BOM-01"
+      ],
+      "title": "L400 retains a land with less worst-corner heel coverage than the maker land",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "L400",
+          "coordinates_mm": [
+            24.2,
+            5.55
+          ],
+          "side": "F",
+          "footprint": "M3_SRP5030TA",
+          "measured": {
+            "native_pad_size_mm": [
+              1.8,
+              2.5
+            ],
+            "native_pad_centres_x_mm": [
+              -2.35,
+              2.35
+            ],
+            "native_inner_edge_abs_x_mm": 1.45,
+            "maker_pad_size_mm": [
+              2.0,
+              1.8
+            ],
+            "maker_pad_centres_x_mm": [
+              -2.25,
+              2.25
+            ],
+            "maker_inner_edge_abs_x_mm": 1.25,
+            "conditional_metal_heel_abs_x_mm": 1.3,
+            "conditional_uncovered_heel_mm": 0.15
+          }
+        },
+        {
+          "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "maker_page": "SRP5030T, p1, Product Dimensions/Recommended Layout",
+          "basis": "Minimum body width5.4/2 minus maximum terminal width1.4 gives1.30mm. The native inner pad starts1.45mm from centre. Independent permitted dimension corners are an Inference; no failed solder joint or required function is demonstrated."
+        }
+      ],
+      "concrete_fix": "Qualify actual SRP5030T-6R8M seating, solder/heel coverage and retention on first articles, or adopt Bourns recommended land through the generator with covered CAD/fab/reproducibility review. Do not count the proxy orientation fit as maker-land qualification."
+    },
+    {
+      "id": "R16-BOM-02",
+      "severity": "Minor",
+      "status": "carried",
+      "active": true,
+      "carried_from": [
+        "R15-BOM-02",
+        "D-R15-02"
+      ],
+      "title": "DB125 insertion and protected-barrel process allocation remains unresolved",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "references": [
+            "J1",
+            "J121",
+            "J400",
+            "J9",
+            "J410",
+            "J420",
+            "J122"
+          ],
+          "coordinates": "All seven terminal poses in terminal_review below",
+          "measured": {
+            "contacts": 23,
+            "pitch_mm": 3.5,
+            "nominal_hole_mm": 1.3,
+            "nominal_land_mm": 1.9,
+            "nominal_annulus_mm": 0.3,
+            "nominal_interpad_gap_mm": 1.6,
+            "conditional_pin_section_mm": [
+              0.7,
+              1.05
+            ],
+            "conditional_sharp_diagonal_mm": 1.2619429464123963,
+            "conditional_minimum_finished_hole_mm": 1.22,
+            "conditional_size_only_allowance_mm": -0.041942946412396376
+          }
+        },
+        {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+          "maker_page": "DORABO T0-1,2022-11-26,sheet1/1",
+          "basis": "Nominal0.50x0.85mm pin,1.20mm recommended hole; independent +/-0.20mm general dimensions would yield the sharp rectangle above, but the table cites GB/T14486 for moulded plastics. Metal-pin applicability, corners/form and relative pattern errors require maker/assembler clarification."
+        },
+        {
+          "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+          "maker_page": "Drilling: Hole size tolerance and Hole Position Tolerance",
+          "basis": "Current public table specifies through-hole +0.13/-0.08mm and position +/-0.075mm. This does not establish correlation/datum/outer-barrel/registration allocation."
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "J121.1",
+          "coordinates_mm": [
+            7.4,
+            54.1
+          ],
+          "measured": {
+            "native_hole_wall_to_In2_3V3_fill_mm": 1.102501,
+            "native_distance_quantization_mm": 1e-06,
+            "conditional_plus_diameter_and_position_consumption_mm": 0.14,
+            "conditional_remaining_mm": 0.962501
+          },
+          "basis": "Independent native point-to-saved-fill distance less0.65mm hole radius. The +0.065mm radial size and0.075mm displacement example is conditional, not a fabricated S8 failure."
+        }
+      ],
+      "concrete_fix": "Obtain authoritative maximum insertion profile, relative pin/form limits and approved seating method; allocate finished hole/pattern/annulus and protected barrel-to-inner-copper realization with fabricator. Inspect all23 contacts for full seating, intact plating/barrels and solder fill. If allocation fails, revise holes/lands and protected inner copper together through covered generators; no blind drill enlargement or reaming."
+    }
+  ],
+  "rejected_or_closed_candidates": [
+    {
+      "id": "R16-CAND-01",
+      "considered_severity": "Major",
+      "status": "rejected_as_demonstrated_failure; retained Minor R16-BOM-01",
+      "hypothesis": "L400 must have an open or unreliable joint because the maker land differs.",
+      "reason": "Native nominal terminal contact is covered. The0.15mm worst-corner heel strip is a bounded assembly deviation, not a measured/open-circuit/retention failure.",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "L400",
+          "coordinates_mm": [
+            24.2,
+            5.55
+          ],
+          "side": "F",
+          "footprint": "M3_SRP5030TA",
+          "measured": {
+            "native_pad_size_mm": [
+              1.8,
+              2.5
+            ],
+            "native_pad_centres_x_mm": [
+              -2.35,
+              2.35
+            ],
+            "native_inner_edge_abs_x_mm": 1.45,
+            "maker_pad_size_mm": [
+              2.0,
+              1.8
+            ],
+            "maker_pad_centres_x_mm": [
+              -2.25,
+              2.25
+            ],
+            "maker_inner_edge_abs_x_mm": 1.25,
+            "conditional_metal_heel_abs_x_mm": 1.3,
+            "conditional_uncovered_heel_mm": 0.15
+          }
+        },
+        {
+          "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "maker_page": "SRP5030T, p1, Product Dimensions/Recommended Layout",
+          "basis": "Minimum body width5.4/2 minus maximum terminal width1.4 gives1.30mm. The native inner pad starts1.45mm from centre. Independent permitted dimension corners are an Inference; no failed solder joint or required function is demonstrated."
+        }
+      ]
+    },
+    {
+      "id": "R16-CAND-02",
+      "considered_severity": "Major",
+      "status": "rejected_as_demonstrated_failure; retained Minor R16-BOM-02",
+      "hypothesis": "DB125 pins cannot fit, or fabricated S8necessarily fails.",
+      "reason": "Sharp rectangle/general-metal applicability and pattern/position correlations are unknown; maker recommends1.20mm nominal holes. Conditional corners do not prove actual insertion failure or fabricated isolation violation.",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "references": [
+            "J1",
+            "J121",
+            "J400",
+            "J9",
+            "J410",
+            "J420",
+            "J122"
+          ],
+          "coordinates": "All seven terminal poses in terminal_review below",
+          "measured": {
+            "contacts": 23,
+            "pitch_mm": 3.5,
+            "nominal_hole_mm": 1.3,
+            "nominal_land_mm": 1.9,
+            "nominal_annulus_mm": 0.3,
+            "nominal_interpad_gap_mm": 1.6,
+            "conditional_pin_section_mm": [
+              0.7,
+              1.05
+            ],
+            "conditional_sharp_diagonal_mm": 1.2619429464123963,
+            "conditional_minimum_finished_hole_mm": 1.22,
+            "conditional_size_only_allowance_mm": -0.041942946412396376
+          }
+        },
+        {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+          "maker_page": "DORABO T0-1,2022-11-26,sheet1/1",
+          "basis": "Nominal0.50x0.85mm pin,1.20mm recommended hole; independent +/-0.20mm general dimensions would yield the sharp rectangle above, but the table cites GB/T14486 for moulded plastics. Metal-pin applicability, corners/form and relative pattern errors require maker/assembler clarification."
+        },
+        {
+          "url": "https://jlcpcb.com/capabilities/pcb-capabilities",
+          "maker_page": "Drilling: Hole size tolerance and Hole Position Tolerance",
+          "basis": "Current public table specifies through-hole +0.13/-0.08mm and position +/-0.075mm. This does not establish correlation/datum/outer-barrel/registration allocation."
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "J121.1",
+          "coordinates_mm": [
+            7.4,
+            54.1
+          ],
+          "measured": {
+            "native_hole_wall_to_In2_3V3_fill_mm": 1.102501,
+            "native_distance_quantization_mm": 1e-06,
+            "conditional_plus_diameter_and_position_consumption_mm": 0.14,
+            "conditional_remaining_mm": 0.962501
+          },
+          "basis": "Independent native point-to-saved-fill distance less0.65mm hole radius. The +0.065mm radial size and0.075mm displacement example is conditional, not a fabricated S8 failure."
+        }
+      ]
+    },
+    {
+      "id": "R16-CAND-03",
+      "considered_severity": "Major",
+      "status": "rejected_as_demonstrated_failure; existing VCAP qualification retained",
+      "hypothesis": "C19/C20 must violate ST operating C/ESR and destabilize the MCU.",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "refs": [
+            "C19",
+            "C20"
+          ],
+          "coordinates_mm": [
+            [
+              28.35,
+              37.65
+            ],
+            [
+              19.8,
+              37.3
+            ]
+          ],
+          "part": "CL10A225KO8NNNC/C23630",
+          "nominal_initial_range_uF": [
+            1.98,
+            2.42
+          ]
+        },
+        {
+          "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "maker_page": "Rev11 Table114 p211",
+          "condition": "2.2uF typical,+/-20%; ESR<100mohm; bypass mode has different capacitor requirement."
+        },
+        {
+          "url": "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+          "maker_page": "May08,2024 exact-part p2 and MLCC manual pp13-17",
+          "condition": "1kHz/1Vrms reference measurement after heat/recovery; X5R +/-15%, bias/AC/aging dependence. Multiplying independent limits gives illustrative1.683..2.783uF, not an actual coupled-condition guarantee."
+        }
+      ],
+      "reason": "ST test interpretation,actual silicon/regulator mode,local temperature,coupled C/ESR/process/aging bounds are unresolved. Current records require that qualification; no actual failure is shown. No arbitrary larger capacitor substitution is qualified."
+    },
+    {
+      "id": "R16-CAND-04",
+      "considered_severity": "Major",
+      "status": "closed_on_current_geometry",
+      "hypothesis": "DB125 maximum body/wire face or SD fitting nails are still omitted.",
+      "reason": "Fresh maker drawing and native checks give7terminal unions with5.003012mm bare-bore wire room vs4.95mm; socket closed15.05x15.70x2.10mm allocation includes nails/tolerances. Physical access/retention remains pending, not omitted proof.",
+      "evidence": [
+        {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+          "page": "sheet1"
+        },
+        {
+          "url": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+          "page": "sheet1"
+        },
+        ".supervisor/r16_parts_probe/fit.json",
+        ".supervisor/r16_parts_probe/terminal_measurements.json"
+      ]
+    },
+    {
+      "id": "R16-CAND-05",
+      "considered_severity": "Major",
+      "status": "release_blocker_disclosed; no_new_CAD_finding",
+      "hypothesis": "Current package is purchasable/released despite stock/assembly obstacles.",
+      "reason": "Fresh stock fails R430/U4, and current ordering records prohibit release pending stock/consignment,full quote,VIPPO/manual C84 and owner acceptance. No order is requested or claimed. These remain procurement/process obligations.",
+      "evidence": [
+        {
+          "code": "C185349",
+          "refs": "R430",
+          "stock": 17,
+          "placement_need": 5,
+          "purchase_minimum": 3610,
+          "order_need": 3610
+        },
+        {
+          "code": "C26633007",
+          "refs": "U4",
+          "stock": 0,
+          "placement_need": 5,
+          "purchase_minimum": 1,
+          "order_need": 5
+        }
+      ]
+    },
+    {
+      "id": "R16-CAND-06",
+      "considered_severity": "Major",
+      "status": "rejected",
+      "hypothesis": "CPL rotates a polarized part,terminal body or microSD into an incompatible footprint.",
+      "reason": "Independent187pad reconstructions,12nonpolar placement checks,native pin roles and maker pin1/polarity review show no mismatch. Factory preview/first article remains required.",
+      "evidence": ".supervisor/r16_parts_probe/independent_orientation.json"
+    }
+  ],
+  "actual_checks": [
+    {
+      "name": "Board identity before/after",
+      "result": "PASS",
+      "details": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982"
+    },
+    {
+      "name": "Independent native/XML/BOM/CPL identity/population reconciliation",
+      "result": "PASS",
+      "evidence": ".supervisor/r16_parts_probe/native_inventory.json",
+      "details": {
+        "fitted": 199,
+        "native_footprints": 209,
+        "bom_rows": 82,
+        "bom_qty": 199,
+        "bom_unique_refs": 199,
+        "cpl_rows": 199,
+        "cpl_sides": {
+          "Bottom": 132,
+          "Top": 67
+        },
+        "bom_missing": [],
+        "bom_extra": [],
+        "cpl_missing": [],
+        "cpl_extra": [],
+        "bad": []
+      }
+    },
+    {
+      "name": "Complete native/XML reference-pin net agreement",
+      "result": "PASS",
+      "details": {
+        "raw_numbered_native_pads": 663,
+        "distinct_native_ref_pin_pairs": 651,
+        "xml_raw_nodes": 651,
+        "xml_unique_pairs": 651,
+        "differences": []
+      }
+    },
+    {
+      "name": "Native44-land pad number/XY/size/drill/shape/attribute multiset comparison for199fitted parts",
+      "result": "PASS",
+      "evidence": ".supervisor/r16_parts_probe/library_comparison.json",
+      "limit": "Multiset of pad number, unflipped local XY, native size, drill, shape enum and pad attribute; quantized 0.00001mm. Custom primitive/paste/mask polygons and rotations are separate maker/native checks, not covered by this compact comparison."
+    },
+    {
+      "name": "Independent final-CPL supplier pad reconstruction",
+      "result": "PASS within reviewed land residuals",
+      "evidence": ".supervisor/r16_parts_probe/independent_orientation.json",
+      "details": {
+        "reconstructed": 187,
+        "placement_only": [
+          "R100",
+          "R101",
+          "R103",
+          "R110",
+          "R150",
+          "R151",
+          "R152",
+          "R153",
+          "R440",
+          "R441",
+          "R450",
+          "R451"
+        ],
+        "worst_residual_mm": 0.49128800000003015,
+        "L400_proxy": "C189932, same SRP5030T package",
+        "LS120_land_centre_difference_mm": 0.4499700049881827
+      }
+    },
+    {
+      "name": "Production jlc_orient.py --verify-cpl",
+      "result": "exit0",
+      "evidence": ".supervisor/r16_parts_probe/orient_check.txt"
+    },
+    {
+      "name": "quality_audit/audit_artifacts.py read-only board audit",
+      "result": "exit0; zero contradictory part fields,missing models,absolute model paths,missing courtyards or missing fitted identities",
+      "evidence": ".supervisor/r16_parts_probe/metadata_audit.json"
+    },
+    {
+      "name": "Native fitted alias identity audit",
+      "result": "199fitted; no missing canonical identity or contradictory normalized MPN/LCSC aliases",
+      "details": "Exact canonical fields checked against XML/BOM; aliases normalized only by removing punctuation/lowercasing field name, values compared exactly."
+    },
+    {
+      "name": "fit_check.py --profile r10 --report ignored path",
+      "result": "exit0, CAD envelopes only",
+      "evidence": ".supervisor/r16_parts_probe/fit.json"
+    },
+    {
+      "name": "Independent terminal pin/land/nominal saved-fill measurements",
+      "result": "23contacts,7pin orders correct; conditional allocation gap retained",
+      "evidence": ".supervisor/r16_parts_probe/terminal_measurements.json"
+    },
+    {
+      "name": "Native five GND pad thermal overrides and SD support population",
+      "result": "PASS; zone_connect1 on all5 terminal GND contacts; R460-46410k,C460100nF,C46122uF",
+      "evidence": ".supervisor/r16_parts_probe/thermal_and_sd_passives.json"
+    },
+    {
+      "name": "r10_parts.py --check",
+      "result": "exit0;9generated lands and native-board budget current",
+      "evidence": ".supervisor/r16_parts_probe/r10_parts_check.txt"
+    },
+    {
+      "name": "Independent five manifest-output hashes and board-input binding",
+      "result": "PASS",
+      "evidence": ".supervisor/r16_parts_probe/manifest_output_checks.json"
+    },
+    {
+      "name": "Primary makers/suppliers",
+      "result": "40named maker PDFs freshly text-extracted; complete relevant drawing pages viewed. Live Molex/Samsung/JLC-capability pages and STRev11 checked; exact Samsung VCAP spec downloaded/viewed.",
+      "details": "PDF skill used. See source_groups and version limits."
+    },
+    {
+      "name": "Fresh public exact-code JLC lookup",
+      "result": "82/82 exact identities; cost target passes, stock release fails2codes",
+      "details": {
+        "queried_utc_start": "2026-10-30T15:30:06.601825+00:00",
+        "queried_utc_end": "2026-10-30T15:30:40.008183+00:00",
+        "input_bom_sha256": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+        "snapshot_sha256": "5a7c25e027d2222f797293beb88d49810db3338a3112f8a160093111e8819220",
+        "exact_codes": 82,
+        "identity_mismatches": [],
+        "missing_prices": [],
+        "parts_usd_per_board": 54.431200000000004,
+        "feeder_usd_per_board": 25.092000000000002,
+        "placed_plus_feeder_usd_per_board": 79.5232,
+        "minimum_purchase_parts_usd_per_board": 56.2334,
+        "minimum_purchase_plus_feeder_usd_per_board": 81.3254,
+        "tiers": {
+          "base": 36,
+          "expand": 46
+        },
+        "short": [
+          {
+            "code": "C185349",
+            "refs": "R430",
+            "stock": 17,
+            "placement_need": 5,
+            "purchase_minimum": 3610,
+            "order_need": 3610
+          },
+          {
+            "code": "C26633007",
+            "refs": "U4",
+            "stock": 0,
+            "placement_need": 5,
+            "purchase_minimum": 1,
+            "order_need": 5
+          }
+        ],
+        "minimum_uplifts": [
+          {
+            "code": "C185349",
+            "qty": 3610,
+            "placed_qty": 5,
+            "cost_per_board": 1.8050000000000002,
+            "placed_cost_per_board": 0.0028
+          }
+        ],
+        "normalization": "Exact componentCode and exact case-sensitive componentModelEn compared against BOM LCSC Part #/Manufacturer Part. Brand strings retained verbatim; only native-versus-XML Manufacturer equality tested, no supplier-brand spelling folding. Purchase quantity=max(5*BOM Qty, minPurchaseNum or1). Prices selected by supplier inclusive start/end tier, -1 open. Feeder82*1.53/5; fixed/process/PCB/rails/consignment/attrition/shipping/tax excluded."
+      }
+    }
+  ],
+  "terminal_review": {
+    "terminals": [
+      {
+        "ref": "J1",
+        "xy": [
+          7.4,
+          75.85
+        ],
+        "rotation": -90.0,
+        "net_order": [
+          "BAT_IN",
+          "GND"
+        ],
+        "expected_order_ok": true,
+        "pitch_mm": [
+          3.5
+        ],
+        "drills_mm": [
+          1.3,
+          1.3
+        ],
+        "lands_mm": [
+          1.9,
+          1.9
+        ],
+        "nominal_copper_gap_mm": 1.6,
+        "nominal_annulus_mm": 0.29999999999999993,
+        "body_union_local_x_mm": [
+          -4.62,
+          3.7
+        ],
+        "body_union_local_y_mm": [
+          -4.1,
+          4.0
+        ],
+        "body_union_height_mm": 8.9,
+        "wire_face_global_x_mm": 3.4000000000000004,
+        "bare_bore_wire_room_mm": 5.003011866037409
+      },
+      {
+        "ref": "J121",
+        "xy": [
+          7.4,
+          55.85
+        ],
+        "rotation": -90.0,
+        "net_order": [
+          "PYRO1_OUT",
+          "PYRO1_IGN"
+        ],
+        "expected_order_ok": true,
+        "pitch_mm": [
+          3.5
+        ],
+        "drills_mm": [
+          1.3,
+          1.3
+        ],
+        "lands_mm": [
+          1.9,
+          1.9
+        ],
+        "nominal_copper_gap_mm": 1.6,
+        "nominal_annulus_mm": 0.29999999999999993,
+        "body_union_local_x_mm": [
+          -4.62,
+          3.7
+        ],
+        "body_union_local_y_mm": [
+          -4.1,
+          4.0
+        ],
+        "body_union_height_mm": 8.9,
+        "wire_face_global_x_mm": 3.4000000000000004,
+        "bare_bore_wire_room_mm": 5.003011866037409
+      },
+      {
+        "ref": "J400",
+        "xy": [
+          7.4,
+          65.849999
+        ],
+        "rotation": -90.0,
+        "net_order": [
+          "BAT_SW_SOURCE",
+          "BAT_SW_RETURN"
+        ],
+        "expected_order_ok": true,
+        "pitch_mm": [
+          3.5
+        ],
+        "drills_mm": [
+          1.3,
+          1.3
+        ],
+        "lands_mm": [
+          1.9,
+          1.9
+        ],
+        "nominal_copper_gap_mm": 1.6,
+        "nominal_annulus_mm": 0.29999999999999993,
+        "body_union_local_x_mm": [
+          -4.62,
+          3.7
+        ],
+        "body_union_local_y_mm": [
+          -4.1,
+          4.0
+        ],
+        "body_union_height_mm": 8.9,
+        "wire_face_global_x_mm": 3.4000000000000004,
+        "bare_bore_wire_room_mm": 5.003011866037409
+      },
+      {
+        "ref": "J9",
+        "xy": [
+          38.6,
+          47.5
+        ],
+        "rotation": 90.0,
+        "net_order": [
+          "CAM_5V",
+          "GND",
+          "CAM_RX_WIRE",
+          "CAM_TX_WIRE"
+        ],
+        "expected_order_ok": true,
+        "pitch_mm": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "drills_mm": [
+          1.3,
+          1.3,
+          1.3,
+          1.3
+        ],
+        "lands_mm": [
+          1.9,
+          1.9,
+          1.9,
+          1.9
+        ],
+        "nominal_copper_gap_mm": 1.6,
+        "nominal_annulus_mm": 0.29999999999999993,
+        "body_union_local_x_mm": [
+          -8.32,
+          7.2
+        ],
+        "body_union_local_y_mm": [
+          -4.1,
+          4.0
+        ],
+        "body_union_height_mm": 8.9,
+        "wire_face_global_x_mm": 42.6,
+        "bare_bore_wire_room_mm": 5.003011866037409
+      },
+      {
+        "ref": "J410",
+        "xy": [
+          38.6,
+          15.5
+        ],
+        "rotation": 90.0,
+        "net_order": [
+          "PORT_4V8",
+          "GND",
+          "GPS_TX_WIRE",
+          "GPS_RX_WIRE"
+        ],
+        "expected_order_ok": true,
+        "pitch_mm": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "drills_mm": [
+          1.3,
+          1.3,
+          1.3,
+          1.3
+        ],
+        "lands_mm": [
+          1.9,
+          1.9,
+          1.9,
+          1.9
+        ],
+        "nominal_copper_gap_mm": 1.6,
+        "nominal_annulus_mm": 0.29999999999999993,
+        "body_union_local_x_mm": [
+          -8.32,
+          7.2
+        ],
+        "body_union_local_y_mm": [
+          -4.1,
+          4.0
+        ],
+        "body_union_height_mm": 8.9,
+        "wire_face_global_x_mm": 42.6,
+        "bare_bore_wire_room_mm": 5.003011866037409
+      },
+      {
+        "ref": "J420",
+        "xy": [
+          38.6,
+          31.5
+        ],
+        "rotation": 90.0,
+        "net_order": [
+          "PORT_4V8",
+          "GND",
+          "RADIO_TX_WIRE",
+          "RADIO_RX_WIRE"
+        ],
+        "expected_order_ok": true,
+        "pitch_mm": [
+          3.5,
+          3.5,
+          3.5
+        ],
+        "drills_mm": [
+          1.3,
+          1.3,
+          1.3,
+          1.3
+        ],
+        "lands_mm": [
+          1.9,
+          1.9,
+          1.9,
+          1.9
+        ],
+        "nominal_copper_gap_mm": 1.6,
+        "nominal_annulus_mm": 0.29999999999999993,
+        "body_union_local_x_mm": [
+          -8.32,
+          7.2
+        ],
+        "body_union_local_y_mm": [
+          -4.1,
+          4.0
+        ],
+        "body_union_height_mm": 8.9,
+        "wire_face_global_x_mm": 42.6,
+        "bare_bore_wire_room_mm": 5.003011866037409
+      },
+      {
+        "ref": "J122",
+        "xy": [
+          38.6,
+          71.5
+        ],
+        "rotation": 90.0,
+        "net_order": [
+          "SERVO1_OUT",
+          "SERVO2_OUT",
+          "SERVO3_OUT",
+          "SERVO4_OUT",
+          "GND"
+        ],
+        "expected_order_ok": true,
+        "pitch_mm": [
+          3.5,
+          3.5,
+          3.5,
+          3.5
+        ],
+        "drills_mm": [
+          1.3,
+          1.3,
+          1.3,
+          1.3,
+          1.3
+        ],
+        "lands_mm": [
+          1.9,
+          1.9,
+          1.9,
+          1.9,
+          1.9
+        ],
+        "nominal_copper_gap_mm": 1.6,
+        "nominal_annulus_mm": 0.29999999999999993,
+        "body_union_local_x_mm": [
+          -10.07,
+          8.95
+        ],
+        "body_union_local_y_mm": [
+          -4.1,
+          4.0
+        ],
+        "body_union_height_mm": 8.9,
+        "wire_face_global_x_mm": 42.6,
+        "bare_bore_wire_room_mm": 5.003011866037409
+      }
+    ],
+    "contacts": 23,
+    "all_pin_orders_ok": true,
+    "adjacent_4p_max_body_gap_mm": 0.4800000000000004,
+    "conditional_sharp_pin_diagonal_mm": 1.2619429464123963,
+    "conditional_finished_hole_min_mm": 1.22,
+    "conditional_size_only_allowance_mm": -0.041942946412396376,
+    "S8_point_to_native_saved_fills_only": [
+      {
+        "ref": "J121.1",
+        "xy": [
+          7.4,
+          54.1
+        ],
+        "fill_distances": [
+          {
+            "zone_net": "PORT_4V8",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 28.442508
+          },
+          {
+            "zone_net": "3V3",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 1.1025010000000002
+          },
+          {
+            "zone_net": "PORT_5V3",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 32.95
+          },
+          {
+            "zone_net": "RAW_PROTECTED",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 11.626113
+          }
+        ],
+        "minimum_mm": 1.1025010000000002
+      },
+      {
+        "ref": "J121.2",
+        "xy": [
+          7.4,
+          57.6
+        ],
+        "fill_distances": [
+          {
+            "zone_net": "PORT_4V8",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 30.53349
+          },
+          {
+            "zone_net": "3V3",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 3.94875
+          },
+          {
+            "zone_net": "PORT_5V3",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 32.95
+          },
+          {
+            "zone_net": "RAW_PROTECTED",
+            "layer": "In2.Cu",
+            "hole_wall_to_filled_zone_mm": 8.134331
+          }
+        ],
+        "minimum_mm": 3.94875
+      }
+    ],
+    "S8_measurement_limit": "Integer-native point-to-polygon distance minus nominal hole radius; rounds down by <=1nm. This independently samples terminal holes against saved inner fill; it is not complete S8 manufactured-object coverage or a fabrication allocation."
+  },
+  "microSD_review": {
+    "ref": "J430",
+    "xy_mm": [
+      24,
+      24.3
+    ],
+    "side": "B",
+    "rotation_degrees": 0,
+    "mpn": "472192001",
+    "LCSC": "C164170",
+    "signal_pad_size_mm": [
+      0.8,
+      1.5
+    ],
+    "signal_pitch_mm": 1.1,
+    "shell_pad_size_mm": [
+      1.45,
+      2.0
+    ],
+    "shell_column_pitch_mm": 13.75,
+    "shell_row_pitch_mm": 8.3,
+    "signal_nets_in_pin_order": [
+      "SD_DAT2",
+      "SD_CS",
+      "SD_MOSI",
+      "3V3",
+      "SD_SCK",
+      "GND",
+      "SD_MISO",
+      "SD_DAT1"
+    ],
+    "shell_aliases_G1_G2_G3_G4": [
+      "12",
+      "9",
+      "10",
+      "11"
+    ],
+    "all_shell_nets": "GND",
+    "closed_allocation_mm": [
+      15.05,
+      15.7,
+      2.1
+    ],
+    "fit_bore_margin_mm": 15.210798000170454,
+    "supplier_CPL_residual_mm": 0.005133673343766586,
+    "maker_current_per_contact_A": 0.5,
+    "maker_temperature_C": [
+      -20,
+      85
+    ],
+    "maker_weight_g": 0.434,
+    "limits": "Common seating,undimensioned card front and selected card load are Inference; no card-detect switch,push-push mechanism or open-hinge fit is claimed.0.10/0.12mm stencil with100% openings; selected200mA write/30mA idle remains allocation. Off/unbolted-from-continuous-sled service and physical shock/vibration qualification remain."
+  },
+  "source_groups": [
+    {
+      "group": "MCU",
+      "refs": [
+        "U1"
+      ],
+      "sources": [
+        "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf"
+      ],
+      "version_pages": "Live DS12110 Rev11 January2026, Figure6/Table9 for LQFP100 pin identity, Figure117 p320 for footprint example; cached Rev8 was identified and used only as a mechanical visual cross-check.",
+      "checked": "Exact STM32H743VIT6TR,100 pins,14x14mm/0.5mm pitch. Native pad width0.30/length1.60 versus maker example0.30/1.20; same outer16.70mm extent and pin ordering, extra inner heel copper is not a demonstrated failed assembly."
+    },
+    {
+      "group": "IMU/barometer",
+      "refs": [
+        "U4",
+        "U5"
+      ],
+      "sources": [
+        "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+        "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocNm=MS5611-01BA03&DocType=Data+Sheet&DocLang=English"
+      ],
+      "version_pages": "LSM6DSV320X DS14623 Rev1 p187; TE06/2017 p15.",
+      "checked": "LSM6DSV320XTR LGA14 body2.5x3.0 and0.5mm pitch, B180 pin1/axis pose retained; MS561101BA03-50 8pins,1.25mm pin pitch, correct VDD/PS/GND/CSB/SDO/SDA/SCL. Duplicate paste extensions are not duplicate physical sensor pins."
+    },
+    {
+      "group": "QSPI/crystal",
+      "refs": [
+        "U3",
+        "Y1"
+      ],
+      "sources": [
+        "https://www.winbond.com/hq/product/code-storage-flash/qspi-nor/w25q-jv/?__locale=en&partNo=W25Q128JVSIQ",
+        "https://jlcpcb.com/partdetail/C1985619"
+      ],
+      "version_pages": "Winbond cached RevG April08,2019 pp6/68/75; NDK NX3225GA sheet1.",
+      "checked": "Exact W25Q128JVSIQ SOIC8 208mil package/pin order; 25MHz NX3225GA STD-CRG-2 specifies8pF load,1/3 crystal contacts,2/4 ground-or-NC,3.2x2.5mm body. No current flash-timing qualification claimed from the older cached revision."
+    },
+    {
+      "group": "Power mux/eFuse",
+      "refs": [
+        "U9",
+        "U11"
+      ],
+      "sources": [
+        "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+        "https://www.ti.com/lit/ds/symlink/tps2121.pdf"
+      ],
+      "version_pages": "TPS25947 SLVSFC9C May2026 pp5-6,73; TPS2121 SLVSEA3F August2020 pp4,39.",
+      "checked": "RPW ten-net/L-shaped pad unions and RUX12 mixed power/signal lands agree with maker pattern and native net roles. Distinct finger duplicates retain one net per electrical pin."
+    },
+    {
+      "group": "Switch/LDO/translator",
+      "refs": [
+        "U10",
+        "U402",
+        "U13",
+        "U401",
+        "U12"
+      ],
+      "sources": [
+        "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+        "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+        "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+        "https://www.ti.com/lit/ds/symlink/txu0202.pdf"
+      ],
+      "version_pages": "SLVS841G Oct2026 pp4/44; SBVS186H July2021 pp3/34; SBVS282A Sep2026 pp3/35; SCES942A Mar2022 pp4/33.",
+      "checked": "DBV5/6 pad1 supply and opposite outputs; DSK10+EP11 0.6x0.25mm/0.5mm pitch plus1.2x2.0EP; DCU8 0.85x0.30mm/0.5mm pitch, B2/GND/VCCA/A2Y/A1/OE/VCCB/B1Y. U12 alone remains. U401 exact two VIPPO sites and split paste retain process obligations."
+    },
+    {
+      "group": "Bucks/inductors",
+      "refs": [
+        "U2",
+        "U400",
+        "L1",
+        "L400"
+      ],
+      "sources": [
+        "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+        "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+        "https://jlcpcb.com/partdetail/C57269"
+      ],
+      "version_pages": "Diodes DS41326 Rev3-2 p17 and pin map; Bourns SRP5030T p1; Sunlord SWPA family drawing.",
+      "checked": "AP63203WU-7 and AP63201WU-7 TSOT26 pins FB/EN/VIN/GND/SW/BST; L1 exact4.7uH SWPA4030S, L400 exact6.8uH SRP5030T. L400 land residual is finding01; its supplier map explicitly remains same-package10uH proxy."
+    },
+    {
+      "group": "FETs",
+      "refs": [
+        "Q120",
+        "Q121",
+        "Q122",
+        "Q123",
+        "Q124"
+      ],
+      "sources": [
+        "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+        "https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf",
+        "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+        "https://www.aosmd.com/sites/default/files/res/datasheets/AO3400A.pdf"
+      ],
+      "version_pages": "AONR21357 Rev2.1 Nov2023 p1; PO-00047 VersionI sheet1; AON7524 Rev1.1 Oct2023 p1; AO3400A Rev3.1 July2023 p1.",
+      "checked": "Genuine AOS P-channel -30V/+/-25V gate pair; pins1-3 source,4 gate,5-8/drain paddle drain. Native source-facing pair and independent enable retained. AON7524 low-side source/GND pins1-3,gate4,drain merged5. Eight-finger orientation avoids comparing arbitrary EP anchors."
+    },
+    {
+      "group": "Diodes/ESD/LED/buzzer",
+      "refs": [
+        "D4",
+        "D8",
+        "D9",
+        "D120",
+        "D121",
+        "D123",
+        "D400",
+        "D401",
+        "D410",
+        "D411",
+        "D420",
+        "D421",
+        "LED1",
+        "LED2",
+        "LS120"
+      ],
+      "sources": [
+        "https://jlcpcb.com/partdetail/C85098",
+        "https://www.st.com/resource/en/datasheet/usblc6-2.pdf",
+        "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598"
+      ],
+      "version_pages": "Named cached maker sheets: B340A,SMA; JSCJ BAT54A p1; Hottech1N5819WS p1; Semtech SRV05-4; Infineon ESD103 Rev1.3; NationStar NCD0805R1 p2; Kento KT-0805Y; Huaneng MLT-5020 pp2/4.",
+      "checked": "D8 CA bidirectional; D9/D123 cathodes on RAW_PROTECTED/3V3 respectively; BAT54A common anode3=3V3 with cathode1 cold pullup; red LED pin1 cathode, yellow pin1 anode; LS120 pad1+3V3/pad2 switched/pad3 dummy.0.5g nominal and -20..70C buzzer ratings retained. Installed protection/acoustic/retention behavior unmeasured."
+    },
+    {
+      "group": "MLCC/resistor families",
+      "refs": "All fitted C/R codes",
+      "sources": [
+        "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+        "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+        "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+        "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf"
+      ],
+      "version_pages": "Exact fresh JLC MPN/package objects for every code; named Samsung/Murata/Fenghua/Yageo/Vishay/Uniroyal/Bourns family sheets. Samsung exact VCAP spec Issued May08,2024 pp1-2/manual pp13-17 fetched afresh.",
+      "checked": "Packages,nominal values and tolerances reconciled to ordered identities; R1342ohm CRM2512,R1660.36ohm2512,R150-1531k0603/100mW. C120 remains1uF25VX7R,C92 remains4.7uF16VX5R; no proposed X7R/X5R substitution credited. Effective capacitance,ESR,pulses and thermal behavior retain their stated conditional scopes."
+    },
+    {
+      "group": "C84",
+      "refs": [
+        "C84"
+      ],
+      "sources": [
+        "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf"
+      ],
+      "version_pages": "JIERRUI MA-series pp1-2 and470uF25V row.",
+      "checked": "Exact MA25V470M8x10,C46550466; derived3.5x1.7mm pads at+/-3.25,positive pad1 at(27.5,81.75),8.5x8.5x10.8 envelope. Supplier sheet has no maker land or reflow profile: explicit manual fit after both reflows remains unqualified process requirement."
+    },
+    {
+      "group": "Connectors",
+      "refs": [
+        "J1",
+        "J121",
+        "J400",
+        "J9",
+        "J410",
+        "J420",
+        "J122",
+        "J3",
+        "J430"
+      ],
+      "sources": [
+        "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+        "https://www.molex.com/en-us/products/part-detail/472192001"
+      ],
+      "version_pages": "DORABO T0-1,2022-11-26 sheet1/1; Molex SD-47219-001G,2012-01-20 sheet1/1; Hroparts TYPE-C-31-M-12 sheet1.",
+      "checked": "All seven DB125 exact codes/colors,outward entries and23 roles; USB-C12-signal/4shell-slot/2locator pattern; microSD8signal/4shell pattern. Maker drawings visually inspected as complete pages. No hinge/card/wire/screwdriver/assembled retention qualification."
+    }
+  ],
+  "procurement": {
+    "queried_utc_start": "2026-10-30T15:30:06.601825+00:00",
+    "queried_utc_end": "2026-10-30T15:30:40.008183+00:00",
+    "input_bom_sha256": "d04fed383a7df9981b1f459b86c0292d09833b6fa34dcadac890aeb65325f081",
+    "snapshot_sha256": "5a7c25e027d2222f797293beb88d49810db3338a3112f8a160093111e8819220",
+    "exact_codes": 82,
+    "identity_mismatches": [],
+    "missing_prices": [],
+    "parts_usd_per_board": 54.431200000000004,
+    "feeder_usd_per_board": 25.092000000000002,
+    "placed_plus_feeder_usd_per_board": 79.5232,
+    "minimum_purchase_parts_usd_per_board": 56.2334,
+    "minimum_purchase_plus_feeder_usd_per_board": 81.3254,
+    "tiers": {
+      "base": 36,
+      "expand": 46
+    },
+    "short": [
+      {
+        "code": "C185349",
+        "refs": "R430",
+        "stock": 17,
+        "placement_need": 5,
+        "purchase_minimum": 3610,
+        "order_need": 3610
+      },
+      {
+        "code": "C26633007",
+        "refs": "U4",
+        "stock": 0,
+        "placement_need": 5,
+        "purchase_minimum": 1,
+        "order_need": 5
+      }
+    ],
+    "minimum_uplifts": [
+      {
+        "code": "C185349",
+        "qty": 3610,
+        "placed_qty": 5,
+        "cost_per_board": 1.8050000000000002,
+        "placed_cost_per_board": 0.0028
+      }
+    ],
+    "normalization": "Exact componentCode and exact case-sensitive componentModelEn compared against BOM LCSC Part #/Manufacturer Part. Brand strings retained verbatim; only native-versus-XML Manufacturer equality tested, no supplier-brand spelling folding. Purchase quantity=max(5*BOM Qty, minPurchaseNum or1). Prices selected by supplier inclusive start/end tier, -1 open. Feeder82*1.53/5; fixed/process/PCB/rails/consignment/attrition/shipping/tax excluded."
+  },
+  "supplier_handoff": {
+    "full_response_bundle": ".supervisor/r16_parts_probe/fresh_supplier.json",
+    "full_response_bundle_sha256": "5a7c25e027d2222f797293beb88d49810db3338a3112f8a160093111e8819220",
+    "compatible_snapshot": ".supervisor/r16_parts_probe/supplier_snapshot.json",
+    "compatible_snapshot_sha256": "4c83a5d7468cb129ac4ce34adb85a0f22b39e14878f55d8198f6422f4d41424b",
+    "raw_response_hash_manifest": ".supervisor/r16_parts_probe/supplier_raw_hashes.json",
+    "raw_response_hash_manifest_sha256": "d07313c0ad5cd0d858642499e6057d4dd8aaa9a5662ea9d99b0db8517fde752f",
+    "raw_response_filenames": "C<code>_supplier_raw.json,82complete original response bodies",
+    "original_query_start_utc": "2026-10-30T15:30:06.601825+00:00",
+    "original_query_end_utc": "2026-10-30T15:30:40.008183+00:00",
+    "maximum_network_concurrency": 3,
+    "query_retries": 0,
+    "normalization_scope": "Exact componentCode and exact case-sensitive componentModelEn compared against BOM LCSC Part #/Manufacturer Part. Brand strings retained verbatim; only native-versus-XML Manufacturer equality tested, no supplier-brand spelling folding. Purchase quantity=max(5*BOM Qty, minPurchaseNum or1). Prices selected by supplier inclusive start/end tier, -1 open. Feeder82*1.53/5; fixed/process/PCB/rails/consignment/attrition/shipping/tax excluded.",
+    "canonical_procurement_files_changed": false
+  },
+  "exact_code_evidence": [
+    {
+      "code": "C307331",
+      "references": [
+        "C5",
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C21",
+        "C24",
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "C88",
+        "C99",
+        "C100"
+      ],
+      "mpn": "CL05B104KB54PNC",
+      "supplier_mpn": "CL05B104KB54PNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 16,
+      "stock": 20979602,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 80,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C307331",
+      "raw_response_sha256": "36a616b343e19a2a5336b40b6b8dc4b18cf7f8e6a377007d3b341a5956262947"
+    },
+    {
+      "code": "C45783",
+      "references": [
+        "C6",
+        "C7",
+        "C8",
+        "C9",
+        "C10",
+        "C11"
+      ],
+      "mpn": "CL21A226MAQNNNE",
+      "supplier_mpn": "CL21A226MAQNNNE",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0805",
+      "qty_per_board": 6,
+      "stock": 3781415,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 30,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C45783",
+      "raw_response_sha256": "0beb3ee0eb77cdf859439dbeff20eef490ae7afded18829861d706023841ee28"
+    },
+    {
+      "code": "C23630",
+      "references": [
+        "C19",
+        "C20",
+        "C87"
+      ],
+      "mpn": "CL10A225KO8NNNC",
+      "supplier_mpn": "CL10A225KO8NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 3,
+      "stock": 2849172,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 15,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C23630",
+      "raw_response_sha256": "fec2c06dc506f4ab6d8ea37e9eb9a415f3e2de31ee520f7dc7e054b5de8634e9"
+    },
+    {
+      "code": "C15849",
+      "references": [
+        "C22"
+      ],
+      "mpn": "CL10A105KB8NNNC",
+      "supplier_mpn": "CL10A105KB8NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 12314247,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C15849",
+      "raw_response_sha256": "7f111178de1952ffba4c96c723b2e89262a4f1b5f42a518d2a507e6f6fd11cdf"
+    },
+    {
+      "code": "C19666",
+      "references": [
+        "C23",
+        "C28",
+        "C92"
+      ],
+      "mpn": "CL10A475KO8NNNC",
+      "supplier_mpn": "CL10A475KO8NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 3,
+      "stock": 4250432,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 15,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C19666",
+      "raw_response_sha256": "f73dfb34d2074e9f2bce566f02231fc9c9603d0fe7a2785284da74d547da0886"
+    },
+    {
+      "code": "C32949",
+      "references": [
+        "C25",
+        "C26"
+      ],
+      "mpn": "CL05C100JB5NNNC",
+      "supplier_mpn": "CL05C100JB5NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 2,
+      "stock": 2428932,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C32949",
+      "raw_response_sha256": "e18fffc85cc2043a7500d00acc97ca0966cb5f1951f73f8a298a84149820f118"
+    },
+    {
+      "code": "C57112",
+      "references": [
+        "C60",
+        "C94",
+        "C127",
+        "C129"
+      ],
+      "mpn": "0603B103K500NT",
+      "supplier_mpn": "0603B103K500NT",
+      "supplier_brand_raw": "FH (Guangdong Fenghua Advanced Tech)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 4,
+      "stock": 5638726,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 20,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C57112",
+      "raw_response_sha256": "5e0dfbe35fc461e3a655a448b7677501f1a680ac0d1ef1ccd34eb6c2c5ffcee4"
+    },
+    {
+      "code": "C13585",
+      "references": [
+        "C80",
+        "C96"
+      ],
+      "mpn": "CL31A106KBHNNNE",
+      "supplier_mpn": "CL31A106KBHNNNE",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "1206",
+      "qty_per_board": 2,
+      "stock": 3135548,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C13585",
+      "raw_response_sha256": "90f9ce5b92bf27b370e3d0a8972d30e5717848d0001cfccff308bdf1cd7ff175"
+    },
+    {
+      "code": "C85980",
+      "references": [
+        "C81"
+      ],
+      "mpn": "GRM1885C1H472JA01D",
+      "supplier_mpn": "GRM1885C1H472JA01D",
+      "supplier_brand_raw": "Murata Electronics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 36358,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C85980",
+      "raw_response_sha256": "7f5e136f640d207c4e46d5697f62e4ae483f85116ddc77ced2b0aca4c0d9dd68"
+    },
+    {
+      "code": "C21397",
+      "references": [
+        "C82",
+        "C400",
+        "C401",
+        "C403",
+        "C404",
+        "C405",
+        "C406",
+        "C407",
+        "C411",
+        "C421",
+        "C431",
+        "C461"
+      ],
+      "mpn": "GRM32ER71E226KE15L",
+      "supplier_mpn": "GRM32ER71E226KE15L",
+      "supplier_brand_raw": "Murata Electronics",
+      "supplier_package_raw": "1210",
+      "qty_per_board": 12,
+      "stock": 74631,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 60,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C21397",
+      "raw_response_sha256": "8c3956b1ee8cc253150391c30605245c5d1f8e0faf218002ce1cc736b88d82bf"
+    },
+    {
+      "code": "C14663",
+      "references": [
+        "C83",
+        "C90",
+        "C93",
+        "C402",
+        "C410",
+        "C420",
+        "C430",
+        "C460"
+      ],
+      "mpn": "CC0603KRX7R9BB104",
+      "supplier_mpn": "CC0603KRX7R9BB104",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 8,
+      "stock": 37349009,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 40,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C14663",
+      "raw_response_sha256": "cbfc787d9be0001227f78faab963eee476ce1caac6baf4bba9a8b98dbdd3048e"
+    },
+    {
+      "code": "C46550466",
+      "references": [
+        "C84"
+      ],
+      "mpn": "MA25V470M8x10",
+      "supplier_mpn": "MA25V470M8x10",
+      "supplier_brand_raw": "jieerrui",
+      "supplier_package_raw": "SMD,D8xL10mm",
+      "qty_per_board": 1,
+      "stock": 111385,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C46550466",
+      "raw_response_sha256": "a655494959f77137ee1a6774e6e00fe2bc798e3111bbf678a804946f2ddf4813"
+    },
+    {
+      "code": "C1623",
+      "references": [
+        "C85"
+      ],
+      "mpn": "CL10B474KA8NNNC",
+      "supplier_mpn": "CL10B474KA8NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 681010,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C1623",
+      "raw_response_sha256": "f4b07344d77fc71a869a7419f7891e87a9701b06ab9c36443ef37e82e8eb4868"
+    },
+    {
+      "code": "C29936",
+      "references": [
+        "C86",
+        "C97",
+        "C98",
+        "C120"
+      ],
+      "mpn": "CL10B105KA8NNNC",
+      "supplier_mpn": "CL10B105KA8NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 4,
+      "stock": 646766,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 20,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C29936",
+      "raw_response_sha256": "5bce6ec8a6225f0df548d326c26359c4906e7422148c16547607669730d8c4ac"
+    },
+    {
+      "code": "C12891",
+      "references": [
+        "C89",
+        "C95"
+      ],
+      "mpn": "CL31A226KAHNNNE",
+      "supplier_mpn": "CL31A226KAHNNNE",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "1206",
+      "qty_per_board": 2,
+      "stock": 1779015,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C12891",
+      "raw_response_sha256": "fa8471dff8f08530f16491dc67eb5d576a001bc3477cd92fdbbfe3d8e59445c3"
+    },
+    {
+      "code": "C1848",
+      "references": [
+        "C91"
+      ],
+      "mpn": "CL31B105KBHNNNE",
+      "supplier_mpn": "CL31B105KBHNNNE",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "1206",
+      "qty_per_board": 1,
+      "stock": 772430,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C1848",
+      "raw_response_sha256": "6df510eb3db45b037c84deb442d5926bb458baacb6c46ee7482f93e4fe331528"
+    },
+    {
+      "code": "C21120",
+      "references": [
+        "C126"
+      ],
+      "mpn": "CL10B224KA8NNNC",
+      "supplier_mpn": "CL10B224KA8NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 1012247,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C21120",
+      "raw_response_sha256": "16e6ea471506b25e1707315171ec0ce765bd0ee82e4055ab6b490c80d3e86f41"
+    },
+    {
+      "code": "C161115",
+      "references": [
+        "C128"
+      ],
+      "mpn": "GCJ188R71H104KA12D",
+      "supplier_mpn": "GCJ188R71H104KA12D",
+      "supplier_brand_raw": "Murata Electronics",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 38233,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C161115",
+      "raw_response_sha256": "3c77496e26be2f25e6ae6ec367090e8e0743a5b3aa317bfabf555e4dc1ae4270"
+    },
+    {
+      "code": "C15195",
+      "references": [
+        "C408"
+      ],
+      "mpn": "CL05B103KB5NNNC",
+      "supplier_mpn": "CL05B103KB5NNNC",
+      "supplier_brand_raw": "Samsung Electro-Mechanics",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 1,
+      "stock": 6133366,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C15195",
+      "raw_response_sha256": "cd32fbc52157e6106ed1c854ba294e54f795119aace66cb243aa356d3a04bd4f"
+    },
+    {
+      "code": "C7519",
+      "references": [
+        "D4"
+      ],
+      "mpn": "USBLC6-2SC6",
+      "supplier_mpn": "USBLC6-2SC6",
+      "supplier_brand_raw": "STMicroelectronics",
+      "supplier_package_raw": "SOT-23-6L",
+      "qty_per_board": 1,
+      "stock": 33773,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C7519",
+      "raw_response_sha256": "bd36af321ed833a7c5cad555883c098032a0e199b4d94b498fefce530e3ca1f9"
+    },
+    {
+      "code": "C83849",
+      "references": [
+        "D8"
+      ],
+      "mpn": "SMBJ12CA",
+      "supplier_mpn": "SMBJ12CA",
+      "supplier_brand_raw": "Littelfuse",
+      "supplier_package_raw": "DO-214AA",
+      "qty_per_board": 1,
+      "stock": 43067,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C83849",
+      "raw_response_sha256": "656b3957598b77b87198905e6ad5714454121f45f80c446776e72b793926ac38"
+    },
+    {
+      "code": "C85098",
+      "references": [
+        "D9"
+      ],
+      "mpn": "B340A-13-F",
+      "supplier_mpn": "B340A-13-F",
+      "supplier_brand_raw": "Diodes Incorporated",
+      "supplier_package_raw": "SMA(DO-214AC)",
+      "qty_per_board": 1,
+      "stock": 79068,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C85098",
+      "raw_response_sha256": "4a903025602285015fb5d9becc2c518c5402f9b102db5329e4d5fdcac33ada6a"
+    },
+    {
+      "code": "C8591",
+      "references": [
+        "D120"
+      ],
+      "mpn": "BAT54A",
+      "supplier_mpn": "BAT54A",
+      "supplier_brand_raw": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+      "supplier_package_raw": "SOT-23",
+      "qty_per_board": 1,
+      "stock": 14459,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C8591",
+      "raw_response_sha256": "f8202dda55656d0bcfa4abffbdcb0df2b5c71815f97cbfb20d42d63f56fd792b"
+    },
+    {
+      "code": "C13612",
+      "references": [
+        "D121"
+      ],
+      "mpn": "SRV05-4.TCT",
+      "supplier_mpn": "SRV05-4.TCT",
+      "supplier_brand_raw": "SEMTECH",
+      "supplier_package_raw": "SOT-23-6L",
+      "qty_per_board": 1,
+      "stock": 97670,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C13612",
+      "raw_response_sha256": "53f0807e33719bfb66e0b54f7839ce173e66293b79ed7bac9f0190bb4c6271f1"
+    },
+    {
+      "code": "C191023",
+      "references": [
+        "D123"
+      ],
+      "mpn": "1N5819WS",
+      "supplier_mpn": "1N5819WS",
+      "supplier_brand_raw": "Guangdong Hottech",
+      "supplier_package_raw": "SOD-323",
+      "qty_per_board": 1,
+      "stock": 3589971,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C191023",
+      "raw_response_sha256": "2ca2984756e7027fd0ff6688fce614e4c3ec23fa40da580ed79b0bd4c68a1a31"
+    },
+    {
+      "code": "C535146",
+      "references": [
+        "D400",
+        "D401",
+        "D410",
+        "D411",
+        "D420",
+        "D421"
+      ],
+      "mpn": "ESD103-B1-02EL E6327",
+      "supplier_mpn": "ESD103-B1-02EL E6327",
+      "supplier_brand_raw": "Infineon Technologies",
+      "supplier_package_raw": "TSLP-2-20",
+      "qty_per_board": 6,
+      "stock": 201,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 30,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C535146",
+      "raw_response_sha256": "22f16a7462db850fb22953d3deffb473b7791715090d5ff548d8aae9c3205447"
+    },
+    {
+      "code": "C466970",
+      "references": [
+        "J1",
+        "J400"
+      ],
+      "mpn": "DB125-3.5-2P-GN-S",
+      "supplier_mpn": "DB125-3.5-2P-GN-S",
+      "supplier_brand_raw": "DORABO",
+      "supplier_package_raw": "Plugin,P=3.5mm",
+      "qty_per_board": 2,
+      "stock": 35556,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C466970",
+      "raw_response_sha256": "b2623ab5f869284f2f78e8589070887b1c3d3a76c301f403d59177e865a17eb5"
+    },
+    {
+      "code": "C165948",
+      "references": [
+        "J3"
+      ],
+      "mpn": "TYPE-C-31-M-12",
+      "supplier_mpn": "TYPE-C-31-M-12",
+      "supplier_brand_raw": "Korean Hroparts Elec",
+      "supplier_package_raw": "SMD",
+      "qty_per_board": 1,
+      "stock": 283970,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C165948",
+      "raw_response_sha256": "12516801dfd15d10576a2d6d8dd2690efb9c79113fa71aae95f0a89e78c26a96"
+    },
+    {
+      "code": "C2757925",
+      "references": [
+        "J9",
+        "J410",
+        "J420"
+      ],
+      "mpn": "DB125-3.5-4P-GN-S",
+      "supplier_mpn": "DB125-3.5-4P-GN-S",
+      "supplier_brand_raw": "DORABO",
+      "supplier_package_raw": "Plugin,P=3.5mm",
+      "qty_per_board": 3,
+      "stock": 37835,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 15,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C2757925",
+      "raw_response_sha256": "c3035db6b5b6ed4f9bedd3e14df031ed07a215d44c5b7cd43928b75e544a5710"
+    },
+    {
+      "code": "C52993880",
+      "references": [
+        "J121"
+      ],
+      "mpn": "DB125-3.5-2P-BK-S",
+      "supplier_mpn": "DB125-3.5-2P-BK-S",
+      "supplier_brand_raw": "DORABO",
+      "supplier_package_raw": "Plugin,P=3.5mm",
+      "qty_per_board": 1,
+      "stock": 346,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C52993880",
+      "raw_response_sha256": "090d6f127fc32b3e6d01f79b051e8330086ea1887bb87bcdd118ccc5c15c2e0d"
+    },
+    {
+      "code": "C3646874",
+      "references": [
+        "J122"
+      ],
+      "mpn": "DB125-3.5-5P-GN-S",
+      "supplier_mpn": "DB125-3.5-5P-GN-S",
+      "supplier_brand_raw": "DORABO",
+      "supplier_package_raw": "Plugin,P=3.5mm",
+      "qty_per_board": 1,
+      "stock": 4169,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C3646874",
+      "raw_response_sha256": "60015f62faae35d6d6b95e3150ef79ab9276d1d81737a0a2b31ec1919317865b"
+    },
+    {
+      "code": "C164170",
+      "references": [
+        "J430"
+      ],
+      "mpn": "472192001",
+      "supplier_mpn": "472192001",
+      "supplier_brand_raw": "MOLEX",
+      "supplier_package_raw": "SMD",
+      "qty_per_board": 1,
+      "stock": 8664,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C164170",
+      "raw_response_sha256": "c8adfe8ded8325a5880df553020db0853f9d26394b0f37b4165884691cdce790"
+    },
+    {
+      "code": "C57269",
+      "references": [
+        "L1"
+      ],
+      "mpn": "SWPA4030S4R7MT",
+      "supplier_mpn": "SWPA4030S4R7MT",
+      "supplier_brand_raw": "Sunlord",
+      "supplier_package_raw": "SMD,4x4mm",
+      "qty_per_board": 1,
+      "stock": 40776,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C57269",
+      "raw_response_sha256": "d5a0f163739929b7b3119799b6c5270d0e3341dc2283d9dbfefd222ac63699c2"
+    },
+    {
+      "code": "C1329837",
+      "references": [
+        "L400"
+      ],
+      "mpn": "SRP5030T-6R8M",
+      "supplier_mpn": "SRP5030T-6R8M",
+      "supplier_brand_raw": "BOURNS",
+      "supplier_package_raw": "SMD,5.7x5.2mm",
+      "qty_per_board": 1,
+      "stock": 1541,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C1329837",
+      "raw_response_sha256": "d24a5288b369f8114058e038225be10c219d4ade6afa7581e85afae875a9a39a"
+    },
+    {
+      "code": "C84256",
+      "references": [
+        "LED1"
+      ],
+      "mpn": "NCD0805R1",
+      "supplier_mpn": "NCD0805R1",
+      "supplier_brand_raw": "Foshan NationStar Optoelectronics",
+      "supplier_package_raw": "0805",
+      "qty_per_board": 1,
+      "stock": 2602809,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C84256",
+      "raw_response_sha256": "4b870a9e5a17a55966ca4caa84e6808c6924fc93f398018c30ec7b3adf5c6ecc"
+    },
+    {
+      "code": "C2296",
+      "references": [
+        "LED2"
+      ],
+      "mpn": "KT-0805Y",
+      "supplier_mpn": "KT-0805Y",
+      "supplier_brand_raw": "Hubei KENTO Elec",
+      "supplier_package_raw": "0805",
+      "qty_per_board": 1,
+      "stock": 641346,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C2296",
+      "raw_response_sha256": "7e717e067b3423fc1606d6d6fdba677b21a70881450f4fcc2d9b75bbea5a3fe6"
+    },
+    {
+      "code": "C94598",
+      "references": [
+        "LS120"
+      ],
+      "mpn": "MLT-5020",
+      "supplier_mpn": "MLT-5020",
+      "supplier_brand_raw": "Jiangsu Huaneng Elec",
+      "supplier_package_raw": "SMD,5x5mm",
+      "qty_per_board": 1,
+      "stock": 54781,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C94598",
+      "raw_response_sha256": "49a0a2f5c2cbaf4f8028e61438892dd6b91ecc0200f09a0c85464f0e98bab0f6"
+    },
+    {
+      "code": "C431196",
+      "references": [
+        "Q120",
+        "Q121"
+      ],
+      "mpn": "AONR21357",
+      "supplier_mpn": "AONR21357",
+      "supplier_brand_raw": "Alpha & Omega Semicon",
+      "supplier_package_raw": "DFN-8(3x3)",
+      "qty_per_board": 2,
+      "stock": 51629,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C431196",
+      "raw_response_sha256": "697282b03bfdaca7422540c5f58a32c084a24de6d1feebf13a4b97437d63cce3"
+    },
+    {
+      "code": "C20917",
+      "references": [
+        "Q122",
+        "Q123"
+      ],
+      "mpn": "AO3400A",
+      "supplier_mpn": "AO3400A",
+      "supplier_brand_raw": "Alpha & Omega Semicon",
+      "supplier_package_raw": "SOT-23",
+      "qty_per_board": 2,
+      "stock": 1065710,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C20917",
+      "raw_response_sha256": "ce0de4f6a412f9e322bb13219b9eb0897acf6b302d49e8c319c1eaff3d3f9aff"
+    },
+    {
+      "code": "C431195",
+      "references": [
+        "Q124"
+      ],
+      "mpn": "AON7524",
+      "supplier_mpn": "AON7524",
+      "supplier_brand_raw": "Alpha & Omega Semicon",
+      "supplier_package_raw": "DFN-8(3x3)",
+      "qty_per_board": 1,
+      "stock": 27310,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C431195",
+      "raw_response_sha256": "a13efe04e1fe9b699ee1729e692f9296b766124659a2884c335d1b438aafe0b8"
+    },
+    {
+      "code": "C25744",
+      "references": [
+        "R5",
+        "R10",
+        "R11",
+        "R61",
+        "R62",
+        "R63",
+        "R64",
+        "R104",
+        "R121",
+        "R128",
+        "R131",
+        "R154",
+        "R155",
+        "R156",
+        "R157",
+        "R163",
+        "R432"
+      ],
+      "mpn": "0402WGF1002TCE",
+      "supplier_mpn": "0402WGF1002TCE",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 17,
+      "stock": 16846153,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 85,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C25744",
+      "raw_response_sha256": "e37f48a7244b73c5090f6a52177c3663499dadec00b539be4946c77a8f6242c3"
+    },
+    {
+      "code": "C25905",
+      "references": [
+        "R7",
+        "R8",
+        "R129",
+        "R132",
+        "R173",
+        "R175"
+      ],
+      "mpn": "0402WGF5101TCE",
+      "supplier_mpn": "0402WGF5101TCE",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 6,
+      "stock": 3780387,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 30,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C25905",
+      "raw_response_sha256": "51179ce893c0352e727a0b67d830be22ea13f124be002602741d7c1be3c631ae"
+    },
+    {
+      "code": "C11702",
+      "references": [
+        "R9",
+        "R105",
+        "R122",
+        "R127"
+      ],
+      "mpn": "0402WGF1001TCE",
+      "supplier_mpn": "0402WGF1001TCE",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 4,
+      "stock": 21613180,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 20,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C11702",
+      "raw_response_sha256": "d408d6a8b1e79eb0885b4c89f25bf53191202446e6c499df491be44ab951279e"
+    },
+    {
+      "code": "C25900",
+      "references": [
+        "R12",
+        "R13"
+      ],
+      "mpn": "0402WGF4701TCE",
+      "supplier_mpn": "0402WGF4701TCE",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 2,
+      "stock": 14872259,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C25900",
+      "raw_response_sha256": "cc025fdafb740d379a9e7825252e6ee7924c42b6bb647662538b3dc993d24959"
+    },
+    {
+      "code": "C17557",
+      "references": [
+        "R32",
+        "R33",
+        "R126"
+      ],
+      "mpn": "0805W8F2200T5E",
+      "supplier_mpn": "0805W8F2200T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0805",
+      "qty_per_board": 3,
+      "stock": 598105,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 15,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C17557",
+      "raw_response_sha256": "8782c8729701cdbc950cc5687c93de67d026e02a84b87b794b5ca4d5f1f1856b"
+    },
+    {
+      "code": "C25741",
+      "references": [
+        "R60",
+        "R120",
+        "R123"
+      ],
+      "mpn": "0402WGF1003TCE",
+      "supplier_mpn": "0402WGF1003TCE",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 3,
+      "stock": 8383488,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 15,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C25741",
+      "raw_response_sha256": "0651661d4aea369d4759e0cf8f759e8fb756ae2c4d9d11e32118bc58a9cfd8b8"
+    },
+    {
+      "code": "C23178",
+      "references": [
+        "R80",
+        "R165"
+      ],
+      "mpn": "0603WAF4703T5E",
+      "supplier_mpn": "0603WAF4703T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 2,
+      "stock": 1041653,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C23178",
+      "raw_response_sha256": "34dd8b7dcb5c464b35827e0220a8dfa4b65d6c683f48679352da27befec09a15"
+    },
+    {
+      "code": "C23024",
+      "references": [
+        "R81"
+      ],
+      "mpn": "0603WAF3003T5E",
+      "supplier_mpn": "0603WAF3003T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 541528,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C23024",
+      "raw_response_sha256": "66434e5ac7a3f4f4ce847b5417544c54ffa62d1287f0f420e38c8eec935ec64f"
+    },
+    {
+      "code": "C4241878",
+      "references": [
+        "R82"
+      ],
+      "mpn": "MCT0603MD2004BP500",
+      "supplier_mpn": "MCT0603MD2004BP500",
+      "supplier_brand_raw": "Vishay Intertech",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 1808,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C4241878",
+      "raw_response_sha256": "4af500f55130facbd08c457f60915962a60afaf6f1006840e97ee9427881d3ce"
+    },
+    {
+      "code": "C705755",
+      "references": [
+        "R83"
+      ],
+      "mpn": "RT0603BRD07280KL",
+      "supplier_mpn": "RT0603BRD07280KL",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 5563,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C705755",
+      "raw_response_sha256": "70592756b710432cc006adc5e02a060268f293b5738524cc302cee216f4b2452"
+    },
+    {
+      "code": "C861551",
+      "references": [
+        "R84"
+      ],
+      "mpn": "RT0603BRD07750RL",
+      "supplier_mpn": "RT0603BRD07750RL",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 1628,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C861551",
+      "raw_response_sha256": "a4a7e77ca50b1f307b2f1c50be8bdc491e05543e41e80acbb9f4e8c4ee332a08"
+    },
+    {
+      "code": "C137691",
+      "references": [
+        "R85"
+      ],
+      "mpn": "RC0603FR-0766K5L",
+      "supplier_mpn": "RC0603FR-0766K5L",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 17902,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C137691",
+      "raw_response_sha256": "41a9bc41fd78ac76f1a96b4b32bf679034d9c6b8c083ee6d80e6b1885ede6ac4"
+    },
+    {
+      "code": "C861568",
+      "references": [
+        "R86"
+      ],
+      "mpn": "RT0603BRD0780K6L",
+      "supplier_mpn": "RT0603BRD0780K6L",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 3741,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C861568",
+      "raw_response_sha256": "b5cb336dd9ff5c7cd6112c486a6e4199718943dc617fdcf801d1ff06fae5fc5a"
+    },
+    {
+      "code": "C25819",
+      "references": [
+        "R87"
+      ],
+      "mpn": "0603WAF4702T5E",
+      "supplier_mpn": "0603WAF4702T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 3122383,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C25819",
+      "raw_response_sha256": "cfe72c9755d06849254b3829197d3907d742ddd0729d86c0a75724f6cce26927"
+    },
+    {
+      "code": "C25804",
+      "references": [
+        "R88",
+        "R89",
+        "R90",
+        "R91",
+        "R102",
+        "R167",
+        "R460",
+        "R461",
+        "R462",
+        "R463",
+        "R464"
+      ],
+      "mpn": "0603WAF1002T5E",
+      "supplier_mpn": "0603WAF1002T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 11,
+      "stock": 40298786,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 55,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C25804",
+      "raw_response_sha256": "6762027ab5a0f558562ebd990409b028b31ff50acf37e3671f4c3b792a5a4f29"
+    },
+    {
+      "code": "C22978",
+      "references": [
+        "R92"
+      ],
+      "mpn": "0603WAF3301T5E",
+      "supplier_mpn": "0603WAF3301T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 5221686,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C22978",
+      "raw_response_sha256": "13fdd3b8ba0186e165c9ff57e716e20544f7cd61fbd99efa644dcaa8e3977dea"
+    },
+    {
+      "code": "C21190",
+      "references": [
+        "R100",
+        "R101",
+        "R103",
+        "R110",
+        "R150",
+        "R151",
+        "R152",
+        "R153",
+        "R440",
+        "R441",
+        "R450",
+        "R451"
+      ],
+      "mpn": "0603WAF1001T5E",
+      "supplier_mpn": "0603WAF1001T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 12,
+      "stock": 31314742,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 60,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C21190",
+      "raw_response_sha256": "7703bac6ac3b0be4448357b4d1743b41b1bad5cecd38ad73218ea77ce1959271"
+    },
+    {
+      "code": "C4109",
+      "references": [
+        "R130",
+        "R133",
+        "R178",
+        "R180"
+      ],
+      "mpn": "0402WGF2001TCE",
+      "supplier_mpn": "0402WGF2001TCE",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0402",
+      "qty_per_board": 4,
+      "stock": 9999004,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 20,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C4109",
+      "raw_response_sha256": "142d57ecee770a2899b211d66de573ddf8127b1ee3cc37aee3841af95539a908"
+    },
+    {
+      "code": "C3013496",
+      "references": [
+        "R134"
+      ],
+      "mpn": "CRM2512-FX-2R00ELF",
+      "supplier_mpn": "CRM2512-FX-2R00ELF",
+      "supplier_brand_raw": "BOURNS",
+      "supplier_package_raw": "2512",
+      "qty_per_board": 1,
+      "stock": 2222,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C3013496",
+      "raw_response_sha256": "3c6f96f0bdeb4aaaa7d05f1a0488eaee589d12f48eb276b660ed0556c1efd7bb"
+    },
+    {
+      "code": "C17513",
+      "references": [
+        "R162"
+      ],
+      "mpn": "0805W8F1001T5E",
+      "supplier_mpn": "0805W8F1001T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0805",
+      "qty_per_board": 1,
+      "stock": 42185724,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C17513",
+      "raw_response_sha256": "bce5e5ac53fe0ef0af64e73498ff6f35fe7936793efdf211b5e1e5796f9d5eeb"
+    },
+    {
+      "code": "C22939",
+      "references": [
+        "R164"
+      ],
+      "mpn": "0603WAF220KT5E",
+      "supplier_mpn": "0603WAF220KT5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 282563,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C22939",
+      "raw_response_sha256": "b07ec7450a393fda1616ac1efa027115c2c9b3f8404260e71220de553520aad8"
+    },
+    {
+      "code": "C168925",
+      "references": [
+        "R166"
+      ],
+      "mpn": "25121WF360LT4E",
+      "supplier_mpn": "25121WF360LT4E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "2512",
+      "qty_per_board": 1,
+      "stock": 1579,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C168925",
+      "raw_response_sha256": "30fa93dcd7f913fea7effa94b23fe8ddd8becc643e2d0fa6ab0348f2902fc2ce"
+    },
+    {
+      "code": "C705784",
+      "references": [
+        "R400"
+      ],
+      "mpn": "RT0603BRD0756K2L",
+      "supplier_mpn": "RT0603BRD0756K2L",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 7905,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C705784",
+      "raw_response_sha256": "9a2fc7f7bddafad4e54a0fb5e507fd79fe7332120f392255d1cec0730cd49e36"
+    },
+    {
+      "code": "C95204",
+      "references": [
+        "R401",
+        "R403"
+      ],
+      "mpn": "RT0603BRD0710KL",
+      "supplier_mpn": "RT0603BRD0710KL",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 2,
+      "stock": 1817847,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C95204",
+      "raw_response_sha256": "c44052c1ea2c965a191b228ff4c102820c509f386845c06c60c37592827aedc3"
+    },
+    {
+      "code": "C705780",
+      "references": [
+        "R402"
+      ],
+      "mpn": "RT0603BRD0749K9L",
+      "supplier_mpn": "RT0603BRD0749K9L",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 178723,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C705780",
+      "raw_response_sha256": "b6042bd3f7956758df32bfb430cbb309f2542657bd55925f1c00bcce410429b0"
+    },
+    {
+      "code": "C22975",
+      "references": [
+        "R404"
+      ],
+      "mpn": "0603WAF2001T5E",
+      "supplier_mpn": "0603WAF2001T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 9817096,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C22975",
+      "raw_response_sha256": "e45ca04d7f900d5782cdc643c29a21c0d19a7d0d2971ef23928a4f87d345d069"
+    },
+    {
+      "code": "C23253",
+      "references": [
+        "R405"
+      ],
+      "mpn": "0603WAF8200T5E",
+      "supplier_mpn": "0603WAF8200T5E",
+      "supplier_brand_raw": "UNI-ROYAL(Uniroyal Elec)",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 804445,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C23253",
+      "raw_response_sha256": "4dcc3c5e415f63c754a7a70fb863ba495e7e24c44d2675287f6c5c876ba82e72"
+    },
+    {
+      "code": "C185349",
+      "references": [
+        "R430"
+      ],
+      "mpn": "RC0603FR-0722K6L",
+      "supplier_mpn": "RC0603FR-0722K6L",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 17,
+      "minimum_purchase": 3610,
+      "order_quantity_5boards": 3610,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C185349",
+      "raw_response_sha256": "15be6ee1a3913beb5c9c0b15513fe49c9b85441b0d6001461ee306fa50fdbffc"
+    },
+    {
+      "code": "C14675",
+      "references": [
+        "R431"
+      ],
+      "mpn": "RC0603FR-07100KL",
+      "supplier_mpn": "RC0603FR-07100KL",
+      "supplier_brand_raw": "YAGEO",
+      "supplier_package_raw": "0603",
+      "qty_per_board": 1,
+      "stock": 8727860,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C14675",
+      "raw_response_sha256": "c79aa0da5f847017ad3036c145bfce879f928f461e0ceaf83ef052e86abf6c76"
+    },
+    {
+      "code": "C5271084",
+      "references": [
+        "U1"
+      ],
+      "mpn": "STM32H743VIT6TR",
+      "supplier_mpn": "STM32H743VIT6TR",
+      "supplier_brand_raw": "STMicroelectronics",
+      "supplier_package_raw": "LQFP-100(14x14)",
+      "qty_per_board": 1,
+      "stock": 812,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C5271084",
+      "raw_response_sha256": "94383520bc4e785120b6c523bc5ac1b6fba2241f972f1759eab606439c5c6020"
+    },
+    {
+      "code": "C780769",
+      "references": [
+        "U2"
+      ],
+      "mpn": "AP63203WU-7",
+      "supplier_mpn": "AP63203WU-7",
+      "supplier_brand_raw": "Diodes Incorporated",
+      "supplier_package_raw": "TSOT-23-6",
+      "qty_per_board": 1,
+      "stock": 4085,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C780769",
+      "raw_response_sha256": "963db63be876b30e9df1116770aac373ad1236fc9526100eb6d118f3436a34e3"
+    },
+    {
+      "code": "C97521",
+      "references": [
+        "U3"
+      ],
+      "mpn": "W25Q128JVSIQ",
+      "supplier_mpn": "W25Q128JVSIQ",
+      "supplier_brand_raw": "Winbond Elec",
+      "supplier_package_raw": "SOIC-8-208mil",
+      "qty_per_board": 1,
+      "stock": 68804,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "base",
+      "source_url": "https://jlcpcb.com/partdetail/C97521",
+      "raw_response_sha256": "e88670776b8fccc1a8aee19281fa0a91b69805f59ca6086337e2cd03312e3090"
+    },
+    {
+      "code": "C26633007",
+      "references": [
+        "U4"
+      ],
+      "mpn": "LSM6DSV320XTR",
+      "supplier_mpn": "LSM6DSV320XTR",
+      "supplier_brand_raw": "STMicroelectronics",
+      "supplier_package_raw": "LGA-14L(2.5x3)",
+      "qty_per_board": 1,
+      "stock": 0,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C26633007",
+      "raw_response_sha256": "ed0e1d18623bcf8f46ab9fc05ff9b9960e13afb4dfa3398f75896ecc8f2fb535"
+    },
+    {
+      "code": "C15639",
+      "references": [
+        "U5"
+      ],
+      "mpn": "MS561101BA03-50",
+      "supplier_mpn": "MS561101BA03-50",
+      "supplier_brand_raw": "TE Connectivity",
+      "supplier_package_raw": "QFN-8(3x5)",
+      "qty_per_board": 1,
+      "stock": 1967,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C15639",
+      "raw_response_sha256": "626d42c4b329ce39a0ab4c89a094f3c09116a6ae40b3f4aa4deb110415a32269"
+    },
+    {
+      "code": "C3662793",
+      "references": [
+        "U9"
+      ],
+      "mpn": "TPS259470LRPWR",
+      "supplier_mpn": "TPS259470LRPWR",
+      "supplier_brand_raw": "Texas Instruments",
+      "supplier_package_raw": "VQFN-10-HR(2x2)",
+      "qty_per_board": 1,
+      "stock": 123,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C3662793",
+      "raw_response_sha256": "820eb77f9498485f50165d79b02521a38bf82aa6d2eb211353ac58ff44e7287b"
+    },
+    {
+      "code": "C55266",
+      "references": [
+        "U10",
+        "U402"
+      ],
+      "mpn": "TPS2553DBVR",
+      "supplier_mpn": "TPS2553DBVR",
+      "supplier_brand_raw": "Texas Instruments",
+      "supplier_package_raw": "SOT-23-6",
+      "qty_per_board": 2,
+      "stock": 46907,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 10,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C55266",
+      "raw_response_sha256": "c7e9e0dd99024a50e9b031a9052960976aca5712feb689788b9ba5cd75f4a2ef"
+    },
+    {
+      "code": "C485916",
+      "references": [
+        "U11"
+      ],
+      "mpn": "TPS2121RUXR",
+      "supplier_mpn": "TPS2121RUXR",
+      "supplier_brand_raw": "Texas Instruments",
+      "supplier_package_raw": "VQFN-HR-12(2x2.5)",
+      "qty_per_board": 1,
+      "stock": 24532,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C485916",
+      "raw_response_sha256": "098fcb72ce48503e0af806e7ff71c2f611cd2b16603ea7b07c0083bac379da7b"
+    },
+    {
+      "code": "C5186957",
+      "references": [
+        "U12"
+      ],
+      "mpn": "TXU0202DCUR",
+      "supplier_mpn": "TXU0202DCUR",
+      "supplier_brand_raw": "Texas Instruments",
+      "supplier_package_raw": "VSSOP-8",
+      "qty_per_board": 1,
+      "stock": 14578,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C5186957",
+      "raw_response_sha256": "26a39656daacce148af0044115ffb048b8f59b1b6f544737f3463233bc066124"
+    },
+    {
+      "code": "C89347",
+      "references": [
+        "U13"
+      ],
+      "mpn": "TPS70933DBVR",
+      "supplier_mpn": "TPS70933DBVR",
+      "supplier_brand_raw": "Texas Instruments",
+      "supplier_package_raw": "SOT-23-5",
+      "qty_per_board": 1,
+      "stock": 7327,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C89347",
+      "raw_response_sha256": "2d204535c8f84891b5ebd122b218d68233d4ff46c83159e9e73bb5a66bb01cfc"
+    },
+    {
+      "code": "C2071044",
+      "references": [
+        "U400"
+      ],
+      "mpn": "AP63201WU-7",
+      "supplier_mpn": "AP63201WU-7",
+      "supplier_brand_raw": "Diodes Incorporated",
+      "supplier_package_raw": "TSOT-23-6",
+      "qty_per_board": 1,
+      "stock": 5671,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C2071044",
+      "raw_response_sha256": "f3b7871de015503f805e3e75a9ac0aaffd12d21471e3de762b9f36aad398bdb4"
+    },
+    {
+      "code": "C2878140",
+      "references": [
+        "U401"
+      ],
+      "mpn": "TPS7A9101DSKR",
+      "supplier_mpn": "TPS7A9101DSKR",
+      "supplier_brand_raw": "Texas Instruments",
+      "supplier_package_raw": "SON-10-EP(2.5x2.5)",
+      "qty_per_board": 1,
+      "stock": 5509,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C2878140",
+      "raw_response_sha256": "a97bed184c6644ebc943b37e8cd1324d3b01c256ee11dec9d78ddb88ca18f71d"
+    },
+    {
+      "code": "C1985619",
+      "references": [
+        "Y1"
+      ],
+      "mpn": "NX3225GA-25.000M-STD-CRG-2",
+      "supplier_mpn": "NX3225GA-25.000M-STD-CRG-2",
+      "supplier_brand_raw": "NDK",
+      "supplier_package_raw": "SMD3225-4P",
+      "qty_per_board": 1,
+      "stock": 5139,
+      "minimum_purchase": 1,
+      "order_quantity_5boards": 5,
+      "tier": "expand",
+      "source_url": "https://jlcpcb.com/partdetail/C1985619",
+      "raw_response_sha256": "8a0ae1c19c7f2072b8cb4a5ea59aceb030de4b2d3b00821ee58abad44c8e8da1"
+    }
+  ],
+  "decision_scope_review": {
+    "decision_ids_considered": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R14-01",
+      "D-R14-02",
+      "D-R14-03",
+      "D-R15-01",
+      "D-R15-02",
+      "D-R15-03"
+    ],
+    "decision_count": 119,
+    "owner_mandates_considered": [
+      {
+        "id": "Initial plan items1-4",
+        "current_disposition": "Ordinary0.15 mm clearance retained with S-8; black3.5 mm IGN and separate battery/switch terminals; C84470 uF/25 V. J124/keyed switch and original fuse wording superseded."
+      },
+      {
+        "id": "O1",
+        "current_disposition": "External HGLRC GPS retained; final DB125/4V8 direct supply+1kUART replaces original GH/switched3V3;L5 loss accepted."
+      },
+      {
+        "id": "O2",
+        "current_disposition": "External LR900-F, no on-board RF; final DB125/direct4V8 and UART5; uplink arm/fire prohibition and installed immunity remain."
+      },
+      {
+        "id": "O3",
+        "current_disposition": "Servo motor power/return off board, protected signals retained; Q120/Q121 serve pyro only; loss of servo power cutoff explicitly retained."
+      },
+      {
+        "id": "O4",
+        "current_disposition": "Regulated camera5 V-class supply; U402/U12/U13 retained. Actual5.456 V setpoint is an agent-selected tolerance solution, not a new owner voltage mandate."
+      },
+      {
+        "id": "O5",
+        "current_disposition": "Separate buck/LDO voltage architecture retained; later owner cut removes GPS/radio switches/translators while camera isolation/switch survives."
+      },
+      {
+        "id": "O6",
+        "current_disposition": "Pack-star motor pairs and bounded reference return retained;0.6144 A is an unmeasured harness inference, qualified with 1 A allowance."
+      },
+      {
+        "id": "D-R2-04 then D-R2-08",
+        "current_disposition": "All current signals hand-routed; old permission for noncritical autorouting superseded."
+      },
+      {
+        "id": "OQ-1",
+        "current_disposition": "4.95 mm floor accepted; current maximum terminal unions give 5.003012 mm. Physical16-22AWG fit stays open."
+      },
+      {
+        "id": "OQ-2",
+        "current_disposition": "Current actual-feed extraction and complete2304required+60local hot-plug sweep executed during each integrated build; simulation/inference only. No measured harness/waveform/endurance or physical logic-survival qualification."
+      },
+      {
+        "id": "OQ-3",
+        "current_disposition": "Exact2026-10-30T13:13:17.644478..13:13:48.643735UTC snapshot79.5232USD placed/feeder share and81.3254USD including minima are below84.41. R43017<3610 and U4zero<5 remain stock blockers; U9stock123/min1. Quote,process/full cost and retained-deviation/agent-choice owner acceptance remain pending; no order and cap unchanged."
+      },
+      {
+        "id": "OQ-4",
+        "current_disposition": "Aft-edge tab/rail selected; panel acceptance before ordering remains open even though current tab windows permit other locations."
+      },
+      {
+        "id": "OQ-5",
+        "current_disposition": "Keep C84/firmware shedding, no hardware cutoff. Always-on GPS/radio/card mean no claim that software can shed them."
+      },
+      {
+        "id": "OQ-6",
+        "current_disposition": "No battery-lead fuse; unfused lead/copper/TVS/cap risk retained. Later single-switch decision also removes ARM-link fuse."
+      },
+      {
+        "id": "OQ-7",
+        "current_disposition": "Board plus axial mounting tolerance wholly forward of joint+47 mm, all roll orientations; freed length remains slack."
+      },
+      {
+        "id": "Single switch and keep-one-switch reaffirmation",
+        "current_disposition": "J400 powers/arms, no J124; two separately driven series firing controls, on-rail/on-last/off-first, launch/ground/in-flight policy retained. AVA photo correction does not restore ARM terminal."
+      },
+      {
+        "id": "AUD-1..10 and GAP-1..5",
+        "current_disposition": "Adopted narrow reductions and real gaps traced individually in the complete current decision index. Later always-on/terminal/audit2 decisions supersede old port/header clauses. No AGENTS section2 rule relaxed."
+      },
+      {
+        "id": "AVA comparison10 layout items",
+        "current_disposition": "Rows/local cells/battery/buzzer/sense/probes implemented, with actual camera/SD/THT constraints. Exact translated cells/old coordinates are not frozen requirements."
+      },
+      {
+        "id": "Always-on ports plus microSD",
+        "current_disposition": "Direct GPS/radio supply/UART; camera switch/isolation; hinged SD alongside primary QSPI, no card-detect promise; current startup/latency/lid obligations explicit."
+      },
+      {
+        "id": "All wired screw terminals / Steer1",
+        "current_disposition": "All seven DB125s correct; USB-C and hinged card remain separate. Legacy circuit-only stop superseded by current full review assignment."
+      },
+      {
+        "id": "Requirements audit2 items1-13,15",
+        "current_disposition": "Direct two-bank ADCs/removals, limited thin taps, In1GND routing allowance, optional plate, count-only leftovers, NRST metric, no Extended cap, single reviewed map, local floors and always-on obligations retained."
+      },
+      {
+        "id": "Requirements audit2 item14/16",
+        "current_disposition": "check.sh zero before each commit retained; STATUS is current. Hash provenance refreshed, electrical/axes review when changed. LEDs stay dark until actual opaque-cover test passes; no test is claimed."
+      }
+    ],
+    "owner_mandate_count": 22,
+    "basis": "Read complete R10_DECISIONS through D-R15-03 plus current requirements/AVA/M3/validation/ordering/vehicle sources. Current amendments govern: all7DB125,always-on GPS/radio,camera isolation,hinged SD,one RAW_ACT sense,smaller AOS pair,manual C84,exact U401VIPPO,AUD2/AUD10,audit2 and119D/22owner scopes. Ledger supplied applicability context,not proof of hardware correctness.",
+    "AGENTS_section2": "unchanged and retained; no proposed change"
+  },
+  "method_errors_and_source_limits": [
+    "Native API is10.0.6; read-only scripts emit a wxApp-traits assertion but return valid results/exit0. No CLI invocation,DRC/ERC/fullgate or native build was run.",
+    "An initial independent orientation walk included8TE paste-only extensions; filtering to actual F/B mask-bearing pads yields the correct187placement reconstruction. No physical pad mismatch was present.",
+    "Thermal getter discovery initially used nonexistent GetZoneConnection and a PAD constructor without a parent. Corrected probe uses loaded pads/GetLocalZoneConnection and passes. These are probe API errors,not board failures.",
+    "Named cached STM32 PDF isRev8; live maker Rev11 was separately read for current VCAP/package statements. Direct ST curl failed HTTP2 then timed out HTTP1.1; web primary PDF remained available.",
+    "Cached Winbond RevG is used for package/pin context only,not latest timing qualification. No fresh exact EasyEDA map query was made; the canonical primary-source pad map was independently read and its proxy/land limitations retained.",
+    "This lens checks nominal mechanical/electrical part facts and exact current supplier identity; it does not qualify every effective capacitance,ESR,thermal,pulse,process or firmware corner."
+  ],
+  "coverage_limits": [
+    "All1942preexisting tracked files were frozen by review protocol; this reviewer wrote only the assigned new MD/JSON and own ignored probes. No git actions,canonical build/source/CAD/fab edits,other-worktree edits,subagents,owner questions,orders or messages to suppliers.",
+    "No physical first article,tool/wire/ferrule/card clearance,solderability,coating,retention,vibration,RF/ESD,thermal/transient,endurance or flight qualification. CAD/model envelopes and supplier-library placement are not those tests.",
+    "12nonpolar C21190resistors have corrected board-placement checks without independent supplier-pad reconstruction; L400 uses a same-package proxy; AOS merged drain anchors are deliberately excluded from orientation fitting while distinct fingers and maker lands are reviewed.",
+    "Compact library comparison covers number,local centre,size,drill,shape/attribute; it is not a complete custom-polygon/paste/mask equivalence proof. Generated9-land check and selected maker drawing review supplement it.",
+    "Independent terminal S8distance checks saved inner fill only and nominal hole radius; the full manufactured-object S8gate and fabrication registration/barrel allocation are outside that point-to-fill diagnostic.",
+    "Fresh stock/prices are public snapshots with no reservation; R430/U4 remain short,full quote/process/consignment/attrition/fixed/PCB/shipping/tax and owner acceptance remain pending.",
+    "PCB Editor/other GUI launch was not retried. No reviewer result substitutes for the two required complete same-board rounds or owner acceptance."
+  ],
+  "evidence_sha256": {
+    ".supervisor/r16_parts_probe/native_inventory.json": "4cb6842eef2a09da370ed3f099838a1eb464dbce566b8a034b36917771e31639",
+    ".supervisor/r16_parts_probe/library_comparison.json": "664aad6389a2c878f3f3ad2a7d5115660f5080e3fed76d8d3517d6c2c13ed7a4",
+    ".supervisor/r16_parts_probe/independent_orientation.json": "a15b811aa6219fcb8c86e93e4ca70ffc12d21c3240148cd8d35d6c2a73525570",
+    ".supervisor/r16_parts_probe/netlist_pad_agreement.json": "f0de87a4e8e99f32e0147512c8905426526b3f03f8059740e46ae2ad4a44baff",
+    ".supervisor/r16_parts_probe/fit.json": "06a35d1ec26080d506de8d59049008d34ca54f91d0444bec8c0e63a32ec5fc47",
+    ".supervisor/r16_parts_probe/terminal_measurements.json": "5309704ec438a93a60cdd7c4e7af1992c0dc2a32f9a737d36ffe0bcf84cd1102",
+    ".supervisor/r16_parts_probe/metadata_audit.json": "19fadf0dbe4b1d0a79d73e2b13aaf937f25610fa4808d422f8394677e4c873de",
+    ".supervisor/r16_parts_probe/manifest_output_checks.json": "b53dd54ec937ca2224cedf1a3c445fbf5d92ec73f849106c645462e7b8fdc31f",
+    ".supervisor/r16_parts_probe/thermal_and_sd_passives.json": "76d3108259d8aa043fe477e78efa65517119be03f2e89e345625aa2d02c0dd3d",
+    ".supervisor/r16_parts_probe/samsung_vcap_spec.pdf": "7ad029052a9bd944e0fd77e7d8e814676dfb7285a5e18b8760a538d5a978e49e"
+  }
+}

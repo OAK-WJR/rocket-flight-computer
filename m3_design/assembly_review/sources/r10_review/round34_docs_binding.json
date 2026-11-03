@@ -1,0 +1,50 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round34_docs_binding",
+ "reviewer": "claude",
+ "target_commit": "c2a11fd",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "R10_VALIDATION:2954 (R19-RTE-04 list) gives 'R101 B(34.0,42.0)' and calls the via 'centred under the body'; R101 is at B(34.0,42.25) and the CAM_UART_OE via at (34.0,42.0), 0.25 mm off the body centre along y but midway between the pads; the 0.175 mm ring-to-pad gap is exact (0.175 / 0.175 mm). The list's coordinates read as via positions; not counted.",
+  "Doc coordinate sweep (Ref F/B(x,y)) over the ten docs: 25 mismatches, all before -> after history rows (AVA_LAYOUT 411-532, M3_R10 121/140, parts_qualification 24 'was' text) or the removed TP121; none in a current statement.",
+  "Backticked file references: .supervisor/r21_routing/scripts/dump.py, .supervisor/r23_fix_brief.md, .supervisor/r33_triage/u9.py, adjacency_a3144b15.json and detour.py are untracked supervisor/round artefacts cited as method provenance in dated records; not broken links.",
+  "The CLAUDE.md copy of AGENTS shown in the session context is stale ($85.60, 5.73 V); the committed AGENTS.md at c2a11fd carries $85.26 / 12:44:13Z and 5.71 V, matching cost_check.json and parts_budget.json."
+ ],
+ "fix_verification": [
+  {
+   "item": "R33-TRI-01 (ORDERING 8.3 U9 exposed pad ends)",
+   "measurement": "pcbnew: U9 at B(18.5,81.6); pads 5/6 0.30 x 2.40 mm spanning y 80.4-82.8, so 0.20 mm beyond a 2.0 mm body at each end (0.15-0.25 mm over the 1.9-2.1 mm body); pad 9 x 19.1-19.7 (0.25 mm high), 0.20 mm beyond the body edge x 19.5; probe points B(18.25,80.45)/B(18.75,80.45) lie on the exposed ends; C88.1 B(18.25,83.56), C82.1 B(19.3,78.25), R84.1 B(20.775,81.825) match",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before/after: a0ec075e... both times",
+  "Binding note c5cd0fa3... : board, netlist (schematic.net.xml 535a8fdf...), pin_table (b94133e6...) and circuit (3220e5f9...) hashes match the files; budget 4267634... matches",
+  "pcbnew: all 100 u1_pins nets/ports equal U1's pad nets on the board and pin_table r10_net",
+  "pcbnew: positions/sides/rotations of 50+ parts cited in AGENTS rows and docs (U1, U4, U5, U9, J1, J400, J121, J9, J410, J420, J440, J122, LS120, R166, C84, D402, R81, C87, Q120-Q124, ...): match",
+  "Five mounting holes (Edge.Cuts circles) at (4,4),(42,4),(4,44.3),(3.7,86),(42,86): match",
+  "Connector pin nets for all eight DB125 terminals vs AGENTS rows and handoff terminal table: match; 44 silkscreen legends and their F/B sides vs handoff: match",
+  "Part values/nets for the switch network, gate networks, sense banks (10.2k/1k/10nF), R127/R126/R128 0.91 kohm, C126/C128, R9/R110, R431, R460-R464, R104/R105: match",
+  "Board statistics: 216 footprints, 1059 segments, 309 vias (304 0.5/0.3, 4 0.6/0.3, 1 1.0/0.5; 170 GND), 1866.794 mm track, 93 hidden refs, 2,369,507 bytes: match M3_R10 / R10_VALIDATION / AVA_LAYOUT",
+  "Fab package: BOM 81 lines, 206 placed, CPL 206 (70 top / 136 bottom), C535146 x9; cost_check.json $85.26 @12:44:13Z and stock_check 12:43:17Z vs AGENTS/STATUS/M3_R10/ORDERING/handoff/REQUIREMENTS: match",
+  "Clearances: PYRO1_OUT-3V3 1.050, PYRO1_OUT-3V3A 1.040, BUZZ_DRV-PYRO1_OUT 0.7935 (R162.1-R173.1), 3V3-PYRO1_GATE_N 1.065, 3V3-PYRO1_GATE 1.0585, 3V3A-PYRO1_GATE 1.145, U9.1-BAT_IN 0.200, EN via-BAT_FAULT_N 0.200, ACT_EN-BAT_ENABLE 0.330 at R123.1, J440.1/J9.1 In2 rings 0.2505 mm from 3V3: all match the docs",
+  "Relative markdown links and anchors in STATUS, AGENTS, README, docs/*.md and r10_design/*.md (224 relative links): 0 broken",
+  "R33-TRI-01 fix: U9 pads 5/6 and 9 geometry measured"
+ ],
+ "sources": [
+  "AGENTS.md, STATUS.md, docs/M3_R10.md, docs/ORDERING.md, docs/R10_VEHICLE_HANDOFF.md, docs/R10_VALIDATION.md, docs/FMEA_REDUNDANCY.md, docs/REQUIREMENTS.md, parts_qualification.md, AVA_LAYOUT.md, pin_table.tsv, r10_binding_note.json, parts_budget.json, fab/*",
+  "TI SLVSFC9C (TPS25947 RPW0010A body 2.0 +/-0.1 mm), as cited by ORDERING 8.3"
+ ],
+ "coverage_limits": [
+  "Not every numeric statement in R10_VALIDATION (3453 lines) or parts_qualification.md was re-derived; dated history sections were read as history",
+  "Calculated figures (chatter, hold-up, fire budget) checked against parts_budget.json keys only where the key exists; not recomputed",
+  "Zone-to-zone distances not measured; In2 fill-edge figures not re-measured"
+ ]
+}

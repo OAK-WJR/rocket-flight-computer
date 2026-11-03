@@ -1,0 +1,92 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round19_mechanics",
+ "reviewer": "claude",
+ "target_commit": "1e60441",
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2
+ },
+ "findings": [
+  {
+   "id": "R19-MEC-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "DB125 legends: none under the nominal body, but pin-1 end legends sit 0.10-0.16 mm off it and five wire-side legends lie under their own wires",
+   "evidence": "DORABO DB125-3.5-XXP-C-S drawing T0-1 (maker PDF cached at .supervisor/r14_mechanics/db125.pdf, page 1): body depth 7.40, pin 3.90 from back and 3.50 to wire face, width Nx3.5, 0.42 mm side latch on the pin-1 side, general tolerance +/-0.30 (6-10) / +/-0.50 (10-30). Nominal body rectangles in PCB mm: J1 x3.9-11.3 y72.35-79.35; J400 y62.35-69.35; J121 y52.35-59.35; J410 x34.7-42.1 y8.5-22.5; J420 y24.5-38.5; J9 y40.5-54.5; J122 y62.75-80.25. Text boxes (pcbnew): no F.Silkscreen legend overlaps a nominal body (checked all 25). Nearest: 1:BAT+ 0.10 mm (J1, pin-1 north end, box y70.55-72.25), 4:RXI J410 0.10, 5:GND 0.10, 1:E1- 0.16 (J121), 1:S1 0.16 (J122). Pin-1 side: 0.42 latch plus 0.15 half-tolerance is 0.57 mm, and the repo VRML envelope (kilib/rocket.3dshapes/M3_DB125_*.wrl, 8.32x8.10x8.90 mm, centre -0.46) reaches 1.12 mm past nominal on pin 1, so it overlaps these boxes (glyph ~1 mm high, nominal glyph clearance ~0.45 mm to J1). Wire-side legends 1:SW (J400, x2.05-3.75), 1:4V8 (J410, x42.35-44.05), 4:RXI and 1:4V8 (J420), 4:TXO (J9) and 'SERVO + FROM HARNESS' (J122, x43.18-44.87, y62.4-81.75) lie 0.15-2.8 mm outside the wire face, centred on their own pin's wire exit line, so inserted wires cover about half of each. Pin 2/3 legends are on B.Silkscreen (by design, under the body, readable only from below / sled side). check_r10 K-legends tests nearest-connector only, not body or wire overlap.",
+   "impact": "No electrical effect. Once wired, the J1 BAT+ / E1- / S1 pin-1 end legends may be partly under the body latch and the wire-side legends are hidden by the wires they label, so polarity cannot be checked by eye after wiring; continuity check against the printed table is needed. Legends are not hidden under the terminal bodies at nominal.",
+   "concrete_fix": "Optional: move 1:BAT+, 1:E1-, 1:S1 (and 4:RXI on J410) 0.5 mm farther from the body (1:BAT+ has 1.0 mm free between the J400 and J1 envelopes: centre y70.4). State in ORDERING 8.3 that pin identity after wiring is by harness continuity check, not by silkscreen."
+  },
+  {
+   "id": "R19-MEC-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "C84 hand-fit: four bottom-side joints sit directly under its pads and R166 is 0.56 mm away",
+   "evidence": "C84 F(27.5,78.5) rot 90, pads 3.5x1.7 at (27.5,75.25) GND and (27.5,81.75) VLOGIC, courtyard 22.95-32.05 x 73.2-83.8. B.Cu pads with 0.0 mm XY gap to those pads: L1.2 (3V3), C7.2 (GND), C9.1 (3V3), C9.2 (GND); also L1.1 0.60, C7.1 0.90 mm. Top neighbour R166 courtyard gap 0.56 mm. Board is 1.6 mm. ORDERING 8.2 / R10_VALIDATION GAP-4 say only 'fit manually after both reflows using a separately validated local soldering process'; the supplier sheet has no manual profile.",
+   "impact": "Iron or hot-air heat on C84's pads is conducted through 1.6 mm FR4 and planes to the already-soldered L1, C7 and C9 joints; those can reflow, shift or tin-whisker; the polymer can's own limit is also unprofiled. Process risk, not a design failure.",
+   "concrete_fix": "Add to ORDERING 8.2: limit time and temperature, preheat from the top only with the bottom supported, re-inspect L1, C7, C9 after fitting and measure 3V3 and VLOGIC; or move C84 away from the bottom-side parts if the owner reopens placement."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R18-11 / R18-MEC-03",
+   "claim": "fit_check prints the wire room of all seven DB125 terminals",
+   "measurement": "fit_check --profile r10 on the board: J1 J121 J122 J400 J410 J420 J9 each 5.00-5.60 mm at 5 mm wire height; recomputed 24.904-19.601-0.3=5.003",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R18-MEC-02 text",
+   "claim": "REQUIREMENTS P2 and the handoff require nylon/insulated hardware at all five supports",
+   "measurement": "present in both; nearest top exposed pad to (4,44.3) is LED2.2 at 3.81 mm (gate 3.8), J2/LED1 3.86-3.88",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-08 (U4 mask / LGA-14)",
+   "claim": "U4 mask expansion 0, axis map unchanged",
+   "measurement": "pad mask margin 0 in footprint; board pads: 1-4 east column north-to-south, 5-7 south row east-to-west, 8-11 west column, 12-14 north row, identical to the ST DS14623 Rev 1 p.9 Figure 5 bottom view as seen from above through the PCB. With pin 1 at the (-X,+Y) corner (3D dot) this gives +X_imu=-x_board, +Y_imu=-y_board, +Z_imu=-z_board, so roll about +y_board reads -gyro_Y; lever arm x=17-23=-6.0 mm",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R18-02/04/05 moves (TP121, R119, R173)",
+   "claim": "nothing else moved that affects the mechanics",
+   "measurement": "fit_check: J3 margin 0.89 mm, DB125 bodies 2.98 mm, tails 7.56 mm, deepest bottom L1 z-4.62 (3.02 below board), nearest bottom envelope to (4,44.3) is C32.2 at 4.536 mm (min 3.5); supports unchanged; holes are Edge.Cuts circles r1.6 at the five positions",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  "R19-MEC-02: add a heat-limit and bottom-joint re-inspection sentence to ORDERING 8.2 (docs only).",
+  "R19-MEC-01: add the harness-continuity sentence (docs only); the legend move is optional."
+ ],
+ "rejected_or_closed_candidates": [
+  "Wire-room margin 'only 0.053 mm' is conservative: the VRML envelope puts the wire face at 4.0 mm from the pin axis (west x3.4) against the maker's 3.5 nominal (3.8 at +0.3), so nominal-drawing room is about 5.80 (5.50 after the 0.3 sled tolerance). Not a defect; the 5.003 figure is an envelope bound.",
+  "IMU axis map and lever arm: confirmed, no finding.",
+  "Screwdriver access: screws are on top over the pin centres, neighbouring terminals are 3.0 mm apart and 8.9 mm tall with open space above; no taller part within 12 mm. Access inside the closed bore needs the sled removed (already stated).",
+  "Supports vs keep-outs: nearest B/F pad and courtyard distances (3.81-8.2 mm) match the fit tool.",
+  "Terminal grouping: pyro/switch/battery on the west edge, GPS/radio/camera/servo on the east: acceptable."
+ ],
+ "checks_actually_executed": [
+  "board SHA before/after",
+  "pcbnew listing of footprints, courtyards, 25 F.Silkscreen text boxes vs DB125 body rectangles",
+  "VRML envelope read of M3_DB125_2P_GN.wrl",
+  "fit_check.py --profile r10 (read-only, no report written)",
+  "U4 pad map vs DS14623 p.9 rendered at 400 dpi",
+  "DB125 drawing T0-1 read",
+  "support-to-pad/via/courtyard distances for the five supports",
+  "C84 pad-to-opposite-side pad overlaps"
+ ],
+ "sources": [
+  "DORABO DB125-3.5-XXP-C-S drawing T0-1 (cached .supervisor/r14_mechanics/db125.pdf, p.1)",
+  "ST DS14623 Rev 1 p.9 Figure 5 (cached .supervisor/r14_mechanics/lsm6dsv320x.pdf)",
+  "docs/R10_VEHICLE_HANDOFF.md, docs/REQUIREMENTS.md P2/P3, docs/ORDERING.md 8.2"
+ ],
+ "coverage_limits": [
+  "No physical or 3D CAD of the sled, wires, ferrules or screwdriver.",
+  "TC2030 plug body vs LED1/LED2 and the (4,44.3) support not checked (Tag-Connect drawing not fetched).",
+  "microSD open-hinge sweep and Molex outline not re-measured.",
+  "Body overhang of J3 taken from the fit model (-0.45) while its courtyard is -1.01; not verified against the maker.",
+  "Baro venting and light not testable in CAD; REQUIREMENTS lists opaque foam over U5 as unverified."
+ ]
+}

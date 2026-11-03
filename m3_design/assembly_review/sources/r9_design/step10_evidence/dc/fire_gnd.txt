@@ -1,0 +1,10 @@
+board <repo>/m3_design/assembly_review/m3.kicad_pcb sha256 4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14
+GND: Q124:1,2,3 -> J1:2, grid 0.1 mm, 631918 free cells, CG 4348 iterations, residual 1e-10
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 0.81 mOhm; at 2.8 A: drop 2.3 mV, copper loss 0.006 W
+  F.Cu   carries   29 % at mid-path; peak 3.88 A/mm at (10.45, 62.45)
+  In1.Cu carries   71 % at mid-path; peak 2.01 A/mm at (10.35, 62.45)
+  In2.Cu carries    0 % at mid-path; peak 0.64 A/mm at (10.45, 62.45)
+  B.Cu   carries    0 % at mid-path; peak 0.55 A/mm at (10.45, 62.45)
+  vias: 152 carry current; largest barrel currents at 2.8 A: 1.23 A at (10.425, 62.45) (F.Cu-In1.Cu), 1.00 A at (11.8, 62.45) (F.Cu-In1.Cu), 0.21 A at (7.95, 59.35) (F.Cu-In1.Cu)
+  vias over 0.5 A: 2; over 1.0 A: 2

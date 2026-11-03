@@ -1,0 +1,41 @@
+ref	x	y	rot	side	basis
+J121	7	54	270	F	R10 black 3.5 mm IGN terminal; wire entry west
+J124	7	64	270	F	R10 black 3.5 mm ARM terminal; wire entry west
+Q124	13	55.2	90	F	Local short pulse drain and source return
+R134	17	61	270	F	2 ohm series pulse resistor; west of servo lanes
+R126	16.6	52.625	180	F	Gate series resistor outside MCU courtyard
+R127	19	52.8	270	F	Gate_N reset pull-down
+R128	17	56.5	0	F	Gate-source pull-down
+C126	17	54.9	0	F	Gate-source capacitor
+TP122	7	58.6	0	B	Bottom gate probe between terminal pad rows
+C128	12	59.5	0	B	Drain snubber below terminal-adjacent signal row
+R173	10.8	57.3	0	B	Continuity divider source-side top
+R129	12.6	57.3	0	B	Continuity divider node-side top
+R130	14.1	58	270	B	Continuity divider parallel lower leg
+R178	15.6	58	270	B	Continuity divider parallel lower leg
+C127	18.5	57.85	270	B	Continuity filter
+R131	10.5	60.8	0	B	Cold continuity pull-up
+D120	15	60.2	0	B	Cold continuity bias diode
+R132	20	58.5	0	B	ARM divider source-side top
+R175	21.8	58.5	0	B	ARM divider node-side top
+R133	23.3	59.2	270	B	ARM divider parallel lower leg
+R180	24.8	59.2	270	B	ARM divider parallel lower leg
+C129	26.8	58.77	0	B	ARM filter
+R168	24	53	90	F	Continuity series resistor at U1 ADC pin15
+R170	33.1	45.5	180	F	ARM series resistor at U1 ADC pin33
+R172	33.1	44.3	180	F	RAW series resistor at U1 ADC pin34
+Q120	13.5	74	0	B	Pyro load switch battery FET; source faces Q121
+Q121	13.5	66	180	B	Pyro load switch output FET; source faces Q120
+Q122	16.8	72.2	0	F	Pyro load switch enable driver
+R120	12.8	72	0	F	Load switch source-to-gate bias
+R121	14.3	72.2	0	F	Load switch gate series resistor
+R122	16.73	76.2	90	F	Logic-protected-rail enable divider top
+R123	16.3	74.5	180	F	Load switch enable divider lower leg
+C120	12.8	70	0	F	Load switch gate-source hold capacitor
+TP120	18	66.5	0	B	RAW_ACT bottom probe; outside high-current pad field
+TP121	7	69.4	0	B	Load switch gate probe
+R177	20	64	0	B	RAW divider source-side top
+R124	21.8	64	0	B	RAW divider node-side top
+R125	23.3	64.7	270	B	RAW divider parallel lower leg
+R182	24.8	64.7	270	B	RAW divider parallel lower leg
+C122	26.8	64.27	0	B	RAW filter

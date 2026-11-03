@@ -1,0 +1,80 @@
+{
+  "status": "COMPLETED record-only correction after all ten full R17 handoffs; Calculation/Inference, not installed-pack qualification",
+  "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "source": {
+    "parts_budget_path": "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+    "parts_budget_sha256": "c5fb1337b9561be9f88243145d3e8aa071822116533a70805acfb9f52a42a7ea",
+    "review_finding": "R17-PWR-02",
+    "review_report_sha256": "215049c02c351179ec2ab44fcf3d55c3e46e240a40fcc2ac61c2fb286c3cf65f",
+    "source_generator_unchanged": "m3_design/r10_parts.py:354-364,479-484"
+  },
+  "assumptions": {
+    "battery_voltage_V": 6.0,
+    "port_converter_efficiency": 0.8,
+    "efficiency_status": "Project inference/allocation,not a maker lower-bound guarantee",
+    "buck_upper_setpoint_V": 5.546269302558957,
+    "buck_nominal_setpoint_V": 5.456,
+    "camera_on_current_A": 1,
+    "GPS_radio_and_port_quiescent_A": 0.461,
+    "unshed_logic_pack_input_allocation_W": 1.4,
+    "SD_write_current_A": 0.2,
+    "SD_voltage_V": 3.3,
+    "SD_converter_efficiency": 0.8,
+    "R92_loss_reference_V": 7.4,
+    "R92_resistance_min_ohm": 3234.0,
+    "continuous_GPS_radio_logic_SD_hours": 2,
+    "motor_charge_included": false,
+    "flight_recovery_charge_included": false,
+    "R92_loss_scope": "Existing conservative 7.4V loss allocation is retained while pad charge is converted at6V; it is not a measured resistor loss at a6V battery."
+  },
+  "formulas": {
+    "camera_pack_input_W": "Vbuck_upper * Icamera / eta_port",
+    "noncamera_pack_input_W": "Vbuck_upper * 0.461 / eta_port + 1.4 + 3.3 * 0.2 / eta_logic + 7.4**2 / (3300 * 0.98)",
+    "pad_energy_Wh": "2 * P_noncamera + camera_hours * P_camera",
+    "pad_charge_Ah": "E_pad_Wh / 6.0",
+    "capacity_selection": "C_tested_Ah >= (Q_pad_board + Q_pad_motors + Q_flight_all + Q_recovery) / 0.8; independently satisfy fire-time source voltage/resistance and physical fit"
+  },
+  "calculated_pack_input_W": {
+    "camera_on_only": 6.932836628198696,
+    "noncamera_unshed_SDwrite": 5.437970276817905,
+    "all_on": 12.3708069050166
+  },
+  "cases": [
+    {
+      "pad_hours": 2,
+      "camera_hours": 0,
+      "board_pack_energy_Wh": 10.87594055363581,
+      "board_pack_charge_Ah_at6V": 1.8126567589393014,
+      "board_only_capacity_Ah_for_20pct_unused": 2.2658209486741265
+    },
+    {
+      "pad_hours": 2,
+      "camera_hours": 0.5,
+      "board_pack_energy_Wh": 14.342358867735157,
+      "board_pack_charge_Ah_at6V": 2.3903931446225264,
+      "board_only_capacity_Ah_for_20pct_unused": 2.9879914307781577
+    },
+    {
+      "pad_hours": 2,
+      "camera_hours": 2,
+      "board_pack_energy_Wh": 24.7416138100332,
+      "board_pack_charge_Ah_at6V": 4.1236023016722,
+      "board_only_capacity_Ah_for_20pct_unused": 5.15450287709025
+    }
+  ],
+  "camera_nominal_increment": {
+    "pack_current_A_at6V_eta80pct": 1.1366666666666665,
+    "pack_current_A_at7p4V_eta80pct": 0.9216216216216215,
+    "extra_1p5h_Ah_at6V_eta80pct": 1.7049999999999996,
+    "former_increment_Ah": 1.155
+  },
+  "disposition": "Retire active mixed1.76/2.04/3.19Ah and2.6/4Ah sizing examples; preserve datedD-CIR-02 history. Camera off onpad unlessrecording. Select measured usable pack capacity from actual planned board/motor/flight/recovery duty plus20pctunused; do not treat board-only examples as an installed-pack qualification.",
+  "limits": [
+    "Uniform6V/80pct is a conditional conservative worksheet,not a measured two-hour battery voltage or guaranteed efficiency.",
+    "Upper electrical load allocations,SD current and logic input are unmeasured; actual installed duty and aged/cold capacity require tests.",
+    "Twenty percent unused charge does not establish the required fire-time7.4V-equivalent source,source resistance,transient performance,or actual battery-bay fit.",
+    "No PCB,circuit-generator,part or firmware change. All ten fullR17handoffs closed on1966unchangedfiles before this record correction."
+  ],
+  "prepared_utc": "2026-10-30T18:02:21.788098+00:00",
+  "decision": "D-R17-01"
+}

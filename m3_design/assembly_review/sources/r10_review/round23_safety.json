@@ -1,0 +1,445 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_safety",
+ "reviewer": "claude",
+ "target_commit": "c70d2614c9f187c46bce6225047ef4d03484848a",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 9
+ },
+ "findings": [
+  {
+   "id": "R23-SAFETY-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The per-flight switch-off check runs with the bus off, so it cannot see the three EN latch paths that need PC1 high, and the bus is first energised each flight with the e-match fitted and the operator at the rail",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb (pcbnew, read-only); docs/ORDERING.md 8.3 'Per-flight check' (1)-(3); docs/R10_VALIDATION.md owner row 24 and section 1 table; m3_design/assembly_review/sources/r10_design/r10_binding_note.json firmware_obligations[9]",
+    "reference": "BAT_ENABLE (U9.1 EN/UVLO) neighbours that are live only with PC1 high or the bus enabled",
+    "coordinates_mm": "R123.1 (ACT_EN) F(20.600,70.230) to BAT_ENABLE track (21.3,68.9)-(21.3,75.2); ACT_EN_MCU track (21.77,67.2)-(19.6,69.37) to BAT_ENABLE via (21.3,68.9); R134.2 (RAW_ACT) B(19.075,64.0) to BAT_ENABLE via (19.675,66.6)",
+    "layer": "F.Cu, F.Cu, B.Cu",
+    "measured": "Edge-to-edge gaps (own polygon geometry, 1 um arc error; reproduces the recorded 0.330 / 0.500 mm): 0.3300, 0.5205, 0.5008 mm. With J400 open EN is held only by R81 300 kOhm, so the board stays on (U9 above VUVLO(F) max 1.116 V) for a leak below 291 kOhm from ACT_EN (2.2 V through 667 Ohm), 587 kOhm from ACT_EN_MCU (3.3 V) and 1.69-1.96 MOhm from RAW_ACT (7.4-8.4 V) (Calculation, .supervisor/r23_safety/calc/calcs.json). ACT_EN, ACT_EN_MCU and RAW_ACT are at 0 V unless PC1 is high. The per-flight check opens J400 after a closed-switch check made BEFORE the e-match goes in; with no match the passive screen reads 'open' (CONT about 146 mV, BUS 0), and the binding note allows PC1 high 'only after a valid passive check', so in that check PC1 stays low and none of the three paths is energised (Inference about the unwritten firmware; it holds for any firmware that refuses PC1 without a match). The same ordering means the bus (RAW_ACT at the full pack voltage) is applied across Q124 and C128 for the first time each flight with the e-match fitted: the cold screen biases them at only about 1.08 V (3.0 V through R131 10 kOhm into 5.6 kOhm), so a leak that conducts only at bus voltage is not seen before the match is exposed.",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps25947.pdf p9 (VUVLO(R) 1.183-1.223 V, VUVLO(F) 1.076-1.116 V, IENLKG +/-0.1 uA); https://www.aosmd.com/res/datasheets/AON7524.pdf p2 (VGS(th) 0.4 / 0.8 / 1.2 V)",
+    "records": "R10_VALIDATION section 1 lists the ACT_EN and RAW_ACT pairs ('With PC1 high ... J400 cannot turn the board off'; 'Once PC1 has enabled the bus, RAW_ACT holds EN on') and closes them by 'per flight ... after any closed-switch check confirm that opening J400 turns it off' (row 24). The ACT_EN_MCU pair (0.5205 mm) is outside the 0.5 mm inventory."
+   },
+   "impact": "A leak at one of these three pairs forming after first article is first exercised on the rail; it shows itself only at abort or recovery, when opening J400 does not turn the board off and the bus stays enabled with the crew at the rocket. The row 24 closure does not cover these three pairs as claimed. No fire by itself: a second fault at Q124 is still needed.",
+   "concrete_fix": "Text only (ORDERING 8.3 per-flight check, R10_VALIDATION row 24 and section 1, R10_VEHICLE_HANDOFF, FMEA H-6 row): do the closed-switch check with the bus enabled, i.e. with a 1-2 Ohm dummy load in J121 so the passive screen passes and firmware raises PC1 (or a firmware switch-off-test state that raises PC1 with no match); confirm the powered BUS / CONT readings; open J400 and confirm within 1 s that the board is off and J121.2 is below 0.1 V; only then swap the dummy for the e-match. Say in row 24 that the three PC1 / bus pairs are screened only this way (or only at first article)."
+  },
+  {
+   "id": "R23-SAFETY-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "After the e-match is in there is no check that the board stays off until J400 closes, no action when J400 open does not de-energise the board or the bus, and plugging USB at recovery bypasses J400",
+   "evidence": {
+    "file": "docs/ORDERING.md 8.3 and 8.4; docs/FMEA_REDUNDANCY.md R10 table row H-6 / V-18; docs/R10_VEHICLE_HANDOFF.md 'Power, arming and USB'; m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "Q120 drain = BAT_IN (Q120.5-9, J1.1 side, ahead of U9); J400 pair (BAT_SW_SOURCE / BAT_SW_RETURN); U11 TPS2121 ST = PA4 (U1.28); TP120 B(18,68.6); J3 USB-C",
+    "coordinates_mm": "J400 F(7.4,65.85); J121 F(7.4,55.85); TP120 B(18.0,68.6) faces the sled",
+    "layer": "harness / procedure",
+    "measured": "(a) The only per-flight 'board off' check is before e-match insertion (ORDERING 8.3 (1)). The J400 pair is twisted together by rule (8.4); a pinch at sled insertion or an insulation failure between the two leads closes the switch circuit, and an EN leak can form later; either powers the board, the passive screen passes with the match fitted and PC1 rises, so the vehicle is armed while it is carried. Nothing between e-match insertion and J400 closure checks for it. (b) The pyro feed is taken from BAT_IN ahead of U9 (netlist: Q120.5-9 BAT_IN), so a failed-on load switch (a Q121 short, an ACT_GATE leak) that the on-rail cold screen reports as 'bus live' stays live after J400 opens. FMEA H-6 says 'confirm the board / RAW_ACT go dead before handling', but TP120 faces the sled and J121 is inside the bay, so RAW_ACT cannot be checked in flight configuration; and nothing says what to do if the board or bus does not go dead (R23-SAFETY-01's latches, U9 failures, R23-SAFETY-06). (c) USB powers the logic through U10 / U11 IN1 with J400 open (TPS2121: 'ST is pulled high when the output is Hi-Z or IN1'); the passive screen then passes on an unfired match and PC1 can rise, enabling the bus from the pack. The only cover is the bench rule 'USB bench work uses the pack disconnected or the e-match disconnected'; recovery log download is not named, and no firmware rule ties PC1 to the battery path.",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps2121.pdf SLVSEA3F p18 (Table 9-3 and the ST summary); https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF p1 (0.30 A no-fire, 0.75 A all-fire)",
+    "records": "R10_VALIDATION section 1: 'USB / self-powered port back-feed can hide a switch opening and retain logic, ACT_EN and RAW_ACT'. M3_R10 Firmware enables the port TX pins only while PA4 reads low; there is no such rule for PC1."
+   },
+   "impact": "Single harness or leak faults can arm the vehicle during handling, and the crew has no stated response when the switch no longer safes it. USB at recovery is a single operator error that re-arms an unfired match with J400 open. Each still needs a second fault (or a firmware fault) to fire.",
+   "concrete_fix": "Text only: (1) after closing the airframe and before carrying, and again just before closing J400 on the rail, confirm no telemetry link and no buzzer; on closing J400 confirm a fresh power-up (proof-of-life tone, new telemetry session); a board already running means J400 has been bypassed: open J400, keep clear, treat as armed. (2) State that a cold-screen 'bus live' refusal, or a board that stays on with J400 open, means the bus may be live from BAT_IN: keep clear of the charge wells and disconnect the e-match (or the pack) before other handling. (3) Recovery order: J400 open, confirm off, confirm the match fired or disconnect it, disconnect the pack, only then USB. (4) Firmware rule: PC1 may go high only while PA4 reads low (U11 on IN2, the battery path, so U9 and J400 are on) and VBUS_SENSE does not contradict it; note that R91.1 and U1.28 each hang on one via (D-R22-02), so this is an extra barrier, not a guarantee."
+  },
+  {
+   "id": "R23-SAFETY-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "No per-flight igniter-resistance check at J121: a stray strand across J121 or a shorted match reads healthy in the passive screen and silently stops the fire",
+   "evidence": {
+    "file": "docs/ORDERING.md 8.3 (per-flight check has no resistance step); docs/FMEA_REDUNDANCY.md R10 table row I-4 / V-16 ('Retain checks for no loose strands at J121 / J1, the igniter's actual resistance and sense integrity'); docs/R10_VALIDATION.md section 1 ('a short match resembles healthy')",
+    "reference": "J121 pins 1 (PYRO1_OUT) and 2 (PYRO1_IGN), 3.5 mm pitch DB125 screw clamps",
+    "coordinates_mm": "J121 F(7.4,55.85): pads (7.4,54.1) and (7.4,57.6)",
+    "layer": "terminal / harness",
+    "measured": "Passive screen with a 0 Ohm (strand) or shorted match: the cold pull-up sees the same 5.6 kOhm load as with a 1-2 Ohm match, so CONT and BUS read the healthy 99 mV pair (Calculation; the records state the same). At the fire the current flows through the strand (R134 limits to about 4.2 A, by design for a shorted igniter) and the bridgewire gets none. With J400 open the board path across J121 is about 22 kOhm (R134 + bus divider + CONT divider), so a DMM reads the match itself.",
+    "maker": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF p1 (40 mA maximum test current)",
+    "records": "The old procedure T-4 (FMEA 6.3, per-wire terminal check >= 1.0 Ohm) is not carried into R10's ORDERING 8.3."
+   },
+   "impact": "An undetectable single fault that stops the primary deployment (the isolated Blue Jay remains the backstop).",
+   "concrete_fix": "Text only (ORDERING 8.3 per-flight check, after e-match insertion with J400 open): measure J121.1-J121.2 with a meter whose test current is below 40 mA; it must read the selected match's resistance (about 1-2 Ohm plus leads), not about 0 Ohm and not open; this also confirms the leads are in the black J121 and not in J400 / J1. Record the value on the flight card."
+  },
+  {
+   "id": "R23-SAFETY-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The R10 firmware obligations have no post-landing disarm: nothing returns PC1 and PE4 low and latches them after landing, so the bus stays enabled while the crew approaches",
+   "evidence": {
+    "file": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json (arming_policy, firmware_obligations 0-35); docs/M3_R10.md 'Firmware'; docs/FMEA_REDUNDANCY.md I-8, F-8 and section 2.3 7.4'.9",
+    "reference": "PC1 (ACT_EN_MCU, U1.16) and PE4 (PYRO1_GATE_N, U1.3)",
+    "coordinates_mm": "-",
+    "layer": "firmware rule",
+    "measured": "Searched the binding note, M3_R10, REQUIREMENTS, ORDERING and the vehicle handoff: no LANDED rule (only the LED rule 'dark from arming through landing'). FMEA I-8 / F-8 / 7.4'.9 (historical text, not cited in the FMEA's R10 table) defined LANDED -> gates low and a latch that only power-off clears. Owner row 18 covers returning PC1 low on the pad only.",
+    "maker": "-",
+    "records": "FMEA H-6 R10 row: 'After landing or an abort, turn this switch off first and confirm the board / RAW_ACT go dead before handling' (see R23-SAFETY-02 on why RAW_ACT cannot be checked in flight configuration)."
+   },
+   "impact": "If the apogee fire did not burn the match (a gate-path open, a lead fault cleared later, F-13 retries exhausted), the recovery crew meets an intact match on an enabled bus: the bus-enabled single-fault class (C128 crack at landing impact, Q124 short, OUT-to-GND chafe, I-5) can fire it during approach and before J400 is opened.",
+   "concrete_fix": "Text only (M3_R10 Firmware, binding-note obligations): add LANDED (FMEA 7.4'.9 criteria, with a T_min floor) -> PE4 low, PC1 low, both latched until power-off; never re-enable PC1 in the same power session; annunciate the locator tone. This is separate from owner row 18 (pad policy)."
+  },
+  {
+   "id": "R23-SAFETY-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Q120's gate reaches R121 only through via (16.2,73.3): an open leaves Q120 off, the bus then runs through Q120's body diode, the four-stall fire current falls to 1.06-1.13 A against the 1.125 A floor, and only a tight powered-bus band would notice",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb (own copper graph: pads, tracks, vias, fill pieces; .supervisor/r23_safety/out/fire_path_opens.json)",
+    "reference": "ACT_GATE: R121.1 F(14.5,72.3) -> F.Cu -> via (16.2,73.3) -> B.Cu -> Q120.4 / C120.2 / R120.2; R121.1 -> F.Cu -> via (11.14,71.7) -> B.Cu -> R119.1 / Q121.4",
+    "coordinates_mm": "vias (16.200,73.300) and (11.140,71.700), 0.5 / 0.3 mm",
+    "layer": "F.Cu / B.Cu",
+    "measured": "Q120.4 and Q121.4 meet only at R121.1 on F.Cu; removing via (16.2,73.3) cuts R121 from Q120.4 (and only that). Off-state stays defined (R120 / C120 local on B.Cu, D-R18-02). With PC1 high Q121 turns on and Q120 stays off, so the bus is fed through Q120's body diode (VSD -0.7 typ / -1.0 V max at IS = -1 A). Re-solving the board's own fire budget (parts_budget.json fire_current_GAP1: 4.4678 Ohm branch, 0.15 Ohm pack, 13.064 W other load, 1.92 A stalls; reproduces 1.5409 ... 1.2787 A) with that drop: four stalls 1.128 A (0.7 V) / 1.063 A (1.0 V), three stalls 1.194 / 1.129 A, idle 1.390 / 1.325 A. At the idle bus load (about 1.5 mA) the drop is about 0.4-0.55 V (Inference from the AOS body-diode curve), 5-7 % of the pack: the powered BUS / VLOGIC comparison catches it only with a band tighter than that. The other gate via (11.14,71.7) open leaves Q121 off and the bus dead, which the powered check refuses (fail-safe).",
+    "maker": "https://www.aosmd.com/res/datasheets/AONR21357.pdf p2 (VSD -0.7 / -1 V at IS = -1 A; VGS(th) -1.3 / -1.7 / -2.3 V)",
+    "records": "D-R18-02 covered the off-bias of each FET's gate; the on-path via was not analysed. F7: 'predicts 1.541 A idle ... 1.279 A four stalls ..., all above 1.125 A'."
+   },
+   "impact": "A single via open, not screened per flight unless the band is tight, erodes the fire margin to or below the 1.125 A design floor (still above the maker's 0.75 A all-fire at 0.5 s).",
+   "concrete_fix": "Now (text): add a ground refusal 'powered BUS reads at least 0.96 x VLOGIC_SENSE-derived pack voltage after the 100 ms settle' to the firmware / bench rules (M3_R10 Firmware, binding note obligation 9), qualified on first articles. Respin: a second F.Cu-B.Cu via at Q120's gate (a direct B.Cu link to Q121.4 would have to cross the ACT_FET_S source bridge at y 71.1)."
+  },
+  {
+   "id": "R23-SAFETY-06",
+   "severity": "Minor",
+   "status": "carried",
+   "earlier_id": "R22-REQUIREMENTS-03",
+   "title": "J400 ESD: 'fire-safe' holds for every EN overstress outcome, but two outcomes are not covered: J400 may stop switching the board off, and a leaky EN pin moves U9's drop-out into the pack's working range; the first-article check measures neither, and the 7.5 V figure is nominal",
+   "evidence": {
+    "file": "docs/ORDERING.md 8.3 'J400 ESD'; docs/REQUIREMENTS.md F9; docs/M3_R10.md retained item; m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "U9 TPS259470L B(18.5,81.6): EN/UVLO pin 1 0.200 mm from the IN bar (pin 5) on TI's land; C87 220 nF F(18.723,81.877); R165 470 kOhm from J400.2",
+    "coordinates_mm": "U9.1 (17.6,82.3); U9.5 (18.25,81.6); J400.2 pad (7.4,67.6), 0.2505 mm from the F.Cu / B.Cu GND pour",
+    "layer": "B.Cu / F.Cu",
+    "measured": "Fire path independence (netlist and copper): Q120 / Q121 / Q124 are driven only by PC1 / PE4 through R122-R123-C123, R121-R119-R120-C120 and R126-R127-R128-C126, none of which shares a part or a single via with U9 or BAT_ENABLE, and U9 cannot raise 3V3 (U2 regulates; U2.1 FB has no single-via open). So no EN outcome commands or bypasses a pyro FET: fire-safe confirmed for EN latch-up, an EN-to-IN short, and a pin stuck high or low. Not covered: (a) EN-to-IN short, EN stuck high, or latch-up leaving the HFET on: the board can no longer be turned off by J400; the discharge happens at the arming touch, after the e-match is in, so the per-flight 'board off' check cannot see it; it appears at abort or recovery. (b) A damaged EN pin with extra leakage to GND: U9 turns off below (1.116 V + I x 227 kOhm) / 0.2419: 1 uA 5.55 V, 2 uA 6.49 V, 3 uA 7.43 V (turn-on 7.88 V), against TI's +/-0.1 uA (4.71 V); at 2-3 uA the board boots on a fresh pack yet browns out at two servo stalls (BAT_IN 6.30 V in the fire budget) or at the fire's own sag, an in-flight reset loop. Leakage from IN above 4.08 uA turns the board on with J400 open. (c) The 7.5 V figure is nominal C87 with J400 closed; at C87's 0.72 x low bound the 8 kV / 150 pF charge adds 7.58 V (EN 7.6 V from open, 9.6 V from closed). Calculation, .supervisor/r23_safety/calc/calcs.json.",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps25947.pdf p7 (VEN/UVLO -0.3..6.5 V), p8 (ESD HBM +/-2000 V, CDM +/-500 V; recommended EN <= 5 V), p9 (thresholds, IENLKG +/-0.1 uA)",
+    "records": "R22-REQUIREMENTS-03 disposition: handling rule, first-article contact discharge 'then repeat the switch-off and J121.2 checks', respin EN clamp / series resistor."
+   },
+   "impact": "A J400 discharge can leave a board that J400 cannot safe, or a latent brown-out that resets the primary in flight (deployment then depends on FMEA F-4's post-reset rules or the Blue Jay). The fire-safety label is right; the record is incomplete on the other two outcomes.",
+   "concrete_fix": "Text only: in F9 / ORDERING 8.3 / M3_R10 list outcomes (a)-(c); extend the first-article check (and any field event where a discharge to J400 is suspected) to measure the board's turn-on and turn-off pack voltages on a bench supply ramp (expect turn-off 4.5-4.8 V, turn-on 4.9-5.2 V) in addition to the switch-off and J121.2 checks; quote the worst case (about 9.6 V) beside the nominal 7.5 V. Respin item unchanged."
+  },
+  {
+   "id": "R23-SAFETY-07",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The launch-detection rule is ambiguous: AGENTS 2.1 and F8 say 'accelerometer + barometer', but the FMEA rule cited for R10 (F-6) latches lift-off on the accelerometer alone, so one IMU fault can set the latch on the pad",
+   "evidence": {
+    "file": "AGENTS.md 2.1; docs/REQUIREMENTS.md F8; docs/M3_R10.md Firmware; docs/FMEA_REDUNDANCY.md R10 table row 'I-7; F-6 / F-10 / F-16' and F-6, F-11",
+    "reference": "Firmware rule text",
+    "coordinates_mm": "-",
+    "layer": "firmware rule",
+    "measured": "F-6: LIFTOFF is set when 'axial acceleration > 3 g for 100 ms' OR (only with IMU_VALID false) the barometric condition; corroboration by both sensors gates only the timer fallback. FLIGHT_PROVEN can then also come from the IMU alone (integrated velocity > 50 m/s), and after 60 % of the nominal apogee time F-11 lets V2 + V3, both from U4, make the 2-of-3 decision. A single IMU fault that stays 'valid' (for example a stuck or offset high-g channel, or self-test left enabled) can therefore walk the pad hold through every gate except the velocity lock (Inference; firmware not written). With 'accelerometer AND barometer' the pad case is closed, but a blocked vent (shared with the Blue Jay) would then stop both deployments: the choice is a real trade-off and is not stated for R10.",
+    "maker": "-",
+    "records": "R10 states the rule only as 'launch detected by accelerometer + barometer'."
+   },
+   "impact": "The firmware cannot be checked against AGENTS 2.1 for the pad-hold single-IMU-fault case until the rule says which sources are required.",
+   "concrete_fix": "Text only (M3_R10 Firmware, binding note): state the R10 rule explicitly, e.g. 'the fire path needs LIFTOFF from the accelerometer AND a barometric altitude gain (LAUNCH_CORROBORATED); with the barometer invalid, the inertial-only path needs FLIGHT_PROVEN and is disabled while barometric altitude is within 30 m of the pad reference and the barometer is valid', or adopt F-6 as written and record its single-IMU-fault pad path with the gates that block it."
+  },
+  {
+   "id": "R23-SAFETY-08",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Fire-route inventory: the passive screen sees a QSPI_IO2-to-PE4 bridge only if QSPI is active during it, two OUT-to-3V3 pairs just past 0.5 mm are bus-enabled fire routes outside the inventory, and 'GND holds the node off' is wrong for PYRO1_IGN",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb (.supervisor/r23_safety/out/adjacency.json, adjacency_summary.txt); docs/R10_VALIDATION.md section 1 surface inventory; docs/M3_R10.md CH1 pyro ('GND next to PYRO1_IGN, PYRO1_GATE and BAT_ENABLE holds the node off')",
+    "reference": "U1.1 PE2 = QSPI_IO2, U1.2 PE3 (NC), U1.3 PE4 = PYRO1_GATE_N, U1.4 PE5 (NC); R173.1 / D120.3; R164.2 (3V3A); J121.2 / R134",
+    "coordinates_mm": "U1.3 pad x 17.85-18.15, y 49.75-51.35; QSPI_IO2 track (17.0,49.1)-(18.9,49.1) w0.2 under U1.2-U1.4; R173.1 B(16.87,59.27) to D120.3 B(15.7,60.2); PYRO1_OUT track (15.5,56.6)-(16.87,57.97) to R164.2 B(16.5,55.9); J121.2 rings to In1 / In2 GND",
+    "layer": "F.Cu (U1), B.Cu, In1 / In2",
+    "measured": "(a) The only driven signal within 0.6 mm of the Q124 gate chain is QSPI_IO2: its track runs 0.5507 mm from U1.3's inner end under U1, and U1.1 (QSPI_IO2) is two pins from PE4 (0.7 mm pad edge to edge). A pad-to-track bridge, or one solder bridge spanning pins 1-3, sets PE4's push-pull low against QSPI_IO2's driver: about 1.61 V on PYRO1_GATE_N and 1.58 V on Q124's gate on IO2-high bits (both drivers about 50 Ohm, Inference from VOL/VOH at 8 mA), against AON7524 VGS(th) 0.4-1.2 V. With the bus enabled that fires the match during QSPI logging; in the passive screen it shows (CONT collapse) only if QSPI traffic runs then. (b) PYRO1_OUT to 3V3 0.5135 mm (R173.1 to D120.3) and to 3V3A 0.5662 mm (track to R164.2), B.Cu: with the bus on, the bus feeds the 3V3 rail through R134 and the match (the round 19 ring analysis gives about 0.3-0.8 A, AP63203 not sinking in PFM, Inference), the same class as the recorded J121.1-to-3V3 barrel case; the 0.5 mm inventory omits them (a pre-existing bridge is refused by the passive screen, CONT above band). (c) With the bus enabled a PYRO1_IGN-to-GND short (J121.2 rings 0.25 mm from In1 / In2 GND, J121.2 pad and the 0.5 mm IGN track 0.2505 mm from the outer pours) draws 3.3-3.75 A through R134 (22-29 W against its 2 W rating) until it opens: no match current, but a thermal event and loss of the primary channel.",
+    "maker": "https://www.aosmd.com/res/datasheets/AON7524.pdf p2 (VGS(th) 0.4 / 0.8 / 1.2 V); https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (I/O VOL / VOH at 8 mA); https://www.bourns.com/docs/product-datasheets/crm2512.pdf p1 (2 W at 70 C)",
+    "records": "Round 22 safety measured the same IGN-to-GND physics (about 34 W) and closed it without a record change. An older R10_VALIDATION table (section 1 of the earlier deviation inventory) lists 'U1.3 to NC sentinels U1.2 / U1.4; QSPI_IO2 track; U1.1 pad 0.2000; 0.5500; 0.7000 mm: pin contamination / internal fault remains possible' without the mechanism or a screen."
+   },
+   "impact": "Bus-enabled single-fault fire routes missing from the current inventory, one of which the passive screen catches only under conditions no rule sets; and a consequence mislabelled as 'holds the node off'.",
+   "concrete_fix": "Text only: (1) firmware rule: run sustained QSPI traffic (and toggle PC14 and the servo PWM) during part of the passive cold screen and refuse if CONT or BUS moves out of band (the FMEA I-2 / H-2 test, adapted to R10's analog sentinels); (2) add the three pairs (QSPI_IO2-PE4, OUT-3V3, OUT-3V3A) to the section 1 inventory with their consequences; (3) M3_R10 / R10_VALIDATION: say that GND at J121.2 is fail-safe for firing but, with the bus enabled, overloads R134 until it opens; optionally, on the ground after PC1 is high, return PC1 low when CONT collapses with BUS present."
+  },
+  {
+   "id": "R23-SAFETY-09",
+   "severity": "Minor",
+   "status": "new",
+   "title": "U9 alternate TPS259470A: no AGENTS section 2 property changes, but round22_alternates.md overstates 'the MCU reboots repeatedly' for a persistent short and omits that an in-flight retry recovers only through FMEA F-4's post-reset rules",
+   "evidence": {
+    "file": "m3_design/assembly_review/sources/r10_review/round22_alternates.md section 1.3 'Shorted load' and 'Transient short'",
+    "reference": "U9 OUT = RAW_PROTECTED (C82, C97, C400, C401, D9, R92, TP81, U11.2, U400.2/3); PC1 / PE4 networks; C120 1 uF with R119 || R120 = 50 kOhm",
+    "coordinates_mm": "U9 B(18.5,81.6)",
+    "layer": "-",
+    "measured": "TI: 470A retries after TSD (154 C, 10 C hysteresis) once tRST = 110 ms expires, 'if it is still enabled'; ILM-pin short latches; output short is 'circuit breaker followed by current limit' with foldback below VOUT 1.9 V (SLVSFC9C p10, p11, p37-38). A hard RAW_PROTECTED short holds VOUT near 0 V, so VLOGIC / 3V3 never come up and the MCU stays off through every retry; only a resistive overload of about 0.8-2.1 Ohm (VOUT above about 3.9 V at the 3.96-4.84 A limit) lets the logic run at all; where that overload is light enough to stay below TSD both variants simply hold the current limit (not latched, Table 7-3) and behave alike, and where it reaches TSD the 470A's later on-times are only the few milliseconds needed to reheat by the 10 C hysteresis (Inference). In every case PC1 and PE4 are held off by R123 / C123 and R127 / R128 / C126 through each reset (no single-via open on any of those paths, measured), J400 still disables U9 (EN low suppresses the retry), and in the cycling regime the passive screen plus its 100 ms settle cannot complete inside a TSD on-time. After any reset with PC1 high the load switch stays on 49-84 ms (C120 x 50 kOhm, VGS(th) 2.3 / 1.3 V, Calculation), longer than a fast reboot after a short J400 or pack drop-out (U9 30-129 ms turn-on), so the binding note's 'after a prior load-switch enable, wait >= 1 s' must be applied after every power-up: firmware cannot know of an enable before a power loss (VBAT tied to VDD clears the record, FMEA F-17).",
+    "maker": "https://www.ti.com/lit/ds/symlink/tps25947.pdf p4 (variants), p10 (TSD 154 C, 10 C), p11 (tRST 110 ms), p37-38 (Tables 7-2 and 7-3)",
+    "records": "round22_alternates.md: 'RAW_PROTECTED, and with it the logic, comes up and drops out once per cycle, so the MCU reboots repeatedly'; 'lift-off detection restarts on each reboot'; '470A brings it back after about 110 ms plus the dVdt ramp and the boot time'."
+   },
+   "impact": "Analysis only (the board is unaffected). The owner's U9 choice should know that 470A changes an in-flight overload from 'primary dead' to 'primary reboots without its flight state', which deploys only through F-4's live-evidence path, and that a hard short gives a dark board, not a cycling one.",
+   "concrete_fix": "Text only: correct section 1.3 as above; add the AGENTS section 2 conclusion (no property changes: defaults hold through each reset, J400 still disables, PC1 cannot complete its enable sequence inside a retry on-time); and reword the cold-screen rule (binding note obligation 9, M3_R10 Firmware) to 'after every power-up or reset, wait at least 1 s and verify RAW_ACT discharged / ACT_GATE off before classifying', which covers both U9 variants."
+  }
+ ],
+ "step_walk": [
+  {
+   "step": "1 Pack in (J400 open, no e-match)",
+   "fire": "None by one fault: no match. Hot-plug cannot turn the load switch on: C120 1 uF holds Q120 / Q121 VGS near 0 (Crss 365 pF), C123 10 nF holds Q122's gate to about 40 mV (Crss 50 pF, 8.4 V step) and C126 220 nF holds Q124's to about 2.5 mV (Crss 65 pF) (Calculation, AOS datasheets p2). Reversed or 3S pack: U9 blocks (IN to -15 V, OVLO 9.77 V nominal); Q120 / Q121 stay off (VGS 0); D8 is bidirectional 12 V standoff.",
+   "stop_fire": "-",
+   "board_on_switch_open": "U9.1-U9.5 0.200 mm leak, U9 HFET or EN-IN short, back-feed (USB, self-powered module), J400 pair short: covered by ORDERING 8.3 check (1) before the match goes in."
+  },
+  {
+   "step": "2 Board-off checks, e-match in",
+   "fire": "Bus live with J400 open (Q121 short: Q120's body diode conducts forward, so Q121 alone blocks; ACT_GATE leak to GND below about 270 kOhm; Q122 short): J121.2 < 0.1 V check (2). With the bus off no single fault both feeds IGN and sinks OUT above 0.3 A (structure: series pair and Q124 both off; CONT divider 0.75 mA at most). E-match into J1 with the pack in fires at once: covered only by J121's black body and legends.",
+   "stop_fire": "Strand across J121 or shorted match: reads healthy; no stated check (R23-SAFETY-03).",
+   "board_on_switch_open": "As step 1."
+  },
+  {
+   "step": "3 Close airframe, carry, load on the rail (e-match in, J400 open)",
+   "fire": "Needs the board on plus a second fault.",
+   "stop_fire": "-",
+   "board_on_switch_open": "J400 twisted-pair pinch or insulation failure, EN leak forming: no check after the match is in (R23-SAFETY-02)."
+  },
+  {
+   "step": "4 J400 closed on the rail: power-up and passive screen (PC1, PE4 low)",
+   "fire": "PC1 / PE4 defined off through reset by R123 / C123 and R127 / R128 / C126 (no single via on any gate-control or pull-down path, measured). Pre-existing Q124 short, Q124 gate-drain bridge (0.520 mm own land), C128 short, OUT-GND or OUT-3V3 bridge: CONT out of band, refusal. QSPI_IO2-PE4 bridge: seen only with QSPI active (R23-SAFETY-08). U2 high-side short (I-5): recorded residual (owner row 1). ESD on J400: fire-safe (R23-SAFETY-06).",
+   "stop_fire": "EN stuck low after ESD: dark board, no-go on the rail.",
+   "board_on_switch_open": "ESD outcomes (R23-SAFETY-06)."
+  },
+  {
+   "step": "5 PC1 high, powered on-rail checks (match fitted, operator at the rail)",
+   "fire": "Bus-enabled single-fault class (Q124 short or gate-drain bridge, C128, OUT-GND 0.1776 / 0.1808 mm, OUT-3V3 0.5135 mm, OUT-3V3A 0.5662 mm, I-5, firmware): recorded owner row 1, lever row 18. Faults that conduct only at bus voltage: first exercised now (R23-SAFETY-01).",
+   "stop_fire": "Q121 gate via (11.14,71.7) open: bus dead, refused. Q120 gate via (16.2,73.3) open: body diode, margin (R23-SAFETY-05). PC1, Q122, R121 path opens: bus dead, refused. Q124 gate chain (PE4 -> R126 -> Q124.4 on F.Cu, no via), C126 short, R128 short: undetectable, Blue Jay (single-string by design).",
+   "board_on_switch_open": "ACT_EN 0.330 mm, ACT_EN_MCU 0.5205 mm, RAW_ACT 0.5008 mm to BAT_ENABLE latch only now (R23-SAFETY-01)."
+  },
+  {
+   "step": "6 Hold on the pad (up to 2 h, bus enabled, PE4 low)",
+   "fire": "Bus-enabled class (recorded). IMU fault faking lift-off: rule ambiguous (R23-SAFETY-07). Radio uplink: firmware rule 'can never arm or fire'. Installed RF: bench test.",
+   "stop_fire": "Pack drain: pad-energy worksheet. IGN-GND short: R134 22-29 W until open (R23-SAFETY-08). Heat: 200 MHz clock rule.",
+   "board_on_switch_open": "n/a (J400 closed)."
+  },
+  {
+   "step": "7 Lift-off, burn, coast",
+   "fire": "Premature fire (wrong-time deployment): C128 crack, Q124 short, OUT-GND harness chafe: recorded class; harness dressing rules.",
+   "stop_fire": "J400 or J1 drop-out longer than 10.6 ms (8.5 ms at 5.73 V): bench chatter test, then F-4 post-reset rules. ESD-damaged EN leak: drop-out at 6.5-7.4 V (R23-SAFETY-06). Terminal screws: staking, strain relief.",
+   "board_on_switch_open": "n/a."
+  },
+  {
+   "step": "8 Apogee fire",
+   "fire": "-",
+   "stop_fire": "Fire-current copper has no single via (BAT_IN B.Cu 1.0 mm track, Q120 -> Q121 multiple paths, RAW_ACT and IGN on B.Cu, OUT on F.Cu, Q124 source to GND multiple paths; measured). Single-string parts (Q124, R134, PE4, MCU): Blue Jay. Body-diode case: R23-SAFETY-05.",
+   "board_on_switch_open": "n/a."
+  },
+  {
+   "step": "9 Descent, landing",
+   "fire": "An unfired match stays on an enabled bus: landing shock on C128 (991 microstrain at 100 g, plate model) can fire it; no LANDED disarm (R23-SAFETY-04).",
+   "stop_fire": "-",
+   "board_on_switch_open": "n/a."
+  },
+  {
+   "step": "10 Recovery and safing",
+   "fire": "Bus still enabled during approach (R23-SAFETY-04); USB log download re-arms with J400 open (R23-SAFETY-02).",
+   "stop_fire": "-",
+   "board_on_switch_open": "Latches (R23-SAFETY-01), U9 failures (R23-SAFETY-06), failed-on load switch fed from BAT_IN: no stated action; RAW_ACT not checkable in flight configuration (R23-SAFETY-02). J400 open otherwise turns the board off in about 42-53 ms (U9) plus the hold-up and the 49-84 ms gate decay (Calculation)."
+  }
+ ],
+ "u9_alternate_answer": "No AGENTS section 2 property changes with TPS259470A: PC1 / PE4 stay defined off through each reset by their via-free external networks; J400 still disables U9 (the retry needs EN high); a hard RAW_PROTECTED short keeps the logic off through every retry; the load-switch enable sequence (passive screen, PC1, 100 ms settle) cannot complete inside a TSD on-time; an in-flight retry loses the lift-off latch and record (power loss, VBAT tied to VDD) and deploys only through FMEA F-4's live-evidence rules, as any in-flight power loss does with 470L. Defects in the analysis: R23-SAFETY-09.",
+ "j400_esd_answer": "Fire-safe holds for every derived EN overstress outcome (latch-up, EN-to-IN short, pin stuck high or low, leakage): no outcome reaches Q120 / Q121 / Q124 or raises 3V3. Not safe in two other senses: J400 may no longer switch the board off, and EN leakage raises U9's drop-out into the pack's working range (R23-SAFETY-06).",
+ "fix_verification": [
+  {
+   "id": "D-R22 pass (all)",
+   "claim": "Checks, one sheet note and records only; PCB unchanged",
+   "measurement": "Board SHA-256 5516eeec... at ec8cb98 and c70d261 (git show); Gerber zip contents identical apart from date and comment lines (all 14 files); tools/check_r10.py diff: removed lines are the replaced DRU parser and pth_inner_copper refactor and two reworded exception reasons; S-1..S-9, BARREL_NETS and K-actuators untouched; seven taps added (26 -> 33) with exact exceptions",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "R22-SAFETY-01 (records fix)",
+   "claim": "R10_VALIDATION section 1 carried to 5516eeec: removed via row struck, least RAW_ACT-to-GND 0.300 mm, minimum 0.150 mm ARM1_SENSE to U13.5, R81 / C87 neighbours added",
+   "measurement": "Section 1 text read on c70d261 against my adjacency: 0.3000 mm (U11.6), 0.1500 mm (U13.5), R81.1 0.1740 / 0.2242 mm, C87.1 0.2505, C87.2 0.2536 mm all present",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "R22-REQUIREMENTS-03 (records fix)",
+   "claim": "F8 / F9, ORDERING 8.3 handling rule and first-article contact-discharge check, respin item",
+   "measurement": "Present in REQUIREMENTS F8 / F9, ORDERING 8.3, M3_R10 retained items and owner row 27; the outcome list is incomplete (R23-SAFETY-06)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R22-02",
+   "claim": "R60.1, PA4 (U1.28) and R91.1 each hang on one via; U10.2 / R7.2, U402.2, R8.2 single GND vias",
+   "measurement": "Own graph: R60.1 to U11.1 cut by via VLOGIC (34.50,63.00) and its tracks; the others not re-run (outside the pyro chain). Note for R23-SAFETY-02: a PA4-based PC1 interlock inherits the R91.1 / U1.28 single points",
+   "verdict": "confirmed (R60.1); not re-measured (others)"
+  },
+  {
+   "id": "D-R22-04",
+   "claim": "Least RAW_ACT-to-GND pad / track / via gap 0.300 mm (B.Cu RAW_ACT (22.8,61.4)-(22.8,63.875) to U11.6); EN 2.03 V nominal, <= 2.06 V with 1 % parts",
+   "measurement": "0.3000 mm (track to U11.6), next 0.3011 mm; fills 0.2505 mm. 8.4 x 300 / 1240 = 2.032 V; 8.4 x 303 / 1233.6 = 2.063 V",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-05",
+   "claim": "R81 / C87 at U9's end; EN reaches them from U9.1 through one via (17.10,82.80); new pad neighbours R81.1-GND via 0.173, C87.1-GND fill 0.251, C87.2-BAT_FAULT_N 0.254 mm",
+   "measurement": "Single opens U9.1 -> R81.1: via (17.10,82.80) plus three tracks; U9.1 -> C87.1: the via plus two tracks. Gaps 0.1740 / 0.2242 (R81.1 to the GND via / its 0.4 mm track), 0.2505, 0.2536 mm",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-04",
+   "claim": "BAT_ENABLE B.Cu hop (19.675,66.6)-(20.7,67.625)-(20.7,68.3)-(21.3,68.9); switch chain critical in route_check",
+   "measurement": "Those three segments present; BAT_ENABLE via (19.675,66.6) to R134.2 0.5008 mm (D-R19-02 unchanged); route_check not re-run",
+   "verdict": "confirmed (geometry)"
+  },
+  {
+   "id": "D-R21-01",
+   "claim": "Inner-layer PTH pad hole to copper >= 0.55 mm",
+   "measurement": "J400.2 hole to In1 GND 0.5505 mm; J121.2 ring to In1 / In2 GND 0.2505 mm (ring kept on purpose, wall 0.55 mm); J121.1 hole to In2 3V3 1.0613 mm, to In1 / In2 GND 1.050 mm; DRC (kicad-cli 10.0.7, all severities, schematic parity) 0 / 0 / 0",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-02",
+   "claim": "U2.1 (AP63203 FB, the 3V3 sense; an open would over-drive 3V3, the FMEA I-5 route) survives every single via open",
+   "measurement": "U2.1 -> L1.2: no single via or track open",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-03",
+   "claim": "battery_entry note: Q120's drain is on BAT_IN, the RAW_ACT fire path bypasses U9 and R134 limits it",
+   "measurement": "Netlist: Q120.5-9 = BAT_IN, Q121.5-9 = RAW_ACT, R134 RAW_ACT -> PYRO1_IGN. R134 limits the igniter branch only; a RAW_ACT-to-GND short (0.300 mm least, 0.2505 mm fills) is limited by nothing (as R10_VALIDATION section 1 records)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-05",
+   "claim": "J121.1 and J400.2 carry no unconnected inner rings; S-8 measures rings",
+   "measurement": "J121.1 hole: In1 / In2 GND 1.050, In2 3V3 1.0613 mm; J400.2 hole: In2 RAW_PROTECTED and In2 GND 1.050, In1 GND 0.5505 mm (exempt)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R20-11",
+   "claim": "Drop-out immunity 10.6 ms at 6.0 V with +/-0.1 uA EN leakage",
+   "measurement": "EN0 = 6.0 x 297 / 1246.4 - 0.1 uA x 225.8 kOhm = 1.407 V; tau = 297 k x 0.72 x 220 nF = 47.0 ms; t = 47.0 x ln((1.407 + 0.0297) / (1.116 + 0.0297)) = 10.6 ms",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-01 / D-R19-02 / D-R19-03 / D-R19-04 / D-R18-02",
+   "claim": "PYRO1_OUT barrels 1.021 mm from GND; BAT_ENABLE via 0.500 mm from R134.2; TP121 removed; C123 on Q122's gate; Q121 via-free local bias R119",
+   "measurement": "PYRO1_OUT via barrel to In1 / In2 GND 1.0210 mm; 0.5008 mm; no TP121, J123 or J124 footprint; C123 ACT_EN-GND present, R123 / C123 grounds have no single open; Q121.4 -> R119.1 and Q120.4 -> R120.2 / C120.2 tracks only",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R23-SAFETY-01",
+   "change": "ORDERING 8.3 per-flight check, R10_VALIDATION row 24 / section 1, FMEA H-6, R10_VEHICLE_HANDOFF: closed-switch check with a 1-2 Ohm dummy load in J121 so PC1 rises; check powered BUS / CONT; open J400 and confirm board off and J121.2 < 0.1 V within 1 s; then fit the e-match",
+   "benefit": "Exercises the three PC1 / bus EN latch paths and bus-voltage leaks of Q124 / C128 before the match is exposed",
+   "board_change": false
+  },
+  {
+   "finding": "R23-SAFETY-02",
+   "change": "ORDERING 8.3 / 8.4: no-telemetry check before carrying and before J400; fresh power-up at J400 closure; action for a board or bus that stays live; recovery order (J400, match, pack, then USB); firmware rule PC1 only while PA4 reads low and VBUS_SENSE agrees",
+   "benefit": "Covers the handling window and the abort / recovery states; adds a firmware barrier against USB re-arming",
+   "board_change": false
+  },
+  {
+   "finding": "R23-SAFETY-03",
+   "change": "ORDERING 8.3: after fitting the e-match (J400 open) read J121.1-J121.2 with < 40 mA test current; record it",
+   "benefit": "Catches a strand or shorted match the passive screen cannot see; confirms the leads are in J121",
+   "board_change": false
+  },
+  {
+   "finding": "R23-SAFETY-04",
+   "change": "M3_R10 Firmware and binding note: LANDED -> PE4 and PC1 low, latched until power-off",
+   "benefit": "Restores the series pair for the recovery crew",
+   "board_change": false
+  },
+  {
+   "finding": "R23-SAFETY-05",
+   "change": "Firmware / bench rule: ground refusal when the settled powered BUS is below about 0.96 x the PA6-derived pack voltage",
+   "benefit": "Detects the Q120 gate-via open and other load-switch drops",
+   "board_change": false
+  },
+  {
+   "finding": "R23-SAFETY-08",
+   "change": "Firmware rule: QSPI traffic and PC14 / PWM toggling during part of the passive screen, refusal on any CONT / BUS movement; inventory and IGN-to-GND wording corrected",
+   "benefit": "Makes the PE4-adjacent bridge class detectable on every power-up",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "A single fault that fires the match with J400 open or with PC1 low",
+   "disposition": "Closed (impossible by the copper and netlist): firing needs Q121 (the forward-blocking FET; Q120's body diode conducts forward) and Q124 to conduct together; with PC1 / PE4 low or unpowered every gate is held off by its own via-free network, and the only off-state current through the match is the cold pull-up (0.096 mA) or the CONT divider (0.75 mA at 8.4 V), against the J-Tek 0.30 A no-fire."
+  },
+  {
+   "candidate": "Single via on the fire-current path",
+   "disposition": "Closed: none (BAT_IN J1.1 -> Q120 is one 1.0 mm B.Cu track; Q120 -> Q121 has parallel paths; RAW_ACT, IGN on B.Cu tracks; OUT on F.Cu; Q124 source to J1.2 has no single via or track open). The PYRO1_OUT via (11.63,55.1) serves only the sense / cold / C128 branch; its open gives a CONT-low refusal."
+  },
+  {
+   "candidate": "Single open in a gate pull-down path (R123, C123, R127, R128, C126 grounds)",
+   "disposition": "Closed: no single via or track open from any of them to the FET source / J1.2."
+  },
+  {
+   "candidate": "Q124 gate disturbed by bus turn-on (Miller)",
+   "disposition": "Closed: C126 220 nF against Q124 Crss tens of pF keeps the coupled step to tens of mV; the bus rises with a 10 ms gate time constant."
+  },
+  {
+   "candidate": "RAW_ACT, ACT_FET_S or BAT_IN copper next to PYRO1_GATE / PYRO1_GATE_N",
+   "disposition": "Closed: none within 0.6 mm on any layer (the gate chain's only foreign neighbours are GND, its own drain at 0.520 mm, the NC sentinels and QSPI_IO2, R23-SAFETY-08)."
+  },
+  {
+   "candidate": "BAT_SW_SOURCE barrel (J400.1 ring / via (10.8,69.2)) 0.2505 mm from In1 / In2 GND and In2 RAW_PROTECTED",
+   "disposition": "Closed: a fault on the source side of the switch cannot defeat it (opening J400 isolates it from EN); to GND it only stops turn-on (fail-safe). S-8 correctly protects only the return side."
+  },
+  {
+   "candidate": "EN-to-OVLO bridge (U9.1-U9.2 0.200 mm)",
+   "disposition": "Closed (fail-safe): with J400 closed both nodes settle near 1.55 V, above the OVLO threshold, so U9 stays off; with J400 open EN sits at 0.57 V."
+  },
+  {
+   "candidate": "U9 alternate TPS259470A changes an AGENTS section 2 property",
+   "disposition": "Closed: no (R23-SAFETY-09 records the analysis defects only)."
+  },
+  {
+   "candidate": "Bus-enabled single-fault fire class (Q124, C128, OUT-GND, I-5)",
+   "disposition": "Not re-filed: recorded owner row 1 with lever row 18 (open owner decision); no member found worse than recorded except the inventory additions in R23-SAFETY-08."
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1 on the worktree and via git show c70d261 and ec8cb98, at the start and the end; git status: no tracked file changed.",
+  "pcbnew (KiCad 10 Python, read-only): footprint / pad / net dump (.supervisor/r23_safety/out/footprints.json, nets.json).",
+  "Own polygon adjacency of 23 pyro / arming / switch / buzzer nets against every other net on F.Cu, In1, In2 and B.Cu (pads, tracks, via pads, barrels, fill pieces; 0.6 mm outer, 1.1 mm inner): .supervisor/r23_safety/out/adjacency.json; reproduces the recorded 0.150, 0.173, 0.177, 0.180, 0.200, 0.225, 0.250, 0.300, 0.330, 0.367, 0.500, 1.021, 1.050, 1.061 mm figures.",
+  "Own copper graph per net and single via / track opens for 52 terminal pairs on the fire path, gate drives, pull-downs, the J400 chain and U2 FB: .supervisor/r23_safety/out/fire_path_opens.json.",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity (output only in the probe dir): 0 violations, 0 unconnected, 0 parity.",
+  "Gerber zip contents ec8cb98 vs c70d261 compared file by file ignoring date / comment lines: identical.",
+  "git diff ec8cb98..c70d261 of tools/check_r10.py read for removed or weakened rules.",
+  "Calculations (.supervisor/r23_safety/calc/calcs.py / calcs.json): EN latch and UVLO-shift thresholds, ESD charge, gate turn-off after reset, cold-screen bias, IGN-GND power, QSPI bridge level; fire budget re-solved with a body-diode drop from parts_budget.json.",
+  "Maker text read from the cached primary PDFs: TI SLVSFC9C pp4, 7-11, 30-31, 37-38; TI SLVSEA3F p18; AOS AON7524 and AONR21357 p2; Bourns CRM2512 p1."
+ ],
+ "sources": [
+  {
+   "doc": "TI TPS25947 SLVSFC9C (Rev C, May 2026)",
+   "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+   "pages": "p4 variants; p7 EN abs max 6.5 V; p8 ESD HBM 2 kV / CDM 500 V, EN <= 5 V recommended; p9 UVLO thresholds, IENLKG, ILM open / short; p10 TSD 154 C / 10 C, VFB 1.9 V; p11 tRST 110 ms; pp30-31 ILM notes; pp37-38 Tables 7-2, 7-3"
+  },
+  {
+   "doc": "TI TPS2121 SLVSEA3F",
+   "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+   "pages": "p18 Table 9-3 and ST summary"
+  },
+  {
+   "doc": "AOS AON7524",
+   "url": "https://www.aosmd.com/res/datasheets/AON7524.pdf",
+   "pages": "p2 VGS(th) 0.4 / 0.8 / 1.2 V, VGS +/-12 V"
+  },
+  {
+   "doc": "AOS AONR21357",
+   "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+   "pages": "p2 VGS(th) -1.3 / -1.7 / -2.3 V, VSD -0.7 / -1 V at -1 A"
+  },
+  {
+   "doc": "Bourns CRM2512",
+   "url": "https://www.bourns.com/docs/product-datasheets/crm2512.pdf",
+   "pages": "p1 2 W at 70 C"
+  },
+  {
+   "doc": "MJG J-Tek technical sheet",
+   "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+   "pages": "p1 0.75 A all-fire, 0.30 A no-fire, 40 mA test"
+  },
+  {
+   "doc": "ST DS12110 Rev 8 (STM32H743VI)",
+   "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+   "pages": "I/O output levels at 8 mA (used as about 50 Ohm drivers, Inference)"
+  }
+ ],
+ "coverage_limits": [
+  "No bench, firmware, SPICE or physical test; firmware does not exist, so every firmware-rule statement is about the written rules.",
+  "ESD arc paths, damaged-pin leakage values and the QSPI-bridge driver impedances are Inference; the TPS25947 internal EN structure is not documented by TI.",
+  "Adjacency is edge to edge on the CAD copper with 1 um polygon error; solder mask, coating and fabrication tolerances are not modelled.",
+  "The single-open search treats a track segment or via as the unit; partial or high-resistance opens and solder-joint opens are not modelled.",
+  "Round 22's safety report was opened only after these findings were written (comparison in the Markdown)."
+ ],
+ "probe_dir": ".supervisor/r23_safety/"
+}

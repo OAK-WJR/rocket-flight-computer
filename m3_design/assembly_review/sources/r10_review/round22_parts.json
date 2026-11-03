@@ -1,0 +1,134 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round22_parts",
+ "reviewer": "claude",
+ "target_commit": "ec8cb98",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 3
+ },
+ "findings": [
+  {
+   "id": "R22-PARTS-01",
+   "severity": "Minor",
+   "status": "carried (R21-BOM-02, widened to U9)",
+   "title": "The documented fallback for short U4 / U9, \"consign franchised parts\", is not obtainable today from the franchised channels checked",
+   "evidence": {
+    "jlc_live_probe_2026-11-01T01:07-01:10Z": "U9 C3662793 TPS259470LRPWR: stockCount 40, canPresaleNumber -69, minPurchase 7; U4 C51931514 ISM6HG256XTR: stockCount 9, canPresaleNumber 2; LCSC 40 / 0. This repeats fab/stock_check.json 2026-10-31T23:23Z (ok=false, short = U9 and U4).",
+    "U9_franchised": [
+     "TI store, https://www.ti.com/product/TPS25947/part-details/TPS259470LRPWR: Active, \"Not available\" (out of stock); only orderable form is the 3000-piece reel (SLVSFC9C p70 option table: TPS259470LRPWR, RPW, 10 pins, 3000 LARGE T&R; no small-reel T variant).",
+     "DigiKey 296-TPS259470LRPWRCT-ND / TR / DKR (https://punchouttest.digikey.de/en/products/detail/texas-instruments/TPS259470LRPWR/14124014): In-Stock 0, 3000 expected 14-Dec-2026, maker lead time 6 weeks.",
+     "findchips (https://www.findchips.com/search/TPS259470LRPWR): only brokers, Vyrian 9716 and Win Source 11502; no franchised line.",
+     "Mouser: page timed out twice; not verified."
+    ],
+    "U4_franchised": [
+     "ST eStore (https://estore.st.com/en/products/mems-and-sensors/inemo-inertial-modules/ism6hg256x.html): Out of Stock, notify-me only, $6.83.",
+     "DigiKey 497-ISM6HG256XTRCT-ND (https://punchouttest.digikey.de/en/products/detail/stmicroelectronics/ISM6HG256XTR/27569220): 0 in stock, 5000 expected 22-Mar-2027, lead time 20 weeks.",
+     "findchips: Avnet Americas 0, Newark 0, STMicroelectronics 0.",
+     "Second fallback LSM6DSV320XTR: DigiKey 0, lead time 24 weeks, \"estimated in-stock date unavailable\"; JLC / LCSC 0 (round 21).",
+     "RS (0719447) showed stock in search snippets, but the page returned 403; not verified. Mouser not verified."
+    ],
+    "records": "docs/ORDERING.md rows 279 / 282 and line 430, docs/M3_R10.md line 880 and docs/R10_VALIDATION.md row 14 give franchised consignment as the fallback for both parts. docs/M3_R10.md line 85 still says U4 is \"in JLC stock\"."
+   },
+   "impact": "If JLC cannot fill U4 and U9 on order day, 5 boards cannot be fully assembled. The fallback the records give cannot be met from TI, ST, DigiKey, Avnet or Newark today (Mouser and RS unverified). The only listed U9 stock is at brokers. U9 is the battery-path eFuse, so a broker part without traceability is a reliability risk. This is ordering and evidence, not a board defect.",
+   "concrete_fix": "Text only. (1) In ORDERING 8.1 rows 279 / 282, record the franchised status with dates: TI and ST stores out; DigiKey 0 with expected dates of 14-Dec-2026 (U9) and 22-Mar-2027 (U4); Mouser and RS to be checked. (2) State that U9 / U4 come only from franchised sources or JLC with traceability, never from brokers. (3) Add a fallback that does not need new stock: order the boards with U4 / U9 left unfitted (DNP), or order only as many fully fitted boards as JLC can fill (U4 has 2 orderable), and fit the rest later. Both are owner choices. (4) Correct M3_R10.md line 85, \"in JLC stock\"."
+  },
+  {
+   "id": "R22-PARTS-02",
+   "severity": "Minor",
+   "status": "carried (R21-BOM-03 / R20-BOM-02 / R19-BOM-04)",
+   "title": "DB125 holes are 1.30 mm with 1.90 mm lands; DORABO recommends 1.20 mm holes",
+   "evidence": "Native pads, all 8 DB125 footprints (J1, J400, J121, J122, J9, J410, J420, J440): drill 1.3, pad 1.9 mm circular. The outer annulus is 0.30 mm. Library unchanged since round 21 (git diff accfff4..ec8cb98 -- kilib: empty).",
+   "impact": "Larger fill volume and annulus at JLC's limit. THT fill is unqualified.",
+   "concrete_fix": "As recorded: check THT fill on the first article. No board change now."
+  },
+  {
+   "id": "R22-PARTS-03",
+   "severity": "Minor",
+   "status": "carried (R21-BOM-04 / R20-BOM-03 / R18-m10)",
+   "title": "VCAP C19 / C20 (C23630, CL10A225KO8NNNC 2.2 uF X5R 16 V) have no maker-bounded worst case for capacitance and ESR at their operating point",
+   "evidence": "BOM line \"2.2uF 16V X5R 10%, C19,C20, C23630\". Not changed since round 21.",
+   "impact": "Bounded residual, as recorded.",
+   "concrete_fix": "As R18-m10 (bench check of the VCAP)."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R21-05",
+   "claim": "R81 moved to F(18.8482,80.0) rot 0 and C87 to F(18.7232,81.8768) rot 0, pads 1 on the EN run; CPL rows updated; no other part moved",
+   "measured": "Native diff of all 215 footprints against the round 21 board 0dc84776: only R81 (20.5,65,0)->(18.8482,80.0,0) and C87 (17,65,0)->(18.7232,81.8768,0) changed; pads, fields and library identical. CPL rows: R81 18.8482,-80.0,Top,0 and C87 18.7232,-81.8768,Top,0. Fresh EasyEDA rebuild: R81 (R0603) 0.072 mm (pitch difference), C87 (C0603) 0.000 mm, pin numbers matched. F.Paste flashes at the new pads (R81 0.8x0.95 roundrect, C87 0.8x0.9); none at the old spots; totals 253 / 375. Lands: R81 0.8x0.95 at 1.65 pitch, C87 0.8x0.9 at 1.4 pitch, the same as every other 0603 on the board. Live parts: C23024 0603WAF3003T5E 300 kOhm 1% 100 mW 75 V; C21120 CL10B224KA8NNNC 220 nF 25 V X7R. Ratings: the divider holds EN at 2.03 V or less, so R81 dissipates about 14 uW. Render: both models sit on their lands between C80 and C84.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R21-01",
+   "claim": "Every plated pad hole is at least 0.55 mm from foreign inner copper (JLC 0.3); J1.2, J400.2 and J3's shell slots were refilled",
+   "measured": "Native, slot-aware (hole shape from GetEffectiveHoleShape, axis sampled at 1 um): 31 PTH pads x 4 layers, inner minimum 0.5505 mm; J3.1-J3.4 In2 0.5505 (3V3). Shipped Gerber (net-aware parse of m3_gerber.zip, sha 9fb07d16 = manifest): J1.2 In2 0.5505 (RAW_PROTECTED), J400.2 In1 0.5505 (GND), J3.1-J3.4 In2 slot walls 0.5505 (3V3), J400.2 / J121.1 In2 1.05. Outer layers: minimum 0.5505 (J3.1 F.Cu to SWDIO track 0.575). DRC (kicad-cli 10.0.7, all severities, parity): 0 / 0 / 0.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R21-05 (vias)",
+   "claim": "Two GND vias removed, (20.706,65.619) and (16.639,63.939); no via added",
+   "measured": "Via-set diff 0dc84776 -> 5516eeec: 302 -> 300, removed exactly those two, added none. Via in pad: only the two gated U401.11 VIPPO vias. R81.1 (EN) is 0.173 mm from the GND via (17.2,79.9), typical of the board (least foreign-net via-to-SMD gap is 0.150 mm, J430.12). That via has no mask opening, so it is tented.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R20-05 / D-R19-11 / D-R19-07 (touched)",
+   "claim": "Inner rings removed where unconnected; U4 ISM6HG256X at Bottom 180; C84 no paste, owner BOM only",
+   "measured": "J400.2 In1 and J1.2 In2 have no ring (no Gerber flash) and are 0.5505 mm from copper. U4 EasyEDA (LGA-14 BR) at Bottom 180: 0.040 mm on all 14 pads. C84 lands have no F.Paste flash; C46550466 is on the owner BOM only.",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R22-PARTS-01",
+   "change": "Text only (no board change). (a) ORDERING 8.1 rows 279 / 282: add the dated franchised status and the \"franchised or JLC only, never brokers\" rule. (b) Add the owner choice: DNP U4 / U9, or a partial order matched to JLC's fill. (c) M3_R10.md line 85: remove \"in JLC stock\"."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "U9 consigned land / CPL rotation: same MPN and package, so the same land. Our land matches TI RPW0010A (SLVSFC9C p72 example board layout): columns at +/-0.9 (1.8), 8X 0.6 long, pads 2/3/8/9 0.25 wide at +/-0.225, corner legs 0.25x0.65 at +/-0.725 (1.45), pads 5/6 0.3x2.4 at +/-0.25. EasyEDA C3662793 (VQFN-10-HR) at Bottom 180: pads 2/3/8/9 within 0.005 mm, 5/6 0.015 mm, corner pads 0.18-0.19 mm (the L-shaped pads are split on our side), so pin 1 is correct. CPL rotation is set against the footprint, not the tape (TI reel pin 1 is Q2, SLVSFC9C p71). Whether JLC maps a consigned part to the same footprint is an Inference: check pin 1 in JLC's placement preview. Not a finding.",
+  "D-R21-01 record table, In1 values for J3.1 / J3.4 (1.375 / 1.345 mm to VBUS): slot-aware measurement gives 1.225 / 1.194 (centre-based 1.611 / 1.573). Both are far above 0.3 mm, so this changes nothing. Noted only.",
+  "Vias very close to same-net pads, e.g. VBUS (11.95,30.6) 0.014 mm from D4.5: same net, tented, known since R5 (R5-RTE-04). Not new.",
+  "BOM / CPL / schematic / board identity: 215 / 215 / 206 fitted / 81 + 1 lines / 205 CPL / 666 nodes, 0 issues; LCSC Part = LCSC on all 130 extra fields; the 82 live codes match their BOM MPNs (36 Basic / 46 Extended, including C84). R164 0603WAF220KT5E is 2.2 Ohm (live LCSC), which matches its BOM value.",
+  "CPL outliers Q124 / R134 / LS120 / Q120 / Q121 are the known land-size cases, as in rounds 19-21.",
+  "Capacitor ratings: every capacitor on a battery, actuator, pyro or USB net is rated 16 V or more, and every capacitor carries a voltage rating.",
+  "Cost $85.37 against the $84.41 cap (cost_check.json 2026-10-31T23:24Z): open owner decision, noted only. Fab hashes (BOM df6c0fc2, owner c48868b3, CPL 905e4314, Gerber 9fb07d16) match the manifest bound to 5516eeec, and the stock / cost input hashes match."
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after: 5516eeec both; no tracked file edited",
+  "Native pcbnew dump of 215 footprints; diff against the round 21 dump of 0dc84776: only R81 / C87 poses changed",
+  "kicad-cli 10.0.7 schematic netlist plus identity compare (schematic / board / BOM / CPL / owner BOM): 0 issues",
+  "kicad-cli 10.0.7 DRC, all severities, schematic parity: 0 violations / 0 unconnected / 0 parity",
+  "CPL reconstruction of all 205 rows against EasyEDA footprints (9 codes fetched fresh, pads identical to the round 21 cache; the rest from the round 21 cache)",
+  "Slot-aware PTH hole-wall-to-foreign-copper on all 4 layers (native), plus a net-aware Gerber parse of In1 / In2 for J1, J400, J121, J3",
+  "Via-in / near-pad scan of all 300 vias; via-set diff against 0dc84776",
+  "Gerber F.Paste / F.Mask flashes at R81 / C87 (new and old spots) and C84; paste totals",
+  "Manifest and stock / cost input hashes against the files",
+  "Live JLC exact-code and LCSC queries for all 82 codes (2026-11-01T01:07-01:10Z)",
+  "Franchised checks: TI store, ST eStore, DigiKey (U9, U4, LSM6DSV320XTR), findchips; Mouser timed out, RS returned 403",
+  "TI SLVSFC9C RPW0010A land pattern compared with M3_TPS25947_RPW",
+  "kicad-cli renders: top U9 / R81 / C87 corner and bottom U9 (pin-1 dot at pad 1)"
+ ],
+ "sources": [
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C, May 2026: p70-71 options / reel Q2, p72-74 RPW0010A outline, land, stencil)",
+  "https://www.ti.com/product/TPS25947/part-details/TPS259470LRPWR",
+  "https://punchouttest.digikey.de/en/products/detail/texas-instruments/TPS259470LRPWR/14124014",
+  "https://punchouttest.digikey.de/en/products/detail/stmicroelectronics/ISM6HG256XTR/27569220",
+  "https://punchouttest.digikey.de/en/products/result?keywords=LSM6DSV320XTR",
+  "https://estore.st.com/en/products/mems-and-sensors/inemo-inertial-modules/ism6hg256x.html",
+  "https://www.findchips.com/search/TPS259470LRPWR",
+  "https://www.findchips.com/search/ISM6HG256XTR",
+  "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList (exact-code queries)",
+  "https://wmsc.lcsc.com/ftps/wm/product/detail?productCode=<code>",
+  "https://easyeda.com/api/products/<code>/components (footprints)",
+  "https://jlcpcb.com/capabilities/pcb-capabilities (inner-layer PTH pad hole to copper 0.3 mm)"
+ ],
+ "coverage_limits": [
+  "Mouser was not verified (timed out) and RS was not verified (403). The DigiKey figures come from its .de punchout mirror.",
+  "JLC's field meanings (canPresaleNumber) and how JLC maps consigned parts to footprints are Inferences.",
+  "Lands of unchanged parts are carried from rounds 19-21; today's EasyEDA pads match them.",
+  "No physical qualification; cost not re-run."
+ ]
+}

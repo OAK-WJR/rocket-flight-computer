@@ -1,0 +1,645 @@
+{
+ "schema": 1,
+ "phase": "focused_final_r14_native_geometry_metric_refresh",
+ "target_commit": null,
+ "commit_scope": "Root supplied the current canonical integration PCB SHA, not a new committed-board review target. No git action or committed-board review is performed.",
+ "board": "m3_design/assembly_review/m3.kicad_pcb",
+ "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+ "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+ "prepared_utc": "2026-10-30T12:42:13.346788+00:00",
+ "native_inventory_fresh": {
+  "board_bytes": 2257812,
+  "footprints": 209,
+  "segments": 957,
+  "vias": 296,
+  "GND_vias": 168,
+  "track_mm": 1797.1401775940153
+ },
+ "near_pad_edge_endpoints_fresh": {
+  "count": 5,
+  "unique_pad_positions": 3,
+  "threshold_mm": 0.03,
+  "method": "Fresh full-board same-net endpoint inventory using native pad.TransformShapeToPolygon(ERROR_INSIDE,0.001mm). Endpoint containment and shortest distance to literal polygon edges; overlapping same-number lands with deeper contact suppress a false shallow entry. Results rounded0.001mm exactly as the historical static helper. No bounding-box depth substitution.",
+  "instances": [
+   {
+    "pad": "L1.2",
+    "net": "3V3",
+    "layer": "B.Cu",
+    "end": [
+     24.2,
+     77.0
+    ],
+    "depth_mm": 0.0
+   },
+   {
+    "pad": "R432.1",
+    "net": "CAM_FAULT_N",
+    "layer": "B.Cu",
+    "end": [
+     35.02,
+     58.05
+    ],
+    "depth_mm": 0.02
+   },
+   {
+    "pad": "R432.1",
+    "net": "CAM_FAULT_N",
+    "layer": "B.Cu",
+    "end": [
+     35.02,
+     58.05
+    ],
+    "depth_mm": 0.02
+   },
+   {
+    "pad": "R120.2",
+    "net": "ACT_GATE",
+    "layer": "B.Cu",
+    "end": [
+     18.23,
+     73.3
+    ],
+    "depth_mm": 0.0
+   },
+   {
+    "pad": "R120.2",
+    "net": "ACT_GATE",
+    "layer": "B.Cu",
+    "end": [
+     18.23,
+     73.3
+    ],
+    "depth_mm": 0.0
+   }
+  ]
+ },
+ "foreign_between_two_pad_lanes_fresh": {
+  "count": 4,
+  "method": "Every track versus every two-copper-pad part, different from both pad nets, native same-layer pad shapes; strict center-axis crossing outside both pad shapes. Gap is the collision bracket between each native effective track capsule and pad shape, binary search stopped at100native units(0.0001mm); reported minimum is the smaller upper bracket, matching prior method.",
+  "instances": [
+   {
+    "part": "C84",
+    "net": "3V3",
+    "layer": "F.Cu",
+    "at_mm": [
+     27.5,
+     79.26
+    ],
+    "minimum_pad_gap_mm": 0.540007,
+    "pad_gap_brackets": [
+     {
+      "pad": "C84.1",
+      "lower_mm": 0.539931,
+      "upper_mm": 0.540007
+     },
+     {
+      "pad": "C84.2",
+      "lower_mm": 2.059935,
+      "upper_mm": 2.060011
+     }
+    ],
+    "track_mm": [
+     [
+      26.4,
+      79.26
+     ],
+     [
+      30.8,
+      79.26
+     ]
+    ]
+   },
+   {
+    "part": "C22",
+    "net": "BAT_FAULT_N",
+    "layer": "B.Cu",
+    "at_mm": [
+     27.0,
+     47.3
+    ],
+    "minimum_pad_gap_mm": 0.200041,
+    "pad_gap_brackets": [
+     {
+      "pad": "C22.1",
+      "lower_mm": 0.199964,
+      "upper_mm": 0.200041
+     },
+     {
+      "pad": "C22.2",
+      "lower_mm": 0.199964,
+      "upper_mm": 0.200041
+     }
+    ],
+    "track_mm": [
+     [
+      28.0,
+      47.3
+     ],
+     [
+      26.0,
+      47.3
+     ]
+    ]
+   },
+   {
+    "part": "C28",
+    "net": "USB_FAULT_N",
+    "layer": "B.Cu",
+    "at_mm": [
+     13.05,
+     24.9
+    ],
+    "minimum_pad_gap_mm": 0.200041,
+    "pad_gap_brackets": [
+     {
+      "pad": "C28.1",
+      "lower_mm": 0.199964,
+      "upper_mm": 0.200041
+     },
+     {
+      "pad": "C28.2",
+      "lower_mm": 0.199964,
+      "upper_mm": 0.200041
+     }
+    ],
+    "track_mm": [
+     [
+      13.05,
+      25.7
+     ],
+     [
+      13.05,
+      24.1
+     ]
+    ]
+   },
+   {
+    "part": "R87",
+    "net": "RAW_ACT",
+    "layer": "B.Cu",
+    "at_mm": [
+     22.0,
+     63.875
+    ],
+    "minimum_pad_gap_mm": 0.275038,
+    "pad_gap_brackets": [
+     {
+      "pad": "R87.1",
+      "lower_mm": 0.274962,
+      "upper_mm": 0.275038
+     },
+     {
+      "pad": "R87.2",
+      "lower_mm": 0.374983,
+      "upper_mm": 0.37506
+     }
+    ],
+    "track_mm": [
+     [
+      19.2,
+      63.875
+     ],
+     [
+      22.8,
+      63.875
+     ]
+    ]
+   }
+  ]
+ },
+ "slow_AUD2_reference_observations_fresh": {
+  "diagnostic_only": true,
+  "scope": "Fresh read-only K-region diagnostic restricted in memory to exactly critical_reference.R10_SLOW_RETURN_NETS; original function restored immediately. These nets are exempt from the mandatory one-region/reference/partner-via rules. No gate, rule or source change.",
+  "examined_named_slow_nets": [
+   "ACT_DRV",
+   "ACT_EN",
+   "ACT_EN_MCU",
+   "ACT_GATE",
+   "ARM1_SENSE",
+   "ARM1_SENSE_MID",
+   "CAM_5V_SENSE",
+   "CAM_FAULT_N",
+   "CAM_PWR_EN",
+   "CAM_UART_OE",
+   "PYRO1_CONT",
+   "PYRO1_CONT_MID",
+   "V3V3_SENSE",
+   "VLOGIC_SENSE"
+  ],
+  "evidence": {
+   "items": 59,
+   "samples": 13033,
+   "nets": [
+    "ACT_DRV",
+    "ACT_EN",
+    "ACT_EN_MCU",
+    "ACT_GATE",
+    "ARM1_SENSE",
+    "ARM1_SENSE_MID",
+    "CAM_5V_SENSE",
+    "CAM_FAULT_N",
+    "CAM_PWR_EN",
+    "CAM_UART_OE",
+    "PYRO1_CONT",
+    "PYRO1_CONT_MID",
+    "V3V3_SENSE",
+    "VLOGIC_SENSE"
+   ]
+  },
+  "count": 11,
+  "counts_by_kind": {
+   "run": 5,
+   "pad": 5,
+   "connected_chain": 1
+  },
+  "distinct_observed_nets": [
+   "ARM1_SENSE",
+   "PYRO1_CONT_MID",
+   "V3V3_SENSE"
+  ],
+  "instances": [
+   {
+    "kind": "run",
+    "net": "V3V3_SENSE",
+    "observation": "V3V3_SENSE B.Cu run (25.93, 55.70) - (25.93, 56.70) lies over In2 planes ['3V3'] and 102 samples over no In2 copper, e.g. (25.93, 55.7) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "run",
+    "net": "V3V3_SENSE",
+    "observation": "V3V3_SENSE B.Cu run (25.93, 52.18) - (25.93, 55.70) lies over In2 planes ['3V3'] and 375 samples over no In2 copper, e.g. (25.93, 52.18) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "run",
+    "net": "V3V3_SENSE",
+    "observation": "V3V3_SENSE B.Cu run (25.50, 51.75) - (25.93, 52.18) lies over In2 planes ['3V3'] and 24 samples over no In2 copper, e.g. (25.94, 51.91) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "run",
+    "net": "ARM1_SENSE",
+    "observation": "ARM1_SENSE B.Cu run (29.75, 49.40) - (29.75, 45.50) lies over In2 planes ['3V3'] and 19 samples over no In2 copper, e.g. (29.55, 46.38) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "run",
+    "net": "PYRO1_CONT_MID",
+    "observation": "PYRO1_CONT_MID B.Cu run (23.00, 58.77) - (23.00, 57.83) lies over In2 planes ['3V3'] and 6 samples over no In2 copper, e.g. (23.0, 58.77) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "pad",
+    "net": "V3V3_SENSE",
+    "observation": "V3V3_SENSE pad R62.2 lies over In2 planes ['3V3'] and 154 samples over no In2 copper, e.g. (25.79, 55.38) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "pad",
+    "net": "V3V3_SENSE",
+    "observation": "V3V3_SENSE pad R63.1 lies over In2 planes ['3V3'] and 154 samples over no In2 copper, e.g. (25.79, 56.38) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "pad",
+    "net": "PYRO1_CONT_MID",
+    "observation": "PYRO1_CONT_MID pad R129.1 lies over In2 planes ['3V3'] and 3 samples over no In2 copper, e.g. (22.68, 58.07) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "pad",
+    "net": "PYRO1_CONT_MID",
+    "observation": "PYRO1_CONT_MID pad R173.2 lies over In2 planes ['3V3', 'GND'] and 74 samples over no In2 copper, e.g. (22.68, 58.43) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "pad",
+    "net": "ARM1_SENSE",
+    "observation": "ARM1_SENSE pad C129.1 lies over In2 planes ['3V3'] and 1 samples over no In2 copper, e.g. (27.1, 52.1) (one In2 plane region per signal-critical run)"
+   },
+   {
+    "kind": "connected_chain",
+    "net": "PYRO1_CONT_MID",
+    "observation": "PYRO1_CONT_MID connected B.Cu chain (B.Cu run (23.00, 58.77) - (23.00, 57.83), pad R129.1, pad R173.2) lies over In2 planes ['3V3', 'GND'] (one In2 plane region per connected chain)"
+   }
+  ]
+ },
+ "noncritical_return_companions_fresh": {
+  "count": 6,
+  "observation_benchmark_mm": 1.5,
+  "applicable_limit": null,
+  "scope": "NRST,BOOT0,I2C1_SCL,I2C1_SDA are outside the mandatory fast-signal partner list; distances are native via-center Euclidean geometry, not functional-failure findings.",
+  "instances": [
+   {
+    "net": "NRST",
+    "at_mm": [
+     24.3,
+     49.1
+    ],
+    "nearest_GND_via_mm": [
+     24.8,
+     47.7
+    ],
+    "GND_center_distance_mm": 1.4866068747318493
+   },
+   {
+    "net": "NRST",
+    "at_mm": [
+     14.2,
+     37.3
+    ],
+    "nearest_GND_via_mm": [
+     11.7,
+     40.0
+    ],
+    "GND_center_distance_mm": 3.679673898594822
+   },
+   {
+    "net": "NRST",
+    "at_mm": [
+     22.54,
+     38.5
+    ],
+    "nearest_GND_via_mm": [
+     21.4,
+     37.3
+    ],
+    "GND_center_distance_mm": 1.655173706896049
+   },
+   {
+    "net": "BOOT0",
+    "at_mm": [
+     13.8,
+     45.6
+    ],
+    "nearest_GND_via_mm": [
+     13.35,
+     44.0
+    ],
+    "GND_center_distance_mm": 1.6620770138594676
+   },
+   {
+    "net": "I2C1_SCL",
+    "at_mm": [
+     7.75,
+     49.8
+    ],
+    "nearest_GND_via_mm": [
+     7.4,
+     51.2
+    ],
+    "GND_center_distance_mm": 1.4430869689661867
+   },
+   {
+    "net": "I2C1_SDA",
+    "at_mm": [
+     9.97,
+     51.5
+    ],
+    "nearest_GND_via_mm": [
+     11.23,
+     53.343
+    ],
+    "GND_center_distance_mm": 2.232543168675583
+   }
+  ],
+  "above_observation_benchmark": 4
+ },
+ "named_AUD2_transition_companions_fresh": {
+  "scope": "Supplemental native endpoint-layer transitions for named slow nets only;1.5mm is not imposed on them.",
+  "count": 8,
+  "instances": [
+   {
+    "net": "CAM_PWR_EN",
+    "at_mm": [
+     34.4,
+     57.4
+    ],
+    "nearest_GND_via_mm": [
+     33.2,
+     55.0
+    ],
+    "GND_center_distance_mm": 2.6832815729997446
+   },
+   {
+    "net": "PYRO1_CONT",
+    "at_mm": [
+     24.0,
+     52.15
+    ],
+    "nearest_GND_via_mm": [
+     25.15,
+     54.0
+    ],
+    "GND_center_distance_mm": 2.178302091079197
+   },
+   {
+    "net": "V3V3_SENSE",
+    "at_mm": [
+     25.5,
+     51.75
+    ],
+    "nearest_GND_via_mm": [
+     25.15,
+     54.0
+    ],
+    "GND_center_distance_mm": 2.2770595073471402
+   },
+   {
+    "net": "ARM1_SENSE",
+    "at_mm": [
+     29.2,
+     45.5
+    ],
+    "nearest_GND_via_mm": [
+     29.2,
+     46.2
+    ],
+    "GND_center_distance_mm": 0.7000000000000028
+   },
+   {
+    "net": "CAM_UART_OE",
+    "at_mm": [
+     34.0,
+     42.0
+    ],
+    "nearest_GND_via_mm": [
+     33.1,
+     43.65
+    ],
+    "GND_center_distance_mm": 1.8794946129212482
+   },
+   {
+    "net": "CAM_FAULT_N",
+    "at_mm": [
+     36.5,
+     56.8
+    ],
+    "nearest_GND_via_mm": [
+     37.1,
+     57.875
+    ],
+    "GND_center_distance_mm": 1.2311072252245163
+   },
+   {
+    "net": "ACT_GATE",
+    "at_mm": [
+     16.2,
+     73.3
+    ],
+    "nearest_GND_via_mm": [
+     16.05,
+     75.0
+    ],
+    "GND_center_distance_mm": 1.706604816587604
+   },
+   {
+    "net": "ACT_GATE",
+    "at_mm": [
+     11.8,
+     70.725
+    ],
+    "nearest_GND_via_mm": [
+     16.05,
+     75.0
+    ],
+    "GND_center_distance_mm": 6.028111229896148
+   }
+  ]
+ },
+ "short_hops_fresh": {
+  "count": 3,
+  "method": "Direct static native via_steps_and_hops helper only: track on a net with a pour, shorter than4mm and touching two distinct same-net via rings. No candidate routing/search or production rule evaluation invoked. These existing hops contact own fills or junctions; no prohibited series-hop conclusion.",
+  "instances": [
+   {
+    "net": "PORT_5V3",
+    "layer": "F.Cu",
+    "a": [
+     26.8,
+     8.0
+    ],
+    "b": [
+     26.0,
+     8.0
+    ],
+    "len_mm": 0.8
+   },
+   {
+    "net": "RAW_PROTECTED",
+    "layer": "F.Cu",
+    "a": [
+     14.1,
+     7.6
+    ],
+    "b": [
+     14.1,
+     9.0
+    ],
+    "len_mm": 1.4
+   },
+   {
+    "net": "RAW_PROTECTED",
+    "layer": "B.Cu",
+    "a": [
+     20.3,
+     79.1
+    ],
+    "b": [
+     21.1,
+     79.1
+    ],
+    "len_mm": 0.8
+   }
+  ],
+  "via_steps_count": 3,
+  "via_steps": [
+   {
+    "net": "3V3",
+    "layer": "B.Cu",
+    "via": [
+     29.2,
+     48.5
+    ],
+    "len_mm": 0.212
+   },
+   {
+    "net": "CAM_MCU_TX",
+    "layer": "F.Cu",
+    "via": [
+     32.2,
+     42.85
+    ],
+    "len_mm": 0.212
+   },
+   {
+    "net": "CC1",
+    "layer": "B.Cu",
+    "via": [
+     7.85,
+     29.25
+    ],
+    "len_mm": 0.113
+   }
+  ]
+ },
+ "comparison_to_earlier_r14_target": {
+  "earlier_board_sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "current_readings_not_transferred": true,
+  "comparison_normalization": "Sort canonical JSON serializations, normalizing native tuple versus JSON array containers; numeric values are unchanged.",
+  "literal_near_edge_rows_identical": true,
+  "four_foreign_between_pad_rows_and_gap_uppers_identical": true,
+  "eleven_AUD2_observation_texts_identical": true,
+  "noncritical_via_distances_identical": true,
+  "three_pour_contact_hop_rows_identical": true,
+  "all_requested_detailed_metrics_preserved": true
+ },
+ "checks_actually_executed": [
+  "Exact current canonical SHA before/after and fresh native load/inventory.",
+  "Fresh full-board literal native-pad-polygon endpoint scan.",
+  "Fresh full-board two-pad foreign-axis-crossing/minimum-gap scan.",
+  "Fresh exactly named slow AUD2 K-region diagnostic with restored in-memory selector.",
+  "Fresh nearest-GND center distances for general noncritical and named AUD2 endpoint-layer transitions.",
+  "Fresh direct short-hop/via-step geometry helper; no candidates or redraws.",
+  "Explicit comparison against earlier own R14 static-probe data, labelled historical comparison only.",
+  "Original four routing review/fix files hash checked before/after; no writes."
+ ],
+ "transferred_vs_fresh": {
+  "fresh_metric_fields": [
+   "native_inventory_fresh",
+   "near_pad_edge_endpoints_fresh",
+   "foreign_between_two_pad_lanes_fresh",
+   "slow_AUD2_reference_observations_fresh",
+   "noncritical_return_companions_fresh",
+   "named_AUD2_transition_companions_fresh",
+   "short_hops_fresh"
+  ],
+  "transferred_current_measurements": [],
+  "historical_comparison_only": [
+   "Earlier R14 static-probe rows/hash for equality comparison; they are not substituted for current execution."
+  ],
+  "root_report_context_only": ".supervisor/r14_final_route.json was named by root; no measurement above relies on its139items/54windows."
+ },
+ "preservation": {
+  "original_review_and_fix_hashes_unchanged": {
+   "m3_design/assembly_review/sources/r10_review/round14_routing.md": "b5ce9d6dba8518831ca06fa8bdd0ade99c725c8b96e9840b191aab27639b868e",
+   "m3_design/assembly_review/sources/r10_review/round14_routing.json": "20174636ee0c2faa328ffb8c35ce579c15e117ddc7719140c63209fc29266c09",
+   "m3_design/assembly_review/sources/r10_review/round14_routing_fix.md": "0bc01843e845dce54194bfaf3ae534e3c0e57767537801a94b089089fd3fa740",
+   "m3_design/assembly_review/sources/r10_review/round14_routing_fix.json": "ed0095d8a05055cbaf5f56cbdbd71d0971cbd4bc916717fd62eafe9fdad4ff1a"
+  },
+  "canonical_source_CAD_fab_mutations": 0
+ },
+ "source_receipts": [
+  {
+   "path": "m3_design/assembly_review/sources/r8_design/step9/m2_sweep.py",
+   "sha256": "b3669fd68c99f11d151b0e07546a2a31c2e2dd639bce7e087841bb2e6bd6b26d"
+  },
+  {
+   "path": "tools/check_r10.py",
+   "sha256": "8ae9b668aeeefa9d7d6301faaff09d45c1045bb1e0286f3fad45023ef7cf9fb3"
+  },
+  {
+   "path": "tools/route_check.py",
+   "sha256": "d8070ccbb4a9ef21d2adc442577ac93110822e54d708a884b1c225896ae670f0"
+  },
+  {
+   "path": "tools/critical_reference.py",
+   "sha256": "440207cdba27dae50bb435bd53b8ab2dc9e10c03d58ff2ccedaef469985ac1d1"
+  }
+ ],
+ "coverage_limits": [
+  "Focused read-only metric refresh, not a new full independent review, source change or acceptance.",
+  "No native CLI/DRC/ERC, fullcheck, canonical build/write, candidate routing, GUI or git action. No original report/fix/source/CAD/fab edits.",
+  "No newly imposed numerical rule on noncritical/AUD2 nets and no physical, firmware, EMI, harness, assembly or flight qualification."
+ ]
+}

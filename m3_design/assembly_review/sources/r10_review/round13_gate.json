@@ -1,0 +1,1086 @@
+{
+  "schema": 1,
+  "lens": "Round13 independent gate adversary",
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "findings": [
+    {
+      "id": "R13-GATE-01",
+      "severity": "Minor",
+      "status": "new_prospective_gap",
+      "title": "An added contradictory MPN field escapes identity audit and real schematic parity",
+      "evidence": {
+        "files": [
+          "quality_audit/audit_artifacts.py:35",
+          "quality_audit/audit_artifacts.py:43",
+          "tools/check_r10.py:676"
+        ],
+        "ref": "R134",
+        "coordinate_mm": [
+          16.5,
+          64.0
+        ],
+        "seed": {
+          "canonical_Manufacturer_Part": "CRM2512-FX-2R00ELF",
+          "additional_hidden_MPN": "CRM2512-FX-20R0ELF"
+        },
+        "measured": {
+          "metadata_missing": 0,
+          "metadata_conflicts": 0,
+          "K_contract_issues": 0,
+          "K_actuators_issues": 0,
+          "official_10_0_7_DRC": 0,
+          "unconnected": 0,
+          "schematic_parity": 0
+        },
+        "controls": "Changing canonical Manufacturer Part instead produces one genuine footprint_symbol_field_mismatch parity warning; exact native SaveBoard control equals original SHA and has 0/0/0.",
+        "current_board": "No alternate MPN/Part Number fields found in the actual board; canonical metadata/parity are clean.",
+        "source": {
+          "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+          "page": 2,
+          "basis": "Maker ordering format uses R as decimal point for these resistance codes; 2R00 and 20R0 name different resistances."
+        },
+        "broader_catches": "Original fab manifest rejects changed CAD. Recomputed native power budget differs in fire_current_GAP1 board provenance. No whole-gate escape was executed or claimed."
+      },
+      "fix": "Extend the existing metadata field walk to normalize known MPN/part-number aliases and reject conflicting second identities; retain canonical LCSC/Manufacturer/Manufacturer Part and parity checks. Seed both a conflicting extra MPN and a valid matching alias, or prohibit redundant MPN aliases explicitly."
+    },
+    {
+      "id": "R13-GATE-02",
+      "severity": "Minor",
+      "status": "new_prospective_gap",
+      "title": "S-4 accepts the same required designator in two different production BOM rows",
+      "evidence": {
+        "files": [
+          "tools/check_r10.py:212",
+          "tools/check_r10.py:1483",
+          "m3_design/assembly_review/fab/m3_bom_jlc.csv:60"
+        ],
+        "ref": "R134",
+        "coordinate_mm": [
+          16.5,
+          64.0
+        ],
+        "seed": "Append a second Qty=1 R134 row with Manufacturer Part CRM2512-FX-20R0ELF and LCSC Part # C0; keep every genuine original row and the current native PCB/schematic/CPL.",
+        "measured": {
+          "baseline_rows": 82,
+          "baseline_qty_sum": 199,
+          "mutant_rows": 83,
+          "mutant_qty_sum": 200,
+          "R134_lines": [
+            60,
+            84
+          ],
+          "assembly_population_issues": 0,
+          "actual_S4_issues": 0,
+          "actual_S4_required": 199
+        },
+        "controls": "Current 82-row/199-part BOM passes. Existing positive-Qty and per-row distinct-count checks are retained; the new gap is reference reuse across rows.",
+        "current_board": "Actual BOM designators are unique and quantities correct.",
+        "source": {
+          "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+          "page": 2,
+          "basis": "R134 identity in the two seeded rows is contradictory by the maker ordering code; uniqueness itself is the native one-footprint/one-designator assembly contract, not a maker electrical threshold."
+        },
+        "broader_catches": "The original five-output manifest rejects the altered BOM. Exporter regeneration from unique board references prevents this edit in the present exporter. A faulty future exporter with newly matching manifest was not executed."
+      },
+      "fix": "Track the first row for each designator in assembly_population and reject a designator appearing in any second row, including a conflicting code/MPN. Preserve the current distinct-within-row rule and quantity-free CPL behavior."
+    },
+    {
+      "id": "R13-GATE-03",
+      "severity": "Minor",
+      "status": "new_prospective_gap",
+      "title": "Paste checker ignores actual aperture geometry",
+      "evidence": {
+        "files": [
+          "tools/paste_check.py:51",
+          "tools/paste_check.py:98",
+          "m3_design/assembly_review/fab/m3_gerber.zip"
+        ],
+        "ref": "R127 and R104/R105/R60/R61",
+        "coordinate_mm": [
+          19.8,
+          54.24
+        ],
+        "seed": "In an isolated copy of the actual F_Paste Gerber, change only %ADD28R,0.566000X0.540000*% to %ADD28R,0.001000X0.001000*%; repackage with every other Gerber byte unchanged.",
+        "measured": {
+          "affected_flashes": 10,
+          "native_pad_dimensions_mm": [
+            0.566,
+            0.54
+          ],
+          "original_aperture_area_mm2": 0.30564,
+          "seeded_aperture_area_mm2": 1e-06,
+          "area_reduction_percent": 99.99967281769402,
+          "actual_paste_checker_issues": 0,
+          "accepted_F_Paste_flashes": 245,
+          "accepted_B_Paste_flashes": 373
+        },
+        "controls": "Unmodified package also passes. Both live layer-data check and the repacked zip check accept the tiny apertures; coordinates and component identifiers are untouched.",
+        "current_board": "The actual package retains the full 0.566x0.540 mm rectangular aperture, matching these native pads; no current paste defect is demonstrated.",
+        "source": {
+          "url": "https://www.lcsc.com/product-detail/C11702.html",
+          "page": "Product specifications",
+          "basis": "Primary supplier identifies R127 C11702 as UNI-ROYAL 0402WGF1001TCE, 1kOhm 0402. The measured paste requirement here is the existing native pad/paste geometry, not an invented maker stencil floor; almost-zero solder coverage is a prospective manufacturing inference."
+        },
+        "broader_catches": "The unchanged manifest rejects the changed Gerber zip. No reissued manifest/faulty exporter whole-gate escape or physical soldering result is claimed."
+      },
+      "fix": "Read ADD aperture/macro definitions and compare exported geometry/area with native expected paste polygons. Ordinary lead apertures follow their reviewed native paste margins; exposed pads retain maker-approved window/segmentation patterns, and explicitly reviewed manual-after-reflow process exceptions remain scoped. Use the existing expected native area/pattern semantics, or a maker/process-sourced bound when needed; add no universal copper-coverage percentage or solder-volume claim. Fail closed for unsupported geometry; retain flash-count, position and dry-pad checks. Add under/oversize and valid equivalent/window/manual-exception controls."
+    }
+  ],
+  "checks_executed": [
+    {
+      "kind": "Finished committed board native contracts",
+      "rules": [
+        "S-1",
+        "S-2",
+        "S-3",
+        "S-4",
+        "S-5",
+        "S-6",
+        "S-7",
+        "S-8",
+        "S-9",
+        "K-contract",
+        "K-actuators",
+        "K-legends",
+        "K-copper",
+        "K-inner",
+        "K-loader",
+        "K-width",
+        "K-rules",
+        "K-retained",
+        "M-1",
+        "M-5",
+        "M-6",
+        "M-7",
+        "P-11",
+        "F9-2",
+        "LC-1",
+        "T-1",
+        "M-3",
+        "F9-1",
+        "K-reference",
+        "K-region",
+        "K-fill"
+      ],
+      "count": 31,
+      "result": "all accepted in two selected-rule API calls, no full check.sh run"
+    },
+    {
+      "kind": "Official native CLI, exclusively reserved then released",
+      "version": "10.0.7",
+      "options": [
+        "pcb drc",
+        "--severity-all",
+        "--schematic-parity",
+        "--all-track-errors",
+        "--format json"
+      ],
+      "records": [
+        {
+          "label": "baseline",
+          "returncode": 0,
+          "violations": 0,
+          "unconnected_items": 0,
+          "schematic_parity": 0,
+          "types": {}
+        },
+        {
+          "label": "identity_control",
+          "returncode": 0,
+          "violations": 0,
+          "unconnected_items": 0,
+          "schematic_parity": 0,
+          "types": {}
+        },
+        {
+          "label": "identity_fault",
+          "returncode": 0,
+          "violations": 0,
+          "unconnected_items": 0,
+          "schematic_parity": 1,
+          "types": {
+            "footprint_symbol_field_mismatch": 1
+          }
+        }
+      ],
+      "extra_MPN": {
+        "ref": "R134",
+        "added_field": "MPN",
+        "value": "CRM2512-FX-20R0ELF",
+        "metadata_missing": [],
+        "metadata_conflicts": [],
+        "K_contract": [],
+        "K_actuators": [],
+        "returncode": 0,
+        "counts": {
+          "violations": 0,
+          "unconnected_items": 0,
+          "schematic_parity": 0
+        },
+        "markers": []
+      }
+    },
+    {
+      "kind": "Native safety/electrical/fit/manufacturing and production-output probes",
+      "records": [
+        {
+          "label": "finished_board_selected_contracts",
+          "expected": "accept",
+          "actual": "accept",
+          "rules": [],
+          "issues": []
+        },
+        {
+          "label": "finished_board_fit",
+          "expected": "accept",
+          "actual": "accept",
+          "issue_count": 0,
+          "issues": []
+        },
+        {
+          "label": "pyro_gate_cap_99nF",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "S-3: pyro FET Q124: no a gate-source capacitor >= 100 nF (PYRO1_GATE to GND)"
+          ]
+        },
+        {
+          "label": "reset_pull_up_replaces_pull_down",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 2,
+          "issues": [
+            "S-3: R127 is on the MCU-side gate node PYRO1_GATE_N (nets ['3V3', 'PYRO1_GATE_N']): only U1, the series resistor and resistors to GND may touch it (a pull-up would hold the gate on)",
+            "S-3: pyro FET Q124: no resistor of 100 ohm - 100 k from the MCU-side gate node PYRO1_GATE_N to GND (it must be defined off while the MCU pin floats)"
+          ]
+        },
+        {
+          "label": "automatic_act_enable_from_logic_rail",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 2,
+          "issues": [
+            "S-3: independent load-switch enable ACT_EN_MCU must touch only ['R122', 'U1']",
+            "S-3: independent load-switch enable R122.1 must be ACT_EN_MCU (is RAW_PROTECTED)"
+          ]
+        },
+        {
+          "label": "resistor_bypass_real_copper",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 9,
+          "issues": [
+            "S-1: RAW_ACT copper reaches C128.1 (PYRO1_OUT) through track PYRO1_OUT (10.37, 57.50): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches D120.1 (PYRO1_COLD) through track RAW_ACT (19.07, 64.00): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches J121.1 (PYRO1_OUT) through track PYRO1_OUT (7.40, 54.10): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches J121.2 (PYRO1_IGN) through track RAW_ACT (19.07, 64.00): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches Q124.5 (PYRO1_OUT) through track PYRO1_OUT (11.63, 55.10): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches R131.1 (PYRO1_OUT) through track PYRO1_OUT (10.37, 57.50): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches R131.2 (PYRO1_COLD) through track PYRO1_COLD (11.23, 61.15): firing / sense chain is bypassed",
+            "S-1: RAW_ACT copper reaches R134.1 (PYRO1_IGN) through track PYRO1_IGN (12.00, 64.00): firing / sense chain is bypassed"
+          ]
+        },
+        {
+          "label": "GPS_ground_clamp_to_fire_gate",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "S-6: D410 joins port nets ['GPS_TX_WIRE'] to pyro / arming nets ['PYRO1_GATE']"
+          ]
+        },
+        {
+          "label": "functional_IMU_DNP",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "U4: required fitted part excluded (dnp)"
+          ]
+        },
+        {
+          "label": "servo_series_fault_10ohm",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "R150 must be 1k 0603 100mW (AUD-7)"
+          ]
+        },
+        {
+          "label": "unreviewed_SD_socket_identity",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "J430: must use C164170 on rocket:M3_MICROSD_MOLEX_472192001"
+          ]
+        },
+        {
+          "label": "wrong_IMU_axis_180deg",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 2,
+          "issues": [
+            "M-7: U4 must be bottom side, rotation 180 (the R9 D-S7-06 axis map: roll = -gyro_Y recorded for M3-ASSY-R10; a new map needs a recorded decision); is bottom rot 0",
+            "M-7: U4 pad 1 is at (-1.21, 0.75) mm from the centre, recorded (1.21, -0.75) (a mirrored or rotated footprint would change the axis map)"
+          ]
+        },
+        {
+          "label": "SWD_clearance_below_floor_0p507",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "LC-1: J2.1 local clearance 0.507 mm is below its applicable 0.508 mm floor"
+          ]
+        },
+        {
+          "label": "SWD_equal_floor_0p508_control",
+          "expected": "accept",
+          "actual": "accept",
+          "issue_count": 0,
+          "issues": []
+        },
+        {
+          "label": "uncapped_U401_thermal_via",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "GAP-3: thermal via at (27.3, 13.6) must be 0.5/0.3 GND through-via, filled and capped, inside U401.11"
+          ]
+        },
+        {
+          "label": "shifted_U401_thermal_via_20um",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "GAP-3: thermal via at (27.3, 13.6) must be 0.5/0.3 GND through-via, filled and capped, inside U401.11"
+          ]
+        },
+        {
+          "label": "GPS_wire_floor_fail",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "P-11: J410 has 4.90 mm of wire room to the bore wall (owner-accepted R10 floor 4.95; R8 6.25)"
+          ]
+        },
+        {
+          "label": "switch_wire_floor_fail",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "P-11: J400 has 4.90 mm of wire room to the bore wall (owner-accepted R10 floor 4.95; R8 6.25)"
+          ]
+        },
+        {
+          "label": "servo_model_shrink_0.01",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "J122: model envelope differs from reviewed dimensions/pose of M3_DB125_5P_GN: (-0.10069998910000001, -0.040999994199999994, 0.0895000115, 0.0399999962, 1.2700000001775182e-08, 0.0890000125), expected (-10.07, -4.1, 8.95, 4.0, 0.0, 8.9) mm"
+          ]
+        },
+        {
+          "label": "servo_model_shrink_0.99999",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "J122: model envelope differs from reviewed dimensions/pose of M3_DB125_5P_GN: (-10.069898210010901, -4.0999584200058, 8.9499116499885, 3.9999596200038003, 1.2699873001775163e-06, 8.899912249987501), expected (-10.07, -4.1, 8.95, 4.0, 0.0, 8.9) mm"
+          ]
+        },
+        {
+          "label": "SD_model_offset_30nm",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 2,
+          "issues": [
+            "J430: model envelope differs from reviewed dimensions/pose of M3_MICROSD_MOLEX_472192001: (-6.99996997, -9.49999878, 7.00002997, 6.000000700000001, 0.0, 2.10000088), expected (-7.0, -9.5, 7.0, 6.0, 0.0, 2.1) mm",
+            "J430: required R10 mated envelope missing"
+          ]
+        },
+        {
+          "label": "actual_fire_path_490um",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "S-9: PYRO1_IGN fire-path track 0.490 mm wide, 6.505 mm long on B.Cu (7.4, 59.4)-(12.0, 64.0); minimum 0.5 mm (AUD-6)"
+          ]
+        },
+        {
+          "label": "QSPI_signal_on_In2",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "In2.Cu track of QSPI_CLK: In1 carries GND only; In2 power and GND only"
+          ]
+        },
+        {
+          "label": "production_BOM_control",
+          "expected": "accept",
+          "actual": "accept",
+          "issue_count": 0,
+          "issues": []
+        },
+        {
+          "label": "same_reference_second_BOM_row",
+          "expected": "reject",
+          "actual": "accept",
+          "issue_count": 0,
+          "issues": [],
+          "duplicate": "R134",
+          "row_count": 83
+        },
+        {
+          "label": "paste_current_package_control",
+          "expected": "accept",
+          "actual": "accept",
+          "issue_count": 0,
+          "issues": []
+        },
+        {
+          "label": "paste_aperture_1um_square",
+          "expected": "reject",
+          "actual": "accept",
+          "issue_count": 0,
+          "issues": [],
+          "aperture": 28,
+          "original": "%ADD28R,0.566000X0.540000*%",
+          "flashes_affected": 10
+        }
+      ]
+    },
+    {
+      "kind": "Native route/reference/fill/model/control/budget/inner-copper probes",
+      "records": [
+        {
+          "label": "finished_board_remaining_five_contracts",
+          "actual": "accept",
+          "expected": "accept",
+          "rules": [],
+          "issues": []
+        },
+        {
+          "label": "finished_board_route_scan",
+          "expected": "accept",
+          "actual": "accept",
+          "count": 141,
+          "categories": {
+            "pad_end_offcentre": 57,
+            "segment_inside_pad": 22,
+            "passes_through_pad": 1,
+            "short_segment": 1,
+            "width_change_junction": 11,
+            "short_layer_hop": 3,
+            "u_turn": 6,
+            "tiny_jog": 7,
+            "extra_bends": 7,
+            "power_via_no_gnd": 24,
+            "via_on_track_in_fill": 1,
+            "detour": 1
+          },
+          "blocking": [],
+          "allowed_count": 0,
+          "stale_count": 0
+        },
+        {
+          "label": "critical_QSPI_skewed_midpoint",
+          "expected": "reject",
+          "actual": "reject",
+          "faults": [
+            {
+              "cat": "off_angle",
+              "net": "QSPI_IO0",
+              "cls": "spi",
+              "layer": "F.Cu",
+              "x": 26.201,
+              "y": 37.978,
+              "end": [
+                26.13,
+                38.55
+              ],
+              "dev_deg": 7.076,
+              "lat_mm": 0.071
+            },
+            {
+              "cat": "off_angle",
+              "net": "QSPI_IO0",
+              "cls": "spi",
+              "layer": "F.Cu",
+              "x": 26.13,
+              "y": 37.18,
+              "end": [
+                26.201,
+                37.978
+              ],
+              "dev_deg": 5.084,
+              "lat_mm": 0.071
+            }
+          ]
+        },
+        {
+          "label": "AUD10_duplicate_control",
+          "expected": "review_information",
+          "actual": "review_information",
+          "instances": [
+            {
+              "cat": "duplicate_segment",
+              "net": "QSPI_IO0",
+              "cls": "spi",
+              "layer": "F.Cu",
+              "x": 25.5,
+              "y": 35.45,
+              "end": [
+                25.5,
+                36.55
+              ],
+              "other": [
+                25.5,
+                35.45,
+                25.5,
+                36.55
+              ],
+              "overlap_mm": 1.1
+            }
+          ]
+        },
+        {
+          "label": "finished_fast_transition_control",
+          "expected": "accept",
+          "actual": "accept",
+          "count": 25,
+          "maximum_mm": 1.4916433890176295
+        },
+        {
+          "label": "remove_actual_fast_GND_partners",
+          "expected": "reject",
+          "actual": "reject",
+          "net": "PYRO1_GATE",
+          "transition_mm": [
+            14.4,
+            53.3
+          ],
+          "before_mm": 1.4916433890176295,
+          "after_mm": 1.9006577808748213,
+          "removed_mm": [
+            [
+              15.35,
+              52.15
+            ]
+          ]
+        },
+        {
+          "label": "valid_equivalent_halfscale_doubleunits",
+          "expected": "accept",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "J122: model envelope differs from reviewed dimensions/pose of M3_DB125_5P_GN: (-25.5777972314, -10.413998526799999, 22.733002921, 10.1599990348, 3.225800000450896e-06, 22.606003175), expected (-10.07, -4.1, 8.95, 4.0, 0.0, 8.9) mm"
+          ],
+          "classification": "invalid fixture: omitted raw VRML 2.54 mm/unit conversion, physically 2.54x too large; correctly rejected. Corrected valid control is separately executed below."
+        },
+        {
+          "label": "identity_control_native_budget_binding",
+          "expected": "accept",
+          "actual": "accept",
+          "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+          "different_keys": []
+        },
+        {
+          "label": "identity_fault_native_budget_binding",
+          "expected": "reject_stale",
+          "actual": "reject_stale",
+          "board_sha256": "346c88df9c5fdf6ae9b552c0278285991613d592623a7301c45ddffc20bf8930",
+          "different_keys": [
+            "fire_current_GAP1"
+          ]
+        },
+        {
+          "label": "extra_mpn_fault_native_budget_binding",
+          "expected": "reject_stale",
+          "actual": "reject_stale",
+          "board_sha256": "76f9bf568443d6a6544d82c695fa0b9904f9d06737b4e030fbe51fe3eb528007",
+          "different_keys": [
+            "fire_current_GAP1"
+          ]
+        },
+        {
+          "label": "3V3_drawing_In2.Cu",
+          "expected": "accept",
+          "actual": "accept",
+          "issue_count": 0,
+          "issues": []
+        },
+        {
+          "label": "3V3_drawing_In1.Cu",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "In1.Cu board copper drawing of 3V3: In1 carries GND only; In2 power and GND only"
+          ]
+        },
+        {
+          "label": "inner_drawing_near_actual_pyro_barrel",
+          "expected": "reject",
+          "actual": "reject",
+          "issue_count": 1,
+          "issues": [
+            "S-8: 3V3 copper on In2.Cu is 0.250 mm from the J121.1 hole barrel of PYRO1_OUT (minimum 1.0 mm)"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "Hot-plug result validator adversary, not a fresh solver sweep",
+      "records": [
+        {
+          "label": "actual_saved_model_control",
+          "expected": "accept",
+          "accepted": true,
+          "issues": []
+        },
+        {
+          "label": "missing_corner",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "missing or changed model corners"
+          ]
+        },
+        {
+          "label": "failing_corner_hidden_by_passed_true",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "model fails: {'case': 0, 'metric': 'minimum_V', 'value': -15.001, 'limit': -15.0}",
+            "model convergence corners/steps missing or changed",
+            "missing or failing no-clamp control",
+            "missing, changed or failing local-path sensitivity",
+            "cold IN-to-OUT absolute limit fails"
+          ]
+        },
+        {
+          "label": "nonfinite_corner",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "model fails: {'case': 0, 'metric': 'falling_V_per_us', 'value': nan, 'limit': 10.0}",
+            "model convergence corners/steps missing or changed",
+            "missing or failing no-clamp control",
+            "missing, changed or failing local-path sensitivity"
+          ]
+        },
+        {
+          "label": "relaxed_falling_limit",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "model limits changed"
+          ]
+        },
+        {
+          "label": "topology_control_not_board",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "model is a topology control, not this board"
+          ]
+        },
+        {
+          "label": "stale_model_hash",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "stale model source"
+          ]
+        },
+        {
+          "label": "missing_local_path_refinement",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "missing, changed or failing local-path sensitivity"
+          ]
+        },
+        {
+          "label": "shortened_duration",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "model duration is too short"
+          ]
+        },
+        {
+          "label": "rebased_report_stale_electrical_inputs",
+          "expected": "reject",
+          "accepted": false,
+          "issues": [
+            "stale electrical inputs (BAT_IN/protection geometry or parts changed)"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "Actual fabrication manifest positive and corrupted/missing-output controls",
+      "records": [
+        {
+          "label": "actual_finished_package",
+          "accepted": true,
+          "outputs": 5
+        },
+        {
+          "label": "identity_control_with_original_package",
+          "accepted": true,
+          "outputs": 5
+        },
+        {
+          "label": "identity_fault_with_original_package",
+          "accepted": false,
+          "error": "ValueError: fabrication package does not match current CAD/export inputs; regenerate it"
+        },
+        {
+          "label": "extra_mpn_fault_with_original_package",
+          "accepted": false,
+          "error": "ValueError: fabrication package does not match current CAD/export inputs; regenerate it"
+        },
+        {
+          "label": "changed_output_m3_assembly_bottom.pdf",
+          "accepted": false,
+          "error": "ValueError: fabrication output missing or changed: m3_assembly_bottom.pdf"
+        },
+        {
+          "label": "changed_output_m3_assembly_top.pdf",
+          "accepted": false,
+          "error": "ValueError: fabrication output missing or changed: m3_assembly_top.pdf"
+        },
+        {
+          "label": "changed_output_m3_bom_jlc.csv",
+          "accepted": false,
+          "error": "ValueError: fabrication output missing or changed: m3_bom_jlc.csv"
+        },
+        {
+          "label": "changed_output_m3_cpl_jlc.csv",
+          "accepted": false,
+          "error": "ValueError: fabrication output missing or changed: m3_cpl_jlc.csv"
+        },
+        {
+          "label": "changed_output_m3_gerber.zip",
+          "accepted": false,
+          "error": "ValueError: fabrication output missing or changed: m3_gerber.zip"
+        },
+        {
+          "label": "missing_output_m3_assembly_top.pdf",
+          "accepted": false,
+          "error": "FileNotFoundError: [Errno 2] No such file or directory: '.supervisor/r13_gate_probes/fab_seed/m3_assembly_top.pdf'"
+        },
+        {
+          "label": "missing_output_m3_assembly_bottom.pdf",
+          "accepted": false,
+          "error": "FileNotFoundError: [Errno 2] No such file or directory: '.supervisor/r13_gate_probes/fab_seed/m3_assembly_bottom.pdf'"
+        },
+        {
+          "label": "restored_package_control",
+          "accepted": true,
+          "outputs": 5
+        }
+      ]
+    },
+    {
+      "kind": "Corrected equivalent-unit control, actual S-4/paste calls and broader catches",
+      "records": [
+        {
+          "label": "valid_equivalent_unit_control_corrected",
+          "issues": [],
+          "accepted": true,
+          "box": [
+            34.50000058,
+            62.54999885,
+            42.599999620000006,
+            81.56999891,
+            1.2700000001775181e-06,
+            8.90000125
+          ],
+          "fixture_note": "Earlier equivalent_units fixture omitted VRML 2.54mm/unit conversion and was physically 2.54x too large; correct rejection, not a gate defect."
+        },
+        {
+          "label": "actual_S4_crossrow_duplicate_BOM",
+          "issues": [],
+          "accepted": true,
+          "required": 199
+        },
+        {
+          "label": "actual_paste_checker_repacked_tiny_aperture",
+          "issues": [],
+          "accepted": true,
+          "evidence": {
+            "F_Paste": {
+              "flashes": 245,
+              "pads_with_paste": 245,
+              "components": 60
+            },
+            "B_Paste": {
+              "flashes": 373,
+              "pads_with_paste": 373,
+              "components": 132
+            },
+            "dry_pads": []
+          }
+        },
+        {
+          "label": "actual_manifest_rejects_tiny_paste_package",
+          "issues": [
+            "fabrication output missing or changed: m3_gerber.zip"
+          ],
+          "accepted": false
+        },
+        {
+          "label": "actual_manifest_rejects_duplicated_BOM",
+          "issues": [
+            "fabrication output missing or changed: m3_bom_jlc.csv"
+          ],
+          "accepted": false
+        },
+        {
+          "label": "tiny_paste_affected_native_pads",
+          "issues": [],
+          "accepted": true,
+          "parts": [
+            {
+              "ref": "R127",
+              "center_mm": [
+                19.8,
+                54.24
+              ],
+              "pads": [
+                {
+                  "number": "1",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                },
+                {
+                  "number": "2",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                }
+              ]
+            },
+            {
+              "ref": "R104",
+              "center_mm": [
+                33.2,
+                46.5
+              ],
+              "pads": [
+                {
+                  "number": "1",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                },
+                {
+                  "number": "2",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                }
+              ]
+            },
+            {
+              "ref": "R105",
+              "center_mm": [
+                33.2,
+                48.6
+              ],
+              "pads": [
+                {
+                  "number": "1",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                },
+                {
+                  "number": "2",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                }
+              ]
+            },
+            {
+              "ref": "R60",
+              "center_mm": [
+                33.2,
+                58.6
+              ],
+              "pads": [
+                {
+                  "number": "1",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                },
+                {
+                  "number": "2",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                }
+              ]
+            },
+            {
+              "ref": "R61",
+              "center_mm": [
+                33.2,
+                54.0
+              ],
+              "pads": [
+                {
+                  "number": "1",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                },
+                {
+                  "number": "2",
+                  "size_mm": [
+                    0.566,
+                    0.54
+                  ]
+                }
+              ]
+            }
+          ],
+          "original_aperture_area_mm2": 0.30563999999999997,
+          "seeded_area_mm2": 1e-06,
+          "ratio": 3.271823059808926e-06,
+          "area_reduction_percent": 99.99967281769402
+        },
+        {
+          "label": "canonical_hash_after",
+          "issues": [],
+          "accepted": true,
+          "sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+          "bytes": 2264839
+        }
+      ]
+    },
+    {
+      "kind": "Read-only metadata audit and native serialization controls",
+      "records": [
+        {
+          "label": "identity_fault",
+          "ref": "R134",
+          "field": "Manufacturer Part",
+          "original": "CRM2512-FX-2R00ELF",
+          "seed": "CRM2512-FX-20R0ELF",
+          "audit_missing": [],
+          "audit_conflicts": [],
+          "contract_issues": {
+            "K-contract": [],
+            "K-actuators": []
+          },
+          "sha256": "346c88df9c5fdf6ae9b552c0278285991613d592623a7301c45ddffc20bf8930"
+        },
+        {
+          "label": "identity_control",
+          "ref": "R134",
+          "field": "Manufacturer Part",
+          "original": "CRM2512-FX-2R00ELF",
+          "seed": "CRM2512-FX-2R00ELF",
+          "audit_missing": [],
+          "audit_conflicts": [],
+          "contract_issues": {
+            "K-contract": [],
+            "K-actuators": []
+          },
+          "sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c"
+        }
+      ]
+    }
+  ],
+  "closed_prior_items": [
+    {
+      "id": "R12-GATE-01",
+      "result": "Positive shrink 0.01/0.99999 and 0.000030mm SD offset rejected; correctly converted nonunity positive scale accepted."
+    },
+    {
+      "id": "R12-GATE-02",
+      "result": "Manufactured 3V3 In1 drawing rejected; corresponding In2 power drawing accepted. Actual near-J121.1 drawing rejected by S-8 at0.250mm vs1mm."
+    },
+    {
+      "id": "R12-GATE-03",
+      "result": "Current per-row positive quantity implementation is retained; new cross-row duplication is separately reported as R13-GATE-02."
+    }
+  ],
+  "retained_current_observations": [
+    "Fresh route scan:141 information instances,0 blocking,0 allowlist,0 stale. This includes existing AUD-10/M2 residuals, not gate failures.",
+    "25 actual required fast transitions have GND partner maximum1.491643389mm; removing the selected partner raises PYRO1_GATE at(14.4,53.3) to1.900657781mm and is detected.",
+    "Actual committed board and exact native serialization control both have DRC/unconnected/parity0 under official10.0.7."
+  ],
+  "context_read": [
+    "AGENTS.md first",
+    ".supervisor/r10_review_packet.md",
+    ".supervisor/r13_target_packet.md",
+    "docs/REQUIREMENTS.md",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md, all110 D IDs through D-R12-03",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md",
+    "docs/M3_R10.md",
+    "docs/R10_VALIDATION.md, historical context/current R11/R12/deviation records",
+    "docs/R9_VALIDATION.md, severity precedents, no invented literal severity table",
+    "docs/R10_VEHICLE_HANDOFF.md",
+    "../../docs/VEHICLE.md, read-only stale mirror",
+    "r10_final_deviations.json owner_mandates,22records; canonical pre-round context only"
+  ],
+  "coverage_limits": [
+    "No canonical CAD/source saves, generator/build/fullcheck, GUI, git mutations, other-worktree edits, child agents or peer current-round report reads. Only assigned reports and ignored probes written.",
+    "All three findings are prospective local checker gaps. Current board/package are correct for their seeded properties; broader unchanged manifest/native-budget provenance rejects relevant mutants. No whole-gate escape established.",
+    "No firmware, physical, electrical, thermal, installed RF/ESD, harness/fit, solder-process or selected e-match/card qualification performed. No AGENTS section2 constraint relaxed.",
+    "F9 validates current board extraction and saved2304-case evidence; this lens seeds the validator but does not recompute the full numerical sweep.",
+    "API-only safety/routing/model mutants were not run through native DRC unless specifically listed in the CLI records. In-memory filled-plane changes are not physical qualification.",
+    "Four preliminary API accessor/enum-name errors were corrected before completed probes; no interrupted attempt counts as a pass. One initial equivalent-unit fixture was physically2.54x too large and correctly rejected; the corrected valid conversion passes.",
+    "No fresh procurement lookup/quote/order performed; disclosed pending stock/cost/process and physical/firmware obligations remain as scoped."
+  ],
+  "ignored_repro_directory": ".supervisor/r13_gate_probes",
+  "probe_script_sha256": {
+    "probe_identity.py": "b828268113e5db1619bcb605fd3667c2e133cdeeed7c5e9a89480d91f9b22b91",
+    "probe_contracts.py": "4a0a39695778259083a1d8a122c33e818a88c065133a3d62d0bf552342c900f8",
+    "probe_extra_identity.py": "a558e068ec198914a19c490ab344d294f6b17894fb87df2c7304d57763c4293b",
+    "probe_bindings.py": "f3a37871a72fe868877fdf9bd8e3a732f0096441924f202a797c4a85317c928f",
+    "probe_hotplug.py": "2c3984e961e321eabf078bd14a8d58b1d7b4cb45b5400b8ba1f311944d295e50",
+    "probe_budget_hash.py": "c69bc5427ff8f26d7ed375082437e06cc6955f6d215e5d45b3f29c9ba9c90dfd",
+    "probe_secondary.py": "7726f6fdb8b1e6b40d8245dbde74c92b10328ff8e1aeb30e514486b3fcc0ac0e",
+    "probe_final.py": "2496ea98af8458d8b61c4303619eeb4a32b0134edba623bffd115351f717850b",
+    "probe_contracts_tail.py": "83343264e7b80c847e0519502ad4085473887060dbb37ac324d14a78e39aa7d6"
+  }
+}

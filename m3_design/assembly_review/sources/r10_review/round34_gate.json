@@ -1,0 +1,63 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round34_gate",
+  "reviewer": "claude",
+  "target_commit": "c2a11fdb4c2329c30777f2abf329e7187672cb11",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "D-R28-01 seed A (loaded_pack power 5.456 x (1.46 + aux_A)): r10_parts --check fails 'stale: parts_budget.json' (rc 1); after --budget-only regeneration (lines 91-92 -> 5.881014 / 4.388745 V) r10_parts --check and test_r10_parts (5 tests) pass. No check pins the four-stall pack-sag figures; only freshness binds them. The 0.18 mV change crosses no limit, so it is not a rule-violating defect (not a gate miss).",
+    "D-R28-01 seed B (ports_w with the 1.46 + aux_A literal): same result: stale until regenerated, then every budget check passes (c_camera_radio_gps_on 13.064 -> 13.057 W, four-stall fire current +0.04 mA); no limit crossed.",
+    "D-R28-02 ... -04 / D-R28-03 / D-R29-01 generator seeds: 25 reverts or partial reverts in m3_design/r10_sch_check.py (rule 3 full revert, unpowered, 'or open', clamp Inference label, 'before first power', Simulation label, fight qualifier, 'all but one corner'; rule 4 full revert, R120.1 reference, PC1-high clause, Q124 label; obligation 15 full revert and its label; DS15034 'pp. 10-11' and 'p. 10'; port map, GAP-5, chatter, window, turn-on, rule 8 corner / hold-up / loads labels): each fails SchematicContract.test_r23_binding_note_rules_and_pin_table.",
+    "Every positive phrase pinned in test_r23_binding_note_rules_and_pin_table (95 strings) occurs exactly once in the regenerated firmware_obligations, so no duplicate hides a revert.",
+    "Stale-note path: the DS15034 revert in the generator without regenerating the note fails check_r10 K-binding ('saved ... differs from native binding-note regeneration'); the clean copy passes check_r10 (full) OK.",
+    "D-R27-02 seed (mcu_revision sentence back to 'byte-identical); Rev 11'): fails test_r23_binding_note_rules_and_pin_table.",
+    "D-R27-03 seed (circuit.json J440 lib back to M3:CameraTerminal): r10_sch_check fails ('J440: symbol differs', nonreproducible telemetry.kicad_sch / schematic.net.xml, fresh export differs).",
+    "D-R26-01 seeds: dropping the GND partner via at (7.4, 16.5) fails route_check critical_via_no_gnd AUX_TX_WIRE J440.3 (2.0 mm). Restoring J440.3 / J410.3 inner rings (KEEP_ALL) passes route_check and check_r10 apart from the hash-binding rules (K-binding, F9-1 stale inputs); no stated rule requires the rings removed, so this is not a gate miss.",
+    "D-R26-02 / -04 seeds beyond the tests' named put-back spots: D120 moved 0.3 mm east (D120.3 3V3 0.977 mm from R173 PYRO1_OUT pad, B.Cu) fails test_r26_pyro1_out_clear_of_3v3_and_3v3a; the 3V3 via at (19.5, 49.15) moved to (19.2, 49.6) (0.837 mm from U1's PYRO1_GATE_N pad, F.Cu) fails test_r26_gate_nets_clear_of_3v3_and_3v3a. Smaller moves (1.017 mm) correctly pass the 1.0 mm rule.",
+    "right_angle seeds on real chamfers: VLOGIC_SENSE F.Cu (32.05, 47.0) and PYRO1_GATE F.Cu (15.3, 55.395) un-chamfered both fail right_angle (free, 90.0 deg). With 0.1 / 0.02 mm overshoot (T with a stub) right_angle is skipped but dead_copper fails (len 0.1 / 0.02 mm).",
+    "A zero-length track at the un-chamfered VLOGIC_SENSE corner suppresses right_angle (the node has three track ends) and gives only a non-critical micro_segment INFO leftover, so route_check passes; kicad-cli DRC reports track_dangling at (32.05, 47.0), so check.sh still fails. The generator also asserts a != b for every segment. Not a miss.",
+    "Round 33's one correction (R33-TRI-01, U9 exposed-pad figures in ORDERING 8.3) is outside the gate lens; no gate-lens fix to verify."
+  ],
+  "fix_verification": [
+    {
+      "item": "R33-TRI-01 (ORDERING 8.3 U9 exposed-pad figures)",
+      "measurement": "not in the gate lens (text-only fix, no check involved)",
+      "verdict": "not applicable"
+    }
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after (a0ec075e...)",
+    "r10_parts.py --check / --budget-only on a probe copy with D-R28-01 seeds A and B; tools/test_r10_parts.py on seed A",
+    "25 generator seeds + D-R27-02 seed run against SchematicContract.test_r23_binding_note_rules_and_pin_table (probe copy)",
+    "pinned-phrase occurrence count over the regenerated binding note (95 strings)",
+    "fit_check + check_r10 (full) on the probe copy, clean and with the DS15034 generator seed (K-binding)",
+    "r10_sch_check on the probe copy, clean and with circuit.json J440 lib seeded",
+    "route_check --profile r10 on 7 seeded boards (2 D-R26-01, 5 right_angle) and the clean copy",
+    "check_r10 (full) on the rings-back seed",
+    "RealBoardSeeds.test_r26_pyro1_out_clear_of_3v3_and_3v3a / test_r26_gate_nets_clear_of_3v3_and_3v3a on 4 zone-refilled seeds",
+    "kicad-cli 10.0.7 pcb drc on the zero-length-corner seed"
+  ],
+  "sources": [
+    "AGENTS.md section 3 (routing, check.sh)",
+    "R10_DECISIONS.md D-R26-01 ... D-R29-02",
+    "tools/route_check.py right_angle / micro_segment / dead_copper",
+    "tools/test_r10_check.py",
+    "m3_design/r10_parts.py",
+    "m3_design/r10_sch_check.py",
+    "m3_design/r10_route.py track() (a != b assertion)",
+    "probe scripts in .supervisor/r34_gate/"
+  ],
+  "coverage_limits": [
+    "Full tools/check.sh was not run on any seed; each seed was run against the specific stage that should catch it (and DRC for the zero-length case).",
+    "Seeds were made on a probe copy of the tree, since deleted; the seeded boards and scripts stay in .supervisor/r34_gate/.",
+    "No build (r10_build.sh) was run; the regenerated-budget path was emulated with r10_parts --budget-only.",
+    "D-R26-02 / -04 variant seeds move parts or vias without re-routing their tracks; the clearance tests were judged only on the copper gap they measure."
+  ]
+}

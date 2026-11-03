@@ -1,0 +1,13 @@
+board <board folder>/m3.kicad_pcb sha256 6600ef9462b37ec58540e0dd7edd97577c3e778bda0d233d3c1dffc555ad5a8d
+GND: J122:3,6,9,12 -> J1:2, grid 0.1 mm, 567698 free cells, CG 4246 iterations, residual 1e-10
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 0.72 mOhm; at 7.7 A: drop 5.6 mV, copper loss 0.043 W
+  F.Cu   carries    1 % at mid-path; peak 1.77 A/mm at (24.45, 111.65)
+  In1.Cu carries   85 % at mid-path; peak 3.25 A/mm at (26.65, 109.45)
+  In2.Cu carries    9 % at mid-path; peak 1.10 A/mm at (43.15, 99.05)
+  B.Cu   carries    5 % at mid-path; peak 1.69 A/mm at (24.45, 111.65)
+  vias: 110 carry current; largest barrel currents at 7.7 A: 0.38 A at (37.35, 100.6) (F.Cu-In1.Cu), 0.37 A at (43.125, 99.125) (In2.Cu-B.Cu), 0.26 A at (30.6, 99.1) (In1.Cu-In2.Cu), 0.26 A at (15.0, 107.3) (F.Cu-In1.Cu), 0.24 A at (35.0, 99.2) (In1.Cu-In2.Cu)
+  vias over 0.5 A: 0; over 1.0 A: 0
+  cuts: neck 1.97 mm at level 0.030 on In1.Cu (54 % of the current), cut box (24.5, 26.6, 109.4, 111.4), per-layer length [1.18, 1.06, 0.0, 1.21]
+  cuts: median 38.35 mm; below 1.1x neck: 16 of 377 levels; 5 narrowest: [(1.97, 0.03, (24.5, 26.6, 109.4, 111.4)), (1.97, 0.033, (24.5, 26.6, 109.4, 111.4)), (1.99, 0.072, (24.4, 26.7, 109.3, 111.6)), (1.99, 0.07, (24.4, 26.7, 109.3, 111.5)), (2.01, 0.075, (24.4, 26.7, 109.3, 111.6))]
+  IPC-2152 (no plane credit): neck 1.97 mm on In1.Cu rises 62.8 C at 7.7 A; 20 C needs 5.56 mm there

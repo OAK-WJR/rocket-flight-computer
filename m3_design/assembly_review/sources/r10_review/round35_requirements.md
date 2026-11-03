@@ -1,0 +1,46 @@
+# Round 35 requirements lens (R10, board a0ec075e…)
+
+- Target commit `c3c4249`; board SHA-256 before and after `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c`.
+- Totals: 0 Critical / 0 Major / 0 Minor (real errors only).
+
+## Findings
+
+None.
+
+## Fix verification
+
+- R34-TRI-01 (outside this lens, checked in passing): parts_qualification now names `hotplug_results.json` as the current results: confirmed.
+
+## Observations (not counted)
+
+- F4 hinge range: re-ran .supervisor/r23_requirements/hinge.py (flat-plate Ackeret, 8 x 26.5 mm tab, hinge at the tab LE z 52.5, CP at half chord, 5.4 kg.cm stall): L1000 nominal M1.82/212 kPa 77 %, high M2.13/285.5 kPa 84 %; matches F4's 64-84 % (77-84 % nominal to high). Tab geometry agrees with VEHICLE.md.
+- VEHICLE-derived numbers reproduce: board aft edge joint -44.6 + 80 + 44..48 = +79.4..83.4 mm (32 mm to joint + 47); battery bay top +35.4; F3 8.8 km MSL = 7.6 km AGL + 1200 m site; ISA apogee ambient -7.75/-27.25 C (K850DM) and -16.2/-42.2 C (L1000W); P3 landing 6.2/8.0 m/s over 20 mm = 98/163 g.
+- F1: (5 - 0.9 - 0.03)/(0.015 x 30) = 9.04 C; rate noise 5.5 mdps/sqrt(Hz) x sqrt(30 s) = 0.030 deg; DS15034 values (+-2 dps ZRL, +-0.015 dps/C, 4.5-5.5 mdps/sqrt(Hz), +-1 %) match the cached text. The 30 s vs 35 s window recompute is stated as an open item.
+- F8 divider figures reproduce: 19.9 x 1014.5/(5026.05+1014.5) = 3.342171 V; top-short current 8.4/(5026+985.5) = 1.397 mA; cold CONT/BUS 99.37/99.33 mV and open CONT 146.23 mV at 3.1 V through R131 10k; Q122 gate 3.6 x 2k/33k = 0.218 V.
+- F9 ramp: worst turn-off 4.802 V (1.116 V, R165/R80 474.7k, R81 297k, 0.1 uA EN + 50 nA D402); nominal 4.51/4.96 V; EN 2.03 V at 8.4 V (TPS25947 SLVSFC9C p9 thresholds from the cached PDF).
+- F9 D402: board B(4.45,65.9), tap J400.2 -> D402.1 on B.Cu 2.59 + 0.509 + 1.015 = 4.114 mm; GND via (5.15,65.575) 0.70 mm from D402.2; BAT_SW_RETURN = {J400.2, R165.1, D402.1}.
+- F7 fire path widths: PYRO1_OUT, PYRO1_IGN and RAW_ACT fire runs 0.5 mm; ACT_FET_S has exactly seven 0.4 mm source-pin bridges; the 0.3 mm ACT_FET_S and 0.2/0.4 mm RAW_ACT/PYRO1_OUT tracks are R119/R120/C120, TP120 and sense branches. No zones on these nets.
+- F8/F10 connectors: footprints, colours (J121 BK, others GN), positions and every pin legend match (J121 1:E1- F.Silk / 2:E1+ B.Silk; J400 1:SW/2:SW; J1 1:BAT+/2:GND; J122 1:S1..5:GND; ports 1:4V8 2:GND 3:TXO 4:RXI; J9 1:5V4 3:RXI 4:TXO); nets match the stated UART directions.
+- pin_table.tsv r10_net vs board U1 pad nets: 0 mismatches; F10 EXTI pins PE1/PA4/PA5/PD6/PC8/PE12 and PC13/PC3_C NC agree.
+- F5 microSD: J430 pins and R460-R464 10k pulls (CS, CMD, DAT0, DAT1, DAT2), C460 100 nF / C461 22 uF on 3V3 as stated.
+- P2 support (4,44.3) exposed-land distances: LED2.2 GND 3.808, LED1.1 GND 3.860, J2.1 3V3 3.881, J2.3 NRST 3.989 mm (polygon approximation; 3.987 stated, rounding of the arc).
+- M2 U401.11 vias: two GND 0.5/0.3 mm at (27.3,13.6) and (27.9,13.6) as stated.
+- Storage: R167 10k at 8.4 V = 0.84 mA; 1 Ah / 0.84 mA = 7.1 weeks.
+- P3 relief pocket x 31.5-41, y 20-60 covers C411/C421/C431 courtyards (C431 courtyard to y 60.05, body inside).
+- Session-context copy of AGENTS.md is stale (92c3ad59, $85.60, 5.73 V); the committed AGENTS.md is the one reviewed (already ruled, R34).
+
+## Checks executed
+
+- SHA-256 before/after
+- pcbnew probes probe1-probe9 (footprints, nets, pads, tracks, vias, zones, silkscreen, courtyards)
+- pin_table.tsv vs board U1 nets
+- hinge.py rerun (r23 probe)
+- hand calculations for F1, F3, F6/F9 EN, F8 dividers, P3, Storage, Board position
+- DS15034 and SLVSFC9C text checks (cached PDFs)
+
+## Coverage limits
+
+- HV6120 stall torque (5.4 kg.cm) not re-checked against a maker datasheet
+- Pad-energy worksheet, hot-plug model and parts_budget figures not re-derived
+- Wire-room 5.003 mm only checked for geometric consistency, not re-measured from terminal models
+- DRC / check.sh not run (read-only rule)

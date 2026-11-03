@@ -1,0 +1,92 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round26_mcu",
+ "reviewer": "claude",
+ "target_commit": "3d8e845",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "Rule 8 / D-R25-02 \"0.22-0.31 of the break-to-3.8 V hold-up\": over the stated window (VLOGIC 4.84-5.17 V, break from 7.4 V) the energy fraction is 0.2229-0.3048; the 0.31 upper bound is outward rounding of 0.305 and encloses the true range, so it is not false.",
+  "PA6 trip window with 1 % R60 / R61 (0402WGF, 1 %) spans VLOGIC 4.753-5.265 V; the lower corner is below the 4.84 V nominal edge quoted against U9 4.80 V BAT_IN turn-off, but rule 8 already says the window is \"to be qualified with the divider and ADC tolerances\" and D-R25-02 / round 25 triage list 4.7529 V; disclosed.",
+  "DS12110 Rev 8 Table 120 p. 213 allows 0 mA injection of either sign on PA4 / PA5 (all other FT/TT pins -5/+0 mA). Both pins are pulled only to 3V3 (R91 / R89 10 k) and driven by open-drain U11 ST / U9 FLT, so no injection path exists; the pin table does not mention the special limit, and no requirement asks it to.",
+  "pin_table row 25 (PA3 loader USART2_RX pull-up against R157 10 k) \"<= 0.83 V\" is computed at VDD 3.3 V (3.3 x 10/40); at a 3V3 rail tolerance edge it is about 0.84 V. No requirement depends on the figure (servo input threshold far above).",
+  "PA4 is a TT_a pin (DS12110 Rev 8 Table 9 p. 69), not FT; it is only pulled to 3V3, so the FT statements for the port UART pins do not apply to it and nothing is claimed otherwise.",
+  "Binding rule 48 / M3_R10 rule 13 cite the LSM6DSV80X (\"all three parts\"); its datasheet is not cached and I did not verify the +/-80 g clip or 3.904 mg/LSB on that part."
+ ],
+ "fix_verification": [
+  {
+   "change": "D-R24-03 BOOT0 second via",
+   "measurement": "BOOT0: U1.94 (15.45,46.0) F.Cu -> vias (14.2,46.0) and (13.8,45.6), joined on F.Cu and B.Cu, -> R5.1 (13.0,45.6) B.Cu; R5 10 k to GND",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-08 second vias for R91.1 and U1.28 (rule 5 text)",
+   "measurement": "LOGIC_SOURCE_ST: U1.28 (30.55,48.0) F.Cu -> vias (30.45,51.4) and (30.85,51.8), joined on both layers -> R91.2 / U11.9 on B.Cu; 3V3 via at (28.1,59.4) present. Binding rule 40 and M3_R10 rule 5 coordinates match.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-02 second gate barrels (quoted by rule 4 / binding 39)",
+   "measurement": "ACT_GATE vias (16.2,73.3)+(15.4,72.85) join Q120.4 / C120.2 / R120.2 on B.Cu; (11.14,71.7)+(11.74,72.3) join Q121.4 / R119.1; both pairs meet R121.1 (14.5,72.3) on F.Cu; no B.Cu link between the two groups, so both Q120 barrels open leaves Q120 held off by R120 as stated. R120.2 and C120.2 are ACT_GATE (probe point correct).",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-19 rule 8 turn-off corner 4.80 V (4.78 V without D402)",
+   "measurement": "(1.116 + 0.0226 + 0.0057) / 0.23829 = 4.802 V; without D402 4.778 V; PA6 0.44 x 11 = 4.84 V",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R25-01 binding rule 17 (sliding 100 ms window, single drop-out figures, periodic fractions)",
+   "measurement": "Independent EN model (R80 = R165 = 474.7 k, R81 = 297 k, C87 0.72 x 220 nF, 0.1 uA EN + 50 nA D402, VUVLO(F) 1.116 V per SLVSFC9C p. 9): EN0 1.4014 V at 6.0 V; single drop-out 10.345 / 20.111 / 26.023 ms at 6.0 / 7.4 / 8.4 V, 8.204 ms at 5.73 V, 6.300 ms at 5.5 V; one block per 100 ms 7.629 / 5.871 / 9.594 ms at 5.73 / 5.5 / 6.0 V; periodic trip fraction 19.90 % (0.1 ms) to 5.82 % (8 ms) at 5.73 V and 24.31 % (0.1 ms) to 8.32 % (9.9 ms) at 6.0 V; fast-chatter limit 20.0 / 24.4 %. Nominal 19 / 33 / 41 ms reproduce. All quoted figures reproduce.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R25-02 binding rule 8 hold-up after the PA6 trip",
+   "measurement": "t = C (V^2 - 3.8^2) / 2P at 300.8 uF: all ports on (11.249-13.064 W, parts_budget.json) 0.1034-0.1643 ms; shed (4.295-4.650 W) 0.2906-0.4303 ms; window 4.84-5.17 V = 0.44-0.47 x 11 (R60 100 k / R61 10 k on the board). Break-to-3.8 V from 7.4 V 0.4642-0.5391 / 1.3041-1.4118 ms matches M3_R10 and the budget.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-21 BOOT0 citation (comments only)",
+   "measurement": "not re-read in code; no MCU-visible text affected",
+   "verdict": "not checked (out of lens; comment-only)"
+  }
+ ],
+ "checks_actually_executed": [
+  "shasum -a 256 of m3.kicad_pcb before and after (92c3ad59... both)",
+  "pcbnew read-only dump of U1 100 pads vs pin_table.tsv r10_net (.supervisor/r26_mcu/u1_pads.py): 100/100 match, no extra pads; U1 at (23,43) rot 0 F.Cu",
+  "schematic.net.xml U1 nodes vs pin_table.tsv: 100/100 match; binding note u1_pins vs pin_table port/net/mode: 0 mismatches",
+  "binding note hashes: board, pin_table (b94133e6...), circuit (aeb1674f...), netlist (762bc13d...) recomputed and equal",
+  "pdftotext of cached DS12110 Rev 8: Figure 5 LQFP100 pin order; Table 9 pin types for PA4/PA5/PA6/PC0/PC5/PB1/PB12/PB13/PD8/PD9/PC6/PC7/PE4/PE12; AF tables 10-14 (all AF numbers in pin_table and page numbers 89-95); Table 119/120 pp. 212-213; Table 122 note 3 p. 215; Table 126 p. 217; Tables 127/128; Table 146 p. 238 (LSI 29.4-33.6 kHz); Table 157 note 7 p. 247; Table 159 p. 249; Table 160 note 2 p. 251; Table 189 p. 291; Table 192 p. 293; Figure 95; Table 9 note 7 p. 88; AF0 TRACECLK/TRACED0/TRACED1 on PE2/PC1/PE4",
+  "IWDG arithmetic: 4 x 240 = 960 LSI cycles, 30.0 / 28.571 / 32.653 ms; 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms",
+  "pcbnew net and part dump for every MCU-facing net (.supervisor/r26_mcu/nets.py): divider ratios PA6 /11, PB1 /11, PC0 / PC5 /11.2 (5.1 k + 5.1 k over 2 k || 2 k), PC8 /2; R10 / R11 / R12 / R13 / R460-R464 pull-ups; R122 / R123 / C123 and R126 / R127 / R128 / C126 gate networks; C128 on PYRO1_OUT; U3.3 = QSPI_IO2, R127.1 = PYRO1_GATE_N; U5 PS = 3V3A, CSB = GND (0x77); J2 TC2030 pinout; U12 TXU0202 A2Y = PE7, A1 = PE8",
+  "pull-up dominance arithmetic: PE4 gate 0.1038 V, PC1 gate 0.218 V nominal (0.2203 V with 1 %, as parts_budget), PC1-high gate 2.2 V / 1.1 mA, PA6 loader drive <= 0.363 mA, C123 tau 6.67 us",
+  "TPS2121 SLVSEA3F: pin functions (IN1 = 7, IN2 = 2, ST = 9, PR1 = 6, OV1 = 5, OV2 = 4, CP2 = 3) vs U11 copper (PR1 / CP2 / OV2 at GND, OV1 USB_OVLO), Table 9-3 p. 18 ST semantics, Table 9-1 p. 13",
+  "TPS25947 SLVSFC9C section 6.5: VUVLO(R) 1.183-1.223, VUVLO(F) 1.076-1.116 V, IENLKG +/-0.1 uA, IOVLKG; independent chatter model (.supervisor/r26_mcu/chatter.py)",
+  "TPS2553 SLVS841G: FAULT deglitch 3-7.5-11 ms, toff 3 ms, reverse trip 95-190 mV after 3-7 ms",
+  "LSM6DSV320X DS14623 Rev 1: Figure 5 (rendered p. 9) pin / axis map vs U4 pad positions (bottom, rot 180): +X_imu = -x, +Y_imu = -y, +Z_imu = -z reproduced; Table 2 SDx / SCx to GND, OCS_aux / SDO_aux unconnected allowed; IF_CFG p. 60 defaults; Table 150 p. 93; high-g sensitivities",
+  "via / copper checks for D-R24-02 / -03 / -08 coordinates quoted by the obligations (.supervisor/r26_mcu/vias.py, netcopper.py)",
+  "hold-up arithmetic from parts_budget.json battery_break_load_W",
+  "git status clean before and after (no tracked file touched)"
+ ],
+ "sources": [
+  "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 8, cached .supervisor/r14_parts_pdf/st_h743.pdf)",
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C, cached)",
+  "https://www.ti.com/lit/ds/symlink/tps2121.pdf (SLVSEA3F, cached)",
+  "https://www.ti.com/lit/ds/symlink/tps2553.pdf (SLVS841G, cached)",
+  "https://www.ti.com/lit/ds/symlink/txu0202.pdf (SCES942A, cached)",
+  "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1, cached .supervisor/r14_mechanics/lsm6dsv320x.pdf)",
+  "m3_design/assembly_review/sources/r10_design/pin_table.tsv, r10_binding_note.json, parts_budget.json, R10_DECISIONS.md (D-R24-02/03/08/19, D-R25-01/02/03)",
+  "docs/M3_R10.md \"Firmware\", \"CH1 pyro\", \"Ports and signals\", \"IMU axis map\"; docs/ORDERING.md 8.3; AGENTS.md at 3d8e845"
+ ],
+ "coverage_limits": [
+  "RM0433, AN2606 and DS15034 (ISM6HG256X) were not re-read; loader pin roles and option-byte items are taken as labelled Inference.",
+  "LSM6DSV80X datasheet not available locally (rule 13 figures for that part not verified).",
+  "Turn-on window (30-130 ms) and the 44 ms PORT_4V8-to-3V3 lag were checked only for plausibility (C87 1.27 x gives 130.3 ms), not re-derived end to end; these belong to the power lens.",
+  "No firmware exists; no physical or bench test was possible."
+ ]
+}

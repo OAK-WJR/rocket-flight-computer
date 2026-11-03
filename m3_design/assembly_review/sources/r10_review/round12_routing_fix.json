@@ -1,0 +1,620 @@
+{
+  "round": 12,
+  "kind": "canonical generator integration receipt",
+  "board": {
+    "sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "bytes": 2264839,
+    "footprints": 209,
+    "segments": 973,
+    "vias": 296,
+    "gnd_vias": 168,
+    "track_length_mm": 1808.3004062475577,
+    "size_mm": [
+      46,
+      90
+    ]
+  },
+  "native_geometry": {
+    "scope": "Canonical native PCB after full source-driven R12 integration; no temporary-board substitute",
+    "before": {
+      "sha256": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+      "bytes": 2263730,
+      "footprints": 209,
+      "segments": 973,
+      "vias": 295,
+      "gnd_vias": 167,
+      "track_length_mm": 1809.7087323596263
+    },
+    "after": {
+      "sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+      "bytes": 2264839,
+      "footprints": 209,
+      "segments": 973,
+      "vias": 296,
+      "gnd_vias": 168,
+      "track_length_mm": 1808.3004062475577
+    },
+    "parts_poses_pad_lands_and_nets_identical": true,
+    "all_original_gnd_tracks_identical": true,
+    "all_original_vias_geometry_and_flags_identical": true,
+    "removed_tracks": [
+      {
+        "net": "BAT_ENABLE",
+        "layer": "F.Cu",
+        "width_mm": 0.2,
+        "start_mm": [
+          21.3,
+          75.2
+        ],
+        "end_mm": [
+          18.2,
+          78.3
+        ]
+      },
+      {
+        "net": "BAT_ENABLE",
+        "layer": "F.Cu",
+        "width_mm": 0.2,
+        "start_mm": [
+          19.9,
+          80.0
+        ],
+        "end_mm": [
+          17.1,
+          82.8
+        ]
+      },
+      {
+        "net": "BAT_ENABLE",
+        "layer": "F.Cu",
+        "width_mm": 0.2,
+        "start_mm": [
+          18.2,
+          78.3
+        ],
+        "end_mm": [
+          19.9,
+          80.0
+        ]
+      }
+    ],
+    "added_tracks": [
+      {
+        "net": "BAT_ENABLE",
+        "layer": "F.Cu",
+        "width_mm": 0.2,
+        "start_mm": [
+          21.3,
+          75.2
+        ],
+        "end_mm": [
+          18.0232,
+          78.4768
+        ]
+      },
+      {
+        "net": "BAT_ENABLE",
+        "layer": "F.Cu",
+        "width_mm": 0.2,
+        "start_mm": [
+          18.0232,
+          81.8768
+        ],
+        "end_mm": [
+          17.1,
+          82.8
+        ]
+      },
+      {
+        "net": "BAT_ENABLE",
+        "layer": "F.Cu",
+        "width_mm": 0.2,
+        "start_mm": [
+          18.0232,
+          78.4768
+        ],
+        "end_mm": [
+          18.0232,
+          81.8768
+        ]
+      }
+    ],
+    "added_ordinary_gnd_via_mm": [
+      23.8,
+      62.95
+    ],
+    "changed_fab_reference_texts": {
+      "C29": {
+        "before": {
+          "position_mm": [
+            28.0,
+            43.52
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "layer": "B.Fab",
+          "angle": 90.0,
+          "mirrored": true
+        },
+        "after": {
+          "position_mm": [
+            27.95,
+            43.52
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "layer": "B.Fab",
+          "angle": 90.0,
+          "mirrored": true
+        }
+      },
+      "C92": {
+        "before": {
+          "position_mm": [
+            32.35,
+            52.5
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "layer": "B.Fab",
+          "angle": 180.0,
+          "mirrored": true
+        },
+        "after": {
+          "position_mm": [
+            32.35,
+            52.5
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "layer": "B.Fab",
+          "angle": 180.0,
+          "mirrored": true
+        }
+      },
+      "R10": {
+        "before": {
+          "position_mm": [
+            20.0,
+            44.69
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "layer": "B.Fab",
+          "angle": 180.0,
+          "mirrored": true
+        },
+        "after": {
+          "position_mm": [
+            20.0,
+            44.79
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "layer": "B.Fab",
+          "angle": 180.0,
+          "mirrored": true
+        }
+      },
+      "R8": {
+        "before": {
+          "position_mm": [
+            9.0,
+            32.5
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "layer": "B.Fab",
+          "angle": 270.0,
+          "mirrored": true
+        },
+        "after": {
+          "position_mm": [
+            9.0,
+            32.5
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "layer": "B.Fab",
+          "angle": 270.0,
+          "mirrored": true
+        }
+      },
+      "C5": {
+        "before": {
+          "position_mm": [
+            22.2,
+            71.43
+          ],
+          "size_mm": [
+            1.0,
+            1.0
+          ],
+          "stroke_mm": 0.15,
+          "layer": "B.Fab",
+          "angle": 180.0,
+          "mirrored": true
+        },
+        "after": {
+          "position_mm": [
+            22.2,
+            71.43
+          ],
+          "size_mm": [
+            0.4,
+            0.4
+          ],
+          "stroke_mm": 0.06,
+          "layer": "B.Fab",
+          "angle": 180.0,
+          "mirrored": true
+        }
+      }
+    },
+    "new_c98_return": {
+      "distance_mm": 7.345584412271562,
+      "path_mm": [
+        [
+          "B.Cu",
+          23.925,
+          62.625
+        ],
+        [
+          "B.Cu",
+          23.925,
+          63.075
+        ],
+        [
+          "In1.Cu",
+          23.925,
+          63.075
+        ],
+        [
+          "In1.Cu",
+          23.925,
+          63.875
+        ],
+        [
+          "In1.Cu",
+          25.725,
+          65.675
+        ],
+        [
+          "B.Cu",
+          25.725,
+          65.675
+        ],
+        [
+          "B.Cu",
+          25.725,
+          65.325
+        ]
+      ],
+      "layers": [
+        "B.Cu",
+        "In1.Cu"
+      ],
+      "endpoints": [
+        "C98.2",
+        "U11.12"
+      ]
+    },
+    "source_sha256": {
+      "m3_design/r10_route_power.py": "b05cc60d092bf48375628e11df9efdb754f1cd6cd9921ad72641fd81b597e597",
+      "m3_design/r10_post.py": "94a467a2e823ca7e5160aceb7baf7d1f474b056ed54a608ee713690c6bf5eaeb",
+      "m3_design/r10_fanout.tsv": "6997c2b9ac393cd182a2a02992afd64d667cfdabffbc862e4718e8b174c5573f",
+      "tools/check_r10.py": "b129c1b06dbedeb6bdfcea1f17f662a35e796ce00d63c0eb1ba3760c16804856",
+      "tools/fit_check.py": "52f780c61feca88cd436de84a333fe53acf672b5ab1b6b8dfe394956b2ea129c",
+      "tools/test_r10_check.py": "35b2cbd731fc7818fe688e8934504109713fc8564455fdd66e1157a4c028597d",
+      "tools/test_fit_check.py": "752d8536d0c913c18fcf87ca423b161f7c8abaa3de0d3f0a22c3bb41c1632795"
+    },
+    "limitations": "CAD geometry and calculations only; no inductance, transient, assembly or physical fit qualification"
+  },
+  "routing": {
+    "command": "KiCad Python tools/route_check.py --profile r10 --bumps-all --report temporary.json",
+    "report_sha256": "39ae790dc57837e166c449eab5a165ccd6755c238953707f27dd029fa2af1665",
+    "total_instances": 141,
+    "category_counts": {
+      "pad_end_offcentre": 57,
+      "segment_inside_pad": 22,
+      "passes_through_pad": 1,
+      "short_segment": 1,
+      "width_change_junction": 11,
+      "short_layer_hop": 3,
+      "u_turn": 6,
+      "tiny_jog": 7,
+      "extra_bends": 7,
+      "power_via_no_gnd": 24,
+      "via_on_track_in_fill": 1,
+      "detour": 1
+    },
+    "count_definition": "All141 actual route instances include22 AUD10 inside-pad representations and9 hygiene leftovers. The remaining110 are ordinary informational items. No supplementary local bump survives; do not add the old supplemental candidate again.",
+    "partition": {
+      "ordinary_information": 110,
+      "AUD10_inside_pad": 22,
+      "noncritical_hygiene_leftovers": 9,
+      "supplementary_bump_candidates": 0
+    },
+    "failures": [],
+    "allowed": [],
+    "stale": [],
+    "measured_check": [],
+    "alternative_audit": [],
+    "leftovers_stale": [],
+    "leftover_inventory_location": "r10_final_deviations.json#/routing_inventory/noncritical_leftovers_once",
+    "new_C98_annotation": [
+      {
+        "cat": "via_on_track_in_fill",
+        "net": "GND",
+        "cls": "power",
+        "layer": "B.Cu",
+        "x": 23.8,
+        "y": 62.95,
+        "off_mm": 0.3,
+        "track": [
+          23.5,
+          62.5,
+          23.5,
+          63.75
+        ]
+      }
+    ],
+    "new_BAT_ENABLE_annotation": [
+      {
+        "cat": "extra_bends",
+        "net": "BAT_ENABLE",
+        "cls": "other",
+        "layer": "F.Cu",
+        "x": 21.3,
+        "y": 68.9,
+        "end": [
+          17.1,
+          82.8
+        ],
+        "seglens": [
+          6.3,
+          4.634,
+          3.4,
+          1.306
+        ]
+      }
+    ],
+    "bump_windows_searched": 56
+  },
+  "bounded_two_segment_screen": {
+    "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "method": "Native physical F.Cu track/pad/via/drawing clearance screen at0.15mm; zone fills excluded because they refill around a reroute. No board mutation/save or native DRC; collisions disprove these two simplest whole-chain reductions, not every alternative.",
+    "candidates": [
+      {
+        "path_mm": [
+          [
+            21.3,
+            68.9
+          ],
+          [
+            21.3,
+            78.6
+          ],
+          [
+            17.1,
+            82.8
+          ]
+        ],
+        "clearance_collisions": [
+          {
+            "segment": [
+              [
+                21.3,
+                68.9
+              ],
+              [
+                21.3,
+                78.6
+              ]
+            ],
+            "net": "GND",
+            "label": "via GND (20.85, 76.40)"
+          },
+          {
+            "segment": [
+              [
+                21.3,
+                78.6
+              ],
+              [
+                17.1,
+                82.8
+              ]
+            ],
+            "net": "RAW_PROTECTED",
+            "label": "via RAW_PROTECTED (20.30, 79.10)"
+          },
+          {
+            "segment": [
+              [
+                21.3,
+                78.6
+              ],
+              [
+                17.1,
+                82.8
+              ]
+            ],
+            "net": "RAW_PROTECTED",
+            "label": "via RAW_PROTECTED (21.10, 79.10)"
+          }
+        ]
+      },
+      {
+        "path_mm": [
+          [
+            21.3,
+            68.9
+          ],
+          [
+            17.1,
+            73.1
+          ],
+          [
+            17.1,
+            82.8
+          ]
+        ],
+        "clearance_collisions": [
+          {
+            "segment": [
+              [
+                21.3,
+                68.9
+              ],
+              [
+                17.1,
+                73.1
+              ]
+            ],
+            "net": "ACT_EN",
+            "label": "R123.1"
+          },
+          {
+            "segment": [
+              [
+                21.3,
+                68.9
+              ],
+              [
+                17.1,
+                73.1
+              ]
+            ],
+            "net": "ACT_EN",
+            "label": "R122.2"
+          },
+          {
+            "segment": [
+              [
+                21.3,
+                68.9
+              ],
+              [
+                17.1,
+                73.1
+              ]
+            ],
+            "net": "ACT_EN",
+            "label": "track ACT_EN (19.08, 70.75)"
+          },
+          {
+            "segment": [
+              [
+                21.3,
+                68.9
+              ],
+              [
+                17.1,
+                73.1
+              ]
+            ],
+            "net": "ACT_EN",
+            "label": "track ACT_EN (19.60, 70.23)"
+          },
+          {
+            "segment": [
+              [
+                21.3,
+                68.9
+              ],
+              [
+                17.1,
+                73.1
+              ]
+            ],
+            "net": "ACT_EN",
+            "label": "track ACT_EN (17.80, 70.75)"
+          },
+          {
+            "segment": [
+              [
+                17.1,
+                73.1
+              ],
+              [
+                17.1,
+                82.8
+              ]
+            ],
+            "net": "GND",
+            "label": "D8.2"
+          },
+          {
+            "segment": [
+              [
+                17.1,
+                73.1
+              ],
+              [
+                17.1,
+                82.8
+              ]
+            ],
+            "net": "GND",
+            "label": "track GND (17.65, 75.00)"
+          },
+          {
+            "segment": [
+              [
+                17.1,
+                73.1
+              ],
+              [
+                17.1,
+                82.8
+              ]
+            ],
+            "net": "GND",
+            "label": "track GND (15.88, 79.90)"
+          },
+          {
+            "segment": [
+              [
+                17.1,
+                73.1
+              ],
+              [
+                17.1,
+                82.8
+              ]
+            ],
+            "net": "GND",
+            "label": "via GND (17.20, 79.90)"
+          }
+        ]
+      }
+    ]
+  },
+  "full_integration_receipt": "round12_fix_validation.json",
+  "limitations": "CAD/current routing evidence only; no independent full-round or physical qualification."
+}

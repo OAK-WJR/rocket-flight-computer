@@ -1,0 +1,33 @@
+R9 step 8: what the ground step adds, measured against the same board with step 8's copper removed (the build's own
+stage-33 board, or step8_evidence/unground.py: the table's vias and straps deleted, the three pours shrunk back to the
+strip, the crystal plane deleted and its rule area's step-3 flags restored, every via's pads back on every layer,
+refilled; the design aid reproduces the frozen r9_ground.tsv byte for byte from that board: aid_check.txt).
+Session 2 (board 89ddea8d...; session 1's board 95d59a54... in brackets where it differs).
+
+critical_reference, R6 set (scorecard R6b): step-7 board 26,469 / 31,359 unreferenced (0.8441); built board 3,206 / 31,359
+(0.1022) [5,430, 0.1732]. Classes on the built board (reference_causes.txt): own antipads of the 12 critical
+layer-change vias 3,205 (21 one-branch sides 2,550, three two-branch sides 655), USB_DM's one edge sample at CC1's via
+(REF_STRAY); none under a keep-out, a split or a void. Session 2's steps, measured on the built board (what-ifs, D-S8-17):
+  every via's unconnected inner pads removed (D-S8-19)       0.1396  (own 3,386, crystal keep-out 992, other vias 1)
+  + the crystal's In2 GND plane (D-S8-20)                     0.1022  (own 3,205, other vias 1)
+  [+ 0.45 / 0.2 critical vias: 0.0888, not adopted: weaker than the board's 0.5 / 0.3 via rule]
+critical_reference, extended set: built board 3,931 / 83,715 (R8 5,944) [6,369]; survey R1 / R3 (centre-line
+unreferenced, own antipads excluded) 0.0 / 0.0 mm [2.8 / 2.8]; R4 reference-edge crossings 32 [30]: HSE_OUT's two B.Cu
+branches and QSPI_NCS's R10 branch now leave their via antipads onto the crystal plane (before they ran on in the void),
+HSE_IN one fewer; no split between two nets' fills is crossed (refaudit_ext.txt: own_via 3,930, other_via 1).
+A first session-2 build without xtal_outline's notch left NRST's B.Cu run to C24.1 0.33 mm over the gap between the plane
+and the 3V3 fill (one more extended-set crossing); the notch keeps the 3V3 fill under it.
+
+m2_sweep (sources/r8_design/step9/m2_sweep.py) on the built board: adjacency 33 [39] (six via-to-via pairs under 0.2 mm on
+In1 / In2 are gone with the unconnected inner rings: GND (28.94, 7.2) / RADIO_TXEN (29.34, 7.8), GND (8.35, 45.5) / 3V3
+(8.45, 44.82), GNSS_VCC_RF (10.4, 7.4) / GND (10.75, 6.8)); adjacency_pad 29, via_step 1, poured_hop 0, chain_detour 18,
+via_fold 34, short_hop 7 [unchanged]. Scorecard Y1 31, Y1b 14, Y2c 11 unchanged.
+These rows (and X2g 7, S8 / S9 2, S10b 260, X3f 291.3, Y5 34, Y7 1) are steps 3-7's; step 8 changes none of them.
+
+Planes (survey): P1 In1 GND coverage 0.9094 [0.8973]; P3b In1 slots 4 [8]; P6 In2 perimeter 1484.0 mm [1533.3]; P8
+stitching 9.43 / cm2 [9.41]; X8 copper zones 16 [15] (R9_GND_In2_Y1).
+
+route_check r9 on the board-wide pours before step 8's fixes: 1 pour_sliver + 7 pour_finger (D-S8-03); built board: 0
+failing, 0 allowlisted. DRC on the pours alone: 4 starved_thermal, 7 unconnected; built board: none (silk classes only).
+Survey P rows: pours alone P7 25 / P9 13.13 / P10 21.82 mm; built board P7 9 / P9 3.45 / P10 7.32 mm (unchanged by
+session 2: the via pads and the crystal plane change In1 / In2 only).

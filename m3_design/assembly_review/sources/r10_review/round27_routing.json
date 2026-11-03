@@ -1,0 +1,64 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 27, routing lens",
+  "reviewer": "claude",
+  "target_commit": "816038c",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "route_check --profile r10 on a0ec075e: exit 0, 0 failing, 0 allowlisted, 5 unrecorded noncritical leftovers (BAT_OVLO short segment, BUZZ_DRV / BAT_FAULT_N / I2C1_SDA tiny jogs, USB_ILIM detour), 28 bump windows; right_angle 0.",
+    "Against 92c3ad59 under the same checker the instance list differs only by the two J440 critical_via_no_gnd 'pad' instances (gone), the USB_LIMITED In2 extra_bends anchor (same seglens, reversed) and the PYRO1_CONT_MID u_turn (16.87,60.13) 10.288 mm -> (16.87,59.48) 10.575 mm.",
+    "Independent 90-degree scan: 35 two-branch 90-degree nodes on the board, every one at a same-net pad or via whose copper covers the bend's inner corner; none in open copper.",
+    "Every new segment (R13 strap, R164 strap, 3V3A trunk, C11.2 / C10.2 returns, PYRO1_OUT's last vertical, PYRO1_CONT_MID) is octilinear with 45-degree bends only; the R13 and R164 straps are the octilinear-shortest paths to their via spots (1.228 / 1.638 mm).",
+    "C10.2's return leaves its pad 0.05 mm north of the pad centre, inside the 1.41 x 1.35 mm land (below route_check's 0.1 mm pad_end_offcentre threshold); recorded in AVA_LAYOUT and R10_VALIDATION. Not a rule instance.",
+    "PYRO1_CONT_MID 10.575 / 6.813 mm (1.55x, +3.76 mm) is below the 1.6x detour gate; its diagonal (16.87,60.82)-(17.85,61.8) is limited by Q123.1 at 0.2005 mm and its vertical by BUZZ_G's x 17.75 run, so no 45-degree start is earlier; the u_turn is information only (D-R18-05 corridor).",
+    "PYRO1_OUT's final vertical (16.87,57.97)-(16.87,58.62) is forced: a single diagonal ending on R173.1 would pass 0.07 mm from Q124's source via (15.85,57.695).",
+    "Independent GND-partner scan: 25 return-required critical layer-change vias (GND partner 0.770-1.492 mm, PYRO1_GATE (14.4,53.3) the largest) plus the plated pins J440.3 / J440.4 (1.500 mm each); every other critical layer change without a partner is on AUD-2's slow list (ACT_GATE x4, BAT_ENABLE x3, BAT_SW_SOURCE, BAT_SW_RETURN at J400.2, PYRO1_CONT, CAM_PWR_EN, CAM_UART_OE). No critical signal net has inner-layer tracks (In2 carries only USB_LIMITED and 3V3A).",
+    "The J440 GND vias (7.4,16.5) / (7.4,20.0) lie in the F.Cu and B.Cu GND fills and In1 GND; the 4-position terminal's pins 3 / 4 report UnconnectedLayerMode 3 and flash no In1 / In2 copper on J410, J420, J440 and J9 (pins 1 / 2 keep their rings).",
+    "In2 reference sampling under PYRO1_OUT, PYRO1_GATE and the AUX B.Cu runs: one In2 region each (GND for the pyro nets, 3V3 for AUX); the only void samples are the pins' / vias' own voids (AUX 24 of 52 samples inside the J440 pin void, as on 92c3ad59).",
+    "Near-node scan: the only near-coincident same-net nodes are the BUZZ_G T 0.02 mm before its chamfer (round 24 triage observation), VBUS / RAW_PROTECTED 0.05 mm Ts and C127.1's 0.0707 mm PYRO1_CONT piece inside its pad; identical on 92c3ad59.",
+    "Two-pad under-body via scan unchanged from 92c3ad59: five 0603 (R86, R89, R91, R101, R401), five 1210 (C400, C405, C411, C421, C461) and D8 (16.05,75.0) (round 26 observation).",
+    "Detour table (R10_VALIDATION section 6) reproduces exactly: 116 non-pour nets, 1500.8 / 1236.6 mm (1.214x), 23 nets at +3.5 mm or more; PYRO1_OUT 23.00 / 15.45, PYRO1_CONT_MID 10.57 / 6.81, 3V3A 36.56 / 33.97. ACT_FET_S and RADIO_TX_MCU (+3.07 mm each) also lie between +3.0 and +3.5 mm besides the two nets the text names below the line; the text does not claim that list is complete.",
+    "Copper counts reproduce: 1059 segments, 0 arcs, 309 vias (170 GND), 1866.794 mm, 216 footprints.",
+    "Probe-copy DRC (kicad-cli 10.0.7, --severity-all, no schematic): 0 unconnected, 0 copper / clearance violations; the 199 lib_footprint_issues come from the probe directory lacking the project's library table and are not board defects.",
+    "The R10_VALIDATION 'Historical round10 deviations' table still lists 'R128.1 / R126.1 to 3V3 via (19.05,55.9), 0.6761 / 0.8352 mm' as 'Current geometry'; it sits under the historical heading bound to b337fe63, so it is history, not a current statement."
+  ],
+  "fix_verification": [
+    {"change": "D-R26-01", "measurement": "GND vias 0.5 / 0.3 mm at (7.4,16.5) and (7.4,20.0); centre to J440.3 (7.4,18.0) / J440.4 (7.4,21.5) 1.500 mm; ring to own pin pad 0.300 mm, to neighbouring pin pad 0.800 mm; in F.Cu, B.Cu and In1 GND fills; pins 3 / 4 of J410 / J420 / J440 / J9 flash no inner copper; route_check critical_via_no_gnd 2 (on 92c3ad59 with the committed checker) -> 0", "verdict": "confirmed"},
+    {"change": "D-R26-02", "measurement": "C11 B(17.5,51.45), R164 B(17.325,55.25), R173 B(16.87,59.05); 3V3A trunk (16.5,48.31)-(16.5,50.2)-(16.5,51.45)-(16.5,53.5)-(16.5,55.25) through the pad centres; C11.2 return (18.5,51.45)-(19.423,52.373) at 45 degrees; R13 strap (10.25,52.98)-(9.63,52.98)-(9.2,52.55); PYRO1_OUT last vertical (16.87,57.97)-(16.87,58.62); PYRO1_OUT B.Cu run to R164.2 1.040 mm (rounded-rect corner), R173.1 to R162.1 (BUZZ_DRV) 0.794 mm as recorded; PYRO1_OUT 23.65 -> 23.00 mm", "verdict": "confirmed"},
+    {"change": "D-R26-04", "measurement": "R164's 3V3 via (19.55,55.825), strap (18.15,55.25)-(18.975,55.25)-(19.55,55.825); via to R127.1 1.065 mm, to R126.1 1.081 mm, to R128.1 1.0585 mm (pad-rectangle calculation); C10 B(17.5,53.5), its return (18.5,53.45)-(19.65,53.45) 0.05 mm off the pad centre; PYRO1_CONT_MID (16.87,59.48)-(16.87,60.82)-(17.85,61.8)-(20.83,61.8)-(23.0,59.63)-(23.0,57.83), 10.575 mm, all bends 45 degrees", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after (a0ec075e both times); git HEAD 816038c",
+    "route_check.py --profile r10 --list --report on the committed board (KiCad Python, read-only), and on 3d8e845's board (92c3ad59) in the probe directory; sorted instance diff",
+    "pcbnew dumps of every track, via and pad in x 8-22 / y 49-63, x 2-16 / y 9-26, x 14-19.5 / y 46.5-49.2 and x 21-26 / y 58-63",
+    "independent GND-partner scan of every via and PTH pad of the SIGNAL_CRITICAL classes (route_check's R10_CLASSES and critical_reference's AUD-2 list)",
+    "independent 90-degree bend scan with inner-corner coverage at pads and vias",
+    "near-coincident node / T-near-end scan, new vs old board",
+    "zone-fill contact test at the six new or moved vias",
+    "In2 reference sampling (0.05 mm) under PYRO1_OUT, PYRO1_GATE, AUX_TX_WIRE and AUX_RX_WIRE B.Cu tracks",
+    "PTH unconnected-layer mode and inner-layer flashing for J1, J9, J121, J122, J400, J410, J420, J440",
+    "two-pad under-body via scan, new vs old",
+    "detour recomputation (track length against the octilinear MST of pad centres) for all 116 non-pour nets, new and old",
+    "kicad-cli 10.0.7 pcb drc --severity-all on a probe copy",
+    "copper inventory counts (segments, arcs, vias, GND vias, length, footprints)"
+  ],
+  "sources": [
+    ".supervisor/r27_review_brief.md",
+    "AGENTS.md section 3; docs/REQUIREMENTS.md M2",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R26-01 ... -04",
+    "m3_design/assembly_review/sources/r10_review/round26_fix_cad.md, round26_triage.md, round24_triage.md (BUZZ_G observation), round26_routing.md (read after this lens's findings were settled)",
+    "docs/M3_R10.md D-R26 table; docs/R10_VALIDATION.md section 6 and 'Round 26 fix pass'; AVA_LAYOUT.md D-R26 rows",
+    "tools/route_check.py, tools/critical_reference.py",
+    "probe scripts and outputs in .supervisor/r27_routing/"
+  ],
+  "coverage_limits": [
+    "No full tools/check.sh, no check_r10 run, no build (read-only brief).",
+    "Clearances quoted in fix_verification are pad-rectangle / rounded-rect hand calculations, not pcbnew shape collisions; they agree with the recorded figures to 1 um.",
+    "The probe DRC had no schematic (no parity check) and no library table.",
+    "Pad-entry tidiness was surveyed through route_check's information output and the new copper only; the 70 off-centre entries inherited from earlier boards were not re-judged one by one.",
+    "IPC-2152 widths and adjacency hazards are left to the power and safety lenses."
+  ]
+}

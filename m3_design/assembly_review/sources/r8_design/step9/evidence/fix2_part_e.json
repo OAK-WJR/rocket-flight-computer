@@ -1,0 +1,849 @@
+{
+ "board_sha256": "990c8040c5b8457bd2bd1717ed3e5c2725f32c1dda1cd7f826a0c2b458d28b18",
+ "method": "scratch e_analysis.py: each pad_end_offcentre / segment_inside_pad end moved to its pad centre on its own segment heading, tested with route_check.RedrawCheck (clearance, keep-outs, holes, edge); footprint keep-outs (J2) are not in RedrawCheck",
+ "instances": [
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3",
+   "pad": "C100.1",
+   "at": [
+    34.95,
+    42.8
+   ],
+   "off": 0.17,
+   "size": [
+    0.5,
+    0.54
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GND",
+   "pad": "C100.2",
+   "at": [
+    35.45,
+    42.8
+   ],
+   "off": 0.17,
+   "size": [
+    0.5,
+    0.54
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GND",
+   "pad": "C129.2",
+   "at": [
+    18.9274,
+    90.7274
+   ],
+   "off": 0.3855,
+   "size": [
+    0.8,
+    0.9
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GND",
+   "pad": "C83.2",
+   "at": [
+    9.55,
+    35.4
+   ],
+   "off": 0.175,
+   "size": [
+    0.9,
+    0.95
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_RADIO",
+   "pad": "C310.1",
+   "at": [
+    36.35,
+    19.6
+   ],
+   "off": 0.43,
+   "size": [
+    1.41,
+    1.35
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_RADIO",
+   "pad": "C310.1",
+   "at": [
+    36.35,
+    19.6
+   ],
+   "off": 0.43,
+   "size": [
+    1.41,
+    1.35
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "RADIO_SCK",
+   "pad": "U31.15",
+   "at": [
+    24.5,
+    16.54
+   ],
+   "off": 0.41,
+   "size": [
+    1.5,
+    0.9
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "far end at the centre"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "RADIO_SCK",
+   "pad": "U31.15",
+   "at": [
+    24.5,
+    16.54
+   ],
+   "off": 0.41,
+   "size": [
+    1.5,
+    0.9
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "far end at the centre"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "SERVO2_MCU",
+   "pad": "D121.3",
+   "at": [
+    33.45,
+    76.97
+   ],
+   "off": 0.12,
+   "size": [
+    0.53,
+    1.07
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE_N",
+   "pad": "R126.1",
+   "at": [
+    21.9,
+    90.4
+   ],
+   "off": 0.3,
+   "size": [
+    1.13,
+    1.38
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE",
+   "pad": "C126.1",
+   "at": [
+    23.4,
+    91.85
+   ],
+   "off": 0.25,
+   "size": [
+    0.8,
+    0.9
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE",
+   "pad": "R126.2",
+   "at": [
+    22.1,
+    92.4
+   ],
+   "off": 0.5,
+   "size": [
+    1.13,
+    1.38
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_GATE",
+   "pad": "C126.1",
+   "at": [
+    23.4,
+    91.85
+   ],
+   "off": 0.25,
+   "size": [
+    0.8,
+    0.9
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_RX_WIRE",
+   "pad": "TP75.1",
+   "at": [
+    37.5,
+    40.3
+   ],
+   "off": 0.15,
+   "size": [
+    1.5,
+    1.5
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_CONT",
+   "pad": "R129.2",
+   "at": [
+    27.87,
+    88.08
+   ],
+   "off": 0.18,
+   "size": [
+    0.57,
+    0.54
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "SERVO3_MCU",
+   "pad": "D121.4",
+   "at": [
+    33.45,
+    74.43
+   ],
+   "off": 0.12,
+   "size": [
+    0.53,
+    1.07
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "NRST",
+   "pad": "J2.3",
+   "at": [
+    1.6,
+    42.75
+   ],
+   "off": 0.115,
+   "size": [
+    0.79,
+    0.79
+   ],
+   "verdict": [
+    "extend/move the end to the centre: clean"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_GNSS",
+   "pad": "C301.1",
+   "at": [
+    12.61,
+    21.75
+   ],
+   "off": 0.1838,
+   "size": [
+    0.5,
+    0.54
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "3V3_GNSS",
+   "pad": "C301.1",
+   "at": [
+    12.61,
+    21.75
+   ],
+   "off": 0.1838,
+   "size": [
+    0.5,
+    0.54
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_SAFEBOOT_N",
+   "pad": "TP30.1",
+   "at": [
+    2.6,
+    10.2
+   ],
+   "off": 0.8485,
+   "size": [
+    1.5,
+    1.5
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "far end at the centre"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_SAFEBOOT_N",
+   "pad": "TP30.1",
+   "at": [
+    2.6,
+    10.2
+   ],
+   "off": 0.8485,
+   "size": [
+    1.5,
+    1.5
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "far end at the centre"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PULLPIN",
+   "pad": "D122.3",
+   "at": [
+    14.23,
+    80.0
+   ],
+   "off": 0.43,
+   "size": [
+    1.0,
+    0.65
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "VLOGIC_SENSE",
+   "pad": "C60.1",
+   "at": [
+    24.43,
+    56.75
+   ],
+   "off": 0.23,
+   "size": [
+    0.8,
+    0.9
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_FAULT_N",
+   "pad": "TP85.1",
+   "at": [
+    36.0,
+    83.6
+   ],
+   "off": 0.8485,
+   "size": [
+    1.5,
+    1.5
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "extend/move the end to the centre: clean"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_FAULT_N",
+   "pad": "TP85.1",
+   "at": [
+    36.0,
+    83.6
+   ],
+   "off": 0.8485,
+   "size": [
+    1.5,
+    1.5
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "extend/move the end to the centre: clean"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "VBUS_SENSE",
+   "pad": "R110.1",
+   "at": [
+    11.825,
+    30.6
+   ],
+   "off": 0.25,
+   "size": [
+    0.8,
+    0.95
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "VBUS_SENSE",
+   "pad": "R110.1",
+   "at": [
+    11.825,
+    30.6
+   ],
+   "off": 0.25,
+   "size": [
+    0.8,
+    0.95
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_DM",
+   "pad": "D4.6",
+   "at": [
+    12.6,
+    32.85
+   ],
+   "off": 0.45,
+   "size": [
+    0.53,
+    1.07
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_DM",
+   "pad": "D4.6",
+   "at": [
+    12.6,
+    32.85
+   ],
+   "off": 0.45,
+   "size": [
+    0.53,
+    1.07
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_ENABLE",
+   "pad": "U9.1",
+   "at": [
+    40.42,
+    86.2
+   ],
+   "off": 0.18,
+   "size": [
+    0.6,
+    0.3
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_5V",
+   "pad": "C91.1",
+   "at": [
+    44.17,
+    49.6
+   ],
+   "off": 0.375,
+   "size": [
+    1.15,
+    1.8
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "PYRO1_CONT_MID",
+   "pad": "R129.1",
+   "at": [
+    28.95,
+    87.8
+   ],
+   "off": 0.2417,
+   "size": [
+    0.57,
+    0.54
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_LNA_EN",
+   "pad": "R303.1",
+   "at": [
+    12.03,
+    12.18
+   ],
+   "off": 0.22,
+   "size": [
+    0.57,
+    0.54
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_LNA_EN",
+   "pad": "R303.1",
+   "at": [
+    12.03,
+    12.18
+   ],
+   "off": 0.22,
+   "size": [
+    0.57,
+    0.54
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_VCC_RF",
+   "pad": "Q32.2",
+   "at": [
+    9.575,
+    12.25
+   ],
+   "off": 0.125,
+   "size": [
+    1.0,
+    0.65
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_ILIM",
+   "pad": "R85.1",
+   "at": [
+    12.85,
+    38.025
+   ],
+   "off": 0.3889,
+   "size": [
+    0.8,
+    0.95
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "USB_ILIM",
+   "pad": "R85.1",
+   "at": [
+    12.85,
+    38.025
+   ],
+   "off": 0.3889,
+   "size": [
+    0.8,
+    0.95
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_DVDT",
+   "pad": "U7.1",
+   "at": [
+    33.05,
+    29.9
+   ],
+   "off": 0.15,
+   "size": [
+    0.5,
+    0.25
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "BAT_DVDT",
+   "pad": "U9.7",
+   "at": [
+    42.225,
+    84.675
+   ],
+   "off": 0.2151,
+   "size": [
+    0.25,
+    0.65
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "GNSS_ANT_SRC",
+   "pad": "Q32.1",
+   "at": [
+    7.925,
+    12.25
+   ],
+   "off": 0.125,
+   "size": [
+    1.0,
+    0.65
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "pad_end_offcentre",
+   "net": "CAM_ILIM",
+   "pad": "TP73.1",
+   "at": [
+    30.575,
+    34.9
+   ],
+   "off": 0.475,
+   "size": [
+    1.5,
+    1.5
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "3V3_RADIO",
+   "pad": "C310.1",
+   "at": [
+    36.35,
+    19.6
+   ],
+   "off": 0.43,
+   "size": [
+    1.41,
+    1.35
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "RADIO_SCK",
+   "pad": "U31.15",
+   "at": [
+    24.5,
+    16.54
+   ],
+   "off": 0.41,
+   "size": [
+    1.5,
+    0.9
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "far end at the centre"
+   ]
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "GNSS_SAFEBOOT_N",
+   "pad": "TP30.1",
+   "at": [
+    2.6,
+    10.2
+   ],
+   "off": 0.849,
+   "size": [
+    1.5,
+    1.5
+   ],
+   "verdict": [
+    "centre off the octilinear headings from the segment's far end",
+    "far end at the centre"
+   ]
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "VBUS_SENSE",
+   "pad": "R110.1",
+   "at": [
+    11.825,
+    30.6
+   ],
+   "off": 0.25,
+   "size": [
+    0.8,
+    0.95
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "USB_DM",
+   "pad": "D4.6",
+   "at": [
+    12.15,
+    32.85
+   ],
+   "off": 0.45,
+   "size": [
+    0.53,
+    1.07
+   ],
+   "verdict": [
+    "extend/move the end to the centre: clean",
+    "extend/move the end to the centre: clean"
+   ]
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "GNSS_LNA_EN",
+   "pad": "R303.1",
+   "at": [
+    12.03,
+    12.18
+   ],
+   "off": 0.22,
+   "size": [
+    0.57,
+    0.54
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  },
+  {
+   "cat": "segment_inside_pad",
+   "net": "USB_ILIM",
+   "pad": "R85.1",
+   "at": [
+    12.85,
+    38.025
+   ],
+   "off": 0.389,
+   "size": [
+    0.8,
+    0.95
+   ],
+   "verdict": [
+    "far end at the centre",
+    "centre off the octilinear headings from the segment's far end"
+   ]
+  }
+ ]
+}

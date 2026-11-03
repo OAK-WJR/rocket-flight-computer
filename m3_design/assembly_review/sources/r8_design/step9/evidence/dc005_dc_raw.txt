@@ -1,0 +1,10 @@
+RAW_ACT: Q121:5,6,7,8,9 -> J122:2,5,8,11, grid 0.05 mm, 442211 free cells, CG 3403 iterations, residual 9.9e-11
+  stack-up: F.Cu 35 um at 0.0175 mm, In1.Cu 30 um at 0.2530 mm, In2.Cu 30 um at 1.3130 mm, B.Cu 35 um at 1.5485 mm
+  R = 1.45 mOhm; at 7.7 A: drop 11.2 mV, copper loss 0.086 W
+  F.Cu   carries  100 % at mid-path; peak 5.15 A/mm at (11.32, 85.62)
+  In2.Cu carries    0 % at mid-path; peak 2.19 A/mm at (11.28, 85.62)
+  B.Cu   carries    0 % at mid-path; peak 3.34 A/mm at (5.48, 99.82)
+  cuts: neck 5.94 mm at level 0.158 on F.Cu (100 % of the current), cut box (20.25, 21.8, 80.65, 86.25), per-layer length [5.94, 0.0, 0.0, 0.0]
+  cuts: median 8.63 mm; below 1.1x neck: 34 of 377 levels; 5 narrowest: [(5.94, 0.158, (20.25, 21.8, 80.65, 86.25)), (5.96, 0.155, (20.3, 21.85, 80.65, 86.25)), (5.98, 0.152, (20.3, 21.95, 80.65, 86.25)), (5.99, 0.16, (20.2, 21.75, 80.65, 86.25)), (5.99, 0.17, (20.05, 21.55, 80.65, 86.25))]
+  IPC-2152 (no plane credit): neck 5.94 mm on F.Cu rises 17.5 C at 7.7 A; 20 C needs 5.28 mm there
+  neck OK: 17.5 C <= 20 C (R8_DECISIONS D12)

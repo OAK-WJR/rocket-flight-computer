@@ -1,0 +1,65 @@
+ref	x	y	rot	side	basis
+C400	43	52.1	-90	F	R10 power-local placement; maker loop geometry
+C401	43	57.5	0	F	R10 power-local placement; maker loop geometry
+C402	37	53.975	-90	B	R10 power-local placement; maker loop geometry
+C403	43	61.5	0	F	R10 power-local placement; maker loop geometry
+C404	43	65	0	F	R10 power-local placement; maker loop geometry
+C405	32	16	90	B	R10 power-local placement; maker loop geometry
+C406	24	15.8	90	B	R10 power-local placement; maker loop geometry
+C407	24	20.7	-90	B	R10 power-local placement; maker loop geometry
+C408	30.5	16	0	F	R10 power-local placement; maker loop geometry
+C5	30.200000000000003	68.4	90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C6	35.75	66.75	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C7	36.3	70.8	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C8	34.0	75.28	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C80	7	79.4	0	F	R10 power-local placement; maker loop geometry
+C81	9.3	76.35	90.0	B	R10 power-local placement; maker loop geometry
+C82	33.9	65.9	90.0	F	R9 logic local geometry translated -7,-5; final R10 requalification required
+C84	38.5	74	-90	F	R10 power-local placement; maker loop geometry
+C85	35.9	62.724999999999994	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C87	12.4	82.3	0	B	R10 power-local placement; maker loop geometry
+C88	7.900000000000002	79.83	90.0	B	R10 power-local placement; maker loop geometry
+C89	31.5	72.8	0	F	R10 power-local placement; maker loop geometry
+C9	35	77.24	0	B	R10 power-local placement; maker loop geometry
+C95	31.5	69.8	0	F	R10 power-local placement; maker loop geometry
+C96	12	79.4	0	F	R10 power-local placement; maker loop geometry
+C97	32.3	61.400000000000006	90.0	F	R9 logic local geometry translated -7,-5; final R10 requalification required
+C98	32.275	59.2	180.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+C99	33.5	63.900000000000006	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+D8	9.5	84.5	90	F	R10 power-local placement; maker loop geometry
+D9	22	70.1	0	B	R10 power-local placement; maker loop geometry
+L1	33.0	71.6	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+L400	40.8	57.6	-90	B	R10 power-local placement; maker loop geometry
+R165	23	68	90	F	R10 power-local placement; maker loop geometry
+R166	31	79	-90	F	R10 power-local placement; maker loop geometry
+R167	28	72	90	F	R10 power-local placement; maker loop geometry
+R400	36.5	52.4	180	F	R10 power-local placement; maker loop geometry
+R401	36.5	49.2	0	F	R10 power-local placement; maker loop geometry
+R402	24.8	12	0	B	R10 power-local placement; maker loop geometry
+R403	27.7	10.4	90	B	R10 power-local placement; maker loop geometry
+R404	36.5	50.8	0	F	R10 power-local placement; maker loop geometry
+R405	27.3	22.3	0	B	R10 power-local placement; maker loop geometry
+R80	20.45	68	90	F	R10 power-local placement; maker loop geometry
+R81	6	77.6	90	B	R10 power-local placement; maker loop geometry
+R82	9.400000000000002	82.5	0.0	B	R10 power-local placement; maker loop geometry
+R83	12.46	84	0	B	R10 power-local placement; maker loop geometry
+R84	13.1	78.6	0	B	R10 power-local placement; maker loop geometry
+R86	35.9	60.5	0	B	R10 power-local placement; maker loop geometry
+R87	30.0	60.425	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+R88	30.0	63.5	-90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+R89	27.5	66	0	B	R10 power-local placement; maker loop geometry
+R91	35.9	58	0	B	R10 power-local placement; maker loop geometry
+R92	6	81.5	90	B	R10 power-local placement; maker loop geometry
+TP80	13	84.5	0	F	R10 power-local placement; maker loop geometry
+TP81	44.5	69	0	F	R10 power-local placement; maker loop geometry
+TP83	44.5	73.2	0	F	R10 power-local placement; maker loop geometry
+TP84	18	88.3	0	F	R10 power-local placement; maker loop geometry
+TP85	14	87.5	0	F	R10 power-local placement; maker loop geometry
+TP87	43.5	80.5	0	F	R10 power-local placement; maker loop geometry
+TP88	44.5	76.3	0	F	R10 power-local placement; maker loop geometry
+TP89	12	87	0	B	R10 power-local placement; maker loop geometry
+U11	32.65	61.5	90.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+U2	33.0	66.8	0.0	B	R9 logic local geometry translated -7,-5; final R10 requalification required
+U400	40.8	52.1	-90	B	R10 power-local placement; maker loop geometry
+U401	28	16	0	B	R10 power-local placement; maker loop geometry
+U9	9.999999999999996	80.0	90.0	B	R10 power-local placement; maker loop geometry

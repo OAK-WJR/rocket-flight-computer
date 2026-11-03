@@ -1,0 +1,19 @@
+board c84f00b88f5fb9409de40f33b2d51a48fb29fb66c386c869b7f93ea791e37c54 (fix pass 3): KiCad Python, each suite run after m3_design/r8_fab.sh; suite, tests run, result
+test_check_shell.py 2 OK
+test_dc_solve.py 3 OK
+test_fab_validation.py 23 OK
+test_fit_check.py 23 OK
+test_maze_clearances.py 10 OK
+test_paste_check.py 5 OK
+test_procurement.py 15 OK
+test_r5_repair.py 13 OK
+test_r6_check.py 17 OK
+test_r7_check.py 35 OK
+test_r8_check.py 23 OK
+test_r8_ground.py 11 OK
+test_r8_place.py 13 OK
+test_r8_power.py 7 OK
+test_r8_route.py 12 OK
+test_reference_audit.py 3 OK
+test_route_check.py 57 OK
+total 272 tests in 17 suites; quality_audit.test_quality_tools 21 OK under KiCad's Python and the system python3

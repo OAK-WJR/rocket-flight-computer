@@ -1,0 +1,1813 @@
+{
+  "schema": 1,
+  "round": 14,
+  "lens": "safety / AGENTS section2",
+  "review_kind": "fresh full independent adversarial",
+  "prepared_utc": "2026-10-30T10:59:05.956057+00:00",
+  "target_commit": "f5e4a5a94013514edb952fd328325341b63a98df",
+  "board_sha256_before": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "board_sha256_after": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "finding_counts": {
+    "new_active": 1,
+    "carried_active": 0,
+    "closed_rechecks": 3
+  },
+  "findings": [
+    {
+      "id": "R14-SAF-01",
+      "severity": "Minor",
+      "status": "active",
+      "origin": "new",
+      "title": "Active FMEA amendment retains the circuit-pass firing currents",
+      "evidence": {
+        "file": "docs/FMEA_REDUNDANCY.md",
+        "line": 21,
+        "native_file": "m3_design/assembly_review/m3.kicad_pcb",
+        "coordinates_mm": {
+          "Q120": [
+            13.5,
+            73.6
+          ],
+          "Q121": [
+            13.5,
+            68.6
+          ],
+          "R134": [
+            16.5,
+            64.0
+          ],
+          "Q124": [
+            13.9,
+            57.37
+          ]
+        },
+        "reported_A": [
+          1.546,
+          1.481,
+          1.284
+        ],
+        "independent_current_A": [
+          1.5443660716989063,
+          1.4794377872063396,
+          1.2830130390490941
+        ],
+        "native_loop_ohm": 4.617458126128065,
+        "parts_budget_file": "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+        "parts_budget_pointer": "/fire_current_GAP1/primary_40mohm_FETs/pack_7V4_by_stall_count",
+        "maker_url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+        "maker_page": 1
+      },
+      "impact": "Bounded stale numerical safety record. No threshold crossing: independently reconstructed four-stall current1.283013039A still exceeds the selected1.125A floor. No hardware failure or section2 violation follows.",
+      "concrete_fix": "Update the active FMEA amendment to1.544/1.479/1.283A, bind it to e0e3ad84, or label the old values with their circuit-pass board. Retain conditional source/hot-FET/harness and actual20ms lot qualifications."
+    }
+  ],
+  "closed_rechecks": [
+    {
+      "id": "R13-SAF-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": "ORDERING8.4 and current R10 deviation section2 now specify >=50milliohm signal-reference branches; J122 has only four signals plus shared GND. O6 still requires actual measurement."
+    },
+    {
+      "id": "R9-SAF-01",
+      "severity": "Minor",
+      "status": "closed",
+      "evidence": "Current schematic/circuit note, generated binding, M3_R10 and ORDERING8.3 all put both-low passive screening before PC1, >=1s/verified discharge after prior enable, then PE4 low/>=100ms settling. No firmware implementation is credited."
+    },
+    {
+      "id": "R3-SAF-01",
+      "severity": "Major",
+      "status": "closed_under_current_amended_constraints",
+      "evidence": "Independent native inner-fill/pad/via/track distances for the four surviving protected barrels are1.102501576/1.900001049/2.698435248/2.100000000mm, all above the unchanged1mm floor. No inner graphics/fields exist. R10 owner-authorized ordinary surface spacing is distinct."
+    }
+  ],
+  "checks": [
+    {
+      "name": "Exact target identity",
+      "result": "pass",
+      "evidence": "HEAD read as f5e4a5a94013514edb952fd328325341b63a98df; before/after PCB SHA matches exact target; no git mutation."
+    },
+    {
+      "name": "Independent native/XML/pin-table/binding reconstruction",
+      "result": "pass",
+      "evidence": {
+        "native_counts": {
+          "footprints": 209,
+          "tracks": 966,
+          "vias": 296
+        },
+        "XML_contact_keys": 651,
+        "PCB_XML_differences": [],
+        "independent_role_contact_count": 92,
+        "independent_role_differences": [],
+        "U1_pins_compared": 100,
+        "binding": {
+          "u1_count": 100,
+          "pin_differences": [],
+          "hashes": {
+            "board_sha256": {
+              "actual": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+              "recorded": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6"
+            },
+            "netlist_sha256": {
+              "actual": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+              "recorded": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e"
+            },
+            "pin_table_sha256": {
+              "actual": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+              "recorded": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd"
+            },
+            "circuit_sha256": {
+              "actual": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+              "recorded": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Independent sense single-resistor corners",
+      "result": "pass",
+      "evidence": "2banks x9states x16 resistor corners=288 evaluations; 19.9V maximum3.342170828815256V. Opens/shorts of every top/bottom resistor included; double faults not credited."
+    },
+    {
+      "name": "Independent cold-network nominal and tolerance solve",
+      "result": "pass_as_calculation",
+      "evidence": "Native OUT/RAW/divider network, nominal Gaussian elimination and4096 source/resistor corner evaluations per state. Zero leakage/ADC error; diode/temp are assumptions."
+    },
+    {
+      "name": "Independent firing copper and source solve",
+      "result": "pass_as_conditional_calculation",
+      "evidence": "Native selected endpoint lengths/widths independently summed; no series fire via/parallel source credit. High-root constant-power source solve reproduces5 stall cases; match-short sensitivities are conditional, not logic-survival tests."
+    },
+    {
+      "name": "Native corroborating contracts",
+      "result": "pass",
+      "evidence": "S-1..S-9,K-actuators,K-loader:zero issues. S-4 separately passes with actual exported BOM/CPL and all199 required-fitted parts."
+    },
+    {
+      "name": "Seven in-memory negative controls",
+      "result": "pass",
+      "evidence": {
+        "zero_C126": {
+          "detected": true,
+          "rules": [
+            "S-3"
+          ],
+          "issues": [
+            "S-3: pyro FET Q124: no a gate-source capacitor >= 100 nF (PYRO1_GATE to GND)"
+          ]
+        },
+        "weak_R128": {
+          "detected": true,
+          "rules": [
+            "S-3"
+          ],
+          "issues": [
+            "S-3: pyro FET Q124: no a resistor from the gate (PYRO1_GATE) to the source (GND) of 1 k - 100 k"
+          ]
+        },
+        "weak_R127": {
+          "detected": true,
+          "rules": [
+            "S-3"
+          ],
+          "issues": [
+            "S-3: pyro FET Q124: no resistor of 100 ohm - 100 k from the MCU-side gate node PYRO1_GATE_N to GND (it must be defined off while the MCU pin floats)"
+          ]
+        },
+        "wrong_R122": {
+          "detected": true,
+          "rules": [
+            "S-3"
+          ],
+          "issues": [
+            "S-3: independent load-switch enable R122 must be 1000 ohm"
+          ]
+        },
+        "R134_bypass_to_BAT_IN": {
+          "detected": true,
+          "rules": [
+            "S-1"
+          ],
+          "issues": [
+            "S-1: R134.2 must be on RAW_ACT (RAW_ACT bus behind Q120/Q121)",
+            "S-1: R134 has pads on the armed / RAW_ACT side net PYRO1_IGN and on the supply BAT_IN: not a named tie (GND_TIES / SUPPLY_TIES in tools/check_r10.py)"
+          ]
+        },
+        "Q121_drain_to_BAT_IN": {
+          "detected": true,
+          "rules": [
+            "S-2"
+          ],
+          "issues": [
+            "S-2: Q121 must be drain RAW_ACT, source ACT_FET_S, gate ACT_GATE (is {'S': ['ACT_FET_S'], 'G': ['ACT_GATE'], 'D': ['BAT_IN']})",
+            "S-2: RAW_ACT copper touches Q121.8 (BAT_IN) through track RAW_ACT (14.47, 67.11)",
+            "S-2: RAW_ACT copper touches Q121.9 (BAT_IN) through track RAW_ACT (13.50, 68.60)"
+          ]
+        },
+        "coalesce_MCU_controls": {
+          "detected": true,
+          "rules": [
+            "S-1",
+            "S-3"
+          ],
+          "issues": [
+            "S-1: RAW_ACT reaches PYRO1_COLD outside R134 / R132: RAW_ACT [Q121] ACT_GATE [R121] ACT_DRV [Q122] ACT_EN [R122] PYRO1_GATE_N [R126] PYRO1_GATE [Q124] PYRO1_OUT [R131] PYRO1_COLD",
+            "S-1: RAW_ACT reaches PYRO1_CONT outside R134 / R132: RAW_ACT [Q121] ACT_GATE [R121] ACT_DRV [Q122] ACT_EN [R122] PYRO1_GATE_N [R126] PYRO1_GATE [Q124] PYRO1_OUT [R173] PYRO1_CONT_MID [R129] PYRO1_CONT",
+            "S-1: RAW_ACT reaches PYRO1_CONT_MID outside R134 / R132: RAW_ACT [Q121] ACT_GATE [R121] ACT_DRV [Q122] ACT_EN [R122] PYRO1_GATE_N [R126] PYRO1_GATE [Q124] PYRO1_OUT [R173] PYRO1_CONT_MID",
+            "S-1: RAW_ACT reaches PYRO1_GATE outside R134 / R132: RAW_ACT [Q121] ACT_GATE [R121] ACT_DRV [Q122] ACT_EN [R122] PYRO1_GATE_N [R126] PYRO1_GATE",
+            "S-1: RAW_ACT reaches PYRO1_GATE_N outside R134 / R132: RAW_ACT [Q121] ACT_GATE [R121] ACT_DRV [Q122] ACT_EN [R122] PYRO1_GATE_N",
+            "S-1: RAW_ACT reaches PYRO1_IGN outside R134 / R132: RAW_ACT [Q121] ACT_GATE [R121] ACT_DRV [Q122] ACT_EN [R122] PYRO1_GATE_N [R126] PYRO1_GATE [Q124] PYRO1_OUT [J121] PYRO1_IGN",
+            "S-1: RAW_ACT reaches PYRO1_OUT outside R134 / R132: RAW_ACT [Q121] ACT_GATE [R121] ACT_DRV [Q122] ACT_EN [R122] PYRO1_GATE_N [R126] PYRO1_GATE [Q124] PYRO1_OUT",
+            "S-1: MCU-side net PYRO1_GATE_N is not U1 + R126 toward an armed net (parts ['R122', 'R126', 'R127', 'U1']; toward ['R126'], others ['R122']): a mis-named armed net",
+            "S-3: R122 is on the MCU-side gate node PYRO1_GATE_N (nets ['ACT_EN', 'PYRO1_GATE_N']): only U1, the series resistor and resistors to GND may touch it (a pull-up would hold the gate on)",
+            "S-3: independent load-switch enable ACT_EN_MCU must touch only ['R122', 'U1']",
+            "S-3: independent load-switch enable R122.1 must be ACT_EN_MCU (is PYRO1_GATE_N)",
+            "S-3: independent load-switch enable U1.16 must be ACT_EN_MCU (is PYRO1_GATE_N)"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Independent protected-barrel geometry",
+      "result": "pass",
+      "evidence": "Saved inner-fill polygon boundary distance plus plated pads/vias/tracks; all four >=1mm. Existing S-8 independently corroborates complete manufactured-copper walk."
+    },
+    {
+      "name": "Primary maker PDF review",
+      "result": "pass_with_ST_access_limit",
+      "evidence": "Fresh AOS/JSCJ/MJG/Bourns originals, complete relevant rendered pages inspected. ST/TI official web text inspected. Local ST download unsuccessful; no substituted-vendor or physical claim."
+    },
+    {
+      "name": "Review scope and source continuity",
+      "result": "complete_for_assigned_safety_lens",
+      "evidence": "All113 D IDs and22 owner mandates considered under current amendments. No peer round14 reports read, no subagents, no native CLI/full build/check, no GUI retries or canonical edits."
+    }
+  ],
+  "source_sha256": {
+    "AGENTS.md": "0ce3e6e22e968e206316355f27a1ecb343eb625de66b192904434cce7c46f22d",
+    ".supervisor/r14_target_packet.md": "e0522baeb0aef7092f0ebd334abc6d2c42bfc149e4cbc071ac2bca0774338ded",
+    ".supervisor/r10_review_packet.md": "70c48551c6736fa21890cb216a51fb24debec079bc9c6f527e748b7ff2321535",
+    "docs/REQUIREMENTS.md": "327e4361052e413a4a7dcb6be5b686f0c92373f275f213b374e81a6c96548c31",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "f93da61053b2019504aa05a621389644842030b4548163bcdf9f0a758a3333f7",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": "ebe8d71ce1b5a1cb3768df3d2fcccc0969870590a027b6e86494c9b9a6c139c3",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "3fb173c963be8e2ccaf666e1baa11221d488ac5994f2fe89d4aceed3e928a5b9",
+    "docs/M3_R10.md": "2f3918d0ee7f9f2cd3c44db304983ad723c21e4085edc865f73b3f90067dc634",
+    "docs/R10_VALIDATION.md": "5dfc344da26865e228c4e217c34eeb77778a2588ff8c9a6835ba4a48b4cf6bb0",
+    "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+    "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+    "docs/R10_VEHICLE_HANDOFF.md": "f0f3ed2d5b22c78f65482b9e7a3d0807564fb4b7f5d7dadba91fa43246ffdba3",
+    "docs/ORDERING.md": "57023ad390970e7d5801933ab36d6ff10b62be1149bcdb3e9ec1d2b5dadbc4b8",
+    "docs/FMEA_REDUNDANCY.md": "dc38bc1397190d2c177cce8113c22b8704e8f1b68f67e8782a439add16290442",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "51fd7fe359a152b9e22c6efed840560d3355773c291069239cfbe6dd2d449fa0",
+    "m3_design/assembly_review/sources/r10_design/circuit.json": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json": "e46603e498b2b534df7bf607f80a2254929e30e3acd70e76d78190660b7725ba",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "2e2ab94f2302977b99baa0c670143114eacf23b6a7082d412960ea1419fff661",
+    "m3_firmware/assembly_binding.py": "2a7a1391950a7c629861c5c0c93e6335cfe55c38d8a2f4ccf1d481ebdecf89e9",
+    "m3_firmware/build.py": "d97fca19c340d4bc9f471abd5bedea58df00fc45d2e8ad86a6315a07abcdd86b",
+    "tools/check_r10.py": "55c69e8d21d807725a01706fb696c4184f663f325f99d859da62f19cf056db1f",
+    "m3_design/check_actuators.py": "91088afab3f880e1c9cb1138c21e761c1f223a897446165ce008e896784325f0"
+  },
+  "decision_scope": {
+    "decision_ids_read": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03"
+    ],
+    "owner_mandate_ids_considered": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16"
+    ],
+    "amendment_order": "Single-switch/keep-one-switch -> AUD/GAP -> always-on ports/microSD/all-DB125/audit2 -> D-AVA/R11/R12/R13. No section2 relaxation. Non-safety dimensions/cost/process reviewed as context, not certified by this lens."
+  },
+  "independent_native_roles": {
+    "C120": {
+      "value": "1uF 25V X7R 10%",
+      "face": "B.Cu",
+      "xy_mm": [
+        17.1,
+        72.525
+      ],
+      "pads": {
+        "1": "ACT_FET_S",
+        "2": "ACT_GATE"
+      }
+    },
+    "C126": {
+      "value": "220nF 25V X7R",
+      "face": "F.Cu",
+      "xy_mm": [
+        16.85,
+        57.675
+      ],
+      "pads": {
+        "1": "PYRO1_GATE",
+        "2": "GND"
+      }
+    },
+    "C127": {
+      "value": "10nF 50V X7R 10%",
+      "face": "B.Cu",
+      "xy_mm": [
+        23.65,
+        53.2
+      ],
+      "pads": {
+        "1": "PYRO1_CONT",
+        "2": "GND"
+      }
+    },
+    "C128": {
+      "value": "100nF 50V X7R 10%",
+      "face": "B.Cu",
+      "xy_mm": [
+        12.0,
+        57.5
+      ],
+      "pads": {
+        "1": "PYRO1_OUT",
+        "2": "GND"
+      }
+    },
+    "C129": {
+      "value": "10nF 50V X7R 10%",
+      "face": "B.Cu",
+      "xy_mm": [
+        28.25,
+        51.6
+      ],
+      "pads": {
+        "1": "ARM1_SENSE",
+        "2": "GND"
+      }
+    },
+    "C87": {
+      "value": "2.2uF 16V X5R 10%",
+      "face": "F.Cu",
+      "xy_mm": [
+        17.0,
+        65.0
+      ],
+      "pads": {
+        "1": "BAT_ENABLE",
+        "2": "GND"
+      }
+    },
+    "D120": {
+      "value": "BAT54A",
+      "face": "B.Cu",
+      "xy_mm": [
+        14.7,
+        60.2
+      ],
+      "pads": {
+        "1": "PYRO1_COLD",
+        "2": "unconnected-(D120-K2-Pad2)",
+        "3": "3V3"
+      }
+    },
+    "J1": {
+      "value": "DB125-3.5-2P-GN-S",
+      "face": "F.Cu",
+      "xy_mm": [
+        7.4,
+        75.85
+      ],
+      "pads": {
+        "1": "BAT_IN",
+        "2": "GND"
+      }
+    },
+    "J121": {
+      "value": "DB125-3.5-2P-BK-S",
+      "face": "F.Cu",
+      "xy_mm": [
+        7.4,
+        55.85
+      ],
+      "pads": {
+        "1": "PYRO1_OUT",
+        "2": "PYRO1_IGN"
+      }
+    },
+    "J122": {
+      "value": "DB125-3.5-5P-GN-S",
+      "face": "F.Cu",
+      "xy_mm": [
+        38.6,
+        71.5
+      ],
+      "pads": {
+        "1": "SERVO1_OUT",
+        "2": "SERVO2_OUT",
+        "3": "SERVO3_OUT",
+        "4": "SERVO4_OUT",
+        "5": "GND"
+      }
+    },
+    "J400": {
+      "value": "DB125-3.5-2P-GN-S",
+      "face": "F.Cu",
+      "xy_mm": [
+        7.4,
+        65.849999
+      ],
+      "pads": {
+        "1": "BAT_SW_SOURCE",
+        "2": "BAT_SW_RETURN"
+      }
+    },
+    "J410": {
+      "value": "DB125-3.5-4P-GN-S",
+      "face": "F.Cu",
+      "xy_mm": [
+        38.6,
+        15.5
+      ],
+      "pads": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "GPS_TX_WIRE",
+        "4": "GPS_RX_WIRE"
+      }
+    },
+    "J420": {
+      "value": "DB125-3.5-4P-GN-S",
+      "face": "F.Cu",
+      "xy_mm": [
+        38.6,
+        31.5
+      ],
+      "pads": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "RADIO_TX_WIRE",
+        "4": "RADIO_RX_WIRE"
+      }
+    },
+    "J9": {
+      "value": "DB125-3.5-4P-GN-S",
+      "face": "F.Cu",
+      "xy_mm": [
+        38.6,
+        47.5
+      ],
+      "pads": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "CAM_RX_WIRE",
+        "4": "CAM_TX_WIRE"
+      }
+    },
+    "Q120": {
+      "value": "AONR21357",
+      "face": "B.Cu",
+      "xy_mm": [
+        13.5,
+        73.6
+      ],
+      "pads": {
+        "1": "ACT_FET_S",
+        "2": "ACT_FET_S",
+        "3": "ACT_FET_S",
+        "4": "ACT_GATE",
+        "5": "BAT_IN",
+        "6": "BAT_IN",
+        "7": "BAT_IN",
+        "8": "BAT_IN",
+        "9": "BAT_IN"
+      }
+    },
+    "Q121": {
+      "value": "AONR21357",
+      "face": "B.Cu",
+      "xy_mm": [
+        13.5,
+        68.6
+      ],
+      "pads": {
+        "1": "ACT_FET_S",
+        "2": "ACT_FET_S",
+        "3": "ACT_FET_S",
+        "4": "ACT_GATE",
+        "5": "RAW_ACT",
+        "6": "RAW_ACT",
+        "7": "RAW_ACT",
+        "8": "RAW_ACT",
+        "9": "RAW_ACT"
+      }
+    },
+    "Q122": {
+      "value": "AO3400A",
+      "face": "F.Cu",
+      "xy_mm": [
+        16.8,
+        69.8
+      ],
+      "pads": {
+        "1": "ACT_EN",
+        "2": "GND",
+        "3": "ACT_DRV"
+      }
+    },
+    "Q124": {
+      "value": "AON7524",
+      "face": "F.Cu",
+      "xy_mm": [
+        13.9,
+        57.37
+      ],
+      "pads": {
+        "1": "GND",
+        "2": "GND",
+        "3": "GND",
+        "4": "PYRO1_GATE",
+        "5": "PYRO1_OUT"
+      }
+    },
+    "R120": {
+      "value": "100k",
+      "face": "B.Cu",
+      "xy_mm": [
+        18.5,
+        72.6
+      ],
+      "pads": {
+        "1": "ACT_FET_S",
+        "2": "ACT_GATE"
+      }
+    },
+    "R121": {
+      "value": "10k",
+      "face": "F.Cu",
+      "xy_mm": [
+        14.5,
+        71.87
+      ],
+      "pads": {
+        "1": "ACT_GATE",
+        "2": "ACT_DRV"
+      }
+    },
+    "R122": {
+      "value": "1k",
+      "face": "F.Cu",
+      "xy_mm": [
+        19.6,
+        69.8
+      ],
+      "pads": {
+        "1": "ACT_EN_MCU",
+        "2": "ACT_EN"
+      }
+    },
+    "R123": {
+      "value": "100k",
+      "face": "F.Cu",
+      "xy_mm": [
+        20.6,
+        70.66
+      ],
+      "pads": {
+        "1": "ACT_EN",
+        "2": "GND"
+      }
+    },
+    "R126": {
+      "value": "220R",
+      "face": "F.Cu",
+      "xy_mm": [
+        17.0,
+        54.24
+      ],
+      "pads": {
+        "1": "PYRO1_GATE_N",
+        "2": "PYRO1_GATE"
+      }
+    },
+    "R127": {
+      "value": "1k",
+      "face": "F.Cu",
+      "xy_mm": [
+        19.8,
+        54.24
+      ],
+      "pads": {
+        "1": "PYRO1_GATE_N",
+        "2": "GND"
+      }
+    },
+    "R128": {
+      "value": "10k",
+      "face": "F.Cu",
+      "xy_mm": [
+        18.3,
+        57.405
+      ],
+      "pads": {
+        "1": "PYRO1_GATE",
+        "2": "GND"
+      }
+    },
+    "R129": {
+      "value": "5.1k",
+      "face": "B.Cu",
+      "xy_mm": [
+        23.0,
+        57.4
+      ],
+      "pads": {
+        "1": "PYRO1_CONT_MID",
+        "2": "PYRO1_CONT"
+      }
+    },
+    "R130": {
+      "value": "2k",
+      "face": "B.Cu",
+      "xy_mm": [
+        23.43,
+        55.85
+      ],
+      "pads": {
+        "1": "PYRO1_CONT",
+        "2": "GND"
+      }
+    },
+    "R131": {
+      "value": "10k",
+      "face": "B.Cu",
+      "xy_mm": [
+        10.8,
+        61.15
+      ],
+      "pads": {
+        "1": "PYRO1_OUT",
+        "2": "PYRO1_COLD"
+      }
+    },
+    "R132": {
+      "value": "5.1k",
+      "face": "B.Cu",
+      "xy_mm": [
+        28.0,
+        57.6
+      ],
+      "pads": {
+        "1": "RAW_ACT",
+        "2": "ARM1_SENSE_MID"
+      }
+    },
+    "R133": {
+      "value": "2k",
+      "face": "B.Cu",
+      "xy_mm": [
+        28.43,
+        54.25
+      ],
+      "pads": {
+        "1": "ARM1_SENSE",
+        "2": "GND"
+      }
+    },
+    "R134": {
+      "value": "2R 1% 2W pulse",
+      "face": "B.Cu",
+      "xy_mm": [
+        16.5,
+        64.0
+      ],
+      "pads": {
+        "1": "PYRO1_IGN",
+        "2": "RAW_ACT"
+      }
+    },
+    "R165": {
+      "value": "470k 1%",
+      "face": "F.Cu",
+      "xy_mm": [
+        13.25,
+        67.0
+      ],
+      "pads": {
+        "1": "BAT_SW_RETURN",
+        "2": "BAT_ENABLE"
+      }
+    },
+    "R173": {
+      "value": "5.1k",
+      "face": "B.Cu",
+      "xy_mm": [
+        23.0,
+        59.2
+      ],
+      "pads": {
+        "1": "PYRO1_OUT",
+        "2": "PYRO1_CONT_MID"
+      }
+    },
+    "R175": {
+      "value": "5.1k",
+      "face": "B.Cu",
+      "xy_mm": [
+        28.0,
+        55.8
+      ],
+      "pads": {
+        "1": "ARM1_SENSE_MID",
+        "2": "ARM1_SENSE"
+      }
+    },
+    "R178": {
+      "value": "2k",
+      "face": "B.Cu",
+      "xy_mm": [
+        23.43,
+        54.85
+      ],
+      "pads": {
+        "1": "PYRO1_CONT",
+        "2": "GND"
+      }
+    },
+    "R180": {
+      "value": "2k",
+      "face": "B.Cu",
+      "xy_mm": [
+        28.43,
+        53.25
+      ],
+      "pads": {
+        "1": "ARM1_SENSE",
+        "2": "GND"
+      }
+    },
+    "R80": {
+      "value": "470k 1%",
+      "face": "F.Cu",
+      "xy_mm": [
+        13.25,
+        69.2
+      ],
+      "pads": {
+        "1": "BAT_IN",
+        "2": "BAT_SW_SOURCE"
+      }
+    },
+    "R81": {
+      "value": "300k 1%",
+      "face": "F.Cu",
+      "xy_mm": [
+        20.5,
+        65.0
+      ],
+      "pads": {
+        "1": "BAT_ENABLE",
+        "2": "GND"
+      }
+    },
+    "U1": {
+      "value": "STM32H743VIT6",
+      "face": "F.Cu",
+      "xy_mm": [
+        23.0,
+        43.0
+      ],
+      "pads": {
+        "1": "QSPI_IO2",
+        "2": "unconnected-(U1-PE3-Pad2)",
+        "3": "PYRO1_GATE_N",
+        "4": "unconnected-(U1-PE5-Pad4)",
+        "5": "unconnected-(U1-PE6-Pad5)",
+        "6": "3V3",
+        "7": "unconnected-(U1-PC13-Pad7)",
+        "8": "BUZZ_DRV",
+        "9": "unconnected-(U1-PC15-Pad9)",
+        "10": "GND",
+        "11": "3V3",
+        "12": "HSE_IN",
+        "13": "HSE_OUT",
+        "14": "NRST",
+        "15": "PYRO1_CONT",
+        "16": "ACT_EN_MCU",
+        "17": "unconnected-(U1-PC2_C-Pad17)",
+        "18": "V3V3_SENSE",
+        "19": "GND",
+        "20": "3V3A",
+        "21": "3V3A",
+        "22": "SERVO1_MCU",
+        "23": "SERVO2_MCU",
+        "24": "SERVO3_MCU",
+        "25": "SERVO4_MCU",
+        "26": "GND",
+        "27": "3V3",
+        "28": "LOGIC_SOURCE_ST",
+        "29": "BAT_FAULT_N",
+        "30": "VLOGIC_SENSE",
+        "31": "unconnected-(U1-PA7-Pad31)",
+        "32": "unconnected-(U1-PC4-Pad32)",
+        "33": "ARM1_SENSE",
+        "34": "unconnected-(U1-PB0-Pad34)",
+        "35": "CAM_5V_SENSE",
+        "36": "QSPI_CLK",
+        "37": "CAM_MCU_RX",
+        "38": "CAM_MCU_TX",
+        "39": "CAM_UART_OE",
+        "40": "unconnected-(U1-PE10-Pad40)",
+        "41": "CAM_PWR_EN",
+        "42": "CAM_FAULT_N",
+        "43": "unconnected-(U1-PE13-Pad43)",
+        "44": "unconnected-(U1-PE14-Pad44)",
+        "45": "unconnected-(U1-PE15-Pad45)",
+        "46": "unconnected-(U1-PB10-Pad46)",
+        "47": "unconnected-(U1-PB11-Pad47)",
+        "48": "VCAP1",
+        "49": "GND",
+        "50": "3V3",
+        "51": "RADIO_RX_MCU",
+        "52": "RADIO_TX_MCU",
+        "53": "unconnected-(U1-PB14-Pad53)",
+        "54": "unconnected-(U1-PB15-Pad54)",
+        "55": "unconnected-(U1-PD8-Pad55)",
+        "56": "unconnected-(U1-PD9-Pad56)",
+        "57": "unconnected-(U1-PD10-Pad57)",
+        "58": "QSPI_IO0",
+        "59": "QSPI_IO1",
+        "60": "QSPI_IO3",
+        "61": "unconnected-(U1-PD14-Pad61)",
+        "62": "unconnected-(U1-PD15-Pad62)",
+        "63": "GPS_TX_MCU",
+        "64": "GPS_RX_MCU",
+        "65": "VBUS_SENSE",
+        "66": "unconnected-(U1-PC9-Pad66)",
+        "67": "unconnected-(U1-PA8-Pad67)",
+        "68": "unconnected-(U1-PA9-Pad68)",
+        "69": "unconnected-(U1-PA10-Pad69)",
+        "70": "USB_DM",
+        "71": "USB_DP",
+        "72": "SWDIO",
+        "73": "VCAP2",
+        "74": "GND",
+        "75": "3V3",
+        "76": "SWCLK",
+        "77": "unconnected-(U1-PA15-Pad77)",
+        "78": "SD_SCK",
+        "79": "SD_MISO",
+        "80": "SD_MOSI",
+        "81": "SD_CS",
+        "82": "unconnected-(U1-PD1-Pad82)",
+        "83": "unconnected-(U1-PD2-Pad83)",
+        "84": "unconnected-(U1-PD3-Pad84)",
+        "85": "unconnected-(U1-PD4-Pad85)",
+        "86": "LED_RED",
+        "87": "USB_FAULT_N",
+        "88": "LED_YEL",
+        "89": "SPI1_SCK",
+        "90": "SPI1_MISO",
+        "91": "SPI1_MOSI",
+        "92": "QSPI_NCS",
+        "93": "IMU_CS",
+        "94": "BOOT0",
+        "95": "I2C1_SCL",
+        "96": "I2C1_SDA",
+        "97": "unconnected-(U1-PE0-Pad97)",
+        "98": "IMU_INT1",
+        "99": "GND",
+        "100": "3V3"
+      }
+    },
+    "U10": {
+      "value": "TPS2553DBVR",
+      "face": "B.Cu",
+      "xy_mm": [
+        12.6,
+        27.5
+      ],
+      "pads": {
+        "1": "VBUS",
+        "2": "GND",
+        "3": "VBUS",
+        "4": "USB_FAULT_N",
+        "5": "USB_ILIM",
+        "6": "USB_LIMITED"
+      }
+    },
+    "U11": {
+      "value": "TPS2121RUXR",
+      "face": "B.Cu",
+      "xy_mm": [
+        24.65,
+        64.5
+      ],
+      "pads": {
+        "1": "VLOGIC",
+        "2": "RAW_PROTECTED",
+        "3": "GND",
+        "4": "GND",
+        "5": "USB_OVLO",
+        "6": "GND",
+        "7": "USB_LIMITED",
+        "8": "VLOGIC",
+        "9": "LOGIC_SOURCE_ST",
+        "10": "LOGIC_ILIM",
+        "11": "LOGIC_SS",
+        "12": "GND"
+      }
+    },
+    "U12": {
+      "value": "TXU0202DCUR",
+      "face": "B.Cu",
+      "xy_mm": [
+        31.6,
+        39.8
+      ],
+      "pads": {
+        "1": "CAM_RX_BUFFER",
+        "2": "GND",
+        "3": "3V3",
+        "4": "CAM_MCU_RX",
+        "5": "CAM_MCU_TX",
+        "6": "CAM_UART_OE",
+        "7": "CAM_IO_3V3",
+        "8": "CAM_TX_BUFFER"
+      }
+    },
+    "U13": {
+      "value": "TPS70933DBVR",
+      "face": "B.Cu",
+      "xy_mm": [
+        31.85,
+        49.7
+      ],
+      "pads": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "unconnected-(U13-EN_LEAVE_OPEN-Pad3)",
+        "4": "unconnected-(U13-NC-Pad4)",
+        "5": "CAM_IO_3V3"
+      }
+    },
+    "U402": {
+      "value": "TPS2553DBVR",
+      "face": "B.Cu",
+      "xy_mm": [
+        32.0,
+        59.0
+      ],
+      "pads": {
+        "1": "PORT_5V3",
+        "2": "GND",
+        "3": "CAM_PWR_EN",
+        "4": "CAM_FAULT_N",
+        "5": "CAM_ILIM",
+        "6": "CAM_5V"
+      }
+    },
+    "U9": {
+      "value": "TPS259470LRPWR",
+      "face": "B.Cu",
+      "xy_mm": [
+        18.5,
+        81.6
+      ],
+      "pads": {
+        "1": "BAT_ENABLE",
+        "2": "BAT_OVLO",
+        "3": "unconnected-(U9-AUXOFF-Pad3)",
+        "4": "BAT_FAULT_N",
+        "5": "BAT_IN",
+        "6": "RAW_PROTECTED",
+        "7": "BAT_DVDT",
+        "8": "GND",
+        "9": "BAT_ILIM",
+        "10": "unconnected-(U9-ITIMER-Pad10)"
+      }
+    }
+  },
+  "safety_net_contacts": {
+    "ACT_DRV": [
+      "Q122.3",
+      "R121.2"
+    ],
+    "ACT_EN": [
+      "Q122.1",
+      "R122.2",
+      "R123.1"
+    ],
+    "ACT_EN_MCU": [
+      "R122.1",
+      "U1.16"
+    ],
+    "ACT_FET_S": [
+      "C120.1",
+      "Q120.1",
+      "Q120.2",
+      "Q120.3",
+      "Q121.1",
+      "Q121.2",
+      "Q121.3",
+      "R120.1"
+    ],
+    "ACT_GATE": [
+      "C120.2",
+      "Q120.4",
+      "Q121.4",
+      "R120.2",
+      "R121.1",
+      "TP121.1"
+    ],
+    "ARM1_SENSE": [
+      "C129.1",
+      "R133.1",
+      "R175.2",
+      "R180.1",
+      "U1.33"
+    ],
+    "ARM1_SENSE_MID": [
+      "R132.2",
+      "R175.1"
+    ],
+    "BAT_ENABLE": [
+      "C87.1",
+      "R165.2",
+      "R81.1",
+      "U9.1",
+      "U9.1"
+    ],
+    "BAT_SW_RETURN": [
+      "J400.2",
+      "R165.1"
+    ],
+    "BAT_SW_SOURCE": [
+      "J400.1",
+      "R80.2"
+    ],
+    "PYRO1_COLD": [
+      "D120.1",
+      "R131.2"
+    ],
+    "PYRO1_CONT": [
+      "C127.1",
+      "R129.2",
+      "R130.1",
+      "R178.1",
+      "U1.15"
+    ],
+    "PYRO1_CONT_MID": [
+      "R129.1",
+      "R173.2"
+    ],
+    "PYRO1_GATE": [
+      "C126.1",
+      "Q124.4",
+      "R126.2",
+      "R128.1",
+      "TP122.1"
+    ],
+    "PYRO1_GATE_N": [
+      "R126.1",
+      "R127.1",
+      "U1.3"
+    ],
+    "PYRO1_IGN": [
+      "J121.2",
+      "R134.1"
+    ],
+    "PYRO1_OUT": [
+      "C128.1",
+      "J121.1",
+      "Q124.5",
+      "R131.1",
+      "R173.1"
+    ]
+  },
+  "calculations": {
+    "sense_faults_19_9V": [
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "healthy",
+        "min_V": 1.7304118799301178,
+        "max_V": 1.8242775558888904
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "top1_short",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "top2_short",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "top1_open",
+        "min_V": 0,
+        "max_V": 0
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "top2_open",
+        "min_V": 0,
+        "max_V": 0
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "bottom1_short",
+        "min_V": 0.0,
+        "max_V": 0.0
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "bottom2_short",
+        "min_V": 0.0,
+        "max_V": 0.0
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "bottom1_open",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      },
+      {
+        "bank": [
+          "R173",
+          "R129",
+          "R130",
+          "R178"
+        ],
+        "fault": "bottom2_open",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "healthy",
+        "min_V": 1.7304118799301178,
+        "max_V": 1.8242775558888904
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "top1_short",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "top2_short",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "top1_open",
+        "min_V": 0,
+        "max_V": 0
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "top2_open",
+        "min_V": 0,
+        "max_V": 0
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "bottom1_short",
+        "min_V": 0.0,
+        "max_V": 0.0
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "bottom2_short",
+        "min_V": 0.0,
+        "max_V": 0.0
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "bottom1_open",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      },
+      {
+        "bank": [
+          "R132",
+          "R175",
+          "R133",
+          "R180"
+        ],
+        "fault": "bottom2_open",
+        "min_V": 3.1839612303046536,
+        "max_V": 3.342170828815256
+      }
+    ],
+    "Q124_reset_gate_upper_V": 0.011935294117647058,
+    "Q122_reset_gate_upper_V": 0.111595,
+    "Q124_floating_R_ohm": 1087.344028520499,
+    "IWDG_s_29_4_33_6_kHz": [
+      0.02857142857142857,
+      0.0326530612244898
+    ],
+    "guard_ms": 34.8530612244898,
+    "R134_low_70C_ohm": 1.97109,
+    "R134_short_W": 35.79745217113374,
+    "R134_20ms_J": 0.7159490434226748,
+    "R134_36ms_J": 1.2887082781608146,
+    "cold_network": [
+      {
+        "state": "healthy1",
+        "OUT": 1.1129160329105423,
+        "RAW": 1.1126180102292307,
+        "CONT": 0.09936750293844125,
+        "BUS": 0.09934089377046702,
+        "match_current_A": 9.934089377054238e-05
+      },
+      {
+        "state": "healthy2",
+        "OUT": 1.1129478652156843,
+        "RAW": 1.1125505257422046,
+        "CONT": 0.09937034510854321,
+        "BUS": 0.0993348683698397,
+        "match_current_A": 9.933486836993799e-05
+      },
+      {
+        "state": "match_short",
+        "OUT": 1.1128841967434748,
+        "RAW": 1.1126855029036706,
+        "CONT": 0.09936466042352454,
+        "BUS": 0.09934691990211346,
+        "match_current_A": 9.93469199020991e-05
+      },
+      {
+        "state": "open",
+        "OUT": 1.6377358490566039,
+        "RAW": 0.0,
+        "CONT": 0.14622641509433962,
+        "BUS": 0.0,
+        "match_current_A": 0
+      },
+      {
+        "state": "Q124_short",
+        "OUT": 3.099999999991365e-12,
+        "RAW": 3.0991698652060417e-12,
+        "CONT": 2.7678571428494325e-13,
+        "BUS": 2.767115951076823e-13,
+        "match_current_A": 2.7671159510768945e-16
+      }
+    ],
+    "Q124_reset_bound_scope": "Conservative1uA MCU and10uA AON7524 leakage;1.45% resistors. Maker IGSS test is25C at10V, not hot/unpowered transient qualification."
+  },
+  "cold_tolerance_corners": [
+    {
+      "state": "healthy1",
+      "evaluations": 4096,
+      "CONT_V": [
+        0.08698548584056913,
+        0.11518781994962014
+      ],
+      "BUS_V": [
+        0.0869619918018914,
+        0.115157232350861
+      ]
+    },
+    {
+      "state": "healthy2",
+      "evaluations": 4096,
+      "CONT_V": [
+        0.0869880583754195,
+        0.11519100657350105
+      ],
+      "BUS_V": [
+        0.08695676058872795,
+        0.11515018829695652
+      ]
+    },
+    {
+      "state": "match_short",
+      "evaluations": 4096,
+      "CONT_V": [
+        0.08698291299185595,
+        0.11518463294128264
+      ],
+      "BUS_V": [
+        0.08696722364449962,
+        0.11516427726662654
+      ]
+    },
+    {
+      "state": "open",
+      "evaluations": 4096,
+      "CONT_V": [
+        0.12916150644368293,
+        0.1680197738222698
+      ],
+      "BUS_V": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "state": "Q124_short",
+      "evaluations": 4096,
+      "CONT_V": [
+        0.0,
+        0.0
+      ],
+      "BUS_V": [
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "independent_firing": {
+    "path_lengths_widths_mm": {
+      "BAT_IN": [
+        6.3071067811865476,
+        1.0
+      ],
+      "RAW_ACT": [
+        5.88613311116846,
+        0.5
+      ],
+      "PYRO1_IGN": [
+        10.230382386916238,
+        0.5
+      ],
+      "PYRO1_OUT": [
+        7.85447834896002,
+        0.5
+      ],
+      "ACT_FET_S": [
+        2.2,
+        0.4
+      ]
+    },
+    "copper_20C_ohm": 0.02936241214213563,
+    "copper_70C_ohm": 0.03513212612806528,
+    "branch_without_pack_ohm": 4.467458126128065,
+    "loop_ohm": 4.617458126128065,
+    "converter_W_allocation": 12.370806905016599,
+    "normal": [
+      {
+        "stalls": 0,
+        "loaded_pack_V": 6.899390756727756,
+        "current_A": 1.5443660716989063
+      },
+      {
+        "stalls": 1,
+        "loaded_pack_V": 6.609326364555884,
+        "current_A": 1.4794377872063396
+      },
+      {
+        "stalls": 2,
+        "loaded_pack_V": 6.318164198837923,
+        "current_A": 1.4142637760577872
+      },
+      {
+        "stalls": 3,
+        "loaded_pack_V": 6.025729657046817,
+        "current_A": 1.348804955060497
+      },
+      {
+        "stalls": 4,
+        "loaded_pack_V": 5.7318070272281405,
+        "current_A": 1.2830130390490941
+      }
+    ],
+    "shorted_match_same_source": [
+      {
+        "stalls": 0,
+        "loaded_pack_V": 6.715438088362251,
+        "current_A": 2.7216016422941753
+      },
+      {
+        "stalls": 1,
+        "loaded_pack_V": 6.432484309212206,
+        "current_A": 2.606927445332602
+      },
+      {
+        "stalls": 2,
+        "loaded_pack_V": 6.14842493114011,
+        "current_A": 2.491805176361075
+      },
+      {
+        "stalls": 3,
+        "loaded_pack_V": 5.863083160603955,
+        "current_A": 2.376163185311803
+      },
+      {
+        "stalls": 4,
+        "loaded_pack_V": 5.576240285283069,
+        "current_A": 2.259912833468548
+      }
+    ],
+    "basis": "Native segment endpoints/widths selected independently; no source-bridge parallel credit or series fire via. Same conditional material/FET/harness/source allocations as F7; source load is a design allocation, not a measurement."
+  },
+  "barrel_minima": [
+    {
+      "barrel": "J121.1",
+      "net": "PYRO1_OUT",
+      "xy": [
+        7.4,
+        54.1
+      ],
+      "drill_radius_mm": 0.65,
+      "minimum_foreign_gap_mm": 1.1025015761924428,
+      "foreign_net": "3V3",
+      "foreign_layer": "In2.Cu"
+    },
+    {
+      "barrel": "J121.2",
+      "net": "PYRO1_IGN",
+      "xy": [
+        7.4,
+        57.6
+      ],
+      "drill_radius_mm": 0.65,
+      "minimum_foreign_gap_mm": 1.900001049041748,
+      "foreign_net": "PYRO1_OUT",
+      "foreign_layer": "In1.Cu J121.1"
+    },
+    {
+      "barrel": "via",
+      "net": "PYRO1_OUT",
+      "xy": [
+        11.63,
+        55.1
+      ],
+      "drill_radius_mm": 0.15,
+      "minimum_foreign_gap_mm": 2.6984352477713123,
+      "foreign_net": "3V3",
+      "foreign_layer": "In2.Cu"
+    },
+    {
+      "barrel": "via",
+      "net": "PYRO1_GATE",
+      "xy": [
+        14.4,
+        53.3
+      ],
+      "drill_radius_mm": 0.15,
+      "minimum_foreign_gap_mm": 2.0999999999999956,
+      "foreign_net": "USB_LIMITED",
+      "foreign_layer": "In2.Cu"
+    }
+  ],
+  "population": {
+    "required": 199,
+    "safety": [
+      "C120",
+      "C126",
+      "C127",
+      "C128",
+      "C129",
+      "D120",
+      "J121",
+      "J400",
+      "Q120",
+      "Q121",
+      "Q122",
+      "Q124",
+      "R120",
+      "R121",
+      "R122",
+      "R123",
+      "R126",
+      "R127",
+      "R128",
+      "R129",
+      "R130",
+      "R131",
+      "R132",
+      "R133",
+      "R134",
+      "R165",
+      "R173",
+      "R175",
+      "R178",
+      "R180",
+      "R80"
+    ],
+    "schematic": "m3.kicad_sch",
+    "BOM": "m3_design/assembly_review/fab/m3_bom_jlc.csv",
+    "CPL": "m3_design/assembly_review/fab/m3_cpl_jlc.csv"
+  },
+  "maker_sources": {
+    "aon7524": {
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+      "sha256": "f062570cdd7382ee0fb23cb77e4522e538a098918f4ac06d0d38521efd543547",
+      "bytes": 373053,
+      "pages_visually_inspected": [
+        2
+      ]
+    },
+    "ao3400a": {
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AO3400A.pdf",
+      "sha256": "9c60d0b6c1ddc7609a4b788a91181468d8ffe6c3e9ba425c3d8ffc5ba88c5033",
+      "bytes": 317848,
+      "pages_visually_inspected": [
+        2
+      ]
+    },
+    "aonr21357": {
+      "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+      "sha256": "95786edcc78744297555a01e7ab21bf9d5443d9b063bf3204c4d600e8d05d516",
+      "bytes": 378057,
+      "pages_visually_inspected": [
+        1,
+        2
+      ]
+    },
+    "crm": {
+      "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+      "sha256": "dd72c578f48227dbc38ed5c531d965920166b267da3cf4d0494253143732a94d",
+      "bytes": 183421,
+      "pages_visually_inspected": [
+        3
+      ]
+    },
+    "jtek": {
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "sha256": "c88600ceda9bbc47a315d7bb3e70213401b9ebcbd8e2d1a00b924bd5ab7ff20d",
+      "bytes": 286399,
+      "pages_visually_inspected": [
+        1
+      ]
+    },
+    "bat54a": {
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/ca4491d947c141a6a7930def6b75867f.pdf?productCode=C8591",
+      "sha256": "23d8e056fa034c1cc3ed84079768de74870882c47a60e4ed39020ab9b8e72e4b",
+      "pages_visually_inspected": [
+        1
+      ],
+      "source": "JSCJ original sheet carried by exact C8591 supplier page"
+    },
+    "st": {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "document": "DS12110 Rev11 January2026",
+      "web_text_checked": "Table9/reset note,Tables109-110 and136; native table/binding pin agreement checked separately",
+      "local_download": "failed HTTP2/timeout; no local-PDF visual claim"
+    },
+    "tps25947": {
+      "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+      "document": "SLVSFC9C May2026",
+      "web_text_checked": "EN/UVLO/load-switch/reverse-blocking topology and negative-input condition"
+    },
+    "tps2553": {
+      "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+      "document": "SLVS841G",
+      "web_text_checked": "reverse-input/output protection is not a physical switch-state sensor"
+    },
+    "txu0202": {
+      "url": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+      "document": "SCES942A",
+      "web_text_checked": "OE-low/high-impedance and partial-power-down; applied only to surviving camera translator"
+    }
+  },
+  "retained_disclosed_limits": [
+    "Ordinary0.15mm surface faults can bypass/load gates or ground OUT; no universal single-component-fault tolerance is claimed. Mandatory coating/cold checks do not prevent a later bridge.",
+    "USB/self-powered back-feed can conceal J400 opening; direct GPS/radio have no off-state isolation or software power cutoff. E-match connection excludes every back-feed source.",
+    "Unfused BAT_IN/entry/TVS/cap risks and external servo faults can remove the primary computer; isolated Blue Jay remains required.",
+    "No R10 firmware exists. Launch detection, ground hard refusals, in-flight never-veto, trace locks/loader handling, watchdog/no-refresh/current tail, hot R134/source/harness/actual lot20ms firing are unimplemented/unmeasured.",
+    "Sense absolute-stress arithmetic does not establish accurate ADC conversion after a fault, hot leakage/noise thresholds, powered-off behavior or waveform immunity.",
+    "Native and constant-power calculations do not qualify hot-plug, hold-up, thermal/current sharing, installed RF/ESD, switching bounce/dry contact, coating/workmanship, harness/retention, physical bore/stack or first article."
+  ],
+  "coverage_limits": [
+    "No kicad-cli, full check.sh or canonical build executed by this reviewer; root reserves those. Focused native API contracts and independent extraction are scoped evidence.",
+    "No physical board, executable R10 firmware, bench waveform, flight test, assembler process, owner acceptance or order is inferred.",
+    "In-memory omission seed using native Remove hit a SWIG ownership error and supplied no result; replaced by explicit electrical-value mutants. An intermediate geometry helper failed on API arity/idempotence; final successful replay supplies the reported geometry. No failed probe is counted as a pass.",
+    "Primary ST local PDF fetch failed; official web extraction supplied the cited reset/limits/LSI evidence. AOS/JSCJ/MJG/Bourns page rendering was inspected."
+  ],
+  "reproducibility": {
+    "independent_formulas": {
+      "sense": "Vpin=Vbus*Rbottom/(Rtop1+Rtop2+Rbottom); Rbottom=Rbottom1||Rbottom2; enumerate each single open/short and +/-1.45% corners",
+      "cold": "Solve OUT/RAW coupled by Rmatch+R134 with R131 from(3V3-Vf), separate10.2k/1k banks to GND; zero-leakage Gaussian elimination; corner solve uses equivalent divider loads",
+      "fire": "Rcu=sum(rho20*length/(width*35um))*(1+0.00393*50); Rbranch=2.02909+0.08+0.008236+0.005+0.01+2+0.3+Rcu; (1+0.15/Rbranch)*V^2-(7.4-0.15*1.92*N)*V+0.15*12.370806905016599=0, high root; Ifire=V/Rbranch",
+      "timing": "4*(239+1)/LSI; maxLSI=33.6kHz,minLSI=29.4kHz; max fault allocation=max period+0.2+0.5+1.5ms",
+      "barrels": "Minimum circular drill-wall distance to saved In1/In2 fill boundary, exact effective pads, track capsules and via rings, excluding own net/GND"
+    },
+    "ignored_probe_sha256": {
+      ".supervisor/r14_safety_probe.py": "923c8cd9d1af2cd02660528fd1774d051fd6d4fca39588d72f0dbeee984cf0b6",
+      ".supervisor/r14_safety_geometry.py": "637830830cd00d703907d529aa6d99ed4d0ae8dcf66bba0fd053f8bdf7706689",
+      ".supervisor/r14_safety_controls.py": "48f98ed40e198911c7951ec7af3e97b0f46c987e817e7c321c4b080127f77e12",
+      ".supervisor/r14_safety_final_native.py": "a38ae164fa7ce49968da78db7ea35e3d493d808cc34bba44ab60b163190b14e0"
+    }
+  }
+}

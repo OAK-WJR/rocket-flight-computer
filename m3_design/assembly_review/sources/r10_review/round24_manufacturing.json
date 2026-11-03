@@ -1,0 +1,79 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round24_manufacturing",
+  "reviewer": "claude",
+  "target_commit": "f2b8251",
+  "board_sha256_before": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "board_sha256_after": "1407e8506efbac0f664b3aeb65568c32ae9670c9b45b502a465cba1130de522e",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "JLC multilayer capabilities (read 2026-11-01) all met: vias 302 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5 (diameter - hole >= 0.2 mm vs JLC 0.1); min PTH ring 0.300 mm (J1.1) vs 0.20 recommended; plated slots 0.6 mm; NPTH 0.6 / 0.991 mm vs 0.5 min.",
+    "Hole wall to hole wall: via-via same net 0.259 mm (GND 15.25,51.6 / 15.35,52.15), different net 0.350 mm (3V3 29.25,38.65 / VCAP1 29.25,38.0) vs JLC 0.2 mm; pad holes >= 0.920 mm (J3 NPTH to J3.4) vs 0.45 mm.",
+    "Solder mask: 710 of 713 pad openings 1:1, 3 at +0.05 mm; no web under 0.13 mm between openings of different pads (only same-pad / same-net merged openings at Q120, Q121, U9); no opening within 0.12 mm of a foreign outer track or via (JLC 0.10 mm bridge, 0.09 mm opening-to-trace); all vias tented.",
+    "Silkscreen apertures >= 0.15 mm (the one 0-width aperture on F.Silk is only used inside G36/G37 regions); DRC text height/thickness 0.",
+    "Copper to routed edge 0.5 mm on every layer (DRC 0) vs JLC 0.2 mm; In2 fills end at x 45.49 (0.5 mm in), so D-R24-14's 'x 44.0-45.7' is the zone outline, not the fill, and is consistent with the board.",
+    "U401 VIPPO: both vias (27.3,13.6) and (27.9,13.6) GND 0.5/0.3 under pad 11 (B.Cu); pad 11 has no own paste, the two split windows are y 12.6-13.49 / 13.71-14.6, so the 0.22 mm gap and 0.04 mm overlap of each 0.3 mm drill stated in ORDERING 8.1 reproduce; drill file 0.300 mm group holds 306 hits (both VIPPO vias plus 304).",
+    "Tab nearest parts by courtyard/pad box (my metric): west aft J440 3.205, west forward J400 3.205 (D402 4.013), east aft J410 3.205, east forward J122 3.205 mm; ORDERING's 3.15-3.16 mm come from T-1's own metric; all far above the 2.0 mm connector rule.",
+    "Bottom SMD pad copper to DB125 pad copper: J121 R13 1.762, J122 R153 1.826, J400 D402 1.960, J410 D410 1.772, J420 D420/D421 1.772, J440 D440 1.866, J9 D400/D401 1.772 mm: inside ORDERING 8.2's stated 1.76-2.17 mm range; D402 is listed under J400.",
+    "CPL verification worst pad residual 0.491 mm is a 2-pad land under jlc_orient's 0.6 mm two-pad tolerance, as in earlier rounds.",
+    "Stackup name JLC041611-7628 (ORDERING 8.1) could not be confirmed on JLC's impedance page, which lists only JLC04161H-* (0.5 oz inner); the 1 oz-inner name is from the quote page read by round 23 (not re-read here).",
+    "Assembly PDFs: committed and a fresh probe export have identical content streams (only metadata differs)."
+  ],
+  "fix_verification": [
+    {
+      "id": "D-R24-11 (fab side)",
+      "measurement": "BOM line C535146 qty 9 incl. D402; CPL D402 4.4500mm,-65.9000mm,Bottom,90; 206 BOM refs = 206 CPL rows (70 top / 136 bottom); B.Paste 381 flashes on 381 pasted pads; D402 on bottom assembly PDF",
+      "verdict": "confirmed"
+    },
+    {
+      "id": "D-R24-13",
+      "measurement": "0 occurrences of JLCJLC in m3.kicad_pcb; no JLC text in either assembly PDF; ORDERING order form says Mark on PCB none / Remove Mark",
+      "verdict": "confirmed"
+    },
+    {
+      "id": "D-R24-14",
+      "measurement": "In2 fill scan: RAW_PROTECTED x 44.00-45.49 from y 4.4 to 63.3, PORT_5V3 x 41.0-43.69 y 4.7-63.0, joining only at y ~63.4; any east tab band x 43-46 lies over one of them; K-plane tab-band areas pass (7.497 / 3.077 / 12.244 mm^2)",
+      "verdict": "confirmed (deviation correctly disclosed)"
+    },
+    {
+      "id": "D-R24-15",
+      "measurement": "R92 courtyard 2.525 mm and TP88 2.555 mm from the forward edge; CPL R92 31.0000,-86.7000 Top; remaining short-edge parts R400/R401/R404 1.025, C95 1.505, R166 1.755, C403 1.955 mm match ORDERING's DFM list",
+      "verdict": "confirmed"
+    },
+    {
+      "id": "D-R24-12",
+      "measurement": "no Fab shapes on D120, D123, J2, Q122, Q123; only a circle on D121, D4, J3, U1, U2, U3, U4, U5, Y1: exactly ORDERING 8.2's list",
+      "verdict": "confirmed (deferred as recorded)"
+    },
+    {
+      "id": "D-R24-09 / D-R24-17 (fab side)",
+      "measurement": "CPL R402 30.9,-12.85 Bottom 180 and R403 30.9,-14.6 Bottom 0; C88 18.67,-83.56 Bottom; F.Paste 249 / B.Paste 381; via inventory 302/4/1 = 307 matches drill hits 306 (0.3) + 1 (0.5)",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "sha256 of the board before and after (1407e850...)",
+    "tools/fab_manifest.py --content (read-only verify): 6 outputs bound to current inputs; S-4 BOM/CPL OK; jlc_orient --verify-cpl 67+125 rebuilt, 14 placement-only, 206 rows, no errors; paste_check 249/381 OK",
+    "kicad-cli 10.0.7 pcb drc --severity-all --all-track-errors --schematic-parity on a probe copy with schematics and libraries: 0 violations, 0 unconnected, 0 parity",
+    "check_r10.py full on the probe copy with the committed BOM/CPL: every rule OK except K-binding (copy-path artefact: binding note not beside the copy)",
+    "tools/export_fab.py re-export of the probe copy into the probe dir: BOM, owner BOM and CPL byte-identical; all 14 Gerber/drill/job files identical except date lines; PDFs content-identical",
+    "own pcbnew/numpy scripts: via/PTH/NPTH sizes and rings, hole-to-hole, mask webs and opening-to-track, silk apertures, edge distances, tab nearest parts, bottom-pad to DB125 distances, In2 east-edge net scan, Fab-outline inventory, board counts (216 fp, 1057 segs, 307 vias / 168 GND, 1867.022756 mm, 124 visible / 92 hidden refs, 44 legends)",
+    "BOM/CPL format and cross-consistency (81 unique codes, qty sum 206, coordinate format, rotations), supplier-evidence input hashes",
+    "pdftotext of both assembly PDFs against the board's per-side footprint list (74 top / 142 bottom, none missing, none extra)"
+  ],
+  "sources": [
+    "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-01)",
+    "https://jlcpcb.com/impedance (read 2026-11-01)",
+    "docs/ORDERING.md section 8; docs/M3_R10.md Current state; R10_DECISIONS D-R24-11..15; round24_board_cad.md"
+  ],
+  "coverage_limits": [
+    "JLC's quote page and Confirm Production File were not exercised; tab, rail, VIPPO and stackup acceptance remain JLC confirmations",
+    "mask web check covers pad openings and outer tracks/vias, not zone copper at openings",
+    "no physical or factory inspection"
+  ]
+}

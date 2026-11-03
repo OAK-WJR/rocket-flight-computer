@@ -1,0 +1,297 @@
+{
+ "schema": "r10-triage-v1",
+ "target_commit": "c4bb56b01e3431e5f4309a01321d18935038e707",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "real_errors": [
+  {
+   "id": "R25-TRI-01",
+   "merged_ids": [
+    "R25-POWER-03",
+    "R25-REQUIREMENTS-01",
+    "R25-SAFETY observation 9"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "The J400 chatter bench rule (< 10 ms per drop-out, < 18 % open in any 100 ms window) is not safe at the worst corner: trains that pass both lines turn a worst-case U9 off at 5.73-6.0 V; 20.0 / 24.4 % is only the fast-chatter (d -> 0) limit",
+   "evidence": "Own model (.supervisor/r25_triage/chatter.py -> chatter.out): EN node with R80 / R165 +1 %, R81 -1 %, C87 0.72 x 220 nF, U9 EN sink 0.1 uA, D402 50 nA (at J400.2 closed, through R165 open), VUVLO(F) 1.116 V (TI SLVSFC9C p9); an exhaustive +/- corner search confirms this is the worst corner. It reproduces the records: single drop-out 6.30 / 8.204 / 10.345 / 20.111 / 26.023 ms at 5.5 / 5.73 / 6.0 / 7.4 / 8.4 V, pack floor for 10 ms 5.96 V, EN 1.4014 V at 6.0 V, averaged trip 20.01 / 24.41 % at 5.73 / 6.0 V. Periodic steady-state trip fraction falls with drop-out length d: 5.73 V 19.9 / 18.9 / 17.7 / 15.1 / 13.6 / 11.8 / 9.6 / 5.8 % at 0.1 / 1 / 2 / 4 / 5 / 6 / 7 / 8 ms; 6.0 V 24.3 / 23.4 / 22.3 / 20.0 / 18.6 / 17.2 / 15.6 / 13.7 / 8.3 % at 0.1 / 1 / 2 / 4 / 5 / 6 / 7 / 8 / 9.9 ms (reproduces both lenses). Counterexamples that pass < 10 ms and < 18 %: 6.0 V, 8 ms every 50-51 ms (16 %), EN min 1.095-1.098 V; 5.96 V, 8 ms every 57 ms, 1.106 V. A worse class the lenses did not test: clustered drop-outs defeat the per-drop-out rule as well; 3 x 4 ms open with 0.2 ms closures (12 ms in 100 ms = 12 %, longest 4 ms) gives EN 1.028 V at 5.73 V and 1.078 V at 6.0 V; 2 x 5 ms gives 1.073 V at 5.73 V; all trip. So a \"longest drop-out\" table (REQUIREMENTS-01 option 2) is not conservative either (3 x 4 ms at 12 % passes a 15.1 % line and trips). The C87 = 150 nF functional run (option 3) is not either: a nominal board with 150 nF still tolerates 25.4 / 23.7 / 21.3 % at 0.5 / 2 / 4 ms against the worst-case 19.5 / 17.7 / 15.1 %. The functional \"U9 stays on\" check screens only the bench board (nominal averaged trip about 26-30 %). A sliding-window total is safe: blocks every 100 ms trip only above 7.63 ms open per 100 ms at 5.73 V (9.59 ms at 6.0 V, 5.87 ms at 5.5 V); a 4000-train adversarial search at 5.73 V under \"< 7.62 ms open in any 100 ms window\" gave EN min 1.1173 V > 1.116 V (.supervisor/r25_triage/window_rule.py -> window_rule.out).",
+   "quoted_in": [
+    "AGENTS.md section 1 power row (line 13: \"bench chatter pass line is an open fraction below 18 %\", \"the 10 ms bench criterion needs a pack of at least 5.96 V\")",
+    "STATUS.md line 11 (\"below 18 % open in any 100 ms window\", \"a pack of >= 5.96 V for the 10 ms rule\") and line 16 (\"the 18 % chatter line ... worst-case trip is about 20 %\")",
+    "docs/REQUIREMENTS.md F6 line 60 (bench acceptance: < 10 ms, < 18 %, \"above about 20-24 % turns U9 off however short\", \"a pack of at least 5.96 V is needed for 10 ms\"); F4 line 58 and line 106 cite the 5.73 V chatter test and the single-drop-out immunity",
+    "docs/M3_R10.md line 260 (\"trips U9 above an open fraction of about 20-24 % ... so the bench pass line is below 18 %\") and lines 577-578 (\"pass if the longest drop-out is < 10 ms\")",
+    "docs/ORDERING.md 8.3 line 617 (J400 chatter and vibration bullet)",
+    "docs/R10_VEHICLE_HANDOFF.md lines 67-68",
+    "docs/R10_VALIDATION.md line 1906 (R23-POWER-02 row), 2073 (R24-TRI-02 row), 2150 (owner row 21: \"< 10 ms and below the 5.73 V figure ... below 18 %\"), 2435 (C87 row: \"< 10 ms ... below 18 %\"); line 1686 (R19 row, \"< 10 ms chatter bench test stays\") is dated history",
+    "m3_design/r10_sch_check.py line 295 chatter obligation -> r10_binding_note.json (\"drop-outs shorter than ... about 8.2 ms at 5.73 V cannot trip U9\"; \"bench acceptance of a longest measured drop-out < 10 ms holds only with the loaded pack at or above 5.96 V\"), pinned by tools/test_r10_check.py around line 394-400",
+    "R10_DECISIONS.md D-R24-19 lines 4159-4161 (decision history: record the change as a new D-R25 decision, do not rewrite)"
+   ],
+   "recommended_criterion": "Pass line (executable from the contact record the procedure already takes, correct at the worst corner): record the J400 contact state at >= 10 kS/s under flight-level vibration and pass only if the total open time in every sliding 100 ms window is < 7 ms (7.63 ms is the worst-case limit at 5.73 V with C87 220 nF; Calculation), and U9 stays on for the whole run at 5.73 V. This replaces both the < 18 % line and the < 10 ms single-drop-out rule (a single drop-out >= 7 ms already fails it). A switch that fails it may be accepted only if its recorded contact waveform, replayed through the worst-corner EN model above at 5.73 V, keeps EN >= 1.116 V; the periodic trip-fraction table is guidance only. Chosen over the root option (functional run at 5.73 V plus the single-drop-out rule) because the functional run screens only a nominal board and the single-drop-out rule is defeated by clustered drop-outs; over REQUIREMENTS-01 option 2 and 3 for the reasons in the evidence; option 1 (replay) is kept as the less conservative fallback because it needs a committed model script.",
+   "concrete_fix": "Text, records and generated text only. In every place listed in quoted_in: state that 20.0 / 24.4 % is the d -> 0 limit; replace \"< 10 ms\" and \"< 18 %\" by the window rule above (< 7 ms open in any 100 ms window at 5.73 V, U9 stays on; optional worst-corner replay); give the d-dependent trip fractions as guidance; correct \"drop-outs shorter than ... cannot trip U9\" to \"a single drop-out shorter than ...\". Edit the chatter obligation in m3_design/r10_sch_check.py line 295, regenerate r10_binding_note.json (K-binding) and update the words pinned in tools/test_r10_check.py. Record a new decision (D-R25-NN). Raising C87 (BOM only, same land) remains the owner alternative if a real switch cannot meet 7 ms.",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-02",
+   "merged_ids": [
+    "R25-SAFETY-02",
+    "R25-POWER-02",
+    "R25-MCU-01",
+    "R25-REQUIREMENTS-02"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "Post-trip hold-up 0.157-0.182 ms (all ports) / 0.44-0.48 ms (camera off / shed) is computed from 5.3 V, above the stated PA6 trip window VLOGIC 4.84-5.17 V (PA6 0.44-0.47 V x 11)",
+   "evidence": "Board: PA6 = VLOGIC x 10k / (100k + 10k) (R60 / R61), so 0.44-0.47 V is VLOGIC 4.84-5.17 V; even 1 % parts give at most 0.47 x 11.20 = 5.26 V < 5.3 V. Constant power from parts_budget.json battery_break_load_W (c 11.249-13.064 W, d 4.295-4.650 W), C84 counted 300.8 uF, to 3.8 V (.supervisor/r25_triage/holdup.py -> holdup.out): from 5.3 V 0.1571-0.1825 / 0.4415-0.4779 ms (the records' figures, so 5.3 V is the input); from 5.17 V 0.1415-0.1643 / 0.3975-0.4303 ms; from 4.84 V 0.1034-0.1201 / 0.2906-0.3146 ms. Over the window: 0.103-0.164 ms all ports on, 0.291-0.430 ms camera off / shed; 0.22-0.31 of the break-to-3.8 V figures, not \"about a third\" (0.339 only at 5.3 V).",
+   "quoted_in": [
+    "docs/M3_R10.md line 616 (\"from the trip at about 5.3 V ... 0.157-0.182 ms ... 0.44-0.48 ms\") and Firmware rule 8 lines 1017-1018",
+    "docs/REQUIREMENTS.md F6 line 60 (PA6 trip sentence)",
+    "docs/ORDERING.md 8.3 line 674",
+    "docs/R10_VALIDATION.md owner row 5 (line 2134, \"about a third of that\") and row 25 (line 2164, \"about a third of the break-to-3.8 V figures\")",
+    "m3_design/r10_sch_check.py line 322 rule 8 -> r10_binding_note.json firmware_obligations rule 8"
+   ],
+   "concrete_fix": "Text and generated text only: \"Hold-up after the trip is 0.10-0.16 ms with all ports on and 0.29-0.43 ms with the camera off / shed (Calculation, from VLOGIC 4.84-5.17 V, PA6 0.44-0.47 V, at 300.8 uF; the shortest at the window's lower edge)\"; strike \"from the trip at about 5.3 V\" (M3_R10 616); rows 5 / 25 \"about a fifth to a third\" (0.22-0.31). Edit rule 8 in m3_design/r10_sch_check.py and regenerate r10_binding_note.json (K-binding); no test pins the old figures (grep).",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-03",
+   "merged_ids": [
+    "R25-POWER-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "REQUIREMENTS F6 still says \"If that is about 0.2 ms (Inference), 100-220 uF would do and C84 could be a reflow-rated part\"; R10_VALIDATION (R23-POWER-01 row, owner row 25) and M3_R10 616 say it was struck, and from the trip it gives only 0.03-0.12 ms",
+   "evidence": "docs/REQUIREMENTS.md line 60 \"Hold-up requirement (open owner question, R19-REQ-07)\" carries the sentence; docs/R10_VALIDATION.md line 1905 says \"struck\" for REQUIREMENTS F6. holdup.out, all-ports load 11.249-13.064 W: 100 uF 0.034-0.055 ms and 220 uF 0.076-0.120 ms over the 4.84-5.17 V window (0.052-0.061 / 0.115-0.134 ms even from 5.3 V), all below the 0.2 ms premise.",
+   "concrete_fix": "Text only, REQUIREMENTS F6: replace the sentence with the M3_R10 / row 25 wording (counted from the PA6 trip; 300.8 uF gives only the R25-TRI-02 figures; \"100-220 uF would do\" is struck because it was not computed from the trip voltage).",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-04",
+   "merged_ids": [
+    "R25-POWER-04"
+   ],
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "U9's OVLO corner 9.97 V is called \"the highest RAW_PROTECTED can reach\" but omits the OVLO pin leakage (IOVLKG +/-0.1 uA); with it the highest trip is 10.18 V",
+   "evidence": "TI SLVSFC9C section 6.5 (cached tps25947.pdf, OVLO block): VOV(R) 1.183-1.223 V, IOVLKG -0.1 to 0.1 uA at 0.5-1.5 V. Board BOM: R82 2M 0.1 % (C4241878), R83 280k 0.1 % (C705755). Trip = (VOV(R) + I x R82||R83) x (R82+R83)/R83 at the 0.1 % corners: 9.4163-10.1764 V with leakage, 9.6161-9.9762 V without. Consequences: buck prospective all-shorts peak 3.645 / 3.616 -> about 3.657 / 3.627 A (470 / 500 kHz; recomputed with the generator's peak() formula); U9 port-fault bound 3.74380 -> about 3.74386 A, still below U9's 3.946 A minimum limit, so r10_parts.py's assert holds.",
+   "quoted_in": [
+    "m3_design/r10_parts.py lines 378-379 (comment), 501 (peak(9.97, ...) and keys 9V97_*), 520-521 (u9 bound term 9.97/(3300...), basis \"R92 at9.97V\")",
+    "m3_design/assembly_review/sources/r10_design/parts_budget.json (generated: keys 9V97_470kHz / 9V97_500kHz, u9_port_fault_peak_bound_inference_A and _basis)",
+    "parts_qualification.md line 639 (inside the \"All three ports shorted\" paragraph, a superseded port-switch record) and line 137 (3.083 mA R92 bleed)"
+   ],
+   "concrete_fix": "Edit m3_design/r10_parts.py: use the leakage-inclusive OVLO corner 10.18 V (or compute it from 1.223 V + 0.1 uA x R82||R83 at the 0.1 % corners), rename the 9V97 keys, and correct the comment. The generator must be re-run: `r10_parts.py --budget-only --board <board>` (r10_build.sh line 55) regenerates parts_budget.json; tools/check.sh line 58 (`r10_parts.py --check`) pins it and fails \"stale: parts_budget.json\" until it is regenerated; the assert at r10_parts.py:626 keeps holding. Then update parts_qualification.md line 137 / 639 (or label the 639 paragraph historical) and note M3_R4 A2's 9.63-9.96 V as the no-leakage trip. No board change.",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-05",
+   "merged_ids": [
+    "R25-SAFETY-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "FMEA H-6 / V-18 (docs/FMEA_REDUNDANCY.md line 36) still gives the superseded bench-ramp window \"turn-off 4.5-4.8 V, turn-on 4.9-5.2 V\"; STATUS line 16 says every record carries the corrected window",
+   "evidence": "FMEA line 36: \"After a suspected discharge, repeat the bench supply ramp (turn-off 4.5-4.8 V, turn-on 4.9-5.2 V)\". ORDERING 8.3, REQUIREMENTS F9, M3_R10 and the battery_entry sheet note give off 4.29-4.80 V, on 4.72-5.25 V (D-R24-19); reproduced: off 4.2876-4.8021 V (nominal 4.5053), on 4.7233-5.2512 V (nominal 4.960) over 1 % parts, TI p9 thresholds, +/-0.1 uA, D402 0-50 nA. The old window rejects in-spec boards (off 4.29-4.50 V, on 4.72-4.90 or 5.20-5.25 V); this is R24-TRI-03's error, not fixed here (c4bb56b changed only H-6's BAT_FAULT_N clause). STATUS.md line 16: \"every record carry ... the corrected bench-ramp window\".",
+   "concrete_fix": "Text only: FMEA line 36 \"(turn-off 4.29-4.80 V, turn-on 4.72-5.25 V, nominal 4.51 / 4.96 V; ORDERING 8.3, D-R24-19; or compare with the board's first-article values)\". STATUS line 16 is then true.",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-06",
+   "merged_ids": [
+    "R25-SAFETY-03",
+    "R25-DOCS_BINDING-01",
+    "R25-SAFETY observation 7"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "Two current-board statements name the superseded board 1407e850 as current: FMEA I-11 / V-19 / H-6 (R10) \"Current R10 (1407e850...)\" and R10_VALIDATION section 1 S-8 paragraph \"on this board (1407e850...)\"",
+   "evidence": "shasum of the committed m3.kicad_pcb = 92c3ad59...; docs/FMEA_REDUNDANCY.md line 86 \"**Current R10 (`1407e850...`; the ports since the round 19 fix pass):**\"; docs/R10_VALIDATION.md line 2329 \"6 of them carry plated barrels on this board (`1407e850...`), 12 barrels in all\", inside the section 1 inventory whose basis line 2278 is 92c3ad59. The content (ports, 6 nets / 12 barrels) also holds on 92c3ad59 (the only copper change is BAT_FAULT_N's chamfer, D-R24-18).",
+   "concrete_fix": "Text only: FMEA line 86 \"Current R10 (`92c3ad59...`; ...)\"; R10_VALIDATION line 2329 \"on this board (`92c3ad59...`, unchanged from `1407e850...`)\".",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-07",
+   "merged_ids": [
+    "R25-REQUIREMENTS-03"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "REQUIREMENTS Operating assumptions \"Pack\" row gives U9's turn-off corner without D402's leakage (4.778 / 4.811 / 4.851 V); with it 4.802 / 4.835 / 4.875 V, and F6 in the same file says 4.80 V",
+   "evidence": "docs/REQUIREMENTS.md line 88. Vin_off = (VUVLO(F) (1/(R80+R165) + 1/R81) + Ien)(R80+R165) + Id x R80, VUVLO(F) 1.116 V, Ien 0.1 uA, Id 50 nA, resistor corners 1 / 1.45 / 2 %: 4.7784 / 4.8111 / 4.8514 V without D402 (the row), 4.8021 / 4.8349 / 4.8754 V with it. F6, R10_VALIDATION row 25 and D-R24-19 state 4.80 V with D402 (4.78 V before).",
+   "concrete_fix": "Text only, Pack row: \"4.802 V at 25 C (U9 +/-0.1 uA and D402 <= 50 nA, D-R24-19); 4.835 V at 70 C with +/-100 ppm/K; 4.875 V at 125 C (4.778 / 4.811 / 4.851 V before D402)\".",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-08",
+   "merged_ids": [
+    "R25-MECHANICS-01"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "M3_R10 and R10_VALIDATION section 8 say R150-R155 are \"still missing\" from the plate tool's strain table; they have been in STRAIN_PARTS since the round 19 gate pass",
+   "evidence": "tools/plate_model.py line 40: STRAIN_PARTS ends with 'R150' ... 'R155' (R18-MEC-01), added in commit 2ca63a1; the round 25 mechanics run on 92c3ad59 reports R150-R155 1336-1420 microstrain. Current-section statements: docs/M3_R10.md line 874 (\"Current mechanical integration\": \"R150-R155 are still missing (open Minor)\") and docs/R10_VALIDATION.md line 2709 (section 8). The R10_VALIDATION line 1619 row sits in the dated round 18 gate-lane section and is history.",
+   "concrete_fix": "Text only, both current statements: \"R150-R155 were added in the round 19 gate pass (R18-MEC-01)\"; optionally quote the 92c3ad59 values (1336-1420 microstrain at 100 g, D5 pinned, Calculation/Inference).",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-09",
+   "merged_ids": [
+    "R25-MECHANICS-02"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "ORDERING 8.4 \"4.5 mm standoffs with a plate <= 0.8 mm (keeps h + t < 5.3 mm at x 3.7)\" gives h + t = 5.3 mm at the limit, not < 5.3 mm; the same option in REQUIREMENTS P3, R10_VEHICLE_HANDOFF 105 and R10_VALIDATION row 32 breaks the records' strict h + t < 5.3 mm rule at its end",
+   "evidence": "4.5 + 0.8 = 5.3 mm. M3_R10 line 911 \"Use conservative combined limits h + t < 6.0 / 5.3 mm\" (exact 5.3652558 mm), M3_R10 857, R10_VEHICLE_HANDOFF 76 and R10_VALIDATION 2938 (\"must be < 5.3 mm at x 3.7\"). Physically it fits (5.3 < 5.365).",
+   "concrete_fix": "Text only: either \"a plate < 0.8 mm\" in the four places, or state the x 3.7 limit as h + t <= 5.3 mm (inside the exact 5.365 mm) in M3_R10 857 / 911, R10_VEHICLE_HANDOFF 76 and R10_VALIDATION 2938 and change ORDERING to \"keeps h + t <= 5.3 mm\".",
+   "board_change": false
+  },
+  {
+   "id": "R25-TRI-10",
+   "merged_ids": [
+    "R25-MECHANICS observation 1 (promoted)"
+   ],
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "R10_VALIDATION owner row 32 says the 98-163 g landing range is \"above the 125 g at which the plate model puts C431 / C421 onto a 4 mm sled\"; C421 contacts at 133 g (ORDERING 8.4), and 98 g is below 125 g",
+   "evidence": "docs/R10_VALIDATION.md line 2171 against docs/ORDERING.md line 699 (\"C431 onto the sled at 125 g (250 g), C421 at 133 g (265 g)\"; the round 25 mechanics run gives 132-133 g for C421). The row contradicts ORDERING on C421 and states a range as above a value it straddles; ORDERING itself correctly says \"can exceed\".",
+   "concrete_fix": "Text only, row 32: \"98-163 g (Inference; R24-TRI-08), which can exceed the 125 g at which the plate model puts C431 onto a 4 mm sled (C421 at 133 g)\".",
+   "board_change": false
+  }
+ ],
+ "observations": [
+  {
+   "id": "R25-SAFETY obs 1, 4, 8, 10",
+   "reason": "Confirmations on the built board (S-1..S-9, gate networks, adjacency classes, D-R18-03 floor, per-flight timing); no record contradicted."
+  },
+  {
+   "id": "R25-SAFETY obs 2 (Q124 gate-drain gap 0.520 mm)",
+   "reason": "Within the disclosed Q124-side class (\"a failed-short Q124 can fire an enabled match\"), needs the bus enabled plus a bridge, and the cold screen refuses a pre-existing bridge; the records state the gap; no false statement."
+  },
+  {
+   "id": "R25-SAFETY obs 3 (U9 bypass paths)",
+   "reason": "Per-flight step 2 detects the symptom and prescribes the right action; a non-exhaustive cause list is not false."
+  },
+  {
+   "id": "R25-SAFETY obs 5 (sense plausibility)",
+   "reason": "A pack sitting at 4.85-5.17 V is outside the stated operating range (pad READY >= 7.4 V, four-stall-plus-fire corner 5.37 V); the prescribed action (log and resume) is harmless either way; wording."
+  },
+  {
+   "id": "R25-SAFETY obs 6 (S-8 tables labelled 50a39de5)",
+   "reason": "Labelled history; the current sentence above the table is correct (1.021 / 1.050 mm reproduced by the lens)."
+  },
+  {
+   "id": "R25-SAFETY obs 11 (1.042 / 0.342 mm vs pcbnew 1.041 / 0.341)",
+   "reason": "Own pcbnew Collide measurement: 1.041135 / 0.341344 mm; the 1 um difference is within KiCad's 5 um arc-approximation error used by DRC-style measurement, and no rule or conclusion depends on it."
+  },
+  {
+   "id": "R25-POWER obs 1, 2, 5, 6, 7, 10",
+   "reason": "Reproductions of D-R24-19, D402, hot-plug, K-power and regulator-tap records; consistent (own chatter.out reproduces obs 1)."
+  },
+  {
+   "id": "R25-POWER obs 3 (PA6 with 1 % divider 4.75 V)",
+   "reason": "The records leave the divider / ADC tolerance to qualification explicitly (\"to be qualified with the divider and ADC tolerances\")."
+  },
+  {
+   "id": "R25-POWER obs 4 (AGENTS \"<= 2.06 V with 1 % parts\")",
+   "reason": "Scoped to the parts; true as stated (2.063 V); with leakage 2.086 V, far below the 5 / 6.5 V limits."
+  },
+  {
+   "id": "R25-POWER obs 8 (U401 / U400 feed 0.4 mm)",
+   "reason": "Meets the IPC width; not a POWER_PATHS item; no rule violated."
+  },
+  {
+   "id": "R25-POWER obs 9 (parts_qualification \"All three ports shorted\" / \"2.92 A asserted\")",
+   "reason": "Port-switch-era figures superseded by the file header (\"supersedes the earlier port-switch ... records\"); \"Shared port fault budget\" gives the current 3.160 / 3.744 A. As round 24, not counted; the R25-TRI-04 fix touches line 639 and may label the paragraph historical."
+  },
+  {
+   "id": "R25-POWER obs 11",
+   "reason": "Context for R25-TRI-01 (merged there)."
+  },
+  {
+   "id": "R25-ROUTING obs 1, 2, 4, 5, 6, 9",
+   "reason": "Review-only AUD-10 / M2 counts (local_bump_review, information counts, T junctions, equal-to-bound segments, in-pad jog); the final-board deviation list is not yet due (round 24 triage); STATUS / R10_VALIDATION \"5 unrecorded noncritical leftovers\" is route_check's default count, which these do not change."
+  },
+  {
+   "id": "R25-ROUTING obs 3 (J440.3 / .4 on both layers)",
+   "reason": "AUX_* are not critical nets in AGENTS section 3; round 24 triage observation stands."
+  },
+  {
+   "id": "R25-ROUTING obs 7, 8",
+   "reason": "Partner vias within 1.5 mm; PYRO1_OUT In2 void excused by K-region; confirmations."
+  },
+  {
+   "id": "R25-MCU obs 1-9",
+   "reason": "Pin map, AF, citations, binding hashes, port wiring, gate networks, IWDG and rule 8 EN figures confirmed."
+  },
+  {
+   "id": "R25-MCU obs 10 (parallel via pairs 0.566 mm centres, 0.3 mm drills)",
+   "reason": "Hole edge 0.266 mm >= the recorded 0.25 mm via hole-to-hole rule (m3.kicad_pro min_hole_to_hole 0.25; ORDERING 8.1 \"vias keep 0.25 mm\")."
+  },
+  {
+   "id": "R25-GATE obs 1 (BAT_FAULT_N cap not gated)",
+   "reason": "0.1733 mm breaks no rule (F8 0.15 mm); the 0.200 mm is a record held by CHAMFER_CUTS and review, so not a gate miss."
+  },
+  {
+   "id": "R25-GATE obs 2-6",
+   "reason": "Text-pin coverage, a DRC-caught zero-length seed, measurement tolerance, conservative fallbacks; no realistic defect passes."
+  },
+  {
+   "id": "R25-PARTS obs 1-4",
+   "reason": "Deliberate JLC centroid offsets, dated history, run-to-run price movement, inherited part; nothing false."
+  },
+  {
+   "id": "R25-MECHANICS obs 2 (J9 / J420 tails before C411)",
+   "reason": "ORDERING's contact list is not stated as exhaustive and the tails lie in the relief pocket the vehicle item specifies; round 24 noted the same."
+  },
+  {
+   "id": "R25-MECHANICS obs 3-6",
+   "reason": "Documented definitions and reproductions (plate model 180.8 Hz, 78.6 g; raster-level gap differences; support keep-outs)."
+  },
+  {
+   "id": "R25-MECHANICS obs 7 (\"not re-run on the current board\")",
+   "reason": "True: M3_R10 line 268 says not re-run on 1407e850 or 92c3ad59; the R150-R155 part of that sentence is R25-TRI-08."
+  },
+  {
+   "id": "R25-MANUFACTURING obs 1-6",
+   "reason": "Stackup name confirmed, required order remark, different metrics, no JLC silk-to-edge limit, paste ratio as noted, tab-band vias legal."
+  },
+  {
+   "id": "R25-REQUIREMENTS obs 1-3, 5-7",
+   "reason": "Reproductions of F1-F10, P3, M1, M3 and storage figures."
+  },
+  {
+   "id": "R25-REQUIREMENTS obs 4 (F1 9 C for 30 s)",
+   "reason": "F1 itself says to recompute for the window; disclosed."
+  },
+  {
+   "id": "R25-REQUIREMENTS obs 8 (OVLO and deep-discharged 3S)",
+   "reason": "No stated requirement gives a 3S voltage; M3_R4 already discloses the deeply discharged 3S case."
+  },
+  {
+   "id": "R25-DOCS_BINDING obs 1-3",
+   "reason": "Not contradictory ($0.2306 part cost vs $0.24 with price movement), same legend glyph, JLC centroid convention."
+  }
+ ],
+ "not_reproducible": [],
+ "totals": {
+  "raw_findings": 14,
+  "reproduced": 14,
+  "real_errors": 10,
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 10,
+  "real_errors_with_board_change": 0,
+  "observations_raw": 72,
+  "observation_entries": 28,
+  "not_reproducible": 0,
+  "note": "14 raw lens findings all reproduced and merged into 9 real errors (TRI-01 to TRI-09); mechanics observation 1 promoted (TRI-10); safety observations 7 and 9 folded into TRI-06 / TRI-01; 72 of the 75 lens observations stay observations (grouped into the entries listed)."
+ },
+ "checks_actually_executed": [
+  "shasum -a 256 of m3.kicad_pcb before and after",
+  ".supervisor/r25_triage/chatter.py (EN chatter model, corner search, periodic and burst trains)",
+  ".supervisor/r25_triage/window_rule.py (sliding-window limit, 4000-train adversarial search)",
+  ".supervisor/r25_triage/holdup.py (post-trip hold-up, F6 100-220 uF)",
+  ".supervisor/r25_triage/barrels.py (pcbnew clearances for D-R24-02)",
+  "OVLO and turn-off corner arithmetic (inline)",
+  "pdftotext of the cached TPS25947 datasheet section 6.5",
+  "greps of AGENTS, STATUS, docs, generators, tests and generated records"
+ ]
+}

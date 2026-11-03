@@ -1,0 +1,743 @@
+{
+  "round": 15,
+  "lens": 10,
+  "lens_name": "documentation and firmware-binding consistency",
+  "review_kind": "Fresh full independent assigned-lens review; no desired grade/count",
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_bytes_before": 2257812,
+  "board_bytes_after": 2257812,
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "findings": [
+    {
+      "id": "R15-DOC-01",
+      "severity": "Minor",
+      "status": "new",
+      "active": true,
+      "title": "Active summaries and two current-ledger fields retain superseded R13 facts",
+      "evidence": [
+        {
+          "file": "docs/M3_R10.md",
+          "line": 100,
+          "measured_value": "Says all113 decisions through D-R13-03; source headings and current ledger contain exactly116 through D-R14-03.",
+          "coordinate_mm": null,
+          "maker_page": "Not applicable: source-index consistency."
+        },
+        {
+          "file": "STATUS.md",
+          "line": 43,
+          "measured_value": "Active decision pointer stops at D-R13-03, although D-R14-01..03 govern the present board.",
+          "coordinate_mm": null,
+          "maker_page": "Not applicable: source-index consistency."
+        },
+        {
+          "file": "docs/M3_R10.md",
+          "line": 147,
+          "measured_value": "Active placement paragraph says current R13 fixes and fresh full14/15; current header/target packet require fresh full15/16 on7866d6b8.",
+          "coordinate_mm": null,
+          "maker_page": "Not applicable: review-provenance consistency."
+        },
+        {
+          "file": "docs/M3_R10.md",
+          "line": 476,
+          "measured_value": "Open OQ-3 bullet retains08:38 snapshot82.65/84.99USD and U9 minimum7; current11:03 snapshot is82.6434/84.4456USD and U9 stock113/minimum1.",
+          "coordinate_mm": null,
+          "maker_page": "Dated supplier snapshot; no new price/stock lookup or quote claimed."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json",
+          "json_pointer": "/owner_mandates/10/disposition",
+          "measured_value": "Current owner-mandate disposition still says82.65/84.99USD,0.58USD excess; /procurement correctly says82.6434/84.4456USD,0.0356USD excess.",
+          "coordinate_mm": null,
+          "maker_page": "Dated supplier snapshot; no new price/stock lookup or quote claimed."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json",
+          "json_pointer": "/current_topics/historical_count/required_closure",
+          "measured_value": "Current closure still requests fresh full14/15, while /completion/required_fresh_full_rounds correctly requires15/16.",
+          "coordinate_mm": null,
+          "maker_page": "Not applicable: review-provenance consistency."
+        },
+        {
+          "file": "docs/R10_VEHICLE_HANDOFF.md",
+          "line": 39,
+          "subject": "C431",
+          "coordinate_mm": [
+            39.3,
+            57.75
+          ],
+          "measured_value": "Current handoff says optional100g/D5 gap0.274mm. Current board-bound round14_plate.json#/local_sled_clearance/minima/0/gap_h4_mm is0.2709126712998049mm; M3_R10 and R10_VALIDATION use0.270913mm.",
+          "maker_page": "Huaneng MLT-5020 sheet p2 item9 nominal0.5g underlies corrected current optional mass; modeled gap is Calculation/Inference."
+        }
+      ],
+      "impact": "Bounded documentation/provenance drift: correct target headers, native artifacts, current procurement block and exact decision index already exist. No hardware failure, false release or transferred clean pair is demonstrated.",
+      "concrete_fix": "Update only active M3/STATUS/handoff and current-ledger fields to116/D-R14-03, fresh full15/16, the dated11:03 supplier values and0.270913mm modeled gap. Keep prior immutable reports and explicitly historical R12/R13 snapshots unchanged. Keep stock/process/owner acceptance and physical qualification open.",
+      "new_carried_closed_basis": "New present-target stale-summary instances after the R14 successor; earlier record-drift findings are context, not proof."
+    },
+    {
+      "id": "R15-DOC-02",
+      "severity": "Minor",
+      "status": "carried",
+      "active": true,
+      "title": "Separately owned VEHICLE candidate mirror still describes deleted hardware",
+      "evidence": [
+        {
+          "file": "../../docs/VEHICLE.md",
+          "line": 39,
+          "subject": "R10 candidate stack row",
+          "coordinate_mm": null,
+          "measured_value": "Still says GH-4 ports, GH-2 J400 at(10.5,85.5), ARM/IGN terminals and0.03mm mated-GH margin. Native board has seven DB125s, J400F(7.4,65.85), no J124 or pull-pin; old mating margin is inapplicable.",
+          "maker_page": "DORABO T0-1 sheet1 identifies the actual DB125 family; native PCB establishes installed poses and nets."
+        },
+        {
+          "file": "docs/R10_VEHICLE_HANDOFF.md",
+          "line": 13,
+          "subject": "Current replacement terminal table",
+          "coordinate_mm": [
+            7.4,
+            65.85
+          ],
+          "measured_value": "Correct replacement facts are already supplied in-worktree: J400 west DB125-2, GPS/radio/camera east DB125-4, J122 DB125-5; current native connector nets and poses agree.",
+          "maker_page": "DORABO T0-1 sheet1; no physical fit claimed."
+        }
+      ],
+      "impact": "An integrator reading the vehicle mirror can plan the wrong cable families, switch location and obsolete ARM hardware. This is disclosed, has a current in-worktree handoff and does not demonstrate a hardware-function failure.",
+      "concrete_fix": "Through the separately authorized parent-document workflow, replace only its R10 candidate clause from the current native/HANDOFF facts, preserve accepted R9 history and OQ-7 joint+47mm rule, remove obsolete GH/ARM/mating-margin claims, and retain actual harness/sled/card/bore qualification as open. Do not edit that other worktree in this review.",
+      "new_carried_closed_basis": "Carried R11-m03/R12-m02/R13-m03 and R14 retained vehicle-mirror obligation; freshly re-read against current native board."
+    }
+  ],
+  "rejected_or_closed_C_M_candidates": [
+    {
+      "id": "R15-DOC-CAND-01",
+      "candidate_severity": "Major",
+      "status": "rejected",
+      "candidate": "Generated R10 note might masquerade as an executable firmware binding.",
+      "evidence": "The note explicitly says record only; M3_R10 Firmware, AGENTS current row and current decisionD-R13-03 distinguish it. assembly_binding.py:20 and protocol_assembly.json:7 remain M3-ASSY-R1; build.py has no R10 target and requires ICM-45686 for IMU builds. Direct read-only make_binding import fails ModuleNotFoundError(check_assembly), before compilation/artifact creation; no hash-only bypass was used.",
+      "reason": "No false executable R10 approval is established. R10 firmware remains openly unimplemented."
+    },
+    {
+      "id": "R15-DOC-CAND-02",
+      "candidate_severity": "Major",
+      "status": "closed",
+      "candidate": "Current pins/axes/hash provenance or fabrication outputs could be stale.",
+      "evidence": "Fresh real native schematic export matches committed XML on209 components and651 unique ref/pin nets. PCB/XML/table/note agree on100 MCU pins and four hashes; binding and native-bound budget regenerate identically in memory;193input/five-output manifest passes. U4B180(17,45.9),pad1offset(+1.21,-0.75),leverx-6 match records.",
+      "reason": "No current pin, identity, axis or package-binding discrepancy found in this lens."
+    },
+    {
+      "id": "R15-DOC-CAND-03",
+      "candidate_severity": "Major",
+      "status": "rejected",
+      "candidate": "Absent firmware, lot20ms firing and physical qualification might themselves prove required-function failure.",
+      "evidence": "Current requirements, M3, ordering, AGENTS, binding and ledger explicitly keep these unimplemented/unmeasured, with R10 unaccepted/unordered and R9 accepted. MJG maker sheetp1 defines0.75A at0.5s; current1.125A margin and actual20ms lot test remain distinct.",
+      "reason": "Disclosed CAD-stage obligations alone are not demonstrated hardware failure under the required severity practice. No AGENTS section2 change is requested."
+    },
+    {
+      "id": "R15-DOC-CAND-04",
+      "candidate_severity": "Major",
+      "status": "rejected",
+      "candidate": "Historical schematic_validation.json might certify the current circuit incorrectly.",
+      "evidence": "That unreferenced old snapshot reports250parts/746pins, old GPS OE/FAULT seeds and netlistbc343ccb, while the current build writes its schematic receipt to a temporary report and current fresh export/contract agrees at209parts/651pairs. Current records do not cite the stale file as current qualification.",
+      "reason": "Not used as current evidence in this lens and no active passing contract is bypassed. Archival scoping would improve hygiene, but no additional demonstrated current defect is asserted."
+    }
+  ],
+  "freeze": {
+    "preexisting_tracked_files": 1909,
+    "all_hashed_before_and_after": true,
+    "changed": [],
+    "missing": [],
+    "head_unchanged": true,
+    "writes_owned_only": [
+      "m3_design/assembly_review/sources/r10_review/round15_docs_binding.md",
+      "m3_design/assembly_review/sources/r10_review/round15_docs_binding.json"
+    ],
+    "no_canonical_source_CAD_fab_edits": true,
+    "no_git_mutations": true,
+    "no_peer_round15_report_or_probe_exposure": true,
+    "no_subagents": true,
+    "native_CLI": "One root-reserved real native schematic netlist export; reservation released; no GUI retry."
+  },
+  "checks_actually_executed": [
+    {
+      "check": "Initial exact target/freeze inventory",
+      "result": "HEAD789f4d5,PCB7866d6b8/2257812bytes,1909 tracked SHA256 values."
+    },
+    {
+      "check": "Mandatory source review",
+      "result": "AGENTS first; both target/review packets; REQUIREMENTS; full R10_DECISIONS throughD-R14-03 and current owner amendments; AVA_LAYOUT; M3_R10; full R10_VALIDATION; R9 severity precedents; read-only VEHICLE. Current ORDERINGsection8/HANDOFF/STATUS/README, circuit/pin/budget/binding and executable chain also inspected."
+    },
+    {
+      "check": "Decision and owner coverage",
+      "result": "116 unique source D IDs match116 ledger IDs exactly, no omissions/extras/duplicates;22 owner-mandate records considered under amendment scope. Stale active-index/owner-cost summaries are finding01."
+    },
+    {
+      "check": "Real native schematic export",
+      "result": "Official vendor CLI located only through exact approved pointer; sch export netlist --format kicadxml exits0 to ignored own path.209 component identities/flags and651 unique pin/net pairs equal committed XML."
+    },
+    {
+      "check": "Independent native PCB/XML/table/note mapping",
+      "result": "663 numbered physical pads collapse to651 unique ref/pin pairs, including12 duplicate fingers. All651 native maps and100 MCU rows agree; no PCB/XML manufacturer,LCSC or Manufacturer Part mismatch."
+    },
+    {
+      "check": "Native positions/axis/identification",
+      "result": "209footprints/957segments/296vias/1797.1401775940153mm track;46x90mm edge-centre outline/1.6mm. U1F(23,43)rot0;U4B(17,45.9)rot180,pad1offset(+1.21,-0.75);118shown/91hidden refs and40legends. Seven terminal maps/poses and J430B(24,24.3) agree. Zlever-2.06 remains explicitly model-derived Inference."
+    },
+    {
+      "check": "Fresh schematic contract against source",
+      "result": "r10_sch_check.contract on the newly exported native netlist returns[]; no full r10_sch_check.check/DRC/ERC invocation in this lens."
+    },
+    {
+      "check": "In-memory evidence regeneration",
+      "result": "r10_sch_check.binding_note and r10_parts.power_budget reproduce committed note/budget exactly; no output write or canonical build."
+    },
+    {
+      "check": "Independent allocation arithmetic",
+      "result": "Quadratic coupled source solve exactly reproduces fire currents1.544366071699,1.479437787206,1.414263776058,1.348804955060,1.283013039049A for0..4stalls.960/33.6..960/29.4=28.571428571..32.653061224ms; fault allocation34.853061224ms<36ms. Conditional calculations only."
+    },
+    {
+      "check": "Fabrication manifest and population",
+      "result": "tools/fab_manifest.py exits0,193CAD/exportinputs and5outputs match.82BOMcodes/199distinct fitted references with positive matching quantities;CPL199distinct,67top/132bottom,identical native-fitted set.187reconstruction+12placement-only is correctly distinguished from fullCPLrows in current ORDERING."
+    },
+    {
+      "check": "Current evidence provenance",
+      "result": "All17 source_catalog keys endingR14 exist and their SHA256 values match, including actual model/budget/notes/integration/plate and supplier evidence. Existing complete build/sweep claims reviewed as recorded evidence, not rerun wholesale."
+    },
+    {
+      "check": "Maker sources/pages",
+      "result": "Live ST DS12110 Rev11 January2026 verified through official source; Table10 pp91-92 UART mappings,Table112note3p210/Table147note6p242 pull-off conditions andTable136p233 LSI range. Complete cached ST DS14623Rev1p9 axis figure visually inspected; DORABOT0-1sheet1 and HuanengMLT-5020p2item9 visually inspected. Live MJG sheetp1 confirms0.5s all-fire definition."
+    },
+    {
+      "check": "Executable firmware distinction",
+      "result": "Static R1 profile/protocol/ICM-45686 checks inspected; read-only assembly binding import fails at missing legacycheck_assembly module. No firmware build,flash,target emulation or dependency repair."
+    },
+    {
+      "check": "Final target/freeze check",
+      "result": "Exact HEAD/PCB and all1909 preexisting tracked-file SHA256 values unchanged before report writing; repeated after report writing below."
+    }
+  ],
+  "native_observations": {
+    "footprints": 209,
+    "segments": 957,
+    "vias": 296,
+    "track_length_mm": 1797.1401775940153,
+    "xml_raw_nodes": 651,
+    "xml_unique_ref_pins": 651,
+    "pcb_numbered_pads": 663,
+    "pcb_unique_ref_pins": 651,
+    "mcu_map_rows": 100,
+    "identity_mismatches": [],
+    "pin_binding_errors": [],
+    "imu_binding": {
+      "axis_basis": "same signed frame as R9: bottom180",
+      "bench_sign_check": "required",
+      "forward_thrust": "-a_Y",
+      "lever_arm_frame": "board frame: x east (+x toward the x = 46 edge), y forward, z up from the top face; lever_arm_x_mm and lever_arm_z_mm are the sensor position relative to the roll axis in that frame; in the IMU frame (+X_imu = -x, +Y_imu = -y, +Z_imu = -z) the lever arm is (+6.0, ., +2.06) mm",
+      "lever_arm_x_mm": -6.0,
+      "lever_arm_z_basis": "Inference: centre of the U4 3D model box, not measured",
+      "lever_arm_z_mm": -2.06,
+      "roll_about_forward_axis": "-gyro_Y",
+      "rotation_deg": 180.0,
+      "side": "bottom",
+      "x_mm": 17.0,
+      "y_mm": 45.9
+    },
+    "connector_maps": {
+      "J1": {
+        "1": "BAT_IN",
+        "2": "GND"
+      },
+      "J121": {
+        "1": "PYRO1_OUT",
+        "2": "PYRO1_IGN"
+      },
+      "J122": {
+        "1": "SERVO1_OUT",
+        "2": "SERVO2_OUT",
+        "3": "SERVO3_OUT",
+        "4": "SERVO4_OUT",
+        "5": "GND"
+      },
+      "J400": {
+        "1": "BAT_SW_SOURCE",
+        "2": "BAT_SW_RETURN"
+      },
+      "J410": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "GPS_TX_WIRE",
+        "4": "GPS_RX_WIRE"
+      },
+      "J420": {
+        "1": "PORT_4V8",
+        "2": "GND",
+        "3": "RADIO_TX_WIRE",
+        "4": "RADIO_RX_WIRE"
+      },
+      "J430": {
+        "1": "SD_DAT2",
+        "10": "GND",
+        "11": "GND",
+        "12": "GND",
+        "2": "SD_CS",
+        "3": "SD_MOSI",
+        "4": "3V3",
+        "5": "SD_SCK",
+        "6": "GND",
+        "7": "SD_MISO",
+        "8": "SD_DAT1",
+        "9": "GND"
+      },
+      "J9": {
+        "1": "CAM_5V",
+        "2": "GND",
+        "3": "CAM_RX_WIRE",
+        "4": "CAM_TX_WIRE"
+      }
+    },
+    "poses": {
+      "C82": {
+        "footprint": "rocket:M3_GRM32_1210",
+        "layer": "B.Cu",
+        "rotation_deg": 90.0,
+        "value": "22uF 25V X7R 10%",
+        "xy_mm": [
+          19.3,
+          76.75
+        ]
+      },
+      "C84": {
+        "footprint": "rocket:M3_MA_8x10",
+        "layer": "F.Cu",
+        "rotation_deg": 90.0,
+        "value": "470uF 25V polymer",
+        "xy_mm": [
+          27.5,
+          78.5
+        ]
+      },
+      "C91": {
+        "footprint": "rocket:C_1206_3216Metric",
+        "layer": "B.Cu",
+        "rotation_deg": -90.0,
+        "value": "1uF 50V X7R 10%",
+        "xy_mm": [
+          34.95,
+          53.9
+        ]
+      },
+      "C92": {
+        "footprint": "rocket:C0603",
+        "layer": "B.Cu",
+        "rotation_deg": 0.0,
+        "value": "4.7uF 16V X5R 10%",
+        "xy_mm": [
+          32.35,
+          52.5
+        ]
+      },
+      "D9": {
+        "footprint": "rocket:D_SMA",
+        "layer": "B.Cu",
+        "rotation_deg": -90.0,
+        "value": "B340A-13-F",
+        "xy_mm": [
+          15.0,
+          79.3
+        ]
+      },
+      "J1": {
+        "footprint": "rocket:M3_DB125_2P_GN",
+        "layer": "F.Cu",
+        "rotation_deg": -90.0,
+        "value": "DB125-3.5-2P-GN-S",
+        "xy_mm": [
+          7.4,
+          75.85
+        ]
+      },
+      "J121": {
+        "footprint": "rocket:M3_DB125_2P_BK",
+        "layer": "F.Cu",
+        "rotation_deg": -90.0,
+        "value": "DB125-3.5-2P-BK-S",
+        "xy_mm": [
+          7.4,
+          55.85
+        ]
+      },
+      "J122": {
+        "footprint": "rocket:M3_DB125_5P_GN",
+        "layer": "F.Cu",
+        "rotation_deg": 90.0,
+        "value": "DB125-3.5-5P-GN-S",
+        "xy_mm": [
+          38.6,
+          71.5
+        ]
+      },
+      "J400": {
+        "footprint": "rocket:M3_DB125_2P_GN",
+        "layer": "F.Cu",
+        "rotation_deg": -90.0,
+        "value": "DB125-3.5-2P-GN-S",
+        "xy_mm": [
+          7.4,
+          65.849999
+        ]
+      },
+      "J410": {
+        "footprint": "rocket:M3_DB125_4P_GN",
+        "layer": "F.Cu",
+        "rotation_deg": 90.0,
+        "value": "DB125-3.5-4P-GN-S",
+        "xy_mm": [
+          38.6,
+          15.5
+        ]
+      },
+      "J420": {
+        "footprint": "rocket:M3_DB125_4P_GN",
+        "layer": "F.Cu",
+        "rotation_deg": 90.0,
+        "value": "DB125-3.5-4P-GN-S",
+        "xy_mm": [
+          38.6,
+          31.5
+        ]
+      },
+      "J430": {
+        "footprint": "rocket:M3_MICROSD_MOLEX_472192001",
+        "layer": "B.Cu",
+        "rotation_deg": 0.0,
+        "value": "472192001",
+        "xy_mm": [
+          24.0,
+          24.3
+        ]
+      },
+      "J9": {
+        "footprint": "rocket:M3_DB125_4P_GN",
+        "layer": "F.Cu",
+        "rotation_deg": 90.0,
+        "value": "DB125-3.5-4P-GN-S",
+        "xy_mm": [
+          38.6,
+          47.5
+        ]
+      },
+      "LS120": {
+        "footprint": "rocket:M3_MLT5020_3pad",
+        "layer": "F.Cu",
+        "rotation_deg": 0.0,
+        "value": "MLT-5020",
+        "xy_mm": [
+          23.0,
+          58.5
+        ]
+      },
+      "Q120": {
+        "footprint": "rocket:M3_AONR21357_DFN3x3A_EP1",
+        "layer": "B.Cu",
+        "rotation_deg": 0.0,
+        "value": "AONR21357",
+        "xy_mm": [
+          13.5,
+          73.6
+        ]
+      },
+      "Q121": {
+        "footprint": "rocket:M3_AONR21357_DFN3x3A_EP1",
+        "layer": "B.Cu",
+        "rotation_deg": 180.0,
+        "value": "AONR21357",
+        "xy_mm": [
+          13.5,
+          68.6
+        ]
+      },
+      "R162": {
+        "footprint": "rocket:R0805",
+        "layer": "B.Cu",
+        "rotation_deg": 0.0,
+        "value": "1k 0805",
+        "xy_mm": [
+          19.5,
+          57.7
+        ]
+      },
+      "R166": {
+        "footprint": "rocket:M3_R2512_UR",
+        "layer": "F.Cu",
+        "rotation_deg": 0.0,
+        "value": "0.36R 1% 2512",
+        "xy_mm": [
+          23.5,
+          86.3
+        ]
+      },
+      "R92": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "layer": "F.Cu",
+        "rotation_deg": 0.0,
+        "value": "3.3k 1%",
+        "xy_mm": [
+          31.0,
+          87.5
+        ]
+      },
+      "U1": {
+        "footprint": "rocket:LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL",
+        "layer": "F.Cu",
+        "rotation_deg": 0.0,
+        "value": "STM32H743VIT6",
+        "xy_mm": [
+          23.0,
+          43.0
+        ]
+      },
+      "U4": {
+        "footprint": "rocket:LGA-14_L3.0-W2.5-P0.50-TL",
+        "layer": "B.Cu",
+        "rotation_deg": 180.0,
+        "value": "LSM6DSV320X",
+        "xy_mm": [
+          17.0,
+          45.9
+        ]
+      },
+      "U5": {
+        "footprint": "rocket:SENSORS-SMD_MS5611-01BA03",
+        "layer": "B.Cu",
+        "rotation_deg": 0.0,
+        "value": "MS561101BA03",
+        "xy_mm": [
+          10.6,
+          49.1
+        ]
+      },
+      "U9": {
+        "footprint": "rocket:M3_TPS25947_RPW",
+        "layer": "B.Cu",
+        "rotation_deg": 0.0,
+        "value": "TPS259470LRPWR",
+        "xy_mm": [
+          18.5,
+          81.6
+        ]
+      }
+    }
+  },
+  "binding_regeneration": {
+    "binding_regeneration_equal": true,
+    "budget_regeneration_equal": true,
+    "fresh_schematic_contract_issues": []
+  },
+  "decision_coverage_ids": [
+    "D-AUD-01",
+    "D-AUD-01a",
+    "D-AUD-02",
+    "D-AUD-03",
+    "D-AUD-03a",
+    "D-AUD-03b",
+    "D-AUD-03c",
+    "D-AUD-04",
+    "D-AUD-05",
+    "D-AUD-06",
+    "D-AUD-07",
+    "D-AUD-08",
+    "D-AUD-09",
+    "D-AUD-10",
+    "D-AVA-01",
+    "D-AVA-02",
+    "D-CIR-01",
+    "D-CIR-02",
+    "D-CIR-03",
+    "D-CIR-04",
+    "D-GAP-01",
+    "D-GAP-01a",
+    "D-GAP-02",
+    "D-GAP-02a",
+    "D-GAP-02b",
+    "D-GAP-03",
+    "D-GAP-04",
+    "D-GAP-05",
+    "D-OA-01",
+    "D-OA-02",
+    "D-OA-03",
+    "D-OA-04",
+    "D-OA-05",
+    "D-OA-06",
+    "D-OA-07",
+    "D-OA-08",
+    "D-OA-09",
+    "D-R1-01",
+    "D-R1-02",
+    "D-R1-03",
+    "D-R1-04",
+    "D-R1-05",
+    "D-R1-06",
+    "D-R1-07",
+    "D-R10-01",
+    "D-R10-02",
+    "D-R10-03",
+    "D-R11-01",
+    "D-R11-02",
+    "D-R11-03",
+    "D-R11-04",
+    "D-R11-05",
+    "D-R12-01",
+    "D-R12-02",
+    "D-R12-03",
+    "D-R13-01",
+    "D-R13-02",
+    "D-R13-03",
+    "D-R14-01",
+    "D-R14-02",
+    "D-R14-03",
+    "D-R2-01",
+    "D-R2-02",
+    "D-R2-03",
+    "D-R2-04",
+    "D-R2-05",
+    "D-R2-06",
+    "D-R2-07",
+    "D-R2-08",
+    "D-R2-09",
+    "D-R2-10",
+    "D-R2-11",
+    "D-R2-12",
+    "D-R2-13",
+    "D-R2-14",
+    "D-R2-15",
+    "D-R2-16",
+    "D-R3-01",
+    "D-R3-02",
+    "D-R3-03",
+    "D-R3-04",
+    "D-R3-05",
+    "D-R3-06",
+    "D-R3-07",
+    "D-R3-08",
+    "D-R3-09",
+    "D-R3-10",
+    "D-R3-11",
+    "D-R3-12",
+    "D-R3-13",
+    "D-R4-01",
+    "D-R4-02",
+    "D-R4-03",
+    "D-R4-04",
+    "D-R5-01",
+    "D-R5-02",
+    "D-R5-03",
+    "D-R5-04",
+    "D-R6-01",
+    "D-R6-02",
+    "D-R6-03",
+    "D-R7-01",
+    "D-R7-02",
+    "D-R8-01",
+    "D-R8-02",
+    "D-R8-03",
+    "D-R9-01",
+    "D-R9-02",
+    "D-R9-03",
+    "D-R9-04",
+    "D-R9-05",
+    "D-R9-06",
+    "D-SS-01",
+    "D-SS-02",
+    "D-SS-03",
+    "D-SS-04"
+  ],
+  "owner_mandates_considered": [
+    "Initial plan items1-4",
+    "O1",
+    "O2",
+    "O3",
+    "O4",
+    "O5",
+    "O6",
+    "D-R2-04 then D-R2-08",
+    "OQ-1",
+    "OQ-2",
+    "OQ-3",
+    "OQ-4",
+    "OQ-5",
+    "OQ-6",
+    "OQ-7",
+    "Single switch and keep-one-switch reaffirmation",
+    "AUD-1..10 and GAP-1..5",
+    "AVA comparison10 layout items",
+    "Always-on ports plus microSD",
+    "All wired screw terminals / Steer1",
+    "Requirements audit2 items1-13,15",
+    "Requirements audit2 item14/16"
+  ],
+  "primary_sources": [
+    {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "version": "DS12110 Rev11,January2026; live official browse",
+      "pages": [
+        91,
+        92,
+        208,
+        210,
+        233,
+        242,
+        244,
+        246
+      ],
+      "scope": "Selected MCU AF/electrical/watchdog facts; not full firmware implementation."
+    },
+    {
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "version": "DS14623 Rev1,March2025",
+      "pages": [
+        9
+      ],
+      "sha256": "1b3b1d497968a6dd54a8ce7875e84ff6579217733061617beb1f62a1ba7d9c1c",
+      "scope": "Full axis/pin-connection page visually inspected from named static maker cache; official web PDF exceeds tool limit."
+    },
+    {
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+      "version": "DORABO T0-1 sheet1/1",
+      "pages": [
+        1
+      ],
+      "sha256": "76a55d0cbb4d30bf4d714401b8612365b6b35fedcd9660adae81c0e79d86ff7a",
+      "scope": "DB125 body/tail/terminal family; complete page visually inspected."
+    },
+    {
+      "url": "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598",
+      "version": "Huaneng MLT-5020 maker sheet,p2 item9",
+      "pages": [
+        2
+      ],
+      "sha256": "db73c860afd42abdf9a2e69c4a34ac915d68e07108a2188d6ee0a9c02f723be9",
+      "scope": "0.5g nominal mass; complete page visually inspected. No assembled mass/retention qualification."
+    },
+    {
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "version": "J-Tek LEAD-FREE technical information sheet,live official source",
+      "pages": [
+        1
+      ],
+      "scope": "0.75A all-fire definition at0.5s and4mJ minimum energy;20ms actual lot remains unqualified."
+    }
+  ],
+  "coverage_limits": [
+    "Assigned documentation/binding lens, full current amendment/records review; no peer current-round findings/probes read and no subagents.",
+    "No full canonical build/check.sh, PCB DRC, ERC, complete orientation reconstruction, paste-geometry suite, new full2304case sweep or optional plate solve was executed by this lens. Existing exact-board receipts were hash-checked; their claims remain scoped recorded evidence.",
+    "Only one reserved native CLI call: fresh schematic export. Installed nativePython API was used read-only; benign wx image-handler initialization and CLI Fontconfig warnings do not imply hardware/GUI qualification.",
+    "Static cached st_h743 PDF proved to be DS12110Rev8 and was rejected for Rev11 claims. Two attempts to download the current PDF failed; current Rev11 facts were verified via the official live browse text. No failed download or wrong-version cache is counted as a pass.",
+    "Initial exploratory native identity probe used unavailable GetProperties; corrected final GetFields probe succeeded. Two small AF-list helper attempts had syntax errors, corrected before use; no failed probe is substituted for a result.",
+    "No physical,firmware,flight,thermal,transient,lot-firing,installed RF/ESD,harness,coating,hinge,tool,retention,sled/bore/stack or assembler/process qualification; no owner acceptance/order/quote.",
+    "Final board-bound deviation ledger preserves current and explicit historical evidence. Finding01 targets active fields only, not immutable archived report text.",
+    "Other-worktree VEHICLE was read only; finding02 remains separately owned. This review changes no AGENTSsection2 rule."
+  ]
+}

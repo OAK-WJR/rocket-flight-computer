@@ -1,0 +1,62 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 29, routing lens",
+  "reviewer": "claude",
+  "target_commit": "09a564e",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "route_check --profile r10 (gate mode) on a probe copy: 0 failing, 0 allowlisted, 0 stale, 28 bump windows, 5 unrecorded noncritical leftovers (BAT_OVLO short_segment B(16.4,83.0); tiny_jog BUZZ_DRV F(20.5,51.8), BAT_FAULT_N B(28.2,47.5), I2C1_SDA B(9.97,51.5); detour USB_ILIM (14.825,27.2)). Matches M3_R10 'Routing evidence', R10_VALIDATION section 6 and REQUIREMENTS M2.",
+    "--bumps-all information counts: pad_end_offcentre 70, segment_inside_pad 27, power_via_no_gnd 28, short_layer_hop 18, extra_bends 14, width_change_junction 11, u_turn 5, tiny_jog 3, local_bump_review 2, short_segment / collinear_unmerged / detour / passes_through_pad / via_on_track_in_fill 1 each; 49 windows. The final-board category summary is not yet due (round 24 / 25 triage rulings).",
+    "Current route_check run on the previous board 92c3ad59 (commit 3d8e845): exactly two failures, critical_via_no_gnd at J440.3 (3.900 mm) and J440.4 (4.037 mm), 27 bump windows; every other category count equals a0ec075e's. Confirms M2, M3_R10 and R10_VALIDATION section 6 ('fails J440.3 / J440.4 on 92c3ad59', 'every category's instance count as on 92c3ad59'). Instance diff: only USB_LIMITED's In2 extra_bends anchor and PYRO1_CONT_MID's u_turn anchor (60.13 -> 59.48) moved.",
+    "Current route_check on 5516eeec (commit c70d261): right_angle 59 (F.Cu 25, B.Cu 31, In2 3; 53 free, 4 via, 2 pad). Confirms the '59 -> 0 (F.Cu 25, B.Cu 31, In2 3)' and '54 plain bends with D402's tap, 6 pad / via bends' figures in M2, M3_R10 and R10_VALIDATION.",
+    "Independent geometry scan (own pcbnew dump: 1059 segments, 309 vias, 0 arcs): 0 off-angle headings; 35 two-end 90 deg nodes, all at a same-net pad or via whose copper covers the inner corner (vias: corner 0.141-0.212 mm from centre against radius 0.25 / 0.30 mm); 7 acute (45 deg) branch pairs, all at pads with the wedge apex inside the pad (J9.1, C80.2, C89.1, D8.1 x2, U10.4, C98.1). No rule instance outside route_check's definitions.",
+    "Independent tiny-jog scan (middle < 0.5 mm between two parallel legs): only I2C1_SDA B(9.97,51.5), a recorded noncritical leftover. Dangling-end scan: 0 free ends; 6 ends are T joints on a same-net track's centre line (the four port-clamp branches RADIO_TX/RX_WIRE, CAM_RX/TX_WIRE, VBUS (11.3,30.0), BUZZ_G (20.5,58.7)), which route_check treats as T nodes, not overlap-only joints.",
+    "GND partner vias: 27 return-required critical layer changes (25 vias + plated pins J440.3 / J440.4), nearest GND via 0.770 (QSPI_NCS) to 1.500 mm (J440 pins); PYRO1_GATE 1.492, SD_SCK 1.432, PYRO1_OUT 1.421 mm. All 170 GND vias touch the In1 GND fill. Per-pad scan of every plated pad: only J440.3 / J440.4 (critical, return-required), J400.2 (AUD-2 slow) and J1.1 (power) carry tracks on two layers; J121, J122, J410, J420, J9, J3 one layer each, as R10_VALIDATION section 6 says.",
+    "Reference planes: In2 fill sampled round each of the 27 layer changes: 3V3 x17, PORT_4V8 x4 (the 21 rail vias), GND at HSE_IN / HSE_OUT / PYRO1_GATE, PYRO1_OUT in its S-8 barrel void with GND beyond 1.3 mm, J440.3 / J440.4 over In2 3V3 beyond their 1.2 mm clearance. Matches '21 of the 25 ... (3V3 x17, PORT_4V8 x4)' and '23 of the 27'. Gated partner range for the 21 rail vias 0.77-1.43 mm, as quoted.",
+    "Nearest rail-to-GND capacitor (via centre to rail-side pad centre): 1.29 mm (QSPI_IO3, C29) to 6.19 mm (SD_MISO, C17); SD_SCK 5.33, SD_MOSI 5.07, SD_CS 4.84, SPI1 5.04-5.77, QSPI_NCS 5.32, CAM_MCU_RX 4.02 (C29); 13 of the 21 beyond 4 mm; J440.3 / J440.4 to C460 16.28 / 15.86 mm. All as R10_VALIDATION section 6 quotes.",
+    "Stack-up from the board file: prepreg 0.203 mm, In1-In2 core 1.03 mm, so B.Cu to In2 0.203 mm and to In1 1.263 mm, as quoted.",
+    "Detour table recomputed (own octilinear MST of pad centres, routed track length, non-pour nets with >= 2 pads): 116 nets, 1500.8 / 1236.6 mm, 1.214x, +264.2 mm; all 23 rows (USB_LIMITED 81.62 / 53.39 ... ACT_EN_MCU 24.36 / 20.85) and every via count match R10_VALIDATION section 6 and owner row 8. Next below the line: QSPI_IO2 +3.3, USB_DM +3.1 (ACT_FET_S and RADIO_TX_MCU also +3.1; the table does not claim the two named are the only ones).",
+    "USB pair: D+ / D- 1.90 mm apart over x 11.1-15.85 on F.Cu with the VBUS via (11.95,30.6) and GND via (15.6,30.5) between, 0.707 mm on the diagonals, J3-to-U1 trunks 16.448 (D-) / 14.702 (D+) mm, as quoted.",
+    "Contents row: 1059 segments, 309 vias (170 GND; 304 at 0.5 / 0.3, 4 at 0.6 / 0.3, 1 at 1.0 / 0.5 mm), 1866.794 mm of track. In2 fills: 3V3 one piece 1430.05 mm2; In2 3V3 to RAW_PROTECTED / PORT_5V3 / PORT_4V8 fills 0.300 mm (owner row 1).",
+    "D-R26 copper as AVA_LAYOUT 'Round 26 fix pass' lists it: 3V3A trunk (16.5,50.2)-(16.5,51.45)-(16.5,53.5)-(16.5,55.25); C11.2 return to (19.423,52.373); C10.2 return (18.5,53.45)-(19.65,53.45), 0.05 mm off the pad centre; R164 strap (18.15,55.25)-(18.975,55.25)-(19.55,55.825); R13 strap to (9.2,52.55); PYRO1_OUT (16.87,57.97)-(16.87,58.62); PYRO1_CONT_MID (16.87,59.48)-(16.87,60.82)-(17.85,61.8)-(20.83,61.8). Shape distances: CONT_MID diagonal to Q123.1 0.2005 and R134.2 0.3865 mm; the run's minima 0.175 / 0.250 mm; R164's via to BUZZ_DRV B.Cu 0.2338, LS120.3 0.2062, R162.2 0.9971 mm.",
+    "U401 OUT T at (29.75,12.85) lies 0.075 mm inside R402.1's land (land x 29.675-30.475), 0.325 mm from its centre; OUT vias (29.75,11.65) and (29.75,9.95) on the B.Cu run, the AUX feed's second via (30.5,9.95) on F.Cu. As M3_R10 and R10_VALIDATION section 6 say.",
+    "Owner row 8 / R19-RTE-03: BAT_FAULT_N to the GND via (27.9,64.25) 0.180 mm (F.Cu); R89.2 to its under-body 3V3 via (23.0,70.0) 0.175 mm (recorded R19-RTE-04 pattern).",
+    "Coordinate sweep of M3_R10 (current and history sections), ORDERING section 8, R10_VEHICLE_HANDOFF and R10_VALIDATION 2350-3031: every coordinate pair not on a board item is an explicitly labelled 'before' position or a labelled older board (for example R81 F(20.5,65), (30.575,11.6), TP82 B(11.0,17.6), RAW_ACT (22.8,61.4)-(22.8,63.875) under its 5516eeec label).",
+    "Gate seeds on a probe copy (KiCad Python, removed items kept referenced): (1) J440.4's partner via (7.4,20.0) removed, (2) J440.3's partner via moved 0.05 mm to (7.4,16.45), (3) AUX_TX_WIRE's B.Cu chamfer at (4.45,18.0) undone. route_check: 3 failing, exactly critical_via_no_gnd J440.4 (4.037 mm), critical_via_no_gnd J440.3 (1.55 mm) and right_angle AUX_TX_WIRE B.Cu (4.45,18.0).",
+    "IPC-2152 widths from tools/ipc2152.py (30 C rise, external): 2.9 A 0.680, 2.0 A 0.356, 1.9 A 0.326, 1.81 A 0.299, 1.294 A 0.167, 1.249 A 0.157 mm, each under its K-power floor (1.0 / 0.7 / 0.4 mm); 2.9 A agrees with an IPC-2221 hand check (about 0.67 mm). The thin segments on power nets (VLOGIC, RAW_ACT, PORT_5V3, BAT_IN, 3V3, PYRO1_OUT, CAM_5V, PORT_4V8 at 0.2 mm) are sense, bypass, EN or second-barrel links, not load paths."
+  ],
+  "fix_verification": [
+    {"change": "D-R28-01 ... D-R28-04", "verdict": "confirmed, no routing effect", "measurement": "Generator and text changes only; board SHA-256 a0ec075e... unchanged; route_check result identical to round 28's."},
+    {"change": "Round 28 audit A item 11 and routed siblings (J440 clamp distances: parts_qualification.md:36, M3_R10.md:97 and :132, R10_VALIDATION.md:1756, :2046 and :2773, R10_DECISIONS.md D-R21-07 note, STATUS.md:21)", "verdict": "confirmed", "measurement": "On a0ec075e: AUX_TX_WIRE B.Cu J440.3 (7.4,18.0) -> (4.81,18.0) -> (4.45,18.36) -> D440.1 (4.45,19.125) = 2.59 + 0.5091 + 0.765 = 3.864 mm; AUX_RX_WIRE 2.59 + 0.5091 + 0.865 = 3.964 mm (each 0.211 mm shorter than 4.075 / 4.175, which round to 4.08 / 4.18); straight centre to centre 3.157 / 3.194 mm; J440 pad (r 0.95 mm) to D440.1 / D441.1 land (0.6 x 0.35 mm) edge gap 1.865 / 1.900 mm; all under K-ports' 4.5 mm. J410 / J420 straight 3.064-3.411 mm ('3.1-3.4' correct to one decimal); K-ports paths J410 4.288 / 4.388, J420 and J9 3.975 / 3.975 mm. D440 / D441 at B(4.45,19.45) / B(4.45,23.05)."},
+    {"change": "Round 28 audit B (ORDERING 8.3 procedures), routing-relevant rows", "verdict": "confirmed", "measurement": "J440 partner GND vias 0.300 mm from J440.3 / J440.4 pads (1.5 - 0.95 - 0.25)."}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after: a0ec075e... both times",
+    "route_check --profile r10 (gate mode and --bumps-all) on a probe copy of a0ec075e",
+    "route_check --profile r10 on probe copies of 92c3ad59 (git show 3d8e845) and 5516eeec (git show c70d261)",
+    "own pcbnew dump of tracks, vias, pads, footprints and zones; own polygon export for shape distances (NumPy segment distances)",
+    "own scans: off-angle, 90 deg and acute nodes with corner / apex coverage, tiny jogs, dangling ends, plated-pad layer changes, GND partner vias, In2 fill round each layer change, GND via to In1 fill, rail-capacitor distances, detour MST, USB pair, J440 / J410 / J420 / J9 clamp paths, In2 fill areas and gaps, D-R26 copper coordinates",
+    "coordinate sweep of M3_R10, ORDERING section 8, R10_VEHICLE_HANDOFF and R10_VALIDATION 2350-3031 against board items",
+    "three seeded routing faults on a probe copy, route_check output recorded",
+    "tools/ipc2152.py widths for the K-power design currents"
+  ],
+  "sources": [
+    "AGENTS.md section 3; docs/REQUIREMENTS.md M2",
+    "docs/M3_R10.md (The board, round 20 / 24 / 26 change tables, Power, Routing evidence)",
+    "docs/R10_VALIDATION.md section 6 and the owner decision table rows 1, 2 and 8",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R21-07, D-R26-01 ... -04, D-R28-01 ... -04",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md round 24 / 26 sections; parts_qualification.md row J440",
+    "m3_design/assembly_review/sources/r10_review/round28_triage.md, round28_audit_pq.md, round28_audit_proc.md",
+    "tools/route_check.py, tools/check_r10.py (K-power, K-region, K-reference), tools/critical_reference.py, tools/ipc2152.py",
+    "JLC PCB capabilities (https://jlcpcb.com/capabilities/pcb-capabilities) as cited by D-R21-01"
+  ],
+  "coverage_limits": [
+    "Review-only M2 items (off-centre pad entries, non-critical detours and layer hops, under-body vias) were checked against the records, not judged one by one for removability; the final-board deviation list is not yet due.",
+    "check_r10 was not run (it needs the full gate's fit report); K-ports, K-region and K-reference were reproduced by independent measurement, not by seeding check_r10.",
+    "No DRC run, no signal-integrity or current-density solve; IPC-2152 figures are the tool's own fit.",
+    "JLC hole-to-hole and via-spacing capabilities were not re-read (manufacturing lens)."
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 31, power lens",
+  "reviewer": "claude",
+  "target_commit": "3366287193ec7988fbc0fe41cb66b5f2a55791fa",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "parts_budget.json is current: `r10_parts.py --check --budget-only` (KiCad Python, read-only board load) exits 0; file SHA-256 4267634220f4... matches the hash parts_qualification.md:493 quotes; board hash unchanged after the load.",
+    "D-R28-01 pack sag reproduced by hand: r = 0.15 ohm, constant current 7.68 + 0.6375 A, constant power 5.456 x 1.561 / 0.8 = 10.646 W; V = (a + sqrt(a^2 - 4rP)) / 2 gives 5.880831 V (7.4 V open) and 4.388491 V (6.0 V open). Every current quote (STATUS:43/54, parts_qualification:694-700, R10_VALIDATION R28-TRI-03) matches; no stale 5.899 / 5.921 / 4.414 / 4.436 / 4.389 figure remains outside dated history (git grep).",
+    "USB attach inventory (parts_qualification:970-974, M3_R10 USB bullet) matches the board: VLOGIC = C84 470 uF + C6 / C7 22 uF + C99 100 nF (514.1 uF), USB_LIMITED = C86 / C98 1 uF (516.1 uF); R85 66.5 k gives 347.7-453.0 mA (SLVS841G eq. 1 / 3 at +/-2 %); 2.416 / 2.426 mC to 4.7 V, 5.33-6.95 / 5.35-6.98 ms reproduce.",
+    "C120 off time constant: 50 k x 1.02 x 1.265 uF = 64.52 ms (129.03 ms with one resistor open); 1 s = 15.5 / 7.75 tau. Board: C120 is ACT_FET_S-ACT_GATE, R119 / R120 100 k gate-source, R121 10 k to Q122's drain (open when Q122 is off). Enable tau 10.75 ms, settled |VGS| 4.744 V, 31.9 ms to 4.5 V, Ceff 0.587 uF and 0.239 V step reproduce.",
+    "GAP-1 reproduces: native fire-path copper 29.650 / 35.477 mOhm, loop 4.617803 Ohm, 0-4 stall currents 1.540851-1.278747 A against 1.125 A; other converter load 13.064091 W (12.370807 W pre-AUX).",
+    "GAP-3 reproduces: (5.546269 - 4.711504) x 0.56 + 5.546269 x 0.004 = 0.48965 W; 109.17-123.86 C at 70 C, 124.17-138.86 C at 85 C; theta ceiling 55 / 0.48965 = 112.3 C/W; AUX <= 0.112 A keeps the loss <= 0.5 W.",
+    "GAP-5 reproduces: 960 / 33600-29400 Hz = 28.571-32.653 ms; Rdis 1087.344 x 1.02 = 1109.09 Ohm; C126 max 278.3 nF; RC to 0.4 V 0.678 ms, + 0.061 ms gate charge = 0.739 ms; 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms; R134 1.97109 Ohm, 35.7975 W, 0.716 / 1.289 J; Bourns log interpolation 61.20 / 44.13 W; 85 C derating 36.345 vs 35.851 W.",
+    "Battery-break ride-through table (parts_qualification:823-828) matches every battery_break_ride_through_ms key to its stated rounding (e.g. c 300.8 uF to 3.8 V 0.464-0.539 ms; d 1.304-1.412 ms); R92 allowance 7.4^2 / 3234 = 16.93 mW.",
+    "OQ-5 option reproduces (DS41326 eq. 1-2 with Ip 1.5 uA / Ip+Ih 5.5 uA): VOFF 5.7265 / 6.0115 / 6.2965 V, VON 6.4845 / 6.6555 / 6.9405 V; ports-on 0.25 / 0.40 ms to VOFF; ride-through 3.84 / 6.00 and 1.57 / 2.46 ms (records 3.8 / 6.0, 1.6 / 2.5 ms: correct roundings).",
+    "Post-trip hold-up (D-R25-02) reproduces: 0.5 x 300.8 uF x (4.84^2 - 3.8^2) / 13.064 W = 0.1034 ms to 0.5 x 300.8 uF x (5.17^2 - 3.8^2) / 11.249 W = 0.1643 ms; shed case 0.2906-0.4303 ms.",
+    "J400 / EN figures reproduce: turn-on 87.7 / 55.5 / 44.7 ms; nominal drop-out 18.9 / 32.7 / 41.1 ms; worst 10.34 ms at 6.0 V and 8.065 ms at 5.713 V; one-block-per-100-ms window limits 9.594 / 7.501 / 7.629 / 5.871 ms at 6.0 / 5.713 / 5.73 / 5.5 V and 7.026 ms at 5.65 V; turn-off 4.802 V (25 C) / 4.835 V (70 C); ramp window 4.29-4.80 / 4.72-5.25 V; damaged-EN 5.55 / 6.49 / 7.43 V at 1 / 2 / 3 uA (nominal resistors, no D402 term); 4.08 uA IN leak.",
+    "Four-stall-plus-fire corner reproduces from the fire budget: 5.7132 / 5.7112 V healthy, 5.5576 / 5.5512 V match shorted, 5.5111 / 5.5029 V match and leads shorted (40 mOhm / typical-hot FETs); the record's single 5.50 V for the last case is the lower corner, conservative.",
+    "Regulator rails: buck 5.366682-5.546269 V (R400 / R404 / R401 with 0.1 % / 1 % and 25 / 100 ppm/K over 100 K, VFB 0.792-0.808 V, DS41326 p5), LDO 4.711504-4.873250 V (+/-100 nA x 49.9 k), headroom 0.4434 V > 0.2 V dropout, R405 bleeder 5.633 mA > 5 mA, camera / radio / GPS / AUX endpoint minima 5.031682 / 4.601504 / 4.631504 / 4.641504 V, maximum 4.92325 V; TPS2553 R430 22.6 k gives 1.041-1.249 A (SLVS841G eq. 1 / 3); TPS2121 R86 80.6 k sits at the 80 k row (1-2 A); TPS25947 R84 750 Ohm 3.96-4.84 A (SLVSFC9C p9) scaled to 3.946-4.857 A; all rail parts inside their input ranges (TPS7A91 <= 6.5 V, TPS2553 2.5-6.5 V, TPS709 2.7-30 V with C92 2.21 uF effective within 1.5-47 uF, AP6320x 3.8-32 V, TPS2121 2.8-22 V, TPS25947 IN -15...28 V, EN / OVLO <= 6.5 V: EN 4.8 V and OVLO 2.44 V at the 19.9 V TVS clamp).",
+    "Regulator taps: R400.1 taps PORT_5V3 at C403.1 (F.Cu, no via, 0.2 mm run along y 1.8); R402.1 sits on U401's B.Cu OUT run with no via (D-R24-09); U2.1 senses 3V3 next to U2; U401 PG (pin 5) open, SS_CTRL (pin 6) GND with C408 10 nF on NR/SS, EN (pin 7) on PORT_5V3; U13 (TPS709) EN left open, which the maker allows (SBVS186H pin table: floating enables).",
+    "IPC-2152 widths (tools/ipc2152.py, 30 C, no plane credit): 1.249 A 0.157 mm, 1.294 A 0.167, 1.81 A 0.299, 1.9 A 0.326 (In2 0.343), 2.0 A 0.356 (In2 0.375), 2.9 A 0.680 mm; every K-power floor (0.4 / 0.7 / 1.0 mm) meets its design current. The six POWER_NARROW entries are the measured pin-pitch / bar-entry exceptions already recorded. In2 fills: 3V3 1430.05 mm^2 one piece (matches M3_R10), RAW_PROTECTED 1218.99, PORT_5V3 218.62, PORT_4V8 324.80 mm^2; 3V3 fill to RAW_PROTECTED / PORT_5V3 / PORT_4V8 fills 0.300 mm (matches owner row 1); the 0.549 mm 3V3 neck (U2 output vias) exceeds the 0.375 mm In2 width for 2.0 A.",
+    "Hot-plug binding: hotplug_inputs.json binds board a0ec075e...; its canonical digest f4d1b57d... equals hotplug_results.json inputs_sha256; 2304 rows, minimum -14.807372918 V, fall 8.994764 V/us, rise 5.087664 V/us, R166 579.049 W / 2.979359 mJ, retained OUT 5.914470 V at 1643.90 uF; the retained-output inventory lists all 73 board capacitors (no missing or extra reference). Limits match SLVSFC9C section 6.1 (max(-15, VOUT-21) V, 28 V, 10 / 100 V/us).",
+    "Probe worksheet power rows (TP80 F(9.8,83.8), TP81 B(31,84.8), TP82 B(11.2,20.7), TP83 B(34.5,81.5), TP120 B(18,68.6), C88.1 B(18.25,83.56), C82.1 B(19.3,78.25), R84.1 B(20.775,81.825), ACT_GATE pads) match the board; C84-connected capacitance window 0.41-0.62 / 0.04-0.05 mF reproduces.",
+    "Already-observed classes, nothing new shown: USB_LIMITED In2 length 63.605 mm (labelled Round 18; now 63.115 mm in all, about 58.1 mm in series, conservative, R27 / R29 observations); U400 / L400 '1.2-2.2 W' (R28 / R29 observations); U400 input feed outside K-power (R25 / R29).",
+    "REQUIREMENTS Pack row 'about 1.7 W, 0.23 A' for LR900-F 1 W + GPS 0.05 A: with the budget's 11 mA port quiescent allowance, 0.2693 A x 5.456 V / 0.85 = 1.73 W, 0.234 A at 7.4 V; without it 1.66 W / 0.224 A; labelled 'about' and Inference, not shown wrong."
+  ],
+  "fix_verification": [
+    {"item": "R30-TRI-01 sibling (power-adjacent: RAW_ACT-to-BAT_ENABLE bridge EN load)", "measurement": "R10_VALIDATION:2670 now reads '(EN is loaded by 10 kOhm, 11.2 kOhm (5.6 kOhm with the e-match or the step-3 dummy fitted, R30-TRI-01) or 2 kOhm)'; 11.2 k || (11.2 k + about 4 Ohm) = 5.60 kOhm; with R80 + R165 940 k and 5.6 k the EN node sits at about 8.4 x 5.6 / 945.6 = 0.05 V, below 1.183 V. The main R30-TRI-01 text (R10_VALIDATION:2637, 2.19-2.21 V, 0.107-0.109 mA) is also present and reproduces ((3.3 - V)/10.2 k + (3.3 - Vf - V)/10 k = V/11.2 k).", "verdict": "confirmed"},
+    {"item": "R30-TRI-02 (chamber-test criterion; power-knot thermal context)", "measurement": "git grep finds no live 'LS120 <= 70' pass clause in docs / STATUS / AGENTS / parts_qualification (STATUS:18 and M3_R10:42 mention it only as the replaced round 29 clause); REQUIREMENTS:94, ORDERING 8.3 (board temperature bullet), owner rows 33 / 36 state 'every 85 C part <= 85 C' as the pass and LS120's rise as a recorded, non-gating measurement.", "verdict": "confirmed"},
+    {"item": "D-R28-01 (shared port current, 5.880831 / 4.388491 V)", "measurement": "r10_parts.py power_budget: port_A = 1.461 + aux_A feeds both ports_w and loaded_pack; hand solve and budget agree to 1e-6 V; budget regenerates byte-identically (--check).", "verdict": "confirmed"},
+    {"item": "D-R29-01 / D-R29-02", "measurement": "Not power items (rule 3 gate time constant and binding-note test pins). Spot check only: (220 + 50||50||1000) || 10 k = 238.56 Ohm x (C126 198 / 220 / 242 nF + 2.25 nF) = 47.8 / 53.0 / 58.3 us.", "verdict": "confirmed (spot check, outside lens)"}
+  ],
+  "checks_actually_executed": [
+    "git rev-parse HEAD = 3366287; shasum -a 256 board before and after: a0ec075e... both times; git status shows no tracked change from this lens",
+    "KiCad Python: m3_design/r10_parts.py --check --budget-only (exit 0, budget current)",
+    "KiCad Python read-only probes (.supervisor/r31_power/nets.py, tracks.py, in2gap.py): pad / net inventories of every power net, track widths / lengths / vias of BAT_IN, RAW_PROTECTED, VLOGIC, PORT_5V3, PORT_4V8, CAM_5V, USB_LIMITED, VBUS, 3V3; In2 zone areas and 3V3-to-rail fill gaps; component and probe positions",
+    "Capacitor inventory: 73 board capacitors vs hotplug_results.json retained_output inventory_F (0 missing / 0 extra)",
+    "hotplug_inputs.json canonical digest vs hotplug_results.json inputs_sha256; extrema recomputed from the 2304 rows",
+    "Hand / Python recomputation of: pack sag, ride-through table, OQ-5, PA6 post-trip hold-up, USB attach and USB-only draw, C120 / enable network, GAP-1 / GAP-3 / GAP-5, U9 fault bound and current limit, buck / LDO tolerance bands and endpoint minima, EN turn-on / drop-out / window limits / ramp windows / damaged-EN corners, four-stall-plus-fire corners, ipc2152 widths",
+    "Datasheet reads from the cached primary PDFs (.supervisor/r14_parts_pdf/*.txt): TPS25947 SLVSFC9C (abs max, EN / OVLO thresholds and leakage, ILIM table, dVdt), AP6320x DS41326 Rev 3-2 (VFB, EN, IPEAK, theta-JA), TPS7A91 SBVS282A (capacitors, RthetaJA), TPS2553 SLVS841G (IOS equations and table, EN polarity), TPS2121 SLVSEA3F (ILM table, ST, Table 9-3, IRCB), TPS709 SBVS186H (EN, capacitor range)"
+  ],
+  "sources": [
+    "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C sections 6.1, 6.3, 6.5 pp7-11)",
+    "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (DS41326 Rev 3-2 pp4-5, 10-11)",
+    "https://www.ti.com/lit/ds/symlink/tps7a91.pdf (SBVS282A pp4-6)",
+    "https://www.ti.com/lit/ds/symlink/tps2553.pdf (SLVS841G pp6-7, 16-17)",
+    "https://www.ti.com/lit/ds/symlink/tps2121.pdf (SLVSEA3F pp7-8, 13, 18)",
+    "https://www.ti.com/lit/ds/symlink/tps709.pdf (SBVS186H pin table, section 8.1.1)",
+    "m3_design/r10_parts.py, parts_budget.json, parts_qualification.md, hotplug_inputs.json, hotplug_results.json, hotplug.md, tools/check_r10.py (K-power, K-plane), tools/ipc2152.py",
+    "docs/M3_R10.md (Power, Simulation and calculation), docs/ORDERING.md 8.3, docs/REQUIREMENTS.md (F6, F9, F10, Pack, Temperature), docs/R10_VALIDATION.md (owner rows, section 1), AGENTS.md, STATUS.md",
+    "round30_triage.md / .json, round30_fix_docs.md; rounds 24-29 triage observations (power entries)"
+  ],
+  "coverage_limits": [
+    "No transient, thermal or circuit simulation was re-run; the hot-plug sweep was checked by binding and extrema, not re-solved",
+    "No full tools/check.sh run on the canonical tree (brief rule); check_r10's K-power / K-plane outputs were not re-executed, their specifications and the underlying geometry were measured directly",
+    "The fire-budget VLOGIC drop (0.09-0.16 V) and the PORT_4V8-to-3V3 lag are model statements checked only for plausibility",
+    "The pad-energy worksheet (owner row 17, sealed) was not recomputed",
+    "No other round 31 lens report was opened"
+  ]
+}

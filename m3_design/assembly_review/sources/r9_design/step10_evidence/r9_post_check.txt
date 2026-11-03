@@ -1,0 +1,10 @@
+# m3_design/assembly_review/m3.kicad_pcb sha256 4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14 (r9_post_check.py, build line 38 of the fix pass's stage replay)
+legends    OK
+dc         OK
+supply     OK
+f9         OK
+legends: 35 board texts; 139 designators shown, 110 hidden (kept on Fab)
+dc {'raw': 0.8, 'bat': 0.17, 'fet': 0.27} mOhm; {'raw': 12.6, 'bat': 12.1, 'fet': 20.8} C; via max 0.65 A
+supply {'rp_u7': 77.11, 'rp_u11': 16.22, 'cam_j9': 2.88, 'bat_u9': 2.32} mOhm
+f9 2.32 mOhm, 3.232 nH
+R9 post gate: OK

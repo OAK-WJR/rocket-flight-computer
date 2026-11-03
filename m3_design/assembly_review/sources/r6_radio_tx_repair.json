@@ -1,0 +1,52 @@
+{
+  "first": {
+    "applied": [
+      "radio_tx"
+    ],
+    "skipped": [
+      "power: already applied",
+      "radio_mcu: already applied"
+    ],
+    "removed": [
+      "05e3b070-9810-4ec2-ba6f-46d11bd94e53",
+      "1ee0a10a-48c3-4260-a6f4-5eb197a7ea68",
+      "77c573fe-7623-45d9-b903-6b480cb6cae0",
+      "a5e00384-71b1-54c4-8d7b-9c0e4243e5dd",
+      "e034a505-72ee-5732-8530-6239284a74af",
+      "f35860f1-8310-4d84-8942-7e2d3a750003"
+    ],
+    "added": [
+      "de900470-0374-5a52-878c-9eb44722151a",
+      "9d126576-d39a-538c-b305-d6c6a94b4af4",
+      "b05886a4-736d-5652-ac39-4072769ae7bb",
+      "58de0c13-ae20-532e-ac49-4b1bce1d53e7",
+      "c74722c4-1f2d-528f-91a0-e06da9cb4cfe",
+      "18f8c64e-6645-5946-9509-e6828052c845",
+      "8e176330-696e-5f51-aa5a-984341fe6a44",
+      "bbf61079-244a-59d3-9dd3-cb18856c8daf",
+      "445964e8-aa16-59e1-87bb-781383ea2b00",
+      "6a003a0d-110d-580a-a38c-fd1d927e4835",
+      "45441f2c-e7e9-5062-bf3e-2e8e498ae022",
+      "c5747476-fe63-5613-a7f8-41ad14ce1367",
+      "410cfefc-1961-53a1-b705-9cfb6337e724",
+      "d4f76f7d-966d-5473-a7d8-11923f6412a8",
+      "f0cfe19f-a38f-5ea3-84c3-df5ac94dae49"
+    ],
+    "zones_require_refill": true,
+    "native_drc_required": true
+  },
+  "second": {
+    "applied": [],
+    "skipped": [
+      "power: complete radio_tx upgrade already applied",
+      "radio_mcu: already applied",
+      "radio_tx: already applied"
+    ],
+    "removed": [],
+    "added": [],
+    "zones_require_refill": false,
+    "native_drc_required": true
+  },
+  "idempotent_reload": true,
+  "atomic_changed_route_rejection": true
+}

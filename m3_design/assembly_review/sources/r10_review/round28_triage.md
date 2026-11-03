@@ -1,0 +1,116 @@
+# R10 round 28 triage
+
+Target commit `19dd0b5`, board `a0ec075e…` (SHA-256 before and after: `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c`). Read-only; every finding reproduced from the files (pcbnew dump, budget re-solve, DS12110 Rev 8 Table 9 text, the R23 hinge script, git grep sweeps). Probes in `.supervisor/r28_triage/`.
+
+## Totals
+
+| Critical | Major | Minor | Real errors | Raw findings confirmed | Observations promoted | Observations (not counted) | Not reproducible | Board changes |
+|---|---|---|---|---|---|---|---|---|
+| 0 | 1 | 8 | 9 | 8 of 8 | 1 | 102 | 0 | 0 |
+
+All nine fixes are text, record, generator or check edits; none changes copper or placement. Round 28 has real errors, so it is not a clean round.
+
+## Real errors
+
+### R28-TRI-01 (R28-SAFETY-01): Minor, doc, board_change false
+
+**FMEA's current R10 disposition row credits the bus / continuity dividers with 'ADC series protection'; R10 has none**
+
+- Evidence: docs/FMEA_REDUNDANCY.md:39 (table 'R10 applicability', column 'Current R10 disposition'). Board a0ec075e (pcbnew dump): PYRO1_CONT = {C127.1, R129.2, R130.1, R178.1, U1.15}, ARM1_SENSE = {C129.1, R133.1, R175.2, R180.1, U1.33}; R168 / R170 / R172 absent from the 216 footprints. The FMEA's own header (lines 3-8), REQUIREMENTS F8 and M3_R10:585 say R168 / R170 were removed by audit 2 and the nodes feed PC0 / PC5 directly. 'Cold pull-up' in the same row is true (R131 10k, PYRO1_OUT to PYRO1_COLD). Sweep: 'ADC series' / 'series protection' elsewhere only in labelled history (FMEA:80 R6-R9 row, R10_VALIDATION:2997 under 'Historical round10 deviations', R5 docs); no other current FMEA / M3_R10 / REQUIREMENTS / ORDERING / handoff / AGENTS statement presents R168 / R170 / R172, J124, ARM link, pull-pin, J123 or TP121 as fitted.
+- All places: docs/FMEA_REDUNDANCY.md:39
+- Fix: FMEA:39: replace 'and bus / continuity dividers with ADC series protection' with 'and the bus / continuity dividers (two 5.1 kOhm tops in series, two parallel 2 kOhm bottoms, 10 nF) read directly by PC0 / PC5: audit 2 removed the R168 / R170 ADC series resistors, so there is no double-fault pin-current limit (REQUIREMENTS F8)'. Text only.
+
+### R28-TRI-02 (R28-POWER-01): Minor, doc, board_change false
+
+**parts_qualification GAP-1 (labelled current) says parts_budget.json includes 12.370807 W; the budget holds 13.064091 W**
+
+- Evidence: parts_qualification.md:458. parts_budget.json:113 / :288 other_converter_load_W = 13.06409056783647. Recomputed: 5.546269 x 1.461 / 0.8 + 1.4 + 0.825 + 0.016933 = 12.3708 W (pre-AUX); with 1.561 A, 13.0641 W. The same paragraph (line 473) says 13.064 W. Sweep (git grep 12.3708 / 12.371): no other tracked current text; the remaining hits are round 11-17 review records.
+- All places: m3_design/assembly_review/sources/r10_design/parts_qualification.md:458
+- Fix: Replace '12.370807 W' with '13.064091 W (12.370807 W before D-R19-14's 100 mA AUX allowance)'. Text only.
+
+### R28-TRI-03 (R28-POWER-02): Minor, calc, board_change false
+
+**D-R27-01's loaded_pack uses 1.46 A + AUX although its comment and record say it matches ports_w (1.461 A + AUX); the 6 V four-stall figure 4.389 V is 4.388 V on the stated basis**
+
+- Evidence: m3_design/r10_parts.py:444-448: comment lists camera 1 A + radio .3 + GPS .15 + 11 mA + AUX 'as ports_w does'; code uses 5.456 * (1.46 + aux_A); ports_w (line 415) uses 1.461 + aux_A. Re-solved: 1.56 A -> 5.881014 / 4.388745 V (budget lines 91-92); 1.561 A -> 5.880831 / 4.388491 V. The 11 mA quiescent is a real buck-output load carried by every other port figure, so the code is the error. The quoted 4.389 V is not a correct rounding of the stated-basis 4.388491 V.
+- All places: m3_design/r10_parts.py:444-448; m3_design/assembly_review/sources/r10_design/parts_budget.json:91-92; m3_design/assembly_review/sources/r10_design/parts_qualification.md:662-666 (1.56 A / 1.46 A, 5.881 / 4.389 V, 5.881014 / 4.388745 V); m3_design/assembly_review/sources/r10_design/parts_qualification.md:475 (budget SHA ecc45417); STATUS.md:17; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:4543-4551 (D-R27-01: record, add a correcting decision); docs/R10_VALIDATION.md:2243 (R27-TRI-02 disposition quotes 5.881 / 4.389 V)
+- Fix: r10_parts.py loaded_pack: power = 5.456 * (1.461 + aux_A); regenerate parts_budget.json (5.880831 / 4.388491 V, new SHA); update parts_qualification 662-666 (1.561 A = 1.461 A + 0.1 A; 5.881 / 4.388 V), its budget-SHA sentence, STATUS:17 and add a D-R28 record (R10_VALIDATION row). Alternative: keep the code and reword the comment / D-R27-01 to 1.46 A without the 11 mA. No board change.
+
+### R28-TRI-04 (R28-POWER-03): Minor, doc, board_change false
+
+**parts_qualification says the current board has four C21397 22 uF on PORT_4V8; it has five (C445) plus a third 100 nF (C444)**
+
+- Evidence: parts_qualification.md:584-586 ('on the current board ... four on PORT_4V8 (C406, C407, C411, C421, plus C410 and C420 as local bypasses)'). Board: PORT_4V8 = {C406, C407, C410, C411, C420, C421, C444, C445, J410.1, J420.1, J440.1, R402.1, R405.1, U401.1, U401.2}; C445 22uF 25V X7R, C444 100 nF. Fab BOM C21397 row lists C445. Other counts in the sentence (C400 / C401, C403-C405, C431) are correct. Sweep: no other PORT_4V8 capacitor inventory in current docs.
+- All places: m3_design/assembly_review/sources/r10_design/parts_qualification.md:584-586
+- Fix: 'five on PORT_4V8 (C406, C407, C411, C421, C445, plus C410, C420 and C444 as local bypasses)'. Text only.
+
+### R28-TRI-05 (R28-MCU-01): Minor, doc, board_change false
+
+**First-article U3.3-to-R127.1 check 'must read open' fails an intact board in one polarity**
+
+- Evidence: Board: QSPI_IO2 = {U1.1, U3.3}; PYRO1_GATE_N = {U1.3, R126.1, R127.1}; R127 1k to GND, R126 220R + R128 10k to GND: R127.1 to GND 1k || 10.22k = 910.9 Ohm. With the meter's positive lead on R127.1 the VSS-side input clamps of U1.1 (PE2, FT_h, DS12110 Rev 8 Table 9 p64; Table 120 note 4 negative injection) and U3.3 conduct: diode drop + 0.91 kOhm, a finite ohms reading and about 1.0-1.5 V on diode test, never 'open'. Reversed: open or a slowly rising reading (3V3 capacitance). A bridge reads near 0 Ohm both ways. The source (round23_safety_severity_check.md:212-213) required 'no beep and > 100 Ohm'. Sweep of the other meter / continuity / resistance checks in ORDERING 8.3 (harness pin identity 605, J121.2 < 0.1 V 659, igniter resistance 661 (parallel board path >= about 11 kOhm + diode, negligible against 1-2 Ohm and a positive pass band), NRST ratio 666, R166 and harness resistance 669-670, J410.3 etc. voltages 649), M3_R10 and the binding note: no other check has an ignored parallel path or polarity that changes its verdict.
+- All places: docs/ORDERING.md:651; docs/M3_R10.md:1088-1089; docs/FMEA_REDUNDANCY.md:38; m3_design/r10_sch_check.py:366 (generates m3_design/assembly_review/sources/r10_design/r10_binding_note.json:610); tools/test_r10_check.py:407 (asserts the phrase; update with the text)
+- Fix: Replace 'it must read open' with: 'in resistance mode, both polarities: an intact board reads above 0.9 kOhm both ways (red lead on R127.1: a diode drop plus about 0.91 kOhm through the U1 / U3 input clamps; reversed: open or slowly rising); a continuity beep or under 100 Ohm in either polarity is a bridge: reject'. Regenerate the binding note; update the test string. Text / check only.
+
+### R28-TRI-06 (R28-MCU-02): Minor, doc, board_change false
+
+**parts_qualification calls PB1 a TT_a pin (DS12110: TT_u); R10_VALIDATION says the docs already say TT_u**
+
+- Evidence: DS12110 Rev 8 Table 9 p70 (cached PDF text): pin 35 PB1 I/O TT_u. parts_qualification.md:913-914 'PB1 is a TT_a pin with a 4.0 V limit'; R10_VALIDATION.md:1915 'CAD lane (binding note); docs already say TT_u' is therefore false. pin_table row 35 says TT_u. The 4.0 V limit is right (Table 119, all TT). Sweep of every Pxx / FT_x / TT_x pairing in current docs, decisions, binding note and generators against Table 9: no other mismatch (generic 'FT' in labelled R1 / R2 history only; R10_DECISIONS:3767 records the old correction).
+- All places: m3_design/assembly_review/sources/r10_design/parts_qualification.md:913-914; docs/R10_VALIDATION.md:1915
+- Fix: parts_qualification:914 'TT_a pin' -> 'TT_u pin (DS12110 Rev 8 Table 9 p70)'; R10_VALIDATION:1915 'docs already say TT_u' -> 'parts_qualification corrected in the round 28 fix pass'. Text only.
+
+### R28-TRI-07 (R28-REQUIREMENTS-01): Minor, calc, board_change false
+
+**REQUIREMENTS F4 gives flight 2's max-q hinge moment as 73-84 % of HV6120 stall; 73 % is the flight-1 K850DM case**
+
+- Evidence: Re-ran .supervisor/r23_requirements/hinge.py: K850 qmax hi M1.65 q 172 kPa 15 deg 73 %; L1000 nominal M1.82 q 212 kPa 77 %; L1000 hi M2.13 q 286 kPa 84 %. Over all 18 L1000W cases of flight1d_results.json (same linear theory, 15 deg, 8 x 26.5 mm tab, 5.4 kg.cm): 63.9-84.3 %. F4's sentence is about flight 2. Sweep: '73-84' appears nowhere else in tracked text.
+- All places: docs/REQUIREMENTS.md:58
+- Fix: F4: 'the derived max-q hinge moment at 15 deg is about 64-84 % of the HV6120 stall torque over flight 2's derived envelope (77-84 % nominal to high; supersonic linear theory, Inference)'. Text only.
+
+### R28-TRI-08 (R28-REQUIREMENTS-02): Minor, doc, board_change false
+
+**REQUIREMENTS line 36 asks to re-check 'the Temperature row's 525 s'; the Temperature row says about 1200 s since round 23**
+
+- Evidence: grep: '525' in REQUIREMENTS only at :36 and an unrelated R7 BOM row; the Temperature row (:93) states 'flight 2 lasts up to about 1200 s under a 36 in chute'. Sweep of REQUIREMENTS cross-references that quote a figure from another row or document (F6's 5.71 V in F4, DESIGN_ASSURANCE 92 / 367 g and 85 C, the Pack / Pad time worksheet links, ORDERING's citations of the Temperature row 0.4-1.1 W and the LR900-F 1 W): all still match; 'F5's window' and 'Q_flight' are open re-check items, not stale figures.
+- All places: docs/REQUIREMENTS.md:36
+- Fix: Drop 'and the Temperature row's 525 s' (re-checked in round 23: about 1200 s), or reword to 'the Temperature row's flight duration (now about 1200 s)'. Text only.
+
+### R28-TRI-09 (R28-SAFETY observation 4 (promoted)): Major, rule, board_change false
+
+**Firmware rule 3 states the QSPI_IO2 / PE4 fight figures (1.19-1.98 V on the gate, fires after about 0.55 ms, 6 mA RMS) as fact; they rest on inferred driver resistances (AGENTS section 2.5)**
+
+- Evidence: docs/M3_R10.md:1079-1083 and the binding note (r10_binding_note.json:610, generated by r10_sch_check.py:366) give the figures under 'Physics:' with no Inference label; ORDERING:651 labels them 'Calculation' only. Their source round23_safety_severity_check.md 'Coverage limits' lists as Inf model inputs the MCU and flash driver resistances under the fight, the W25Q drive, AON7524's extrapolated sub-amp transfer curve and the J-Tek thermal model. FMEA:38 ('Calculation / Simulation; driver resistances Inference') and R10_VALIDATION:2481 carry the label. AGENTS section 2.5: an unmeasured, not-datasheet-checked inference must be labelled, never written as fact; the review brief rates any AGENTS section 2 violation Major. The other twelve R23 rules in the binding note label their inferences (rules 4, 7, 10, 12). The safety lens judged it an observation (labelled at its source); the rule requires the label where it is stated.
+- All places: docs/M3_R10.md:1079-1083; m3_design/r10_sch_check.py:366 (generates m3_design/assembly_review/sources/r10_design/r10_binding_note.json:610); docs/ORDERING.md:651 (labelled Calculation only)
+- Fix: Add the FMEA's label in all three: after '... at least 50x below the 0.30 A no-fire' insert '(Calculation / Simulation; driver resistances, flash drive, the AON7524 sub-amp curve and the match thermal model are Inference)'; ORDERING 'Calculation' -> 'Calculation / Inference'. Regenerate the binding note. Text only; can share the edit with R28-TRI-05.
+
+## Root-flagged items
+
+- **R28-MCU-01:** reproduced (R28-TRI-05). Correct criterion: resistance mode, both polarities; intact reads above 0.9 kOhm both ways (red on R127.1: diode drop + about 0.91 kOhm; reversed open or slowly rising); a beep or under 100 Ohm either way is a bridge. Same procedure in ORDERING:651, M3_R10:1088-1089, FMEA:38, r10_sch_check.py:366 -> binding note:610 (and the test string in test_r10_check.py:407). No other meter check in ORDERING 8.3, M3_R10 or the binding note has the same flaw.
+- **R28-MCU-02:** reproduced (R28-TRI-06); the full pin-type sweep finds no other mismatch.
+- **R28-POWER-01 / -03:** reproduced (R28-TRI-02, -04). parts_qualification sweep: the ride-through table and OQ-5 paragraph (779-813) are pre-microSD / pre-AUX but covered by the header line 8 ("supersedes ... ride-through records"), observation; "Inference, upstream coordination" already R25 obs 9; the stall-input (662-666) and GAP-3 (675) paragraphs carry the AUX allowance; "Shared port fault budget" figures match the budget.
+- **R28-POWER-02:** reproduced (R28-TRI-03). The comment and record basis (1.461 A + AUX, as ports_w) is right; the code (1.46 A) omits the 11 mA quiescent: 5.880831 / 4.388491 V, not 5.881014 / 4.388745 V.
+- **R28-REQUIREMENTS-01 / -02:** reproduced (R28-TRI-07, -08); the REQUIREMENTS cross-reference sweep finds no other stale figure.
+- **Untracked probe artefacts:** observation; full list in the JSON and `.supervisor/r28_triage/untracked_citations.txt`. They are provenance, not inputs to any stated procedure.
+- **R28-SAFETY-01:** reproduced (R28-TRI-01); no other current FMEA / M3_R10 / REQUIREMENTS / ORDERING / handoff text presents removed hardware as fitted.
+- **Promoted:** R28-SAFETY observation 4 (R28-TRI-09, Major under the brief because it breaks AGENTS section 2.5): firmware rule 3 states inference-based fight figures as fact in M3_R10 and the binding note.
+
+## Observations (not counted)
+
+- **R28-POWER obs 1 (ride-through table and OQ-5 paragraph, parts_qualification 779-813):** Pre-microSD / pre-AUX values cited to parts_budget keys, but the file header (line 8) names 'ride-through records' among those the current amendment supersedes; same precedent as R25-POWER obs 9. Current figures are in REQUIREMENTS F6 / AGENTS / M3_R10 (0.464-0.539 ms etc.). Labelling the section historical would remove the ambiguity (optional).
+- **R28-POWER obs 2 (Q122 gate at most 0.218 V vs 0.2203 V with 1 % parts):** Stated with its explicit nominal formula (3.6 V x 2 / 33), settled in R19-DOC-05 and seen in round 26; 0.43 V below threshold either way.
+- **R28-POWER obs 3-12:** Sealed worksheet with stated inputs (owner row 17), non-K-power feed width, K-power coverage, U400/L400 1.2-2.2 W loss (labelled Inference; upper bound agrees with the 80-85 % budget), upstream-coordination text (R25 obs 9), and datasheet confirmations.
+- **R28-SAFETY obs 1-3, 5-12:** I-5 route lists not claimed complete (round 27 ruling); sub-micron method difference (0.5205 vs 0.5197 mm); per-flight diagnosis completeness (rounds 20/21); disclosed load-switch faults; confirmations of AGENTS section 2 networks, deviation figures, cold-screen arithmetic, D-R26-04 audit and S-8 barrels.
+- **R28-MCU obs 1-14:** Pin map, AF, pin type, footprint, binding hash, citation, copper and calculation confirmations; M3_R10:416 'U1.15 / U1.17 pitch 0.200 mm' uses 'pitch' for the 0.200 mm pad gap (figure right; 'pad gaps' would be cleaner); FMEA:359 VBUS_SENSE (PD15) is labelled R1 history.
+- **R28-ROUTING obs 1-16:** route_check, geometry, partner-via, reference-plane, detour, USB, contents, D402, adjacency, under-body and fill reproductions; LED_YEL 0.500 mm middle is on the boundary of the strict '< 0.5 mm' test, non-critical.
+- **R28-GATE obs 1-6:** D-R27-01 regression not pinned by a check is the R26-GATE obs 2 class (no rule binds a budget figure to a check); other seeds caught by the gate as a whole or contrived; RealBoardSeeds bind the D-R26-02 / -04 spacing.
+- **R28-PARTS obs 1-7:** Part-code, CPL offset, VRWM, regulator, dissipation, voltage-rating and test-pad confirmations.
+- **R28-MECHANICS obs 1-7:** Plate model and fit reproductions; C10 3.333144 mm and 1.24 mm / 256.1 Hz are under labelled historical headings; tail allocation already ruled (rounds 25/26).
+- **R28-MANUFACTURING obs 1-7:** Disclosed VIPPO drill grouping, KiCad job-file default, disclosed jlc_orient residual, Edge.Cuts holes, JLC legend minimum met, edge vias, BOM comment merging: no rule violated.
+- **R28-REQUIREMENTS obs 1-16:** Port, symbol, legend, divider, bank, width, outline, vehicle-derived, hold-up and fab confirmations; F1's 35 s re-computation is disclosed in F1; P3 boost range already ruled (round 27); flight 1 has one servo.
+- **R28-DOCS_BINDING obs 2 (tracked docs cite untracked probe artefacts):** Every citation of a file absent from git (sweep in .supervisor/r28_triage/untracked_citations.txt): R10_VALIDATION:2465 adjacency_a3144b15.json, R10_VALIDATION:2746 dump.py / detour.py, R10_DECISIONS:4495 adjdiff.py, R10_DECISIONS:2574 .supervisor/request.txt, and the .supervisor fix briefs (AVA_LAYOUT:368/395/396/432/457, R10_DECISIONS:3067/3230/3402/3593/3724, R10_VALIDATION:1895). All are provenance for measurements or decisions; .supervisor/ is excluded by design (AGENTS section 4 keeps intermediates out); each claim is reproducible from the board (the routing lens reproduced the detour table, the safety lens the adjacency rows) and no stated procedure requires running them. VEHICLE.md, 'AVA board layout images.md' and 'Compact rocket GPS and radio.md' exist in the parent repository. Not a false statement.
+- **R28-DOCS_BINDING obs 1, 3-6:** Session-context AGENTS copy was stale, the committed file is right; FMEA I-5 ring figures, coordinate convention and binding-note calculation consistent; test counts not re-run.
+
+## Not reproducible
+
+None.

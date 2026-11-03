@@ -1,0 +1,1962 @@
+{
+ "ok": false,
+ "rules": {
+  "LC-1": {
+   "title": "local clearance overrides",
+   "ok": false,
+   "issues": [
+    "LC-1: pad TP75.1 (CAM_RX_WIRE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad J124.2 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP76.1 (CAM_TX_WIRE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP30.1 (GNSS_SAFEBOOT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP84.1 (BAT_ENABLE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad J122.2 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad J122.5 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad J122.8 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad J122.11 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP121.1 (ACT_GATE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP91.1 (CAM_UART_OE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP86.1 (USB_FAULT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP81.1 (RAW_PROTECTED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP72.1 (CAM_5V) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP80.1 (BAT_IN) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP90.1 (CAM_IO_3V3) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP73.1 (CAM_ILIM) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP83.1 (VLOGIC) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP89.1 (BAT_ILIM) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP87.1 (LOGIC_SOURCE_ST) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP92.1 (VBUS_SENSE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP85.1 (BAT_FAULT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP82.1 (USB_LIMITED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP74.1 (GND) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP122.1 (PYRO1_GATE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP71.1 (CAM_INPUT_LIMITED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP70.1 (RAW_PROTECTED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP88.1 (GND) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+    "LC-1: pad TP120.1 (RAW_ACT) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)"
+   ],
+   "evidence": {
+    "overrides": [
+     "TP75.1 (CAM_RX_WIRE) 1",
+     "J124.2 (RAW_ACT) 0.3",
+     "TP76.1 (CAM_TX_WIRE) 1",
+     "TP30.1 (GNSS_SAFEBOOT_N) 1",
+     "TP84.1 (BAT_ENABLE) 1",
+     "J122.2 (RAW_ACT) 0.3",
+     "J122.5 (RAW_ACT) 0.3",
+     "J122.8 (RAW_ACT) 0.3",
+     "J122.11 (RAW_ACT) 0.3",
+     "TP121.1 (ACT_GATE) 1",
+     "TP91.1 (CAM_UART_OE) 1",
+     "TP86.1 (USB_FAULT_N) 1",
+     "TP81.1 (RAW_PROTECTED) 1",
+     "TP72.1 (CAM_5V) 1",
+     "TP80.1 (BAT_IN) 1",
+     "TP90.1 (CAM_IO_3V3) 1",
+     "TP73.1 (CAM_ILIM) 1",
+     "TP83.1 (VLOGIC) 1",
+     "TP89.1 (BAT_ILIM) 1",
+     "TP87.1 (LOGIC_SOURCE_ST) 1",
+     "TP92.1 (VBUS_SENSE) 1",
+     "TP85.1 (BAT_FAULT_N) 1",
+     "TP82.1 (USB_LIMITED) 1",
+     "TP74.1 (GND) 1",
+     "TP122.1 (PYRO1_GATE) 1",
+     "TP71.1 (CAM_INPUT_LIMITED) 1",
+     "TP70.1 (RAW_PROTECTED) 1",
+     "TP88.1 (GND) 1",
+     "TP120.1 (RAW_ACT) 1"
+    ],
+    "zone_clearances_floor_only": [
+     "GND_F 0.15",
+     "R8_RAW_ACT_F 0.3",
+     "R8_BAT_IN_F 0.3",
+     "R8_RAW_ACT_B_west 0.3",
+     "R8_ACT_FET_S_B 0.3",
+     "GND_B 0.15",
+     "R8_BAT_IN_B 0.3",
+     "R8_RAW_ACT_B_box 0.3",
+     "GND_In1 0.25",
+     "R8_RAW_ACT_In2_west 0.3",
+     "R8_3V3_In2 0.25",
+     "R8_BAT_IN_In2 0.3",
+     "R8_GND_In2 0.25",
+     "R8_RAW_ACT_In2_j122 0.3"
+    ]
+   }
+  },
+  "P-0": {
+   "title": "pyro spacing rules, geometric",
+   "ok": false,
+   "issues": [
+    "pyro rule G (gate nets (P-1b scope) to other live nets): via (18.75, 54.3) (PYRO1_GATE_N) to track (18.18, 53.1) (ARM1_SENSE) on B.Cu is 0.219 mm; minimum 0.3 mm",
+    "pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): Q124.5 (PYRO1_OUT) to R129.2 (PYRO1_CONT) on F.Cu is 1.025 mm; minimum 1.2 mm",
+    "pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): R134.2 (PYRO1_BUS) to R126.2 (PYRO1_GATE) on F.Cu is 1.027 mm; minimum 1.2 mm",
+    "pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): Q124.5 (PYRO1_OUT) to R130.1 (PYRO1_CONT) on F.Cu is 1.028 mm; minimum 1.2 mm",
+    "pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): R134.2 (PYRO1_BUS) to C129.1 (ARM1_SENSE) on F.Cu is 1.150 mm; minimum 1.2 mm",
+    "pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): R134.2 (PYRO1_BUS) to R180.1 (ARM1_SENSE) on F.Cu is 1.161 mm; minimum 1.2 mm"
+   ],
+   "evidence": {
+    "A": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.501,
+      "a": "zone R8_RAW_ACT_F (RAW_ACT)",
+      "b": "C127.1 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.001,
+     "violations": 0
+    },
+    "B": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.67,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "track (24.7, 91.85) (PYRO1_GATE)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.17,
+     "violations": 0
+    },
+    "C": {
+     "minimum": 0.3,
+     "closest": {
+      "mm": 0.377,
+      "a": "track (16.17, 96.07) (PYRO1_BUS)",
+      "b": "R132.2 (ARM1_SENSE_MID)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.077,
+     "violations": 0
+    },
+    "D": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.501,
+      "a": "zone GND_F (GND)",
+      "b": "J124.1 (PYRO1_BUS)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.001,
+     "violations": 0
+    },
+    "E": {
+     "minimum": 1.0,
+     "closest": {
+      "mm": 1.3,
+      "a": "zone R8_RAW_ACT_F (RAW_ACT)",
+      "b": "J124.1 (PYRO1_BUS)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.3,
+     "violations": 0
+    },
+    "F": {
+     "minimum": 0.5,
+     "closest": {
+      "mm": 0.7,
+      "a": "R134.2 (PYRO1_BUS)",
+      "b": "track (17.4, 98.45) (BAT_ENABLE)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.2,
+     "violations": 0
+    },
+    "G": {
+     "minimum": 0.3,
+     "closest": {
+      "mm": 0.219,
+      "a": "via (18.75, 54.3) (PYRO1_GATE_N)",
+      "b": "track (18.18, 53.1) (ARM1_SENSE)",
+      "layer": "B.Cu"
+     },
+     "margin": -0.081,
+     "violations": 1
+    },
+    "A2": {
+     "minimum": 0.3,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    },
+    "H": {
+     "minimum": 1.0,
+     "closest": {
+      "mm": 1.025,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.025,
+     "violations": 0
+    },
+    "H+": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.025,
+      "a": "Q124.5 (PYRO1_OUT)",
+      "b": "R129.2 (PYRO1_CONT)",
+      "layer": "F.Cu"
+     },
+     "margin": -0.175,
+     "violations": 5
+    },
+    "GS": {
+     "minimum": 1.2,
+     "closest": {
+      "mm": 1.262,
+      "a": "R126.2 (PYRO1_GATE)",
+      "b": "C129.1 (ARM1_SENSE)",
+      "layer": "F.Cu"
+     },
+     "margin": 0.062,
+     "violations": 0
+    },
+    "AG": {
+     "minimum": 1.2,
+     "closest": null,
+     "margin": null,
+     "violations": 0
+    }
+   }
+  },
+  "P-1": {
+   "title": "PYRO_BLOCK area by content (+ P-1b rule G scope)",
+   "ok": false,
+   "issues": [
+    "P-1: J124 courtyard + 1.0 mm reaches 5.613 mm2 outside PYRO_BLOCK",
+    "P-1: J121 courtyard + 1.0 mm reaches 5.613 mm2 outside PYRO_BLOCK",
+    "P-1: D120 courtyard + 1.0 mm reaches 17.749 mm2 outside PYRO_BLOCK",
+    "P-1: D120.1 (PYRO1_COLD, F.Cu) reaches 0.325 mm2 outside PYRO_BLOCK",
+    "P-1: track (29.72, 85.33) (PYRO1_COLD, F.Cu) reaches 0.017 mm2 outside PYRO_BLOCK",
+    "P-1b: rule G must cover gate copper outside U1's courtyard: its condition must carry (A.intersectsArea('PYRO_BLOCK') || !A.intersectsCourtyard('U1')) in place of A.intersectsArea('PYRO_BLOCK') (owner decision 2)"
+   ],
+   "evidence": {
+    "area_bbox": [
+     4.0,
+     84.0,
+     42.0,
+     114.4
+    ],
+    "rule_g_scope": false
+   }
+  },
+  "P-2": {
+   "title": "armed-live copper confined",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "items": 27
+   }
+  },
+  "P-3": {
+   "title": "block purity",
+   "ok": false,
+   "issues": [
+    "P-3: TP84.1 (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (13.48, 98.95) (ACT_GATE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (16.6, 104.5) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (16.6, 99.25) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (17.4, 98.45) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (20.3, 103.79) (RAW_PROTECTED) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (20.3, 99.75) (RAW_PROTECTED) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (33.6, 51.0) (BAT_FAULT_N) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: track (42.9, 93.5) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: via (11.3, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (11.3, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (11.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (11.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (12.7, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (12.7, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (12.7, 91.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (12.7, 91.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (13.48, 98.95) (ACT_GATE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: via (13.48, 98.95) (ACT_GATE) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (13.48, 98.95) (ACT_GATE) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (14.7, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (14.7, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (14.7, 91.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (14.7, 91.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (20.6, 82.8) (RAW_ACT) on B.Cu is 0.950 mm from CH1 copper track (19.25, 87.0) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+    "P-3: via (20.6, 82.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (20.6, 82.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (20.6, 84.2) (RAW_ACT) on B.Cu is 0.950 mm from CH1 copper track (19.25, 87.0) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+    "P-3: via (20.6, 84.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (20.6, 84.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (20.6, 85.6) (RAW_ACT) on B.Cu is 0.950 mm from CH1 copper track (19.25, 87.0) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+    "P-3: via (20.6, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (20.6, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (22.0, 82.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (22.0, 82.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (22.0, 84.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (22.0, 84.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (22.0, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (22.0, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (23.4, 82.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (23.4, 82.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (23.4, 84.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (23.4, 84.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (23.4, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (23.4, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (3.3, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (3.3, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (33.6, 81.2) (BAT_FAULT_N) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: via (33.6, 81.2) (BAT_FAULT_N) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (33.6, 81.2) (BAT_FAULT_N) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 92.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 92.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 94.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 94.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 95.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 95.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 97.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 97.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 98.4) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (4.099999, 98.4) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (40.42, 93.5) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+    "P-3: via (40.42, 93.5) (BAT_ENABLE) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (40.42, 93.5) (BAT_ENABLE) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.3, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.3, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 92.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 92.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 94.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 94.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 95.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 95.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 97.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 97.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 98.4) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (5.5, 98.4) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (7.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (7.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (7.3, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (7.3, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (9.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: via (9.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: zone R8_ACT_FET_S_B (ACT_FET_S) on B.Cu is 0.301 mm from CH1 copper via (14.55, 97.55) (ARM1_SENSE); minimum 1.0 mm inside the hull",
+    "P-3: zone R8_BAT_IN_B (BAT_IN) on B.Cu is 0.932 mm from CH1 copper via (14.55, 97.55) (ARM1_SENSE); minimum 1.0 mm inside the hull",
+    "P-3: zone R8_RAW_ACT_B_box (RAW_ACT) on B.Cu is 0.600 mm from CH1 copper track (27.39, 87.6) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+    "P-3: zone R8_RAW_ACT_B_west (RAW_ACT) on B.Cu is 0.650 mm from CH1 copper via (14.55, 94.15) (ARM1_SENSE); minimum 1.0 mm inside the hull",
+    "P-3: zone R8_RAW_ACT_In2_j122 (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+    "P-3: zone R8_RAW_ACT_In2_west (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)"
+   ],
+   "evidence": {
+    "hull_bbox": [
+     3.5,
+     80.36,
+     42.49,
+     100.11
+    ],
+    "hull_area_mm2": 627.3,
+    "foreign_nets": {
+     "F.Cu": [
+      "ACT_GATE",
+      "BAT_ENABLE",
+      "BAT_FAULT_N",
+      "RAW_PROTECTED"
+     ],
+     "In1.Cu": [
+      "ACT_GATE",
+      "BAT_ENABLE",
+      "BAT_FAULT_N",
+      "RAW_ACT"
+     ],
+     "In2.Cu": [
+      "ACT_GATE",
+      "BAT_ENABLE",
+      "BAT_FAULT_N",
+      "RAW_ACT"
+     ],
+     "B.Cu": [
+      "ACT_FET_S",
+      "BAT_IN",
+      "RAW_ACT"
+     ]
+    }
+   }
+  },
+  "P-4": {
+   "title": "rule H live",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "rules_after_h": [
+     "Small GND pad thermal relief",
+     "RAW_ACT pins to pours",
+     "Tag-Connect contact to foreign copper"
+    ],
+    "rule_h_sha16": "2826f2e9f5038349",
+    "seed_pairs": [
+     "Q124.5 -- R129.2",
+     "R134.2 -- R126.2",
+     "Q124.5 -- R130.1"
+    ]
+   }
+  },
+  "P-5": {
+   "title": "solder-bridge table",
+   "ok": false,
+   "issues": [
+    "bridge table (P-5): R168.1 (PYRO1_CONT) to C14.1 (3V3) (B) is 0.617 mm < 1.0 mm: 3V3 drives sense node PYRO1_CONT",
+    "bridge table (P-5): C128.2 (GND) to R134.1 (PYRO1_IGN) (F) is 0.621 mm < 1.0 mm: R134 across the armed bus (4.1 A, below the 5 A fuse)",
+    "bridge table (P-5): C11.1 (3V3A) to C122.1 (RAW_ACT_SENSE) (B) is 0.840 mm < 1.0 mm: 3V3A drives sense node RAW_ACT_SENSE",
+    "bridge table (P-5): C11.1 (3V3A) to R182.1 (RAW_ACT_SENSE) (B) is 0.957 mm < 1.0 mm: 3V3A drives sense node RAW_ACT_SENSE",
+    "bridge table (P-5): Q124.5 (PYRO1_OUT) to C128.2 (GND) (F) is 0.970 mm < 1.0 mm: FIRES when armed: drain to GND bypasses Q124",
+    "bridge table (P-5): Q124.5 (PYRO1_OUT) to R129.2 (PYRO1_CONT) (F) is 1.025 mm < 1.2 mm: live past the divider top: PYRO1_OUT on PYRO1_CONT (ADC overstress)",
+    "bridge table (P-5): R126.2 (PYRO1_GATE) to R134.2 (PYRO1_BUS) (F) is 1.027 mm < 1.2 mm: FIRES: PYRO1_BUS on the pyro gate (3.30 V in reset)",
+    "bridge table (P-5): R130.1 (PYRO1_CONT) to Q124.5 (PYRO1_OUT) (F) is 1.028 mm < 1.2 mm: live past the divider top: PYRO1_OUT on PYRO1_CONT (ADC overstress)",
+    "bridge table (P-5): R134.2 (PYRO1_BUS) to C129.1 (ARM1_SENSE) (F) is 1.150 mm < 1.2 mm: live past the divider top: PYRO1_BUS on ARM1_SENSE (ADC overstress)",
+    "bridge table (P-5): R180.1 (ARM1_SENSE) to R134.2 (PYRO1_BUS) (F) is 1.161 mm < 1.2 mm: live past the divider top: PYRO1_BUS on ARM1_SENSE (ADC overstress)"
+   ],
+   "evidence": {
+    "pairs": 144,
+    "forbidden": 10,
+    "under_1mm": [
+     "0.546 R125.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.546 R125.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.559 C122.1 (RAW_ACT_SENSE) -- R182.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.588 R125.2 (GND) -- R124.2 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.610 R130.1 (PYRO1_CONT) -- R178.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.617 R168.1 (PYRO1_CONT) -- C14.1 (3V3): 3V3 drives sense node PYRO1_CONT",
+     "0.621 C128.2 (GND) -- R134.1 (PYRO1_IGN): R134 across the armed bus (4.1 A, below the 5 A fuse)",
+     "0.634 C120.1 (ACT_FET_S) -- Q121.4 (ACT_GATE): ACT_GATE to ACT_FET_S: gate at source, switch held off",
+     "0.662 R126.1 (PYRO1_GATE_N) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.666 C15.2 (GND) -- R170.1 (ARM1_SENSE): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.676 R128.2 (GND) -- C126.1 (PYRO1_GATE): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.677 R129.1 (PYRO1_CONT_MID) -- R178.1 (PYRO1_CONT): PYRO1_CONT_MID to its own node: one 5.1 k half shorted (R4 pass 11)",
+     "0.677 R129.2 (PYRO1_CONT) -- R178.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.677 R133.1 (ARM1_SENSE) -- R180.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.677 R133.2 (GND) -- R180.1 (ARM1_SENSE): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.687 R130.2 (GND) -- C127.1 (PYRO1_CONT): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.710 R131.2 (PYRO1_COLD) -- R173.2 (PYRO1_CONT_MID): COLD to its own midpoint (R4 tolerated)",
+     "0.717 R168.2 (PYRO1_CONT_MCU) -- R63.2 (GND): PYRO1_CONT_MCU to GND: the ADC reads 0 (ground refusal)",
+     "0.769 R131.1 (PYRO1_OUT) -- R173.2 (PYRO1_CONT_MID): PYRO1_OUT to its own midpoint: one 5.1 k half shorted (R4 tolerated)",
+     "0.769 R131.2 (PYRO1_COLD) -- R173.1 (PYRO1_OUT): drain to its own COLD pad: R131 shorted (R4 tolerated)",
+     "0.794 R168.1 (PYRO1_CONT) -- C14.2 (GND): PYRO1_CONT to GND: reads no continuity / disarmed (ground refusal)",
+     "0.798 R128.1 (PYRO1_GATE) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.818 R128.2 (GND) -- Q124.4 (PYRO1_GATE): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.840 C11.1 (3V3A) -- C122.1 (RAW_ACT_SENSE): 3V3A drives sense node RAW_ACT_SENSE",
+     "0.854 R128.1 (PYRO1_GATE) -- Q124.3 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)",
+     "0.892 C122.2 (GND) -- R182.1 (RAW_ACT_SENSE): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.900 R175.2 (ARM1_SENSE) -- Q122.2 (GND): ARM1_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.910 R172.1 (RAW_ACT_SENSE) -- C15.2 (GND): RAW_ACT_SENSE to GND: reads no continuity / disarmed (ground refusal)",
+     "0.957 C11.1 (3V3A) -- R182.1 (RAW_ACT_SENSE): 3V3A drives sense node RAW_ACT_SENSE",
+     "0.970 Q124.5 (PYRO1_OUT) -- C128.2 (GND): FIRES when armed: drain to GND bypasses Q124",
+     "0.988 R126.1 (PYRO1_GATE_N) -- C126.1 (PYRO1_GATE): GATE to GATE_N: R126 shorted, the gate follows GATE_N (R127 holds it in reset)",
+     "0.988 R126.2 (PYRO1_GATE) -- C126.2 (GND): gate to GND: holds the FET off (R127 / R128 / C126 short)"
+    ]
+   }
+  },
+  "P-6": {
+   "title": "bare gate pads",
+   "ok": false,
+   "issues": [
+    "P-6: bare gate pad Q121.4 (ACT_GATE) is 0.634 mm from bare always-live pad C120.1 (ACT_FET_S) on B; minimum 1.0 mm"
+   ],
+   "evidence": {
+    "nearest": {
+     "Q121.4 (ACT_GATE)": [
+      0.634,
+      "C120.1 (ACT_FET_S)"
+     ],
+     "R126.2 (PYRO1_GATE)": [
+      1.027,
+      "R134.2 (PYRO1_BUS)"
+     ],
+     "C120.2 (ACT_GATE)": [
+      1.095,
+      "R120.1 (ACT_FET_S)"
+     ],
+     "R120.2 (ACT_GATE)": [
+      1.296,
+      "C120.1 (ACT_FET_S)"
+     ],
+     "C126.1 (PYRO1_GATE)": [
+      1.491,
+      "R134.1 (PYRO1_IGN)"
+     ],
+     "Q120.4 (ACT_GATE)": [
+      1.652,
+      "Q121.1 (ACT_FET_S)"
+     ],
+     "R128.1 (PYRO1_GATE)": [
+      1.737,
+      "R134.1 (PYRO1_IGN)"
+     ]
+    }
+   }
+  },
+  "P-7": {
+   "title": "gate guard (reset voltage)",
+   "ok": false,
+   "issues": [
+    "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.300 mm from PYRO1_CONT track (19.25, 58.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.300 mm from PYRO1_CONT track (19.25, 87.0) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.300 mm from PYRO1_CONT track (19.85, 87.6) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.370 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N track (19.3, 88.33) (B.Cu) is 0.370 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N via (18.75, 54.3) (B.Cu) is 0.219 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N via (18.75, 54.3) (B.Cu) is 0.449 mm from 3V3 zone R8_3V3_In2 (In2.Cu); a short puts 3.23 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N via (18.75, 54.3) (In2.Cu) is 0.219 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N via (18.75, 54.3) (In2.Cu) is 0.449 mm from 3V3 zone R8_3V3_In2 (In2.Cu); a short puts 3.23 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N via (23.0, 88.33) (B.Cu) is 0.329 mm from PYRO1_CONT track (27.39, 87.6) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+    "P-7: PYRO1_GATE_N via (23.0, 88.33) (In2.Cu) is 0.329 mm from PYRO1_CONT track (27.39, 87.6) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm"
+   ],
+   "evidence": {
+    "reset_voltage_table": [
+     {
+      "net": "ARM1_SENSE",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.219,
+      "gate": "via (18.75, 54.3)",
+      "other": "track (18.18, 53.1)",
+      "layers": [
+       "In2.Cu",
+       "B.Cu"
+      ],
+      "v_reset": 0.367
+     },
+     {
+      "net": "PYRO1_CONT",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.3,
+      "gate": "track (18.75, 87.78)",
+      "other": "track (19.25, 58.1)",
+      "layers": [
+       "B.Cu",
+       "B.Cu"
+      ],
+      "v_reset": 0.367
+     },
+     {
+      "net": "unconnected-(U1-PE5-Pad4)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.354,
+      "gate": "track (18.0, 53.55)",
+      "other": "U1.4",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "unconnected-(U1-PE3-Pad2)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.42,
+      "gate": "track (18.0, 53.55)",
+      "other": "U1.2",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "3V3",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.449,
+      "gate": "via (18.75, 54.3)",
+      "other": "zone R8_3V3_In2",
+      "layers": [
+       "In2.Cu",
+       "In2.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "ARM1_SENSE",
+      "gate_net": "PYRO1_GATE",
+      "mm": 0.499,
+      "gate": "via (20.45, 92.4)",
+      "other": "C129.1",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.408
+     },
+     {
+      "net": "unconnected-(U1-PE6-Pad5)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.705,
+      "gate": "track (18.0, 53.55)",
+      "other": "U1.5",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "QSPI_IO2",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.843,
+      "gate": "track (18.0, 53.55)",
+      "other": "U1.1",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "BUZZ_DRV",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 0.899,
+      "gate": "via (18.75, 54.3)",
+      "other": "track (20.0, 52.55)",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "RAW_ACT",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 1.001,
+      "gate": "track (18.75, 87.78)",
+      "other": "zone R8_RAW_ACT_B_box",
+      "layers": [
+       "B.Cu",
+       "B.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "PYRO1_BUS",
+      "gate_net": "PYRO1_GATE",
+      "mm": 1.027,
+      "gate": "R126.2",
+      "other": "R134.2",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.3
+     },
+     {
+      "net": "BUZZ_G",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 1.15,
+      "gate": "track (18.75, 87.78)",
+      "other": "Q123.1",
+      "layers": [
+       "B.Cu",
+       "B.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "PULLPIN",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 1.399,
+      "gate": "via (18.75, 54.3)",
+      "other": "track (20.5, 52.55)",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "PYRO1_IGN",
+      "gate_net": "PYRO1_GATE",
+      "mm": 1.491,
+      "gate": "C126.1",
+      "other": "R134.1",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.3
+     },
+     {
+      "net": "3V3A",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 1.75,
+      "gate": "track (18.75, 87.78)",
+      "other": "via (20.9, 62.2)",
+      "layers": [
+       "B.Cu",
+       "In2.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "NRST",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 1.999,
+      "gate": "via (18.75, 54.3)",
+      "other": "track (23.15, 51.95)",
+      "layers": [
+       "In2.Cu",
+       "B.Cu"
+      ],
+      "v_reset": 3.229
+     },
+     {
+      "net": "unconnected-(U1-PC15-Pad9)",
+      "gate_net": "PYRO1_GATE_N",
+      "mm": 2.104,
+      "gate": "via (18.75, 54.3)",
+      "other": "U1.9",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 0.0
+     },
+     {
+      "net": "PYRO1_OUT",
+      "gate_net": "PYRO1_GATE",
+      "mm": 2.15,
+      "gate": "Q124.4",
+      "other": "track (28.7, 93.85)",
+      "layers": [
+       "F.Cu",
+       "F.Cu"
+      ],
+      "v_reset": 3.3
+     }
+    ]
+   }
+  },
+  "P-8": {
+   "title": "sense resistors at the MCU end",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "PYRO1_CONT_MCU": 2.05,
+    "ARM1_SENSE_MCU": 2.55,
+    "RAW_ACT_SENSE_MCU": 2.578
+   }
+  },
+  "P-9": {
+   "title": "test pads and pyro vias",
+   "ok": false,
+   "issues": [
+    "P-9: PYRO1_GATE via at (20.45, 92.4) has no GND via within 1.5 mm (nearest 2.7168455973794297)"
+   ],
+   "evidence": {
+    "tp122_nearest_bottom": null,
+    "guarded_pads": [
+     "TP75.1: 1 mm",
+     "J124.2: 0.3 mm",
+     "J2.1: 0.508 mm",
+     "J2.2: 0.508 mm",
+     "J2.3: 0.508 mm",
+     "J2.4: 0.508 mm",
+     "J2.5: 0.508 mm",
+     "J2.6: 0.508 mm",
+     "TP76.1: 1 mm",
+     "TP30.1: 1 mm",
+     "TP84.1: 1 mm",
+     "J122.2: 0.3 mm",
+     "J122.5: 0.3 mm",
+     "J122.8: 0.3 mm",
+     "J122.11: 0.3 mm",
+     "TP121.1: 1 mm",
+     "TP91.1: 1 mm",
+     "TP86.1: 1 mm",
+     "TP81.1: 1 mm",
+     "TP72.1: 1 mm",
+     "TP80.1: 1 mm",
+     "TP90.1: 1 mm",
+     "TP73.1: 1 mm",
+     "TP83.1: 1 mm",
+     "TP89.1: 1 mm",
+     "TP87.1: 1 mm",
+     "TP92.1: 1 mm",
+     "TP85.1: 1 mm",
+     "TP82.1: 1 mm",
+     "TP74.1: 1 mm",
+     "TP122.1: 1 mm",
+     "TP71.1: 1 mm",
+     "TP70.1: 1 mm",
+     "TP88.1: 1 mm",
+     "TP120.1: 1 mm"
+    ],
+    "pyro_vias": [
+     [
+      "ARM1_SENSE",
+      [
+       18.18,
+       91.3
+      ],
+      1.348
+     ],
+     [
+      "ARM1_SENSE",
+      [
+       14.55,
+       97.55
+      ],
+      0.721
+     ],
+     [
+      "ARM1_SENSE",
+      [
+       14.55,
+       94.15
+      ],
+      0.721
+     ],
+     [
+      "PYRO1_GATE_N",
+      [
+       18.75,
+       54.3
+      ],
+      1.334
+     ],
+     [
+      "PYRO1_GATE_N",
+      [
+       23.0,
+       88.33
+      ],
+      1.309
+     ],
+     [
+      "PYRO1_GATE",
+      [
+       20.45,
+       92.4
+      ],
+      2.717
+     ],
+     [
+      "PYRO1_CONT",
+      [
+       28.4,
+       88.61
+      ],
+      1.408
+     ],
+     [
+      "PYRO1_CONT_MCU",
+      [
+       24.0,
+       53.7
+      ],
+      1.011
+     ],
+     [
+      "ARM1_SENSE_MCU",
+      [
+       29.3,
+       47.5
+      ],
+      0.707
+     ]
+    ]
+   }
+  },
+  "P-10": {
+   "title": "coat region",
+   "ok": false,
+   "issues": [
+    "P-10: test pad TP121 lies in the coat region (only TP122 may)"
+   ],
+   "evidence": {
+    "u4_mm": 7.074
+   }
+  },
+  "P-11": {
+   "title": "terminal entry",
+   "ok": false,
+   "issues": [
+    "P-11: J121 wires enter from +x; the owner set -x (pyro leads west, decision 1)"
+   ],
+   "evidence": {
+    "J121": {
+     "entry": "+x",
+     "wire_room_mm": 6.253
+    },
+    "J124": {
+     "entry": "-x",
+     "wire_room_mm": 6.253
+    }
+   }
+  },
+  "R-1": {
+   "title": "strip extent",
+   "ok": false,
+   "issues": [
+    "R-1: strip part C300 reaches y 23.29 (strip boundary y_f 22.0)",
+    "R-1: strip part C301 reaches y 22.34 (strip boundary y_f 22.0)",
+    "R-1: strip part FB30 reaches y 25.64 (strip boundary y_f 22.0)",
+    "R-1: strip part FB31 reaches y 22.64 (strip boundary y_f 22.0)",
+    "R-1: strip part R305 reaches y 23.23 (strip boundary y_f 22.0)",
+    "R-1: strip part R307 reaches y 23.36 (strip boundary y_f 22.0)"
+   ],
+   "evidence": {
+    "deepest_strip_courtyard": [
+     25.645,
+     "FB30"
+    ]
+   }
+  },
+  "R-2": {
+   "title": "strip layers",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "RADIO_TXEN_B": 22.719
+   }
+  },
+  "R-3": {
+   "title": "jacks",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "J30": {
+     "x": 12.85,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "J31": {
+     "x": 31.54,
+     "y": 0.0,
+     "rot": 0.0
+    },
+    "spacing_mm": 18.69
+   }
+  },
+  "R-4": {
+   "title": "launch congruent",
+   "ok": false,
+   "issues": [
+    "R-4: J30: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 0.502 mm)"
+   ],
+   "evidence": {
+    "J30": {
+     "cutouts": 1,
+     "in2_missing": 0,
+     "via_offsets": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.02,
+      0.0,
+      0.0,
+      0.502
+     ],
+     "pad_to_gnd_mm": 0.301
+    },
+    "J31": {
+     "cutouts": 1,
+     "in2_missing": 0,
+     "via_offsets": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.02,
+      0.02,
+      0.0,
+      0.0
+     ],
+     "pad_to_gnd_mm": 0.301
+    }
+   }
+  },
+  "R-5": {
+   "title": "GCPW cross-section",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "window_samples": {
+     "GNSS C303": 8,
+     "GNSS R304": 43,
+     "GNSS launch": 49,
+     "GNSS D30": 2,
+     "GNSS L30": 15,
+     "GNSS module": 24,
+     "GNSS C305": 12,
+     "RADIO C313": 11,
+     "RADIO R316": 34,
+     "RADIO launch": 49,
+     "RADIO module": 28,
+     "RADIO C314": 8
+    },
+    "line_pad_lengths": {
+     "GNSS R304.1": 0.553,
+     "GNSS R304.2": 0.553,
+     "GNSS D30.1": 0.6,
+     "GNSS L30.2": 0.55,
+     "RADIO D31.1": 0.6,
+     "RADIO R316.1": 0.553,
+     "RADIO R316.2": 0.553
+    },
+    "gap_range_mm": [
+     0.26,
+     1.26
+    ],
+    "line_gap_range_mm": [
+     0.26,
+     0.31
+    ]
+   }
+  },
+  "R-6": {
+   "title": "RF line length",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "GNSS": {
+     "length_mm": 5.755,
+     "bends": 2
+    },
+    "RADIO": {
+     "length_mm": 4.75,
+     "bends": 2
+    }
+   }
+  },
+  "R-7": {
+   "title": "RF stitching and fence",
+   "ok": false,
+   "issues": [
+    "R-7: GNSS right: GND stitching gap 2.73 mm beside the RF line (maximum 2.5 mm, no named ceilings)",
+    "R-7: fence: GND vias 6.01 mm apart between x 0.00 and 6.01 with no lane through the gap (maximum 2.0 mm)",
+    "R-7: fence: opening x 6.01-46.00 is 39.99 mm wide (maximum 2.7 mm)"
+   ],
+   "evidence": {
+    "GNSS_left_largest_gap_mm": 2.34,
+    "GNSS_right_largest_gap_mm": 2.725,
+    "RADIO_left_largest_gap_mm": 1.7,
+    "RADIO_right_largest_gap_mm": 2.405,
+    "fence": {
+     "fence_vias": 1,
+     "row_y": 21.7,
+     "openings": [
+      {
+       "x0": 0.0,
+       "x1": 6.01,
+       "width": 6.01,
+       "lanes": []
+      },
+      {
+       "x0": 6.01,
+       "x1": 46.0,
+       "width": 39.99,
+       "lanes": [
+        "3V3_GNSS",
+        "GNSS_RESET_N",
+        "GNSS_RXD",
+        "GNSS_TIMEPULSE",
+        "GNSS_TXD",
+        "RADIO_BUSY",
+        "RADIO_DIO1",
+        "RADIO_MISO_MCU",
+        "RADIO_MOSI",
+        "RADIO_NRST",
+        "RADIO_NSS",
+        "RADIO_RXEN",
+        "RADIO_SCK"
+       ]
+      }
+     ]
+    },
+    "gnd_reach_F.Cu": 3.04,
+    "gnd_reach_B.Cu": 3.49,
+    "rf_ground_via_mm": {
+     "D30.2": 0.16,
+     "D31.2": 0.16,
+     "C303.2": 0.16,
+     "C305.2": 0.16,
+     "C313.2": 0.16,
+     "C314.2": 0.16
+    },
+    "strip_gnd_coverage": {
+     "F.Cu": 0.786,
+     "In1.Cu": 0.951,
+     "In2.Cu": 0.967,
+     "B.Cu": 0.925
+    }
+   }
+  },
+  "R-8": {
+   "title": "module keep-outs",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "U30 F.Cu": {
+     "required": [
+      5.36,
+      11.25,
+      15.46,
+      18.65
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U30 In1.Cu": {
+     "required": [
+      5.36,
+      11.25,
+      15.46,
+      18.65
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 F.Cu": {
+     "required": [
+      25.81,
+      9.95,
+      33.91,
+      18.05
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 In1.Cu": {
+     "required": [
+      25.81,
+      9.95,
+      33.91,
+      18.05
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 In2.Cu": {
+     "required": [
+      24.86,
+      9.0,
+      34.86,
+      19.0
+     ],
+     "uncovered_mm2": 0.0
+    },
+    "U31 B.Cu": {
+     "required": [
+      24.86,
+      9.0,
+      34.86,
+      19.0
+     ],
+     "uncovered_mm2": 0.0
+    }
+   }
+  },
+  "R-9": {
+   "title": "chain topology",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "GNSS_esd_from_jack_pad_mm": 0.795,
+    "GNSS_bias_cap_mm": 0.925,
+    "GNSS_C303_stub_mm": 0.94,
+    "GNSS_C305_stub_mm": 0.94,
+    "RADIO_esd_from_jack_pad_mm": 0.795,
+    "RADIO_C313_stub_mm": 0.94,
+    "RADIO_C314_stub_mm": 0.94
+   }
+  },
+  "R-10": {
+   "title": "RF separation",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "nearest_part": [
+     5.94,
+     "R306",
+     "U1"
+    ],
+    "nearest_line": [
+     5.075,
+     "R306",
+     "USB_DM"
+    ]
+   }
+  },
+  "R-11": {
+   "title": "coexistence geometry",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "radio_to_u30_body": {
+     "RADIO_BUSY": [
+      5.94,
+      "track (21.5, 11.46)"
+     ],
+     "RADIO_DIO1": [
+      16.49,
+      "U31.20"
+     ],
+     "RADIO_MISO": [
+      7.687,
+      "R314.1"
+     ],
+     "RADIO_MISO_MCU": [
+      6.44,
+      "track (22.0, 12.73)"
+     ],
+     "RADIO_MOSI": [
+      7.04,
+      "track (22.6, 29.07)"
+     ],
+     "RADIO_MOSI_MCU": [
+      12.007,
+      "R315.1"
+     ],
+     "RADIO_NRST": [
+      18.6,
+      "U31.3"
+     ],
+     "RADIO_NSS": [
+      7.64,
+      "track (23.2, 15.67)"
+     ],
+     "RADIO_RXEN": [
+      5.44,
+      "track (21.0, 22.0)"
+     ],
+     "RADIO_SCK": [
+      8.7,
+      "U31.15"
+     ],
+     "RADIO_SCK_MCU": [
+      13.593,
+      "R313.1"
+     ],
+     "RADIO_TXEN": [
+      8.965,
+      "track (24.5, 8.1)"
+     ]
+    },
+    "module_courtyards_mm": 7.66,
+    "rf_to_rf_mm": 15.45
+   }
+  },
+  "R-12": {
+   "title": "RF supply",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "C311_to_U31": 1.97,
+    "C312_to_U31": 2.191,
+    "C310_to_U31": 3.639,
+    "C301_to_U30": 2.184,
+    "C300_to_U30": 3.021,
+    "gnss_vcc_ohm": {
+     "total": 0.0847,
+     "fb30": 0.05,
+     "tracks": 0.0147,
+     "vias": 0,
+     "feed_3v3_allowance": 0.02
+    }
+   }
+  },
+  "R-13": {
+   "title": "radio to pyro",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "nearest": [
+     65.98,
+     "U31",
+     "R131.1 (PYRO1_OUT)"
+    ],
+    "nearest_other_pyro_copper": [
+     27.37,
+     "U31",
+     "R170.2 (ARM1_SENSE_MCU)"
+    ]
+   }
+  },
+  "M-2": {
+   "title": "vibration (plate model)",
+   "ok": false,
+   "issues": [
+    "M-2: first plate mode 208.7 Hz (jacks only, pinned, D 5); minimum 209.0 Hz"
+   ],
+   "evidence": {
+    "f1_hz": 208.7,
+    "supports": [
+     [
+      4.0,
+      4.0
+     ],
+     [
+      4.0,
+      64.0
+     ],
+     [
+      4.0,
+      114.4
+     ],
+     [
+      42.0,
+      114.4
+     ],
+     [
+      42.3,
+      4.0
+     ]
+    ]
+   }
+  },
+  "M-3": {
+   "title": "J122 tie holes",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "columns": [
+     -3.81,
+     -1.27,
+     1.27,
+     3.81
+    ],
+    "half_plug": 3.81,
+    "courtyard_u": [
+     -5.075,
+     5.075
+    ],
+    "holes": [
+     [
+      27.0,
+      82.599999
+     ],
+     [
+      21.5,
+      68.6
+     ]
+    ],
+    "line_v_at_plugs": [
+     2.786,
+     1.788,
+     0.79,
+     -0.207
+    ],
+    "channel_nearest": [
+     2.264,
+     "R150"
+    ]
+   }
+  },
+  "M-4": {
+   "title": "J1",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "J1_to_J121": 21.46,
+    "J1_to_J124": 21.46,
+    "entry": "+y"
+   }
+  },
+  "M-5": {
+   "title": "fit",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "J9 mated": 0.028,
+    "J3": 0.886,
+    "J121": 1.153,
+    "J124": 1.153,
+    "C84": 1.367,
+    "J122 mated": 0.715,
+    "worst_bottom": 2.3566439942940143,
+    "support_bottom": 4.452427315521276,
+    "support_top": 5.008493
+   }
+  },
+  "M-6": {
+   "title": "bottom keep-outs",
+   "ok": false,
+   "issues": [
+    "M-6: bottom part C15 is 0.83 mm from the pyro via (29.3, 47.5) (minimum 1.0)",
+    "M-6: bottom part R168 is 0.23 mm from the pyro via (24.0, 53.7) (minimum 1.0)",
+    "M-6: bottom part R170 is 0.64 mm from the pyro via (29.3, 47.5) (minimum 1.0)",
+    "M-6: bottom part R172 is 0.69 mm from the pyro via (29.3, 47.5) (minimum 1.0)"
+   ],
+   "evidence": {
+    "pyro_vias": 9
+   }
+  },
+  "M-7": {
+   "title": "IMU and MEMS",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "imu_lever_arm_mm": 13.0,
+    "U4": {
+     "body": [
+      8.355,
+      52.405,
+      11.645,
+      55.195
+     ],
+     "interior": [
+      9.078,
+      53.127,
+      10.922,
+      54.472
+     ]
+    },
+    "U5": {
+     "body": [
+      8.055,
+      58.105,
+      13.145,
+      62.295
+     ],
+     "interior": [
+      9.02,
+      59.65,
+      12.18,
+      60.75
+     ]
+    }
+   }
+  },
+  "F9-1": {
+   "title": "input protection at J1",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "D8": 6.57,
+    "C80": 8.41,
+    "C96": 10.6,
+    "C89": 9.47,
+    "C95": 7.93,
+    "R166": 8.87,
+    "R167": 3.86,
+    "U9": 27.07
+   }
+  },
+  "T-1": {
+   "title": "panel-tab windows",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "windows": {
+     "west": [
+      [
+       0.5,
+       6.0
+      ],
+      [
+       48.5,
+       77.25
+      ],
+      [
+       86.25,
+       117.5
+      ]
+     ],
+     "east": [
+      [
+       0.5,
+       23.0
+      ],
+      [
+       104.25,
+       117.5
+      ]
+     ]
+    },
+    "length": 118.0,
+    "in2_under": {
+     "west 0.5-6.0": [
+      "GND"
+     ],
+     "west 48.5-77.25": [
+      "3V3"
+     ],
+     "west 86.25-117.5": [
+      "RAW_ACT"
+     ],
+     "east 0.5-23.0": [
+      "GND"
+     ],
+     "east 104.25-117.5": [
+      "GND"
+     ]
+    }
+   }
+  },
+  "K-contract": {
+   "title": "contract (pin map, connectors, series, outline)",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "outline_mm": [
+     0.0,
+     0.0,
+     46.0,
+     118.0
+    ],
+    "c29_vcc_pad_distance_mm": 1.870000000000001,
+    "c29_direct_route_mm": 1.870000000000001,
+    "camera_bypass": {
+     "C100": {
+      "supply_pin": "U12.3",
+      "pad_distance_mm": 1.211981848048892,
+      "direct_copper_route_mm": 1.2000000000000028,
+      "direct_ground_return_mm": 1.2000000000000028
+     },
+     "C93": {
+      "supply_pin": "U12.7",
+      "pad_distance_mm": 1.6001953005805243,
+      "direct_copper_route_mm": 3.7749999999999972
+     }
+    },
+    "loader_pins": {
+     "PA2": "SERVO3_MCU (D5)",
+     "PA6": "NC",
+     "PA8": "NC",
+     "PA9": "NC",
+     "PA11": "USB_DM (D5)",
+     "PA12": "USB_DP (D5)",
+     "PB6": "QSPI_NCS (D5)",
+     "PB9": "I2C1_SDA (D5)",
+     "PB10": "RADIO_SCK_MCU (D5)",
+     "PB14": "RADIO_MOSI_MCU (D5)",
+     "PC9": "NC",
+     "PC11": "NC",
+     "PE13": "NC"
+    }
+   }
+  },
+  "K-legends": {
+   "title": "legends and ids",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "terminal_legends": {
+     "4:SW (15.34, 116.899999)": [
+      "J1.4",
+      5.65,
+      "J1.3",
+      6.51
+     ],
+     "3:SW (20.47, 116.8)": [
+      "J1.3",
+      5.55,
+      "J1.2",
+      6.4
+     ],
+     "2:GND (25.55, 116.8)": [
+      "J1.2",
+      5.55,
+      "J1.1",
+      6.18
+     ],
+     "1:BAT+ (30.63, 104.2)": [
+      "J1.1",
+      5.35,
+      "J1.2",
+      5.83
+     ],
+     "2:RAW (6.2, 82.98)": [
+      "J124.2",
+      6.21,
+      "J123.1",
+      6.69
+     ],
+     "1:BUS1 (10.2, 101.07)": [
+      "J124.1",
+      2.39,
+      "J124.2",
+      7.47
+     ],
+     "1:E1- (36.4, 85.98)": [
+      "J121.1",
+      2.41,
+      "J121.2",
+      7.49
+     ],
+     "2:E1+ (38.5, 101.77)": [
+      "J121.2",
+      3.89,
+      "J121.1",
+      8.76
+     ],
+     "1:PULL (9.1, 77.2)": [
+      "J123.1",
+      1.25,
+      "J123.2",
+      3.25
+     ],
+     "2:GND (14.7, 76.1)": [
+      "J123.2",
+      0.65,
+      "J123.1",
+      2.65
+     ]
+    }
+   }
+  },
+  "K-copper": {
+   "title": "copper hygiene (vias in pads, joints, thermals, paste)",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "smd_pads_checked_for_via_holes": 699,
+    "track_endpoints_checked": 1588,
+    "small_ground_pads": 86,
+    "via_paste": {
+     "pairs_checked": 709,
+     "nearest_ring_mm": [
+      0.025,
+      "via (34.8, 53.68) (3V3) and C90.1's paste (B)"
+     ]
+    }
+   }
+  },
+  "K-power-pyro": {
+   "title": "D18 / D85 / D19 (strengthened)",
+   "ok": false,
+   "issues": [
+    "battery-live copper near the ARM side: ACT_FET_S zone R8_ACT_FET_S_B is 1.089 mm from PYRO1_BUS J124.1 on B.Cu; minimum 2.5 mm (D85, rule E's margin)"
+   ],
+   "evidence": {
+    "inner_power_pyro": {
+     "nearest": [
+      2.65,
+      "BAT_IN zone R8_BAT_IN_In2 In2.Cu",
+      "R134.1 (PYRO1_IGN, F.Cu)"
+     ],
+     "items": 175,
+     "within_5mm": 43
+    },
+    "battery_pyro": {
+     "nearest": [
+      1.089,
+      "ACT_FET_S zone R8_ACT_FET_S_B to PYRO1_BUS J124.1 (B.Cu)"
+     ]
+    },
+    "gate_servo": {
+     "nearest": null,
+     "under_limit": 0,
+     "layer_pairs": [
+      [
+       "B.Cu",
+       "B.Cu"
+      ],
+      [
+       "B.Cu",
+       "In2.Cu"
+      ],
+      [
+       "F.Cu",
+       "F.Cu"
+      ],
+      [
+       "F.Cu",
+       "In1.Cu"
+      ],
+      [
+       "In1.Cu",
+       "F.Cu"
+      ],
+      [
+       "In1.Cu",
+       "In1.Cu"
+      ],
+      [
+       "In2.Cu",
+       "B.Cu"
+      ],
+      [
+       "In2.Cu",
+       "In2.Cu"
+      ]
+     ]
+    }
+   }
+  },
+  "K-inner": {
+   "title": "D20 In1 / In2 signal tracks",
+   "ok": false,
+   "issues": [
+    "In2 track of ARM1_SENSE at (14.55, 94.15): In1 carries no track (S16) and In2 power and GND only (S15, D20; no exemption in R9)"
+   ],
+   "evidence": {
+    "In2_signal": 3.4
+   }
+  },
+  "K-actuators": {
+   "title": "check_actuators.py pinned",
+   "ok": true,
+   "issues": [],
+   "evidence": {
+    "sha256": "6fa58a419cc7b6405eb66800b1d0212f38bcdd3df1e8b75f11a2f4f32023ac3c"
+   }
+  }
+ },
+ "issues": [
+  "LC-1: pad TP75.1 (CAM_RX_WIRE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad J124.2 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP76.1 (CAM_TX_WIRE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP30.1 (GNSS_SAFEBOOT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP84.1 (BAT_ENABLE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad J122.2 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad J122.5 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad J122.8 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad J122.11 (RAW_ACT) carries a local clearance override of 0.3 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP121.1 (ACT_GATE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP91.1 (CAM_UART_OE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP86.1 (USB_FAULT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP81.1 (RAW_PROTECTED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP72.1 (CAM_5V) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP80.1 (BAT_IN) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP90.1 (CAM_IO_3V3) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP73.1 (CAM_ILIM) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP83.1 (VLOGIC) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP89.1 (BAT_ILIM) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP87.1 (LOGIC_SOURCE_ST) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP92.1 (VBUS_SENSE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP85.1 (BAT_FAULT_N) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP82.1 (USB_LIMITED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP74.1 (GND) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP122.1 (PYRO1_GATE) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP71.1 (CAM_INPUT_LIMITED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP70.1 (RAW_PROTECTED) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP88.1 (GND) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "LC-1: pad TP120.1 (RAW_ACT) carries a local clearance override of 1 mm (it replaces the DRU rules, pyro rules included, for every pair it is in)",
+  "P-0: pyro rule G (gate nets (P-1b scope) to other live nets): via (18.75, 54.3) (PYRO1_GATE_N) to track (18.18, 53.1) (ARM1_SENSE) on B.Cu is 0.219 mm; minimum 0.3 mm",
+  "P-0: pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): Q124.5 (PYRO1_OUT) to R129.2 (PYRO1_CONT) on F.Cu is 1.025 mm; minimum 1.2 mm",
+  "P-0: pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): R134.2 (PYRO1_BUS) to R126.2 (PYRO1_GATE) on F.Cu is 1.027 mm; minimum 1.2 mm",
+  "P-0: pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): Q124.5 (PYRO1_OUT) to R130.1 (PYRO1_CONT) on F.Cu is 1.028 mm; minimum 1.2 mm",
+  "P-0: pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): R134.2 (PYRO1_BUS) to C129.1 (ARM1_SENSE) on F.Cu is 1.150 mm; minimum 1.2 mm",
+  "P-0: pyro rule H+ (rule H pairs, strict (H + 0.2 mm)): R134.2 (PYRO1_BUS) to R180.1 (ARM1_SENSE) on F.Cu is 1.161 mm; minimum 1.2 mm",
+  "P-1: J124 courtyard + 1.0 mm reaches 5.613 mm2 outside PYRO_BLOCK",
+  "P-1: J121 courtyard + 1.0 mm reaches 5.613 mm2 outside PYRO_BLOCK",
+  "P-1: D120 courtyard + 1.0 mm reaches 17.749 mm2 outside PYRO_BLOCK",
+  "P-1: D120.1 (PYRO1_COLD, F.Cu) reaches 0.325 mm2 outside PYRO_BLOCK",
+  "P-1: track (29.72, 85.33) (PYRO1_COLD, F.Cu) reaches 0.017 mm2 outside PYRO_BLOCK",
+  "P-1b: rule G must cover gate copper outside U1's courtyard: its condition must carry (A.intersectsArea('PYRO_BLOCK') || !A.intersectsCourtyard('U1')) in place of A.intersectsArea('PYRO_BLOCK') (owner decision 2)",
+  "P-3: TP84.1 (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (13.48, 98.95) (ACT_GATE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (16.6, 104.5) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (16.6, 99.25) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (17.4, 98.45) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (20.3, 103.79) (RAW_PROTECTED) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (20.3, 99.75) (RAW_PROTECTED) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (33.6, 51.0) (BAT_FAULT_N) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: track (42.9, 93.5) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: via (11.3, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (11.3, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (11.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (11.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (12.7, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (12.7, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (12.7, 91.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (12.7, 91.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (13.48, 98.95) (ACT_GATE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: via (13.48, 98.95) (ACT_GATE) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (13.48, 98.95) (ACT_GATE) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (14.7, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (14.7, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (14.7, 91.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (14.7, 91.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (20.6, 82.8) (RAW_ACT) on B.Cu is 0.950 mm from CH1 copper track (19.25, 87.0) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+  "P-3: via (20.6, 82.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (20.6, 82.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (20.6, 84.2) (RAW_ACT) on B.Cu is 0.950 mm from CH1 copper track (19.25, 87.0) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+  "P-3: via (20.6, 84.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (20.6, 84.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (20.6, 85.6) (RAW_ACT) on B.Cu is 0.950 mm from CH1 copper track (19.25, 87.0) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+  "P-3: via (20.6, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (20.6, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (22.0, 82.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (22.0, 82.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (22.0, 84.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (22.0, 84.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (22.0, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (22.0, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (23.4, 82.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (23.4, 82.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (23.4, 84.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (23.4, 84.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (23.4, 85.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (23.4, 85.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (3.3, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (3.3, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (33.6, 81.2) (BAT_FAULT_N) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: via (33.6, 81.2) (BAT_FAULT_N) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (33.6, 81.2) (BAT_FAULT_N) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 92.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 92.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 94.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 94.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 95.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 95.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 97.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 97.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 98.4) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (4.099999, 98.4) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (40.42, 93.5) (BAT_ENABLE) on F.Cu inside the CH1 hull + 1.0 mm",
+  "P-3: via (40.42, 93.5) (BAT_ENABLE) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (40.42, 93.5) (BAT_ENABLE) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.3, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.3, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 92.8) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 92.8) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 94.2) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 94.2) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 95.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 95.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 97.0) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 97.0) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 98.4) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (5.5, 98.4) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (7.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (7.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (7.3, 89.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (7.3, 89.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (9.3, 87.6) (RAW_ACT) on In1.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: via (9.3, 87.6) (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: zone R8_ACT_FET_S_B (ACT_FET_S) on B.Cu is 0.301 mm from CH1 copper via (14.55, 97.55) (ARM1_SENSE); minimum 1.0 mm inside the hull",
+  "P-3: zone R8_BAT_IN_B (BAT_IN) on B.Cu is 0.932 mm from CH1 copper via (14.55, 97.55) (ARM1_SENSE); minimum 1.0 mm inside the hull",
+  "P-3: zone R8_RAW_ACT_B_box (RAW_ACT) on B.Cu is 0.600 mm from CH1 copper track (27.39, 87.6) (PYRO1_CONT); minimum 1.0 mm inside the hull",
+  "P-3: zone R8_RAW_ACT_B_west (RAW_ACT) on B.Cu is 0.650 mm from CH1 copper via (14.55, 94.15) (ARM1_SENSE); minimum 1.0 mm inside the hull",
+  "P-3: zone R8_RAW_ACT_In2_j122 (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-3: zone R8_RAW_ACT_In2_west (RAW_ACT) on In2.Cu inside the CH1 hull (In1 / In2 GND only)",
+  "P-5: bridge table (P-5): R168.1 (PYRO1_CONT) to C14.1 (3V3) (B) is 0.617 mm < 1.0 mm: 3V3 drives sense node PYRO1_CONT",
+  "P-5: bridge table (P-5): C128.2 (GND) to R134.1 (PYRO1_IGN) (F) is 0.621 mm < 1.0 mm: R134 across the armed bus (4.1 A, below the 5 A fuse)",
+  "P-5: bridge table (P-5): C11.1 (3V3A) to C122.1 (RAW_ACT_SENSE) (B) is 0.840 mm < 1.0 mm: 3V3A drives sense node RAW_ACT_SENSE",
+  "P-5: bridge table (P-5): C11.1 (3V3A) to R182.1 (RAW_ACT_SENSE) (B) is 0.957 mm < 1.0 mm: 3V3A drives sense node RAW_ACT_SENSE",
+  "P-5: bridge table (P-5): Q124.5 (PYRO1_OUT) to C128.2 (GND) (F) is 0.970 mm < 1.0 mm: FIRES when armed: drain to GND bypasses Q124",
+  "P-5: bridge table (P-5): Q124.5 (PYRO1_OUT) to R129.2 (PYRO1_CONT) (F) is 1.025 mm < 1.2 mm: live past the divider top: PYRO1_OUT on PYRO1_CONT (ADC overstress)",
+  "P-5: bridge table (P-5): R126.2 (PYRO1_GATE) to R134.2 (PYRO1_BUS) (F) is 1.027 mm < 1.2 mm: FIRES: PYRO1_BUS on the pyro gate (3.30 V in reset)",
+  "P-5: bridge table (P-5): R130.1 (PYRO1_CONT) to Q124.5 (PYRO1_OUT) (F) is 1.028 mm < 1.2 mm: live past the divider top: PYRO1_OUT on PYRO1_CONT (ADC overstress)",
+  "P-5: bridge table (P-5): R134.2 (PYRO1_BUS) to C129.1 (ARM1_SENSE) (F) is 1.150 mm < 1.2 mm: live past the divider top: PYRO1_BUS on ARM1_SENSE (ADC overstress)",
+  "P-5: bridge table (P-5): R180.1 (ARM1_SENSE) to R134.2 (PYRO1_BUS) (F) is 1.161 mm < 1.2 mm: live past the divider top: PYRO1_BUS on ARM1_SENSE (ADC overstress)",
+  "P-6: bare gate pad Q121.4 (ACT_GATE) is 0.634 mm from bare always-live pad C120.1 (ACT_FET_S) on B; minimum 1.0 mm",
+  "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.300 mm from PYRO1_CONT track (19.25, 58.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.300 mm from PYRO1_CONT track (19.25, 87.0) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.300 mm from PYRO1_CONT track (19.85, 87.6) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N track (18.75, 87.78) (B.Cu) is 0.370 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N track (19.3, 88.33) (B.Cu) is 0.370 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N via (18.75, 54.3) (B.Cu) is 0.219 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N via (18.75, 54.3) (B.Cu) is 0.449 mm from 3V3 zone R8_3V3_In2 (In2.Cu); a short puts 3.23 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N via (18.75, 54.3) (In2.Cu) is 0.219 mm from ARM1_SENSE track (18.18, 53.1) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N via (18.75, 54.3) (In2.Cu) is 0.449 mm from 3V3 zone R8_3V3_In2 (In2.Cu); a short puts 3.23 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N via (23.0, 88.33) (B.Cu) is 0.329 mm from PYRO1_CONT track (27.39, 87.6) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-7: PYRO1_GATE_N via (23.0, 88.33) (In2.Cu) is 0.329 mm from PYRO1_CONT track (27.39, 87.6) (B.Cu); a short puts 0.37 V on the gate in reset; minimum 0.5 mm",
+  "P-9: PYRO1_GATE via at (20.45, 92.4) has no GND via within 1.5 mm (nearest 2.7168455973794297)",
+  "P-10: test pad TP121 lies in the coat region (only TP122 may)",
+  "P-11: J121 wires enter from +x; the owner set -x (pyro leads west, decision 1)",
+  "R-1: strip part C300 reaches y 23.29 (strip boundary y_f 22.0)",
+  "R-1: strip part C301 reaches y 22.34 (strip boundary y_f 22.0)",
+  "R-1: strip part FB30 reaches y 25.64 (strip boundary y_f 22.0)",
+  "R-1: strip part FB31 reaches y 22.64 (strip boundary y_f 22.0)",
+  "R-1: strip part R305 reaches y 23.23 (strip boundary y_f 22.0)",
+  "R-1: strip part R307 reaches y 23.36 (strip boundary y_f 22.0)",
+  "R-4: J30: no GND via at the qualified spot (+1.25, 4.15) in the jack frame (nearest 0.502 mm)",
+  "R-7: GNSS right: GND stitching gap 2.73 mm beside the RF line (maximum 2.5 mm, no named ceilings)",
+  "R-7: fence: GND vias 6.01 mm apart between x 0.00 and 6.01 with no lane through the gap (maximum 2.0 mm)",
+  "R-7: fence: opening x 6.01-46.00 is 39.99 mm wide (maximum 2.7 mm)",
+  "M-2: first plate mode 208.7 Hz (jacks only, pinned, D 5); minimum 209.0 Hz",
+  "M-6: bottom part C15 is 0.83 mm from the pyro via (29.3, 47.5) (minimum 1.0)",
+  "M-6: bottom part R168 is 0.23 mm from the pyro via (24.0, 53.7) (minimum 1.0)",
+  "M-6: bottom part R170 is 0.64 mm from the pyro via (29.3, 47.5) (minimum 1.0)",
+  "M-6: bottom part R172 is 0.69 mm from the pyro via (29.3, 47.5) (minimum 1.0)",
+  "K-power-pyro: battery-live copper near the ARM side: ACT_FET_S zone R8_ACT_FET_S_B is 1.089 mm from PYRO1_BUS J124.1 on B.Cu; minimum 2.5 mm (D85, rule E's margin)",
+  "K-inner: In2 track of ARM1_SENSE at (14.55, 94.15): In1 carries no track (S16) and In2 power and GND only (S15, D20; no exemption in R9)"
+ ],
+ "failing": [
+  "LC-1",
+  "P-0",
+  "P-1",
+  "P-3",
+  "P-5",
+  "P-6",
+  "P-7",
+  "P-9",
+  "P-10",
+  "P-11",
+  "R-1",
+  "R-4",
+  "R-7",
+  "M-2",
+  "M-6",
+  "K-power-pyro",
+  "K-inner"
+ ],
+ "board_sha256": "cc044ea0922ff826df19af9d9726d92c096ab2b127025b55d123d8772e5fb4a7",
+ "inputs_sha256": {
+  "kilib/generic.3dshapes/DFN-8-1EP_3x3mm_P0.65mm_EP1.55x2.4mm.step": "113b3987035c6f315a2a5c49dcedc349f8184b3b415289cb0cb67e90e82112b4",
+  "kilib/generic.3dshapes/LQFP-100_14x14mm_P0.5mm.step": "51720097260ffba41c3062f85f67623721102fa535901c47cb555a1f444feeb3",
+  "kilib/generic.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step": "ea4d0799007ebdd3945072bf255d673d2fe87eb05fda85fd8d7993ad9397da41",
+  "kilib/generic.3dshapes/PinHeader_1x06_P2.54mm_Vertical.step": "d6113af109a14a67c50dcefd1cfc7b43b59b59afa85d808b2319e2452da91318",
+  "kilib/generic.3dshapes/R_2512_6332Metric.step": "76b2052a3c120193de7cdc0af99157b6f375e9a4af7721e3e3d012968c877f27",
+  "kilib/rocket.3dshapes/BUZ-SMD_4P-L8.5-W8.5-H3.0.wrl": "c16c41a2915b8f78e2ec8670cb3ad79ff779227374a4890a87361ee14640bcbe",
+  "kilib/rocket.3dshapes/C0402_L1.0-W0.5-H0.5.wrl": "c20fe21cf8899edf2ae6dbf00c69756b1e5f5bc4029d9c1ce67875d905c8a199",
+  "kilib/rocket.3dshapes/C0603_L1.6-W0.8-H0.8.wrl": "125791465c37d0e6cda3b2f45f84e01af226d81a462bfbecb7a4513327e9f22a",
+  "kilib/rocket.3dshapes/C0805_L2.0-W1.3-H1.3.wrl": "31b2ac9a40994188ebd20202214e75f004b604b0068b3dea50d8cf7940cadb1a",
+  "kilib/rocket.3dshapes/CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5.wrl": "4ba30f0c1480e60481a8bb65b4f3ae0599d27afb0c01ee00e643feb77c340ff2",
+  "kilib/rocket.3dshapes/CONN-TH_12P-P2.00_S12B-PH-K-S-LF-SN.wrl": "979d15112f617a529b9e8b07ed00e998f1f64367231b464569b5c20f7210375e",
+  "kilib/rocket.3dshapes/CONN-TH_4P-P5.08_DIBO_DB128V-5.08.wrl": "df2d079aaf92482feb39a71637fc4f6e69197316b60d808970db28f146397862",
+  "kilib/rocket.3dshapes/CONN-TH_6P-P5.08_DIBO_DB128V-5.08.wrl": "8d525f3287c8079ee32dedb41fd27872fb539a473187c2fdbabf571c92fb8c52",
+  "kilib/rocket.3dshapes/CONN-TH_9P-P2.00_S9B-PH-K-S-LF-SN.wrl": "d826432137c98ee330e7997b2b5e7408ecf38a1a5c2c47a1c09b9539370378cd",
+  "kilib/rocket.3dshapes/CRYSTAL-SMD_4P-L3.2-W2.5-BL.wrl": "44a3909b050bdb95f8ce007f9dbbda4a81ea6842b089ab23bbc1283ff45bd0aa",
+  "kilib/rocket.3dshapes/C_0603_1608Metric.step": "4857b3dc717675bf1fb22edda622ac3b3ae03cf44d81eefaf3fa3ba3a86d84c1",
+  "kilib/rocket.3dshapes/C_1206_3216Metric.step": "11e948c72c90e2b6322436b72745f40ff4e8ba0da64fb2a0df943dfa61e89c1a",
+  "kilib/rocket.3dshapes/D_SMA.step": "1cfddd4e3b1bf22b8fc6ee3258c2aade882ed7b85b528e23b9db42437775a1db",
+  "kilib/rocket.3dshapes/D_SMB.step": "029466277d91e9f5492556be93e46611049e07115c7913880c547afa96058ed4",
+  "kilib/rocket.3dshapes/HDR-M-2.54_1x40.wrl": "33a623109162433c03382de3b3bebb47376e856101315ebc4d468d5789156437",
+  "kilib/rocket.3dshapes/HDR-TH_12P-P2.54-V-M-R3-C4-S2.54.wrl": "932a4724477746d8d2f72cdb5b92b0867c052a4b4d8f0a4949d7a65dd1bf0b7c",
+  "kilib/rocket.3dshapes/HDR-TH_HMT-2.54-1X6PM.wrl": "89a7b833c9eff28ab8c06c245aa125d8d8686d605f99b1b4c6d8337af9352426",
+  "kilib/rocket.3dshapes/IND-SMD_L4.0-W4.0-H1.9.wrl": "3eb732ddf40a2bd47e12878dc62b7264b2131cb38a31dd666e821458278bd0be",
+  "kilib/rocket.3dshapes/LED0805-RD.wrl": "3384c4f297a3342792da0408309e9cc3027058d39452110db6271848dc1ec7cd",
+  "kilib/rocket.3dshapes/LGA-14_L2.5-W3.0-H0.9-P0.50.wrl": "d9a21d9ea8ac294c9eff9872ac778b02b96ff6a3bca7bd786b4a7c708463d794",
+  "kilib/rocket.3dshapes/M3_AP63200_TSOT26.wrl": "8732b490fe05977910e08f74160142badf1d3d3d9ed89a7857f7f88fbed20846",
+  "kilib/rocket.3dshapes/M3_BLM18K_0603.wrl": "90d1842c544e96afb52f260a3de31857966f20429b0ee8f551f0e353c31c0989",
+  "kilib/rocket.3dshapes/M3_DB128L_2P.wrl": "1a49b36bddd6483d464d3741cdbb7c52a4224317680da3cd3c1fb4b5356aed19",
+  "kilib/rocket.3dshapes/M3_DB128L_2P_BK.wrl": "ed3fda3465dfe673901fd97be01ef9787b72ee1142b135de3607b65671f181a3",
+  "kilib/rocket.3dshapes/M3_DB128V_4P.wrl": "db2780499c56a1a53913e08c7e112413bdda82b36d56d06e9902c51fca9b9471",
+  "kilib/rocket.3dshapes/M3_E22_900MM22S_ENVELOPE.wrl": "c6376ec4a928a0c1aaf4cce76aa2b228a9074ffc49c9e86a742e2c57bf7ac8af",
+  "kilib/rocket.3dshapes/M3_GH_BM04B_GHS_TBT.step": "ebc503b4b58cad5873c7cdeb695315baf8bea08dd22aa49873b0104671b78d59",
+  "kilib/rocket.3dshapes/M3_GRM32_1210.wrl": "da5781e5c931576de5a5bd3100122220aaaf47e27bb26848d28e88fff730c9dd",
+  "kilib/rocket.3dshapes/M3_JST_PH_B2B_2P.wrl": "97c329b49a224bfebae4b719ce75f1698a14cda25f101248638326e86db1c792",
+  "kilib/rocket.3dshapes/M3_KT0805Y_A1.wrl": "23f86f2c6c6763550045575f83e9b6a0df5e3795c9b5631217d68ab880f82769",
+  "kilib/rocket.3dshapes/M3_LQG15_0402.wrl": "dce600ef4a0605f7d416ab0bd36703f8d037511c0593c327a9ac6ca356461554",
+  "kilib/rocket.3dshapes/M3_MAX_F10S_ENVELOPE.wrl": "b94c381b5b18bb1a779f13349e78ef779bbedc5005020a9c5dac3a3101b7b5a5",
+  "kilib/rocket.3dshapes/M3_MLT5020_3pad.wrl": "c8412cc0b59804da416b02d13c80bd3c37f86963de80590f7549256011075a8c",
+  "kilib/rocket.3dshapes/M3_NCD0805R1_K1.wrl": "50f35703e0a36e01a0ed2cf5c666e21c8465d8f06cf3ea01dd22a3f16af8017e",
+  "kilib/rocket.3dshapes/M3_OSCON_F12.wrl": "cbdb3b03479700173a82964fb243f60af24166bb4115c8bc17e42526053a6956",
+  "kilib/rocket.3dshapes/M3_SAM_M10Q_ENVELOPE.wrl": "19ed7bea8fc8223b2061f57f6ed971b50864ef82545974ac024a63382dba178a",
+  "kilib/rocket.3dshapes/M3_SH_BM04B_SRSS_TB.step": "8980de73cbad53eb5e794fa02d776853bd9e12958c401f80c4b4c723ec196b98",
+  "kilib/rocket.3dshapes/M3_SH_BM07B_SRSS_TB.step": "7df6eb693edebff163e7f953295508a8dc894e09fba0d898788e96be8c7b0dd8",
+  "kilib/rocket.3dshapes/M3_SMA_KH_KE8_EDGE.wrl": "3d4425f519fbd4c29564724b86f047983a1d7e331e4078de416241c9d5cab99b",
+  "kilib/rocket.3dshapes/M3_SRP5030TA.wrl": "bbcc84b3eb6a2091d954e9d1dd6db4c608dca3cf70d5ca2301d612662c968482",
+  "kilib/rocket.3dshapes/M3_TPS2121_RUX.wrl": "63e7487350c5fb47cccb0cd6c3caee2dfeb9f9cb7a5a7a8f8735d7205b93fcf8",
+  "kilib/rocket.3dshapes/M3_TPS2553_DBV.wrl": "e299e94ac030d1ad035cab4b0ef2935ceada6419c987c22953eb78816592b246",
+  "kilib/rocket.3dshapes/M3_TPS25947_RPW.wrl": "2bc1ca30540707d2a2ac6924e7ef853b17bda42682b9dc6ae65c646e4cd6f492",
+  "kilib/rocket.3dshapes/M3_TPS2595_DSG.wrl": "a932e04772d96c3bd5e049ab20b27b82d6169bd0dd3709d0f13b673308a052f1",
+  "kilib/rocket.3dshapes/M3_TPS709_DBV.wrl": "e299e94ac030d1ad035cab4b0ef2935ceada6419c987c22953eb78816592b246",
+  "kilib/rocket.3dshapes/M3_TSLP_2_20.wrl": "7484cd1fa02ca33bbf927894286fbf25e36a6b2d946c09ebb4eac120955c0f7a",
+  "kilib/rocket.3dshapes/M3_TXU0202_DCU.wrl": "7a1659360b3969da182d1a8b0100b8a5ae1d68c271e4a1afe967d657fd17c408",
+  "kilib/rocket.3dshapes/PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL.wrl": "4b5b1b16ea52173b581a58a1ade12617ec81db16a1eb9bd027ed77794f33b845",
+  "kilib/rocket.3dshapes/R0402_L1.0-W0.5-H0.4.wrl": "ced0a40a718711c2ae16482a4f46a9eb6a0a33ecf9f9d8c2e18c160fa951a420",
+  "kilib/rocket.3dshapes/R0603.wrl": "2a125409502d8eb68f2e196ab1c28b180e0918830445364f93a45d9461b4daad",
+  "kilib/rocket.3dshapes/R0805_L2.0-W1.3-H0.6.wrl": "76145163b8ad77c0f68aa2c4b6ced6a1f5008bab9c42bb2043539f815256d6ab",
+  "kilib/rocket.3dshapes/R_0603_1608Metric.step": "1875571c326d0d9e96f36b4efeb8094068ef7619f0a449c781caf0b49c2e5861",
+  "kilib/rocket.3dshapes/SENSORS-SMD_MS5611-01BA03.wrl": "8d23a16413fff3cb34917c093a1d65cf1c84ae9a0b1339212feab5584ad2755a",
+  "kilib/rocket.3dshapes/SMA_L4.3-W2.6-LS5.2-RD.wrl": "182bdfe16c250365c998a42967078bbe9204d0d7a7092594820fdfbe0465c388",
+  "kilib/rocket.3dshapes/SMB_L4.6-W3.6-LS5.3-BI.wrl": "f5fec39be6b431c2ee10f1369f78a7c396f428fa2773e57778ca8dfd68f3af96",
+  "kilib/rocket.3dshapes/SOD-323_L1.8-W1.3-LS2.5-RD.wrl": "1066ae56f1408eb17040fe2caa43c28629818eb8c242c8687c99d10e2607d75b",
+  "kilib/rocket.3dshapes/SOIC-8_L5.3-W5.3-H1.9-LS7.9-P1.27.wrl": "ca10a7dd660f5c145b727a3f65f6e1fc81503c72ca4442e7a3cd64fd5ff71e40",
+  "kilib/rocket.3dshapes/SOT-23-3P_L2.9-W1.3-H1.0-LS2.4-P0.95.wrl": "6d0af3fdee819c602d1b3906e3031015573ebcb85f3a357833e5def01e2ebe32",
+  "kilib/rocket.3dshapes/SOT-23-6_L2.9-W1.6-H1.5-LS2.8-P0.95.wrl": "7023139da8e0528b1cd05db53344f9f563fe34c447e10fb4db9b06fdddb0aa4b",
+  "kilib/rocket.3dshapes/TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL.wrl": "cea0f96767724d06e8c232affea97d8817d6fcf062d32513f25749da2068d3c9",
+  "kilib/rocket.3dshapes/USB-C_SMD-TYPE-C-31-M-12_1.wrl": "0457a14076c3c2f9d16ed2a995ac1f248173ab9ac1c200f99988a33d97d111b5",
+  "m3.kicad_pcb": "cc044ea0922ff826df19af9d9726d92c096ab2b127025b55d123d8772e5fb4a7",
+  "m3.kicad_dru": "1674d58be79ae4282851206ab2578c17dd86f69d7f3da07e5355f3be3dbdf672",
+  "m3.kicad_pro": "3730b060a94ebbd8f5f5ad179927549cb0cda8f475801e0e85b4c559fecaa7bf",
+  "pin_table.tsv": "bd4687a8037990f972e26f3c9cb216a7e7288c49264c8f29e5714e62b8d314b4"
+ },
+ "checker_sha256": "28c01661826c6225d19b030492e909d87956afb728f1d9d1b71660843b7a86e9"
+}

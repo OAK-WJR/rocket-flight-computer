@@ -1,0 +1,513 @@
+{
+  "round": 16,
+  "scope": "Focused implementation evidence after all ten full reviews closed; not fresh full-review credit or physical/firmware qualification. Canonical source changes only; target PCB unchanged after complete integration.",
+  "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "raw_execution_receipts": [
+    {
+      "path": ".supervisor/r16_binding_fix/receipt.json",
+      "sha256": "1c4f497c948d2e79400472ceb00cd2c6df9653b6723bf31f6ec1723cf768ec41",
+      "bytes": 3268,
+      "availability": "Ignored original raw execution receipt; executable host path replaced by declared native-interpreter role only in this durable representation."
+    },
+    {
+      "path": ".supervisor/r16_route_gate_fix/receipt.json",
+      "sha256": "c5f5e340082e01c8c664f57b914350374f4fa7058d847b7bffa26e6753255388",
+      "bytes": 11399,
+      "availability": "Ignored original raw execution receipt; executable host path replaced by declared native-interpreter role only in this durable representation."
+    }
+  ],
+  "saved_binding": {
+    "finding": "R16-GATE-01",
+    "scope": "Saved record-only binding evidence validation; no PCB, schematic, fab or generated-data edit.",
+    "owned_changed_files": [
+      "tools/check_r10.py",
+      "tools/test_r10_check.py",
+      "m3_design/r10_build.sh"
+    ],
+    "validation": [
+      {
+        "name": "focused_tests",
+        "command": [
+          "KICAD_PY (installed native API10.0.6)",
+          "-I",
+          "-B",
+          "tools/test_r10_check.py",
+          "BindingEvidence",
+          "RuleSelection",
+          "SchematicContract"
+        ],
+        "returncode": 0,
+        "elapsed_seconds": 3.433,
+        "log": ".supervisor/r16_binding_fix/focused_tests.log",
+        "log_sha256": "adc85292404bfd82c93ad7205ac001e36e834f5446d779bb2292de3a383ad47a",
+        "tests": 10,
+        "new_binding_tests": 4,
+        "skipped": 0
+      },
+      {
+        "name": "native_binding_check",
+        "command": [
+          "KICAD_PY (installed native API10.0.6)",
+          "-I",
+          "-B",
+          "tools/check_r10.py",
+          "--only",
+          "K-binding",
+          "--report",
+          ".supervisor/r16_binding_fix/native_binding_report.json"
+        ],
+        "returncode": 0,
+        "elapsed_seconds": 0.415,
+        "log": ".supervisor/r16_binding_fix/native_binding_check.log",
+        "log_sha256": "87f98295706ec4a5bc6545388d980f696c6b55d670b2ee6058a0c1e9f21e2c25"
+      },
+      {
+        "name": "build_syntax",
+        "command": [
+          "bash",
+          "-n",
+          "m3_design/r10_build.sh"
+        ],
+        "returncode": 0,
+        "elapsed_seconds": 0.003,
+        "log": ".supervisor/r16_binding_fix/build_syntax.log",
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "binding_cases": {
+      "valid": 2,
+      "negative": 16,
+      "input_snapshot_verified_after_each": true,
+      "negative_groups": {
+        "missing_or_malformed_saved_note": 4,
+        "saved_hash_pin_axis_or_record_status": 9,
+        "native_board_hash_pin_or_axis_change": 3
+      }
+    },
+    "canonical_before_files": 1075,
+    "canonical_after_files": 1075,
+    "canonical_changed": [
+      "sources/r10_design/R10_DECISIONS.md",
+      "sources/r10_design/r10_plan.md"
+    ],
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "source_sha256": {
+      "tools/check_r10.py": "7c01f55fefbca1d1c4fc07d4f950c406ed5873b6f8748c24c63d9190b69e1488",
+      "tools/test_r10_check.py": "6e1a2d3832bbd553000980b670e152175e4804124a573025f79c97987784935e",
+      "m3_design/r10_build.sh": "80d6f8b0b06f437c134c6dcef0553d943c04e5c1e15f894e8d64587f7a97ec68"
+    },
+    "full_native_build_and_check": "Reserved for root; no KiCad CLI invocation in this task.",
+    "concurrent_documentation_changes": [
+      "sources/r10_design/R10_DECISIONS.md",
+      "sources/r10_design/r10_plan.md"
+    ],
+    "board_fab_generated_or_other_project_changes": [],
+    "discovery_counts": {
+      "r10_rules": 32,
+      "discovered_r10_tests": 180,
+      "new_binding_tests": 4
+    },
+    "hash_walk_note": "Initial all-file walk exited1 for the two concurrently edited source documents. No owned edit touched canonical artifacts. All remaining1073 project files, including board/fab/generated data, are byte-identical."
+  },
+  "exact_duplicate_topology": {
+    "finding": "R16-GATE-02",
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "python": "KICAD_PY (installed native API10.0.6)",
+    "kicad": "10.0.6",
+    "canonical_board_written": false,
+    "git_actions": false,
+    "kicad_cli": false,
+    "commands": [
+      {
+        "command": "KICAD_PY (installed native API10.0.6) -I -B .supervisor/r16_route_gate_fix/probe.py before > .supervisor/r16_route_gate_fix/probe-before.log 2>&1",
+        "exit_code": 0
+      },
+      {
+        "command": "KICAD_PY (installed native API10.0.6) -I -B tools/test_route_check.py R10AuditScope > .supervisor/r16_route_gate_fix/r10-scope.log 2>&1",
+        "exit_code": 0,
+        "tests": 10
+      },
+      {
+        "command": "KICAD_PY (installed native API10.0.6) -I -B tools/test_route_check.py > .supervisor/r16_route_gate_fix/routing-suite.log 2>&1",
+        "exit_code": 0,
+        "tests": 67,
+        "skipped": 0
+      },
+      {
+        "command": "KICAD_PY (installed native API10.0.6) -I -B .supervisor/r16_route_gate_fix/probe.py after > .supervisor/r16_route_gate_fix/probe-after.log 2>&1",
+        "exit_code": 0
+      },
+      {
+        "command": "KICAD_PY (installed native API10.0.6) -I -B tools/route_check.py m3_design/assembly_review/m3.kicad_pcb --profile r10 --bumps-all --report .supervisor/r16_route_gate_fix/native-routing.json > .supervisor/r16_route_gate_fix/native-routing.log 2>&1",
+        "exit_code": 0
+      },
+      {
+        "command": "KICAD_PY (installed native API10.0.6) -I -B .supervisor/r16_route_gate_fix/receipt.py",
+        "exit_code": 0
+      }
+    ],
+    "unchanged_native_counts": {
+      "collinear_unmerged": 1,
+      "detour": 1,
+      "extra_bends": 7,
+      "pad_end_offcentre": 59,
+      "passes_through_pad": 1,
+      "power_via_no_gnd": 24,
+      "segment_inside_pad": 23,
+      "short_layer_hop": 3,
+      "short_segment": 1,
+      "tiny_jog": 4,
+      "u_turn": 4,
+      "via_on_track_in_fill": 1,
+      "width_change_junction": 11
+    },
+    "unchanged_native_annotations_identical": true,
+    "cases": {
+      "real_unchanged": {
+        "before_instances": 140,
+        "before_failures": 0,
+        "after_instances": 140,
+        "after_failures": 0,
+        "after_failure_categories": {},
+        "after_route": {
+          "pads": 2,
+          "len": 31.74520461473032,
+          "mst": 29.62172977833279,
+          "vias": 1,
+          "need": 1,
+          "at": [
+            33175000,
+            10250000
+          ],
+          "first": "R440.2"
+        }
+      },
+      "real_exact_duplicate": {
+        "before_instances": 144,
+        "before_failures": 3,
+        "after_instances": 141,
+        "after_failures": 0,
+        "after_failure_categories": {},
+        "after_route": {
+          "pads": 2,
+          "len": 31.74520461473032,
+          "mst": 29.62172977833279,
+          "vias": 1,
+          "need": 1,
+          "at": [
+            33175000,
+            10250000
+          ],
+          "first": "R440.2"
+        }
+      },
+      "real_reversed_duplicate": {
+        "before_instances": 144,
+        "before_failures": 3,
+        "after_instances": 141,
+        "after_failures": 0,
+        "after_failure_categories": {},
+        "after_route": {
+          "pads": 2,
+          "len": 31.74520461473032,
+          "mst": 29.62172977833279,
+          "vias": 1,
+          "need": 1,
+          "at": [
+            33175000,
+            10250000
+          ],
+          "first": "R440.2"
+        }
+      },
+      "real_partial_overlap": {
+        "before_instances": 144,
+        "before_failures": 4,
+        "after_instances": 144,
+        "after_failures": 4,
+        "after_failure_categories": {
+          "collinear_overlap": 1,
+          "fold_back": 2,
+          "track_loop": 1
+        },
+        "after_route": {
+          "pads": 2,
+          "len": 40.94520461473032,
+          "mst": 29.62172977833279,
+          "vias": 1,
+          "need": 1,
+          "at": [
+            33175000,
+            10250000
+          ],
+          "first": "R440.2"
+        }
+      },
+      "real_different_width": {
+        "before_instances": 146,
+        "before_failures": 3,
+        "after_instances": 146,
+        "after_failures": 4,
+        "after_failure_categories": {
+          "collinear_overlap": 1,
+          "fold_back": 2,
+          "track_loop": 1
+        },
+        "after_route": {
+          "pads": 2,
+          "len": 44.94520461473032,
+          "mst": 29.62172977833279,
+          "vias": 1,
+          "need": 1,
+          "at": [
+            33175000,
+            10250000
+          ],
+          "first": "R440.2"
+        }
+      },
+      "synthetic_unchanged": {
+        "before_instances": 0,
+        "before_failures": 0,
+        "after_instances": 0,
+        "after_failures": 0,
+        "after_failure_categories": {},
+        "after_route": {
+          "pads": 2,
+          "len": 10.0,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_exact_duplicate": {
+        "before_instances": 5,
+        "before_failures": 4,
+        "after_instances": 1,
+        "after_failures": 0,
+        "after_failure_categories": {},
+        "after_route": {
+          "pads": 2,
+          "len": 10.0,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_reversed_duplicate": {
+        "before_instances": 5,
+        "before_failures": 4,
+        "after_instances": 1,
+        "after_failures": 0,
+        "after_failure_categories": {},
+        "after_route": {
+          "pads": 2,
+          "len": 10.0,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_partial_overlap": {
+        "before_instances": 4,
+        "before_failures": 4,
+        "after_instances": 4,
+        "after_failures": 4,
+        "after_failure_categories": {
+          "collinear_overlap": 1,
+          "fold_back": 2,
+          "track_loop": 1
+        },
+        "after_route": {
+          "pads": 2,
+          "len": 16.0,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_different_width": {
+        "before_instances": 5,
+        "before_failures": 4,
+        "after_instances": 5,
+        "after_failures": 5,
+        "after_failure_categories": {
+          "collinear_overlap": 1,
+          "fold_back": 2,
+          "track_loop": 1,
+          "detour": 1
+        },
+        "after_route": {
+          "pads": 2,
+          "len": 20.0,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_near_endpoints": {
+        "before_instances": 5,
+        "before_failures": 4,
+        "after_instances": 5,
+        "after_failures": 5,
+        "after_failure_categories": {
+          "collinear_overlap": 1,
+          "fold_back": 2,
+          "track_loop": 1,
+          "detour": 1
+        },
+        "after_route": {
+          "pads": 2,
+          "len": 20.0,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_crossing": {
+        "before_instances": 6,
+        "before_failures": 5,
+        "after_instances": 3,
+        "after_failures": 2,
+        "after_failure_categories": {
+          "crossing_without_node": 2
+        },
+        "after_route": {
+          "pads": 4,
+          "len": 16.0,
+          "mst": 18.48528137423857,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_genuine_cycle": {
+        "before_instances": 6,
+        "before_failures": 5,
+        "after_instances": 3,
+        "after_failures": 2,
+        "after_failure_categories": {
+          "track_loop": 1,
+          "detour": 1
+        },
+        "after_route": {
+          "pads": 2,
+          "len": 22.48528137423857,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      },
+      "synthetic_dead_offangle": {
+        "before_instances": 10,
+        "before_failures": 9,
+        "after_instances": 4,
+        "after_failures": 3,
+        "after_failure_categories": {
+          "off_angle": 1,
+          "acute_angle": 1,
+          "dead_copper": 1
+        },
+        "after_route": {
+          "pads": 2,
+          "len": 13.001666203960726,
+          "mst": 10.0,
+          "vias": 0,
+          "need": 0,
+          "at": [
+            0,
+            0
+          ],
+          "first": "A1.1"
+        }
+      }
+    },
+    "sha256": {
+      "tools/route_check.py": "ceac9352ebe3716f5b4db7e0683725fed255d61cb7329eba416e25ebff6bb812",
+      "tools/test_route_check.py": "c3ecd93a3fdf20f59c5b4d0935d3ebe36ba2a83a9cd62f6d71f9075bfcb892ed",
+      ".supervisor/r16_route_gate_fix/before.json": "a4b9d602c3e8b01905bbf257813cc7a2c133faea0a66ae76a4f807bb0fbfe9b4",
+      ".supervisor/r16_route_gate_fix/after.json": "efaa6dd48051ac918258a3602441696c10463e438c51ae7da976b02236c98624",
+      ".supervisor/r16_route_gate_fix/routing-suite.log": "2e5ba19805094d5b9df86e0ad74b3653c4944e48c98512dc73025a95b16a845e",
+      ".supervisor/r16_route_gate_fix/r10-scope.log": "dc50415e1651b1f03a4ae7625c7e999f8aeb1221be1cf2e6f65266fd5e5d779b",
+      ".supervisor/r16_route_gate_fix/probe.py": "d92e889fc20561460253657b96f99b8c0ada5991095c927712ad45013d7486e1",
+      ".supervisor/r16_route_gate_fix/receipt.py": "00610da02098583734fe21b367d4fe23272e57f531f7611b38e5fcdce352fbd7",
+      ".supervisor/r16_route_gate_fix/native-routing.log": "b4ee21afe60c75ff2bffd090c0079c6f41dd10ea56d6a255f664a1bec004e74b",
+      ".supervisor/r16_route_gate_fix/native-routing.json": "30195a919b0891c2e3e3048de1439b32c9c7786a84c6d6c418f01e26cc936153",
+      ".supervisor/r16_route_gate_fix/route_check.patch": "22c9117edb7871a07213a6e4d861bfee75171ea02d641975a6247dd91469f76a",
+      ".supervisor/r16_route_gate_fix/test_route_check.patch": "dfc37aad8356471bbb43ee9d723edd0552f28d010a96a21cd0a0590da7839a8f",
+      ".supervisor/r16_route_gate_fix/route_check.before.py": "d8070ccbb4a9ef21d2adc442577ac93110822e54d708a884b1c225896ae670f0",
+      ".supervisor/r16_route_gate_fix/test_route_check.before.py": "e2751c222e55b867678fd3eebfa7ca93a9c8f2b4e4d36480d8401a3902cb48ab"
+    },
+    "full_native_inventory": {
+      "scope": "Board loaded at 09:29:07 local before root integrated build began. Root build overlapped later audit execution; no stable post-inventory board-hash claim.",
+      "instances": 140,
+      "counts": {
+        "collinear_unmerged": 1,
+        "detour": 1,
+        "extra_bends": 7,
+        "pad_end_offcentre": 59,
+        "passes_through_pad": 1,
+        "power_via_no_gnd": 24,
+        "segment_inside_pad": 23,
+        "short_layer_hop": 3,
+        "short_segment": 1,
+        "tiny_jog": 4,
+        "u_turn": 4,
+        "via_on_track_in_fill": 1,
+        "width_change_junction": 11
+      },
+      "failures": 0,
+      "allowed": 0,
+      "stale": 0,
+      "instances_equal_prebuild_native_scan": true,
+      "total_bump_windows_searched": 46,
+      "removable_critical_bumps": 0,
+      "removable_noncritical_bumps": 0,
+      "informational_leftovers": 6
+    }
+  },
+  "method_limits": [
+    "Focused checks use real native objects and actual changed source; no fake CLI, gate skip or weakened clearance.",
+    "Pre-build topology inventory loaded target632a9ad3 before the root integration build; it makes no claim about on-disk hashes while build stages were replacing canonical artifacts.",
+    "Original complete-gate binding escape remains immutable in round16_gate. Full integrated build/check is recorded separately, not inferred from focused controls."
+  ]
+}

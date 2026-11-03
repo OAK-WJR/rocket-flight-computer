@@ -1,0 +1,3719 @@
+{
+  "schema": 1,
+  "round": 12,
+  "lens": "power_electrical",
+  "assigned_commit": "d57b216c365fc8d18896bceba37f63caf20d52a4",
+  "board": "m3_design/assembly_review/m3.kicad_pcb",
+  "board_sha256_before": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "board_sha256_after": "0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d",
+  "board_unchanged": true,
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "classification_totals": {
+    "new_open": 0,
+    "carried_open": 1,
+    "closed": 1
+  },
+  "findings": [
+    {
+      "id": "R12-PWR-01",
+      "severity": "Minor",
+      "classification": "carried",
+      "status": "open",
+      "prior_ids": [
+        "R11-RTE-02",
+        "R11-m09"
+      ],
+      "title": "C98 input bypass retains remote GND return",
+      "file": "m3_design/assembly_review/m3.kicad_pcb",
+      "coordinates_mm": {
+        "C98_body": [
+          24.575,
+          62.2
+        ],
+        "C98_GND_pad": [
+          23.8,
+          62.2
+        ],
+        "U11_body": [
+          24.65,
+          64.5
+        ],
+        "U11_IN2_pad7": [
+          24.3,
+          63.825
+        ],
+        "U11_GND_pad12": [
+          25.8,
+          65.25
+        ]
+      },
+      "measured": {
+        "power_direct_mm": 1.9347157413945852,
+        "power_route_mm": 2.0599242404917497,
+        "diagnostic_return_mm": 31.812236636408766
+      },
+      "method": "Saved B.Cu/In1 GND raster,0.05mm,12mm expanded window,full1.6mm via penalty; geometry only",
+      "maker_evidence": {
+        "source_id": "U11",
+        "page": 33,
+        "sections": [
+          "11",
+          "12.1"
+        ],
+        "requirement": "Close bypass capacitors and short wide power connections"
+      },
+      "fix": "Re-place C98 with a local power-ground connection or redraw the surrounding supply/return corridor to provide nearby In1 stitch and short U11 return; rebuild/refill/native DRC and waveform qualification before accepting a replacement.",
+      "limits": "Retained layout deviation; no measured transient failure and no fully validated replacement placement."
+    }
+  ],
+  "closed_findings": [
+    {
+      "id": "R12-PWR-02",
+      "severity": "Minor",
+      "classification": "closed",
+      "status": "closed",
+      "prior_ids": [
+        "R11-PWR-01"
+      ],
+      "title": "Current native-bound firing and transient records replace circuit-pass literals",
+      "evidence": "Independent graph and arithmetic reproduce current board-bound budget and local paths; fresh native hot-plug extraction exactly matches normalized input digest.",
+      "counted_in_current_totals": false
+    }
+  ],
+  "conclusion": "No demonstrated required-function failure or Critical/Major candidate found; retained C98 return deviation remains. No acceptance or clean-round credit.",
+  "native_roles": {
+    "native_vs_XML_pin_checks": 144,
+    "role_assertions": "pass",
+    "vippo": [
+      [
+        27.9,
+        13.6,
+        "GND",
+        0.5,
+        0.3
+      ],
+      [
+        27.3,
+        13.6,
+        "GND",
+        0.5,
+        0.3
+      ]
+    ],
+    "counts": [
+      209,
+      973,
+      295
+    ]
+  },
+  "native_recheck": {
+    "hotplug_fresh_exact": true,
+    "loops": {
+      "C98": {
+        "device": "U11",
+        "power_direct_mm": 1.9347157413945852,
+        "power_path": {
+          "distance_mm": 2.0599242404917497,
+          "path_mm": [
+            [
+              24.3,
+              63.825
+            ],
+            [
+              24.3,
+              63.25
+            ],
+            [
+              25.35,
+              62.2
+            ]
+          ]
+        },
+        "ground_path": {
+          "distance_mm": 31.812236636408766,
+          "path_mm": [
+            [
+              "B.Cu",
+              23.925,
+              61.725
+            ],
+            [
+              "B.Cu",
+              23.925,
+              61.425
+            ],
+            [
+              "B.Cu",
+              24.075,
+              61.425
+            ],
+            [
+              "B.Cu",
+              25.175,
+              60.325
+            ],
+            [
+              "B.Cu",
+              25.775,
+              60.325
+            ],
+            [
+              "B.Cu",
+              26.825,
+              59.275
+            ],
+            [
+              "B.Cu",
+              26.925,
+              59.275
+            ],
+            [
+              "B.Cu",
+              26.975,
+              59.225
+            ],
+            [
+              "B.Cu",
+              27.775,
+              59.225
+            ],
+            [
+              "B.Cu",
+              28.525,
+              58.475
+            ],
+            [
+              "B.Cu",
+              28.525,
+              54.975
+            ],
+            [
+              "B.Cu",
+              28.725,
+              54.775
+            ],
+            [
+              "B.Cu",
+              28.725,
+              53.725
+            ],
+            [
+              "B.Cu",
+              28.975,
+              53.475
+            ],
+            [
+              "B.Cu",
+              29.025,
+              53.475
+            ],
+            [
+              "B.Cu",
+              29.125,
+              53.375
+            ],
+            [
+              "B.Cu",
+              29.175,
+              53.375
+            ],
+            [
+              "B.Cu",
+              29.425,
+              53.125
+            ],
+            [
+              "B.Cu",
+              29.425,
+              52.875
+            ],
+            [
+              "B.Cu",
+              30.075,
+              52.225
+            ],
+            [
+              "In1.Cu",
+              30.075,
+              52.225
+            ],
+            [
+              "In1.Cu",
+              30.075,
+              61.475
+            ],
+            [
+              "In1.Cu",
+              25.875,
+              65.675
+            ],
+            [
+              "B.Cu",
+              25.875,
+              65.675
+            ],
+            [
+              "B.Cu",
+              25.875,
+              65.325
+            ]
+          ],
+          "layers": [
+            "B.Cu",
+            "In1.Cu"
+          ],
+          "endpoints": [
+            "C98.2",
+            "U11.12"
+          ]
+        }
+      },
+      "C91": {
+        "device": "U13",
+        "power_direct_mm": 4.092141859711122,
+        "power_path": {
+          "distance_mm": 5.0356601717798215,
+          "path_mm": [
+            [
+              33.15,
+              48.75
+            ],
+            [
+              34.2,
+              48.75
+            ],
+            [
+              34.2,
+              49.325
+            ],
+            [
+              34.2,
+              51.675
+            ],
+            [
+              34.95,
+              52.425
+            ]
+          ]
+        },
+        "ground_path": {
+          "distance_mm": 6.273401871576762,
+          "path_mm": [
+            [
+              "B.Cu",
+              34.825,
+              54.825
+            ],
+            [
+              "B.Cu",
+              34.825,
+              54.525
+            ],
+            [
+              "B.Cu",
+              34.675,
+              54.525
+            ],
+            [
+              "B.Cu",
+              33.575,
+              53.425
+            ],
+            [
+              "B.Cu",
+              33.375,
+              53.425
+            ],
+            [
+              "B.Cu",
+              33.175,
+              53.225
+            ],
+            [
+              "B.Cu",
+              33.175,
+              51.975
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.125
+            ],
+            [
+              "B.Cu",
+              32.325,
+              51.075
+            ],
+            [
+              "B.Cu",
+              32.325,
+              50.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.425,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.475,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.525,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.625,
+              49.975
+            ]
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            "C91.2",
+            "U13.2"
+          ]
+        }
+      },
+      "C92": {
+        "device": "U13",
+        "power_direct_mm": 3.9080046059338263,
+        "power_path": {
+          "distance_mm": 4.2056349186104045,
+          "path_mm": [
+            [
+              30.55,
+              48.75
+            ],
+            [
+              31.65,
+              49.85
+            ],
+            [
+              31.65,
+              52.5
+            ]
+          ]
+        },
+        "ground_path": {
+          "distance_mm": 2.5313708498984755,
+          "path_mm": [
+            [
+              "B.Cu",
+              32.925,
+              52.075
+            ],
+            [
+              "B.Cu",
+              32.925,
+              51.725
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.125
+            ],
+            [
+              "B.Cu",
+              32.325,
+              51.075
+            ],
+            [
+              "B.Cu",
+              32.325,
+              50.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.425,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.475,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.525,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.625,
+              49.975
+            ]
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            "C92.2",
+            "U13.2"
+          ]
+        }
+      },
+      "C82": {
+        "out_path": {
+          "distance_mm": 3.5778174593052023,
+          "path_mm": [
+            [
+              18.75,
+              81.6
+            ],
+            [
+              18.75,
+              79.8
+            ],
+            [
+              19.3,
+              79.25
+            ],
+            [
+              19.3,
+              78.25
+            ]
+          ]
+        },
+        "return_path": {
+          "distance_mm": 9.426345596729048,
+          "path_mm": [
+            [
+              "B.Cu",
+              20.425,
+              75.725
+            ],
+            [
+              "B.Cu",
+              20.425,
+              75.825
+            ],
+            [
+              "B.Cu",
+              20.475,
+              75.875
+            ],
+            [
+              "B.Cu",
+              20.475,
+              76.175
+            ],
+            [
+              "B.Cu",
+              20.625,
+              76.325
+            ],
+            [
+              "In1.Cu",
+              20.625,
+              76.325
+            ],
+            [
+              "In1.Cu",
+              20.625,
+              78.125
+            ],
+            [
+              "In1.Cu",
+              19.925,
+              78.825
+            ],
+            [
+              "In1.Cu",
+              19.925,
+              78.875
+            ],
+            [
+              "In1.Cu",
+              19.875,
+              78.925
+            ],
+            [
+              "In1.Cu",
+              19.875,
+              80.975
+            ],
+            [
+              "In1.Cu",
+              19.975,
+              81.075
+            ],
+            [
+              "B.Cu",
+              19.975,
+              81.075
+            ],
+            [
+              "B.Cu",
+              19.975,
+              81.175
+            ],
+            [
+              "B.Cu",
+              19.875,
+              81.275
+            ],
+            [
+              "B.Cu",
+              19.675,
+              81.275
+            ]
+          ],
+          "layers": [
+            "B.Cu",
+            "In1.Cu"
+          ],
+          "endpoints": [
+            "C82.2",
+            "U9.8"
+          ]
+        }
+      },
+      "D9": {
+        "out_path": {
+          "distance_mm": 6.5855339059327385,
+          "path_mm": [
+            [
+              18.75,
+              81.6
+            ],
+            [
+              18.75,
+              79.8
+            ],
+            [
+              16.25,
+              77.3
+            ],
+            [
+              15.0,
+              77.3
+            ]
+          ]
+        },
+        "return_path": {
+          "distance_mm": 8.176345596729053,
+          "path_mm": [
+            [
+              "B.Cu",
+              15.875,
+              80.225
+            ],
+            [
+              "B.Cu",
+              16.725,
+              80.225
+            ],
+            [
+              "B.Cu",
+              16.825,
+              80.125
+            ],
+            [
+              "B.Cu",
+              17.225,
+              80.125
+            ],
+            [
+              "In1.Cu",
+              17.225,
+              80.125
+            ],
+            [
+              "In1.Cu",
+              19.025,
+              80.125
+            ],
+            [
+              "In1.Cu",
+              19.975,
+              81.075
+            ],
+            [
+              "B.Cu",
+              19.975,
+              81.075
+            ],
+            [
+              "B.Cu",
+              19.975,
+              81.175
+            ],
+            [
+              "B.Cu",
+              19.875,
+              81.275
+            ],
+            [
+              "B.Cu",
+              19.675,
+              81.275
+            ]
+          ],
+          "layers": [
+            "B.Cu",
+            "In1.Cu"
+          ],
+          "endpoints": [
+            "D9.2",
+            "U9.8"
+          ]
+        }
+      }
+    },
+    "hotplug_fresh_digest": "7528385758d3e4db4a0225cefd9a096d2322cd2c42bb6b6a6889402a0693f9db",
+    "hotplug_saved_digest": "7528385758d3e4db4a0225cefd9a096d2322cd2c42bb6b6a6889402a0693f9db"
+  },
+  "independent_calculations": {
+    "native_fire_paths": {
+      "BAT_IN": {
+        "length_mm": 6.3071067811865476,
+        "pieces": [
+          {
+            "start": [
+              7.4,
+              74.1
+            ],
+            "end": [
+              13.0,
+              74.1
+            ],
+            "length_mm": 5.6,
+            "width_mm": 1.0
+          },
+          {
+            "start": [
+              13.0,
+              74.1
+            ],
+            "end": [
+              13.5,
+              73.6
+            ],
+            "length_mm": 0.7071067811865475,
+            "width_mm": 1.0
+          }
+        ]
+      },
+      "ACT_FET_S": {
+        "length_mm": 2.200000000000003,
+        "pieces": [
+          {
+            "start": [
+              13.175,
+              72.2
+            ],
+            "end": [
+              13.175,
+              71.1
+            ],
+            "length_mm": 1.1000000000000085,
+            "width_mm": 0.4
+          },
+          {
+            "start": [
+              13.175,
+              71.1
+            ],
+            "end": [
+              13.175,
+              70.0
+            ],
+            "length_mm": 1.0999999999999943,
+            "width_mm": 0.4
+          }
+        ]
+      },
+      "RAW_ACT": {
+        "length_mm": 5.886133111168463,
+        "pieces": [
+          {
+            "start": [
+              14.475,
+              67.105
+            ],
+            "end": [
+              17.58,
+              64.0
+            ],
+            "length_mm": 4.391133111168462,
+            "width_mm": 0.5
+          },
+          {
+            "start": [
+              17.58,
+              64.0
+            ],
+            "end": [
+              19.075,
+              64.0
+            ],
+            "length_mm": 1.495000000000001,
+            "width_mm": 0.5
+          }
+        ]
+      },
+      "PYRO1_IGN": {
+        "length_mm": 10.230382386916235,
+        "pieces": [
+          {
+            "start": [
+              13.925,
+              64.0
+            ],
+            "end": [
+              12.0,
+              64.0
+            ],
+            "length_mm": 1.9250000000000007,
+            "width_mm": 0.5
+          },
+          {
+            "start": [
+              12.0,
+              64.0
+            ],
+            "end": [
+              7.4,
+              59.4
+            ],
+            "length_mm": 6.505382386916237,
+            "width_mm": 0.5
+          },
+          {
+            "start": [
+              7.4,
+              59.4
+            ],
+            "end": [
+              7.4,
+              57.6
+            ],
+            "length_mm": 1.7999999999999972,
+            "width_mm": 0.5
+          }
+        ]
+      },
+      "PYRO1_OUT": {
+        "length_mm": 7.8544783489600185,
+        "pieces": [
+          {
+            "start": [
+              7.4,
+              54.1
+            ],
+            "end": [
+              10.63,
+              54.1
+            ],
+            "length_mm": 3.2300000000000004,
+            "width_mm": 0.5
+          },
+          {
+            "start": [
+              10.63,
+              54.1
+            ],
+            "end": [
+              11.63,
+              55.1
+            ],
+            "length_mm": 1.414213562373095,
+            "width_mm": 0.5
+          },
+          {
+            "start": [
+              11.63,
+              55.1
+            ],
+            "end": [
+              13.9,
+              57.37
+            ],
+            "length_mm": 3.2102647865869227,
+            "width_mm": 0.5
+          }
+        ]
+      }
+    },
+    "copper20_ohm": 0.029362412142135627,
+    "copper70_ohm": 0.03513212612806527,
+    "buck_V": [
+      5.366681973094171,
+      5.546269302558957
+    ],
+    "ldo_V": [
+      4.711504463251122,
+      4.873250033991471
+    ],
+    "camera_min_V": 5.031681973094171,
+    "radio_min_V": 4.601504463251122,
+    "gps_min_V": 4.6315044632511215,
+    "radio_GPS_max_V": 4.92325003399147,
+    "ldo_headroom_V": 0.44343193910270085,
+    "camera_limit_A": [
+      1.0408911159585672,
+      1.2494980434153073
+    ],
+    "usb_limit_A": [
+      0.34769038777999106,
+      0.4530489900670699
+    ],
+    "ldo_loss_W": 0.4061769032918402,
+    "ldo_70C_junction_inference_C": [
+      102.49415226334722,
+      114.67945936210242
+    ],
+    "load_W": {
+      "all_ports_SD_write": [
+        10.617782429677817,
+        12.370806905016599
+      ],
+      "GPS_radio_camera_off_shed_SD_idle": [
+        3.664038931919968,
+        3.9567202768179044
+      ]
+    },
+    "ride_7V4_to_3V8_ms": {
+      "all_ports_SD_write": {
+        "300.8": [
+          0.4901966417033703,
+          0.5711294274640745
+        ],
+        "470.0": [
+          0.7659322526615161,
+          0.8923897304126163
+        ]
+      },
+      "GPS_radio_camera_off_shed_SD_idle": {
+        "300.8": [
+          1.5326147859198496,
+          1.655039182900379
+        ],
+        "470.0": [
+          2.394710602999765,
+          2.585998723281842
+        ]
+      }
+    },
+    "fire_branch_ohm": 4.467458126128065,
+    "fire_loop_including_pack_ohm": 4.617458126128065,
+    "fire_cases": [
+      {
+        "stalls": 0,
+        "loaded_BAT_IN_V": 6.899390756727756,
+        "fire_A": 1.5443660716989063,
+        "minimum_settled_Vgs": 6.10246191458651
+      },
+      {
+        "stalls": 1,
+        "loaded_BAT_IN_V": 6.609326364555884,
+        "fire_A": 1.4794377872063396,
+        "minimum_settled_Vgs": 5.842094155273825
+      },
+      {
+        "stalls": 2,
+        "loaded_BAT_IN_V": 6.318164198837923,
+        "fire_A": 1.4142637760577872,
+        "minimum_settled_Vgs": 5.580741011866636
+      },
+      {
+        "stalls": 3,
+        "loaded_BAT_IN_V": 6.025729657046817,
+        "fire_A": 1.348804955060497,
+        "minimum_settled_Vgs": 5.31824575754853
+      },
+      {
+        "stalls": 4,
+        "loaded_BAT_IN_V": 5.7318070272281405,
+        "fire_A": 1.2830130390490941,
+        "minimum_settled_Vgs": 5.054414764836279
+      }
+    ],
+    "shorted_match_cases": [
+      {
+        "stalls": 0,
+        "short_fire_A": 3.0729346373992708,
+        "loaded_BAT_IN_V": 6.660457150891449
+      },
+      {
+        "stalls": 4,
+        "short_fire_A": 2.5512559844354157,
+        "loaded_BAT_IN_V": 5.529740515297399
+      }
+    ],
+    "unbounded_port_fault_demand_A": 2.911,
+    "upstream_threshold_bound_A": 3.7437971552257268,
+    "r134_short_power_W": 35.79745217113374,
+    "r134_short_J": [
+      0.7159490434226748,
+      1.2887082781608146
+    ],
+    "ground_return_share_A": 0.6144,
+    "watchdog_ms": [
+      28.57142857142857,
+      32.6530612244898
+    ],
+    "usb_nominal_attach_charge_mC": 2.41627
+  },
+  "additional_calculations": {
+    "bounce": {
+      "source_V": 7.4,
+      "R80_ohm": 470000,
+      "R165_ohm": 470000,
+      "R81_ohm": 300000,
+      "C87_nominal_uF": 2.2,
+      "nominal_EN_V": 1.7903225806451613,
+      "maker_typical_bias_delta_pct": -14.616721099254805,
+      "explicit_inference_factors": [
+        0.9,
+        0.85,
+        0.9
+      ],
+      "C87_inference_F": 1.2933005255095876e-06,
+      "resistor_fraction_bound": 0.02,
+      "TI_EN_leakage_A": 1e-07,
+      "TI_EN_falling_max_V": 1.116,
+      "minimum_initial_EN_V": 1.7140894636015327,
+      "conditional_open_interval_ms": 159.7479365999579,
+      "limit_ms": 150,
+      "physical_qualification": false
+    },
+    "copper": {
+      "rho20_ohm_m": 1.72e-08,
+      "TCR_per_K": 0.00393,
+      "outer_um": 35,
+      "inner_um": 30,
+      "long_external_rise_inference_C": {
+        "1mm_1p8A": 7.411625833786185,
+        "1mm_2p9A": 19.238201624117846
+      },
+      "long_inner_rise_inference_C": {
+        "1p2mm_1p461A": 4.594159465126331,
+        "1p2mm_2p02A": 8.502335876106738
+      },
+      "adiabatic_0p5mm_35um_70C_rise_C": {
+        "20ms": 7.075741720327299,
+        "36ms": 12.736335096589137
+      },
+      "adiabatic_0p5mm_28um_70C_rise_C": {
+        "20ms": 11.055846438011404,
+        "36ms": 19.900523588420526
+      },
+      "U9_two_via_parallel_R20_ohm": 0.0007299906723148267,
+      "via_plating_um_inference": 20
+    },
+    "inductor_normal_allocations": {
+      "U2_output_A": 0.5639143730886851,
+      "U2_peak_A": 0.8223988859728132,
+      "U400_output_A": 1.461,
+      "U400_peak_A": 1.8294748926270727,
+      "qualification": "Conditional on retained core/card/module allocations,not measured"
+    }
+  },
+  "hotplug_fresh_selected_runs": {
+    "selected_corners": [
+      {
+        "lh_uH": 2.0,
+        "rh_ohm": 0.03,
+        "bulk": "high",
+        "damper": "low",
+        "bypass": "high",
+        "vbr_V": 15.6,
+        "reference": "gnd",
+        "rdamp_ohm": 0.3378672,
+        "copper_r_scale": 0.75
+      },
+      {
+        "lh_uH": 0.1,
+        "rh_ohm": 0.03,
+        "bulk": "low",
+        "damper": "low",
+        "bypass": "low",
+        "vbr_V": 12.4,
+        "reference": "near",
+        "rdamp_ohm": 0.3378672,
+        "copper_r_scale": 0.75
+      },
+      {
+        "lh_uH": 0.1,
+        "rh_ohm": 0.03,
+        "bulk": "low",
+        "damper": "low",
+        "bypass": "low",
+        "vbr_V": 12.4,
+        "reference": "gnd",
+        "rdamp_ohm": 0.3825072,
+        "copper_r_scale": 0.75
+      },
+      {
+        "lh_uH": 0.1,
+        "rh_ohm": 0.03,
+        "bulk": "low",
+        "damper": "low",
+        "bypass": "low",
+        "vbr_V": 15.6,
+        "reference": "gnd",
+        "rdamp_ohm": 0.3825072,
+        "copper_r_scale": 0.75
+      }
+    ],
+    "main_rows": [
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -14.807373235755303,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 1.3337956106198587,
+        "rising_V_per_us": 0.7514364078787139,
+        "falling_peak_us": 12.510999999998736,
+        "falling_peak_voltage_V": -7.832038546294795,
+        "damper_peak_W": 207.64276059223081,
+        "damper_energy_J": 0.0022150299167894793
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.246411255271966,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.495123196196275,
+        "rising_V_per_us": 4.168716964859875,
+        "falling_peak_us": 2.285000000000035,
+        "falling_peak_voltage_V": -8.67479344515504,
+        "damper_peak_W": 539.9966947836172,
+        "damper_energy_J": 0.0017370530960260323
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.60649739243232,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.99147710943282,
+        "rising_V_per_us": 4.416363776616805,
+        "falling_peak_us": 2.2670000000000337,
+        "falling_peak_voltage_V": -8.778812207370066,
+        "damper_peak_W": 515.1398021636126,
+        "damper_energy_J": 0.0017479569297655633
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.980132634802949,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.99147710943282,
+        "rising_V_per_us": 5.090699647317009,
+        "falling_peak_us": 2.2670000000000337,
+        "falling_peak_voltage_V": -8.778812207370066,
+        "damper_peak_W": 536.9698684356031,
+        "damper_energy_J": 0.0017644221330549083
+      }
+    ],
+    "half_step_rows": [
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -14.807371821882377,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 1.3337951683327631,
+        "rising_V_per_us": 0.7514522440040138,
+        "falling_peak_us": 12.51050000000135,
+        "falling_peak_voltage_V": -7.83137185232394,
+        "damper_peak_W": 207.64276036542472,
+        "damper_energy_J": 0.0022150295766705723
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.24641023272601,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.494914701465461,
+        "rising_V_per_us": 4.169275537929451,
+        "falling_peak_us": 2.2855000000001313,
+        "falling_peak_voltage_V": -8.679043244824374,
+        "damper_peak_W": 539.996959791153,
+        "damper_energy_J": 0.0017370529701782851
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.606495656744086,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.990752846171901,
+        "rising_V_per_us": 4.415782661327583,
+        "falling_peak_us": 2.26650000000013,
+        "falling_peak_voltage_V": -8.774337487483415,
+        "damper_peak_W": 515.1409213324853,
+        "damper_energy_J": 0.001747956806770896
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.980167088671285,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.990752846171901,
+        "rising_V_per_us": 5.091052576634779,
+        "falling_peak_us": 2.26650000000013,
+        "falling_peak_voltage_V": -8.774337487483415,
+        "damper_peak_W": 536.9692353475784,
+        "damper_energy_J": 0.0017644219864618885
+      }
+    ],
+    "local_rows": [
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.9755209476786535,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.10174656333461482,
+        "rising_V_per_us": 0.0013848994839804616,
+        "falling_peak_us": 0.4996562499995795,
+        "falling_peak_voltage_V": 1.9755557497264054,
+        "damper_peak_W": 0.0016295223402093362,
+        "damper_energy_J": 1.6103817999236952e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.9755667274970121,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.10159726715031069,
+        "rising_V_per_us": 0.0014004105786113994,
+        "falling_peak_us": 0.4996562499995795,
+        "falling_peak_voltage_V": 1.975601478240896,
+        "damper_peak_W": 0.0016235081037087428,
+        "damper_energy_J": 1.603054044990988e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.976018877109811,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.10009750806005967,
+        "rising_V_per_us": 0.0015363865557560528,
+        "falling_peak_us": 0.4996562499995795,
+        "falling_peak_voltage_V": 1.9760531124724316,
+        "damper_peak_W": 0.0015647010771337158,
+        "damper_energy_J": 1.5315038902510896e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.9755210569544317,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.10169680145111212,
+        "rising_V_per_us": 0.0013864462999890745,
+        "falling_peak_us": 0.4994937499995792,
+        "falling_peak_voltage_V": 1.9755724780710828,
+        "damper_peak_W": 0.0016295058248663973,
+        "damper_energy_J": 1.6103643692351746e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.9755668391409797,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.10154737040579674,
+        "rising_V_per_us": 0.0014006559290180574,
+        "falling_peak_us": 0.4994937499995792,
+        "falling_peak_voltage_V": 1.9756181846452632,
+        "damper_peak_W": 0.0016234916286727995,
+        "damper_energy_J": 1.6030366934703672e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.976019009212277,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.1000461435829436,
+        "rising_V_per_us": 0.001538454519334209,
+        "falling_peak_us": 0.4994937499995792,
+        "falling_peak_voltage_V": 1.9760695950742195,
+        "damper_peak_W": 0.0015646850379286772,
+        "damper_energy_J": 1.5314873179748253e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.9755264788808906,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.10159467851877933,
+        "rising_V_per_us": 0.0013402297049935894,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.9755271138476314,
+        "damper_peak_W": 0.0016293392740664874,
+        "damper_energy_J": 1.610190098473426e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.975572284194052,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.10144447674775846,
+        "rising_V_per_us": 0.0013591961156578234,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.9755729182220316,
+        "damper_peak_W": 0.0016233254951976712,
+        "damper_energy_J": 1.602863217858482e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.9760246514388595,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.09993404068708854,
+        "rising_V_per_us": 0.0015265521646767863,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.976025276026614,
+        "damper_peak_W": 0.0015645234147857886,
+        "damper_energy_J": 1.5313216620199465e-10
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2958618879355175,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8844990869458793,
+        "rising_V_per_us": 0.0008338833978882575,
+        "falling_peak_us": 0.4997937499995798,
+        "falling_peak_voltage_V": 1.2964567270132836,
+        "damper_peak_W": 1.3311265135019628,
+        "damper_energy_J": 1.3195539899266084e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2971619274979982,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.883722440785163,
+        "rising_V_per_us": 0.0008784348715096256,
+        "falling_peak_us": 0.4997937499995798,
+        "falling_peak_voltage_V": 1.2977566072352456,
+        "damper_peak_W": 1.326234930623454,
+        "damper_energy_J": 1.3135671211363642e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.3101125074744702,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.874286123706326,
+        "rising_V_per_us": 0.00127331867716407,
+        "falling_peak_us": 0.49980624999957984,
+        "falling_peak_voltage_V": 1.3106693236106832,
+        "damper_peak_W": 1.278065859019245,
+        "damper_energy_J": 1.2551221508607044e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.295870318671203,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.883335621657323,
+        "rising_V_per_us": 0.000842345766471908,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2958883395188385,
+        "damper_peak_W": 1.3311079533584742,
+        "damper_energy_J": 1.3195345431534719e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2971704684560372,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8825620186978536,
+        "rising_V_per_us": 0.0008923744765354512,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.297188484468654,
+        "damper_peak_W": 1.3262163846670756,
+        "damper_energy_J": 1.3135477584977644e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.310122096284272,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8732086425975463,
+        "rising_V_per_us": 0.001284284447677919,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.3101400538382881,
+        "damper_peak_W": 1.2780475103419844,
+        "damper_energy_J": 1.255103625630023e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2959539103866002,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.886307126637177,
+        "rising_V_per_us": 0.0008060154677025365,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2959719498061417,
+        "damper_peak_W": 1.3309211168369783,
+        "damper_energy_J": 1.3193401611628524e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2972551561556058,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.885523137958756,
+        "rising_V_per_us": 0.0008321159761237594,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.297273190675218,
+        "damper_peak_W": 1.32602970897097,
+        "damper_energy_J": 1.313354223049825e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.3102169930081435,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8759374815834344,
+        "rising_V_per_us": 0.0012804649784925457,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.3102349676174034,
+        "damper_peak_W": 1.2778630359737972,
+        "damper_energy_J": 1.2549185092396104e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2935312595654276,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.899253157995218,
+        "rising_V_per_us": 0.00045797994729923625,
+        "falling_peak_us": 0.49971874999957966,
+        "falling_peak_voltage_V": 1.2943465851223257,
+        "damper_peak_W": 1.2002894056302584,
+        "damper_energy_J": 1.18976948704817e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2948370269461653,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.89767647577932,
+        "rising_V_per_us": 0.00048526734630627283,
+        "falling_peak_us": 0.49971874999957966,
+        "falling_peak_voltage_V": 1.2956519095600427,
+        "damper_peak_W": 1.1958802697385575,
+        "damper_energy_J": 1.1843710358635551e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.3078196991471114,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8808571588179173,
+        "rising_V_per_us": 0.0007440447724604836,
+        "falling_peak_us": 0.4997312499995797,
+        "falling_peak_voltage_V": 1.3085938536915998,
+        "damper_peak_W": 1.152467817426568,
+        "damper_energy_J": 1.131669751704317e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2935382450189583,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8992282351758543,
+        "rising_V_per_us": 0.00046527164343501676,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2935563651954283,
+        "damper_peak_W": 1.2002739511637872,
+        "damper_energy_J": 1.1897524432691585e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2948438919394811,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8976617105058717,
+        "rising_V_per_us": 0.000492952079156339,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2948620023251718,
+        "damper_peak_W": 1.1958648907520462,
+        "damper_energy_J": 1.1843540612297452e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.3078254527350242,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.880960275604138,
+        "rising_V_per_us": 0.0007413329150551816,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.3078434587367467,
+        "damper_peak_W": 1.1524531469828656,
+        "damper_energy_J": 1.1316534461784662e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2936081639208672,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.897227475475716,
+        "rising_V_per_us": 0.0004569698219825113,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.293626271592589,
+        "damper_peak_W": 1.2001207087206636,
+        "damper_energy_J": 1.1895819544313298e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2949126134721376,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.895683558570283,
+        "rising_V_per_us": 0.0004736285674766804,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2949307114943787,
+        "damper_peak_W": 1.1957123858789982,
+        "damper_energy_J": 1.1841842582197893e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.307883342284102,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.879369587329705,
+        "rising_V_per_us": 0.0007309967031687846,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.3079013383440228,
+        "damper_peak_W": 1.1523075210895537,
+        "damper_energy_J": 1.1314902841234525e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2935312595654276,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.899253157995218,
+        "rising_V_per_us": 0.00045797994729923625,
+        "falling_peak_us": 0.49971874999957966,
+        "falling_peak_voltage_V": 1.2943465851223257,
+        "damper_peak_W": 1.2002894056302584,
+        "damper_energy_J": 1.18976948704817e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2948370269461653,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.89767647577932,
+        "rising_V_per_us": 0.00048526734630627283,
+        "falling_peak_us": 0.49971874999957966,
+        "falling_peak_voltage_V": 1.2956519095600427,
+        "damper_peak_W": 1.1958802697385575,
+        "damper_energy_J": 1.1843710358635551e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 10.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.3078196991471114,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8808571588179173,
+        "rising_V_per_us": 0.0007440447724604836,
+        "falling_peak_us": 0.4997312499995797,
+        "falling_peak_voltage_V": 1.3085938536915998,
+        "damper_peak_W": 1.152467817426568,
+        "damper_energy_J": 1.131669751704317e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2935382450189583,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8992282351758543,
+        "rising_V_per_us": 0.00046527164343501676,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2935563651954283,
+        "damper_peak_W": 1.2002739511637872,
+        "damper_energy_J": 1.1897524432691585e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2948438919394811,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.8976617105058717,
+        "rising_V_per_us": 0.000492952079156339,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2948620023251718,
+        "damper_peak_W": 1.1958648907520462,
+        "damper_energy_J": 1.1843540612297452e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 100.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.3078254527350242,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.880960275604138,
+        "rising_V_per_us": 0.0007413329150551816,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.3078434587367467,
+        "damper_peak_W": 1.1524531469828656,
+        "damper_energy_J": 1.1316534461784662e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 0.1
+        },
+        "minimum_V": 1.2936081639208672,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.897227475475716,
+        "rising_V_per_us": 0.0004569698219825113,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.293626271592589,
+        "damper_peak_W": 1.2001207087206636,
+        "damper_energy_J": 1.1895819544313298e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 1.0
+        },
+        "minimum_V": 1.2949126134721376,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.895683558570283,
+        "rising_V_per_us": 0.0004736285674766804,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.2949307114943787,
+        "damper_peak_W": 1.1957123858789982,
+        "damper_energy_J": 1.1841842582197893e-07
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75,
+          "input_cap_pF": 1000.0,
+          "contact_edge_ns": 10.0
+        },
+        "minimum_V": 1.307883342284102,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 2.879369587329705,
+        "rising_V_per_us": 0.0007309967031687846,
+        "falling_peak_us": 0.49999374999958024,
+        "falling_peak_voltage_V": 1.3079013383440228,
+        "damper_peak_W": 1.1523075210895537,
+        "damper_energy_J": 1.1314902841234525e-07
+      }
+    ],
+    "topology_issues": [],
+    "fresh_reexecution_only": true,
+    "no_clamp_selected": [
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 1000.0,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -14.807406082399794,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 1.3337956106198587,
+        "rising_V_per_us": 0.7514407322320338,
+        "falling_peak_us": 12.510999999998736,
+        "falling_peak_voltage_V": -7.832038546294795,
+        "damper_peak_W": 207.64276059223081,
+        "damper_energy_J": 0.002215032472168685
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 1000.0,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.4831290239468,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.495123196196275,
+        "rising_V_per_us": 4.599532836718544,
+        "falling_peak_us": 2.285000000000035,
+        "falling_peak_voltage_V": -8.67479344515504,
+        "damper_peak_W": 553.6124424999186,
+        "damper_energy_J": 0.001748010764910439
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 1000.0,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.98013263712821,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.99147710943282,
+        "rising_V_per_us": 5.090699651304042,
+        "falling_peak_us": 2.2670000000000337,
+        "falling_peak_voltage_V": -8.778812207370066,
+        "damper_peak_W": 536.9698684963853,
+        "damper_energy_J": 0.0017644221331462404
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 1000.0,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.98013263712821,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.99147710943282,
+        "rising_V_per_us": 5.090699651304042,
+        "falling_peak_us": 2.2670000000000337,
+        "falling_peak_voltage_V": -8.778812207370066,
+        "damper_peak_W": 536.9698684963853,
+        "damper_energy_J": 0.0017644221331462404
+      }
+    ],
+    "low_harness_selected": [
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.0,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -16.110943326964104,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 1.586278442101907,
+        "rising_V_per_us": 0.9802952459640578,
+        "falling_peak_us": 12.586999999998708,
+        "falling_peak_voltage_V": -8.897723823277165,
+        "damper_peak_W": 259.001153693992,
+        "damper_energy_J": 0.002672459376501149
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.01,
+          "bulk": "high",
+          "damper": "low",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -15.831629199532617,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 1.4994306686100245,
+        "rising_V_per_us": 0.9245887764235405,
+        "falling_peak_us": 12.650999999998687,
+        "falling_peak_voltage_V": -8.652443981636992,
+        "damper_peak_W": 240.32774845039935,
+        "damper_energy_J": 0.0025234806152481877
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.0,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -17.290408301752596,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 15.29150892086939,
+        "rising_V_per_us": 6.071661453667332,
+        "falling_peak_us": 2.1990000000000283,
+        "falling_peak_voltage_V": -11.923579971841908,
+        "damper_peak_W": 902.6631686563887,
+        "damper_energy_J": 0.0021490136627573125
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.01,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "near",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -15.780867726814858,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 12.474603375249416,
+        "rising_V_per_us": 5.058346915833844,
+        "falling_peak_us": 2.3610000000000406,
+        "falling_peak_voltage_V": -12.31246583993811,
+        "damper_peak_W": 758.4181519275792,
+        "damper_energy_J": 0.0019858760722069975
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.0,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -17.730485603131395,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 16.209354035891188,
+        "rising_V_per_us": 6.567218560816101,
+        "falling_peak_us": 2.207000000000029,
+        "falling_peak_voltage_V": -12.440927105621089,
+        "damper_peak_W": 854.2105663626,
+        "damper_energy_J": 0.0021323071479607855
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.01,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 12.4,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -16.181222530201534,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 13.186288742974561,
+        "rising_V_per_us": 5.518450726075486,
+        "falling_peak_us": 2.3470000000000395,
+        "falling_peak_voltage_V": -12.558859808925394,
+        "damper_peak_W": 718.9958415638018,
+        "damper_energy_J": 0.001979118759392751
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.0,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -19.058117109434363,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 17.21885303083503,
+        "rising_V_per_us": 8.418204578208409,
+        "falling_peak_us": 2.313000000000037,
+        "falling_peak_voltage_V": -14.192495165320576,
+        "damper_peak_W": 976.2071636699666,
+        "damper_energy_J": 0.0022224695387416974
+      },
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.01,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -17.38158127738073,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 13.268367026917359,
+        "rising_V_per_us": 7.713571514625705,
+        "falling_peak_us": 2.369000000000041,
+        "falling_peak_voltage_V": -12.85077902605302,
+        "damper_peak_W": 816.6571410700968,
+        "damper_energy_J": 0.0020474259357568243
+      }
+    ],
+    "damper_stress_selected": [
+      {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "high",
+          "bypass": "low",
+          "vbr_V": 15.6,
+          "reference": "gnd",
+          "rdamp_ohm": 0.3378672,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -13.361452518622844,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 8.41083045428892,
+        "rising_V_per_us": 4.5850679232382054,
+        "falling_peak_us": 2.275000000000034,
+        "falling_peak_voltage_V": -8.552623911944739,
+        "damper_peak_W": 579.049146582958,
+        "damper_energy_J": 0.0023943447918557017
+      },
+      {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "high",
+          "damper": "high",
+          "bypass": "high",
+          "vbr_V": 15.6,
+          "reference": "near",
+          "rdamp_ohm": 0.3825072,
+          "copper_r_scale": 0.75
+        },
+        "minimum_V": -12.707774909272867,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 1.3155471849528588,
+        "rising_V_per_us": 0.21331174490040183,
+        "falling_peak_us": 12.274999999998817,
+        "falling_peak_voltage_V": -7.60129655412924,
+        "damper_peak_W": 259.07534280521804,
+        "damper_energy_J": 0.002979359077108136
+      }
+    ]
+  },
+  "independent_constant_C_MNA": [
+    {
+      "corner": {
+        "lh_uH": 0.1,
+        "rh_ohm": 0.03,
+        "bulk": "low",
+        "damper": "low",
+        "bypass": "low",
+        "vbr_V": 1000.0,
+        "reference": "near",
+        "rdamp_ohm": 0.36,
+        "copper_r_scale": 1.0
+      },
+      "independent_MNA": {
+        "minimum_V": -10.82825216122739,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 4.546932909947898,
+        "rising_V_per_us": 1.4361923535926022
+      },
+      "half_step_MNA": {
+        "minimum_V": -10.828251742749183,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 4.546889910158836,
+        "rising_V_per_us": 1.4361930701500825
+      },
+      "compiled_charge_control": {
+        "corner": {
+          "lh_uH": 0.1,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 1000.0,
+          "reference": "near",
+          "rdamp_ohm": 0.36,
+          "copper_r_scale": 1.0
+        },
+        "minimum_V": -10.828252157961309,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 4.546932918680246,
+        "rising_V_per_us": 1.4361923528705132,
+        "falling_peak_us": 1.7810000000000104,
+        "falling_peak_voltage_V": -3.3358948109212143,
+        "damper_peak_W": 329.9562018269334,
+        "damper_energy_J": 0.0022593782909356348
+      },
+      "absolute_deltas": {
+        "minimum_V": 3.2660807391948765e-09,
+        "maximum_V": 0.0,
+        "falling_V_per_us": 8.732347289708287e-09,
+        "rising_V_per_us": 7.220890552162018e-10
+      }
+    },
+    {
+      "corner": {
+        "lh_uH": 2.0,
+        "rh_ohm": 0.03,
+        "bulk": "low",
+        "damper": "low",
+        "bypass": "low",
+        "vbr_V": 1000.0,
+        "reference": "gnd",
+        "rdamp_ohm": 0.36,
+        "copper_r_scale": 1.0
+      },
+      "independent_MNA": {
+        "minimum_V": -12.009433901806025,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.9618841703580293,
+        "rising_V_per_us": 0.2427980210141456
+      },
+      "half_step_MNA": {
+        "minimum_V": -12.00943378507514,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.9618842642282742,
+        "rising_V_per_us": 0.2427980327141199
+      },
+      "compiled_charge_control": {
+        "corner": {
+          "lh_uH": 2.0,
+          "rh_ohm": 0.03,
+          "bulk": "low",
+          "damper": "low",
+          "bypass": "low",
+          "vbr_V": 1000.0,
+          "reference": "gnd",
+          "rdamp_ohm": 0.36,
+          "copper_r_scale": 1.0
+        },
+        "minimum_V": -12.009433894865024,
+        "maximum_V": 2.0,
+        "falling_V_per_us": 0.9618841701430901,
+        "rising_V_per_us": 0.24279802053044364,
+        "falling_peak_us": 8.397000000000169,
+        "falling_peak_voltage_V": -3.552864016894992,
+        "damper_peak_W": 162.58037169501836,
+        "damper_energy_J": 0.0027193863786362953
+      },
+      "absolute_deltas": {
+        "minimum_V": 6.941000663118757e-09,
+        "maximum_V": 0.0,
+        "falling_V_per_us": 2.149391775674303e-10,
+        "rising_V_per_us": 4.837019673686882e-10
+      }
+    }
+  ],
+  "hotplug_coverage": {
+    "full_2304_rerun": false,
+    "selected_main": 4,
+    "selected_half_step": 4,
+    "early_local": 36,
+    "no_clamp": 4,
+    "lower_harness_R": 8,
+    "damper_stress": 2,
+    "constant_C_compiled_controls": 2,
+    "independent_MNA_full_and_half": 4,
+    "input_cap_sensitivity_pF": [
+      10,
+      100,
+      1000
+    ],
+    "contact_edge_sensitivity_ns": [
+      0.1,
+      1,
+      10
+    ]
+  },
+  "sources": [
+    {
+      "id": "U9",
+      "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+      "document": "SLVSFC9C",
+      "pages": [
+        7,
+        8,
+        9,
+        62,
+        63
+      ],
+      "retrieved_content_sha256": "8f96de389903091650d4f462dcfad3210071c3ae7093623a7978f34baf8a65b4"
+    },
+    {
+      "id": "buck",
+      "url": "https://www.diodes.com/datasheet/download/AP63200-AP63201-AP63203-AP63205.pdf",
+      "document": "DS41326 Rev3-2",
+      "pages": [
+        4,
+        5,
+        11,
+        14,
+        15
+      ],
+      "retrieved_content_sha256": "ef99daa3789d835bc025dfcb4c605c5c2e6d3e7223e86d40b33e6b497ea5a722"
+    },
+    {
+      "id": "U10_U402",
+      "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+      "document": "SLVS841G",
+      "pages": [
+        5,
+        6,
+        7,
+        13,
+        14
+      ],
+      "retrieved_content_sha256": "edd76d150b073ae8d4addbf85f6845b8c722fbd0b35ef025ac3c9e704a6a3385"
+    },
+    {
+      "id": "U11",
+      "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+      "document": "SLVSEA3F",
+      "pages": [
+        8,
+        15,
+        33
+      ]
+    },
+    {
+      "id": "U401",
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "document": "SBVS282A",
+      "pages": [
+        3,
+        4,
+        5,
+        6,
+        22,
+        25,
+        26
+      ]
+    },
+    {
+      "id": "U13",
+      "url": "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+      "document": "SBVS186H",
+      "pages": [
+        14,
+        15,
+        16
+      ]
+    },
+    {
+      "id": "Q120_Q121",
+      "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+      "document": "Rev2.1 November2023",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "rendered_pages": [
+        4,
+        5
+      ],
+      "retrieved_content_sha256": "95786edcc78744297555a01e7ab21bf9d5443d9b063bf3204c4d600e8d05d516"
+    },
+    {
+      "id": "Q124",
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+      "pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "retrieved_content_sha256": "f062570cdd7382ee0fb23cb77e4522e538a098918f4ac06d0d38521efd543547"
+    },
+    {
+      "id": "R134",
+      "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+      "pages": [
+        1,
+        2,
+        3
+      ],
+      "rendered_pages": [
+        3
+      ],
+      "retrieved_content_sha256": "dd72c578f48227dbc38ed5c531d965920166b267da3cf4d0494253143732a94d"
+    },
+    {
+      "id": "C87",
+      "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+      "section": "DCBias numerical graph, typical data",
+      "retrieved_content_sha256": "c1f40a5c02e97b44a5d5be53be29fee4274cba66f3a06588381657d61b3f4a06"
+    },
+    {
+      "id": "ematch",
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "pages": [
+        1
+      ]
+    },
+    {
+      "id": "camera",
+      "url": "https://www.runcam.com/download/split4k/RC_Split_4k_Manual_EN.pdf",
+      "pages": [
+        1
+      ]
+    },
+    {
+      "id": "radio",
+      "url": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+      "section": "Specifications"
+    },
+    {
+      "id": "GPS",
+      "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+      "section": "Specification"
+    },
+    {
+      "id": "L400",
+      "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+      "pages": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": "L1",
+      "url": "https://www.sunlordinc.com/uploads/files/20221122/SWPA%20series%20of%20SMD%20Power%20Inductor.pdf",
+      "section": "SWPA4030S specification table; primary indexed text; full PDF fetch timed out"
+    },
+    {
+      "id": "D8",
+      "url": "https://www.littelfuse.com/~/media/electronics/datasheets/tvs_diodes/littelfuse_tvs_diode_smbj_datasheet.pdf.pdf",
+      "section": "SMBJ12CA electrical table; primary indexed text"
+    },
+    {
+      "id": "U1_watchdog",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "document": "DS12110 Rev11 January2026",
+      "pages": [
+        233
+      ],
+      "table": 136,
+      "verified_revision": "RevV",
+      "LSI_range_kHz": [
+        29.4,
+        33.6
+      ]
+    }
+  ],
+  "calculation_source": "import bisect, heapq, json, math, pathlib\n\nroot = pathlib.Path.cwd()\nnative = json.loads((root / 'm3_design/assembly_review/sources/r10_review/round12_power.json').read_text())['independent_calculation_native_input']\ntracks = native['tracks']\n\n\ndef between(net, start, end, layer):\n    rows = [t for t in tracks if t['type'] == 'PCB_TRACK' and t['net'] == net and t['layer'] == layer]\n    vertices = {tuple(q) for t in rows for q in (t['start'], t['end'])} | {start, end}\n    graph = {p: [] for p in vertices}\n    for t in rows:\n        a, b = t['start'], t['end']\n        dx, dy = b[0] - a[0], b[1] - a[1]\n        length = math.hypot(dx, dy)\n        cuts = []\n        for q in vertices:\n            fraction = ((q[0] - a[0]) * dx + (q[1] - a[1]) * dy) / length ** 2\n            distance = abs((q[0] - a[0]) * dy - (q[1] - a[1]) * dx) / length\n            if -1e-6 <= fraction <= 1 + 1e-6 and distance < 1e-6:\n                cuts.append((fraction, q))\n        cuts.sort()\n        for (f0, p0), (f1, p1) in zip(cuts, cuts[1:]):\n            ll = (f1 - f0) * length\n            if ll > 1e-8:\n                graph[p0].append((p1, ll, t['w']))\n                graph[p1].append((p0, ll, t['w']))\n    queue, best, came = [(0., start)], {start: 0.}, {}\n    while queue:\n        dist, p = heapq.heappop(queue)\n        if dist != best[p]:\n            continue\n        if p == end:\n            route = []\n            while p != start:\n                prior, length, width = came[p]\n                route.append(dict(start=prior, end=p, length_mm=length, width_mm=width))\n                p = prior\n            route.reverse()\n            return dict(length_mm=dist, pieces=route)\n        for q, length, width in graph[p]:\n            candidate = dist + length\n            if candidate < best.get(q, math.inf):\n                best[q], came[q] = candidate, (p, length, width)\n                heapq.heappush(queue, (candidate, q))\n    raise ValueError((net, 'disconnected'))\n\n\npaths = {net: between(net, start, end, side) for net, start, end, side in [\n    ('BAT_IN', (7.4, 74.1), (13.5, 73.6), 'B.Cu'),\n    ('ACT_FET_S', (13.175, 72.2), (13.175, 70.), 'B.Cu'),\n    ('RAW_ACT', (14.475, 67.105), (19.075, 64.), 'B.Cu'),\n    ('PYRO1_IGN', (13.925, 64.), (7.4, 57.6), 'B.Cu'),\n    ('PYRO1_OUT', (7.4, 54.1), (13.9, 57.37), 'F.Cu')]}\nrho20, copper_t = 1.72e-8, 35e-6\nresistance20 = sum(sum(q['length_mm'] / q['width_mm'] * rho20 / copper_t for q in p['pieces']) for p in paths.values())\nresistance70 = resistance20 * (1 + .00393 * 50)\nthin, thick = .001 + .000025 * 100, .01 + .0001 * 100\nbuck = [.792 * (1 + (56200 * (1 - thin) + 2000 * (1 - thick)) / (10000 * (1 + thin))),\n        .808 * (1 + (56200 * (1 + thin) + 2000 * (1 + thick)) / (10000 * (1 - thin)))]\nldo = [.792 * (1 + 49900 * (1 - thin) / (10000 * (1 + thin))) - 100e-9 * 49900 * (1 + thin),\n       .808 * (1 + 49900 * (1 + thin) / (10000 * (1 - thin))) + 100e-9 * 49900 * (1 + thin)]\ncamera_limit = [25230 / (22.6 * (1 + thick)) ** 1.016 / 1000, 22980 / (22.6 * (1 - thick)) ** .94 / 1000]\nusb_limit = [25230 / (66.5 * (1 + thick)) ** 1.016 / 1000, 22980 / (66.5 * (1 - thick)) ** .94 / 1000]\nsdwrite, sdidle = [3.3 * .2 / e for e in [.85, .8]], [3.3 * .03 / e for e in [.85, .8]]\nbleed = 7.4 ** 2 / (3300 * .98)\nloads = {'all_ports_SD_write': [buck[0] * 1.461 / .85 + .6 + sdwrite[0] + bleed,\n                               buck[1] * 1.461 / .8 + 1.4 + sdwrite[1] + bleed],\n         'GPS_radio_camera_off_shed_SD_idle': [buck[0] * .461 / .85 + .62 + sdidle[0] + bleed,\n                                             buck[1] * .461 / .8 + .62 + sdidle[1] + bleed]}\nride = {name: {str(c * 1e6): [.5 * c * (7.4 ** 2 - 3.8 ** 2) / p * 1000 for p in [ww[1], ww[0]]]\n               for c in [300.8e-6, 470e-6]} for name, ww in loads.items()}\nr134_high, r134_low = 2 * 1.01 * (1 + .0001 * 45), 2 * .99 * (1 - .0001 * 45)\nrbranch = r134_high + 2 + .3 + resistance70 + .005 + .01 + 2 * .04 + .0058 * 1.42\ncases = []\nfor nstall in range(5):\n    a, b, c = 1 + .15 / rbranch, 7.4 - .15 * 1.92 * nstall, .15 * loads['all_ports_SD_write'][1]\n    v = (b + math.sqrt(b * b - 4 * a * c)) / (2 * a)\n    cases.append(dict(stalls=nstall, loaded_BAT_IN_V=v, fire_A=v / rbranch, minimum_settled_Vgs=(v - v / rbranch * .04 - .1) * 98000 / (98000 + 10200)))\nshorts = []\nfor nstall in [0, 4]:\n    rr = rbranch - 2 - .3\n    a, b, c = 1 + .15 / rr, 7.4 - .15 * 1.92 * nstall, .15 * loads['all_ports_SD_write'][1]\n    v = (b + math.sqrt(b * b - 4 * a * c)) / (2 * a)\n    shorts.append(dict(stalls=nstall, short_fire_A=v / rr, loaded_BAT_IN_V=v))\nloss = (buck[1] - ldo[0]) * .46 + buck[1] * .004\nresult = dict(native_fire_paths=paths, copper20_ohm=resistance20, copper70_ohm=resistance70,\n              buck_V=buck, ldo_V=ldo, camera_min_V=buck[0] - .135 - .15 - .05,\n              radio_min_V=ldo[0] - .3 * .2 - .05, gps_min_V=ldo[0] - .15 * .2 - .05,\n              radio_GPS_max_V=ldo[1] + .05, ldo_headroom_V=buck[0] - .05 - ldo[1],\n              camera_limit_A=camera_limit, usb_limit_A=usb_limit,\n              ldo_loss_W=loss, ldo_70C_junction_inference_C=[70 + theta * loss for theta in [80, 110]],\n              load_W=loads, ride_7V4_to_3V8_ms=ride, fire_branch_ohm=rbranch,\n              fire_loop_including_pack_ohm=rbranch + .15, fire_cases=cases, shorted_match_cases=shorts,\n              unbounded_port_fault_demand_A=1.9 + 1 + .011,\n              upstream_threshold_bound_A=3.1 + (1.4 + .825) / 3.5 + 9.97 / (3300 * .98) + .005,\n              r134_short_power_W=8.4 ** 2 / r134_low,\n              r134_short_J=[8.4 ** 2 / r134_low * t for t in [.02, .036]],\n              ground_return_share_A=4 * 7.68 * .001 / .05,\n              watchdog_ms=[960 / f * 1000 for f in [33600, 29400]],\n              usb_nominal_attach_charge_mC=(470 + 22 + 22 + .1) * 1e-3 * 4.7)\n(root / '.supervisor/round12_power_tmp/calculations.json').write_text(json.dumps(result, indent=2))\nfor k, v in result.items():\n    if k != 'native_fire_paths':\n        print(k, v)\nprint('native_fire_paths', {k: v['length_mm'] for k, v in paths.items()})\n",
+  "independent_MNA_source": "import json, math, pathlib, sys\nimport numpy as np\n\nroot = pathlib.Path.cwd()\ninputs = json.loads((root / 'm3_design/assembly_review/sources/r10_design/hotplug_inputs.json').read_text())\nsys.path.insert(0, str(root / 'tools'))\nimport r10_hotplug as production\n\n# Independent descriptor-system MNA. No production matrices/integrator are used.\npins = inputs['terminals']\nedges = inputs['edges']\nnodes = sorted({e[k] for e in edges for k in ('a', 'b')})\nix = {v: n for n, v in enumerate(nodes)}\nn, m = len(nodes), len(edges) + 1\nE = np.zeros((m, n))\nfor j, e in enumerate(edges):\n    E[j, ix[e['a']]], E[j, ix[e['b']]] = 1, -1\nE[-1, ix[pins['J1.1']]] = -1\nC = np.zeros((n, n))\nfor a, b, cap in [('C80.1', None, 10e-6), ('C96.1', None, 10e-6),\n                  ('C89.1', 'C89.2', 22e-6), ('C95.1', 'C95.2', 22e-6),\n                  ('C88.1', None, 100e-9)]:\n    e = np.zeros(n)\n    e[ix[pins[a]]] = 1\n    if b:\n        e[ix[pins[b]]] = -1\n    C += cap * np.outer(e, e)\n\n\ndef descriptor(corner, multiplier=1):\n    R = np.diag([e['R_ohm'] * corner['copper_r_scale'] for e in edges] + [corner['rh_ohm']])\n    L = np.diag([e['L_' + corner['reference'] + '_nH'] * 1e-9 for e in edges] + [corner['lh_uH'] * 1e-6])\n    G = np.zeros((n, n))\n    for pin, resistor in [('R166.1', corner['rdamp_ohm']), ('R167.1', 10000)]:\n        G[ix[pins[pin]], ix[pins[pin]]] += 1 / resistor\n    Z = np.zeros((n, m))\n    D = np.block([[C, Z], [Z.T, L]])\n    K = np.block([[G, E.T], [-E, R]])\n    source = np.zeros(n + m)\n    source[-1] = -8.4\n    state = np.zeros(n + m)\n    state[:n] = 2\n    for p in ['C89.2', 'C95.2', 'R166.1']:\n        state[ix[pins[p]]] = 0\n    u = ix[pins['U9.5']]\n    vmin, vmax, fall, rise, time = 2., 2., 0., 0., 0.\n    # The source is an imposed reverse step. D8 is disabled for this linear control.\n    for end, dt in [(1e-6, .5e-9 * multiplier), (20e-6, 2e-9 * multiplier), (150e-6, 10e-9 * multiplier)]:\n        left = D / dt + K / 2\n        right = D / dt - K / 2\n        inv = np.linalg.inv(left)\n        advance = np.einsum('ij,jk->ik', inv, right)\n        forced = np.einsum('ij,j->i', inv, source)\n        assert np.isfinite(advance).all() and np.isfinite(forced).all()\n        first = time == 0\n        if first:\n            old = state.copy()\n            state = np.linalg.solve(D / dt + K, np.einsum('ij,j->i', D, state) / dt + source)\n            slope = (state[u] - old[u]) / dt / 1e6\n            fall, rise = max(fall, -slope), max(rise, slope)\n            vmin, vmax = min(vmin, state[u]), max(vmax, state[u])\n            time += dt\n        for _ in range(round((end - time) / dt)):\n            old = state[u]\n            state = np.einsum('ij,j->i', advance, state) + forced\n            assert np.isfinite(state).all()\n            slope = (state[u] - old) / dt / 1e6\n            vmin, vmax = min(vmin, state[u]), max(vmax, state[u])\n            fall, rise = max(fall, -slope), max(rise, slope)\n            time += dt\n    return dict(minimum_V=vmin, maximum_V=vmax, falling_V_per_us=fall, rising_V_per_us=rise)\n\n\ncorners = [dict(lh_uH=l, rh_ohm=.03, bulk='low', damper='low', bypass='low',\n                vbr_V=1000., reference=ref, rdamp_ohm=.36, copper_r_scale=1.)\n           for l, ref in [(.1, 'near'), (2., 'gnd')]]\noriginal = production.curves\ndef fixed_curves():\n    ns = np.full(3, 2, dtype=np.int32)\n    xs, qs, cs = np.zeros((3, 160)), np.zeros((3, 160)), np.ones((3, 160))\n    xs[:, 1] = 1000.\n    qs[:, 1] = 1000.\n    return ns, xs, cs, qs, [dict(low=1., high=1.)] * 3\nproduction.curves = fixed_curves\ntry:\n    compiled = production.run_nonlinear(inputs, corners)\nfinally:\n    production.curves = original\nrows = []\nfor c, compiled_row in zip(corners, compiled):\n    coarse, fine = descriptor(c), descriptor(c, .5)\n    delta = {k: abs(coarse[k] - compiled_row[k]) for k in coarse}\n    row = dict(corner=c, independent_MNA=coarse, half_step_MNA=fine, compiled_charge_control=compiled_row,\n               absolute_deltas=delta)\n    rows.append(row)\n    print(json.dumps(row))\n(root / '.supervisor/round12_power_tmp/independent_mna.json').write_text(json.dumps(rows, indent=2))\n",
+  "checks_executed": [
+    "Native read-only KiCad pad/track/zone parsing",
+    "144 selected native-to-exported-schematic pin/net comparisons",
+    "Independent endpoint/thermal/source-sag/hold-up/short-pulse calculations",
+    "Independent current-path graph with real collinear junction splitting",
+    "Read-only native hotplug extraction and normalized full-input equality",
+    "Selected nonlinear extrema/refinement/local/no-clamp/lower-R/damper simulations",
+    "Independent descriptor-MNA linear controls",
+    "Original AOS SOA and Bourns pulse pages rendered and visually inspected",
+    "Before/after exact PCB SHA256"
+  ],
+  "not_executed": [
+    "canonical builds",
+    "tools/check.sh",
+    "native DRC",
+    "GUI launch",
+    "Git mutation",
+    "other-worktree edits",
+    "physical measurements",
+    "firmware implementation or qualification",
+    "full2304-case simulation sweep",
+    "full track/plane/via DC or thermal field solve"
+  ],
+  "qualification_limits": [
+    "Unmeasured source reserve and harness R/L/contact losses",
+    "Typical capacitor C(V),ideal common ground/pad copper and estimated inductance",
+    "C84 cold ESR and actual physical-break/SD-busy load decay",
+    "Comparator overshoot and port-short logic survival",
+    "Actual-board converter/FET thermal and linear SOA",
+    "Selected e-match lot20ms firing and charge deployment",
+    "Watchdog/silicon/startup/gate-current-tail behavior",
+    "R166 pulse durability",
+    "USB host attach/source transfer/back-feed",
+    "RF/ESD immunity and actual assembly/VIPPO/manual-C84 process"
+  ],
+  "AGENTS_section2_unchanged": true,
+  "acceptance_claimed": false,
+  "independent_calculation_native_input": {
+    "tracks": [
+      {
+        "net": "BAT_IN",
+        "start": [
+          12.525,
+          87.3
+        ],
+        "end": [
+          14.116,
+          88.891
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 2.250013777735594,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          13.35,
+          75.0
+        ],
+        "end": [
+          10.2,
+          71.85
+        ],
+        "w": 0.2,
+        "layer": "F.Cu",
+        "len": 4.45477272147525,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          10.2,
+          70.2
+        ],
+        "end": [
+          13.075,
+          70.2
+        ],
+        "w": 0.2,
+        "layer": "F.Cu",
+        "len": 2.875,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          11.625,
+          83.8
+        ],
+        "end": [
+          9.8,
+          83.8
+        ],
+        "w": 0.4,
+        "layer": "F.Cu",
+        "len": 1.825,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          10.2,
+          71.85
+        ],
+        "end": [
+          10.2,
+          70.2
+        ],
+        "w": 0.2,
+        "layer": "F.Cu",
+        "len": 1.65,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          12.525,
+          82.1
+        ],
+        "end": [
+          12.525,
+          84.7
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 2.6,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          8.9,
+          74.1
+        ],
+        "end": [
+          9.8,
+          75.0
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 1.2727922061357857,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          17.5,
+          88.891
+        ],
+        "end": [
+          17.5,
+          87.3
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 1.591,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          12.525,
+          84.7
+        ],
+        "end": [
+          11.625,
+          83.8
+        ],
+        "w": 0.4,
+        "layer": "F.Cu",
+        "len": 1.2727922061357857,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          13.075,
+          70.2
+        ],
+        "end": [
+          14.075,
+          69.2
+        ],
+        "w": 0.2,
+        "layer": "F.Cu",
+        "len": 1.4142135623730951,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          14.116,
+          88.891
+        ],
+        "end": [
+          17.5,
+          88.891
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 3.384,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          7.4,
+          74.1
+        ],
+        "end": [
+          8.9,
+          74.1
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 1.5,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          12.525,
+          75.825
+        ],
+        "end": [
+          12.525,
+          79.5
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 3.675,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          12.525,
+          84.7
+        ],
+        "end": [
+          12.525,
+          87.3
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 2.6,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          12.525,
+          79.5
+        ],
+        "end": [
+          12.525,
+          82.1
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 2.6,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          13.35,
+          75.0
+        ],
+        "end": [
+          12.525,
+          75.825
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 1.1667261889578033,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          9.8,
+          75.0
+        ],
+        "end": [
+          13.35,
+          75.0
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 3.55,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          17.5,
+          87.3
+        ],
+        "end": [
+          17.5,
+          87.3
+        ],
+        "w": 1.0,
+        "layer": "F.Cu",
+        "len": 0.0,
+        "type": "PCB_VIA",
+        "drill": 0.5
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          7.4,
+          74.1
+        ],
+        "end": [
+          13.0,
+          74.1
+        ],
+        "w": 1.0,
+        "layer": "B.Cu",
+        "len": 5.6,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          19.4,
+          84.37
+        ],
+        "end": [
+          18.25,
+          84.37
+        ],
+        "w": 0.7,
+        "layer": "B.Cu",
+        "len": 1.15,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          15.5,
+          87.3
+        ],
+        "end": [
+          15.5,
+          83.9
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 3.4,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          15.5,
+          83.9
+        ],
+        "end": [
+          13.925,
+          83.9
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.575,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          19.4,
+          85.4
+        ],
+        "end": [
+          19.4,
+          84.37
+        ],
+        "w": 0.7,
+        "layer": "B.Cu",
+        "len": 1.03,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          17.5,
+          87.3
+        ],
+        "end": [
+          19.4,
+          85.4
+        ],
+        "w": 1.0,
+        "layer": "B.Cu",
+        "len": 2.687005768508881,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          13.925,
+          83.9
+        ],
+        "end": [
+          13.825,
+          83.8
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 0.14142135623730953,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          13.0,
+          74.1
+        ],
+        "end": [
+          13.5,
+          73.6
+        ],
+        "w": 1.0,
+        "layer": "B.Cu",
+        "len": 0.7071067811865476,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          18.25,
+          83.4
+        ],
+        "end": [
+          18.25,
+          81.6
+        ],
+        "w": 0.3,
+        "layer": "B.Cu",
+        "len": 1.8,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          18.25,
+          84.37
+        ],
+        "end": [
+          18.25,
+          83.4
+        ],
+        "w": 0.7,
+        "layer": "B.Cu",
+        "len": 0.97,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "BAT_IN",
+        "start": [
+          17.5,
+          87.3
+        ],
+        "end": [
+          15.5,
+          87.3
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 2.0,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          10.63,
+          54.1
+        ],
+        "end": [
+          11.63,
+          55.1
+        ],
+        "w": 0.5,
+        "layer": "F.Cu",
+        "len": 1.4142135623730951,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          11.63,
+          55.1
+        ],
+        "end": [
+          13.9,
+          57.37
+        ],
+        "w": 0.5,
+        "layer": "F.Cu",
+        "len": 3.210264786586926,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          7.4,
+          54.1
+        ],
+        "end": [
+          10.63,
+          54.1
+        ],
+        "w": 0.5,
+        "layer": "F.Cu",
+        "len": 3.23,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          11.63,
+          55.1
+        ],
+        "end": [
+          11.63,
+          55.1
+        ],
+        "w": 0.5,
+        "layer": "F.Cu",
+        "len": 0.0,
+        "type": "PCB_VIA",
+        "drill": 0.3
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          10.37,
+          56.36
+        ],
+        "end": [
+          10.37,
+          56.6
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 0.24,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          17.0,
+          61.8
+        ],
+        "end": [
+          20.83,
+          61.8
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 3.83,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          11.63,
+          55.1
+        ],
+        "end": [
+          10.37,
+          56.36
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 1.7819090885900999,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          20.83,
+          61.8
+        ],
+        "end": [
+          23.0,
+          59.63
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 3.068843430349616,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          10.37,
+          57.5
+        ],
+        "end": [
+          10.37,
+          61.15
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 3.65,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          17.0,
+          58.1
+        ],
+        "end": [
+          17.0,
+          61.8
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 3.7,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          10.37,
+          56.6
+        ],
+        "end": [
+          10.37,
+          57.5
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 0.9,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          10.37,
+          56.6
+        ],
+        "end": [
+          15.5,
+          56.6
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 5.13,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          10.37,
+          57.5
+        ],
+        "end": [
+          11.225,
+          57.5
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 0.855,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_OUT",
+        "start": [
+          15.5,
+          56.6
+        ],
+        "end": [
+          17.0,
+          58.1
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 2.121320343559643,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_IGN",
+        "start": [
+          7.4,
+          57.6
+        ],
+        "end": [
+          7.4,
+          59.4
+        ],
+        "w": 0.5,
+        "layer": "B.Cu",
+        "len": 1.8,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_IGN",
+        "start": [
+          7.4,
+          59.4
+        ],
+        "end": [
+          12.0,
+          64.0
+        ],
+        "w": 0.5,
+        "layer": "B.Cu",
+        "len": 6.505382386916238,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "PYRO1_IGN",
+        "start": [
+          12.0,
+          64.0
+        ],
+        "end": [
+          13.925,
+          64.0
+        ],
+        "w": 0.5,
+        "layer": "B.Cu",
+        "len": 1.925,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          17.52,
+          72.17
+        ],
+        "end": [
+          18.5,
+          72.17
+        ],
+        "w": 0.3,
+        "layer": "B.Cu",
+        "len": 0.98,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          13.825,
+          72.2
+        ],
+        "end": [
+          13.825,
+          71.1
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.1,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          14.475,
+          71.1
+        ],
+        "end": [
+          16.45,
+          71.1
+        ],
+        "w": 0.3,
+        "layer": "B.Cu",
+        "len": 1.975,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          13.825,
+          70.0
+        ],
+        "end": [
+          13.825,
+          71.1
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.1,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          13.175,
+          70.0
+        ],
+        "end": [
+          13.175,
+          71.1
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.1,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          12.525,
+          72.2
+        ],
+        "end": [
+          12.525,
+          71.1
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.1,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          17.1,
+          71.75
+        ],
+        "end": [
+          17.52,
+          72.17
+        ],
+        "w": 0.3,
+        "layer": "B.Cu",
+        "len": 0.5939696961966999,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          16.45,
+          71.1
+        ],
+        "end": [
+          17.1,
+          71.75
+        ],
+        "w": 0.3,
+        "layer": "B.Cu",
+        "len": 0.9192388155425119,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          13.175,
+          72.2
+        ],
+        "end": [
+          13.175,
+          71.1
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.1,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          14.475,
+          71.1
+        ],
+        "end": [
+          14.475,
+          70.0
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.1,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "ACT_FET_S",
+        "start": [
+          12.525,
+          71.1
+        ],
+        "end": [
+          14.475,
+          71.1
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 1.95,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          19.2,
+          63.875
+        ],
+        "end": [
+          22.8,
+          63.875
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 3.6,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          22.8,
+          63.875
+        ],
+        "end": [
+          22.8,
+          61.4
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 2.475,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          14.475,
+          67.105
+        ],
+        "end": [
+          17.58,
+          64.0
+        ],
+        "w": 0.5,
+        "layer": "B.Cu",
+        "len": 4.39113311116846,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          26.17,
+          58.03
+        ],
+        "end": [
+          28.0,
+          58.03
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 1.83,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          22.8,
+          61.4
+        ],
+        "end": [
+          26.17,
+          58.03
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 4.765899705197331,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          17.58,
+          64.0
+        ],
+        "end": [
+          19.075,
+          64.0
+        ],
+        "w": 0.5,
+        "layer": "B.Cu",
+        "len": 1.495,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          19.075,
+          64.0
+        ],
+        "end": [
+          19.2,
+          63.875
+        ],
+        "w": 0.2,
+        "layer": "B.Cu",
+        "len": 0.1767766952966369,
+        "type": "PCB_TRACK"
+      },
+      {
+        "net": "RAW_ACT",
+        "start": [
+          13.5,
+          68.6
+        ],
+        "end": [
+          18.0,
+          68.6
+        ],
+        "w": 0.4,
+        "layer": "B.Cu",
+        "len": 4.5,
+        "type": "PCB_TRACK"
+      }
+    ]
+  }
+}

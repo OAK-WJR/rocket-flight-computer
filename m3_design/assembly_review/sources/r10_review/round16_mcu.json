@@ -1,0 +1,6605 @@
+{
+  "schema": 1,
+  "round": 16,
+  "lens": "5 MCU,pins,loader,reset,electrical/port interfaces and firmware binding",
+  "target_commit": "b1b8658d5bf541795b7e7636c09f2e886ea8c67a",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 1
+  },
+  "new_findings": 0,
+  "carried_findings": 1,
+  "findings": [
+    {
+      "id": "R16-MCU-01",
+      "severity": "Minor",
+      "status": "carried_active",
+      "prior_ids": [
+        "R15-MCU-01",
+        "D-R15-02"
+      ],
+      "title": "Exact VCAP parts still lack a closed combined operating C/ESR qualification",
+      "classification": "Disclosed CAD-stage qualification gap; no demonstrated regulator instability or required-function failure",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "C19/C20",
+          "coordinates_mm": {
+            "C19": {
+              "side": "B",
+              "x": 28.35,
+              "y": 37.65
+            },
+            "C20": {
+              "side": "B",
+              "x": 19.8,
+              "y": 37.3
+            }
+          },
+          "measured_value": "Native exact identity CL10A225KO8NNNC/C23630,2.2uF16VX5R+/-10%; separate VCAP1/U1.48 and VCAP2/U1.73 nets, each only its capacitor and MCU pad"
+        },
+        {
+          "source_url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+          "maker_version": "DS12110Rev11 January2026",
+          "maker_page": "211 Table114/notes1-2",
+          "measured_value": "2.2uF typical,+/-20% tolerated,ESR<100mOhm; table does not state an AC-frequency/amplitude or combined bias/process interpretation"
+        },
+        {
+          "source_url": "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+          "maker_version": "Exact Samsung reference sheet issued2024-05-08; downloaded2026-10-30,38PDFpages",
+          "maker_page": "PDF2,12,16,17",
+          "source_sha256": "7ad029052a9bd944e0fd77e7d8e814676dfb7285a5e18b8760a538d5a978e49e",
+          "measured_value": "Initial capacitance measured at1kHz+/-10%,1.0+/-0.2Vrms after heat treatment/recovery; X5R TCC+/-15%; manual requires actual DC/AC/temperature/aging and frequency-dependent impedance consideration"
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+          "location": "VCAP C19/C20 operating qualification",
+          "measured_value": "Current record explicitly retains combined C/ESR/process and actual regulator-mode qualification as open"
+        }
+      ],
+      "calculation": {
+        "nominal_selection_uF": [
+          1.98,
+          2.42
+        ],
+        "ST_typical_plusminus20_interpretation_uF": [
+          1.76,
+          2.64
+        ],
+        "initial_tolerance_times_full_X5R_TCC_uF": [
+          1.683,
+          2.783
+        ],
+        "interpretation": "The latter is a conservative envelope calculation,not a supported simultaneous operating corner or a measured failure. No multiplication of separate typical bias/temperature curves is credited."
+      },
+      "concrete_fix": "Before operating qualification, resolve ST C/ESR test conditions and actual fitted silicon/regulator modes; obtain maker-supported combined bounds or qualify exact fitted parts after reflow/rework and defined aging at actual local temperature,VCAP bias/relevant ripple/frequency,checking both C limits,ESR,startup and load/clock transients. If these fail,qualify an exact compatible replacement through a covered CAD/build/review change; a larger nominal value alone is not a fix."
+    }
+  ],
+  "rejected_or_closed_CM_candidates": [
+    {
+      "id": "R16-CAND-01",
+      "candidate_severity": "Major",
+      "status": "rejected",
+      "claim": "MCU package,AF or ADC remap prevents a required interface",
+      "evidence": "All100 native pins match maker Fig5 and all six representations;28 assigned AFs and5 ADC channels checked against current DS12110Rev11 Tables9/10; no mismatch."
+    },
+    {
+      "id": "R16-CAND-02",
+      "candidate_severity": "Critical",
+      "status": "rejected",
+      "claim": "ROM loader drives either independent firing control",
+      "evidence": "AN2606Rev70 Table135 pp320-323 does not use PC1 or PE4. Native PC1/U1.16 ->R1221k->Q122 with R123100k; PE4/U1.3 ->R126220R->Q124 with R1271k/R12810k/C126220nF. Loader PA6 drive is confined to its100k/10k diagnostic divider; PE11 is input with camera100k pull-down. Actual firmware jump/trace behavior remains unqualified."
+    },
+    {
+      "id": "R16-CAND-03",
+      "candidate_severity": "Major",
+      "status": "rejected",
+      "claim": "Every powered5V GPS/radio UART exceeds the selected MCU pins rating",
+      "evidence": "PC6/PC7FT_h and PB12/PB13FT_u are valid digital5V-capable pins with relevant powered supplies and disabled pulls. Operating limits are distinct from absolute stress; actual endpoint levels/startup/installedESD remain unqualified. Native ports contain1k/ground-only ESD and no isolation,as authorized."
+    },
+    {
+      "id": "R16-CAND-04",
+      "candidate_severity": "Major",
+      "status": "rejected_as_demonstrated_failure_retained_Minor",
+      "claim": "Samsung nominal2.2uF selection proves VCAP regulator failure",
+      "evidence": "Exact part initial1.98..2.42uF fits nominal ST selection. Separate TCC/bias/AC/process/aging effects do not establish a simultaneous violating operating corner. R16-MCU-01 remains open,without claiming stability."
+    },
+    {
+      "id": "R16-CAND-05",
+      "candidate_severity": "Major",
+      "status": "rejected",
+      "claim": "PC14 nominal3.3mA resistor-only charging bound proves a hard3mA MCU violation",
+      "evidence": "Current DS12110Rev11 Table149 p244 specifies output drop at3mA; it does not establish a minimum driver resistance or a hard3mA transient limit. Table110 p208 has the applicable20mA absolute output-current ceiling; actual dynamics unmeasured. R1621k remains;4kHz is below Table150 note2 p2462MHz."
+    },
+    {
+      "id": "R16-CAND-06",
+      "candidate_severity": "Major",
+      "status": "not_a_new_CAD_failure",
+      "claim": "R1 executable binding and absent R10 firmware qualify or invalidate the present CAD as an observed functional result",
+      "evidence": "assembly_binding.py explicitly returns M3-ASSY-R1; build.py selects legacy review directories/locked protocol and board hashes. R10 evidence note correctly says record-only/no firmware approval and all current input hashes match. No R10 firmware was executed or claimed."
+    },
+    {
+      "id": "R16-CAND-07",
+      "candidate_severity": "Major",
+      "status": "retained_authorized_residual_not_new_required_limit_failure",
+      "claim": "PA6/PB1 diagnostic single-fault damage defeats the promised pyro-divider single-resistor protection",
+      "evidence": "Native PA6 100k/10k and PB1 10k/1k diagnostic dividers have the disclosed damaging single faults; neither is the retained PC0/PC5 split-top/parallel-bottom pyro bank. The latter topology and current fault-ratio contract are intact. General diagnostic pin-fault immunity is not a current promised constraint."
+    }
+  ],
+  "checks_actually_executed": [
+    {
+      "check": "Before/after PCB SHA256",
+      "result": "matches exact target both times",
+      "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982"
+    },
+    {
+      "check": "Official10.0.7 fresh schematic export under root reservation",
+      "result": "exit0; reservation released",
+      "root_schematic_sha256": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+      "mcu_schematic_sha256": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+      "fresh_xml_sha256": "ae2e0f4ab37a37b8ea7e8c447a82689c98804719da82b08b8028ea8455f902fa",
+      "warnings": "Fontconfig configuration/cache warnings; no export error"
+    },
+    {
+      "check": "Independent native MCU schematic graph and package reconstruction",
+      "result": "100 U1 pin endpoints followed through native wires/global labels or explicit no-connects; all100 native symbol names agree with current maker package pin order"
+    },
+    {
+      "check": "Six-way net comparison",
+      "result": "Native schematic graph,PCB,storedXML,freshXML,r10_net table and binding agree for100/100;32NC pads have no other-pad/track/via/zone connections"
+    },
+    {
+      "check": "Independent current-maker AF/ADC reconstruction",
+      "result": "28 AF assignments and5 ADC channels agree with DS12110Rev11 Tables9/10; GPIO/ANA/reset/FT/TT/supply structures recorded for every package pin"
+    },
+    {
+      "check": "Fresh-versus-stored XML semantic comparison",
+      "result": "651 unique reference-pin mappings each;0 differences; differing XML bytes are exporter metadata,not pin differences"
+    },
+    {
+      "check": "Focused native API rules",
+      "result": {
+        "S-3": {
+          "ok": true,
+          "issues": []
+        },
+        "K-contract": {
+          "ok": true,
+          "issues": []
+        },
+        "K-loader": {
+          "ok": true,
+          "issues": []
+        }
+      },
+      "scope": "S-3,K-contract,K-loader only; not a full gate,DRC or ERC execution"
+    },
+    {
+      "check": "Current primary maker inspection",
+      "result": "ST DS12110Rev11 and AN2606Rev70 web text freshly read; Samsung exact specification freshly downloaded and complete PDF2/12/16/17 pages visually inspected; cached TIRevA full PDF7/20 and InfineonRev1.3 printed6/7 inspected"
+    },
+    {
+      "check": "Native MCU support/interface topology inspection",
+      "result": "Independent fire-enable/fire gate,BOOT0/NRST,servo pulls,QSPI and IMU CS pulls,UART1k/groundESD,camera translator/switch,SD pull-ups/CS and MCU decoupling reconstructed from fresh XML and native pads"
+    },
+    {
+      "check": "Binding provenance and executable boundary",
+      "result": "Board,netlist,table,circuit hashes match R10 record; IMU B180/(17,45.9)/-gyroY/-6mm agrees with native pose; executable assembly_binding remains R1,as disclosed"
+    },
+    {
+      "check": "Independent arithmetic",
+      "result": {
+        "watchdog_min_ms": 28.57142857142857,
+        "watchdog_max_ms": 32.6530612244898,
+        "fault_allocation_ms": 34.8530612244898,
+        "neutral_allocation_ms": 48.6530612244898,
+        "VCAP_nominal_uF": [
+          1.9800000000000002,
+          2.4200000000000004
+        ],
+        "VCAP_ST_typical_plusminus20_uF": [
+          1.7600000000000002,
+          2.64
+        ],
+        "unqualified_initial_times_X5R_TCC_uF": [
+          1.683,
+          2.7830000000000004
+        ],
+        "pc14_initial_resistor_only_mA": 3.3636363636363638,
+        "pc14_steady_mA": 0.3,
+        "nrst_min250k_to50k_pullup_VDD_ratio": 0.8333333333333334
+      },
+      "scope": "Calculation/Inference only; current-tail,reset,regulator and actual current not measured"
+    },
+    {
+      "check": "Authority scope",
+      "result": "119 unique D IDs and22 owner mandates considered under current amendments; no removed GH/ARM/pull-pin/switch/translator/duplicate-bank promise reinstated; AGENTS section2 retained"
+    }
+  ],
+  "coverage_limits": [
+    "Read-only full lens5 review,not a delta/fix check; no canonical file edits,build,full check.sh,git action,other-worktree mutation,subagent or current-round peer report/probe access. Commit identity is supplied by the root target packet; PCB identity independently hashed.",
+    "No firmware implementation/execution,physical board,regulator stability,C/ESR measurement,flight,SD busy/power-loss/timing,reset/trace override,current-tail,installedESD/RF,endpoint/harness or first-article test was performed. Disclosed pending qualifications are not converted to observed hardware failures.",
+    "Current ST PDFs were accessible as primary web text: DS12110Rev11 January2026/357p and AN2606Rev70 February2026/553p. Direct ST PDF downloads failed HTTP/2 code92 and one HTTP/1.1 attempt timed out at25s. Web screenshot calls returned text references without image payload,so no current ST page visual QA is claimed. Allowed cached st_h743.pdf is Rev8 and was not substituted for current electrical limits.",
+    "Current DS text coverage: p32,55,63-88 pin definitions/relevant notes,89-94 assigned AFs,206-211 supply/absolute/operating/VCAP,233 LSI,240-248 injection/I-O/PC14/NRST. AN2606 text: pp320-325 H74x configuration/selection/version. Focused page ranges,not a new complete357/553-page datasheet audit.",
+    "Samsung exact reference sheet issued2024-05-08,38p,SHA7ad029052a9bd944e0fd77e7d8e814676dfb7285a5e18b8760a538d5a978e49e; typical product page and generic manual plots are not combined-condition part guarantees. No prior-round inferred1.716525uF value was treated as fresh measured proof.",
+    "Static cache scopes: InfineonRev1.3(2014-06-12),TI TXU0202RevA(March2022),ST LSM6DSV320XDS14623Rev1(March2025),WinbondW25Q128JVRevG(April2019). Current ST IMU web PDF exceeded web-tool size limit; no claim to inspect a newer IMU/Winbond revision. Only native pin/topology and stated firmware-qualification boundary are concluded.",
+    "Native API10.0.6 emitted a nonfatal wxApp assertion during successful read-only probes; official10.0.7 export exited0. The initial own probe compared raw unconnected names to NC,then corrected that normalization and preserved PC2_C/PC3_C names; no resulting false mismatch is a board finding.",
+    "Whole-board power,thermal,mechanical,fabrication and routing certifications belong to other full lenses/root gates. This lens inspected their current authority/disposition for interface implications without inheriting any prior clean-review credit."
+  ],
+  "authority": {
+    "agent_decisions_considered": 119,
+    "decision_ids": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R14-01",
+      "D-R14-02",
+      "D-R14-03",
+      "D-R15-01",
+      "D-R15-02",
+      "D-R15-03"
+    ],
+    "owner_mandates_considered": 22,
+    "owner_scopes": [
+      {
+        "id": "Initial plan items1-4",
+        "disposition": "Ordinary0.15 mm clearance retained with S-8; black3.5 mm IGN and separate battery/switch terminals; C84470 uF/25 V. J124/keyed switch and original fuse wording superseded."
+      },
+      {
+        "id": "O1",
+        "disposition": "External HGLRC GPS retained; final DB125/4V8 direct supply+1kUART replaces original GH/switched3V3;L5 loss accepted."
+      },
+      {
+        "id": "O2",
+        "disposition": "External LR900-F, no on-board RF; final DB125/direct4V8 and UART5; uplink arm/fire prohibition and installed immunity remain."
+      },
+      {
+        "id": "O3",
+        "disposition": "Servo motor power/return off board, protected signals retained; Q120/Q121 serve pyro only; loss of servo power cutoff explicitly retained."
+      },
+      {
+        "id": "O4",
+        "disposition": "Regulated camera5 V-class supply; U402/U12/U13 retained. Actual5.456 V setpoint is an agent-selected tolerance solution, not a new owner voltage mandate."
+      },
+      {
+        "id": "O5",
+        "disposition": "Separate buck/LDO voltage architecture retained; later owner cut removes GPS/radio switches/translators while camera isolation/switch survives."
+      },
+      {
+        "id": "O6",
+        "disposition": "Pack-star motor pairs and bounded reference return retained;0.6144 A is an unmeasured harness inference, qualified with 1 A allowance."
+      },
+      {
+        "id": "D-R2-04 then D-R2-08",
+        "disposition": "All current signals hand-routed; old permission for noncritical autorouting superseded."
+      },
+      {
+        "id": "OQ-1",
+        "disposition": "4.95 mm floor accepted; current maximum terminal unions give 5.003012 mm. Physical16-22AWG fit stays open."
+      },
+      {
+        "id": "OQ-2",
+        "disposition": "Current actual-feed extraction and complete2304required+60local hot-plug sweep executed during each integrated build; simulation/inference only. No measured harness/waveform/endurance or physical logic-survival qualification."
+      },
+      {
+        "id": "OQ-3",
+        "disposition": "Exact2026-10-30T13:13:17.644478..13:13:48.643735UTC snapshot79.5232USD placed/feeder share and81.3254USD including minima are below84.41. R43017<3610 and U4zero<5 remain stock blockers; U9stock123/min1. Quote,process/full cost and retained-deviation/agent-choice owner acceptance remain pending; no order and cap unchanged."
+      },
+      {
+        "id": "OQ-4",
+        "disposition": "Aft-edge tab/rail selected; panel acceptance before ordering remains open even though current tab windows permit other locations."
+      },
+      {
+        "id": "OQ-5",
+        "disposition": "Keep C84/firmware shedding, no hardware cutoff. Always-on GPS/radio/card mean no claim that software can shed them."
+      },
+      {
+        "id": "OQ-6",
+        "disposition": "No battery-lead fuse; unfused lead/copper/TVS/cap risk retained. Later single-switch decision also removes ARM-link fuse."
+      },
+      {
+        "id": "OQ-7",
+        "disposition": "Board plus axial mounting tolerance wholly forward of joint+47 mm, all roll orientations; freed length remains slack."
+      },
+      {
+        "id": "Single switch and keep-one-switch reaffirmation",
+        "disposition": "J400 powers/arms, no J124; two separately driven series firing controls, on-rail/on-last/off-first, launch/ground/in-flight policy retained. AVA photo correction does not restore ARM terminal."
+      },
+      {
+        "id": "AUD-1..10 and GAP-1..5",
+        "disposition": "Adopted narrow reductions and real gaps traced individually in the complete current decision index. Later always-on/terminal/audit2 decisions supersede old port/header clauses. No AGENTS section2 rule relaxed."
+      },
+      {
+        "id": "AVA comparison10 layout items",
+        "disposition": "Rows/local cells/battery/buzzer/sense/probes implemented, with actual camera/SD/THT constraints. Exact translated cells/old coordinates are not frozen requirements."
+      },
+      {
+        "id": "Always-on ports plus microSD",
+        "disposition": "Direct GPS/radio supply/UART; camera switch/isolation; hinged SD alongside primary QSPI, no card-detect promise; current startup/latency/lid obligations explicit."
+      },
+      {
+        "id": "All wired screw terminals / Steer1",
+        "disposition": "All seven DB125s correct; USB-C and hinged card remain separate. Legacy circuit-only stop superseded by current full review assignment."
+      },
+      {
+        "id": "Requirements audit2 items1-13,15",
+        "disposition": "Direct two-bank ADCs/removals, limited thin taps, In1GND routing allowance, optional plate, count-only leftovers, NRST metric, no Extended cap, single reviewed map, local floors and always-on obligations retained."
+      },
+      {
+        "id": "Requirements audit2 item14/16",
+        "disposition": "check.sh zero before each commit retained; STATUS is current. Hash provenance refreshed, electrical/axes review when changed. LEDs stay dark until actual opaque-cover test passes; no test is claimed."
+      }
+    ]
+  },
+  "native_u1_reconstruction": {
+    "1": {
+      "port": "PE2",
+      "schematic_xy": [
+        63.5,
+        69.85
+      ],
+      "native_symbol_name": "PE2",
+      "schematic_net": "QSPI_IO2",
+      "native_no_connect": false,
+      "board_net": "QSPI_IO2",
+      "board_xy": [
+        17.0,
+        50.55
+      ],
+      "table_net": "QSPI_IO2",
+      "binding_net": "QSPI_IO2",
+      "netlist_net": "QSPI_IO2",
+      "fresh_netlist_net": "QSPI_IO2",
+      "maker_port": "PE2",
+      "mode": "AF9 QUADSPI_BK1_IO2",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "maker_af": {
+        "af": 9,
+        "function": "QUADSPI_BK1_IO2",
+        "page": 94
+      },
+      "reset_fact": "analog after reset"
+    },
+    "2": {
+      "port": "PE3",
+      "schematic_xy": [
+        63.5,
+        72.39
+      ],
+      "native_symbol_name": "PE3",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        17.5,
+        50.55
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE3",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "6": {
+      "port": "VBAT",
+      "schematic_xy": [
+        63.5,
+        74.93
+      ],
+      "native_symbol_name": "VBAT",
+      "schematic_net": "3V3",
+      "native_no_connect": false,
+      "board_net": "3V3",
+      "board_xy": [
+        19.5,
+        50.55
+      ],
+      "table_net": "3V3",
+      "binding_net": "3V3",
+      "netlist_net": "3V3",
+      "fresh_netlist_net": "3V3",
+      "maker_port": "VBAT",
+      "mode": "VBAT",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "7": {
+      "port": "PC13",
+      "schematic_xy": [
+        63.5,
+        77.47
+      ],
+      "native_symbol_name": "PC13",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        20.0,
+        50.55
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PC13",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "reset_fact": "analog after reset"
+    },
+    "10": {
+      "port": "VSS",
+      "schematic_xy": [
+        63.5,
+        80.01
+      ],
+      "native_symbol_name": "VSS",
+      "schematic_net": "GND",
+      "native_no_connect": false,
+      "board_net": "GND",
+      "board_xy": [
+        21.5,
+        50.55
+      ],
+      "table_net": "GND",
+      "binding_net": "GND",
+      "netlist_net": "GND",
+      "fresh_netlist_net": "GND",
+      "maker_port": "VSS",
+      "mode": "VSS",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "11": {
+      "port": "VDD",
+      "schematic_xy": [
+        63.5,
+        82.55
+      ],
+      "native_symbol_name": "VDD",
+      "schematic_net": "3V3",
+      "native_no_connect": false,
+      "board_net": "3V3",
+      "board_xy": [
+        22.0,
+        50.55
+      ],
+      "table_net": "3V3",
+      "binding_net": "3V3",
+      "netlist_net": "3V3",
+      "fresh_netlist_net": "3V3",
+      "maker_port": "VDD",
+      "mode": "VDD",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "12": {
+      "port": "PH0",
+      "schematic_xy": [
+        63.5,
+        85.09
+      ],
+      "native_symbol_name": "PH0",
+      "schematic_net": "HSE_IN",
+      "native_no_connect": false,
+      "board_net": "HSE_IN",
+      "board_xy": [
+        22.5,
+        50.55
+      ],
+      "table_net": "HSE_IN",
+      "binding_net": "HSE_IN",
+      "netlist_net": "HSE_IN",
+      "fresh_netlist_net": "HSE_IN",
+      "maker_port": "PH0",
+      "mode": "HSE",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "reset_fact": "analog after reset"
+    },
+    "13": {
+      "port": "PH1",
+      "schematic_xy": [
+        63.5,
+        87.63
+      ],
+      "native_symbol_name": "PH1",
+      "schematic_net": "HSE_OUT",
+      "native_no_connect": false,
+      "board_net": "HSE_OUT",
+      "board_xy": [
+        23.0,
+        50.55
+      ],
+      "table_net": "HSE_OUT",
+      "binding_net": "HSE_OUT",
+      "netlist_net": "HSE_OUT",
+      "fresh_netlist_net": "HSE_OUT",
+      "maker_port": "PH1",
+      "mode": "HSE",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "reset_fact": "analog after reset"
+    },
+    "14": {
+      "port": "NRST",
+      "schematic_xy": [
+        63.5,
+        90.17
+      ],
+      "native_symbol_name": "NRST",
+      "schematic_net": "NRST",
+      "native_no_connect": false,
+      "board_net": "NRST",
+      "board_xy": [
+        23.5,
+        50.55
+      ],
+      "table_net": "NRST",
+      "binding_net": "NRST",
+      "netlist_net": "NRST",
+      "fresh_netlist_net": "NRST",
+      "maker_port": "NRST",
+      "mode": "NRST",
+      "loader_role": "-",
+      "maker_io_structure": "RST",
+      "reset_fact": "dedicated input/reset"
+    },
+    "17": {
+      "port": "PC2_C",
+      "schematic_xy": [
+        63.5,
+        92.71
+      ],
+      "native_symbol_name": "PC2_C",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        25.0,
+        50.55
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PC2_C",
+      "mode": "NC (firmware: analog)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_a",
+      "reset_fact": "analog after reset"
+    },
+    "18": {
+      "port": "PC3_C",
+      "schematic_xy": [
+        63.5,
+        95.25
+      ],
+      "native_symbol_name": "PC3_C",
+      "schematic_net": "V3V3_SENSE",
+      "native_no_connect": false,
+      "board_net": "V3V3_SENSE",
+      "board_xy": [
+        25.5,
+        50.55
+      ],
+      "table_net": "V3V3_SENSE",
+      "binding_net": "V3V3_SENSE",
+      "netlist_net": "V3V3_SENSE",
+      "fresh_netlist_net": "V3V3_SENSE",
+      "maker_port": "PC3_C",
+      "mode": "ADC",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_a",
+      "maker_adc": "ADC3_INP1",
+      "reset_fact": "analog after reset"
+    },
+    "19": {
+      "port": "VSSA",
+      "schematic_xy": [
+        63.5,
+        97.79
+      ],
+      "native_symbol_name": "VSSA",
+      "schematic_net": "GND",
+      "native_no_connect": false,
+      "board_net": "GND",
+      "board_xy": [
+        26.0,
+        50.55
+      ],
+      "table_net": "GND",
+      "binding_net": "GND",
+      "netlist_net": "GND",
+      "fresh_netlist_net": "GND",
+      "maker_port": "VSSA",
+      "mode": "VSSA",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "20": {
+      "port": "VREF+",
+      "schematic_xy": [
+        63.5,
+        100.33
+      ],
+      "native_symbol_name": "VREF+",
+      "schematic_net": "3V3A",
+      "native_no_connect": false,
+      "board_net": "3V3A",
+      "board_xy": [
+        26.5,
+        50.55
+      ],
+      "table_net": "3V3A",
+      "binding_net": "3V3A",
+      "netlist_net": "3V3A",
+      "fresh_netlist_net": "3V3A",
+      "maker_port": "VREF+",
+      "mode": "VREF+",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "21": {
+      "port": "VDDA",
+      "schematic_xy": [
+        63.5,
+        102.87
+      ],
+      "native_symbol_name": "VDDA",
+      "schematic_net": "3V3A",
+      "native_no_connect": false,
+      "board_net": "3V3A",
+      "board_xy": [
+        27.0,
+        50.55
+      ],
+      "table_net": "3V3A",
+      "binding_net": "3V3A",
+      "netlist_net": "3V3A",
+      "fresh_netlist_net": "3V3A",
+      "maker_port": "VDDA",
+      "mode": "VDDA",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "26": {
+      "port": "VSS",
+      "schematic_xy": [
+        63.5,
+        105.41
+      ],
+      "native_symbol_name": "VSS",
+      "schematic_net": "GND",
+      "native_no_connect": false,
+      "board_net": "GND",
+      "board_xy": [
+        30.55,
+        49.0
+      ],
+      "table_net": "GND",
+      "binding_net": "GND",
+      "netlist_net": "GND",
+      "fresh_netlist_net": "GND",
+      "maker_port": "VSS",
+      "mode": "VSS",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "27": {
+      "port": "VDD",
+      "schematic_xy": [
+        63.5,
+        107.95
+      ],
+      "native_symbol_name": "VDD",
+      "schematic_net": "3V3",
+      "native_no_connect": false,
+      "board_net": "3V3",
+      "board_xy": [
+        30.55,
+        48.5
+      ],
+      "table_net": "3V3",
+      "binding_net": "3V3",
+      "netlist_net": "3V3",
+      "fresh_netlist_net": "3V3",
+      "maker_port": "VDD",
+      "mode": "VDD",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "36": {
+      "port": "PB2",
+      "schematic_xy": [
+        63.5,
+        110.49
+      ],
+      "native_symbol_name": "PB2",
+      "schematic_net": "QSPI_CLK",
+      "native_no_connect": false,
+      "board_net": "QSPI_CLK",
+      "board_xy": [
+        30.55,
+        44.0
+      ],
+      "table_net": "QSPI_CLK",
+      "binding_net": "QSPI_CLK",
+      "netlist_net": "QSPI_CLK",
+      "fresh_netlist_net": "QSPI_CLK",
+      "maker_port": "PB2",
+      "mode": "AF9 QUADSPI_CLK",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_ha",
+      "maker_af": {
+        "af": 9,
+        "function": "QUADSPI_CLK",
+        "page": 90
+      },
+      "reset_fact": "analog after reset"
+    },
+    "37": {
+      "port": "PE7",
+      "schematic_xy": [
+        63.5,
+        113.03
+      ],
+      "native_symbol_name": "PE7",
+      "schematic_net": "CAM_MCU_RX",
+      "native_no_connect": false,
+      "board_net": "CAM_MCU_RX",
+      "board_xy": [
+        30.55,
+        43.5
+      ],
+      "table_net": "CAM_MCU_RX",
+      "binding_net": "CAM_MCU_RX",
+      "netlist_net": "CAM_MCU_RX",
+      "fresh_netlist_net": "CAM_MCU_RX",
+      "maker_port": "PE7",
+      "mode": "AF7 UART7_RX",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_ha",
+      "maker_af": {
+        "af": 7,
+        "function": "UART7_RX",
+        "page": 94
+      },
+      "reset_fact": "analog after reset"
+    },
+    "40": {
+      "port": "PE10",
+      "schematic_xy": [
+        63.5,
+        115.57
+      ],
+      "native_symbol_name": "PE10",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        42.0
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE10",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_ha",
+      "reset_fact": "analog after reset"
+    },
+    "46": {
+      "port": "PB10",
+      "schematic_xy": [
+        63.5,
+        118.11
+      ],
+      "native_symbol_name": "PB10",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        39.0
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PB10",
+      "mode": "NC",
+      "loader_role": "USART3_TX: output, AF push-pull pull-up; input until USART3 detected on V9.1 (p278) [LOADER-DRIVEN]. NC (no net)",
+      "maker_io_structure": "FT_f",
+      "reset_fact": "analog after reset"
+    },
+    "47": {
+      "port": "PB11",
+      "schematic_xy": [
+        63.5,
+        120.65
+      ],
+      "native_symbol_name": "PB11",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        38.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PB11",
+      "mode": "NC",
+      "loader_role": "USART3_RX: input, pull-up (p278). NC",
+      "maker_io_structure": "FT_f",
+      "reset_fact": "analog after reset"
+    },
+    "48": {
+      "port": "VCAP",
+      "schematic_xy": [
+        63.5,
+        123.19
+      ],
+      "native_symbol_name": "VCAP",
+      "schematic_net": "VCAP1",
+      "native_no_connect": false,
+      "board_net": "VCAP1",
+      "board_xy": [
+        30.55,
+        38.0
+      ],
+      "table_net": "VCAP1",
+      "binding_net": "VCAP1",
+      "netlist_net": "VCAP1",
+      "fresh_netlist_net": "VCAP1",
+      "maker_port": "VCAP",
+      "mode": "VCAP",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "49": {
+      "port": "VSS",
+      "schematic_xy": [
+        63.5,
+        125.73
+      ],
+      "native_symbol_name": "VSS",
+      "schematic_net": "GND",
+      "native_no_connect": false,
+      "board_net": "GND",
+      "board_xy": [
+        30.55,
+        37.5
+      ],
+      "table_net": "GND",
+      "binding_net": "GND",
+      "netlist_net": "GND",
+      "fresh_netlist_net": "GND",
+      "maker_port": "VSS",
+      "mode": "VSS",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "50": {
+      "port": "VDD",
+      "schematic_xy": [
+        63.5,
+        128.27
+      ],
+      "native_symbol_name": "VDD",
+      "schematic_net": "3V3",
+      "native_no_connect": false,
+      "board_net": "3V3",
+      "board_xy": [
+        30.55,
+        37.0
+      ],
+      "table_net": "3V3",
+      "binding_net": "3V3",
+      "netlist_net": "3V3",
+      "fresh_netlist_net": "3V3",
+      "maker_port": "VDD",
+      "mode": "VDD",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "58": {
+      "port": "PD11",
+      "schematic_xy": [
+        63.5,
+        130.81
+      ],
+      "native_symbol_name": "PD11",
+      "schematic_net": "QSPI_IO0",
+      "native_no_connect": false,
+      "board_net": "QSPI_IO0",
+      "board_xy": [
+        25.5,
+        35.45
+      ],
+      "table_net": "QSPI_IO0",
+      "binding_net": "QSPI_IO0",
+      "netlist_net": "QSPI_IO0",
+      "fresh_netlist_net": "QSPI_IO0",
+      "maker_port": "PD11",
+      "mode": "AF9 QUADSPI_BK1_IO0",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "maker_af": {
+        "af": 9,
+        "function": "QUADSPI_BK1_IO0",
+        "page": 93
+      },
+      "reset_fact": "analog after reset"
+    },
+    "59": {
+      "port": "PD12",
+      "schematic_xy": [
+        63.5,
+        133.35
+      ],
+      "native_symbol_name": "PD12",
+      "schematic_net": "QSPI_IO1",
+      "native_no_connect": false,
+      "board_net": "QSPI_IO1",
+      "board_xy": [
+        25.0,
+        35.45
+      ],
+      "table_net": "QSPI_IO1",
+      "binding_net": "QSPI_IO1",
+      "netlist_net": "QSPI_IO1",
+      "fresh_netlist_net": "QSPI_IO1",
+      "maker_port": "PD12",
+      "mode": "AF9 QUADSPI_BK1_IO1",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_fh",
+      "maker_af": {
+        "af": 9,
+        "function": "QUADSPI_BK1_IO1",
+        "page": 93
+      },
+      "reset_fact": "analog after reset"
+    },
+    "60": {
+      "port": "PD13",
+      "schematic_xy": [
+        63.5,
+        135.89
+      ],
+      "native_symbol_name": "PD13",
+      "schematic_net": "QSPI_IO3",
+      "native_no_connect": false,
+      "board_net": "QSPI_IO3",
+      "board_xy": [
+        24.5,
+        35.45
+      ],
+      "table_net": "QSPI_IO3",
+      "binding_net": "QSPI_IO3",
+      "netlist_net": "QSPI_IO3",
+      "fresh_netlist_net": "QSPI_IO3",
+      "maker_port": "PD13",
+      "mode": "AF9 QUADSPI_BK1_IO3",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_fh",
+      "maker_af": {
+        "af": 9,
+        "function": "QUADSPI_BK1_IO3",
+        "page": 93
+      },
+      "reset_fact": "analog after reset"
+    },
+    "62": {
+      "port": "PD15",
+      "schematic_xy": [
+        63.5,
+        138.43
+      ],
+      "native_symbol_name": "PD15",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        23.5,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD15",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "63": {
+      "port": "PC6",
+      "schematic_xy": [
+        63.5,
+        140.97
+      ],
+      "native_symbol_name": "PC6",
+      "schematic_net": "GPS_TX_MCU",
+      "native_no_connect": false,
+      "board_net": "GPS_TX_MCU",
+      "board_xy": [
+        23.0,
+        35.45
+      ],
+      "table_net": "GPS_TX_MCU",
+      "binding_net": "GPS_TX_MCU",
+      "netlist_net": "GPS_TX_MCU",
+      "fresh_netlist_net": "GPS_TX_MCU",
+      "maker_port": "PC6",
+      "mode": "AF7 USART6_TX",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "maker_af": {
+        "af": 7,
+        "function": "USART6_TX",
+        "page": 92
+      },
+      "reset_fact": "analog after reset"
+    },
+    "64": {
+      "port": "PC7",
+      "schematic_xy": [
+        63.5,
+        143.51
+      ],
+      "native_symbol_name": "PC7",
+      "schematic_net": "GPS_RX_MCU",
+      "native_no_connect": false,
+      "board_net": "GPS_RX_MCU",
+      "board_xy": [
+        22.5,
+        35.45
+      ],
+      "table_net": "GPS_RX_MCU",
+      "binding_net": "GPS_RX_MCU",
+      "netlist_net": "GPS_RX_MCU",
+      "fresh_netlist_net": "GPS_RX_MCU",
+      "maker_port": "PC7",
+      "mode": "AF7 USART6_RX",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "maker_af": {
+        "af": 7,
+        "function": "USART6_RX",
+        "page": 92
+      },
+      "reset_fact": "analog after reset"
+    },
+    "70": {
+      "port": "PA11",
+      "schematic_xy": [
+        63.5,
+        146.05
+      ],
+      "native_symbol_name": "PA11",
+      "schematic_net": "USB_DM",
+      "native_no_connect": false,
+      "board_net": "USB_DM",
+      "board_xy": [
+        19.5,
+        35.45
+      ],
+      "table_net": "USB_DM",
+      "binding_net": "USB_DM",
+      "netlist_net": "USB_DM",
+      "fresh_netlist_net": "USB_DM",
+      "maker_port": "PA11",
+      "mode": "AF10 OTG_FS_DM",
+      "loader_role": "USB DFU DM: AF push-pull, no pull (p280) [LOADER-DRIVEN]. USB_DM: the intended DFU path",
+      "maker_io_structure": "FT_u",
+      "maker_af": {
+        "af": 10,
+        "function": "OTG_FS_DM",
+        "page": 89
+      },
+      "reset_fact": "analog after reset"
+    },
+    "71": {
+      "port": "PA12",
+      "schematic_xy": [
+        63.5,
+        148.59
+      ],
+      "native_symbol_name": "PA12",
+      "schematic_net": "USB_DP",
+      "native_no_connect": false,
+      "board_net": "USB_DP",
+      "board_xy": [
+        19.0,
+        35.45
+      ],
+      "table_net": "USB_DP",
+      "binding_net": "USB_DP",
+      "netlist_net": "USB_DP",
+      "fresh_netlist_net": "USB_DP",
+      "maker_port": "PA12",
+      "mode": "AF10 OTG_FS_DP",
+      "loader_role": "USB DFU DP: AF push-pull, no pull (p280) [LOADER-DRIVEN]. USB_DP: the intended DFU path",
+      "maker_io_structure": "FT_u",
+      "maker_af": {
+        "af": 10,
+        "function": "OTG_FS_DP",
+        "page": 90
+      },
+      "reset_fact": "analog after reset"
+    },
+    "72": {
+      "port": "PA13",
+      "schematic_xy": [
+        63.5,
+        151.13
+      ],
+      "native_symbol_name": "PA13",
+      "schematic_net": "SWDIO",
+      "native_no_connect": false,
+      "board_net": "SWDIO",
+      "board_xy": [
+        18.5,
+        35.45
+      ],
+      "table_net": "SWDIO",
+      "binding_net": "SWDIO",
+      "netlist_net": "SWDIO",
+      "fresh_netlist_net": "SWDIO",
+      "maker_port": "PA13",
+      "mode": "AF0 SWDIO",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "maker_af": {
+        "af": 0,
+        "function": "SWDIO",
+        "page": 90
+      },
+      "reset_fact": "debug AF at reset"
+    },
+    "73": {
+      "port": "VCAP",
+      "schematic_xy": [
+        63.5,
+        153.67
+      ],
+      "native_symbol_name": "VCAP",
+      "schematic_net": "VCAP2",
+      "native_no_connect": false,
+      "board_net": "VCAP2",
+      "board_xy": [
+        18.0,
+        35.45
+      ],
+      "table_net": "VCAP2",
+      "binding_net": "VCAP2",
+      "netlist_net": "VCAP2",
+      "fresh_netlist_net": "VCAP2",
+      "maker_port": "VCAP",
+      "mode": "VCAP",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "74": {
+      "port": "VSS",
+      "schematic_xy": [
+        63.5,
+        156.21
+      ],
+      "native_symbol_name": "VSS",
+      "schematic_net": "GND",
+      "native_no_connect": false,
+      "board_net": "GND",
+      "board_xy": [
+        17.5,
+        35.45
+      ],
+      "table_net": "GND",
+      "binding_net": "GND",
+      "netlist_net": "GND",
+      "fresh_netlist_net": "GND",
+      "maker_port": "VSS",
+      "mode": "VSS",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "75": {
+      "port": "VDD",
+      "schematic_xy": [
+        63.5,
+        158.75
+      ],
+      "native_symbol_name": "VDD",
+      "schematic_net": "3V3",
+      "native_no_connect": false,
+      "board_net": "3V3",
+      "board_xy": [
+        17.0,
+        35.45
+      ],
+      "table_net": "3V3",
+      "binding_net": "3V3",
+      "netlist_net": "3V3",
+      "fresh_netlist_net": "3V3",
+      "maker_port": "VDD",
+      "mode": "VDD",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "76": {
+      "port": "PA14",
+      "schematic_xy": [
+        63.5,
+        161.29
+      ],
+      "native_symbol_name": "PA14",
+      "schematic_net": "SWCLK",
+      "native_no_connect": false,
+      "board_net": "SWCLK",
+      "board_xy": [
+        15.45,
+        37.0
+      ],
+      "table_net": "SWCLK",
+      "binding_net": "SWCLK",
+      "netlist_net": "SWCLK",
+      "fresh_netlist_net": "SWCLK",
+      "maker_port": "PA14",
+      "mode": "AF0 SWCLK",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "maker_af": {
+        "af": 0,
+        "function": "SWCLK",
+        "page": 90
+      },
+      "reset_fact": "debug AF at reset"
+    },
+    "84": {
+      "port": "PD3",
+      "schematic_xy": [
+        63.5,
+        163.83
+      ],
+      "native_symbol_name": "PD3",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        15.45,
+        41.0
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD3",
+      "mode": "NC (firmware: analog)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "85": {
+      "port": "PD4",
+      "schematic_xy": [
+        63.5,
+        166.37
+      ],
+      "native_symbol_name": "PD4",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        15.45,
+        41.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD4",
+      "mode": "NC (firmware: analog)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "89": {
+      "port": "PB3",
+      "schematic_xy": [
+        63.5,
+        168.91
+      ],
+      "native_symbol_name": "PB3",
+      "schematic_net": "SPI1_SCK",
+      "native_no_connect": false,
+      "board_net": "SPI1_SCK",
+      "board_xy": [
+        15.45,
+        43.5
+      ],
+      "table_net": "SPI1_SCK",
+      "binding_net": "SPI1_SCK",
+      "netlist_net": "SPI1_SCK",
+      "fresh_netlist_net": "SPI1_SCK",
+      "maker_port": "PB3",
+      "mode": "AF5 SPI1_SCK",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "maker_af": {
+        "af": 5,
+        "function": "SPI1_SCK",
+        "page": 90
+      },
+      "reset_fact": "debug AF at reset"
+    },
+    "90": {
+      "port": "PB4",
+      "schematic_xy": [
+        63.5,
+        171.45
+      ],
+      "native_symbol_name": "PB4",
+      "schematic_net": "SPI1_MISO",
+      "native_no_connect": false,
+      "board_net": "SPI1_MISO",
+      "board_xy": [
+        15.45,
+        44.0
+      ],
+      "table_net": "SPI1_MISO",
+      "binding_net": "SPI1_MISO",
+      "netlist_net": "SPI1_MISO",
+      "fresh_netlist_net": "SPI1_MISO",
+      "maker_port": "PB4",
+      "mode": "AF5 SPI1_MISO",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "maker_af": {
+        "af": 5,
+        "function": "SPI1_MISO",
+        "page": 90
+      },
+      "reset_fact": "debug AF at reset"
+    },
+    "91": {
+      "port": "PB5",
+      "schematic_xy": [
+        63.5,
+        173.99
+      ],
+      "native_symbol_name": "PB5",
+      "schematic_net": "SPI1_MOSI",
+      "native_no_connect": false,
+      "board_net": "SPI1_MOSI",
+      "board_xy": [
+        15.45,
+        44.5
+      ],
+      "table_net": "SPI1_MOSI",
+      "binding_net": "SPI1_MOSI",
+      "netlist_net": "SPI1_MOSI",
+      "fresh_netlist_net": "SPI1_MOSI",
+      "maker_port": "PB5",
+      "mode": "AF5 SPI1_MOSI",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "maker_af": {
+        "af": 5,
+        "function": "SPI1_MOSI",
+        "page": 90
+      },
+      "reset_fact": "analog after reset"
+    },
+    "92": {
+      "port": "PB6",
+      "schematic_xy": [
+        63.5,
+        176.53
+      ],
+      "native_symbol_name": "PB6",
+      "schematic_net": "QSPI_NCS",
+      "native_no_connect": false,
+      "board_net": "QSPI_NCS",
+      "board_xy": [
+        15.45,
+        45.0
+      ],
+      "table_net": "QSPI_NCS",
+      "binding_net": "QSPI_NCS",
+      "netlist_net": "QSPI_NCS",
+      "fresh_netlist_net": "QSPI_NCS",
+      "maker_port": "PB6",
+      "mode": "AF10 QUADSPI_BK1_NCS",
+      "loader_role": "I2C1_SCL: open drain, no pull (p278) [LOADER-DRIVEN]. QSPI_NCS, inherited from R8: R10 10k pull-up; a loader low selects U3, which gets no clock (PB2 is not a loader pin)",
+      "maker_io_structure": "FT_f",
+      "maker_af": {
+        "af": 10,
+        "function": "QUADSPI_BK1_NCS",
+        "page": 90
+      },
+      "reset_fact": "analog after reset"
+    },
+    "93": {
+      "port": "PB7",
+      "schematic_xy": [
+        63.5,
+        179.07
+      ],
+      "native_symbol_name": "PB7",
+      "schematic_net": "IMU_CS",
+      "native_no_connect": false,
+      "board_net": "IMU_CS",
+      "board_xy": [
+        15.45,
+        45.5
+      ],
+      "table_net": "IMU_CS",
+      "binding_net": "IMU_CS",
+      "netlist_net": "IMU_CS",
+      "fresh_netlist_net": "IMU_CS",
+      "maker_port": "PB7",
+      "mode": "GPIO out",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_fa",
+      "reset_fact": "analog after reset"
+    },
+    "94": {
+      "port": "BOOT0",
+      "schematic_xy": [
+        63.5,
+        181.61
+      ],
+      "native_symbol_name": "BOOT0",
+      "schematic_net": "BOOT0",
+      "native_no_connect": false,
+      "board_net": "BOOT0",
+      "board_xy": [
+        15.45,
+        46.0
+      ],
+      "table_net": "BOOT0",
+      "binding_net": "BOOT0",
+      "netlist_net": "BOOT0",
+      "fresh_netlist_net": "BOOT0",
+      "maker_port": "BOOT0",
+      "mode": "BOOT0",
+      "loader_role": "-",
+      "maker_io_structure": "B",
+      "reset_fact": "dedicated input/reset"
+    },
+    "95": {
+      "port": "PB8",
+      "schematic_xy": [
+        63.5,
+        184.15
+      ],
+      "native_symbol_name": "PB8",
+      "schematic_net": "I2C1_SCL",
+      "native_no_connect": false,
+      "board_net": "I2C1_SCL",
+      "board_xy": [
+        15.45,
+        46.5
+      ],
+      "table_net": "I2C1_SCL",
+      "binding_net": "I2C1_SCL",
+      "netlist_net": "I2C1_SCL",
+      "fresh_netlist_net": "I2C1_SCL",
+      "maker_port": "PB8",
+      "mode": "AF4 I2C1_SCL",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_fh",
+      "maker_af": {
+        "af": 4,
+        "function": "I2C1_SCL",
+        "page": 90
+      },
+      "reset_fact": "analog after reset"
+    },
+    "96": {
+      "port": "PB9",
+      "schematic_xy": [
+        63.5,
+        186.69
+      ],
+      "native_symbol_name": "PB9",
+      "schematic_net": "I2C1_SDA",
+      "native_no_connect": false,
+      "board_net": "I2C1_SDA",
+      "board_xy": [
+        15.45,
+        47.0
+      ],
+      "table_net": "I2C1_SDA",
+      "binding_net": "I2C1_SDA",
+      "netlist_net": "I2C1_SDA",
+      "fresh_netlist_net": "I2C1_SDA",
+      "maker_port": "PB9",
+      "mode": "AF4 I2C1_SDA",
+      "loader_role": "I2C1_SDA: open drain, no pull (p278) [LOADER-DRIVEN]. I2C1_SDA, inherited from R8: loader slave address 0b1001110x, not U5 0x76/0x77",
+      "maker_io_structure": "FT_fh",
+      "maker_af": {
+        "af": 4,
+        "function": "I2C1_SDA",
+        "page": 90
+      },
+      "reset_fact": "analog after reset"
+    },
+    "99": {
+      "port": "VSS",
+      "schematic_xy": [
+        63.5,
+        189.23
+      ],
+      "native_symbol_name": "VSS",
+      "schematic_net": "GND",
+      "native_no_connect": false,
+      "board_net": "GND",
+      "board_xy": [
+        15.45,
+        48.5
+      ],
+      "table_net": "GND",
+      "binding_net": "GND",
+      "netlist_net": "GND",
+      "fresh_netlist_net": "GND",
+      "maker_port": "VSS",
+      "mode": "VSS",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "100": {
+      "port": "VDD",
+      "schematic_xy": [
+        63.5,
+        191.77
+      ],
+      "native_symbol_name": "VDD",
+      "schematic_net": "3V3",
+      "native_no_connect": false,
+      "board_net": "3V3",
+      "board_xy": [
+        15.45,
+        49.0
+      ],
+      "table_net": "3V3",
+      "binding_net": "3V3",
+      "netlist_net": "3V3",
+      "fresh_netlist_net": "3V3",
+      "maker_port": "VDD",
+      "mode": "VDD",
+      "loader_role": "-",
+      "maker_io_structure": "Supply",
+      "reset_fact": "Supply"
+    },
+    "3": {
+      "port": "PE4",
+      "schematic_xy": [
+        63.5,
+        194.31
+      ],
+      "native_symbol_name": "PE4",
+      "schematic_net": "PYRO1_GATE_N",
+      "native_no_connect": false,
+      "board_net": "PYRO1_GATE_N",
+      "board_xy": [
+        18.0,
+        50.55
+      ],
+      "table_net": "PYRO1_GATE_N",
+      "binding_net": "PYRO1_GATE_N",
+      "netlist_net": "PYRO1_GATE_N",
+      "fresh_netlist_net": "PYRO1_GATE_N",
+      "maker_port": "PE4",
+      "mode": "GPIO out",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "4": {
+      "port": "PE5",
+      "schematic_xy": [
+        119.38,
+        69.85
+      ],
+      "native_symbol_name": "PE5",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        18.5,
+        50.55
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE5",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "5": {
+      "port": "PE6",
+      "schematic_xy": [
+        119.38,
+        72.39
+      ],
+      "native_symbol_name": "PE6",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        19.0,
+        50.55
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE6",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "8": {
+      "port": "PC14",
+      "schematic_xy": [
+        119.38,
+        74.93
+      ],
+      "native_symbol_name": "PC14",
+      "schematic_net": "BUZZ_DRV",
+      "native_no_connect": false,
+      "board_net": "BUZZ_DRV",
+      "board_xy": [
+        20.5,
+        50.55
+      ],
+      "table_net": "BUZZ_DRV",
+      "binding_net": "BUZZ_DRV",
+      "netlist_net": "BUZZ_DRV",
+      "fresh_netlist_net": "BUZZ_DRV",
+      "maker_port": "PC14",
+      "mode": "GPIO out",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "reset_fact": "analog; PC14/PC15 retain LSE configuration across non-POR reset"
+    },
+    "9": {
+      "port": "PC15",
+      "schematic_xy": [
+        119.38,
+        77.47
+      ],
+      "native_symbol_name": "PC15",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        21.0,
+        50.55
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PC15",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT",
+      "reset_fact": "analog; PC14/PC15 retain LSE configuration across non-POR reset"
+    },
+    "15": {
+      "port": "PC0",
+      "schematic_xy": [
+        119.38,
+        80.01
+      ],
+      "native_symbol_name": "PC0",
+      "schematic_net": "PYRO1_CONT",
+      "native_no_connect": false,
+      "board_net": "PYRO1_CONT",
+      "board_xy": [
+        24.0,
+        50.55
+      ],
+      "table_net": "PYRO1_CONT",
+      "binding_net": "PYRO1_CONT",
+      "netlist_net": "PYRO1_CONT",
+      "fresh_netlist_net": "PYRO1_CONT",
+      "maker_port": "PC0",
+      "mode": "ADC",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_a",
+      "maker_adc": "ADC123_INP10",
+      "reset_fact": "analog after reset"
+    },
+    "16": {
+      "port": "PC1",
+      "schematic_xy": [
+        119.38,
+        82.55
+      ],
+      "native_symbol_name": "PC1",
+      "schematic_net": "ACT_EN_MCU",
+      "native_no_connect": false,
+      "board_net": "ACT_EN_MCU",
+      "board_xy": [
+        24.5,
+        50.55
+      ],
+      "table_net": "ACT_EN_MCU",
+      "binding_net": "ACT_EN_MCU",
+      "netlist_net": "ACT_EN_MCU",
+      "fresh_netlist_net": "ACT_EN_MCU",
+      "maker_port": "PC1",
+      "mode": "GPIO out (push-pull; initialise low before output mode)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_ha",
+      "reset_fact": "analog after reset"
+    },
+    "22": {
+      "port": "PA0",
+      "schematic_xy": [
+        119.38,
+        85.09
+      ],
+      "native_symbol_name": "PA0",
+      "schematic_net": "SERVO1_MCU",
+      "native_no_connect": false,
+      "board_net": "SERVO1_MCU",
+      "board_xy": [
+        27.5,
+        50.55
+      ],
+      "table_net": "SERVO1_MCU",
+      "binding_net": "SERVO1_MCU",
+      "netlist_net": "SERVO1_MCU",
+      "fresh_netlist_net": "SERVO1_MCU",
+      "maker_port": "PA0",
+      "mode": "AF2 TIM5_CH1",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_a",
+      "maker_af": {
+        "af": 2,
+        "function": "TIM5_CH1",
+        "page": 89
+      },
+      "reset_fact": "analog after reset"
+    },
+    "23": {
+      "port": "PA1",
+      "schematic_xy": [
+        119.38,
+        87.63
+      ],
+      "native_symbol_name": "PA1",
+      "schematic_net": "SERVO2_MCU",
+      "native_no_connect": false,
+      "board_net": "SERVO2_MCU",
+      "board_xy": [
+        28.0,
+        50.55
+      ],
+      "table_net": "SERVO2_MCU",
+      "binding_net": "SERVO2_MCU",
+      "netlist_net": "SERVO2_MCU",
+      "fresh_netlist_net": "SERVO2_MCU",
+      "maker_port": "PA1",
+      "mode": "AF2 TIM5_CH2",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_ha",
+      "maker_af": {
+        "af": 2,
+        "function": "TIM5_CH2",
+        "page": 89
+      },
+      "reset_fact": "analog after reset"
+    },
+    "24": {
+      "port": "PA2",
+      "schematic_xy": [
+        119.38,
+        90.17
+      ],
+      "native_symbol_name": "PA2",
+      "schematic_net": "SERVO3_MCU",
+      "native_no_connect": false,
+      "board_net": "SERVO3_MCU",
+      "board_xy": [
+        28.5,
+        50.55
+      ],
+      "table_net": "SERVO3_MCU",
+      "binding_net": "SERVO3_MCU",
+      "netlist_net": "SERVO3_MCU",
+      "fresh_netlist_net": "SERVO3_MCU",
+      "maker_port": "PA2",
+      "mode": "AF2 TIM5_CH3",
+      "loader_role": "USART2_TX: output, AF push-pull pull-up; input until USART2 detected on V9.1 (p278) [LOADER-DRIVEN]. SERVO3_MCU, inherited from R8: R156 10k pull-down and R152 1k; the loader runs only after a firmware jump (BOOT0 tied low), servo 3 sees UART levels, never a fire or arming net",
+      "maker_io_structure": "FT_a",
+      "maker_af": {
+        "af": 2,
+        "function": "TIM5_CH3",
+        "page": 89
+      },
+      "reset_fact": "analog after reset"
+    },
+    "25": {
+      "port": "PA3",
+      "schematic_xy": [
+        119.38,
+        92.71
+      ],
+      "native_symbol_name": "PA3",
+      "schematic_net": "SERVO4_MCU",
+      "native_no_connect": false,
+      "board_net": "SERVO4_MCU",
+      "board_xy": [
+        29.0,
+        50.55
+      ],
+      "table_net": "SERVO4_MCU",
+      "binding_net": "SERVO4_MCU",
+      "netlist_net": "SERVO4_MCU",
+      "fresh_netlist_net": "SERVO4_MCU",
+      "maker_port": "PA3",
+      "mode": "AF2 TIM5_CH4",
+      "loader_role": "USART2_RX: input, pull-up (p278). SERVO4_MCU, inherited from R8: the 30-50 kOhm pull-up against R157 10k holds the line at <= 0.83 V (Calc): no pulses",
+      "maker_io_structure": "FT_ha",
+      "maker_af": {
+        "af": 2,
+        "function": "TIM5_CH4",
+        "page": 89
+      },
+      "reset_fact": "analog after reset"
+    },
+    "28": {
+      "port": "PA4",
+      "schematic_xy": [
+        119.38,
+        95.25
+      ],
+      "native_symbol_name": "PA4",
+      "schematic_net": "LOGIC_SOURCE_ST",
+      "native_no_connect": false,
+      "board_net": "LOGIC_SOURCE_ST",
+      "board_xy": [
+        30.55,
+        48.0
+      ],
+      "table_net": "LOGIC_SOURCE_ST",
+      "binding_net": "LOGIC_SOURCE_ST",
+      "netlist_net": "LOGIC_SOURCE_ST",
+      "fresh_netlist_net": "LOGIC_SOURCE_ST",
+      "maker_port": "PA4",
+      "mode": "GPIO in",
+      "loader_role": "SPI1_NSS: slave input, no pull (p279). LOGIC_SOURCE_ST: driven by R91 10k pull-up and U11 ST open drain; an input changes nothing (R3-MCU-01)",
+      "maker_io_structure": "TT_a",
+      "reset_fact": "analog after reset"
+    },
+    "29": {
+      "port": "PA5",
+      "schematic_xy": [
+        119.38,
+        97.79
+      ],
+      "native_symbol_name": "PA5",
+      "schematic_net": "BAT_FAULT_N",
+      "native_no_connect": false,
+      "board_net": "BAT_FAULT_N",
+      "board_xy": [
+        30.55,
+        47.5
+      ],
+      "table_net": "BAT_FAULT_N",
+      "binding_net": "BAT_FAULT_N",
+      "netlist_net": "BAT_FAULT_N",
+      "fresh_netlist_net": "BAT_FAULT_N",
+      "maker_port": "PA5",
+      "mode": "GPIO in",
+      "loader_role": "SPI1_SCK: slave input, no pull (p279). BAT_FAULT_N: driven by R89 10k pull-up and U9 FLT open drain; an input changes nothing (R3-MCU-01)",
+      "maker_io_structure": "TT_ha",
+      "reset_fact": "analog after reset"
+    },
+    "30": {
+      "port": "PA6",
+      "schematic_xy": [
+        119.38,
+        100.33
+      ],
+      "native_symbol_name": "PA6",
+      "schematic_net": "VLOGIC_SENSE",
+      "native_no_connect": false,
+      "board_net": "VLOGIC_SENSE",
+      "board_xy": [
+        30.55,
+        47.0
+      ],
+      "table_net": "VLOGIC_SENSE",
+      "binding_net": "VLOGIC_SENSE",
+      "netlist_net": "VLOGIC_SENSE",
+      "fresh_netlist_net": "VLOGIC_SENSE",
+      "maker_port": "PA6",
+      "mode": "ADC (ADC12_INP3)",
+      "loader_role": "SPI1_MISO: slave output, push-pull, no pull (p279) [LOADER-DRIVEN]. VLOGIC_SENSE: the drive sees only R61 10k, R60 100k to VLOGIC and C60 10nF: <= 0.36 mA (3.3 V / 10 kOhm + 3.3 V / 100 kOhm with VLOGIC at 0 V, Calc), no actuator, pyro or supply-control node; the F6 ADC watchdog is not running in the loader (R3-MCU-01)",
+      "maker_io_structure": "FT_a",
+      "maker_adc": "ADC12_INP3",
+      "reset_fact": "analog after reset"
+    },
+    "31": {
+      "port": "PA7",
+      "schematic_xy": [
+        119.38,
+        102.87
+      ],
+      "native_symbol_name": "PA7",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        46.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PA7",
+      "mode": "NC (firmware: analog)",
+      "loader_role": "SPI1_MOSI: slave input, no pull (p279). NC",
+      "maker_io_structure": "TT_a",
+      "reset_fact": "analog after reset"
+    },
+    "32": {
+      "port": "PC4",
+      "schematic_xy": [
+        119.38,
+        105.41
+      ],
+      "native_symbol_name": "PC4",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        46.0
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PC4",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_a",
+      "reset_fact": "analog after reset"
+    },
+    "33": {
+      "port": "PC5",
+      "schematic_xy": [
+        119.38,
+        107.95
+      ],
+      "native_symbol_name": "PC5",
+      "schematic_net": "ARM1_SENSE",
+      "native_no_connect": false,
+      "board_net": "ARM1_SENSE",
+      "board_xy": [
+        30.55,
+        45.5
+      ],
+      "table_net": "ARM1_SENSE",
+      "binding_net": "ARM1_SENSE",
+      "netlist_net": "ARM1_SENSE",
+      "fresh_netlist_net": "ARM1_SENSE",
+      "maker_port": "PC5",
+      "mode": "ADC",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_a",
+      "maker_adc": "ADC12_INP8",
+      "reset_fact": "analog after reset"
+    },
+    "34": {
+      "port": "PB0",
+      "schematic_xy": [
+        119.38,
+        110.49
+      ],
+      "native_symbol_name": "PB0",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        45.0
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PB0",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_a",
+      "reset_fact": "analog after reset"
+    },
+    "35": {
+      "port": "PB1",
+      "schematic_xy": [
+        119.38,
+        113.03
+      ],
+      "native_symbol_name": "PB1",
+      "schematic_net": "CAM_5V_SENSE",
+      "native_no_connect": false,
+      "board_net": "CAM_5V_SENSE",
+      "board_xy": [
+        30.55,
+        44.5
+      ],
+      "table_net": "CAM_5V_SENSE",
+      "binding_net": "CAM_5V_SENSE",
+      "netlist_net": "CAM_5V_SENSE",
+      "fresh_netlist_net": "CAM_5V_SENSE",
+      "maker_port": "PB1",
+      "mode": "ADC",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_a",
+      "maker_adc": "ADC12_INP5",
+      "reset_fact": "analog after reset"
+    },
+    "38": {
+      "port": "PE8",
+      "schematic_xy": [
+        119.38,
+        115.57
+      ],
+      "native_symbol_name": "PE8",
+      "schematic_net": "CAM_MCU_TX",
+      "native_no_connect": false,
+      "board_net": "CAM_MCU_TX",
+      "board_xy": [
+        30.55,
+        43.0
+      ],
+      "table_net": "CAM_MCU_TX",
+      "binding_net": "CAM_MCU_TX",
+      "netlist_net": "CAM_MCU_TX",
+      "fresh_netlist_net": "CAM_MCU_TX",
+      "maker_port": "PE8",
+      "mode": "AF7 UART7_TX",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_ha",
+      "maker_af": {
+        "af": 7,
+        "function": "UART7_TX",
+        "page": 94
+      },
+      "reset_fact": "analog after reset"
+    },
+    "39": {
+      "port": "PE9",
+      "schematic_xy": [
+        119.38,
+        118.11
+      ],
+      "native_symbol_name": "PE9",
+      "schematic_net": "CAM_UART_OE",
+      "native_no_connect": false,
+      "board_net": "CAM_UART_OE",
+      "board_xy": [
+        30.55,
+        42.5
+      ],
+      "table_net": "CAM_UART_OE",
+      "binding_net": "CAM_UART_OE",
+      "netlist_net": "CAM_UART_OE",
+      "fresh_netlist_net": "CAM_UART_OE",
+      "maker_port": "PE9",
+      "mode": "GPIO out",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "TT_ha",
+      "reset_fact": "analog after reset"
+    },
+    "41": {
+      "port": "PE11",
+      "schematic_xy": [
+        119.38,
+        120.65
+      ],
+      "native_symbol_name": "PE11",
+      "schematic_net": "CAM_PWR_EN",
+      "native_no_connect": false,
+      "board_net": "CAM_PWR_EN",
+      "board_xy": [
+        30.55,
+        41.5
+      ],
+      "table_net": "CAM_PWR_EN",
+      "binding_net": "CAM_PWR_EN",
+      "netlist_net": "CAM_PWR_EN",
+      "fresh_netlist_net": "CAM_PWR_EN",
+      "maker_port": "PE11",
+      "mode": "GPIO out",
+      "loader_role": "SPI4_NSS: slave input, no pull (p280). CAM_PWR_EN: input only; R431 100k pull-down holds U402 EN low, camera port off (R3-MCU-01)",
+      "maker_io_structure": "FT_ha",
+      "reset_fact": "analog after reset"
+    },
+    "42": {
+      "port": "PE12",
+      "schematic_xy": [
+        119.38,
+        123.19
+      ],
+      "native_symbol_name": "PE12",
+      "schematic_net": "CAM_FAULT_N",
+      "native_no_connect": false,
+      "board_net": "CAM_FAULT_N",
+      "board_xy": [
+        30.55,
+        41.0
+      ],
+      "table_net": "CAM_FAULT_N",
+      "binding_net": "CAM_FAULT_N",
+      "netlist_net": "CAM_FAULT_N",
+      "fresh_netlist_net": "CAM_FAULT_N",
+      "maker_port": "PE12",
+      "mode": "GPIO in",
+      "loader_role": "SPI4_SCK: slave input, no pull (p280). CAM_FAULT_N: driven by U402 FAULT open drain and R432 10k pull-up; an input changes nothing (R3-MCU-01)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "43": {
+      "port": "PE13",
+      "schematic_xy": [
+        119.38,
+        125.73
+      ],
+      "native_symbol_name": "PE13",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        40.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE13",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "SPI4_MISO: slave output, push-pull (p280) [LOADER-DRIVEN]. NC (no net)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "44": {
+      "port": "PE14",
+      "schematic_xy": [
+        119.38,
+        128.27
+      ],
+      "native_symbol_name": "PE14",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        40.0
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE14",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "SPI4_MOSI: slave input, no pull (p280). NC",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "45": {
+      "port": "PE15",
+      "schematic_xy": [
+        119.38,
+        130.81
+      ],
+      "native_symbol_name": "PE15",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        30.55,
+        39.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE15",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "51": {
+      "port": "PB12",
+      "schematic_xy": [
+        119.38,
+        133.35
+      ],
+      "native_symbol_name": "PB12",
+      "schematic_net": "RADIO_RX_MCU",
+      "native_no_connect": false,
+      "board_net": "RADIO_RX_MCU",
+      "board_xy": [
+        29.0,
+        35.45
+      ],
+      "table_net": "RADIO_RX_MCU",
+      "binding_net": "RADIO_RX_MCU",
+      "netlist_net": "RADIO_RX_MCU",
+      "fresh_netlist_net": "RADIO_RX_MCU",
+      "maker_port": "PB12",
+      "mode": "AF14 UART5_RX",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_u",
+      "maker_af": {
+        "af": 14,
+        "function": "UART5_RX",
+        "page": 91
+      },
+      "reset_fact": "analog after reset"
+    },
+    "52": {
+      "port": "PB13",
+      "schematic_xy": [
+        119.38,
+        135.89
+      ],
+      "native_symbol_name": "PB13",
+      "schematic_net": "RADIO_TX_MCU",
+      "native_no_connect": false,
+      "board_net": "RADIO_TX_MCU",
+      "board_xy": [
+        28.5,
+        35.45
+      ],
+      "table_net": "RADIO_TX_MCU",
+      "binding_net": "RADIO_TX_MCU",
+      "netlist_net": "RADIO_TX_MCU",
+      "fresh_netlist_net": "RADIO_TX_MCU",
+      "maker_port": "PB13",
+      "mode": "AF14 UART5_TX",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_u",
+      "maker_af": {
+        "af": 14,
+        "function": "UART5_TX",
+        "page": 91
+      },
+      "reset_fact": "analog after reset"
+    },
+    "53": {
+      "port": "PB14",
+      "schematic_xy": [
+        119.38,
+        138.43
+      ],
+      "native_symbol_name": "PB14",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        28.0,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PB14",
+      "mode": "NC",
+      "loader_role": "USART1_TX (PB14/PB15 map): output, AF push-pull pull-up (p277) [LOADER-DRIVEN]. NC (no net)",
+      "maker_io_structure": "FT_u",
+      "reset_fact": "analog after reset"
+    },
+    "54": {
+      "port": "PB15",
+      "schematic_xy": [
+        119.38,
+        140.97
+      ],
+      "native_symbol_name": "PB15",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        27.5,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PB15",
+      "mode": "NC",
+      "loader_role": "USART1_RX (PB14/PB15 map): input, pull-up (p277); PB15 at GND blocks every interface but USB (Table120 p282). NC, never pulled down",
+      "maker_io_structure": "FT_u",
+      "reset_fact": "analog after reset"
+    },
+    "55": {
+      "port": "PD8",
+      "schematic_xy": [
+        119.38,
+        143.51
+      ],
+      "native_symbol_name": "PD8",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        27.0,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD8",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "56": {
+      "port": "PD9",
+      "schematic_xy": [
+        119.38,
+        146.05
+      ],
+      "native_symbol_name": "PD9",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        26.5,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD9",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "57": {
+      "port": "PD10",
+      "schematic_xy": [
+        119.38,
+        148.59
+      ],
+      "native_symbol_name": "PD10",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        26.0,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD10",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "61": {
+      "port": "PD14",
+      "schematic_xy": [
+        119.38,
+        151.13
+      ],
+      "native_symbol_name": "PD14",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        24.0,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD14",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "65": {
+      "port": "PC8",
+      "schematic_xy": [
+        119.38,
+        153.67
+      ],
+      "native_symbol_name": "PC8",
+      "schematic_net": "VBUS_SENSE",
+      "native_no_connect": false,
+      "board_net": "VBUS_SENSE",
+      "board_xy": [
+        22.0,
+        35.45
+      ],
+      "table_net": "VBUS_SENSE",
+      "binding_net": "VBUS_SENSE",
+      "netlist_net": "VBUS_SENSE",
+      "fresh_netlist_net": "VBUS_SENSE",
+      "maker_port": "PC8",
+      "mode": "GPIO in",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "66": {
+      "port": "PC9",
+      "schematic_xy": [
+        119.38,
+        156.21
+      ],
+      "native_symbol_name": "PC9",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        21.5,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PC9",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "I2C3_SDA: open drain, no pull (p278) [LOADER-DRIVEN]. NC",
+      "maker_io_structure": "FT_fh",
+      "reset_fact": "analog after reset"
+    },
+    "67": {
+      "port": "PA8",
+      "schematic_xy": [
+        119.38,
+        158.75
+      ],
+      "native_symbol_name": "PA8",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        21.0,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PA8",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "I2C3_SCL: open drain, no pull (p278) [LOADER-DRIVEN]. NC",
+      "maker_io_structure": "FT_fha",
+      "reset_fact": "analog after reset"
+    },
+    "68": {
+      "port": "PA9",
+      "schematic_xy": [
+        119.38,
+        161.29
+      ],
+      "native_symbol_name": "PA9",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        20.5,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PA9",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "USART1_TX: output, AF push-pull pull-up; input until USART1 detected on V9.1 (p277) [LOADER-DRIVEN]. NC",
+      "maker_io_structure": "FT_u",
+      "reset_fact": "analog after reset"
+    },
+    "69": {
+      "port": "PA10",
+      "schematic_xy": [
+        119.38,
+        163.83
+      ],
+      "native_symbol_name": "PA10",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        20.0,
+        35.45
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PA10",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "USART1_RX: input, pull-up (p277). NC",
+      "maker_io_structure": "FT_u",
+      "reset_fact": "analog after reset"
+    },
+    "77": {
+      "port": "PA15",
+      "schematic_xy": [
+        119.38,
+        166.37
+      ],
+      "native_symbol_name": "PA15",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        15.45,
+        37.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PA15",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "SPI3_NSS: slave input, no pull (p279). NC",
+      "maker_io_structure": "FT",
+      "reset_fact": "debug AF at reset"
+    },
+    "78": {
+      "port": "PC10",
+      "schematic_xy": [
+        119.38,
+        168.91
+      ],
+      "native_symbol_name": "PC10",
+      "schematic_net": "SD_SCK",
+      "native_no_connect": false,
+      "board_net": "SD_SCK",
+      "board_xy": [
+        15.45,
+        38.0
+      ],
+      "table_net": "SD_SCK",
+      "binding_net": "SD_SCK",
+      "netlist_net": "SD_SCK",
+      "fresh_netlist_net": "SD_SCK",
+      "maker_port": "PC10",
+      "mode": "AF6 SPI3_SCK",
+      "loader_role": "SPI3_SCK: slave input, no pull (AN2606 Rev64 Table119 p279); SD clock, not firing copper",
+      "maker_io_structure": "FT_ha",
+      "maker_af": {
+        "af": 6,
+        "function": "SPI3_SCK",
+        "page": 92
+      },
+      "reset_fact": "analog after reset"
+    },
+    "79": {
+      "port": "PC11",
+      "schematic_xy": [
+        119.38,
+        171.45
+      ],
+      "native_symbol_name": "PC11",
+      "schematic_net": "SD_MISO",
+      "native_no_connect": false,
+      "board_net": "SD_MISO",
+      "board_xy": [
+        15.45,
+        38.5
+      ],
+      "table_net": "SD_MISO",
+      "binding_net": "SD_MISO",
+      "netlist_net": "SD_MISO",
+      "fresh_netlist_net": "SD_MISO",
+      "maker_port": "PC11",
+      "mode": "AF6 SPI3_MISO",
+      "loader_role": "SPI3_MISO: slave output push-pull (AN2606 Rev64 Table119 p279) [LOADER-DRIVEN]. SD DAT0 is high-impedance while PD0 SD_CS stays high through R46010k; no firing or supply-control copper",
+      "maker_io_structure": "FT_h",
+      "maker_af": {
+        "af": 6,
+        "function": "SPI3_MISO",
+        "page": 92
+      },
+      "reset_fact": "analog after reset"
+    },
+    "80": {
+      "port": "PC12",
+      "schematic_xy": [
+        119.38,
+        173.99
+      ],
+      "native_symbol_name": "PC12",
+      "schematic_net": "SD_MOSI",
+      "native_no_connect": false,
+      "board_net": "SD_MOSI",
+      "board_xy": [
+        15.45,
+        39.0
+      ],
+      "table_net": "SD_MOSI",
+      "binding_net": "SD_MOSI",
+      "netlist_net": "SD_MOSI",
+      "fresh_netlist_net": "SD_MOSI",
+      "maker_port": "PC12",
+      "mode": "AF6 SPI3_MOSI",
+      "loader_role": "SPI3_MOSI: slave input, no pull (AN2606 Rev64 Table119 p279). SD CMD input pulled high10k",
+      "maker_io_structure": "FT_h",
+      "maker_af": {
+        "af": 6,
+        "function": "SPI3_MOSI",
+        "page": 92
+      },
+      "reset_fact": "analog after reset"
+    },
+    "81": {
+      "port": "PD0",
+      "schematic_xy": [
+        119.38,
+        176.53
+      ],
+      "native_symbol_name": "PD0",
+      "schematic_net": "SD_CS",
+      "native_no_connect": false,
+      "board_net": "SD_CS",
+      "board_xy": [
+        15.45,
+        39.5
+      ],
+      "table_net": "SD_CS",
+      "binding_net": "SD_CS",
+      "netlist_net": "SD_CS",
+      "fresh_netlist_net": "SD_CS",
+      "maker_port": "PD0",
+      "mode": "GPIO output push-pull; initialise high before output mode",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "82": {
+      "port": "PD1",
+      "schematic_xy": [
+        119.38,
+        179.07
+      ],
+      "native_symbol_name": "PD1",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        15.45,
+        40.0
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD1",
+      "mode": "NC (firmware: analog)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "83": {
+      "port": "PD2",
+      "schematic_xy": [
+        119.38,
+        181.61
+      ],
+      "native_symbol_name": "PD2",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        15.45,
+        40.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PD2",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "86": {
+      "port": "PD5",
+      "schematic_xy": [
+        119.38,
+        184.15
+      ],
+      "native_symbol_name": "PD5",
+      "schematic_net": "LED_RED",
+      "native_no_connect": false,
+      "board_net": "LED_RED",
+      "board_xy": [
+        15.45,
+        42.0
+      ],
+      "table_net": "LED_RED",
+      "binding_net": "LED_RED",
+      "netlist_net": "LED_RED",
+      "fresh_netlist_net": "LED_RED",
+      "maker_port": "PD5",
+      "mode": "GPIO out",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "87": {
+      "port": "PD6",
+      "schematic_xy": [
+        119.38,
+        186.69
+      ],
+      "native_symbol_name": "PD6",
+      "schematic_net": "USB_FAULT_N",
+      "native_no_connect": false,
+      "board_net": "USB_FAULT_N",
+      "board_xy": [
+        15.45,
+        42.5
+      ],
+      "table_net": "USB_FAULT_N",
+      "binding_net": "USB_FAULT_N",
+      "netlist_net": "USB_FAULT_N",
+      "fresh_netlist_net": "USB_FAULT_N",
+      "maker_port": "PD6",
+      "mode": "GPIO in",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "88": {
+      "port": "PD7",
+      "schematic_xy": [
+        119.38,
+        189.23
+      ],
+      "native_symbol_name": "PD7",
+      "schematic_net": "LED_YEL",
+      "native_no_connect": false,
+      "board_net": "LED_YEL",
+      "board_xy": [
+        15.45,
+        43.0
+      ],
+      "table_net": "LED_YEL",
+      "binding_net": "LED_YEL",
+      "netlist_net": "LED_YEL",
+      "fresh_netlist_net": "LED_YEL",
+      "maker_port": "PD7",
+      "mode": "GPIO out",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "97": {
+      "port": "PE0",
+      "schematic_xy": [
+        119.38,
+        191.77
+      ],
+      "native_symbol_name": "PE0",
+      "schematic_net": "NC",
+      "native_no_connect": true,
+      "board_net": "NC",
+      "board_xy": [
+        15.45,
+        47.5
+      ],
+      "table_net": "NC",
+      "binding_net": "NC",
+      "netlist_net": "NC",
+      "fresh_netlist_net": "NC",
+      "maker_port": "PE0",
+      "mode": "NC (firmware: analog, never driven)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    },
+    "98": {
+      "port": "PE1",
+      "schematic_xy": [
+        119.38,
+        194.31
+      ],
+      "native_symbol_name": "PE1",
+      "schematic_net": "IMU_INT1",
+      "native_no_connect": false,
+      "board_net": "IMU_INT1",
+      "board_xy": [
+        15.45,
+        48.0
+      ],
+      "table_net": "IMU_INT1",
+      "binding_net": "IMU_INT1",
+      "netlist_net": "IMU_INT1",
+      "fresh_netlist_net": "IMU_INT1",
+      "maker_port": "PE1",
+      "mode": "GPIO in, internal pull-down, EXTI1 data-ready interrupt (LSM6DSV320X INT1 push-pull, active high by default)",
+      "loader_role": "not used by the H74x bootloader (AN2606 Rev64 Table119 pp277-280)",
+      "maker_io_structure": "FT_h",
+      "reset_fact": "analog after reset"
+    }
+  },
+  "native_relevant_parts": {
+    "J121": {
+      "value": "DB125-3.5-2P-BK-S",
+      "xy": [
+        7.4,
+        55.85
+      ],
+      "side": "F",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "J121",
+        "Value": "DB125-3.5-2P-BK-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "Description": "",
+        "LCSC": "C52993880",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-2P-BK-S"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_OUT",
+          "xy": [
+            7.4,
+            54.1
+          ]
+        },
+        "2": {
+          "net": "PYRO1_IGN",
+          "xy": [
+            7.4,
+            57.6
+          ]
+        }
+      }
+    },
+    "Q122": {
+      "value": "AO3400A",
+      "xy": [
+        16.8,
+        69.8
+      ],
+      "side": "F",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "Q122",
+        "Value": "AO3400A",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C20917",
+        "Manufacturer": "Alpha & Omega Semicon",
+        "Manufacturer Part": "AO3400A",
+        "LCSC Part": "C20917"
+      },
+      "pads": {
+        "1": {
+          "net": "ACT_EN",
+          "xy": [
+            17.8,
+            70.75
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            17.8,
+            68.85
+          ]
+        },
+        "3": {
+          "net": "ACT_DRV",
+          "xy": [
+            15.8,
+            69.8
+          ]
+        }
+      }
+    },
+    "R126": {
+      "value": "220R",
+      "xy": [
+        17.0,
+        54.24
+      ],
+      "side": "F",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R126",
+        "Value": "220R",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C17557",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0805W8F2200T5E",
+        "LCSC Part": "C17557"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_GATE_N",
+          "xy": [
+            18.0,
+            54.24
+          ]
+        },
+        "2": {
+          "net": "PYRO1_GATE",
+          "xy": [
+            16.0,
+            54.24
+          ]
+        }
+      }
+    },
+    "J2": {
+      "value": "TC2030-IDC-NL SWD",
+      "xy": [
+        5.0,
+        39.4
+      ],
+      "side": "F",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "J2",
+        "Value": "TC2030-IDC-NL SWD",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "",
+        "LCSC Part": "",
+        "Manufacturer": "Tag-Connect",
+        "Manufacturer Part": "TC2030-IDC-NL"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            7.54,
+            40.416
+          ]
+        },
+        "1": {
+          "net": "3V3",
+          "xy": [
+            3.73,
+            40.035
+          ]
+        },
+        "2": {
+          "net": "SWDIO",
+          "xy": [
+            3.73,
+            38.765
+          ]
+        },
+        "3": {
+          "net": "NRST",
+          "xy": [
+            5.0,
+            40.035
+          ]
+        },
+        "4": {
+          "net": "SWCLK",
+          "xy": [
+            5.0,
+            38.765
+          ]
+        },
+        "5": {
+          "net": "GND",
+          "xy": [
+            6.27,
+            40.035
+          ]
+        },
+        "6": {
+          "net": "unconnected-(J2-Pin_6-Pad6)",
+          "xy": [
+            6.27,
+            38.765
+          ]
+        }
+      }
+    },
+    "J122": {
+      "value": "DB125-3.5-5P-GN-S",
+      "xy": [
+        38.6,
+        71.5
+      ],
+      "side": "F",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "J122",
+        "Value": "DB125-3.5-5P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "Description": "",
+        "LCSC": "C3646874",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-5P-GN-S"
+      },
+      "pads": {
+        "1": {
+          "net": "SERVO1_OUT",
+          "xy": [
+            38.6,
+            78.5
+          ]
+        },
+        "2": {
+          "net": "SERVO2_OUT",
+          "xy": [
+            38.6,
+            75.0
+          ]
+        },
+        "3": {
+          "net": "SERVO3_OUT",
+          "xy": [
+            38.6,
+            71.5
+          ]
+        },
+        "4": {
+          "net": "SERVO4_OUT",
+          "xy": [
+            38.6,
+            68.0
+          ]
+        },
+        "5": {
+          "net": "GND",
+          "xy": [
+            38.6,
+            64.5
+          ]
+        }
+      }
+    },
+    "U1": {
+      "value": "STM32H743VIT6",
+      "xy": [
+        23.0,
+        43.0
+      ],
+      "side": "F",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "U1",
+        "Value": "STM32H743VIT6",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C5271084",
+        "LCSC": "C5271084",
+        "Manufacturer": "STMicroelectronics",
+        "Manufacturer Part": "STM32H743VIT6TR"
+      },
+      "pads": {
+        "1": {
+          "net": "QSPI_IO2",
+          "xy": [
+            17.0,
+            50.55
+          ]
+        },
+        "2": {
+          "net": "unconnected-(U1-PE3-Pad2)",
+          "xy": [
+            17.5,
+            50.55
+          ]
+        },
+        "3": {
+          "net": "PYRO1_GATE_N",
+          "xy": [
+            18.0,
+            50.55
+          ]
+        },
+        "4": {
+          "net": "unconnected-(U1-PE5-Pad4)",
+          "xy": [
+            18.5,
+            50.55
+          ]
+        },
+        "5": {
+          "net": "unconnected-(U1-PE6-Pad5)",
+          "xy": [
+            19.0,
+            50.55
+          ]
+        },
+        "6": {
+          "net": "3V3",
+          "xy": [
+            19.5,
+            50.55
+          ]
+        },
+        "7": {
+          "net": "unconnected-(U1-PC13-Pad7)",
+          "xy": [
+            20.0,
+            50.55
+          ]
+        },
+        "8": {
+          "net": "BUZZ_DRV",
+          "xy": [
+            20.5,
+            50.55
+          ]
+        },
+        "9": {
+          "net": "unconnected-(U1-PC15-Pad9)",
+          "xy": [
+            21.0,
+            50.55
+          ]
+        },
+        "10": {
+          "net": "GND",
+          "xy": [
+            21.5,
+            50.55
+          ]
+        },
+        "11": {
+          "net": "3V3",
+          "xy": [
+            22.0,
+            50.55
+          ]
+        },
+        "12": {
+          "net": "HSE_IN",
+          "xy": [
+            22.5,
+            50.55
+          ]
+        },
+        "13": {
+          "net": "HSE_OUT",
+          "xy": [
+            23.0,
+            50.55
+          ]
+        },
+        "14": {
+          "net": "NRST",
+          "xy": [
+            23.5,
+            50.55
+          ]
+        },
+        "15": {
+          "net": "PYRO1_CONT",
+          "xy": [
+            24.0,
+            50.55
+          ]
+        },
+        "16": {
+          "net": "ACT_EN_MCU",
+          "xy": [
+            24.5,
+            50.55
+          ]
+        },
+        "17": {
+          "net": "unconnected-(U1-PC2_C-Pad17)",
+          "xy": [
+            25.0,
+            50.55
+          ]
+        },
+        "18": {
+          "net": "V3V3_SENSE",
+          "xy": [
+            25.5,
+            50.55
+          ]
+        },
+        "19": {
+          "net": "GND",
+          "xy": [
+            26.0,
+            50.55
+          ]
+        },
+        "20": {
+          "net": "3V3A",
+          "xy": [
+            26.5,
+            50.55
+          ]
+        },
+        "21": {
+          "net": "3V3A",
+          "xy": [
+            27.0,
+            50.55
+          ]
+        },
+        "22": {
+          "net": "SERVO1_MCU",
+          "xy": [
+            27.5,
+            50.55
+          ]
+        },
+        "23": {
+          "net": "SERVO2_MCU",
+          "xy": [
+            28.0,
+            50.55
+          ]
+        },
+        "24": {
+          "net": "SERVO3_MCU",
+          "xy": [
+            28.5,
+            50.55
+          ]
+        },
+        "25": {
+          "net": "SERVO4_MCU",
+          "xy": [
+            29.0,
+            50.55
+          ]
+        },
+        "26": {
+          "net": "GND",
+          "xy": [
+            30.55,
+            49.0
+          ]
+        },
+        "27": {
+          "net": "3V3",
+          "xy": [
+            30.55,
+            48.5
+          ]
+        },
+        "28": {
+          "net": "LOGIC_SOURCE_ST",
+          "xy": [
+            30.55,
+            48.0
+          ]
+        },
+        "29": {
+          "net": "BAT_FAULT_N",
+          "xy": [
+            30.55,
+            47.5
+          ]
+        },
+        "30": {
+          "net": "VLOGIC_SENSE",
+          "xy": [
+            30.55,
+            47.0
+          ]
+        },
+        "31": {
+          "net": "unconnected-(U1-PA7-Pad31)",
+          "xy": [
+            30.55,
+            46.5
+          ]
+        },
+        "32": {
+          "net": "unconnected-(U1-PC4-Pad32)",
+          "xy": [
+            30.55,
+            46.0
+          ]
+        },
+        "33": {
+          "net": "ARM1_SENSE",
+          "xy": [
+            30.55,
+            45.5
+          ]
+        },
+        "34": {
+          "net": "unconnected-(U1-PB0-Pad34)",
+          "xy": [
+            30.55,
+            45.0
+          ]
+        },
+        "35": {
+          "net": "CAM_5V_SENSE",
+          "xy": [
+            30.55,
+            44.5
+          ]
+        },
+        "36": {
+          "net": "QSPI_CLK",
+          "xy": [
+            30.55,
+            44.0
+          ]
+        },
+        "37": {
+          "net": "CAM_MCU_RX",
+          "xy": [
+            30.55,
+            43.5
+          ]
+        },
+        "38": {
+          "net": "CAM_MCU_TX",
+          "xy": [
+            30.55,
+            43.0
+          ]
+        },
+        "39": {
+          "net": "CAM_UART_OE",
+          "xy": [
+            30.55,
+            42.5
+          ]
+        },
+        "40": {
+          "net": "unconnected-(U1-PE10-Pad40)",
+          "xy": [
+            30.55,
+            42.0
+          ]
+        },
+        "41": {
+          "net": "CAM_PWR_EN",
+          "xy": [
+            30.55,
+            41.5
+          ]
+        },
+        "42": {
+          "net": "CAM_FAULT_N",
+          "xy": [
+            30.55,
+            41.0
+          ]
+        },
+        "43": {
+          "net": "unconnected-(U1-PE13-Pad43)",
+          "xy": [
+            30.55,
+            40.5
+          ]
+        },
+        "44": {
+          "net": "unconnected-(U1-PE14-Pad44)",
+          "xy": [
+            30.55,
+            40.0
+          ]
+        },
+        "45": {
+          "net": "unconnected-(U1-PE15-Pad45)",
+          "xy": [
+            30.55,
+            39.5
+          ]
+        },
+        "46": {
+          "net": "unconnected-(U1-PB10-Pad46)",
+          "xy": [
+            30.55,
+            39.0
+          ]
+        },
+        "47": {
+          "net": "unconnected-(U1-PB11-Pad47)",
+          "xy": [
+            30.55,
+            38.5
+          ]
+        },
+        "48": {
+          "net": "VCAP1",
+          "xy": [
+            30.55,
+            38.0
+          ]
+        },
+        "49": {
+          "net": "GND",
+          "xy": [
+            30.55,
+            37.5
+          ]
+        },
+        "50": {
+          "net": "3V3",
+          "xy": [
+            30.55,
+            37.0
+          ]
+        },
+        "51": {
+          "net": "RADIO_RX_MCU",
+          "xy": [
+            29.0,
+            35.45
+          ]
+        },
+        "52": {
+          "net": "RADIO_TX_MCU",
+          "xy": [
+            28.5,
+            35.45
+          ]
+        },
+        "53": {
+          "net": "unconnected-(U1-PB14-Pad53)",
+          "xy": [
+            28.0,
+            35.45
+          ]
+        },
+        "54": {
+          "net": "unconnected-(U1-PB15-Pad54)",
+          "xy": [
+            27.5,
+            35.45
+          ]
+        },
+        "55": {
+          "net": "unconnected-(U1-PD8-Pad55)",
+          "xy": [
+            27.0,
+            35.45
+          ]
+        },
+        "56": {
+          "net": "unconnected-(U1-PD9-Pad56)",
+          "xy": [
+            26.5,
+            35.45
+          ]
+        },
+        "57": {
+          "net": "unconnected-(U1-PD10-Pad57)",
+          "xy": [
+            26.0,
+            35.45
+          ]
+        },
+        "58": {
+          "net": "QSPI_IO0",
+          "xy": [
+            25.5,
+            35.45
+          ]
+        },
+        "59": {
+          "net": "QSPI_IO1",
+          "xy": [
+            25.0,
+            35.45
+          ]
+        },
+        "60": {
+          "net": "QSPI_IO3",
+          "xy": [
+            24.5,
+            35.45
+          ]
+        },
+        "61": {
+          "net": "unconnected-(U1-PD14-Pad61)",
+          "xy": [
+            24.0,
+            35.45
+          ]
+        },
+        "62": {
+          "net": "unconnected-(U1-PD15-Pad62)",
+          "xy": [
+            23.5,
+            35.45
+          ]
+        },
+        "63": {
+          "net": "GPS_TX_MCU",
+          "xy": [
+            23.0,
+            35.45
+          ]
+        },
+        "64": {
+          "net": "GPS_RX_MCU",
+          "xy": [
+            22.5,
+            35.45
+          ]
+        },
+        "65": {
+          "net": "VBUS_SENSE",
+          "xy": [
+            22.0,
+            35.45
+          ]
+        },
+        "66": {
+          "net": "unconnected-(U1-PC9-Pad66)",
+          "xy": [
+            21.5,
+            35.45
+          ]
+        },
+        "67": {
+          "net": "unconnected-(U1-PA8-Pad67)",
+          "xy": [
+            21.0,
+            35.45
+          ]
+        },
+        "68": {
+          "net": "unconnected-(U1-PA9-Pad68)",
+          "xy": [
+            20.5,
+            35.45
+          ]
+        },
+        "69": {
+          "net": "unconnected-(U1-PA10-Pad69)",
+          "xy": [
+            20.0,
+            35.45
+          ]
+        },
+        "70": {
+          "net": "USB_DM",
+          "xy": [
+            19.5,
+            35.45
+          ]
+        },
+        "71": {
+          "net": "USB_DP",
+          "xy": [
+            19.0,
+            35.45
+          ]
+        },
+        "72": {
+          "net": "SWDIO",
+          "xy": [
+            18.5,
+            35.45
+          ]
+        },
+        "73": {
+          "net": "VCAP2",
+          "xy": [
+            18.0,
+            35.45
+          ]
+        },
+        "74": {
+          "net": "GND",
+          "xy": [
+            17.5,
+            35.45
+          ]
+        },
+        "75": {
+          "net": "3V3",
+          "xy": [
+            17.0,
+            35.45
+          ]
+        },
+        "76": {
+          "net": "SWCLK",
+          "xy": [
+            15.45,
+            37.0
+          ]
+        },
+        "77": {
+          "net": "unconnected-(U1-PA15-Pad77)",
+          "xy": [
+            15.45,
+            37.5
+          ]
+        },
+        "78": {
+          "net": "SD_SCK",
+          "xy": [
+            15.45,
+            38.0
+          ]
+        },
+        "79": {
+          "net": "SD_MISO",
+          "xy": [
+            15.45,
+            38.5
+          ]
+        },
+        "80": {
+          "net": "SD_MOSI",
+          "xy": [
+            15.45,
+            39.0
+          ]
+        },
+        "81": {
+          "net": "SD_CS",
+          "xy": [
+            15.45,
+            39.5
+          ]
+        },
+        "82": {
+          "net": "unconnected-(U1-PD1-Pad82)",
+          "xy": [
+            15.45,
+            40.0
+          ]
+        },
+        "83": {
+          "net": "unconnected-(U1-PD2-Pad83)",
+          "xy": [
+            15.45,
+            40.5
+          ]
+        },
+        "84": {
+          "net": "unconnected-(U1-PD3-Pad84)",
+          "xy": [
+            15.45,
+            41.0
+          ]
+        },
+        "85": {
+          "net": "unconnected-(U1-PD4-Pad85)",
+          "xy": [
+            15.45,
+            41.5
+          ]
+        },
+        "86": {
+          "net": "LED_RED",
+          "xy": [
+            15.45,
+            42.0
+          ]
+        },
+        "87": {
+          "net": "USB_FAULT_N",
+          "xy": [
+            15.45,
+            42.5
+          ]
+        },
+        "88": {
+          "net": "LED_YEL",
+          "xy": [
+            15.45,
+            43.0
+          ]
+        },
+        "89": {
+          "net": "SPI1_SCK",
+          "xy": [
+            15.45,
+            43.5
+          ]
+        },
+        "90": {
+          "net": "SPI1_MISO",
+          "xy": [
+            15.45,
+            44.0
+          ]
+        },
+        "91": {
+          "net": "SPI1_MOSI",
+          "xy": [
+            15.45,
+            44.5
+          ]
+        },
+        "92": {
+          "net": "QSPI_NCS",
+          "xy": [
+            15.45,
+            45.0
+          ]
+        },
+        "93": {
+          "net": "IMU_CS",
+          "xy": [
+            15.45,
+            45.5
+          ]
+        },
+        "94": {
+          "net": "BOOT0",
+          "xy": [
+            15.45,
+            46.0
+          ]
+        },
+        "95": {
+          "net": "I2C1_SCL",
+          "xy": [
+            15.45,
+            46.5
+          ]
+        },
+        "96": {
+          "net": "I2C1_SDA",
+          "xy": [
+            15.45,
+            47.0
+          ]
+        },
+        "97": {
+          "net": "unconnected-(U1-PE0-Pad97)",
+          "xy": [
+            15.45,
+            47.5
+          ]
+        },
+        "98": {
+          "net": "IMU_INT1",
+          "xy": [
+            15.45,
+            48.0
+          ]
+        },
+        "99": {
+          "net": "GND",
+          "xy": [
+            15.45,
+            48.5
+          ]
+        },
+        "100": {
+          "net": "3V3",
+          "xy": [
+            15.45,
+            49.0
+          ]
+        }
+      }
+    },
+    "R128": {
+      "value": "10k",
+      "xy": [
+        18.3,
+        57.405
+      ],
+      "side": "F",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "R128",
+        "Value": "10k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C25744",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1002TCE",
+        "LCSC Part": "C25744"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_GATE",
+          "xy": [
+            18.3,
+            56.975
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            18.3,
+            57.835
+          ]
+        }
+      }
+    },
+    "Q124": {
+      "value": "AON7524",
+      "xy": [
+        13.9,
+        57.37
+      ],
+      "side": "F",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "Q124",
+        "Value": "AON7524",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C431195",
+        "Manufacturer": "Alpha & Omega Semicon",
+        "Manufacturer Part": "AON7524",
+        "LCSC Part": "C431195"
+      },
+      "pads": {
+        "1": {
+          "net": "GND",
+          "xy": [
+            15.3,
+            58.345
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            15.3,
+            57.695
+          ]
+        },
+        "3": {
+          "net": "GND",
+          "xy": [
+            15.3,
+            57.045
+          ]
+        },
+        "4": {
+          "net": "PYRO1_GATE",
+          "xy": [
+            15.3,
+            56.395
+          ]
+        },
+        "5": {
+          "net": "PYRO1_OUT",
+          "xy": [
+            13.9,
+            57.37
+          ]
+        }
+      }
+    },
+    "J9": {
+      "value": "DB125-3.5-4P-GN-S",
+      "xy": [
+        38.6,
+        47.5
+      ],
+      "side": "F",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "J9",
+        "Value": "DB125-3.5-4P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "Description": "",
+        "LCSC": "C2757925",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-4P-GN-S"
+      },
+      "pads": {
+        "1": {
+          "net": "CAM_5V",
+          "xy": [
+            38.6,
+            52.75
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            38.6,
+            49.25
+          ]
+        },
+        "3": {
+          "net": "CAM_RX_WIRE",
+          "xy": [
+            38.6,
+            45.75
+          ]
+        },
+        "4": {
+          "net": "CAM_TX_WIRE",
+          "xy": [
+            38.6,
+            42.25
+          ]
+        }
+      }
+    },
+    "R123": {
+      "value": "100k",
+      "xy": [
+        20.6,
+        70.66
+      ],
+      "side": "F",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "R123",
+        "Value": "100k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C25741",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1003TCE",
+        "LCSC Part": "C25741"
+      },
+      "pads": {
+        "1": {
+          "net": "ACT_EN",
+          "xy": [
+            20.6,
+            70.23
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            20.6,
+            71.09
+          ]
+        }
+      }
+    },
+    "R104": {
+      "value": "10k",
+      "xy": [
+        33.2,
+        46.5
+      ],
+      "side": "F",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R104",
+        "Value": "10k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C25744",
+        "LCSC": "C25744",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1002TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "CAM_5V",
+          "xy": [
+            33.63,
+            46.5
+          ]
+        },
+        "2": {
+          "net": "CAM_5V_SENSE",
+          "xy": [
+            32.77,
+            46.5
+          ]
+        }
+      }
+    },
+    "R122": {
+      "value": "1k",
+      "xy": [
+        19.6,
+        69.8
+      ],
+      "side": "F",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "R122",
+        "Value": "1k",
+        "Datasheet": "https://www.lcsc.com/product-detail/C11702.html",
+        "Description": "",
+        "LCSC": "C11702",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1001TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "ACT_EN_MCU",
+          "xy": [
+            19.6,
+            69.37
+          ]
+        },
+        "2": {
+          "net": "ACT_EN",
+          "xy": [
+            19.6,
+            70.23
+          ]
+        }
+      }
+    },
+    "R464": {
+      "value": "10k 1%",
+      "xy": [
+        25.55,
+        22.18
+      ],
+      "side": "F",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R464",
+        "Value": "10k 1%",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "SD_DAT2",
+          "xy": [
+            26.375,
+            22.18
+          ]
+        },
+        "2": {
+          "net": "3V3",
+          "xy": [
+            24.725,
+            22.18
+          ]
+        }
+      }
+    },
+    "J410": {
+      "value": "DB125-3.5-4P-GN-S",
+      "xy": [
+        38.6,
+        15.5
+      ],
+      "side": "F",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "J410",
+        "Value": "DB125-3.5-4P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "Description": "",
+        "LCSC": "C2757925",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-4P-GN-S"
+      },
+      "pads": {
+        "1": {
+          "net": "PORT_4V8",
+          "xy": [
+            38.6,
+            20.75
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            38.6,
+            17.25
+          ]
+        },
+        "3": {
+          "net": "GPS_TX_WIRE",
+          "xy": [
+            38.6,
+            13.75
+          ]
+        },
+        "4": {
+          "net": "GPS_RX_WIRE",
+          "xy": [
+            38.6,
+            10.25
+          ]
+        }
+      }
+    },
+    "R61": {
+      "value": "10k",
+      "xy": [
+        33.2,
+        54.0
+      ],
+      "side": "F",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R61",
+        "Value": "10k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C25744",
+        "LCSC": "C25744",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1002TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "VLOGIC_SENSE",
+          "xy": [
+            32.77,
+            54.0
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            33.63,
+            54.0
+          ]
+        }
+      }
+    },
+    "R127": {
+      "value": "1k",
+      "xy": [
+        19.8,
+        54.24
+      ],
+      "side": "F",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R127",
+        "Value": "1k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C11702",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1001TCE",
+        "LCSC Part": "C11702"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_GATE_N",
+          "xy": [
+            19.37,
+            54.24
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            20.23,
+            54.24
+          ]
+        }
+      }
+    },
+    "R105": {
+      "value": "1k",
+      "xy": [
+        33.2,
+        48.6
+      ],
+      "side": "F",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R105",
+        "Value": "1k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C11702",
+        "LCSC": "C11702",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1001TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "CAM_5V_SENSE",
+          "xy": [
+            32.77,
+            48.6
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            33.63,
+            48.6
+          ]
+        }
+      }
+    },
+    "C126": {
+      "value": "220nF 25V X7R",
+      "xy": [
+        16.85,
+        57.675
+      ],
+      "side": "F",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "C126",
+        "Value": "220nF 25V X7R",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C21120",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B224KA8NNNC",
+        "LCSC Part": "C21120"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_GATE",
+          "xy": [
+            16.85,
+            56.975
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            16.85,
+            58.375
+          ]
+        }
+      }
+    },
+    "J400": {
+      "value": "DB125-3.5-2P-GN-S",
+      "xy": [
+        7.4,
+        65.849999
+      ],
+      "side": "F",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "J400",
+        "Value": "DB125-3.5-2P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "Description": "",
+        "LCSC": "C466970",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-2P-GN-S"
+      },
+      "pads": {
+        "1": {
+          "net": "BAT_SW_SOURCE",
+          "xy": [
+            7.4,
+            64.099999
+          ]
+        },
+        "2": {
+          "net": "BAT_SW_RETURN",
+          "xy": [
+            7.4,
+            67.599999
+          ]
+        }
+      }
+    },
+    "J3": {
+      "value": "USB-C 2.0",
+      "xy": [
+        4.6,
+        30.799999
+      ],
+      "side": "F",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "J3",
+        "Value": "USB-C 2.0",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C165948",
+        "LCSC": "C165948",
+        "Manufacturer": "Korean Hroparts Elec",
+        "Manufacturer Part": "TYPE-C-31-M-12"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            5.81,
+            33.689999
+          ]
+        },
+        "1": {
+          "net": "GND",
+          "xy": [
+            6.31,
+            35.124999
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            2.13,
+            35.124999
+          ]
+        },
+        "3": {
+          "net": "GND",
+          "xy": [
+            2.13,
+            26.474999
+          ]
+        },
+        "4": {
+          "net": "GND",
+          "xy": [
+            6.31,
+            26.474999
+          ]
+        },
+        "A1B12": {
+          "net": "GND",
+          "xy": [
+            6.88,
+            27.599999
+          ]
+        },
+        "A4B9": {
+          "net": "VBUS",
+          "xy": [
+            6.88,
+            28.399999
+          ]
+        },
+        "A5": {
+          "net": "CC1",
+          "xy": [
+            6.88,
+            29.549999
+          ]
+        },
+        "A6": {
+          "net": "USB_DP",
+          "xy": [
+            6.88,
+            30.549999
+          ]
+        },
+        "A7": {
+          "net": "USB_DM",
+          "xy": [
+            6.88,
+            31.049999
+          ]
+        },
+        "A8": {
+          "net": "unconnected-(J3-SBU1-PadA8)",
+          "xy": [
+            6.88,
+            32.049999
+          ]
+        },
+        "B1A12": {
+          "net": "GND",
+          "xy": [
+            6.88,
+            33.999999
+          ]
+        },
+        "B4A9": {
+          "net": "VBUS",
+          "xy": [
+            6.88,
+            33.199999
+          ]
+        },
+        "B5": {
+          "net": "CC2",
+          "xy": [
+            6.88,
+            32.549999
+          ]
+        },
+        "B6": {
+          "net": "USB_DP",
+          "xy": [
+            6.88,
+            31.549999
+          ]
+        },
+        "B7": {
+          "net": "USB_DM",
+          "xy": [
+            6.88,
+            30.049999
+          ]
+        },
+        "B8": {
+          "net": "unconnected-(J3-SBU2-PadB8)",
+          "xy": [
+            6.88,
+            29.049999
+          ]
+        }
+      }
+    },
+    "J420": {
+      "value": "DB125-3.5-4P-GN-S",
+      "xy": [
+        38.6,
+        31.5
+      ],
+      "side": "F",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "J420",
+        "Value": "DB125-3.5-4P-GN-S",
+        "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+        "Description": "",
+        "LCSC": "C2757925",
+        "Manufacturer": "DORABO",
+        "Manufacturer Part": "DB125-3.5-4P-GN-S"
+      },
+      "pads": {
+        "1": {
+          "net": "PORT_4V8",
+          "xy": [
+            38.6,
+            36.75
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            38.6,
+            33.25
+          ]
+        },
+        "3": {
+          "net": "RADIO_TX_WIRE",
+          "xy": [
+            38.6,
+            29.75
+          ]
+        },
+        "4": {
+          "net": "RADIO_RX_WIRE",
+          "xy": [
+            38.6,
+            26.25
+          ]
+        }
+      }
+    },
+    "R60": {
+      "value": "100k",
+      "xy": [
+        33.2,
+        58.6
+      ],
+      "side": "F",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R60",
+        "Value": "100k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C25741",
+        "LCSC": "C25741",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1003TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "VLOGIC",
+          "xy": [
+            33.63,
+            58.6
+          ]
+        },
+        "2": {
+          "net": "VLOGIC_SENSE",
+          "xy": [
+            32.77,
+            58.6
+          ]
+        }
+      }
+    },
+    "D120": {
+      "value": "BAT54A",
+      "xy": [
+        14.7,
+        60.2
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "D120",
+        "Value": "BAT54A",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C8591",
+        "Manufacturer": "JSCJ",
+        "Manufacturer Part": "BAT54A",
+        "LCSC Part": "C8591"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_COLD",
+          "xy": [
+            13.7,
+            61.15
+          ]
+        },
+        "2": {
+          "net": "unconnected-(D120-K2-Pad2)",
+          "xy": [
+            13.7,
+            59.25
+          ]
+        },
+        "3": {
+          "net": "3V3",
+          "xy": [
+            15.7,
+            60.2
+          ]
+        }
+      }
+    },
+    "R175": {
+      "value": "5.1k",
+      "xy": [
+        28.0,
+        55.8
+      ],
+      "side": "B",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "R175",
+        "Value": "5.1k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C25905",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF5101TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "ARM1_SENSE_MID",
+          "xy": [
+            28.0,
+            56.23
+          ]
+        },
+        "2": {
+          "net": "ARM1_SENSE",
+          "xy": [
+            28.0,
+            55.37
+          ]
+        }
+      }
+    },
+    "D400": {
+      "value": "ESD103-B1-02EL",
+      "xy": [
+        35.75,
+        43.7
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "D400",
+        "Value": "ESD103-B1-02EL",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146",
+        "Description": "",
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            35.75,
+            44.03
+          ]
+        },
+        "1": {
+          "net": "CAM_TX_WIRE",
+          "xy": [
+            35.75,
+            43.375
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            35.75,
+            44.025
+          ]
+        }
+      }
+    },
+    "R450": {
+      "value": "1k 1%",
+      "xy": [
+        34.0,
+        26.25
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R450",
+        "Value": "1k 1%",
+        "Datasheet": "",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C21190",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1001T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "RADIO_RX_WIRE",
+          "xy": [
+            34.825,
+            26.25
+          ]
+        },
+        "2": {
+          "net": "RADIO_RX_MCU",
+          "xy": [
+            33.175,
+            26.25
+          ]
+        }
+      }
+    },
+    "U4": {
+      "value": "LSM6DSV320X",
+      "xy": [
+        17.0,
+        45.9
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "U4",
+        "Value": "LSM6DSV320X",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C26633007",
+        "LCSC": "C26633007",
+        "Manufacturer": "STMicroelectronics",
+        "Manufacturer Part": "LSM6DSV320XTR"
+      },
+      "pads": {
+        "1": {
+          "net": "SPI1_MISO",
+          "xy": [
+            18.21,
+            45.15
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            18.21,
+            45.65
+          ]
+        },
+        "3": {
+          "net": "GND",
+          "xy": [
+            18.21,
+            46.15
+          ]
+        },
+        "4": {
+          "net": "IMU_INT1",
+          "xy": [
+            18.21,
+            46.65
+          ]
+        },
+        "5": {
+          "net": "3V3A",
+          "xy": [
+            17.5,
+            46.86
+          ]
+        },
+        "6": {
+          "net": "GND",
+          "xy": [
+            17.0,
+            46.86
+          ]
+        },
+        "7": {
+          "net": "GND",
+          "xy": [
+            16.5,
+            46.86
+          ]
+        },
+        "8": {
+          "net": "3V3A",
+          "xy": [
+            15.79,
+            46.65
+          ]
+        },
+        "9": {
+          "net": "unconnected-(U4-INT2-Pad9)",
+          "xy": [
+            15.79,
+            46.15
+          ]
+        },
+        "10": {
+          "net": "unconnected-(U4-OCS_aux-Pad10)",
+          "xy": [
+            15.79,
+            45.65
+          ]
+        },
+        "11": {
+          "net": "unconnected-(U4-SDO_aux-Pad11)",
+          "xy": [
+            15.79,
+            45.15
+          ]
+        },
+        "12": {
+          "net": "IMU_CS",
+          "xy": [
+            16.5,
+            44.94
+          ]
+        },
+        "13": {
+          "net": "SPI1_SCK",
+          "xy": [
+            17.0,
+            44.94
+          ]
+        },
+        "14": {
+          "net": "SPI1_MOSI",
+          "xy": [
+            17.5,
+            44.94
+          ]
+        }
+      }
+    },
+    "U12": {
+      "value": "TXU0202DCUR",
+      "xy": [
+        31.6,
+        39.8
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "U12",
+        "Value": "TXU0202DCUR",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C5186957",
+        "LCSC Part": "C5186957",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TXU0202DCUR"
+      },
+      "pads": {
+        "1": {
+          "net": "CAM_RX_BUFFER",
+          "xy": [
+            30.05,
+            40.55
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            30.05,
+            40.05
+          ]
+        },
+        "3": {
+          "net": "3V3",
+          "xy": [
+            30.05,
+            39.55
+          ]
+        },
+        "4": {
+          "net": "CAM_MCU_RX",
+          "xy": [
+            30.05,
+            39.05
+          ]
+        },
+        "5": {
+          "net": "CAM_MCU_TX",
+          "xy": [
+            33.15,
+            39.05
+          ]
+        },
+        "6": {
+          "net": "CAM_UART_OE",
+          "xy": [
+            33.15,
+            39.55
+          ]
+        },
+        "7": {
+          "net": "CAM_IO_3V3",
+          "xy": [
+            33.15,
+            40.05
+          ]
+        },
+        "8": {
+          "net": "CAM_TX_BUFFER",
+          "xy": [
+            33.15,
+            40.55
+          ]
+        }
+      }
+    },
+    "R133": {
+      "value": "2k",
+      "xy": [
+        28.43,
+        54.25
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R133",
+        "Value": "2k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C4109",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF2001TCE",
+        "LCSC Part": "C4109"
+      },
+      "pads": {
+        "1": {
+          "net": "ARM1_SENSE",
+          "xy": [
+            28.0,
+            54.25
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            28.86,
+            54.25
+          ]
+        }
+      }
+    },
+    "R180": {
+      "value": "2k",
+      "xy": [
+        28.43,
+        53.25
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R180",
+        "Value": "2k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C4109",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF2001TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "ARM1_SENSE",
+          "xy": [
+            28.0,
+            53.25
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            28.86,
+            53.25
+          ]
+        }
+      }
+    },
+    "D121": {
+      "value": "SRV05-4",
+      "xy": [
+        31.5,
+        71.5
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "D121",
+        "Value": "SRV05-4",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C13612",
+        "Manufacturer": "SEMTECH",
+        "Manufacturer Part": "SRV05-4.TCT",
+        "LCSC Part": "C13612"
+      },
+      "pads": {
+        "1": {
+          "net": "SERVO1_MCU",
+          "xy": [
+            32.45,
+            72.65
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            31.5,
+            72.65
+          ]
+        },
+        "3": {
+          "net": "SERVO2_MCU",
+          "xy": [
+            30.55,
+            72.65
+          ]
+        },
+        "4": {
+          "net": "SERVO3_MCU",
+          "xy": [
+            30.55,
+            70.35
+          ]
+        },
+        "5": {
+          "net": "3V3",
+          "xy": [
+            31.5,
+            70.35
+          ]
+        },
+        "6": {
+          "net": "SERVO4_MCU",
+          "xy": [
+            32.45,
+            70.35
+          ]
+        }
+      }
+    },
+    "R451": {
+      "value": "1k 1%",
+      "xy": [
+        34.0,
+        29.75
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R451",
+        "Value": "1k 1%",
+        "Datasheet": "",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C21190",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1001T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "RADIO_TX_MCU",
+          "xy": [
+            33.175,
+            29.75
+          ]
+        },
+        "2": {
+          "net": "RADIO_TX_WIRE",
+          "xy": [
+            34.825,
+            29.75
+          ]
+        }
+      }
+    },
+    "R62": {
+      "value": "10k",
+      "xy": [
+        25.5,
+        55.7
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R62",
+        "Value": "10k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C25744",
+        "LCSC": "C25744",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1002TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "3V3",
+          "xy": [
+            25.07,
+            55.7
+          ]
+        },
+        "2": {
+          "net": "V3V3_SENSE",
+          "xy": [
+            25.93,
+            55.7
+          ]
+        }
+      }
+    },
+    "R463": {
+      "value": "10k 1%",
+      "xy": [
+        14.2,
+        18.9
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R463",
+        "Value": "10k 1%",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "SD_DAT1",
+          "xy": [
+            15.025,
+            18.9
+          ]
+        },
+        "2": {
+          "net": "3V3",
+          "xy": [
+            13.375,
+            18.9
+          ]
+        }
+      }
+    },
+    "C19": {
+      "value": "2.2uF 16V X5R 10%",
+      "xy": [
+        28.35,
+        37.65
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "C19",
+        "Value": "2.2uF 16V X5R 10%",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C23630",
+        "LCSC": "C23630",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A225KO8NNNC"
+      },
+      "pads": {
+        "1": {
+          "net": "VCAP1",
+          "xy": [
+            28.35,
+            36.95
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            28.35,
+            38.35
+          ]
+        }
+      }
+    },
+    "Q121": {
+      "value": "AONR21357",
+      "xy": [
+        13.5,
+        68.6
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "Q121",
+        "Value": "AONR21357",
+        "Datasheet": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+        "Description": "",
+        "LCSC": "C431196",
+        "Manufacturer": "Alpha & Omega Semicon",
+        "Manufacturer Part": "AONR21357"
+      },
+      "pads": {
+        "1": {
+          "net": "ACT_FET_S",
+          "xy": [
+            14.475,
+            70.0
+          ]
+        },
+        "2": {
+          "net": "ACT_FET_S",
+          "xy": [
+            13.825,
+            70.0
+          ]
+        },
+        "3": {
+          "net": "ACT_FET_S",
+          "xy": [
+            13.175,
+            70.0
+          ]
+        },
+        "4": {
+          "net": "ACT_GATE",
+          "xy": [
+            12.525,
+            70.0
+          ]
+        },
+        "5": {
+          "net": "RAW_ACT",
+          "xy": [
+            12.525,
+            67.105
+          ]
+        },
+        "6": {
+          "net": "RAW_ACT",
+          "xy": [
+            13.175,
+            67.105
+          ]
+        },
+        "7": {
+          "net": "RAW_ACT",
+          "xy": [
+            13.825,
+            67.105
+          ]
+        },
+        "8": {
+          "net": "RAW_ACT",
+          "xy": [
+            14.475,
+            67.105
+          ]
+        },
+        "9": {
+          "net": "RAW_ACT",
+          "xy": [
+            13.5,
+            68.6
+          ]
+        }
+      }
+    },
+    "J430": {
+      "value": "472192001",
+      "xy": [
+        24.0,
+        24.3
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "J430",
+        "Value": "472192001",
+        "Datasheet": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+        "Description": "",
+        "LCSC": "C164170",
+        "Manufacturer": "MOLEX",
+        "Manufacturer Part": "472192001"
+      },
+      "pads": {
+        "1": {
+          "net": "SD_DAT2",
+          "xy": [
+            27.205,
+            24.3
+          ]
+        },
+        "2": {
+          "net": "SD_CS",
+          "xy": [
+            26.105,
+            24.3
+          ]
+        },
+        "3": {
+          "net": "SD_MOSI",
+          "xy": [
+            25.005,
+            24.3
+          ]
+        },
+        "4": {
+          "net": "3V3",
+          "xy": [
+            23.905,
+            24.3
+          ]
+        },
+        "5": {
+          "net": "SD_SCK",
+          "xy": [
+            22.805,
+            24.3
+          ]
+        },
+        "6": {
+          "net": "GND",
+          "xy": [
+            21.705,
+            24.3
+          ]
+        },
+        "7": {
+          "net": "SD_MISO",
+          "xy": [
+            20.605,
+            24.3
+          ]
+        },
+        "8": {
+          "net": "SD_DAT1",
+          "xy": [
+            19.505,
+            24.3
+          ]
+        },
+        "9": {
+          "net": "GND",
+          "xy": [
+            30.875,
+            30.0
+          ]
+        },
+        "10": {
+          "net": "GND",
+          "xy": [
+            17.125,
+            30.0
+          ]
+        },
+        "11": {
+          "net": "GND",
+          "xy": [
+            17.125,
+            21.7
+          ]
+        },
+        "12": {
+          "net": "GND",
+          "xy": [
+            30.875,
+            21.7
+          ]
+        }
+      }
+    },
+    "D411": {
+      "value": "ESD103-B1-02EL",
+      "xy": [
+        35.75,
+        8.7
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "D411",
+        "Value": "ESD103-B1-02EL",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146",
+        "Description": "",
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            35.75,
+            9.03
+          ]
+        },
+        "1": {
+          "net": "GPS_RX_WIRE",
+          "xy": [
+            35.75,
+            8.375
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            35.75,
+            9.025
+          ]
+        }
+      }
+    },
+    "D410": {
+      "value": "ESD103-B1-02EL",
+      "xy": [
+        35.75,
+        12.3
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "D410",
+        "Value": "ESD103-B1-02EL",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146",
+        "Description": "",
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            35.75,
+            12.63
+          ]
+        },
+        "1": {
+          "net": "GPS_TX_WIRE",
+          "xy": [
+            35.75,
+            11.975
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            35.75,
+            12.625
+          ]
+        }
+      }
+    },
+    "D401": {
+      "value": "ESD103-B1-02EL",
+      "xy": [
+        35.75,
+        47.2
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "D401",
+        "Value": "ESD103-B1-02EL",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146",
+        "Description": "",
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            35.75,
+            47.53
+          ]
+        },
+        "1": {
+          "net": "CAM_RX_WIRE",
+          "xy": [
+            35.75,
+            46.875
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            35.75,
+            47.525
+          ]
+        }
+      }
+    },
+    "U13": {
+      "value": "TPS70933DBVR",
+      "xy": [
+        31.85,
+        49.7
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "U13",
+        "Value": "TPS70933DBVR",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C89347",
+        "LCSC Part": "C89347",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TPS70933DBVR"
+      },
+      "pads": {
+        "1": {
+          "net": "CAM_5V",
+          "xy": [
+            33.15,
+            48.75
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            33.15,
+            49.7
+          ]
+        },
+        "3": {
+          "net": "unconnected-(U13-EN_LEAVE_OPEN-Pad3)",
+          "xy": [
+            33.15,
+            50.65
+          ]
+        },
+        "4": {
+          "net": "unconnected-(U13-NC-Pad4)",
+          "xy": [
+            30.55,
+            50.65
+          ]
+        },
+        "5": {
+          "net": "CAM_IO_3V3",
+          "xy": [
+            30.55,
+            48.75
+          ]
+        }
+      }
+    },
+    "R441": {
+      "value": "1k 1%",
+      "xy": [
+        34.0,
+        13.75
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R441",
+        "Value": "1k 1%",
+        "Datasheet": "",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C21190",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1001T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "GPS_TX_MCU",
+          "xy": [
+            33.175,
+            13.75
+          ]
+        },
+        "2": {
+          "net": "GPS_TX_WIRE",
+          "xy": [
+            34.825,
+            13.75
+          ]
+        }
+      }
+    },
+    "R132": {
+      "value": "5.1k",
+      "xy": [
+        28.0,
+        57.6
+      ],
+      "side": "B",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "R132",
+        "Value": "5.1k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C25905",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF5101TCE",
+        "LCSC Part": "C25905"
+      },
+      "pads": {
+        "1": {
+          "net": "RAW_ACT",
+          "xy": [
+            28.0,
+            58.03
+          ]
+        },
+        "2": {
+          "net": "ARM1_SENSE_MID",
+          "xy": [
+            28.0,
+            57.17
+          ]
+        }
+      }
+    },
+    "R162": {
+      "value": "1k 0805",
+      "xy": [
+        19.5,
+        57.7
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R162",
+        "Value": "1k 0805",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C17513",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0805W8F1001T5E",
+        "LCSC Part": "C17513"
+      },
+      "pads": {
+        "1": {
+          "net": "BUZZ_DRV",
+          "xy": [
+            18.5,
+            57.7
+          ]
+        },
+        "2": {
+          "net": "BUZZ_G",
+          "xy": [
+            20.5,
+            57.7
+          ]
+        }
+      }
+    },
+    "R63": {
+      "value": "10k",
+      "xy": [
+        25.5,
+        56.7
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R63",
+        "Value": "10k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C25744",
+        "LCSC": "C25744",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1002TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "V3V3_SENSE",
+          "xy": [
+            25.93,
+            56.7
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            25.07,
+            56.7
+          ]
+        }
+      }
+    },
+    "D421": {
+      "value": "ESD103-B1-02EL",
+      "xy": [
+        35.75,
+        27.7
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "D421",
+        "Value": "ESD103-B1-02EL",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146",
+        "Description": "",
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            35.75,
+            28.03
+          ]
+        },
+        "1": {
+          "net": "RADIO_RX_WIRE",
+          "xy": [
+            35.75,
+            27.375
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            35.75,
+            28.025
+          ]
+        }
+      }
+    },
+    "U5": {
+      "value": "MS561101BA03",
+      "xy": [
+        10.6,
+        49.1
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "U5",
+        "Value": "MS561101BA03",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C15639",
+        "LCSC": "C15639",
+        "Manufacturer": "TE Connectivity",
+        "Manufacturer Part": "MS561101BA03-50"
+      },
+      "pads": {
+        "1": {
+          "net": "3V3A",
+          "xy": [
+            8.72,
+            48.0
+          ]
+        },
+        "2": {
+          "net": "3V3A",
+          "xy": [
+            9.97,
+            48.0
+          ]
+        },
+        "3": {
+          "net": "GND",
+          "xy": [
+            11.23,
+            48.0
+          ]
+        },
+        "4": {
+          "net": "GND",
+          "xy": [
+            12.48,
+            48.0
+          ]
+        },
+        "5": {
+          "net": "GND",
+          "xy": [
+            12.48,
+            50.925
+          ]
+        },
+        "6": {
+          "net": "BARO_SDO",
+          "xy": [
+            11.23,
+            50.925
+          ]
+        },
+        "7": {
+          "net": "I2C1_SDA",
+          "xy": [
+            9.97,
+            50.925
+          ]
+        },
+        "8": {
+          "net": "I2C1_SCL",
+          "xy": [
+            8.72,
+            50.925
+          ]
+        }
+      }
+    },
+    "C120": {
+      "value": "1uF 25V X7R 10%",
+      "xy": [
+        17.1,
+        72.525
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "C120",
+        "Value": "1uF 25V X7R 10%",
+        "Datasheet": "https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C29936",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10B105KA8NNNC"
+      },
+      "pads": {
+        "1": {
+          "net": "ACT_FET_S",
+          "xy": [
+            17.1,
+            71.75
+          ]
+        },
+        "2": {
+          "net": "ACT_GATE",
+          "xy": [
+            17.1,
+            73.3
+          ]
+        }
+      }
+    },
+    "R178": {
+      "value": "2k",
+      "xy": [
+        23.43,
+        54.85
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R178",
+        "Value": "2k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C4109",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF2001TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_CONT",
+          "xy": [
+            23.0,
+            54.85
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            23.86,
+            54.85
+          ]
+        }
+      }
+    },
+    "U402": {
+      "value": "TPS2553DBVR",
+      "xy": [
+        32.0,
+        59.0
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "U402",
+        "Value": "TPS2553DBVR",
+        "Datasheet": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+        "Description": "",
+        "LCSC": "C55266",
+        "Manufacturer": "Texas Instruments",
+        "Manufacturer Part": "TPS2553DBVR"
+      },
+      "pads": {
+        "1": {
+          "net": "PORT_5V3",
+          "xy": [
+            30.7,
+            59.95
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            30.7,
+            59.0
+          ]
+        },
+        "3": {
+          "net": "CAM_PWR_EN",
+          "xy": [
+            30.7,
+            58.05
+          ]
+        },
+        "4": {
+          "net": "CAM_FAULT_N",
+          "xy": [
+            33.3,
+            58.05
+          ]
+        },
+        "5": {
+          "net": "CAM_ILIM",
+          "xy": [
+            33.3,
+            59.0
+          ]
+        },
+        "6": {
+          "net": "CAM_5V",
+          "xy": [
+            33.3,
+            59.95
+          ]
+        }
+      }
+    },
+    "R163": {
+      "value": "10k",
+      "xy": [
+        21.8,
+        59.3
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "R163",
+        "Value": "10k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C25744",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF1002TCE",
+        "LCSC Part": "C25744"
+      },
+      "pads": {
+        "1": {
+          "net": "BUZZ_G",
+          "xy": [
+            21.8,
+            58.87
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            21.8,
+            59.73
+          ]
+        }
+      }
+    },
+    "R460": {
+      "value": "10k 1%",
+      "xy": [
+        27.8,
+        16.8
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R460",
+        "Value": "10k 1%",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "SD_CS",
+          "xy": [
+            26.975,
+            16.8
+          ]
+        },
+        "2": {
+          "net": "3V3",
+          "xy": [
+            28.625,
+            16.8
+          ]
+        }
+      }
+    },
+    "R440": {
+      "value": "1k 1%",
+      "xy": [
+        34.0,
+        10.25
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R440",
+        "Value": "1k 1%",
+        "Datasheet": "",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C21190",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1001T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "GPS_RX_WIRE",
+          "xy": [
+            34.825,
+            10.25
+          ]
+        },
+        "2": {
+          "net": "GPS_RX_MCU",
+          "xy": [
+            33.175,
+            10.25
+          ]
+        }
+      }
+    },
+    "Q120": {
+      "value": "AONR21357",
+      "xy": [
+        13.5,
+        73.6
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "Q120",
+        "Value": "AONR21357",
+        "Datasheet": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+        "Description": "",
+        "LCSC": "C431196",
+        "Manufacturer": "Alpha & Omega Semicon",
+        "Manufacturer Part": "AONR21357"
+      },
+      "pads": {
+        "1": {
+          "net": "ACT_FET_S",
+          "xy": [
+            12.525,
+            72.2
+          ]
+        },
+        "2": {
+          "net": "ACT_FET_S",
+          "xy": [
+            13.175,
+            72.2
+          ]
+        },
+        "3": {
+          "net": "ACT_FET_S",
+          "xy": [
+            13.825,
+            72.2
+          ]
+        },
+        "4": {
+          "net": "ACT_GATE",
+          "xy": [
+            14.475,
+            72.2
+          ]
+        },
+        "5": {
+          "net": "BAT_IN",
+          "xy": [
+            14.475,
+            75.095
+          ]
+        },
+        "6": {
+          "net": "BAT_IN",
+          "xy": [
+            13.825,
+            75.095
+          ]
+        },
+        "7": {
+          "net": "BAT_IN",
+          "xy": [
+            13.175,
+            75.095
+          ]
+        },
+        "8": {
+          "net": "BAT_IN",
+          "xy": [
+            12.525,
+            75.095
+          ]
+        },
+        "9": {
+          "net": "BAT_IN",
+          "xy": [
+            13.5,
+            73.6
+          ]
+        }
+      }
+    },
+    "R461": {
+      "value": "10k 1%",
+      "xy": [
+        24.2,
+        16.8
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "R461",
+        "Value": "10k 1%",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "SD_MOSI",
+          "xy": [
+            23.375,
+            16.8
+          ]
+        },
+        "2": {
+          "net": "3V3",
+          "xy": [
+            25.025,
+            16.8
+          ]
+        }
+      }
+    },
+    "C20": {
+      "value": "2.2uF 16V X5R 10%",
+      "xy": [
+        19.8,
+        37.3
+      ],
+      "side": "B",
+      "angle": 0.0,
+      "fields": {
+        "Reference": "C20",
+        "Value": "2.2uF 16V X5R 10%",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC Part": "C23630",
+        "LCSC": "C23630",
+        "Manufacturer": "Samsung Electro-Mechanics",
+        "Manufacturer Part": "CL10A225KO8NNNC"
+      },
+      "pads": {
+        "1": {
+          "net": "VCAP2",
+          "xy": [
+            19.1,
+            37.3
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            20.5,
+            37.3
+          ]
+        }
+      }
+    },
+    "R173": {
+      "value": "5.1k",
+      "xy": [
+        23.0,
+        59.2
+      ],
+      "side": "B",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "R173",
+        "Value": "5.1k",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C25905",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0402WGF5101TCE"
+      },
+      "pads": {
+        "1": {
+          "net": "PYRO1_OUT",
+          "xy": [
+            23.0,
+            59.63
+          ]
+        },
+        "2": {
+          "net": "PYRO1_CONT_MID",
+          "xy": [
+            23.0,
+            58.77
+          ]
+        }
+      }
+    },
+    "R462": {
+      "value": "10k 1%",
+      "xy": [
+        14.2,
+        16.9
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "R462",
+        "Value": "10k 1%",
+        "Datasheet": "https://www.lcsc.com/product-detail/C25804.html",
+        "Description": "",
+        "KiLib_Generator": "SMD_2terminal_chip_molded",
+        "LCSC": "C25804",
+        "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "Manufacturer Part": "0603WAF1002T5E"
+      },
+      "pads": {
+        "1": {
+          "net": "SD_MISO",
+          "xy": [
+            15.025,
+            16.9
+          ]
+        },
+        "2": {
+          "net": "3V3",
+          "xy": [
+            13.375,
+            16.9
+          ]
+        }
+      }
+    },
+    "Q123": {
+      "value": "AO3400A",
+      "xy": [
+        19.5,
+        60.25
+      ],
+      "side": "B",
+      "angle": 180.0,
+      "fields": {
+        "Reference": "Q123",
+        "Value": "AO3400A",
+        "Datasheet": "",
+        "Description": "",
+        "LCSC": "C20917",
+        "Manufacturer": "Alpha & Omega Semicon",
+        "Manufacturer Part": "AO3400A",
+        "LCSC Part": "C20917"
+      },
+      "pads": {
+        "1": {
+          "net": "BUZZ_G",
+          "xy": [
+            18.5,
+            61.2
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            18.5,
+            59.3
+          ]
+        },
+        "3": {
+          "net": "BUZZ_OUT",
+          "xy": [
+            20.5,
+            60.25
+          ]
+        }
+      }
+    },
+    "D420": {
+      "value": "ESD103-B1-02EL",
+      "xy": [
+        35.75,
+        31.2
+      ],
+      "side": "B",
+      "angle": -90.0,
+      "fields": {
+        "Reference": "D420",
+        "Value": "ESD103-B1-02EL",
+        "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/9f837311bec7e3ead15a9d62fb0575b0.pdf?productCode=C535146",
+        "Description": "",
+        "LCSC": "C535146",
+        "Manufacturer": "Infineon Technologies",
+        "Manufacturer Part": "ESD103-B1-02EL E6327"
+      },
+      "pads": {
+        "": {
+          "net": "NC",
+          "xy": [
+            35.75,
+            31.53
+          ]
+        },
+        "1": {
+          "net": "RADIO_TX_WIRE",
+          "xy": [
+            35.75,
+            30.875
+          ]
+        },
+        "2": {
+          "net": "GND",
+          "xy": [
+            35.75,
+            31.525
+          ]
+        }
+      }
+    },
+    "U3": {
+      "value": "W25Q128JVSIQ",
+      "xy": [
+        22.6,
+        41.2
+      ],
+      "side": "B",
+      "angle": 90.0,
+      "fields": {
+        "Reference": "U3",
+        "Value": "W25Q128JVSIQ",
+        "Datasheet": "https://www.winbond.com/resource-files/w25q128jv%20revg%2004082019%20plus.pdf",
+        "Description": "",
+        "LCSC Part": "C97521",
+        "LCSC": "C97521",
+        "Manufacturer": "Winbond",
+        "Manufacturer Part": "W25Q128JVSIQ"
+      },
+      "pads": {
+        "1": {
+          "net": "QSPI_NCS",
+          "xy": [
+            19.07,
+            43.1
+          ]
+        },
+        "2": {
+          "net": "QSPI_IO1",
+          "xy": [
+            19.07,
+            41.83
+          ]
+        },
+        "3": {
+          "net": "QSPI_IO2",
+          "xy": [
+            19.07,
+            40.57
+          ]
+        },
+        "4": {
+          "net": "GND",
+          "xy": [
+            19.07,
+            39.3
+          ]
+        },
+        "5": {
+          "net": "QSPI_IO0",
+          "xy": [
+            26.13,
+            39.3
+          ]
+        },
+        "6": {
+          "net": "QSPI_CLK",
+          "xy": [
+            26.13,
+            40.57
+          ]
+        },
+        "7": {
+          "net": "QSPI_IO3",
+          "xy": [
+            26.13,
+            41.83
+          ]
+        },
+        "8": {
+          "net": "3V3",
+          "xy": [
+            26.13,
+            43.1
+          ]
+        }
+      }
+    }
+  },
+  "input_sha256": {
+    "AGENTS.md": "6240b9d22c47c2fcfb3acd0acccea1aa6cf52bcca653c31f20a27185d587fcdb",
+    "docs/REQUIREMENTS.md": "bcecf21944980a44ad49116ab4409d643f5660493d4e34d44646f68a42d45da5",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "09e9c7b3521b52bfa429955371253eef7dcc9201caed0dc7547836cad203db6b",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "345c4bbe7d2bdc3a8341b2f93ae6d03217ad94f1a9c19bd9f021f2f7665dffa5",
+    "docs/M3_R10.md": "62bb9f2d28b3bdaad095cad55172f808441cc3e4417444c7e3e0c672895184d1",
+    "docs/R10_VALIDATION.md": "04650f8a18e3e8e6cacf8bda1e68d81c3a82b002f06d4fdfd309b56ace2a8366",
+    "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+    "docs/R10_VEHICLE_HANDOFF.md": "708f74d29a0872ddafbb1f7bd50354b32b4691a1fe30c94412efe30a3b46b5d9",
+    "docs/ORDERING.md": "78717b72f29d67f12730debd0148e5d495785b36a6aaae4b0e596abe134975b9",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": "05cee2ae6ef64d2991e95788a40aae30431440578f61532c0d22175ef37f24e4",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "42dcc47fad468382e6a7a15405981b0028353fac9190ed4605e9a6857890096d",
+    "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": "43866150e2b96dc8f2f112408980ad4d4c971930d536165dd6b4c50f5575eccc",
+    "m3_design/assembly_review/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+    "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+    "m3_design/assembly_review/schematic.net.xml": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "d4c460c8bdb47ebca22d88363ad71a83d14738576d2f98f9bab59c5c3ea6aecd",
+    "m3_design/assembly_review/sources/r10_design/circuit.json": "ef67b3f1d4c71433f6969b4ad4b6bcb4bff8e72da647888e16ed1ce8a087ec09",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+    "m3_firmware/assembly_binding.py": "2a7a1391950a7c629861c5c0c93e6335cfe55c38d8a2f4ccf1d481ebdecf89e9",
+    "m3_firmware/build.py": "d97fca19c340d4bc9f471abd5bedea58df00fc45d2e8ad86a6315a07abcdd86b",
+    "m3_design/r10_sch.py": "f4b98a0c390862f3924da610d31844ba42a44e02aed369c4e292da6990b30950",
+    "m3_design/r10_sch_check.py": "1f0e114eccf8df43025729ac1871d5078be246fc9da88bea6bed896f97944deb",
+    "tools/check_r10.py": "ca7728f1ee41d09753e44165effef8ac5e24d569407d0aedea400966ed068cd6"
+  },
+  "parent_vehicle_source": {
+    "path": "../../docs/VEHICLE.md",
+    "sha256": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+    "scope": "Read-only; stale current-candidate mirror distinguished from current in-worktree handoff"
+  },
+  "primary_sources": [
+    {
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "version": "DS12110Rev11 January2026",
+      "coverage": "Current web text as detailed in limits"
+    },
+    {
+      "url": "https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+      "version": "AN2606Rev70 February2026",
+      "coverage": "Current H74x tables135/136,pp320-325"
+    },
+    {
+      "url": "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+      "version": "Exact CL10A225KO8NNNC reference sheet,2024-05-08",
+      "sha256": "7ad029052a9bd944e0fd77e7d8e814676dfb7285a5e18b8760a538d5a978e49e",
+      "coverage": "PDF2/12/16/17 complete visual pages; supporting extracted text"
+    },
+    {
+      "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+      "coverage": "Exact current part family,size/value/tolerance/rating and typical-data caveat"
+    },
+    {
+      "url": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+      "version": "SCES942A March2022",
+      "coverage": "Current primary text/pin functions/power states; allowed cache complete visual pp7/20"
+    },
+    {
+      "url": "https://www.infineon.com/cms/en/product/esd-and-surge-protection/esd-protection/esd103-b1-02el/",
+      "version": "Allowed maker cacheRev1.3 June2014",
+      "coverage": "Printedpp6/7 tables3-5/typical curves visually inspected; current guessed direct assetURL inaccessible"
+    },
+    {
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "version": "Allowed cacheDS14623Rev1 March2025",
+      "coverage": "SPI10MHz,gyroTon40ms,IF_CFG default push-pull/active-high extracted; current web too large"
+    }
+  ]
+}

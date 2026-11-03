@@ -1,0 +1,295 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round20_mcu",
+ "reviewer": "claude",
+ "target_commit": "6628488cf34bf33bdf104cb4383fcbe447c5da65",
+ "board_sha256_before": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "board_sha256_after": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 4
+ },
+ "findings": [
+  {
+   "id": "R20-MCU-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "VREFBUF obligation guards only against enabling the buffer; it omits the ENVR = 0 / HIZ = 0 mode, which pulls VREF+ (3V3A: VDDA, IMU and barometer supply) to VSSA",
+   "evidence": [
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+     "reference": "firmware_obligations[35] (R19-MCU-04)",
+     "text": "Keep VREFBUF_CSR at its reset value (ENVR = 0, HIZ = 1 per the ST SVD), never enable the buffer (no HAL_SYSCFG_EnableVREFBUF) ... an enabled buffer would drive its 1.5-2.5 V output ... against 3V3A"
+    },
+    {
+     "file": "board m3.kicad_pcb (sha 50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976)",
+     "reference": "3V3A net",
+     "measured": "U1.20 VREF+, U1.21 VDDA, U4.5 / U4.8 (ISM6HG256X VDDIO / VDD), U5.1 / U5.2 (MS5611), fed from 3V3 through R164 2.2 ohm"
+    },
+    {
+     "maker": "STMicroelectronics RM0433 VREFBUF 'VREF buffer modes' table (as quoted on ST community for the STM32H753; RM0433 itself not re-read here: Inference)",
+     "url": "https://community.st.com/stm32-mcus-products-25/use-of-vrefbuf-on-the-stm32h753-65835",
+     "text": "ENVR = 0, HIZ = 0: VREFBUF buffer off, VREF+ pin pulled down to VSSA; ENVR = 0, HIZ = 1: external voltage reference mode (default); ENVR = 1, HIZ = 1: hold mode"
+    },
+    {
+     "maker": "ST DS12110 Rev 8",
+     "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+     "page": "Figure 95 p. 286 (VREF+ connected to VDDA); Table 189 p. 291"
+    }
+   ],
+   "impact": "Documentation gap in a firmware obligation (no firmware exists; hardware unchanged). The obligation's stated hazard is ENVR = 1 only. HAL exposes HAL_SYSCFG_VREFBUF_HighImpedanceConfig(SYSCFG_VREFBUF_HIGH_IMPEDANCE_DISABLE), which clears HIZ with ENVR = 0; per the RM mode table that connects VREF+ to VSSA, i.e. loads 3V3A (behind 2.2 ohm) and so the IMU, barometer and ADC reference: loss of the roll-loop sensors. 'Keep at reset value' already forbids it implicitly, so the residual is a reader writing a HIZ-only call without seeing why.",
+   "concrete_fix": "Text only: in obligation 35 (r10_sch_check.py binding-note source, then regenerate) and docs/M3_R10.md Firmware add: 'Never clear HIZ either: ENVR = 0 with HIZ = 0 pulls VREF+ (3V3A: VDDA, U4, U5) to VSSA (RM0433 VREFBUF mode table; to be re-read: Inference). Do not call HAL_SYSCFG_VREFBUF_HighImpedanceConfig or write VREFBUF_CSR at all; bench check: 3V3A unchanged after VREFBUF clock enable.'"
+  },
+  {
+   "id": "R20-MCU-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Port endpoint level rule says 0-5 V, but at every battery power-up PORT_4V8 leads 3V3 by tens of ms, when the FT ceiling is 4.0 V; the spare AUX port invites an unspecified device",
+   "evidence": [
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+     "reference": "firmware_obligations[15]",
+     "text": "Direct port UARTs are FT digital inputs only, within 0 to 5 V"
+    },
+    {
+     "file": "docs/ORDERING.md",
+     "lines": "577",
+     "text": "Their digital UARTs require powered-board FT setup, internal RX pulls always off and 0-5 V endpoints"
+    },
+    {
+     "file": "docs/M3_R10.md",
+     "lines": "701",
+     "text": "configure FT digital RX with pulls disabled for any 5 V endpoint"
+    },
+    {
+     "file": "docs/R10_VALIDATION.md",
+     "lines": "1574, 1926",
+     "text": "PORT_4V8 can lead 3V3 by tens of ms because U11's 470 nF soft-start makes 3V3 lag (Inference); ... stay under the 4.0 V limit as long as the module's output high level is at most 3.6-4.0 V"
+    },
+    {
+     "maker": "ST DS12110 Rev 8",
+     "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+     "page": "Table 119 p. 212: FT VIN max = Min(VDD, VDDA, VDD33USB, VBAT) + 4.0 V, i.e. 4.0 V at VDD = 0; Table 120 note 3 p. 213: no positive injection on FT pins"
+    },
+    {
+     "maker": "TI SLVSEA3F",
+     "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+     "page": "Table 9-1 p. 13: 100 nF -> 780-800 V/s; C85 = 470 nF gives about 166-170 V/s, VLOGIC 0 -> 7.4 V in about 44 ms plus tSET (Calculation, inverse-C scaling)"
+    },
+    {
+     "file": "board",
+     "reference": "LOGIC_SS = {C85 470 nF, U11.11}; PORT_4V8 from RAW_PROTECTED via U400 (AP63201) and U401 (TPS7A9101, SS C408 10 nF) with no gating by 3V3",
+     "measured": "RX pins PD9 (FT_h, Table 9 p. 75), PB12 (FT_u, p. 74), PC7 (FT_h, p. 79) see the module TX through 1 kohm only"
+    },
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+     "reference": "D-R19-14",
+     "text": "a spare serial port for flight 2 without a respin"
+    }
+   ],
+   "impact": "Bounded residual / documentation conflict. GPS and radio are 3.3 V LVTTL (per records), so the current defaults are within 4.0 V. A 5 V-logic device placed on any of J410 / J420 / J440 under the written 0-5 V rule would hold up to about 5 V on an FT pin with VDD = 0 for tens of ms at every power-up, beyond the absolute maximum (no clamp path; Table 119 note 4 also requires pulls off above 4 V). The records disagree with each other (VALIDATION 3.6-4.0 V vs obligation / ORDERING 0-5 V).",
+   "concrete_fix": "Text only: one rule in binding obligation 15 and 20, ORDERING 8.x (line 577 and the J410 / J420 / J440 rows), M3_R10 Firmware and REQUIREMENTS F10: 'Any device on J410, J420 or J440 must have a TX output high level <= 3.6 V (3.3 V LVTTL); 5 V-logic devices are not allowed on these ports, because PORT_4V8 is up for tens of ms before 3V3 at every power-up and the FT limit is then 4.0 V (DS12110 Rev 8 Table 119 p. 212).' Measure the PORT_4V8-to-3V3 lag on first articles."
+  },
+  {
+   "id": "R20-MCU-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "No obligation for a port with no mapped device (J440 by default, normally unplugged): its RX pin floats as a digital AF input if the UART is enabled",
+   "evidence": [
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+     "reference": "firmware_obligations[2], [20], [26], [31]",
+     "text": "[2] default ... J440 AUX spare (USART6); [20] PD9/PB12/PC7 are digital AF inputs with internal pulls always disabled; [26] covers only no-net pins; [31] 'Direct port UARTs ... can float/noise when unplugged ... disable the affected UART after a bounded error threshold'"
+    },
+    {
+     "file": "board",
+     "reference": "AUX_RX_MCU = {U1.64 PC7, R470.2}; AUX_RX_WIRE = {R470.1, D441.1, J440.4}",
+     "measured": "no pull resistor on either side; J440.4 open when nothing is wired"
+    },
+    {
+     "maker": "ST DS12110 Rev 8",
+     "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+     "page": "Table 122 note 3 p. 215 / Table 157 note 7 p. 247 (pull rules); floating CMOS input current not specified (Inference)"
+    }
+   ],
+   "impact": "Bounded residual (no hazard): an enabled USART6 on an open J440 sees a floating RX through 1 kohm and an unterminated stub, giving framing / noise interrupts and extra input-buffer current; obligation 31 only reacts after errors. The same applies to any port whose device is unplugged, and to the RX pins while PA4 is high (modules unpowered), which obligation 20 does not park (only TX pins).",
+   "concrete_fix": "Text only (binding obligation 2 / 20 and M3_R10 Firmware): 'A port with no device in the map (J440 by default) keeps both its pins in analog mode with its UART clock off; while PA4 is high, park the RX pins (PD9, PB12, PC7) analog too and stop the UARTs.'"
+  },
+  {
+   "id": "R20-MCU-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "parts_qualification.md still gives the pre-D-R19-14 port pin map (R440 / R441 to PC7 / PC6) and omits the AUX path",
+   "evidence": [
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+     "lines": "82-84",
+     "text": "PC6/PC7 are FT_h; PB12/PB13 are FT_u in [ST DS12110 Rev11 Table9 pp74-79 and Table10 pp91-92] ... (Table109 pp207-208)"
+    },
+    {
+     "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+     "lines": "718-729 ('Port UART ESD ... current direct-port amendment')",
+     "text": "D400/D401, D410/D411, D420/D421 are ESD103-B1-02EL ... GPS/radio instead connect directly through R440/R441/R450/R451 to PC7/PC6/PB12/PB13"
+    },
+    {
+     "file": "board / schematic.net.xml",
+     "measured": "R440.2 = GPS_RX_MCU = U1.56 PD9; R441.1 = GPS_TX_MCU = U1.55 PD8; R470.2 = AUX_RX_MCU = U1.64 PC7; R471.1 = AUX_TX_MCU = U1.63 PC6; D440 / D441 on AUX_TX_WIRE / AUX_RX_WIRE"
+    }
+   ],
+   "impact": "Documentation defect in a current record: a firmware author reading the parts record would wire the GPS driver to USART6, the old map (the same mistake the legacy R1 GNSS driver already makes). The authoritative pin_table / binding note are correct.",
+   "concrete_fix": "Text only: lines 82-84 -> 'PD8 / PD9 (GPS, J410) and PC6 / PC7 (AUX, J440) are FT_h; PB12 / PB13 (radio) are FT_u (DS12110 Rev 8 Table 9 pp. 74-79; AF Tables 11-13 pp. 91-94; Table 119 p. 212)'; line 727 -> 'through R440 / R441 (PD9 / PD8), R450 / R451 (PB12 / PB13) and R470 / R471 (PC7 / PC6)', and add D440 / D441 to the ESD list."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R19-13 (R19-MCU-01)",
+   "claim": "Port TX enabled only while PA4 reads low (U11 on IN2 = RAW_PROTECTED), parked analog no pull on PA4 rise or PA6 trip; ports powered whenever the battery path is on",
+   "measurement": "Board: U11.2 IN2 = RAW_PROTECTED, U11.7 IN1 = USB_LIMITED, U11.9 ST = LOGIC_SOURCE_ST = U1.28 PA4 with R91 10k to 3V3; PORT_4V8 from RAW_PROTECTED via U400/U401, no 3V3 gating. SLVSEA3F Table 9-3 p18: ST low = IN2. Rule present for all three TX pins (pin_table rows 52/55/63, binding port_states.startup / shutdown_shedding, obligations 15/20, M3_R10 l.701, ORDERING l.589). On battery break U11 reverse blocking takes the output Hi-Z so ST (PA4) rises; PA6 is the backup.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-13 (R19-MCU-02)",
+   "claim": "Every DS12110 cite in pin_table / binding note is Rev 8",
+   "measurement": "82 pin_table rows cite 'DS12110 Rev 8'; Rev 11 appears only in the labelled design-limit sentences. Spot pages vs cached Rev 8: PD8/PD9 Table 9 p75, PC6 p78 / PC7 p79, Table 11 p91, Table 12 p92, Table 13 p94, Table 119 p212, Table 120 note 3 p213, Table 146 p238, Table 159 p249, Figure 95 p286, Table 189 p291 - all match.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-13 (R19-MCU-03)",
+   "claim": "camera_uart note says OE on PE9; mcu note: PE3/PE5 flank PE4, PE3/PE5/PE6/PC4 analog never driven",
+   "measurement": "Both sheet notes present at 6628488; U1.2/4/5 nets unconnected-(...) with no tracks (0 net-less or NC-net tracks on the board); PE4 is pin 3 between them at y 50.55.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-13 (R19-MCU-04)",
+   "claim": "VREFBUF obligation added",
+   "measurement": "Obligation 35 present; it covers ENVR = 1 but not ENVR = 0 / HIZ = 0 (pull-down mode).",
+   "verdict": "partly (R20-MCU-01)"
+  },
+  {
+   "d_id": "D-R19-04",
+   "claim": "C123 10 nF ACT_EN to GND; tau 7.1 us; 1.45 V at 7.6 us; below 0.65 V 8.6 us after PC1 falls, 26 us after reset",
+   "measurement": "Board C123.1 ACT_EN, C123.2 GND; Q122 1 G ACT_EN / 2 S GND / 3 D ACT_DRV; R122 ACT_EN_MCU-ACT_EN 1k, R123 ACT_EN-GND 2k. Calculation (10.63 nF): tau 7.09 us; 1.45 V at 7.63 us (3.3 V), 6.6-9.2 us (3.6-3.0 V); fall 8.64 us; reset 25.9 us; PC1 peak 3.3 mA, steady 1.1 mA (< 20 mA IIO, Table 120 p213); internal pull-up gate 0.136-0.218 V. AGENTS 2.4 pull-down + series + gate-source cap satisfied.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-11 (MCU/IMU interface)",
+   "claim": "Same pin map and axes; WHO_AM_I 0x73; INT1 push-pull active high by default",
+   "measurement": "DS15034 Figure 5 p9 rendered beside DS14623 Figure 5 p9: identical pinout and axis arrows. Table 25 p52: INT1 'Default: output forced to ground'. IF_CFG p60: PP_OD = 0 push-pull, H_LACTIVE = 0 active high (defaults). WHO_AM_I p66 = 73h. Ton 40 ms (DS15034 p15), SPI <= 10 MHz (p17). Board U4.4 = IMU_INT1 = U1.98 PE1 (FT_h, Table 9 p87; EXTI1 own vector); U4.2/3 SDx/SCx to GND (allowed: 'connect to VDDIO or GND', Table 2 p10); U4.10/11 unconnected (allowed).",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-14 (UART / MCU part)",
+   "claim": "GPS on USART3 PD8 TX / PD9 RX AF7, AUX on USART6 PC6 / PC7 AF7; FT_h; not loader pins",
+   "measurement": "DS12110 Rev 8 Table 13 p94 AF7 USART3_TX/RX on PD8/PD9; Table 12 p92 AF7 USART6_TX/RX on PC6/PC7; Table 9 FT_h for all four. Board / committed netlist / fresh kicad-cli 10.0.7 netlist / pin_table / binding note agree on all 100 U1 pins (0 differences). Directions: PD8 -> R441 -> J410.3 TXO; J410.4 -> R440 -> PD9; PC6 -> R471 -> J440.3; J440.4 -> R470 -> PC7. AN2606 loader USART3 = PB10/PB11 (pin_table K-loader column; corroborated by ST community, AN2606 PDF not fetchable here).",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-05",
+   "claim": "U1.19 VSSA has no pour connection",
+   "measurement": "U1 pad 19 local zone connection = ZONE_CONNECTION_NONE (0); pads 10/20/21/26 inherit.",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R20-MCU-02",
+   "change": "Docs/binding-note text: replace '0 to 5 V' / '0-5 V endpoints' / 'any 5 V endpoint' with the <= 3.6 V TX-level rule for J410 / J420 / J440 (no CAD change)."
+  },
+  {
+   "id": "R20-MCU-01",
+   "change": "Binding obligation 35 and M3_R10: add 'never clear HIZ; do not write VREFBUF_CSR' (no CAD change)."
+  },
+  {
+   "id": "R20-MCU-04",
+   "change": "parts_qualification.md lines 82-84 and 727: current pin map PD8/PD9, PB12/PB13, PC6/PC7 and D440/D441 (no CAD change)."
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "candidate": "Module TX into an unpowered MCU through 1 kohm (PD9 / PB12 / PC7)",
+   "disposition": "closed for 3.3 V LVTTL modules: FT pins, VIN max 4.0 V at VDD = 0 (Table 119 p212), no positive injection path so no back-power of 3V3 (Table 120 note 3 p213); only the 5 V-device allowance is filed (R20-MCU-02)"
+  },
+  {
+   "candidate": "PA4 low but PORT_4V8 absent (U401 limit / port short / start-up)",
+   "disposition": "not raised: MCU TX into an unpowered module is limited to about 2.7 mA by the 1 kohm, short-lived; 'settling delay' and shared-short behaviour already recorded (obligations 14, 20)"
+  },
+  {
+   "candidate": "PA4 / PA5 zero injection allowance (Table 120 p213)",
+   "disposition": "not a finding: both are pulled to 3V3 (R91 / R89) and driven only by open-drain U11 ST / U9 FLT; no source outside 0-3V3"
+  },
+  {
+   "candidate": "New GPS / AUX runs beside firing controls",
+   "disposition": "not a finding: nearest firing-net copper to any GPS/AUX/IMU_INT1 net is IMU_INT1 to the PE4 pad 1.37 mm (F.Cu); GPS/AUX MCU-side nets are >= 0.437 mm from PORT_4V8 only; AUX_RX_WIRE 0.250 mm from a 3V3 via (benign: 3.3 V on an RX wire)"
+  },
+  {
+   "candidate": "PC7 (AUX RX) beside PC8 VBUS_SENSE",
+   "disposition": "not new (PC7 was GPS RX in round 19); a bridge only fakes USB presence, which obligation 28 forbids as a sole safety input"
+  },
+  {
+   "candidate": "Sentinel pins PE3 / PE5 / PE6 copper",
+   "disposition": "closed: no tracks or zones on their nets; DRC 0"
+  },
+  {
+   "candidate": "PE4 fire drive",
+   "disposition": "not a finding: steady 3.62 mA, inrush <= 18.3 mA with an ideal source (< 20 mA IIO), gate 3.23 V; internal pull-up gate 0.063-0.104 V; network unchanged in D-R19"
+  },
+  {
+   "candidate": "R19-MCU-05 VCAP operating C / ESR",
+   "disposition": "carried as disclosed pending qualification in round 19; nothing changed at C19 / C20; not re-filed"
+  },
+  {
+   "candidate": "ISM6HG256X INT1 boot-strap or I3C pin requirement",
+   "disposition": "none in DS15034 (Table 2 p10, Table 25 p52); INT1 default forced low, compatible with the PE1 pull-down"
+  },
+  {
+   "candidate": "AN2606 revisions mixed (Rev64 / Rev70) in pin_table and sheet notes",
+   "disposition": "not raised: each cite names its revision; loader pin set unchanged"
+  }
+ ],
+ "checks_actually_executed": [
+  "git archive 6628488 into .supervisor/r20_mcu/tree; board SHA-256 before and after (both trees) = 50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+  "pcbnew (native KiCad Python) dump of every footprint's pad nets; U1 100 pads vs pin_table r10_net: 0 mismatches",
+  "committed schematic.net.xml vs board (all refs/pads): 0 differences; fresh kicad-cli 10.0.7 'sch export netlist' vs committed: 0 node differences",
+  "U1 symbol pin names vs pin_table port column: 0 mismatches; pin numbers vs DS12110 Rev 8 Table 9 LQFP100 column (text extraction): all matched",
+  "binding note u1_pins vs pin_table (port, net, mode): 0 differences; binding hashes vs board / netlist / pin_table / circuit.json: all equal",
+  "kicad-cli 10.0.7 pcb drc --schematic-parity --severity-all on the probe copy: 0 violations, 0 unconnected, 0 parity",
+  "DS12110 Rev 8 AF tables 11-14 rows for PB12/PB13, PC6/PC7, PD8/PD9, PE0/PE1; Table 9 I/O types; Tables 119/120 text; page spot-checks",
+  "DS15034 / DS14623 page 9 rendered and compared; DS15034 Tables 2, 25, IF_CFG p60, WHO_AM_I p66, Ton, SPI clock",
+  "TPS2121 SLVSEA3F soft-start text and Table 9-1",
+  "pcbnew effective-shape clearance probes (prox.py) between port / IMU_INT1 nets and firing / supply nets; NC-pad copper probe; U1.19 zone connection",
+  "calc.py: PC1/C123 gate timing, PE4 currents, U11 slew"
+ ],
+ "sources": [
+  {
+   "doc": "ST DS12110 Rev 8 (cached copy .supervisor/r14_parts_pdf/st_h743.pdf)",
+   "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf"
+  },
+  {
+   "doc": "ST DS15034 Rev 1 ISM6HG256X (cached .supervisor/r19_parts/pdf_ism6hg256x)",
+   "url": "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf"
+  },
+  {
+   "doc": "ST DS14623 Rev 1 LSM6DSV320X (cached .supervisor/r14_parts_pdf/st_lsm.pdf)",
+   "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf"
+  },
+  {
+   "doc": "TI SLVSEA3F TPS2121",
+   "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf"
+  },
+  {
+   "doc": "ST community: VREFBUF modes on STM32H753",
+   "url": "https://community.st.com/stm32-mcus-products-25/use-of-vrefbuf-on-the-stm32h753-65835"
+  },
+  {
+   "doc": "ST community: STM32H74xxx USART bootloader pins (USART1 PA9/PA10, PB14/PB15; USART2 PA2/PA3; USART3 PB10/PB11)",
+   "url": "https://community.st.com/t5/stm32-mcus/how-to-use-stm32cubeprogrammer-to-access-the-usart-bootloader-on/ta-p/49608"
+  }
+ ],
+ "coverage_limits": [
+  "AN2606 and RM0433 PDFs could not be downloaded in this session (timeouts); loader roles and the VREFBUF mode table rest on the pin table's AN2606 Rev64 reading and ST community quotes (Inference).",
+  "No firmware exists; all MCU behaviour is obligations. No bench, power-sequencing or level measurement.",
+  "Power-up lag PORT_4V8 vs 3V3 is a Calculation from SLVSEA3F Table 9-1 scaling plus records; tSET, U2 UVLO and U400/U401 start-up not modelled.",
+  "Routing, power, safety and manufacturing aspects of D-R19 fixes reviewed only where they touch U1 pins."
+ ]
+}

@@ -1,0 +1,18 @@
+{
+  "candidate_sha256": "2041de7b205e02711d80c5bc75ec6678830f44ca844a56eab2c775fd331f73c8",
+  "base_sha256": "c128a253d4c42cc3fcad8be4331099c50a2fce210ba9bd324168d6c7decbfa2a",
+  "helper_sha256": "0ff8adf5eb8cd711b54f386df25b158bd0ac0097c8573ea314cc8a8c8f022af2",
+  "packet_sha256": "9b22b511ca657f2f8f17e85299ec38bede8c2edd1aa99725fb2f19abaf34a1f6",
+  "exact_copper_and_lock_match": true,
+  "idempotent": true,
+  "changed_original_rejected_atomically": true,
+  "partial_application_rejected_atomically": true,
+  "changed_reviewed_rejected_atomically": true,
+  "fresh_application": {
+    "applied": true,
+    "added": 70,
+    "removed": 7,
+    "zones_require_refill": true,
+    "native_drc_required": true
+  }
+}

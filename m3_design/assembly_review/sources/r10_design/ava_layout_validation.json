@@ -1,0 +1,272 @@
+{
+  "board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "baseline_commit": "ff15523",
+  "baseline_sha256": "6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa",
+  "completed_builds": [
+    {
+      "number": 1,
+      "exit_code": 0,
+      "check_sh_exit": 0,
+      "board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+      "log_sha256": "1a1817c398b80be871879d83980766c261e3e061ba7d1b46075fc448cc7eed32"
+    },
+    {
+      "number": 2,
+      "exit_code": 0,
+      "check_sh_exit": 0,
+      "board_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+      "log_sha256": "f63f37667a610cd1217c863c106e8866f5801796b0373217a15620fb36cd4ec0"
+    }
+  ],
+  "check_sh_exit": 0,
+  "closure": "Two complete builds passed; CAD candidate ready for the separate review agent",
+  "cad_rules": {
+    "S-1": {
+      "ok": true,
+      "issues": []
+    },
+    "S-2": {
+      "ok": true,
+      "issues": []
+    },
+    "S-3": {
+      "ok": true,
+      "issues": []
+    },
+    "S-4": {
+      "ok": true,
+      "issues": []
+    },
+    "S-5": {
+      "ok": true,
+      "issues": []
+    },
+    "S-6": {
+      "ok": true,
+      "issues": []
+    },
+    "S-7": {
+      "ok": true,
+      "issues": []
+    },
+    "S-8": {
+      "ok": true,
+      "issues": []
+    },
+    "S-9": {
+      "ok": true,
+      "issues": []
+    },
+    "K-contract": {
+      "ok": true,
+      "issues": []
+    },
+    "K-loader": {
+      "ok": true,
+      "issues": []
+    },
+    "K-actuators": {
+      "ok": true,
+      "issues": []
+    },
+    "LC-1": {
+      "ok": true,
+      "issues": []
+    },
+    "M-1": {
+      "ok": true,
+      "issues": []
+    },
+    "M-3": {
+      "ok": true,
+      "issues": []
+    },
+    "M-5": {
+      "ok": true,
+      "issues": []
+    },
+    "M-6": {
+      "ok": true,
+      "issues": []
+    },
+    "M-7": {
+      "ok": true,
+      "issues": []
+    },
+    "P-11": {
+      "ok": true,
+      "issues": []
+    },
+    "F9-1": {
+      "ok": true,
+      "issues": []
+    },
+    "F9-2": {
+      "ok": true,
+      "issues": []
+    },
+    "T-1": {
+      "ok": true,
+      "issues": []
+    },
+    "K-legends": {
+      "ok": true,
+      "issues": []
+    },
+    "K-copper": {
+      "ok": true,
+      "issues": []
+    },
+    "K-inner": {
+      "ok": true,
+      "issues": []
+    },
+    "K-reference": {
+      "ok": true,
+      "issues": []
+    },
+    "K-region": {
+      "ok": true,
+      "issues": []
+    },
+    "K-fill": {
+      "ok": true,
+      "issues": []
+    },
+    "K-rules": {
+      "ok": true,
+      "issues": []
+    },
+    "K-width": {
+      "ok": true,
+      "issues": []
+    },
+    "K-retained": {
+      "ok": true,
+      "issues": []
+    }
+  },
+  "wire_room": {
+    "J1": {
+      "entry": "-x",
+      "wire_room_mm": 4.953,
+      "r8_floor_mm": 6.25,
+      "r10_accepted_floor_mm": 4.95,
+      "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+    },
+    "J121": {
+      "entry": "-x",
+      "wire_room_mm": 4.953,
+      "r8_floor_mm": 6.25,
+      "r10_accepted_floor_mm": 4.95,
+      "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+    },
+    "J400": {
+      "entry": "-x",
+      "wire_room_mm": 4.953,
+      "r8_floor_mm": 6.25,
+      "r10_accepted_floor_mm": 4.95,
+      "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+    },
+    "J410": {
+      "entry": "+x",
+      "wire_room_mm": 4.953,
+      "r8_floor_mm": 6.25,
+      "r10_accepted_floor_mm": 4.95,
+      "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+    },
+    "J420": {
+      "entry": "+x",
+      "wire_room_mm": 4.953,
+      "r8_floor_mm": 6.25,
+      "r10_accepted_floor_mm": 4.95,
+      "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+    },
+    "J9": {
+      "entry": "+x",
+      "wire_room_mm": 4.953,
+      "r8_floor_mm": 6.25,
+      "r10_accepted_floor_mm": 4.95,
+      "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+    },
+    "J122": {
+      "entry": "+x",
+      "wire_room_mm": 4.953,
+      "r8_floor_mm": 6.25,
+      "r10_accepted_floor_mm": 4.95,
+      "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+    }
+  },
+  "output_loops": {
+    "C82": {
+      "out_route_mm": 3.5778174593052023,
+      "local_ground_route_mm": 9.426345596729048,
+      "loop_mm": 13.004163056034251,
+      "projected_loop_area_mm2": 6.591562500000009
+    },
+    "D9": {
+      "out_route_mm": 6.5855339059327385,
+      "local_ground_route_mm": 8.176345596729053,
+      "loop_mm": 14.761879502661792,
+      "projected_loop_area_mm2": 7.012187499999868
+    }
+  },
+  "input_feed_mm": {
+    "J1.1 to C88.1": {
+      "before": 47.4119667991878,
+      "after": 30.670811752380267
+    },
+    "C88.1 to U9.5": {
+      "before": 3.920000000000009,
+      "after": 3.920000000000009
+    }
+  },
+  "hotplug_cases": 2304,
+  "hotplug_failures": 0,
+  "physical_qualification": false,
+  "independent_review_rounds": 0,
+  "tests": {
+    "shell": 4,
+    "fit": 25,
+    "paste": 5,
+    "routing": 60,
+    "r10": {
+      "ran": 160,
+      "skipped": 3,
+      "failures": 0,
+      "skips": "Two required hot-plug numerical tests rerun successfully with NumPy; one optional plate diagnostic not run"
+    },
+    "numpy_hotplug": 2,
+    "required_gates_skipped": 0
+  },
+  "reproducibility": {
+    "pcb_bytes_identical": true,
+    "generated_files_compared": 23,
+    "mismatches": [],
+    "generated_file_sha256": {
+      "m3_design/assembly_review/actuator_power.kicad_sch": "54ed8859d0d0d77f05724df8052962258eb240fcbdf38910e2d7ef2bf0e5d6bc",
+      "m3_design/assembly_review/battery_entry.kicad_sch": "984d524d93f87852803f524b7041d3c1d9eadca4f775a717e1cb2241da0fec69",
+      "m3_design/assembly_review/camera_connector.kicad_sch": "84069d1f115d9a3c331e38ec5e0c73733b6f00432c79ea42d95e616dbf48f162",
+      "m3_design/assembly_review/camera_power.kicad_sch": "cd8a5a352bea9a9c80211d511b9d78c3aafd2816bec6a6db9c1a9beb53ba15d0",
+      "m3_design/assembly_review/camera_uart.kicad_sch": "8f64fb78ed2f9b76023ace78df25557ee44908e973494356720db6b85e0a50a6",
+      "m3_design/assembly_review/diagnostics.kicad_sch": "6e1ad47f47ee0003a9e595431a5ddcb279d3a4c587d8730248c5376f7c75b71d",
+      "m3_design/assembly_review/kilib/m3.kicad_sym": "eae1338782216a005145b430e198f7cb19fa61cf92e1d906e1d68fd8c5b00664",
+      "m3_design/assembly_review/logic_power_path.kicad_sch": "258633179614506fcd792a1c5edc0cc0ef32db84c402bbf4acb16896f5bfb31b",
+      "m3_design/assembly_review/m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+      "m3_design/assembly_review/m3.kicad_pcb": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+      "m3_design/assembly_review/m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+      "m3_design/assembly_review/m3.kicad_sch": "4c3cd068b22c171d198a022adc3dd8f3a16ed2dd2b3e15f8cf99793443c8f89b",
+      "m3_design/assembly_review/mcu.kicad_sch": "03f3a7007ed196a1a0770523f193f90a9c7a1e9b9d32783dd2bfcd285af207bf",
+      "m3_design/assembly_review/pullpin_buzzer.kicad_sch": "6251166ef5e36bd43d48060c3085437fd637df326d82dd7709f9836d9282e1e7",
+      "m3_design/assembly_review/pyro.kicad_sch": "d3a6fde39e5a5df3a93a7a2c60bd7e90c24b28de1fe281a9bcfa03babc35e056",
+      "m3_design/assembly_review/schematic.net.xml": "8382c140f77dd8a0d3fefc0b7fc7125a84db282e5c06870fc744d1c5c89598f5",
+      "m3_design/assembly_review/sensors.kicad_sch": "bc81013b62caf9c9093acac15a3fd8cfce56a6b0c922f4899906e745d5af8ece",
+      "m3_design/assembly_review/servos.kicad_sch": "c9d0d4661e6d30337fb9fa094219678f38a8a8b0c3dc48fa35e392ab2c1c1e0f",
+      "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json": "60fecf17b92a1836b9d21713f5a5ad64a02a2cf07a08281613375f5fc2ad382f",
+      "m3_design/assembly_review/sources/r10_design/hotplug_results.json": "7812c6653c136dd14856e3c99e0ffb38529bf29543064f11e279ebab7b8df021",
+      "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "20553b581af8f98ee6062081c22a5accb341500304d9b8c87d90ac1817973581",
+      "m3_design/assembly_review/telemetry.kicad_sch": "16145d6f1b32a8cc90356996d7a5d364d05bc7c99501e7f6809f5eea7ce711f8",
+      "m3_design/assembly_review/usb_sense.kicad_sch": "1ce87ca1ed4f2e09f2289c8af29069a094162bf5e6f58e50e66138b9f37ae865"
+    }
+  }
+}

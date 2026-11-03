@@ -1,0 +1,49 @@
+# R10 round 26 — mechanics lens (Claude)
+
+Target `3d8e845`, board `92c3ad59…` (SHA-256 before and after: `92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f`).
+
+**Totals:** 0 Critical / 0 Major / 1 Minor.
+
+## Findings
+
+- **R26-MECHANICS-01** (doc, Minor): `docs/R10_VALIDATION.md` line 2752 (owner list, §8 Mechanics) says the wire room with P2's 0.5 mm wall allowance is "4.503 mm". The calculation √(24.9² − 5²) − 19.6 − 0.3 = 4.4928 mm, and M3_R10 line 860, ORDERING 8.4, owner row 31 and line 1915 all give 4.493 mm (R23-MECHANICS-01 corrected this exact slip, 5.003 − 0.5, elsewhere). Fix: "(4.493 mm with it; R23-MECHANICS-01)".
+
+## Fix verification
+
+- D-R24-11 D402 at B(4.45,65.9): bore margin 5.60 mm; not within 3.5 mm of any support (nearest bottom obstacle remains C32.2, 4.536 mm) — confirmed
+- D-R24-15 R92 F(31,86.7), TP88 F(35.5,86.4): TP88.1 5.75 mm and R92.2 9.78 mm from the (42,86) support (>= 3.8 mm); courtyards 2.525 / 2.555 mm from y 90 — confirmed
+- D-R24-20 M-8 short-edge rule: courtyard bbox distances R400/R401/R404 1.025, C95 1.505, R166 1.755, C403 1.955 mm (the six queries); every other courtyard >= 2.505 mm (L400) — confirmed
+- D-R24-09 R402/R403 to B(30.9,12.85)/B(30.9,14.6): no support-clearance change (fit_check clean, nearest bottom obstacle unchanged) — confirmed
+- R25-TRI-08 (R150-R155 in STRAIN_PARTS): tools/plate_model.py STRAIN_PARTS lists R150-R155; M3_R10 line 887 now says so — confirmed
+- R25-TRI-09 (plate thinner than 0.8 mm): ORDERING 8.4, REQUIREMENTS P3, handoff line 107, row 32 all read 'thinner than 0.8 mm'; 4.5 + t < 5.3 < 5.3653 — confirmed
+- R25-TRI-10 (row 32 contact loads): row 32: C431 125 g, C421 133 g; re-run 125.2 / 132.6 g — confirmed
+
+## Observations (not counted)
+
+- Plate model re-run on 92c3ad59 (fit_check --profile r10 report + masses.json): pinned D5 180.8 Hz, D10 255.6, clamped 287.8 / 407.0 Hz, 78.6 g, max 100 g deflection 1.27 mm; the records' 180.8 Hz / 78.6 g match; 256.1 / 287.9 / 407.1 Hz and 1.24 mm are correctly labelled as 632a9ad3 figures.
+- 100 g D5 gaps at 4 mm standoffs on a 0.5 / 0.25 mm raster: C431 0.261 mm, C421 0.320 mm (records exact); contact loads C431 125.2 g (D10 250.3), C421 132.6 (265.3), C411 175.3 (350.5), L1 213.9 (427.7) on the 0.25 mm raster, matching ORDERING 8.4's 125/250, 133/265, 175/351, 214/428.
+- J9 / J420 terminal-tail allocations reach a 4 mm sled at about 162-170 g (D5), before C411; already judged not a finding (R25 triage: list not stated as exhaustive, tails inside the specified relief pocket x 31.5-41, y 20-60). With the 1.5 mm pocket the first contacts outside it are J122.5 tail ~209 g and L1 ~214 g; with 4.5 mm standoffs C431 first at ~173 g; both above the 163 g landing bound.
+- 3.5 mm standoff sensitivity: C431 -0.239 mm, C421 -0.180 mm overlap; C411 +0.058, L1 +0.024 mm; records' 'overlaps C431 and C421' holds.
+- Nut-inclusive bounds re-derived: h + t < 6.0184 mm at x 4 / 42 and < 5.3653 mm at x 3.7 (M3_R10 historical section exact values); 4.0 + 1.0 and 4.5 + <0.8 both satisfy them; plate-only 6.88 mm bound reproduced.
+- Wire room 5.003012 mm (bare bore, z 5, -0.3 mm) on all eight terminals; 5.322 / 4.819 mm at 3 mm wire height; fit_check P2 rows: J3 margin 0.886 mm (shell x -0.45), DB125 body margin 2.98 mm, tail minimum 7.558359 mm, 27 tails, L1 3.015825 mm below the bottom face at B(25,74.6), U5 model 1.100074 mm, J430 15.05 x 15.70 x 2.10 mm.
+- Supports: five r=1.6 Edge.Cuts holes exactly at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); nearest bottom C32.2 4.536177 mm, nearest top LED2.2 3.807887 mm; LED1.1 3.8601, J2.1 3.8798, J2.3 3.9870 mm from (4,44.3) (records exact); J440 3.93 mm from (4,4); copper pours 0.5 mm from every hole edge (masked; nylon hardware rule covers it).
+- Retention worksheet (M3_R10) arithmetic rechecked: all loads and 5x values correct; landing 98-163 g (a = v^2/2s, s 20 mm) and 92 g / 367 g DESIGN_ASSURANCE cases correct.
+- R10_VALIDATION OQ-1 row (line 273, 'measured CAD room is 4.953 mm') sits in the dated 2026-10-28 owner-answer section and describes the then-current board; historical, not counted.
+- J9-J122 body gap 6.73 mm at x 42 (y 55.82 to 62.55) re-measured; no east mid-span washer fits, as recorded.
+
+## Checks executed
+
+- tools/fit_check.py --profile r10 on the committed board (read-only), report .supervisor/r26_mechanics/fit.json: OK, 0 issues
+- tools/plate_model.py --profile r10 with masses.json: .supervisor/r26_mechanics/plate.json
+- .supervisor/r26_mechanics/gaps.py: 100 g D5 / D10 gap and contact-load table at 3.5 / 4.0 / 4.5 mm standoffs on 0.1 / 0.25 / 0.5 mm rasters
+- .supervisor/r26_mechanics/supp.py: support positions, exposed top pads and copper distance per hole
+- .supervisor/r26_mechanics/pos.py, edge.py: footprint positions/rotations and short-edge courtyard distances
+- Hand calculations: wire room (5.003 / 4.493 / 5.322 / 4.819 mm), nut-inclusive h + t bounds, plate-only bound, retention worksheet, landing g
+- Text sweep of REQUIREMENTS P1-P3, ORDERING 8.4, M3_R10 mechanics sections, R10_VEHICLE_HANDOFF, R10_VALIDATION section 8 and owner rows 11/31/32, AGENTS row
+
+## Coverage limits
+
+- CAD envelopes and model only; no physical harness, sled, screwdriver or shroud fit
+- Plate model is the repository's Rayleigh-Ritz code with Inference masses; not independently validated by FEA
+- VEHICLE.md stack and OQ-7 position not checkable from the board
+- 5516eeec / 50a39de5 boards not re-run; the 'identical figures' history accepted as consistent with the current re-run

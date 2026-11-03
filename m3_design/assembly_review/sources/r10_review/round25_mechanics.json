@@ -1,0 +1,71 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round25_mechanics",
+ "reviewer": "claude",
+ "target_commit": "c4bb56b01e3431e5f4309a01321d18935038e707",
+ "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+ "totals": {"Critical": 0, "Major": 0, "Minor": 2},
+ "findings": [
+  {
+   "id": "R25-MECHANICS-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "M3_R10 and R10_VALIDATION say R150-R155 are still missing from the plate tool's strain table; they have been in STRAIN_PARTS since round 19",
+   "contradicts": "tools/plate_model.py STRAIN_PARTS (line 40: 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', comment R18-MEC-01) and R10_DECISIONS.md line 3199 ('STRAIN_PARTS (R18-MEC-01). R150-R155 are added (NumPy test)'); added in commit 2ca63a1 (round 19 gate pass).",
+   "evidence": "docs/M3_R10.md line 874: 'The gate pass added J410, J420, J9, J400, C431, C421 and C411 to the plate tool's table; R150-R155 are still missing (open Minor)'. docs/R10_VALIDATION.md line 2709: '... the gate lane added J410, J420, J9, J400, C431, C421 and C411 to the tool's table, R150-R155 are still missing'. Running tools/plate_model.py --profile r10 on this board's fit report (.supervisor/r25_mechanics/plate.json) reports strain for R150 1382, R151 1420, R152 1391, R153 1337, R154 1359, R155 1336 microstrain (100 g, D5 pinned).",
+   "impact": "Two records state an open gap in the plate tool that does not exist; a reader would think the servo resistors' strain is unreported and open.",
+   "concrete_fix": "In both places replace 'R150-R155 are still missing (open Minor)' with 'R150-R155 were added in the round 19 gate pass (R10_DECISIONS R18-MEC-01 line)'. Optionally quote the 92c3ad59 values from this run (R150-R155 1336-1420 microstrain, D5 pinned, Calculation/Inference)."
+  },
+  {
+   "id": "R25-MECHANICS-02",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "ORDERING 8.4: '4.5 mm standoffs with a plate <= 0.8 mm (keeps h + t < 5.3 mm at x 3.7)' allows h + t = 5.3 mm, which is not below the stated 5.3 mm bound",
+   "contradicts": "docs/M3_R10.md line 857 ('Nut-inclusive combined h + t bounds remain strictly below 6.0 mm at x = 4 and 42 and below 5.3 mm at x = 3.7'), line 911 ('Use conservative combined limits h + t < 6.0 / 5.3 mm'), R10_VEHICLE_HANDOFF line 76 and R10_VALIDATION line 2938 ('<5.3 mm at x 3.7').",
+   "evidence": "docs/ORDERING.md line 699, Landing clause: '4.5 mm standoffs with a plate <= 0.8 mm (keeps h + t < 5.3 mm at x 3.7)'. At the permitted maximum, h + t = 4.5 + 0.8 = 5.3 mm, which equals rather than stays below 5.3 mm. The same option is given in REQUIREMENTS P3 (line 74), R10_VEHICLE_HANDOFF line 105 and R10_VALIDATION row 32 (line 2171). Recomputed: the exact nut-stack bound at x = 3.7 is sqrt(24.9^2 - 22.775^2) - 4.7 = 5.3653 mm (M3_R10 line 911), so 5.3 mm fits physically; the false part is the stated '< 5.3' and the conflict with the strict rule.",
+   "impact": "The documented vehicle option breaks the documents' own strict h + t limit at its upper end; a builder following both cannot satisfy them at plate = 0.8 mm.",
+   "concrete_fix": "Either write 'a plate < 0.8 mm' in the four places, or state the bound as h + t <= 5.3 mm (exact limit 5.365 mm, M3_R10) and change 'keeps h + t < 5.3 mm' to 'keeps h + t <= 5.3 mm, inside the 5.365 mm bound'."
+  }
+ ],
+ "observations": [
+  "R10_VALIDATION row 32 (line 2171) says the 98-163 g landing range is 'above the 125 g' C431 contact figure; only its upper part is above (ORDERING 699 correctly says 'can exceed'); and C421's contact is 132-133 g, not 125 g. Wording; the conclusion and the vehicle item stand.",
+  "At 4 mm standoffs the plate model (D5 pinned, this board) puts J9's terminal-tail allocations onto the sled at 162-167 g and J420.1's at 167 g, before C411 (174 g) and L1 (213 g); ORDERING 699's contact list omits them, but they are inside the x 31.5-41 / y 20-60 relief pocket and clear to 207 g at 4.5 mm standoffs, so the vehicle item covers them (round 24 noted the same tails as gaps).",
+  "Wire room (fit_check wire_rooms) applies the 0.3 mm sled tolerance horizontally only; that is the documented definition (P2, R18-MEC-03), not an error.",
+  "Plate model on 92c3ad59 reproduces the records exactly: 180.8 Hz pinned D5, 78.6 g; also 255.6 / 287.8 / 407.0 Hz and 1.27 mm at (46, 44.5). The records' 256.1 / 287.9 / 407.1 Hz and 1.24 mm are explicitly labelled as 632a9ad3 figures; the same current-tool numbers come out on 5516eeec and 1407e850, so D402's mass effect is nil as the records infer.",
+  "C431 / C421 100 g gap at 4 mm: 0.257 / 0.318 mm on a 0.1 mm raster vs the recorded 0.261 / 0.320 mm (raster resolution only).",
+  "Copper on all four layers stops 0.50 mm from every Ø3.2 mm support hole edge (2.1 mm from centre); no copper or part enters any support keep-out beyond the recorded LED2.2 3.808 mm top-land case.",
+  "M3_R10 line 870-875 still says the plate calculation 'has not been re-run on the current board' for the R18-MEC-01 strain values; that is a disclosed historical attribution, not a false figure."
+ ],
+ "fix_verification": [
+  {"change": "R24-TRI-08 (P3 landing load 98-163 g)", "measurement": "6.2^2/0.04 = 961 m/s^2 = 98.0 g; 8.0^2/0.04 = 1600 m/s^2 = 163.2 g; 2 x 163 = 326 g ~ 330 g. REQUIREMENTS P3, ORDERING 699, R10_VALIDATION rows 12/32 now read 98-163 g; no live '168 g' left outside the correction notes.", "verdict": "confirmed"},
+  {"change": "R24-TRI-09 (J2 round-land distances)", "measurement": "J2.1 (3.73, 40.035) d 0.7874 mm: 4.2736 - 0.3937 = 3.880 mm; J2.3 (5.0, 40.035): 3.987 mm; LED2.2 3.808, LED1.1 3.860 mm (pcbnew polygons 3.881 / 3.989 with ERROR_INSIDE). Washer edge 0.31-0.49 mm. REQUIREMENTS P2, M3_R10 854-855, R10_VALIDATION 2710, ORDERING 700, HANDOFF 75 all corrected.", "verdict": "confirmed"},
+  {"change": "D-R24-11 (D402 fitted, B(4.45, 65.9) rot 90)", "measurement": "Placed as recorded; bore margin 5.60 mm (z -1.92); 0.32 mm below the bottom face, far from any support (nearest bottom envelope to a support is still C32.2 4.536 mm); plate figures unchanged.", "verdict": "confirmed"},
+  {"change": "D-R24-15 (R92 F(31, 86.7), TP88 F(35.5, 86.4))", "measurement": "Placed as recorded; TP88.1 top land 5.75 mm and R92 body 10.2 mm from the (42, 86) support (>= 3.8 mm).", "verdict": "confirmed"}
+ ],
+ "checks_actually_executed": [
+  "sha256 of the board before and after (unchanged); git diff c4bb56b on docs/tools/board/r10_design: empty",
+  "tools/fit_check.py --profile r10 on the board (KiCad Python), report .supervisor/r25_mechanics/fit.json: OK; 216 footprints = 207 rows + 9 excluded bare features; worst margin J3 0.886 mm; terminals 2.976 mm; wire room 5.003-5.603 mm on all eight DB125; nearest bottom envelope C32.2 4.536 mm; nearest top land LED2.2 3.808 mm",
+  "tools/plate_model.py --profile r10 with masses.json on this board, and on copies of 5516eeec and 1407e850 (probe dir): identical f1 / mass / deflection",
+  "probe_gap.py / probe_contact.py: per-part 100 g deflection and contact acceleration at 3.5 / 4.0 / 4.5 mm standoffs and with the 1.5 mm pocket, D5 and D10",
+  "probe_supports.py / probe_edge.py / probe_holecu.py: Edge.Cuts outline 46 x 90 mm, five r 1.6 mm support circles at the recorded positions, nearest pads per side per support, copper-to-hole distance on all four layers",
+  "Hand recalculation: landing a = v^2/2s; nut-stack h + t bounds 6.0184 / 5.3653 mm; J2 round-land distances; 0.984175 mm L1 gap; 6.73 mm J9-J122 gap at x = 42"
+ ],
+ "sources": [
+  "docs/REQUIREMENTS.md P1-P3 (lines 72-74)",
+  "docs/M3_R10.md lines 268-270, 841-875, 909-911",
+  "docs/ORDERING.md lines 699-700",
+  "docs/R10_VEHICLE_HANDOFF.md lines 74-105",
+  "docs/R10_VALIDATION.md lines 2079-2080, 2148-2171, 2689-2710, 2938",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R24-11, D-R24-15, D-R24-20, line 3199",
+  "m3_design/assembly_review/sources/r10_design/masses.json",
+  "m3_design/assembly_review/sources/r10_review/round24_triage.md R24-TRI-08 / -09",
+  "tools/fit_check.py, tools/plate_model.py"
+ ],
+ "coverage_limits": [
+  "Bodies are the tool's 3D-model bounding boxes; DB125 and other model heights were not re-checked against maker drawings this round.",
+  "Plate model is the repository's Kirchhoff/Rayleigh-Ritz Inference with allocated masses; no physical mass, stiffness, vibration or shock data exist.",
+  "Vehicle stack position (joint + 47 mm) and harness routing are vehicle-level and were not re-derived; parent VEHICLE.md gives no descent mass, so the 6.2-8.0 m/s chute range was not re-derived.",
+  "Previous-round mechanics reports were opened only after the findings were written."
+ ]
+}

@@ -1,0 +1,155 @@
+{
+ "A": {
+  "minimum": 0.5,
+  "kind": "dru",
+  "description": "RAW_ACT to pyro control",
+  "closest": {
+   "mm": 0.82,
+   "a": "J122.11 (RAW_ACT)",
+   "b": "track (28.53, 75.64) (ARM1_SENSE)",
+   "layer": "F.Cu"
+  },
+  "margin": 0.32,
+  "violations": [],
+  "violation_count": 0
+ },
+ "B": {
+  "minimum": 0.5,
+  "kind": "dru",
+  "description": "bus, igniter and drain to gate",
+  "closest": {
+   "mm": 0.82,
+   "a": "Q124.5 (PYRO1_OUT)",
+   "b": "track (9.125, 61.955) (PYRO1_GATE)",
+   "layer": "F.Cu"
+  },
+  "margin": 0.32,
+  "violations": [],
+  "violation_count": 0
+ },
+ "C": {
+  "minimum": 0.3,
+  "kind": "dru",
+  "description": "bus, igniter and drain to sense",
+  "closest": {
+   "mm": 0.577,
+   "a": "R131.1 (PYRO1_OUT)",
+   "b": "track (15.43, 67.66) (PYRO1_COLD)",
+   "layer": "F.Cu"
+  },
+  "margin": 0.277,
+  "violations": [],
+  "violation_count": 0
+ },
+ "D": {
+  "minimum": 0.5,
+  "kind": "dru",
+  "description": "GND to bus, igniter and drain",
+  "closest": {
+   "mm": 0.77,
+   "a": "track (10.425, 63.05) (GND)",
+   "b": "Q124.5 (PYRO1_OUT)",
+   "layer": "F.Cu"
+  },
+  "margin": 0.27,
+  "violations": [],
+  "violation_count": 0
+ },
+ "E": {
+  "minimum": 1.0,
+  "kind": "dru",
+  "description": "RAW_ACT to bus and igniter (ARM break)",
+  "closest": null,
+  "margin": null,
+  "violations": [],
+  "violation_count": 0
+ },
+ "F": {
+  "minimum": 0.5,
+  "kind": "dru",
+  "description": "bus, igniter and drain to other live nets",
+  "closest": null,
+  "margin": null,
+  "violations": [],
+  "violation_count": 0
+ },
+ "G": {
+  "minimum": 0.3,
+  "kind": "dru",
+  "description": "gate nets (P-1b scope) to other live nets",
+  "closest": {
+   "mm": 0.412,
+   "a": "track (13.0, 53.35) (PYRO1_GATE_N)",
+   "b": "U1.2 (unconnected-(U1-PE3-Pad2))",
+   "layer": "F.Cu"
+  },
+  "margin": 0.112,
+  "violations": [],
+  "violation_count": 0
+ },
+ "A2": {
+  "minimum": 0.3,
+  "kind": "dru",
+  "description": "RAW_ACT to RAW_ACT_SENSE",
+  "closest": null,
+  "margin": null,
+  "violations": [],
+  "violation_count": 0
+ },
+ "H": {
+  "minimum": 1.0,
+  "kind": "dru",
+  "description": "live pads to sense and gate pads (solder bridge)",
+  "closest": {
+   "mm": 1.225,
+   "a": "Q124.5 (PYRO1_OUT)",
+   "b": "R129.2 (PYRO1_CONT)",
+   "layer": "F.Cu"
+  },
+  "margin": 0.225,
+  "violations": [],
+  "violation_count": 0
+ },
+ "H+": {
+  "minimum": 1.2,
+  "kind": "strict",
+  "description": "rule H pairs, strict (H + 0.2 mm)",
+  "closest": {
+   "mm": 1.225,
+   "a": "Q124.5 (PYRO1_OUT)",
+   "b": "R129.2 (PYRO1_CONT)",
+   "layer": "F.Cu"
+  },
+  "margin": 0.025,
+  "violations": [],
+  "violation_count": 0
+ },
+ "GS": {
+  "minimum": 1.2,
+  "kind": "strict",
+  "description": "pyro gate pads to sense, COLD and midpoint pads (strict)",
+  "closest": {
+   "mm": 1.68,
+   "a": "R128.1 (PYRO1_GATE)",
+   "b": "C127.1 (PYRO1_CONT)",
+   "layer": "F.Cu"
+  },
+  "margin": 0.48,
+  "violations": [],
+  "violation_count": 0
+ },
+ "AG": {
+  "minimum": 1.2,
+  "kind": "strict",
+  "description": "actuator-switch gate pads to GND pads (strict)",
+  "closest": {
+   "mm": 1.362,
+   "a": "Q122.3 (ACT_DRV)",
+   "b": "R123.2 (GND)",
+   "layer": "B.Cu"
+  },
+  "margin": 0.162,
+  "violations": [],
+  "violation_count": 0
+ }
+}

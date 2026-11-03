@@ -1,0 +1,124 @@
+# R9 step 9 (session 2): the two full replays, stage by stage (scratch runner; every stage rc 0)
+## replay 1
+=== [0] rc=0 0s
+=== [1] rc=0 0s
+=== [2] rc=0 0s
+=== [3] rc=0 1s
+=== [4] rc=0 12s
+=== [5] rc=0 0s
+=== [6] rc=0 1s
+=== [7] rc=0 14s
+=== [8] rc=0 0s
+=== [9] rc=0 31s
+=== [10] rc=0 0s
+=== [11] rc=0 52s
+=== [12] rc=0 0s
+=== [13] rc=0 160s
+=== [14] rc=0 0s
+=== [15] rc=0 65s
+=== [16] rc=0 0s
+=== [17] rc=0 65s
+=== [18] rc=0 0s
+=== [19] rc=0 66s
+=== [20] rc=0 0s
+=== [21] rc=0 68s
+=== [22] rc=0 0s
+=== [23] rc=0 70s
+=== [24] rc=0 0s
+=== [25] rc=0 71s
+=== [26] rc=0 0s
+=== [27] rc=0 73s
+=== [28] rc=0 0s
+=== [29] rc=0 75s
+=== [30] rc=0 0s
+=== [31] rc=0 77s
+=== [32] rc=0 0s
+=== [33] rc=0 76s
+=== [34] rc=0 1s
+=== [35] rc=0 144s
+=== [36] rc=0 52s
+=== [37] rc=0 100s
+=== [38] rc=0 155s
+rc=0
+## replay 2
+=== [0] rc=0 0s
+=== [1] rc=0 0s
+=== [2] rc=0 0s
+=== [3] rc=0 1s
+=== [4] rc=0 12s
+=== [5] rc=0 0s
+=== [6] rc=0 1s
+=== [7] rc=0 15s
+=== [8] rc=0 0s
+=== [9] rc=0 32s
+=== [10] rc=0 0s
+=== [11] rc=0 54s
+=== [12] rc=0 0s
+=== [13] rc=0 162s
+=== [14] rc=0 0s
+=== [15] rc=0 66s
+=== [16] rc=0 0s
+=== [17] rc=0 66s
+=== [18] rc=0 0s
+=== [19] rc=0 66s
+=== [20] rc=0 0s
+=== [21] rc=0 68s
+=== [22] rc=0 0s
+=== [23] rc=0 70s
+=== [24] rc=0 0s
+=== [25] rc=0 72s
+=== [26] rc=0 0s
+=== [27] rc=0 74s
+=== [28] rc=0 0s
+=== [29] rc=0 75s
+=== [30] rc=0 0s
+=== [31] rc=0 77s
+=== [32] rc=0 0s
+=== [33] rc=0 76s
+=== [34] rc=0 1s
+=== [35] rc=0 144s
+=== snapshot <scratch>/r9/b1/stage35.kicad_pcb
+=== [36] rc=0 53s
+=== [37] rc=0 101s
+=== [38] rc=0 155s
+rc=0
+## stage commands (replay 2)
+=== [0] git restore --source=9c8179b --worktree -- m3_design/assembly_review/actuator_power.kicad_sch m3_design/assembly_review/battery_entry.kicad_sch m3_design/assemb
+=== [1] python3 -B m3_design/r9_lib.py
+=== [2] python3 -B m3_design/r9_dru.py
+=== [3] python3 -B m3_design/r9_sch.py --netlist
+=== [4] <KiCad python3> -I -B m3_design/r9_sch_check.py
+=== [5] git restore --source=9c8179b --worktree -- m3_design/assembly_review/m3.kicad_pcb
+=== [6] <KiCad python3> -I -B m3_design/r9_pcb.py
+=== [7] <KiCad python3> -I -B m3_design/r9_place_check.py --numpy-py ~/dev/
+=== [8] <KiCad python3> -I -B m3_design/r9_rf.py
+=== [9] <KiCad python3> -I -B m3_design/r9_rf_check.py
+=== [10] <KiCad python3> -I -B m3_design/r9_pyro.py
+=== [11] <KiCad python3> -I -B m3_design/r9_pyro_check.py
+=== [12] <KiCad python3> -I -B m3_design/r9_power.py
+=== [13] <KiCad python3> -I -B m3_design/r9_power_check.py --numpy-py ~/dev/
+=== [14] <KiCad python3> -I -B m3_design/r9_route.py rf_if
+=== [15] <KiCad python3> -I -B m3_design/r9_route_check.py rf_if
+=== [16] <KiCad python3> -I -B m3_design/r9_route.py qspi_hse
+=== [17] <KiCad python3> -I -B m3_design/r9_route_check.py qspi_hse
+=== [18] <KiCad python3> -I -B m3_design/r9_route.py pyro
+=== [19] <KiCad python3> -I -B m3_design/r9_route_check.py pyro
+=== [20] <KiCad python3> -I -B m3_design/r9_route.py servo
+=== [21] <KiCad python3> -I -B m3_design/r9_route_check.py servo
+=== [22] <KiCad python3> -I -B m3_design/r9_route.py imu_baro
+=== [23] <KiCad python3> -I -B m3_design/r9_route_check.py imu_baro
+=== [24] <KiCad python3> -I -B m3_design/r9_route.py usb_swd
+=== [25] <KiCad python3> -I -B m3_design/r9_route_check.py usb_swd
+=== [26] <KiCad python3> -I -B m3_design/r9_route.py camera
+=== [27] <KiCad python3> -I -B m3_design/r9_route_check.py camera
+=== [28] <KiCad python3> -I -B m3_design/r9_route.py status
+=== [29] <KiCad python3> -I -B m3_design/r9_route_check.py status
+=== [30] <KiCad python3> -I -B m3_design/r9_route.py power_ctl
+=== [31] <KiCad python3> -I -B m3_design/r9_route_check.py power_ctl
+=== [32] <KiCad python3> -I -B m3_design/r9_route.py links
+=== [33] <KiCad python3> -I -B m3_design/r9_route_check.py links
+=== [34] <KiCad python3> -I -B m3_design/r9_ground.py
+=== [35] <KiCad python3> -I -B m3_design/r9_ground_check.py
+=== [36] <KiCad python3> -I -B m3_design/r9_post.py
+=== [37] <KiCad python3> -I -B m3_design/r9_post_check.py --numpy-py ~/dev/r
+=== [38] tools/check.sh

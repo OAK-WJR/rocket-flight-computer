@@ -1,0 +1,1479 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round18_gate",
+ "reviewer": "claude",
+ "lens": "gate adversary",
+ "target_commit": "dcbb6c8",
+ "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 9
+ },
+ "findings": [
+  {
+   "id": "R18-GATE-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "S-8 does not protect the load-switch gate barrels: ACT_GATE vias sit 0.251 mm from In1 GND (the turn-on direction) and a 3V3 plane re-cut beside them passes the complete gate",
+   "evidence": {
+    "files": [
+     "tools/check_r10.py:867 (BARREL_NETS = RAW_ACT, PYRO1_IGN, PYRO1_OUT, PYRO1_GATE)",
+     "tools/check_r10.py:1592 (every barrel exempts GND copper)",
+     "m3_design/check_actuators.py:145-146 (\"a GND short on ACT_GATE or ACT_DRV left Q120/Q121 on\")",
+     "docs/R10_VALIDATION.md \"R10 deviations for owner acceptance\" section 1 (S-8 lists four protected barrels only) and the historical round-10 row \"ACT_GATE vias (16.2,72.3) / (11.8,69) to In2 RAW_PROTECTED ... biases the P-FET pair toward off\" (stale coordinates; In1 GND not named)"
+    ],
+    "canonical_geometry": {
+     "method": "read-only pcbnew 10.0.7 on a byte-identical copy (632a9ad3...), check_r10.copper_nodes + check_r8.min_gap from the plated barrel wall (drill radius)",
+     "vias": [
+      {
+       "net": "ACT_GATE",
+       "xy_mm": [
+        16.2,
+        73.3
+       ],
+       "pad_drill_mm": [
+        0.5,
+        0.3
+       ],
+       "nearest_inner_mm": {
+        "In1.Cu GND": 0.251,
+        "In2.Cu RAW_PROTECTED": 0.251
+       }
+      },
+      {
+       "net": "ACT_GATE",
+       "xy_mm": [
+        11.8,
+        70.725
+       ],
+       "pad_drill_mm": [
+        0.5,
+        0.3
+       ],
+       "nearest_inner_mm": {
+        "In1.Cu GND": 0.251,
+        "In2.Cu RAW_PROTECTED": 0.251
+       }
+      }
+     ]
+    },
+    "circuit": "Q120/Q121 AONR21357 P-FETs, sources on ACT_FET_S (about BAT_IN minus a body-diode drop when off); R120 100k ACT_GATE-ACT_FET_S, R121 10k ACT_GATE-ACT_DRV, Q122 pulls ACT_DRV low when PC1 enables: the designed on-state gate is about 0.09 x V_S. An ACT_GATE short to GND is at or below that on-state level; a short to 3V3 gives VGS about 3.3 - 6.7 = -3.4 V at a 7.4 V pack.",
+    "maker": {
+     "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+     "page": "2 (Rev 2.1, Nov 2023)",
+     "parameter": "VGS(th) -1.3 / -1.7 / -2.3 V"
+    },
+    "seed": {
+     "name": "s04_actgate_3v3",
+     "change": "In2 3V3 zone \"R18_SEED_3V3_CORRIDOR\", priority 3, outline (15.5, 72.6)-(22.6, 74.0) mm, joining the existing In2 3V3 region at x 22 (a plane re-cut); zones refilled",
+     "measured": "ACT_GATE via (16.2, 73.3) barrel to In2 3V3 0.251 mm (was RAW_PROTECTED)",
+     "regeneration": "all 9 steps exit 0 (budget, hot-plug extract + solve, orient, export, S-4 BOM/CPL, verify-cpl, paste, binding note)",
+     "gate": "DRC/parity/ERC 0/0/0/0; verify_board PASS; silk 0; r10_parts current; fit OK; check_r10 full 32/32 rules OK (S-8 evidence: barrels 4, near {}); route_check 0 failing; fab manifest 5 outputs OK",
+     "complete_check_sh": {
+      "command": "KICAD_CLI=<10.0.7> NUMPY_PY=<.supervisor/venv> bash .supervisor/r18_gate/s04_actgate_3v3/tools/check.sh (self-tests included)",
+      "exit": 0,
+      "tail": [
+       "short: none",
+       "thin (stock < 2 x order): none",
+       "Ran 31 tests in 0.041s",
+       "OK",
+       "Ran 16 tests in 0.016s",
+       "OK",
+       "Ran 5 tests in 0.768s",
+       "OK",
+       "Ran 67 tests in 7.348s",
+       "OK",
+       "Ran 180 tests in 198.747s",
+       "OK (skipped=4)",
+       "Ran 2 tests in 0.761s",
+       "OK"
+      ]
+     },
+     "seeded_board_sha256": "26445493f5a8162d95870a9588f41cf429de187e42db256de11794b48a3f9af2"
+    }
+   },
+   "impact": "One barrel-to-plane inner defect (drill wander/smear, CAF) at either ACT_GATE via turns Q120/Q121 on with PC1 low, so RAW_ACT follows the pack whenever the board is powered. Firing still needs PE4/Q124 and a static short shows in the passive cold screen (bus sensed live with PC1 low), but it removes one of the two independent controls F8 relies on, and the gate cannot see the hazardous direction because S-8 encodes the N-side rule \"GND is safe\". The current deviation inventory does not record the In1-GND adjacency of these barrels. No fire from this fault alone; not a demonstrated hardware failure.",
+   "concrete_fix": "Gate (checks only): give S-8 a per-net hazardous-neighbour set and add the P-FET drive nets: ACT_GATE and ACT_DRV barrels >= 1.0 mm from GND and from every rail below BAT_IN (3V3, 3V3A, PORT_*, VLOGIC, CAM_*), PYRO1_GATE_N / ACT_EN / ACT_EN_MCU barrels >= 1.0 mm from any non-GND copper; add an s04-style seeded regression. Board: either (reviewed CAD change) place R121 and Q122 on B.Cu beside Q120/Q121 so ACT_GATE / ACT_DRV need no layer change and the only via of the enable chain is on ACT_EN_MCU (GND short safe; keep it >= 1.0 mm from non-GND inner copper), or record both ACT_GATE vias with their 0.251 mm In1-GND gap and the cold-screen detection argument in the R10 deviation list."
+  },
+  {
+   "id": "R18-GATE-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "K-width only counts tracks at exactly the 0.3 mm floor: the U9 output path (0.7 -> 0.31 mm) and the U9 input feed upstream of C88 (1.0 -> 0.31 mm) pass the complete gate",
+   "evidence": {
+    "files": [
+     "tools/check_r10.py:2511-2512 (HC_MIN_W 0.3 mm, HC_NARROW_MAX_LEN 2.0 mm)",
+     "tools/check_r10.py:2608 (a segment joins a narrow run only when w <= 0.3 + 0.001 mm)",
+     "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R3-03 (U9 path sized with the same IPC-2152 fit at 1.8 / 2.9 A)"
+    ],
+    "seed": {
+     "name": "s03_rawprot_neck",
+     "change": "six RAW_PROTECTED B.Cu tracks 0.7 -> 0.31 mm, 8.414 mm in all: (16.25, 77.3)-(15.0, 77.3) 1.25; (18.75, 79.8)-(16.25, 77.3) 3.536; (18.75, 79.8)-(19.3, 79.25) 0.778; (19.3, 79.25)-(19.3, 78.25) 1.0; (19.3, 78.25)-(20.3, 78.25) 1.0; (20.3, 78.25)-(20.3, 79.1) 0.85 mm. 3.628 mm of it is in series between U9.6 and the In2 via (20.3, 79.1) and carries the whole board load",
+     "regeneration": "all 9 steps exit 0",
+     "gate": "all eight check.sh checker stages exit 0; check_r10 32/32; K-width evidence byte-identical to the baseline (RAW_PROTECTED min 0.3 mm, longest narrow run 1.8 mm)",
+     "complete_check_sh": {
+      "command": "KICAD_CLI=<10.0.7> NUMPY_PY=<.supervisor/venv> bash .supervisor/r18_gate/s03_rawprot_neck/tools/check.sh (self-tests included)",
+      "exit": 0,
+      "tail": [
+       "short: none",
+       "thin (stock < 2 x order): none",
+       "Ran 31 tests in 0.038s",
+       "OK",
+       "Ran 16 tests in 0.017s",
+       "OK",
+       "Ran 5 tests in 0.763s",
+       "OK",
+       "Ran 67 tests in 7.414s",
+       "OK",
+       "Ran 180 tests in 197.481s",
+       "OK (skipped=4)",
+       "Ran 2 tests in 0.739s",
+       "OK"
+      ]
+     },
+     "seeded_board_sha256": "c11d9bf4a3012e57141fa1159ec1c96e86135959c5178188d595d56293169302"
+    },
+    "ipc2152": {
+     "basis": "tools/ipc2152.py (external, 35 um, no plane credit; Inference, long-conductor upper bound)",
+     "rise_C": {
+      "1.8 A": {
+       "0.7 mm": 11.2,
+       "0.31 mm": 28.5
+      },
+      "2.9 A": {
+       "0.7 mm": 29.0,
+       "0.31 mm": 74.0
+      },
+      "3.946 A (U9 calculated minimum current limit)": {
+       "0.7 mm": 53.7,
+       "0.31 mm": 137.0
+      }
+     },
+     "width_for_30C_at_2_9A_mm": 0.68
+    },
+    "related": {
+     "s03b_batin_neck": "BAT_IN feed including the C88 -> U9 local path to 0.31 mm IS rejected, but only incidentally: F9-1 (C88 local bypass path exceeds the qualified R and L) and route_check local_bump at the F.Cu (12.525, 87.3)-(17.5, 87.3) window; the 2304 required hot-plug rows still passed",
+     "s03c_batin_upstream_neck": {
+      "change": "BAT_IN tracks >= 0.4 mm upstream of C88 (J1 -> D8 / C80 / C96 / C89 / C95 -> via (17.5, 87.3) -> C88.1) to 0.31 mm; S-9 fire path, C88 -> U9.5 local path and the C95 -> via F.Cu window kept",
+      "seed_log": [
+       "narrowed 16 BAT_IN tracks upstream of C88, length 31.72"
+      ],
+      "seeded_board_sha256": "3172d1cbfa3ee48a4234c3ea78eebf532bdd6e60bc79a218026fdd4939c2c8e1",
+      "regeneration_exits": {
+       "budget": 0,
+       "hotplug_extract": 0,
+       "hotplug_solve": 0,
+       "fab_orient": 0,
+       "fab_export": 0,
+       "fab_s4_bom_cpl": 0,
+       "fab_verify_cpl": 0,
+       "fab_paste": 0,
+       "binding": 0
+      },
+      "gate_stage_exits": {
+       "drc": 0,
+       "audit": 0,
+       "silk": 0,
+       "parts": 0,
+       "fit": 0,
+       "r10": 0,
+       "route": 0,
+       "fab": 0
+      },
+      "all_gate_stages_pass": true,
+      "failures": []
+     },
+     "other_rails": "no width floor at all for VLOGIC, PORT_5V3, CAM_5V, PORT_4V8 or 3V3 tracks"
+    }
+   },
+   "impact": "U9's input and output carry the whole board load (GAP-1 11.5 W normal, about 1.56 A at 7.4 V; U9 limit 3.95-4.86 A calculated). K-width was added (R8-GATE-04) to hold the sizing of this path; a uniform width 0.01 mm above its floor removes the length cap, so either side can lose 55-69 % of its width with no gate signal (the F9-1 C88-to-U9.5 local bound covers only the last 3.9 mm). Prospective; the current board keeps its 0.7 / 1.0 mm runs.",
+   "concrete_fix": "In K-width treat every BAT_IN / RAW_PROTECTED segment narrower than the reviewed run width (0.7 mm; tools/ipc2152.py gives 0.68 mm for 30 C at 2.9 A) as narrow and cap such chains at 2 mm except the measured U9 pad entries, or gate a per-segment IPC-2152 rise at a named design current; give VLOGIC / PORT_5V3 / CAM_5V / PORT_4V8 their own floors; add 0.31 mm and just-above-floor seeds to test_r10_check."
+  },
+  {
+   "id": "R18-GATE-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Current-carrying layer transitions and the fire-current GND return have no gate: the U9 output reaches In2 through one 0.3 mm via and the gate still passes",
+   "evidence": {
+    "files": [
+     "tools/check_r10.py S-9 (FIRE_TERMINALS has no GND entry) and K-width (tracks only)",
+     "docs/R10_VALIDATION.md R10 deviation list section 4 \"Continuous power necks\" (two 0.5/0.3 mm U9 OUT vias inventoried, unqualified)",
+     "R10_DECISIONS.md D-R3-03 (RAW_PROTECTED reached In2 \"through four vias\"; \"Q124's 0.3 mm source bar 16 C\" at 4.2 A / 20 ms)"
+    ],
+    "seeds": {
+     "s11_rawprot_single_via": {
+      "change": "U9 OUT -> In2 RAW_PROTECTED transitions 2 -> 1: via (21.1, 79.1) 0.5/0.3 mm and its 0.4 mm B.Cu link (20.3, 79.1)-(21.1, 79.1) deleted; zones refilled",
+      "result": "all 9 regeneration steps and all eight check.sh checker stages exit 0"
+     },
+     "s11b_batin_via_shrink": {
+      "change": "only BAT_IN layer change of the U9 input feed, via (17.5, 87.3), 1.0/0.5 -> 0.5/0.3 mm",
+      "seeded_board_sha256": "73483e593b8b939520f09c72e6c566e5843ba7ae518764e502fdf47655e6928d",
+      "regeneration_exits": {
+       "budget": 0,
+       "hotplug_extract": 0,
+       "hotplug_solve": 0,
+       "fab_orient": 0,
+       "fab_export": 0,
+       "fab_s4_bom_cpl": 0,
+       "fab_verify_cpl": 0,
+       "fab_paste": 0,
+       "binding": 0
+      },
+      "gate_stage_exits": {
+       "drc": 0,
+       "audit": 0,
+       "silk": 0,
+       "parts": 0,
+       "fit": 0,
+       "r10": 0,
+       "route": 0,
+       "fab": 0
+      },
+      "all_gate_stages_pass": true,
+      "failures": []
+     },
+     "s26_q124_return": {
+      "change": "Q124 source GND bar (15.3, 57.045)-(15.3, 58.345) and its two via stubs to (15.85, 57.695) / (15.85, 58.345), F.Cu, 0.3 -> 0.15 mm (adiabatic rise at 4.2 A / 20 ms about 64 K vs 16 K, the D-R3-03 basis scaled by width squared; Inference)",
+      "seeded_board_sha256": "ed83f6796b849186a1fe6708b82fbff47100feb91e0e0eac4b23c733fdd3bf51",
+      "regeneration_exits": {
+       "budget": 0,
+       "hotplug_extract": 0,
+       "hotplug_solve": 0,
+       "fab_orient": 0,
+       "fab_export": 0,
+       "fab_s4_bom_cpl": 0,
+       "fab_verify_cpl": 0,
+       "fab_paste": 0,
+       "binding": 0
+      },
+      "gate_stage_exits": {
+       "drc": 0,
+       "audit": 0,
+       "silk": 0,
+       "parts": 0,
+       "fit": 0,
+       "r10": 0,
+       "route": 0,
+       "fab": 0
+      },
+      "all_gate_stages_pass": true,
+      "failures": []
+     }
+    }
+   },
+   "impact": "All board power crosses the U9 OUT transition and every fire pulse returns through Q124's source copper; the gate holds neither the transition count/drill nor the return width that D-R3-03 sized, so the inventoried state can degrade further unnoticed. Prospective; no current-board failure claimed.",
+   "concrete_fix": "Pin the measured transitions and return the way FIRE_NARROW pins the source bridge: U9 OUT >= 2 vias of >= 0.3 mm drill into In2 RAW_PROTECTED, U9 IN feed via >= 0.5 mm drill (or two), Q124 source bar and its two GND vias at >= 0.3 mm / 2 vias; fail on fewer or smaller."
+  },
+  {
+   "id": "R18-GATE-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "check.sh never validates fabrication content, and export_fab.py binds the manifest before r10_fab.sh validates: a reversed D9 placement and a substituted R134 BOM code both pass",
+   "evidence": {
+    "files": [
+     "tools/export_fab.py:179 (write_manifest at the end of every export)",
+     "m3_design/r10_fab.sh:32-39 (S-4 --bom/--cpl, jlc_orient --verify-cpl, paste_check run after the manifest exists; set -e leaves it valid when they fail)",
+     "tools/check.sh:56-66 (canonical branch runs only fab_manifest.py: output hashes vs inputs)",
+     "AGENTS.md:113 (documents python3 tools/export_fab.py alone)"
+    ],
+    "seeds": {
+     "s17_stale_correction": {
+      "change": "tools/jlc_corrections.json D9 key C85098|D_SMA theta 0 -> 180 (a stale correction), then only python3 tools/export_fab.py (AGENTS.md section 5)",
+      "measured": "CPL row D9 rotation 90 -> 270 (B340A Schottky placed reversed); manifest rewritten",
+      "gate": "board byte-identical; all eight check.sh checker stages exit 0, fab manifest 5 outputs OK",
+      "validator": "jlc_orient --verify-cpl exit 1: D9 pad residual 4.193 mm"
+     },
+     "s18_bom_edit": {
+      "change": "fab/m3_bom_jlc.csv R134 LCSC C3013496 -> C25744 (a 10k 0402 code), manifest refreshed with tools/fab_manifest.write_manifest",
+      "gate": "check_r10 full OK (no --bom), fab manifest 5 outputs OK; the other stages do not read fab/",
+      "validator": "check_r10 --only S-4 --bom exit 1: \"R134 LCSC Part # C25744 differs from native fitted part C3013496\""
+     }
+    }
+   },
+   "impact": "The canonical gate certifies that outputs match their inputs, not that they are right: placement orientation (the one check that would catch a reversed polarized part), BOM identity and paste geometry are validated only inside r10_fab.sh, whose failure leaves a valid manifest, and not at all when the documented export command is run alone. Prospective; the current package passes all three validators.",
+   "concrete_fix": "Move write_manifest out of export_fab.py to the last line of r10_fab.sh (after the three validators), or delete the manifest on any validator failure; in check.sh's canonical branch also run check_r10 --only S-4 --bom/--cpl, jlc_orient --verify-cpl and paste_check on the bound package; point AGENTS.md section 5 at r10_fab.sh."
+  },
+  {
+   "id": "R18-GATE-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Canonical fab-package enforcement keys on a literal path string and an unowned skip flag",
+   "evidence": {
+    "files": [
+     "tools/check.sh:56-66 (string equality \"$BOARD\" == \"$ROOT/m3_design/assembly_review/m3.kicad_pcb\"; R10_SKIP_FAB_MANIFEST=1 skips with exit 0)",
+     "m3_design/r10_build.sh (runs r10_fab.sh before check.sh and never sets the flag)",
+     "R10_DECISIONS.md:780 D-R8-03 (still says r10_build.sh sets it)"
+    ],
+    "runs": {
+     "copy": "s19_stale_fab: board changed (silkscreen nudge), budget / hot-plug / binding regenerated, fab package NOT regenerated; check_noself.sh = tools/check.sh up to its self-test block, byte-identical",
+     "results": [
+      "CHECK_A exit=1",
+      "CHECK_B exit=0",
+      "CHECK_C exit=0",
+      "direct fab_manifest exit=1"
+     ],
+     "lines": [
+      "### (a) canonical path 20:47:19",
+      "CHECK_A exit=1",
+      "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+      "fab package bound to a different board: run m3_design/r10_fab.sh",
+      "### (b) case-variant spelling of the same canonical board 20:48:12",
+      "16037282 s19_stale_fab/M3_DESIGN/assembly_review/m3.kicad_pcb",
+      "16037282 s19_stale_fab/m3_design/assembly_review/m3.kicad_pcb",
+      "CHECK_B exit=0",
+      "fab manifest: not checked (board copy)",
+      "check.sh (without self-tests): all checker stages exit 0",
+      "### (c) R10_SKIP_FAB_MANIFEST=1 20:49:06",
+      "CHECK_C exit=0",
+      "fab manifest: not checked (build stage: run m3_design/r10_fab.sh, then tools/check.sh)",
+      "check.sh (without self-tests): all checker stages exit 0",
+      "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+      "direct fab_manifest exit=1",
+      "### queue7 done 20:50:00"
+     ]
+    }
+   },
+   "impact": "On the case-insensitive macOS volume the same canonical board spelled with a different case (or via a symlink) is treated as a \"board copy\" and its stale package is not checked; any shell that exports R10_SKIP_FAB_MANIFEST=1 gets a passing gate with a stale package. Both reopen R17-GATE-01's fail-open. Prospective.",
+   "concrete_fix": "Use [[ \"$BOARD\" -ef \"$ROOT/m3_design/assembly_review/m3.kicad_pcb\" ]] (same inode); delete the flag (no producer remains) or honour it only with a build-stage token that r10_build.sh sets and that a standalone check.sh refuses; add a case-variant and a flag regression to test_check_shell.py; correct D-R8-03."
+  },
+  {
+   "id": "R18-GATE-06",
+   "severity": "Minor",
+   "status": "new",
+   "title": "K-rules does not pin the silkscreen text floors: a 0.6 mm safety designator passes after the project floor is lowered",
+   "evidence": {
+    "files": [
+     "tools/check_r10.py:812-814 (PRO_FLOORS: clearance, track, via, annular, hole, edge, microvia only)",
+     "docs/REQUIREMENTS.md M2 (>= 1.0 mm text, >= 0.15 mm lines)",
+     "no other checker reads text height or stroke (grep of tools/ and quality_audit/)"
+    ],
+    "seed": {
+     "change": ".kicad_pro min_text_height 1.0 -> 0.5 mm and min_text_thickness 0.15 -> 0.08 mm; R134 reference (shown safety designator, B.Silkscreen) 0.6 mm text / 0.10 mm stroke",
+     "seed_log": [
+      "pro text floors lowered",
+      "R134 ref before 1.0 0.15 B.Silkscreen True",
+      "R134 ref after 0.6 0.1"
+     ],
+     "seeded_board_sha256": "d706e37b785cb7f21ef6cff85a1e4fcf2c1d144749fc892d99e44f04ae518afc",
+     "regeneration_exits": {
+      "budget": 0,
+      "hotplug_extract": 0,
+      "hotplug_solve": 0,
+      "fab_orient": 0,
+      "fab_export": 0,
+      "fab_s4_bom_cpl": 0,
+      "fab_verify_cpl": 0,
+      "fab_paste": 0,
+      "binding": 0
+     },
+     "gate_stage_exits": {
+      "drc": 0,
+      "audit": 0,
+      "silk": 0,
+      "parts": 0,
+      "fit": 0,
+      "r10": 0,
+      "route": 0,
+      "fab": 0
+     },
+     "all_gate_stages_pass": true,
+     "failures": []
+    }
+   },
+   "impact": "M2's legibility floor (>= 1.0 mm text, >= 0.15 mm lines) is enforced only by DRC against .kicad_pro values the gate does not pin; K-legends only requires R134 to stay shown (R8-GATE-03), so a shown but 0.6 mm safety designator passes. Prospective; the current board meets 1.0 / 0.15 mm.",
+   "concrete_fix": "Add min_text_height 1.0, min_text_thickness 0.15 and min_silk_clearance 0.15 (and min_resolved_spokes 2) to PRO_FLOORS, or check every visible silkscreen text in K-legends directly; add a seeded regression."
+  },
+  {
+   "id": "R18-GATE-07",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The five support coordinates of P1 / P2 / VEHICLE.md are not pinned: a 2.55 mm support move passes",
+   "evidence": {
+    "files": [
+     "tools/check_r10.py:1849-1854 (M-3 counts five Edge.Cuts circles)",
+     "tools/fit_check.py:295-315 (each corner support anywhere within 6 mm, the fifth anywhere in the middle third)",
+     "docs/REQUIREMENTS.md P1 / P2 and ../../docs/VEHICLE.md (holes at (4, 4), (42, 4), (4, 44.3), (3.7, 86), (42, 86) mm)"
+    ],
+    "seed": {
+     "first_attempt": {
+      "change": "middle support (4, 44.3) -> (4, 47.3)",
+      "result": "caught incidentally by fit_check clearances (R12.2 3.049 mm < 3.5; LED2.2 3.501 mm < 3.8)",
+      "seeded_board_sha256": "5fb0161e0826dec93f18ac077c93e7e2b35f92309d6fdc55029e97a16b58ac47",
+      "regeneration_exits": {
+       "budget": 0,
+       "hotplug_extract": 0,
+       "hotplug_solve": 0,
+       "fab_orient": 0,
+       "fab_export": 0,
+       "fab_s4_bom_cpl": 0,
+       "fab_verify_cpl": 0,
+       "fab_paste": 0,
+       "binding": 0
+      },
+      "gate_stage_exits": {
+       "drc": 0,
+       "audit": 0,
+       "silk": 0,
+       "parts": 0,
+       "fit": 1,
+       "r10": 1,
+       "route": 0,
+       "fab": 0
+      },
+      "all_gate_stages_pass": false,
+      "failures": [
+       "FAIL R12.2 bottom/pin envelope 3.049 mm from support (4.0, 47.3); need >=3.5 mm",
+       "FAIL LED2.2 exposed top pad 3.501 mm from support (4.0, 47.3); need >=3.8 mm (7 mm OD washer + 0.3 mm radial margin)",
+       "fit check: FAIL (3 findings)",
+       "M-5          FAIL fit (profile r10) (3)",
+       "M-6          FAIL bottom keep-outs (1)",
+       "FAIL M-5: fit_check: R12 bottom/pin envelope 3.167 mm from support (4.0, 47.3); need >=3.5 mm"
+      ]
+     },
+     "legal_move": {
+      "change": "middle support (4, 44.3) -> (3.5, 46.8), 2.55 mm, chosen by .supervisor/r18_gate/scripts/support_search.py among 208 fit-clean moves (e.g. (42, 86) -> (40, 84), (4, 4) -> (6, 6))",
+      "seeded_board_sha256": "a3eb7d24355f236ca30826a965011135628864dd611ea794e300ad57b98c661a",
+      "regeneration_exits": {
+       "budget": 0,
+       "hotplug_extract": 0,
+       "hotplug_solve": 0,
+       "fab_orient": 0,
+       "fab_export": 0,
+       "fab_s4_bom_cpl": 0,
+       "fab_verify_cpl": 0,
+       "fab_paste": 0,
+       "binding": 0
+      },
+      "gate_stage_exits": {
+       "drc": 0,
+       "audit": 0,
+       "silk": 0,
+       "parts": 0,
+       "fit": 0,
+       "r10": 0,
+       "route": 0,
+       "fab": 0
+      },
+      "all_gate_stages_pass": true,
+      "failures": []
+     }
+    }
+   },
+   "impact": "The board-to-sled interface can move without a gate signal (a corner support up to about 2 mm, the middle one anywhere between y 30 and 60 mm). Prospective.",
+   "concrete_fix": "Pin the five support centres to P1 within 0.01 mm in M-3 (and in fit_check profile r10); seed a moved-support regression."
+  },
+  {
+   "id": "R18-GATE-08",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Terminal word legends have no blocking subject association: BAT can head the igniter terminal and IGN the battery terminal",
+   "evidence": {
+    "files": [
+     "tools/check_r10.py:784-785 (WORD_LEGENDS_R10 has no SWITCH entry)",
+     "tools/check_r7.py:861 (legend distance goes to the AUD-10 review list)",
+     "canonical legends: IGN (2.056, 50.455), SWITCH (3.228, 60.455), BAT (1.967, 70.455), each in the gap above its terminal; J121 / J400 / J1 courtyards start at y 50.98 / 60.98 / 70.98"
+    ],
+    "seed": {
+     "change": "word legends exchanged: 'BAT' now at (3.228, 60.455) (the J121/J400 gap, above J400), 'SWITCH' at (1.967, 70.455) (above J1); pin legends unchanged",
+     "focused": {
+      "gate_stage_exits": {
+       "r10": 1
+      },
+      "note": "only K-binding / F9-1 hash staleness failed; K-legends OK with AUD-10 review entry \"silkscreen legend 'BAT' is 10.0 mm from J1\""
+     },
+     "full_pipeline_bat_switch": {
+      "note": "s16b: the same BAT/SWITCH swap with full regeneration is caught, but only geometrically: the 5.6 mm SWITCH text then crosses the x = 0 edge and overlaps '1:BAT+' (DRC silk_edge_clearance / silk_overlap, silk_check)",
+      "seeded_board_sha256": "f4cc23fbecfde36b18771753f285e7cdea51a0f8c62e2eba6688e1fcec377952",
+      "regeneration_exits": {
+       "budget": 0,
+       "hotplug_extract": 0,
+       "hotplug_solve": 0,
+       "fab_orient": 0,
+       "fab_export": 0,
+       "fab_s4_bom_cpl": 0,
+       "fab_verify_cpl": 0,
+       "fab_paste": 0,
+       "binding": 0
+      },
+      "gate_stage_exits": {
+       "drc": 1,
+       "audit": 1,
+       "silk": 1,
+       "parts": 0,
+       "fit": 0,
+       "r10": 0,
+       "route": 0,
+       "fab": 0
+      },
+      "all_gate_stages_pass": false,
+      "failures": []
+     },
+     "full_pipeline_bat_ign": {
+      "change": "'BAT' and 'IGN' exchange anchors: BAT (2.056, 50.455) heads the black J121 igniter terminal, IGN (1.967, 70.455) heads the green J1 battery terminal; same font, near-equal widths, pin legends unchanged",
+      "seeded_board_sha256": "3c4500eaa385a16aef36bfec6fe072ee7eccb5963b16199164c84d2a2808651a",
+      "regeneration_exits": {
+       "budget": 0,
+       "hotplug_extract": 0,
+       "hotplug_solve": 0,
+       "fab_orient": 0,
+       "fab_export": 0,
+       "fab_s4_bom_cpl": 0,
+       "fab_verify_cpl": 0,
+       "fab_paste": 0,
+       "binding": 0
+      },
+      "gate_stage_exits": {
+       "drc": 0,
+       "audit": 0,
+       "silk": 0,
+       "parts": 0,
+       "fit": 0,
+       "r10": 0,
+       "route": 0,
+       "fab": 0
+      },
+      "all_gate_stages_pass": true,
+      "failures": []
+     }
+    }
+   },
+   "impact": "REQUIREMENTS M2 keeps \"correct/required legends\" blocking, but the gate checks word legends only by a review-only distance, so the group labels of the three west-edge terminals can point at the wrong terminal while the pin legends stay right: contradictory harness instructions on unkeyed DB125 terminals. A battery on J121 or an e-match on J1 does not fire by itself (the R134 / divider path limits it to about a milliampere), but it is the miswiring class the requirements keep blocking. Prospective.",
+   "concrete_fix": "Add a blocking check that each word legend (IGN, SWITCH, BAT, CAM, GPS, RADIO, SERVO, SWD) is nearer its own connector than any other terminal, keeping AUD-10's distance metric as a review count; add SWITCH -> J400 to WORD_LEGENDS_R10."
+  },
+  {
+   "id": "R18-GATE-09",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Non-generated safety lands are not pinned: a consistent library + board edit of Q124's gate pad passes",
+   "evidence": {
+    "files": [
+     "m3_design/r10_parts.py geometry_checks (pins only the nine generated R10 footprints)",
+     "kilib/rocket.pretty/M3_AON7524_DFN3x3A.kicad_mod (Q124), not generated or hashed by a gate rule",
+     "tools/jlc_orient.py:40 (TOL 0.35 mm pad-centre residual, a placement check, not a land check)"
+    ],
+    "seed": {
+     "change": "kilib/rocket.pretty/M3_AON7524_DFN3x3A.kicad_mod pad 4 (Q124 gate) (0.975, 1.4) -> (1.055, 1.4) and the placed Q124 pad 4 moved the same 0.08 mm",
+     "seeded_board_sha256": "1551d5598312c1aae7536f9fbab3f76a762a27e18faaa6d0a525dfc163685f04",
+     "regeneration_exits": {
+      "budget": 0,
+      "hotplug_extract": 0,
+      "hotplug_solve": 0,
+      "fab_orient": 0,
+      "fab_export": 0,
+      "fab_s4_bom_cpl": 0,
+      "fab_verify_cpl": 0,
+      "fab_paste": 0,
+      "binding": 0
+     },
+     "gate_stage_exits": {
+      "drc": 0,
+      "audit": 0,
+      "silk": 0,
+      "parts": 0,
+      "fit": 0,
+      "r10": 0,
+      "route": 0,
+      "fab": 0
+     },
+     "all_gate_stages_pass": true,
+     "failures": []
+    }
+   },
+   "impact": "DRC lib_footprint_mismatch only proves the board equals the library; when both change together the pyro FET land (and every other non-generated land: U9, Q122, D8, R134 ...) can drift with no gate signal. Prospective; land review remains a manual item.",
+   "concrete_fix": "Hash-pin the reviewed .kicad_mod files of the safety and power parts (or their pad tables, as geometry_checks does for the generated ones) in check_r10 / r10_parts --check, with a reviewed re-pin procedure."
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R18-GATE-05",
+   "change": "tools/check.sh: replace the string test with [[ \"$BOARD\" -ef \"$ROOT/m3_design/assembly_review/m3.kicad_pcb\" ]] and remove the R10_SKIP_FAB_MANIFEST branch (no producer); regressions in tools/test_check_shell.py",
+   "scope": "checks only; no PCB change"
+  },
+  {
+   "finding": "R18-GATE-04",
+   "change": "m3_design/r10_fab.sh / tools/export_fab.py: write the manifest only after S-4 --bom/--cpl, --verify-cpl and paste_check pass; tools/check.sh canonical branch: run the same three validators on the bound package",
+   "scope": "checks only; no PCB change"
+  },
+  {
+   "finding": "R18-GATE-02",
+   "change": "tools/check_r10.py: pin the U9 IN / OUT current path the way S-9 pins the fire path (J1.1 -> U9.5 through C88; U9.6 -> the In2 RAW_PROTECTED vias) with a 0.7 mm floor, naming the measured exceptions ((18.25, 83.4)-(18.25, 81.6) and (18.75, 81.6)-(18.75, 79.8) 0.3 mm pad entries, (20.3, 79.1)-(21.1, 79.1) 0.4 mm via link) with FIRE_NARROW-style exact matching; seeds at 0.31 mm",
+   "scope": "checks only; the current board passes by construction of the named list"
+  },
+  {
+   "finding": "R18-GATE-06",
+   "change": "tools/check_r10.py PRO_FLOORS += min_text_height 1.0, min_text_thickness 0.15, min_silk_clearance 0.15, min_resolved_spokes 2",
+   "scope": "checks only; current .kicad_pro meets them"
+  },
+  {
+   "finding": "R18-GATE-07",
+   "change": "tools/check_r10.py m3: require Edge.Cuts circle centres {(4,4), (42,4), (4,44.3), (3.7,86), (42,86)} within 0.01 mm",
+   "scope": "checks only; current board meets it"
+  },
+  {
+   "finding": "R18-GATE-01",
+   "change": "tools/check_r10.py s8: per-net hazardous-neighbour sets incl. ACT_GATE / ACT_DRV (GND and sub-BAT rails hazardous); then either the R121/Q122-to-B.Cu CAD change or an explicit deviation row for the two 0.251 mm In1-GND gaps",
+   "scope": "gate change fails the current board until the deviation is accepted or the CAD is changed; no CAD change recommended under D-R16-03 without owner input"
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "seed": "s05_move_pad",
+   "fault": "Q124 gate pad moved 0.08 mm inside the placed footprint only",
+   "result": "caught: DRC lib_footprint_mismatch (Footprint M3_AON7524_DFN3x3A does not match copy in library)"
+  },
+  {
+   "seed": "s06_pyrogate_3v3",
+   "fault": "In2 3V3 patch 0.251 mm from the PYRO1_GATE via barrel (14.4, 53.3)",
+   "result": "caught: S-8 (3V3 0.251 mm < 1.0 mm), K-region (two In2 nets under PYRO1_GATE B.Cu), K-reference"
+  },
+  {
+   "seed": "s07_del_gnd_partner",
+   "fault": "only GND via within 1.5 mm of the PYRO1_GATE layer change deleted ((15.35, 52.15); nearest then 1.901 mm)",
+   "result": "caught: route_check critical_via_no_gnd"
+  },
+  {
+   "seed": "s08_silk_over_pad",
+   "fault": "B.Silkscreen text over R134.1",
+   "result": "caught: DRC silk_over_copper and K-legends R3-MFG-01 (0.820 mm overlap)"
+  },
+  {
+   "seed": "s12_swap_gate_nets",
+   "fault": "PC1 / PE4 nets swapped at U1.3 / U1.16",
+   "result": "caught: S-3, K-contract, K-actuators, K-binding"
+  },
+  {
+   "seed": "s13_dnp_pulldown",
+   "fault": "R128 gate pull-down DNP / excluded from BOM and position files",
+   "result": "caught: S-4 and parity (footprint_symbol_mismatch x2)"
+  },
+  {
+   "seed": "s14_shrink_fire",
+   "fault": "PYRO1_IGN fire path 0.5 -> 0.4 mm",
+   "result": "caught: S-9 (three segments) and r10_parts --check (stale native fire budget)"
+  },
+  {
+   "seed": "s03b_batin_neck",
+   "fault": "every BAT_IN feed track >= 0.4 mm, including the C88 -> U9 local path, to 0.31 mm",
+   "result": "caught incidentally: F9-1 topology (C88 local bypass path R and L above the qualified bounds; the 2304 required rows still passed) and route_check local_bump; see R18-GATE-02"
+  },
+  {
+   "seed": "s19_stale_fab",
+   "fault": "board changed (silkscreen nudge), fab package not regenerated",
+   "result": "caught on the canonical path: fab_manifest.py \"fabrication package does not match current CAD/export inputs\" (all other stages pass); see R18-GATE-05 for the non-canonical spellings"
+  },
+  {
+   "seed": "s20_binding_hash",
+   "fault": "saved binding note with a wrong board hash",
+   "result": "caught: K-binding"
+  },
+  {
+   "seed": "s21_plane_split",
+   "fault": "In1 GND split into two same-net islands by a full-width 0.3 mm keep-out at y 30.0-30.3",
+   "result": "caught: K-reference (1273 critical samples unreferenced, e.g. RADIO_RX_MCU F.Cu at y 30.3); a split under non-critical tracks only would pass by design (AUD-2 scope)"
+  },
+  {
+   "seed": "s22_rule_severity",
+   "fault": ".kicad_pro lib_footprint_mismatch severity ignore",
+   "result": "caught: K-rules and verify_board (ignored checks); check.sh's own DRC summary alone passes"
+  },
+  {
+   "seed": "s15_support_move",
+   "fault": "middle support (4, 44.3) -> (4, 47.3)",
+   "result": "caught incidentally by fit_check part clearances (R12.2 3.049 mm < 3.5 mm; LED2.2 3.501 mm < 3.8 mm), not by a position rule; the clearance-legal move s15b is R18-GATE-07"
+  },
+  {
+   "seed": "s16b_legend_swap_full",
+   "fault": "BAT / SWITCH word legends exchanged, full regeneration",
+   "result": "caught incidentally: the 5.6 mm SWITCH text crosses the x = 0 edge and overlaps \"1:BAT+\" (DRC silk_edge_clearance, silk_overlap; silk_check); the geometry-clean BAT / IGN exchange s16c is R18-GATE-08"
+  },
+  {
+   "seed": "structural",
+   "fault": "prompt seeds \"single-via critical net\" read as signal nets",
+   "result": "all critical signal layer changes have a GND partner <= 1.5 mm and route_check gates their removal (s07); the power-path reading of the seed is R18-GATE-03"
+  }
+ ],
+ "checks_actually_executed": {
+  "method": "Each seed: an APFS clone of a full working-tree copy (tracked files plus the ignored fab zip / PDFs, peer round18 reports removed) under .supervisor/r18_gate/, one fault applied with KiCad 10.0.7 pcbnew (zones refilled) or a text edit, then the post-board regeneration a developer or m3_design/r10_build.sh runs (r10_parts --budget-only, r10_hotplug --extract and the NumPy solve, jlc_orient, export_fab, the r10_fab.sh validators S-4 --bom/--cpl, --verify-cpl and paste_check, r10_sch_check --binding-note; .supervisor/r18_gate/regen.sh, explicit copy paths because r10_fab.sh cds to the git top level), then the exact check.sh checker commands, each recorded separately (.supervisor/r18_gate/run_gate.sh: DRC all severities + parity, ERC, quality_audit/verify_board, silk_check, r10_parts --check, fit_check r10, check_r10 full with --fit, route_check r10, fab_manifest). Focused seeds that a content rule already rejects skip regeneration and run only the relevant stages (hash-bound F9-1 / K-binding staleness is then expected and ignored). kicad-cli 10.0.7 and its bundled pcbnew 10.0.7; NumPy from .supervisor/venv; one kicad-cli process at a time.",
+  "controls": [
+   {
+    "seed": "s00_baseline",
+    "board_sha256": null,
+    "regen_exits": null,
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s00_baseline/log.txt",
+    "log_sha256": null
+   },
+   {
+    "seed": "s01_regen_control",
+    "board_sha256": null,
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s01_regen_control/log.txt",
+    "log_sha256": null
+   },
+   {
+    "seed": "s02_save_control",
+    "board_sha256": "49e6c2d7481f9462f9352b7ec9ad17130399c1f15a9c838d45af49d59567eae7",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s02_save_control/log.txt",
+    "log_sha256": "4b2df584a3aaa168fb2e03bb73aa62dcbe5d10810cf5fd6e8dc1e53acb0dacab"
+   }
+  ],
+  "seeds": [
+   {
+    "seed": "s03_rawprot_neck",
+    "board_sha256": "c11d9bf4a3012e57141fa1159ec1c96e86135959c5178188d595d56293169302",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s03_rawprot_neck/log.txt",
+    "log_sha256": "008a5f97a302524938b9a87c75a631ae5610495f044409935bbc5d8c9ef261af"
+   },
+   {
+    "seed": "s03b_batin_neck",
+    "board_sha256": "0106dbc3a38ffbf9b20a4a88026ed8197b4fc422ac442ee4e2e71bf62af0b782",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 1,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 1,
+     "route": 1,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s03b_batin_neck/log.txt",
+    "log_sha256": "70e5891d14041dddf4d662ab68b839db3c46f4ecf956fec4b180822e687bcb82"
+   },
+   {
+    "seed": "s03c_batin_upstream_neck",
+    "board_sha256": "3172d1cbfa3ee48a4234c3ea78eebf532bdd6e60bc79a218026fdd4939c2c8e1",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s03c_batin_upstream_neck/log.txt",
+    "log_sha256": "97229a32eb46447f661b447259d586d455c14c9c71283bbc484696c5a9244065"
+   },
+   {
+    "seed": "s04_actgate_3v3",
+    "board_sha256": "26445493f5a8162d95870a9588f41cf429de187e42db256de11794b48a3f9af2",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s04_actgate_3v3/log.txt",
+    "log_sha256": "aacd15567a6c98fce6f005f5010306b5a965de71470c3e6031f1fe799944e8ba"
+   },
+   {
+    "seed": "s05_move_pad",
+    "board_sha256": "c245c71583befc1efbb2e34f91d999f6444aab0335738d22448e04e1551263c8",
+    "regen_exits": null,
+    "gate_exits": {
+     "drc": 1
+    },
+    "log": ".supervisor/r18_gate/out/s05_move_pad/log.txt",
+    "log_sha256": "5769ce4cb27a4b54659a24de57d8aafa1045bcbc4482c599069c764014f100ca"
+   },
+   {
+    "seed": "s06_pyrogate_3v3",
+    "board_sha256": "dfac3fb022306355328e87140528c69b47df7226505490b859ce7fbc25f6b628",
+    "regen_exits": null,
+    "gate_exits": {
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s06_pyrogate_3v3/log.txt",
+    "log_sha256": "f4cf095c4207915ee42c6a062a1ae449863f0bb603e10e7525f9cb3f1b96a4f9"
+   },
+   {
+    "seed": "s07_del_gnd_partner",
+    "board_sha256": "05482abccfb5847337dde92749859fd360c7512f61965b112ec13c1fe3190a10",
+    "regen_exits": null,
+    "gate_exits": {
+     "route": 1
+    },
+    "log": ".supervisor/r18_gate/out/s07_del_gnd_partner/log.txt",
+    "log_sha256": "7b3a2651da599d6bf120366a8301daa80df0567dc1d3995f3d1eca4f403323f9"
+   },
+   {
+    "seed": "s08_silk_over_pad",
+    "board_sha256": "680b6f2e4302e34517227e32898002d579bca646c81bedbf213387226dec8028",
+    "regen_exits": null,
+    "gate_exits": {
+     "drc": 1,
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s08_silk_over_pad/log.txt",
+    "log_sha256": "2c86f14f6bf096bccdc68da41a76c40a98d07e8d1814c0642d871ea45cecbf2e"
+   },
+   {
+    "seed": "s11_rawprot_single_via",
+    "board_sha256": "6c2049323b17ea8877e6f1d9d147bed08e11d59a3d1f62652275659b637e9514",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s11_rawprot_single_via/log.txt",
+    "log_sha256": "11126cf3251c9d29a950ea20ecd9b4fe4fca42db70039aad0d091ff2a4079032"
+   },
+   {
+    "seed": "s11b_batin_via_shrink",
+    "board_sha256": "73483e593b8b939520f09c72e6c566e5843ba7ae518764e502fdf47655e6928d",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s11b_batin_via_shrink/log.txt",
+    "log_sha256": "6d84348ddc0c08d3224f354850d5206aff2fa31a40438152b466267bd807a8c4"
+   },
+   {
+    "seed": "s12_swap_gate_nets",
+    "board_sha256": "b0f6db44bde17a6ccb214995992c885d08967e7fbb9252cc83f460320f5c442b",
+    "regen_exits": null,
+    "gate_exits": {
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s12_swap_gate_nets/log.txt",
+    "log_sha256": "081ee6ef41477b2ab2874611e35153363de73264f26c86563e8ddfef4af54652"
+   },
+   {
+    "seed": "s13_dnp_pulldown",
+    "board_sha256": "aa1303354f1d8533dcfcfdffc103d4c718b40ea364a590a8caed36978a6b23e6",
+    "regen_exits": null,
+    "gate_exits": {
+     "drc": 1,
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s13_dnp_pulldown/log.txt",
+    "log_sha256": "57455a5003d301e4cad92ff44bd7c51784fda3530112c66080c8bbd012df7872"
+   },
+   {
+    "seed": "s14_shrink_fire",
+    "board_sha256": "b3becbbfbbb0272fe52de2859957126cf267290de25cca1780d8f995ae6219ee",
+    "regen_exits": null,
+    "gate_exits": {
+     "parts": 1,
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s14_shrink_fire/log.txt",
+    "log_sha256": "7923f0934135c7348de5dd8bb6ebd45f250b076cb0ad150111122c5488cf5ded"
+   },
+   {
+    "seed": "s15_support_move",
+    "board_sha256": "5fb0161e0826dec93f18ac077c93e7e2b35f92309d6fdc55029e97a16b58ac47",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 1,
+     "r10": 1,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s15_support_move/log.txt",
+    "log_sha256": "5ba641128aa85179dfcfa007e206dd0cbd06428d109ada58f03b0ccff1a749c9"
+   },
+   {
+    "seed": "s15b_support_move_legal",
+    "board_sha256": "a3eb7d24355f236ca30826a965011135628864dd611ea794e300ad57b98c661a",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s15b_support_move_legal/log.txt",
+    "log_sha256": "7d890d60769477b05fbbf635b761e18996aab7a7bcec8b2373fe24a80a03807f"
+   },
+   {
+    "seed": "s16_legend_swap",
+    "board_sha256": "f4cc23fbecfde36b18771753f285e7cdea51a0f8c62e2eba6688e1fcec377952",
+    "regen_exits": null,
+    "gate_exits": {
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s16_legend_swap/log.txt",
+    "log_sha256": "06e6f8833274b038f794875306bb786159ae42cd0b7ca2955e7e88f7962fa826"
+   },
+   {
+    "seed": "s16b_legend_swap_full",
+    "board_sha256": "f4cc23fbecfde36b18771753f285e7cdea51a0f8c62e2eba6688e1fcec377952",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 1,
+     "audit": 1,
+     "silk": 1,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s16b_legend_swap_full/log.txt",
+    "log_sha256": "3b7e3f4fef7d98758472c1f7f8f579644f9569035e2461dc23d3a57ab4fedcce"
+   },
+   {
+    "seed": "s16c_legend_swap_bat_ign",
+    "board_sha256": "3c4500eaa385a16aef36bfec6fe072ee7eccb5963b16199164c84d2a2808651a",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s16c_legend_swap_bat_ign/log.txt",
+    "log_sha256": "63ca4a6e0330fa0833fa12fd3661e904cb5f2f63c2e37c1d1c161f5ec30a424d"
+   },
+   {
+    "seed": "s17_stale_correction",
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "regen_exits": null,
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s17_stale_correction/log.txt",
+    "log_sha256": "4462e8f0fec122d9987656d81abee960604eca619eb2d593e5640e6e6c912635"
+   },
+   {
+    "seed": "s18_bom_edit",
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "regen_exits": null,
+    "gate_exits": {
+     "r10": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s18_bom_edit/log.txt",
+    "log_sha256": "2c6db043900de0322a52641c06af78f79b80eaf896220ee439b7981386582d04"
+   },
+   {
+    "seed": "s19_stale_fab",
+    "board_sha256": "79b0c509282df9c7011aa34f7f89387651a2ad04d98c4d5339aa241005bff005",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 1
+    },
+    "log": ".supervisor/r18_gate/out/s19_stale_fab/log.txt",
+    "log_sha256": "df5de887a8be643afb9934e4332fc706ffdf4743ad62c3812caddc40c3644d8a"
+   },
+   {
+    "seed": "s20_binding_hash",
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "regen_exits": null,
+    "gate_exits": {
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s20_binding_hash/log.txt",
+    "log_sha256": "a74d4d07a8dbcdf5b6a155f950d69e618b5a357494adf3ff72d04bda3fd52664"
+   },
+   {
+    "seed": "s21_plane_split",
+    "board_sha256": "5b787e0982bf845a565b0f2588a28441bb9bc901f89ebbe8d63d21c1dd2b4435",
+    "regen_exits": null,
+    "gate_exits": {
+     "r10": 1,
+     "route": 0
+    },
+    "log": ".supervisor/r18_gate/out/s21_plane_split/log.txt",
+    "log_sha256": "c5813f60ff188f5233ea0faa9b8229b334793f7a9b7942f97353d3de625267cd"
+   },
+   {
+    "seed": "s22_rule_severity",
+    "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+    "regen_exits": null,
+    "gate_exits": {
+     "drc": 0,
+     "audit": 1,
+     "r10": 1
+    },
+    "log": ".supervisor/r18_gate/out/s22_rule_severity/log.txt",
+    "log_sha256": "756c04796706faeb1a6b0c1296acd84b479d9756caf087e682ca9ce339806be9"
+   },
+   {
+    "seed": "s23_text_floor",
+    "board_sha256": "d706e37b785cb7f21ef6cff85a1e4fcf2c1d144749fc892d99e44f04ae518afc",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s23_text_floor/log.txt",
+    "log_sha256": "00b34920b3625ed547929e71b0f3568a565b5588d84e214be773e92b8ce57399"
+   },
+   {
+    "seed": "s25_land_edit",
+    "board_sha256": "1551d5598312c1aae7536f9fbab3f76a762a27e18faaa6d0a525dfc163685f04",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s25_land_edit/log.txt",
+    "log_sha256": "669386675c871c0e7cbae29be3b4f87b282aa92adccea7801846cbf19f0a3edf"
+   },
+   {
+    "seed": "s26_q124_return",
+    "board_sha256": "ed83f6796b849186a1fe6708b82fbff47100feb91e0e0eac4b23c733fdd3bf51",
+    "regen_exits": {
+     "budget": 0,
+     "hotplug_extract": 0,
+     "hotplug_solve": 0,
+     "fab_orient": 0,
+     "fab_export": 0,
+     "fab_s4_bom_cpl": 0,
+     "fab_verify_cpl": 0,
+     "fab_paste": 0,
+     "binding": 0
+    },
+    "gate_exits": {
+     "drc": 0,
+     "audit": 0,
+     "silk": 0,
+     "parts": 0,
+     "fit": 0,
+     "r10": 0,
+     "route": 0,
+     "fab": 0
+    },
+    "log": ".supervisor/r18_gate/out/s26_q124_return/log.txt",
+    "log_sha256": "f1f9b434e6253dd4afddf7c592559e399d72b3081dc9356a181bd2ec9b784270"
+   }
+  ],
+  "complete_check_sh_runs": {
+   "full_check_s04": {
+    "command": "KICAD_CLI=<10.0.7> NUMPY_PY=<.supervisor/venv> bash .supervisor/r18_gate/s04_actgate_3v3/tools/check.sh (self-tests included)",
+    "exit": 0,
+    "tail": [
+     "short: none",
+     "thin (stock < 2 x order): none",
+     "Ran 31 tests in 0.041s",
+     "OK",
+     "Ran 16 tests in 0.016s",
+     "OK",
+     "Ran 5 tests in 0.768s",
+     "OK",
+     "Ran 67 tests in 7.348s",
+     "OK",
+     "Ran 180 tests in 198.747s",
+     "OK (skipped=4)",
+     "Ran 2 tests in 0.761s",
+     "OK"
+    ]
+   },
+   "full_check_s03": {
+    "command": "KICAD_CLI=<10.0.7> NUMPY_PY=<.supervisor/venv> bash .supervisor/r18_gate/s03_rawprot_neck/tools/check.sh (self-tests included)",
+    "exit": 0,
+    "tail": [
+     "short: none",
+     "thin (stock < 2 x order): none",
+     "Ran 31 tests in 0.038s",
+     "OK",
+     "Ran 16 tests in 0.017s",
+     "OK",
+     "Ran 5 tests in 0.763s",
+     "OK",
+     "Ran 67 tests in 7.414s",
+     "OK",
+     "Ran 180 tests in 197.481s",
+     "OK (skipped=4)",
+     "Ran 2 tests in 0.739s",
+     "OK"
+    ]
+   }
+  },
+  "path_and_flag_runs": {
+   "copy": "s19_stale_fab: board changed (silkscreen nudge), budget / hot-plug / binding regenerated, fab package NOT regenerated; check_noself.sh = tools/check.sh up to its self-test block, byte-identical",
+   "results": [
+    "CHECK_A exit=1",
+    "CHECK_B exit=0",
+    "CHECK_C exit=0",
+    "direct fab_manifest exit=1"
+   ],
+   "lines": [
+    "### (a) canonical path 20:47:19",
+    "CHECK_A exit=1",
+    "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+    "fab package bound to a different board: run m3_design/r10_fab.sh",
+    "### (b) case-variant spelling of the same canonical board 20:48:12",
+    "16037282 s19_stale_fab/M3_DESIGN/assembly_review/m3.kicad_pcb",
+    "16037282 s19_stale_fab/m3_design/assembly_review/m3.kicad_pcb",
+    "CHECK_B exit=0",
+    "fab manifest: not checked (board copy)",
+    "check.sh (without self-tests): all checker stages exit 0",
+    "### (c) R10_SKIP_FAB_MANIFEST=1 20:49:06",
+    "CHECK_C exit=0",
+    "fab manifest: not checked (build stage: run m3_design/r10_fab.sh, then tools/check.sh)",
+    "check.sh (without self-tests): all checker stages exit 0",
+    "Fab manifest: FAIL: fabrication package does not match current CAD/export inputs; regenerate it",
+    "direct fab_manifest exit=1",
+    "### queue7 done 20:50:00"
+   ]
+  },
+  "canonical_measurements": {
+   "board_sha256": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+   "barrel_gaps_mm": {
+    "ACT_GATE via (16.2, 73.3)": {
+     "In1 GND": 0.251,
+     "In2 RAW_PROTECTED": 0.251
+    },
+    "ACT_GATE via (11.8, 70.725)": {
+     "In1 GND": 0.251,
+     "In2 RAW_PROTECTED": 0.251
+    },
+    "PYRO1_GATE via (14.4, 53.3)": {
+     "In1 GND": 0.251,
+     "In2 GND": 0.251,
+     "In2 3V3": 2.751
+    },
+    "PYRO1_OUT via (11.63, 55.1)": {
+     "In1 GND": 0.251,
+     "In2 GND": 0.251,
+     "In2 3V3": 2.698
+    },
+    "J121.1 hole": {
+     "In1 GND": 0.551,
+     "In2 3V3": 1.103
+    },
+    "PYRO1_CONT via (24.0, 52.15)": {
+     "In2 3V3": 0.251
+    },
+    "ARM1_SENSE via (29.2, 45.5)": {
+     "In2 3V3": 0.251
+    },
+    "BAT_IN via (17.5, 87.3)": {
+     "In1 GND": 0.251,
+     "In2 RAW_PROTECTED": 0.251
+    }
+   },
+   "power_track_widths_mm_by_length": {
+    "BAT_IN": {
+     "0.2": 10.39,
+     "0.3": 1.8,
+     "0.4": 9.03,
+     "0.7": 3.15,
+     "1.0": 35.18
+    },
+    "RAW_PROTECTED": {
+     "0.3": 3.44,
+     "0.4": 13.35,
+     "0.7": 8.42
+    }
+   },
+   "u9_out_to_in2_vias": [
+    [
+     20.3,
+     79.1
+    ],
+    [
+     21.1,
+     79.1
+    ]
+   ],
+   "supports": [
+    [
+     4,
+     4
+    ],
+    [
+     42,
+     4
+    ],
+    [
+     4,
+     44.3
+    ],
+    [
+     3.7,
+     86
+    ],
+    [
+     42,
+     86
+    ]
+   ],
+   "critical_layer_changes": 25,
+   "critical_layer_changes_with_exactly_one_gnd_via_within_1_5mm": 22,
+   "note": "measured read-only on a byte-identical copy with pcbnew 10.0.7"
+  }
+ },
+ "sources": [
+  {
+   "item": "AONR21357 gate threshold",
+   "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+   "page": "2 (Rev 2.1, November 2023)",
+   "value": "VGS(th) -1.3 / -1.7 / -2.3 V min/typ/max at VDS=VGS"
+  },
+  {
+   "item": "IPC-2152 curve fit used for every temperature figure here",
+   "url": "tools/ipc2152.py",
+   "value": "Brooks & Adam fit, external 35 um, no plane credit (the fit D-R3-03 used); Inference, upper bound"
+  },
+  {
+   "item": "U9 calculated current-limit band and normal converter load",
+   "url": "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+   "value": "u9_current_limit_min_A 3.946188, max 4.856999 (Calc/Inference); GAP-1 11.545807 W normal load"
+  },
+  {
+   "item": "Vehicle sled interface holes",
+   "url": "../../docs/VEHICLE.md (main-section stack row)",
+   "value": "five M3 holes at (4, 4), (42, 4), (4, 44.3), (3.7, 86), (42, 86) mm"
+  }
+ ],
+ "coverage_limits": [
+  "No canonical-tree edit, build, git state change or canonical check.sh. Two complete check.sh runs (self-tests included) were made on seeded probe copies only.",
+  "m3_design/r10_build.sh and r10_fab.sh were not executed (they cd to the git top level, i.e. the canonical tree); their post-board steps were replicated with explicit probe paths. Generator stages before r10_post (r10_sch.py, r10_pcb.py, r10_route.py) were not exercised: seeds are post-generation board edits.",
+  "kicad-cli / pcbnew 10.0.7 throughout; the installed 10.0.6 was not used. Zone refills by 10.0.7 differ from the saved 10.0.6 fill by a few vertices; the save control (s02) passes every stage, so this does not mask or create a finding.",
+  "Temperatures are IPC-2152 curve-fit upper bounds (Inference), not measurements; currents are the project calculations cited. Seeded misses are prospective gate gaps unless stated as current board geometry.",
+  "Other lenses (safety, power, routing, ...) were not read (independence rule); overlap with them is possible.",
+  "No physical, firmware, supplier or JLC process check. Maker datasheet values are from the cached AOS PDF (Rev 2.1), cited by its maker URL."
+ ]
+}

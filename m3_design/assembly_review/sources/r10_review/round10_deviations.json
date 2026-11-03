@@ -1,0 +1,3660 @@
+{
+  "board_sha256": "b337fe63c258c85ba4120e75ad018afa0c22241f8bc21a4172787cf2887208d9",
+  "review_target_commit": "619db7e5aa2b5a1130ec7a2267eb4c1ef982c14d",
+  "scope": "Current R10 only; closed/superseded history is explicitly marked. All physical/firmware qualifications remain open. File/line locators in independent reports refer to immutable reviewed619db7e.",
+  "owner_acceptance": "pending",
+  "historical_review_rows": [
+    {
+      "historical_id": "R3-REQ-01 (PWR-03, BOM-01, DOC-01)",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records, D-R3-01): 100 kΩ everywhere, budget re-derived on the peak-current criterion; the 2.507 A OVLO / 470 kHz corner listed"
+    },
+    {
+      "historical_id": "R3-SAF-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (copper + gate, D-R3-02): In2 GND under the CH1 column, barrels ≥ 1.458 mm from non-GND inner copper, J124 window GND on all layers, R122's via 1.72 mm from R134.2; S-8 and widened S-5; deviation 1 rewritten with the remaining cases"
+    },
+    {
+      "historical_id": "R3-PWR-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-03): full-width entries, 1.0 mm runs, four vias; IPC-2152 table in M3_R10"
+    },
+    {
+      "historical_id": "R3-PWR-02",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records, D-R3-13): F6 restated for ports off / on at 300.8 and 470 µF; hardware option as **OQ-5**"
+    },
+    {
+      "historical_id": "R3-MCU-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate + records, D-R3-10, -13): check_r10 K-loader with an allowance table and seeds; pin_table loader-role column; deviation 5 corrected"
+    },
+    {
+      "historical_id": "R3-RTE-01 (GATE-04, SAF-03)",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (copper + gate, D-R3-04, -07, -09, -10): one critical-net definition; every layer change ≤ 1.455 mm from a GND via; every B.Cu control run over one In2 region"
+    },
+    {
+      "historical_id": "R3-GATE-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-10): `arc_segment`, arcs sampled; seeds"
+    },
+    {
+      "historical_id": "R3-REQ-02 (DOC-05)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: R10 amendments (D-R3-13)"
+    },
+    {
+      "historical_id": "R3-REQ-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: ORDERING §8"
+    },
+    {
+      "historical_id": "R3-REQ-04 (BOM-02)",
+      "historical_severity": "Minor",
+      "current_state": "partly_closed",
+      "group_or_reason": "uart_pin_tables",
+      "canonical_disposition": "**Partly fixed**: one board-side convention, J9 table; J410 / J420 tables do not fit (**listed**, deviation 10)"
+    },
+    {
+      "historical_id": "R3-REQ-05",
+      "historical_severity": "Minor",
+      "current_state": "superseded",
+      "group_or_reason": "unfused_architecture",
+      "canonical_disposition": "**OQ-6**"
+    },
+    {
+      "historical_id": "R3-REQ-06 (MFG-04, DOC-09)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-11)"
+    },
+    {
+      "historical_id": "R3-REQ-07",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: thermal relief (D-R3-07)"
+    },
+    {
+      "historical_id": "R3-REQ-08",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "camera_loop",
+      "canonical_disposition": "**Recorded**: loop split in parts_qualification (harness spec); listed (deviation 13, C-9)"
+    },
+    {
+      "historical_id": "R3-REQ-09 (PWR-08)",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "external_radio_supply_band",
+      "canonical_disposition": "**Recorded**: binding note, parts_qualification; bench measurement before flight (C-9)"
+    },
+    {
+      "historical_id": "R3-REQ-10 (MCU-03, DOC-02)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-13)"
+    },
+    {
+      "historical_id": "R3-REQ-11 (DOC-08)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: M3_R10 IPC-2152 bullet"
+    },
+    {
+      "historical_id": "R3-REQ-12",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "switch_contact",
+      "canonical_disposition": "**Recorded** (REQUIREMENTS F9 note), listed (deviation 13, C-9)"
+    },
+    {
+      "historical_id": "R3-SAF-02",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "port_backfeed",
+      "canonical_disposition": "**Recorded**: firmware obligation, ORDERING §8 bench step, REQUIREMENTS / FMEA; listed (deviation 4)"
+    },
+    {
+      "historical_id": "R3-PWR-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-04): 2.395 mm"
+    },
+    {
+      "historical_id": "R3-PWR-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-05)"
+    },
+    {
+      "historical_id": "R3-PWR-06",
+      "historical_severity": "Minor",
+      "current_state": "closed_by_GAP_2",
+      "group_or_reason": "u9_output_loop",
+      "canonical_disposition": "**Open, listed** (C-10): needs a part; the In2 RAW_PROTECTED plane and its decoupling serve meanwhile"
+    },
+    {
+      "historical_id": "R3-PWR-07",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "port_bypass_vias",
+      "canonical_disposition": "**Partly fixed**: CAM_5V via 0.8 / 0.45 mm; no room for a second U402.1 via; bypass placement **listed** (deviation 13, C-10)"
+    },
+    {
+      "historical_id": "R3-PWR-09 (BOM-03)",
+      "historical_severity": "Minor",
+      "current_state": "closed_by_GAP_3",
+      "group_or_reason": "u401_vias",
+      "canonical_disposition": "**Recorded**: parts_qualification corrected (junction ≈ 117–130 °C at 85 °C ambient, Inference); listed (deviation 13, C-10)"
+    },
+    {
+      "historical_id": "R3-BOM-04",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "procurement",
+      "canonical_disposition": "**Listed** (OQ-3; deviation 13, C-11)"
+    },
+    {
+      "historical_id": "R3-MCU-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-12): 1 kΩ"
+    },
+    {
+      "historical_id": "R3-MCU-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R3-MCU-05",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "esd103",
+      "canonical_disposition": "**Recorded** in parts_qualification"
+    },
+    {
+      "historical_id": "R3-MEC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-10): f1 275.7 Hz"
+    },
+    {
+      "historical_id": "R3-MEC-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate); basis in OQ-1"
+    },
+    {
+      "historical_id": "R3-MEC-03 / -04 / -05",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "mechanical_harness",
+      "canonical_disposition": "**Recorded**: ORDERING §8"
+    },
+    {
+      "historical_id": "R3-MEC-06",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (M3_R10)"
+    },
+    {
+      "historical_id": "R3-RTE-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-06)"
+    },
+    {
+      "historical_id": "R3-RTE-03",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "necessary_hops",
+      "canonical_disposition": "**Fixed** where needless (CAM_MCU_TX); the rest cross named copper (needless-hop test), **listed** (deviation 13, C-12)"
+    },
+    {
+      "historical_id": "R3-RTE-04",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "necessary_hops",
+      "canonical_disposition": "**Fixed** for PULLPIN (0.63 / 1.01 mm); BUZZ_DRV length **listed** (deviation 13, C-12)"
+    },
+    {
+      "historical_id": "R3-RTE-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-08)"
+    },
+    {
+      "historical_id": "R3-RTE-06",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "routing_pad_entries",
+      "canonical_disposition": "**Partly fixed** (TP86, R162); the rest **listed** (deviation 13, C-12)"
+    },
+    {
+      "historical_id": "R3-RTE-07",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "slow_split_crossings",
+      "canonical_disposition": "**Fixed** for every critical net (K-reference); SERVO2_MCU (R155 / D121 / R151 straddle the RAW / 3V3 split), LOGIC_SOURCE_ST **listed** (deviation 13, C-12)"
+    },
+    {
+      "historical_id": "R3-RTE-08",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** by this record and the deviation list C-12"
+    },
+    {
+      "historical_id": "R3-MFG-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-11) + K-legends polygon check"
+    },
+    {
+      "historical_id": "R3-MFG-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: 0 below 0.15 mm, asserted"
+    },
+    {
+      "historical_id": "R3-MFG-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (holes ≥ 0.15 mm from those openings); plugged-via 0.35 mm guidance: tent (ORDERING §8)"
+    },
+    {
+      "historical_id": "R3-MFG-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (keep-outs asserted)"
+    },
+    {
+      "historical_id": "R3-GATE-02 / -03 / -05 / -07",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R3-10)"
+    },
+    {
+      "historical_id": "R3-GATE-06",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: 68 tests, 20 on the board"
+    },
+    {
+      "historical_id": "R3-DOC-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R3-DOC-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: R10 banners, ORDERING §8"
+    },
+    {
+      "historical_id": "R3-DOC-06 / -07",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (AGENTS, M3_R10, this record)"
+    },
+    {
+      "historical_id": "R3-DOC-10",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (asserted rule)"
+    },
+    {
+      "historical_id": "R3-DOC-11",
+      "historical_severity": "Minor",
+      "current_state": "historical_only",
+      "group_or_reason": "legacy_paths",
+      "canonical_disposition": "**Fixed** in 19 files; six hash-pinned R6 records keep theirs (**listed** (deviation 13, C-14))"
+    },
+    {
+      "historical_id": "R4-REQ-01 (MEC-02)",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records, D-R4-04): ORDERING 8.1–8.4 supersede each item with R10's measured fact"
+    },
+    {
+      "historical_id": "R4-RTE-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (copper + gate, D-R4-01, D-R4-03): In2 GND strip under PYRO1_CONT, CH1 band edges re-cut; K-reference on every signal-critical net"
+    },
+    {
+      "historical_id": "R4-RTE-02",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate, D-R4-03): check_r10 K-region; synthetic seeds"
+    },
+    {
+      "historical_id": "R4-GATE-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate, D-R4-03): check_r10 K-rules; both seeds now fail"
+    },
+    {
+      "historical_id": "R4-MEC-01",
+      "historical_severity": "Minor (reported Major)",
+      "current_state": "current_as_amended",
+      "group_or_reason": "mechanical_harness",
+      "canonical_disposition": "**Fixed** (records): M3_R10 retention table. Downgraded: P3 verifies it by staking and external retention after inspection, and P3's R10 text names every R10 tall part and plug; R9 carried no per-part figure either"
+    },
+    {
+      "historical_id": "R4-GATE-02",
+      "historical_severity": "Minor (reported Major)",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R4-03): `check.sh` runs both suites. Downgraded: the table reported runs that had happened, not a `check.sh` stage"
+    },
+    {
+      "historical_id": "R4-REQ-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R4-REQ-03 (MFG-01, DOC-01)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R4-REQ-04 (MFG-02, DOC-02, DOC-03)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R4-REQ-05 (MEC-06)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R4-REQ-06",
+      "historical_severity": "Minor",
+      "current_state": "partly_closed",
+      "group_or_reason": "uart_pin_tables",
+      "canonical_disposition": "**Fixed** (records): M3_R10, ORDERING 8.2 cable check; deviation 10 reworded. The pin order itself stays (**listed**)"
+    },
+    {
+      "historical_id": "R4-REQ-07",
+      "historical_severity": "— (rejected)",
+      "current_state": "rejected",
+      "group_or_reason": "Rejected: `../../docs/VEHICLE.md` line 39 carries the R10 candidate entry (root read it)",
+      "canonical_disposition": "Rejected: `../../docs/VEHICLE.md` line 39 carries the R10 candidate entry (root read it)"
+    },
+    {
+      "historical_id": "R4-SAF-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate)"
+    },
+    {
+      "historical_id": "R4-SAF-02 (GATE-03)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): named ties only"
+    },
+    {
+      "historical_id": "R4-SAF-03",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "default_pyro_spacing",
+      "canonical_disposition": "**Recorded** (deviation 1 (c)); the via could not move (D-R4-02)"
+    },
+    {
+      "historical_id": "R4-PWR-01",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "u9_power_necks",
+      "canonical_disposition": "**Recorded** (M3_R10; root measured the U9 copper): pad-pitch-limited short necks, bench thermal check"
+    },
+    {
+      "historical_id": "R4-PWR-02",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "u9_power_necks",
+      "canonical_disposition": "**Recorded** (Inference): 36 mV, narrowest cut 3.6 mm"
+    },
+    {
+      "historical_id": "R4-BOM-01 / -02 / -03",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "land_preview",
+      "canonical_disposition": "**Recorded**: parts_qualification, ORDERING 8.2 preview checklist"
+    },
+    {
+      "historical_id": "R4-MCU-01",
+      "historical_severity": "Minor",
+      "current_state": "current_firmware_obligation",
+      "group_or_reason": "port_rx_startup",
+      "canonical_disposition": "**Recorded**: binding-note obligation (pull-ups before OE)"
+    },
+    {
+      "historical_id": "R4-MCU-02 / -04",
+      "historical_severity": "Minor",
+      "current_state": "closed_records_open_firmware",
+      "group_or_reason": "adc_nc_rules",
+      "canonical_disposition": "**Recorded**: binding note (Inference until checked against DS12110)"
+    },
+    {
+      "historical_id": "R4-MCU-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R4-MEC-03 / -04",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "mechanical_harness",
+      "canonical_disposition": "**Recorded**: M3_R10, ORDERING 8.4; shroud an open fit item (**listed**)"
+    },
+    {
+      "historical_id": "R4-MEC-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate)"
+    },
+    {
+      "historical_id": "R4-RTE-03",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "noncritical_returns",
+      "canonical_disposition": "**Listed** (C-12): AGENTS §3's critical list does not name them; K-reference samples NRST"
+    },
+    {
+      "historical_id": "R4-RTE-04",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "port_bypass_vias",
+      "canonical_disposition": "**Listed** (C-12)"
+    },
+    {
+      "historical_id": "R4-RTE-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (D-R4-02); ACT_GATE enters R120.2 by a 45° approach"
+    },
+    {
+      "historical_id": "R4-GATE-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R4-GATE-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: K-fill"
+    },
+    {
+      "historical_id": "R4-GATE-06",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R5-MFG-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records, D-R5-04): ORDERING 8.1 via row and 8.2 order remarks (plug where allowed, otherwise tent, never open mask; expected DFM query); counts on `3b6e15f3…`: 222 / 108"
+    },
+    {
+      "historical_id": "R5-REQ-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: added; every part in the boxes coated, unlisted ones named"
+    },
+    {
+      "historical_id": "R5-REQ-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records): 5.456 V nominal PORT_5V3"
+    },
+    {
+      "historical_id": "R5-REQ-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records): U9's EN network equals R9's (values compared with the hash-pinned R9 netlist)"
+    },
+    {
+      "historical_id": "R5-REQ-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** in the parent repo (uncommitted there, for the owner)"
+    },
+    {
+      "historical_id": "R5-SAF-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): any non-U1 multi-net part on both a RAW-side and an armed-side net fails"
+    },
+    {
+      "historical_id": "R5-SAF-02 (GATE-02)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate)"
+    },
+    {
+      "historical_id": "R5-SAF-03",
+      "historical_severity": "Minor",
+      "current_state": "superseded_by_single_switch",
+      "group_or_reason": "old_raw_bus_gap",
+      "canonical_disposition": "**Listed** (deviation 1 (a): surface RAW-to-bus at the default clearance)"
+    },
+    {
+      "historical_id": "R5-SAF-04",
+      "historical_severity": "— (information)",
+      "current_state": "rejected",
+      "group_or_reason": "No action",
+      "canonical_disposition": "No action"
+    },
+    {
+      "historical_id": "R5-PWR-01",
+      "historical_severity": "Minor",
+      "current_state": "current_recorded_obligation",
+      "group_or_reason": "power_spec_limits",
+      "canonical_disposition": "**Recorded** (parts_qualification, M3_R10)"
+    },
+    {
+      "historical_id": "R5-PWR-02",
+      "historical_severity": "Minor",
+      "current_state": "superseded_by_AUD_5",
+      "group_or_reason": "ilm_probe",
+      "canonical_disposition": "**Recorded**: ORDERING 8 bench rule (high-impedance probe only)"
+    },
+    {
+      "historical_id": "R5-PWR-03",
+      "historical_severity": "Minor",
+      "current_state": "current_recorded_obligation",
+      "group_or_reason": "power_spec_limits",
+      "canonical_disposition": "**Recorded**"
+    },
+    {
+      "historical_id": "R5-PWR-04",
+      "historical_severity": "Minor",
+      "current_state": "current_recorded_obligation",
+      "group_or_reason": "power_spec_limits",
+      "canonical_disposition": "**Recorded**: bench step at a 6.0 V loaded pack"
+    },
+    {
+      "historical_id": "R5-BOM-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_by_AUD_3a_01a",
+      "group_or_reason": "c120_voltage",
+      "canonical_disposition": "**Listed** (deviation 13): a 25 V part needs a new code or C29936 1 µF (changes the gate time constant); clamp events are transient"
+    },
+    {
+      "historical_id": "R5-BOM-02",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "c84_documentation",
+      "canonical_disposition": "**Listed** (deviation 6, the C84 maker gap)"
+    },
+    {
+      "historical_id": "R5-MCU-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (citation column only; no gate pins the file)"
+    },
+    {
+      "historical_id": "R5-MCU-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: binding-note obligation"
+    },
+    {
+      "historical_id": "R5-MCU-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** in the binding note; pin_table's mode text left (marked superseded)"
+    },
+    {
+      "historical_id": "R5-MCU-04",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "sense_pin_faults",
+      "canonical_disposition": "**Listed** (deviation 13), recorded in parts_qualification"
+    },
+    {
+      "historical_id": "R5-MCU-05",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "sense_pin_faults",
+      "canonical_disposition": "**Recorded**: M3_R10, binding note (never a safety input)"
+    },
+    {
+      "historical_id": "R5-MEC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R5-MEC-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: 0.3 g (Inference); f1 275.6 Hz"
+    },
+    {
+      "historical_id": "R5-MEC-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R5-MEC-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records): placement rule aft edge ≥ joint + 37.2 mm, else ≤ 0.75 mm radial overlap at J410 (listed as a fit item)"
+    },
+    {
+      "historical_id": "R5-MEC-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: h + t ≤ 6.9 mm for a 46 mm plate (Calc)"
+    },
+    {
+      "historical_id": "R5-RTE-01 / -02 / -06",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (copper + gate, D-R5-01, D-R5-03): 0.1 mm margin, pads, chains; In2 edges re-cut; CH1 strip ≥ 1.05 mm"
+    },
+    {
+      "historical_id": "R5-RTE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: diodes 0.15 mm north, straight entries"
+    },
+    {
+      "historical_id": "R5-RTE-04",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "routing_pad_entries",
+      "canonical_disposition": "**Partly fixed** (RADIO_FAULT_N); the rest **listed** (C-12) with the measured blocker (SPI1 lanes 0.03 mm short; C25.2's via 0.12 mm; D4.5's paste; IO-rail antipad on the OE run)"
+    },
+    {
+      "historical_id": "R5-RTE-05 (GATE-01)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): a sample is exempt only inside a no-copper component wholly within the pad's clearance disc"
+    },
+    {
+      "historical_id": "R5-RTE-07",
+      "historical_severity": "Minor",
+      "current_state": "current_AUD_10_review_only",
+      "group_or_reason": "harmless_copper",
+      "canonical_disposition": "**Partly fixed** (the IO rails); CC1's needs K-reference's REF_STRAY entry moved: **listed** (C-12)"
+    },
+    {
+      "historical_id": "R5-MFG-02",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "silk_margin",
+      "canonical_disposition": "**Fixed**: every legend and designator ≥ 0.615 mm inside; TP89 / TP81 moved; TP88's footprint silk 0.426 mm (its vias block a move) **listed**"
+    },
+    {
+      "historical_id": "R5-MFG-03",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "silk_margin",
+      "canonical_disposition": "**Listed** (deviation 10)"
+    },
+    {
+      "historical_id": "R5-GATE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R5-DOC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: cases re-measured on `3b6e15f3…`"
+    },
+    {
+      "historical_id": "R5-DOC-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: this round states it"
+    },
+    {
+      "historical_id": "R5-DOC-03",
+      "historical_severity": "Minor",
+      "current_state": "historical_only",
+      "group_or_reason": "legacy_paths",
+      "canonical_disposition": "**Listed** (C-14)"
+    },
+    {
+      "historical_id": "R6-MEC-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records, D-R6-03): M3_R10, ORDERING 8.4, REQUIREMENTS P2: board wholly forward of joint + 47 mm in any clocking unless a measured clearance replaces it; owner question **OQ-7**"
+    },
+    {
+      "historical_id": "R6-REQ-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (Calc): 4.50 Ω loop, 1.64 A at 7.4 V; 1.52 / 1.45 / 1.39 A with 2 / 3 / 4 stalled servos (F7: ≥ 1.5 A with up to two); 1.33 A at 6.0 V (below F7's 7.4 V point); DC solve open"
+    },
+    {
+      "historical_id": "R6-REQ-02 (MFG-01)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: 222 / 108"
+    },
+    {
+      "historical_id": "R6-REQ-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: method stated, labelled approximate (MFG and DOC reviewers reproduced 222 / 108 with it)"
+    },
+    {
+      "historical_id": "R6-REQ-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R6-REQ-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: J3 staked; J123 / J400 tie or RTV"
+    },
+    {
+      "historical_id": "R6-REQ-06",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "procurement",
+      "canonical_disposition": "**Recorded**: cost evidence is BOM-bound (BOM unchanged since round 3)"
+    },
+    {
+      "historical_id": "R6-REQ-07",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R6-REQ-08",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: worst case, 4.95–5.55 mm; fit_check prints two decimals"
+    },
+    {
+      "historical_id": "R6-SAF-01 / -02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate)"
+    },
+    {
+      "historical_id": "R6-SAF-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (deviation 1 reworded with the measured exceptions)"
+    },
+    {
+      "historical_id": "R6-SAF-04",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "default_pyro_spacing",
+      "canonical_disposition": "**Fixed** (deviation 1 (c))"
+    },
+    {
+      "historical_id": "R6-PWR-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records)"
+    },
+    {
+      "historical_id": "R6-PWR-02",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "usb_inrush",
+      "canonical_disposition": "**Recorded**: ORDERING 8 bench step; host ≥ 450 mA (Inference)"
+    },
+    {
+      "historical_id": "R6-PWR-03",
+      "historical_severity": "Minor",
+      "current_state": "superseded_by_AUD_3a",
+      "group_or_reason": "gate_settling",
+      "canonical_disposition": "**Recorded**: τ ≈ 20 ms (Calc)"
+    },
+    {
+      "historical_id": "R6-BOM-01",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "supplier_visibility",
+      "canonical_disposition": "**Recorded**: confirm on jlcpcb.com/parts before ordering (ORDERING 8)"
+    },
+    {
+      "historical_id": "R6-BOM-02",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "u4_mask",
+      "canonical_disposition": "**Listed** (already an ORDERING remark)"
+    },
+    {
+      "historical_id": "R6-MCU-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: PE1 on EXTI1, pull-down (binding note, pin_table, REQUIREMENTS F10, schematic note)"
+    },
+    {
+      "historical_id": "R6-MCU-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: \"analog, never driven\""
+    },
+    {
+      "historical_id": "R6-MCU-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R6-MCU-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (binding note)"
+    },
+    {
+      "historical_id": "R6-MCU-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (binding note; erase figure Inference)"
+    },
+    {
+      "historical_id": "R6-MEC-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: 0.306 mm to a nominal 7.0 mm washer; washer OD measured"
+    },
+    {
+      "historical_id": "R6-MEC-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: `lever_arm_frame` in the binding note and M3_R10"
+    },
+    {
+      "historical_id": "R6-MEC-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R6-MEC-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R6-MEC-06",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "mechanical_harness",
+      "canonical_disposition": "**Fixed**: nut on the sled side"
+    },
+    {
+      "historical_id": "R6-RTE-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (copper, D-R6-01): arms widened round each via; ≥ 0.65 mm round every via hole; farthest point ≤ 2.9 mm from a GND via"
+    },
+    {
+      "historical_id": "R6-RTE-02 (GATE-01)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): exempt only inside a fill hole covered by foreign-via discs"
+    },
+    {
+      "historical_id": "R6-RTE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (wording)"
+    },
+    {
+      "historical_id": "R6-MFG-02",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "silk_margin",
+      "canonical_disposition": "**Recorded**: stroke centreline (ink ≈ 0.075 mm less), generator constant only; TP88 / J3 footprint silk listed"
+    },
+    {
+      "historical_id": "R6-GATE-02 … -05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (12 tests; void test on polygon geometry)"
+    },
+    {
+      "historical_id": "R6-GATE-06",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R6-GATE-07 / -08",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): ARMED_PARTS allowlist; GATE_N membership"
+    },
+    {
+      "historical_id": "R6-DOC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (this round's rule)"
+    },
+    {
+      "historical_id": "R7-REQ-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R7-REQ-02 (PWR-01)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (Calc, re-measured fire path): 4.533 Ω; 1.633 A at 7.4 V; 1.506 A with two stalls (no margin: treated as failing until the harness is measured), 1.442 / 1.379 A with three / four; 1.32 A at 6.0 V"
+    },
+    {
+      "historical_id": "R7-SAF-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): every armed-side net (`ARMED_NET_PARTS`)"
+    },
+    {
+      "historical_id": "R7-SAF-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): `*_MCU` / GATE_N topology asserted"
+    },
+    {
+      "historical_id": "R7-SAF-03",
+      "historical_severity": "Minor",
+      "current_state": "current_firmware_bench_obligation",
+      "group_or_reason": "trace_override",
+      "canonical_disposition": "**Recorded** (binding note: no trace-capable debugger with the ARM link in; Inference)"
+    },
+    {
+      "historical_id": "R7-PWR-02",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "usb_inrush",
+      "canonical_disposition": "**Recorded**: ORDERING 8 bench step on a current-limited hub; USB-only programming host-dependent (**listed**)"
+    },
+    {
+      "historical_id": "R7-BOM-01",
+      "historical_severity": "Minor",
+      "current_state": "current_option_not_adopted",
+      "group_or_reason": "cap_code_option",
+      "canonical_disposition": "**Listed** (OQ-3 cost options; board frozen for the clean-round pair)"
+    },
+    {
+      "historical_id": "R7-BOM-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_by_R9_01",
+      "group_or_reason": "cap_labels",
+      "canonical_disposition": "**Listed**"
+    },
+    {
+      "historical_id": "R7-BOM-03",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "procurement",
+      "canonical_disposition": "**Recorded**: confirm in the quote; 22 kΩ C31850 fallback (1.070–1.282 A) needs a port-budget re-check"
+    },
+    {
+      "historical_id": "R7-MCU-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (binding note; Inference until RM0433 is read)"
+    },
+    {
+      "historical_id": "R7-MCU-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: LCKK read-back before arming; loader-jump sequence; FMEA F-16 R10 line"
+    },
+    {
+      "historical_id": "R7-MCU-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (binding note: jump only before the IWDG starts; ≈ 34 ms at the LSI corner, Inference)"
+    },
+    {
+      "historical_id": "R7-MCU-04",
+      "historical_severity": "Minor",
+      "current_state": "current_firmware_obligation",
+      "group_or_reason": "flash_erase",
+      "canonical_disposition": "**Recorded**: firmware obligation (erase-suspend slices or a single pre-erase before arming)"
+    },
+    {
+      "historical_id": "R7-MEC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (Calc): h + t < 6.3 mm at x = 4 / 42, < 5.7 mm at (3.7, 86)"
+    },
+    {
+      "historical_id": "R7-MEC-02 / -03 / -04",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "mechanical_harness",
+      "canonical_disposition": "**Fixed** (records; OQ-7 kept: it bites only if the bay or lead zone shrinks by ≈ 30 mm)"
+    },
+    {
+      "historical_id": "R7-MEC-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: R10 row in 8.4 supersedes it"
+    },
+    {
+      "historical_id": "R7-MEC-06",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: TP89 3.806 mm"
+    },
+    {
+      "historical_id": "R7-MEC-07",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records): rotations in the IMU frame"
+    },
+    {
+      "historical_id": "R7-RTE-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_by_R8_01_then_AUD_5",
+      "group_or_reason": "old_plane_necks",
+      "canonical_disposition": "**Listed**: a parallel branch (root: the lobe's widest path ≈ 1.3 mm)"
+    },
+    {
+      "historical_id": "R7-RTE-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_by_R8_01_then_AUD_5",
+      "group_or_reason": "old_plane_necks",
+      "canonical_disposition": "**Listed** (plane copper, connected; board frozen)"
+    },
+    {
+      "historical_id": "R7-RTE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_by_R8_01_then_AUD_5",
+      "group_or_reason": "old_plane_necks",
+      "canonical_disposition": "**Listed** (non-critical net; board frozen)"
+    },
+    {
+      "historical_id": "R7-MFG-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (8: what differs on R10)"
+    },
+    {
+      "historical_id": "R7-MFG-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: 127 pluggable; CAM_5V via tented"
+    },
+    {
+      "historical_id": "R7-MFG-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: C83 / R8, 1.95 / 2.15 mm copper gap"
+    },
+    {
+      "historical_id": "R7-MFG-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R7-GATE-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R7-GATE-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: hole minus disc union must be empty (≤ 2e-3 mm²)"
+    },
+    {
+      "historical_id": "R7-GATE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (S-3 `GATE_PARTS`, S-1 `ARMED_NET_PARTS`)"
+    },
+    {
+      "historical_id": "R7-GATE-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: seeded real-board tests"
+    },
+    {
+      "historical_id": "R7-DOC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R7-DOC-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R8-GATE-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): stubs, a failure case per self-test stage, run by check.sh; a mutation removing the self-test stage fails it"
+    },
+    {
+      "historical_id": "R8-MEC-01",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records): coat ≥ 3 mm off U5's pads and body; R13 / R64 masked; U5 taped whole while coating; TP122 brushed from its south / east side, coat edge ≥ 1.0 mm from U5"
+    },
+    {
+      "historical_id": "R8-MFG-01 (MFG-02)",
+      "historical_severity": "Major",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records): one complete R10 remarks block (a–j) in R10 designators; §4's u-blox profile, MSL bake, SMA, C121 and R9 hole-fill lines named as not applying"
+    },
+    {
+      "historical_id": "R8-REQ-01 (DOC-02)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R8-REQ-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (records; OQ-7 stands)"
+    },
+    {
+      "historical_id": "R8-REQ-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (Calc, Inference): ≈ 1.65–1.9 Ah before reserve; pack ≥ 2 Ah if the radio transmits continuously"
+    },
+    {
+      "historical_id": "R8-REQ-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R8-SAF-01",
+      "historical_severity": "Minor",
+      "current_state": "current_firmware_bench_obligation",
+      "group_or_reason": "trace_override",
+      "canonical_disposition": "**Fixed** (records): ORDERING 8 bench step (ARM link out, trace enabled, PE4 / TP122 observed)"
+    },
+    {
+      "historical_id": "R8-BOM-01 / -02",
+      "historical_severity": "Minor",
+      "current_state": "current_historical_comments",
+      "group_or_reason": "envelope_comments",
+      "canonical_disposition": "**Listed**: the .wrl files are hash-bound by the fab manifest and `r10_parts.py --check`; comment change deferred to the next part-library change"
+    },
+    {
+      "historical_id": "R8-MCU-01",
+      "historical_severity": "Minor",
+      "current_state": "current_firmware_obligation",
+      "group_or_reason": "port_rx_startup",
+      "canonical_disposition": "**Recorded**: binding-note obligation (DMA / IDLE reception, error masking, drop OE after repeated framing errors)"
+    },
+    {
+      "historical_id": "R8-MCU-02",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "external_radio_supply_band",
+      "canonical_disposition": "**Recorded**: Inference; SH1.0-to-GH1.25 adapter"
+    },
+    {
+      "historical_id": "R8-MEC-02",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "mechanical_harness",
+      "canonical_disposition": "**Recorded**: standoffs ≥ 4.0 mm recommended (Calc)"
+    },
+    {
+      "historical_id": "R8-MEC-03",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "sensor_thermal",
+      "canonical_disposition": "**Recorded**: bench item (U4 / U5 temperature against U1 load)"
+    },
+    {
+      "historical_id": "R8-MEC-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: ≈ 2.0 mm body, 1.71 mm courtyard; foam capped at U5 + 1 mm"
+    },
+    {
+      "historical_id": "R8-MEC-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: DORABO T0-1 read: 8.60 ± 0.30 mm"
+    },
+    {
+      "historical_id": "R8-RTE-01",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "qspi_skew",
+      "canonical_disposition": "**Recorded** (M3_R10): ≤ 10.4 mm (Inference: harmless at W25Q clocks)"
+    },
+    {
+      "historical_id": "R8-RTE-02",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "necessary_hops",
+      "canonical_disposition": "**Listed**; HSE bench check (ORDERING 8)"
+    },
+    {
+      "historical_id": "R8-RTE-03",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "noncritical_returns",
+      "canonical_disposition": "**Partly fixed**: GND via (7.4, 51.2) 1.43 mm from SCL's; SDA's has no DRC-clean spot (U5 keep-out, R13 / R64) **listed**"
+    },
+    {
+      "historical_id": "R8-MFG-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: stated as evidence, not uploads"
+    },
+    {
+      "historical_id": "R8-GATE-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate, K-legends)"
+    },
+    {
+      "historical_id": "R8-GATE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate): 14 safety / connector designators must stay shown; hidden set reported"
+    },
+    {
+      "historical_id": "R8-GATE-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed** (gate, K-width)"
+    },
+    {
+      "historical_id": "R8-GATE-05",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**: check.sh verifies the fab manifest on the repository board (skipped inside `r10_build.sh`, which runs before `r10_fab.sh`); test_fit_check, test_paste_check added"
+    },
+    {
+      "historical_id": "R8-DOC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "**Fixed**"
+    },
+    {
+      "historical_id": "R9-REQ-01",
+      "historical_severity": "Major",
+      "current_state": "resolved_by_OQ_1",
+      "group_or_reason": "Owner accepts4.95 mm floor; J124 removed; physical J1/J121 wire fit remains unverified.",
+      "canonical_disposition": "**Resolved by owner 2026-10-28:** accept the measured clearance; P-11 floor 4.95 mm. Physical wire fit is unverified."
+    },
+    {
+      "historical_id": "R9-REQ-02",
+      "historical_severity": "Major",
+      "current_state": "closed_model_implemented_bench_open",
+      "group_or_reason": "D-OA-04 through08 qualify revised C88 feed-first topology and full local-path model; current board-bound2304-case simulation passes, bench unfused harness remains open.",
+      "canonical_disposition": "**Owner selected requalification 2026-10-28:** model actual R10 feed parasitics and move parts only if the model fails. Qualification remains pending the implementation below."
+    },
+    {
+      "historical_id": "R9-PWR-01",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "procurement",
+      "canonical_disposition": "**Fixed in owner-answer implementation:** generator and regenerated budget use the same 80–110 °C/W inference range (117.49–129.68 °C). Thermal bench obligation retained; no overheating is established by this discrepancy."
+    },
+    {
+      "historical_id": "R9-REQ-03 (MFG / MEC / DOC duplicates)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed records: current PC13 / EXTI / mating / retention / modal inventory; historical R7–R9 clauses remain qualified"
+    },
+    {
+      "historical_id": "R9-REQ-04",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed current snapshot and history distinction; OQ-3 remains nonblocking"
+    },
+    {
+      "historical_id": "R9-SAF-01 (DOC duplicate)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed schematic note, binding generator, ORDERING and FMEA: both controls low, qualified cold screen first, ≥1 s discharge check after prior enable, then PC1 high / PE4 low ≥100 ms and powered checks. Firmware absent; not an observed startup fire"
+    },
+    {
+      "historical_id": "R9-PWR-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed source / firmware budget to 11 ms plus actual handling / decay latency; electrical limit calculations unchanged"
+    },
+    {
+      "historical_id": "R9-BOM-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed generator/source labels from seven primary source groups; no substitution / net / land change"
+    },
+    {
+      "historical_id": "R9-MCU-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed H743 debugger procedure, observed PE2 clock and retained GPIO-mode / lock validity; actual override remains unmeasured"
+    },
+    {
+      "historical_id": "R9-MEC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed <6.0 / <5.3 mm bounds; measured 4.0 mm standoffs / ≤1.0 mm plate selected as starting stack; actual hardware maxima / eccentricity still qualify fit"
+    },
+    {
+      "historical_id": "R9-RTE-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed generator corners: 6.257107 mm, saves 0.692893 mm"
+    },
+    {
+      "historical_id": "R9-RTE-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed corners (6.2021,41.5521) / (8.2479,41.5521): 5.516563 mm, saves 0.347651 mm"
+    },
+    {
+      "historical_id": "R9-RTE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed via corners (11.85,39.05) / (11.85,31.85): 13.110660 mm, saves 0.597056 mm; remaining endpoint branches preserved"
+    },
+    {
+      "historical_id": "R9-RTE-04 (carried)",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "noncritical_returns",
+      "canonical_disposition": "Retain as noncritical-return deviations; these nets are outside the AGENTS named fast/critical set. The reference contract and bench obligations remain; no untested claim that every possible new stitch is impossible"
+    },
+    {
+      "historical_id": "R9-RTE-05 (carried)",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "routing_pad_entries",
+      "canonical_disposition": "Partly fixed: IO entries / vias centred x35.45 and U10.1 VBUS centred x11.30 after combined DRC / reference checks. Rejected on-axis MOSI via (17.50,44.30): IMU_body_B violation and 11 unreferenced SCK samples. Keep SPI / between-pad cases with measured reasons"
+    },
+    {
+      "historical_id": "R9-RTE-06 (carried)",
+      "historical_severity": "Minor",
+      "current_state": "current",
+      "group_or_reason": "slow_split_crossings",
+      "canonical_disposition": "Retain slow/control routing; a plane redraw needs power and return requalification. Fast interfaces remain held to their own reference contracts"
+    },
+    {
+      "historical_id": "R9-RTE-07 (carried)",
+      "historical_severity": "Minor",
+      "current_state": "current_as_amended",
+      "group_or_reason": "necessary_hops",
+      "canonical_disposition": "Retain necessary hops: simple BUZZ layer swaps cross VBUS_SENSE or USB_LIMITED. Solid In1 GND intervenes; HSE / buzzer interference is a bench item"
+    },
+    {
+      "historical_id": "R9-GATE-01 (root duplicate)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed API / CLI validation for unknown, mixed and explicit-empty selections; valid stage scope retained"
+    },
+    {
+      "historical_id": "R9-GATE-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed final required / unique / correct tables and harness-note checks; AUD-10 distance-only relaxation preserved"
+    },
+    {
+      "historical_id": "R9-GATE-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed by removing implicit pad-neck exemption. Current board passes; both width seeds fail; seven measured source-bridge exceptions remain exact"
+    },
+    {
+      "historical_id": "R9-PROC-01 (root)",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed explicit R10 $84.41 / 52 profile, used by R10 fab / ordering; legacy default preserved. Procurement regressions run in check.sh. This seed is not a real supplier quote"
+    },
+    {
+      "historical_id": "R9-DOC-01",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed PC1 + PE4 locks, each LCKK / pin-bit readback; no firmware implementation claimed"
+    },
+    {
+      "historical_id": "R9-DOC-02",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed two foreign crossings; HSE_OUT own crossing 2.565488 mm. Keep QSPI and buzzer bench stimulation"
+    },
+    {
+      "historical_id": "R9-DOC-03",
+      "historical_severity": "Minor",
+      "current_state": "closed_recorded_fix",
+      "group_or_reason": "Canonical round table records fix; this lens did not independently rerun every geometric/gate seed.",
+      "canonical_disposition": "Fixed wording to the retained critical scope and named AUD-2 slow exceptions; not a new unauthorized routing relaxation"
+    }
+  ],
+  "early_plan_minors": [
+    {
+      "id": "R1-m01/m06",
+      "status": "merged_in_Major_R1_06/R1_04_R1_05; five_supports_and_EXti_default_off_records_present"
+    },
+    {
+      "id": "R1-m02/m03",
+      "status": "current_external_module_and_terminal_installed_fit_retention_qualification; J124_gap_retired"
+    },
+    {
+      "id": "R1-m04/m07/m08/m10",
+      "status": "closed_colour_legend_critical_scope_supplier_sheet_or_superseded_J124_removal"
+    },
+    {
+      "id": "R1-m05/m09/m11",
+      "status": "current_cost_miss_manual_C84_process_and_installed_system_qualification; operating_assumptions_amended"
+    }
+  ],
+  "historical_group_dispositions": [
+    {
+      "group": "uart_pin_tables",
+      "historical_ids": [
+        "R3-REQ-04",
+        "R4-REQ-06"
+      ],
+      "status": "partly_closed",
+      "current_measurement_or_reason": "Missing GPS/radio tables closed by AUD-10 and final required-text gates. Differing order remains: J9 3 RXI/4 TXO; J410/J420 3 TXO/4 RXI. Native pad maps independently agree; each cable must be checked end to end.",
+      "source": "docs/M3_R10.md:261; docs/ORDERING.md:270",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "unfused_architecture",
+      "historical_ids": [
+        "R3-REQ-05"
+      ],
+      "status": "superseded",
+      "current_measurement_or_reason": "OQ-6 removes battery-lead fuse; single-switch decision also removes J124/fuse. Old 15 A versus 10 A mismatch retired. Unfused pack-to-U9/Q120 short risk remains explicitly accepted; strain relief/no chafe/crimped or soldered leads.",
+      "source": "docs/REQUIREMENTS.md:94; m3_design/assembly_review/sources/r10_design/r10_plan.md:139",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "camera_loop",
+      "historical_ids": [
+        "R3-REQ-08"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "150 mOhm total loop maximum; harness share 36 mOhm. Old electrical calculation is not remeasured here; real harness/source/current qualification remains.",
+      "source": "docs/ORDERING.md:270; m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "external_radio_supply_band",
+      "historical_ids": [
+        "R3-REQ-09",
+        "R8-MCU-02"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "LR900-F 890-915 MHz; use channels 12-25 at 902-915 MHz or maker-qualified legal FHSS set. Full-power peak versus 0.348 A minimum switch limit, GPS IO level and SH1.0-to-GH1.25 adapter remain bench/harness obligations. Old measurements not rechecked.",
+      "source": "docs/ORDERING.md:251; m3_design/assembly_review/sources/r10_design/parts_qualification.md; m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "switch_contact",
+      "historical_ids": [
+        "R3-REQ-12"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "J400 tin contacts and external screw switch carry about 7 uA. Dry-circuit reliability/vibration remains unmeasured. Native connector topology agrees.",
+      "source": "docs/REQUIREMENTS.md:60; docs/ORDERING.md:253",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "port_backfeed",
+      "historical_ids": [
+        "R3-SAF-02"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "Enabled TPS2553 reverse-current threshold about 0.7 A permits backfeed; J400 has no state sensor, so opening can be unobservable. PC1 is independent MCU output, no automatic RAW_PROTECTED enable. No backfeed source when e-match is attached. AUD-8 also requires OE low with port off; wrong OE can feed a few mA through 1k. Native source topology rechecked; current magnitude remains sourced calculation.",
+      "source": "docs/ORDERING.md:250; m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "u9_output_loop",
+      "historical_ids": [
+        "R3-PWR-06"
+      ],
+      "status": "closed_by_GAP_2",
+      "current_measurement_or_reason": "C82/D9 moved and loop routes redrawn. Current saved-copper record: C82 OUT/GND/total 3.390990/9.177817/12.568808 mm, 2.3153 mm2; D9 6.873402/9.818377/16.691778 mm, 17.4197 mm2. Geometry supplied by committed round9_geometry; not remeasured in this lens. Transient bench qualification remains.",
+      "source": "docs/M3_R10.md:145; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1320",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "port_bypass_vias",
+      "historical_ids": [
+        "R3-PWR-07",
+        "R4-RTE-04"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "CAM_5V via 0.8/0.45 mm; single U402.1 feed via and 4.3-4.9 mm historical bypass distances remain recorded engineering compromises. Old four IO-rail return-distance set does not transfer wholesale: AUD-8 deletes those IO LDOs; R9 aligns VCCB entries. Remaining distances not remeasured here.",
+      "source": "docs/R10_VALIDATION.md:317; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:486; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1412",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "u401_vias",
+      "historical_ids": [
+        "R3-PWR-09"
+      ],
+      "status": "closed_by_GAP_3",
+      "current_measurement_or_reason": "No-thermal-via complaint closed by exactly two 0.5/0.3 mm GND VIPPO vias at (27.3,13.6)/(27.9,13.6). Filled/capped/planar process mandatory. Conservative 80-110 C/W remains Inference, full-load thermal bench still open; this lens checks documentation not thetaJA.",
+      "source": "docs/M3_R10.md:149; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1200",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "procurement",
+      "historical_ids": [
+        "R3-BOM-04",
+        "R7-BOM-03",
+        "R9-PWR-01",
+        "R6-REQ-06"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "Old R9-PWR-01 coefficient mismatch closed by D-OA-02/GAP-3; old CPL binding complaint superseded by current snapshot. Cost $84.43 vs $84.41, 46 Extended codes; R430 17 vs 3610 minimum and U4 0 vs 5. Refresh within 24 h, consign/stock U4, confirm R430 quote. Snapshot not refreshed by this lens.",
+      "source": "docs/M3_R10.md:17; docs/R10_VALIDATION.md:837",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "esd103",
+      "historical_ids": [
+        "R3-MCU-05"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "ESD103 UART use is justified in parts_qualification rather than RF-only naming; actual edge/ESD robustness remains bench qualification. Old component calculations not rederived here.",
+      "source": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "mechanical_harness",
+      "historical_ids": [
+        "R3-MEC-03",
+        "R4-MEC-01",
+        "R4-MEC-03",
+        "R6-MEC-06",
+        "R7-MEC-02",
+        "R7-MEC-03",
+        "R7-MEC-04",
+        "R8-MEC-02"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "TC2030 nose conflicts with (4,44.3) support: program before fitting it. Mated GH CAD margin about 0.03 mm, cables bend inward and plugs require tie/RTV. L1 bottom hang 3.02 mm; default measured 4 mm standoffs/plate <=1 mm, nut-inclusive h+t <6.0/<5.3 mm. OQ-7 selects board wholly forward of joint+47 mm. Old geometry not remeasured here; physical stack/hardware/harness/vibration unqualified.",
+      "source": "docs/M3_R10.md:280; docs/ORDERING.md:245; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1429",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "routing_pad_entries",
+      "historical_ids": [
+        "R3-RTE-06",
+        "R5-RTE-04",
+        "R9-RTE-05"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "Keep SPI1_MOSI U4.14 entry x17.55 vs pad x17.50 (0.05 mm); tested on-axis alternative violated IMU_body_B and lost 11 SCK reference samples. IO VCCB entries x35.45 and U10.1 VBUS x11.30 aligned by R9 fix; PULLPIN deleted AUD-4. Between-pad LED1/R33/C86 cases remain documented routing compromises. Current measurements except native pin data are committed reviewer/root evidence, not remeasured here.",
+      "source": "docs/R10_VALIDATION.md:783; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1412",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "necessary_hops",
+      "historical_ids": [
+        "R3-RTE-03",
+        "R3-RTE-04",
+        "R9-RTE-07",
+        "R8-RTE-02"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "BUZZ_DRV 36.38 mm/3 vias remains; swaps cross VBUS_SENSE/USB_LIMITED. Only foreign Y1 F.Cu crossings BUZZ 2.732695 mm and NRST 0.777648 mm; HSE_OUT own crossing 2.565488 mm; QSPI_IO2 zero and PULLPIN removed. Solid In1 GND intervenes. Current crossings/root geometry cited, not independently remeasured here; HSE bench stimulation remains.",
+      "source": "docs/M3_R10.md:250; docs/R10_VALIDATION.md:785",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "slow_split_crossings",
+      "historical_ids": [
+        "R3-RTE-07",
+        "R9-RTE-06"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "SERVO2_MCU B tail crosses 3V3/RAW_PROTECTED split approximately 0.42 mm; LOGIC_SOURCE_ST near y57.7-58.0. Retained slow/control routing; plane redraw needs power/return requalification. Not independently remeasured here.",
+      "source": "docs/R10_VALIDATION.md:784",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "default_pyro_spacing",
+      "historical_ids": [
+        "R4-SAF-03",
+        "R6-SAF-04"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "Default 0.15 mm surface spacing intentionally replaces former rules; Q124 own gate/drain approximately0.52 mm and gate track approximately0.62 mm from OUT; 3V3 via (19.05,55.9) approximately0.676 mm from R128.1 and0.835 mm from R126.1. Historical distances not remeasured here; S-8 remains >=1.0 mm for pyro barrels. Single-switch removes physical break but retains post-load-switch source and two reset-off MCU controls.",
+      "source": "docs/R10_VALIDATION.md:871; docs/M3_R10.md:118",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "u9_power_necks",
+      "historical_ids": [
+        "R4-PWR-01",
+        "R4-PWR-02"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "U9 0.3 mm pad-pitch entries extend 0.6 mm beyond pads; 0.4 mm via ladder/U400 feeds recorded as short necks. Historical plane-only DC solve 36 mV/3.6 mm narrowest cut is Inference and not current full track/via solve. Updated C88 feed neck model separate. No absolute neck thermal bound; thermal bench remains. Old dimensions not remeasured here.",
+      "source": "docs/M3_R10.md:201",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "land_preview",
+      "historical_ids": [
+        "R4-BOM-01"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "L400 proxy land, TXU0202 0.147 mm residual and C84 polarity require factory preview; old residual not remeasured here. New AONR21357 orientations have separate qualified maker/supplier comparison; keep preview checks.",
+      "source": "docs/ORDERING.md:307; m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "port_rx_startup",
+      "historical_ids": [
+        "R4-MCU-01",
+        "R8-MCU-01"
+      ],
+      "status": "current_firmware_obligation",
+      "current_measurement_or_reason": "PC7/PB12/PE7 RX pullups and PC6/PB13/PE8 idle-high before OE. Unplugged/OE-high TXU input pulldown can yield continuous break: DMA/IDLE reception, bounded/masked framing errors and drop OE after specified N. N not selected, firmware absent. Native pins independently verified.",
+      "source": "docs/M3_R10.md:357; m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "adc_nc_rules",
+      "historical_ids": [
+        "R4-MCU-02"
+      ],
+      "status": "closed_records_open_firmware",
+      "current_measurement_or_reason": "Per-sense ADC instances/channels and every NC analog/never-driven rule now explicit, including PA15 reset-JTDI exception; correct note regenerated exactly. ADC implementation and fault qualification absent.",
+      "source": "docs/M3_R10.md:372; m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "noncritical_returns",
+      "historical_ids": [
+        "R4-RTE-03",
+        "R8-RTE-03",
+        "R9-RTE-04"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "NRST partner distances 1.6552/3.3534 mm, BOOT0 1.6621, I2C1_SDA1.8806; SCL1.4431 after new stitch. Not in AGENTS named fast/critical return set. Reference/bench contracts stay. Old/current committed geometry not remeasured here.",
+      "source": "docs/R10_VALIDATION.md:782",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "old_raw_bus_gap",
+      "historical_ids": [
+        "R5-SAF-03"
+      ],
+      "status": "superseded_by_single_switch",
+      "current_measurement_or_reason": "Former PYRO1_BUS via1.139 mm from Q121 RAW is same canonical RAW_ACT after merge; separate J124 gap/ARM-break claim retired. Native net merge independently verified.",
+      "source": "docs/M3_R10.md:65; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1063",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "power_spec_limits",
+      "historical_ids": [
+        "R5-PWR-01",
+        "R5-PWR-03",
+        "R5-PWR-04"
+      ],
+      "status": "current_recorded_obligation",
+      "current_measurement_or_reason": "U9 OVLO pin exceeds recommended1.5 V above12.2 V input but remains below absolute max at clamp; fault-state use is Inference. AP63201 IQ258 uA recorded; loaded dropout is typical-only and requires6 V loaded-pack test. Historical electrical values not independently rederived here.",
+      "source": "docs/M3_R10.md:184; docs/ORDERING.md:268",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "ilm_probe",
+      "historical_ids": [
+        "R5-PWR-02"
+      ],
+      "status": "superseded_by_AUD_5",
+      "current_measurement_or_reason": "TP89 deleted. Probe U9 ILM directly with high-impedance instrument; never load/short. Native removal independently verified.",
+      "source": "docs/ORDERING.md:265; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1132",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "c120_voltage",
+      "historical_ids": [
+        "R5-BOM-01"
+      ],
+      "status": "closed_by_AUD_3a_01a",
+      "current_measurement_or_reason": "C120 now1 uF/25 V X7R C29936, correct established metric0603 land; old16 V overstress retired. >=100 ms settling retained; timing/shorted-load thermal behavior requires bench. Native value/part/topology independently checked.",
+      "source": "docs/M3_R10.md:136; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1248",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "c84_documentation",
+      "historical_ids": [
+        "R5-BOM-02"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "Supplier MA sheet rather than maker-qualified reflow/land; manufacturer spelling alias not a part substitution. GAP-4 selects validated manual fitting after both reflows, with cap/ESR/polarity/height checks. No assembly process is qualified by CAD.",
+      "source": "docs/ORDERING.md:249; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1211",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "sense_pin_faults",
+      "historical_ids": [
+        "R5-MCU-04",
+        "R5-MCU-05"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "PA6/PB1 ordinary diagnostic dividers lack4.7k series protection and retain single-fault pin-damage cases. PC8 VBUS/2 can be low below approximately4.62 V VBUS at3.3 V VDD; never proof of no USB. Native divider nets and pins checked; electrical thresholds are recorded calculations.",
+      "source": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "harmless_copper",
+      "historical_ids": [
+        "R5-RTE-07"
+      ],
+      "status": "current_AUD_10_review_only",
+      "current_measurement_or_reason": "GPS/radio IO-rail segments superseded by AUD-8; CC1 approximately0.113 mm inside-via segment was left to preserve REF_STRAY contract. AUD-10 counts exact collinear/duplicate/inside-pad artifacts for review, does not relax partial overlaps/connectivity/critical hygiene. CC1 measurement not rechecked.",
+      "source": "docs/R10_VALIDATION.md:937; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1172",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "silk_margin",
+      "historical_ids": [
+        "R5-MFG-02",
+        "R5-MFG-03",
+        "R6-MFG-02"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "Stroke0.15 mm equals JLC minimum; TP88 footprint silk0.426 mm from east edge and J3 footprint silk0.50 mm keep recorded edge-margin exceptions.144 shown/81 hidden refs, >=1 mm text,38 legends; current count from committed root evidence; not remeasured here. AUD-10 distance scope does not relax pad/edge/mask clearance.",
+      "source": "docs/M3_R10.md:254; docs/R10_VALIDATION.md:795",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "legacy_paths",
+      "historical_ids": [
+        "R3-DOC-11",
+        "R5-DOC-03"
+      ],
+      "status": "historical_only",
+      "current_measurement_or_reason": "Six SHA-pinned R6 records retain historical local paths; they are not R10 qualification. Exact inventory at validation line943. No current report adds local paths.",
+      "source": "docs/R10_VALIDATION.md:943",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "usb_inrush",
+      "historical_ids": [
+        "R6-PWR-02",
+        "R7-PWR-02"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "Approximately514 uF*4.7 V=2.4 mC behind355-445 mA switch; USB2 allowance comparison remains labelled Inference. USB-only operation host-dependent; qualify current-limited hub/laptop. AUD-9 retains function. Electrical model not rederived here.",
+      "source": "docs/ORDERING.md:262; docs/M3_R10.md:395",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "gate_settling",
+      "historical_ids": [
+        "R6-PWR-03"
+      ],
+      "status": "superseded_by_AUD_3a",
+      "current_measurement_or_reason": "Old approximately20 ms RC belongs to old C120/FETs. New maximum11.73 ms RC and approximately23.7 ms to4.5 V recorded; require>=100 ms after safe cold screen/enable before powered checks. Binding/doc order independently verified; physical settling unmeasured.",
+      "source": "docs/M3_R10.md:341; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1248",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "supplier_visibility",
+      "historical_ids": [
+        "R6-BOM-01"
+      ],
+      "status": "current_as_amended",
+      "current_measurement_or_reason": "Historical supplier API visibility issues do not imply wrong identities. J124 removed; U4 stock/consignment and current J1/J121/L1 exact order identities must still be confirmed in JLC preview. No live requery performed by this lens.",
+      "source": "docs/ORDERING.md:309; m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "u4_mask",
+      "historical_ids": [
+        "R6-BOM-02"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "U4 mask web0.100 mm at JLC limit; unchanged paste and no substituted board cleaning process. Old mask measurement not rechecked here.",
+      "source": "docs/ORDERING.md:298",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "trace_override",
+      "historical_ids": [
+        "R7-SAF-03",
+        "R8-SAF-01"
+      ],
+      "status": "current_firmware_bench_obligation",
+      "current_measurement_or_reason": "PC1 and PE4 locked-low GPIOs require separate GPIOC/E LCKK+pin readback. H743 DBGMCU_CR bit20 TRACECLKEN confirmed from ST CMSIS; valid dummy test needs observed PE2 trace clock, retained locks/modes, no e-match. Override behavior unmeasured.",
+      "source": "docs/FMEA_REDUNDANCY.md:425; docs/ORDERING.md:266",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "cap_code_option",
+      "historical_ids": [
+        "R7-BOM-01"
+      ],
+      "status": "current_option_not_adopted",
+      "current_measurement_or_reason": "C29936->C15849 X7R-to-X5R merge approximately$0.31 saving is unqualified effective-capacitance option. Old board-freeze reason withdrawn in validation; do not credit saving.",
+      "source": "docs/R10_VALIDATION.md:954",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "cap_labels",
+      "historical_ids": [
+        "R7-BOM-02"
+      ],
+      "status": "closed_by_R9_01",
+      "current_measurement_or_reason": "Seven abbreviated strings on21 remaining capacitors expanded from exact existing identities; C120 separately corrected earlier. Native/XML/source label overlay agrees via full schematic contract. No part substitution.",
+      "source": "docs/R10_VALIDATION.md:776; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1361",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "flash_erase",
+      "historical_ids": [
+        "R7-MCU-04"
+      ],
+      "status": "current_firmware_obligation",
+      "current_measurement_or_reason": "QE before quad mode;4k sector erase400 ms max exceeds minimum28.571 ms watchdog. Pre-erase or bounded suspend slices (20 us) and pad ring-buffer capacity remain firmware design obligations; no firmware present.",
+      "source": "docs/M3_R10.md:373; m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "old_plane_necks",
+      "historical_ids": [
+        "R7-RTE-01",
+        "R7-RTE-02",
+        "R7-RTE-03"
+      ],
+      "status": "closed_by_R8_01_then_AUD_5",
+      "current_measurement_or_reason": "Old0.24 mm neck widened approximately0.59 mm; tooth absorbed into crystalGND; VBUS_SENSE flat jog redrawn, later TP92 probe branch deleted. Old measurements not remeasured; source decisions explicitly close these rather than carrying stale defects.",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:762",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "envelope_comments",
+      "historical_ids": [
+        "R8-BOM-01"
+      ],
+      "status": "current_historical_comments",
+      "current_measurement_or_reason": "GH2 envelope is mated height and WRL header carries historical comment; actual model bytes are manifest/hash bound. Header-comment rewrite deferred to part-library change; no dimensions transferred from comment. Old model geometry not independently remeasured.",
+      "source": "docs/R10_VALIDATION.md:549",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "sensor_thermal",
+      "historical_ids": [
+        "R8-MEC-03"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "U4 under U1 west-pin row; log U4/U5 temperature versus U1 load. U4/U5 pose independently verified; no thermal simulation/measurement claimed.",
+      "source": "docs/M3_R10.md:311",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "qspi_skew",
+      "historical_ids": [
+        "R8-RTE-01"
+      ],
+      "status": "current",
+      "current_measurement_or_reason": "Current recorded track lengths CLK7.85/IO0 4.11/IO1 9.71/IO2 14.52/IO3 9.76/NCS6.17 mm, one via each; spread10.413 mm. Delay estimate Inference; qualify chosen clock/setup/hold. Root geometry source, not remeasured here.",
+      "source": "docs/M3_R10.md:248; m3_design/assembly_review/sources/r10_review/round9_geometry.json",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "servo_external_power_and_return",
+      "historical_ids": [
+        "R1-03",
+        "R1-m11"
+      ],
+      "status": "owner_adopted_architecture",
+      "current_measurement_or_reason": "O3 removes board servo-power cutoff; neutral-on-reset is chosen servo/harness qualification plus neutral-first firmware. O6 direct positive/negative pack pairs, >=50 mOhm reference branches and <=1 mOhm star transfer give <=0.62 A board share; harness bound is Inference and must be measured. Native J122 middle row NC/GND reference verified.",
+      "source": "docs/M3_R10.md:96; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:92",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "hold_up_shedding",
+      "historical_ids": [
+        "R1-05",
+        "R3-PWR-02"
+      ],
+      "status": "owner_adopted_OQ_5",
+      "current_measurement_or_reason": "C84 firmware shedding retained with no hardware port cutoff. Ports-on0.55-1.0 ms versus off/shed8.7-13.6 ms and TPS2553 turnoff up to3 ms; watchdog threshold, command/load-decay latency and retained envelope unimplemented/unmeasured. No promised loaded-break ride-through. Current budget calculations not rederived here.",
+      "source": "docs/REQUIREMENTS.md:57; docs/M3_R10.md:171",
+      "independently_remeasured_by_this_lens": false
+    },
+    {
+      "group": "single_switch_ground_screen",
+      "historical_ids": [
+        "R9-SAF-01"
+      ],
+      "status": "closed_record_order_open_qualification",
+      "current_measurement_or_reason": "Both PC1/PE4 low for passive screen before PC1 enable; after prior enable wait>=1 s and verify discharge, then PC1 high/PE4 low>=100 ms before powered checks. Healthy nominal CONT75.27 mV/ARM+RAW75.22 mV and open CONT146.23 mV are calculations with unqualified bands. No physical ARM break, no state sensor, no prelaunch e-match test. Native topology and generated/current policy agree.",
+      "source": "docs/M3_R10.md:341; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1269",
+      "independently_remeasured_by_this_lens": true
+    },
+    {
+      "group": "fire_source_envelope",
+      "historical_ids": [],
+      "status": "current_GAP_1_5_qualification",
+      "current_measurement_or_reason": "Final recorded loop4.612449 ohm plus11.545807 W other load gives1.550071 A idle,1.485263 A one stall and1.420229 A two stalls at7.4 V. Idle F7 passes; even one persistent stall misses1.5 A. Neutral command cannot clear jam. Normal physical20 ms/fault36 ms limits, R134 pulse durability, actual gate tail and source/harness must be qualified. Model not rederived here.",
+      "source": "docs/M3_R10.md:124; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1281",
+      "independently_remeasured_by_this_lens": false
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D-R1-01",
+      "title": "Review the plan before changing CAD",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:6",
+      "status": "process_or_environment_record",
+      "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+    },
+    {
+      "id": "D-R1-02",
+      "title": "O1 needs a voltage decision",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:17",
+      "status": "resolved_by_owner_O5",
+      "coverage": "GPS/radio use PORT_4V8 after LDO, not existing3V3 power."
+    },
+    {
+      "id": "D-R1-03",
+      "title": "Separate camera and radio voltage budgets",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:34",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R1-04",
+      "title": "Review concurrency limit",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:53",
+      "status": "process_or_environment_record",
+      "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+    },
+    {
+      "id": "D-R1-05",
+      "title": "Baseline environment",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:61",
+      "status": "process_or_environment_record",
+      "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+    },
+    {
+      "id": "D-R1-06",
+      "title": "Close round 1 at the owner-decision boundary",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:70",
+      "status": "process_or_environment_record",
+      "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+    },
+    {
+      "id": "D-R1-07",
+      "title": "Implement O5 and O6",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:92",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-01",
+      "title": "Placement legalised by moves, not rebuilt",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:116",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-02",
+      "title": "Pyro channel and USB / SWD routing redrawn from the pads",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:127",
+      "status": "retained_as_amended",
+      "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+    },
+    {
+      "id": "D-R2-03",
+      "title": "Port supply re-planned for routability",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:136",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-04",
+      "title": "Hand-routing kept for critical nets (owner, 2026-10-26)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:153",
+      "status": "superseded_by_D_R2_08",
+      "coverage": "Every signal hand-drawn; old router aid output historical only."
+    },
+    {
+      "id": "D-R2-05",
+      "title": "U9 cell moved; In2 split into four rails",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:159",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-06",
+      "title": "Rail fan-out finished; radio UART on UART5 (PB12 / PB13)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:195",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-07",
+      "title": "Signal routing: pin re-map, re-placements, hand-routed escapes and a frozen router table",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:225",
+      "status": "retained_as_amended",
+      "coverage": "False none-loader-pin premise corrected D-R3-10; pin map correct except AUD-4 deletes PULLPIN; PC1 added D-SS."
+    },
+    {
+      "id": "D-R2-08",
+      "title": "Owner: hand-route every signal (2026-10-27)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:276",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-09",
+      "title": "Placement relieved south and east of U1; three status pins re-mapped",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:284",
+      "status": "retained_as_amended",
+      "coverage": "False none-loader-pin premise corrected D-R3-10; pin map correct except AUD-4 deletes PULLPIN; PC1 added D-SS."
+    },
+    {
+      "id": "D-R2-10",
+      "title": "K-reference re-derived on R10's planes; via inner pads removed",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:338",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-11",
+      "title": "Copper fixes for K-copper, K-retained and schematic parity",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:359",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-12",
+      "title": "Placement relief for the supports, J122's pins and the tie channel",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:377",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-13",
+      "title": "T-1 re-derived for R10",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:392",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R2-14",
+      "title": "P-11 and F9-1: owner questions, R10 figures held meanwhile",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:402",
+      "status": "resolved_by_OQ_1_OQ_2",
+      "coverage": "4.95 mm accepted; distance premise replaced with board-bound schema3 actual-feed2304-case model; physical qualification remains."
+    },
+    {
+      "id": "D-R2-15",
+      "title": "Build and fab scripts",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:413",
+      "status": "process_or_environment_record",
+      "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+    },
+    {
+      "id": "D-R2-16",
+      "title": "Silkscreen",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:421",
+      "status": "retained_as_amended",
+      "coverage": "D-SS/AUD-4 remove ARM/PULL legends; AUD-10 distance-only/counting scope; R9-03 pins correct unique complete current connector tables.144 shown/81 hidden/38 legends current root inventory."
+    },
+    {
+      "id": "D-R3-01",
+      "title": "R410 (GPS ILIM) stays 100 kΩ; the port budget re-derived on it",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:435",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R3-02",
+      "title": "In2 is GND under the CH1 pyro column (R3-SAF-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:445",
+      "status": "retained_as_amended",
+      "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+    },
+    {
+      "id": "D-R3-03",
+      "title": "U9's power path widened (R3-PWR-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:456",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R3-04",
+      "title": "In2 regions re-cut for the port control nets (R3-RTE-01, R3-PWR-04)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:465",
+      "status": "retained_as_amended",
+      "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+    },
+    {
+      "id": "D-R3-05",
+      "title": "Buck input loop (R3-PWR-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:475",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R3-06",
+      "title": "Crystal In2 GND restored (R3-RTE-02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:480",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R3-07",
+      "title": "Camera supply vias, ACT_GATE partner, J122 relief",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:486",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R3-08",
+      "title": "GND stitching (R3-RTE-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:493",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R3-09",
+      "title": "Port-signal layer changes and hops (R3-RTE-01, -03, -04, -06, -07)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:499",
+      "status": "retained_as_amended",
+      "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+    },
+    {
+      "id": "D-R3-10",
+      "title": "Gates",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:508",
+      "status": "retained_as_amended",
+      "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+    },
+    {
+      "id": "D-R3-11",
+      "title": "Silkscreen and footprint graphics",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:523",
+      "status": "retained_as_amended",
+      "coverage": "D-SS/AUD-4 remove ARM/PULL legends; AUD-10 distance-only/counting scope; R9-03 pins correct unique complete current connector tables.144 shown/81 hidden/38 legends current root inventory."
+    },
+    {
+      "id": "D-R3-12",
+      "title": "R162 1 kΩ (PC14's 3 mA)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:534",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R3-13",
+      "title": "Records",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:539",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R4-01",
+      "title": "In2 under the CH1 sense runs re-cut to one region (R4-RTE-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:559",
+      "status": "retained_as_amended",
+      "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+    },
+    {
+      "id": "D-R4-02",
+      "title": "Pad entries straightened (R4-RTE-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:574",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R4-03",
+      "title": "Gates (R4-RTE-01/-02, R4-GATE-01 … -06, R4-SAF-01/-02, R4-MEC-05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:584",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R4-04",
+      "title": "Records (R4-REQ-01 … -06, R4-MEC-01 … -04, R4-PWR-01/-02, R4-BOM-01 … -03, R4-MCU-01 … -04, R4-DOC-*)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:607",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R5-01",
+      "title": "In2 edges re-cut for pads, margins and chains (R5-RTE-01 / -02 / -06)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:626",
+      "status": "retained_as_amended",
+      "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+    },
+    {
+      "id": "D-R5-02",
+      "title": "Pad entries, stubs and silkscreen edge margin (R5-RTE-03 / -04 / -07, R5-MFG-02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:639",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R5-03",
+      "title": "Gates (R5-RTE-01 / -02 / -05 / -06, R5-SAF-01 / -02, R5-GATE-01 … -03)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:653",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R5-04",
+      "title": "Records (R5-MFG-01, R5-REQ-01 … -04, R5-PWR-01 … -04, R5-MCU-01 … -05, R5-MEC-01 … -05, R5-DOC-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:670",
+      "status": "retained_as_amended",
+      "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+    },
+    {
+      "id": "D-R6-01",
+      "title": "CH1 In2 GND arms widened round the sense vias (R6-RTE-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:688",
+      "status": "retained_as_amended",
+      "coverage": "AUD-2 explicitly removes only named slow-net partner-via/reference/region rules; fast set/hygiene/S-8 stay. Former slow In2 arms/partners removed."
+    },
+    {
+      "id": "D-R6-02",
+      "title": "Gates and the fit tool (R6-RTE-02, R6-SAF-01 / -02, R6-GATE-01 … -08, R6-MEC-04 / -05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:698",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R6-03",
+      "title": "Records (R6-MEC-01 … -06, R6-REQ-01 … -08, R6-PWR-01 … -03, R6-MCU-01 … -05, R6-SAF-03 / -04, R6-MFG-02, R6-RTE-03)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:713",
+      "status": "retained_as_amended",
+      "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+    },
+    {
+      "id": "D-R7-01",
+      "title": "Gates (R7-GATE-01 … -04, R7-SAF-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:733",
+      "status": "retained_as_amended",
+      "coverage": "D-SS replaces J124/ARM-gap with merged RAW_ACT behind Q120/Q121; AUD-6 fire-only width0.5 mm; functional/reset/S-8/required fitting remain."
+    },
+    {
+      "id": "D-R7-02",
+      "title": "Records (R7-REQ-01 / -02, R7-PWR-02, R7-SAF-03, R7-MCU-01 … -04, R7-MEC-01 … -07, R7-MFG-01 … -04, R7-BOM-03, R7-DOC-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:743",
+      "status": "retained_as_amended",
+      "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+    },
+    {
+      "id": "D-R8-01",
+      "title": "Copper clean-ups (R7-RTE-01 / -02 / -03, R8-RTE-03)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:762",
+      "status": "retained_as_amended",
+      "coverage": "Current implementation is governed by later D-SS/AUD/GAP/R9 amendments; historical named-board measurements not transferred."
+    },
+    {
+      "id": "D-R8-02",
+      "title": "Gates (R8-GATE-01 … -05)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:771",
+      "status": "retained_as_amended",
+      "coverage": "D-SS/AUD-4 remove ARM/PULL legends; AUD-10 distance-only/counting scope; R9-03 pins correct unique complete current connector tables.144 shown/81 hidden/38 legends current root inventory."
+    },
+    {
+      "id": "D-R8-03",
+      "title": "Records (R8-MEC-01, R8-MFG-01 / -02 / -03, R8-REQ-01 … -04, R8-SAF-01, R8-MCU-01 / -02, R8-MEC-02 … -05, R8-RTE-01 / -02, R8-DOC-01 / -02)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:781",
+      "status": "retained_as_amended",
+      "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+    },
+    {
+      "id": "D-OA-01",
+      "title": "Harness, fit and assembly records (OQ-1 / -4 / -6 / -7)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:838",
+      "status": "retained_as_amended",
+      "coverage": "Current documents supersede old ARM/pullpin/C120/trace/watchdog/plate-stack wording; physical qualification not inferred. D-R9-05 nut-inclusive h+t<6.0/<5.3 mm."
+    },
+    {
+      "id": "D-OA-02",
+      "title": "Firmware shedding and thermal estimate (OQ-5 / R9-PWR-01)",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:851",
+      "status": "retained_as_amended",
+      "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+    },
+    {
+      "id": "D-OA-03",
+      "title": "Historical routing aids",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:863",
+      "status": "retained_as_amended",
+      "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+    },
+    {
+      "id": "D-OA-04",
+      "title": "OQ-2 failure confirmation",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:869",
+      "status": "retained_as_amended",
+      "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+    },
+    {
+      "id": "D-OA-05",
+      "title": "Retained U9 output voltage",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:877",
+      "status": "retained_as_amended",
+      "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+    },
+    {
+      "id": "D-OA-06",
+      "title": "Input feed and damper requalification",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:894",
+      "status": "retained_as_amended",
+      "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+    },
+    {
+      "id": "D-OA-07",
+      "title": "C88 intercepts the feed; local copper remains in the model",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:914",
+      "status": "retained_as_amended",
+      "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+    },
+    {
+      "id": "D-OA-08",
+      "title": "Record corrections before the fresh full round 9",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:938",
+      "status": "retained_as_amended",
+      "coverage": "Current R1660.36ohm/R923.3k/C88-before-U9 feed and bound schema3 hotplug preserved; numeric corners are simulation/Inference, not harness qualification. OQ-5 retains firmware shedding."
+    },
+    {
+      "id": "D-OA-09",
+      "title": "Complete the interrupted pass before audit implementation",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:954",
+      "status": "process_or_environment_record",
+      "coverage": "Current committed build/full-gate evidence is sources/r10_review/round9_fix_validation.json; no preparatory clean-round credit or physical qualification inferred."
+    },
+    {
+      "id": "D-SS-01",
+      "title": "Implement the two independent MCU controls in the recorded decision",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1044",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-SS-02",
+      "title": "One named post-switch net and a shorter fire path",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1063",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-SS-03",
+      "title": "Keep required assembly references visible",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1073",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-01",
+      "title": "Size the surviving IO-LDO capacitor for its electrical load",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1090",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-02",
+      "title": "Keep fast returns constrained; simplify slow returns by explicit name",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1099",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-03",
+      "title": "Use a qualified smaller post-switch pair",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1109",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-04",
+      "title": "Delete the advisory pull-pin as a complete function",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1124",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-05",
+      "title": "Remove redundant probe branches",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1132",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-06",
+      "title": "Size fire-only copper for bounded pulse energy",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1139",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-07",
+      "title": "Use ordinary digital pull-ups and fault-rated servo resistors",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1148",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-08",
+      "title": "Share 3V3 for GPS / radio UART IO; retain local bypasses",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1156",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-09",
+      "title": "Keep USB-only programming and log download",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1166",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-10",
+      "title": "Report harmless drawing artifacts without blocking the electrical gate",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1172",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-01",
+      "title": "Superpose all pack loads at the fire instant",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1181",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-02",
+      "title": "Make U9's output-protection loop local",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1192",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-03",
+      "title": "Add two explicitly manufactured U401 thermal vias",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1200",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-04",
+      "title": "Fit C84 after all reflow",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1211",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-05",
+      "title": "One physical-current duration contract",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1221",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-03a",
+      "title": "Correct the retained gate-slew capacitor's voltage rating",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1248",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-03b",
+      "title": "Verify new assembly orientation against the supplier",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1261",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-SS-04",
+      "title": "Recalculate passive cold readings before enabling the merged bus",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1269",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-01a",
+      "title": "Final track-based conservative fire envelope",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1281",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-02a",
+      "title": "Reject the nearer diode position on measured clearance",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1296",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-03c",
+      "title": "Match orientation by distinct fingers, not an arbitrary EP anchor",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1304",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-GAP-02b",
+      "title": "Freeze the actual output and return paths",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1320",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-AUD-01a",
+      "title": "Keep one assembly land per supplier code",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1333",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-R9-01",
+      "title": "Complete existing capacitor labels and use the current fault-delay bound",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1361",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-R9-02",
+      "title": "Put the cold screen before enabling the bus",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1377",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-R9-03",
+      "title": "Reject unmeasured gate exceptions and select R10 procurement explicitly",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1396",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-R9-04",
+      "title": "Remove demonstrated detours and align three supply entries",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1412",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-R9-05",
+      "title": "Include both transverse sled tolerances",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1429",
+      "status": "retained_as_amended",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-R9-06",
+      "title": "Cover the Minor fix pass in the fresh round 10",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md:1444",
+      "status": "process_or_environment_record",
+      "coverage": "Current amendment; checked against native topology/binding and current M3_R10/REQUIREMENTS/FMEA/ORDERING/STATUS/AGENTS for documentation scope. Engineering measurements separately identified in current records."
+    },
+    {
+      "id": "D-R10-01",
+      "title": "Close two representation gaps without changing CAD",
+      "status": "retained; owner acceptance pending",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+    },
+    {
+      "id": "D-R10-02",
+      "title": "Correct PA6 limits and preserve the barometer coating exclusion",
+      "status": "retained; owner acceptance pending",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+    },
+    {
+      "id": "D-R10-03",
+      "title": "Freeze the reviewed board and finish the complete acceptance inventory",
+      "status": "retained; owner acceptance pending",
+      "source": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+    }
+  ],
+  "current_independent_inventory": {
+    "requirements": [
+      {
+        "ids": [
+          "R3-REQ-08"
+        ],
+        "where": "m3_design/assembly_review/sources/r10_design/parts_qualification.md:403",
+        "current_measured_reason": "Native camera still uses U402/J9. Conditional module floor5.031682V uses135mOhm switch plus<=150mOhm total harness/contact/board loop and50mV transient. Installed resistance not measured; old loop-length measurements not transferred.",
+        "concrete_disposition": "Four-wire installed camera loop and scope startup/supply corners; retain<=1A allocation and verify5V minimum."
+      },
+      {
+        "ids": [
+          "R3-REQ-09"
+        ],
+        "where": "m3_design/assembly_review/sources/r10_design/parts_qualification.md:417; docs/REQUIREMENTS.md:61",
+        "current_measured_reason": "Native R420 remains66.5k; recorded minimum limit0.348A. Current maker manual confirms4.5-5V,27dBm,1W maximum average,890-915MHz and3.3V UART; peak current is still unspecified.",
+        "concrete_disposition": "Measure full-power TX peak against limit and installed voltage; configure manual channels12-25 or maker-confirmed hop set, then perform installed dummy-load immunity test."
+      },
+      {
+        "ids": [
+          "R3-REQ-12"
+        ],
+        "where": "docs/REQUIREMENTS.md:60; m3_design/assembly_review/sources/r10_design/parts_qualification.md:469",
+        "current_measured_reason": "Native J400 remains BM02B-GHS-TBT tin-contact part; native/pinned XML retains470k on both switch sides. Closed-loop current is only about6-7uA over7.4-8.4V. Contact intermittency has not been measured.",
+        "concrete_disposition": "Qualify external screw switch and mated J400 by vibration while logging VLOGIC/3V3; retain external plug strain relief."
+      },
+      {
+        "ids": [
+          "R4-REQ-06"
+        ],
+        "where": "docs/M3_R10.md:267; docs/REQUIREMENTS.md:61",
+        "current_measured_reason": "Native J9 pin3=CAM_RX_WIRE/pin4=CAM_TX_WIRE; J410/J420 pin3=TX_WIRE/pin4=RX_WIRE. Current complete legends pass K-legends; cable compatibility is not uniform.",
+        "concrete_disposition": "Keep explicit per-port end-to-end cable/polarity checks before mating; do not treat identical GH4 bodies as interchangeable harnesses."
+      },
+      {
+        "ids": [
+          "R7-MCU-04"
+        ],
+        "where": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json:595; docs/M3_R10.md:376",
+        "current_measured_reason": "Native U3 remains W25Q128JVSIQ; manufacturer Jan2026 comparison confirms400ms max sector erase versus28.571ms fastest watchdog interval. F5 program-only margin cannot include blocking erase.",
+        "concrete_disposition": "Pre-erase or use bounded erase-suspend and prove ring-buffer/log timing under safety-task supervision; firmware absent."
+      },
+      {
+        "ids": [
+          "R8-MCU-02"
+        ],
+        "where": "m3_design/assembly_review/sources/r10_design/parts_qualification.md:596",
+        "current_measured_reason": "Current HGLRC maker page still gives3.3-5V supply and SH1.0-4pin cable, without a UART-level guarantee; native U411 port side is main3V3 after AUD8. Old voltage measurements have not been rechecked; no measured module IO level exists.",
+        "concrete_disposition": "Verify actual module UART high/low and unpowered behavior, and qualify SH-to-GH adapter before flight; preserve Inference label."
+      }
+    ],
+    "safety": [
+      {
+        "ids": [
+          "R4-SAF-03",
+          "R6-SAF-04"
+        ],
+        "reason": "Default surface gaps permit live-to-gate or OUT-to-GND defects to fire an enabled igniter; cold screening detects some static pre-enable defects only. Inspection/coating/dummy-load tests remain."
+      },
+      {
+        "ids": [
+          "R5-SAF-03"
+        ],
+        "reason": "Old separate BUS/J124 window geometry retired. Current Q121 source-drain0.5200/0.5700mm surface gaps can bypass deliberate RAW_ACT enabling; PC1 cannot clear a hard FET bridge."
+      },
+      {
+        "ids": [
+          "R6-SAF-03"
+        ],
+        "reason": "Four current pyro barrels meet1mm; ACT_GATE vias outside protected set retain0.2505/0.8055mm inner gaps. No blanket pyro fault immunity."
+      },
+      {
+        "ids": [
+          "R3-SAF-02"
+        ],
+        "reason": "Single-switch powered physical break lost. Port backfeed can hide opening and retain MCU/ACT_EN/RAW_ACT. No USB/self-powered source at e-match connection; bench tests pending."
+      }
+    ],
+    "power": [
+      {
+        "ids": [
+          "R3-PWR-07"
+        ],
+        "reason": "Native bypass distancesU402-C4304.309655mm,U420-C4204.878332,U410-C4100.456207. U402input one0.5/0.3via(35.45,40.05),0.4x0.85mmfeed. Retain layoutdeviation; no fresh secondvia impossibilityproof; loadtransienttest."
+      },
+      {
+        "ids": [
+          "R4-PWR-01",
+          "R6-PWR-01"
+        ],
+        "reason": "U9entries0.3x1.8mm,0.6mmoutsidepad;OUT4vias x40.8/41.35/41.9/42.45 y77.1,0.4mmladder. U4000.4mmfeeds; C88neck0.7mm,total2.92mm. In2notch conservative1.20mm. IPCfit7.412/19.238C at1.8/2.9A outer1mm;3.416/8.502C at1.25/2.02A inner1.2mm. NofullDC/thermalmeasurement."
+      },
+      {
+        "ids": [
+          "R7-PWR-02"
+        ],
+        "reason": "USBnominal514.1uF/2.416mCto4.7V; currentlimit347.7-453.0mA,idealno-load5.33-6.95ms; hostattach/startup/complianceopen."
+      },
+      {
+        "ids": [
+          "OQ-5"
+        ],
+        "reason": "Ports-off/shed8.6758-13.5560ms; ports-on0.55375-0.86524ms, turnoffup3ms. Threshold/latency/decayandcoldESRopen; nohardwarecutoff."
+      },
+      {
+        "ids": [
+          "GAP-1",
+          "O6"
+        ],
+        "reason": "Idlefire1.550071A;1stall1.485263miss1.5A. Starreturnbound0.6144Aonlywith<=1mOhmtransfer/>=50mOhmbranches. Measuredeploymentreserveandharness."
+      },
+      {
+        "ids": [
+          "GAP-3",
+          "R9-PWR-01"
+        ],
+        "reason": "U4010.406177W,80-110C/WInference gives102.494-114.679C at70C/117.494-129.679at85C. VIAs do notprove actualtheta. Wholepowerknotthermalopen."
+      },
+      {
+        "ids": [
+          "AUD-1",
+          "AUD-3a",
+          "GAP-4"
+        ],
+        "reason": "C92effective2.211uF;C12025Vratingfixed;C84supplierendpoint300.8uF/37.5mOhm. Typicalcurves/agingInference. C21397bias/stabilitynotindependentlycompleted. C84coldESR/manualfitopen."
+      },
+      {
+        "ids": [
+          "OQ-2"
+        ],
+        "reason": "R1661W V10 has no microsecondpulsecurve;504W/2.888mJ simulateddoesnotprovepulseendurance. Actualunfusedharness>=0.03ohm,0.1-2uH andU9IN/OUTwaveformsmeasure."
+      },
+      {
+        "ids": [
+          "GAP-5"
+        ],
+        "reason": "Physicalnormalcurrent<=20msincltail;intacthardwarefault<=36ms;85Cpulsemarginnegligible/unqualified. Provewatchdognofeed,hotgate,resistorrepeatdriftandfittedRevV. Firmwareabsent."
+      }
+    ],
+    "parts": [
+      {
+        "id": "R10-PARTS-C01",
+        "prior_ids": [
+          "OQ-3",
+          "R3-BOM-04",
+          "R7-BOM-03"
+        ],
+        "severity": "Minor",
+        "location": "m3_design/assembly_review/fab/m3_bom_jlc.csv; R430/U4",
+        "measured_reason": "Fresh 23:51:13Z query reproduces cost $84.43 > $84.41, R430 17 < minimum 3610 and U4 0 < 5. This is disclosed, is not owner cost acceptance and is not an order release.",
+        "fix": "Obtain a compliant quote/owner cost acceptance; obtain U4 stock or accepted consignment; resolve R430 actual minimum-order availability or qualify a replacement and recompute port limits.",
+        "independently_reproduced": true
+      },
+      {
+        "id": "R10-PARTS-C02",
+        "prior_ids": [
+          "R4-BOM-01"
+        ],
+        "severity": "Minor",
+        "location": "m3_design/assembly_review/kilib/rocket.pretty/M3_SRP5030TA.kicad_mod; L400 F(24.2,5.55)",
+        "measured_reason": "Fresh Bourns SRP5030T p1 drawing shows outer land span 6.50 mm, inner gap 2.50 mm and pad height 1.8 mm, implying 2.0 x 1.8 mm lands at x +/-2.25. Native land is 1.8 x 2.5 mm at +/-2.35: same outer span, 2.90 mm inner gap and 0.7 mm extra pad height. Supplier proxy residual remains 0.15 mm. Nominal contact projection is covered; full tolerance coverage is unproven. Minimum body span 5.4 and maximum terminal depth 1.4 can place the heel at x1.30 versus native land edge1.45. This sharpens the already recorded original-land qualification item; failed assembly is not proven.",
+        "source": {
+          "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+          "page": 1,
+          "revision": "Current maker PDF read 2026-10-28"
+        },
+        "fix": "Use the exact maker land (2.0 x 1.8 at +/-2.25), reroute/verify paste and CPL, or obtain assembly qualification for the retained land. Retain explicit preview qualification of the C189932 orientation proxy.",
+        "independently_reproduced": true
+      },
+      {
+        "id": "R10-PARTS-C03",
+        "prior_ids": [
+          "R4-BOM-02"
+        ],
+        "severity": "Minor",
+        "location": "m3_design/assembly_review/m3.kicad_pcb; U411/U12/U421",
+        "measured_reason": "All three top TXU0202s use native -90 degrees and CPL90; all eight supplier pins reconstruct with approximately0.147 mm worst residual. Geometry agrees, but the physical factory placement preview/pin1 has not been inspected.",
+        "fix": "Confirm pin1 on all three in the factory preview before order and inspect first articles.",
+        "independently_reproduced": true
+      },
+      {
+        "id": "R10-PARTS-C04",
+        "prior_ids": [
+          "R4-BOM-03",
+          "R5-BOM-02",
+          "GAP-4"
+        ],
+        "severity": "Minor",
+        "location": "m3_design/assembly_review/m3.kicad_pcb; C84 F(38.5,74.0)",
+        "measured_reason": "Native plus pad1 is VLOGIC at (38.5,77.25), minus pad2 GND at (38.5,70.75); CPL rotation90 and supplier geometry residual approximately0.045 mm. Supplier MA sheet pp1/2/4 confirms 470uF25V, 25mOhm100kHz, 4.1A, +/-20%, 8x10 body, base8.3+/-0.2, P3.1+/-0.2 and terminal width0.8-1.1. It gives no land, reflow profile or manual-solder qualification. The derived native 3.5x1.7 pads at +/-3.25 are an inference. Current JLC brand jieerrui matches native; LCSC and sheet use JIERR, so the existing naming alias remains to reconcile.",
+        "source": {
+          "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+          "pages": [
+            1,
+            2,
+            4
+          ],
+          "revision": "Undated supplier-hosted MA series"
+        },
+        "fix": "Validate the separate post-reflow manual operation and derived land; confirm physical positive orientation in preview/first article and measure height/capacitance/ESR. Reconcile supplier maker aliases without substituting parts.",
+        "independently_reproduced": true
+      },
+      {
+        "id": "R10-PARTS-C05",
+        "prior_ids": [
+          "R6-BOM-02"
+        ],
+        "severity": "Minor",
+        "location": "m3_design/assembly_review/m3.kicad_pcb; U4 B(17.0,45.9)",
+        "measured_reason": "Native adjacent lands are0.35 mm wide on0.50 pitch, with0.025 mm mask relief each: individual mask web0.100 mm. This is the recorded JLC-limit condition; actual fabricated web is unmeasured.",
+        "fix": "Preserve supplied openings/webs and obtain fabricator acceptance; inspect first articles.",
+        "independently_reproduced": true
+      },
+      {
+        "id": "R10-PARTS-C06",
+        "prior_ids": [
+          "R7-BOM-01"
+        ],
+        "severity": "Minor",
+        "location": "m3_design/assembly_review/fab/m3_bom_jlc.csv; C86/C97/C98/C120",
+        "measured_reason": "C29936 remains one Extended code across four parts; C15849 is an incumbent Basic 1uF50V X5R0603. Fresh 5-board prices are0.0177 versus0.0146 each; merging would remove one1.53/order feeder charge, approximately$0.3184/board apparent saving. This is not a qualified substitution: dielectric changes X7R to X5R and C120 is gate-slew/Miller sensitive.",
+        "fix": "If pursuing cost reduction, qualify effective capacitance/temperature/aging and gate behavior at every affected location, standardize land and regenerate checks/BOM/CPL. Do not credit savings before qualification.",
+        "independently_reproduced": true
+      }
+    ],
+    "mcu": [
+      {
+        "id": "R5-MCU-04",
+        "severity": "Minor",
+        "current_reason": "Rechecked native PA6 divider lacks pin resistor and R60-short violates4V ADC stress limit; PB1 divider10k/1k, lower-open gives5.456V through10k against4V TT limit. Existing fault-damage classification persists; exact pin current/damage unmeasured."
+      },
+      {
+        "id": "R8-MCU-02",
+        "severity": "Minor",
+        "current_reason": "Fresh HGLRC maker page specifies3.3-5V supply/SH1.0 cable but no UART voltage. Native GPS TXU B supply nowmain3V3, input tolerant5.5V; module TX high and acceptance of3.3V drive remain unqualified.3.3V UART level is Inference; SH-to-GH harness remains necessary."
+      },
+      {
+        "id": "R3-MCU-05",
+        "severity": "Minor",
+        "current_reason": "All six native UART ESD clamps are ESD103-B1-02EL toGND ahead of1k/TXU.15V working/48V clamp supplier ratings still cannot establish3.3V pin IEC immunity; handling-level protection remains Inference. Exact olderEL datasheet curves not re-read; current maker URL servesELS variant."
+      },
+      {
+        "id": "R3-SAF-02 / AUD-8",
+        "severity": "Minor",
+        "current_reason": "Native GPS/radio translators share3V3, so switched peripheral power alone cannot disable UART. OE-low-before-EN-low remains firmware obligation. TXU original SCES942A guarantees outputs high-Z with OE low or supply below100mV; module-off/OE-high back-power and enabled power-switch back-feed remain accepted, unmeasured behaviors."
+      },
+      {
+        "id": "R4-MCU-01 / R8-MCU-01",
+        "severity": "Minor",
+        "current_reason": "Native RX pins connect only to disabled translator outputs in reset; startup pull-ups/idle-TX-before-OE remain firmware. TI documents internal5Mohm input pulls; enabled/unplugged module RX break remains Inference, with DMA/error containment unimplemented."
+      },
+      {
+        "id": "R6-MCU-04 / R7-MCU-04 / R8-SAF-01",
+        "severity": "Minor",
+        "current_reason": "Trace prohibition, both GPIO locks/readback, low-output loader sequence, flashQE/pre-erase/suspend, and IMU SPI/startup obligations remain binding-note requirements. Firmware and bench tests are unimplemented; no timing or trace override measurement credited."
+      },
+      {
+        "id": "R5-MCU-02 / R5-MCU-05",
+        "severity": "Minor",
+        "current_reason": "Native PC14 buzzer sharesOSC32_IN; LSE remains forbidden. PC8 has1k:1k VBUS divider and is explicitly not a safety input. Earlier4.62V detection statement is conservative versus the additional TTL guarantee; exact threshold is unmeasured."
+      }
+    ],
+    "mechanics": [
+      {
+        "id": "MEC-C01",
+        "severity": "Minor",
+        "prior": "R3-MEC-02/-04/-05;OQ-1",
+        "current_measured_reason": "GH4 mated conservative corner margin0.028128mm; J1220.499500mm; terminal legacy bare-bore floor4.953012mm at5mm wire height. J400 GH2 envelope10.3mm includes3mm inferred wire allowance. JST7.3mm housing with actual wire bends is unqualified; GH cables dress inward, mated board backed.",
+        "fix_or_obligation": "Physical bore check with final16-22AWG terminal leads and GH AWG26 harness; preserve owner accepted wire-room floor. Historical4.44-5.39mm actual-opening range not independently rechecked."
+      },
+      {
+        "id": "MEC-C02",
+        "severity": "Minor",
+        "prior": "R9-MEC-01;support hardware/insulation",
+        "current_measured_reason": "Both0.3mm centering tolerances reproduced: h+t bounds6.018413mm atx4/42,5.365256mm atx3.7; default h4/t1 worst nut radius24.754608mm vs24.9mm. Atwest support only0.157946mm additional outward eccentricity is available under nominal nut assumptions. Nearest top exposed padJ4003.857542mm; nearest bottomC88.1 3.843605mm. Washer discs contain3V3 F.Cu/via atminr3.410399/3.260399 and NRST F.Cu3.421392 at(4,44.3), BAT_IN B.Cu2.750000 at(42,86). Otherthree discs no non-GND surface track/via.",
+        "fix_or_obligation": "Measured nylon hardware only; <=7mm maximum washerOD; nut below sled; whole-bottom nonconductive insulation and ordinary-via covering. Recalculate actual hardware maxima, protrusion and eccentricity before release; nominal arithmetic is not fit qualification."
+      },
+      {
+        "id": "MEC-C03",
+        "severity": "Minor",
+        "prior": "R8-MEC-02/-03/-04; thermal/foam/static clearance",
+        "current_measured_reason": "L1 hangs3.015825mm below PCB;100g plate model maximum over L1 model0.296664mm leaves0.687511mm with4mm standoffs. U5 model hang1.100074mm gives2.899926mm nominal plate gap at4mm. U4 B(17,45.9),180deg; sensor-west offset-6mm; model centerz-2.059994mm(Inference); roll=-gyroY,1850deg/s centripetal0.637865g. U4 sits below U1 west pinrow; no thermal measurement.",
+        "fix_or_obligation": "Use measured4mm standoffs/<=1mm plate; keep foam withinU5 outline+1mm, unloaded pressure port and offU4; log U4/U5 thermal behavior againstU1 load, sign-check axes and vibration-check. Current courtyard1.71mm old number not independently rechecked."
+      },
+      {
+        "id": "MEC-C04",
+        "severity": "Minor",
+        "prior": "R4-MEC-01;R5-MEC-01/-03;P3 retention",
+        "current_measured_reason": "Fresh additive explicit masses26.4g, small-body volume estimate3.968582g, substrate15.111g,total45.479582g. C84m3g requires14.710N5x100g, each DB125mated4g19.613N, J122mated6g29.420N, GH4mated2.2g10.787N, GH2mated1.5g7.355N. No measured retention capacities; records explicitly label inference.",
+        "fix_or_obligation": "Stake C84,J1,J121,J122,LS120,J3 shell; external retentionGH/J400 and J122 plugs; off-board lead strain relief; weigh and bench qualify. These are conditional requirements, not demonstrated5x capacity."
+      },
+      {
+        "id": "MEC-C05",
+        "severity": "Minor",
+        "prior": "R6-MEC-01;OQ-7;external modules",
+        "current_measured_reason": "Fresh allowed parentVEHICLE gives shroudjoint+4..+47mm,r18.4mm,45mmwide. Boardedge23mm transverse offset penetrates4.6mm; J3shell23.45 ->5.05mm; GH4east22.2 ->3.8mm; topJ12223.5 ->5.1mm. Stack-44.6+80+(44..48)=+79.4..83.4mm aftedge leaves32.4..36.4mm before+47 under stated inferred stack. Full-board-forward+47 rule prevents clocking conflict.",
+        "fix_or_obligation": "Preserve selected axial rule including sled tolerance; qualify real sled, shroud,harness and externally mountedGPS/radio envelopes/antenna/retention. ShorterPCB alone does not qualify wholebay fit."
+      },
+      {
+        "id": "MEC-C06",
+        "severity": "Minor",
+        "prior": "GAP-3/GAP-4; manual C84/VIPPO",
+        "current_measured_reason": "C84 F(38.5,74),90deg: model34.25..42.75 x69.75..78.25,z10.8; pads37.65..39.35 x69..72.5/75.5..79 give0.75mm toes beyond body envelope. U401 two exact thermal vias(27.3,13.6)/(27.9,13.6) are fabrication-filled/capped before component placement; no physical process/inspection qualification.",
+        "fix_or_obligation": "Retain manual C84 fit AFTERbothreflows and separately validate solder process, height,polarity,capacitance/ESR. Require resin-filled,copper-capped,planarizedVIPPO for twoU401vias; coordinate assembler acceptance and inspection. Local toe geometry does not prove hand-tool access or process yield."
+      }
+    ],
+    "routing": [
+      {
+        "id": "R9-RTE-04",
+        "severity": "Minor",
+        "new_discovery": false,
+        "title": "Noncritical return companions outside 1.5 mm",
+        "native_coordinates_mm": [
+          [
+            22.54,
+            38.5
+          ],
+          [
+            24.3,
+            49.1
+          ],
+          [
+            12.4,
+            37.9
+          ],
+          [
+            13.8,
+            45.6
+          ],
+          [
+            7.75,
+            49.8
+          ],
+          [
+            9.97,
+            51.5
+          ]
+        ],
+        "measurement": [
+          {
+            "net": "NRST",
+            "xy": [
+              22.54,
+              38.5
+            ],
+            "changing": true,
+            "layers": [
+              "F.Cu",
+              "B.Cu"
+            ],
+            "nearest_gnd_mm": 1.655173706896049,
+            "nearest_gnd_xy": [
+              21.4,
+              37.3
+            ],
+            "fast_required": false
+          },
+          {
+            "net": "NRST",
+            "xy": [
+              24.3,
+              49.1
+            ],
+            "changing": true,
+            "layers": [
+              "F.Cu",
+              "B.Cu"
+            ],
+            "nearest_gnd_mm": 1.4866068747318493,
+            "nearest_gnd_xy": [
+              24.8,
+              47.7
+            ],
+            "fast_required": false
+          },
+          {
+            "net": "NRST",
+            "xy": [
+              12.4,
+              37.9
+            ],
+            "changing": true,
+            "layers": [
+              "F.Cu",
+              "B.Cu"
+            ],
+            "nearest_gnd_mm": 3.3533565274214427,
+            "nearest_gnd_xy": [
+              9.05,
+              37.75
+            ],
+            "fast_required": false
+          },
+          {
+            "net": "BOOT0",
+            "xy": [
+              13.8,
+              45.6
+            ],
+            "changing": true,
+            "layers": [
+              "F.Cu",
+              "B.Cu"
+            ],
+            "nearest_gnd_mm": 1.6620770138594676,
+            "nearest_gnd_xy": [
+              13.35,
+              44.0
+            ],
+            "fast_required": false
+          },
+          {
+            "net": "I2C1_SCL",
+            "xy": [
+              7.75,
+              49.8
+            ],
+            "changing": true,
+            "layers": [
+              "F.Cu",
+              "B.Cu"
+            ],
+            "nearest_gnd_mm": 1.4430869689661867,
+            "nearest_gnd_xy": [
+              7.4,
+              51.2
+            ],
+            "fast_required": false
+          },
+          {
+            "net": "I2C1_SDA",
+            "xy": [
+              9.97,
+              51.5
+            ],
+            "changing": true,
+            "layers": [
+              "F.Cu",
+              "B.Cu"
+            ],
+            "nearest_gnd_mm": 1.88057118982505,
+            "nearest_gnd_xy": [
+              10.712,
+              53.228
+            ],
+            "fast_required": false
+          }
+        ],
+        "source": [
+          "AGENTS.md section 3",
+          "docs/R10_VALIDATION.md:782"
+        ],
+        "reason": "NRST, BOOT0 and I2C are outside the named partner-via scope. NRST is still sampled by K-reference; zero loose reference samples. No untested assertion that every new GND stitch is impossible.",
+        "concrete_disposition": "Keep these measured return deviations in the acceptance list; a cleanup requires legal GND stitches within 1.5 mm and fresh fill/DRC/reference checks."
+      },
+      {
+        "id": "R9-RTE-05",
+        "severity": "Minor",
+        "new_discovery": false,
+        "title": "Retained MOSI offset and between-pad routes",
+        "native_coordinates_mm": [
+          [
+            17.55,
+            44.94
+          ],
+          [
+            17.5,
+            44.94
+          ]
+        ],
+        "measurement": {
+          "mosi_landing_x_mm": 17.55,
+          "imu_pad14_x_mm": 17.5,
+          "offset_mm": 0.05,
+          "between_pad_routes": {
+            "LED1": {
+              "gapbox": [
+                10.6,
+                43.0,
+                11.5,
+                44.2
+              ],
+              "net": "LED_YEL_A",
+              "tracks": [
+                {
+                  "layer": "F.Cu",
+                  "a": [
+                    10.9,
+                    45.5
+                  ],
+                  "z": [
+                    10.9,
+                    41.6
+                  ],
+                  "w": 0.2,
+                  "between_length_mm": 1.200000000000003
+                }
+              ]
+            },
+            "R33": {
+              "gapbox": [
+                11.4665,
+                40.9115,
+                12.3335,
+                42.2885
+              ],
+              "net": "LED_RED_A",
+              "tracks": [
+                {
+                  "layer": "F.Cu",
+                  "a": [
+                    11.9,
+                    39.65
+                  ],
+                  "z": [
+                    11.9,
+                    43.6
+                  ],
+                  "w": 0.2,
+                  "between_length_mm": 1.3770000000000024
+                }
+              ]
+            },
+            "C86": {
+              "gapbox": [
+                16.4,
+                28.425,
+                17.05,
+                29.375
+              ],
+              "net": "BUZZ_DRV",
+              "tracks": [
+                {
+                  "layer": "B.Cu",
+                  "a": [
+                    16.8,
+                    29.55
+                  ],
+                  "z": [
+                    16.8,
+                    18.85
+                  ],
+                  "w": 0.2,
+                  "between_length_mm": 0.9499999999999993
+                }
+              ]
+            }
+          },
+          "fixed_entries": {
+            "U411.7": {
+              "pad": [
+                35.45,
+                16.9
+              ],
+              "ends": [
+                {
+                  "xy": [
+                    35.45,
+                    16.9
+                  ],
+                  "layer": "F.Cu"
+                }
+              ],
+              "vias": [
+                [
+                  35.45,
+                  17.8
+                ],
+                [
+                  35.45,
+                  29.8
+                ]
+              ]
+            },
+            "U421.7": {
+              "pad": [
+                35.45,
+                28.9
+              ],
+              "ends": [
+                {
+                  "xy": [
+                    35.45,
+                    28.9
+                  ],
+                  "layer": "F.Cu"
+                }
+              ],
+              "vias": [
+                [
+                  35.45,
+                  17.8
+                ],
+                [
+                  35.45,
+                  29.8
+                ]
+              ]
+            },
+            "U10.1": {
+              "pad": [
+                11.3,
+                28.45
+              ],
+              "ends": [
+                {
+                  "xy": [
+                    11.3,
+                    28.45
+                  ],
+                  "layer": "B.Cu"
+                }
+              ],
+              "vias": []
+            }
+          }
+        },
+        "source": [
+          "docs/REQUIREMENTS.md M2",
+          "docs/R10_VALIDATION.md:783",
+          "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R9-04"
+        ],
+        "reason": "Native on-axis candidate via (17.50,44.30), after refill, produces IMU_body_B DRC error and 11 loose adjacent SPI1_SCK reference samples; two MISO stray entries become stale. Between-pad tracks remain inside legal native gaps: LED1 gap0.900 mm/track0.200; R33 gap0.867/track0.200; C86 gap0.650/track0.200, nearest x-edge clearance0.150. IO entries and U10.1 VBUS are now on-axis and are no longer carried offsets.",
+        "concrete_disposition": "Retain the proven 0.05 mm MOSI residual and three measured between-pad routes; any on-axis revision must redraw the adjoining SPI fan-out while preserving the MEMS keepout/reference contract."
+      },
+      {
+        "id": "R9-RTE-06",
+        "severity": "Minor",
+        "new_discovery": false,
+        "title": "Slow routes cross In2 plane boundaries",
+        "native_coordinates_mm": [
+          [
+            21.73,
+            74.425
+          ],
+          [
+            33.8,
+            57.85
+          ]
+        ],
+        "measurement": {
+          "sample_step_mm": 0.01,
+          "SERVO2_MCU": {
+            "tail_a_mm": [
+              22.7,
+              73.455
+            ],
+            "tail_z_mm": [
+              21.73,
+              74.425
+            ],
+            "planes": [
+              "3V3",
+              "gap",
+              "RAW_PROTECTED"
+            ],
+            "gap_sampled_length_mm": 0.42
+          },
+          "LOGIC_SOURCE_ST": {
+            "crossing_bounds_mm": [
+              33.65,
+              57.7,
+              33.8,
+              58.01
+            ],
+            "planes": [
+              "3V3",
+              "gap",
+              "RAW_PROTECTED"
+            ]
+          },
+          "full_samples": "native_metrics.json:slow_plane_crossings"
+        },
+        "source": [
+          "docs/R10_VALIDATION.md:784",
+          "AGENTS.md section 3"
+        ],
+        "reason": "Independent 0.01 mm centreline sampling finds SERVO2_MCU tail 3V3 -> gap -> RAW_PROTECTED, gap length0.42 mm by samples (0.85–1.27 mm along diagonal). LOGIC_SOURCE_ST changes from3V3 near (33.65,57.70), through (33.8,57.85), to RAW_PROTECTED by y58.01. These slow/noncritical nets are not fast-interface reference claims.",
+        "concrete_disposition": "Carry measured slow split crossings. A local GND/reference-plane redraw needs power-plane and return requalification before replacing the deviation."
+      },
+      {
+        "id": "R9-RTE-07",
+        "severity": "Minor",
+        "new_discovery": false,
+        "title": "BUZZ routing and crystal-neighbour projections",
+        "native_coordinates_mm": [
+          [
+            17.8,
+            30.55
+          ],
+          [
+            20.3,
+            33.85
+          ],
+          [
+            23.1,
+            36.65
+          ],
+          [
+            22.85,
+            46.6
+          ]
+        ],
+        "measurement": {
+          "buzz_track_mm": 36.376450491675,
+          "buzz_via_count": 3,
+          "crystal_body_box_mm": [
+            21.600066,
+            45.000054,
+            24.099934,
+            48.199946000000004
+          ],
+          "F_Cu_body_projection_crossing_mm": {
+            "NRST": 0.7776477536777241,
+            "BUZZ_DRV": 2.732695374379505,
+            "HSE_OUT": 2.565487580515294
+          }
+        },
+        "source": [
+          "docs/M3_R10.md Current routing records",
+          "docs/R10_VALIDATION.md:785",
+          "docs/ORDERING.md section 8"
+        ],
+        "reason": "Native foreign F.Cu centreline projections over Y1 are BUZZ_DRV2.732695 mm and NRST0.777648 mm; own HSE_OUT2.565488 mm. Solid In1 GND intervenes. Fresh native collision tests of simple BUZZ layer swaps hit VBUS_SENSE/U1 pads on F.Cu or USB_LIMITED/R110.1 on B.Cu at0.15 mm clearance.",
+        "concrete_disposition": "Keep measured route/projection deviations and the HSE cold-start/frequency test with buzzer and QSPI active; broader part/fan-out movement would require requalification. No HSE interference measurement exists."
+      }
+    ],
+    "manufacturing": [
+      {
+        "item": "U4 minimum mask web",
+        "current_measurement": "0.575x0.35 mm copper land, +0.025 mm relief,0.5 mm pitch =>0.100 mm individual mask web; matches current JLC green1oz minimum. Preserve apertures; fabrication acceptance not claimed."
+      },
+      {
+        "item": "Silkscreen minima/hidden refs",
+        "current_measurement": "Minimum1.0 mm text and0.15 mm stroke;81 hidden refs, list matches K-legends. Zero current mask overlaps/outline escapes; TP88 historical0.426 mm edge figure not independently recomputed."
+      },
+      {
+        "item": "J1/J121 same terminal family, role numbering",
+        "current_measurement": "Both native3.5 mm pitch,1.9 mm copper/1.3 mm drill, rotation-90. J1 green C466970 pad1 BAT_IN at(7,74.1),pad2 GND at(7,77.6); J121 black C52993880 pad1 OUT at(7,54.1),pad2 IGN at(7,57.6). Physical preview/orientation remains required."
+      },
+      {
+        "item": "GAP-3 VIPPO",
+        "current_measurement": "Exactly GND(27.3,13.6)/(27.9,13.6),0.5/0.3 mm, filled+capped flags true. U401.11 EP27.0..28.2/12.6..14.6 and two maker split paste windows unchanged; supplier process/price acceptance pending."
+      },
+      {
+        "item": "C84 GAP-4 manual fitting",
+        "current_measurement": "Current instructions explicitly require manual fitting after both reflows and preserve required BOM/CPL identity. Supplier land/reflow profile unavailable; manual process, polarity/height/capacitance/ESR qualification remain open."
+      },
+      {
+        "item": "Panel tabs OQ-4",
+        "current_measurement": "T-1 PASS; legal windows west0.5..23.25/43..89.5, east49.25..64.5/83.5..89.5,aft0.5..7/37..45.5,forward0.5..5.75 mm. Aft rail/frame and exact production spans still require JLC acceptance."
+      },
+      {
+        "item": "Procurement and process release",
+        "current_measurement": "Bound snapshot fails disclosed $0.02 cost target and R430/U4 availability. Supplier live full-82-code refresh not rerun. No order placed, no process acceptance, two-reflow U5 qualification and physical measurements not claimed."
+      }
+    ],
+    "gate": [
+      {
+        "item": "Cost and stock",
+        "current_reason": "Bound $84.43 exceeds $84.41 by $0.02; focused procurement verifier rejects it. Existing R430/U4 stock shortages are recorded in round9_fix_validation.json; inventory was not freshly queried."
+      },
+      {
+        "item": "AUD-2 slow returns / AUD-10 representation residuals",
+        "current_reason": "Intentional scope is preserved by source inspection. Current individual route measurements and counts from the root two-build evidence were not independently rechecked in this lens."
+      },
+      {
+        "item": "GAP-3 process",
+        "current_reason": "Fresh native K-copper baseline passes and both negative via controls fail. Resin filling, copper capping and planarity remain physical manufacture/inspection obligations."
+      }
+    ]
+  },
+  "new_minor_fixes": [
+    {
+      "id": "R10-GATE-01",
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change."
+    },
+    {
+      "id": "R10-GATE-02",
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change."
+    },
+    {
+      "id": "R10-MCU-01",
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change."
+    },
+    {
+      "id": "R10-MEC-01",
+      "disposition": "Fixed after review in gate/regression or record/generator only; no PCB change."
+    }
+  ],
+  "coating_independent_confirmation": [
+    {
+      "id": "R10-MFG-01",
+      "severity": "Minor",
+      "title": "Whole-part C11 coating instruction breaches U5 body keep-out",
+      "location": [
+        "docs/ORDERING.md:249",
+        "docs/ORDERING.md:251",
+        "docs/ORDERING.md:354",
+        "docs/M3_R10.md:310"
+      ],
+      "native_coordinates_mm": {
+        "U5_center": [
+          10.6,
+          49.1
+        ],
+        "U5_nominal_maker_body": [
+          8.1,
+          47.6,
+          13.1,
+          50.6
+        ],
+        "U5_pad_union_extents": [
+          8.42,
+          47.05,
+          12.78,
+          51.15
+        ],
+        "C11_center": [
+          17.5,
+          52.1
+        ],
+        "C11_pad1": [
+          15.795,
+          51.425,
+          17.205,
+          52.775
+        ]
+      },
+      "measured_value": "Minimum C11.1 copper-to-U5 nominal body gap sqrt(2.695^2+0.825^2)=2.8184481546 mm (<3 mm by0.1815518454 mm). Pads-only distance3.0275154830 mm is insufficient to prove the stated body+pad keep-out. Even the native conservative C11 Fab/pad envelope is only2.4225709484 mm from nominal U5 body.",
+      "requirement": "ORDERING section8 requires coating/resin >=3 mm from U5 body AND pads and names TP122 as the only exception, but also commands whole C11 coating. This is the project numeric keep-out, not a claimed TE numeric rule.",
+      "source": {
+        "url": "https://www.te.com/commerce/DocumentDelivery/DDEController?Action=srchrtrv&DocFormat=pdf&DocLang=English&DocNm=MS5611-01BA03&DocType=Data+Sheet&PartCntxt=MS561101BA03-50",
+        "revision": "06/2017",
+        "pages": [
+          1,
+          15,
+          17
+        ],
+        "verified": "Maker nominal5x3x1 mm package, outline and open-port/no-clean handling. Current TE product page independently lists5x3x1 mm."
+      },
+      "severity_reason": "Narrow process-record contradiction at a nominal 3 mm project exclusion boundary. U5 whole-part tape is already required; no demonstrated contamination or failure from the0.18 mm shortfall. Distinct from the earlier0.42/0.69 mm R13/R64 defects, which remain masked. No CAD change is required.",
+      "concrete_fix": "Mask C11 whole, retain >=3 mm coating-edge clearance from union(U5 actual body,pads), and update the coat inventory and nearest-clearance claims. Correct the pads-only3.03 mm statement; keep R13/R64 masked and the separate TP122 brush exception. Control edge position against the actual fitted body, allowing package/placement tolerances.",
+      "other_coated_parts": "Nearest OTHER prescribed whole-part envelope is C10: conservative B.Fab top-west arc bounding rectangle x15.465..15.765,y53.125..53.425 to U5.5 pad x12.18..12.78,y50.70..51.15 gives3.3331441613 mm. C10 copper-pad gap3.7770160180 mm. Every other prescribed bottom coated ref besides C11 and explicit TP122 exception has conservative native Fab/pad-union gap>=5.075 mm. R13/R64 are masked; TP122 conservative Fab envelope1.35 mm / copper pad1.40 mm is its carried exception.",
+      "independently_reproduced": true,
+      "evidence": "geometry.py and geometry.json"
+    }
+  ],
+  "current_measurement_precedence": "Current independent inventory and final R10_VALIDATION sections override measurements explicitly marked old/not rechecked in historical reconciliation. No removed J124/PULLPIN geometry is transferred.",
+  "current_corrections": {
+    "PA6": "4 V ADC maximum; 6 V powered-3.3 V digital FT ceiling per DS12110 Rev11 Table109 notes3-5. Old 7.3 V claim retired; fault-damage conclusion unchanged.",
+    "coating": "C11 masked whole, copper-to-U5-body 2.818449 mm. Keep >=3 mm from body/pad union. Nearest remaining coated conservative Fab/pad envelope C10=3.333144 mm, others>=5.075 mm; actual tolerances/process unqualified.",
+    "usb_limiter": "347.7-453.0 mA current resistance corners; historical 355-445 mA is not newly qualified. Ideal no-load 5.33-6.95 ms; actual host/startup unqualified.",
+    "L400": "Maker/native land delta and tolerance gap independently recorded by parts lens; no worst-case contact coverage claimed."
+  },
+  "owner_items": {
+    "OQ-3": "$84.43 vs $84.41; $0.02 miss, dated owner acceptance pending",
+    "deviation_list": "dated owner acceptance pending",
+    "before_order": [
+      "R430: 17 vs 3,610 minimum purchase; U4: 0 vs 5 needed, stock or consignment",
+      "Exact-code cost/stock refresh within 24 h",
+      "JLC panel/tab, exactly two VIPPO vias and post-reflow manual C84 process acceptance"
+    ]
+  }
+}

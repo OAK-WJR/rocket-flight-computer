@@ -1,0 +1,294 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round19_routing",
+ "reviewer": "claude",
+ "target_commit": "acba196",
+ "board_sha256_before": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "board_sha256_after": "a3144b151b58daf8ba5747def50decc4d1751ad35be478fafc89ef53aa533918",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 8
+ },
+ "findings": [
+  {
+   "id": "R19-RTE-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Removing V3V3_SENSE left an unstitched 1.69 mm2 F.Cu GND pour fragment hanging off U1.19",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "zone R10_GND_F, saved fill piece touching U1.19 (GND pin F(26.0,50.55))",
+    "layer": "F.Cu",
+    "coordinates_mm": "bbox x 25.12-27.15, y 51.24-53.45; widest point F(26.04,51.96)",
+    "measured": {
+     "area_mm2": 1.693,
+     "stitching_vias_touching": 0,
+     "pads_touching": [
+      "U1.19 (pad-tip thermal)"
+     ],
+     "widest_inscribed_width_mm": 0.97,
+     "tongue_width_mm": 0.39,
+     "neighbours": "ACT_EN_MCU diagonal (24.5,51.6)-(26.62,53.72) and BAT_FAULT_N via (26.9,52.45) / diagonal (26.9,52.45)-(27.37,52.92), each 0.2505 mm; U1.17/.18 (NC) and U1.20 (3V3A) 0.25 mm",
+     "u1_19_own_gnd_path": "F.Cu 0.3 mm (26.0,50.55)-(26.0,46.75) to the via under U1: the fragment tip is about 6 mm of copper from any GND via",
+     "before_after": "R10_GND_F pieces 14 -> 15 (632a9ad3 -> a3144b15); the area held V3V3_SENSE F.Cu (25.5,50.55)-(25.5,51.75) and its via (removed, D-R18-01) and BAT_FAULT_N at x 26.9 (moved to 27.37, D-R18-03)",
+     "other_unstitched_gnd_pieces_on_board": "one, 0.282 mm2 at U1.74 (closed by round 18 as touching a GND pad)",
+     "gate": "committed route_check (acba196) passes: pour_finger only examines thin pieces longer than FINGER_L = 3.0 mm with a 4 mm reach (tools/route_check.py docstring lines 128-131, constants 193-195); nothing reports a short unstitched GND piece",
+     "seeded_fix_on_probe_copy": "U1 pad 19 local zone connection NONE, native refill: R10_GND_F 2940.4859 mm2 / 15 pieces -> 2938.6922 / 14, every other fill byte-for-byte the same area; route_check 0 failing (139 instances); check_r10 S-3, S-8, LC-1, M-6, K-reference, K-region, K-plane OK; DRC on the copy identical to an unmodified refilled copy (only the 199 library-lookup items the probe folder causes)"
+    },
+    "maker_source": "n/a (geometry)"
+   },
+   "impact": "No electrical or safety failure: it is GND copper and ACT_EN_MCU / BAT_FAULT_N are fail-safe to GND (D-R18-03). It is new pour debris (REQUIREMENTS M2: no debris, no unstitched fingers) that appears in no record, and it shows a gate gap: short unstitched GND fragments are invisible to route_check.",
+   "concrete_fix": "Records now: list it in R10_VALIDATION section 6. If CAD is reopened for any reason: in m3_design/r10_pcb.py set U1 pad 19 SetLocalZoneConnection(ZONE_CONNECTION_NONE) (KiCad island removal then drops the piece; U1.19 keeps its own F.Cu path to via (26.0,46.75) exactly as on 632a9ad3); confirm DRC library parity in the canonical build. Do not use a pour-trim rule area: route_check pad_pour_cut would then flag U1.19. Gate: report every GND fill piece with no stitching via as information, whatever its length."
+  },
+  {
+   "id": "R19-RTE-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "TP121's 7.14 mm ACT_GATE arm to B(4,70) is the shortest legal option under TP121's rules but is missing from the owner's M2 list",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "ACT_GATE B.Cu (11.14,70.0)-(4.0,70.0) 0.3 mm to TP121 (1.5 mm square bare pad)",
+    "layer": "B.Cu",
+    "coordinates_mm": "TP121 B(4.0,70.0); T node B(11.14,70.0)",
+    "measured": {
+     "stub_length_mm": 7.14,
+     "ACT_GATE_BCu_mm": "7.239 -> 14.817",
+     "ACT_GATE_FCu_mm": "5.467 -> 5.723",
+     "stub_to_GND_pour_mm": 0.2505,
+     "stub_to_BAT_SW_SOURCE_via_10.8_69.2_mm": 0.4,
+     "TP_pad_to_GND_fill_mm": 1.0005,
+     "M6_courtyard_to_J400.2_mm": 1.835,
+     "M6_courtyard_to_J1.1_mm": 2.98,
+     "independent_legal_spot_search": "grid 0.1 mm, x 1.5-24, y 62-80; pad >= 1.0 mm from foreign copper (m3.kicad_dru R9 bare test pads), no courtyard overlap, M-6 >= 1.5 mm from foreign THT pads and >= 3.5 mm from M3 centres, pad >= 0.5 mm from the edge; the present stub not counted as a landing. B.Cu best: B(4.39,70.0) on the same axis (M-6 to J400.2 caps x at 4.398; stub 6.75 mm, -0.39 mm); B(5.3,70.8) (about 5.96-6.17 mm with one 45-degree bend, -1.0 to -1.2 mm); B(12.2,77.0) south of Q120 (3.8 mm straight-line gap, but a real route must go round Q120). F.Cu: no legal spot nearer than 6.05 mm.",
+     "records": "docs/M3_R10.md line 120 (acba196) records the stub; docs/R10_VALIDATION.md section 6 (the owner's M2 list) does not; AVA_LAYOUT.md section 6 row 10 ('TP120/121/122 follow the bus switch') no longer fits TP121"
+    },
+    "maker_source": "n/a (geometry and project rules)"
+   },
+   "impact": "No failure; the fix pass's 'no nearer legal spot' holds within about 1.2 mm. The residual is an un-AVA-like probe arm to the west edge and twice the ACT_GATE outer copper running beside GND at the default 0.25 mm pour clearance (an ACT_GATE-GND bridge turns Q120 / Q121 on: owner row 2), without an entry in the owner's M2 list.",
+   "concrete_fix": "Records: add the stub, its length and the search result to R10_VALIDATION section 6 (owner row 8, cross-referenced from row 2). Owner option, following D-AUD-05 ('values stay probeable at part pads, as on AVA'): delete TP121 and its stub and probe ACT_GATE at C120.2 B(17.1,73.3) or R119.1 B(11.14,71.1), which removes 7.14 mm of outer ACT_GATE copper and a bare pad near the edge. If TP121 stays and CAD reopens, a custom 0.5 mm ACT_GATE-to-GND-zone clearance rule halves the GND-adjacent exposure without moving copper. Not fix-now."
+  },
+  {
+   "id": "R19-RTE-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Round-18 routing records are incomplete or stale: BAT_FAULT_N's new 0.18 / 0.38 mm via neighbours, and the section 6 per-net table",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R18-03; docs/R10_VALIDATION.md section 6 (acba196 lines 1830-1839)",
+    "reference": "BAT_FAULT_N F.Cu (27.37,52.92)-(27.37,65.655)",
+    "layer": "F.Cu",
+    "coordinates_mm": "GND via (27.9,64.25) = R86.2 fanout; 3V3 via (28.1,60.0) = R91.1 fanout",
+    "measured": {
+     "BAT_FAULT_N_to_GND_via_27.9_64.25_mm": "0.650 -> 0.180",
+     "BAT_FAULT_N_to_3V3_via_28.1_60.0_mm": "0.850 -> 0.380",
+     "D-R18-03_lists": "only ACT_EN_MCU's neighbours",
+     "section6_table_vs_a3144b15": "PYRO1_OUT 33.1 / 22.0 (table) -> 23.65 / 15.72 mm routed / octilinear MST; the corridor excess now sits on PYRO1_CONT_MID 10.50 / 7.08 (u-turn); ACT_GATE 20.54 / 17.08; SD_MOSI 34.10 / 26.83; totals 114 nets 1454.6 / 1194.3 -> 112 nets 1454.9 / 1195.2 (1.217x)",
+     "also_on_1e60441": "the PYRO1_OUT row is unchanged in the later records commit (line 1871)"
+    },
+    "maker_source": "n/a"
+   },
+   "impact": "Documentation only. 0.180 mm passes DRC (0.15 mm); BAT_FAULT_N is a slow open-drain status line (a GND bridge asserts the fault, a 3V3 bridge masks the U9 fault flag: a diagnostic loss, not a hazard). The owner list misstates where the CH1 sense excess now lies.",
+   "concrete_fix": "Add BAT_FAULT_N's two new neighbours (before -> after) to D-R18-03 and section 6; refresh the section 6 per-net table on a3144b15 with the values above. If CAD reopens, moving the R86.2 / R91.1 fanout vias out from under their resistors (R19-RTE-04) restores at least 0.45 mm."
+  },
+  {
+   "id": "R19-RTE-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Six 0603 resistors carry a fanout via centred under the body, 0.175 mm from both pads (an untidy pad-entry pattern missed by rounds 1-18)",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "R86, R89, R91, R101, R401, R403",
+    "layer": "B.Cu (R86, R91, R101) / F.Cu (R89, R401, R403); vias are through",
+    "coordinates_mm": "R86 B(27.9,64.25) GND via between LOGIC_ILIM / GND; R89 F(23.0,70.0) 3V3 via between 3V3 / BAT_FAULT_N; R91 B(28.1,60.0) 3V3 via between 3V3 / LOGIC_SOURCE_ST; R101 B(34.0,42.0) CAM_UART_OE (foreign net) via between CAM_TX_BUFFER / CAM_TX_WIRE; R401 F(13.0,1.8) GND via between PORT_FB / GND; R403 F(31.4,14.4) GND via between PORT_LDO_FB / GND",
+    "measured": {
+     "via_ring_to_each_pad_mm": 0.175,
+     "via_hole_to_each_pad_opening_mm": 0.275,
+     "drawing": "each is a pad exit from the outer pad inward under the part, e.g. R86.2 (28.725,64.25)->(27.9,64.25), R401.2 (12.175,1.8)->(13.0,1.8)",
+     "history": "identical on 632a9ad3; no review report or R10_VALIDATION entry mentions them (searched)",
+     "larger_parts_with_a_via_under_the_body_not_counted": "C400, C405, C411, C421, C461, C84, D8, L1, R134: via ring 0.35-1.47 mm from any foreign pad; C89: GND via (13.536,85.161) (R167.2 fanout) 0.186 mm from BAT_IN pad C89.1, beside a GND pour that is already 0.2505 mm from it; R81: GND via 0.094 mm from its own GND pad, 0.449 mm from BAT_ENABLE",
+     "other_foreign_copper_at_those_pads": "the GND pour already reaches 0.2505 mm from the foreign pad at R86, R401, R403 (and C89), so their GND vias tighten an existing 0.25 mm GND gap only to 0.175 mm; at R89 / R91 (3V3 vias) and R101 (CAM_UART_OE via) the via is the only foreign copper that close under the body"
+    },
+    "maker_source": "n/a; M2 via-to-opening rule (>= 0.1 mm) and DRC pass"
+   },
+   "impact": "Not a demonstrated failure; DRC and the M2 via-to-opening rule pass. It is an untidy pad-entry pattern (M2 review item; AVA-unlike): each fanout leaves the outer pad inward under the part to a via between the pads, where a bridge or tent defect cannot be inspected. The electrical effect of a bridge is small: R89 / R91 lose their pull-up (BAT_FAULT_N / LOGIC_SOURCE_ST tied to 3V3, a diagnostic loss), R101 joins CAM_UART_OE to the camera TX path, R86 / R401 / R403 already sit 0.25 mm from GND pour (Inference). Two of the vias (R86.2, R91.1) are also what squeeze BAT_FAULT_N to 0.18 / 0.38 mm (R19-RTE-03). None of this is recorded.",
+   "concrete_fix": "Record the six in R10_VALIDATION section 6 (count and locations). In a respin, place each fanout via beyond the outer end of its own pad, screened per instance; not fix-now."
+  },
+  {
+   "id": "R19-RTE-05",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R18-RTE-02",
+   "title": "Critical layer changes return over In2 power rails; no gate measures via-to-rail-capacitor distance",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "the 25 required critical-signal vias (21 over In2 3V3 / PORT_4V8)",
+    "layer": "In2.Cu",
+    "measured": "unchanged on a3144b15: the copper diff 632a9ad3 -> a3144b15 touches no critical-signal via, no rail-to-GND capacitor and no In2 fill north of y 50.85 except the SD_MOSI B.Cu run; critical_reference r10 (normal and --extended) loses 0 samples against 632a9ad3; unreferenced samples are via ends plus the GPS / radio UART B.Cu runs over PORT_4V8 (e.g. GPS_RX_WIRE 1661 of 2022)",
+    "coordinates_mm": "see round18_routing.json R18-RTE-02",
+    "maker_source": "n/a"
+   },
+   "impact": "As round 18: return current of B.Cu fast nets is carried by the In2 rail and closes through capacitors 1.3-6.2 mm away; benign at the bus speeds used (Inference), untested.",
+   "concrete_fix": "As round 18: add a counted via-to-rail-capacitor report; in a respin, a 100 nF 0402 3V3-GND at B(11.25,41.25)."
+  },
+  {
+   "id": "R19-RTE-06",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R18-RTE-03",
+   "title": "Placement-driven detours and extra vias outside the gate (refreshed on a3144b15)",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "112 non-pour nets",
+    "layer": "all",
+    "measured": "1454.9 mm routed vs 1195.2 mm octilinear MST (1.217x, +259.7 mm); top excess USB_LIMITED +28.1 (3 vias), BAT_IN +20.6, NRST +14.4 (3 vias), USB_FAULT_N +13.9, BAT_FAULT_N +12.6 (51.34 / 38.76, 3 vias), CAM_IO_3V3 +9.2, SD_MISO +9.1, SD_SCK +8.2, PYRO1_OUT +7.9 (23.65 / 15.72), SD_MOSI +7.3, VBUS_SENSE +6.9 (3 vias), SD_CS +6.6",
+    "coordinates_mm": "per net",
+    "maker_source": "n/a"
+   },
+   "impact": "M2 review residual (owner row 8); no electrical failure shown.",
+   "concrete_fix": "Refresh the section 6 table (R19-RTE-03); otherwise as round 18 (re-placement in a respin)."
+  },
+  {
+   "id": "R19-RTE-07",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R18-RTE-05",
+   "title": "USB D+ / D- not routed as a coupled pair",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "USB_DP / USB_DM F.Cu",
+    "layer": "F.Cu",
+    "measured": "no USB_DP / USB_DM copper, via or pad changed between 632a9ad3 and a3144b15 (copper diff); round 18 figures stand (1.90 mm centre spacing over x 11.1-15.85 with the VBUS via (11.95,30.6) and GND via (15.6,30.5) between them; trunks 16.45 / 14.70 mm)",
+    "coordinates_mm": "x 11.1-15.85, y 29.7-31.6",
+    "maker_source": "n/a"
+   },
+   "impact": "Benign at USB full speed (Inference); not a hand-quality pair.",
+   "concrete_fix": "As round 18 (respin: move the two vias, route DP beside DM)."
+  },
+  {
+   "id": "R19-RTE-08",
+   "severity": "Minor",
+   "status": "carried",
+   "carried_from": "R18-RTE-06 / R16-MEC-01",
+   "title": "B.Cu signal and supply copper crosses U4's nominal body (ST TN1383 guidance)",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "reference": "U4 B(17,45.9)",
+    "layer": "B.Cu",
+    "measured": "no copper change under U4 between 632a9ad3 and a3144b15 (only its mask expansion, D-R18-08); round 18 figures stand (IMU_CS 0.760 + 0.092 mm, SPI1_MISO / IMU_INT1 / 3V3A 0.325 mm each)",
+    "coordinates_mm": "body x 15.50-18.50, y 44.65-47.15",
+    "maker_source": "https://www.st.com/resource/en/technical_note/tn1383-pcb-design-guidelines-for-mems-sensors-stmicroelectronics.pdf pp7-9 (as cited by R16-MEC-01; not re-read this round)"
+   },
+   "impact": "Disclosed MEMS stress departure pending first-article qualification (owner row 8).",
+   "concrete_fix": "As recorded (first-article bias / temperature / vibration qualification; respin re-escape)."
+  }
+ ],
+ "fix_verification": [
+  {
+   "D-ID": "D-R18-01 (copper part)",
+   "claim": "R62/R63, V3V3_SENSE copper and the vias (25.5,51.75), (25.07,54.7), (25.07,57.6) removed; PC3_C NC",
+   "measurement": "copper diff: 4 V3V3_SENSE segments, the 3V3 / GND stubs and 3 vias gone; U1.18 net unconnected-(U1-PC3_C-Pad18); B.Cu GND pour refills the area cleanly; but F.Cu GND gains an unstitched 1.693 mm2 piece at U1.19 (R19-RTE-01)",
+   "verdict": "partly"
+  },
+  {
+   "D-ID": "D-R18-02",
+   "claim": "R119 B(11.57,71.1); Q121.4 -> (11.14,70.0) -> R119.1 -> via (11.14,71.7) and R119.2 -> (12.525,71.1), all B.Cu, no via; TP121 B(4,70) on a y = 70 stub; M-6 and 1.0 mm hold; ACT_GATE B.Cu 7.24 -> 14.82, F.Cu 5.47 -> 5.72; no nearer legal TP spot",
+   "measurement": "geometry exact; ACT_GATE B.Cu 7.239 -> 14.817, F.Cu 5.467 -> 5.723; ACT_FET_S has 0 vias; TP pad to GND fill 1.0005; M-6 1.835 / 2.98 mm; via hole 0.18 mm from R119.1 copper (M2 >= 0.1 to opening holds); legal-spot search: best alternatives save only 0.39-1.2 mm (R19-RTE-02)",
+   "verdict": "confirmed"
+  },
+  {
+   "D-ID": "D-R18-03",
+   "claim": "ACT_EN_MCU-BAT_FAULT_N 0.171 -> 0.550; -LS120.2 0.400 -> 0.520; -USB_LIMITED via 0.550 -> 0.670; NRST via 0.425; ACT_EN-BAT_ENABLE 0.330; U11.12 via removed, joins C99.2",
+   "measurement": "0.550 / 0.520 / 0.670 / 0.4248 / 0.330 mm reproduced; GND pour 0.2505, nearest GND via 0.275. U11.12 track ends at (25.80,66.9), 0.04 mm off C99.2 centre (25.84,66.9), joined through the pad. Unrecorded side effects: BAT_FAULT_N now 0.180 mm from GND via (27.9,64.25) (was 0.650) and 0.380 mm from 3V3 via (28.1,60.0) (was 0.850) (R19-RTE-03); it also widened the gap that holds the R19-RTE-01 fragment",
+   "verdict": "partly"
+  },
+  {
+   "D-ID": "D-R18-04",
+   "claim": "16-gon fill-only keep-outs, radius drill/2 + 1.05; ACT_GATE barrels In1 GND / In2 RAW 0.251 -> 1.050; BAT_ENABLE In2 1.050 (In1 GND 0.251 kept); J400.2 In2 1.050 (In1 GND 0.551 kept); In2 RAW 1253.99 -> 1222.74 mm2",
+   "measurement": "inradius 1.200 (vias) / 1.700 (J400.2); barrel-to-foreign inner copper 1.050 at all six barrels on the hazardous layers; BAT_ENABLE In1 GND 0.251, J400.2 In1 GND 0.550; RAW fill 1222.7372 mm2, one piece; In1 GND one piece; tracks over the new holes are only ACT_GATE, ACT_FET_S, BAT_IN, BAT_ENABLE, BAT_OVLO and GND (no fast net); K-reference 0 lost samples; the nearest GND via (16.05,75.0) keeps In1 contact",
+   "verdict": "confirmed"
+  },
+  {
+   "D-ID": "D-R18-05",
+   "claim": "R173 B(16.87,59.7) -90; OUT-R134.2 0.250 -> 2.825; OUT-Q123.1 0.175 -> 1.577; OUT-BUZZ_G 0.510; OUT-D120.3 0.514; OUT-C126 GND via 0.550; IGN-R131.1 0.222 -> 0.575; MID-R134.2 0.250 and MID-Q123.1 0.175 retained; OUT-GND 0.177 unchanged",
+   "measurement": "2.830 (pad polygons approximated inside; 0.005 mm from the record) / 1.577 / 0.510 / 0.514 / 0.550 / 0.575 / 0.250 / 0.175 / 0.177 mm reproduced; BUZZ_G-Q123.2 0.150; PYRO1_OUT 33.13 -> 23.65 mm; MID 10.50 mm with the route_check u-turn at B(16.87,60.13) (forced by the buzzer cell; same corridor copper as R17 OUT); the MID diagonal now carries the 0.203 mm GND approach that OUT had",
+   "verdict": "confirmed"
+  },
+  {
+   "D-ID": "D-R18-06",
+   "claim": "In2 3V3 one piece 1466.52 mm2; necks about 0.55 (island A) and 0.50 mm (finger); K-plane",
+   "measurement": "1466.5214 mm2, one piece; unfractured deflation: island A, shoulder and bay part from the main plane at an opening of 0.55 mm (neck 0.52-0.55 mm, the strip between the USB_LIMITED x = 26.2 clearance and the bay edge x = 27.2); the finger parts at 0.48 mm (neck about 0.45-0.48 mm beside GND via (22.825,67.825); the BAT_ENABLE keep-out narrows only the parallel channel); K-plane OK",
+   "verdict": "confirmed"
+  },
+  {
+   "D-ID": "D-R18-07",
+   "claim": "SD_MOSI (20.1,32.8) -> (25.005,27.895) -> (25.005,24.3); 36.098 -> 34.104 mm; 12 -> 10 segments; DRC, route_check, K-reference, K-region pass",
+   "measurement": "36.099 -> 34.104 mm; 12 -> 10 segments; DRC 0; route_check 0; K-reference no new loss; K-region OK; the 0.5 mm MOSI-SCK parallel run is gone, MOSI now parallels SD_CS at 0.79 mm edge",
+   "verdict": "confirmed"
+  },
+  {
+   "D-ID": "D-R18-08 (track entries only)",
+   "claim": "L400 2.0 x 1.8 mm at +/-2.25; PORT_SW / PORT_5V3 entries follow the pad centres",
+   "measurement": "PORT_SW (19.6,5.55)-(21.95,5.55) and PORT_5V3 (26.45,5.55)-(28.6,5.55) end at the new centres; 0.2505 mm to GND pour; no via near the new lands",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R19-RTE-01",
+   "condition": "only if CAD is reopened for another reason (any board change restarts the clean pair)",
+   "change": "m3_design/r10_pcb.py: set U1 pad 19 local zone connection to pcbnew.ZONE_CONNECTION_NONE before the fill (U1.19 keeps its F.Cu track to via (26.0,46.75)); refill.",
+   "evidence": "probe copy .supervisor/r19_routing/seed/fix_u119.kicad_pcb: R10_GND_F 15 -> 14 pieces (-1.794 mm2), all other fills unchanged; route_check 0 failing; check_r10 S-3/S-8/LC-1/M-6/K-reference/K-region/K-plane OK; DRC equal to the unmodified refilled copy; library parity to be confirmed in the canonical build"
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "PYRO1_CONT_MID u-turn B(16.87,60.13), 10.50 mm vs 7.08 mm MST: forced by the buzzer cell between R173 and R129 (a direct 45-degree exit hits Q123.1; a horizontal R173 at y 61.8 touches Q123.1); same corridor copper as R17 OUT; recorded in section 6. Closed.",
+  "BUZZ_G lead 0.150 mm from Q123.2 (GND): forced by the 0.5 mm OUT target; GND holds the buzzer FET off; recorded in D-R18-05. Closed.",
+  "ACT_GATE trunk enters R119.1 from the north and leaves south (perpendicular to the 0402 axis), via 0.6 mm from the pad centre: hole 0.18 mm from copper, >= 0.13 mm from the opening, tented; meets M2. Closed.",
+  "U11.12 GND track ends 0.04 mm off C99.2 centre inside the pad (joined through it), below route_check 0.1 mm: cosmetic. Closed.",
+  "BAT_FAULT_N 0.665 mm 45-degree segment after via (26.9,52.45): a via at (27.37,52.92) would sit 0.10 mm from R180.1 on B.Cu. Necessary. Closed.",
+  "In2 keep-out holes: no fast or reference-checked net crosses them; GND via (20.706,65.619) ring 0.157 mm inside BAT_ENABLE_3 never had In2 GND there (RAW region) and keeps In1. Closed.",
+  "Cross-lens note, not judged here: S-8 treats GND as non-foreign for PYRO1_OUT (via (11.63,55.1) 0.251 mm from In1 / In2 GND; J121.1 0.550 mm); with the bus live after the on-rail check an OUT-GND short equals Q124 on, which is the owner-accepted single-barrier state (owner row 1).",
+  "Whole-board scans: 0 off-angle segments, 0 crossings without a node, 0 fine-pitch pad exits toward a foreign neighbour; 5 segments < 0.25 mm outside pads, all pre-existing (CC1 0.113, BAT_OVLO 0.15, 3V3 0.212, CAM_MCU_TX 0.212, PYRO1_OUT 0.24); only via-in-pad is the named U401 VIPPO pair.",
+  "SD_MOSI redraw coupling: MOSI-SCK 0.5 mm parallel run removed; MOSI-CS 0.79 mm edge for about 6.9 mm. Improvement. Closed."
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the board before and after (and after every CLI run): a3144b15... unchanged",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity on the board: 0 violations / 0 unconnected / 0 parity",
+  "committed tools (git archive acba196) route_check --profile r10 --list --routes --bumps-all on a3144b15 and on a copy of 632a9ad3: both 0 failing; instance diff 4 removed / 4 added (139 vs 140)",
+  "committed critical_reference --profile r10 (normal and --extended), 632a9ad3 -> a3144b15: 0 lost, 0 new losses; unreferenced samples grouped by net / layer / In2 net",
+  "committed fit_check --profile r10 and check_r10 --only S-3,S-8,LC-1,M-6,K-reference,K-region,K-plane: OK",
+  "pcbnew (10.0.6, read-only) geometry dumps of both boards; copper / placement / zone diff",
+  "nearest foreign copper for every added track, via and moved pad; targeted before/after gaps for every D-R18-03 / -05 number",
+  "barrel-to-inner-copper for all pyro / enable barrels on In1 and In2; keep-out radii; vias inside keep-outs",
+  "GND pour piece stitching audit on every GND fill (R17 and R18)",
+  "In2 3V3 neck widths by unfractured polygon deflation with region-membership test points",
+  "TP121 legal-spot search on B.Cu and F.Cu",
+  "per-net routed length vs octilinear MST (R17 and R18)",
+  "whole-board hygiene scans: off-angle, short segments, same-net overlap / crossings, fine-pitch pad exits, via hole to SMD mask opening (with native mask expansions), vias between the pads of two-pad parts",
+  "renders: kicad-cli SVG of B.Cu; net-aware SVG -> PNG renders of every changed area and of full F.Cu / B.Cu / In2; kicad-cli 3D bottom render (all in .supervisor/r19_routing/png)",
+  "seeded fix on probe copies only: U1.19 zone connection NONE + native refill; DRC, route_check and check_r10 subset on the copy"
+ ],
+ "sources": [
+  "AGENTS.md sections 2-3 (acba196)",
+  "docs/REQUIREMENTS.md M2",
+  "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md D-R18-01..08, D-AUD-05",
+  "m3_design/assembly_review/sources/r10_review/round18_fix_cad.md (as read at acba196)",
+  "round18_routing.md / .json",
+  "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md",
+  "docs/M3_R10.md (residuals, line 120)",
+  "docs/R10_VALIDATION.md section 6 and the owner decision table (acba196; PYRO1_OUT row also checked on 1e60441)",
+  "m3_design/assembly_review/m3.kicad_dru / m3.kicad_pro",
+  "tools/route_check.py, tools/critical_reference.py, tools/check_r10.py, tools/fit_check.py (acba196)",
+  "m3_design/r10_route_pyro.py, r10_route_signals.py, r10_route_power.py, r10_route_sd.py, r10_route_ground.py, r10_fanout.tsv, r10_place.tsv (diff dcbb6c8..acba196)"
+ ],
+ "coverage_limits": [
+  "CAD geometry only: no field solve, current-density or thermal analysis of the In2 necks, no build, no full tools/check.sh, no physical, firmware or bench test.",
+  "Distances use pad polygons approximated inside (ERROR_INSIDE): rounded pads may read up to about 0.005 mm large (e.g. OUT-R134.2 2.830 vs recorded 2.825).",
+  "The TP121 search ignores legend fit, probe access and coating masks; its alternatives are screens, not qualified routes.",
+  "The R19-RTE-04 assembly and failure consequences are Inference; no maker or JLC statement on vias under 0603 bodies was fetched.",
+  "Carried items R19-RTE-05/-07/-08 were confirmed unchanged by the copper diff, not re-measured from scratch.",
+  "HEAD moved to 1e60441 (records / gates, board unchanged) during the review; findings refer to acba196 text unless stated.",
+  "No other round19 report or .supervisor/r19_* directory was opened."
+ ],
+ "probe_directory": ".supervisor/r19_routing/"
+}

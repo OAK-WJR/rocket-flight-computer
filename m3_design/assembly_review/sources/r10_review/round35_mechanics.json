@@ -1,0 +1,43 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 35, mechanics lens",
+  "reviewer": "claude",
+  "target_commit": "c3c4249",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Plate-model landing figures re-derived at a 0.1 mm raster over each model box (D5 pinned): C431 125 g, C421 132 g, C411 174 g, L1 213 g; D10 249 / 265 / 349 / 426 g; gap under C431 at 100 g 0.257 mm. Records (0.25 mm raster) give 125 / 133 / 175 / 214 g, 250 / 265 / 351 / 428 g and 0.261 mm: raster differences, not errors.",
+    "The h + t < 5.3 mm limit at x 3.7 is conservative: with the stated 6.35 mm across-corners nut, 2.4 mm nut, 0.4 mm projection taken at the nut radius and both 0.3 mm tolerances, the bound computes to 5.365 mm (x 4 / 42: 6.018 mm, stated < 6.0). Rounded down, not wrong.",
+    "C431's courtyard reaches y 60.045, past the relief pocket's y 20-60; its model body ends at y 59.5, so the pocket (a body clearance) covers it.",
+    "The plate-model 'not re-run on a0ec075e' statements are statements about the recorded evidence (round 29 triage judged them true); this round's re-run gives identical figures.",
+    "r10_place.tsv's basis comment for the (3.7, 86) support ('J400 3.8 mm clear of the washer') is a historical placement note; J400 is now at y 61.2-69.6, far from that support. Not a document a procedure uses."
+  ],
+  "fix_verification": [
+    {"item": "R34-TRI-01 (parts_qualification hot-plug pointer)", "verdict": "outside this lens (power / docs); no round 34 correction touched mechanics"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after: a0ec075e... both times",
+    "tools/fit_check.py --profile r10 on the committed board, report into .supervisor/r35_mechanics/fit.json: OK; issues []; all eight terminals margin 2.976 mm; wire room 5.003-5.603 mm on all eight; nearest bottom C32.2 4.536177 mm from (4,44.3); nearest top LED2.2 3.807887 mm; deepest bottom L1 z -4.616 (3.015825 mm below bottom face); minimum tail clearance 7.558359 mm; J3 x -0.45; J440 body y 7.93-23.45; J430 15.05 x 15.70 x 2.10",
+    "pcbnew probe of all F.Cu pads within 5 mm of each support (exposed copper): (4,44.3) LED2.2 GND 3.8079, LED1.1 GND 3.8601, J2.1 3V3 3.8798, J2.3 NRST 3.987; no pad within 5 mm of the other four supports",
+    "Edge.Cuts support circles: five, Ø3.2 at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); outline 46 x 90, thickness 1.6",
+    "DB125 pads: 27 plated, drill 1.30, land 1.90 (matches handoff)",
+    "Terminal centres/rotations, D402 B(4.45,65.9) between J400 tails, J430 B(24,24.3), L1 B(25,74.6), C411/C421/C431 courtyards inside x 31.5-41 (bodies inside y 20-60) against ORDERING 8.4 and the handoff",
+    "Compass check: aft = low y (R400 at y 1.8 is the 'aft' DFM query, M3_R10 line 86), forward = y 90, west = x 0; battery route (forward edge, into J1 from west, not past J400/J121/(4,44.3)/J3), J440 route (aft of y 23.5, not along x 0 past J3 y 25.3-36.3, (4,44.3), J121/J400) all consistent with the board",
+    "Wire-room arithmetic: 24.903 - 19.9 = 5.003 mm; with 0.5 mm wall 4.493 mm; bend budgets 3.9 / 4.1 / 5.1 / 5.7-6.5 mm; landing 98-163 g from v^2/2s",
+    "tools/plate_model.py --profile r10 --mass-spec masses.json re-run on the r35 fit report: f1 pinned D5 180.8 Hz, D10 255.6, clamped 287.8 / 407.0, 78.6 g, max deflection 1.27 mm at (46,44.5); identical to the round 34 probe",
+    ".supervisor/r35_mechanics/landing.py: per-part 100 g deflection and contact load (see observations)",
+    "Hardware h + t bounds recomputed from the stated nut/screw assumptions"
+  ],
+  "sources": [
+    "AGENTS.md, docs/REQUIREMENTS.md P1-P3, docs/ORDERING.md 8.4, docs/R10_VEHICLE_HANDOFF.md, docs/M3_R10.md",
+    "m3_design/r10_place.tsv, m3_design/assembly_review/m3.kicad_pcb, tools/fit_check.py, tools/plate_model.py, m3_design/assembly_review/sources/r10_design/masses.json",
+    "round24-34 triage observations (plate re-run statement, round29_triage.json)"
+  ],
+  "coverage_limits": [
+    "CAD envelopes only; no physical fit, harness, screwdriver or vibration evidence exists to check",
+    "Maker drawings for DB125, nut and washer dimensions not re-read; the retained envelopes and stated hardware assumptions were used",
+    "Parent VEHICLE.md not re-read (its R10 row is known stale)"
+  ]
+}

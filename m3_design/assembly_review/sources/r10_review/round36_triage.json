@@ -1,0 +1,28 @@
+{
+  "schema": "r10-triage-v1",
+  "target_commit": "c3c4249b89f1fe5a396cb6c4fd18fedb58d385e6",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "real_errors": [],
+  "observations": [
+    {"id": "DOCS_BINDING obs 0", "reason": "Dated method citations (adjacency_a3144b15.json, detour.py), not links; no procedure requires them; ruled in rounds 28 / 35."},
+    {"id": "DOCS_BINDING obs 1", "reason": "Rounds 35 / 36 named as the planned closing pair: true at the commit."},
+    {"id": "ROOT flag R173 B(16.87,59.70)", "reason": "Dated records true when written; board B(16.87,59.05) as M3_R10's round 26 table states; round 35 ruling."},
+    {"id": "ROOT flag C10 coat distance", "reason": "ORDERING 8.3 hand-procedure figure, not a rule a gate must bind; round 35 ruling."},
+    {"id": "GATE obs A1/A2/K-binding/B1-B7/D-R26/D-R27/right_angle/baseline", "reason": "Seeds caught or ruled class (unpinned budget figures, rounds 26/28/29/35); confirmations."},
+    {"id": "MECHANICS obs 0-1", "reason": "Older-board figures labelled; J3 courtyard gap consistent with stated metric."},
+    {"id": "PARTS obs 0-3", "reason": "J430 offset intended; committed AGENTS current; R166 band reproduced; historical section labelled."},
+    {"id": "POWER obs 0-5", "reason": "Outward-rounded bound encloses 0.2229-0.3048; disclosed single via and bleed; doubled tap; comment in unadopted option; IPC-2152 steady state."},
+    {"id": "ROUTING obs 0-9", "reason": "T junctions not bends; 90-degree junctions inside pad copper; AUD-2 / power exemptions; routing_inventory ruled round 24."},
+    {"id": "SAFETY obs 0-11", "reason": "Reproductions; BUZZ_G not fire-capable; probe procedure still catches Q120 off; S-8 row labelled historical; owner rows 1/2/24."},
+    {"id": "MCU obs 0-11, MANUFACTURING obs 0-15, REQUIREMENTS obs 0-19", "reason": "Confirmations reproducing records or prior rulings."}
+  ],
+  "not_reproducible": [],
+  "triage_sweep": [
+    "current/latest/newest pointers: all point to current sources; r10_place.tsv 216 rows match the board",
+    "all Ref F/B(x,y) in current docs parsed against the board: current statements match; mismatches only in dated change rows or via positions",
+    "owner row 20: 126 + 103 = 229; 103 table IDs equal the D-R18..D-R29 headings"
+  ],
+  "spot_checks": 11,
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0, "real_errors": 0, "observations_groups": 11, "not_reproducible": 0}
+}

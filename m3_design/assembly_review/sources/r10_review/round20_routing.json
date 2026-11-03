@@ -1,0 +1,288 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round20_routing",
+ "reviewer": "claude",
+ "target_commit": "6628488",
+ "board_sha256_before": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "board_sha256_after": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 11
+ },
+ "findings": [
+  {
+   "id": "R20-RTE-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "TP82 move (D-R19-14 / M-6) lengthens its USB_LIMITED dead-end stub 1.0 -> 4.03 mm and adds two bends; a legal collinear spot gives 0.85 mm and no new bend",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "B.Cu",
+    "net": "USB_LIMITED",
+    "before": "a3144b15: TP82 B(10.8,21.3), stub (11.8,21.3)-(10.8,21.3) 1.000 mm",
+    "after": "50a39de5: TP82 B(11.0,17.6), stub (11.8,21.3)-(11.8,18.4) 2.900 mm + (11.8,18.4)-(11.0,17.6) 1.131 mm = 4.031 mm; TP82 branch from node (15.55,28.0) is 12.28 mm of 0.4 mm copper",
+    "gate": "route_check --bumps-all new info instance extra_bends USB_LIMITED B.Cu (15.55,28.0) seglens [2.95, 5.303, 2.9, 1.131]",
+    "old_spot_fails": "B(10.8,21.3) now overlaps R90 courtyard and is 1.455 mm from J440.4 (M-6 needs 1.5)",
+    "legal_alternative": "B(11.2,20.7): on the extension of the existing diagonal (15.55,25.05)-(11.8,21.3); 1.5 mm pad to foreign B.Cu copper 1.075 mm (R90.1 / R90.2; rule 1.0), 3V3 via (13.375,20.0) 1.175 mm; courtyard (2.0 mm square) overlaps none; J440.4 M-6 1.855 mm; stub 0.849 mm collinear",
+    "probe": ".supervisor/r20_routing/tp82.py, tp82_search_B.json (205 legal B.Cu spots; rules from round 19 tp_search: 1.0 mm bare-pad clearance, courtyards, M-6 1.5 mm, 3.5 mm supports, 0.5 mm edge)"
+   },
+   "impact": "Cleanliness only (M2 stub / extra bends); 3.18 mm more dead-end copper on a 5 V input rail than needed. No electrical failure.",
+   "concrete_fix": "r10_place.tsv: TP82 B(11.0,17.6) -> B(11.2,20.7); r10_route_usb.py: replace (15.55,25.05)-(11.8,21.3), (11.8,21.3)-(11.8,18.4), (11.8,18.4)-(11.0,17.6) by one segment (15.55,25.05)-(11.2,20.7) 0.4 mm; re-run DRC / M-6 / bare-pad rules and the TP82 legend search."
+  },
+  {
+   "id": "R20-RTE-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Via-less 0.282 mm2 F.Cu GND fragment on U1.74 pin tip (same class as R19-RTE-01, missed by rounds 1-19)",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "F.Cu",
+    "zone": "R10_GND_F piece 11",
+    "area_mm2": 0.282,
+    "bbox": "(17.10,34.20)-(17.90,34.76)",
+    "connection": "only through U1.74 (GND, F(17.5,35.45), pad tip y 34.65); no via; neighbours SWDIO run y 33.85 and U1.73 / U1.75 tips",
+    "U1.74 own path": "F.Cu (17.5,35.45)-(17.5,39.3) to GND via (17.5,39.3)",
+    "also_on_a3144b15": "yes (piece 12, 0.282 mm2)",
+    "probe": ".supervisor/r20_routing/geo.py islands (every F/B/In1/In2 GND fill piece with its GND via / THT count; this is the only piece with none)"
+   },
+   "impact": "Pour debris, electrically harmless; D-R19-05 removed the larger U1.19 instance and left this one. route_check pour_finger only checks pieces longer than 3 mm.",
+   "concrete_fix": "r10_pcb.py: board.FindFootprintByReference('U1').FindPadByNumber('74').SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_NONE), as for pad 19; U1.74 keeps its run to via (17.5,39.3)."
+  },
+  {
+   "id": "R20-RTE-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Re-routed GPS pair (USART3 PD8 / PD9) takes two 45-degree jogs per trace; forced only by C90 fan-out vias on the escape side",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "F.Cu",
+    "GPS_TX_MCU": "(27.0,35.45)-(27.0,34.3)-(27.4,33.9)-(27.4,31.6)-(29.3,29.7)-(29.3,16.0); seglens 1.15/0.566/2.3/2.687/13.7",
+    "GPS_RX_MCU": "(26.5,35.45)-(26.5,33.6)-(27.0,33.1)-(27.0,31.4)-(28.8,29.6)-(28.8,11.0); seglens 1.85/0.707/1.7/2.546/18.6",
+    "gate": "route_check new info instances extra_bends GPS_TX_MCU / GPS_RX_MCU",
+    "why": "C90.1 3V3 via (26.425,32.075) and C90.2 GND via (26.425,30.525) sit east of their pads in the PD9 escape; RADIO_TX vertical x 28.5 to y 31.1 then diagonal x+y=59.6. With the vias there, single diagonals need c_RX >= 59.21 and c_TX <= 59.10 (x+y): infeasible, so the corridor x 26.9-27.65 and the first jog are forced.",
+    "alternative (Inference, not DRC-checked)": "C90 vias on the west side of their pads (e.g. (24.775,32.075) / (24.775,30.525)); then RX (26.5,35.45)-(26.5,32.0)-(28.8,29.7) and TX (27.0,35.45)-(27.0,32.0)-(29.3,29.7): one bend pair each, 0.154 mm to the RADIO_TX diagonal (DRC 0.15), 0.325 mm to C90.1 pad",
+    "record": "AVA_LAYOUT.md Round19 row describes the route; R10_VALIDATION section 6 does not list the extra bends",
+    "net lengths": "GPS_TX 28.77 -> 27.11 mm, GPS_RX 31.75 -> 30.09 mm (shorter than round 18)"
+   },
+   "impact": "Cleanliness (M2 staircase-like double jog on a slow UART); no signal-integrity consequence expected (Inference). Reference: continuous In1 GND under both traces.",
+   "concrete_fix": "Records now: add the two extra_bends instances to the section 6 M2 list. Respin: move C90 fan-out vias west and redraw the GPS escape as one diagonal per trace."
+  },
+  {
+   "id": "R20-RTE-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "VLOGIC parallel via pair (D-R19-09) is untidy: the first via sits off both runs on 0.42 mm doglegs and the second hangs on a 0.85 mm diagonal, a 2.6 mm loop",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "net": "VLOGIC",
+    "copper": "F.Cu C84.1 (27.5,81.75)-(29.2,81.75); F (29.2,81.75)-(29.5,82.05) 0.424 mm -> via (29.5,82.05) -> B (29.5,82.05)-(29.8,81.75) 0.424 mm to the B node of trunk x 29.8 / branch y 81.75; new F (29.2,81.75)-(29.8,81.15) 0.849 mm -> via (29.8,81.15) on the trunk",
+    "via centres": "0.949 mm (holes 0.649 mm); nearest foreign 1.44 mm F (3V3 y 79.26) / 1.638 mm B (3V3 via (30.8,79.26)); no VLOGIC plane",
+    "gate": "route_check PARALLEL_VIAS names (29.8,81.15); no tiny_jog reported for the 0.424 mm doglegs",
+    "in-line alternative (Inference)": "F.Cu straight (27.5,81.75)-(30.45,81.75); vias at the B node (29.8,81.75) and (30.45,81.75) on the B branch y 81.75 (holes 0.35 mm apart); no diagonal stubs"
+   },
+   "impact": "Cleanliness only; both vias carry the hold-up current as intended.",
+   "concrete_fix": "Respin (or with any CAD reopening): r10_route_power.py place both VLOGIC vias on the straight F.Cu run / B.Cu branch y 81.75 as above; update PARALLEL_VIAS."
+  },
+  {
+   "id": "R20-RTE-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "J440 ESD clamps sit 6.2 mm from the connector pins (J410 / J420: 3.1-3.4 mm); not recorded",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "F.Cu",
+    "pin to clamp (centre)": "J440.3 -> D440.1 6.23 mm, J440.4 -> D441.1 6.18 mm; J410 3.36 / 3.41; J420 3.06 / 3.06",
+    "GND pin to clamp GND pad": "J440 7.34 / 9.71 mm; J410 5.43 / 8.70; J420 3.33 / 5.95",
+    "cause": "J410 / J420 cells are on the bottom under the connector body (D410 B(35.75,12.3)); J440 cell is on the top east of J440 courtyard (x > 11.70); D440 courtyard x 13.26-14.54",
+    "option (Inference)": "D440 / D441 west against J440 courtyard (x ~12.45) recovers about 1.4 mm; needs the RX wire step redrawn"
+   },
+   "impact": "Longer unclamped wire run and clamp loop than the sibling ports (roughly 1 nH/mm, Inference); the 1 kohm series resistors still sit MCU-side of the clamps. Installed ESD is unqualified for all ports; no failure shown.",
+   "concrete_fix": "Records: state the clamp distances in D-R19-14 / section 6 as a difference from J410 / J420. Respin: move D440 / D441 (or the whole cell) toward J440."
+  },
+  {
+   "id": "R20-RTE-06",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The under-body via record (R19-RTE-04, six 0603 resistors) misses C89: R167.2 GND via 0.186 mm from the battery-input pad, under the 1206 body",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb",
+    "layer": "F.Cu",
+    "via": "GND (13.536,85.161) d0.5, R167.2 fan-out (r10_fanout.tsv line 53), B.Cu (12.175,83.8)-(13.536,85.161)",
+    "gaps": "via ring to C89.1 (BAT_IN, F(12.525,84.7) 1.15 x 1.8) 0.186 mm; to C89.2 (BAT_DAMP) 1.114 mm; F.Cu GND pour there keeps 0.25 mm",
+    "others found by the same scan (via centre between the two pads)": "C400 0.75/0.75, C405 0.75/0.75, C411 0.40/1.10, C421 0.75/0.75, C461 0.55/0.95 mm (1210, vias under body); unchanged since a3144b15",
+    "tenting": "board setup tenting front yes / back yes",
+    "probe": ".supervisor/r20_routing/scan in this lens report (vias between the pads of two-pad parts)"
+   },
+   "impact": "BAT_IN is upstream of U9 (not current limited). A tented via under the body is unlikely to bridge, and the pour already sits at 0.25 mm; this is a records completeness defect for the owner M2 list, not a demonstrated hazard.",
+   "concrete_fix": "Records now: add C89 (and, for completeness, the five 1210 cases) to section 6 under R19-RTE-04. Respin: move R167.2 fan-out via out from under C89."
+  },
+  {
+   "id": "R20-RTE-07",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Records: the current-board routing inventory and two round 19 measurement statements are stale or incomplete",
+   "evidence": {
+    "route_check (committed checker, --bumps-all) on 50a39de5": "149 instances, 0 failing, 7 unrecorded leftovers (a3144b15 with the same checker: 140, 6); added 11: detour USB_FAULT_N (12.1,23.0) 33.91 / 20.89 mm ratio 1.62 (new leftover; R90 move shortened the MST), extra_bends GPS_TX / GPS_RX / USB_LIMITED, short_layer_hop BAT_ENABLE B (19.675,66.6) 2.973, PORT_4V8 B (29.75,9.95) 2.65, PORT_4V8 F (30.5,9.95) 0.75, PORT_5V3 B (25.65,14.9) 0.75, PORT_5V3 B (42.0,61.8) 0.75, power_via_no_gnd PORT_4V8 (29.75,9.95) 3.421, VLOGIC (29.8,81.15) 3.17; removed 1: pad_end_offcentre USB_FAULT_N R90.2",
+    "R10_VALIDATION section 6": "states the --bumps-all inventory was not re-run on 50a39de5 and keeps a3144b15 figures (three short layer hops, 57 off-centre entries); now 8 and 56",
+    "D-R19-09 / hand-back table": "U401 IN via (26.45,11.95) nearest F.Cu non-GND 2.000 mm GPS_RX_MCU was measured before item 14; on 50a39de5 it is 0.929 mm to the AUX PORT_4V8 feed",
+    "D-R19-01 neck statement": "true at 0.5 mm, but In2 GND_CH1 now has a dead-end finger north of the J121.1 keep-out (x 5.7-8.65, y 51.81-52.77) with a 0.60 mm neck at x 7.0-7.8; a 0.6 mm opening splits 0.126 mm2 off, 0.8 mm loses 1.277 mm2 (a3144b15: 0.16); In1 keeps a 0.6 mm bridge between the J121.1 keep-out and the J121.2 antipad (x 6.9-7.9, y 55.75-56.5), connected on both sides",
+    "D-R19-02 wording": "In2 GND 1.123 mm is barrel-to-barrel to the GND via (20.706,65.619) (1.423 mm centres); the nearest In2 GND fill is 3.088 mm from the wall"
+   },
+   "impact": "Owner M2 acceptance list does not yet cover the current board; no hazard.",
+   "concrete_fix": "Docs / gate lane: paste the 11 / 1 instance delta and the 7 leftovers into section 6 and the final deviations JSON; correct the (26.45,11.95) figure; add the In2 GND_CH1 finger to the D-R19-01 record."
+  },
+  {
+   "id": "R20-RTE-08",
+   "severity": "Minor",
+   "status": "carried",
+   "title": "Layer-change returns over In2 power rails (carried)",
+   "evidence": {
+    "note": "No critical layer-change copper changed except the BAT_ENABLE via moving 0.2 mm (In1 GND 0.250 mm, In2 hole inside RAW_PROTECTED, nearest GND via 1.423 mm). check_r10 K-reference / K-region OK on the probe copy."
+   },
+   "impact": "As round 19.",
+   "concrete_fix": "As round 19 (first-article signal checks; respin).",
+   "earlier_id": "R19-RTE-05"
+  },
+  {
+   "id": "R20-RTE-09",
+   "severity": "Minor",
+   "status": "carried",
+   "title": "Placement-driven detours (carried; refreshed)",
+   "evidence": {
+    "non-pour nets": "116 nets, routed 1504.3 mm vs octilinear pad MST 1239.9 mm, 1.213 (a3144b15: 112 nets, 1454.9 / 1195.2, 1.217)",
+    "changed nets": "ACT_GATE 20.54 -> 13.40 mm; USB_FAULT_N 37.18 -> 33.91; USB_LIMITED 81.66 -> 84.69 (TP82); GPS_TX 28.77 -> 27.11; GPS_RX 31.75 -> 30.09; new AUX_TX_MCU 21.77 / 19.97, AUX_RX_MCU 18.67 / 17.16",
+    "probe": ".supervisor/r20_routing/detour_table.py"
+   },
+   "impact": "As round 19.",
+   "concrete_fix": "As round 19; R20-RTE-01 removes 3.2 mm.",
+   "earlier_id": "R19-RTE-06"
+  },
+  {
+   "id": "R20-RTE-10",
+   "severity": "Minor",
+   "status": "carried",
+   "title": "USB D+ / D- not routed as a coupled pair (carried)",
+   "evidence": {
+    "note": "USB_DP / USB_DM copper identical to a3144b15 (copper diff)"
+   },
+   "impact": "As round 19.",
+   "concrete_fix": "As round 19.",
+   "earlier_id": "R19-RTE-07"
+  },
+  {
+   "id": "R20-RTE-11",
+   "severity": "Minor",
+   "status": "carried",
+   "title": "Copper under U4 departs from ST TN1383 (carried)",
+   "evidence": {
+    "note": "No copper under U4 changed in round 19 (copper diff); U4 part change only (D-R19-11)"
+   },
+   "impact": "As round 19.",
+   "concrete_fix": "As round 19.",
+   "earlier_id": "R19-RTE-08"
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R19-01",
+   "claim": "In1 / In2 GND >= 1 mm from PYRO1_OUT barrels; planes stay one piece; no new neck < 0.5 mm",
+   "measurement": "OUT via wall to In1 / In2 GND fill 1.050 mm (1.021 to own partner via ring (10.3,55.6), 1.42 mm centres); J121.1 wall 1.050 / 1.050, In2 3V3 1.061; J121.2 0.550 unchanged; In1 GND and In2 GND_CH1 one piece at 0.5 mm opening; In2 GND_CH1 splits at 0.6 mm (dead-end finger, R20-RTE-07)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-02",
+   "claim": "BAT_ENABLE via to (19.675,66.6); 0.500 mm to R134.2; B.Cu run as stated",
+   "measurement": "B.Cu 0.500 mm to R134.2 (RAW_ACT); F.Cu 1.556 mm to ACT_EN_MCU; In1 GND 0.250; In2 RAW 1.050; GND partner via 1.423 mm; run (19.675,66.6)-(21.0,67.925)-(21.0,68.6)-(21.3,68.9) exact; the hop crosses ACT_EN_MCU (needed); pre-existing 0.424 mm tiny jog at (21.0,68.6) forced by R88.2",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-03",
+   "claim": "TP121 and its 7.14 mm ACT_GATE stub removed",
+   "measurement": "No ACT_GATE copper west of x 11.14; Q121.4 -> (11.14,70.0) -> R119.1 -> via (11.14,71.7) is one clean bend; no dangling end (independent endpoint scan: 0)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-04",
+   "claim": "C123 ACT_EN 1.1 mm from Q122.1; GND to R123.2 via",
+   "measurement": "F.Cu (17.8,70.75)-(17.8,71.85) 1.10 mm; GND (18.64,71.85)-(19.207,71.85)-(19.967,71.09) 0.567 + 1.075 mm, pad-centre entries",
+   "verdict": "confirmed (routing only)"
+  },
+  {
+   "id": "D-R19-05",
+   "claim": "U1.19 no pour connection; fragment gone",
+   "measurement": "F.Cu GND pieces 15 -> 14; the 1.693 mm2 piece is gone; DRC (severity all, parity, 10.0.7) 0; the same pattern remains at U1.74 (R20-RTE-02)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-09",
+   "claim": "Second vias at five feeds, legal spots, in own In2 fills",
+   "measurement": "All five present at track nodes (not overlap-only); In2 membership: PORT_4V8 / PORT_5V3 vias in their own fill, VLOGIC none (no plane); hole spacing >= 0.45 mm (VLOGIC 0.649); nearest foreign copper matches except (26.45,11.95) now 0.929 mm F.Cu to the AUX feed (R20-RTE-07); VLOGIC pair untidy (R20-RTE-04)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R19-14 (routing)",
+   "claim": "AUX and GPS pairs F.Cu only; AUX no layer change; J410 pair changes only first 7 mm; feed via two vias; R90 / TP82 / stitch moves",
+   "measurement": "AUX pair octilinear, no via, continuous In1 GND under every sample except its own pad / THT antipads; GPS pair shorter but 2 extra bends each (R20-RTE-03); feed (29.75,9.95) / (30.5,9.95) in In2 PORT_4V8; R90 run no longer doubles back (pad_end_offcentre removed); TP82 stub 4.03 mm (R20-RTE-01); worst GND-via distance in the NW corner pours 6.95 -> 5.18 mm; ESD clamps 6.2 mm from pins (R20-RTE-05)",
+   "verdict": "partly"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R20-RTE-02",
+   "change": "r10_pcb.py: U1 pad 74 SetLocalZoneConnection(ZONE_CONNECTION_NONE) (one line beside pad 19's)",
+   "why": "removes the last via-less GND fragment; no net, land or clearance change"
+  },
+  {
+   "finding": "R20-RTE-01",
+   "change": "TP82 B(11.0,17.6) -> B(11.2,20.7); USB_LIMITED B.Cu (15.55,25.05)-(11.2,20.7) replaces three segments",
+   "why": "3.18 mm less dead-end stub, two bends fewer; legal margins measured (1.075 / M-6 1.855 mm)"
+  },
+  {
+   "finding": "R20-RTE-03 / -05 / -06 / -07",
+   "change": "records only (section 6 / D-R19-09 / D-R19-14 / D-R19-01 text)",
+   "why": "no board change"
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "C23.2 GND fan-out via move (27.1,34.2) -> (25.95,34.15): B.Cu link 1.10 -> 1.63 mm, F.Cu 0.200 mm to GPS_RX (DRC 0.15); needed to free PD8; extra loop about 0.5 nH (Inference): not filed.",
+  "AUX ESD taps end mid-segment on the wire runs (T-junctions at (13.575,18.0) / (13.575,20.6)): same style as RADIO / CAM wires; connected (no overlap-only end).",
+  "Second-via 0.75 mm stubs (PORT_5V3 (24.9,14.9), (42.75,61.8); PORT_4V8 (30.5,9.95)): reported as short_layer_hop by route_check; they are intended parallel vias into the same In2 fill.",
+  "U401 EN second via: EN draws microamps, but a single cracked via would switch off all three port supplies, so the redundancy has a reason.",
+  "PORT_4V8 AUX feed 22.8 mm F.Cu 0.4 mm and its jog to y 9.95: forced by the cap pads at y <= 9.95 west of x 17 and the GPS_RX via (28.8,11.0); F.Cu GND stays one piece.",
+  "BAT_ENABLE B.Cu hop (2.973 mm, new short_layer_hop info): crosses the ACT_EN_MCU F.Cu diagonal; needed.",
+  "Stitch via (0.9,9.0): 0.65 mm copper to the board edge; DRC 0; far from the (4,4) washer.",
+  "GND partner rule: every critical-class via changed in round 19 is within 1.5 mm of a GND via or on the AUD-2 excluded list (unchanged vias at 1.7-7.5 mm are pre-existing AUD-2 exclusions).",
+  "UART crosstalk: GPS_TX diagonal runs 1.13 mm parallel to RADIO_TX diagonal at 0.224 mm gap; AUX_RX beside VBUS_SENSE geometry is the pre-existing former GPS run; not filed."
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 of the committed file, the working tree and the probe copy before and after: all 50a39de5... (unchanged).",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity on a git-archive copy of 6628488: 0 violations, 0 unconnected, 0 parity.",
+  "Committed tools/route_check.py --profile r10 --bumps-all on 50a39de5 (149 instances, 0 failing, 7 leftovers) and on a3144b15 (140, 6); instance diff.",
+  "Committed tools/fit_check.py and tools/check_r10.py (full contract) on the probe copy: OK (K-reference, K-region, K-plane, K-power, S-8 included).",
+  "Native pcbnew dump of both boards and a copper / footprint / zone diff (18 tracks removed, 55 added; 6 vias removed, 15 added).",
+  "Independent scans: octilinear angles (0 off-grid), duplicates (0), zero-length (0), dangling or overlap-only ends (0), T-junctions (15; 2 new, AUX ESD taps).",
+  "Zone membership of every new or moved via on all four layers; reference sampling (centre and +-0.3 mm edges, 0.05 mm step) under AUX, GPS, radio, SD, BAT_ENABLE, USB_FAULT_N and feed runs.",
+  "Opening analysis (0.3-1.0 mm) of In1 GND and In2 GND fills around the PYRO1_OUT keep-outs on both boards; barrel wall distances.",
+  "GND fill pieces with GND via / THT counts on every layer, both boards; worst distance to a GND via in the NW corner pours.",
+  "TP82 legal-spot search on B.Cu (round 19 tp_search rules) and clearance check of the old, new and alternative spots.",
+  "Nearest-GND-via distance diff for all non-GND vias; per-net routed length vs octilinear MST; under-body via scan for two-pad parts; port-cell geometry for J410 / J420 / J440.",
+  "Region renders (F / B / In1 / In2) of the GPS escape, AUX cell and feed, VLOGIC pair, BAT_ENABLE, R90 / TP82, PYRO1_OUT voids and the U1.74 fragment."
+ ],
+ "sources": [
+  "AGENTS.md section 3 and docs/REQUIREMENTS.md M2 (clean-routing list)",
+  "R10_DECISIONS.md D-R19-01..14",
+  "round19_fix_cad.md",
+  "round19_routing.md",
+  "AVA_LAYOUT.md (Round19 CAD fix pass)",
+  "docs/R10_VALIDATION.md section 6",
+  "tools/route_check.py, tools/check_r10.py at 6628488",
+  "No maker datasheet parameter is relied on; the ESD inductance figure is labelled Inference."
+ ],
+ "coverage_limits": [
+  "CAD geometry only: no field solve, ESD / SI simulation, current-density analysis of necks, physical or bench test.",
+  "Alternatives in R20-RTE-03, -04 and -05 are Inference (not DRC-checked on a modified copy); R20-RTE-01 alternative checked against the stated placement rules, not legend fit or probe-fixture access.",
+  "Full tools/check.sh was not run (brief); self-tests not run.",
+  "Silkscreen, paste and BOM changes of round 19 are outside this lens."
+ ]
+}

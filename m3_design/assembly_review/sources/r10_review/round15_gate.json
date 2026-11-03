@@ -1,0 +1,662 @@
+{
+  "schema": 1,
+  "round": 15,
+  "lens": 9,
+  "lens_name": "gate adversary / seeded native and package inputs",
+  "target_commit": "789f4d516251991bdf1518254d537ff7b41f65bb",
+  "commit_authority": "Exact root target packet; no Git commands used.",
+  "created_utc": "2026-10-30T13:58:22.888097+00:00",
+  "board_sha256_before": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_sha256_after": "7866d6b895573eb10c14d0227ee4bdde8b4fba6145529786cd554cdb80121783",
+  "board_bytes": 2257812,
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 3
+  },
+  "findings": [
+    {
+      "id": "R15-GATE-01",
+      "severity": "Minor",
+      "status": "active",
+      "provenance": "new",
+      "title": "Production BOM identity is not compared with the native fitted part",
+      "evidence": {
+        "files": [
+          "tools/check_r10.py:212",
+          "tools/check_r10.py:1486",
+          "m3_design/r10_fab.sh:39",
+          "m3_design/assembly_review/fab/m3_bom_jlc.csv:60"
+        ],
+        "component": "R134",
+        "coordinates_mm": [
+          16.5,
+          64.0
+        ],
+        "side": "B.Cu",
+        "expected": {
+          "LCSC": "C3013496",
+          "Manufacturer Part": "CRM2512-FX-2R00ELF",
+          "value": "2R 1% 2W pulse",
+          "Qty": 1
+        },
+        "seed": {
+          "LCSC Part #": "C168925",
+          "Manufacturer Part": "25121WF360LT4E",
+          "Comment": "0.36R 1% 2512",
+          "Footprint": "M3_R2512_UR",
+          "Qty": 1
+        },
+        "S4_issues": [],
+        "original_manifest": "rejects changed m3_bom_jlc.csv",
+        "after_genuine_write_manifest": "verify_manifest accepts all five hashed outputs; this supplies no semantic identity check",
+        "maker_page": "Bourns CRM2512 p1 family and rating; selected exact identity is native R134 and its BOM row. The seed uses the existing native R166 identity.",
+        "source_url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf"
+      },
+      "impact": "A wrong physical resistor order can pass the BOM population/quantity detector. The current production row is correct. Original manifest rejection prevents claiming a whole-gate escape.",
+      "concrete_fix": "In the existing BOM walk, map every row designator to the native fitted LCSC, Manufacturer Part and footprint, and reject mismatches or unexpected members. Preserve quantity-free CPL handling and valid merged BOM rows."
+    },
+    {
+      "id": "R15-GATE-02",
+      "severity": "Minor",
+      "status": "active",
+      "provenance": "new scope extension beyond closed R12 terminal/SD coverage",
+      "title": "Positive scale can shrink the C84 physical fit representation",
+      "evidence": {
+        "files": [
+          "tools/fit_check.py:67",
+          "tools/fit_check.py:144",
+          "tools/fit_check.py:180"
+        ],
+        "component": "C84",
+        "coordinates_mm": [
+          27.5,
+          78.5
+        ],
+        "side": "F.Cu",
+        "seed_model_scale_xyz": [
+          0.01,
+          0.01,
+          0.01
+        ],
+        "baseline_model_allocation_mm": [
+          8.50000078,
+          8.50000078,
+          10.80000126
+        ],
+        "seed_allocation_mm": [
+          0.0850000078,
+          0.0850000078,
+          0.1080000126
+        ],
+        "fit_passes": true,
+        "P11_passes": true,
+        "native_DRC": {
+          "violations": 0,
+          "unconnected": 0,
+          "parity": 0
+        },
+        "independent_native_budget_binding": "rejects changed PCB",
+        "maker_page": "MA series p2 8x10 dimensions and p4 MA25V470M8X10 electrical row, four-page sheet with no explicit revision seen",
+        "source_url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+        "source_pdf_sha256": "5ab3c478e90f1826a614a56af8164bb4bab3143affaae1ad7aa69fc0c1981997"
+      },
+      "impact": "The fit detector accepts a representation much smaller than the specified capacitor. Current C84 is full size and no physical collision or full-gate acceptance is demonstrated. Eight terminal/SD positive-shrink controls reject correctly.",
+      "concrete_fix": "Add the reviewed M3_MA_8x10 normalized physical envelope to the existing R10_MODEL_BOXES validation, with a C84 shrink negative and equivalent-unit positive control. Keep the present conservative dimensions and physical qualification limits."
+    },
+    {
+      "id": "R15-GATE-03",
+      "severity": "Minor",
+      "status": "active",
+      "provenance": "new",
+      "title": "K-fill compares area rather than saved filled geometry",
+      "evidence": {
+        "files": [
+          "tools/check_r10.py:2707"
+        ],
+        "zone": "R10_GND_In2_CH1",
+        "zone_uuid": "0343b2c5-ae3b-4e3e-bc68-aa41b4327dd8",
+        "layer": "In2.Cu",
+        "baseline_filled_bbox_mm": [
+          0.5005,
+          51.3005,
+          24.0,
+          66.099999
+        ],
+        "seed_translation_mm": [
+          0.1,
+          0.0
+        ],
+        "saved_area_before_mm2": 237.869754823186,
+        "saved_area_after_mm2": 237.869754823186,
+        "symmetric_difference_mm2": 5.694234392076,
+        "K_fill": {
+          "issues": [],
+          "evidence": {
+            "zones": 9,
+            "stale": 0,
+            "tolerance_mm2": 0.01
+          }
+        },
+        "other_focused_checks": {
+          "K_inner_r10_issues": [],
+          "S8_issues": [],
+          "reference_issue_count": 0
+        },
+        "independent_native_budget_binding": "rejects changed PCB",
+        "maker_page": "Not applicable: native saved-fill/refill geometry equality is a software invariant, not a maker parameter."
+      },
+      "impact": "A demonstrably stale saved fill passes its dedicated freshness detector. The target has no demonstrated stale fill; broader native-budget binding rejects the mutant. No whole-gate or manufacturing escape is claimed.",
+      "concrete_fix": "After native refill compare normalized polygons per zone UUID/layer/net, using symmetric difference or equivalent geometric comparison with an explicit numerical tolerance. Add same-area translation/reshape negatives and unchanged/equivalent-geometry positives."
+    }
+  ],
+  "closed_or_rejected_CM_hypotheses": [
+    {
+      "id": "C1",
+      "hypothesis_grade": "Critical",
+      "hypothesis": "Copper drawing bypasses R134 while labels and nets retain the reviewed topology.",
+      "status": "rejected as gate escape",
+      "evidence": "Real B.Cu 0.5mm drawing connects R134 pads at (13.925,64) and (19.075,64). Native DRC reports11 violations; S-1 and S-2 reject. S-9 alone is not a bypass detector."
+    },
+    {
+      "id": "M1",
+      "hypothesis_grade": "Major",
+      "hypothesis": "C126 marked DNP evades reset-safe assembly enforcement.",
+      "status": "rejected",
+      "evidence": "Native parity reports1 item and S-4 rejects required fitted C126. S-3 topology alone remains clean as expected."
+    },
+    {
+      "id": "M2",
+      "hypothesis_grade": "Major",
+      "hypothesis": "Required firing paths can be reduced to0.25mm without rejection.",
+      "status": "rejected",
+      "evidence": [
+        {
+          "net": "PYRO1_IGN",
+          "terminals": [
+            [
+              "R134.1"
+            ],
+            [
+              "J121.2"
+            ]
+          ],
+          "joined": true,
+          "start": [
+            7.4,
+            59.4
+          ],
+          "end": [
+            12.0,
+            64.0
+          ],
+          "original_width_mm": 0.5,
+          "seeded_width_mm": 0.25,
+          "s9_rejected": true,
+          "issues": [
+            "S-9: PYRO1_IGN fire-path track 0.250 mm wide, 6.505 mm long on B.Cu (7.4, 59.4)-(12.0, 64.0); minimum 0.5 mm (AUD-6)"
+          ]
+        },
+        {
+          "net": "PYRO1_OUT",
+          "terminals": [
+            [
+              "J121.1"
+            ],
+            [
+              "Q124.5"
+            ]
+          ],
+          "joined": true,
+          "start": [
+            7.4,
+            54.1
+          ],
+          "end": [
+            10.63,
+            54.1
+          ],
+          "original_width_mm": 0.5,
+          "seeded_width_mm": 0.25,
+          "s9_rejected": true,
+          "issues": [
+            "S-9: PYRO1_OUT fire-path track 0.250 mm wide, 3.230 mm long on F.Cu (7.4, 54.1)-(10.63, 54.1); minimum 0.5 mm (AUD-6)"
+          ]
+        },
+        {
+          "net": "RAW_ACT",
+          "terminals": [
+            [
+              "Q121.5",
+              "Q121.6",
+              "Q121.7",
+              "Q121.8",
+              "Q121.9"
+            ],
+            [
+              "R134.2"
+            ]
+          ],
+          "joined": true,
+          "start": [
+            14.475,
+            67.105
+          ],
+          "end": [
+            17.58,
+            64.0
+          ],
+          "original_width_mm": 0.5,
+          "seeded_width_mm": 0.25,
+          "s9_rejected": true,
+          "issues": [
+            "S-9: RAW_ACT fire-path track 0.250 mm wide, 4.391 mm long on B.Cu (14.47, 67.11)-(17.58, 64.0); minimum 0.5 mm (AUD-6)"
+          ]
+        },
+        {
+          "net": "ACT_FET_S",
+          "terminals": [
+            [
+              "Q120.1",
+              "Q120.2",
+              "Q120.3"
+            ],
+            [
+              "Q121.1",
+              "Q121.2",
+              "Q121.3"
+            ]
+          ],
+          "joined": true,
+          "start": [
+            12.525,
+            71.1
+          ],
+          "end": [
+            14.475,
+            71.1
+          ],
+          "original_width_mm": 0.4,
+          "seeded_width_mm": 0.25,
+          "s9_rejected": true,
+          "issues": [
+            "S-9: ACT_FET_S fire-path track 0.250 mm wide, 1.950 mm long on B.Cu (12.53, 71.1)-(14.47, 71.1); minimum 0.5 mm (AUD-6)",
+            "S-9: stale FIRE_NARROW entry ('ACT_FET_S', 'B.Cu', 0.4, 1.95, (12.525, 71.1, 14.475, 71.1)) (AONR21357 source bridge bar)"
+          ]
+        },
+        {
+          "net": "BAT_IN",
+          "terminals": [
+            [
+              "J1.1"
+            ],
+            [
+              "Q120.5",
+              "Q120.6",
+              "Q120.7",
+              "Q120.8",
+              "Q120.9"
+            ]
+          ],
+          "joined": true,
+          "start": [
+            7.4,
+            74.1
+          ],
+          "end": [
+            13.0,
+            74.1
+          ],
+          "original_width_mm": 1.0,
+          "seeded_width_mm": 0.25,
+          "s9_rejected": true,
+          "issues": [
+            "S-9: BAT_IN fire-path track 0.250 mm wide, 5.600 mm long on B.Cu (7.4, 74.1)-(13.0, 74.1); minimum 1.0 mm (D-R2-02)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "M3",
+      "hypothesis_grade": "Major",
+      "hypothesis": "Normalized terminal/closed-SD envelope shrinking still evades the R12 guards.",
+      "status": "rejected",
+      "evidence": "All8 native positive0.99999 x-scale seeds reject. Valid native fit and fit unit-conversion regression controls pass."
+    },
+    {
+      "id": "M4",
+      "hypothesis_grade": "Major",
+      "hypothesis": "The three reported prospective detector gaps prove complete present-gate acceptance of wrong hardware/package.",
+      "status": "rejected as an overclaim",
+      "evidence": "Original BOM manifest rejects the wrong row. Native-bound budget differs for C84-scale and shifted-fill boards. No full check.sh mutant pass was executed or claimed."
+    },
+    {
+      "id": "M5",
+      "hypothesis_grade": "Major",
+      "hypothesis": "Existing R1 executable firmware is approved for R10 through the generated evidence note.",
+      "status": "rejected",
+      "evidence": "Fresh r10_sch_check.binding_note equals the stored note; make_binding/build source remains explicitly R1-bound. Correctly disclosed missing firmware/physical qualification is not counted as a hardware failure."
+    }
+  ],
+  "checks": {
+    "native_CLI": {
+      "version_from_fresh_DRC_report": "10.0.7",
+      "actual_calls": 5,
+      "reserved_with_root": true,
+      "baseline": {
+        "violations": 0,
+        "unconnected_items": 0,
+        "schematic_parity": 0,
+        "ignored_checks": []
+      },
+      "mutants": [
+        {
+          "name": "r134_copper_bypass",
+          "drc": {
+            "violations": 11,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "violation_types": [
+            "clearance",
+            "shorting_items",
+            "solder_mask_bridge"
+          ]
+        },
+        {
+          "name": "c126_dnp",
+          "drc": {
+            "violations": 0,
+            "unconnected_items": 0,
+            "schematic_parity": 1
+          },
+          "violation_types": []
+        },
+        {
+          "name": "pyro_width_025",
+          "drc": {
+            "violations": 1,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "violation_types": [
+            "clearance"
+          ]
+        },
+        {
+          "name": "c84_model_shrink",
+          "drc": {
+            "violations": 0,
+            "unconnected_items": 0,
+            "schematic_parity": 0
+          },
+          "violation_types": []
+        }
+      ]
+    },
+    "all_31_current_rules": {
+      "complete": true,
+      "ok": true,
+      "failing": []
+    },
+    "native_fit": {
+      "ok": true,
+      "issues": [],
+      "terminal_tails": {
+        "count": 23,
+        "max_below_seating_mm": 3.8,
+        "transverse_allocation": "Inference: native copper-pad AABB, not a pin/solder model",
+        "minimum_bore_margin_mm": 7.5583593625055165,
+        "max_projection_below_board_mm": 2.1999999999999997,
+        "nominal_4mm_standoff_plate_clearance_mm": 1.8000000000000003,
+        "source": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+      }
+    },
+    "native_metadata": {
+      "footprints": 209,
+      "fitted_footprints": 199,
+      "missing_required_part_fields": [],
+      "conflicting_part_fields": []
+    },
+    "native_libraries_and_budget": {
+      "stale": []
+    },
+    "manifest_outputs": 5,
+    "CPL_control": {
+      "reconstructed_top": 66,
+      "reconstructed_bottom": 121,
+      "placement_only": 12,
+      "expected_rows": 199,
+      "worst_pad_residual_mm": 0.491,
+      "errors": []
+    },
+    "paste_control": {
+      "name": "control",
+      "ok": true,
+      "issues": [],
+      "evidence": {
+        "F_Paste": {
+          "flashes": 245,
+          "pads_with_paste": 245,
+          "geometry_matched": 245,
+          "components": 60
+        },
+        "B_Paste": {
+          "flashes": 373,
+          "pads_with_paste": 373,
+          "geometry_matched": 373,
+          "components": 132
+        },
+        "dry_pads": []
+      }
+    },
+    "BOM_cases": [
+      {
+        "name": "bom_control",
+        "s4_ok": true,
+        "population_issues": [],
+        "issues": []
+      },
+      {
+        "name": "bom_r134_wrong_identity",
+        "s4_ok": true,
+        "population_issues": [],
+        "issues": []
+      },
+      {
+        "name": "bom_c126_zero_qty",
+        "s4_ok": false,
+        "population_issues": [
+          "line 18: Qty '0' must be a positive integer"
+        ],
+        "issues": [
+          "S-4: BOM: line 18: Qty '0' must be a positive integer"
+        ]
+      },
+      {
+        "name": "bom_r134_duplicate",
+        "s4_ok": false,
+        "population_issues": [
+          "line 84: R134 already appears on line 60"
+        ],
+        "issues": [
+          "S-4: BOM: line 84: R134 already appears on line 60"
+        ]
+      }
+    ],
+    "paste_rejected_controls": [
+      {
+        "name": "D04",
+        "ok": false,
+        "issues": [
+          "F_Paste: unsupported paste command D04* (rule 5)"
+        ]
+      },
+      {
+        "name": "D09",
+        "ok": false,
+        "issues": [
+          "F_Paste: unsupported paste command D09* (rule 5)"
+        ]
+      },
+      {
+        "name": "D10_after_end",
+        "ok": false,
+        "issues": [
+          "F_Paste: paste data after M02 end command (rule 5)"
+        ]
+      }
+    ],
+    "schematic_contract": {
+      "native_binding_identical": true,
+      "schematic_contract_issues": [],
+      "schematic_fault_controls": {
+        "C92 split assembly footprint": true,
+        "C120 split assembly footprint": true,
+        "AUD-4 pull-pin restored": true,
+        "AUD-4 pull-pin MCU net restored": true,
+        "AUD-5 removed test pad restored": true,
+        "AVA obsolete GPS translator restored": true,
+        "AVA obsolete radio switch restored": true,
+        "AVA duplicate bus divider restored": true,
+        "audit2 CONT pin resistor restored": true,
+        "audit2 bus ADC tail restored": true,
+        "AVA duplicate bus ADC restored": true,
+        "obsolete ARM terminal restored": true,
+        "obsolete separate pyro bus": true,
+        "pyro feed directly from pack": true,
+        "bus sense directly from pack": true,
+        "load switch follows logic rail": true,
+        "load switch enable pull-down missing": true,
+        "independent load switch MCU pin missing": true,
+        "servo signal terminal powered": true,
+        "radio USB injection bypass": true,
+        "GPS always-on feed split": true,
+        "radio TX series bypass": true,
+        "retained camera isolation removed": true,
+        "retained camera switch removed": true,
+        "pyro load switch removed": true,
+        "pyro gate capacitor excluded": true,
+        "shorted igniter limiter DNP": true,
+        "microSD socket removed": true,
+        "microSD CS reset pullup removed": true,
+        "microSD MOSI MISO swapped": true,
+        "microSD shield floating": true,
+        "microSD supplied by port LDO": true,
+        "microSD unused DAT2 floating": true,
+        "QSPI primary logger removed": true
+      }
+    },
+    "routing": {
+      "profile": "r10",
+      "failures": 0,
+      "allowlist": 0,
+      "stale_allowlist": 0,
+      "information_instances": 139,
+      "noncritical_hygiene_leftovers": 8,
+      "categories": {
+        "pad_end_offcentre": 57,
+        "segment_inside_pad": 22,
+        "passes_through_pad": 1,
+        "short_segment": 1,
+        "width_change_junction": 11,
+        "short_layer_hop": 3,
+        "u_turn": 6,
+        "extra_bends": 6,
+        "tiny_jog": 6,
+        "power_via_no_gnd": 24,
+        "via_on_track_in_fill": 1,
+        "detour": 1
+      }
+    },
+    "focused_suites": [
+      {
+        "suite": "test_fit_check",
+        "tests_run": 30,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "ok": true
+      },
+      {
+        "suite": "test_paste_check",
+        "tests_run": 16,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "ok": true
+      },
+      {
+        "suite": "test_route_check",
+        "tests_run": 60,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "ok": true
+      },
+      {
+        "suite": "R10 assembly, legends, selection, schematic/binding",
+        "tests_run": 17,
+        "failures": 0,
+        "errors": 0,
+        "skips": 0,
+        "ok": true
+      }
+    ]
+  },
+  "method_corrections": [
+    {
+      "issue": "First CLI width seed chose the longest PYRO1_OUT track, which was a pruned sensing branch rather than the fire path.",
+      "disposition": "S-9 acceptance was correct, not a finding. All5 retained fire paths were separately selected using native fire_path and their0.25mm faults reject."
+    },
+    {
+      "issue": "A direct K-inner helper call initially inherited route_check default r8 classification.",
+      "disposition": "Two apparent PORT plane diagnostics were fixture false positives, discarded; explicit r10 rerun is clean."
+    }
+  ],
+  "coverage_limits": [
+    "Complete present gate reviewed from native/source inputs; this is not a delta review. All116 D IDs through D-R14-03 and22 owner mandate/amendment scopes were considered.",
+    "No canonical build, full check.sh, canonical write, Git action, other-worktree edit, subagent or GUI launch was used. Only the two assigned reports and ignored own probes were written.",
+    "No current-round peer report or probe was read. Exact CLI pointer and named static maker PDFs only were used for tool/source discovery.",
+    "No whole-gate mutant acceptance is claimed; individual genuine detectors and independent broader bindings are distinguished.",
+    "Fresh baseline PCB DRC/parity was executed. This lens did not separately rerun ERC, all173 R10 tests, complete hot-plug numerical sweep, full exporter, supplier stock/cost or reproducibility builds. These are not claimed as fresh lens results.",
+    "No R10 executable firmware, electrical/thermal/transient/endurance, source/harness/e-match lot, RF/ESD, physical fit/retention or first-article qualification was performed. Correctly disclosed pending qualification alone is not a finding.",
+    "Read-only source and maker evidence cannot prove factory BOM acceptance or physical failure from a seed.",
+    "Static maker PDF pages were inspected fresh; source links and hashes identify the actual documents."
+  ],
+  "source_sha256": {
+    "AGENTS.md": "7fb5d302b19aaa974a3019683077665b198b6bd8ea6e09c5f8eedabad72d80d3",
+    "docs/REQUIREMENTS.md": "bee999b80843d4e0f74248dbff596fbbddbe98643803e9401788789394043d59",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": "05cee2ae6ef64d2991e95788a40aae30431440578f61532c0d22175ef37f24e4",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "5f4893cde7faeb4dfbc96948eaed5873229491d2b4e2e27dc7d30da6861b1d14",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "0a88fb481d50e663e9a88f79fb3b361af04221c5f160ffd73486f24eb4f4ca55",
+    "docs/M3_R10.md": "c0a0adf04792bc91cfb824852b1f890027069bfd01b6e6b4c2a3d82ed3c2aaa6",
+    "docs/R10_VALIDATION.md": "d6999285b2e1daaa06949d819aa74c1f25ce6213aeb75e0c0d6e90154c29eadc",
+    "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+    "docs/R10_VEHICLE_HANDOFF.md": "f0f3ed2d5b22c78f65482b9e7a3d0807564fb4b7f5d7dadba91fa43246ffdba3",
+    "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+    "tools/check.sh": "3edcd2f63f51999fde57d45d171e5cc0cf939bd578e34c980aac1825f839cea1",
+    "tools/check_r10.py": "8ae9b668aeeefa9d7d6301faaff09d45c1045bb1e0286f3fad45023ef7cf9fb3",
+    "tools/route_check.py": "d8070ccbb4a9ef21d2adc442577ac93110822e54d708a884b1c225896ae670f0",
+    "tools/fit_check.py": "c3a8ea5535a74589922cdd544bd7875b1598781d0d2ff00f86ef4a7210187011",
+    "tools/paste_check.py": "009938355d0b37923a7fd8438b1f56a831338df9486119714839a89340d67e2f",
+    "tools/fab_manifest.py": "9319ae89ee6ecd087c981596ee08294965892ba030eeb3ed9f7ccb9d1b593aaf",
+    "tools/jlc_orient.py": "75b36799b732384eac5ac0f0d4e5ae3a9a2e8b2b1d230421ff791e76e77619ae",
+    "m3_design/r10_parts.py": "a832add1ca3d61cfd652162d4ec67d78e09f97ac9f90509a8a88007f0151d08b",
+    "m3_design/r10_sch_check.py": "1f0e114eccf8df43025729ac1871d5078be246fc9da88bea6bed896f97944deb",
+    "m3_design/r10_fab.sh": "350e4e8e7960dc47a0d12509ddebffdac10675e736b7b23f93e889a916c4bfe9",
+    "quality_audit/audit_artifacts.py": "2bdd5d1a7b4d915c9dc9c764836a42871bf8e084907e15b8b1b2160f9004676d",
+    "quality_audit/verify_board.py": "04a95655d8a1e69c42f0e4af257597718fa13a2d9ca896c8f6a42dfdb19a0f94",
+    "m3_firmware/assembly_binding.py": "2a7a1391950a7c629861c5c0c93e6335cfe55c38d8a2f4ccf1d481ebdecf89e9",
+    "m3_firmware/build.py": "d97fca19c340d4bc9f471abd5bedea58df00fc45d2e8ad86a6315a07abcdd86b"
+  },
+  "probe_receipts": {
+    ".supervisor/r15_gate_probes/native_results.json": "dc68e238af1657cd6c5b57a3caa6d896252aa08205c255149f934801eacfbca8",
+    ".supervisor/r15_gate_probes/api_results.json": "58e5a0c25220429e8e7c0084bbed44dee36466077b77a3882063a86a920fcbac",
+    ".supervisor/r15_gate_probes/all31.json": "d000b7ab4c602eab96486456603d4545a5f2ea82fedac2da36abca3c2926e5e8",
+    ".supervisor/r15_gate_probes/geometry_matrix_results.json": "d3dd330f57f845ccd51ea2f4c7414541e1d06aab7f36c1abab7a28c6b1b4553e",
+    ".supervisor/r15_gate_probes/fill_recheck.json": "63952c292100215aac57e12b3bb90be4928ddc1edee62cbafc1fdc791de64fd8",
+    ".supervisor/r15_gate_probes/route_control.json": "ffd189085ce47e4f4e5c2e0cf3e34276dbaae1d9a4f74830aa8fd8f184f15f3c",
+    ".supervisor/r15_gate_probes/focused_suites.json": "4947c51cfb4366d7b462c63d0db5b9e9faa98c8baef24c95ccfaa85244ec2c86"
+  }
+}

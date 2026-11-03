@@ -1,0 +1,65 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round36_gate",
+  "reviewer": "claude",
+  "target_commit": "c3c4249",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "A1 (D-R28-01): loaded_pack's power seeded to 5.456 x (1.46 + aux_A): r10_parts --check fails 'stale: parts_budget.json' (rc 1); after the build-style regeneration (--budget-only) it passes, with pack_7V4/6V0_four_stall_loaded_V 5.880831 -> 5.881014 V and 4.388491 -> 4.388745 V. No check pins the shared port_A or those figures: the class ruled not a gate miss in rounds 26/28/29/35 (no stated rule binds a budget figure to a check). Not counted.",
+    "A2 (D-R28-01): ports_w seeded to (1.46 + aux_A): stale-budget check fails (rc 1); regenerated, 53 budget leaves move (c_camera_radio_gps_on 13.064 -> 13.057 W max, fire other_converter_load_W the same) and --check passes. Same ruled class. Not counted.",
+    "B1-B7 (D-R28-02 ... -04): rule 3 polarity / unpowered wording removed, 'before first power and coating' -> 'before coating', rule 3 'Calculation / Simulation' label -> 'Calculation', rule 4 |VGS| 4.5 -> 2.5 V, rule 4 0.2 -> 0.5 V, DS15034 'Table 2 p. 11' -> 'pp. 10-11', obligation 15 back to 'rises about 44 ms or more before 3V3': test_r23_binding_note_rules_and_pin_table fails on all seven.",
+    "K-binding: a hand-edited binding note (DS15034 'pp. 10-11') and an unregenerated generator edit (rule 4 0.5 V) each fail k_binding ('saved firmware_obligations differs from native binding-note regeneration'); the unseeded copy gives no issue.",
+    "D-R26-01: dropping the GND via at (7.4, 16.5) on a board copy fails route_check r10: critical_via_no_gnd AUX_TX_WIRE pad J440.3 (7.4, 18.0), gnd 2.0 mm, F.Cu+B.Cu (rc 1). test_r26_aux_pins_have_gnd_partner_vias and test_r26_own_pad_void_with_its_gnd_partner_via pass on the board.",
+    "D-R26-02 / -04: R13's 3V3 via moved back to (9.2, 52.98) fails test_r26_pyro1_out_clear_of_3v3_and_3v3a; R164's 3V3 via moved 0.3 mm west to (19.25, 55.825), tracks following, fails test_r26_gate_nets_clear_of_3v3_and_3v3a (both self-tests run on the checked board in check.sh). Both pass on the committed board.",
+    "D-R27-03: test_r27_port_terminal_pin_names passes on the committed netlist (its four in-memory name seeds included).",
+    "right_angle: three chamfers removed on board copies (generator-revert style), each fails route_check r10: PYRO1_IGN B.Cu (7.4, 64.0) 0.5 mm, BAT_IN F.Cu (12.525, 88.891) 1.0 mm, USB_DP F.Cu (19.0, 31.55) 0.2 mm, all 90.0 deg 'free'. test_r24_right_angle and test_r26_plated_pad_layer_change_needs_a_gnd_via pass.",
+    "Baseline route_check r10 on the unmodified copy: 0 failing, 5 unrecorded non-critical leftovers (AUD-10 counted class)."
+  ],
+  "fix_verification": [
+    {
+      "item": "R34-TRI-01 (parts_qualification pointed at the round 11 hotplug.md as the current results)",
+      "lens": "docs, not gate; checked in passing",
+      "measurement": "parts_qualification.md lines 1036-1037 and 1061-1062 point to hotplug_results.json / hotplug_inputs.json and M3_R10 'Current state' as the current results; hotplug.md is named as the model",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "sha256 of the board before and after",
+    "git archive of c3c4249 into .supervisor/r36_gate/tree (probe copy)",
+    "r10_parts.py --check (baseline, A1, A2, before and after --budget-only regeneration)",
+    "test_r10_check.py SchematicContract.test_r23_binding_note_rules_and_pin_table (baseline + 7 seeds)",
+    "test_r10_check.py SchematicContract.test_r27_port_terminal_pin_names",
+    "check_r10.k_binding direct call (baseline, hand-edited note, unregenerated generator edit)",
+    "test_r10_check.py R4Synthetic.test_r26_own_pad_void_with_its_gnd_partner_via, RealBoardSeeds.test_r26_aux_pins_have_gnd_partner_vias, test_r26_pyro1_out_clear_of_3v3_and_3v3a, test_r26_gate_nets_clear_of_3v3_and_3v3a (committed board and two seeded copies)",
+    "test_route_check.py RouteCheck.test_r24_right_angle, R10AuditScope.test_r26_plated_pad_layer_change_needs_a_gnd_via",
+    "route_check.py --profile r10 on the baseline copy and four seeded copies (s1 via drop, s2/s3/s5 unchamfered bends)",
+    "read of route_check right_angle / acute_angle / off_angle / pad_layer_changes code"
+  ],
+  "sources": [
+    "AGENTS.md",
+    "docs/REQUIREMENTS.md (M2)",
+    "R10_DECISIONS.md D-R26-01 ... -04, D-R27-01 ... -03, D-R28-01 ... -04",
+    "m3_design/r10_parts.py",
+    "m3_design/r10_sch_check.py",
+    "tools/check.sh",
+    "tools/check_r10.py",
+    "tools/route_check.py",
+    "tools/test_r10_check.py",
+    "tools/test_route_check.py",
+    "tools/test_r10_parts.py",
+    "round29-35 triage observations (gate classes)"
+  ],
+  "coverage_limits": [
+    "No full tools/check.sh run (brief); seeds ran the specific checks only",
+    "DRC and the full check_r10 run were not executed on the seeded copies",
+    "Only the D-R26 / D-R27 / D-R28 seeds and right_angle seeds named in the lens queue, plus two spacing via moves; other gates not re-seeded",
+    "The previous round's gate report was not opened"
+  ]
+}

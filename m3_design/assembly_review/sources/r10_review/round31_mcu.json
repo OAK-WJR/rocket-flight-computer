@@ -1,0 +1,61 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 31, lens mcu",
+  "reviewer": "claude",
+  "target_commit": "3366287",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "U1 pin map: all 100 U1 pads on the board, all 100 U1 pins in a kicad-cli schematic netlist export, pin_table.tsv r10_net and the binding note u1_pins agree (0 mismatches; NC pins carry no net or an unconnected-* net). Symbol pin functions match the pin_table port names.",
+    "LQFP100 pin numbering and pin types re-read from DS12110 Rev 8 Table 9 (pp. 64-87): PE4 FT_h p. 64, PC0 FT_a p. 67, PA4 TT_a / PA5 TT_ha / PA6 FT_a p. 69, PC5 TT_a / PB1 TT_u p. 70, PB12 / PB13 FT_u p. 74, PD8 / PD9 FT_h p. 75, PC6 FT_h p. 78, PC7 FT_h p. 79, PC14 FT p. 65, PE1 FT_h p. 87; every pin-type statement in pin_table, the binding note, M3_R10, R10_VALIDATION and parts_qualification matches (R10_VALIDATION:1918 'PB1 TT_a' is the title of the R23-MCU-04 finding, not a claim).",
+    "Alternate functions used (PB12 / PB13 UART5 AF14, PE7 / PE8 UART7 AF7, PB2 QUADSPI_CLK AF9, PB6 QUADSPI_BK1_NCS AF10, PD8 / PD9 USART3, PC6 / PC7 USART6) and the cited table pages (Table 11 p. 91, Table 12 p. 92, Table 13 p. 94, Table 14 p. 95) match DS12110 Rev 8.",
+    "Trace pins: PE2 TRACECLK, PE3 / PC1 / PG13 TRACED0, PE4 / PC8 / PG14 TRACED1, PE5 / PD2 TRACED2, PE6 / PC12 TRACED3 (Rev 8 AF tables). The obligation names the two firing controls (PC1, PE4) correctly; PC8 (VBUS_SENSE input) and PC12 (SD_MOSI) are further trace options but carry no firing copper.",
+    "DS12110 Rev 8 Table 120 lists PA4 / PA5 injected current as -0/0 mA (others -5/+0). PA4 and PA5 are pulled only to 3V3 (R91, R89) by open-drain sources (U11 ST, U9 FLT), so no stated design case injects into them; noted for completeness, not a finding.",
+    "Rule 3 meter check: QSPI_IO2 = {U1.1, U3.3} only, PYRO1_GATE_N = {U1.3, R126.1, R127.1}, PYRO1_GATE = {R126.2, R128.1, C126.1, Q124.4, TP122.1}; R127 1 k || (R126 220 + R128 10 k) = 0.911 kOhm; red on R127.1 conducts through GND and the VSS-side clamps of U1.1 / U3.3 (Inference as labelled).",
+    "Rule 4 copper: ACT_GATE = {R121.1, Q120.4, Q121.4, R119.1, R120.2, C120.2}; ACT_FET_S = Q120 / Q121 sources, R120.1 at B(18.5,72.17), R119.2, C120.1; Q120 drain BAT_IN, Q121 drain RAW_ACT; ACT_GATE vias (16.2,73.3), (15.4,72.85), (11.14,71.7), (11.74,72.3) present. AONR21357 Rev 2.1 p. 2: VSD -0.7 / -1 V at 1 A, VGS(th) -1.3 / -1.7 / -2.3 V, RDS(on) <= 12.3 mOhm at -4.5 V. Settled |VGS| = 0.833 x V_S.",
+    "Rule 4's '0.93-1.01x the 1.125 A floor' against the stated 1.128 / 1.063 A (0.945-1.003x) is the round 27 triage observation (envelope of the round 23 case table); nothing new.",
+    "pin_table row 25 PA3 '<= 0.83 V' is the round 26 triage observation (VDD 3.3 V basis); nothing new.",
+    "Rule 5: LOGIC_SOURCE_ST vias (30.45,51.4) and (30.85,51.8); 3V3 vias at R91.1 (28.1,59.4) and (28.1,60.0): two each, as stated.",
+    "Rule 11 bring-up facts reproduce: PA6 = VLOGIC / 11 (R60 100 k / R61 10 k), PB1 = CAM_5V / 11 (R104 10 k / R105 1 k), PC0 / PC5 = node / 11.2 (5.1 k + 5.1 k over 2 k || 2 k); U5 PS (pin 2) on 3V3A, CSB (pins 4) on GND, so 0x77 (MS5611 pin table: 6 SDO, 7 SDA, 8 SCLK, matching the footprint nets); R12 / R13 4.7 k on I2C1; R10 on QSPI_NCS, R11 on IMU_CS.",
+    "IMU citations re-read: DS15034 Rev 1 Figure 5 p. 9, Table 2 p. 11, Ton 40 ms p. 15, SPI 10 MHz p. 17, IF_CFG PP_OD / H_LACTIVE p. 60, WHO_AM_I 73h p. 66, Table 150 p. 93; DS14623 Rev 1 Figure 5 p. 9, Table 2 p. 11, IF_CFG p. 60, WHO_AM_I p. 66, Table 150 p. 93. U4 pin 4 = IMU_INT1 = U1.98 (PE1).",
+    "DS12110 Rev 8 citations re-read: Table 119 p. 212 with notes 3-4 on p. 213, Table 120 note 3 p. 213, Table 122 note 3 p. 215, Table 126 p. 217, Tables 127-128 pp. 218-219, Table 146 p. 238 (LSI 29.4-33.6 kHz), Table 147 p. 239, Table 157 note 7 p. 247 (VIH 0.7 VDD on p. 246), Table 159 p. 249, Table 160 note 2 p. 251, Figure 95 p. 286, Table 189 p. 291, Table 192 p. 293 (ratio error +/-10 %), section 3.8 p. 32 (GPIOs analog at reset except debug pins), Table 9 note 7 p. 88.",
+    "IWDG: 4 x (239 + 1) = 960 LSI cycles; 28.571 / 30.0 / 32.653 ms at 33.6 / 32 / 29.4 kHz; fault bound 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms.",
+    "Gate thresholds: PE4 gate 3.6 V x 0.911 / 30.911 x 10 / 10.22 = 0.104 V < AON7524 VGS(th) min 0.4 V (Rev 1.1 p. 2); PC1 gate 3.6 x 2 / 33 = 0.218 V < AO3400A 0.65 V; PC8 4.4 V / 2 = 2.20 V < 2.31 V.",
+    "Camera UART: U12 (TXU0202, SCES942A Table 6-1) pin 4 A2Y = CAM_MCU_RX (PE7), pin 5 A1 = CAM_MCU_TX (PE8), pin 6 OE = CAM_UART_OE (PE9, R102 10 k pull-down), VCCA = 3V3, VCCB = CAM_IO_3V3; port series / ESD designators in pin_table rows 51-52, 55-56 and 63-64 match the board.",
+    "LED polarity: LED1 pin 1 (K) and LED2 pin 2 (K) both on GND, footprints M3_NCD0805R1_K1 / M3_KT0805Y_A1; consistent with the schematic pin functions.",
+    "The binding note regenerated in memory (r10_sch_check.binding_note on the committed project and board) equals the saved note in every key (SHA-256 c5cd0fa3...), pin_table b94133e6... and circuit 3220e5f9... match the note's recorded hashes."
+  ],
+  "fix_verification": [
+    {"item": "R30-TRI-01 (D120 / R131 cold pull-up in the ARM1_SENSE-to-CAM_IO_3V3 bridge; EN load 5.6 kOhm with a load fitted)", "measurement": "R10_VALIDATION:2637 now states 2.19-2.21 V on RAW_ACT and 0.107-0.109 mA through the match at a 0.20-0.24 V BAT54 drop. Own solve (ARM1_SENSE stiff at 3.3 V through 10.2 k, 3V3 minus Vf through R131 10 k, 11.2 k to GND via the continuity bank): 2.205 / 2.191 V and 0.107 / 0.109 mA at Vf 0.20 / 0.24 V. RAW_ACT pads {Q121.5-9, R132.1, R134.2, TP120.1}, PYRO1_OUT {C128, J121.1, Q124.5, R131.1, R173.1}, D120.3 = 3V3, D120.1 = PYRO1_COLD = R131.2. EN load 11.2 k || 11.2 k = 5.6 kOhm with the match fitted (R10_VALIDATION:2670).", "verdict": "confirmed"},
+    {"item": "R30-TRI-02 (LS120 chamber pass clause)", "measurement": "Outside this lens; spot check: no current procedure text still carries 'LS120 <= 70 C' (only history rows R10_VALIDATION:2366 / 2417, M3_R10:42, STATUS:18).", "verdict": "confirmed (spot check only)"},
+    {"item": "D-R29-01 (rule 3 gate time constant 47-58 us)", "measurement": "R = (220 + 50 || 50 || 1000) || 10000 = 238.6 Ohm; C = C126 (C21120, +/-10 %) + AON7524 Ciss 2.25 nF: 47.8 / 53.0 / 58.3 us. Binding note and M3_R10 rule 3 both read 'about 47-58 us over C126's +/-10 % (53 us nominal; Calculation, driver resistances Inference)'.", "verdict": "confirmed"},
+    {"item": "D-R28-02 (rule 3 two-polarity meter check)", "measurement": "Copper above; 0.911 kOhm reproduces; wording identical in the binding note (obligation 38) and M3_R10 rule 3.", "verdict": "confirmed"},
+    {"item": "D-R28-04 (rule 4 Q120 criterion; DS15034 Table 2 p. 11)", "measurement": "R120.1 = ACT_FET_S, R120.2 / C120.2 = ACT_GATE; Table 2 is on p. 11 of DS15034 Rev 1 (and of DS14623 Rev 1).", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "sha256 of m3.kicad_pcb before and after (a0ec075e... both).",
+    "pcbnew (KiCad Python, read-only): U1 100 pad nets vs pin_table.tsv; pad nets of the PE4 / PC1 gate networks, Q120 / Q121, sense dividers, port series / ESD parts, U3 / U4 / U5 / U12 / J430 / LEDs; vias on LOGIC_SOURCE_ST, ACT_GATE, QSPI_IO2, 3V3 near R91; pad positions of R120, C120, R127, U3.3, U1.1, U1.3.",
+    "kicad-cli 10.0.7 sch export netlist into .supervisor/r31_mcu/m3.net; U1 pin nets and pin functions vs pin_table.tsv.",
+    "binding note u1_pins vs pin_table rows (port, net, mode); file hashes of pin_table and circuit vs the note.",
+    "In-memory regeneration of the binding note (r10_sch_check.binding_note) against the saved note: no key differs.",
+    "pdftotext of DS12110 Rev 8, DS15034 Rev 1, DS14623 Rev 1, AONR21357 Rev 2.1, AON7524, TXU0202 SCES942A, MS5611; page and table checks listed in observations.",
+    "Hand calculations: divider scales, gate-hold voltages, IWDG periods, rule 3 time constant, R30-TRI-01 three-node solve, EN load."
+  ],
+  "sources": [
+    "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 8, cached copy)",
+    "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (DS15034 Rev 1)",
+    "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1)",
+    "https://www.aosmd.com/res/datasheets/AONR21357.pdf (Rev 2.1 p. 2)",
+    "https://www.aosmd.com/res/datasheets/AON7524.pdf (p. 2)",
+    "https://www.ti.com/lit/ds/symlink/txu0202.pdf (SCES942A Table 6-1)",
+    "TE MS5611-01BA03 datasheet (pin configuration)"
+  ],
+  "coverage_limits": [
+    "AN2606 and RM0433 were not re-read (not cached); the loader-role column and the RM0433-based items stay as the records label them.",
+    "U4 axis directions against the footprint / 3D model were not re-derived; the note's signed map is checked only for internal consistency with the stated IMU frame.",
+    "Power, safety and thermal figures quoted in the obligations (chatter, hold-up, fire budget, port lead time) were checked only where they bear on MCU pins.",
+    "No physical, firmware or bench evidence exists; none was produced."
+  ]
+}

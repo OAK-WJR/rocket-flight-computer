@@ -1,0 +1,154 @@
+{
+  "round": 9,
+  "target_commit": "8bccb07",
+  "board_sha256": "877d01996a59e9dd5c6dbc367274bb9a323a13982d67960fe46df9b0ee53205d",
+  "method": "Ten independent fresh read-only contexts, parallel batches up to three; Phase A canonical tree unchanged.",
+  "reviewers": [
+    {
+      "lens": "requirements",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 2,
+      "findings": [
+        "R9-REQ-03",
+        "R9-REQ-04"
+      ],
+      "evidence_summary": "Native pad-net and all 100 U1 pin comparisons; S-1 through S-9, contract, loader, actuator, mechanics, fit/model and fab manifest."
+    },
+    {
+      "lens": "safety",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 1,
+      "findings": [
+        "R9-SAF-01"
+      ],
+      "evidence_summary": "Nine focused safety/actuator checks; independent cold-screen and divider-fault arithmetic; primary MOSFET, MCU and switch sources."
+    },
+    {
+      "lens": "power",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 1,
+      "findings": [
+        "R9-PWR-02"
+      ],
+      "evidence_summary": "Native model extraction; four fresh nonlinear extrema; independent pack/fire arithmetic and pulse rise; exact output loops and thermal vias."
+    },
+    {
+      "lens": "parts",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 1,
+      "findings": [
+        "R9-BOM-01"
+      ],
+      "evidence_summary": "225 PCB/XML identities, 82 BOM codes / 215 references, 203 pad reconstructions plus 12 placement-only checks; all 82 supplier MPNs at 22:03 UTC."
+    },
+    {
+      "lens": "mcu",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 1,
+      "findings": [
+        "R9-MCU-01"
+      ],
+      "evidence_summary": "All 100 pins and 25 AF assignments against DS12110 Rev11; AN2606 Rev70 Table135; primary RM0433/H743 header; reset, back-feed and ESD."
+    },
+    {
+      "lens": "mechanics",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 1,
+      "findings": [
+        "R9-MEC-01"
+      ],
+      "evidence_summary": "Fit, plate at 280.9224 Hz / 45.4796 g, seven native rules, 215 model boxes, independent nut-stack arithmetic."
+    },
+    {
+      "lens": "routing",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 7,
+      "findings": [
+        "R9-RTE-01",
+        "R9-RTE-02",
+        "R9-RTE-03",
+        "R9-RTE-04",
+        "R9-RTE-05",
+        "R9-RTE-06",
+        "R9-RTE-07"
+      ],
+      "evidence_summary": "Native planes, references and returns; three isolated and combined counterfactual DRC checks; hop and old-Minor remeasurement; public AVA photos."
+    },
+    {
+      "lens": "manufacturing",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 0,
+      "findings": [],
+      "evidence_summary": "Five-output manifest, orientation, paste, silk, rules/required fitting; 182 native texts and 215 models; process sources and rendered views."
+    },
+    {
+      "lens": "gate",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 3,
+      "findings": [
+        "R9-GATE-01",
+        "R9-GATE-02",
+        "R9-GATE-03"
+      ],
+      "evidence_summary": "Actual-board legend/width mutations; empty-rule CLI probe; 59 route tests plus 11 scope/real-board tests; source-bridge width faults."
+    },
+    {
+      "lens": "docs",
+      "role": "validator",
+      "fresh_context": true,
+      "critical": 0,
+      "major": 0,
+      "minor": 3,
+      "findings": [
+        "R9-DOC-01",
+        "R9-DOC-02",
+        "R9-DOC-03"
+      ],
+      "evidence_summary": "Four binding hashes, 100 pins, 74 explicit parts, 225 components / 700 pins, 22 contract faults, in-memory binding regeneration, EXTI, timing and HSE clipping."
+    }
+  ],
+  "root_additional_findings": [
+    "R9-PROC-01"
+  ],
+  "counts": {
+    "critical": 0,
+    "major": 0,
+    "minor_groups": 21,
+    "new_minor_groups": 17,
+    "carried_routing_groups": 4
+  },
+  "finding_dispositions": "docs/R10_VALIDATION.md Round 9; decisions R10_DECISIONS D-R9-01 through D-R9-06",
+  "limits": [
+    "No full build or full gate during concurrent reviews; root integration checks follow separately.",
+    "No R10 firmware, bench, installed RF immunity or physical fit qualification."
+  ],
+  "excluded_evidence": "One read-only legacy check in external R9 worktree exceeded scope; no files changed; excluded and access stopped.",
+  "gui": "Computer Use rejected KiCad and PCB Editor launch; no bypass; native geometry andrendered CAD used."
+}

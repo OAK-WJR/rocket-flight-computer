@@ -1,0 +1,109 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round28_requirements",
+ "reviewer": "claude",
+ "target_commit": "19dd0b5",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2
+ },
+ "findings": [
+  {
+   "id": "R28-REQUIREMENTS-01",
+   "kind": "calc",
+   "severity": "Minor",
+   "title": "F4 attributes 73-84 % of HV6120 stall torque to flight 2's max-q hinge moment; the 73 % is a flight-1 (K850DM) case, and flight 2's own range is 77-84 % nominal-to-high or 64-84 % over the derived envelope",
+   "contradicts": "docs/REQUIREMENTS.md F4 (line 58): 'Stall during boost is an operating case on flight 2 (R23-REQUIREMENTS-05): the derived max-q hinge moment at large deflection is 73-84 % of the HV6120 stall torque (Inference)'. Inputs: tab 8 mm x 26.5 mm, hinge at the tab's forward edge (../../docs/VEHICLE.md 'Control tab'); REQUIREMENTS flight-envelope row, flight 2 max Mach 1.54-2.20, q_max 142-286 kPa; HV6120 5.4 kg.cm.",
+   "evidence": {
+    "method": "Same linear theory as the source (R23-REQUIREMENTS-05, hinge.py): dCp = 4 delta / sqrt(M^2-1), delta 15 deg, S = 8 x 26.5 mm, arm = 26.5/2 mm, stall 5.4 kg.cm = 0.5296 N.m; (Mmax, qmax) per case from the R23 flight1d_results.json that the envelope row cites (R23-REQUIREMENTS-01).",
+    "source_output": "Re-running the R23 script: 'K850 qmax hi M1.65 q=172kPa d=15: 0.386 N.m = 73%'; 'L1000 nominal M1.82 q=212kPa d=15: 0.410 N.m = 77%'; 'L1000 hi M2.13 q=286kPa d=15: 0.447 N.m = 84%'. round23_requirements.json R23-REQUIREMENTS-05 'measured': '0.39-0.41 N.m (K850DM ...) and 0.41-0.45 N.m (L1000W ...)'. So 73 % is the K850DM high-q case; the L1000W figures are 77-84 %.",
+    "full_envelope": ".supervisor/r28_requirements/hinge_all.py over all 18 L1000W cases: 63.9 % (dry 2.7 kg, Cd x1.3, 1200 m site: M1.59, q 142.2 kPa, 0.338 N.m) to 84.3 % (dry 1.6, Cd x0.8, 0 m: M2.13, q 285.5 kPa, 0.447 N.m); table in hinge_l1000w.txt.",
+    "not_elsewhere": "grep of docs/ and sources: '73-84' appears only in REQUIREMENTS F4 and the R23 review files."
+   },
+   "impact": "The flight-2 figure that motivates F4's stall-as-operating-case rule is mis-stated at its lower end (taken from flight 1). The conclusion (up to about 84 % of stall at 15 deg near max q, so stall is plausible) is unchanged; no board impact.",
+   "concrete_fix": "F4 text: 'flight 2's derived max-q hinge moment at 15 deg is about 64-84 % of the HV6120 stall torque over the derived envelope (77-84 % nominal to high; supersonic linear theory, Inference)'."
+  },
+  {
+   "id": "R28-REQUIREMENTS-02",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The flight-envelope note asks to re-check 'the Temperature row's 525 s', but the Temperature row no longer contains 525 s (it says about 1200 s since round 23)",
+   "contradicts": "docs/REQUIREMENTS.md line 36: 'Re-check F5's window, the pad-energy Q_flight and the Temperature row's 525 s against the new envelope.' versus the Temperature row (line 93): 'flight 2 lasts up to about 1200 s under a 36 in chute (derived envelope, Inference)'.",
+   "evidence": {
+    "grep": "'525' occurs in REQUIREMENTS.md only at line 36 (and an unrelated R7 BOM row, line 194); the Temperature row has '1200 s'.",
+    "history": "git log -S: 'Temperature row's 525 s' was added in ec8cb98 (round 21); 'lasts up to about 1200 s' replaced 'lasts up to 525 s' in 9b27268 (round 23, R23-REQUIREMENTS-01 fix), which left line 36 unchanged."
+   },
+   "impact": "The requirements file states a figure the Temperature row does not contain and lists as open a re-check that round 23 already made; a reader re-doing the Temperature item looks for a 525 s that is not there. No board impact.",
+   "concrete_fix": "Line 36: drop 'and the Temperature row's 525 s' (done in round 23: 1200 s), keeping the F5 window and Q_flight re-checks, or reword to 'the Temperature row's flight duration (now about 1200 s)'."
+  }
+ ],
+ "observations": [
+  "F10 port pins on the board: J410/J420/J440 pin 1 PORT_4V8, 2 GND, 3 *_TX_WIRE via 1 k to PD8 (U1.55) / PB13 (U1.52) / PC6 (U1.63), 4 *_RX_WIRE via 1 k to PD9 (U1.56) / PB12 (U1.51) / PC7 (U1.64); ESD103 to GND on each wire; matches F10.",
+  "J9: 1 CAM_5V, 2 GND, 3 CAM_RX_WIRE -> R100 -> U12.1, 4 CAM_TX_WIRE <- R101 <- U12.8; UART7 PE7 (U1.37) RX / PE8 (U1.38) TX through U12; U13 TPS70933 from CAM_5V; matches F10.",
+  "Schematic symbols: J410/J420/J440 use M3:PortTerminal (4V8/GND/TXO/RXI), netlist pinfunctions 4V8_1/GND_2/TXO_3/RXI_4; J9 keeps CameraTerminal; J122 ServoTerminal SERVO1-4/GND; J1/J400/J121 Conn_1x2.",
+  "Silk legends sit beside the right pins on all eight DB125 terminals (pin coordinates vs legend coordinates checked).",
+  "PORT_5V3 = 0.8 x (1 + (56.2k + 2k)/10k) = 5.456 V; PORT_4V8 = 0.8 x (1 + 49.9k/10k) = 4.792 V; PA6 divider 100k/10k (x11, 0.44 V -> 4.84 V); R167 10 k -> 0.84 mA at 8.4 V, 1 Ah in about 7 weeks: all as stated.",
+  "F8 banks: R173/R129 and R132/R175 5.1 k tops, R130||R178 and R133||R180 2 k bottoms, C127/C129 10 nF; Q122 R122 1 k / R123 2 k / C123 10 nF, 3.6 x 2/33 = 0.218 V; Q124 R126 220 R / R128 10 k / C126 220 nF; cold-screen open CONT 3.1003 x 11.2/21.2 / 11.2 = 146.24 mV consistent with the healthy 99.369 mV.",
+  "F4/F6: SERVO1-4 on PA0-PA3 (U1.22-25), 1 k series, 10 k pull-downs and D121 SRV05-4 on the MCU side; F5 J430 on PC10/PC11/PC12/PD0 with 10 k pull-ups, C460 100 nF / C461 22 uF.",
+  "F10 EXTI pins on the board: PE1 IMU_INT1 (98), PA4 LOGIC_SOURCE_ST (28), PA5 BAT_FAULT_N (29), PD6 USB_FAULT_N (87), PC8 VBUS_SENSE (65), PE12 CAM_FAULT_N (42); PC3_C, PC13 NC; PC14 BUZZ_DRV; PB1 CAM_5V_SENSE.",
+  "P1/P2: outline 46 x 90 mm; NPTH/Edge.Cuts holes at (4,4), (42,4), (4,44.3), (3.7,86), (42,86).",
+  "F7 widths: BAT_IN fire feed 1.0 mm; ACT_FET_S exactly seven 0.4 mm segments (plus 0.3 mm gate-bias branches to R119/R120/C120); RAW_ACT 0.5 mm Q121 drain to R134, 0.4 mm TP120 branch, 0.2 mm sense; PYRO1_IGN 0.5 mm; PYRO1_OUT 0.5 mm F.Cu fire path, 0.2 mm sense.",
+  "VEHICLE-derived numbers re-derived and correct: board aft edge joint + 79.4-83.4 mm (-44.6 + 80 + 44-48), 32 mm forward of joint + 47; battery bay top +35.4; sled bounds h + t < 6.88 / 6.018 / 5.365 mm; wire room 5.003 mm (sqrt(25.4^2 - 5^2) - 0.3 - 19.6); apogee ISA -8 to -27 C / -16 to -42 C; 8.8 km MSL ISA 317 hPa >= 300 hPa; tab 35.8 % of the 74.1 mm local chord.",
+  "F1 dT allowance (5 - 0.9 - 0.03)/0.45 = 9.04 C at 30 s; F1 itself says to recompute for the 35 s window (about 7.7 C by the same formula): disclosed, not a finding.",
+  "F6 hold-up arithmetic reproduced: 0.103-0.164 ms, 0.291-0.430 ms, 0.22-0.31 ratio, 100-220 uF 0.03-0.12 ms, 470 uF 0.725-0.842 / 2.038-2.206 ms; turn-on 87.6 / 55.5 ms at 6.0 / 7.4 V (tau 50.0 ms).",
+  "M1/M3 versus fab files: stock_check 2026-11-02T12:43:17Z (U9 30 / -81, min 7; U4 9 / 2), cost_check 12:44:13Z $85.26, min-purchase $61.01 - $60.47 = $0.54, fixed fees $16.79 per board; BOM 81 codes, CPL 206; C84 only in the owner BOM: all match.",
+  "P3's '28-37 g' boost range is flight 2's (round 27 observation); not re-reported.",
+  "By the same linear theory flight 1 reaches 64-85 % at 15 deg (85 % at M1.17, where linear theory is unreliable); flight 1 has one servo, so F4's four-stall concern does not apply: not a finding."
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R27-03",
+   "measurement": "telemetry.kicad_sch lib symbol M3:PortTerminal pins 1 4V8 / 2 GND / 3 TXO / 4 RXI; J410/J420/J440 instances use it; schematic.net.xml (SHA 535a8fdf...) pinfunctions 4V8_1/GND_2/TXO_3/RXI_4 on all three, J9 5V_OUT_1/GND_2/RX_FROM_CAMERA_TX_3/TX_TO_CAMERA_RX_4; board nets on those pins unchanged",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R27-01",
+   "measurement": "parts_budget.json SHA ecc45417...; loaded_pack recomputed: a = 7.4 - 0.15 x (7.68 + 0.6375) = 6.1524, P = 5.456 x 1.56 / 0.8 = 10.639 W -> 5.8810 V; 6 V -> 4.3887 V; fire-budget four-stall 5.713190 V unchanged",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R27-02",
+   "measurement": "r10_binding_note.json mcu_revision sentence names the two Rev 11 Table 109 limits",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R26-03 (F4/F6 text)",
+   "measurement": "REQUIREMENTS F4/F6 and Accepted risks quote 5.71 V, 7.50 ms, 8.07 ms, 1.1295 V; consistent with parts_budget fire_current_GAP1 5.713190 V; EN model not re-run here",
+   "verdict": "partly (text consistency only)"
+  }
+ ],
+ "checks_actually_executed": [
+  "sha256 of m3.kicad_pcb before and after",
+  "pcbnew read-only dump of every footprint, pad net, value and LCSC field (fp.json); terminal pad coordinates (padpos.py); silkscreen legends (silk.py); Edge.Cuts holes (holes.py); fire-path track widths and ACT_FET_S / RAW_ACT segments (widths.py, seg.py)",
+  "net tracing of every F10 / J9 UART path, sense dividers, converter feedback, SD, servo, EXTI pins",
+  "schematic symbol and netlist pinfunction greps",
+  "stock_check.json / cost_check.json / BOM / CPL reads",
+  "hand recalculation of the REQUIREMENTS numbers listed in observations; hinge-moment recomputation over the R23 envelope cases (hinge_all.py)",
+  "git log -S history for the 525 s / 1200 s text"
+ ],
+ "sources": [
+  "docs/REQUIREMENTS.md @19dd0b5",
+  "../../docs/VEHICLE.md",
+  "AGENTS.md @19dd0b5",
+  "R10_DECISIONS D-R26 / D-R27",
+  "round23_requirements.json/.md and .supervisor/r23_requirements (hinge.py, flight1d_results.json)",
+  "fab/stock_check.json, cost_check.json, BOMs, CPL",
+  "parts_budget.json",
+  "schematic.net.xml, telemetry.kicad_sch, camera_connector.kicad_sch, servos.kicad_sch, battery_entry.kicad_sch, pyro.kicad_sch"
+ ],
+ "coverage_limits": [
+  "No full check.sh, DRC or route_check run (read-only rule).",
+  "EN/U9 chatter model, OQ-2 hot-plug model, fire budget and thermal figures not re-run; only text consistency.",
+  "Flight envelope not re-simulated; only R23's recorded cases used.",
+  "Datasheet limits (ISM6HG256X, TPS25947, etc.) not re-read in this lens.",
+  "Supplier stock and price not re-queried."
+ ]
+}

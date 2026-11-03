@@ -1,0 +1,72 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round28_mechanics",
+ "reviewer": "claude",
+ "target_commit": "19dd0b5",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "Plate model re-run on a0ec075e (fit_check --profile r10 report, masses.json): f1 pinned D5 180.8 / D10 255.6 / clamped 287.8 / 407.0 Hz, 78.6 g; 100 g D5 gaps at h = 4 mm (0.25 mm raster, the round 22 method) C431 0.261, C421 0.320, L1 0.524, C411 0.558 mm; contact loads 125 / 133 / 175 / 214 g (D5) and 250 / 265 / 351 / 428 g (D10): every figure in ORDERING 8.4, the handoff, M3_R10 and AGENTS reproduces. The records' phrase 'not re-run on a0ec075e' is true of the records; this run could be cited.",
+  "Same run: maximum 100 g static deflection 1.27 mm at (46, 44.5) and D10 pinned 255.6 Hz, against the 1.24 mm / 256.1 Hz that M3_R10:960 labels as 632a9ad3 figures; labelled history, not a current claim.",
+  "Same run, strain table now populated for the east column (J410 1421, J420 1414, J9 1313, J122 1489, C431 1221, C411 1303, R150-R155 1336-1420 microstrain); M3_R10 says no new strain values are recorded, which is true; no requirement sets a strain limit.",
+  "J9 / J420 terminal-tail allocations reach a 4 mm sled at 162-176 g (D5), before C411; already judged not a finding by the round 25 / 26 triage (inside the x 31.5-41 / y 20-60 pocket; 4.5 mm option first contact C431 at 173 g > 163 g). Nothing new.",
+  "M3_R10:1009 (under 'Historical mechanical record') and R10_VALIDATION:3124 (under 'Historical round10 deviations') still quote C10's coat-union clearance as 3.333144 mm; both sections are labelled historical, and the current instruction ORDERING 8.3:578-581 gives 3.016596 mm on a0ec075e. Not a current false statement.",
+  "Gate seeds on probe copies: LED2 moved 0.1 mm west -> fit_check FAIL (3.716 < 3.8 mm); C32 moved 1.1 mm west -> fit_check FAIL (3.464 < 3.5 mm); J440 moved 0.5 mm west -> fit_check OK (prints 4.50-5.10) but check_r10 P-11 FAIL (wire room < 4.95 mm). The fit gates catch these realistic moves.",
+  "U4 body crossings on B.Cu re-measured (centre-line, 0.001 mm sampling): IMU_CS 0.760 + 0.091, SPI1_MISO 0.325, IMU_INT1 0.324, 3V3A 0.324 mm, matching the handoff's R16-MEC-01 figures to sampling precision."
+ ],
+ "fix_verification": [
+  {
+   "item": "D-R27 docs (R27-TRI-06): J440 lead route 'aft of y 23.5 (y < 23.5; J440's forward body end is at y 23.45)'",
+   "measurement": "ORDERING 8.4 J440 row and handoff 'J440 lead routing' carry the new text; fit report J440 body y 7.93-23.45; compass check: J3 y 26.33-35.27, (4,44.3), J121 y 51.23-59.55 and J400 y 61.23-69.55 all lie at y > 23.5 (forward), so the bound keeps the leads off them; errata present in round20_mechanics.md:11 and round19_fix_docs.md:132; no other inverted compass word in ORDERING 8.4 or the handoff",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R26-01 GND vias (7.4,16.5) / (7.4,20.0) between J440 pins",
+   "measurement": "inside J440's top body footprint, no change to any fit row; fit_check OK, J440 body margin 2.98 mm, wire room 5.003 mm, (4,4) washer 3.93 mm from J440's envelope",
+   "verdict": "confirmed (no mechanical effect)"
+  },
+  {
+   "item": "D-R26-02 / -04 moves of C10, C11, R164, R173 (bottom)",
+   "measurement": "fit_check nearest bottom obstacle still C32.2 4.536177 mm from (4,44.3), top LED2.2 3.807887 mm; plate mass 78.6 g and all gaps unchanged",
+   "verdict": "confirmed (no mechanical effect)"
+  }
+ ],
+ "checks_actually_executed": [
+  "sha256 of the board before and after",
+  "tools/fit_check.py --profile r10 on the committed board (report in the probe dir): OK; margins J3 0.886, DB125 2.976 mm; tails 27, 7.558 mm; wire room 5.003-5.603 mm on all eight; nearest C32.2 4.536177 / LED2.2 3.807887 mm",
+  "tools/plate_model.py --profile r10 with masses.json on that report; own gap / contact-load script on the plate solution (D5 and D10, h 4 and 4.5 mm)",
+  "pcbnew dump of every footprint position / rotation / side / courtyard; terminal pad positions and nets; silkscreen pin legends and their layers vs the handoff's list",
+  "exact distances of LED1 / LED2 / J2 lands (circle for J2) and all pads to the five supports, top and bottom",
+  "hand calculations: wire room (25.4 / 24.9 mm radius, 5 and 3 mm heights), bend room 3.9 / 4.1 / 5.1 / 5.7-6.5 mm, nut-inclusive h + t bounds 6.018 / 5.365 mm, body corner margin, landing 98-163 g, retention N figures, J9/J122 6.73 mm gap",
+  "compass sweep of ORDERING 8.4 and the whole handoff against board coordinates (north = smaller y = aft, west = small x)",
+  "U4 body crossing measurement on B.Cu",
+  "three gate seeds on probe copies (fit_check; check_r10 P-11 for the J440 seed)"
+ ],
+ "sources": [
+  "AGENTS.md",
+  "docs/REQUIREMENTS.md P1-P3, M2",
+  "docs/ORDERING.md 8.3, 8.4",
+  "docs/R10_VEHICLE_HANDOFF.md",
+  "docs/M3_R10.md 'Current mechanical integration', 'Historical mechanical record', 'Retention at 100 g'",
+  "docs/R10_VALIDATION.md",
+  "R10_DECISIONS.md",
+  "round27_triage.md",
+  "round27_fix_docs.md",
+  "m3_design/assembly_review/sources/r10_design/masses.json",
+  "tools/fit_check.py",
+  "tools/plate_model.py",
+  "tools/check_r10.py"
+ ],
+ "coverage_limits": [
+  "No physical fit, harness, screwdriver, hardware or vibration test; all figures are CAD envelopes and model Calculation/Inference.",
+  "VEHICLE.md stack figures not re-derived; the camera-shroud side was not re-checked beyond the OQ-7 placement rule.",
+  "Maker drawings (DORABO T0-1, Molex microSD, nut dimensions) not re-read; the records' values were used.",
+  "check_r10 was run only on the J440 seed copy (its other failures there are copy artefacts: no schematic, stale fills)."
+ ]
+}

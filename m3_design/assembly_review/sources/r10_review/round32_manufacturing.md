@@ -1,0 +1,45 @@
+# Round 32 — manufacturing lens (claude)
+
+Target `3366287`, board SHA-256 before / after `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c` (unchanged). Real errors only.
+
+**Totals:** Critical 0 / Major 0 / Minor 1.
+
+## Findings
+
+### R32-MANUFACTURING-01 (doc, Minor): R166-to-C84 courtyard gap stated as 0.56 mm; the board gives 0.65 mm (centreline) / 0.60 mm (stroke outer edges); the same R10_VALIDATION row says ORDERING asks for a top-side preheat, which it does not
+- **Contradicts:** docs/ORDERING.md §8.2 line 435 ('on the top R166's courtyard is 0.56 mm from C84's'); docs/R10_VALIDATION.md line 3063 ('R166, 0.56 mm from its courtyard ... the same on a0ec075e…'; also 'ORDERING 8.2 ... asks for top-side preheat with the bottom supported') and line 1685 (R19-MEC-02 row, 'R166 is 0.56 mm away'). The figure is checked against the board (a0ec075e…) and the footprint libraries.
+- **Evidence:** Footprint primitives: kilib/rocket.pretty/M3_MA_8x10.kicad_mod F.CrtYd rect (-5.25,-4.5)-(5.25,4.5), stroke 0.05; C84 at F(27.5,78.5) rot 90, so its courtyard runs y 73.25-83.75. kilib/rocket.pretty/M3_R2512_UR.kicad_mod F.CrtYd rect (-4.35,-1.9)-(4.35,1.9), stroke 0.05; R166 at F(23.5,86.3) rot 0, so y 84.40-88.20, x 19.15-27.85 (overlaps C84's x 23.0-32.0). Gap: 84.40-83.75 = 0.650 mm centreline; 84.375-83.775 = 0.600 mm between the stroke outer edges. KiCad's own courtyard polygon (FOOTPRINT.GetCourtyard(F_CrtYd)) has vertices at y 83.745 (C84) and 84.405 (R166); the project's helper check_r8.min_gap(check_r8.courtyard(C84), check_r8.courtyard(R166)) returns 0.66 mm. The 0.56 mm comes only from SHAPE_POLY_SET.BBox(), which pads each box by 0.045 mm (C84 BBox bottom 83.795, R166 BBox top 84.355). Those are the exact inputs round28_audit_proc.md row 3 quotes ('C84 courtyard y <= 83.795 and R166 courtyard y >= 84.355: 0.56 mm'), so the figure is a bounding-box artefact, not a gap. None of the three conventions (centreline, outer edge, KiCad polygon) gives 0.56; the error is 0.04-0.10 mm, about 7-18 %, which is not rounding. Second point: ORDERING 8.2's heat-limit text says to support the bottom face, 'heat only from the top' with minimum dwell, and 'Record the tip temperature and time used'. It never asks for a preheat, so R10_VALIDATION line 3063's 'asks for top-side preheat' describes a step that ORDERING does not contain. Probe: .supervisor/r32_manufacturing/dist.py, claims.py and the inline GetCourtyard dump.
+- **Impact:** The C84 heat-limit records misstate the board geometry. Its direction is conservative (the real gap is larger), and the inspection list (R166 re-inspection) is unaffected. A reader of R10_VALIDATION is told that ORDERING requires a preheat step that the procedure does not define.
+- **Fix:** In ORDERING §8.2 (line 435) and R10_VALIDATION line 3063, replace 0.56 mm with 0.65 mm (courtyard centrelines; 0.60 mm between the courtyard lines' outer edges). Annotate the R19-MEC-02 history row (line 1685) with the corrected current figure. In R10_VALIDATION line 3063, replace 'asks for top-side preheat with the bottom supported' with 'asks for top-only heating with the bottom supported on a heat-sinking fixture, a minimum dwell per land and a recorded tip temperature and time'.
+
+## Fix verification
+- R30-TRI-02 (ORDERING 8.3 chamber test: LS120 is not a pass / fail gate, measured rise sets the best-effort bay limit): ORDERING 8.3 'Board temperature at the pad load' read at 3366287: pass is every 85 °C part at 85 °C or less; LS120 rise recorded; best-effort limit 70 °C minus the measured rise, replacing the inferred 48 °C — **confirmed**
+- R30-TRI-01 (ARM1_SENSE to CAM_IO_3V3 bridge figures): outside the manufacturing lens; not re-measured — **not checked (out of lens)**
+- D-R29 / D-R28 manufacturing-relevant package state (BOM 00af5358…, manifest binding): fab_manifest verify OK; BOM SHA in the manifest matches; Gerbers / PDFs regenerate identically — **confirmed**
+
+## Observations (not counted)
+- DRC (kicad-cli 10.0.7, --severity-all --schematic-parity) on a0ec075e…: 0 violations, 0 unconnected, 0 parity issues.
+- Gerbers (11 layers), PTH / NPTH drills and job file regenerated with export_fab.py's exact options: identical to the committed m3_gerber.zip apart from the date lines; both assembly PDFs regenerate with identical text.
+- JLC capabilities (read 2026-11-02): via 0.5/0.3 mm (annular ring 0.10 mm, at least 0.15 / 0.25 mm), via hole-to-hole 0.259 mm same net and 0.350 mm different nets (at least 0.2 mm), pad hole-to-hole enforced at 0.45 mm by the DRU, PTH annular ring 0.20 mm minimum (J3 slot ends) against JLC's 0.20 mm (multilayer absolute minimum 0.15 mm), plated slot width 0.6 mm (at least 0.35 mm), NPTH 0.6 / 0.991 mm (at least 0.50 mm) with no copper ring, tracks at least 0.2 mm, clearance 0.15 mm, copper to edge 0.5 mm, silk text 1.0 mm / 0.15 mm strokes (D123's two filled 0.30 mm polygons are fills, not hairlines).
+- Via counts 304 + 4 + 1 = 309; m3-PTH.drl T1 (0.300 mm) has 308 hits, including (27.3,13.6) and (27.9,13.6), which the board marks filling / capping yes (the only two); U401 B.Paste windows y 12.60-13.49 / 13.71-14.60 (0.22 mm gap, so 0.04 mm overlap of each 0.3 mm drill), as ORDERING 8.1 states.
+- BOM / CPL: 81 lines, 206 refs, quantities consistent, no duplicate codes; the 206 CPL rows (70 top / 136 bottom) match the BOM refs; every board LCSC / MPN / footprint field matches its BOM row; every CPL layer matches the board; offsets 0.5 mm or less except J430 at 1.55 mm (its verified jlc_corrections offset, residual 0.005 mm); C84 is only on the owner BOM.
+- Content checks re-run read-only: S-4 OK; jlc_orient --verify-cpl 67 + 125 rebuilt plus 14 placement-only, worst 0.491 mm, no errors; paste_check 249 / 381 flashes, 0 dry pads; fab_manifest verify OK (6 outputs).
+- ORDERING 8.2 / 8.3 spot checks reproduced: terminal and part poses (J1 ... J122, Q120 / Q121 / Q124, C126, C123, C411, C421, C431, C91, C92, C84, D9, U4, J430, R92, TP88), 93 hidden designators, 14 parts without a Fab body (9 with a pin-1 dot only), 13 bottom pin legends, C84 lands (27.5,75.25) / (27.5,81.75) 3.5 x 1.7 mm with no paste, the C84 land-projection joints and 0.545 / 0.605 / 0.814 mm, L400 2.0 x 1.8 mm at +/-2.25 mm, the six GND thermal overrides (zone_connect 1), U4 paste 88.4 % (ratio -0.03), J440 partner vias 0.305 mm (polygon approximation of 0.300), DB125-to-bottom copper 1.763-2.172 mm, J3 slot gaps 1.958 / 2.011 / 2.150 mm, short-edge courtyards (stated values sit about 0.05 mm below the courtyard centreline, so conservative), every probe-worksheet contact, the BAT_ENABLE / RAW_PROTECTED / 3V3A vias, and the U4 / U5 / TP122 extents.
+- D402's 1.768 / 1.808 mm are explicitly labelled as M-6 (courtyard to pad circle) figures; its copper gap is 1.962 / 2.003 mm, inside the stated 1.76-2.17 mm copper range: consistent.
+- Job-file stackup (inner copper 0.030 mm, dielectric 0.203 / 1.03 mm) is KiCad's descriptive stackup, not an upload input; ORDERING names the JLC041611-7628 stackup and no impedance control.
+
+## Checks executed
+- shasum -a 256 of the board before and after; git status clean apart from untracked review files
+- kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity --format json (output in the probe directory)
+- kicad-cli pcb export gerbers / drill with export_fab.py's options into the probe directory; diff against the committed zip with date lines excluded
+- kicad-cli pcb export pdf (top / bottom, export_fab options); pdftotext comparison
+- python3 tools/fab_manifest.py <board> (verify only)
+- check_r10.py --only S-4 --bom --cpl; jlc_orient.py --verify-cpl; paste_check.py (read-only)
+- pcbnew read-only scripts: stats.py (rules, tracks, vias, holes, annular rings, silk), bomcpl.py (board fields against BOM / CPL), claims.py, probes.py, export_polys.py with dist.py (copper and courtyard gaps), hole-to-hole sweep, NPTH copper, VIPPO flags, U401 paste windows, courtyard primitive dump
+- WebFetch of https://jlcpcb.com/capabilities/pcb-capabilities (2026-11-02)
+
+## Coverage limits
+- No live JLC quote, DFM upload or stock query
+- Polygon distances use ERROR_INSIDE pad approximations (about 0.005 mm); overlap cases were checked by bounding box
+- ORDERING 8.3 bench and firmware gates beyond probe coordinates and geometry were not re-derived (audit B and other lenses)
+- Panel tab plan T-1 windows not recomputed

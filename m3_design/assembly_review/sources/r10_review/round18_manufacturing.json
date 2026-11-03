@@ -1,0 +1,100 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round18_manufacturing",
+ "reviewer": "claude",
+ "target_commit": "dcbb6c8",
+ "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 6
+ },
+ "findings": [
+  {
+   "id": "R18-MFG-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "R10 fab package carries no concrete panel/tab plan; stale R9 tab spans remain in ORDERING order remarks",
+   "evidence": "docs/ORDERING.md section 8.2 says \"Use the supplied tab-routed rail plan, including the selected aft-edge rail/frame and aft-edge tab\", but no tab or rail span exists in any R10 artifact: tools/check_r10.py t1() only computes legal windows and the board Edge.Cuts has none. Section 3 / section 4 order remarks (line ~99) still give R9 spans \"Gerber Y -101.50...-96.50\", beyond the 90 mm R10 outline. Board 46 x 90 mm (< 70 mm wide needs JLC rails). JLC min tab 4-5 mm: https://jlcpcb.com/capabilities/pcb-capabilities",
+   "impact": "A user pasting remarks gets spans off the board, or JLC chooses tabs itself near J3 (0.45 mm west overhang) or terminals; nothing ordered, so documentation/procedure defect.",
+   "concrete_fix": "Add a single R10 tab-plan table (edge, KiCad y/x span, Gerber coords, nearest part) from t1() windows to section 8.1, and mark section 4 line 99 as R9 history."
+  },
+  {
+   "id": "R18-MFG-02",
+   "severity": "Minor",
+   "status": "carried (U4 mask webs, ORDERING section 8.2)",
+   "title": "U4 LGA-14 solder-mask webs are exactly 0.100 mm, zero margin to JLC green minimum",
+   "evidence": "Computed from pad polygons plus mask expansion (0.025 mm) on B.Cu mask: 13 neighbour pairs U4.1-2, 2-3, 3-4, 5-6, 6-7, 8-9, 9-10, 10-11, 12-13, 13-14 at 0.100 mm (webs between GND/signal pads). No other pad pair on either side is under 0.15 mm. JLC multilayer green mask bridge min 0.10 mm (https://jlcpcb.com/capabilities/pcb-capabilities).",
+   "impact": "If JLC LDI tolerance removes a web the pads merge into one opening; signal-GND solder bridges at 0.5 mm pitch LGA.",
+   "concrete_fix": "Keep the order remark; optionally 0.015 mm expansion (web 0.12) if the paste/pad fit allows."
+  },
+  {
+   "id": "R18-MFG-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Mixed via covering (two filled/capped vias, one 0.5 mm plugged via, rest tented/plugged) is only a free-text order request; no file carries it",
+   "evidence": "m3.kicad_pcb setup (capping no)(filling no); only vias at (27.3,13.6) and (27.9,13.6) carry (capping yes)(filling yes), both inside U401.11 (the only vias inside any SMD pad, checked all pads). Gerber zip and job file have no fill attribute (PTH.drl lists them in the generic 0.3 ViaDrill group). BAT_IN via (17.5,87.3) drill 0.5 / pad 1.0 equals JLC plug maximum 0.5 mm. JLC page: via covering is an order-level option; epoxy fill and cap supported 0.15-0.55 mm, not default for 4 layers.",
+   "impact": "JLC may refuse per-via mixing or apply it to all vias (cost), or silently ignore it, leaving U401 exposed-pad solder wicking. Disclosed as VIPPO ordering obligation; no fallback stated.",
+   "concrete_fix": "State a fallback in ORDERING (e.g. whole-board capped fill or move the vias outside the pad) and mark the two vias in a fab drawing/note layer."
+  },
+  {
+   "id": "R18-MFG-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "All 158 silkscreen texts sit at JLC absolute minimum, 1.0 mm high with 0.15 mm stroke (1:6.7 vs recommended 1:6)",
+   "evidence": "pcbnew: 158 visible silk texts, every one height 1.0 / thickness 0.15; JLC min height 1.0, min width 0.15, ratio 1:6 preferred (https://jlcpcb.com/capabilities/pcb-capabilities). DRC min_text_height 1.0.",
+   "impact": "Small designators and pin legends (1:SW, 2:GND, 4:RXI) may print filled-in or faint; legibility only.",
+   "concrete_fix": "No change for this board; if respun use 0.17 mm stroke on legends (not designators crowded near pads)."
+  },
+  {
+   "id": "R18-MFG-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Procurement numbers in AGENTS.md disagree with current fab/cost_check.json and ORDERING; stock_check.json fails while cost_check passes",
+   "evidence": "AGENTS.md: supplier 2026-10-30T15:30:40Z, $79.5232 placed / $81.3254 minima. fab/cost_check.json and ORDERING 8.1: supplier 17:15:45Z, 79.52 placed, order_usd_per_board_with_min_purchase 56.77 + feeder share 25.09 = $81.8636. stock_check.json ok:false, short list 2 (R430 C185349 17<3610; U4 C26633007 0<5).",
+   "impact": "Doc inconsistency only; the release gate correctly fails on stock.",
+   "concrete_fix": "Update AGENTS.md row to the 17:15Z snapshot."
+  },
+  {
+   "id": "R18-MFG-06",
+   "severity": "Minor",
+   "status": "new",
+   "title": "C84 is an ordinary SMT line in BOM and CPL although the order requires it absent from both reflows",
+   "evidence": "m3_bom_jlc.csv: C84, M3_MA_8x10, C46550466, Assembly \"SMT\"; m3_cpl_jlc.csv C84 27.5,-78.5 Top 90; ORDERING 8.2 lines ~367: \"C84 absent from both passes... keep it required-fitted in the BOM/CPL\".",
+   "impact": "JLC upload tools will schedule it for reflow unless the remark is honored; a miss reflows the polymer cap at 240 C whose supplier gives no profile.",
+   "concrete_fix": "Rely on written JLC confirmation before payment (already required); consider marking the BOM row \"THT/manual\" in the Assembly column."
+  }
+ ],
+ "fix_now_recommendations": [
+  "R18-MFG-05 doc update (AGENTS.md procurement row)",
+  "R18-MFG-01 add R10 tab-plan table to ORDERING 8.1"
+ ],
+ "rejected_or_closed_candidates": [
+  "Via 0.3/0.5 mm (0.10 mm ring) meets JLC rule via dia >= hole+0.1; all 296 vias same.",
+  "Hole-to-hole min 0.259 mm via-via vs JLC 0.2; PTH-pad spacing fine.",
+  "Hole to foreign copper min 0.251 mm via, 0.551 mm PTH vs JLC 0.2/0.3.",
+  "Copper-to-edge DRC 0.5 mm vs JLC 0.2.",
+  "Track/space 0.15/0.20 vs JLC 0.09; stackup 0.203/1.03/0.203, 1.6 mm, ENIG, 1 oz in job file.",
+  "Vias tented: 0 mask flashes at via centres on F and B.",
+  "No fiducials/tooling on board: JLC adds rails.",
+  "Gerber regeneration byte-equal (excluding timestamps) for all 11 layers and both drill files.",
+  "BOM 199 parts/82 codes = CPL 199 rows, sides match, LCSC fields match, 10 excluded parts are J2/TPs.",
+  "Manifest: 5 output hashes and 193 input hashes all match."
+ ],
+ "checks_actually_executed": [
+  "kicad-cli 10.0.7 DRC all severities with schematic parity: 0 violations, 0 unconnected, 0 parity",
+  "pcbnew via/hole/zone-clearance/hole-to-hole scripts",
+  "mask web computation from pad polygons",
+  "gerber regeneration and diff",
+  "BOM/CPL cross-checks",
+  "manifest hash verification",
+  "render of assembly PDFs and top silk"
+ ],
+ "sources": [
+  "https://jlcpcb.com/capabilities/pcb-capabilities"
+ ],
+ "coverage_limits": [
+  "Bottom silkscreen render and per-legend 6 mm distance not independently recomputed (silk DRC clean, check_r10 gates it); impedance not needed; JLC live DFM not run; CPL rotations trusted to tools/jlc_orient.py beyond position and side checks; mask-to-track opening 0.09 not computed."
+ ]
+}

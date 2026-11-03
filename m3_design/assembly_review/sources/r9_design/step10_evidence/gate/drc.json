@@ -1,0 +1,18 @@
+{
+ "$schema": "https://schemas.kicad.org/drc.v1.json",
+ "coordinate_units": "mm",
+ "date": "2026-10-25T17:11:42",
+ "ignored_checks": [],
+ "included_severities": [
+  "error",
+  "warning",
+  "exclusion"
+ ],
+ "kicad_version": "10.0.6",
+ "schematic_parity": [],
+ "source": "m3.kicad_pcb",
+ "unconnected_items": [],
+ "violations": [],
+ "board_sha256": "4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14",
+ "bound_by": "step10/bind_report.py"
+}

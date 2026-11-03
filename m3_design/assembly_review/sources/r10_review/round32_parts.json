@@ -1,0 +1,73 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round32_parts",
+ "reviewer": "claude",
+ "target_commit": "3366287",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {"Critical": 0, "Major": 0, "Minor": 1},
+ "findings": [
+  {
+   "id": "R32-PARTS-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The hot-end records name the fitted 85 C parts as only MS5611, the AP6320x bucks and J430 (plus the U4 alternates), but U3, Y1, LED1, LED2 and the sixteen fitted X5R MLCCs are also rated to +85 C",
+   "contradicts": [
+    "docs/R10_VALIDATION.md:2494 (owner row 33, Description): 'The fitted 85 C parts (MS5611, the AP6320x bucks, J430) therefore have no margin at a 70 C bay.'",
+    "docs/M3_R10.md:496 (Hot-end temperature): 'The 85 C parts (MS5611, the AP6320x bucks, J430, the U4 alternates) then have no margin at a 70 C bay.'",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md:40 (Round 23 notes): 'the 85 C parts (MS5611, AP6320x, J430, the U4 alternates) need bay air <= about 55-60 C until the first-article 70 C chamber test ... passes'",
+    "Winbond W25Q128JV Rev G, p4 ('-40C to +85C operating range') and p74 ordering code 'I = Industrial (-40C to +85C)': U3 is W25Q128JVSIQ (C97521)",
+    "NDK NX3225GA sheet (cached .supervisor/r14_parts_pdf/ndk.pdf): STD-CRG-2 operating temperature range -40 to +85 C: Y1 is NX3225GA-25.000M-STD-CRG-2 (C1985619)",
+    "Samsung MLCC catalogue (Nov 2015) p5, Class II table: symbol A = X5R, operation temperature -55 to 85 C: C6-C11 CL21A226MAQNNNE, C19/C20 CL10A225KO8NNNC, C22 CL10A105KB8NNNC, C23/C28/C92 CL10A475KO8NNNC, C80/C96 CL31A106KBHNNNE, C89/C95 CL31A226KAHNNNE (16 parts)",
+    "NATIONSTAR NCD0805R1 p1 (Topr -30 to +85 C; also quoted in parts_qualification.md:45 itself) and KENTO KT-0805Y (Topr -40 to +85 C): LED1, LED2",
+    "The same owner row 33's Needed column and ORDERING 8.3:608 log C6 / C7, C89 ('a BAT_IN X5R') and 'near Y1 / U3' in the chamber test and offer 'X7R parts on the same lands' as the remedy, i.e. they treat these as 85 C parts"
+   ],
+   "evidence": "Read-only, commit 3366287. Fitted identities from fab/m3_bom_jlc.csv and the board fields (pcbnew dump .supervisor/r32_parts/fields.txt, nets.txt): U3 W25Q128JVSIQ C97521; Y1 NX3225GA-25.000M-STD-CRG-2 C1985619; LED1 NCD0805R1 C84256; LED2 KT-0805Y C2296; X5R lines C45783 (C6-C11), C23630 (C19, C20), C15849 (C22), C19666 (C23, C28, C92), C13585 (C80, C96), C12891 (C89, C95) = 16 fitted X5R MLCCs. Datasheet text extracted from the cached PDFs (.supervisor/r32_parts/winbond.txt lines 190 and 3553; ndk.pdf 'Operating Temperature Range (C) -40 to +85', STD-CRG-2 column; samsung.pdf Class II table 'A X5R 55 85'; led1.pdf 'TOPR -30 ~ +85'; led2.pdf 'Topr -40C ~ +85C'). Every one of these is a fitted part whose hot-end rating is +85 C, the same as the parts the three sentences list, and none of them is in any of the three lists. (U1 STM32H743VIT6, DS12110 Rev 8 Table 24: TA -40...85 C at maximum power dissipation for the suffix 6 version, up to 105 C at low dissipation with TJ <= 125 C, is a further candidate but is junction-limited, so it is not counted here.) The general pass rule ('every 85 C part <= 85 C') and ORDERING 8.3's logging list are right; only the named sets are wrong.",
+   "impact": "Owner row 33 is the owner-acceptance statement of which fitted parts have no hot-end margin at a 70 C bay; it omits the QSPI flash (the primary crash-safe log), the HSE crystal, both LEDs and all bulk X5R decoupling on VLOGIC, 3V3, 3V3A, VCAP and BAT_IN. Someone applying 'every 85 C part <= 85 C' from row 33 / M3_R10 / parts_qualification would not check them, although ORDERING 8.3 logs some of them.",
+   "concrete_fix": "Text only, in the three places: replace the parenthetical with the full fitted set, e.g. 'The fitted 85 C parts (MS5611, the AP6320x bucks, J430, W25Q128JVSIQ U3, crystal Y1, LED1 / LED2 and the sixteen X5R MLCCs C6-C11, C19, C20, C22, C23, C28, C80, C89, C92, C95, C96; plus the U4 alternates)', or say 'among them' and point to a single complete list in parts_qualification.md (next to the cold-end list). Optionally note U1's suffix-6 TA 85 C (max dissipation) / TJ 125 C rating."
+  }
+ ],
+ "observations": [
+  "BOM / CPL / board agree: 81 JLC codes, 206 designators each once, every Qty equals its designator count; LCSC, Manufacturer Part and footprint fields on all 206 placed footprints match their BOM line (pcbnew dump); C84 alone on the owner BOM; no code duplicated, no MPN under two codes.",
+  "Every BOM comment (value, voltage, dielectric, tolerance, size) decodes consistently from its MPN; UniOhm codes checked against the SMD-SP-001 multiplier table (J=10^-1, K=10^-2, L=10^-3): R164 0603WAF220KT5E = 2.2 ohm, R166 25121WF360LT4E = 0.36 ohm.",
+  "jlc_orient.py --verify-cpl rerun read-only on the committed CPL: 67 top + 125 bottom rows rebuilt, worst residual 0.491 mm, errors none, 14 placement-only (the C21190 rows), 206 expected rows; matches ORDERING 8.2.",
+  "cost_check.json arithmetic reproduces: 60.47 + 81 x 1.53 / 5 = 85.26 USD per board; fixed fees 83.96 / 5 = 16.79; 46 'expand' lines = 45 JLC Extended + C84; stock_check shorts are U9 and U4 as recorded.",
+  "Voltage ratings at the operating points: every MLCC >= 2x its net's maximum (BAT_IN parts 25-50 V against the SMBJ12CA 19.9 V clamp; RAW_PROTECTED 25 V against the 10.18 V OVLO corner); AONR21357 VGS +-25 V, AON7524 / AO3400A +-12 V against <= 8.4 V / 3.3 V drives; TPS2121 IN 24 V, TPS7A91 IN 6.5 V, TPS2553 6.5 V all respected.",
+  "Pin maps re-read against the datasheets: TPS7A91 DSK (EN 7 tied to IN, SS_CTRL 6 to GND, PG 5 open allowed), TPS2121 RUX (IN1 = USB_LIMITED pin 7, IN2 = RAW_PROTECTED pin 2, OV1 = USB_OVLO, OV2 / PR1 / CP2 grounded), TXU0202 DCU, TPS709 EN floating (internal pull-up), TPS25947 AUXOFF / ITIMER open allowed, BAT54A common anode on 3V3, AONR21357 S1-3 / G4 / D5-8.",
+  "Recalculated records: TPS2553 camera limit 1.041-1.249 A (eq. 1 / 3 with R430 +-2 %); U9 minimum 3.946188 A (3.96 A / 1.0035); fire currents 1.5409 / 1.4758 / 1.4104 / 1.3448 / 1.2787 A from the budget inputs; CRM2512 chart interpolation 61.204 / 44.134 W and 85 C derating 36.345 vs 35.851 W; C126 discharge 0.6782 ms; IWDG 28.571-32.653 ms; R92 5.9549 V at 2 s; R166 0.33787-0.38251 ohm; ESD103 EN shift 5.69 mV; C123 tau 7.09 us; C84 300.8 uF / 37.5 mohm (MA25V470M8X10 row: 25 mohm, 4100 mA).",
+  "AP63201 L400 6.8 uH differs from DS41326 Table 1's 10 uH suggestion for 5 V, but the records size it with DS41326 eq. 7 (0.74-0.76 A ripple, inside the 30-50 % guidance); a recommendation table, not a limit.",
+  "BAT54A C8591: EasyEDA land is the 1.6 / 2.8 mm SOT-23 variant (residual 0.235 mm) against our 1.3 / 2.4 mm land; the cached JSCJ sheet has no package drawing, so no land error is shown.",
+  "LS120 MLT-5020 operating 2-4 V (rated 3.0 V) driven from 3V3; coil 12 +-3 ohm; current qualification is already disclosed as open."
+ ],
+ "fix_verification": [
+  {"item": "R30-TRI-02 (LS120 not a chamber pass / fail gate)", "measurement": "REQUIREMENTS Temperature row, M3_R10:494-500, ORDERING 8.3:608, R10_VALIDATION owner rows 33 and 36, parts_qualification.md:40 and STATUS all state the pass criterion as every 85 C part <= 85 C and record LS120's measured rise; no current 'LS120 <= 70 C' pass clause remains outside history rows", "verdict": "confirmed"},
+  {"item": "R29-TRI-04 (LS120 is a +70 C part)", "measurement": "Cached Huawha MLT-5020 specification 2021-05-27, p2 item 6: operating -20...+70 C; item 7 storage -30...+85 C; records cite p2 item 6", "verdict": "confirmed"},
+  {"item": "R30-TRI-01 (D120 / R131 cold pull-up in the bridge figures)", "measurement": "Parts side only: D120 is BAT54A C8591 with pin 3 (common anode, JSCJ p1 symbol) on 3V3 and pin 1 on PYRO1_COLD, R131 10 k to PYRO1_OUT, as the corrected text assumes; figures themselves belong to the safety lens", "verdict": "confirmed (parts facts)"}
+ ],
+ "checks_actually_executed": [
+  "shasum -a 256 of the board before and after: a0ec075e... both times",
+  "KiCad Python read-only dump of every footprint's fields, side, position, rotation and pad nets (.supervisor/r32_parts/fields.py, nets.py, pads.py)",
+  "BOM / CPL / owner-BOM cross-check script (quantities, coverage, code uniqueness)",
+  "tools/jlc_orient.py --verify-cpl on the committed CPL, output to the probe directory only",
+  "cost_check.json / stock_check.json arithmetic",
+  "pdftotext of the cached datasheets (AP6320x, TPS7A91, TPS2553, TPS25947, TPS2121, TPS709, TXU0202, AONR21357, AON7524, AO3400A, SMBJ, BAT54, ESD103, CRM2512, UniOhm, MA polymer, MLT-5020, NDK, Winbond, Samsung, LED1, LED2, MS5611, STM32H743 DS12110 Rev 8) and comparison with parts_qualification.md",
+  "Python recalculation of the fire-current quadratic, TPS2553 current limits and the other figures listed under observations"
+ ],
+ "sources": [
+  "Winbond W25Q128JV Rev G (cached .supervisor/r14_parts_pdf/winbond.pdf) p4, p74",
+  "NDK NX3225GA sheet (cached ndk.pdf), STD-CRG-2 column",
+  "Samsung MLCC catalogue Nov 2015 (cached samsung.pdf) p5 Class II table",
+  "NATIONSTAR NCD0805R1 (cached led1.pdf) p1; KENTO KT-0805Y (cached led2.pdf)",
+  "Huawha MLT-5020 specification 2021-05-27 (cached buzzer.pdf) p2",
+  "ST DS12110 Rev 8 Table 24 (cached st_h743.pdf)",
+  "TI SLVS841G, SBVS282A, SLVSFC9C, SLVSEA3F; Diodes DS41326 (cached PDFs)",
+  "Bourns CRM2512; UNI-ROYAL SMD-SP-001; JIERRUI MA series (cached PDFs)",
+  "tools/jlc_easyeda/pads.json and tools/jlc_corrections.json"
+ ],
+ "coverage_limits": [
+  "No live LCSC / JLC / maker web access this round; datasheet checks used the cached PDFs listed in .supervisor/primary_pdf_cache_paths.json.",
+  "EasyEDA body / wire-entry orientation of the DB125 terminals and LED polarity marks cannot be shown from pad data; left to the factory preview as the records require.",
+  "BAT54A, ESD103 and DB125 land geometry not re-derived from maker package drawings (BAT54A sheet has none).",
+  "IMU register-map facts and MCU pin facts left to the mcu lens."
+ ]
+}

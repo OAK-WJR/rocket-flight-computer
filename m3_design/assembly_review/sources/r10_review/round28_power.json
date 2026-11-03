@@ -1,0 +1,108 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 28, power lens",
+  "reviewer": "claude",
+  "target_commit": "19dd0b52482c6cb2648de206715ab02a9a4b5394",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 3},
+  "findings": [
+    {
+      "id": "R28-POWER-01",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "parts_qualification GAP-1 says parts_budget.json 'now includes 12.370807 W' normal converter allocation; that is the pre-AUX figure, the budget's is 13.064091 W",
+      "contradicts": "m3_design/assembly_review/sources/r10_design/parts_budget.json fire_current_GAP1.other_converter_load_W = 13.06409056783647 and battery_break_load_W.c_camera_radio_gps_on[1] = 13.06409056783647 (r10_parts.py other_w = loads_w['c_camera_radio_gps_on'][1]); the same paragraph's own later sentence '(other converter load 13.064 W with the 100 mA AUX allowance)'; M3_R10 'Current fire budget' 13.064091 W.",
+      "evidence": "parts_qualification.md line 458 (paragraph 'GAP-1, requirements audit 2 (current Calc / Inference)'): '`parts_budget.json` now includes 12.370807 W normal converter allocation with SD writes and always-on GPS/radio.' Recomputed from the budget's own inputs: buck_max 5.546269 V x (1.461 A) / 0.80 + 1.4 W + 0.825 W + R92 0.016933 W = 12.370807 W (no AUX allowance); with D-R19-14's aux_A 0.1 A: 5.546269 x 1.561 / 0.80 + 1.4 + 0.825 + 0.016933 = 13.064091 W, the value the budget holds. No key in parts_budget.json (regenerated in memory with KiCad Python from the committed board: byte-identical to the committed file, SHA-256 ecc45417...) equals 12.370807. The line dates from acba196 (round 18, before the AUX port); the paragraph was later updated for AUX elsewhere but this sentence was not. Not in rounds 24-27 triage observations.",
+      "impact": "The GAP-1 paragraph, labelled current, states two different 'other converter load' figures and attributes the stale one to the budget; a reader re-solving the quoted equation with 12.370807 W gets the pre-AUX currents (1.544251 ... 1.282918 A), not the bound 1.540851 ... 1.278747 A.",
+      "concrete_fix": "Replace '12.370807 W' with '13.064091 W (12.370807 W before D-R19-14's 100 mA AUX allowance)' in parts_qualification.md line 458."
+    },
+    {
+      "id": "R28-POWER-02",
+      "kind": "calc",
+      "severity": "Minor",
+      "title": "D-R27-01's loaded_pack uses 1.46 A + AUX, not ports_w's 1.461 A + AUX that its comment and record claim, so the 6 V four-stall figure is 4.3887 V instead of 4.3885 V on the stated basis",
+      "contradicts": "m3_design/r10_parts.py lines 444-446 comment: 'the ports draw camera 1 A + radio .3 + GPS .15 + 11 mA + the AUX allowance at the 5.456 V buck output, as ports_w does' (= 1.561 A); ports_w line 415 uses (1.461 + aux_A); R10_DECISIONS D-R27-01 'What': 'takes the ports' input power as 5.456 V x (1.46 A + aux_A), the way ports_w does'.",
+      "evidence": "r10_parts.py line 448: power = 5.456 * (1.46 + aux_A), i.e. 1.56 A (1 + 0.3 + 0.15 + 0.010), while ports_w (line 415) and the battery-break / fire loads use 1.461 + aux_A = 1.561 A (the 11 mA quiescent the comment names). Re-solving the generator's own equation (pack 0.15 ohm, logic 0.6375 A, 7.68 A stalls, 80 %): with 1.56 A, 5.881014 / 4.388745 V (the budget's pack_7V4 / pack_6V0_four_stall_loaded_V); with the stated 1.561 A, 5.880831 / 4.388491 V. The 6 V figure quoted to 3 decimals in STATUS, parts_qualification (lines 665-666) and D-R27-01 (4.389 V) becomes 4.388 V on the stated basis; the 7.4 V figure stays 5.881 V.",
+      "impact": "Immaterial to any limit (0.25 mV), but D-R27-01's fix does not do what its comment and record say: the four-stall pack sag still omits the 11 mA port quiescent allowance that every other port figure in the budget carries.",
+      "concrete_fix": "In loaded_pack use 5.456 * (1.461 + aux_A) (or reword the comment and D-R27-01 to say 1.46 A, 10 mA quiescent); regenerate parts_budget.json and update the 4.389 V / 4.388745 V quotations (STATUS, parts_qualification, D-R27-01) if the code changes."
+    },
+    {
+      "id": "R28-POWER-03",
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "parts_qualification says the current board has four C21397 22 uF capacitors on PORT_4V8 (C406, C407, C411, C421); it has five (C445 too) and three 100 nF (C444 too)",
+      "contradicts": "Fab BOM m3_bom_jlc.csv line for C21397: 'C82,C400,C401,C403,C404,C405,C406,C407,C411,C421,C431,C445,C461'; netlist schematic.net.xml net PORT_4V8: C406.1 C407.1 C410.1 C411.1 C420.1 C421.1 C444.1 C445.1 ...; parts_qualification's own round 19 table row 'J440, R470 / R471, D440 / D441, C444, C445 ... 22 uF C21397'.",
+      "evidence": "parts_qualification.md lines 584-586 ('Supply contract and sources'): 'Capacitors reuse Murata GRM32ER71E226KE15L C21397 ... on the current board: two at the buck input (C400, C401), three on PORT_5V3 ... (C403, C404, C405), four on PORT_4V8 (C406, C407, C411, C421, plus C410 and C420 as local bypasses) and one on CAM_5V (C431).' The netlist puts C445 (22 uF 25V X7R, C21397) and C444 (100 nF) on PORT_4V8 (D-R19-14's AUX cell; both are in hotplug_inputs.json). The other counts in the sentence are right (C430 on PORT_5V3 is 100 nF). The line dates from acba196 (round 18, before the AUX cell); the file header says round 19 amendments supersede earlier text where they differ, but this sentence states the count 'on the current board'.",
+      "impact": "Wrong inventory for U401's output capacitance (five 22 uF, 110 uF nominal, not four), the figure a stability or retained-output check would start from.",
+      "concrete_fix": "Change to 'five on PORT_4V8 (C406, C407, C411, C421, C445, plus C410, C420 and C444 as local bypasses)'."
+    }
+  ],
+  "observations": [
+    "parts_qualification 'Battery-lead break ride-through' table and OQ-5 paragraph (lines 779-813) cite parts_budget.json but carry a pre-microSD, pre-AUX model: (a) 8.7 / 8.2 ms, (c) 0.55-0.65 / 0.53-0.62 ms, OQ-5 4.6 / 7.2 and 2.3 / 3.7 ms, versus the budget's 7.43-7.49 / 7.05-7.11, 0.49-0.57 / 0.46-0.54, 3.84 / 6.00 and 1.57 / 2.46 ms (reproduced exactly by removing the SD terms and aux_A). The file header states the always-on/microSD amendment 'supersedes the earlier ... ride-through records', so by the R25 obs-9 precedent not counted; labelling the section historical or regenerating it would remove the ambiguity.",
+    "Q122 gate against a 30 kOhm PC1 pull-up: docs (M3_R10 Power, R10_VALIDATION 2550/2674, REQUIREMENTS F8, M3_R10 1141) say 'at most 0.218 V (3.6 V x 2 / 33)', the nominal-resistor figure; with 1 % parts the budget's Q122_gate_with_30k_pullup_PC1_unconfigured_V is 0.2203 V. Seen by round 26 MCU as nominal vs 1 %; 0.43 V below the 0.65 V threshold either way.",
+    "ORDERING 8.1.1 pad-energy worksheet (sealed D-R17-01) uses 0.461 A for GPS, radio and quiescent and no AUX allowance; with a 100 mA AUX device the board input rises by about 0.69 W. The worksheet states its inputs and its larger conservative margins (1.4 W logic, continuous SD) exceed this; owner row 17 is open.",
+    "U400 input feed (RAW_PROTECTED F.Cu 0.4 mm, C400/C401 to U400.2/.3) is not a K-power path; at the normal 1.561 A port load it needs 0.32 mm at 30 C even at the 5.71 V four-stall BAT_IN; only the camera-short fault (firmware-cleared, 11 ms deglitch) at 5.71 V needs 0.43 mm. Not continuous; as round 25 obs 8.",
+    "K-power's U9 IN / OUT 2.9 A design current (D-R3-03) covers every continuous budget case: 13.064 W at 5.71 V is 2.29 A, the camera-short case 14.79 W at 5.71 V 2.59 A; the 3.744 A port-fault peak is buck-limited hiccup.",
+    "M3_R10 / ORDERING / R10_VALIDATION row 26: 'U400 and L400 lose 1.2-2.2 W' (Inference). The budget's 80-85 % efficiency at the 1.561 A allocation gives 1.48-2.16 W; 1.2 W needs about 87.5 % (round 20 power used 80-88 %). Upper bound, which drives the conclusion, agrees.",
+    "parts_qualification 'Inference, upstream coordination' (2.92 A asserted, 3.6 A) remains port-switch-era text; already R25-POWER obs 9.",
+    "Every K-power path passes on a0ec075e (power_paths run read-only): IPC-2152 floors 0.68 mm (2.9 A), 0.326 mm (1.9 A), 0.299 mm (1.81 A), 0.356 mm (2.0 A), 0.167 mm (1.294 A), 0.157 mm (1.249 A) against drawn floors 1.0 / 0.7 / 0.4 mm; only the six named POWER_NARROW entries are narrower.",
+    "Regulator taps: U400's R400.1 taps C403.1 (a stub capacitor off the L400.2 1.0 mm run) through 0.2 mm F.Cu; U401's R402.1 sits on U401's B.Cu OUT run before the In2 vias; U2.1 (AP63203 FB) reaches In2 3V3 through two vias (23.2, 68.6) and (23.0, 70.0). Each is in SINGLE_OPEN_TAPS.",
+    "TPS7A91 recommended COUT minimum 10 uF and VIN 1.4-6.5 V hold: PORT_5V3 max 5.546 V, five 22 uF on PORT_4V8; IGND 4 mA used in GAP-3 is the SBVS282A p5 maximum at 1 A (3.5 mA at VIN 6.5 V, 5 mA).",
+    "U9 VOVLO recommended range 0.5-1.5 V (SLVSFC9C p8) holds for BAT_IN about 4.07-12.2 V with R82 2 M / R83 280 k; records already disclose the 12.2 V upper edge.",
+    "R80 + R165 = 940 kOhm and R82 = 2 MOhm meet TI's '350 kOhm or higher' recommendation for EN / OVLO pull-ups exposed to reverse polarity (SLVSFC9C p7 note 2); R84 750 ohm is inside RILM 549-6650 ohm (p8)."
+  ],
+  "fix_verification": [
+    {
+      "change": "D-R27-01 (loaded_pack counts the AUX allowance)",
+      "measurement": "Committed parts_budget.json SHA-256 ecc45417a4b9ec6ad021f52153cf2f59b547ac8e1afbd39dbd7d6e4c39f9a8bb; power_budget() re-run in memory on the committed board gives byte-identical JSON. git diff 816038c..19dd0b5 of the budget changes only pack_7V4 / pack_6V0_four_stall_loaded_V, 5.899191 -> 5.881014 V and 4.414002 -> 4.388745 V. Independent solve: 5.881014 / 4.388745 V with 1.56 A ports; 5.880831 / 4.388491 V with the 1.561 A the comment and record name.",
+      "verdict": "partly (AUX now counted; the 11 mA quiescent the fix claims to mirror from ports_w is not, R28-POWER-02)"
+    },
+    {
+      "change": "Round 27 docs lane: GAP-3 U401 figures (parts_qualification, STATUS, M3_R10, R10_VALIDATION)",
+      "measurement": "(5.546269 - 4.711504) x 0.56 + 5.546269 x 0.004 = 0.489653 W; 70 + 80/110 x P = 109.17 / 123.86 C; 85 C: 124.17 / 138.86 C; (125 - 70) / 0.489653 = 112.32 C/W; AUX limit (0.5 - 0.022185) / 0.834765 - 0.46 = 0.1124 A.",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "Round 27 docs lane: parts_qualification stall-input paragraph (1.56 A, 0.6375 A, 5.881 / 4.389 V)",
+      "measurement": "Matches the generator as coded (5.881014 / 4.388745 V); see R28-POWER-02 for the 1 mA basis.",
+      "verdict": "confirmed (as coded)"
+    },
+    {
+      "change": "D-R26-03 (four-stall BAT_IN 5.713 V and EN window figures)",
+      "measurement": "fire_current_GAP1 primary 4-stall loaded_pack_V 5.713190 V, fire 1.278747 A reproduced; worst-corner EN model (470 k +1 %, 300 k -1 %, 0.72 x 220 nF, 0.1 uA + 50 nA, 1.116 V): single drop-out 8.066 ms at 5.713 V, 10.345 / 20.111 / 26.023 ms at 6.0 / 7.4 / 8.4 V, 6.300 ms at 5.5 V, 10 ms at 5.9556 V; late-block periodic limit 7.501 / 7.629 / 5.871 / 9.594 ms at 5.713 / 5.73 / 5.5 / 6.0 V, EN 1.1295 / 1.1330 V at 7 ms; rule 8 corners 5.7132 / 5.5576 / 5.5555 / 5.5085 V; turn-on 87.7 / 55.5 / 44.7 ms nominal, 30.3-129.8 ms worst; U9 turn-off 4.802 / 4.835 / 4.875 V at 25 / 70 / 125 C.",
+      "verdict": "confirmed"
+    },
+    {
+      "change": "D-R26-02 / -04 hot-plug inputs (C10 / C11 moved)",
+      "measurement": "tools/r10_hotplug.py --extract on the committed board into the probe directory gives hotplug_inputs.json byte-identical to the committed file; its digest f4d1b57d... equals hotplug_results.json inputs_sha256.",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "Board SHA-256 before and after (a0ec075e...), commit 19dd0b5, worktree clean.",
+    "r10_parts.power_budget() run in memory under KiCad Python on the committed board; JSON compared with the committed parts_budget.json: identical.",
+    "git diff 816038c..19dd0b5 of parts_budget.json and r10_parts.py.",
+    "Independent recomputation (plain Python / NumPy) of loaded_pack, the fire_case quadratic (0-4 stalls, body-diode 0.7 / 1.0 V case 1.1275 / 1.0626 A), rule 8 shorted-match corners, ports_w / battery_break loads, hold-up from break and from the PA6 window, USB-only draw, U10 / U402 ILIM bounds, U9 port-fault bound, LDO loss / junction / AUX limit, buck ripple, R92 bleed, load-switch gate figures, R134 pulse figures, watchdog bound.",
+    "EN model script (.supervisor/r28_power/en_model.py): single drop-out, turn-on, U9 turn-off vs temperature, late-block periodic chatter limits.",
+    "tools/check_r10.power_paths run read-only on the committed board (0 issues) and tools/ipc2152 widths for each design current.",
+    "Track / via / pad dumps of RAW_PROTECTED, VLOGIC, USB_LIMITED, PORT_5V3, PORT_4V8, CAM_5V, 3V3 near U2, and regulator pads (pcbnew read-only).",
+    "Netlist parse of schematic.net.xml for power nets; fab BOM C21397 designators.",
+    "tools/r10_hotplug.py --extract into the probe directory, compared with committed inputs and results digest.",
+    "Datasheet reads (cached PDFs via pdftotext): TPS25947 SLVSFC9C abs max / rec-op / EN-OVLO table; TPS7A91 SBVS282A rec-op, electrical table, pinout; AP63201 DS41326 electrical table; AON7524 RDS(on); TPS2121 RON.",
+    "Greps of docs, STATUS, AGENTS (committed), parts_qualification, R10_DECISIONS, binding note, circuit.json notes for budget-derived figures and for pre-AUX values (12.370807, 0.406 W, 1.711 A, 5.899 / 4.414, 11.545807)."
+  ],
+  "sources": [
+    "TI TPS25947 SLVSFC9C https://www.ti.com/lit/ds/symlink/tps25947.pdf pp. 7-9",
+    "TI TPS7A91 SBVS282A https://www.ti.com/lit/ds/symlink/tps7a91.pdf pp. 3-5",
+    "Diodes AP63201 DS41326 https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf pp. 4-5",
+    "AOS AON7524 https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf p. 2",
+    "m3_design/r10_parts.py, parts_budget.json, R10_DECISIONS.md D-R19-14 / D-R25-* / D-R26-* / D-R27-*, parts_qualification.md, docs/M3_R10.md, docs/R10_VALIDATION.md, docs/ORDERING.md 8.1.1 / 8.3, docs/REQUIREMENTS.md, STATUS.md, AGENTS.md (committed)"
+  ],
+  "coverage_limits": [
+    "The hot-plug simulation (2304 cases) was not re-run; only its inputs were re-extracted and compared.",
+    "No thermal or DC copper solve; IPC-2152 figures are the repository's long-conductor fit.",
+    "The 7 ms line's 5.6465 V lower bound and the D-R25-01 70 C TCR window limits were not recomputed.",
+    "Earlier rounds' power reports were not opened before writing the findings; no other round 28 lens output was read."
+  ]
+}

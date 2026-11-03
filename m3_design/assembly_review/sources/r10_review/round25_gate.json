@@ -1,0 +1,52 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 25, gate lens",
+  "reviewer": "claude",
+  "target_commit": "c4bb56b",
+  "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "BAT_FAULT_N cut restored to 0.36 mm (D-R24-18 undone) on a copy of the board, with the zones refilled: the result is byte-identical to the round 24 board 1407e850 (SHA-256 1407e850...). Current gate on it: DRC 0 / 0 unconnected / 0 parity, route_check r10 0 failing, check_r10 full fails only K-binding (board_sha256) and F9-1 (stale board-derived model inputs). r10_build.sh regenerates both of those, so after a rebuild nothing would fail. The 0.1733 mm gap is above F8's 0.15 mm board clearance and breaks no AGENTS / REQUIREMENTS / JLC rule. Only the CHAMFER_CUTS entry and review keep the 0.200 mm that R10_VALIDATION row 24 records. Not a gate miss under the round rule.",
+    "Putting the pre-D-R24-19 figure 'EN 1.407 V at 6.0 V' back in the r10_sch_check chatter obligation and regenerating the binding note (the build's record step) passes K-binding and test_r23_binding_note_rules_and_pin_table. The test pins the headline figures (10.3/20.1/26.0, 8.2 ms, 5.96 V, 6.3 ms, 30-130 ms, 4.80 V, rules 4/5) but not the 1.401 V intermediate. That is text-pin coverage, not a rule violation.",
+    "A zero-length F.Cu segment at a sharp 90-degree corner of a non-critical net (BAT_FAULT_N (16.55, 83.35)) gives route_check's node four track ends, so the right_angle rule does not see the bend (0 failing; micro_segment is counted only on non-critical nets). KiCad DRC at every severity flags it as track_dangling, so check.sh still fails. The generators' track() also asserts against zero-length segments.",
+    "M-8 accepts a listed part up to SHORT_EDGE_TOL = 0.005 mm nearer than its record (seed R400 0.004 mm aft: OK). That is a measurement tolerance, not a realistic defect.",
+    "M-8 falls back to the footprint bounding box when a footprint has no courtyard on its own side. A seed with R92's courtyard removed and the part moved 0.3 mm forward reads 2.418 mm, against 2.225 mm with the courtyard, and still fails. No footprint on the board lacks its own-side courtyard.",
+    "M-8 also holds TP88 / TP80 / TP81 / TP83, which are excluded from the BOM and position files (JLC does not place them). This is conservative, not a miss."
+  ],
+  "fix_verification": [
+    {"change": "D-R24-18 BAT_FAULT_N chamfer capped (0.32 mm)", "measurement": "Canonical board, pcbnew segment distance, BAT_ENABLE via (17.1, 82.8) 0.5 mm to BAT_FAULT_N 0.2 mm F.Cu: chamfer (16.55, 83.03)-(16.87, 83.35) 0.2015 mm, both legs 0.200 mm; (1.1 - 0.32)/sqrt2 - 0.35 = 0.2015 mm; diagonal 0.4525 mm; length delta 0.04 x (2 - sqrt2) = 0.023 mm, matching 1867.023 -> 1867.046. The restore seed is byte-identical to 1407e850 (0.1733 mm), which confirms the claim that the copper diff is exactly the three pieces.", "verdict": "confirmed"},
+    {"change": "D-R24-19 generated EN text and its tests", "measurement": "Seed G1 (battery_entry note 'off at 4.45-4.61 V' in r10_sch.py, sheets not regenerated): r10_sch_check FAIL 'nonreproducible generated artifact: battery_entry.kicad_sch'. G2 (same edit, sheets regenerated): r10_sch_check OK, test_r21_sheet_notes FAIL on the 4.72-5.25 / 4.29-4.80 V window. G3a (chatter obligation edited, note not regenerated): K-binding FAIL 'saved firmware_obligations differs'. G4 ('5.92 V (6.6 ms)' put back, note regenerated): K-binding OK, test_r23_binding_note_rules_and_pin_table FAIL. Unpinned 1.407 V: see observations.", "verdict": "confirmed"},
+    {"change": "D-R24-20 M-8 short-edge rule", "measurement": "Baseline OK, with the near list R400/R401/R404 aft 1.025, C403 aft 1.955, C95 fwd 1.505, R166 fwd 1.755 mm. Board seeds, each FAIL: L400 0.1 mm aft (2.405 mm, not listed); R82 bottom moved forward 3 mm (2.325 mm); R92 rotated 90 degrees (1.775 mm); TP88 flipped to the bottom and moved 0.2 mm (2.355 mm); C95 1.2 mm aft (stale, 2.705 mm); C95 0.4 mm aft (re-record, 1.905 mm); R400 moved to the forward edge (wrong edge, 0.425 mm). Table seeds through check_r10.m8: L400 added at 2.505 (stale); R92 added at 2.525 (stale); R999 added (missing); R400 loosened to 0.5 (re-record); R166 recorded on the wrong edge (fail); C95 dropped (not listed).", "verdict": "confirmed"},
+    {"change": "D-R24-17 right_angle (re-run)", "measurement": "ra1 BAT_FAULT_N F.Cu (16.55, 83.35) sharpened: FAIL right_angle. ra6 GND B.Cu (14.7, 48.0) sharpened (critical net): FAIL right_angle. ra4 the sharp corner plus a 0.25 mm copy of its leg: FAIL fold_back x2. ra5 the sharp corner plus a 0.3 mm stub: FAIL dead_copper. ra3 the sharp corner with one end offset 2 um: FAIL dead_copper x6. ra2 the sharp corner plus a zero-length segment: route_check 0, DRC track_dangling (gate fails). RouteCheck.test_r24_right_angle passes on the copy.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "sha256 of the board before and after (92c3ad59...)",
+    "a git archive of c4bb56b into the probe directory; check_r10 full + fit_check on the unseeded copy: OK",
+    "check_r10 --only M-8 on 9 seeded board copies; check_r10.m8 with 6 edited SHORT_EDGE_QUERIES tables",
+    "BAT_FAULT_N restore seed: kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity, fit_check, check_r10 full, route_check --profile r10",
+    "r10_sch_check on a project copy with an edited r10_sch.py (G1), and after r10_sch.py regeneration (G2); test_r10_check SchematicContract.test_r21_sheet_notes on G2",
+    "an edited r10_sch_check obligation: check_r10 --only K-binding before and after --binding-note regeneration (G3, G4); SchematicContract.test_r23_binding_note_rules_and_pin_table and BindingEvidence",
+    "route_check --profile r10 on 6 right_angle seeds; kicad-cli DRC on ra1 / ra2; test_route_check -k right_angle -k r24"
+  ],
+  "sources": [
+    "tools/check_r10.py (m8, SHORT_EDGE_QUERIES, k_binding)",
+    "tools/check_r8.py courtyard()",
+    "tools/route_check.py (topology, right_angle, gated, _route_tracks)",
+    "m3_design/r10_route.py CHAMFER_CUTS",
+    "m3_design/r10_sch.py R19_SHEET_NOTES",
+    "m3_design/r10_sch_check.py binding_note / obligations",
+    "m3_design/r10_build.sh",
+    "tools/test_r10_check.py",
+    "tools/test_route_check.py",
+    "R10_DECISIONS D-R19-02, D-R24-17 ... D-R24-23",
+    "docs/R10_VALIDATION.md owner row 24",
+    "docs/REQUIREMENTS.md F6, F8, M2"
+  ],
+  "coverage_limits": [
+    "The full r10_build.sh was not run on a seeded generator: the BAT_FAULT_N restore was seeded as the board edit plus refill that the generator would produce (shown byte-identical to 1407e850), and binding refresh was taken from r10_build.sh's steps.",
+    "check.sh's self-test suites were not all run on seeded copies; only the named tests were run.",
+    "Other lenses' reports and probe directories were not opened; the round 24 gate report was not opened."
+  ]
+}

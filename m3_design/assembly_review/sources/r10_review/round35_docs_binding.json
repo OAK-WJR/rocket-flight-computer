@@ -1,0 +1,56 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round35_docs_binding",
+ "reviewer": "claude",
+ "target_commit": "c3c4249",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "M3_R10.md:1340, R10_VALIDATION.md:1549 / :2837 give R173 at B(16.87,59.70); the board has B(16.87,59.05). All three are dated records (board history, the round 18 fix row, '(d') after the fix pass on a3144b15'), true when written; not current-board statements.",
+  "R10_VALIDATION.md:2988 R101 B(34.0,42.0) is the via coordinate (R101 at B(34.0,42.25)); already ruled in rounds 29, 31 and 34.",
+  "Q122 gate 'at most 0.218 V' (M3_R10:779, REQUIREMENTS:63, FMEA:42) is the nominal 3.6 x 2/33 figure; parts_budget gives 0.2203 V with 1 % parts; already ruled in round 28 and 34.",
+  "R10_VALIDATION.md:2751 and :3033 name probe artifacts (adjacency_a3144b15.json, detour.py) that are not in the tracked tree; they are dated method citations, not links.",
+  "Other coordinate-scan mismatches (M3_R10:102/121/140, ORDERING:231, parts_qualification:24, AVA_LAYOUT 115/411/414/447/468/490/493/494/532) are from -> to move records, whose 'to' coordinate matches the board, or parser artifacts."
+ ],
+ "fix_verification": [
+  {
+   "item": "R34-TRI-01 (hot-plug results pointer)",
+   "measurement": "parts_qualification.md:1036 and :1061-1063 now point to hotplug_results.json / hotplug_inputs.json and M3_R10 'Current state'; hotplug.md:3-6 has the round 34 pointer and :8 the 'Historical round-11 fix-pass target' header. hotplug_inputs.json board_sha256 = a0ec075e...; its canonical digest (r10_hotplug.digest) recomputes to f4d1b57d..., equal to hotplug_results.json inputs_sha256. Extrema over rows + half-step rows: falling 8.994764, rising 5.087664 V/us; retained 1643.9031 uF / 5.914470 V; M3_R10:348/350/745 quote them. On ec8cb98 (5516eeec) the same extrema were 8.991477 / 5.091053, as M3_R10:745 says. The new link ../../../../docs/M3_R10.md#current-state resolves.",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3.kicad_pcb before and after: a0ec075e... both; binding note c5cd0fa3..., budget 4267634..., pin_table b94133e6... and circuit 3220e5f9... match the hashes the binding note and docs cite.",
+  "Binding note u1_pins (100) vs board U1 pad nets: 0 mismatches; vs pin_table.tsv r10_net/port: 0 mismatches; AGENTS pin claims (PD8/PD9, PB13/PB12, PC6/PC7, PE8/PE7, PC1, PE4, PC5, PC0, SPI3, PD0, PC3_C NC, PC13 NC, PC14 buzzer) checked against pin_table.",
+  "Binding note IMU block (B(17,45.9), 180, x -6 / z -2.06 Inference) vs board U4.",
+  "Relative markdown links and anchors in STATUS, AGENTS, docs/*.md, parts_qualification, AVA_LAYOUT, hotplug.md, R10_DECISIONS: 230 links, 0 bad (GitHub slug rules).",
+  "Backticked file references in the listed docs resolved against the tree (4 unresolved: VEHICLE.md path shorthand and two dated probe-artifact names).",
+  "Regex scan of every REF F(x,y) / B(x,y) statement in the listed docs against pcbnew positions of all 216 footprints (29 hits, all dated or from->to records).",
+  "Terminal table (handoff) and AGENTS rows: positions, sides and rotations of J1, J400, J121, J440, J410, J420, J9, J122, U9, R166, R81, C87, U1, U4, U5, D402, LS120, Q120-Q123; the five M3 holes (Edge.Cuts circles at (4,4), (42,4), (4,44.3), (3.7,86), (42,86)).",
+  "Silkscreen legends: every pin legend the handoff says is on the bottom (J121 2:E1+, J400 2:SW, J440 2-4, J410/J420/J9 2-3, J122 2 and 4) is on B.Silkscreen; 44 legends total.",
+  "EN via (17.10,82.80) exists on BAT_ENABLE.",
+  "M3_R10 'The board' metrics recomputed: 2,369,507 bytes, 216 footprints, 1059 segments, 1866.794 mm, 309 vias (170 GND; 304 0.5/0.3, 4 0.6/0.3, 1 1.0/0.5), 123 visible / 93 hidden references, C18 hidden, 44 legends.",
+  "Fab package: BOM 81 lines, 206 placed (sum of designators), CPL 70 top / 136 bottom; cost_check.json $85.26, 12:44:13Z, fixed fees 83.96/5 = $16.79, $0.85 over $84.41; input hashes match the three committed CSVs; stock_check.json 12:43:17Z, U4 9/2 vs 5, U9 30/-81 min 7, as AGENTS, STATUS and M3_R10:402-403/1274 state.",
+  "Clearances quoted in AGENTS status: PYRO1_OUT to 3V3/3V3A min 1.040 mm (B.Cu, R164.2) / 1.050 mm (F.Cu); 3V3/3V3A to PYRO1_GATE_N/PYRO1_GATE 1.0585 mm (F.Cu, R128.1 to via (19.55,55.825)); BUZZ_DRV-PYRO1_OUT 0.7935 mm (B.Cu) vs '0.794 mm'.",
+  "parts_budget figures quoted in AGENTS/M3_R10: four-stall 5.713 V / 1.279 A, idle 1.540851 A, loop 4.617803 ohm, pack sag 5.880831 / 4.388491 V, watchdog 28.571-32.653 ms, GAP-5 34.853 ms, hold-up 0.464-0.539 / 1.304-1.412 ms (470 uF 0.725-0.842 / 2.038-2.206 ms), cold CONT 99.37 / 146.2 mV."
+ ],
+ "sources": [
+  "git show c3c4249 tree (read-only)",
+  "pcbnew (KiCad 10 Python) on m3.kicad_pcb",
+  "parts_budget.json, r10_binding_note.json, pin_table.tsv, hotplug_inputs.json, hotplug_results.json (and history at ec8cb98 / 816038c)",
+  "fab/cost_check.json, fab/stock_check.json, fab/m3_bom_jlc.csv, fab/m3_cpl_jlc.csv",
+  "tools/r10_hotplug.py (digest), m3_design/r10_parts.py (Q122 calc)"
+ ],
+ "coverage_limits": [
+  "R10_VALIDATION (about 3,200 lines), M3_R10 and ORDERING 8 were checked by targeted scans (coordinates, hashes, links, numeric spot checks), not line by line.",
+  "Decision counts (229 / 126 / 103) not recounted.",
+  "Inner-layer barrel clearances (S-8) not re-measured; the netdist probe measures flashed copper only.",
+  "No datasheet re-reads; no kicad-cli run."
+ ]
+}

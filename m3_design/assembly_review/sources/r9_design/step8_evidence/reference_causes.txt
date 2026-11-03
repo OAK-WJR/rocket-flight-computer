@@ -1,0 +1,60 @@
+== step-7 board (the build's stage-33 output: GND pours only in the strip, no stitching, no crystal plane, via pads on every layer)
+samples 31359, unreferenced 26469 (0.8441)
+  own antipad, one-branch sides: 21 sides, 2856 samples
+  own antipad, multi-branch sides: 3 sides, 745 samples
+  outside every own antipad: 22868 {'HSE_IN B.Cu': 785, 'HSE_IN F.Cu': 368, 'HSE_OUT B.Cu': 228, 'HSE_OUT F.Cu': 1598, 'IMU_CS B.Cu': 38, 'IMU_CS F.Cu': 380, 'QSPI_CLK B.Cu': 17, 'QSPI_CLK F.Cu': 1744, 'QSPI_IO0 B.Cu': 18, 'QSPI_IO0 F.Cu': 886, 'QSPI_IO1 B.Cu': 43, 'QSPI_IO1 F.Cu': 454, 'QSPI_IO2 B.Cu': 17, 'QSPI_IO2 F.Cu': 3773, 'QSPI_IO3 B.Cu': 17, 'QSPI_IO3 F.Cu': 2321, 'QSPI_NCS B.Cu': 124, 'QSPI_NCS F.Cu': 1247, 'SPI1_MISO B.Cu': 51, 'SPI1_MISO F.Cu': 566, 'SPI1_MOSI B.Cu': 18, 'SPI1_MOSI F.Cu': 523, 'SPI1_SCK B.Cu': 96, 'SPI1_SCK F.Cu': 299, 'USB_DM F.Cu': 4047, 'USB_DP F.Cu': 3210} e.g. [('QSPI_IO2', 'F.Cu', 13.9, 47.1), ('QSPI_IO2', 'F.Cu', 13.9707, 47.1707)]
+  critical layer-change vias: 12
+    HSE_IN (17.0, 50.6) B.Cu                   133  branches 1
+    HSE_IN (17.0, 50.6) F.Cu                   136  branches 1
+    HSE_OUT (19.69, 47.0) B.Cu                 270  branches 2
+    HSE_OUT (19.69, 47.0) F.Cu                 136  branches 1
+    IMU_CS (9.0, 46.4) B.Cu                    208  branches 2
+    IMU_CS (9.0, 46.4) F.Cu                    136  branches 1
+    QSPI_CLK (22.75, 42.07) B.Cu               134  branches 1
+    QSPI_CLK (22.75, 42.07) F.Cu               137  branches 1
+    QSPI_IO0 (21.13, 40.05) B.Cu               133  branches 1
+    QSPI_IO0 (21.13, 40.05) F.Cu               134  branches 1
+    QSPI_IO1 (20.0, 38.9) B.Cu                 133  branches 1
+    QSPI_IO1 (20.0, 38.9) F.Cu                 134  branches 1
+    QSPI_IO2 (12.5, 42.07) B.Cu                134  branches 1
+    QSPI_IO2 (12.5, 42.07) F.Cu                136  branches 1
+    QSPI_IO3 (22.75, 43.33) B.Cu               134  branches 1
+    QSPI_IO3 (22.75, 43.33) F.Cu               136  branches 1
+    QSPI_NCS (14.57, 45.4) B.Cu                267  branches 2
+    QSPI_NCS (14.57, 45.4) F.Cu                136  branches 1
+    SPI1_MISO (12.55, 45.0) B.Cu               133  branches 1
+    SPI1_MISO (12.55, 45.0) F.Cu               136  branches 1
+    SPI1_MOSI (12.55, 45.75) B.Cu              133  branches 1
+    SPI1_MOSI (12.55, 45.75) F.Cu              149  branches 1
+    SPI1_SCK (11.7, 44.6) B.Cu                 147  branches 1
+    SPI1_SCK (11.7, 44.6) F.Cu                 136  branches 1
+== built board 89ddea8d... (r9_ground.py output)
+samples 31359, unreferenced 3206 (0.1022)
+  own antipad, one-branch sides: 21 sides, 2550 samples
+  own antipad, multi-branch sides: 3 sides, 655 samples
+  outside every own antipad: 1 {'USB_DM F.Cu': 1} e.g. [('USB_DM', 'F.Cu', 8.0793, 33.0793)]
+  critical layer-change vias: 12
+    HSE_IN (17.0, 50.6) B.Cu                   119  branches 1
+    HSE_IN (17.0, 50.6) F.Cu                   121  branches 1
+    HSE_OUT (19.69, 47.0) B.Cu                 241  branches 2
+    HSE_OUT (19.69, 47.0) F.Cu                 122  branches 1
+    IMU_CS (9.0, 46.4) B.Cu                    172  branches 2
+    IMU_CS (9.0, 46.4) F.Cu                    119  branches 1
+    QSPI_CLK (22.75, 42.07) B.Cu               119  branches 1
+    QSPI_CLK (22.75, 42.07) F.Cu               122  branches 1
+    QSPI_IO0 (21.13, 40.05) B.Cu               119  branches 1
+    QSPI_IO0 (21.13, 40.05) F.Cu               119  branches 1
+    QSPI_IO1 (20.0, 38.9) B.Cu                 119  branches 1
+    QSPI_IO1 (20.0, 38.9) F.Cu                 119  branches 1
+    QSPI_IO2 (12.5, 42.07) B.Cu                119  branches 1
+    QSPI_IO2 (12.5, 42.07) F.Cu                121  branches 1
+    QSPI_IO3 (22.75, 43.33) B.Cu               119  branches 1
+    QSPI_IO3 (22.75, 43.33) F.Cu               121  branches 1
+    QSPI_NCS (14.57, 45.4) B.Cu                242  branches 2
+    QSPI_NCS (14.57, 45.4) F.Cu                121  branches 1
+    SPI1_MISO (12.55, 45.0) B.Cu               124  branches 1
+    SPI1_MISO (12.55, 45.0) F.Cu               125  branches 1
+    SPI1_MOSI (12.55, 45.75) B.Cu              119  branches 1
+    SPI1_MOSI (12.55, 45.75) F.Cu              133  branches 1
+    SPI1_SCK (11.7, 44.6) B.Cu                 129  branches 1
+    SPI1_SCK (11.7, 44.6) F.Cu                 121  branches 1

@@ -1,0 +1,83 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round27_gate",
+ "reviewer": "claude",
+ "target_commit": "816038c46b95c78b7286b10fe555f3bbe38a3fa5",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "All the requested seeds fail their gates. No realistic seed passed.",
+  "The D-R26-02 / -04 clearance guards are self-tests: test_r26_pyro1_out_clear_of_3v3_and_3v3a and test_r26_gate_nets_clear_of_3v3_and_3v3a in RealBoardSeeds, not check_r10 rules. check.sh runs them on the checked board (R10_BOARD), so they still block it, as the seeded copies show.",
+  "right_angle near-miss corners: the stop-short, overshoot and both-short variants (0.01-0.05 mm) are not right_angle nodes. They fail through dead_copper, which is gated on every net, and on critical and power nets also through overlap_only_joint. On non-critical nets overlap_only_joint is only counted. This repeats R26-GATE observation 5.",
+  "pad_layer_changes reads PCB_TRACK only. Arcs fail arc_segment on every net, so an arc into a plated pin cannot pass.",
+  "The J440 inner rings put back on a copy (unconnected-layer mode KEEP_ALL, refilled) give eight hole_clearance errors at 0.400 mm against 'JLC inner-layer PTH pad hole to copper' 0.55 mm, plus lib_footprint_mismatch. The D-R26-01 enabling change is gated by DRC."
+ ],
+ "fix_verification": [
+  {
+   "change": "D-R26-01 board",
+   "measurement": "GND vias at (7.4,16.5) and (7.4,20.0), 0.5 mm: 1.500 mm from J440.3 (7.4,18.0) and from J440.4 (7.4,21.5). J410 / J420 / J440 / J9 pins 3 / 4 are flashed on F.Cu / B.Cu only (no inner rings). pad_layer_changes on a0ec075e = [J440.3, J440.4]; route_check r10 baseline 0 gated failures.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-01 gate (pad_layer_changes / critical_via_no_gnd)",
+   "measurement": "Each seed fails critical_via_no_gnd (layer 'pad'): A1, partner (7.4,16.5) removed: J440.3 at 2.0 mm. A2, (7.4,20.0) removed: J440.4 at 4.037 mm. A3 / A4, a partner moved to 1.6 mm on the column: 1.6 mm. A4b, moved to 1.6 mm diagonally: 1.6 mm. A5, a second-layer branch from a plated pin: J410.3 GPS_TX_WIRE 2.427 mm, J420.4 RADIO_RX_WIRE 3.775 mm, J9.3 CAM_RX_WIRE 4.037 mm, J121.1 PYRO1_OUT 2.9 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-01 K-region OwnPadVoids extension",
+   "measurement": "Baseline 0 issues, and 0 after a refill. Four realistic voids reaching beyond the pad disc and partner antipad, each refilled, all fail with the AUX_TX B.Cu run at 181 samples over no In2 copper: B1a, the partner at 1.6 mm; B1b, a PORT_4V8 via at (6.75,16.2); B1c, a chained GND via at (7.4,15.75); B1d, an In2 fill keep-out into the antipad. Three B.Cu runs over the merged void outside the pad disc also fail: B2a 20 samples, B2b 6 samples (inside the partner disc), B2c on J440.4, 11 samples.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-02",
+   "measurement": "PYRO1_OUT to 3V3 / 3V3A is 1.040 mm (copper_gap, every layer, fills included). R173 (16.87,59.05), C11 (17.5,51.45), C10 (17.5,53.5), R164 (17.325,55.25); R13's 3V3 via is at (9.2,52.55). The put-back copies fail test_r26_pyro1_out_clear_of_3v3_and_3v3a: R173 back 0.514 mm, the column back 0.566 mm, R13's via back 0.62 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-04",
+   "measurement": "R164's 3V3 via is at (19.55,55.825). The gate nets are 1.0585 mm from 3V3 / 3V3A: PYRO1_GATE_N to 3V3 1.065, PYRO1_GATE to 3V3 1.0585, PYRO1_GATE to 3V3A 1.145. BUZZ_DRV / PYRO1_OUT is 0.7935 mm, as disclosed. The put-back copies fail test_r26_gate_nets_clear_of_3v3_and_3v3a at 0.331 mm (19.05,55.25) and 0.676 mm (19.05,55.9).",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R26-03 binding note",
+   "measurement": "K-binding passes on an unchanged copy. Each of these makes it fail ('saved firmware_obligations differs from native binding-note regeneration'): the saved note's chatter obligation edited (5.71 -> 5.73 V, or the window 7.50 -> 7.63 ms); rule 8's corner edited (5.71 -> 5.37 V); the generator (a copy of r10_sch_check.py, window 7.50 -> 7.52 ms) edited without regenerating. With the same generator edit regenerated, test_r23_binding_note_rules_and_pin_table fails on its pinned 7.50 ms phrase.",
+   "verdict": "confirmed"
+  },
+  {
+   "change": "D-R24-17 right_angle (re-run)",
+   "measurement": "An exact 90-degree un-chamfer fails right_angle at='free' on AUX_TX_WIRE (4.45,18.0), BAT_FAULT_N (26.0,47.3), USB_ILIM (14.825,27.5), 3V3 (29.25,36.2), CAM_5V (34.2,48.75) and RAW_PROTECTED (14.1,9.0). So does a 0.5 um sub-TOL mismatch. A 0.5 mm via at a 0.4 mm-wide bend fails at='via' (h sqrt2 0.283 > 0.25); a 0.6 mm via is exempt, as specified. The stop-short / overshoot / both-short variants (0.01 and 0.05 mm) fail through dead_copper, and on critical and power nets also through overlap_only_joint.",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the board before and after: a0ec075e... both times. git status clean.",
+  "route_check (profile r10) rc.scan + rc.evaluate in process on the board and on seeded in-memory copies: seeds_a.py, seeds_e.py, seeds_e_via.py.",
+  "check_r10.region_issues on the board, on a refilled copy and on seven seeded copies (four refilled): seeds_b.py.",
+  "RealBoardSeeds.test_r26_pyro1_out_clear_of_3v3_and_3v3a / test_r26_gate_nets_clear_of_3v3_and_3v3a with R10_BOARD set to six saved copies: seeds_c.py, seeds_c.log.",
+  "check_r10.k_binding on four saved-note copies and once with a shadowed, edited generator copy; test_r23_binding_note_rules_and_pin_table against the edited generator: seeds_d.py, run_t23_altgen.py.",
+  "kicad-cli 10.0.7 pcb drc on a copy with J440.3 / J440.4 inner rings restored and refilled: seeds_f.py, seeds_f/drc.json.",
+  "The round 26 unit tests on the unmodified board: test_route_check R10AuditScope.test_r26_plated_pad_layer_change_needs_a_gnd_via; test_r10_check R4Synthetic.test_r26_own_pad_void_with_its_gnd_partner_via; RealBoardSeeds.test_r26_aux_pins_have_gnd_partner_vias, test_r26_pyro1_out_clear_of_3v3_and_3v3a and test_r26_gate_nets_clear_of_3v3_and_3v3a. All OK.",
+  "Clearance measurements with RealBoardSeeds.copper_gap: measure.py."
+ ],
+ "sources": [
+  ".supervisor/r27_review_brief.md",
+  "AGENTS.md section 3 (1.5 mm GND partner rule, 45-degree rule)",
+  "tools/route_check.py (pad_layer_changes, critical_transitions, scan right_angle / via checks)",
+  "tools/check_r10.py (OwnPadVoids, pad_void_regions, region_issues, k_binding)",
+  "tools/test_route_check.py, tools/test_r10_check.py (D-R26 seeds, test_r23 pins)",
+  "m3_design/r10_sch_check.py (binding_note)",
+  "m3_design/assembly_review/sources/r10_review/round26_fix_cad.md; round26_triage.md (observations); round26_gate.md, read after own findings",
+  "docs/M3_R10.md, Routing evidence and the round 26 change table"
+ ],
+ "coverage_limits": [
+  "check.sh and r10_build.sh were not run end to end on any seeded copy. Gates were called in process on in-memory or saved copies, and check.sh runs the same functions and tests.",
+  "Most route_check seeds were not refilled; the refill does not affect the categories tested. The K-region void seeds were refilled.",
+  "No other lens's work was opened. Only the gate scope of D-R26-01..04 was examined; the generated text's figures were not recomputed."
+ ]
+}

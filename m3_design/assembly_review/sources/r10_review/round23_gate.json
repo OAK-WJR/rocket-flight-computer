@@ -1,0 +1,255 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_gate",
+ "reviewer": "claude",
+ "target_commit": "c70d2614c9f187c46bce6225047ef4d03484848a",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 7
+ },
+ "findings": [
+  {
+   "id": "R23-GATE-01",
+   "severity": "Minor",
+   "status": "new (extends R22-GATE-01, whose mil / um / (opt) / named-layer cases D-R22-05 fixed)",
+   "title": "K-rules DRU reader misses three spellings KiCad honours: unquoted rule names, quoted layer names and #-commented rules",
+   "evidence": {
+    "file": "tools/check_r10.py dru_rules (regex r'\\(rule \"([^\"]+)\"'), dru_layers_meet, jlc_hole_table",
+    "unit_probe": ".supervisor/r23_gate/probe/dru_spell.py on the committed DRU text: (rule relief (layer inner) ... hole_clearance (min 0.25mm)) 0 issues; (rule relief (constraint hole_clearance (min 0.10mm))) 0 issues (not even the 0.20 mm floor); (layer \"In1.Cu\") 0.25 mm, (layer \"inner\") 0.25 mm, (layer \"F.Cu\") 0.21 mm each 0 issues; the same rules with a quoted name / bare layer word give 1+ issues (control). Commenting out the pinned rule \"JLC inner-layer PTH pad hole to copper\" with # on every line: 0 issues (the table still finds it, KiCad ignores it; the committed DRU itself starts with # comment lines that KiCad accepts).",
+    "kicad_acceptance": "h01 (unquoted rule name relief, via hole_clearance 0.10 mm for non-zone copper): KiCad 10.0.7 DRC 0 violations with the seeded 0.16 mm drawing, which DRC flags (hole_clearance 0.25 rule, actual 0.1600 mm) without the rule (h01c control). h06 (rule \"quoted layer probe\" with (layer \"In1.Cu\"), 1.0 mm): DRC reports 130 hole_clearance violations naming that rule, so KiCad reads a quoted layer.",
+    "full_gate_seed": "h01_unq_relief_graphic: generator r10_sch.py appends the unquoted rule, DRU regenerated and DRU_SHA256 re-pinned; an In1 GND board copper drawing (0.2 mm line) 0.16 mm from the hole wall of via 3V3 (36.13, 58.80), under JLC \"Inner layer via hole to copper clearance 0.2mm\". After the post-board regeneration (budget, hot-plug, orient / export / bind / verify, binding note: all exit 0) every check.sh checker step exits 0: drc, audit, silk, parts, fit, check_r10 (K-rules OK, 36/36), route_check, fab --content.",
+    "control": "h01b: the same seed with a quoted rule name fails K-rules with 4 table issues (floor 0.20 and three overrides).",
+    "jlc": "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-01): \"Inner layer via hole to copper clearance: 0.2mm\""
+   },
+   "impact": "A reviewed, re-pinned DRU can lower any JLC hole row with a rule KiCad applies but K-rules does not read (unquoted name: every row and the 0.20 mm floor; quoted layer: the inner and outer PTH overrides). On its own the board measures still hold most rows; together with R23-GATE-02 a 0.16 mm via-hole-to-copper gap passes the whole gate (h01).",
+   "concrete_fix": "Checks only: parse rules with an s-expression reader that strips # comment lines first and accepts a quoted or bare rule name and layer token (strip quotes before dru_layers_meet); fail K-rules on any (rule token it cannot parse. Seeds: h01 / the dru_spell.py cases."
+  },
+  {
+   "id": "R23-GATE-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "JLC board measures (pth_inner_copper, jlc_board_holes) skip copper drawings, copper text and footprint zones",
+   "evidence": {
+    "file": "tools/check_r10.py _copper_items: board.Zones(), board.GetTracks() and pads only; copper_nodes (used by S-8, K-power) also takes board and footprint PCB_SHAPE copper, copper text / fields and footprint zones",
+    "seed": "h01b: with the 0.16 mm In1 GND drawing beside via 3V3 (36.13, 58.80) K-rules reports only the 4 DRU-table issues, no \"via ... hole wall\" issue; in h01 (DRU table blind, R23-GATE-01) K-rules is OK. NPTH-to-copper, PTH-to-outer and PTH-to-inner rows read the same item list.",
+    "board_now": "No copper drawing or copper text on 5516eeec near a hole (DRC clean), so the board is not affected today."
+   },
+   "impact": "D-R22-01 / -05's claim 'measured on the board whatever the DRU says' holds only for tracks, vias, pads and board zones; any copper drawing or text is held by DRC alone, i.e. by the DRU the measures were meant to back up.",
+   "concrete_fix": "Checks only: build _copper_items from copper_nodes (or add PCB_SHAPE copper, copper PCB_TEXT / fields / text boxes and footprint zones to it); seed h01b with the table issues excepted and require the via-hole issue."
+  },
+  {
+   "id": "R23-GATE-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "DRU constraints other than the hole rows, and rule severity, are not floored: a re-pinned DRU drops copper clearance to 0.064 mm (under JLC 0.09 mm) and the gate passes",
+   "evidence": {
+    "file": "tools/check_r10.py k_rules: PRO_FLOORS / NETCLASS_CLEARANCE_FLOOR read the .kicad_pro only; jlc_hole_table reads only hole_clearance / hole_to_hole; no check of DRU clearance, track_width, edge_clearance, annular_width, via_diameter, text_height or (severity ...)",
+    "unit_probe": "dru_spell.py: clearance 0.05, track_width 0.05, edge_clearance 0, annular_width 0.01, text_height 0.3, hole_size 0.1 and a (severity ignore) rule: 0 issues each",
+    "seeds": "h04_clearance_below_floor: generator rule \"Servo pair\" clearance (min 0.05mm) on SERVO1_MCU, re-pinned; SERVO1_MCU F.Cu (30.3, 54.8)-(30.3, 73.2) widened 0.2 -> 0.38 mm, 0.0636 mm from SERVO2_MCU (DRC measure in control h03b: \"netclass Default clearance 0.1500 mm; actual 0.0636 mm\"). KiCad honours the DRU rule below the board-setup minimum 0.15 mm: DRC 0. h03_severity_ignore_servo: the same widening with a rule whose min stays 0.15 mm but carries (severity ignore): DRC 0. Both: regeneration all exit 0, every checker step exit 0 (K-rules OK, route_check 0 failing).",
+    "jlc": "https://jlcpcb.com/capabilities/pcb-capabilities: multilayer min trace width / spacing \"0.09 / 0.09 mm (3.5 / 3.5 mil)\"; \"Copper clearance from routed board edges: >=0.2 mm\""
+   },
+   "impact": "K-rules' docstring says the design rules are 'not loosened (pyro safety rests on them)', but PRO_FLOORS are not a KiCad floor: one re-pinned DRU rule, or a (severity ignore) clause, silences DRC's clearance (and any other) test on chosen nets, including pyro nets, with no other checker holding general copper clearance.",
+   "concrete_fix": "Checks only: in k_rules, floor every DRU constraint minimum against PRO_FLOORS / JLC (clearance >= 0.15 except the named stricter rules, track_width >= 0.15, edge_clearance >= 0.5, annular_width >= 0.1, via_diameter >= 0.5, hole_size >= 0.3, text_height >= 1.0 on silk, ...), and reject any (severity ...) clause other than error; seeds h03 / h04."
+  },
+  {
+   "id": "R23-GATE-04",
+   "severity": "Minor",
+   "status": "new (extends R22-GATE-02 / D-R22-06)",
+   "title": "K-legends Fab rule misses footprint text boxes, visible footprint fields, squashed text and board-level Fab shapes",
+   "evidence": {
+    "file": "tools/check_r10.py fab_ref_crossings: fab_texts = isinstance(g, PCB_TEXT) over f.GraphicalItems() (PCB_TEXTBOX is a PCB_SHAPE, fields are not graphical items); only GetTextHeight() is floored; board-level drawings checked only for PCB_TEXT / PCB_TEXTBOX",
+    "seeds": [
+     "f01b_fab_textbox_apart: a footprint PCB_TEXTBOX \"Q121\" (no border, mirrored, 0.6 mm) in Q120 on B.Fab at (13.5, 76.8), clear of every Fab outline: every checker step exit 0 (f01, the same box on Q120's body, fails only incidentally: the box joins Q120's outline and crosses its reference, 1.44 mm^2)",
+     "f02_value_visible: Q120's Value field (B.Fab, \"AONR21357\") made visible at Q120's centre: every step exit 0 (AGENTS section 3: part numbers hidden on F.Fab; D-R21-08: only ${REFERENCE} on the Fab layers)",
+     "f03_fab_ref_squash: R119's B.Fab reference character width 0.02 mm (height 0.40, stroke 0.06 kept): every step exit 0",
+     "f05_board_fab_cover: a board-level filled B.Fab rectangle 3.2 x 1.6 mm over R134's reference at (16.5, 64.0): every step exit 0"
+    ],
+    "caught": [
+     "f04 (R134 reference un-mirrored on B.Fab): DRC nonmirrored_text_on_back_layer",
+     "g08a / g08c / g08d (round 22 seeds): K-legends"
+    ]
+   },
+   "impact": "The bound assembly drawings (C84 is fitted by hand from them) can carry a wrong designator, a part number, an unreadable designator or a blacked-out one with the gate passing.",
+   "concrete_fix": "Checks only: treat PCB_TEXTBOX and every visible PCB_FIELD on a Fab layer as Fab text (only the one ${REFERENCE} text allowed); floor GetTextWidth() like the height (>= 0.5 x height, or FAB_REF_MIN_H); reject board-level PCB_SHAPEs on F.Fab / B.Fab (or test them against reference ink boxes). Seeds f01b, f02, f03, f05."
+  },
+  {
+   "id": "R23-GATE-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "r10_parts.py's own footprints are pinned only to their generator: a generator edit that strips the paste from Q120 / Q121 (the RAW_ACT load switch) passes the gate",
+   "evidence": {
+    "file": "m3_design/r10_parts.py load_switch() / geometry_checks() (pad positions and sizes only); tools/check_r10.py FOOTPRINT_SHA256 pins only the other footprints; LAND_OVERRIDES and paste_check compare the board with the library and the Gerbers with the board",
+    "seed": "x02_gen_fet_no_paste: the copy's r10_parts.py load_switch() pads 1-9 lose F.Paste; r10_parts --library-only regenerates kilib (M3_AONR21357_DFN3x3A_EP1: 9 -> 0 paste layers); Q120 / Q121's 18 pads on the board lose B.Paste to match. Regeneration all exit 0; every checker step exit 0; the bound package reads \"B_Paste 357 flashes on 357 pasted pads\" (375 in the committed package and in AGENTS / docs).",
+    "related": "x01_gen_db125_drill (terminal() drill 1.3 -> 1.0 mm, against DORABO T0-1's 1.3 mm) fails only incidentally (K-reference, after the refill); no check holds the DB125 drill."
+   },
+   "impact": "The fire-path P-FETs (and any other r10_parts land: DB125 drills, GH2, TPS7A91, C84, SRP5030, microSD) can lose paste, drill or mask through a generator edit and the gate passes; JLC would place Q120 / Q121 on dry pads.",
+   "concrete_fix": "Checks only: pin r10_parts' generated .kicad_mod files in FOOTPRINT_SHA256 (as K-lands does for the others), or pin each generated footprint's paste / mask layers and drill in geometry_checks; also pin the paste totals (253 / 375) in the fab content check."
+  },
+  {
+   "id": "R23-GATE-06",
+   "severity": "Minor",
+   "status": "new",
+   "title": "check.sh does not hold the committed sheets to the generator: a hand-reverted diagnostics note passes",
+   "evidence": {
+    "file": "tools/test_r10_check.py SchematicContract.test_r21_sheet_notes builds the sheets from r10_sch.py in a temp dir; m3_design/r10_sch_check.py (the replay that compares committed sheets byte for byte) runs only in r10_build.sh, not in check.sh",
+    "seed": "d01_sheet_note_revert: diagnostics.kicad_sch line 2 hand-reverted to round 21's \"5.25 V reads 0.477 V; even 19.9 V (TVS clamp, failed regulator) reads 1.81 V.\" (D-R22-03's removed text); fab re-bound (the manifest takes the new sheet hash). Every checker step exit 0; r10_sch_check --binding-note fails (\"binding note requires a passing schematic contract\", nonreproducible diagnostics.kicad_sch), but check.sh never runs it.",
+    "selftests": "test_r10_check 253 tests OK (6 skipped), test_route_check, test_fab_validation, test_r10_parts, test_paste_check all exit 0 (R10_BOARD = the copy)"
+   },
+   "impact": "A sheet edit outside the generator (or a generator / sheet mismatch) is caught only by a full build, not by the pre-commit gate.",
+   "concrete_fix": "Checks only: run r10_sch_check (or its replay comparison alone) in check.sh, or have K-binding compare every committed .kicad_sch with a fresh r10_sch.build in a temp dir."
+  },
+  {
+   "id": "R23-GATE-07",
+   "severity": "Minor",
+   "status": "new (extends D-R22-02)",
+   "title": "SINGLE_OPEN_TAPS still omits single-via grounds and regulator pins of flight-relevant ICs: U4's only power-ground via and the MCU's VCAP capacitors",
+   "evidence": {
+    "probe": ".supervisor/r23_gate/probe/single_via_all.py: every pad that one via open cuts off from its net's main copper (copper_nodes + _copper_adjacency, as single_via_opens)",
+    "rows": [
+     "GND via (16.75, 47.60), B.Cu/In1/F.Cu: cuts U4.6 and U4.7 (ISM6HG256X pins 6 / 7, 'GND, 0 V supply', DS14623 Rev 1 pin table p10, same map as DS15034 per parts_qualification.md); U4.2 / U4.3 (SDx / SCx, 'connect to VDDIO or GND') stay on GND by another path. Open: the IMU's supply ground floats (behaviour not stated by ST: Inference); the accelerometer is the launch-detect input",
+     "VCAP1 via (29.25, 38.00): cuts C19.1 from U1's VCAP pin; VCAP2 via (18.00, 37.30): cuts C20.1 (open: the core regulator loses its output capacitor; MCU behaviour Inference)",
+     "GND via (19.35, 59.30): Q123.2 (buzzer driver source, annunciation only); GND via (29.14, 49.25): C21.2 (3V3A bypass); GND via (13.75, 24.10): C28.2",
+     "none of these is a SINGLE_OPEN_TAPS entry or a recorded single point (grep of docs and R10_DECISIONS for the coordinates)"
+    ]
+   },
+   "impact": "D-R22-02 applied 'the via is the IC's only ground' to the two TPS2553s only; the same open on U4's ground or a VCAP capacitor is a silent single point for flight sensing / the MCU core, unrecorded and ungated.",
+   "concrete_fix": "Checks only now: add (GND, U4.6 / U4.7, J1.2), (VCAP1, C19.1, U1 VCAP), (VCAP2, C20.1, U1 VCAP) as taps with exact SINGLE_OPEN_EXCEPTIONS entries and measured reasons, and record them with the next-board-change second vias; the board change itself waits for the next respin."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R22-01",
+   "claim": "K-rules measures PTH ring, via ring, plated / NPTH hole sizes, NPTH ring and NPTH-to-copper on the board whatever the DRU says",
+   "measured": "g01e / g01f re-run: K-rules names J400.2 0.251 mm and J1.2 0.255 mm walls; jlc_board_holes runs on every seed. h01b: the copper-drawing case is not measured (R23-GATE-02)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R22-02",
+   "claim": "7 new taps; each entry dropped fails; stale entries fail",
+   "measured": "probe/tap_drop.py on 5516eeec: base 0 issues; dropping each of the 15 SINGLE_OPEN_EXCEPTIONS gives exactly 1 issue naming its via. Coverage gap U4 / VCAP (R23-GATE-07)",
+   "verdict": "confirmed (coverage partly)"
+  },
+  {
+   "id": "D-R22-03",
+   "claim": "diagnostics note text corrected; seeded sheet-notes test",
+   "measured": "generator text and committed sheet carry the new line; the test checks the generator only, a hand-reverted committed sheet passes check.sh (d01, R23-GATE-06)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R22-04",
+   "claim": "record corrections, text only",
+   "measured": "board SHA unchanged (git diff ec8cb98..c70d261 shows no m3.kicad_pcb change); figures not re-measured by this lens",
+   "verdict": "confirmed (no copper change)"
+  },
+  {
+   "id": "D-R22-05",
+   "claim": "every DRU (min) read in any unit and position; any layer that can meet counts; via-hole, PTH-to-outer and pad hole-to-hole board rows",
+   "measured": "g01e / f / g / h re-run: each fails K-rules (named overrides, 0.254 / 0.1524 / 0.15 mm). Missed: unquoted rule names, quoted layers, # comments (R23-GATE-01); non-hole constraints and severity (R23-GATE-03). Via hole-to-hole (JLC 0.2 mm) has no board row but h05 (two GND vias 0.15 mm wall to wall, unquoted 0.10 mm rule) is caught by route_check via_overlap, and 0.5 / 0.3 mm vias cannot reach it without overlapping pads",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R22-06",
+   "claim": "Fab reference reach 1.5 mm, stroke floor, no board-level Fab text",
+   "measured": "g08a (5.147 mm), g08c (board text Q121) and g08d (0.005 mm stroke) re-run: each fails K-legends. Missed: footprint text box, visible field, squashed width, board-level Fab shape (R23-GATE-04)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R22-07",
+   "claim": "clamp GND legs reach a GND via through tracks within 1.0 mm",
+   "measured": "g07b re-run: K-ports \"D420.2 reaches no GND via through tracks\". track_graph pad nodes are layer-aware (a stub moved to the other layer cannot count)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-01",
+   "claim": "JLC hole table pinned; PTH hole to inner copper >= 0.3 mm on the board",
+   "measured": "as D-R22-01 / -05: rows held for tracks, vias, pads and zones; DRU spellings and drawings open (R23-GATE-01 / -02)",
+   "verdict": "partly"
+  },
+  {
+   "id": "D-R21-02",
+   "claim": "single_via_opens over SINGLE_OPEN_TAPS",
+   "measured": "tap_drop.py; survey single_via_all.py (R23-GATE-07)",
+   "verdict": "confirmed (coverage partly)"
+  },
+  {
+   "id": "D-R21-08",
+   "claim": "each footprint has one visible Fab reference clear of other parts",
+   "measured": "round 22 d06 / g08e class not re-run; new misses in R23-GATE-04",
+   "verdict": "partly"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R23-GATE-01",
+   "change": "dru_rules: strip # comment lines, accept bare or quoted rule names and layer tokens (unquote before dru_layers_meet), fail on any unparsed (rule; add the dru_spell.py cases and h01 as seeds",
+   "board_change": false
+  },
+  {
+   "finding": "R23-GATE-02",
+   "change": "_copper_items from copper_nodes (drawings, copper text / fields / text boxes, footprint zones); seed h01b",
+   "board_change": false
+  },
+  {
+   "finding": "R23-GATE-03",
+   "change": "k_rules: floor every DRU constraint minimum to the PRO_FLOORS / JLC figures (named stricter rules allowed), reject (severity) other than error; seeds h03 / h04",
+   "board_change": false
+  },
+  {
+   "finding": "R23-GATE-04",
+   "change": "Fab text = PCB_TEXT + PCB_TEXTBOX + visible fields on Fab; width floor; no board-level Fab shapes; seeds f01b / f02 / f03 / f05",
+   "board_change": false
+  },
+  {
+   "finding": "R23-GATE-05",
+   "change": "pin r10_parts' generated .kicad_mod SHA-256s (or their paste / mask / drill) and the 253 / 375 paste totals; seed x02",
+   "board_change": false
+  },
+  {
+   "finding": "R23-GATE-06",
+   "change": "run r10_sch_check (or its replay comparison) from check.sh; seed d01",
+   "board_change": false
+  },
+  {
+   "finding": "R23-GATE-07",
+   "change": "add the U4.6 / U4.7, C19.1, C20.1 taps with exact exceptions and records; second vias at the next board change",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "h05 via hole-to-hole 0.15 mm (JLC 0.2): caught by route_check via_overlap; 0.5 / 0.3 mm vias cannot go under 0.2 mm without pad overlap (h05c: DRC hole_to_hole)",
+  "f01 text box on Q120's body: caught incidentally by K-legends (crosses its reference); f01b is the real miss",
+  "f04 B.Fab reference un-mirrored: DRC nonmirrored_text_on_back_layer",
+  "x01 DB125 drill 1.3 -> 1.0 mm through the generator: caught (K-reference, after the refill); noted under R23-GATE-05",
+  "dru_spell S8 (L == In1 in the condition, no layer), S9 (In1.Cu bare), S10 (expression min): caught",
+  "Controls h01c (drawing alone), h03b (widening alone), h05c: DRC catches each",
+  "Round 22 seeds g01e, g01f, g01g, g01h, g07b, g08a, g08c, g08d: all now fail check_r10 (K-rules / K-ports / K-legends); drc, audit, silk, parts, fit, route, fab exit 0",
+  "ACT_GATE single vias (16.20, 73.30) / (11.14, 71.70): each FET keeps its own gate-source bias across the cut (R119 / R120, D-R18-02), so an open is fail-safe (no bus); recorded in R18-SAF-02",
+  "Clamp return checks: track_graph is layer-aware, so a stub moved to the other copper layer is not counted"
+ ],
+ "checks_actually_executed": [
+  "git archive c70d261 -> .supervisor/r23_gate/base (board SHA 5516eeec verified); APFS clones per seed; KiCad 10.0.7 pcbnew seeding with removed items leaked; zones refilled where copper changed",
+  "post-board regeneration on each copy (r10_parts --budget-only, r10_hotplug --extract + base-solve shortcut when electrical inputs unchanged, jlc_orient, export_fab --pending, fab_manifest --bind / verify, r10_sch_check --binding-note): exit codes recorded per seed",
+  "check.sh's checker commands per seed with the copy's tools: kicad-cli 10.0.7 DRC (--severity-all --schematic-parity) + ERC, quality_audit verify_board, silk_check, r10_parts --check, fit_check r10, check_r10 --fit, route_check r10, fab_manifest --content",
+  "24 seeds plus 6 controls / probes judged; every seed applied (SEED exit 0) before judging",
+  "probe/dru_spell.py (18 DRU spellings through jlc_hole_table); probe/single_via_all.py (every single-via pad on the board); probe/tap_drop.py (each SINGLE_OPEN_EXCEPTIONS entry dropped)",
+  "gate self-tests on the d01 / h01 / x02 copies with R10_BOARD set to the copy: {\"d01_sheet_note_revert\": \"test_r10_check 253 tests OK (6 skipped), test_route_check, test_fab_validation, test_r10_parts, test_paste_check all exit 0 (R10_BOARD = the copy)\", \"h01_unq_relief_graphic\": \"test_r10_check 253 tests OK (6 skipped), test_route_check, test_fab_validation, test_r10_parts, test_paste_check all exit 0 (R10_BOARD = the copy)\", \"x02_gen_fet_no_paste\": \"self-test run stopped for time (not judged)\"}",
+  "JLCPCB capabilities page re-read 2026-11-01; DS14623 Rev 1 pin table (cached PDF) for U4 pins 2 / 3 / 6 / 7"
+ ],
+ "sources": [
+  "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-01)",
+  "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1, pin description table, p10)",
+  "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (DS15034 Rev 1, same pin map per parts_qualification.md; not re-read)",
+  "tools/check_r10.py, tools/check.sh, tools/test_r10_check.py, m3_design/r10_sch.py, m3_design/r10_parts.py, m3_design/r10_sch_check.py at c70d261",
+  "round22_gate.md (compared after these findings were written: none of R23-GATE-01..07 is in it; R22-GATE-01 / -02 are the parents of -01 / -04)"
+ ],
+ "coverage_limits": [
+  "No full r10_build.sh of a generator-edited copy (r10_build.sh cds to the git top level, i.e. the canonical tree); generator seeds regenerate only the stage they change (r10_sch DRU, r10_parts library) and apply the matching board edit by pcbnew",
+  "The hot-plug solve was reused from the base where the electrical inputs were unchanged (hp_fast.py); not a fresh NumPy solve",
+  "Self-tests were run on d01 and h01 only (x02's run was stopped for time); the other misses are shown to pass every checker step, not the self-tests",
+  "VCAP and U4 open-ground consequences are Inference (ST does not state open-pin behaviour); the MCU and power lenses own those",
+  "No canonical edit, build, check.sh or git state change. At hand-back the worktree showed uncommitted edits to tracked files (tools/check_r10.py, AGENTS.md, docs, r10_sch.py and others) made by another session during this review; every probe here used git archive c70d261, so the findings are against the committed tools"
+ ]
+}

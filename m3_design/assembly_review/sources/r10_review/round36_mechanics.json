@@ -1,0 +1,42 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round36_mechanics",
+ "reviewer": "claude",
+ "target_commit": "c3c4249b89f1fe5a396cb6c4fd18fedb58d385e6",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+ "findings": [],
+ "observations": [
+  "M3_R10 Mechanics quotes 255.6-class modes and 1.24 mm max static deflection as the 632a9ad3 figures (256.1 / 287.9 / 407.1 Hz); the current-board re-run gives 255.6 / 287.8 / 407.0 Hz and 1.27 mm. The text labels them as the older board's figures, so it is not false.",
+  "The 'J3 courtyard 1.67 mm' (D-R19-14, R10_VALIDATION, r10_place basis) is the outer-edge gap of the two 0.05 mm courtyard rectangles (23.675 to 25.345); the centreline gap is 1.72 mm and the bounding-box gap 1.63 mm. Consistent as stated."
+ ],
+ "fix_verification": [
+  {"item": "R34-TRI-01 (parts_qualification hot-plug pointer)", "verdict": "not in this lens: docs-only, no mechanical content; round 34 made no mechanics correction"}
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of the board before and after: a0ec075e... both times; git state untouched.",
+  "tools/fit_check.py --profile r10 on the canonical board with its report written to the probe directory: OK, 0 issues; J3 margin 0.89 mm (shell to x -0.4499), all eight DB125 bodies 2.976 mm, J440 body y 7.93-23.45, deepest bottom L1 z -4.6158 (3.015825 mm below the bottom face), nearest bottom envelope C32.2 4.536177 mm and nearest top pad LED2.2 3.807887 mm from (4,44.3), wire room 5.003 mm (5.003-5.603) on all eight terminals, 27 tails with 7.558359 mm minimum bore margin, 2.20 mm projection, 1.80 mm to a 4 mm plane, J430 closed envelope 15.05 x 15.70 x 2.10 mm.",
+  "Edge.Cuts: five Ø3.2 mm holes at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); outline 0..46 x 0..90.",
+  "Top-pad distances to the (4,44.3) support centre by pcbnew shape clearance: LED2.2 GND 3.807886, LED1.1 GND 3.860051, J2.1 3V3 3.879837, J2.3 NRST 3.986964 mm, matching P2 / ORDERING 8.4 / handoff.",
+  "Courtyard measurement J440 to J3 (1.67 mm outer edges).",
+  "Plate model re-run (tools/plate_model.py --profile r10 with masses.json on the fresh fit report): pinned D5 180.8 Hz, D10 255.6, clamped 287.8 / 407.0 Hz, 78.6 g, max 100 g deflection 1.27 mm at (46,44.5).",
+  "Per-part 100 g deflection over each model box from the same solution: C431 1.0387 mm, C421 0.9801, C411 0.7418, L1 0.4602. At h = 4 mm: gaps 0.261 / 0.320 mm (C431 / C421); contact onset D5 (D10) C431 125 (250) g, C421 133 (265), C411 175 (351), L1 214 (428); h = 3.5 mm overlaps C431 and C421; all match ORDERING 8.4 and the handoff.",
+  "Relief pocket x 31.5-41, y 20-60 contains the model boxes of C411 (32.85-35.55, 21-24.5), C421 (32.05-35.55, 35.4-38.1) and C431 (37.95-40.65, 56-59.5).",
+  "Nut-inclusive bound recomputed (R 24.9, ±0.3 both axes, 6.35 mm across corners, 2.4 mm nut, 0.4 mm projection): h+t max 6.018 mm at x 4/42 and 5.365 mm at x 3.7, so the stated < 6.0 / < 5.3 mm hold; 4.5 mm + < 0.8 mm plate is < 5.3.",
+  "Wire room with the 0.5 mm wall allowance: 5.003 - (sqrt(25.4^2-5^2) - sqrt(24.9^2-5^2)) = 4.493 mm, as stated; the bend arithmetic 3.9 / 4.1 / 5.1 / 5.7-6.5 mm and 'at 2x or 3x OD nothing fits' recomputed.",
+  "Compass: y 0 aft, y 90 forward, consistent across ORDERING 8.4, the handoff and M3_R10 (J440 forward body end 23.45 < 23.5, battery route y > 90, J3 plug zone y 25.3-36.3 on x 0 between J440 and the (4,44.3) support, J121/J400 west exits).",
+  "East column 34 g (J410, J420, J9 6 g each + J122 7.5 g + mated 2/2/2/2.5 g) and 82 mm unsupported east edge; J9-J122 body gap 6.73 mm."
+ ],
+ "sources": [
+  "AGENTS.md; docs/REQUIREMENTS.md P1-P3, F8, F9",
+  "docs/ORDERING.md section 8.4; docs/R10_VEHICLE_HANDOFF.md; docs/M3_R10.md Mechanics and plate rows; docs/R10_VALIDATION.md J440 paragraph",
+  "m3_design/r10_place.tsv; m3_design/assembly_review/m3.kicad_pcb; m3_design/assembly_review/sources/r10_design/masses.json; R10_DECISIONS D-R19-14",
+  "tools/fit_check.py, tools/plate_model.py"
+ ],
+ "coverage_limits": [
+  "CAD envelopes only; no physical hardware, harness, sled or camera-shroud geometry exists to check.",
+  "The DB125 and other VRML body maxima were taken as the fit checker's models; maker drawings were not re-read this round.",
+  "The plate model's masses and stiffness are the recorded inferences; no independent mass or stiffness basis."
+ ]
+}

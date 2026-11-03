@@ -1,0 +1,63 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round29_manufacturing",
+  "reviewer": "claude",
+  "target_commit": "09a564e582865e58b5a94f5823789356f88442c8",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "kicad-cli 10.0.7 DRC on a probe copy, --severity-all --severity-exclusions --all-track-errors --schematic-parity: 0 violations, 0 unconnected, 0 parity; with --refill-zones (not saved): 0 / 0; the copy's SHA-256 stayed a0ec075e. No rule severity is set to ignore and drc_exclusions is empty.",
+    "Gerbers and drill files regenerated from the committed board with export_fab.py's exact kicad-cli options match all 14 files in m3_gerber.zip byte for byte apart from creation-date lines.",
+    "JLC capabilities page re-read 2026-11-02: via hole-to-hole 0.2 mm (board min 0.259 same net at (15.35,52.15)/(15.25,51.6), 0.350 diff net at (29.25,38.65)/(29.25,38.0)); pad hole-to-hole 0.45 (board min pad-pad 3.593, pad-via 0.700 at J440.3/(7.4,16.5)); NPTH-via 0.681 (J2 hole (7.54,40.416) to via (6.27,40.8)); min NPTH 0.5 (board 0.6); multilayer plated slot 0.35 (J3 0.6); PTH annular >= 0.20 (DB125 0.30, J3 slots 0.20-0.30); silkscreen 0.15 / 1.0 mm (Gerber apertures >= 0.15 apart from 0-width region outlines); mask bridge 0.10 (smallest different-pad web 0.150 at U4; only same-net exposed-pad slivers below that).",
+    "Every via hole is >= 0.125 mm from any soldered pad's mask opening (C98.2, via (23.8,62.95)) except the two GAP-3 U401.11 VIPPO vias; the other in-pad vias are only on TP*/J2 (REQUIREMENTS M2).",
+    "Only the two U401.11 vias carry filling/capping yes in the board; global tenting front/back yes, so no via mask openings in F/B_Mask.",
+    "Courtyard short-edge distances below 2.5 mm are exactly R400/R401/R404 1.025, C403 1.955 (aft), C95 1.505, R166 1.755 (forward): matches ORDERING 8.2 and M-8's six DFM queries.",
+    "bottom assembly PDF: pdftotext reads 'D400R100' and 'D421R451' as one word; the Fab ink boxes are 0.278 / 0.259 mm apart (gate D-R21-08 passes), so it is a text-extraction artefact, not overlapping references.",
+    "J3's courtyard reaches x = -1.035 mm (west of the edge); ORDERING's 0.45 mm is the shell overhang, a different quantity; no rail or tab is on that span.",
+    "BOM comment cells merge two value strings for two lines ('10k; 10k 1%', '1k 1%; 1k 0603'); JLC matches by LCSC code and MPN, which agree with the board fields.",
+    "gbrjob / board stackup lists inner copper 0.030 mm and dielectrics 0.203 / 1.03 / 0.203 mm; JLC builds to its own JLC041611-7628 stackup, so this is informational only.",
+    "Hand-solder list in ORDERING 8.2 is complete: the next bottom pad after U5 (2.172 mm) is R405 at 2.243 mm from J410 copper; J3's slot list (C83 / R7 / R8) is complete, next soldered bottom pad D441 at 2.53 mm.",
+    "Cost arithmetic reproduced from cost_check.json: 81 x 1.53 = 123.93 / 5 = 24.79; 60.47 + 24.79 = 85.26; +16.79 = 102.05; +2.99 = 105.04; min-purchase 61.01 + 24.79 = 85.80. Stock rows (U4 9 / 2, U9 30 / -81 / 7, C2757925 35,895 / 35,052, C535146 196 / 189) match ORDERING, REQUIREMENTS M1 and the committed AGENTS.md."
+  ],
+  "fix_verification": [
+    {"item": "Fab package after the round 28 fix pass", "measurement": "BOM 00af5358, CPL 1f899750, owner BOM c48868b3 identical at 19dd0b5 and 09a564e; only PDFs, zip and manifest changed (dates); fab_manifest.py verify: OK, 6 outputs; cad/m3.kicad_pcb input a0ec075e", "verdict": "confirmed"},
+    {"item": "D-R28-01 ... -04 (budget, generated rules 3/4, labels, DS15034 citation)", "measurement": "No fab-package or board effect: board SHA unchanged, content checks S-4 / jlc_orient --verify-cpl / paste_check OK on the committed package", "verdict": "confirmed (manufacturing effect only)"},
+    {"item": "Audit B #2 tab table 3.155 mm", "measurement": "J440 / J400 courtyard x 3.155; J410 / J122 x 42.845 (3.155 from x 46); nearest part to each tab band 3.155 mm", "verdict": "confirmed"},
+    {"item": "Audit B #3 C84 heat limit wording", "measurement": "C84 courtyard y <= 83.795, R166 courtyard y >= 84.355: 0.560 mm", "verdict": "confirmed"},
+    {"item": "Audit B #4 TP83 capacitance criterion", "measurement": "VLOGIC capacitors: C84 470 uF +-20 %, C6 / C7 22 uF +-20 %, C99 0.1 uF: 411-617 uF; without C84 35-53 uF; pass at >= 0.3 mF separates them", "verdict": "confirmed"},
+    {"item": "Audit B #5 power-knot distances", "measurement": "U401 B(27.6,13.6) to L400 8.739 mm, to U400 13.390 mm", "verdict": "confirmed"},
+    {"item": "Audit B #11 Q120 gate-drive probe points", "measurement": "R120.1 B(18.5,72.17) ACT_FET_S = Q120 source pads 1-3; R120.2 B(18.5,73.03) / C120.2 B(17.1,73.3) ACT_GATE; TP80 F(9.8,83.8) BAT_IN, TP120 B(18,68.6) RAW_ACT, TP74 B(42.5,58) / TP88 F(35.5,86.4) GND; Q120 gate vias (16.2,73.3) / (15.4,72.85), Q121 (11.14,71.7) / (11.74,72.3)", "verdict": "confirmed"},
+    {"item": "Audit B #13 per-flight step 4 (no USB / self-powered module)", "measurement": "Text present in ORDERING 8.3 step 4 and consistent with the bench rule and AGENTS pad-arming row", "verdict": "confirmed"},
+    {"item": "Audit B #10 J400 ESD procedure", "measurement": "D402 B(4.45,65.9) on BAT_SW_RETURN / GND; first-article test now with a 1-2 ohm dummy in J121 and no e-match, consistent with the 8.3 dummy-load rule", "verdict": "confirmed"},
+    {"item": "Audit B probe worksheet (unchanged rows)", "measurement": "All 13 probe rows, R84.1 B(20.775,81.825) BAT_ILIM, U9 pad 5 / 6 at x 18.25 / 18.75 spanning y 80.4-82.8, TP122 box x 12.55-14.05 y 52.55-54.05 reproduced", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after; git status (only other lenses' round29 files untracked)",
+    "kicad-cli 10.0.7 pcb drc (all severities, exclusions, parity) and a second run with --refill-zones on a probe copy",
+    "kicad-cli pcb export gerbers / drill with export_fab.py options on the copy; diff against the zip contents",
+    "tools/fab_manifest.py verify (read-only); check_r10 --only S-4 with the committed BOM / CPL; jlc_orient --verify-cpl; paste_check on the committed zip (all on the probe copy)",
+    "pcbnew dump of footprints, pads, courtyards, vias, Fab texts, silk legends, zone-connection overrides and track statistics",
+    "NumPy polygon distances: bottom pads to DB125 copper, J3 slot copper, mask-opening webs, via holes to soldered-pad mask openings; hole-to-hole matrix",
+    "Excellon tool counts (PTH 0.3 x 308, 0.5 x 1, 0.6 x 4 slots, 1.3 x 27; NPTH 0.6 x 2, 0.991 x 3); Edge.Cuts (outline plus five 3.2 mm routed holes)",
+    "Paste flash count per side from the Gerbers (249 / 381); hidden reference count (93); Fab-body and bottom pin-legend lists",
+    "BOM / CPL cross-check against the board (designators, sides, positions incl. J3 / J430 placement corrections, LCSC and MPN fields, quantities)",
+    "pdftotext of both assembly PDFs against the footprint list per side",
+    "cost_check.json / stock_check.json arithmetic and row comparison with ORDERING 8.1, REQUIREMENTS M1 / M3 and AGENTS.md (committed)",
+    "WebFetch of https://jlcpcb.com/capabilities/pcb-capabilities (2026-11-02)"
+  ],
+  "sources": [
+    "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-02)",
+    "docs/ORDERING.md section 8 at 09a564e; docs/M3_R10.md; docs/REQUIREMENTS.md M1-M3; AGENTS.md at 09a564e",
+    "m3_design/assembly_review/fab/* at 09a564e; tools/export_fab.py, tools/fab_manifest.py, tools/check_r10.py",
+    "m3_design/assembly_review/sources/r10_review/round28_audit_proc.md"
+  ],
+  "coverage_limits": [
+    "No live JLC quote, DFM upload or supplier query; stock and cost taken from the committed evidence files.",
+    "The JLC capability numbers come from a page summary, not a full-page capture.",
+    "Assembly PDFs checked by text extraction and the D-R21-08 geometry, not by visual raster inspection.",
+    "Stackup naming (JLC041611-7628) not checked against JLC's stackup table.",
+    "8.4 and the vehicle handoff were not reviewed beyond the round 28 audit items listed."
+  ]
+}

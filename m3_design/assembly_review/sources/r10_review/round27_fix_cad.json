@@ -1,0 +1,312 @@
+{
+ "schema": 1,
+ "lane": "round 27 fix pass, CAD lane (generators, generated text, checks)",
+ "date": "2026-11-02",
+ "brief": ".supervisor/r27_fix_brief.md items 1-4 on round27_triage.md / .json (R27-TRI-02 generator part, R27-TRI-04, R27-TRI-07, records)",
+ "base": {
+  "commit": "816038c",
+  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c"
+ },
+ "board": {
+  "sha256_after_build": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "changed": false,
+  "why_unchanged": "the board takes nets, values, footprints and fields from the netlist (none changed) and carries no pin names",
+  "second_build_needed": false
+ },
+ "build": {
+  "runs": {
+   "1": {
+    "exit": 0,
+    "seconds": 1672,
+    "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c"
+   }
+  },
+  "kicad_cli": "10.0.7 (the brief's extracted CLI)",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "r10_sch_check": {
+   "ok": true,
+   "seeded_faults": 43,
+   "all_caught": true,
+   "contract_seeds": 39,
+   "name_seeds": 4,
+   "erc_violations": 0
+  },
+  "stage_checks": "every family OK; ground: DRC 0, unconnected 0, route_check 0 failing",
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "check_r10": "37 / 37 rules OK",
+  "k_binding": "OK",
+  "route_check": "0 failing, 0 allowlisted, 5 unrecorded noncritical leftovers as before",
+  "check_sh": {
+   "exit": 0,
+   "ran": "as the build's last step; afterwards only R10_DECISIONS.md changed (no gate reads it)"
+  }
+ },
+ "hotplug": {
+  "inputs_changed": false,
+  "results_changed": false,
+  "cases": 2304,
+  "failures": 0,
+  "passed": true,
+  "minimum_V": -14.807,
+  "steepest_fall_V_per_us": 8.995,
+  "steepest_rise_V_per_us": 5.088,
+  "limits": {
+   "minimum_V": -15.0,
+   "falling_V_per_us": 10.0,
+   "rising_V_per_us": 100.0
+  }
+ },
+ "manufacturing": {
+  "fab_outputs_changed": "creation dates only (Gerber zip: 14 files; the two assembly PDFs)",
+  "bom": "byte-identical",
+  "owner_bom": "byte-identical",
+  "cpl": "byte-identical",
+  "paste": {
+   "F.Paste": 249,
+   "B.Paste": 381,
+   "changed": false
+  },
+  "manifest": "re-bound by the build; changed inputs cad/telemetry.kicad_sch and cad/kilib/m3.kicad_sym",
+  "r10_fab_sh": "run by the build only; no networked run (BOM / CPL unchanged, supplier evidence still binds)",
+  "supplier_evidence": "unchanged (cost_check.json / stock_check.json)"
+ },
+ "items": [
+  {
+   "n": 1,
+   "triage": "R27-TRI-02 (generator part)",
+   "decision": "D-R27-01",
+   "status": "done",
+   "before": {
+    "loaded_pack_power": "5.456 V x 1.46 A",
+    "pack_7V4_four_stall_loaded_V": 5.899191137113537,
+    "pack_6V0_four_stall_loaded_V": 4.414001778867496,
+    "parts_budget_sha256": "5204280e098eea4981b968789840d97ca3d8f2f4565ca7b5043c3918215ae3bc"
+   },
+   "after": {
+    "loaded_pack_power": "5.456 V x (1.46 A + aux_A 0.1 A)",
+    "pack_7V4_four_stall_loaded_V": 5.881013614959047,
+    "pack_6V0_four_stall_loaded_V": 4.388744837110238,
+    "parts_budget_sha256": "ecc45417a4b9ec6ad021f52153cf2f59b547ac8e1afbd39dbd7d6e4c39f9a8bb",
+    "parts_budget_lines_91_92": [
+     "\"pack_7V4_four_stall_loaded_V\": 5.881013614959047,",
+     "\"pack_6V0_four_stall_loaded_V\": 4.388744837110238,"
+    ],
+    "matches_triage": "5.881 / 4.389 V"
+   },
+   "budget_diff": "lines 91-92 only; the fire budget (5.713 V four-stall BAT_IN, 1.279 A) already used ports_w",
+   "budget_sha_binders": "none in code (check.sh regenerates and compares the budget); the docs quote it",
+   "sweep": {
+    "r10_parts.py": "every other port figure carries aux_A (ports_w, battery-break loads, camera-short buck case, U401 loss and junction); LDO-short cases are bounded by U401's shared limit",
+    "sheet_notes_and_binding_note": "quote D-R19-14's 100 mA allowance",
+    "r10_hotplug.py": "no port current",
+    "check_r10.py": "K-power comment: round 18's pre-AUX \"11.5 W normal, about 1.56 A at 7.4 V\" -> the budget's c_camera_radio_gps_on 11.25-13.06 W, at most about 1.77 A at 7.4 V (comment only; the rule's 2.9 A design current is D-R3-03's)"
+   },
+   "files": [
+    "m3_design/r10_parts.py",
+    "tools/check_r10.py (comment)",
+    "regenerated: m3_design/assembly_review/sources/r10_design/parts_budget.json"
+   ]
+  },
+  {
+   "n": 2,
+   "triage": "R27-TRI-04",
+   "decision": "D-R27-02",
+   "status": "done",
+   "before": "every DS12110 citation in this note is Rev 8 (April 2021), revision V electrical chapter (section 7; the LCSC copy is byte-identical); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)",
+   "after": "every DS12110 citation in this note is Rev 8 (April 2021), revision V electrical chapter (section 7; the LCSC copy is byte-identical), except the two design limits labelled as read from Rev 11 Table 109 in round 14 (the 6.0 V FT cap and the 4.0 V ADC-mode maximum; R5-MCU-04 obligation, Inference); Rev 11 and RM0433 were not re-read in round 19 (R19-MCU-02)",
+   "binding_note_sha256": [
+    "b2112fb3312176f33d964fa27df367778fdfdbea6f5503980a4e605551087f84",
+    "e8f10fb3ef1c4bd8428035dc17a08accde8b69675f1449bbc30c037b6cf37a3b"
+   ],
+   "binding_note_changes": [
+    "sources.mcu_revision",
+    "netlist_sha256 (item 3)",
+    "circuit_sha256 (item 3)"
+   ],
+   "test": "test_r23_binding_note_rules_and_pin_table pins the new words, rejects \"byte-identical); Rev 11\" and checks the obligation still says \"were read from Rev 11 Table 109 in round 14\"",
+   "files": [
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "regenerated: m3_design/assembly_review/sources/r10_design/r10_binding_note.json"
+   ]
+  },
+  {
+   "n": 3,
+   "triage": "R27-TRI-07",
+   "decision": "D-R27-03",
+   "status": "done",
+   "before": {
+    "symbol": "M3:CameraTerminal",
+    "pin_names": {
+     "1": "5V OUT",
+     "2": "GND",
+     "3": "RX FROM CAMERA TX",
+     "4": "TX TO CAMERA RX"
+    }
+   },
+   "after": {
+    "symbol": "M3:PortTerminal",
+    "pin_names": {
+     "1": "4V8",
+     "2": "GND",
+     "3": "TXO",
+     "4": "RXI"
+    },
+    "pin_types": "passive (as CameraTerminal)",
+    "footprint_filter": "M3_DB125_4P_GN"
+   },
+   "refs": [
+    "J410",
+    "J420",
+    "J440"
+   ],
+   "unchanged": {
+    "J9": "M3:CameraTerminal"
+   },
+   "netlist": {
+    "sha256": [
+     "762bc13d683085134748b6f49faf056442e769fc74a4101b35d5a935a4a60135",
+     "535a8fdfe96c3a771a901db2bb9d2cd1a6674b001dfe1e18aa7d600e3aea7e9a"
+    ],
+    "changes": "J410 / J420 / J440 pinfunction 5V_OUT_1 / GND_2 / RX_FROM_CAMERA_TX_3 / TX_TO_CAMERA_RX_4 -> 4V8_1 / GND_2 / TXO_3 / RXI_4; libsource and libpart PortTerminal; nets, values, footprints and fields unchanged"
+   },
+   "sheets": {
+    "telemetry.kicad_sch": [
+     "6e310ef4a30cddc8b5bd1aa06c39dd8a72d61e642709073bbc31ece01767628a",
+     "695cfa0d09a99670b0b45511cfc53373eb4b01518664a96b3a5e03d9f80fffb9"
+    ],
+    "others": "14 sheets byte-identical"
+   },
+   "symbol_library_sha256": [
+    "979cf095dca39c9b0f5ddc0761924b042e902e98860b93495823b569837a6626",
+    "7a3c7d8dbd5c0bc770eefd0c879e692133c8aa890ee5458c637bae011369236c"
+   ],
+   "circuit_json_sha256": [
+    "aeb1674fddbda6b4bebf31b94c6aede2005de8d5491b0dd45ce103c2c69adafb",
+    "3220e5f9d2147e757c6a50810cf2bad6f26018aa7ed0126345deb8801cb168c2"
+   ],
+   "erc": 0,
+   "schematic_parity": 0,
+   "drc": 0,
+   "check": "r10_sch_check: the netlist pin names must be 4V8 / GND / TXO / RXI on J410 / J420 / J440 and the camera terminal's on J9, in the checked netlist and the fresh export; four in-memory name seeds (camera names on a port, TXO / RXI swapped, port supply named 5V OUT, port names on J9), all caught; round 27's netlist fails it three times",
+   "seed": "test_r10_check.SchematicContract.test_r27_port_terminal_pin_names",
+   "files": [
+    "m3_design/r10_parts.py",
+    "m3_design/r10_sch.py",
+    "m3_design/assembly_review/sources/r10_design/circuit.json",
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "regenerated: m3_design/assembly_review/telemetry.kicad_sch, m3_design/assembly_review/kilib/m3.kicad_sym, m3_design/assembly_review/schematic.net.xml"
+   ]
+  },
+  {
+   "n": 4,
+   "item": "records",
+   "status": "done",
+   "decisions": [
+    "D-R27-01",
+    "D-R27-02",
+    "D-R27-03"
+   ],
+   "annotated": [],
+   "why_none": "R19-MCU-02 already labels the two Rev 11 limits; no decision names the ports' symbol or the four-stall loaded-pack figures",
+   "files": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+   ]
+  }
+ ],
+ "tests": {
+  "counts": {
+   "shell": 11,
+   "procurement": "OK",
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 72,
+   "r10": 268,
+   "r10_numpy_skips": 6,
+   "numpy_hotplug_plate": 6
+  },
+  "previous": {
+   "r10": 267
+  },
+  "all_ok": true,
+  "added": [
+   "test_r10_check.SchematicContract.test_r27_port_terminal_pin_names"
+  ],
+  "extended": [
+   "test_r10_check.SchematicContract.test_r23_binding_note_rules_and_pin_table"
+  ],
+  "not_run": "no physical test; the pack-sag figures are calculations"
+ },
+ "decisions": [
+  "D-R27-01",
+  "D-R27-02",
+  "D-R27-03"
+ ],
+ "record_index": "223 unique D IDs through D-R27-03",
+ "residual_grep_hits": {
+  "phrases": [
+   "5.456 * 1.46",
+   "5.899",
+   "4.414",
+   "11.5 W",
+   "1.56 A at 7.4",
+   "byte-identical); Rev 11",
+   "M3:CameraTerminal",
+   "RX FROM CAMERA TX",
+   "RX_FROM_CAMERA_TX",
+   "TX TO CAMERA RX",
+   "TX_TO_CAMERA_RX",
+   "5V OUT",
+   "5V_OUT",
+   "5204280e",
+   "762bc13d",
+   "aeb1674f",
+   "b2112fb3"
+  ],
+  "current_statements": "all fixed; 5.456 * 1.46 has no hit",
+  "deliberate": [
+   "J9's CameraTerminal names (camera_connector.kicad_sch, kilib/m3.kicad_sym, schematic.net.xml) and J9's circuit.json entry",
+   "r10_sch_check.CAMERA_PIN_NAMES and its seeds",
+   "the r10_parts.py / check_r10.py comments naming what they replace",
+   "the test's rejected \"byte-identical); Rev 11\""
+  ],
+  "history": [
+   "the D-R27 records' before figures",
+   "round18_gate.json (11.5 W)",
+   "round 25 / 26 review records (old netlist, circuit and budget hashes)",
+   "r9_input/ (hash-pinned R9 inputs)",
+   "r6_sch.py",
+   "the R1 reference board's '5V OUT' text"
+  ],
+  "coincidences": [
+   "5.899 / 4.414 inside other numbers: hot-plug results and capacitors, round 11 routing JSON, R8 evidence, PCB fill coordinates"
+  ],
+  "not_swept": "docs-lane files"
+ },
+ "for_docs_lane": [
+  "parts_budget.json SHA-256 5204280e... -> ecc45417a4b9ec6ad021f52153cf2f59b547ac8e1afbd39dbd7d6e4c39f9a8bb (parts_qualification line 475 quotes the old one)",
+  "four-stall loaded pack 5.899 / 4.414 V -> 5.881 / 4.389 V (5.881014 / 4.388745 V) from a 7.4 / 6.0 V open pack, ports 1.56 A at 5.456 V (the stall-input paragraph)",
+  "binding note SHA-256 b2112fb3... -> e8f10fb3ef1c4bd8428035dc17a08accde8b69675f1449bbc30c037b6cf37a3b, with the new mcu_revision wording",
+  "schematic.net.xml 762bc13d... -> 535a8fdfe96c3a771a901db2bb9d2cd1a6674b001dfe1e18aa7d600e3aea7e9a",
+  "circuit.json aeb1674f... -> 3220e5f9d2147e757c6a50810cf2bad6f26018aa7ed0126345deb8801cb168c2",
+  "J410 / J420 / J440 use M3:PortTerminal (4V8 / GND / TXO / RXI); J9 keeps M3:CameraTerminal",
+  "unchanged: PCB a0ec075e..., BOM, CPL, paste, supplier evidence ($85.26, U4 / U9 short), hot-plug results"
+ ],
+ "git_state_changed": false,
+ "native_cad_hand_edited": false,
+ "off_limits_untouched": [
+  "STATUS.md",
+  "AGENTS.md",
+  "docs/*.md",
+  "parts_qualification.md",
+  "AVA_LAYOUT.md",
+  "review records other than this hand-back"
+ ],
+ "jobs_left_running": false
+}

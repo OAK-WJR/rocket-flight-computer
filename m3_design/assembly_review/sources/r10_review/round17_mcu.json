@@ -1,0 +1,2074 @@
+{
+  "round": 17,
+  "lens": 5,
+  "scope": "FULL independent MCU/pinmap/loader/direct-UART/backfeed/ESD/firmware-electrical review",
+  "target_commit": "ac483f40d38db6e0424227bd32d2a5d5f9f60c3e",
+  "board_sha256_before": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "board_sha256_after": "632a9ad36c19426ede219b6ff6b0d638955665cac1b4704d3392a6afdbe03982",
+  "canonical_freeze": {
+    "count": 1966,
+    "changed_before": [],
+    "changed_after": []
+  },
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "new": 1,
+  "carried": 1,
+  "findings": [
+    {
+      "id": "R17-MCU-01",
+      "severity": "Minor",
+      "status": "carried_active",
+      "carried_from": [
+        "R15-MCU-01",
+        "R16-MCU-01",
+        "D-R15-02"
+      ],
+      "title": "VCAP combined operating capacitance and ESR remain unclosed",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "refs": [
+            "C19",
+            "C20"
+          ],
+          "coordinates_mm": {
+            "C19": {
+              "side": "B",
+              "x": 28.35,
+              "y": 37.65
+            },
+            "C20": {
+              "side": "B",
+              "x": 19.8,
+              "y": 37.3
+            }
+          },
+          "measured_value": "Both exact CL10A225KO8NNNC/C23630,2.2uF16VX5R10%; separate U1.48/VCAP1 and U1.73/VCAP2 to GND, without another load."
+        },
+        {
+          "source": "ST-MCU",
+          "page": 211,
+          "table": "114",
+          "measured_value": "2.2uF typical,+/-20% variation; ESR<100mOhm; relevant measurement conditions unspecified."
+        },
+        {
+          "source": "SAMSUNG",
+          "pages": [
+            1,
+            2,
+            12,
+            16,
+            17
+          ],
+          "measured_value": "Nominal tolerance1.98-2.42uF; initial qualification at1kHz/1Vrms after150C treatment and recovery; ClassII capacitance depends on DC/AC,temperature and aging; impedance depends on frequency."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+          "measured_value": "Current section explicitly retains combined-condition/regulator-mode/process/rework/aging qualification."
+        }
+      ],
+      "assessment": "Numerical initial-tolerance times full X5R TCC gives1.683-2.783uF (Calculation), not a guaranteed simultaneous corner or observed failure. Nominal selection passes. No demonstrated regulator instability or required-function failure; no larger nominal substitution is prequalified.",
+      "concrete_fix": "Resolve ST measurement conditions and actual silicon/regulator modes; obtain supported joint C/ESR bounds or qualify exact fitted parts after process/rework/aging over actual local temperature,bias and ripple/frequency. Check both C limits,ESR,startup and load/clock transients; retain as an acceptance deviation until closed. No Minor CAD change."
+    },
+    {
+      "id": "R17-MCU-02",
+      "severity": "Minor",
+      "status": "new_active",
+      "title": "BOOT0-low wording omits the option-byte path into ROM",
+      "evidence": [
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/pin_table.tsv",
+          "line": 25,
+          "ref": "U1.24/PA2",
+          "coordinates_mm": {
+            "side": "F",
+            "x": 28.5,
+            "y": 50.55
+          },
+          "measured_value": "Loader-role entry says the loader runs only after a firmware jump because BOOT0 is tied low."
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "ref": "R5",
+          "coordinates_mm": {
+            "side": "B",
+            "x": 13.0,
+            "y": 45.17
+          },
+          "measured_value": "10k BOOT0-to-GND; U1.94/BOOT0 is F(15.45,46.0). This fixes the sampled pin state, not BOOT_ADD0."
+        },
+        {
+          "source": "ST-BOOT",
+          "page": 35,
+          "table": "2 Pattern10",
+          "measured_value": "BOOT pin0 together with BOOT_ADD0=0x1FF0 selects the H74x system-memory bootloader."
+        },
+        {
+          "source": "ST-BOOT",
+          "page": 321,
+          "table": "135",
+          "measured_value": "PA2 is USART2_TX and may become an alternate push-pull output. It reaches servo3 through R1521k; R15610k does not hold a driven TX low."
+        }
+      ],
+      "assessment": "This is an overstatement in an active source record. No actual option bytes were read or programmed; no R10 firmware exists. It is not proof that a qualified board enters ROM unexpectedly, and PC1/PE4 are not ROM-loader pins. The documented boot-tone/readiness refusal still applies.",
+      "concrete_fix": "Qualify the table statement with the required BOOT_ADD0 user-flash setting; carry explicit boot-address option-byte recording/readback into the future R10 firmware/programming acceptance procedure. Preserve low controls and documented loader preparation. Refresh table/binding provenance after a text-only correction; change no PCB or circuit generator."
+    }
+  ],
+  "rejected_or_narrowed_CM_hypotheses": [
+    {
+      "hypothesis": "Wrong package order, AF or ADC assignment causes a required function to fail",
+      "candidate_severity": "Major",
+      "disposition": "rejected",
+      "evidence": "Fresh651-pair parity; independently transcribed DS Figure5 matches100ports;28AF assignments and5ADC channels match current tables;32NC pins isolated."
+    },
+    {
+      "hypothesis": "ROM loader directly drives a firing control or camera EN",
+      "candidate_severity": "Critical",
+      "disposition": "rejected",
+      "evidence": "Current AN2606 H74x list excludes PC1/PE4; PE11/SPI4_NSS is input held by R431100k. PA6 drive reaches only diagnostic divider; PC11 storage output is contained by independent PD0/R460 CS. BOOT_ADD0 documentation defect retained separately as Minor."
+    },
+    {
+      "hypothesis": "Direct5V digital UART is inherently incompatible with the selected MCU pins",
+      "candidate_severity": "Major",
+      "disposition": "rejected under stated powered digital conditions",
+      "evidence": "PC6/PC7 FT_h and PB12/PB13 FT_u; current operating pull-off condition is relevant supply+0.3V; direct RX pulls always disabled.1k and ground-only ESD are present. Endpoint levels/startup/shutdown/back-feed/ESD are unqualified, not guaranteed by these checks."
+    },
+    {
+      "hypothesis": "Nominal2.2uF VCAP selection or typical-curve multiplication proves regulator failure",
+      "candidate_severity": "Major",
+      "disposition": "narrowed to R17-MCU-01 Minor",
+      "evidence": "Exact nominal tolerance meets selection; combined conditions/ESR not closed and a product of separate curves is not a supported joint corner."
+    },
+    {
+      "hypothesis": "PC14 resistor current proves a hard3mA violation or failed buzzer",
+      "candidate_severity": "Major",
+      "disposition": "rejected",
+      "evidence": "ST Table149 characterizes output voltage at3mA, not a guaranteed minimum output resistance.3.363636mA is a resistor-only initial bound, not measured current; nominal steady current is0.300mA.4kHz is below2MHz; keep LSE disabled."
+    },
+    {
+      "hypothesis": "R1 software or the R10 evidence note qualifies executable R10 firmware",
+      "candidate_severity": "Major",
+      "disposition": "rejected as a current claim",
+      "evidence": "assembly_binding.py explicitly returns M3-ASSY-R1; build.py selects legacy protocol/review hashes; the R10 note says record-only and has no firmware approval. Actual R10 implementation remains absent."
+    },
+    {
+      "hypothesis": "Unprotected diagnostic divider faults disprove the retained pyro single-resistor protection",
+      "candidate_severity": "Major",
+      "disposition": "rejected as conflated scopes",
+      "evidence": "PC0/PC5 retain two5.1k tops,two2k parallel bottoms and10nF; PA6 shorted-top/PB1 open-bottom diagnostic damage cases are separately disclosed. No double-fault MCU guarantee exists."
+    },
+    {
+      "hypothesis": "The watchdog arithmetic itself violates36ms fault or50ms neutral contracts",
+      "candidate_severity": "Major",
+      "disposition": "rejected as arithmetic; actual timing unqualified",
+      "evidence": "960/33.6=28.571ms;960/29.4=32.653ms; fault allocation34.853ms; neutral allocation48.653ms. Silicon revision/LSI,reset,startup,tail,safety-task and servo response require actual qualification."
+    }
+  ],
+  "checks_actually_executed": [
+    {
+      "name": "initial_and_final_canonical_freeze",
+      "actual": "1966/1966 frozen paths match before and after; zero mismatches",
+      "result": "pass"
+    },
+    {
+      "name": "fresh_official_netlist_export",
+      "actual": "one root-reserved official10.0.7 sch export netlist,exit0; Fontconfig/cache warnings",
+      "result": "pass"
+    },
+    {
+      "name": "native_schematic_board_reconciliation",
+      "actual": {
+        "fresh_pairs": 651,
+        "stored_pairs": 651,
+        "pcb_pairs": 651,
+        "components": 209,
+        "mismatches": 0
+      },
+      "result": "pass"
+    },
+    {
+      "name": "all100_MCU_and_saved_binding",
+      "actual": {
+        "table_rows": 100,
+        "mismatches": 0,
+        "regenerated_note_differing_keys": []
+      },
+      "result": "pass"
+    },
+    {
+      "name": "current_maker_package_and_function_reconstruction",
+      "actual": {
+        "package_pins": 100,
+        "assigned_AF": 28,
+        "ADC_channels": {
+          "PC0": "ADC123_INP10",
+          "PC3_C": "ADC3_INP1",
+          "PA6": "ADC12_INP3",
+          "PC5": "ADC12_INP8",
+          "PB1": "ADC12_INP5"
+        },
+        "differences": 0
+      },
+      "result": "pass"
+    },
+    {
+      "name": "NC_copper_audit",
+      "actual": "All32NC MCU pads have no other pad,track,via or zone on their native net",
+      "result": "pass"
+    },
+    {
+      "name": "selected_native_contracts",
+      "actual": {
+        "K_contract_issues": [],
+        "S3_issues": [],
+        "K_loader_issues": []
+      },
+      "result": "pass"
+    },
+    {
+      "name": "saved_binding_helper_controls",
+      "actual": {
+        "baseline": {
+          "issues": [],
+          "count": 0,
+          "expected": "pass"
+        },
+        "wrong_board_hash": {
+          "issues": [
+            "K-binding: saved board_sha256 differs from native binding-note regeneration"
+          ],
+          "count": 1,
+          "expected": "reject"
+        },
+        "wrong_fire_pin": {
+          "issues": [
+            "K-binding: saved u1_pins differs from native binding-note regeneration"
+          ],
+          "count": 1,
+          "expected": "reject"
+        },
+        "wrong_roll_sign": {
+          "issues": [
+            "K-binding: saved imu differs from native binding-note regeneration"
+          ],
+          "count": 1,
+          "expected": "reject"
+        }
+      },
+      "result": "baseline_pass_three_independent_negative_controls_rejected; helper-only,not full copied check.sh"
+    },
+    {
+      "name": "boot_and_reset",
+      "actual": "Current Pattern10 and loader pin table read; BOOT0 R5 verified; reset analog excludes debug pins; PC1/PE4 external off-state networks present; option-byte wording omission found",
+      "result": "Minor R17-MCU-02"
+    },
+    {
+      "name": "supply_domain_and_external_UART",
+      "actual": "Five VDD pins and VBAT on3V3; five VSS pins plus VSSA onGND; VDDA/VREF+ on3V3A; both separate VCAP caps present. Direct port series/ground ESD and retained camera U12/U13/U402 reconstructed.5V digital FT/analog4V/operating pulls/positive injection kept distinct.",
+      "result": "no demonstrated required-limit failure"
+    },
+    {
+      "name": "timing_and_storage_obligations",
+      "actual": {
+        "vcap_initial_uF": [
+          1.9800000000000002,
+          2.4200000000000004
+        ],
+        "vcap_numeric_st_uF": [
+          1.7600000000000002,
+          2.64
+        ],
+        "vcap_initial_times_full_TCC_uF": [
+          1.683,
+          2.7830000000000004
+        ],
+        "iwdg_min_ms": 28.57142857142857,
+        "iwdg_max_ms": 32.6530612244898,
+        "fault_allocation_ms": 34.8530612244898,
+        "neutral_allocation_ms": 48.6530612244898,
+        "pc14_resistor_only_initial_mA": 3.3636363636363638,
+        "pc14_nominal_steady_mA": 0.3,
+        "pa6_loader_max_nominal_mA": 0.363,
+        "pc8_vbus_min_for_cmos_high_at3V3_V": 4.619999999999999
+      },
+      "result": "arithmetic passes; no waveform/firmware execution"
+    },
+    {
+      "name": "sensor_and_interface_obligations",
+      "actual": "Native U4 bottom180,(17,45.9),leverx=-6mm and savedroll=-gyro_Y agree. z=-2.06mm remains Inference. SPI3/QSPI,EXTI1/4/5/6/8/12,no-trace/locks,200MHz budget,nonblocking storage/UART and no-self-powered-port restrictions checked as pending obligations. IMU40ms Ton is typical,not a measured guarantee.",
+      "result": "no firmware/physical qualification"
+    },
+    {
+      "name": "primary_PDF_QA",
+      "actual": "Fresh exact Samsung pages1/2/12/16/17 and permitted TI7/20/InfineonPDF5/6 complete pages rendered/visually inspected. Current ST tables read via primary web text; no ST image payload.",
+      "result": "bounded source inspection"
+    },
+    {
+      "name": "scope_authority",
+      "actual": "All122uniqueDIDs reconcile with freeze; all23owner mandate scopes considered under latestD-R16-03; stale parent VEHICLE treated as an integration limit.",
+      "result": "pass"
+    }
+  ],
+  "coverage_limits": [
+    "No canonical build,DRC,ERC or fullcheck.sh was run by this lens; earlier round/build/gate results supply no fresh check credit.",
+    "No firmware,assembly,trace-override,UART levels/peaks,startup/shutdown/back-feed,ESD/RF,VCAP,temperature/aging,SD latency/current/power-loss,e-match or flight measurement was performed.",
+    "Exact post-reset GPIO configuration and locks,option-byte contents,LSI silicon/temp range,physical current tail and neutral/startup timing remain future firmware/bench qualification.",
+    "Current ST PDFs were read as primary web text. Direct binary downloads failed; screenshot calls yielded references only. The permitted st_h743 cache is Rev8 and was not substituted for current limits. Current RM oversized fetch failed; no fresh full RM register/trace proof is claimed.",
+    "Allowed original IMU and Winbond caches have their stated versions; current IMU web fetch timed out; no newer Winbond revision visual audit is claimed.",
+    "This full lens covers MCU/electrical-interface facts; it is not a mechanical,manufacturing,whole-board routing,procurement or regulator-performance release.",
+    "No questions,subagents,Git mutations,other-worktree edits,current-round peer report/probe access or canonical modifications. Only assigned new reports and own ignored probes were written. Prior round16 MCU report was read only after fresh native/current-maker evidence,for carried-status reconciliation."
+  ],
+  "authority": {
+    "files": {
+      "AGENTS.md": {
+        "sha256": "c02a8aad64f7cd305c1faacdcfa542dd68f93742ec0751ca0c8a111a7d4ba73e",
+        "bytes": 26580
+      },
+      "docs/REQUIREMENTS.md": {
+        "sha256": "f5f827d49e746142e0fc10f680714c27d16339d7e5ea117bcc5fbab2d5779664",
+        "bytes": 58801
+      },
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": {
+        "sha256": "79deffd07861a1048cf317854cd64a1ace3039698d0361f39ae1592ff7b9041d",
+        "bytes": 199582
+      },
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md": {
+        "sha256": "a414e6b33a8a586080a9796ed4deee712f84d67907bff778757a5ad0cae8a5c4",
+        "bytes": 20841
+      },
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": {
+        "sha256": "514f8b12c48c07c43682c573b70e2e34fb6a2a2606e0dec436e020f5b5f45109",
+        "bytes": 21665
+      },
+      "docs/M3_R10.md": {
+        "sha256": "855b7a2c1e3bf4712a5e2a244b19242c28a1d3498222b377e13af8b3e2bd26d5",
+        "bytes": 58074
+      },
+      "docs/R10_VALIDATION.md": {
+        "sha256": "f2a3a375f8f365e9fda4307fa40cc413b4d56589763f3b04c95a1052a2ccbb75",
+        "bytes": 191903
+      },
+      "docs/R9_VALIDATION.md": {
+        "sha256": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+        "bytes": 81266
+      },
+      "../../docs/VEHICLE.md": {
+        "sha256": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+        "bytes": 8424
+      },
+      "docs/R10_VEHICLE_HANDOFF.md": {
+        "sha256": "f75cec52ea9862f787f293755b71709e6c35554647fb0b7259272ca5b781665b",
+        "bytes": 8137
+      },
+      "docs/ORDERING.md": {
+        "sha256": "7461ca98b1e5821984c0a2b5e24e3c06c2ac5416a8fd5a89fd8ca48cef40be6b",
+        "bytes": 112161
+      },
+      "docs/FMEA_REDUNDANCY.md": {
+        "sha256": "a5541a9dee1c0a5fc664f2f73d70d3fb8cc8087effd60e105e44f9dfdff06205",
+        "bytes": 120067
+      },
+      "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": {
+        "sha256": "f3c3b5ad9294a95810ed80b63756ef79eae5227ac67ed601439e31d113ad0c7c",
+        "bytes": 953510
+      }
+    },
+    "decision_ids": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03",
+      "D-R13-01",
+      "D-R13-02",
+      "D-R13-03",
+      "D-R14-01",
+      "D-R14-02",
+      "D-R14-03",
+      "D-R15-01",
+      "D-R15-02",
+      "D-R15-03",
+      "D-R16-01",
+      "D-R16-02",
+      "D-R16-03"
+    ],
+    "owner_mandates": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16",
+      "Supervisor2026-10-30afterround16: no Minor CAD changes"
+    ],
+    "latest_steer": "D-R16-03 forbids Minor PCB/placement/routing/circuit-generator changes; no AGENTS section2 change."
+  },
+  "sources": [
+    {
+      "id": "ST-MCU",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf",
+      "version": "DS12110 Rev11, January2026,357pages",
+      "pages_read": "32; Figure5 p55; Table9 relevant pin/domain/ADC rows pp64-88; assigned Table10 AF rows pp89-94;206-211;233;240-248; RevY LSI Table39 p129",
+      "method": "current official primary web text; screenshot calls returned no image payload; no current ST raster QA"
+    },
+    {
+      "id": "ST-BOOT",
+      "url": "https://www.st.com/resource/en/application_note/an2606-stm32-microcontroller-system-memory-boot-mode-stmicroelectronics.pdf",
+      "version": "AN2606 Rev70, February2026,553pages",
+      "pages_read": "Table2 Pattern10 p35; H74x Table135 pp320-323; selection p324; version limits pp325-327",
+      "method": "current official primary web text"
+    },
+    {
+      "id": "SAMSUNG",
+      "url": "https://product.samsungsem.com/part/download.do?masterKey=CL10A225KO8NNN&type=specsheet",
+      "version": "CL10A225KO8NNNC reference sheet issued2024-05-08 plus MLCC manual;38PDFpages",
+      "sha256": "7ad029052a9bd944e0fd77e7d8e814676dfb7285a5e18b8760a538d5a978e49e",
+      "pages_read": [
+        1,
+        2,
+        12,
+        16,
+        17
+      ],
+      "method": "fresh direct maker download; complete relevant pages rendered and visually inspected"
+    },
+    {
+      "id": "SAMSUNG-PRODUCT",
+      "url": "https://product.samsungsem.com/mlcc/CL10A225KO8NNN.do",
+      "method": "current maker product page; typical data do not establish joint operating bounds"
+    },
+    {
+      "id": "TI-UART",
+      "url": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+      "version": "SCES942A RevA,March2022",
+      "pages_read": [
+        7,
+        20
+      ],
+      "sha256": "f8e3f51edcccf12c7e991bec54cf1747a7fd84dccd23b875f326a3e631241ef2",
+      "method": "current maker web text plus permitted original cached PDF; complete pages rendered/inspected"
+    },
+    {
+      "id": "INFINEON",
+      "url": "https://www.infineon.com/part/ESD103-B1-02EL",
+      "version": "permitted original ESD103-B1-02 series Rev1.3,2014-06-12,printedp6 tables3-5; maker current product table corroborates15V working/48V TLP value",
+      "sha256": "c727b3157320518323c58bd5041507b14c21d763ba8e7c44b1e001ffc128eb16",
+      "pages_read": "PDF5/printed6 and PDF6/printed7",
+      "method": "original cached maker PDF; complete relevant pages rendered/inspected; no installed ESD qualification"
+    },
+    {
+      "id": "ST-IMU",
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "version": "permitted DS14623 Rev1 cache",
+      "sha256": "1b3b1d497968a6dd54a8ce7875e84ff6579217733061617beb1f62a1ba7d9c1c",
+      "pages_read": "electrical/serial tables and IF_CFG p60;40ms Ton is typical",
+      "method": "original cached maker text; current web PDF timed out; no newer-version or sensor-performance qualification"
+    },
+    {
+      "id": "WINBOND",
+      "url": "https://www.winbond.com/resource-files/w25q128jv%20revg%2004082019%20plus.pdf",
+      "version": "permitted cached W25Q128JV RevG",
+      "sha256": "5e2f6a77e0225a5c61b8f4b5b9680b57e0e1fe68cfc011465e30f665fe282057",
+      "pages_read": "PDF10/17 QE; PDF66 AC erase/suspend",
+      "method": "original cached maker text; no current RevI binary audit claimed; source behavior agrees with retained nonblocking obligations"
+    },
+    {
+      "id": "GPS",
+      "url": "https://www.hglrc.com/products/hglrc-m100_mini-gps",
+      "method": "current maker page;3.3-5V input stated; exact endpoint UART levels remain unmeasured"
+    },
+    {
+      "id": "RADIO",
+      "url": "https://micoair.com/en/docs/telemetry/lr900/lr900-telemetry",
+      "method": "current maker manual; endpoint/harness/transient/RF behavior remains unqualified"
+    },
+    {
+      "id": "ST-RM",
+      "url": "https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+      "method": "current web fetch refused as over-size; no fresh full RM register/trace-override validation claimed; current DS reset/configuration-lock statement and native obligations checked"
+    }
+  ],
+  "native_evidence": {
+    "native_API": "10.0.6",
+    "fresh_netlist_sha256": "719e77155445c5e6e6467ed4aaba4e033f095fbd26f65d547907627b9bc2aaeb",
+    "stored_netlist_sha256": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+    "all100_pins": [
+      {
+        "pin": "1",
+        "port": "PE2",
+        "net": "QSPI_IO2",
+        "mode_af": "AF9 QUADSPI_BK1_IO2",
+        "xy_mm": [
+          17.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "2",
+        "port": "PE3",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          17.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "3",
+        "port": "PE4",
+        "net": "PYRO1_GATE_N",
+        "mode_af": "GPIO out",
+        "xy_mm": [
+          18.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "4",
+        "port": "PE5",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          18.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "5",
+        "port": "PE6",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          19.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "6",
+        "port": "VBAT",
+        "net": "3V3",
+        "mode_af": "VBAT",
+        "xy_mm": [
+          19.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "7",
+        "port": "PC13",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          20.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "8",
+        "port": "PC14",
+        "net": "BUZZ_DRV",
+        "mode_af": "GPIO out",
+        "xy_mm": [
+          20.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "9",
+        "port": "PC15",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          21.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "10",
+        "port": "VSS",
+        "net": "GND",
+        "mode_af": "VSS",
+        "xy_mm": [
+          21.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "11",
+        "port": "VDD",
+        "net": "3V3",
+        "mode_af": "VDD",
+        "xy_mm": [
+          22.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "12",
+        "port": "PH0",
+        "net": "HSE_IN",
+        "mode_af": "HSE",
+        "xy_mm": [
+          22.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "13",
+        "port": "PH1",
+        "net": "HSE_OUT",
+        "mode_af": "HSE",
+        "xy_mm": [
+          23.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "14",
+        "port": "NRST",
+        "net": "NRST",
+        "mode_af": "NRST",
+        "xy_mm": [
+          23.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "15",
+        "port": "PC0",
+        "net": "PYRO1_CONT",
+        "mode_af": "ADC",
+        "xy_mm": [
+          24.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "16",
+        "port": "PC1",
+        "net": "ACT_EN_MCU",
+        "mode_af": "GPIO out (push-pull; initialise low before output mode)",
+        "xy_mm": [
+          24.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "17",
+        "port": "PC2_C",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog)",
+        "xy_mm": [
+          25.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "18",
+        "port": "PC3_C",
+        "net": "V3V3_SENSE",
+        "mode_af": "ADC",
+        "xy_mm": [
+          25.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "19",
+        "port": "VSSA",
+        "net": "GND",
+        "mode_af": "VSSA",
+        "xy_mm": [
+          26.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "20",
+        "port": "VREF+",
+        "net": "3V3A",
+        "mode_af": "VREF+",
+        "xy_mm": [
+          26.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "21",
+        "port": "VDDA",
+        "net": "3V3A",
+        "mode_af": "VDDA",
+        "xy_mm": [
+          27.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "22",
+        "port": "PA0",
+        "net": "SERVO1_MCU",
+        "mode_af": "AF2 TIM5_CH1",
+        "xy_mm": [
+          27.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "23",
+        "port": "PA1",
+        "net": "SERVO2_MCU",
+        "mode_af": "AF2 TIM5_CH2",
+        "xy_mm": [
+          28.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "24",
+        "port": "PA2",
+        "net": "SERVO3_MCU",
+        "mode_af": "AF2 TIM5_CH3",
+        "xy_mm": [
+          28.5,
+          50.55
+        ]
+      },
+      {
+        "pin": "25",
+        "port": "PA3",
+        "net": "SERVO4_MCU",
+        "mode_af": "AF2 TIM5_CH4",
+        "xy_mm": [
+          29.0,
+          50.55
+        ]
+      },
+      {
+        "pin": "26",
+        "port": "VSS",
+        "net": "GND",
+        "mode_af": "VSS",
+        "xy_mm": [
+          30.55,
+          49.0
+        ]
+      },
+      {
+        "pin": "27",
+        "port": "VDD",
+        "net": "3V3",
+        "mode_af": "VDD",
+        "xy_mm": [
+          30.55,
+          48.5
+        ]
+      },
+      {
+        "pin": "28",
+        "port": "PA4",
+        "net": "LOGIC_SOURCE_ST",
+        "mode_af": "GPIO in",
+        "xy_mm": [
+          30.55,
+          48.0
+        ]
+      },
+      {
+        "pin": "29",
+        "port": "PA5",
+        "net": "BAT_FAULT_N",
+        "mode_af": "GPIO in",
+        "xy_mm": [
+          30.55,
+          47.5
+        ]
+      },
+      {
+        "pin": "30",
+        "port": "PA6",
+        "net": "VLOGIC_SENSE",
+        "mode_af": "ADC (ADC12_INP3)",
+        "xy_mm": [
+          30.55,
+          47.0
+        ]
+      },
+      {
+        "pin": "31",
+        "port": "PA7",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog)",
+        "xy_mm": [
+          30.55,
+          46.5
+        ]
+      },
+      {
+        "pin": "32",
+        "port": "PC4",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          46.0
+        ]
+      },
+      {
+        "pin": "33",
+        "port": "PC5",
+        "net": "ARM1_SENSE",
+        "mode_af": "ADC",
+        "xy_mm": [
+          30.55,
+          45.5
+        ]
+      },
+      {
+        "pin": "34",
+        "port": "PB0",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          45.0
+        ]
+      },
+      {
+        "pin": "35",
+        "port": "PB1",
+        "net": "CAM_5V_SENSE",
+        "mode_af": "ADC",
+        "xy_mm": [
+          30.55,
+          44.5
+        ]
+      },
+      {
+        "pin": "36",
+        "port": "PB2",
+        "net": "QSPI_CLK",
+        "mode_af": "AF9 QUADSPI_CLK",
+        "xy_mm": [
+          30.55,
+          44.0
+        ]
+      },
+      {
+        "pin": "37",
+        "port": "PE7",
+        "net": "CAM_MCU_RX",
+        "mode_af": "AF7 UART7_RX",
+        "xy_mm": [
+          30.55,
+          43.5
+        ]
+      },
+      {
+        "pin": "38",
+        "port": "PE8",
+        "net": "CAM_MCU_TX",
+        "mode_af": "AF7 UART7_TX",
+        "xy_mm": [
+          30.55,
+          43.0
+        ]
+      },
+      {
+        "pin": "39",
+        "port": "PE9",
+        "net": "CAM_UART_OE",
+        "mode_af": "GPIO out",
+        "xy_mm": [
+          30.55,
+          42.5
+        ]
+      },
+      {
+        "pin": "40",
+        "port": "PE10",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          42.0
+        ]
+      },
+      {
+        "pin": "41",
+        "port": "PE11",
+        "net": "CAM_PWR_EN",
+        "mode_af": "GPIO out",
+        "xy_mm": [
+          30.55,
+          41.5
+        ]
+      },
+      {
+        "pin": "42",
+        "port": "PE12",
+        "net": "CAM_FAULT_N",
+        "mode_af": "GPIO in",
+        "xy_mm": [
+          30.55,
+          41.0
+        ]
+      },
+      {
+        "pin": "43",
+        "port": "PE13",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          40.5
+        ]
+      },
+      {
+        "pin": "44",
+        "port": "PE14",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          40.0
+        ]
+      },
+      {
+        "pin": "45",
+        "port": "PE15",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          30.55,
+          39.5
+        ]
+      },
+      {
+        "pin": "46",
+        "port": "PB10",
+        "net": "NC",
+        "mode_af": "NC",
+        "xy_mm": [
+          30.55,
+          39.0
+        ]
+      },
+      {
+        "pin": "47",
+        "port": "PB11",
+        "net": "NC",
+        "mode_af": "NC",
+        "xy_mm": [
+          30.55,
+          38.5
+        ]
+      },
+      {
+        "pin": "48",
+        "port": "VCAP",
+        "net": "VCAP1",
+        "mode_af": "VCAP",
+        "xy_mm": [
+          30.55,
+          38.0
+        ]
+      },
+      {
+        "pin": "49",
+        "port": "VSS",
+        "net": "GND",
+        "mode_af": "VSS",
+        "xy_mm": [
+          30.55,
+          37.5
+        ]
+      },
+      {
+        "pin": "50",
+        "port": "VDD",
+        "net": "3V3",
+        "mode_af": "VDD",
+        "xy_mm": [
+          30.55,
+          37.0
+        ]
+      },
+      {
+        "pin": "51",
+        "port": "PB12",
+        "net": "RADIO_RX_MCU",
+        "mode_af": "AF14 UART5_RX",
+        "xy_mm": [
+          29.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "52",
+        "port": "PB13",
+        "net": "RADIO_TX_MCU",
+        "mode_af": "AF14 UART5_TX",
+        "xy_mm": [
+          28.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "53",
+        "port": "PB14",
+        "net": "NC",
+        "mode_af": "NC",
+        "xy_mm": [
+          28.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "54",
+        "port": "PB15",
+        "net": "NC",
+        "mode_af": "NC",
+        "xy_mm": [
+          27.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "55",
+        "port": "PD8",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          27.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "56",
+        "port": "PD9",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          26.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "57",
+        "port": "PD10",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          26.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "58",
+        "port": "PD11",
+        "net": "QSPI_IO0",
+        "mode_af": "AF9 QUADSPI_BK1_IO0",
+        "xy_mm": [
+          25.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "59",
+        "port": "PD12",
+        "net": "QSPI_IO1",
+        "mode_af": "AF9 QUADSPI_BK1_IO1",
+        "xy_mm": [
+          25.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "60",
+        "port": "PD13",
+        "net": "QSPI_IO3",
+        "mode_af": "AF9 QUADSPI_BK1_IO3",
+        "xy_mm": [
+          24.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "61",
+        "port": "PD14",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          24.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "62",
+        "port": "PD15",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          23.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "63",
+        "port": "PC6",
+        "net": "GPS_TX_MCU",
+        "mode_af": "AF7 USART6_TX",
+        "xy_mm": [
+          23.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "64",
+        "port": "PC7",
+        "net": "GPS_RX_MCU",
+        "mode_af": "AF7 USART6_RX",
+        "xy_mm": [
+          22.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "65",
+        "port": "PC8",
+        "net": "VBUS_SENSE",
+        "mode_af": "GPIO in",
+        "xy_mm": [
+          22.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "66",
+        "port": "PC9",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          21.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "67",
+        "port": "PA8",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          21.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "68",
+        "port": "PA9",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          20.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "69",
+        "port": "PA10",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          20.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "70",
+        "port": "PA11",
+        "net": "USB_DM",
+        "mode_af": "AF10 OTG_FS_DM",
+        "xy_mm": [
+          19.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "71",
+        "port": "PA12",
+        "net": "USB_DP",
+        "mode_af": "AF10 OTG_FS_DP",
+        "xy_mm": [
+          19.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "72",
+        "port": "PA13",
+        "net": "SWDIO",
+        "mode_af": "AF0 SWDIO",
+        "xy_mm": [
+          18.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "73",
+        "port": "VCAP",
+        "net": "VCAP2",
+        "mode_af": "VCAP",
+        "xy_mm": [
+          18.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "74",
+        "port": "VSS",
+        "net": "GND",
+        "mode_af": "VSS",
+        "xy_mm": [
+          17.5,
+          35.45
+        ]
+      },
+      {
+        "pin": "75",
+        "port": "VDD",
+        "net": "3V3",
+        "mode_af": "VDD",
+        "xy_mm": [
+          17.0,
+          35.45
+        ]
+      },
+      {
+        "pin": "76",
+        "port": "PA14",
+        "net": "SWCLK",
+        "mode_af": "AF0 SWCLK",
+        "xy_mm": [
+          15.45,
+          37.0
+        ]
+      },
+      {
+        "pin": "77",
+        "port": "PA15",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          15.45,
+          37.5
+        ]
+      },
+      {
+        "pin": "78",
+        "port": "PC10",
+        "net": "SD_SCK",
+        "mode_af": "AF6 SPI3_SCK",
+        "xy_mm": [
+          15.45,
+          38.0
+        ]
+      },
+      {
+        "pin": "79",
+        "port": "PC11",
+        "net": "SD_MISO",
+        "mode_af": "AF6 SPI3_MISO",
+        "xy_mm": [
+          15.45,
+          38.5
+        ]
+      },
+      {
+        "pin": "80",
+        "port": "PC12",
+        "net": "SD_MOSI",
+        "mode_af": "AF6 SPI3_MOSI",
+        "xy_mm": [
+          15.45,
+          39.0
+        ]
+      },
+      {
+        "pin": "81",
+        "port": "PD0",
+        "net": "SD_CS",
+        "mode_af": "GPIO output push-pull; initialise high before output mode",
+        "xy_mm": [
+          15.45,
+          39.5
+        ]
+      },
+      {
+        "pin": "82",
+        "port": "PD1",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog)",
+        "xy_mm": [
+          15.45,
+          40.0
+        ]
+      },
+      {
+        "pin": "83",
+        "port": "PD2",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          15.45,
+          40.5
+        ]
+      },
+      {
+        "pin": "84",
+        "port": "PD3",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog)",
+        "xy_mm": [
+          15.45,
+          41.0
+        ]
+      },
+      {
+        "pin": "85",
+        "port": "PD4",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog)",
+        "xy_mm": [
+          15.45,
+          41.5
+        ]
+      },
+      {
+        "pin": "86",
+        "port": "PD5",
+        "net": "LED_RED",
+        "mode_af": "GPIO out",
+        "xy_mm": [
+          15.45,
+          42.0
+        ]
+      },
+      {
+        "pin": "87",
+        "port": "PD6",
+        "net": "USB_FAULT_N",
+        "mode_af": "GPIO in",
+        "xy_mm": [
+          15.45,
+          42.5
+        ]
+      },
+      {
+        "pin": "88",
+        "port": "PD7",
+        "net": "LED_YEL",
+        "mode_af": "GPIO out",
+        "xy_mm": [
+          15.45,
+          43.0
+        ]
+      },
+      {
+        "pin": "89",
+        "port": "PB3",
+        "net": "SPI1_SCK",
+        "mode_af": "AF5 SPI1_SCK",
+        "xy_mm": [
+          15.45,
+          43.5
+        ]
+      },
+      {
+        "pin": "90",
+        "port": "PB4",
+        "net": "SPI1_MISO",
+        "mode_af": "AF5 SPI1_MISO",
+        "xy_mm": [
+          15.45,
+          44.0
+        ]
+      },
+      {
+        "pin": "91",
+        "port": "PB5",
+        "net": "SPI1_MOSI",
+        "mode_af": "AF5 SPI1_MOSI",
+        "xy_mm": [
+          15.45,
+          44.5
+        ]
+      },
+      {
+        "pin": "92",
+        "port": "PB6",
+        "net": "QSPI_NCS",
+        "mode_af": "AF10 QUADSPI_BK1_NCS",
+        "xy_mm": [
+          15.45,
+          45.0
+        ]
+      },
+      {
+        "pin": "93",
+        "port": "PB7",
+        "net": "IMU_CS",
+        "mode_af": "GPIO out",
+        "xy_mm": [
+          15.45,
+          45.5
+        ]
+      },
+      {
+        "pin": "94",
+        "port": "BOOT0",
+        "net": "BOOT0",
+        "mode_af": "BOOT0",
+        "xy_mm": [
+          15.45,
+          46.0
+        ]
+      },
+      {
+        "pin": "95",
+        "port": "PB8",
+        "net": "I2C1_SCL",
+        "mode_af": "AF4 I2C1_SCL",
+        "xy_mm": [
+          15.45,
+          46.5
+        ]
+      },
+      {
+        "pin": "96",
+        "port": "PB9",
+        "net": "I2C1_SDA",
+        "mode_af": "AF4 I2C1_SDA",
+        "xy_mm": [
+          15.45,
+          47.0
+        ]
+      },
+      {
+        "pin": "97",
+        "port": "PE0",
+        "net": "NC",
+        "mode_af": "NC (firmware: analog, never driven)",
+        "xy_mm": [
+          15.45,
+          47.5
+        ]
+      },
+      {
+        "pin": "98",
+        "port": "PE1",
+        "net": "IMU_INT1",
+        "mode_af": "GPIO in, internal pull-down, EXTI1 data-ready interrupt (LSM6DSV320X INT1 push-pull, active high by default)",
+        "xy_mm": [
+          15.45,
+          48.0
+        ]
+      },
+      {
+        "pin": "99",
+        "port": "VSS",
+        "net": "GND",
+        "mode_af": "VSS",
+        "xy_mm": [
+          15.45,
+          48.5
+        ]
+      },
+      {
+        "pin": "100",
+        "port": "VDD",
+        "net": "3V3",
+        "mode_af": "VDD",
+        "xy_mm": [
+          15.45,
+          49.0
+        ]
+      }
+    ],
+    "isolated_NC_pins": [
+      {
+        "pin": "2",
+        "port": "PE3",
+        "net": "unconnected-(U1-PE3-Pad2)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "4",
+        "port": "PE5",
+        "net": "unconnected-(U1-PE5-Pad4)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "5",
+        "port": "PE6",
+        "net": "unconnected-(U1-PE6-Pad5)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "7",
+        "port": "PC13",
+        "net": "unconnected-(U1-PC13-Pad7)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "9",
+        "port": "PC15",
+        "net": "unconnected-(U1-PC15-Pad9)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "17",
+        "port": "PC2_C",
+        "net": "unconnected-(U1-PC2_C-Pad17)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "31",
+        "port": "PA7",
+        "net": "unconnected-(U1-PA7-Pad31)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "32",
+        "port": "PC4",
+        "net": "unconnected-(U1-PC4-Pad32)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "34",
+        "port": "PB0",
+        "net": "unconnected-(U1-PB0-Pad34)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "40",
+        "port": "PE10",
+        "net": "unconnected-(U1-PE10-Pad40)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "43",
+        "port": "PE13",
+        "net": "unconnected-(U1-PE13-Pad43)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "44",
+        "port": "PE14",
+        "net": "unconnected-(U1-PE14-Pad44)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "45",
+        "port": "PE15",
+        "net": "unconnected-(U1-PE15-Pad45)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "46",
+        "port": "PB10",
+        "net": "unconnected-(U1-PB10-Pad46)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "47",
+        "port": "PB11",
+        "net": "unconnected-(U1-PB11-Pad47)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "53",
+        "port": "PB14",
+        "net": "unconnected-(U1-PB14-Pad53)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "54",
+        "port": "PB15",
+        "net": "unconnected-(U1-PB15-Pad54)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "55",
+        "port": "PD8",
+        "net": "unconnected-(U1-PD8-Pad55)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "56",
+        "port": "PD9",
+        "net": "unconnected-(U1-PD9-Pad56)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "57",
+        "port": "PD10",
+        "net": "unconnected-(U1-PD10-Pad57)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "61",
+        "port": "PD14",
+        "net": "unconnected-(U1-PD14-Pad61)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "62",
+        "port": "PD15",
+        "net": "unconnected-(U1-PD15-Pad62)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "66",
+        "port": "PC9",
+        "net": "unconnected-(U1-PC9-Pad66)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "67",
+        "port": "PA8",
+        "net": "unconnected-(U1-PA8-Pad67)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "68",
+        "port": "PA9",
+        "net": "unconnected-(U1-PA9-Pad68)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "69",
+        "port": "PA10",
+        "net": "unconnected-(U1-PA10-Pad69)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "77",
+        "port": "PA15",
+        "net": "unconnected-(U1-PA15-Pad77)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "82",
+        "port": "PD1",
+        "net": "unconnected-(U1-PD1-Pad82)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "83",
+        "port": "PD2",
+        "net": "unconnected-(U1-PD2-Pad83)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "84",
+        "port": "PD3",
+        "net": "unconnected-(U1-PD3-Pad84)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "85",
+        "port": "PD4",
+        "net": "unconnected-(U1-PD4-Pad85)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      },
+      {
+        "pin": "97",
+        "port": "PE0",
+        "net": "unconnected-(U1-PE0-Pad97)",
+        "other_pads": [],
+        "tracks_or_vias": [],
+        "zones": []
+      }
+    ],
+    "loader_paths": {
+      "PA10": "NC",
+      "PA11": {
+        "net": "USB_DM",
+        "role": "USB_DM (DFU)",
+        "use": "od",
+        "reason": "DFU is the loader interface itself (R8 allowance); members not pinned (USB contract)"
+      },
+      "PA12": {
+        "net": "USB_DP",
+        "role": "USB_DP (DFU)",
+        "use": "od",
+        "reason": "DFU is the loader interface itself (R8 allowance); members not pinned (USB contract)"
+      },
+      "PA15": "NC",
+      "PA2": {
+        "net": "SERVO3_MCU",
+        "role": "USART2_TX",
+        "use": "out",
+        "reason": "USART2_TX drives the servo-3 signal through R152 1k: R8's allowance (frozen 3.2; a servo never sends 0x7F); servo power is off the board (O3), so a byte at most twitches an unpowered or harness-powered servo on the bench (BOOT0 is a bench-only state)"
+      },
+      "PA3": {
+        "net": "SERVO4_MCU",
+        "role": "USART2_RX",
+        "use": "in-pu",
+        "reason": "USART2_RX: an input (AN2606 p. 278 lists both no pull and pull-up), never driven; the line is held by R157 10k and driven only by U1 itself in flight"
+      },
+      "PA4": {
+        "net": "LOGIC_SOURCE_ST",
+        "role": "SPI1_NSS",
+        "use": "in",
+        "reason": "SPI1_NSS: a slave input, no pull (p. 279), never driven; U11 ST with its R91 10k pull-up (R8 pin table) is the only driver"
+      },
+      "PA5": {
+        "net": "BAT_FAULT_N",
+        "role": "SPI1_SCK",
+        "use": "in",
+        "reason": "SPI1_SCK: a slave input, no pull (p. 279), never driven; U9 FLT with its R89 10k pull-up (R8 pin table) is the only driver"
+      },
+      "PA6": {
+        "net": "VLOGIC_SENSE",
+        "role": "SPI1_MISO",
+        "use": "out",
+        "reason": "SPI1_MISO is driven push-pull by the loader into the VLOGIC divider node (R60 100k from VLOGIC, R61 10k to GND, C60 10 nF): the pin current is at most 3.3 V / (10k || 100k) = 0.36 mA (VLOGIC at 0 V, pin high), far below the 20 mA absolute-maximum I/O current (DS12110 Rev 10 Table 22, p. 105); VLOGIC (<= 8.4 V) reaches the pin only through R60 (<= 84 uA into a low pin); the reading is wrong only while in the loader"
+      },
+      "PA7": "NC",
+      "PA8": "NC",
+      "PA9": "NC",
+      "PB10": "NC",
+      "PB11": "NC",
+      "PB14": "NC",
+      "PB15": "NC",
+      "PB6": {
+        "net": "QSPI_NCS",
+        "role": "I2C1_SCL",
+        "use": "od",
+        "reason": "I2C1_SCL open drain, no pull: R8's allowance (frozen 3.5): the R10 10k pull-up keeps the flash deselected; the loader as an I2C slave pulls SCL low only to stretch a clock it receives"
+      },
+      "PB9": {
+        "net": "I2C1_SDA",
+        "role": "I2C1_SDA",
+        "use": "od",
+        "reason": "I2C1_SDA open drain, no pull: R8's allowance (frozen 3.6): the barometer's own I2C data line with its 4.7k pull-up; the loader answers only address 0b1001110x, which the barometer (0x76 / 0x77) does not use"
+      },
+      "PC10": {
+        "net": "SD_SCK",
+        "role": "SPI3_SCK",
+        "use": "in",
+        "reason": "SPI3_SCK is a loader slave input, never driven; J430.5 is the card clock input. PD0 SD_CS has R460 10k to 3V3, keeping the card deselected while all GPIOs are reset inputs"
+      },
+      "PC11": {
+        "net": "SD_MISO",
+        "role": "SPI3_MISO",
+        "use": "out",
+        "reason": "SPI3_MISO is driven by the loader only during a host transfer; PD0 SD_CS is independent of the loader SPI3_NSS PA15 and is held high by R460 10k, so the card data output stays high impedance. R462 draws at most 3.3V/10k=0.33mA if PC11 drives low; bench BOOT0 use only"
+      },
+      "PC12": {
+        "net": "SD_MOSI",
+        "role": "SPI3_MOSI",
+        "use": "in",
+        "reason": "SPI3_MOSI is a loader slave input, never driven; J430.3 is the card command input and R461 10k holds it high while the card stays deselected by SD_CS"
+      },
+      "PC9": "NC",
+      "PE11": {
+        "net": "CAM_PWR_EN",
+        "role": "SPI4_NSS",
+        "use": "in",
+        "reason": "SPI4_NSS: a slave input, no pull (AN2606 p. 280): R431 100k holds U402 EN low, so the camera supply stays off in the loader"
+      },
+      "PE12": {
+        "net": "CAM_FAULT_N",
+        "role": "SPI4_SCK",
+        "use": "in",
+        "reason": "SPI4_SCK: a slave input, no pull (p. 280), never driven; U402 FAULT is open drain (TPS2553 data sheet) with the R432 10k pull-up"
+      },
+      "PE13": "NC",
+      "PE14": "NC",
+      "PF0": "not on this package",
+      "PF1": "not on this package",
+      "PH13": "not on this package",
+      "PH14": "not on this package",
+      "PI0": "not on this package",
+      "PI1": "not on this package",
+      "PI2": "not on this package",
+      "PI3": "not on this package"
+    },
+    "safety_gate_networks": {
+      "Q124": {
+        "gate": "PYRO1_GATE",
+        "source": "GND",
+        "values": {
+          "R128": "10k",
+          "C126": "220nF 25V X7R"
+        },
+        "pull": [
+          "R128"
+        ],
+        "cap": [
+          "C126"
+        ],
+        "series": [
+          [
+            "R126",
+            "PYRO1_GATE_N"
+          ]
+        ],
+        "mcu_pull": {
+          "PYRO1_GATE_N": [
+            "R127"
+          ]
+        }
+      },
+      "Q120": {
+        "gate": "ACT_GATE",
+        "source": "ACT_FET_S",
+        "values": {
+          "R120": "100k",
+          "C120": "1uF 25V X7R 10%"
+        },
+        "pull": [
+          "R120"
+        ],
+        "cap": [
+          "C120"
+        ],
+        "series": [
+          [
+            "R121",
+            "ACT_DRV"
+          ]
+        ]
+      },
+      "Q121": {
+        "gate": "ACT_GATE",
+        "source": "ACT_FET_S",
+        "values": {
+          "R120": "100k",
+          "C120": "1uF 25V X7R 10%"
+        },
+        "pull": [
+          "R120"
+        ],
+        "cap": [
+          "C120"
+        ],
+        "series": [
+          [
+            "R121",
+            "ACT_DRV"
+          ]
+        ]
+      },
+      "load_enable": {
+        "U1.16": "ACT_EN_MCU",
+        "R122.1": "ACT_EN_MCU",
+        "R122.2": "ACT_EN",
+        "R123.1": "ACT_EN",
+        "R123.2": "GND",
+        "Q122.1": "ACT_EN",
+        "Q122.2": "GND",
+        "Q122.3": "ACT_DRV"
+      }
+    },
+    "binding_note_sha256": "35a72d796c7a6dd51eb1dc32f652c9c9f702f07121c466eb5d117e494ab392bf",
+    "probe_hashes": {
+      "baseline.json": "001a429a9ead52efd7949d82553617abe805c9410fb5e056a2cef4e2a5b3989e",
+      "native_probe.py": "a2315285ad2018232a57a08288a5e25dae38916bb3248cd1e77e042c302663b2",
+      "native.json": "7481b4513ec82399356d264311ac4a0e6ada62d84848c020151e93ec5cd422e0",
+      "controls.py": "a78f8bdaba9d9c23a290b761586e8acd4067b8febf5fb1618fba46972a9ce2a2",
+      "controls.json": "d72b83c39878cc72686e6096c30b619ff495a2f8c36d2ea2a89ee18adff26203",
+      "netlist_export.json": "a5f08d7afc8b6a16017d4216a636f189d69660bf81b7836c94cf73bb2b03aee7"
+    }
+  },
+  "review_status": "Read-only complete lens; no demonstrated Critical/Major. This does not approve R10 firmware,physical build,owner acceptance or ordering."
+}

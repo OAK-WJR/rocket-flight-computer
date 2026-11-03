@@ -1,0 +1,4585 @@
+{
+  "schema": 1,
+  "lens": "ROUND13 lens4 parts/BOM/lands/supplier/orientation/process",
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "finding_partition": {
+    "new": 1,
+    "carried": 1,
+    "closed_not_counted": 1
+  },
+  "findings": [
+    {
+      "id": "R13-BOM-01",
+      "severity": "Minor",
+      "status": "carried_open",
+      "title": "L400 retains a possible 0.15 mm uncovered heel at permitted component tolerance",
+      "prior_ids": [
+        "R12-BOM-01",
+        "R4-BOM-01"
+      ],
+      "evidence": {
+        "native_file": "m3_design/assembly_review/m3.kicad_pcb",
+        "library_file": "m3_design/assembly_review/kilib/rocket.pretty/M3_SRP5030TA.kicad_mod",
+        "coordinate_mm": [
+          24.2,
+          5.55
+        ],
+        "side": "F.Cu",
+        "rotation_deg": 0,
+        "identity": "C1329837 / Bourns SRP5030T-6R8M",
+        "native_pad_size_mm": [
+          1.8,
+          2.5
+        ],
+        "native_pad_center_x_mm": [
+          -2.35,
+          2.35
+        ],
+        "maker_pad_size_mm": [
+          2.0,
+          1.8
+        ],
+        "maker_pad_center_x_mm": [
+          -2.25,
+          2.25
+        ],
+        "native_inner_edge_abs_x_mm": 1.45,
+        "minimum_permitted_component_heel_abs_x_mm": 1.3,
+        "possible_uncovered_heel_mm": 0.15,
+        "calculation": "(2.35-1.8/2)-((5.7-0.3)/2-(1.1+0.3))=0.15 mm",
+        "maker_source": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+        "maker_page": 1,
+        "assessment": "Measured land deviation; no open circuit or failed required function is demonstrated. Nominal overlap and an orientation pass do not qualify worst-tolerance solder fillets."
+      },
+      "fix": "Use the Bourns recommended land through a separately covered generator/layout revision, or obtain documented assembler/owner acceptance and actual tolerance/fillet qualification of this exact retained land."
+    },
+    {
+      "id": "R13-BOM-02",
+      "severity": "Minor",
+      "status": "new_open",
+      "title": "Closed microSD model omits lateral fitting-nail projection",
+      "evidence": {
+        "model_file": "m3_design/assembly_review/kilib/rocket.3dshapes/M3_MICROSD_MOLEX_472192001.wrl",
+        "generator_file": "m3_design/r10_parts.py",
+        "coordinate_mm": [
+          24.0,
+          24.3
+        ],
+        "side": "B.Cu",
+        "rotation_deg": 0,
+        "model_width_mm": 13.99999994,
+        "native_model_local_x_mm": [
+          -6.99999997,
+          6.99999997
+        ],
+        "maker_shell_width_mm": 13.6,
+        "maker_fitting_nail_projection_per_side_mm": 0.5,
+        "nominal_total_fitting_nail_width_mm": 14.6,
+        "nominal_undercoverage_per_side_mm": 0.3,
+        "native_model_board_x_mm": [
+          17.0,
+          31.0
+        ],
+        "nominal_nail_board_x_mm": [
+          16.7,
+          31.3
+        ],
+        "native_shell_land_outer_board_x_mm": [
+          16.4,
+          31.6
+        ],
+        "maker_source": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+        "inspected_maker_document_mirror": "https://cdn.promelec.ru/upload/items/2020/09/01/472192001_sd.pdf",
+        "maker_page": 1,
+        "maker_figure": "Top view: 13.60 body width and 0.50 lateral fitting-nail projection; SD-47219-001 revision G",
+        "fresh_official_library_source": "https://lceda.cn/api/products/C164170/components",
+        "fresh_library_outline_width_units": 57.4802,
+        "fresh_library_nominal_width_mm": 14.599970800000001,
+        "assessment": "New bounded model/evidence defect; no demonstrated function or current fit failure. An independent conservative complete-box screen, rather than shell-pad extent, finds no bottom courtyard-AABB overlap and0.575mm nearest gap to C23. Bounds depend on explicit centred-datum/seating/card assumptions; no physical or full-gate result is claimed.",
+        "tolerance_and_diagnostic_bounds": {
+          "maker_general_decimal_tolerance_mm": 0.15,
+          "maker_PCB_layout_explicit_tolerance_mm": 0.05,
+          "assumption": "Body/land centre datum follows drawing and zero seating offset; card centring/position remains unqualified. These simple-box corner stacks are conservative Inference, not a maker certified assembly maximum.",
+          "nominal_fitting_nail_width_mm": 14.6,
+          "independent_tolerance_stack_max_width_mm": 15.05,
+          "socket_local_body_y_stack_mm": [
+            -9.7,
+            5.35
+          ],
+          "retained_card_local_front_bound_mm": 6.0,
+          "closed_z_stack_mm": [
+            0,
+            2.05
+          ],
+          "candidate_union_local_xyz_mm": [
+            [
+              -7.525,
+              7.525
+            ],
+            [
+              -9.7,
+              6.0
+            ],
+            [
+              0,
+              2.1
+            ]
+          ],
+          "candidate_board_xy_mm": [
+            16.475,
+            18.3,
+            31.525,
+            34.0
+          ],
+          "existing_model_board_xy_mm": [
+            17.0,
+            18.3,
+            31.0,
+            33.8
+          ],
+          "body_y_undercoverage_possible_mm": 0.1999999999999993,
+          "closest_B_courtyard_boxes": [
+            {
+              "ref": "C23",
+              "B_courtyard_stroked_AABB_mm": [
+                26.425,
+                34.575,
+                29.175,
+                36.025
+              ],
+              "old_model_box_gap_mm": 0.7750000000000057,
+              "candidate_conservative_box_gap_mm": 0.5750000000000028
+            },
+            {
+              "ref": "R460",
+              "B_courtyard_stroked_AABB_mm": [
+                26.295,
+                16.045,
+                29.305,
+                17.555
+              ],
+              "old_model_box_gap_mm": 0.745000000000001,
+              "candidate_conservative_box_gap_mm": 0.745000000000001
+            },
+            {
+              "ref": "R461",
+              "B_courtyard_stroked_AABB_mm": [
+                22.695,
+                16.045,
+                25.705,
+                17.555
+              ],
+              "old_model_box_gap_mm": 0.745000000000001,
+              "candidate_conservative_box_gap_mm": 0.745000000000001
+            },
+            {
+              "ref": "R463",
+              "B_courtyard_stroked_AABB_mm": [
+                12.695,
+                18.145,
+                15.705,
+                19.655
+              ],
+              "old_model_box_gap_mm": 1.295,
+              "candidate_conservative_box_gap_mm": 0.7700000000000014
+            },
+            {
+              "ref": "R450",
+              "B_courtyard_stroked_AABB_mm": [
+                32.495,
+                25.495,
+                35.505,
+                27.005
+              ],
+              "old_model_box_gap_mm": 1.4949999999999974,
+              "candidate_conservative_box_gap_mm": 0.9699999999999989
+            },
+            {
+              "ref": "R451",
+              "B_courtyard_stroked_AABB_mm": [
+                32.495,
+                28.995,
+                35.505,
+                30.505
+              ],
+              "old_model_box_gap_mm": 1.4949999999999974,
+              "candidate_conservative_box_gap_mm": 0.9699999999999989
+            },
+            {
+              "ref": "R462",
+              "B_courtyard_stroked_AABB_mm": [
+                12.695,
+                16.145,
+                15.705,
+                17.655
+              ],
+              "old_model_box_gap_mm": 1.4467377094691352,
+              "candidate_conservative_box_gap_mm": 1.0044525872334649
+            },
+            {
+              "ref": "C411",
+              "B_courtyard_stroked_AABB_mm": [
+                32.575,
+                20.475,
+                35.825,
+                25.025
+              ],
+              "old_model_box_gap_mm": 1.5750000000000028,
+              "candidate_conservative_box_gap_mm": 1.0500000000000043
+            }
+          ],
+          "candidate_B_courtyard_AABB_overlaps": [],
+          "candidate_bare_bore_radial_extent_mm": 9.689201463485006,
+          "usable_radius_mm": 24.9,
+          "candidate_body_bore_radial_clearance_mm": 15.210798536514993,
+          "limits": "No refilled DRC/full fit/real seating/card/lid clearance is certified. Courtyard AABBs are placement diagnostics, not exact physical bodies. No inference of no collision solely from shell-pad extent."
+        },
+        "additional_y_undercoverage_possible_mm": 0.2
+      },
+      "fix": "Include fitting nails and maker dimensional tolerances, or model the nails separately at their real height. A conservative diagnostic union under the stated common-centre/zero-seating assumptions is x[-7.525,+7.525],y[-9.70,+6.00],z[0,2.10]mm; current card-front/centring remain inferred and need confirmation. Regenerate/recheck local clearance and fit, model-identity expectations and bindings under separately covered work. Until corrected, qualify the14mm box as incomplete body/card representation rather than a conservative complete socket union."
+    }
+  ],
+  "closed_findings": [
+    {
+      "id": "R11-BOM-01 / R11-MEC-01",
+      "status": "closed_on_current_target",
+      "evidence": "Independent maker-to-native maximum-envelope and pose checks give5.003011866mm at all seven terminals, above4.95mm floor; no reliance on the prior closure receipt."
+    }
+  ],
+  "native_counts": {
+    "all_footprints": 209,
+    "all_F": 70,
+    "all_B": 139,
+    "fitted": 199,
+    "fitted_F": 67,
+    "fitted_B": 132,
+    "native_pad_instances_in_fitted_parts": 664,
+    "numbered_netted_pad_instances_compared_to_XML": 648,
+    "unnamed_paste_mechanical_pads": 16,
+    "bom_codes": 82,
+    "bom_qty_sum": 199,
+    "cpl_rows": 199,
+    "cpl_Top": 67,
+    "cpl_Bottom": 132,
+    "native_fitted_population_errors": []
+  },
+  "orientation": {
+    "current_cache_reconstructed": 187,
+    "current_cache_reconstructed_Top": 66,
+    "current_cache_reconstructed_Bottom": 121,
+    "current_cache_placement_only": [
+      "R100",
+      "R101",
+      "R103",
+      "R110",
+      "R150",
+      "R151",
+      "R152",
+      "R153",
+      "R440",
+      "R441",
+      "R450",
+      "R451"
+    ],
+    "current_cache_placement_only_Top": 1,
+    "current_cache_placement_only_Bottom": 11,
+    "with_fresh_review_only_C21190_map_reconstructed": 199,
+    "with_fresh_review_only_C21190_map_Top": 67,
+    "with_fresh_review_only_C21190_map_Bottom": 132,
+    "fresh_C21190_residual_mm": 0.071636,
+    "max_residual_mm": 0.49128800000002926,
+    "errors": [],
+    "historical_72_115_note": "72Top/115Bottom is the circuit-pass6e73b6eb reconstructed split; it is not the current7355 CPL population.",
+    "rows": [
+      {
+        "ref": "C5",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C6",
+        "lcsc": "C45783",
+        "footprint": "C0805",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.000000023372195e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C7",
+        "lcsc": "C45783",
+        "footprint": "C0805",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.000000023372195e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C8",
+        "lcsc": "C45783",
+        "footprint": "C0805",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.0000000269249085e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C9",
+        "lcsc": "C45783",
+        "footprint": "C0805",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.0000000269249085e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C10",
+        "lcsc": "C45783",
+        "footprint": "C0805",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.0000000269249085e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C11",
+        "lcsc": "C45783",
+        "footprint": "C0805",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.0000000269249085e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C13",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C14",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C15",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C16",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C17",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C18",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C19",
+        "lcsc": "C23630",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.3999999967827534e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C20",
+        "lcsc": "C23630",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.399999996427482e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C21",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C22",
+        "lcsc": "C15849",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.3999999967827534e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C23",
+        "lcsc": "C19666",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.399999996427482e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C24",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C25",
+        "lcsc": "C32949",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C26",
+        "lcsc": "C32949",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C28",
+        "lcsc": "C19666",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.399999996427482e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C29",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0001160000000055561,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C30",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0001160000000055561,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C31",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C32",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C60",
+        "lcsc": "C57112",
+        "footprint": "C0603",
+        "side": "Top",
+        "supplier_residual_mm": 2.3999999967827534e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C80",
+        "lcsc": "C13585",
+        "footprint": "C_1206_3216Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.11757999999999491,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C81",
+        "lcsc": "C85980",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003857,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C82",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.017396000000047707,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C83",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003679,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C84",
+        "lcsc": "C46550466",
+        "footprint": "M3_MA_8x10",
+        "side": "Top",
+        "supplier_residual_mm": 0.04501500000007752,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C85",
+        "lcsc": "C1623",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000670736,
+        "center_error_mm": 9.999999974752427e-07,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C86",
+        "lcsc": "C29936",
+        "footprint": "C_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07497700000003427,
+        "center_error_mm": 9.999999974752427e-07,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C87",
+        "lcsc": "C23630",
+        "footprint": "C0603",
+        "side": "Top",
+        "supplier_residual_mm": 2.399999996427482e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C88",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999134525,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C89",
+        "lcsc": "C12891",
+        "footprint": "C_1206_3216Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.11757999999999491,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C90",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07497600000003857,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C91",
+        "lcsc": "C1848",
+        "footprint": "C_1206_3216Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.11757999999999669,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C92",
+        "lcsc": "C19666",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.3999999967827534e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C93",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07497600000003501,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C94",
+        "lcsc": "C57112",
+        "footprint": "C0603",
+        "side": "Top",
+        "supplier_residual_mm": 2.3999999960722107e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C95",
+        "lcsc": "C12891",
+        "footprint": "C_1206_3216Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.11757999999999491,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C96",
+        "lcsc": "C13585",
+        "footprint": "C_1206_3216Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.11757999999999491,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C97",
+        "lcsc": "C29936",
+        "footprint": "C_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07497600000004212,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C98",
+        "lcsc": "C29936",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003857,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C99",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C100",
+        "lcsc": "C307331",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011599999999845068,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C120",
+        "lcsc": "C29936",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003501,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C126",
+        "lcsc": "C21120",
+        "footprint": "C0603",
+        "side": "Top",
+        "supplier_residual_mm": 2.3999999967827534e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C127",
+        "lcsc": "C57112",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.399999996427482e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C128",
+        "lcsc": "C161115",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003679,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C129",
+        "lcsc": "C57112",
+        "footprint": "C0603",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.399999996427482e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C400",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Top",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C401",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Top",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C402",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07497600000003679,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C403",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Top",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C404",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Top",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C405",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C406",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C407",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Top",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C408",
+        "lcsc": "C15195",
+        "footprint": "C0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011600000000200339,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C410",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003501,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C411",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C420",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003501,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C421",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C430",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07497600000003857,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C431",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C460",
+        "lcsc": "C14663",
+        "footprint": "C_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07497600000003857,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "C461",
+        "lcsc": "C21397",
+        "footprint": "M3_GRM32_1210",
+        "side": "Top",
+        "supplier_residual_mm": 0.0173960000000406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D4",
+        "lcsc": "C7519",
+        "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+        "side": "Top",
+        "supplier_residual_mm": 0.0009048845230506086,
+        "center_error_mm": 0.0,
+        "pads_checked": 6,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "D8",
+        "lcsc": "C83849",
+        "footprint": "D_SMB",
+        "side": "Top",
+        "supplier_residual_mm": 0.2409020000000055,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D9",
+        "lcsc": "C85098",
+        "footprint": "D_SMA",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.19252800000001002,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D120",
+        "lcsc": "C8591",
+        "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.23507500340310006,
+        "center_error_mm": 0.0,
+        "pads_checked": 3,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "D121",
+        "lcsc": "C13612",
+        "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.20001000399980604,
+        "center_error_mm": 0.0,
+        "pads_checked": 6,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "D123",
+        "lcsc": "C191023",
+        "footprint": "SOD-323_L1.8-W1.3-LS2.5-RD",
+        "side": "Top",
+        "supplier_residual_mm": 0.0024639999999997997,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D400",
+        "lcsc": "C535146",
+        "footprint": "M3_TSLP_2_20",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.004945999999996786,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D401",
+        "lcsc": "C535146",
+        "footprint": "M3_TSLP_2_20",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.004945999999996786,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D410",
+        "lcsc": "C535146",
+        "footprint": "M3_TSLP_2_20",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00494599999999501,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D411",
+        "lcsc": "C535146",
+        "footprint": "M3_TSLP_2_20",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00494599999999501,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D420",
+        "lcsc": "C535146",
+        "footprint": "M3_TSLP_2_20",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.004945999999996786,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "D421",
+        "lcsc": "C535146",
+        "footprint": "M3_TSLP_2_20",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.004945999999996786,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "J1",
+        "lcsc": "C466970",
+        "footprint": "M3_DB125_2P_GN",
+        "side": "Top",
+        "supplier_residual_mm": 5.99999999622014e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "J3",
+        "lcsc": "C165948",
+        "footprint": "USB-C_SMD-TYPE-C-31-M-12_1",
+        "side": "Top",
+        "supplier_residual_mm": 0.09926306431906345,
+        "center_error_mm": 1.0000000010279564e-06,
+        "pads_checked": 16,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "J9",
+        "lcsc": "C2757925",
+        "footprint": "M3_DB125_4P_GN",
+        "side": "Top",
+        "supplier_residual_mm": 7.400000003343621e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 4,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "J121",
+        "lcsc": "C52993880",
+        "footprint": "M3_DB125_2P_BK",
+        "side": "Top",
+        "supplier_residual_mm": 0.00010919999998293406,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "J122",
+        "lcsc": "C3646874",
+        "footprint": "M3_DB125_5P_GN",
+        "side": "Top",
+        "supplier_residual_mm": 0.00013400000000274304,
+        "center_error_mm": 0.0,
+        "pads_checked": 5,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "J400",
+        "lcsc": "C466970",
+        "footprint": "M3_DB125_2P_GN",
+        "side": "Top",
+        "supplier_residual_mm": 6.099999995967664e-05,
+        "center_error_mm": 9.999999974752427e-07,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "J410",
+        "lcsc": "C2757925",
+        "footprint": "M3_DB125_4P_GN",
+        "side": "Top",
+        "supplier_residual_mm": 7.400000003343621e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 4,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "J420",
+        "lcsc": "C2757925",
+        "footprint": "M3_DB125_4P_GN",
+        "side": "Top",
+        "supplier_residual_mm": 7.400000003343621e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 4,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "J430",
+        "lcsc": "C164170",
+        "footprint": "M3_MICROSD_MOLEX_472192001",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.005133673343765411,
+        "center_error_mm": 0.0,
+        "pads_checked": 12,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "L1",
+        "lcsc": "C57269",
+        "footprint": "IND-SMD_L4.0-W4.0",
+        "side": "Bottom",
+        "supplier_residual_mm": 5.400000001998251e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "L400",
+        "lcsc": "C1329837",
+        "footprint": "M3_SRP5030TA",
+        "side": "Top",
+        "supplier_residual_mm": 0.15010599999998675,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "LED1",
+        "lcsc": "C84256",
+        "footprint": "M3_NCD0805R1_K1",
+        "side": "Top",
+        "supplier_residual_mm": 0.2501232000051645,
+        "center_error_mm": 7.32410687763558e-15,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "LED2",
+        "lcsc": "C2296",
+        "footprint": "M3_KT0805Y_A1",
+        "side": "Top",
+        "supplier_residual_mm": 0.10028999999999844,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "LS120",
+        "lcsc": "C94598",
+        "footprint": "M3_MLT5020_3pad",
+        "side": "Top",
+        "supplier_residual_mm": 0.4499700049881818,
+        "center_error_mm": 0.0,
+        "pads_checked": 3,
+        "threshold_mm": 0.451
+      },
+      {
+        "ref": "Q120",
+        "lcsc": "C431196",
+        "footprint": "M3_AONR21357_DFN3x3A_EP1",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.1001240896687644,
+        "center_error_mm": 0.0,
+        "pads_checked": 8,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "Q121",
+        "lcsc": "C431196",
+        "footprint": "M3_AONR21357_DFN3x3A_EP1",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.1001240896687502,
+        "center_error_mm": 0.0,
+        "pads_checked": 8,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "Q122",
+        "lcsc": "C20917",
+        "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+        "side": "Top",
+        "supplier_residual_mm": 4.0049968845606215e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 3,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "Q123",
+        "lcsc": "C20917",
+        "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+        "side": "Bottom",
+        "supplier_residual_mm": 4.0049968845606215e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 3,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "Q124",
+        "lcsc": "C431195",
+        "footprint": "M3_AON7524_DFN3x3A",
+        "side": "Top",
+        "supplier_residual_mm": 0.1001240896687573,
+        "center_error_mm": 0.0,
+        "pads_checked": 4,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "R5",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R7",
+        "lcsc": "C25905",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R8",
+        "lcsc": "C25905",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R9",
+        "lcsc": "C11702",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R10",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R11",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R12",
+        "lcsc": "C25900",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R13",
+        "lcsc": "C25900",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R32",
+        "lcsc": "C17557",
+        "footprint": "R0805",
+        "side": "Top",
+        "supplier_residual_mm": 2.0000000251485517e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R33",
+        "lcsc": "C17557",
+        "footprint": "R0805",
+        "side": "Top",
+        "supplier_residual_mm": 2.0000000251485517e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R60",
+        "lcsc": "C25741",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R61",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R62",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R63",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R64",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R80",
+        "lcsc": "C23178",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R81",
+        "lcsc": "C23024",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R82",
+        "lcsc": "C4241878",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R83",
+        "lcsc": "C705755",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R84",
+        "lcsc": "C861551",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000003001,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R85",
+        "lcsc": "C137691",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R86",
+        "lcsc": "C861568",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000003001,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R87",
+        "lcsc": "C25819",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R88",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R89",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R90",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002734,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R91",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000003001,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R92",
+        "lcsc": "C22978",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R100",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R101",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R102",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R103",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R104",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R105",
+        "lcsc": "C11702",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R110",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002823,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R120",
+        "lcsc": "C25741",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R121",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R122",
+        "lcsc": "C11702",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R123",
+        "lcsc": "C25741",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R126",
+        "lcsc": "C17557",
+        "footprint": "R0805",
+        "side": "Top",
+        "supplier_residual_mm": 2.0000000269249085e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R127",
+        "lcsc": "C11702",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R128",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Top",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R129",
+        "lcsc": "C25905",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R130",
+        "lcsc": "C4109",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R131",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R132",
+        "lcsc": "C25905",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R133",
+        "lcsc": "C4109",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R134",
+        "lcsc": "C3013496",
+        "footprint": "R2512",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.49128800000002926,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R150",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R151",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R152",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R153",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R154",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R155",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R156",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R157",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0028160000000525542,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R162",
+        "lcsc": "C17513",
+        "footprint": "R0805",
+        "side": "Bottom",
+        "supplier_residual_mm": 2.0000000269249085e-06,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R163",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R164",
+        "lcsc": "C22939",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R165",
+        "lcsc": "C23178",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R166",
+        "lcsc": "C168925",
+        "footprint": "M3_R2512_UR",
+        "side": "Top",
+        "supplier_residual_mm": 0.23371199999997216,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R167",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R173",
+        "lcsc": "C25905",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R175",
+        "lcsc": "C25905",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R178",
+        "lcsc": "C4109",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R180",
+        "lcsc": "C4109",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R400",
+        "lcsc": "C705784",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000003001,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R401",
+        "lcsc": "C95204",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R402",
+        "lcsc": "C705780",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R403",
+        "lcsc": "C95204",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R404",
+        "lcsc": "C22975",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R405",
+        "lcsc": "C23253",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R430",
+        "lcsc": "C185349",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R431",
+        "lcsc": "C14675",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R432",
+        "lcsc": "C25744",
+        "footprint": "R0402",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.002816000000045449,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R440",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R441",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R450",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R451",
+        "lcsc": "C21190",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R460",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R461",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R462",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002823,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R463",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.07163600000002823,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "R464",
+        "lcsc": "C25804",
+        "footprint": "R_0603_1608Metric",
+        "side": "Top",
+        "supplier_residual_mm": 0.07163600000002646,
+        "center_error_mm": 0.0,
+        "pads_checked": 2,
+        "threshold_mm": 0.6
+      },
+      {
+        "ref": "U1",
+        "lcsc": "C5271084",
+        "footprint": "LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL",
+        "side": "Top",
+        "supplier_residual_mm": 0.0001649242250277687,
+        "center_error_mm": 0.0,
+        "pads_checked": 100,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U2",
+        "lcsc": "C780769",
+        "footprint": "TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.00011142710620448018,
+        "center_error_mm": 0.0,
+        "pads_checked": 6,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U3",
+        "lcsc": "C97521",
+        "footprint": "SOIC-8_L5.3-W5.3-P1.27-LS8.0-BL",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0050008463283760796,
+        "center_error_mm": 0.0,
+        "pads_checked": 8,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U4",
+        "lcsc": "C26633007",
+        "footprint": "LGA-14_L3.0-W2.5-P0.50-TL",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.05244415377328929,
+        "center_error_mm": 0.0,
+        "pads_checked": 14,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U5",
+        "lcsc": "C15639",
+        "footprint": "SENSORS-SMD_MS5611-01BA03",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.20005759371150775,
+        "center_error_mm": 0.0,
+        "pads_checked": 8,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U9",
+        "lcsc": "C3662793",
+        "footprint": "M3_TPS25947_RPW",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.20047706738682047,
+        "center_error_mm": 0.0,
+        "pads_checked": 14,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U10",
+        "lcsc": "C55266",
+        "footprint": "M3_TPS2553_DBV",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.05001001599681267,
+        "center_error_mm": 0.0,
+        "pads_checked": 6,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U11",
+        "lcsc": "C485916",
+        "footprint": "M3_TPS2121_RUX",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0001916898536176477,
+        "center_error_mm": 0.0,
+        "pads_checked": 12,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U12",
+        "lcsc": "C5186957",
+        "footprint": "M3_TXU0202_DCU",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.1474120138930508,
+        "center_error_mm": 0.0,
+        "pads_checked": 8,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U13",
+        "lcsc": "C89347",
+        "footprint": "M3_TPS709_DBV",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.0001067754653794138,
+        "center_error_mm": 0.0,
+        "pads_checked": 5,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U400",
+        "lcsc": "C2071044",
+        "footprint": "M3_AP63200_TSOT26",
+        "side": "Top",
+        "supplier_residual_mm": 0.10002300799822428,
+        "center_error_mm": 0.0,
+        "pads_checked": 6,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U401",
+        "lcsc": "C2878140",
+        "footprint": "M3_TPS7A91_DSK10",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.007479095399796087,
+        "center_error_mm": 0.0,
+        "pads_checked": 11,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "U402",
+        "lcsc": "C55266",
+        "footprint": "M3_TPS2553_DBV",
+        "side": "Bottom",
+        "supplier_residual_mm": 0.05001001599681267,
+        "center_error_mm": 0.0,
+        "pads_checked": 6,
+        "threshold_mm": 0.35
+      },
+      {
+        "ref": "Y1",
+        "lcsc": "C1985619",
+        "footprint": "CRYSTAL-SMD_4P-L3.2-W2.5-BL",
+        "side": "Bottom",
+        "supplier_residual_mm": 7.481310049441958e-05,
+        "center_error_mm": 0.0,
+        "pads_checked": 4,
+        "threshold_mm": 0.35
+      }
+    ]
+  },
+  "terminal_checks": [
+    {
+      "ref": "J1",
+      "at": [
+        7.4,
+        75.85
+      ],
+      "rotation": -90.0,
+      "numbered_roles": [
+        "BAT_IN",
+        "GND"
+      ],
+      "pads_mm": "3.5 pitch; diameter1.9/drill1.3",
+      "body_local_bounds_mm": [
+        [
+          -4.6199996500000005,
+          3.7000014899999996
+        ],
+        [
+          -4.09999942,
+          3.99999962
+        ],
+        [
+          1.2700000001775181e-06,
+          8.90000125
+        ]
+      ],
+      "max_model_quantization_delta_mm": 1.4899999993822632e-06,
+      "wire_room_bare_bore_mm": 5.003011866037409,
+      "pad_gap_mm": 1.6,
+      "ground_thermal_overrides": [
+        "2"
+      ]
+    },
+    {
+      "ref": "J121",
+      "at": [
+        7.4,
+        55.85
+      ],
+      "rotation": -90.0,
+      "numbered_roles": [
+        "PYRO1_OUT",
+        "PYRO1_IGN"
+      ],
+      "pads_mm": "3.5 pitch; diameter1.9/drill1.3",
+      "body_local_bounds_mm": [
+        [
+          -4.6199996500000005,
+          3.7000014899999996
+        ],
+        [
+          -4.09999942,
+          3.99999962
+        ],
+        [
+          1.2700000001775181e-06,
+          8.90000125
+        ]
+      ],
+      "max_model_quantization_delta_mm": 1.4899999993822632e-06,
+      "wire_room_bare_bore_mm": 5.003011866037409,
+      "pad_gap_mm": 1.6,
+      "ground_thermal_overrides": []
+    },
+    {
+      "ref": "J400",
+      "at": [
+        7.4,
+        65.849999
+      ],
+      "rotation": -90.0,
+      "numbered_roles": [
+        "BAT_SW_SOURCE",
+        "BAT_SW_RETURN"
+      ],
+      "pads_mm": "3.5 pitch; diameter1.9/drill1.3",
+      "body_local_bounds_mm": [
+        [
+          -4.6199996500000005,
+          3.7000014899999996
+        ],
+        [
+          -4.09999942,
+          3.99999962
+        ],
+        [
+          1.2700000001775181e-06,
+          8.90000125
+        ]
+      ],
+      "max_model_quantization_delta_mm": 1.4899999993822632e-06,
+      "wire_room_bare_bore_mm": 5.003011866037409,
+      "pad_gap_mm": 1.6,
+      "ground_thermal_overrides": []
+    },
+    {
+      "ref": "J410",
+      "at": [
+        38.6,
+        15.5
+      ],
+      "rotation": 90.0,
+      "numbered_roles": [
+        "PORT_4V8",
+        "GND",
+        "GPS_TX_WIRE",
+        "GPS_RX_WIRE"
+      ],
+      "pads_mm": "3.5 pitch; diameter1.9/drill1.3",
+      "body_local_bounds_mm": [
+        [
+          -8.3199986,
+          7.2000008399999995
+        ],
+        [
+          -4.09999942,
+          3.99999962
+        ],
+        [
+          1.2700000001775181e-06,
+          8.90000125
+        ]
+      ],
+      "max_model_quantization_delta_mm": 1.4000000003733248e-06,
+      "wire_room_bare_bore_mm": 5.003011866037409,
+      "pad_gap_mm": 1.6,
+      "ground_thermal_overrides": [
+        "2"
+      ]
+    },
+    {
+      "ref": "J420",
+      "at": [
+        38.6,
+        31.5
+      ],
+      "rotation": 90.0,
+      "numbered_roles": [
+        "PORT_4V8",
+        "GND",
+        "RADIO_TX_WIRE",
+        "RADIO_RX_WIRE"
+      ],
+      "pads_mm": "3.5 pitch; diameter1.9/drill1.3",
+      "body_local_bounds_mm": [
+        [
+          -8.3199986,
+          7.2000008399999995
+        ],
+        [
+          -4.09999942,
+          3.99999962
+        ],
+        [
+          1.2700000001775181e-06,
+          8.90000125
+        ]
+      ],
+      "max_model_quantization_delta_mm": 1.4000000003733248e-06,
+      "wire_room_bare_bore_mm": 5.003011866037409,
+      "pad_gap_mm": 1.6,
+      "ground_thermal_overrides": [
+        "2"
+      ]
+    },
+    {
+      "ref": "J9",
+      "at": [
+        38.6,
+        47.5
+      ],
+      "rotation": 90.0,
+      "numbered_roles": [
+        "CAM_5V",
+        "GND",
+        "CAM_RX_WIRE",
+        "CAM_TX_WIRE"
+      ],
+      "pads_mm": "3.5 pitch; diameter1.9/drill1.3",
+      "body_local_bounds_mm": [
+        [
+          -8.3199986,
+          7.2000008399999995
+        ],
+        [
+          -4.09999942,
+          3.99999962
+        ],
+        [
+          1.2700000001775181e-06,
+          8.90000125
+        ]
+      ],
+      "max_model_quantization_delta_mm": 1.4000000003733248e-06,
+      "wire_room_bare_bore_mm": 5.003011866037409,
+      "pad_gap_mm": 1.6,
+      "ground_thermal_overrides": [
+        "2"
+      ]
+    },
+    {
+      "ref": "J122",
+      "at": [
+        38.6,
+        71.5
+      ],
+      "rotation": 90.0,
+      "numbered_roles": [
+        "SERVO1_OUT",
+        "SERVO2_OUT",
+        "SERVO3_OUT",
+        "SERVO4_OUT",
+        "GND"
+      ],
+      "pads_mm": "3.5 pitch; diameter1.9/drill1.3",
+      "body_local_bounds_mm": [
+        [
+          -10.06999891,
+          8.95000115
+        ],
+        [
+          -4.09999942,
+          3.99999962
+        ],
+        [
+          1.2700000001775181e-06,
+          8.90000125
+        ]
+      ],
+      "max_model_quantization_delta_mm": 1.2700000001775181e-06,
+      "wire_room_bare_bore_mm": 5.003011866037409,
+      "pad_gap_mm": 1.6,
+      "ground_thermal_overrides": [
+        "5"
+      ]
+    }
+  ],
+  "microSD_checks": {
+    "at": [
+      24.0,
+      24.3
+    ],
+    "bounds": [
+      [
+        -6.99999997,
+        6.99999997
+      ],
+      [
+        -9.49999878,
+        6.000000700000001
+      ],
+      [
+        0.0,
+        2.10000088
+      ]
+    ],
+    "pads": [
+      {
+        "number": "1",
+        "local_maker_view_mm": [
+          3.205,
+          -0.0
+        ],
+        "net": "SD_DAT2",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "2",
+        "local_maker_view_mm": [
+          2.105,
+          -0.0
+        ],
+        "net": "SD_CS",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "3",
+        "local_maker_view_mm": [
+          1.005,
+          -0.0
+        ],
+        "net": "SD_MOSI",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "4",
+        "local_maker_view_mm": [
+          -0.095,
+          -0.0
+        ],
+        "net": "3V3",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "5",
+        "local_maker_view_mm": [
+          -1.195,
+          -0.0
+        ],
+        "net": "SD_SCK",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "6",
+        "local_maker_view_mm": [
+          -2.295,
+          -0.0
+        ],
+        "net": "GND",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "7",
+        "local_maker_view_mm": [
+          -3.395,
+          -0.0
+        ],
+        "net": "SD_MISO",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "8",
+        "local_maker_view_mm": [
+          -4.495,
+          -0.0
+        ],
+        "net": "SD_DAT1",
+        "pad_size_mm": [
+          0.8,
+          1.5
+        ]
+      },
+      {
+        "number": "9",
+        "local_maker_view_mm": [
+          6.875,
+          -5.7
+        ],
+        "net": "GND",
+        "pad_size_mm": [
+          1.45,
+          2.0
+        ]
+      },
+      {
+        "number": "10",
+        "local_maker_view_mm": [
+          -6.875,
+          -5.7
+        ],
+        "net": "GND",
+        "pad_size_mm": [
+          1.45,
+          2.0
+        ]
+      },
+      {
+        "number": "11",
+        "local_maker_view_mm": [
+          -6.875,
+          2.6
+        ],
+        "net": "GND",
+        "pad_size_mm": [
+          1.45,
+          2.0
+        ]
+      },
+      {
+        "number": "12",
+        "local_maker_view_mm": [
+          6.875,
+          2.6
+        ],
+        "net": "GND",
+        "pad_size_mm": [
+          1.45,
+          2.0
+        ]
+      }
+    ]
+  },
+  "process_checks": {
+    "pasted_SMD_hole_intersections": [],
+    "U401_EP_hole_intersections": [
+      {
+        "via": [
+          27.9,
+          13.6
+        ],
+        "net": "GND",
+        "ring": 0.5,
+        "drill": 0.3
+      },
+      {
+        "via": [
+          27.3,
+          13.6
+        ],
+        "net": "GND",
+        "ring": 0.5,
+        "drill": 0.3
+      }
+    ],
+    "library_checked_footprints": 209,
+    "library_errors": []
+  },
+  "fresh_supplier": {
+    "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+    "started_utc": "2026-10-30T08:38:42.799722+00:00",
+    "finished_utc": "2026-10-30T08:38:52.797802+00:00",
+    "codes_checked": 82,
+    "exact_MPN_matches": 82,
+    "unknown": [],
+    "shortages": [
+      {
+        "lcsc": "C185349",
+        "refs": [
+          "R430"
+        ],
+        "mpn": "RC0603FR-0722K6L",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 17,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 3610,
+        "order_quantity": 3610,
+        "unit_price_fitted_usd": 0.0028,
+        "unit_price_order_usd": 0.0025,
+        "supplier_page": "https://jlcpcb.com/partdetail/C185349"
+      },
+      {
+        "lcsc": "C26633007",
+        "refs": [
+          "U4"
+        ],
+        "mpn": "LSM6DSV320XTR",
+        "manufacturer": "STMicroelectronics",
+        "package": "LGA-14L(2.5x3)",
+        "library": "expand",
+        "stock": 0,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 12.3925,
+        "unit_price_order_usd": 12.3925,
+        "supplier_page": "https://jlcpcb.com/partdetail/C26633007"
+      }
+    ],
+    "placed_parts_usd_per_board": 57.5538,
+    "minimum_purchase_parts_usd_per_board": 59.8942,
+    "standard_feeder_share_usd_per_board": 25.092,
+    "placed_with_feeder_usd_per_board": 82.6458,
+    "minima_with_feeder_usd_per_board": 84.9862,
+    "cap_usd_per_board": 84.41,
+    "status": "Known procurement obligations remain open; not a release pass",
+    "rows": [
+      {
+        "lcsc": "C307331",
+        "refs": [
+          "C5",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C17",
+          "C18",
+          "C21",
+          "C24",
+          "C29",
+          "C30",
+          "C31",
+          "C32",
+          "C88",
+          "C99",
+          "C100"
+        ],
+        "mpn": "CL05B104KB54PNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0402",
+        "library": "base",
+        "stock": 20959727,
+        "fitted_5_boards": 80,
+        "minimum_purchase": 1,
+        "order_quantity": 80,
+        "unit_price_fitted_usd": 0.009,
+        "unit_price_order_usd": 0.009,
+        "supplier_page": "https://jlcpcb.com/partdetail/C307331"
+      },
+      {
+        "lcsc": "C45783",
+        "refs": [
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11"
+        ],
+        "mpn": "CL21A226MAQNNNE",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0805",
+        "library": "base",
+        "stock": 3520979,
+        "fitted_5_boards": 30,
+        "minimum_purchase": 1,
+        "order_quantity": 30,
+        "unit_price_fitted_usd": 0.192,
+        "unit_price_order_usd": 0.192,
+        "supplier_page": "https://jlcpcb.com/partdetail/C45783"
+      },
+      {
+        "lcsc": "C23630",
+        "refs": [
+          "C19",
+          "C20",
+          "C87"
+        ],
+        "mpn": "CL10A225KO8NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0603",
+        "library": "base",
+        "stock": 2859772,
+        "fitted_5_boards": 15,
+        "minimum_purchase": 1,
+        "order_quantity": 15,
+        "unit_price_fitted_usd": 0.0119,
+        "unit_price_order_usd": 0.0119,
+        "supplier_page": "https://jlcpcb.com/partdetail/C23630"
+      },
+      {
+        "lcsc": "C15849",
+        "refs": [
+          "C22"
+        ],
+        "mpn": "CL10A105KB8NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0603",
+        "library": "base",
+        "stock": 12356370,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0139,
+        "unit_price_order_usd": 0.0139,
+        "supplier_page": "https://jlcpcb.com/partdetail/C15849"
+      },
+      {
+        "lcsc": "C19666",
+        "refs": [
+          "C23",
+          "C28",
+          "C92"
+        ],
+        "mpn": "CL10A475KO8NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0603",
+        "library": "base",
+        "stock": 4252234,
+        "fitted_5_boards": 15,
+        "minimum_purchase": 1,
+        "order_quantity": 15,
+        "unit_price_fitted_usd": 0.0169,
+        "unit_price_order_usd": 0.0169,
+        "supplier_page": "https://jlcpcb.com/partdetail/C19666"
+      },
+      {
+        "lcsc": "C32949",
+        "refs": [
+          "C25",
+          "C26"
+        ],
+        "mpn": "CL05C100JB5NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0402",
+        "library": "base",
+        "stock": 1759652,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.0061,
+        "unit_price_order_usd": 0.0061,
+        "supplier_page": "https://jlcpcb.com/partdetail/C32949"
+      },
+      {
+        "lcsc": "C57112",
+        "refs": [
+          "C60",
+          "C94",
+          "C127",
+          "C129"
+        ],
+        "mpn": "0603B103K500NT",
+        "manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+        "package": "0603",
+        "library": "base",
+        "stock": 5631512,
+        "fitted_5_boards": 20,
+        "minimum_purchase": 1,
+        "order_quantity": 20,
+        "unit_price_fitted_usd": 0.0103,
+        "unit_price_order_usd": 0.0103,
+        "supplier_page": "https://jlcpcb.com/partdetail/C57112"
+      },
+      {
+        "lcsc": "C13585",
+        "refs": [
+          "C80",
+          "C96"
+        ],
+        "mpn": "CL31A106KBHNNNE",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "1206",
+        "library": "base",
+        "stock": 3128409,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.2431,
+        "unit_price_order_usd": 0.2431,
+        "supplier_page": "https://jlcpcb.com/partdetail/C13585"
+      },
+      {
+        "lcsc": "C85980",
+        "refs": [
+          "C81"
+        ],
+        "mpn": "GRM1885C1H472JA01D",
+        "manufacturer": "Murata Electronics",
+        "package": "0603",
+        "library": "expand",
+        "stock": 36520,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0187,
+        "unit_price_order_usd": 0.0187,
+        "supplier_page": "https://jlcpcb.com/partdetail/C85980"
+      },
+      {
+        "lcsc": "C21397",
+        "refs": [
+          "C82",
+          "C400",
+          "C401",
+          "C403",
+          "C404",
+          "C405",
+          "C406",
+          "C407",
+          "C411",
+          "C421",
+          "C431",
+          "C461"
+        ],
+        "mpn": "GRM32ER71E226KE15L",
+        "manufacturer": "Murata Electronics",
+        "package": "1210",
+        "library": "expand",
+        "stock": 74927,
+        "fitted_5_boards": 60,
+        "minimum_purchase": 1,
+        "order_quantity": 60,
+        "unit_price_fitted_usd": 0.2704,
+        "unit_price_order_usd": 0.2704,
+        "supplier_page": "https://jlcpcb.com/partdetail/C21397"
+      },
+      {
+        "lcsc": "C14663",
+        "refs": [
+          "C83",
+          "C90",
+          "C93",
+          "C402",
+          "C410",
+          "C420",
+          "C430",
+          "C460"
+        ],
+        "mpn": "CC0603KRX7R9BB104",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "base",
+        "stock": 37533537,
+        "fitted_5_boards": 40,
+        "minimum_purchase": 1,
+        "order_quantity": 40,
+        "unit_price_fitted_usd": 0.0086,
+        "unit_price_order_usd": 0.0086,
+        "supplier_page": "https://jlcpcb.com/partdetail/C14663"
+      },
+      {
+        "lcsc": "C46550466",
+        "refs": [
+          "C84"
+        ],
+        "mpn": "MA25V470M8x10",
+        "manufacturer": "jieerrui",
+        "package": "SMD,D8xL10mm",
+        "library": "expand",
+        "stock": 111485,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.2814,
+        "unit_price_order_usd": 0.2814,
+        "supplier_page": "https://jlcpcb.com/partdetail/C46550466"
+      },
+      {
+        "lcsc": "C1623",
+        "refs": [
+          "C85"
+        ],
+        "mpn": "CL10B474KA8NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0603",
+        "library": "base",
+        "stock": 684701,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.013,
+        "unit_price_order_usd": 0.013,
+        "supplier_page": "https://jlcpcb.com/partdetail/C1623"
+      },
+      {
+        "lcsc": "C29936",
+        "refs": [
+          "C86",
+          "C97",
+          "C98",
+          "C120"
+        ],
+        "mpn": "CL10B105KA8NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0603",
+        "library": "expand",
+        "stock": 659613,
+        "fitted_5_boards": 20,
+        "minimum_purchase": 1,
+        "order_quantity": 20,
+        "unit_price_fitted_usd": 0.0177,
+        "unit_price_order_usd": 0.0177,
+        "supplier_page": "https://jlcpcb.com/partdetail/C29936"
+      },
+      {
+        "lcsc": "C12891",
+        "refs": [
+          "C89",
+          "C95"
+        ],
+        "mpn": "CL31A226KAHNNNE",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "1206",
+        "library": "base",
+        "stock": 1789329,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.1161,
+        "unit_price_order_usd": 0.1161,
+        "supplier_page": "https://jlcpcb.com/partdetail/C12891"
+      },
+      {
+        "lcsc": "C1848",
+        "refs": [
+          "C91"
+        ],
+        "mpn": "CL31B105KBHNNNE",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "1206",
+        "library": "base",
+        "stock": 773779,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0622,
+        "unit_price_order_usd": 0.0622,
+        "supplier_page": "https://jlcpcb.com/partdetail/C1848"
+      },
+      {
+        "lcsc": "C21120",
+        "refs": [
+          "C126"
+        ],
+        "mpn": "CL10B224KA8NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0603",
+        "library": "base",
+        "stock": 1013787,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0093,
+        "unit_price_order_usd": 0.0093,
+        "supplier_page": "https://jlcpcb.com/partdetail/C21120"
+      },
+      {
+        "lcsc": "C161115",
+        "refs": [
+          "C128"
+        ],
+        "mpn": "GCJ188R71H104KA12D",
+        "manufacturer": "Murata Electronics",
+        "package": "0603",
+        "library": "expand",
+        "stock": 38343,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0554,
+        "unit_price_order_usd": 0.0554,
+        "supplier_page": "https://jlcpcb.com/partdetail/C161115"
+      },
+      {
+        "lcsc": "C15195",
+        "refs": [
+          "C408"
+        ],
+        "mpn": "CL05B103KB5NNNC",
+        "manufacturer": "Samsung Electro-Mechanics",
+        "package": "0402",
+        "library": "base",
+        "stock": 6163095,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0039,
+        "unit_price_order_usd": 0.0039,
+        "supplier_page": "https://jlcpcb.com/partdetail/C15195"
+      },
+      {
+        "lcsc": "C7519",
+        "refs": [
+          "D4"
+        ],
+        "mpn": "USBLC6-2SC6",
+        "manufacturer": "STMicroelectronics",
+        "package": "SOT-23-6L",
+        "library": "expand",
+        "stock": 34569,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.1799,
+        "unit_price_order_usd": 0.1799,
+        "supplier_page": "https://jlcpcb.com/partdetail/C7519"
+      },
+      {
+        "lcsc": "C83849",
+        "refs": [
+          "D8"
+        ],
+        "mpn": "SMBJ12CA",
+        "manufacturer": "Littelfuse",
+        "package": "DO-214AA",
+        "library": "expand",
+        "stock": 42987,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.1282,
+        "unit_price_order_usd": 0.1282,
+        "supplier_page": "https://jlcpcb.com/partdetail/C83849"
+      },
+      {
+        "lcsc": "C85098",
+        "refs": [
+          "D9"
+        ],
+        "mpn": "B340A-13-F",
+        "manufacturer": "Diodes Incorporated",
+        "package": "SMA(DO-214AC)",
+        "library": "expand",
+        "stock": 80888,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0723,
+        "unit_price_order_usd": 0.0723,
+        "supplier_page": "https://jlcpcb.com/partdetail/C85098"
+      },
+      {
+        "lcsc": "C8591",
+        "refs": [
+          "D120"
+        ],
+        "mpn": "BAT54A",
+        "manufacturer": "Jiangsu Changjing Electronics Technology Co., Ltd.",
+        "package": "SOT-23",
+        "library": "expand",
+        "stock": 17515,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0245,
+        "unit_price_order_usd": 0.0245,
+        "supplier_page": "https://jlcpcb.com/partdetail/C8591"
+      },
+      {
+        "lcsc": "C13612",
+        "refs": [
+          "D121"
+        ],
+        "mpn": "SRV05-4.TCT",
+        "manufacturer": "SEMTECH",
+        "package": "SOT-23-6L",
+        "library": "expand",
+        "stock": 97697,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.1629,
+        "unit_price_order_usd": 0.1629,
+        "supplier_page": "https://jlcpcb.com/partdetail/C13612"
+      },
+      {
+        "lcsc": "C191023",
+        "refs": [
+          "D123"
+        ],
+        "mpn": "1N5819WS",
+        "manufacturer": "Guangdong Hottech",
+        "package": "SOD-323",
+        "library": "base",
+        "stock": 3606527,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0124,
+        "unit_price_order_usd": 0.0124,
+        "supplier_page": "https://jlcpcb.com/partdetail/C191023"
+      },
+      {
+        "lcsc": "C535146",
+        "refs": [
+          "D400",
+          "D401",
+          "D410",
+          "D411",
+          "D420",
+          "D421"
+        ],
+        "mpn": "ESD103-B1-02EL E6327",
+        "manufacturer": "Infineon Technologies",
+        "package": "TSLP-2-20",
+        "library": "expand",
+        "stock": 201,
+        "fitted_5_boards": 30,
+        "minimum_purchase": 1,
+        "order_quantity": 30,
+        "unit_price_fitted_usd": 0.2303,
+        "unit_price_order_usd": 0.2303,
+        "supplier_page": "https://jlcpcb.com/partdetail/C535146"
+      },
+      {
+        "lcsc": "C466970",
+        "refs": [
+          "J1",
+          "J400"
+        ],
+        "mpn": "DB125-3.5-2P-GN-S",
+        "manufacturer": "DORABO",
+        "package": "Plugin,P=3.5mm",
+        "library": "expand",
+        "stock": 35571,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.1833,
+        "unit_price_order_usd": 0.1833,
+        "supplier_page": "https://jlcpcb.com/partdetail/C466970"
+      },
+      {
+        "lcsc": "C165948",
+        "refs": [
+          "J3"
+        ],
+        "mpn": "TYPE-C-31-M-12",
+        "manufacturer": "Korean Hroparts Elec",
+        "package": "SMD",
+        "library": "expand",
+        "stock": 285305,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.1872,
+        "unit_price_order_usd": 0.1872,
+        "supplier_page": "https://jlcpcb.com/partdetail/C165948"
+      },
+      {
+        "lcsc": "C2757925",
+        "refs": [
+          "J9",
+          "J410",
+          "J420"
+        ],
+        "mpn": "DB125-3.5-4P-GN-S",
+        "manufacturer": "DORABO",
+        "package": "Plugin,P=3.5mm",
+        "library": "expand",
+        "stock": 38841,
+        "fitted_5_boards": 15,
+        "minimum_purchase": 1,
+        "order_quantity": 15,
+        "unit_price_fitted_usd": 0.4025,
+        "unit_price_order_usd": 0.4025,
+        "supplier_page": "https://jlcpcb.com/partdetail/C2757925"
+      },
+      {
+        "lcsc": "C52993880",
+        "refs": [
+          "J121"
+        ],
+        "mpn": "DB125-3.5-2P-BK-S",
+        "manufacturer": "DORABO",
+        "package": "Plugin,P=3.5mm",
+        "library": "expand",
+        "stock": 346,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.1977,
+        "unit_price_order_usd": 0.1977,
+        "supplier_page": "https://jlcpcb.com/partdetail/C52993880"
+      },
+      {
+        "lcsc": "C3646874",
+        "refs": [
+          "J122"
+        ],
+        "mpn": "DB125-3.5-5P-GN-S",
+        "manufacturer": "DORABO",
+        "package": "Plugin,P=3.5mm",
+        "library": "expand",
+        "stock": 4169,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.4753,
+        "unit_price_order_usd": 0.4753,
+        "supplier_page": "https://jlcpcb.com/partdetail/C3646874"
+      },
+      {
+        "lcsc": "C164170",
+        "refs": [
+          "J430"
+        ],
+        "mpn": "472192001",
+        "manufacturer": "MOLEX",
+        "package": "SMD",
+        "library": "expand",
+        "stock": 8667,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.7293,
+        "unit_price_order_usd": 0.7293,
+        "supplier_page": "https://jlcpcb.com/partdetail/C164170"
+      },
+      {
+        "lcsc": "C57269",
+        "refs": [
+          "L1"
+        ],
+        "mpn": "SWPA4030S4R7MT",
+        "manufacturer": "Sunlord",
+        "package": "SMD,4x4mm",
+        "library": "expand",
+        "stock": 44452,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0604,
+        "unit_price_order_usd": 0.0604,
+        "supplier_page": "https://jlcpcb.com/partdetail/C57269"
+      },
+      {
+        "lcsc": "C1329837",
+        "refs": [
+          "L400"
+        ],
+        "mpn": "SRP5030T-6R8M",
+        "manufacturer": "BOURNS",
+        "package": "SMD,5.7x5.2mm",
+        "library": "expand",
+        "stock": 1541,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 1.4373,
+        "unit_price_order_usd": 1.4373,
+        "supplier_page": "https://jlcpcb.com/partdetail/C1329837"
+      },
+      {
+        "lcsc": "C84256",
+        "refs": [
+          "LED1"
+        ],
+        "mpn": "NCD0805R1",
+        "manufacturer": "Foshan NationStar Optoelectronics",
+        "package": "0805",
+        "library": "base",
+        "stock": 2608317,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0135,
+        "unit_price_order_usd": 0.0135,
+        "supplier_page": "https://jlcpcb.com/partdetail/C84256"
+      },
+      {
+        "lcsc": "C2296",
+        "refs": [
+          "LED2"
+        ],
+        "mpn": "KT-0805Y",
+        "manufacturer": "Hubei KENTO Elec",
+        "package": "0805",
+        "library": "base",
+        "stock": 643510,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0147,
+        "unit_price_order_usd": 0.0147,
+        "supplier_page": "https://jlcpcb.com/partdetail/C2296"
+      },
+      {
+        "lcsc": "C94598",
+        "refs": [
+          "LS120"
+        ],
+        "mpn": "MLT-5020",
+        "manufacturer": "Jiangsu Huaneng Elec",
+        "package": "SMD,5x5mm",
+        "library": "expand",
+        "stock": 54837,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.4425,
+        "unit_price_order_usd": 0.4425,
+        "supplier_page": "https://jlcpcb.com/partdetail/C94598"
+      },
+      {
+        "lcsc": "C431196",
+        "refs": [
+          "Q120",
+          "Q121"
+        ],
+        "mpn": "AONR21357",
+        "manufacturer": "Alpha & Omega Semicon",
+        "package": "DFN-8(3x3)",
+        "library": "expand",
+        "stock": 51699,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.3548,
+        "unit_price_order_usd": 0.3548,
+        "supplier_page": "https://jlcpcb.com/partdetail/C431196"
+      },
+      {
+        "lcsc": "C20917",
+        "refs": [
+          "Q122",
+          "Q123"
+        ],
+        "mpn": "AO3400A",
+        "manufacturer": "Alpha & Omega Semicon",
+        "package": "SOT-23",
+        "library": "base",
+        "stock": 1119789,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.089,
+        "unit_price_order_usd": 0.089,
+        "supplier_page": "https://jlcpcb.com/partdetail/C20917"
+      },
+      {
+        "lcsc": "C431195",
+        "refs": [
+          "Q124"
+        ],
+        "mpn": "AON7524",
+        "manufacturer": "Alpha & Omega Semicon",
+        "package": "DFN-8(3x3)",
+        "library": "expand",
+        "stock": 27190,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.3704,
+        "unit_price_order_usd": 0.3704,
+        "supplier_page": "https://jlcpcb.com/partdetail/C431195"
+      },
+      {
+        "lcsc": "C25744",
+        "refs": [
+          "R5",
+          "R10",
+          "R11",
+          "R61",
+          "R62",
+          "R63",
+          "R64",
+          "R104",
+          "R121",
+          "R128",
+          "R131",
+          "R154",
+          "R155",
+          "R156",
+          "R157",
+          "R163",
+          "R432"
+        ],
+        "mpn": "0402WGF1002TCE",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0402",
+        "library": "base",
+        "stock": 16883314,
+        "fitted_5_boards": 85,
+        "minimum_purchase": 1,
+        "order_quantity": 85,
+        "unit_price_fitted_usd": 0.0024,
+        "unit_price_order_usd": 0.0024,
+        "supplier_page": "https://jlcpcb.com/partdetail/C25744"
+      },
+      {
+        "lcsc": "C25905",
+        "refs": [
+          "R7",
+          "R8",
+          "R129",
+          "R132",
+          "R173",
+          "R175"
+        ],
+        "mpn": "0402WGF5101TCE",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0402",
+        "library": "base",
+        "stock": 3772562,
+        "fitted_5_boards": 30,
+        "minimum_purchase": 1,
+        "order_quantity": 30,
+        "unit_price_fitted_usd": 0.0023,
+        "unit_price_order_usd": 0.0023,
+        "supplier_page": "https://jlcpcb.com/partdetail/C25905"
+      },
+      {
+        "lcsc": "C11702",
+        "refs": [
+          "R9",
+          "R105",
+          "R122",
+          "R127"
+        ],
+        "mpn": "0402WGF1001TCE",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0402",
+        "library": "base",
+        "stock": 21601379,
+        "fitted_5_boards": 20,
+        "minimum_purchase": 1,
+        "order_quantity": 20,
+        "unit_price_fitted_usd": 0.0013,
+        "unit_price_order_usd": 0.0013,
+        "supplier_page": "https://jlcpcb.com/partdetail/C11702"
+      },
+      {
+        "lcsc": "C25900",
+        "refs": [
+          "R12",
+          "R13"
+        ],
+        "mpn": "0402WGF4701TCE",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0402",
+        "library": "base",
+        "stock": 14898025,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.002,
+        "unit_price_order_usd": 0.002,
+        "supplier_page": "https://jlcpcb.com/partdetail/C25900"
+      },
+      {
+        "lcsc": "C17557",
+        "refs": [
+          "R32",
+          "R33",
+          "R126"
+        ],
+        "mpn": "0805W8F2200T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0805",
+        "library": "base",
+        "stock": 601318,
+        "fitted_5_boards": 15,
+        "minimum_purchase": 1,
+        "order_quantity": 15,
+        "unit_price_fitted_usd": 0.0046,
+        "unit_price_order_usd": 0.0046,
+        "supplier_page": "https://jlcpcb.com/partdetail/C17557"
+      },
+      {
+        "lcsc": "C25741",
+        "refs": [
+          "R60",
+          "R120",
+          "R123"
+        ],
+        "mpn": "0402WGF1003TCE",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0402",
+        "library": "base",
+        "stock": 8353875,
+        "fitted_5_boards": 15,
+        "minimum_purchase": 1,
+        "order_quantity": 15,
+        "unit_price_fitted_usd": 0.0012,
+        "unit_price_order_usd": 0.0012,
+        "supplier_page": "https://jlcpcb.com/partdetail/C25741"
+      },
+      {
+        "lcsc": "C23178",
+        "refs": [
+          "R80",
+          "R165"
+        ],
+        "mpn": "0603WAF4703T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 1044669,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.003,
+        "unit_price_order_usd": 0.003,
+        "supplier_page": "https://jlcpcb.com/partdetail/C23178"
+      },
+      {
+        "lcsc": "C23024",
+        "refs": [
+          "R81"
+        ],
+        "mpn": "0603WAF3003T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 541331,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0038,
+        "unit_price_order_usd": 0.0038,
+        "supplier_page": "https://jlcpcb.com/partdetail/C23024"
+      },
+      {
+        "lcsc": "C4241878",
+        "refs": [
+          "R82"
+        ],
+        "mpn": "MCT0603MD2004BP500",
+        "manufacturer": "Vishay Intertech",
+        "package": "0603",
+        "library": "expand",
+        "stock": 1818,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.1002,
+        "unit_price_order_usd": 0.1002,
+        "supplier_page": "https://jlcpcb.com/partdetail/C4241878"
+      },
+      {
+        "lcsc": "C705755",
+        "refs": [
+          "R83"
+        ],
+        "mpn": "RT0603BRD07280KL",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 5563,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0566,
+        "unit_price_order_usd": 0.0566,
+        "supplier_page": "https://jlcpcb.com/partdetail/C705755"
+      },
+      {
+        "lcsc": "C861551",
+        "refs": [
+          "R84"
+        ],
+        "mpn": "RT0603BRD07750RL",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 1648,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0438,
+        "unit_price_order_usd": 0.0438,
+        "supplier_page": "https://jlcpcb.com/partdetail/C861551"
+      },
+      {
+        "lcsc": "C137691",
+        "refs": [
+          "R85"
+        ],
+        "mpn": "RC0603FR-0766K5L",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 17902,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0032,
+        "unit_price_order_usd": 0.0032,
+        "supplier_page": "https://jlcpcb.com/partdetail/C137691"
+      },
+      {
+        "lcsc": "C861568",
+        "refs": [
+          "R86"
+        ],
+        "mpn": "RT0603BRD0780K6L",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 4781,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0413,
+        "unit_price_order_usd": 0.0413,
+        "supplier_page": "https://jlcpcb.com/partdetail/C861568"
+      },
+      {
+        "lcsc": "C25819",
+        "refs": [
+          "R87"
+        ],
+        "mpn": "0603WAF4702T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 3137399,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0019,
+        "unit_price_order_usd": 0.0019,
+        "supplier_page": "https://jlcpcb.com/partdetail/C25819"
+      },
+      {
+        "lcsc": "C25804",
+        "refs": [
+          "R88",
+          "R89",
+          "R90",
+          "R91",
+          "R102",
+          "R167",
+          "R460",
+          "R461",
+          "R462",
+          "R463",
+          "R464"
+        ],
+        "mpn": "0603WAF1002T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 40549015,
+        "fitted_5_boards": 55,
+        "minimum_purchase": 1,
+        "order_quantity": 55,
+        "unit_price_fitted_usd": 0.0022,
+        "unit_price_order_usd": 0.0022,
+        "supplier_page": "https://jlcpcb.com/partdetail/C25804"
+      },
+      {
+        "lcsc": "C22978",
+        "refs": [
+          "R92"
+        ],
+        "mpn": "0603WAF3301T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 5237280,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0022,
+        "unit_price_order_usd": 0.0022,
+        "supplier_page": "https://jlcpcb.com/partdetail/C22978"
+      },
+      {
+        "lcsc": "C21190",
+        "refs": [
+          "R100",
+          "R101",
+          "R103",
+          "R110",
+          "R150",
+          "R151",
+          "R152",
+          "R153",
+          "R440",
+          "R441",
+          "R450",
+          "R451"
+        ],
+        "mpn": "0603WAF1001T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 31578411,
+        "fitted_5_boards": 60,
+        "minimum_purchase": 1,
+        "order_quantity": 60,
+        "unit_price_fitted_usd": 0.0017,
+        "unit_price_order_usd": 0.0017,
+        "supplier_page": "https://jlcpcb.com/partdetail/C21190"
+      },
+      {
+        "lcsc": "C4109",
+        "refs": [
+          "R130",
+          "R133",
+          "R178",
+          "R180"
+        ],
+        "mpn": "0402WGF2001TCE",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0402",
+        "library": "base",
+        "stock": 10010430,
+        "fitted_5_boards": 20,
+        "minimum_purchase": 1,
+        "order_quantity": 20,
+        "unit_price_fitted_usd": 0.0026,
+        "unit_price_order_usd": 0.0026,
+        "supplier_page": "https://jlcpcb.com/partdetail/C4109"
+      },
+      {
+        "lcsc": "C3013496",
+        "refs": [
+          "R134"
+        ],
+        "mpn": "CRM2512-FX-2R00ELF",
+        "manufacturer": "BOURNS",
+        "package": "2512",
+        "library": "expand",
+        "stock": 2222,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.5572,
+        "unit_price_order_usd": 0.5572,
+        "supplier_page": "https://jlcpcb.com/partdetail/C3013496"
+      },
+      {
+        "lcsc": "C17513",
+        "refs": [
+          "R162"
+        ],
+        "mpn": "0805W8F1001T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0805",
+        "library": "base",
+        "stock": 42205780,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0035,
+        "unit_price_order_usd": 0.0035,
+        "supplier_page": "https://jlcpcb.com/partdetail/C17513"
+      },
+      {
+        "lcsc": "C22939",
+        "refs": [
+          "R164"
+        ],
+        "mpn": "0603WAF220KT5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 284079,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0034,
+        "unit_price_order_usd": 0.0034,
+        "supplier_page": "https://jlcpcb.com/partdetail/C22939"
+      },
+      {
+        "lcsc": "C168925",
+        "refs": [
+          "R166"
+        ],
+        "mpn": "25121WF360LT4E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "2512",
+        "library": "expand",
+        "stock": 1579,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0386,
+        "unit_price_order_usd": 0.0386,
+        "supplier_page": "https://jlcpcb.com/partdetail/C168925"
+      },
+      {
+        "lcsc": "C705784",
+        "refs": [
+          "R400"
+        ],
+        "mpn": "RT0603BRD0756K2L",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 8005,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0354,
+        "unit_price_order_usd": 0.0354,
+        "supplier_page": "https://jlcpcb.com/partdetail/C705784"
+      },
+      {
+        "lcsc": "C95204",
+        "refs": [
+          "R401",
+          "R403"
+        ],
+        "mpn": "RT0603BRD0710KL",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 1833948,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.0302,
+        "unit_price_order_usd": 0.0302,
+        "supplier_page": "https://jlcpcb.com/partdetail/C95204"
+      },
+      {
+        "lcsc": "C705780",
+        "refs": [
+          "R402"
+        ],
+        "mpn": "RT0603BRD0749K9L",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 203883,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0312,
+        "unit_price_order_usd": 0.0312,
+        "supplier_page": "https://jlcpcb.com/partdetail/C705780"
+      },
+      {
+        "lcsc": "C22975",
+        "refs": [
+          "R404"
+        ],
+        "mpn": "0603WAF2001T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 9921426,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0024,
+        "unit_price_order_usd": 0.0024,
+        "supplier_page": "https://jlcpcb.com/partdetail/C22975"
+      },
+      {
+        "lcsc": "C23253",
+        "refs": [
+          "R405"
+        ],
+        "mpn": "0603WAF8200T5E",
+        "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+        "package": "0603",
+        "library": "base",
+        "stock": 810369,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0015,
+        "unit_price_order_usd": 0.0015,
+        "supplier_page": "https://jlcpcb.com/partdetail/C23253"
+      },
+      {
+        "lcsc": "C185349",
+        "refs": [
+          "R430"
+        ],
+        "mpn": "RC0603FR-0722K6L",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 17,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 3610,
+        "order_quantity": 3610,
+        "unit_price_fitted_usd": 0.0028,
+        "unit_price_order_usd": 0.0025,
+        "supplier_page": "https://jlcpcb.com/partdetail/C185349"
+      },
+      {
+        "lcsc": "C14675",
+        "refs": [
+          "R431"
+        ],
+        "mpn": "RC0603FR-07100KL",
+        "manufacturer": "YAGEO",
+        "package": "0603",
+        "library": "expand",
+        "stock": 8768120,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.0022,
+        "unit_price_order_usd": 0.0022,
+        "supplier_page": "https://jlcpcb.com/partdetail/C14675"
+      },
+      {
+        "lcsc": "C5271084",
+        "refs": [
+          "U1"
+        ],
+        "mpn": "STM32H743VIT6TR",
+        "manufacturer": "STMicroelectronics",
+        "package": "LQFP-100(14x14)",
+        "library": "expand",
+        "stock": 817,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 12.5941,
+        "unit_price_order_usd": 12.5941,
+        "supplier_page": "https://jlcpcb.com/partdetail/C5271084"
+      },
+      {
+        "lcsc": "C780769",
+        "refs": [
+          "U2"
+        ],
+        "mpn": "AP63203WU-7",
+        "manufacturer": "Diodes Incorporated",
+        "package": "TSOT-23-6",
+        "library": "expand",
+        "stock": 4205,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 1.2259,
+        "unit_price_order_usd": 1.2259,
+        "supplier_page": "https://jlcpcb.com/partdetail/C780769"
+      },
+      {
+        "lcsc": "C97521",
+        "refs": [
+          "U3"
+        ],
+        "mpn": "W25Q128JVSIQ",
+        "manufacturer": "Winbond Elec",
+        "package": "SOIC-8-208mil",
+        "library": "base",
+        "stock": 73842,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 2.586,
+        "unit_price_order_usd": 2.586,
+        "supplier_page": "https://jlcpcb.com/partdetail/C97521"
+      },
+      {
+        "lcsc": "C26633007",
+        "refs": [
+          "U4"
+        ],
+        "mpn": "LSM6DSV320XTR",
+        "manufacturer": "STMicroelectronics",
+        "package": "LGA-14L(2.5x3)",
+        "library": "expand",
+        "stock": 0,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 12.3925,
+        "unit_price_order_usd": 12.3925,
+        "supplier_page": "https://jlcpcb.com/partdetail/C26633007"
+      },
+      {
+        "lcsc": "C15639",
+        "refs": [
+          "U5"
+        ],
+        "mpn": "MS561101BA03-50",
+        "manufacturer": "TE Connectivity",
+        "package": "QFN-8(3x5)",
+        "library": "expand",
+        "stock": 975,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 6.4912,
+        "unit_price_order_usd": 6.4912,
+        "supplier_page": "https://jlcpcb.com/partdetail/C15639"
+      },
+      {
+        "lcsc": "C3662793",
+        "refs": [
+          "U9"
+        ],
+        "mpn": "TPS259470LRPWR",
+        "manufacturer": "Texas Instruments",
+        "package": "VQFN-10-HR(2x2)",
+        "library": "expand",
+        "stock": 94,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 7,
+        "order_quantity": 7,
+        "unit_price_fitted_usd": 1.3455,
+        "unit_price_order_usd": 1.3455,
+        "supplier_page": "https://jlcpcb.com/partdetail/C3662793"
+      },
+      {
+        "lcsc": "C55266",
+        "refs": [
+          "U10",
+          "U402"
+        ],
+        "mpn": "TPS2553DBVR",
+        "manufacturer": "Texas Instruments",
+        "package": "SOT-23-6",
+        "library": "expand",
+        "stock": 47173,
+        "fitted_5_boards": 10,
+        "minimum_purchase": 1,
+        "order_quantity": 10,
+        "unit_price_fitted_usd": 0.4491,
+        "unit_price_order_usd": 0.4491,
+        "supplier_page": "https://jlcpcb.com/partdetail/C55266"
+      },
+      {
+        "lcsc": "C485916",
+        "refs": [
+          "U11"
+        ],
+        "mpn": "TPS2121RUXR",
+        "manufacturer": "Texas Instruments",
+        "package": "VQFN-HR-12(2x2.5)",
+        "library": "expand",
+        "stock": 24570,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.9194,
+        "unit_price_order_usd": 0.9194,
+        "supplier_page": "https://jlcpcb.com/partdetail/C485916"
+      },
+      {
+        "lcsc": "C5186957",
+        "refs": [
+          "U12"
+        ],
+        "mpn": "TXU0202DCUR",
+        "manufacturer": "Texas Instruments",
+        "package": "VSSOP-8",
+        "library": "expand",
+        "stock": 14579,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.862,
+        "unit_price_order_usd": 0.862,
+        "supplier_page": "https://jlcpcb.com/partdetail/C5186957"
+      },
+      {
+        "lcsc": "C89347",
+        "refs": [
+          "U13"
+        ],
+        "mpn": "TPS70933DBVR",
+        "manufacturer": "Texas Instruments",
+        "package": "SOT-23-5",
+        "library": "expand",
+        "stock": 7493,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.3368,
+        "unit_price_order_usd": 0.3368,
+        "supplier_page": "https://jlcpcb.com/partdetail/C89347"
+      },
+      {
+        "lcsc": "C2071044",
+        "refs": [
+          "U400"
+        ],
+        "mpn": "AP63201WU-7",
+        "manufacturer": "Diodes Incorporated",
+        "package": "TSOT-23-6",
+        "library": "expand",
+        "stock": 5803,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 1.2242,
+        "unit_price_order_usd": 1.2242,
+        "supplier_page": "https://jlcpcb.com/partdetail/C2071044"
+      },
+      {
+        "lcsc": "C2878140",
+        "refs": [
+          "U401"
+        ],
+        "mpn": "TPS7A9101DSKR",
+        "manufacturer": "Texas Instruments",
+        "package": "SON-10-EP(2.5x2.5)",
+        "library": "expand",
+        "stock": 5509,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.8047,
+        "unit_price_order_usd": 0.8047,
+        "supplier_page": "https://jlcpcb.com/partdetail/C2878140"
+      },
+      {
+        "lcsc": "C1985619",
+        "refs": [
+          "Y1"
+        ],
+        "mpn": "NX3225GA-25.000M-STD-CRG-2",
+        "manufacturer": "NDK",
+        "package": "SMD3225-4P",
+        "library": "expand",
+        "stock": 5145,
+        "fitted_5_boards": 5,
+        "minimum_purchase": 1,
+        "order_quantity": 5,
+        "unit_price_fitted_usd": 0.3911,
+        "unit_price_order_usd": 0.3911,
+        "supplier_page": "https://jlcpcb.com/partdetail/C1985619"
+      }
+    ]
+  },
+  "fresh_official_library": {
+    "source": "JLCEDA/EasyEDA Official Library",
+    "homepage_links": [
+      "https://lceda.cn/",
+      "https://easyeda.com/"
+    ],
+    "started_utc": "2026-10-30T08:47:10.379867+00:00",
+    "finished_utc": "2026-10-30T08:47:16.845799+00:00",
+    "codes": [
+      "C466970",
+      "C52993880",
+      "C2757925",
+      "C3646874",
+      "C164170",
+      "C431196",
+      "C431195",
+      "C2878140",
+      "C3662793",
+      "C5186957",
+      "C46550466",
+      "C3013496",
+      "C189932",
+      "C21190"
+    ],
+    "exact_cached_maps_unchanged": 12,
+    "C21190_now_available": true,
+    "no_canonical_cache_mutation": true
+  },
+  "authority_scope": {
+    "agent_decision_ids": [
+      "D-R1-01",
+      "D-R1-02",
+      "D-R1-03",
+      "D-R1-04",
+      "D-R1-05",
+      "D-R1-06",
+      "D-R1-07",
+      "D-R2-01",
+      "D-R2-02",
+      "D-R2-03",
+      "D-R2-04",
+      "D-R2-05",
+      "D-R2-06",
+      "D-R2-07",
+      "D-R2-08",
+      "D-R2-09",
+      "D-R2-10",
+      "D-R2-11",
+      "D-R2-12",
+      "D-R2-13",
+      "D-R2-14",
+      "D-R2-15",
+      "D-R2-16",
+      "D-R3-01",
+      "D-R3-02",
+      "D-R3-03",
+      "D-R3-04",
+      "D-R3-05",
+      "D-R3-06",
+      "D-R3-07",
+      "D-R3-08",
+      "D-R3-09",
+      "D-R3-10",
+      "D-R3-11",
+      "D-R3-12",
+      "D-R3-13",
+      "D-R4-01",
+      "D-R4-02",
+      "D-R4-03",
+      "D-R4-04",
+      "D-R5-01",
+      "D-R5-02",
+      "D-R5-03",
+      "D-R5-04",
+      "D-R6-01",
+      "D-R6-02",
+      "D-R6-03",
+      "D-R7-01",
+      "D-R7-02",
+      "D-R8-01",
+      "D-R8-02",
+      "D-R8-03",
+      "D-OA-01",
+      "D-OA-02",
+      "D-OA-03",
+      "D-OA-04",
+      "D-OA-05",
+      "D-OA-06",
+      "D-OA-07",
+      "D-OA-08",
+      "D-OA-09",
+      "D-SS-01",
+      "D-SS-02",
+      "D-SS-03",
+      "D-AUD-01",
+      "D-AUD-02",
+      "D-AUD-03",
+      "D-AUD-04",
+      "D-AUD-05",
+      "D-AUD-06",
+      "D-AUD-07",
+      "D-AUD-08",
+      "D-AUD-09",
+      "D-AUD-10",
+      "D-GAP-01",
+      "D-GAP-02",
+      "D-GAP-03",
+      "D-GAP-04",
+      "D-GAP-05",
+      "D-AUD-03a",
+      "D-AUD-03b",
+      "D-SS-04",
+      "D-GAP-01a",
+      "D-GAP-02a",
+      "D-AUD-03c",
+      "D-GAP-02b",
+      "D-AUD-01a",
+      "D-R9-01",
+      "D-R9-02",
+      "D-R9-03",
+      "D-R9-04",
+      "D-R9-05",
+      "D-R9-06",
+      "D-R10-01",
+      "D-R10-02",
+      "D-R10-03",
+      "D-CIR-01",
+      "D-CIR-02",
+      "D-CIR-03",
+      "D-CIR-04",
+      "D-AVA-01",
+      "D-AVA-02",
+      "D-R11-01",
+      "D-R11-02",
+      "D-R11-03",
+      "D-R11-04",
+      "D-R11-05",
+      "D-R12-01",
+      "D-R12-02",
+      "D-R12-03"
+    ],
+    "owner_mandate_ids": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16"
+    ],
+    "scope": "Current amendments apply; historical GH/switch/ARM-link/three-bank and old review claims remain historical. No AGENTS section2 change or implied owner acceptance."
+  },
+  "checks_executed": [
+    {
+      "check": "Target SHA-256 before and after",
+      "result": "Both equal the exact requested PCB hash; no CAD/native save, CLI, build, full check, GUI or git action used."
+    },
+    {
+      "check": "Mandatory requirements/authority reading",
+      "result": "AGENTS read first; packets and named mandatory sources read, including later supersession and all110 D IDs/22 owner mandates by applicability. This parts lens does not replace other full-review lenses."
+    },
+    {
+      "check": "Independent native PCB/XML/BOM/CPL inventory",
+      "result": "209 native footprints;199 fitted;82 BOM codes/199 Qty; native values, footprint IDs, LCSC/Manufacturer/Manufacturer Part agree with XML.664 native pad instances include648 numbered/netted instances compared with XML and16 unnamed paste/mechanical pads; no compared net mismatch, contradictory supplier field, omission or duplicate."
+    },
+    {
+      "check": "Independent local-library comparison",
+      "result": "209 footprints compared for numbered pad shapes, local centres, dimensions and drills; no mismatch. Custom primitive geometry is separately examined for critical new lands rather than certified by anchor size."
+    },
+    {
+      "check": "Independent supplier-pad CPL reconstruction",
+      "result": "Current cache:187 reconstructed,66 Top/121 Bottom;12 nonpolar C21190 placement-only rows,1 Top/11 Bottom. Fresh C21190 map supplements only ignored review data: all199 rows reconstructed,67 Top/132 Bottom;zero errors;maximum residual0.491288mm R134."
+    },
+    {
+      "check": "Fresh public JLC exact-code identity/stock/price lookup",
+      "result": "82/82 exact MPNs agree;0 unknown.2026-10-30T08:38:42.799722Z through08:38:52.797802Z.Only R430/U4 fail order-quantity stock. No order/quote."
+    },
+    {
+      "check": "Fresh official-library refresh",
+      "result": "14 codes fetched2026-10-30T08:47:10.379867Z through08:47:16.845799Z;12 cached exact maps unchanged;C189932 confirms L400 proxy map;C21190 now independently available. Source: JLCEDA/EasyEDA Official Library, https://lceda.cn/ and https://easyeda.com/."
+    },
+    {
+      "check": "Maker visual/dimensional review",
+      "result": "Complete relevant pages rendered/inspected for DORABO T0-1, Molex SD-47219-001G, Bourns SRP5030T p1 and AOS PO-00047I. Bourns CRM and TI TPS7A91/TXU0202 primary documents also checked for retained land/pin/process facts."
+    },
+    {
+      "check": "Seven DB125 native lands/pins/models",
+      "result": "23 contacts at3.5mm pitch,1.9mm copper/1.3mm drill;correct roles/poses/colour identities;all five terminal GND contacts explicit thermal=1. Decoded max body unions agree within0.00000149mm;all wire rooms5.003011866mm;adjacent4P nominal maximum-union gap0.480mm."
+    },
+    {
+      "check": "Molex native land/SPI/paste",
+      "result": "All8 signal lands and4 shell lands agree with maker drawing, mirrored for bottom;correct SPI pin order, five10k pulls,100nF/22uF allocation and12 full paste-layer apertures. Closed-body width defect separately reported; lid/card/retention/latency unqualified."
+    },
+    {
+      "check": "Manufacturing geometry",
+      "result": "Native shape/hole collision walk:0 drilled-hole intersections with directly pasted SMD lands;U401 EP separately has exactly twoGND0.5/0.3mm vias at27.3/27.9,13.6.199 model references are existing relative KIPRJMOD/kilib paths with positive finite scales. Retired connectors/port cells/ADC tails and servo motor supply parts absent."
+    },
+    {
+      "check": "New microSD finding tolerance/clearance screen",
+      "result": "Maker general±0.15mm and explicit PCB±0.05mm datums stacked independently. Diagnostic15.05mm-wide union, y[-9.70,+6.00],z[0,2.10] has0 bottom stroked-courtyard-AABB overlaps;nearestC230.575mm, R460/R4610.745mm. Specific union/bore radius check leaves15.210799mm radial clearance; this is CAD/Inferences only, not full DRC/fit or physical qualification."
+    }
+  ],
+  "coverage_limits": [
+    "No physical/firmware/flight, first-article solder/retention, actual SD-card current/busy/power-loss, harness/screwdriver/bore/sled access, coating, hot-plug endurance or thermal qualification.",
+    "No native CLI, new full DRC/ERC, full check.sh, canonical build or fabrication regeneration was run by this lens.",
+    "Supplier stock and price are public snapshots, not reservations, quotes or assembler process acceptance. Fresh library geometry is not a factory placement preview.",
+    "Supplier-pad reconstruction checks position/numbering and documented residual bounds; maker physical lands remain the authority. L400 remains a proxy-map part; R134 matches its actual maker land despite a large supplier-centre residual.",
+    "Molex official local download timed out; the complete original-identified maker drawing was visually inspected through the named mirror. The official maker URL and product page were also opened. ST LSM6DSV320X web extraction exceeded tool size limit; no claim of re-reading its complete datasheet is made.",
+    "No peer current-round13 reports read; only assigned report files and ignored temporary probes written. Existing canonical CAD/docs/caches/CPL remain untouched."
+  ],
+  "sources_read_sha256": {
+    "AGENTS.md": "dd5d1ddb06f5630000573389026ab6007f88bc250891722f6d019f0e211d823b",
+    ".supervisor/r10_review_packet.md": "70c48551c6736fa21890cb216a51fb24debec079bc9c6f527e748b7ff2321535",
+    ".supervisor/r13_target_packet.md": "21fca9a9a3a900fbf44f8da14632594913eadd781aedbbbdf5399f8075e66119",
+    "docs/REQUIREMENTS.md": "2495315d16e65fa2af5db9882bf6cc458ab30139be6773e38cf20ef1f561e25c",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "6104d47cb76dc7d7368f0eb138de0e51ba13d64de22d602acc747696db65e4b9",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "183694ae1bc2a0026cdbb8d185f1c971fe7e1639405d7d0a43ed7d3e00596da1",
+    "docs/M3_R10.md": "02d2ee401d1de86e549790b9068cd35559630a3724bb6e391bbce514bbe35ccb",
+    "docs/R10_VALIDATION.md": "636f7289db3abb76c30ce46503d3b4c7b3e8481807d9f0079ed6c5396bcd642f",
+    "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+    "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": "6236254c8e1276d1b65b9177fffede3526632cff6f71c2ccb8b4d53ace8924c7",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "55c1b56fba99cb9c2908022b373cecd6e64f492608e26b1ea6f987fdff732868",
+    "docs/ORDERING.md": "f3605b3876653370eaad5ef70a6e00a50a949cd0b7bd66d1e93e96268ae5842f"
+  },
+  "primary_sources": {
+    "DORABO_T0_1": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+    "Molex_product": "https://www.molex.com/en-us/products/part-detail/472192001",
+    "Molex_SD_47219_001G": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf",
+    "Bourns_SRP5030T": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+    "Bourns_CRM": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+    "AOS_land_PO_00047I": "https://www.aosmd.com/sites/default/files/res/packaging_information/DFN3x3A_8L_EP1_P.pdf",
+    "AOS_AONR21357": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+    "AOS_AON7524": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+    "TI_TPS7A91": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+    "TI_TXU0202": "https://www.ti.com/lit/ds/symlink/txu0202.pdf",
+    "C84_exact_supplier_sheet": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf"
+  },
+  "unverified_obligations_not_new_findings": [
+    "R43017 stock<3610 minimum;U40<5;U9 minimum7 for5 fitted;current minimum-purchase cost remains above84.41. Resolve supply/consignment, obtain complete process/panel quote and owner acceptance, refresh within24h of order.",
+    "C84 MA25V470M8x10: derived land and no supplier reflow/manual profile; keep required-fitted but fit manually after both reflows under validated operation, check polarity/height/capacitance/ESR.",
+    "U401 two thermal vias need resin-filled/copper-capped planarVIPPO; CAD cannot establish the process or thermal coefficient.",
+    "Standard bottom-first/top-last,no-clean, U5 two-reflow acceptance,0.10mm preferred stencil,23 terminal THT contacts and first-article hole fill/ordinary via covering remain assembler obligations.",
+    "All seven terminals need verified28-16AWG entries,staking,externally supported wires,backing during tightening and physical retention/access checks.",
+    "Molex closed lid/card fit is separate from opening travel; unbolt/remove unpowered PCB from a continuous sled or qualify a window. No selected-card flight qualification exists."
+  ],
+  "preserved_ignored_evidence": [
+    {
+      "path": ".supervisor/r13_parts_supplier_raw.json",
+      "sha256": "b925f9fb991c9aac14cd3dfd92f4bd0cee263043398dfd8411e0afdf0c330357",
+      "bytes": 537805
+    },
+    {
+      "path": ".supervisor/r13_parts_fresh_pads.json",
+      "sha256": "4875a5247e3b7dbc59c22ca192c537630f165458f9d6a38e460973ad362f4323",
+      "bytes": 84716
+    },
+    {
+      "path": ".supervisor/r13_parts_sd_bounds.json",
+      "sha256": "e092a433fefcfb23dbacdc2ecde2c9fd536220364c298a10f8531d06fc86c4f6",
+      "bytes": 3417
+    },
+    {
+      "path": ".supervisor/r13_parts_pdf/molex.pdf",
+      "sha256": "793d191c35764f9e0dbde0d95a19418da8016b442c4b2716e787f808011faa1e",
+      "bytes": 112772
+    },
+    {
+      "path": ".supervisor/r13_parts_pdf/molex.png",
+      "sha256": "33b470839a01f07d94184527c922abde32c4015eb81f6ee60a00c1d8bc2aad53",
+      "bytes": 408707
+    },
+    {
+      "path": ".supervisor/r13_parts_pdf/molex_detail.png",
+      "sha256": "a9b0afe588b007c3a5b45360790158c7059ea2d2cb0c4818119456135b916a35",
+      "bytes": 67083
+    }
+  ],
+  "probe_execution_notes": [
+    "Initial native extraction attempts encountered unsupported API method/UTF8 JSON conversions and were corrected before the reported final successful run. The supplier helper tuple order was corrected against its source; prices and aggregate demand were recomputed from the preserved exact raw responses.",
+    "Shapely was unavailable under the native interpreter, so the final manufacturing drill/land check uses KiCad native polygon collision without installing a package. A native via-width getter warning was eliminated by providing the explicit layer and rerunning successfully.",
+    "Nonfatal wx initialization diagnostic was printed by native read-only loads. No CAD Save/SaveBoard was called.",
+    "EasyEDA.com direct retrieval returned403; the official lceda.cn endpoint succeeded for all14 requested codes. No fresh data was written into a canonical cache."
+  ]
+}

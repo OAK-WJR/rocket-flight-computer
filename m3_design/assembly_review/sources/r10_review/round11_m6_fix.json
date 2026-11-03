@@ -1,0 +1,1420 @@
+{
+  "scope": "temporary generated-copy implementation receipt; not a canonical full build/release",
+  "baseline_board_sha256": "419a8f49f39ea748a1622ecb5858ba060d1eb2fac7df7e3cca37a72dc6d8fd15",
+  "prototype_board_sha256": "6b6589254b879dfa66760c550c63b94358ff43b6bcd22057366779b1c7d4d6e6",
+  "pre_post_board_sha256": "c2974ddfaedffdcb60c53f521fb924d06e221a04432250de07e5c5211dbb3bb4",
+  "fixed_copper_zone_pad_pose_digest": "c198efe388d556984cdf3cfe80183eb271ddb7ccc6dac92f16a9d326ab2dc14c",
+  "all_209_poses_match_current_table": true,
+  "all_tracks_vias_match_current_dry_generators": true,
+  "track_segments": 973,
+  "vias": 295,
+  "source_sha256": {
+    "m3_design/r10_place.tsv": "53e2c1c7275039ca461f182f4b917cfccaa4ba7594130f41be381f138eaf4441",
+    "m3_design/r10_fanout.tsv": "6997c2b9ac393cd182a2a02992afd64d667cfdabffbc862e4718e8b174c5573f",
+    "m3_design/r10_route_core.py": "7fb5dbc18636089e7502cd1c58b33e8c84a877c25a657c1ebbced47261533b1a",
+    "m3_design/r10_route_power.py": "47b09de152993cb694578fa947043db895cc1290591e619599db07684529cff8",
+    "m3_design/r10_route_signals.py": "fc70710556321958d198c88af80ac6405ed16fcffa59e1fbe65c9a3ed9e27d48",
+    "m3_design/r10_route_ground.py": "01ed1e24283f5b355a38b09c095ffbbd8877ff68174648ffaa53b4633463cb3b",
+    "m3_design/r10_route.py": "9a6c9594902fa0207aa92694ff8799b3d40dedbb245c4067f49a81f794b96a4a",
+    "m3_design/r10_post.py": "c084a24768c59949790d65768e654f2737aee58a74ff141a1aa9b4fc569bdbb0"
+  },
+  "poses": {
+    "C411": {
+      "x_mm": 34.2,
+      "y_mm": 22.75,
+      "rotation_deg": 90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.855,
+        "J410.1"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.855,
+        "J410.1"
+      ]
+    },
+    "C421": {
+      "x_mm": 33.8,
+      "y_mm": 36.75,
+      "rotation_deg": 180.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.605,
+        "J420.1"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.605,
+        "J420.1"
+      ]
+    },
+    "C431": {
+      "x_mm": 39.3,
+      "y_mm": 57.75,
+      "rotation_deg": 90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.805,
+        "J9.1"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.805,
+        "J9.1"
+      ]
+    },
+    "C91": {
+      "x_mm": 34.95,
+      "y_mm": 53.9,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.555,
+        "J9.1"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.555,
+        "J9.1"
+      ]
+    },
+    "C92": {
+      "x_mm": 32.35,
+      "y_mm": 52.5,
+      "rotation_deg": 0.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        3.955,
+        "J9.1"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        3.955,
+        "J9.1"
+      ]
+    },
+    "D400": {
+      "x_mm": 35.75,
+      "y_mm": 43.7,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.586,
+        "J9.4"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.586,
+        "J9.4"
+      ]
+    },
+    "D401": {
+      "x_mm": 35.75,
+      "y_mm": 47.2,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.586,
+        "J9.3"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.586,
+        "J9.3"
+      ]
+    },
+    "D410": {
+      "x_mm": 35.75,
+      "y_mm": 12.3,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.586,
+        "J410.3"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.586,
+        "J410.3"
+      ]
+    },
+    "D411": {
+      "x_mm": 35.75,
+      "y_mm": 8.7,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.62,
+        "J410.4"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.62,
+        "J410.4"
+      ]
+    },
+    "D420": {
+      "x_mm": 35.75,
+      "y_mm": 31.2,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.586,
+        "J420.3"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.586,
+        "J420.3"
+      ]
+    },
+    "D421": {
+      "x_mm": 35.75,
+      "y_mm": 27.7,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.586,
+        "J420.4"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.586,
+        "J420.4"
+      ]
+    },
+    "R102": {
+      "x_mm": 35.4,
+      "y_mm": 39.7,
+      "rotation_deg": 0.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.561,
+        "J9.4"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.561,
+        "J9.4"
+      ]
+    },
+    "R13": {
+      "x_mm": 10.25,
+      "y_mm": 52.55,
+      "rotation_deg": -90.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.58,
+        "J121.1"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.58,
+        "J121.1"
+      ]
+    },
+    "R150": {
+      "x_mm": 34.6,
+      "y_mm": 75.9,
+      "rotation_deg": 0.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.581,
+        "J122.2"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.581,
+        "J122.2"
+      ]
+    },
+    "R151": {
+      "x_mm": 34.7,
+      "y_mm": 72.77,
+      "rotation_deg": 0.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.536,
+        "J122.3"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.536,
+        "J122.3"
+      ]
+    },
+    "R152": {
+      "x_mm": 34.7,
+      "y_mm": 70.23,
+      "rotation_deg": 0.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.536,
+        "J122.3"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.536,
+        "J122.3"
+      ]
+    },
+    "R153": {
+      "x_mm": 34.6,
+      "y_mm": 68.0,
+      "rotation_deg": 0.0,
+      "side": "B",
+      "fresh_load_M6_gap_mm": [
+        1.575,
+        "J122.4"
+      ],
+      "built_courtyard_M6_gap_mm": [
+        1.575,
+        "J122.4"
+      ]
+    }
+  },
+  "global_built_courtyard_M6_minimum": [
+    1.51,
+    "C83",
+    "J3.4"
+  ],
+  "C91_U13_input": {
+    "pad_distance_mm": 4.0921418597111225,
+    "direct_copper_route_mm": 5.035660171779822,
+    "supply_width_mm": 0.4,
+    "conservative_C91_C92_courtyard_envelope_gap_mm": 0.01,
+    "conservative_C91_U13_courtyard_envelope_gap_mm": 0.035,
+    "conservative_C91_J9_1_courtyard_envelope_gap_mm": 1.505,
+    "C91_C92_polygon_collision_gap_mm": 0.11,
+    "C91_U13_polygon_collision_gap_mm": 0.135
+  },
+  "native_DRC": {
+    "$schema": "https://schemas.kicad.org/drc.v1.json",
+    "coordinate_units": "mm",
+    "date": "2026-10-29T21:57:00",
+    "ignored_checks": [],
+    "included_severities": [
+      "error",
+      "warning",
+      "exclusion"
+    ],
+    "kicad_version": "10.0.7",
+    "schematic_parity": [],
+    "source": "prototype/m3.kicad_pcb",
+    "unconnected_items": [],
+    "violations": []
+  },
+  "focused": {
+    "profile": "r10",
+    "stage": "full",
+    "complete": false,
+    "ok": true,
+    "rules": {
+      "M-5": {
+        "title": "fit (profile r10)",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "width_mm": 46.0,
+          "length_mm": 90.0,
+          "supports": [
+            [
+              3.7,
+              86.0
+            ],
+            [
+              4.0,
+              4.0
+            ],
+            [
+              4.0,
+              44.3
+            ],
+            [
+              42.0,
+              4.0
+            ],
+            [
+              42.0,
+              86.0
+            ]
+          ],
+          "nearest_support": [
+            4.536176804314399,
+            "C32.2",
+            [
+              4.0,
+              44.3
+            ]
+          ],
+          "nearest_top_support": [
+            3.807887,
+            "LED2.2 exposed top pad",
+            [
+              4.0,
+              44.3
+            ]
+          ]
+        }
+      },
+      "M-6": {
+        "title": "bottom keep-outs",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "supports": [
+            [
+              3.7,
+              86.0
+            ],
+            [
+              4.0,
+              4.0
+            ],
+            [
+              4.0,
+              44.3
+            ],
+            [
+              42.0,
+              4.0
+            ],
+            [
+              42.0,
+              86.0
+            ]
+          ]
+        }
+      },
+      "M-7": {
+        "title": "IMU and MEMS",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "imu_rotation": {
+            "revision": "M3-ASSY-R10",
+            "required": 180.0,
+            "axis_map": "R9 D-S7-06 axis map: roll = -gyro_Y"
+          },
+          "imu_lever_arm_mm": 6.0,
+          "U4": {
+            "body": [
+              15.355,
+              44.505,
+              18.645,
+              47.295
+            ],
+            "interior": [
+              16.078,
+              45.227,
+              17.922,
+              46.572
+            ]
+          },
+          "U5": {
+            "body": [
+              8.055,
+              47.005,
+              13.145,
+              51.195
+            ],
+            "interior": [
+              9.02,
+              48.55,
+              12.18,
+              49.65
+            ]
+          },
+          "imu_lever_arm_signed_mm": -6.0,
+          "imu_pad1_offset_mm": [
+            1.21,
+            -0.75
+          ],
+          "board_axis_map": {
+            "side": "bottom",
+            "rotation": 180.0,
+            "map": "R9 D-S7-06 axis map: +X_imu = -x_board, +Y_imu = -y_board; roll = -gyro_Y"
+          }
+        }
+      },
+      "P-11": {
+        "title": "terminal entry and owner-accepted 4.95 mm wire room",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "J1": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J121": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J400": {
+            "entry": "-x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J410": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J420": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J9": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          },
+          "J122": {
+            "entry": "+x",
+            "wire_room_mm": 5.003,
+            "r8_floor_mm": 6.25,
+            "r10_accepted_floor_mm": 4.95,
+            "owner_decision": "OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified"
+          }
+        }
+      },
+      "F9-2": {
+        "title": "GAP-2 U9 output capacitor and Schottky local copper loops",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "bounds_mm": {
+            "C82": [
+              4.0,
+              10.0,
+              13.5
+            ],
+            "D9": [
+              7.0,
+              10.5,
+              17.0
+            ]
+          },
+          "out_detour_ratio_max": 1.25,
+          "ground_grid_mm": 0.05,
+          "basis": "GAP-2 engineering local-copper bounds; physical qualification pending",
+          "area_method": "projected OUT/GND paths joined through component pad centres; 0.05mm GND raster, not inductance",
+          "C82": {
+            "out_route_mm": 3.5778174593052023,
+            "out_endpoints": [
+              "U9.6",
+              "C82.1"
+            ],
+            "out_layer": "B.Cu",
+            "out_path": {
+              "distance_mm": 3.5778174593052023,
+              "path_mm": [
+                [
+                  18.75,
+                  81.6
+                ],
+                [
+                  18.75,
+                  79.8
+                ],
+                [
+                  19.3,
+                  79.25
+                ],
+                [
+                  19.3,
+                  78.25
+                ]
+              ]
+            },
+            "out_octilinear_mm": 3.577817459305197,
+            "out_detour_ratio": 1.0000000000000016,
+            "local_ground_route_mm": 9.426345596729048,
+            "ground_path": {
+              "distance_mm": 9.426345596729048,
+              "path_mm": [
+                [
+                  "B.Cu",
+                  20.425,
+                  75.725
+                ],
+                [
+                  "B.Cu",
+                  20.425,
+                  75.825
+                ],
+                [
+                  "B.Cu",
+                  20.475,
+                  75.875
+                ],
+                [
+                  "B.Cu",
+                  20.475,
+                  76.175
+                ],
+                [
+                  "B.Cu",
+                  20.625,
+                  76.325
+                ],
+                [
+                  "In1.Cu",
+                  20.625,
+                  76.325
+                ],
+                [
+                  "In1.Cu",
+                  20.625,
+                  78.125
+                ],
+                [
+                  "In1.Cu",
+                  19.925,
+                  78.825
+                ],
+                [
+                  "In1.Cu",
+                  19.925,
+                  78.875
+                ],
+                [
+                  "In1.Cu",
+                  19.875,
+                  78.925
+                ],
+                [
+                  "In1.Cu",
+                  19.875,
+                  80.975
+                ],
+                [
+                  "In1.Cu",
+                  19.975,
+                  81.075
+                ],
+                [
+                  "B.Cu",
+                  19.975,
+                  81.075
+                ],
+                [
+                  "B.Cu",
+                  19.975,
+                  81.175
+                ],
+                [
+                  "B.Cu",
+                  19.875,
+                  81.275
+                ],
+                [
+                  "B.Cu",
+                  19.675,
+                  81.275
+                ]
+              ],
+              "layers": [
+                "B.Cu",
+                "In1.Cu"
+              ],
+              "endpoints": [
+                "C82.2",
+                "U9.8"
+              ]
+            },
+            "loop_mm": 13.004163056034251,
+            "projected_loop_area_mm2": 6.591562500000009
+          },
+          "D9": {
+            "out_route_mm": 6.5855339059327385,
+            "out_endpoints": [
+              "U9.6",
+              "D9.1"
+            ],
+            "out_layer": "B.Cu",
+            "out_path": {
+              "distance_mm": 6.5855339059327385,
+              "path_mm": [
+                [
+                  18.75,
+                  81.6
+                ],
+                [
+                  18.75,
+                  79.8
+                ],
+                [
+                  16.25,
+                  77.3
+                ],
+                [
+                  15.0,
+                  77.3
+                ]
+              ]
+            },
+            "out_octilinear_mm": 5.853300858899104,
+            "out_detour_ratio": 1.125097456065389,
+            "local_ground_route_mm": 8.176345596729053,
+            "ground_path": {
+              "distance_mm": 8.176345596729053,
+              "path_mm": [
+                [
+                  "B.Cu",
+                  15.875,
+                  80.225
+                ],
+                [
+                  "B.Cu",
+                  16.725,
+                  80.225
+                ],
+                [
+                  "B.Cu",
+                  16.825,
+                  80.125
+                ],
+                [
+                  "B.Cu",
+                  17.225,
+                  80.125
+                ],
+                [
+                  "In1.Cu",
+                  17.225,
+                  80.125
+                ],
+                [
+                  "In1.Cu",
+                  19.025,
+                  80.125
+                ],
+                [
+                  "In1.Cu",
+                  19.975,
+                  81.075
+                ],
+                [
+                  "B.Cu",
+                  19.975,
+                  81.075
+                ],
+                [
+                  "B.Cu",
+                  19.975,
+                  81.175
+                ],
+                [
+                  "B.Cu",
+                  19.875,
+                  81.275
+                ],
+                [
+                  "B.Cu",
+                  19.675,
+                  81.275
+                ]
+              ],
+              "layers": [
+                "B.Cu",
+                "In1.Cu"
+              ],
+              "endpoints": [
+                "D9.2",
+                "U9.8"
+              ]
+            },
+            "loop_mm": 14.761879502661792,
+            "projected_loop_area_mm2": 7.012187499999868
+          }
+        }
+      },
+      "K-legends": {
+        "title": "legends and ids",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "terminal_legends": {
+            "2:GND (2.937, 79.552)": [
+              "J1.2",
+              1.952
+            ],
+            "1:BAT+ (3.232, 70.552)": [
+              "J1.1",
+              1.852
+            ],
+            "2:E1+ (6.213, 59.552)": [
+              "J121.2",
+              1.952
+            ],
+            "3:S3 (30.908, 70.152)": [
+              "J122.3",
+              4.108
+            ],
+            "4:RXI (34.846, 6.702)": [
+              "J410.4",
+              1.852
+            ],
+            "5:GND (34.637, 60.952)": [
+              "J122.5",
+              1.852
+            ],
+            "1:5V4 (39.480, 54.702)": [
+              "J9.1",
+              2.141
+            ],
+            "1:SW (2.052, 61.413)": [
+              "J400.1",
+              3.652
+            ],
+            "2:SW (2.052, 65.613)": [
+              "J400.2",
+              3.652
+            ],
+            "1:E1- (7.952, 47.413)": [
+              "J121.1",
+              1.991
+            ],
+            "1:S1 (37.252, 80.408)": [
+              "J122.1",
+              1.908
+            ],
+            "1:4V8 (42.352, 18.830)": [
+              "J410.1",
+              3.752
+            ],
+            "4:RXI (42.352, 23.396)": [
+              "J420.4",
+              3.752
+            ],
+            "4:TXO (42.352, 38.330)": [
+              "J9.4",
+              3.752
+            ],
+            "1:4V8 (43.752, 35.130)": [
+              "J420.1",
+              5.152
+            ],
+            "2:S2 (39.508, 73.652)": [
+              "J122.2",
+              0.908
+            ],
+            "3:RXI (39.446, 44.402)": [
+              "J9.3",
+              0.846
+            ],
+            "3:TXO (39.480, 12.402)": [
+              "J410.3",
+              0.88
+            ],
+            "3:TXO (39.480, 28.402)": [
+              "J420.3",
+              0.88
+            ],
+            "2:GND (39.537, 15.902)": [
+              "J410.2",
+              0.937
+            ],
+            "2:GND (39.537, 31.902)": [
+              "J420.2",
+              0.937
+            ],
+            "2:GND (39.537, 47.902)": [
+              "J9.2",
+              0.937
+            ],
+            "4:S4 (39.552, 65.408)": [
+              "J122.4",
+              0.952
+            ]
+          },
+          "silk_mask_overlaps": 0,
+          "aud10_review": [],
+          "aud10_review_count": 0,
+          "hidden": [
+            "C10",
+            "C100",
+            "C11",
+            "C126",
+            "C127",
+            "C129",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C19",
+            "C20",
+            "C21",
+            "C22",
+            "C23",
+            "C24",
+            "C25",
+            "C26",
+            "C30",
+            "C31",
+            "C32",
+            "C410",
+            "C411",
+            "C421",
+            "C6",
+            "C7",
+            "C81",
+            "C82",
+            "C85",
+            "C88",
+            "C92",
+            "C99",
+            "D121",
+            "D400",
+            "D401",
+            "D410",
+            "D420",
+            "D421",
+            "LED1",
+            "Q122",
+            "Q123",
+            "R10",
+            "R100",
+            "R101",
+            "R103",
+            "R104",
+            "R105",
+            "R120",
+            "R121",
+            "R122",
+            "R126",
+            "R127",
+            "R128",
+            "R129",
+            "R13",
+            "R130",
+            "R132",
+            "R133",
+            "R151",
+            "R152",
+            "R155",
+            "R162",
+            "R163",
+            "R164",
+            "R173",
+            "R175",
+            "R178",
+            "R180",
+            "R32",
+            "R403",
+            "R405",
+            "R432",
+            "R441",
+            "R450",
+            "R451",
+            "R5",
+            "R62",
+            "R63",
+            "R64",
+            "R87",
+            "R9",
+            "TP120",
+            "TP122",
+            "TP82",
+            "U11",
+            "U12",
+            "U2",
+            "U4",
+            "U402",
+            "U5",
+            "U9"
+          ],
+          "hidden_count": 91
+        }
+      },
+      "K-copper": {
+        "title": "copper hygiene, exact GAP-3 U401 VIPPO condition",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "smd_pads_checked_for_via_holes": 613,
+          "track_endpoints_checked": 1946,
+          "small_ground_pads": 78,
+          "via_paste": {
+            "pairs_checked": 762,
+            "nearest_ring_mm": [
+              0.014,
+              "via (11.95, 30.6) (VBUS) and D4.5's paste (F)"
+            ]
+          },
+          "gap3": {
+            "centres_mm": [
+              [
+                27.900000000000002,
+                13.6
+              ],
+              [
+                27.3,
+                13.6
+              ]
+            ],
+            "local_centres_mm": [
+              [
+                -0.3,
+                0.0
+              ],
+              [
+                0.3,
+                0.0
+              ]
+            ],
+            "qualified": 2,
+            "local_exposed_pad_mm": [
+              -0.599999999999998,
+              -1.0,
+              0.6000000000000015,
+              1.0
+            ],
+            "local_paste_windows_mm": [
+              [
+                -0.5649999999999978,
+                -1.0,
+                0.5650000000000013,
+                -0.11000000000000114
+              ],
+              [
+                -0.5649999999999977,
+                0.10999999999999936,
+                0.5650000000000014,
+                1.0
+              ]
+            ],
+            "manufacturing_condition": "resin-filled, copper-capped, planar VIPPO; physical fabrication unverified"
+          }
+        }
+      },
+      "K-reference": {
+        "title": "critical signal reference copper",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "samples": 160761,
+          "unreferenced": 10056,
+          "inside_own_antipad": 10049,
+          "recorded_stray": 6,
+          "loose": 0,
+          "b_cu_planes": [
+            "GND",
+            "3V3",
+            "3V3A",
+            "PORT_5V3",
+            "PORT_4V8",
+            "RAW_PROTECTED"
+          ],
+          "by_net_layer": {
+            "SPI1_MISO B.Cu": {
+              "samples": 2,
+              "box": [
+                17.79,
+                43.88,
+                17.8,
+                43.89
+              ]
+            },
+            "SPI1_MISO F.Cu": {
+              "samples": 1,
+              "box": [
+                17.3,
+                43.89,
+                17.3,
+                43.89
+              ]
+            },
+            "SPI1_SCK B.Cu": {
+              "samples": 3,
+              "box": [
+                17.1,
+                43.4,
+                17.1,
+                43.42
+              ]
+            },
+            "USB_DM F.Cu": {
+              "samples": 1,
+              "box": [
+                8.08,
+                29.58,
+                8.08,
+                29.58
+              ]
+            }
+          }
+        }
+      },
+      "K-region": {
+        "title": "critical B.Cu runs over one In2 plane region (R4-RTE-02)",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "items": 165,
+          "samples": 62984,
+          "nets": [
+            "CAM_MCU_RX",
+            "CAM_MCU_TX",
+            "CAM_RX_BUFFER",
+            "CAM_RX_WIRE",
+            "CAM_TX_BUFFER",
+            "CAM_TX_WIRE",
+            "GPS_RX_MCU",
+            "GPS_RX_WIRE",
+            "GPS_TX_MCU",
+            "GPS_TX_WIRE",
+            "HSE_IN",
+            "HSE_OUT",
+            "IMU_CS",
+            "PYRO1_COLD",
+            "PYRO1_GATE",
+            "PYRO1_GATE_N",
+            "PYRO1_IGN",
+            "PYRO1_OUT",
+            "QSPI_CLK",
+            "QSPI_IO0",
+            "QSPI_IO1",
+            "QSPI_IO2",
+            "QSPI_IO3",
+            "QSPI_NCS",
+            "RADIO_RX_MCU",
+            "RADIO_RX_WIRE",
+            "RADIO_TX_MCU",
+            "RADIO_TX_WIRE",
+            "SD_CS",
+            "SD_DAT1",
+            "SD_DAT2",
+            "SD_MISO",
+            "SD_MOSI",
+            "SD_SCK",
+            "SPI1_MISO",
+            "SPI1_MOSI",
+            "SPI1_SCK",
+            "USB_DM",
+            "USB_DP"
+          ]
+        }
+      },
+      "K-fill": {
+        "title": "saved zone fills are current (refill a copy, R4-GATE-05)",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "zones": 9,
+          "stale": 0,
+          "tolerance_mm2": 0.01
+        }
+      },
+      "K-retained": {
+        "title": "flash/camera/microSD bypass, TP122",
+        "ok": true,
+        "issues": [],
+        "evidence": {
+          "camera_bypass": {
+            "C100": {
+              "supply_pin": "U12.3",
+              "pad_distance_mm": 1.1999999999999993,
+              "direct_copper_route_mm": 1.1999999999999993,
+              "direct_ground_return_mm": 1.373969696196701
+            },
+            "C93": {
+              "supply_pin": "U12.7",
+              "pad_distance_mm": 0.25,
+              "direct_copper_route_mm": 3.7499999999999916
+            }
+          },
+          "microSD_bypass": {
+            "C460": {
+              "vdd_pad_distance_mm": 2.680018656651479,
+              "maximum_mm": 3.0
+            },
+            "C461": {
+              "vdd_pad_distance_mm": 5.057571057335725,
+              "maximum_mm": 6.0
+            }
+          },
+          "flash": {
+            "pad_distance_mm": 1.87,
+            "direct_route_mm": 1.870000000000001
+          }
+        }
+      }
+    },
+    "issues": [],
+    "failing": [],
+    "clearance_scope": "J2/TP bare-contact clearance requires tools/check.sh DRC; this checker does not duplicate it",
+    "board_sha256": "6b6589254b879dfa66760c550c63b94358ff43b6bcd22057366779b1c7d4d6e6",
+    "inputs_sha256": {
+      "kilib/generic.3dshapes/DFN-8-1EP_3x3mm_P0.65mm_EP1.55x2.4mm.step": "113b3987035c6f315a2a5c49dcedc349f8184b3b415289cb0cb67e90e82112b4",
+      "kilib/generic.3dshapes/LQFP-100_14x14mm_P0.5mm.step": "51720097260ffba41c3062f85f67623721102fa535901c47cb555a1f444feeb3",
+      "kilib/generic.3dshapes/PinHeader_1x02_P2.54mm_Vertical.step": "ea4d0799007ebdd3945072bf255d673d2fe87eb05fda85fd8d7993ad9397da41",
+      "kilib/generic.3dshapes/PinHeader_1x06_P2.54mm_Vertical.step": "d6113af109a14a67c50dcefd1cfc7b43b59b59afa85d808b2319e2452da91318",
+      "kilib/generic.3dshapes/R_2512_6332Metric.step": "76b2052a3c120193de7cdc0af99157b6f375e9a4af7721e3e3d012968c877f27",
+      "kilib/rocket.3dshapes/BUZ-SMD_4P-L8.5-W8.5-H3.0.wrl": "c16c41a2915b8f78e2ec8670cb3ad79ff779227374a4890a87361ee14640bcbe",
+      "kilib/rocket.3dshapes/C0402_L1.0-W0.5-H0.5.wrl": "c20fe21cf8899edf2ae6dbf00c69756b1e5f5bc4029d9c1ce67875d905c8a199",
+      "kilib/rocket.3dshapes/C0603_L1.6-W0.8-H0.8.wrl": "125791465c37d0e6cda3b2f45f84e01af226d81a462bfbecb7a4513327e9f22a",
+      "kilib/rocket.3dshapes/C0805_L2.0-W1.3-H1.3.wrl": "31b2ac9a40994188ebd20202214e75f004b604b0068b3dea50d8cf7940cadb1a",
+      "kilib/rocket.3dshapes/CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5.wrl": "4ba30f0c1480e60481a8bb65b4f3ae0599d27afb0c01ee00e643feb77c340ff2",
+      "kilib/rocket.3dshapes/CONN-TH_12P-P2.00_S12B-PH-K-S-LF-SN.wrl": "979d15112f617a529b9e8b07ed00e998f1f64367231b464569b5c20f7210375e",
+      "kilib/rocket.3dshapes/CONN-TH_4P-P5.08_DIBO_DB128V-5.08.wrl": "df2d079aaf92482feb39a71637fc4f6e69197316b60d808970db28f146397862",
+      "kilib/rocket.3dshapes/CONN-TH_6P-P5.08_DIBO_DB128V-5.08.wrl": "8d525f3287c8079ee32dedb41fd27872fb539a473187c2fdbabf571c92fb8c52",
+      "kilib/rocket.3dshapes/CONN-TH_9P-P2.00_S9B-PH-K-S-LF-SN.wrl": "d826432137c98ee330e7997b2b5e7408ecf38a1a5c2c47a1c09b9539370378cd",
+      "kilib/rocket.3dshapes/CRYSTAL-SMD_4P-L3.2-W2.5-BL.wrl": "44a3909b050bdb95f8ce007f9dbbda4a81ea6842b089ab23bbc1283ff45bd0aa",
+      "kilib/rocket.3dshapes/C_0603_1608Metric.step": "4857b3dc717675bf1fb22edda622ac3b3ae03cf44d81eefaf3fa3ba3a86d84c1",
+      "kilib/rocket.3dshapes/C_1206_3216Metric.step": "11e948c72c90e2b6322436b72745f40ff4e8ba0da64fb2a0df943dfa61e89c1a",
+      "kilib/rocket.3dshapes/D_SMA.step": "1cfddd4e3b1bf22b8fc6ee3258c2aade882ed7b85b528e23b9db42437775a1db",
+      "kilib/rocket.3dshapes/D_SMB.step": "029466277d91e9f5492556be93e46611049e07115c7913880c547afa96058ed4",
+      "kilib/rocket.3dshapes/HDR-M-2.54_1x40.wrl": "33a623109162433c03382de3b3bebb47376e856101315ebc4d468d5789156437",
+      "kilib/rocket.3dshapes/HDR-TH_12P-P2.54-V-M-R3-C4-S2.54.wrl": "932a4724477746d8d2f72cdb5b92b0867c052a4b4d8f0a4949d7a65dd1bf0b7c",
+      "kilib/rocket.3dshapes/HDR-TH_HMT-2.54-1X6PM.wrl": "89a7b833c9eff28ab8c06c245aa125d8d8686d605f99b1b4c6d8337af9352426",
+      "kilib/rocket.3dshapes/IND-SMD_L4.0-W4.0-H1.9.wrl": "3eb732ddf40a2bd47e12878dc62b7264b2131cb38a31dd666e821458278bd0be",
+      "kilib/rocket.3dshapes/LED0805-RD.wrl": "3384c4f297a3342792da0408309e9cc3027058d39452110db6271848dc1ec7cd",
+      "kilib/rocket.3dshapes/LGA-14_L2.5-W3.0-H0.9-P0.50.wrl": "d9a21d9ea8ac294c9eff9872ac778b02b96ff6a3bca7bd786b4a7c708463d794",
+      "kilib/rocket.3dshapes/M3_AONR21357_DFN3x3A_EP1.wrl": "93e8ba4cae28023b19542d8f6b9e4194da6fdabc4bd3071e791a74620ed953f3",
+      "kilib/rocket.3dshapes/M3_AP63200_TSOT26.wrl": "8732b490fe05977910e08f74160142badf1d3d3d9ed89a7857f7f88fbed20846",
+      "kilib/rocket.3dshapes/M3_BLM18K_0603.wrl": "90d1842c544e96afb52f260a3de31857966f20429b0ee8f551f0e353c31c0989",
+      "kilib/rocket.3dshapes/M3_DB125_2P_BK.wrl": "efab17f431f377ab6318d1cc151901eda5c070e525bd79a23448963f43aa53d0",
+      "kilib/rocket.3dshapes/M3_DB125_2P_GN.wrl": "949835401190a4182f9cb7d9268d42cc6d59886a4ad246b27d085055678e507c",
+      "kilib/rocket.3dshapes/M3_DB125_4P_GN.wrl": "ff19ffd9b2c61765b655e3f885fad407f3445c38a5cc797daa8d840166d27f17",
+      "kilib/rocket.3dshapes/M3_DB125_5P_GN.wrl": "4123f68eb0c390da876c64c2d764ffffa9ceffb3e433450c7e2dbed7348f608d",
+      "kilib/rocket.3dshapes/M3_DB128L_2P.wrl": "1a49b36bddd6483d464d3741cdbb7c52a4224317680da3cd3c1fb4b5356aed19",
+      "kilib/rocket.3dshapes/M3_DB128L_2P_BK.wrl": "ed3fda3465dfe673901fd97be01ef9787b72ee1142b135de3607b65671f181a3",
+      "kilib/rocket.3dshapes/M3_DB128V_4P.wrl": "db2780499c56a1a53913e08c7e112413bdda82b36d56d06e9902c51fca9b9471",
+      "kilib/rocket.3dshapes/M3_E22_900MM22S_ENVELOPE.wrl": "c6376ec4a928a0c1aaf4cce76aa2b228a9074ffc49c9e86a742e2c57bf7ac8af",
+      "kilib/rocket.3dshapes/M3_GH_BM02B_GHS_TBT.wrl": "f27ad581dcbb5ca4ad16a3bc34481a689d6198301463486288b8eea5fb76805f",
+      "kilib/rocket.3dshapes/M3_GH_BM04B_GHS_TBT.step": "ebc503b4b58cad5873c7cdeb695315baf8bea08dd22aa49873b0104671b78d59",
+      "kilib/rocket.3dshapes/M3_GRM32_1210.wrl": "da5781e5c931576de5a5bd3100122220aaaf47e27bb26848d28e88fff730c9dd",
+      "kilib/rocket.3dshapes/M3_JST_PH_B2B_2P.wrl": "97c329b49a224bfebae4b719ce75f1698a14cda25f101248638326e86db1c792",
+      "kilib/rocket.3dshapes/M3_KT0805Y_A1.wrl": "23f86f2c6c6763550045575f83e9b6a0df5e3795c9b5631217d68ab880f82769",
+      "kilib/rocket.3dshapes/M3_LQG15_0402.wrl": "dce600ef4a0605f7d416ab0bd36703f8d037511c0593c327a9ac6ca356461554",
+      "kilib/rocket.3dshapes/M3_MAX_F10S_ENVELOPE.wrl": "b94c381b5b18bb1a779f13349e78ef779bbedc5005020a9c5dac3a3101b7b5a5",
+      "kilib/rocket.3dshapes/M3_MA_8x10.wrl": "8969c393340692a96a03cd804c70720747d9adc62146d0757f266fe5a2a12902",
+      "kilib/rocket.3dshapes/M3_MICROSD_MOLEX_472192001.wrl": "b42294e799c534e0e628109596c34a816745ddf6ae14cb993d1a99d62f9085de",
+      "kilib/rocket.3dshapes/M3_MLT5020_3pad.wrl": "c8412cc0b59804da416b02d13c80bd3c37f86963de80590f7549256011075a8c",
+      "kilib/rocket.3dshapes/M3_NCD0805R1_K1.wrl": "50f35703e0a36e01a0ed2cf5c666e21c8465d8f06cf3ea01dd22a3f16af8017e",
+      "kilib/rocket.3dshapes/M3_OSCON_F12.wrl": "cbdb3b03479700173a82964fb243f60af24166bb4115c8bc17e42526053a6956",
+      "kilib/rocket.3dshapes/M3_SAM_M10Q_ENVELOPE.wrl": "19ed7bea8fc8223b2061f57f6ed971b50864ef82545974ac024a63382dba178a",
+      "kilib/rocket.3dshapes/M3_SH_BM04B_SRSS_TB.step": "8980de73cbad53eb5e794fa02d776853bd9e12958c401f80c4b4c723ec196b98",
+      "kilib/rocket.3dshapes/M3_SH_BM07B_SRSS_TB.step": "7df6eb693edebff163e7f953295508a8dc894e09fba0d898788e96be8c7b0dd8",
+      "kilib/rocket.3dshapes/M3_SMA_KH_KE8_EDGE.wrl": "3d4425f519fbd4c29564724b86f047983a1d7e331e4078de416241c9d5cab99b",
+      "kilib/rocket.3dshapes/M3_SRP5030TA.wrl": "bbcc84b3eb6a2091d954e9d1dd6db4c608dca3cf70d5ca2301d612662c968482",
+      "kilib/rocket.3dshapes/M3_TPS2121_RUX.wrl": "63e7487350c5fb47cccb0cd6c3caee2dfeb9f9cb7a5a7a8f8735d7205b93fcf8",
+      "kilib/rocket.3dshapes/M3_TPS2553_DBV.wrl": "e299e94ac030d1ad035cab4b0ef2935ceada6419c987c22953eb78816592b246",
+      "kilib/rocket.3dshapes/M3_TPS25947_RPW.wrl": "2bc1ca30540707d2a2ac6924e7ef853b17bda42682b9dc6ae65c646e4cd6f492",
+      "kilib/rocket.3dshapes/M3_TPS2595_DSG.wrl": "a932e04772d96c3bd5e049ab20b27b82d6169bd0dd3709d0f13b673308a052f1",
+      "kilib/rocket.3dshapes/M3_TPS709_DBV.wrl": "e299e94ac030d1ad035cab4b0ef2935ceada6419c987c22953eb78816592b246",
+      "kilib/rocket.3dshapes/M3_TPS7A91_DSK10.wrl": "70bf43d3dc6293d6b658ff8e0dd38f8526a70fc243421c11834c41f2608b0f80",
+      "kilib/rocket.3dshapes/M3_TSLP_2_20.wrl": "7484cd1fa02ca33bbf927894286fbf25e36a6b2d946c09ebb4eac120955c0f7a",
+      "kilib/rocket.3dshapes/M3_TXU0202_DCU.wrl": "7a1659360b3969da182d1a8b0100b8a5ae1d68c271e4a1afe967d657fd17c408",
+      "kilib/rocket.3dshapes/PDFN-8_L5.6-W5.2-P1.27-LS6.1-BL.wrl": "4b5b1b16ea52173b581a58a1ade12617ec81db16a1eb9bd027ed77794f33b845",
+      "kilib/rocket.3dshapes/R0402_L1.0-W0.5-H0.4.wrl": "ced0a40a718711c2ae16482a4f46a9eb6a0a33ecf9f9d8c2e18c160fa951a420",
+      "kilib/rocket.3dshapes/R0603.wrl": "2a125409502d8eb68f2e196ab1c28b180e0918830445364f93a45d9461b4daad",
+      "kilib/rocket.3dshapes/R0805_L2.0-W1.3-H0.6.wrl": "76145163b8ad77c0f68aa2c4b6ced6a1f5008bab9c42bb2043539f815256d6ab",
+      "kilib/rocket.3dshapes/R_0603_1608Metric.step": "1875571c326d0d9e96f36b4efeb8094068ef7619f0a449c781caf0b49c2e5861",
+      "kilib/rocket.3dshapes/SENSORS-SMD_MS5611-01BA03.wrl": "8d23a16413fff3cb34917c093a1d65cf1c84ae9a0b1339212feab5584ad2755a",
+      "kilib/rocket.3dshapes/SMA_L4.3-W2.6-LS5.2-RD.wrl": "182bdfe16c250365c998a42967078bbe9204d0d7a7092594820fdfbe0465c388",
+      "kilib/rocket.3dshapes/SMB_L4.6-W3.6-LS5.3-BI.wrl": "f5fec39be6b431c2ee10f1369f78a7c396f428fa2773e57778ca8dfd68f3af96",
+      "kilib/rocket.3dshapes/SOD-323_L1.8-W1.3-LS2.5-RD.wrl": "1066ae56f1408eb17040fe2caa43c28629818eb8c242c8687c99d10e2607d75b",
+      "kilib/rocket.3dshapes/SOIC-8_L5.3-W5.3-H1.9-LS7.9-P1.27.wrl": "ca10a7dd660f5c145b727a3f65f6e1fc81503c72ca4442e7a3cd64fd5ff71e40",
+      "kilib/rocket.3dshapes/SOT-23-3P_L2.9-W1.3-H1.0-LS2.4-P0.95.wrl": "6d0af3fdee819c602d1b3906e3031015573ebcb85f3a357833e5def01e2ebe32",
+      "kilib/rocket.3dshapes/SOT-23-6_L2.9-W1.6-H1.5-LS2.8-P0.95.wrl": "7023139da8e0528b1cd05db53344f9f563fe34c447e10fb4db9b06fdddb0aa4b",
+      "kilib/rocket.3dshapes/TSOT-26_L2.9-W1.6-P0.95-LS2.8-BL.wrl": "cea0f96767724d06e8c232affea97d8817d6fcf062d32513f25749da2068d3c9",
+      "kilib/rocket.3dshapes/USB-C_SMD-TYPE-C-31-M-12_1.wrl": "0457a14076c3c2f9d16ed2a995ac1f248173ab9ac1c200f99988a33d97d111b5",
+      "m3.kicad_pcb": "6b6589254b879dfa66760c550c63b94358ff43b6bcd22057366779b1c7d4d6e6",
+      "m3.kicad_dru": "5acf6db7017276f7d4ad59d737584adaeaf686fedaba8ad38b5e06063fadf1e3",
+      "m3.kicad_pro": "afc28ac07a8609143118d91bdc4e68fa75a19fd150e3c33ed50ab6dd5fbb32c7",
+      "m3.kicad_sch": null
+    },
+    "checker_sha256": "003c0e88d643d8be9d14fb5dff4101296bed5892cf22a344070a71b184d65a55",
+    "contract_tables_sha256": {
+      "r10_pin_table": {
+        "path": "m3_design/assembly_review/sources/r10_design/pin_table.tsv",
+        "sha256": "34e77f0f51ecdd5b13e32dea1e2939302b312b89ac375bde7fb82dc329d2d619"
+      },
+      "masses": {
+        "path": "m3_design/assembly_review/sources/r10_design/masses.json",
+        "sha256": "b6f15a1746315bd6de45c3aa522c30b423b66626ca345cd5ba1dcd86305c4366"
+      }
+    }
+  },
+  "routing_hygiene": {
+    "profile": "r10",
+    "ok": true,
+    "blocking": 0,
+    "allowlisted": 0,
+    "stale": 0,
+    "local_bumps_on_critical_nets": 0,
+    "bump_windows_searched": 25,
+    "noncritical_leftovers": [
+      {
+        "cat": "short_segment",
+        "net": "BAT_OVLO",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 16.4,
+        "y": 83.0,
+        "len_mm": 0.15,
+        "width": 0.2,
+        "end": [
+          16.4,
+          83.15
+        ]
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "V3V3_SENSE",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 26.25,
+        "y": 52.5,
+        "end": [
+          25.93,
+          55.7
+        ],
+        "seglens": [
+          1.8,
+          0.453,
+          1.08
+        ]
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "BAT_FAULT_N",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 26.0,
+        "y": 47.3,
+        "end": [
+          26.4,
+          51.95
+        ],
+        "seglens": [
+          1.45,
+          0.4,
+          3.2
+        ]
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "BUZZ_DRV",
+        "cls": "other",
+        "layer": "F.Cu",
+        "x": 20.5,
+        "y": 51.8,
+        "end": [
+          20.2,
+          52.1
+        ],
+        "mid_mm": 0.424,
+        "offset_mm": 0.3,
+        "at": "plain/via",
+        "via": true
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "BAT_FAULT_N",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 28.2,
+        "y": 47.5,
+        "end": [
+          28.0,
+          47.3
+        ],
+        "mid_mm": 0.283,
+        "offset_mm": 0.2,
+        "at": "via/plain",
+        "via": true
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "I2C1_SDA",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 9.97,
+        "y": 51.5,
+        "end": [
+          10.25,
+          51.78
+        ],
+        "mid_mm": 0.396,
+        "offset_mm": 0.28,
+        "at": "via/plain",
+        "via": false
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "BAT_ENABLE",
+        "cls": "other",
+        "layer": "F.Cu",
+        "x": 19.675,
+        "y": 66.0,
+        "end": [
+          19.675,
+          66.4
+        ],
+        "mid_mm": 0.4,
+        "offset_mm": 0.4,
+        "at": "T/via",
+        "via": true
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "BAT_ENABLE",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 21.0,
+        "y": 68.6,
+        "end": [
+          21.3,
+          68.9
+        ],
+        "mid_mm": 0.424,
+        "offset_mm": 0.3,
+        "at": "plain/via",
+        "via": true
+      },
+      {
+        "cat": "detour",
+        "net": "USB_ILIM",
+        "cls": "other",
+        "layer": "net",
+        "x": 14.825,
+        "y": 27.2,
+        "pads": 2,
+        "first": "R85.1",
+        "len_mm": 3.33,
+        "mst_mm": 1.05,
+        "ratio": 3.18,
+        "vias": 1,
+        "need": 1
+      }
+    ],
+    "instance_counts": {
+      "pad_end_offcentre": 57,
+      "segment_inside_pad": 22,
+      "passes_through_pad": 1,
+      "short_segment": 1,
+      "width_change_junction": 11,
+      "short_layer_hop": 3,
+      "u_turn": 6,
+      "tiny_jog": 7,
+      "extra_bends": 6,
+      "power_via_no_gnd": 24,
+      "detour": 1
+    },
+    "ran_on_prototype_board_sha256": "6b6589254b879dfa66760c550c63b94358ff43b6bcd22057366779b1c7d4d6e6"
+  },
+  "artifact_sha256": {
+    "drc": "24669e0b1834b61a9dbab4515b0f67bde79c8b12ba06257885a4f844f489b8c4",
+    "focused": "c2138ae2d6a13de94bfa3e2e4455e5b69175c801e002f8a064b9b40c9a741fb5",
+    "routing_hygiene": "10ec14d60dfec10e1bfbc9f63cf4ace8f8faa3e9ee848ce768bd1e33bcfbe7ed",
+    "post": "172c1dffd87db3a5c46d6279744573681c81bfcde37383c664d16e46928b36d9"
+  },
+  "pending": [
+    "canonical integrated full builds/gate, final firmware/model/fab bindings and build reproducibility are root-owned",
+    "physical harness/THT/thermal/retention/coating qualification remains unmeasured"
+  ]
+}

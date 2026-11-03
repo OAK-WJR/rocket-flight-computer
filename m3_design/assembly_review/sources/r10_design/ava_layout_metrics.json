@@ -1,0 +1,578 @@
+{
+  "method": "Orthogonal bounding envelope of member footprint courtyards, projected across both faces; includes gaps. Block envelopes may overlap and are not additive occupied board area. Identical reference membership on both boards.",
+  "baseline_sha256": "6e73b6ebe7e25d7a8c810493887fbaa7cce34f6fe1d379828dc67017e14235aa",
+  "candidate_sha256": "0c50b9fd0930f34edab7129fc21b8e71d0ee03bc079e1900b7e131cece6bfaf8",
+  "baseline_totals": {
+    "vias": 303,
+    "segments": 887,
+    "length_mm": 1878.1495152619698,
+    "footprints": 209
+  },
+  "candidate_totals": {
+    "vias": 294,
+    "segments": 981,
+    "length_mm": 1818.769511310815,
+    "footprints": 209
+  },
+  "blocks": {
+    "Battery and protection": {
+      "references": [
+        "C80",
+        "C81",
+        "C82",
+        "C87",
+        "C88",
+        "C89",
+        "C95",
+        "C96",
+        "D8",
+        "D9",
+        "J1",
+        "J400",
+        "R80",
+        "R81",
+        "R82",
+        "R83",
+        "R84",
+        "R89",
+        "R92",
+        "R165",
+        "R166",
+        "R167",
+        "TP80",
+        "TP81",
+        "TP88",
+        "U9"
+      ],
+      "footprints": 26,
+      "before": {
+        "bounding_box_mm": [
+          3.055,
+          54.225,
+          45.545,
+          88.945
+        ],
+        "envelope_area_mm2": 1475.2527999999998,
+        "courtyard_sum_mm2": 359.40539999999976
+      },
+      "after": {
+        "bounding_box_mm": [
+          3.055,
+          61.904999,
+          36.545,
+          88.495
+        ],
+        "envelope_area_mm2": 890.4991334900003,
+        "courtyard_sum_mm2": 359.40540000000016
+      }
+    },
+    "USB, mux, hold-up and 3V3": {
+      "references": [
+        "C5",
+        "C6",
+        "C7",
+        "C8",
+        "C9",
+        "C10",
+        "C11",
+        "C28",
+        "D4",
+        "J3",
+        "L1",
+        "R7",
+        "R8",
+        "R164",
+        "U2",
+        "C83",
+        "C84",
+        "C85",
+        "C86",
+        "C97",
+        "C98",
+        "C99",
+        "R85",
+        "R86",
+        "R87",
+        "R88",
+        "R90",
+        "R91",
+        "TP82",
+        "TP83",
+        "U10",
+        "U11",
+        "R9",
+        "R110"
+      ],
+      "footprints": 34,
+      "before": {
+        "bounding_box_mm": [
+          -1.035,
+          24.125,
+          43.045,
+          79.295
+        ],
+        "envelope_area_mm2": 2431.8936,
+        "courtyard_sum_mm2": 403.7325000000002
+      },
+      "after": {
+        "bounding_box_mm": [
+          -1.035,
+          20.255,
+          35.545,
+          83.795
+        ],
+        "envelope_area_mm2": 2324.2932,
+        "courtyard_sum_mm2": 403.7325000000003
+      }
+    },
+    "MCU, clock and debug": {
+      "references": [
+        "C13",
+        "C14",
+        "C15",
+        "C16",
+        "C17",
+        "C18",
+        "C19",
+        "C20",
+        "C21",
+        "C22",
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "J2",
+        "R5",
+        "U1",
+        "Y1"
+      ],
+      "footprints": 18,
+      "before": {
+        "bounding_box_mm": [
+          1.455,
+          34.355,
+          31.645,
+          52.565
+        ],
+        "envelope_area_mm2": 549.7599,
+        "courtyard_sum_mm2": 381.07460000000015
+      },
+      "after": {
+        "bounding_box_mm": [
+          1.455,
+          34.355,
+          31.645,
+          52.615
+        ],
+        "envelope_area_mm2": 551.2694000000001,
+        "courtyard_sum_mm2": 381.07460000000015
+      }
+    },
+    "QSPI and sensors": {
+      "references": [
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "R10",
+        "R11",
+        "R12",
+        "R13",
+        "R64",
+        "U3",
+        "U4",
+        "U5"
+      ],
+      "footprints": 12,
+      "before": {
+        "bounding_box_mm": [
+          6.535,
+          38.255,
+          28.465,
+          53.465
+        ],
+        "envelope_area_mm2": 333.5553,
+        "courtyard_sum_mm2": 112.00119999999998
+      },
+      "after": {
+        "bounding_box_mm": [
+          6.535,
+          38.255,
+          28.465,
+          53.465
+        ],
+        "envelope_area_mm2": 333.5553,
+        "courtyard_sum_mm2": 112.00119999999998
+      }
+    },
+    "Voltage diagnosis and indicators": {
+      "references": [
+        "C60",
+        "C94",
+        "LED1",
+        "LED2",
+        "R32",
+        "R33",
+        "R60",
+        "R61",
+        "R62",
+        "R63",
+        "R104",
+        "R105"
+      ],
+      "footprints": 12,
+      "before": {
+        "bounding_box_mm": [
+          7.205,
+          40.615,
+          41.665,
+          54.345
+        ],
+        "envelope_area_mm2": 473.1357999999999,
+        "courtyard_sum_mm2": 46.006999999999984
+      },
+      "after": {
+        "bounding_box_mm": [
+          7.205,
+          40.615,
+          35.165,
+          58.765
+        ],
+        "envelope_area_mm2": 507.474,
+        "courtyard_sum_mm2": 46.00699999999999
+      }
+    },
+    "Port buck and LDO": {
+      "references": [
+        "C400",
+        "C401",
+        "C402",
+        "C403",
+        "C404",
+        "C405",
+        "C406",
+        "C407",
+        "C408",
+        "L400",
+        "R400",
+        "R401",
+        "R402",
+        "R403",
+        "R404",
+        "R405",
+        "U400",
+        "U401"
+      ],
+      "footprints": 18,
+      "before": {
+        "bounding_box_mm": [
+          10.305,
+          1.025,
+          37.525,
+          24.095
+        ],
+        "envelope_area_mm2": 627.9653999999999,
+        "courtyard_sum_mm2": 208.32639999999998
+      },
+      "after": {
+        "bounding_box_mm": [
+          10.305,
+          1.025,
+          35.825,
+          21.795
+        ],
+        "envelope_area_mm2": 530.0504000000002,
+        "courtyard_sum_mm2": 208.32639999999998
+      }
+    },
+    "GPS": {
+      "references": [
+        "J410",
+        "R440",
+        "R441",
+        "D410",
+        "D411",
+        "C410",
+        "C411"
+      ],
+      "footprints": 7,
+      "before": {
+        "bounding_box_mm": [
+          29.475,
+          7.705,
+          45.445,
+          23.295
+        ],
+        "envelope_area_mm2": 248.97230000000002,
+        "courtyard_sum_mm2": 161.27689999999993
+      },
+      "after": {
+        "bounding_box_mm": [
+          31.905,
+          7.705,
+          42.945,
+          23.295
+        ],
+        "envelope_area_mm2": 172.1136,
+        "courtyard_sum_mm2": 161.27689999999996
+      }
+    },
+    "Radio": {
+      "references": [
+        "J420",
+        "R450",
+        "R451",
+        "D420",
+        "D421",
+        "C420",
+        "C421"
+      ],
+      "footprints": 7,
+      "before": {
+        "bounding_box_mm": [
+          1.055,
+          8.205,
+          36.025,
+          26.275
+        ],
+        "envelope_area_mm2": 631.9079,
+        "courtyard_sum_mm2": 161.2769
+      },
+      "after": {
+        "bounding_box_mm": [
+          31.905,
+          23.705,
+          42.945,
+          39.295
+        ],
+        "envelope_area_mm2": 172.11360000000002,
+        "courtyard_sum_mm2": 161.27690000000007
+      }
+    },
+    "Camera": {
+      "references": [
+        "J9",
+        "TP74",
+        "C90",
+        "C91",
+        "C92",
+        "C93",
+        "C100",
+        "D400",
+        "D401",
+        "R100",
+        "R101",
+        "R102",
+        "R103",
+        "U12",
+        "U13",
+        "C430",
+        "C431",
+        "R430",
+        "R431",
+        "R432",
+        "U402"
+      ],
+      "footprints": 21,
+      "before": {
+        "bounding_box_mm": [
+          32.135,
+          32.555,
+          45.445,
+          67.295
+        ],
+        "envelope_area_mm2": 462.3894000000001,
+        "courtyard_sum_mm2": 257.4928000000001
+      },
+      "after": {
+        "bounding_box_mm": [
+          24.825,
+          29.775,
+          43.545,
+          62.575
+        ],
+        "envelope_area_mm2": 614.0160000000002,
+        "courtyard_sum_mm2": 257.4928000000001
+      }
+    },
+    "Pyro bus switch": {
+      "references": [
+        "C120",
+        "Q120",
+        "Q121",
+        "Q122",
+        "R120",
+        "R121",
+        "R122",
+        "R123",
+        "TP120",
+        "TP121"
+      ],
+      "footprints": 10,
+      "before": {
+        "bounding_box_mm": [
+          11.555,
+          65.655,
+          21.065,
+          75.245
+        ],
+        "envelope_area_mm2": 91.20090000000005,
+        "courtyard_sum_mm2": 61.0106
+      },
+      "after": {
+        "bounding_box_mm": [
+          9.455,
+          66.655,
+          21.065,
+          75.545
+        ],
+        "envelope_area_mm2": 103.21290000000002,
+        "courtyard_sum_mm2": 61.01059999999999
+      }
+    },
+    "Pyro firing and sense": {
+      "references": [
+        "C126",
+        "C127",
+        "C128",
+        "C129",
+        "D120",
+        "J121",
+        "Q124",
+        "R126",
+        "R127",
+        "R128",
+        "R129",
+        "R130",
+        "R131",
+        "R132",
+        "R133",
+        "R134",
+        "R173",
+        "R175",
+        "R178",
+        "R180",
+        "TP122"
+      ],
+      "footprints": 21,
+      "before": {
+        "bounding_box_mm": [
+          3.055,
+          51.905,
+          26.745,
+          69.12
+        ],
+        "envelope_area_mm2": 407.8233500000001,
+        "courtyard_sum_mm2": 177.04830000000004
+      },
+      "after": {
+        "bounding_box_mm": [
+          3.055,
+          50.855,
+          29.645,
+          66.145
+        ],
+        "envelope_area_mm2": 406.56109999999995,
+        "courtyard_sum_mm2": 177.0483
+      }
+    },
+    "Servos": {
+      "references": [
+        "D121",
+        "J122",
+        "R150",
+        "R151",
+        "R152",
+        "R153",
+        "R154",
+        "R155",
+        "R156",
+        "R157"
+      ],
+      "footprints": 10,
+      "before": {
+        "bounding_box_mm": [
+          17.455,
+          67.685,
+          36.545,
+          88.745
+        ],
+        "envelope_area_mm2": 402.0354000000001,
+        "courtyard_sum_mm2": 197.90840000000026
+      },
+      "after": {
+        "bounding_box_mm": [
+          29.745,
+          61.955,
+          42.945,
+          81.045
+        ],
+        "envelope_area_mm2": 251.98800000000003,
+        "courtyard_sum_mm2": 197.90839999999994
+      }
+    },
+    "Buzzer": {
+      "references": [
+        "D123",
+        "LS120",
+        "Q123",
+        "R162",
+        "R163"
+      ],
+      "footprints": 5,
+      "before": {
+        "bounding_box_mm": [
+          14.135,
+          11.685,
+          27.595,
+          20.495
+        ],
+        "envelope_area_mm2": 118.5826,
+        "courtyard_sum_mm2": 64.64630000000001
+      },
+      "after": {
+        "bounding_box_mm": [
+          17.635,
+          55.505,
+          26.295,
+          63.745
+        ],
+        "envelope_area_mm2": 71.35839999999996,
+        "courtyard_sum_mm2": 64.64629999999997
+      }
+    },
+    "microSD": {
+      "references": [
+        "C460",
+        "C461",
+        "J430",
+        "R460",
+        "R461",
+        "R462",
+        "R463",
+        "R464"
+      ],
+      "footprints": 8,
+      "before": {
+        "bounding_box_mm": [
+          12.675,
+          16.025,
+          31.895,
+          34.195
+        ],
+        "envelope_area_mm2": 349.2274,
+        "courtyard_sum_mm2": 289.6322
+      },
+      "after": {
+        "bounding_box_mm": [
+          12.675,
+          16.025,
+          31.895,
+          34.195
+        ],
+        "envelope_area_mm2": 349.2274,
+        "courtyard_sum_mm2": 289.6322
+      }
+    }
+  }
+}

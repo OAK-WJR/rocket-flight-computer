@@ -1,0 +1,47 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 25, parts lens",
+  "reviewer": "claude",
+  "target_commit": "c4bb56b",
+  "board_sha256_before": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "board_sha256_after": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "J3 and J430 CPL centroids differ from the KiCad footprint origins (J3 4.505 vs 4.600 mm x; J430 y -25.85 vs -24.30 mm); these are the generator's deliberate JLC centroid offsets (r10_route_sd / jlc_orient records), not a mismatch.",
+    "parts_qualification.md round 19 J440 row still says 'the ESD code 8' per board; it sits in the dated round 19 section, and the round 24 amendment above it and the section header both give 206 parts / C535146 x 9, so it reads as history, not a current claim.",
+    "The 'was $85.36 before D402' figure comes from a separate pre-D402 JLC run; recomputing it from today's line prices gives $85.37. Prices differ from run to run, so this cannot be shown false.",
+    "The Sunlord L1 (SWPA4030S4R7MT) cached PDF has no text layer, so I could not re-read its Isat this round; it is an inherited part, earlier rounds qualified it, and nothing changed it in round 24."
+  ],
+  "fix_verification": [
+    {"change": "D-R24-11 D402 part identity", "measurement": "BOM line C535146 'ESD103-B1-02EL E6327' qty 9 including D402; board field LCSC/MPN/footprint M3_TSLP_2_20 match; CPL D402 Bottom (4.45,-65.9) rot 90 equals board pose", "verdict": "confirmed"},
+    {"change": "D-R24-11 D402 land", "measurement": "M3_TSLP_2_20 copper 0.35 x 0.60 mm at +/-0.325 mm (0.30 mm gap), paste 0.28 x 0.45 at +/-0.33 mm (0.38 mm gap), matching Infineon ESD103-B1-02 Rev 1.3 Figure 14 p12 (TSLP-2-20 footprint)", "verdict": "confirmed"},
+    {"change": "D-R24-11 D402 rating at the operating point", "measurement": "VRWM +/-15 V (Rev 1.3 Table p6); J400.2 is 5.22 V at 8.4 V and 12.4 V at the 19.9 V SMBJ12CA clamp corner (19.9 x 770/1240), both below 15 V; bidirectional, so rotation 90 vs the other clamps' 270 has no polarity effect", "verdict": "confirmed"},
+    {"change": "D-R24-11 / -19 leakage shift", "measurement": "50 nA x 470k x 300k / 1240k = 5.69 mV at EN; / (300k || 940k = 227.4k) = 25.0 nA equivalent; C87 rise 21 V x 150 pF / 220 nF = 14.3 mV", "verdict": "confirmed"},
+    {"change": "D-R24-11 placement figures", "measurement": "D402 centre to J400.2 (7.4,67.6) = 3.405 mm; tap (7.4,67.6)->(4.81,67.6)->(4.45,67.24)->(4.45,66.225) = 4.114 mm; D402.2 (4.45,65.575) to via (5.15,65.575) = 0.70 mm; D402 nets 1 BAT_SW_RETURN, 2 GND", "verdict": "confirmed"},
+    {"change": "D-R24-11 / -23 counts", "measurement": "CPL 206 rows, 70 Top + 136 Bottom; Gerber paste flashes F 249 / B 381; 216 footprints, every non-excluded footprint in BOM or owner BOM; 81 JLC lines = 45 expand + 36 base, C84 on owner BOM", "verdict": "confirmed"},
+    {"change": "D-R24-11 cost", "measurement": "cost_check.json: C535146 9 x $0.2306 = $2.0754; parts sum $60.8123 + 81 x $1.53 / 5 = $24.786 -> $85.60; $1.19 over $84.41", "verdict": "confirmed"},
+    {"change": "D-R24-11 stock record", "measurement": "stock_check.json 2026-11-02T01:42:53Z: C535146 201 / 194 orderable vs 45; U9 28 / -83, min 7; U4 9 / 2 vs 5, matching parts_qualification, AGENTS and M3_R10", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of the board before and after (unchanged)",
+    "KiCad pcbnew cross-check of every BOM / owner-BOM designator: LCSC, Manufacturer Part and footprint fields vs BOM; CPL side, position (0.01 mm) and rotation vs board; footprints missing from BOM",
+    "Per-part pad-net dump for all C / R / D / L / Q / U parts; voltage rating of every capacitor against its net (16 V parts only on 3V3, VCAP, VBUS, CAM_IO_3V3); diode pin functions (BAT54A, SRV05-4, USBLC6-2SC6, B340A, 1N5819WS, SMBJ12CA) and FET pins (AO3400A, AONR21357, AON7524) against their nets",
+    "Resistor dissipation spot checks: R167 (40 mW at 19.9 V), R92 (30 mW at 9.97 V), dividers 5.1k/2k (2.9 mW), R134 35.80 W / 0.716 J at 8.4 V and 1.971 ohm",
+    "L400 SRP5030T-6R8M Isat 4.3 A (Bourns datasheet) vs 3.645 A prospective peak in parts_budget.json",
+    "Gerber paste flash counts; CPL side counts; cost_check / stock_check line recomputation",
+    "D402 land vs Infineon TSLP-2-20 footprint drawing; ESD103 VRWM, IR and VTrig vs operating point"
+  ],
+  "sources": [
+    "Infineon ESD103-B1-02 Series datasheet Rev 1.3 (2014-06-12): electrical table p6, Figure 14 TSLP-2-20 footprint p12 (LCSC C535146)",
+    "JSCJ BAT54/A/C/S datasheet (LCSC C8591): VRWM 30 V, IF 200 mA",
+    "Bourns SRP5030T datasheet: SRP5030T-6R8M Irms 4 A, Isat 4.3 A",
+    "m3_design/assembly_review/fab/ (BOM, owner BOM, CPL, Gerber zip, cost_check.json, stock_check.json)",
+    "m3_design/assembly_review/sources/r10_design/parts_qualification.md, parts_budget.json, R10_DECISIONS.md D-R24-11 / -19 / -23"
+  ],
+  "coverage_limits": [
+    "No live LCSC / JLC re-query; supplier facts taken from the committed stock and cost files.",
+    "Lands of the inherited parts not touched by round 24 were not all re-measured against their drawings this round; D402's land was.",
+    "The Sunlord L1 datasheet cache has no text layer; L1 ratings not re-read."
+  ]
+}

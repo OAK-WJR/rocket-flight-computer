@@ -1,0 +1,18 @@
+# m3_design/assembly_review/m3.kicad_pcb sha256 4f841a0e44ebb1829ad7996dfe6320ed527fce1fdb1e5ff11658e0705b44ac14 (step10/fire_loop_r9.py; R9_DECISIONS D-S10-04)
+F7 fire loop, board share (each solve bound to the board above):
+     0.16 mOhm  BAT_IN J1.1 -> Q120 drain (0.05 mm)  [dc005_bat.txt]
+     0.26 mOhm  ACT_FET_S Q120 source -> Q121 source (0.05 mm)  [dc005_fet.txt]
+    10.06 mOhm  RAW_ACT Q121 drain -> J124.2 RAW pad (0.05 mm)  [fire_raw.txt]
+     2.41 mOhm  PYRO1_BUS J124.1 -> R134.2 (0.05 mm)  [fire_bus.txt]
+     2.42 mOhm  PYRO1_IGN R134.1 -> J121.2 (0.05 mm)  [fire_ign.txt]
+     1.58 mOhm  PYRO1_OUT J121.1 -> Q124 drain (0.05 mm)  [fire_out.txt]
+     0.81 mOhm  GND Q124 source -> J1.2 (0.1 mm, window x 0-46, y 50-102: upper bound)  [fire_gnd.txt]
+    17.70 mOhm  board copper, sum of the seven segments
+     4.30 mOhm  Q120 AON6403: RDS(on) max at Vgs -4.5 V; the gate sees -6.73 V at 7.4 V (CIRCUIT_REVIEW, gate divider)
+     4.30 mOhm  Q121 AON6403: same
+     5.80 mOhm  Q124 AON7524: RDS(on) max at Vgs 2.5 V; the gate sees >= 2.77 V at the guaranteed corner (MARGIN_PRESCRIPTION, the pyro gate drive row and the AON7524 paragraph)
+    14.40 mOhm  the three FETs at their data-sheet maxima
+    32.10 mOhm  board total (copper + FETs)
+F7 budget without the board: 7.4 V / 4.45 ohm = 1.663 A
+F7 budget with the board:    7.4 V / (4.45 + 0.0321) ohm = 1.651 A
+against 1.5 x 1.0 A all-fire = 1.50 A: met (1.65 x all-fire)

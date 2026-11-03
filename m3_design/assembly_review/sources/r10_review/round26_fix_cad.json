@@ -1,0 +1,1090 @@
+{
+ "schema": 1,
+ "lane": "round 26 fix pass, CAD lane (board, generated text and checks)",
+ "date": "2026-11-02",
+ "brief": ".supervisor/r26_fix_brief.md items 1-4 on round26_triage.md / .json (R26-TRI-09, the R26-TRI-01 respin item, R26-TRI-02 / -03 / -04), then the root's follow-up (gate nets, C10, a whole-board adjacency audit; D-R26-04)",
+ "base": {
+  "commit": "3d8e845",
+  "board_sha256": "92c3ad59174afe1ffe206f6384c8cd9a8962e09647ccd6a8c418b95b5312056f"
+ },
+ "board": {
+  "sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "size_mm": [
+   46,
+   90,
+   1.6
+  ],
+  "changed": true,
+  "first_hand_back_sha256": "4108e6fa2e8b7dc3aeeeeea98f1b80737f6dc186f11916ab95572ca0376274fe",
+  "counts_columns": [
+   "92c3ad59",
+   "4108e6fa (first hand-back)",
+   "a0ec075e (final)"
+  ],
+  "counts": {
+   "footprints": [
+    216,
+    216,
+    216
+   ],
+   "segments": [
+    1057,
+    1058,
+    1059
+   ],
+   "vias": [
+    307,
+    309,
+    309
+   ],
+   "gnd_vias": [
+    168,
+    170,
+    170
+   ],
+   "track_mm": [
+    1867.046181,
+    1866.026497,
+    1866.793959
+   ],
+   "hidden_designators": [
+    92,
+    93,
+    93
+   ]
+  },
+  "hidden_designators_change": {
+   "added": [
+    "C18"
+   ],
+   "removed": [],
+   "why": "C18's designator spot (19.32, 50.38) B.SilkS now lies on C11.2's mask; the search finds no other spot even with C18 placed first"
+  },
+  "copper_diff": {
+   "vias_added": [
+    [
+     "GND",
+     7.4,
+     16.5
+    ],
+    [
+     "GND",
+     7.4,
+     20.0
+    ]
+   ],
+   "against": "92c3ad59",
+   "vias_moved": [
+    [
+     "3V3",
+     [
+      9.2,
+      52.98
+     ],
+     [
+      9.2,
+      52.55
+     ]
+    ],
+    [
+     "3V3",
+     [
+      19.05,
+      55.9
+     ],
+     [
+      19.55,
+      55.825
+     ]
+    ],
+    [
+     "GND",
+     [
+      19.423,
+      53.023
+     ],
+     [
+      19.423,
+      52.373
+     ]
+    ],
+    [
+     "GND",
+     [
+      19.423,
+      55.023
+     ],
+     [
+      19.65,
+      53.45
+     ]
+    ]
+   ],
+   "footprints_moved": {
+    "C11": [
+     [
+      17.5,
+      52.1
+     ],
+     [
+      17.5,
+      51.45
+     ]
+    ],
+    "C10": [
+     [
+      17.5,
+      54.1
+     ],
+     [
+      17.5,
+      53.5
+     ]
+    ],
+    "R164": [
+     [
+      17.325,
+      55.9
+     ],
+     [
+      17.325,
+      55.25
+     ]
+    ],
+    "R173": [
+     [
+      16.87,
+      59.7
+     ],
+     [
+      16.87,
+      59.05
+     ]
+    ]
+   },
+   "segments_removed": 11,
+   "segments_added": 13,
+   "tracks": "R13's 3V3 strap (west, then 45 degrees); the 3V3A trunk's three pad segments; R164's 3V3 strap (18.15, 55.25) -> (18.975, 55.25) -> (19.55, 55.825); the C11.2 / C10.2 return stubs (C10.2's from (18.5, 53.45), 0.05 mm north of its pad centre); PYRO1_OUT's last vertical (16.87, 57.97)-(16.87, 58.62); PYRO1_CONT_MID from R173.2 via (16.87, 60.82) and (17.85, 61.8) (the chamfered 90 at (16.87, 61.8) is gone)",
+   "pads": "J410 / J420 / J440 / J9 pins 3 and 4 keep no unconnected inner ring (UNCONNECTED_LAYER_MODE REMOVE_EXCEPT_START_AND_END)",
+   "zones": "re-poured",
+   "silkscreen": "C18's designator hidden; no other designator or legend moved"
+  }
+ },
+ "build": {
+  "kicad_cli": "10.0.7",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": 2,
+  "final_builds": [
+   "A",
+   "B"
+  ],
+  "runs": {
+   "1": {
+    "exit": 1,
+    "seconds": 79,
+    "stopped": "signals stage check: route_check detour PYRO1_CONT_MID 11.15 mm / 6.81 mm (1.64 x), exploratory"
+   },
+   "2": {
+    "exit": 0,
+    "seconds": 1626,
+    "board_sha256": "4108e6fa2e8b7dc3aeeeeea98f1b80737f6dc186f11916ab95572ca0376274fe",
+    "note": "first hand-back"
+   },
+   "3": {
+    "exit": 0,
+    "seconds": 1628,
+    "board_sha256": "4108e6fa2e8b7dc3aeeeeea98f1b80737f6dc186f11916ab95572ca0376274fe",
+    "note": "first hand-back"
+   },
+   "A": {
+    "exit": 0,
+    "seconds": 1672,
+    "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+    "note": "after the root's follow-up (D-R26-04)"
+   },
+   "B": {
+    "exit": 0,
+    "seconds": 1682,
+    "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+    "note": "after the root's follow-up (D-R26-04)"
+   }
+  },
+  "exploratory": "build 1 stopped at the signals stage check: PYRO1_CONT_MID detour 11.15 mm / 6.81 mm (1.64 x) after R173 moved; item 2 redrew the run (now 10.58 mm, 1.55 x)",
+  "history": "builds 2 and 3 gave 4108e6fa (the first hand-back); the root's follow-up (D-R26-04) changed the board, and builds A and B gave a0ec075e",
+  "identical_hash": true,
+  "r10_sch_check": "OK",
+  "stage_checks": "every family OK; ground: DRC 0, unconnected 0, route_check 0 failing",
+  "drc": 0,
+  "unconnected": 0,
+  "schematic_parity": 0,
+  "erc": 0,
+  "check_r10": "37 / 37 rules OK",
+  "k_binding": "OK (binding note regenerated by the build: board hash and the two obligations)",
+  "route_check": "0 failing, 0 allowlisted, 0 stale; 5 unrecorded noncritical leftovers as before; 28 bump windows searched (27 before)",
+  "route_check_instances": {
+   "critical_via_no_gnd": [
+    2,
+    0
+   ],
+   "other_categories": "every count unchanged against 92c3ad59; the PYRO1_CONT_MID u_turn and one USB_LIMITED extra_bends information instance changed anchor (as on 4108e6fa)"
+  },
+  "fab": "content checks pass (S-4 BOM / CPL, JLC-footprint CPL rebuild, paste 249 / 381); manifest re-bound",
+  "check_sh_exit": 0,
+  "after_builds": {
+   "first_pass": {
+    "comment_fix": "after builds 2 and 3 one comment in m3_design/r10_route_signals.py (the J440 vias' clearances) was corrected; no drawn value changed",
+    "fab": "R10_RENDER_DIR=.supervisor/r10_renders FAB_NET=1 m3_design/r10_fab.sh: content checks pass (S-4 BOM / CPL, CPL rebuilt from JLC footprints 67 + 125 rows plus 14 placement-only, paste 249 / 381), manifest re-bound (6 outputs); exit 1 on the cost / stock targets only",
+    "check_sh": {
+     "exit": 0,
+     "seconds": 1273,
+     "drc": 0,
+     "unconnected": 0,
+     "schematic_parity": 0,
+     "erc": 0,
+     "check_r10": "37 / 37 OK",
+     "route_check": "0 failing",
+     "fab_manifest": "OK, content checks pass"
+    }
+   },
+   "comment_fixes": "after builds A and B two texts were made exact, nothing drawn changed: the PYRO1_CONT_MID comment in m3_design/r10_route_signals.py (the diagonal is 0.2005 mm from Q123.1; the run keeps the 0.175 mm minimum) and the docstring of test_r26_gate_nets_clear_of_3v3_and_3v3a (3.2 V through R126 for PYRO1_GATE_N, 3.3 V directly for PYRO1_GATE); the standalone check.sh ran on the final tree",
+   "fab": "R10_RENDER_DIR=.supervisor/r10_renders FAB_NET=1 m3_design/r10_fab.sh after builds A and B: content checks pass (S-4 BOM / CPL; the CPL rebuilt from JLC footprints, 67 + 125 rows plus 14 placement-only; paste 249 / 381); manifest re-bound (6 outputs); renders refreshed; exit 1 on the procurement cost target only (stock short on U9 and U4, as before); 133 s",
+   "rerun_note": "a first post-build fab run and check.sh used the system kicad-cli (10.0.6) instead of the brief's 10.0.7; check.sh stopped at the sheet replay (schematic.net.xml's tool stamp, Eeschema 10.0.7 against 10.0.6). Both were re-run with the brief's CLI; the second fab run re-exported and re-bound every fab output and re-ran the supplier evidence",
+   "check_sh": {
+    "exit": 0,
+    "seconds": 1326,
+    "drc": 0,
+    "unconnected": 0,
+    "schematic_parity": 0,
+    "erc": 0,
+    "check_r10": "37 / 37 OK",
+    "route_check": "0 failing",
+    "fab_manifest": "OK, content checks pass",
+    "hotplug": "2304 cases, 0 failures"
+   }
+  },
+  "binding_note": "regenerated by the builds; K-binding OK",
+  "hotplug": {
+   "cases": 2304,
+   "failures": 0,
+   "passed": true,
+   "minimum_V": -14.807,
+   "steepest_fall_V_per_us": 8.995,
+   "steepest_rise_V_per_us": 5.088,
+   "limits": {
+    "minimum_V": -15.0,
+    "maximum_V": 28.0,
+    "falling_V_per_us": 10.0,
+    "rising_V_per_us": 100.0
+   },
+   "inputs_change": "C10 / C11 pad positions in the capacitor inventory and the hashes; results unchanged but the inputs hash"
+  }
+ },
+ "manufacturing": {
+  "bom": "byte-identical to 3d8e845 (81 JLC codes)",
+  "owner_bom": "byte-identical",
+  "cpl": "206 rows (70 top + 136 bottom); 4 rows moved against 3d8e845: C10 (now 53.5), C11, R164, R173; against the first hand-back only C10 moved again",
+  "paste": {
+   "F.Paste": 249,
+   "B.Paste": 381
+  },
+  "supplier": {
+   "rerun": true,
+   "why": "the CPL changed again (C10 at (17.5, 53.5), D-R26-04); BOM unchanged",
+   "command": "FAB_NET=1 m3_design/r10_fab.sh",
+   "cost_check": {
+    "checked_utc": "2026-11-02T12:44:13Z",
+    "total_usd_per_board": 85.26,
+    "parts_usd_per_board": 60.47,
+    "charged_codes": 81,
+    "target_usd": 84.41,
+    "over_usd": 0.85,
+    "extended_codes": 45,
+    "fixed_fees_usd_per_order": 83.96,
+    "handling_fee_may_apply_usd": 14.93,
+    "ok": false,
+    "errors": [],
+    "binds_cpl_sha256": "1f89975052e0745c5579b7fcfd6edda8e09d3a5ad77a11464ab1e6070e63a7ac",
+    "binds_bom_sha256": "00af5358a4043980e9c3a488b5e5a4bbe7a5d562054aaf9ce4ee6f99694e6b55"
+   },
+   "stock_check": {
+    "checked_utc": "2026-11-02T12:43:17Z",
+    "ok": false,
+    "short": [
+     "C3662793 U9 orderable -81 (stockCount 30, canPresaleNumber -81) < 7",
+     "C51931514 U4 orderable 2 (stockCount 9, canPresaleNumber 2) < 5"
+    ],
+    "thin": []
+   },
+   "check_procurement": "fails on the cost target, as before",
+   "first_hand_back": {
+    "cost_checked_utc": "2026-11-02T10:03:22Z",
+    "total_usd_per_board": 85.3,
+    "stock_checked_utc": "2026-11-02T10:02:26Z",
+    "short": [
+     "C3662793 U9 orderable -81 (stockCount 30, canPresaleNumber -81) < 7",
+     "C51931514 U4 orderable 2 (stockCount 9, canPresaleNumber 2) < 5"
+    ]
+   },
+   "before_this_pass_usd": 85.6
+  }
+ },
+ "items": [
+  {
+   "n": 1,
+   "triage": "R26-TRI-09",
+   "decision": "D-R26-01",
+   "status": "done (board and gate)",
+   "before": {
+    "J440.3_gnd_partner_mm": 3.9,
+    "J440.4_gnd_partner_mm": 4.037,
+    "route_check": "vias only: 0 failing on 92c3ad59; the new pad test finds J440.3 / J440.4"
+   },
+   "after": {
+    "J440.3_gnd_partner_mm": 1.5,
+    "J440.4_gnd_partner_mm": 1.5,
+    "vias": [
+     [
+      7.4,
+      16.5
+     ],
+     [
+      7.4,
+      20.0
+     ]
+    ],
+    "via_to_own_pin_pad_mm": 0.3,
+    "via_to_other_pin_pad_mm": 0.8,
+    "hole_to_hole_mm": 0.7,
+    "via_In1_ring_to_pin_hole_mm": 0.6,
+    "via_layers": [
+     "F.Cu",
+     "In1.Cu",
+     "B.Cu"
+    ],
+    "route_check": "0 failing; no other plated pad changes layer on a return-required critical net (J400.2 AUD-2-slow, J1.1 power; J121, J122, J410, J420, J9, J3, J2 one layer)"
+   },
+   "gate": "route_check profile r10: pad_layer_changes; critical_via_no_gnd layer 'pad' measured from the pad centre; critical_transitions includes it; R7-R9 profiles keep the via-only test",
+   "enabling_changes": {
+    "footprint": {
+     "what": "M3_DB125_4P_GN pins 3 / 4 drop their unconnected inner rings (J410, J420, J440, J9)",
+     "why": "DRU 'JLC inner-layer PTH pad hole to copper' 0.55 mm from the via hole to the pin's 0.95 mm inner ring: 0.400 mm at 1.5 mm on the probe (8 hole_clearance errors); a partner would need 1.65 mm with the ring",
+     "k_lands_pin": [
+      "747446dd144e6eaeefc8268d60e286510cf72af60f2268e2f405fc192874439b",
+      "5582eb2808a8e1e3bed547b5bef608854da161921ec61c847134f23e95edb78d"
+     ],
+     "fills": "unchanged: the In2 void round each pin stays 1.2 mm (hole 0.65 + 0.55)"
+    },
+    "k_region": {
+     "what": "OwnPadVoids / pad_void_regions accept the antipad discs (pad radius + REGION_HOLE_REACH) of a pad's GND partner vias (centres within PARTNER_REACH 1.5 mm); the sample still lies in the pad disc",
+     "why": "the via's 0.40 mm In2 antipad merges with the pin's 1.2 mm void at 1.5 mm; K-region failed both AUX B.Cu runs (181 samples each, all inside the void exempted before)",
+     "no_weakening": "old and new K-region give identical evidence on 92c3ad59"
+    }
+   },
+   "seeds": [
+    "test_route_check.R10AuditScope.test_r26_plated_pad_layer_change_needs_a_gnd_via",
+    "test_r10_check.RealBoardSeeds.test_r26_aux_pins_have_gnd_partner_vias",
+    "test_r10_check.R4Synthetic.test_r26_own_pad_void_with_its_gnd_partner_via"
+   ],
+   "files": [
+    "m3_design/r10_route_signals.py",
+    "m3_design/r10_parts.py",
+    "m3_design/assembly_review/kilib/rocket.pretty/M3_DB125_4P_GN.kicad_mod (regenerated)",
+    "tools/route_check.py",
+    "tools/check_r10.py",
+    "tools/test_route_check.py",
+    "tools/test_r10_check.py"
+   ]
+  },
+  {
+   "n": 2,
+   "triage": "R26-TRI-01 respin item",
+   "decision": "D-R26-02",
+   "status": "done and kept",
+   "corrected_by": "D-R26-04: R164's 3V3 via (19.05, 55.25) -> (19.55, 55.825); C10 0.60 mm instead of 0.65 mm; the CONT_MID diagonal (16.87, 60.82)-(17.85, 61.8); D-R26-02's adjacency list annotated as incomplete",
+   "moves": {
+    "R173": "0.65 mm north",
+    "C11 / C10 / R164 column": "C11 and R164 0.65 mm north, C10 0.60 mm (D-R26-04), with the 3V3A trunk; R164's 3V3 via is D-R26-04's",
+    "C11.2 return via": "(19.423, 53.023) -> (19.423, 52.373)",
+    "C10.2 return via": "(19.423, 55.023) -> (19.65, 53.45): the diagonal spot (19.423, 54.373) lies under R127.1 (PYRO1_GATE_N) on F.Cu",
+    "R13 3V3 via": "(9.2, 52.98) -> (9.2, 52.55), strap west then 45 degrees",
+    "PYRO1_CONT_MID": "45-degree turn at (16.87, 60.82) (D-R26-04; 60.77 in the first hand-back): 10.58 mm against 6.81 mm (1.55 x); straight down 11.15 mm (1.64 x) failed the detour gate"
+   },
+   "triage_suggestion_not_taken": "D120 0.55 mm west puts D120.2 on C128.2's GND via (12.775, 59.025), whose other spots sit against Q124.5's drain on F.Cu",
+   "before_after_mm": {
+    "R173.1-D120.3 (3V3)": [
+     0.5135,
+     1.0511
+    ],
+    "diagonal (15.5,56.6)-(16.87,57.97) - R164.2 (3V3A)": [
+     0.5662,
+     1.04
+    ],
+    "run (10.37,56.6)-(15.5,56.6) - R164.2": [
+     0.6059,
+     1.04
+    ],
+    "J121.1 F.Cu run - R13's 3V3 via": [
+     0.62,
+     1.05
+    ],
+    "J121.1 pad - R13's 3V3 via": [
+     0.92,
+     1.1754
+    ],
+    "vertical - D120.3": [
+     0.8027,
+     "> 1.3"
+    ],
+    "3V3A trunk - diagonal / run": [
+     [
+      0.9771,
+      0.9957
+     ],
+     "> 1.3"
+    ],
+    "R173.1 - D120.3's 3V3 strap": [
+     1.0084,
+     "> 1.3"
+    ],
+    "J121.1 - R13's 3V3 strap": [
+     1.07,
+     "> 1.3"
+    ],
+    "minimum, any layer": [
+     0.5135,
+     1.04
+    ]
+   },
+   "new_or_nearer_adjacencies_note": "D-R26-02's list on 4108e6fa was incomplete (R164's 3V3 via 0.331 mm from PYRO1_GATE_N; BUZZ_DRV / PYRO1_OUT 0.964 -> 0.794 mm); item 5 fixes the first and its audit gives the complete list on a0ec075e",
+   "new_or_nearer_adjacencies_mm": {
+    "R173.1 (PYRO1_OUT) - Q124 source via (15.85,58.345) GND": [
+     0.7373,
+     0.5
+    ],
+    "R173.1 - C126's GND via (15.8,59.425)": [
+     0.55,
+     0.7052
+    ],
+    "R173.1 - BUZZ_G": [
+     0.51,
+     0.51
+    ],
+    "R173.2 (PYRO1_CONT_MID) - D120.3 (3V3)": [
+     0.4,
+     0.4154
+    ],
+    "PYRO1_CONT_MID diagonal - Q123.1 (BUZZ_G)": [
+     null,
+     0.2005
+    ],
+    "PYRO1_CONT_MID diagonal - R134.2 (RAW_ACT)": [
+     null,
+     0.386
+    ],
+    "PYRO1_CONT_MID run - Q123.1 / R134.2": [
+     [
+      0.175,
+      0.25
+     ],
+     [
+      0.175,
+      0.25
+     ]
+    ],
+    "PYRO1_OUT - GND minimum": [
+     [
+      0.1768,
+      0.18
+     ],
+     [
+      0.1768,
+      0.18
+     ]
+    ]
+   },
+   "kept": "D-R18-05 (OUT pad >= 0.5 mm from BUZZ_G 0.51 and C126's GND via 0.705); no gate network moved or got a via (S-3); S-1 ... S-9, DRC, every K-rule and route_check pass; hot-plug unchanged",
+   "seed": "test_r10_check.RealBoardSeeds.test_r26_pyro1_out_clear_of_3v3_and_3v3a (1.040 mm; 0.5135 / 0.566 / 0.620 mm with R173, the column or the R13 via put back)",
+   "files": [
+    "m3_design/r10_place.tsv",
+    "m3_design/r10_route_core.py",
+    "m3_design/r10_fanout.tsv",
+    "m3_design/r10_route_signals.py",
+    "tools/check_r10.py (K-plane calibration comment)",
+    "tools/test_r10_check.py"
+   ]
+  },
+  {
+   "n": 3,
+   "triage": "R26-TRI-02 / -03 / -04",
+   "decision": "D-R26-03",
+   "status": "done",
+   "before": {
+    "four_stall_V": 5.73,
+    "single_dropout_ms": 8.2,
+    "window_limit_ms": 7.63,
+    "margin_ms": 0.63,
+    "fast_fraction_pct": 20.0,
+    "fractions_5V7": "19.9 -> 5.8 % at 0.1 -> 8 ms (5.73 V)",
+    "bench_V": 5.73,
+    "search": "4000 trains under 7.62 ms kept EN >= 1.1173 V",
+    "rule8_corner": "5.37 V four-stall-plus-fire"
+   },
+   "after": {
+    "four_stall_V": 5.71,
+    "four_stall_V_exact": 5.713,
+    "single_dropout_ms": 8.07,
+    "window_limit_ms": 7.5,
+    "margin_ms": 0.5,
+    "line_holds_to_V": 5.6465,
+    "fast_fraction_pct": 19.7,
+    "fractions_5V71": "19.6 / 18.6 / 17.4 / 14.8 / 11.4 / 4.5 % at 0.1 / 1 / 2 / 4 / 6 / 8 ms",
+    "bench_V": 5.71,
+    "worst_train": "one open block per 100 ms placed late (exchange argument); trips at 7.50 ms at 5.71 V (7.63 ms at 5.73 V); EN 1.1295 V at the 7 ms line (1.1330 V at 5.73 V)",
+    "rule8_corner_V": {
+     "healthy": 5.71,
+     "match_shorted": [
+      5.55,
+      5.56
+     ],
+     "match_and_leads_shorted": 5.5,
+     "vlogic_lower_by_V": [
+      0.09,
+      0.16
+     ]
+    }
+   },
+   "rerun": {
+    "model": "own worst-corner EN model (R80 / R165 +1 %, R81 -1 %, C87 0.72 x 220 nF, 0.1 uA, D402 50 nA, VUVLO(F) 1.116 V)",
+    "at_5V7132": {
+     "single_ms": 8.067,
+     "window_ms": 7.503,
+     "EN_at_7ms_V": 1.1295,
+     "fast_pct": 19.72
+    },
+    "late_block_5V73": {
+     "7.62_ms_V": 1.1162,
+     "7.6_ms_V": 1.1168
+    },
+    "exchange_identity_V": 0.17625,
+    "fire_corner_V": {
+     "healthy": 5.7132,
+     "shorted_hot": 5.5576,
+     "shorted_cold": 5.5555,
+     "match_and_leads_shorted_cold": 5.5085
+    },
+    "pack_A_for_5V37": 13.53
+   },
+   "battery_entry_note": "carries none of these figures (only the 6.0 / 7.4 / 8.4 V single drop-out); unchanged",
+   "files": [
+    "m3_design/r10_sch_check.py",
+    "tools/test_r10_check.py",
+    "regenerated: r10_binding_note.json"
+   ]
+  },
+  {
+   "n": 4,
+   "item": "records",
+   "status": "done",
+   "decisions": [
+    "D-R26-01",
+    "D-R26-02",
+    "D-R26-03",
+    "D-R26-04"
+   ],
+   "annotated": [
+    "D-R24-19: the 8.2 ms at 5.73 V and 20.0 % chatter lines",
+    "D-R25-01: the 5.73 V bench condition, 8.2 ms, the 5.73 V trip fractions, the 7.629 ms limit, the 1.1173 V search and the 0.63 ms margin",
+    "D-R26-02: R164's via spot, C10's move and the CONT_MID diagonal (corrected by D-R26-04), and its adjacency list (incomplete; D-R26-04 names the omissions)"
+   ],
+   "files": [
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+   ]
+  },
+  {
+   "n": 5,
+   "item": "root's follow-up after the first hand-back (gate nets, C10, BUZZ_DRV / PYRO1_OUT, a whole-board adjacency audit, a seed, records)",
+   "decision": "D-R26-04",
+   "status": "done",
+   "r164_3v3_via": {
+    "from": [
+     19.05,
+     55.25
+    ],
+    "to": [
+     19.55,
+     55.825
+    ],
+    "strap": [
+     [
+      18.15,
+      55.25
+     ],
+     [
+      18.975,
+      55.25
+     ],
+     [
+      19.55,
+      55.825
+     ]
+    ],
+    "generator": "m3_design/r10_route_core.py (CoreTable: R164_VIA_R9, the strap in track(), the via in via())",
+    "search": "0.025 mm grid with real pcbnew shapes; a spot was legal when the via and its strap stay >= 0.2 mm from foreign copper and >= 0.25 mm hole to hole; (19.55, 55.825) gives the largest smaller gate clearance",
+    "root_grid": "(19.55, 55.80-55.85)",
+    "other_neighbours_mm": {
+     "BUZZ_DRV B.Cu diagonal": 0.2335,
+     "LS120.3 (no net, mechanical pad)": 0.2062,
+     "R162.2 (BUZZ_G)": 0.997
+    },
+    "other_neighbours_bridge": "no pyro or arming net; a 3V3 bridge to BUZZ_DRV drives PC14's output and sounds the buzzer"
+   },
+   "gate_clearance_mm": {
+    "columns": [
+     "92c3ad59",
+     "4108e6fa",
+     "a0ec075e"
+    ],
+    "3V3 / PYRO1_GATE_N": {
+     "values": [
+      0.8352,
+      0.3306,
+      1.065
+     ],
+     "where": "R127.1 to R164's 3V3 via, F.Cu (R126.1 1.081)"
+    },
+    "3V3 / PYRO1_GATE": {
+     "values": [
+      0.6761,
+      1.2698,
+      1.0585
+     ],
+     "where": "R128.1 to R164's 3V3 via, F.Cu"
+    },
+    "3V3A / PYRO1_GATE": {
+     "values": [
+      1.1506,
+      1.145,
+      1.1451
+     ],
+     "where": "C10.1 to the PYRO1_GATE via (14.4, 53.3), B.Cu"
+    },
+    "3V3A / PYRO1_GATE_N": {
+     "values": [
+      1.6,
+      1.6,
+      1.6
+     ],
+     "where": "U1.3 to the 3V3A via (16.0, 50.2), F.Cu"
+    },
+    "inner_layers": "the gate nets' only inner copper is the barrel of PYRO1_GATE's via (14.4, 53.3); S-8 holds it >= 1.0 mm from foreign inner copper; the nearest 3V3 fill (In2) is 2.75 mm from it",
+    "next_nearest": "U1.6 (3V3) to U1.3 (PE4), 1.200 mm, U1's own pins",
+    "target": "every 3V3 / 3V3A copper item >= 1.0 mm from all PYRO1_GATE_N and PYRO1_GATE copper on every layer",
+    "target_met": true,
+    "minimum": 1.0585,
+    "bridge": "Calculation: 3V3 on either gate net puts about 3.23 V on Q124's gate (R126 220 ohm against R128 10 kOhm: 3.3 x 10 / 10.22), turning it on and firing an enabled match"
+   },
+   "pyro1_out_to_3v3_3v3a_mm": {
+    "values": [
+     0.5135,
+     1.04,
+     1.04
+    ],
+    "note": "D-R26-02's target kept"
+   },
+   "c10": {
+    "move": "(17.5, 54.1) -> (17.5, 53.5): 0.60 mm north of its 92c3ad59 spot instead of 0.65 mm",
+    "generators": [
+     "m3_design/r10_place.tsv",
+     "m3_design/r10_route_core.py (COLUMN_DY)",
+     "m3_design/r10_fanout.tsv (note)",
+     "m3_design/r10_route_ground.py (C10.2's stub)"
+    ],
+    "envelope_to_u5_union_mm": {
+     "values": [
+      3.333,
+      2.994,
+      3.017
+     ],
+     "note": "C10's conservative Fab / pad envelope to U5's body-and-pad union; ORDERING 8.3's coat exclusion is 3 mm"
+    },
+    "pads_only_mm": [
+     3.777,
+     3.425,
+     3.449
+    ],
+    "return": "C10.2's via stays (19.65, 53.45); its stub leaves the pad 0.05 mm north of centre, inside the 1.35 mm land and below route_check's 0.1 mm pad_end_offcentre",
+    "gnd_to_pyro1_gate_n_mm": {
+     "values": [
+      0.263,
+      0.27,
+      0.27
+     ],
+     "where": "C10.2's via to R127.1"
+    },
+    "mask_whole_needed": false
+   },
+   "cont_mid_diagonal": {
+    "from": [
+     [
+      16.87,
+      60.77
+     ],
+     [
+      17.9,
+      61.8
+     ]
+    ],
+    "to": [
+     [
+      16.87,
+      60.82
+     ],
+     [
+      17.85,
+      61.8
+     ]
+    ],
+    "buzz_g_pair_minimum_mm": [
+     0.175,
+     0.1652,
+     0.175
+    ],
+    "diagonal_to_Q123.1_mm": 0.2005,
+    "diagonal_to_R134.2_mm": 0.3862,
+    "run_to_Q123.1_R134.2_mm": [
+     0.175,
+     0.25
+    ],
+    "route_check_path_mm": 10.575
+   },
+   "buzz_drv_pyro1_out": {
+    "restored": false,
+    "mm": [
+     0.9636,
+     0.7935
+    ],
+    "where": "R162.1 to R173.1, B.Cu",
+    "why_not": [
+     "R173 cannot go back south without losing the 3V3 clearance",
+     "R162 cannot move 0.2 mm east without its courtyard crossing R163's",
+     "R162 cannot move north without crossing R164's via route"
+    ],
+    "optional": true
+   },
+   "audit": {
+    "validation": "root's adjdiff.py (region x 6-25, y 47-66; tracks, vias and pads) reports 3V3 / PYRO1_GATE_N 0.835 -> 0.331 on 4108e6fa; re-run on a0ec075e it gives the same rows as the whole-board run",
+    "extension": "whole board: every copper layer and every net pair; tracks, arcs, vias where flashed and pads; a second run with zone fills",
+    "compare": "3d8e845's board (92c3ad59) -> a0ec075e",
+    "criterion": "minimum under 1.2 mm on a0ec075e and dropped by more than 5 um, or a new pair",
+    "rows": [
+     {
+      "pair": [
+       "BUZZ_DRV",
+       "PYRO1_OUT"
+      ],
+      "old": 0.9636,
+      "new": 0.7935,
+      "where": "R162.1 - R173.1, B.Cu",
+      "pyro_arming": "fire chain",
+      "label": "Inference",
+      "bridge": "With PC1 high and Q124 off, OUT follows the bus through R134 and the match, and the bridge ties it to PC14 (U1.8). PC14's output is characterised only at +/-3 mA (DS12110 Table 159), so it cannot hold the pin against the bus through about 4 ohm (R134 and the match): in any PC14 state the pin is driven far above its supply and its protection conducts. The current that passes before the pin fails is not known and may exceed the match's 0.30 A no-fire, so firing is not excluded. A bridge present at power-up moves the cold OUT reading to PC14's level, which the CONT / BUS bands refuse (R23 firmware rule 3 also toggles PC14 during the cold screen)."
+     },
+     {
+      "pair": [
+       "3V3A",
+       "PYRO1_GATE"
+      ],
+      "old": 1.1506,
+      "new": 1.1451,
+      "where": "C10.1 - the PYRO1_GATE via (14.4, 53.3), B.Cu",
+      "pyro_arming": "pyro gate",
+      "label": "Calculation",
+      "bridge": "about 3.3 V straight onto Q124's gate (R128 10 kOhm to GND) turns it on and fires an enabled match; meets the 1.0 mm target"
+     },
+     {
+      "pair": [
+       "BUZZ_DRV",
+       "PYRO1_CONT_MID"
+      ],
+      "old": null,
+      "new": 1.1329,
+      "where": "R162.1 - R173.2, B.Cu",
+      "pyro_arming": "pyro sense",
+      "label": "Calculation",
+      "bridge": "behind R173's 5.1 kOhm an enabled bus feeds PC14 at most 8.4 V / 5.1 k = 1.6 mA: no fire; cold, CONT leaves its band and is refused"
+     },
+     {
+      "pair": [
+       "3V3",
+       "BUZZ_DRV"
+      ],
+      "old": 0.5339,
+      "new": 0.2335,
+      "where": "R164's 3V3 via - BUZZ_DRV's diagonal, B.Cu",
+      "pyro_arming": "no",
+      "bridge": "PC14's output held at 3.3 V; the buzzer sounds"
+     },
+     {
+      "pair": [
+       "3V3",
+       "LS120.3 (no net)"
+      ],
+      "old": 0.7,
+      "new": 0.2062,
+      "where": "R164's 3V3 via - the buzzer's mechanical pad, F.Cu",
+      "pyro_arming": "no",
+      "bridge": "none"
+     },
+     {
+      "pair": [
+       "BUZZ_DRV",
+       "GND"
+      ],
+      "old": 0.2801,
+      "old_with_fills": 0.2506,
+      "new": 0.2001,
+      "where": "C10.2's via (19.65, 53.45) - BUZZ_DRV's vertical, B.Cu",
+      "pyro_arming": "no",
+      "bridge": "PC14's output held low"
+     },
+     {
+      "pair": [
+       "GND",
+       "U1.5 (PE6, no net)"
+      ],
+      "old": 1.1439,
+      "new": 0.847,
+      "where": "C11.2's via - U1.5, F.Cu",
+      "pyro_arming": "no",
+      "bridge": "none",
+      "fills": "not a regression with fills (the GND fill was already as near)"
+     }
+    ],
+    "with_fills": "the same rows less GND / U1.5 (6 rows); 711 net pairs under 1.2 mm on a0ec075e",
+    "pairs_under_1v2_without_fills": 684,
+    "every_other_pair": "same or larger",
+    "first_hand_back": "on 4108e6fa the same audit also listed 3V3 / PYRO1_GATE_N 0.331 and BUZZ_G / PYRO1_CONT_MID 0.165, both fixed here"
+   },
+   "seed": {
+    "test": "test_r10_check.RealBoardSeeds.test_r26_gate_nets_clear_of_3v3_and_3v3a",
+    "board": ">= 1.0 mm (1.0585)",
+    "put_back": {
+     "(19.05, 55.25)": 0.331,
+     "(19.05, 55.9)": 0.676
+    },
+    "put_back_fails": true,
+    "also": "test_r26_pyro1_out_clear_of_3v3_and_3v3a puts C10 back by its own 0.60 mm; copper_gap and moved_via are shared helpers"
+   },
+   "records": {
+    "added": "D-R26-04",
+    "annotated": "D-R26-02: R164's via spot, C10's 0.65 mm, the CONT_MID diagonal and its adjacency list (incomplete: it omitted R164's via 0.331 mm from PYRO1_GATE_N and BUZZ_DRV / PYRO1_OUT 0.964 -> 0.794 mm)"
+   },
+   "kept": "S-1 ... S-9, DRC 0, all 37 check_r10 rules, route_check 0 failing (instances as on 4108e6fa but the CONT_MID u_turn's path, 10.545 -> 10.575 mm), the hot-plug model; BOM and owner BOM byte-identical; K-plane's 3V3 necks unchanged in width (0.549 / 0.549 / 0.589 / 0.706 mm)",
+   "files": [
+    "m3_design/r10_route_core.py",
+    "m3_design/r10_place.tsv",
+    "m3_design/r10_fanout.tsv",
+    "m3_design/r10_route_ground.py",
+    "m3_design/r10_route_signals.py",
+    "tools/check_r10.py (K-plane comment)",
+    "tools/test_r10_check.py",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md"
+   ]
+  }
+ ],
+ "tests": {
+  "counts": {
+   "shell": 11,
+   "procurement": "OK",
+   "fab_validation": 34,
+   "fit": 33,
+   "paste": 16,
+   "r10_parts": 5,
+   "route": 72,
+   "r10": 267,
+   "r10_numpy_skips": 6,
+   "numpy_hotplug_plate": 6
+  },
+  "previous": {
+   "route": 71,
+   "r10": 263,
+   "note": "at 3d8e845; the first hand-back had r10 266"
+  },
+  "ran": "builds A and B and the standalone check.sh, all OK",
+  "added": [
+   "test_route_check.R10AuditScope.test_r26_plated_pad_layer_change_needs_a_gnd_via",
+   "test_r10_check.R4Synthetic.test_r26_own_pad_void_with_its_gnd_partner_via",
+   "test_r10_check.RealBoardSeeds.test_r26_aux_pins_have_gnd_partner_vias",
+   "test_r10_check.RealBoardSeeds.test_r26_pyro1_out_clear_of_3v3_and_3v3a",
+   "test_r10_check.RealBoardSeeds.test_r26_gate_nets_clear_of_3v3_and_3v3a"
+  ],
+  "extended": [
+   "test_r10_check.SchematicContract.test_r23_binding_note_rules_and_pin_table"
+  ],
+  "not_run": "no physical test; the EN, hold-up, fire-corner and bridge figures are calculations or labelled inferences",
+  "helpers": [
+   "test_r10_check.RealBoardSeeds.copper_gap",
+   "test_r10_check.RealBoardSeeds.moved_via"
+  ]
+ },
+ "decisions": [
+  "D-R26-01",
+  "D-R26-02",
+  "D-R26-03",
+  "D-R26-04"
+ ],
+ "record_index": "220 unique D IDs through D-R26-04",
+ "residual_grep_hits": {
+  "phrases": [
+   "5.73 V",
+   "8.2 ms",
+   "7.63 ms",
+   "0.63 ms",
+   "1.1173",
+   "adversarial search",
+   "20.0 / 24.4",
+   "19.9 % at 0.1",
+   "5.37 V",
+   "0.5135",
+   "0.5662",
+   "0.566 mm",
+   "0.620 mm",
+   "(9.2, 52.98)",
+   "(19.05, 55.9)",
+   "(19.423, 55.023)",
+   "(19.423, 53.023)",
+   "(16.87, 59.7)",
+   "59.27",
+   "60.13",
+   "3.900 / 4.037",
+   "92c3ad59",
+   "1057",
+   "307",
+   "1867.04",
+   "92 hidden",
+   "(19.05, 55.25)",
+   "60.77",
+   "53.45",
+   "0.331",
+   "2.994",
+   "4108e6fa",
+   "(17.9, 61.8)",
+   "0.165 mm",
+   "(17.5, 53.45)",
+   "1058",
+   "1866.026"
+  ],
+  "fixed": "binding note (regenerated), r10_sch_check.py, test pins, route_check / check_r10 docstrings, r10_place.tsv bases, check_r10 K-plane calibration comment (annotated); r10_fanout.tsv notes; the D-R26-02 records' corrected spots (annotated); r10_route_core / r10_route_ground / r10_route_signals D-R26 comments (they quote the old spots, 0.331, 2.994 and 0.165 mm only as what D-R26-04 moved away from)",
+  "deliberate_comparisons": "r10_sch_check.py and the binding note keep '(7.63 ms at 5.73 V)' and '(1.1330 V at 5.73 V)', the triage's wording",
+  "tests": "tools/test_r10_check.py: the old phrases in the rejected list, the old figures in the D-R26 seeds' put-back cases",
+  "history": [
+   "R10_DECISIONS D-R19-10 / D-R20-11 (dated)",
+   "D-R24-19 / D-R25-01 (annotated)",
+   "the D-R26 records' own before figures",
+   "R10_DECISIONS line 774 (3V3 via (9.2, 52.98)) and line 3149 (0.589 mm neck at it), dated decisions",
+   "sources/r10_review round 26 lens and triage records",
+   "D-R26-02's first-hand-back figures, each annotated '(Corrected by D-R26-04 …)'"
+  ],
+  "coincidences": [
+   "1.1173 in two R6 review JSONs",
+   "0.566 mm in R7-R9 review files and route_check PARALLEL_VIAS reasons",
+   "53.45 in an R7 handoff and two inventory JSONs (C10.2's via y, which stays, is current)",
+   "0.331 in procurement and supplier JSONs, a round 17 timestamp and an R7 RF table",
+   "2.994 in the via coordinate 22.994 (r10_fanout.tsv and rounds 11-15's review JSONs)",
+   "0.165 mm in R6 / R7 review files and a round 18 land clearance",
+   "1058 inside longer numbers (the hot-plug results, the parts budget, older review JSONs, autoroute files)",
+   "3D-model and SVG coordinates",
+   "8.2 ms in older docs is '18.2 ms'"
+  ],
+  "docs_lane": {
+   "when": "read-only counts in the docs lane's uncommitted files during this follow-up; they will change as that lane works",
+   "superseded": "the first hand-back's per-file counts for 92c3ad59, 5.73 V, 7.63 ms and the rest",
+   "re_sweep": {
+    "4108e6fa (now this pass's first hand-back, not the board)": {
+     "AGENTS.md": 4,
+     "STATUS.md": 7,
+     "docs/FMEA_REDUNDANCY.md": 4,
+     "docs/M3_R10.md": 29,
+     "docs/ORDERING.md": 10,
+     "docs/R10_VALIDATION.md": 49,
+     "docs/R10_VEHICLE_HANDOFF.md": 5,
+     "docs/REQUIREMENTS.md": 5,
+     "parts_qualification.md": 5,
+     "AVA_LAYOUT.md": 2
+    },
+    "53.45 (C10's first-hand-back y; also C10.2's via y, which stays)": {
+     "docs/M3_R10.md": 2,
+     "docs/ORDERING.md": 1,
+     "docs/R10_VALIDATION.md": 3,
+     "AVA_LAYOUT.md": 5
+    },
+    "2.994 (C10 envelope on 4108e6fa; now 3.017)": {
+     "STATUS.md": 1,
+     "docs/ORDERING.md": 1,
+     "docs/R10_VALIDATION.md": 1
+    },
+    "0.165 mm (the CONT_MID diagonal on 4108e6fa; now 0.175 / 0.2005)": {
+     "docs/M3_R10.md": 2,
+     "docs/R10_VALIDATION.md": 3
+    },
+    "60.77 (the CONT_MID diagonal start; now 60.82)": {
+     "docs/M3_R10.md": 2,
+     "docs/R10_VALIDATION.md": 3,
+     "AVA_LAYOUT.md": 1
+    },
+    "1058 (segments on 4108e6fa; now 1059)": {
+     "docs/M3_R10.md": 2,
+     "docs/R10_VALIDATION.md": 2,
+     "AVA_LAYOUT.md": 1
+    },
+    "0.331 (R164's via to R126.1 on 4108e6fa; fixed)": {
+     "AGENTS.md": 2,
+     "STATUS.md": 1,
+     "docs/FMEA_REDUNDANCY.md": 1,
+     "docs/M3_R10.md": 2,
+     "docs/R10_VALIDATION.md": 8,
+     "AVA_LAYOUT.md": 1
+    }
+   },
+   "other_revisions_not_counted": [
+    "docs/M3_R7.md",
+    "docs/M3_R8.md",
+    "docs/R5_VALIDATION.md",
+    "docs/R7_VALIDATION.md"
+   ],
+   "absent": [
+    "a0ec075e",
+    "(19.05, 55.25)",
+    "(19.05, 55.9)",
+    "(17.5, 53.45)",
+    "0.1652",
+    "(17.9, 61.8)",
+    "1866.026",
+    "0.794",
+    "10.55 mm"
+   ]
+  }
+ },
+ "for_docs_lane": [
+  "new board a0ec075e (216 footprints, 1059 segments, 309 vias / 170 GND, 1866.794 mm, 93 hidden: C18 added); 4108e6fa was this pass's first hand-back and is history; 92c3ad59 is the board of rounds 25 and 26",
+  "CPL 206 rows (70 + 136): C10, C11, R164 and R173 moved against 3d8e845 (C10 now (17.5, 53.5)); paste 249 / 381; BOM unchanged; supplier evidence re-run (see supplier)",
+  "TRI-01 and D-R26-04: PYRO1_OUT >= 1.040 mm from 3V3 / 3V3A, and 3V3 / 3V3A >= 1.0585 mm from PYRO1_GATE_N / PYRO1_GATE, on every layer; the OUT-to-GND members remain (0.1768 / 0.1800 mm, pour 0.25 mm)",
+  "D-R26-02's adjacency list was incomplete; quote D-R26-04's audit instead: BUZZ_DRV / PYRO1_OUT 0.794 mm (Inference: firing not excluded in any PC14 state), 3V3A / PYRO1_GATE 1.145 mm, BUZZ_DRV / PYRO1_CONT_MID 1.133 mm (<= 1.6 mA, no fire), and the four non-pyro rows",
+  "C10's envelope is 3.017 mm from U5's union (pads 3.449 mm), so C10 need not be masked whole",
+  "R10_VALIDATION's 'None of the pairs below fires the match by itself' still needs the triage's correction for the OUT-to-GND class and J440.1 / J440.2",
+  "TRI-09: J440 partner vias added; J410 / J420 / J440 / J9 pins 3 / 4 keep no inner ring (D-R20-05's wording covers J121.1 / J400.2 only); route_check now counts a plated pin's layer change (REQUIREMENTS M2's 'a change into a same-net pad' covers vias only); K-region's own-pad-void exemption covers the GND partner's antipad",
+  "TRI-02 / -03 / -04: D-R26-03's figures (5.71 V, 8.1 ms, 7.50 ms, 0.50 ms, 19.7 %, the late-block train, rule 8's corner) in every place the triage lists",
+  "re-sweep the phrases in residual_grep_hits.docs_lane.re_sweep"
+ ],
+ "git_state_changed": false,
+ "native_cad_hand_edited": false,
+ "off_limits_untouched": [
+  "STATUS.md",
+  "AGENTS.md",
+  "docs/*.md",
+  "parts_qualification.md",
+  "AVA_LAYOUT.md"
+ ],
+ "off_limits_note": "these files carry the docs lane's uncommitted edits; this lane neither touched nor reverted them",
+ "jobs_left_running": false
+}

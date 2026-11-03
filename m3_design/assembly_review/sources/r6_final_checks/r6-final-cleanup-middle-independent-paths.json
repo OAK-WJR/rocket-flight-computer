@@ -1,0 +1,153 @@
+{
+  "before": {
+    "4": {
+      "bridge_endpoints": {
+        "error": "no local return"
+      },
+      "east_half": {
+        "length_mm": 4.403553390593267,
+        "points": [
+          [
+            20.65,
+            46.15
+          ],
+          [
+            20.75,
+            46.15
+          ],
+          [
+            20.8,
+            46.2
+          ],
+          [
+            20.95,
+            46.2
+          ],
+          [
+            21.0,
+            46.25
+          ],
+          [
+            24.8,
+            46.25
+          ],
+          [
+            24.95,
+            46.4
+          ]
+        ]
+      },
+      "whole_middle": {
+        "error": "no local return"
+      }
+    },
+    "6": {
+      "bridge_endpoints": {
+        "error": "no local return"
+      },
+      "east_half": {
+        "error": "no local return"
+      },
+      "whole_middle": {
+        "error": "no local return"
+      }
+    },
+    "bridge_erosion_0.10": {
+      "bridge_endpoints": {
+        "length_mm": 1.272792206135785,
+        "points": [
+          [
+            19.75,
+            45.25
+          ],
+          [
+            20.65,
+            46.15
+          ]
+        ]
+      }
+    }
+  },
+  "after": {
+    "4": {
+      "bridge_endpoints": {
+        "error": "no local return"
+      },
+      "east_half": {
+        "length_mm": 4.403553390593267,
+        "points": [
+          [
+            20.65,
+            46.15
+          ],
+          [
+            20.75,
+            46.15
+          ],
+          [
+            20.8,
+            46.2
+          ],
+          [
+            20.95,
+            46.2
+          ],
+          [
+            21.0,
+            46.25
+          ],
+          [
+            24.8,
+            46.25
+          ],
+          [
+            24.95,
+            46.4
+          ]
+        ]
+      },
+      "whole_middle": {
+        "error": "no local return"
+      }
+    },
+    "6": {
+      "bridge_endpoints": {
+        "error": "no local return"
+      },
+      "east_half": {
+        "error": "no local return"
+      },
+      "whole_middle": {
+        "error": "no local return"
+      }
+    },
+    "bridge_erosion_0.10": {
+      "bridge_endpoints": {
+        "length_mm": 1.272792206135785,
+        "points": [
+          [
+            19.75,
+            45.25
+          ],
+          [
+            20.65,
+            46.15
+          ]
+        ]
+      }
+    }
+  },
+  "protected_3V3": {
+    "HSE": {
+      "checkpoint_retained": true,
+      "additional_loss_mm2": 1.117305e-07
+    },
+    "feeder": {
+      "checkpoint_retained": true,
+      "additional_loss_mm2": 0.0
+    }
+  },
+  "bridge_count": 1,
+  "bridge_length_mm": 1.2727922061357857,
+  "explicit_multilayer_middle_length_mm": 5.676345596729052
+}

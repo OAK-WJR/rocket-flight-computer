@@ -1,0 +1,648 @@
+{
+  "round": 13,
+  "lens": "docs_binding",
+  "review_kind": "Fresh full independent read-only adversarial documentation/firmware-binding review",
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "target_commit_basis": "Immutable task packet; no Git action was performed.",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 4
+  },
+  "totals_basis": "Open new and carried findings only; closed rechecks below are not counted again.",
+  "findings": [
+    {
+      "id": "R13-DOC-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "O6 acceptance prose names motor branches instead of signal-reference branches",
+      "evidence": [
+        {
+          "file": "docs/R10_VALIDATION.md",
+          "line": 1231,
+          "observation": "The current acceptance list applies the >=50 milliohm lower bound to motor branches."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+          "line": 102,
+          "observation": "O6 assigns >=50 milliohm to each reference branch, with <=1 milliohm star transfer."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+          "line": 697,
+          "measurement": "4 * (7.68 A * 0.001 ohm) / 0.050 ohm = 0.6144 A; motor-lead resistance alone does not bound a parallel reference path."
+        },
+        {
+          "file": "docs/ORDERING.md",
+          "line": 485,
+          "observation": "The current servo-harness worksheet correctly retains reference branches."
+        }
+      ],
+      "fix": "Replace motor branches with signal-reference branches. Preserve O6 direct motor pairs, transfer-resistance measurement, reference-branch measurement and 1 A board allowance.",
+      "severity_basis": "Bounded specification transcription defect. The operative ordering worksheet is correct; no installed-harness failure is demonstrated."
+    },
+    {
+      "id": "R13-DOC-02",
+      "severity": "Minor",
+      "status": "new",
+      "title": "AGENTS describes an assembly binding as matching7355 although only the R10 evidence note does",
+      "evidence": [
+        {
+          "file": "AGENTS.md",
+          "line": 26,
+          "observation": "Current firmware row says r10_binding_note.json and assembly binding match7355ae1a."
+        },
+        {
+          "file": "m3_firmware/assembly_binding.py",
+          "line": 20,
+          "observation": "The executable legacy binding still returns profile M3-ASSY-R1."
+        },
+        {
+          "file": "m3_design/assembly_review/verification_assembly.json",
+          "line": 5,
+          "measurement": "Legacy assembly verification remains R1-bound to e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f."
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/r10_binding_note.json",
+          "line": 3,
+          "observation": "R10 note explicitly record-only/no firmware approval; all four hashes and complete in-memory replay match current CAD."
+        },
+        {
+          "check": "Legacy assembly_binding import-only probe",
+          "result": "ModuleNotFoundError: No module named check_assembly; no build/compilation was invoked."
+        }
+      ],
+      "fix": "Say that the generated R10 evidence note matches current CAD/pin/axis facts while executable assembly binding remains the unavailable R1 chain. Retain no-approval wording and require a new reviewed R10 implementation; do not replace the R1 hash.",
+      "severity_basis": "Provenance wording ambiguity with adjacent correct no-firmware warnings. No hash bypass or executable R10 approval exists."
+    },
+    {
+      "id": "R13-DOC-03",
+      "severity": "Minor",
+      "status": "carried",
+      "prior_ids": [
+        "R11-m03",
+        "R12-m02",
+        "R12-DOC-02"
+      ],
+      "title": "Parent vehicle candidate mirror still describes removed hardware",
+      "evidence": [
+        {
+          "file": "../../docs/VEHICLE.md",
+          "line": 39,
+          "observation": "R10 paragraph still names GH4 ports, ARM terminal, GH2 J400 at(10.5,85.5) and 0.03 mm GH envelope margin."
+        },
+        {
+          "file": "docs/R10_VEHICLE_HANDOFF.md",
+          "line": 11,
+          "observation": "Current concrete replacement handoff gives seven DB125 terminals, no J124 and current support/access/arming limits."
+        },
+        {
+          "native_ref": "J400",
+          "position_mm": [
+            7.4,
+            65.849999
+          ],
+          "rotation_deg": -90.0,
+          "pins": {
+            "1": "BAT_SW_SOURCE",
+            "2": "BAT_SW_RETURN"
+          }
+        }
+      ],
+      "fix": "Apply the complete in-worktree handoff in the separately authorized parent-repository workflow, preserving accepted R9 history; alternatively mark the parent candidate paragraph obsolete and link the handoff. No other-worktree write was performed here.",
+      "severity_basis": "Known integration/documentation mismatch. Current in-worktree construction instructions are correct and physical fit remains openly unverified."
+    },
+    {
+      "id": "R13-DOC-04",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Active servo-raceway risk statement retains M1.75 instead of current approximately Mach1.9 design point",
+      "evidence": [
+        {
+          "file": "docs/REQUIREMENTS.md",
+          "line": 102,
+          "observation": "Unqualified current accepted-risk sentence says flight2 servo raceway operates up to M1.75."
+        },
+        {
+          "file": "docs/REQUIREMENTS.md",
+          "line": 13,
+          "observation": "Governing L1000W flight2 design point is about Mach1.9."
+        },
+        {
+          "file": "docs/REQUIREMENTS.md",
+          "line": 32,
+          "observation": "Current envelope explicitly requires updating the trajectory for Mach1.9."
+        }
+      ],
+      "fix": "Use the current approximately Mach1.9 design point and label it an estimate, or explicitly scope M1.75 to the earlier trajectory. Preserve actual flight-model/hinge/harness qualification.",
+      "severity_basis": "Bounded stale prose. No physical aerodynamic or harness failure has been established."
+    }
+  ],
+  "closed_rechecks": [
+    {
+      "id": "R12-MCU-01 evidence component",
+      "status": "closed",
+      "evidence": "Pin-table source and current records withdraw <=2.9mA maximum. Independent 3.33V/990ohm calculation gives3.363636mA; resistor/circuit unchanged and actual dynamics unmeasured."
+    },
+    {
+      "id": "R12-DOC-01 primary status/native-geometry component",
+      "status": "closed with bounded residuals R13-DOC-01/02",
+      "evidence": "Current active top records consistently identify7355, two complete build receipts,42 matching hashes, clean-pair pending and CAD/simulation/physical separation. Original stale geometry is explicitly historical."
+    },
+    {
+      "id": "R10 note provenance",
+      "status": "closed on current target",
+      "evidence": "Four input hashes match; all100 U1 rows agree across native schematic/PCB/XML/table/note; in-memory note replay equal."
+    }
+  ],
+  "independent_native_evidence": {
+    "u1_pad_count": 100,
+    "u1_xml_count": 100,
+    "u1_table_count": 100,
+    "u1_binding_count": 100,
+    "pin_mismatches": [],
+    "native_schematic_u1_pins": 100,
+    "native_schematic_mismatches": [],
+    "native_schematic_pin_name_mismatches": [],
+    "binding_hashes": {
+      "board_sha256": {
+        "recorded": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+        "actual": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+        "match": true
+      },
+      "netlist_sha256": {
+        "recorded": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+        "actual": "541c20c708c6e0b435237135dbf6829234f873fb58553f7d58c86590fefd552e",
+        "match": true
+      },
+      "pin_table_sha256": {
+        "recorded": "430d94a0642eee87ceaa2c383ce2ea0421cf1cf2b6ce9c40e1db406fc6cd1196",
+        "actual": "430d94a0642eee87ceaa2c383ce2ea0421cf1cf2b6ce9c40e1db406fc6cd1196",
+        "match": true
+      },
+      "circuit_sha256": {
+        "recorded": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+        "actual": "527313ad151dd8bb37bc589c419e568374c1d472e1faea8f7b2f0fd3225b6a7f",
+        "match": true
+      }
+    },
+    "in_memory_binding_replay_equal": true,
+    "schematic_contract_issues": [],
+    "schematic_components_and_pin_mappings": {
+      "components": 209,
+      "pin_mappings": 651
+    },
+    "all_native_pin_net_mismatches": [],
+    "imu": {
+      "pos_mm": [
+        17.0,
+        45.9
+      ],
+      "side": "bottom",
+      "rotation_deg": 180.0,
+      "pad1_mm": [
+        [
+          18.21,
+          45.15
+        ]
+      ],
+      "lever_x_mm": -6.0,
+      "binding": {
+        "x_mm": 17.0,
+        "y_mm": 45.9,
+        "rotation_deg": 180.0,
+        "side": "bottom",
+        "lever_arm_x_mm": -6.0,
+        "lever_arm_z_mm": -2.06,
+        "lever_arm_z_basis": "Inference: centre of the U4 3D model box, not measured",
+        "lever_arm_frame": "board frame: x east (+x toward the x = 46 edge), y forward, z up from the top face; lever_arm_x_mm and lever_arm_z_mm are the sensor position relative to the roll axis in that frame; in the IMU frame (+X_imu = -x, +Y_imu = -y, +Z_imu = -z) the lever arm is (+6.0, ., +2.06) mm",
+        "bench_sign_check": "required",
+        "axis_basis": "same signed frame as R9: bottom180",
+        "roll_about_forward_axis": "-gyro_Y",
+        "forward_thrust": "-a_Y"
+      }
+    },
+    "native_m7": {
+      "issues": [],
+      "evidence": {
+        "imu_rotation": {
+          "revision": "M3-ASSY-R10",
+          "required": 180.0,
+          "axis_map": "R9 D-S7-06 axis map: roll = -gyro_Y"
+        },
+        "imu_lever_arm_mm": 6.0,
+        "U4": {
+          "body": [
+            15.355,
+            44.505,
+            18.645,
+            47.295
+          ],
+          "interior": [
+            16.078,
+            45.227,
+            17.922,
+            46.572
+          ]
+        },
+        "U5": {
+          "body": [
+            8.055,
+            47.005,
+            13.145,
+            51.195
+          ],
+          "interior": [
+            9.02,
+            48.55,
+            12.18,
+            49.65
+          ]
+        },
+        "imu_lever_arm_signed_mm": -6.0,
+        "imu_pad1_offset_mm": [
+          1.21,
+          -0.75
+        ],
+        "board_axis_map": {
+          "side": "bottom",
+          "rotation": 180.0,
+          "map": "R9 D-S7-06 axis map: +X_imu = -x_board, +Y_imu = -y_board; roll = -gyro_Y"
+        }
+      }
+    },
+    "terminal_inventory": {
+      "J121": {
+        "pos_mm": [
+          7.4,
+          55.85
+        ],
+        "rotation_deg": -90.0,
+        "side": "top",
+        "pins": {
+          "1": "PYRO1_OUT",
+          "2": "PYRO1_IGN"
+        }
+      },
+      "J400": {
+        "pos_mm": [
+          7.4,
+          65.849999
+        ],
+        "rotation_deg": -90.0,
+        "side": "top",
+        "pins": {
+          "1": "BAT_SW_SOURCE",
+          "2": "BAT_SW_RETURN"
+        }
+      },
+      "J1": {
+        "pos_mm": [
+          7.4,
+          75.85
+        ],
+        "rotation_deg": -90.0,
+        "side": "top",
+        "pins": {
+          "1": "BAT_IN",
+          "2": "GND"
+        }
+      },
+      "J410": {
+        "pos_mm": [
+          38.6,
+          15.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "top",
+        "pins": {
+          "1": "PORT_4V8",
+          "2": "GND",
+          "3": "GPS_TX_WIRE",
+          "4": "GPS_RX_WIRE"
+        }
+      },
+      "J420": {
+        "pos_mm": [
+          38.6,
+          31.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "top",
+        "pins": {
+          "1": "PORT_4V8",
+          "2": "GND",
+          "3": "RADIO_TX_WIRE",
+          "4": "RADIO_RX_WIRE"
+        }
+      },
+      "J9": {
+        "pos_mm": [
+          38.6,
+          47.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "top",
+        "pins": {
+          "1": "CAM_5V",
+          "2": "GND",
+          "3": "CAM_RX_WIRE",
+          "4": "CAM_TX_WIRE"
+        }
+      },
+      "J122": {
+        "pos_mm": [
+          38.6,
+          71.5
+        ],
+        "rotation_deg": 90.0,
+        "side": "top",
+        "pins": {
+          "1": "SERVO1_OUT",
+          "2": "SERVO2_OUT",
+          "3": "SERVO3_OUT",
+          "4": "SERVO4_OUT",
+          "5": "GND"
+        }
+      }
+    },
+    "silk_references": {
+      "visible": 118,
+      "hidden": 91
+    },
+    "hidden_reference_mismatches": {
+      "missing_in_doc": [],
+      "extra_in_doc": []
+    },
+    "absolute_native_model_paths": []
+  },
+  "schematic_seed_results": {
+    "total": 34,
+    "all_rejected": true,
+    "names": [
+      "C92 split assembly footprint",
+      "C120 split assembly footprint",
+      "AUD-4 pull-pin restored",
+      "AUD-4 pull-pin MCU net restored",
+      "AUD-5 removed test pad restored",
+      "AVA obsolete GPS translator restored",
+      "AVA obsolete radio switch restored",
+      "AVA duplicate bus divider restored",
+      "audit2 CONT pin resistor restored",
+      "audit2 bus ADC tail restored",
+      "AVA duplicate bus ADC restored",
+      "obsolete ARM terminal restored",
+      "obsolete separate pyro bus",
+      "pyro feed directly from pack",
+      "bus sense directly from pack",
+      "load switch follows logic rail",
+      "load switch enable pull-down missing",
+      "independent load switch MCU pin missing",
+      "servo signal terminal powered",
+      "radio USB injection bypass",
+      "GPS always-on feed split",
+      "radio TX series bypass",
+      "retained camera isolation removed",
+      "retained camera switch removed",
+      "pyro load switch removed",
+      "pyro gate capacitor excluded",
+      "shorted igniter limiter DNP",
+      "microSD socket removed",
+      "microSD CS reset pullup removed",
+      "microSD MOSI MISO swapped",
+      "microSD shield floating",
+      "microSD supplied by port LDO",
+      "microSD unused DAT2 floating",
+      "QSPI primary logger removed"
+    ]
+  },
+  "primary_source_checks": [
+    {
+      "source": "ST DS12110 Rev11",
+      "url": "https://www.st.com/resource/en/datasheet/stm32h742vg.pdf",
+      "pages": "Figure5 p55; Table9 pp64-87; Table10 pp89-94; Table149 p244",
+      "result": "100 package names checked with no mismatch;28 selected alternate-function entries and five ADC roles agree. PC14 output-drop test point supplies no minimum driver-resistance proof."
+    },
+    {
+      "source": "ST AN2606 Rev70",
+      "url": "https://www.st.com/content/ccc/resource/technical/document/application_note/b9/9b/16/3a/12/1e/40/0c/CD00167594.pdf/files/CD00167594.pdf/_jcr_content/translations/en.CD00167594.pdf",
+      "pages": "Table135 pp320-323",
+      "result": "Current loader-resource list agrees with retained mapped exceptions and SD-MISO caveat. Prior Rev64 citations remain versioned references."
+    },
+    {
+      "source": "ST DS14623 Rev3",
+      "url": "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf",
+      "pages": "Figure5 p9",
+      "result": "Official indexed pin/axis context inspected; complete fresh rendered axis-figure derivation unavailable. Native B180/pad1/lever mapping is consistent with reviewed source; bench sign check remains required."
+    }
+  ],
+  "decision_requirements_coverage": {
+    "all_decision_text_and_current_applicability_read": true,
+    "decision_ids": {
+      "unique_heading_count": 110,
+      "ledger_count": 110,
+      "missing": [],
+      "extra": [],
+      "duplicate_ids": []
+    },
+    "owner_mandate_count": 22,
+    "owner_mandate_ids": [
+      "Initial plan items1-4",
+      "O1",
+      "O2",
+      "O3",
+      "O4",
+      "O5",
+      "O6",
+      "D-R2-04 then D-R2-08",
+      "OQ-1",
+      "OQ-2",
+      "OQ-3",
+      "OQ-4",
+      "OQ-5",
+      "OQ-6",
+      "OQ-7",
+      "Single switch and keep-one-switch reaffirmation",
+      "AUD-1..10 and GAP-1..5",
+      "AVA comparison10 layout items",
+      "Always-on ports plus microSD",
+      "All wired screw terminals / Steer1",
+      "Requirements audit2 items1-13,15",
+      "Requirements audit2 item14/16"
+    ],
+    "historical_groups": 46,
+    "historical_row_identity": {
+      "ledger_count": 229,
+      "archive_count": 229,
+      "same_ids_in_order": true
+    },
+    "source_catalog_checks": {
+      "preparation": {
+        "path": ".supervisor/r10_deviations_lean_prep.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "historical_archive": {
+        "path": "m3_design/assembly_review/sources/r10_review/round10_deviations.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "requirements": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_requirements.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "routing_review": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_routing.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "parts_review": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_parts.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "mcu_review": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_mcu.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "reconciliation": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_reconciliation.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "C98_candidate": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_c98_candidate.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "Fab_fix": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_fab_fix.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "gate_fix": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_gate_fix.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "native_fix": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_fix_native.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "supplier_raw": {
+        "path": ".supervisor/round12_parts_supplier.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "final_route_raw": {
+        "path": ".supervisor/r12_final_route.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "decisions": {
+        "path": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      },
+      "integration": {
+        "path": "m3_design/assembly_review/sources/r10_review/round12_fix_validation.json",
+        "exists": true,
+        "sha_match": true,
+        "bytes_match": true
+      }
+    },
+    "json_source_pointer_count": 176,
+    "invalid_json_source_pointers": [],
+    "generated42_hash_mismatches": [],
+    "active_entry_markdown_missing_local_links": [],
+    "source_durability": "Three catalogue inputs remain ignored raw/preparation intermediates. Durable ledger copies substantive observations/dispositions and links named durable prior-review/native/integration receipts; no unresolved pointer/hash mismatch found.",
+    "AGENTS_section2_violation_demonstrated": false,
+    "current_vs_history": "R9 accepted; R10 unaccepted/unordered. Full same-board13/14 pair still pending. Older board-specific gates/models/reviews retain their hashes."
+  },
+  "checks_executed": [
+    {
+      "check": "Mandatory-source/owner-decision/current-document reading",
+      "result": "Complete assigned lens; no peer current-round reports read."
+    },
+    {
+      "command": "shasum -a256 m3_design/assembly_review/m3.kicad_pcb",
+      "result": "Exact target hash before; repeated native/report checks preserve it."
+    },
+    {
+      "command": "KICAD_PY -I -B .supervisor/r13_docs_binding_probe.py",
+      "result": "Successful complete read-only native API, direct schematic walk, binding replay,34 seeds, M7, ledger/source and generated-hash checks. Initial scratch fixture exceptions corrected; failed attempts not counted as passes."
+    },
+    {
+      "check": "Manual ST Figure5 package-list comparison",
+      "result": "100 names,0 mismatches."
+    },
+    {
+      "check": "Selected primary maker ADC/AF/loader/PC14 source inspection through official web extraction",
+      "result": "No conflicting current pin fact found; source/render limitations below."
+    },
+    {
+      "check": "Independent O6/PC14 arithmetic",
+      "result": {
+        "servo_return_bound_A": 0.6144,
+        "PC14_initial_resistor_corner_mA": 3.3636363636363638
+      }
+    },
+    {
+      "check": "Legacy assembly_binding import-only probe",
+      "result": "Stopped at absent check_assembly import; no compile/artifact generation. Static R1 profile/proof inspection completed."
+    },
+    {
+      "check": "Native section2-relevant topology inventory",
+      "result": "Separate PC1/PE4 controls, external bias/series/capacitor networks,post-Q120/Q121 RAW_ACT,2ohm R134 and direct two-bank sense facts agree with current documentation."
+    }
+  ],
+  "source_hashes": {
+    "AGENTS.md": "dd5d1ddb06f5630000573389026ab6007f88bc250891722f6d019f0e211d823b",
+    "STATUS.md": "7107eaf4f52eca4ce3a0e3e99927bbc272f11ba0f0f2425d80ffe25f99eb41fe",
+    "README.md": "3ba6dc40fcc75096f7c3625a3573ddefa96d5015043a2597aa473a330298b602",
+    "docs/REQUIREMENTS.md": "2495315d16e65fa2af5db9882bf6cc458ab30139be6773e38cf20ef1f561e25c",
+    "docs/M3_R10.md": "02d2ee401d1de86e549790b9068cd35559630a3724bb6e391bbce514bbe35ccb",
+    "docs/R10_VALIDATION.md": "636f7289db3abb76c30ce46503d3b4c7b3e8481807d9f0079ed6c5396bcd642f",
+    "docs/R9_VALIDATION.md": "7103449b0ac3d11271feac286c8a8c1199bc9c76b7fe3909996791022f591bee",
+    "docs/ORDERING.md": "f3605b3876653370eaad5ef70a6e00a50a949cd0b7bd66d1e93e96268ae5842f",
+    "docs/R10_VEHICLE_HANDOFF.md": "3a2f34f3857e1c07010229ea9bdde5547160685bcf174d98aaa7682d6f12faad",
+    "docs/FMEA_REDUNDANCY.md": "dc38bc1397190d2c177cce8113c22b8704e8f1b68f67e8782a439add16290442",
+    "m3_design/assembly_review/sources/r10_design/r10_plan.md": "6236254c8e1276d1b65b9177fffede3526632cff6f71c2ccb8b4d53ace8924c7",
+    "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "6104d47cb76dc7d7368f0eb138de0e51ba13d64de22d602acc747696db65e4b9",
+    "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "183694ae1bc2a0026cdbb8d185f1c971fe7e1639405d7d0a43ed7d3e00596da1",
+    "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "9fb7b913003d378ce395ff0d518979183a6fa02974ce89c84e74e25f3328d6f3",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "430d94a0642eee87ceaa2c383ce2ea0421cf1cf2b6ce9c40e1db406fc6cd1196",
+    "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": "3050403875aea523513165bbb2c3699a6315800433595290ede86edd1bcb99e3",
+    "m3_firmware/assembly_binding.py": "2a7a1391950a7c629861c5c0c93e6335cfe55c38d8a2f4ccf1d481ebdecf89e9",
+    "m3_firmware/build.py": "d97fca19c340d4bc9f471abd5bedea58df00fc45d2e8ad86a6315a07abcdd86b",
+    "../../docs/VEHICLE.md": "96b8fab9b91d1a586d0ae25fde3bc15c71ae7d267ef62d0e5443b2e48fb1f9cb"
+  },
+  "coverage_limits": [
+    "No canonical build,full check.sh,native CLI,GUI,Git action or CAD mutation. Only assigned reports and ignored scratch probes written; no other-worktree write.",
+    "All100 MCU native schematic names/nets were derived from symbol coordinates,wires,labels and NC marks without CLI. The full651-pin PCB/XML comparison is consistency evidence, not independent electrical connectivity/ERC qualification.",
+    "ST whole-PDF downloads timed out or exceeded web size limit; official indexed/extracted maker text supplied pin/AF/loader evidence. Complete fresh LSM6 axis-figure visual derivation unavailable; retained signed map and mandatory bench sign test preserved.",
+    "KiCad API emits known nonfatal wx/image-handler initialization messages. Initial local scratch fixture failures were corrected before final successful check.",
+    "Legacy firmware dependency absence prevents executing the old assembly binding to its hash check. No current R10 build/firmware approval or hash bypass was tested or created.",
+    "No simulation sweep,live supplier refresh/quote,firmware timing,physical/electrical/thermal/endurance,RF/ESD,harness/retention/coating,fit,flight or first-article result claimed.",
+    "Disclosed unimplemented firmware/bench qualification remains an obligation,not a demonstrated hardware failure."
+  ]
+}

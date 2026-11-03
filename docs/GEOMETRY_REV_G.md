@@ -2,7 +2,7 @@
 
 > This document supersedes **every geometry-related item** in `ROCKET_FC_FROZEN_DESIGN.md` (outline, zoning, connector positions, height budget, copper widths, mounting holes). The electrical architecture, pin table, netlist and firmware constraints still follow the original document, patched only by the list in §8.
 > Wherever a checker overturned an analysis agent, the checker wins; that is already merged below.
-> Historical note: the current single-board M3 is 46 × 186 mm (see `../STATUS.md`); the 46 mm width and the envelope model below still apply.
+> Historical note: the current single-board M3 (R3/R4) is 46 × 193 mm (see `../STATUS.md`); the 46 mm width still applies. R4 moves the board plane: the sled puts the board's **top face on the bore axis**, and the aft ~70 mm sits inside the Ø50.8 mm coupler (REQUIREMENTS P1/P2). The envelope model below predates both; the R4 fit check is in `M3_R4.md` §5.
 
 ---
 
@@ -48,7 +48,7 @@ Hole Ø3.2 (ISO 273 fine); DIN 125A washer OD 7.0 → **obstacle radius 3.5 mm**
 
 All connector dimensions are taken at **maximum material** (DORABO drawing, GB/T 14486-2008 general tolerances: 10–30 mm → ±0.50, 30–60 mm → ±0.70) **including the 0.57 mm dovetail** (checker measurement: the dovetail lies outside the `N × 5.08` dimension line; front view 25 px / 44.36 px·mm⁻¹ = 0.564 mm, matching the drawing's 0.57).
 
-DB128V-5.08 body length = **exactly N × 5.08** (4P = 20.32, 6P = 30.48). Frozen §4.5's "body length unverified / draw with conservative 5.08N + 2.54 bound" is **closed**; the MKDS bound does not apply. The same drawing confirms: body depth 10.20, pin row 5.00 from the wire-entry face, 14.00 tall on the board, PCB hole Ø1.60, pin 0.80 × 1.00, tail 3.50 ± 0.30, strip length 6–7, M2.5 / 0.4 N·m, −40…+105 °C, UL group B 16 A/300 V, IEC 24 A, 22–12 AWG.
+DB128V-5.08 body length = **exactly N × 5.08** (4P = 20.32, 6P = 30.48). Frozen §4.5's "body length unverified / draw with conservative 5.08N + 2.54 bound" is **closed**; the MKDS bound does not apply. The same drawing confirms: body depth 10.20, pin row 5.00 from the ~~wire-entry~~ **back** face (corrected in M3-ASSY-R4: the drawing's third-angle side view and PCB layout put the wire entry 5.20 mm from the pins; see `docs/M3_R4.md` V2), 14.00 tall on the board, PCB hole Ø1.60, pin 0.80 × 1.00, tail 3.50 ± 0.30, strip length 6–7, M2.5 / 0.4 N·m, −40…+105 °C, UL group B 16 A/300 V, IEC 24 A, 22–12 AWG.
 
 ### 3.1 J-BAT — DB128V-5.08-4P (C2915641), aft end edge
 

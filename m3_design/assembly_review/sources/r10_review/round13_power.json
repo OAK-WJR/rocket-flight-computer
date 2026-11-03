@@ -1,0 +1,1476 @@
+{
+  "round": 13,
+  "lens": "power_electrical",
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 2
+  },
+  "findings": [
+    {
+      "id": "R13-PWR-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Deviation summary assigns the resistance floor to motor branches",
+      "evidence": [
+        {
+          "file": "docs/R10_VALIDATION.md",
+          "line": 1231,
+          "value": ">=50 milliohm motor branches"
+        },
+        {
+          "file": "docs/ORDERING.md",
+          "line": 485,
+          "value": ">=50 milliohm reference branches"
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md",
+          "section": "D-R1-07",
+          "value": "Reference branches >=50 milliohm; star transfer <=1 milliohm"
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "coordinates_mm": {
+            "J122": [
+              38.6,
+              71.5
+            ],
+            "J1": [
+              7.4,
+              75.85
+            ]
+          },
+          "pads": {
+            "J122.5": "GND",
+            "J1.2": "GND"
+          }
+        },
+        {
+          "calculation": "7.68*0.001/(0.001+0.002)",
+          "counterexample_A": 2.56,
+          "scope": "Unconstrained 2 milliohm reference/board bypass; not an installed harness measurement"
+        }
+      ],
+      "maker_page": "Not applicable: the resistance floor is a project-derived harness condition, established in D-R1-07.",
+      "fix": "Replace motor branches with reference branches in the current summary. Preserve the star-transfer limit, 1 A allowance and actual harness/return measurements.",
+      "classification": "ORDERING retains the correct construction condition; no installed-harness failure demonstrated."
+    },
+    {
+      "id": "R13-PWR-02",
+      "severity": "Minor",
+      "status": "new",
+      "title": "U9 coordination minimum omits R84 initial tolerance and TCR",
+      "evidence": [
+        {
+          "file": "m3_design/r10_parts.py",
+          "line": 471,
+          "field": "u9_current_limit_min_A",
+          "value_A": 3.96
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+          "line": 94,
+          "value_A": 3.96
+        },
+        {
+          "file": "m3_design/assembly_review/sources/r10_design/parts_qualification.md",
+          "line": 71,
+          "reported_headroom_A": 0.216203
+        },
+        {
+          "file": "m3_design/assembly_review/m3.kicad_pcb",
+          "reference": "R84",
+          "coordinates_mm": [
+            21.6,
+            81.825
+          ],
+          "layer": "B.Cu",
+          "part": "RT0603BRD07750RL",
+          "ohm": 750,
+          "initial_tolerance": 0.001,
+          "TCR_per_K": 2.5e-05
+        },
+        {
+          "source": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+          "pages": [
+            9,
+            32
+          ],
+          "basis": "3.960-4.840 A at RILM=750 ohm; inverse-R equation 7"
+        },
+        {
+          "source": "https://yageogroup.com/content/datasheet/asset/file/pyu-rt_1-to-0-01_rohs_l",
+          "pages": [
+            2,
+            5
+          ],
+          "revision": "V17, 2026-02-12",
+          "basis": "B=0.1%; D=25 ppm/K"
+        }
+      ],
+      "calculation": {
+        "temperature_excursion_K": 100,
+        "relative_R_envelope": 0.0035,
+        "equations": [
+          "deltaR=.001+25e-6*100",
+          "Ilo=3.96/(1+deltaR)",
+          "Ihi=4.84/(1-deltaR)",
+          "headroom=Ilo-3.7437971552257268"
+        ],
+        "initial_tolerance_only_A": [
+          3.9560439560439566,
+          4.844844844844845
+        ],
+        "with_TCR_A": [
+          3.9461883408071747,
+          4.856999498243853
+        ],
+        "remaining_headroom_A": 0.20239118558144797,
+        "scope": "Calculated inverse-R sensitivity, not new TI characterization."
+      },
+      "maker_page": "TI SLVSFC9C p9 and p32 equation 7; Yageo RT V17 p2/p5.",
+      "fix": "Derive a documented conservative coordination bound from native R84 identity, tolerance and TCR; regenerate the worksheet/assertions/current headroom prose and review uses of the 4.84 A upper bound. Retain physical overshoot/rail-dip tests.",
+      "classification": "Positive conditional headroom remains; no demonstrated required-function failure."
+    }
+  ],
+  "unresolved_critical_major_candidates": [],
+  "checks_executed": [
+    {
+      "name": "Target SHA-256 before/after",
+      "result": "pass",
+      "before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+      "after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c"
+    },
+    {
+      "name": "KiCad 10.0.6 API native power/schematic pad comparison",
+      "result": "pass",
+      "components": 91,
+      "pins": 262,
+      "issues": []
+    },
+    {
+      "name": "Independent endpoint/pad-shape fire graph",
+      "result": "pass",
+      "paths": {
+        "BAT_IN": {
+          "length_mm": 5.6,
+          "widths_mm": [
+            1.0
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            [
+              "J1",
+              "1"
+            ],
+            [
+              "Q120",
+              "9"
+            ]
+          ],
+          "segments": 1
+        },
+        "ACT_FET_S": {
+          "length_mm": 2.2,
+          "widths_mm": [
+            0.4
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            [
+              "Q120",
+              "2"
+            ],
+            [
+              "Q121",
+              "3"
+            ]
+          ],
+          "segments": 2
+        },
+        "RAW_ACT": {
+          "length_mm": 5.88613311116846,
+          "widths_mm": [
+            0.5
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            [
+              "Q121",
+              "9"
+            ],
+            [
+              "R134",
+              "2"
+            ]
+          ],
+          "segments": 2
+        },
+        "PYRO1_IGN": {
+          "length_mm": 10.230382386916238,
+          "widths_mm": [
+            0.5
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            [
+              "R134",
+              "1"
+            ],
+            [
+              "J121",
+              "2"
+            ]
+          ],
+          "segments": 3
+        },
+        "PYRO1_OUT": {
+          "length_mm": 7.854478348960021,
+          "widths_mm": [
+            0.5
+          ],
+          "layers": [
+            "F.Cu"
+          ],
+          "endpoints": [
+            [
+              "J121",
+              "1"
+            ],
+            [
+              "Q124",
+              "5"
+            ]
+          ],
+          "segments": 3
+        }
+      },
+      "scope": "Ideal pad copper; real overlapping drain fingers joined by shape collision; production battery pad-entry accounting is deliberately more conservative."
+    },
+    {
+      "name": "Native worksheet reproduction, fire widths, continuous widths",
+      "result": "pass",
+      "budget_equals_saved": true,
+      "S9_issues": [],
+      "continuous_width_issues": []
+    },
+    {
+      "name": "Native hot-plug re-extraction and saved-evidence validation",
+      "result": "pass",
+      "extraction_matches_saved": true,
+      "issues": [],
+      "topology_issues": [],
+      "saved_required_rows": 2304,
+      "saved_local_rows": 60
+    },
+    {
+      "name": "Six nonlinear selected extrema and half-step replays",
+      "result": "pass",
+      "duration_us": 150,
+      "steps_scales": [
+        1,
+        0.5
+      ],
+      "limits": {
+        "minimum_V": -15.0,
+        "maximum_V": 28.0,
+        "falling_V_per_us": 10.0,
+        "rising_V_per_us": 100.0
+      },
+      "replay_max_abs_delta": {
+        "minimum_V": 0.0,
+        "maximum_V": 0.0,
+        "falling_V_per_us": 0.0,
+        "rising_V_per_us": 0.0,
+        "damper_peak_W": 0.0,
+        "damper_energy_J": 0.0
+      },
+      "refinement_max_abs_delta": {
+        "minimum_V": 3.445386833611508e-05,
+        "maximum_V": 0.0,
+        "falling_V_per_us": 0.0008856858597638961,
+        "rising_V_per_us": 0.0005811152892221116,
+        "damper_peak_W": 0.001119168872719456,
+        "damper_energy_J": 3.4011890699681135e-10
+      },
+      "convergence_limits": {
+        "voltage_V": 0.002,
+        "slew_V_per_us": 0.01
+      },
+      "failures": [],
+      "rows": [
+        {
+          "corner": {
+            "lh_uH": 2.0,
+            "rh_ohm": 0.03,
+            "bulk": "high",
+            "damper": "low",
+            "bypass": "high",
+            "vbr_V": 15.6,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3378672,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -14.807373235755303,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 1.3337956106198587,
+          "rising_V_per_us": 0.7514364078787139,
+          "falling_peak_us": 12.510999999998736,
+          "falling_peak_voltage_V": -7.832038546294795,
+          "damper_peak_W": 207.64276059223081,
+          "damper_energy_J": 0.0022150299167894793
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "low",
+            "bypass": "low",
+            "vbr_V": 12.4,
+            "reference": "near",
+            "rdamp_ohm": 0.3378672,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.246411255271966,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.495123196196275,
+          "rising_V_per_us": 4.168716964859875,
+          "falling_peak_us": 2.285000000000035,
+          "falling_peak_voltage_V": -8.67479344515504,
+          "damper_peak_W": 539.9966947836172,
+          "damper_energy_J": 0.0017370530960260323
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "low",
+            "bypass": "low",
+            "vbr_V": 12.4,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3825072,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.60649739243232,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.99147710943282,
+          "rising_V_per_us": 4.416363776616805,
+          "falling_peak_us": 2.2670000000000337,
+          "falling_peak_voltage_V": -8.778812207370066,
+          "damper_peak_W": 515.1398021636126,
+          "damper_energy_J": 0.0017479569297655633
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "low",
+            "bypass": "low",
+            "vbr_V": 15.6,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3825072,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.980132634802949,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.99147710943282,
+          "rising_V_per_us": 5.090699647317009,
+          "falling_peak_us": 2.2670000000000337,
+          "falling_peak_voltage_V": -8.778812207370066,
+          "damper_peak_W": 536.9698684356031,
+          "damper_energy_J": 0.0017644221330549083
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "high",
+            "bypass": "low",
+            "vbr_V": 15.6,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3378672,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.361452518622844,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.41083045428892,
+          "rising_V_per_us": 4.5850679232382054,
+          "falling_peak_us": 2.275000000000034,
+          "falling_peak_voltage_V": -8.552623911944739,
+          "damper_peak_W": 579.049146582958,
+          "damper_energy_J": 0.0023943447918557017
+        },
+        {
+          "corner": {
+            "lh_uH": 2.0,
+            "rh_ohm": 0.03,
+            "bulk": "high",
+            "damper": "high",
+            "bypass": "high",
+            "vbr_V": 15.6,
+            "reference": "near",
+            "rdamp_ohm": 0.3825072,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -12.707774909272867,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 1.3155471849528588,
+          "rising_V_per_us": 0.21331174490040183,
+          "falling_peak_us": 12.274999999998817,
+          "falling_peak_voltage_V": -7.60129655412924,
+          "damper_peak_W": 259.07534280521804,
+          "damper_energy_J": 0.002979359077108136
+        }
+      ],
+      "refined_rows": [
+        {
+          "corner": {
+            "lh_uH": 2.0,
+            "rh_ohm": 0.03,
+            "bulk": "high",
+            "damper": "low",
+            "bypass": "high",
+            "vbr_V": 15.6,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3378672,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -14.807371821882377,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 1.3337951683327631,
+          "rising_V_per_us": 0.7514522440040138,
+          "falling_peak_us": 12.51050000000135,
+          "falling_peak_voltage_V": -7.83137185232394,
+          "damper_peak_W": 207.64276036542472,
+          "damper_energy_J": 0.0022150295766705723
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "low",
+            "bypass": "low",
+            "vbr_V": 12.4,
+            "reference": "near",
+            "rdamp_ohm": 0.3378672,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.24641023272601,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.494914701465461,
+          "rising_V_per_us": 4.169275537929451,
+          "falling_peak_us": 2.2855000000001313,
+          "falling_peak_voltage_V": -8.679043244824374,
+          "damper_peak_W": 539.996959791153,
+          "damper_energy_J": 0.0017370529701782851
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "low",
+            "bypass": "low",
+            "vbr_V": 12.4,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3825072,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.606495656744086,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.990752846171901,
+          "rising_V_per_us": 4.415782661327583,
+          "falling_peak_us": 2.26650000000013,
+          "falling_peak_voltage_V": -8.774337487483415,
+          "damper_peak_W": 515.1409213324853,
+          "damper_energy_J": 0.001747956806770896
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "low",
+            "bypass": "low",
+            "vbr_V": 15.6,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3825072,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.980167088671285,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.990752846171901,
+          "rising_V_per_us": 5.091052576634779,
+          "falling_peak_us": 2.26650000000013,
+          "falling_peak_voltage_V": -8.774337487483415,
+          "damper_peak_W": 536.9692353475784,
+          "damper_energy_J": 0.0017644219864618885
+        },
+        {
+          "corner": {
+            "lh_uH": 0.1,
+            "rh_ohm": 0.03,
+            "bulk": "low",
+            "damper": "high",
+            "bypass": "low",
+            "vbr_V": 15.6,
+            "reference": "gnd",
+            "rdamp_ohm": 0.3378672,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -13.36145160258629,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 8.409944768429156,
+          "rising_V_per_us": 4.584782013738575,
+          "falling_peak_us": 2.2745000000001303,
+          "falling_peak_voltage_V": -8.54843499607344,
+          "damper_peak_W": 579.0487743627305,
+          "damper_energy_J": 0.0023943446324795293
+        },
+        {
+          "corner": {
+            "lh_uH": 2.0,
+            "rh_ohm": 0.03,
+            "bulk": "high",
+            "damper": "high",
+            "bypass": "high",
+            "vbr_V": 15.6,
+            "reference": "near",
+            "rdamp_ohm": 0.3825072,
+            "copper_r_scale": 0.75
+          },
+          "minimum_V": -12.707774867133722,
+          "maximum_V": 2.0,
+          "falling_V_per_us": 1.3155411016505523,
+          "rising_V_per_us": 0.21331161491708883,
+          "falling_peak_us": 12.273500000001231,
+          "falling_peak_voltage_V": -7.599323474955663,
+          "damper_peak_W": 259.07534337862904,
+          "damper_energy_J": 0.0029793588349112453
+        }
+      ]
+    },
+    {
+      "name": "C88 bypass topology seed",
+      "result": "detected",
+      "issues": [
+        "U9 has an input feed that bypasses C88"
+      ],
+      "scope": "Temporary JSON graph; no CAD mutation or DRC claim."
+    },
+    {
+      "name": "Separate incremental constant-C MNA on current complete graph",
+      "result": "pass",
+      "conditions": {
+        "capacitance": "Production curves frozen at +2 V with selected low-family factors",
+        "U9_shunt_pF": 100,
+        "contact_edge_ns": 1,
+        "TVS": "disabled",
+        "duration_us": 0.5
+      },
+      "controls": [
+        {
+          "dt_ns": 0.0125,
+          "independent": {
+            "minimum_V": 1.283595577704581,
+            "maximum_V": 2.0,
+            "falling_V_per_us": 2.971237783739866,
+            "rising_V_per_us": 0.0004929463415237477
+          },
+          "charge": {
+            "minimum_V": 1.2835955777045405,
+            "maximum_V": 2.0,
+            "falling_V_per_us": 2.97123778381092,
+            "rising_V_per_us": 0.0004929463237601793
+          },
+          "abs_delta": {
+            "minimum_V": 4.063416270128073e-14,
+            "maximum_V": 0.0,
+            "falling_V_per_us": 7.105427357601002e-11,
+            "rising_V_per_us": 1.7763568394002505e-11
+          }
+        },
+        {
+          "dt_ns": 0.00625,
+          "independent": {
+            "minimum_V": 1.2835957475126092,
+            "maximum_V": 2.0,
+            "falling_V_per_us": 2.971197771017841,
+            "rising_V_per_us": 0.0004933757935532411
+          },
+          "charge": {
+            "minimum_V": 1.2835957475133872,
+            "maximum_V": 2.0,
+            "falling_V_per_us": 2.9711977710683164,
+            "rising_V_per_us": 0.0004933757580261043
+          },
+          "abs_delta": {
+            "minimum_V": 7.780442956573097e-13,
+            "maximum_V": 0.0,
+            "falling_V_per_us": 5.047517959155812e-11,
+            "rising_V_per_us": 3.552713678800501e-11
+          }
+        }
+      ]
+    },
+    {
+      "name": "Independent source/fire bisection",
+      "result": "pass",
+      "required_fire_A": 1.125,
+      "cases": [
+        {
+          "stalls": 0,
+          "loaded_V": 6.899390756727756,
+          "fire_A": 1.5443660716989063,
+          "abs_delta_A": 0.0
+        },
+        {
+          "stalls": 1,
+          "loaded_V": 6.609326364555885,
+          "fire_A": 1.4794377872063398,
+          "abs_delta_A": 2.220446049250313e-16
+        },
+        {
+          "stalls": 2,
+          "loaded_V": 6.318164198837923,
+          "fire_A": 1.4142637760577872,
+          "abs_delta_A": 0.0
+        },
+        {
+          "stalls": 3,
+          "loaded_V": 6.025729657046817,
+          "fire_A": 1.348804955060497,
+          "abs_delta_A": 0.0
+        },
+        {
+          "stalls": 4,
+          "loaded_V": 5.731807027228141,
+          "fire_A": 1.2830130390490944,
+          "abs_delta_A": 2.220446049250313e-16
+        }
+      ]
+    },
+    {
+      "name": "Hot adiabatic copper sensitivity",
+      "result": "calculation",
+      "assumptions": {
+        "rho20_ohm_m": 1.72e-08,
+        "alpha_per_K": 0.00393,
+        "volumetric_heat_capacity_J_per_m3_K": 3449600,
+        "initial_C": 70,
+        "heat_spreading_credit": false
+      },
+      "cases": [
+        {
+          "width_mm": 0.5,
+          "copper_um": 35,
+          "time_ms": 20.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 7.158605506774002
+        },
+        {
+          "width_mm": 0.5,
+          "copper_um": 35,
+          "time_ms": 36.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 13.006491942958052
+        },
+        {
+          "width_mm": 0.5,
+          "copper_um": 28,
+          "time_ms": 20.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 11.259038503132162
+        },
+        {
+          "width_mm": 0.5,
+          "copper_um": 28,
+          "time_ms": 36.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 20.56532676037659
+        },
+        {
+          "width_mm": 0.4,
+          "copper_um": 35,
+          "time_ms": 20.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 11.259038503132162
+        },
+        {
+          "width_mm": 0.4,
+          "copper_um": 35,
+          "time_ms": 36.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 20.56532676037659
+        },
+        {
+          "width_mm": 0.4,
+          "copper_um": 28,
+          "time_ms": 20.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 17.77425010809695
+        },
+        {
+          "width_mm": 0.4,
+          "copper_um": 28,
+          "time_ms": 36.0,
+          "current_A": 4.261601448944493,
+          "rise_K": 32.7379198230387
+        }
+      ],
+      "scope": "Isolated full-current rod diagnostics. The 0.4 mm/28 um case is not the actual parallel source network and does not establish a new violation."
+    },
+    {
+      "name": "Saved-copper output protection and bypass returns",
+      "result": "pass",
+      "output_issues": [],
+      "output_loops": {
+        "bounds_mm": {
+          "C82": [
+            4.0,
+            10.0,
+            13.5
+          ],
+          "D9": [
+            7.0,
+            10.5,
+            17.0
+          ]
+        },
+        "out_detour_ratio_max": 1.25,
+        "ground_grid_mm": 0.05,
+        "basis": "GAP-2 engineering local-copper bounds; physical qualification pending",
+        "area_method": "projected OUT/GND paths joined through component pad centres; 0.05mm GND raster, not inductance",
+        "C82": {
+          "out_route_mm": 3.5778174593052023,
+          "out_endpoints": [
+            "U9.6",
+            "C82.1"
+          ],
+          "out_layer": "B.Cu",
+          "out_path": {
+            "distance_mm": 3.5778174593052023,
+            "path_mm": [
+              [
+                18.75,
+                81.6
+              ],
+              [
+                18.75,
+                79.8
+              ],
+              [
+                19.3,
+                79.25
+              ],
+              [
+                19.3,
+                78.25
+              ]
+            ]
+          },
+          "out_octilinear_mm": 3.577817459305197,
+          "out_detour_ratio": 1.0000000000000016,
+          "local_ground_route_mm": 9.426345596729048,
+          "ground_path": {
+            "distance_mm": 9.426345596729048,
+            "path_mm": [
+              [
+                "B.Cu",
+                20.425,
+                75.725
+              ],
+              [
+                "B.Cu",
+                20.425,
+                75.825
+              ],
+              [
+                "B.Cu",
+                20.475,
+                75.875
+              ],
+              [
+                "B.Cu",
+                20.475,
+                76.175
+              ],
+              [
+                "B.Cu",
+                20.625,
+                76.325
+              ],
+              [
+                "In1.Cu",
+                20.625,
+                76.325
+              ],
+              [
+                "In1.Cu",
+                20.625,
+                78.125
+              ],
+              [
+                "In1.Cu",
+                19.925,
+                78.825
+              ],
+              [
+                "In1.Cu",
+                19.925,
+                78.875
+              ],
+              [
+                "In1.Cu",
+                19.875,
+                78.925
+              ],
+              [
+                "In1.Cu",
+                19.875,
+                80.975
+              ],
+              [
+                "In1.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.175
+              ],
+              [
+                "B.Cu",
+                19.875,
+                81.275
+              ],
+              [
+                "B.Cu",
+                19.675,
+                81.275
+              ]
+            ],
+            "layers": [
+              "B.Cu",
+              "In1.Cu"
+            ],
+            "endpoints": [
+              "C82.2",
+              "U9.8"
+            ]
+          },
+          "loop_mm": 13.004163056034251,
+          "projected_loop_area_mm2": 6.591562500000009
+        },
+        "D9": {
+          "out_route_mm": 6.5855339059327385,
+          "out_endpoints": [
+            "U9.6",
+            "D9.1"
+          ],
+          "out_layer": "B.Cu",
+          "out_path": {
+            "distance_mm": 6.5855339059327385,
+            "path_mm": [
+              [
+                18.75,
+                81.6
+              ],
+              [
+                18.75,
+                79.8
+              ],
+              [
+                16.25,
+                77.3
+              ],
+              [
+                15.0,
+                77.3
+              ]
+            ]
+          },
+          "out_octilinear_mm": 5.853300858899104,
+          "out_detour_ratio": 1.125097456065389,
+          "local_ground_route_mm": 8.176345596729053,
+          "ground_path": {
+            "distance_mm": 8.176345596729053,
+            "path_mm": [
+              [
+                "B.Cu",
+                15.875,
+                80.225
+              ],
+              [
+                "B.Cu",
+                16.725,
+                80.225
+              ],
+              [
+                "B.Cu",
+                16.825,
+                80.125
+              ],
+              [
+                "B.Cu",
+                17.225,
+                80.125
+              ],
+              [
+                "In1.Cu",
+                17.225,
+                80.125
+              ],
+              [
+                "In1.Cu",
+                19.025,
+                80.125
+              ],
+              [
+                "In1.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.075
+              ],
+              [
+                "B.Cu",
+                19.975,
+                81.175
+              ],
+              [
+                "B.Cu",
+                19.875,
+                81.275
+              ],
+              [
+                "B.Cu",
+                19.675,
+                81.275
+              ]
+            ],
+            "layers": [
+              "B.Cu",
+              "In1.Cu"
+            ],
+            "endpoints": [
+              "D9.2",
+              "U9.8"
+            ]
+          },
+          "loop_mm": 14.761879502661792,
+          "projected_loop_area_mm2": 7.012187499999868
+        }
+      },
+      "bypass_ground_returns": {
+        "C98": {
+          "distance_mm": 7.345584412271562,
+          "path_mm": [
+            [
+              "B.Cu",
+              23.925,
+              62.625
+            ],
+            [
+              "B.Cu",
+              23.925,
+              63.075
+            ],
+            [
+              "In1.Cu",
+              23.925,
+              63.075
+            ],
+            [
+              "In1.Cu",
+              23.925,
+              63.875
+            ],
+            [
+              "In1.Cu",
+              25.725,
+              65.675
+            ],
+            [
+              "B.Cu",
+              25.725,
+              65.675
+            ],
+            [
+              "B.Cu",
+              25.725,
+              65.325
+            ]
+          ],
+          "layers": [
+            "B.Cu",
+            "In1.Cu"
+          ],
+          "endpoints": [
+            "C98.2",
+            "U11.12"
+          ]
+        },
+        "C91": {
+          "distance_mm": 6.273401871576762,
+          "path_mm": [
+            [
+              "B.Cu",
+              34.825,
+              54.825
+            ],
+            [
+              "B.Cu",
+              34.825,
+              54.525
+            ],
+            [
+              "B.Cu",
+              34.675,
+              54.525
+            ],
+            [
+              "B.Cu",
+              33.575,
+              53.425
+            ],
+            [
+              "B.Cu",
+              33.375,
+              53.425
+            ],
+            [
+              "B.Cu",
+              33.175,
+              53.225
+            ],
+            [
+              "B.Cu",
+              33.175,
+              51.975
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.125
+            ],
+            [
+              "B.Cu",
+              32.325,
+              51.075
+            ],
+            [
+              "B.Cu",
+              32.325,
+              50.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.425,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.475,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.525,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.625,
+              49.975
+            ]
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            "C91.2",
+            "U13.2"
+          ]
+        },
+        "C92": {
+          "distance_mm": 2.5313708498984755,
+          "path_mm": [
+            [
+              "B.Cu",
+              32.925,
+              52.075
+            ],
+            [
+              "B.Cu",
+              32.925,
+              51.725
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              51.125
+            ],
+            [
+              "B.Cu",
+              32.325,
+              51.075
+            ],
+            [
+              "B.Cu",
+              32.325,
+              50.175
+            ],
+            [
+              "B.Cu",
+              32.375,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.425,
+              50.125
+            ],
+            [
+              "B.Cu",
+              32.475,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.525,
+              50.075
+            ],
+            [
+              "B.Cu",
+              32.625,
+              49.975
+            ]
+          ],
+          "layers": [
+            "B.Cu"
+          ],
+          "endpoints": [
+            "C92.2",
+            "U13.2"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Original maker limits and PDF graph review",
+      "result": "completed",
+      "skill": "pdf:pdf, read-only",
+      "graphs": [
+        {
+          "part": "CRM2512",
+          "page": 3,
+          "pdf_sha256": "dd72c578f48227dbc38ed5c531d965920166b267da3cf4d0494253143732a94d"
+        },
+        {
+          "part": "AONR21357",
+          "page": 4,
+          "pdf_sha256": "95786edcc78744297555a01e7ab21bf9d5443d9b063bf3204c4d600e8d05d516"
+        }
+      ],
+      "method": "Poppler render; full relevant pages inspected. Temporary PDFs and renders removed after use."
+    }
+  ],
+  "coverage_limits": [
+    "No native CLI DRC, full check.sh, build, GUI, git action, canonical edit or peer round13 report access.",
+    "Saved 2304 required/60 local evidence rows were structurally/value validated; this lens freshly reran six selected full-duration extrema at two step sizes.",
+    "The separate constant-C MNA is a numerical control, not physical nonlinear capacitance, package parasitic, ground or harness validation.",
+    "Samsung identities/ratings were reopened; numerical curves were read from existing source-bound JSON, not newly characterized.",
+    "No firmware, physical, electrical/thermal/transient/endurance, installed RF/ESD, firing, fit, flight, process or full track/via DC/thermal qualification.",
+    "Scratch graph initially omitted overlapping drain fingers; corrected. Direct-voltage MNA cancellation attempt was discarded; final incremental finite-state controls agree. KiCad/NumPy diagnostic warnings occurred with completed controls exiting zero."
+  ],
+  "status_dispositions": [
+    {
+      "item": "C98 remote-return geometry",
+      "status": "remedied by native stitch; 7.345584 mm remeasured",
+      "physical_transient_qualification": false
+    },
+    {
+      "item": "Existing power/port/source/timing/process/bench limitations",
+      "status": "carried and correctly disclosed; no newly demonstrated required-function failure"
+    }
+  ],
+  "reviewed_maker_sources": [
+    {
+      "name": "TPS25947",
+      "url": "https://www.ti.com/lit/ds/symlink/tps25947.pdf",
+      "pages_or_scope": "Rev C pp7-9,32,62-63"
+    },
+    {
+      "name": "TPS2121",
+      "url": "https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+      "pages_or_scope": "Rev F pp8,15,33"
+    },
+    {
+      "name": "TPS7A91",
+      "url": "https://www.ti.com/lit/ds/symlink/tps7a91.pdf",
+      "pages_or_scope": "Rev A pp5,18, thermal/layout"
+    },
+    {
+      "name": "AP63201/AP63203",
+      "url": "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf",
+      "pages_or_scope": "DS41326 Rev3-2 pp4-5,10-15"
+    },
+    {
+      "name": "TPS2553",
+      "url": "https://www.ti.com/lit/ds/symlink/tps2553.pdf",
+      "pages_or_scope": "Rev G pp6-7,13-16"
+    },
+    {
+      "name": "TPS709",
+      "url": "https://www.ti.com/lit/ds/symlink/tps709.pdf",
+      "pages_or_scope": "Rev H capacitor/layout/reverse-current sections"
+    },
+    {
+      "name": "AONR21357",
+      "url": "https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+      "pages_or_scope": "Rev2.1 pp1-4"
+    },
+    {
+      "name": "AON7524",
+      "url": "https://www.aosmd.com/sites/default/files/res/datasheets/AON7524.pdf",
+      "pages_or_scope": "Rev1.1 pp1-2"
+    },
+    {
+      "name": "CRM2512",
+      "url": "https://www.bourns.com/docs/product-datasheets/CRM.pdf",
+      "pages_or_scope": "pp1,3"
+    },
+    {
+      "name": "SRP5030T",
+      "url": "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf",
+      "pages_or_scope": "p1"
+    },
+    {
+      "name": "C84 MA supplier sheet",
+      "url": "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf",
+      "pages_or_scope": "pp1-4"
+    },
+    {
+      "name": "Yageo RT",
+      "url": "https://yageogroup.com/content/datasheet/asset/file/pyu-rt_1-to-0-01_rohs_l",
+      "pages_or_scope": "V17 pp2,5"
+    },
+    {
+      "name": "UNI-ROYAL",
+      "url": "https://www.uni-royal.cn/en/images/userfile/file/1753752986c56505e6d9ab55c7.pdf",
+      "pages_or_scope": "V10 ordering/TCR/power"
+    },
+    {
+      "name": "MJG J-Tek",
+      "url": "https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF",
+      "pages_or_scope": "p1"
+    },
+    {
+      "name": "CL31A106KBHNNN",
+      "url": "https://product.samsungsem.com/mlcc/CL31A106KBHNNN.do",
+      "pages_or_scope": "Maker identity/ratings; existing source-bound typical numerical graph samples."
+    },
+    {
+      "name": "CL31A226KAHNNN",
+      "url": "https://product.samsungsem.com/mlcc/CL31A226KAHNNN.do",
+      "pages_or_scope": "Maker identity/ratings; existing source-bound typical numerical graph samples."
+    },
+    {
+      "name": "CL05B104KB54PN",
+      "url": "https://product.samsungsem.com/mlcc/CL05B104KB54PN.do",
+      "pages_or_scope": "Maker identity/ratings; existing source-bound typical numerical graph samples."
+    },
+    {
+      "name": "CL10B105KA8NNN",
+      "url": "https://product.samsungsem.com/mlcc/CL10B105KA8NNN.do",
+      "pages_or_scope": "Maker identity/ratings; existing source-bound typical numerical graph samples."
+    },
+    {
+      "name": "CL10A475KO8NNN",
+      "url": "https://product.samsungsem.com/mlcc/CL10A475KO8NNN.do",
+      "pages_or_scope": "Maker identity/ratings; existing source-bound typical numerical graph samples."
+    }
+  ],
+  "current_calculations": {
+    "endpoint_min_V": {
+      "camera": 5.031681973094171,
+      "radio": 4.601504463251122,
+      "GPS": 4.6315044632511215
+    },
+    "ldo_loss_W": 0.4061769032918402,
+    "ldo_70C_junction_inference_C": [
+      102.49415226334722,
+      114.67945936210242
+    ],
+    "hold_up_300p8uF_to3p8V_ms": {
+      "all_ports_SDwrite": [
+        0.4901966417033703,
+        0.5711294274640745
+      ],
+      "camera_off_shed_card_idle": [
+        1.5326147859198496,
+        1.655039182900379
+      ]
+    },
+    "retained_output_estimate": {
+      "capacitance_F": 0.0016161237136,
+      "inventory_F": {
+        "C10": 3.0359999999999997e-05,
+        "C100": 1.38e-07,
+        "C11": 3.0359999999999997e-05,
+        "C120": 1.38e-06,
+        "C126": 3.036e-07,
+        "C127": 1.38e-08,
+        "C128": 1.38e-07,
+        "C129": 1.38e-08,
+        "C13": 1.38e-07,
+        "C14": 1.38e-07,
+        "C15": 1.38e-07,
+        "C16": 1.38e-07,
+        "C17": 1.38e-07,
+        "C18": 1.38e-07,
+        "C19": 3.036e-06,
+        "C20": 3.036e-06,
+        "C21": 1.38e-07,
+        "C22": 1.38e-06,
+        "C23": 6.485999999999999e-06,
+        "C24": 1.38e-07,
+        "C25": 1.3799999999999999e-11,
+        "C26": 1.3799999999999999e-11,
+        "C28": 6.485999999999999e-06,
+        "C29": 1.38e-07,
+        "C30": 1.38e-07,
+        "C31": 1.38e-07,
+        "C32": 1.38e-07,
+        "C400": 3.0359999999999997e-05,
+        "C401": 3.0359999999999997e-05,
+        "C402": 1.38e-07,
+        "C403": 3.0359999999999997e-05,
+        "C404": 3.0359999999999997e-05,
+        "C405": 3.0359999999999997e-05,
+        "C406": 3.0359999999999997e-05,
+        "C407": 3.0359999999999997e-05,
+        "C408": 1.38e-08,
+        "C410": 1.38e-07,
+        "C411": 3.0359999999999997e-05,
+        "C420": 1.38e-07,
+        "C421": 3.0359999999999997e-05,
+        "C430": 1.38e-07,
+        "C431": 3.0359999999999997e-05,
+        "C460": 1.38e-07,
+        "C461": 3.0359999999999997e-05,
+        "C5": 1.38e-07,
+        "C6": 3.0359999999999997e-05,
+        "C60": 1.38e-08,
+        "C7": 3.0359999999999997e-05,
+        "C8": 3.0359999999999997e-05,
+        "C80": 1.3799999999999998e-05,
+        "C81": 6.486e-09,
+        "C82": 3.0359999999999997e-05,
+        "C83": 1.38e-07,
+        "C84": 0.00094,
+        "C85": 6.486e-07,
+        "C86": 1.38e-06,
+        "C87": 3.036e-06,
+        "C88": 1.38e-07,
+        "C89": 3.0359999999999997e-05,
+        "C9": 3.0359999999999997e-05,
+        "C90": 1.38e-07,
+        "C91": 1.38e-06,
+        "C92": 6.485999999999999e-06,
+        "C93": 1.38e-07,
+        "C94": 1.38e-08,
+        "C95": 3.0359999999999997e-05,
+        "C96": 1.3799999999999998e-05,
+        "C97": 1.38e-06,
+        "C98": 1.38e-06,
+        "C99": 1.38e-07
+      },
+      "R92_max_ohm": 3354.6645,
+      "initial_V": 8.5,
+      "time_s": 2.0,
+      "output_bound_V": 5.877715488614672,
+      "cold_input_minimum_V": -15.0,
+      "inference": "All board capacitors share one 8.5V node: C84 twice nominal, others +20% tolerance and +15% temperature. No operating-load or divider-discharge credit; no U11 reverse-blocking credit. Capacitor sharing and the doubled C84 envelope are inference, requiring bench verification."
+    },
+    "fault_timing_and_R134": {
+      "watchdog_prescaler": 4,
+      "watchdog_reload": 239,
+      "watchdog_LSI_cycles": 960,
+      "watchdog_nominal_ms": 30,
+      "LSI_qualified_Hz": [
+        29400,
+        33600
+      ],
+      "watchdog_actual_ms": [
+        28.57142857142857,
+        32.6530612244898
+      ],
+      "prefire_sync_max_ms": 0.2,
+      "reset_to_HiZ_max_ms": 0.5,
+      "actual_current_tail_max_ms": 1.5,
+      "physical_fault_bound_ms": 34.8530612244898,
+      "guarded_fault_max_ms": 36,
+      "normal_physical_current_max_ms": 20,
+      "postfire_SAFETY_refresh_max_ms": 5,
+      "C126_max_F": 2.783e-07,
+      "floating_MCU_Rdis_max_ohm": 1109.090909090909,
+      "RC_to_0V4_ms": 0.6781953380405975,
+      "gate_charge_tail_ms_inference": 0.06099999999999999,
+      "combined_tail_model_ms_inference": 0.7391953380405974,
+      "R134_min_70C_ohm": 1.97109,
+      "R134_fault_max_W": 35.79745217113374,
+      "R134_20ms_energy_J": 0.7159490434226748,
+      "R134_36ms_energy_J": 1.2887082781608146,
+      "R134_curve_20ms_W_inference": 61.20385393838324,
+      "R134_curve_36ms_W_inference": 44.13366936349395,
+      "R134_85C_curve_36ms_W_sensitivity_inference": 36.34537476993619,
+      "note": "Refresh immediately before PE4 rises; no refresh during fire; normal abort includes gate tail. All timing/actual-current and hot pulse limits need bench tests; no firmware implemented. 0.4V off criterion and hot gate-charge extrapolation are inferences, not a hot off guarantee."
+    }
+  },
+  "probe_code_sha256": {
+    "native": "4d36eed2086b7444bb0465a88d35d9cbd98aa79d2523236ca619317fb22adab3",
+    "numerics": "38053432b21f1efb24ca156e9946fd2b0dd1387d1a00a70be30d09d414a78a0c"
+  }
+}

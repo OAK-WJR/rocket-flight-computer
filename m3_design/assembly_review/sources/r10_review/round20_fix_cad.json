@@ -1,0 +1,913 @@
+{
+ "schema": 1,
+ "lane": "round 20 polish pass, CAD lane",
+ "date": "2026-10-31",
+ "brief": ".supervisor/r20_fix_cad_brief.md (11 items) and the coordinator notes 1-3 (named gate entries, designator pre-filter list, FMEA I-11 for the docs lane)",
+ "board_before": {
+  "sha256": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+  "bytes": 2336742,
+  "footprints": 215,
+  "segments": 984,
+  "vias": 301,
+  "gnd_vias": 169,
+  "track_mm": 1870.487095
+ },
+ "board_after": {
+  "sha256": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+  "bytes": 2340154,
+  "footprints": 215,
+  "segments": 985,
+  "vias": 302,
+  "gnd_vias": 169,
+  "track_mm": 1874.854252,
+  "size_mm": [
+   46,
+   90,
+   1.6
+  ],
+  "rule_areas": [
+   "R18_BARREL_KEEPOUT_ACT_GATE_0",
+   "R18_BARREL_KEEPOUT_ACT_GATE_1",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_2",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_3",
+   "R18_BARREL_KEEPOUT_BAT_ENABLE_4",
+   "R18_BARREL_KEEPOUT_BAT_SW_RETURN_5",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_6",
+   "R18_BARREL_KEEPOUT_PYRO1_OUT_7",
+   "R20_TAB_KEEPOUT_WEST_AFT"
+  ]
+ },
+ "builds": {
+  "kicad_cli": "10.0.7",
+  "numpy_py": ".supervisor/venv/bin/python",
+  "complete_builds": [
+   {
+    "name": "1",
+    "exit": 0,
+    "check_sh_exit": 0,
+    "board_sha256": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3"
+   },
+   {
+    "name": "2",
+    "exit": 0,
+    "check_sh_exit": 0,
+    "board_sha256": "0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3"
+   }
+  ],
+  "build1_vs_build2": "Snapshot compare: 890 files identical, 4 differ only by date stamps (m3_assembly_top.pdf, m3_assembly_bottom.pdf, m3_gerber.zip, m3_fab_manifest.json), none only in one.",
+  "iterations": "Scratch builds through the ground family plus r10_post on a project copy, with DRC / fit / check_r10 / route_check on each, before the two complete builds. They carried the item 1 trial (reverted, D-R20-01), item 2 with and without a B.Cu stub (the stub made a staircase), item 8 with three, two and one tab keep-outs (K-plane) and item 9 in two clamp arrangements (the first sat on J440's 4:RXI legend).",
+  "check_sh": {
+   "drc": 0,
+   "unconnected": 0,
+   "schematic_parity": 0,
+   "erc": 0,
+   "metadata_3d": "OK",
+   "silk_outside": 0,
+   "r10_parts_check": "OK",
+   "fit": "OK (eight wire rooms 5.00-5.60 mm)",
+   "check_r10": "35 / 35 rules OK",
+   "route_check": "0 failing, 22 bump windows, 7 unrecorded noncritical leftovers (unchanged)",
+   "fab": "content checks 3 / 3, manifest 6 outputs bound to 0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3",
+   "self_tests": {
+    "shell": 10,
+    "procurement": "OK",
+    "fab_validation": 34,
+    "fit": 33,
+    "paste": 16,
+    "r10_parts": 5,
+    "route": 68,
+    "r10": 239,
+    "r10_skips": 6,
+    "numpy_hotplug_plate": 6
+   }
+  },
+  "fab_package": {
+   "bom_lines": 81,
+   "placed": 205,
+   "cpl": "69 top / 122 bottom rebuilt + 14 placement-only (was 71 / 120)",
+   "paste": "F 253 / B 375 flashes (was 257 / 371)",
+   "bom_csv": "unchanged",
+   "owner_bom": "C84 (C46550466)"
+  },
+  "hotplug": "2304 cases, 0 failures, qualification pass; extremes identical to round 19 (minimum -14.807 V)",
+  "binding_note": "regenerated for 0dc847761de94a45cf68b1c82ec91f38e9d4ebb7297abc7108e3df9a454940d3; K-binding OK"
+ },
+ "items": {
+  "1_u9_en_pulldown": {
+   "decision": "D-R20-01",
+   "status": "not done (measured reason)",
+   "finding": "R20-SAF-01",
+   "measured": {
+    "d9_to_u9_courtyard_mm": 0.21,
+    "r82_2_to_bat_in_trunk_mm": 0.35,
+    "needed_for_0p2_run_mm": 0.5,
+    "r82_max_west_shift_mm": 0.275,
+    "pocket_mm": "about 1.4 x 0.9 round the BAT_ENABLE via (17.1, 82.8)",
+    "r81_0603_pad_span_mm": [
+     0.95,
+     2.45
+    ],
+    "triangle_max_pad_span_mm": 1.64
+   },
+   "trial": "R81 B(16.775,85.475) rot 180 with a straight run from U9.1 needed R82 0.25 mm west, the U9 IN via 0.1 mm east, the R82/R167 BAT_IN tap rerouted and two GND vias in a pour island enclosed by BAT_IN; route_check then failed 4 ways (acute angles at R82.1 and U9.1, BAT_IN detour ratio 1.61, a removable local bump). Reverted.",
+   "residual": "EN still reaches R81 through three series vias and about 20 mm of 0.2 mm track (Inference: an open floats EN toward ON). C87 stays at F(17,65).",
+   "respin": "re-layout of U9's west cell so R81 sits at U9.1 with its return in the main B.Cu pour"
+  },
+  "2_u401_fb_tap": {
+   "decision": "D-R20-02",
+   "status": "done",
+   "finding": "R20-PWR-02",
+   "change": "PORT_4V8 via (30.575, 11.6) into the In2 output plane, 0.4 mm F.Cu stub to R402.1; GPS_RX_MCU unchanged (0.25 mm from the via)",
+   "before": {
+    "net": "PORT_4V8",
+    "vias_tested": 8,
+    "single_points": [
+     "via PORT_4V8 (29.75, 12.60)"
+    ]
+   },
+   "after": {
+    "net": "PORT_4V8",
+    "vias_tested": 9,
+    "single_points": []
+   },
+   "check_changes": [
+    "K-power: single_via_opens / SINGLE_OPEN_TAPS (R402.1 must stay joined to U401.1/2 with any one PORT_4V8 via removed)"
+   ],
+   "side_effect": "U401 OUT K-power path reaches 4 In2 vias; the doubled-feed seed drops (29.75, 9.95) and (30.575, 11.6)"
+  },
+  "3_u1_74": {
+   "decision": "D-R20-03",
+   "status": "done",
+   "finding": "R20-RTE-02",
+   "before": [
+    {
+     "net": "GND",
+     "layer": "F.Cu",
+     "pads": [
+      "U1.74"
+     ],
+     "area_mm2": 0.282,
+     "at": "(17.50, 34.48)"
+    }
+   ],
+   "after": [],
+   "pour_pieces": [
+    35,
+    34
+   ],
+   "gate_entries_deleted": [
+    "POUR_DEBRIS U1.74"
+   ]
+  },
+  "4_tp82": {
+   "decision": "D-R20-04",
+   "status": "done",
+   "finding": "R20-RTE-01",
+   "before": {
+    "at": [
+     11.0,
+     17.6
+    ],
+    "spur_segments": [
+     [
+      11.8,
+      18.4,
+      11.0,
+      17.6,
+      1.131
+     ]
+    ],
+    "stub_beyond_old_bend_mm": 3.785,
+    "nearest_foreign": [
+     [
+      1.0,
+      "fill",
+      "GND"
+     ],
+     [
+      1.225,
+      "pad R462.2",
+      "3V3"
+     ],
+     [
+      1.251,
+      "pad R463.2",
+      "3V3"
+     ],
+     [
+      1.525,
+      "PCB_TRACK",
+      "3V3"
+     ]
+    ],
+    "m6_nearest_tht": [
+     1.655,
+     "J440.3"
+    ]
+   },
+   "after": {
+    "at": [
+     11.2,
+     20.7
+    ],
+    "spur_segments": [
+     [
+      15.55,
+      25.05,
+      11.2,
+      20.7,
+      6.152
+     ]
+    ],
+    "stub_beyond_old_bend_mm": 0.849,
+    "nearest_foreign": [
+     [
+      1.0,
+      "fill",
+      "GND"
+     ],
+     [
+      1.075,
+      "pad R90.1",
+      "3V3"
+     ],
+     [
+      1.075,
+      "pad R90.2",
+      "USB_FAULT_N"
+     ],
+     [
+      1.176,
+      "PCB_VIA",
+      "3V3"
+     ]
+    ],
+    "m6_nearest_tht": [
+     1.855,
+     "J440.4"
+    ]
+   }
+  },
+  "5_inner_rings": {
+   "decision": "D-R20-05",
+   "status": "done (J121.1, J400.2); J121.2 kept (GND exempt, removal would bring GND 0.55 -> 0.25 mm)",
+   "finding": "R20-SAF-05",
+   "method": "generated library footprints (BK pad 1, GN pad 2: remove unconnected layers, keep start/end); a board pad override failed DRC library parity (2 lib_footprint_mismatch)",
+   "side_effects": [
+    "J1.2 (GND, GN pad 2): In2 ring removed; In2 RAW_PROTECTED 0.55 -> 0.25 mm from its barrel (hole clearance)",
+    "J400.2 In1 GND (exempt) wall 0.55 -> 0.25 mm"
+   ],
+   "check_changes": [
+    "S-8 measures inner rings a protected barrel keeps (barrel_rings)"
+   ]
+  },
+  "6_designators": {
+   "decision": "D-R20-06",
+   "status": "done",
+   "finding": "R20-MFG-02",
+   "before": [
+    {
+     "ref": "C400",
+     "other": "J440",
+     "own_mm": 0.082,
+     "gap_mm": 0.0,
+     "overlap_mm2": 0.151
+    },
+    {
+     "ref": "C94",
+     "other": "U1",
+     "own_mm": 0.142,
+     "gap_mm": 0.0,
+     "overlap_mm2": 0.266
+    },
+    {
+     "ref": "R461",
+     "other": "J430",
+     "own_mm": 0.018,
+     "gap_mm": 0.0,
+     "overlap_mm2": 0.306
+    }
+   ],
+   "after": [],
+   "gate_entries_deleted": [
+    "DESIGNATOR_COURTYARD_R20 C400",
+    "C94",
+    "R461"
+   ],
+   "moved_by_prefilter": {
+    "C400": "F(9.743,6.048) -> F(9.707,5.75)",
+    "C94": "hidden",
+    "R461": "hidden"
+   },
+   "moved_by_this_pass": {
+    "R402": "F(29.574,11.373) 0 -> F(28.638,11.429) 90",
+    "R463": "B(11.175,20.453) -> B(11.0,18.9)",
+    "C444": "B(12.04,12.986) 0 -> B(12.577,11.904) 90",
+    "R470": "F(16.957,21.951) -> F(16.454,21.954)",
+    "D440": "hidden -> B(5.572,18.043) 90",
+    "D441": "hidden -> B(3.669,24.672) 0",
+    "C28": "hidden -> B(14.18,22.338) 90",
+    "C404": "F(27.399,9.95) -> hidden",
+    "R90": "B(11.123,21.81) -> hidden",
+    "U401": "B(29.537,11.309) -> hidden",
+    "J440 3:TXO legend": "B(5.7,17.5) 90 -> B(10.5,17.5) 0"
+   },
+   "hidden": [
+    94,
+    96
+   ]
+  },
+  "7_fab_refs": {
+   "decision": "D-R20-07",
+   "status": "done",
+   "finding": "R20-MFG-03",
+   "before": {
+    "C123": 0.0013,
+    "C445": 0.1915,
+    "D440": 0.0479,
+    "D441": 0.0479,
+    "R119": 0.6935,
+    "R173": 0.011
+   },
+   "after": {},
+   "entries": {
+    "C445": [
+     0,
+     0,
+     0.7
+    ],
+    "D440": [
+     0,
+     -1.0,
+     0.8
+    ],
+    "D441": [
+     0,
+     -1.0,
+     0.8
+    ],
+    "C123": [
+     0,
+     -0.1,
+     0.4
+    ],
+    "R119": [
+     0,
+     0.1,
+     0.4
+    ],
+    "R173": [
+     -0.1,
+     0,
+     0.4
+    ]
+   },
+   "gate_entries_deleted": [
+    "FAB_REF_CROSSINGS_R20 C123",
+    "C445",
+    "D440",
+    "D441",
+    "R119",
+    "R173"
+   ]
+  },
+  "8_panel_tabs": {
+   "decision": "D-R20-08",
+   "status": "partly done: west aft keep-out added; east aft / east forward not done (measured)",
+   "finding": "R20-MFG-01",
+   "in2_under_tab_mm2": {
+    "before": {
+     "west_aft": {
+      "3V3": 12.498
+     },
+     "east_aft": {
+      "PORT_5V3": 3.077,
+      "RAW_PROTECTED": 7.497
+     },
+     "east_fwd": {
+      "RAW_PROTECTED": 12.244
+     }
+    },
+    "after": {
+     "west_aft": {},
+     "east_aft": {
+      "PORT_5V3": 3.077,
+      "RAW_PROTECTED": 7.497
+     },
+     "east_fwd": {
+      "RAW_PROTECTED": 12.244
+     }
+    }
+   },
+   "not_done": {
+    "east_aft": "K-plane: RAW_PROTECTED splits into 2 pieces (245.01 mm^2 north piece, 0 links); also at 2.0 mm depth",
+    "east_fwd": "K-plane: the north RAW piece joins only through a 0.45 mm neck (< 0.5) at depths 3.0 / 2.9 / 2.8 mm"
+   },
+   "owner": "the owner chooses the east tab plan"
+  },
+  "9_aux_clamps": {
+   "decision": "D-R20-09",
+   "status": "done",
+   "finding": "R20-RTE-05",
+   "before": {
+    "D440": {
+     "at": [
+      13.9,
+      17.2,
+      0.0,
+      "F"
+     ],
+     "pin_to_clamp_mm": 6.227,
+     "m6_min_mm": 3035.95
+    },
+    "D441": {
+     "at": [
+      13.9,
+      21.4,
+      0.0,
+      "F"
+     ],
+     "pin_to_clamp_mm": 6.176,
+     "m6_min_mm": 3035.95
+    }
+   },
+   "after": {
+    "D440": {
+     "at": [
+      4.45,
+      19.45,
+      -90.0,
+      "B"
+     ],
+     "pin_to_clamp_mm": 3.157,
+     "m6_min_mm": 1.681
+    },
+    "D441": {
+     "at": [
+      4.45,
+      23.05,
+      -90.0,
+      "B"
+     ],
+     "pin_to_clamp_mm": 3.194,
+     "m6_min_mm": 1.713
+    }
+   },
+   "vias": {
+    "added": [
+     [
+      3.75,
+      19.775
+     ],
+     [
+      3.75,
+      23.375
+     ]
+    ],
+    "removed": [
+     [
+      14.225,
+      16.45
+     ],
+     [
+      14.225,
+      22.15
+     ]
+    ]
+   }
+  },
+  "10_optional": {
+   "decision": "D-R20-10",
+   "status": "not done",
+   "reason": "cleanliness only; the VLOGIC in-line pair moves the pinned PARALLEL_VIAS entry and two tests, the GPS jogs need C90's fan-out vias moved"
+  },
+  "11_c87_text": {
+   "decision": "D-R20-11",
+   "status": "done",
+   "finding": "R20-SAF-04",
+   "before": "11.4/21/27 ms worst, 9.3 ms at 5.73 V, turn-on 31-122 ms",
+   "after": "10.6/20.5/26.4 ms worst, 8.5 ms at 5.73 V, 6.6 ms at 5.5 V, 10 ms needs >= 5.92 V, turn-on 30-129 ms",
+   "files": [
+    "m3_design/r10_sch_check.py (binding-note obligation)",
+    "m3_design/r10_sch.py (battery_entry sheet note)"
+   ],
+   "source": "TI SLVSFC9C p9 (EN thresholds, I_ENLKG +/-0.1 uA)"
+  }
+ },
+ "s8_barrels": {
+  "before": {
+   "via (14.400,53.300)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu 3V3A": {
+     "wall_mm": 3.089,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In2.Cu USB_LIMITED": {
+     "wall_mm": 2.1,
+     "ring_mm": null
+    }
+   },
+   "via (19.675,66.600)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu USB_LIMITED": {
+     "wall_mm": 4.533,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 3.086,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (21.300,68.900)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu USB_LIMITED": {
+     "wall_mm": 6.287,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 5.453,
+     "ring_mm": null
+    },
+    "In2.Cu 3V3": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (17.100,82.800)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu BAT_IN": {
+     "wall_mm": 11.93,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 9.906,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (11.630,55.100)": {
+    "In1.Cu GND": {
+     "wall_mm": 1.021,
+     "ring_mm": null
+    },
+    "In1.Cu PYRO1_IGN": {
+     "wall_mm": 3.814,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 1.021,
+     "ring_mm": null
+    },
+    "In2.Cu 3V3": {
+     "wall_mm": 2.698,
+     "ring_mm": null
+    }
+   },
+   "via (16.200,73.300)": {
+    "In1.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    },
+    "In1.Cu BAT_IN": {
+     "wall_mm": 7.737,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 7.05,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (11.140,71.700)": {
+    "In1.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    },
+    "In1.Cu BAT_IN": {
+     "wall_mm": 3.344,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 5.45,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "J400.2": {
+    "In1.Cu GND": {
+     "wall_mm": 0.55,
+     "ring_mm": 0.25
+    },
+    "In1.Cu BAT_SW_SOURCE": {
+     "wall_mm": 1.901,
+     "ring_mm": 1.601
+    },
+    "In2.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": 0.75
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": 0.75
+    }
+   },
+   "J121.1": {
+    "In1.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": 0.75
+    },
+    "In1.Cu PYRO1_IGN": {
+     "wall_mm": 1.901,
+     "ring_mm": 1.601
+    },
+    "In2.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": 0.75
+    },
+    "In2.Cu 3V3": {
+     "wall_mm": 1.061,
+     "ring_mm": 0.761
+    }
+   },
+   "J121.2": {
+    "In1.Cu GND": {
+     "wall_mm": 0.55,
+     "ring_mm": 0.25
+    },
+    "In1.Cu PYRO1_OUT": {
+     "wall_mm": 1.901,
+     "ring_mm": 1.601
+    },
+    "In2.Cu GND": {
+     "wall_mm": 0.55,
+     "ring_mm": 0.25
+    },
+    "In2.Cu PYRO1_OUT": {
+     "wall_mm": 1.901,
+     "ring_mm": 1.601
+    }
+   }
+  },
+  "after": {
+   "via (14.400,53.300)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu 3V3A": {
+     "wall_mm": 3.089,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In2.Cu USB_LIMITED": {
+     "wall_mm": 2.1,
+     "ring_mm": null
+    }
+   },
+   "via (19.675,66.600)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu USB_LIMITED": {
+     "wall_mm": 4.533,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 3.086,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (21.300,68.900)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu USB_LIMITED": {
+     "wall_mm": 6.287,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 5.453,
+     "ring_mm": null
+    },
+    "In2.Cu 3V3": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (17.100,82.800)": {
+    "In1.Cu GND": {
+     "wall_mm": 0.251,
+     "ring_mm": null
+    },
+    "In1.Cu BAT_IN": {
+     "wall_mm": 11.93,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 16.566,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (11.630,55.100)": {
+    "In1.Cu GND": {
+     "wall_mm": 1.021,
+     "ring_mm": null
+    },
+    "In1.Cu PYRO1_IGN": {
+     "wall_mm": 3.814,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 1.021,
+     "ring_mm": null
+    },
+    "In2.Cu 3V3": {
+     "wall_mm": 2.698,
+     "ring_mm": null
+    }
+   },
+   "via (16.200,73.300)": {
+    "In1.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    },
+    "In1.Cu BAT_IN": {
+     "wall_mm": 7.737,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 7.05,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "via (11.140,71.700)": {
+    "In1.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    },
+    "In1.Cu BAT_IN": {
+     "wall_mm": 3.344,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 5.45,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "J400.2": {
+    "In1.Cu GND": {
+     "wall_mm": 0.25,
+     "ring_mm": null
+    },
+    "In1.Cu BAT_SW_SOURCE": {
+     "wall_mm": 1.901,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    },
+    "In2.Cu RAW_PROTECTED": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    }
+   },
+   "J121.1": {
+    "In1.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    },
+    "In1.Cu PYRO1_IGN": {
+     "wall_mm": 1.901,
+     "ring_mm": null
+    },
+    "In2.Cu GND": {
+     "wall_mm": 1.05,
+     "ring_mm": null
+    },
+    "In2.Cu 3V3": {
+     "wall_mm": 1.061,
+     "ring_mm": null
+    }
+   },
+   "J121.2": {
+    "In1.Cu GND": {
+     "wall_mm": 0.55,
+     "ring_mm": 0.25
+    },
+    "In1.Cu BAT_SW_SOURCE": {
+     "wall_mm": 4.901,
+     "ring_mm": 4.601
+    },
+    "In2.Cu GND": {
+     "wall_mm": 0.55,
+     "ring_mm": 0.25
+    },
+    "In2.Cu 3V3": {
+     "wall_mm": 3.899,
+     "ring_mm": 3.599
+    }
+   }
+  }
+ },
+ "render_check": {
+  "renders": [
+   ".supervisor/r10_renders/r10_top.png",
+   ".supervisor/r10_renders/r10_bottom.png"
+  ],
+  "made_by": "r10_fab.sh in builds 1-2 (same PCB), kicad-cli 10.0.7, 1016 x 1988",
+  "also_checked": "2016 x 3952 bottom crop of the J440 corner; zoom-3 top views of the AUX cell and the U401 / R402 corner",
+  "seen": [
+   "top: the AUX cell has no clamps on the top; R470 / R471 / C445 / C444 designators whole; AUX and 1:4V8 legends whole",
+   "top: R402 designator vertical west of R402 / R403; no silkscreen over the new via north of R402.1",
+   "bottom: D440 / D441 under J440 with their designators beside them; 2:GND, 3:TXO (now east of pin 3) and 4:RXI whole and clear of pads; TP82 on its diagonal with R463 and C28 designators beside it",
+   "bottom: no silkscreen over a pad, via or the board edge in the changed areas; every other area unchanged from round 19"
+  ],
+  "note": "R463's designator ink is 0.203 mm from 3:TXO's and 0.967 mm from TP82's pad, between R463 and TP82; it passes the courtyard rule (no gate sets a text-to-text gap)"
+ },
+ "tests_added": [
+  "RealBoardSeeds.test_r20_s8_terminal_inner_rings",
+  "RealBoardSeeds.test_r20_fb_tap_survives_one_via_open"
+ ],
+ "tests_changed": [
+  "R3Synthetic.test_s8_inner_copper_near_pyro_barrel (ringless via as the board; 0.900 mm ring seed)",
+  "RealBoardSeeds.test_r19_pour_debris_seed (U1.74 seed; no entry left)",
+  "RealBoardSeeds.test_r20_designators_inside_a_large_neighbours_courtyard (no offenders; round 19 spots fail)",
+  "RealBoardSeeds.test_r20_fab_reference_crosses_its_own_fab_outline (no crossings; round 19 texts fail)",
+  "RealBoardSeeds.test_r19_doubled_feeds_keep_two_vias (U401 OUT drops two vias)",
+  "RealBoardSeeds.drop (via seeds leave the removed via undeleted: SWIG ownership crash)"
+ ],
+ "decisions": [
+  "D-R20-01",
+  "D-R20-02",
+  "D-R20-03",
+  "D-R20-04",
+  "D-R20-05",
+  "D-R20-06",
+  "D-R20-07",
+  "D-R20-08",
+  "D-R20-09",
+  "D-R20-10",
+  "D-R20-11"
+ ],
+ "for_docs_lane": [
+  "FMEA I-11 overclaims S-6's scope (coordinator note 3)",
+  "AGENTS / M3_R10 / REQUIREMENTS F6 C87 figures: 10.6/20.5/26.4 ms, 8.5 ms at 5.73 V, >= 5.92 V for 10 ms, turn-on 30-129 ms",
+  "AGENTS pyro row: the terminal-hole inner rings 0.30 mm closer is resolved for J121.1 / J400.2 (J121.2 keeps them, GND exempt); J1.2 lost its In2 ring",
+  "positions: TP82 B(11.2,20.7), D440 B(4.45,19.45), D441 B(4.45,23.05); hidden designators 96 (C94, R461, C404, R90, U401 added; C28, D440, D441 shown)",
+  "ORDERING 8.1 tab table: the west aft tab has no In2 power copper; the east tabs still sit over In2 RAW_PROTECTED (owner tab plan)",
+  "R20-SAF-01 respin item (D-R20-01)"
+ ],
+ "git_state_changed": false,
+ "native_cad_hand_edited": false
+}

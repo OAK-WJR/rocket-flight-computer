@@ -1,0 +1,226 @@
+# M3-ASSY-R8 placement table (build step 4, frozen): every part that is not rigid R7 copy (check_r8 STRIP_PARTS, CH1_PARTS, J1, J122).
+# KiCad mm, y = 0 at the aft edge, +y forward; rot = KiCad orientation in degrees; side F (top) / B (bottom). basis: seed (partial/b0_place_final.tsv),
+# spike-a/b/c/d (m3_design/r8_spikes/*/RESULT.md), legalised (a legaliser nudge of a seed / spike position), Dnn (R8_DECISIONS). r8_pcb.py places it and r8_legalise.py
+# must find it legal (the build stops otherwise); m3_design/r8_keepclear.tsv holds the routing it was frozen against.
+ref	x	y	rot	side	basis
+# --- MCU core under U1 (D1; spike a): U1 at rotation 0, flash U3 and crystal Y1 on the bottom under it, decoupling at its pins, the QSPI / HSE / NRST / BOOT0 dives
+U1	23	45	0	F	seed
+U3	22.6	43.2	90	B	spike-a
+Y1	22.85	48.6	90	B	spike-a
+C13	14.1	52.1	-90	B	spike-a
+C14	22	55.2	-90	B	spike-a
+C15	29.2	49.4	90	B	spike-a
+C16	28.1	38.62	180	B	spike-a
+C17	17	39.9	-90	B	spike-a
+C18	18.3	51.15	180	B	spike-a
+C19	28.35	40.7	-90	B	spike-a
+C20	19.8	39.3	0	B	spike-a
+C21	26.5	55.6	-90	B	spike-a
+C22	28.4	55.18	0	B	spike-a
+C23	15.45	43.95	-90	B	spike-a
+C24	25.75	51.1	0	B	spike-a
+C25	19.95	49.7	180	B	spike-a
+C26	25.75	47.5	0	B	spike-a
+C29	28	45.52	-90	B	spike-a
+R5	17.9	48	0	B	spike-a
+R10	16.7	44.67	90	B	spike-a
+# --- Pyro sense series resistors at the ADC pins (F8): R168 (CONT, pin 15) forward of U1, R170 (ARM, pin 33) and R172 (RAW_ACT_SENSE, pin 34) under U1's east pad row (spike a; D33)
+R168	23.6	54.6	0	B	seed
+R170	28	47.93	90	B	spike-a
+R172	30.65	48.1	90	B	D33 D106
+# --- RAW_ACT_SENSE divider at J122's aft end, tapped from J122.11 (D32)
+R177	25.92	68.6	90	B	D32
+R124	25.92	66.7	90	B	D32
+R125	26.4	65.25	0	B	D32
+R182	26.4	64.25	0	B	D32
+C122	26.67	63	0	B	D32
+# --- 3V3A filter and the VLOGIC / V3V3 sense dividers at pins 17 / 18 (D33)
+R164	23.2	58.8	0	B	D33
+C10	23.025	61.0	180	B	D44
+C11	23.025	63.4	180	B	D44
+R60	26.1	55.3	180	F	D33
+R61	24	55.3	180	F	D33
+C60	24.9	56.75	0	F	D33
+R62	25.3	57.3	90	B	D33
+R63	25.3	55.45	90	B	D33
+# --- RF interface resistors at the MCU end and the strip's non-rigid parts (spike d P1/P2; D4, D17)
+R306	18.8	29.6	90	F	spike-d
+R310	24.1	29.5	-90	F	spike-d
+R313	25.1	29.5	90	F	spike-d
+R315	22.6	29.5	90	F	spike-d
+R305	7.11	22.32	-90	F	spike-d
+R307	9	22.45	-90	F	seed
+C300	10.88	22.54	180	F	spike-d
+C301	13.16	21.88	0	F	seed
+FB30	11.58	24.5	90	F	seed
+R311	37	14.43	-90	F	seed
+R312	25.8	7.15	90	F	spike-d
+R314	23	12.73	180	F	seed
+C310	37.78	19.6	0	F	seed
+C311	37.2	16.54	0	F	seed
+C312	37.2	17.5	0	F	seed
+FB31	35.1	21.5	90	F	seed
+TP30	2	9.6	0	F	seed
+# --- Status LEDs on the west edge (D3) and the SWD pad J2 beside them (spike d P7)
+LED1	6.6	41.8	0	F	spike-d
+LED2	6.6	44	180	F	spike-d
+R32	11.1	41.8	180	F	spike-d
+R33	11.3	44	180	F	spike-d
+J2	2.35	42.75	-90	F	spike-d
+# --- USB (seed)
+J3	4.6	33.6	-90	F	seed
+D4	11	33.8	270	F	D52
+R7	9	30	0	F	seed
+R8	9	37.2	0	F	seed
+R9	12.4	29.2	0	B	seed
+R110	12.4	30.6	0	B	seed
+U10	12.4	35.4	0	B	seed
+R85	12.3	38.3	180	B	D52
+R90	12.4	39.8	0	B	seed
+C28	9.5	41.8	0	B	seed
+C83	9.55	36	90	B	D88
+C86	15.4	33.6	90	B	seed
+TP82	19.4	31.6	0	B	seed
+TP86	12.4	42.9	0	B	D52
+TP92	16.6	29.6	0	B	seed
+# --- IMU and barometer on the bottom, rotation 0 (D13: the default position, D38)
+U4	10	53.8	0	B	seed
+U5	10.6	60.2	0	B	seed
+R11	11.25	56.08	270	F	D52
+R12	8.72	64	270	B	D52
+R13	9.97	64	270	B	D52
+R64	11.23	64	270	B	D52
+C30	12.95	55.5	90	B	D52
+C31	12.95	53.47	270	B	D52
+C32	7.3	57.48	90	B	D52
+# --- Buzzer and pull-pin (seed; Q123 / R162 clear of the pyro corridor, spike a)
+LS120	11.9	68	0	F	D34
+D123	16.45	71.7	0	F	legalised
+Q123	16	66.4	0	B	spike-a
+R162	16.4	62.95	270	B	D57
+R163	16.4	68.8	0	B	seed
+J123	12.2	75.4	0	F	seed
+R160	10.6	72.2	0	B	seed
+R161	13.8	72.2	0	B	seed
+C160	10.6	78.4	180	B	D57
+D122	14.8	80	0	B	seed
+# --- Servo interface (spike b; D7): F.Cu lanes straight from U1.22-25, pull-downs on the rows, 1k series on B.Cu, D121 on B.Cu at rotation 180
+R150	30.4	79.51	180	B	spike-b
+R151	30.4	76.97	180	B	spike-b
+R152	30.4	74.43	180	B	spike-b
+R153	30.4	71.89	180	B	spike-b
+R154	30.4	79.94	-90	F	spike-b
+R155	30.4	77.4	-90	F	spike-b
+R156	30.4	74.86	-90	F	spike-b
+R157	30.4	72.32	-90	F	spike-b
+D121	34.4	75.7	180	B	spike-b
+# --- Battery band (spike c "west chain"; D30 R5 L10 nudges): actuator switch, gate drive, switch legs, input protection at J1.1, RAW_ACT bulk
+Q120	16.38	101.72	90	B	spike-c
+Q121	8	103	-90	B	spike-c
+C120	12.5	106.46	-90	B	D43
+R120	14.3	106.73	-90	B	D30
+TP121	13.48	103.2	0	F	spike-c
+R121	13.91	100.85	0	F	spike-c
+Q122	16.6	100.85	0	F	spike-c
+R122	18.2	103.36	90	F	D69
+R123	19.15	102.5	90	F	D69
+R80	20.46	106.1	-90	B	D30
+R165	16.6	106.1	90	B	D30
+D8	32.3	101.9	90	B	legalised
+C80	35.8	102.3	90	B	spike-c
+C96	38.9	102.3	90	B	spike-c
+R167	34.3	108.4	-90	B	spike-c
+C89	24	102.15	90	F	spike-c
+C95	26.5	102.15	90	F	spike-c
+R166	32.2	101.7	0	F	spike-c
+C121	12	83.8	180	F	spike-c
+TP120	3	88	0	B	spike-c
+C150	8	81.8	90	B	spike-c
+C151	5.4	81.8	90	B	spike-c
+TP74	44.6	99	0	B	spike-c
+TP88	44.6	101.6	0	B	spike-c
+# --- eFuse U9 aft of J121's L10 zone on the BAT_IN feed lane, its network, the RAW_PROTECTED output parts (D36)
+U9	41.5	85.5	0	B	D36
+C88	41.67	87.6	0	B	D43
+R82	40.425	88.9	180	B	D36
+R83	38.1	86.8	180	B	D36
+C87	43.65	94.1	0	F	D36
+R81	39.6	91.275	90	B	D36 D100
+TP80	43.4	94.6	0	B	D36
+TP84	42.9	96.5	0	F	D36
+R84	43.8	86.9	90	B	D36
+C81	44.68	83.9	90	B	D39
+TP89	44.3	89.6	0	B	D36
+R89	38.5	83.6	180	B	D36
+TP85	35.4	83	0	B	D36
+D9	43.51	78	90	B	D39
+C82	39.45	78.2	180	B	D36
+R92	43.3	82.6	0	F	D46
+TP81	40.5	74.5	0	B	D36
+# --- Logic power: hold-up C84 (top), mux U11 and 3V3 buck U2 / L1 on the bottom (seed, legalised; D39). Step 5: the 3V3 buck as
+#     DS41326 Figure 25 (D40: SW faces L1, VIN / GND at the aft end with C6 across them, C7 beside, Cout C8 / C9 aft of L1 on its
+#     3V3 end, C5 at BST); the mux U11 turned so IN2 faces the USB_LIMITED feed from the south, IN1 north-west, OUT north-east (D42)
+C84	37	63.2	90	F	seed
+U11	35.6	58.6	90	B	D42
+R86	38.95	58.35	0	B	D42
+R87	32.2	58.6	-90	B	D42
+R88	32.2	61.66	-90	B	D42
+R91	44.3	58.8	90	B	D42
+C85	38.95	59.95	0	B	D42
+C97	34.55	61.6	180	B	D42
+C98	36.03	56.2	0	B	D42
+C99	37.17	61.5	0	B	D42
+U2	37.95	66.6	90	B	D40
+L1	42.7	66.6	0	B	D39
+C5	39.57	69.4	180	B	D40
+C6	37.75	63.86	0	B	D40
+C7	34.75	64.65	90	B	D40
+C8	43.3	63.32	180	B	D40
+C9	43.3	61.33	180	B	D40
+TP83	33.0	67.75	0	B	D40
+TP87	42.0	58.5	0	B	D42
+# --- Camera supply: eFuse U7 and buck U8 / L3 (D37). Step 5 (D41): the buck stage as DS42002 Figure 39: SW forward into L3, C72
+#     across VIN / GND at U8's east end, C73 beside it, C74 at BST, Cout C75 / C76 at L3's 5V end, the feedback network on the top
+U7	33.8	30.7	-90	B	D37
+C70	30.88	29.9	180	B	D37
+C71	35.5	27.4	-90	B	D37
+R70	31.4	33.05	0	B	D37
+R74	31.6	27.5	0	B	D37
+R75	31.6	25.9	180	B	D37
+R76	33.6	36.55	180	B	D37
+R77	34.05	33.75	90	B	D37
+TP70	37.4	25.6	0	B	D37
+TP71	36.36	31.65	0	B	D41
+TP73	30.1	34.9	0	B	D37
+U8	39.95	34.95	-90	B	D41
+L3	39.95	40.82	-90	B	D41
+C72	43.41	34.95	-90	B	D41
+C73	43.41	30.35	90	B	D41
+C74	36.1	36.83	90	B	D41
+C75	40.0	46.07	0	B	D41
+C76	35.29	40.66	90	B	D41
+C77	39.5	35.5	180	F	D41
+R71	39.5	33.9	180	F	D41
+R72	39.5	32.3	0	F	D41
+R78	35.5	45.2	180	B	D41
+TP72	44.2	43.17	0	B	D41
+# --- Camera UART translator, IO LDO, connector J9, test pads and the CAM_5V sense divider (seed; D33, D34)
+J9	42.7	44.2	-90	F	seed
+U12	35.2	45.55	270	F	D55
+C93	37	48.5	0	B	D55
+C100	35.2	42.8	0	F	D55
+R100	37.5	43.175	270	F	D55
+R101	37.5	47.925	270	F	D55
+R102	34.95	50.15	270	F	D55
+TP75	37.65	40.3	0	F	D55
+TP76	37.5	51.1	0	F	D55
+TP91	32.5	52.3	0	B	D55
+U13	40.8	49.6	0	B	D39
+C90	35.6	52.9	90	B	D42
+C91	44.17	48.5	90	B	D39
+C92	41.3	55	0	B	seed
+R103	38.2	52.6	0	B	seed
+TP90	44.75	52.35	0	B	legalised
+R104	33.73	47.4	180	B	D55
+R105	33.73	48.7	0	B	D55
+C94	34	49.95	0	B	D55

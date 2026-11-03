@@ -1,0 +1,103 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round29_requirements",
+ "reviewer": "claude",
+ "target_commit": "09a564e",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R29-REQUIREMENTS-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "The hot-end thermal requirement and its first-article test cover only 85 °C parts. LS120 (MLT-5020) is rated −20…+70 °C operating, so it is out of rating at the stated 70 °C bay, and by the records' own board-rise figure it can be out of rating at the 55 °C interim limit",
+   "contradicts": "REQUIREMENTS Temperature row: 'Bay −20…+70 °C' and 'Hot-end ratings are judged against part temperature, not bay air … so the 85 °C parts need bay air ≤ about 55–60 °C. Until the first-article 70 °C chamber test at the pad load passes (every 85 °C part ≤ 85 °C; ORDERING 8.3), the interim site limit is bay air ≤ 55 °C'. Against this, the MLT-5020 datasheet (https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598, p2, item 6) gives 'Operating Temperature −20～+70 ℃' (storage −30～+85 ℃, item 7). The buzzer must operate on the pad: F11 makes it the pad and post-landing annunciator, and F12 the locator tone",
+   "evidence": {
+    "board": "LS120 MLT-5020 (C94598) fitted at F(23,58.5), 3V3 / BUZZ_OUT, driven by Q123 from PC14 (pcbnew dump of a0ec075e…)",
+    "datasheet": "cached .supervisor/r14_parts_pdf/buzzer.pdf (SHA-256 db73c860…), the same Huawha MLT-5020 sheet the M1 row cites for the reflow rating ('datasheet §3 item 9'); p2: operating −20～+70 ℃",
+    "calculation": "The row's own Inference is a board rise over bay air of +10–22 K at the pad load. LS120 therefore sits at 70 + 10…22 = 80–92 °C at the stated 70 °C bay, 10–22 K over its rating. At the 55 °C interim limit it sits at 65–77 °C, up to 7 K over. With zero rise, a 70 °C bay is exactly at its limit. The same logic the row applies to 85 °C parts (85 − 22 ≈ 60 °C) gives about 48 °C bay air for a 70 °C part",
+    "procedure": "ORDERING 8.3 'Board temperature at the pad load' (line 608), owner row 33 (R10_VALIDATION:2405) and M3_R10:472-475 run the first article in 70 °C chamber air at the pad load and pass when 'every 85 °C-rated part ≤ 85 °C'. LS120 is above its 70 °C operating limit throughout such a run, and the pass criterion never checks it. The 55 °C interim limit is presented as protecting the hot-end ratings, but by the figures above it does not protect LS120",
+    "sweep": "The Temperature row and parts_qualification.md:41-48 mention LS120 only for its −20 °C cold end. R23-PARTS-01's evidence noted 'LS120 +70 C (already recorded)', and its fix (owner row 33, ORDERING 8.3) covered the 85 °C parts only. No round 24–28 triage observation covers LS120's hot end (grep of round24…28_triage.json)"
+   },
+   "impact": "F11 / F12 pad and post-landing annunciation relies on a part operated outside its maker rating at the stated bay condition. The thermal qualification, as written, cannot detect this. No pyro or flight-control path depends on LS120.",
+   "concrete_fix": "Text only, in the Temperature row, M3_R10 'Hot-end temperature', ORDERING 8.3 line 608 and owner row 33:\n- list LS120 as a +70 °C part (MLT-5020 p2 item 6);\n- add 'LS120 ≤ 70 °C' to the chamber-test pass criterion (log a thermocouple on LS120);\n- state that at a 70 °C bay LS120 is out of rating, and either set the interim site limit to bay air ≤ about 48 °C (70 − 22 K, Inference) for buzzer annunciation, or accept the buzzer as best-effort above 70 °C (owner row).\n- Alternatively, a +85 °C buzzer on the same land at the next board change."
+  }
+ ],
+ "observations": [
+  "F4 hinge range reproduced from the R23 flight1d envelope and linear theory (15°, 8 × 26.5 mm tab, 5.4 kg·cm): L1000W 63.9–84.3 %, nominal (2.1 kg, Cd × 1.0, site 0) 77.47 %, high 84.33 %, so '64–84 % (77–84 % nominal to high)' is correct. The K850DM cases reach 64.1–85.0 % (85.0 % at M1.17, where linear theory is weakest), but F4 makes no claim about flight 1, which has one servo.",
+  "Derived envelope (Sources table) reproduced from flight1d_results.json, every figure: max specific force, burnout deceleration, Mach, q, apogee, apogee time and whole-flight time for both motors. F3's 8.8 km MSL (7601 + 1200 m) is about 317 hPa ISA, above 300 hPa. F1's apogee ambient ranges (−7.8…−27.3 / −16.1…−42.2 °C) and the ≤ 35 s window (34.2 s) are reproduced.",
+  "F5's 2–3.5 MB log size reproduced: 1.86 MB for the shortest K850DM flight, 3.52 MB for the longest L1000W flight, at 40 B, 500 Hz to apogee + 30 s and 50 Hz after that.",
+  "P3 landing figures (98–163 g; 2× = about 330 / 220 g) reproduced from the model's Cd 1.5 / 2.2. The model and the parent recovery notes call Cd 1.5 'elliptical', while P3 says 'flat'. A flat circular canopy is commonly given a lower Cd, which would mean faster descent. The Cd values are unsourced and labelled Inference, and I found no citable maker or handbook page, so this is not reported as an error.",
+  "Board position row checked against VEHICLE.md: −44.6 + 80 + 44…48 = joint + 79.4…83.4 mm; battery bay top at +35.4; shroud +4…+47; 32 mm margin to joint + 47. The stack fits the 595 mm free length (499–503 mm with the 90 mm board).",
+  "EN model re-run independently at the worst corner (R80 / R165 +1 %, R81 −1 %, C87 0.72 × 220 nF, 0.1 µA + 50 nA, 1.116 V). Single drop-out: 10.345 / 20.111 / 26.023 ms at 6.0 / 7.4 / 8.4 V, 8.066 ms at 5.713 V, 6.300 ms at 5.5 V, 10.034 ms at 5.96 V. One block per 100 ms: 7.501 / 7.629 / 9.594 / 5.871 ms; 7 ms holds EN at 1.1295 V and the line holds to 5.6465 V. F4's 1.088 V (5.96 V, 8 ms / 50 ms) and F6's 1.095 V (6.0 V) and 1.028 V / 1.025 V (3 × 4 ms) are reproduced. Fast-chatter limits 19.71 / 24.41 % (analytic) and the periodic fractions 19.6 / 18.6 / 17.4 / 14.8 / 11.4 / 4.5 % at 5.713 V are reproduced.",
+  "Nominal EN timing (turn-on 88 / 56 / 45 ms; drop-out 19 / 33 / 41 ms), the D402 EN shift of 5.69 mV, the unclamped ESD EN of 7.48 / 9.64 V and the Pack-row turn-off corner 4.802 V (4.778 V without D402) are all reproduced.",
+  "Fire budget re-solved: 1.5409 / 1.4758 / 1.2787 A at 0 / 1 / 4 stalls, and BAT_IN 5.7132 V at four stalls, matching F7 and F6.",
+  "Hold-up figures reproduced from parts_budget at 300.8 µF: 0.103–0.164 ms from the trip (all ports) and 0.291–0.430 ms (shed); 0.03–0.12 ms at 100–220 µF; trip-to-break ratios 0.22–0.31.",
+  "Requirement-to-board map, all confirmed on a0ec075e…:\n- F4: J122 pins 1–4 SERVO1–4_OUT and pin 5 GND, R150–R153 1 kΩ, R154–R157 10 kΩ pull-downs, D121 SRV05-4; PA0–PA3, with PA2 = SERVO3 as F10 says.\n- F5: J430 C164170, SPI3 PC10 / PC11 / PC12 (pins 78–80), PD0 CS, R460–R464 10 kΩ, C460 100 nF and C461 22 µF.\n- F7: Q120 drain on BAT_IN, ACT_FET_S, Q121 drain on RAW_ACT, R134 to J121.2, Q124 drain J121.1; fire-path widths BAT_IN 1.0 mm, OUT / IGN / RAW_ACT 0.5 mm, exactly seven 0.4 mm ACT_FET_S bridges; the 0.3 mm ACT_FET_S and 0.4 mm RAW_ACT (TP120) runs are bias and test branches.\n- F8: Q124 R126 / R128 / C126, Q120 / Q121 R121 / R119 / R120 / C120, Q122 R122 / R123 / C123, the divider banks, BAT_SW_RETURN = {J400.2, R165.1, D402.1}, connector colours (BOM codes) and every pin legend.\n- F9: D402 at B(4.45,65.9), tap 4.114 mm, GND via 0.700 mm; C88 feed-first.\n- F10: port pins and UARTs, the EXTI pins, J9 directions.\n- F11: LED1 / LED2 / R32 / R33, LS120 / Q123 / D123 / R162 / R163 on PC14, PC3_C and PC13 NC, VBAT tied to 3V3.\n- P1 / P2: 46 × 90 outline and five Ø3.2 holes at the stated points; support-land distances 3.808 / 3.860 / 3.880 / 3.987 mm.\n- P3: no via or fill under U4 / U5 on the component side (pad-entry tracks only).",
+  "F8 cold-screen (99.369 / 99.338 / 146.23 mV), the one-fault 3.342171 V and 1.397 mA, and Q122 at 0.218 V are reproduced. F9's D-R28-04 lead (3.3 / 196 + 4 = 20.8 ms; 3.7 / 166 + 4 = 26.3 ms) is reproduced; 166–196 V/s is TPS2121 SLVSEA3F Table 9-1 p13 (100 nF 780–800 V/s, 1 µF 88–92 V/s) scaled to 470 nF.",
+  "Temperature cold end: the bay may run below −20 °C in descent from −42 °C ambient. Already raised as R23-REQUIREMENTS-08 and handled by the F1 logging requirement; not re-reported.",
+  "Per the Temperature row's part-temperature principle, the resistors behind U9's turn-off corner run at bay + 10–22 K. Extrapolating the Pack row's 0.73 mV/K gives about 4.85 V at 92 °C, above PA6's 4.84 V lower edge. The Pack row already discloses local resistor temperature as unqualified, and F6 discloses the divider and ADC tolerances, so this is an observation.",
+  "M1 / M3 supplier figures match stock_check.json (12:43:17Z: U4 9 / 2 / 2, U9 30 / −81 / −81, minimum 7) and cost_check.json (12:44:13Z: $85.26, $61.01 with minimum purchase). M3's 'about $102–$105' is right on the $85.26 basis (102.05–105.04) and about $0.5 low if the minimum-purchase $85.80 is meant (102.59–105.58); the sentence is ambiguous, not wrong.",
+  "M2 silkscreen: all 167 visible texts are 1.0 mm high with 0.15 mm strokes; the only zero-width silk shapes are D123's filled polygons."
+ ],
+ "fix_verification": [
+  {
+   "item": "R28-TRI-07 (F4 hinge)",
+   "measurement": "L1000W 63.9–84.3 %, nominal 77.47 %, high 84.33 %",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R28-TRI-08 (stale 525 s)",
+   "measurement": "The only remaining '525 s' is the labelled superseded estimate in the Sources table. The Temperature row's flight duration (about 1200 s) matches the 1182.6 s envelope maximum",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "D-R28-01 pack sag (REQUIREMENTS)",
+   "measurement": "REQUIREMENTS quotes no 5.881 / 4.388 / 4.389 figure. parts_budget lines 91–92 are 5.880831 / 4.388491 V",
+   "verdict": "confirmed (no REQUIREMENTS text affected)"
+  },
+  {
+   "item": "D-R28-04 / F9 port-supply lead relabel",
+   "measurement": "20.8–26.3 ms reproduced; 166–196 V/s matches SLVSEA3F Table 9-1 p13 scaled to 470 nF; U400 is fed from RAW_PROTECTED, ahead of U11, so the PORT_4V8 lead exists; labelled Calculation / Inference",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Round 28 docs §2.5 sweep: F8 cold-screen label",
+   "measurement": "99.369 / 99.338 / 146.23 mV reproduced at 3.3 V and a 0.20 V drop; labelled Calculation / Inference",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "Round 28 docs §2.5 sweep: F4 / F6 C87 X7R Inference labels",
+   "measurement": "F4's 1.088 V and F6's EN figures reproduced at C87 0.72 × 220 nF; labels present",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "pcbnew read-only dump of a0ec075e…: footprints, nets, pads, positions (.supervisor/r29_requirements/dump.py)",
+  "Fire-net widths and segments; BAT_SW_RETURN tap; D402 GND via; support-land distances; MEMS under-body copper; silkscreen text and line widths; Edge.Cuts holes",
+  "Independent worst-corner EN chatter model (en_model.py, frac.py)",
+  "Hinge moment over all 36 flight1d cases; envelope reproduction",
+  "Fire budget re-solve; hold-up arithmetic; cold-screen network; TPS2121 Table 9-1; DS12110 LSI Table 146; MLT-5020 datasheet temperature items",
+  "git grep sweeps of docs and review records (LS120 hot end, hinge, flat chute, 525 s)"
+ ],
+ "sources": [
+  "docs/REQUIREMENTS.md @09a564e",
+  "../../docs/VEHICLE.md",
+  "MLT-5020 https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf?productCode=C94598 p2",
+  "TI SLVSEA3F Table 9-1 p13",
+  "ST DS12110 Rev 8 Table 146",
+  "parts_budget.json",
+  "flight1d_results.json (.supervisor/r23_requirements)"
+ ],
+ "coverage_limits": [
+  "No KiCad DRC, route_check or check.sh run",
+  "Chute Cd not verified against a citable source",
+  "No thermal model of LS120's local rise beyond the records' board-level +10–22 K Inference",
+  "M2 routing hygiene left to the routing / gate lenses"
+ ]
+}

@@ -1,0 +1,349 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_power",
+ "reviewer": "claude",
+ "target_commit": "c70d261",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 4
+ },
+ "findings": [
+  {
+   "id": "R23-POWER-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Hold-up after the PA6 trip is about a third of the quoted ride-through, and no record states the narrow window the PA6 trip voltage must sit in",
+   "evidence": {
+    "records": [
+     "docs/M3_R10.md Power 'Hold-up' and Firmware 'Ports and shedding': 0.464-0.539 ms (all ports, SD writing) and 1.304-1.412 ms (camera off, logic shed) at 300.8 uF",
+     "docs/REQUIREMENTS.md F6: the hold-up need is 'the time firmware needs after the PA6 watchdog fires'; 'If that is about 0.2 ms (Inference), 100-220 uF would do'",
+     "m3_design/assembly_review/sources/r10_design/parts_budget.json battery_break_ride_through_note: 'constant-power loads ... from 7.4 V' (the break, not the trip)"
+    ],
+    "calculation": {
+     "load_power_implied_W": {
+      "all_ports": [
+       11.25,
+       13.07
+      ],
+      "camera_off_shed": [
+       4.29,
+       4.65
+      ]
+     },
+     "trip_window_upper_bound": "lowest legitimate BAT_IN 5.37-5.54 V at four stalls plus a fire pulse (7.4 V EMF, 0.15 ohm source, 5.73 V four-stall point; shorted match 2.26-2.41 A, healthy match 1.24 A) -> VLOGIC about 5.25-5.45 V after U9 (<=45 mOhm) and U11 (<=0.1 Ohm)",
+     "trip_window_lower_bound": "U9 turn-off corner 4.288-4.778 V BAT_IN (UVLO(F) 1.076-1.116 V, 1 % divider, +-0.1 uA EN leakage; SLVSFC9C p9): in a slow sag a trip below about 4.7 V VLOGIC comes after U9 has already cut the board",
+     "post_trip_holdup_300.8uF_ms": {
+      "trip_5.3V": {
+       "all_ports": [
+        0.157,
+        0.182
+       ],
+       "camera_off_shed": [
+        0.441,
+        0.478
+       ]
+      },
+      "trip_5.0V": {
+       "all_ports": [
+        0.122,
+        0.141
+       ],
+       "camera_off_shed": [
+        0.342,
+        0.37
+       ]
+      },
+      "trip_6.0V_nuisance_trips_at_four_stalls": "53 % of quoted"
+     },
+     "fraction_of_quoted_energy": {
+      "5.3V": 0.339,
+      "5.0V": 0.262
+     },
+     "R19-REQ-07_capacitor_claim": "from a 5.3 V trip with all ports on: 100 uF 0.052-0.061 ms, 220 uF 0.115-0.133 ms (both below the 0.2 ms example); from 7.4 V (the records' basis) 0.154-0.394 ms",
+     "label": "Calculation (constant-power, the records' own load powers and capacitance); trip voltage itself not yet chosen"
+    },
+    "sources": [
+     "https://www.ti.com/lit/ds/symlink/tps25947.pdf p9 (UVLO, EN leakage)",
+     "docs/REQUIREMENTS.md F7 / Pack rows (7.4 V EMF, 0.15 ohm, 4.778 V corner)"
+    ]
+   },
+   "impact": "The owner question R19-REQ-07 (how long the logic must stay up after PA6 fires, and whether C84 can shrink to 100-220 uF) is being answered against energy counted from 7.4 V, of which roughly two thirds is spent before PA6 can legitimately trip. A C84 reduction sized on the quoted figures would leave about 0.05-0.13 ms after the trip with ports on. No PA6 threshold is stated anywhere, and both window edges matter: too high and the four-stall/fire corner sheds logging at deployment; too low and a slow pack sag lets U9 cut the board before the shed starts. No pyro or deployment effect.",
+   "concrete_fix": "Text only. In M3_R10 Power 'Hold-up' / Firmware, REQUIREMENTS F6 and the R10_VALIDATION owner row for R19-REQ-07: (1) state the PA6 trip window, VLOGIC about 4.8-5.2 V (PA6 0.44-0.47 V), above U9's 4.78 V BAT_IN turn-off corner and below the 5.37 V BAT_IN four-stall-plus-fire corner, to be qualified with the divider and ADC tolerances; (2) quote hold-up from the trip voltage (300.8 uF: 0.157-0.182 ms all ports, 0.44-0.48 ms camera off / shed, from 5.3 V) beside the existing break-to-3.8 V figures; (3) strike or recompute '100-220 uF would do'. Add the trip-to-3.8 V case to parts_budget.json at the next generator run."
+  },
+  {
+   "id": "R23-POWER-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The J400 chatter acceptance (longest drop-out < 10 ms) does not screen a chatter train: an open fraction above about 21-25 % at 5.73-6.0 V turns U9 off however short each drop-out is",
+   "evidence": {
+    "records": [
+     "docs/REQUIREMENTS.md F6 'Bench acceptance (proposed, R18-REQ-12): ... pass if the longest drop-out is < 10 ms'",
+     "docs/ORDERING.md 8.3 'Measure the chosen switch's contact chatter at flight vibration: pass if the longest drop-out is < 10 ms'"
+    ],
+    "board": "R80 F(13.25,69.2) / R165 F(13.25,67.0) 470 kOhm, R81 F(18.848,80.0) 300 kOhm, C87 F(18.723,81.877) 220 nF on BAT_ENABLE to U9.1 B(18.5,81.6) (pcbnew read)",
+    "calculation": {
+     "single_dropout_reproduced_ms": {
+      "6.0V": 10.65,
+      "7.4V": 20.47,
+      "8.4V": 26.41,
+      "5.73V": 8.5,
+      "5.5V": 6.58,
+      "turn_on_range": [
+       30.3,
+       128.6
+      ],
+      "pack_floor_for_10ms_V": 5.917
+     },
+     "chatter_equilibrium": "closed: C dV/dt = (Vb-V)/R_top - V/R81 - I_lk; open: C dV/dt = -V/R81 - I_lk; averaged over a train with open fraction d, EN settles at ((1-d)Vb/R_top - I_lk)/((1-d)/R_top + 1/R81), independent of C87",
+     "open_fraction_that_trips_U9": {
+      "5.73V": {
+       "nominal": 0.264,
+       "worst": 0.206
+      },
+      "6.0V": {
+       "nominal": 0.304,
+       "worst": 0.25
+      },
+      "7.4V": {
+       "nominal": 0.459,
+       "worst": 0.417
+      },
+      "8.4V": {
+       "nominal": 0.533,
+       "worst": 0.497
+      }
+     },
+     "time_to_trip_ms_examples": {
+      "5.73V 100 Hz 30 % open (3 ms drop-outs)": {
+       "nominal": 92,
+       "worst_C87_0.72x": 32
+      },
+      "6.0V 100 Hz 40 % open": {
+       "nominal": 63,
+       "worst": 32
+      },
+      "7.4V 100 Hz 50 % open (5 ms drop-outs)": {
+       "nominal": 114,
+       "worst": 55
+      }
+     },
+     "label": "Calculation (TI SLVSFC9C p9 thresholds and +-0.1 uA leakage; 1 % resistors; C87 0.72-1.27 x as the records use); script .supervisor/r23_power/en_numerics.py"
+    },
+    "sources": [
+     "https://www.ti.com/lit/ds/symlink/tps25947.pdf p9"
+    ]
+   },
+   "impact": "A loose or vibrating screw switch that chatters for tens of milliseconds with 3-5 ms drop-outs passes the stated bench criterion yet turns U9 off (UVLO, not latched): the primary computer resets in flight and restarts 30-129 ms plus boot later (Blue Jay unaffected). F6 forbids repeated resets from a single cause. Pending physical qualification, so Minor.",
+   "concrete_fix": "Text only (REQUIREMENTS F6, ORDERING 8.3, R10_VEHICLE_HANDOFF switch row): make the pass rule functional as well as per-drop-out: at the lowest loaded pack voltage (5.73-6.0 V) under flight-level vibration, U9 must stay on for the whole run (RAW_PROTECTED at TP81 never below about 5 V, or no reset in the log), and the measured open fraction over any 100 ms window must stay below 20 %. Keep the < 10 ms single-drop-out rule."
+  },
+  {
+   "id": "R23-POWER-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "round22_alternates.md: the TPS259470A persistent-short behaviour is partly wrong (current, logic reboot, C84, FLT) and omits U9 cycling to TSD every cycle",
+   "evidence": {
+    "analysis": "m3_design/assembly_review/sources/r10_review/round22_alternates.md section 1.3 'Shorted load (difference)'",
+    "datasheet": {
+     "retry": "TSD 154 C, hysteresis 10 C (p10); 'remains off until it has cooled down by TSDHYS. Thereafter ... an additional delay of tRST' 110 ms (p11, p37-38 Table 7-2): confirmed",
+     "foldback": "'The current limit threshold in the foldback region (0V < VOUT < VFB) is lower than the steady state current limit threshold (ILIM)' (p32 note 2), VFB 1.9 V (p10); no foldback value is given (Inference beyond that)",
+     "start_up": "'Active current limiting ... is active during start-up ... without waiting for the ITIMER delay' (p33 note 3); retry is a dVdt-limited start-up (p34 Figure 7-11)",
+     "hard_short": "fast trip at 2 x ILIM or IFT 22.2 A within 500 ns, re-on after 30 us in current limit (p10-11, p34)",
+     "time_to_TSD": "Figure 6-36 / 6-37 (p18): about 0.3 ms at 36 W, about 8 ms at 10 W (read from the plot, Inference)",
+     "thermal": "RthJA 41.7 / 74.5 C/W, TJ recommended max 125 C (p8)",
+     "flt": "Table 7-3 p38: overtemperature FLT L, latched; reverse current FLT L"
+    },
+    "calculation": {
+     "hard_short": "RAW_PROTECTED held below VFB 1.9 V; U11 IN2 UVLO 2.5-2.8 V rising (SLVSEA3F p7) and AP63203 UVLO 3.30-3.70 V rising (DS41326 p5) are never reached, so the logic does not boot on any retry; R89 pulls BAT_FAULT_N to the dead 3V3, so FLT is unobservable (pack-only)",
+     "reboot_band_ohm_at_7.4V": "about 0.77-2.1 Ohm (VOUT >= 3.75 V at ILIM 3.96-4.84 A, yet above the limit with a 0.5 A board load); even there U11 settling plus soft start (C85 470 nF, about 190 V/s, SLVSEA3F p13 Table 9-1 interpolated) must finish before TSD",
+     "pack_current": "hard short: the foldback level (< ILIM, unspecified) for each heat pulse, plus a <= 500 ns spike at 2 x ILIM (8.9 A) or IFT; 3.96-4.84 A only for VOUT >= 1.9 V",
+     "C84_per_cycle": "none for a hard short (U11 reverse blocking keeps C84 off RAW_PROTECTED); about 0.1 A (514 uF x about 190 V/s) only in the overload band",
+     "U9_temperature": "junction reaches TSD 154 C on every cycle, about every 110 ms plus heat and cool time, for as long as J400 stays closed (470L: once); average dissipation 0.1 W (36 W, 0.3 ms pulses) to about 1.5 W (7 W, 30 ms pulses) depending on the unspecified foldback current (Inference)",
+     "label": "Calculation from SLVSFC9C figures; foldback amplitude and plot readings are Inference"
+    },
+    "sources": [
+     "https://www.ti.com/lit/ds/symlink/tps25947.pdf p8-11, p18, p32-34, p37-38",
+     "https://www.ti.com/lit/ds/symlink/tps2121.pdf p7, p13",
+     "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf p5"
+    ]
+   },
+   "impact": "The owner is choosing between the 470L, 470A and 474L with this analysis. As written it says the pack sees about 4.4 A pulses and the MCU reboots every cycle with FLT pulsing; for a hard short the board simply stays dead while U9 thermally cycles at 154 C indefinitely and drains the pack with low-duty pulses. This is a defect in the analysis, not in the board (U9 as fitted is the 470L). No AGENTS section 2 property changes: the fire path stays on BAT_IN, and with no logic there is no fire.",
+   "concrete_fix": "Text only: correct round22_alternates.md section 1.3 and the matching ORDERING 8.1 option text to: hard short -> foldback-limited current below ILIM (value not given by TI), logic dead, FLT unobservable, U9 at TSD every cycle while J400 stays closed; resistive overload of about 0.8-2 Ohm -> possible reboot attempts. State that the 470A turns a pad short into a dead board that keeps heating U9 and slowly drains the pack until J400 is opened."
+  },
+  {
+   "id": "R23-POWER-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "BAT_FAULT_N (PA5, EXTI5) also goes low whenever U9 blocks reverse current, so it pulses on fast pack-side drops; the records describe PA5 only as a U9 fault",
+   "evidence": {
+    "datasheet": "SLVSFC9C Table 7-3 p38: 'Reverse Current ((VOUT - VIN) > VREVTH): Reverse Current Blocking, latched N, FLT L'; VREVTH -36.45...-22.3 mV, VFWDTH 83-125 mV (p10); tRCB 1 us, tSWRCB 50 us (p11). UVLO and OVLO give FLT H (p38).",
+    "board": "U9.4 B(18.5,81.6) -> BAT_FAULT_N -> R89.2 F(23.0,70.0) 10 kOhm to 3V3 -> U1.29 (PA5); pin_table.tsv row PA5: 'R89 10k to 3V3: high (no fault)'; REQUIREMENTS F10: 'EXTI ... 5 BAT fault PA5'",
+    "calculation": "RAW_PROTECTED (67 uF nominal) unloaded by U9 falls at its own load slope, about 15-30 V/ms at 1-2 A; any BAT_IN drop faster than that reverses current through U9's 28-45 mOhm and trips RCB, e.g. a pack-connector or J1 contact bounce, a servo-driver current edge on a stiff pack, or a hot-plug transient; FLT stays low until VIN - VOUT > 83-125 mV (Calculation/Inference; slower drops such as a servo stall rise or the fire-pulse onset at 4-12 V/ms probably do not trip it)",
+    "U11_ST": "TPS2121 ST is defined only for source selection (SLVSEA3F Table 9-3 p18); its state during U11's own reverse blocking (IRCB 0.2-2 A, p8, p15) is not stated: PA4 may also glitch during hold-up (Inference)",
+    "sources": [
+     "https://www.ti.com/lit/ds/symlink/tps25947.pdf p10, p11, p38",
+     "https://www.ti.com/lit/ds/symlink/tps2121.pdf p8, p15, p18"
+    ]
+   },
+   "impact": "Firmware written from the records would read a short PA5 low as a U9 fault: a nuisance ground refusal or a spurious fault log in flight, or an EXTI5 interrupt storm under contact chatter. Conversely the same edge is a free, fast battery-break indicator the shedding logic does not use. No hardware or pyro effect.",
+   "concrete_fix": "Text only: in pin_table.tsv (PA5 note), the binding-note obligations and M3_R10 Firmware: 'PA5 low also means U9 is blocking reverse current (pack side below RAW_PROTECTED; SLVSFC9C Table 7-3 p38). Treat PA5 as a U9 fault only when it stays low longer than a qualified time with RAW_PROTECTED collapsed; rate-limit EXTI5; never reset or refuse readiness on a single pulse. Optionally use the PA5 falling edge to start the PA6 shed early.' Add that U11's ST during its own reverse blocking is unstated (Inference): deglitch PA4 before re-enabling the port UARTs."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R22-01",
+   "claim": "K-rules measures JLC hole, ring and NPTH rows on the board (checks only)",
+   "measurement": "Out of this lens's depth. PCB at ec8cb98 and at c70d261 both hash 5516eeec...; git diff ec8cb98..c70d261 touches no .kicad_pcb, .kicad_dru or placement file",
+   "verdict": "confirmed (no copper change)"
+  },
+  {
+   "id": "D-R22-02",
+   "claim": "The TPS2553 grounds, CC Rd returns and power-state monitors are single-open taps: 33 taps, 15 exact exceptions",
+   "measurement": "check_r10.single_via_opens run read-only on the board: 33 taps, 15 exceptions, 0 issues; single points U10.2 / R7.2 / R85.2 via GND (9.00,27.84), U402.2 / R430.2 via GND (32.30,59.50), R8.2 via GND (9.95,30.60), R60.1 via VLOGIC (34.50,63.00), U1.28 via (30.85,51.80), R91.1 via 3V3 (28.10,60.00). Own fill-piece survey: U10.2 + R7.2 B.Cu island 2.89 mm2 / 1 via; U402.2 5.70 mm2 / 1 via; R8.2 6.96 mm2 / 1 via; U10.2 has no track, only the island. No existing tap or exception was removed (diff). Open-GND consequence (Inference, SLVS841G is silent; GND pin p4, abs max p5, UVLO 2.35-2.45 V p7): the IC's quiescent current can return only through its pin protection to the lowest pin, so its ground floats to about one diode above OUT; IN-GND then approaches UVLO and OUT limps at roughly 2-3 V or cycles, i.e. camera (U402) or bench-USB (U10) supply loss, as the record says. Two refinements: FAULT is an open drain to that floating ground, so CAM_FAULT_N / USB_FAULT_N cannot report it (CAM_5V_SENSE on PB1 can, nothing senses USB_LIMITED); and R85 / R430 return to board ground while the IC ground floats, so the current limit is no longer referenced as designed (with a coincident camera-lead short it could sit above 1.07-1.22 A: Inference, double fault)",
+   "verdict": "confirmed (reasons consistent; the FAULT-flag limitation could be added to the reason text)"
+  },
+  {
+   "id": "D-R22-03",
+   "claim": "Diagnostics note: 5.456 V reads 0.496 V; failed U400 about 0.89 V; D8 19.9 V reads 1.81 V",
+   "measurement": "5.456/11 = 0.496 V; 9.77/11 = 0.888 V; 19.9/11 = 1.809 V; diff touches only that text object in diagnostics.kicad_sch",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22-04",
+   "claim": "EN 2.03 V nominal, <= 2.06 V with 1 % parts at 8.4 V",
+   "measurement": "8.4 x 300/1240 = 2.032 V; 8.4 x 303/(303+930.6) = 2.063 V",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22-05 / -06 / -07",
+   "claim": "Checks only (DRU parsing, Fab references, K-ports clamp returns)",
+   "measurement": "No copper change (hash). Not otherwise reviewed by this lens",
+   "verdict": "confirmed (no copper change)"
+  },
+  {
+   "id": "D-R21-02",
+   "claim": "U2.1 has a second path; SINGLE_OPEN_TAPS",
+   "measurement": "single_via_opens: U2.1 has no single point",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-05",
+   "claim": "R81 / C87 at U9's end; one via (17.10,82.80); EN timing",
+   "measurement": "R81 F(18.848,80.0), C87 F(18.723,81.877); single point via BAT_ENABLE (17.10,82.80) only; R81.2 / C87.2 GND piece 12.42 mm2 with 2 vias. Timing reproduced: turn-on 30.3-128.6 ms over 6.0-8.4 V; worst drop-out immunity 10.65 / 20.47 / 26.41 ms at 6.0 / 7.4 / 8.4 V, 8.50 ms at 5.73 V, 6.58 ms at 5.5 V; 10 ms needs 5.917 V",
+   "verdict": "confirmed (single-drop-out figures); see R23-POWER-02 for chatter trains"
+  },
+  {
+   "id": "D-R20-11",
+   "claim": "C87 figures with +-0.1 uA leakage",
+   "measurement": "reproduced as above",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-10",
+   "claim": "C87 220 nF: turn-on 30-129 ms, immunity 10.6/20.5/26.4 ms",
+   "measurement": "reproduced",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-04",
+   "claim": "Q122 gate network R122 1k / R123 2k / C123 10 nF",
+   "measurement": "Pads read from the board: ACT_EN = Q122.1, C123.1, R123.1, R122.2; PC1 (U1.16) -> R122.1. With PC1 high and VDD falling, Q122 (Vth 0.65-1.45 V, AO3400A p2) turns off at about VDD 1-2.2 V, at or near BOR; ACT_GATE then decays through R119 || R120 (50 kOhm) and C120 1 uF: RAW_ACT stays on 39-68 / 50-78 / 56-85 ms at 6.0 / 7.4 / 8.4 V (AONR21357 Vth -1.3...-2.3 V p2)",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "finding": "R23-POWER-01",
+   "change": "State the PA6 trip window (VLOGIC about 4.8-5.2 V) and quote post-trip hold-up from the trip voltage in M3_R10 Power/Firmware, REQUIREMENTS F6 and the R19-REQ-07 owner row; strike '100-220 uF would do'",
+   "board_change": false
+  },
+  {
+   "finding": "R23-POWER-02",
+   "change": "Add a functional pass rule (U9 stays on at 5.73-6.0 V under flight vibration) and an open-fraction limit (< 20 % in any 100 ms) to the J400 chatter acceptance in REQUIREMENTS F6 and ORDERING 8.3",
+   "board_change": false
+  },
+  {
+   "finding": "R23-POWER-03",
+   "change": "Correct round22_alternates.md section 1.3 (and the ORDERING 8.1 option text) for the hard-short case",
+   "board_change": false
+  },
+  {
+   "finding": "R23-POWER-04",
+   "change": "Add the reverse-current-blocking meaning of PA5 low and a deglitch rule to pin_table.tsv, the binding-note obligations and M3_R10 Firmware",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  {
+   "item": "Brown-out order as RAW falls (slow sag, J400 closed)",
+   "result": "PORT_5V3 leaves regulation first (RAW about 5.77 V camera on / 5.57 V camera off: 5.456 V + I x (0.125 Ohm typ RDS(on)1, DS41326 p5, + 0.0762 Ohm SRP5030T-6R8M DCR)); PORT_4V8 next (RAW about 5.31 / 5.10 V: + 0.200 V TPS7A91 dropout max at 1 A, SBVS282A p5); then U9 cuts the whole board at its UVLO corner, BAT_IN 4.29-4.78 V, while 3V3 is still regulated (U2 needs VLOGIC >= about 3.4 V); in hold-up the ports collapse (with or without U11's reverse blocking, IRCB 0.2-2 A, SLVSEA3F p8), then 3V3 below VLOGIC about 3.4 V and AP63203 UVLO 2.86-3.26 V (3.30-3.70 rising, 440 mV hysteresis typ, DS41326 p5; 'below 3.1 V disabled' p11), then the MCU at BOR (VBOR0 falling 1.58-1.68 V, VBOR1 1.95-2.06 V, DS12110 Rev 8 Table 126). At the four-stall corner (BAT_IN 5.73 V) only PORT_5V3 with the camera on leaves regulation, by about 0.13 V. Calculation; no defect beyond R23-POWER-01"
+  },
+  {
+   "item": "PC1 / PE4 definition through brown-out",
+   "result": "Above BOR the pins are driven to their ODR; below BOR the MCU is in reset with pins in their reset state and the external pull-downs hold them: R123 2 kOhm on ACT_EN, R127 1 kOhm on the PE4 node, R128 10 kOhm and C126 220 nF on PYRO1_GATE. Defined at every VDD. The bus (RAW_ACT) can stay on 39-85 ms after Q122 turns off (C120 time constant), by design; firing still needs PE4. Calculation"
+  },
+  {
+   "item": "Fire pulse into R134 and its tail",
+   "result": "Q124 off-tail after a commanded PE4 low 0.05-0.10 ms (220 Ohm x 222 nF to Vth 1.2-0.4 V, AON7524 p2); after a reset (PE4 Hi-Z, 1.087 kOhm) 0.24-0.50 ms, inside the 1.5 ms allocation of the 34.853 ms guard. Drain dV/dt kick into the gate about 8 mV (C126 dominates). Shorted match 35.8 W in R134 against about 46 W at 36 ms and 63 W at 20 ms read from the Bourns CRM2512 >= 1 Ohm pulse curve (p3; reading is Inference): 1.29x / 1.75x. Four stalls plus a shorted match leave BAT_IN about 5.37 V, above U9's 4.78 V corner. Calculation; no defect"
+  },
+  {
+   "item": "Fire-end and servo-release overshoot into U9 OVLO",
+   "result": "Q124 turns off in about 0.1 ms, so L di/dt from 2 uH at 4 A is about 0.08 V; OVLO min about 9.62 V vs an 8.4 V pack. An OVLO blip would recover in tSWOV 90 us (SLVSFC9C p11), inside hold-up. Closed"
+  },
+  {
+   "item": "USB plug / unplug with the pack on",
+   "result": "U11 in VCOMP mode (PR1, CP2, OV2 grounded; OV1 = USB_OVLO 47k/10k -> 5.76-6.27 V) keeps IN2 while the pack exceeds USB_LIMITED; plug-in only re-runs the settling timer (SLVSEA3F p12, Table 9-3 p18). Unplug with the pack on: no effect. Pack below USB: switchover in tSW 100 us (CP2 low), dip about 0.1 V on 514 uF. Closed"
+  },
+  {
+   "item": "USB hot-plug from an always-on legacy source",
+   "result": "Ringing of 0.7-1 uH cable into C28 (2.5-3.5 uF effective) peaks at about 7.0-8.9 V before D4's VBUS clamp (VBR >= 6 V, USBLC6-2) acts, against TPS2553 IN 7 V absolute maximum (SLVS841G p5): Inference. Bench only, and ORDERING section 5's 'USB hot-plug from an always-on legacy source' check applies to R10 through 8.3. Not re-filed"
+  },
+  {
+   "item": "Port device hot-plug (J410 / J420 / J440 / J9)",
+   "result": "Charge sharing on PORT_4V8 (about 95 uF effective, Inference): a 10 / 22 / 47 / 100 uF module input dips the shared rail to 4.34 / 3.89 / 3.21 / 2.33 V for 0.05-0.51 ms (TPS7A91 limit 1.5-1.9 A, SBVS282A p5), enough to reset the radio on another port; J9 is behind U402's 1.07-1.22 A limit. Ceramic-input ringing at the module is the module's exposure (Inference). No flight effect; a one-line 'wire port and camera leads with J400 open' rule in ORDERING 8.4 would close it. Not filed"
+  },
+  {
+   "item": "Pack hot-plug glitching the bus on",
+   "result": "C120 1 uF holds ACT_GATE to ACT_FET_S while ACT_FET_S follows BAT_IN through Q120's body diode; Q121's body diode blocks to RAW_ACT. VGS stays near 0. Closed (also covered by the 2304-case hot-plug model)"
+  },
+  {
+   "item": "U9 GND pad single via",
+   "result": "U9.8 reaches GND via a 0.2 mm B.Cu track to via (20.2,81.0); single_via_opens shows R81.2 / R83.2 / R84.2 / C87.2 to U9.8 with no single point, so another path exists. Closed"
+  }
+ ],
+ "checks_actually_executed": [
+  "SHA-256 of m3_design/assembly_review/m3.kicad_pcb before and after (5516eeec...), and of git show ec8cb98:...m3.kicad_pcb",
+  "git diff --stat ec8cb98 c70d261 (and of the CAD files); git diff of tools/check_r10.py removed lines",
+  "pcbnew (KiCad 10 Python, read-only): footprint values, positions and pad nets for all 215 parts; GND fill-piece survey at IC ground pads; track and via listing at named pads",
+  "tools/check_r10.single_via_opens imported and run read-only on the canonical board: 33 taps, 15 exceptions, 0 issues",
+  "EN network corners, chatter-train equilibrium and time-domain simulation (.supervisor/r23_power/en_numerics.py)",
+  "Transient, hold-up, brown-out, fire-tail, R134 pulse, alternate retry, VBUS ring and port hot-plug numerics (.supervisor/r23_power/transients.py)",
+  "Datasheet text extraction and page lookups (TPS25947, TPS2121, TPS2553, AP6320x, TPS7A91, DS12110, AON7524, AONR21357, AO3400A, USBLC6-2, CRM2512, SRP5030T); rendered SLVSFC9C pp18 and 21 and CRM2512 p3"
+ ],
+ "sources": [
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (Rev C, May 2026) pp7-11, 18, 21, 30-34, 37-38",
+  "https://www.ti.com/lit/ds/symlink/tps2121.pdf (Rev F) pp4, 7-8, 12-15, 17-18",
+  "https://www.ti.com/lit/ds/symlink/tps2553.pdf (Rev G, Oct 2026) pp4-7, 15-17",
+  "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf (Rev 3-2) pp5, 11, 14",
+  "https://www.ti.com/lit/ds/symlink/tps7a91.pdf (Rev A) p5",
+  "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf Rev 8 Table 126 (PDF p217)",
+  "https://www.aosmd.com/res/datasheets/AON7524.pdf p2",
+  "https://www.aosmd.com/res/datasheets/AONR21357.pdf p2",
+  "https://www.aosmd.com/res/datasheets/AO3400A.pdf p2",
+  "https://www.st.com/resource/en/datasheet/usblc6-2.pdf p2",
+  "https://www.bourns.com/docs/product-datasheets/crm2512.pdf p3",
+  "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf p1",
+  "Cached copies listed in .supervisor/primary_pdf_cache_paths.json (r14_parts_pdf); revisions read from the PDF titles and footers"
+ ],
+ "coverage_limits": [
+  "No SPICE or physical waveform; all transients are first-order Calculation, with Inference labels where makers are silent",
+  "TPS25947 foldback current and the time-to-TSD plots have no tabulated values: plot readings are Inference",
+  "Capacitor DC-bias, temperature and ageing derating are Inference; the records' 300.8 uF and load powers were reused for R23-POWER-01",
+  "TPS2553 open-GND and TPS2121 ST-during-RCB behaviour are not stated by TI: Inference",
+  "Servo current edges, pack ESR spectrum and harness inductance are not measured; whether servo edges trip U9's RCB is Inference",
+  "Module input capacitance and limits for the GPS, radio and camera were not read",
+  "Round 22's power report was opened only after these findings were written; none of the four overlaps it"
+ ]
+}

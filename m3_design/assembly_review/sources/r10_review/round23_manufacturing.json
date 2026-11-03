@@ -1,0 +1,200 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round23_manufacturing",
+ "reviewer": "claude",
+ "target_commit": "c70d2614c9f187c46bce6225047ef4d03484848a",
+ "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 5
+ },
+ "findings": [
+  {
+   "id": "R23-MANUFACTURING-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "The Electrical Test field is not specified: JLC's free default is a random-sample flying-probe test, while owner row 29 relies on every bare board being tested",
+   "evidence": {
+    "docs": "ORDERING 8.1 'Electrical test' row: 'Keep JLC's bare-board electrical (open / short) test, and confirm it in the order ... That JLC tests every four-layer bare board by default is also an Inference.' The same reliance is in M3_R10.md 'Power' (Mitigations: JLC's electrical test of the bare board) and R10_VALIDATION owner row 29.",
+    "jlc_live": "JLC order form https://cart.jlcpcb.com/quote (read 2026-11-01): Electrical Test options 'Flying Probe Fully Test'; 'Full Test: 100% pass rate, but is slower and incurs a fee due to it is time-consuming.'; 'Random Test: Free of charge, ensuring a minimum pass rate of 99%.'; 'E-test Fixture'.",
+    "board": "EN chain U9.1 -> via (17.10, 82.80) -> R81 / C87 (D-R21-05); one open via floats EN 0.2 mm from BAT_IN (R21-SAF-01, Inference)."
+   },
+   "impact": "The docs give no single value for this field. If the free option is taken, a given bare board may not be tested, so the first screen for an open in the EN via (owner row 29) is not assured on every board. The per-flight 'off with J400 open' check is still the second screen, so this is a procedure gap, not a fire path.",
+   "concrete_fix": "Text only. ORDERING 8.1: 'Electrical Test: Flying Probe Full Test (fee; include it in the quote)'. Replace the 'tests every four-layer bare board by default' Inference with the form's wording and date. Make owner row 29 and M3_R10 'Mitigations' name the Full Test."
+  },
+  {
+   "id": "R23-MANUFACTURING-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Order-number mark: JLC withdrew the order number in May 2026 and asks for no JLCJLCJLCJLC text, but the board carries the placeholder and ORDERING says 'Specify a location'",
+   "evidence": {
+    "board": "B.Silkscreen text 'JLCJLCJLCJLC', mirrored, at KiCad (20.35, 35.6), 1.0 / 0.15 mm; Gerber ink x 15.323-25.425, y 34.980-36.130 (re-measured; matches ORDERING 8.1). Required by m3_design/r10_post.py (item 3) and tools/check_r10.py JLC_ORDER_MARK.",
+    "docs": "ORDERING 8.1 'Order-number mark (R20-MFG-04)': choose 'Specify a location' for the order number.",
+    "jlc_live": "https://jlcpcb.com/help/article/How-to-mark-on-PCB (last updated 2026-05-22, read 2026-11-01): 'Order Number is not available since May 2026'; 'Please DO NOT add \"JLCJLCJLCJLC\" in your silkscreen layer for specifying order number location'; 'No mark will be added on the PCB by default'; 'Specify Position' now needs a solid silkscreen square (2 x 10 mm for a number, 5/8/10 mm for a 2D barcode). The quote page (read 2026-11-01) lists Mark on PCB: Order Number, 2D barcode, Remove Mark, with 'No mark will be added by default'."
+   },
+   "impact": "The documented form value is no longer a JLC process. The 12-character text will either be printed literally on the bottom or raise an engineering query. No electrical or assembly effect.",
+   "concrete_fix": "Text now: ORDERING 8.1, 'Mark on PCB: none (default) / Remove Mark'. Add a remark that the bottom text 'JLCJLCJLCJLC' at Gerber (20.35, -35.6) is a legacy legend and may be printed as-is or omitted, then confirm in Confirm Production File. At the next board change: delete the placeholder and drop the requirement from r10_post / check_r10 (or replace it with a solid square if a 2D serial is wanted)."
+  },
+  {
+   "id": "R23-MANUFACTURING-03",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Section 8 does not give one value for several JLC PCB / SMT form fields; sections 3-4 (R9) are excluded unless restated",
+   "evidence": {
+    "docs": "ORDERING section 8 intro: use sections 1-7's procedures 'only where restated here'. Fields with no R10 value: Delivery Format; edge-rail sides and width; Via Covering (8.1 says 'plugged only where ... permit; otherwise tent', which is not a form option); Tooling holes; fiducials; Silkscreen colour; Product Type; panel or rail removal by JLC; ENIG thickness.",
+    "jlc_live": "Quote page (read 2026-11-01): Delivery Format 'Single PCB / Panel by Customer / Panel by JLCPCB - We construct your panel with v-cut'; Silkscreen white by default; Product Type Aerospace/Medical 'require 4-Wire Kelvin Test ... and FR4 Tg155 for 4- and 6-layer'. Assembly capabilities https://jlcpcb.com/capabilities/pcb-assembly-capabilities (read 2026-11-01): Standard single PCB 70x70 to 460x500 mm, edge rails and fiducials 'Necessary', 'Wave soldering is used for THT', 'Panel removal is available as an option'. Assembly terms https://jlcpcb.com/help/article/61-Terms-and-Conditions-of-JLCPCB-Assembly-Service (updated 2026-09-09): §5.5 'Tooling holes, Edge rails and Fiducials are required', added by default; §5.14 for boards under 70 x 70 mm JLC 'will select a suitable production method for edge rail, for instance, mouse bite method'.",
+    "board": "No fiducials and no tooling holes on the board (pcbnew footprint scan). Width 46 mm, so a long-edge rail panel needs about 12 mm per side (rail plus gap) to reach JLC's 70 mm Standard minimum. Of the 300 vias, 179 are within 0.35 mm (pad edge) of a solder-mask opening on at least one side (62 F, 144 B), so JLC cannot ink-plug them (Gerber measurement); no ordinary via's drill wall is within 0.10 mm of an opening."
+   },
+   "impact": "An operator filling in the form must guess, or copy R9's section 3/4 values, which section 8 forbids. The risks: 'Panel by JLCPCB' gives V-cut, which J3's overhang forbids; JLC removing the rails conflicts with 8.3's 'nibble, never snap'; Aerospace product type adds cost and test changes; the via-covering selection is not fixed.",
+   "concrete_fix": "Text only. Add an 'R10 order form' table to 8.1 / 8.2, one value per field: Base FR-4; 4 layers; 1.6 mm; Product Type Industrial/Consumer; Delivery Format Single PCB with JLC-added edge rails on the two long edges (tab-routed, per the tab plan, about 12 mm rails to reach 70 mm; confirm in Confirm Production File); green mask; white silkscreen; ENIG (default thickness); outer 1 oz / inner 1 oz; stackup JLC041611-7628; Via Covering Plugged (unpluggable vias tented) with the U401 VIPPO remark, or Epoxy Filled & Capped under VIPPO fallback (1); Min via 0.3 / 0.5 mm (no surcharge, per the form note); Mark on PCB none; Electrical Test Flying Probe Full Test; Confirm Production File yes. Assembly: Standard; both sides; tooling holes and fiducials added by JLCPCB; Confirm Parts Placement yes; no panel removal (owner nibbles the tabs)."
+  },
+  {
+   "id": "R23-MANUFACTURING-04",
+   "severity": "Minor",
+   "status": "new",
+   "title": "VIPPO request: JLC's help says filled vias can be named per via; the docs cite only the capabilities page, and the paste windows overlap the via drills if the fill is missed",
+   "evidence": {
+    "jlc_live": "https://jlcpcb.com/help/article/pcb-via-covering (read 2026-11-01): Epoxy / Copper filled & capped, holes 'should not exceed 0.5 mm'; 'specify which vias to fill with a note or image, or fill all vias of a given diameter'; resin filling is free only for 6-layer and above. https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-01): filled & capped for 0.15-0.55 mm vias, default only for 6+ layers.",
+    "docs": "ORDERING 8.1 'Via covering and the VIPPO fallback': JLC 'may refuse per-via mixing, apply the option to every via ... or silently ignore it'.",
+    "board": "Both U401.11 vias, (27.3, 13.6) / (27.9, 13.6), 0.5 / 0.3 mm, filling = 1, capping = 1 (pcbnew); they are in the PTH.drl T1 0.300 mm group with 297 other vias, so 'by diameter' means every 0.3 mm via. B.Paste windows 1.13 x 0.89 mm at y 13.045 and 14.155: the gap between them is 0.22 mm, so each window overlaps the 0.30 mm drill outline by 0.04 mm and the 0.5 mm land by 0.14 mm. The BAT_IN via drill is 0.5 mm, within JLC's 0.5 mm fill limit."
+   },
+   "impact": "The docs' fallback reasoning is less certain than JLC's own text: the per-via route exists, but only by note or image. If the fill is missed, paste sits over the edge of open barrels and can wick from U401's exposed pad. That is an assembly-yield and thermal residual already covered as an Inference.",
+   "concrete_fix": "Text only. In 8.1 / 8.2, cite the via-covering help article. Attach an image or coordinate list of the two vias to the order remark. State that 'fill by diameter' equals the whole-board fill (fallback 1). Add first-article X-ray of U401 pad 11 voiding and wicking (JLC X-rays QFN / LGA automatically, per the assembly capabilities page)."
+  },
+  {
+   "id": "R23-MANUFACTURING-05",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Parts nearer than JLC's 2.5 mm body-to-edge assembly rule on the rail-less short edges are not in the expected DFM queries",
+   "evidence": {
+    "jlc_live": "Assembly terms §2.3 (https://jlcpcb.com/help/article/61-Terms-and-Conditions-of-JLCPCB-Assembly-Service, updated 2026-09-09, read 2026-11-01): 'The distance between the body of the components and the edge of the board must be equal or greater than 2.5mm.'",
+    "board": "Courtyard to edge (pcbnew), mm: aft y=0: R400 / R401 / R404 1.02, C403 1.96; forward y=90: C95 1.50, R92 1.72, R166 1.75, TP88 1.95; west: J3 -1.03 (overhang), J2 1.46; east: TP74 2.45. The 8.1 tab plan puts rails and tabs on the long edges only.",
+    "docs": "ORDERING 8.2 'Expected DFM queries' lists U11, J3, U4 webs, via covering, VIPPO, C84 and the M3 holes, but not edge clearance."
+   },
+   "impact": "JLC may query, or add rails on the short edges, which would change the agreed tab plan (the T-1 short-edge windows are narrow). This is a planning gap; parts on non-rail edges are normally accepted.",
+   "concrete_fix": "Text only. Add to 'Expected DFM queries' and the remark: rails on the two long edges only, and the short-edge parts R400 / R401 / R404 (1.02 mm), C95, R92, R166, C403, TP88 sit less than 2.5 mm from the aft / forward edges by design. If JLC insists on four-side rails, re-run T-1 for short-edge tabs before accepting."
+  }
+ ],
+ "fix_verification": [
+  {
+   "id": "D-R22 (all)",
+   "claim": "No copper or fab-content change in the round 22 between-rounds pass",
+   "measurement": "PCB SHA-256 5516eeec... at ec8cb98 and at c70d261; m3_bom_jlc.csv df6c0fc2 and m3_cpl_jlc.csv 905e4314 unchanged; all 14 files in m3_gerber.zip are byte-identical between ec8cb98 and c70d261 once date lines are stripped (zip hash differs only by timestamps); manifest outputs match the files",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R22-01 / D-R22-05 (board rows)",
+   "claim": "Board meets JLC hole rows: NPTH >= 0.5, NPTH to copper >= 0.2, via hole to copper >= 0.2, PTH to outer copper >= 0.28",
+   "measurement": "Independent Gerber/drill parse: NPTH 0.600 / 0.991 mm; NPTH wall to copper 0.200 mm (F.Cu, J3 at (5.81, 27.91)), 0.25 inner; via wall to foreign copper least 0.25 mm on every layer; PTH pad walls >= 0.550 mm on F/B; plated holes >= 0.30 mm. Check-code refactors not re-run (gate lens)",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R21-01",
+   "claim": "Every plated pad hole >= 0.55 mm from foreign inner copper (J1.2, J400.2, J3.1-4 raised from 0.251 / 0.451)",
+   "measurement": "Independent Gerber X2 net-aware measurement, 31 plated pad holes (27 DB125 + 4 J3 slots): least 0.550 mm on In1 and In2 (J1.2 In2 RAW_PROTECTED 0.55; J400.2 In1 GND 0.55; J3 slots In2 3V3 0.55); J121.1 PYRO1_OUT 1.05 mm",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-R19-07",
+   "claim": "C84 lands carry no paste",
+   "measurement": "F.Paste flashes 253, none on C84.1 / C84.2; every flash lies in a pasted pad; no pasted pad lacks a flash; B.Paste 375 likewise",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "D-GAP-03 / R18-MFG-03",
+   "claim": "Only the two U401.11 vias are flagged filled and capped; the drill file does not distinguish them",
+   "measurement": "pcbnew: filling = 1 / capping = 1 on (27.3, 13.6) and (27.9, 13.6) only; both are inside B.Mask opening U401.11; PTH.drl T1 0.300 mm has 299 hits incl. both; T2 0.500 mm 1 hit (BAT_IN (17.5, 87.3))",
+   "verdict": "confirmed"
+  },
+  {
+   "id": "R20-MFG-04",
+   "claim": "Placeholder position and extents in ORDERING 8.1",
+   "measurement": "Gerber ink x 15.323-25.425, y 34.980-36.130 at (20.35, 35.6): matches; but see R23-MANUFACTURING-02 on JLC's current process",
+   "verdict": "partly"
+  },
+  {
+   "id": "R18-MFG-02 / D-R18-08 (mask)",
+   "claim": "Vias never inside a mask opening except the two VIPPO vias",
+   "measurement": "F: 0 vias inside openings; B: only the two U401 vias. No ordinary via's drill wall is within 0.10 mm of an opening",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [
+  {
+   "id": "R23-MANUFACTURING-01",
+   "change": "ORDERING 8.1 Electrical test row: 'Flying Probe Full Test (fee)'; same wording in M3_R10 'Mitigations' and owner row 29",
+   "board_change": false
+  },
+  {
+   "id": "R23-MANUFACTURING-02",
+   "change": "ORDERING 8.1: 'Mark on PCB: none / Remove Mark' plus a remark about the legacy text; drop 'Specify a location'. Removing the placeholder waits for the next board change",
+   "board_change": false
+  },
+  {
+   "id": "R23-MANUFACTURING-03",
+   "change": "Add a one-value-per-field R10 order-form table (PCB and SMT) to ORDERING 8.1 / 8.2",
+   "board_change": false
+  },
+  {
+   "id": "R23-MANUFACTURING-04",
+   "change": "Cite JLC's via-covering article, attach a two-via image or coordinate list, state that by-diameter equals whole-board, add first-article X-ray of U401.11",
+   "board_change": false
+  },
+  {
+   "id": "R23-MANUFACTURING-05",
+   "change": "Add the short-edge 2.5 mm parts to Expected DFM queries and the order remark",
+   "board_change": false
+  }
+ ],
+ "rejected_or_closed_candidates": [
+  "Layers / thickness / finish: board 4 copper layers, 1.6 mm, ENIG; gbrjob LayerNumber 4, BoardThickness 1.6, Finish ENIG; stackup 0.035 / 0.203 / 0.030 / 1.03 / 0.030 / 0.203 / 0.035 mm equals the JLC041611-7628 template as mirrored by github.com/gsuberland/jlcpcb_autogenerated_stackups (third-party copy of JLC data, Inference); JLC stackup article: inner 1 oz finished 1.2 mil (0.030 mm). Form: inner copper defaults to 0.5 oz, so ORDERING's explicit 1 oz is needed and present.",
+  "Min via: 0.3 / 0.5 mm; form note 'Additional charges will apply when the via hole<0.3mm and the via diameter<=0.4mm': no surcharge.",
+  "Outline: Edge.Cuts 46.000 x 90.000 mm rectangle and five 3.2 mm milled circles at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); gbrjob size 46.05 x 90.05 includes the 0.05 mm line. Copper to edge and to M3 holes >= 0.500 mm on all four layers (JLC 0.2 mm; still >= 0.3 mm at the +/-0.2 mm milling tolerance).",
+  "Drill: PTH 299 x 0.300 via, 1 x 0.500 via, 27 x 1.300 DB125, 4 x 0.600 plated slots (J3; 1.4 / 1.7 mm long; JLC multilayer plated slot 0.35 mm); NPTH 2 x 0.600 (J3), 3 x 0.991 (J2). Matches the board's pad and via inventory exactly.",
+  "Paste: 253 top / 375 bottom flashes equal the board's pasted pads (including paste-only TSLP and U401 window pads); every flash maps to a pad; only J3's shell slots are pasted among PTH (pin-in-paste); no DB125 pad is pasted.",
+  "BOM / CPL: 81 BOM lines cover exactly the 205 CPL designators (72 top / 133 bottom); C84 only on the owner BOM; U4 bottom rotation 180; U9 bottom 180.",
+  "Via mask slivers: 29 vias have a mask sliver under 0.10 mm between their ring and an own-net pad opening (e.g. GND via (23.8, 62.95) beside C98.2). All are same-net, no drill wall is within 0.10 mm, and the case is covered by the R3-MFG-03 / R5-MFG-01 'tent where not pluggable' disposition. Not filed.",
+  "Fiducials and tooling holes absent from the board: JLC adds them on rails by default (terms §5.5); folded into R23-MANUFACTURING-03 as a documentation gap only.",
+  "Material / Tg: the current quote page offers no Tg selection for Standard 4-layer, except the Aerospace/Medical product types that force FR4 Tg155. No requirement found that needs it. Closed.",
+  "DB125 THT soldering: the assembly page says wave for THT; ORDERING 8.2 already requires hand soldering by remark with written acceptance. Closed.",
+  "Consigned U4 / U9: JLC terms §5.12 says consigned parts are not tested; ORDERING 8.1 requires franchised traceable stock. Ordering item, not filed.",
+  "Tab plan / east tabs over In2 power and the cost cap: open owner decisions, not filed."
+ ],
+ "checks_actually_executed": [
+  "shasum -a 256 on m3.kicad_pcb before and after (5516eeec...)",
+  "Unzipped m3_gerber.zip into .supervisor/r23_manufacturing/gerber; read the gbrjob, both drill files and Edge.Cuts",
+  "pcbnew read-only: layer count, outline, via inventory and fill / cap flags, PTH / NPTH pads, paste pad count, fiducials, placeholder text (scripts/board_facts.py)",
+  "Paste flash to pad mapping, both sides (scripts/paste_map.py)",
+  "Independent X2 net-aware Gerber parser: hole wall to foreign copper on every layer for all 300 vias, 31 plated pad holes and 5 NPTH (scripts/inner_clear.py)",
+  "Copper to routed edge and to M3 milled holes per layer (scripts/edge_clear.py)",
+  "Via to solder-mask opening distances, F and B (scripts/via_mask.py)",
+  "Courtyard to edge for all parts (scripts/edge_parts.py)",
+  "CPL / BOM / owner-BOM cross-check",
+  "Gerber content diff ec8cb98 vs c70d261 ignoring date lines",
+  "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity: 0 violations, 0 unconnected, 0 parity",
+  "Live reads (2026-11-01): JLC PCB capabilities, assembly capabilities, assembly terms, via-covering, via-in-pad, mark-on-PCB, confirm-production-file, stackup articles, quote page"
+ ],
+ "sources": [
+  "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-01)",
+  "https://jlcpcb.com/capabilities/pcb-assembly-capabilities (read 2026-11-01)",
+  "https://jlcpcb.com/help/article/61-Terms-and-Conditions-of-JLCPCB-Assembly-Service (updated 2026-09-09; read 2026-11-01)",
+  "https://jlcpcb.com/help/article/pcb-via-covering (read 2026-11-01)",
+  "https://jlcpcb.com/help/article/via-in-pad-pofv-guide (read 2026-11-01)",
+  "https://jlcpcb.com/help/article/How-to-mark-on-PCB (updated 2026-05-22; read 2026-11-01)",
+  "https://jlcpcb.com/help/article/how-to-confirm-the-production-file (read 2026-11-01)",
+  "https://jlcpcb.com/help/article/multi-layer-pcb-standard-laminated-structures (read 2026-11-01)",
+  "https://cart.jlcpcb.com/quote (order form text, read 2026-11-01)",
+  "https://github.com/gsuberland/jlcpcb_autogenerated_stackups (third-party JLC stackup mirror; JLC041611-7628 kicad template)"
+ ],
+ "coverage_limits": [
+  "The quote page was read as text only: no Gerber upload, DFM, quote, rail preview or production-file check was made, and its via-covering and assembly sub-fields were not visible.",
+  "JLC's stackup images were not readable. The JLC041611-7628 values come from a third-party mirror (Inference).",
+  "Drill tolerance and milling tolerance are not modelled beyond the +/-0.2 mm statement.",
+  "Bare via barrels on inner layers (no ring) are not in the Gerbers, so the inner clearance to them was not measured from the Gerbers (D-R21-01's own record covers them).",
+  "The check-code changes in D-R22 were not re-run or seeded (gate lens). Only fab-content equality was verified.",
+  "Supplier stock and cost were not re-queried.",
+  "Round 22's manufacturing report was read after these findings were written; it had none of R23-MANUFACTURING-01 to -05. It noted the missing fiducial line as optional, which overlaps part of -03."
+ ]
+}

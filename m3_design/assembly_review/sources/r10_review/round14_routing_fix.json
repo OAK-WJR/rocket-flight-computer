@@ -1,0 +1,1141 @@
+{
+ "schema": 1,
+ "phase": "round14_source_fix",
+ "status": "source_handoff_pending_root_full_integration",
+ "target_commit": "f5e4a5a94013514edb952fd328325341b63a98df",
+ "target_commit_scope": "Base reviewed commit; this source-only handoff has no new commit or final canonical PCB hash.",
+ "board": "m3_design/assembly_review/m3.kicad_pcb",
+ "board_sha256_before": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+ "board_sha256_after": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+ "source_edits_complete": true,
+ "canonical_CAD_untouched": true,
+ "prepared_utc": "2026-10-30T12:14:53.746981+00:00",
+ "authorization": "Root explicitly elected all12 qualified combined alternatives after all10 R14 lens handoffs and released the source freeze; this reviewer owns six R10 route modules, one obsolete R10 REF_STRAY retirement and these new receipts.",
+ "source_changes": [
+  {
+   "path": "m3_design/r10_route_core.py",
+   "before_sha256": "7fb5dbc18636089e7502cd1c58b33e8c84a877c25a657c1ebbced47261533b1a",
+   "after_sha256": "1cbbd91b1ca3c73500b5761787b0b11b01ff0cf0ac21eb319042a4a2ec14d336",
+   "reverse_exact_changes_reconstructs_original_bytes": true,
+   "syntax_valid": true,
+   "diff": "--- m3_design/r10_route_core.py before\n+++ m3_design/r10_route_core.py after\n@@ -22,6 +22,8 @@\n         return super().pad(ref, number, net, at)\n \n     def track(self, net, layer, width, points):\n+        if net == 'I2C1_SDA' and layer == 'F' and points == [r9_route_imu_baro.u1_pin(96), (8.35,48.5), (4.97,51.88), (4.97,53.0)]:\n+            points = [points[0], (9.47,48.5), (4.97,53.0)]\n         if net == 'I2C1_SDA' and layer == 'B' and points == [(4.97,53.0),(4.97,53.62)]:\n             points = [(4.97,53.0),(5.25,53.28),(5.25,53.62)]\n         if net == '3V3' and layer == 'B' and points == [(4.97,54.48),(4.2,54.48)]:\n@@ -85,5 +87,5 @@\n     # C14 remains at its MCU supply pin; its transition is east of the adjacent buzzer escape.\n     d.track('3V3','F',.3,[d.pad('U1.11'),(22,51.55),(22.6,52.15)])\n     d.via('3V3',(22.6,52.15))\n-    d.track('3V3','B',.3,[(22.6,52.15),d.pad('C14.1'),(21.82,51.8),(19.5,49.48),(19.5,49.15)])\n+    d.track('3V3','B',.3,[(22.6,52.15),d.pad('C14.1'),(21.82,51.47),(19.5,49.15)])\n     d.track('GND','B',.2,[d.pad('C14.2'),(20.98,52.96),(21.82,53.8)])\n"
+  },
+  {
+   "path": "m3_design/r10_route_power.py",
+   "before_sha256": "b05cc60d092bf48375628e11df9efdb754f1cd6cd9921ad72641fd81b597e597",
+   "after_sha256": "7a1333c06f33bc2fc3097e8d7213e429f4837d17405b9b2cb415e3b4c2ae54f0",
+   "reverse_exact_changes_reconstructs_original_bytes": true,
+   "syntax_valid": true,
+   "diff": "--- m3_design/r10_route_power.py before\n+++ m3_design/r10_route_power.py after\n@@ -69,7 +69,7 @@\n     t('BAT_IN','B',BAT,[feed,(19.4,85.4)])\n     t('BAT_IN','B',BYPASS_W,[(19.4,85.4),p('C88.1'),(18.25,84.37),(18.25,83.4)])\n     t('BAT_IN','B',PAD_W,[(18.25,83.4),p('U9.5')])\n-    t('BAT_IN','B',W,[feed,(15.5,87.3),p('R82.1')])\n+    t('BAT_IN','B',W,[feed,(15.5,85.3),p('R82.1')])\n     t('BAT_IN','B',W,[p('R82.1'),(13.925,83.9),p('R167.1')])\n     t('BAT_IN','F',S,[p('D8.1'),(10.2,71.85),(10.2,70.2),(13.075,70.2),p('R80.1')])\n     t('BAT_IN','F',W,[p('C89.1'),(11.625,83.8),p('TP80.1')])\n@@ -145,7 +145,7 @@\n     t('PORT_4V8','F',W,[(29.75,12.6),p('R402.1')])\n     t('PORT_LDO_FB','F',S,[(29.75,13.6),(32.225,13.6)])\n     t('PORT_LDO_FB','F',S,[p('R402.2'),(32.225,13.6),p('R403.1')])\n-    t('PORT_4V8','B',W,[p('C406.1'),(28.4,10.2),(29.75,11.55),(29.75,12.6)])\n+    t('PORT_4V8','B',W,[p('C406.1'),(29.75,9.95),(29.75,12.6)])\n     t('PORT_4V8','F',W,[p('C407.1'),(31.1,20.3),(30.3,20.3)]);v('PORT_4V8',(30.3,20.3))\n     t('PORT_4V8','B',S,[p('R405.1'),(33.725,16.35),(33.725,17.3)])\n     # Always-on port bypass cells and terminal feeds.\n"
+  },
+  {
+   "path": "m3_design/r10_route_pyro.py",
+   "before_sha256": "0db97cadbce93bf8315939af81f406b537325a2e17f3af8cab137b05f5d5fdbc",
+   "after_sha256": "e7092155689211134c877fe13cb6cb9174e2f664476393ad8d106bf45d4c7283",
+   "reverse_exact_changes_reconstructs_original_bytes": true,
+   "syntax_valid": true,
+   "diff": "--- m3_design/r10_route_pyro.py before\n+++ m3_design/r10_route_pyro.py after\n@@ -25,7 +25,7 @@\n     d.link('PYRO1_GATE_N','F',S,'R126.1','R127.1')\n     t('PYRO1_GATE','B',P,[p('TP122.1'),(14.4,53.3)])\n     v('PYRO1_GATE',(14.4,53.3));v('GND',(15.35,52.15))\n-    t('PYRO1_GATE','F',P,[(14.4,53.3),(16.0,53.3),p('R126.2')])\n+    t('PYRO1_GATE','F',P,[(14.4,53.3),(15.06,53.3),p('R126.2')])\n     t('PYRO1_GATE','F',P,[p('R126.2'),(16.0,55.395)])\n     t('PYRO1_GATE','F',P,[(16.0,55.395),(15.3,55.395),p('Q124.4')])\n     t('PYRO1_GATE','F',P,[(16.0,55.395),(16.0,56.125),p('C126.1')])\n@@ -58,7 +58,7 @@\n     t('ACT_GATE','B',P,[p('Q120.4'),(15.575,73.3),(16.2,73.3),p('C120.2'),(18.23,73.3),p('R120.2')])\n     v('ACT_GATE',(16.2,73.3))\n     t('ACT_GATE','B',P,[p('Q121.4'),(11.8,70.725)]);v('ACT_GATE',(11.8,70.725))\n-    t('ACT_GATE','F',P,[(11.8,70.725),(11.8,71.4),(12.7,72.3),p('R121.1'),(15.2,72.3),(16.2,73.3)])\n+    t('ACT_GATE','F',P,[(11.8,70.725),(13.375,72.3),p('R121.1'),(15.2,72.3),(16.2,73.3)])\n     t('ACT_GATE','B',P,[(11.8,70.725),(11.025,71.5),p('TP121.1')])\n     d.link('ACT_DRV','F',P,'Q122.3','R121.2',((15.8,70.14),))\n     t('ACT_EN_MCU','F',S,[p('U1.16'),(24.5,51.6),(26.5,53.6),(26.5,66.0),(25.3,67.2),(21.0,67.2),(19.6,68.6),p('R122.1')])\n"
+  },
+  {
+   "path": "m3_design/r10_route_sd.py",
+   "before_sha256": "ba9f7d90d6229371915867639576fe01b2bdc39a05f87bc69f654564b8448486",
+   "after_sha256": "087349274ebd907c425449088ee63b7932759b71ea2896842edf74ffff98c388",
+   "reverse_exact_changes_reconstructs_original_bytes": true,
+   "syntax_valid": true,
+   "diff": "--- m3_design/r10_route_sd.py before\n+++ m3_design/r10_route_sd.py after\n@@ -24,10 +24,10 @@\n     t('SD_MOSI','B',.2,[(12.4,39.6),(12.4,36.9),(16.5,32.8),(20.1,32.8),(20.1,27.7),(21.6,26.2),(25.005+DX,26.2),p('J430.3')])\n     t('SD_CS','B',.2,[(13.0,40.2),(13.0,37.6),(17.1,33.5),(20.8,33.5),(20.8,27.7),(21.5,27.0),(26.105+DX,27.0),p('J430.2')])\n     # Pull-up components sit beyond the retaining-body courtyard on B.Cu.\n-    t('SD_MISO','B',.2,[p('J430.7'),(20.605+DX,21.9),(15.605+DX,16.9),p('R462.1')])\n+    t('SD_MISO','B',.2,[p('J430.7'),(20.605+DX,22.48+DX),p('R462.1')])\n     t('SD_DAT1','B',.2,[p('J430.8'),(19.505+DX,22.0),(16.405+DX,18.9),p('R463.1')])\n     t('SD_MOSI','B',.2,[p('J430.3'),(25.005+DX,20.0+DX),(23.375,18.37),p('R461.1')])\n-    t('SD_CS','B',.2,[p('J430.2'),(26.105+DX,19.0),(26.975,18.13+DX),p('R460.1')])\n+    t('SD_CS','B',.2,[p('J430.2'),(26.105+DX,17.67-DX),p('R460.1')])\n     # SD_DAT2: a B.Cu stub north from the pad to one via, then a straight F.Cu link to R464, which takes its 3V3 from the\n     # socket pin 4's via and carries C461.1's 3V3.  The GND partner via sits within 1.5 mm of the signal via, west of\n     # the GPS lanes' band.\n"
+  },
+  {
+   "path": "m3_design/r10_route_signals.py",
+   "before_sha256": "2e7a49db51763c50381f8db4b7a88b50ca0464ac50c6ca970811cdfcde867d7a",
+   "after_sha256": "0593a10a89cabd685f71645f65345ab8808568e603cecfbd79d0d93b75a9e160",
+   "reverse_exact_changes_reconstructs_original_bytes": true,
+   "syntax_valid": true,
+   "diff": "--- m3_design/r10_route_signals.py before\n+++ m3_design/r10_route_signals.py after\n@@ -77,7 +77,7 @@\n     t('GND','F',S,[p('C93.2'),(34.3,38.5)]);v('GND',(34.3,38.5))\n     t('CAM_IO_3V3','F',S,[(32.2,40.05),p('C93.1'),(35.8,40.05),(36.55,40.8),(36.55,48.18)])\n     v('CAM_IO_3V3',(36.55,48.18))\n-    t('CAM_IO_3V3','B',S,[(36.55,48.18),(32.32,48.18),(31.75,48.75),p('U13.5')])\n+    t('CAM_IO_3V3','B',S,[(36.55,48.18),(31.12,48.18),p('U13.5')])\n     # Parallel control trunks: the higher MCU pin takes the outer lane.\n     t('CAM_PWR_EN','F',S,[p('U1.41'),(35.5,41.5),(35.5,57.4),(35.5,58.9),(37.025,60.425),p('R431.1')])\n     t('CAM_PWR_EN','F',S,[(35.5,57.4),(34.4,57.4)]);v('CAM_PWR_EN',(34.4,57.4))\n"
+  },
+  {
+   "path": "m3_design/r10_route_usb.py",
+   "before_sha256": "ffb59fc7e5de6f9ea72021a39c323af72509a00c145c8d39056d578b2e5fb035",
+   "after_sha256": "fc6c57f9151e5445ecad37870c84f71974c191c9eb2042b118277c47aa027a56",
+   "reverse_exact_changes_reconstructs_original_bytes": true,
+   "syntax_valid": true,
+   "diff": "--- m3_design/r10_route_usb.py before\n+++ m3_design/r10_route_usb.py after\n@@ -13,6 +13,10 @@\n             local.pad(ref, num, net, at)\n     nrst_count = 0\n     for index, (net, layer, width, pts) in enumerate(old.TRACKS):\n+        if net == 'USB_DM' and layer == 'F' and pts == [(6.88,33.55),(7.75,33.55),(8.15,33.15),(8.8,33.15)]:\n+            pts = [(6.88,33.55),(8.4,33.55),(8.8,33.15)]\n+        if net == 'USB_DP' and layer == 'F' and pts == [(6.88,34.05),(7.9,34.05),(7.9,35.05)]:\n+            pts = [(6.88,34.05),(7.455,34.05),(7.9,34.495),(7.9,35.05)]\n         if net in ('CC1', 'CC2', 'VBUS') or index < 6:\n             if net == 'VBUS' and layer == 'B' and pts == [(11.35, 33.5), (11.35, 32.15)]:\n                 # Tee into the retained trunk on U10.1's axis (R9-RTE-05).\n@@ -93,7 +97,7 @@\n     d.track('GND','F',.3,[d.pad('C86.2'),(18.3,25.3)]);d.via('GND',(18.3,25.3))\n     d.track('USB_LIMITED','B',.4,[(15.55,28),(16,28)]\n     )\n-    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25),(14.525,25),(14.525,22.3),(11.8,22.3),d.pad('TP82.1')])\n+    d.track('USB_LIMITED','B',.4,[(15.55,28),(15.55,25.05),(11.8,21.3),d.pad('TP82.1')])\n \n     if feed:\n         power_feed(d)\n"
+  },
+  {
+   "path": "tools/check_r10.py",
+   "before_sha256": "55c69e8d21d807725a01706fb696c4184f663f325f99d859da62f19cf056db1f",
+   "after_sha256": "8ae9b668aeeefa9d7d6301faaff09d45c1045bb1e0286f3fad45023ef7cf9fb3",
+   "reverse_exact_changes_reconstructs_original_bytes": true,
+   "syntax_valid": true,
+   "removed_REF_STRAY": [
+    "USB_DM",
+    "F.Cu",
+    8.0793,
+    29.5793,
+    "USB_DM's 45-degree run's copper edge grazes CC1's via antipad (7.85, 29.25), r 0.40 mm: 0.401 mm from its centre (R9's REF_STRAY, translated; one edge sample)"
+   ],
+   "other_REF_STRAY_exactly_preserved": true,
+   "all_other_checker_bytes_preserved": true,
+   "diff": "--- tools/check_r10.py before\n+++ tools/check_r10.py after\n@@ -784,8 +784,6 @@\n REF_PAD_ANTIPAD = 0.6          # mm beyond half a plated pad's size: the plane void around a terminal barrel (Inference)\n REF_OWN_R = 0.45               # mm: a sample this close to a same-net via centre lies in that via's own antipad\n REF_STRAY = [   # (net, layer, x, y, reason): unreferenced samples outside their own via antipads; matched within 0.01 mm\n-    ('USB_DM', 'F.Cu', 8.0793, 29.5793, \"USB_DM's 45-degree run's copper edge grazes CC1's via antipad (7.85, 29.25), \"\n-                                         \"r 0.40 mm: 0.401 mm from its centre (R9's REF_STRAY, translated; one edge sample)\"),\n     ('SPI1_MISO', 'B.Cu', 17.7904, 43.8818, \"R9's translated IMU fan-out: the edge of SPI1_MISO's 45-degree stub passes \"\n                                              \"SPI1_MOSI's via (17.55, 44.25) antipad at 0.440 mm (edge samples)\"),\n     ('SPI1_MISO', 'B.Cu', 17.7975, 43.8889, 'as above'),\n"
+  }
+ ],
+ "implemented_windows": [
+  {
+   "case": "simple_1_PORT_4V8",
+   "net": "PORT_4V8",
+   "layer": "B.Cu",
+   "width_mm": 0.4,
+   "source_file": "m3_design/r10_route_power.py",
+   "source_function": "port_supply",
+   "source_change": "C406.1 to existing PORT_4V8 via; replace only the displayed branch.",
+   "current_points_mm": [
+    [
+     28.4,
+     8.6
+    ],
+    [
+     28.4,
+     10.2
+    ],
+    [
+     29.75,
+     11.55
+    ],
+    [
+     29.75,
+     12.6
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     28.4,
+     8.6
+    ],
+    [
+     29.75,
+     9.95
+    ],
+    [
+     29.75,
+     12.6
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 4.5591883092036785,
+   "replacement_mm": 4.5591883092036785,
+   "savings_mm": 0.0
+  },
+  {
+   "case": "simple_2_3V3",
+   "net": "3V3",
+   "layer": "B.Cu",
+   "width_mm": 0.3,
+   "source_file": "m3_design/r10_route_core.py",
+   "source_function": "draw",
+   "source_change": "Keep the preceding (22.6,52.15) to C14.1 connection; replace only the following displayed window.",
+   "current_points_mm": [
+    [
+     21.82,
+     52.15
+    ],
+    [
+     21.82,
+     51.8
+    ],
+    [
+     19.5,
+     49.48
+    ],
+    [
+     19.5,
+     49.15
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     21.82,
+     52.15
+    ],
+    [
+     21.82,
+     51.47
+    ],
+    [
+     19.5,
+     49.15
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 3.960975464705581,
+   "replacement_mm": 3.960975464705581,
+   "savings_mm": 0.0
+  },
+  {
+   "case": "simple_3_USB_DM",
+   "net": "USB_DM",
+   "layer": "F.Cu",
+   "width_mm": 0.2,
+   "source_file": "m3_design/r10_route_usb.py",
+   "source_function": "draw",
+   "source_change": "Intercept the first inherited USB_DM table row in the R10 wrapper, before local translation (0,-3.5). Do not edit pinned R9 input. Retire only obsolete check_r10.REF_STRAY USB_DM/F row at(8.0793,29.5793).",
+   "current_points_mm": [
+    [
+     6.88,
+     30.05
+    ],
+    [
+     7.75,
+     30.05
+    ],
+    [
+     8.15,
+     29.65
+    ],
+    [
+     8.8,
+     29.65
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     6.88,
+     30.05
+    ],
+    [
+     8.4,
+     30.05
+    ],
+    [
+     8.8,
+     29.65
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 2.085685424949238,
+   "replacement_mm": 2.0856854249492383,
+   "savings_mm": -4.440892098500626e-16
+  },
+  {
+   "case": "simple_4_SD_MISO",
+   "net": "SD_MISO",
+   "layer": "B.Cu",
+   "width_mm": 0.2,
+   "source_file": "m3_design/r10_route_sd.py",
+   "source_function": "draw",
+   "source_change": "J430.7 to R462.1 pull-up branch, retain DX-aware source frame and the separate MCU run.",
+   "current_points_mm": [
+    [
+     20.605,
+     24.3
+    ],
+    [
+     20.605,
+     21.9
+    ],
+    [
+     15.605,
+     16.9
+    ],
+    [
+     15.025,
+     16.9
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     20.605,
+     24.3
+    ],
+    [
+     20.605,
+     22.48
+    ],
+    [
+     15.025,
+     16.9
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 10.051067811865476,
+   "replacement_mm": 9.71131167804187,
+   "savings_mm": 0.3397561338236059
+  },
+  {
+   "case": "simple_5_SD_CS",
+   "net": "SD_CS",
+   "layer": "B.Cu",
+   "width_mm": 0.2,
+   "source_file": "m3_design/r10_route_sd.py",
+   "source_function": "draw",
+   "source_change": "J430.2 to R460.1 pull-up branch, retain DX-aware source frame and the separate MCU run.",
+   "current_points_mm": [
+    [
+     26.105,
+     24.3
+    ],
+    [
+     26.105,
+     19.0
+    ],
+    [
+     26.975,
+     18.13
+    ],
+    [
+     26.975,
+     16.8
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     26.105,
+     24.3
+    ],
+    [
+     26.105,
+     17.67
+    ],
+    [
+     26.975,
+     16.8
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 7.860365799264592,
+   "replacement_mm": 7.860365799264592,
+   "savings_mm": 0.0
+  },
+  {
+   "case": "simple_6_I2C1_SDA",
+   "net": "I2C1_SDA",
+   "layer": "F.Cu",
+   "width_mm": 0.2,
+   "source_file": "m3_design/r10_route_core.py",
+   "source_function": "CoreTable.track",
+   "source_change": "Intercept only the inherited F.Cu SDA row. Before CORE_SHIFT(+5,-1.5), replace [u1_pin(96),(8.35,48.5),(4.97,51.88),(4.97,53)] by [u1_pin(96),(9.47,48.5),(4.97,53)]. Retain its B.Cu connections.",
+   "current_points_mm": [
+    [
+     15.45,
+     47.0
+    ],
+    [
+     13.35,
+     47.0
+    ],
+    [
+     9.97,
+     50.38
+    ],
+    [
+     9.97,
+     51.5
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     15.45,
+     47.0
+    ],
+    [
+     14.47,
+     47.0
+    ],
+    [
+     9.97,
+     51.5
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 8.00004184082106,
+   "replacement_mm": 7.343961030678928,
+   "savings_mm": 0.6560808101421323
+  },
+  {
+   "case": "simple_7_ACT_GATE",
+   "net": "ACT_GATE",
+   "layer": "F.Cu",
+   "width_mm": 0.3,
+   "source_file": "m3_design/r10_route_pyro.py",
+   "source_function": "draw",
+   "source_change": "Replace only prefix from existing via(11.8,70.725) to R121.1; preserve R121.1 through(15.2,72.3) to via(16.2,73.3).",
+   "current_points_mm": [
+    [
+     11.8,
+     70.725
+    ],
+    [
+     11.8,
+     71.4
+    ],
+    [
+     12.7,
+     72.3
+    ],
+    [
+     14.5,
+     72.3
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     11.8,
+     70.725
+    ],
+    [
+     13.375,
+     72.3
+    ],
+    [
+     14.5,
+     72.3
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 3.7477922061357853,
+   "replacement_mm": 3.3523863607376247,
+   "savings_mm": 0.3954058453981606
+  },
+  {
+   "case": "simple_8_CAM_IO_3V3",
+   "net": "CAM_IO_3V3",
+   "layer": "B.Cu",
+   "width_mm": 0.2,
+   "source_file": "m3_design/r10_route_signals.py",
+   "source_function": "camera",
+   "source_change": "Existing via(36.55,48.18) to U13.5, leaving all other camera supply/isolation paths intact.",
+   "current_points_mm": [
+    [
+     36.55,
+     48.18
+    ],
+    [
+     32.32,
+     48.18
+    ],
+    [
+     31.75,
+     48.75
+    ],
+    [
+     30.55,
+     48.75
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     36.55,
+     48.18
+    ],
+    [
+     31.12,
+     48.18
+    ],
+    [
+     30.55,
+     48.75
+    ]
+   ],
+   "current_segments": 3,
+   "replacement_segments": 2,
+   "current_mm": 6.236101730552664,
+   "replacement_mm": 6.236101730552664,
+   "savings_mm": 0.0
+  },
+  {
+   "case": "chain_2_BAT_IN",
+   "net": "BAT_IN",
+   "layer": "B.Cu",
+   "width_mm": 0.4,
+   "source_file": "m3_design/r10_route_power.py",
+   "source_function": "battery",
+   "source_change": "feed(17.5,87.3) to R82.1 branch, NOT the C88-first U9 feed itself. Re-extract full hot-plug graph and regenerate bound evidence after source adoption.",
+   "current_points_mm": [
+    [
+     17.5,
+     87.3
+    ],
+    [
+     15.5,
+     87.3
+    ],
+    [
+     15.5,
+     83.9
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     17.5,
+     87.3
+    ],
+    [
+     15.5,
+     85.3
+    ],
+    [
+     15.5,
+     83.9
+    ]
+   ],
+   "current_segments": 2,
+   "replacement_segments": 2,
+   "current_mm": 5.4,
+   "replacement_mm": 4.228427124746181,
+   "savings_mm": 1.171572875253819
+  },
+  {
+   "case": "chain_5_USB_DP",
+   "net": "USB_DP",
+   "layer": "F.Cu",
+   "width_mm": 0.2,
+   "source_file": "m3_design/r10_route_usb.py",
+   "source_function": "draw",
+   "source_change": "Intercept inherited J3.A6 USB_DP row in R10 wrapper, local y=current y+3.5; do not edit pinned R9 source. Preserve tee at(7.9,31.55).",
+   "current_points_mm": [
+    [
+     6.88,
+     30.55
+    ],
+    [
+     7.9,
+     30.55
+    ],
+    [
+     7.9,
+     31.55
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     6.88,
+     30.55
+    ],
+    [
+     7.455,
+     30.55
+    ],
+    [
+     7.9,
+     30.995
+    ],
+    [
+     7.9,
+     31.55
+    ]
+   ],
+   "current_segments": 2,
+   "replacement_segments": 3,
+   "current_mm": 2.02,
+   "replacement_mm": 1.7593250352560277,
+   "savings_mm": 0.26067496474397234
+  },
+  {
+   "case": "chain_6_PYRO1_GATE",
+   "net": "PYRO1_GATE",
+   "layer": "F.Cu",
+   "width_mm": 0.3,
+   "source_file": "m3_design/r10_route_pyro.py",
+   "source_function": "draw",
+   "source_change": "Existing via(14.4,53.3) to R126.2 only; preserve its subsequent gate branches.",
+   "current_points_mm": [
+    [
+     14.4,
+     53.3
+    ],
+    [
+     16.0,
+     53.3
+    ],
+    [
+     16.0,
+     54.24
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     14.4,
+     53.3
+    ],
+    [
+     15.06,
+     53.3
+    ],
+    [
+     16.0,
+     54.24
+    ]
+   ],
+   "current_segments": 2,
+   "replacement_segments": 2,
+   "current_mm": 2.54,
+   "replacement_mm": 1.9893607486307125,
+   "savings_mm": 0.5506392513692875
+  },
+  {
+   "case": "extra_USB_LIMITED_centered",
+   "net": "USB_LIMITED",
+   "layer": "B.Cu",
+   "width_mm": 0.4,
+   "source_file": "m3_design/r10_route_usb.py",
+   "source_function": "draw",
+   "source_change": "Replace only TP82 branch from(15.55,28), retaining the U10/C86/In2 feed tee and all endpoints. This refinement supersedes the rejected first TP82 sketch.",
+   "current_points_mm": [
+    [
+     15.55,
+     28.0
+    ],
+    [
+     15.55,
+     25.0
+    ],
+    [
+     14.525,
+     25.0
+    ],
+    [
+     14.525,
+     22.3
+    ],
+    [
+     11.8,
+     22.3
+    ],
+    [
+     10.8,
+     21.3
+    ]
+   ],
+   "replacement_points_mm": [
+    [
+     15.55,
+     28
+    ],
+    [
+     15.55,
+     25.05
+    ],
+    [
+     11.8,
+     21.3
+    ],
+    [
+     10.8,
+     21.3
+    ]
+   ],
+   "current_segments": 5,
+   "replacement_segments": 3,
+   "current_mm": 10.864213562373095,
+   "replacement_mm": 9.253300858899106,
+   "savings_mm": 1.6109127034739892
+  }
+ ],
+ "source_ownership": {
+  "route_modules": 6,
+  "checker_files": 1,
+  "minimal_byte_controls_pass": true,
+  "method": "Reversing only the12 explicit route changes and restoring the single removed REF_STRAY reconstructs every original owned file byte for byte at its before SHA. AST parse passes for all7 files.",
+  "R9_input_or_shared_R9_source_edits": 0,
+  "other_checker_bytes_preserved": true,
+  "numeric_rules_limits_other_allowlist_edits": 0,
+  "source_local_contracts": "Existing R10 Draw octilinear/width/net/pad assertions remain; full exact inherited USB/SDA rows are intercepted in R10 only. Complete native dry output proves these intercepts match the pinned input and all other generated tuples remain unchanged."
+ },
+ "generated_geometry": {
+  "method": "Actual six-family R10 Draw dry-run on the exact native footprint/pad board; its entire957-track output is then generated into an ignored native copy, refilled and measured. No canonical generator/build invoked.",
+  "family_segments": [
+   {
+    "family": "core",
+    "segments": 153
+   },
+   {
+    "family": "usb",
+    "segments": 107
+   },
+   {
+    "family": "pyro",
+    "segments": 102
+   },
+   {
+    "family": "power",
+    "segments": 206
+   },
+   {
+    "family": "signals",
+    "segments": 303
+   },
+   {
+    "family": "ground",
+    "segments": 86
+   }
+  ],
+  "segments_before": 966,
+  "segments_after": 957,
+  "segments_saved": 9,
+  "vias_before_after": 296,
+  "track_mm_before": 1802.12522017822,
+  "track_mm_after": 1797.1401775940194,
+  "track_mm_saved": 4.985042584200528,
+  "exact_native_nanometre_track_multiset_match": true,
+  "actual_source_track_digest": "4d8b6b1cc1fc8918cc29950f42a1f3d48d901213ac3e96a3ca96a49a9380d5ca",
+  "qualified_combined_track_digest": "4d8b6b1cc1fc8918cc29950f42a1f3d48d901213ac3e96a3ca96a49a9380d5ca",
+  "track_delta_matches_only_exact12_windows": true,
+  "all_other_track_tuples_preserved": true,
+  "all_source_via_specs_match_target_and_control": true,
+  "invariants": {
+   "all_footprint_pad_net_poses": true,
+   "all_via_geometry_modes_flags": true,
+   "all_zone_outlines_layers_nets": true
+  },
+  "qualified_combined_board_sha256": "4ea3464eec8d8b75e8cdccb53e34dc72864f6708451828aba96f589e97f976f0",
+  "generated_ignored_copy": ".supervisor/r14_routing_fix_generated/m3.kicad_pcb",
+  "generated_ignored_copy_sha256": "8bb1a87c82db697ba6db1ff870b7c92642378b1ec2cc1257ab551d95471f64d1",
+  "saved_fill_symmetric_differences": [
+   {
+    "zone": "R10_GND_F",
+    "symmetric_difference_mm2": 4.04661e-07
+   },
+   {
+    "zone": "R10_GND_B",
+    "symmetric_difference_mm2": 1.0160999999999999e-08
+   },
+   {
+    "zone": "R10_GND_In1",
+    "symmetric_difference_mm2": 0.0
+   },
+   {
+    "zone": "R10_GND_In2_CH1",
+    "symmetric_difference_mm2": 0.0
+   },
+   {
+    "zone": "R10_GND_In2_Y1",
+    "symmetric_difference_mm2": 0.0
+   },
+   {
+    "zone": "R10_PORT_4V8_In2",
+    "symmetric_difference_mm2": 0.0
+   },
+   {
+    "zone": "R10_3V3_In2",
+    "symmetric_difference_mm2": 0.0
+   },
+   {
+    "zone": "R10_PORT_5V3_In2",
+    "symmetric_difference_mm2": 0.0
+   },
+   {
+    "zone": "R10_RAW_In2",
+    "symmetric_difference_mm2": 0.0
+   }
+  ],
+  "saved_fill_comparison_limit_mm2": 1e-06,
+  "maximum_fill_difference_mm2": 4.04661e-07,
+  "fill_scope": "In1 and all In2 fills are exact; outer GND refill has sub-micrometre-area numerical differences, explicitly measured. The ignored generated file has new track UUIDs and is not the prior qualified file hash or a canonical full-build artifact."
+ },
+ "checks_actually_executed": {
+  "source_AST_files": 7,
+  "exact_source_byte_reconstruction_controls": 7,
+  "six_family_source_dry_run": true,
+  "complete_source_track_generation_into_ignored_copy": true,
+  "native_refill": true,
+  "native_rule_ids": [
+   "S-8",
+   "S-9",
+   "M-7",
+   "F9-2",
+   "K-legends",
+   "K-copper",
+   "K-inner",
+   "K-reference",
+   "K-region",
+   "K-fill",
+   "K-width",
+   "K-retained"
+  ],
+  "native_all_selected_pass": true,
+  "native_failing": [],
+  "critical_reference": {
+   "samples": 159810,
+   "unreferenced": 10051,
+   "inside_own_antipad": 10045,
+   "recorded_stray": 5,
+   "loose": 0,
+   "b_cu_planes": [
+    "GND",
+    "3V3",
+    "3V3A",
+    "PORT_5V3",
+    "PORT_4V8",
+    "RAW_PROTECTED"
+   ],
+   "by_net_layer": {
+    "SPI1_MISO B.Cu": {
+     "samples": 2,
+     "box": [
+      17.79,
+      43.88,
+      17.8,
+      43.89
+     ]
+    },
+    "SPI1_MISO F.Cu": {
+     "samples": 1,
+     "box": [
+      17.3,
+      43.89,
+      17.3,
+      43.89
+     ]
+    },
+    "SPI1_SCK B.Cu": {
+     "samples": 3,
+     "box": [
+      17.1,
+      43.4,
+      17.1,
+      43.42
+     ]
+    }
+   }
+  },
+  "critical_region": {
+   "items": 163,
+   "samples": 62590,
+   "nets": [
+    "CAM_MCU_RX",
+    "CAM_MCU_TX",
+    "CAM_RX_BUFFER",
+    "CAM_RX_WIRE",
+    "CAM_TX_BUFFER",
+    "CAM_TX_WIRE",
+    "GPS_RX_MCU",
+    "GPS_RX_WIRE",
+    "GPS_TX_MCU",
+    "GPS_TX_WIRE",
+    "HSE_IN",
+    "HSE_OUT",
+    "IMU_CS",
+    "PYRO1_COLD",
+    "PYRO1_GATE",
+    "PYRO1_GATE_N",
+    "PYRO1_IGN",
+    "PYRO1_OUT",
+    "QSPI_CLK",
+    "QSPI_IO0",
+    "QSPI_IO1",
+    "QSPI_IO2",
+    "QSPI_IO3",
+    "QSPI_NCS",
+    "RADIO_RX_MCU",
+    "RADIO_RX_WIRE",
+    "RADIO_TX_MCU",
+    "RADIO_TX_WIRE",
+    "SD_CS",
+    "SD_DAT1",
+    "SD_DAT2",
+    "SD_MISO",
+    "SD_MOSI",
+    "SD_SCK",
+    "SPI1_MISO",
+    "SPI1_MOSI",
+    "SPI1_SCK",
+    "USB_DM",
+    "USB_DP"
+   ]
+  },
+  "current_fill": {
+   "zones": 9,
+   "stale": 0,
+   "tolerance_mm2": 0.01
+  },
+  "source_fire_widths": {
+   "PYRO1_IGN": {
+    "terminals": [
+     [
+      "R134.1"
+     ],
+     [
+      "J121.2"
+     ]
+    ],
+    "path_segments": 3,
+    "widths_mm": [
+     0.5
+    ],
+    "joined": true,
+    "minimum_mm": 0.5
+   },
+   "PYRO1_OUT": {
+    "terminals": [
+     [
+      "J121.1"
+     ],
+     [
+      "Q124.5"
+     ]
+    ],
+    "path_segments": 3,
+    "widths_mm": [
+     0.5
+    ],
+    "joined": true,
+    "minimum_mm": 0.5
+   },
+   "RAW_ACT": {
+    "terminals": [
+     [
+      "Q121.5",
+      "Q121.6",
+      "Q121.7",
+      "Q121.8",
+      "Q121.9"
+     ],
+     [
+      "R134.2"
+     ]
+    ],
+    "path_segments": 2,
+    "widths_mm": [
+     0.5
+    ],
+    "joined": true,
+    "minimum_mm": 0.5
+   },
+   "ACT_FET_S": {
+    "terminals": [
+     [
+      "Q120.1",
+      "Q120.2",
+      "Q120.3"
+     ],
+     [
+      "Q121.1",
+      "Q121.2",
+      "Q121.3"
+     ]
+    ],
+    "path_segments": 7,
+    "widths_mm": [
+     0.4
+    ],
+    "joined": true,
+    "minimum_mm": 0.5
+   },
+   "BAT_IN": {
+    "terminals": [
+     [
+      "J1.1"
+     ],
+     [
+      "Q120.5",
+      "Q120.6",
+      "Q120.7",
+      "Q120.8",
+      "Q120.9"
+     ]
+    ],
+    "path_segments": 1,
+    "widths_mm": [
+     1.0
+    ],
+    "joined": true,
+    "minimum_mm": 1.0
+   },
+   "narrow_used": [
+    "AONR21357 source bridge bar",
+    "Q120.1 source leg",
+    "Q120.2 source leg",
+    "Q120.3 source leg",
+    "Q121.1 source leg",
+    "Q121.2 source leg",
+    "Q121.3 source leg"
+   ]
+  },
+  "retained_bypass": {
+   "camera_bypass": {
+    "C100": {
+     "supply_pin": "U12.3",
+     "pad_distance_mm": 1.1999999999999993,
+     "direct_copper_route_mm": 1.1999999999999993,
+     "direct_ground_return_mm": 1.373969696196701
+    },
+    "C93": {
+     "supply_pin": "U12.7",
+     "pad_distance_mm": 0.25,
+     "direct_copper_route_mm": 3.7499999999999916
+    }
+   },
+   "microSD_bypass": {
+    "C460": {
+     "vdd_pad_distance_mm": 2.680018656651479,
+     "maximum_mm": 3.0
+    },
+    "C461": {
+     "vdd_pad_distance_mm": 5.057571057335725,
+     "maximum_mm": 6.0
+    }
+   },
+   "flash": {
+    "pad_distance_mm": 1.87,
+    "direct_route_mm": 1.870000000000001
+   }
+  },
+  "route_controls": {
+   "production_instances": 139,
+   "categories": {
+    "pad_end_offcentre": 57,
+    "segment_inside_pad": 22,
+    "short_segment": 1,
+    "passes_through_pad": 1,
+    "width_change_junction": 11,
+    "u_turn": 6,
+    "tiny_jog": 6,
+    "extra_bends": 6,
+    "short_layer_hop": 3,
+    "power_via_no_gnd": 24,
+    "via_on_track_in_fill": 1,
+    "detour": 1
+   },
+   "critical_windows": 25,
+   "critical_bumps": [],
+   "failures": [],
+   "allowed": [],
+   "stale": []
+  },
+  "REF_STRAY_after": [
+   [
+    "SPI1_MISO",
+    "B.Cu",
+    17.7904,
+    43.8818,
+    "R9's translated IMU fan-out: the edge of SPI1_MISO's 45-degree stub passes SPI1_MOSI's via (17.55, 44.25) antipad at 0.440 mm (edge samples)"
+   ],
+   [
+    "SPI1_MISO",
+    "B.Cu",
+    17.7975,
+    43.8889,
+    "as above"
+   ],
+   [
+    "SPI1_MISO",
+    "F.Cu",
+    17.3046,
+    43.8869,
+    "as above, F.Cu side: SPI1_MOSI's via (17.55, 44.25) at 0.438 mm, its In1 antipad"
+   ],
+   [
+    "SPI1_SCK",
+    "B.Cu",
+    17.1,
+    43.4,
+    "R9's translated IMU fan-out: SPI1_SCK's B.Cu edge passes SPI1_MISO's via (17.55, 43.5) antipad at 0.461 mm"
+   ],
+   [
+    "SPI1_SCK",
+    "B.Cu",
+    17.1,
+    43.42,
+    "as above"
+   ]
+  ],
+  "fresh_hotplug_extraction": {
+   "generated_board_sha256": "8bb1a87c82db697ba6db1ff870b7c92642378b1ec2cc1257ab551d95471f64d1",
+   "native_extracted_board_sha256": "8bb1a87c82db697ba6db1ff870b7c92642378b1ec2cc1257ab551d95471f64d1",
+   "native_extracted_electrical_sha256": "e4f13accbe3011affc9e9f748c0f72c48eb4f444536248a25903b8c6a0a25ed3",
+   "same_electrical_input_as_full2304_plus60_review_sweep": true,
+   "input_sha256": "ae4884b66af3f3d4b531598d8d272084b5bcc9e29d26eac61ea97ae64eb8d8e4",
+   "scope": "Fresh source-generated copy extraction; full nonlinear sweep not repeated because the electrical digest equals the fully swept exact alternative."
+  },
+  "new_fix_phase_CLI_or_DRC_runs": 0,
+  "canonical_build_or_fullcheck_runs": 0,
+  "canonical_board_writes": 0,
+  "git_mutations": 0,
+  "GUI_operations": 0
+ },
+ "electrical_model_provenance": {
+  "fresh_generated_copy_electrical_sha256": "e4f13accbe3011affc9e9f748c0f72c48eb4f444536248a25903b8c6a0a25ed3",
+  "equals_exact_review_sweep_input": true,
+  "prior_full_required_cases": 2304,
+  "prior_full_local_sensitivity_cases": 60,
+  "prior_full_sweep_passed": true,
+  "prior_convergence_and_cold_controls_passed": true,
+  "prior_full_sweep_result_sha256": "e11a852c8816e51ba570aa128c92ce82fc1136ea70f386002da46f2bbc6b8164",
+  "new_full_sweep_runs": 0,
+  "scope": "Fresh actual-board extraction matches the fully2304+60 swept exact alternative electrical digest. Model sweeps are Simulation/Inference; full native integration will regenerate the final hash-bound evidence. No physical hot-plug/thermal/endurance claim."
+ },
+ "prior_qualification_controls": {
+  "immutable_review_report": "m3_design/assembly_review/sources/r10_review/round14_routing.json",
+  "immutable_review_report_sha256": "20174636ee0c2faa328ffb8c35ce579c15e117ddc7719140c63209fc29266c09",
+  "individual_and_combined_official10_0_7_DRCs": 13,
+  "all_prior_DRC_counts_zero": true,
+  "qualified_combined_DRC": {
+   "candidate_board_sha256": "4ea3464eec8d8b75e8cdccb53e34dc72864f6708451828aba96f589e97f976f0",
+   "counts": {
+    "violations": 0,
+    "unconnected_items": 0,
+    "schematic_parity": 0
+   },
+   "report_sha256": "3537a04fa43751bffcdc8a0f6005ab0cfd732928491103a975c11a08b5a7fcd3",
+   "log_sha256": "ef6d52bf81dde3cf6c373a4ce42439e483159ca2cbafdf5c474a86b3fa117cae"
+  },
+  "scope": "Prior review qualification on exact scratch files is retained as such. This fix phase proves the source track/via/zone geometry matches it, but does not label the new source-generated file as freshly DRC-tested."
+ },
+ "preservation": {
+  "pinned_R9_source_input_files": 51,
+  "all_pinned_R9_bytes_unchanged": true,
+  "original_round14_reviews_sha256_unchanged": {
+   "m3_design/assembly_review/sources/r10_review/round14_routing.md": "b5ce9d6dba8518831ca06fa8bdd0ade99c725c8b96e9840b191aab27639b868e",
+   "m3_design/assembly_review/sources/r10_review/round14_routing.json": "20174636ee0c2faa328ffb8c35ce579c15e117ddc7719140c63209fc29266c09"
+  },
+  "part_pad_net_via_zone_outlines_unchanged": {
+   "all_footprint_pad_net_poses": true,
+   "all_via_geometry_modes_flags": true,
+   "all_zone_outlines_layers_nets": true
+  },
+  "AGENTS_section2_changed": false,
+  "pad_map_cells_widths_layers_gate_networks_preserved": true,
+  "all_checker_bytes_except_exact_unused_REF_STRAY_preserved": true
+ },
+ "rejected_and_failed_controls_retained": [
+  "Original first SDA scratch warning(track_not_centered_on_via,1nm float conversion mismatch) remains in the immutable R14 record. Actual source dry output uses the existing rounded source-point primitive and matches the exact native qualified anchors.",
+  "First USB_LIMITED sketch added two offcentre TP82 endpoints; only the checked centered refinement is implemented.",
+  "BUZZ_G in-pad bend sketch and ACT_FET_S exactS-9-contract failure remain rejected; neither source route changes. No exception was loosened.",
+  "Initial fix probe used a nonexistent PAD.GetZoneConnection method after its dry track/via match. That incomplete run is not credited; the complete replay uses GetLocalZoneConnection and passes. Initial log remains ignored."
+ ],
+ "remaining_limits": [
+  "Only R14-RTE-01 source cleanup is implemented here; its final canonical geometry, fullcheck, fabrication/binding evidence and future reviews remain root integration work. The original R14 findings/report hashes are immutable.",
+  "The carried R14-RTE-02 noncritical remote return companions and R14-RTE-03 M2 pad-entry/in-fill/review observations remain owner/assembler/bench dispositions; production information inventory is139(109ordinary+22inside-pad+8noncritical leftovers), one fewer extra-bends annotation. No promise of a fully clean M2 board or owner acceptance.",
+  "No resistor/ADC/fire circuit change, new via, pad/part pose change, route width/layer change or weakening of numeric rules/allowlists. Only the obsolete USB_DM exact reference sample is retired; five other REF_STRAY entries are exactly preserved.",
+  "No native full build, full check.sh, new DRC, CAD source write, fabrication export, executable firmware binding, physical/flight/process test, stock/quote/order or owner acceptance was performed by this worker.",
+  "Existing native contracts and model calculations do not establish USB impedance/timing, SD latency/power-loss, reset/EMI, hot R134/current tail, installed harness/retention, screwdriver/card/stack access or first article."
+ ],
+ "root_next_steps": [
+  "Run the two authorized complete native builds/check0 and verify deterministic generated artifacts, final DRC/ERC/parity and all31 rules.",
+  "Regenerate final board-bound electrical/hot-plug/fab/manifests/binding evidence and matching decision/status/ledger records; the final canonical SHA is not the ignored generated-copy SHA.",
+  "Commit through the supervisor workflow and run fresh full committed-board review rounds15/16."
+ ],
+ "ignored_receipts": [
+  {
+   "path": ".supervisor/r14_routing_fix_before.json",
+   "sha256": "2bc06eb5997ce1b06e1aed7a37e70714cf09f43629ead08d4ce759045d464ee9"
+  },
+  {
+   "path": ".supervisor/r14_routing_fix_probe.json",
+   "sha256": "886fb99ab45b709c71955ff3433d488cf87b585b34469a6244b3e1eabad907e4"
+  },
+  {
+   "path": ".supervisor/r14_routing_fix_source_controls.json",
+   "sha256": "b7339d3a90482f07d4688ac5f6486f1d6d2df212dc2aec9c90bcc836df2efed4"
+  },
+  {
+   "path": ".supervisor/r14_routing_fix_hotplug_receipt.json",
+   "sha256": "ec722bd98d18037db40c016d2848c65ed7b25ff4e96cc698d1916023c6156d04"
+  }
+ ]
+}

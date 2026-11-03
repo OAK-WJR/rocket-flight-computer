@@ -1,0 +1,30 @@
+# Round13 requirements traceability review
+
+Target commit `fa897c81abac3026e75ca5cc88bef0c2659a7130`. Native PCB SHA-256 before and after: `7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c`.
+
+**0 Critical / 0 Major / 4 Minor groups: two new records defects, two carried.** No demonstrated required-function/constraint failure or AGENTS section2 violation found. R9 severity practice has no literal rubric; disclosed pending firmware/bench/procurement qualification alone is not a demonstrated hardware failure. This is one lens, not full-round or owner acceptance.
+
+| ID | Status | Evidence and implication | Concrete fix |
+|---|---|---|---|
+| R13-REQ-01 | New Minor | `docs/R10_VALIDATION.md:1231` puts the `>=50 milliohm` minimum on **motor branches**. D-R1-07, `parts_qualification.md:691-703` and `ORDERING.md:485` require it on each **signal-reference branch**. The stated bound is `4 x 7.68mV / 50mOhm = 0.6144A`; motor-branch resistance does not supply that denominator. Native J122 is four signals plus one reference GND. Detailed wiring instructions are correct; no installed overcurrent demonstrated. | Change the summary to signal-reference branches; retain pack-star, transfer-resistance and four-wire measurement conditions. |
+| R13-REQ-02 | New Minor | `r10_final_deviations.json#/current_topics/hotplug` still says final binding pending; `/current_topics/records` says PREPARATION/pending final receipts, despite its completed 7355 receipts and fresh matching native F9-1/binding/budget. `/owner_mandates/16` still says `107-index`, while all110 are present. | Reconcile active topic completion state/count with current receipts; keep full-round/owner/physical obligations pending. |
+| R13-REQ-03 | Carried Minor | `../../docs/VEHICLE.md:39` still says GH ports, ARM terminal and GH-2 J400 at(10.5,85.5). Fresh native J400 is DB125 at(7.4,65.85), no J124; current handoff correctly states all seven terminals. | Parent owner applies `docs/R10_VEHICLE_HANDOFF.md` within its separate workflow, preserving accepted R9 history/OQ-7. No parent edit made here. |
+| R13-REQ-04 | Carried Minor | Fresh route scan reproduces141 total instances:110 ordinary information,22 AUD-10 inside-pad items and9 noncritical leftovers;0 blocking/critical allowlist/stale. The current nine-location inventory matches. C98's ordinary stitch retains its explicit in-fill annotation. These remain M2 deviations pending dated acceptance. | Preserve exact inventory for owner acceptance, or use a covered generator change to remove selected residuals and refresh evidence. No extra copper added merely to erase an annotation. |
+
+No component maker parameter is disputed by these four findings; their evidence is owner requirements, native geometry and record provenance. Maker pages used for F1/F2/F3/F7 capability checks are listed in JSON.
+
+Fresh KiCad10.0.6 API checks pass29 distinct selected contracts: S-1..S-9, K-contract/loader/actuators, LC-1, M-1/3/5/6/7, P-11, F9-1/2, T-1, K-legends/copper/inner/reference/region/width/retained. The probe initially supplied an incomplete fit fixture; the correctly hash-bound M-5 rerun passes. No CLI/build/fullcheck/GUI ran.
+
+- Native inventory:209 footprints,973 straight segments,0 arcs,296 vias(168 GND),1808.300406mm track,46x90x1.6mm.
+- All100 MCU pads agree across PCB/XML/sole `r10_net` map/binding. The schematic contract has209 components/651 mappings; exact binding regeneration/four hashes and native-bound budget regeneration match.199 required fitted parts agree across native/schematic/BOM/CPL.199 model references have no absolute path.
+- Seven outward DB125s pass P-11 at printed5.003mm versus4.95mm. Bottom/top support clearances4.536177/3.807887mm meet3.5/3.8mm. Physical wire/tool/hinge/sled fit is unverified.
+- Fast-reference check:160761 samples,0 loose; K-region165 items/62984 samples. AUD-2 scope stays narrow. Only two exact U401 VIPPO sites qualify.
+- Native fire budget reproduces4.617458126Ohm and1.544366/1.283013A at idle/four stalls versus1.125A, conditional on recorded source/material/harness assumptions. [MJG p1](https://electricmatch.com/upload/JTEK_TECHNICAL_INFORMATION_SHEET_SPECIFICATIONS.PDF) defines its all-fire current using0.5s; actual20ms lot firing remains unqualified.
+
+All110 unique decision IDs, including suffixes and D-R12-01/02/03, were read and reconciled: no missing/extra index entry; the JSON gives each current applicability/reason. All22 owner-mandate records were traced through later amendments. Fifteen indexed source objects match their hashes. F1-F10/P1-P3/M1-M3 and all five AGENTS section2 rules have explicit JSON coverage/limits.
+
+The current native architecture preserves the independent post-switch PC1/PE4 firing controls, split-top/parallel-bottom direct PC0/PC5 banks, required gate networks, external servo motor pairs, always-on GPS/radio, camera isolation/switch, primary QSPI/secondary hinged SD and five supports. Removed switches/translators/ARM link/pull-pin/sense tails/header/tie holes remain absent. Source obligations retain ground refusals, accelerometer+barometer launch, in-flight never-veto, trace restrictions, no-backfeed e-match connection and dark LEDs pending the actual cover test.
+
+Qualification/procurement duties remain correctly open: firmware, actual pulse/tail/watchdog/neutral/shedding, card latency/power loss, chosen-lot firing, hot/source/harness/transient/R166 endurance, installed RF/ESD, coating/retention, bore/stack/tool/card access, C84 manual fitting, exact VIPPO, L400 heel/proxy assembly and first article. Current dated cost is82.65USD placed+feeder,84.99USD with minima versus84.41; R430/U4 supply, full process/quote and owner acceptance remain pending. No release or order is inferred.
+
+Only the assigned new reports and preserved ignored probes were written. No git command, subagent, peer current-round report or other-worktree edit. Complete structured coverage, native metrics, checks actually executed, probe setup corrections and limits: [round13_requirements.json](round13_requirements.json).

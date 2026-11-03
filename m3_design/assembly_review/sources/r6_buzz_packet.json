@@ -1,0 +1,385 @@
+{
+  "description": "BUZZ_DRV complete fixed-copper route, margin 8 with critical B.Cu reference fences retained during search",
+  "base_sha256": "47dd4a4c6d372facba3f0e143c47f2fc74aa0d078572658f6dde56fea417e860",
+  "candidate_sha256": "3d7869d51d8b5520e8fec705903abddedfc7df9ebdce74b1b875662515ccc5e3",
+  "removed_tracks_guard": [],
+  "added_tracks": [
+    {
+      "uuid": "d3245b9c-9a83-4059-8a42-94e6a403b230",
+      "type": "PCB_VIA",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "position": [
+        11.05,
+        29.45
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "7326f1b9-02e3-4edb-b05c-951999df3ffa",
+      "type": "PCB_VIA",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "position": [
+        12.25,
+        28.25
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "75282c4f-9222-42b5-aec7-7498efa29cdb",
+      "type": "PCB_VIA",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "position": [
+        15.65,
+        30.25
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "0123cc32-1bc2-4d36-9696-9719bf61ad70",
+      "type": "PCB_VIA",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "position": [
+        19.25,
+        32.65
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "d7c59b92-aa6f-41da-be87-01d222f2db36",
+      "type": "PCB_VIA",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "position": [
+        24.15,
+        32.25
+      ],
+      "diameter_mm": 0.6,
+      "drill_mm": 0.3,
+      "layers": [
+        "F.Cu",
+        "B.Cu"
+      ]
+    },
+    {
+      "uuid": "12f6a66f-2731-47d2-9f8b-f4d84b938c65",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        4.25,
+        67.05
+      ],
+      "end": [
+        4.299999,
+        67.099999
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "93ff81dd-cc09-409c-bd17-200da4b68eec",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        4.25,
+        53.25
+      ],
+      "end": [
+        4.25,
+        67.05
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "3393e78e-dc94-4d2b-900e-adf7eebfca8f",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        1.55,
+        50.55
+      ],
+      "end": [
+        4.25,
+        53.25
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "07951198-4c53-4ff3-8e9c-7012ca4ad519",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        1.55,
+        35.05
+      ],
+      "end": [
+        1.55,
+        50.55
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "6997b741-6bea-4c9c-b507-d9e2befedeba",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        7.15,
+        29.45
+      ],
+      "end": [
+        1.55,
+        35.05
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "c1c553e3-af6d-4cf6-94e4-31e4e2706e47",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        11.05,
+        29.45
+      ],
+      "end": [
+        7.15,
+        29.45
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "e0db7564-a167-46a9-bb99-9f3b42af8659",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        12.25,
+        28.25
+      ],
+      "end": [
+        11.05,
+        29.45
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "34860b1c-fa92-4caf-9ca3-5ecf9199e56a",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        14.45,
+        28.25
+      ],
+      "end": [
+        12.25,
+        28.25
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "dd9bb573-9f86-458f-90a8-4d35661067b7",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        15.65,
+        29.45
+      ],
+      "end": [
+        14.45,
+        28.25
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "fb661478-52c4-4384-b0a1-eaea1f3973be",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        15.65,
+        30.25
+      ],
+      "end": [
+        15.65,
+        29.45
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "1fd4b7b6-e5e5-4443-8a1f-ac28ac601f96",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        16.149999,
+        30.75
+      ],
+      "end": [
+        15.65,
+        30.25
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "1585639f-f7f0-4540-ac72-0025cb9b431f",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        16.25,
+        30.75
+      ],
+      "end": [
+        16.149999,
+        30.75
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "c9a9808d-3c63-4e03-a9e0-280ff3835dca",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        16.35,
+        30.85
+      ],
+      "end": [
+        16.25,
+        30.75
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "98726505-f56c-4746-b985-c25ee8b205ff",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        17.45,
+        30.85
+      ],
+      "end": [
+        16.35,
+        30.85
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "d85825b7-333e-4bf0-94cb-d74a157f949f",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        19.25,
+        32.65
+      ],
+      "end": [
+        17.45,
+        30.85
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "437b6d44-c04c-469e-bd56-1328be28a4e2",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        19.65,
+        32.25
+      ],
+      "end": [
+        19.25,
+        32.65
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "d56b316d-dcff-4d23-a211-451ceaf7798e",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "B.Cu",
+      "start": [
+        24.15,
+        32.25
+      ],
+      "end": [
+        19.65,
+        32.25
+      ],
+      "width_mm": 0.15
+    },
+    {
+      "uuid": "67b1bb8e-a220-457e-aa9b-c4dd4af4b5db",
+      "type": "PCB_TRACK",
+      "net": "BUZZ_DRV",
+      "locked": true,
+      "layer": "F.Cu",
+      "start": [
+        26.85,
+        29.55
+      ],
+      "end": [
+        24.15,
+        32.25
+      ],
+      "width_mm": 0.15
+    }
+  ],
+  "pad_changes": [],
+  "validation": {
+    "native_candidate": "<scratch>/r6-selected-bojk80hg/candidate-9.json",
+    "hard_drc": 0,
+    "unconnected_before": 30,
+    "unconnected_after": 29,
+    "new_non_dangling_violations": [],
+    "split_pad_groups": []
+  }
+}

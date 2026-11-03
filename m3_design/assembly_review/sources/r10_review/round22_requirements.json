@@ -1,0 +1,114 @@
+{
+  "schema": "r10-review-v1",
+  "review": "round22_requirements",
+  "reviewer": "claude",
+  "target_commit": "ec8cb98c198e25462a2fb5d34f87a84636e37993",
+  "board_sha256_before": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "board_sha256_after": "5516eeec5b9e79b49d157146baf6f7652cc0fb0fdb9f1c3c13921c26f9d315a1",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 4},
+  "findings": [
+    {
+      "id": "R22-REQUIREMENTS-01",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Owner row 30 presents the AUD-2 arming-chain exemption as load-bearing, but the project's own GND-via spot search finds a legal spot 0.671 mm from 3 of its 4 vias",
+      "evidence": {
+        "files": ["docs/R10_VALIDATION.md owner row 30", "AGENTS.md section 3 (R10 AUD-2)", "tools/critical_reference.py R10_SLOW_RETURN_NETS", "tools/route_check.py nognd_audit", "m3_design/r7_hygiene.py gnd_spots"],
+        "measured": "Probe copy of tools/ with BAT_ENABLE / BAT_SW_SOURCE / BAT_SW_RETURN removed from R10_SLOW_RETURN_NETS (all else unchanged): route_check --profile r10 fails exactly 4 critical_via_no_gnd: BAT_SW_SOURCE (10.8,69.2) 7.467 mm, BAT_ENABLE (21.3,68.9) 1.866 mm, (19.675,66.6) 1.875 mm, (17.1,82.8) 2.902 mm (row 30's figures reproduce). r7_hygiene.gnd_spots(board, via, GND_REACH, first=True), the search M2 says decides whether a missing-GND-via entry still holds, returns a legal 0.5 mm GND via at (10.2,68.9), (20.7,69.2) and (20.275,66.3), each 0.671 mm away; none for (17.1,82.8). S-8 does not count GND at BAT_ENABLE / BAT_SW_RETURN barrels (check_r10 BARREL_GND_HAZARD = ACT_GATE, ACT_DRV, PYRO1_OUT): GND there holds U9 off.",
+        "physics": "BAT_SW_SOURCE and BAT_SW_RETURN sit behind 470 kOhm each (R80, R165), BAT_ENABLE is (R80+R165)||R81 x C87 = 227 kOhm x 220 nF = 50 ms; currents are about 7 uA. A return partner via does nothing for such a node, so the exemption is physically rooted (agrees with D-R21-04)."
+      },
+      "impact": "The owner is asked to accept row 30 on the premise that the rule cannot be met; M2 asks for any exception's reason to be re-measured, and an allowlist entry for three of these vias would be stale. The real reason is physics (no fast edge), not impossibility. No electrical impact.",
+      "concrete_fix": "Text only: in row 30 (and D-R21-04) state that the project's spot search finds legal GND spots 0.671 mm from three of the vias and none for (17.1,82.8), and that the exemption rests on the 50 ms / 7 uA physics, not on lack of room. Alternatively (board change, not recommended for the closing pair) add the three GND vias and leave only (17.1,82.8) exempt."
+    },
+    {
+      "id": "R22-REQUIREMENTS-02",
+      "severity": "Minor",
+      "status": "new",
+      "title": "K-rules pins only four rows of JLC's hole table; PTH annular ring and the 0.50 mm non-plated hole minimum are held by nothing (seeded)",
+      "evidence": {
+        "files": ["tools/check_r10.py JLC_HOLE_TABLE / PRO_FLOORS", "m3_design/assembly_review/m3.kicad_dru", "m3_design/assembly_review/m3.kicad_pro rules"],
+        "jlc": "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-10-31): PTH annular ring >= 0.20 mm, multilayer 1 oz absolute minimum 0.15 mm; Min. non-plated holes 0.50 mm; via diameter 0.1 mm larger than hole; via to via 0.2 mm; NPTH to track 0.2 mm; inner via 0.2 / PTH 0.3 mm; PTH to track 0.28 (0.35 recommended); solder mask bridge 0.10 mm; silkscreen 0.15 / 1.0 mm.",
+        "seeded": "Probe copy of the board: J122.5 drill 1.3 -> 1.7 mm (ring 0.30 -> 0.10 mm) and one J2 NPTH 0.991 -> 0.40 mm. kicad-cli 10.0.7 DRC (all severities) reports only one hole_clearance on J122.5 (inner 0.55 rule); no annular-ring or hole-size violation. check_r10 contains no annular / NPTH-size test (grep). min_through_hole_diameter 0.3 and min_via_annular_width 0.1 (vias only) are the only related floors.",
+        "board_now": "Measured on 5516eeec: PTH rings 0.30 (DB125, 1.3/1.9 mm) and 0.20 (J3 slots); NPTH 0.60 (J3) and 0.991 (J2); vias 295 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5; least via hole to via hole 0.259 mm; least via hole to PTH hole 0.681 mm; PTH hole to foreign copper >= 0.551 mm on all four layers; J3 NPTH to J3 GND SMD lands 0.200 mm (JLC NPTH-to-track 0.2, at the limit, maker land); least mask web 0.150 mm (U4); least track 0.2 mm."
+      },
+      "impact": "M2's 'design rules within JLC's limits' is met by the board as built (every JLC row checked holds), but two hole-table rows are not gated, so a re-pinned footprint could break them silently. Footprints are SHA-pinned by K-lands, which limits but does not remove the gap.",
+      "concrete_fix": "Checks only: add to JLC_HOLE_TABLE (or a board measurement beside pth_inner_copper) every PTH pad ring >= 0.15 mm (fail) / 0.20 mm (recommended) and every NPTH drill >= 0.50 mm; optionally DRU rules '(condition \"A.Type == 'Pad' && A.Pad_Type == 'NPTH, mechanical'\") (constraint hole_size (min 0.5mm))'. Name the J3 NPTH-to-land 0.200 mm as an at-limit maker-land figure in M2 / ORDERING."
+    },
+    {
+      "id": "R22-REQUIREMENTS-03",
+      "severity": "Minor",
+      "status": "new",
+      "title": "No requirement or bench item covers ESD on J400, the operator-touched arming switch",
+      "evidence": {
+        "files": ["docs/REQUIREMENTS.md F8 / F9 / Pad arming", "docs/ORDERING.md 8.3", "docs/FMEA_REDUNDANCY.md H-6"],
+        "measured": "J400.1 BAT_SW_SOURCE -> R80 470 kOhm -> BAT_IN (D8 SMBJ12CA there); J400.2 BAT_SW_RETURN -> R165 470 kOhm -> BAT_ENABLE (U9.1 EN, R81 300 kOhm, C87 220 nF at U9's end since D-R21-05). No clamp on J400 (the GPS / radio / AUX / camera ports have ESD diodes). grep of REQUIREMENTS / ORDERING / FMEA / R10_VALIDATION for ESD together with J400 / screw switch: no hit.",
+        "calculation": "Inference: an IEC 61000-4-2 style 150 pF / 8 kV contact that fully transfers into C87 gives 1.2 uC / 220 nF = 5.5 V on top of EN's 2.03 V maximum divider level, about 7.5 V against TPS25947 EN/UVLO absolute maximum 6.5 V (TI SLVSFC9C section 6.1 p7). On a floating vehicle the transfer is limited by the vehicle's capacitance to earth, so the real figure is likely far smaller; R165 flash-over is not characterised."
+      },
+      "impact": "The single external screw switch (owner decision 2026-10-28) is turned by hand on the rail; a screw switch whose screw is a contact puts the operator's discharge straight onto J400. The worst credible result is EN overstress / U9 damage (board off or latched, fail safe for firing), not a fire path. Unqualified, not demonstrated.",
+      "concrete_fix": "Text only: add J400 ESD to F8 / F9's qualification list and ORDERING 8.3 (touch airframe / pad ground before the switch; first article: contact discharge at the switch screw in flight configuration, then the switch-off and J121.2 checks). A board change (a clamp at J400.2) is a respin option only."
+    },
+    {
+      "id": "R22-REQUIREMENTS-04",
+      "severity": "Minor",
+      "status": "new",
+      "title": "Two stale record lines: the OQ-6 accepted risk omits C88, and ORDERING's U4 row cites the 10:13Z stock check",
+      "evidence": {
+        "files": ["docs/REQUIREMENTS.md line 101 (Accepted risks, OQ-6)", "m3_design/assembly_review/battery_entry.kicad_sch (D-R21-03 note)", "docs/ORDERING.md line 279 (U4 row)", "m3_design/assembly_review/fab/stock_check.json"],
+        "measured": "Board: BAT_IN pads are C80.1, C88.1, C89.1, C95.1, C96.1, D8.1, J1.1, Q120.5-9, R167.1, R80.1, R82.1, TP80.1, U9.5. The D-R21-03 sheet note names C88 (100 nF) among the unfused items; REQUIREMENTS' OQ-6 risk lists 'the lead, J1, BAT_IN copper, D8, C80 / C96 / C89 / C95' without C88. stock_check.json checked_utc is 2026-10-31T23:23:18Z; ORDERING's U4 row says 'fails: 2 against 5 (stock_check.json 2026-10-31T10:13Z)' while the same table's U9 row and the M1 row cite 23:23Z."
+      },
+      "impact": "C88 is an MLCC at U9's input; a cracked C88 is an unfused hard short of the pack, the very case OQ-6 accepts, so the owner's accepted-risk list should name it. The timestamp is a citation defect.",
+      "concrete_fix": "Text only: add C88 (and 'Q120's drain') to the OQ-6 bullet in REQUIREMENTS Accepted risks; change ORDERING's U4 row citation to 2026-10-31T23:23Z."
+    }
+  ],
+  "fix_verification": [
+    {"id": "D-R21-01", "claim": "Inner-layer PTH pad hole to copper 0.55 mm; J1.2, J400.2, J3 shell holes 0.550 mm; K-rules pins JLC's hole table", "measured": "Every PTH hole wall to foreign copper >= 0.551 mm on F, In1, In2 and B (J1.2 In2 RAW_PROTECTED 0.551; J400.2 In1 GND 0.551); DRC all severities with parity 0 / 0 / 0; JLC figures re-read on the capabilities page and match the DRU and JLC_HOLE_TABLE; but the table pins only four rows (R22-REQUIREMENTS-02)", "verdict": "confirmed (gate coverage partial)"},
+    {"id": "D-R21-02", "claim": "U2.1 second path, B.Cu 3V3 run (24.05,68.95)-(23.0,70.0)", "measured": "0.4 mm B.Cu 3V3 track present from inside U2.1 (24.05,68.6) to (23.0,70.0)", "verdict": "confirmed (presence)"},
+    {"id": "D-R21-03", "claim": "Three sheet notes corrected", "measured": "sensors: ISM6HG256X fitted, +/-32..256 g high-g, FS codes 001/010, pins 10/11 open (DS15034 Table 25 p52); diagnostics: battery-powered camera self-test, off on USB; battery_entry: no battery-lead fuse, C88 and Q120 named. No stale U8 / LSM-fitted / 'must be fused' text left. R21-REQ-01 / -02 closed", "verdict": "confirmed"},
+    {"id": "D-R21-04", "claim": "BAT_SW_SOURCE / BAT_SW_RETURN / BAT_ENABLE critical (pyro) and AUD-2 slow; BAT_ENABLE jog gone", "measured": "R10_CLASSES pyro regex matches the three; route_check r10 0 failing, no tiny_jog on BAT_ENABLE, one counted short_layer_hop (19.675,66.6) 2.973 mm; without the exemption exactly 4 critical_via_no_gnd fail with row 30's distances; 3 legal GND spots exist (R22-REQUIREMENTS-01). R21-REQ-04 closed", "verdict": "confirmed (record wording partly)"},
+    {"id": "D-R21-05", "claim": "R81 F(18.8482,80.0), C87 F(18.7232,81.8768); EN max 2.03 V", "measured": "Poses as claimed on the board; BAT_ENABLE vias (21.3,68.9), (19.675,66.6), (17.1,82.8); 8.4 V x 300k / 1240k = 2.03 V", "verdict": "confirmed"},
+    {"id": "D-R21-06..09", "claim": "Checks only (K-plane tab bands, K-ports, K-legends) and designator re-placement", "measured": "Not re-run in this lens (other lenses); D-R21-09 designator moves not re-measured", "verdict": "not checked here"},
+    {"id": "R21-REQ-03 / -05 / -06", "claim": "Camera row names J440; flight-2 envelope flagged; R7-R9 text moved", "measured": "Camera row names J410, J420 or J440; envelope row carries the 21.5 km Inference and an owner / simulator action; M2's R7-R9 clauses moved to HISTORY section 3 (two '(and, on R7-R9, the RF-module keep-outs)' parentheticals remain, harmless); Board position row now labels the R9-zone arithmetic as an Inference", "verdict": "confirmed"}
+  ],
+  "fix_now_recommendations": [
+    {"finding": "R22-REQUIREMENTS-01", "change": "Row 30 and D-R21-04: add 'the project spot search (r7_hygiene.gnd_spots) finds legal GND via spots 0.671 mm from (10.8,69.2), (21.3,68.9) and (19.675,66.6), none for (17.1,82.8); the exemption is taken on physics (227 kOhm x 220 nF, about 7 uA), not on lack of room'", "scope": "text only"},
+    {"finding": "R22-REQUIREMENTS-02", "change": "check_r10 K-rules: board measurement of every PTH ring >= 0.15 mm and every NPTH drill >= 0.50 mm, with seeded tests", "scope": "checks only"},
+    {"finding": "R22-REQUIREMENTS-03", "change": "REQUIREMENTS F8 / F9 and ORDERING 8.3: J400 ESD handling and a first-article contact-discharge check at the switch", "scope": "text only"},
+    {"finding": "R22-REQUIREMENTS-04", "change": "REQUIREMENTS OQ-6 bullet: add C88 and Q120's drain; ORDERING U4 row: 23:23Z", "scope": "text only"}
+  ],
+  "rejected_or_closed_candidates": [
+    {"candidate": "AUD-2 exemption of the arming chain contradicts M2 / AGENTS 2", "disposition": "Closed: M2 and AGENTS 3 explicitly route the exemption through the named list and owner row 30; AGENTS 2 rules are untouched; the partner-via rule has no physical root on a 50 ms / 7 uA node. Only the wording issue R22-REQUIREMENTS-01 remains."},
+    {"candidate": "Inner PTH clearance 0.55 mm is an oversized margin over JLC's 0.3 mm", "disposition": "Not filed: it narrowed In2 strips (J3.2/J3.3 slot to edge 0.479 -> 0.379 mm, J1/J400 inter-pin 1.40 -> 1.10 mm) but split no fill, kept every K-plane neck, and costs nothing; the gate's own floor is JLC's 0.3 mm."},
+    {"candidate": "0.5 / 0.3 mm vias (0.1 mm ring) below JLC's annular ring", "disposition": "Rejected: JLC's 0.15 / 0.20 mm ring row is for PTH; for vias JLC asks diameter >= hole + 0.1 mm (0.15 preferred); 0.5/0.3 gives 0.2 mm."},
+    {"candidate": "U11 pads 0.2 x 0.6 mm under JLC's 0.25 x 0.25 mm minimum SMD pad", "disposition": "Not filed: TI's TPS2121 RUX land; area and long side exceed the figure; no assembly defect shown."},
+    {"candidate": "J3 NPTH to J3 GND land 0.200 mm", "disposition": "At JLC's NPTH-to-track 0.2 mm, the maker's land; noted in R22-REQUIREMENTS-02 evidence."},
+    {"candidate": "VLOGIC_SENSE / CAM_5V_SENSE in the AUD-2 list are not critical, so their entry is a no-op; route_check's pyro regex excludes PYRO1_CONT_MCU / ARM1_SENSE_MCU, which are no board nets", "disposition": "Harmless redundancy, not filed."},
+    {"candidate": "TP 1.0 mm DRU rule ('R9 bare test pads') as an unrooted constraint", "disposition": "Rooted: bare, uncoated probe pads (M3_R5 L10 / row 95); kept."},
+    {"candidate": "Board position: aft edge would reach the shroud zone if the lead zone shrank", "disposition": "Closed: bay top +35.4 mm, so OQ-7's 'wholly forward of joint + 47' is a live constraint, correctly kept as pending physical fit."},
+    {"candidate": "AGENTS.md shown as stale (0dc84776, $85.35)", "disposition": "Rejected: the committed AGENTS.md at ec8cb98 states 5516eeec, the 23:23Z / 23:24Z evidence and rounds 22 / 23."}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after (unchanged)",
+    "kicad-cli 10.0.7 pcb drc --severity-all --schematic-parity: 0 violations, 0 unconnected, 0 parity",
+    "tools/route_check.py --profile r10 (report in probe): 0 failing, 6 unrecorded noncritical leftovers, 22 bump windows",
+    "route_check on a probe copy of tools/ with the three arming nets removed from R10_SLOW_RETURN_NETS: 4 critical_via_no_gnd",
+    "r7_hygiene.gnd_spots at the four arming-chain vias",
+    "pcbnew probes: pad nets of BAT_IN and the arming / pyro nets, connector poses and pin nets, outline 46 x 90, five 3.2 mm holes, R81 / C87 / U9 poses, U2.1 run, route class of every net",
+    "pcbnew: every PTH / NPTH hole to foreign copper on four layers, PTH rings, NPTH drills, via sizes, via-via and via-PTH hole spacing, least track, least mask web, smallest SMD pad",
+    "Seeded DRC on a probe copy (PTH ring 0.10 mm, NPTH 0.40 mm)",
+    "WebFetch of JLC's capabilities page (two reads)",
+    "Read of the three regenerated sheet notes in the committed sheets; grep of docs for stale R81 / C87 / stock / cost text"
+  ],
+  "sources": [
+    "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-10-31)",
+    "TI SLVSFC9C (TPS25947) https://www.ti.com/lit/ds/symlink/tps25947.pdf section 6.1 p7 (EN/UVLO abs max 6.5 V), p9 (EN thresholds), as cited by D-R21-05; not re-fetched",
+    "ST DS15034 Rev 1 (ISM6HG256X) https://www.st.com/resource/en/datasheet/ism6hg256x.pdf, as cited in the sensors note; not re-fetched",
+    "../../docs/VEHICLE.md (stack, coupler bore, shroud)"
+  ],
+  "coverage_limits": [
+    "CAD and documents only: no bench, firmware or flight data; ESD figure is an Inference.",
+    "gnd_spots legality is the project's GndFit search; the three spots were not seeded into a board copy and re-filled.",
+    "check.sh was not run on the canonical tree; check_r10 K-rules / K-plane / K-ports / K-legends were not re-run.",
+    "D-R21-06 .. -09 not re-measured (other lenses).",
+    "JLC page read through a summariser; the PTH-ring versus via-ring reading was cross-checked against the via footnote wording."
+  ]
+}

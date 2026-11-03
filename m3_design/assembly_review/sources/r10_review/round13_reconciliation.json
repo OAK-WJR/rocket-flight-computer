@@ -1,0 +1,645 @@
+{
+  "schema": 1,
+  "round": 13,
+  "review_date_utc": "2026-10-30T09:32:30.035139+00:00",
+  "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+  "board_sha256_before": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "board_sha256_after": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+  "canonical_target_unchanged_during_all_ten": true,
+  "full_lenses": 10,
+  "max_concurrent_reviewers": 3,
+  "independence": "Fresh fork-none contexts; no current-round peer report reading. Existing canonical63-file freeze checked exact through all ten. Root consolidated only after final handoffs.",
+  "severity_method": "R9 precedents: Critical credible inadvertent fire/comparable hazard; Major demonstrated required-function or constraint failure; Minor bounded residual, prospective checker gap or evidence/procedure defect. Disclosed CAD-stage qualification alone is not a demonstrated hardware failure. AGENTS section2 remains blocking.",
+  "lens_reports": [
+    {
+      "lens": 1,
+      "name": "requirements",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 4
+      },
+      "files": {
+        "round13_requirements.json": "57647f49ea38acc47b5fa5cfb0f6efe7c4d147f007433d3947d4fe2f1fa156ac",
+        "round13_requirements.md": "cb0f11e0f2298767eafa187f7ea7a1397fa9cf3d0ab0a4ad004e0bb371919f1a"
+      }
+    },
+    {
+      "lens": 2,
+      "name": "safety",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "files": {
+        "round13_safety.json": "cbc75ff51ffc8d8445b871bab3847a389a24ffc79319c6f4f61b2d379bee5e3b",
+        "round13_safety.md": "c7f3e450b51c2782cc7088f6e0ae69be661368faf252ca044c94446716dc0b9c"
+      }
+    },
+    {
+      "lens": 3,
+      "name": "power",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "files": {
+        "round13_power.json": "4c216bf5e98983e43c7cf20933ad6b02ca24008e107d34bc55430451e662d8cb",
+        "round13_power.md": "a7579b5b947efa89bc1bcec7d1cdc961998e4d2c6f4f87ce73960530e12fafa8"
+      }
+    },
+    {
+      "lens": 4,
+      "name": "parts",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "files": {
+        "round13_parts.json": "8f8cd38f34a3a85a8227dccb734eeb2e3987aebc9d51ada73e165e8c7f9cc1df",
+        "round13_parts.md": "7ceef7eae8a8c6ec8c8fc52aadc8a8840dae59ae5b8ec78b8c4aa35e4dcb7510"
+      }
+    },
+    {
+      "lens": 5,
+      "name": "mcu",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 1
+      },
+      "files": {
+        "round13_mcu.json": "d20538312a42f7070c4f9f8b1834efaba2c99250f1d97d85de81c0a77e84bdcc",
+        "round13_mcu.md": "d3ee0357042b1f00b5b7c810c9859a55c073ce391587a7ae500a548df8969772"
+      }
+    },
+    {
+      "lens": 6,
+      "name": "mechanics",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "files": {
+        "round13_mechanics.json": "5f1a0df3b4d9fb87cd2eab4e70ff7cfc4081057b3a30cd955ad3a21e8b23d5e6",
+        "round13_mechanics.md": "a721a7119334f8f11cfebd14646416508f4773b7b5db907b806465b0bd2177e1"
+      }
+    },
+    {
+      "lens": 7,
+      "name": "routing",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 3
+      },
+      "files": {
+        "round13_routing.json": "84992e8e43e3ae7a72b8656bdbe67bedc91d8ff5ec17add328fc221a8399d91a",
+        "round13_routing.md": "0ececda2533db654cefffad6aa756becda60aecac945f00eb7f44a74b4a3b0b2"
+      }
+    },
+    {
+      "lens": 8,
+      "name": "manufacturing",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 2
+      },
+      "files": {
+        "round13_manufacturing.json": "1809e47563dbef6116c484211ecb1df187086361d817aea8b1c3fd0bdfdfa6dd",
+        "round13_manufacturing.md": "dad82b0a1b86dcba3d0aaee2d3c12d19656cf335de0f4c202eb5836570fd897a"
+      }
+    },
+    {
+      "lens": 9,
+      "name": "gate",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 3
+      },
+      "files": {
+        "round13_gate.json": "59a05f5b367a6b003048ffd07a5de8c51e1396dabcbe56db01a315713554d2d9",
+        "round13_gate.md": "bcd3e4dfe1963c0ee677af32b9b18f6ff1ca33932df46ce4b334f916da9aa4c2"
+      }
+    },
+    {
+      "lens": 10,
+      "name": "docs_binding",
+      "totals": {
+        "Critical": 0,
+        "Major": 0,
+        "Minor": 4
+      },
+      "files": {
+        "round13_docs_binding.json": "d59b80ef7697b69f12c189d0acb4e273b93290bd43059ffacb2f774db36d5326",
+        "round13_docs_binding.md": "6d380b38002070f4b8619a6cbec7997925fced4401b3bf32a68e84f47ca83966"
+      }
+    }
+  ],
+  "raw_totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 24
+  },
+  "consolidated_totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 17
+  },
+  "new_groups": 13,
+  "carried_groups": 4,
+  "closed_historical_mcu_findings_excluded": 3,
+  "findings": [
+    {
+      "id": "R13-m01",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-REQ-01",
+        "R13-SAF-01",
+        "R13-PWR-01",
+        "R13-DOC-01"
+      ],
+      "title": "O6 signal-reference wording",
+      "disposition": "Correct active motor-branch typo to signal-reference branches; retain conditional return-current qualification.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m02",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-REQ-02"
+      ],
+      "title": "Current ledger states",
+      "disposition": "Replace stale PREPARATION/final-binding/107-index language with actual integrated receipts and a complete current decision index.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m03",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-REQ-03",
+        "R13-MEC-02",
+        "R13-DOC-03"
+      ],
+      "title": "Parent vehicle mirror",
+      "disposition": "Retain separately owned mirror mismatch; current in-worktree handoff supplies exact seven-terminal, switch, SD and support facts.",
+      "status": "Retained measured deviation/qualification obligation",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m04",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-REQ-04",
+        "R13-RTE-03"
+      ],
+      "title": "M2 routing inventory",
+      "disposition": "Re-extract complete final route partition and location-only noncritical leftovers; preserve measured entry/return and unqualified alternatives as deviations.",
+      "status": "Retained measured deviation/qualification obligation",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m05",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-PWR-02"
+      ],
+      "title": "U9 current-limit tolerance",
+      "disposition": "Use R84 +/-0.35% inverse-R sensitivity:3.946188..4.856999A, headroom0.202391A; Calc/Inference, no transient qualification.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m06",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-BOM-01",
+        "R13-MFG-02"
+      ],
+      "title": "L400 heel land",
+      "disposition": "Retain possible0.15mm uncovered heel for owner/assembler qualification; no unqualified power-land change.",
+      "status": "Retained measured deviation/qualification obligation",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m07",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-BOM-02"
+      ],
+      "title": "SD nails/tolerances",
+      "disposition": "Generate15.05x15.70x2.10mm closed allocation including nails/tolerances; datum/card seating remain Inference.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m08",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-MEC-01"
+      ],
+      "title": "DB125 tail coverage",
+      "disposition": "Allocate all23 tails separately using pad AABBs and3.8mm seating length; body-only models no longer overclaimed.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m09",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-MCU-01"
+      ],
+      "title": "UART operating pulls",
+      "disposition": "Disable direct RX pulls throughout operation; relevant I/O supply+0.3V operating condition differs from4V absolute stress.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m10",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-MFG-01"
+      ],
+      "title": "Fab reference intersections",
+      "disposition": "Correct77 actual border/dot/polarity collisions with fixed source overrides; preserve132 references and all non-reference objects; vector zoom remains.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m11",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-RTE-01"
+      ],
+      "title": "Local signal detours",
+      "disposition": "Adopt CAM_RX_BUFFER and only additional native-qualified bounded same-layer sketches; exact adopted sources and preserved limits in routing-fix receipt.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m12",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-RTE-02"
+      ],
+      "title": "Noncritical return companions",
+      "disposition": "Retain measured NRST/BOOT0/I2C companion distances and noise qualification; fast numeric rules unchanged.",
+      "status": "Retained measured deviation/qualification obligation",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m13",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-GATE-01"
+      ],
+      "title": "Contradictory identity aliases",
+      "disposition": "Reject contradictory normalized extra MPN/LCSC identity fields; matching and blank aliases valid.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m14",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-GATE-02"
+      ],
+      "title": "Cross-row BOM duplicates",
+      "disposition": "Reject repeated designators across rows while preserving production quantity and quantity-free CPL controls.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m15",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-GATE-03"
+      ],
+      "title": "Paste geometry parity",
+      "disposition": "Compare actual aperture polygons to native paste geometry within1um, preserving real margins/split EP windows; no volume qualification.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m16",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-DOC-02"
+      ],
+      "title": "Executable binding distinction",
+      "disposition": "R10 evidence JSON is board-bound provenance; executable binding and v0.8.1/diagnostics remain R1-bound.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    },
+    {
+      "id": "R13-m17",
+      "severity": "Minor",
+      "source_findings": [
+        "R13-DOC-04"
+      ],
+      "title": "Flight harness description",
+      "disposition": "Replace active obsolete M1.75 prose with current estimated Mach1.9; actual flight-load/harness qualification remains open.",
+      "status": "Evidence/source correction integrated; relevant physical/firmware qualification remains open",
+      "integration_evidence": "round13_fix_validation.json"
+    }
+  ],
+  "critical_major_candidates": [],
+  "fresh_critical_major_verification": "No current C/M candidate. R11 terminal Major remains closed and was independently rechecked.",
+  "freeze_evidence": {
+    "completed_utc": "2026-10-30T09:32:30.035139+00:00",
+    "target_commit": "fa897c81abac3026e75ca5cc88bef0c2659a7130",
+    "board_sha256": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+    "frozen_existing_files": 63,
+    "unchanged": true,
+    "canonical_hashes": {
+      "AGENTS.md": "dd5d1ddb06f5630000573389026ab6007f88bc250891722f6d019f0e211d823b",
+      "STATUS.md": "7107eaf4f52eca4ce3a0e3e99927bbc272f11ba0f0f2425d80ffe25f99eb41fe",
+      "docs/M3_R10.md": "02d2ee401d1de86e549790b9068cd35559630a3724bb6e391bbce514bbe35ccb",
+      "docs/ORDERING.md": "f3605b3876653370eaad5ef70a6e00a50a949cd0b7bd66d1e93e96268ae5842f",
+      "docs/R10_VALIDATION.md": "636f7289db3abb76c30ce46503d3b4c7b3e8481807d9f0079ed6c5396bcd642f",
+      "docs/R10_VEHICLE_HANDOFF.md": "3a2f34f3857e1c07010229ea9bdde5547160685bcf174d98aaa7682d6f12faad",
+      "docs/REQUIREMENTS.md": "2495315d16e65fa2af5db9882bf6cc458ab30139be6773e38cf20ef1f561e25c",
+      "m3_design/assembly_review/fab/cost_check.json": "794ecc28d1692b438b3d4bb3a39a1ba56946a5f58b2569d7303b1f830d1d6f96",
+      "m3_design/assembly_review/fab/m3_assembly_bottom.pdf": "2fd91e43d69e62fc4b9686408a14a0d355aded3ad941c11e213515181ac110c8",
+      "m3_design/assembly_review/fab/m3_assembly_top.pdf": "ac5a4330fdb1d6b74644ad7d670528a88f5aaf792c2d2f1c10c06a23bca9b031",
+      "m3_design/assembly_review/fab/m3_fab_manifest.json": "d0edc608a496fc9fbd22726e6baafe1f601957a1186e6882488d4103ae1f6560",
+      "m3_design/assembly_review/fab/m3_gerber.zip": "41769182d935b090214f3033453a530b5190f4a45fc1b4d074c0538493b0fa73",
+      "m3_design/assembly_review/fab/stock_check.json": "4344c8372105630a42d1e5f8e3e4728366f0fcfa9fa67a1b13dadc9e1fc7eaa9",
+      "m3_design/assembly_review/m3.kicad_pcb": "7355ae1aeb1fdfdf6f64317945a0bf114d94c2bb65fb04adfbcd5a2b8037b09c",
+      "m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md": "183694ae1bc2a0026cdbb8d185f1c971fe7e1639405d7d0a43ed7d3e00596da1",
+      "m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md": "6104d47cb76dc7d7368f0eb138de0e51ba13d64de22d602acc747696db65e4b9",
+      "m3_design/assembly_review/sources/r10_design/hotplug_inputs.json": "12ee937e82aaa2fcf8e5f9d4afb414cfde40f8046e1fe48e33fc7308ce0f3a82",
+      "m3_design/assembly_review/sources/r10_design/hotplug_results.json": "9b1ed811334c449ab69cbdfc7382ddab89bc8ccc2321b6da9aba1b2d22857a9a",
+      "m3_design/assembly_review/sources/r10_design/parts_budget.json": "398a68f5732818fbb2d788bc05e5d2d2e4e2e590ee464bbf5a2c4f7d3f61f0d5",
+      "m3_design/assembly_review/sources/r10_design/parts_qualification.md": "55c1b56fba99cb9c2908022b373cecd6e64f492608e26b1ea6f987fdff732868",
+      "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "430d94a0642eee87ceaa2c383ce2ea0421cf1cf2b6ce9c40e1db406fc6cd1196",
+      "m3_design/assembly_review/sources/r10_design/r10_binding_note.json": "9fb7b913003d378ce395ff0d518979183a6fa02974ce89c84e74e25f3328d6f3",
+      "m3_design/assembly_review/sources/r10_design/r10_plan.md": "6236254c8e1276d1b65b9177fffede3526632cff6f71c2ccb8b4d53ace8924c7",
+      "m3_design/assembly_review/sources/r10_review/r10_final_deviations.json": "3050403875aea523513165bbb2c3699a6315800433595290ede86edd1bcb99e3",
+      "m3_design/assembly_review/sources/r10_review/round12_archived_power_record.md": "2f95fce1131b601cc4a620f62ce320a0678ea6cac8d318522e0036f397d5f111",
+      "m3_design/assembly_review/sources/r10_review/round12_c98_candidate.json": "3e8f1449bfe1eeaa6fa84eb8d842fc58b2ccfe15562168af7fce27013e301d99",
+      "m3_design/assembly_review/sources/r10_review/round12_c98_candidate.md": "70f11a354a16af3ff9cf86e4048a33b92299d8b4a22c7d31788bc66ce589b8a8",
+      "m3_design/assembly_review/sources/r10_review/round12_deviation_audit.md": "99da47df550d0b1bb3d4ac4c54f6d3ef9cba8b844119c2bf98362b23fa307341",
+      "m3_design/assembly_review/sources/r10_review/round12_docs_binding.json": "d1087d203ec387e08c7249800dd5bff88ece35272cdd972299903149186f8554",
+      "m3_design/assembly_review/sources/r10_review/round12_docs_binding.md": "d41035421797069887b7ed1937a539a8a95fc6f2d32fdd1882e0ff8a76b752ff",
+      "m3_design/assembly_review/sources/r10_review/round12_fab_fix.json": "3d4f1a697c6c3666748dd4514aa9ace37b33ec6fe0a9b3eaaac201639b1addab",
+      "m3_design/assembly_review/sources/r10_review/round12_fab_fix.md": "bc4c10cfa7fe18de3944b68a317e0024db25148637388ab6ab962a98f3c55649",
+      "m3_design/assembly_review/sources/r10_review/round12_fix_native.json": "c81bb9ab4f8280f0174dda1720d9f8f459abd7e45209c9559f9e57452c2e51aa",
+      "m3_design/assembly_review/sources/r10_review/round12_fix_validation.json": "0afb396f389d38feedbf35fb15ceb6e958c789d5d62f74dc9007c5dddaacd67a",
+      "m3_design/assembly_review/sources/r10_review/round12_gate.json": "2c031361695885741c0ce1ccaad7d70cd47bd873d306c9218dc645932cdae409",
+      "m3_design/assembly_review/sources/r10_review/round12_gate.md": "359e2426e9a581814566ff29751e27344df288402309873105900fb0f58485f4",
+      "m3_design/assembly_review/sources/r10_review/round12_gate_fix.json": "0b429c06dd414c0d58170d8f99212bd176fce09dba6438beec2636522ac3a7b7",
+      "m3_design/assembly_review/sources/r10_review/round12_gate_fix.md": "747c8b2dc0c8a56d61b9975b5ff67d80824c9b6e7d21ac982ab05065983486d6",
+      "m3_design/assembly_review/sources/r10_review/round12_manufacturing.json": "9db95152d0f11c9d052a1e20b4734b9de59f4794bb4278ea5aa70a156e8dcb4d",
+      "m3_design/assembly_review/sources/r10_review/round12_manufacturing.md": "7868b703cb4caccec876a9bda37a6fc63112eeca70d49356c05bfe4d123efc1c",
+      "m3_design/assembly_review/sources/r10_review/round12_mcu.json": "9c70683d602b2a4c190ee05231c3c561c26331e48aaf38f52aa03d18cc5ed3e4",
+      "m3_design/assembly_review/sources/r10_review/round12_mcu.md": "7a9cf7102baa8a06b3b3484c41243cf095cea5698f9eef9cf719bb395b48c07f",
+      "m3_design/assembly_review/sources/r10_review/round12_mechanics.json": "c41642843775feb35692ecc3fa25c9c6c55566cc52c3bdc043130869f9a7b74b",
+      "m3_design/assembly_review/sources/r10_review/round12_mechanics.md": "773e142880077b873dedfac12a6369bc7076ae2ca8a73415259307b0e1f82fc9",
+      "m3_design/assembly_review/sources/r10_review/round12_parts.json": "bd6c1934a04a6c345fa45a9068d5ccb40acfc11ce555c8fbeebf8d4f36bd20ad",
+      "m3_design/assembly_review/sources/r10_review/round12_parts.md": "447df39a115301228799afca881155f75b0cd142511681e58fe85adede8e840d",
+      "m3_design/assembly_review/sources/r10_review/round12_power.json": "52cf27a94a44ced81e82bffc0bd4a0bc574d241713d34231d8e7843c840f800a",
+      "m3_design/assembly_review/sources/r10_review/round12_power.md": "0641c95045dd0705a05e66fa3ceee8a0b309094b8bf585d078adf2f93d576eb7",
+      "m3_design/assembly_review/sources/r10_review/round12_reconciliation.json": "9f5714385df9596d22ee3d284c270d89cf4e7ac7975dfb3199ecad39656a743c",
+      "m3_design/assembly_review/sources/r10_review/round12_requirements.json": "702518cb8ad169e9ae706ae16d2c11b31ef33a8de4c69a3da16432ee7c0ee6e6",
+      "m3_design/assembly_review/sources/r10_review/round12_requirements.md": "9dd9cc3a914c8e732dc73dfacce05ab38f0ff530b2b35da12e5ea54d1e09c390",
+      "m3_design/assembly_review/sources/r10_review/round12_routing.json": "de7d3bc97578e0990fd0d353055c35ff2ce5adacffe9943466de8c33ba67e439",
+      "m3_design/assembly_review/sources/r10_review/round12_routing.md": "5c0909d840c45dbd8abeb8e05ca204231afa15464886d6184de27dbeaf740194",
+      "m3_design/assembly_review/sources/r10_review/round12_routing_fix.json": "cca808a915443ed8a8214c6a7a7f8eab7168a6d05831b13aa2a1ecaf4ca4b526",
+      "m3_design/assembly_review/sources/r10_review/round12_routing_fix.md": "db56c7c053f93983c36e1c6eba5059571f6977fcb254f26251bcd482b9991b5c",
+      "m3_design/assembly_review/sources/r10_review/round12_safety.json": "b5a590b67d43dcd8c523474e96932c1df35f49a96a2a05e1258fca56a6d20910",
+      "m3_design/assembly_review/sources/r10_review/round12_safety.md": "04eace8c8ae66ed6dd759798ad1e53dc8ddd804c8d11ae78fde0c89032d28d75",
+      "m3_design/r10_post.py": "94a467a2e823ca7e5160aceb7baf7d1f474b056ed54a608ee713690c6bf5eaeb",
+      "m3_design/r10_route_power.py": "b05cc60d092bf48375628e11df9efdb754f1cd6cd9921ad72641fd81b597e597",
+      "tools/check_r10.py": "b129c1b06dbedeb6bdfcea1f17f662a35e796ce00d63c0eb1ba3760c16804856",
+      "tools/fit_check.py": "52f780c61feca88cd436de84a333fe53acf672b5ab1b6b8dfe394956b2ea129c",
+      "tools/test_fit_check.py": "752d8536d0c913c18fcf87ca423b161f7c8abaa3de0d3f0a22c3bb41c1632795",
+      "tools/test_r10_check.py": "35b2cbd731fc7818fe688e8934504109713fc8564455fdd66e1157a4c028597d"
+    },
+    "reports": {
+      "requirements": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 4
+        },
+        "active_ids": [
+          "R13-REQ-01",
+          "R13-REQ-02",
+          "R13-REQ-03",
+          "R13-REQ-04"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "57647f49ea38acc47b5fa5cfb0f6efe7c4d147f007433d3947d4fe2f1fa156ac",
+          "md": "cb0f11e0f2298767eafa187f7ea7a1397fa9cf3d0ab0a4ad004e0bb371919f1a"
+        }
+      },
+      "safety": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 1
+        },
+        "active_ids": [
+          "R13-SAF-01"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "cbc75ff51ffc8d8445b871bab3847a389a24ffc79319c6f4f61b2d379bee5e3b",
+          "md": "c7f3e450b51c2782cc7088f6e0ae69be661368faf252ca044c94446716dc0b9c"
+        }
+      },
+      "power": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 2
+        },
+        "active_ids": [
+          "R13-PWR-01",
+          "R13-PWR-02"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "4c216bf5e98983e43c7cf20933ad6b02ca24008e107d34bc55430451e662d8cb",
+          "md": "a7579b5b947efa89bc1bcec7d1cdc961998e4d2c6f4f87ce73960530e12fafa8"
+        }
+      },
+      "parts": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 2
+        },
+        "active_ids": [
+          "R13-BOM-01",
+          "R13-BOM-02"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "8f8cd38f34a3a85a8227dccb734eeb2e3987aebc9d51ada73e165e8c7f9cc1df",
+          "md": "7ceef7eae8a8c6ec8c8fc52aadc8a8840dae59ae5b8ec78b8c4aa35e4dcb7510"
+        }
+      },
+      "mcu": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 1
+        },
+        "active_ids": [
+          "R13-MCU-01"
+        ],
+        "closed_ids": [
+          "R12-MCU-01",
+          "R11-MCU-01",
+          "R11-MCU-02"
+        ],
+        "files": {
+          "json": "d20538312a42f7070c4f9f8b1834efaba2c99250f1d97d85de81c0a77e84bdcc",
+          "md": "d3ee0357042b1f00b5b7c810c9859a55c073ce391587a7ae500a548df8969772"
+        }
+      },
+      "mechanics": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 2
+        },
+        "active_ids": [
+          "R13-MEC-01",
+          "R13-MEC-02"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "5f1a0df3b4d9fb87cd2eab4e70ff7cfc4081057b3a30cd955ad3a21e8b23d5e6",
+          "md": "a721a7119334f8f11cfebd14646416508f4773b7b5db907b806465b0bd2177e1"
+        }
+      },
+      "routing": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 3
+        },
+        "active_ids": [
+          "R13-RTE-01",
+          "R13-RTE-02",
+          "R13-RTE-03"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "84992e8e43e3ae7a72b8656bdbe67bedc91d8ff5ec17add328fc221a8399d91a",
+          "md": "0ececda2533db654cefffad6aa756becda60aecac945f00eb7f44a74b4a3b0b2"
+        }
+      },
+      "manufacturing": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 2
+        },
+        "active_ids": [
+          "R13-MFG-01",
+          "R13-MFG-02"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "1809e47563dbef6116c484211ecb1df187086361d817aea8b1c3fd0bdfdfa6dd",
+          "md": "dad82b0a1b86dcba3d0aaee2d3c12d19656cf335de0f4c202eb5836570fd897a"
+        }
+      },
+      "gate": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 3
+        },
+        "active_ids": [
+          "R13-GATE-01",
+          "R13-GATE-02",
+          "R13-GATE-03"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "59a05f5b367a6b003048ffd07a5de8c51e1396dabcbe56db01a315713554d2d9",
+          "md": "bcd3e4dfe1963c0ee677af32b9b18f6ff1ca33932df46ce4b334f916da9aa4c2"
+        }
+      },
+      "docs_binding": {
+        "totals": {
+          "Critical": 0,
+          "Major": 0,
+          "Minor": 4
+        },
+        "active_ids": [
+          "R13-DOC-01",
+          "R13-DOC-02",
+          "R13-DOC-03",
+          "R13-DOC-04"
+        ],
+        "closed_ids": [],
+        "files": {
+          "json": "d59b80ef7697b69f12c189d0acb4e273b93290bd43059ffacb2f774db36d5326",
+          "md": "6d380b38002070f4b8619a6cbec7997925fced4401b3bf32a68e84f47ca83966"
+        }
+      }
+    },
+    "raw_active_totals": {
+      "Critical": 0,
+      "Major": 0,
+      "Minor": 24
+    },
+    "consolidated_totals": {
+      "Critical": 0,
+      "Major": 0,
+      "Minor": 17
+    },
+    "C_M_candidates": [],
+    "planned_board_change": "CAM_RX_BUFFER route and additional Fab-reference fixes; this round does not transfer final same-board pair credit to changed PCB"
+  },
+  "clean_on_reviewed_board": true,
+  "final_same_board_pair_credit": false,
+  "pair_coverage": "Source fixes change PCB; fresh complete14/15 must review newly committed result. No prior pair transfer.",
+  "owner_acceptance": false,
+  "physical_firmware_order_release": false,
+  "fix_pass": {
+    "board": {
+      "sha256": "e0e3ad841654128792b32ab778ca19e4a71e596fa89864074ec4e91e6a5ccfc6",
+      "bytes": 2259597,
+      "footprints": 209,
+      "segments": 966,
+      "vias": 296,
+      "gnd_vias": 168,
+      "track_length_mm": 1802.12522017822,
+      "size_mm": [
+        46,
+        90
+      ]
+    },
+    "receipt": "round13_fix_validation.json",
+    "full_builds_exit0": 2,
+    "generated_files_byte_identical": 42,
+    "check_sh_exit_code": 0,
+    "fresh_full_same_board_rounds_required": [
+      14,
+      15
+    ]
+  },
+  "post_review_integration_finding": {
+    "severity": "Minor",
+    "title": "Optional plate mass bookkeeping for new collision-only tail rows",
+    "reason": "Old calculator added0.547998g to already lumped connector mass; exclude exactly23 tail collision rows. Added positive/negative regression, final NumPy4cases pass.",
+    "evidence": "round13_plate.json",
+    "counts_scope": "Found during fix integration, not retroactively added to the17 full-review groups or24raw findings."
+  }
+}

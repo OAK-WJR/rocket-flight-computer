@@ -1,0 +1,73 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 30, mcu lens",
+  "reviewer": "claude",
+  "target_commit": "0afaed3",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "M3_R10:444 says 'U1.15 / U1.17 pitch 0.200 mm'; 0.200 mm is the pad edge-to-edge gap (measured U1.15-U1.16 0.2001 mm), U1's pitch is 0.5 mm. The wording is loose, but no figure or procedure depends on it.",
+    "M3_R10:444 gives the ACT_EN_MCU-to-NRST via (24.3,49.1) at 0.425 mm (measured 0.4248 mm) and its effect on ACT_EN only (at most 0.22 V). A bridge would also pull NRST low whenever PC1 drives low, which would reset-loop the MCU. That is fail-safe and diagnosable (no bus enable, no fire), and leaving it out makes no statement false.",
+    "M3_R10 'Option for the owner' quotes 'R121 x C120 = 10 ms time constant'. The Thevenin constant with R119 || R120 is about 8.3 ms; the product as written is arithmetically true and sits in a not-adopted option.",
+    "PC8 detection (obligation 28) uses Table 157's tested VIH of 0.7 VDD; the by-design 0.47 VDD + 0.25 V line would recognise 2.20 V. The stated threshold is the conservative one, not a false one.",
+    "Rule 4's 0.96 x VLOGIC-derived band: Q120's body diode at the about 1.8 mA ground bus load is about 0.51 V at 25 C and about 0.32 V at 125 C (AONR21357 Fig. 6 p3), so discrimination depends on temperature and on the VLOGIC drop. Round 29 already ruled this covered by 'Qualify the band on first articles'; nothing new.",
+    "Rule 4's 0.93-1.01x / >= 1.39x / >= 1.04x ratios are the round 23 envelope (1.043-1.137 A), not the two quoted currents; R27 triage already ruled this conservative.",
+    "AN2606 (Rev 64 Table 119, Rev 70 Table 2 / Table 135) could not be downloaded in this session; the loader-role column was checked only for internal consistency (SPI1 PA4-PA7, SPI4 PE11-PE14, USART2 PA2/PA3, USART3 PB10/PB11, I2C1 PB6/PB9) against the board nets.",
+    "Table 120 (DS12110 Rev 8 p213) allows no injection at all (-0/0) on PA4 and PA5; both are open-drain status inputs pulled to 3V3 by R91 / R89 10 kOhm, with no source that goes below VSS or above VDD, so no violation."
+  ],
+  "fix_verification": [
+    {"item": "D-R29-01 (R29-TRI-02): rule 3 gate time constant 'about 47-58 us over C126's +/-10 % (53 us nominal; Calculation, driver resistances Inference)'",
+     "measurement": "R = (220 + 50||50||1000) || 10000 = 238.56 ohm; C = C126 + Ciss 2.25 nF: 47.78 / 53.03 / 58.28 us at C126 198 / 220 / 242 nF. Board: C126 220nF on PYRO1_GATE/GND, R126 220R PYRO1_GATE_N-PYRO1_GATE, R128 10k PYRO1_GATE-GND, R127 1k PYRO1_GATE_N-GND. The phrase is present in r10_binding_note.json (c5cd0fa3...) firmware_obligations[38], M3_R10:1118, FMEA:39, R10_VALIDATION:2618, STATUS:18; no '47-53 us' remains in a current statement (only in correction records); tools/test_r10_check.py:497 pins it and :507 rejects '47-53 us'.",
+     "verdict": "confirmed"},
+    {"item": "D-R29-02 (R29-TRI-05): test pins for the D-R28-02 ... -04 labels",
+     "measurement": "test_r10_check.py pins the rule 3 / rule 4 phrases in the generated note; the note's text matches (rule 4 '(0.7 / 1.0 V drop: AONR21357 VSD typical / maximum at 1 A, p. 2;', 'against Q120's source at R120.1, must settle', R23-SAFETY-05 criterion). Test not executed (read-only round; no check.sh on the canonical tree).",
+     "verdict": "confirmed (by reading; test not run)"},
+    {"item": "Binding note hash c5cd0fa3... and its bound inputs",
+     "measurement": "r10_binding_note.json SHA-256 c5cd0fa313d3e973...; board_sha256 = a0ec075e... (matches the board), netlist_sha256 535a8fdf... = schematic.net.xml, pin_table_sha256 b94133e6... = pin_table.tsv, circuit_sha256 3220e5f9... = circuit.json; u1_pins equal to pin_table port/r10_net/mode_af on all 100 rows.",
+     "verdict": "confirmed"},
+    {"item": "D-R28-02 / -04 rule 3 meter criterion (round 29 docs)",
+     "measurement": "QSPI_IO2 = U1.1 and U3.3 only (no pull-up); PYRO1_GATE_N = U1.3, R126.1, R127.1. R127 || (R126 + R128) = 1000 || 10220 = 910.8 ohm. Red on R127.1: R127 network -> GND -> the VSS clamps of U1.1 (FT_h) / U3.3 -> IO2 = diode + 0.91 kOhm; reversed: only through U3's VCC clamp, 3V3 rail and its capacitors, then GND -> 0.91 kOhm, so above 0.9 kOhm or slowly rising. Criterion consistent.",
+     "verdict": "confirmed"},
+    {"item": "D-R28-02 / -04 rule 4 (Q120 pass criterion, VSD citation)",
+     "measurement": "AONR21357 Rev 2.1 p2: VSD 0.7 typ / 1.0 max at IS = -1 A; Q120 4 = ACT_GATE, 1-3 = ACT_FET_S, 5-9 = BAT_IN; R120.1 ACT_FET_S at B(18.5,72.17), R120.2 ACT_GATE at B(18.5,73.03), C120.2 ACT_GATE; gate barrels ACT_GATE at (16.2,73.3), (15.4,72.85), (11.14,71.7), (11.74,72.3); TP80 BAT_IN F(9.8,83.8), TP120 RAW_ACT B(18.0,68.6).",
+     "verdict": "confirmed"},
+    {"item": "D-R28-02 DS15034 Table 2 p. 11 citation (and the other DS15034 / DS14623 page cites)",
+     "measurement": "DS15034 Rev 1: Figure 5 p9, Table 2 Pin description p11, Ton 40 ms p15, fc(SPC) 10 MHz p17, IF_CFG (PP_OD = 0, H_LACTIVE = 0 defaults) p60, WHO_AM_I 73h p66, Table 150 p93 (011 reserved, 100 = +/-256 g). DS14623 Rev 1: Figure 5 p9, IF_CFG p60, 73h p66, Table 150 p93 (011 = 256 g, 100 = 320 g). U4 pins match Table 2 (1 SDO, 2/3 SDx/SCx to GND, 4 INT1, 5 VDDIO, 8 VDD on 3V3A, 12 CS, 13 SCL, 14 SDA).",
+     "verdict": "confirmed"},
+    {"item": "Obligation 15 'tens of ms' port-supply lead (D-R28-04)",
+     "measurement": "TPS2121 SLVSEA3F Table 9-1 p13 scaled to C85 = 470 nF: 166-196 V/s; AP63203 DS41326 p5 UVLO rising 3.30-3.70 V, tSS 4 ms: 3V3 at 20.8-26.3 ms into the slew; '21-26 ms' holds.",
+     "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of the board before and after review (identical); hashes of the binding note, pin_table.tsv, circuit.json and schematic.net.xml against the note's bound values.",
+    "pcbnew (KiCad 10 Python, read-only): all 100 U1 pad nets against pin_table.tsv r10_net (0 mismatches); the U1 footprint is LQFP-100 at (23,43), rotation 0, F.Cu.",
+    "schematic.net.xml: all 100 U1 nodes against pin_table.tsv (0 mismatches; every pinfunction name matches the port).",
+    "binding note u1_pins against pin_table port / net / mode on all 100 rows (0 differences).",
+    "DS12110 Rev 8 (cached, pdftotext): LQFP100 pin numbers from Figure 5 p55 for every pin, power pins included; the I/O structure from Table 9 for every pin-type statement (PE4 FT_h, PA4 TT_a, PA5 TT_ha, PA6 FT_a, PC0 FT_a, PC1 FT_ha, PC5 TT_a, PB1 TT_u, PB12/PB13 FT_u, PD8/PD9 FT_h, PC6/PC7 FT_h, PC8 FT_h, PE7/PE8 TT_ha, PD15 FT_h); the Table 9 page of every pin_table row (all match); the AF table and page for every cited AF (UART5 AF14 PB12/PB13 p91, USART3 AF7 PD8/PD9 p94, USART6 AF7 PC6/PC7 p92, UART7 AF7 PE7/PE8 p95, TIM5 AF2 PA0-PA3, QUADSPI AF9/AF10, SPI1 AF5, SPI3 AF6, I2C1 AF4, OTG AF10, AF0 trace on PE2/PC1/PE4); the ADC channels PC0 ADC123_INP10, PA6 ADC12_INP3, PC5 ADC12_INP8, PB1 ADC12_INP5.",
+    "DS12110 Rev 8 tables and notes cited by the note: Table 119 p212 and notes 3-4 p213; Table 120 note 3 p213; Table 122 note 3 p215; Table 126 p217; Tables 127-128 pp218-219; Table 146 p238 (LSI 29.4-33.6 kHz); Table 157 p246 and note 7 p247; Table 159 p249 (+/-3 mA); Table 160 note 2 p251 (2 MHz); Figure 95 p286; Table 189 p291 (1.5-2.5 V, 4 mA); Table 192 p293 (VBAT/4, +/-10 %); section 3.8 p32; section 3.19 p37; Table 9 note 7 p88.",
+    "Recomputed: IWDG (239+1) x 4 = 960 LSI cycles, 28.571 / 32.653 ms, 34.853 ms; PE4 pull-up bound 0.104 V and PC1 0.218 V; PC1-high gate 2.2 V / 1.1 mA; Q122 gate constant 7.1 us; the 3.23 V hard-bridge gate; PA6 window 4.84-5.17 V; scales /11 and /11.2; PC8 2.20 V and 4.62 V; GPS harmonic 63 x 25 = 21 x 75 = 1575 MHz; the GAP-5 RC tail 0.678 ms (278.3 nF x 1109 ohm x ln 9).",
+    "netdist.py (pcbnew effective-shape collision, binary search): 3V3/3V3A to PYRO1_GATE_N/PYRO1_GATE minimum 1.0585 mm (R128.1 to the via at (19.55,55.825)), R127.1 1.0651 mm, C10.1 to the PYRO1_GATE via 1.1451 mm, In2 3V3 fill to the gate-via barrel 2.75 mm; QSPI_IO2 to U1.3 0.550 mm (track) and 0.700 mm (U1.1); ACT_EN to BAT_ENABLE 0.330 mm; ACT_EN_MCU to the NRST via 0.4248 mm. All match the records.",
+    "Every via coordinate the rules cite (ACT_GATE x4, 3V3 (28.1,59.4), LOGIC_SOURCE_ST (30.45,51.4), BAT_ENABLE (17.1,82.8), 3V3 (19.55,55.825)) exists on the stated net.",
+    "Connector pin maps J410/J420/J440/J9/J122/J121/J400/J1/J430/J2/J3 against the binding note and pin_table statements; pull-up / pull-down parts (R5, R9/R110, R10-R13, R89-R91, R102, R104/R105, R122/R123, R126-R128, R150-R157, R162/R163, R431/R432, R460-R464, R440/R441/R450/R451/R470/R471, D410-D441) against the reset_contract column.",
+    "TPS2121 SLVSEA3F: pin functions (IN1 = 7 USB_LIMITED, IN2 = 2 RAW_PROTECTED, ST = 9), Table 9-3 p18 (ST low = IN2), RST 6-20 kOhm (R91 10k), Table 9-1 p13.",
+    "ST cmsis ism6hg256x_reg.h (cached): ISM6HG256X_256g = 0x3, as rule 13 says."
+  ],
+  "sources": [
+    "ST DS12110 Rev 8 (STM32H742xI/G STM32H743xI/G), https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (cached .supervisor/r14_parts_pdf/st_h743.pdf)",
+    "ST DS15034 Rev 1 (ISM6HG256X), https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (cached .supervisor/r23_mcu/pdf/)",
+    "ST DS14623 Rev 1 (LSM6DSV320X), https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (cached)",
+    "ST DS14764 Rev 1 (LSM6DSV80X) (cached)",
+    "AOS AON7524 Rev 1.1 p2, https://www.aosmd.com/res/datasheets/AON7524.pdf",
+    "AOS AONR21357 Rev 2.1 pp2-3, https://www.aosmd.com/res/datasheets/AONR21357.pdf",
+    "TI SLVSEA3F (TPS2121), https://www.ti.com/lit/ds/symlink/tps2121.pdf",
+    "Diodes DS41326 Rev 3-2 (AP63203)"
+  ],
+  "coverage_limits": [
+    "AN2606 could not be fetched in this session; loader-role citations (Rev 64 Table 119 pp277-280, Rev 70 Table 2 / Table 135) were not re-read.",
+    "RM0433 not read; every RM0433-based statement is already labelled Inference in the records.",
+    "No tools/check.sh, test suite or build was run (read-only round); D-R29-02's test pins were checked by reading.",
+    "The u-blox integration-manual citation (UBX-20053088 R05 section 3.6.3.1 p46) and the W25Q128JV AC figures were not re-read."
+  ]
+}

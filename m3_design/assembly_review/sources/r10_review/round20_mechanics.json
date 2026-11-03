@@ -1,0 +1,128 @@
+{
+ "schema": "r10-review-v1",
+ "review": "round20_mechanics",
+ "reviewer": "claude",
+ "target_commit": "6628488",
+ "board_sha256_before": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "board_sha256_after": "50a39de5b76dec3cb58bbb1b0ab528fd4d65098de9dfe8f89f49e2e7adcbd976",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 2
+ },
+ "findings": [
+  {
+   "id": "R20-MEC-01",
+   "severity": "Minor",
+   "status": "new",
+   "title": "No lead path for the J440 (AUX) harness on the shared west edge",
+   "evidence": {
+    "file": "m3_design/assembly_review/m3.kicad_pcb; docs/ORDERING.md 8.4; docs/R10_VEHICLE_HANDOFF.md; ../../docs/VEHICLE.md",
+    "reference": "J440, J3, J2, J121, J400, J1, supports (4,4) and (4,44.3)",
+    "coordinates_mm": "Board frame x=0 west, y=0 aft (ORDERING 8.1). J440 pins at (7.4, 11.0/14.5/18.0/21.5), wire face x=3.40, envelope y 7.93-23.45. Next along x=0, going forward: J3 USB-C envelope y 26.33-35.27 (a USB-C plug overmold up to 12.35 mm wide, centred near y 30.8, takes about y 24.6-37.0 beyond the edge: USB-IF maximum, Inference); J2 TC2030 y 37.4-41.4; the (4,44.3) washer and head with a 3.8 mm radius cover x 0.2-7.8, y 40.5-48.1, i.e. the whole 3.4 mm edge strip; J121 igniter wires y 54.1/57.6; J400 switch wires 64.1/67.6; J1 battery 74.1/77.6. Going aft: the (4,4) washer covers y 0.2-7.8 of the strip, and the aft edge is the OQ-7 boundary (board wholly forward of joint+47), with the camera shroud at joint+4..+47 within 18.4 mm of the axis (VEHICLE.md) on an unclocked side, while the J440 wire face is 19.6 mm off the axis.",
+    "layer": "F (terminal bodies, wires)",
+    "measured_value": "J440 wire room 5.003 mm (5.00-5.60 with sled tolerance), as on every DB125. ORDERING 8.4 gives a lead rule for the battery (west row, 'dress apart', clear of the forward-west washer), the J400 pair (own ties, away from the battery and servo leads) and the external modules ('keep radio/harness away from the CH1 cell'), but not a lead path for J440. The handoff says only 'fit ... any AUX module ... harness ... together'.",
+    "maker_url": "USB Type-C Cable and Connector Specification Rel 2.x, plug overmold maximum 12.35 x 6.5 mm (Inference: not re-read for this review)"
+   },
+   "impact": "J440 is the first lead group at the aft-west corner. Its only exits are forward along x=0 or aft past the board's aft edge. Forward, a 4-wire bundle (PORT_4V8, GND, UART; possibly the radio, if it is moved there, which D-R19-14 allows) would cross the USB-C plug zone, ride over the (4,44.3) screw head, and then run beside the J121 igniter and J400 switch exits, contrary to the 8.4 dressing rules. Aft, it enters the battery-lead and camera-shroud zone right at the OQ-7 boundary. Neither is a demonstrated failure, and physical harness fit is already listed as pending. But an installer has no rule, and the natural forward route breaks two existing ones.",
+   "concrete_fix": "Docs only (ORDERING 8.4 new 'AUX / J440 leads' row, plus the handoff 'Position in the stack, pack and harness' section): J440 leads leave west, turn aft over or around the (4,4) nylon head, stay south of y 23.5 (clear of the USB-C plug zone), and leave past the aft edge on the side away from the camera shroud, tied to the sled. Never run them forward along x=0 past J3, J121 or J400. If the radio or GPS is moved to J440, the same route applies, and its module stays away from the CH1 cell. Record the chosen route in the physical fit check."
+  },
+  {
+   "id": "R20-MEC-02",
+   "severity": "Minor",
+   "status": "new",
+   "title": "Plate-model and mass figures in the records predate J440; a re-run on 50a39de5 gives slightly lower margins",
+   "evidence": {
+    "file": "tools/plate_model.py (commit 6628488) with sources/r10_design/masses.json, on a fit_check --profile r10 report of the commit's board (probe .supervisor/r20_mechanics/plate_r10.json, defl.py)",
+    "reference": "AGENTS.md mounting row; docs/M3_R10.md line 794 and 'East-edge asymmetry'; docs/R10_VEHICLE_HANDOFF.md 'Board, supports and hardware'; docs/R10_VALIDATION.md line 2199; docs/ORDERING.md 8.4 'body/bore margin is 2.976 mm (measured before J440)'",
+    "measured_value": "f1 pinned D5 180.8 Hz (records: 181.1), pinned D10 255.6, clamped D5 287.8 / D10 407.0 Hz. Modelled mass 78.6 g (records: 70.5 g; +8 g is J440 6 g plus its 2 g mated allowance). 100 g D5 pinned: maximum deflection 1.27 mm at (46, 44.5). Remaining clearance to a 4 mm standoff plane: C431 0.261 mm (records: 0.270913), C421 0.320, L1 0.524. Strain: J440 1184, C445 1121, J122 1489, J410 1421 microstrain. fit_check gives the J440 body/bore margin as 2.98 mm, the same as the other DB125s.",
+    "maker_url": "n/a (Calculation/Inference model)"
+   },
+   "impact": "Record currency only. Every document says the model was not re-run since J440 and is not a release floor. The C431 margin falls 0.010 mm and the mass rises 11 %.",
+   "concrete_fix": "Docs lane: replace 181.1 Hz / 70.5 g / 0.270913 mm with 180.8 Hz / 78.6 g / 0.261 mm (C431) and 0.320 mm (C421) on 50a39de5, labelled Calculation/Inference. In ORDERING 8.4, drop '(measured before J440)': fit_check gives J440 2.98 mm."
+  }
+ ],
+ "fix_verification": [
+  {
+   "d_id": "D-R19-14 (J440 placement)",
+   "claim": "J440 F(7.4,16.25) -90; top washer (4,4) 3.93 mm to fit envelope (>=3.8); J3 courtyard 1.67 mm; wire room 5.003 mm; M-6 moves of TP82/R90",
+   "measurement": "Envelope x 3.40-11.50, y 7.93-23.45, z 0-8.9: 3.93 mm from (4,4). Courtyard polygon gap to J3 1.73 mm (bbox 1.63); envelope gap to J3 2.88 mm. Wire room 5.00-5.60 mm. Bore margin 2.98 mm. Nearest bottom pad to a J440 THT pad is R90.1 at 2.45 mm (>=1.5). Pin 1 is aft (y 11.0).",
+   "verdict": "confirmed (the J3 courtyard gap measures 1.73 mm, not 1.67; both are clear)"
+  },
+  {
+   "d_id": "D-R19-08",
+   "claim": "Every top pin and word legend wholly outside every DB125 envelope, smallest 0.133 mm",
+   "measurement": "Ink (TransformShapeToPolygon) to VRML envelope: smallest 0.133 mm (J410 1:4V8, J420 4:TXO); 1:S1 0.180, 1:5V4 0.213, SWITCH / 1:E1- / words 0.245, J440 1:4V8 0.470, AUX 0.492, 1:BAT+ 0.550. 1:S1 to the (42,86) washer is at least 4.21 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-12",
+   "claim": "Terminal designators touch their envelope edge by 0.060-0.087 mm; J122's moves into the C84/J122 gap",
+   "measurement": "J1 / J121 / J440 -0.087, J400 / J410 / J420 -0.067, J9 -0.060; J122 0.670 mm clear",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-11",
+   "claim": "ISM6HG256X on the same land, same pin map and axis directions; roll = -gyro_Y, lever x = -6 mm",
+   "measurement": "U4 pads, rotation (180, bottom) and position are identical to commit 1e60441's board. DS15034 Rev 1 p9 Figure 5 is the same drawing as DS14623 Rev 1 p9 (both rendered at 110 dpi). Board pads: 1-4 east column north to south, 12-14 north row: the datasheet bottom view seen through the PCB. Lever 17.0-23.0 = -6.0 mm.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-07",
+   "claim": "C84 lands have no stencil aperture",
+   "measurement": "C84 pads 1/2 (3.5 x 1.7 mm at y 81.75 / 75.25) are not on F.Paste. Hand-iron access: the land ends stick out 0.75 mm past the body at each end; nearest top copper is R166.2, 1.15 mm from C84.1; J122 envelope 2.75 mm east.",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "D-R19-03",
+   "claim": "TP121 B(4,70) removed",
+   "measurement": "TP121 absent; one fewer bare bottom pad under the sled",
+   "verdict": "confirmed"
+  },
+  {
+   "d_id": "R19-MEC-01 / R19-MEC-02 (docs dispositions)",
+   "claim": "ORDERING 8.3 continuity check; ORDERING 8.2 C84 heat limit",
+   "measurement": "Both present in the commit (ORDERING lines 388 and 546)",
+   "verdict": "confirmed"
+  }
+ ],
+ "fix_now_recommendations": [],
+ "rejected_or_closed_candidates": [
+  "J440 3:TXO bottom legend: its centre (5.7, 17.5) is 0.5 mm toward pin 2. Its ink end is 0.573 mm from J440.2's copper but 0.937 mm from J440.3's. The gate metric (pad centre to legend box: pin 3 0.85 mm, pin 2 1.15 mm) assigns it to pin 3. Bottom-only and covered by the ORDERING 8.3 continuity check, so not filed. Optionally centre it at y 18.0 when the free-spot check allows.",
+  "J440 pins 2-4 and the J121 / J400 pin 2 legends are on the bottom, under a continuous sled plate: covered by R19-MEC-01's continuity rule.",
+  "West aft-third panel tab (y 12.5-17.5) lies at J440's wire exits: ORDERING 8.3 already says to nibble the tabs and file the stubs flush. The same pattern holds at J400, J410 and J122.",
+  "Supports: nearest exposed copper is LED2.2 at 3.808 mm from (4,44.3) and tented vias at 3.08-3.87 mm. Nylon hardware is required at all five supports (handoff, ORDERING 8.4). J440 adds no exposed copper within 3.8 mm of (4,4); the nearest is a tented GND via at 3.873 mm.",
+  "Tallest parts: top C84 10.8 mm near the axis, DB125 8.9 mm with a 2.98 mm bore margin, J3 0.89 mm margin (the tightest). Bottom: L1 3.02 mm below the bottom face, then 2.7 mm capacitors. Tails 7.56 mm. All unchanged except J440, which is at the west-row figures.",
+  "Screwdriver access: vertical screws over the pin centres, with no part taller than 8.9 mm within 2.75 mm of any terminal body. Access needs the sled out of the bay (already stated). The (4,4) support sits 3.93 mm from J440 and backs it locally.",
+  "microSD J430: unchanged position and neighbours (round 19's moves TP82 / R90 stay 4.4 mm or more from its envelope). The open-sweep limitation stays as documented.",
+  "Baro U5: unchanged at B(10.6, 49.1), 5.26 mm from the (4,44.3) support envelope. The venting and opaque-cover items stay as documented physical qualifications.",
+  "C445 (22 uF 1210) flex near J440's screws: the same pattern as the existing port cells, 14 mm from the (4,4) support, and ORDERING 8.4 says to back the PCB locally while tightening."
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after (canonical file and git show 6628488): 50a39de5..., unchanged",
+  "git archive 6628488 into the probe directory; every measurement is on that copy",
+  "tools/fit_check.py --profile r10 (read-only, report into the probe directory): OK; wire room 5.00-5.60 mm on all eight DB125; J3 margin 0.89 mm; nearest top support pad LED2.2 3.808 mm",
+  "pcbnew: footprint diff between 1e60441 and 6628488. Only C123, J440 and its cell are new, R90 and TP82 moved, and TP121 is gone; U4 and U5 are unchanged.",
+  "pcbnew: DB125 VRML envelopes against supports and J3; courtyard polygon distances",
+  "pcbnew: ink polygon of every visible F.Silkscreen text against the DB125 envelopes; J440 bottom legends against its pads",
+  "pcbnew: exposed pads and vias within 4.6 mm of each support, both sides",
+  "pcbnew: C84 paste layers, land sizes and nearby top copper",
+  "Bottom pads near the J440 THT pads (M-6)",
+  "plate_model.py --profile r10 with masses.json on the current fit report (NumPy venv), plus deflection under each bottom part",
+  "DS15034 Rev 1 p9 and DS14623 Rev 1 p9 rendered and compared",
+  "Read: brief, D-R19-01..14, ORDERING 8.1-8.4, R10_VEHICLE_HANDOFF, AGENTS rows, round19_mechanics, VEHICLE.md bay rows"
+ ],
+ "sources": [
+  "ST DS15034 Rev 1 (ISM6HG256X) p9 Figure 5, https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (cached copy SHA-256 c867695b...)",
+  "ST DS14623 Rev 1 (LSM6DSV320X) p9 Figure 5 (cached copy)",
+  "DORABO DB125 drawing T0-1 (envelope via the repository VRML models and fit_check R10_MODEL_BOXES)",
+  "../../docs/VEHICLE.md coupler bore 50.8 mm and camera shroud joint+4..+47 rows"
+ ],
+ "coverage_limits": [
+  "No physical sled, harness, ferrule, screwdriver or module mock-up; harness routes are geometric reasoning only.",
+  "USB-C plug overmold size is a typical maximum (Inference), not a selected cable.",
+  "Molex microSD open-lid sweep not re-measured (unchanged part and position).",
+  "Plate model is the repository's Kirchhoff/Rayleigh-Ritz Inference; no modal or shock test.",
+  "No 3D render generated this round; legend checks are ink-polygon measurements."
+ ]
+}
