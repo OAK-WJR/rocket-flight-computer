@@ -20,6 +20,15 @@ are assumptions from R5, not measurements. R7's SMA jacks (J30/J31) overhang the
 mated plugs are checked radially like every other envelope, wherever they sit along the axis. New connector allocations must be reviewed against the
 maker's mating drawing and the actual harness. The check does not model insertion tools, wire stiffness,
 the camera shroud, sled structure, vibration, or a fitted Tag-Connect probe.
+
+Profile r11 (M3-ASSY-R11, D-R11-02 / -05 / -08): 46 mm wide x <= 56 mm (the outline read from the board), the same bore,
+axis and sled tolerance (P2). Each side-entry JST GH header (Manufacturer Part SMnnB-GHS-TB, any footprint name) gets a
+mated plug-and-wire envelope built from JST's drawing (GH_DRAWING) along its mouth, the direction from its contact pad
+row to its two fixing-tab pads, so it does not depend on the footprint's local axes; the mouth must face the board edge
+the header sits on (GH_EDGE_REACH) and the envelope is checked radially and against every other body. The battery and
+pyro wire pads (WIRE_PAD_REFS) carry no model: each plated wire pad gets a solder-and-bend allocation (WIRE_ALLOWANCE),
+an Inference until the harness is built. Supports: one M3 support within 6 mm of each corner (a fifth is optional on
+the <= 56 mm board) with the same 3.5 / 3.8 mm hardware clearances.
 """
 import argparse
 import hashlib
@@ -95,6 +104,31 @@ RETENTION_HOLES = ((21.5, 68.6), (27.0, 82.6))   # J122 tie (R7: +18 mm); all ot
 STANDOFF_RADIUS = 3.5
 TOP_HARDWARE_RADIUS = 3.5 + 0.3   # 7 mm OD washer plus radial assembly margin
 SIDE_ENTRY = ('J9', 'J121', 'J124')
+# ---- profile r11 (D-R11-05) ------------------------------------------------------------------------------------------
+# JST GH (1.25 mm) catalogue eGH.pdf, page 3 (https://www.jst-mfg.com/product/pdf/eng/eGH.pdf, read 2026-11-02 with
+# pdftotext): side-entry header SMnnB-GHS-TB width B = 1.25 (n - 1) + 4.5 mm (SM04B 8.25, SM06B 10.75), depth 4.25 mm
+# and height 4.25 mm (the drawing gives 4.05 / 4.25: the larger is taken); housing GHR-nnV-S width B = 1.25 (n + 1) mm
+# (GHR-04V-S 6.25), length 5.7 mm, height 4.15 mm. The header's contact pads sit at its rear: KiCad's
+# JST_GH_SM04B-GHS-TB footprint (the same drawing) has the pad row 0.25 mm behind the body's rear wall and the mouth
+# 4.30 mm in front of the pad row (Datasheet, via KiCad's library). The plug is counted in front of the header for its
+# whole 5.7 mm length (no insertion overlap credited: conservative) and GH_WIRE_STRAIGHT mm of straight wire beyond it,
+# R7's GH allocation (the bend itself is a harness item, unverified).
+GH_DRAWING = dict(source='https://www.jst-mfg.com/product/pdf/eng/eGH.pdf', page=3,
+                  header_extra_width=4.5, header_depth=4.25, header_height=4.25,
+                  housing_extra_width=1.25, housing_length=5.7, housing_height=4.15,
+                  pad_behind_rear=0.25, mouth_ahead_of_pads=4.30)
+GH_WIRE_STRAIGHT = 3.0          # mm of straight wire beyond the plug (R7 basis, Inference)
+GH_PART = re.compile(r'^SM(\d\d)B-GHS-TB')
+GH_EDGE_REACH = 3.0             # mm: the header's mouth lies within this of the outline edge it faces
+R11_GH_REFS = {'J9', 'J122', 'J400', 'J410', 'J420', 'J440'}
+R11_MATED_REFS = {'J430'} | R11_GH_REFS
+WIRE_PAD_REFS = {'J1', 'J121'}
+# A wire soldered into a plated pad from the component side: a fillet (1.0 mm), a bend of inner radius 1 x OD and the
+# OD itself above the face, the pad grown by one OD round it, and a 1.5 mm solder / lead tail below the board
+# (P2's <= 1.8 mm insulation OD and 1 x OD bend; Inference until the harness is built)
+WIRE_OD = 1.8
+WIRE_ALLOWANCE = dict(above=1.0 + 2 * WIRE_OD, grow=WIRE_OD, tail=1.5)
+R11_MAX_LENGTH = 56.0           # mm, D-R11-02 ceiling
 BORE_R, WIRE_Z = 25.4, 5.0                             # the coupler bore's wall; wire height above the top face
 
 
@@ -406,9 +440,73 @@ def terminal_tail_box(f, p):
     return (*pad_box(p)[:4], *z)
 
 
+def gh_circuits(f):
+    """The circuit count of a side-entry JST GH header (Manufacturer Part SMnnB-GHS-TB), else None."""
+    part = f.GetFieldText('Manufacturer Part') if f.HasField('Manufacturer Part') else ''
+    m = GH_PART.match(part or '')
+    return int(m.group(1)) if m else None
+
+
+def gh_envelope(f, n, outline):
+    """(header box, mated box, mouth unit vector, problems) of a side-entry GH header, in board mm. The mouth points
+    from the contact pad row (the numbered pads) to the two fixing tabs (the unnumbered / MP pads)."""
+    g = GH_DRAWING
+    sig = [p for p in f.Pads() if p.GetNumber().isdigit()]
+    tabs = [p for p in f.Pads() if not p.GetNumber().isdigit()]
+    if len(sig) != n or len(tabs) != 2:
+        return None, None, None, [f'{f.GetReference()}: GH header needs {n} contact pads and 2 fixing tabs, has '
+                                  f'{len(sig)} / {len(tabs)}']
+    cx = sum(mm(p.GetPosition().x) for p in sig) / n
+    cy = sum(mm(p.GetPosition().y) for p in sig) / n
+    tx = sum(mm(p.GetPosition().x) for p in tabs) / 2
+    ty = sum(mm(p.GetPosition().y) for p in tabs) / 2
+    L = math.hypot(tx - cx, ty - cy)
+    if L < 1e-6:
+        return None, None, None, [f'{f.GetReference()}: GH header mouth undefined (tabs on the pad row)']
+    ux, uy = (tx - cx) / L, (ty - cy) / L
+    if abs(ux) > 1e-6 and abs(uy) > 1e-6:
+        return None, None, None, [f'{f.GetReference()}: GH header mouth not along a board axis']
+    vx, vy = -uy, ux
+    half = max((n - 1) * 1.25 + g['header_extra_width'], (n + 1) * g['housing_extra_width']) / 2
+    rear = -g['pad_behind_rear']
+    mouth = g['mouth_ahead_of_pads']
+    tip = mouth + g['housing_length'] + GH_WIRE_STRAIGHT
+    z0, z1 = (-BOARD_T - g['header_height'], -BOARD_T) if f.IsFlipped() else (0.0, g['header_height'])
+
+    def box(a, b_):
+        pts = [(cx + ux * t + vx * w, cy + uy * t + vy * w) for t in (a, b_) for w in (-half, half)]
+        xs, ys = zip(*pts)
+        return (min(xs), min(ys), max(xs), max(ys), z0, z1)
+    problems = []
+    x0, y0, x1, y1 = outline
+    mx, my = cx + ux * mouth, cy + uy * mouth
+    edge = {(1, 0): x1 - mx, (-1, 0): mx - x0, (0, 1): y1 - my, (0, -1): my - y0}[(round(ux), round(uy))]
+    if edge > GH_EDGE_REACH + 1e-6 or edge < -GH_EDGE_REACH - 1e-6:
+        problems.append(f'{f.GetReference()}: GH mouth {edge:.2f} mm from the edge it faces (must face its own edge '
+                        f'within {GH_EDGE_REACH} mm)')
+    return box(rear, mouth), box(mouth, tip), (ux, uy), problems
+
+
+def wire_pad_boxes(f):
+    """[(label, box above, box below)] of each plated wire pad of a battery / pyro wire-pad footprint."""
+    out, w = [], WIRE_ALLOWANCE
+    for p in f.Pads():
+        if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
+            continue
+        x0, y0, x1, y1 = pad_box(p)[:4]
+        g = w['grow']
+        top = (0.0, w['above']) if not f.IsFlipped() else (-BOARD_T - w['above'], -BOARD_T)
+        bot = (-BOARD_T - w['tail'], -BOARD_T) if not f.IsFlipped() else (0.0, w['tail'])
+        out.append((f'{f.GetReference()}.{p.GetNumber()} wire', (x0 - g, y0 - g, x1 + g, y1 + g, *top),
+                    (x0, y0, x1, y1, *bot)))
+    return out
+
+
 def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
-    if profile not in ('r9', 'r10'):
+    if profile not in ('r9', 'r10', 'r11'):
         raise ValueError(f'unknown fit profile {profile!r}')
+    if profile == 'r11':
+        return check_board_r11(b, prj, radius, axis_x, tol)
     mated = R10_MATED if profile == 'r10' else MATED
     required_refs = R10_MATED_REFS if profile == 'r10' else {'J9', 'J122', 'J123', 'J30', 'J31'}
     rows, bodies, mating, bottom, issues, excluded = [], [], [], [], [], []
@@ -514,6 +612,140 @@ def check_board(b, prj, radius=24.9, axis_x=23.0, tol=0.3, profile='r9'):
                 ok=not issues)
 
 
+def corner_supports(holes, outline, bottom_boxes):
+    """R11: one M3 support within 6 mm of each corner, at most one more anywhere; the 3.5 mm bottom clearance."""
+    issues, x0, y0, x1, y1 = [], *outline
+    for x, y in ((x0, y0), (x1, y0), (x0, y1), (x1, y1)):
+        near = [h for h in holes if abs(h[0] - x) <= 6 and abs(h[1] - y) <= 6]
+        if len(near) != 1:
+            issues.append(f'corner ({x:g}, {y:g}) needs one M3 support within 6 mm on both axes, found {len(near)}')
+    if not 4 <= len(holes) <= 5:
+        issues.append(f'expected four or five M3 supports, found {len(holes)}')
+    nearest = None
+    for hole in holes:
+        for ref, box in bottom_boxes:
+            d = point_box_distance(hole, box)
+            if nearest is None or d < nearest[0]:
+                nearest = (d, ref, hole)
+            if d < STANDOFF_RADIUS - 1e-4:
+                issues.append(f'{ref} bottom/pin envelope {d:.3f} mm from support {hole}; need >=3.5 mm')
+    return list(holes), nearest, issues
+
+
+def check_board_r11(b, prj, radius, axis_x, tol):
+    """Profile r11: see the module docstring."""
+    rows, bodies, mating, bottom, issues, excluded, top_bodies, top_pads = [], [], [], [], [], [], [], []
+    gh, wires = {}, []
+    if not all(math.isfinite(v) for v in (radius, axis_x, tol)) or radius <= 0 or tol < 0:
+        raise ValueError('finite positive bore radius, finite axis and nonnegative sled tolerance required')
+    if abs(mm(b.GetDesignSettings().GetBoardThickness()) - BOARD_T) > 0.01:
+        issues.append('board thickness differs from the 1.6 mm envelope transform')
+    if b.GetCopperLayerCount() != 6:
+        issues.append(f'R11 is a six-layer board (D-R11-03); this one has {b.GetCopperLayerCount()} copper layers')
+    holes, outline = board_geometry(b)
+    for f in b.GetFootprints():
+        ref, side = f.GetReference(), 'B' if f.IsFlipped() else 'F'
+        top_pads.extend((ref + '.' + p.GetNumber(), p) for p in f.Pads()
+                        if p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH
+                        and p.IsOnLayer(pcbnew.F_Cu) and p.IsOnLayer(pcbnew.F_Mask) and not p.IsTented(pcbnew.F_Cu))
+        if ref in WIRE_PAD_REFS:
+            boxes = wire_pad_boxes(f)
+            if not boxes:
+                issues.append(f'{ref}: wire-pad footprint has no plated wire pad')
+            for label, above, below in boxes:
+                for box, face in ((above, 'F' if not f.IsFlipped() else 'B'), (below, 'B' if not f.IsFlipped() else 'F')):
+                    rows.append((margin(box, radius, axis_x, tol), label, face, box))
+                    bodies.append((label, box))
+                    (bottom if box[4] < -BOARD_T + 1e-9 else top_bodies).append((label, box))
+                wires.append(label)
+            continue
+        if board_feature(f) or f.GetAttributes() & pcbnew.FP_DNP:
+            excluded.append(ref)
+            bottom.extend((ref + '.' + p.GetNumber() + ' exposed bottom pad', pad_box(p)) for p in f.Pads()
+                          if p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH
+                          and p.IsOnLayer(pcbnew.B_Cu) and p.IsOnLayer(pcbnew.B_Mask) and not p.IsTented(pcbnew.B_Cu))
+            continue
+        try:
+            box = model_box(f, prj)
+        except ValueError as error:
+            issues.append(str(error))
+            continue
+        if box is None:
+            issues.append(f'{ref}: no readable model (only explicit bare board features/DNP are excluded)')
+            continue
+        rows.append((margin(box, radius, axis_x, tol), ref, side, box))
+        bodies.append((ref, box))
+        if f.IsFlipped():
+            bottom.append((ref, box))
+            bottom.extend((ref + '.' + p.GetNumber(), pad_box(p)) for p in f.Pads() if p.IsOnLayer(pcbnew.B_Cu))
+        else:
+            top_bodies.append((ref, box))
+            bottom.extend((ref + '.' + p.GetNumber() + ' pin', pad_box(p)) for p in f.Pads()
+                          if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)
+        n = gh_circuits(f)
+        if n is not None:
+            if ref not in R11_GH_REFS:
+                issues.append(f'{ref}: GH mated envelope is not reviewed for this reference')
+                continue
+            header, mb, mouth, probs = gh_envelope(f, n, outline)
+            issues.extend(probs)
+            if mb is None:
+                continue
+            rows.append((margin(mb, radius, axis_x, tol), ref + ' mated', side, mb))
+            mating.append((ref, mb))
+            gh[ref] = dict(circuits=n, mouth=[round(mouth[0]), round(mouth[1])], header=[round(v, 3) for v in header],
+                           mated=[round(v, 3) for v in mb],
+                           beyond_outline_mm=round(max(outline[0] - mb[0], mb[2] - outline[2], outline[1] - mb[1],
+                                                       mb[3] - outline[3], 0.0), 3))
+            continue
+        spec = R10_MATED.get(fp_name(f))
+        if spec:
+            if ref not in spec['refs']:
+                issues.append(f'{ref}: mated envelope is not reviewed for this reference')
+                continue
+            mb = footprint_box(f, spec['box'])
+            rows.append((margin(mb, radius, axis_x, tol), ref + ' mated', side, mb))
+            mating.append((ref, mb))
+            (bottom if f.IsFlipped() else top_bodies).append((ref + ' mated', mb))
+        elif ref in R11_MATED_REFS:
+            issues.append(f'{ref}: mated housing/wire envelope has not been reviewed (a GH port needs Manufacturer Part '
+                          f'SMnnB-GHS-TB)')
+    missing = R11_MATED_REFS - {ref for ref, _ in mating}
+    issues.extend(f'{ref}: required R11 mated envelope missing' for ref in sorted(missing))
+    missing_wires = WIRE_PAD_REFS - {w.split('.')[0] for w in wires}
+    issues.extend(f'{ref}: required R11 wire-pad footprint missing' for ref in sorted(missing_wires))
+    for index, (ref, box) in enumerate(mating):
+        for other, body in bodies:
+            if other != ref and box_overlap(box, body):
+                issues.append(f'{ref} mated envelope intersects {other} model box')
+        for other, other_box in mating[index + 1:]:
+            if box_overlap(box, other_box):
+                issues.append(f'{ref} and {other} mated envelopes intersect')
+    for label in wires:
+        ref = label.split('.')[0]
+        mine = [bx for lb, bx in bodies if lb == label]
+        for other, body in bodies + mating:
+            if other.split('.')[0].split(' ')[0] == ref:
+                continue
+            if any(box_overlap(m, body) for m in mine):
+                issues.append(f'{label} allocation intersects {other}')
+    width, length = outline[2] - outline[0], outline[3] - outline[1]
+    if abs(width - 46.0) > 0.01:
+        issues.append(f'board width {width:g} mm; P1 / D-R11-02 require 46 mm')
+    if length > R11_MAX_LENGTH + 0.01:
+        issues.append(f'board length {length:g} mm exceeds the D-R11-02 {R11_MAX_LENGTH:g} mm ceiling')
+    supports, nearest, support_issues = corner_supports(holes, outline, bottom)
+    issues.extend(support_issues)
+    nearest_top, top_issues = top_support_check(supports, top_bodies, top_pads)
+    issues.extend(top_issues)
+    issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
+    return dict(profile='r11', rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
+                nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS, wire_room_mm={},
+                gh_ports=gh, gh_drawing=GH_DRAWING, gh_wire_straight_mm=GH_WIRE_STRAIGHT,
+                wire_pads=sorted(wires), wire_allowance=dict(WIRE_ALLOWANCE, od=WIRE_OD, basis='Inference'),
+                outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded), ok=not issues)
+
+
 def wire_rooms(b, rows, profile, axis_x, tol):
     """Wire bend room from each side-entry terminal's entry face (its model box side farther from the axis, nearest
     the long edge) to the bore wall at WIRE_Z, sled tolerance both ways: {ref: (low, high) mm}. Profile r10 (R3-MEC-02,
@@ -546,7 +778,7 @@ def margin(box, radius, axis_x, tol):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('board', nargs='?', default='m3_design/assembly_review/m3.kicad_pcb')
-    ap.add_argument('--profile', choices=('r9', 'r10'), default='r9')
+    ap.add_argument('--profile', choices=('r9', 'r10', 'r11'), default='r9')
     ap.add_argument('--radius', type=float, default=24.9)
     ap.add_argument('--axis-x', type=float, default=23.0)
     ap.add_argument('--tol', type=float, default=0.3)
@@ -569,7 +801,8 @@ def main():
         print(f'  deepest bottom part: {min(bot, key=lambda r: r[3][4])[1]} '
               f'(z {min(r[3][4] for r in bot):.2f} mm), worst bottom margin {bot[0][0]:.2f} mm ({bot[0][1]})')
     print('  five-support geometry:', report['supports'])
-    print(f"  board: {report['width_mm']:g} x {report['length_mm']:g} mm; 120 mm maximum (P1)")
+    print(f"  board: {report['width_mm']:g} x {report['length_mm']:g} mm; "
+          + (f"{R11_MAX_LENGTH:g} mm ceiling (D-R11-02)" if a.profile == 'r11' else '120 mm maximum (P1)'))
     if report['nearest_support']:
         distance, ref, hole = report['nearest_support']
         print(f'  nearest bottom/pin envelope: {ref}, {distance:.3f} mm from support {hole} (minimum 3.5 mm)')
@@ -586,7 +819,7 @@ def main():
         report.update(board_sha256=before[board_path.name], inputs_sha256=before,
                       checker_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                       radius_mm=a.radius, axis_x_mm=a.axis_x, tolerance_mm=a.tol,
-                      mated_envelopes=R10_MATED if a.profile == 'r10' else MATED, physical_fit_verified=False)
+                      mated_envelopes=R10_MATED if a.profile in ('r10', 'r11') else MATED, physical_fit_verified=False)
         a.report.write_text(json.dumps(report, indent=2) + '\n')
     return 0 if report['ok'] else 1
 

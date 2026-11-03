@@ -1,0 +1,456 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid ca933be8-355e-5c3e-9e8c-72863d0fbd60)
+	(paper "A3")
+	(title_block
+		(title "06 | Camera terminal and characterization")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R11")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))		(symbol "M3:CameraGH6"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "CameraGH6"
+				(at 0 -11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "JST SM06B-GHS-TB camera port (D-R11-05): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "camera port UART"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_GH_SM06B_GHS_TB"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "CameraGH6_0_1"
+				(rectangle
+					(start -10.16 8.89)
+					(end 10.16 -8.89)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraGH6_1_1"
+				(pin passive line
+					(at -15.24 6.35 0)
+					(length 5.08)
+					(name "5V OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 3.81 0)
+					(length 5.08)
+					(name "5V OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 1.27 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -1.27 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -3.81 0)
+					(length 5.08)
+					(name "RX FROM CAMERA TX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -6.35 0)
+					(length 5.08)
+					(name "TX TO CAMERA RX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+)
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 170.18 88.9 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid e9342493-fbc1-56a8-b2ce-a1908663356f)
+		(property "Reference" "TP74"
+			(at 170.18 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "GND"
+			(at 170.18 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "TP74")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 170.18 88.9)
+			(xy 162.56 88.9))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7a8442c8-904e-5ce1-9bf0-dee2a0a71481))
+	(global_label "GND"
+		(shape passive)
+		(at 162.56 88.9 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2aecc2cf-6104-5935-b702-97ded790c010))
+	(text "Redundantcamera testpads removed; probeconnector/fittedcircuit. Insert/removemicroSD onlywithboardoff/outofbay."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 83d28bc0-fc10-5036-b6cb-96de2b452466))
+	(symbol
+		(lib_id "M3:CameraGH6")
+		(at 76.2 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid de97252f-36d4-5832-b733-dc798db304e1)
+		(property "Reference" "J9"
+			(at 78.74 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "SM06B-GHS-TB"
+			(at 78.74 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GH_SM06B_GHS_TB"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-SM06B-GHS-TB-LF-SN_C133065.pdf"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C133065"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "JST"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "SM06B-GHS-TB(LF)(SN)"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "J9")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 60.96 82.55)
+			(xy 55.88 82.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7679d87e-634a-5634-bdbb-b3d700452d33))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 55.88 82.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 133ed397-a852-557f-afdc-5b052c489d0e))
+	(wire
+		(pts
+			(xy 60.96 85.09)
+			(xy 55.88 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 98eba2fc-f6da-55c4-896c-c35ba8988b7a))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 55.88 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7f280b10-e4f4-5336-9d3a-5b1086f20530))
+	(wire
+		(pts
+			(xy 60.96 87.63)
+			(xy 55.88 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 59e0e71a-da87-5b2d-9f37-e61997b8639c))
+	(global_label "GND"
+		(shape passive)
+		(at 55.88 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8ae7b666-8594-57f0-a6c5-1d56fe276a49))
+	(wire
+		(pts
+			(xy 60.96 90.17)
+			(xy 55.88 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 22bf17cd-ced9-564f-afc8-aa4a0fda72a4))
+	(global_label "GND"
+		(shape passive)
+		(at 55.88 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5112d8a4-4911-5055-99ab-124076f7fca3))
+	(wire
+		(pts
+			(xy 60.96 92.71)
+			(xy 55.88 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1516ed59-9ab0-5acb-beb5-5219546dac2b))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 55.88 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fa52c456-1a9e-5d92-b527-06c0eb603775))
+	(wire
+		(pts
+			(xy 60.96 95.25)
+			(xy 55.88 95.25))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 878168ee-9b2c-5b7a-a505-4f53a290f7b1))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 55.88 95.25 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5ef2cbbe-b098-5bcc-b827-968c3e41d44b))
+	(text "R11 (D-R11-05): J9 is a latching JST GH SM06B-GHS-TB 6-pin header: pins 1 and 2 CAM_5V, 3 and 4 GND, 5 CAM_RX_WIRE (board RX), 6 CAM_TX_WIRE (board TX); the 1 A camera allowance is 0.5 A per contact (GH 1.0 A per contact, JST eGH p1). Camera U12/U13 isolation and the U402 switch retained."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid b6e8afac-1299-5d96-9c2e-4bd11f4b2ec0))
+	(text "GH is keyed and latching (JST eGH p1). Label all six pins, verify the harness end-to-end and polarity before power; GH crimps take AWG 30-26 only (JST eGH p2). Current and loop-resistance limits stay."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid de8f5fa2-417d-5eb4-9a18-57e0772fa1a5))
+	(sheet_instances
+		(path "/"
+			(page "6"))))

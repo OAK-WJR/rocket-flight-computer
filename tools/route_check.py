@@ -2,7 +2,7 @@
 """Routing hygiene gate: the clean-routing rules of AGENTS.md §3 and the owner's acceptance list, on every track and
 via of the board (the review pass-2 geometry scan, sources/r7_review/pass2_routing_geometry.md §2, made a gate).
 
-usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r10|r9|r8|r7]
+usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r11|r10|r9|r8|r7]
 exit 0 = no failing instance and no stale allowlist entry (see GATE below)
 
 Profiles: r8 (default, M3-ASSY-R8): ALLOWLIST holds A8 (R8_DECISIONS D9) and the antenna-bias limiter's two
@@ -23,6 +23,12 @@ rails). Profile r10 also fails every arc track (arc_segment) and, on the critica
 checks; all critical hygiene classes remain. AUD-10 counts exact collinear nodes, duplicate segments and segments
 inside pads for review without blocking R10. Partial overlaps, crossings and every other gated category stay blocking.
 Audit 2 item 7 leaves noncritical LEFTOVERS records informational; critical exceptions retain measured/redraw checks.
+r11 (M3-ASSY-R11, D-R11-08; the R11 gate in tools/check.sh): every r10 rule on a six-layer board (F / In1 GND / In2
+power / In3 signal / In4 GND / B, D-R11-03). It reads R10's class list (R10_CLASSES, from critical_reference's one
+definition) and AUD-2's slow-return list unchanged; ALLOWLIST, LEFTOVERS, ROUTE_FIGURES and PARALLEL_VIAS start empty.
+Every layer-dependent test walks the board's own copper stack (cu_layers: F, In1..In4, B on a six-layer board; the
+R7-R10 four-layer set otherwise, so their verdicts are unchanged), so a layer change through In3 or In4 is one, and the
+strict redraw's reference test pairs each layer with its neighbours in the R11 stack (REF_PAIRS_R11).
 
 Copper is grouped per (layer, net). Track end points within 1 µm form a node. A node is "plain" when exactly two
 track ends meet there and it holds no pad, via or T (another track's body); a chain is a run of segments through
@@ -209,6 +215,13 @@ FINGER_REACH = 4.0               # mm of copper to the nearest GND via or plated
 PAD_RING = 0.75                  # mm round a pad joined to its pour: its thermal gap (0.25-0.5) and spokes, not a finger
 RASTER = 0.05                    # mm: through-copper distance raster
 CU4 = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
+CU6 = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.In3_Cu, pcbnew.In4_Cu, pcbnew.B_Cu)
+
+
+def cu_layers(board):
+    """The copper layers every per-layer test walks: the six-layer stack (R11, D-R11-03) on a board with six or more
+    copper layers, else R7-R10's four (also a synthetic board's default, whose In1 / In2 copper the tests use)."""
+    return CU6 if board.GetCopperLayerCount() >= 6 else CU4
 
 CLASSES = [
     ('rf', r'^(GNSS_RF_ANT|GNSS_RF_IN|RADIO_RF_ANT|RADIO_RF)$'),
@@ -312,7 +325,8 @@ ROUTE_FIGURES = {'GNSS_LNA_EN': (7.65, 1), 'GNSS_VCC_RF': (6.2, 1)}         # D5
 
 # Profiles: r8 (default) = the lists above and the keep-out-aware detour baseline (D10); r7 = the R7 record's lists
 # (route_lists_r7.py) and the plain baseline, which reproduces the owner-accepted R7 verdict on board c872a3d3...
-PROFILES = ('r10', 'r9', 'r8', 'r7')
+PROFILES = ('r11', 'r10', 'r9', 'r8', 'r7')
+R10_LIKE = ('r10', 'r11')        # r11 runs every r10 rule (D-R11-08)
 PROFILE = 'r8'
 # D-R19-09 (R19-PWR-01), profile r10 only: a second via beside a supply's single-via layer change on a net without a pour
 # closes one deliberate loop (the two barrels join the same two copper pieces). (net, (x, y) mm of the added via, measured
@@ -365,14 +379,14 @@ def set_profile(name):
     elif name == 'r8':
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = _R8_LISTS
         KEEPOUT_BASELINE = True
-    elif name in ('r9', 'r10'):                                      # r9_plan.md section 2: no exception of any kind
+    elif name in ('r9', 'r10', 'r11'):                                    # r9_plan.md section 2: no exception of any kind
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = [], [], {}
         KEEPOUT_BASELINE = True
     else:
         raise ValueError(f'unknown profile {name!r}; one of {PROFILES}')
     PROFILE = name
     global PARALLEL_VIAS
-    PARALLEL_VIAS = list(PARALLEL_VIAS_R10) if name == 'r10' else []
+    PARALLEL_VIAS = list(PARALLEL_VIAS_R10) if name == 'r10' else []      # r11: starts empty (D-R11-08)
 
 
 def parallel_skip(nc, entries=None):
@@ -392,7 +406,7 @@ def parallel_skip(nc, entries=None):
 
 
 def net_class(name):
-    for c, rx in (R10_CLASSES if PROFILE == 'r10' else CLASSES):
+    for c, rx in (R10_CLASSES if PROFILE in R10_LIKE else CLASSES):
         if re.search(rx, name):
             return c
     return 'other'
@@ -400,7 +414,7 @@ def net_class(name):
 
 def return_required(name):
     """AUD-2 changes only R10 return geometry, never critical routing-hygiene classification."""
-    return not (PROFILE == 'r10' and _cr.r10_slow_return_net(name))
+    return not (PROFILE in R10_LIKE and _cr.r10_slow_return_net(name))
 
 
 def mm(v):
@@ -468,7 +482,7 @@ def _route_tracks(tracks, skip=frozenset()):
     for i, t in enumerate(tracks):
         if skip and id(t['obj']) in skip:
             continue
-        if PROFILE == 'r10' and not t['arc']:
+        if PROFILE in R10_LIKE and not t['arc']:
             key = _track_key(t)
             if key in seen:
                 continue
@@ -501,7 +515,7 @@ def collect(board, nets=None):
         if t.GetClass() == 'PCB_VIA':
             p = t.GetPosition()
             get(n).vias.append(dict(pos=(p.x, p.y), r=t.GetWidth(pcbnew.F_Cu) / 2,
-                                    layers={l for l in CU4 if t.IsOnLayer(l)}, obj=t))
+                                    layers={l for l in cu_layers(board) if t.IsOnLayer(l)}, obj=t))
         elif t.GetClass() in ('PCB_TRACK', 'PCB_ARC'):
             a, b = t.GetStart(), t.GetEnd()
             get(n).tracks.append(dict(net=n, lid=t.GetLayer(), a=(a.x, a.y), b=(b.x, b.y), w=t.GetWidth(),
@@ -514,13 +528,13 @@ def collect(board, nets=None):
             bb = p.GetBoundingBox()
             get(n).pads.append(dict(name=f'{f.GetReference()}.{p.GetNumber()}', key=f'{f.GetReference()}.{p.GetNumber()}#{k}',
                                     pos=(p.GetPosition().x, p.GetPosition().y), obj=p,
-                                    layers={l for l in CU4 if p.IsOnLayer(l)},
+                                    layers={l for l in cu_layers(board) if p.IsOnLayer(l)},
                                     bb=(bb.GetLeft(), bb.GetTop(), bb.GetRight(), bb.GetBottom())))
     for z in board.Zones():
         n = z.GetNetname()
         if z.GetIsRuleArea() or not n or (nets is not None and n not in nets):
             continue
-        get(n).zones.append((z, [l for l in CU4 if z.IsOnLayer(l)]))
+        get(n).zones.append((z, [l for l in cu_layers(board) if z.IsOnLayer(l)]))
     return out
 
 
@@ -901,7 +915,7 @@ def pad_layer_changes(board):
     (D-R20-09 drew AUX_TX_WIRE / AUX_RX_WIRE on F.Cu from the cell and on B.Cu to the clamps through J440.3 / J440.4,
     and the via-only test passed them). A layer counts when a track of the net ends in the pad's copper on it or in its
     hole. [(pad name, net, (x, y) nm, sorted layer ids)]; the other profiles' records keep their via-only verdicts."""
-    if PROFILE != 'r10':
+    if PROFILE not in R10_LIKE:
         return []
     by = defaultdict(list)
     for t in board.GetTracks():
@@ -1036,7 +1050,7 @@ def keepout_obstacles(board):
     if closed is not None:
         for i in range(closed.OutlineCount()):
             obs.append(('track keep-out on every layer', _poly_mm(closed.Outline(i))))
-    for ref, (w, h) in ({} if PROFILE == 'r10' else MODULE_BODIES).items():
+    for ref, (w, h) in ({} if PROFILE in R10_LIKE else MODULE_BODIES).items():
         f = board.FindFootprintByReference(ref)
         if f:
             x, y = mm(f.GetPosition().x), mm(f.GetPosition().y)
@@ -1420,7 +1434,7 @@ def pour_pieces(board):
     for z in board.Zones():
         if z.GetIsRuleArea() or not z.GetNetname():
             continue
-        for lid in CU4:
+        for lid in cu_layers(board):
             if z.IsOnLayer(lid) and z.HasFilledPolysForLayer(lid):
                 by[(z.GetNetname(), lid)].append(z.GetFilledPolysList(lid))
     for (net, lid), fills in sorted(by.items(), key=lambda kv: (kv[0][0], kv[0][1])):
@@ -1498,7 +1512,7 @@ def fill_keepouts(board):
     out = defaultdict(list)
     for z in board.Zones():
         if is_trim(z):
-            for lid in CU4:
+            for lid in cu_layers(board):
                 if z.IsOnLayer(lid):
                     out[lid].append(z.Outline())
     return out
@@ -1510,7 +1524,7 @@ def pad_contacts(board, pads=None):
     zones = defaultdict(list)
     for z in board.Zones():
         if not z.GetIsRuleArea() and z.GetNetname():
-            for lid in CU4:
+            for lid in cu_layers(board):
                 if z.IsOnLayer(lid):
                     zones[(z.GetNetname(), lid)].append(z)
     out = {}
@@ -1519,7 +1533,7 @@ def pad_contacts(board, pads=None):
             key = f'{f.GetReference()}.{p.GetNumber()}#{k}'
             if not p.GetNetname() or (pads is not None and key not in pads):
                 continue
-            for lid in CU4:
+            for lid in cu_layers(board):
                 zs = zones.get((p.GetNetname(), lid))
                 if not zs or not p.IsOnLayer(lid):
                     continue
@@ -1793,7 +1807,7 @@ def needless_hops(board, cu, chains, via_ends, poured):
         return other_l1[lid]
 
     def pure_layers(v):
-        if any(cu.pads_at(v['net'], lid, v['pos']) for lid in CU4):
+        if any(cu.pads_at(v['net'], lid, v['pos']) for lid in cu_layers(board)):
             return None
         return {s['lid'] for s, _ in via_ends.get(v['i'], [])}
     for chain, n0, n1 in chains:
@@ -1849,7 +1863,7 @@ def scan(board, baseline_log=None):
     # segment ends at each via's centre on every layer: a path goes on through a via onto another layer
     via_ends = defaultdict(list)
     for v in cu.vias:
-        for lid in CU4:
+        for lid in cu_layers(board):
             for s in cu.by_ln.get((lid, v['net']), []):
                 for e, q in ((0, s['a']), (1, s['b'])):
                     if dist(q, v['pos']) <= TOL:
@@ -1945,7 +1959,7 @@ def scan(board, baseline_log=None):
         elif s['len'] < max(mm(s['w']), SHORT) and not cu.inside_one(s):
             add('short_segment', s['net'], s['layer'], s['a'], len_mm=round(s['len'], 4),
                 width=round(mm(s['w']), 3), end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)))
-        if s['arc'] and PROFILE == 'r10':
+        if s['arc'] and PROFILE in R10_LIKE:
             # R3-GATE-01: AGENTS.md section 3 allows only 0 / 45 / 90 degree straight segments; an arc is skipped by
             # every heading, jog and staircase test below (its chord is not its copper), so it fails outright
             add('arc_segment', s['net'], s['layer'], s['a'], end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)),
@@ -1998,7 +2012,7 @@ def scan(board, baseline_log=None):
                     ov = min(Li, max(t1, t2)) - max(0, min(t1, t2))
                     other = (round(mm(aj[0]), 4), round(mm(aj[1]), 4), round(mm(bj[0]), 4), round(mm(bj[1]), 4))
                     if off <= TOL and ov > TOL:
-                        dup = (not (si['arc'] or sj['arc']) and _track_key(si) == _track_key(sj)) if PROFILE == 'r10' else \
+                        dup = (not (si['arc'] or sj['arc']) and _track_key(si) == _track_key(sj)) if PROFILE in R10_LIKE else \
                             ((dist(ai, aj) <= TOL and dist(bi, bj) <= TOL) or
                              (dist(ai, bj) <= TOL and dist(bi, aj) <= TOL))
                         add('duplicate_segment' if dup else 'collinear_overlap', net, layer, ai,
@@ -2163,12 +2177,12 @@ def scan(board, baseline_log=None):
     for v in cu.vias:
         if v['net'] not in poured:
             continue
-        at_c = [(s, q) for lid in CU4 for s in cu.by_ln.get((lid, v['net']), []) for q in (s['a'], s['b'])
+        at_c = [(s, q) for lid in cu_layers(board) for s in cu.by_ln.get((lid, v['net']), []) for q in (s['a'], s['b'])
                 if dist(q, v['pos']) <= TOL]
-        near = [s for lid in CU4 for s in cu.by_ln.get((lid, v['net']), []) if pt_seg(v['pos'], s['a'], s['b'])[0] <= v['r']]
+        near = [s for lid in cu_layers(board) for s in cu.by_ln.get((lid, v['net']), []) if pt_seg(v['pos'], s['a'], s['b'])[0] <= v['r']]
         if len(at_c) == 2 and len({s['lid'] for s, _ in at_c}) == 2 and len(near) == 2 and \
-                not any(cu.pads_at(v['net'], lid, v['pos']) for lid in CU4) and \
-                not any(cu.in_zone(v['net'], lid, v['pos'], v['r']) for lid in CU4):
+                not any(cu.pads_at(v['net'], lid, v['pos']) for lid in cu_layers(board)) and \
+                not any(cu.in_zone(v['net'], lid, v['pos'], v['r']) for lid in cu_layers(board)):
             pure[v['i']] = v
     parent = {}
 
@@ -2193,7 +2207,7 @@ def scan(board, baseline_log=None):
                 at=sorted([round(mm(pure[i]['pos'][0]), 4), round(mm(pure[i]['pos'][1]), 4)] for i in vs))
 
     # ---- profile r10, critical signal nets: needless layer hops (R3-GATE-03) -----------------------------------------
-    if PROFILE == 'r10':
+    if PROFILE in R10_LIKE:
         for d in needless_hops(board, cu, chains, via_ends, poured):
             add('extra_vias', d.pop('net'), 'net', d.pop('at'), **d)
 
@@ -2269,7 +2283,7 @@ def scan(board, baseline_log=None):
     gnd = [v['pos'] for v in cu.vias_by_net.get('GND', [])]
     for v in cu.vias:
         layers, tracked = set(), set()
-        for lid in CU4:
+        for lid in cu_layers(board):
             for s in cu.by_ln.get((lid, v['net']), []):
                 if dist(s['a'], v['pos']) <= v['r'] or dist(s['b'], v['pos']) <= v['r']:
                     tracked.add(lid)
@@ -2280,7 +2294,7 @@ def scan(board, baseline_log=None):
         if len(layers) < 2:
             add('dangling_via', v['net'], 'via', v['pos'])
         power = net_class(v['net']) == 'power' and v['net'] != 'GND'
-        padl = {lid for lid in CU4 if cu.pads_at(v['net'], lid, v['pos'])}   # a via in a pad: a layer change too
+        padl = {lid for lid in cu_layers(board) if cu.pads_at(v['net'], lid, v['pos'])}   # a via in a pad: a layer change too
         if (net_class(v['net']) in SIGNAL_CRITICAL or power) and return_required(v['net']) and len(tracked | padl) >= 2:
             g = min((dist(q, v['pos']) for q in gnd), default=None)
             if g is None or mm(g) > GND_REACH:
@@ -2306,7 +2320,7 @@ def scan(board, baseline_log=None):
     # joined by overlap only. Where the via also lies in its own net's fill on that layer the fill makes the joint
     # (information)
     for v in cu.vias:
-        for lid in CU4:
+        for lid in cu_layers(board):
             if not v['item'].IsOnLayer(lid):
                 continue
             group = cu.by_ln.get((lid, v['net']), [])
@@ -2370,7 +2384,7 @@ def scan(board, baseline_log=None):
 
 
 def gated(d):
-    if PROFILE == 'r10' and d['cat'] in R10_REVIEW:  # AUD-10: all other categories retain their gate scope.
+    if PROFILE in R10_LIKE and d['cat'] in R10_REVIEW:  # AUD-10: all other categories retain their gate scope.
         return False
     return d['cat'] in RULE or d['cat'] in POUR or (d['cat'] in HYGIENE + REMOVABLE and d['cls'] in CRITICAL)
 
@@ -2413,7 +2427,7 @@ def leftover_check(inst, leftovers=None):
     used = [False] * len(leftovers)
     recorded, missing = [], []
     for d in inst:
-        if PROFILE == 'r10' and d['cat'] in R10_REVIEW:  # AUD-10: counted review, not an unrecorded leftover.
+        if PROFILE in R10_LIKE and d['cat'] in R10_REVIEW:  # AUD-10: counted review, not an unrecorded leftover.
             continue
         if d['cat'] not in LEFTOVER_CATS or d['cls'] in CRITICAL:
             continue
@@ -2727,6 +2741,18 @@ EDGE_CLEAR = 0.5                 # mm: copper to the board edge (m3.kicad_pro mi
                                  # and at the internal Edge.Cuts holes (fix pass 7: alt_audit used to test the outline's
                                  # bounding box + 0.3 mm, so DRC could reject a redraw it called clean)
 REF_PAIR = {pcbnew.B_Cu: pcbnew.In2_Cu, pcbnew.In2_Cu: pcbnew.B_Cu}   # strict: a pour on one is the other's reference
+# R11 (D-R11-03): F over In1 GND, In3 between In2 power and In4 GND, B over In4 GND; each layer is paired with both its
+# neighbours in the stack (conservative: a redraw on either side of a dielectric may cut the other's reference)
+REF_PAIRS_R11 = {pcbnew.F_Cu: {pcbnew.In1_Cu}, pcbnew.In1_Cu: {pcbnew.F_Cu, pcbnew.In2_Cu},
+                 pcbnew.In2_Cu: {pcbnew.In1_Cu, pcbnew.In3_Cu}, pcbnew.In3_Cu: {pcbnew.In2_Cu, pcbnew.In4_Cu},
+                 pcbnew.In4_Cu: {pcbnew.In3_Cu, pcbnew.B_Cu}, pcbnew.B_Cu: {pcbnew.In4_Cu}}
+
+
+def ref_pairs():
+    """{layer: layers whose critical tracks take this layer's pour as their reference} for the profile."""
+    if PROFILE == 'r11':
+        return REF_PAIRS_R11
+    return {k: {v} for k, v in REF_PAIR.items()}
 REF_GAP = 0.3                    # mm: the pours' clearance round a redraw (zone clearance 0.3 on the power pours)
 NAMED_KEEPOUTS = ('U30_KEEPOUT', 'U31_KEEPOUT')   # m3.kicad_dru "R7 U30 / U31 keep-out": no non-GND track inside (rule
                                                    # areas that carry no track keep-out flag of their own)
@@ -2740,7 +2766,7 @@ def _clearance_class(clearance):
         if str(p) not in sys.path:
             sys.path.insert(0, str(p))
     import r7_hygiene as hy                     # noqa: E402 (board-specific rules, imported only here)
-    if PROFILE != 'r10':
+    if PROFILE not in R10_LIKE:
         return hy.Clearance
 
     class R10Clearance(hy.Clearance):
@@ -2782,7 +2808,7 @@ class RedrawCheck:
         self.board = board
         self.clr = _clearance_class(clearance)(board)
         self.keep = [z for z in board.Zones() if z.GetIsRuleArea() and z.GetDoNotAllowTracks()]
-        self.named = [z for z in board.Zones() if PROFILE != 'r10' and z.GetIsRuleArea()
+        self.named = [z for z in board.Zones() if PROFILE not in R10_LIKE and z.GetIsRuleArea()
                       and z.GetZoneName() in NAMED_KEEPOUTS]
         self.npth = [((f_p.GetPosition().x, f_p.GetPosition().y), max(f_p.GetDrillSize().x, f_p.GetDrillSize().y) / 2)
                      for f in board.GetFootprints() for f_p in f.Pads() if f_p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH]
@@ -2812,7 +2838,7 @@ class RedrawCheck:
         for f in board.GetFootprints():
             ps = [q for q in f.Pads() if q.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH]
             if len(ps) == 2:
-                for lid in CU4:
+                for lid in cu_layers(board):
                     if all(q.IsOnLayer(lid) for q in ps):
                         self.two_pad.append((lid, ps))
 
@@ -2867,14 +2893,15 @@ class RedrawCheck:
                     x = interior_crossing(a, c, q0, q1)
                     if x is not None and not any(q.GetEffectiveShape(lid).Collide(P(x), 0) for q in ps):
                         return 'between the pads of ' + ps[0].GetParentFootprint().GetReference()
-                if cu is not None and lid in REF_PAIR:
+                pairs = ref_pairs()
+                if cu is not None and lid in pairs:
                     # a critical signal track on the paired layer takes this layer's pour as its reference (B.Cu over
                     # In2, In2 under B.Cu; tools/critical_reference.py): a redraw may not cut that pour where the
                     # window's present copper does not already (fix pass 7: LED_RED's and SERVO2_MCU's "removable"
                     # bumps did, 465 / 179 samples)
                     reach = w / 2 + REF_GAP / NM
                     for (l2, n2), group in cu.by_ln.items():
-                        if l2 != REF_PAIR[lid] or n2 == net or net_class(n2) not in SIGNAL_CRITICAL:
+                        if l2 not in pairs[lid] or n2 == net or net_class(n2) not in SIGNAL_CRITICAL:
                             continue
                         for o in group:
                             r = reach + o['w'] / 2
@@ -3101,7 +3128,7 @@ def main():
     ap.add_argument('--bumps-all', action='store_true', help='also search the non-critical nets for removable local '
                     'bumps (information, local_bump_review; slow)')
     ap.add_argument('--profile', choices=PROFILES, default='r8', help='exception lists and detour baseline: r8 (default; '
-                    'R8_DECISIONS D9 / D10), r10 (empty lists, R10 classes, no RF parts; the R10 gate), r9 (empty lists, D10 '
+                    'R8_DECISIONS D9 / D10), r11 (r10 rules on six copper layers, empty lists; the R11 gate), r10 (empty lists, R10 classes, no RF parts; the R10 gate), r9 (empty lists, D10 '
                     'baseline; the R9 record) or r7 (the R7 record, '
                     'route_lists_r7.py, plain baseline)')
     args = ap.parse_args()
@@ -3143,7 +3170,7 @@ def main():
         print('FAIL allowlisted critical_via_no_gnd has a legal GND via spot:', d['net'], (d['x'], d['y']),
               f'{dia} mm via at {spot}, {dist_:.3f} mm')
     recorded, missing, stale_left = leftover_check(inst)
-    bookkeeping = PROFILE != 'r10'  # audit 2 item 7: R10 noncritical records remain informational.
+    bookkeeping = PROFILE not in R10_LIKE  # audit 2 item 7: R10 noncritical records remain informational.
     for d in missing:
         print(('FAIL' if bookkeeping else 'INFO') + ' non-critical leftover without a recorded reason (LEFTOVERS):', d['cat'], d['net'], d['layer'],
               (d['x'], d['y']))
@@ -3166,7 +3193,7 @@ def main():
     if args.report:
         args.report.write_text(json.dumps(dict(profile=PROFILE, detour_baseline=baseline_log,
                                                instances=inst, failures=failures, allowed=allowed,
-                                               review=[d for d in inst if PROFILE == 'r10' and d['cat'] in R10_REVIEW],
+                                               review=[d for d in inst if PROFILE in R10_LIKE and d['cat'] in R10_REVIEW],
                                                stale=[list(e) for e in stale],
                                                nognd_audit=[dict(d, spot=list(sp), via=dia, dist=dd)
                                                             for d, (sp, dia, dd) in audit],

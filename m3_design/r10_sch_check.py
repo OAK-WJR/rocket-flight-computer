@@ -13,6 +13,7 @@ import csv
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -225,6 +226,12 @@ def seeds(parts, pins):
     return results
 
 
+def _stamp_free(path):
+    """File bytes without the netlist's <tool> version stamp (KiCad 10.0.6 and 10.0.7 export the same design)."""
+    data = path.read_bytes()
+    return re.sub(rb'<tool>[^<]*</tool>', b'<tool/>', data) if path.name.endswith('.net.xml') else data
+
+
 def check(project):
     gen.source_check()
     parts, pins = read_netlist(project / 'schematic.net.xml')
@@ -249,7 +256,7 @@ def check(project):
         gen.build(replay)
         # Freshly regenerate both the stored netlist and sheets from fixed input.
         for file in sorted(replay.glob('*.kicad_sch')) + [replay / 'schematic.net.xml', replay / 'm3.kicad_dru']:
-            if file.read_bytes() != (project / file.name).read_bytes():
+            if _stamp_free(file) != _stamp_free(project / file.name):
                 issues.append(f'nonreproducible generated artifact: {file.name}')
         # Export the supplied sheets themselves too, detecting a changed sheet
         # paired with a stale but otherwise valid netlist.

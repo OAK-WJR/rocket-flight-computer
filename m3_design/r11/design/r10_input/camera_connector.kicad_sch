@@ -1,0 +1,366 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_core_schematic")
+	(uuid ca933be8-355e-5c3e-9e8c-72863d0fbd60)
+	(paper "A3")
+	(title_block
+		(title "06 | Camera terminal and characterization")
+		(date "2026-09-07")
+		(rev "M3-ASSY-R10")
+		(company "Single-board M3 candidate; full system incomplete"))
+	(lib_symbols
+		(symbol "M3:CameraTerminal"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraTerminal_0_1"
+				(rectangle
+					(start -22.86 6.35)
+					(end 22.86 -6.35)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraTerminal_1_1"
+				(pin passive line
+					(at -27.939999999999998 3.8099999999999996 0)
+					(length 5.08)
+					(name "5V OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 1.2699999999999996 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 -1.2700000000000005 0)
+					(length 5.08)
+					(name "RX FROM CAMERA TX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -27.939999999999998 -3.8100000000000005 0)
+					(length 5.08)
+					(name "TX TO CAMERA RX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_DB125_4P_GN"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 170.18 88.9 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid e9342493-fbc1-56a8-b2ce-a1908663356f)
+		(property "Reference" "TP74"
+			(at 170.18 81.28 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "GND"
+			(at 170.18 85.09 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" ""
+			(at 170.18 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "TP74")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 170.18 88.9)
+			(xy 162.56 88.9))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7a8442c8-904e-5ce1-9bf0-dee2a0a71481))
+	(global_label "GND"
+		(shape passive)
+		(at 162.56 88.9 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2aecc2cf-6104-5935-b702-97ded790c010))
+	(symbol
+		(lib_id "M3:CameraTerminal")
+		(at 76.2 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid de97252f-36d4-5832-b733-dc798db304e1)
+		(property "Reference" "J9"
+			(at 78.74 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "DB125-3.5-4P-GN-S"
+			(at 78.74 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_DB125_4P_GN"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C2757925"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "DORABO"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB125-3.5-4P-GN-S"
+			(at 76.2 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/df8afa2f-b72f-56f6-9fee-55c91cce0fe4"
+					(reference "J9")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 85.09)
+			(xy 43.18 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5fe76507-e3d6-590f-8c6d-8b3622477967))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 43.18 85.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid eddf47fc-46bd-5b95-bf19-ac0b1351b5f8))
+	(wire
+		(pts
+			(xy 48.26 87.63)
+			(xy 43.18 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bad93347-25b6-536a-a972-ea62859ada62))
+	(global_label "GND"
+		(shape passive)
+		(at 43.18 87.63 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ace720a2-7455-527f-87c4-7ee77035c74e))
+	(wire
+		(pts
+			(xy 48.26 90.17)
+			(xy 43.18 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ea5c70c0-29e9-5bf2-be40-be90ad3ed420))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 43.18 90.17 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 943d75ac-cfeb-51f3-a071-4617dcf71d99))
+	(wire
+		(pts
+			(xy 48.26 92.71)
+			(xy 43.18 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a795eb21-5bf1-5ec3-b124-7a9ba01e79fd))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 43.18 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 59e3517e-d161-5cf2-9f7f-0eca08154c36))
+	(text "R10 owner screw terminals: J9 DB1253.5mm4pos; pin1 CAM_5V,pin2GND,pin3CAM_RX_WIRE(boardRX),pin4CAM_TX_WIRE(boardTX). CameraU12/U13isolation andU402switch retained."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 5586ba24-10dc-578b-9b7a-f8d2c933cc8c))
+	(text "No physical portkeying: labelallfourpins, verifyharness end-to-end andpolarity beforepower. DB125 accepts28-16AWG; qualifiedferrules/splices forthinnermoduleleads. Current/loopresistance limits stay."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 89f9d89c-21e5-5d71-a602-20d1665dd0ac))
+	(text "Redundantcamera testpads removed; probeconnector/fittedcircuit. Insert/removemicroSD onlywithboardoff/outofbay."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 83d28bc0-fc10-5036-b6cb-96de2b452466))
+	(sheet_instances
+		(path "/"
+			(page "6"))))

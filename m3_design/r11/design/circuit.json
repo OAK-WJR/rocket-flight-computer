@@ -1,0 +1,800 @@
+{
+  "revision": "M3-ASSY-R11",
+  "status": "frozen",
+  "stage": "A",
+  "basis": "R10 netlist at deb179e (r10_input/schematic.net.xml, manifest.json); every R10 net and value carries over (D-R11-01)",
+  "catalog": {
+    "C11702": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1001TCE",
+      "Datasheet": "",
+      "footprint": "rocket:R0402",
+      "source": "R10 line (R105, R122, R127, R9)"
+    },
+    "C133065": {
+      "Manufacturer": "JST",
+      "Manufacturer Part": "SM06B-GHS-TB(LF)(SN)",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-SM06B-GHS-TB-LF-SN_C133065.pdf",
+      "footprint": "rocket:M3_GH_SM06B_GHS_TB",
+      "source": "JLC/LCSC listing 2026-11-02: -25℃~+85℃ 1 1.25mm 10.75mm 1A 1x6P 4.13mm 4.25mm 50V 6 6P Auxiliary Solder Pin GH PA9T Phosphor bronze Surface Mount, Right Angle Tin UL94V-0 White SMD,P=1.25mm,卧贴 Wire To Board Connector ROHS"
+    },
+    "C15195": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05B103KB5NNNC",
+      "Datasheet": "https://www.lcsc.com/product-detail/C15195.html",
+      "footprint": "rocket:C0402",
+      "source": "R10 line (C123, C408)"
+    },
+    "C189893": {
+      "Manufacturer": "JST",
+      "Manufacturer Part": "SM02B-GHS-TB(LF)(SN)",
+      "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2304140030_JST-SM02B-GHS-TB-LF-SN_C189893.pdf",
+      "footprint": "rocket:M3_GH_SM02B_GHS_TB",
+      "source": "JLC/LCSC listing 2026-11-02: -25℃~+85℃ 1 1.25mm 1A 1x2P 2 2P 4.13mm 4.25mm 5.75mm 50V Auxiliary Solder Pin GH PA9T Phosphor bronze Surface Mount, Right Angle Tin UL94V-0 White SMD,P=1.25mm,Surface Mount，Right Angle Wire To Board Connector ROHS"
+    },
+    "C189895": {
+      "Manufacturer": "JST",
+      "Manufacturer Part": "SM04B-GHS-TB(LF)(SN)",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-SM04B-GHS-TB-LF-SN_C189895.pdf",
+      "footprint": "rocket:M3_GH_SM04B_GHS_TB",
+      "source": "JLC/LCSC listing 2026-11-02: -25℃~+85℃ 1 1.25mm 1A 1x4P 4 4.13mm 4.25mm 4P 50V 8.25mm Auxiliary Solder Pin GH PA9T Phosphor bronze Surface Mount, Right Angle Tin UL94V-0 White SMD,P=1.25mm,卧贴 Wire To Board Connector ROHS"
+    },
+    "C189896": {
+      "Manufacturer": "JST",
+      "Manufacturer Part": "SM05B-GHS-TB(LF)(SN)",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-SM05B-GHS-TB-LF-SN_C189896.pdf",
+      "footprint": "rocket:M3_GH_SM05B_GHS_TB",
+      "source": "JLC/LCSC listing 2026-11-02: -25℃~+85℃ 1 1.25mm 1A 1x5P 4.13mm 4.25mm 5 50V 5P 9.5mm Auxiliary Solder Pin GH PA9T Phosphor bronze Surface Mount, Right Angle Tin UL94V-0 White SMD,P=1.25mm,卧贴 Wire To Board Connector ROHS"
+    },
+    "C190095": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0402BRD0710KL",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 10kΩ 50V 62.5mW Thin Film Resistor ±0.1% ±25ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C25091": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF2200TCE",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2205311900_UNI-ROYAL-Uniroyal-Elec-0402WGF2200TCE_C25091.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 220Ω 50V 62.5mW Thick Film Resistor ±1% ±100ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C25741": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1003TCE",
+      "Datasheet": "",
+      "footprint": "rocket:R0402",
+      "source": "R10 line (R119, R120, R60)"
+    },
+    "C25744": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF1002TCE",
+      "Datasheet": "",
+      "footprint": "rocket:R0402",
+      "source": "R10 line (R10, R104, R11, R121, R128, R131, R154, R155, R156, R157, R163, R432, R5, R61, R64)"
+    },
+    "C25774": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF3003TCE",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF3003TCE_C25774.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 300kΩ 50V 62.5mW Thick Film Resistor ±1% ±100ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C25790": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF4703TCE",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4703TCE_C25790.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 470kΩ 50V 62.5mW Thick Film Resistor ±1% ±100ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C25792": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF4702TCE",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 47kΩ 50V 62.5mW Thick Film Resistor ±1% ±100ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C26960": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF2262TCE",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0402WGF2262TCE_C26960.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 22.6kΩ 50V 62.5mW Thick Film Resistor ±1% ±100ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C29381": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF6652TCE",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0402WGF6652TCE_C29381.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 50V 62.5mW 66.5kΩ Thick Film Resistor ±1% ±100ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C307331": {
+      "Manufacturer": "Samsung Electro-Mechanics",
+      "Manufacturer Part": "CL05B104KB54PNC",
+      "Datasheet": "",
+      "footprint": "rocket:C0402",
+      "source": "R10 line (C100, C13, C14, C15, C16, C17, C18, C21, C24, C29, C30, C31, C32, C5, C88, C99)"
+    },
+    "C4109": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF2001TCE",
+      "Datasheet": "",
+      "footprint": "rocket:R0402",
+      "source": "R10 line (R123, R130, R133, R178, R180)"
+    },
+    "C705636": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0402BRD0756K2L",
+      "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2210242030_YAGEO-RT0402BRD0756K2L_C705636.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 50V 56.2kΩ 62.5mW Thin Film Resistor ±0.1% ±25ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C852911": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0402BRD07750RL",
+      "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2210181700_YAGEO-RT0402BRD07750RL_C852911.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 50V 62.5mW 750Ω Thin Film Resistor ±0.1% ±25ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C852923": {
+      "Manufacturer": "YAGEO",
+      "Manufacturer Part": "RT0402BRD0780K6L",
+      "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2311211102_YAGEO-RT0402BRD0780K6L_C852923.pdf",
+      "footprint": "rocket:R0402",
+      "source": "JLC/LCSC listing 2026-11-02: -55℃~+155℃ 50V 63mW 80.6kΩ Thin Film Resistor ±0.1% ±25ppm/℃ 0402 Chip Resistor - Surface Mount ROHS"
+    },
+    "C964146": {
+      "Manufacturer": "STMicroelectronics",
+      "Manufacturer Part": "STM32H743VIH6",
+      "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2203091604_STMicroelectronics-STM32H743VIH6_C964146.pdf",
+      "footprint": "rocket:M3_TFBGA100_8x8_P0.8",
+      "source": "JLC/LCSC listing 2026-11-02: -40℃~+85℃ 1.62V~3.6V 1MB 2MB 32 Bit 480MHz 82 ARM Cortex-M7 Built-in FLASH TFBGA-100 Microcontrollers (MCU/MPU/SOC) ROHS"
+    }
+  },
+  "parts": {
+    "C127": {
+      "lcsc": "C15195",
+      "value": "10nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C0603",
+        "lcsc": "C57112",
+        "value": "10nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 10nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C129": {
+      "lcsc": "C15195",
+      "value": "10nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C0603",
+        "lcsc": "C57112",
+        "value": "10nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 10nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C402": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C410": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C420": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C430": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C444": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C460": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C60": {
+      "lcsc": "C15195",
+      "value": "10nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C0603",
+        "lcsc": "C57112",
+        "value": "10nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 10nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C83": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C90": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C93": {
+      "lcsc": "C307331",
+      "value": "100nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C_0603_1608Metric",
+        "lcsc": "C14663",
+        "value": "100nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 100nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "C94": {
+      "lcsc": "C15195",
+      "value": "10nF 50V X7R 10%",
+      "r10": {
+        "footprint": "rocket:C0603",
+        "lcsc": "C57112",
+        "value": "10nF 50V X7R 10%"
+      },
+      "why": "D-R11-06: 10nF 50V X7R 0603 -> 0402 (R10's own 0402 line)"
+    },
+    "J1": {
+      "lcsc": null,
+      "value": "AWG20 wire pads",
+      "footprint": "rocket:M3_WIREPAD_2P_AWG20",
+      "in_bom": false,
+      "in_pos_files": false,
+      "r10": {
+        "footprint": "rocket:M3_DB125_2P_GN",
+        "lcsc": "C466970",
+        "value": "DB125-3.5-2P-GN-S"
+      },
+      "why": "D-R11-05: two plated AWG 20 wire pads, pin 1 / 2 = BAT_IN / GND as R10; hand-soldered, no paste, not in the JLC BOM or CPL"
+    },
+    "J121": {
+      "lcsc": null,
+      "value": "AWG20 wire pads",
+      "footprint": "rocket:M3_WIREPAD_2P_AWG20",
+      "in_bom": false,
+      "in_pos_files": false,
+      "r10": {
+        "footprint": "rocket:M3_DB125_2P_BK",
+        "lcsc": "C52993880",
+        "value": "DB125-3.5-2P-BK-S"
+      },
+      "why": "D-R11-05: two plated AWG 20 wire pads, pin 1 / 2 = PYRO1_OUT / PYRO1_IGN as R10; hand-soldered, no paste, not in the JLC BOM or CPL"
+    },
+    "J122": {
+      "lcsc": "C189896",
+      "value": "SM05B-GHS-TB",
+      "r10": {
+        "footprint": "rocket:M3_DB125_5P_GN",
+        "lcsc": "C3646874",
+        "value": "DB125-3.5-5P-GN-S"
+      },
+      "why": "D-R11-05: same pins 1-4 SERVO1-4, 5 GND"
+    },
+    "J400": {
+      "lcsc": "C189893",
+      "value": "SM02B-GHS-TB",
+      "r10": {
+        "footprint": "rocket:M3_DB125_2P_GN",
+        "lcsc": "C466970",
+        "value": "DB125-3.5-2P-GN-S"
+      },
+      "why": "D-R11-05: same pins 1 BAT_SW_SOURCE, 2 BAT_SW_RETURN"
+    },
+    "J410": {
+      "lcsc": "C189895",
+      "value": "SM04B-GHS-TB",
+      "r10": {
+        "footprint": "rocket:M3_DB125_4P_GN",
+        "lcsc": "C2757925",
+        "value": "DB125-3.5-4P-GN-S"
+      },
+      "why": "D-R11-05: same pins 1 PORT_4V8, 2 GND, 3 TXO, 4 RXI"
+    },
+    "J420": {
+      "lcsc": "C189895",
+      "value": "SM04B-GHS-TB",
+      "r10": {
+        "footprint": "rocket:M3_DB125_4P_GN",
+        "lcsc": "C2757925",
+        "value": "DB125-3.5-4P-GN-S"
+      },
+      "why": "D-R11-05: same pins 1 PORT_4V8, 2 GND, 3 TXO, 4 RXI"
+    },
+    "J440": {
+      "lcsc": "C189895",
+      "value": "SM04B-GHS-TB",
+      "r10": {
+        "footprint": "rocket:M3_DB125_4P_GN",
+        "lcsc": "C2757925",
+        "value": "DB125-3.5-4P-GN-S"
+      },
+      "why": "D-R11-05: same pins 1 PORT_4V8, 2 GND, 3 TXO, 4 RXI"
+    },
+    "J9": {
+      "lcsc": "C133065",
+      "value": "SM06B-GHS-TB",
+      "r10": {
+        "footprint": "rocket:M3_DB125_4P_GN",
+        "lcsc": "C2757925",
+        "value": "DB125-3.5-4P-GN-S"
+      },
+      "why": "D-R11-05: 1-2 CAM_5V, 3-4 GND, 5 RXI, 6 TXO",
+      "lib": "M3:CameraGH6"
+    },
+    "R100": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R101": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R102": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R103": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R110": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R126": {
+      "lcsc": "C25091",
+      "value": "220R",
+      "r10": {
+        "footprint": "rocket:R0805",
+        "lcsc": "C17557",
+        "value": "220R"
+      },
+      "why": "D-R11-06: 220R 0805 -> 0402"
+    },
+    "R162": {
+      "lcsc": "C11702",
+      "value": "1k",
+      "r10": {
+        "footprint": "rocket:R0805",
+        "lcsc": "C17513",
+        "value": "1k 0805"
+      },
+      "why": "D-R11-06: 1k 0805 -> 0402; value text drops the case"
+    },
+    "R165": {
+      "lcsc": "C25790",
+      "value": "470k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C23178",
+        "value": "470k 1%"
+      },
+      "why": "D-R11-06: 470k 1% 0603 -> 0402"
+    },
+    "R167": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R32": {
+      "lcsc": "C25091",
+      "value": "220R",
+      "r10": {
+        "footprint": "rocket:R0805",
+        "lcsc": "C17557",
+        "value": "220R"
+      },
+      "why": "D-R11-06: 220R 0805 -> 0402"
+    },
+    "R33": {
+      "lcsc": "C25091",
+      "value": "220R",
+      "r10": {
+        "footprint": "rocket:R0805",
+        "lcsc": "C17557",
+        "value": "220R"
+      },
+      "why": "D-R11-06: 220R 0805 -> 0402"
+    },
+    "R400": {
+      "lcsc": "C705636",
+      "value": "56.2k 0.1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C705784",
+        "value": "56.2k 0.1%"
+      },
+      "why": "D-R11-06: 56.2k 0.1% 25 ppm 0603 -> 0402 (same Yageo RT series)"
+    },
+    "R401": {
+      "lcsc": "C190095",
+      "value": "10k 0.1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C95204",
+        "value": "10k 0.1%"
+      },
+      "why": "D-R11-06: 10k 0.1% 25 ppm 0603 -> 0402 (same Yageo RT series)"
+    },
+    "R403": {
+      "lcsc": "C190095",
+      "value": "10k 0.1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C95204",
+        "value": "10k 0.1%"
+      },
+      "why": "D-R11-06: 10k 0.1% 25 ppm 0603 -> 0402 (same Yageo RT series)"
+    },
+    "R404": {
+      "lcsc": "C4109",
+      "value": "2k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C22975",
+        "value": "2k 1%"
+      },
+      "why": "D-R11-06: 2k 1% 0603 -> 0402"
+    },
+    "R430": {
+      "lcsc": "C26960",
+      "value": "22.6k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C2999509",
+        "value": "22.6k 1%"
+      },
+      "why": "D-R11-06: 22.6k 1% 0603 -> 0402"
+    },
+    "R431": {
+      "lcsc": "C25741",
+      "value": "100k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C14675",
+        "value": "100k 1%"
+      },
+      "why": "D-R11-06: 100k 1% 0603 -> 0402"
+    },
+    "R440": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R441": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R450": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R451": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R460": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R461": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R462": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R463": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R464": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R470": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R471": {
+      "lcsc": "C11702",
+      "value": "1k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C21190",
+        "value": "1k 1%"
+      },
+      "why": "D-R11-06: 1k 1% 0603 -> 0402"
+    },
+    "R80": {
+      "lcsc": "C25790",
+      "value": "470k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C23178",
+        "value": "470k 1%"
+      },
+      "why": "D-R11-06: 470k 1% 0603 -> 0402"
+    },
+    "R81": {
+      "lcsc": "C25774",
+      "value": "300k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C23024",
+        "value": "300k 1%"
+      },
+      "why": "D-R11-06: 300k 1% 0603 -> 0402"
+    },
+    "R84": {
+      "lcsc": "C852911",
+      "value": "750R 0.1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C861551",
+        "value": "750R 0.1%"
+      },
+      "why": "D-R11-06: 750R 0.1% 25 ppm 0603 -> 0402 (same Yageo RT series)"
+    },
+    "R85": {
+      "lcsc": "C29381",
+      "value": "66.5k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C137691",
+        "value": "66.5k 1%"
+      },
+      "why": "D-R11-06: 66.5k 1% 0603 -> 0402"
+    },
+    "R86": {
+      "lcsc": "C852923",
+      "value": "80.6k 0.1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C861568",
+        "value": "80.6k 0.1%"
+      },
+      "why": "D-R11-06: 80.6k 0.1% 25 ppm 0603 -> 0402 (same Yageo RT series)"
+    },
+    "R87": {
+      "lcsc": "C25792",
+      "value": "47k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25819",
+        "value": "47k 1%"
+      },
+      "why": "D-R11-06: 47k 1% 0603 -> 0402"
+    },
+    "R88": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R89": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R90": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "R91": {
+      "lcsc": "C25744",
+      "value": "10k 1%",
+      "r10": {
+        "footprint": "rocket:R_0603_1608Metric",
+        "lcsc": "C25804",
+        "value": "10k 1%"
+      },
+      "why": "D-R11-06: 10k 1% 0603 -> 0402 (parts_r11.md)"
+    },
+    "U1": {
+      "lcsc": "C964146",
+      "value": "STM32H743VIH6",
+      "r10": {
+        "footprint": "rocket:LQFP-100_L14.0-W14.0-P0.50-LS16.0-BL",
+        "lcsc": "C5271084",
+        "value": "STM32H743VIT6"
+      },
+      "why": "D-R11-04: TFBGA-100; balls in pin_table.tsv",
+      "lib": "M3:MCU_TFBGA100"
+    }
+  },
+  "pin_maps": {
+    "J9": {
+      "1": [
+        "1",
+        "2"
+      ],
+      "2": [
+        "3",
+        "4"
+      ],
+      "3": [
+        "5"
+      ],
+      "4": [
+        "6"
+      ]
+    },
+    "U1": "r11_sch.BALL (LQFP100 pin -> TFBGA100 ball), pin_table.tsv r11_ball"
+  },
+  "removed_pins": {
+    "U1": {
+      "20": "VREF+ (3V3A): no TFBGA100 ball; double-bonded to VDDA in the package (DS12110 Rev 8 Table 9 note 7 p. 88)"
+    }
+  },
+  "added_pins": {
+    "U1": {
+      "F7": "3V3"
+    },
+    "J9": {
+      "2": "CAM_5V",
+      "4": "GND"
+    }
+  },
+  "mechanical": [],
+  "mechanical_note": "No mechanical-only footprint is added to the schematic in stage A; mounting holes and tooling holes are board items (stage B)."
+}

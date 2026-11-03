@@ -1,0 +1,834 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r2_actuators")
+	(uuid 169afdd7-d08d-585a-bb42-706654a24862)
+	(paper "A3")
+	(title_block
+		(title "14 | Buzzer")
+		(date "2026-09-25")
+		(rev "M3-ASSY-R11")
+		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
+	(lib_symbols
+		(symbol "M3:Buzzer_3pad"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "LS"
+				(at 0 7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "Buzzer_3pad"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "SMD magnetic buzzer, 1 = +lead, 2 = -lead, 3 = isolated mechanical tab"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "Buzzer_3pad_0_1"
+				(rectangle
+					(start -5.08 5.08)
+					(end 5.08 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "Buzzer_3pad_1_1"
+				(pin passive line
+					(at -10.16 2.54 0)
+					(length 5.08)
+					(name "+"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -10.16 -2.54 0)
+					(length 5.08)
+					(name "-"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 10.16 2.54 180)
+					(length 5.08)
+					(name "DUMMY"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+	)
+			(embedded_fonts no))
+			(symbol "M3:D_Schottky_KA"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "D_Schottky_KA"
+				(at 0 -3.81 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Schottky diode, pin 1 = K, pin 2 = A"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "D_Schottky_KA_0_1"
+				(rectangle
+					(start -2.54 1.27)
+					(end 2.54 -1.27)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "D_Schottky_KA_1_1"
+				(pin passive line
+					(at -7.62 0 0)
+					(length 5.08)
+					(name "A"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 7.62 0 180)
+					(length 5.08)
+					(name "K"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+		(symbol "M3:NMOS_SOT23"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 0 7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "NMOS_SOT23"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "N-MOSFET SOT-23 (1 G, 2 S, 3 D)"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "NMOS_SOT23_0_1"
+				(rectangle
+					(start -5.08 5.08)
+					(end 5.08 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "NMOS_SOT23_1_1"
+				(pin passive line
+					(at -10.16 0 0)
+					(length 5.08)
+					(name "G"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 -10.16 90)
+					(length 5.08)
+					(name "S"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 10.16 270)
+					(length 5.08)
+					(name "D"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+			(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes)))))
+	(symbol
+		(lib_id "M3:Buzzer_3pad")
+		(at 332.74 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 147908ea-9ac1-5282-8959-c1434d74a21d)
+		(property "Reference" "LS120"
+			(at 336.55 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "MLT-5020"
+			(at 336.55 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_MLT5020_3pad"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/23f5c6599ed9cb614c21ac31ad2b1106.pdf"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C94598"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Jiangsu Huaneng Elec"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "MLT-5020"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "LS120")
+					(unit 1))))		(property "LCSC Part" "C94598"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+)
+	(wire
+		(pts
+			(xy 322.58 48.26)
+			(xy 317.5 48.26))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9ad0036e-47d7-5307-b5e3-0c438c13d530))
+	(global_label "3V3"
+		(shape passive)
+		(at 317.5 48.26 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 173d611f-8ed8-5758-a35a-f9d64032176a))
+	(wire
+		(pts
+			(xy 322.58 53.34)
+			(xy 317.5 53.34))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 544bc287-33fd-5aed-a0a8-7fdc26eb9fd9))
+	(global_label "BUZZ_OUT"
+		(shape passive)
+		(at 317.5 53.34 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 885908b0-a46b-5244-90c2-2601dc424442))
+	(no_connect
+		(at 342.9 48.26)
+		(uuid 8671c8f0-23ed-5403-886f-aa2c06397b43))
+	(symbol
+		(lib_id "M3:D_Schottky_KA")
+		(at 40.64 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 51aadcbc-2da4-5844-9db2-6a6022a277cb)
+		(property "Reference" "D123"
+			(at 44.45 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1N5819WS"
+			(at 44.45 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOD-323_L1.8-W1.3-LS2.5-RD"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C191023"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Guangdong Hottech"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "1N5819WS"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "D123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 33.02 114.3)
+			(xy 27.94 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1d58868d-b07f-5147-8afe-9ea6f324e619))
+	(global_label "BUZZ_OUT"
+		(shape passive)
+		(at 27.94 114.3 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 479951aa-478d-5f06-891b-c99d3ae6b403))
+	(wire
+		(pts
+			(xy 48.26 114.3)
+			(xy 53.34 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 383c2145-350b-5b9c-833d-2aeebe222c99))
+	(global_label "3V3"
+		(shape passive)
+		(at 53.34 114.3 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 53fd45cf-fc1c-5934-bb73-97923b3e6be4))
+	(symbol
+		(lib_id "M3:NMOS_SOT23")
+		(at 99.06 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 25615ebf-59b4-59da-9087-652c7c36d1d4)
+		(property "Reference" "Q123"
+			(at 102.87 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AO3400A"
+			(at 102.87 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C20917"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "Alpha & Omega Semicon"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "AO3400A"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "Q123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 88.9 114.3)
+			(xy 83.82 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 029e6510-ddea-537e-8739-7d840bf893cd))
+	(global_label "BUZZ_G"
+		(shape passive)
+		(at 83.82 114.3 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3567b7d1-b034-584d-af30-5efe993ddd68))
+	(wire
+		(pts
+			(xy 99.06 124.46)
+			(xy 99.06 129.54))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8ffb6a66-9e53-577d-8e50-b6628e505eed))
+	(global_label "GND"
+		(shape passive)
+		(at 99.06 129.54 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 12676ad1-fa5b-5baa-b99d-0092ae99f542))
+	(wire
+		(pts
+			(xy 99.06 104.14)
+			(xy 99.06 99.06))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 522db46c-7c7a-5c9b-8fa9-52de888fb03f))
+	(global_label "BUZZ_OUT"
+		(shape passive)
+		(at 99.06 99.06 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 2242edff-01cf-5c91-8691-3c1f8690c1f3))
+	(symbol
+		(lib_id "M3:R")
+		(at 215.9 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d219091c-ae7a-5444-9408-0ff31439bad9)
+		(property "Reference" "R163"
+			(at 219.71 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 219.71 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "R163")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 110.49)
+			(xy 215.9 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid aa1018c5-9eb6-5d72-87f3-f85f8b4e3065))
+	(global_label "BUZZ_G"
+		(shape passive)
+		(at 215.9 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid fdf295d8-ad83-5c3b-a93e-e9e8901c0d86))
+	(wire
+		(pts
+			(xy 215.9 118.11)
+			(xy 215.9 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ac48e9be-2669-5578-be06-092d380087ec))
+	(global_label "GND"
+		(shape passive)
+		(at 215.9 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 06597c7a-706b-5445-9940-f1c9c740e312))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6a71a63c-5726-5897-8c0a-e5737d5110d8)
+		(property "Reference" "R162"
+			(at 160.02 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k"
+			(at 160.02 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C11702"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC Part" "C17513"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1001TCE"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/5ee931eb-d962-5c64-b0fd-46233c13323f"
+					(reference "R162")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 50b82770-90fa-56a0-b1d5-9c54f251822e))
+	(global_label "BUZZ_DRV"
+		(shape passive)
+		(at 157.48 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5578617f-ac73-59b0-91e9-adb7859f3c33))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 70065cbe-613d-5136-bb31-6791c5b9dd24))
+	(global_label "BUZZ_G"
+		(shape passive)
+		(at 157.48 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 561ab97b-0a60-5607-af3e-05a2979a3b48))
+	(text "14 | Buzzer; AUD-4 removes J123, R160/R161, C160 and D122. PC13 U1.A2 is NC/analog, with no pull-pin or EXTI13."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c7940a10-f64f-55f2-aab3-b53d686344da))
+	(text "LS120 MLT-5020: pad1 positive, pad2 negative, pad3 isolated mechanical tab. Huaneng 2021-05-27 drawing; body5.0 +/-0.3 mm, height2.0 +/-0.2 mm."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f2a45cb8-e38e-5cce-9114-38af4efcf313))
+	(text "BUZZ_DRV = PC14 U1.A1 (R10); R162 1k and R163 10k retain the gate network. Use4kHz,50% duty GPIO software toggle; backup-domain GPIO <=2MHz. Never drive the coil with DC."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 164aed60-4833-53fe-a6d2-64e8794085a6))
+	(text "Keep LSEON=0 and do not assign RTC/clock outputs to PC14; VBAT=3V3, so backup-domain settings survive NRST. Buzzer and servo neutral behavior remain bench qualifications."
+		(at 20.32 30.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 433b0ad4-b6fb-5542-ba7d-f8bc66b057c9))
+	(sheet_instances
+		(path "/"
+			(page "14"))))

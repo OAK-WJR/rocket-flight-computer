@@ -1239,5 +1239,88 @@ class R10AuditScope(unittest.TestCase):
                 board.Remove(duplicate)
 
 
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11SixLayer(unittest.TestCase):
+    """D-R11-08: route_check profile r11 on synthetic six-layer boards (test_r11_check.Six): R10's classes and rules on
+    every layer of the F / In1 / In2 / In3 / In4 / B stack."""
+
+    @classmethod
+    def setUpClass(cls):
+        global Six
+        from test_r11_check import Six                            # noqa: E402 (the shared six-layer board builder)
+
+    def setUp(self):
+        rc.set_profile('r11'); self.addCleanup(rc.set_profile, 'r8')
+
+    def scan(self, s, cat):
+        return [d for d in rc.scan(s.board) if d['cat'] == cat]
+
+    def test_profile_reads_r10_classes_and_starts_empty(self):
+        self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES, rc.PARALLEL_VIAS), ([], [], {}, []))
+        for net in ('USB_DP', 'GPS_TX_WIRE', 'PYRO1_GATE', 'BAT_SW_RETURN', 'SD_SCK', '3V3'):
+            rc.set_profile('r10'); want = rc.net_class(net)
+            rc.set_profile('r11')
+            self.assertEqual(rc.net_class(net), want)
+        self.assertFalse(rc.return_required('BAT_SW_RETURN'))             # AUD-2's slow list, read from R10's
+        self.assertEqual(rc.cu_layers(Six().board), rc.CU6)
+        b4 = pcbnew.BOARD(); b4.SetCopperLayerCount(4)
+        self.assertEqual(rc.cu_layers(b4), rc.CU4)                        # R7-R10 boards keep their four layers
+
+    def test_layer_change_to_in3_or_in4_needs_a_gnd_via(self):
+        for layer in (pcbnew.In3_Cu, pcbnew.In4_Cu):
+            with self.subTest(layer=layer):
+                s = Six()
+                s.part('A1', 5, 5, [('1', 'USB_DP', (0, 0), 'smd')])
+                s.part('A2', 20, 5, [('1', 'USB_DP', (0, 0), 'smd')])
+                s.track((5, 5), (10, 5), 'USB_DP')
+                s.via(10, 5, 'USB_DP')
+                s.track((10, 5), (15, 5), 'USB_DP', layer)
+                s.via(15, 5, 'USB_DP')
+                s.track((15, 5), (20, 5), 'USB_DP')
+                hits = self.scan(s, 'critical_via_no_gnd')
+                self.assertEqual(len(hits), 2)
+                self.assertTrue(all(rc.gated(d) for d in hits))
+                s.via(10, 6.2, 'GND'); s.via(15, 6.2, 'GND')
+                self.assertEqual(self.scan(s, 'critical_via_no_gnd'), [])
+
+    def test_plated_pad_layer_change_through_in3(self):
+        s = Six()
+        s.part('J9', 10, 10, [('5', 'CAM_RX_WIRE', (0, 0), 'pth')])
+        s.part('U1', 20, 10, [('1', 'CAM_RX_WIRE', (0, 0), 'smd')])
+        s.part('D1', 0.5, 10, [('1', 'CAM_RX_WIRE', (0, 0), 'smd')])
+        s.track((10, 10), (20, 10), 'CAM_RX_WIRE')
+        s.track((10, 10), (0.5, 10), 'CAM_RX_WIRE', pcbnew.In3_Cu)
+        self.assertEqual([n for n, _, _, lays in rc.pad_layer_changes(s.board)], ['J9.5'])
+        self.assertEqual(rc.pad_layer_changes(s.board)[0][3], sorted([pcbnew.F_Cu, pcbnew.In3_Cu]))
+
+    def test_right_angle_and_off_angle_on_in3_and_in4(self):
+        for layer in (pcbnew.In3_Cu, pcbnew.In4_Cu):
+            with self.subTest(layer=layer):
+                s = Six()
+                s.part('A1', 5, 5, [('1', 'SIGNAL', (0, 0), 'smd')])
+                s.part('A2', 15, 10, [('1', 'SIGNAL', (0, 0), 'smd')])
+                s.via(5, 5, 'SIGNAL'); s.via(15, 10, 'SIGNAL')
+                s.track((5, 5), (15, 5), 'SIGNAL', layer); s.track((15, 5), (15, 10), 'SIGNAL', layer)
+                self.assertTrue(self.scan(s, 'right_angle'))
+                s.track((20, 20), (25, 20.3), 'SIGNAL', layer)
+                self.assertTrue(self.scan(s, 'off_angle'))
+
+    def test_dangling_via_counts_inner_layers(self):
+        s = Six()
+        s.part('A1', 5, 5, [('1', 'SIGNAL', (0, 0), 'smd')])
+        s.part('A2', 15, 5, [('1', 'SIGNAL', (0, 0), 'smd')])
+        s.track((5, 5), (10, 5), 'SIGNAL'); s.via(10, 5, 'SIGNAL')
+        s.track((10, 5), (15, 5), 'SIGNAL', pcbnew.In3_Cu)               # joins F.Cu and In3 at the via: not dangling
+        self.assertEqual([d for d in self.scan(s, 'dangling_via') if d['net'] == 'SIGNAL'], [])
+
+    def test_reference_pairs_follow_the_r11_stack(self):
+        pairs = rc.ref_pairs()
+        self.assertEqual(pairs[pcbnew.In3_Cu], {pcbnew.In2_Cu, pcbnew.In4_Cu})
+        self.assertEqual(pairs[pcbnew.B_Cu], {pcbnew.In4_Cu})
+        rc.set_profile('r10')
+        self.assertEqual(rc.ref_pairs(), {pcbnew.B_Cu: {pcbnew.In2_Cu}, pcbnew.In2_Cu: {pcbnew.B_Cu}})
+
+
 if __name__ == '__main__':
     unittest.main()

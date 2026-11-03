@@ -1,0 +1,222 @@
+ref	x	y	rot	side	basis
+@OUTLINE	46	50	0	F	D-R11-02: 46 mm wide, as short as the parts allow (stageB.md section 1)
+@M3	3.5	3.5	0	F	D-R11-10: corner support, nylon M3 hardware
+@M3	42.5	3.5	0	F	D-R11-10: corner support, nylon M3 hardware
+@M3	3.5	46.5	0	F	D-R11-10: corner support, nylon M3 hardware
+@M3	42.5	46.5	0	F	D-R11-10: corner support, nylon M3 hardware
+C10	21.3	34	0	B	3V3A bulk
+C100	28	17.4	0	B	3V3 at U12
+C11	21.3	36.2	0	B	3V3A bulk
+C120	17	21.9	90	F	ACT gate-source
+C123	17	29.8	0	F	Q122 gate-source
+C126	11.6	31.6	0	F	Q124 gate-source
+C127	9.45	20	90	B	continuity bank (PC0), low-voltage side
+C128	7.9	32.8	0	F	PYRO1_OUT cap at Q124
+C129	9.45	22.4	90	B	bus-sense bank (PC5), low-voltage side
+C13	22	25.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C14	26	25.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C15	22	26.8	0	B	U1 decoupling under the ball field (LEVIA style)
+C16	26	26.8	0	B	U1 decoupling under the ball field (LEVIA style)
+C17	22	29.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C18	26	29.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C19	24	26.55	90	B	VCAP1 under the ball field
+C20	24	29.45	90	B	VCAP2 under the ball field
+C21	22	30.8	0	B	U1 decoupling under the ball field (LEVIA style)
+C22	16.4	32.6	0	B	3V3A
+C23	25.6	34	0	B	3V3 bulk
+C24	18.9	30.6	90	B	NRST cap
+C25	16.6	23.4	0	B	HSE load cap
+C26	16.6	28.6	0	B	HSE load cap
+C28	31	25.4	90	B	VBUS
+C29	30.8	28	0	B	U3 decoupling
+C30	26.2	19.6	90	B	IMU decoupling
+C31	27.3	19.6	90	B	IMU decoupling
+C32	13.4	37.2	0	B	barometer decoupling
+C400	31.9	15.4	0	F	port supply 1210 bank
+C401	36.7	15.4	0	F	port supply 1210 bank
+C402	40	12.2	0	F	U400 bootstrap
+C403	41.5	15.4	0	F	port supply 1210 bank
+C404	31.9	18.9	0	F	port supply 1210 bank
+C405	36.7	18.9	0	F	port supply 1210 bank
+C406	41.5	18.9	0	F	port supply 1210 bank
+C407	31.9	22.4	0	F	port supply 1210 bank
+C408	36.7	22.4	0	F	U401 soft start
+C410	26.3	46.4	90	B	port 4V8 decoupling
+C411	20.7	46.7	90	B	port 4V8 bulk at pin 1
+C420	15.7	46.4	90	B	port 4V8 decoupling
+C421	10.1	46.7	90	B	port 4V8 bulk at pin 1
+C430	26.2	12.4	0	F	PORT_5V3 at U402
+C431	27.3	9.4	0	F	CAM_5V
+C444	36.9	46.4	90	B	port 4V8 decoupling
+C445	31.3	46.7	90	B	port 4V8 bulk at pin 1
+C460	36	42.4	90	B	microSD 3V3 decoupling
+C461	24	15.6	0	F	microSD 3V3 bulk
+C5	23.6	38.6	0	F	U2 bootstrap
+C6	18	40.4	0	F	VLOGIC input
+C60	25.6	37.8	0	B	VLOGIC sense filter
+C7	22.4	40.4	0	F	VLOGIC input
+C8	27.2	35.2	90	F	3V3 output
+C80	14.9	9	90	F	BAT_IN bulk
+C81	15	8.4	0	B	U9 dV/dt
+C82	16.9	15.6	90	B	RAW_PROTECTED bulk
+C83	30.8	30.2	0	B	USB support
+C84	10	38.3	0	F	VLOGIC hold-up can, tall part on top
+C85	15.8	38.2	0	B	U11 soft start
+C86	35	34	0	B	USB_LIMITED
+C87	15	10.2	0	B	U9 EN timing, at U9 (D-R21-05 intent)
+C88	8.6	12.6	0	B	BAT_IN decoupling at U9
+C89	16	14	90	F	damper capacitor
+C9	26.8	40.4	0	F	3V3 output
+C90	25.6	17.4	0	B	3V3 at U12
+C91	27.1	11.2	0	B	CAM_5V at U13
+C92	22	10.8	0	B	CAM_IO_3V3
+C93	22.6	17.4	0	B	CAM_IO_3V3
+C94	20.8	8.6	90	B	CAM_5V sense filter
+C95	18.6	14	90	F	damper capacitor
+C96	17.5	9	90	F	BAT_IN bulk
+C97	12.6	35	90	B	RAW_PROTECTED at U11
+C98	35	35.8	0	B	USB_LIMITED
+C99	18.6	37.4	90	B	VLOGIC at U11
+D120	9	26	0	B	cold pull-up diode
+D121	24.8	8	0	B	servo clamp
+D123	41	41.8	0	B	buzzer flyback
+D4	35.6	30.4	90	B	USB ESD
+D400	28.6	2	90	B	J9.6 ESD under its pin
+D401	30.2	2	90	B	J9.5 ESD under its pin
+D402	9.2	5.2	0	B	J400.2 ESD clamp under J400 (D-R24-11 intent)
+D410	23.625	47.4	90	B	port TX wire ESD under its pin
+D411	24.875	47.4	90	B	port RX wire ESD under its pin
+D420	13.025	47.4	90	B	port TX wire ESD under its pin
+D421	14.275	47.4	90	B	port RX wire ESD under its pin
+D440	34.225	47.4	90	B	port TX wire ESD under its pin
+D441	35.475	47.4	90	B	port RX wire ESD under its pin
+D8	9.7	9.2	0	F	BAT_IN TVS at the battery pads
+D9	10.6	15.6	0	B	RAW_PROTECTED clamp
+J1	2.3	12.4	90	F	battery wire pads on the west edge, aft: leads from the aft battery bay (D-R11-13)
+J121	2.3	22.8	90	F	pyro wire pads on the west edge beside the pyro cell; pigtail runs forward (D-R11-13)
+J122	21.4	3.55	180	F	aft edge GH-5 servo, mouth aft: servo leads come from the fin can (D-R11-13)
+J2	32.9	39.6	0	F	SWD pads, top, forward of U3; bottom kept clear of the plug pins
+J3	41.4	30	90	F	USB-C mouth at the east edge (shell 0.45 mm proud, as R10 J3); bench only
+J400	11	3.55	180	F	aft edge GH-2, mouth aft (-y); beside the power front end (D-R11-13)
+J410	23	46.45	0	F	forward edge GH-4 GPS (default), mouth forward (D-R11-13)
+J420	12.4	46.45	0	F	forward edge GH-4 radio (default), mouth forward (D-R11-13)
+J430	37.5	13.05	0	B	microSD on the bottom at the east edge, aft; hinge opened with the board unbolted (as R10)
+J440	33.6	46.45	0	F	forward edge GH-4 AUX, mouth forward, nearest USART6 balls E10/F10 (D-R11-13)
+J9	32.8	3.55	180	F	aft edge GH-6 camera, mouth aft (D-R11-13)
+L1	18.6	36	0	F	3V3 buck inductor
+L400	33.9	10.5	0	F	PORT_5V3 buck inductor
+LED1	21.6	20.6	0	F	red LED
+LED2	26	20.6	0	F	yellow LED
+LS120	40	39.6	0	F	buzzer east-forward, far from U4 (top: tall part)
+Q120	8	19.6	0	F	load switch, BAT_IN side
+Q121	12.3	19.6	0	F	load switch, RAW_ACT side
+Q122	17.6	25.4	0	F	ACT enable driver
+Q123	40.6	39	0	B	buzzer driver
+Q124	7.9	29.3	0	F	low-side fire FET beside J121.1 (OUT)
+R10	30.8	29.1	0	B	QSPI_NCS pull-up
+R100	31.6	2	90	B	camera RX series
+R101	32.8	2	90	B	camera TX series
+R102	19.6	14.6	90	B	CAM_UART_OE pull-down
+R103	19.6	11.6	90	B	CAM_IO_3V3 load
+R104	28	12.4	0	F	CAM_5V sense
+R105	19.6	8.6	90	B	CAM_5V sense
+R11	19.8	19.6	90	B	IMU_CS pull-up
+R110	30.8	36.8	0	B	USB support
+R119	15.6	18	90	F	ACT gate bias
+R12	13	39	90	B	I2C pull-up
+R120	16.7	18	90	F	ACT gate bias
+R121	17.8	18	90	F	ACT gate drive
+R122	17	27.6	0	F	Q122 gate series
+R123	17	28.7	0	F	Q122 gate pull-down
+R126	11.4	28	0	F	Q124 gate series
+R127	11.4	29.1	0	F	PE4 pull-down
+R128	11.4	30.2	0	F	Q124 gate pull-down
+R129	6	20	90	B	continuity bank (PC0), low-voltage side
+R13	13	41.1	90	B	I2C pull-up
+R130	7.15	20	90	B	continuity bank (PC0), low-voltage side
+R131	6.3	25.4	90	F	PYRO1_OUT cold pull-up leg, on F.Cu with OUT (S-8: no OUT via)
+R132	14.85	20.6	90	F	RAW_ACT top leg of the bus-sense divider, on F.Cu with RAW_ACT (S-8: no RAW_ACT via)
+R133	7.15	22.4	90	B	bus-sense bank (PC5), low-voltage side
+R134	11.6	24.6	0	F	RAW_ACT to IGN 2 ohm, beside J121.2
+R150	17.4	3	90	B	servo series 1k under J122
+R151	19.2	3	90	B	servo series 1k under J122
+R152	21	3	90	B	servo series 1k under J122
+R153	22.8	3	90	B	servo series 1k under J122
+R154	17.4	6.6	90	B	servo pull-down
+R155	18.6	6.6	90	B	servo pull-down
+R156	19.8	6.6	90	B	servo pull-down
+R157	21	6.6	90	B	servo pull-down
+R162	44.4	38.6	90	B	buzzer gate series
+R163	44.4	40.8	90	B	buzzer gate pull-down
+R164	16.4	30.8	0	B	3V3 to 3V3A
+R165	11.4	5.2	0	B	J400.2 to BAT_ENABLE (470k)
+R166	10.1	14	0	F	BAT_DAMP damper
+R167	6.4	12.6	90	B	BAT_IN bleed
+R173	6.3	23.3	90	F	PYRO1_OUT top leg of the continuity divider, on F.Cu with OUT (S-8: no OUT via)
+R175	6	22.4	90	B	bus-sense bank (PC5), low-voltage side
+R178	8.3	20	90	B	continuity bank (PC0), low-voltage side
+R180	8.3	22.4	90	B	bus-sense bank (PC5), low-voltage side
+R32	21.6	22.4	0	F	LED series
+R33	26	22.4	0	F	LED series
+R400	43.6	10	90	F	PORT_5V3 feedback
+R401	44.8	10	90	F	PORT_5V3 feedback
+R402	44.9	19	90	F	PORT_4V8 feedback
+R403	44.9	22.6	90	F	PORT_4V8 feedback
+R404	43.6	12.2	90	F	PORT_5V3 feedback
+R405	44.9	15.4	90	F	PORT_4V8 minimum load
+R430	20.8	12.4	0	F	U402 ILIM
+R431	22.6	12.4	0	F	CAM_PWR_EN pull-down
+R432	24.4	12.4	0	F	CAM_FAULT_N pull-up
+R440	24.875	44.4	90	B	port RX 1k
+R441	23.625	44.4	90	B	port TX 1k
+R450	14.275	44.4	90	B	port RX 1k
+R451	13.025	44.4	90	B	port TX 1k
+R460	30	42.4	90	B	microSD pull-ups
+R461	31.15	42.4	90	B	microSD pull-ups
+R462	32.3	42.4	90	B	microSD pull-ups
+R463	33.45	42.4	90	B	microSD pull-ups
+R464	34.6	42.4	90	B	microSD pull-ups
+R470	35.475	44.4	90	B	port RX 1k
+R471	34.225	44.4	90	B	port TX 1k
+R5	24	31.6	0	B	BOOT0 pull-down under U1
+R60	25.6	35.6	0	B	VLOGIC sense
+R61	25.6	36.7	0	B	VLOGIC sense
+R64	9	36.6	0	B	BARO_SDO pull-down
+R7	37	38	90	B	CC1 pull-down
+R8	38.1	38	90	B	CC2 pull-down
+R80	17.4	8.6	90	B	BAT_IN to J400.1 (470k)
+R81	15	11.8	0	B	U9 EN pull-down at U9 (D-R21-05 intent)
+R82	6.8	9.6	90	B	OVLO divider
+R83	8.6	9.6	90	B	OVLO divider
+R84	17.4	11.8	90	B	U9 ILIM
+R85	30.8	31.3	0	B	USB support
+R86	15.8	39.8	0	B	U11 ILM
+R87	30.8	32.4	0	B	USB support
+R88	30.8	33.5	0	B	USB support
+R89	13.4	5.2	0	B	BAT_FAULT_N pull-up
+R9	30.8	35.7	0	B	USB support
+R90	30.8	34.6	0	B	USB support
+R91	15.8	40.9	0	B	source status pull-up
+R92	16.2	19	0	B	RAW_PROTECTED bleed beside D9
+TP120	16.8	32	0	F	RAW_ACT probe
+TP122	13.9	29	0	F	PYRO1_GATE probe
+TP74	35.4	3	0	B	GND probe
+TP80	6.4	30	0	B	BAT_IN probe
+TP81	8.9	30	0	B	RAW_PROTECTED probe
+TP82	28.2	39	0	B	USB_LIMITED probe
+TP83	21.3	39.2	0	B	VLOGIC probe
+TP88	11.4	30	0	B	GND probe
+U1	24	28	0	F	TFBGA-100 central; column 1 west (pyro control / HSE), row A aft (IMU SPI), column 10 east (USB, SD)
+U10	34.9	25.4	0	B	USB current limit
+U11	15.8	35.3	0	B	source mux
+U12	22.6	14.6	0	B	camera UART buffer
+U13	27.1	14.6	0	B	CAM_IO_3V3 LDO
+U2	23.6	35.8	0	F	3V3 buck
+U3	32.2	30.5	0	F	QSPI flash east of U1 beside its QSPI balls
+U4	23	20.5	180	B	IMU bottom on the roll axis (x 23), aft of U1, R10 axis map (D-R11-11)
+U400	40	9.6	0	F	PORT_5V3 buck
+U401	41.5	22.4	0	F	PORT_4V8 LDO
+U402	22	9.4	0	F	camera supply switch near J9
+U5	9	40	0	B	barometer bottom, west-forward, far from U400 / U401 / U2 (D-R11-14)
+U9	11.5	10.6	0	B	eFuse under the front end
+Y1	16.6	26	0	B	HSE crystal west of U1 beside HSE balls C1 / D1
