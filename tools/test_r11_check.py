@@ -499,6 +499,106 @@ class R11Fit(unittest.TestCase):
         self.assertIn('J1.1 wire', rep['wire_pads'])
 
 
+R11_PROJECT = Path(__file__).resolve().parents[1] / 'm3_design' / 'r11'
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11KRules(unittest.TestCase):
+    """D-R11-40: K-rules holds R11's own DRU (SHA-256 pinned) and floors from JLC's six-layer capability page, and its
+    later-rule test respects each rule's condition."""
+
+    def setUp(self):
+        self.dru = (R11_PROJECT / 'm3.kicad_dru').read_text()
+        self.pro = (R11_PROJECT / 'm3.kicad_pro').read_text()
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+
+    def k_rules(self, dru=None, pro=None, pin_own=False, board=None):
+        folder = Path(self.temp.name)
+        dru = self.dru if dru is None else dru
+        (folder / 'm3.kicad_dru').write_text(dru)
+        (folder / 'm3.kicad_pro').write_text(self.pro if pro is None else pro)
+        ctx = r11.make_ctx(Six().board if board is None else board, data={}, board_path=folder / 'm3.kicad_pcb')
+        sha = __import__('hashlib').sha256(dru.encode('utf-8')).hexdigest() if pin_own else None
+        return r11.k_rules(ctx, dru_sha=sha)[0]
+
+    def test_the_project_rules_pass(self):
+        self.assertEqual(self.k_rules(), [])
+
+    def test_hash_mismatch_fails(self):
+        issues = self.k_rules(self.dru + '\n# a comment only\n')
+        self.assertEqual(len(issues), 1, issues)
+        self.assertIn('is not the pinned', issues[0])
+
+    def test_a_looser_dru_fails_even_when_re_pinned(self):
+        looser = self.dru.replace('(constraint clearance (min 0.1mm))', '(constraint clearance (min 0.08mm))')
+        self.assertNotEqual(looser, self.dru)
+        self.assertTrue(any('is not the pinned' in i for i in self.k_rules(looser)))
+        issues = self.k_rules(looser, pin_own=True)
+        self.assertTrue(any('below the 0.1 mm floor' in i for i in issues), issues)
+        self.assertTrue(any("below JLC's 0.09 mm" in i for i in issues), issues)
+        via = self.dru.replace('(constraint via_diameter (min 0.25mm))', '(constraint via_diameter (min 0.2mm))')
+        self.assertTrue(any('via_diameter min 0.2 mm is below' in i for i in self.k_rules(via, pin_own=True)))
+
+    def test_a_rule_below_the_jlc_floor_fails(self):
+        for rule, want in (('(rule "seed" (condition "A.Type == \'Via\'") (constraint hole_to_hole (min 0.15mm)))',
+                            'below the 0.2 mm floor'),
+                           ('(rule "seed" (constraint hole_size (min 0.12mm)))', 'below the 0.15 mm floor'),
+                           ('(rule "seed" (constraint track_width (min 0.09mm)))', 'below the 0.1 mm floor')):
+            with self.subTest(rule=rule):
+                issues = self.k_rules(self.dru + rule + '\n', pin_own=True)
+                self.assertTrue(any(want in i for i in issues), issues)
+        for key, value in (('"min_clearance": 0.1', '"min_clearance": 0.08'),
+                           ('"min_via_diameter": 0.25', '"min_via_diameter": 0.2'),
+                           ('"min_hole_to_hole": 0.2', '"min_hole_to_hole": 0.15')):
+            with self.subTest(pro=key):
+                self.assertIn(key, self.pro)
+                issues = self.k_rules(pro=self.pro.replace(key, value))
+                self.assertTrue(any('.kicad_pro design rule' in i for i in issues), issues)
+        import json
+        project = json.loads(self.pro)
+        project['net_settings']['classes'][0]['via_drill'] = 0.1
+        self.assertTrue(any('via_drill 0.1, floor 0.15' in i for i in self.k_rules(pro=json.dumps(project))))
+        project = json.loads(self.pro)
+        project['net_settings']['classes'][0]['clearance'] = 0.09
+        self.assertTrue(any('clearance 0.09, floor 0.1' in i for i in self.k_rules(pro=json.dumps(project))))
+
+    def test_a_via_via_condition_rule_is_evaluated_only_for_vias(self):
+        pad_pad = "A.Type == 'Pad' && B.Type == 'Pad'"
+        via_via = "A.Type == 'Via' && B.Type == 'Via'"
+        self.assertFalse(r11.conditions_meet(pad_pad, via_via))
+        self.assertFalse(r11.conditions_meet(pad_pad, "A.Type == 'Via'"))          # either order: never a pad pair
+        self.assertTrue(r11.conditions_meet(pad_pad, None))
+        self.assertTrue(r11.conditions_meet(pad_pad, "B.Type == 'Pad'"))
+        self.assertTrue(r11.conditions_meet(pad_pad, "A.Pad_Type == 'Through-hole'"))
+        self.assertTrue(r11.conditions_meet(pad_pad, "A.Type == 'Via' || B.Type == 'Pad'"))   # '||': no facts
+        self.assertTrue(r11.conditions_meet(None, via_via))
+        self.assertTrue(r11.conditions_meet("A.Type == 'Via'", "B.Type == 'Via' && A.Type == 'Pad'"))  # swapped
+        # the project's 0.2 mm via-via rule follows the 0.45 mm pad hole-to-hole rule and cannot override it ...
+        issues, _ = r11.jlc_table_r11(self.dru)
+        self.assertEqual(issues, [])
+        self.assertTrue(any(' follows "JLC pad hole to hole"' in i for i in r10.jlc_hole_table(self.dru)[0]))
+        # ... while a later 0.2 mm hole-to-hole rule that can match a pad pair still fails
+        for cond in (None, "A.Type == 'Pad'", "A.Type == 'Via' || B.Type == 'Via'"):
+            with self.subTest(cond=cond):
+                c = '' if cond is None else f' (condition "{cond}")'
+                text = self.dru + f'(rule "seed"{c} (constraint hole_to_hole (min 0.2mm)))\n'
+                issues, _ = r11.jlc_table_r11(text)
+                self.assertTrue(any('"seed"' in i and 'follows "JLC pad hole to hole"' in i for i in issues), issues)
+        # and a via-via rule is still held to JLC's 0.2 mm via figure
+        text = self.dru.replace("(constraint hole_to_hole (min 0.2mm))", "(constraint hole_to_hole (min 0.18mm))")
+        self.assertTrue(r11.jlc_table_r11(text)[0])
+
+    def test_pth_hole_to_inner_copper_stays_at_jlcs_0_3_mm(self):
+        """R21-GATE-02 on R11's four inner layers: a PTH hole wall 0.2 mm from foreign In3 copper fails."""
+        for x, bad in ((10.75, True), (10.95, False)):         # hole wall at 10.5; 0.1 mm track: 0.2 / 0.4 mm gap
+            with self.subTest(x=x):
+                s = Six()
+                s.part('J1', 10, 10, [('1', 'BAT_IN', (0, 0), 'pth')])
+                s.track((x, 5), (x, 15), 'SIGNAL', pcbnew.In3_Cu, width=0.1)
+                issues = [i for i in self.k_rules(board=s.board) if 'inner-layer PTH' in i]
+                self.assertEqual(bool(issues), bad, issues)
+
+
 def real_board():
     path = os.environ.get('R11_BOARD')
     if path and Path(path).is_file():
@@ -564,6 +664,10 @@ class R11RealBoard(unittest.TestCase):
         na, nb = a.GetNet(), b.GetNet()
         a.SetNet(nb); b.SetNet(na)
         self.assertTrue(self.run_rules({'W-1'})['issues'])
+
+    def test_k_rules_hold_on_the_real_board(self):
+        """D-R11-40: R11's own K-rules (pinned DRU, JLC six-layer floors) hold on the R11 board and project."""
+        self.assertEqual(self.run_rules({'K-rules'})['issues'], [])
 
     def test_route_check_r11_is_clean(self):
         rc.set_profile('r11'); self.addCleanup(rc.set_profile, 'r8')

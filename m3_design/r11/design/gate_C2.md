@@ -106,3 +106,79 @@ U401 EN has no design current and keeps R10's fixed 0.2 mm floor.
 
 Not run on R11 copper: the R11 board in the worktree had no tracks when these checks were written (the design lane was
 rebuilding it). K-power and route_check r11 on the real rails wait for the design lane's entries.
+
+## 4. D-R11-40: R11's own K-rules
+
+Gate lane, `tools/` only. `check_r10.py` is unchanged, so R10's gate keeps R10's floors (R23-GATE-03) and its
+condition-blind later-rule test. `fab_manifest.py` is untouched.
+
+**What was wrong.** `check_r11` K-rules ran `check_r10.k_rules` with only the DRU hash swapped, and that hash was the
+DRU's own (a self-pin). So R10's floors judged R11's board: 0.15 mm clearance and track, 0.5 / 0.3 mm via, 0.25 mm hole
+to hole and 0.15 mm net-class clearance. That gave 13 findings. The 14th came from the later-rule test, which compared
+layers only, so the via-only rule "R11 board floor: via hole to hole" (0.2 mm) looked as if it could override "JLC pad
+hole to hole" (0.45 mm).
+
+**What K-rules does now** (`check_r11.k_rules`):
+
+* `m3.kicad_dru` is pinned by SHA-256 in `tools/check_r11.py` (`R11_DRU_SHA256`, now `b483f287…`). A reviewed DRU
+  change re-pins it there. `r11_gate_data.json` cannot re-pin it.
+* Every DRU minimum is read as KiCad reads it (`check_r10.dru_rules`). Each must be at least its `R11_DRU_FLOORS` entry.
+  A constraint with no floor fails, and so does a severity other than error.
+* `R11_JLC_TABLE` keeps R10's four JLC hole rows and adds six for R11's floor rules. Each row's rule must exist exactly
+  once, with its pinned layer and condition and a minimum at least JLC's figure. The six new rows are: clearance
+  0.09 mm, track 0.09 mm, via drill 0.15 mm, via diameter 0.25 mm, via hole to hole 0.2 mm and PTH annular ring 0.15 mm.
+  R10's four rows include PTH pad hole to inner copper at 0.3 mm (R21-GATE-02).
+* A later rule fails if it sets a pinned row's constraint below JLC's figure and can meet the pinned rule on both
+  layer and condition. Two conditions "meet" unless their top-level `&&` terms of the form `A/B.Type` or
+  `A/B.Pad_Type == '…'` contradict each other in both orders, (A, B) and (B, A), since KiCad tries a two-item rule
+  both ways round. A `Pad_Type` term also requires `Type == 'Pad'`. A condition with a top-level `||`, or a term of
+  any other form, contributes no fact, so the test can only err toward a failure.
+* `.kicad_pro`: the design rules are held to `R11_PRO_FLOORS`. Every net class's clearance, track width, via diameter
+  and via drill are held to `R11_NETCLASS_FLOORS`, and its via ring (diameter − drill) / 2 must be at least 0.05 mm.
+  No severity may be set to ignore, and there may be no DRC exclusion.
+* The board itself, unchanged from R10: `check_r10.pth_inner_copper` checks every PTH hole wall against JLC's 0.3 mm
+  to foreign copper on In1 … In4. `check_r10.jlc_board_holes` checks the PTH ring (0.20 mm), via ring, plated hole
+  size, NPTH size and ring, NPTH to copper, via hole to copper, PTH to outer copper and pad hole to hole.
+
+**Floors and sources.** All figures are from JLCPCB's capability page, https://jlcpcb.com/capabilities/pcb-capabilities
+(read 2026-11-03). The page gives multilayer figures, which cover the six-layer board; it has no six-layer column.
+No floor is below JLC's figure.
+
+| Floor | R11 floor | JLC figure (page section) |
+|---|---|---|
+| Copper clearance (DRU, .kicad_pro, net classes) | 0.1 mm (D-R11-15) | 0.09 mm: "Min. track width and spacing (1 oz)", multilayer (Traces) |
+| Track width (DRU, .kicad_pro, net classes) | 0.1 mm (D-R11-15) | 0.09 mm (Traces). JLC's "3 mil acceptable in BGA fan-outs" is not used |
+| Thermal gap and spoke, physical clearance, diff-pair gap | 0.1 mm | 0.09 mm (Traces) |
+| Via diameter / via drill | 0.25 / 0.15 mm | "Min. via hole size / diameter", multilayer 0.15 / 0.25 mm (Drilling) |
+| Plated hole (`min_through_hole_diameter`, DRU `hole_size`) | 0.15 mm | Multilayer drill 0.15–6.3 mm (Drilling) |
+| Via ring (`min_via_annular_width`, DRU `annular_width`, net-class via) | 0.05 mm | Via diameter 0.1 mm over the hole (Drilling) |
+| PTH annular ring (DRU rule) | 0.15 mm; the board is held to 0.20 mm | 1 oz multilayer: recommended 0.20 mm, absolute minimum 0.15 mm (Traces) |
+| Hole clearance (`min_hole_clearance`, DRU `hole_clearance`, physical hole clearance) | 0.20 mm | "Via hole to track" and "Inner layer via hole to copper clearance", 0.2 mm (Traces) |
+| PTH pad hole to inner copper | 0.30 mm (DRU 0.55 mm, D-R21-01) | "Inner layer PTH pad hole to copper clearance", 0.3 mm (Traces) |
+| PTH hole to outer track | 0.28 mm | "PTH to track", min 0.28 mm, 0.35 mm recommended (Traces) |
+| Hole to hole (`min_hole_to_hole`, via–via) | 0.20 mm | "Via hole-to-hole spacing", 0.2 mm (Drilling) |
+| Pad hole to hole | 0.45 mm | "Pad hole-to-hole spacing", 0.45 mm (Drilling) |
+| Microvia diameter / drill | 0.2 / 0.1 mm (R11 draws none; every via is held to 0.15 mm on the board) | "Min. drill diameter for 2- or more-layer PCBs is 0.1 mm" (Drilling) |
+| Copper to edge | 0.5 mm (R10's) | ≥ 0.2 mm from routed edges (Outline) |
+| NPTH size, ring, to track | 0.50, 0.45, 0.20 mm | Drilling and Traces rows, unchanged from R10 |
+| Silkscreen text 1.0 / 0.15 mm, silk clearance 0.15 mm | REQUIREMENTS M2 | not JLC figures |
+
+**Tests** (`tools/test_r11_check.py`, `R11KRules`, plus one `R11RealBoard` case):
+
+* The committed DRU and `.kicad_pro` pass.
+* A hash mismatch fails, even when the only change is a comment.
+* A looser DRU fails: clearance 0.08 mm fails on the hash. Re-pinned to its own hash, it fails on the 0.1 mm floor and
+  JLC's 0.09 mm. A via diameter of 0.2 mm also fails.
+* A rule below the JLC floor fails: an added rule with hole to hole 0.15 mm, hole size 0.12 mm or track 0.09 mm.
+  So do `.kicad_pro` values of `min_clearance` 0.08, `min_via_diameter` 0.2 or `min_hole_to_hole` 0.15, and a net
+  class with via drill 0.1 mm or clearance 0.09 mm.
+* The via–via condition rule is evaluated only for vias. `conditions_meet` holds pad–pad against via–via, `A.Type ==
+  'Via'`, no condition, `'||'` and the swapped order. The project's DRU passes `jlc_table_r11`, while R10's
+  condition-blind test still flags it. A later 0.2 mm hole-to-hole rule with no condition, `A.Type == 'Pad'` or a
+  `||` condition fails. A via–via rule at 0.18 mm fails JLC's 0.2 mm.
+* A PTH hole wall 0.2 mm from foreign In3 copper fails JLC's 0.3 mm; at 0.4 mm it passes.
+* Real board (copy): K-rules is clean.
+
+Measured on a copy of the C3 board in the worktree (2026-11-03): K-rules is OK. `pth_inner_copper` found no foreign
+inner copper within its 1 mm reach of any PTH hole on that copy, since In1 / In4 are not poured yet. Its 0.3 mm rule
+is exercised by the synthetic seed. Re-check it once the ground family pours.

@@ -54,8 +54,10 @@ Rules (R10's id where it is R10's rule):
              keeps In2 to power and GND
   K-plane    inner power fills (In2, In3) one piece, else >= 2 links of >= 0.5 mm; necks reported (check_r10)
   K-fill     saved fills are current (check_r10.fill_freshness)
-  K-rules    .kicad_pro floors, JLC hole table in the DRU, PTH hole to inner copper and JLC board holes (check_r10.k_rules;
-             the DRU itself is held to its generator by r11_sch_check, so it is not SHA-pinned here)
+  K-rules    R11's own (D-R11-40): m3.kicad_dru SHA-256 pinned (R11_DRU_SHA256), its rules and the .kicad_pro rules and net
+             classes held to JLC's six-layer capability floors (R11_JLC_TABLE, R11_DRU_FLOORS, R11_PRO_FLOORS,
+             R11_NETCLASS_FLOORS; later-rule overrides judged on layer and condition), PTH hole to inner copper 0.3 mm
+             and JLC board holes, rings and NPTH (check_r10.pth_inner_copper / jlc_board_holes)
   K-lands    the project library is the only footprint source; placed paste / mask settings equal the library
   K-width    BAT_IN / RAW_PROTECTED width floor (check_r10.k_width)
   K-power    rail paths (POWER_PATHS_R11: R10's paths by function on R11's topology, O-C2-6) at the IPC-2152 width of
@@ -636,15 +638,220 @@ def k_plane(ctx):
     return issues + necks, dict(pieces_mm2=ev, necks=neck_ev)
 
 
-def k_rules(ctx):
-    dru = None
+# K-rules for R11 (D-R11-40, gate_C2.md section 4). R10's k_rules held R11's board to R10's floors (R23-GATE-03:
+# 0.15 mm clearance and track, 0.5 / 0.3 mm via, 0.25 mm hole to hole); R11 is a six-layer JLC board with a TFBGA-100
+# and its own floors (D-R11-15). Every figure below is from JLCPCB's capability page,
+# https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-03; the page gives multilayer figures, which cover the
+# six-layer board; it has no separate six-layer column). A floor here is never below JLC's figure.
+#   "Traces" section:
+#     Min. track width and spacing (1 oz), multilayer: 0.09 / 0.09 mm ("3 mil is acceptable in BGA fan-outs": not used)
+#     BGA pad to trace clearance >= 0.1 mm (min. 0.09 mm for multilayer boards)
+#     Inner layer via hole to copper clearance 0.2 mm; Via hole to track 0.2 mm
+#     Inner layer PTH pad hole to copper clearance 0.3 mm (R21-GATE-02); PTH to track min 0.28 mm (0.35 recommended)
+#     PTH annular ring, multilayer 1 oz: recommended 0.20 mm, absolute minimum 0.15 mm; NPTH pad annular ring >= 0.45 mm
+#     NPTH to track 0.2 mm
+#   "Drilling" section:
+#     Drill diameter, multilayer: 0.15 - 6.3 mm; Min. via hole size / diameter, multilayer: 0.15 mm / 0.25 mm
+#     (via diameter 0.1 mm over the hole: a 0.05 mm via ring); Via hole-to-hole spacing 0.2 mm; Pad hole-to-hole
+#     spacing 0.45 mm; Min. non-plated holes 0.50 mm
+#   "Outline" section: copper clearance from routed board edges >= 0.2 mm
+# The DRU is pinned by SHA-256 here (a reviewed DRU change re-pins R11_DRU_SHA256 in this file; R11_DATA cannot re-pin
+# it). Its rules are read as KiCad reads them (check_r10.dru_rules) and held to R11_DRU_FLOORS and R11_JLC_TABLE.
+R11_DRU_SHA256 = 'b483f287ef14c506438357c894d7ddbf4e93d58e3c789dee913a7a7effbdf0ca'   # m3_design/r11/m3.kicad_dru
+JLC_URL = 'https://jlcpcb.com/capabilities/pcb-capabilities'
+# Board design-rule floors (.kicad_pro 'rules'): D-R11-15's figures where they are stricter than JLC's, else JLC's.
+R11_PRO_FLOORS = {
+    'min_clearance': 0.1,                  # D-R11-15 0.1 mm; JLC Traces 0.09 mm
+    'min_track_width': 0.1,                # D-R11-15 0.1 mm; JLC Traces 0.09 mm
+    'min_via_diameter': 0.25,              # JLC Drilling: via 0.15 / 0.25 mm
+    'min_via_annular_width': 0.05,         # JLC Drilling: via diameter 0.1 mm over the hole
+    'min_through_hole_diameter': 0.15,     # JLC Drilling: multilayer drill 0.15 mm
+    'min_hole_clearance': 0.2,             # JLC Traces: via hole to track / inner via hole to copper 0.2 mm
+    'min_hole_to_hole': 0.2,               # JLC Drilling: via hole-to-hole 0.2 mm
+    'min_copper_edge_clearance': 0.5,      # R10's 0.5 mm kept; JLC Outline 0.2 mm
+    'min_microvia_diameter': 0.2,          # JLC Drilling: min drill 0.1 mm on 2+ layers, plus the 0.1 mm via ring rule;
+    'min_microvia_drill': 0.1,             # R11 draws none (D-R11-15), and jlc_board_holes holds every via to 0.15 mm
+    # REQUIREMENTS M2 silkscreen floors and the project's spoke count, as R10 (R18-GATE-06)
+    'min_text_height': 1.0, 'min_text_thickness': 0.15, 'min_silk_clearance': 0.15, 'min_resolved_spokes': 2}
+# Net-class floors (.kicad_pro net_settings classes): the same figures per class.
+R11_NETCLASS_FLOORS = {'clearance': 0.1, 'track_width': 0.1, 'via_diameter': 0.25, 'via_drill': 0.15}
+R11_NETCLASS_VIA_RING = 0.05
+# DRU constraint floors (every (min ...) in m3.kicad_dru, whatever its rule or condition)
+R11_DRU_FLOORS = {
+    'clearance': 0.1, 'track_width': 0.1,                         # D-R11-15; JLC Traces 0.09 mm
+    'edge_clearance': 0.5,                                        # R10's 0.5 mm; JLC Outline 0.2 mm
+    'annular_width': 0.05,                                        # JLC Drilling: via ring; PTH pads by R11_JLC_TABLE
+    'via_diameter': 0.25, 'hole_size': 0.15,                      # JLC Drilling: 0.15 / 0.25 mm, drill 0.15 mm
+    'hole_clearance': 0.20,                                       # JLC Traces: via hole to track 0.2 mm
+    'hole_to_hole': 0.20,                                         # JLC Drilling: via hole-to-hole 0.2 mm
+    'text_height': 1.0, 'text_thickness': 0.15, 'silk_clearance': 0.15,     # REQUIREMENTS M2
+    'thermal_relief_gap': 0.1, 'thermal_spoke_width': 0.1,        # copper gap / width: D-R11-15; JLC Traces 0.09 mm
+    'physical_clearance': 0.1, 'diff_pair_gap': 0.1,              # D-R11-15; JLC Traces 0.09 mm
+    'physical_hole_clearance': 0.20,                              # JLC Traces 0.2 mm
+    'courtyard_clearance': 0.0}
+# JLC rows held by named DRU rules: (what, JLC's row, DRU rule, layer, condition, constraint, JLC minimum mm), as R10's
+# JLC_HOLE_TABLE (whose four rows are kept: PTH to inner copper 0.3 mm stays, R21-GATE-02) plus R11's floor rules.
+R11_JLC_TABLE = r10.JLC_HOLE_TABLE + (
+    ('copper clearance', 'Traces: Min. track width and spacing (1 oz) multilayer 0.09 / 0.09 mm',
+     'R11 board floor: copper clearance', None, None, 'clearance', 0.09),
+    ('track width', 'Traces: Min. track width and spacing (1 oz) multilayer 0.09 / 0.09 mm',
+     'R11 board floor: track width', None, None, 'track_width', 0.09),
+    ('via drill', 'Drilling: Min. via hole size / diameter, multilayer 0.15 mm / 0.25 mm', 'R11 board floor: via drill',
+     None, "A.Type == 'Via'", 'hole_size', 0.15),
+    ('via diameter', 'Drilling: Min. via hole size / diameter, multilayer 0.15 mm / 0.25 mm',
+     'R11 board floor: via diameter', None, "A.Type == 'Via'", 'via_diameter', 0.25),
+    ('via hole to hole', 'Drilling: Via hole-to-hole spacing 0.2 mm', 'R11 board floor: via hole to hole', None,
+     "A.Type == 'Via' && B.Type == 'Via'", 'hole_to_hole', 0.20),
+    ('PTH annular ring', 'Traces: PTH annular ring, multilayer 1 oz, absolute minimum 0.15 mm',
+     'R11 board floor: PTH pad annular ring', None, "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'",
+     'annular_width', 0.15),
+)
+_COND_FACT = re.compile(r"^\s*([AB])\.(Type|Pad_Type)\s*==\s*'([^']*)'\s*$")
+
+
+def _top_split(cond, op):
+    """`cond` split on `op` ('&&' or '||') outside parentheses and quotes."""
+    parts, depth, i, start, quote = [], 0, 0, 0, False
+    while i < len(cond):
+        c = cond[i]
+        if c == "'":
+            quote = not quote
+        elif not quote and c == '(':
+            depth += 1
+        elif not quote and c == ')':
+            depth -= 1
+        elif not quote and depth == 0 and cond.startswith(op, i):
+            parts.append(cond[start:i])
+            i += len(op)
+            start = i
+            continue
+        i += 1
+    parts.append(cond[start:])
+    return parts
+
+
+def condition_facts(cond):
+    """{(item, field): value} that `cond` requires: its top-level '&&' terms of the form A/B.Type / Pad_Type == 'lit'
+    (a Pad_Type also requires Type 'Pad'). A term of any other form, and a condition with a top-level '||', adds no
+    fact, so the facts are never narrower than the condition (a sound basis for 'cannot match')."""
+    if not cond or len(_top_split(cond, '||')) > 1:
+        return {}
+    facts = {}
+    for term in _top_split(cond, '&&'):
+        m = _COND_FACT.match(term)
+        if not m:
+            continue
+        item, field, value = m.groups()
+        for key, v in (((item, field), value),) + ((((item, 'Type'), 'Pad'),) if field == 'Pad_Type' else ()):
+            if facts.get(key, v) != v:
+                return None                                      # self-contradictory: the condition matches nothing
+            facts[key] = v
+    return facts
+
+
+def conditions_meet(pinned, later):
+    """True when some item pair can satisfy both conditions, so a later rule can override the pinned one (D-R11-40).
+    KiCad tests a two-item rule's condition both ways round (A, B) and (B, A), so both orders are tried; a condition
+    that matches nothing meets nothing."""
+    p, q = condition_facts(pinned), condition_facts(later)
+    if p is None or q is None:
+        return False
+    for swap in (False, True):
+        qq = {(('B' if k[0] == 'A' else 'A') if swap else k[0], k[1]): v for k, v in q.items()}
+        if all(p.get(k, v) == v for k, v in qq.items()):
+            return True
+    return False
+
+
+def jlc_table_r11(text, table=R11_JLC_TABLE, floor=r10.JLC_HOLE_FLOOR, floors=None):
+    """check_r10.jlc_hole_table on R11's table and floors, with the later-rule test limited to rules that can meet the
+    pinned rule on both layer (check_r10.dru_layers_meet) and condition (conditions_meet). The rest of R10's checks
+    (one rule per row, its layer and condition pinned, its minimum at least JLC's, no hole rule below JLC's least hole
+    figure, every minimum readable and at least its floor, severity error only) run unchanged."""
+    floors = R11_DRU_FLOORS if floors is None else floors
+    issues, ev = r10.jlc_hole_table(text, table=table, floor=floor, floors=floors)
+    issues = [i for i in issues if ' follows "' not in i]                # R10's condition-blind test, replaced below
+    named = [r for r in r10.dru_rules(text) if r['name']]
+    for what, row, name, layer, cond, constraint, need in table:
+        hits = [i for i, r in enumerate(named) if r['name'] == name]
+        if len(hits) != 1:
+            continue
+        for later in named[hits[0] + 1:]:
+            v = later['mins'].get(constraint)
+            if (v is not None and v < need - 1e-9 and r10.dru_layers_meet(layer, later['layer'])
+                    and conditions_meet(cond, later['condition'])):
+                issues.append(f'JLC table: DRU rule "{later["name"]}" ({constraint} min {v:.4g} mm on layer '
+                              f'{later["layer"]}, condition {later["condition"]!r}) follows "{name}" and can override '
+                              f'JLC\'s {need} mm ({what})')
+    return issues, ev
+
+
+def k_rules(ctx, dru_sha=None):
+    """R11's own K-rules (D-R11-40): m3.kicad_dru pinned by SHA-256 (R11_DRU_SHA256), its rules held to JLC's six-layer
+    capability (R11_JLC_TABLE, R11_DRU_FLOORS), the .kicad_pro rules and net classes held to R11_PRO_FLOORS /
+    R11_NETCLASS_FLOORS, no ignored severity or DRC exclusion, and the board itself against JLC's PTH-to-inner-copper
+    (0.3 mm), hole, ring and NPTH rows (check_r10.pth_inner_copper, check_r10.jlc_board_holes, unchanged)."""
+    pin = R11_DRU_SHA256 if dru_sha is None else dru_sha
+    issues, ev = [], dict(jlc_source=JLC_URL)
+    dru = getattr(ctx, 'dru', None)
     if ctx.board_path and Path(ctx.board_path).with_suffix('.kicad_dru').is_file():
         dru = Path(ctx.board_path).with_suffix('.kicad_dru').read_bytes().decode('utf-8')
-    pin = hashlib.sha256(dru.encode('utf-8')).hexdigest() if dru is not None else r10.DRU_SHA256
-    with patched(r10, DRU_SHA256=ctx.data.get('dru_sha256', pin)):
-        issues, ev = r10.k_rules(ctx)
-    ev['dru_pin'] = 'R11_DATA dru_sha256' if 'dru_sha256' in ctx.data else 'r11_sch_check (generator replay)'
+    if dru is None:
+        issues.append('K-rules: m3.kicad_dru not readable next to the board')
+    else:
+        actual = hashlib.sha256(dru.encode('utf-8')).hexdigest()
+        ev.update(dru_sha256=actual, dru_sha256_expected=pin)
+        if actual != pin:
+            issues.append(f'K-rules: m3.kicad_dru SHA-256 {actual} is not the pinned {pin} (a reviewed change re-pins '
+                          'R11_DRU_SHA256 in tools/check_r11.py)')
+        table, ev['jlc_table'] = jlc_table_r11(dru)
+        issues += [f'K-rules: {i}' for i in table]
+    if ctx.board is not None:
+        walls, ev['pth_inner_copper_mm'] = r10.pth_inner_copper(ctx.board)     # JLC 0.3 mm (R21-GATE-02)
+        issues += [f'K-rules: {i}' for i in walls]
+        holes, ev['jlc_board_holes'] = r10.jlc_board_holes(ctx.board)          # rings, hole sizes, NPTH (D-R22-01)
+        issues += [f'K-rules: {i}' for i in holes]
+    pro = Path(ctx.board_path).with_suffix('.kicad_pro') if ctx.board_path else None
+    if pro is None or not pro.is_file():
+        issues.append('K-rules: the .kicad_pro next to the board is not readable')
+        return issues, ev
+    project = json.loads(pro.read_text())
+    issues += project_rule_issues(project, ev)
     return issues, ev
+
+
+def project_rule_issues(project, ev=None):
+    """The .kicad_pro design rules and net classes against R11_PRO_FLOORS / R11_NETCLASS_FLOORS; no ignored
+    severity, no DRC exclusion."""
+    ev = {} if ev is None else ev
+    issues = []
+    design = project.get('board', {}).get('design_settings', {})
+    rules = design.get('rules', {})
+    ev['pro_rules'] = {k: rules.get(k) for k in R11_PRO_FLOORS}
+    for key, floor in R11_PRO_FLOORS.items():
+        value = rules.get(key)
+        if not isinstance(value, (int, float)) or value < floor - 1e-9:
+            issues.append(f'K-rules: .kicad_pro design rule {key} = {value}, floor {floor} mm')
+    classes = project.get('net_settings', {}).get('classes', [])
+    ev['netclasses'] = {c.get('name'): {k: c.get(k) for k in R11_NETCLASS_FLOORS} for c in classes}
+    if not any(c.get('name') == 'Default' for c in classes):
+        issues.append('K-rules: .kicad_pro has no Default net class')
+    for c in classes:
+        for key, floor in R11_NETCLASS_FLOORS.items():
+            value = c.get(key)
+            if not isinstance(value, (int, float)) or value < floor - 1e-9:
+                issues.append(f'K-rules: net class {c.get("name")} {key} {value}, floor {floor} mm')
+        d, h = c.get('via_diameter'), c.get('via_drill')
+        if isinstance(d, (int, float)) and isinstance(h, (int, float)) and (d - h) / 2 < R11_NETCLASS_VIA_RING - 1e-9:
+            issues.append(f'K-rules: net class {c.get("name")} via {d} / {h} mm has a {(d - h) / 2:.3f} mm ring, under '
+                          f'JLC\'s {R11_NETCLASS_VIA_RING} mm')
+    ignored = sorted(k for k, v in design.get('rule_severities', {}).items() if v == 'ignore')
+    ev['ignored_severities'] = ignored
+    if ignored:
+        issues.append(f'K-rules: DRC rule severities set to ignore: {ignored}')
+    if design.get('drc_exclusions'):
+        issues.append(f'K-rules: {len(design["drc_exclusions"])} DRC exclusions in the project')
+    return issues
 
 
 def k_lands(ctx):
