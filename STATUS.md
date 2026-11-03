@@ -6,6 +6,19 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
+**Purchasable pilot and two-correction-round budget (2026-11-03 UTC).**
+The [ordering assessment](docs/ORDERING.md#pilot-procurement-and-rework-budget-2026-11-03)
+records the owner's lower-rework-cost requirement and an exact-code supplier
+refresh at 22:53 UTC. All 82 lookups match, but U2/U4/U9 still fail the existing
+conservative stock rule at both two and five assemblies. Parts with supplier
+minimums, feeder and fixed fees total an estimated $343.91 for two assemblies
+versus $515.99 for five, excluding fabrication, process, joints, inspection,
+attrition, shipping/tax and rework. Neither is a complete quote or order.
+Native netlist inspection confirms serial attachment points, but onboard
+sensor/QSPI buses have no general expansion connector. No external correction
+PCB or two-round repair coverage is demonstrated. The assessment changes no
+PCB, BOM/CPL, firmware or probe permissions and makes no physical-test claim.
+
 **R10 saved-evidence fault localization (2026-11-03 UTC).**
 The [readback report](diagnostics/R10_FIRMWARE.md#circuit-localization-from-saved-evidence)
 now separates acquisition errors, history, stale data, inactive drivers and

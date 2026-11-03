@@ -279,7 +279,72 @@ python3 tools/check_procurement.py --profile r10
 **The $84.41 per-board target** is R3's cost per board ($54.94 + 48 × $3.07 / 5; [REQUIREMENTS M3](REQUIREMENTS.md#manufacturing-and-cost)).
 It counts parts plus JLC's per-code feeder fees only. The Extended-code count is informational.
 
-**Latest checkpoint:** the [2026-11-03 review](R10_REVIEW_2026-11-03.md#procurement-checkpoint) records the newer same-BOM query ($85.16 component/feeder estimate; U2/U4/U9 fail the conservative stock rule). Neither snapshot is a procurement release.
+**Latest checkpoint:** the [pilot procurement and rework assessment](#pilot-procurement-and-rework-budget-2026-11-03) below records a later same-BOM query, including a two-assembly pilot. U2/U4/U9 still fail the conservative stock rule. The preceding [2026-11-03 review](R10_REVIEW_2026-11-03.md#procurement-checkpoint) remains the earlier snapshot. Neither is a procurement release.
+
+#### Pilot procurement and rework budget (2026-11-03)
+
+The owner requests an actually purchasable prototype and a cost plan that
+prioritizes at most two rounds of small external correction boards over
+replacing the populated main board. This is a design and budgeting target,
+not evidence that two patches can repair any defect. The current native board
+and BOM are unchanged. No correction PCB has been designed or qualified.
+
+JLC's [prototype service](https://jlcpcb.com/solutions/pcb-prototype-assembly)
+lists Standard PCBA from two assembled boards. Compare five bare boards with
+two assembled against the five-assembly engineering baseline in the table
+above; confirm the actual combination and process in the quote. This does not
+change M1's five-board stock requirement or M3's five-board cost target.
+Reserve one assembled article for an unchanged comparison, and use the other
+for diagnosed rework. Bare spares do not prove that JLC will later accept them
+for reassembly, and recovering soldered fine-pitch parts is not assumed free.
+
+The [bound supplier field projection](../m3_design/assembly_review/sources/r10_review/pilot_orderability_20261103.json)
+queried all 82 exact codes at 22:53 UTC on 2026-11-03, against board
+`6d23d1e5…` and the unchanged upload/owner BOMs and CPL. It records the raw
+snapshot digest; stock is not reserved and checkout is not confirmed.
+
+| Assembled quantity | Ordered parts per board, supplier minimums included | Feeder fees per order | Setup/stencil/fixture per order | Partial order estimate |
+|---|---:|---:|---:|---:|
+| 2 | $68.01 | $123.93 | $83.96 | $343.91 |
+| 5 | $61.62 | $123.93 | $83.96 | $515.99 |
+
+These are parts/fee estimates using the existing cost model and JLC's
+[published fee table](https://jlcpcb.com/help/article/pcb-assembly-price), not
+complete quotes. Both exclude PCB/rails/process surcharges, assembly joints,
+inspection, attrition, handling, sourcing/consignment, US shipping, duties/tax,
+and correction-board/rework costs. The estimated initial cash difference is
+$172.08, not a guaranteed delivered saving.
+
+Both quantities still fail sourcing: U2 C780769 reports stockCount 66,
+canPresaleNumber -380, minimum 8; U4 C51931514 reports 4/-3, minimum 1;
+U9 C3662793 reports 18/-93, minimum 7. The smaller-field orderable rule remains
+an inference about JLC's undocumented field, not a claim of zero worldwide
+stock. Resolve exact-part quantities and assembly attrition before release.
+JLC requires [consigned/global-sourced inventory to arrive and be selected](https://jlcpcb.com/help/article/component-matching-guidelines-for-pcba-orders)
+before processing. Do not assume overseas consignment saves money: its
+[terms](https://jlcpcb.com/help/article/consignment-part-terms-conditions) list
+additional service, handling, freight and customs costs.
+
+**Repairability disposition from the native netlist:**
+
+| Area | What currently exists | Limit before calling a correction board viable |
+|---|---|---|
+| External serial peripherals | J410/J420/J440 expose supply, GND, board TX and board RX; J9 has a different supply and reversed TX/RX order | Existing connectors are candidate attachment points only. Verify electrical compatibility, firmware, power/back-feed, retention and actual fit for each adapter. |
+| Diagnostics | J2 is SWD, J3 is USB | Neither is a general-purpose sensor expansion connector. Bench diagnostic software is not a hardware bypass. |
+| Removable storage | J430 is a removable microSD socket | Replacing a card does not repair the socket, its power, or MCU wiring. |
+| Soldered sensors and QSPI | U4 SPI, U5 I2C and U3 QSPI terminate at soldered components, pull-ups and U1; none of these bus nets reaches a connector | The current board does not establish plug-in replacement of these blocks. UART AUX is not a pin-compatible substitute. The required isolation/access and any firmware changes remain unresolved. |
+
+For each actual defect, retain evidence and a cause hypothesis, identify whether
+the failing block can be isolated, and cost parts/rework plus the proposed
+correction PCB before ordering it. Each correction needs its own checked
+schematic/layout, attachment and mechanical review, an unpowered continuity
+check, and a repeat of the affected and adjacent functional tests. Two rounds
+are the intended spending limit, not two guaranteed successful repairs.
+Buried copper faults, an unusable critical footprint, shared power/ground or
+thermal faults and unacceptable mechanical fit may require replacing the main
+board. Do not order the current candidate on a promise that external patches
+will resolve those cases. No automatic bypass of protection or safety-related
+circuits is part of this assessment.
 
 **Historical canonical supplier snapshot (2026-11-02).** All 82 exact codes (81 JLC BOM lines, 45 Extended / 36 Basic, plus C84 on the owner BOM) were queried live from JLC on the final files of `a0ec075e…` (re-run because the round 26 fix pass moved four CPL rows; the BOM and owner BOM are byte-identical): stock at 2026-11-02T12:43:17Z and cost at 12:44:13Z. The cost report binds the JLC BOM `00af5358…`, the owner BOM `c48868b3…` and the current CPL `1f899750…`; the stock report binds the BOM and owner BOM only, by design ([cost](../m3_design/assembly_review/fab/cost_check.json) and
 [stock](../m3_design/assembly_review/fab/stock_check.json)). At 5 boards:
