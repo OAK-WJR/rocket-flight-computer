@@ -7980,7 +7980,7 @@
     </library>
   </libraries>
   <nets>
-    <net code="1" name="3V3" class="Default">
+    <net code="1" name="3V3" class="Power">
       <node ref="C100" pin="1" pintype="passive"/>
       <node ref="C13" pin="1" pintype="passive"/>
       <node ref="C14" pin="1" pintype="passive"/>
@@ -8027,7 +8027,7 @@
       <node ref="U2" pin="1" pinfunction="FB_1" pintype="input"/>
       <node ref="U3" pin="8" pinfunction="VCC_8" pintype="power_in"/>
     </net>
-    <net code="2" name="3V3A" class="Default">
+    <net code="2" name="3V3A" class="Power">
       <node ref="C10" pin="1" pintype="passive"/>
       <node ref="C11" pin="1" pintype="passive"/>
       <node ref="C21" pin="1" pintype="passive"/>
@@ -8056,7 +8056,7 @@
       <node ref="R122" pin="1" pintype="passive"/>
       <node ref="U1" pin="F2" pinfunction="PC1_F2" pintype="bidirectional"/>
     </net>
-    <net code="6" name="ACT_FET_S" class="Default">
+    <net code="6" name="ACT_FET_S" class="Power">
       <node ref="C120" pin="1" pintype="passive"/>
       <node ref="Q120" pin="1" pinfunction="S_1" pintype="passive"/>
       <node ref="Q120" pin="2" pinfunction="S_2" pintype="passive"/>
@@ -8108,7 +8108,7 @@
       <node ref="R64" pin="1" pintype="passive"/>
       <node ref="U5" pin="6" pinfunction="SDO_6" pintype="output"/>
     </net>
-    <net code="15" name="BAT_DAMP" class="Default">
+    <net code="15" name="BAT_DAMP" class="Power">
       <node ref="C89" pin="2" pintype="passive"/>
       <node ref="C95" pin="2" pintype="passive"/>
       <node ref="R166" pin="1" pintype="passive"/>
@@ -8132,7 +8132,7 @@
       <node ref="R84" pin="1" pintype="passive"/>
       <node ref="U9" pin="9" pinfunction="ILM_9" pintype="passive"/>
     </net>
-    <net code="20" name="BAT_IN" class="Default">
+    <net code="20" name="BAT_IN" class="Power">
       <node ref="C80" pin="1" pintype="passive"/>
       <node ref="C88" pin="1" pintype="passive"/>
       <node ref="C89" pin="1" pintype="passive"/>
@@ -8187,7 +8187,7 @@
       <node ref="LS120" pin="2" pinfunction="-_2" pintype="passive"/>
       <node ref="Q123" pin="3" pinfunction="D_3" pintype="passive"/>
     </net>
-    <net code="29" name="CAM_5V" class="Default">
+    <net code="29" name="CAM_5V" class="Power">
       <node ref="C431" pin="1" pintype="passive"/>
       <node ref="C91" pin="1" pintype="passive"/>
       <node ref="J9" pin="1" pinfunction="5V_OUT_1" pintype="passive"/>
@@ -8262,7 +8262,7 @@
       <node ref="J3" pin="B5" pinfunction="CC2_B5" pintype="passive"/>
       <node ref="R8" pin="1" pintype="passive"/>
     </net>
-    <net code="44" name="GND" class="Default">
+    <net code="44" name="GND" class="Power">
       <node ref="C10" pin="2" pintype="passive"/>
       <node ref="C100" pin="2" pintype="passive"/>
       <node ref="C11" pin="2" pintype="passive"/>
@@ -8519,7 +8519,7 @@
       <node ref="J2" pin="3" pinfunction="Pin_3_3" pintype="passive"/>
       <node ref="U1" pin="E1" pinfunction="NRST_E1" pintype="input"/>
     </net>
-    <net code="63" name="PORT_4V8" class="Default">
+    <net code="63" name="PORT_4V8" class="Power">
       <node ref="C406" pin="1" pintype="passive"/>
       <node ref="C407" pin="1" pintype="passive"/>
       <node ref="C410" pin="1" pintype="passive"/>
@@ -8536,7 +8536,7 @@
       <node ref="U401" pin="1" pinfunction="OUT_1" pintype="power_out"/>
       <node ref="U401" pin="2" pinfunction="OUT_2" pintype="passive"/>
     </net>
-    <net code="64" name="PORT_5V3" class="Default">
+    <net code="64" name="PORT_5V3" class="Power">
       <node ref="C403" pin="1" pintype="passive"/>
       <node ref="C404" pin="1" pintype="passive"/>
       <node ref="C405" pin="1" pintype="passive"/>
@@ -8570,7 +8570,7 @@
       <node ref="C408" pin="1" pintype="passive"/>
       <node ref="U401" pin="8" pinfunction="NR_SS_8" pintype="passive"/>
     </net>
-    <net code="70" name="PORT_SW" class="Default">
+    <net code="70" name="PORT_SW" class="Power">
       <node ref="C402" pin="2" pintype="passive"/>
       <node ref="L400" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U400" pin="5" pinfunction="SW_5" pintype="output"/>
@@ -8656,7 +8656,7 @@
       <node ref="J420" pin="3" pinfunction="TXO_3" pintype="passive"/>
       <node ref="R451" pin="2" pintype="passive"/>
     </net>
-    <net code="88" name="RAW_ACT" class="Default">
+    <net code="88" name="RAW_ACT" class="Power">
       <node ref="Q121" pin="5" pinfunction="D_5" pintype="passive"/>
       <node ref="Q121" pin="6" pinfunction="D_6" pintype="passive"/>
       <node ref="Q121" pin="7" pinfunction="D_7" pintype="passive"/>
@@ -8666,7 +8666,7 @@
       <node ref="R134" pin="2" pintype="passive"/>
       <node ref="TP120" pin="1" pinfunction="1_1" pintype="passive"/>
     </net>
-    <net code="89" name="RAW_PROTECTED" class="Default">
+    <net code="89" name="RAW_PROTECTED" class="Power">
       <node ref="C400" pin="1" pintype="passive"/>
       <node ref="C401" pin="1" pintype="passive"/>
       <node ref="C82" pin="1" pintype="passive"/>
@@ -8766,7 +8766,7 @@
       <node ref="J2" pin="2" pinfunction="Pin_2_2" pintype="passive"/>
       <node ref="U1" pin="A10" pinfunction="PA13_A10" pintype="bidirectional"/>
     </net>
-    <net code="109" name="SW_NODE" class="Default">
+    <net code="109" name="SW_NODE" class="Power">
       <node ref="C5" pin="1" pintype="passive"/>
       <node ref="L1" pin="1" pinfunction="1_1" pintype="passive"/>
       <node ref="U2" pin="5" pinfunction="SW_5" pintype="output"/>
@@ -8794,7 +8794,7 @@
       <node ref="R85" pin="1" pintype="passive"/>
       <node ref="U10" pin="5" pinfunction="ILIM_5" pintype="passive"/>
     </net>
-    <net code="114" name="USB_LIMITED" class="Default">
+    <net code="114" name="USB_LIMITED" class="Power">
       <node ref="C86" pin="1" pintype="passive"/>
       <node ref="C98" pin="1" pintype="passive"/>
       <node ref="R87" pin="1" pintype="passive"/>
@@ -8807,7 +8807,7 @@
       <node ref="R88" pin="1" pintype="passive"/>
       <node ref="U11" pin="5" pinfunction="OV1_5" pintype="input"/>
     </net>
-    <net code="116" name="VBUS" class="Default">
+    <net code="116" name="VBUS" class="Power">
       <node ref="C28" pin="1" pintype="passive"/>
       <node ref="C83" pin="1" pintype="passive"/>
       <node ref="D4" pin="5" pinfunction="VBUS_5" pintype="passive"/>
@@ -8822,15 +8822,15 @@
       <node ref="R9" pin="2" pintype="passive"/>
       <node ref="U1" pin="F9" pinfunction="PC8_F9" pintype="bidirectional"/>
     </net>
-    <net code="118" name="VCAP1" class="Default">
+    <net code="118" name="VCAP1" class="Power">
       <node ref="C19" pin="1" pintype="passive"/>
       <node ref="U1" pin="F8" pinfunction="VCAP_F8" pintype="power_out"/>
     </net>
-    <net code="119" name="VCAP2" class="Default">
+    <net code="119" name="VCAP2" class="Power">
       <node ref="C20" pin="1" pintype="passive"/>
       <node ref="U1" pin="E7" pinfunction="VCAP_E7" pintype="power_out"/>
     </net>
-    <net code="120" name="VLOGIC" class="Default">
+    <net code="120" name="VLOGIC" class="Power">
       <node ref="C6" pin="1" pintype="passive"/>
       <node ref="C7" pin="1" pintype="passive"/>
       <node ref="C84" pin="1" pintype="passive"/>

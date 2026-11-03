@@ -127,3 +127,44 @@ bulkhead terminal). East long edge: USB-C J3 (bench) and, on the bottom, microSD
 U5 on the bottom at B(9.0, 40.0), west-forward: ≥ 37 mm from U401 / U400 / L400, 33 mm from U402, 15 mm from U2,
 10 mm from L1, 29.5 mm from U9 (centre to centre, Calculation on the placement). Its port faces the sled side;
 the sled must leave it open (stage E procedure item).
+
+## D-R11-15 Stage C infrastructure: net classes, widths, vias, family gate
+
+Signal tracks 0.1 mm (one track between two 0.4 mm lands at 0.8 mm pitch, 0.15 mm each side), clearance 0.1 mm (JLC
+multilayer 0.09 mm track / space plus 0.01, https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-11-02; the DRU
+floor rule); rails from R10's width set (0.2 … 2.0 mm) sized per IPC-2152 by the family that draws them. Vias 0.4 / 0.2
+(signal, BGA dog-bone), 0.45 / 0.25 and 0.6 / 0.3 mm (power), all through F → B (no blind / buried vias). `m3.kicad_pro`
+gets a Default (signal) and a Power class (r11_sch.py). Each family has its own module and is gated by
+`r11_stage_check.py` (DRC, unconnected never rising, route_check r11 only on pending nets). **Why:** the TFBGA-100
+channels set the signal width; through vias keep JLC's standard six-layer process. Measured (kicad-cli DRC): the DRU's
+0.25 mm copper-to-hole rule, not the 0.1 mm clearance, sets via spacing (0.15 mm copper gap, 0.55 mm between foreign
+vias).
+
+## D-R11-16 U1 fan-out by one frozen table
+
+`m3_design/r11_fanout.tsv` lists every connected ball with its escape: drawn by core, an F.Cu lane, or a reserved via
+site for its family; `r11_route_core.fanout_check` keeps core's vias off every reserved site. **Why:** the bottom
+decoupling under the field closes most interstitial sites (stageC1.md §2), so the escapes are planned together rather
+than per family. Two balls (C6, D6) are left `open` with their dog-bone sites free (stageC1.md §4).
+
+## D-R11-17 Two placement changes for the fan-out
+
+C19 / C20 (both 2.2 µF 16 V X5R 0603, VCAP) swap places, the south one rotated 270, so VCAP2 (E7, north of F8) uses the
+north cap and VCAP1 the south one, each beside its ball's via, and the south cap's GND pad reaches R5.2. LED2 moves
+0.8 mm east (26.8, 20.6) so F.Cu has room for the via of U4's GND pins 2 / 3. **Why:** with the stage-B positions the
+two VCAP straps cross and U4's east GND pins had no via site clear of LED2's pads. Same parts, values and sides; fit,
+courtyards and DRC re-checked in the build (Measured).
+
+## D-R11-18 QSPI on F.Cu under U3, IMU over U4 on F.Cu
+
+CLK, IO0, IO1 reach U3 with no via, IO3 / IO2 / NCS with two; IMU CS and MOSI run on F.Cu in the channel between LED1 /
+R32 and LED2 / R33 above U4 (one via each), SCK on In3, MISO on B.Cu. **Why:** fewest layer changes on the critical
+SPI / QSPI nets and their GND partners within 1.5 mm; In3 under the field stays free for the forward-to-aft nets of
+the later families (servo, camera).
+
+## D-R11-19 I2C and BARO_SDO on In3 to the barometer
+
+The I2C pair runs on In3 north of Y1 and down the west side to vias at R12 / R13 and south of U5's pads; BARO_SDO by In3
+from R64 under U5. **Why:** U5's inter-row band is closed to tracks (R10's BARO rule area), so pads 6 / 7 / 8 are
+reachable only from the south, and R64 / R12 / R13 sit north and east of them; In3 crosses under U5 without blocking.
+The vias under C84's can are an Inference to confirm in stage D (stageC1.md O-C1-4).

@@ -492,7 +492,23 @@ def project_settings():
                  min_via_diameter=R11_FLOOR['via_diameter'], min_through_hole_diameter=R11_FLOOR['via_hole'],
                  min_via_annular_width=0.05, min_hole_to_hole=R11_FLOOR['via_hole_to_hole'])
     pro['meta']['filename'] = 'm3.kicad_pro'
+    # D-R11-15 (stage C1): net classes. Default = the BGA signal class: 0.1 mm track and clearance (JLC multilayer
+    # 0.09 mm track / space plus 0.01, https://jlcpcb.com/capabilities/pcb-capabilities, read 2026-11-02; the DRU floor
+    # rule enforces it), 0.4 / 0.2 mm via (stageB.md section 10). Power = R10's rail widths start at 0.3 mm (the families
+    # size each path per IPC-2152 for 0.5 oz inner / 1 oz outer copper), 0.45 / 0.25 mm via. DRC clearance comes from
+    # m3.kicad_dru; the classes set the interactive defaults and record the intent.
+    default = next(c for c in pro['net_settings']['classes'] if c['name'] == 'Default')
+    default.update(track_width=0.1, clearance=0.1, via_diameter=0.4, via_drill=0.2)
+    power = dict(default, name='Power', priority=0, track_width=0.3, clearance=0.1, via_diameter=0.45, via_drill=0.25)
+    pro['net_settings']['classes'] = [default, power]
+    pro['net_settings']['netclass_patterns'] = [
+        {'netclass': 'Power', 'pattern': p} for p in R11_POWER_NETS]
     return json.dumps(pro, indent=2) + '\n'
+
+
+# rails of the Power net class (stage C1, D-R11-15)
+R11_POWER_NETS = ('GND', '3V3', '3V3A', 'VCAP1', 'VCAP2', 'VLOGIC', 'BAT_IN', 'BAT_DAMP', 'RAW_PROTECTED', 'RAW_ACT',
+                  'ACT_FET_S', 'PORT_5V3', 'PORT_4V8', 'PORT_SW', 'CAM_5V', 'VBUS', 'USB_LIMITED', 'SW_NODE')
 
 
 # ---------------------------------------------------------------------------------------------------------------------
