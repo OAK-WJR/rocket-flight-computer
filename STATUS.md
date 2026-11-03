@@ -6,6 +6,18 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
+**R10 saved-evidence fault localization (2026-11-03 UTC).**
+The [readback report](diagnostics/R10_FIRMWARE.md#circuit-localization-from-saved-evidence)
+now separates acquisition errors, history, stale data, inactive drivers and
+incomplete captures, and lists native circuit endpoints and board-bound power
+record locations for inspection. MCU clock/configuration evidence is not labelled
+as a failed external chip; a quad mismatch does not identify a particular bad
+lane. Suggested causes remain engineering hypotheses. 20 localization tests and
+45 existing bounded-readback tests pass using saved/synthetic bytes and actual
+C record fixtures. Acquisition source-key sets and AP permissions are unchanged;
+an original ABI5 capture still replays. No physical fault localization,
+measurement accuracy, array integrity or hardware qualification is established.
+
 **R10 read-only flash record/image integration (2026-11-03 UTC).**
 The [bench image](m3_firmware/r10/README.md) now links the fixed-read U3 core,
 native QSPI transport and serializer into ABI5. Its84 logical words occupy

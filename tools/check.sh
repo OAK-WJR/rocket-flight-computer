@@ -90,6 +90,7 @@ selftest python3 "$ROOT/tools/test_schematic_repro.py"   # exporter metadata mus
 selftest python3 -B "$ROOT/diagnostics/test_r10_offline.py"  # offline records, never a board connection
 selftest python3 -B "$ROOT/diagnostics/test_r10_swd.py"      # fake readers only; no probe enumeration
 selftest python3 -B "$ROOT/diagnostics/test_r10_firmware.py" # synthetic DP/image/mailbox; never opens a probe
+selftest python3 -B "$ROOT/diagnostics/test_r10_findings.py" # saved-record circuit localization; no target actions
 selftest python3 -B "$ROOT/m3_firmware/r10/test_r10.py"     # real portable C + saved records; no probe/flash
 selftest python3 -B "$ROOT/m3_firmware/r10/imu/test_imu_core.py" # fitted ST sensor core, scripted registers only
 selftest python3 -B "$ROOT/m3_firmware/r10/baro/test_baro.py" # MS5611 core, scripted I2C only

@@ -110,6 +110,33 @@ release remain false. UID identifies the MCU, not its assembly; unsigned local
 manifests/receipts are not cryptographic attestation. Sensors, rails, power loads,
 connectors, actuators, environmental endurance and flight behaviour are untested.
 
+## Circuit localization from saved evidence
+
+The JSON report now contains `fault_localization`, also rendered in Chinese in
+`report.md`. It separates a recorded error, prior recovery, expired data,
+not-started acquisition and a historical ABI without that field. A failed or
+incomplete capture yields no component-level localization; preserved raw records
+remain available. A core FAULT record is treated as a MCU exception, not evidence
+that its interrupted peripheral state is still live.
+
+Circuit endpoints are read from the pinned native netlist after the existing
+IMU, barometer, ADC and QSPI part/pin contracts pass. Power-record locations come
+from the board-bound diagnostic catalog, with side, top-projection coordinates
+and a GND reference. Shared-rail points do not prove voltage at each component or
+trace continuity. Inspection suggestions are engineering hypotheses, not verified
+causes or repair instructions: a driver clock/configuration failure is not proof
+of a broken U3, a quad-ID mismatch does not identify a particular bad lane, and
+an ADC range error does not identify a failed regulator. Reported polling errors
+do not specifically implicate IMU INT1.
+
+`circuit_sources` hashes this analysis and its native topology inputs separately
+from acquisition `tool_sources`. The acquisition source-key sets, checked AP
+permissions and ABI5 record boundary are unchanged. A saved synthetic ABI5 capture
+from the original reader is replay-tested alongside the earlier ABI fixtures.
+These tests cover interpretation and refusal behaviour; physical fault isolation
+and measurement accuracy remain unverified. No target recovery writes or probe
+operations are performed by this analysis.
+
 ## Address boundary
 
 The dedicated guard allows fixed AP configuration, identity/status registers,

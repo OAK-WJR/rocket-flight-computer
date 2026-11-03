@@ -465,7 +465,7 @@ def analyze(run,board):
     error=capture_error or cleanup_error or supervision_error
     worker_status=("UNKNOWN" if supervision is None else "UNREAPED" if supervision["worker_exit_code"] is None and
                    supervision["worker_pid"] is not None else "EXITED" if type(supervision["worker_exit_code"]) is int else "UNKNOWN")
-    return dict(schema="r10-firmware-report/v1",origin=req["origin"],run_id=req["run_id"],assembly_id=req["assembly_id"],
+    result = dict(schema="r10-firmware-report/v1",origin=req["origin"],run_id=req["run_id"],assembly_id=req["assembly_id"],
                 state=state,complete_capture=complete,temporal_coherence=temporal,
                 observed_image_sha256=sha_bytes(observed) if observed else None,
                 image_bytes_match=observed==image,board_sha256_claim=BOARD_SHA,build_id=req["build_id"],
@@ -475,6 +475,10 @@ def analyze(run,board):
                 acquisition_sources=req["tool_sources"],analysis_sources=sources(),
                 reset_boot_operator_declared=req["reset_boot_confirmed"],reset_continuity_verified=False,
                 hardware_qualified=False,physical_board_identity_verified=False,flashed=False,fabrication_release=False)
+    # Analysis-only provenance is separate from acquisition source keys and AP permissions.
+    from .r10_findings import from_report
+    result["fault_localization"] = from_report(result, board)
+    return result
 
 
 def report(run,board,out):
@@ -571,6 +575,8 @@ def report(run,board,out):
                     port["phase"],port["owned"],port["transfer_active"],port["pins_parked"],port["last_cr_raw"],
                     port["last_sr_raw"],port["last_ccr_raw"],port["last_dr_raw"],flash["cleanup_error"])
                 text+="\n只读应答不证明存储阵列、写入、寿命或掉电可靠性；无回应也可能来自供电、睡眠、连线或时序问题。\n"
+    from .r10_findings import render_zh
+    text += render_zh(result["fault_localization"])
     (out/"report.md").write_text(text)
     return result
 
