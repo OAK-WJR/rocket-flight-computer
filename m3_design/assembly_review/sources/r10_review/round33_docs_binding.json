@@ -1,0 +1,75 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round33_docs_binding",
+ "reviewer": "claude",
+ "target_commit": "feed21fae27c7ff9a3cf304ea44407fa48948255",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 1
+ },
+ "findings": [
+  {
+   "id": "R33-DOCS_BINDING-01",
+   "kind": "doc",
+   "severity": "Minor",
+   "title": "ORDERING 8.3 probe worksheet understates U9 pad 5 / 6 exposure beyond the body as 0.10 mm (board fab body and TI RPW0010A give 0.15 mm minimum, 0.20 mm nominal)",
+   "contradicts": "TI TPS25947 datasheet SLVSFC9C, RPW0010A package outline (p. 'PACKAGE OUTLINE', drawing 4225183/A): body 1.9-2.1 mm x 1.9-2.1 mm (2 mm x 2 mm nominal, device table p. 1), https://www.ti.com/lit/ds/symlink/tps25947.pdf; and the board's own U9 B.Fab body rectangle.",
+   "evidence": "docs/ORDERING.md line 552 (8.3 probe worksheet, 'U9 IN / OUT' row): \"U9's pads 5 and 6 expose only 0.10 x 0.30 mm beyond the body at each end\". Board a0ec075e (pcbnew): U9 at B(18.5,81.6), rot 0; pad 5 BAT_IN x 18.10-18.40, y 80.40-82.80; pad 6 RAW_PROTECTED x 18.60-18.90, y 80.40-82.80; B.Fab body rect x 17.45-19.55, y 80.55-82.65 (2.10 mm, line width 0.10 mm). Exposure per end = 80.55 - 80.40 = 0.15 mm (board body = datasheet maximum); 0.20 mm at the 2.0 mm nominal body and 0.25 mm at the 1.9 mm minimum. The 0.10 mm figure comes from round 23's reading of the fab line's outer edge (17.40-19.60, round23_docs_binding.md line 55), not the body edge; the same B.Fab rect (17.45-19.55) is on the round 18 board acba196 and round 24 board f2b8251, so it was never 2.2 mm. Probe script .supervisor/r33_docs_binding/u9.py, fab.py.",
+   "impact": "A procedure fact stated wrongly (the exposed probe land is 0.15-0.25 mm, not 0.10 mm). Conservative direction; the probe point B(18.25,80.45) still lies on exposed copper, so the step stays usable.",
+   "concrete_fix": "ORDERING 8.3 U9 row: \"U9's pads 5 and 6 expose 0.15-0.25 mm (0.20 mm nominal; RPW0010A body 1.9-2.1 mm) x 0.30 mm beyond the body at each end\". Optionally note pad 9's outer 0.15-0.25 mm (x 19.55-19.70 at the maximum body) is likewise exposed, while R84.1 stays the recommended ILM probe."
+  }
+ ],
+ "observations": [
+  "ORDERING 8.3 'pad 9 itself is under the body': pad 9 (x 19.10-19.70) extends 0.15-0.25 mm beyond the body edge; the instruction (probe at R84.1 instead) is still right, so left as an observation and folded into the fix of -01.",
+  "R10_VALIDATION line 2771 (d') gives R173 at B(16.87,59.70); it sits inside the labelled 'After the fix pass (a3144b15...)' round 18 record, so it is history (R173 is B(16.87,59.05) since D-R26-02, as AVA_LAYOUT's round 26 table states).",
+  "The coordinate scan's other mismatches (TP82, R403, D440/D441, C87, C88, TP88, C10/C11/R164/R173 'from' positions) are all inside labelled move or round history entries.",
+  "The 5.71 V 'four-stall' point is the four-stall-plus-fire loaded pack (parts_budget pack_7V4_by_stall_count[4] 5.713 V); the four-stall without fire is 5.881 V; the records already define it as 'the fire budget's four-stall point, which already includes the 1.28 A fire current'.",
+  "J400 dry-contact current 'about 7 uA' = 8.4 V / 1.24 MOhm = 6.8 uA; D402 50 nA leakage shifts EN by 50 nA x (470k||770k) x 300/770 = 5.69 mV, matching '5.7 mV'.",
+  "Nominal turn-on 88 / 56 / 45 ms reproduces (tau 227.4 kOhm x 220 nF = 50.0 ms, 1.2 V threshold)."
+ ],
+ "fix_verification": [
+  {
+   "item": "R32-TRI-01 R166-to-C84 courtyard gap",
+   "measurement": "pcbnew: R166 F.Courtyard y 84.40-88.20, C84 y 73.25-83.75 (width 0.05): 0.65 mm centreline, 0.60 mm outer edges; ORDERING 8.2, R10_VALIDATION hand-fit paragraph and R19-MEC-02 row carry it",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R32-TRI-02 C84 heat-limit summary",
+   "measurement": "R10_VALIDATION paragraph now matches ORDERING 8.2 lines 30-32 (top-only heating, bottom on heat-sinking fixture, short dwell, record tip temperature and time, no preheat or temperature limit)",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R32-TRI-03 fitted 85 C part lists",
+   "measurement": "Exact phrase present in R10_VALIDATION (2, row 33 and record), M3_R10 (1), parts_qualification (1); the 16 X5R designators equal the BOM's six X5R lines (6+2+1+3+2+2), no other X5R/CL..A part on either BOM",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: a0ec075e... (both)",
+  "Link and anchor check (links.py) over STATUS, AGENTS, M3_R10, ORDERING, handoff, R10_VALIDATION, FMEA, REQUIREMENTS, parts_qualification, AVA_LAYOUT, R10_DECISIONS, round32_fix_docs: 0 broken",
+  "Binding note c5cd0fa3...: board, netlist (schematic.net.xml 535a8fdf...), pin_table and circuit hashes match the files; all 100 u1_pins equal pin_table r10_net; pin_table r10_net equals U1's 100 pad nets on the board",
+  "Budget 4267634... hash; four-stall / fire figures cross-checked",
+  "Board metrics vs M3_R10 'The board' and AVA_LAYOUT round 26: 2,369,507 bytes, 216 footprints, 1059 segments, 309 vias (170 GND; 304 / 4 / 1), 1866.794 mm, 123 / 93 references, 44 legends: all match",
+  "Doc coordinate scan of F(x,y)/B(x,y) designator positions against all 216 footprints (coords.py)",
+  "Terminal table pins and silkscreen legend faces (handoff) vs board pads and silk texts: match",
+  "Five supports (Edge.Cuts circles) match",
+  "Net clearances: PYRO1_OUT to 3V3/3V3A 1.040 mm (B.Cu), Q124 gate nets to 3V3/3V3A 1.0585 mm (R128.1), BUZZ_DRV/PYRO1_OUT 0.7935 mm: match",
+  "ORDERING 8.3 probe worksheet pad positions (R119.1, R120.1/.2, C120.2, C15.1, C24, C88.1, C82.1, R84.1, TPs) vs pcbnew: match except -01",
+  "cost_check / stock_check values vs AGENTS, STATUS, ORDERING, M3_R10 ($85.26, $0.85 over, $16.79, U4 9/2, U9 30/-81/min 7): match",
+  "Decision counts 126 + 103 = 229: match"
+ ],
+ "sources": [
+  "https://www.ti.com/lit/ds/symlink/tps25947.pdf (SLVSFC9C, RPW0010A package outline; cached copy .supervisor/r14_parts_pdf/tps25947.pdf)",
+  "m3_design/assembly_review/m3.kicad_pcb (pcbnew read-only)",
+  "m3_design/assembly_review/fab/*",
+  "m3_design/assembly_review/sources/r10_design/{r10_binding_note.json,pin_table.tsv,parts_budget.json,AVA_LAYOUT.md,parts_qualification.md}"
+ ],
+ "coverage_limits": [
+  "Not every prose figure in the ~3000-line R10_VALIDATION and FMEA was re-derived; focus was current-state statements, the round 32 edits, hashes, positions, links and procedure probe points",
+  "Electrical models (EN chatter, hold-up, hot-plug) spot-checked only at the nominal turn-on point",
+  "Datasheet temperature ratings of the 85 C list not re-read (parts lens)"
+ ]
+}

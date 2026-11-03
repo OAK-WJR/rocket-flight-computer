@@ -1,0 +1,39 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round33_parts",
+ "reviewer": "claude",
+ "target_commit": "feed21fae27c7ff9a3cf304ea44407fa48948255",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+ "findings": [],
+ "observations": [
+  "STM32H743VIT6 (suffix 6, -40...+85 C ambient) is not named in the hot-end list, but that list now reads 'among them', so it does not claim to be complete. Not a false statement.",
+  "CPL Mid X/Y for J3 (4.505, -30.8) and J430 (24.0, -25.85) differ from the KiCad footprint origins (4.6, 30.8) / (24.0, 24.3). These are the EasyEDA origin offsets that jlc_orient applies on purpose, and --verify-cpl rebuilds those rows with no error.",
+  "Value fields are written in two styles ('10k' and '10k 1%' share C25744; '1k 1%' and '1k 0603' share C21190). Each BOM line's comment joins them and the parts agree. Cosmetic only."
+ ],
+ "fix_verification": [
+  {"item": "R32-TRI-03 (85 C part lists)", "measurement": "M3_R10:499, R10_VALIDATION:2543, STATUS:19 and parts_qualification:40 now read 'among them MS5611, the AP6320x bucks, J430, U3, Y1, LED1, LED2 and the 16 fitted X5R capacitors C6-C11, C19, C20, C22, C23, C28, C80, C89, C92, C95, C96'. The JLC BOM's X5R lines (C45783 x6, C23630 x2, C15849 x1, C19666 x3, C13585 x2, C12891 x2) total exactly 16, with the same references. The cached datasheets give W25Q128JVSIQ industrial grade, NX3225GA -40...+85, NCD0805R1 -30...+85 and KT-0805Y -40...+85.", "verdict": "confirmed"}
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 checked before and after the review (unchanged); commit feed21f; worktree clean",
+  "pcbnew dump of all 216 footprints compared with m3_bom_jlc.csv, m3_bom_owner.csv and m3_cpl_jlc.csv. LCSC, Manufacturer Part, footprint, value and side all agree, with no second contradictory LCSC field. Every BOM ref is on the board. The 10 refs missing from the CPL are C84 (hand-fit), J2 and 8 test points.",
+  "BOM: 81 lines, 206 placed parts; cost_check lists 45 extended codes (matches 45 Extended / 36 Basic)",
+  "tools/jlc_orient.py --verify-cpl run read-only against the committed CPL (output to the probe dir): 67 top + 125 bottom rows rebuilt, errors none, 14 placement-only, 206 expected",
+  "MPN decode of every line against its Comment value, voltage, dielectric and tolerance (Samsung, Murata, Yageo, Fenghua, UNI-ROYAL including the J/K/L sub-ohm multipliers for 220K = 2.2 ohm and 360L = 0.36 ohm, Yageo RT, Vishay MCT, FOJAN, Bourns CRM -FX = 1 %/100 ppm)",
+  "Pad-net review of every passive, diode, FET and IC against its operating rail. Every capacitor's voltage rating is above its net's maximum (BAT_IN 25/50 V parts against the 19.9 V SMBJ12CA clamp; 16 V parts only on 3V3, VCAP, VBUS and CAM_IO_3V3). Diode, FET and protection pinouts checked: D120 BAT54A common anode to 3V3, D123, D9, D4 USBLC6, D121 SRV05-4, Q120-Q124 and the LED pads.",
+  "TPS709 EN left open: allowed by the datasheet (300 nA internal pull-up, section 'Enabled')",
+  "Cached datasheet re-reads: AONR21357 (+/-25 V VGS, 12.3 mohm at -4.5 V, Qg 70 nC max at 10 V), AON7524 (Qg(4.5V) 22 nC max, VGS(th) 0.4-1.2 V), AO3400A (Ciss 630 pF), SMBJ12CA (VRWM 12, Vc 19.9 V), CRM2512 (2 W at 70 C, derated to zero at 155 C, X = 100 ppm), NDK CRG-2 (CL 8 pF, -40...+85 C), MLT-5020 (-20...+70 C), NCD0805R1 / KT-0805Y temperatures; Bourns SRP5030T-6R8M fetched (6.8 uH, 76.2 mohm, Irms 4 A, Isat 4.3 A)",
+  "Recalculated these parts_qualification figures: C123 tau 7.1 us; C120 tau 10.7525 ms, 31.89 ms, 64.52 ms, 0.239 V; Q120 0.706 W / 8.95 W; R134 35.7975 W, 61.204 / 44.134 W, 36.345 W at 85 C; C126 0.6782 ms; buck rail 5.367-5.546 V; R405 5.63 mA; U401 0.490 W and 109.2-123.9 C, 112.3 C/W; L400 ripple 0.74-0.76 A; pack sag 5.8808 / 4.3885 V; U400 2.911 / 3.160 A; R92 3.147 mA; U9 3.946-4.857 A; R162 3.364 / 0.306 mA; servo return 0.6144 / 2.13 A; C84 300.8 uF / 37.5 mohm; DB125 diagonal 1.2619 mm / -0.0419 mm; C19 1.683-2.783 uF; C87 2.03 / 2.06 V. All reproduce.",
+  "Positions quoted in parts_qualification checked on the board: C84, C92, C120, C126, U9, U12, U401, L400, D402, C123, C87, R81, C88, R92, TP88, R402, R403"
+ ],
+ "sources": [
+  "Cached maker PDFs listed in .supervisor/primary_pdf_cache_paths.json (r14_parts_pdf/*)",
+  "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf (table, SRP5030T-6R8M row)"
+ ],
+ "coverage_limits": [
+  "No live LCSC or JLC page was re-fetched; part identity comes from MPN decode and the committed stock_check model fields",
+  "U1 pin-level checks are left to the mcu lens; IC pinouts were spot-checked only for U2, U400, U401, U10, U402, U13 and the discretes",
+  "The CPL rotations rest on tools/jlc_easyeda/pads.json. Its EasyEDA snapshot was not re-fetched."
+ ]
+}

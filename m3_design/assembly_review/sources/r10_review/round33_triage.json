@@ -1,0 +1,38 @@
+{
+  "schema": "r10-triage-v1",
+  "target_commit": "feed21f",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "real_errors": [
+    {
+      "id": "R33-TRI-01",
+      "merged_ids": ["R33-DOCS_BINDING-01", "R33-DOCS_BINDING observation 0 (pad 9 'under the body')"],
+      "kind": "doc",
+      "severity": "Minor",
+      "title": "ORDERING 8.3 misstates how much of U9's lands lies outside the body: pads 5 / 6 expose 0.15-0.25 mm (not 0.10 mm) at each end, and pad 9 is not wholly under the body",
+      "evidence": "Board a0ec075e (pcbnew, .supervisor/r33_triage/u9.py): U9 B(18.5,81.6) rot 0; pad 5 BAT_IN x 18.10-18.40, y 80.40-82.80; pad 6 RAW_PROTECTED x 18.60-18.90, y 80.40-82.80; pad 9 BAT_ILIM x 19.10-19.70, y 81.70-81.95. B.Fab rect bounding box 17.40-19.60 / 80.50-82.70 with 0.10 mm line width, so its centreline (the body) is 17.45-19.55 / 80.55-82.65 = 2.10 mm. TI SLVSFC9C RPW0010A outline (drawing 4225183/A, cached .supervisor/r14_parts_pdf/tps25947.pdf): body 1.9-2.1 mm both axes. Body half 0.95-1.05 mm against land half-length 1.20 mm: pads 5 / 6 expose 0.15-0.25 mm (0.20 nominal) x 0.30 mm at each end; pad 9's outer edge 19.70 lies 0.15-0.25 mm beyond the body edge 19.45-19.55. Round 23's 0.10 mm took the Fab line's outer edge as the body. The probe points B(18.25,80.45) / B(18.75,80.45) and the R84.1 instruction remain correct.",
+      "all_places": [
+        "docs/ORDERING.md:552 ('U9's pads 5 and 6 expose only 0.10 x 0.30 mm beyond the body at each end')",
+        "docs/ORDERING.md:555 ('pad 9 itself is under the body')",
+        "history only, not to be edited (frozen round 23 review records, the origin): m3_design/assembly_review/sources/r10_review/round23_docs_binding.md:55 and round23_docs_binding.json:82 ('each exposes only 0.10 mm x 0.30 mm ... Pad 9 ... 0.10 mm exposed')"
+      ],
+      "concrete_fix": "ORDERING 8.3 line 552: 'U9's pads 5 and 6 expose 0.15-0.25 mm (0.20 mm nominal; RPW0010A body 1.9-2.1 mm, SLVSFC9C) x 0.30 mm beyond the body at each end'. Line 555: '(R84 750 ohm, BAT_ILIM; pad 9 exposes only 0.15-0.25 x 0.25 mm beyond the body, too small to probe safely)'. Record the correction in R10_VALIDATION and STATUS.",
+      "board_change": false
+    }
+  ],
+  "observations": [
+    {"id": "R33-MCU obs 3 (root flag)", "reason": "parts_qualification.md:949 cites the PA6 4.0 V FT_a/ADC limit to DS12110 Rev 11 Table 109 / 110, which is the maker datasheet it was read from (round 14); the citation is true as written and claims nothing about Rev 8, so AGENTS 2.5 (unchecked inference) is not violated. The Inference labels elsewhere (M3_R10:548, R10_VALIDATION:2902, binding note) qualify Rev 8 applicability, and M3_R10:547-548 already names these two Rev 11 limits."},
+    {"id": "R33-SAFETY obs 0-6", "reason": "Reproduced or consistent with the records; disclosed classes (owner rows 1 / 2), non-fire bridges, labelled hypotheticals, executable checks; O6's 2.1-2.2 mm at M3_R10:650 is stated on the wall basis and the ring figure (1.902 mm) also clears the 1.0 mm floor."},
+    {"id": "R33-POWER obs 0-16", "reason": "Recomputations that agree with the records, or items already ruled in rounds 24-32 (OQ-5 VON comment, In2 length, Q122 gate, U400 layout recommendation)."},
+    {"id": "R33-ROUTING obs 0-14", "reason": "Independent scans agree with route_check / DRC and the records; leftovers, detour examples, u-turn wording and the final-deviations binding were already ruled."},
+    {"id": "R33-MCU obs 0-2, 4-6", "reason": "Previously ruled envelopes and nominal-VDD figures (R26 / R27 / R32 triage), labelled Inference, decoupling and HSE consistent with DS12110."},
+    {"id": "R33-GATE obs 0-10", "reason": "Seeds that fail as designed, known budget-not-pinned class (R29 / R30), contrived chamfer seeds, or DRC-caught seeds."},
+    {"id": "R33-PARTS obs 0-2", "reason": "'among them' list not claimed complete; CPL origin offsets intentional and verified; cosmetic value strings."},
+    {"id": "R33-MECHANICS obs 0-9", "reason": "Fit, bore, supports, plate model, compass and legends reproduce; ASCII hyphen in the J121 legend is typography."},
+    {"id": "R33-MANUFACTURING obs 0-14", "reason": "DRC, drill, paste, BOM / CPL, DFM, cost and probe positions reproduce the records."},
+    {"id": "R33-REQUIREMENTS obs 0-6", "reason": "'about' Inference figures internally consistent (1.66 W rounds to 1.7 W; 1.7 W / 7.4 V = 0.23 A), disclosed open items, conservative bore rule, previously ruled cost row and stale VEHICLE row named in the brief."},
+    {"id": "R33-DOCS_BINDING obs 1-5", "reason": "Coordinates inside labelled history entries; 5.71 V point defined in the records; dry-contact current, D402 shift and turn-on times reproduce. (Obs 0 promoted into R33-TRI-01.)"}
+  ],
+  "not_reproducible": [],
+  "totals": {"Critical": 0, "Major": 0, "Minor": 1, "observations": 11, "not_reproducible": 0, "board_changes": 0}
+}

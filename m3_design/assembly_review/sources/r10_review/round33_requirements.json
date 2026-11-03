@@ -1,0 +1,74 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round33_requirements",
+ "reviewer": "claude",
+ "target_commit": "feed21fae27c7ff9a3cf304ea44407fa48948255",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "REQUIREMENTS Pack row: 'about 1.7 W, 0.23 A at a 7.4 V pack' recomputes to 1.66 W / 0.224 A (1 W radio + 0.05 A GPS at 4.792 V, LDO from 5.456 V, 85 % buck); the 0.23 A follows the rounded 1.7 W. An 'about' Inference figure, not counted.",
+  "REQUIREMENTS line 38 'about 3 MB' versus F5 'about 2-3.5 MB' (recomputed 1.86-3.52 MB on the derived envelope, 40 B/sample): approximate wording, both under 16 MB.",
+  "F1 still states the budget over a <= 30 s window while saying its window is the <= 35 s control window and asking for the Delta-T allowance to be recomputed; disclosed open item.",
+  "F4 hinge range re-run (.supervisor/r23_requirements/hinge.py): L1000W 77 % nominal / 84 % high at 15 deg; flight 1 low case (M1.17) also reaches 77 % near M1 under linear theory; F4's sentence is about flight 2, so not false.",
+  "ORDERING / M3_R10 cost table 'Plus fixed fees' rows build on $85.26 not $85.80: already ruled an observation in round 29 triage.",
+  "P1/P2 require the whole board to fit a 50.8 mm bore although the coupler bore ends at joint + 120 and the board's forward edge is near joint + 169-173 (54.6 mm bore): conservative, not false.",
+  "VEHICLE.md's R10 stack row is stale (GH ports, J400 at (10.5,85.5)); the brief already notes it; REQUIREMENTS takes positions from the board."
+ ],
+ "fix_verification": [
+  {
+   "item": "R32-TRI-01 (R166-C84 courtyard 0.65 mm / 0.60 mm)",
+   "measurement": "ORDERING:435 and R10_VALIDATION:3063 no longer carry 0.56 mm; R10_VALIDATION:1687 keeps 0.56 in the historical R19-MEC-02 title with the Round 32 correction appended",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R32-TRI-02 (ORDERING 8.2 preheat claim)",
+   "measurement": "'preheat' no longer appears in R10_VALIDATION's C84 paragraph (only in the R32-TRI-02 log row)",
+   "verdict": "confirmed"
+  },
+  {
+   "item": "R32-TRI-03 (85 C part lists)",
+   "measurement": "'among them MS5611' present once each in M3_R10, parts_qualification and R10_VALIDATION (2: text and log); REQUIREMENTS Temperature row uses the generic 'the 85 C parts' with no definite list",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before/after: a0ec075e...733c both (shasum -a 256).",
+  "pcbnew: positions/values/nets of R80, R165, R81, C87, R122, R123, C123, R134, R166, R92, R167, D402, J1, J400, J121, J122, J9, J410, J420, J440, J430, R460-R464, C460, C461, R32, R33, LED1, LED2, Q123, D123, R162, R163, LS120, C84, U9, U4, U5, R173, R164, C10, C11 against F4-F11, P1-P3.",
+  "U1 pad nets versus pin_table.tsv r10_net (all assigned pins match; NC pins only named differently) and F10/F11 pins PE1, PA4, PA5, PD6, PC8, PE12, PC14, PB1, PC3_C, PC13, PA6, PC0, PC1, PC5, PE4, PD8/PD9, PB13/PB12, PC6/PC7, PE8/PE7, PC10-12, PD0, PA2; VBAT pin 6 = 3V3, VREF+ / VDDA pins 20/21 = 3V3A.",
+  "Port wiring: J410/J420/J440 pin 3 = *_TX_WIRE via 1 k to the USART TX pin, pin 4 = *_RX_WIRE to RX, ground-only ESD on each; J9 pin 3 CAM_RX_WIRE, pin 4 CAM_TX_WIRE; PORT_4V8 = 0.8 x (1 + 49.9k/10k) = 4.792 V; PORT_5V3 = 0.8 x (1 + 58.2k/10k) = 5.456 V; PA6 divider 100k/10k (x11).",
+  "Fire-path widths: BAT_IN J1.1 -> Q120.9 1.0 mm on B.Cu; ACT_FET_S exactly seven 0.4 mm source-pin segments plus 0.3 mm bias branches; RAW_ACT 0.5 mm to R134 (0.4 mm only to TP120); PYRO1_IGN 0.5 mm; PYRO1_OUT 0.5 mm F.Cu, 0.2 mm sense on B.Cu.",
+  "D402 tap 2.59 + 0.509 + 1.015 = 4.114 mm; GND via (5.15,65.575) 0.700 mm from D402.2; U401.11 vias at (27.3,13.6)/(27.9,13.6) 0.5/0.3 mm GND.",
+  "Supports: Edge.Cuts circles at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); board 46 x 90; nearest lands to (4,44.3): LED2.2 3.808, LED1.1 3.860, J2.1 3.881, J2.3 3.989 mm (polygon; round-land exact values <= these).",
+  "All 23 terminal pin legends present on F/B silkscreen (J1, J400, J121, J122, J9, J410, J420, J440).",
+  "EN model (own script en2.py / en.py): single drop-out worst 6.30 / 8.04 / 8.07 / 8.20 / 10.03 / 10.35 / 20.11 / 26.02 ms at 5.5 / 5.71 / 5.713 / 5.73 / 5.96 / 6.0 / 7.4 / 8.4 V; 8 ms every 50 ms: 1.0878 V at 5.96 V, 1.0953 V at 6.0 V; nominal turn-on 87.7 / 55.5 / 44.7 ms; nominal drop-out 18.9 / 32.7 / 41.1 ms. All match F4/F6.",
+  "Hand calcs: Q122 gate 3.6 x 2/33 = 0.218 V; healthy CONT 99.37 mV, open CONT 146.23 mV; R167 10k: 0.84 mA, 1 Ah / 0.84 mA = 7.1 weeks; BAT_IN bleed tau <= 0.70 s (<= 70 uF incl. tolerance), 8.4 -> 1 V in 1.49 s < 2 s; ESD 7.5 / 9.6 V; hold-up scalings (470 uF, 100-220 uF, trip fractions 0.22-0.31); 3V3 regulation 20.8-26.3 ms; landing 98-163 g, 2x = 326 g; apogee ISA temperatures; F3 8.8 km MSL (ISA 317 hPa); fire currents 1.541 / 1.476 A in parts_budget.json; M3 $85.26 - $84.41 = $0.85.",
+  "VEHICLE.md cross-checks: motors 54 x 635 mm in a 721 mm booster for both flights; bulkplate top joint - 44.6; battery bay top + 35.4; aft edge + 79.4-83.4; shroud + 4...+ 47; 32 mm margin.",
+  "Round 32 fixes: git grep at feed21f."
+ ],
+ "sources": [
+  "docs/REQUIREMENTS.md",
+  "AGENTS.md",
+  "../../docs/VEHICLE.md",
+  "m3_design/assembly_review/m3.kicad_pcb",
+  "m3_design/assembly_review/sources/r10_design/pin_table.tsv",
+  "m3_design/assembly_review/sources/r10_design/parts_budget.json",
+  "docs/M3_R10.md (Cost and stock)",
+  "docs/ORDERING.md (8.1 cost table)",
+  "m3_design/assembly_review/sources/r10_review/round28_triage.md",
+  "m3_design/assembly_review/sources/r10_review/round32_triage.md",
+  ".supervisor/r23_requirements/hinge.py",
+  "TI SLVSFC9C p9 (EN thresholds as quoted in the records; not re-read)"
+ ],
+ "coverage_limits": [
+  "No datasheet re-read: EN thresholds, LSI range, part temperature ratings and JLC stackup naming taken as quoted by the records.",
+  "No kicad-cli DRC or route_check run (other lenses' domain).",
+  "F4 hinge figures re-run only with the round 23 script; not independently derived.",
+  "Schematic not opened; board nets used for mapping."
+ ]
+}
