@@ -25,7 +25,9 @@ inside pads for review without blocking R10. Partial overlaps, crossings and eve
 Audit 2 item 7 leaves noncritical LEFTOVERS records informational; critical exceptions retain measured/redraw checks.
 r11 (M3-ASSY-R11, D-R11-08; the R11 gate in tools/check.sh): every r10 rule on a six-layer board (F / In1 GND / In2
 power / In3 signal / In4 GND / B, D-R11-03). It reads R10's class list (R10_CLASSES, from critical_reference's one
-definition) and AUD-2's slow-return list unchanged; ALLOWLIST, LEFTOVERS, ROUTE_FIGURES and PARALLEL_VIAS start empty.
+definition) and AUD-2's slow-return list unchanged; ALLOWLIST, LEFTOVERS and ROUTE_FIGURES start empty, and
+PARALLEL_VIAS holds only the pairs the R11 gate data list (R11_DATA key 'parallel_vias', O-C2-5; schema at
+load_parallel_pairs; a missing key or file is an empty list; --gate-data names another file).
 Every layer-dependent test walks the board's own copper stack (cu_layers: F, In1..In4, B on a six-layer board; the
 R7-R10 four-layer set otherwise, so their verdicts are unchanged), so a layer change through In3 or In4 is one, and the
 strict redraw's reference test pairs each layer with its neighbours in the R11 stack (REF_PAIRS_R11).
@@ -104,8 +106,12 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           measured reason) is left out of the loop search; a named via that is missing or not parallel
                           (without it a pad of its net is cut off) is a parallel_via instance (gated). D-R24-02: a
                           named via is also left out of the net's via count (extra_vias) and of the needless-hop pairs
-                          (a redundant barrel is the point, not a hop); every other via still counts
-    detour                a net without a pour whose track copper is longer than DETOUR_MAX (1.6) x the octilinear
+                          (a redundant barrel is the point, not a hop); every other via still counts. Profile r11
+                          (O-C2-5): the same, for the pairs in the R11 gate data's 'parallel_vias' (both barrels
+                          named; the second is the one left out); a pair whose first or second via is gone, or whose
+                          net has no copper, is a stale parallel_via instance, and each barrel must be redundant on
+                          its own (with only the first removed every pad stays joined, too)
+    detour               a net without a pour whose track copper is longer than DETOUR_MAX (1.6) x the octilinear
                           minimum spanning tree of its pad centres and more than DETOUR_SLACK (2 mm) longer than it
                           (for a two-pad net: the copper path against the octilinear pad-to-pad distance); profile r8
                           (R8_DECISIONS D10): an MST edge that crosses a hard keep-out (closed to tracks on every
@@ -362,12 +368,60 @@ PARALLEL_VIAS_R10 = [
      "first barrel (16.0, 28.0), joined to it on B.Cu and In2"),
 ]
 PARALLEL_VIAS = []
+# Profile r11 (stageC2.md O-C2-5, gate_C2.md): the parallel barrels come from the R11 gate data as pairs, both barrels
+# named, so a pair whose first or second barrel is gone fails as stale. PARALLEL_PAIRS holds them as (net, (x, y) of
+# the first barrel, (x, y) of the second, reason); PARALLEL_VIAS gets each pair's second barrel (net, (x, y), reason),
+# which the loop search, the via count and the needless-hop test leave out exactly as for r10.
+PARALLEL_PAIRS = []
+R11_DATA = Path(__file__).resolve().parents[1] / 'm3_design/r11/design/r11_gate_data.json'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
 
 
-def set_profile(name):
-    """Select the exception lists and detour baseline of one board revision (module globals; main() calls it)."""
+def load_parallel_pairs(data):
+    """The R11 gate data's parallel barrels (r11_gate_data.json, optional key 'parallel_vias'; O-C2-5): a list of
+    objects {"net": "ACT_GATE", "vias": [[x1, y1], [x2, y2]], "reason": "measured reason"}, board mm (KiCad's y), the
+    first barrel and the second barrel beside it. Both must be vias of `net` (within 0.02 mm) whose copper joins the
+    same two pieces, so that either one alone keeps every pad of the net joined. A missing key is an empty list; a
+    malformed entry raises ValueError (the gate then fails; nothing is guessed). Returns [(net, xy1, xy2, reason)]."""
+    raw = data.get('parallel_vias', [])
+    if not isinstance(raw, list):
+        raise ValueError("gate data 'parallel_vias' must be a list")
+    out = []
+    for k, e in enumerate(raw):
+        where = f"gate data 'parallel_vias'[{k}]"
+        if not isinstance(e, dict) or set(e) != {'net', 'vias', 'reason'}:
+            raise ValueError(f'{where}: an object with exactly the keys net, vias, reason')
+        net, vias, reason = e['net'], e['vias'], e['reason']
+        if not isinstance(net, str) or not net:
+            raise ValueError(f'{where}: net must be a net name')
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError(f'{where}: reason must state the measured reason')
+        if not (isinstance(vias, list) and len(vias) == 2 and all(
+                isinstance(v, list) and len(v) == 2 and all(isinstance(c, (int, float)) and not isinstance(c, bool)
+                                                            for c in v) for v in vias)):
+            raise ValueError(f'{where}: vias must be two [x, y] centres in mm')
+        a, b = (tuple(float(c) for c in v) for v in vias)
+        if math.hypot(a[0] - b[0], a[1] - b[1]) <= 0.02:
+            raise ValueError(f'{where}: the two via centres are the same point')
+        out.append((net, a, b, reason))
+    return out
+
+
+def read_gate_data(path=None):
+    """The R11 gate data file (R11_DATA unless `path`) as a dict; a missing file is {}."""
+    path = R11_DATA if path is None else Path(path)
+    if not path.is_file():
+        return {}
+    data = json.loads(path.read_text())
+    if not isinstance(data, dict):
+        raise ValueError(f'{path}: gate data must be a JSON object')
+    return data
+
+
+def set_profile(name, gate_data=None):
+    """Select the exception lists and detour baseline of one board revision (module globals; main() calls it).
+    Profile r11 reads its parallel barrels from `gate_data` (a dict), else from the R11 gate data file (R11_DATA)."""
     global ALLOWLIST, LEFTOVERS, ROUTE_FIGURES, KEEPOUT_BASELINE, PROFILE
     if name == 'r7':
         here = str(Path(__file__).resolve().parent)
@@ -385,8 +439,10 @@ def set_profile(name):
     else:
         raise ValueError(f'unknown profile {name!r}; one of {PROFILES}')
     PROFILE = name
-    global PARALLEL_VIAS
-    PARALLEL_VIAS = list(PARALLEL_VIAS_R10) if name == 'r10' else []      # r11: starts empty (D-R11-08)
+    global PARALLEL_VIAS, PARALLEL_PAIRS
+    PARALLEL_PAIRS = load_parallel_pairs(read_gate_data() if gate_data is None else gate_data) if name == 'r11' else []
+    PARALLEL_VIAS = (list(PARALLEL_VIAS_R10) if name == 'r10' else
+                     [(net, b, reason) for net, _, b, reason in PARALLEL_PAIRS])   # r11: the listed pairs (O-C2-5)
 
 
 def parallel_skip(nc, entries=None):
@@ -403,6 +459,33 @@ def parallel_skip(nc, entries=None):
         else:
             stale.append((net, xy, reason))
     return frozenset(skip), stale
+
+
+def pair_issues(nc, pairs=None):
+    """Profile r11 (O-C2-5): [(position nm, problem)] for the PARALLEL_PAIRS entries of nc's net. Each barrel of a pair
+    must be a via of the net at its named centre (within 0.02 mm; else the entry is stale), and each one must be
+    redundant on its own: with only that barrel removed every pad of the net stays joined (the second barrel's own test
+    is the generic one in scan; this adds the first barrel's, so the two are parallel, not two barrels in series)."""
+    pairs = PARALLEL_PAIRS if pairs is None else pairs
+    out = []
+    for net, a, b, _ in pairs:
+        if net != nc.net:
+            continue
+        found = []
+        for xy in (a, b):
+            hit = [v for v in nc.vias if math.hypot(mm(v['pos'][0]) - xy[0], mm(v['pos'][1]) - xy[1]) <= 0.02]
+            if not hit:
+                out.append(((xy[0] / NM, xy[1] / NM), 'stale gate data parallel_vias entry: no via of the net at '
+                                                     f'({xy[0]}, {xy[1]})'))
+            found.append(hit)
+        if not all(found):
+            continue
+        whole = pad_groups(nc, zones=True)
+        first = frozenset(id(v['obj']) for v in found[0])
+        if pad_groups(nc, skip=first, zones=True) != whole:
+            out.append((found[0][0]['pos'], 'not parallel: without the first barrel of the pair a pad of the net is cut '
+                                           'off'))
+    return out
 
 
 def net_class(name):
@@ -2334,7 +2417,12 @@ def scan(board, baseline_log=None):
                         v['pos'], off_mm=round(mm(d), 4), track=[round(mm(c), 4) for c in s['a'] + s['b']])
 
     # ---- connectivity: dead copper and loops -----------------------------------------------------------------------
-    for net, nc in sorted(collect(board).items()):
+    nets_cu = collect(board)
+    for net, a, _, _ in PARALLEL_PAIRS:                                 # r11 (O-C2-5): a pair on a net with no copper
+        if net not in nets_cu:
+            add('parallel_via', net, 'via', (a[0] / NM, a[1] / NM),
+                problem='stale gate data parallel_vias entry: the net has no copper on the board')
+    for net, nc in sorted(nets_cu.items()):
         pieces, dvias = dead(nc)
         for i, segs in sorted(pieces.items()):
             t = nc.tracks[i]
@@ -2349,12 +2437,14 @@ def scan(board, baseline_log=None):
         for x, y, lid in loops(nc):
             add('track_loop', net, board.GetLayerName(lid), (x, y))
         skip, stale = parallel_skip(nc)                                # D-R19-09: each named via exists and is parallel
-        for _, xy, _ in (stale if nc.tracks else ()):                  # (a net not drawn yet: a later route family)
+        for _, xy, _ in (stale if nc.tracks and PROFILE != 'r11' else ()):   # (a net not drawn yet: a later family)
             add('parallel_via', net, 'via', (xy[0] / NM, xy[1] / NM), problem='no via of the net at the named spot')
         if skip and pad_groups(nc, skip=skip, zones=True) != pad_groups(nc, zones=True):
             for v in nc.vias:
                 if id(v['obj']) in skip:
                     add('parallel_via', net, 'via', v['pos'], problem='not parallel: without it a pad of the net is cut off')
+        for d in pair_issues(nc):                                      # r11 (O-C2-5): both barrels of each listed pair
+            add('parallel_via', net, 'via', d[0], problem=d[1])
         if nc.zones:
             continue
         r = net_route(nc, skip=skip)                                   # D-R24-02: named parallel vias not counted
@@ -3131,8 +3221,10 @@ def main():
                     'R8_DECISIONS D9 / D10), r11 (r10 rules on six copper layers, empty lists; the R11 gate), r10 (empty lists, R10 classes, no RF parts; the R10 gate), r9 (empty lists, D10 '
                     'baseline; the R9 record) or r7 (the R7 record, '
                     'route_lists_r7.py, plain baseline)')
+    ap.add_argument('--gate-data', type=Path, help='profile r11: the gate data file whose parallel_vias it reads '
+                    '(default m3_design/r11/design/r11_gate_data.json; a missing file or key is an empty list)')
     args = ap.parse_args()
-    set_profile(args.profile)
+    set_profile(args.profile, gate_data=read_gate_data(args.gate_data) if args.profile == 'r11' else None)
     board = pcbnew.LoadBoard(str(args.board))
     if args.routes:
         for net, nc in sorted(collect(board).items()):

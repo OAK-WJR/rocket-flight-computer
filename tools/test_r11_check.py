@@ -5,6 +5,7 @@ R11_BOARD_REQUIRED=1 (set by tools/check.sh once its R11 section has run) turns 
 the real-board seeds cannot be skipped silently while the R11 board exists.
 """
 import os
+import re
 from pathlib import Path
 import shutil
 import sys
@@ -65,7 +66,7 @@ class Six:
         return v
 
     def part(self, ref, x, y, pads, part=None):
-        """pads: [(number, net, (dx, dy), 'smd' | 'pth')]."""
+        """pads: [(number, net, (dx, dy), 'smd' | 'smdb' (on B.Cu) | 'pth')]."""
         f = pcbnew.FOOTPRINT(self.board); f.SetReference(ref); f.SetPosition(self.P(x, y))
         if part:
             f.SetField('Manufacturer Part', part)
@@ -77,7 +78,7 @@ class Six:
                 p.SetSize(self.P(1.8, 1.8)); p.SetDrillSize(self.P(1.0, 1.0)); p.SetLayerSet(pcbnew.PAD.PTHMask())
             else:
                 p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT); p.SetSize(self.P(0.6, 1.7))
-                ls = pcbnew.LSET(); ls.AddLayer(pcbnew.F_Cu); p.SetLayerSet(ls)
+                ls = pcbnew.LSET(); ls.AddLayer(pcbnew.B_Cu if kind == 'smdb' else pcbnew.F_Cu); p.SetLayerSet(ls)
             if net:
                 p.SetNet(self.net(net))
             f.Add(p); p.SetPosition(self.P(x + dx, y + dy))
@@ -242,10 +243,135 @@ class R11Rules(unittest.TestCase):
         self.assertIn(('J9', '6', 'D400.1', 'R101'), r11.PORT_CLAMPS_R11)
         self.assertEqual(len(r11.PORT_CLAMPS_R11), len(r10.PORT_CLAMPS))
 
-    def test_power_paths_keep_floors_but_drop_r10_coordinates(self):
-        self.assertEqual([(p['name'], p['floor'], p['vias']['count']) for p in r11.POWER_PATHS_R11],
-                         [(p['name'], p['floor'], p['vias']['count']) for p in r10.POWER_PATHS])
-        self.assertFalse(any('bridges' in p['vias'] or 'layers' in p for p in r11.POWER_PATHS_R11))
+    def test_power_paths_follow_r11_topology(self):
+        """O-C2-6: R10's paths by function, on R11 terminals and nets (the R11 schematic netlist), no R10 coordinates,
+        R10's design currents, and U9 IN without R10's 1.0 / 0.5 mm via (J1 is a plated wire pad)."""
+        import xml.etree.ElementTree as ET
+        nets = {}
+        for n in ET.parse(r11.R11_DIR / 'schematic.net.xml').getroot().iter('net'):
+            for node in n.iter('node'):
+                nets[f'{node.get("ref")}.{node.get("pin")}'] = n.get('name')
+        self.assertEqual(sorted(p['name'] for p in r11.POWER_PATHS_R11), sorted(p['name'] for p in r10.POWER_PATHS))
+        amps = {p['name']: p.get('amps') for p in r10.POWER_PATHS}
+        for p in r11.POWER_PATHS_R11:
+            with self.subTest(path=p['name']):
+                self.assertEqual(p.get('amps'), amps[p['name']])
+                self.assertTrue('amps' in p or 'floor' in p)
+                self.assertFalse('bridges' in p['vias'] or 'layers' in p)
+                self.assertGreaterEqual((p['vias']['pad'], p['vias']['drill']), (0.5, 0.3))
+                for group in (p['start'], p['end'] or {}, p['through']):
+                    for ref, nums in group.items():
+                        for num in nums:
+                            self.assertEqual(nets.get(f'{ref}.{num}'), p['net'], f'{ref}.{num}')
+        u9 = next(p for p in r11.POWER_PATHS_R11 if p['name'] == 'U9 IN')
+        self.assertEqual((u9['vias']['count'], u9['vias']['max']), (0, 0))
+        self.assertEqual(r11.ipc_floor('F.Cu', 2.9), 0.68)                # R10's 0.68 mm at 35 um
+        self.assertEqual(r11.ipc_floor('In2.Cu', 2.9), 1.83)              # 0.5 oz inner copper (stageB.md section 3)
+        self.assertEqual(r11.ipc_floor('B.Cu', 1.9), 0.33)
+
+    def u9_in(self, entry_width=0.3, entry_len=0.5, layer=None, via=False):
+        """J1.1 (plated) -> C88.1 -> U9.5 on B.Cu at 0.7 mm, the last `entry_len` mm into U9.5 at `entry_width`."""
+        s = Six()
+        s.part('J1', 3, 10, [('1', 'BAT_IN', (0, 0), 'pth')])
+        s.part('C88', 6, 10, [('1', 'BAT_IN', (0, 0), 'smdb')])
+        s.part('U9', 9, 10, [('5', 'BAT_IN', (0, 0), 'smdb')])
+        s.track((3, 10), (6, 10), 'BAT_IN', pcbnew.B_Cu, 0.7)
+        if via or layer is not None:                                   # a hop: B.Cu, via, `layer`, via, B.Cu
+            s.track((6, 10), (6.5, 10), 'BAT_IN', pcbnew.B_Cu, 0.7); s.via(6.5, 10, 'BAT_IN', d=0.6)
+            s.track((6.5, 10), (8, 10), 'BAT_IN', pcbnew.F_Cu if layer is None else layer, 0.7)
+            s.via(8, 10, 'BAT_IN', d=0.6); s.track((8, 10), (9 - entry_len, 10), 'BAT_IN', pcbnew.B_Cu, 0.7)
+        else:
+            s.track((6, 10), (9 - entry_len, 10), 'BAT_IN', pcbnew.B_Cu, 0.7)
+        s.track((9 - entry_len, 10), (9, 10), 'BAT_IN', pcbnew.B_Cu, entry_width)
+        return s
+
+    def u9_issues(self, s, entries):
+        narrow, bad = r11.power_narrow_entries({'power_narrow': entries})
+        spec = [p for p in r11.POWER_PATHS_R11 if p['name'] == 'U9 IN']
+        return bad + r11.power_paths_r11(s.board, paths=spec, narrow=narrow)[0]
+
+    def test_power_narrow_pin_entries_are_data_with_a_length_cap(self):
+        """O-C2-6: a pin entry narrower than the IPC-2152 floor passes only as a listed R11_DATA 'power_narrow' entry
+        within its length cap; over the cap, unlisted, on another pad, or stale, it fails."""
+        entry = {'net': 'BAT_IN', 'pad': 'U9.5', 'layer': 'B.Cu', 'width_mm': 0.3, 'max_len_mm': 0.6,
+                 'reason': 'test: U9.5 bar entry at the 0.5 mm pitch'}
+        self.assertEqual(self.u9_issues(self.u9_in(), [entry]), [])
+        unlisted = self.u9_issues(self.u9_in(), [])
+        self.assertTrue(any('no power_narrow pin entry' in i and '0.300 mm wide' in i for i in unlisted), unlisted)
+        over = self.u9_issues(self.u9_in(entry_len=0.8), [entry])                    # 0.8 mm against the 0.6 mm cap
+        self.assertTrue(any('allows 0.3 mm over at most 0.6 mm' in i for i in over), over)
+        self.assertTrue(any('stale power_narrow entry' in i for i in over))
+        narrower = self.u9_issues(self.u9_in(entry_width=0.2), [entry])              # narrower than the entry's width
+        self.assertTrue(any('0.200 mm wide' in i for i in narrower), narrower)
+        other_pad = self.u9_issues(self.u9_in(), [dict(entry, pad='C88.1')])
+        self.assertTrue(any('no power_narrow pin entry' in i for i in other_pad))
+        self.assertTrue(any('stale power_narrow entry' in i for i in other_pad))
+        clean = self.u9_issues(self.u9_in(entry_width=0.7), [entry])                 # nothing left to excuse: stale
+        self.assertEqual([i[:22] for i in clean], ['stale power_narrow ent'])
+        for bad in (dict(entry, max_len_mm=2.5), dict(entry, layer='In5.Cu'), dict(entry, reason=''),
+                    dict(entry, pad='U9'), {k: v for k, v in entry.items() if k != 'reason'}, dict(entry, width_mm='0.3')):
+            with self.subTest(bad=bad):
+                self.assertTrue(any("'power_narrow'[0]" in i for i in self.u9_issues(self.u9_in(), [bad])))
+        self.assertEqual(r11.power_narrow_entries({}), ([], []))                     # no key: strict floors
+
+    def test_u9_in_floors_follow_the_layer_and_take_no_via(self):
+        entry = {'net': 'BAT_IN', 'pad': 'U9.5', 'layer': 'B.Cu', 'width_mm': 0.3, 'max_len_mm': 0.6, 'reason': 'test'}
+        inner = self.u9_issues(self.u9_in(layer=pcbnew.In2_Cu), [entry])            # 0.7 mm on 0.5 oz In2: 1.83 floor
+        self.assertTrue(any('0.700 mm wide' in i and 'In2.Cu' in i and 'floor 1.83' in i for i in inner), inner)
+        self.assertFalse(any('0.700 mm wide' in i and 'B.Cu' in i for i in inner), inner)   # 0.68 on B.Cu holds
+        via = self.u9_issues(self.u9_in(via=True), [entry])
+        self.assertTrue(any('2 via(s) on the path; at most 0' in i for i in via), via)
+        s = self.u9_in()
+        s.board.Remove(next(t for t in s.board.GetTracks() if t.GetStart() == Six.P(3, 10)))
+        self.assertTrue(any('no BAT_IN copper path' in i for i in self.u9_issues(s, [entry])))
+
+    def test_single_open_taps_map_u1_pins_to_balls(self):
+        taps = r11.single_open_taps_r11()
+        self.assertEqual(len(taps), len(r10.SINGLE_OPEN_TAPS))
+        labels = {lab for _, tap, src, _ in taps for lab in (tap,) + src}
+        self.assertFalse([lab for lab in labels if re.fullmatch(r'U1\.\d+', lab)])    # no LQFP pin number is left
+        self.assertTrue({'U1.G3', 'U1.D5', 'U1.F8', 'U1.E7'} <= labels)               # PA4, BOOT0, VCAP1, VCAP2
+        self.assertIn(('ACT_GATE', 'Q120.4', ('R121.1',)), [t[:3] for t in taps])
+        self.assertIn(('ACT_GATE', 'Q121.4', ('R121.1',)), [t[:3] for t in taps])
+        for tap in ('R85.2', 'R7.2', 'R8.2', 'U10.2'):
+            self.assertIn(tap, [t[1] for t in taps])
+        with self.assertRaises(ValueError):
+            r11.single_open_taps_r11({'28': 'G3'})                    # a U1 pin without a ball: fail, never drop
+        b = r11.lqfp_balls()
+        self.assertEqual((b['28'], b['94'], b['48'], b['73']), ('G3', 'D5', 'F8', 'E7'))
+
+    def test_single_via_tap_and_route_check_parallel_pair_agree(self):
+        """O-C2-5: Q120.4 -> R121.1 on one ACT_GATE barrel fails K-power's single-via-open taps; a second barrel beside
+        it passes K-power, and passes route_check r11 only when the gate data list the pair."""
+        def build(second):
+            s = Six()
+            s.part('Q120', 5, 5, [('4', 'ACT_GATE', (0, 0), 'smd')])
+            s.part('R121', 15, 5, [('1', 'ACT_GATE', (0, 0), 'smdb')])
+            s.track((5, 5), (7, 5), 'ACT_GATE', width=0.3); s.via(7, 5, 'ACT_GATE')
+            s.track((7, 5), (15, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3)
+            s.via(7, 6.2, 'GND')
+            if second:
+                s.via(7.75, 5.75, 'ACT_GATE')
+                s.track((7.75, 5.75), (7, 5), 'ACT_GATE', width=0.3)
+                s.track((7.75, 5.75), (7.75, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3)
+            return s
+        taps = [t for t in r11.single_open_taps_r11() if t[1] == 'Q120.4']
+
+        def single(s, exceptions=()):
+            return r10.single_via_opens(s.board, taps=taps, exceptions=list(exceptions))[0]
+        one = build(False)
+        self.assertTrue(any('hangs on one via' in i for i in single(one)))          # the seeded single-via tap fails
+        exc = [('Q120.4', 'via ACT_GATE (7.00, 5.00)', 'test')]
+        self.assertEqual(single(one, exc), [])                                       # ... unless an exact exception
+        two = build(True)
+        self.assertEqual(single(two), [])
+        self.assertTrue(any('stale SINGLE_OPEN_EXCEPTIONS' in i for i in single(two, exc)))
+        self.addCleanup(rc.set_profile, 'r8')
+        pair = {'net': 'ACT_GATE', 'vias': [[7, 5], [7.75, 5.75]], 'reason': 'test'}
+        for pairs, want in (([], {'track_loop', 'extra_vias'}), ([pair], set())):
+            rc.set_profile('r11', gate_data={'parallel_vias': pairs})
+            got = {d['cat'] for d in rc.scan(two.board) if d['net'] == 'ACT_GATE' and rc.gated(d)}
+            self.assertEqual(got & {'track_loop', 'extra_vias', 'parallel_via'}, want)
 
     def test_rule_selection_fails_closed(self):
         with self.assertRaises(ValueError):

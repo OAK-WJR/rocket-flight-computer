@@ -1251,7 +1251,7 @@ class R11SixLayer(unittest.TestCase):
         from test_r11_check import Six                            # noqa: E402 (the shared six-layer board builder)
 
     def setUp(self):
-        rc.set_profile('r11'); self.addCleanup(rc.set_profile, 'r8')
+        rc.set_profile('r11', gate_data={}); self.addCleanup(rc.set_profile, 'r8')
 
     def scan(self, s, cat):
         return [d for d in rc.scan(s.board) if d['cat'] == cat]
@@ -1313,6 +1313,89 @@ class R11SixLayer(unittest.TestCase):
         s.track((5, 5), (10, 5), 'SIGNAL'); s.via(10, 5, 'SIGNAL')
         s.track((10, 5), (15, 5), 'SIGNAL', pcbnew.In3_Cu)               # joins F.Cu and In3 at the via: not dangling
         self.assertEqual([d for d in self.scan(s, 'dangling_via') if d['net'] == 'SIGNAL'], [])
+
+    def gate_board(self, second=True):
+        """ACT_GATE between two pads: F.Cu, a barrel at (7, 5), B.Cu under an OTHER track (a needed hop), a barrel at
+        (13, 5), F.Cu; with `second` a second barrel at (7.75, 5.75) beside the first, joined on F.Cu and B.Cu."""
+        s = Six()
+        s.part('A1', 5, 5, [('1', 'ACT_GATE', (0, 0), 'smd')])
+        s.part('A2', 15, 5, [('1', 'ACT_GATE', (0, 0), 'smd')])
+        s.track((5, 5), (7, 5), 'ACT_GATE', width=0.3); s.via(7, 5, 'ACT_GATE', d=0.6)
+        s.track((7, 5), (13, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3); s.via(13, 5, 'ACT_GATE', d=0.6)
+        s.track((13, 5), (15, 5), 'ACT_GATE', width=0.3)
+        s.track((10, 2), (10, 8), 'OTHER')                             # the B.Cu run passes under it: a needed hop
+        for xy in ((7, 6.2), (13, 6.2)):
+            s.via(*xy, 'GND')                                          # GND partners within 1.5 mm
+        if second:
+            s.via(7.75, 5.75, 'ACT_GATE', d=0.6)
+            s.track((7.75, 5.75), (7, 5), 'ACT_GATE', width=0.3)
+            s.track((7.75, 5.75), (7.75, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3)
+        return s
+
+    def gate_hits(self, s, pairs):
+        rc.set_profile('r11', gate_data={'parallel_vias': pairs})
+        hits = [d for d in rc.scan(s.board) if d['net'] == 'ACT_GATE' and d['cat'] in ('track_loop', 'parallel_via',
+                                                                                       'extra_vias')]
+        self.assertTrue(all(rc.gated(d) for d in hits))
+        return sorted((d['cat'], d.get('problem', '')[:5]) for d in hits)
+
+    def test_o_c2_5_listed_parallel_pair_passes_unlisted_fails(self):
+        """O-C2-5: a second barrel beside a single-via tap passes route_check r11 only as a listed pair from the gate
+        data; unlisted it is a track_loop and an extra via (both gated)."""
+        pair = {'net': 'ACT_GATE', 'vias': [[7, 5], [7.75, 5.75]], 'reason': 'test: second ACT_GATE barrel'}
+        s = self.gate_board()
+        self.assertEqual(self.gate_hits(s, []), [('extra_vias', ''), ('extra_vias', ''), ('track_loop', '')])
+        self.assertEqual(self.gate_hits(s, [pair]), [])
+        self.assertEqual(rc.PARALLEL_VIAS, [('ACT_GATE', (7.75, 5.75), 'test: second ACT_GATE barrel')])
+        # either order names the same pair: the barrel left out of the loop search is the second one named
+        self.assertEqual(self.gate_hits(s, [dict(pair, vias=[[7.75, 5.75], [7, 5]])]), [])
+        # a pair on another net does not cover this one
+        self.assertEqual(self.gate_hits(s, [dict(pair, net='OTHER')]),
+                         [('extra_vias', ''), ('extra_vias', ''), ('track_loop', '')])
+        self.assertEqual(self.gate_hits(self.gate_board(second=False), []), [])        # one barrel: clean
+
+    def test_o_c2_5_stale_and_series_pairs_fail(self):
+        s = self.gate_board()
+        pair = {'net': 'ACT_GATE', 'vias': [[7, 5], [7.75, 5.75]], 'reason': 'test'}
+        # stale: the first barrel moved away (no via at the named spot), the second gone, or a net with no copper
+        self.assertIn(('parallel_via', 'stale'), self.gate_hits(s, [dict(pair, vias=[[6, 5], [7.75, 5.75]])]))
+        self.assertIn(('parallel_via', 'stale'), self.gate_hits(self.gate_board(second=False), [pair]))
+        rc.set_profile('r11', gate_data={'parallel_vias': [dict(pair, net='NO_COPPER')]})
+        stale = [d for d in rc.scan(s.board) if d['cat'] == 'parallel_via']
+        self.assertEqual([(d['net'], d['problem'][:5]) for d in stale], [('NO_COPPER', 'stale')])
+        self.assertTrue(rc.gated(stale[0]))
+        # two barrels in series (the run's two layer changes) are not a pair: the second named one fails as not
+        # parallel, and the real second barrel's loop still fails
+        hits = self.gate_hits(s, [dict(pair, vias=[[7, 5], [13, 5]])])
+        self.assertIn(('parallel_via', 'not p'), hits)
+        self.assertIn(('track_loop', ''), hits)
+        # the first barrel named must be redundant too: (13, 5) is not, though (7.75, 5.75) beside (7, 5) is
+        rc.set_profile('r11', gate_data={'parallel_vias': [dict(pair, vias=[[13, 5], [7.75, 5.75]])]})
+        bad = [d for d in rc.scan(s.board) if d['cat'] == 'parallel_via']
+        self.assertEqual([((d['x'], d['y']), d['problem'][:40]) for d in bad],
+                         [((13.0, 5.0), 'not parallel: without the first barrel o')])
+
+    def test_o_c2_5_gate_data_schema(self):
+        self.assertEqual(rc.load_parallel_pairs({}), [])               # no key: an empty list
+        ok = {'net': 'GND', 'vias': [[1, 2], [1.6, 2]], 'reason': 'R7.2 second GND barrel'}
+        self.assertEqual(rc.load_parallel_pairs({'parallel_vias': [ok]}), [('GND', (1.0, 2.0), (1.6, 2.0), ok['reason'])])
+        for bad in ({'parallel_vias': {}}, {'parallel_vias': [dict(ok, reason=' ')]},
+                    {'parallel_vias': [dict(ok, vias=[[1, 2]])]}, {'parallel_vias': [dict(ok, vias=[[1, 2], [1, 2]])]},
+                    {'parallel_vias': [dict(ok, extra=1)]}, {'parallel_vias': [dict(ok, net='')]},
+                    {'parallel_vias': [dict(ok, vias=[[1, 2], [1, True]])]}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                rc.load_parallel_pairs(bad)
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / 'gate.json'
+            self.assertEqual(rc.read_gate_data(path), {})              # no file: no pairs
+            path.write_text(json.dumps({'parallel_vias': [ok]}))
+            rc.set_profile('r11', gate_data=rc.read_gate_data(path))
+            self.assertEqual(rc.PARALLEL_VIAS, [('GND', (1.6, 2.0), ok['reason'])])
+        rc.set_profile('r10')
+        self.assertEqual(rc.PARALLEL_PAIRS, [])                        # r10 keeps its own frozen list
+        self.assertEqual(rc.PARALLEL_VIAS, rc.PARALLEL_VIAS_R10)
 
     def test_reference_pairs_follow_the_r11_stack(self):
         pairs = rc.ref_pairs()

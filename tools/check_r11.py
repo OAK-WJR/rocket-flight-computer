@@ -58,8 +58,11 @@ Rules (R10's id where it is R10's rule):
              the DRU itself is held to its generator by r11_sch_check, so it is not SHA-pinned here)
   K-lands    the project library is the only footprint source; placed paste / mask settings equal the library
   K-width    BAT_IN / RAW_PROTECTED width floor (check_r10.k_width)
-  K-power    rail paths at their IPC-2152 width and via counts (R10's POWER_PATHS without its coordinate bridges or
-             per-layer restrictions), Q124's fire return, single-via-open taps (exceptions from R11_DATA, empty)
+  K-power    rail paths (POWER_PATHS_R11: R10's paths by function on R11's topology, O-C2-6) at the IPC-2152 width of
+             R10's design currents on each segment's own layer and R11 copper (CU_MM_R11), narrow pin entries only as
+             R11_DATA 'power_narrow' entries with a length cap; their via counts and sizes; Q124's fire return;
+             R10's single-via-open taps with U1's LQFP pins mapped to R11 balls (single_open_taps_r11, O-C2-5),
+             exceptions only from R11_DATA 'single_open_exceptions' (none by default). Schemas: gate_C2.md
   K-ports    port ESD clamps on the wire side, <= 4.5 mm of track from the pin (J9's UART pins 5 / 6 on R11)
   K-loader   ROM-loader pins (check_r10.loader_pins with U1's balls from the R11 pin table)
 
@@ -111,15 +114,66 @@ GH_PORTS = {
 # R10's clamps keyed by terminal pin; J9's UART moves from pins 3 / 4 to 5 / 6 (D-R11-05: RXI pin 5, TXO pin 6)
 PORT_CLAMPS_R11 = tuple((ref, {'3': '5', '4': '6'}[pin] if ref == 'J9' else pin, clamp, res)
                         for ref, pin, clamp, res in r10.PORT_CLAMPS)
-# R10's power paths with their R10 drawing details removed: named bridge coordinates and the J440 feed's F.Cu-only
-# restriction were measured on the R10 copper. Floors, design currents, terminals and minimum via counts stay.
-POWER_PATHS_R11 = tuple(dict({k: v for k, v in p.items() if k != 'layers'},
-                             vias={k: v for k, v in p['vias'].items() if k != 'bridges'}) for p in r10.POWER_PATHS)
+# K-power on R11 (stageC2.md O-C2-6, gate_C2.md). R10's POWER_PATHS by function, re-drawn on R11's topology: R10's
+# coordinates, its 1.0 / 0.5 mm IN via, its drawn floors and the 'through' parts that R11's placement moves off the path
+# are gone; the design currents (R10 check_r10 K-power comment, parts_budget.json) stay. Each path's tracks must be at
+# least the IPC-2152 width for its current at POWER_RISE on that track's own layer and R11 copper (CU_MM_R11; 0.01 mm
+# up), so an inner-layer segment needs its 0.5 oz width; a narrower segment passes only inside a pin entry listed in
+# R11_DATA 'power_narrow' (power_narrow_entries). Via specs: R11's power via is 0.6 / 0.3 mm (D-R11-15), held to R10's
+# 0.5 / 0.3 mm minimum; 'max' caps the vias on a path.
+# R11 copper (stageB.md section 3, JLC06161H-3313 table, Datasheet): outer 0.035 mm, inner 0.0152 mm (0.5 oz).
+CU_MM_R11 = {'F.Cu': 0.035, 'B.Cu': 0.035, 'In1.Cu': 0.0152, 'In2.Cu': 0.0152, 'In3.Cu': 0.0152, 'In4.Cu': 0.0152}
+POWER_RISE = r10.POWER_RISE                                      # 30 C, R10's U9 OUT basis
+_PV = dict(drill=0.3, pad=0.5)                                   # R10's power via minimum; R11 draws 0.6 / 0.3
+POWER_PATHS_R11 = (
+    # J1 is a plated AWG20 wire pad (1.30 mm hole, 2.50 mm land, D-R11-05) whose barrel reaches U9's B.Cu side; U9, C88
+    # (its input decoupling, 'at U9') and the path are on B.Cu, so the path takes no via (max 0: R10's 1.0 / 0.5 mm IN
+    # via was the DB125's F.Cu-to-B.Cu change, which R11 does not have).
+    dict(name='U9 IN', net='BAT_IN', start={'J1': ('1',)}, end={'U9': ('5',)}, through={'C88': ('1',)}, amps=2.9,
+         vias=dict(_PV, count=0, max=0, plane=None)),
+    dict(name='U9 OUT', net='RAW_PROTECTED', start={'U9': ('6',)}, end=None, through={}, amps=2.9,
+         vias=dict(_PV, count=2, plane='In2.Cu')),
+    dict(name='U401 IN', net='PORT_5V3', start={'U401': ('9', '10')}, end=None, through={}, amps=1.9,
+         vias=dict(_PV, count=2, plane='In2.Cu')),
+    dict(name='U401 EN', net='PORT_5V3', start={'U401': ('7',)}, end=None, through={}, floor=0.2,
+         vias=dict(_PV, count=2, plane='In2.Cu')),               # an EN input: no design current, R10's 0.2 mm floor
+    dict(name='U401 OUT', net='PORT_4V8', start={'U401': ('1', '2')}, end=None, through={}, amps=1.9,
+         vias=dict(_PV, count=2, plane='In2.Cu')),
+    # C430 is U402's input capacitor, placed 'at U402' (r11_place.tsv)
+    dict(name='U402 IN', net='PORT_5V3', start={'U402': ('1',)}, end=None, through={'C430': ('1',)}, amps=1.249,
+         vias=dict(_PV, count=2, plane='In2.Cu')),
+    # The three identical GH ports (D-R11-05) each drop from pin 1 to the In2 PORT_4V8 band under them (stageC2.md
+    # section 5). R10's J420 'through C421' and J440 two-via / F.Cu-only details were R10 drawing details (D-R19-14).
+    dict(name='J410 feed', net='PORT_4V8', start={'J410': ('1',)}, end=None, through={}, amps=1.9,
+         vias=dict(_PV, count=1, plane='In2.Cu')),
+    dict(name='J420 feed', net='PORT_4V8', start={'J420': ('1',)}, end=None, through={}, amps=1.9,
+         vias=dict(_PV, count=1, plane='In2.Cu')),
+    dict(name='J440 feed', net='PORT_4V8', start={'J440': ('1',)}, end=None, through={}, amps=1.9,
+         vias=dict(_PV, count=1, plane='In2.Cu')),
+    # U402, C431 and J9 are all on F.Cu; J9 (GH-6) carries the camera supply on pins 1 and 2 (D-R11-05), both on the
+    # path; the whole 1.249 A is held on every segment.
+    dict(name='CAM_5V out', net='CAM_5V', start={'U402': ('6',)}, end={'J9': ('1', '2')},
+         through={'C431': ('1',), 'J9': ('1', '2')}, amps=1.249, vias=dict(_PV, count=0, plane=None)),
+    # C84 (F.Cu) to U11 (B.Cu): two vias, as R10 (D-R19-09: an open barrel no longer drops the hold-up)
+    dict(name='C84 hold-up', net='VLOGIC', start={'C84': ('1',)}, end={'U11': ('1', '8')}, through={}, amps=1.294,
+         vias=dict(_PV, count=2, plane=None)),
+    # U11 and C99 are on B.Cu and U2 on F.Cu (R10: all B.Cu, no via), so the trunk changes side: two vias, D-R19-09's
+    # rule for a supply feed (one open barrel would stop U2 and with it the whole logic rail)
+    dict(name='VLOGIC trunk', net='VLOGIC', start={'U11': ('1', '8')}, end={'U2': ('2', '3')}, through={'C99': ('1',)},
+         amps=1.294, vias=dict(_PV, count=2, plane=None)),
+    # The bucks' outputs to their In2 regions. R10's C404 / C8 'through' parts sit elsewhere on R11: C404 in the 1210
+    # bank at (31.9, 18.9), C8 east of U2 while L1.2 faces west (stageC2.md O-C2-2 b); they reach In2 by their own vias.
+    dict(name='U400 OUT', net='PORT_5V3', start={'L400': ('2',)}, end=None, through={}, amps=1.81,
+         vias=dict(_PV, count=2, plane='In2.Cu')),
+    dict(name='U2 OUT', net='3V3', start={'L1': ('2',)}, end=None, through={}, amps=2.0,
+         vias=dict(_PV, count=2, plane='In2.Cu')),
+)
+PIN_ENTRY_MAX = 2.0     # mm: a 'power_narrow' length cap may not exceed R8-GATE-04's 2 mm narrow-run limit (K-width)
 
 
 def load_data(path=None):
     """R11_DATA: what the later stages record (imu, supports, fire_narrow, power_narrow, single_open_exceptions,
-    short_edge_queries). Missing file: {} (each rule says what it then needs)."""
+    short_edge_queries; route_check r11 reads parallel_vias). Missing file: {} (each rule says what it then needs)."""
     path = R11_DATA if path is None else Path(path)
     if not path.is_file():
         return {}
@@ -625,13 +679,160 @@ def k_lands(ctx):
     return issues, dict(footprints_used=len(used), pads_compared_for_paste_mask=compared, pinned=len(pins))
 
 
+def lqfp_balls(path=None):
+    """{LQFP pin number: TFBGA ball} from the R11 pin table's 'pin' and 'r11_ball' columns (R10's tables name U1 by
+    LQFP pin; R11's U1 pads are balls)."""
+    path = R11_PIN_TABLE if path is None else Path(path)
+    if not path.is_file():
+        raise ValueError(f'R11 pin table {path} not found (stage A writes it)')
+    with path.open() as f:
+        rows = list(csv.DictReader((line for line in f if not line.startswith('#')), delimiter='\t'))
+    if not rows or 'r11_ball' not in rows[0] or 'pin' not in rows[0]:
+        raise ValueError(f'R11 pin table {path} has no pin / r11_ball columns')
+    return {r['pin']: r['r11_ball'] for r in rows if r.get('pin') and r.get('r11_ball') not in (None, '', '-')}
+
+
+def single_open_taps_r11(pin_ball=None):
+    """O-C2-5: R10's SINGLE_OPEN_TAPS by function on R11. Every other reference keeps its R10 refdes and pad number
+    (D-R11-01: same netlist; U1 is the only package whose pad names change), so a tap or source 'U1.<LQFP pin>' becomes
+    'U1.<ball>' through the pin table (PA4 28 -> G3, VCAP1 48 -> F8, VCAP2 73 -> E7, BOOT0 94 -> D5). A U1 pin with no
+    ball fails here (ValueError), never silently drops its tap."""
+    pin_ball = lqfp_balls() if pin_ball is None else pin_ball
+
+    def ball(label):
+        ref, _, num = label.partition('.')
+        if ref != 'U1':
+            return label
+        if num not in pin_ball:
+            raise ValueError(f'single-via-open tap {label}: LQFP pin {num} has no R11 ball in the pin table')
+        return f'U1.{pin_ball[num]}'
+    return tuple((net, ball(tap), tuple(ball(s) for s in sources), why) for net, tap, sources, why in r10.SINGLE_OPEN_TAPS)
+
+
+NARROW_KEYS = {'net', 'pad', 'layer', 'width_mm', 'max_len_mm', 'reason'}
+
+
+def power_narrow_entries(data):
+    """(entries, issues) from R11_DATA 'power_narrow' (O-C2-6): a list of objects
+    {"net": "BAT_IN", "pad": "U9.5", "layer": "B.Cu", "width_mm": 0.3, "max_len_mm": 1.0, "reason": "measured reason"}:
+    a run of a power path's tracks narrower than the path's IPC-2152 floor, on `layer`, touching pad `pad` (a pin entry),
+    every segment at least width_mm wide and the run at most max_len_mm long (<= PIN_ENTRY_MAX). A missing key is an
+    empty list; a malformed entry is an issue (fail closed)."""
+    raw = data.get('power_narrow', [])
+    if not isinstance(raw, list):
+        return [], ["R11_DATA 'power_narrow' must be a list"]
+    out, issues = [], []
+    for k, e in enumerate(raw):
+        where = f"R11_DATA 'power_narrow'[{k}]"
+        if not isinstance(e, dict) or set(e) != NARROW_KEYS:
+            issues.append(f'{where}: an object with exactly the keys {", ".join(sorted(NARROW_KEYS))}')
+            continue
+        num = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool)   # noqa: E731
+        bad = [f for f, ok in (('net', isinstance(e['net'], str) and e['net']),
+                               ('pad', isinstance(e['pad'], str) and re.fullmatch(r'[A-Z]+\d+\.\w+', e['pad'])),
+                               ('layer', e['layer'] in CU_MM_R11),
+                               ('width_mm', num(e['width_mm']) and e['width_mm'] > 0),
+                               ('max_len_mm', num(e['max_len_mm']) and 0 < e['max_len_mm'] <= PIN_ENTRY_MAX),
+                               ('reason', isinstance(e['reason'], str) and e['reason'].strip())) if not ok]
+        if bad:
+            issues.append(f'{where}: invalid {", ".join(bad)} (max_len_mm at most {PIN_ENTRY_MAX} mm, R8-GATE-04)')
+            continue
+        out.append(e)
+    return out, issues
+
+
+def ipc_floor(layer, amps):
+    """IPC-2152 width (mm, rounded up to 0.01 mm) for `amps` at POWER_RISE on `layer` with R11's copper."""
+    import ipc2152
+    return math.ceil(ipc2152.ipc_width(POWER_RISE, layer, amps, th_mm=CU_MM_R11[layer]) * 100 - 1e-6) / 100
+
+
+def _narrow_runs(segs):
+    """Connected runs (tracks joined end to end on one layer) of `segs`: [[track, ...]]."""
+    parent = list(range(len(segs)))
+
+    def root(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    for i, a in enumerate(segs):
+        for j in range(i):
+            b = segs[j]
+            if a.GetLayer() == b.GetLayer() and any((p - q).EuclideanNorm() <= 1000 for p in (a.GetStart(), a.GetEnd())
+                                                    for q in (b.GetStart(), b.GetEnd())):
+                parent[root(i)] = root(j)
+    runs = {}
+    for i, t in enumerate(segs):
+        runs.setdefault(root(i), []).append(t)
+    return list(runs.values())
+
+
+def power_paths_r11(board, paths=POWER_PATHS_R11, narrow=()):
+    """O-C2-6: every path joined from its start to its end (None: a via of the net), through its listed pads; each of
+    its tracks at least the floor of its own layer (the IPC-2152 width of the path's design current on R11 copper, or
+    the path's fixed floor where it has no current); a run of narrower tracks only as one 'power_narrow' pin entry
+    (net, layer and pad match, every width >= width_mm, run length <= max_len_mm); its vias (r10.via_issues, plus a 'max'
+    count). An entry that excuses nothing is stale."""
+    import pcbnew
+    mm = pcbnew.ToMM
+    issues, ev, used = [], {}, set()
+    for spec in paths:
+        name, net = spec['name'], spec['net']
+        segs, joined, vias, on = r10.path_graph(board, net, spec['start'], spec['end'])
+        layers = sorted({board.GetLayerName(t.GetLayer()) for t in segs})
+        floors = {lay: (ipc_floor(lay, spec['amps']) if 'amps' in spec else spec['floor']) for lay in layers}
+        ev[name] = dict(net=net, path_segments=len(segs), widths_mm=sorted({round(mm(t.GetWidth()), 3) for t in segs}),
+                        joined=joined, floors_mm=floors, amps=spec.get('amps'), pads=on,
+                        vias=[[round(mm(v.GetPosition().x), 3), round(mm(v.GetPosition().y), 3),
+                               round(mm(v.GetWidth(pcbnew.F_Cu)), 3), round(mm(v.GetDrillValue()), 3)] for v in vias])
+        if not joined:
+            issues.append(f'{name}: no {net} copper path from {spec["start"]} to {spec["end"] or "a via of the net"}')
+            continue
+        issues += [f'{name}: the {net} path does not pass {ref}.{num}' for ref, nums in spec['through'].items()
+                   for num in nums if f'{ref}.{num}' not in on]
+        thin = [t for t in segs if mm(t.GetWidth()) < floors[board.GetLayerName(t.GetLayer())] - r10.EPS]
+        for run in _narrow_runs(thin):
+            lay = board.GetLayerName(run[0].GetLayer())
+            length = sum(mm(t.GetLength()) for t in run)
+            width = min(mm(t.GetWidth()) for t in run)
+            touched = set()
+            for f in board.GetFootprints():
+                for pad in f.Pads():
+                    if pad.GetNetname() == net and pad.IsOnLayer(run[0].GetLayer()) and any(
+                            pad.HitTest(q) for t in run for q in (t.GetStart(), t.GetEnd())):
+                        touched.add(f'{f.GetReference()}.{pad.GetNumber()}')
+            hit = [k for k, e in enumerate(narrow) if e['net'] == net and e['layer'] == lay and e['pad'] in touched
+                   and width >= e['width_mm'] - 0.005 and length <= e['max_len_mm'] + 0.005]
+            if hit:
+                used.update(hit)
+                continue
+            a = run[0].GetStart()
+            cap = [e for e in narrow if e['net'] == net and e['layer'] == lay and e['pad'] in touched]
+            why = (f'; the power_narrow entry for {cap[0]["pad"]} allows {cap[0]["width_mm"]} mm over at most '
+                   f'{cap[0]["max_len_mm"]} mm' if cap else '; no power_narrow pin entry for it')
+            issues.append(f'{name}: {net} run of {len(run)} track(s) {width:.3f} mm wide, {length:.3f} mm long on {lay} '
+                          f'from ({mm(a.x):.3f}, {mm(a.y):.3f}) touching {sorted(touched) or "no pad"}; floor '
+                          f'{floors[lay]} mm ({spec.get("amps", "no")} A, IPC-2152 at {POWER_RISE:g} C on R11 copper)'
+                          f'{why}')
+        vspec = spec['vias']
+        if 'max' in vspec and len(vias) > vspec['max']:
+            issues.append(f'{name}: {len(vias)} via(s) on the path; at most {vspec["max"]}')
+        issues += r10.via_issues(board, name, vias, {k: v for k, v in vspec.items() if k != 'max'}, net)
+    issues += [f'stale power_narrow entry {e["net"]} {e["pad"]} {e["layer"]} {e["width_mm"]} mm / {e["max_len_mm"]} mm '
+               f'({e["reason"][:60]})' for k, e in enumerate(narrow) if k not in used]
+    ev['narrow_used'] = [narrow[k]['reason'] for k in sorted(used)]
+    return issues, ev
+
+
 def k_power(ctx):
-    narrow = [(e[0], e[1], e[2], e[3], tuple(e[4]), e[5]) for e in ctx.data.get('power_narrow', [])]
+    narrow, bad = power_narrow_entries(ctx.data)
     exceptions = [tuple(e) for e in ctx.data.get('single_open_exceptions', [])]
-    issues, ev = r10.power_paths(ctx.board, paths=POWER_PATHS_R11, narrow=narrow)
+    issues, ev = power_paths_r11(ctx.board, narrow=narrow)
     found, ev['fire_return'] = r10.fire_return(ctx.board)
-    taps, ev['single_via_open_taps'] = r10.single_via_opens(ctx.board, exceptions=exceptions)
-    return [f'K-power: {i}' for i in issues + found + taps], ev
+    taps, ev['single_via_open_taps'] = r10.single_via_opens(ctx.board, taps=single_open_taps_r11(),
+                                                            exceptions=exceptions)
+    return [f'K-power: {i}' for i in bad + issues + found + taps], ev
 
 
 def k_ports(ctx):
