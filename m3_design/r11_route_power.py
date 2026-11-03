@@ -46,11 +46,12 @@ RUNS = (
                           (3.23, 14.3), ('J1', '1')]),
     ('BAT_IN', 'B', 0.3, [(4.5, 13.03), ('R167', '1')]),
     ('BAT_IN', 'B', 0.5, [('J1', '1'), (4.7, 16.7)]),                                 # TP80
-    # BAT_IN to In2: a stub via off the trunk, D8.1's own via; C80.1 - C96.1 and R80.1 / R82.1 (B.Cu) on (18.7, 9.2)
+    # BAT_IN to In2: a stub via off the trunk, D8.1's own via; C96.1 and R80.1 / R82.1 (B.Cu) on (18.7, 9.2)
     ('BAT_IN', 'B', 0.7, [(8.0, 7.15), (8.0, 6.2)]),
     ('BAT_IN', 'B', 0.7, [(7.2, 7.15), (7.2, 6.2)]),
     ('BAT_IN', 'F', 0.5, [(6.0, 10.8), (6.6, 10.2)]),
-    ('BAT_IN', 'F', 1.0, [('C80', '1'), ('C96', '1')]),
+    # D-R11-79: C80 on B.Cu beside the trunk, its pad 1 tied straight down onto it (hot-plug falling slew at U9 IN)
+    ('BAT_IN', 'B', 0.7, [('C80', '1'), (6.125, 7.15)]),
     ('BAT_IN', 'F', 0.5, [(18.7, 9.2), (17.9, 10.0)]),
     ('BAT_IN', 'B', 0.5, [('R80', '1'), (17.4, 11.0), (16.675, 11.725), ('R82', '1')]),
     ('BAT_IN', 'B', 0.5, [(17.4, 9.2), (18.7, 9.2)]),

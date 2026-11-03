@@ -4,6 +4,7 @@
 R11_BOARD_REQUIRED=1 (set by tools/check.sh once its R11 section has run) turns a missing R11_BOARD into a failure, so
 the real-board seeds cannot be skipped silently while the R11 board exists.
 """
+import math
 import os
 import re
 from pathlib import Path
@@ -788,6 +789,52 @@ class R11Legends(unittest.TestCase):
         issues, _ = r11.word_spans_r11(s.board)
         self.assertTrue(issues and 'along the pin row (x' in issues[0], issues)
 
+    def test_r11_legend_set_waives_only_absent_optional_legends(self):
+        """D-R11-83: pin 1 and the last pin of each GH port, every pyro / battery / arming legend and the safety words
+        stay required; an absent optional legend is waived, a drawn wrong one is not."""
+        for ref in r11.PROTECTED_LEGENDS_R11:
+            self.assertFalse(any(k[0] == ref for k in r11.OPTIONAL_PINS_R11), ref)
+        for ref, pins in r11.TERMINAL_PINS_R11:
+            if ref in r11.GH_PORTS_R11:
+                self.assertNotIn((ref, pins[0][0]), r11.OPTIONAL_PINS_R11)
+                self.assertNotIn((ref, pins[-1][0]), r11.OPTIONAL_PINS_R11)
+        self.assertFalse({'IGN', 'BAT', 'SWITCH'} & r11.OPTIONAL_WORDS_R11)
+        s = Six()
+        absent = ['J122.2: 0 legends "2:S2" nearest it, expected one',
+                  "J420: word legend 'RADIO' appears 0 times on silkscreen, expected once",
+                  'J2.4: silkscreen must identify SWCLK exactly once (R10 port table)',
+                  "J122: silkscreen must identify 'SERVO + FROM HARNESS' exactly once"]
+        required = ['J122.1: 0 legends "1:S1" nearest it, expected one',
+                    'J122.5: 0 legends "5:GND" nearest it, expected one',
+                    'J121.1: 0 legends "1:E1-" nearest it, expected one',
+                    'J400.2: 0 legends "2:SW" nearest it, expected one',
+                    "J400: word legend 'SWITCH' appears 0 times on silkscreen, expected once",
+                    'J2.1: silkscreen must identify 3V3 exactly once (R10 port table)',
+                    'J122.2: 2 legends "2:S2" nearest it, expected one',
+                    "J420: word legend 'RADIO' appears 2 times on silkscreen, expected once"]
+        kept, waived = r11.r11_legend_set(s.board, absent + required)
+        self.assertEqual((kept, sorted(waived)), (required, sorted(absent)))
+        R11Legends.text(self, s, 'J2 4:SWCLK', 20.0, 20.0)           # drawn: the port-table finding is not an absence
+        kept, _ = r11.r11_legend_set(s.board, ['J2.4: silkscreen must identify SWCLK exactly once (R10 port table)'])
+        self.assertEqual(len(kept), 1)
+
+    def test_exti_lines_are_distinct(self):
+        """D-R11-81: two interrupt nets on one EXTI line number fail (PA5 and PD5 were both line 5)."""
+        s = Six()
+        nets = (('H3', 'BAT_FAULT_N'), ('C6', 'IMU_INT1'), ('G3', 'LOGIC_SOURCE_ST'), ('F9', 'VBUS_SENSE'),
+                ('H9', 'USB_FAULT_N'), ('A2', 'CAM_FAULT_N'), ('B6', 'SIGNAL'))
+        u1 = s.part('U1', 23.0, 25.0, [(ball, net, (k * 0.8, 0), 'smd') for k, (ball, net) in enumerate(nets)])
+        table = {'PA5': 'H3', 'PD6': 'C6', 'PA4': 'G3', 'PC8': 'F9', 'PD10': 'H9', 'PC13': 'A2', 'PD5': 'B6'}
+        issues, ev = r11.exti_lines(s.board, table)
+        self.assertEqual(issues, [], ev)
+        self.assertEqual(ev['EXTI6'], ['IMU_INT1 PD6 (C6)'])
+        u1.FindPadByNumber('C6').SetNet(s.net('SIGNAL'))
+        u1.FindPadByNumber('B6').SetNet(s.net('IMU_INT1'))                 # D-R11-49's PD5: line 5 with PA5
+        issues, _ = r11.exti_lines(s.board, table)
+        self.assertTrue(any('EXTI line 5 shared' in i for i in issues), issues)
+        u1.FindPadByNumber('B6').SetNet(s.net('SIGNAL'))                   # the net on no ball
+        self.assertTrue(any('IMU_INT1: on U1 balls []' in i for i in r11.exti_lines(s.board, table)[0]))
+
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
 class R11RealBoard(unittest.TestCase):
@@ -855,6 +902,48 @@ class R11RealBoard(unittest.TestCase):
     def test_k_rules_hold_on_the_real_board(self):
         """D-R11-40: R11's own K-rules (pinned DRU, JLC six-layer floors) hold on the R11 board and project."""
         self.assertEqual(self.run_rules({'K-rules'})['issues'], [])
+
+    def test_gap3_vippo_holds_and_catches_seeds(self):
+        """D-R11-80: exactly two filled / capped 0.5 / 0.3 GND vias at U401.11's local (+-0.3, 0); any change fails."""
+        issues, ev, allowed = r11.thermal_vias_r11(self.board)
+        self.assertEqual((issues, len(allowed)), ([], 2), ev)
+        self.assertEqual(self.run_rules({'K-copper'})['issues'], [])
+        vias = [v for v in self.board.GetTracks() if v.GetClass() == 'PCB_VIA'
+                and any(math.dist((pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y)), c) < 1e-3
+                        for c in r10.vippo_centres(self.board.FindFootprintByReference('U401')))]
+        self.assertEqual(len(vias), 2)
+        vias[0].SetFillingMode(pcbnew.FILLING_MODE_NOT_FILLED)
+        self.assertTrue(r11.thermal_vias_r11(self.board)[0])
+        vias[0].SetFillingMode(pcbnew.FILLING_MODE_FILLED); vias[0].SetCappingMode(pcbnew.CAPPING_MODE_FROM_BOARD)
+        self.assertTrue(r11.thermal_vias_r11(self.board)[0])
+        vias[0].SetCappingMode(pcbnew.CAPPING_MODE_CAPPED)
+        vias[1].Move(pcbnew.VECTOR2I(pcbnew.FromMM(0.05), 0))
+        self.assertTrue(any('K-copper' in i for i in self.run_rules({'K-copper'})['issues']))
+
+    def test_exti_holds_on_the_real_board(self):
+        self.assertEqual(self.run_rules({'K-exti'})['issues'], [])
+        u1 = self.board.FindFootprintByReference('U1')
+        u1.FindPadByNumber(r11.pin_table()['PD5']).SetNet(self.board.FindNet('IMU_INT1'))
+        self.assertTrue(self.run_rules({'K-exti'})['issues'])
+
+    def test_r11_legend_set_on_the_real_board(self):
+        """D-R11-83: K-legends holds; removing the arming word or a pyro pin legend fails; a wrong middle-contact
+        legend fails though middle contacts are optional."""
+        self.assertEqual(self.run_rules({'K-legends'})['issues'], [])
+        texts = [d for d in self.board.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT)]
+        switch = next(t for t in texts if t.GetText() == 'SWITCH')
+        switch.SetVisible(False)
+        self.assertTrue(any("'SWITCH'" in i for i in self.run_rules({'K-legends'})['issues']))
+        switch.SetVisible(True)
+        e1 = next(t for t in texts if t.GetText() == '1:E1-')
+        e1.SetVisible(False)
+        self.assertTrue(any('J121.1' in i for i in self.run_rules({'K-legends'})['issues']))
+        e1.SetVisible(True)
+        pad = self.board.FindFootprintByReference('J410').FindPadByNumber('2').GetPosition()
+        t = pcbnew.PCB_TEXT(self.board); t.SetText('2:TXO'); t.SetLayer(pcbnew.F_SilkS)
+        t.SetTextSize(pcbnew.VECTOR2I(pcbnew.FromMM(1.0), pcbnew.FromMM(1.0))); t.SetPosition(pad)
+        self.board.Add(t)
+        self.assertTrue(any('J410.2' in i for i in self.run_rules({'K-legends'})['issues']))
 
     def test_route_check_r11_is_clean(self):
         rc.set_profile('r11'); self.addCleanup(rc.set_profile, 'r8')

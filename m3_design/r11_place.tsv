@@ -56,7 +56,7 @@ C6	18	40.4	0	F	VLOGIC input
 C60	25.6	37.8	0	B	VLOGIC sense filter
 C7	22.4	40.4	0	F	VLOGIC input
 C8	27.2	35.2	90	F	3V3 output
-C80	14.9	9	90	F	BAT_IN bulk
+C80	7.6	8.6	0	B	BAT_IN bulk; D-R11-79: on the B.Cu trunk 3.6 mm from C88.1 (was F (14.9, 9), behind the In2 pour), so U9 IN sees a 10 uF bulk on outer copper (hot-plug falling slew)
 C81	8.45	11.65	180	B	U9 dV/dt, west of U9 (D-R11-25)
 C82	16.9	15.6	90	B	RAW_PROTECTED bulk
 C83	36	32.82	270	F	VBUS 100 nF; D-R11-20: on F beside C28

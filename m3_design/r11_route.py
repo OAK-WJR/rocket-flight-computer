@@ -121,6 +121,20 @@ class Draw:
             v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(self.net(net))
             self.board.Add(v)
 
+    def vippo(self, net, at):
+        """GAP-3 (AGENTS section 3, D-R11-80): one of U401.11's two 0.5 / 0.3 GND thermal vias, resin-filled and
+        copper-capped (planar VIPPO). The only via size outside VIA_SIZES; check_r11 K-copper holds the exact pose."""
+        assert net == 'GND', 'GAP-3 thermal vias are GND only'
+        at = tuple(round(v, 4) for v in at)
+        assert at not in self.vias, f'duplicate via {at}'
+        self.vias[at] = net
+        if not self.dry:
+            v = pcbnew.PCB_VIA(self.board)
+            v.SetPosition(point(at)); v.SetWidth(pcbnew.FromMM(0.5)); v.SetDrill(pcbnew.FromMM(0.3))
+            v.SetLayerPair(pcbnew.F_Cu, pcbnew.B_Cu); v.SetNet(self.net(net))
+            v.SetFillingMode(pcbnew.FILLING_MODE_FILLED); v.SetCappingMode(pcbnew.CAPPING_MODE_CAPPED)
+            self.board.Add(v)
+
     def link(self, net, layer, width, start, end, corners=()):
         """Pad-referenced polyline: start pad, the explicit corners, end pad."""
         self.track(net, layer, width, [self.pad(start, net=net), *corners, self.pad(end, net=net)])

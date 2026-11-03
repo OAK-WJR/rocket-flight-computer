@@ -3517,7 +3517,7 @@
         <field name="LCSC">C25790</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF4703TCE</field>
-        <field name="LCSC Part">C23178</field>
+        <field name="LCSC Part">C25790</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4703TCE_C25790.pdf</field>
         <field name="Description"/>
@@ -3526,7 +3526,7 @@
       <property name="LCSC" value="C25790"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF4703TCE"/>
-      <property name="LCSC Part" value="C23178"/>
+      <property name="LCSC Part" value="C25790"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3550,7 +3550,7 @@
         <field name="LCSC">C25774</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF3003TCE</field>
-        <field name="LCSC Part">C23024</field>
+        <field name="LCSC Part">C25774</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF3003TCE_C25774.pdf</field>
         <field name="Description"/>
@@ -3559,7 +3559,7 @@
       <property name="LCSC" value="C25774"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF3003TCE"/>
-      <property name="LCSC Part" value="C23024"/>
+      <property name="LCSC Part" value="C25774"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3647,7 +3647,7 @@
         <field name="LCSC">C852911</field>
         <field name="Manufacturer">YAGEO</field>
         <field name="Manufacturer Part">RT0402BRD07750RL</field>
-        <field name="LCSC Part">C861551</field>
+        <field name="LCSC Part">C852911</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet">https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2210181700_YAGEO-RT0402BRD07750RL_C852911.pdf</field>
         <field name="Description"/>
@@ -3656,7 +3656,7 @@
       <property name="LCSC" value="C852911"/>
       <property name="Manufacturer" value="YAGEO"/>
       <property name="Manufacturer Part" value="RT0402BRD07750RL"/>
-      <property name="LCSC Part" value="C861551"/>
+      <property name="LCSC Part" value="C852911"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3679,7 +3679,7 @@
         <field name="LCSC">C25744</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1002TCE</field>
-        <field name="LCSC Part">C25804</field>
+        <field name="LCSC Part">C25744</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -3688,7 +3688,7 @@
       <property name="LCSC" value="C25744"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1002TCE"/>
-      <property name="LCSC Part" value="C25804"/>
+      <property name="LCSC Part" value="C25744"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3741,7 +3741,7 @@
       <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4703TCE_C25790.pdf</datasheet>
       <fields>
         <field name="LCSC">C25790</field>
-        <field name="LCSC Part">C23178</field>
+        <field name="LCSC Part">C25790</field>
         <field name="Manufacturer Part">0402WGF4703TCE</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Footprint">rocket:R0402</field>
@@ -3750,7 +3750,7 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25790"/>
-      <property name="LCSC Part" value="C23178"/>
+      <property name="LCSC Part" value="C25790"/>
       <property name="Manufacturer Part" value="0402WGF4703TCE"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
@@ -3804,7 +3804,7 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C25744</field>
-        <field name="LCSC Part">C25804</field>
+        <field name="LCSC Part">C25744</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1002TCE</field>
         <field name="Footprint">rocket:R0402</field>
@@ -3813,7 +3813,7 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C25744"/>
-      <property name="LCSC Part" value="C25804"/>
+      <property name="LCSC Part" value="C25744"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1002TCE"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
@@ -3953,7 +3953,7 @@
         <field name="LCSC">C307331</field>
         <field name="Manufacturer">Samsung Electro-Mechanics</field>
         <field name="Manufacturer Part">CL05B104KB54PNC</field>
-        <field name="LCSC Part">C14663</field>
+        <field name="LCSC Part">C307331</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -3962,7 +3962,7 @@
       <property name="LCSC" value="C307331"/>
       <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
       <property name="Manufacturer Part" value="CL05B104KB54PNC"/>
-      <property name="LCSC Part" value="C14663"/>
+      <property name="LCSC Part" value="C307331"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -4177,7 +4177,7 @@
         <field name="LCSC">C29381</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF6652TCE</field>
-        <field name="LCSC Part">C137691</field>
+        <field name="LCSC Part">C29381</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0402WGF6652TCE_C29381.pdf</field>
         <field name="Description"/>
@@ -4186,7 +4186,7 @@
       <property name="LCSC" value="C29381"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF6652TCE"/>
-      <property name="LCSC Part" value="C137691"/>
+      <property name="LCSC Part" value="C29381"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4210,7 +4210,7 @@
         <field name="LCSC">C852923</field>
         <field name="Manufacturer">YAGEO</field>
         <field name="Manufacturer Part">RT0402BRD0780K6L</field>
-        <field name="LCSC Part">C861568</field>
+        <field name="LCSC Part">C852923</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet">https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2311211102_YAGEO-RT0402BRD0780K6L_C852923.pdf</field>
         <field name="Description"/>
@@ -4219,7 +4219,7 @@
       <property name="LCSC" value="C852923"/>
       <property name="Manufacturer" value="YAGEO"/>
       <property name="Manufacturer Part" value="RT0402BRD0780K6L"/>
-      <property name="LCSC Part" value="C861568"/>
+      <property name="LCSC Part" value="C852923"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4243,7 +4243,7 @@
         <field name="LCSC">C25792</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF4702TCE</field>
-        <field name="LCSC Part">C25819</field>
+        <field name="LCSC Part">C25792</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf</field>
         <field name="Description"/>
@@ -4252,7 +4252,7 @@
       <property name="LCSC" value="C25792"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF4702TCE"/>
-      <property name="LCSC Part" value="C25819"/>
+      <property name="LCSC Part" value="C25792"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4275,7 +4275,7 @@
         <field name="LCSC">C25744</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1002TCE</field>
-        <field name="LCSC Part">C25804</field>
+        <field name="LCSC Part">C25744</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4284,7 +4284,7 @@
       <property name="LCSC" value="C25744"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1002TCE"/>
-      <property name="LCSC Part" value="C25804"/>
+      <property name="LCSC Part" value="C25744"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4307,7 +4307,7 @@
         <field name="LCSC">C25744</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1002TCE</field>
-        <field name="LCSC Part">C25804</field>
+        <field name="LCSC Part">C25744</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4316,7 +4316,7 @@
       <property name="LCSC" value="C25744"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1002TCE"/>
-      <property name="LCSC Part" value="C25804"/>
+      <property name="LCSC Part" value="C25744"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4339,7 +4339,7 @@
         <field name="LCSC">C25744</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1002TCE</field>
-        <field name="LCSC Part">C25804</field>
+        <field name="LCSC Part">C25744</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4348,7 +4348,7 @@
       <property name="LCSC" value="C25744"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1002TCE"/>
-      <property name="LCSC Part" value="C25804"/>
+      <property name="LCSC Part" value="C25744"/>
       <property name="Sheetname" value="08 | USB limit, source mux and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4495,7 +4495,7 @@
         <field name="LCSC">C307331</field>
         <field name="Manufacturer">Samsung Electro-Mechanics</field>
         <field name="Manufacturer Part">CL05B104KB54PNC</field>
-        <field name="LCSC Part">C14663</field>
+        <field name="LCSC Part">C307331</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4504,7 +4504,7 @@
       <property name="LCSC" value="C307331"/>
       <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
       <property name="Manufacturer Part" value="CL05B104KB54PNC"/>
-      <property name="LCSC Part" value="C14663"/>
+      <property name="LCSC Part" value="C307331"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -4590,7 +4590,7 @@
         <field name="LCSC">C307331</field>
         <field name="Manufacturer">Samsung Electro-Mechanics</field>
         <field name="Manufacturer Part">CL05B104KB54PNC</field>
-        <field name="LCSC Part">C14663</field>
+        <field name="LCSC Part">C307331</field>
         <field name="Footprint">rocket:C0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4599,7 +4599,7 @@
       <property name="LCSC" value="C307331"/>
       <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
       <property name="Manufacturer Part" value="CL05B104KB54PNC"/>
-      <property name="LCSC Part" value="C14663"/>
+      <property name="LCSC Part" value="C307331"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -4716,7 +4716,7 @@
         <field name="LCSC">C11702</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1001TCE</field>
-        <field name="LCSC Part">C21190</field>
+        <field name="LCSC Part">C11702</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4725,7 +4725,7 @@
       <property name="LCSC" value="C11702"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1001TCE"/>
-      <property name="LCSC Part" value="C21190"/>
+      <property name="LCSC Part" value="C11702"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4748,7 +4748,7 @@
         <field name="LCSC">C11702</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1001TCE</field>
-        <field name="LCSC Part">C21190</field>
+        <field name="LCSC Part">C11702</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4757,7 +4757,7 @@
       <property name="LCSC" value="C11702"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1001TCE"/>
-      <property name="LCSC Part" value="C21190"/>
+      <property name="LCSC Part" value="C11702"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4780,7 +4780,7 @@
         <field name="LCSC">C25744</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1002TCE</field>
-        <field name="LCSC Part">C25804</field>
+        <field name="LCSC Part">C25744</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4789,7 +4789,7 @@
       <property name="LCSC" value="C25744"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1002TCE"/>
-      <property name="LCSC Part" value="C25804"/>
+      <property name="LCSC Part" value="C25744"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4812,7 +4812,7 @@
         <field name="LCSC">C11702</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1001TCE</field>
-        <field name="LCSC Part">C21190</field>
+        <field name="LCSC Part">C11702</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4821,7 +4821,7 @@
       <property name="LCSC" value="C11702"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1001TCE"/>
-      <property name="LCSC Part" value="C21190"/>
+      <property name="LCSC Part" value="C11702"/>
       <property name="Sheetname" value="09 | Camera UART, separate supply domains"/>
       <property name="Sheetfile" value="camera_uart.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4947,7 +4947,7 @@
         <field name="LCSC">C11702</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1001TCE</field>
-        <field name="LCSC Part">C21190</field>
+        <field name="LCSC Part">C11702</field>
         <field name="Footprint">rocket:R0402</field>
         <field name="Datasheet"/>
         <field name="Description"/>
@@ -4956,7 +4956,7 @@
       <property name="LCSC" value="C11702"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1001TCE"/>
-      <property name="LCSC Part" value="C21190"/>
+      <property name="LCSC Part" value="C11702"/>
       <property name="Sheetname" value="10 | USB cable presence, ordinary GPIO sensing"/>
       <property name="Sheetfile" value="usb_sense.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -6341,7 +6341,7 @@
       <footprint>rocket:R0402</footprint>
       <fields>
         <field name="LCSC">C11702</field>
-        <field name="LCSC Part">C17513</field>
+        <field name="LCSC Part">C11702</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
         <field name="Manufacturer Part">0402WGF1001TCE</field>
         <field name="Footprint">rocket:R0402</field>
@@ -6350,7 +6350,7 @@
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
       <property name="LCSC" value="C11702"/>
-      <property name="LCSC Part" value="C17513"/>
+      <property name="LCSC Part" value="C11702"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
       <property name="Manufacturer Part" value="0402WGF1001TCE"/>
       <property name="Sheetname" value="14 | Buzzer"/>
@@ -8482,7 +8482,7 @@
       <node ref="U4" pin="12" pinfunction="AP_CS_12" pintype="input"/>
     </net>
     <net code="54" name="IMU_INT1" class="Default">
-      <node ref="U1" pin="B6" pinfunction="PD5_B6" pintype="bidirectional"/>
+      <node ref="U1" pin="C6" pinfunction="PD6_C6" pintype="bidirectional"/>
       <node ref="U4" pin="4" pinfunction="INT1_4" pintype="output"/>
     </net>
     <net code="55" name="LED_RED" class="Default">
@@ -8908,8 +8908,8 @@
     <net code="141" name="unconnected-(U1-PD4-PadD7)" class="Default">
       <node ref="U1" pin="D7" pinfunction="PD4_D7" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="142" name="unconnected-(U1-PD6-PadC6)" class="Default">
-      <node ref="U1" pin="C6" pinfunction="PD6_C6" pintype="bidirectional+no_connect"/>
+    <net code="142" name="unconnected-(U1-PD5-PadB6)" class="Default">
+      <node ref="U1" pin="B6" pinfunction="PD5_B6" pintype="bidirectional+no_connect"/>
     </net>
     <net code="143" name="unconnected-(U1-PD7-PadD6)" class="Default">
       <node ref="U1" pin="D6" pinfunction="PD7_D6" pintype="bidirectional+no_connect"/>

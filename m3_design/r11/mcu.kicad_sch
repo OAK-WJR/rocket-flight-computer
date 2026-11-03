@@ -4631,25 +4631,25 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 99fae504-baba-5657-9e6d-8a6eec614fbb))
+	(no_connect
+		(at 119.38 184.15)
+		(uuid 8abba072-59ba-5649-95ce-ba6fad985f17))
 	(wire
 		(pts
-			(xy 119.38 184.15)
-			(xy 124.46 184.15))
+			(xy 119.38 186.69)
+			(xy 124.46 186.69))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 48802d86-f345-5c6a-95f2-82f81d76de32))
+		(uuid f324d0fa-30f9-5d26-ac81-fb2f9fccef93))
 	(global_label "IMU_INT1"
 		(shape passive)
-		(at 124.46 184.15 180)
+		(at 124.46 186.69 180)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
-		(uuid 2aaefa39-c2c0-5e2c-9313-d244b4c22dba))
-	(no_connect
-		(at 119.38 186.69)
-		(uuid 83993ab2-4d5e-5416-b5d6-7d9e91dd5f16))
+		(uuid 419a0eba-ebc5-5c95-ab13-edf5d58c014a))
 	(no_connect
 		(at 119.38 189.23)
 		(uuid 1a70e174-5ed4-5a34-8496-6cf1ca167568))

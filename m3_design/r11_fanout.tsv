@@ -21,7 +21,6 @@ B2	3V3	core	routed	F-plane	20.8	24.8	P	-	-	-	-	-	rail: dog-bone via to its In2 p
 B3	IMU_CS	core	routed	F	-	-	N	F	21.6	U4.12	22.5	19.54	D-R11-49: re-pinned (was NC)
 B4	CAM_MCU_RX	signals	routed	F	23.2	17.3	N	F	23.2	U12.4	24.15	15.35	D-R11-49: re-pinned (was NC)
 B5	QSPI_NCS	core	routed	F	23.2	25.6	E	F	32.4	U3.1	30.3	34.03	D-R11-49: routed (was open)
-B6	IMU_INT1	core	routed	F-In3	24.8	24.8	N	In3	25.6	U4.4	24.21	21.25	D-R11-49: re-pinned (was LED_RED)
 B7	LED_YEL	status	routed	F	-	-	N	F	25.6	R33.1	25.57	22.4	D-R11-49: re-pinned (was NC)
 B8	SD_MISO	sd	routed	F	-	-	N	F	26.42	R462.1	29.13	15.8	
 B9	SD_SCK	sd	routed	F	29.5	23.15	E	F	24.03	J430.5	36.305	13.05	
@@ -30,6 +29,7 @@ C1	HSE_IN	core	routed	F-B	20.0	25.6	W	B	26	Y1.1	15.5	25.15
 C2	GND	core	routed	F-plane	20.8	25.6	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 C3	PYRO1_GATE_N	pyro	routed	F	-	-	W	F	26.35	R126.1	11.83	28	
 C5	SPI1_MOSI	core	routed	F	24.0	18.7	N	F	24	U4.14	23.5	19.54	
+C6	IMU_INT1	core	routed	F-In3	24.8	25.6	N	In3	25.6	U4.4	24.21	21.25	D-R11-81: re-pinned from B6 (PD5, EXTI5 shared with PA5) to C6 (PD6, EXTI6)
 C8	SD_MOSI	sd	routed	F	-	-	N	F	27.25	R461.1	29.13	16.7	D-R11-63: F.Cu north between A9 / A10 (was F-In3 via 27.2, 25.6)
 C10	USB_DM	usb	routed	F	-	-	E	F	25.6	J3.A7	39.12	29.75	
 D1	HSE_OUT	core	routed	F-B	20.0	27.2	W	B	26.85	Y1.3	17.7	26.85	

@@ -1,13 +1,13 @@
 {
-  "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
+  "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
   "dc_solves": {
     "BAT_IN_J1_to_Q120": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 28620,
-      "cg_iterations": 1677,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 28578,
+      "cg_iterations": 1654,
       "grid_mm": 0.1,
       "net": "BAT_IN",
-      "resistance_ohm": 0.0030209746151045017,
+      "resistance_ohm": 0.003020974615104956,
       "sink": "Q120:5,6,7,8,9",
       "source": "J1:1",
       "window_mm": [
@@ -18,12 +18,12 @@
       ]
     },
     "BAT_IN_J1_to_U9": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 28620,
-      "cg_iterations": 1699,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 28578,
+      "cg_iterations": 1677,
       "grid_mm": 0.1,
       "net": "BAT_IN",
-      "resistance_ohm": 0.011840455601301383,
+      "resistance_ohm": 0.01177138178435984,
       "sink": "U9:5",
       "source": "J1:1",
       "window_mm": [
@@ -34,12 +34,12 @@
       ]
     },
     "GND_Q124_to_J1": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 75469,
-      "cg_iterations": 1637,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 75113,
+      "cg_iterations": 1663,
       "grid_mm": 0.1,
       "net": "GND",
-      "resistance_ohm": 0.0024700769980817872,
+      "resistance_ohm": 0.002503257611983473,
       "sink": "J1:2",
       "source": "Q124:1,2,3",
       "window_mm": [
@@ -50,12 +50,12 @@
       ]
     },
     "PORT_4V8_U401_to_J410": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 34643,
-      "cg_iterations": 1959,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 34606,
+      "cg_iterations": 1957,
       "grid_mm": 0.1,
       "net": "PORT_4V8",
-      "resistance_ohm": 0.017488246717624917,
+      "resistance_ohm": 0.017742098502116128,
       "sink": "J410:1",
       "source": "U401:1,2",
       "window_mm": [
@@ -66,12 +66,12 @@
       ]
     },
     "PORT_4V8_U401_to_J420": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 34643,
-      "cg_iterations": 1955,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 34606,
+      "cg_iterations": 1953,
       "grid_mm": 0.1,
       "net": "PORT_4V8",
-      "resistance_ohm": 0.01973335061799631,
+      "resistance_ohm": 0.01995099489854891,
       "sink": "J420:1",
       "source": "U401:1,2",
       "window_mm": [
@@ -82,12 +82,12 @@
       ]
     },
     "PORT_4V8_U401_to_J440": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 34643,
-      "cg_iterations": 1928,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 34606,
+      "cg_iterations": 1926,
       "grid_mm": 0.1,
       "net": "PORT_4V8",
-      "resistance_ohm": 0.015111577210195166,
+      "resistance_ohm": 0.015397731498249176,
       "sink": "J440:1",
       "source": "U401:1,2",
       "window_mm": [
@@ -98,12 +98,12 @@
       ]
     },
     "PORT_5V3_L400_to_U401": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 18442,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 18642,
       "cg_iterations": 1350,
       "grid_mm": 0.1,
       "net": "PORT_5V3",
-      "resistance_ohm": 0.009717172839951289,
+      "resistance_ohm": 0.009667861155932154,
       "sink": "U401:9,10",
       "source": "L400:2",
       "window_mm": [
@@ -114,12 +114,12 @@
       ]
     },
     "PORT_5V3_L400_to_U402": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 18442,
-      "cg_iterations": 1330,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 18642,
+      "cg_iterations": 1329,
       "grid_mm": 0.1,
       "net": "PORT_5V3",
-      "resistance_ohm": 0.01936731867706602,
+      "resistance_ohm": 0.0193673186770739,
       "sink": "U402:1",
       "source": "L400:2",
       "window_mm": [
@@ -130,12 +130,12 @@
       ]
     },
     "RAW_PROTECTED_U9_to_U11": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 50250,
-      "cg_iterations": 2422,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 50761,
+      "cg_iterations": 2435,
       "grid_mm": 0.1,
       "net": "RAW_PROTECTED",
-      "resistance_ohm": 0.014766456113661671,
+      "resistance_ohm": 0.01447001805223774,
       "sink": "U11:2",
       "source": "U9:6",
       "window_mm": [
@@ -146,12 +146,12 @@
       ]
     },
     "RAW_PROTECTED_U9_to_U400": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
-      "cells": 50250,
-      "cg_iterations": 2407,
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "cells": 50761,
+      "cg_iterations": 2391,
       "grid_mm": 0.1,
       "net": "RAW_PROTECTED",
-      "resistance_ohm": 0.023688905345692006,
+      "resistance_ohm": 0.022733004655981152,
       "sink": "U400:2,3",
       "source": "U9:6",
       "window_mm": [
@@ -162,7 +162,7 @@
       ]
     },
     "USB_LIMITED_U10_to_U11": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
       "cells": 1497,
       "cg_iterations": 530,
       "grid_mm": 0.1,
@@ -178,7 +178,7 @@
       ]
     },
     "VLOGIC_U11_to_U2": {
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
       "cells": 3108,
       "cg_iterations": 596,
       "grid_mm": 0.1,
@@ -561,7 +561,7 @@
       },
       "Q124_hot_R_inference_ohm": 0.008235999999999999,
       "R134_hot_max_ohm": 2.02909,
-      "board_sha256": "893c18239ff8e656619eda4c4e59074bf2c03adcd5436541c4a39bd051ad471b",
+      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
       "copper_20C_by_net_ohm": {
         "ACT_FET_S": 0.006344967874291371,
         "BAT_IN": 0.0038168789085799115,
@@ -847,11 +847,27 @@
   "r11_u401": {
     "gnd_vias_within_3mm": [
       {
+        "centre_distance_mm": 0.3,
+        "in_pad": true,
+        "xy": [
+          41.8,
+          22.4
+        ]
+      },
+      {
         "centre_distance_mm": 1.812,
         "in_pad": false,
         "xy": [
           42.65,
           23.8
+        ]
+      },
+      {
+        "centre_distance_mm": 0.3,
+        "in_pad": true,
+        "xy": [
+          41.2,
+          22.4
         ]
       },
       {
@@ -872,7 +888,7 @@
       22.4
     ],
     "side": "top",
-    "vias_in_pad": 0
+    "vias_in_pad": 2
   },
   "rails": {
     "C84 hold-up": {
@@ -1215,7 +1231,7 @@
           },
           "ipc_rise_at_min_width_C": 40.66723713338034,
           "ipc_width_for_30C_mm": 0.32570913065781604,
-          "length_mm": 2.565685424949238,
+          "length_mm": 2.5656854249492382,
           "min_width_mm": 0.25,
           "th_mm": 0.035
         }
@@ -1445,7 +1461,7 @@
       ]
     }
   },
-  "source_board_sha256": "b7e2decb49bce5b24d124e24dd886d38a8e634ad7c2d203885f7125a6771bbb5",
+  "source_board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
   "stackup": {
     "B.Cu": {
       "depth_mm": 1.5209000000000001,

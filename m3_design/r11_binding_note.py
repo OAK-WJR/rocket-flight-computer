@@ -26,7 +26,8 @@ R10_NOTE = HERE / 'assembly_review/sources/r10_design/r10_binding_note.json'
 OUT = DESIGN / 'r11_binding_note.json'
 
 # (R10 obligation index, what changes on R11). Pin facts from pin_table.tsv / D-R11-41 / D-R11-49; EXTI line = pin
-# number (RM0433 SYSCFG_EXTICRx selects one port per line; RM0433 not re-read here: Inference).
+# number (RM0433 SYSCFG_EXTICRx selects one port per line; RM0433 could not be fetched from ST in D-R11-81's session:
+# Inference). D-R11-81 gives every interrupt net its own line number, so the map holds under either reading.
 R11_DELTAS = (
     (3, 'Camera UART is UART4 AF8: CAM_MCU_TX PB9 (ball A4), CAM_MCU_RX PB8 (ball B4), no flow control (D-R11-49), not '
         'UART7 PE8 / PE7. PB9 is a ROM-loader pin (I2C1_SDA, open drain): stageC1b.md section 8.4 case; drive PB9 '
@@ -35,10 +36,12 @@ R11_DELTAS = (
         'PC14 is an input; camera OE is PC15 (ball B1), held low by R102 10 k. New loader members: PA15 (SPI3_NSS) '
         'carries SERVO2_MCU (R155 holds it low) and PB9 carries CAM_MCU_TX (stageC1b.md section 8.4).'),
     (5, 'EXTI map on R11: CAM_FAULT_N PC13 (EXTI13, EXTI15_10), USB_FAULT_N PD10 (EXTI10, EXTI15_10), LOGIC_SOURCE_ST PA4 '
-        '(EXTI4), BAT_FAULT_N PA5 (EXTI5), VBUS_SENSE PC8 (EXTI8), IMU_INT1 PD5 (EXTI5). CONFLICT: PA5 and PD5 are both '
-        'line 5, and SYSCFG_EXTICR2 routes one port to a line, so BAT_FAULT_N and IMU_INT1 cannot both interrupt '
-        '(Inference: RM0433 not re-read). Open design item D-R11-77: one of them must be polled or re-mapped. PC13 is '
-        'used on R11 (it was NC).'),
+        '(EXTI4), BAT_FAULT_N PA5 (EXTI5), IMU_INT1 PD6 (EXTI6, ball C6; D-R11-81), VBUS_SENSE PC8 (EXTI8). Every '
+        'interrupt net has its own line number (4, 5, 6, 8, 10, 13), so each SYSCFG_EXTICR field selects one port '
+        '(PA for 4 / 5, PD for 6 / 10, PC for 8 / 13); lines 5 / 6 / 8 share the EXTI9_5 vector and 10 / 13 the '
+        'EXTI15_10 vector, so each handler checks its pending bit. IMU_INT1 is no longer on EXTI1 (R10) and no longer '
+        'on PD5 (D-R11-49), which shared line 5 with PA5 (D-R11-77, closed by D-R11-81). PC13 is used on R11 (it was '
+        'NC); PD5 is NC.'),
     (6, 'PE3 carries IMU_CS on R11 (ball B3), so it is no longer an analog sentinel; the sentinels are PE5 / PE6 / PC4. '
         'PA15 carries SERVO2_MCU (TIM2_CH1 AF1): it resets as JTDI with its internal pull-up, which against R155 '
         '10 k gives at most 0.83 V on the line until firmware selects TIM2 (stageC1b.md section 8.4, Calculation with '
@@ -58,8 +61,11 @@ R11_DELTAS = (
          'VBAT/4 bridge reading. PB1 carries LED_RED.'),
     (24, 'LEDs: LED_RED PB1 (ball K4), LED_YEL PD2 (ball B7).'),
     (27, 'LSE: PC14 (OSC32_IN) now drives CAM_PWR_EN; keep RCC_BDCR.LSEON = 0 as on R10.'),
-    (29, 'CAM_5V_SENSE moved to PC2_C, an analog-only switch pad: the R10 TT_u 4.0 V single-fault limit for an open R105 '
-         'does not carry over; the PC2_C limit is to be read from DS12110 (not re-read here: open item).'),
+    (29, 'CAM_5V_SENSE moved to PC2_C, an analog-only switch pad. Single fault R105 open: the pin is pulled to CAM_5V '
+         '(nominal 5.456 V) through R104 10 kOhm, as R10\'s PB1 case, which R10 recorded above its 4.0 V TT_u limit with '
+         'no firmware mitigation. The PC2_C absolute maximum was not read from DS12110 in D-R11-81\'s session (ST\'s PDF '
+         'could not be fetched); taking it as R10\'s 4.0 V class is an Inference, under which the fault exceeds it as on '
+         'R10 (injection through 10 kOhm at most about 0.2 mA, Inference). Owner item, no design change (D-R11-81).'),
     (30, 'PE3 is IMU_CS: synchronous trace (TRACED0 on PE3) would also drive the IMU chip select; the trace prohibition '
          'stands. The lock list is unchanged (PC1, PE4).'),
     (38, 'Rule 3 on R11: QSPI_IO2 is PE2 (ball A3) and PE4 is ball C3, with PE3 / IMU_CS (B3) between them; a BGA '
@@ -70,7 +76,7 @@ R11_DELTAS = (
          'points, its dog-bone (21.60, 28.80) and its In3-to-B.Cu via (14.65, 39.90) (D-R11-45, D-R11-48, '
          'single_open_exceptions): an open leaves PA4 floating, so rule 5 (PC1 only while PA4 reads low) stays an '
          'extra barrier, not a guarantee.'),
-    (42, 'EXTI5 is shared with IMU_INT1 on R11 (see the delta for obligation 5).'),
+    (42, 'EXTI5 is BAT_FAULT_N\'s alone on R11 (IMU_INT1 is on EXTI6, D-R11-81); rule 7 stands as R10.'),
     (46, 'U5 (MS5611) is on I2C2, PB10 SCL (ball J7) / PB11 SDA (ball K7), AF4 (D-R11-41; the nets keep the names '
          'I2C1_SCL / I2C1_SDA); PB10 / PB11 are loader USART3 pins (stageC1b.md section 7). IMU_CS is PE3 (ball B3). '
          'CAM_5V scale: PC2_C = CAM_5V / 11.'),
@@ -162,8 +168,9 @@ def generate(board_path, stage_d=None):
         'r11_firmware_rules': [
             'An R11 binding changes the TIM, UART, ADC and EXTI assignments together (stageC1b.md section 8.2); R10 '
             'firmware cannot run on R11.',
-            'EXTI line 5 is claimed by both BAT_FAULT_N (PA5) and IMU_INT1 (PD5): firmware must poll one of them until '
-            'the open design item D-R11-77 is decided (Inference on RM0433 SYSCFG_EXTICR, not re-read).'],
+            'EXTI lines on R11 (D-R11-81): 4 PA4 LOGIC_SOURCE_ST, 5 PA5 BAT_FAULT_N, 6 PD6 IMU_INT1, 8 PC8 VBUS_SENSE, '
+            '10 PD10 USB_FAULT_N, 13 PC13 CAM_FAULT_N; one port per line in SYSCFG_EXTICR (Inference on RM0433, not '
+            're-read: ST\'s PDF could not be fetched in that session).'],
         'physical_tests': 'not performed',
     }
     if stage_d:

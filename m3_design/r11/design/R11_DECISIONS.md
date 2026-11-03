@@ -793,3 +793,95 @@ no R11 binding check, and neither was changed.
 D-R11-49 moved IMU_INT1 to PD5 (EXTI5); BAT_FAULT_N stays on PA5, also line 5, and R10's rule 7 rate-limits an EXTI5
 interrupt there. SYSCFG_EXTICR routes one port per line (Inference: RM0433 not re-read), so one of the two must be
 polled or re-mapped. Recorded in the binding note's R11 firmware rules; the pin map is not changed here.
+
+## D-R11-78 Stage A: `LCSC Part` follows `LCSC` (closes D-R11-70)
+
+`r11_sch.py set_symbol` now writes R10's redundant `LCSC Part` field from the part's R11 `LCSC` code wherever R10 had
+that field (it never adds one), so the 21 parts of D-R11-70 carry one part number (AGENTS §3: redundant identity fields
+may agree, never contradict). `r11_sch_check.py` fails any part whose `LCSC Part` differs from its `LCSC`, with a seeded
+fault (R85 back to R10's C137691). Result: `quality_audit/verify_board.py` OK on the R11 board (Measured).
+
+## D-R11-79 C80 on the B.Cu trunk beside C88: the hot-plug falling slew passes (closes D-R11-74's failure)
+
+C80 (10 µF 50 V X5R 1206, unchanged part) moves from F (14.9, 9.0) to B (7.6, 8.6), rotation 0: pad 1 (6.125, 8.6) is
+tied by a 0.7 mm B.Cu stub (the trunk's width) straight onto the 0.7 mm J1-C88 trunk at (6.125, 7.15), 3.9 mm of trunk from C88.1; pad 2
+(9.075, 8.6) joins C88.2's GND via (10.21, 8.6) on B.Cu. C80's F.Cu link to C96 is gone (C96.1 keeps its F.Cu run to
+the (18.7, 9.2) In2 via); D8.2's F.Cu GND run now ends at C96.2's via (16.2, 8.275). Widths match at every new junction (C80.2 and C88.2 0.4 mm on B.Cu, C96.2 0.5 mm as D8.2's on F.Cu), so route_check r11 has no new width_change_junction. No part, value or net changes, so
+the hot-plug model's component and corner set is R10's. **Why:** with a 0.1 µH harness the −8.4 V step reached U9.5 with
+only C88 (100 nF) beside it while the 10 µF bulk sat behind the In2 pour's inductance (stageD_analysis.md section 6).
+A scratch comparison on the stage D board (Simulation, 576 cases at 0.1 µH): two extra BAT_IN vias only, 144 fail,
+10.685 V/µs; C80 on the trunk, 0 fail, 8.684 V/µs. **Result** (Simulation / Inference, `tools/r11_hotplug.py` on the
+final board): all 2304 required cases pass; figures in stageD2.md section 3.
+
+## D-R11-80 U401.11: R10's two GAP-3 VIPPO thermal vias restored, on the top face (closes D-R11-75's U401 item)
+
+Two 0.5 / 0.3 mm GND through vias at U401.11's TI DSK0010A footprint-local centres (−0.3, 0) / (+0.3, 0), board
+(41.2, 22.4) / (41.8, 22.4), resin-filled and copper-capped (`r11_route.Draw.vippo`, the only via outside R11's via
+set); U401.11's F.Cu GND link to U401.4 now leaves the pad at (41.5, 22.9), clear of both. `check_r11` K-copper carries
+R10's exact GAP-3 test (`thermal_vias_r11`: exactly two, that size, net, fill and cap, wholly inside the exposed pad, the
+maker paste windows unchanged) for U401 on the top face; every other via in a soldered pad still fails. Seeded tests on
+the real board (unfilled, uncapped, moved 0.05 mm). Inputs that differ from R10: the inner planes are 15.2 µm (R10
+30 µm) and U401 is on the top face over J430 (bottom), so R10's inferred 80–110 °C/W and its 109.2–123.9 °C junction
+figure at a 70 °C bay carry over only as an **Inference** (not re-derived; the 1.1 °C margin of R10 is not claimed for
+R11). The 100 mA AUX allowance rests on that Inference until a first-article thermal test. The VIPPO order condition
+(resin fill, copper cap, planar) is R10's ORDERING §8 item and applies to R11.
+
+## D-R11-81 IMU_INT1 to PD6 (ball C6, EXTI6) (closes D-R11-77)
+
+Interrupt nets on R11 (R10 firmware obligation 5 and rule 7): LOGIC_SOURCE_ST PA4 (line 4), BAT_FAULT_N PA5 (5),
+VBUS_SENSE PC8 (8), USB_FAULT_N PD10 (10), CAM_FAULT_N PC13 (13) and IMU_INT1, which D-R11-49 put on PD5 (line 5, shared
+with PA5). IMU_INT1 moves to PD6 (ball C6, DS12110 Rev 8 Table 9 p. 83, a general-purpose I/O, not a ROM-loader pin per
+AN2606; freed by D-R11-49): line 6, used by no other net. PD5 (B6) becomes NC. Escape: C6's NE dog-bone via (24.8, 25.6),
+then In3 diagonally under B7 to R10's lane x 25.6 and on to U4.4 as before (the B6 via at (24.8, 24.8) is gone); exit N
+on In3 at slot 25.6 unchanged; `r11_escape_check` OK. Updated: `r11_sch.py` R11_REPIN, `pin_table.tsv`, `r11_fanout.tsv`,
+`r11_escape.py`, the binding note (obligation 5 / 42 deltas and the EXTI firmware rule). New check_r11 rule K-exti:
+every EXTI_NETS_R11 net on one ball and no two on one line number (seeded tests).
+**Source:** RM0433's SYSCFG_EXTICR rule (one 4-bit port selector per EXTI line, line n = pin n of the selected port)
+could **not** be read from ST in this session (ST's PDF download was refused from this environment); the rule is
+therefore labelled Inference, as before. The fix does not depend on it: every interrupt net now has its own line number,
+so the map holds under any port-selection rule. **PC2_C (CAM_5V_SENSE):** DS12110 could not be fetched either, so the
+absolute maximum of the PC2_C analog pad has no source in this session. Single fault R105 open puts CAM_5V (5.456 V
+nominal) on the pin through R104 10 kΩ, as on R10's PB1, where R10 recorded it above the 4.0 V TT limit with no
+mitigation (parts_qualification). Taking PC2_C's limit as that 4.0 V class is an Inference; under it the fault exceeds
+the limit exactly as on R10 (injection at most about 0.2 mA through 10 kΩ, Inference). No design change (the limit is
+not shown broken beyond R10's accepted case); owner item to read DS12110 Table "Voltage characteristics" for Pxy_C.
+
+## D-R11-82 Room for the arming word SWITCH and Q120's designator
+
+C80's move (D-R11-79) freed F.Cu silkscreen room east of J400, and two GND vias left that column: C87.2's via
+(14.8, 6.53) → (14.05, 6.63) (B.Cu link from C87.2's centre at 45°), and R81.2's second barrel (14.38, 9.15) is removed:
+R81.2 reaches C96.2's via (16.2, 8.275) on its own run and C87.2's via through C87.2's second path, so check_r11
+K-power's single-via-open taps still hold (Measured; a stub to a moved via would have ended off R81.2's centre, a new
+route_check pad_end_offcentre instance). `r11_legends_aid.py` places the arming word SWITCH first (before J400's pin
+legends, which have other spots): SWITCH at F (14.80, 3.18), 90°, between J400 and J122 at the aft edge; J400 1:SW at
+F (13.93, 8.80), 90°, in the freed column; 2:SW on the bottom (9.78, 3.00) (K-legends' tie and nearest-pin rules,
+Measured by check_r11). Q120 (a SHOWN_REFS pyro part) gets its designator on the bottom under its part at
+(8.27, 18.18): `r11_legends_aid.place_near_courtyard` now measures the bottom spot's ownership margin against the bottom
+parts' courtyards only, the face the gate measures (r8_post.courtyard_fails, R20-MFG-02), at 0.05 mm steps; on the top
+every courtyard still counts. Every pyro, battery and arming legend is placed: J121 1:E1− / 2:E1+, J1 1:BAT+ / 2:GND,
+J400 1:SW / 2:SW, IGN, BAT, SWITCH, and every SHOWN_REFS designator (Measured: K-legends OK).
+
+## D-R11-83 R11 legend set for the GH ports, J2 and J122's note (owner acceptance pending)
+
+After D-R11-82 the aid still finds no legal spot on either face for the middle GH contacts (J122.2–.4, J9.2–.4,
+J410 / J420 / J440 .2–.3), the words SERVO, RADIO and AUX, J2's rows 3–6 and `SERVO + FROM HARNESS` (stageD.md section 3:
+9 of the 12 contacts have none even with every via removed). R11 adopts its own legend set: on every GH port the
+legends of pin 1 and of the last pin are required (J122 1:S1 / 5:GND, J9 1:5V4 / 6:TXO, J410 / J420 / J440 1:4V8 / 4:RXI;
+J9 5:RXI and GPS are drawn too); J2 keeps rows 1:3V3 and 2:SWDIO; the ports are identified by their shown designators
+(J122, J9, J410, J420, J440 are SHOWN_REFS) and the full pin maps are in the R11 harness pin map (stageD2.md section 6).
+The items above are optional: absent they are not findings; drawn they are held to R10's rules (strictly nearest their
+own pin, the words' tie / centre / span rules, exactly once). `check_r11.r11_legend_set` waives only the exact
+"absent" findings of OPTIONAL_PINS_R11 / OPTIONAL_WORDS_R11 / OPTIONAL_PORT_ROWS_R11 / OPTIONAL_NOTES_R11; no pyro,
+arming or battery legend is optional (PROTECTED_LEGENDS_R11, tested). Tests: R11Legends (waiver exactness, protected
+sets), R11RealBoard (SWITCH or J121's 1:E1− removed fails; a wrong J410.2 legend fails). The aid writes no open row for
+an optional item; the table has 0 open rows. **Owner acceptance line:** the owner accepts that R11's silkscreen labels
+each GH port by designator, pin 1 and the last pin, with SERVO / RADIO / AUX words, J2 rows 3–6 and J122's harness note
+moved to the harness pin map — pending (R10's terminal-legend rule D-AVA-01 is otherwise unchanged).
+
+## D-R11-84 Stage D fix pass: board, gate and package
+
+Board `5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63` (46 × 50 mm, six layers), built twice by
+`m3_design/r11_build.sh` from the final tree with the same SHA-256 (Measured); `r11_legends.tsv` refrozen (aid run twice, byte-identical).
+The board and `m3_design/r11/fab/` are staged (closes D-R11-71) and `tools/check.sh` runs the R11 section on them.
+Cost and stock re-run (live JLC, 5 boards, 2026-11-03T23:01Z): $79.79 per board against the $84.41 cap; stock short
+on U9, U4 and U2 as D-R11-69. stageD2.md has every figure.

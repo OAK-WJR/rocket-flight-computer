@@ -238,6 +238,8 @@ def contract(actual_parts, actual_pins, project=None):
         for key in ('LCSC', 'Manufacturer', 'Manufacturer Part'):
             if f.get(key, '') != want['fields'][key]:
                 issues.append(f'{ref}: {key} {f.get(key, "")!r}, expected {want["fields"][key]!r}')
+        if 'LCSC Part' in f and f['LCSC Part'] != f.get('LCSC', ''):           # D-R11-78, AGENTS 3
+            issues.append(f'{ref}: LCSC Part {f["LCSC Part"]!r} contradicts LCSC {f.get("LCSC", "")!r}')
         if flags(a) != want['flags']:
             issues.append(f'{ref}: assembly flags {sorted(flags(a))}, expected {sorted(want["flags"])}')
         if project is not None:
@@ -295,6 +297,7 @@ def seeds(parts, pins):
         'microSD MOSI MISO swapped': lambda p, n: n.update({('J430', '3'): 'SD_MISO', ('J430', '7'): 'SD_MOSI'}),
         'microSD unused DAT2 floating': lambda p, n: p.pop('R464'),
         'QSPI primary logger removed': lambda p, n: p.pop('U3'),
+        'LCSC Part contradicts LCSC': set_field('R85', 'LCSC Part', 'C137691'),   # D-R11-78
         # R11 (D-R11-04 / -05)
         'PDR_ON tied low': lambda p, n: n.update({('U1', 'F7'): 'GND'}),
         'PDR_ON floating': lambda p, n: n.pop(('U1', 'F7')),

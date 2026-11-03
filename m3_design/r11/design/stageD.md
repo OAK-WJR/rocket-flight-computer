@@ -161,3 +161,7 @@ Prices and stock move daily; re-run `FAB_NET=1 m3_design/r11_fab.sh` before orde
 * `tools/check.sh` does not exit 0 with the R11 board tracked: the audit (section 5) and K-legends (section 3). The
   board and fab package are therefore not staged (D-R11-71).
 * Plate model, JLC DFM on the panel and tabs (D-R11-12), first-article checks: not run.
+
+**Fix pass (stageD2.md, D-R11-78 … -84):** the audit (section 5) and the 22 K-legends findings (section 3) are resolved
+on board `5f1a7e1d…` (LCSC Part follows LCSC; SWITCH and Q120 placed; the R11 legend set, owner acceptance pending); the
+board and fab package are staged. The hashes in section 8 are the stage D board's.

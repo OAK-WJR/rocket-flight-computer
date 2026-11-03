@@ -23,7 +23,8 @@ this order (the first placed get the room):
   7. Fab references (place_fab): one ${REFERENCE} per footprint, inside its own Fab body where it fits, else beside it
      within check_r10.FAB_REF_REACH, crossing no Fab outline or other Fab reference (check_r10.fab_ref_crossings).
 A required legend or designator with no legal spot is written as an 'open' row (D-R11-66): m3_design/r11_post.py
-accepts exactly those K-legends findings, and tools/check.sh still fails on them.
+accepts exactly those K-legends findings, and tools/check.sh still fails on them. An item the R11 legend set does not
+require (check_r11.OPTIONAL_*, D-R11-83) is still searched for and drawn where it fits, and simply left out where not.
 Every placement keeps r10_post's SILK_GAP from pads, vias, holes, mask openings and other silkscreen, the 0.6 mm edge
 margin and the support hardware circles. Deterministic: a fixed order and fixed grids, no random search.
 """
@@ -142,9 +143,12 @@ def place_near_courtyard(b, ref, cap, step=0.1, margin=0.15):
     f = b.FindFootprintByReference(ref)
     t = f.Reference()
     own = r7_post._courtyard(f)
-    others = [r7_post._courtyard(g) for g in b.GetFootprints() if g.GetReference() != ref]
-    others = [o for o in others if o[2] > o[0]]
+    every = [(g.IsFlipped(), r7_post._courtyard(g)) for g in b.GetFootprints() if g.GetReference() != ref]
+    every = [(flipped, o) for flipped, o in every if o[2] > o[0]]
     for side in (('B',) if f.IsFlipped() else ('F', 'B')):
+        # D-R11-82: under a top part on the bottom, the margin is taken against the bottom parts' courtyards, the face
+        # the gate measures (r8_post.courtyard_fails, R20-MFG-02); on the top every courtyard counts, as before
+        others = [o for flipped, o in every if side == 'F' or flipped]
         t.SetVisible(False)
         s = P.Silk10(b, side)
         for g in b.GetFootprints():
@@ -360,6 +364,9 @@ def draft(b):
             missing.append(('pin', f'{ref} {number}:{name}'))
 
     terminals = dict(check_r11.TERMINAL_PINS_R11)
+    # 0. D-R11-82: the arming word SWITCH first, in the one column beside J400 that can hold it (J400's pin legends
+    #    have other spots; placed after them, 1:SW can take that column)
+    log['SWITCH'] = put_word(b, silks, 'SWITCH', check_r10.WORD_LEGENDS_R10['SWITCH'])
     # 1. the wire-pad and switch terminal legends first (J121 E1- / E1+, J1, J400: pyro, battery, arming)
     for ref in WIRED_FIRST:
         for number, name in terminals[ref]:
@@ -376,7 +383,7 @@ def draft(b):
         for ref in check_r10.SHOWN_REFS:
             got = r8_post.place_designator(b, ref)
             if got is None:                      # a larger reach for the required ones (the gate measures ownership)
-                got = place_near_courtyard(b, ref, SHOWN_CAP)
+                got = place_near_courtyard(b, ref, SHOWN_CAP, step=0.05)   # D-R11-82: Q120's 1.22 mm band
             log[f'designator {ref}'] = got
             if got is None:
                 missing.append(('ref', ref))
@@ -386,6 +393,8 @@ def draft(b):
             shown.append(ref)
     # 3. connector words
     for word, ref in check_r10.WORD_LEGENDS_R10.items():
+        if word == 'SWITCH' and log.get('SWITCH') is not None:
+            continue
         axis = pin_axis(b, ref) if word in SPAN_WORDS else None
         result = put_word(b, silks, word, ref, span_axis=axis)
         if result is None:
@@ -433,6 +442,21 @@ def draft(b):
     return log, missing
 
 
+def is_optional(kind, text):
+    """D-R11-83: an item the R11 legend set does not require (check_r11.OPTIONAL_*); everything else stays an open row."""
+    if kind == 'pin':
+        ref, rest = text.split(' ', 1)
+        return (ref, rest.split(':', 1)[0]) in check_r11.OPTIONAL_PINS_R11
+    if kind == 'word':
+        return text in check_r11.OPTIONAL_WORDS_R11
+    if kind == 'port':
+        ref, rest = text.split(' ', 1)
+        return (ref, int(rest.split(':', 1)[0])) in check_r11.OPTIONAL_PORT_ROWS_R11
+    if kind == 'note':
+        return text in check_r11.OPTIONAL_NOTES_R11
+    return False
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('board', type=Path)
@@ -447,7 +471,11 @@ def main():
             print(k, v)
     hidden = sorted(f.GetReference() for f in b.GetFootprints() if not f.Reference().IsVisible())
     print('hidden designators', len(hidden), ' '.join(hidden))
-    rows = r11_post.table_rows(b) + [('open', text, kind, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) for kind, text in missing]
+    optional = [(kind, text) for kind, text in missing if is_optional(kind, text)]
+    if optional:
+        print('optional in the R11 legend set (D-R11-83), not drawn, no open row:', optional)
+    rows = r11_post.table_rows(b) + [('open', text, kind, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) for kind, text in missing
+                                     if (kind, text) not in optional]
     r11_post.write_table(args.out, rows)
     print(f'wrote {len(rows)} rows to {args.out}')
     if args.save:

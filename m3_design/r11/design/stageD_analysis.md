@@ -213,3 +213,7 @@ voltage limit must be re-read for the _C analog pad), U5 on I2C2 PB10 / PB11, bu
 
 Everything else re-run here passes its R10 limit: fire floor 1.125 A at four stalls (1.278004 A), watchdog guard
 34.853 < 36 ms, GND return 2.47 mΩ < 5 mΩ allowance, EN / chatter and hold-up identical, K-power IPC widths.
+
+**Fix pass (stageD2.md, D-R11-78 … -84):** items 1–3 above are closed on board `5f1a7e1d…`: hot-plug 0 / 2304 failing,
+steepest fall 8.663 V/µs (C80 on the B.Cu trunk, D-R11-79); U401.11 carries R10's two GAP-3 VIPPO vias (D-R11-80; its
+thermal figure an Inference); IMU_INT1 on PD6, EXTI6 (D-R11-81). The figures above are the stage D board's.

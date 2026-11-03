@@ -43,8 +43,9 @@ Rules (R10's id where it is R10's rule):
        'short_edge_queries', empty by default)
   K-legends  check_r10's legend rules on R11 data (D-R11-64): J9's six GH contacts (TERMINAL_PINS_R11), M3-ASSY-R11 the
              only revision (pinned_texts_r11), GPS / RADIO / AUX inside their span along the pin-row axis
-  K-copper   vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper, no GAP-3 exemption on
-             R11 unless R11_DATA adds one), no pour debris (check_r10.pour_debris)
+  K-copper   vias in pads, overlap-only joints, thermal policy, via paste (check_r9.k_copper); GAP-3 admits only
+             two exact filled / capped GND vias in U401.11 on the top face (thermal_vias_r11, D-R11-80); no pour debris
+             (check_r10.pour_debris)
   K-inner    In1 and In4 GND only; In2 power and GND only; In3 signal routing (no rule on its nets)
   K-reference critical signal samples: F.Cu over In1 GND, B.Cu over In4 GND, In3 over In4 GND (D-R11-03); own
              antipads and S-8 voids excepted; a sample within REF_EDGE_TOL (0.005 mm, KiCad's arc approximation error)
@@ -68,6 +69,7 @@ Rules (R10's id where it is R10's rule):
              R10's single-via-open taps with U1's LQFP pins mapped to R11 balls (single_open_taps_r11, O-C2-5),
              exceptions only from R11_DATA 'single_open_exceptions' (none by default). Schemas: gate_C2.md
   K-ports    port ESD clamps on the wire side, <= 4.5 mm of track from the pin (J9's UART pins 5 / 6 on R11)
+  K-exti     the EXTI_NETS_R11 interrupt nets each on one U1 ball, no two on the same EXTI line number (D-R11-81)
   K-loader   ROM-loader pins: LOADER_R11 (R11's own list, keyed by port pin, on U1's balls from the R11 pin table;
              check_r10.LOADER_H74X's pin set; gate_C2.md section 5): no net without an entry, no entry for another
              net or an NC pin, recorded members, decision and case section present
@@ -584,6 +586,56 @@ def word_spans_r11(board, spans=WORD_SPAN_R11, margin=None):
     return issues, ev
 
 
+# D-R11-83: the R11 legend set (owner acceptance pending). On the 46 x 50 mm board no legal silkscreen spot exists for
+# the middle contacts of the GH ports, the words SERVO / RADIO / AUX, J2's rows 3-6 or J122's harness note (stageD.md
+# section 3, stageD2.md section 6: searched on both faces after the D-R11-82 room-making). R11 therefore requires, on
+# every GH port, the legends of pin 1 and of the last pin; the full GH pin maps are in the R11 harness pin map
+# (stageD2.md section 6). The optional items below are not required, but any that is drawn is held to R10's rule
+# (strictly nearest its own pin, the word's tie / centre / span rules, exactly once). Nothing here touches a pyro,
+# arming or battery legend: J121 E1- / E1+, J1 BAT+ / GND, J400 SW / SW, the words IGN, BAT and SWITCH and every
+# SHOWN_REFS designator stay required exactly as on R10.
+GH_PORTS_R11 = ('J122', 'J9', 'J410', 'J420', 'J440')
+OPTIONAL_PINS_R11 = frozenset((ref, n) for ref, pins in TERMINAL_PINS_R11 if ref in GH_PORTS_R11
+                              for n, _ in pins[1:-1])
+OPTIONAL_WORDS_R11 = frozenset({'SERVO', 'RADIO', 'AUX'})
+OPTIONAL_PORT_ROWS_R11 = frozenset({('J2', 3), ('J2', 4), ('J2', 5), ('J2', 6)})
+OPTIONAL_NOTES_R11 = frozenset({r10.SERVO_HARNESS_NOTE})
+PROTECTED_LEGENDS_R11 = ('J121', 'J1', 'J400')                   # pyro, battery, arming: every contact required
+
+
+def _silk_texts(board):
+    import pcbnew
+    out = []
+    for item in r10.legend_items(board):
+        if (isinstance(item, (pcbnew.PCB_TEXT, pcbnew.PCB_TEXTBOX))
+                and item.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS)
+                and (not hasattr(item, 'IsVisible') or item.IsVisible())):
+            out.append(item.GetText().strip())
+    return out
+
+
+def r11_legend_set(board, issues):
+    """D-R11-83: drop exactly the findings that say an OPTIONAL legend is absent (drawn zero times); a drawn optional
+    legend that is wrong, misplaced or duplicated still fails. (kept issues, waived absences)."""
+    texts = _silk_texts(board)
+    rows = dict(r10.PORT_LEGENDS_R10)
+    waived = set()
+    for ref, n in OPTIONAL_PINS_R11:
+        word = dict(dict(TERMINAL_PINS_R11)[ref])[n]
+        waived.add(f'{ref}.{n}: 0 legends "{n}:{word}" nearest it, expected one')
+    for word in OPTIONAL_WORDS_R11:
+        waived.add(f'{r10.WORD_LEGENDS_R10[word]}: word legend {word!r} appears 0 times on silkscreen, expected once')
+    for ref, i in OPTIONAL_PORT_ROWS_R11:
+        name = rows[ref][i - 1]
+        if not any(re.match(rf'^{ref}\s+(?:.*\s)?{i}:{name}(?:\s|$)', t) for t in texts):
+            waived.add(f'{ref}.{i}: silkscreen must identify {name} exactly once (R10 port table)')
+    for note in OPTIONAL_NOTES_R11:
+        if texts.count(note) == 0:
+            waived.add(f'J122: silkscreen must identify {note!r} exactly once')
+    kept = [i for i in issues if i not in waived]
+    return kept, sorted(set(issues) - set(kept))
+
+
 def k_legends(ctx):
     words = r10.word_legends
     with patched(r10, PINNED_TEXTS=PINNED_TEXTS_R11, TERMINAL_PINS_R10=TERMINAL_PINS_R11,
@@ -591,14 +643,99 @@ def k_legends(ctx):
                  word_legends=lambda board, **kw: words(board, spans={}, **kw)):
         issues, ev = r10.k_legends(ctx)
         spans, span_ev = word_spans_r11(ctx.board)
-    return issues + spans, dict(ev, word_spans=span_ev)
+    kept, waived = r11_legend_set(ctx.board, issues + spans)
+    return kept, dict(ev, word_spans=span_ev, r11_legend_set_absent_optional=waived)
+
+
+def thermal_vias_r11(board):
+    """GAP-3 on R11 (D-R11-80): R10's exact U401.11 VIPPO condition (check_r10.thermal_vias) with U401 on the top face.
+    Two 0.5 / 0.3 GND through vias at the TI DSK0010A footprint-local centres (check_r10.VIPPO_LOCAL_CENTRES), wholly
+    inside the 1.2 x 2.0 mm exposed pad, resin-filled and copper-capped, with the maker's two paste windows unchanged.
+    Every other via in a soldered pad stays a K-copper failure. The saved intent is not a fabrication claim."""
+    import pcbnew
+    import check_r8 as r8
+    import check_r9 as r9
+    issues, qualified = [], set()
+    eps = r10.EPS
+    fp = board.FindFootprintByReference('U401')
+    pad = fp.FindPadByNumber('11') if fp else None
+    if pad is None or pad.GetNetname() != 'GND' or not pad.IsOnLayer(pcbnew.F_Cu):
+        return ['GAP-3: U401.11 must be the top GND exposed pad (R11)'], {}, qualified
+    xy = lambda p: (pcbnew.ToMM(p.x), pcbnew.ToMM(p.y))                                   # noqa: E731
+
+    def local_box(poly):
+        points = [r9.to_local(fp, *xy(chain.CPoint(k))) for i in range(poly.OutlineCount())
+                  for chain in (poly.Outline(i),) for k in range(chain.PointCount())]
+        return (min(x for x, _ in points), min(y for _, y in points),
+                max(x for x, _ in points), max(y for _, y in points))
+    paste_polys = [poly for name, cu, poly in r8.paste_polys(board) if name == 'U401.paste' and cu == pcbnew.F_Cu]
+    paste = [local_box(poly) for poly in paste_polys]
+    paste_ok = len(paste) == 2 and all(any(max(abs(a - b) for a, b in zip(local_box(poly), expected)) <= eps
+                 and abs(poly.Area() / 1e12 - (expected[2] - expected[0]) * (expected[3] - expected[1])) <= eps ** 2
+                 for poly in paste_polys) for expected in r10.VIPPO_LOCAL_PASTE)
+    if not paste_ok:
+        issues.append('GAP-3: U401 maker exposed-pad paste windows changed')
+    shape = pad.GetEffectiveShape(pcbnew.F_Cu)
+    ep_poly = pcbnew.SHAPE_POLY_SET()
+    pad.TransformShapeToPolygon(ep_poly, pcbnew.F_Cu, 0, pcbnew.FromMM(.001), pcbnew.ERROR_INSIDE)
+    ep_box = local_box(ep_poly)
+    ep_ok = (pad.GetAttribute() == pcbnew.PAD_ATTRIB_SMD and pad.GetShape() == pcbnew.PAD_SHAPE_RECT
+             and not fp.IsFlipped() and not pad.IsOnLayer(pcbnew.B_Cu)
+             and max(abs(a - b) for a, b in zip(ep_box, r10.VIPPO_LOCAL_EP)) <= eps)
+    if not ep_ok:
+        issues.append('GAP-3: U401.11 exposed-pad shape or reviewed local pose changed')
+    vias = [v for v in board.GetTracks() if v.GetClass() == 'PCB_VIA'
+            and shape.Collide(pcbnew.SHAPE_CIRCLE(v.GetPosition(), v.GetDrillValue() // 2), pcbnew.FromMM(0.1))]
+    if len(vias) != 2:
+        issues.append(f'GAP-3: U401.11 requires exactly two thermal vias (has {len(vias)})')
+    centres = r10.vippo_centres(fp)
+    for centre in centres:
+        matches = [v for v in vias if math.dist(xy(v.GetPosition()), centre) <= eps]
+        ok = len(matches) == 1
+        if ok:
+            v = matches[0]
+            ring, drill = pcbnew.ToMM(v.GetWidth(pcbnew.F_Cu)), pcbnew.ToMM(v.GetDrillValue())
+            ok = (v.GetNetname() == 'GND' and abs(ring - 0.5) <= eps and abs(drill - 0.3) <= eps
+                  and v.GetViaType() == pcbnew.VIATYPE_THROUGH
+                  and v.TopLayer() == pcbnew.F_Cu and v.BottomLayer() == pcbnew.B_Cu
+                  and v.GetFillingMode() == pcbnew.FILLING_MODE_FILLED
+                  and v.GetCappingMode() == pcbnew.CAPPING_MODE_CAPPED)
+            r = pcbnew.FromMM(0.25)                     # the full ring, not only its centre, inside the exposed pad
+            c = v.GetPosition()
+            ok = ok and all(shape.Collide(pcbnew.VECTOR2I(c.x + dx, c.y + dy), 0)
+                            for dx, dy in ((-r, 0), (r, 0), (0, -r), (0, r)))
+            if ok and paste_ok and ep_ok:
+                qualified.add(v.m_Uuid.AsString())
+        if not ok:
+            issues.append(f'GAP-3: thermal via at {centre} must be 0.5/0.3 GND through-via, filled and capped, inside U401.11')
+    return issues, dict(centres_mm=centres, local_centres_mm=r10.VIPPO_LOCAL_CENTRES, qualified=len(qualified),
+                        local_exposed_pad_mm=ep_box, local_paste_windows_mm=paste,
+                        manufacturing_condition='resin-filled, copper-capped, planar VIPPO; physical fabrication unverified'), qualified
 
 
 def k_copper(ctx):
+    """check_r9.k_copper with exactly GAP-3's two U401.11 VIPPO vias exempt (D-R11-80, as check_r10.k_copper), and no
+    pour debris (check_r10.pour_debris)."""
+    import check_r7 as r7
+    import check_r8 as r8
     import check_r9 as r9
-    issues, ev = r9.k_copper(ctx)
+    import pcbnew
+    thermal, evidence, allowed = thermal_vias_r11(ctx.board)
+    smd, paste = r7.vias_in_smd_pads, r8.via_paste
+
+    def pad_exempt(p, v):
+        return (v.m_Uuid.AsString() in allowed and p.GetParentFootprint().GetReference() == 'U401'
+                and p.GetNumber() == '11' and p.GetNetname() == 'GND')
+
+    def paste_exempt(name, cu, poly, v):
+        return v.m_Uuid.AsString() in allowed and name == 'U401.paste' and cu == pcbnew.F_Cu
+
+    with patched(r7, vias_in_smd_pads=lambda b: smd(b, exempt=pad_exempt)), \
+            patched(r8, via_paste=lambda b: paste(b, exempt=paste_exempt)):
+        issues, ev = r9.k_copper(ctx)
     debris, debris_ev = r10.pour_debris(ctx.board)
-    return issues + [f'K-copper: {i}' for i in debris], dict(ev, pour_pieces=debris_ev)
+    return issues + [f'K-copper: {i}' for i in thermal] + [f'K-copper: {i}' for i in debris], \
+        dict(ev, gap3=evidence, pour_pieces=debris_ev)
 
 
 def k_inner(ctx):
@@ -1266,6 +1403,39 @@ def k_loader(ctx):
     return [f'K-loader: {i}' for i in issues], ev
 
 
+# D-R11-81: the nets firmware takes as EXTI interrupts (R10 firmware obligation 5 and rule 7, the R11 binding note).
+# SYSCFG_EXTICR selects one GPIO port per EXTI line, and line n is pin n of that port (RM0433; not re-read from ST's
+# PDF in D-R11-81's session: Inference), so no two of them may share a pin number.
+EXTI_NETS_R11 = ('LOGIC_SOURCE_ST', 'BAT_FAULT_N', 'IMU_INT1', 'VBUS_SENSE', 'USB_FAULT_N', 'CAM_FAULT_N')
+
+
+def exti_lines(board, port_ball):
+    """(issues, evidence): every EXTI_NETS_R11 net on exactly one U1 ball, and no two on the same EXTI line."""
+    port_of = {ball: port for port, ball in port_ball.items()}
+    u1 = board.FindFootprintByReference('U1')
+    issues, lines = [], {}
+    for net in EXTI_NETS_R11:
+        balls_ = sorted(p.GetNumber() for p in (u1.Pads() if u1 else []) if p.GetNetname() == net)
+        if len(balls_) != 1 or balls_[0] not in port_of:
+            issues.append(f'{net}: on U1 balls {balls_}, expected exactly one GPIO ball')
+            continue
+        port = port_of[balls_[0]]
+        m = re.fullmatch(r'P([A-K])(\d+)(?:_C)?', port)
+        if not m:
+            issues.append(f'{net}: ball {balls_[0]} ({port}) is not a GPIO port pin')
+            continue
+        lines.setdefault(int(m[2]), []).append(f'{net} {port} ({balls_[0]})')
+    for line, who in sorted(lines.items()):
+        if len(who) > 1:
+            issues.append(f'EXTI line {line} shared by {", ".join(who)}: SYSCFG_EXTICR routes one port per line')
+    return issues, {f'EXTI{line}': who for line, who in sorted(lines.items())}
+
+
+def k_exti(ctx):
+    issues, ev = exti_lines(ctx.board, balls(ctx))
+    return [f'K-exti: {i}' for i in issues], ev
+
+
 RULES = [
     ('S-1', 'RAW_ACT pyro bus, named armed-side parts', lambda c, s: s1(c)),
     ('S-2', 'pyro feed only through the load switch', lambda c, s: s2(c)),
@@ -1287,7 +1457,7 @@ RULES = [
     ('M-7', 'IMU pose (R11_DATA) and MEMS keep-outs', lambda c, s: m7(c)),
     ('M-8', 'courtyards >= 2.5 mm from the short edges, recorded queries (D-R11-12)', lambda c, s: m8(c)),
     ('K-legends', 'legends, ids, silkscreen allowlist, designators and Fab references', lambda c, s: k_legends(c)),
-    ('K-copper', 'copper hygiene, no pour debris', lambda c, s: k_copper(c)),
+    ('K-copper', 'copper hygiene, exact GAP-3 U401 VIPPO condition, no pour debris', lambda c, s: k_copper(c)),
     ('K-inner', 'In1 / In4 GND only, In2 power and GND only', lambda c, s: k_inner(c)),
     ('K-reference', 'critical signal reference copper on the six-layer stack', lambda c, s: k_reference(c)),
     ('K-region', 'critical In3 runs over one In2 plane region', lambda c, s: k_region(c)),
@@ -1299,8 +1469,9 @@ RULES = [
     ('K-power', 'rail paths, fire return, single-via-open taps', lambda c, s: k_power(c)),
     ('K-ports', 'port ESD clamps on the wire side', lambda c, s: k_ports(c)),
     ('K-loader', 'ROM-loader pins on U1\'s balls', lambda c, s: k_loader(c)),
+    ('K-exti', 'interrupt nets on distinct EXTI lines (D-R11-81)', lambda c, s: k_exti(c)),
 ]
-STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'W-1', 'W-2', 'K-loader'}}
+STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'W-1', 'W-2', 'K-loader', 'K-exti'}}
 STAGES['placement'] = STAGES['functional'] | {'LC-1', 'M-1', 'M-3', 'M-5', 'M-6', 'M-7', 'M-8', 'K-lands'}
 STAGES['full'] = {rid for rid, _, _ in RULES}
 

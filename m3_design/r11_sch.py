@@ -105,10 +105,14 @@ R11_REPIN = {
            '(ball H2); a ROM-loader pin (SPI3_NSS), allowance case in stageC1b.md section 8'),
     '2': ('IMU_CS', 'GPIO output push-pull; initialise high before output mode',
           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 64 (PE3, a general-purpose I/O); was PB7 (ball A5)'),
-    '86': ('IMU_INT1', 'GPIO in, internal pull-down, EXTI5 data-ready interrupt (U4 INT1 push-pull, active high)',
-           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 83 (PD5, a general-purpose I/O; EXTI line 5); was PE1 (ball C4)'),
-    '98': ('NC', NC_MODE, 'R11 D-R11-49: PE1 freed (IMU_INT1 moved to PD5, ball B6)'),
-    '87': ('NC', NC_MODE, 'R11 D-R11-49: PD6 freed (R10 USB_FAULT_N moved to PD10, ball H9)'),
+    # D-R11-81: IMU_INT1 on PD6 (ball C6, EXTI line 6), not PD5 (B6, EXTI line 5): SYSCFG_EXTICR selects one port per
+    # EXTI line (RM0433), and line 5 is BAT_FAULT_N's (PA5, R10 firmware rule 7)
+    '87': ('IMU_INT1', 'GPIO in, internal pull-down, EXTI6 data-ready interrupt (U4 INT1 push-pull, active high)',
+           'R11 D-R11-81: DS12110 Rev 8 Table 9 p. 83 (PD6, a general-purpose I/O; EXTI line 6, used by no other '
+           'interrupt net); was PD5 (ball B6, D-R11-49, EXTI line 5 shared with BAT_FAULT_N on PA5) and PE1 (ball C4, '
+           'R10); R10 USB_FAULT_N moved to PD10 (ball H9)'),
+    '86': ('NC', NC_MODE, 'R11 D-R11-81: PD5 freed (IMU_INT1 moved to PD6, ball C6; R10 LED_RED moved to PB1, ball K4)'),
+    '98': ('NC', NC_MODE, 'R11 D-R11-49: PE1 freed (IMU_INT1 moved to PD5, ball B6; D-R11-81: then to PD6, ball C6)'),
     '24': ('NC', NC_MODE, 'R11 D-R11-49: PA2 freed (SERVO3_MCU moved to PA0, ball G2); a ROM-loader pin left unconnected'),
     '25': ('NC', NC_MODE, 'R11 D-R11-49: PA3 freed (SERVO4_MCU moved to PA1, ball H2); a ROM-loader pin left unconnected'),
     '22': ('SERVO3_MCU', 'AF2 TIM5_CH1 (servo PWM, 50-400 Hz)',
@@ -144,7 +148,8 @@ R11_REPIN = {
            'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 67 (PC2_C: ANA pad, ADC3_INP0) and note 6 p. 88; was PB1 '
            '(ball K4, ADC12_INP5)'),
     '57': ('USB_FAULT_N', 'GPIO in',
-           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 75 (PD10, a general-purpose I/O); was PD6 (ball C6)'),
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 75 (PD10, a general-purpose I/O); was PD6 (ball C6, now IMU_INT1, '
+           'D-R11-81)'),
     '35': ('LED_RED', 'GPIO out',
            'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 70 (PB1, a general-purpose I/O); was PD5 (ball B6); LED1 / R32 '
            'moved forward beside the ports; R10 CAM_5V_SENSE moved to PC2_C (ball E2)'),
@@ -347,8 +352,12 @@ def set_symbol(text, ref, spec, library):
     if spec.get('lib') and spec['lib'] != 'M3:' + lib_name(node):
         lid = node.children('lib_id')[0].items[1]
         edits.append((lid.start, lid.end, sch_quote(spec['lib'])))
-    for name in ('Value', 'Footprint', 'Datasheet', 'LCSC', 'Manufacturer', 'Manufacturer Part'):
-        want = spec['props'].get(name)
+    for name in ('Value', 'Footprint', 'Datasheet', 'LCSC', 'Manufacturer', 'Manufacturer Part', 'LCSC Part'):
+        # D-R11-78: R10's redundant `LCSC Part` field follows the part's `LCSC` code (AGENTS section 3: redundant
+        # identity fields may agree, never contradict); it is never added where R10 had none.
+        want = spec['props'].get('LCSC' if name == 'LCSC Part' else name)
+        if name == 'LCSC Part' and name not in props:
+            continue
         if name in props and want is None:
             edits.append((text.rfind('\n', 0, props[name].start), props[name].end, ''))  # with its line break
         elif name in props:
