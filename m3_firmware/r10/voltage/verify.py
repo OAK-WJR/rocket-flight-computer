@@ -1,4 +1,4 @@
-"""Check the candidate voltage core's actual R10 divider and reference wiring."""
+"""Check the R10 voltage sources, divider and reference wiring."""
 import hashlib
 import json
 from pathlib import Path
@@ -65,4 +65,4 @@ def verify(root=ROOT):
     return True
 
 if __name__=='__main__':
-    verify();print('R10 voltage core: source parts and 14 endpoints verified; not linked or hardware tested')
+    verify();print('R10 voltage: source parts, register references and14 endpoints verified; not hardware tested')

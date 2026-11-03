@@ -1,10 +1,12 @@
-/* R10 bench image: sensor SPI/I2C diagnostics. No actuator/PWM, ADC, UART,
+/* R10 bench image: sensor SPI/I2C and ADC diagnostics. No actuator/PWM, UART,
  * USB or flash programming. External loads must be physically disconnected. */
 #include "stm32h7xx.h"
 #include "mailbox.h"
 #include "generated.h"
 #include "imu_frame.h"
 #include "baro_frame.h"
+#include "voltage_frame.h"
+_Static_assert(R10_WORDS==256u && R10_CRC==255u,"Voltage frame requires ABI4 bounds");
 
 #ifndef R10_HOST_TEST
 /* Fail compilation if the stack-free startup's supply constants drift. */
@@ -25,6 +27,7 @@ static r10_observation obs;
 static uint32_t frame[R10_WORDS];
 static r10_imu imu;
 static r10_baro baro;
+static r10_voltage voltage;
 
 void SysTick_Handler(void) {
     if (++ticks_lo == 0u) ++ticks_hi;
@@ -42,7 +45,10 @@ static void sample(uint32_t state, uint32_t exception) {
     r10_frame(frame, &obs, R10_BOARD_HASH, R10_BUILD_HASH);
     /* A core exception may interrupt a sensor-state update. Do not present a
      * partially updated sensor object as a coherent/fresh sample in that case. */
-    if (state!=R10_STATE_FAULT){r10_pack_imu(frame,&imu);r10_pack_baro(frame,&baro);}
+    if (state!=R10_STATE_FAULT) {
+        r10_pack_imu(frame,&imu);r10_pack_baro(frame,&baro);
+        r10_pack_voltage(frame,&voltage,r10_native_adc_state());
+    }
     r10_publish(r10_mailbox, frame, &sequence);
 }
 
@@ -79,6 +85,7 @@ int main(void) {
     __enable_irq();
     r10_imu_begin(&imu,r10_native_imu_io(),ticks_lo);
     r10_baro_begin(&baro,r10_native_baro_io(),ticks_lo);
+    r10_voltage_begin(&voltage,r10_native_voltage_io(),ticks_lo);
     uint32_t published = 0u;
     uint32_t polled = ticks_lo;
     for (;;) {
@@ -89,6 +96,7 @@ int main(void) {
             r10_imu_poll(&imu,now);
         }
         r10_baro_poll(&baro,ticks_lo);
+        r10_voltage_poll(&voltage,ticks_lo);
         __disable_irq();
         ++main_count;
         if ((uint32_t)(ticks_lo - published) >= R10_PUBLISH_PERIOD_TICKS) {

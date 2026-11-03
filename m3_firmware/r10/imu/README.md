@@ -1,7 +1,7 @@
 # R10 IMU driver core
 
 The ISM6HG256X acquisition/state layer and native H743 SPI1 port are implemented,
-host-tested and linked into the independent R10 diagnostic image. ABI v3 (with the original v2 IMU offsets) and
+host-tested and linked into the independent R10 diagnostic image. ABI4 (with the retained v2/v3 IMU offsets) and
 the host decoder expose configuration, raw native-axis samples, data age,
 validity, error history and retries. No sensor or physical board has been
 connected, and no flight/control functionality is implemented.

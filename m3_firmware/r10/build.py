@@ -26,7 +26,10 @@ LOCAL_INPUTS = ["binding.json", "protocol.json", "build.py", "linker.ld",
                 "baro/baro_io.h","baro/baro_core.h","baro/baro_core.c","baro/baro_frame.h","baro/baro_frame.c",
                 "baro/i2c_port.h","baro/i2c_port.c","baro/native_i2c.c","baro/verify.py","baro/provenance.json",
                 "vendor/ism6hg256x/ism6hg256x_reg.c","vendor/ism6hg256x/ism6hg256x_reg.h",
-                "vendor/ism6hg256x/LICENSE","vendor/ism6hg256x/manifest.json"]
+                "vendor/ism6hg256x/LICENSE","vendor/ism6hg256x/manifest.json",
+                "voltage/voltage_core.h","voltage/voltage_core.c","voltage/adc_port.h","voltage/adc_port.c",
+                "voltage/native_adc.c","voltage/voltage_frame.h","voltage/voltage_frame.c",
+                "voltage/verify.py","voltage/provenance.json"]
 FLAGS = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft", "-Os", "-g3",
          "-std=c11", "-ffreestanding", "-fno-builtin", "-fno-common",
          "-ffunction-sections", "-fdata-sections", "-fstack-usage",
@@ -59,10 +62,13 @@ def validate_inputs(root=ROOT):
     spec=importlib.util.spec_from_file_location("r10_barometer_sources",HERE/"baro/verify.py")
     barometer=importlib.util.module_from_spec(spec);spec.loader.exec_module(barometer)
     barometer.verify(root)
+    spec=importlib.util.spec_from_file_location("r10_voltage_sources",HERE/"voltage/verify.py")
+    voltage=importlib.util.module_from_spec(spec);spec.loader.exec_module(voltage)
+    voltage.verify(root)
     protocol = json.loads((HERE / "protocol.json").read_text())
     if (protocol["magic_le"] != int.from_bytes(b"R10D", "little") or
             protocol["address"] != binding["mailbox_address"] or
-            protocol["bytes"] != binding["mailbox_bytes"] or protocol["version"]!=3):
+            protocol["bytes"] != binding["mailbox_bytes"] or protocol["version"]!=4):
         raise ValueError("R10 mailbox contract mismatch")
     return binding, protocol
 
@@ -96,10 +102,10 @@ def verify_binary(raw, symbols, disassembly):
                 raise ValueError("Reserved vector is not zero")
         elif not (address & 1 and 0x08000000 <= (address & ~1) < 0x08000000 + len(raw)):
             raise ValueError("Vector does not point into this Thumb image")
-    if not re.search(r"^24000000\s+00000200\s+B\s+r10_mailbox$", symbols, re.M):
+    if not re.search(r"^24000000\s+00000400\s+B\s+r10_mailbox$", symbols, re.M):
         raise ValueError("R10 mailbox symbol/address/length mismatch")
     if (not re.search(r"^24000000\s+B\s+_r10_mailbox_start$",symbols,re.M) or
-            not re.search(r"^24000200\s+B\s+_r10_mailbox_end$",symbols,re.M)):
+            not re.search(r"^24000400\s+B\s+_r10_mailbox_end$",symbols,re.M)):
         raise ValueError("Startup ECC mailbox bounds changed")
     if not re.search(r"\bstrd\b", disassembly) or not re.search(r"\bdmb\b", disassembly):
         raise ValueError("ECC double-word init or publication barrier missing")
@@ -128,7 +134,7 @@ def build(prefix, out):
                           "-ffile-prefix-map="+str(compiler_root)+"=./toolchain",
                           "-fdebug-prefix-map="+str(stage)+"=./build",
                           "-ffile-prefix-map="+str(stage)+"=./build"]
-        includes = [HERE / "src", HERE/"imu",HERE/"baro",ROOT/"m3_firmware/src", HERE/"vendor/ism6hg256x", stage, ROOT / "m3_firmware/vendor/cmsis",
+        includes = [HERE / "src", HERE/"imu",HERE/"baro",HERE/"voltage",ROOT/"m3_firmware/src", HERE/"vendor/ism6hg256x", stage, ROOT / "m3_firmware/vendor/cmsis",
                     ROOT / "m3_firmware/vendor/device/Include"]
         includes = ["-I"+str(p) for p in includes]
         env = dict(os.environ, SOURCE_DATE_EPOCH="0", LC_ALL="C")
@@ -136,7 +142,8 @@ def build(prefix, out):
         for path in [HERE/"src/startup.s", HERE/"src/main.c", HERE/"src/mailbox.c", HERE/"src/memory.c", ROOT/VENDOR_SYSTEM,
                      HERE/"imu/imu_core.c",HERE/"imu/spi_port.c",HERE/"imu/native_spi.c",HERE/"imu/imu_frame.c",
                      HERE/"baro/baro_core.c",HERE/"baro/i2c_port.c",HERE/"baro/native_i2c.c",HERE/"baro/baro_frame.c",ROOT/"m3_firmware/src/checks.c",
-                     HERE/"vendor/ism6hg256x/ism6hg256x_reg.c"]:
+                     HERE/"vendor/ism6hg256x/ism6hg256x_reg.c",HERE/"voltage/voltage_core.c",
+                     HERE/"voltage/adc_port.c",HERE/"voltage/native_adc.c",HERE/"voltage/voltage_frame.c"]:
             obj = stage/(path.stem+".o")
             subprocess.run([gcc, *common, *includes, "-c", str(path), "-o", str(obj)], check=True, env=env)
             objects.append(str(obj))
@@ -165,10 +172,10 @@ def build(prefix, out):
         outputs = {p.name: digest(p) for p in stage.iterdir() if p.is_file()}
         manifest = {"schema": "r10-bench-build/v1", "profile": binding["profile"],
                     "build_id": build_id, "inputs": identity, "outputs": outputs,
-                    "mailbox_address": binding["mailbox_address"], "mailbox_bytes": 512,
+                    "mailbox_address": binding["mailbox_address"], "mailbox_bytes": 1024,
                     "board_sha256": binding["inputs"][BOARD], "hardware_tested": False,
                     "flashed": False, "actuation_implemented": False,
-                    "sensor_drivers_implemented": True,"barometer_driver_implemented":True, "mailbox_abi":3,"flight_qualified": False}
+                    "sensor_drivers_implemented": True,"barometer_driver_implemented":True, "voltage_driver_implemented":True,"mailbox_abi":4,"flight_qualified": False}
         (stage/"manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True)+"\n")
         shutil.copytree(stage, out)
     return manifest

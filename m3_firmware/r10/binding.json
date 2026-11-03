@@ -8,7 +8,7 @@
     "m3_firmware/vendor_manifest.json": "d05ca03d4f6263a131d6191c083d9a85c544e7e00072d12fa76f0049165409a2"
   },
   "mailbox_address": 603979776,
-  "mailbox_bytes": 512,
+  "mailbox_bytes": 1024,
   "hardware_tested": false,
   "actuation_implemented": false
 }

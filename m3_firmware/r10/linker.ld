@@ -2,7 +2,7 @@ ENTRY(Reset_Handler)
 MEMORY {
  FLASH (rx) : ORIGIN = 0x08000000, LENGTH = 2048K
  RAM (rw) : ORIGIN = 0x20000000, LENGTH = 128K
- MAILBOX (rw) : ORIGIN = 0x24000000, LENGTH = 512
+ MAILBOX (rw) : ORIGIN = 0x24000000, LENGTH = 1024
 }
 _estack = ORIGIN(RAM) + LENGTH(RAM);
 SECTIONS {
@@ -19,6 +19,6 @@ SECTIONS {
  .ARM.attributes 0 : { *(.ARM.attributes) }
  ASSERT(ADDR(.isr_vector) == 0x08000000, "vector moved")
  ASSERT(SIZEOF(.isr_vector) == 664, "H743 vector count changed")
- ASSERT(ADDR(.r10_mailbox) == 0x24000000 && SIZEOF(.r10_mailbox) == 512, "R10 ABI changed")
+ ASSERT(ADDR(.r10_mailbox) == 0x24000000 && SIZEOF(.r10_mailbox) == 1024, "R10 ABI changed")
  ASSERT(_ebss <= _estack - 8192, "stack reserve less than 8KiB")
 }

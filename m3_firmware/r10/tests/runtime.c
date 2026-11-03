@@ -22,6 +22,8 @@ static unsigned baro_present;
 static uint8_t baro_command,baro_conversion;
 static uint32_t baro_ready;
 static uint16_t baro_prom[8];
+static r10_adc_port fake_voltage_port;
+static unsigned voltage_present,voltage_error_at,voltage_slot;
 static jmp_buf escape;
 static int sensor_init(void *p,uint32_t *hz,uint32_t *detail) {
     (void)p;*hz=sensor_present?1000000u:0u;*detail=sensor_present?0u:1u;
@@ -64,6 +66,36 @@ static int baro_transfer(void *p,uint8_t addr,const uint8_t *tx,size_t nt,uint8_
 const r10_baro_io *r10_native_baro_io(void) {
     static const r10_baro_io io={.initialize=baro_init,.transfer=baro_transfer};return &io;
 }
+static int voltage_init(void *p,uint32_t now,r10_voltage_config *c,uint32_t *detail) {
+    (void)p;(void)now;*detail=voltage_present?0u:0x02000000u;
+    if (!voltage_present) return R10_VOLTAGE_IO_ERROR;
+    *c=(r10_voltage_config){0x2003u,24000u,10u,2000000u,2000000u};
+    fake_voltage_port.phase=A_READY;fake_voltage_port.owned=1u;
+    fake_voltage_port.revision=0x2003u;fake_voltage_port.calibration=24000u;
+    fake_voltage_port.nominal_adc_hz=2000000u;return R10_VOLTAGE_IO_OK;
+}
+static int voltage_start(void *p,unsigned slot,uint32_t *detail) {
+    (void)p;assert(slot<5u && !fake_voltage_port.active);
+    if (voltage_error_at && sleep_count>=voltage_error_at) {
+        *detail=0x0b800001u;return R10_VOLTAGE_IO_ERROR;
+    }
+    voltage_slot=slot;fake_voltage_port.active=1u;fake_voltage_port.unit=slot==1u || slot==2u?1u:3u;
+    *detail=0u;return R10_VOLTAGE_IO_OK;
+}
+static int voltage_read(void *p,uint32_t *raw,uint32_t *detail) {
+    (void)p;static const uint32_t data[5]={375u,140u,155u,256u,375u};
+    assert(fake_voltage_port.active);*raw=data[voltage_slot];*detail=0u;
+    fake_voltage_port.last_dr=*raw;fake_voltage_port.active=0u;return R10_VOLTAGE_IO_OK;
+}
+static int voltage_cancel(void *p,uint32_t *detail) {
+    (void)p;fake_voltage_port.phase=A_NEW;fake_voltage_port.active=fake_voltage_port.owned=0u;
+    *detail=0u;return R10_VOLTAGE_IO_OK;
+}
+const r10_voltage_io *r10_native_voltage_io(void) {
+    static const r10_voltage_io io={.initialize=voltage_init,.start=voltage_start,
+                                  .poll=voltage_read,.cancel=voltage_cancel};return &io;
+}
+const r10_adc_port *r10_native_adc_state(void) {return &fake_voltage_port;}
 void __disable_irq(void) {irq_enabled=0;}
 void __enable_irq(void) {irq_enabled=1;}
 void __DSB(void) {}
@@ -105,6 +137,8 @@ static void reset_model(void) {
     memset(frame,0,sizeof frame);
     memset(&imu,0,sizeof imu);memset(sensor_regs,0,sizeof sensor_regs);
     memset(&baro,0,sizeof baro);baro_present=baro_command=baro_conversion=baro_ready=0;
+    memset(&voltage,0,sizeof voltage);memset(&fake_voltage_port,0,sizeof fake_voltage_port);
+    voltage_present=voltage_error_at=voltage_slot=0u;
     const uint16_t coefficients[]={0,40127,36924,23317,23282,33464,28312,0};
     for(unsigned i=0;i<8;++i)baro_prom[i]=coefficients[i];
     baro_prom[7]=bench_prom_crc4(baro_prom);
@@ -128,10 +162,10 @@ static void run_main(void) {
 static void valid_record(uint32_t state) {
     uint32_t copy[R10_WORDS];
     for(unsigned i=0;i<R10_WORDS;++i)copy[i]=r10_mailbox[i];
-    assert(copy[0]==R10_MAGIC && copy[1]==R10_ABI && copy[2]==512);
+    assert(copy[0]==R10_MAGIC && copy[1]==R10_ABI && copy[2]==1024);
     assert(copy[3]!=0 && (copy[3]&1)==0 && copy[4]==state);
     assert(copy[R10_CRC]==r10_crc32((const uint8_t*)copy,R10_CRC*4));
-    assert(copy[27]==1 && copy[44]==31);
+    assert(copy[27]==2 && copy[44]==63);
 }
 int main(void) {
     reset_model();run_main();valid_record(R10_STATE_RUNNING);
@@ -150,7 +184,13 @@ int main(void) {
     reset_model();sensor_present=1;sensor_error_at=2400;run_main();valid_record(R10_STATE_RUNNING);
     assert(r10_mailbox[45]==R10_IMU_ERROR && r10_mailbox[46]==R10_IMU_CONFIG_READ);
     assert(r10_mailbox[48]>0 && r10_mailbox[58]==1 && !(r10_mailbox[47]&0x00ff0000u));
-    reset_model();sensor_present=baro_present=1;throw_fault=1;run_main();valid_record(R10_STATE_FAULT);
+    reset_model();voltage_present=1;run_main();valid_record(R10_STATE_RUNNING);
+    assert(r10_mailbox[139]>0u && r10_mailbox[144]==3u);
+    assert(r10_mailbox[176]>4900u && r10_mailbox[176]<5000u);
+    reset_model();voltage_present=1;voltage_error_at=2400;run_main();valid_record(R10_STATE_RUNNING);
+    assert(r10_mailbox[139]>0u && r10_mailbox[144]==2u && r10_mailbox[129]==R10_VOLTAGE_START_ERROR);
+    assert(r10_mailbox[155]==375u && r10_mailbox[176]>4900u);
+    reset_model();sensor_present=baro_present=voltage_present=1;throw_fault=1;run_main();valid_record(R10_STATE_FAULT);
     assert(imu.samples>0); /* exception must not expose a partially updated IMU object */
     for(unsigned i=45;i<63;++i)assert(r10_mailbox[i]==0);
     assert(baro.samples>0);for(unsigned i=64;i<R10_CRC;++i)assert(r10_mailbox[i]==0);

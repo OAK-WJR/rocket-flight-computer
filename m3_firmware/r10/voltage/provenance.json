@@ -61,10 +61,10 @@
   "adc_configuration": "10bit, single software-triggered conversion,810.5-cycle sampling, no DMA/interrupt/multimode; ADC2 remains deep-power-down. ADC3 VREFINT andVBAT paths are enabled only while dependent ADCs are disabled.",
   "external_gpio": "Only PA6/PB1 MODER and PUPDR fields become analog/no-pull; other pin fields and RCC fields are preserved.",
   "w1c_policy": "Stale EOC/OVR cause failure before a new conversion. Read DR, retain it, recheck OVR/EOC, then acknowledge EOS/EOSMP and verify. Cleanup preserves original core error history and resets only exclusively owned ADC12/ADC3.",
-  "image_linked": false,
+  "image_linked": true,
   "physical_hardware_tested": false,
   "open_items": [
-    "Link into a versioned image and diagnostic record, with historical decoder and exact read-window tests.",
+    "Versioned ABI4 integration is under software verification; not physically tested.",
     "Physical ADC timing, settling, calibration accuracy, noise, temperature and reference/divider uncertainty remain unqualified.",
     "The model does not simulate analog behavior, undocumented silicon effects, or all applicable device errata."
   ]

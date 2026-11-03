@@ -1,5 +1,5 @@
-/* Bench-only register bridge. Cross-compiled and model-tested, not linked into
- * the current image or executed on a physical board. */
+/* Bench-only register bridge. Cross-compiled and model-tested; no physical
+ * ADC timing, voltage accuracy or hardware qualification is claimed. */
 #include "stm32h7xx.h"
 #include "adc_port.h"
 #include <stddef.h>
@@ -62,3 +62,5 @@ static r10_adc_port port={.io={.read=read_register,.write=write_register}};
 static const r10_voltage_io io={.context=&port,.initialize=r10_adc_initialize,
     .start=r10_adc_start,.poll=r10_adc_poll,.cancel=r10_adc_cancel};
 const r10_voltage_io *r10_native_voltage_io(void) {return &io;}
+
+const r10_adc_port *r10_native_adc_state(void) {return &port;}

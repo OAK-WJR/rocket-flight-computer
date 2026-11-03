@@ -1,4 +1,4 @@
-# R10 sensor bench diagnostics
+# R10 sensor and voltage bench diagnostics
 
 This is a separate, cross-built **bench diagnostic image** for the exact
 M3-ASSY-R10 board in `binding.json`. It has not run on hardware. The R1 image,
@@ -14,20 +14,23 @@ failure, recursive faults and a damaged stack can prevent publication.
 
 The [fitted IMU acquisition core](imu/README.md) and native SPI1 port are now
 linked into the image. The [MS5611 barometer core and I2C1 port](baro/README.md)
-are now linked too. Only PB3/PB4/PB5 AF5, PB7 sensor CS and PB8/PB9 AF4 are configured;
-no actuator/PWM, ADC, UART, USB or storage driver is enabled. Flight state,
+are now linked too. The [voltage core and ADC1/ADC3 port](voltage/README.md)
+are linked in ABI4. GPIO changes are limited to PB3/PB4/PB5 AF5, PB7 sensor CS,
+PB8/PB9 AF4, and PA6/PB1 analog/no-pull inputs. Internal VREFINT and VBAT are
+sampled on ADC3; ADC2 remains in deep power-down. No actuator/PWM, UART, USB or
+storage driver is enabled. Flight state,
 control and recovery logic remain unimplemented. This is bench diagnostics,
 not the complete board firmware.
 
-A separate [voltage acquisition core](voltage/README.md) now has executable
-software tests for serial samples, reference/calibration math, partial evidence,
-timeouts and recovery. A bounded ADC register adapter now has fake-MMIO fault
-tests and pinned-CMSIS cross-compilation checks. Neither module is linked yet,
-and no voltage fields are added to this ABI-v3 image. Image/protocol integration
-and physical accuracy remain open work.
+Voltage records retain the current partial raw batch and a separate last-good
+sample, configuration, timestamps and nominal conversions. Initialization,
+conversion and batch timeouts are bounded; failed cleanup stops retry. No rail
+pass band or full physical uncertainty budget is claimed. Current failure,
+error history, native port phase and its most recent CR/ISR/DR observations stay
+visible even when the current data is invalid.
 
-Both sensors run outside the publication critical section: IMU every 20 nominal
-ms, and the nonblocking barometer state machine on each main-loop wake.
+Sensor and voltage polling runs outside the publication critical section: IMU
+every20 nominal ms, barometer and voltage state machines on each main-loop wake.
 A missing or failed IMU leaves the MCU heartbeat running, with sensor state,
 configuration, error history and last-good raw data retained in the record.
 The SPI port uses a shared finite iteration budget independent of SysTick.
@@ -55,7 +58,7 @@ debug artifacts are mapped to portable names. Two independent builds have
 produced identical outputs on the development host; this does not establish
 equivalence across different toolchain binaries claiming the same version.
 
-The linker reserves the ordinary DTCM data/stack region and a distinct 512-byte
+The linker reserves the ordinary DTCM data/stack region and a distinct 1024-byte
 AXI-SRAM mailbox at `0x24000000`. Startup configures the internal LDO and waits
 for `ACTVOSRDY` in stack-free assembly **before any RAM write**, initializes
 DTCM with 32-bit stores and the mailbox with aligned 64-bit stores. Its AXI range
@@ -71,8 +74,8 @@ fault barrier or evidence that an attached circuit is safe.
 
 ## Saved-record analysis
 
-`protocol.json` defines 512-byte `R10D/v3`; the saved-file decoder also supports
-historical 256-byte `R10D/v1` and `R10D/v2` records. Image/record ABI declarations must agree. Its magic is distinct from every
+`protocol.json` defines 1024-byte `R10D/v4`; the saved-file decoder also supports
+historical 512-byte v3 and 256-byte v1/v2 records. Image/record ABI declarations must agree. Its magic is distinct from every
 legacy R1 record. Publication uses a reserved generation, an odd sequence while
 writing, CRC-32 and an even sequence after the payload is complete. A terminal
 exception receives a new generation even when it interrupts the last store of
@@ -90,7 +93,7 @@ python3 m3_firmware/r10/decode.py \
   --snapshot first.bin --second second.bin
 ```
 
-Each snapshot must match its ABI: 512 bytes for v3, 256 for historical v1/v2. Invalid CRC, odd/zero sequence, wrong
+Each snapshot must match its ABI: 1024 bytes for v4,512 for v3,256 for historical v1/v2. Invalid CRC, odd/zero sequence, wrong
 build or board identity, legacy ABI, nonzero reserved fields and contradictory
 runtime/fault states are rejected. Two matching records with advancing ticks,
 main counter and generation show **observed progress in the supplied records**.
@@ -103,7 +106,7 @@ HSE frequency or clock margin. Reset flags remain raw and sticky. MMFAR/BFAR
 addresses are accompanied by their CFSR validity bits. No sensor or power-rail
 pass is inferred from successful record decoding.
 
-The IMU retains its v2 offsets in v3: words 45–62 for U4 state/error, identity/status/validity/has-sample,
+The IMU retains its v2 offsets in v3/v4: words 45–62 for U4 state/error, identity/status/validity/has-sample,
 sample count/time, endpoint flags, ten signed raw channels, eight configuration
 bytes, bus errors, nominal frequency, detailed failure and retry/history fields.
 The host suppresses validity after 250 nominal ms even if the last core poll
@@ -117,20 +120,29 @@ Barometer words 64–97 retain candidate/last-good values and separate calibrati
 banks. The host checks PROM CRC4 and independently repeats integer compensation.
 Freshness starts before the D1 command and a subsequent poll checks age before
 commit; callback latency cannot refresh old conversions. Core FAULT withholds
-both sensors. Reserved word63 and words98–126 stay zero; CRC32 is word127.
+all sensor/voltage state. In v4, word63,words98–127 and193–254 stay zero;
+CRC32 is word255. Historical v3 retains its original CRC at127.
+
+Voltage words128–192 hold acquisition/error/cleanup state, counters, raw masks,
+full32-bit pending and last-good values, each sample timestamp, both calibration
+and clock configurations, nominal converted values and native driver evidence.
+The host independently recomputes the last-good conversions. A failed batch
+cannot promote retained values to current data. Freshness is evaluated at record
+publication with an exclusive1000 nominal ms bound, not at file replay time.
+Reported voltage acquisition progress is separate from MCU and sensor progress.
+Internal VBAT/4 is a coarse3V3 observation, not a narrow rail acceptance test.
 
 ## Verification evidence and remaining work
 
 The host suite compiles and executes the actual portable C publisher, injects
-each of the 4096 possible single-bit changes into a record, tests random payloads
+each of the 8192 possible single-bit changes into a record, tests random payloads
 and counter wrap, and executes the actual `main.c` with scripted register and
 exception responses under the host undefined-behavior sanitizer. Scripted
 registers are not an STM32 emulator or a physical power-up test. Cross-build
 checks inspect the actual vector table, stack address, mailbox symbol, double-
 word store and memory barriers. No image has been flashed.
 
-Next: add native R10 rail measurements
-and persistent diagnostic logs. Real reset, clock, supply, probe, sensor and
+Next: qualify physical R10 rail measurements and add persistent diagnostic logs. Real reset, clock, supply, probe, sensor and
 fault-injection checks remain first-article work.
 
 ## Primary references

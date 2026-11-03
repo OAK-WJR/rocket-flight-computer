@@ -44,8 +44,10 @@ class ActualC(unittest.TestCase):
         library = Path(cls.temp.name)/"r10.dylib"
         subprocess.run(["/usr/bin/clang", "-dynamiclib", "-O2", "-std=c11", "-Wall", "-Wextra", "-Werror",
                         "-I"+str(HERE/"imu"), "-I"+str(HERE/"vendor/ism6hg256x"),
-                        "-I"+str(HERE/"baro"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
+                        "-I"+str(HERE/"baro"),"-I"+str(HERE/"voltage"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
                         str(HERE/"src/mailbox.c"), str(HERE/"imu/imu_frame.c"), str(HERE/"tests/imu_record.c"),
+                        str(HERE/"tests/voltage_record.c"),str(HERE/"voltage/voltage_core.c"),
+                        str(HERE/"voltage/adc_port.c"),str(HERE/"voltage/voltage_frame.c"),
                         str(HERE/"baro/baro_frame.c"),str(HERE.parents[1]/"m3_firmware/src/checks.c"),
                         "-o", str(library)], check=True, capture_output=True)
         cls.lib = ctypes.CDLL(str(library))
@@ -57,6 +59,7 @@ class ActualC(unittest.TestCase):
         cls.lib.r10_crc32.restype = ctypes.c_uint32
         cls.lib.r10_test_sensor_record.argtypes = [u32p, ctypes.c_uint]
         cls.lib.r10_test_baro_record.argtypes=[u32p,ctypes.c_uint]
+        cls.lib.r10_test_voltage_record.argtypes=[u32p,ctypes.c_uint]
         cls.lib.bench_ms5611.argtypes=[ctypes.POINTER(ctypes.c_uint16),ctypes.c_uint32,ctypes.c_uint32,
                                       ctypes.POINTER(ctypes.c_int32),ctypes.POINTER(ctypes.c_int32)]
         cls.board = "a0"*32; cls.identity = "17"*32
@@ -70,8 +73,8 @@ class ActualC(unittest.TestCase):
                           main_count=count, cpuid=0x411fc271, idcode=0x20030450,
                           uid0=0x1234, uid1=0x5678, uid2=0x9abc,
                           core_hz=64000000, systick_load=63999)
-        words = (ctypes.c_uint32*128)()
-        dest = (ctypes.c_uint32*128)(*([0xdeadbeef]*128))
+        words = (ctypes.c_uint32*256)()
+        dest = (ctypes.c_uint32*256)(*([0xdeadbeef]*256))
         bh = (ctypes.c_uint8*32).from_buffer_copy(bytes.fromhex(self.board))
         ih = (ctypes.c_uint8*32).from_buffer_copy(bytes.fromhex(self.identity))
         self.lib.r10_frame(words, ctypes.byref(obs), bh, ih)
@@ -126,15 +129,70 @@ class ActualC(unittest.TestCase):
     def test_semantic_faults_rejected_even_with_valid_crc(self):
         raw = self.frame()
         for index, value in ((4,0),(8,0),(9,0),(15,8),(18,1),(19,1),(24,0),
-                             (24,64000001),(25,100),(26,3),(27,2),(44,63),(45,7),(62,1)):
+                             (24,64000001),(25,100),(26,3),(27,3),(44,127),(45,7),(62,1)):
             with self.assertRaises(ValueError): self.decode(self.mutate(raw, index, value))
 
     def sensor_frame(self, mode=0, ticks=1000):
-        words=(ctypes.c_uint32*128).from_buffer_copy(self.frame(ticks))
+        words=(ctypes.c_uint32*256).from_buffer_copy(self.frame(ticks))
         self.lib.r10_test_sensor_record(words,mode)
-        dest=(ctypes.c_uint32*128)();sequence=ctypes.c_uint32(words[3])
+        dest=(ctypes.c_uint32*256)();sequence=ctypes.c_uint32(words[3])
         self.lib.r10_publish(dest,words,ctypes.byref(sequence))
         return bytes(dest)
+
+    def voltage_frame(self,mode=1,ticks=1000):
+        words=(ctypes.c_uint32*256).from_buffer_copy(self.frame(ticks))
+        self.lib.r10_test_voltage_record(words,mode)
+        dest=(ctypes.c_uint32*256)();sequence=ctypes.c_uint32(words[3])
+        self.lib.r10_publish(dest,words,ctypes.byref(sequence))
+        return bytes(dest)
+
+    def test_actual_voltage_core_adapter_model_and_serializer_are_decoded(self):
+        d=self.decode(self.voltage_frame())["voltage"]
+        self.assertTrue(d["fresh"]);self.assertEqual(d["state"],"WAIT")
+        self.assertEqual(list(d["sample_raw"].values()),[375,140,155,256,375])
+        self.assertEqual(d["sample_configuration"]["factory_calibration16"],24000)
+        for name in ("hardware_qualified","measurement_accuracy_qualified","electrical_health_assessed"):
+            self.assertFalse(d[name])
+
+    def test_voltage_failure_keeps_full_raw_error_and_last_good_sample(self):
+        old=self.decode(self.voltage_frame())["voltage"]["values_nominal"]
+        for mode,error in ((2,"START_ERROR"),(3,"START_ERROR"),(4,"RAW_RANGE"),(5,"REFERENCE_DRIFT"),(6,"START_ERROR")):
+            with self.subTest(mode=mode):
+                d=self.decode(self.voltage_frame(mode))["voltage"]
+                self.assertFalse(d["fresh"]);self.assertTrue(d["has_sample"])
+                self.assertEqual(d["error"],error);self.assertEqual(d["values_nominal"],old)
+                if mode==3:
+                    self.assertEqual((d["state"],d["cleanup_error"]),("STOPPED","CLEANUP"))
+                    self.assertEqual(d["cleanup_driver_failure"]["reason"],"CLEANUP")
+                    self.assertEqual(d["last_driver_failure"]["reason"],"STATUS")
+                if mode==4:
+                    self.assertEqual(d["pending_raw"]["logic"],0xffffffff)
+                    self.assertEqual(d["port"]["last_dr_raw"],0xffffffff)
+                    self.assertNotEqual(d["sample_raw"]["logic"],0xffffffff)
+
+    def test_voltage_age_counter_wrap_and_progress_are_separate(self):
+        raw=self.voltage_frame(ticks=10)
+        first=self.decode(raw);tick=first["voltage"]["last_good_tick_lo"]
+        for age in (999,1000,1001,0xffffffff):
+            d=self.decode(self.mutate(raw,5,(tick+age)&0xffffffff))["voltage"]
+            self.assertEqual(d["fresh"],age<1000)
+        first=self.decode(self.mutate(self.voltage_frame(ticks=1000),139,0xffffffff))
+        raw=self.mutate(self.voltage_frame(ticks=2000),139,0)
+        raw=self.mutate(self.mutate(raw,3,first["sequence"]+2),7,first["main_count"]+20)
+        second=self.decode(raw)
+        result=decoder.pair(first,second)["voltage_progress"]
+        self.assertTrue(result["reported_acquisition_progress"]);self.assertEqual(result["sample_count_delta"],1)
+        raw=self.voltage_frame(mode=4,ticks=2000)
+        failed=self.decode(self.mutate(self.mutate(raw,3,first["sequence"]+2),7,first["main_count"]+20))
+        paired=decoder.pair(first,failed)
+        self.assertTrue(paired["observed_progress"])
+        self.assertFalse(paired["voltage_progress"]["reported_acquisition_progress"])
+
+    def test_v4_reserved_space_and_voltage_semantic_claims_are_checked(self):
+        raw=self.voltage_frame()
+        for index,value in ((63,1),(98,1),(127,1),(193,1),(254,1),(128,0),(129,99),
+                            (133,13),(142,6),(143,2),(144,1),(170,0x2008),(175,1),(180,0),(192,0),(4,3)):
+            with self.subTest(index=index,value=value),self.assertRaises(ValueError):self.decode(self.mutate(raw,index,value))
 
     def test_actual_c_imu_raw_packing_and_config_validity(self):
         imu=self.decode(self.sensor_frame())["imu"]
@@ -176,13 +234,23 @@ class ActualC(unittest.TestCase):
 
     def test_v1_saved_records_stay_decodable_but_cannot_pair_with_v2(self):
         for version in (1,2):
-            words=list(struct.unpack("<128I",self.frame()))[:64]
+            words=list(struct.unpack("<256I",self.frame()))[:64]
             words[1]=version;words[2]=256;words[27]=0 if version==1 else 1;words[44]=7 if version==1 else 15
             payload=struct.pack("<63I",*words[:63]);raw=payload+struct.pack("<I",zlib.crc32(payload))
             old=self.decode(raw)
             self.assertEqual(old["abi_version"],version)
             self.assertIsNone(old["baro"])
             with self.assertRaises(ValueError):decoder.pair(old,self.decode(self.frame()))
+
+    def test_historical_v3_sensor_records_keep_their_layout_and_reserved_contract(self):
+        words=list(struct.unpack("<256I",self.baro_frame()))[:128]
+        words[1]=3;words[2]=512;words[27]=1;words[44]=31
+        raw=struct.pack("<127I",*words[:127]);raw+=struct.pack("<I",zlib.crc32(raw))
+        old=self.decode(raw)
+        self.assertEqual(old["baro"]["pressure_pa"],100009)
+        self.assertIsNone(old["voltage"])
+        with self.assertRaises(ValueError):decoder.pair(old,self.decode(self.frame()))
+        with self.assertRaises(ValueError):self.decode(self.mutate(raw,98,1))
 
     def test_main_progress_and_sensor_progress_are_separate(self):
         first=self.decode(self.sensor_frame(ticks=1000))
@@ -197,9 +265,9 @@ class ActualC(unittest.TestCase):
         self.assertFalse(result["imu_progress"]["reported_acquisition_progress"])
 
     def baro_frame(self,mode=0,ticks=1000):
-        words=(ctypes.c_uint32*128).from_buffer_copy(self.frame(ticks))
+        words=(ctypes.c_uint32*256).from_buffer_copy(self.frame(ticks))
         self.lib.r10_test_baro_record(words,mode)
-        dest=(ctypes.c_uint32*128)();sequence=ctypes.c_uint32(words[3])
+        dest=(ctypes.c_uint32*256)();sequence=ctypes.c_uint32(words[3])
         self.lib.r10_publish(dest,words,ctypes.byref(sequence));return bytes(dest)
 
     def test_actual_c_barometer_pack_keeps_raw_calibration_and_values(self):
@@ -281,7 +349,7 @@ class ActualC(unittest.TestCase):
                 (folder/"second.bin").write_bytes(self.frame(20,20,2))
             manifest=folder/"manifest.json"
             manifest.write_text(json.dumps({"schema":"r10-bench-build/v1","profile":"M3-ASSY-R10",
-                                           "board_sha256":bh,"build_id":ih,"mailbox_abi":3,"inputs":inputs}))
+                                           "board_sha256":bh,"build_id":ih,"mailbox_abi":4,"mailbox_bytes":1024,"inputs":inputs}))
             cmd=[sys.executable,str(HERE/"decode.py"),"--snapshot",str(folder/"first.bin"),
                  "--second",str(folder/"second.bin"),"--board",str(board),"--manifest",str(manifest)]
             result=subprocess.run(cmd,capture_output=True,text=True,timeout=5)
@@ -289,6 +357,16 @@ class ActualC(unittest.TestCase):
             report=json.loads(result.stdout)
             self.assertTrue(report["pair"]["observed_progress"])
             self.assertFalse(report["record"]["hardware_qualified"])
+            original=json.loads(manifest.read_text())
+            for field,value in (("mailbox_abi",True),("mailbox_abi",3),("mailbox_bytes",512),("mailbox_bytes",1024.0)):
+                changed=dict(original);changed[field]=value;manifest.write_text(json.dumps(changed))
+                rejected=subprocess.run(cmd,capture_output=True,text=True,timeout=5)
+                self.assertEqual(rejected.returncode,3,rejected.stdout)
+                self.assertNotIn("Traceback",rejected.stderr)
+            missing=dict(original);missing.pop("mailbox_bytes");manifest.write_text(json.dumps(missing))
+            rejected=subprocess.run(cmd,capture_output=True,text=True,timeout=5)
+            self.assertEqual(rejected.returncode,3)
+            manifest.write_text(json.dumps(original))
             board.write_bytes(b"WRONG SYNTHETIC BOARD")
             result=subprocess.run(cmd,capture_output=True,text=True,timeout=5)
             self.assertEqual(result.returncode,3)
@@ -307,11 +385,25 @@ class ActualC(unittest.TestCase):
 
 
 class BuildContract(unittest.TestCase):
+    def test_freestanding_memcpy_preserves_source_and_guard_bytes(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output=Path(temp)/"copy.dylib"
+            subprocess.run(["/usr/bin/clang","-dynamiclib","-O2","-fno-builtin","-Wall","-Wextra","-Werror",
+                "-Dmemset=r10_private_memset","-Dmemcpy=r10_private_memcpy",str(HERE/"src/memory.c"),"-o",str(output)],check=True,capture_output=True)
+            fn=ctypes.CDLL(str(output)).r10_private_memcpy
+            fn.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t];fn.restype=ctypes.c_void_p
+            for length in (0,1,2,7,31,256):
+                source=(ctypes.c_ubyte*272)(*[(i*17)&255 for i in range(272)])
+                old=bytes(source);dest=(ctypes.c_ubyte*272)(*([0xa5]*272))
+                self.assertEqual(fn(ctypes.byref(dest,3),ctypes.byref(source,5),length),ctypes.addressof(dest)+3)
+                self.assertEqual(bytes(source),old)
+                self.assertEqual(bytes(dest),b"\xa5"*3+old[5:5+length]+b"\xa5"*(269-length))
+
     def test_freestanding_memory_primitive_preserves_guard_bytes(self):
         with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"memory.dylib"
             subprocess.run(["/usr/bin/clang","-dynamiclib","-O2","-fno-builtin",
-                            "-Dmemset=r10_private_memset",str(HERE/"src/memory.c"),"-o",str(output)],
+                            "-Dmemset=r10_private_memset","-Dmemcpy=r10_private_memcpy",str(HERE/"src/memory.c"),"-o",str(output)],
                            check=True,capture_output=True)
             lib=ctypes.CDLL(str(output));fn=lib.r10_private_memset
             fn.argtypes=[ctypes.c_void_p,ctypes.c_int,ctypes.c_size_t];fn.restype=ctypes.c_void_p
@@ -329,10 +421,11 @@ class BuildContract(unittest.TestCase):
             subprocess.run(["/usr/bin/clang","-std=c11","-O1","-g","-Wall","-Wextra","-Werror","-DR10_HOST_TEST",
                             "-fsanitize=undefined","-DR10_PUBLISH_OBSERVER","-I"+str(HERE/"tests"),"-I"+str(folder),
                             "-I"+str(HERE/"imu"),"-I"+str(HERE/"vendor/ism6hg256x"),
-                            "-I"+str(HERE/"baro"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
+                            "-I"+str(HERE/"baro"),"-I"+str(HERE/"voltage"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
                             "-U__weak","-D__weak=__attribute__((weak))",
                             str(HERE/"tests/runtime.c"),str(HERE/"src/mailbox.c"),str(HERE/"imu/imu_core.c"),
                             str(HERE/"imu/imu_frame.c"),str(HERE/"baro/baro_frame.c"),str(HERE/"baro/baro_core.c"),
+                            str(HERE/"voltage/voltage_core.c"),str(HERE/"voltage/voltage_frame.c"),
                             str(HERE.parents[1]/"m3_firmware/src/checks.c"),
                             str(HERE/"vendor/ism6hg256x/ism6hg256x_reg.c"),"-o",str(executable)],
                            check=True,capture_output=True,text=True)
@@ -356,7 +449,7 @@ class BuildContract(unittest.TestCase):
 
     def test_reviewed_board_and_vendor_inputs(self):
         binding, protocol = build.validate_inputs()
-        self.assertEqual(binding["mailbox_bytes"],512)
+        self.assertEqual(binding["mailbox_bytes"],1024)
         self.assertEqual(protocol["magic_le"],decoder.MAGIC)
         self.assertFalse(binding["actuation_implemented"])
 
@@ -380,7 +473,7 @@ class BuildContract(unittest.TestCase):
     def test_protocol_word_offsets_and_reserved_zero_match_real_c(self):
         p = json.loads((HERE/"protocol.json").read_text())
         self.assertEqual(p["words"]["sequence"],3)
-        self.assertEqual(p["words"]["crc32"],127)
+        self.assertEqual(p["words"]["crc32"],255)
         self.assertEqual(p["words"]["board_sha256"]*4,112)
         self.assertEqual(p["words"]["build_id"]*4,144)
 
@@ -389,14 +482,14 @@ class BuildContract(unittest.TestCase):
         vectors[0] = 0x20020000
         for i in (7,8,9,10,13): vectors[i] = 0
         raw = struct.pack("<166I",*vectors)+bytes(2048)
-        symbols = "24000000 00000200 B r10_mailbox\n24000000 B _r10_mailbox_start\n24000200 B _r10_mailbox_end\n"
+        symbols = "24000000 00000400 B r10_mailbox\n24000000 B _r10_mailbox_start\n24000400 B _r10_mailbox_end\n"
         build.verify_binary(raw,symbols,"strd r2, r3, [r0]\ndmb sy")
         for i, v in ((0,0x20040000),(1,0x08000400),(7,0x08000401),(165,0x09000001)):
             broken=list(vectors);broken[i]=v
             with self.assertRaises(ValueError):
                 build.verify_binary(struct.pack("<166I",*broken)+bytes(2048),symbols,"strd dmb")
         with self.assertRaises(ValueError): build.verify_binary(raw,symbols,"no required instructions")
-        with self.assertRaises(ValueError):build.verify_binary(raw,symbols.replace('24000200','24000100'),"strd dmb")
+        with self.assertRaises(ValueError):build.verify_binary(raw,symbols.replace('24000400','24000100'),"strd dmb")
 
 
 if __name__ == "__main__":

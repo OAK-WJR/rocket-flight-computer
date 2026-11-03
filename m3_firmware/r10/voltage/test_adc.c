@@ -225,6 +225,6 @@ int main(void) {
     r10_voltage_poll(&v,now++);r10_voltage_poll(&v,now++);
     assert(v.error && !v.valid && v.samples==1u && !r10_voltage_fresh(&v,now));
     assert(v.last_good_ms==last && !memcmp(&v.values,&saved,sizeof(saved)));
-    puts("ADC MMIO sequencing and fault cases passed; not linked or hardware tested");
+    puts("ADC MMIO sequencing and fault cases passed; scripted inputs only");
     return 0;
 }

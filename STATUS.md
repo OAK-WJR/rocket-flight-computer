@@ -6,7 +6,27 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
-**R10 native bench ADC adapter (2026-11-03 UTC).**
+**R10 voltage readback integration (2026-11-03 UTC).**
+The [bench image](m3_firmware/r10/README.md) now links the ADC1/ADC3 adapter and
+voltage core. ABI4 uses an explicit1024-byte record: uncompressed pending raw
+observations, a separate last-good sample/configuration, per-channel times,
+nominal values, error/cleanup history and native port phase/register evidence.
+The host independently repeats the nominal conversion and reports freshness at
+publication, without a rail-health or measurement-accuracy verdict. Image/ABI
+binding grants only the matching256/512/1024-byte window; legacy register-only
+and R1 permissions remain unchanged. An original saved synthetic v3 capture is
+preserved byte-for-byte and replayed without requiring the new source field.
+The targeted suites have40 firmware/runtime/record tests and41 bounded-readback
+tests; the13-case voltage suite separately checks real C with scripted MMIO and
+pinned-CMSIS object builds. The integrated candidate cross-links for Cortex-M7;
+a missing freestanding memcpy was added and checked with guarded-buffer tests.
+The complete repository gate remains required before this change is committed.
+The preceding adapter-only gate passed at20:42:58 UTC with2515unchanged inputs
+and unchanged PCB bytes. No image was installed or run on a real board. Physical
+voltage acquisition, accuracy, full operational firmware and board/flight
+qualification remain unverified; PCB and manufacturing outputs are unchanged.
+
+**R10 native bench ADC adapter checkpoint (2026-11-03 UTC, before ABI4 integration).**
 The [voltage module](m3_firmware/r10/voltage/README.md) now also contains an
 ADC1/ADC3 register adapter, reviewed against the manufacturer manual and pinned
 ST register/clock sources. It serializes regulator, calibration, enable and
@@ -16,8 +36,8 @@ the ADCs and PA6/PB1 analog fields and checks timing guards, all four explicit
 revision IDs, tick wrap and failure paths. The voltage suite has 13 software
 tests, including actual C with AddressSanitizer/UBSan, three Cortex-M7 object
 builds against pinned CMSIS, and source-provenance negative controls. These are
-software checks only. The adapter/core are not linked into the ABI-v3 image;
-versioned full-evidence readback is the next integration step. PCB, manufacturing
+software checks only. At this earlier checkpoint the adapter/core were not linked into the ABI-v3 image;
+versioned full-evidence readback was the next integration step. PCB, manufacturing
 files and probe permissions remain unchanged. No physical voltage acquisition,
 accuracy or hardware qualification is claimed.
 
@@ -31,7 +51,7 @@ and native netlist/source-part checks with wrong-divider/pin negative controls.
 The complete `tools/check.sh` gate for that preceding core step passed at 20:10:30 UTC on 2026-11-03 (exit 0): DRC, unconnected items, schematic parity and ERC are zero; metadata/3D, silkscreen, fit, routing and fabrication checks pass. All 1,018 inventoried inputs and PCB bytes stayed unchanged during that gate. At that checkpoint there was no native ADC
 adapter or ABI integration: the PCB, bench image, manufacturing outputs and
 probe permissions are unchanged, and no physical voltage measurement or accuracy
-qualification is claimed. Firmware ADC integration remains open work.
+qualification was claimed. Firmware ADC integration remained open at that preceding checkpoint.
 
 **Independent R10 diagnostic evidence (2026-11-03 UTC).**
 Contradictory voltage records previously stopped the entire cause search, also

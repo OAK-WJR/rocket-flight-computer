@@ -2,7 +2,7 @@
 
 `diagnostics.r10_firmware` separately compares the installed internal image with
 the reviewed [R10 sensor diagnostic build](../m3_firmware/r10/README.md) and acquires two
-512-byte ABI v3 CRC-protected RAM records. Original register-only SWD and legacy R1
+1024-byte ABI v4 CRC-protected RAM records. Original register-only SWD and legacy R1
 permissions remain unchanged. Development tests use synthetic DP/MCU data only;
 no probe was opened or image flashed, and no physical R10 test has passed.
 
@@ -88,6 +88,14 @@ ABI v3 also reports U5 PROM CRC4, candidate/last-good D1/D2, their calibration
 banks, compensated pressure/temperature, acquisition age and message/retry
 history. The host independently recomputes compensation and suppresses expired
 data. Record size and ABI must match the image; adjacent words remain blocked.
+ABI4 adds full raw/last-good voltage observations, per-channel times,
+configuration and calibration, nominal conversions, state/error/cleanup history
+and last native ADC register observations. Current errors or expired data keep
+history visible without reporting acquisition progress. Freshness is at record
+publication, not at replay time. The host independently checks the nominal math;
+it does not assess electrical rail health or establish measurement accuracy.
+Historical capture requests retain their original source-set shape for replay;
+new capture requests bind the voltage decoder too.
 A successful decode or a reported fresh sample is not physical calibration,
 sensor identity authentication or a sensor/board qualification.
 
@@ -99,8 +107,11 @@ connectors, actuators, environmental endurance and flight behaviour are untested
 ## Address boundary
 
 The dedicated guard allows fixed AP configuration, identity/status registers,
-the exact internal-image window (at most 64 KiB), then only its version-bound mailbox (512 bytes for v3, 256 for historical v1/v2).
-The 512-byte v3 grant is explicit after matching the image and its validated
+the exact internal-image window (at most64KiB), then only its image/ABI-bound
+mailbox:1024 bytes for v4,512 for historical v3,256 for v1/v2. The default grant
+remains v1/256 bytes. A size from a different ABI is rejected and revokes RAM
+access. For v4,0x240003FC is the last permitted word;0x24000400 remains blocked.
+The larger grant is explicit after matching the image and its validated
 version/size contract; it does not enable the legacy generic RAM or mapped QSPI
 permissions. Startup ECC initialization covers the exact linked record range. Target-memory data writes,
 GPIO/reset/debug-control addresses, unaligned addresses and adjacent words are

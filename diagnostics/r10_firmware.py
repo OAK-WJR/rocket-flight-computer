@@ -34,7 +34,8 @@ REGS = dict(CPUID=0xe000ed00, IDCODE=0x5c001000,
 SOURCES = ("diagnostics/r10_firmware.py", "diagnostics/r10_swd.py", "diagnostics/r10_offline.py",
            "diagnostics/r10_swd_binding.json", "diagnostics/r10_profile.json",
            "diagnostics/transport.py", "diagnostics/registers.py", "diagnostics/engine.py",
-           "m3_firmware/r10/decode.py", "m3_firmware/r10/build.py")
+           "m3_firmware/r10/decode.py", "m3_firmware/r10/voltage_decode.py", "m3_firmware/r10/build.py")
+LEGACY_SOURCES=tuple(p for p in SOURCES if p!="m3_firmware/r10/voltage_decode.py")
 BOOTSTRAP = ("import sys; sys.path.insert(0,sys.argv.pop(1)); "
              "from diagnostics.r10_firmware import main; raise SystemExit(main())")
 
@@ -53,9 +54,9 @@ def build_bundle(manifest_bytes, image, *, current=True):
     require(inputs["schema"] == "r10-bench-build-inputs/v1" and expected_id == m.get("build_id"),
             "Firmware build identity mismatch")
     abi=m.get("mailbox_abi",1)
-    require(type(abi) is int and abi in (1,2,3) and type(m.get("mailbox_address")) is int and
+    require(type(abi) is int and abi in (1,2,3,4) and type(m.get("mailbox_address")) is int and
             type(m.get("mailbox_bytes")) is int and m.get("mailbox_address") == RAM and
-            m.get("mailbox_bytes") == {1:256,2:256,3:512}[abi] and
+            m.get("mailbox_bytes") == {1:256,2:256,3:512,4:1024}[abi] and
             m.get("actuation_implemented") is False, "Wrong mailbox/function contract")
     require(isinstance(m.get("outputs"), dict) and m["outputs"].get("r10_bench.bin") == sha_bytes(image),
             "Local image changed since build")
@@ -64,7 +65,7 @@ def build_bundle(manifest_bytes, image, *, current=True):
     require(sp == 0x20020000 and entry & 1 and FLASH <= entry & ~1 < FLASH+len(image), "Wrong image vector")
     if current:
         expected, _ = firmware_build.validate_inputs()
-        require(m.get("mailbox_abi") == 3 and m.get("barometer_driver_implemented") is True and m.get("sensor_drivers_implemented") is True,
+        require(m.get("mailbox_abi") == 4 and m.get("barometer_driver_implemented") is True and m.get("sensor_drivers_implemented") is True and m.get("voltage_driver_implemented") is True,
                 "Current R10 image must declare the reviewed sensor diagnostic ABI")
         require(inputs["sources"] == firmware_build.source_inventory() and
                 inputs["board_inputs"] == expected["inputs"] and inputs["flags"] == firmware_build.FLAGS,
@@ -79,23 +80,26 @@ class FirmwareAPGuard:
         self.operations = []
         self.family = False
         self.image_bytes = 0
+        self.record_bytes = 0
         self.ram = False
         self.ram_bytes = 0
         self.current_address = None
 
-    def enable_image(self, cpuid, idcode, size):
-        self.family=False;self.image_bytes=0;self.ram=False;self.ram_bytes=0;self.current_address=None
+    def enable_image(self, cpuid, idcode, size, mailbox_abi=1):
+        self.family=False;self.image_bytes=0;self.record_bytes=0;self.ram=False;self.ram_bytes=0;self.current_address=None
         require(type(cpuid) is int and type(idcode) is int and
                 cpuid & CPUID_MASK == EXPECTED_CPUID and idcode & 0xfff == EXPECTED_FAMILY,
                 "Wrong chip; internal flash remains disabled")
         require(type(size) is int and 664 <= size <= MAX_IMAGE and size % 4 == 0, "Bad image window")
+        require(type(mailbox_abi) is int and mailbox_abi in (1,2,3,4),"Unsupported image mailbox ABI")
         self.family, self.image_bytes = True, size
+        self.record_bytes={1:256,2:256,3:512,4:1024}[mailbox_abi]
 
     def enable_ram(self, observed, expected, power, vtor, reset_boot_confirmed, record_bytes=256):
         self.ram=False;self.ram_bytes=0;self.current_address=None
         require(self.family and len(observed) == self.image_bytes and observed == expected and
                 type(power) is int and power & 0x2000 and vtor == FLASH and reset_boot_confirmed is True and
-                type(record_bytes) is int and record_bytes in (256,512),
+                type(record_bytes) is int and record_bytes == self.record_bytes,
                 "No verified image/reset-boot/supply/VTOR prerequisite; RAM disabled")
         self.ram = True;self.ram_bytes=record_bytes
 
@@ -140,8 +144,8 @@ class FirmwareReader(PyOCDReader):
     def read32(self, address):
         return self.ap.read32(address)
 
-    def enable_image(self, c, d, length):
-        self.guard.enable_image(c,d,length)
+    def enable_image(self, c, d, length, mailbox_abi=1):
+        self.guard.enable_image(c,d,length,mailbox_abi)
 
     def enable_ram(self, observed, expected, power, vtor, reset_boot_confirmed,record_bytes=256):
         self.guard.enable_ram(observed,expected,power,vtor,reset_boot_confirmed,record_bytes)
@@ -183,7 +187,7 @@ def request(run, board, *, current=False):
     require(r["build_id"] == m["build_id"] and r["manifest_sha256"] == sha_bytes(raw) and
             r["image_sha256"] == sha_bytes(image) and type(r["image_bytes"]) is int and r["image_bytes"] == len(image),
             "Request bundle changed")
-    fields(r["tool_sources"], SOURCES)
+    fields(r["tool_sources"], SOURCES if m.get("mailbox_abi",1)==4 else LEGACY_SOURCES)
     require(all(isinstance(v,str) and len(v)==64 and set(v)<=set("0123456789abcdef") for v in r["tool_sources"].values()),
             "Bad source digest")
     if current:require(r["tool_sources"] == sources(), "Worker sources changed since request")
@@ -215,7 +219,7 @@ def worker(run, board, reader_factory=None, pause=time.sleep):
         s["driver"]=reader.open();s["state"]="IDENTITY";save()
         c,d=reg("CPUID"),reg("IDCODE")
         require(c&CPUID_MASK==EXPECTED_CPUID and d&0xfff==EXPECTED_FAMILY,"Wrong CPU/device family")
-        reader.enable_image(c,d,len(image))
+        reader.enable_image(c,d,len(image),abi)
         uid=[reg(n) for n in ("UID0","UID1","UID2")]
         require(reg("FLASH_SIZE")&0xffff == 2048,"Wrong flash capacity")
         power,vtor=reg("PWR_CSR1"),reg("VTOR")
@@ -527,6 +531,23 @@ def report(run,board,out):
                 text+=("\n本次待完成原始值 D1=%d / D2=%d；上次有效值 D1=%d / D2=%d。\n"%
                        (baro["pending_d1"],baro["pending_d2"],baro["sample_d1"],baro["sample_d2"]))
                 text+="\n当前校准原始字：%s；上次有效样本校准：%s。\n"%(baro["current_prom"],baro["sample_prom"])
+            voltage=record.get("voltage")
+            if voltage is None:
+                text+="\n历史 ABI 没有电压采样字段。\n"
+            else:
+                text+="\n电压采样：%s，当前错误 %s，历史错误 %s；发布时有效 %s，发布时标称样本年龄 %s ms。\n"%(
+                    voltage["effective_state"],voltage["error"],voltage["last_error"],voltage["effective_valid"],voltage["nominal_sample_age_ms"])
+                text+="\n本次原始 ADC（掩码 0x%x）：%s；上次完整样本：%s。\n"%(
+                    voltage["pending_mask"],json.dumps(voltage["pending_raw"],sort_keys=True),json.dumps(voltage["sample_raw"],sort_keys=True))
+                text+="\n上次完整样本标称换算（失败或过期时仅为历史值）：%s。\n"%json.dumps(voltage["values_nominal"],sort_keys=True)
+                port=voltage["port"]
+                text+="\n驱动原因（当前 / 历史 / 清理）：%s / %s / %s。\n"%tuple(
+                    json.dumps(voltage[key],sort_keys=True) for key in
+                    ("current_driver_failure","last_driver_failure","cleanup_driver_failure"))
+                text+="\nADC 端口阶段 %s，单元 %d；最近读回 CR=0x%s，ISR=0x%s，DR=%d；驱动历史详情 0x%s，清理错误 %s（0x%s）。\n"%(
+                    port["phase"],port["unit"],port["last_cr_raw"],port["last_isr_raw"],port["last_dr_raw"],port["detail_raw"],
+                    voltage["cleanup_error"],voltage["cleanup_detail_raw"])
+                text+="\n标称换算不是电源合格判据；VBAT/4 为粗测，测量精度尚未经过实板验证。\n"
     (out/"report.md").write_text(text)
     return result
 

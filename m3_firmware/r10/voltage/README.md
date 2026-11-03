@@ -1,12 +1,11 @@
 # R10 bench voltage acquisition core
 
-This portable C module is a tested implementation step towards power diagnostics.
-It and its register adapter are **not linked into the bench image**. No ADC
-observations are available in the current ABI-v3 RAM record. The adapter is now
-cross-compiled against pinned CMSIS and tested through a fake-MMIO model; these
-tests do not open a probe, program a device or measure physical hardware.
+The portable core and ADC1/ADC3 register adapter are linked into the ABI4 bench
+image, with a1024-byte record. Software tests and cross-builds establish behavior
+under scripted inputs; no probe was opened, device programmed or physical
+voltage measured. The image is not operational flight firmware.
 
-The candidate adapter contract serializes five observations: ADC3 VREFINT before
+The adapter contract serializes five observations: ADC3 VREFINT before
 the inputs, ADC1 PA6/VLOGIC, ADC1 PB1/camera, ADC3 VBAT, and VREFINT again.
 `verify.py` checks the actual R10 MCU, both resistor dividers and 14 reference/input
 endpoints against the native netlist. The old PC2_C/PC3_C driver does not bind here.
@@ -79,9 +78,15 @@ only for V/0x2003, the version for which RM0433 documents that flag. A second
 1 nominal ms guard separates calibration completion and enable. No VREFBUF,
 DMA, conversion interrupts or control outputs are configured.
 
-Before integration: version the RAM protocol, preserve full raw and last-good
-evidence, and test historical decoders and exact read windows. Input settling,
-silicon behavior and the complete physical uncertainty budget remain open.
+ABI4 words128–192 preserve uncompressed32-bit pending/last-good observations,
+per-channel timestamps and configurations, nominal values and the native port
+phase, CALFACT and last CR/ISR/DR observations. Failed batches invalidate current
+data while retaining separate history. Host recomputation and age checks do not
+turn coherent packets into a rail-health verdict. Core exceptions withhold all
+mutable voltage fields. Historical ABI1/2/3 decoding and exact256/512-byte read
+windows remain available; ABI4 explicitly grants1024 bytes only after its image
+and version prerequisites. Input settling, silicon behavior and the physical
+uncertainty budget remain open.
 
 Run the actual C state-machine fault cases under AddressSanitizer/UBSan and
 compare nominal conversion against 2,000 independent rational-arithmetic vectors:

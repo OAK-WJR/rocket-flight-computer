@@ -38,11 +38,12 @@ Errors invalidate current data and retain message detail, cumulative message
 errors, retry count and last error. Reinitialization occurs after one nominal
 second; a transport failure latches further messages off until then. MCU
 heartbeat and IMU diagnostics continue independently. A core FAULT record
-withholds both sensors because an exception can interrupt their updates.
+withholds sensor and voltage state because an exception can interrupt their updates.
 
 ## Record and host view
 
-ABI v3 is 512 bytes, CRC32 at byte508. Words64–97 hold phase/error, flags,
+Current ABI4 is1024 bytes, CRC32 at byte1020; historical ABI3 remains512 bytes,
+CRC32 at byte508. Both retain words64–97 for phase/error, flags,
 counts, acquisition/read/commit times, candidate and last-good raw D1/D2,
 pressure in Pa, temperature in 0.01 °C, current/sample PROM banks, PROM CRC4,
 message errors, nominal bus frequency and recovery history. Other documented
@@ -51,8 +52,8 @@ integer compensation, keeps stale values visible with validity zero, and
 reports MCU/IMU/barometer acquisition progress separately. CRC4/CRC32 and source
 binding are integrity checks, not physical-part authentication or qualification.
 
-Historical 256-byte v1/v2 records remain readable. The current readback grants
-only the v3 image's exact 512-byte range after image/reset-boot/supply checks;
+Historical256-byte v1/v2 and512-byte v3 records remain readable. Current readback
+grants only the verified ABI4 image's exact1024-byte range after image/reset-boot/supply checks;
 original register-only and legacy R1 read permissions are unchanged.
 
 ```sh

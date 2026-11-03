@@ -1,4 +1,4 @@
-/* Bounded bench ADC adapter. Not linked into the current ABI-v3 image.
+/* Bounded bench ADC adapter for the ABI-v4 bench image.
  * Register addresses/masks are checked against pinned CMSIS in native_adc.c. */
 #ifndef R10_ADC_PORT_H
 #define R10_ADC_PORT_H
@@ -51,4 +51,5 @@ int r10_adc_start(void *,unsigned slot,uint32_t *);
 int r10_adc_poll(void *,uint32_t *,uint32_t *);
 int r10_adc_cancel(void *,uint32_t *);
 const r10_voltage_io *r10_native_voltage_io(void);
+const r10_adc_port *r10_native_adc_state(void);
 #endif

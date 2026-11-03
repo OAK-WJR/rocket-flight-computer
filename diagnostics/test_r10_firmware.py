@@ -21,14 +21,14 @@ BOARD=r.ROOT/"m3_design/assembly_review/m3.kicad_pcb"
 
 
 def frame(build_id,ticks=1000,sequence=2,state=2,uid=(123,456,789)):
-    words=[0]*128
-    words[:10]=[int.from_bytes(b"R10D","little"),3,512,sequence,state,ticks,0,ticks,0x411fc271,0x20030450]
+    words=[0]*256
+    words[:10]=[int.from_bytes(b"R10D","little"),4,1024,sequence,state,ticks,0,ticks,0x411fc271,0x20030450]
     words[10:13]=uid
     words[24:26]=[64000000,63999]
     words[28:36]=struct.unpack("<8I",bytes.fromhex(r.BOARD_SHA))
     words[36:44]=struct.unpack("<8I",bytes.fromhex(build_id))
-    words[27]=1;words[44]=31
-    words[127]=zlib.crc32(struct.pack("<127I",*words[:127]))
+    words[27]=2;words[44]=63
+    words[255]=zlib.crc32(struct.pack("<255I",*words[:255]))
     return words
 
 
@@ -41,7 +41,7 @@ def bundle(folder):
     identity=r.sha_bytes(build.canonical(inputs))
     manifest=dict(schema="r10-bench-build/v1",profile=r.PROFILE,board_sha256=r.BOARD_SHA,
                   build_id=identity,inputs=inputs,outputs={"r10_bench.bin":r.sha_bytes(image)},
-                  mailbox_address=r.RAM,mailbox_bytes=512,mailbox_abi=3,barometer_driver_implemented=True,
+                  mailbox_address=r.RAM,mailbox_bytes=1024,mailbox_abi=4,voltage_driver_implemented=True,barometer_driver_implemented=True,
                   sensor_drivers_implemented=True,actuation_implemented=False)
     (folder/"manifest.json").write_text(json.dumps(manifest))
     (folder/"image.bin").write_bytes(image)
@@ -78,14 +78,14 @@ class FakeReader:
         if r.FLASH<=address<r.FLASH+len(self.image):
             v=struct.unpack_from("<I",self.image,address-r.FLASH)[0]
             return v^1 if self.bad_image and address==r.FLASH else v
-        if r.RAM<=address<r.RAM+512:
+        if r.RAM<=address<r.RAM+1024:
             index=self.ram_reads;self.ram_reads+=1
             if self.odd:return 3
-            value=self.frames[min(index//130,1)][(address-r.RAM)//4]
-            return value+2 if self.torn and index%130==129 else value
+            value=self.frames[min(index//258,1)][(address-r.RAM)//4]
+            return value+2 if self.torn and index%258==257 else value
         raise AssertionError("SYNTHETIC address escaped allowlist")
 
-    def enable_image(self,c,d,size):self.guard.enable_image(c,d,size)
+    def enable_image(self,c,d,size,mailbox_abi=1):self.guard.enable_image(c,d,size,mailbox_abi)
     enable_ram=r.FirmwareReader.enable_ram  # exercise the production adapter, not a permissive fake
     def close(self):
         self.closed=True
@@ -129,7 +129,7 @@ class CaptureTests(unittest.TestCase):
         self.assertEqual(result["origin"],"SYNTHETIC_FIXTURE")
         for k in ("hardware_qualified","physical_board_identity_verified","reset_continuity_verified","flashed","fabrication_release"):
             self.assertIs(result[k],False)
-        self.assertEqual(reader.ram_reads,260)
+        self.assertEqual(reader.ram_reads,516)
 
     def test_wrong_chip_stops_after_two_identity_registers(self):
         reader,result=self.capture(wrong_family=True)
@@ -141,7 +141,7 @@ class CaptureTests(unittest.TestCase):
             with self.subTest(kwargs=kwargs):
                 run=self.run;self.run=self.root/("run"+str(kwargs))
                 reader,result=self.capture(**kwargs)
-                self.assertFalse(any(r.FLASH<=a<r.FLASH+len(self.image) or r.RAM<=a<r.RAM+512 for a in reader.seen))
+                self.assertFalse(any(r.FLASH<=a<r.FLASH+len(self.image) or r.RAM<=a<r.RAM+1024 for a in reader.seen))
                 self.assertFalse(result["complete_capture"]);self.run=run
 
     def test_image_mismatch_preserves_partial_image_without_reading_ram(self):
@@ -157,7 +157,7 @@ class CaptureTests(unittest.TestCase):
 
     def test_torn_sequences_never_count_as_a_complete_record(self):
         reader,result=self.capture(torn=True)
-        self.assertEqual(reader.ram_reads,780)
+        self.assertEqual(reader.ram_reads,1548)
         self.assertFalse(result["complete_capture"])
 
     def test_record_uid_disagreeing_with_chip_is_rejected(self):
@@ -226,7 +226,7 @@ class CaptureTests(unittest.TestCase):
                     words[49]=words[5]-20
                     words[56:58]=struct.unpack("<2I",bytes(IMU_CONFIG_VALUES))
                     words[59]=1000000
-                    words[127]=zlib.crc32(struct.pack("<127I",*words[:127]))
+                    words[255]=zlib.crc32(struct.pack("<255I",*words[:255]))
                 code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None)
                 if case!="missing_supervision":
                     self.receipt(req,code,timeout=(case=="timeout"))
@@ -265,7 +265,7 @@ class CaptureTests(unittest.TestCase):
         second[14]=8  # Coherent HSI /2 record; disagrees with the first record.
         second[24]=32000000
         second[25]=31999
-        second[127]=zlib.crc32(struct.pack("<127I",*second[:127]))
+        second[255]=zlib.crc32(struct.pack("<255I",*second[:255]))
         code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None)
         self.receipt(req,code)
         snapshot=r.document(self.run/"snapshot.json")
@@ -291,10 +291,70 @@ class CaptureTests(unittest.TestCase):
         self.assertIn("未校准",text)
         self.assertIn("气压计 U5：OFF",text)
 
+    def test_voltage_errors_and_last_good_values_reach_json_and_human_report(self):
+        import ctypes
+        source=r.ROOT/"m3_firmware/r10"
+        library=self.root/"voltage.dylib"
+        subprocess.run(["/usr/bin/clang","-dynamiclib","-O2","-std=c11","-Wall","-Wextra","-Werror",
+            "-I"+str(source/"voltage"),str(source/"tests/voltage_record.c"),str(source/"voltage/voltage_frame.c"),
+            str(source/"voltage/adc_port.c"),str(source/"voltage/voltage_core.c"),"-o",str(library)],check=True,capture_output=True)
+        lib=ctypes.CDLL(str(library));lib.r10_test_voltage_record.argtypes=[ctypes.POINTER(ctypes.c_uint32),ctypes.c_uint]
+        for case in ("good","conversion_error","close_error"):
+            with self.subTest(case=case):
+                self.run=self.root/case;req=self.prepare()
+                reader=FakeReader(self.image,self.identity,close_error=(case=="close_error"))
+                for index,words in enumerate(reader.frames):
+                    mode=4 if case=="conversion_error" and index==1 else 1
+                    buffer=(ctypes.c_uint32*256)(*words)
+                    lib.r10_test_voltage_record(buffer,mode);words[:]=buffer[:]
+                    words[139]=5+index if mode==1 else 5
+                    if mode==4:
+                        words[138]=reader.frames[0][138]
+                        words[155:165]=reader.frames[0][155:165]
+                        words[170:180]=reader.frames[0][170:180]
+                    words[255]=zlib.crc32(struct.pack("<255I",*words[:255]))
+                code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None);self.receipt(req,code)
+                result=r.report(self.run,BOARD,self.root/(case+"-report"))
+                text=(self.root/(case+"-report")/"report.md").read_text()
+                self.assertIn("电压采样",text);self.assertIn("仅为历史值",text)
+                if case=="good":
+                    self.assertTrue(result["progress"]["voltage_progress"]["reported_acquisition_progress"])
+                elif case=="conversion_error":
+                    self.assertTrue(result["progress"]["observed_progress"])
+                    self.assertFalse(result["progress"]["voltage_progress"]["reported_acquisition_progress"])
+                    self.assertIn("RAW_RANGE",text);self.assertIn("4294967295",text)
+                    second=result["records"][1]["voltage"]
+                    self.assertFalse(second["effective_valid"])
+                    self.assertEqual(second["pending_raw"]["logic"],0xffffffff)
+                    self.assertEqual(result["records"][0]["voltage"]["values_nominal"],second["values_nominal"])
+                else:
+                    self.assertFalse(result["complete_capture"]);self.assertIsNone(result["progress"])
+                    self.assertTrue(all(v["voltage"]["fresh"] for v in result["records"]))
+
+    def test_original_saved_v3_capture_replays_without_new_source_keys_or_wider_ram(self):
+        fixture=json.loads((r.ROOT/"diagnostics/fixtures/r10_v3_capture.json").read_text())
+        self.assertEqual(fixture["origin"],"SYNTHETIC_FIXTURE")
+        self.run.mkdir()
+        for name,content in fixture["files"].items():
+            data=bytes.fromhex(content["hex"]) if "hex" in content else content["text"].encode()
+            (self.run/name).write_bytes(data)
+        with mock.patch.object(r,"utc",return_value="2026-11-04T00:00:00+00:00"):
+            result=r.analyze(self.run,BOARD)
+        self.assertTrue(result["complete_capture"]);self.assertEqual(result["origin"],"SYNTHETIC_FIXTURE")
+        self.assertTrue(all(record["abi_version"]==3 and record["voltage"] is None for record in result["records"]))
+        self.assertIsNone(result["progress"]["voltage_progress"])
+        addresses=[op[2] for op in r.document(self.run/"snapshot.json")["operations"] if op[1]==4 and r.RAM<=op[2]<r.RAM+1024]
+        self.assertEqual(max(addresses),r.RAM+508)
+        req=r.document(self.run/"request.json")
+        self.assertEqual(set(req["tool_sources"]),set(r.LEGACY_SOURCES))
+        req["tool_sources"]["m3_firmware/r10/voltage_decode.py"]="0"*64
+        self.replace("request.json",req)
+        with self.assertRaises(ValueError):r.request(self.run,BOARD)
+
     def test_current_bundle_cannot_claim_old_or_missing_sensor_contract(self):
         manifest=(self.root/"manifest.json").read_bytes()
         r.build_bundle(manifest,self.image)
-        for field,value in (("mailbox_abi",1),("sensor_drivers_implemented",False)):
+        for field,value in (("mailbox_abi",1),("sensor_drivers_implemented",False),("voltage_driver_implemented",False)):
             changed=json.loads(manifest);changed[field]=value
             with self.assertRaises(ValueError):r.build_bundle(json.dumps(changed).encode(),self.image)
             # Historical replay still relies on its exact stored image/inputs,
@@ -306,7 +366,7 @@ class CaptureTests(unittest.TestCase):
         req=self.prepare();reader=FakeReader(self.image,self.identity)
         for words in reader.frames:
             words[1]=1;words[27]=0;words[44]=7
-            words[127]=zlib.crc32(struct.pack("<127I",*words[:127]))
+            words[255]=zlib.crc32(struct.pack("<255I",*words[:255]))
         code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None)
         self.receipt(req,code)
         result=r.analyze(self.run,BOARD)
@@ -317,7 +377,7 @@ class CaptureTests(unittest.TestCase):
 
     def test_record_window_metadata_requires_exact_integer_version_and_size(self):
         original=json.loads((self.root/"manifest.json").read_bytes())
-        for key,value in (("mailbox_abi",3.0),("mailbox_bytes",512.0),("mailbox_bytes",1024),
+        for key,value in (("mailbox_abi",4.0),("mailbox_bytes",1024.0),("mailbox_bytes",512),
                           ("mailbox_address",float(r.RAM))):
             changed=dict(original);changed[key]=value
             with self.assertRaises(ValueError):r.build_bundle(json.dumps(changed).encode(),self.image,current=False)
@@ -376,7 +436,7 @@ class CaptureTests(unittest.TestCase):
         for mutate in (lambda v:v["records"][0].update(accepted=True),
                        lambda v:v["records"][0]["attempts"][0]["words"].__setitem__(4,999),
                        lambda v:v["operations"].append(["AP_CONFIG_WRITE",12,1]),
-                       lambda v:v["operations"].append(["AP_CONFIG_WRITE",4,r.RAM+512]),
+                       lambda v:v["operations"].append(["AP_CONFIG_WRITE",4,r.RAM+1024]),
                        lambda v:v["operations"].insert(3,["AP_CONFIG_WRITE",4,r.RAM]),
                        lambda v:v.update(operations=[])):
             raw=copy.deepcopy(original);mutate(raw);self.replace("snapshot.json",raw);self.seal()
@@ -393,16 +453,17 @@ class CaptureTests(unittest.TestCase):
 class GuardTests(unittest.TestCase):
     def test_production_reader_forwards_the_exact_versioned_record_window(self):
         reader=object.__new__(r.FirmwareReader);reader.guard=r.FirmwareAPGuard(DP())
-        image=bytes(704);reader.enable_image(0x411fc271,0x20030450,len(image))
+        image=bytes(704);reader.enable_image(0x411fc271,0x20030450,len(image),3)
         reader.enable_ram(image,image,0x2000,r.FLASH,True,512)
         reader.guard.write_ap(4,r.RAM+508)
         with self.assertRaises(ValueError):reader.guard.write_ap(4,r.RAM+512)
+        reader.enable_image(0x411fc271,0x20030450,len(image),1)
         reader.enable_ram(image,image,0x2000,r.FLASH,True,256)
         with self.assertRaises(ValueError):reader.guard.write_ap(4,r.RAM+256)
         reader.guard.write_ap(4,r.RAM+252)
     def test_v3_exact_window_requires_image_grant_and_bad_revalidation_revokes_it(self):
         g=r.FirmwareAPGuard(DP());image=bytes(704)
-        g.enable_image(0x411fc271,0x20030450,704)
+        g.enable_image(0x411fc271,0x20030450,704,3)
         for address in (r.RAM,r.RAM+508):
             with self.assertRaises(ValueError):g.write_ap(4,address)
         g.enable_ram(image,image,0x2000,r.FLASH,True,512)
@@ -410,6 +471,23 @@ class GuardTests(unittest.TestCase):
         with self.assertRaises(ValueError):g.write_ap(4,r.RAM+512)
         with self.assertRaises(ValueError):g.enable_ram(image,image,0x2000,r.FLASH,True,1024)
         with self.assertRaises(ValueError):g.write_ap(4,r.RAM)
+    def test_every_record_abi_grants_only_its_exact_window(self):
+        image=bytes(704)
+        for abi,size in ((1,256),(2,256),(3,512),(4,1024)):
+            with self.subTest(abi=abi):
+                g=r.FirmwareAPGuard(DP());g.enable_image(0x411fc271,0x20030450,704,abi)
+                with self.assertRaises(ValueError):g.write_ap(4,r.RAM)
+                g.enable_ram(image,image,0x2000,r.FLASH,True,size)
+                g.write_ap(4,r.RAM+size-4)
+                with self.assertRaises(ValueError):g.write_ap(4,r.RAM+size)
+                wrong=512 if size!=512 else 1024
+                with self.assertRaises(ValueError):g.enable_ram(image,image,0x2000,r.FLASH,True,wrong)
+                with self.assertRaises(ValueError):g.write_ap(4,r.RAM)
+        for invalid in (0,5,True,4.0,'4'):
+            g=r.FirmwareAPGuard(DP())
+            with self.assertRaises(ValueError):g.enable_image(0x411fc271,0x20030450,704,invalid)
+            with self.assertRaises(ValueError):g.write_ap(4,r.FLASH)
+
     def test_auto_increment_requires_fresh_tar_for_every_drw(self):
         class AutoDP(DP):
             def __init__(self):super().__init__();self.tar=0;self.reads=[]

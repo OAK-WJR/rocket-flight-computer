@@ -1,6 +1,7 @@
 """Decode saved R10 RAM bytes only. No probe, programmer or target connection."""
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 from pathlib import Path
@@ -11,6 +12,9 @@ import zlib
 
 MAGIC = int.from_bytes(b"R10D", "little")
 HEX = re.compile(r"[0-9a-f]{64}\Z")
+_voltage_spec=importlib.util.spec_from_file_location("r10_voltage_decode",Path(__file__).with_name("voltage_decode.py"))
+_voltage_module=importlib.util.module_from_spec(_voltage_spec);_voltage_spec.loader.exec_module(_voltage_module)
+decode_voltage=_voltage_module.decode_voltage
 
 
 IMU_STATES = ("OFF", "BOOT_WAIT", "RESET_WAIT", "WAIT_DATA", "READY", "STALE", "ERROR")
@@ -136,10 +140,10 @@ def decode(raw, board_sha256, build_id):
     for value in (board_sha256, build_id):
         if not isinstance(value, str) or not HEX.fullmatch(value):
             raise ValueError("Expected a canonical SHA256 identity")
-    if len(raw) not in (256,512):
-        raise ValueError("R10 record must be exactly 256 (v1/v2) or 512 (v3) bytes")
+    if len(raw) not in (256,512,1024):
+        raise ValueError("R10 record must be exactly 256 (v1/v2), 512 (v3) or 1024 (v4) bytes")
     w = struct.unpack("<%dI"%(len(raw)//4), raw)
-    if w[0] != MAGIC or w[1] not in (1,2,3) or w[2] != len(raw) or len(raw)!={1:256,2:256,3:512}[w[1]]:
+    if w[0] != MAGIC or w[1] not in (1,2,3,4) or w[2] != len(raw) or len(raw)!={1:256,2:256,3:512,4:1024}[w[1]]:
         raise ValueError("Not a supported R10D ABI; legacy R1 records are incompatible")
     if w[3] == 0 or w[3] & 1:
         raise ValueError("Unpublished or in-progress record")
@@ -147,12 +151,16 @@ def decode(raw, board_sha256, build_id):
         raise ValueError("Torn or damaged record: CRC mismatch")
     if raw[112:144].hex() != board_sha256 or raw[144:176].hex() != build_id:
         raise ValueError("Record board/build identity mismatch")
-    policy, caps = {1:(0,7),2:(1,15),3:(1,31)}[w[1]]
+    policy, caps = {1:(0,7),2:(1,15),3:(1,31),4:(2,63)}[w[1]]
     if w[4] not in (1, 2, 3) or w[27] != policy or w[44] != caps or (w[1] == 1 and any(w[45:63])):
         raise ValueError("Unsupported state/capabilities/reserved fields")
     imu = decode_imu(w) if w[1] >= 2 else None
-    baro = decode_baro(w) if w[1]==3 else None
+    baro = decode_baro(w) if w[1]>=3 else None
+    voltage=decode_voltage(w) if w[1]==4 else None
     if w[1]==3 and (w[63] or any(w[98:127])):raise ValueError("Nonzero v3 reserved fields")
+    if w[1]==4 and (w[63] or any(w[98:128]) or any(w[193:255])):raise ValueError("Nonzero v4 reserved fields")
+    if w[4]==3 and voltage is not None and voltage["state"]!="OFF":
+        raise ValueError("Core FAULT must withhold interrupted voltage state")
     if w[4] == 3 and imu is not None and imu["state"] != "OFF":
         raise ValueError("Core FAULT must withhold interrupted IMU state")
     if w[4]==3 and baro is not None and baro["state"]!="OFF":
@@ -170,7 +178,8 @@ def decode(raw, board_sha256, build_id):
     if w[4] != 3 and (w[18] or w[19] or w[26]):
         raise ValueError("Fault evidence contradicts non-fault state")
     return {
-        "schema": "r10-bench-record-report/v3", "abi_version": w[1], "imu": imu,"baro":baro,
+        "schema": "r10-bench-record-report/v4" if w[1]==4 else "r10-bench-record-report/v3",
+        "abi_version": w[1], "imu": imu,"baro":baro,"voltage":voltage,
         "state": {1:"STARTING", 2:"RUNNING", 3:"FAULT"}[w[4]],
         "sequence": w[3], "nominal_uptime_ms": w[5] | w[6] << 32,
         "main_count": w[7], "cpuid": "%08x" % w[8], "idcode": "%08x" % w[9],
@@ -214,8 +223,16 @@ def pair(first, second):
         barometer_progress=dict(reported_acquisition_progress=bool(advancing and a["fresh"] and b["fresh"] and
                                 0<samples<0x80000000 and 0<sample_time<0x80000000),
                                 sample_count_delta=samples,nominal_acquisition_delta_ms=sample_time,hardware_qualified=False)
+    voltage_progress=None
+    if first.get("voltage") is not None and second.get("voltage") is not None:
+        a,b=first["voltage"],second["voltage"]
+        samples=(b["samples"]-a["samples"])&0xffffffff
+        sample_time=(b["last_good_tick_lo"]-a["last_good_tick_lo"])&0xffffffff
+        voltage_progress=dict(reported_acquisition_progress=bool(advancing and a["fresh"] and b["fresh"] and
+                              0<samples<0x80000000 and 0<sample_time<0x80000000),
+                              sample_count_delta=samples,nominal_last_sample_delta_ms=sample_time,hardware_qualified=False)
     return {"observed_progress": advancing, "nominal_elapsed_ms": ticks,
-            "main_count_delta": loops, "imu_progress":sensor_progress,"baro_progress":barometer_progress, "hardware_qualified": False,
+            "main_count_delta": loops, "imu_progress":sensor_progress,"baro_progress":barometer_progress,"voltage_progress":voltage_progress, "hardware_qualified": False,
             "note": "Two saved records; capture timing, reset continuity and provenance are not verified here."}
 
 
@@ -259,12 +276,19 @@ def main():
         board_sha = hashlib.sha256(read_bytes(args.board, 33554432)).hexdigest()
         if build_id != m.get("build_id") or board_sha != m.get("board_sha256"):
             raise ValueError("Manifest identity does not match its inputs or supplied board")
-        first = decode(read_bytes(args.snapshot, 512), board_sha, build_id)
-        if type(m.get("mailbox_abi",1)) is not int or first["abi_version"] != m.get("mailbox_abi",1):
+        abi=m.get("mailbox_abi",1)
+        if type(abi) is not int or abi not in (1,2,3,4):
+            raise ValueError("Unsupported manifest mailbox ABI")
+        record_bytes={1:256,2:256,3:512,4:1024}[abi]
+        if ((abi==4 and "mailbox_bytes" not in m) or
+                "mailbox_bytes" in m and (type(m["mailbox_bytes"]) is not int or m["mailbox_bytes"]!=record_bytes)):
+            raise ValueError("Manifest record size disagrees with its ABI")
+        first = decode(read_bytes(args.snapshot, record_bytes), board_sha, build_id)
+        if first["abi_version"] != abi:
             raise ValueError("Record ABI differs from trusted build manifest")
         result = {"record": first}
         if args.second:
-            second = decode(read_bytes(args.second, 512), board_sha, build_id)
+            second = decode(read_bytes(args.second, record_bytes), board_sha, build_id)
             result.update(second=second, pair=pair(first, second))
     except (OSError, ValueError, TypeError, KeyError) as exc:
         parser.exit(3, "R10 decode refused: %s\n" % exc)
