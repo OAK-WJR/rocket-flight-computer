@@ -183,11 +183,15 @@ class R11Rules(unittest.TestCase):
         self.assertTrue(build(part={'J400': 'BM02B-GHS-TBT'}))           # top entry, not the side-entry header
 
     def test_m1_outline_and_m3_supports(self):
+        pins = {'supports': [[4, 4], [42, 4], [4, 46], [42, 46]]}
         s = Six()
         for x, y in ((4, 4), (42, 4), (4, 46), (42, 46)):
             s.hole(x, y)
-        rep = s.run({'M-1', 'M-3'})
+        rep = s.run({'M-1', 'M-3'}, data=pins)
         self.assertEqual(failing(rep, 'M-1') + failing(rep, 'M-3'), [])
+        self.assertTrue(failing(s.run({'M-3'}), 'M-3'))                 # unpinned supports fail (D-R11-10)
+        s.hole(23, 25)                                                   # a fifth, unpinned circle
+        self.assertTrue(any('not a pinned support' in i for i in failing(s.run({'M-3'}, data=pins), 'M-3')))
         s = Six(length=60)
         for x, y in ((4, 4), (42, 4), (4, 56), (42, 56)):
             s.hole(x, y)
@@ -195,7 +199,7 @@ class R11Rules(unittest.TestCase):
         s = Six()
         for x, y in ((4, 4), (42, 4), (4, 46), (30, 25)):
             s.hole(x, y)                                                 # no support at the (46, 50) corner
-        self.assertTrue(failing(s.run({'M-3'}), 'M-3'))
+        self.assertTrue(failing(s.run({'M-3'}, data={'supports': [[4, 4], [42, 4], [4, 46], [30, 25]]}), 'M-3'))
         s = Six()
         for x, y in ((4, 4), (42, 4), (4, 46), (42, 46)):
             s.hole(x, y)
@@ -253,6 +257,64 @@ class R11Rules(unittest.TestCase):
         rep = s.run({'S-1'}, port_pin={})                                # no ball for PC0: the rule cannot run
         self.assertFalse(rep['ok'])
         self.assertIn('could not run', rep['issues'][0])
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11Fixes(unittest.TestCase):
+    """The stage B follow-up: the R11 pin table's balls, the sense-node exemption on them, S-3c, the wire pads."""
+
+    def test_pin_table_reads_r11_balls_and_skips_comments(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / 'pin_table.tsv'
+            p.write_text('# comment line\npin\tport\tr11_ball\tr11_net\n15\tPC0\tF1\tPYRO1_CONT\n-\tVREF+\t-\t-\n')
+            self.assertEqual(r11.pin_table(p), {'PC0': 'F1'})              # the ball, not the LQFP pin 15
+            p.write_text('pin\tport\n15\tPC0\n')
+            with self.assertRaises(ValueError):
+                r11.pin_table(p)                                          # no r11_ball column: fail, never guess
+        table = r11.pin_table()
+        self.assertEqual((table['PC0'], table['PC5'], table['PC1']), ('F1', 'H4', 'F2'))
+
+    def board(self, adc_ball='F1'):
+        s = Six()
+        s.part('U1', 23, 25, [('F1', 'PYRO1_CONT' if adc_ball == 'F1' else 'SIGNAL', (0, 0), 'smd'),
+                              ('H4', 'ARM1_SENSE', (1, 0), 'smd'), ('E5', '3V3', (2, 0), 'smd'),
+                              ('E6', 'GND', (3, 0), 'smd')] +
+               ([] if adc_ball == 'F1' else [(adc_ball, 'PYRO1_CONT', (4, 0), 'smd')]))
+        return s
+
+    def test_s2_exempts_the_sense_nodes_only_on_their_own_balls(self):
+        ties = [i for i in failing(self.board().run({'S-2'}, port_pin={'PC0': 'F1', 'PC5': 'H4', 'PC1': 'F2'}), 'S-2')
+                if 'U1 has pads' in i]
+        self.assertEqual(ties, [])
+        ties = [i for i in failing(self.board('G1').run({'S-2'}, port_pin={'PC0': 'F1', 'PC5': 'H4', 'PC1': 'F2'}),
+                                   'S-2') if 'U1 has pads' in i and 'PYRO1_CONT' in i]
+        self.assertTrue(ties)                                            # PYRO1_CONT on a second ball is a tie
+
+    def test_s3c_is_full_stage_only_and_holds_the_copper_rule(self):
+        self.assertIn('S-3c', r11.STAGES['full'])
+        self.assertNotIn('S-3c', r11.STAGES['placement'])
+        rep = Six().run({'S-3c'})
+        self.assertTrue(failing(rep, 'S-3c'))                            # no load switch / no copper: fails
+
+    def test_wire_pads_must_be_off_the_jlc_upload_and_fitted(self):
+        def issues(attrs):
+            s = Six()
+            for ref, nets in r11.WIRE_PADS.items():
+                f = s.part(ref, 5, 10 if ref == 'J1' else 30,
+                           [(n, net, (0, 3 * i), 'pth') for i, (n, net) in enumerate(sorted(nets.items()))])
+                f.SetAttributes(attrs)
+            ctx = r11.make_ctx(s.board, data={})
+            return r11.wire_pad_population(ctx)
+        off = pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES
+        self.assertEqual(issues(off), [])
+        self.assertEqual(len(issues(pcbnew.FP_EXCLUDE_FROM_BOM)), 2)     # still in the position file
+        self.assertEqual(len(issues(off | pcbnew.FP_DNP)), 2)
+        with tempfile.TemporaryDirectory() as d:
+            bom = Path(d) / 'bom.csv'
+            bom.write_text('Designator,Qty\nJ121,1\n')
+            s = Six()
+            ctx = r11.make_ctx(s.board, data={}); ctx.bom = bom
+            self.assertTrue(any('J121 are in the JLC upload' in i for i in r11.wire_pad_population(ctx)))
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
@@ -353,6 +415,22 @@ class R11RealBoard(unittest.TestCase):
         t.SetNet(self.board.FindNet('3V3'))                           # foreign, non-GND copper on In3
         self.board.Add(t)
         self.assertTrue(self.run_rules({'S-8'})['issues'])
+
+    def test_placement_stage_passes_and_catches_seeded_placement_faults(self):
+        full = r11.check_board(self.board, self.copy, self.copy / self.path.name, stage='placement')
+        self.assertEqual(full['issues'], [])
+        j1 = self.board.FindFootprintByReference('J1')
+        j1.SetAttributes(j1.GetAttributes() & ~pcbnew.FP_EXCLUDE_FROM_POS_FILES)
+        self.assertTrue(self.run_rules({'S-4'})['issues'])
+        hole = next(d for d in self.board.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts
+                    and d.GetShape() == pcbnew.SHAPE_T_CIRCLE)
+        hole.Move(pcbnew.VECTOR2I(pcbnew.FromMM(0.05), 0))
+        self.assertTrue(self.run_rules({'M-3'})['issues'])
+        u1 = self.board.FindFootprintByReference('U1')
+        ball = r11.pin_table()['PC0']
+        spare = next(p for p in u1.Pads() if p.GetNumber() != ball and p.GetNetname().startswith('unconnected'))
+        spare.SetNet(self.board.FindNet('PYRO1_CONT'))
+        self.assertTrue(self.run_rules({'S-2'})['issues'])
 
     def test_a_swapped_pyro_wire_pad_fails(self):
         j121 = self.board.FindFootprintByReference('J121')

@@ -104,5 +104,6 @@
    "aft",
    1.955
   ]
- }
+ },
+ "supports_basis": "D-R11-10: four corner M3 supports, nylon hardware (check_r11 M-3 pins them within 0.01 mm)"
 }

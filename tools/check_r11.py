@@ -18,7 +18,9 @@ Rules (R10's id where it is R10's rule):
        table)
   S-2  pyro feed only through the Q120 / Q121 load switch (check_r10.s2)
   S-3  gate networks defined off (check_r10.s3; PC1's ball for ACT_EN_MCU from the pin table)
-  S-4  required fitted parts on board, schematic, BOM and CPL; MPN-decoded values (check_r10.s4)
+  S-3c Q120 / Q121 gate bias joined by the FET layer's copper alone (check_r10.local_gate_bias; full stage only)
+  S-4  required fitted parts on board, schematic, BOM and CPL; MPN-decoded values (check_r10.s4); the hand-soldered
+       wire pads J1 / J121 (D-R11-05) instead on board and schematic, not DNP, excluded from BOM and CPL
   S-5  J400 arming switch contacts behind their 470 k resistors and D402 (check_r10.s5)
   S-6  external ports apart from pyro / arming copper (check_r10.s6)
   S-7  J122 (JST GH 5-pin): contacts 1-4 SERVO1-4_OUT, 5 GND; only its two fixing tabs besides, on GND or no net
@@ -32,7 +34,8 @@ Rules (R10's id where it is R10's rule):
        fixing tabs on GND or no net
   LC-1 local clearance overrides respect their floors (check_r10.lc1)
   M-1  outline one rectangle from (0, 0), 46 mm wide, <= 56 mm long (D-R11-02); every Edge.Cuts circle 3.2 mm
-  M-3  four or five M3 supports, one within 6 mm of each corner (positions pinned by R11_DATA 'supports' when given)
+  M-3  the D-R11-10 supports pinned in R11_DATA 'supports' (centres within 0.01 mm, no other circle) and one within
+       6 mm of each corner
   M-5  fit_check --profile r11 clean and bound to this board
   M-6  bottom parts SMD only, >= 1.5 mm from foreign through-hole pads, >= 3.5 mm from an M3 support (check_r10.m6)
   M-7  U4 side, rotation and lever arm as R11_DATA 'imu' records; no via or fill under U4 / U5 on their side
@@ -127,14 +130,16 @@ def load_data(path=None):
 
 
 def pin_table(path=None):
-    """{port: ball} from the R11 pin table (columns 'port' and 'ball', else 'pin')."""
+    """{port: ball} from the R11 pin table: its 'port' and 'r11_ball' columns (R10's 'pin' column there is the LQFP pin
+    number, not a ball); '#' lines are comments."""
     path = R11_PIN_TABLE if path is None else Path(path)
     if not path.is_file():
         raise ValueError(f'R11 pin table {path} not found (stage A writes it)')
     with path.open() as f:
-        rows = list(csv.DictReader(f, delimiter='\t'))
-    col = 'ball' if rows and 'ball' in rows[0] else 'pin'
-    return {r['port']: r[col] for r in rows if r.get('port') and r.get(col)}
+        rows = list(csv.DictReader((line for line in f if not line.startswith('#')), delimiter='\t'))
+    if not rows or 'r11_ball' not in rows[0] or 'port' not in rows[0]:
+        raise ValueError(f'R11 pin table {path} has no port / r11_ball columns')
+    return {r['port']: r['r11_ball'] for r in rows if r.get('port') and r.get('r11_ball') not in (None, '', '-')}
 
 
 def balls(ctx):
@@ -150,16 +155,33 @@ def lid(board, name):
 # ======================================================================================================================
 # rules
 # ======================================================================================================================
-def s1(ctx):
+def direct_adc(ctx):
+    """R10's DIRECT_ADC (the filtered sense nodes PC0 / PC5 touch only their own U1 pin) on R11's balls."""
     b = balls(ctx)
-    with patched(r10, DIRECT_ADC={'PYRO1_CONT': b['PC0'], 'ARM1_SENSE': b['PC5']}):
+    return {'PYRO1_CONT': b['PC0'], 'ARM1_SENSE': b['PC5']}
+
+
+def s1(ctx):
+    with patched(r10, DIRECT_ADC=direct_adc(ctx)):
         return r10.s1(ctx)
 
 
-def s3(ctx):
-    """check_r10.s3 with PC1's ball in place of the LQFP pin U1.16."""
+def s2(ctx):
+    """check_r10.s2 with the sense nodes' U1 exemption on R11's balls (U1.F1 PC0, U1.H4 PC5): any other U1 pad on an
+    armed / RAW_ACT net, or the sense net on a second ball, is still a tie and fails."""
+    with patched(r10, DIRECT_ADC=direct_adc(ctx)):
+        return r10.s2(ctx)
+
+
+LOCAL_BIAS = 'by F.Cu copper alone'                     # check_r10.local_gate_bias's copper finding (S-3c)
+
+
+def s3(ctx, copper=False):
+    """check_r10.s3 with PC1's ball in place of the LQFP pin U1.16. The load switches' copper-only gate bias
+    (check_r10.local_gate_bias, a routing rule) is S-3c: the placement stage has no copper, and the full stage runs
+    both."""
     issues, ev = r10.s3(ctx)
-    issues = [i for i in issues if 'U1.16' not in i]
+    issues = [i for i in issues if 'U1.16' not in i and (copper or LOCAL_BIAS not in i and 'copper alone' not in i)]
     ball = balls(ctx)['PC1']
     u1 = ctx.fps.get('U1')
     pad = u1.FindPadByNumber(ball) if u1 else None
@@ -168,6 +190,96 @@ def s3(ctx):
                       f'(is {pad.GetNetname() if pad else None})')
     ev.get('load_enable', {}).pop('U1.16', None)
     return sorted(set(issues)), ev
+
+
+def s3c(ctx):
+    """R18-SAF-02 on R11: Q120 / Q121's gate and source pads reach a 1 k - 100 k gate-source resistor through copper on
+    the FET's own layer (check_r10.local_gate_bias)."""
+    issues, ev = [], {}
+    for fet in ('Q120', 'Q121'):
+        found, ev[fet] = r10.local_gate_bias(ctx, fet, r10.PFET_ROLES)
+        issues += [i.replace('S-3:', 'S-3c:') for i in found]
+    return issues, ev
+
+
+# D-R11-05: the battery and pyro wire pads are soldered by hand to the harness, so they are on the board and in the
+# schematic but outside the JLC BOM and CPL (exclude_from_bom / exclude_from_pos_files). Every other required part keeps
+# check_r10's full population rule.
+WIRE_PAD_FLAGS = ('exclude_from_bom', 'exclude_from_pos_files')
+
+
+def wire_pad_population(ctx):
+    """(issues): J1 / J121 present on board and schematic, not DNP, not board-only, value not DNP, and excluded from the
+    BOM and position files on both (so no assembly upload lists them); absent from a supplied BOM / CPL."""
+    import pcbnew
+    from sexpr import read, properties
+    issues = []
+    flags = {'dnp': pcbnew.FP_DNP, 'board_only': pcbnew.FP_BOARD_ONLY,
+             'exclude_from_bom': pcbnew.FP_EXCLUDE_FROM_BOM, 'exclude_from_pos_files': pcbnew.FP_EXCLUDE_FROM_POS_FILES}
+    for ref in sorted(WIRE_PADS):
+        f = ctx.fps.get(ref)
+        if f is None:
+            issues.append(f'{ref}: wire-pad part missing from the board')
+            continue
+        on = {k for k, bit in flags.items() if f.GetAttributes() & bit}
+        if on & {'dnp', 'board_only'} or f.GetValue().strip().upper() in ('DNP', 'NC', 'NF', 'NOFIT'):
+            issues.append(f'{ref}: wire-pad part not fitted ({sorted(on & {"dnp", "board_only"})}, value {f.GetValue()})')
+        missing = [k for k in WIRE_PAD_FLAGS if k not in on]
+        if missing:
+            issues.append(f'{ref}: wire pads are hand-soldered (D-R11-05) and must be {missing} (a JLC upload would '
+                          'list them)')
+    sch = Path(ctx.board_path).with_suffix('.kicad_sch') if ctx.board_path else None
+    if sch is not None and sch.is_file():
+        found = {}
+        pending, seen = [sch], set()
+        while pending:
+            path = pending.pop().resolve()
+            if path in seen:
+                continue
+            seen.add(path)
+            tree = read(path.read_text())
+            for sheet in tree.children('sheet'):
+                pending.append(path.parent / properties(sheet)['Sheetfile'].items[2].atom)
+            for node in tree.children('symbol'):
+                props = properties(node)
+                if 'Reference' in props and props['Reference'].items[2].atom in WIRE_PADS:
+                    found[props['Reference'].items[2].atom] = {k: node.children(k)[0].items[1].atom
+                                                               for k in ('dnp', 'in_bom', 'on_board') if node.children(k)}
+        for ref in sorted(WIRE_PADS):
+            got = found.get(ref)
+            if got is None:
+                issues.append(f'schematic: {ref} wire-pad symbol missing')
+            elif got.get('dnp') == 'yes' or got.get('on_board') == 'no':
+                issues.append(f'schematic: {ref} wire-pad symbol not fitted ({got})')
+            elif got.get('in_bom') != 'no':
+                issues.append(f'schematic: {ref} wire pads must be in_bom no (D-R11-05)')
+    elif sch is not None:
+        issues.append(f'schematic {sch} not found')
+    for name, path in (('BOM', ctx.bom), ('CPL', ctx.cpl)):
+        if path:
+            listed = {ref.strip() for row in csv.DictReader(Path(path).read_text().splitlines())
+                      for ref in (row.get('Designator') or '').split(',') if ref.strip()}
+            issues += [f'{name}: hand-soldered wire pads {ref} are in the JLC upload' for ref in sorted(WIRE_PADS)
+                       if ref in listed]
+    return issues
+
+
+def s4(ctx):
+    """check_r10.s4 with the required set less the wire pads (J1 / J121), which wire_pad_population holds instead."""
+    required = frozenset(r10.REQUIRED_FITTED) - set(WIRE_PADS)
+    fns = (r10.board_population, r10.population)
+    old = [f.__defaults__ for f in fns]
+    r10.board_population.__defaults__ = (required,)
+    r10.population.__defaults__ = (required, False)
+    try:
+        with patched(r10, REQUIRED_FITTED=required):
+            issues, ev = r10.s4(ctx)
+    finally:
+        for f, d in zip(fns, old):
+            f.__defaults__ = d
+    issues += [f'S-4: {i}' for i in wire_pad_population(ctx)]
+    ev['wire_pads'] = sorted(WIRE_PADS)
+    return issues, ev
 
 
 def connector_pads(ctx, ref, want, rid, tabs=True):
@@ -290,18 +402,32 @@ def m1(ctx):
     return [i.replace('the P1 ', 'the D-R11-02 ') for i in issues], ev
 
 
-def m3(ctx):
+SUPPORT_TOL = r10.SUPPORT_TOL
+
+
+def m3(ctx, tol=SUPPORT_TOL):
+    """D-R11-10: the supports R11_DATA 'supports' pins (four corner M3 holes), each one Edge.Cuts circle centred within
+    `tol`, no other circle, and fit_check's corner rule (one support within 6 mm of each corner). Without a pin the rule
+    fails: an unpinned support could move unreviewed."""
     import pcbnew
+    import fit_check as fc
     mm = pcbnew.ToMM
     holes = [(mm(d.GetCenter().x), mm(d.GetCenter().y)) for d in ctx.board.GetDrawings()
              if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE]
-    pinned = ctx.data.get('supports')
-    if pinned:
-        return r10.m3(ctx, supports=tuple(tuple(p) for p in pinned))
-    import fit_check as fc
-    _, _, issues = fc.corner_supports(holes, ctx.outline, [])
-    return [f'M-3: {i}' for i in issues], dict(centres_mm=sorted((round(x, 4), round(y, 4)) for x, y in holes),
-                                               pinned=False)
+    _, _, corner = fc.corner_supports(holes, ctx.outline, [])
+    issues = [f'M-3: {i}' for i in corner]
+    pinned = [tuple(map(float, p)) for p in ctx.data.get('supports', [])]
+    if not pinned:
+        issues.append('M-3: R11_DATA pins no supports (D-R11-10 records them)')
+    for want in pinned:
+        near = [h for h in holes if math.dist(h, want) <= tol]
+        if len(near) != 1:
+            issues.append(f'M-3: the D-R11-10 support ({want[0]:g}, {want[1]:g}) needs one Edge.Cuts circle centred '
+                          f'within {tol} mm (found {len(near)})')
+    issues += [f'M-3: Edge.Cuts circle at ({h[0]:.3f}, {h[1]:.3f}) is not a pinned support' for h in holes
+               if pinned and not any(math.dist(h, w) <= tol for w in pinned)]
+    return issues, dict(centres_mm=sorted((round(x, 4), round(y, 4)) for x, y in holes),
+                        pinned_mm=[list(p) for p in pinned], tolerance_mm=tol)
 
 
 def m5(ctx, board_sha=None):
@@ -522,9 +648,10 @@ def k_loader(ctx):
 
 RULES = [
     ('S-1', 'RAW_ACT pyro bus, named armed-side parts', lambda c, s: s1(c)),
-    ('S-2', 'pyro feed only through the load switch', lambda c, s: r10.s2(c)),
+    ('S-2', 'pyro feed only through the load switch', lambda c, s: s2(c)),
     ('S-3', 'gate networks defined off', lambda c, s: s3(c)),
-    ('S-4', 'required-fitted parts, MPN-decoded values', lambda c, s: r10.s4(c)),
+    ('S-3c', 'load-switch gate bias on the FET layer\'s copper alone (R18-SAF-02)', lambda c, s: s3c(c)),
+    ('S-4', 'required-fitted parts, MPN-decoded values; wire pads off the JLC upload', lambda c, s: s4(c)),
     ('S-5', 'J400 arming switch and protected EN contacts', lambda c, s: r10.s5(c)),
     ('S-6', 'external ports apart from pyro / arming copper', lambda c, s: r10.s6(c)),
     ('S-7', 'J122 GH: SERVO1-4 and GND, two fixing tabs', lambda c, s: s7(c)),
@@ -534,11 +661,11 @@ RULES = [
     ('W-2', 'GH port pin-outs and parts (D-R11-05)', lambda c, s: w2(c)),
     ('LC-1', 'local overrides respect the applicable floors', lambda c, s: r10.lc1(c.board)),
     ('M-1', 'outline 46 mm wide, <= 56 mm long', lambda c, s: m1(c)),
-    ('M-3', 'four or five M3 supports, one at each corner', lambda c, s: m3(c)),
+    ('M-3', 'the pinned D-R11-10 supports, one at each corner', lambda c, s: m3(c)),
     ('M-5', 'fit (profile r11)', lambda c, s: m5(c, s)),
     ('M-6', 'bottom keep-outs', lambda c, s: r10.m6(c)),
     ('M-7', 'IMU pose (R11_DATA) and MEMS keep-outs', lambda c, s: m7(c)),
-    ('M-8', 'courtyards >= 2.5 mm from the short edges', lambda c, s: m8(c)),
+    ('M-8', 'courtyards >= 2.5 mm from the short edges, recorded queries (D-R11-12)', lambda c, s: m8(c)),
     ('K-legends', 'legends, ids, silkscreen allowlist, designators and Fab references', lambda c, s: k_legends(c)),
     ('K-copper', 'copper hygiene, no pour debris', lambda c, s: k_copper(c)),
     ('K-inner', 'In1 / In4 GND only, In2 power and GND only', lambda c, s: k_inner(c)),
