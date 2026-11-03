@@ -1,0 +1,61 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round35_mcu",
+  "reviewer": "claude",
+  "target_commit": "c3c4249",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {
+    "Critical": 0,
+    "Major": 0,
+    "Minor": 0
+  },
+  "findings": [],
+  "observations": [
+    "U1: all 100 board pads (KiCad pcbnew), all 100 schematic netlist nodes and all 100 binding-note u1_pins entries agree with pin_table.tsv r10_net / port / mode_af (0 mismatches).",
+    "Every pin_table port name matches DS12110 Rev 8 Table 9 at its LQFP100 pin; every 'Table 9 p. N' cite lands on the page that holds that pin, and every Table 10-14 AF-table page cite lands on the page with the named port row (0 misses).",
+    "AF numbers checked against Rev 8 Tables 11-14: UART5 PB12 RX / PB13 TX (p. 91), USART6 PC6 / PC7 (p. 92), USART3 PD8 / PD9 (p. 94), UART7 PE7 RX / PE8 TX and QUADSPI_BK1_IO2 on PE2 (p. 95).",
+    "Pin-type statements reproduce from Table 9: PC0 FT_a, PA4 TT_a, PA5 TT_ha, PA6 FT_a, PC5 TT_a, PB1 TT_u, PB12 / PB13 FT_u, PD8 / PD9 / PC6 / PC7 / PD15 FT_h; PC1 TRACED0, PE3 TRACED0, PE4 TRACED1, PE2 TRACECLK as obligation 30 says.",
+    "Table 119 p. 212 (FT Min(VDD,VDDA,VDD33USB,VBAT)+4.0 V, TT 4.0 V), note 4 p. 213, Table 120 note 3 p. 213, Table 122 note 3 p. 215, Table 157 note 7 p. 247 (and RPU 30-50 kOhm), Table 159 p. 249 (+/-3 mA), Table 160 note 2 p. 251, Table 126 p. 217, Tables 127-128 pp. 218-219, Figure 95 p. 286, Table 189 p. 291, Table 192 p. 293 (+/-10 %), Table 9 note 7 p. 88: all at the cited pages.",
+    "GAP-5 IWDG: (239+1) x 4 = 960 LSI cycles; 30.0 / 28.571 / 32.653 ms at 32 / 33.6 / 29.4 kHz (Rev 8 Table 146 p. 238, TJ -40 to 125 C); 32.653 + 0.2 + 0.5 + 1.5 = 34.853 ms < 36 ms.",
+    "Rule 3: R127.1 is PYRO1_GATE_N (U1.3 PE4), U3.3 is QSPI_IO2 (W25Q128JV IO2); R127 1k || (R126 220R + R128 10k) = 0.911 kOhm; C126 220 nF on PYRO1_GATE, C128 100 nF on PYRO1_OUT; red-lead-on-R127.1 polarity gives diode + 0.91 kOhm through the VSS clamp of IO2, reverse is blocked by PE4's VDD clamp (as stated, labelled Inference).",
+    "Rule 3 gate time constant: Thevenin (Rdrv~26 Ohm || R127 + 220) || 10k = about 240 Ohm x 220 nF = about 53 us; +/-10 % gives 47.6-58.2 us, matching 47-58 us.",
+    "Rule 4: AONR21357 Rev 2.1 p. 2 VSD -0.7 typ / -1 max at IS = -1 A reproduces; ACT_GATE = R120.2 / C120.2 / R119.1 / R121.1 / Q120.4 / Q121.4, Q120 source ACT_FET_S = R120.1, Q120 drain BAT_IN so its body diode feeds ACT_FET_S when off, as stated. The 0.93-1.01x envelope versus 1.128 / 1.063 A was ruled an observation in round 27 (R27-MCU obs 5); nothing new.",
+    "DS15034 Rev 1 citations reproduce: Figure 5 p. 9, Table 2 p. 11 (INT1 pin 4 = IMU_INT1 = U1.98 PE1; CS 12, SCL 13, SDA 14, SDO 1 match board), PP_OD / H_LACTIVE p. 60, WHO_AM_I p. 66, Table 150 p. 93 (100 = +/-256 g, 011 reserved; DS14623 011 = +/-256 g, 100 = +/-320 g), 10 MHz SPI p. 17, gyro Ton 40 ms p. 15; 3.904 mg/LSB at +/-128 g on both parts.",
+    "Binding note c5cd0fa3... binds board a0ec075e..., netlist 535a8fdf..., pin_table b94133e6..., circuit 3220e5f9...: all four hashes reproduce from the committed files.",
+    "Camera UART: PE7 (UART7_RX) = U12.4 A2Y output, PE8 (UART7_TX) = U12.5 A1 input, PE9 = U12.6 OE with R102 10k pull-down (TI TXU0202 Table 6-1 p. 4).",
+    "EXTI map (PE1 line 1, PA4 4, PA5 5, PD6 6, PC8 8, PE12 12) has one port per line; lines 5/6/8 share EXTI9_5 and 12 EXTI15_10, as obligation 5 says.",
+    "MS5611 PS (pin 2) on 3V3A and CSB (pins 4/5) on GND give I2C address 0x77, as rule 11 says; R10 / R11 are the QSPI_NCS / IMU_CS pull-ups, R12 / R13 the I2C pull-ups.",
+    "AN2606 Rev 64 Table 119 could not be re-read (download failed); loader-pin statements were not re-verified this round (coverage limit, already noted in round 30)."
+  ],
+  "fix_verification": [
+    {
+      "item": "R34-TRI-01 (parts_qualification pointer to the stale round 11 hotplug.md)",
+      "verdict": "not in the mcu lens; not measured",
+      "measurement": "none"
+    }
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after (both a0ec075e...)",
+    "pcbnew (KiCad Python, read-only): U1 pad-to-net dump vs pin_table.tsv (.supervisor/r35_mcu/u1_pads.py)",
+    "schematic.net.xml U1 nodes vs pin_table.tsv",
+    "binding note u1_pins vs pin_table.tsv; binding note hashes vs files",
+    "pdftotext of DS12110 Rev 8 (cached st_h743.pdf): Table 9 pin-name parse, per-page cite checks for every Table 9 and AF-table citation in pin_table.tsv, spot checks of every Rev 8 table / note cited in the binding note's firmware obligations",
+    "pcbnew net-member and part-pin dumps for the PE4 / Q124, PC1 / Q122 / Q120 / Q121, camera UART, IMU, baro, QSPI, SWD, USB, HSE, VCAP and sense nets (.supervisor/r35_mcu/refs.py, netmembers.py)",
+    "DS15034 Rev 1 and DS14623 Rev 1 page checks; AONR21357 Rev 2.1 VSD; TXU0202 pin table",
+    "IWDG, rule 3 resistance and time-constant recalculation"
+  ],
+  "sources": [
+    "https://www.st.com/resource/en/datasheet/stm32h743vi.pdf (DS12110 Rev 8)",
+    "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf (DS15034 Rev 1)",
+    "https://www.st.com/resource/en/datasheet/lsm6dsv320x.pdf (DS14623 Rev 1)",
+    "https://www.aosmd.com/res/datasheets/AONR21357.pdf (Rev 2.1, p. 2)",
+    "https://www.ti.com/lit/ds/symlink/txu0202.pdf (Table 6-1 p. 4)"
+  ],
+  "coverage_limits": [
+    "AN2606 Rev 64 Table 119 not available (download failed); loader-role statements not re-read.",
+    "RM0433 not read (statements that rely on it are labelled Inference in the records).",
+    "Alternate-function column positions checked by row and page for the UART / QSPI pins; the other AF numbers rely on the standard H743 map, not a column-by-column parse.",
+    "No firmware exists; no physical tests."
+  ]
+}

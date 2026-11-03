@@ -1,0 +1,58 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 35, power lens",
+  "reviewer": "claude",
+  "target_commit": "c3c4249",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "parts_budget.json (SHA-256 4267634220f4..., board a0ec075e) reproduces by hand from r10_parts.py power_budget: buck 5.366682-5.546269 V, LDO 4.711504-4.873250 V, camera / radio / GPS / AUX minima 5.031682 / 4.601504 / 4.631504 / 4.641504 V, headroom 0.443432 V, camera ILIM 1.040891-1.249498 A (SLVS841F eq. 1), OVLO corner 10.1764 V, U9 limit 3.946188-4.856999 A, U9 fault bound 3.743861 A (0.202327 A margin), prospective 4.420037 A.",
+    "D-R28-01 shared port current: port_A = 1.461 + 0.1 A feeds both ports_w and loaded_pack; loaded_pack re-solved by hand gives 5.880831 V (7.4 V open) and 4.388491 V (6.0 V open), matching the budget lines and parts_qualification's stall-input paragraph.",
+    "Ride-through table (cases a-d, 300.8 / 470 uF, to 3.5 / 3.8 V), the 16.93 mW R92 allowance, the 9.86-10.82 W port load, the PA6-trip hold-up 0.103-0.164 / 0.291-0.430 ms and the 0.22-0.31 fractions all reproduce from battery_break_load_W.",
+    "OQ-5 (hypothetical): VOFF 5.7265 / 6.0115 / 6.2965 V and VON 6.4845-6.9405 V from DS41326 p5 VEN_L / VEN_H with the typical 5.5 / 1.5 uA EN currents; 0.25 / 0.40 ms to VOFF and 3.84 / 6.00 / 1.57 / 2.46 ms ride-through reproduce; 0.13 mA divider load correct.",
+    "GAP-3: (5.546269 - 4.711504) x 0.56 A + 5.546269 x 4 mA = 0.48965 W; 109.17-123.86 C at 70 C, 124.17-138.86 C at 85 C, 112.3 C/W ceiling, 0.406 W without AUX; TPS7A91 SBVS282A p5 ILIM 1.5/1.7/1.9 A, IFB +/-100 nA, IGND <= 3.5-4 mA, VOUT +/-1 % excluding resistors, VIN 6.5 V, VOUT 5.2 V max: all as used. Pad 11 1.2 x 2.0 at (27.6,13.6) with GND vias (27.3,13.6) / (27.9,13.6) 0.5 / 0.3 on the board.",
+    "GAP-1: rest 4.467803 ohm, loop 4.617803 ohm, quadratic high root and the 0-4 stall fire currents 1.540851 ... 1.278747 A reproduce; copper 20 C 29.650 mohm from the five native lengths at 0.4914 mohm/sq.",
+    "GAP-5: 960 / 29.4 kHz = 32.653 ms; Rdis 1087.344 / 1109.091 ohm; RC to 0.4 V 0.67820 ms; gate-charge tail 0.061 ms; bound 34.853 ms; R134 1.97109 ohm, 35.7975 W, 0.71595 / 1.28871 J; 85 C demand 35.851 W vs 36.345 W: all reproduce.",
+    "C120 off tau 50 k x 1.02 x 1.265 uF = 64.52 ms (129.03 ms with one of R119 / R120 open); 1 s = 15.5 / 7.75 tau; enable tau 10.7525 ms, 31.89 ms to 4.5 V from settled 4.7444 V; ACT_DRV = {Q122.3, R121.2} only, so the off path is R119 || R120, as audit A wrote.",
+    "USB attach inventory from the board: VLOGIC = C84 470 uF, C6 / C7 22 uF, C99 100 nF (514.1 uF); USB_LIMITED = C86 / C98 1 uF (516.1 uF in all); VBUS side C28 4.7 uF + C83 100 nF. 2.426 mC to 4.7 V, 5.35-6.98 ms at R85 66.5 k's 347.7-453.0 mA; USB-only draw 0.4596 / 0.4856 A, 1.61 W guaranteed, 0.281-0.296 A for the lower allocation all reproduce.",
+    "Already observed (R27 / R29 / R31 / R33 / R34): M3_R10's USB-only bullet uses the Round 18 63.605 mm In2 USB_LIMITED length; the board has 63.116 mm in all (58.13 mm in series), < 1 % in resistance. Not re-reported.",
+    "Already observed (R30 triage): the U400 input feed (In2 vias (14.1,7.6) / (14.1,8.5), 0.4 mm F.Cu) is not a K-power path; 0.4 mm exceeds the 0.385 mm IPC-2152 30 C width at the 2.09 A camera-short input current at 6 V. Not re-reported.",
+    "In2 power fills, raster erosion at 0.04 mm (own probe neck.py): RAW_PROTECTED stays connected at 1.0 mm width (not at 1.5 mm) both from U9's vias to U400's vias and to U11.2's via (24.3,66.0); PORT_5V3 from L400's vias to U402's vias and PORT_4V8 from U401's vias to J410 / J420's vias stay connected at 1.0 mm. Internal IPC-2152 30 C widths: 0.71 mm at 2.9 A, 0.32 mm at 1.81 A, 0.34 mm at 1.9 A, all met.",
+    "K-power and S-9 (run on a probe copy) pass; every path floor meets its IPC-2152 width (0.68 / 0.326 / 0.157 / 0.299 / 0.356 / 0.167 mm against 1.0/0.7 / 0.4 / 0.4 / 0.4 / 0.4 / 0.4 mm); the single-via taps reported are exactly the SINGLE_OPEN_EXCEPTIONS entries (USB_LIMITED, USB_ILIM, U10 / R7 / R8 GND islands, VCAP1, U4 GND, BAT_ENABLE), each with its disclosed reason.",
+    "Regulator taps on the board: AP63201 FB R400 56.2 k + R404 2 k over R401 10 k (0.1 % RT0603BRD, 25 ppm), tapped at C403.1; TPS7A91 FB R402 49.9 k / R403 10 k beside U401 with FB straight to U401.3; U9 OVLO R82 2 M (MCT0603) / R83 280 k; U11 OV1 R87 47 k / R88 10 k on USB_LIMITED; TPS2121 pins match SLVSEA3F (IN1 = 7 = USB_LIMITED, IN2 = 2 = RAW_PROTECTED, OV1 = 5).",
+    "Hot-plug: hotplug_inputs.json binds a0ec075e; results passed / convergence_passed / cold_limit_passed true, minimum -14.807372 V, steepest fall 8.994764 V/us, rise 5.087664 V/us; the 1643.90 uF retained inventory lists exactly the board's capacitors (none missing, none extra).",
+    "Rail voltage vs part ratings: BAT_IN (D8 clamp 19.9 V) parts 25 V or more; RAW_PROTECTED <= 10.18 V into U400 (32 V), U11 (24 V abs max); PORT_5V3 <= 5.546 V into U401 (6.5 V), U402 (6.5 V); PORT_4V8 <= 4.873 V (+50 mV) under the LR900 5 V maximum.",
+    "parts_qualification's C84 connection check (0.41-0.62 mF fitted, 0.04-0.05 mF without, 0.3 mF pass) reproduces from 470 uF and 2 x 22 uF at +/-20 %; R10_VEHICLE_HANDOFF's 4.71-4.87 V PORT_4V8 check is the rounded LDO band."
+  ],
+  "fix_verification": [
+    {
+      "change": "R34-TRI-01: parts_qualification pointed at the round 11 hotplug.md as the current hot-plug results",
+      "measurement": "parts_qualification.md lines 1036-1037 (R92) and 1061-1063 (R166) now name hotplug_results.json (inputs hotplug_inputs.json) and M3_R10 'Current state'; hotplug.md opens with a 'Current results (round 34 pointer)' paragraph (board a0ec075e, input digest f4d1b57d, 8.995 / 5.088 V/us, 1643.90 uF / 5.914 V) and labels the round 11 target historical; hotplug_inputs.json board_sha256 = a0ec075e..., results retained capacitance 0.0016439031 F, output bound 5.914470 V.",
+      "verdict": "confirmed"
+    }
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after: a0ec075e... both; HEAD c3c4249.",
+    "Hand re-derivation of every parts_budget.json key the lens names (port current, loaded pack, ride-through, OQ-5, GAP-1, GAP-3, GAP-5, C120, U9 / U400 fault bounds, camera ILIM, USB limit).",
+    "KiCad Python (read-only, probe copy): pad / net inventory of every power net; copper dumps of RAW_PROTECTED, PORT_5V3, PORT_4V8, BAT_IN, VLOGIC, 3V3A, USB_LIMITED, VBUS, BAT_SW_RETURN, feedback nets; U401 pads and thermal vias; part positions; resistor MPNs on every divider.",
+    "tools/check_r10.py --only K-power,S-9 on a probe copy: OK, evidence read.",
+    "In2 fill export and raster-erosion neck test (NumPy) on RAW_PROTECTED, PORT_5V3 and PORT_4V8 between their via groups.",
+    "Hot-plug capacitor inventory compared against the board's C-references.",
+    "Datasheet text checks from the cached PDFs: TPS7A91 (SBVS282A) electrical table and pin functions, AP63201 (DS41326) electrical table, TPS2121 (SLVSEA3F) pin functions and abs max, AONR21357 threshold / RDS(on) / Qg."
+  ],
+  "sources": [
+    "m3_design/r10_parts.py (power_budget), m3_design/assembly_review/sources/r10_design/parts_budget.json, parts_qualification.md, hotplug.md, hotplug_inputs.json, hotplug_results.json, r10_binding_note.json",
+    "docs/M3_R10.md (Power, Simulation and calculation), docs/ORDERING.md section 8, docs/R10_VEHICLE_HANDOFF.md, docs/REQUIREMENTS.md F4 / F6 / F9 / F10, AGENTS.md at c3c4249",
+    "tools/check_r10.py (K-power, POWER_PATHS, POWER_NARROW, SINGLE_OPEN_EXCEPTIONS, K-plane), tools/ipc2152.py",
+    "round28_audit_pq.md; round25-34 triage observations (to avoid re-reporting)",
+    "TI SBVS282A (TPS7A91) p4-5; Diodes DS41326 Rev 3-2 p5; TI SLVSEA3F (TPS2121) p4-6; TI SLVS841F eq. 1; AOS AONR21357 Rev 2.1 p2 (cached PDFs listed in .supervisor/primary_pdf_cache_paths.json)"
+  ],
+  "coverage_limits": [
+    "No transient, DC copper or thermal re-solve; the hot-plug model and the EN chatter model were not re-run (their bound outputs were checked against the board and the records).",
+    "The raster neck test is approximate (0.04 mm grid) and is a connectivity bound, not a current-capacity analysis.",
+    "Firmware rules, safety cold-screen bands and the pad-energy worksheet were read only where they quote power figures.",
+    "No physical measurement of anything."
+  ]
+}

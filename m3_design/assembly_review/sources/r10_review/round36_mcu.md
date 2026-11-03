@@ -1,0 +1,51 @@
+# R10 round 36 — mcu lens
+
+Target commit `c3c4249`; board SHA-256 `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c` before and after. Reviewer: claude.
+
+## Totals
+
+0 Critical / 0 Major / 0 Minor real errors. No findings.
+
+## Fix verification
+
+- R34-TRI-01 (not an mcu item): parts_qualification now points to `hotplug_results.json` / `hotplug_inputs.json` and M3_R10 "Current state" — confirmed.
+
+## Observations (not counted)
+
+- U1: all 100 board pad nets match pin_table.tsv r10_net and the binding note u1_pins (0 mismatches; NC pins are unconnected-* nets); pin_table SHA-256 b94133e6... equals the binding note's pin_table_sha256 and board_sha256 equals a0ec075e...
+- LQFP100 pin names parsed from DS12110 Rev 8 Table 9 / Figure (pinout) agree with pin_table port names for all 100 pins (91 parsed automatically, 9 multi-line rows checked by hand).
+- Pin-type statements checked against DS12110 Rev 8 Table 9: PE4 FT_h (p. 64), PA4 TT_a, PA5 TT_ha, PA6 FT_a, PC5 TT_a, PB1 TT_u (p. 70), PB12/PB13 FT_u, PD8/PD9 FT_h, PC6/PC7 FT_h, PC14 FT: all correct. Table 119 p. 212 FT limit min(VDD,...)+4.0 V gives 4.0 V at VDD = 0, as the docs say.
+- AF numbers spot-checked in DS12110 Rev 8 alternate-function tables: PB6 AF10 QUADSPI_BK1_NCS, PB12/PB13 AF14 UART5_RX/TX, PE7/PE8 AF7 UART7_RX/TX; others (QUADSPI AF9, USART3/6 AF7, TIM5 AF2, SPI3 AF6, SPI1 AF5, I2C1 AF4, OTG_FS AF10) are the standard H743 assignments; ADC12_INP3 (PA6), INP8 (PC5), INP5 (PB1) present in Table 9.
+- Rule 3 copper: U3.3 = QSPI_IO2 = U1.1 (PE2); R127.1 = PYRO1_GATE_N, R127.2 = GND; R126 220R PYRO1_GATE_N->PYRO1_GATE; R128 10k and C126 220nF gate-to-GND; C128 100nF on PYRO1_OUT (drain). 1k || (220+10k) = 0.911 kΩ; tau about 53 µs nominal with tens of ohms of driver resistance (47-58 µs over ±10 %) consistent.
+- PE4 pull-up hold-off: 30 kΩ pull-up at 3.6 V against R127 || (R126+R128) gives pin 0.106 V, gate 0.1038 V <= 0.104 V as pin_table states; below AON7524 VGS(th) min 0.4 V.
+- Rule 4 copper: R120.1 = ACT_FET_S (Q120 source), R120.2 / C120.2 = ACT_GATE, R121 ACT_GATE<-ACT_DRV, Q120 drain BAT_IN (body diode BAT_IN->ACT_FET_S), Q121 drain RAW_ACT; the four ACT_GATE barrels exist at (16.2,73.3), (15.4,72.85), (11.14,71.7), (11.74,72.3). R121 x C120 = 10k x 1 µF = 10 ms.
+- PC1 hold-off: 3.6 V x 2k/(30k+1k+2k) = 0.218 V; R122 1k, R123 2k, C123 10nF ACT_EN-GND match the copper.
+- Rule 5: U1.28 LOGIC_SOURCE_ST second via (30.45,51.4) with (30.85,51.8); R91.1 is the 3V3 end of the PA4 pull-up, with In2 vias (28.1,60.0) and (28.1,59.4) on net 3V3: matches D-R24-08.
+- Rule 11: U5 PS (pin 2) = 3V3A, CSB (pins 4/5) = GND -> I2C 0x77; R12/R13 4.7k pull-ups on I2C1_SCL/SDA; R10 (QSPI_NCS) and R11 (IMU_CS) 10k to 3V3; PA6 = VLOGIC/11 (R60 100k/R61 10k), PB1 = CAM_5V/11 (R104 10k/R105 1k).
+- VBAT (U1.6) = 3V3, PC14 = BUZZ_DRV via R162 1k, PA9/PA15/PC3_C NC, VREF+ and VDDA on 3V3A, BOOT0 via R5 10k: all as documented.
+- DS15034 Rev 1 citations verified in the ISM6HG256X PDF: Table 31/32 IF_CFG p. 60 (H_LACTIVE 0 = active high, PP_OD 0 = push-pull, defaults 0), WHO_AM_I 73h p. 66, Table 150 p. 93 (100 = ±256 g, 011 reserved), fc(SPC) 10 MHz p. 17, Ton gyro 40 ms p. 15, ±128 g sensitivity 3.904 mg/LSB p. 12.
+
+## Checks executed
+
+- sha256 of m3.kicad_pcb before and after
+- pcbnew read-only dump of U1 pad nets vs pin_table.tsv and binding note u1_pins (.supervisor/r36_mcu/pins.py)
+- pin_table SHA-256 vs binding note
+- pdftotext of DS12110 Rev 8 and automated LQFP100 Table 9 parse (.supervisor/r36_mcu/ds2.py) with manual check of 9 multi-line rows
+- grep of pin-type claims in pin_table, binding note, M3_R10, ORDERING, handoff, R10_VALIDATION, compared with Table 9
+- regex cross-check of port/net and U1.n/port mentions in M3_R10, binding note, ORDERING, handoff, AGENTS
+- pcbnew dump of rule 3/4/5/11 parts and vias (.supervisor/r36_mcu/nets.py, v2.py, v3.py)
+- hand calculations of the PE4 / PC1 hold-off dividers, 0.91 kΩ meter figure, 53 µs gate tau, 10 ms R121xC120
+- pdftotext of DS15034 Rev 1 and check of each cited page
+
+## Sources
+
+- DS12110 Rev 8 https://www.st.com/resource/en/datasheet/stm32h743vi.pdf Table 9 pp. 64-75, alternate-function tables, Table 119 p. 212
+- DS15034 Rev 1 https://www.st.com/resource/en/datasheet/ism6hg256x.pdf pp. 9, 11, 12, 15, 17, 60, 66, 93
+- AON7524 https://www.aosmd.com/res/datasheets/AON7524.pdf p. 2
+
+## Coverage limits
+
+- netlist_sha256 and circuit_sha256 in the binding note were not regenerated (no build of the canonical tree)
+- AF tables spot-checked for the less common assignments only
+- RM0433 not read; DS12110 Rev 11 not re-read
+- LSM6DSV320X (DS14623) citations not re-read

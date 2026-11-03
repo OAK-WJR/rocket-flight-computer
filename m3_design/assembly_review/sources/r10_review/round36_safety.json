@@ -1,0 +1,42 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 36, safety lens",
+  "reviewer": "claude",
+  "target_commit": "c3c4249b89f1fe5a396cb6c4fd18fedb58d385e6",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "AGENTS 2.4 holds on the board: Q124 has R126 220R series (PE4 net PYRO1_GATE_N to PYRO1_GATE), R128 10k gate pull-down and C126 220nF gate-source (source GND), plus R127 1k at the PE4 pin; Q122 has R122 1k, R123 2k and C123 10nF; Q120/Q121 share ACT_GATE with R120/R119 100k to ACT_FET_S, R121 10k series and C120 1uF gate-source.",
+    "AGENTS 2.2 holds: R134.2 is on RAW_ACT (Q121 drain, behind the back-to-back Q120/Q121 pair whose drains are BAT_IN and RAW_ACT); PYRO1_IGN = {J121.2, R134.1} only.",
+    "BAT_SW_RETURN is exactly {J400.2, R165.1, D402.1}; BAT_SW_SOURCE {R80.2, J400.1}; BAT_ENABLE {R81.1, R165.2, C87.1, U9.1}, as documented.",
+    "Re-measured adjacencies match records: PYRO1_OUT-GND 0.1768 B / 0.1800 F mm; PYRO1_OUT-3V3 1.050 F / 1.0511 B; PYRO1_OUT-3V3A 1.0400 B; PYRO1_OUT-BUZZ_DRV 0.7935; PYRO1_GATE-3V3 1.0585 (R128.1 to via 19.55,55.825); PYRO1_GATE_N-3V3 1.065; PYRO1_GATE-3V3A 1.145; PYRO1_GATE_N-QSPI_IO2 0.550; RAW_ACT-USB_LIMITED 0.225; RAW_ACT-PYRO1_IGN 0.3672; BAT_ENABLE-RAW_ACT 0.500; ACT_EN-BAT_ENABLE 0.330; CONT_MID-BUZZ_G 0.175; CONT_MID-3V3 0.4154; J440.1/J9.1 In2 to 3V3 0.2505; J121.1 hole to In1/In2 GND 1.050, In2 3V3 1.0612; J400.2 hole to In2 RAW_PROTECTED 1.050.",
+    "PYRO1_OUT to BUZZ_G (R173.1 to the track at 17.92,58.70, B.Cu) is 0.510 mm, nearer than the listed BUZZ_DRV pair, but BUZZ_G sits behind R162 1k and R163 10k, so a bridge passes at most a few mA through the match: not fire-capable, so its absence from the row 1 fire list is correct.",
+    "Rule 4 / ORDERING 8.3 probe: R120.2 / C120.2 hang off the Q120-side via node; a single open of the B.Cu stub (15.2625,72.9875)-(14.475,72.2) to Q120.4 would leave R120.2 reading the driven gate, but the same step's BAT_IN - RAW_ACT > 0.2 V criterion during the dummy-load fire still catches Q120 off, so the procedure as a whole works.",
+    "Rule 3 meter figure: R127 1k parallel (R126 220 + R128 10k) = 0.9109 kOhm, as stated; U3.3 and U1.1 are the only QSPI_IO2 pads.",
+    "Scales: PA6 = VLOGIC/11 (R60 100k / R61 10k); PC0/PC5 = node/11.2 (5.1k + 5.1k over 2k || 2k).",
+    "Q122 gate '2.19 V' (ORDERING 615 'nominal', M3_R10 778): D-R18-01 states it includes the 1 % resistor corner (3.3 x 1.98 / 2.99 = 2.185 V; 1.92 V likewise at VOH 2.9 V); not a wrong figure.",
+    "Harness EN 1.28 V (R10_VALIDATION section 1): 3.3 x 300 / 771 kOhm (J440.3's 1 kOhm) = 1.284 V, already ruled correct by round 30's triage.",
+    "S-8 table in M3_R10 'CH1 pyro' lists J400.2 In1 GND 0.250 mm while the board measures 0.5505 mm (D-R21-01); the table is explicitly labelled as the round 19/20 measurement on 50a39de5, and GND is exempt there, so it is a labelled historical figure, not a false current statement.",
+    "Single faults that energise the bus, fire an enabled match, or hold the board on with J400 open found in the scan (ACT_EN_MCU-BAT_ENABLE 0.520, ACT_EN_MCU-BUZZ_OUT 0.520, ACT_EN_MCU-NRST 0.425, BAT_ENABLE-BAT_IN 0.200, BAT_ENABLE-BAT_FAULT_N 0.200) fall under the generic disclosures of owner rows 1, 2 and 24."
+  ],
+  "fix_verification": [
+    {"item": "R34-TRI-01 (outside this lens; checked for completeness)", "measurement": "parts_qualification.md:1036-1037 and :1061-1062 point to hotplug_results.json / hotplug_inputs.json and M3_R10 'Current state'; hotplug_inputs.json board_sha256 = a0ec075e...", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after (a0ec075e... both); HEAD c3c4249.",
+    "pcbnew read-only scripts in .supervisor/r36_safety/: parts.py (fire-chain part values, sides, nets), pins.py (U1 / U3 pin nets), netpads.py (pad lists of 18 safety nets), tracks.py (ACT_GATE / ACT_FET_S topology), adj.py and allnear.py (per-layer nearest foreign copper for PYRO1_OUT, PYRO1_GATE, PYRO1_GATE_N, RAW_ACT, PYRO1_CONT_MID, BAT_ENABLE, ACT_EN, ACT_EN_MCU, ARM1_SENSE_MID, zones included by outline-point distance), padzone.py (terminal pad / hole to inner fills).",
+    "Hand recalculation: 0.91 kOhm meter figure, 47-58 us gate tau, ~7 us Q122 tau, 2.19 / 1.92 V Q122 gate, 0.218 V pull-up case, harness EN figures, 0.54 V CONT_MID-3V3 case, divider scales.",
+    "Read: brief, safety lens queue section, M3_R10 'CH1 pyro' and 'Firmware', ORDERING 8.3 first-article and per-flight checks, R10_VALIDATION owner rows 1-7 and section 1 pair table, FMEA I-2 / H-2 row, D-R18-01."
+  ],
+  "sources": [
+    "AGENTS.md section 2; docs/M3_R10.md; docs/ORDERING.md section 8.3; docs/R10_VALIDATION.md owner table and section 1; docs/FMEA_REDUNDANCY.md; R10_DECISIONS.md D-R18-01; round30_triage.json; round31_triage.json; round34_fix_docs.md",
+    "AO3400A Rev 3.1 p2 and AONR21357 Rev 2.1 p2 as cited in the records (not re-read)"
+  ],
+  "coverage_limits": [
+    "Zone distances are outline-point approximations (0.3-1 um polygon error); inner barrels measured from the drill wall.",
+    "No datasheet PDFs re-read this round; no SPICE re-run; schematic not re-diffed against the board (relied on net names from the PCB).",
+    "AGENTS 2.5 labels spot-checked on the figures in the sections above, not a whole-repository sweep."
+  ]
+}

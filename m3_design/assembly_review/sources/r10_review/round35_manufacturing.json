@@ -1,0 +1,57 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round35_manufacturing",
+ "reviewer": "claude",
+ "target_commit": "c3c4249",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {
+  "Critical": 0,
+  "Major": 0,
+  "Minor": 0
+ },
+ "findings": [],
+ "observations": [
+  "JLC capabilities page (read 2026-11-02) lists silkscreen character width-to-height ratio 1:6 as preferred; the board's 1.0 mm text with 0.15 mm stroke is 1:6.67. A preference, not a limit; line width 0.15 mm and height 1.0 mm meet JLC's minimums.",
+  "ORDERING 8.3's U4 'bottom outline x15.1-19.1, y44.3-47.5' is the union of U4's B.Courtyard (x15.125-18.875, y44.275-47.525) and B.Silkscreen (x max 19.065); a conservative boundary for the 3 mm coat exclusion, not false.",
+  "D402's 'M-6 1.768 / 1.808 mm' (ORDERING 8.2) is check_r10 M-6's courtyard-to-THT-pad metric; the B.Cu copper gaps are 1.959 / 2.002 mm. Both consistent with their stated metric.",
+  "Bottom parts at 2.2-2.5 mm copper gap to DB125 pads (R101, R100, R405, R440, R441, R450, R451, C411, C83, C128) are not in 8.2's hand-solder keep-off list; the list's stated range is 1.76-2.17 mm, so they lie outside it and the list is not false.",
+  "The board's KiCad stackup (0.203 mm prepreg, 1.03 mm core, 0.030 mm inner copper) is what ORDERING section 3 (R9) says the job file uses; R10 has no impedance requirement, and JLC's live template thicknesses were not re-read."
+ ],
+ "fix_verification": [
+  {
+   "item": "R34-TRI-01 (parts_qualification hot-plug pointer; docs lens, outside manufacturing)",
+   "measurement": "parts_qualification.md :1036-1037 and :1061-1062 now point to hotplug_results.json / hotplug_inputs.json and M3_R10 'Current state'; no manufacturing-lens correction in round 34",
+   "verdict": "confirmed"
+  }
+ ],
+ "checks_actually_executed": [
+  "Board SHA-256 before and after: a0ec075e... (identical); HEAD c3c4249.",
+  "Manifest: all 193 inputs (cad/ mapped to m3_design/assembly_review/) and 6 outputs hash-match; board input a0ec075e...",
+  "kicad-cli 10.0.7 DRC on a probe copy, --severity-all --schematic-parity: 0 violations, 0 unconnected, 0 parity.",
+  "Gerbers and drill regenerated from the copy with export_fab.py's options: all 14 files identical to m3_gerber.zip apart from date lines.",
+  "Drill: PTH 0.300 x308, 0.500 x1, 1.300 x27, 0.600 slots x4; NPTH 5 holes (0.991 x3, 0.6 x2); vias 304 x 0.5/0.3, 4 x 0.6/0.3, 1 x 1.0/0.5 = 309, matching ORDERING 8.1.",
+  "Edge.Cuts 46 x 90 mm with five R1.6 mm holes at (4,4), (42,4), (4,44.3), (3.7,86), (42,86); job file 4 layers, 1.6 mm, ENIG.",
+  "Paste flashes 249 F / 381 B; U4 lands 0.575 x 0.35, mask relief 0, min web 0.150 mm, paste 88.36 %; U401 split paste windows gap 0.22 mm vs 0.3 mm via drills (0.04 mm overlap each), as stated.",
+  "BOM: 81 lines, 206 refs, Qty = designator counts, no duplicates, LCSC / Manufacturer Part fields match every footprint; 77 SMT + 4 THT lines; owner BOM C84 only; CPL 206 rows = 70 top + 136 bottom, sides match, no DNP / excluded part; CPL positions equal footprint origins (J430, J3 at pad centres).",
+  "cost_check.json / stock_check.json: timestamps, hashes, $60.47 + $24.79 = $85.26, $85.80, $102.05, $105.04, 45 Extended codes, U4 / U9 shorts all match ORDERING 8.1.",
+  "Assembly PDFs: every one of the 207 fitted parts is in the PDF for its own side and none on the other side.",
+  "ORDERING 8.2: terminal table positions / rotations / LCSC codes; Q120, Q121, Q124, C126, C123, C411, C421, C431, C91, C92, C84 lands, D9 pads, J430, U4, L400 land 2.0 x 1.8 at +-2.25 mm; 93 hidden designators; GND contact zone_connect = 1 on all six; J440.3 / .4 GND partner vias 0.300 mm; bottom-part DB125 copper gaps 1.762-2.171 mm and the quoted R102 1.997, C431 2.050, C410 / C420 2.003; J3 slot gaps C83 1.952, R7 2.010, R8 2.145; short-edge courtyards R400/401/404 1.025, C403 1.955, C95 1.505, R166 1.755, R92 2.525, TP88 2.555 mm, and no other courtyard within 2.5 mm of a short edge.",
+  "ORDERING 8.3: every probe contact in the worksheet, J2 F(5,39.4), U9 exposed pad ends, R84.1, R120.1, the ACT_GATE second vias, the single RAW_PROTECTED and 3V3A vias, the BAT_ENABLE vias, U5 body / pad boundaries, TP122 box and its 1.40 mm to U5, D402's 4.114 mm tap and 0.7 mm GND via.",
+  "JLC PCB capabilities page re-read 2026-11-02 (silkscreen, multilayer trace/space, via, hole-to-hole, edge clearance) against the board's rules and measured geometry."
+ ],
+ "sources": [
+  "https://jlcpcb.com/capabilities/pcb-capabilities (read 2026-11-02)",
+  "docs/ORDERING.md section 8.1-8.3",
+  "m3_design/assembly_review/fab/*",
+  "tools/export_fab.py",
+  "tools/check_r10.py (M-6, DRU_FLOORS)",
+  "m3_design/assembly_review/m3.kicad_dru / m3.kicad_pro"
+ ],
+ "coverage_limits": [
+  "No full tools/check.sh run (brief forbids it on the canonical tree); fab_manifest content checks not re-run.",
+  "CPL rotations not independently reconstructed against JLC's EasyEDA footprints (relied on recorded jlc_orient result).",
+  "JLC assembly capabilities and via-covering pages not re-read this round; DB125 and J3 maker drawings not re-read.",
+  "Assembly PDFs checked by text extraction only, not visually."
+ ]
+}

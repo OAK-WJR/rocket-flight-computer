@@ -1,0 +1,32 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 35, routing lens",
+  "reviewer": "claude",
+  "target_commit": "c3c4249b89f1fe5a396cb6c4fd18fedb58d385e6",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "route_check --profile r10 on a copy: 0 failing, 0 allowlisted, 0 stale; 5 non-critical leftovers (BAT_OVLO short segment B(16.4,83.0); tiny jogs BUZZ_DRV F(20.5,51.8), BAT_FAULT_N B(28.2,47.5), I2C1_SDA B(9.97,51.5); USB_ILIM detour ratio 3.18 at (14.825,27.2)) are informational under requirements audit 2 and were seen in earlier rounds.",
+    "GND F.Cu track passes through same-net pad Q124.2 at (15.3,57.045): INFO category, already covered in rounds 25-31 triage.",
+    "28 power vias without a GND via within 1.5 mm (power_via_no_gnd) are INFO; power nets have no partner-via rule in AGENTS section 3.",
+    "Critical-net vias with no GND via within 1.5 mm (ACT_GATE up to 5.92 mm, CAM_PWR_EN 2.68 mm, PYRO1_CONT 2.18 mm, CAM_UART_OE 1.88 mm) are all on AUD-2's R10_SLOW_RETURN_NETS exclusion list; every other critical via has a GND partner within 1.5 mm (worst PYRO1_GATE 1.492 mm at (14.4,53.3))."
+  ],
+  "fix_verification": [
+    {"item": "R34-TRI-01 (parts_qualification hotplug pointer)", "verdict": "not in this lens (text-only, no routing content)"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of the board before and after (unchanged a0ec075e...)",
+    "tools/route_check.py --profile r10 --list --report on a copy in .supervisor/r35_routing/ (rc 0)",
+    "Independent pcbnew scan of all 1059 track segments: 0 arcs, 0 off-45-degree headings, 0 bends below 135 degrees in open copper; 35 90-degree bends at pads (25) or vias (10), each with the inner copper corner N + h_b u_a + h_a u_b inside the pad or via copper",
+    "Independent GND partner-via distance for every critical-signal-net via (34 vias)",
+    "J440 clamp-run figures (M3_R10 AUX ESD clamps and R26-TRI-09 rows): centre to centre 3.157 / 3.194 mm, B.Cu track 3.864 / 3.964 mm, pad edge to pad edge 1.865 / 1.900 mm, GND partner vias (7.4,16.5)/(7.4,20.0) 1.500 mm from J440.3 / J440.4, 0.300 mm to own pad, 0.800 mm to neighbour: all match",
+    "C88 at B(18.67,83.56) and the BAT_IN via at (17.5,87.15) match the D-R24-17 row"
+  ],
+  "sources": ["AGENTS.md section 3", "docs/REQUIREMENTS.md M2", "docs/M3_R10.md", "tools/route_check.py", "tools/critical_reference.py"],
+  "coverage_limits": [
+    "No new gate seeds were run; route_check's right_angle and partner-via logic were cross-checked by independent scans instead.",
+    "Zone fill geometry and reference-plane continuity were not re-derived independently beyond route_check's own reports."
+  ]
+}
