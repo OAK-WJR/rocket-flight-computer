@@ -5,7 +5,9 @@ Stage C of `r11_plan.md` §4, second part. Nothing is committed or ordered. Deci
 KiCad's y). Every route was drafted with a scratch maze aid or by hand and is frozen as explicit tables in
 `m3_design/r11_route_{usb,pyro,power}.py` (D-R11-07: the build never searches).
 
-**State (after C2b, section 8).** `usb` and `pyro` route every net they own except the three sense nets of O-C2-1;
+**State (after C2c, section 9).** C2c routed PYRO1_CONT, ARM1_SENSE_MID, VLOGIC_SENSE and LOGIC_SOURCE_ST, fixed D4.2's via,
+pinned the supports and gave VCAP1 a second barrel. Still open: ARM1_SENSE's MCU run, BAT_FAULT_N / R89 and the BOOT0 /
+VCAP2 / PA4 single barrels (section 9.3). **State (after C2b, section 8).** `usb` and `pyro` route every net they own except the three sense nets of O-C2-1;
 `power` routes every rail and In2 region, the J400 / EN chain and the regulator cells. Not routed: the sense lines
 (O-C2-1), BAT_FAULT_N / LOGIC_SOURCE_ST / VLOGIC_SENSE (O-C2-4) and with them R89.1 (3V3). Stage C2 is therefore **not
 complete**; sections 1-7 are the first part's record, section 8 is C2b's and supersedes them where they differ.
@@ -191,3 +193,36 @@ stub shortened to it). Fit, courtyards and DRC re-checked in the build.
 * J400.2's BAT_SW_RETURN is one barrel: open, the board stays off (fail-safe, Inference).
 * PE4 / D2 0.200 mm stays an owner deviation (D-R11-23).
 
+
+## 9. Stage C2c (2026-11-03): sense lines, status lines, D4.2, supports, VCAP1
+
+Decisions D-R11-31 … -36 and -40 in `R11_DECISIONS.md`; the C3 families of the same pass are in `stageC3.md`. Measured on
+the board built by `m3_design/r11_build.sh` (SHA-256 `86fc4652…`, stageC3.md §1) unless labelled.
+
+### 9.1 Done
+
+| Item | Result |
+|---|---|
+| O-C2-1 | PYRO1_CONT (3 vias: (20.0, 28.8), (16.9, 21.9), (14.0, 19.0)) and ARM1_SENSE_MID (2 vias: (15.6, 20.02), (6.95, 23.47)) routed; both bank rows drawn (D-R11-35). ARM1_SENSE from U1.H4 not drawn (9.3) |
+| O-C2-4 | VLOGIC_SENSE (1 via (21.6, 32.6)) and LOGIC_SOURCE_ST (2 vias (23.2, 28.8), (16.23, 41.6)) routed (D-R11-36). BAT_FAULT_N not drawn, R89 not moved (9.3) |
+| O-C2-12 | VCAP1 second barrel (26.4, 28.0), listed in `parallel_vias` (D-R11-34); BOOT0 / VCAP2 have no site (9.3) |
+| O-C2-13 | D4.2's GND via at (35.35, 30.4), 0.4 / 0.2 mm; check_r11 K-copper OK (D-R11-31) |
+| M-3 | `supports` pinned from `r11_pcb.SUPPORTS`; check_r11 M-3 OK (D-R11-32) |
+| K-rules | cause found: R10's floors and a condition-blind later-rule test in the gate (D-R11-40); not changed (tools/ is the gate lane's) |
+| Placement | R460-R464 to an F.Cu column north-east of U1, J430.4's 3V3 via to the pin (D-R11-33) |
+
+S-1 … S-9 OK on the final board; PYRO1_CONT / ARM1_SENSE_MID In3 runs keep the ACT_GATE barrels' S-8 keep-outs (check_r11
+S-8 OK, Measured). PYRO1_CONT / ARM1_SENSE_MID are pyro-class critical nets: route_check gates their hygiene (0 findings);
+they are on AUD-2's slow-return list, so no GND partner or one-region rule applies.
+
+### 9.2 Gate results
+
+r11_stage_check after pyro and power OK (unconnected 379 and 239); check_r11 results in stageC3.md §3.
+
+### 9.3 Open items carried to stage C3's record
+
+* ARM1_SENSE (H4) and BAT_FAULT_N (H3) / R89: stageC3.md O-C3-1. H3 and H4 have only the F.Cu lane x 22.4 between them
+  (VLOGIC_SENSE took x 21.6); H4's via is pinched on B.Cu (C21.2 / BOOT0's via, 0.23 mm hole clearance against 0.25 mm,
+  Calculation); the west-bound route must cross core's I2C In3 wall and the D120-K1 3V3 B.Cu run.
+* BOOT0, VCAP2 and PA4 (LOGIC_SOURCE_ST) single barrels: stageC3.md O-C3-5 (check_r11 K-power, 5 findings).
+* O-C2-8 (GND of the earlier families) continues as stageC3.md O-C3-7.

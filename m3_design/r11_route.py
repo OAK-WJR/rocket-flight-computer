@@ -27,7 +27,7 @@ LAYERS = {'F': pcbnew.F_Cu, 'In1': pcbnew.In1_Cu, 'In2': pcbnew.In2_Cu, 'In3': p
           'B': pcbnew.B_Cu}
 LAYER_NAME = {v: k for k, v in LAYERS.items()}
 # Build order (r11_plan.md section 4): the core fan-out first, the poured ground last.
-FAMILIES = ('core', 'usb', 'pyro', 'power', 'ports', 'servo', 'sd', 'signals', 'ground')
+FAMILIES = ('core', 'usb', 'pyro', 'power', 'ports', 'servo', 'sd', 'signals', 'status', 'ground')
 # D-R11-15: signal 0.1 (JLC multilayer 0.09 mm floor plus 0.01, m3.kicad_dru), wider signal / power steps after R10's
 WIDTHS = (0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.0)
 SIGNAL_VIA = (0.4, 0.2)          # stageB.md section 10: dog-bone / signal via, 0.10 mm annular ring

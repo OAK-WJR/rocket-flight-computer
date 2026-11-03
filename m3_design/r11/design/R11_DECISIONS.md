@@ -289,3 +289,95 @@ PYRO1_GATE_N leaves C3 diagonally to (21.65, 26.35) and runs west at y 26.35 ins
 clearance floor, so D2 (3V3) gets 0.200 mm instead of 0.150 mm (Measured). **Why:** the most the row gap allows with no via
 (D-R11-23 as corrected).
 
+
+## D-R11-31 D4.2's GND via clear of its pad (O-C2-13)
+
+usb's GND via beside D4.2 moves from (35.15, 30.4) (0.45 / 0.25 mm, its ring inside D4.2's mask and paste) to (35.35, 30.4)
+as a 0.4 / 0.2 mm via: 0.165 mm from D4.2's pad end, its hole 0.27 mm from V_DM's ring, 0.57 mm from V_DM (GND partner)
+(Calculation on the table; DRC and check_r11 K-copper OK, Measured). **Why:** K-copper failed the via in D4.2's mask
+opening and paste aperture; the larger via does not fit beside V_DM.
+
+## D-R11-32 The D-R11-10 supports pinned in the gate data (M-3)
+
+`r11_pcb.py` holds the four corner centres as `SUPPORTS` ((3.5, 3.5), (42.5, 3.5), (3.5, 46.5), (42.5, 46.5)), stops the
+build if the placement table's `@M3` rows differ, and writes them to `r11_gate_data.json` key `supports`. check_r11 M-3
+OK (Measured). **Why:** M-3 failed with no pin; writing the pin from the same table it checks would let a support move
+unreviewed, so the pin is a constant in the generator.
+
+## D-R11-33 microSD pull-ups beside the SD route (placement)
+
+R460-R464 (10 k, 3V3 pull-ups of SD_CS / MOSI / MISO / DAT1 / DAT2) move from the forward edge (x 30-34.6, y 42.4, B.Cu)
+to one F.Cu column north-east of U1 (x 28.7, y 14.9 DAT1, 15.8 MISO, 16.7 MOSI, 17.6 CS, 18.5 DAT2; rotation 180, SD pad
+east), between LED2 / C461 and the U400 input-cap block. Their 3V3 pads join on one F.Cu bus to one via (28.27, 19.25) in
+the In2 3V3 strip between 3V3A and PORT_5V3; J430.4's 3V3 via moves from (37.405, 17.15) to (37.105, 14.25), at the pin,
+so the SD runs can pass south of it under J430. **Why:** U1's SD balls (B8 / B9 / C8 / D8) are on the field's north-east
+side and J430 is north-east; with the pull-ups at the forward edge every SD line but SCK had to reach both ends of the
+board through the field (Calculation: about 30 mm more per line). Fit, courtyards and DRC re-checked in the build
+(Measured). The SD family itself is not drawn (stageC3.md O-C3-4): the column leaves one F.Cu track between the resistor
+pads and C400 / C404, so the row order and via sites are a plan, not a checked route (Inference).
+
+## D-R11-34 VCAP1's second barrel; no site for BOOT0, VCAP2 or PA4 (O-C2-12)
+
+U1.F8 (VCAP1) gets a second barrel at its NE interstitial site (26.4, 28.0), joined to the first (25.6, 28.0) on F.Cu
+through the ball and on B.Cu, listed in `parallel_vias` (route_check and check_r11 K-power: VCAP1 OK, Measured). BOOT0
+(D5), VCAP2 (E7) and PA4 (G3, LOGIC_SOURCE_ST) have no second site: every other interstitial site of D5 / E7 / G3 is
+closed by a bottom decoupling pad (C20.1 at x 23.55-24.45, C16.1 at y 26.53-27.07, C17.1 / C17.2 at y 28.93-29.47; a 0.4 mm
+via there overlaps the pad, Calculation on the placed pads), the one F.Cu lane out of E7 / D5 meets other dog-bones, and
+(24.8, 26.4) is D6's only site. They stay K-power findings (stageC3.md O-C3-5). **Why:** R10 met the rule with second
+vias in open copper (D-R24-03 / -04, D-R22-02); under the TFBGA the sites are a fan-out decision (moving C20 / C17 or the
+ball assignment), not a routing one.
+
+## D-R11-35 Sense lines: PYRO1_CONT and ARM1_SENSE_MID routed, ARM1_SENSE open (O-C2-1)
+
+PYRO1_CONT: U1.F1 to a via at its SW site (20.0, 28.8); B.Cu north in the via-free lane x 20.4 under ball column 1 (between
+the x 20.0 and x 20.8 via columns, 0.15 mm each side), diagonally north of Y1 / C25 to (16.9, 21.9); In3 to (14.0, 19.0)
+under the ACT_GATE B.Cu trunk (the In3 corridor between the ACT_GATE S-8 keep-outs); B.Cu to the bank row y 20.43 (C127,
+R178, R130, R129.2). ARM1_SENSE_MID: R132.2 by a via to In3, west along y 18.57 and diagonally over the banks to a via south
+of R175, B.Cu into R175.1. The ARM1_SENSE bank row (C129, R180, R133, R175.2) is drawn; U1.H4 to it is not (stageC3.md
+O-C3-1). S-6 / S-8 OK (Measured). **Why:** the y 18.5 In3 corridor of stageC2.md 8.3 holds; the bank-side via that
+stageC2.md could not place is not needed when the line comes up beside C127 on B.Cu.
+
+## D-R11-36 VLOGIC_SENSE and LOGIC_SOURCE_ST routed, BAT_FAULT_N open (O-C2-4)
+
+VLOGIC_SENSE (PA6): U1.J3 down the F.Cu lane x 21.6, a via at (21.6, 32.6), B.Cu round C10 / C23 to R60.2, R61.1, C60.1.
+LOGIC_SOURCE_ST (PA4): U1.G3 east along the y 28.8 row gap to a via at (23.2, 28.8), In3 through the field (x 22.8, y 26.8
+north of NRST's via), south along x 18.4 and diagonally to a via south of R91 (16.23, 41.6); B.Cu to R91.2 and U11.9
+beside U11 (not under it). BAT_FAULT_N (H3) and R89 are not drawn or moved (stageC3.md O-C3-1). **Why:** these are the
+lanes the fan-out table reserved; PA4's single barrels are D-R11-34's finding.
+
+## D-R11-37 Family `ports`: the wire sides and their clamps
+
+The three GH ports are one cell translated by the port centre x0 (J420 12.4, J410 23.0, J440 33.6): TX pin 3 by F.Cu to a
+via west of the cell (x0 + 0.1, 45.9), B.Cu north into the resistor's wire pad and south into the clamp; RX pin 4 to a via
+between the columns (x0 + 1.25, 45.9), B.Cu north-east into its resistor and south into its clamp; each clamp's GND pad
+0.625 mm to its own GND via (x, 46.45), which is also the wire vias' GND partner (0.76 / 0.83 mm). J9 (camera): each wire
+pin by one via under the housing (y 3.6) to its clamp (west) and resistor; CAM_TX_WIRE reaches R101.2 along y 0.6 south of
+the clamps; four GND vias (two clamp returns, two partners). check_r11 K-ports: every port clamp on the wire side within
+4.5 mm (stageC3.md section 2 for the measured lengths); the only K-ports finding left is D402 (J400's clamp, the ground
+family's via, O-C2-8). **Why:** the MCU sides cannot leave the field yet (stageC3.md O-C3-1); the wire cells are
+independent of them and close K-ports.
+
+## D-R11-38 Family `servo`: J122's outputs
+
+R150-R153 (B.Cu, SERVO1-4 west to east) feed J122.1-.4 (F.Cu, east to west): each output changes layer once beside its
+resistor or south of the pin row, SERVO1 / SERVO2 crossing on F.Cu under J122's housing and SERVO3 / SERVO4 on B.Cu.
+**Why:** the order reverses between the resistor row and the connector; one via per net is the minimum. The MCU side
+(U1.G2-K2) is open (stageC3.md O-C3-1).
+
+## D-R11-39 Family `status` and the family order
+
+`r11_route.FAMILIES` and `r11_build.sh` gain `status` (after `signals`, before `ground`): LEDs, buzzer and test points.
+It draws LED_RED_A, LED_YEL_A, BUZZ_G and BUZZ_OUT (local, F.Cu / B.Cu, one via on BUZZ_OUT). LED_RED, LED_YEL and BUZZ_DRV
+are open (stageC3.md O-C3-3). The test points need no new copper: TP80 / TP82 / TP83 / TP120 / TP122 are on their nets'
+runs, TP74 / TP88 (GND) and TP81 (RAW_PROTECTED, its In2 via drawn) wait only for the ground family. **Why:** the brief
+named `status` as its own family; `r11_stage_check` judges every family in `FAMILIES` order.
+
+## D-R11-40 check_r11 K-rules fails on R10's floors (gate finding, not changed here)
+
+check_r11 K-rules runs check_r10.k_rules with only the DRU hash patched, so R10's floors (R23-GATE-03: 0.15 mm clearance and
+track, 0.5 / 0.3 mm via, 0.25 mm hole to hole, net-class clearance 0.15 mm) judge R11's D-R11-15 floors (0.1 / 0.1 mm,
+0.4 / 0.2 mm vias, JLC's six-layer figures): 13 of its 14 findings. The 14th ("R11 board floor: via hole to hole" can
+override "JLC pad hole to hole") comes from jlc_hole_table's later-rule test, which compares layers only and ignores the
+rule's condition (A.Type == 'Via' && B.Type == 'Via', which cannot match a pad pair). Both are gate-lane items (tools/ is
+not edited by the design lane); the project's rules and the board are as D-R11-15 set them (Measured: 14 findings, the
+same on the C2b and C3 boards).

@@ -20,7 +20,9 @@ PV = (0.45, 0.25)          # power / GND via
 
 # key vias (x, y)
 V_DP, V_DM, V_A7 = (36.25, 28.6), (35.8, 30.75), (38.1, 29.75)
-G_D4, G_DP = (35.15, 30.4), (37.15, 28.75)          # GND partners: V_DM (0.74 mm), V_DP (0.91) / V_A7 (1.38)
+# GND partners: V_DM (0.57 mm), V_DP (0.91) / V_A7 (1.38). D-R11-31: G_D4 sits 0.165 mm clear of D4.2's pad end (was
+# inside its mask / paste at x 35.15) as a 0.4 / 0.2 mm via, whose hole keeps 0.27 mm from V_DM's ring
+G_D4, G_DP = (35.35, 30.4), (37.15, 28.75)
 V_FLT, V_ILIM_G = (36.75, 27.0), (35.33, 28.6)     # USB_FAULT_N to In3; R85.2's GND via (V_DP partner, 0.92 mm)
 VB1, VB2 = (38.3, 27.6), (38.0, 32.4)              # VBUS at J3.B4A9 / J3.A4B9, joined on In3 east of V_A7
 V_CC1, V_CC2 = (38.27, 31.25), (38.27, 28.25)       # CC to B.Cu
@@ -51,7 +53,7 @@ def pair(d):
     t('USB_DM', 'B', USB, [V_DM, (35.8, 31.35)])
     # GND partners
     t('GND', 'B', PWR, [p('D4', '2', net='GND'), G_D4])
-    v('GND', G_D4, PV)
+    v('GND', G_D4, SV)
     v('GND', G_DP, PV)
 
 

@@ -41,6 +41,7 @@ HOLE_R = 1.6                            # 3.2 mm M3 clearance hole, nylon hardwa
 EDGE_W = 0.05
 EDGE_MIN = 0.25                         # courtyard to any edge (stage B rule; J3's shell overhang excepted below)
 SHORT_EDGE_DFM = 0.5                    # courtyard to a short edge with the JLC panel's 5 mm rails there (D-R11-12)
+SUPPORTS = ((3.5, 3.5), (42.5, 3.5), (3.5, 46.5), (42.5, 46.5))   # D-R11-10: the four corner M3 supports (M-3 pin)
 TOP_HARDWARE = 3.8                      # top bodies / pads to a support centre (fit_check TOP_HARDWARE_RADIUS)
 BOTTOM_STANDOFF = 3.5                   # bottom courtyards to a support centre (P2, check_r10.m6)
 BOTTOM_THT = 1.5                        # bottom courtyards to a foreign plated pad (check_r10.m6)
@@ -342,7 +343,10 @@ def gate_data(project, board, feat, near):
     data['imu'] = dict(rotation=round(u4.GetOrientationDegrees(), 3), side='B',
                        lever_mm=round(mm(u4.GetPosition().x) - 23.0, 3), tol_mm=0.05,
                        basis='stageB.md section 6 (D-R11-11): R10 axis map kept, roll = -gyro_Y')
-    data.pop('supports', None)          # the corner rule (fit_check / check_r11 M-3) holds them; see stageB.md section 4
+    # D-R11-10 / D-R11-32: check_r11 M-3 pins the four corner supports by this key; the build writes the reviewed
+    # centres (SUPPORTS) and stops if the placement table's @M3 rows differ from them
+    assert sorted(feat['supports']) == sorted(SUPPORTS), ('@M3 rows differ from D-R11-10', feat['supports'])
+    data['supports'] = [list(c) for c in SUPPORTS]
     data['short_edge_queries'] = {ref: ['aft' if box(board.FindFootprintByReference(ref))[1] < feat['outline'][1] / 2
                                         else 'forward', d]
                                   for ref, d in sorted(near.items()) if d < 2.5 - 1e-6}

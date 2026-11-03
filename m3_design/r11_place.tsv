@@ -171,11 +171,11 @@ R440	24.875	44.4	90	B	port RX 1k
 R441	23.625	44.4	90	B	port TX 1k
 R450	14.275	44.4	90	B	port RX 1k
 R451	13.025	44.4	90	B	port TX 1k
-R460	30	42.4	90	B	microSD pull-ups
-R461	31.15	42.4	90	B	microSD pull-ups
-R462	32.3	42.4	90	B	microSD pull-ups
-R463	33.45	42.4	90	B	microSD pull-ups
-R464	34.6	42.4	90	B	microSD pull-ups
+R460	28.7	17.6	180	F	microSD pull-ups; D-R11-33
+R461	28.7	16.7	180	F	microSD pull-ups; D-R11-33
+R462	28.7	15.8	180	F	microSD pull-ups; D-R11-33
+R463	28.7	14.9	180	F	microSD pull-ups; D-R11-33: one F.Cu column beside the SD route north-east of U1, rows in J430 pin order, 3V3 pads on one west bus
+R464	28.7	18.5	180	F	microSD pull-ups; D-R11-33
 R470	35.475	44.4	90	B	port RX 1k
 R471	34.225	44.4	90	B	port TX 1k
 R5	24	31.6	0	B	BOOT0 pull-down under U1

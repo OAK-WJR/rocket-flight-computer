@@ -76,6 +76,20 @@
      21.65
     ]
    ]
+  },
+  {
+   "net": "VCAP1",
+   "reason": "D-R11-34 (O-C2-12): U1.F8 (VCAP1) dog-bone NW plus a second barrel at its NE site, joined on F.Cu through the ball and on B.Cu, so one open barrel leaves C19 on VCAP1 (SINGLE_OPEN_TAPS VCAP1 U1.F8)",
+   "vias": [
+    [
+     25.6,
+     28.0
+    ],
+    [
+     26.4,
+     28.0
+    ]
+   ]
   }
  ],
  "power_narrow": [
@@ -204,5 +218,23 @@
   ]
  },
  "single_open_exceptions": [],
+ "supports": [
+  [
+   3.5,
+   3.5
+  ],
+  [
+   42.5,
+   3.5
+  ],
+  [
+   3.5,
+   46.5
+  ],
+  [
+   42.5,
+   46.5
+  ]
+ ],
  "supports_basis": "D-R11-10: four corner M3 supports, nylon hardware (check_r11 M-3 pins them within 0.01 mm)"
 }

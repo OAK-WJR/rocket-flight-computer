@@ -129,6 +129,11 @@ def mcu_local(d):
     d.via('VCAP1', (25.6, 28.0))
     stub(d, 'VCAP1', 'F8', (25.6, 28.0), PWR)
     d.track('VCAP1', 'B', 0.15, [(25.6, 28.0), (24.85, 28.75), d.pad('C19.1', net='VCAP1')])
+    # D-R11-34 (O-C2-12): F8's second barrel at its NE site, joined to the first on F.Cu (through the ball) and B.Cu, so
+    # one open barrel leaves C19 on VCAP1 (check_r11 K-power single-open taps; r11_gate_data.json parallel_vias)
+    d.via('VCAP1', (26.4, 28.0))
+    stub(d, 'VCAP1', 'F8', (26.4, 28.0), PWR)
+    d.track('VCAP1', 'B', PWR, [(26.4, 28.0), (25.6, 28.0)])
 
 
 # ---- 3. SWD: A9 / A10 north to vias, B.Cu east along the aft edge of the field and down the free column x 32.0 / 32.35

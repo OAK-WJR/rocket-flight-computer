@@ -23,7 +23,7 @@ import math
 import pcbnew
 
 NETS = ('ACT_FET_S', 'ACT_GATE', 'ACT_DRV', 'ACT_EN', 'ACT_EN_MCU', 'RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE',
-        'PYRO1_GATE_N', 'PYRO1_COLD', 'PYRO1_CONT_MID')
+        'PYRO1_GATE_N', 'PYRO1_COLD', 'PYRO1_CONT_MID', 'PYRO1_CONT', 'ARM1_SENSE_MID')
 
 FIRE, BAT, SIG, PWR = 0.5, 1.0, 0.15, 0.3
 SV, PV, BV = (0.4, 0.2), (0.45, 0.25), (0.6, 0.3)
@@ -167,6 +167,35 @@ def sense(d):
     t('PYRO1_CONT_MID', 'B', SIG, [V_CMID, (5.3, 21.13), p('R129', '1', net='PYRO1_CONT_MID')])
 
 
+# Stage C2c (O-C2-1, D-R11-35): the sense lines. PYRO1_CONT leaves U1.F1 by the west site (20.0, 28.8), runs north on
+# B.Cu in the via-free lane x 20.4 under ball column 1, crosses the crystal's north side to (16.9, 21.9), hops on In3
+# under the ACT_GATE B.Cu trunk (the In3 corridor between the ACT_GATE keep-outs) and reaches the continuity bank's row
+# on B.Cu. ARM1_SENSE_MID: R132.2 by one via to In3, west along y 18.57 and diagonally over the banks to a via south of
+# R175 (B.Cu). ARM1_SENSE's own MCU run (U1.H4) is not drawn: stageC3.md O-C3-1; only its bank row is.
+V_CONT = ((20.0, 28.8), (16.9, 21.9), (14.0, 19.0))
+V_MID = ((15.6, 20.02), (6.95, 23.47))
+SENSE_TRACKS = (
+    ('PYRO1_CONT', 'F', [('U1', 'F1'), (20.0, 28.8)]),
+    ('PYRO1_CONT', 'B', [(20.0, 28.8), (20.4, 28.4), (20.4, 25.4), (16.9, 21.9)]),
+    ('PYRO1_CONT', 'In3', [(16.9, 21.9), (14.0, 19.0)]),
+    ('PYRO1_CONT', 'B', [(14.0, 19.0), (12.7, 20.3), (9.7, 20.3)]),
+    ('PYRO1_CONT', 'B', [(9.45, 20.43), ('R178', '1'), ('R130', '1'), (6.86, 20.43), ('R129', '2')]),
+    ('ARM1_SENSE', 'B', [(9.45, 22.83), ('R180', '1'), ('R133', '1'), (6.86, 22.83), ('R175', '2')]),
+    ('ARM1_SENSE_MID', 'F', [('R132', '2'), (15.6, 20.02)]),
+    ('ARM1_SENSE_MID', 'In3', [(15.6, 20.02), (14.15, 18.57), (11.85, 18.57), (6.95, 23.47)]),
+    ('ARM1_SENSE_MID', 'B', [(6.95, 23.47), (6.25, 22.77)]),                 # ends inside R175.1
+)
+
+
+def sense_c2(d):
+    for net, layer, pts in SENSE_TRACKS:
+        d.track(net, layer, 0.1, [d.pad(*p, net=net) if isinstance(p[0], str) else p for p in pts])
+    for at in V_CONT:
+        d.via('PYRO1_CONT', at, SV)
+    for at in V_MID:
+        d.via('ARM1_SENSE_MID', at, SV)
+
+
 def keepouts(d):
     for k, at in enumerate(BARRELS_GND):
         # 1.0 mm from the 0.4 mm ring (0.2 + 1.0) plus margin; VG_B2 at 1.25 so In3 I2C1_SDA (y 23.0) stays outside
@@ -183,5 +212,6 @@ def draw(d):
     fire(d)
     gates(d)
     sense(d)
+    sense_c2(d)
     if not d.dry:
         keepouts(d)

@@ -26,7 +26,8 @@ import pcbnew
 
 NETS = ('BAT_DVDT', 'BAT_ILIM', 'BAT_OVLO', 'BAT_DAMP', 'CAM_ILIM', 'LOGIC_ILIM', 'LOGIC_SS', 'BAT_ENABLE',
         'BAT_SW_SOURCE', 'BAT_SW_RETURN', 'SW_NODE', 'BST', 'PORT_SW', 'PORT_BST', 'PORT_FB', 'PORT_FB_TOP',
-        'PORT_LDO_FB', 'PORT_LDO_SS', 'BAT_IN', 'RAW_PROTECTED', 'VLOGIC', 'CAM_5V', 'PORT_5V3', 'PORT_4V8', '3V3A')
+        'PORT_LDO_FB', 'PORT_LDO_SS', 'BAT_IN', 'RAW_PROTECTED', 'VLOGIC', 'CAM_5V', 'PORT_5V3', 'PORT_4V8', '3V3A',
+        'VLOGIC_SENSE', 'LOGIC_SOURCE_ST')
 
 SV, PV, BV = (0.4, 0.2), (0.45, 0.25), (0.6, 0.3)
 
@@ -152,7 +153,7 @@ RUNS = (
     ('3V3', 'B', 0.2, [('D121', '5'), (24.8, 10.6), (24.2, 11.2)]),
     ('3V3', 'B', 0.2, [('C90', '1'), (24.296, 16.516)]),
     ('3V3', 'B', 0.2, [('C100', '1'), (27.58, 16.5)]),
-    ('3V3', 'B', 0.2, [('J430', '4'), (37.405, 17.15)]),
+    ('3V3', 'B', 0.2, [('J430', '4'), (37.405, 13.95), (37.105, 14.25)]),          # D-R11-33: at the pin, so the SD runs pass south
     ('3V3', 'B', 0.2, [(24.8, 28.0), (25.45, 27.35), (25.45, 26.8), ('C16', '1')]),
     ('3V3', 'B', 0.2, [(25.45, 26.8), (25.45, 25.2), ('C14', '1')]),
     ('3V3', 'F', 0.2, [('U3', '8'), (30.85, 26.97)]),
@@ -161,11 +162,8 @@ RUNS = (
     ('3V3', 'B', 0.2, [('C23', '1'), (24.9, 33.05)]),
     ('3V3', 'F', 0.3, [('C8', '1'), (28.1, 36.2)]),
     ('3V3', 'F', 0.3, [('C9', '1'), (25.8, 39.8), (26.4, 39.2)]),
-    ('3V3', 'B', 0.2, [('R460', '2'), (30.0, 41.42)]),
-    ('3V3', 'B', 0.2, [('R461', '2'), (31.15, 41.42)]),
-    ('3V3', 'B', 0.2, [('R462', '2'), (32.3, 41.42)]),
-    ('3V3', 'B', 0.2, [('R463', '2'), (33.95, 41.97)]),
-    ('3V3', 'B', 0.2, [('R464', '2'), (34.6, 41.42)]),
+    # D-R11-33: the microSD pull-ups' 3V3 pads, one F.Cu column bus west of the resistors to one via south of R464
+    ('3V3', 'F', 0.2, [('R463', '2'), ('R462', '2'), ('R461', '2'), ('R460', '2'), ('R464', '2'), (28.27, 19.25)]),
     ('3V3', 'F', 0.2, [(31.63, 40.4), (31.63, 41.0)]),            # from inside J2.1, south of J2's keep-out strip
     ('3V3', 'B', 0.2, [('C460', '1'), (35.5, 42.82)]),
     ('3V3', 'F', 0.3, [('LS120', '1'), (38.15, 40.05)]),
@@ -223,9 +221,8 @@ VIAS = (
     ('3V3A', (18.95, 31.1), PV),
     ('3V3', (12.45, 40.67), PV), ('3V3', (15.37, 41.4), PV), ('3V3', (14.82, 40.9), PV), ('3V3', (20.75, 16.6), PV), ('3V3', (21.7, 14.35), PV),
     ('3V3', (23.25, 15.6), PV), ('3V3', (24.2, 11.2), PV), ('3V3', (24.296, 16.516), PV),
-    ('3V3', (27.58, 16.5), PV), ('3V3', (37.405, 17.15), PV), ('3V3', (30.85, 26.97), PV), ('3V3', (31.23, 30.05), PV),
-    ('3V3', (24.9, 33.05), PV), ('3V3', (28.1, 36.2), PV), ('3V3', (26.4, 39.2), PV), ('3V3', (30.0, 41.42), PV),
-    ('3V3', (31.15, 41.42), PV), ('3V3', (32.3, 41.42), PV), ('3V3', (33.95, 41.97), PV), ('3V3', (34.6, 41.42), PV),
+    ('3V3', (27.58, 16.5), PV), ('3V3', (37.105, 14.25), PV), ('3V3', (30.85, 26.97), PV), ('3V3', (31.23, 30.05), PV),
+    ('3V3', (24.9, 33.05), PV), ('3V3', (28.1, 36.2), PV), ('3V3', (26.4, 39.2), PV), ('3V3', (28.27, 19.25), PV),
     ('3V3', (31.63, 41.0), PV), ('3V3', (35.5, 42.82), PV), ('3V3', (38.15, 40.05), PV), ('3V3', (39.83, 41.2), PV),
     ('3V3A', (8.94, 37.6), PV), ('3V3A', (11.1, 37.2), PV), ('3V3A', (15.05, 32.6), PV), ('3V3A', (19.1, 34.0), PV),
     ('3V3A', (19.0, 36.2), PV),
@@ -302,7 +299,30 @@ def keepout(board, centre, radius, layers, name):
     board.Add(z)
 
 
+# Stage C2c (O-C2-4, D-R11-36): two of the three status / sense lines. VLOGIC_SENSE (PA6) leaves U1.J3 down the F.Cu lane
+# x 21.6, one via south of the field, B.Cu diagonally to R60.2 and the divider's R61.1 / C60.1. LOGIC_SOURCE_ST (PA4)
+# leaves U1.G3 east along the y 28.8 row gap to a via at the interstitial site (23.2, 28.8), runs on In3 through the field
+# (x 22.8, then y 26.8 north of NRST's via), south along x 18.4 under L1 and diagonally to a via south of R91, and on
+# B.Cu to R91.2 (its pull-up) and U11.9 (ST). BAT_FAULT_N is not drawn (stageC3.md O-C3-1).
+SIGNAL_RUNS = (
+    ('VLOGIC_SENSE', 'F', [('U1', 'J3'), (21.6, 31.2), (21.6, 32.6)]),
+    ('VLOGIC_SENSE', 'B', [(21.6, 32.6), (22.5, 32.6), (23.75, 33.85), (23.75, 34.75), (24.15, 35.15), (25.58, 35.15),
+                           ('R60', '2')]),
+    ('VLOGIC_SENSE', 'B', [('R60', '2'), (26.03, 35.84), ('R61', '1'), (25.17, 37.8)]),          # ends inside C60.1
+    ('LOGIC_SOURCE_ST', 'F', [('U1', 'G3'), (22.4, 28.8), (23.2, 28.8)]),
+    ('LOGIC_SOURCE_ST', 'In3', [(23.2, 28.8), (22.8, 28.4), (22.8, 27.8), (21.8, 26.8), (19.1, 26.8), (18.4, 27.5),
+                                (18.4, 39.43), (16.23, 41.6)]),
+    ('LOGIC_SOURCE_ST', 'B', [(16.23, 41.6), ('R91', '2')]),
+    ('LOGIC_SOURCE_ST', 'B', [('U11', '9'), (17.2, 37.1), (17.2, 39.8), (16.35, 40.65)]),     # ends inside R91.2
+)
+SIGNAL_VIAS = (('VLOGIC_SENSE', (21.6, 32.6)), ('LOGIC_SOURCE_ST', (23.2, 28.8)), ('LOGIC_SOURCE_ST', (16.23, 41.6)))
+
+
 def draw(d):
+    for net, layer, pts in SIGNAL_RUNS:
+        d.track(net, layer, 0.1, [d.pad(p[0], p[1], net=net) if isinstance(p[0], str) else p for p in pts])
+    for net, at in SIGNAL_VIAS:
+        d.via(net, at, SV)
     for net, layer, width, pts in RUNS:
         d.track(net, layer, width, [d.pad(p[0], p[1], net=net) if isinstance(p[0], str) else p for p in pts])
     for net, at, size in VIAS:

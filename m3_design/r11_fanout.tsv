@@ -5,7 +5,7 @@
 # open = no free site or channel is left on the core board: the family must re-plan with core (stageC1.md section 4).
 # m3_design/r11_route_core.py asserts every connected ball is listed and that each drawn via is at its row's (x, y).
 ball	net	family	state	x	y	escape
-A1	BUZZ_DRV	signals	via	20.0	24.0	NW outside-row site; In3 / B from there
+A1	BUZZ_DRV	status	via	20.0	24.0	NW outside-row site; In3 / B from there (not drawn, stageC3.md O-C3-3)
 A3	QSPI_IO2	core	drawn	21.6	24.0	dog-bone NW; B.Cu y 24.4, x 29.0; F.Cu under U3 to pin 3
 A4	I2C1_SDA	core	drawn	22.8	23.6	via N; In3 west y 23.0, south x 13.2 to R13 / U5.7
 A5	IMU_CS	core	drawn	-	-	F.Cu N, channel x 23.1 over U4 (LED1 / LED2 gap) to via (22.3, 18.5)
@@ -16,7 +16,7 @@ A10	SWDIO	core	drawn	27.6	23.6	via N; B.Cu y 23.6, x 32.0 to J2.2
 B2	3V3	core	drawn	20.8	24.8	dog-bone; C13.1 on B.Cu
 B4	I2C1_SCL	core	drawn	23.2	24.8	dog-bone NE; In3 west y 24.4 / 23.6, south x 13.75 to R12 / U5.8
 B5	QSPI_NCS	core	drawn	23.2	25.6	dog-bone SW; In3 y 26.0, x 29.5 to (29.5, 32.4); R10 on B.Cu
-B6	LED_RED	signals	via	24.8	24.8	dog-bone NE; In3 west y 25.2 to a via near (19.6, 24.6), F.Cu to R32.1 (plan)
+B6	LED_RED	status	via	24.8	24.8	dog-bone NE; a via here voids the In2 3V3 neck beside C6's via under QSPI_NCS (K-region): not drawn, stageC3.md O-C3-3
 B8	SD_MISO	sd	lane	25.6	24.8	F.Cu channel x 25.6 north (between A7 / A8), clear of GND (26.0, 23.1) by 0.4 mm
 B9	SD_SCK	sd	lane	27.2	24.8	F.Cu channel x 27.2 north between the SWD vias
 B10	USB_DP	usb	lane	-	-	F.Cu east from the ball (keep north of U3 pin 8, y <= 25.5)
@@ -31,7 +31,7 @@ C10	USB_DM	usb	lane	-	-	F.Cu east from the ball, beside USB_DP
 D1	HSE_OUT	core	drawn	20.0	27.2	via SW outside; B.Cu to Y1.3 / C26.1
 D2	3V3	core	drawn	20.8	27.2	dog-bone; C15.1 on B.Cu
 D5	BOOT0	core	drawn	23.2	27.2	dog-bone; In3 x 23.6 to (23.2, 32.4); R5.1 on B.Cu
-D6	LED_YEL	signals	open	24.8	26.4	dog-bone site free; NCS's In3 lane y 26.0 bounds it on In3 (stageC1.md 4)
+D6	LED_YEL	status	open	24.8	26.4	dog-bone site free; NCS's In3 lane y 26.0, C6's via (24.8, 25.6) and the SD lanes bound it (stageC3.md O-C3-3)
 D8	SD_CS	sd	lane	26.4	26.4	F.Cu east channel y 26.4 (C9 / D9, C10 / D10)
 E1	NRST	core	drawn	19.6	27.6	via W; C24 on B.Cu; In3 y 33.5 to J2.3
 E4	GND	core	drawn	22.4	28.0	dog-bone SW; E5 / E6 joined on F.Cu; C13.2 / C15.2 / C17.2 on B.Cu
@@ -39,18 +39,18 @@ E5	GND	core	drawn	-	-	F.Cu to E4
 E6	GND	core	drawn	-	-	F.Cu to E5
 E7	VCAP2	core	drawn	24.8	27.2	dog-bone NW; C20.1 on B.Cu
 E10	AUX_RX_MCU	ports	via	27.2	27.2	dog-bone (the east channel at y 27.2 is closed by GND (28.0, 27.2))
-F1	PYRO1_CONT	pyro	lane	-	-	F.Cu west from the ball, y 28.4
+F1	PYRO1_CONT	pyro	drawn	20.0	28.8	via at the SW site; B.Cu north in the lane x 20.4 under column 1 (D-R11-35)
 F2	ACT_EN_MCU	pyro	lane	20.8	28.0	F.Cu west channel y 28.0 (no barrel: S-8)
 F4	3V3	core	drawn	23.2	28.0	dog-bone shared with F5
 F5	3V3	core	drawn	23.2	28.0	dog-bone shared with F4
 F6	3V3	core	drawn	24.8	28.0	dog-bone shared with F7
 F7	3V3	core	drawn	24.8	28.0	dog-bone shared with F6
-F8	VCAP1	core	drawn	25.6	28.0	dog-bone NW; C19.1 on B.Cu
+F8	VCAP1	core	drawn	25.6	28.0	dog-bone NW; C19.1 on B.Cu; second barrel NE (26.4, 28.0), D-R11-34
 F9	VBUS_SENSE	usb	via	27.2	28.0	dog-bone NE
 F10	AUX_TX_MCU	ports	via	28.0	28.0	outside-row site E (the F.Cu east escape at y 28.4 is closed by IO3's via (28.4, 28.35))
 G1	GND	core	drawn	20.0	29.6	via SW outside
 G2	SERVO1_MCU	servo	via	20.8	29.6	dog-bone SW; In3 north (C3 plan)
-G3	LOGIC_SOURCE_ST	power	lane	21.6	28.8	F.Cu west channel y 28.8
+G3	LOGIC_SOURCE_ST	power	drawn	23.2	28.8	F.Cu NE and east along the y 28.8 row gap to the via (23.2, 28.8); In3 west through the field (D-R11-36)
 G5	QSPI_CLK	core	drawn	-	-	F.Cu channel y 28.8 east, under U3 to pin 6
 G9	QSPI_IO0	core	drawn	-	-	F.Cu channel y 29.6 east, under U3 to pin 5
 H1	3V3A	core	drawn	20.0	30.4	via SW outside; C21.1 on B.Cu
@@ -61,7 +61,7 @@ H5	CAM_MCU_RX	ports	via	23.2	30.4	dog-bone SW
 H6	CAM_PWR_EN	ports	via	24.8	29.6	dog-bone NE
 J1	GND	core	drawn	20.0	31.2	via SW outside
 J2	SERVO3_MCU	servo	via	20.8	31.2	dog-bone SW
-J3	VLOGIC_SENSE	power	lane	21.6	31.2	F.Cu channel x 21.6 south
+J3	VLOGIC_SENSE	power	drawn	21.6	32.6	F.Cu channel x 21.6 south to the via (21.6, 32.6) south of the field; B.Cu to R60 / R61 / C60 (D-R11-36)
 J5	CAM_MCU_TX	ports	lane	24.0	31.2	F.Cu channel x 24.0 south (between K5 / K6); via near (24.0, 32.8)
 J6	CAM_FAULT_N	ports	via	24.8	30.4	dog-bone SE
 J8	RADIO_TX_MCU	ports	lane	25.6	31.2	F.Cu channel x 25.6 south

@@ -58,12 +58,12 @@ PY
 fi
 
 # --- stage C hook: copper by families, gated after each (r11_route.py, r11_stage_check.py) --------------------------
-#   r11_route.py F         one family per run in the order core usb pyro power ports servo sd signals ground; a family
+#   r11_route.py F         one family per run in the order core usb pyro power ports servo sd signals status ground; a family
 #                          whose m3_design/r11_route_<family>.py does not exist yet is skipped (stageC1.md section 1)
 #   r11_stage_check.py F   DRC (dangling ends allowed only on pending nets), unconnected items never rising and none
 #                          on a finished net, route_check --profile r11 failing only on pending nets; after ground none
 if [[ -f m3_design/r11_route.py ]]; then
-  for FAMILY in ${R11_FAMILIES:-core usb pyro power ports servo sd signals ground}; do
+  for FAMILY in ${R11_FAMILIES:-core usb pyro power ports servo sd signals status ground}; do
     PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r11_route.py "$FAMILY"
     if [[ -f m3_design/r11_stage_check.py ]]; then
       PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r11_stage_check.py "$FAMILY" --state "$T/stage.json"
