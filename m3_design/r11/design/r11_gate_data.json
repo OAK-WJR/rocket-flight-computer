@@ -232,6 +232,11 @@
    "U1.E7",
    "via VCAP2 (24.80, 27.20)",
    "D-R11-34 / -45: VCAP2's dog-bone; E7's other sites are closed by C20's pads ((24.0, 27.2), (24.0, 28.0) at 0.2 mm hole clearance) and the F6 / F7 3V3 dog-bone (24.8, 28.0) (Calculation on the placed pads)"
+  ],
+  [
+   "U1.G3",
+   "via LOGIC_SOURCE_ST (14.65, 39.90)",
+   "D-R11-48: PA4's In3-to-B.Cu via south of L1. Measured on the board: I2C1_SCL / I2C1_SDA vias at (14.20, 39.55) / (14.20, 40.45) (0.57 mm), the 3V3 via (14.82, 40.90), R86.1 (B.Cu, 15.09-15.65 x 39.53-40.07), C85.2 and LOGIC_ILIM's B.Cu run to the north-east and VLOGIC's F.Cu run leave no second barrel site that joins both the In3 run and the B.Cu run (a trial at (16.05, 38.50) shorted LOGIC_ILIM and C85.2). Open, U11's ST reads floating at PA4 (advisory, Inference)"
   ]
  ],
  "supports": [

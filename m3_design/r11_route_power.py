@@ -24,7 +24,7 @@ import math
 
 import pcbnew
 
-NETS = ('BAT_DVDT', 'BAT_ILIM', 'BAT_OVLO', 'BAT_DAMP', 'CAM_ILIM', 'LOGIC_ILIM', 'LOGIC_SS', 'BAT_ENABLE', 'BAT_SW_SOURCE', 'BAT_SW_RETURN', 'SW_NODE', 'BST', 'PORT_SW', 'PORT_BST', 'PORT_FB', 'PORT_FB_TOP', 'PORT_LDO_FB', 'PORT_LDO_SS', 'BAT_IN', 'RAW_PROTECTED', 'VLOGIC', 'CAM_5V', 'PORT_5V3', 'PORT_4V8', '3V3A', 'VLOGIC_SENSE', 'LOGIC_SOURCE_ST')
+NETS = ('BAT_DVDT', 'BAT_ILIM', 'BAT_OVLO', 'BAT_DAMP', 'CAM_ILIM', 'LOGIC_ILIM', 'LOGIC_SS', 'BAT_ENABLE', 'BAT_SW_SOURCE', 'BAT_SW_RETURN', 'SW_NODE', 'BST', 'PORT_SW', 'PORT_BST', 'PORT_FB', 'PORT_FB_TOP', 'PORT_LDO_FB', 'PORT_LDO_SS', 'BAT_IN', 'RAW_PROTECTED', 'VLOGIC', 'CAM_5V', 'PORT_5V3', 'PORT_4V8', '3V3A', 'VLOGIC_SENSE', 'LOGIC_SOURCE_ST', 'BAT_FAULT_N')
 
 SV, PV, BV = (0.4, 0.2), (0.45, 0.25), (0.6, 0.3)
 
@@ -263,8 +263,12 @@ def zone(board, net, priority, pts):
     z.SetLayer(pcbnew.In2_Cu)
     z.SetNet(board.FindNet(net))
     z.SetAssignedPriority(priority)
-    z.SetLocalClearance(pcbnew.FromMM(0.2))
-    z.SetMinThickness(pcbnew.FromMM(0.2))
+    # D-R11-46: the 3V3 base fill keeps 0.12 mm clearance and 0.1 mm minimum width, so it stays continuous between two
+    # foreign vias 0.8 mm apart under the ball field (0.8 - 2 x (0.2 + 0.12) = 0.16 mm) and every In3 line there keeps
+    # one In2 region (check_r11 K-region); the power regions keep 0.2 / 0.2
+    base = net == '3V3' and priority == 0
+    z.SetLocalClearance(pcbnew.FromMM(0.12 if base else 0.2))
+    z.SetMinThickness(pcbnew.FromMM(0.1 if base else 0.2))
     z.SetPadConnection(pcbnew.ZONE_CONNECTION_FULL)
     z.SetIslandRemovalMode(pcbnew.ISLAND_REMOVAL_MODE_ALWAYS)
     z.SetZoneName(f'In2_{net}')

@@ -193,7 +193,7 @@ R85	34.9	27.93	0	B	U10 ILIM; D-R11-20: beside U10.5 in the strip between U10 and
 R86	15.8	39.8	0	B	U11 ILM
 R87	18.35	35.4	90	B	U11 USB over-voltage divider top; D-R11-20: beside U11.5 so USB_OVLO stays local
 R88	18.35	33.5	90	B	U11 USB over-voltage divider bottom; D-R11-20: beside U11.5
-R89	13.4	5.2	0	B	BAT_FAULT_N pull-up
+R89	17.5	19.3	180	F	BAT_FAULT_N pull-up; D-R11-47: F.Cu over the In2 3V3 strip north-west of U4 (was in the BAT_IN region)
 R9	30.8	35.7	0	B	USB support
 R90	36.85	27.93	180	B	USB_FAULT_N pull-up; D-R11-20: beside U10.4 in the strip between U10 and D4
 R91	15.8	40.9	0	B	source status pull-up

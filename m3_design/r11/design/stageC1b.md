@@ -144,3 +144,52 @@ gate lane's fix), K-lands, K-width.
   check): identical SHA-256 (section 4).
 * `tools/check_r11.py` (full) on a zone-filled scratch copy with its fit report (section 4).
 * Not run: tools/check.sh (not this lane), signal integrity, JLC DFM of the new runs, any electrical test.
+
+## 7. Follow-up pass (2026-11-03, after commit 51a4c02)
+
+Decisions D-R11-46 … -48 in `R11_DECISIONS.md`. Measured on the board built by `r11_build.sh` unless labelled.
+
+| Item (section 5) | Result |
+|---|---|
+| O-C1b-3 K-region | **Closed.** The In2 3V3 base fill now keeps 0.12 mm clearance and 0.1 mm minimum width (D-R11-46), so it stays continuous between two foreign vias 0.8 mm apart (0.8 - 2 × (0.2 + 0.12) = 0.16 mm, Calculation): CAM_MCU_RX's three runs and RADIO_TX_MCU now sit over one region. SD_MOSI and AUX_RX_MCU were re-routed clear of the fill voids at the 3V3A / PORT_5V3 strip and J2's holes. check_r11 K-region OK; S-8, K-plane, K-inner, K-copper still OK. |
+| O-C1b-4 PA4 second barrel | **Not drawable.** A trial second barrel at (16.05, 38.50) on PA4's In3 run, joined to its B.Cu run, shorted LOGIC_ILIM's B.Cu run and C85.2 and came within clearance of VLOGIC's F.Cu run (DRC, Measured); the site (14.65, 39.90) is boxed by the I2C vias (0.57 mm), the 3V3 via (14.82, 40.90) and R86.1. The via is a fourth `single_open_exceptions` entry with that measured reason (D-R11-48). K-power: no U1 tap finding left. |
+| BAT_FAULT_N / R89 | **BAT_FAULT_N closed, R89.1 open.** R89 moved to F.Cu (17.5, 19.3) rotation 180 (D-R11-47); R89.2 taps BAT_FAULT_N's In3 run by a via at its corner (17.30, 20.45), so BAT_FAULT_N is complete and in power's NETS. R89.1 (3V3) is not joined: R89 sits over an In2 3V3 strip that is an island (RAW south of y 18.6, 3V3A north and east), so any 3V3 via there makes K-plane fail (2 pieces, Measured on a trial); F.Cu from R89.1 is boxed (drafting router, Measured) and a B.Cu / In3 hop to R11.2 crosses CAM_5V_SENSE's B.Cu run. Open item: R89 to a spot over the main 3V3 fill, or R89.1 to C461.1 / R11.2 after the camera nets are re-planned. |
+| O-C1b-2 K-loader, BUZZ_DRV | A non-loader ball was tried: BUZZ_DRV on PD15 (ball G8, not in AN2606 Rev 64 Table 119 / Rev 70 Table 135). The drafting router found no route from G8 (its four sites are taken by the QSPI_CLK / IO0 lanes, C18 and the port escapes, Measured on the scratch board), so BUZZ_DRV stays on PB15 (G10) with the allowance case below. |
+| O-C1b-2 K-loader, I2C | No non-loader pair is escapable: the only I2C pair off the loader list is I2C1 / I2C4 SCL PB8 (B4) with SDA PB7 (A5); A5 is IMU_CS, and B4 / A5 sit in the north row where the pair walled the field in stage C3 (O-C3-1). PB6 / PB9 (I2C1) and PA8 / PC9 (I2C3) are loader pins, PF0 / PF1 (I2C2) and PF14 / PF15 / PH (I2C4) are not on this package, PD12 / PD13 (I2C4) carry QSPI IO1 / IO3 (DS12110 Rev 8 Table 11-13; AN2606 Rev 64 Table 119). The allowance case is below. |
+| PB9's stale allowance | It lives in `tools/check_r10.py` LOADER_R10, not in `r11_gate_data.json`: a gate-lane item (remove PB9; add PB10 / PB11 / PB15 if the case below is accepted). |
+| O-C1b-1, O-C1b-5 | **Still open.** QSPI_NCS, LED_YEL, SERVO4_MCU and CAM_UART_OE have no escape copper; SD_MOSI (no legal GND partner site within 1.5 mm of its vias (27.20, 25.60) and (29.80, 17.05): the partner search finds none, Measured; extra vias), CAM_MCU_RX / TX, CAM_FAULT_N, CAM_IO_3V3, CAM_RX / TX_BUFFER, GPS_TX_MCU, AUX_TX_MCU, SERVO1 / SERVO3_MCU, ARM1_SENSE and USB_FAULT_N keep their route_check findings and stay out of NETS. A negotiated re-route of these twenty nets with the rest held fixed did not converge (fails at SERVO4 / LED_YEL / BUZZ_DRV, overlaps in the field after 5 iterations, Measured on the scratch board); the field needs another re-plan of its In3 / B line allocation, not more local repair. |
+
+### K-loader allowance case (R3-MCU-01 / R17-MCU-02 form; Inference unless labelled)
+
+The ROM loader runs only from system-memory boot: BOOT0 high, or BOOT_ADD0 = 0x1FF0 with BOOT0 low (AN2606 Rev 70
+Table 2 pattern 10). On this board BOOT0 is held low by R5 10 k (D-R11-45 single point); the BOOT_ADD0 read-back stays
+the pre-flight item R10's PA2 allowance records.
+
+* **PB10 (USART3_TX, loader drives push-pull) carries I2C1_SCL** (members R12.1 4.7 k pull-up to 3V3, U5.8 MS5611
+  SCL). Idle board: the loader leaves USART3_TX at its idle level, high, the same level R12 holds; the pin transmits only
+  after the loader has accepted a 0x7F sync on PB11, which cannot happen (below). U5's SCL is an input (MS5611: no clock
+  stretching), so there is no contention: a high pin against a pull-up draws nothing, a low pin at most 3.3 V / 4.7 k =
+  0.7 mA (Calculation), far below the 20 mA absolute maximum. The barometer sees no START (SDA stays high), so no
+  transaction.
+* **PB11 (USART3_RX, loader input with pull-up) carries I2C1_SDA** (members R13.1 4.7 k pull-up, U5.7 MS5611 SDA, open
+  drain). Idle board: R13 and the loader's pull-up hold the line high, a continuous UART mark. The MS5611 drives SDA low
+  only to acknowledge or return data after a master's START and its own address; in system-memory boot no code drives
+  SCL / SDA as an I2C master (the MCU runs the loader; U5 is the only other device on the bus), so the barometer never
+  drives SDA. With no falling edge there is no start bit, so the 0x7F sync byte cannot form.
+* **PB15 (USART1_RX, PB14 / PB15 map, loader input with pull-up) carries BUZZ_DRV** (members R162.1 1 k to Q123's
+  gate, R163 10 k gate to GND). Idle board: the loader's pull-up (about 40 k, DS12110 RPU, Inference) against
+  R162 + R163 sets the pin near 3.3 V × 11 k / 51 k = 0.7 V and Q123's gate near 0.65 V (Calculation): a constant level,
+  below Q123's threshold, so the buzzer stays off. A constant level has no falling edge followed by the 0x7F bit pattern,
+  so no sync forms; nothing else drives BUZZ_DRV.
+* The I2C1_SDA allowance on PB9 is stale (PB9 is NC since D-R11-41) and should be dropped.
+
+### Follow-up gate results (Measured)
+
+* `r11_build.sh` twice: every stage check OK, escape check OK (69 rows, 4 open), identical SHA-256
+  `6dfac724838162e4377540a000985be277141a8fa86aedb2c0cf3e1efc7301d3`.
+* Unconnected after `status`: 191 = 182 GND + 9 non-GND in 5 nets (QSPI_NCS 2, SERVO4_MCU 3, CAM_UART_OE 2, LED_YEL 1,
+  3V3 1 at R89.1).
+* check_r11 (full, zone-filled copy): OK S-1 … S-9, W-1, W-2, LC-1, M-1, M-3, M-5 … M-8, K-copper, K-inner, **K-region**,
+  K-plane, K-fill, K-rules, K-lands, K-width; FAIL K-legends 394 (stage D), K-reference 1 (pours), K-power 18 (all GND
+  joints and Q124's fire return, waiting for the pours; no U1 tap left), K-ports 1 (D402.2's GND via), K-loader 4 (the
+  allowance case above; PB9's stale allowance is in tools/).

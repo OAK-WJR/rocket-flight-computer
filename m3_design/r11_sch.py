@@ -99,7 +99,7 @@ R11_REPIN = {
           'R11 D-R11-42: PC14 freed; the BUZZ_DRV net moved to PB15 (ball G10)'),
     '54': ('BUZZ_DRV', 'GPIO out (push-pull; initialise low before output mode)',
            'R11 D-R11-42: DS12110 Rev 8 Table 9 p. 75 (PB15, a general-purpose I/O; GPIO output needs no alternate '
-           'function)'),
+           'function); a ROM-loader pin (USART1_RX), allowance case in stageC1b.md section 7'),
 }
 
 

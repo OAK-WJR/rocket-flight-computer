@@ -430,3 +430,24 @@ U1.G3 via (21.60, 28.80), U1.D5 via (27.20, 26.40) and U1.E7 via (24.80, 27.20) 
 `single_open_exceptions` with their measured reasons (each ball's other interstitial sites carry another ball's escape
 via or sit inside C20's pads). PA4's second via (14.65, 39.90), outside the field, stays a K-power finding to give a
 second barrel (O-C1b-4).
+
+## D-R11-46 In2 3V3 base fill: 0.12 mm clearance, 0.1 mm minimum width
+
+`r11_route_power.zone` gives the priority-0 3V3 base fill 0.12 mm clearance and 0.1 mm minimum width; the priority-1
+power regions keep 0.2 / 0.2 mm. Between two foreign vias 0.8 mm apart (the ball field's interstitial sites) the base fill
+is now 0.16 mm wide (Calculation) instead of absent, so every In3 line there lies over one In2 region (check_r11
+K-region OK, Measured). 0.12 mm is above the 0.1 mm DRU floor and the 0.1 mm width above JLC's 0.09 mm minimum (the
+D-R11-15 sources). S-8, K-plane, K-inner and K-copper unchanged (Measured). **Why:** stageC1b.md O-C1b-3.
+
+## D-R11-47 R89 over the In2 3V3 strip
+
+R89 (BAT_FAULT_N's 10 k pull-up) moves from (13.4, 5.2) B.Cu, in the BAT_IN region, to (17.5, 19.3) F.Cu rotation 180,
+over the In2 3V3 strip north-west of U4. R89.2 taps BAT_FAULT_N's In3 run by a via at its corner (17.30, 20.45); R89.1
+reaches R11.2's 3V3 by an In3 hop. **Why:** R89.1 needs 3V3, and the BAT_IN region has none.
+
+## D-R11-48 PA4's south via stays a single point
+
+PA4's In3-to-B.Cu via (14.65, 39.90) has no second-barrel site: a trial at (16.05, 38.50) shorted LOGIC_ILIM's B.Cu run
+and C85.2 (DRC, Measured), and the via's own surroundings (I2C vias 0.57 mm away, the 3V3 via, R86.1) leave none
+closer. It is a fourth `single_open_exceptions` entry with that reason. BUZZ_DRV stays on PB15 after a trial on PD15
+(G8, not a loader pin) found no escape; the K-loader allowance case for PB10 / PB11 / PB15 is stageC1b.md section 7.

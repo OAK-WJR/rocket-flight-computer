@@ -24,7 +24,7 @@ C3	PYRO1_GATE_N	pyro	routed	F	-	-	W	F	26.35	R126.1	11.83	28
 C4	IMU_INT1	core	routed	F	22.4	23.05	N	F	22.4	U4.4	24.21	21.25	
 C5	SPI1_MOSI	core	routed	F	24.0	18.7	N	F	24	U4.14	23.5	19.54	
 C6	USB_FAULT_N	usb	routed	F-B	26.0	23.8	E	B	30.97	U10.4	35.85	26.4	
-C8	SD_MOSI	sd	routed	F-In3	27.2	25.6	E	In3	24.18	R461.1	29.13	16.7	
+C8	SD_MOSI	sd	routed	F-In3	27.2	25.6	N	In3	28.55	R461.1	29.13	16.7	
 C10	USB_DM	usb	routed	F	-	-	E	F	25.6	J3.A7	39.12	29.75	
 D1	HSE_OUT	core	routed	F-B	20.0	27.2	W	B	26.85	Y1.3	17.7	26.85	
 D2	3V3	core	routed	F-plane	20.8	27.2	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
@@ -36,7 +36,7 @@ E4	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 p
 E5	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 E6	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 E7	VCAP2	core	routed	F-plane	24.8	27.2	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-E10	AUX_RX_MCU	ports	routed	F-In3	28.45	27.55	E	In3	27.82	R470.2	35.475	43.97	
+E10	AUX_RX_MCU	ports	routed	F	-	-	E	F	27.53	R470.2	35.475	43.97	
 F1	PYRO1_CONT	pyro	routed	F-B	20.0	28.8	W	B	24.38	C127.1	9.45	20.42	
 F2	ACT_EN_MCU	pyro	routed	F	-	-	W	F	28	R122.1	18.43	28	
 F4	3V3	core	routed	F-plane	23.2	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
