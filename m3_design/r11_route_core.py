@@ -11,7 +11,7 @@ C21 and R5 left the field in stage C1b, D-R11-43). I2C, NRST, BOOT0 and QSPI_NCS
 # Every net this family completes (r11_stage_check: these may not stay unconnected or fail route_check after `core`).
 NETS = ('HSE_IN', 'HSE_OUT', 'NRST', 'BOOT0', 'VCAP1', 'VCAP2', 'SWDIO', 'SWCLK', 'I2C1_SCL', 'I2C1_SDA', 'BARO_SDO',
         'IMU_CS', 'SPI1_SCK', 'SPI1_MISO', 'SPI1_MOSI', 'IMU_INT1', 'QSPI_CLK', 'QSPI_IO0', 'QSPI_IO1', 'QSPI_IO2',
-        'QSPI_IO3')    # QSPI_NCS: open (stageC1b.md O-C1b-1)
+        'QSPI_IO3', 'QSPI_NCS')    # QSPI_NCS: D-R11-49
 
 SIG = 0.1          # signal width: one track between two 0.4 mm lands at 0.8 mm pitch (0.15 mm each side)
 PWR = 0.2          # decoupling straps and power dog-bones
@@ -48,10 +48,11 @@ RAIL_VIAS = (
     # D-R11-43: the decoupling and pull-down moved out of the ball field get their own vias
     ('3V3', (29.88, 24.7)),     # C17.1
     ('GND', (30.72, 24.7)),     # C17.2
-    ('3V3A', (18.57, 21.25)),   # C21.1 (In2 3V3A strip)
-    ('GND', (19.43, 22.95)),    # C21.2
+    ('3V3A', (18.57, 21.12)),   # C21.1 (In2 3V3A strip)
+    ('GND', (19.45, 22.52)),    # C21.2 (D-R11-49: east of the pad, so CAM_5V_SENSE's In3 run leaves the field north)
     ('GND', (24.0, 31.2)),      # C19.2 (south cap), the J / K row site under C19's column
     ('GND', (29.27, 34.35)),    # R5.2
+    ('GND', (27.2, 26.4)),      # D-R11-49: SD_MOSI's dog-bone (27.2, 25.6) partner (BOOT0's old via site)
 )
 # (net, layer, width, points) straps on B (and the E-row GND link on F)
 RAIL_TRACKS = (
@@ -67,8 +68,8 @@ RAIL_TRACKS = (
     ('GND', 'B', PWR, [(17.02, 28.6), (17.4, 28.6), (18.0, 29.2)]),         # C26.2
     ('3V3', 'B', PWR, [(29.88, 25.3), (29.88, 24.7)]),                      # C17.1
     ('GND', 'B', PWR, [(30.72, 25.3), (30.72, 24.7)]),                      # C17.2
-    ('3V3A', 'F', PWR, [(19.0, 21.68), (18.57, 21.25)]),                    # C21.1
-    ('GND', 'F', PWR, [(19.0, 22.52), (19.43, 22.95)]),                     # C21.2
+    ('3V3A', 'F', PWR, [(18.85, 21.68), (18.57, 21.4), (18.57, 21.12)]),     # C21.1
+    ('GND', 'F', PWR, [(18.85, 22.52), (19.45, 22.52)]),                     # C21.2
     ('GND', 'B', PWR, [(24.0, 30.15), (24.0, 31.2)]),                       # C19.2
     ('GND', 'B', PWR, [(28.82, 33.9), (29.27, 34.35)]),                     # R5.2
 )
@@ -164,9 +165,10 @@ def qspi(d):
     d.track('QSPI_IO3', 'F', SIG, [(28.4, 28.35), (31.37, 28.35), (31.57, 28.15), (31.57, 27.6)])
     d.pad('U3.7', net='QSPI_IO3', at=(31.57, 26.97))
     # IO2 A3: dog-bone north-west, B.Cu east along y 24.4 (under row A, between the via rows) and south down x 29.0, F under U3
-    d.via('QSPI_IO2', (21.6, 24.0))
-    stub(d, 'QSPI_IO2', 'A3', (21.6, 24.0), SIG)
-    d.track('QSPI_IO2', 'B', SIG, [(21.6, 24.0), (22.0, 24.4), (28.6, 24.4), (29.0, 24.8), (29.0, 30.6)])
+    # D-R11-49: the via sits on A3's own column north of row A (was (21.6, 24.0)), so B3's F.Cu lane x 21.6 is free
+    d.via('QSPI_IO2', (22.0, 23.6))
+    stub(d, 'QSPI_IO2', 'A3', (22.0, 23.6), SIG)
+    d.track('QSPI_IO2', 'B', SIG, [(22.0, 23.6), (22.8, 24.4), (28.6, 24.4), (29.0, 24.8), (29.0, 30.6)])
     d.via('QSPI_IO2', (29.0, 30.6))
     d.track('QSPI_IO2', 'F', SIG, [(29.0, 30.6), (32.23, 30.6), (32.83, 31.2), (32.83, 33.4)])
     d.pad('U3.3', net='QSPI_IO2', at=(32.83, 34.03))
@@ -179,18 +181,12 @@ def qspi(d):
 # MISO on B.Cu round the east; CS / SCK / MOSI on In3 straight under U4 to vias aft of its pins (one crossing-free
 # order, W -> E CS, MOSI, SCK; SCK sweeps aft of MOSI's via); INT1 F north, B.Cu to pin 4 from the east.
 def imu(d):
-    # MISO A6: via north, B.Cu round the east of U4 into pin 1
-    d.via('SPI1_MISO', (24.4, 23.6))
-    stub(d, 'SPI1_MISO', 'A6', (24.4, 23.6), SIG)
-    d.track('SPI1_MISO', 'B', SIG, [(24.4, 23.6), (24.8, 23.2), (25.5, 22.5), (25.5, 20.15), (25.1, 19.75),
-                                    d.pad('U4.1', net='SPI1_MISO')])
-    # CS A5 and MOSI C5 on F.Cu down the channel between LED1 / R32 and LED2 / R33 (x 22.85 ... 25.35) over U4, vias aft
-    # of pins 12 / 14; R11 (CS pull-up) on B.Cu from CS's via
-    d.track('IMU_CS', 'F', SIG, [d.pad('U1', 'A5', net='IMU_CS'), (23.6, 23.4), (23.1, 22.9), (23.1, 19.3), (22.3, 18.5)])
-    d.via('IMU_CS', (22.3, 18.5))
-    d.track('IMU_CS', 'B', SIG, [(22.3, 18.5), (22.5, 18.7), d.pad('U4.12', net='IMU_CS')])
-    d.track('IMU_CS', 'B', SIG, [(22.3, 18.5), (21.33, 18.5), (19.8, 20.03)])
-    d.pad('R11.1', net='IMU_CS', at=(19.8, 20.03))
+    # D-R11-49: MISO A6 on F.Cu straight up x 24.4 over U4 to a via east of pin 1 (no field-edge via); B.Cu into pin 1
+    d.track('SPI1_MISO', 'F', SIG, [d.pad('U1', 'A6', net='SPI1_MISO'), (24.4, 19.9), (25.0, 19.3)])
+    d.via('SPI1_MISO', (25.0, 19.3))
+    d.track('SPI1_MISO', 'B', SIG, [(25.0, 19.3), (24.55, 19.75), d.pad('U4.1', net='SPI1_MISO')])
+    # MOSI C5 on F.Cu up the lane x 24.0 over U4 to a via aft of pin 14. CS (B3) and INT1 (B6) are the escape plan's
+    # (r11_escape.py, D-R11-49)
     d.track('SPI1_MOSI', 'F', SIG, [d.pad('U1', 'C5', net='SPI1_MOSI'), (24.0, 25.6), (24.0, 18.7)])
     d.via('SPI1_MOSI', (24.0, 18.7))
     d.track('SPI1_MOSI', 'B', SIG, [(24.0, 18.7), (24.0, 19.04), d.pad('U4.14', net='SPI1_MOSI')])
@@ -198,21 +194,17 @@ def imu(d):
     # three, U1's MOSI-SCK order being the reverse of U4's)
     d.via('SPI1_SCK', (25.2, 23.6))
     stub(d, 'SPI1_SCK', 'A7', (25.2, 23.6), SIG)
-    d.track('SPI1_SCK', 'In3', SIG, [(25.2, 23.6), (24.6, 23.0), (24.6, 18.65), (24.2, 18.25), (23.0, 18.25)])
-    d.via('SPI1_SCK', (23.0, 18.25))
-    d.track('SPI1_SCK', 'B', SIG, [(23.0, 18.25), d.pad('U4.13', net='SPI1_SCK')])
-    # INT1 C4: F channel x 22.4 north between B3 / B4 and A3 / A4, via north of row A, B.Cu east above U4's pin row
-    # and into pin 4 from the east
-    d.track('IMU_INT1', 'F', SIG, [d.pad('U1', 'C4', net='IMU_INT1'), (22.4, 25.6), (22.4, 23.05)])
-    d.via('IMU_INT1', (22.4, 23.05))
-    d.track('IMU_INT1', 'B', SIG, [(22.4, 23.05), (22.85, 22.6), (24.6, 22.6), (24.9, 22.3), (24.9, 21.6), (24.55, 21.25),
-                                   d.pad('U4.4', net='IMU_INT1')])
+    # D-R11-49: diagonal under U4 to a via at (22.75, 18.3) (was (23.0, 18.25)), so CAM_MCU_RX's lane x 23.2 passes east of it
+    d.track('SPI1_SCK', 'In3', SIG, [(25.2, 23.6), (24.6, 23.0), (24.6, 20.15), (22.75, 18.3)])
+    d.via('SPI1_SCK', (22.75, 18.3))
+    d.track('SPI1_SCK', 'B', SIG, [(22.75, 18.3), (23.0, 18.55), d.pad('U4.13', net='SPI1_SCK')])
     # U4 supply: pins 5 / 8 (3V3A) and C30 / C31 to their own vias (In2 3V3A), pins 2 / 3 and 6 / 7 (GND) to vias. F.Cu
     # over U4 carries LED1 / LED2 / R32 / R33, so every via sits clear of their pads.
     d.track('3V3A', 'B', PWR, [d.pad('U4.5', net='3V3A'), (23.5, 22.1), (23.6, 22.2)])
     d.via('3V3A', (23.6, 22.2))
-    d.track('3V3A', 'B', PWR, [d.pad('U4.8', net='3V3A'), (20.15, 21.25), (19.9, 21.0)])
-    d.via('3V3A', (19.9, 21.0))
+    # D-R11-49: U4.8's via at (19.6, 21.25) (was (19.9, 21.0)), so CAM_PWR_EN's In3 run x 20.0 passes it straight
+    d.track('3V3A', 'B', PWR, [d.pad('U4.8', net='3V3A'), (19.6, 21.25)])
+    d.via('3V3A', (19.6, 21.25))
     d.track('GND', 'B', PWR, [d.pad('U4.6', net='GND'), d.pad('U4.7', net='GND'), (22.11, 21.85), (20.4, 21.85)])
     d.via('GND', (20.4, 21.85))
     d.track('GND', 'B', PWR, [d.pad('U4.2', net='GND'), (24.75, 20.25), (25.0, 20.5)])
@@ -224,7 +216,7 @@ def imu(d):
     d.track('GND', 'B', PWR, [d.pad('C30.2', net='GND'), d.pad('C31.2', net='GND')])
     d.track('GND', 'B', PWR, [(26.75, 19.18), (26.75, 18.5)])
     d.via('GND', (26.75, 18.5))
-    for v in ((24.8, 24.0), (26.0, 23.1), (21.6, 18.1), (24.6, 18.0)):     # GND partners
+    for v in ((24.8, 24.0), (21.6, 18.1), (24.6, 18.0)):     # GND partners (D-R11-49: (26.0, 23.1) dropped, A8's lane)
         d.via('GND', v)
 
 
@@ -238,7 +230,7 @@ def baro(d):
     d.track('BARO_SDO', 'In3', SIG, [(7.97, 36.0), (9.63, 37.66), (9.63, 42.7)])
     d.via('BARO_SDO', (9.63, 42.7))
     d.track('BARO_SDO', 'B', SIG, [(9.63, 42.7), (9.63, 41.825)])
-    d.via('GND', (21.6, 23.2))                                # QSPI_IO2 dog-bone partner
+    d.via('GND', (20.75, 23.05))                              # QSPI_IO2 dog-bone partner (D-R11-49; was (21.6, 23.2))
 
 
 def draw(d):

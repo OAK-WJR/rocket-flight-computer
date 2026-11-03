@@ -4,10 +4,10 @@ Explicit tables only (D-R11-07). Board mm (x east, y forward from the aft edge, 
 J122's pin order (SERVO1 east, D-R11-43), so each output goes up to F.Cu by one via east of its resistor and runs under
 J122's housing straight into its pin; no two outputs cross.
 
-The MCU side (U1.G2 / H2 / J2 / K2 to R150-R157.1 and D121) is not drawn: stageC3.md O-C3-1.
+The MCU side (U1.A5 / A8 / G2 / H2 to R150-R157.1 and D121) is drawn from r11_escape.py (D-R11-49, stageC1b.md section 8).
 """
 
-NETS = ('SERVO1_OUT', 'SERVO2_OUT', 'SERVO3_OUT', 'SERVO4_OUT', 'SERVO2_MCU')
+NETS = ('SERVO1_OUT', 'SERVO2_OUT', 'SERVO3_OUT', 'SERVO4_OUT', 'SERVO1_MCU', 'SERVO2_MCU', 'SERVO3_MCU', 'SERVO4_MCU')
 
 SIG, SV = 0.1, (0.4, 0.2)
 RUNS = (

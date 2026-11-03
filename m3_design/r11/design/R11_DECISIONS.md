@@ -451,3 +451,41 @@ PA4's In3-to-B.Cu via (14.65, 39.90) has no second-barrel site: a trial at (16.0
 and C85.2 (DRC, Measured), and the via's own surroundings (I2C vias 0.57 mm away, the 3V3 via, R86.1) leave none
 closer. It is a fourth `single_open_exceptions` entry with that reason. BUZZ_DRV stays on PB15 after a trial on PD15
 (G8, not a loader pin) found no escape; the K-loader allowance case for PB10 / PB11 / PB15 is stageC1b.md section 7.
+
+## D-R11-49 Escape-first pin map (coordinator decision, 2026-11-03)
+
+Every movable function of U1 is re-assigned by the side of the board its target lies on, then routed; the six-layer
+stack stays. Fixed: PE4 (fire), PC1 (bus enable), PC0, PC5, BOOT0, NRST, PH0 / PH1, PA11 / PA12, PA13 / PA14, VCAP,
+VREF and the supply balls, with their reviewed analyses. Moved (ball HEAD 33876fe -> D-R11-49; mode; DS12110 Rev 8
+Table 9 for GPIO, Tables 10 / 11 for the alternate functions):
+
+| Function (net) | Was | Now | R11 mode |
+|---|---|---|---|
+| Camera UART TX (CAM_MCU_TX) | PE8 / J5, UART7_TX AF7 | PB9 / A4 | UART4_TX AF8 |
+| Camera UART RX (CAM_MCU_RX) | PE7 / H5, UART7_RX AF7 | PB8 / B4 | UART4_RX AF8 |
+| SERVO1_MCU | PA0 / G2, TIM5_CH1 | PB7 / A5 | TIM4_CH2 AF2 |
+| SERVO2_MCU | PA1 / H2, TIM5_CH2 | PA15 / A8 | TIM2_CH1 AF1 |
+| SERVO3_MCU | PA2 / J2, TIM5_CH3 | PA0 / G2 | TIM5_CH1 AF2 |
+| SERVO4_MCU | PA3 / K2, TIM5_CH4 | PA1 / H2 | TIM5_CH2 AF2 |
+| IMU_CS | PB7 / A5 | PE3 / B3 | GPIO out, high before output mode |
+| IMU_INT1 | PE1 / C4, EXTI1 | PD5 / B6 | GPIO in, pull-down, EXTI5 |
+| CAM_UART_OE | PE9 / K5 | PC15 / B1 | GPIO out, low speed (PC13-15: 3 mA, 2 MHz) |
+| CAM_PWR_EN | PE11 / H6 | PC14 / A1 | GPIO out, low speed |
+| CAM_FAULT_N | PE12 / J6 | PC13 / A2 | GPIO in |
+| CAM_5V_SENSE | PB1 / K4, ADC12_INP5 | PC2_C / E2 | ADC3_INP0 |
+| LED_RED | PD5 / B6 | PB1 / K4 | GPIO out |
+| LED_YEL | PD7 / D6 | PD2 / B7 | GPIO out |
+| USB_FAULT_N | PD6 / C6 | PD10 / H9 | GPIO in |
+| BUZZ_DRV | PB15 / G10 | PE8 / J5 | GPIO out, low before output mode |
+
+Unchanged since D-R11-41: I2C1_SCL / SDA on PB10 / PB11 (peripheral I2C2). Now NC: PA2, PA3, PE1, PE7, PE9, PE11,
+PE12, PD6, PD7, PB15 (PB0 stays NC, the AVA contract). Loader pins: PB15, PA2, PA3, PE11 and PE12 are freed; PB9
+(CAM_MCU_TX) and PA15 (SERVO2_MCU) are new, with their cases in stageC1b.md section 8.
+
+Placement: LED1 / R32 forward beside the ports, (20.6, 42.3) / (23.0, 42.3); U12 rotation 180 (MCU side faces U1); C93
+to (22.6, 12.4); C21 0.15 mm west, (18.85, 22.1). Power: the 3V3A In2 block's west edge stays x 20.8; R89.1 (3V3) joins
+R11.2 through a via over the 3V3A block, (18.57, 20.55), with an In2 fill keep-out of 0.5 mm radius there (no 3V3 sliver
+in 3V3A's clearance ring). BOOT0 gets a second barrel at R5's end, (28.30, 33.10); D5's dog-bone (23.20, 27.20) is the
+`single_open_exceptions` entry (it replaces the D-R11-45 site (27.20, 26.40), which now carries SD_MOSI's GND partner).
+The board stays 46 × 50 mm. **Why:** greedy per-family escapes walled the field (stageC1b.md sections 1, 5 and 7); with
+targets grouped by side every ball has an exit (count table in stageC1b.md section 8).

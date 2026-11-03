@@ -3,16 +3,15 @@
 Explicit tables only (D-R11-07). Board mm (x east, y forward from the aft edge, KiCad's y).
 
 LED_RED_A / LED_YEL_A: R32.2 / R33.2 to the LEDs' anodes on F.Cu. Buzzer: BUZZ_G (Q123.1 to R162.2 and R163.1) and
-BUZZ_OUT (Q123.3, D123.2 on B.Cu, LS120.2 on F.Cu by one via) on B.Cu beside the parts. The MCU lines LED_RED (U1.B6),
-LED_YEL (U1.D6) and BUZZ_DRV (U1.A1 to R162.1) are not drawn: stageC3.md O-C3-3 (LED_RED's only via site, the dog-bone
-(24.8, 24.8), closes the In2 3V3 neck beside C6's via under QSPI_NCS's In3 run: check_r11 K-region, Measured).
+BUZZ_OUT (Q123.3, D123.2 on B.Cu, LS120.2 on F.Cu by one via) on B.Cu beside the parts. The MCU lines LED_RED (U1.K4,
+PB1), LED_YEL (U1.B7, PD2) and BUZZ_DRV (U1.J5, PE8) are drawn from r11_escape.py (D-R11-49, stageC1b.md section 8).
 """
 
-NETS = ('LED_RED_A', 'LED_YEL_A', 'BUZZ_G', 'BUZZ_OUT', 'LED_RED', 'BUZZ_DRV')
+NETS = ('LED_RED_A', 'LED_YEL_A', 'BUZZ_G', 'BUZZ_OUT', 'LED_RED', 'BUZZ_DRV', 'LED_YEL')
 
 SIG, SV = 0.1, (0.4, 0.2)
 RUNS = (
-    ('LED_RED_A', 'F', [('R32', '2'), (22.03, 21.35), (22.23, 21.15)]),                 # ends inside LED1.2
+    ('LED_RED_A', 'F', [('R32', '2'), (21.6, 42.3)]),                                # ends inside LED1.2 (D-R11-49)
     ('LED_YEL_A', 'F', [('R33', '2'), (26.43, 21.55), (26.13, 21.25)]),                 # ends inside LED2.1
     ('BUZZ_G', 'B', [('Q123', '1'), (43.75, 38.05)]),
     ('BUZZ_G', 'B', [(43.75, 38.05), (44.15, 38.05)]),                                  # ends inside R162.2

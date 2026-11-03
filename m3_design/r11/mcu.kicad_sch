@@ -1973,22 +1973,6 @@
 		(uuid f942b454-e4f4-554e-b679-b4d9c3458fb1))
 	(wire
 		(pts
-			(xy 63.5 113.03)
-			(xy 58.42 113.03))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b4893bcc-0e4c-5c2f-ba55-b142d94fe860))
-	(global_label "CAM_MCU_RX"
-		(shape passive)
-		(at 58.42 113.03 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 4289dee8-8dbf-5d22-b068-611523c049cb))
-	(wire
-		(pts
 			(xy 63.5 123.19)
 			(xy 58.42 123.19))
 		(stroke
@@ -2261,22 +2245,6 @@
 		(uuid 247cfe9b-a7f3-54a8-9462-e0f2753781de))
 	(wire
 		(pts
-			(xy 63.5 179.07)
-			(xy 58.42 179.07))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 5fe30d8e-8833-5faa-9552-3964d13e91a2))
-	(global_label "IMU_CS"
-		(shape passive)
-		(at 58.42 179.07 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a6ae992c-2f9c-57df-bcf5-b6a4d85c02f2))
-	(wire
-		(pts
 			(xy 63.5 181.61)
 			(xy 58.42 181.61))
 		(stroke
@@ -2327,20 +2295,11 @@
 		(at 119.38 72.39)
 		(uuid 68ebba14-79b6-58bc-81db-26f054699f53))
 	(no_connect
-		(at 119.38 77.47)
-		(uuid 6c7d8bd8-ad1d-5f0c-858d-43eb1329c062))
-	(no_connect
 		(at 119.38 125.73)
 		(uuid ccb3546e-65d6-55ed-a3a4-3ac1e85218fc))
 	(no_connect
 		(at 119.38 128.27)
 		(uuid 8347df75-a872-5dc5-84d7-759dbae7c30e))
-	(no_connect
-		(at 119.38 166.37)
-		(uuid 79fb664f-cb71-50bd-9855-4fea2ef99741))
-	(no_connect
-		(at 119.38 181.61)
-		(uuid 5bcbd9e8-dfda-5f25-9753-5064a830041e))
 	(symbol
 		(lib_id "M3:Header")
 		(at 330.2 63.5 0)
@@ -4008,70 +3967,6 @@
 		(uuid 085ee3a6-8232-5d2e-b73a-6ec810b18d75))
 	(wire
 		(pts
-			(xy 119.38 85.09)
-			(xy 127 85.09))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b7d38ba4-9598-50d5-9eb0-a7548be937df))
-	(global_label "SERVO1_MCU"
-		(shape passive)
-		(at 127 85.09 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid c1c5ce60-6425-540e-bcb7-d9771b41e409))
-	(wire
-		(pts
-			(xy 119.38 87.63)
-			(xy 127 87.63))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid f4e9cc9b-762f-5168-941a-c8f0ee500037))
-	(global_label "SERVO2_MCU"
-		(shape passive)
-		(at 127 87.63 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid ca7fb33e-f6b9-5cdb-89ce-4c7edefb0646))
-	(wire
-		(pts
-			(xy 119.38 90.17)
-			(xy 127 90.17))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid fa5409a7-5c2e-5c52-a041-07970aa99ec9))
-	(global_label "SERVO3_MCU"
-		(shape passive)
-		(at 127 90.17 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 25bff4e2-8b61-572c-a53c-151ee798cf02))
-	(wire
-		(pts
-			(xy 119.38 92.71)
-			(xy 127 92.71))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid f71c043b-6d77-5d51-a5b9-d059a7032bf8))
-	(global_label "SERVO4_MCU"
-		(shape passive)
-		(at 127 92.71 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid b32a803e-4b8a-57b7-ada7-dc90b7d2bcfa))
-	(wire
-		(pts
 			(xy 119.38 107.95)
 			(xy 127 107.95))
 		(stroke
@@ -4088,38 +3983,6 @@
 		(uuid 37d30ce7-6ce2-5596-8e1b-fb7de6aeaa22))
 	(wire
 		(pts
-			(xy 119.38 113.03)
-			(xy 127 113.03))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b83dc0e7-389d-4167-9c69-5f9108ce8b9d))
-	(global_label "CAM_5V_SENSE"
-		(shape passive)
-		(at 127 113.03 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 6baa08a9-f799-4d2d-956c-7e75a840098f))
-	(wire
-		(pts
-			(xy 119.38 115.57)
-			(xy 127 115.57))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid b5c11a95-9334-5f50-a32f-01a3981f9766))
-	(global_label "CAM_MCU_TX"
-		(shape passive)
-		(at 127 115.57 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid f7117d91-6f2c-53e6-b77e-a44013cd9303))
-	(wire
-		(pts
 			(xy 119.38 97.79)
 			(xy 127 97.79))
 		(stroke
@@ -4134,9 +3997,6 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 049d8c61-2bd6-5786-9111-639cd89913d7))
-	(no_connect
-		(at 63.5 72.39)
-		(uuid 67c55654-f2b5-5dac-b265-c59aabf849eb))
 	(no_connect
 		(at 119.38 69.85)
 		(uuid 93e4c79b-978b-5303-859f-77c8f73b45c1))
@@ -4232,22 +4092,6 @@
 	(no_connect
 		(at 63.5 115.57)
 		(uuid cf7e94a2-e406-5501-9e8b-e4118b8863a4))
-	(wire
-		(pts
-			(xy 119.38 194.31)
-			(xy 124.46 194.31))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 7e45c54a-64ac-5244-81d8-f5c8f2f6ac91))
-	(global_label "IMU_INT1"
-		(shape passive)
-		(at 124.46 194.31 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 4756ffcd-376b-5b54-8e68-a7107a6a083e))
 	(wire
 		(pts
 			(xy 119.38 143.51)
@@ -4356,57 +4200,6 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid ed946356-d44c-5603-bc76-e0c3d5ecf599))
-	(wire
-		(pts
-			(xy 119.38 118.11)
-			(xy 124.46 118.11))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid bae1e790-6e1f-541f-83b9-f7529ac05207))
-	(global_label "CAM_UART_OE"
-		(shape passive)
-		(at 124.46 118.11 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 6ac742db-bbd0-5493-8730-502b90725a7c))
-	(wire
-		(pts
-			(xy 119.38 120.65)
-			(xy 124.46 120.65))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4bf6e3ee-a2cf-5670-8081-0d10d1e04553))
-	(global_label "CAM_PWR_EN"
-		(shape passive)
-		(at 124.46 120.65 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid a8a6e664-bbff-5f04-b4bf-daaad21e6dfe))
-	(wire
-		(pts
-			(xy 119.38 123.19)
-			(xy 124.46 123.19))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 0372f102-5994-554e-a524-0a2a5246ef4a))
-	(global_label "CAM_FAULT_N"
-		(shape passive)
-		(at 124.46 123.19 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid f4b08ab6-223e-5d32-8818-f4d507b7e35f))
-	(no_connect
-		(at 119.38 148.59)
-		(uuid 0de9482c-3e57-5e62-9d9b-a9bca129aaee))
 	(no_connect
 		(at 119.38 179.07)
 		(uuid 5cb26fcd-de6e-5a8c-ab56-732a3114b3fc))
@@ -4416,44 +4209,6 @@
 	(no_connect
 		(at 63.5 166.37)
 		(uuid f958b8e9-9fcc-54c2-ab9c-6bb1df92b823))
-	(wire
-		(pts
-			(xy 119.38 184.15)
-			(xy 124.46 184.15))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 40033376-0386-5eee-9809-06bea25d6b29))
-	(global_label "LED_RED"
-		(shape passive)
-		(at 124.46 184.15 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid e4cf7973-c252-5882-b724-781e70a97415))
-	(wire
-		(pts
-			(xy 119.38 189.23)
-			(xy 124.46 189.23))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c7133d72-1eab-58b6-929a-120a5aa33624))
-	(global_label "LED_YEL"
-		(shape passive)
-		(at 124.46 189.23 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 542141fb-b26e-519c-b85e-2144a8420148))
-	(no_connect
-		(at 63.5 77.47)
-		(uuid 9c79ea49-fd10-57ae-b53a-7561dc5cabeb))
-	(no_connect
-		(at 63.5 92.71)
-		(uuid 6ad4e78c-4b81-5e19-b386-dc896f195773))
 	(no_connect
 		(at 63.5 95.25)
 		(uuid 94a74865-346a-5f29-9ca9-76e7660aa0b3))
@@ -4517,6 +4272,9 @@
 	(no_connect
 		(at 119.38 138.43)
 		(uuid 9d0f1991-7770-52c8-adbb-38bd327a4643))
+	(no_connect
+		(at 119.38 140.97)
+		(uuid 0b527c25-7210-5139-a425-638444416f80))
 	(no_connect
 		(at 119.38 151.13)
 		(uuid d58ca93e-16ac-5dc7-b50c-22687e2e5381))
@@ -4649,6 +4407,120 @@
 		(uuid 27570032-55df-54ee-9974-fd6138e80900))
 	(wire
 		(pts
+			(xy 63.5 92.71)
+			(xy 58.42 92.71))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 73eb0efa-5090-5c64-a532-bc0f2bda275e))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 58.42 92.71 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b6ece243-0a73-506a-a9b9-70b63c83bb56))
+	(wire
+		(pts
+			(xy 63.5 72.39)
+			(xy 58.42 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7700a0af-ef87-5299-97e4-5da80d6aac0b))
+	(global_label "IMU_CS"
+		(shape passive)
+		(at 58.42 72.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a7f589c4-1a78-545e-90c9-2b7ba9c0f307))
+	(wire
+		(pts
+			(xy 119.38 85.09)
+			(xy 124.46 85.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 34af0b49-741a-5eab-86f5-d494247d93fb))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 124.46 85.09 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid f0848bd8-ac97-5ac4-89ba-a3fbdcffc3dc))
+	(wire
+		(pts
+			(xy 119.38 87.63)
+			(xy 124.46 87.63))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5473bbdb-e29d-5f06-ab84-8791a8c3bbdb))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 124.46 87.63 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 67ddf1f7-465d-5ac7-bab8-8692e3d50db6))
+	(no_connect
+		(at 119.38 90.17)
+		(uuid 23b22607-0547-581e-ad1b-f5bb593ff40c))
+	(no_connect
+		(at 119.38 92.71)
+		(uuid 0a88d091-4b3f-5efc-83e0-3b2e4b4b237a))
+	(wire
+		(pts
+			(xy 119.38 113.03)
+			(xy 124.46 113.03))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a811646b-f5d1-5d57-8b30-1bc66117b8e5))
+	(global_label "LED_RED"
+		(shape passive)
+		(at 124.46 113.03 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 6452ad7b-2cba-5f40-ad33-693118e038e2))
+	(no_connect
+		(at 63.5 113.03)
+		(uuid 293d917e-3f7b-5093-b88a-6b1db320e470))
+	(wire
+		(pts
+			(xy 119.38 115.57)
+			(xy 124.46 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 273c0d11-9ed6-59d9-be49-c131e0bb8e14))
+	(global_label "BUZZ_DRV"
+		(shape passive)
+		(at 124.46 115.57 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 958c4d22-6666-5958-b2c4-5c0387d19d1b))
+	(no_connect
+		(at 119.38 118.11)
+		(uuid 981a46f8-91a1-51e2-9490-45890592344d))
+	(no_connect
+		(at 119.38 120.65)
+		(uuid bb988ffa-b567-50fd-9d20-f878851e3e49))
+	(no_connect
+		(at 119.38 123.19)
+		(uuid ecf9cd52-830e-50a6-80fd-cdee58cf3a10))
+	(wire
+		(pts
 			(xy 63.5 118.11)
 			(xy 58.42 118.11))
 		(stroke
@@ -4681,29 +4553,173 @@
 		(uuid 98fb9659-d0ac-5013-881a-8d66980f6d1e))
 	(wire
 		(pts
-			(xy 119.38 140.97)
-			(xy 124.46 140.97))
+			(xy 119.38 148.59)
+			(xy 124.46 148.59))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 1f84be05-d227-5b72-95c1-5d57b8852495))
-	(global_label "BUZZ_DRV"
+		(uuid cb4d8483-061a-53a7-9603-ea693ffb7efa))
+	(global_label "USB_FAULT_N"
 		(shape passive)
-		(at 124.46 140.97 180)
+		(at 124.46 148.59 180)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
-		(uuid c6aee9a9-2e5f-5dde-992e-72cdba992242))
+		(uuid e869afd2-5db8-57bc-afa1-fae81ce9e133))
+	(wire
+		(pts
+			(xy 63.5 77.47)
+			(xy 58.42 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7c6d25d5-ed01-5872-9743-0a43a25ea5bf))
+	(global_label "CAM_FAULT_N"
+		(shape passive)
+		(at 58.42 77.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid eaea7d9d-776d-53e3-a338-ff0bcc77811e))
+	(wire
+		(pts
+			(xy 119.38 166.37)
+			(xy 124.46 166.37))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f451e7ae-b51c-573f-badf-0697914d2f09))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 124.46 166.37 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 5da96feb-eab5-5e20-ae26-d1d3d107a803))
+	(wire
+		(pts
+			(xy 119.38 74.93)
+			(xy 124.46 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ffac8a9c-cb49-5adf-9461-ea8f82bee48a))
+	(global_label "CAM_PWR_EN"
+		(shape passive)
+		(at 124.46 74.93 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 7c098167-e102-555d-b51d-5baf39c49d81))
+	(wire
+		(pts
+			(xy 119.38 181.61)
+			(xy 124.46 181.61))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5b0d23dc-b057-5b54-b9c8-e3f7be4df65d))
+	(global_label "LED_YEL"
+		(shape passive)
+		(at 124.46 181.61 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 99fae504-baba-5657-9e6d-8a6eec614fbb))
+	(wire
+		(pts
+			(xy 119.38 184.15)
+			(xy 124.46 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 48802d86-f345-5c6a-95f2-82f81d76de32))
+	(global_label "IMU_INT1"
+		(shape passive)
+		(at 124.46 184.15 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 2aaefa39-c2c0-5e2c-9313-d244b4c22dba))
 	(no_connect
-		(at 119.38 74.93)
-		(uuid b7f7696d-9c04-5692-934c-efee81b8cef9))
+		(at 119.38 186.69)
+		(uuid 83993ab2-4d5e-5416-b5d6-7d9e91dd5f16))
 	(no_connect
-		(at 63.5 184.15)
-		(uuid 0099bb81-ea2d-5a24-9616-5c74577af394))
+		(at 119.38 189.23)
+		(uuid 1a70e174-5ed4-5a34-8496-6cf1ca167568))
+	(wire
+		(pts
+			(xy 119.38 77.47)
+			(xy 124.46 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1c5c2de4-afd6-56b3-bc61-962587cec2e2))
+	(global_label "CAM_UART_OE"
+		(shape passive)
+		(at 124.46 77.47 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d7b36a75-5f85-5405-b316-e443c65fd38f))
+	(wire
+		(pts
+			(xy 63.5 179.07)
+			(xy 58.42 179.07))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e680448e-6050-5025-ade6-9572f3c3c422))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 58.42 179.07 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 806f15b5-8c58-5beb-a61b-dff977d4195f))
+	(wire
+		(pts
+			(xy 63.5 184.15)
+			(xy 58.42 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1dc79ca0-8bfb-50d1-ab4b-02fdc2439be3))
+	(global_label "CAM_MCU_RX"
+		(shape passive)
+		(at 58.42 184.15 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 64d188ae-6424-5dce-a310-feb4a421f285))
+	(wire
+		(pts
+			(xy 63.5 186.69)
+			(xy 58.42 186.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dfb17e65-72f2-5c24-b5e2-9267c44105ca))
+	(global_label "CAM_MCU_TX"
+		(shape passive)
+		(at 58.42 186.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ba3fbc6d-fa9c-5cb4-a697-ff3e3a748a67))
 	(no_connect
-		(at 63.5 186.69)
-		(uuid 47c6a7d0-0c82-539b-bc79-15b72064f370))
+		(at 119.38 194.31)
+		(uuid 171c2589-0fb8-5009-be21-17d38c519df5))
 	(text "R10: camera enable CAM_PWR_EN on PE11 / ball H6, fault input CAM_FAULT_N (EXTI12) on PE12 / ball J6 (GPIO only, SPI4 never enabled); swapped from R8 for routing (D-R2-07); no actuation changes."
 		(at 185.42 220.98 0)
 		(effects
@@ -4735,6 +4751,4 @@
 	(sheet_instances
 		(path "/"
 			(page "2")))
-(wire (pts (xy 119.38 186.69) (xy 124.46 186.69)) (stroke (width 0)(type default)) (uuid acef812e-4096-4f67-9f0f-3561fc73d66c))
-(global_label "USB_FAULT_N" (shape input) (at 124.46 186.69 180) (effects (font (size 1.05 1.05))(justify left)) (uuid 4a724d71-42cc-47ec-8fae-b249fe2ea23c))
 )

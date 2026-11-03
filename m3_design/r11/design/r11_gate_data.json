@@ -225,8 +225,8 @@
   ],
   [
    "U1.D5",
-   "via BOOT0 (27.20, 26.40)",
-   "D-R11-45: BOOT0 leaves D5 east on the F.Cu row gap y 26.4 to the interstitial site (27.20, 26.40); D5's own four sites are closed by C20 (two) and the 3V3 / GND dog-bones, and the row gap's other sites carry the SD / USB_FAULT_N escapes, so no second site exists in the field. Open, R5 no longer holds BOOT0 low (internal: BOOT0 has no internal pull-down; ROM-loader boot possible, as R10's R23-MCU-02 single point)"
+   "via BOOT0 (23.20, 27.20)",
+   "D-R11-45 / -49: BOOT0's dog-bone at D5's south-west interstitial site; the D-R11-45 site (27.20, 26.40) now carries SD_MOSI's GND partner. D5's other sites are closed (Measured on the board): north-west (23.20, 26.40) by the GND dog-bone, north-east (24.00, 26.40) by C20.2 (B.Cu, to y 26.30) and QSPI_NCS's In3 run (x 24.25), south-east (24.00, 27.20) by C20.1. R5's end has a second barrel (28.30, 33.10). Open, R5 no longer holds BOOT0 low (BOOT0 has no internal pull-down; ROM-loader boot possible, as R10's R23-MCU-02 single point)"
   ],
   [
    "U1.E7",

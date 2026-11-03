@@ -82,24 +82,80 @@ BALL_NOTES = {
     '100': ('ball F4 is VDDLDO (Table 9 p. 87): tied to 3V3 = VDD, as LQFP100 ties it internally (Table 9 note 8 p. 88)'),
 }
 
-# D-R11-41 (stageC1b.md): R11 re-pins for the BGA escape plan. {LQFP100 pin: (R11 net or 'NC', mode, note)}; every
-# other ball keeps R10's r10_net. The nets themselves are R10's (the net contract is unchanged); only the ball that
-# carries them moves, to a ball whose alternate function DS12110 Rev 8 Table 11 p. 91 (Port B) gives (a GPIO output
-# needs no alternate function). The firmware binding must follow these rows (r11 binding item).
+# D-R11-41 / D-R11-49 (stageC1b.md): R11 re-pins for the BGA escape plan. {LQFP100 pin: (R11 net or 'NC', mode, note)};
+# every other ball keeps R10's r10_net. The nets themselves are R10's (the net contract is unchanged); only the ball that
+# carries them moves, to a ball whose alternate function DS12110 Rev 8 Tables 10-14 pp. 89-96 give (a GPIO needs no
+# alternate function: Table 9). D-R11-49 re-pins every movable function to a ball in the outer two rings (or one row-C
+# dog-bone) on its target's side; the firmware binding must follow these rows (stageC1b.md section 8 binding list).
+NC_MODE = 'NC (firmware: analog, never driven)'
 R11_REPIN = {
-    '95': ('NC', 'NC (firmware: analog, never driven)',
-           'R11 D-R11-41: PB8 freed; the I2C1_SCL net moved to PB10 (ball J7)'),
-    '96': ('NC', 'NC (firmware: analog, never driven)',
-           'R11 D-R11-41: PB9 freed; the I2C1_SDA net moved to PB11 (ball K7)'),
+    # D-R11-49 (escape-first, stageC1b.md section 8): every movable function re-assigned by board side
+    # aft (north) row A / B: camera UART on UART4 (PB9 / PB8, F.Cu lanes x 22.8 / 23.2), servos 1 / 2 on TIM4 / TIM2
+    '96': ('CAM_MCU_TX', 'AF8 UART4_TX',
+           'R11 D-R11-49: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB9 AF8 UART4_TX); was PE8 '
+           'UART7_TX (ball J5); a ROM-loader pin (I2C1_SDA), allowance case in stageC1b.md section 8'),
+    '95': ('CAM_MCU_RX', 'AF8 UART4_RX',
+           'R11 D-R11-49: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB8 AF8 UART4_RX); was PE7 '
+           'UART7_RX (ball H5)'),
+    '93': ('SERVO1_MCU', 'AF2 TIM4_CH2 (servo PWM, 50-400 Hz)',
+           'R11 D-R11-49: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB7 AF2 TIM4_CH2); was PA0 '
+           '(ball G2); R10 IMU_CS moved to PE3 (ball B3)'),
+    '77': ('SERVO2_MCU', 'AF1 TIM2_CH1 (servo PWM, 50-400 Hz)',
+           'R11 D-R11-49: DS12110 Rev 8 Table 10 p. 91 (Port A alternate functions: PA15 AF1 TIM2_CH1); was PA1 '
+           '(ball H2); a ROM-loader pin (SPI3_NSS), allowance case in stageC1b.md section 8'),
+    '2': ('IMU_CS', 'GPIO output push-pull; initialise high before output mode',
+          'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 64 (PE3, a general-purpose I/O); was PB7 (ball A5)'),
+    '86': ('IMU_INT1', 'GPIO in, internal pull-down, EXTI5 data-ready interrupt (U4 INT1 push-pull, active high)',
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 83 (PD5, a general-purpose I/O; EXTI line 5); was PE1 (ball C4)'),
+    '98': ('NC', NC_MODE, 'R11 D-R11-49: PE1 freed (IMU_INT1 moved to PD5, ball B6)'),
+    '87': ('NC', NC_MODE, 'R11 D-R11-49: PD6 freed (R10 USB_FAULT_N moved to PD10, ball H9)'),
+    '24': ('NC', NC_MODE, 'R11 D-R11-49: PA2 freed (SERVO3_MCU moved to PA0, ball G2); a ROM-loader pin left unconnected'),
+    '25': ('NC', NC_MODE, 'R11 D-R11-49: PA3 freed (SERVO4_MCU moved to PA1, ball H2); a ROM-loader pin left unconnected'),
+    '22': ('SERVO3_MCU', 'AF2 TIM5_CH1 (servo PWM, 50-400 Hz)',
+           'R11 D-R11-49: DS12110 Rev 8 Table 10 p. 89 (Port A alternate functions: PA0 AF2 TIM5_CH1); was PA2 '
+           '(ball J2, a ROM-loader pin)'),
+    '23': ('SERVO4_MCU', 'AF2 TIM5_CH2 (servo PWM, 50-400 Hz)',
+           'R11 D-R11-49: DS12110 Rev 8 Table 10 p. 89 (Port A alternate functions: PA1 AF2 TIM5_CH2); was PA3 '
+           '(ball K2, a ROM-loader pin)'),
+    '39': ('NC', NC_MODE, 'R11 D-R11-49: PE9 freed (CAM_UART_OE moved to PC15, ball B1)'),
+    '38': ('BUZZ_DRV', 'GPIO out (push-pull; initialise low before output mode)',
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 71 (PE8, a general-purpose I/O); was PC14 (R10) and PB15 (ball '
+           'G10, D-R11-42); R10 CAM_MCU_TX moved to PB9 (ball A4)'),
+    # I2C (D-R11-41): the R10 nets I2C1_SCL / I2C1_SDA on peripheral I2C2, south row
     '46': ('I2C1_SCL', 'AF4 I2C2_SCL (the R10 net I2C1_SCL, now on peripheral I2C2)',
-           'R11 D-R11-41: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB10 AF4 I2C2_SCL)'),
+           'R11 D-R11-41: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB10 AF4 I2C2_SCL); a ROM-loader '
+           'pin (USART3_TX), allowance case in stageC1b.md section 7'),
     '47': ('I2C1_SDA', 'AF4 I2C2_SDA (the R10 net I2C1_SDA, now on peripheral I2C2)',
-           'R11 D-R11-41: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB11 AF4 I2C2_SDA)'),
-    '8': ('NC', 'NC (firmware: analog, never driven)',
-          'R11 D-R11-42: PC14 freed; the BUZZ_DRV net moved to PB15 (ball G10)'),
-    '54': ('BUZZ_DRV', 'GPIO out (push-pull; initialise low before output mode)',
-           'R11 D-R11-42: DS12110 Rev 8 Table 9 p. 75 (PB15, a general-purpose I/O; GPIO output needs no alternate '
-           'function); a ROM-loader pin (USART1_RX), allowance case in stageC1b.md section 7'),
+           'R11 D-R11-41: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB11 AF4 I2C2_SDA); a ROM-loader '
+           'pin (USART3_RX), allowance case in stageC1b.md section 7'),
+    # camera control (D-R11-49): from the south rows to the north-west corner (PC13-PC15) and the west column (PC2_C);
+    # camera control on PC13-PC15 (north-west corner), west to east in the order of their targets: OE (R102 / U12.6),
+    # PWR_EN (U402.3 / R431), FAULT_N (U402.4 / R432)
+    '9': ('CAM_UART_OE', 'GPIO out (push-pull, low speed; PC15 sources at most 3 mA and toggles at most 2 MHz)',
+          'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 65 (PC15), Table 62 p. 142 (PC13-PC15 output levels at 3 mA) and '
+          'p. 143 note 2 (2 MHz); the load is U12 OE and R102 10k: at most 0.33 mA (Calculation); was PE9 (ball K5)'),
+    '8': ('CAM_PWR_EN', 'GPIO out (push-pull, low speed; PC14 sources at most 3 mA and toggles at most 2 MHz)',
+          'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 65 (PC14, LSE off), Table 62 p. 142 and p. 143 note 2; the load is '
+          'U402 EN and R431 100k: at most 0.04 mA (Calculation); was PE11 (ball H6, a ROM-loader pin)'),
+    '7': ('CAM_FAULT_N', 'GPIO in (U402 FAULT open drain, R432 10k pull-up)',
+          'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 64 (PC13, a general-purpose I/O); was PE12 (ball J6, a ROM-loader '
+          'pin)'),
+    '17': ('CAM_5V_SENSE', 'ADC (ADC3_INP0, PC2_C analog pad)',
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 67 (PC2_C: ANA pad, ADC3_INP0) and note 6 p. 88; was PB1 '
+           '(ball K4, ADC12_INP5)'),
+    '57': ('USB_FAULT_N', 'GPIO in',
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 75 (PD10, a general-purpose I/O); was PD6 (ball C6)'),
+    '35': ('LED_RED', 'GPIO out',
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 70 (PB1, a general-purpose I/O); was PD5 (ball B6); LED1 / R32 '
+           'moved forward beside the ports; R10 CAM_5V_SENSE moved to PC2_C (ball E2)'),
+    '37': ('NC', NC_MODE, 'R11 D-R11-49: PE7 freed (CAM_MCU_RX moved to PB8, ball B4)'),
+    '41': ('NC', NC_MODE, 'R11 D-R11-49: PE11 freed (CAM_PWR_EN moved to PC14, ball A1); a ROM-loader pin left unconnected'),
+    '42': ('NC', NC_MODE, 'R11 D-R11-49: PE12 freed (CAM_FAULT_N moved to PC13, ball A2); a ROM-loader pin left '
+                    'unconnected'),
+    # status (D-R11-49)
+    '83': ('LED_YEL', 'GPIO out',
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 83 (PD2, a general-purpose I/O); was PD7 (ball D6)'),
+    '88': ('NC', NC_MODE, 'R11 D-R11-49: PD7 freed (LED_YEL moved to PD2, ball B7)'),
 }
 
 

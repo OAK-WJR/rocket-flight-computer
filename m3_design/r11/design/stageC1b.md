@@ -1,15 +1,16 @@
 # R11 stage C1b: the U1 escape re-plan (2026-11-03)
 
-Stage C of `r11_plan.md` §4, a re-plan of stage C1's fan-out. Nothing is committed or ordered. Decisions D-R11-41 … -45
+Stage C of `r11_plan.md` §4, a re-plan of stage C1's fan-out. Nothing is committed or ordered. Decisions D-R11-41 … -49
 are in `R11_DECISIONS.md`. Evidence labels as AGENTS §2.5. Coordinates are board mm (x east, y forward from the aft
 edge, KiCad's y). U1 (TFBGA-100, 0.8 mm) sits at (24, 28): ball column c at x = 20.4 + 0.8 (c - 1), row A..K at
 y = 24.4 + 0.8 r; interstitial (dog-bone) sites at x 20.8 + 0.8 i, y 24.8 + 0.8 j.
 
-**State.** The re-plan is drawn and gated: every family from `core` to `status` passes `r11_stage_check`, the escape
-table passes `r11_escape_check` on its own and against the copper, and two full builds give one hash (section 4). It is
-**not complete**: four balls have no escape copper (B5 QSPI_NCS, D6 LED_YEL, K2 SERVO4_MCU, K5 CAM_UART_OE), and thirteen
-drawn nets still carry route_check findings, so they stay pending (not in their family's `NETS`); check_r11 adds
-K-region (6), K-loader (4) and K-power single-barrel findings caused by this pass (section 5).
+**State (after D-R11-49, section 8).** The escape-first pin map is drawn and gated: every used ball has escape copper
+(`r11_escape_check`: 69 rows, 0 open), every non-GND net is joined (unconnected after `status`: 184, all GND), every
+family from `core` to `status` passes `r11_stage_check`, and two full builds give one hash. Four drawn nets keep
+route_check findings and stay pending (ARM1_SENSE, GPS_TX_MCU, SD_MOSI, CAM_RX_BUFFER; section 8.6), and check_r11's
+remaining findings are the pours (ground family), silkscreen (stage D) and K-loader entries that need `tools/` (section
+8.4). Sections 1-7 are the history of the first re-plan (D-R11-41 … -48).
 
 ## 1. Why (stageC3.md O-C3-1 … O-C3-7)
 
@@ -193,3 +194,165 @@ the pre-flight item R10's PA2 allowance records.
   K-plane, K-fill, K-rules, K-lands, K-width; FAIL K-legends 394 (stage D), K-reference 1 (pours), K-power 18 (all GND
   joints and Q124's fire return, waiting for the pours; no U1 tap left), K-ports 1 (D402.2's GND via), K-loader 4 (the
   allowance case above; PB9's stale allowance is in tools/).
+
+## 8. Escape-first pin map (D-R11-49, 2026-11-03)
+
+Coordinator decision: re-plan the whole pin map escape-first on six layers. Fixed: PE4, PC1, PC0, PC5, BOOT0, NRST,
+PH0 / PH1, PA11 / PA12, PA13 / PA14, VCAP, VREF and the supplies. Everything else could move to any ball whose function
+DS12110 Rev 8 Tables 9-14 give. Measured on the board built by `r11_build.sh` unless labelled.
+
+### 8.1 Capacity per side
+
+The field box is U1's courtyard (x 19.38-28.62, y 23.38-32.62). North is aft (row A), south is forward (row K).
+
+Channel capacity per side and layer (Calculation; DRU floors D-R11-15):
+* **F.Cu:** the 10 edge balls, plus one 0.1 mm track in each of the 9 gaps between them (0.4 mm gap = 0.1 mm track +
+  2 × 0.15 mm), so at most 19 exits.
+* **In3 and B.Cu:** bounded by via sites, not by crossing slots (9.24 mm / 0.2 mm = 46 per layer). Of the 81
+  interstitial sites, 26 are closed by bottom parts (C13-C16, C18-C20), 14 carry rail dog-bones, 17 carry signal
+  escapes and 24 are free (Measured, final board). Some escapes use sites just outside the box (for example
+  (19.9, 24.0), (23.2, 25.6), (21.6, 28.0)).
+
+Demand and use per side: demand is the balls whose target lies on that side; "used" counts the pinned exits per layer
+(Measured, `r11_fanout.tsv`). No side exceeds its capacity, so eight layers were not needed (Calculation).
+
+| Side | Demand (balls) | F used / 19 | In3 used | B used | Balls |
+|---|---|---|---|---|---|
+| North (aft: IMU, camera, servo resistors, LED2) | 16 | 8 | 7 | 1 | A1 A2 A4 A5 A6 A7 A8 B1 B3 B4 B6 B7 B8 C5 C8 E2 |
+| East (QSPI, USB, SD, SWD, AUX) | 15 | 10 | 2 | 3 | A3 A9 A10 B5 B9 B10 C10 D8 E10 F10 G5 G9 H9 J10 K10 |
+| South (forward: ports, I2C, R5, LED1, buzzer) | 12 | 3 | 7 | 2 | D5 F9 G3 J3 J5 J7 J8 J9 K4 K7 K8 K9 |
+| West (HSE, pyro / arming, NRST, U9, servos 3 / 4) | 10 | 2 | 4 | 4 | C1 C3 D1 E1 F1 F2 G2 H2 H3 H4 |
+| Rails (dog-bone to plane / capacitor) | 16 | - | - | - | exit P |
+
+SERVO3 / SERVO4 leave west and turn north outside the field. Their first pads, R152.1 (19.2, 3.8) and R153.1
+(17.4, 3.8), lie beyond the north-west corner, so the escape check accepts either side.
+
+### 8.2 Firmware binding list
+
+The binding list (function: ball at HEAD 33876fe → D-R11-49 ball, mode) is the table in `R11_DECISIONS.md` D-R11-49.
+The source of truth is `pin_table.tsv` column `r11_net` with the "R11 mode:" text in `r11_ball_source`, generated from
+`r11_sch.R11_REPIN` (the citation for each row is there).
+
+Summary:
+* camera UART on UART4 AF8: PB9 TX / PB8 RX;
+* SERVO1 TIM4_CH2 (PB7), SERVO2 TIM2_CH1 (PA15), SERVO3 / SERVO4 TIM5_CH1 / CH2 (PA0 / PA1);
+* IMU_CS PE3, IMU_INT1 PD5 (EXTI5);
+* camera control: CAM_UART_OE PC15, CAM_PWR_EN PC14, CAM_FAULT_N PC13;
+* CAM_5V_SENSE PC2_C (ADC3_INP0);
+* LED_RED PB1, LED_YEL PD2, USB_FAULT_N PD10, BUZZ_DRV PE8.
+
+PC13-PC15 are low-speed outputs (3 mA, 2 MHz; DS12110 Rev 8 Table 62 p. 142 and p. 143 note 2). Their loads are
+≤ 0.33 mA (Calculation). Firmware rule: an R11 binding must change the TIM, UART and EXTI assignments together. The
+R10 firmware cannot run on R11.
+
+### 8.3 Placement and power changes
+
+* **Placement:**
+  * LED1 / R32 move forward beside the ports, to (20.6, 42.3) / (23.0, 42.3).
+  * U12 is rotated 180, so pins 4 / 5 face U1.
+  * C93 moves to (22.6, 12.4).
+  * C21 moves 0.15 mm west, to (18.85, 22.1). Its GND via goes to (19.45, 22.52) and its 3V3A via to (18.57, 21.12).
+    This opens CAM_5V_SENSE's north exit at x 19.45.
+* **U4's SPI:**
+  * MISO goes F to a via at (25.0, 19.3), then B.
+  * SCK has a via at (25.2, 23.6), runs In3 to (22.75, 18.3), then B.
+  * U4.8's 3V3A via moves to (19.6, 21.25).
+* **R89.1 (3V3):** joins R11.2 through a via over the 3V3A block, (18.57, 20.55).
+  * The 3V3A block's west edge stays at x 20.8. A 21.2 trial left the In2 3V3 strip under R89 joined only by a neck
+    under 0.5 mm (K-plane, Measured).
+  * An In2 fill keep-out (0.5 mm radius) around the via stops the 3V3 base fill leaving a 0.18 mm² sliver inside
+    3V3A's clearance ring (K-plane, Measured).
+* **CAM_MCU_TX:** its via moves to (21.4, 16.75), and the GND via (20.8, 15.9) is dropped (GND (21.6, 18.1) is its
+  partner). Before this, R11.2's 3V3 via (20.75, 16.6) joined the fill only through a neck (K-plane, Measured).
+* **BOOT0:** gets a second barrel at R5's end, (28.30, 33.10). D5's dog-bone (23.20, 27.20) replaces the D-R11-45 site
+  in `single_open_exceptions`; that site now carries SD_MOSI's GND partner.
+
+### 8.4 K-loader cases (R3-MCU-01 / R17-MCU-02 form; Inference unless labelled)
+
+The loader runs only from system-memory boot (section 7). BOOT0 is held low by R5, and BOOT_ADD0 read-back stays a
+pre-flight item.
+
+* **PB9 (I2C1_SDA, loader open drain, no pull) carries CAM_MCU_TX.**
+  * Members: U12's A input (the camera UART buffer, CMOS input) only.
+  * Idle board: the loader leaves PB9 open drain and released, so the line floats into U12's input.
+  * U12 is disabled: OE is low by R102 10 k while PC15 is an input. The camera is unpowered: U402 EN is held low by
+    R431 100 k while PC14 is an input. So nothing reaches J9.
+  * Loader I2C1 is a slave and needs clock edges on SCL, PB6 (QSPI_NCS, held high by R10 10 k). No device on the
+    board is an I2C master, so there are none and no address byte or command forms.
+  * Firmware drives PB9 push-pull only after the UART4 binding.
+* **PA15 (SPI3_NSS, loader input, no pull) carries SERVO2_MCU.**
+  * Members: R151 1 k to SERVO2_OUT, R155 10 k pull-down, a D121 channel.
+  * The loader only reads PA15, and R155 holds it low (0 V). The servo sees a constant low level and no pulses.
+  * An SPI3 frame needs SCK edges on PC10 (SD_SCK). With no card activity there are none, so no command forms.
+  * PA15 resets as JTDI with an internal pull-up (DS12110 Table 9 note). Against R155 10 k that pull-up gives at most
+    3.3 V × 10 k / (10 k + 30 k) = 0.83 V (Calculation, 30 kΩ the minimum pull-up, Inference). That stays below a
+    servo's logic threshold (Inference) until firmware sets the pin to TIM2.
+* **PB10 / PB11 (I2C on USART3):** unchanged, as section 7.
+* **Freed loader pins:** PB15, PA2, PA3, PE11 and PE12 now carry no net, so the case for each is "NC".
+* **Still in `tools/check_r10.py` LOADER_R10:** check_r11 shows 8 K-loader findings:
+  * no allowance yet for PA15, PB10 and PB11;
+  * PB9's allowance is still I2C1_SDA;
+  * stale allowances for PA2, PA3, PE11 and PE12.
+
+  All eight are gate-lane edits in `tools/`, which this lane does not change.
+
+### 8.5 Gate results (Measured)
+
+* `r11_build.sh` twice: every stage check OK and the escape check OK, with identical SHA-256 (section 8.7).
+* Stage A: `r11_sch_check` OK.
+
+| Family | NETS done (cumulative) | unconnected after |
+|---|---|---|
+| core | 22 | 470 |
+| usb | 32 | 437 |
+| pyro | 46 | 387 |
+| power | 74 | 243 |
+| ports | 87 | 230 |
+| servo | 95 | 214 |
+| sd | 100 | 210 |
+| signals | 108 | 193 |
+| status | 115 | 184 (all GND) |
+
+* **New in NETS:**
+  * core: QSPI_NCS;
+  * usb: USB_FAULT_N;
+  * ports: AUX_TX_MCU;
+  * servo: SERVO1 / 3 / 4_MCU;
+  * signals: CAM_FAULT_N, CAM_UART_OE, CAM_MCU_TX / RX, CAM_TX_BUFFER, CAM_IO_3V3;
+  * status: LED_YEL.
+* **Pending:** GND, 3V3 (the power family's own findings), ARM1_SENSE, GPS_TX_MCU, SD_MOSI and CAM_RX_BUFFER.
+* **r11_escape_check:** 69 rows, 0 open. Exits: N 16 (F 8, In3 7, B 1), E 15, S 12, W 10, P 16. Board checked OK.
+* **check_r11 (full, zone-filled copy):**
+  * OK: S-1 … S-9, W-1, W-2, LC-1, M-1, M-3, M-5 … M-8, K-copper, K-inner, K-region, K-plane, K-fill, K-rules,
+    K-lands, K-width.
+  * FAIL K-legends 394: stage D.
+  * FAIL K-reference 1: the pours.
+  * FAIL K-power 18: GND joints and Q124's fire return, waiting for the pours (the same set as before). No single-via
+    finding is left.
+  * FAIL K-ports 1: D402.2's GND via.
+  * FAIL K-loader 8: section 8.4.
+
+### 8.6 Open items
+
+* **ARM1_SENSE** (2 tiny jogs, 1 short segment, In3 near (17.5, 29.2)): the jog is forced by GND vias (18.0, 29.2) and
+  (17.0, 29.3) and the 3V3A via (18.95, 31.1). A straight diagonal fails hole clearance (DRC, Measured). It was already
+  pending before.
+* **GPS_TX_MCU** (tiny jog at (26.3, 38.65)): forced by C99, C9.1 and VLOGIC's F.Cu. A single diagonal shorts them
+  (DRC, Measured).
+* **SD_MOSI:**
+  * tiny jog at (28.6, 19.75): SD_CS's In3 run at x 28.95 and the 3V3 via (28.27, 19.25) leave no straight B.Cu line;
+  * no GND partner within 1.5 mm of the via (29.8, 17.05): SD_CS's F.Cu at y 17.45, C400 / C404 and the PORT_5V3
+    region leave no legal site (partner search, Measured);
+  * 4 vias against a need of 1.
+* **CAM_RX_BUFFER** (4 vias where none are needed): a B.Cu-only route is impossible, and the F / B minimum across the
+  CAM_5V path is 4 (drafting router, Measured).
+* **Ground family:** In1 / In4 pours and the GND joints (unchanged list in O-C1b-6, plus the moved C21.2 via
+  (19.45, 22.52)).
+* **Gate lane:** the `tools/` LOADER_R10 edits (section 8.4).
+
+### 8.7 Checks run
+
+* `m3_design/r11_build.sh` end to end, twice: identical SHA-256 `fdd011541bda7c9b9359357912c5fdbf4aba01aebcb1157c80bcc9323e85bea2`.
+* `tools/check_r11.py` (full) on a zone-filled copy of the built board with its `fit_check --profile r11` report.
+* `r11_escape_check --board`.
+* Not run: tools/check.sh (not this lane), signal integrity, JLC DFM, any electrical test.

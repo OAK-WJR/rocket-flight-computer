@@ -12,7 +12,7 @@ trunk. D4 (USBLC6, B.Cu) taps the pair by one via each, its two pins of a line b
 change of D+ / D- has a GND via within 1.5 mm (AGENTS section 3).
 """
 
-NETS = ('USB_DP', 'USB_DM', 'VBUS', 'CC1', 'CC2', 'VBUS_SENSE', 'USB_ILIM', 'USB_LIMITED', 'USB_OVLO')
+NETS = ('USB_DP', 'USB_DM', 'VBUS', 'CC1', 'CC2', 'VBUS_SENSE', 'USB_ILIM', 'USB_LIMITED', 'USB_OVLO', 'USB_FAULT_N')
 
 SIG, USB, PWR = 0.1, 0.2, 0.3
 SV = (0.4, 0.2)            # signal via

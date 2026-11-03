@@ -1,4 +1,4 @@
-# M3-ASSY-R11 U1 (TFBGA-100, (24, 28), 0.8 mm) escape table (stage C1b, D-R11-44; pinned, reviewed). One row per used
+# M3-ASSY-R11 U1 (TFBGA-100, (24, 28), 0.8 mm) escape table (stage C1b, D-R11-44; re-planned D-R11-49; pinned, reviewed). One row per used
 # ball (pin_table.tsv r11_net not NC). state: routed = the escape copper is on the board; open = no escape copper yet
 # (an open item of stageC1b.md, the note says why). path: the layers from the ball to the field boundary (F = F.Cu only,
 # F-In3 / F-B = a via at (via_x, via_y) and the named layer, F-plane = a rail ball's dog-bone to its plane). exit: the side
@@ -6,32 +6,38 @@
 # field), layer the copper layer it crosses on, slot the crossing coordinate along that side (mm). target: the escape's
 # first pad (tx, ty its centre). m3_design/r11_escape_check.py proves the table and checks it against the copper.
 ball	net	family	state	path	via_x	via_y	exit	layer	slot	target	tx	ty	note
-A3	QSPI_IO2	core	routed	F-B	21.6	24.0	E	B	24.42	U3.3	32.83	34.03	
-A5	IMU_CS	core	routed	F	-	-	N	F	23.58	U4.12	22.5	19.54	
-A6	SPI1_MISO	core	routed	F-B	24.4	23.6	N	B	24.62	U4.1	24.21	19.75	
+A1	CAM_PWR_EN	signals	routed	F	-	-	N	F	20.18	R431.1	22.17	12.4	D-R11-49: re-pinned (was NC)
+A2	CAM_FAULT_N	signals	routed	F-In3	21.2	23.6	N	In3	21.42	R432.1	23.97	12.4	D-R11-49: re-pinned (was NC)
+A3	QSPI_IO2	core	routed	F-B	22.0	23.6	E	B	24.42	U3.3	32.83	34.03	D-R11-49: re-routed
+A4	CAM_MCU_TX	signals	routed	F	-	-	N	F	22.8	U12.5	21.05	15.35	D-R11-49: re-pinned (was NC)
+A5	SERVO1_MCU	servo	routed	F-B	23.6	23.6	N	B	24.07	D121.1	23.85	6.85	D-R11-49: re-pinned (was IMU_CS)
+A6	SPI1_MISO	core	routed	F	-	-	N	F	24.4	U4.1	24.21	19.75	D-R11-49: re-routed
 A7	SPI1_SCK	core	routed	F-In3	25.2	23.6	N	In3	24.98	U4.13	23	19.54	
+A8	SERVO2_MCU	servo	routed	F-In3	26.0	23.6	N	In3	26.1	D121.3	25.75	6.85	D-R11-49: re-pinned (was NC)
 A9	SWCLK	core	routed	F-B	26.8	23.6	E	B	23.6	J2.4	32.9	38.965	
 A10	SWDIO	core	routed	F-B	28.0	24.0	E	B	24	J2.2	31.63	38.965	
+B1	CAM_UART_OE	signals	routed	F-In3	19.9	24.0	N	In3	19.9	U12.6	21.05	14.85	D-R11-49: re-pinned (was NC)
 B2	3V3	core	routed	F-plane	20.8	24.8	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-B5	QSPI_NCS	core	open	-	-	-	-	-	-	U3.1	30.3	34.03	stageC1b.md O-C1b-1: B5 boxed by the north-going In3 lines and the IMU / SD F lanes; no route found on the re-planned board
-B6	LED_RED	status	routed	F-In3	24.8	24.8	N	In3	23.38	R32.1	21.17	22.4	
+B3	IMU_CS	core	routed	F	-	-	N	F	21.6	U4.12	22.5	19.54	D-R11-49: re-pinned (was NC)
+B4	CAM_MCU_RX	signals	routed	F	23.2	17.3	N	F	23.2	U12.4	24.15	15.35	D-R11-49: re-pinned (was NC)
+B5	QSPI_NCS	core	routed	F	23.2	25.6	E	F	32.4	U3.1	30.3	34.03	D-R11-49: routed (was open)
+B6	IMU_INT1	core	routed	F-In3	24.8	24.8	N	In3	25.6	U4.4	24.21	21.25	D-R11-49: re-pinned (was LED_RED)
+B7	LED_YEL	status	routed	F	-	-	N	F	25.6	R33.1	25.57	22.4	D-R11-49: re-pinned (was NC)
 B8	SD_MISO	sd	routed	F	-	-	N	F	26.42	R462.1	29.13	15.8	
 B9	SD_SCK	sd	routed	F	29.5	23.15	E	F	24.03	J430.5	36.305	13.05	
 B10	USB_DP	usb	routed	F	-	-	E	F	25.2	J3.A6	39.12	30.25	
 C1	HSE_IN	core	routed	F-B	20.0	25.6	W	B	26	Y1.1	15.5	25.15	
 C2	GND	core	routed	F-plane	20.8	25.6	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 C3	PYRO1_GATE_N	pyro	routed	F	-	-	W	F	26.35	R126.1	11.83	28	
-C4	IMU_INT1	core	routed	F	22.4	23.05	N	F	22.4	U4.4	24.21	21.25	
 C5	SPI1_MOSI	core	routed	F	24.0	18.7	N	F	24	U4.14	23.5	19.54	
-C6	USB_FAULT_N	usb	routed	F-B	26.0	23.8	E	B	30.97	U10.4	35.85	26.4	
-C8	SD_MOSI	sd	routed	F-In3	27.2	25.6	N	In3	28.55	R461.1	29.13	16.7	
+C8	SD_MOSI	sd	routed	F-In3	27.2	25.6	N	In3	28.6	R461.1	29.13	16.7	D-R11-49: re-routed
 C10	USB_DM	usb	routed	F	-	-	E	F	25.6	J3.A7	39.12	29.75	
 D1	HSE_OUT	core	routed	F-B	20.0	27.2	W	B	26.85	Y1.3	17.7	26.85	
 D2	3V3	core	routed	F-plane	20.8	27.2	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-D5	BOOT0	core	routed	F-B	27.2	26.4	S	B	27.6	R5.1	27.97	33.9	
-D6	LED_YEL	status	open	-	-	-	-	-	-	R33.1	25.57	22.4	stageC1b.md O-C1b-1: D6 has one site (24.8, 26.4) between the In3 lines x 24.4 / 25.2; no route found
+D5	BOOT0	core	routed	F-In3	23.2	27.2	S	In3	27.27	R5.1	27.97	33.9	D-R11-49: re-routed
 D8	SD_CS	sd	routed	F-In3	27.2	27.2	E	In3	25.78	R460.1	29.13	17.6	
 E1	NRST	core	routed	F-B	19.55	27.6	W	B	27.77	C24.1	19	28.48	
+E2	CAM_5V_SENSE	signals	routed	F-In3	21.6	28.0	N	In3	19.45	R105.1	19.6	9.03	D-R11-49: re-pinned (was NC)
 E4	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 E5	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 E6	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
@@ -47,31 +53,25 @@ F8	VCAP1	core	routed	F-plane	26.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2
 F9	VBUS_SENSE	usb	routed	F-B	27.2	28.0	S	B	27.2	R110.1	30.37	36.8	
 F10	AUX_TX_MCU	ports	routed	F	29.4	27.95	E	F	27.95	R471.1	34.225	44.83	
 G1	GND	core	routed	F-plane	20.0	29.6	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-G2	SERVO1_MCU	servo	routed	F-In3	20.8	28.8	N	In3	19.75	D121.1	23.85	6.85	
+G2	SERVO3_MCU	servo	routed	F-In3	20.8	28.8	W	In3	25.98	R152.1	19.2	3.825	D-R11-49: re-pinned (was SERVO1_MCU)
 G3	LOGIC_SOURCE_ST	power	routed	F-In3	21.6	28.8	S	In3	21.2	U11.9	16.55	36.45	
 G5	QSPI_CLK	core	routed	F	-	-	E	F	28.8	U3.6	32.83	26.97	
 G9	QSPI_IO0	core	routed	F	-	-	E	F	29.6	U3.5	34.1	26.97	
-G10	BUZZ_DRV	status	routed	F	29.4	29.2	E	F	29.2	R162.1	44.4	39.03	
 H1	3V3A	core	routed	F-plane	20.0	30.4	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-H2	SERVO2_MCU	servo	routed	F-In3	21.6	30.4	N	In3	25.6	D121.3	25.75	6.85	
+H2	SERVO4_MCU	servo	routed	F-In3	20.8	29.6	W	In3	28.78	R153.1	17.4	3.825	D-R11-49: re-pinned (was SERVO2_MCU)
 H3	BAT_FAULT_N	power	routed	F-In3	21.6	29.6	W	In3	29.73	U9.4	12.225	11.475	
 H4	ARM1_SENSE	pyro	routed	F-In3	22.4	30.4	W	In3	30.78	C129.1	9.45	22.82	
-H5	CAM_MCU_RX	signals	routed	F	22.4	29.6	N	F	20.7	U12.4	21.05	13.85	
-H6	CAM_PWR_EN	signals	routed	F-In3	24.8	29.6	N	In3	27.6	R431.1	22.17	12.4	
+H9	USB_FAULT_N	usb	routed	F-In3	24.8	29.6	E	In3	26.93	U10.4	35.85	26.4	D-R11-49: re-pinned (was NC)
 J1	GND	core	routed	F-plane	20.0	31.2	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-J2	SERVO3_MCU	servo	routed	F-In3	20.8	30.4	W	In3	28.78	R156.1	18.6	7.03	
 J3	VLOGIC_SENSE	power	routed	F-B	21.6	32.6	S	B	22.52	R60.2	26.03	35.6	
-J5	CAM_MCU_TX	signals	routed	F-B	23.2	31.2	N	B	26.4	U12.5	24.15	13.85	
-J6	CAM_FAULT_N	signals	routed	F	22.4	28.8	N	F	22.8	R432.1	23.97	12.4	
+J5	BUZZ_DRV	status	routed	F	23.9	32.75	S	F	23.77	R162.1	44.4	39.03	D-R11-49: re-pinned (was CAM_MCU_TX)
 J7	I2C1_SCL	core	routed	F-In3	24.8	31.2	S	In3	20.8	R12.1	13	39.43	
 J8	RADIO_TX_MCU	ports	routed	F-In3	25.6	31.2	S	In3	25.6	R451.1	13.025	44.83	
 J9	GPS_RX_MCU	ports	routed	F-In3	26.4	31.2	S	In3	25.8	R440.2	24.875	43.97	
 J10	QSPI_IO3	core	routed	F	28.0	30.4	E	F	28.35	U3.7	31.57	26.97	
 K1	3V3	core	routed	F-plane	20.0	32.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-K2	SERVO4_MCU	servo	open	-	-	-	-	-	-	D121.6	23.85	9.15	stageC1b.md O-C1b-1: no route from K2 found once the other north-going nets held their lines
-K4	CAM_5V_SENSE	signals	routed	F-B	22.4	31.2	N	B	20.15	R105.1	19.6	9.03	
-K5	CAM_UART_OE	signals	open	-	-	-	-	-	-	U12.6	24.15	14.35	stageC1b.md O-C1b-1: U12.6 and K5 both boxed; no route found
+K4	LED_RED	status	routed	F	22.0	35.05	S	F	22	R32.1	23.43	42.3	D-R11-49: re-pinned (was CAM_5V_SENSE)
 K7	I2C1_SDA	core	routed	F-In3	24.0	32.0	S	In3	23.38	R13.1	13	41.53	
 K8	RADIO_RX_MCU	ports	routed	F-In3	25.2	32.4	S	In3	25.35	R450.2	14.275	43.97	
-K9	GPS_TX_MCU	ports	routed	F	-	-	S	F	26.25	R441.1	23.625	44.83	
+K9	GPS_TX_MCU	ports	routed	F	-	-	S	F	26.3	R441.1	23.625	44.83	D-R11-49: re-routed
 K10	QSPI_IO1	core	routed	F	-	-	E	F	31.6	U3.2	31.57	34.03	
