@@ -22,6 +22,12 @@ storage driver is enabled. Flight state,
 control and recovery logic remain unimplemented. This is bench diagnostics,
 not the complete board firmware.
 
+The [read-only U3 diagnostic module](flash/README.md) has a separately tested
+core and native QUADSPI transport. It is not in this image or its ABI4 record.
+Flash evidence serialization and host reporting must be integrated before those
+tests can support installed-board diagnosis; current firmware/probe grants
+and capabilities are unchanged.
+
 Voltage records retain the current partial raw batch and a separate last-good
 sample, configuration, timestamps and nominal conversions. Initialization,
 conversion and batch timeouts are bounded; failed cleanup stops retry. No rail

@@ -94,6 +94,10 @@ selftest python3 -B "$ROOT/m3_firmware/r10/test_r10.py"     # real portable C + 
 selftest python3 -B "$ROOT/m3_firmware/r10/imu/test_imu_core.py" # fitted ST sensor core, scripted registers only
 selftest python3 -B "$ROOT/m3_firmware/r10/baro/test_baro.py" # MS5611 core, scripted I2C only
 selftest python3 -B "$ROOT/m3_firmware/r10/voltage/test_voltage.py" # voltage core + fake-MMIO ADC; no physical hardware
+selftest python3 -B "$ROOT/m3_firmware/r10/flash/test_flash_ro.py" # read-only core; scripted transport only
+selftest python3 -B "$ROOT/m3_firmware/r10/flash/test_qspi.py" # fixed-frame QSPI MMIO model; no probe
+selftest python3 -B "$ROOT/m3_firmware/r10/flash/test_verify_flash.py" # source/part/pin provenance
+selftest python3 -B "$ROOT/m3_firmware/r10/flash/test_mutations.py" # deliberate regressions must be observed
 selftest python3 "$ROOT/tools/test_procurement.py"       # required R9 / R10 limits cannot be weakened by report data
 selftest python3 "$ROOT/tools/test_fab_validation.py"    # placement, export and binding regressions (R18-GATE-04)
 selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imports fit_check from its own folder

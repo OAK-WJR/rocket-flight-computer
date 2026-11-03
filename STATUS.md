@@ -6,6 +6,24 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
+**R10 read-only flash diagnostic module (2026-11-03 UTC).**
+The [U3 diagnostic core and QUADSPI transport](m3_firmware/r10/flash/README.md)
+now implement fixed status/JEDEC/SFDP/quad-ID reads with bounded stages,
+partial raw evidence, last-good history, retries and certified cleanup.
+The source contract checks the fitted W25Q128JVSIQ, its pull-up,16 endpoints,
+six pin/AF rows and pinned manufacturer register references. The native
+initialisation applies the reviewed ES0392 timing/CCR workarounds with pins
+parked; object-code tests check its interrupt-masked consecutive stores.
+The targeted suite passes71 software tests, including scripted C/MMIO fault
+cases with sanitizers, Cortex-M7 object compilation and8 deliberate regressions
+that compile and then fail runtime assertions. Gate self-tests enforce the new
+stages; `tools/check.sh` remains required before committing this change.
+This module is not linked into the current ABI4 image. Flash serialization,
+host readback and physical validation remain open. No programming, wake/reset
+command or array write is added; CAD, fabrication bytes and probe grants are
+unchanged. Neither ID checks nor these models establish storage-array integrity,
+endurance, real bus timing, power-loss behaviour or flight qualification.
+
 **R10 voltage readback integration (2026-11-03 UTC).**
 The [bench image](m3_firmware/r10/README.md) now links the ADC1/ADC3 adapter and
 voltage core. ABI4 uses an explicit1024-byte record: uncompressed pending raw
@@ -20,7 +38,9 @@ The targeted suites have40 firmware/runtime/record tests and41 bounded-readback
 tests; the13-case voltage suite separately checks real C with scripted MMIO and
 pinned-CMSIS object builds. The integrated candidate cross-links for Cortex-M7;
 a missing freestanding memcpy was added and checked with guarded-buffer tests.
-The complete repository gate remains required before this change is committed.
+The complete repository gate passed at21:15:21 UTC on2026-11-03 with2520
+unchanged inventoried inputs and unchanged PCB bytes; this integration was
+published as`ab3d101` on the development branch.
 The preceding adapter-only gate passed at20:42:58 UTC with2515unchanged inputs
 and unchanged PCB bytes. No image was installed or run on a real board. Physical
 voltage acquisition, accuracy, full operational firmware and board/flight

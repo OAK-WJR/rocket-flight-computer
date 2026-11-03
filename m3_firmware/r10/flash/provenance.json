@@ -1,0 +1,75 @@
+{
+  "schema": "r10-bench-read-only-flash-provenance/v1",
+  "reviewed_utc_date": "2026-11-03",
+  "fitted_device": {
+    "ref": "U3",
+    "manufacturer": "Winbond",
+    "part": "W25Q128JVSIQ",
+    "lcsc": "C97521"
+  },
+  "sources": [
+    {
+      "document": "W25Q128JV RevM, December24,2024",
+      "url": "https://www.winbond.com/resource-files/W25Q128JV%20RevM%2012242024%20Plus.pdf",
+      "pdf_sha256": "b51bb4303e17a17750c9cbcafc9a776dea842a8971d7cdd5edc70ff738efb1fe",
+      "sections": [
+        "7.1.4",
+        "8.1 Instruction Set Table",
+        "Read Status Registers",
+        "Read Manufacturer/Device ID Quad IO Figure41",
+        "Read JEDEC ID",
+        "Read SFDP Register"
+      ],
+      "figure41_note": "The diagram places the24-bit address before the8-bit F0 mode and four dummy cycles; nearby prose orders these inconsistently. The implemented frame follows Figure41."
+    },
+    {
+      "document": "RM0433 Rev8, January2023",
+      "url": "https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+      "manufacturer_pdf_mirror_sha256": "9ba54135736a47a302cdc28fdc7ca8f23c6eed5a646fa0a639af6ed2ad71336e",
+      "sections": [
+        "23.3.3",
+        "23.3.4",
+        "23.3.5",
+        "23.3.9",
+        "23.3.12",
+        "23.3.13",
+        "23.3.15",
+        "23.3.16",
+        "23.5.1-23.5.9"
+      ]
+    },
+    {
+      "document": "ES0392 Rev16, October2026",
+      "url": "https://www.st.com/resource/en/errata_sheet/es0392-stm32h742x743xig-st32h750xb-and-stm32h753xi-device-errata-stmicroelectronics.pdf",
+      "sections": [
+        "2.7.1",
+        "2.7.2",
+        "2.7.3",
+        "2.7.4",
+        "2.7.5",
+        "2.7.6"
+      ]
+    },
+    {
+      "document": "Reviewed R10 pin_table.tsv, DS12110 Rev8 Tables9/11/13/14 citations",
+      "path": "m3_design/assembly_review/sources/r10_design/pin_table.tsv"
+    }
+  ],
+  "pinned_sources": {
+    "m3_firmware/vendor/device/Include/stm32h743xx.h": "9a4ea0860707868a1cc562140ba214d535fb5a64fde91b451b2767276eef7e03",
+    "m3_firmware/vendor/hal/Src/stm32h7xx_hal_qspi.c": "cd8e278936fe6c09d59949b6b05b3a2e52c5f3ae3d33ab7f7729ea33690845fc",
+    "m3_firmware/vendor/hal/Inc/stm32h7xx_hal_qspi.h": "ed55223d786dfba78b8fb9e30c64898558c3c7044f2fdc689069decceb528648",
+    "m3_firmware/vendor/hal/Src/stm32h7xx_hal_rcc_ex.c": "ba3ffa42989a60a93e8de7f148cde4fa22c6853223d00d5d9954ad370c6012fe"
+  },
+  "clock_policy": "Require the current HSI64/HCLK64 selectors and divisors. Leave selectors unchanged; divide the serial clock by64 to nominal1MHz. No physical frequency or oscillator accuracy is asserted.",
+  "timing_workaround": "ES0392 2.7.4 is applied with pins parked and NCS high, using an interrupt-masked native primitive with consecutive CCR/CCR/CR stores. Clear the residual CCR and explicitly clear/set EN for2.7.3 before exposing AF pins. Object-code ordering does not qualify actual bus-cycle timing.",
+  "read_only_policy": "Only05/35/15/9F/5A/94 read frames from a fixed descriptor table; addresses zero, finite lengths <=8, no flash DR writes, reset/wake/WREN/program/erase/status writes, DMA, interrupts, auto-poll or memory-mapped access.",
+  "cleanup_policy": "Raise NCS using its GPIO ODR before output mode, park the five other pins analog/no-pull, reset only the owned QUADSPI, require idle/reset readback, then disable its clock. Failed cleanup stops the core.",
+  "image_linked": false,
+  "hardware_tested": false,
+  "open_items": [
+    "Versioned flash evidence serialization/readback integration.",
+    "Physical timing, supply, IO continuity, real-device identity and silicon qualification.",
+    "No storage-array content, programming, endurance or power-loss qualification."
+  ]
+}
