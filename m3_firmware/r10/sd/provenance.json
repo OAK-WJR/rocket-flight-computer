@@ -1,0 +1,75 @@
+{
+  "schema": "r10-sd-metadata-provenance/v1",
+  "reviewed_utc_date": "2026-11-03",
+  "sources": [
+    {
+      "publisher": "SD Association",
+      "title": "Physical Layer Simplified Specification",
+      "version": "9.10",
+      "date": "2023-12-01",
+      "official_version_index": "https://www.sdcard.org/downloads/pls/",
+      "retrieved_document": "https://www.lishutong1024.cn/pdf/Part1PhysicalLayerSimplifiedSpecificationVer9.10Fin_20231201.pdf",
+      "retrieved_as_mirror": true,
+      "document_sha256": "9e243598ca9ed152da5a97ef612a253151f996b9f3cfb067867bd68369bf56df",
+      "sections": [
+        "4.5 CRC",
+        "5.1 OCR",
+        "5.2 CID",
+        "5.3.2 CSDv1",
+        "5.3.3 CSDv2",
+        "7.1 SDUC SPI limitation",
+        "7.2.2 CRC-on guidance",
+        "7.2.6 CID/CSD read packets",
+        "7.2.4 CMD0 during programming",
+        "4.4 clock control while ACMD41 is pending",
+        "4.2 initialization clock range and completion timing"
+      ],
+      "visually_reviewed_printed_pages": [
+        233,
+        289,
+        292
+      ]
+    },
+    {
+      "publisher": "Analog Devices",
+      "title": "AN-1443",
+      "url": "https://www.analog.com/en/resources/app-notes/an-1443.html",
+      "sections": [
+        "Table3 microSD pin mapping",
+        "SPI bit-rate initialization"
+      ]
+    },
+    {
+      "publisher": "Molex",
+      "part": "472192001",
+      "url": "https://www.molex.com/en-us/products/part-detail/472192001",
+      "drawing": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf"
+    }
+  ],
+  "scope": "Source-bound codec, fixed command frames and portable normalized metadata query; no native transport, target IO or image link.",
+  "diagnostic_policies": {
+    "nominal_ocr_voltage_overlap_mask": "0x00300000",
+    "ocr_policy": "Require overlap with3.2-3.4V nominal window; not a measured-rail or full-tolerance acceptance test.",
+    "sdsc_capacity_limit_bytes": 2147483648,
+    "sdhc_sdxc_capacity": "Reported CSDv2 bit-field capacity only, not a full SD conformance test.",
+    "unknown_csd": "Preserve raw response and reject unsupported structures; SDUC is not SPI-compatible.",
+    "cmd0": "Changes protocol state and can interrupt pending programming. Portable query requires exclusive cold-start declaration exactly1, does not prove actual ownership and has no reset/retry after failure.",
+    "query_nominal_deadlines_ms": {
+      "power_guard": 2,
+      "initialize": 500,
+      "transaction_including_final_cleanup": 200,
+      "ACMD41": 1500,
+      "pending_ACMD41_clock_gap": 25,
+      "total": 5000
+    },
+    "query_deadlines": "Engineering bench policies, checked at subsequent polls; cannot preempt a callback which never returns. Native finite register/wire timing budgets remain unimplemented."
+  },
+  "native_adapter_implemented": false,
+  "image_linked": false,
+  "hardware_tested": false,
+  "open_items": [
+    "Native bounded SPI3 transport and register/pin/clock provenance are unimplemented; portable query exists and is tested only against a normalized host model.",
+    "Actual SPI/card behavior, physical ownership, clock/CS timing, power/retention, latency/endurance/power loss and logger integration remain unqualified.",
+    "No connection or protocol command was sent to a real card. No media block read, write, erase, lock or format path exists in this codec."
+  ]
+}

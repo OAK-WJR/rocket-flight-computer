@@ -151,6 +151,15 @@ qualification is inferred.
 
 ## Verification evidence and remaining work
 
+The [microSD metadata module](sd/README.md) is a separate portable codec and
+one-shot query core, with exact socket/net/pin binding and actual-C host tests.
+It preserves partial replies and separates parsing from acquisition completion.
+It has no native SPI3 adapter and is not linked into this image; no SD command
+has been sent to hardware. Its cold-start declaration is a caller contract,
+not proof of physical ownership. Native transport, capture/report integration
+and storage/power-loss qualification remain open. ABI5 and its build inputs
+are unchanged by the standalone module.
+
 The host suite compiles and executes the actual portable C publisher, injects
 each of the 8192 possible single-bit changes into a record, tests random payloads
 and counter wrap, and executes the actual `main.c` with scripted register and

@@ -28,6 +28,8 @@ pathlib.Path(sys.argv[sys.argv.index('-o') + 1]).write_text(json.dumps(report))
         stub = '''
 import os, pathlib, sys
 stage = pathlib.Path(__file__).stem
+if pathlib.Path(__file__).parent.name == 'sd':
+    stage = 'sd_' + stage
 with open(os.environ['GATE_LOG'], 'a') as log:
     log.write(stage + '\\n')
 if os.environ.get('EXPECTED_KICAD_CLI') and os.environ.get('KICAD_CLI') != os.environ['EXPECTED_KICAD_CLI']:
@@ -51,10 +53,13 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         (self.root / 'm3_firmware/r10/baro').mkdir()
         (self.root / 'm3_firmware/r10/voltage').mkdir()
         (self.root / 'm3_firmware/r10/flash').mkdir()
+        (self.root / 'm3_firmware/r10/sd').mkdir()
         for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_schematic_repro.py',
                      'diagnostics/test_r10_offline.py', 'diagnostics/test_r10_swd.py', 'diagnostics/test_r10_firmware.py', 'diagnostics/test_r10_findings.py', 'm3_firmware/r10/test_r10.py', 'm3_firmware/r10/imu/test_imu_core.py', 'm3_firmware/r10/baro/test_baro.py', 'm3_firmware/r10/voltage/test_voltage.py', 'tools/test_procurement.py',
                      'm3_firmware/r10/flash/test_flash_ro.py', 'm3_firmware/r10/flash/test_qspi.py',
                      'm3_firmware/r10/flash/test_verify_flash.py', 'm3_firmware/r10/flash/test_mutations.py', 'm3_firmware/r10/flash/test_flash_frame.py',
+                     'm3_firmware/r10/sd/verify.py', 'm3_firmware/r10/sd/test_metadata.py',
+                     'm3_firmware/r10/sd/test_query.py', 'm3_firmware/r10/sd/test_mutations.py',
                      'tools/test_fab_validation.py', 'tools/test_fit_check.py', 'tools/test_paste_check.py',
                      'tools/test_r10_parts.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
             (self.root / path).write_text(stub)
@@ -64,7 +69,9 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         self.env.pop('R10_SKIP_FAB_MANIFEST', None)
         (self.root / 'board.kicad_pcb').write_text('board copy\n')
 
-    SELFTESTS = ['test_check_shell', 'test_schematic_repro', 'test_r10_offline', 'test_r10_swd', 'test_r10_firmware', 'test_r10_findings', 'test_r10', 'test_imu_core', 'test_baro', 'test_voltage', 'test_flash_ro', 'test_qspi', 'test_verify_flash', 'test_mutations', 'test_flash_frame', 'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
+    SELFTESTS = ['test_check_shell', 'test_schematic_repro', 'test_r10_offline', 'test_r10_swd', 'test_r10_firmware', 'test_r10_findings', 'test_r10', 'test_imu_core', 'test_baro', 'test_voltage', 'test_flash_ro', 'test_qspi', 'test_verify_flash', 'test_mutations', 'test_flash_frame',
+                 'sd_verify', 'sd_test_metadata', 'sd_test_query', 'sd_test_mutations',
+                 'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
                  'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check']
     CONTRACTS = ['r10_sch_check', 'check_r10_diagnostic_profile', 'verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
 

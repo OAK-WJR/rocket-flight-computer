@@ -6,6 +6,23 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
+**R10 microSD metadata diagnostic core (2026-11-03 UTC).**
+The [standalone microSD module](m3_firmware/r10/sd/README.md) provides fixed
+initialization/register frames, CRC7/CRC16 and CID/CSD/OCR decoding, plus a
+one-shot query over a normalized callback interface. It retains partial bytes,
+counts, command times and primary/cleanup errors. Completion is accepted only
+after a subsequent poll observes cleanup time; a reproduced delayed-cleanup
+defect is covered by executable regressions. The source contract checks J430,
+its pull-ups/bypass capacitors, 30 endpoints and four reviewed MCU pins.
+The targeted suites pass 23 codec/source tests and 21 actual-C query tests;
+two mutation tests reject eight regressions that compile and then fail runtime
+assertions. The 13 gate-shell tests require all four new SD stages and stop
+after a failing stage. The complete repository gate is required before commit.
+This is not a native card driver: SPI3, capture/host integration and logging
+remain open. It is not linked into the bench image and adds no physical access,
+media read/write/erase path or hardware/card qualification. PCB, fabrication
+outputs, ABI5 and image build inputs remain unchanged.
+
 **Purchasable pilot and two-correction-round budget (2026-11-03 UTC).**
 The [ordering assessment](docs/ORDERING.md#pilot-procurement-and-rework-budget-2026-11-03)
 records the owner's lower-rework-cost requirement and an exact-code supplier
