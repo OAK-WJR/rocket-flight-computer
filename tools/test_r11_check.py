@@ -408,6 +408,99 @@ class R11Fixes(unittest.TestCase):
                ([] if adc_ball == 'F1' else [(adc_ball, 'PYRO1_CONT', (4, 0), 'smd')]))
         return s
 
+    # K-loader (gate_C2.md section 5): R11's own LOADER_R11 on U1's balls
+    @staticmethod
+    def pin_nets():
+        import csv
+        with r11.R11_PIN_TABLE.open() as f:
+            rows = csv.DictReader((line for line in f if not line.startswith('#')), delimiter='\t')
+            return {r['port']: r['r11_net'] for r in rows if r.get('port')}
+
+    def loader_board(self, nets=None):
+        """U1 with every LOADER_H74X ball of the R11 pin table, on `nets` (default: LOADER_R11's nets; others NC), and
+        every recorded member pad with its recorded value."""
+        balls = r11.pin_table()
+        nets = {p: e['net'] for p, e in r11.LOADER_R11.items()} if nets is None else nets
+        s = Six()
+        s.part('U1', 23, 25, [(balls[p], nets.get(p), (0.1 * k, 0), 'smd')
+                              for k, p in enumerate(sorted(q for q in r10.LOADER_H74X if q in balls))])
+        parts = {}
+        for e in r11.LOADER_R11.values():
+            for pad, value in (e['members'] or {}).items():
+                ref, num = pad.split('.')
+                parts.setdefault(ref, (value, []))[1].append((num, e['net']))
+        for k, (ref, (value, pads)) in enumerate(sorted(parts.items())):
+            f = s.part(ref, 5 + k, 45, [(num, net, (0.5 * j, 0), 'smd') for j, (num, net) in enumerate(pads)])
+            f.SetValue(value)
+        return s, balls
+
+    def loader_issues(self, s, balls, allowances=None):
+        return r11.loader_pins_r11(s.board, balls, allowances)[0]
+
+    def test_k_loader_entries_cover_the_r11_pin_tables_loader_nets(self):
+        """The passing real map: LOADER_R11 is exactly the loader ports that carry a net in pin_table.tsv's r11_net,
+        each with that net, R10's AN2606 citation, a decision heading and a case section; the board built from it
+        passes."""
+        nets = self.pin_nets()
+        carried = {p: n for p, n in nets.items() if p in r10.LOADER_H74X and n not in ('', 'NC', '-')}
+        self.assertEqual({p: e['net'] for p, e in r11.LOADER_R11.items()}, carried)
+        self.assertEqual(r11.loader_entry_issues(r11.LOADER_R11), [])
+        self.assertEqual({p: (e['net'], e['decision'], e['case']) for p, e in r11.LOADER_R11.items()
+                          if p in ('PB9', 'PA15', 'PB10', 'PB11', 'PB6')},
+                         {'PB9': ('CAM_MCU_TX', 'D-R11-49', '8.4'), 'PA15': ('SERVO2_MCU', 'D-R11-49', '8.4'),
+                          'PB10': ('I2C1_SCL', 'D-R11-41', '7'), 'PB11': ('I2C1_SDA', 'D-R11-41', '7'),
+                          'PB6': ('QSPI_NCS', 'D-R11-01', r11.R10_CASE)})
+        self.assertTrue(all(e['an2606'] == r11.LOADER_AN2606 for e in r11.LOADER_R11.values()))
+        self.assertEqual(set(r11.LOADER_R11) - set(r10.LOADER_H74X), set())
+        s, balls = self.loader_board()
+        self.assertEqual(self.loader_issues(s, balls), [])
+        self.assertEqual(s.run({'K-loader'}, port_pin=balls)['issues'], [])
+        self.assertIn('PI0', r10.LOADER_H74X)                  # the set is R10's LOADER_H74X, unchanged
+        self.assertNotIn('PI0', balls)
+
+    def test_k_loader_fails_a_loader_net_with_no_entry(self):
+        s, balls = self.loader_board()
+        s.board.FindFootprintByReference('U1').FindPadByNumber(balls['PA9']).SetNet(s.net('GPS_TX_WIRE'))
+        issues = self.loader_issues(s, balls)
+        self.assertEqual(len(issues), 1)
+        self.assertIn('PA9', issues[0]); self.assertIn('no LOADER_R11 entry', issues[0])
+        self.assertIn('loader drives this pin', issues[0])
+        s, balls = self.loader_board()
+        less = {p: e for p, e in r11.LOADER_R11.items() if p != 'PA15'}
+        self.assertTrue(any('PA15' in i and 'no LOADER_R11 entry' in i for i in self.loader_issues(s, balls, less)))
+
+    def test_k_loader_fails_an_entry_whose_pin_now_carries_another_net(self):
+        nets = {p: e['net'] for p, e in r11.LOADER_R11.items()}
+        nets['PB9'] = 'I2C1_SDA'                               # R10's old PB9 net back on the ball
+        s, balls = self.loader_board(nets)
+        issues = self.loader_issues(s, balls)
+        self.assertTrue(any('PB9' in i and 'carries I2C1_SDA' in i and 'entry is for CAM_MCU_TX' in i for i in issues))
+        s, balls = self.loader_board()                         # a new member on a pinned net
+        s.part('R999', 40, 45, [('1', 'SERVO2_MCU', (0, 0), 'smd')]).SetValue('10k')
+        self.assertTrue(any('PA15' in i and 'members differ' in i for i in self.loader_issues(s, balls)))
+
+    def test_k_loader_fails_a_stale_entry_for_an_nc_pin(self):
+        s, balls = self.loader_board()
+        stale = dict(r11.LOADER_R11, PA2=dict(r11.LOADER_R11['PA15'], net='SERVO3_MCU'))
+        issues = self.loader_issues(s, balls, stale)
+        self.assertTrue(any(i.startswith('stale LOADER_R11 entry PA2') for i in issues))
+        nets = {p: e['net'] for p, e in r11.LOADER_R11.items() if p != 'PB10'}
+        s, balls = self.loader_board(nets)                    # PB10's ball made NC: its entry is stale
+        self.assertTrue(any(i.startswith('stale LOADER_R11 entry PB10') for i in self.loader_issues(s, balls)))
+
+    def test_k_loader_entries_need_provenance(self):
+        bad = dict(r11.LOADER_R11)
+        bad['PB9'] = dict(bad['PB9'], decision='D-R11-999')
+        bad['PB10'] = dict(bad['PB10'], case='9.9')
+        bad['PB11'] = dict(bad['PB11'], an2606='AN2606 Rev 70')
+        bad['PA15'] = dict(bad['PA15'], case=r11.R10_CASE)    # R10 had no PA15 allowance
+        bad['PD0'] = dict(bad['PA15'])                         # not a loader pin
+        bad['PA4'] = dict(bad['PA4'], reason=' ')
+        issues = r11.loader_entry_issues(bad)
+        for frag in ('PB9: decision D-R11-999', 'PB10: case section 9.9', 'PB11: AN2606 citation',
+                     "PA15: names R10's case", 'PD0: not a loader pin', "PA4: missing ['reason']"):
+            self.assertTrue(any(frag in i for i in issues), frag)
+
     def test_s2_exempts_the_sense_nodes_only_on_their_own_balls(self):
         ties = [i for i in failing(self.board().run({'S-2'}, port_pin={'PC0': 'F1', 'PC5': 'H4', 'PC1': 'F2'}), 'S-2')
                 if 'U1 has pads' in i]
@@ -664,6 +757,10 @@ class R11RealBoard(unittest.TestCase):
         na, nb = a.GetNet(), b.GetNet()
         a.SetNet(nb); b.SetNet(na)
         self.assertTrue(self.run_rules({'W-1'})['issues'])
+
+    def test_k_loader_holds_on_the_real_board(self):
+        """gate_C2.md section 5: LOADER_R11 covers every loader ball's net on the R11 board, with recorded members."""
+        self.assertEqual(self.run_rules({'K-loader'})['issues'], [])
 
     def test_k_rules_hold_on_the_real_board(self):
         """D-R11-40: R11's own K-rules (pinned DRU, JLC six-layer floors) hold on the R11 board and project."""

@@ -66,7 +66,9 @@ Rules (R10's id where it is R10's rule):
              R10's single-via-open taps with U1's LQFP pins mapped to R11 balls (single_open_taps_r11, O-C2-5),
              exceptions only from R11_DATA 'single_open_exceptions' (none by default). Schemas: gate_C2.md
   K-ports    port ESD clamps on the wire side, <= 4.5 mm of track from the pin (J9's UART pins 5 / 6 on R11)
-  K-loader   ROM-loader pins (check_r10.loader_pins with U1's balls from the R11 pin table)
+  K-loader   ROM-loader pins: LOADER_R11 (R11's own list, keyed by port pin, on U1's balls from the R11 pin table;
+             check_r10.LOADER_H74X's pin set; gate_C2.md section 5): no net without an entry, no entry for another
+             net or an NC pin, recorded members, decision and case section present
 
 Dropped from check_r10, each for one reason:
   M-2 (optional plate) not a gate. P-11 DB125 wire room: R11 has no screw terminals (fit_check r11 holds the GH plug and
@@ -1049,8 +1051,133 @@ def k_ports(ctx):
             dict(clamp_path_mm=ev, bound_mm=r10.CLAMP_PATH_MAX, clamp_gnd_mm=gnd))
 
 
+# K-loader on R11 (R3-MCU-01 / R17-MCU-02; gate_C2.md section 5). The loader-pin set is check_r10.LOADER_H74X unchanged
+# (AN2606 Rev 64 Table 119 pp. 277-280 = Rev 70 Table 135 pp. 320-323); U1's balls come from pin_table.tsv. R10's
+# LOADER_R10 is keyed to R10's pin map and stays frozen; LOADER_R11 is R11's own list, keyed by port pin. Each entry:
+# the net the pin may carry, the net's other members (pad -> part value; None = not pinned, the USB contract), the
+# decision that put the net there, the section holding its case ('R10' = check_r10.LOADER_R10's case, reused only
+# while R10's entry has the same net and members), the AN2606 citation and the electrical reason.
+LOADER_AN2606 = 'AN2606 Rev 64 Table 119 pp. 277-280 (Rev 70 Table 135 pp. 320-323)'
+LOADER_DECISIONS = R11_DIR / 'design/R11_DECISIONS.md'
+LOADER_CASES = R11_DIR / 'design/stageC1b.md'
+R10_CASE = 'R10'
+
+
+def _loader_r10(port):
+    """An R10 allowance whose pin carries the same net on R11 (D-R11-01 keeps R10's netlist)."""
+    net, members, reason = r10.LOADER_R10[port]
+    return dict(net=net, members=members, decision='D-R11-01', case=R10_CASE, an2606=LOADER_AN2606, reason=reason)
+
+
+LOADER_R11 = {
+    **{port: _loader_r10(port) for port in ('PA4', 'PA5', 'PA6', 'PC10', 'PC11', 'PC12', 'PA11', 'PA12', 'PB6')},
+    'PB9': dict(net='CAM_MCU_TX', members={'U12.5': 'TXU0202DCUR'}, decision='D-R11-49', case='8.4',
+                an2606=LOADER_AN2606,
+                reason='I2C1_SDA open drain, no pull: the loader leaves PB9 released into U12\'s CMOS input; U12 is '
+                       'disabled (OE low by R102 10k while PC15 is an input) and the camera unpowered (U402 EN low by '
+                       'R431 100k while PC14 is an input), so nothing reaches J9; the I2C1 slave needs SCL edges on '
+                       'PB6 (QSPI_NCS, held high by R10 10k) and no board device is an I2C master (Inference)'),
+    'PA15': dict(net='SERVO2_MCU', members={'R151.1': '1k 0603', 'R155.1': '10k', 'D121.3': 'SRV05-4'},
+                 decision='D-R11-49', case='8.4', an2606=LOADER_AN2606,
+                 reason='SPI3_NSS: a loader input, no pull, never driven; R155 10k holds it low, so the servo sees a '
+                        'constant low; the reset JTDI pull-up (>= 30k, Inference) against R155 gives <= 0.83 V '
+                        '(Calculation); an SPI3 frame needs SCK edges on PC10 (SD_SCK), which nothing drives'),
+    'PB10': dict(net='I2C1_SCL', members={'R12.1': '4.7k', 'U5.8': 'MS561101BA03'}, decision='D-R11-41', case='7',
+                 an2606=LOADER_AN2606,
+                 reason='USART3_TX, driven push-pull: idle high, the level R12 4.7k holds; it transmits only after a '
+                        '0x7F sync on PB11, which cannot form; U5 SCL is an input (no clock stretching), so a low pin '
+                        'draws at most 3.3 V / 4.7k = 0.7 mA (Calculation), far below 20 mA; SDA stays high, no START'),
+    'PB11': dict(net='I2C1_SDA', members={'R13.1': '4.7k', 'U5.7': 'MS561101BA03'}, decision='D-R11-41', case='7',
+                 an2606=LOADER_AN2606,
+                 reason='USART3_RX, a loader input with pull-up, never driven: R13 and the pull-up hold a UART mark; '
+                        'U5 drives SDA only after a master START and its address, and in system-memory boot nothing '
+                        'masters the bus, so no start bit and no 0x7F sync form (Inference)'),
+}
+
+
+def loader_entry_issues(allowances):
+    """Schema and provenance of LOADER_R11-form entries: a LOADER_H74X port, every field, a decision heading in
+    R11_DECISIONS.md, a case section heading in stageC1b.md (or R10's own entry, same net and members), R10's AN2606
+    citation."""
+    issues = []
+    decisions = LOADER_DECISIONS.read_text() if LOADER_DECISIONS.is_file() else ''
+    cases = LOADER_CASES.read_text() if LOADER_CASES.is_file() else ''
+    for port, e in sorted(allowances.items()):
+        tag = f'LOADER_R11 {port}'
+        if port not in r10.LOADER_H74X:
+            issues.append(f'{tag}: not a loader pin (AN2606 Rev 70 Table 135 as check_r10.LOADER_H74X encodes it)')
+        missing = [k for k in ('net', 'decision', 'case', 'an2606', 'reason') if not str(e.get(k) or '').strip()]
+        if missing or 'members' not in e:
+            issues.append(f'{tag}: missing {missing + ([] if "members" in e else ["members"])}')
+            continue
+        if e['an2606'] != LOADER_AN2606:
+            issues.append(f'{tag}: AN2606 citation {e["an2606"]!r} is not R10\'s ({LOADER_AN2606})')
+        if not re.search(rf'^## {re.escape(e["decision"])} ', decisions, re.M):
+            issues.append(f'{tag}: decision {e["decision"]} has no heading in {LOADER_DECISIONS.name}')
+        if e['case'] == R10_CASE:
+            old = r10.LOADER_R10.get(port)
+            if old is None or (old[0], old[1]) != (e['net'], e['members']):
+                issues.append(f'{tag}: names R10\'s case, but R10\'s LOADER_R10 has no entry for {port} with net '
+                              f'{e["net"]} and these members; write an R11 case')
+        elif not re.search(rf'^#+ {re.escape(e["case"])}\.? ', cases, re.M):
+            issues.append(f'{tag}: case section {e["case"]} not found in {LOADER_CASES.name}')
+    return issues
+
+
+def loader_pins_r11(board, port_pin, allowances=None):
+    """K-loader on R11: (issues, evidence). Every U1 ball on a LOADER_H74X port that carries a net needs a LOADER_R11
+    entry naming that net and the net's exact other members; an entry whose pin carries another net fails; an entry
+    for an NC pin, or a pin not on the package, is stale."""
+    allowances = LOADER_R11 if allowances is None else allowances
+    issues = loader_entry_issues(allowances)
+    u1 = board.FindFootprintByReference(r10.MCU_REF)
+    if u1 is None:
+        return issues + ['U1 missing'], {}
+    members = {}
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if r10.real_net(p.GetNetname()) and f.GetReference() != r10.MCU_REF:
+                members.setdefault(p.GetNetname(), {})[f'{f.GetReference()}.{p.GetNumber()}'] = f.GetValue()
+    ev, used = {}, set()
+    for port, (role, use) in sorted(r10.LOADER_H74X.items()):
+        ball = port_pin.get(port)
+        if ball is None:
+            ev[port] = 'not on this package'
+            continue
+        pad = u1.FindPadByNumber(ball)
+        where = f'U1.{ball} {port} ({role}, loader {use}; {LOADER_AN2606})'
+        if pad is None:
+            issues.append(f'{where}: pad missing')
+            continue
+        net = pad.GetNetname()
+        if not r10.real_net(net):
+            ev[port] = 'NC'
+            continue
+        e = allowances.get(port)
+        if e is None:
+            issues.append(f'{where} carries {net} with no LOADER_R11 entry' +
+                          (' (the loader drives this pin)' if use in r10.LOADER_DRIVES else ''))
+            continue
+        used.add(port)
+        ev[port] = dict(ball=ball, net=net, role=role, use=use, decision=e.get('decision'), case=e.get('case'))
+        if net != e.get('net'):
+            issues.append(f'{where} carries {net}; its LOADER_R11 entry is for {e.get("net")}')
+            continue
+        pinned = e.get('members')
+        if pinned is not None:
+            actual = members.get(net, {})
+            if actual != pinned:
+                extra = sorted(f'{k} {v}' for k, v in actual.items() if pinned.get(k) != v)
+                gone = sorted(f'{k} {v}' for k, v in pinned.items() if actual.get(k) != v)
+                issues.append(f'{where}: {net} members differ from the entry (now {extra}, recorded {gone}); '
+                              're-qualify the loader state')
+    issues += [f'stale LOADER_R11 entry {port} ({allowances[port].get("net")}): the pin carries no net or is not on '
+               'this package' for port in sorted(set(allowances) - used)]
+    return issues, ev
+
+
 def k_loader(ctx):
-    issues, ev = r10.loader_pins(ctx.board, port_pin=balls(ctx))
+    issues, ev = loader_pins_r11(ctx.board, balls(ctx))
     return [f'K-loader: {i}' for i in issues], ev
 
 

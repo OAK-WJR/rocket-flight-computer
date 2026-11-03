@@ -182,3 +182,57 @@ No floor is below JLC's figure.
 Measured on a copy of the C3 board in the worktree (2026-11-03): K-rules is OK. `pth_inner_copper` found no foreign
 inner copper within its 1 mm reach of any PTH hole on that copy, since In1 / In4 are not poured yet. Its 0.3 mm rule
 is exercised by the synthetic seed. Re-check it once the ground family pours.
+
+## 5. K-loader: R11's own loader list
+
+Gate lane, `tools/` only. `check_r10.py` and its `LOADER_R10` are unchanged (R10's gate is frozen).
+
+**What was wrong.** `check_r11` K-loader ran `check_r10.loader_pins`, whose allowances are keyed to R10's pin map. On
+R11's map (D-R11-41, D-R11-49) that gave 8 findings: PA15, PB10 and PB11 had no allowance, PB9's named I2C1_SDA, and
+the PA2, PA3, PE11 and PE12 allowances were stale.
+
+**What K-loader does now** (`check_r11.loader_pins_r11`, list `check_r11.LOADER_R11`):
+
+* The loader-pin set is `check_r10.LOADER_H74X` unchanged (AN2606 Rev 70 Table 135, pp. 320-323 = Rev 64 Table 119,
+  pp. 277-280). U1's balls come from `pin_table.tsv` (`port` → `r11_ball`). PF0 / PF1, PH13 / PH14 and PI0-PI3 have no
+  ball on TFBGA-100.
+* Each entry is keyed by port pin and carries the net the pin may carry, the net's other members (pad → part value;
+  `None` only for USB_DM / USB_DP, R10's USB contract), the decision, the section of `stageC1b.md` holding its
+  R17-MCU-02-form case, R10's AN2606 citation and the electrical reason.
+* It fails on a loader ball that carries a net with no entry, an entry whose ball carries another net, members that
+  differ from the entry, and an entry for an NC ball or a port with no ball (stale).
+* It also fails on an entry for a port outside `LOADER_H74X`, a missing field, a citation other than R10's, a decision
+  with no `## <id> ` heading in `R11_DECISIONS.md`, and a case section with no heading in `stageC1b.md`. An entry may
+  name R10's case only while `LOADER_R10` has the same port, net and members.
+
+**Entries** (members as on the worktree R11 board on 2026-11-03, which git does not track yet; Measured):
+
+| Port (ball) | Net | Members | Decision | Case |
+|---|---|---|---|---|
+| PB9 (A4) | CAM_MCU_TX | U12.5 | D-R11-49 | stageC1b §8.4 |
+| PA15 (A8) | SERVO2_MCU | R151.1, R155.1, D121.3 | D-R11-49 | stageC1b §8.4 |
+| PB10 (J7) | I2C1_SCL | R12.1, U5.8 | D-R11-41 | stageC1b §7 |
+| PB11 (K7) | I2C1_SDA | R13.1, U5.7 | D-R11-41 | stageC1b §7 |
+| PA4 (G3) | LOGIC_SOURCE_ST | R91.2, U11.9 | D-R11-01 | R10's LOADER_R10 |
+| PA5 (H3) | BAT_FAULT_N | R89.2, U9.4 | D-R11-01 | R10's LOADER_R10 |
+| PA6 (J3) | VLOGIC_SENSE | R60.2, R61.1, C60.1 | D-R11-01 | R10's LOADER_R10 |
+| PC10 (B9) | SD_SCK | J430.5 | D-R11-01 | R10's LOADER_R10 |
+| PC11 (B8) | SD_MISO | J430.7, R462.1 | D-R11-01 | R10's LOADER_R10 |
+| PC12 (C8) | SD_MOSI | J430.3, R461.1 | D-R11-01 | R10's LOADER_R10 |
+| PA11 (C10) | USB_DM | not pinned | D-R11-01 | R10's LOADER_R10 |
+| PA12 (B10) | USB_DP | not pinned | D-R11-01 | R10's LOADER_R10 |
+| PB6 (B5) | QSPI_NCS | R10.1, U3.1 | D-R11-01 | R10's LOADER_R10 |
+
+No entry for PA2, PA3, PE11, PE12 or PB15: they are NC on R11 (D-R11-49), so an entry would be stale.
+
+**Tests** (`tools/test_r11_check.py`, Measured):
+
+* The real map passes. LOADER_R11 is exactly the loader ports with a net in `pin_table.tsv`'s `r11_net`, and a board
+  built from the entries gives no finding, directly and through `check_board`.
+* A net on PA9 with no entry fails, as does dropping PA15's entry.
+* PB9 carrying I2C1_SDA against its CAM_MCU_TX entry fails, and so does a new member on SERVO2_MCU.
+* A PA2 entry on an NC ball is stale, and so is PB10's entry when its ball is NC.
+* Provenance: an unknown decision, a missing case section, a different citation, a false R10 case, a non-loader
+  port and an empty reason each fail.
+* `R11RealBoard.test_k_loader_holds_on_the_real_board` runs when `R11_BOARD` is set. On a scratch copy of the
+  worktree board, K-loader is OK (Measured).
