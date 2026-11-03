@@ -7,9 +7,9 @@ ref	x	y	rot	side	basis
 C10	21.3	34	0	B	3V3A bulk
 C100	28	17.4	0	B	3V3 at U12
 C11	21.3	36.2	0	B	3V3A bulk
-C120	17	21.9	90	F	ACT gate-source
-C123	17	29.8	0	F	Q122 gate-source
-C126	11.6	31.6	0	F	Q124 gate-source
+C120	10.15	16.8	180	F	ACT gate-source; D-R11-21: in Q120 gate island, ACT_FET_S from the gap
+C123	14.31	30.1	0	F	Q122 gate-source; D-R11-21
+C126	11.67	30.3	0	F	Q124 gate-source; D-R11-21: gate column west, GND east
 C127	9.45	20	90	B	continuity bank (PC0), low-voltage side
 C128	7.9	32.8	0	F	PYRO1_OUT cap at Q124
 C129	9.45	22.4	90	B	bus-sense bank (PC5), low-voltage side
@@ -27,7 +27,7 @@ C23	25.6	34	0	B	3V3 bulk
 C24	18.9	30.6	90	B	NRST cap
 C25	16.6	23.4	0	B	HSE load cap
 C26	16.6	28.6	0	B	HSE load cap
-C28	31	25.4	90	B	VBUS
+C28	37.25	33.1	270	F	VBUS; D-R11-20: on F at J3.A4B9, east of U3
 C29	30.8	28	0	B	U3 decoupling
 C30	26.2	19.6	90	B	IMU decoupling
 C31	27.3	19.6	90	B	IMU decoupling
@@ -59,7 +59,7 @@ C8	27.2	35.2	90	F	3V3 output
 C80	14.9	9	90	F	BAT_IN bulk
 C81	15	8.4	0	B	U9 dV/dt
 C82	16.9	15.6	90	B	RAW_PROTECTED bulk
-C83	30.8	30.2	0	B	USB support
+C83	36	32.82	270	F	VBUS 100 nF; D-R11-20: on F beside C28
 C84	10	38.3	0	F	VLOGIC hold-up can, tall part on top
 C85	15.8	38.2	0	B	U11 soft start
 C86	35	34	0	B	USB_LIMITED
@@ -77,7 +77,7 @@ C96	17.5	9	90	F	BAT_IN bulk
 C97	12.6	35	90	B	RAW_PROTECTED at U11
 C98	35	35.8	0	B	USB_LIMITED
 C99	18.6	37.4	90	B	VLOGIC at U11
-D120	9	26	0	B	cold pull-up diode
+D120	9	26	270	B	cold pull-up diode; D-R11-21: 3V3 pin north (to its via clear of the pyro nets), COLD pin south-east
 D121	24.8	8	0	B	servo clamp
 D123	41	41.8	0	B	buzzer flyback
 D4	35.6	30.4	90	B	USB ESD
@@ -108,9 +108,9 @@ L400	33.9	10.5	0	F	PORT_5V3 buck inductor
 LED1	21.6	20.6	0	F	red LED
 LED2	26.8	20.6	0	F	yellow LED (D-R11-17: 0.8 mm east, F.Cu room for U4 pins 2 / 3 GND via)
 LS120	40	39.6	0	F	buzzer east-forward, far from U4 (top: tall part)
-Q120	8	19.6	0	F	load switch, BAT_IN side
+Q120	8	19.6	180	F	load switch, BAT_IN side; D-R11-21: rotated so its sources face Q121 across the gap and its gate is at the west end
 Q121	12.3	19.6	0	F	load switch, RAW_ACT side
-Q122	17.6	25.4	0	F	ACT enable driver
+Q122	17.55	31.15	90	F	ACT enable driver; D-R11-21: south of the PE4 lane, on the PC1 lane
 Q123	40.6	39	0	B	buzzer driver
 Q124	7.9	29.3	0	F	low-side fire FET beside J121.1 (OUT)
 R10	30.8	29.1	0	B	QSPI_NCS pull-up
@@ -122,22 +122,22 @@ R104	28	12.4	0	F	CAM_5V sense
 R105	19.6	8.6	90	B	CAM_5V sense
 R11	19.8	19.6	90	B	IMU_CS pull-up
 R110	30.8	36.8	0	B	USB support
-R119	15.6	18	90	F	ACT gate bias
+R119	12.95	22.02	180	F	Q121 local gate bias (D-R18-02 on R11); D-R11-21: under Q121.4 / Q121.3
 R12	13	39	90	B	I2C pull-up
-R120	16.7	18	90	F	ACT gate bias
-R121	17.8	18	90	F	ACT gate drive
-R122	17	27.6	0	F	Q122 gate series
-R123	17	28.7	0	F	Q122 gate pull-down
-R126	11.4	28	0	F	Q124 gate series
-R127	11.4	29.1	0	F	PE4 pull-down
-R128	11.4	30.2	0	F	Q124 gate pull-down
+R120	7.35	17.05	180	F	Q120 local gate bias (D-R18-02 on R11); D-R11-21: over Q120.4 / Q120.3
+R121	14.4	29.6	270	B	ACT gate drive; D-R11-21: on B.Cu at the south end of the ACT_GATE trunk (two ACT_GATE barrels in all, route_check extra_vias), ACT_DRV by one barrelnk
+R122	18	28	180	F	Q122 gate series; D-R11-21: PC1 lane end
+R123	14.3	29	0	F	Q122 gate pull-down; D-R11-21
+R126	11.4	28	180	F	Q124 gate series; D-R11-21: PE4 side east, gate column west
+R127	12.9	28.5	270	F	PE4 pull-down; D-R11-21: on the PE4 lane
+R128	11.4	29.1	0	F	Q124 gate pull-down; D-R11-21: gate column west, GND east
 R129	6	20	90	B	continuity bank (PC0), low-voltage side
 R13	13	41.1	90	B	I2C pull-up
 R130	7.15	20	90	B	continuity bank (PC0), low-voltage side
 R131	6.3	25.4	90	F	PYRO1_OUT cold pull-up leg, on F.Cu with OUT (S-8: no OUT via)
-R132	14.85	20.6	90	F	RAW_ACT top leg of the bus-sense divider, on F.Cu with RAW_ACT (S-8: no RAW_ACT via)
+R132	15.6	21.6	90	F	RAW_ACT top leg of the bus-sense divider, on F.Cu with RAW_ACT (S-8: no RAW_ACT via); D-R11-21: east of the RAW_ACT run
 R133	7.15	22.4	90	B	bus-sense bank (PC5), low-voltage side
-R134	11.6	24.6	0	F	RAW_ACT to IGN 2 ohm, beside J121.2
+R134	11.6	24.65	0	F	RAW_ACT to IGN 2 ohm, beside J121.2; D-R11-21: 0.05 mm forward for R119 (clear of core's Y1.4 GND via)
 R150	17.4	3	90	B	servo series 1k under J122
 R151	19.2	3	90	B	servo series 1k under J122
 R152	21	3	90	B	servo series 1k under J122
@@ -182,32 +182,32 @@ R5	24	31.6	0	B	BOOT0 pull-down under U1
 R60	25.6	35.6	0	B	VLOGIC sense
 R61	25.6	36.7	0	B	VLOGIC sense
 R64	9	36.6	0	B	BARO_SDO pull-down
-R7	37	38	90	B	CC1 pull-down
-R8	38.1	38	90	B	CC2 pull-down
+R7	37	38	270	B	CC1 pull-down; D-R11-20: rotated, CC1 from the north, GND pads joined to one via
+R8	38.1	38	270	B	CC2 pull-down; D-R11-20: rotated, CC2 from the north, GND pads joined to one via
 R80	17.4	8.6	90	B	BAT_IN to J400.1 (470k)
 R81	15	11.8	0	B	U9 EN pull-down at U9 (D-R21-05 intent)
 R82	6.8	9.6	90	B	OVLO divider
 R83	8.6	9.6	90	B	OVLO divider
 R84	17.4	11.8	90	B	U9 ILIM
-R85	30.8	31.3	0	B	USB support
+R85	34.9	27.93	0	B	U10 ILIM; D-R11-20: beside U10.5 in the strip between U10 and D4 (no via on the ILIM tap)
 R86	15.8	39.8	0	B	U11 ILM
-R87	30.8	32.4	0	B	USB support
-R88	30.8	33.5	0	B	USB support
+R87	18.35	35.4	90	B	U11 USB over-voltage divider top; D-R11-20: beside U11.5 so USB_OVLO stays local
+R88	18.35	33.5	90	B	U11 USB over-voltage divider bottom; D-R11-20: beside U11.5
 R89	13.4	5.2	0	B	BAT_FAULT_N pull-up
 R9	30.8	35.7	0	B	USB support
-R90	30.8	34.6	0	B	USB support
+R90	36.85	27.93	180	B	USB_FAULT_N pull-up; D-R11-20: beside U10.4 in the strip between U10 and D4
 R91	15.8	40.9	0	B	source status pull-up
 R92	16.2	19	0	B	RAW_PROTECTED bleed beside D9
-TP120	16.8	32	0	F	RAW_ACT probe
-TP122	13.9	29	0	F	PYRO1_GATE probe
+TP120	16.9	24.1	0	F	RAW_ACT probe; D-R11-21: east of R134.2, clear of the MCU lanes
+TP122	10.97	32.6	0	F	PYRO1_GATE probe; D-R11-21: at the south end of the gate column
 TP74	35.4	3	0	B	GND probe
-TP80	6.4	30	0	B	BAT_IN probe
-TP81	8.9	30	0	B	RAW_PROTECTED probe
-TP82	28.2	39	0	B	USB_LIMITED probe
+TP80	4.9	34	0	B	BAT_IN probe; D-R11-21: moved forward, clear of Q124's fire-return vias (test-pad 1.0 mm rule)
+TP81	7.4	34	0	B	RAW_PROTECTED probe; D-R11-21: moved forward, clear of Q124's fire-return vias (test-pad 1.0 mm rule)
+TP82	25	41.15	0	B	USB_LIMITED probe; D-R11-20: on the USB_LIMITED run west of J2
 TP83	21.3	39.2	0	B	VLOGIC probe
-TP88	11.4	30	0	B	GND probe
+TP88	9.9	34	0	B	GND probe; D-R11-21: moved forward, clear of Q124's fire-return vias (test-pad 1.0 mm rule)
 U1	24	28	0	F	TFBGA-100 central; column 1 west (pyro control / HSE), row A aft (IMU SPI), column 10 east (USB, SD)
-U10	34.9	25.4	0	B	USB current limit
+U10	34.9	25.1	270	B	USB current limit; D-R11-20: rotated so VBUS IN / EN face aft and OUT / ILIM / FAULT face the strip above D4
 U11	15.8	35.3	0	B	source mux
 U12	22.6	14.6	0	B	camera UART buffer
 U13	27.1	14.6	0	B	CAM_IO_3V3 LDO

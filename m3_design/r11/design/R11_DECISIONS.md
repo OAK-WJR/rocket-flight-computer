@@ -168,3 +168,50 @@ The I2C pair runs on In3 north of Y1 and down the west side to vias at R12 / R13
 from R64 under U5. **Why:** U5's inter-row band is closed to tracks (R10's BARO rule area), so pads 6 / 7 / 8 are
 reachable only from the south, and R64 / R12 / R13 sit north and east of them; In3 crosses under U5 without blocking.
 The vias under C84's can are an Inference to confirm in stage D (stageC1.md O-C1-4).
+
+## D-R11-20 USB cluster: placement and topology
+
+U10 rotated 270 (IN / EN aft, OUT / ILIM / FAULT forward) at (34.9, 25.1); R85 (ILIM) and R90 (FAULT pull-up) into the
+B.Cu strip between U10 and D4; C28 / C83 (VBUS) onto F.Cu at J3.A4B9, east of U3; R87 / R88 (U11's USB OV divider) beside
+U11.5; R7 / R8 rotated 270; TP82 onto the USB_LIMITED run (25.0, 41.15). D+ / D- on F.Cu north of U3 to J3; J3's D+ pads
+joined by a loop west of the pads, the enclosed D- pad (A7) by one via and In3 back to D-'s via; D4 taps each line by one
+via; VBUS's two J3 pins joined on In3; CC to B.Cu (CC2 under J3's body). **Why:** with the stage-B spots the USB support
+parts sat west of core's SWD B.Cu lines (x 32.0 / 32.35) and every one of their nets had to cross them, and U10's three
+signal pins faced J3. Courtyards, fit and DRC re-checked in the build (Measured).
+
+## D-R11-21 Pyro cell re-placement
+
+Q120 rotated 180 (sources north, facing Q121's south-row sources across the gap; gate at its west end); R120 / R119 (each
+FET's own 100 k gate bias) beside each gate on F.Cu; C120 in Q120's gate island; R134 0.05 mm forward; R132 east of the
+RAW_ACT run; TP120 east of R134.2 and TP122 at the south end of the Q124 gate column; Q122 / R122 / R123 / C123 south of
+PE4's lane on PC1's lane; R121 onto B.Cu at the end of the ACT_GATE trunk; R126 / R127 / R128 / C126 as a gate column and
+a GND column; D120 rotated 270; TP80 / TP81 / TP88 forward to y 34 (clear of Q124's fire-return vias, test-pad 1.0 mm
+rule). **Why:** with both FETs at rotation 0 Q120's gate sat between the two source groups and Q121's gate between
+RAW_ACT and R134, so the fire path or a gate had to take a via; PE4 (C3) and PC1 (F2) leave U1 one above the other and
+their targets were in the reverse order. The fire path is now F.Cu only with no series via (AGENTS §2); S-1 … S-3c, S-5,
+S-6, S-8, S-9 pass (Measured, check_r11 --only).
+
+## D-R11-22 ACT_GATE / ACT_DRV barrels: single, with S-8 rule areas
+
+Two ACT_GATE barrels (one per FET island) and one ACT_DRV barrel; each keeps a 1.3 mm rule area (no tracks, no fills) on
+In1..In4, J121's pads 2.3 mm areas (their 2.5 mm inner rings: In1..In4 for J121.1, In2 / In3 for J121.2). **Why:**
+route_check r11 has no PARALLEL_VIAS list (D-R11-08), so R10's second barrels (D-R24-02) fail track_loop / extra_vias;
+the price is that check_r11 K-power's single-via-open taps Q120.4 / Q121.4 → R121.1 fail until the gate data carry an R11
+entry (stageC2.md O-C2-5, owner / gate lane). S-8 Measured: nearest foreign inner copper 1.218 mm (ACT_DRV to a GND via
+ring) before the pours; the rule areas keep the pours out (Inference until poured).
+
+## D-R11-23 PE4's gate-net spacing at the TFBGA (owner deviation)
+
+PYRO1_GATE_N's copper is 0.150 mm from U1.D2 (3V3) on F.Cu (Measured), against R10's 1.0585 mm (D-R26-04). The ball C3
+itself is 0.73 mm edge to edge from the 3V3 balls B2 and D2, so no route can meet it on the TFBGA-100 (stage A's package).
+Every other PYRO1_GATE_N / PYRO1_GATE / PYRO1_OUT copper keeps ≥ 4.1 mm from 3V3 / 3V3A (Measured, no inner 3V3 copper
+yet). **Why recorded:** a 3V3 bridge to PE4's net drives Q124's gate through R126 against R128 and may fire an enabled
+match (R10's reasoning, Inference); it is a package-level deviation for the owner, as R10 D-R26-04's retained pairs.
+
+## D-R11-24 power family split
+
+`r11_route_power.py` draws the regulator-local control nets (U9 dV/dt / ILIM / OVLO, the R166 damper, U402 / U11 ILIM and
+soft-start). The rails, the J400 / EN chain and the In2 regions wait for the placement changes listed in stageC2.md O-C2-2
+(U9's west cell, L1 / C5 at U2, U400's orientation, U402's feed, PORT_4V8's path to the forward ports). **Why:** each of
+them needs a part moved or rotated before any legal copper exists; drawing partial rails would only create copper to
+remove.
