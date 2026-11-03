@@ -6,6 +6,18 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
+**R10 voltage acquisition core (2026-11-03 UTC).**
+The [portable voltage core](m3_firmware/r10/voltage/README.md) now implements
+serialized, time-bounded sampling, nominal reference/divider conversion, partial
+raw evidence and separately retained last-good values. Failed cleanup and a
+backwards timebase stop retries. Its 10 software tests include executable C fault
+cases under AddressSanitizer/UBSan, 2,000 independent rational-arithmetic vectors,
+and native netlist/source-part checks with wrong-divider/pin negative controls.
+The complete `tools/check.sh` gate passed at 20:10:30 UTC on 2026-11-03 (exit 0): DRC, unconnected items, schematic parity and ERC are zero; metadata/3D, silkscreen, fit, routing and fabrication checks pass. All 1,018 inventoried inputs and PCB bytes stayed unchanged during the gate. There is no native ADC
+adapter or ABI integration yet: the PCB, bench image, manufacturing outputs and
+probe permissions are unchanged, and no physical voltage measurement or accuracy
+qualification is claimed. Firmware ADC integration remains open work.
+
 **Independent R10 diagnostic evidence (2026-11-03 UTC).**
 Contradictory voltage records previously stopped the entire cause search, also
 hiding an independently supported UART line-order mismatch. Voltage conflicts

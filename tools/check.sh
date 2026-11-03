@@ -93,6 +93,7 @@ selftest python3 -B "$ROOT/diagnostics/test_r10_firmware.py" # synthetic DP/imag
 selftest python3 -B "$ROOT/m3_firmware/r10/test_r10.py"     # real portable C + saved records; no probe/flash
 selftest python3 -B "$ROOT/m3_firmware/r10/imu/test_imu_core.py" # fitted ST sensor core, scripted registers only
 selftest python3 -B "$ROOT/m3_firmware/r10/baro/test_baro.py" # MS5611 core, scripted I2C only
+selftest python3 -B "$ROOT/m3_firmware/r10/voltage/test_voltage.py" # portable voltage core; scripted conversions, not linked
 selftest python3 "$ROOT/tools/test_procurement.py"       # required R9 / R10 limits cannot be weakened by report data
 selftest python3 "$ROOT/tools/test_fab_validation.py"    # placement, export and binding regressions (R18-GATE-04)
 selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imports fit_check from its own folder

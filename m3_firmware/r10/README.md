@@ -19,6 +19,12 @@ no actuator/PWM, ADC, UART, USB or storage driver is enabled. Flight state,
 control and recovery logic remain unimplemented. This is bench diagnostics,
 not the complete board firmware.
 
+A separate [voltage acquisition core](voltage/README.md) now has executable
+software tests for serial samples, reference/calibration math, partial evidence,
+timeouts and recovery. It is not linked, has no native ADC adapter yet, and adds
+no voltage fields to this ABI-v3 image. ADC integration and physical accuracy
+remain open work.
+
 Both sensors run outside the publication critical section: IMU every 20 nominal
 ms, and the nonblocking barometer state machine on each main-loop wake.
 A missing or failed IMU leaves the MCU heartbeat running, with sensor state,
