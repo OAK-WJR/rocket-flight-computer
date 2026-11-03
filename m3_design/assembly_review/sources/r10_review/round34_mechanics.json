@@ -1,0 +1,46 @@
+{
+ "schema": "r10-review-v2",
+ "review": "round34_mechanics",
+ "reviewer": "claude",
+ "target_commit": "c2a11fdb4c2329c30777f2abf329e7187672cb11",
+ "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+ "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+ "findings": [],
+ "observations": [
+  "fit_check --profile r10 on a probe copy (kilib linked): OK; body/bore margin 2.98 mm on all eight DB125 terminals, J3 0.89 mm, J3 shell x -0.45 (0.45 mm west overhang), worst bottom margin 5.60 mm (D402/D440/D441), tail bore clearance 7.56 mm.",
+  "Wire room recomputed by hand: sqrt(25.4^2-5^2) - (23-3.4+0.3) = 5.003 mm; with the 0.5 mm wall allowance 4.493 mm; matches ORDERING 8.4, handoff and P2.",
+  "Deepest bottom part L1 B(25,74.6), z -4.616 -> 3.016 mm below the bottom face; 4 mm standoff gap 0.984 mm; matches ORDERING 8.4.",
+  "Support clearances: C32.2 4.536 mm bottom; LED2.2 3.808, LED1.1 3.860, J2.1 3.880, J2.3 3.987 mm (exact circle) from (4,44.3); matches P2, ORDERING 8.4 and the handoff.",
+  "Plate model re-run on a0ec075e (masses.json): f1 pinned D5 180.8 Hz, D10 255.6, clamped 287.8/407.0 Hz, 78.6 g; 100 g D5 pinned gaps at h=4 mm: C431 0.261, C421 0.320, L1 0.524, C411 0.558 mm; sled contact at 125/133/214/175 g (D10 250/265/428/351 g); all match the records. The records' 'not re-run on a0ec075e' is a true statement of the record history; this lens's run confirms the figures on a0ec075e.",
+  "Compass: forward is +y (C95 forward-edge DFM query at y 86.5-88.1, battery route 'y > 90'); J440 body y 7.93-23.45 (forward end 23.45 as stated), J3 y 26.33-35.27, J121 51.23-59.55, J400 61.23-69.55, J1 71.23-79.55 on the west row, so the J440 and battery-lead routing reasons in ORDERING 8.4 and the handoff hold.",
+  "Sled relief pocket x 31.5-41, y 20-60 contains C411 (32.85-35.55, 21-24.5), C421 (32.05-35.55, 35.4-38.1) and C431 (37.95-40.65, 56-59.5).",
+  "Hardware h+t limits: a hand bound (6.35 mm across-corner nut, 2.4 mm nut, 0.4 mm projection, +-0.3 mm both axes, R 24.9) gives about 6.02 mm at x 4/42 and 5.37 mm at x 3.7; the stated <6.0 / <5.3 limits are on the conservative side.",
+  "Chute landing 6.2-8.0 m/s over 20 mm: 98-163 g, as stated; 4.5 mm + <0.8 mm plate keeps h+t < 5.3.",
+  "Handoff terminal table: centres, rotations (-90 west row, 90 east row), wire-entry sides and top/bottom pin-legend placement all match the board; J430 15.05 x 15.70 x 2.10 mm closed envelope matches the fit row; D402 at B(4.45,65.9).",
+  "East column mass 34 g = J122 (7.5+2.5) + 3 x (6+2) per masses.json, as M3_R10 states."
+ ],
+ "fix_verification": [
+  {"id": "R33-TRI-01", "measurement": "U9 pads 5/6 y 80.40-82.80, pad 9 x 19.10-19.70 / y 81.70-81.95 at centre (18.5,81.6); against the RPW0010A 1.9-2.1 mm body: 0.15-0.25 mm (0.20 nominal) x 0.30 mm exposure at each end, pad 9 0.15-0.25 x 0.25 mm; ORDERING 8.3 lines 552 and 555 now state these", "verdict": "confirmed"}
+ ],
+ "checks_actually_executed": [
+  "sha256 of the board before and after",
+  "tools/fit_check.py --profile r10 on a probe copy with kilib linked (KiCad Python)",
+  "tools/plate_model.py --profile r10 --mass-spec r10_design/masses.json on that fit report (venv NumPy)",
+  "probe gaps.py: per-bottom-part 100 g deflection and sled gap via plate_model.build",
+  "probe pos.py / j2.py: footprint positions and exact pad-to-support distances",
+  "probe silk.py: pin-legend layers",
+  "probe u9.py: U9 pad extents for R33-TRI-01",
+  "hand calculations: wire room, h+t bounds, chute landing g"
+ ],
+ "sources": [
+  "docs/ORDERING.md 8.3, 8.4", "docs/R10_VEHICLE_HANDOFF.md", "docs/REQUIREMENTS.md P1-P3", "docs/M3_R10.md", "AGENTS.md",
+  "m3_design/assembly_review/sources/r10_design/masses.json", "m3_design/assembly_review/sources/r10_review/round33_triage.md",
+  "TI SLVSFC9C RPW0010A (https://www.ti.com/lit/ds/symlink/tps25947.pdf)"
+ ],
+ "coverage_limits": [
+  "CAD envelopes and models only; no physical harness, screwdriver, sled, shroud or hardware measurement.",
+  "Camera-shroud side for J440 lead exit not verifiable from board files.",
+  "Plate model is the repository's Kirchhoff/Rayleigh-Ritz Inference; not re-derived independently."
+ ]
+}

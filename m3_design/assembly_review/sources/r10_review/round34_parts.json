@@ -1,0 +1,46 @@
+{
+  "schema": "r10-review-v2",
+  "review": "R10 round 34, parts lens",
+  "reviewer": "claude",
+  "target_commit": "c2a11fdb4c2329c30777f2abf329e7187672cb11",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "parts_qualification.md:655 cites TPS2553 'SLVS841F equation 1 (p15, IOSmin / IOSmax)'; the cached revision G has IOSmax as eq. 1 and IOSmin as eq. 3 on pp16-17 (line 588 already cites SLVS841G pp16-17). The constants 22980 / 0.94 and 25230 / 1.016 used by r10_parts.py match, and the 1.041-1.249 A camera bound reproduces; a citation-revision detail, not a false figure.",
+    "TPS25947 note (2) (SLVSFC9C §6.1) asks for >= 350 kOhm on EN / OVLO pull-ups to IN for reverse polarity: R80 + R165 = 940 kOhm and R82 = 2 MOhm comply; D8 SMBJ12CA is bidirectional as TI recommends. Consistent, no finding.",
+    "U13 TPS70933 EN (pin 3) left open: allowed by the TPS709 datasheet (300 nA internal pull-up, 'EN can be left floating'). Consistent.",
+    "TPS7A91 is fed from PORT_5V3 (5.367-5.546 V), inside its 1.4-6.5 V range; dropout headroom about 0.66 V against 200 mV max at 1 A. Consistent.",
+    "TPS25947 recommended OVLO pin range is 0.5-1.5 V; the R82 / R83 divider gives 1.03 V at 8.4 V and stays above 0.5 V down to about 4.1 V pack, below U9's UVLO turn-off. Consistent."
+  ],
+  "fix_verification": [
+    {"id": "R33-TRI-01", "lens_note": "docs_binding item, U9 land; checked because it concerns a part land", "measurement": "pcbnew pad bounding boxes on a0ec075e: U9 pads 5 / 6 y 80.40-82.80, width 0.30; pad 9 x 19.10-19.70, height 0.25; body centre (18.5, 81.6), RPW0010A body 1.9-2.1 mm -> edges y 80.55-80.65, x 19.45-19.55; exposure 0.15-0.25 mm. ORDERING.md lines 552 / 555 now state 0.15-0.25 (0.20 nominal) x 0.30 and 0.15-0.25 x 0.25.", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "SHA-256 of m3.kicad_pcb before and after (unchanged).",
+    "pcbnew dump of all 216 footprints (value, footprint, side, position, rotation, pad nets) and fields (LCSC, Manufacturer, Manufacturer Part): every designator on m3_bom_jlc.csv and m3_bom_owner.csv matches the board's LCSC and maker part, footprint name and value; 9 board items not on the BOM are TP pads and the J2 Tag-Connect footprint (not fitted parts).",
+    "m3_cpl_jlc.csv (206 rows) against board positions / sides: all match to 0.001 mm except the recorded J3 (-0.095 mm x) and J430 (+1.550 mm y) EasyEDA origin offsets.",
+    "stock_check.json 'model' (JLC's own MPN per LCSC code) against the BOM's maker part: all 81 JLC lines agree, designator sets agree.",
+    "Value-code decode of every resistor and capacitor MPN against the BOM comment (UniOhm, Yageo RT/RC, Vishay MCT, FOJAN, Samsung CL, Murata GRM/GCJ, FH, Bourns CRM): all agree (incl. R164 0603WAF220K = 2.2 Ohm, R166 25121WF360L = 0.36 Ohm).",
+    "Capacitor voltage ratings against every cap's net (max rail 8.4 V BAT_IN / RAW_PROTECTED, 5.546 V PORT_5V3, VBUS 5 V): all 16 V parts sit on <= 5 V rails, all others >= 25 V.",
+    "Datasheet re-reads from the cached PDFs: TPS25947 (EN/OVLO thresholds, 6.5 V abs max, ILIM 3.96-4.84 A at 750 Ohm, reverse-polarity notes), TPS2553 IOS equations, TPS7A91 (VIN, IFB, dropout), AP63201 (3.8-32 V, 2.5-3.1 A HS limit), AON7524 (Qg(4.5V) 22 nC max, Vgs +-12 V, Rds 5.8 mOhm at 2.5 V), AONR21357 (Vgs +-25 V, 12.3 mOhm, Qg(10V) 70 nC), AO3400A (Ciss 630 pF), ESD103-B1-02EL (IR 50 nA at 15 V, VTrig 21 V typ), TPS709 EN behaviour.",
+    "Recomputed in parts_qualification.md: C123 tau 7.09 us; D402 EN shift 5.69 mV and J400.2 5.22 V; C87 EN 2.03 V; R92 bleed 3.147 mA at 10.18 V and 3234 Ohm; LDO thermal 0.490 W, 109.2-123.9 C, 112.3 C/W ceiling; R405 bleeder 5.63 mA; L400 ripple 0.737-0.758 A; camera ILIM 1.041-1.249 A; C126 discharge 1087.344 / 1109.09 Ohm, 278.3 nF, 0.6782 ms, +0.061 ms; R134 1.97109 Ohm, 35.80 W, 0.716 / 1.289 J, 61.2 / 44.13 W chart interpolation, 1.23x margin, 36.35 vs 35.85 W at 85 C; Q120 settled |Vgs| 4.744 V; R162 3.364 / 0.306 mA; U401 pad 11 and its two 0.5 / 0.3 mm vias at (27.3, 13.6) / (27.9, 13.6). All reproduce."
+  ],
+  "sources": [
+    "TI SLVSFC9C TPS25947 (https://www.ti.com/lit/ds/symlink/tps25947.pdf) §6.1, §6.3 note 2, §6.5",
+    "TI SLVS841G TPS2553 (https://www.ti.com/lit/ds/symlink/tps2553.pdf) eq. 1-3 pp16-17",
+    "TI SBVS282A TPS7A91 (https://www.ti.com/lit/ds/symlink/tps7a91.pdf) pp5-6",
+    "TI TPS709 (https://www.ti.com/lit/ds/symlink/tps709.pdf) EN pin description",
+    "Diodes DS41326 AP63200/1/3/5 p5",
+    "AOS AON7524, AONR21357, AO3400A datasheets (aosmd.com)",
+    "Infineon ESD103-B1-02EL datasheet Table 3",
+    "Bourns CRM chart p3 (as read in the records)"
+  ],
+  "coverage_limits": [
+    "No live JLC / LCSC page fetch this round; LCSC-to-MPN identity relies on JLC's own 'model' field in stock_check.json (2026-11-02).",
+    "CPL rotations were not rebuilt independently; the gate's jlc_orient --verify-cpl covers them and was not re-run on the canonical tree (read-only rule).",
+    "Local land patterns not re-derived from maker drawings this round beyond U9 and U401 pad geometry.",
+    "parts_qualification.md read in its current sections (lines 1-248, 346-560, 564-728); historical round sections skimmed only."
+  ]
+}

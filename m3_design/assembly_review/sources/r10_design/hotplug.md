@@ -1,6 +1,11 @@
 # R10 reverse hot-plug re-model (OQ-2, 2026-10-28)
 
-**Round-11 fix-pass target, 2026-10-29:** the completed inputs/results bind
+**Current results (round 34 pointer):** the current bound inputs and results are `hotplug_inputs.json` and
+`hotplug_results.json` (board `a0ec075e…`, input digest `f4d1b57d…`); their figures are in
+[M3_R10 "Current state"](../../../../docs/M3_R10.md#current-state): falling 8.995 / rising 5.088 V/µs and
+retained output 1643.90 µF / 5.914 V after 2 s. This file keeps the model, sources, limitations and the historical runs below.
+
+**Historical round-11 fix-pass target, 2026-10-29 (board `0ad0135c…`):** the inputs/results at that stage bound
 PCB `0ad0135cb9ff1f6ace7ef9d5ba9006b727b293d7b5224bb97dad47859b91238d`,
 electrical signature `5c069037842d5af804e1642e3ebd63754ce7dd552e4322053960dbddd49b61fc`.
 The full 2304-case sweep has completed; the numerical summary is recorded below.

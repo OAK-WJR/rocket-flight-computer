@@ -1,0 +1,52 @@
+{
+  "schema": "r10-review-v2",
+  "review": "round34_requirements",
+  "reviewer": "claude",
+  "target_commit": "c2a11fd",
+  "board_sha256_before": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256_after": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "totals": {"Critical": 0, "Major": 0, "Minor": 0},
+  "findings": [],
+  "observations": [
+    "Outline 46.05 x 90.05 mm edge bbox (0.025 mm line) and five Edge.Cuts O3.2 holes at (4,4), (42,4), (4,44.3), (3.7,86), (42,86) match P1 / P2.",
+    "Terminal positions and pin nets match F4 / F8 / F9 / F10: J1 F(7.4,75.85) BAT_IN/GND; J400 F(7.4,65.85) BAT_SW_SOURCE/BAT_SW_RETURN; J121 black F(7.4,55.85) PYRO1_OUT/PYRO1_IGN; J122 F(38.6,71.5) SERVO1-4_OUT + GND; J9 CAM_5V/GND/CAM_RX_WIRE/CAM_TX_WIRE; J410/J420/J440 PORT_4V8/GND/TX_WIRE/RX_WIRE.",
+    "F4: servo chain R150-R153 1 k series, R154-R157 10 k pull-downs, D121 SRV05-4 on the MCU side; PA0-PA3 TIM5_CH1-4. Hinge 0.447 N m at M2.13 / 286 kPa / 15 deg (linear theory, 8 x 26.5 mm tab) = 84 % of 0.53 N m, reproducing F4's upper bound.",
+    "F5 / F10 / F11 pin map in pin_table r10_net reproduces (SPI3 PC10-12 AF6, PD0 CS, USART3 PD8/PD9, UART5 PB13/PB12 AF14, USART6 PC6/PC7, UART7 PE8/PE7, EXTI 1/4/5/6/8/12); U1 pins 15/16/22/30/33 carry PC0/PC1/PA0/PA6/PC5 nets; VBAT pin 6 on 3V3, VREF+/VDDA on 3V3A, PC3_C NC.",
+    "F6 EN model reproduced: turn-on 87.7 / 55.5 / 44.7 ms at 6.0 / 7.4 / 8.4 V (1.2 V threshold, tau 50.0 ms); worst single drop-out 10.35 / 8.04 / 6.30 ms at 6.0 / 5.71 / 5.5 V; 8 ms every 50 ms gives EN 1.088 V at 5.96 V and 1.095 V at 6.0 V; 7 ms pass line holds to 5.646 V by interpolation.",
+    "F7 widths: BAT_IN fire feed 1.0 mm; seven 0.4 mm ACT_FET_S source-pin bridges; RAW_ACT 0.4 mm only to TP120 and 0.2 mm only on the R132 sense branch; PYRO1_IGN 0.5 mm; PYRO1_OUT 0.5 mm F.Cu with 0.2 mm sense/cold branches. parts_budget four-stall fire 1.2787 A at 5.7132 V, one stall 1.4758 A, idle 1.5409 A.",
+    "F8 figures reproduce: Q122 gate 3.6 x 2/33 = 0.218 V; cold CONT 99.36 mV healthy, 146.2 mV open (3.1 V through R131 10 k into 5.6 k / 11.2 k); Q124 network R126 220 R, R128 10 k, C126 220 nF; Q122 R122 1 k / R123 2 k / C123 10 nF.",
+    "F9: D402 B(4.45,65.9); its BAT_SW_RETURN tap from J400.2 is 2.590 + 0.509 + 1.015 = 4.114 mm (B.Cu); GND via (5.15,65.575) 0.700 mm from D402.2; unclamped ESD 5.45 V + 2.03 V = 7.5 V, 0.72 x C87 worst 9.6 V.",
+    "Port rails: AP63201 0.8 x (1 + 58.2/10) = 5.456 V; TPS7A91 0.8 x (1 + 49.9/10) = 4.792 V; PA6 divider R60 100 k / R61 10 k (x 11); R167 10 k gives 0.84 mA at 8.4 V and 7.1 weeks on 1 Ah.",
+    "P2: exposed lands nearest (4,44.3): LED2.2 3.808, LED1.1 3.860, J2.1 3.881, J2.3 3.989 mm (polygon approximation; records 3.880 / 3.987); no exposed land within 5.5 mm of the other four supports.",
+    "VEHICLE derivations reproduce: board aft edge -44.6 + 80 + 44..48 = joint + 79.4..83.4 mm; battery bay top +35.4; ISA 316 hPa at 8.8 km MSL; apogee ambient -7.8..-27.3 C (K850DM) and -16.2..-42.2 C (L1000W); 1850 x 1.9/0.9 = 3906 dps; landing 98-163 g at 6.2-8.0 m/s over 20 mm.",
+    "M3 / M1: cost_check 2026-11-02T12:44:13Z 60.47 + 123.93/5 = 85.26 $/board, 81 codes, 45 Extended, min purchase +0.54 (85.80); stock_check 12:43:17Z U9 30 / -81 / min 7 and U4 9 / 2 match REQUIREMENTS M1 / M3; both checks' input hashes match the committed BOM / CPL.",
+    "The session-context copy of AGENTS.md is stale (92c3ad59 / $85.60); the committed AGENTS.md at c2a11fd names a0ec075e (round 29 ruling, not a finding)."
+  ],
+  "fix_verification": [
+    {"id": "R33-TRI-01", "lens_note": "docs_binding correction, checked for completeness", "measurement": "U9 pads 5 / 6 y 80.40-82.80, pad 9 x 19.10-19.70, y 81.70-81.95; body 1.9-2.1 mm centred at (18.5,81.6) gives 0.15-0.25 mm exposure at each end and 0.15-0.25 x 0.25 mm for pad 9; ORDERING:552 and :555 state exactly this; no '0.10 x 0.30' left in current docs (only the R10_VALIDATION history row)", "verdict": "confirmed"}
+  ],
+  "checks_actually_executed": [
+    "shasum -a 256 of the board before and after",
+    "pcbnew (KiCad Python, read-only) probes in .supervisor/r34_requirements/probe1-9.py: footprint positions / nets, Edge.Cuts holes, D402 tap and GND via, sense / fire-path track widths, exposed lands near supports, U1 supply pins, U9 pad extents",
+    "pin_table.tsv r10_net / mode_af / exti columns for the requirement pins",
+    "parts_budget.json fire_current_GAP1 and pack-sag figures",
+    "cost_check.json / stock_check.json figures and input hashes against fab CSV SHA-256",
+    "independent EN RC model (scratchpad en.py) for F4 / F6 chatter figures",
+    "hand arithmetic for F1, F3, F8, F9, P3, Storage, Board position, hinge moment"
+  ],
+  "sources": [
+    "docs/REQUIREMENTS.md, AGENTS.md at c2a11fd",
+    "../../docs/VEHICLE.md",
+    "m3_design/assembly_review/m3.kicad_pcb (a0ec075e)",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv, parts_budget.json",
+    "m3_design/assembly_review/fab/cost_check.json, stock_check.json, m3_bom_jlc.csv, m3_cpl_jlc.csv",
+    "docs/ORDERING.md 8.3; round33_triage.md",
+    "TI SLVSFC9C p9 (EN thresholds as recorded); STM32H743 LQFP100 pinout (DS12110) as used by pin_table"
+  ],
+  "coverage_limits": [
+    "Datasheets were not re-downloaded; EN thresholds, HV6120 stall torque (0.53 N m) and the derived flight envelope were taken as recorded.",
+    "Schematic not opened separately; board nets used (schematic parity is a gate item).",
+    "Pad-energy worksheet (ORDERING 8.1.1) and the plate model were not re-derived.",
+    "No full tools/check.sh run (brief: read-only)."
+  ]
+}
