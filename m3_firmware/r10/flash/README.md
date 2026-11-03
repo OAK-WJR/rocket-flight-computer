@@ -1,10 +1,11 @@
 # R10 read-only flash diagnostics
 
 This module contains a bounded acquisition core and a native QUADSPI transport
-for U3, the fitted **W25Q128JVSIQ / C97521**. It is not linked into the current
-ABI4 bench image. No flash record, flash capability, new readback window or
-hardware access is added by this module. The next integration must publish raw
-observations, ages, configuration and errors before it can support board diagnosis.
+for U3, the fitted **W25Q128JVSIQ / C97521**. It is linked into the ABI5 bench image, with raw
+observations, ages, configuration and errors decoded by the host. Its84 logical
+words use spare positions in the existing1024-byte record, preserving the
+sensor/voltage offsets and all historical record boundaries. It has not run on
+hardware; read-only identity/status checks do not qualify the storage array.
 
 `verify_flash.py` binds the source part, NCS pull-up, all16 relevant endpoints,
 six MCU pin/alternate-function rows and pinned ST register references. A changed

@@ -44,10 +44,11 @@ class ActualC(unittest.TestCase):
         library = Path(cls.temp.name)/"r10.dylib"
         subprocess.run(["/usr/bin/clang", "-dynamiclib", "-O2", "-std=c11", "-Wall", "-Wextra", "-Werror",
                         "-I"+str(HERE/"imu"), "-I"+str(HERE/"vendor/ism6hg256x"),
-                        "-I"+str(HERE/"baro"),"-I"+str(HERE/"voltage"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
+                        "-I"+str(HERE/"baro"),"-I"+str(HERE/"voltage"),"-I"+str(HERE/"flash"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
                         str(HERE/"src/mailbox.c"), str(HERE/"imu/imu_frame.c"), str(HERE/"tests/imu_record.c"),
                         str(HERE/"tests/voltage_record.c"),str(HERE/"voltage/voltage_core.c"),
                         str(HERE/"voltage/adc_port.c"),str(HERE/"voltage/voltage_frame.c"),
+                        str(HERE/"flash/flash_ro.c"),str(HERE/"flash/qspi_port.c"),str(HERE/"flash/flash_frame.c"),str(HERE/"tests/flash_record.c"),
                         str(HERE/"baro/baro_frame.c"),str(HERE.parents[1]/"m3_firmware/src/checks.c"),
                         "-o", str(library)], check=True, capture_output=True)
         cls.lib = ctypes.CDLL(str(library))
@@ -60,6 +61,7 @@ class ActualC(unittest.TestCase):
         cls.lib.r10_test_sensor_record.argtypes = [u32p, ctypes.c_uint]
         cls.lib.r10_test_baro_record.argtypes=[u32p,ctypes.c_uint]
         cls.lib.r10_test_voltage_record.argtypes=[u32p,ctypes.c_uint]
+        cls.lib.r10_test_flash_record.argtypes=[u32p,ctypes.c_uint]
         cls.lib.bench_ms5611.argtypes=[ctypes.POINTER(ctypes.c_uint16),ctypes.c_uint32,ctypes.c_uint32,
                                       ctypes.POINTER(ctypes.c_int32),ctypes.POINTER(ctypes.c_int32)]
         cls.board = "a0"*32; cls.identity = "17"*32
@@ -129,8 +131,39 @@ class ActualC(unittest.TestCase):
     def test_semantic_faults_rejected_even_with_valid_crc(self):
         raw = self.frame()
         for index, value in ((4,0),(8,0),(9,0),(15,8),(18,1),(19,1),(24,0),
-                             (24,64000001),(25,100),(26,3),(27,3),(44,127),(45,7),(62,1)):
+                             (24,64000001),(25,100),(26,3),(27,4),(44,255),(45,7),(62,1)):
             with self.assertRaises(ValueError): self.decode(self.mutate(raw, index, value))
+
+    def flash_frame(self,mode=1,ticks=1000):
+        words=(ctypes.c_uint32*256).from_buffer_copy(self.frame(ticks))
+        self.lib.r10_test_flash_record(words,mode)
+        dest=(ctypes.c_uint32*256)();seq=ctypes.c_uint32(words[3])
+        self.lib.r10_publish(dest,words,ctypes.byref(seq));return bytes(dest)
+
+    def test_flash_core_native_model_and_serializer_survive_real_publication(self):
+        d=self.decode(self.flash_frame());self.assertEqual(d['abi_version'],5)
+        self.assertTrue(d['flash']['fresh']);self.assertEqual(d['flash']['sample_raw']['quad_id'],'ef17ef17')
+        self.assertFalse(d['flash']['array_integrity_assessed'])
+
+    def test_flash_failure_cleanup_and_core_fault_cannot_claim_current_data(self):
+        for mode,error in ((2,'TIMEOUT'),(3,'READ_ERROR'),(5,'READ_ERROR'),(7,'QUAD_DISABLED'),(8,'QUAD_IDENTITY')):
+            with self.subTest(mode=mode):
+                raw=self.flash_frame(mode,ticks=4000);d=self.decode(raw)['flash']
+                self.assertEqual(d['error'],error);self.assertFalse(d['fresh'])
+                if mode==5:self.assertEqual(d['cleanup_error'],'CLEANUP')
+        with self.assertRaises(ValueError):self.decode(self.mutate(self.flash_frame(),4,3))
+        for index in (63,247,254):
+            with self.subTest(index=index),self.assertRaises(ValueError):
+                self.decode(self.mutate(self.flash_frame(),index,1))
+
+    def test_flash_progress_and_wrapping_counter_are_not_a_hardware_verdict(self):
+        first=self.decode(self.mutate(self.flash_frame(),111,0xffffffff))
+        raw=self.mutate(self.flash_frame(ticks=2000),111,0)
+        for index in [108,125,126,127,193,194,195,196,197]:
+            words=struct.unpack('<256I',raw);raw=self.mutate(raw,index,(words[index]+1000)&0xffffffff)
+        raw=self.mutate(self.mutate(raw,3,first['sequence']+2),7,first['main_count']+20)
+        progress=decoder.pair(first,self.decode(raw))['flash_progress']
+        self.assertTrue(progress['reported_acquisition_progress']);self.assertFalse(progress['hardware_qualified'])
 
     def sensor_frame(self, mode=0, ticks=1000):
         words=(ctypes.c_uint32*256).from_buffer_copy(self.frame(ticks))
@@ -190,6 +223,7 @@ class ActualC(unittest.TestCase):
 
     def test_v4_reserved_space_and_voltage_semantic_claims_are_checked(self):
         raw=self.voltage_frame()
+        for i,value in ((1,4),(27,2),(44,63)):raw=self.mutate(raw,i,value)
         for index,value in ((63,1),(98,1),(127,1),(193,1),(254,1),(128,0),(129,99),
                             (133,13),(142,6),(143,2),(144,1),(170,0x2008),(175,1),(180,0),(192,0),(4,3)):
             with self.subTest(index=index,value=value),self.assertRaises(ValueError):self.decode(self.mutate(raw,index,value))
@@ -302,7 +336,7 @@ class ActualC(unittest.TestCase):
         d=self.decode(self.mutate(raw,67,0))["baro"]
         self.assertTrue(d["has_sample"]);self.assertTrue(d["fresh"])
         self.assertFalse(self.decode(self.mutate(raw,97,(10-251)&0xffffffff))["baro"]["fresh"])
-        for index,value in ((64,9),(65,13),(66,3),(85,0),(86,0xffff),(81,0),(73,0),(75,999),(75,100010),(91,13),(98,1),(4,3)):
+        for index,value in ((64,9),(65,13),(66,3),(85,0),(86,0xffff),(81,0),(73,0),(75,999),(75,100010),(91,13),(247,1),(4,3)):
             with self.subTest(index=index),self.assertRaises(ValueError):self.decode(self.mutate(raw,index,value))
 
     def test_wrong_board_or_build_rejected(self):
@@ -349,7 +383,7 @@ class ActualC(unittest.TestCase):
                 (folder/"second.bin").write_bytes(self.frame(20,20,2))
             manifest=folder/"manifest.json"
             manifest.write_text(json.dumps({"schema":"r10-bench-build/v1","profile":"M3-ASSY-R10",
-                                           "board_sha256":bh,"build_id":ih,"mailbox_abi":4,"mailbox_bytes":1024,"inputs":inputs}))
+                                           "board_sha256":bh,"build_id":ih,"mailbox_abi":5,"mailbox_bytes":1024,"inputs":inputs}))
             cmd=[sys.executable,str(HERE/"decode.py"),"--snapshot",str(folder/"first.bin"),
                  "--second",str(folder/"second.bin"),"--board",str(board),"--manifest",str(manifest)]
             result=subprocess.run(cmd,capture_output=True,text=True,timeout=5)
@@ -385,11 +419,28 @@ class ActualC(unittest.TestCase):
 
 
 class BuildContract(unittest.TestCase):
+    def test_freestanding_memcmp_compares_unsigned_bytes_without_changing_inputs(self):
+        with tempfile.TemporaryDirectory() as temp:
+            output=Path(temp)/"compare.dylib"
+            subprocess.run(["/usr/bin/clang","-dynamiclib","-O2","-fno-builtin","-Wall","-Wextra","-Werror",
+                "-Dmemset=r10_private_memset","-Dmemcpy=r10_private_memcpy","-Dmemcmp=r10_private_memcmp",
+                str(HERE/"src/memory.c"),"-o",str(output)],check=True,capture_output=True)
+            fn=ctypes.CDLL(str(output)).r10_private_memcmp
+            fn.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t];fn.restype=ctypes.c_int
+            for length in (0,1,2,7,31,256):
+                for a,b in ((0,255),(128,127),(255,0),(128,128)):
+                    left=(ctypes.c_ubyte*258)(*([0x5a]*258));right=(ctypes.c_ubyte*258)(*([0x5a]*258))
+                    if length:left[length]=a;right[length]=b
+                    saved=bytes(left),bytes(right)
+                    value=fn(ctypes.byref(left,1),ctypes.byref(right,1),length)
+                    expected=(a>b)-(a<b) if length else 0
+                    self.assertEqual((value>0)-(value<0),expected);self.assertEqual((bytes(left),bytes(right)),saved)
+
     def test_freestanding_memcpy_preserves_source_and_guard_bytes(self):
         with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"copy.dylib"
             subprocess.run(["/usr/bin/clang","-dynamiclib","-O2","-fno-builtin","-Wall","-Wextra","-Werror",
-                "-Dmemset=r10_private_memset","-Dmemcpy=r10_private_memcpy",str(HERE/"src/memory.c"),"-o",str(output)],check=True,capture_output=True)
+                "-Dmemset=r10_private_memset","-Dmemcpy=r10_private_memcpy","-Dmemcmp=r10_private_memcmp",str(HERE/"src/memory.c"),"-o",str(output)],check=True,capture_output=True)
             fn=ctypes.CDLL(str(output)).r10_private_memcpy
             fn.argtypes=[ctypes.c_void_p,ctypes.c_void_p,ctypes.c_size_t];fn.restype=ctypes.c_void_p
             for length in (0,1,2,7,31,256):
@@ -403,7 +454,7 @@ class BuildContract(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             output=Path(temp)/"memory.dylib"
             subprocess.run(["/usr/bin/clang","-dynamiclib","-O2","-fno-builtin",
-                            "-Dmemset=r10_private_memset","-Dmemcpy=r10_private_memcpy",str(HERE/"src/memory.c"),"-o",str(output)],
+                            "-Dmemset=r10_private_memset","-Dmemcpy=r10_private_memcpy","-Dmemcmp=r10_private_memcmp",str(HERE/"src/memory.c"),"-o",str(output)],
                            check=True,capture_output=True)
             lib=ctypes.CDLL(str(output));fn=lib.r10_private_memset
             fn.argtypes=[ctypes.c_void_p,ctypes.c_int,ctypes.c_size_t];fn.restype=ctypes.c_void_p
@@ -421,15 +472,17 @@ class BuildContract(unittest.TestCase):
             subprocess.run(["/usr/bin/clang","-std=c11","-O1","-g","-Wall","-Wextra","-Werror","-DR10_HOST_TEST",
                             "-fsanitize=undefined","-DR10_PUBLISH_OBSERVER","-I"+str(HERE/"tests"),"-I"+str(folder),
                             "-I"+str(HERE/"imu"),"-I"+str(HERE/"vendor/ism6hg256x"),
-                            "-I"+str(HERE/"baro"),"-I"+str(HERE/"voltage"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
+                            "-I"+str(HERE/"baro"),"-I"+str(HERE/"voltage"),"-I"+str(HERE/"flash"),"-I"+str(HERE.parents[1]/"m3_firmware/src"),
                             "-U__weak","-D__weak=__attribute__((weak))",
                             str(HERE/"tests/runtime.c"),str(HERE/"src/mailbox.c"),str(HERE/"imu/imu_core.c"),
                             str(HERE/"imu/imu_frame.c"),str(HERE/"baro/baro_frame.c"),str(HERE/"baro/baro_core.c"),
                             str(HERE/"voltage/voltage_core.c"),str(HERE/"voltage/voltage_frame.c"),
+                            str(HERE/"flash/flash_ro.c"),str(HERE/"flash/flash_frame.c"),
                             str(HERE.parents[1]/"m3_firmware/src/checks.c"),
                             str(HERE/"vendor/ism6hg256x/ism6hg256x_reg.c"),"-o",str(executable)],
                            check=True,capture_output=True,text=True)
-            r=subprocess.run([str(executable)],check=True,capture_output=True,text=True,timeout=5)
+            r=subprocess.run([str(executable)],capture_output=True,text=True,timeout=5)
+            self.assertEqual(r.returncode,0,r.stdout+r.stderr)
             self.assertIn("scripted runtime cases passed",r.stdout)
             self.assertEqual(r.stderr,"")
 
@@ -483,13 +536,21 @@ class BuildContract(unittest.TestCase):
         for i in (7,8,9,10,13): vectors[i] = 0
         raw = struct.pack("<166I",*vectors)+bytes(2048)
         symbols = "24000000 00000400 B r10_mailbox\n24000000 B _r10_mailbox_start\n24000400 B _r10_mailbox_end\n"
-        build.verify_binary(raw,symbols,"strd r2, r3, [r0]\ndmb sy")
+        prime='08001000 <prime>:\n 0: cpsid i\n 2: mrs r3, PRIMASK\n 4: str r0, [r2, #20]\n 6: str r0, [r2, #20]\n 8: str.w ip, [r2]\n a: msr PRIMASK, r3\n'
+        build.verify_binary(raw,symbols,"strd r2, r3, [r0]\ndmb sy\n"+prime)
         for i, v in ((0,0x20040000),(1,0x08000400),(7,0x08000401),(165,0x09000001)):
             broken=list(vectors);broken[i]=v
             with self.assertRaises(ValueError):
                 build.verify_binary(struct.pack("<166I",*broken)+bytes(2048),symbols,"strd dmb")
         with self.assertRaises(ValueError): build.verify_binary(raw,symbols,"no required instructions")
         with self.assertRaises(ValueError):build.verify_binary(raw,symbols.replace('24000400','24000100'),"strd dmb")
+
+    def test_linked_qspi_primitive_refuses_missing_duplicate_store_or_mask(self):
+        text='08001000 <prime>:\n 0: cpsid i\n 2: mrs r3, PRIMASK\n 4: str r0, [r2, #20]\n 6: str r0, [r2, #20]\n 8: str.w ip, [r2]\n a: msr PRIMASK, r3\n'
+        build.verify_qspi_primitive(text)
+        for broken in (text.replace('prime','absent'),text.replace('cpsid','nop'),
+                       text.replace(' 6: str r0, [r2, #20]',' 6: nop')):
+            with self.assertRaises(ValueError):build.verify_qspi_primitive(broken)
 
 
 if __name__ == "__main__":

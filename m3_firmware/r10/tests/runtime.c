@@ -24,6 +24,8 @@ static uint32_t baro_ready;
 static uint16_t baro_prom[8];
 static r10_adc_port fake_voltage_port;
 static unsigned voltage_present,voltage_error_at,voltage_slot;
+static r10_qspi_port fake_flash_port;
+static unsigned flash_present,flash_error_at,flash_command;
 static jmp_buf escape;
 static int sensor_init(void *p,uint32_t *hz,uint32_t *detail) {
     (void)p;*hz=sensor_present?1000000u:0u;*detail=sensor_present?0u:1u;
@@ -96,6 +98,35 @@ const r10_voltage_io *r10_native_voltage_io(void) {
                                   .poll=voltage_read,.cancel=voltage_cancel};return &io;
 }
 const r10_adc_port *r10_native_adc_state(void) {return &fake_voltage_port;}
+static int flash_init(void *p,uint32_t now,uint32_t *hz,uint32_t *detail) {
+    (void)p;(void)now;*hz=flash_present?1000000u:0u;*detail=flash_present?0u:0x02000000u;
+    if (!flash_present) return FRO_ERROR;
+    fake_flash_port.phase=Q_READY;fake_flash_port.owned=1u;fake_flash_port.parked=0u;
+    fake_flash_port.revision=0x2003;fake_flash_port.nominal_hz=1000000u;return FRO_OK;
+}
+static int flash_start(void *p,unsigned command,uint32_t *detail) {
+    (void)p;assert(command<8 && !fake_flash_port.active);
+    if (flash_error_at && sleep_count>=flash_error_at) {*detail=0x0c040001u;return FRO_ERROR;}
+    flash_command=command;fake_flash_port.command=command;fake_flash_port.active=1u;
+    fake_flash_port.received=0;*detail=0;return FRO_OK;
+}
+static int flash_read(void *p,uint8_t *out,uint32_t capacity,uint32_t *received,uint32_t *detail) {
+    (void)p;static const unsigned lengths[8]={1,1,1,3,8,4,3,1};
+    static const uint8_t data[8][8]={{0},{2},{0},{0xef,0x40,0x18},
+        {'S','F','D','P',5,1,0,255},{0xef,0x17,0xef,0x17},{0xef,0x40,0x18},{0}};
+    assert(fake_flash_port.active && capacity>=lengths[flash_command]);
+    memcpy(out,data[flash_command],lengths[flash_command]);*received=lengths[flash_command];*detail=0;
+    fake_flash_port.received=*received;fake_flash_port.active=0;return FRO_OK;
+}
+static int flash_cancel(void *p,uint32_t *detail) {
+    (void)p;fake_flash_port.phase=Q_NEW;fake_flash_port.owned=fake_flash_port.active=0;
+    fake_flash_port.parked=1;fake_flash_port.nominal_hz=0;*detail=0;return FRO_OK;
+}
+const r10_flash_ro_io *r10_native_flash_io(void) {
+    static const r10_flash_ro_io io={.initialize=flash_init,.start=flash_start,.poll=flash_read,.cancel=flash_cancel};
+    return &io;
+}
+const r10_qspi_port *r10_native_qspi_state(void) {return &fake_flash_port;}
 void __disable_irq(void) {irq_enabled=0;}
 void __enable_irq(void) {irq_enabled=1;}
 void __DSB(void) {}
@@ -139,6 +170,8 @@ static void reset_model(void) {
     memset(&baro,0,sizeof baro);baro_present=baro_command=baro_conversion=baro_ready=0;
     memset(&voltage,0,sizeof voltage);memset(&fake_voltage_port,0,sizeof fake_voltage_port);
     voltage_present=voltage_error_at=voltage_slot=0u;
+    memset(&flash,0,sizeof flash);memset(&fake_flash_port,0,sizeof fake_flash_port);
+    flash_present=flash_error_at=flash_command=0;
     const uint16_t coefficients[]={0,40127,36924,23317,23282,33464,28312,0};
     for(unsigned i=0;i<8;++i)baro_prom[i]=coefficients[i];
     baro_prom[7]=bench_prom_crc4(baro_prom);
@@ -165,7 +198,7 @@ static void valid_record(uint32_t state) {
     assert(copy[0]==R10_MAGIC && copy[1]==R10_ABI && copy[2]==1024);
     assert(copy[3]!=0 && (copy[3]&1)==0 && copy[4]==state);
     assert(copy[R10_CRC]==r10_crc32((const uint8_t*)copy,R10_CRC*4));
-    assert(copy[27]==2 && copy[44]==63);
+    assert(copy[27]==3 && copy[44]==127);
 }
 int main(void) {
     reset_model();run_main();valid_record(R10_STATE_RUNNING);
@@ -190,7 +223,12 @@ int main(void) {
     reset_model();voltage_present=1;voltage_error_at=2400;run_main();valid_record(R10_STATE_RUNNING);
     assert(r10_mailbox[139]>0u && r10_mailbox[144]==2u && r10_mailbox[129]==R10_VOLTAGE_START_ERROR);
     assert(r10_mailbox[155]==375u && r10_mailbox[176]>4900u);
-    reset_model();sensor_present=baro_present=voltage_present=1;throw_fault=1;run_main();valid_record(R10_STATE_FAULT);
+    reset_model();flash_present=1;run_main();valid_record(R10_STATE_RUNNING);
+    assert(flash.samples>0 && r10_mailbox[232]==3u && r10_mailbox[111]>0);
+    /* The1Hz flash batch must fail before the3000ms publication. */
+    reset_model();flash_present=1;flash_error_at=1800;run_main();valid_record(R10_STATE_RUNNING);
+    assert(flash.samples>0 && flash.error==FRO_START_ERROR && r10_mailbox[232]==2u);
+    reset_model();sensor_present=baro_present=voltage_present=flash_present=1;throw_fault=1;run_main();valid_record(R10_STATE_FAULT);
     assert(imu.samples>0); /* exception must not expose a partially updated IMU object */
     for(unsigned i=45;i<63;++i)assert(r10_mailbox[i]==0);
     assert(baro.samples>0);for(unsigned i=64;i<R10_CRC;++i)assert(r10_mailbox[i]==0);

@@ -65,10 +65,10 @@
   "timing_workaround": "ES0392 2.7.4 is applied with pins parked and NCS high, using an interrupt-masked native primitive with consecutive CCR/CCR/CR stores. Clear the residual CCR and explicitly clear/set EN for2.7.3 before exposing AF pins. Object-code ordering does not qualify actual bus-cycle timing.",
   "read_only_policy": "Only05/35/15/9F/5A/94 read frames from a fixed descriptor table; addresses zero, finite lengths <=8, no flash DR writes, reset/wake/WREN/program/erase/status writes, DMA, interrupts, auto-poll or memory-mapped access.",
   "cleanup_policy": "Raise NCS using its GPIO ODR before output mode, park the five other pins analog/no-pull, reset only the owned QUADSPI, require idle/reset readback, then disable its clock. Failed cleanup stops the core.",
-  "image_linked": false,
+  "image_linked": true,
   "hardware_tested": false,
   "open_items": [
-    "Versioned flash evidence serialization/readback integration.",
+    "ABI5 evidence serialization and host readback are under software verification; not tested on hardware.",
     "Physical timing, supply, IO continuity, real-device identity and silicon qualification.",
     "No storage-array content, programming, endurance or power-loss qualification."
   ]

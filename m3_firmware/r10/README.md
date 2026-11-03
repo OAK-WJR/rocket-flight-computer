@@ -1,4 +1,4 @@
-# R10 sensor and voltage bench diagnostics
+# R10 sensor, voltage and read-only flash bench diagnostics
 
 This is a separate, cross-built **bench diagnostic image** for the exact
 M3-ASSY-R10 board in `binding.json`. It has not run on hardware. The R1 image,
@@ -15,18 +15,19 @@ failure, recursive faults and a damaged stack can prevent publication.
 The [fitted IMU acquisition core](imu/README.md) and native SPI1 port are now
 linked into the image. The [MS5611 barometer core and I2C1 port](baro/README.md)
 are now linked too. The [voltage core and ADC1/ADC3 port](voltage/README.md)
-are linked in ABI4. GPIO changes are limited to PB3/PB4/PB5 AF5, PB7 sensor CS,
+are linked with the [read-only U3 core and QUADSPI port](flash/README.md) in ABI5.
+GPIO changes are limited to PB3/PB4/PB5 AF5, PB7 sensor CS,
 PB8/PB9 AF4, and PA6/PB1 analog/no-pull inputs. Internal VREFINT and VBAT are
-sampled on ADC3; ADC2 remains in deep power-down. No actuator/PWM, UART, USB or
-storage driver is enabled. Flight state,
+sampled on ADC3; ADC2 remains in deep power-down. QSPI uses PB2/PD11/PD12/PD13/PE2
+AF9 and PB6 AF10, with NCS driven high before its AF change. No actuator/PWM,
+UART, USB or flash programming is enabled. Flight state,
 control and recovery logic remain unimplemented. This is bench diagnostics,
 not the complete board firmware.
 
-The [read-only U3 diagnostic module](flash/README.md) has a separately tested
-core and native QUADSPI transport. It is not in this image or its ABI4 record.
-Flash evidence serialization and host reporting must be integrated before those
-tests can support installed-board diagnosis; current firmware/probe grants
-and capabilities are unchanged.
+The read-only U3 module publishes pending bytes/counts, last-good responses,
+per-command times, error/cleanup history and native port evidence in spare ABI5
+words. The host checks that evidence and publication age independently. Status,
+identity and SFDP-header reads do not establish array or write reliability.
 
 Voltage records retain the current partial raw batch and a separate last-good
 sample, configuration, timestamps and nominal conversions. Initialization,
@@ -36,7 +37,7 @@ error history, native port phase and its most recent CR/ISR/DR observations stay
 visible even when the current data is invalid.
 
 Sensor and voltage polling runs outside the publication critical section: IMU
-every20 nominal ms, barometer and voltage state machines on each main-loop wake.
+every20 nominal ms, with barometer, voltage and flash state machines on each wake.
 A missing or failed IMU leaves the MCU heartbeat running, with sensor state,
 configuration, error history and last-good raw data retained in the record.
 The SPI port uses a shared finite iteration budget independent of SysTick.
@@ -80,8 +81,8 @@ fault barrier or evidence that an attached circuit is safe.
 
 ## Saved-record analysis
 
-`protocol.json` defines 1024-byte `R10D/v4`; the saved-file decoder also supports
-historical 512-byte v3 and 256-byte v1/v2 records. Image/record ABI declarations must agree. Its magic is distinct from every
+`protocol.json` defines1024-byte `R10D/v5`; the saved-file decoder also supports
+historical1024-byte v4,512-byte v3 and256-byte v1/v2 records. Image/record ABI declarations must agree. Its magic is distinct from every
 legacy R1 record. Publication uses a reserved generation, an odd sequence while
 writing, CRC-32 and an even sequence after the payload is complete. A terminal
 exception receives a new generation even when it interrupts the last store of
@@ -99,7 +100,7 @@ python3 m3_firmware/r10/decode.py \
   --snapshot first.bin --second second.bin
 ```
 
-Each snapshot must match its ABI: 1024 bytes for v4,512 for v3,256 for historical v1/v2. Invalid CRC, odd/zero sequence, wrong
+Each snapshot must match its ABI:1024 bytes for v4/v5,512 for v3,256 for historical v1/v2. Invalid CRC, odd/zero sequence, wrong
 build or board identity, legacy ABI, nonzero reserved fields and contradictory
 runtime/fault states are rejected. Two matching records with advancing ticks,
 main counter and generation show **observed progress in the supplied records**.
@@ -112,7 +113,7 @@ HSE frequency or clock margin. Reset flags remain raw and sticky. MMFAR/BFAR
 addresses are accompanied by their CFSR validity bits. No sensor or power-rail
 pass is inferred from successful record decoding.
 
-The IMU retains its v2 offsets in v3/v4: words 45–62 for U4 state/error, identity/status/validity/has-sample,
+The IMU retains its v2 offsets in v3/v4/v5: words 45–62 for U4 state/error, identity/status/validity/has-sample,
 sample count/time, endpoint flags, ten signed raw channels, eight configuration
 bytes, bus errors, nominal frequency, detailed failure and retry/history fields.
 The host suppresses validity after 250 nominal ms even if the last core poll
@@ -126,7 +127,7 @@ Barometer words 64–97 retain candidate/last-good values and separate calibrati
 banks. The host checks PROM CRC4 and independently repeats integer compensation.
 Freshness starts before the D1 command and a subsequent poll checks age before
 commit; callback latency cannot refresh old conversions. Core FAULT withholds
-all sensor/voltage state. In v4, word63,words98–127 and193–254 stay zero;
+all sensor/voltage/flash state. In historical v4, word63,words98–127 and193–254 stay zero;
 CRC32 is word255. Historical v3 retains its original CRC at127.
 
 Voltage words128–192 hold acquisition/error/cleanup state, counters, raw masks,
@@ -137,6 +138,16 @@ cannot promote retained values to current data. Freshness is evaluated at record
 publication with an exclusive1000 nominal ms bound, not at file replay time.
 Reported voltage acquisition progress is separate from MCU and sensor progress.
 Internal VBAT/4 is a coarse3V3 observation, not a narrow rail acceptance test.
+
+Flash has84 logical words mapped to98–127 and193–246; word63 and247–254 stay
+zero in v5. The existing sensor/voltage offsets, CRC word255 and1024-byte window
+remain fixed. Pending responses/counts and last-good responses/times stay
+separate. The host independently checks the fitted-profile responses, native
+frame/configuration evidence and the exclusive3000ms freshness limit from batch
+start. Failed cleanup stops retries. Original synthetic v3/v4 captures remain
+byte-preserved replay fixtures; a v4 record cannot qualify a v5 image merely
+because both records are1024bytes. No array-content, endurance or power-loss
+qualification is inferred.
 
 ## Verification evidence and remaining work
 

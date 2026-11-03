@@ -34,8 +34,9 @@ REGS = dict(CPUID=0xe000ed00, IDCODE=0x5c001000,
 SOURCES = ("diagnostics/r10_firmware.py", "diagnostics/r10_swd.py", "diagnostics/r10_offline.py",
            "diagnostics/r10_swd_binding.json", "diagnostics/r10_profile.json",
            "diagnostics/transport.py", "diagnostics/registers.py", "diagnostics/engine.py",
-           "m3_firmware/r10/decode.py", "m3_firmware/r10/voltage_decode.py", "m3_firmware/r10/build.py")
-LEGACY_SOURCES=tuple(p for p in SOURCES if p!="m3_firmware/r10/voltage_decode.py")
+           "m3_firmware/r10/decode.py", "m3_firmware/r10/voltage_decode.py", "m3_firmware/r10/flash_decode.py", "m3_firmware/r10/build.py")
+V4_SOURCES=tuple(p for p in SOURCES if p!="m3_firmware/r10/flash_decode.py")
+LEGACY_SOURCES=tuple(p for p in V4_SOURCES if p!="m3_firmware/r10/voltage_decode.py")
 BOOTSTRAP = ("import sys; sys.path.insert(0,sys.argv.pop(1)); "
              "from diagnostics.r10_firmware import main; raise SystemExit(main())")
 
@@ -54,18 +55,22 @@ def build_bundle(manifest_bytes, image, *, current=True):
     require(inputs["schema"] == "r10-bench-build-inputs/v1" and expected_id == m.get("build_id"),
             "Firmware build identity mismatch")
     abi=m.get("mailbox_abi",1)
-    require(type(abi) is int and abi in (1,2,3,4) and type(m.get("mailbox_address")) is int and
+    require(type(abi) is int and abi in (1,2,3,4,5) and type(m.get("mailbox_address")) is int and
             type(m.get("mailbox_bytes")) is int and m.get("mailbox_address") == RAM and
-            m.get("mailbox_bytes") == {1:256,2:256,3:512,4:1024}[abi] and
+            m.get("mailbox_bytes") == {1:256,2:256,3:512,4:1024,5:1024}[abi] and
             m.get("actuation_implemented") is False, "Wrong mailbox/function contract")
     require(isinstance(m.get("outputs"), dict) and m["outputs"].get("r10_bench.bin") == sha_bytes(image),
             "Local image changed since build")
+    if abi==5:
+        require(all(m.get(key) is True for key in ('sensor_drivers_implemented','barometer_driver_implemented',
+                    'voltage_driver_implemented','flash_driver_implemented')),
+                "ABI5 image has contradictory driver declarations")
     require(664 <= len(image) <= MAX_IMAGE and len(image) % 4 == 0, "Image exceeds fixed read window")
     sp, entry = struct.unpack_from("<II", image)
     require(sp == 0x20020000 and entry & 1 and FLASH <= entry & ~1 < FLASH+len(image), "Wrong image vector")
     if current:
         expected, _ = firmware_build.validate_inputs()
-        require(m.get("mailbox_abi") == 4 and m.get("barometer_driver_implemented") is True and m.get("sensor_drivers_implemented") is True and m.get("voltage_driver_implemented") is True,
+        require(m.get("mailbox_abi") == 5 and m.get("flash_driver_implemented") is True and m.get("barometer_driver_implemented") is True and m.get("sensor_drivers_implemented") is True and m.get("voltage_driver_implemented") is True,
                 "Current R10 image must declare the reviewed sensor diagnostic ABI")
         require(inputs["sources"] == firmware_build.source_inventory() and
                 inputs["board_inputs"] == expected["inputs"] and inputs["flags"] == firmware_build.FLAGS,
@@ -91,9 +96,9 @@ class FirmwareAPGuard:
                 cpuid & CPUID_MASK == EXPECTED_CPUID and idcode & 0xfff == EXPECTED_FAMILY,
                 "Wrong chip; internal flash remains disabled")
         require(type(size) is int and 664 <= size <= MAX_IMAGE and size % 4 == 0, "Bad image window")
-        require(type(mailbox_abi) is int and mailbox_abi in (1,2,3,4),"Unsupported image mailbox ABI")
+        require(type(mailbox_abi) is int and mailbox_abi in (1,2,3,4,5),"Unsupported image mailbox ABI")
         self.family, self.image_bytes = True, size
-        self.record_bytes={1:256,2:256,3:512,4:1024}[mailbox_abi]
+        self.record_bytes={1:256,2:256,3:512,4:1024,5:1024}[mailbox_abi]
 
     def enable_ram(self, observed, expected, power, vtor, reset_boot_confirmed, record_bytes=256):
         self.ram=False;self.ram_bytes=0;self.current_address=None
@@ -187,7 +192,7 @@ def request(run, board, *, current=False):
     require(r["build_id"] == m["build_id"] and r["manifest_sha256"] == sha_bytes(raw) and
             r["image_sha256"] == sha_bytes(image) and type(r["image_bytes"]) is int and r["image_bytes"] == len(image),
             "Request bundle changed")
-    fields(r["tool_sources"], SOURCES if m.get("mailbox_abi",1)==4 else LEGACY_SOURCES)
+    fields(r["tool_sources"], SOURCES if m.get("mailbox_abi",1)==5 else V4_SOURCES if m.get("mailbox_abi",1)==4 else LEGACY_SOURCES)
     require(all(isinstance(v,str) and len(v)==64 and set(v)<=set("0123456789abcdef") for v in r["tool_sources"].values()),
             "Bad source digest")
     if current:require(r["tool_sources"] == sources(), "Worker sources changed since request")
@@ -548,6 +553,24 @@ def report(run,board,out):
                     port["phase"],port["unit"],port["last_cr_raw"],port["last_isr_raw"],port["last_dr_raw"],port["detail_raw"],
                     voltage["cleanup_error"],voltage["cleanup_detail_raw"])
                 text+="\n标称换算不是电源合格判据；VBAT/4 为粗测，测量精度尚未经过实板验证。\n"
+            flash=record.get("flash")
+            if flash is None:
+                text+="\n历史 ABI 没有存储器诊断字段。\n"
+            else:
+                text+="\n存储器 U3：%s，当前错误 %s，历史错误 %s；发布时有效 %s，标称样本年龄 %s ms。\n"%(
+                    flash["effective_state"],flash["error"],flash["last_error"],flash["effective_valid"],flash["nominal_sample_age_ms"])
+                text+="\n本次读取完成掩码 0x%x，实际字节数 %s；本次原始应答 %s。\n"%(
+                    flash["completed_mask"],json.dumps(flash["pending_byte_counts"],sort_keys=True),
+                    json.dumps(flash["pending_raw"],sort_keys=True))
+                text+="\n上次完整存储器应答（失败或过期时仅为历史值）：%s。\n"%json.dumps(flash["sample_raw"],sort_keys=True)
+                text+="\n存储驱动原因（当前 / 历史 / 清理）：%s / %s / %s。\n"%tuple(
+                    json.dumps(flash[key],sort_keys=True) for key in
+                    ("current_driver_failure","last_driver_failure","cleanup_driver_failure"))
+                port=flash["port"]
+                text+="\nQSPI 阶段 %s，持有接口 %s、传输中 %s、引脚停放 %s；最近 CR=0x%s，SR=0x%s，CCR=0x%s，DR=%d；清理错误 %s。\n"%(
+                    port["phase"],port["owned"],port["transfer_active"],port["pins_parked"],port["last_cr_raw"],
+                    port["last_sr_raw"],port["last_ccr_raw"],port["last_dr_raw"],flash["cleanup_error"])
+                text+="\n只读应答不证明存储阵列、写入、寿命或掉电可靠性；无回应也可能来自供电、睡眠、连线或时序问题。\n"
     (out/"report.md").write_text(text)
     return result
 

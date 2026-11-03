@@ -14,3 +14,9 @@ void *memcpy(void *dest,const void *source,size_t size) {
     while (size--!=0u) *d++=*s++;
     return dest;
 }
+
+int memcmp(const void *left,const void *right,size_t size) {
+    const unsigned char *a=(const unsigned char *)left,*b=(const unsigned char *)right;
+    for (size_t i=0;i<size;++i) if (a[i]!=b[i]) return (int)a[i]-(int)b[i];
+    return 0;
+}

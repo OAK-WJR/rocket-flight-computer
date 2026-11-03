@@ -6,7 +6,7 @@
 /* Separate from every R1 bench ABI. Little-endian, 256 words, CRC at byte1020. */
 #define R10_WORDS 256u
 #define R10_MAGIC 0x44303152u /* ASCII R10D */
-#define R10_ABI 4u
+#define R10_ABI 5u
 #define R10_SEQ 3u
 #define R10_CRC 255u
 #define R10_PUBLISH_PERIOD_TICKS 1000u

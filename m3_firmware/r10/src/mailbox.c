@@ -40,13 +40,13 @@ void r10_frame(uint32_t out[R10_WORDS], const r10_observation *o,
     out[21] = o->mmfar; out[22] = o->bfar; out[23] = o->icsr;
     out[24] = o->core_hz; out[25] = o->systick_load;
     out[26] = o->exception;
-    /* 27: sensor SPI/I2C and PA6/PB1 analog policy; not an electrical observation. */
-    out[27]=2u;
+    /* Compiled sensor/ADC/read-only QSPI policy, not electrical verification. */
+    out[27]=3u;
     for (unsigned i = 0; i < 8u; ++i) {
         out[28u+i] = le32(board_hash+4u*i);
         out[36u+i] = le32(build_hash+4u*i);
     }
-    out[44] = 63u; /* identity, nominal tick, exception, IMU, barometer, voltage */
+    out[44] = 127u; /* identity, ticks, exception, IMU, barometer, voltage, flash */
 }
 
 void r10_publish(volatile uint32_t dest[R10_WORDS], uint32_t frame[R10_WORDS],

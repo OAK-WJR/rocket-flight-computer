@@ -29,7 +29,10 @@ LOCAL_INPUTS = ["binding.json", "protocol.json", "build.py", "linker.ld",
                 "vendor/ism6hg256x/LICENSE","vendor/ism6hg256x/manifest.json",
                 "voltage/voltage_core.h","voltage/voltage_core.c","voltage/adc_port.h","voltage/adc_port.c",
                 "voltage/native_adc.c","voltage/voltage_frame.h","voltage/voltage_frame.c",
-                "voltage/verify.py","voltage/provenance.json"]
+                "voltage/verify.py","voltage/provenance.json",
+                "flash/flash_ro.c","flash/flash_ro.h","flash/qspi_port.c","flash/qspi_port.h",
+                "flash/native_qspi.c","flash/flash_frame.c","flash/flash_frame.h",
+                "flash/verify_flash.py","flash/provenance.json"]
 FLAGS = ["-mcpu=cortex-m7", "-mthumb", "-mfloat-abi=soft", "-Os", "-g3",
          "-std=c11", "-ffreestanding", "-fno-builtin", "-fno-common",
          "-ffunction-sections", "-fdata-sections", "-fstack-usage",
@@ -65,10 +68,13 @@ def validate_inputs(root=ROOT):
     spec=importlib.util.spec_from_file_location("r10_voltage_sources",HERE/"voltage/verify.py")
     voltage=importlib.util.module_from_spec(spec);spec.loader.exec_module(voltage)
     voltage.verify(root)
+    spec=importlib.util.spec_from_file_location("r10_flash_sources",HERE/"flash/verify_flash.py")
+    flash=importlib.util.module_from_spec(spec);spec.loader.exec_module(flash)
+    flash.verify(root)
     protocol = json.loads((HERE / "protocol.json").read_text())
     if (protocol["magic_le"] != int.from_bytes(b"R10D", "little") or
             protocol["address"] != binding["mailbox_address"] or
-            protocol["bytes"] != binding["mailbox_bytes"] or protocol["version"]!=4):
+            protocol["bytes"] != binding["mailbox_bytes"] or protocol["version"]!=5):
         raise ValueError("R10 mailbox contract mismatch")
     return binding, protocol
 
@@ -90,6 +96,22 @@ def source_inventory():
     return sources
 
 
+def verify_qspi_primitive(disassembly):
+    match=re.search(r'<prime>:\n(.*?)(?=\n\n|\Z)',disassembly,re.S)
+    if not match:raise ValueError('QSPI timing primitive missing from linked image')
+    body=match.group(1)
+    if 'cpsid' not in body or 'PRIMASK' not in body.upper():
+        raise ValueError('QSPI timing stores are not interrupt-masked')
+    lines=[line.strip() for line in body.splitlines()]
+    for i in range(len(lines)-2):
+        triple=lines[i:i+3]
+        if (all(re.search(r'\bstr(?:\.w)?\b',line) for line in triple) and
+                '#20]' in triple[0] and '#20]' in triple[1] and
+                re.search(r'\[r\d+(?:, #0)?\]',triple[2])):
+            return
+    raise ValueError('QSPI CCR/CCR/CR stores are not consecutive')
+
+
 def verify_binary(raw, symbols, disassembly):
     if len(raw) < 664:
         raise ValueError("Truncated firmware vector table")
@@ -109,6 +131,7 @@ def verify_binary(raw, symbols, disassembly):
         raise ValueError("Startup ECC mailbox bounds changed")
     if not re.search(r"\bstrd\b", disassembly) or not re.search(r"\bdmb\b", disassembly):
         raise ValueError("ECC double-word init or publication barrier missing")
+    verify_qspi_primitive(disassembly)
 
 
 def build(prefix, out):
@@ -134,7 +157,7 @@ def build(prefix, out):
                           "-ffile-prefix-map="+str(compiler_root)+"=./toolchain",
                           "-fdebug-prefix-map="+str(stage)+"=./build",
                           "-ffile-prefix-map="+str(stage)+"=./build"]
-        includes = [HERE / "src", HERE/"imu",HERE/"baro",HERE/"voltage",ROOT/"m3_firmware/src", HERE/"vendor/ism6hg256x", stage, ROOT / "m3_firmware/vendor/cmsis",
+        includes = [HERE / "src", HERE/"imu",HERE/"baro",HERE/"voltage",HERE/"flash",ROOT/"m3_firmware/src", HERE/"vendor/ism6hg256x", stage, ROOT / "m3_firmware/vendor/cmsis",
                     ROOT / "m3_firmware/vendor/device/Include"]
         includes = ["-I"+str(p) for p in includes]
         env = dict(os.environ, SOURCE_DATE_EPOCH="0", LC_ALL="C")
@@ -143,7 +166,8 @@ def build(prefix, out):
                      HERE/"imu/imu_core.c",HERE/"imu/spi_port.c",HERE/"imu/native_spi.c",HERE/"imu/imu_frame.c",
                      HERE/"baro/baro_core.c",HERE/"baro/i2c_port.c",HERE/"baro/native_i2c.c",HERE/"baro/baro_frame.c",ROOT/"m3_firmware/src/checks.c",
                      HERE/"vendor/ism6hg256x/ism6hg256x_reg.c",HERE/"voltage/voltage_core.c",
-                     HERE/"voltage/adc_port.c",HERE/"voltage/native_adc.c",HERE/"voltage/voltage_frame.c"]:
+                     HERE/"voltage/adc_port.c",HERE/"voltage/native_adc.c",HERE/"voltage/voltage_frame.c",
+                     HERE/"flash/flash_ro.c",HERE/"flash/qspi_port.c",HERE/"flash/native_qspi.c",HERE/"flash/flash_frame.c"]:
             obj = stage/(path.stem+".o")
             subprocess.run([gcc, *common, *includes, "-c", str(path), "-o", str(obj)], check=True, env=env)
             objects.append(str(obj))
@@ -175,7 +199,7 @@ def build(prefix, out):
                     "mailbox_address": binding["mailbox_address"], "mailbox_bytes": 1024,
                     "board_sha256": binding["inputs"][BOARD], "hardware_tested": False,
                     "flashed": False, "actuation_implemented": False,
-                    "sensor_drivers_implemented": True,"barometer_driver_implemented":True, "voltage_driver_implemented":True,"mailbox_abi":4,"flight_qualified": False}
+                    "sensor_drivers_implemented": True,"barometer_driver_implemented":True, "voltage_driver_implemented":True,"mailbox_abi":5,"flash_driver_implemented":True,"flight_qualified": False}
         (stage/"manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True)+"\n")
         shutil.copytree(stage, out)
     return manifest

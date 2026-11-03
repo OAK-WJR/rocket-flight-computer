@@ -22,12 +22,12 @@ BOARD=r.ROOT/"m3_design/assembly_review/m3.kicad_pcb"
 
 def frame(build_id,ticks=1000,sequence=2,state=2,uid=(123,456,789)):
     words=[0]*256
-    words[:10]=[int.from_bytes(b"R10D","little"),4,1024,sequence,state,ticks,0,ticks,0x411fc271,0x20030450]
+    words[:10]=[int.from_bytes(b"R10D","little"),5,1024,sequence,state,ticks,0,ticks,0x411fc271,0x20030450]
     words[10:13]=uid
     words[24:26]=[64000000,63999]
     words[28:36]=struct.unpack("<8I",bytes.fromhex(r.BOARD_SHA))
     words[36:44]=struct.unpack("<8I",bytes.fromhex(build_id))
-    words[27]=2;words[44]=63
+    words[27]=3;words[44]=127
     words[255]=zlib.crc32(struct.pack("<255I",*words[:255]))
     return words
 
@@ -41,7 +41,7 @@ def bundle(folder):
     identity=r.sha_bytes(build.canonical(inputs))
     manifest=dict(schema="r10-bench-build/v1",profile=r.PROFILE,board_sha256=r.BOARD_SHA,
                   build_id=identity,inputs=inputs,outputs={"r10_bench.bin":r.sha_bytes(image)},
-                  mailbox_address=r.RAM,mailbox_bytes=1024,mailbox_abi=4,voltage_driver_implemented=True,barometer_driver_implemented=True,
+                  mailbox_address=r.RAM,mailbox_bytes=1024,mailbox_abi=5,flash_driver_implemented=True,voltage_driver_implemented=True,barometer_driver_implemented=True,
                   sensor_drivers_implemented=True,actuation_implemented=False)
     (folder/"manifest.json").write_text(json.dumps(manifest))
     (folder/"image.bin").write_bytes(image)
@@ -351,6 +351,67 @@ class CaptureTests(unittest.TestCase):
         self.replace("request.json",req)
         with self.assertRaises(ValueError):r.request(self.run,BOARD)
 
+    def test_original_v4_capture_keeps_exact_source_fields_and_1024_byte_boundary(self):
+        fixture=json.loads((r.ROOT/"diagnostics/fixtures/r10_v4_capture.json").read_text())
+        self.assertEqual(fixture["origin"],"SYNTHETIC_FIXTURE");self.run.mkdir()
+        for name,content in fixture["files"].items():
+            (self.run/name).write_bytes(bytes.fromhex(content["hex"]) if "hex" in content else content["text"].encode())
+        with mock.patch.object(r,"utc",return_value="2026-11-04T00:00:00+00:00"):
+            result=r.analyze(self.run,BOARD)
+        self.assertTrue(result["complete_capture"])
+        self.assertTrue(all(record["abi_version"]==4 and record["flash"] is None for record in result["records"]))
+        self.assertIsNone(result["progress"]["flash_progress"])
+        addresses=[op[2] for op in r.document(self.run/"snapshot.json")["operations"] if op[1]==4 and r.RAM<=op[2]<r.RAM+2048]
+        self.assertEqual(max(addresses),r.RAM+1020)
+        req=r.document(self.run/"request.json");self.assertEqual(set(req["tool_sources"]),set(r.V4_SOURCES))
+        req["tool_sources"]["m3_firmware/r10/flash_decode.py"]="0"*64
+        self.replace("request.json",req)
+        with self.assertRaises(ValueError):r.request(self.run,BOARD)
+
+    def test_actual_flash_records_and_faults_survive_capture_and_report(self):
+        import ctypes
+        from m3_firmware.r10.test_r10 import ActualC
+        ActualC.setUpClass();self.addCleanup(ActualC.tearDownClass)
+        for case,mode in [('good',4),('read_error',3),('cleanup',5),('quad',8),('incomplete',4)]:
+            with self.subTest(case=case):
+                self.run=self.root/('flash-'+case);req=self.prepare()
+                reader=FakeReader(self.image,self.identity,close_error=case=='incomplete')
+                for index,words in enumerate(reader.frames):
+                    buffer=(ctypes.c_uint32*256)(*words)
+                    ActualC.lib.r10_test_flash_record(buffer,1 if index==0 else mode)
+                    words[:]=buffer[:];words[5]=1000 if index==0 else 4000;words[7]=words[5]
+                    words[255]=zlib.crc32(struct.pack('<255I',*words[:255]))
+                code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None);self.receipt(req,code)
+                result=r.report(self.run,BOARD,self.root/('flash-report-'+case))
+                text=(self.root/('flash-report-'+case)/'report.md').read_text()
+                self.assertIn('存储器 U3',text);self.assertIn('仅为历史值',text)
+                second=result['records'][1]['flash']
+                self.assertFalse(second['array_integrity_assessed']);self.assertFalse(second['hardware_qualified'])
+                if case=='incomplete':
+                    self.assertFalse(result['complete_capture']);self.assertIsNone(result['progress'])
+                    self.assertIn('捕获不完整',text)
+                elif case=='good':
+                    self.assertTrue(result['progress']['flash_progress']['reported_acquisition_progress'])
+                else:
+                    self.assertTrue(result['progress']['observed_progress'])
+                    self.assertFalse(result['progress']['flash_progress']['reported_acquisition_progress'])
+                    if case=='quad':
+                        self.assertEqual(second['error'],'QUAD_IDENTITY');self.assertIn('ee17ef17',text)
+                    else:
+                        self.assertEqual(second['error'],'READ_ERROR')
+                        self.assertEqual(second['sample_raw']['quad_id'],'ef17ef17')
+                    if case=='cleanup':
+                        self.assertEqual(second['cleanup_error'],'CLEANUP');self.assertEqual(second['state'],'STOPPED')
+
+    def test_same_size_v4_record_is_rejected_under_a_v5_image(self):
+        req=self.prepare();reader=FakeReader(self.image,self.identity)
+        for words in reader.frames:
+            words[1]=4;words[27]=2;words[44]=63
+            words[255]=zlib.crc32(struct.pack('<255I',*words[:255]))
+        code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None);self.receipt(req,code)
+        result=r.analyze(self.run,BOARD);self.assertFalse(result['complete_capture'])
+        self.assertIsNone(result['progress']);self.assertLessEqual(reader.ram_reads,1548)
+
     def test_current_bundle_cannot_claim_old_or_missing_sensor_contract(self):
         manifest=(self.root/"manifest.json").read_bytes()
         r.build_bundle(manifest,self.image)
@@ -360,7 +421,17 @@ class CaptureTests(unittest.TestCase):
             # Historical replay still relies on its exact stored image/inputs,
             # not today's source inventory or ABI declaration.
             if field=="mailbox_abi":changed["mailbox_bytes"]=256
+            else:changed["mailbox_abi"]=4
             r.build_bundle(json.dumps(changed).encode(),self.image,current=False)
+
+    def test_v5_driver_declarations_remain_consistent_during_replay(self):
+        manifest=(self.root/'manifest.json').read_bytes()
+        for field in ('sensor_drivers_implemented','barometer_driver_implemented',
+                      'voltage_driver_implemented','flash_driver_implemented'):
+            for value in (False,None,1):
+                with self.subTest(field=field,value=value):
+                    changed=json.loads(manifest);changed[field]=value
+                    with self.assertRaises(ValueError):r.build_bundle(json.dumps(changed).encode(),self.image,current=False)
 
     def test_old_abi_record_rejected_under_current_image_contract(self):
         req=self.prepare();reader=FakeReader(self.image,self.identity)
@@ -473,7 +544,7 @@ class GuardTests(unittest.TestCase):
         with self.assertRaises(ValueError):g.write_ap(4,r.RAM)
     def test_every_record_abi_grants_only_its_exact_window(self):
         image=bytes(704)
-        for abi,size in ((1,256),(2,256),(3,512),(4,1024)):
+        for abi,size in ((1,256),(2,256),(3,512),(4,1024),(5,1024)):
             with self.subTest(abi=abi):
                 g=r.FirmwareAPGuard(DP());g.enable_image(0x411fc271,0x20030450,704,abi)
                 with self.assertRaises(ValueError):g.write_ap(4,r.RAM)
@@ -483,7 +554,7 @@ class GuardTests(unittest.TestCase):
                 wrong=512 if size!=512 else 1024
                 with self.assertRaises(ValueError):g.enable_ram(image,image,0x2000,r.FLASH,True,wrong)
                 with self.assertRaises(ValueError):g.write_ap(4,r.RAM)
-        for invalid in (0,5,True,4.0,'4'):
+        for invalid in (0,6,True,4.0,'4'):
             g=r.FirmwareAPGuard(DP())
             with self.assertRaises(ValueError):g.enable_image(0x411fc271,0x20030450,704,invalid)
             with self.assertRaises(ValueError):g.write_ap(4,r.FLASH)

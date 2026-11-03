@@ -5,9 +5,9 @@
 They check the R10 PCB/profile, preserve raw register and instrument evidence,
 and report supported fault branches and native locations. A separate
 [R10 sensor firmware readback](R10_FIRMWARE.md) compares internal image bytes
-and captures paired diagnostic records, including ABI4 IMU, barometer and voltage
+and captures paired diagnostic records, including ABI5 IMU, barometer, voltage and read-only flash
 data, age, validity, calibration and configuration/error history. Historical
-ABI1/2/3 saved records retain their versioned sizes. Its firmware is cross-built and all
+ABI1/2/3/4 saved records retain their versioned sizes and source-field contracts. Its firmware is cross-built and all
 readback tests use synthetic data; no R10 image has run on a verified physical
 board. These paths remain distinct from R1 USB/mailbox capture.
 

@@ -6,7 +6,28 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
-**R10 read-only flash diagnostic module (2026-11-03 UTC).**
+**R10 read-only flash record/image integration (2026-11-03 UTC).**
+The [bench image](m3_firmware/r10/README.md) now links the fixed-read U3 core,
+native QSPI transport and serializer into ABI5. Its84 logical words occupy
+98–127 and193–246 in the existing1024-byte record; sensor/voltage offsets and
+the CRC boundary remain unchanged. The [host reader](diagnostics/R10_FIRMWARE.md)
+checks raw responses, counts, native configuration, validity/age and image/ABI
+agreement, and reports current failures, last-good history and cleanup errors
+separately. An original synthetic v4 capture is preserved byte-for-byte; v1–v4
+replay retains each source-key shape and exact record boundary. A v4 record does
+not qualify a v5 image just because both use1024bytes.
+Targeted software checks pass45 firmware/runtime/record,45 bounded-readback and
+84 flash-module tests, plus13 gate self-tests. Two Cortex-M7 builds have52
+matching output hashes, including the linked timing-store sequence; the BIN is
+22,616bytes. The required complete repository gate must pass before committing.
+The preceding standalone-module gate passed at21:49:04 UTC with2534unchanged
+inputs and unchanged PCB bytes (`5fe590c`). No image has been installed or run
+on hardware. PCB/fabrication bytes and historical record grants are unchanged.
+The new image keeps the1024-byte RAM bound; internal-image reads remain tied
+to its verified length. Array integrity, writes, endurance, power loss, physical timing,
+remaining operational firmware and board/flight qualification remain open.
+
+**R10 read-only flash diagnostic module (2026-11-03 UTC, before ABI5 integration).**
 The [U3 diagnostic core and QUADSPI transport](m3_firmware/r10/flash/README.md)
 now implement fixed status/JEDEC/SFDP/quad-ID reads with bounded stages,
 partial raw evidence, last-good history, retries and certified cleanup.
