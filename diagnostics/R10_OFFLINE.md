@@ -35,8 +35,10 @@ Do not reuse it as an acceptance record or relabel it as a physical measurement.
 - Measurements must agree on assembly, session, epoch and configuration and lie
   within the stated time window. Missing or unavailable readings are never zero.
   Repeated readings do not shrink uncertainty; conflicting readings stop voltage
-  localization. The supplied source window is an operator declaration, not a
-  verified instrument or device rating.
+  localization. A separately validated earlier unpowered continuity record can
+  still identify a UART line-order mismatch; the report retains the voltage
+  conflict and does not infer a power fault from it. The supplied source window
+  is an operator declaration, not a verified instrument or device rating.
 - The JSON report keeps each original observation in `observation_records`.
   `observed` contains separately labelled conservative envelopes, without an
   instrument, timestamp or pad attribution. Consistency is checked across every

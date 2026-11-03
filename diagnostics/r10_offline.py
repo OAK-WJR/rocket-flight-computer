@@ -390,9 +390,9 @@ class Engine:
 
     def causes(self):
         found = {}
-        if self.conflicts:
-            return found
-        if self.assumptions_supported():
+        # Conflicting voltage records invalidate voltage inference, not the
+        # separately validated prior-unpowered harness continuity evidence.
+        if not self.conflicts and self.assumptions_supported():
             for cause, parent, child in self.graph():
                 if self.upstream_supported(parent, child) and self.collapsed(child, parent):
                     tokens = ['net:' + parent, child if child.startswith('module:') else 'net:' + child]
@@ -697,7 +697,7 @@ def render_zh(report):
     if not report['assumptions_supported']:
         lines.append('  电源选择／接地／回灌前提未确认，电源分支结论保持未定。')
     if report['conflicting_tokens']:
-        lines.append('  同网记录互相矛盾，拒绝跨观测推断：' + ', '.join(report['conflicting_tokens']))
+        lines.append('  同网记录互相矛盾，拒绝电压观测合并推断：' + ', '.join(report['conflicting_tokens']))
     for reason in report['unresolved_reasons_zh']:
         lines.append('尚未确定：' + reason)
     def label(c):

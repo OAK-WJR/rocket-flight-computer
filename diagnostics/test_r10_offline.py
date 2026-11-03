@@ -322,6 +322,64 @@ class ProbeTests(unittest.TestCase):
         self.assertEqual(s.engine.result()['status'], 'INSUFFICIENT_EVIDENCE')
         self.assertEqual(s.engine.causes(), {})
 
+    def test_voltage_conflict_retains_independent_uart_evidence(self):
+        i = initial()
+        for module in ('GPS', 'CAMERA'):
+            w = i['observations']['harness_continuity'][module]
+            w['module_TX_to'], w['module_RX_to'] = w['module_RX_to'], w['module_TX_to']
+        s = r.Session(i, P)
+        s.engine.add(measurement('R164.1', 0))
+        s.engine.add(measurement('R164.2', 0))
+        result = s.engine.result()
+        self.assertEqual(s.engine.conflicts, {'net:3V3'})
+        self.assertEqual(result['candidate_causes'], ['uart_harness:GPS', 'uart_harness:CAMERA'])
+        self.assertEqual(result['evidence'], [
+            {'cause': 'uart_harness:GPS', 'observations': ['wiring:GPS']},
+            {'cause': 'uart_harness:CAMERA', 'observations': ['wiring:CAMERA']}])
+        self.assertEqual(result['next_step']['action'], 'VERIFY_UNPOWERED_UART_ORDER')
+        self.assertEqual([p['point_id'] for p in result['next_step']['target_points']], ['J410.3', 'J410.4'])
+        self.assertIsNone(s.engine.next_probe())
+        self.assertFalse(s.engine.screening_complete())
+        self.assertFalse(result['physical_qualified'])
+        self.assertFalse(result['firmware_verified'])
+        schema = r.document(SCHEMA)
+        validate_schema(result, schema, schema)
+
+    def test_manual_voltage_conflict_preserves_bound_harness_finding(self):
+        d = manual_record()
+        w = copy.deepcopy(initial()['observations']['harness_continuity']['GPS'])
+        w.update(origin='MANUAL_OFFLINE', assembly_id=d['assembly_id'], session_id=d['session_id'],
+                 board_sha256=r.BOARD_SHA, harness_id='example-unchanged-gps-harness',
+                 observed_at='2026-01-01T11:00:00Z', power_state='UNPOWERED', unchanged_since=True)
+        w['module_TX_to'], w['module_RX_to'] = w['module_RX_to'], w['module_TX_to']
+        d['harness_continuity']['GPS'] = w
+        contradictory = copy.deepcopy(d['measurements'][0])
+        contradictory['interval'] = [-.01, .01]
+        d['measurements'].append(contradictory)
+        report = r.analyze_manual(d, board=BOARD)
+        self.assertEqual(report['conflicting_tokens'], ['net:3V3'])
+        self.assertEqual(report['result']['candidate_causes'], ['uart_harness:GPS'])
+        self.assertEqual(report['wiring_observed']['GPS'], w)
+        self.assertEqual(report['observation_records']['net:3V3'], [d['measurements'][0], contradictory])
+        text = r.render_zh(report)
+        for marker in ('同网记录互相矛盾', 'UART 线序', 'J410.3', 'J410.4'):
+            self.assertIn(marker, text)
+        # A correct harness or an unavailable record supplies no fault finding.
+        correct = copy.deepcopy(d)
+        cw = correct['harness_continuity']['GPS']
+        cw['module_TX_to'], cw['module_RX_to'] = cw['module_RX_to'], cw['module_TX_to']
+        self.assertEqual(r.analyze_manual(correct, board=BOARD)['result']['candidate_causes'], [])
+        unavailable = copy.deepcopy(d)
+        unavailable['harness_continuity']['GPS'] = {'status': 'NOT_AVAILABLE', 'origin': 'MANUAL_OFFLINE'}
+        self.assertEqual(r.analyze_manual(unavailable, board=BOARD)['result']['candidate_causes'], [])
+        # Voltage conflicts must not relax the independent harness binding rules.
+        for key, value in [('unchanged_since', False), ('session_id', 'other-session'),
+                           ('power_state', 'POWERED'), ('observed_at', '2026-01-01T12:00:01Z')]:
+            bad = copy.deepcopy(d)
+            bad['harness_continuity']['GPS'][key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                r.analyze_manual(bad, board=BOARD)
+
     def test_bridging_interval_cannot_hide_conflicts_in_any_input_order(self):
         record = manual_record()
         readings = []

@@ -6,6 +6,32 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
+**Independent R10 diagnostic evidence (2026-11-03 UTC).**
+Contradictory voltage records previously stopped the entire cause search, also
+hiding an independently supported UART line-order mismatch. Voltage conflicts
+now continue to block all power-branch inference, voltage probing and screening
+completion, while a validated earlier unpowered, unchanged harness record can
+retain its wiring finding. The report preserves both the conflict and the
+original observations, and identifies the relevant connector pads. Correct or
+unavailable harness records do not create a fault, and stale, changed or
+mixed-session records remain rejected. Separately, incomplete firmware readback
+captures now withhold their aggregate progress verdict while retaining decoded
+records, counters and capture/cleanup errors; pair identity checks still apply.
+The old top-level status already refused those captures, but its nested progress
+field could be affirmative. New regressions reproduce both issues before their
+fixes, including close failure, missing supervision and timeout cases. The
+targeted offline suite and saved-file JSON/Chinese CLI replay pass. The full
+diagnostics suite has 283 passes and one existing historical-board skip;
+independent bounded reviews found no high/medium defect in the fixes.
+The complete `tools/check.sh` integration and board gate passed at 19:31:55 UTC
+on 2026-11-03 (exit 0): DRC, unconnected items, schematic parity and ERC are zero,
+with metadata/3D, silkscreen, fit, routing and fabrication-content checks passing.
+The 268-case R10 regression has 262 passes and six NumPy-dependent skips under
+KiCad Python; all six pass in the following numerical stage. All 1,013
+inventoried inputs and PCB bytes were unchanged during the gate. PCB,
+manufacturing files, firmware, input schema and probe permissions are unchanged
+by this fix; no physical test or whole-board acceptance is claimed.
+
 **R10 whole-board design checkpoint (2026-11-03 UTC).**
 The [checkpoint review](docs/R10_REVIEW_2026-11-03.md) records the BAT_OVLO
 junction cleanup (`a0ec075e…` → `6d23d1e5…`), three corrected requirement/report

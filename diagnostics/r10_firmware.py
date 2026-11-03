@@ -440,7 +440,10 @@ def analyze(run,board):
         if exit_code!=0:complete=False
     if len(receipts)==2:temporal=temporal and timestamp(receipts[0]["completed_at"])<=timestamp(receipts[1]["completed_at"])
     complete=bool(complete and temporal)
-    progress=pair(*records) if temporal and len(records)==2 and all(r is not None for r in records) else None
+    # Still validate paired identities when capture/cleanup/receipts failed,
+    # but expose a capture-level progress verdict only for complete evidence.
+    paired=pair(*records) if temporal and len(records)==2 and all(r is not None for r in records) else None
+    progress=paired if complete else None
     state="INCOMPLETE"
     if complete:
         state="FAULT_RECORDED" if any(r["state"]=="FAULT" for r in records) else (
@@ -486,6 +489,8 @@ def report(run,board,out):
             sup["worker_pid"],result["worker_status"],sup["worker_exit_code"],sup["timed_out"],sup["error"])
     if result["worker_status"]=="UNREAPED":
         text+="\n不要重复连接；先确认上述 PID 对应的子进程已经结束。\n"
+    if not result["complete_capture"]:
+        text+="\n以下为保留的记录字段；捕获不完整，不确认主循环或传感器采集进度。\n"
     for i,record in enumerate(result["records"]):
         if record is None:
             text+="\n记录 %d：没有通过序号、CRC 与身份校验的完整记录。\n"%(i+1)

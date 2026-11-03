@@ -71,8 +71,12 @@ Replay needs no pyOCD or probe. New JSON/Markdown reports distinguish:
 | `INCOMPLETE` | Image/readback, chronology, receipt, timeout or cleanup evidence is incomplete |
 
 Reports retain capture errors, cleanup failures, PID/exit/timeout details and
-unreaped-worker instructions. Clock inconsistency suppresses progress while
-keeping raw records. Transport failure is never automatically a PCB defect.
+unreaped-worker instructions. Any incomplete capture has `progress: null`,
+including cleanup failures, missing receipts, timeouts and clock inconsistency.
+Decoded records and their reported sensor states/counters remain visible as
+saved observations; they are not a capture-level progress verdict. Paired
+identity validation still applies. Transport failure is never automatically a
+PCB defect.
 
 The retained IMU fields from v2 add U4 sensor state, current/history errors, sample count and
 nominal age, raw native-axis values, endpoint/validity masks, configuration

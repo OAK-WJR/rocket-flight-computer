@@ -15,6 +15,7 @@ import zlib
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from diagnostics import r10_firmware as r
 from m3_firmware.r10 import build
+from m3_firmware.r10.decode import IMU_CONFIG_VALUES
 
 BOARD=r.ROOT/"m3_design/assembly_review/m3.kicad_pcb"
 
@@ -212,6 +213,40 @@ class CaptureTests(unittest.TestCase):
         req=r.document(self.run/"request.json");self.receipt(req,timeout=True)
         self.assertFalse(r.analyze(self.run,BOARD)["complete_capture"])
 
+    def test_incomplete_capture_retains_records_without_progress_verdict(self):
+        for case in ("complete", "close_failure", "missing_supervision", "timeout"):
+            with self.subTest(case=case):
+                self.run=self.root/case
+                req=self.prepare()
+                reader=FakeReader(self.image,self.identity,close_error=(case=="close_failure"))
+                for index,words in enumerate(reader.frames):
+                    words[45]=4  # Scripted READY sensor, not a physical reading.
+                    words[47]=(1<<24)|(15<<16)|(15<<8)|0x73
+                    words[48]=56+index
+                    words[49]=words[5]-20
+                    words[56:58]=struct.unpack("<2I",bytes(IMU_CONFIG_VALUES))
+                    words[59]=1000000
+                    words[127]=zlib.crc32(struct.pack("<127I",*words[:127]))
+                code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None)
+                if case!="missing_supervision":
+                    self.receipt(req,code,timeout=(case=="timeout"))
+                original=(self.run/"snapshot.json").read_bytes()
+                result=r.report(self.run,BOARD,self.root/(case+"-report"))
+                self.assertEqual((self.run/"snapshot.json").read_bytes(),original)
+                self.assertEqual([rec["imu"]["samples"] for rec in result["records"]],[56,57])
+                self.assertTrue(all(rec["imu"]["fresh"] for rec in result["records"]))
+                self.assertFalse(result["hardware_qualified"])
+                if case=="complete":
+                    self.assertTrue(result["complete_capture"])
+                    self.assertTrue(result["progress"]["imu_progress"]["reported_acquisition_progress"])
+                    self.assertEqual(result["state"],"PROGRESS_OBSERVED")
+                else:
+                    self.assertFalse(result["complete_capture"])
+                    self.assertEqual(result["state"],"INCOMPLETE")
+                    self.assertIsNone(result["progress"])
+                    self.assertIn("不确认主循环或传感器采集进度",
+                                  (self.root/(case+"-report")/"report.md").read_text())
+
     def test_reversed_sample_chronology_cannot_report_progress(self):
         self.capture();raw=r.document(self.run/"snapshot.json")
         a,b=[group["attempts"][0] for group in raw["records"]]
@@ -223,6 +258,21 @@ class CaptureTests(unittest.TestCase):
         self.assertFalse(result["complete_capture"])
         self.assertIsNone(result["progress"])
         self.assertIsNotNone(result["records"][0])
+
+    def test_incomplete_capture_still_rejects_disagreeing_record_pair(self):
+        req=self.prepare();reader=FakeReader(self.image,self.identity,close_error=True)
+        second=reader.frames[1]
+        second[14]=8  # Coherent HSI /2 record; disagrees with the first record.
+        second[24]=32000000
+        second[25]=31999
+        second[127]=zlib.crc32(struct.pack("<127I",*second[:127]))
+        code=r.worker(self.run,BOARD,lambda _:reader,pause=lambda _:None)
+        self.receipt(req,code)
+        snapshot=r.document(self.run/"snapshot.json")
+        self.assertTrue(all(g["accepted"] is not None for g in snapshot["records"]))
+        self.assertEqual(code,3)
+        with self.assertRaisesRegex(ValueError,"Paired records disagree on core_hz_nominal"):
+            r.analyze(self.run,BOARD)
 
     def test_cleanup_error_remains_in_json_and_human_report(self):
         self.capture(close_error=True)
