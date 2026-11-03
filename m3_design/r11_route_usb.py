@@ -12,7 +12,7 @@ trunk. D4 (USBLC6, B.Cu) taps the pair by one via each, its two pins of a line b
 change of D+ / D- has a GND via within 1.5 mm (AGENTS section 3).
 """
 
-NETS = ('USB_DP', 'USB_DM', 'VBUS', 'CC1', 'CC2', 'VBUS_SENSE', 'USB_ILIM', 'USB_FAULT_N', 'USB_LIMITED', 'USB_OVLO')
+NETS = ('USB_DP', 'USB_DM', 'VBUS', 'CC1', 'CC2', 'VBUS_SENSE', 'USB_ILIM', 'USB_LIMITED', 'USB_OVLO')
 
 SIG, USB, PWR = 0.1, 0.2, 0.3
 SV = (0.4, 0.2)            # signal via
@@ -23,10 +23,9 @@ V_DP, V_DM, V_A7 = (36.25, 28.6), (35.8, 30.75), (38.1, 29.75)
 # GND partners: V_DM (0.57 mm), V_DP (0.91) / V_A7 (1.38). D-R11-31: G_D4 sits 0.165 mm clear of D4.2's pad end (was
 # inside its mask / paste at x 35.15) as a 0.4 / 0.2 mm via, whose hole keeps 0.27 mm from V_DM's ring
 G_D4, G_DP = (35.35, 30.4), (37.15, 28.75)
-V_FLT, V_ILIM_G = (36.75, 27.0), (35.33, 28.6)     # USB_FAULT_N to In3; R85.2's GND via (V_DP partner, 0.92 mm)
+V_ILIM_G = (35.33, 28.6)                            # R85.2's GND via (V_DP partner, 0.92 mm)
 VB1, VB2 = (38.3, 27.6), (38.0, 32.4)              # VBUS at J3.B4A9 / J3.A4B9, joined on In3 east of V_A7
 V_CC1, V_CC2 = (38.27, 31.25), (38.27, 28.25)       # CC to B.Cu
-V_FLT_U1 = (24.8, 25.6)                            # C6's dog-bone site (r11_fanout.tsv)
 V_SENSE_U1 = (27.2, 28.0)                          # F9's dog-bone site (r11_fanout.tsv)
 
 
@@ -74,13 +73,8 @@ def limiter(d):
     v('GND', V_ILIM_G, SV)
     t('GND', 'B', PWR, [p('R85', '2'), (35.33, 27.43)])
     v('GND', (35.33, 27.43), SV)         # D-R11-29: R85.2's second GND barrel
-    # FAULT: R90 (pull-up) and a via to In3, west along y 25.6 to C6's dog-bone
-    t('USB_FAULT_N', 'B', 0.15, [p('U10', '4', net='USB_FAULT_N'), (36.45, 27.0), V_FLT])
-    t('USB_FAULT_N', 'B', 0.15, [V_FLT, (36.75, 27.6), p('R90', '2', net='USB_FAULT_N')])
-    v('USB_FAULT_N', V_FLT, SV)
-    t('USB_FAULT_N', 'In3', SIG, [V_FLT, (35.35, 25.6), V_FLT_U1])
-    v('USB_FAULT_N', V_FLT_U1, SV)
-    t('USB_FAULT_N', 'F', SIG, [p('U1', 'C6', net='USB_FAULT_N'), V_FLT_U1])
+    # FAULT: U10.4 to R90.2 (pull-up) on B.Cu; the MCU side (U1.C6) is drawn by ESCAPE (stageC1b.md, D-R11-44)
+    t('USB_FAULT_N', 'B', 0.15, [p('U10', '4', net='USB_FAULT_N'), (36.42, 26.97), p('R90', '2', net='USB_FAULT_N')])
     t('3V3', 'B', 0.2, [p('R90', '1', net='3V3'), (37.28, 27.47), (37.55, 27.2)])
     v('3V3', (37.55, 27.2), SV)
     # USB_LIMITED: U10.6 down the column west of D4 to C86 / C98, round the SWD vias to TP82, west on y 40.4 to U11
@@ -149,6 +143,8 @@ def cc_vbus(d):
 
 
 def draw(d):
+    import r11_escape
+    r11_escape.draw(d, 'usb')
     pair(d)
     limiter(d)
     caps_sense(d)

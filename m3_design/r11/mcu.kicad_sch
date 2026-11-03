@@ -2293,38 +2293,6 @@
 		(uuid e5de3c48-f15a-5713-8957-d21a125b47dc))
 	(wire
 		(pts
-			(xy 63.5 184.15)
-			(xy 58.42 184.15))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid c89649db-1159-597d-9332-55c410b27f9d))
-	(global_label "I2C1_SCL"
-		(shape passive)
-		(at 58.42 184.15 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 27e78eb0-0ba2-5a1e-b768-6ce37246aef1))
-	(wire
-		(pts
-			(xy 63.5 186.69)
-			(xy 58.42 186.69))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 9079bb01-b30b-5ef6-b6de-ac1d67ad3c62))
-	(global_label "I2C1_SDA"
-		(shape passive)
-		(at 58.42 186.69 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 72dd9b0a-d201-5db6-b974-8cac37e60f96))
-	(wire
-		(pts
 			(xy 63.5 189.23)
 			(xy 58.42 189.23))
 		(stroke
@@ -4166,22 +4134,6 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 049d8c61-2bd6-5786-9111-639cd89913d7))
-	(wire
-		(pts
-			(xy 119.38 74.93)
-			(xy 127 74.93))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 9715a3be-ed40-5df2-99f6-707ee32cf9c5))
-	(global_label "BUZZ_DRV"
-		(shape passive)
-		(at 127 74.93 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 5068265c-dd5c-543c-8f7b-d13196c3a90f))
 	(no_connect
 		(at 63.5 72.39)
 		(uuid 67c55654-f2b5-5dac-b265-c59aabf849eb))
@@ -4530,12 +4482,6 @@
 	(no_connect
 		(at 119.38 130.81)
 		(uuid e49cdeb0-723f-5127-9340-ca49575df2dd))
-	(no_connect
-		(at 63.5 118.11)
-		(uuid 484a6d03-63cd-59f3-ab2a-f318ee3395c2))
-	(no_connect
-		(at 63.5 120.65)
-		(uuid 22c3c017-dd9b-5b19-b8af-cf580cfaa632))
 	(wire
 		(pts
 			(xy 119.38 133.35)
@@ -4571,9 +4517,6 @@
 	(no_connect
 		(at 119.38 138.43)
 		(uuid 9d0f1991-7770-52c8-adbb-38bd327a4643))
-	(no_connect
-		(at 119.38 140.97)
-		(uuid 0b527c25-7210-5139-a425-638444416f80))
 	(no_connect
 		(at 119.38 151.13)
 		(uuid d58ca93e-16ac-5dc7-b50c-22687e2e5381))
@@ -4704,6 +4647,63 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 27570032-55df-54ee-9974-fd6138e80900))
+	(wire
+		(pts
+			(xy 63.5 118.11)
+			(xy 58.42 118.11))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e349a287-9502-5ef3-8d6a-4fd3161be1ed))
+	(global_label "I2C1_SCL"
+		(shape passive)
+		(at 58.42 118.11 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e4b6e7a9-3c0d-54dc-bcbb-7b5678f0012b))
+	(wire
+		(pts
+			(xy 63.5 120.65)
+			(xy 58.42 120.65))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 55ec1c01-49a3-52f3-878a-95c14fa3c10e))
+	(global_label "I2C1_SDA"
+		(shape passive)
+		(at 58.42 120.65 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 98fb9659-d0ac-5013-881a-8d66980f6d1e))
+	(wire
+		(pts
+			(xy 119.38 140.97)
+			(xy 124.46 140.97))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1f84be05-d227-5b72-95c1-5d57b8852495))
+	(global_label "BUZZ_DRV"
+		(shape passive)
+		(at 124.46 140.97 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c6aee9a9-2e5f-5dde-992e-72cdba992242))
+	(no_connect
+		(at 119.38 74.93)
+		(uuid b7f7696d-9c04-5692-934c-efee81b8cef9))
+	(no_connect
+		(at 63.5 184.15)
+		(uuid 0099bb81-ea2d-5a24-9616-5c74577af394))
+	(no_connect
+		(at 63.5 186.69)
+		(uuid 47c6a7d0-0c82-539b-bc79-15b72064f370))
 	(text "R10: camera enable CAM_PWR_EN on PE11 / ball H6, fault input CAM_FAULT_N (EXTI12) on PE12 / ball J6 (GPIO only, SPI4 never enabled); swapped from R8 for routing (D-R2-07); no actuation changes."
 		(at 185.42 220.98 0)
 		(effects

@@ -226,3 +226,13 @@ r11_stage_check after pyro and power OK (unconnected 379 and 239); check_r11 res
   Calculation); the west-bound route must cross core's I2C In3 wall and the D120-K1 3V3 B.Cu run.
 * BOOT0, VCAP2 and PA4 (LOGIC_SOURCE_ST) single barrels: stageC3.md O-C3-5 (check_r11 K-power, 5 findings).
 * O-C2-8 (GND of the earlier families) continues as stageC3.md O-C3-7.
+
+## 10. Status after stage C1b (2026-11-03, stageC1b.md)
+
+* ARM1_SENSE (H4): drawn by the escape table (west on B.Cu, In3 to the bank), pending on route_check hygiene
+  (stageC1b.md O-C1b-5).
+* BAT_FAULT_N (H3): drawn to U9.4 (west, In3); R89 (its 3V3 pull-up) is still in the BAT_IN region, so R89.1 (3V3) and
+  BAT_FAULT_N stay unconnected there (O-C1b-5).
+* BOOT0 / VCAP2 / PA4 single barrels: in-field dog-bones excepted (D-R11-45); PA4's via (14.65, 39.90) open (O-C1b-4).
+* LOGIC_SOURCE_ST and NRST were re-drawn by the escape table (D-R11-44); USB_FAULT_N re-drawn, pending (acute join at
+  U10.4); QSPI_NCS lost its route and is open (O-C1b-1).

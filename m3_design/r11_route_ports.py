@@ -15,8 +15,7 @@ nets, <= 1.5 mm).
 The MCU sides (U1 -> the resistors' MCU pads) are not drawn: stageC3.md O-C3-1 / O-C3-2.
 """
 
-NETS = ('GPS_TX_WIRE', 'GPS_RX_WIRE', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE', 'AUX_TX_WIRE', 'AUX_RX_WIRE', 'CAM_TX_WIRE',
-        'CAM_RX_WIRE')
+NETS = ('GPS_TX_WIRE', 'GPS_RX_WIRE', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE', 'AUX_TX_WIRE', 'AUX_RX_WIRE', 'CAM_TX_WIRE', 'CAM_RX_WIRE', 'GPS_RX_MCU', 'RADIO_TX_MCU', 'RADIO_RX_MCU', 'AUX_RX_MCU')
 
 SIG = 0.1
 SV, PV = (0.4, 0.2), (0.45, 0.25)
@@ -51,6 +50,8 @@ def gh_cell(d, ref, x0, port, r_tx, r_rx, d_tx, d_rx):
 
 
 def draw(d):
+    import r11_escape
+    r11_escape.draw(d, 'ports')
     for cell in GH:
         gh_cell(d, *cell)
     cam(d)

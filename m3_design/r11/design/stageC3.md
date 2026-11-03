@@ -120,3 +120,19 @@ M-8, **K-copper** (D4.2 fixed, D-R11-31), K-inner, **K-region**, K-plane, K-fill
 * `tools/check_r11.py` (full) on a zone-filled scratch copy of the project with its fit report (section 3).
 * Not run: tools/check.sh (not this lane), any electrical test, signal integrity, JLC DFM of the new 0.1 mm runs, the plate
   model.
+
+## 6. Status after stage C1b (2026-11-03, stageC1b.md)
+
+* O-C3-1 (the escape): **re-planned** (D-R11-41 … -44): one pinned escape table, its checker in the build; every
+  family passes its stage check. Of the nets listed here, still without escape copper: CAM_UART_OE (K5) and SERVO4_MCU
+  (K2) (stageC1b.md O-C1b-1); drawn but pending (route_check findings, O-C1b-5): CAM_MCU_RX / TX, CAM_FAULT_N,
+  SERVO1 / SERVO3_MCU, ARM1_SENSE, BAT_FAULT_N (R89 not moved), GPS_TX_MCU, AUX_TX_MCU. Finished: CAM_PWR_EN,
+  CAM_5V_SENSE, SERVO2_MCU, GPS_RX_MCU, RADIO_TX_MCU, RADIO_RX_MCU, AUX_RX_MCU.
+* O-C3-2 (ports' MCU sides): drawn by the escape table; GPS_TX / AUX_TX pending (tiny jogs).
+* O-C3-3 (LEDs, buzzer): LED_RED and BUZZ_DRV (now PB15, ball G10, D-R11-42) finished; LED_YEL open (O-C1b-1).
+* O-C3-4 (SD): SD_SCK / MISO / CS / DAT1 / DAT2 finished; SD_MOSI pending (O-C1b-5).
+* O-C3-5 (single barrels): BOOT0 / VCAP2 / PA4's in-field dog-bones in `single_open_exceptions` (D-R11-45); PA4's via
+  (14.65, 39.90) open (O-C1b-4).
+* O-C3-6 (CAM_IO_3V3, CAM_RX / TX_BUFFER): drawn (U13 rotated, D-R11-43), pending (O-C1b-5).
+* O-C3-7 (GND): the list is extended in stageC1b.md O-C1b-6 (65 GND vias now).
+* O-C3-8 (K-rules): check_r11 K-rules OK on the C1b board (the gate lane's fix).

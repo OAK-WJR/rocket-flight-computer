@@ -22,8 +22,7 @@ import math
 
 import pcbnew
 
-NETS = ('ACT_FET_S', 'ACT_GATE', 'ACT_DRV', 'ACT_EN', 'ACT_EN_MCU', 'RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE',
-        'PYRO1_GATE_N', 'PYRO1_COLD', 'PYRO1_CONT_MID', 'PYRO1_CONT', 'ARM1_SENSE_MID')
+NETS = ('ACT_FET_S', 'ACT_GATE', 'ACT_DRV', 'ACT_EN', 'ACT_EN_MCU', 'RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE', 'PYRO1_GATE_N', 'PYRO1_COLD', 'PYRO1_CONT_MID', 'PYRO1_CONT', 'ARM1_SENSE_MID')
 
 FIRE, BAT, SIG, PWR = 0.5, 1.0, 0.15, 0.3
 SV, PV, BV = (0.4, 0.2), (0.45, 0.25), (0.6, 0.3)
@@ -209,6 +208,8 @@ def keepouts(d):
 
 
 def draw(d):
+    import r11_escape
+    r11_escape.draw(d, 'pyro')
     fire(d)
     gates(d)
     sense(d)

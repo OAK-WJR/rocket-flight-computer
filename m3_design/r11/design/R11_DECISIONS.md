@@ -381,3 +381,52 @@ override "JLC pad hole to hole") comes from jlc_hole_table's later-rule test, wh
 rule's condition (A.Type == 'Via' && B.Type == 'Via', which cannot match a pad pair). Both are gate-lane items (tools/ is
 not edited by the design lane); the project's rules and the board are as D-R11-15 set them (Measured: 14 findings, the
 same on the C2b and C3 boards).
+
+## D-R11-41 I2C1's nets move to PB10 / PB11 (balls J7 / K7, peripheral I2C2) — firmware binding item
+
+The nets I2C1_SCL / I2C1_SDA keep their names and every other pin (R12, R13, U5); only the MCU ball changes: SCL from PB8
+(B4) to PB10 (J7), SDA from PB9 (A4) to PB11 (K7), alternate function AF4 I2C2_SCL / I2C2_SDA (DS12110 Rev 8 Table 11
+p. 91, Port B alternate functions; the page is the one R10's pin table cites for Port B). B4 / A4 become NC.
+`r11_sch.R11_REPIN` carries the move into the pin table (r11_net, mode, source), the schematic (`repin`: a global label
+on the new ball, a no-connect on the old) and `r11_sch_check.expected()`; the stage A gate passes (strict ERC 0, 54 / 54
+seeded faults, Measured). **Firmware binding:** the barometer bus is I2C2 on PB10 / PB11. **Why:** the targets (U5,
+R12, R13) are south-west; from the north row the pair walled In3 west and north of the field (stageC3.md O-C3-1), from
+the south row it leaves through the south edge with the other south-going nets. **Open:** PB10 / PB11 are ROM-loader
+pins (USART3; K-loader, stageC1b.md O-C1b-2).
+
+## D-R11-42 BUZZ_DRV moves from PC14 (A1) to PB15 (G10) — firmware binding item
+
+PB15 is a general-purpose I/O (DS12110 Rev 8 Table 9 p. 75); a push-pull output needs no alternate function, and it is not
+limited to PC14's 3 mA / 2 MHz RTC-domain drive (Inference: R162 1 kOhm keeps the gate current as R10 computed). A1 is
+NC. **Why:** R162 / Q123 lie south-east (44.4, 39.0); from the north-west corner ball the line had to cross the whole
+field, from G10 it leaves on F.Cu through the east edge. **Open:** PB15 is a ROM-loader pin (USART1_RX, input pull-up
+while the loader runs: Q123's gate may be pulled up through R162 with BOOT0 high, Inference; K-loader, O-C1b-2).
+
+## D-R11-43 Placement for the escape plan
+
+C17 (3V3 decoupling) to (30.3, 25.3) B.Cu under U3's north end, C21 (VDDA decoupling) to (19.0, 22.1) F.Cu over the In2
+3V3A strip with its own via, R5 (BOOT0 pull-down) to (28.4, 33.9) B.Cu: their old spots under the field closed every
+interstitial site of rows F-K in columns 3-6. C19.2 gets its own GND via at the site (24.0, 31.2). U13 rotated 180 so
+CAM_5V enters U13.1 from C91.1 north of U13 and the corridor east of U12.6 opens; R150-R153 and R154-R157 reversed
+(SERVO1 east) so each servo output runs straight to its J122 pin (no output crosses another; R153.1 was enclosed by the
+old crossing). Fit, courtyards and DRC re-checked in the build (Measured). C17 / C21 now decouple through the In2 3V3 /
+3V3A planes from up to about 7 mm away (Inference).
+
+## D-R11-44 One escape plan, one table, one checker
+
+`m3_design/r11_fanout.tsv` pins the escape of every used ball (path, via site, exit side, layer and slot on U1's
+courtyard, target), `m3_design/r11_escape_check.py` proves it (one row per ball, no two exits in one slot on a layer
+and side, each exit faces its target) and checks it against the copper (vias, target pads, crossings) in `r11_build.sh`.
+The re-planned MCU-side copper is one frozen table per family in `m3_design/r11_escape.py`, drawn by each family module
+(`core`, `usb`, `pyro`, `power`, `ports`, `servo`, `sd`, `signals`, `status`); `sd` and `signals` are new modules.
+In3 under the field carries the north-going nets on ball-column lines (each line one 0.1 mm track whatever sits on the
+sites), the south / east / west edges the rest; SWD leaves east. A family's `NETS` lists only the nets that pass its
+gate; thirteen drawn nets and four balls stay open (stageC1b.md §5). **Why:** greedy per-family routing had walled the
+field (stageC3.md O-C3-1); the plan decides every ball's channel together.
+
+## D-R11-45 single_open_exceptions for the in-field dog-bones of PA4, BOOT0 and VCAP2
+
+U1.G3 via (21.60, 28.80), U1.D5 via (27.20, 26.40) and U1.E7 via (24.80, 27.20) are listed in `r11_gate_data.json`
+`single_open_exceptions` with their measured reasons (each ball's other interstitial sites carry another ball's escape
+via or sit inside C20's pads). PA4's second via (14.65, 39.90), outside the field, stays a K-power finding to give a
+second barrel (O-C1b-4).

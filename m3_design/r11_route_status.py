@@ -8,7 +8,7 @@ LED_YEL (U1.D6) and BUZZ_DRV (U1.A1 to R162.1) are not drawn: stageC3.md O-C3-3 
 (24.8, 24.8), closes the In2 3V3 neck beside C6's via under QSPI_NCS's In3 run: check_r11 K-region, Measured).
 """
 
-NETS = ('LED_RED_A', 'LED_YEL_A', 'BUZZ_G', 'BUZZ_OUT')
+NETS = ('LED_RED_A', 'LED_YEL_A', 'BUZZ_G', 'BUZZ_OUT', 'LED_RED', 'BUZZ_DRV')
 
 SIG, SV = 0.1, (0.4, 0.2)
 RUNS = (
@@ -27,6 +27,8 @@ ENDS = (('LED1', '2', 'LED_RED_A'), ('LED2', '1', 'LED_YEL_A'), ('R162', '2', 'B
 
 
 def draw(d):
+    import r11_escape
+    r11_escape.draw(d, 'status')
     for net, layer, pts in RUNS:
         d.track(net, layer, SIG, [d.pad(p[0], p[1], net=net) if isinstance(p[0], str) else p for p in pts])
     for net, at in VIAS:

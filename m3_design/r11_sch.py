@@ -82,6 +82,30 @@ BALL_NOTES = {
     '100': ('ball F4 is VDDLDO (Table 9 p. 87): tied to 3V3 = VDD, as LQFP100 ties it internally (Table 9 note 8 p. 88)'),
 }
 
+# D-R11-41 (stageC1b.md): R11 re-pins for the BGA escape plan. {LQFP100 pin: (R11 net or 'NC', mode, note)}; every
+# other ball keeps R10's r10_net. The nets themselves are R10's (the net contract is unchanged); only the ball that
+# carries them moves, to a ball whose alternate function DS12110 Rev 8 Table 11 p. 91 (Port B) gives (a GPIO output
+# needs no alternate function). The firmware binding must follow these rows (r11 binding item).
+R11_REPIN = {
+    '95': ('NC', 'NC (firmware: analog, never driven)',
+           'R11 D-R11-41: PB8 freed; the I2C1_SCL net moved to PB10 (ball J7)'),
+    '96': ('NC', 'NC (firmware: analog, never driven)',
+           'R11 D-R11-41: PB9 freed; the I2C1_SDA net moved to PB11 (ball K7)'),
+    '46': ('I2C1_SCL', 'AF4 I2C2_SCL (the R10 net I2C1_SCL, now on peripheral I2C2)',
+           'R11 D-R11-41: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB10 AF4 I2C2_SCL)'),
+    '47': ('I2C1_SDA', 'AF4 I2C2_SDA (the R10 net I2C1_SDA, now on peripheral I2C2)',
+           'R11 D-R11-41: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB11 AF4 I2C2_SDA)'),
+    '8': ('NC', 'NC (firmware: analog, never driven)',
+          'R11 D-R11-42: PC14 freed; the BUZZ_DRV net moved to PB15 (ball G10)'),
+    '54': ('BUZZ_DRV', 'GPIO out (push-pull; initialise low before output mode)',
+           'R11 D-R11-42: DS12110 Rev 8 Table 9 p. 75 (PB15, a general-purpose I/O; GPIO output needs no alternate '
+           'function)'),
+}
+
+
+def r11_net(pin, r10_net):
+    return R11_REPIN[pin][0] if pin in R11_REPIN else r10_net
+
 
 def uid(key):
     return str(uuid.uuid5(NS, key))
@@ -171,8 +195,9 @@ def pin_rows():
                 'reference buffer must be kept disabled (DS12110 Rev 8 Table 9 note 7 p. 88); R10 tied VREF+ to VDDA '
                 'on the board, so the circuit is the same'))
         else:
-            new.update(r11_ball=BALL[pin], r11_net=row['r10_net'],
-                       r11_ball_source=BALL_SOURCE + ('; ' + BALL_NOTES[pin] if pin in BALL_NOTES else ''))
+            new.update(r11_ball=BALL[pin], r11_net=r11_net(pin, row['r10_net']),
+                       r11_ball_source=BALL_SOURCE + ('; ' + BALL_NOTES[pin] if pin in BALL_NOTES else '') +
+                       ('; ' + R11_REPIN[pin][2] + '; R11 mode: ' + R11_REPIN[pin][1] if pin in R11_REPIN else ''))
         out.append(new)
     extra = {k: '-' for k in out[0]}
     extra.update(pin='-', port='PDR_ON', r9_net='-', r10_net='-', mode_af='input, tied high',
@@ -237,6 +262,16 @@ def rewire(text, ref, pin, net, library):
     bx, by = round(x + dx, 2), round(y + dy, 2)
     return sch.insert(text, sch.wire(x, y, bx, by, f'{ref}:r11:w{pin}') +
                       sch.glabel(net, bx, by, f'{ref}:r11:l{pin}', 180 if dx > 0 else 0, 'left' if dx > 0 else 'right'))
+
+
+def repin(text, ball, net, library):
+    """D-R11-41: give one U1 ball a new net (a 5.08 mm wire and global label, as rewire) or none (a no-connect
+    flag), removing R10's wire, label or flag at that pin."""
+    if net is not None:
+        return rewire(text, 'U1', ball, net, library)
+    x, y, _ = points(text, 'U1', library)[ball]
+    text = sch.disconnect(text, {(x, y)})
+    return sch.insert(text, f'\t(no_connect\n\t\t(at {x:g} {y:g})\n\t\t(uuid {uid("U1:r11:nc" + ball)}))\n')
 
 
 def embed(text, library, name):
@@ -426,6 +461,8 @@ def transform(text, name, library, data, nets):
             text = embed(text, library, spec['lib'].split(':')[1])
         if ref == 'U1':
             text = rewire(text, 'U1', PDR_ON, PDR_ON_NET, library)
+            for pin, (net, _, _) in sorted(R11_REPIN.items()):
+                text = repin(text, BALL[pin], None if net == 'NC' else net, library)
     text = notes(text, name)
     for prefix in ('M3:',):
         for sym in sorted(set(re.findall(r'\t\t\(symbol "M3:([^"]+)"\n', text))):

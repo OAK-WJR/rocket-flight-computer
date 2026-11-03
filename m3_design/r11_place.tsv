@@ -17,11 +17,11 @@ C13	22	25.2	0	B	U1 decoupling under the ball field (LEVIA style)
 C14	26	25.2	0	B	U1 decoupling under the ball field (LEVIA style)
 C15	22	26.8	0	B	U1 decoupling under the ball field (LEVIA style)
 C16	26	26.8	0	B	U1 decoupling under the ball field (LEVIA style)
-C17	22	29.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C17	30.3	25.3	0	B	U1 decoupling (3V3); D-R11-43: out of the ball field (east, under U3's north end), so the south-west interstitial sites take the escape vias
 C18	26	29.2	0	B	U1 decoupling under the ball field (LEVIA style)
 C19	24	29.45	270	B	VCAP1 under the ball field, south of C20 (D-R11-17: VCAP1 pad (24, 28.75) beside F8's via, GND pad to R5.2)
 C20	24	26.55	90	B	VCAP2 under the ball field, north (D-R11-17: VCAP2 pad (24, 27.25) beside E7's via)
-C21	22	30.8	0	B	U1 decoupling under the ball field (LEVIA style)
+C21	19.0	22.1	270	F	VDDA decoupling (3V3A); D-R11-43: out of the ball field, on F.Cu north-west of U1 over the In2 3V3A strip (its own via)
 C22	16.4	32.6	0	B	3V3A
 C23	25.6	34	0	B	3V3 bulk
 C24	19.0	28.9	270	B	NRST cap; D-R11-27: north of H1 so H1's 3V3A link to R164.2 runs west on B.Cu
@@ -138,14 +138,14 @@ R131	6.3	25.4	90	F	PYRO1_OUT cold pull-up leg, on F.Cu with OUT (S-8: no OUT via
 R132	15.6	21.6	90	F	RAW_ACT top leg of the bus-sense divider, on F.Cu with RAW_ACT (S-8: no RAW_ACT via); D-R11-21: east of the RAW_ACT run
 R133	7.15	22.4	90	B	bus-sense bank (PC5), low-voltage side
 R134	11.6	24.65	0	F	RAW_ACT to IGN 2 ohm, beside J121.2; D-R11-21: 0.05 mm forward for R119 (clear of core's Y1.4 GND via)
-R150	17.4	3	90	B	servo series 1k under J122
-R151	19.2	3	90	B	servo series 1k under J122
-R152	21	3	90	B	servo series 1k under J122
-R153	22.8	3	90	B	servo series 1k under J122
-R154	17.4	6.6	90	B	servo pull-down
-R155	18.6	6.6	90	B	servo pull-down
-R156	19.8	6.6	90	B	servo pull-down
-R157	21	6.6	90	B	servo pull-down
+R150	22.8	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R151	21	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R152	19.2	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R153	17.4	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R154	21	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R155	19.8	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R156	18.6	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R157	17.4	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
 R162	44.4	38.6	90	B	buzzer gate series
 R163	44.4	40.8	90	B	buzzer gate pull-down
 R164	16.4	30.8	0	B	3V3 to 3V3A
@@ -178,7 +178,7 @@ R463	28.7	14.9	180	F	microSD pull-ups; D-R11-33: one F.Cu column beside the SD r
 R464	28.7	18.5	180	F	microSD pull-ups; D-R11-33
 R470	35.475	44.4	90	B	port RX 1k
 R471	34.225	44.4	90	B	port TX 1k
-R5	24	31.6	0	B	BOOT0 pull-down under U1
+R5	28.4	33.9	0	B	BOOT0 pull-down; D-R11-43: south-east of the ball field (was under it, closing the rows J / K sites)
 R60	25.6	35.6	0	B	VLOGIC sense
 R61	25.6	36.7	0	B	VLOGIC sense
 R64	9	36.6	0	B	BARO_SDO pull-down
@@ -210,7 +210,7 @@ U1	24	28	0	F	TFBGA-100 central; column 1 west (pyro control / HSE), row A aft (I
 U10	34.9	25.1	270	B	USB current limit; D-R11-20: rotated so VBUS IN / EN face aft and OUT / ILIM / FAULT face the strip above D4
 U11	15.8	35.3	0	B	source mux
 U12	22.6	14.6	0	B	camera UART buffer
-U13	27.1	14.6	0	B	CAM_IO_3V3 LDO
+U13	27.1	14.6	180	B	CAM_IO_3V3 LDO; D-R11-43: rotated 180 so CAM_5V enters from C91 on the east and the corridor east of U12.6 opens
 U2	23.6	35.8	0	F	3V3 buck
 U3	32.2	30.5	0	F	QSPI flash east of U1 beside its QSPI balls
 U4	23	20.5	180	B	IMU bottom on the roll axis (x 23), aft of U1, R10 axis map (D-R11-11)

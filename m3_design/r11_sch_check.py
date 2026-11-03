@@ -115,6 +115,9 @@ def expected():
             if pin == gen.VREF_PIN:
                 continue
             pins[ref, B[pin]] = net
+            if pin in gen.R11_REPIN:                                  # D-R11-41 / -42: the net moves ball, not name
+                new = gen.R11_REPIN[pin][0]
+                pins[ref, B[pin]] = None if new == 'NC' else new
         elif ref in data['pin_maps'] and isinstance(data['pin_maps'][ref], dict):
             for new in data['pin_maps'][ref][pin]:
                 pins[ref, new] = net

@@ -217,7 +217,23 @@
    1.955
   ]
  },
- "single_open_exceptions": [],
+ "single_open_exceptions": [
+  [
+   "U1.G3",
+   "via LOGIC_SOURCE_ST (21.60, 28.80)",
+   "D-R11-45: PA4's dog-bone at G3's north-west interstitial site; G3's other three sites carry the escape vias of H3 / H4 and the B.Cu run of LOGIC itself, so a second barrel has no site under the TFBGA (stageC1b.md section 5). Open, U11's ST status reads floating at PA4 (firmware treats ST as advisory, Inference)"
+  ],
+  [
+   "U1.D5",
+   "via BOOT0 (27.20, 26.40)",
+   "D-R11-45: BOOT0 leaves D5 east on the F.Cu row gap y 26.4 to the interstitial site (27.20, 26.40); D5's own four sites are closed by C20 (two) and the 3V3 / GND dog-bones, and the row gap's other sites carry the SD / USB_FAULT_N escapes, so no second site exists in the field. Open, R5 no longer holds BOOT0 low (internal: BOOT0 has no internal pull-down; ROM-loader boot possible, as R10's R23-MCU-02 single point)"
+  ],
+  [
+   "U1.E7",
+   "via VCAP2 (24.80, 27.20)",
+   "D-R11-34 / -45: VCAP2's dog-bone; E7's other sites are closed by C20's pads ((24.0, 27.2), (24.0, 28.0) at 0.2 mm hole clearance) and the F6 / F7 3V3 dog-bone (24.8, 28.0) (Calculation on the placed pads)"
+  ]
+ ],
  "supports": [
   [
    3.5,

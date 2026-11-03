@@ -62,6 +62,8 @@ fi
 #                          whose m3_design/r11_route_<family>.py does not exist yet is skipped (stageC1.md section 1)
 #   r11_stage_check.py F   DRC (dangling ends allowed only on pending nets), unconnected items never rising and none
 #                          on a finished net, route_check --profile r11 failing only on pending nets; after ground none
+#   r11_escape_check.py    after the families: every used U1 ball has one exit in r11_fanout.tsv, no two exits share a
+#                          channel slot, each exit faces its target, and the table matches the copper (D-R11-44)
 if [[ -f m3_design/r11_route.py ]]; then
   for FAMILY in ${R11_FAMILIES:-core usb pyro power ports servo sd signals status ground}; do
     PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r11_route.py "$FAMILY"
@@ -69,6 +71,9 @@ if [[ -f m3_design/r11_route.py ]]; then
       PYTHONUNBUFFERED=1 "$KICAD_PY" -I -B m3_design/r11_stage_check.py "$FAMILY" --state "$T/stage.json"
     fi
   done
+  # D-R11-44: the pinned U1 escape table (r11_fanout.tsv) proved on its own and against the routed copper
+  "$KICAD_PY" -I -B m3_design/r11_escape_check.py --board "$D/m3.kicad_pcb" --json "$T/escape.json" \
+    || { echo "r11_escape_check: FAIL (see $T/escape.json)"; exit 1; }
 fi
 
 # --- stage D hook: post, fab package and the full gate (r11_post.py, r11_fab.sh, tools/check.sh) -------------------

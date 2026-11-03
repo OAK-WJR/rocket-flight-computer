@@ -24,10 +24,7 @@ import math
 
 import pcbnew
 
-NETS = ('BAT_DVDT', 'BAT_ILIM', 'BAT_OVLO', 'BAT_DAMP', 'CAM_ILIM', 'LOGIC_ILIM', 'LOGIC_SS', 'BAT_ENABLE',
-        'BAT_SW_SOURCE', 'BAT_SW_RETURN', 'SW_NODE', 'BST', 'PORT_SW', 'PORT_BST', 'PORT_FB', 'PORT_FB_TOP',
-        'PORT_LDO_FB', 'PORT_LDO_SS', 'BAT_IN', 'RAW_PROTECTED', 'VLOGIC', 'CAM_5V', 'PORT_5V3', 'PORT_4V8', '3V3A',
-        'VLOGIC_SENSE', 'LOGIC_SOURCE_ST')
+NETS = ('BAT_DVDT', 'BAT_ILIM', 'BAT_OVLO', 'BAT_DAMP', 'CAM_ILIM', 'LOGIC_ILIM', 'LOGIC_SS', 'BAT_ENABLE', 'BAT_SW_SOURCE', 'BAT_SW_RETURN', 'SW_NODE', 'BST', 'PORT_SW', 'PORT_BST', 'PORT_FB', 'PORT_FB_TOP', 'PORT_LDO_FB', 'PORT_LDO_SS', 'BAT_IN', 'RAW_PROTECTED', 'VLOGIC', 'CAM_5V', 'PORT_5V3', 'PORT_4V8', '3V3A', 'VLOGIC_SENSE', 'LOGIC_SOURCE_ST')
 
 SV, PV, BV = (0.4, 0.2), (0.45, 0.25), (0.6, 0.3)
 
@@ -191,7 +188,9 @@ RUNS = (
     ('PORT_4V8', 'B', 0.3, [('C445', '1'), (31.3, 47.4)]),
     # CAM_5V to C91.1 and U13.1 (B.Cu) and R104.1 (F.Cu)
     ('CAM_5V', 'B', 0.4, [(26.9, 7.85), (26.9, 9.8), (26.0, 10.7)]),
-    ('CAM_5V', 'B', 0.3, [(25.2, 12.0), (24.97, 12.23), (24.97, 15.0), (25.52, 15.55), ('U13', '1')]),
+    # D-R11-43: U13 rotated 180, CAM_5V enters U13.1 from C91.1 along the north side of U13 (the corridor east of U12.6
+    # is the escape plan's)
+    ('CAM_5V', 'B', 0.3, [('C91', '1'), (25.625, 12.0), (26.075, 12.45), (27.6, 12.45), (28.4, 13.25), ('U13', '1')]),
     ('CAM_5V', 'F', 0.3, [('C431', '1'), (26.1, 11.6), (26.9, 12.4), ('R104', '1')]),
     # U11 (TPS2121) ILIM to R86, soft-start to C85
     ('LOGIC_ILIM', 'B', 0.15, [('U11', '10'), (15.85, 36.65), (15.85, 39.2), (15.5, 39.55)]),
@@ -299,26 +298,22 @@ def keepout(board, centre, radius, layers, name):
     board.Add(z)
 
 
-# Stage C2c (O-C2-4, D-R11-36): two of the three status / sense lines. VLOGIC_SENSE (PA6) leaves U1.J3 down the F.Cu lane
-# x 21.6, one via south of the field, B.Cu diagonally to R60.2 and the divider's R61.1 / C60.1. LOGIC_SOURCE_ST (PA4)
-# leaves U1.G3 east along the y 28.8 row gap to a via at the interstitial site (23.2, 28.8), runs on In3 through the field
-# (x 22.8, then y 26.8 north of NRST's via), south along x 18.4 under L1 and diagonally to a via south of R91, and on
-# B.Cu to R91.2 (its pull-up) and U11.9 (ST). BAT_FAULT_N is not drawn (stageC3.md O-C3-1).
+# Stage C2c (O-C2-4, D-R11-36): VLOGIC_SENSE (PA6) leaves U1.J3 down the F.Cu lane x 21.6, one via south of the field,
+# B.Cu diagonally to R60.2 and the divider's R61.1 / C60.1. LOGIC_SOURCE_ST: only U11.9 to R91.2 (its pull-up) here; the
+# MCU side and BAT_FAULT_N are the escape plan's (r11_escape.py, stageC1b.md, D-R11-44).
 SIGNAL_RUNS = (
     ('VLOGIC_SENSE', 'F', [('U1', 'J3'), (21.6, 31.2), (21.6, 32.6)]),
     ('VLOGIC_SENSE', 'B', [(21.6, 32.6), (22.5, 32.6), (23.75, 33.85), (23.75, 34.75), (24.15, 35.15), (25.58, 35.15),
                            ('R60', '2')]),
     ('VLOGIC_SENSE', 'B', [('R60', '2'), (26.03, 35.84), ('R61', '1'), (25.17, 37.8)]),          # ends inside C60.1
-    ('LOGIC_SOURCE_ST', 'F', [('U1', 'G3'), (22.4, 28.8), (23.2, 28.8)]),
-    ('LOGIC_SOURCE_ST', 'In3', [(23.2, 28.8), (22.8, 28.4), (22.8, 27.8), (21.8, 26.8), (19.1, 26.8), (18.4, 27.5),
-                                (18.4, 39.43), (16.23, 41.6)]),
-    ('LOGIC_SOURCE_ST', 'B', [(16.23, 41.6), ('R91', '2')]),
     ('LOGIC_SOURCE_ST', 'B', [('U11', '9'), (17.2, 37.1), (17.2, 39.8), (16.35, 40.65)]),     # ends inside R91.2
 )
-SIGNAL_VIAS = (('VLOGIC_SENSE', (21.6, 32.6)), ('LOGIC_SOURCE_ST', (23.2, 28.8)), ('LOGIC_SOURCE_ST', (16.23, 41.6)))
+SIGNAL_VIAS = (('VLOGIC_SENSE', (21.6, 32.6)),)
 
 
 def draw(d):
+    import r11_escape
+    r11_escape.draw(d, 'power')
     for net, layer, pts in SIGNAL_RUNS:
         d.track(net, layer, 0.1, [d.pad(p[0], p[1], net=net) if isinstance(p[0], str) else p for p in pts])
     for net, at in SIGNAL_VIAS:
