@@ -1,6 +1,16 @@
 # Host diagnostics
 
-**Current: M3-ASSY-R1 / firmware v0.8.1.** Start with the [unified triage entry point](TRIAGE.md):
+**Firmware-status capture: M3-ASSY-R1 / firmware v0.8.1.** R10 has separate
+[bounded SWD register capture](R10_SWD.md) and an [offline record analyzer](R10_OFFLINE.md).
+They check the R10 PCB/profile, preserve raw register and instrument evidence,
+and report supported fault branches and native locations. A separate
+[R10 sensor firmware readback](R10_FIRMWARE.md) compares internal image bytes
+and captures paired diagnostic records, including ABI v3 IMU and barometer data, age,
+validity, calibration and configuration/error history. Its firmware is cross-built and all
+readback tests use synthetic data; no R10 image has run on a verified physical
+board. These paths remain distinct from R1 USB/mailbox capture.
+
+For the R1 firmware, start with the [unified triage entry point](TRIAGE.md):
 
 ```sh
 python -m diagnostics.triage capture --port ACTUAL_PORT --assembly BOARD_001 --out NEW_DIRECTORY

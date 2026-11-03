@@ -13,6 +13,7 @@ import csv
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -30,6 +31,16 @@ def read_netlist(path):
     pins = {(p.get('ref'), p.get('pin')): None if n.get('name').startswith('unconnected-') else n.get('name')
             for n in root.findall('./nets/net') for p in n.findall('node')}
     return parts, pins
+
+
+def netlist_comparison_bytes(data):
+    """Normalize only KiCad 10.0 patch metadata, preserving all circuit bytes."""
+    tool = ET.fromstring(data).find('./design/tool')
+    if tool is not None and re.fullmatch(r'Eeschema 10\.0\.\d+', tool.text or ''):
+        marker = ('<tool>' + tool.text + '</tool>').encode('utf-8')
+        if data.count(marker) == 1:
+            return data.replace(marker, b'<tool>Eeschema 10.0.x</tool>', 1)
+    return data
 
 
 # D-R27-03 (R27-TRI-07): the terminal pin names the schematic shows, as the netlist gives them (KiCad writes each node's
@@ -249,7 +260,11 @@ def check(project):
         gen.build(replay)
         # Freshly regenerate both the stored netlist and sheets from fixed input.
         for file in sorted(replay.glob('*.kicad_sch')) + [replay / 'schematic.net.xml', replay / 'm3.kicad_dru']:
-            if file.read_bytes() != (project / file.name).read_bytes():
+            generated, committed = file.read_bytes(), (project / file.name).read_bytes()
+            if file.name == 'schematic.net.xml':
+                generated = netlist_comparison_bytes(generated)
+                committed = netlist_comparison_bytes(committed)
+            if generated != committed:
                 issues.append(f'nonreproducible generated artifact: {file.name}')
         # Export the supplied sheets themselves too, detecting a changed sheet
         # paired with a stale but otherwise valid netlist.

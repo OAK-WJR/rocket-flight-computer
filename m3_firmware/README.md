@@ -1,5 +1,15 @@
 # M3 bench diagnostic firmware
 
+**R10 has a separate [sensor diagnostic image](r10/README.md), cross-built
+and host-tested, not yet run on hardware.** It publishes identity, nominal ticks,
+main-loop progress, best-effort fault registers and fitted ISM6HG256X raw data /
+configuration / validity / error history through native SPI1, plus the MS5611
+barometer through native I2C1 and ABI v3 (raw/calibration/CRC/freshness evidence).
+ADC, storage, UART, USB and actuation drivers remain unimplemented for R10. Its separate [bounded readback workflow](../diagnostics/R10_FIRMWARE.md)
+compares installed image bytes and acquires paired records; it has only been
+tested with synthetic data. The [original SWD workflow](../diagnostics/R10_SWD.md)
+still reads system registers only. R1 images remain incompatible.
+
 > **M3-ASSY-R2 (actuator merge, 2026-09-25): no firmware exists for R2 yet.** R2 moves LED_RED from PE3 to PE8 and turns PE3 / PE6 into no-net sentinels beside the pyro gates PE4 / PE5, so **v0.8.1 must not be run on an R2 board** (it drives PE3). `build.py` already refuses to build against the changed PCB hash; the reviewed R2 GPIO roles are in [`pins_r2.json`](pins_r2.json) and the rules in [`../docs/M3_ACTUATOR_MERGE.md`](../docs/M3_ACTUATOR_MERGE.md). A new binding must be written from `assembly_binding.py` together with the first R2 firmware, not by editing the R1 hash. The R2 hardware also relies on two firmware rules (`docs/M3_ACTUATOR_MERGE.md` §2.6): every pyro fire pulse ends after 20 ms, and flight state survives an MCU reset so channel 2 still fires. Full list: `docs/R2_VERIFICATION.md` §5 (includes reading VLOGIC_SENSE / V3V3_SENSE on ADC3 and keeping U3 a W25Q128JV-IQ).
 
 **Current version: v0.8.1 for M3-ASSY-R1.** Usage: [ASSEMBLY_DIAGNOSTICS.md](ASSEMBLY_DIAGNOSTICS.md). The host-side [triage entry point](../diagnostics/TRIAGE.md) ties USB snapshots, fault history and independent instrument readings to the current PCB's test points, keeping disconnections and partial evidence. **Nothing has been verified on a real board, and the complete M3 is not finished** (see [../STATUS.md](../STATUS.md)).

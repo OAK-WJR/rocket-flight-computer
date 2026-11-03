@@ -1,0 +1,416 @@
+{
+  "accessibility": "Synthetic unmounted/uncoated bench allocation; native exposed copper is not a physical probe-clearance qualification.",
+  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "coordinate_frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+  "ground_point_ids": [
+    "TP88.1",
+    "TP74.1",
+    "J410.2",
+    "J420.2",
+    "J440.2",
+    "J9.2"
+  ],
+  "native_footprints": 216,
+  "native_pads": 705,
+  "native_witness_sha256": "1bb08739d787e9a08bfb64b147b49c52fe3129cebe5824f925cd854c56c7aab0",
+  "points": {
+    "C10.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "3V3A",
+      "pad": "1",
+      "point_id": "C10.1",
+      "reference": "C10",
+      "side": "B.Cu",
+      "xy_mm": [
+        16.5,
+        53.5
+      ]
+    },
+    "C11.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "3V3A",
+      "pad": "1",
+      "point_id": "C11.1",
+      "reference": "C11",
+      "side": "B.Cu",
+      "xy_mm": [
+        16.5,
+        51.45
+      ]
+    },
+    "C403.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "PORT_5V3",
+      "pad": "1",
+      "point_id": "C403.1",
+      "reference": "C403",
+      "side": "F.Cu",
+      "xy_mm": [
+        28.6,
+        3.6
+      ]
+    },
+    "C404.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "PORT_5V3",
+      "pad": "1",
+      "point_id": "C404.1",
+      "reference": "C404",
+      "side": "F.Cu",
+      "xy_mm": [
+        28.6,
+        7.0
+      ]
+    },
+    "C83.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "VBUS",
+      "pad": "1",
+      "point_id": "C83.1",
+      "reference": "C83",
+      "side": "B.Cu",
+      "xy_mm": [
+        9.425,
+        24.9
+      ]
+    },
+    "C9.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "3V3",
+      "pad": "1",
+      "point_id": "C9.1",
+      "reference": "C9",
+      "side": "B.Cu",
+      "xy_mm": [
+        25.4,
+        80.24
+      ]
+    },
+    "C92.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "CAM_IO_3V3",
+      "pad": "1",
+      "point_id": "C92.1",
+      "reference": "C92",
+      "side": "B.Cu",
+      "xy_mm": [
+        31.65,
+        52.5
+      ]
+    },
+    "C93.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "CAM_IO_3V3",
+      "pad": "1",
+      "point_id": "C93.1",
+      "reference": "C93",
+      "side": "F.Cu",
+      "xy_mm": [
+        33.4,
+        40.05
+      ]
+    },
+    "J410.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "PORT_4V8",
+      "pad": "1",
+      "point_id": "J410.1",
+      "reference": "J410",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        20.75
+      ]
+    },
+    "J410.2": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GND",
+      "pad": "2",
+      "point_id": "J410.2",
+      "reference": "J410",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        17.25
+      ]
+    },
+    "J410.3": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GPS_TX_WIRE",
+      "pad": "3",
+      "point_id": "J410.3",
+      "reference": "J410",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        13.75
+      ]
+    },
+    "J410.4": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GPS_RX_WIRE",
+      "pad": "4",
+      "point_id": "J410.4",
+      "reference": "J410",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        10.25
+      ]
+    },
+    "J420.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "PORT_4V8",
+      "pad": "1",
+      "point_id": "J420.1",
+      "reference": "J420",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        36.75
+      ]
+    },
+    "J420.2": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GND",
+      "pad": "2",
+      "point_id": "J420.2",
+      "reference": "J420",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        33.25
+      ]
+    },
+    "J420.3": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "RADIO_TX_WIRE",
+      "pad": "3",
+      "point_id": "J420.3",
+      "reference": "J420",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        29.75
+      ]
+    },
+    "J420.4": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "RADIO_RX_WIRE",
+      "pad": "4",
+      "point_id": "J420.4",
+      "reference": "J420",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        26.25
+      ]
+    },
+    "J440.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "PORT_4V8",
+      "pad": "1",
+      "point_id": "J440.1",
+      "reference": "J440",
+      "side": "F.Cu",
+      "xy_mm": [
+        7.4,
+        11.0
+      ]
+    },
+    "J440.2": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GND",
+      "pad": "2",
+      "point_id": "J440.2",
+      "reference": "J440",
+      "side": "F.Cu",
+      "xy_mm": [
+        7.4,
+        14.5
+      ]
+    },
+    "J440.3": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "AUX_TX_WIRE",
+      "pad": "3",
+      "point_id": "J440.3",
+      "reference": "J440",
+      "side": "F.Cu",
+      "xy_mm": [
+        7.4,
+        18.0
+      ]
+    },
+    "J440.4": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "AUX_RX_WIRE",
+      "pad": "4",
+      "point_id": "J440.4",
+      "reference": "J440",
+      "side": "F.Cu",
+      "xy_mm": [
+        7.4,
+        21.5
+      ]
+    },
+    "J9.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "CAM_5V",
+      "pad": "1",
+      "point_id": "J9.1",
+      "reference": "J9",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        52.75
+      ]
+    },
+    "J9.2": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GND",
+      "pad": "2",
+      "point_id": "J9.2",
+      "reference": "J9",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        49.25
+      ]
+    },
+    "J9.3": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "CAM_RX_WIRE",
+      "pad": "3",
+      "point_id": "J9.3",
+      "reference": "J9",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        45.75
+      ]
+    },
+    "J9.4": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "CAM_TX_WIRE",
+      "pad": "4",
+      "point_id": "J9.4",
+      "reference": "J9",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.6,
+        42.25
+      ]
+    },
+    "R164.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "3V3",
+      "pad": "1",
+      "point_id": "R164.1",
+      "reference": "R164",
+      "side": "B.Cu",
+      "xy_mm": [
+        18.15,
+        55.25
+      ]
+    },
+    "R164.2": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "3V3A",
+      "pad": "2",
+      "point_id": "R164.2",
+      "reference": "R164",
+      "side": "B.Cu",
+      "xy_mm": [
+        16.5,
+        55.25
+      ]
+    },
+    "R431.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "CAM_PWR_EN",
+      "pad": "1",
+      "point_id": "R431.1",
+      "reference": "R431",
+      "side": "F.Cu",
+      "xy_mm": [
+        38.0,
+        60.425
+      ]
+    },
+    "TP74.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GND",
+      "pad": "1",
+      "point_id": "TP74.1",
+      "reference": "TP74",
+      "side": "B.Cu",
+      "xy_mm": [
+        42.5,
+        58.0
+      ]
+    },
+    "TP80.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "BAT_IN",
+      "pad": "1",
+      "point_id": "TP80.1",
+      "reference": "TP80",
+      "side": "F.Cu",
+      "xy_mm": [
+        9.8,
+        83.8
+      ]
+    },
+    "TP81.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "RAW_PROTECTED",
+      "pad": "1",
+      "point_id": "TP81.1",
+      "reference": "TP81",
+      "side": "B.Cu",
+      "xy_mm": [
+        31.0,
+        84.8
+      ]
+    },
+    "TP82.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "USB_LIMITED",
+      "pad": "1",
+      "point_id": "TP82.1",
+      "reference": "TP82",
+      "side": "B.Cu",
+      "xy_mm": [
+        11.2,
+        20.7
+      ]
+    },
+    "TP83.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "VLOGIC",
+      "pad": "1",
+      "point_id": "TP83.1",
+      "reference": "TP83",
+      "side": "B.Cu",
+      "xy_mm": [
+        34.5,
+        81.5
+      ]
+    },
+    "TP88.1": {
+      "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+      "net": "GND",
+      "pad": "1",
+      "point_id": "TP88.1",
+      "reference": "TP88",
+      "side": "F.Cu",
+      "xy_mm": [
+        35.5,
+        86.4
+      ]
+    }
+  },
+  "profile": "M3-ASSY-R10",
+  "schema": "r10-corpus-points/v1"
+}

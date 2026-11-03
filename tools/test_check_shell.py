@@ -30,6 +30,8 @@ import os, pathlib, sys
 stage = pathlib.Path(__file__).stem
 with open(os.environ['GATE_LOG'], 'a') as log:
     log.write(stage + '\\n')
+if os.environ.get('EXPECTED_KICAD_CLI') and os.environ.get('KICAD_CLI') != os.environ['EXPECTED_KICAD_CLI']:
+    sys.exit('selected CLI not inherited by ' + stage + ': ' + repr(os.environ.get('KICAD_CLI')))
 if stage == 'r10_parts' and ('--check' not in sys.argv or '--board' not in sys.argv):
     sys.exit(17)
 if stage == 'fab_manifest' and not (pathlib.Path(sys.argv[1]).parent / 'fab/m3_fab_manifest.json').is_file():
@@ -40,9 +42,15 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
 '''
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
                      'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
-                     'm3_design/check_actuators.py', 'm3_design/r10_parts.py', 'm3_design/r10_sch_check.py'):
+                     'm3_design/check_actuators.py', 'm3_design/r10_parts.py', 'm3_design/r10_sch_check.py',
+                     'tools/check_r10_diagnostic_profile.py'):
             (self.root / path).write_text(stub)
-        for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_procurement.py',
+        (self.root / 'diagnostics').mkdir()
+        (self.root / 'm3_firmware/r10').mkdir(parents=True)
+        (self.root / 'm3_firmware/r10/imu').mkdir()
+        (self.root / 'm3_firmware/r10/baro').mkdir()
+        for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_schematic_repro.py',
+                     'diagnostics/test_r10_offline.py', 'diagnostics/test_r10_swd.py', 'diagnostics/test_r10_firmware.py', 'm3_firmware/r10/test_r10.py', 'm3_firmware/r10/imu/test_imu_core.py', 'm3_firmware/r10/baro/test_baro.py', 'tools/test_procurement.py',
                      'tools/test_fab_validation.py', 'tools/test_fit_check.py', 'tools/test_paste_check.py',
                      'tools/test_r10_parts.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
             (self.root / path).write_text(stub)
@@ -52,9 +60,9 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         self.env.pop('R10_SKIP_FAB_MANIFEST', None)
         (self.root / 'board.kicad_pcb').write_text('board copy\n')
 
-    SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
+    SELFTESTS = ['test_check_shell', 'test_schematic_repro', 'test_r10_offline', 'test_r10_swd', 'test_r10_firmware', 'test_r10', 'test_imu_core', 'test_baro', 'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
                  'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check']
-    CONTRACTS = ['r10_sch_check', 'verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
+    CONTRACTS = ['r10_sch_check', 'check_r10_diagnostic_profile', 'verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
 
     def run_gate(self, board=None):
         return subprocess.run(['bash', str(self.root / 'tools/check.sh'), str(board or self.root / 'board.kicad_pcb')],
@@ -74,6 +82,31 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + self.SELFTESTS)
         self.assertNotIn('fab manifest', result.stdout)      # no fab folder beside the board: nothing to check
+
+    def test_selected_cli_is_inherited_by_all_stages(self):
+        """Discovery and explicit selections reach the later Python self-tests, including -I children."""
+        alias = self.root / 'selected CLI'
+        alias.symlink_to(self.cli)
+        self.env['PATH'] = str(self.root) + os.pathsep + self.env.get('PATH', os.defpath)
+        self.env['EXPECTED_KICAD_CLI'] = str(self.cli.resolve())
+        for selection in (None, 'kicad-cli', str(alias), str(self.cli)):
+            with self.subTest(selection=selection):
+                self.log.unlink(missing_ok=True)
+                if selection is None:
+                    self.env.pop('KICAD_CLI', None)
+                else:
+                    self.env['KICAD_CLI'] = selection
+                result = self.run_gate()
+                self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + self.SELFTESTS)
+
+    def test_invalid_explicit_cli_does_not_fall_back_to_path(self):
+        self.env['PATH'] = str(self.root) + os.pathsep + self.env.get('PATH', os.defpath)
+        self.env['KICAD_CLI'] = str(self.root / 'missing-cli')
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('KiCad CLI unavailable', result.stderr)
+        self.assertFalse(self.log.exists())
 
     def test_each_new_contract_failure_blocks_later_stages(self):
         stages = ['r10_parts', 'fit_check', 'check_r10', 'route_check']

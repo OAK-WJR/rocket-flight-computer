@@ -25,6 +25,8 @@ if [[ -z "$CLI" ]]; then
 fi
 CLI="$(command -v "$CLI")" || { echo 'KiCad CLI unavailable; set KICAD_CLI' >&2; exit 1; }
 CLI="$(python3 -c 'from pathlib import Path; import sys; print(Path(sys.argv[1]).resolve())' "$CLI")"
+# Every child, including the schematic replay inside the seeded tests, must use this selection.
+export KICAD_CLI="$CLI"
 if [[ -z "${KICAD_PY:-}" ]]; then
   candidate="$(dirname "$CLI")/../Frameworks/Python.framework/Versions/Current/bin/python3"
   if [[ -x "$candidate" ]]; then KICAD_PY="$candidate"; else KICAD_PY=python3; fi
@@ -52,6 +54,7 @@ KICAD_CLI="$CLI" "$KICAD_PY" -I -B "$ROOT/m3_design/r10_sch_check.py" --project 
   --json "$OUT/sch_check.json" > "$OUT/sch_check.txt" 2>&1 \
   && echo "schematic contract and sheet replay (r10_sch_check): OK" \
   || { echo "schematic contract / sheet replay FAILED: see $OUT/sch_check.json"; exit 1; }
+"$KICAD_PY" -I -B "$ROOT/tools/check_r10_diagnostic_profile.py" "$BOARD"
 (cd "$ROOT/quality_audit" && python3 verify_board.py "$BOARD" --cli "$CLI" --output "$OUT/audit.json" >/dev/null) \
   && echo "metadata / 3D model audit: OK" || { echo "metadata / 3D model audit FAILED: see $OUT/audit.json"; exit 1; }
 python3 "$ROOT/tools/silk_check.py" "$BOARD" --cli "$CLI"     # DRC skips silkscreen wholly outside the outline
@@ -83,6 +86,13 @@ selftest() {          # print the unittest summary; a failing run prints its tai
   { printf '%s\n' "$out" | grep -v Debug || true; } | tail -3
 }
 selftest python3 "$ROOT/tools/test_check_shell.py"       # check.sh itself fails closed (R8-GATE-01)
+selftest python3 "$ROOT/tools/test_schematic_repro.py"   # exporter metadata must not hide electrical edits
+selftest python3 -B "$ROOT/diagnostics/test_r10_offline.py"  # offline records, never a board connection
+selftest python3 -B "$ROOT/diagnostics/test_r10_swd.py"      # fake readers only; no probe enumeration
+selftest python3 -B "$ROOT/diagnostics/test_r10_firmware.py" # synthetic DP/image/mailbox; never opens a probe
+selftest python3 -B "$ROOT/m3_firmware/r10/test_r10.py"     # real portable C + saved records; no probe/flash
+selftest python3 -B "$ROOT/m3_firmware/r10/imu/test_imu_core.py" # fitted ST sensor core, scripted registers only
+selftest python3 -B "$ROOT/m3_firmware/r10/baro/test_baro.py" # MS5611 core, scripted I2C only
 selftest python3 "$ROOT/tools/test_procurement.py"       # required R9 / R10 limits cannot be weakened by report data
 selftest python3 "$ROOT/tools/test_fab_validation.py"    # placement, export and binding regressions (R18-GATE-04)
 selftest "$KICAD_PY" "$ROOT/tools/test_fit_check.py"       # no -I: the test imports fit_check from its own folder

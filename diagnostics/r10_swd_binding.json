@@ -1,0 +1,85 @@
+{
+  "schema": "r10-swd-binding/v1",
+  "profile": "M3-ASSY-R10",
+  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "connector": {
+    "1": {
+      "point_id": "J2.1",
+      "reference": "J2",
+      "pad": "1",
+      "net": "3V3",
+      "role": "3V3",
+      "side": "F.Cu",
+      "xy_mm": [
+        3.73,
+        40.035
+      ]
+    },
+    "2": {
+      "point_id": "J2.2",
+      "reference": "J2",
+      "pad": "2",
+      "net": "SWDIO",
+      "role": "SWDIO",
+      "side": "F.Cu",
+      "xy_mm": [
+        3.73,
+        38.765
+      ]
+    },
+    "3": {
+      "point_id": "J2.3",
+      "reference": "J2",
+      "pad": "3",
+      "net": "NRST",
+      "role": "NRST",
+      "side": "F.Cu",
+      "xy_mm": [
+        5.0,
+        40.035
+      ]
+    },
+    "4": {
+      "point_id": "J2.4",
+      "reference": "J2",
+      "pad": "4",
+      "net": "SWCLK",
+      "role": "SWCLK",
+      "side": "F.Cu",
+      "xy_mm": [
+        5.0,
+        38.765
+      ]
+    },
+    "5": {
+      "point_id": "J2.5",
+      "reference": "J2",
+      "pad": "5",
+      "net": "GND",
+      "role": "GND",
+      "side": "F.Cu",
+      "xy_mm": [
+        6.27,
+        40.035
+      ]
+    },
+    "6": {
+      "point_id": "J2.6",
+      "reference": "J2",
+      "pad": "6",
+      "net": "unconnected-(J2-Pin_6-Pad6)",
+      "role": "NC",
+      "side": "F.Cu",
+      "xy_mm": [
+        6.27,
+        38.765
+      ]
+    }
+  },
+  "coordinate_frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+  "sources": [
+    "https://www.tag-connect.com/wp-content/uploads/bsk-pdf-manager/ARM20-CTX_19.pdf",
+    "https://pyocd.io/docs/options.html"
+  ],
+  "physical_pin6": "Unconnected on this PCB; no SWO trace connection."
+}

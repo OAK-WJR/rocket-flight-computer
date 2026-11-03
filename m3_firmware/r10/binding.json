@@ -1,0 +1,14 @@
+{
+  "schema": "r10-bench-build-binding/v1",
+  "profile": "M3-ASSY-R10",
+  "inputs": {
+    "m3_design/assembly_review/m3.kicad_pcb": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+    "m3_design/assembly_review/schematic.net.xml": "535a8fdfe96c3a771a901db2bb9d2cd1a6674b001dfe1e18aa7d600e3aea7e9a",
+    "m3_design/assembly_review/sources/r10_design/pin_table.tsv": "b94133e61d553f5febb07c7c97977cd8b124634c6c19d0a2ce5b7fead304564a",
+    "m3_firmware/vendor_manifest.json": "d05ca03d4f6263a131d6191c083d9a85c544e7e00072d12fa76f0049165409a2"
+  },
+  "mailbox_address": 603979776,
+  "mailbox_bytes": 512,
+  "hardware_tested": false,
+  "actuation_implemented": false
+}

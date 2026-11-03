@@ -1,10 +1,182 @@
 # M3 requirements and implementation status
 
-> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. On this branch (`m3-assy-r10`) the repository holds the M3-ASSY-R10 KiCad project (a CAD candidate, not accepted), built from the hash-pinned R9 inputs by `m3_design/r10_build.sh`; R9's project (built from the committed, owner-accepted R8 sources, commit 9c8179b, by `m3_design/r9_build.sh`) stays on branch `m3-assy-r9` (R8 came from R7 by `m3_design/r8_build.sh`, R7 from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R8's project stays on branch `m3-assy-r8` (9c8179b) and R7's on `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
+> Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. The R10 line (`m3-assy-r10` and its `r10/offline-diagnostics` development branch) holds the M3-ASSY-R10 KiCad project (a CAD candidate, not accepted), built from the hash-pinned R9 inputs by `m3_design/r10_build.sh`; R9's project (built from the committed, owner-accepted R8 sources, commit 9c8179b, by `m3_design/r9_build.sh`) stays on branch `m3-assy-r9` (R8 came from R7 by `m3_design/r8_build.sh`, R7 from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R8's project stays on branch `m3-assy-r8` (9c8179b) and R7's on `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-11-02 (R10 candidate section below; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
+Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as of 2026-11-02; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
+
+**R10 IMU + barometer diagnostic image, ABI v3 (2026-11-03 UTC).**
+The fitted MS5611 now joins the IMU in the independent R10 bench image, using
+native I2C1 on PB8/9 with preserved SPI1 fields and read-only clock selection.
+Its 16 source endpoints are checked, including 3V3 pull-ups distinct from the
+sensor's 3V3A rail. Reset/PROM/CRC4 and sequential conversions retain raw and
+last-good samples with their own calibration banks. Independent review found
+and fixed delayed-poll and callback-latency freshness defects: acquisition age
+starts before D1, candidates commit only on a subsequent poll, and an old pair
+cannot replace retained data. The host independently repeats integer compensation.
+
+ABI v3 is exactly 512 bytes. Linker start/end symbols bind startup's 64-bit
+AXI ECC initialization to that range. Image-bound readback grants exactly that
+window; historical v1/v2 replay and original register-only/R1 permissions remain
+separate. Independent integration review also found and fixed a production
+reader adapter argument mismatch that the earlier fake had hidden; capture
+tests now exercise the production adapter and explicit 512/256-byte narrowing.
+
+Verification: 34 actual-C/ABI/build tests, 36 synthetic capture/guard/report tests,
+five IMU and four barometer source/register-model tests pass. The complete
+diagnostics regression has 279 passes and one existing historical CORE-board
+skip. Two independent ARM builds produce identical 36 outputs (12,844-byte
+binary); normal, failed-D2 and stale-acquisition C-packing/readback fixtures
+pass. No ARM image execution, probe connection, physical pressure/IMU readings,
+calibration or flight qualification. R10 ADC/storage/USB/UART/actuation firmware
+remains incomplete; the diagnostic sampling setup is not flight F5 qualification.
+
+**Design gate follow-up.** The earlier full run passed native CAD/fab checks but
+failed one nested CLI-path test and two native subprocesses. The resolved CLI
+is now exported to children, with 13 shell tests and 10 exporter-metadata tests
+passing. Controlled comparisons trace the native abort to the sandbox/macOS
+application-registration path; removing the font-cache warning did not fix it.
+Both exact seeded native checks pass in the normal local environment, with all
+assertions retained. The complete [board gate](tools/check.sh) then passed there
+at 18:17 UTC on 2026-11-03 (exit 0): native DRC, unconnected items, schematic
+parity and ERC are all zero, and metadata/3D, silkscreen, fit, routing and
+fabrication-content checks pass. The 268-case R10 regression has 262 passes
+and six NumPy-dependent skips under KiCad Python; all six run and pass in the
+following NumPy-enabled numerical stage. The checked source inventory and PCB
+bytes are unchanged during that run. These are CAD, host-software and model
+checks, not physical or flight qualification. The cost-cap and sourcing gaps
+recorded below remain open and require refreshed supplier evidence before an
+order. The immediate priority is the owner's requested whole-board design
+verification/optimization; no new firmware block is being expanded now.
+
+**Linked R10 sensor diagnostics, ABI v2 (2026-11-03 UTC).**
+The fitted ISM6HG256X core and native H743 SPI1 port are now linked into the
+independent [R10 bench image](m3_firmware/r10/README.md). Only the sensor pins
+PB3/4/5/7 are configured. A shared finite SPI polling budget, byte FIFO access,
+error latching and bounded SPI1-only cleanup do not depend on SysTick. ABI v2
+and [firmware readback](diagnostics/R10_FIRMWARE.md) expose raw native-axis
+counts, configuration, freshness, endpoint/validity flags, current/history
+errors and retries. Historical v1 records remain decodable but cannot be paired
+with v2 or accepted under the current image contract. Main-loop progress and
+reported sensor acquisition progress are separate. Sensor faults keep the main
+heartbeat; core FAULT records withhold all sensor fields rather than exposing
+an interrupted sensor update. No ADC, barometer, storage, UART, USB or actuation
+driver has been added by this step.
+
+Verification: 30 actual-C/ABI/build-contract tests, 33 synthetic firmware
+capture/guard/report tests, five sensor/provenance/register-model tests and the
+shell gate's 11 tests pass. The improved SPI model separates wire completion
+from RX consumption, exercises latched/W1C flags, back-to-back transfers,
+post-EOT guard ordering, unrelated-register preservation and 48 injected
+stage-error/recovery scenarios. Independent integration review reproduced
+READY, sensor-error and core-fault records and found no confirmed high/medium
+implementation defects. Two independent ARM builds have identical 26 outputs;
+normal and sensor-error end-to-end fixtures execute the host C publisher/packer
+and compare built ARM image bytes against a synthetic DP only. **No ARM image
+execution, probe connection, physical sensor data or hardware qualification.**
+The 128-NOP post-EOT guard is an unqualified engineering choice, not a measured
+timing guarantee. PCB bytes and Git history are unchanged; no merge/push.
+
+Older implementation checkpoints below describe their stage at the time; the
+newest entry above defines the current firmware scope.
+The combined diagnostics regression has 276 passes and one existing historical
+CORE-board test skipped because its PCB is absent.
+At that earlier checkpoint the full gate had passed native CAD/fabrication
+checks while its seeded regression was still running. The ABI v3 entry above
+records the completed current gate.
+
+**Fitted R10 IMU acquisition core (2026-11-03 UTC).**
+[`m3_firmware/r10/imu`](m3_firmware/r10/imu/README.md) implements the portable
+ISM6HG256X state/register layer against a commit-pinned ST driver. Source checks
+bind the fitted part and eight native SPI endpoints. It has nonblocking boot/
+reset/settling stages, checked configuration, signed raw low-g/high-g/gyro data,
+stale-data and finite retry policy, transaction-failure latching and retained
+last-good data/error history. Independent review found and fixed settling-mask
+ordering and persistent no-data recovery. Four host tests pass, including actual
+C plus the vendor driver under UBSan, every initialization-exchange failure,
+eight configuration mutations, partial-burst failure and timer/counter wrap.
+The code cross-compiles to Cortex-M7 objects. **It is not linked into the current
+bootstrap image yet:** native SPI integration and a versioned mailbox/decoder
+extension are next. This step does not change the PCB, current executable image,
+or hardware/flight qualification. No real IMU data has been acquired.
+
+**Bounded R10 firmware readback (2026-11-03 UTC).**
+[`diagnostics.r10_firmware`](diagnostics/R10_FIRMWARE.md) now compares the exact
+internal image before acquiring two bound 256-byte RAM records. A separate
+address guard blocks target data writes, adjacent memory and unchecked
+auto-increment reads; identity, power and VTOR checks precede RAM, with power
+and VTOR rechecked after image reading. Reset boot/isolation are explicit
+operator declarations. Records, image bytes, partial errors, acquisition hashes,
+worker/supervisor receipts and unreaped-worker PID details are preserved.
+Chronology is checked across attempts and samples; incomplete evidence cannot
+produce a complete/progress verdict. Original R1 and register-only transport
+permissions remain unchanged. The bootstrap's external record now publishes
+once per nominal second, with internal millisecond counters, so a slow SWD read
+has a longer stable window. Verification: 30 synthetic capture/guard/supervision
+tests and 23 actual-C/bootstrap host tests pass (11 scripted runtime cases).
+The complete diagnostics regression has 273 passes and one existing historical
+CORE-board test skipped because its PCB is absent; the shell gate's 11 tests pass.
+The actual pinned pyOCD 0.45.1 `MinimalMemAP` was exercised against a synthetic
+auto-incrementing DP, never a physical probe. Source review reproduced and
+closed three medium findings: DRW reuse, reversed sample chronology, and lost
+cleanup/timeout details. No CAD bytes changed, no new physical or flight
+qualification, and no sensor/ADC/logging driver has been delivered by this step.
+
+**Independent R10 firmware bootstrap (2026-11-03 UTC).**
+[`m3_firmware/r10`](m3_firmware/r10/README.md) now cross-builds a separate bench
+image bound to this PCB, netlist, pin table and pinned vendor sources. It records
+chip identity, raw reset flags, nominal HSI ticks, main-loop progress and
+best-effort exception registers in a new CRC-protected RAM ABI. No GPIO,
+actuator, sensor, ADC, UART, USB or storage driver is enabled. The legacy R1
+binding remains unchanged. Its saved-file decoder and the bounded readback stage
+above are separate from the original register-only SWD workflow.
+Verification: 23 host tests pass, including 11 scripted runtime/exception cases
+executing actual C under the host undefined-behavior sanitizer and all 2048
+single-bit record corruptions. Arm cross-build/vector/linker checks pass; two
+independent builds produced identical outputs. Independent source review found
+and fixed pre-supply RAM writes and exception-generation reuse. **Physical
+tests: none; no probe opened, image flashed or hardware qualification claimed.**
+No CAD inputs changed; this firmware change does not add new DRC/simulation evidence.
+
+**Host register capture (2026-11-03 UTC).** The separate
+[`diagnostics.r10_swd` workflow](diagnostics/R10_SWD.md) reuses the pinned DP/AP
+transport for bounded H743 register reads, preserves partial evidence and links
+external voltages by capture/assembly/session/epoch and observation window. It
+uses the native R10 J2 map, source hashes, immutable raw snapshots and distinct
+worker/supervisor receipts. It performs no target initialization, reset/halt,
+flash/GPIO write, sensor transaction or output test. R1 firmware is unchanged
+and still cannot be used as R10 firmware.
+Verification: 30 SWD workflow tests and 41 offline tests pass; the combined
+diagnostic regression has 243 passes and one missing historical CORE-board test
+skipped. The native profile check matches 39 points (33 offline plus six J2).
+Targeted independent review reproduced and closed three saved-evidence defects
+(terminal metadata, contradictory live/synthetic driver labels and malformed
+receipt types). Clock inconsistency remains explicitly incomplete. All test
+readings are synthetic; no actual probe/board connection was attempted, and
+R10 executable firmware, electrical behaviour and physical qualification remain
+unverified. The PCB bytes are unchanged.
+The full native `tools/check.sh` completed with zero DRC, unconnected,
+schematic-parity and ERC findings, clean fabrication-content checks and the
+legacy seeded/numerical regressions. The final reviewed diagnostic code was
+retested separately after fixes made during that long gate run.
+
+**Offline diagnostic development (2026-11-02).** `diagnostics.r10_offline` adds
+saved-record interpretation for this R10 PCB, separate from R1 live capture.
+It binds native probe identities to the actual PCB bytes, retains uncertainty
+and session provenance, and reports supported power/harness branches with the
+next point and GND reference. The board and firmware are unchanged. The software
+tests and native profile check do not constitute physical or flight testing.
+Usage and limits: [R10 offline diagnostics](diagnostics/R10_OFFLINE.md).
+Verification: 41 new diagnostic tests pass; the combined diagnostic suite has
+213 passes and one historical CORE-board test skipped because that PCB is not
+included on this branch. The complete `tools/check.sh` passes with zero DRC,
+unconnected, schematic-parity and ERC findings; all 33 diagnostic catalog points
+match the native PCB. Targeted independent review closed the observation-order,
+provenance and camera-enclosure findings. A near-zero EN interval outside the
+recommended domain deliberately remains insufficient evidence; the synthetic
+proxy's normal-off control expectation is not fully met. No real hardware,
+communication functionality or R10 firmware was tested.
 
 **Status (2026-11-02).** PCB `a0ec075e…` (full hash and metrics in [docs/M3_R10.md, "Current state"](docs/M3_R10.md#current-state)), 46 × 90 × 1.6 mm. Not accepted, nothing ordered; R9 stays the accepted board.
 Rounds 22 and 23 (ten Claude lenses each) were the closing pair on `5516eeec…`: 0 Critical / 0 Major. The round 24 board pass (D-R24-01 … D-R24-17) made `1407e850…`; round 24 found 17 Minor real errors on it, and the round 24 fix pass (D-R24-18 … D-R24-23) changed the board to `92c3ad59…`. Round 25 found 10 Minor real errors on `92c3ad59…`, none on the board; its fix pass (D-R25-01 … -03) left the board unchanged. Round 26 found 12 Minor real errors on `92c3ad59…`, one of them on the board; its fix pass (D-R26-01 … -04) changed the board to `a0ec075e…`. Round 27 found 7 Minor real errors on `a0ec075e…`, none on the board; its fix pass (D-R27-01 … -03) corrected the budget's four-stall pack sag, the ports' schematic symbol, the binding note's revision sentence and the records, and left the board unchanged. Round 28 found 9 real errors on `a0ec075e…` (R28-TRI-01 … -09: one Major, an AGENTS §2.5 labelling violation in firmware rule 3, and 8 Minor; none on the board), and its fix pass (D-R28-01 … -04 and two audit lanes) left the board unchanged. Round 29 found 5 real errors on `a0ec075e…` (R29-TRI-01 … -05: one Major, AGENTS §2.5 again, with figures resting on inferred inputs still marked Calculation only or unlabelled and four round 28 status lines claiming they were all labelled, and 4 Minor; none on the board), and its fix pass (D-R29-01 … -02 and the docs lane) left the board unchanged. Round 30 found 2 Minor real errors on `a0ec075e…` (R30-TRI-01 … -02, text only, none on the board: the ARM1_SENSE-to-CAM_IO_3V3 bridge figures left out the D120 / R131 cold pull-up, and round 29's "LS120 ≤ 70 °C" chamber-test pass clause could not pass), and its fix pass (docs lane) left the board unchanged. Round 33's ten lenses (commit `feed21f`) gave 1 Minor real error after triage (R33-TRI-01, text only, none on the board), which its docs fix pass corrected. Round 34's ten lenses reviewed `a0ec075e…` at commit `c2a11fd` and found 0 real errors; the triage found and kept 1 Minor real error itself (R34-TRI-01, text only, none on the board), and its fix pass (docs lane) left the board unchanged. Round 34 had real errors, so rounds 35 and 36 review `a0ec075e…` under the owner's strict rule (only real errors count; iteration stops after two consecutive rounds with zero verified real errors).

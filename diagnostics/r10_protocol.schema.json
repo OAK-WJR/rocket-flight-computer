@@ -1,0 +1,620 @@
+{
+  "$defs": {
+    "initial": {
+      "additionalProperties": false,
+      "properties": {
+        "board_sha256": {
+          "const": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c"
+        },
+        "firmware_verified": {
+          "const": false
+        },
+        "installed_port_map": {
+          "additionalProperties": false,
+          "properties": {
+            "AUX": {
+              "enum": [
+                "J410",
+                "J420",
+                "J440"
+              ]
+            },
+            "CAMERA": {
+              "const": "J9"
+            },
+            "GPS": {
+              "enum": [
+                "J410",
+                "J420",
+                "J440"
+              ]
+            },
+            "RADIO": {
+              "enum": [
+                "J410",
+                "J420",
+                "J440"
+              ]
+            }
+          },
+          "required": [
+            "GPS",
+            "RADIO",
+            "AUX",
+            "CAMERA"
+          ],
+          "type": "object"
+        },
+        "observations": {
+          "additionalProperties": false,
+          "properties": {
+            "harness_continuity": {
+              "additionalProperties": false,
+              "properties": {
+                "AUX": {
+                  "$ref": "#/$defs/wiring"
+                },
+                "CAMERA": {
+                  "$ref": "#/$defs/wiring"
+                },
+                "GPS": {
+                  "$ref": "#/$defs/wiring"
+                },
+                "RADIO": {
+                  "$ref": "#/$defs/wiring"
+                }
+              },
+              "required": [
+                "GPS",
+                "RADIO",
+                "AUX",
+                "CAMERA"
+              ],
+              "type": "object"
+            },
+            "logic_supply": {
+              "$ref": "#/$defs/measurement"
+            },
+            "module_supplies": {
+              "additionalProperties": false,
+              "properties": {
+                "AUX": {
+                  "$ref": "#/$defs/module_measurement"
+                },
+                "CAMERA": {
+                  "$ref": "#/$defs/module_measurement"
+                },
+                "GPS": {
+                  "$ref": "#/$defs/module_measurement"
+                },
+                "RADIO": {
+                  "$ref": "#/$defs/module_measurement"
+                }
+              },
+              "required": [
+                "GPS",
+                "RADIO",
+                "AUX",
+                "CAMERA"
+              ],
+              "type": "object"
+            },
+            "serial": {
+              "additionalProperties": false,
+              "properties": {
+                "reason": {
+                  "const": "NO_BOUND_R10_FIRMWARE"
+                },
+                "status": {
+                  "const": "NOT_AVAILABLE"
+                }
+              },
+              "required": [
+                "status",
+                "reason"
+              ],
+              "type": "object"
+            }
+          },
+          "required": [
+            "logic_supply",
+            "module_supplies",
+            "harness_continuity",
+            "serial"
+          ],
+          "type": "object"
+        },
+        "origin": {
+          "const": "SYNTHETIC_FIXTURE"
+        },
+        "physical_qualified": {
+          "const": false
+        },
+        "power_context": {
+          "additionalProperties": false,
+          "properties": {
+            "attached_source": {
+              "enum": [
+                "PACK",
+                "USB"
+              ]
+            },
+            "camera_control": {
+              "const": "hypothetical_static_state_not_a_firmware_claim"
+            },
+            "external_self_power": {
+              "const": false
+            },
+            "recovery_loads_connected": {
+              "const": false
+            },
+            "steady_observation_epoch": {
+              "const": "steady_1"
+            }
+          },
+          "required": [
+            "attached_source",
+            "steady_observation_epoch",
+            "external_self_power",
+            "recovery_loads_connected",
+            "camera_control"
+          ],
+          "type": "object"
+        },
+        "probe_budget": {
+          "const": 6
+        },
+        "profile": {
+          "const": "M3-ASSY-R10"
+        },
+        "protocol": {
+          "const": "r10-offline-diagnostic/v1"
+        },
+        "type": {
+          "const": "initial"
+        }
+      },
+      "required": [
+        "type",
+        "protocol",
+        "profile",
+        "board_sha256",
+        "origin",
+        "installed_port_map",
+        "power_context",
+        "observations",
+        "probe_budget",
+        "physical_qualified",
+        "firmware_verified"
+      ],
+      "type": "object"
+    },
+    "measurement": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "epoch": {
+              "const": "steady_1"
+            },
+            "ground": {
+              "$ref": "#/$defs/point"
+            },
+            "interval": {
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            "origin": {
+              "const": "SYNTHETIC_FIXTURE"
+            },
+            "point": {
+              "$ref": "#/$defs/point"
+            },
+            "status": {
+              "const": "AVAILABLE"
+            },
+            "type": {
+              "const": "measurement"
+            },
+            "uncertainty_abs_v": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "unit": {
+              "const": "V"
+            }
+          },
+          "required": [
+            "type",
+            "point",
+            "ground",
+            "status",
+            "unit",
+            "interval",
+            "uncertainty_abs_v",
+            "origin",
+            "epoch"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "epoch": {
+              "const": "steady_1"
+            },
+            "ground": {
+              "$ref": "#/$defs/point"
+            },
+            "origin": {
+              "const": "SYNTHETIC_FIXTURE"
+            },
+            "point": {
+              "$ref": "#/$defs/point"
+            },
+            "status": {
+              "const": "NOT_AVAILABLE"
+            },
+            "type": {
+              "const": "measurement"
+            }
+          },
+          "required": [
+            "type",
+            "point",
+            "ground",
+            "status",
+            "origin",
+            "epoch"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "module_measurement": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "epoch": {
+              "const": "steady_1"
+            },
+            "installed_port": {
+              "enum": [
+                "J410",
+                "J420",
+                "J440",
+                "J9"
+              ]
+            },
+            "interval": {
+              "items": {
+                "type": "number"
+              },
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            "location_kind": {
+              "const": "FIXTURE_MODULE_TERMINALS"
+            },
+            "negative": {
+              "const": "GND"
+            },
+            "origin": {
+              "const": "SYNTHETIC_FIXTURE"
+            },
+            "positive": {
+              "const": "VPLUS"
+            },
+            "status": {
+              "const": "AVAILABLE"
+            },
+            "uncertainty_abs_v": {
+              "exclusiveMinimum": 0,
+              "type": "number"
+            },
+            "unit": {
+              "const": "V"
+            }
+          },
+          "required": [
+            "location_kind",
+            "positive",
+            "negative",
+            "installed_port",
+            "status",
+            "unit",
+            "interval",
+            "uncertainty_abs_v",
+            "origin",
+            "epoch"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "epoch": {
+              "const": "steady_1"
+            },
+            "installed_port": {
+              "enum": [
+                "J410",
+                "J420",
+                "J440",
+                "J9"
+              ]
+            },
+            "location_kind": {
+              "const": "FIXTURE_MODULE_TERMINALS"
+            },
+            "negative": {
+              "const": "GND"
+            },
+            "origin": {
+              "const": "SYNTHETIC_FIXTURE"
+            },
+            "positive": {
+              "const": "VPLUS"
+            },
+            "status": {
+              "const": "NOT_AVAILABLE"
+            }
+          },
+          "required": [
+            "location_kind",
+            "positive",
+            "negative",
+            "installed_port",
+            "status",
+            "origin",
+            "epoch"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "point": {
+      "additionalProperties": false,
+      "properties": {
+        "frame": {
+          "type": "string"
+        },
+        "net": {
+          "type": "string"
+        },
+        "pad": {
+          "type": "string"
+        },
+        "point_id": {
+          "type": "string"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "side": {
+          "enum": [
+            "F.Cu",
+            "B.Cu"
+          ]
+        },
+        "xy_mm": {
+          "items": {
+            "type": "number"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        }
+      },
+      "required": [
+        "point_id",
+        "reference",
+        "pad",
+        "net",
+        "side",
+        "xy_mm",
+        "frame"
+      ],
+      "type": "object"
+    },
+    "probe": {
+      "additionalProperties": false,
+      "properties": {
+        "ground": {
+          "$ref": "#/$defs/point"
+        },
+        "point": {
+          "$ref": "#/$defs/point"
+        },
+        "type": {
+          "const": "probe"
+        }
+      },
+      "required": [
+        "type",
+        "point",
+        "ground"
+      ],
+      "type": "object"
+    },
+    "public_record": {
+      "additionalProperties": false,
+      "properties": {
+        "initial": {
+          "$ref": "#/$defs/initial"
+        },
+        "probe_responses": {
+          "additionalProperties": {
+            "$ref": "#/$defs/measurement"
+          },
+          "type": "object"
+        }
+      },
+      "required": [
+        "initial",
+        "probe_responses"
+      ],
+      "type": "object"
+    },
+    "result": {
+      "additionalProperties": false,
+      "properties": {
+        "candidate_causes": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array",
+          "uniqueItems": true
+        },
+        "evidence": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "cause": {
+                "type": "string"
+              },
+              "observations": {
+                "items": {
+                  "pattern": "^(net:.+|module:(GPS|RADIO|AUX|CAMERA):supply|wiring:(GPS|RADIO|AUX|CAMERA))$",
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array",
+                "uniqueItems": true
+              }
+            },
+            "required": [
+              "cause",
+              "observations"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "firmware_verified": {
+          "const": false
+        },
+        "next_step": {
+          "additionalProperties": false,
+          "properties": {
+            "action": {
+              "enum": [
+                "INSPECT_UNPOWERED_BRANCH",
+                "INSPECT_UNPOWERED_MODULE_HARNESS",
+                "VERIFY_UNPOWERED_UART_ORDER",
+                "REQUEST_MISSING_MEASUREMENTS",
+                "REVIEW_UNVERIFIED_FIRMWARE"
+              ]
+            },
+            "target_cause": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "target_points": {
+              "items": {
+                "$ref": "#/$defs/point"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "action",
+            "target_cause"
+          ],
+          "type": "object"
+        },
+        "physical_qualified": {
+          "const": false
+        },
+        "status": {
+          "enum": [
+            "LOCALIZED",
+            "INSUFFICIENT_EVIDENCE",
+            "NO_DEMONSTRATED_FAULT_WITHIN_OBSERVATIONS"
+          ]
+        },
+        "type": {
+          "const": "result"
+        }
+      },
+      "required": [
+        "type",
+        "status",
+        "candidate_causes",
+        "evidence",
+        "next_step",
+        "physical_qualified",
+        "firmware_verified"
+      ],
+      "type": "object"
+    },
+    "wiring": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "method": {
+              "const": "prior_unpowered_continuity_record_no_subsequent_rewire"
+            },
+            "module_RX_to": {
+              "$ref": "#/$defs/point"
+            },
+            "module_TX_to": {
+              "$ref": "#/$defs/point"
+            },
+            "origin": {
+              "const": "SYNTHETIC_FIXTURE"
+            },
+            "status": {
+              "const": "AVAILABLE"
+            }
+          },
+          "required": [
+            "status",
+            "origin",
+            "method",
+            "module_TX_to",
+            "module_RX_to"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "origin": {
+              "const": "SYNTHETIC_FIXTURE"
+            },
+            "status": {
+              "const": "NOT_AVAILABLE"
+            }
+          },
+          "required": [
+            "status",
+            "origin"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  },
+  "$id": "urn:r10:offline-diagnostic:v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Top-level schema validates candidate messages only. Validate corpus records using $defs.public_record. Semantic identity, budget and transcript-support checks are also mandatory. No case IDs or hidden labels go to candidates.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/probe"
+    },
+    {
+      "$ref": "#/$defs/result"
+    }
+  ],
+  "title": "R10 candidate message and public corpus record schema"
+}

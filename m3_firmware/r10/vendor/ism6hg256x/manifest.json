@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/STMicroelectronics/ism6hg256x-pid",
+  "commit": "842c809183352afbb6995729bc19f951bfee3db7",
+  "files": {
+    "ism6hg256x_reg.c": "0d65ae15db47ed63d57ab0d2b7b945fd033dc4ff37abd3c09def5998b87354c1",
+    "LICENSE": "b54f36a43cf9b8f6292c8f0f3b4c267ebd59859587e0152c94305bc81dda68bc",
+    "ism6hg256x_reg.h": "034002cf8af51c25a019f49709f3bac8fdba4a58f9e4c7ebc15bc5131675e75e"
+  },
+  "license": "BSD-3-Clause",
+  "device": "ISM6HG256X",
+  "datasheet": "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf",
+  "datasheet_read": "DS15034 Rev1, pages25-26 (SPI),66 (ID),68 (CTRL3),93 (high-g)",
+  "datasheet_manufacturer_copy": "https://datasheet.lcsc.com/datasheet/pdf/6d3b0ec6f545ce5dc4873ec229030cd4.pdf?productCode=C51931514",
+  "datasheet_copy_sha256": "c867695b3b3a96cdb768a281889f24faf7f70ecf40dd5636bb130ed097415c50",
+  "application_note": "https://www.st.com/resource/en/application_note/DM01200980.pdf",
+  "status": "Official pinned source linked into the R10 bench sensor diagnostic image; no hardware tests"
+}

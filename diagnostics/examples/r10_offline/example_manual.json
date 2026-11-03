@@ -1,0 +1,123 @@
+{
+  "schema": "r10-manual-offline/v1",
+  "profile": "M3-ASSY-R10",
+  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "origin": "MANUAL_OFFLINE",
+  "assembly_id": "EXAMPLE-ONLY-NO-PHYSICAL-CLAIM",
+  "session_id": "manual-example-1",
+  "epoch": "steady-a",
+  "observed_window": {
+    "start": "2026-01-01T12:00:00Z",
+    "end": "2026-01-01T12:01:00Z"
+  },
+  "installed_port_map": {
+    "GPS": "J410",
+    "RADIO": "J420",
+    "AUX": "J440",
+    "CAMERA": "J9"
+  },
+  "power_context": {
+    "attached_source": "PACK",
+    "selected_source": "PACK",
+    "steady": true,
+    "configuration_id": "unchanged-a",
+    "external_self_power": false,
+    "recovery_loads_connected": false,
+    "source_note": "Illustrative operator-declared source window, not measured",
+    "source_reference_v": [
+      6.0,
+      8.4
+    ],
+    "battery_path_expected": true,
+    "ground_reference_verified": true,
+    "backfeed_excluded": true
+  },
+  "measurements": [
+    {
+      "type": "measurement",
+      "point": {
+        "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+        "net": "3V3",
+        "pad": "1",
+        "point_id": "C9.1",
+        "reference": "C9",
+        "side": "B.Cu",
+        "xy_mm": [
+          25.4,
+          80.24
+        ]
+      },
+      "ground": {
+        "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+        "net": "GND",
+        "pad": "1",
+        "point_id": "TP88.1",
+        "reference": "TP88",
+        "side": "F.Cu",
+        "xy_mm": [
+          35.5,
+          86.4
+        ]
+      },
+      "status": "AVAILABLE",
+      "origin": "MANUAL_OFFLINE",
+      "epoch": "steady-a",
+      "unit": "V",
+      "interval": [
+        3.29,
+        3.3099999999999996
+      ],
+      "uncertainty_abs_v": 0.01,
+      "assembly_id": "EXAMPLE-ONLY-NO-PHYSICAL-CLAIM",
+      "session_id": "manual-example-1",
+      "configuration_id": "unchanged-a",
+      "measured_at": "2026-01-01T12:00:30Z",
+      "instrument": "EXAMPLE instrument, no physical capture",
+      "uncertainty_basis": "Illustrative absolute enclosure +/-0.01 V; no confidence level asserted"
+    },
+    {
+      "type": "measurement",
+      "point": {
+        "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+        "net": "3V3A",
+        "pad": "2",
+        "point_id": "R164.2",
+        "reference": "R164",
+        "side": "B.Cu",
+        "xy_mm": [
+          16.5,
+          55.25
+        ]
+      },
+      "ground": {
+        "frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
+        "net": "GND",
+        "pad": "1",
+        "point_id": "TP74.1",
+        "reference": "TP74",
+        "side": "B.Cu",
+        "xy_mm": [
+          42.5,
+          58.0
+        ]
+      },
+      "status": "AVAILABLE",
+      "origin": "MANUAL_OFFLINE",
+      "epoch": "steady-a",
+      "unit": "V",
+      "interval": [
+        -0.01,
+        0.01
+      ],
+      "uncertainty_abs_v": 0.01,
+      "assembly_id": "EXAMPLE-ONLY-NO-PHYSICAL-CLAIM",
+      "session_id": "manual-example-1",
+      "configuration_id": "unchanged-a",
+      "measured_at": "2026-01-01T12:00:30Z",
+      "instrument": "EXAMPLE instrument, no physical capture",
+      "uncertainty_basis": "Illustrative absolute enclosure +/-0.01 V; no confidence level asserted"
+    }
+  ],
+  "module_supplies": {},
+  "harness_continuity": {}
+}

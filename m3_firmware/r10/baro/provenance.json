@@ -1,0 +1,25 @@
+{
+  "part": "MS561101BA03-50",
+  "lcsc": "C15639",
+  "primary_datasheet": "https://www.mouser.com/datasheet/2/418/6/ENG_DS_MS5611_01BA03_B3-1134567.pdf",
+  "manufacturer_pdf_copy": "https://www.amsys-sensor.com/downloads/data/MS5611-01BA03-AMSYS-datasheet.pdf",
+  "manufacturer_pdf_copy_sha256": "1fac201505813c97e0b9dff4d562a416b1ab67bb203dab138559f5e6234700b7",
+  "datasheet_version": "06/2017 B3",
+  "pages_read": [
+    3,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "conversion_table_page3_visually_checked": true,
+  "osr4096_conversion_max_ms": 9.04,
+  "reset_prom_reload_figure_ms": 2.8,
+  "crc_reference": "https://www.amsys-sensor.eu/sheets/amsys.fr.an520_e.pdf",
+  "crc_version": "AN520_004, p12",
+  "numeric_implementation": "Existing pure portable functions in m3_firmware/src/checks.c, unchanged; not legacy GPIO binding",
+  "barometer_hardware_tested": false
+}

@@ -12,6 +12,7 @@ _autosave-*
 # Build products and toolchains (rebuild locally)
 m3_firmware/toolchain/
 m3_firmware/drafts/
+m3_firmware/r10/build_local*/
 *.o
 *.d
 *.map
