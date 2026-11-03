@@ -238,6 +238,44 @@ class R11Rules(unittest.TestCase):
         stale = [i for i in failing(s.run({'K-reference'}), 'K-reference') if 'stale critical_reference' in i]
         self.assertTrue(stale)                                           # listed names that are no net still fail
 
+    def test_k_reference_edge_on_a_foreign_antipad_boundary(self):
+        """D-R11-62: a critical F.Cu edge exactly on the In1 GND antipad of another net's via is over the plane (KiCad's
+        polygon antipad lies outside the true circle by up to the arc error); 0.02 mm inside the void it still fails."""
+        def build(into):
+            s = Six()
+            for layer in (pcbnew.In1_Cu, pcbnew.In4_Cu):
+                s.zone('GND', ((0, 0), (46, 0), (46, 50), (0, 50)), layer)
+            s.via(20, 20, 'SIGNAL', d=0.4, drill=0.2)
+            s.fill()
+            fill = pcbnew.SHAPE_POLY_SET()
+            for z in s.board.Zones():
+                if z.IsOnLayer(pcbnew.In1_Cu):
+                    fill.BooleanAdd(z.GetFilledPolysList(pcbnew.In1_Cu))
+            lo, hi = 0.0, 1.0                     # the antipad's edge straight north of the via, to 0.1 um
+            while hi - lo > 1e-4:
+                mid = (lo + hi) / 2
+                if fill.Contains(Six.P(20, 20 - mid), -1, 0, True):
+                    hi = mid
+                else:
+                    lo = mid
+            y = 20 - (hi - into) - 0.1            # the track's south edge `into` mm inside the void (width 0.2)
+            s.track((10, y), (30, y), 'USB_DP', pcbnew.F_Cu)
+            rep = s.run({'K-reference'})
+            return [i for i in failing(rep, 'K-reference') if 'stale critical_reference' not in i], rep, hi
+        self.assertEqual(build(0.0)[0], [])                     # on the boundary
+        issues, rep, _ = build(0.003)                           # 3 um inside: KiCad's arc error, over the plane
+        self.assertEqual(issues, [])
+        self.assertGreater(rep['rules']['K-reference']['evidence']['on_boundary'], 0)   # read by the tolerance only
+        self.assertTrue(build(0.02)[0])                         # 0.02 mm into the void: unreferenced
+        self.assertTrue(r11.ref_inside(self._square(), 1.004, 0.5) and not r11.ref_inside(self._square(), 1.006, 0.5))
+
+    @staticmethod
+    def _square():
+        ps = pcbnew.SHAPE_POLY_SET(); ps.NewOutline()
+        for x, y in ((0, 0), (1, 0), (1, 1), (0, 1)):
+            ps.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        return ps
+
     def test_k_ports_use_j9s_r11_uart_pins(self):
         self.assertIn(('J9', '5', 'D401.1', 'R100'), r11.PORT_CLAMPS_R11)
         self.assertIn(('J9', '6', 'D400.1', 'R101'), r11.PORT_CLAMPS_R11)

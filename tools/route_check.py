@@ -25,7 +25,9 @@ inside pads for review without blocking R10. Partial overlaps, crossings and eve
 Audit 2 item 7 leaves noncritical LEFTOVERS records informational; critical exceptions retain measured/redraw checks.
 r11 (M3-ASSY-R11, D-R11-08; the R11 gate in tools/check.sh): every r10 rule on a six-layer board (F / In1 GND / In2
 power / In3 signal / In4 GND / B, D-R11-03). It reads R10's class list (R10_CLASSES, from critical_reference's one
-definition) and AUD-2's slow-return list unchanged; ALLOWLIST, LEFTOVERS and ROUTE_FIGURES start empty, and
+definition) and AUD-2's slow-return list unchanged; ALLOWLIST is ALLOWLIST_R11 (the forced findings, each with its
+measured reason, D-R11-61), ROUTE_FIGURES is ROUTE_FIGURES_R11 and LEFTOVERS starts empty; an allowlisted
+critical_via_no_gnd is re-measured by tools/r11_gnd_spots.gnd_spots (the six-layer R11 rules), not R7's search, and
 PARALLEL_VIAS holds only the pairs the R11 gate data list (R11_DATA key 'parallel_vias', O-C2-5; schema at
 load_parallel_pairs; a missing key or file is an empty list; --gate-data names another file).
 Every layer-dependent test walks the board's own copper stack (cu_layers: F, In1..In4, B on a six-layer board; the
@@ -373,6 +375,25 @@ PARALLEL_VIAS = []
 # the first barrel, (x, y) of the second, reason); PARALLEL_VIAS gets each pair's second barrel (net, (x, y), reason),
 # which the loop search, the via count and the needless-hop test leave out exactly as for r10.
 PARALLEL_PAIRS = []
+# Profile r11 (D-R11-61, gate lane, stageC4.md section 4): the forced findings of the R11 board, each re-measured by the
+# gate lane on board 4e552ef4... (zone-filled scratch copy). Stale entries fail (evaluate), the extra_vias entry fails
+# when the route's length or via count differs from ROUTE_FIGURES_R11 (measured_check), and the critical_via_no_gnd
+# entry fails when tools/r11_gnd_spots finds a legal GND via spot within GND_REACH (nognd_audit).
+ALLOWLIST_R11 = [
+    ('critical_via_no_gnd', 'SD_MOSI', 'via', (29.8, 17.05),
+     'D-R11-61: the B.Cu-to-F.Cu change where R461.1 (pull-up) and the F.Cu run east to J430 meet. r11_gnd_spots on a '
+     '0.025 mm grid within 1.5 mm (11,289 points; diameter / drill 0.45 / 0.25, 0.4 / 0.2 and the DRU floor 0.3 / 0.15, '
+     '0.25 / 0.15 mm) finds no legal GND via site: every point is blocked by other nets\' F.Cu copper (R460-R464 and '
+     'C400 / C404 pads, the SD_MOSI / SD_CS runs at y 16.75 / 17.45) or B.Cu copper (J430.10, SD_SCK / SD_CS runs). '
+     'Nearest GND via 2.242 mm. The junction cannot move: a 3-via alternative tree drawn by the gate lane put it at '
+     '(29.6, 17.0) and found no GND site there either (2.343 mm)'),
+    ('extra_vias', 'CAM_RX_BUFFER', 'net', (31.6, 1.57),
+     'D-R11-61: U12.1 and R100.2 are both B.Cu pads (need 0, allowed 2). A grid router (0.05 mm, every other net fixed, '
+     'clearances relaxed by 0.035 mm, 0.4 / 0.2 and 0.25 / 0.15 mm vias, F / In3 / B) finds 2 vias only with an In3 run '
+     'that crosses from the 3V3 into the RAW_PROTECTED In2 region, which K-region forbids; with each In3 run held over '
+     'one In2 plane net its minimum is 3 vias, still above the 2 allowed, so the finding is forced'),
+]
+ROUTE_FIGURES_R11 = {'CAM_RX_BUFFER': (19.2, 4)}      # D-R11-61: route_check on board 4e552ef4..., zone-filled
 R11_DATA = Path(__file__).resolve().parents[1] / 'm3_design/r11/design/r11_gate_data.json'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
@@ -433,8 +454,11 @@ def set_profile(name, gate_data=None):
     elif name == 'r8':
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = _R8_LISTS
         KEEPOUT_BASELINE = True
-    elif name in ('r9', 'r10', 'r11'):                                    # r9_plan.md section 2: no exception of any kind
+    elif name in ('r9', 'r10'):                                           # r9_plan.md section 2: no exception of any kind
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = [], [], {}
+        KEEPOUT_BASELINE = True
+    elif name == 'r11':                                                   # D-R11-61: the forced findings only
+        ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = list(ALLOWLIST_R11), [], dict(ROUTE_FIGURES_R11)
         KEEPOUT_BASELINE = True
     else:
         raise ValueError(f'unknown profile {name!r}; one of {PROFILES}')
@@ -2541,6 +2565,15 @@ def nognd_audit(board, allowed, search=None):
     """For every allowed critical_via_no_gnd instance, the project's GND via spot search on this board (default
     m3_design/r7_hygiene.gnd_spots, the search gnd_vias' fine pass runs): [(instance, (spot, diameter, distance))] for
     each one where a legal spot within GND_REACH exists, i.e. whose allowlist reason no longer holds."""
+    if search is None and PROFILE == 'r11':        # D-R11-61: the six-layer R11 rules (tools/r11_gnd_spots.py)
+        here = str(Path(__file__).resolve().parent)
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        import r11_gnd_spots                        # noqa: E402
+
+        def search(b, q):
+            return r11_gnd_spots.gnd_spots(b, q, GND_REACH, first=True,
+                                           sizes=r11_gnd_spots.SIZES + r11_gnd_spots.FLOOR_SIZES)
     if search is None:
         root = Path(__file__).resolve().parents[1]
         for d in (root / 'm3_design', root / 'tools'):

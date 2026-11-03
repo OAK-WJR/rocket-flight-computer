@@ -46,7 +46,8 @@ Rules (R10's id where it is R10's rule):
              R11 unless R11_DATA adds one), no pour debris (check_r10.pour_debris)
   K-inner    In1 and In4 GND only; In2 power and GND only; In3 signal routing (no rule on its nets)
   K-reference critical signal samples: F.Cu over In1 GND, B.Cu over In4 GND, In3 over In4 GND (D-R11-03); own
-             antipads and S-8 voids excepted; no stale critical_reference name
+             antipads and S-8 voids excepted; a sample within REF_EDGE_TOL (0.005 mm, KiCad's arc approximation error)
+             of the reference fill counts as over it (D-R11-62); no stale critical_reference name
   K-region   every In3 run of a return-required critical net lies over exactly one In2 plane net and over In2 copper;
              each connected In3 chain sees one In2 plane net (R10's B.Cu-over-In2 rule moved to In3: In3 sits 0.1 mm
              under In2 and 0.535 mm over In4 in the LEVIA-H7 stack, r11_plan section 2, so In2's rail regions are its
@@ -568,7 +569,23 @@ def reference_map(board):
             lid(board, SIGNAL_INNER): (lid(board, 'In4.Cu'), ('GND',))}
 
 
-def k_reference(ctx):
+# D-R11-62 (gate lane): a copper edge drawn exactly at the 0.25 mm hole clearance from another net's via lies exactly on
+# the GND plane's antipad boundary, which KiCad also draws at that hole clearance; the fill approximates the antipad
+# circle by a polygon whose chords lie outside the circle by up to the board's arc error (m_MaxError, 0.005 mm on R11),
+# so an exact point-in-polygon test reads such an edge sample as off the plane by up to 0.005 mm. A sample within
+# REF_EDGE_TOL of the fill is over it. Measured on board 4e552ef4...: 248 samples, all 0.250-0.252 mm from a foreign via
+# hole wall and at most 0.0005 mm inside the void. A sample further inside a void than the tolerance still fails.
+REF_EDGE_TOL = 0.005             # mm: KiCad's default arc approximation error (the R11 board's m_MaxError)
+
+
+def ref_inside(polys, x, y, tol=REF_EDGE_TOL):
+    """True when (x, y) mm lies on the fill or within `tol` mm of it. SHAPE_POLY_SET.Collide measures to the outlines
+    and to the holes (Contains' accuracy argument does not widen a hole's edge, measured on KiCad 10)."""
+    import pcbnew
+    return polys.Collide(pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y)), pcbnew.FromMM(tol))
+
+
+def k_reference(ctx, tol=REF_EDGE_TOL):
     import critical_reference as cr
     import pcbnew
     b = ctx.board
@@ -578,7 +595,8 @@ def k_reference(ctx):
     samples = cr.samples(b, nets, refs)
     fill = cr.fills(b, refs)
     empty = pcbnew.SHAPE_POLY_SET()
-    missing = [s for s in samples if not cr.inside(fill.get(s[1], empty), s[2], s[3])]
+    strict = [s for s in samples if not cr.inside(fill.get(s[1], empty), s[2], s[3])]
+    missing = [s for s in strict if not ref_inside(fill.get(s[1], empty), s[2], s[3], tol)]
     own, voids = r10.own_antipads(b), r10.own_barrel_voids(b)
     loose = [(s[0], b.GetLayerName(s[1]), s[2], s[3]) for s in missing
              if not r10.in_own_antipad(own, s[0], s[2], s[3]) and not r10.in_own_antipad(voids, s[0], s[2], s[3])]
@@ -589,7 +607,9 @@ def k_reference(ctx):
     stale = cr.r10_stale_names({str(n) for n in b.GetNetsByName().keys()})
     issues += [f'stale critical_reference.{lst} entry {name!r}: no such net on the board' for lst, name in stale]
     return [f'K-reference: {i}' for i in issues], dict(samples=len(samples), unreferenced=len(missing),
-                                                       loose=len(loose))
+                                                       loose=len(loose), edge_tolerance_mm=tol,
+                                                       on_boundary=len(strict) - len(missing),
+                                                       board_max_error_mm=pcbnew.ToMM(b.GetDesignSettings().m_MaxError))
 
 
 def region_issues(board, track_layer=SIGNAL_INNER, plane_layer=POWER_LAYER):

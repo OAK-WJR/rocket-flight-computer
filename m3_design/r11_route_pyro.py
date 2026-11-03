@@ -29,7 +29,8 @@ FIRE, BAT, SIG, PWR = 0.5, 1.0, 0.15, 0.3
 SV, PV, BV = (0.4, 0.2), (0.45, 0.25), (0.6, 0.3)
 
 # ACT_GATE barrels: Q120's island (north line) and Q121's island; R121 sits on B.Cu at the trunk's end. ACT_DRV's barrel
-VG_X, VG_B, VD = (14.6, 15.9), (13.95, 21.0), (15.4, 29.7)
+# D-R11-60: ACT_DRV's barrel at (15.55, 29.95) (was (15.4, 29.7)), so its S-8 void clears HSE_OUT at C26.1 and NRST
+VG_X, VG_B, VD = (14.6, 15.9), (13.95, 21.0), (15.55, 29.95)
 # D-R11-29: each FET island's second ACT_GATE barrel, joined to the first on F.Cu and B.Cu (R10 D-R24-02)
 VG_X2, VG_B2 = (14.6, 15.1), (13.95, 21.65)
 BARRELS_GND = (VG_X, VG_B, VD, VG_X2, VG_B2)
@@ -128,12 +129,13 @@ def gates(d):
     # Q122: PC1 lane (F2) to R122, ACT_EN to Q122's gate and its pull-down R123 / 10 nF C123, ACT_DRV to R121
     t('ACT_EN_MCU', 'F', 0.1, [p('U1', 'F2', net='ACT_EN_MCU'), (20.8, 28.0), p('R122', '1', net='ACT_EN_MCU')])
     t('ACT_EN', 'F', SIG, [p('R122', '2', net='ACT_EN'), (17.57, 28.4)])
-    t('ACT_EN', 'F', SIG, [(17.57, 28.4), (17.57, 29.85), (17.87, 30.15), p('Q122', '1', net='ACT_EN')])
+    t('ACT_EN', 'F', SIG, [(17.57, 28.4), (18.5, 29.33), p('Q122', '1', net='ACT_EN')])      # D-R11-60: NRST's via
     t('ACT_EN', 'F', SIG, [(17.57, 28.4), (14.27, 28.4), (13.87, 28.8), p('R123', '1', net='ACT_EN')])
     t('ACT_EN', 'F', SIG, [p('R123', '1'), (13.87, 30.0)])
-    t('ACT_DRV', 'F', PWR, [p('Q122', '3', net='ACT_DRV'), (16.6, 31.2), (15.85, 31.2), (15.4, 30.75), VD])
+    t('ACT_DRV', 'F', PWR, [p('Q122', '3', net='ACT_DRV'), (16.6, 31.2), (15.85, 31.2), (15.55, 30.9), VD])
     v('ACT_DRV', VD, SV)
-    t('ACT_DRV', 'B', PWR, [VD, (15.07, 30.03), p('R121', '2', net='ACT_DRV')])
+    # straight west into R121.2, 0.08 mm north of its centre (R164.1's 3V3 pad holds the barrel at y <= 29.975)
+    t('ACT_DRV', 'B', PWR, [VD, (14.4, 29.95)])
     t('GND', 'F', PWR, [p('Q122', '2', net='GND'), (16.6, 29.7), G_Q122B])
     v('GND', G_Q122B, PV)
     t('GND', 'F', PWR, [p('R123', '2', net='GND'), p('C123', '2', net='GND'), G_Q122])

@@ -123,6 +123,7 @@ deviations of the same form as D-R11-45 / -48.
 * O-C4-1 the three route_check allowlist requests (section 4): gate lane.
 * O-C4-2 K-reference (section 6): NRST / HSE_OUT over the ACT_DRV keep-out (design re-plan) and the plane antipad
   boundary samples (gate lane).
+  The first cause is closed by D-R11-60 (stageC5.md).
 * O-C4-3 the five single_open_exceptions (section 5) stay owner / gate deviations; each is a respin item if a site is
   found by a later placement change.
 * O-C4-4 stage D (silkscreen, designators, title block, zone fill in `r11_post.py`), then `tools/check.sh` with the R11

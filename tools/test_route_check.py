@@ -1257,7 +1257,12 @@ class R11SixLayer(unittest.TestCase):
         return [d for d in rc.scan(s.board) if d['cat'] == cat]
 
     def test_profile_reads_r10_classes_and_starts_empty(self):
-        self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES, rc.PARALLEL_VIAS), ([], [], {}, []))
+        # D-R11-61: r11's allowlist is ALLOWLIST_R11 (forced findings only); leftovers and parallel vias start empty
+        self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES, rc.PARALLEL_VIAS),
+                         (rc.ALLOWLIST_R11, [], rc.ROUTE_FIGURES_R11, []))
+        rc.set_profile('r10')
+        self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES), ([], [], {}))   # R10's gate unchanged
+        rc.set_profile('r11', gate_data={})
         for net in ('USB_DP', 'GPS_TX_WIRE', 'PYRO1_GATE', 'BAT_SW_RETURN', 'SD_SCK', '3V3'):
             rc.set_profile('r10'); want = rc.net_class(net)
             rc.set_profile('r11')
@@ -1266,6 +1271,92 @@ class R11SixLayer(unittest.TestCase):
         self.assertEqual(rc.cu_layers(Six().board), rc.CU6)
         b4 = pcbnew.BOARD(); b4.SetCopperLayerCount(4)
         self.assertEqual(rc.cu_layers(b4), rc.CU4)                        # R7-R10 boards keep their four layers
+
+    # --- D-R11-61: the r11 allowlist, its measured figures and the six-layer GND via audit -----------------------
+    def test_r11_allowlist_entries_carry_measured_reasons(self):
+        self.assertEqual(sorted((e[0], e[1]) for e in rc.ALLOWLIST_R11),
+                         [('critical_via_no_gnd', 'SD_MOSI'), ('extra_vias', 'CAM_RX_BUFFER')])
+        for e in rc.ALLOWLIST_R11:
+            self.assertTrue(e[4].startswith('D-R11-61') and len(e[4]) > 100, e[:4])
+        for e in rc.ALLOWLIST_R11:                                  # every measured category quotes its figures
+            if e[0] in rc.MEASURED_CATS:
+                self.assertIn(e[1], rc.ROUTE_FIGURES_R11)
+
+    def test_r11_allowlist_matches_goes_stale_and_checks_figures(self):
+        d = dict(cat='extra_vias', net='CAM_RX_BUFFER', cls='uart', layer='net', x=31.6, y=1.57, len_mm=19.2, vias=4)
+        failures, allowed, stale = rc.evaluate([d])
+        self.assertEqual((failures, len(allowed)), ([], 1))
+        self.assertEqual([e[1] for e in stale], ['SD_MOSI'])        # the no-GND entry matched nothing: stale
+        self.assertEqual(rc.measured_check(allowed), [])
+        moved = dict(d, len_mm=18.0, vias=3)                         # a redrawn route: the entry is out of date
+        _, allowed, _ = rc.evaluate([moved])
+        self.assertEqual(len(rc.measured_check(allowed)), 1)
+        other = dict(d, x=31.0)                                      # 0.6 mm away: not this entry, so it fails
+        failures, allowed, _ = rc.evaluate([other])
+        self.assertEqual((len(failures), allowed), (1, []))
+        rc.set_profile('r10')                                        # the r10 profile allows nothing
+        failures, allowed, stale = rc.evaluate([d])
+        self.assertEqual((len(failures), allowed, stale), (1, [], []))
+
+    def test_r11_no_gnd_audit_uses_the_six_layer_search(self):
+        s = Six()
+        s.track((3, 20), (5, 20), 'SD_MOSI', width=0.1)
+        s.track((5, 20), (7, 20), 'SD_MOSI', pcbnew.B_Cu, width=0.1)
+        s.via(5, 20, 'SD_MOSI', d=0.4, drill=0.2)
+        d = dict(cat='critical_via_no_gnd', net='SD_MOSI', layer='via', x=5.0, y=20.0)
+        hit = rc.nognd_audit(s.board, [d])                           # open board: a legal spot, so the entry is stale
+        self.assertEqual(len(hit), 1)
+        self.assertLessEqual(hit[0][1][2], rc.GND_REACH)
+        # In3 copper of another net over the whole reach blocks every spot on the six-layer stack (R7's four-layer
+        # search would not see In3); a via keep-out on In4 alone does too
+        for blocker in ('in3', 'in4_keepout'):
+            with self.subTest(blocker=blocker):
+                t = Six()
+                t.track((3, 20), (5, 20), 'SD_MOSI', width=0.1)
+                t.track((5, 20), (7, 20), 'SD_MOSI', pcbnew.B_Cu, width=0.1)
+                t.via(5, 20, 'SD_MOSI', d=0.4, drill=0.2)
+                if blocker == 'in3':
+                    for k in range(-9, 10):
+                        t.track((2.5, 20 + 0.2 * k), (7.5, 20 + 0.2 * k), 'SD_CS', pcbnew.In3_Cu, width=0.1)
+                else:
+                    z = pcbnew.ZONE(t.board); z.SetIsRuleArea(True)
+                    ls = pcbnew.LSET(); ls.AddLayer(pcbnew.In4_Cu); z.SetLayerSet(ls)
+                    z.SetDoNotAllowVias(True); z.SetDoNotAllowTracks(False); z.SetDoNotAllowZoneFills(False)
+                    z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+                    o = z.Outline(); o.NewOutline()
+                    for x, y in ((2, 17), (8, 17), (8, 23), (2, 23)):
+                        o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+                    t.board.Add(z)
+                self.assertEqual(rc.nognd_audit(t.board, [d]), [])
+
+    def test_r11_gnd_spot_rules(self):
+        import r11_gnd_spots as g
+        s = Six()
+        s.track((10, 10), (20, 10), 'SD_CS', pcbnew.In3_Cu, width=0.1)
+        s.via(30, 10, 'SD_SCK', d=0.4, drill=0.2)
+        s.part('J1', 30, 30, [('1', 'BAT_IN', (0, 0), 'pth')])
+        s.part('R1', 15, 30, [('1', 'GND', (0, 0), 'smd')])
+        s.part('TP1', 15, 40, [('1', 'SD_MISO', (0, 0), 'smd')])
+        s.via(10, 40, 'ACT_DRV', d=0.6, drill=0.3)
+        sites = g.Sites(s.board, (0, 0, 46, 50))
+        # copper clearance 0.1 mm or hole clearance 0.25 mm, whichever is larger (0.4 / 0.2 via: hole 0.35 mm reach)
+        self.assertIsNotNone(sites.why((15, 10.39), 0.4, 0.2))
+        self.assertIsNone(sites.why((15, 10.41), 0.4, 0.2))
+        # hole to hole 0.2 mm from any via, whatever its net
+        self.assertIsNotNone(sites.why((30.0, 10.39), 0.25, 0.15))
+        self.assertIsNone(sites.why((30.0, 10.61), 0.4, 0.2))
+        # a PTH hole of another net: 0.55 mm to the via's inner ring (hole 0.5 + 0.55 + 0.2 = 1.25 mm)
+        self.assertIsNotNone(sites.why((31.24, 30), 0.4, 0.2))
+        self.assertIsNone(sites.why((31.26, 30), 0.4, 0.2))
+        # no hole in an SMD pad, even a GND one; a bare test pad keeps 1.0 mm
+        self.assertEqual(sites.why((15, 30.5), 0.4, 0.2), 'hole in an SMD pad')
+        self.assertIsNotNone(sites.why((15.3 + 0.2 + 0.95, 40), 0.4, 0.2))
+        self.assertIsNone(sites.why((15.3 + 0.2 + 1.05, 40), 0.4, 0.2))
+        # S-8: GND keeps 1.0 mm from an ACT_DRV barrel; the board edge 0.5 mm
+        self.assertTrue(sites.why((11.45, 40), 0.4, 0.2).startswith('S-8'))   # ring 0.3 + 1.0 + 0.2
+        self.assertIsNone(sites.why((11.55, 40), 0.4, 0.2))
+        self.assertEqual(sites.why((0.65, 25), 0.4, 0.2), 'board edge')
+        self.assertIsNone(sites.why((0.75, 25), 0.4, 0.2))
 
     def test_layer_change_to_in3_or_in4_needs_a_gnd_via(self):
         for layer in (pcbnew.In3_Cu, pcbnew.In4_Cu):

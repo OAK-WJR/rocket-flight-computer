@@ -568,3 +568,79 @@ keep-out of the ACT_DRV barrel (15.40, 29.70) on In4 (pre-existing routes, now v
 runs that sit exactly at the 0.25 mm hole clearance from a foreign via, where the plane's antipad ends (with a 0.2 mm
 inner-layer plane hole clearance in a scratch DRU copy those 245 vanish, Measured). Owner of the fix: the NRST / ACT_DRV
 re-plan (design) and the plane antipad rule (gate lane, `m3.kicad_dru` is pinned). stageC4.md section 6.
+
+## D-R11-60 ACT_DRV's barrel moves to (15.55, 29.95); NRST crosses ARM1_SENSE on B.Cu and drops to In3 south of it
+
+Clears D-R11-59's first K-reference cause (stageC5.md). The ACT_DRV barrel's S-8 keep-out (1.3 mm on In1..In4; GND
+counts for ACT_DRV, the P-FET gate drive) voided In4 under NRST's B.Cu run and under HSE_OUT's run into C26.1.
+* **Barrel** (15.40, 29.70) -> (15.55, 29.95), in `r11_route_pyro.py` (VD). The site is bounded by R164.1's 3V3 pad
+  on B.Cu (hole clearance 0.25 mm: y <= 29.975), C123.2's GND pad on F.Cu (x >= 15.33), the S-8 ring gap to the GND vias
+  G_Q122 (14.73, 31.2) and G_Q122B (17.0, 29.3) (centre distance >= 1.425 mm) and HSE_OUT's run into C26.1 (copper
+  edge >= 1.33 mm from the centre, outside the keep-out's circumscribed 16-gon, 1.325 mm). Calculation on the tables:
+  HSE_OUT's nearest edge point 1.46 mm, G_Q122 1.495 mm, G_Q122B 1.59 mm. F.Cu: Q122.3 - (16.6, 31.2) - (15.85, 31.2) -
+  (15.55, 30.9) - barrel; B.Cu: straight west to (14.4, 29.95), inside R121.2, 0.08 mm north of its centre (under
+  route_check's 0.1 mm pad_end_offcentre line; a run on the pad's centre line y 30.03 would put the barrel within the
+  hole clearance of R164.1).
+* **NRST** (`r11_escape.py`, core): B.Cu C24.1 - (18.85, 28.5) - one diagonal to a via (17.65, 29.70) south of
+  ARM1_SENSE's In3 diagonal (centre 0.46 mm from its centre line, hole edge to its copper 0.31 mm, Calculation), then In3
+  (17.65, 29.70) - (17.65, 31.20) - (18.45, 32.00) - (19.40, 32.00) - (20.00, 32.60) into the unchanged B.Cu leg. The west
+  loop through (14.75, 27.95) and In3 x 14.0 is gone; NRST's copper is 26.40 mm (was 35.98, Measured), still 4 vias; its
+  GND partner is the via (17.00, 29.30), 0.76 mm away. ARM1_SENSE is not changed.
+* **ACT_EN** (`r11_route_pyro.py`): the R122.2 - Q122.1 branch runs (17.57, 28.40) - (18.50, 29.33) - Q122.1 (it ran down
+  x 17.57 through the new NRST via site).
+**Why:** NRST is the only critical net with copper over the void and it has a shorter path that crosses ARM1_SENSE on
+B.Cu, where the other nets' B.Cu runs (y 29.32 / 30.0 / 30.4 / 30.8 / 31.7, west of the ball field) do not block it; the
+barrel move alone could not clear NRST (the old loop held it on three sides) and the NRST change alone left HSE_OUT's
+three samples (its edge 1.31 mm from the old barrel, inside the 16-gon). K-reference loses all 621 samples of this
+cause; the 248 left are the same samples as on the previous board (Measured, set comparison). S-8 for this barrel 1.069
+mm (In1 GND at G_Q122, Measured). route_check: no new instance, two NRST leftovers (tiny_jog, detour) gone.
+
+## D-R11-61 Gate: route_check r11 allowlist for two forced findings; SD_MOSI's via count is not forced
+
+Gate lane, `tools/` only (stageC4.md section 4, O-C4-1). Each design-lane claim was re-measured on board `4e552ef4…`
+(zone-filled scratch copy) before any entry was written.
+* **`critical_via_no_gnd SD_MOSI` (29.80, 17.05): holds, allowlisted.** The new `tools/r11_gnd_spots.py` (the six-layer
+  R11 rules: 0.1 mm copper clearance, 0.25 mm hole clearance, 0.2 mm hole to hole, 0.55 / 0.28 mm to other nets' PTH
+  holes, 0.5 mm edge, via rule areas on any layer, no hole in an SMD pad, S-8's 1.0 mm from ACT_GATE / ACT_DRV /
+  PYRO1_OUT barrels) finds no legal GND via on a 0.025 mm grid within 1.5 mm (11,289 points) for 0.45 / 0.25, 0.4 / 0.2,
+  0.3 / 0.15 or 0.25 / 0.15 mm vias: 9,995 points are blocked by other nets' F.Cu copper and 1,294 by B.Cu copper
+  (Measured). The same search accepts all 40 of the board's existing GND vias it was tried on when each is lifted.
+  Nearest GND via 2.242 mm.
+* **`extra_vias CAM_RX_BUFFER` (4 vias, need 0 + 2): holds, allowlisted** with ROUTE_FIGURES_R11 19.2 mm / 4 vias. A
+  scratch grid router (0.05 mm, every other net fixed, clearances relaxed by 0.035 mm so that a "none" is conservative,
+  layers F / In3 / B, In3 split by In2 plane net as K-region requires) gives a minimum of 3 vias with 0.4 / 0.2 and with
+  0.25 / 0.15 mm vias; with In3 free of K-region it gives 2, through an In3 run from the 3V3 region into RAW_PROTECTED
+  (Measured). So no route within the 2 allowed exists; a 3-via route may exist and would still be a finding.
+* **`extra_vias SD_MOSI` (4 vias, need 1 + 2): refuted, not allowlisted.** The claim "no route with fewer vias exists"
+  does not hold. Counter-example, drawn on a scratch copy with every other net unchanged: F.Cu U1.C8 (26.00, 26.00) -
+  (26.35, 25.65) - (26.35, 25.15) - (26.65, 24.85) - (26.85, 24.85) - (27.25, 24.45) - via (27.25, 23.15); B.Cu - (27.25,
+  20.85) - (28.50, 19.60) - (28.50, 18.10) - via (29.60, 17.00); F.Cu - (29.30, 16.70) - R461.1; In3 (29.60, 17.00) -
+  (31.90, 14.70) - via (36.35, 14.70) over PORT_5V3; B.Cu - (37.30, 14.70) - (38.505, 13.495) - J430.3; all 0.1 mm, vias
+  0.4 / 0.2 mm. Three vias; DRC 0 violations and 0 unconnected, K-region OK, K-reference unchanged, and route_check no
+  longer reports extra_vias SD_MOSI (Measured). Its cost: the F.Cu escape between U1's B8 / B9 and A9 / A10 balls needs
+  a 0.2 mm piece (`short_segment` and `tiny_jog`, both gated on a critical net) and its three vias have no GND site
+  within 1.5 mm (2.309 / 2.343 / 2.933 mm). With that escape blocked the router's minimum is 4 (Measured). So 4 vias is
+  the design lane's choice between findings, not a forced count; it stays a failing finding for the owner or the design
+  lane (an owner-accepted deviation, or a redraw of SD_MISO / SD_SCK's F.Cu escapes that opens the channel).
+* route_check: profile r11 now loads ALLOWLIST_R11 / ROUTE_FIGURES_R11 (R10's profile keeps empty lists); a stale entry
+  fails (evaluate), a changed CAM_RX_BUFFER route fails (measured_check), and nognd_audit runs `r11_gnd_spots` for r11
+  instead of R7's four-layer search. On the board: 1 failing (SD_MOSI extra_vias), 2 allowlisted, 0 stale.
+**Why:** AGENTS section 3 (every exception an allowlist entry with a measured reason); claims re-measured, not copied.
+
+## D-R11-62 Gate: K-reference reads a sample within 0.005 mm of the plane as over it; m3.kicad_dru unchanged
+
+The 248 K-reference samples left on `4e552ef4…` (the 245 of D-R11-59 plus NRST's, after D-R11-60) are all copper edges
+0.250-0.252 mm from another net's via hole wall, at most 0.0005 mm inside the In1 / In4 antipad (Measured). The edge
+and the antipad are both drawn at the 0.25 mm hole clearance; KiCad approximates the antipad circle by a polygon whose
+chords lie outside the circle by up to the board's arc error (`m_MaxError` 0.005 mm, Measured), so an exact
+point-in-polygon test reads a boundary edge as off the plane. That is a sampling error, not a missing reference:
+`check_r11.k_reference` now counts a sample within REF_EDGE_TOL = 0.005 mm of the fill as over it
+(`SHAPE_POLY_SET.Collide`; `Contains`' accuracy argument does not widen a hole's edge on KiCad 10, Measured). A sample
+further inside a void still fails (test: 0.02 mm fails, 0.003 mm passes). On the zone-filled board K-reference is OK:
+181,143 samples, 0 loose, 430 read on the boundary (Measured). `critical_reference.py` and R10's K-reference are
+unchanged.
+The DRU alternative (In1 / In4 GND to a foreign via hole at 0.2 mm) was not taken: 0.2 mm is JLC's "inner layer via hole
+to copper clearance" and R11_DRU_FLOORS' hole_clearance exactly, with no margin; `m3.kicad_dru` is generated by
+`r11_sch.py` and pinned to it by `r11_sch_check.py` ("DRU differs from the generator"), so the change would need a
+generator edit; and it would refill every plane round every via to fix a 0.5 um reading. `m3.kicad_dru` and
+R11_DRU_SHA256 (`b483f287…`) are unchanged.

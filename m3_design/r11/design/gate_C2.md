@@ -236,3 +236,40 @@ No entry for PA2, PA3, PE11, PE12 or PB15: they are NC on R11 (D-R11-49), so an 
   port and an empty reason each fail.
 * `R11RealBoard.test_k_loader_holds_on_the_real_board` runs when `R11_BOARD` is set. On a scratch copy of the
   worktree board, K-loader is OK (Measured).
+
+## 6. D-R11-61 / -62: route_check r11 allowlist and K-reference's boundary tolerance (stage C4)
+
+Gate lane, `tools/` only; measured on board `4e552ef4…` (zone-filled scratch copy). R10's profile, lists and rules are
+unchanged.
+
+**route_check r11 allowlist** (`ALLOWLIST_R11`, `ROUTE_FIGURES_R11` in `tools/route_check.py`, same tuple form as R8's
+`ALLOWLIST`: category, net, layer, (x, y), measured reason):
+
+| Entry | Verdict | Measured |
+|---|---|---|
+| `critical_via_no_gnd SD_MOSI` via (29.80, 17.05) | holds: allowlisted | no legal GND via within 1.5 mm for 0.45 / 0.25 down to 0.25 / 0.15 mm (11,289 grid points; F.Cu blocks 9,995, B.Cu 1,294) |
+| `extra_vias CAM_RX_BUFFER` (4, need 0 + 2) | holds: allowlisted, 19.2 mm / 4 vias | router minimum 3 with K-region's one-plane In3 runs; 2 only across 3V3 / RAW_PROTECTED |
+| `extra_vias SD_MOSI` (4, need 1 + 2) | **refuted: not allowlisted** | a 3-via tree is DRC-clean and K-region-clean, at the cost of a gated `tiny_jog` + `short_segment` in U1's field (D-R11-61) |
+
+* A stale entry fails (`evaluate`); the CAM_RX_BUFFER entry fails when the route's length or via count changes
+  (`measured_check`); the SD_MOSI no-GND entry fails when `tools/r11_gnd_spots.py` finds a legal spot (`nognd_audit`,
+  which runs that six-layer search for profile r11 and R7's `r7_hygiene.gnd_spots` for R7-R10).
+* `tools/r11_gnd_spots.py` (`Sites.why`, `gnd_spots`): a through via's ring and hole on all six layers against other
+  nets' tracks, vias and flashed pads (0.1 mm; TP* 1.0 mm, J2 0.508 mm, pad local clearance), hole clearance 0.25 mm,
+  hole to hole 0.2 mm, other nets' PTH holes 0.55 mm, NPTH 0.25 mm, edge 0.5 mm, via rule areas on any layer, no hole in
+  an SMD pad, S-8's 1.0 mm from ACT_GATE / ACT_DRV / PYRO1_OUT barrels. Sizes: the board's 0.45 / 0.25 and 0.4 / 0.2 mm,
+  then the DRU-legal 0.3 / 0.15 and 0.25 / 0.15 mm.
+* Result on the board: 1 failing (`extra_vias SD_MOSI`), 2 allowlisted, 0 stale, 0 out of date.
+
+**K-reference** (`check_r11.k_reference`, `REF_EDGE_TOL` 0.005 mm, `ref_inside`): a sample within 0.005 mm of the
+reference fill (KiCad's arc error, the board's `m_MaxError`) is over it. The 248 samples were all 0.250-0.252 mm from a
+foreign via hole and at most 0.0005 mm inside its antipad; K-reference is now OK (181,143 samples, 0 loose, 430 on the
+boundary). `m3.kicad_dru` and `R11_DRU_SHA256` are unchanged (D-R11-62 gives why the 0.2 mm plane hole-clearance rule
+was not taken). K-region, K-plane and K-fill are unchanged and OK on the board.
+
+**Tests.** `tools/test_route_check.py` R11SixLayer: the r11 profile's lists (and R10's still empty); the entries'
+reasons and figures; an entry matches, goes stale, goes out of date on a redrawn route, misses a 0.6 mm-off instance,
+and allows nothing under r10; the no-GND audit finds a spot on an open six-layer board and none when In3 copper or an
+In4-only via keep-out covers the reach; `Sites.why` at each rule's edge (hole clearance, hole to hole, PTH 0.55 mm,
+SMD pad, TP 1.0 mm, S-8, board edge). `tools/test_r11_check.py`: a critical F.Cu edge on another net's In1 antipad
+boundary and 3 µm inside it passes, 0.02 mm inside fails; `ref_inside` at 4 / 6 µm.
