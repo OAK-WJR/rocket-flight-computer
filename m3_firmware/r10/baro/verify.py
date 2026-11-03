@@ -4,7 +4,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[3]
 NETLIST="m3_design/assembly_review/schematic.net.xml"
-NET_SHA="535a8fdfe96c3a771a901db2bb9d2cd1a6674b001dfe1e18aa7d600e3aea7e9a"
+NET_SHA="6ee0a063d14a3b9b977b09e0315df1d758ef13a4118d436b55443befd1b55bc4"
 PIN_TABLE="m3_design/assembly_review/sources/r10_design/pin_table.tsv"
 PIN_SHA="b94133e61d553f5febb07c7c97977cd8b124634c6c19d0a2ce5b7fead304564a"
 def sensor_contract(tree):

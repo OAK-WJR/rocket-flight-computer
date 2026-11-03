@@ -1,8 +1,8 @@
 {
   "profile": "M3-ASSY-R10",
   "status": "record only; R1 binding invalid; no R10 firmware or flight approval",
-  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
-  "netlist_sha256": "535a8fdfe96c3a771a901db2bb9d2cd1a6674b001dfe1e18aa7d600e3aea7e9a",
+  "board_sha256": "6d23d1e5ca477a9754b55a8830fee6e4554b6cb74903593de075c0ede7b60153",
+  "netlist_sha256": "6ee0a063d14a3b9b977b09e0315df1d758ef13a4118d436b55443befd1b55bc4",
   "pin_table_sha256": "b94133e61d553f5febb07c7c97977cd8b124634c6c19d0a2ce5b7fead304564a",
   "circuit_sha256": "3220e5f9d2147e757c6a50810cf2bad6f26018aa7ed0126345deb8801cb168c2",
   "u1_pins": {

@@ -1,0 +1,3394 @@
+{
+  "bom_cpl_sha256": {
+    "m3_bom_jlc.csv": "00af5358a4043980e9c3a488b5e5a4bbe7a5d562054aaf9ce4ee6f99694e6b55",
+    "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
+    "m3_cpl_jlc.csv": "1f89975052e0745c5579b7fcfd6edda8e09d3a5ad77a11464ab1e6070e63a7ac"
+  },
+  "cad_board_sha256_at_query": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "cad_rebind_basis": "216 part identities/properties and705 pad nets/geometry are unchanged; only BAT_OVLO copper simplified. BOM and CPL bytes match the queried input.",
+  "checked_utc": "2026-11-03T18:21:13Z",
+  "cost_scope": "Placed parts plus Standard feeder fees; excludes PCB, fixed setup/stencil/fixtures, joints, shipping, customs/tax and attrition; minimum purchases reported separately.",
+  "orderable_is_inference": "Conservative min(stockCount,canPresaleNumber) when both present; the supplier does not document the second field. Confirm actual purchasable quantities before ordering.",
+  "parts": {
+    "C11702": {
+      "canPresaleNumber": 18108710,
+      "componentCode": "C11702",
+      "componentLibraryType": "base",
+      "componentModelEn": "0402WGF1001TCE",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0013,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0011,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.001,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0009,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0008,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0008,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 21263038
+    },
+    "C12891": {
+      "canPresaleNumber": 1244251,
+      "componentCode": "C12891",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL31A226KAHNNNE",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.1198,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0976,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.0863,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0771,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0739,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0716,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1666176
+    },
+    "C1329837": {
+      "canPresaleNumber": 1489,
+      "componentCode": "C1329837",
+      "componentLibraryType": "expand",
+      "componentModelEn": "SRP5030T-6R8M",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 1.4383,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 1.1858,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 1.0464,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.8889,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.7774,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.7463,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1531
+    },
+    "C13585": {
+      "canPresaleNumber": 2162040,
+      "componentCode": "C13585",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL31A106KBHNNNE",
+      "componentPrices": [
+        {
+          "endNumber": 99,
+          "productPrice": 0.1413,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 299,
+          "productPrice": 0.1142,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.1003,
+          "startNumber": 300
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0888,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0848,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0821,
+          "startNumber": 10000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 3070392
+    },
+    "C13612": {
+      "canPresaleNumber": 69654,
+      "componentCode": "C13612",
+      "componentLibraryType": "expand",
+      "componentModelEn": "SRV05-4.TCT",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.1631,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.1298,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.1155,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0978,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.0899,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0852,
+          "startNumber": 6000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 70747
+    },
+    "C137691": {
+      "canPresaleNumber": 17189,
+      "componentCode": "C137691",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RC0603FR-0766K5L",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0032,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0029,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0026,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0025,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0024,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0024,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 17572
+    },
+    "C14663": {
+      "canPresaleNumber": 28233166,
+      "componentCode": "C14663",
+      "componentLibraryType": "base",
+      "componentModelEn": "CC0603KRX7R9BB104",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0095,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.0074,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0062,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0055,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 47999,
+          "productPrice": 0.0049,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0046,
+          "startNumber": 48000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 38566138
+    },
+    "C14675": {
+      "canPresaleNumber": 11341206,
+      "componentCode": "C14675",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RC0603FR-07100KL",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0021,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0016,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0013,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0012,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0011,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0011,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 11825332
+    },
+    "C15195": {
+      "canPresaleNumber": 4674113,
+      "componentCode": "C15195",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL05B103KB5NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0039,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.003,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0025,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0022,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.002,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.002,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 5738923
+    },
+    "C15639": {
+      "canPresaleNumber": 1254,
+      "componentCode": "C15639",
+      "componentLibraryType": "expand",
+      "componentModelEn": "MS561101BA03-50",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 6.4961,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 5.868,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 5.4662,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 101,
+          "productPrice": 5.0792,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 103,
+          "productPrice": 5.0792,
+          "startNumber": 102
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 5.0792,
+          "startNumber": 104
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1505
+    },
+    "C15849": {
+      "canPresaleNumber": 9110330,
+      "componentCode": "C15849",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL10A105KB8NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0145,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.0112,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0097,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0086,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 47999,
+          "productPrice": 0.0082,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0079,
+          "startNumber": 48000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 12358318
+    },
+    "C161115": {
+      "canPresaleNumber": 24561,
+      "componentCode": "C161115",
+      "componentLibraryType": "expand",
+      "componentModelEn": "GCJ188R71H104KA12D",
+      "componentPrices": [
+        {
+          "endNumber": 99,
+          "productPrice": 0.0555,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 299,
+          "productPrice": 0.0461,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.0415,
+          "startNumber": 300
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0379,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 7999,
+          "productPrice": 0.0324,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.031,
+          "startNumber": 8000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 31724
+    },
+    "C1623": {
+      "canPresaleNumber": 458801,
+      "componentCode": "C1623",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL10B474KA8NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.013,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.0101,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0088,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0064,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 47999,
+          "productPrice": 0.006,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0057,
+          "startNumber": 48000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 640108
+    },
+    "C164170": {
+      "canPresaleNumber": 6291,
+      "componentCode": "C164170",
+      "componentLibraryType": "expand",
+      "componentModelEn": "472192001",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.7299,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.6036,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.5413,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.4789,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 799,
+          "productPrice": 0.4412,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.4232,
+          "startNumber": 800
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 6699
+    },
+    "C165948": {
+      "canPresaleNumber": 156665,
+      "componentCode": "C165948",
+      "componentLibraryType": "expand",
+      "componentModelEn": "TYPE-C-31-M-12",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.1873,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.148,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.1286,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.1044,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0996,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0968,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 169226
+    },
+    "C168925": {
+      "canPresaleNumber": 1579,
+      "componentCode": "C168925",
+      "componentLibraryType": "expand",
+      "componentModelEn": "25121WF360LT4E",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0386,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0302,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0256,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 7999,
+          "productPrice": 0.0215,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0191,
+          "startNumber": 8000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0178,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1579
+    },
+    "C17513": {
+      "canPresaleNumber": 39844937,
+      "componentCode": "C17513",
+      "componentLibraryType": "base",
+      "componentModelEn": "0805W8F1001T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0035,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0028,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0023,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0021,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0019,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0019,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 41637340
+    },
+    "C17557": {
+      "canPresaleNumber": 684457,
+      "componentCode": "C17557",
+      "componentLibraryType": "base",
+      "componentModelEn": "0805W8F2200T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0046,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0037,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0029,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0026,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 99999,
+          "productPrice": 0.0023,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0022,
+          "startNumber": 100000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 848377
+    },
+    "C1848": {
+      "canPresaleNumber": 607031,
+      "componentCode": "C1848",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL31B105KBHNNNE",
+      "componentPrices": [
+        {
+          "endNumber": 99,
+          "productPrice": 0.0622,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 299,
+          "productPrice": 0.0502,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.0442,
+          "startNumber": 300
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0391,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0373,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0361,
+          "startNumber": 10000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 767290
+    },
+    "C191023": {
+      "canPresaleNumber": 2864639,
+      "componentCode": "C191023",
+      "componentLibraryType": "base",
+      "componentModelEn": "1N5819WS",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0124,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0105,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.01,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0093,
+          "startNumber": 6000
+        },
+        {
+          "endNumber": 50999,
+          "productPrice": 0.0091,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0089,
+          "startNumber": 51000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 3139060
+    },
+    "C19666": {
+      "canPresaleNumber": 3393897,
+      "componentCode": "C19666",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL10A475KO8NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 99,
+          "productPrice": 0.0151,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 299,
+          "productPrice": 0.0114,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.0097,
+          "startNumber": 300
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0084,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 7999,
+          "productPrice": 0.0079,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0076,
+          "startNumber": 8000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 4163698
+    },
+    "C1985619": {
+      "canPresaleNumber": 4942,
+      "componentCode": "C1985619",
+      "componentLibraryType": "expand",
+      "componentModelEn": "NX3225GA-25.000M-STD-CRG-2",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.3914,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.3107,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2761,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.2328,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.1996,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1882,
+          "startNumber": 6000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 5129
+    },
+    "C2071044": {
+      "canPresaleNumber": 2326,
+      "componentCode": "C2071044",
+      "componentLibraryType": "expand",
+      "componentModelEn": "AP63201WU-7",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 1.2251,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 1.0251,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.9152,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.7905,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.702,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.6774,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 2612
+    },
+    "C20917": {
+      "canPresaleNumber": 762247,
+      "componentCode": "C20917",
+      "componentLibraryType": "base",
+      "componentModelEn": "AO3400A",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.0891,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.0719,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.063,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0556,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.0532,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0514,
+          "startNumber": 6000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 916313
+    },
+    "C21120": {
+      "canPresaleNumber": 758443,
+      "componentCode": "C21120",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL10B224KA8NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0093,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.0074,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0064,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0051,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 47999,
+          "productPrice": 0.0045,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0042,
+          "startNumber": 48000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 928700
+    },
+    "C21190": {
+      "canPresaleNumber": 22558126,
+      "componentCode": "C21190",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF1001T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0017,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0014,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0012,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.001,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0009,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0009,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 29190976
+    },
+    "C21397": {
+      "canPresaleNumber": 59640,
+      "componentCode": "C21397",
+      "componentLibraryType": "expand",
+      "componentModelEn": "GRM32ER71E226KE15L",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.4051,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.3149,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.2707,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2313,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.2215,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1887,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 70842
+    },
+    "C22939": {
+      "canPresaleNumber": 167414,
+      "componentCode": "C22939",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF220KT5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0027,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0021,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0018,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0016,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0014,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0014,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 254571
+    },
+    "C2296": {
+      "canPresaleNumber": 538466,
+      "componentCode": "C2296",
+      "componentLibraryType": "base",
+      "componentModelEn": "KT-0805Y",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0149,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0118,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.0092,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0082,
+          "startNumber": 6000
+        },
+        {
+          "endNumber": 50999,
+          "productPrice": 0.0073,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0068,
+          "startNumber": 51000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 606725
+    },
+    "C22975": {
+      "canPresaleNumber": 7843619,
+      "componentCode": "C22975",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF2001T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0024,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0019,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0016,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0014,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0013,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0013,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 9322089
+    },
+    "C22978": {
+      "canPresaleNumber": 4409469,
+      "componentCode": "C22978",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF3301T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0022,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0017,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0014,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0012,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0011,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0011,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 4993773
+    },
+    "C23024": {
+      "canPresaleNumber": 421690,
+      "componentCode": "C23024",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF3003T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0038,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.003,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0025,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.002,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0017,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0017,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 508516
+    },
+    "C23178": {
+      "canPresaleNumber": 837873,
+      "componentCode": "C23178",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF4703T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.003,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0023,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.002,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0017,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0014,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0014,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 989572
+    },
+    "C23253": {
+      "canPresaleNumber": 685621,
+      "componentCode": "C23253",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF8200T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0015,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0012,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.001,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0009,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0008,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0008,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 768045
+    },
+    "C23630": {
+      "canPresaleNumber": 2076721,
+      "componentCode": "C23630",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL10A225KO8NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0119,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.0089,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0076,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0066,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 47999,
+          "productPrice": 0.0062,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0059,
+          "startNumber": 48000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 2650562
+    },
+    "C25741": {
+      "canPresaleNumber": 5836794,
+      "componentCode": "C25741",
+      "componentLibraryType": "base",
+      "componentModelEn": "0402WGF1003TCE",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0013,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.001,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0008,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0008,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0007,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0007,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 7596637
+    },
+    "C25744": {
+      "canPresaleNumber": 10463330,
+      "componentCode": "C25744",
+      "componentLibraryType": "base",
+      "componentModelEn": "0402WGF1002TCE",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0028,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0021,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0018,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0016,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0015,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0015,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 15837103
+    },
+    "C25804": {
+      "canPresaleNumber": 35127719,
+      "componentCode": "C25804",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF1002T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0024,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.002,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0018,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0016,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0015,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0015,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 45498240
+    },
+    "C25819": {
+      "canPresaleNumber": 2237310,
+      "componentCode": "C25819",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603WAF4702T5E",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0019,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0015,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0013,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0011,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.001,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.001,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 2925639
+    },
+    "C25900": {
+      "canPresaleNumber": 12132146,
+      "componentCode": "C25900",
+      "componentLibraryType": "base",
+      "componentModelEn": "0402WGF4701TCE",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.002,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0015,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0013,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0012,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.001,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.001,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 14110590
+    },
+    "C25905": {
+      "canPresaleNumber": 4071504,
+      "componentCode": "C25905",
+      "componentLibraryType": "base",
+      "componentModelEn": "0402WGF5101TCE",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0023,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0017,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0015,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0013,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0012,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0012,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 4852605
+    },
+    "C2757925": {
+      "canPresaleNumber": 34807,
+      "componentCode": "C2757925",
+      "componentLibraryType": "expand",
+      "componentModelEn": "DB125-3.5-4P-GN-S",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.4028,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.3285,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2966,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2499,
+          "productPrice": 0.2244,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.2067,
+          "startNumber": 2500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.196,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 35646
+    },
+    "C2878140": {
+      "canPresaleNumber": 1909,
+      "componentCode": "C2878140",
+      "componentLibraryType": "expand",
+      "componentModelEn": "TPS7A9101DSKR",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.8053,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.6446,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.5659,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.4855,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.4396,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.415,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 2352
+    },
+    "C29936": {
+      "canPresaleNumber": 229648,
+      "componentCode": "C29936",
+      "componentLibraryType": "expand",
+      "componentModelEn": "CL10B105KA8NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 99,
+          "productPrice": 0.0178,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 299,
+          "productPrice": 0.0139,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.0122,
+          "startNumber": 300
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.011,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 7999,
+          "productPrice": 0.0088,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0085,
+          "startNumber": 8000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 306815
+    },
+    "C2999509": {
+      "canPresaleNumber": 78445,
+      "componentCode": "C2999509",
+      "componentLibraryType": "expand",
+      "componentModelEn": "FRC0603F2262TS",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0021,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0017,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0014,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0013,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0011,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0011,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 81579
+    },
+    "C3013496": {
+      "canPresaleNumber": 2149,
+      "componentCode": "C3013496",
+      "componentLibraryType": "expand",
+      "componentModelEn": "CRM2512-FX-2R00ELF",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.5577,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.4429,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.3937,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.333,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.3051,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.2887,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 2222
+    },
+    "C307331": {
+      "canPresaleNumber": 15478656,
+      "componentCode": "C307331",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL05B104KB54PNC",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.009,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0067,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0057,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0049,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 99999,
+          "productPrice": 0.0046,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0044,
+          "startNumber": 100000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 20589203
+    },
+    "C32949": {
+      "canPresaleNumber": 1963002,
+      "componentCode": "C32949",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL05C100JB5NNNC",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0058,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.0047,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0041,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0037,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0034,
+          "startNumber": 20000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0033,
+          "startNumber": 50000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 2311071
+    },
+    "C3646874": {
+      "canPresaleNumber": 8625,
+      "componentCode": "C3646874",
+      "componentLibraryType": "expand",
+      "componentModelEn": "DB125-3.5-5P-GN-S",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.4757,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.3822,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.3428,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2936,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.2411,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.228,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 9028
+    },
+    "C3662793": {
+      "canPresaleNumber": -93,
+      "componentCode": "C3662793",
+      "componentLibraryType": "expand",
+      "componentModelEn": "TPS259470LRPWR",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 1.3022,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 1.1513,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 1.0087,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.9037,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.8594,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.8381,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 7,
+      "preferredComponentFlag": false,
+      "stockCount": 18
+    },
+    "C4109": {
+      "canPresaleNumber": 10113776,
+      "componentCode": "C4109",
+      "componentLibraryType": "base",
+      "componentModelEn": "0402WGF2001TCE",
+      "componentPrices": [
+        {
+          "endNumber": 999,
+          "productPrice": 0.0026,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.002,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0016,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 49999,
+          "productPrice": 0.0015,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": 50199,
+          "productPrice": 0.0012,
+          "startNumber": 50000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0012,
+          "startNumber": 50200
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 10688742
+    },
+    "C4241878": {
+      "canPresaleNumber": 875,
+      "componentCode": "C4241878",
+      "componentLibraryType": "expand",
+      "componentModelEn": "MCT0603MD2004BP500",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.1003,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.0804,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.0704,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2499,
+          "productPrice": 0.063,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.057,
+          "startNumber": 2500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.054,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1558
+    },
+    "C431195": {
+      "canPresaleNumber": 27249,
+      "componentCode": "C431195",
+      "componentLibraryType": "expand",
+      "componentModelEn": "AON7524",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.3707,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.2871,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.251,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2067,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.187,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1755,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 27294
+    },
+    "C431196": {
+      "canPresaleNumber": 54587,
+      "componentCode": "C431196",
+      "componentLibraryType": "expand",
+      "componentModelEn": "AONR21357",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.3551,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.2828,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2518,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2499,
+          "productPrice": 0.1955,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.1783,
+          "startNumber": 2500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.168,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 55425
+    },
+    "C45783": {
+      "canPresaleNumber": 2585439,
+      "componentCode": "C45783",
+      "componentLibraryType": "base",
+      "componentModelEn": "CL21A226MAQNNNE",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.1839,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.1431,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.1231,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.1053,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.1004,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0975,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 3547937
+    },
+    "C46550466": {
+      "canPresaleNumber": 109966,
+      "componentCode": "C46550466",
+      "componentLibraryType": "expand",
+      "componentModelEn": "MA25V470M8x10",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.2031,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.1792,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.169,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2499,
+          "productPrice": 0.1458,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.1401,
+          "startNumber": 2500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1368,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 110782
+    },
+    "C466970": {
+      "canPresaleNumber": 35080,
+      "componentCode": "C466970",
+      "componentLibraryType": "expand",
+      "componentModelEn": "DB125-3.5-2P-GN-S",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.1834,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.1462,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.1303,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.1088,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0999,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0947,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 35388
+    },
+    "C485916": {
+      "canPresaleNumber": 23249,
+      "componentCode": "C485916",
+      "componentLibraryType": "expand",
+      "componentModelEn": "TPS2121RUXR",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.9201,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.8037,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.6921,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.6101,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.5757,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.5593,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 23386
+    },
+    "C5186957": {
+      "canPresaleNumber": 10210,
+      "componentCode": "C5186957",
+      "componentLibraryType": "expand",
+      "componentModelEn": "TXU0202DCUR",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.8627,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.7397,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.6528,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.5823,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.5593,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.5462,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 13513
+    },
+    "C51931514": {
+      "canPresaleNumber": -3,
+      "componentCode": "C51931514",
+      "componentLibraryType": "expand",
+      "componentModelEn": "ISM6HG256XTR",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 14.337,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 11,
+          "productPrice": 13.9106,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 13,
+          "productPrice": 13.9106,
+          "startNumber": 12
+        },
+        {
+          "endNumber": 15,
+          "productPrice": 13.9106,
+          "startNumber": 14
+        },
+        {
+          "endNumber": 17,
+          "productPrice": 13.9106,
+          "startNumber": 16
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 13.9106,
+          "startNumber": 18
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 4
+    },
+    "C5271084": {
+      "canPresaleNumber": 232,
+      "componentCode": "C5271084",
+      "componentLibraryType": "expand",
+      "componentModelEn": "STM32H743VIT6TR",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 12.6035,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 10.793,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 9.6909,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 101,
+          "productPrice": 8.7659,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 103,
+          "productPrice": 8.7659,
+          "startNumber": 102
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 8.7659,
+          "startNumber": 104
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 328
+    },
+    "C52993880": {
+      "canPresaleNumber": 152,
+      "componentCode": "C52993880",
+      "componentLibraryType": "expand",
+      "componentModelEn": "DB125-3.5-2P-BK-S",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.1978,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.1565,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.1388,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.1167,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.1068,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1009,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 186
+    },
+    "C535146": {
+      "canPresaleNumber": 184,
+      "componentCode": "C535146",
+      "componentLibraryType": "expand",
+      "componentModelEn": "ESD103-B1-02EL E6327",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.2305,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.1809,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.1596,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2499,
+          "productPrice": 0.1272,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.1153,
+          "startNumber": 2500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1083,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 191
+    },
+    "C55266": {
+      "canPresaleNumber": 59749,
+      "componentCode": "C55266",
+      "componentLibraryType": "expand",
+      "componentModelEn": "TPS2553DBVR",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 0.5544,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 0.4593,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.392,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.3363,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.3182,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.3084,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 60051
+    },
+    "C57112": {
+      "canPresaleNumber": 3743908,
+      "componentCode": "C57112",
+      "componentLibraryType": "base",
+      "componentModelEn": "0603B103K500NT",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0097,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.0075,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0066,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0058,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 47999,
+          "productPrice": 0.0055,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0054,
+          "startNumber": 48000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 5333165
+    },
+    "C57269": {
+      "canPresaleNumber": 35820,
+      "componentCode": "C57269",
+      "componentLibraryType": "expand",
+      "componentModelEn": "SWPA4030S4R7MT",
+      "componentPrices": [
+        {
+          "endNumber": 99,
+          "productPrice": 0.0571,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 299,
+          "productPrice": 0.0468,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 1999,
+          "productPrice": 0.0415,
+          "startNumber": 300
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.034,
+          "startNumber": 2000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0309,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0292,
+          "startNumber": 10000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 36682
+    },
+    "C705755": {
+      "canPresaleNumber": 5340,
+      "componentCode": "C705755",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RT0603BRD07280KL",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0566,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0484,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0438,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0411,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0388,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0374,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 5388
+    },
+    "C705780": {
+      "canPresaleNumber": 159764,
+      "componentCode": "C705780",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RT0603BRD0749K9L",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0312,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0253,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0227,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0207,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0199,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0194,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 174872
+    },
+    "C705784": {
+      "canPresaleNumber": 7378,
+      "componentCode": "C705784",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RT0603BRD0756K2L",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0355,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0301,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0269,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0251,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0237,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0227,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 7461
+    },
+    "C7519": {
+      "canPresaleNumber": 26333,
+      "componentCode": "C7519",
+      "componentLibraryType": "expand",
+      "componentModelEn": "USBLC6-2SC6",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.18,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.1386,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.1183,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.1003,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.0953,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0924,
+          "startNumber": 6000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 30623
+    },
+    "C780769": {
+      "canPresaleNumber": -345,
+      "componentCode": "C780769",
+      "componentLibraryType": "expand",
+      "componentModelEn": "AP63203WU-7",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 1.1956,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 1.0661,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 0.9463,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.8561,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.7856,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.7676,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 8,
+      "preferredComponentFlag": false,
+      "stockCount": 101
+    },
+    "C83849": {
+      "canPresaleNumber": 41199,
+      "componentCode": "C83849",
+      "componentLibraryType": "expand",
+      "componentModelEn": "SMBJ12CA",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.1283,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.1003,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.0858,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.074,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.0699,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0671,
+          "startNumber": 6000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 41982
+    },
+    "C84256": {
+      "canPresaleNumber": 1998555,
+      "componentCode": "C84256",
+      "componentLibraryType": "base",
+      "componentModelEn": "NCD0805R1",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0135,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0106,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.0089,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.008,
+          "startNumber": 6000
+        },
+        {
+          "endNumber": 50999,
+          "productPrice": 0.0076,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0073,
+          "startNumber": 51000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 2358711
+    },
+    "C85098": {
+      "canPresaleNumber": 64822,
+      "componentCode": "C85098",
+      "componentLibraryType": "expand",
+      "componentModelEn": "B340A-13-F",
+      "componentPrices": [
+        {
+          "endNumber": 99,
+          "productPrice": 0.0834,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 299,
+          "productPrice": 0.0679,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 0.0601,
+          "startNumber": 300
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0537,
+          "startNumber": 1000
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0514,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0499,
+          "startNumber": 10000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 68083
+    },
+    "C8591": {
+      "canPresaleNumber": 37853,
+      "componentCode": "C8591",
+      "componentLibraryType": "expand",
+      "componentModelEn": "BAT54A",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0242,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0194,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.0166,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 8999,
+          "productPrice": 0.015,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": 20999,
+          "productPrice": 0.0135,
+          "startNumber": 9000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0128,
+          "startNumber": 21000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 38004
+    },
+    "C85980": {
+      "canPresaleNumber": 114521,
+      "componentCode": "C85980",
+      "componentLibraryType": "expand",
+      "componentModelEn": "GRM1885C1H472JA01D",
+      "componentPrices": [
+        {
+          "endNumber": 499,
+          "productPrice": 0.0187,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 1499,
+          "productPrice": 0.015,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 3999,
+          "productPrice": 0.0129,
+          "startNumber": 1500
+        },
+        {
+          "endNumber": 23999,
+          "productPrice": 0.0117,
+          "startNumber": 4000
+        },
+        {
+          "endNumber": 47999,
+          "productPrice": 0.0106,
+          "startNumber": 24000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.01,
+          "startNumber": 48000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 121631
+    },
+    "C861551": {
+      "canPresaleNumber": 453,
+      "componentCode": "C861551",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RT0603BRD07750RL",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0438,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0374,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.034,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0319,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0301,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0291,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1278
+    },
+    "C861568": {
+      "canPresaleNumber": 1028,
+      "componentCode": "C861568",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RT0603BRD0780K6L",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0414,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0337,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0294,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0268,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0245,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0233,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1061
+    },
+    "C89347": {
+      "canPresaleNumber": 3578,
+      "componentCode": "C89347",
+      "componentLibraryType": "expand",
+      "componentModelEn": "TPS70933DBVR",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.3318,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.2534,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2151,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2999,
+          "productPrice": 0.1809,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 5999,
+          "productPrice": 0.1715,
+          "startNumber": 3000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1659,
+          "startNumber": 6000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 5225
+    },
+    "C94598": {
+      "canPresaleNumber": 148446,
+      "componentCode": "C94598",
+      "componentLibraryType": "expand",
+      "componentModelEn": "MLT-5020",
+      "componentPrices": [
+        {
+          "endNumber": 49,
+          "productPrice": 0.4014,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 149,
+          "productPrice": 0.3126,
+          "startNumber": 50
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 0.2693,
+          "startNumber": 150
+        },
+        {
+          "endNumber": 2499,
+          "productPrice": 0.1969,
+          "startNumber": 500
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.1864,
+          "startNumber": 2500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.1799,
+          "startNumber": 5000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 151784
+    },
+    "C95204": {
+      "canPresaleNumber": 1066452,
+      "componentCode": "C95204",
+      "componentLibraryType": "expand",
+      "componentModelEn": "RT0603BRD0710KL",
+      "componentPrices": [
+        {
+          "endNumber": 199,
+          "productPrice": 0.0302,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 599,
+          "productPrice": 0.0253,
+          "startNumber": 200
+        },
+        {
+          "endNumber": 4999,
+          "productPrice": 0.0232,
+          "startNumber": 600
+        },
+        {
+          "endNumber": 9999,
+          "productPrice": 0.0212,
+          "startNumber": 5000
+        },
+        {
+          "endNumber": 19999,
+          "productPrice": 0.0206,
+          "startNumber": 10000
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 0.0201,
+          "startNumber": 20000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 1724162
+    },
+    "C97521": {
+      "canPresaleNumber": 56341,
+      "componentCode": "C97521",
+      "componentLibraryType": "base",
+      "componentModelEn": "W25Q128JVSIQ",
+      "componentPrices": [
+        {
+          "endNumber": 9,
+          "productPrice": 2.4617,
+          "startNumber": 1
+        },
+        {
+          "endNumber": 29,
+          "productPrice": 2.1321,
+          "startNumber": 10
+        },
+        {
+          "endNumber": 99,
+          "productPrice": 1.8975,
+          "startNumber": 30
+        },
+        {
+          "endNumber": 499,
+          "productPrice": 1.6843,
+          "startNumber": 100
+        },
+        {
+          "endNumber": 999,
+          "productPrice": 1.5859,
+          "startNumber": 500
+        },
+        {
+          "endNumber": -1,
+          "productPrice": 1.5466,
+          "startNumber": 1000
+        }
+      ],
+      "minPurchaseNum": 1,
+      "preferredComponentFlag": false,
+      "stockCount": 75682
+    }
+  },
+  "projection_notice": "Verbatim projection of the public response fields used by jlc_cost/jlc_stock; not the full HTTP payload. Raw response snapshot SHA is retained below. No stock reservation or order quote.",
+  "quantity_basis": 5,
+  "raw_snapshot_sha256": "9e039bd5f71ae9813a56bf02fb67a111154eb9df8ba27163ebb6457fbe4bbf6b",
+  "reviewed_copper_candidate_sha256": "6d23d1e5ca477a9754b55a8830fee6e4554b6cb74903593de075c0ede7b60153",
+  "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+  "summary": {
+    "cost_target_met": false,
+    "over_target_usd": 0.75,
+    "placed_parts_plus_feeder_per_board_usd": 85.16,
+    "stock_short_refs": [
+      "U2",
+      "U4",
+      "U9"
+    ],
+    "stock_target_met": false,
+    "target_usd": 84.41
+  },
+  "supplier_model_identities_match_bom_rows": 82
+}

@@ -1,6 +1,6 @@
 {
   "accessibility": "Synthetic unmounted/uncoated bench allocation; native exposed copper is not a physical probe-clearance qualification.",
-  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256": "6d23d1e5ca477a9754b55a8830fee6e4554b6cb74903593de075c0ede7b60153",
   "coordinate_frame": "PCB top projection, x right, y down, millimetres; bottom pads not mirrored",
   "ground_point_ids": [
     "TP88.1",

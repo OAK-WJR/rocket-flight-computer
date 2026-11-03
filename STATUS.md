@@ -6,6 +6,39 @@ Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as 
 
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
+**R10 whole-board design checkpoint (2026-11-03 UTC).**
+The [checkpoint review](docs/R10_REVIEW_2026-11-03.md) records the BAT_OVLO
+junction cleanup (`a0ec075e…` → `6d23d1e5…`), three corrected requirement/report
+statements, and refreshed procurement evidence. The isolated candidate has zero
+DRC/unconnected/parity/blocking-route findings and four retained informational
+routing items (previously five). Exact native comparison preserves all 216
+component identities/properties/positions, all 705 pad nets/geometries and all
+other tracks/vias. F1 now consistently computes the 35 s conditional budget;
+F8 distinguishes nominal and resistor-tolerance values; P-11 reports the actual
+wire-gauge/OD scope without changing the fit threshold. The original full build
+stopped on the old diagnostic board hash, as intended; binding was refreshed
+only after the unchanged-pin/part proof. Two official regenerations produced
+byte-identical PCB files; neither earlier binding failure is counted as a full
+build pass. After the reviewed binding refresh, the complete `tools/check.sh`
+gate passed at 19:02:58 UTC on 2026-11-03 (exit 0): DRC, unconnected items,
+schematic parity and ERC are zero, and metadata/3D, silkscreen, fit, routing and
+bound fabrication-content checks pass. The 268-case R10 regression has 262
+passes and six NumPy-dependent skips under KiCad Python; all six pass in the
+following numerical stage. All 1,013 inventoried source inputs and PCB bytes
+were unchanged during the gate. The new 512-byte
+ABI-v3 bench build has 36 identical outputs across independent builds, but has
+not executed on hardware. No flight/actuation implementation or physical
+qualification is added by this change.
+
+All 82 queried supplier model identities match the BOM; at five boards the
+current component/feeder estimate is $85.16 against $84.41, and the conservative
+orderable rule fails U2/U4/U9. The published field snapshot reproduces the raw
+stock/cost reports and retains their collection time and BOM/CPL digests. It
+is not an order quote or release pass. Full scope remains the requirements;
+operational firmware, installed power/thermal/harness/EMI, Bench/Flight and
+manufacturing acceptance remain open. Development stays on the normal feature
+branch, with no history rewrite or branch merge.
+
 **R10 IMU + barometer diagnostic image, ABI v3 (2026-11-03 UTC).**
 The fitted MS5611 now joins the IMU in the independent R10 bench image, using
 native I2C1 on PB8/9 with preserved SPI1 fields and read-only clock selection.

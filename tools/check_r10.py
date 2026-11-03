@@ -3602,7 +3602,7 @@ def p11(ctx):
         if d in ('-x', '+x'):
             room = r9.wire_room(face)
             ev[ref].update(wire_room_mm=round(room, 3), r8_floor_mm=WIRE_ROOM, r10_accepted_floor_mm=WIRE_ROOM_R10,
-                           owner_decision='OQ-1 accepted 2026-10-28; physical 16-22 AWG fit not verified')
+                           owner_decision='OQ-1 wire-room floor accepted 2026-10-28; current P2: 20–22 AWG, insulation OD <= 1.8 mm (24 AWG igniter exception); narrowed-gauge owner acceptance pending (R10_VALIDATION row 31); physical bend fit unverified')
             if room < WIRE_ROOM_R10 - EPS:
                 issues.append(f'P-11: {ref} has {room:.2f} mm of wire room to the bore wall (owner-accepted R10 '
                               f'floor {WIRE_ROOM_R10}; R8 {WIRE_ROOM})')

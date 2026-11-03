@@ -20,7 +20,7 @@ from .transport import PyOCDReader, capture, utc
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
-BINDING_SHA = '9d8ad1cfbf3fca3df830e6d3dde326163bc0b162747769dc2b6ccdaf1efd358f'
+BINDING_SHA = '076c815e7a8d66bf242fc5420754af78a81b4d0c6bcd58ce08228379d31a8747'
 REQUEST_KEYS = ('schema', 'profile', 'board_sha256', 'binding_sha256', 'run_id',
                 'assembly_id', 'probe_id', 'origin', 'bench_isolated', 'created_at', 'tool_sources')
 SOURCE_NAMES = ('r10_swd.py', 'r10_swd_binding.json', 'r10_profile.json', 'r10_offline.py',

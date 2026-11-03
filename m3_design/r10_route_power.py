@@ -126,8 +126,10 @@ def efuse(d):
     t('GND','F',W,[p('C96.2'),(15.475,79.5),(15.875,79.9),(17.2,79.9)])
     t('BAT_ILIM','B',S,[p('U9.9'),p('R84.1')])
     t('BAT_DVDT','B',S,[p('U9.7'),(19.85,80.1),p('C81.1')])
-    t('BAT_OVLO','B',S,[p('U9.2'),(16.9,81.825),(16.4,82.325),(16.4,83.0)])
-    t('BAT_OVLO','B',S,[p('R83.1'),(12.025,83.0),(16.4,83.0),(16.4,83.15),p('R82.2')])
+    # Keep the three-way junction explicit without the former 0.15 mm open-copper leg.
+    # Pads/vias stay fixed; the local DRC/route comparison was checked before adoption.
+    t('BAT_OVLO','B',S,[p('U9.2'),(16.9,81.825),(16.25,82.475),(16.25,83.0)])
+    t('BAT_OVLO','B',S,[p('R83.1'),(12.025,83.0),(16.25,83.0),p('R82.2')])
     t('GND','B',S,[p('U9.8'),(19.825,81.375),(20.2,81.0)]);v('GND',(20.2,81.0))
     t('GND','B',P,[p('C88.2'),(19.59,84.06)]);v('GND',(19.59,84.06))
     for layer,pad in [('B','U11.2'),('F','C97.1')]:t(rp,layer,P,[p(pad),(24.3,66.0)])

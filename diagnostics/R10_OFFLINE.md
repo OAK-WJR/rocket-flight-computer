@@ -69,7 +69,7 @@ unverified. The tool does not command power, change wiring, or test outputs.
 ## Native board binding
 
 Both the supplied PCB bytes and the catalog content are SHA-256 pinned. The PCB
-is `a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c`.
+is `6d23d1e5ca477a9754b55a8830fee6e4554b6cb74903593de075c0ede7b60153`.
 `tools/check_r10_diagnostic_profile.py`, run by `tools/check.sh` using KiCad Python,
 compares all 33 catalog points to the actual native pad identities and coordinates
 and verifies the 216-footprint / 705-pad inventory. A different PCB requires an

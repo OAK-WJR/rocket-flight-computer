@@ -1,7 +1,7 @@
 {
   "schema": "r10-manual-offline/v1",
   "profile": "M3-ASSY-R10",
-  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "board_sha256": "6d23d1e5ca477a9754b55a8830fee6e4554b6cb74903593de075c0ede7b60153",
   "origin": "MANUAL_OFFLINE",
   "assembly_id": "EXAMPLE-ONLY-NO-PHYSICAL-CLAIM",
   "session_id": "manual-example-1",

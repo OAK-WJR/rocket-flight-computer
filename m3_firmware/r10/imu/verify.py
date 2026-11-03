@@ -10,7 +10,7 @@ COMMIT="842c809183352afbb6995729bc19f951bfee3db7"
 PIN_TABLE="m3_design/assembly_review/sources/r10_design/pin_table.tsv"
 PIN_SHA="b94133e61d553f5febb07c7c97977cd8b124634c6c19d0a2ce5b7fead304564a"
 NETLIST="m3_design/assembly_review/schematic.net.xml"
-NET_SHA="535a8fdfe96c3a771a901db2bb9d2cd1a6674b001dfe1e18aa7d600e3aea7e9a"
+NET_SHA="6ee0a063d14a3b9b977b09e0315df1d758ef13a4118d436b55443befd1b55bc4"
 PINNED={"ism6hg256x_reg.c":"0d65ae15db47ed63d57ab0d2b7b945fd033dc4ff37abd3c09def5998b87354c1",
         "ism6hg256x_reg.h":"034002cf8af51c25a019f49709f3bac8fdba4a58f9e4c7ebc15bc5131675e75e",
         "LICENSE":"b54f36a43cf9b8f6292c8f0f3b4c267ebd59859587e0152c94305bc81dda68bc"}

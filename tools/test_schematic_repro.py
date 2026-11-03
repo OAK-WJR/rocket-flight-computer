@@ -1,4 +1,5 @@
 """Patch-version portability must not hide netlist edits."""
+import re
 import sys
 import unittest
 from pathlib import Path
@@ -46,8 +47,12 @@ class NetlistPortability(unittest.TestCase):
         """The saved 216-component export is compared by the full board gate."""
         path = Path(__file__).resolve().parents[1] / 'm3_design/assembly_review/schematic.net.xml'
         data = path.read_bytes()
-        self.assertIn(b'<tool>Eeschema 10.0.7</tool>', data)
-        self.assertEqual(canonical(data), canonical(data.replace(b'Eeschema 10.0.7', b'Eeschema 10.0.6')))
+        exporter = re.search(rb'<tool>(Eeschema 10\.0\.\d+)</tool>', data)
+        self.assertIsNotNone(exporter)
+        alternate = b'Eeschema 10.0.6' if exporter[1] != b'Eeschema 10.0.6' else b'Eeschema 10.0.7'
+        changed = data[:exporter.start(1)] + alternate + data[exporter.end(1):]
+        self.assertNotEqual(data, changed)
+        self.assertEqual(canonical(data), canonical(changed))
 
 
 if __name__ == '__main__':

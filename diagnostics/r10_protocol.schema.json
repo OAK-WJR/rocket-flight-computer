@@ -4,7 +4,7 @@
       "additionalProperties": false,
       "properties": {
         "board_sha256": {
-          "const": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c"
+          "const": "6d23d1e5ca477a9754b55a8830fee6e4554b6cb74903593de075c0ede7b60153"
         },
         "firmware_verified": {
           "const": false

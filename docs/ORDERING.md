@@ -279,7 +279,9 @@ python3 tools/check_procurement.py --profile r10
 **The $84.41 per-board target** is R3's cost per board ($54.94 + 48 × $3.07 / 5; [REQUIREMENTS M3](REQUIREMENTS.md#manufacturing-and-cost)).
 It counts parts plus JLC's per-code feeder fees only. The Extended-code count is informational.
 
-**Current supplier snapshot.** All 82 exact codes (81 JLC BOM lines, 45 Extended / 36 Basic, plus C84 on the owner BOM) were queried live from JLC on the final files of `a0ec075e…` (re-run because the round 26 fix pass moved four CPL rows; the BOM and owner BOM are byte-identical): stock at 2026-11-02T12:43:17Z and cost at 12:44:13Z. The cost report binds the JLC BOM `00af5358…`, the owner BOM `c48868b3…` and the current CPL `1f899750…`; the stock report binds the BOM and owner BOM only, by design ([cost](../m3_design/assembly_review/fab/cost_check.json) and
+**Latest checkpoint:** the [2026-11-03 review](R10_REVIEW_2026-11-03.md#procurement-checkpoint) records the newer same-BOM query ($85.16 component/feeder estimate; U2/U4/U9 fail the conservative stock rule). Neither snapshot is a procurement release.
+
+**Historical canonical supplier snapshot (2026-11-02).** All 82 exact codes (81 JLC BOM lines, 45 Extended / 36 Basic, plus C84 on the owner BOM) were queried live from JLC on the final files of `a0ec075e…` (re-run because the round 26 fix pass moved four CPL rows; the BOM and owner BOM are byte-identical): stock at 2026-11-02T12:43:17Z and cost at 12:44:13Z. The cost report binds the JLC BOM `00af5358…`, the owner BOM `c48868b3…` and the current CPL `1f899750…`; the stock report binds the BOM and owner BOM only, by design ([cost](../m3_design/assembly_review/fab/cost_check.json) and
 [stock](../m3_design/assembly_review/fab/stock_check.json)). At 5 boards:
 
 | Basis (JLC Standard, both sides) | Per board |

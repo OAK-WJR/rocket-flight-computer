@@ -34,6 +34,8 @@ The deliverable is **one** board (the M1/M2 two-board scheme was abandoned; see 
 Current placement: `m3_design/r10_place.tsv` (generated into the board). `m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md` holds the §6 disposition and the latest layout changes (its reading guide names the section to read); the rest of that file is history. Current assembly and harness instructions are in `docs/ORDERING.md` section 8 and `docs/R10_VEHICLE_HANDOFF.md`.
 
 
+Current development checkpoint: [2026-11-03 design review](docs/R10_REVIEW_2026-11-03.md). The feature branch `r10/offline-diagnostics` carries the `6d23d1e5…` BAT_OVLO cleanup candidate and sensor bench diagnostics. Its complete board gate passed at 19:02:58 UTC on 2026-11-03 with unchanged source inputs and PCB bytes; the inherited review history and supplier figures above describe the earlier baseline. No R10 manufacturing or flight acceptance is implied.
+
 ## 2. Safety constraints that must never be violated
 
 1. The external power switch is the pad arming device: the board is switched on only with the vehicle on the pad / rail, and the pyro channel is live whenever the board is on. Firmware never fires before it has detected launch (accelerometer + barometer), and on the ground continuity / bus readings are hard refusals (§2.3).
