@@ -1,6 +1,8 @@
 # M3 bench triage entry point
 
-The current PCB is **M3-ASSY-R1**, with firmware `build_assembly_*` / v0.8.1. This entry point links the USB snapshot, fault history and external DC measurements to the current PCB's test points and gives a troubleshooting order from power to communication. It cannot uniquely identify a broken chip, and it does not represent full rocket function, real-board reliability or manufacturing release.
+> **R10 is unsupported here.** The repository now contains the M3-ASSY-R10 candidate, with different parts, pins and test points. This R1 triage workflow and its bound firmware are not a diagnostic implementation for R10. See the [current-board audit](../docs/BOARD_AUDIT_2026-11-02.md).
+
+The supported historical PCB is **M3-ASSY-R1**, with firmware `build_assembly_*` / v0.8.1. This entry point links the USB snapshot, fault history and external DC measurements to the current PCB's test points and gives a troubleshooting order from power to communication. It cannot uniquely identify a broken chip, and it does not represent full rocket function, real-board reliability or manufacturing release.
 
 Board SHA-256: `e432d3436d5029de0a74a4b0ebcd02ec092dedf6d4252ce310f7be301558627f`. This tool changed none of the CAD, copper or the four firmware binaries.
 

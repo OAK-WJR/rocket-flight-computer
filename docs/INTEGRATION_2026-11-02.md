@@ -21,7 +21,7 @@ The preserved local plot script and two portfolio images are R2 history; copied 
 
 Checks are recorded after running `tools/check.sh`. A passing CAD/software gate is not a hardware test, fabrication approval or acceptance of the R10 deviations. Existing R1 firmware stays R1-bound.
 
-No remote branch is updated by this local integration.
+This integration was initially local only. After explicit authorization to merge and push, [PR #8](https://github.com/OAK-WJR/rocket-flight-computer/pull/8) merged it into GitHub `main` at `7a7b9c38d0a5285c4c789f5523fd262257d8e528`, preserving the same tree. All existing local/remote branch heads are contained there. The original JSON below records the earlier local-only check; [the post-merge audit](BOARD_AUDIT_2026-11-02.md) records the later remote state and fresh tests.
 
 ## Completed checks
 

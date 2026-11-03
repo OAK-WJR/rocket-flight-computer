@@ -1,12 +1,14 @@
 # Host diagnostics
 
-**Current: M3-ASSY-R1 / firmware v0.8.1.** Start with the [unified triage entry point](TRIAGE.md):
+**Supported historical target: M3-ASSY-R1 / firmware v0.8.1.** The repository PCB is now M3-ASSY-R10; no compatible R10 firmware, test-point map or end-to-end diagnostic coverage is provided here. Do not treat the R1 commands or version number as R10 verification. See the [current-board audit](../docs/BOARD_AUDIT_2026-11-02.md).
+
+For the supported R1 target, start with the [unified triage entry point](TRIAGE.md):
 
 ```sh
 python -m diagnostics.triage capture --port ACTUAL_PORT --assembly BOARD_001 --out NEW_DIRECTORY
 ```
 
-It saves the raw exchange, fault branches, the 30 test-pad coordinates of the current PCB and an empty instrument template, and still produces a report on disconnection. The default firmware directory is `m3_firmware/build_assembly_inspect`. Nothing has been verified on a real board; the complete M3 is not finished.
+It saves the raw exchange, fault branches, the 30 test-pad coordinates of that R1 PCB and an empty instrument template, and still produces a report on disconnection. The default firmware directory is `m3_firmware/build_assembly_inspect`. Nothing has been verified on a real board; the complete M3 is not finished.
 
 Other entry points, each tied to the firmware version whose board binding it matches:
 

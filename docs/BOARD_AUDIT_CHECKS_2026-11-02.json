@@ -1,0 +1,577 @@
+{
+  "schema": 1,
+  "checked_local_date": "2026-11-02",
+  "scope": "R10 CAD/software contracts, requirements disposition and unchanged numerical models; no physical test",
+  "audited_main_commit": "7a7b9c38d0a5285c4c789f5523fd262257d8e528",
+  "audited_code_tree": "388bf3f6f1c85c2fbe61c07c2b79a98960067b72",
+  "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+  "cad_code_models_firmware_fab_unchanged": true,
+  "integration": {
+    "remote_main": "7a7b9c38d0a5285c4c789f5523fd262257d8e528",
+    "refs": [
+      {
+        "ref": "backup/mit-review-before-r10-20261102",
+        "commit": "8819bd2abe2cc2aaca65804454f4366f6f37366b",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "main",
+        "commit": "18de45a4d7767000bed8328c93882619a0962d18",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "merge/r10-local-20261102",
+        "commit": "1303e282eae38770d63bd72e2763a7f4cef6142f",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "mit-review",
+        "commit": "8819bd2abe2cc2aaca65804454f4366f6f37366b",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin",
+        "commit": "7a7b9c38d0a5285c4c789f5523fd262257d8e528",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r10",
+        "commit": "deb179eb74183402895cc02b877ab8a24d078aa3",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r2-actuators",
+        "commit": "d747bff691cec1b52568c23dec360b9014977d20",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r3",
+        "commit": "533af8eb452fc49e47ae84e041b3edc35740fe76",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r4",
+        "commit": "fa68b381766996ba73ec66901b89630cd8bab94a",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r5",
+        "commit": "580d3584aac687f10abc6a57c94c1fbf148f90c2",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r6",
+        "commit": "3b215ba738cd2ec8b3c7eb9fd4c88a55ff3bdfe7",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r7",
+        "commit": "431025d1f176f1292e01c7771e3ff5c712f189d1",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r8",
+        "commit": "9c8179b6d0a04b8f347af7fb9b95e2a38bdc6612",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/m3-assy-r9",
+        "commit": "ac9ebbab11edd66f59df56bc5465d8a0d30bfa95",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/main",
+        "commit": "7a7b9c38d0a5285c4c789f5523fd262257d8e528",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/merge/r10-local-20261102",
+        "commit": "1303e282eae38770d63bd72e2763a7f4cef6142f",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/r2-cam5v-sense",
+        "commit": "90177f393f28112349a817a1b99d2683cc31bcc3",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/r2-full-pcba",
+        "commit": "92363d9813836e3d6d4f1d6243792783ca312bac",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/r2-orderable",
+        "commit": "12486b15b8db57146edefaa948e007193fe24377",
+        "commits_not_in_main": 0
+      },
+      {
+        "ref": "origin/sim-r2-and-r1-binding",
+        "commit": "709596073f30080c543cb0e54b9598b46a2a5a94",
+        "commits_not_in_main": 0
+      }
+    ],
+    "all_contained": true,
+    "pull_request": "https://github.com/OAK-WJR/rocket-flight-computer/pull/8",
+    "historical_branches_preserved": true
+  },
+  "cad_software_gate": {
+    "command": "NUMPY_PY=<isolated NumPy interpreter> tools/check.sh",
+    "exit_code": 0,
+    "kicad_cli_version": "10.0.6",
+    "native_drc_all_severities": 0,
+    "unconnected": 0,
+    "schematic_parity": 0,
+    "erc": 0,
+    "test_groups_reported": [
+      11,
+      10,
+      34,
+      33,
+      16,
+      5,
+      72,
+      268,
+      6
+    ],
+    "total_cases_reported": 455,
+    "skips_reported": 6,
+    "numeric_group_reported": 6,
+    "numeric_group_skipped": 0,
+    "numpy_version": "2.0.2",
+    "notes": "KiCad Python skips unavailable numerical cases in its large suite; the same numeric class group then runs with NumPy. Gate inputs remain unchanged; only audit/scope documents were edited during the run."
+  },
+  "fit": {
+    "ok": true,
+    "issues": [],
+    "width_mm": 46.0,
+    "length_mm": 90.0,
+    "supports": [
+      [
+        3.7,
+        86.0
+      ],
+      [
+        4.0,
+        4.0
+      ],
+      [
+        4.0,
+        44.3
+      ],
+      [
+        42.0,
+        4.0
+      ],
+      [
+        42.0,
+        86.0
+      ]
+    ],
+    "nearest_top_support": [
+      3.807887,
+      "LED2.2 exposed top pad",
+      [
+        4.0,
+        44.3
+      ]
+    ],
+    "top_hardware_radius_mm": 3.8,
+    "wire_room_mm": {
+      "J1": [
+        5.003,
+        5.603
+      ],
+      "J121": [
+        5.003,
+        5.603
+      ],
+      "J122": [
+        5.003,
+        5.603
+      ],
+      "J400": [
+        5.003,
+        5.603
+      ],
+      "J410": [
+        5.003,
+        5.603
+      ],
+      "J420": [
+        5.003,
+        5.603
+      ],
+      "J440": [
+        5.003,
+        5.603
+      ],
+      "J9": [
+        5.003,
+        5.603
+      ]
+    },
+    "physical_fit_verified": false
+  },
+  "reverse_hotplug": {
+    "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+    "validation_issues": [],
+    "required_cases": 2304,
+    "required_failures": [],
+    "minimum_V": -14.807372917926411,
+    "maximum_V": 2.0,
+    "falling_V_per_us_max": 8.994763887026913,
+    "rising_V_per_us_max": 5.087663921231389,
+    "convergence_passed": true,
+    "refined_cases": 4,
+    "local_path_cases": 60,
+    "local_path_refined_cases": 4,
+    "no_clamp_control_cases": 4,
+    "outside_domain_cases": 8,
+    "outside_domain_metric_failures": 14,
+    "outside_domain_failed_cases": 8,
+    "outside_domain_minimum_V": -19.061980944871564,
+    "outside_domain_falling_max": 17.074570034989023,
+    "inference": "Maker curves are typical; temperature/bias combination and PCB parasitics estimated. Bench qualification outstanding.",
+    "inputs_sha256": "f4d1b57d97f1e9386e8207d5618318236919efdee43e2969f93b66063baeb400",
+    "model_sha256": "a7079e1a3ce189031ab28f8538a8c02b4bd8adcdf4cfc45877a0405935656883"
+  },
+  "routing": {
+    "blocking_findings": 0,
+    "allowlisted_blocking_findings": 0,
+    "noncritical_informational_geometry_items": [
+      {
+        "cat": "short_segment",
+        "net": "BAT_OVLO",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 16.4,
+        "y": 83.0,
+        "len_mm": 0.15,
+        "width": 0.2,
+        "end": [
+          16.4,
+          83.15
+        ]
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "BUZZ_DRV",
+        "cls": "other",
+        "layer": "F.Cu",
+        "x": 20.5,
+        "y": 51.8,
+        "end": [
+          20.2,
+          52.1
+        ],
+        "mid_mm": 0.424,
+        "offset_mm": 0.3,
+        "at": "plain/via",
+        "via": true
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "BAT_FAULT_N",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 28.2,
+        "y": 47.5,
+        "end": [
+          28.0,
+          47.3
+        ],
+        "mid_mm": 0.283,
+        "offset_mm": 0.2,
+        "at": "via/plain",
+        "via": true
+      },
+      {
+        "cat": "tiny_jog",
+        "net": "I2C1_SDA",
+        "cls": "other",
+        "layer": "B.Cu",
+        "x": 9.97,
+        "y": 51.5,
+        "end": [
+          10.25,
+          51.78
+        ],
+        "mid_mm": 0.396,
+        "offset_mm": 0.28,
+        "at": "via/plain",
+        "via": false
+      },
+      {
+        "cat": "detour",
+        "net": "USB_ILIM",
+        "cls": "other",
+        "layer": "net",
+        "x": 14.825,
+        "y": 27.2,
+        "pads": 2,
+        "first": "R85.1",
+        "len_mm": 3.33,
+        "mst_mm": 1.05,
+        "ratio": 3.18,
+        "vias": 1,
+        "need": 1
+      }
+    ],
+    "informational_by_current_policy": true
+  },
+  "plate": {
+    "board_sha256": "a0ec075ed3697a738d2fb9391e66e54a196d95bc6335d9d00fbe217a1a2e733c",
+    "supports": [
+      [
+        3.7,
+        86.0
+      ],
+      [
+        4.0,
+        4.0
+      ],
+      [
+        4.0,
+        44.3
+      ],
+      [
+        42.0,
+        4.0
+      ],
+      [
+        42.0,
+        86.0
+      ]
+    ],
+    "f1": {
+      "r10_mated": {
+        "pinned_D5": 180.8,
+        "pinned_D10": 255.6,
+        "clamped_D5": 287.8,
+        "clamped_D10": 407.0,
+        "board_mass_g": 78.6
+      }
+    },
+    "static": {
+      "r10_mated": {
+        "max_deflection_mm": 1.27,
+        "at": [
+          46.0,
+          44.5
+        ],
+        "strain_ue": {
+          "U4": 462,
+          "U1": 1016,
+          "J121": 1030,
+          "C84": 1350,
+          "U5": 821,
+          "J1": 1099,
+          "J122": 1489,
+          "J410": 1421,
+          "J420": 1414,
+          "J9": 1313,
+          "J400": 1157,
+          "C431": 1221,
+          "C421": 1117,
+          "C411": 1303,
+          "J440": 1184,
+          "C445": 1121,
+          "R150": 1382,
+          "R151": 1420,
+          "R152": 1391,
+          "R153": 1337,
+          "R154": 1359,
+          "R155": 1336
+        }
+      }
+    }
+  },
+  "plate_qualification": "Diagnostic inference only: assumed mass, stiffness and supports; no modal release floor or measured strength",
+  "procurement": {
+    "supplier_checked_utc": "2026-11-03T05:25:19Z",
+    "boards": 5,
+    "tier": "standard",
+    "codes_including_owner_fitted": 82,
+    "jlc_charged_codes": 81,
+    "parts_usd_per_board": 60.35,
+    "feeder_usd_per_order": 123.93,
+    "parts_plus_feeder_usd_per_board": 85.13,
+    "cost_cap_usd_per_board": 84.41,
+    "cost_overrun_usd_per_board": 0.7199999999999989,
+    "cost_ok": false,
+    "fixed_fees_usd_per_order": 83.96,
+    "handling_fee_may_apply_usd": 14.93,
+    "stock_ok": false,
+    "short": [
+      "C3662793 U9 orderable -92 (stockCount 19, canPresaleNumber -92) < 7",
+      "C51931514 U4 orderable -3 (stockCount 4, canPresaleNumber -3) < 5"
+    ],
+    "bom_cpl_hashes": {
+      "m3_bom_jlc.csv": "00af5358a4043980e9c3a488b5e5a4bbe7a5d562054aaf9ce4ee6f99694e6b55",
+      "m3_bom_owner.csv": "c48868b32f2680376e73c4ea93c98df8efd6df4cad909c83e64a7ee56b74c2c0",
+      "m3_cpl_jlc.csv": "1f89975052e0745c5579b7fcfd6edda8e09d3a5ad77a11464ab1e6070e63a7ac"
+    },
+    "public_source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+    "orderable_field_interpretation": "Inference: min(stockCount, canPresaleNumber), confirm quantities in the supplier cart; negative values fail closed",
+    "order_placed": false
+  },
+  "requirements": {
+    "ids_reviewed": [
+      "F1",
+      "F2",
+      "F3",
+      "F4",
+      "F5",
+      "F6",
+      "F7",
+      "F8",
+      "F9",
+      "F10",
+      "F11",
+      "F12",
+      "P1",
+      "P2",
+      "P3",
+      "M1",
+      "M2",
+      "M3"
+    ],
+    "dispositions": [
+      {
+        "id": "F1",
+        "evidence": "Correct fitted IMU and reviewed axis/pin contract in CAD.",
+        "remaining": "Temperature compensation, bias/noise under vibration and the error budget at the current mission window remain unqualified; the document itself requires recomputing the 30 s budget for up to 35 s. No R10 acquisition/control firmware."
+      },
+      {
+        "id": "F2",
+        "evidence": "The fitted IMU provides the specified high-g and low-g hardware ranges.",
+        "remaining": "Actual range configuration, acceleration calibration, clipping and installed dynamics need firmware and measurement."
+      },
+      {
+        "id": "F3",
+        "evidence": "MS5611 present; part and port constraints recorded.",
+        "remaining": "Cold/vacuum characterization to 300 hPa, installed light/pressure behavior and estimator use remain open; the specified error band stops at 450 mbar."
+      },
+      {
+        "id": "F4",
+        "evidence": "Four protected signal outputs and signal GND are routed. Servo motor power and return are in the external harness.",
+        "remaining": "PWM/reset behavior, actual servo levels, stall return and installed neutral behavior need R10 firmware and bench evidence."
+      },
+      {
+        "id": "F5",
+        "evidence": "16 MB QSPI and secondary microSD hardware are present and connected.",
+        "remaining": "\u2265800 Hz acquisition, required log rates, buffering, card latency, corruption handling and power-loss survival are not established for R10."
+      },
+      {
+        "id": "F6",
+        "evidence": "Reset defaults, filtered switch and hold-up circuitry meet the CAD contract; the current calculation records limited ride-through.",
+        "remaining": "From PA6 trip only 0.103\u20130.164 ms with ports on, or 0.291\u20130.430 ms shed (Calculation/Inference). Actual detection/shedding latency and switch chatter require measurement. This does not guarantee completion of a 3 ms flash program."
+      },
+      {
+        "id": "F7",
+        "evidence": "Existing recovery-output hardware passes the current static contract.",
+        "remaining": "Selected-lot and assembled-system qualification and compatible firmware do not exist. Static checks are not output qualification."
+      },
+      {
+        "id": "F8",
+        "evidence": "Current single-switch topology and terminal identities are checked against the later R10 requirements.",
+        "remaining": "Rail access, back-feed behavior, operating procedures and firmware state behavior remain open. No owner-deviation acceptance is inferred from permission to merge Git branches."
+      },
+      {
+        "id": "F9",
+        "evidence": "Board-bound reverse hot-plug model freshly passes its 2304 required cases; see the domain below.",
+        "remaining": "Actual source resistance/inductance, transients, thermal behavior, ESD and upstream unfused-harness exposure remain unqualified. Outside-domain low-resistance cases fail."
+      },
+      {
+        "id": "F10",
+        "evidence": "External GPS/radio/AUX UART and power ports are routed; no onboard RF is fitted.",
+        "remaining": "Device TX levels, back-feed, installed RF/ESD and firmware port mapping require testing. One common supply is not independent redundancy."
+      },
+      {
+        "id": "F11",
+        "evidence": "USB/SWD, LEDs, advisory buzzer and diagnostic sense hardware are represented.",
+        "remaining": "R10 firmware and automated fault-localization coverage are absent. The +70 \u00b0C buzzer is explicitly best-effort in a hot bay; its thermal rise and installed sound need measurement."
+      },
+      {
+        "id": "F12",
+        "evidence": "The CAD has the interfaces needed for the documented landed/beacon state.",
+        "remaining": "Landed-state, shutdown, beaconing, watchdog and recovery-duration behavior are firmware/bench obligations, not implemented proof."
+      },
+      {
+        "id": "P1",
+        "evidence": "Native outline is 46 \u00d7 90 mm, within the 120 mm length maximum.",
+        "remaining": "CAD dimension verified; vehicle integration and owner acceptance remain separate."
+      },
+      {
+        "id": "P2",
+        "evidence": "Bore, closed-card envelopes, five supports and model allocations pass the fit checker.",
+        "remaining": "Physical stack, wires/ferrules, access, fastening, insulation and real assembly fit remain unverified."
+      },
+      {
+        "id": "P3",
+        "evidence": "Fresh diagnostic plate-model results are bound to the current PCB.",
+        "remaining": "Connector/tall-part retention, vibration, shock and landing loads are not measured; the 500 g-equivalent assertion remains open. No modal release floor is defined."
+      },
+      {
+        "id": "M1",
+        "evidence": "Fabrication package and assembly process requirements are checked in the gate, including the two specified filled/capped U401 thermal vias.",
+        "remaining": "Fresh stock check fails on U4 and U9 for five boards. Supplier acceptance, insertion/reflow and first-article assembly quality also require resolution."
+      },
+      {
+        "id": "M2",
+        "evidence": "Native/routing/fab checks meet their enforced rules.",
+        "remaining": "Existing documented routing/MEMS/process compromises still need the recorded owner disposition and first-article qualification. A clean gate does not erase those exceptions."
+      },
+      {
+        "id": "M3",
+        "evidence": "Fresh part-plus-feeder estimate is $85.13 per board at five boards.",
+        "remaining": "The $84.41 cap is missed by $0.72 per board; cost acceptance and stock remain open. This is not the total landed price; no order was placed."
+      }
+    ],
+    "full_system_requirements_verified": false,
+    "matrix": "BOARD_AUDIT_2026-11-02.md#requirements-disposition",
+    "source_sha256": "f5fc23006fe4c90c865befc5f4491d7bac9d003001ecd0e64c5b5d2046d14a81",
+    "owner_decision_rows_open": 35,
+    "owner_decision_rows_closed_or_not_needed": 1,
+    "owner_decision_source_sha256": "63701e7159807eddbe88f66b1e27b323881bf213a3dcbd13a249ac51763b7fbb",
+    "acceptance_changed": false
+  },
+  "diagnostics": {
+    "historical_supported_board": "M3-ASSY-R1",
+    "r10_compatible_firmware_available": false,
+    "r10_end_to_end_fault_localization_available": false,
+    "entry_page_version_scope_corrected": true
+  },
+  "evidence_sha256": {
+    "full_gate.log": "ff6c539c0cd119a6e84ef2f53564e6b6b7d6f17c12148ca71501ac7dcfcd6d76",
+    "branch_coverage.json": "c10b3b1bdbd618c13bcaa8feb27eaf9d24c47bf58fd5b4b1512de87e3e181109",
+    "hotplug_extract.log": "2315eed1738c19cb0b45cb54e4fdb7c7fb38caffc891548a1c7a5f1616a21f3d",
+    "hotplug_inputs_current.json": "f76e5b0e135308451bbb2f4659e9383eb5796050976d4ff031983c38c6748a34",
+    "hotplug_results_current.json": "d9d6af950ad976b3ac64e360aaca7063e6103f88c010c225ed5a88113b780643",
+    "hotplug_validation.json": "b59afab58735af53ac6e4f7d0a87d0160bccb919c6b766cc18b251686bcc85f2",
+    "fit_current.json": "6dad02adeff9f0274df77b44a5a362374076cd0a3f0c598eae5ffd8e51abb0f6",
+    "plate_current.json": "37c20d207127a0cf2f6f4324c314742ac17514840d6c5cb91cb84ecae0d8e82b",
+    "route_current.json": "974f5f82fdbb54a0ed90e3ef323ed4fcbe6a97cc624805b343ad256292b5e497",
+    "owner_decision_status.json": "f9052ee4f8696a0533c642df2f46f605c8c0ea7a42020c643d1d6378fd6600a3",
+    "supplier_snapshot_current.json": "05087348d9b4c861ecec53989c3b5ca4b12e3ee5fb53e9651df114dbde75a3e3",
+    "procurement/cost_check.json": "6aa345f9ab23b58cf6527af77c32ede579c8c2792e7481728a11f2ec8e4fe5d3",
+    "procurement/stock_check.json": "89584a69eb95f0ffff8d011fb3b8b2211c27375c74a43a4923255346845ecf24",
+    "procurement_current.log": "1a6462509c4866a00dd529ed04452872ef7ce6e18e231cad385fd0ab09477c41",
+    "r10_top.png": "392f1f4633625178a2817f33f80b10fee981276b4eb8f2ca3f8d9bcee806005a",
+    "r10_bottom.png": "787f96e77501b5b59a8d0552f1579a6d3f62adf6981af6d98b2e9f4154405e57",
+    "gate_reports/drc.json": "ea40807e4f3080c65444ce89adf13f88c94c993c6ce87bfbadd11b92e0b2837c",
+    "gate_reports/erc.json": "f0a7fd8dd111fe0afac2432e61242bc365bc97df2e4c09ab370f35496d91fd23",
+    "gate_reports/sch_check.json": "beab215a435d03420a4f597530774232d58c6917370870b6f8b22d479de747ac",
+    "gate_reports/audit.json": "370728455e41d3b3ab9f947bf7a13959842ac1f7845a85095f4e28a5b9fd7161",
+    "gate_reports/fit.json": "6dad02adeff9f0274df77b44a5a362374076cd0a3f0c598eae5ffd8e51abb0f6",
+    "gate_reports/r10.json": "80412917faf99ac6d7b3cbd2a60a5d3aee93e959b7091f4485f69639e9387aee",
+    "gate_reports/route.json": "974f5f82fdbb54a0ed90e3ef323ed4fcbe6a97cc624805b343ad256292b5e497"
+  },
+  "r10_owner_accepted": false,
+  "hardware_tested": false,
+  "order_placed": false,
+  "flashed": false,
+  "flight_simulation_run": false,
+  "audit_completed": true,
+  "manufacturing_or_flight_release_ready": false
+}
