@@ -1,0 +1,222 @@
+ref	x	y	rot	side	basis
+@OUTLINE	46	50	0	F	D-R11-02: 46 mm wide, as short as the parts allow (stageB.md section 1)
+@M3	3.5	3.5	0	F	D-R11-10: corner support, nylon M3 hardware
+@M3	42.5	3.5	0	F	D-R11-10: corner support, nylon M3 hardware
+@M3	3.5	46.5	0	F	D-R11-10: corner support, nylon M3 hardware
+@M3	42.5	46.5	0	F	D-R11-10: corner support, nylon M3 hardware
+C10	21.3	34	0	B	3V3A bulk
+C100	28	17.4	0	B	3V3 at U12
+C11	21.3	36.2	0	B	3V3A bulk
+C120	10.15	16.8	180	F	ACT gate-source; D-R11-21: in Q120 gate island, ACT_FET_S from the gap
+C123	14.31	30.1	0	F	Q122 gate-source; D-R11-21
+C126	11.67	30.3	0	F	Q124 gate-source; D-R11-21: gate column west, GND east
+C127	9.45	20	90	B	continuity bank (PC0), low-voltage side
+C128	7.9	32.8	0	F	PYRO1_OUT cap at Q124
+C129	9.45	22.4	90	B	bus-sense bank (PC5), low-voltage side
+C13	22	25.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C14	26	25.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C15	22	26.8	0	B	U1 decoupling under the ball field (LEVIA style)
+C16	26	26.8	0	B	U1 decoupling under the ball field (LEVIA style)
+C17	30.3	25.3	0	B	U1 decoupling (3V3); D-R11-43: out of the ball field (east, under U3's north end), so the south-west interstitial sites take the escape vias
+C18	26	29.2	0	B	U1 decoupling under the ball field (LEVIA style)
+C19	24	29.45	270	B	VCAP1 under the ball field, south of C20 (D-R11-17: VCAP1 pad (24, 28.75) beside F8's via, GND pad to R5.2)
+C20	24	26.55	90	B	VCAP2 under the ball field, north (D-R11-17: VCAP2 pad (24, 27.25) beside E7's via)
+C21	18.85	22.1	270	F	VDDA decoupling (3V3A); D-R11-43: out of the ball field, on F.Cu north-west of U1 over the In2 3V3A strip (its own via); D-R11-49: 0.15 mm west, so its GND via (19.45, 22.52) clears its pad and CAM_5V_SENSE's In3 run leaves the field north
+C22	16.4	32.6	0	B	3V3A
+C23	25.6	34	0	B	3V3 bulk
+C24	19.0	28.9	270	B	NRST cap; D-R11-27: north of H1 so H1's 3V3A link to R164.2 runs west on B.Cu
+C25	16.6	23.4	0	B	HSE load cap
+C26	16.6	28.6	0	B	HSE load cap
+C28	37.25	33.1	270	F	VBUS; D-R11-20: on F at J3.A4B9, east of U3
+C29	30.8	28	0	B	U3 decoupling
+C30	26.2	19.6	90	B	IMU decoupling
+C31	27.3	19.6	90	B	IMU decoupling
+C32	13.4	37.2	0	B	barometer decoupling
+C400	31.9	15.4	0	F	port supply 1210 bank
+C401	36.7	15.4	0	F	port supply 1210 bank
+C402	38.7	12.3	270	F	U400 bootstrap at U400.6 BST, its SW end to L400.1 (D-R11-26)
+C403	41.5	15.4	0	F	port supply 1210 bank
+C404	31.9	18.9	0	F	port supply 1210 bank
+C405	36.7	18.9	0	F	port supply 1210 bank
+C406	41.5	18.9	0	F	port supply 1210 bank
+C407	31.9	22.4	0	F	port supply 1210 bank
+C408	44.4	22.4	0	F	U401 soft start at U401.8 (D-R11-26)
+C410	26.3	46.4	90	B	port 4V8 decoupling
+C411	20.7	46.7	90	B	port 4V8 bulk at pin 1
+C420	15.7	46.4	90	B	port 4V8 decoupling
+C421	10.1	46.7	90	B	port 4V8 bulk at pin 1
+C430	19.38	8.87	270	F	PORT_5V3 at U402.1 (D-R11-26)
+C431	27.6	9.4	0	F	CAM_5V; D-R11-26: 0.3 mm east for R430
+C444	36.9	46.4	90	B	port 4V8 decoupling
+C445	31.3	46.7	90	B	port 4V8 bulk at pin 1
+C460	36	42.4	90	B	microSD 3V3 decoupling
+C461	24	15.6	0	F	microSD 3V3 bulk
+C5	22.9	33.2	180	F	U2 bootstrap over U2.5 SW / U2.6 BST (D-R11-26)
+C6	18	40.4	0	F	VLOGIC input
+C60	25.6	37.8	0	B	VLOGIC sense filter
+C7	22.4	40.4	0	F	VLOGIC input
+C8	27.2	35.2	90	F	3V3 output
+C80	7.6	8.6	0	B	BAT_IN bulk; D-R11-79: on the B.Cu trunk 3.6 mm from C88.1 (was F (14.9, 9), behind the In2 pour), so U9 IN sees a 10 uF bulk on outer copper (hot-plug falling slew)
+C81	8.45	11.65	180	B	U9 dV/dt, west of U9 (D-R11-25)
+C82	16.9	15.6	90	B	RAW_PROTECTED bulk
+C83	36	32.82	270	F	VBUS 100 nF; D-R11-20: on F beside C28
+C84	10	38.3	0	F	VLOGIC hold-up can, tall part on top
+C85	15.8	38.2	0	B	U11 soft start
+C86	35	34	0	B	USB_LIMITED
+C87	14.1	7.38	0	B	U9 EN timing at U9.1, on the EN run (R10 D-R21-05 intent, D-R11-25)
+C88	11.33	8.6	180	B	BAT_IN decoupling on U9 IN bar's aft end (D-R11-25)
+C89	16	14	90	F	damper capacitor
+C9	26.8	40.4	0	F	3V3 output
+C90	25.6	17.4	0	B	3V3 at U12
+C91	27.1	11.2	0	B	CAM_5V at U13
+C92	22	10.8	0	B	CAM_IO_3V3
+C93	22.6	12.4	0	B	CAM_IO_3V3; D-R11-49: north of U12 (was (22.6, 17.4)), so CAM_MCU_RX has its via site south of U4
+C94	20.8	8.6	90	B	CAM_5V sense filter
+C95	18.6	14	90	F	damper capacitor
+C96	17.5	9	90	F	BAT_IN bulk
+C97	12.6	35	90	B	RAW_PROTECTED at U11
+C98	35	35.8	0	B	USB_LIMITED
+C99	25.4	38.35	0	F	D-R11-26: on the VLOGIC trunk at U2.3 (F.Cu); VLOGIC at U11
+D120	9	26	270	B	cold pull-up diode; D-R11-21: 3V3 pin north (to its via clear of the pyro nets), COLD pin south-east
+D121	24.8	8	0	B	servo clamp
+D123	41	41.8	0	B	buzzer flyback
+D4	35.6	30.4	90	B	USB ESD
+D400	28.6	2	90	B	J9.6 ESD under its pin
+D401	30.2	2	90	B	J9.5 ESD under its pin
+D402	9.2	5.2	180	B	J400.2 ESD clamp under J400 (D-R24-11 intent); D-R11-25: pin 1 beside R165.1
+D410	23.625	47.4	90	B	port TX wire ESD under its pin
+D411	24.875	47.4	90	B	port RX wire ESD under its pin
+D420	13.025	47.4	90	B	port TX wire ESD under its pin
+D421	14.275	47.4	90	B	port RX wire ESD under its pin
+D440	34.225	47.4	90	B	port TX wire ESD under its pin
+D441	35.475	47.4	90	B	port RX wire ESD under its pin
+D8	9.7	9.2	0	F	BAT_IN TVS at the battery pads
+D9	10.6	15.6	0	B	RAW_PROTECTED clamp
+J1	2.3	12.4	90	F	battery wire pads on the west edge, aft: leads from the aft battery bay (D-R11-13)
+J121	2.3	22.8	90	F	pyro wire pads on the west edge beside the pyro cell; pigtail runs forward (D-R11-13)
+J122	21.4	3.55	180	F	aft edge GH-5 servo, mouth aft: servo leads come from the fin can (D-R11-13)
+J2	32.9	39.6	0	F	SWD pads, top, forward of U3; bottom kept clear of the plug pins
+J3	41.4	30	90	F	USB-C mouth at the east edge (shell 0.45 mm proud, as R10 J3); bench only
+J400	11	3.55	180	F	aft edge GH-2, mouth aft (-y); beside the power front end (D-R11-13)
+J410	23	46.45	0	F	forward edge GH-4 GPS (default), mouth forward (D-R11-13)
+J420	12.4	46.45	0	F	forward edge GH-4 radio (default), mouth forward (D-R11-13)
+J430	37.5	13.05	0	B	microSD on the bottom at the east edge, aft; hinge opened with the board unbolted (as R10)
+J440	33.6	46.45	0	F	forward edge GH-4 AUX, mouth forward, nearest USART6 balls E10/F10 (D-R11-13)
+J9	32.8	3.55	180	F	aft edge GH-6 camera, mouth aft (D-R11-13)
+L1	18.6	36	180	F	3V3 buck inductor; D-R11-26: SW pad beside U2
+L400	33.9	10.5	180	F	PORT_5V3 buck inductor; D-R11-26: SW pad beside U400
+LED1	20.6	42.3	0	F	red LED; D-R11-49: forward beside the ports (was (21.6, 20.6)), LED_RED from PB1 (ball K4)
+LED2	26.8	20.6	0	F	yellow LED (D-R11-17: 0.8 mm east, F.Cu room for U4 pins 2 / 3 GND via)
+LS120	40	39.6	0	F	buzzer east-forward, far from U4 (top: tall part)
+Q120	8	19.6	180	F	load switch, BAT_IN side; D-R11-21: rotated so its sources face Q121 across the gap and its gate is at the west end
+Q121	12.3	19.6	0	F	load switch, RAW_ACT side
+Q122	17.55	31.15	90	F	ACT enable driver; D-R11-21: south of the PE4 lane, on the PC1 lane
+Q123	40.6	39	0	B	buzzer driver
+Q124	7.9	29.3	0	F	low-side fire FET beside J121.1 (OUT)
+R10	30.8	29.1	0	B	QSPI_NCS pull-up
+R100	31.6	2	90	B	camera RX series
+R101	32.8	2	90	B	camera TX series
+R102	19.6	14.6	90	B	CAM_UART_OE pull-down
+R103	19.6	11.6	270	B	CAM_IO_3V3 load; C4: rotated so R103.2 (GND) faces its via (stageC4.md)
+R104	28	12.4	0	F	CAM_5V sense
+R105	19.6	8.6	90	B	CAM_5V sense
+R11	19.8	19.6	90	B	IMU_CS pull-up
+R110	30.8	36.8	0	B	USB support
+R119	12.95	22.02	180	F	Q121 local gate bias (D-R18-02 on R11); D-R11-21: under Q121.4 / Q121.3
+R12	13	39	90	B	I2C pull-up
+R120	7.35	17.05	180	F	Q120 local gate bias (D-R18-02 on R11); D-R11-21: over Q120.4 / Q120.3
+R121	14.4	29.6	270	B	ACT gate drive; D-R11-21: on B.Cu at the south end of the ACT_GATE trunk (two ACT_GATE barrels in all, route_check extra_vias), ACT_DRV by one barrelnk
+R122	18	28	180	F	Q122 gate series; D-R11-21: PC1 lane end
+R123	14.3	29	0	F	Q122 gate pull-down; D-R11-21
+R126	11.4	28	180	F	Q124 gate series; D-R11-21: PE4 side east, gate column west
+R127	12.9	28.5	270	F	PE4 pull-down; D-R11-21: on the PE4 lane
+R128	11.4	29.1	0	F	Q124 gate pull-down; D-R11-21: gate column west, GND east
+R129	6	20	90	B	continuity bank (PC0), low-voltage side
+R13	13	41.1	90	B	I2C pull-up
+R130	7.15	20	90	B	continuity bank (PC0), low-voltage side
+R131	6.3	25.4	90	F	PYRO1_OUT cold pull-up leg, on F.Cu with OUT (S-8: no OUT via)
+R132	15.6	21.6	90	F	RAW_ACT top leg of the bus-sense divider, on F.Cu with RAW_ACT (S-8: no RAW_ACT via); D-R11-21: east of the RAW_ACT run
+R133	7.15	22.4	90	B	bus-sense bank (PC5), low-voltage side
+R134	11.6	24.65	0	F	RAW_ACT to IGN 2 ohm, beside J121.2; D-R11-21: 0.05 mm forward for R119 (clear of core's Y1.4 GND via)
+R150	22.8	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R151	21	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R152	19.2	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R153	17.4	3	90	B	servo series 1k under J122; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R154	21	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R155	19.8	6.6	270	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin; C4: rotated so R155.2 (GND) leaves south (stageC4.md)
+R156	18.6	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R157	17.4	6.6	90	B	servo pull-down; D-R11-43: order reversed (SERVO1 east) so each output runs straight to its J122 pin
+R162	44.4	38.6	90	B	buzzer gate series
+R163	44.4	40.8	90	B	buzzer gate pull-down
+R164	16.4	30.8	0	B	3V3 to 3V3A
+R165	11.4	5.2	0	B	J400.2 to BAT_ENABLE (470k)
+R166	10.1	14	0	F	BAT_DAMP damper
+R167	6.4	12.6	90	B	BAT_IN bleed
+R173	6.3	23.3	90	F	PYRO1_OUT top leg of the continuity divider, on F.Cu with OUT (S-8: no OUT via)
+R175	6	22.4	90	B	bus-sense bank (PC5), low-voltage side
+R178	8.3	20	90	B	continuity bank (PC0), low-voltage side
+R180	8.3	22.4	90	B	bus-sense bank (PC5), low-voltage side
+R32	23.0	42.3	180	F	LED series; D-R11-49: beside LED1 (was (21.6, 22.4))
+R33	26	22.4	0	F	LED series
+R400	43.3	12.7	90	F	PORT_5V3 feedback top (D-R11-26 column)
+R401	43.3	9.0	90	F	PORT_5V3 feedback bottom (D-R11-26 column at U400 FB)
+R402	38.7	22.225	270	F	PORT_4V8 feedback top at U401.1 / U401.3 (D-R11-26)
+R403	37.2	22.62	90	F	PORT_4V8 feedback bottom (D-R11-26)
+R404	43.3	10.85	90	F	PORT_5V3 feedback (D-R11-26 column)
+R405	35.9	23.0	270	F	D-R11-26: on the PORT_4V8 run west of U401; PORT_4V8 minimum load
+R430	24.62	10.0	270	F	U402 ILIM beside U402.5 (D-R11-26)
+R431	22.6	12.4	0	F	CAM_PWR_EN pull-down
+R432	24.4	12.4	0	F	CAM_FAULT_N pull-up
+R440	24.875	44.4	90	B	port RX 1k
+R441	23.625	44.4	90	B	port TX 1k
+R450	14.275	44.4	90	B	port RX 1k
+R451	13.025	44.4	90	B	port TX 1k
+R460	28.7	17.6	180	F	microSD pull-ups; D-R11-33
+R461	28.7	16.7	180	F	microSD pull-ups; D-R11-33
+R462	28.7	15.8	180	F	microSD pull-ups; D-R11-33
+R463	28.7	14.9	180	F	microSD pull-ups; D-R11-33: one F.Cu column beside the SD route north-east of U1, rows in J430 pin order, 3V3 pads on one west bus
+R464	28.7	18.5	180	F	microSD pull-ups; D-R11-33
+R470	35.475	44.4	90	B	port RX 1k
+R471	34.225	44.4	90	B	port TX 1k
+R5	28.4	33.9	0	B	BOOT0 pull-down; D-R11-43: south-east of the ball field (was under it, closing the rows J / K sites)
+R60	25.6	35.6	0	B	VLOGIC sense
+R61	25.6	36.7	0	B	VLOGIC sense
+R64	9	36.6	0	B	BARO_SDO pull-down
+R7	37	38	270	B	CC1 pull-down; D-R11-20: rotated, CC1 from the north, GND pads joined to one via
+R8	38.1	38	270	B	CC2 pull-down; D-R11-20: rotated, CC2 from the north, GND pads joined to one via
+R80	17.4	8.6	90	B	BAT_IN to J400.1 (470k)
+R81	13.95	8.6	0	B	U9 EN pull-down at U9.1, on the EN run (R10 D-R21-05 intent, D-R11-25)
+R82	15.6	10.9	90	B	OVLO divider top, east of U9 (D-R11-25)
+R83	14.0	10.9	270	B	OVLO divider bottom, east of U9 (D-R11-25)
+R84	9.0	10.375	180	B	U9 ILIM, west of U9 (D-R11-25)
+R85	34.9	27.93	0	B	U10 ILIM; D-R11-20: beside U10.5 in the strip between U10 and D4 (no via on the ILIM tap)
+R86	15.8	39.8	0	B	U11 ILM
+R87	18.35	35.4	90	B	U11 USB over-voltage divider top; D-R11-20: beside U11.5 so USB_OVLO stays local
+R88	18.35	33.5	90	B	U11 USB over-voltage divider bottom; D-R11-20: beside U11.5
+R89	17.5	19.3	180	F	BAT_FAULT_N pull-up; D-R11-47: F.Cu over the In2 3V3 strip north-west of U4 (was in the BAT_IN region)
+R9	30.8	35.7	0	B	USB support
+R90	36.85	27.93	180	B	USB_FAULT_N pull-up; D-R11-20: beside U10.4 in the strip between U10 and D4
+R91	15.8	40.9	0	B	source status pull-up
+R92	16.2	19	0	B	RAW_PROTECTED bleed beside D9
+TP120	16.9	24.1	0	F	RAW_ACT probe; D-R11-21: east of R134.2, clear of the MCU lanes
+TP122	10.97	32.6	0	F	PYRO1_GATE probe; D-R11-21: at the south end of the gate column
+TP74	35.4	3	0	B	GND probe
+TP80	5.2	17.4	0	B	BAT_IN probe on the J1.1 feed (D-R11-25)
+TP81	7.4	34	0	B	RAW_PROTECTED probe; D-R11-21: moved forward, clear of Q124's fire-return vias (test-pad 1.0 mm rule)
+TP82	25	41.15	0	B	USB_LIMITED probe; D-R11-20: on the USB_LIMITED run west of J2
+TP83	18.0	43.2	0	B	D-R11-26: clear of U2's 3V3 vias; VLOGIC probe
+TP88	9.9	34	0	B	GND probe; D-R11-21: moved forward, clear of Q124's fire-return vias (test-pad 1.0 mm rule)
+U1	24	28	0	F	TFBGA-100 central; column 1 west (pyro control / HSE), row A aft (IMU SPI), column 10 east (USB, SD)
+U10	34.9	25.1	270	B	USB current limit; D-R11-20: rotated so VBUS IN / EN face aft and OUT / ILIM / FAULT face the strip above D4
+U11	15.8	35.3	0	B	source mux
+U12	22.6	14.6	180	B	camera UART buffer; D-R11-49: rotated 180 so the MCU side (pins 4 / 5) faces U1 and the buffered side (1 / 8) faces J9
+U13	27.1	14.6	180	B	CAM_IO_3V3 LDO; D-R11-43: rotated 180 so CAM_5V enters from C91 on the east and the corridor east of U12.6 opens
+U2	23.6	35.8	0	F	3V3 buck
+U3	32.2	30.5	0	F	QSPI flash east of U1 beside its QSPI balls
+U4	23	20.5	180	B	IMU bottom on the roll axis (x 23), aft of U1, R10 axis map (D-R11-11)
+U400	40	9.6	180	F	PORT_5V3 buck; D-R11-26: SW / BST pins face L400 / C402
+U401	41.5	22.4	0	F	PORT_4V8 LDO
+U402	22	9.4	0	F	camera supply switch near J9
+U5	9	40	0	B	barometer bottom, west-forward, far from U400 / U401 / U2 (D-R11-14)
+U9	11.5	10.6	180	B	eFuse under the front end; D-R11-25: rotated so EN (pin 1) faces J400 / R165 and IN / OUT leave the bars at opposite ends
+Y1	16.6	26	0	B	HSE crystal west of U1 beside HSE balls C1 / D1

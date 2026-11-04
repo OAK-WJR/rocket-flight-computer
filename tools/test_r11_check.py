@@ -1,0 +1,955 @@
+"""Seeded faults for the R11 contract (tools/check_r11.py) and the r11 fit profile on synthetic six-layer boards
+(route_check's six-layer seeds are in tools/test_route_check.py, R11SixLayer, built with Six below); and, when R11_BOARD names the R11 board, on temporary copies of it.
+
+R11_BOARD_REQUIRED=1 (set by tools/check.sh once its R11 section has run) turns a missing R11_BOARD into a failure, so
+the real-board seeds cannot be skipped silently while the R11 board exists.
+"""
+import math
+import os
+import re
+from pathlib import Path
+import shutil
+import sys
+import tempfile
+import unittest
+
+try:
+    import pcbnew
+except ImportError:
+    pcbnew = None
+if pcbnew:
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import check_r10 as r10
+    import check_r11 as r11
+    import fit_check as fc
+    import route_check as rc
+
+NETS = ('GND', 'SIGNAL', '3V3', 'PORT_4V8', 'RAW_ACT', 'ACT_GATE', 'USB_DP', 'BAT_IN', 'PYRO1_OUT', 'PYRO1_IGN',
+        'GPS_TX_WIRE', 'GPS_RX_WIRE', 'CAM_5V', 'CAM_RX_WIRE', 'CAM_TX_WIRE')
+
+
+class Six:
+    """A synthetic six-layer R11 board: 46 x 50 mm outline, title-block revision M3-ASSY-R11."""
+
+    def __init__(self, length=50.0):
+        self.board = b = pcbnew.BOARD()
+        b.SetCopperLayerCount(6)
+        tb = b.GetTitleBlock(); tb.SetRevision(r11.REVISION); b.SetTitleBlock(tb)
+        for n in NETS:
+            b.Add(pcbnew.NETINFO_ITEM(b, n))
+        for a, c in (((0, 0), (46, 0)), ((46, 0), (46, length)), ((46, length), (0, length)), ((0, length), (0, 0))):
+            e = pcbnew.PCB_SHAPE(b); e.SetShape(pcbnew.SHAPE_T_SEGMENT); e.SetLayer(pcbnew.Edge_Cuts)
+            e.SetStart(self.P(*a)); e.SetEnd(self.P(*c)); b.Add(e)
+
+    def net(self, name):
+        if not self.board.FindNet(name):
+            self.board.Add(pcbnew.NETINFO_ITEM(self.board, name))
+        return self.board.FindNet(name)
+
+    @staticmethod
+    def P(x, y):
+        return pcbnew.VECTOR2I(pcbnew.FromMM(x), pcbnew.FromMM(y))
+
+    def hole(self, x, y):
+        h = pcbnew.PCB_SHAPE(self.board); h.SetShape(pcbnew.SHAPE_T_CIRCLE); h.SetLayer(pcbnew.Edge_Cuts)
+        h.SetCenter(self.P(x, y)); h.SetEnd(self.P(x + 1.6, y)); self.board.Add(h)
+
+    def track(self, a, c, net='SIGNAL', layer=None, width=0.2):
+        t = pcbnew.PCB_TRACK(self.board)
+        t.SetStart(self.P(*a)); t.SetEnd(self.P(*c)); t.SetWidth(pcbnew.FromMM(width))
+        t.SetLayer(pcbnew.F_Cu if layer is None else layer); t.SetNet(self.net(net)); self.board.Add(t)
+        return t
+
+    def via(self, x, y, net='SIGNAL', d=0.6, drill=0.3):
+        v = pcbnew.PCB_VIA(self.board)
+        v.SetPosition(self.P(x, y)); v.SetWidth(pcbnew.FromMM(d)); v.SetDrill(pcbnew.FromMM(drill))
+        v.SetNet(self.net(net)); self.board.Add(v)
+        return v
+
+    def part(self, ref, x, y, pads, part=None):
+        """pads: [(number, net, (dx, dy), 'smd' | 'smdb' (on B.Cu) | 'pth')]."""
+        f = pcbnew.FOOTPRINT(self.board); f.SetReference(ref); f.SetPosition(self.P(x, y))
+        if part:
+            f.SetField('Manufacturer Part', part)
+        self.board.Add(f)
+        for num, net, (dx, dy), kind in pads:
+            p = pcbnew.PAD(f); p.SetNumber(num)
+            if kind == 'pth':
+                p.SetAttribute(pcbnew.PAD_ATTRIB_PTH); p.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
+                p.SetSize(self.P(1.8, 1.8)); p.SetDrillSize(self.P(1.0, 1.0)); p.SetLayerSet(pcbnew.PAD.PTHMask())
+            else:
+                p.SetAttribute(pcbnew.PAD_ATTRIB_SMD); p.SetShape(pcbnew.PAD_SHAPE_RECT); p.SetSize(self.P(0.6, 1.7))
+                ls = pcbnew.LSET(); ls.AddLayer(pcbnew.B_Cu if kind == 'smdb' else pcbnew.F_Cu); p.SetLayerSet(ls)
+            if net:
+                p.SetNet(self.net(net))
+            f.Add(p); p.SetPosition(self.P(x + dx, y + dy))
+        return f
+
+    def gh(self, ref, x, y, nets, mouth=(0, 1), tab_net='GND'):
+        """A side-entry GH header: contact pads in a row at 1.25 mm pitch, two fixing tabs 3.2 mm toward the mouth."""
+        n = len(nets)
+        ux, uy = mouth
+        vx, vy = -uy, ux
+        pads = [(str(i + 1), net, ((i - (n - 1) / 2) * 1.25 * vx, (i - (n - 1) / 2) * 1.25 * vy), 'smd')
+                for i, net in enumerate(nets)]
+        half = ((n - 1) * 1.25 + 3.7) / 2
+        pads += [('MP', tab_net, (s * half * vx + 3.2 * ux, s * half * vy + 3.2 * uy), 'smd') for s in (-1, 1)]
+        return self.part(ref, x, y, pads, part=f'SM{n:02d}B-GHS-TB(LF)(SN)')
+
+    def zone(self, net, pts, layer):
+        z = pcbnew.ZONE(self.board); z.SetNet(self.board.FindNet(net)); z.SetLayer(layer)
+        z.SetMinThickness(pcbnew.FromMM(0.15)); z.SetLocalClearance(pcbnew.FromMM(0.2))
+        o = z.Outline(); o.NewOutline()
+        for x, y in pts:
+            o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        self.board.Add(z)
+        return z
+
+    def fill(self):
+        pcbnew.ZONE_FILLER(self.board).Fill(self.board.Zones())
+
+    def run(self, only, **kw):
+        kw.setdefault('data', {})
+        kw.setdefault('port_pin', {'PC0': 'A1', 'PC5': 'A2', 'PC1': 'A3'})
+        return r11.check_board(self.board, only=set(only), **kw)
+
+
+def failing(report, rid):
+    return report['rules'][rid]['issues']
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11Rules(unittest.TestCase):
+    def test_s8_covers_in3_and_in4(self):
+        """D-R11-08: S-8 holds 1.0 mm from a pyro barrel on all four inner layers; R10's S-8 looks at In1 / In2 only."""
+        s = Six()
+        s.via(10, 10, 'RAW_ACT')
+        s.track((10.8, 5), (10.8, 15), 'SIGNAL', pcbnew.In3_Cu)        # 0.65 mm from the 0.3 mm barrel wall
+        rep = s.run({'S-8'})
+        self.assertTrue(any('In3.Cu' in i and 'RAW_ACT' in i for i in failing(rep, 'S-8')), rep['rules']['S-8'])
+        ctx = r11.make_ctx(s.board, data={})
+        self.assertEqual(r10.s8(ctx)[0], [])                           # the R10 rule cannot see In3
+        s2 = Six()
+        s2.via(10, 10, 'ACT_GATE')
+        s2.track((10.8, 5), (10.8, 15), 'GND', pcbnew.In4_Cu)          # GND counts for the gate-drive hazard nets
+        self.assertTrue(failing(s2.run({'S-8'}), 'S-8'))
+        s3 = Six()
+        s3.via(10, 10, 'RAW_ACT')
+        s3.track((10.8, 5), (10.8, 15), 'GND', pcbnew.In4_Cu)          # ... not for RAW_ACT
+        s3.track((12.0, 5), (12.0, 15), 'SIGNAL', pcbnew.In3_Cu)       # 1.85 mm away
+        self.assertEqual(failing(s3.run({'S-8'}), 'S-8'), [])
+
+    def test_k_inner_six_layers(self):
+        s = Six()
+        s.track((1, 1), (5, 1), 'GND', pcbnew.In1_Cu)
+        s.track((1, 2), (5, 2), 'GND', pcbnew.In4_Cu)
+        s.track((1, 3), (5, 3), '3V3', pcbnew.In2_Cu)
+        s.track((1, 4), (5, 4), 'USB_DP', pcbnew.In3_Cu)
+        self.assertEqual(failing(s.run({'K-inner'}), 'K-inner'), [])
+        for net, layer in (('SIGNAL', pcbnew.In4_Cu), ('3V3', pcbnew.In1_Cu), ('USB_DP', pcbnew.In2_Cu)):
+            with self.subTest(net=net, layer=layer):
+                s = Six()
+                s.track((1, 1), (5, 1), net, layer)
+                self.assertEqual(len(failing(s.run({'K-inner'}), 'K-inner')), 1)
+
+    def test_w1_wire_pads(self):
+        def build(j1=(('1', 'BAT_IN', 'pth'), ('2', 'GND', 'pth')), j121=(('1', 'PYRO1_OUT', 'pth'),
+                                                                          ('2', 'PYRO1_IGN', 'pth'))):
+            s = Six()
+            s.part('J1', 5, 10, [(n, net, (0, 3 * i), k) for i, (n, net, k) in enumerate(j1)])
+            s.part('J121', 5, 30, [(n, net, (0, 3 * i), k) for i, (n, net, k) in enumerate(j121)])
+            return failing(s.run({'W-1'}), 'W-1')
+        self.assertEqual(build(), [])
+        self.assertTrue(build(j1=(('1', 'BAT_IN', 'smd'), ('2', 'GND', 'pth'))))                 # not plated
+        self.assertTrue(build(j121=(('1', 'PYRO1_IGN', 'pth'), ('2', 'PYRO1_OUT', 'pth'))))      # swapped
+        self.assertTrue(build(j1=(('1', 'BAT_IN', 'pth'), ('2', 'GND', 'pth'), ('3', 'GND', 'pth'))))
+        self.assertTrue(build(j1=(('1', 'BAT_IN', 'pth'), ('MP', 'GND', 'pth'), ('2', 'GND', 'pth'))))
+
+    def test_w2_and_s7_gh_ports(self):
+        def build(**over):
+            s = Six()
+            nets = {ref: [want[str(i)] for i in range(1, len(want) + 1)] for ref, want in r11.GH_PORTS.items()}
+            nets.update(over.get('nets', {}))
+            for k, (ref, ns) in enumerate(sorted(nets.items())):
+                f = s.gh(ref, 10 + 5 * k, 40, ns, tab_net=over.get('tab', {}).get(ref, 'GND'))
+                if ref in over.get('part', {}):
+                    f.SetField('Manufacturer Part', over['part'][ref])
+            rep = s.run({'W-2', 'S-7'})
+            return failing(rep, 'W-2') + failing(rep, 'S-7')
+        self.assertEqual(build(), [])
+        self.assertTrue(build(nets={'J9': ['CAM_5V', 'CAM_5V', 'GND', 'GND', 'CAM_TX_WIRE', 'CAM_RX_WIRE']}))
+        self.assertTrue(build(nets={'J410': ['PORT_4V8', 'GND', 'GPS_RX_WIRE', 'GPS_TX_WIRE']}))
+        self.assertTrue(build(tab={'J420': 'PORT_4V8'}))                 # a fixing tab on a supply
+        self.assertTrue(build(tab={'J122': 'SIGNAL'}))
+        self.assertTrue(build(part={'J440': 'SM05B-GHS-TB'}))            # wrong circuit count
+        self.assertTrue(build(part={'J400': 'BM02B-GHS-TBT'}))           # top entry, not the side-entry header
+
+    def test_m1_outline_and_m3_supports(self):
+        pins = {'supports': [[4, 4], [42, 4], [4, 46], [42, 46]]}
+        s = Six()
+        for x, y in ((4, 4), (42, 4), (4, 46), (42, 46)):
+            s.hole(x, y)
+        rep = s.run({'M-1', 'M-3'}, data=pins)
+        self.assertEqual(failing(rep, 'M-1') + failing(rep, 'M-3'), [])
+        self.assertTrue(failing(s.run({'M-3'}), 'M-3'))                 # unpinned supports fail (D-R11-10)
+        s.hole(23, 25)                                                   # a fifth, unpinned circle
+        self.assertTrue(any('not a pinned support' in i for i in failing(s.run({'M-3'}, data=pins), 'M-3')))
+        s = Six(length=60)
+        for x, y in ((4, 4), (42, 4), (4, 56), (42, 56)):
+            s.hole(x, y)
+        self.assertTrue(failing(s.run({'M-1'}), 'M-1'))                 # above the 56 mm ceiling
+        s = Six()
+        for x, y in ((4, 4), (42, 4), (4, 46), (30, 25)):
+            s.hole(x, y)                                                 # no support at the (46, 50) corner
+        self.assertTrue(failing(s.run({'M-3'}, data={'supports': [[4, 4], [42, 4], [4, 46], [30, 25]]}), 'M-3'))
+        s = Six()
+        for x, y in ((4, 4), (42, 4), (4, 46), (42, 46)):
+            s.hole(x, y)
+        self.assertTrue(failing(s.run({'M-3'}, data={'supports': [[4, 4], [42, 4], [4, 46], [42, 45]]}), 'M-3'))
+
+    def test_m7_needs_the_recorded_imu_pose(self):
+        s = Six()
+        self.assertTrue(any('imu record' in i for i in failing(s.run({'M-7'}), 'M-7')))
+
+    def test_k_reference_and_k_region_on_the_six_layer_stack(self):
+        def build(in2=(('3V3', (0, 0, 46, 50)),), in1=True, in4=True, layer=None, x=(5, 30)):
+            s = Six()
+            for net, (x0, y0, x1, y1) in in2:
+                s.zone(net, ((x0, y0), (x1, y0), (x1, y1), (x0, y1)), pcbnew.In2_Cu)
+            if in1:
+                s.zone('GND', ((0, 0), (46, 0), (46, 50), (0, 50)), pcbnew.In1_Cu)
+            if in4:
+                s.zone('GND', ((0, 0), (46, 0), (46, 50), (0, 50)), pcbnew.In4_Cu)
+            s.fill()
+            s.track((x[0], 20), (x[1], 20), 'USB_DP', layer if layer is not None else pcbnew.In3_Cu)
+            rep = s.run({'K-reference', 'K-region'})
+            ref = [i for i in failing(rep, 'K-reference') if 'stale critical_reference' not in i]   # a synthetic board
+            return ref, failing(rep, 'K-region')
+        self.assertEqual(build(), ([], []))
+        ref, region = build(in2=(('3V3', (0, 0, 20, 50)), ('PORT_4V8', (20.5, 0, 46, 50))))
+        self.assertEqual(ref, [])                                        # In4 GND still lies under it
+        self.assertTrue(region)                                          # but the In3 run crosses two In2 planes
+        self.assertTrue(build(in2=(('3V3', (0, 0, 20, 50)),))[1])        # ... or runs off In2 copper
+        self.assertTrue(build(in4=False)[0])                             # In3 over no In4 GND (D-R11-03)
+        self.assertEqual(build(layer=pcbnew.F_Cu, in2=()), ([], []))     # F.Cu over In1 GND
+        self.assertTrue(build(layer=pcbnew.F_Cu, in1=False)[0])
+        self.assertEqual(build(layer=pcbnew.B_Cu), ([], []))             # B.Cu over In4 GND
+        self.assertTrue(build(layer=pcbnew.B_Cu, in4=False)[0])
+        s = Six()
+        stale = [i for i in failing(s.run({'K-reference'}), 'K-reference') if 'stale critical_reference' in i]
+        self.assertTrue(stale)                                           # listed names that are no net still fail
+
+    def test_k_reference_edge_on_a_foreign_antipad_boundary(self):
+        """D-R11-62: a critical F.Cu edge exactly on the In1 GND antipad of another net's via is over the plane (KiCad's
+        polygon antipad lies outside the true circle by up to the arc error); 0.02 mm inside the void it still fails."""
+        def build(into):
+            s = Six()
+            for layer in (pcbnew.In1_Cu, pcbnew.In4_Cu):
+                s.zone('GND', ((0, 0), (46, 0), (46, 50), (0, 50)), layer)
+            s.via(20, 20, 'SIGNAL', d=0.4, drill=0.2)
+            s.fill()
+            fill = pcbnew.SHAPE_POLY_SET()
+            for z in s.board.Zones():
+                if z.IsOnLayer(pcbnew.In1_Cu):
+                    fill.BooleanAdd(z.GetFilledPolysList(pcbnew.In1_Cu))
+            lo, hi = 0.0, 1.0                     # the antipad's edge straight north of the via, to 0.1 um
+            while hi - lo > 1e-4:
+                mid = (lo + hi) / 2
+                if fill.Contains(Six.P(20, 20 - mid), -1, 0, True):
+                    hi = mid
+                else:
+                    lo = mid
+            y = 20 - (hi - into) - 0.1            # the track's south edge `into` mm inside the void (width 0.2)
+            s.track((10, y), (30, y), 'USB_DP', pcbnew.F_Cu)
+            rep = s.run({'K-reference'})
+            return [i for i in failing(rep, 'K-reference') if 'stale critical_reference' not in i], rep, hi
+        self.assertEqual(build(0.0)[0], [])                     # on the boundary
+        issues, rep, _ = build(0.003)                           # 3 um inside: KiCad's arc error, over the plane
+        self.assertEqual(issues, [])
+        self.assertGreater(rep['rules']['K-reference']['evidence']['on_boundary'], 0)   # read by the tolerance only
+        self.assertTrue(build(0.02)[0])                         # 0.02 mm into the void: unreferenced
+        self.assertTrue(r11.ref_inside(self._square(), 1.004, 0.5) and not r11.ref_inside(self._square(), 1.006, 0.5))
+
+    @staticmethod
+    def _square():
+        ps = pcbnew.SHAPE_POLY_SET(); ps.NewOutline()
+        for x, y in ((0, 0), (1, 0), (1, 1), (0, 1)):
+            ps.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        return ps
+
+    def test_k_ports_use_j9s_r11_uart_pins(self):
+        self.assertIn(('J9', '5', 'D401.1', 'R100'), r11.PORT_CLAMPS_R11)
+        self.assertIn(('J9', '6', 'D400.1', 'R101'), r11.PORT_CLAMPS_R11)
+        self.assertEqual(len(r11.PORT_CLAMPS_R11), len(r10.PORT_CLAMPS))
+
+    def test_power_paths_follow_r11_topology(self):
+        """O-C2-6: R10's paths by function, on R11 terminals and nets (the R11 schematic netlist), no R10 coordinates,
+        R10's design currents, and U9 IN without R10's 1.0 / 0.5 mm via (J1 is a plated wire pad)."""
+        import xml.etree.ElementTree as ET
+        nets = {}
+        for n in ET.parse(r11.R11_DIR / 'schematic.net.xml').getroot().iter('net'):
+            for node in n.iter('node'):
+                nets[f'{node.get("ref")}.{node.get("pin")}'] = n.get('name')
+        self.assertEqual(sorted(p['name'] for p in r11.POWER_PATHS_R11), sorted(p['name'] for p in r10.POWER_PATHS))
+        amps = {p['name']: p.get('amps') for p in r10.POWER_PATHS}
+        for p in r11.POWER_PATHS_R11:
+            with self.subTest(path=p['name']):
+                self.assertEqual(p.get('amps'), amps[p['name']])
+                self.assertTrue('amps' in p or 'floor' in p)
+                self.assertFalse('bridges' in p['vias'] or 'layers' in p)
+                self.assertGreaterEqual((p['vias']['pad'], p['vias']['drill']), (0.5, 0.3))
+                for group in (p['start'], p['end'] or {}, p['through']):
+                    for ref, nums in group.items():
+                        for num in nums:
+                            self.assertEqual(nets.get(f'{ref}.{num}'), p['net'], f'{ref}.{num}')
+        u9 = next(p for p in r11.POWER_PATHS_R11 if p['name'] == 'U9 IN')
+        self.assertEqual((u9['vias']['count'], u9['vias']['max']), (0, 0))
+        self.assertEqual(r11.ipc_floor('F.Cu', 2.9), 0.68)                # R10's 0.68 mm at 35 um
+        self.assertEqual(r11.ipc_floor('In2.Cu', 2.9), 1.83)              # 0.5 oz inner copper (stageB.md section 3)
+        self.assertEqual(r11.ipc_floor('B.Cu', 1.9), 0.33)
+
+    def u9_in(self, entry_width=0.3, entry_len=0.5, layer=None, via=False):
+        """J1.1 (plated) -> C88.1 -> U9.5 on B.Cu at 0.7 mm, the last `entry_len` mm into U9.5 at `entry_width`."""
+        s = Six()
+        s.part('J1', 3, 10, [('1', 'BAT_IN', (0, 0), 'pth')])
+        s.part('C88', 6, 10, [('1', 'BAT_IN', (0, 0), 'smdb')])
+        s.part('U9', 9, 10, [('5', 'BAT_IN', (0, 0), 'smdb')])
+        s.track((3, 10), (6, 10), 'BAT_IN', pcbnew.B_Cu, 0.7)
+        if via or layer is not None:                                   # a hop: B.Cu, via, `layer`, via, B.Cu
+            s.track((6, 10), (6.5, 10), 'BAT_IN', pcbnew.B_Cu, 0.7); s.via(6.5, 10, 'BAT_IN', d=0.6)
+            s.track((6.5, 10), (8, 10), 'BAT_IN', pcbnew.F_Cu if layer is None else layer, 0.7)
+            s.via(8, 10, 'BAT_IN', d=0.6); s.track((8, 10), (9 - entry_len, 10), 'BAT_IN', pcbnew.B_Cu, 0.7)
+        else:
+            s.track((6, 10), (9 - entry_len, 10), 'BAT_IN', pcbnew.B_Cu, 0.7)
+        s.track((9 - entry_len, 10), (9, 10), 'BAT_IN', pcbnew.B_Cu, entry_width)
+        return s
+
+    def u9_issues(self, s, entries):
+        narrow, bad = r11.power_narrow_entries({'power_narrow': entries})
+        spec = [p for p in r11.POWER_PATHS_R11 if p['name'] == 'U9 IN']
+        return bad + r11.power_paths_r11(s.board, paths=spec, narrow=narrow)[0]
+
+    def test_power_narrow_pin_entries_are_data_with_a_length_cap(self):
+        """O-C2-6: a pin entry narrower than the IPC-2152 floor passes only as a listed R11_DATA 'power_narrow' entry
+        within its length cap; over the cap, unlisted, on another pad, or stale, it fails."""
+        entry = {'net': 'BAT_IN', 'pad': 'U9.5', 'layer': 'B.Cu', 'width_mm': 0.3, 'max_len_mm': 0.6,
+                 'reason': 'test: U9.5 bar entry at the 0.5 mm pitch'}
+        self.assertEqual(self.u9_issues(self.u9_in(), [entry]), [])
+        unlisted = self.u9_issues(self.u9_in(), [])
+        self.assertTrue(any('no power_narrow pin entry' in i and '0.300 mm wide' in i for i in unlisted), unlisted)
+        over = self.u9_issues(self.u9_in(entry_len=0.8), [entry])                    # 0.8 mm against the 0.6 mm cap
+        self.assertTrue(any('allows 0.3 mm over at most 0.6 mm' in i for i in over), over)
+        self.assertTrue(any('stale power_narrow entry' in i for i in over))
+        narrower = self.u9_issues(self.u9_in(entry_width=0.2), [entry])              # narrower than the entry's width
+        self.assertTrue(any('0.200 mm wide' in i for i in narrower), narrower)
+        other_pad = self.u9_issues(self.u9_in(), [dict(entry, pad='C88.1')])
+        self.assertTrue(any('no power_narrow pin entry' in i for i in other_pad))
+        self.assertTrue(any('stale power_narrow entry' in i for i in other_pad))
+        clean = self.u9_issues(self.u9_in(entry_width=0.7), [entry])                 # nothing left to excuse: stale
+        self.assertEqual([i[:22] for i in clean], ['stale power_narrow ent'])
+        for bad in (dict(entry, max_len_mm=2.5), dict(entry, layer='In5.Cu'), dict(entry, reason=''),
+                    dict(entry, pad='U9'), {k: v for k, v in entry.items() if k != 'reason'}, dict(entry, width_mm='0.3')):
+            with self.subTest(bad=bad):
+                self.assertTrue(any("'power_narrow'[0]" in i for i in self.u9_issues(self.u9_in(), [bad])))
+        self.assertEqual(r11.power_narrow_entries({}), ([], []))                     # no key: strict floors
+
+    def test_u9_in_floors_follow_the_layer_and_take_no_via(self):
+        entry = {'net': 'BAT_IN', 'pad': 'U9.5', 'layer': 'B.Cu', 'width_mm': 0.3, 'max_len_mm': 0.6, 'reason': 'test'}
+        inner = self.u9_issues(self.u9_in(layer=pcbnew.In2_Cu), [entry])            # 0.7 mm on 0.5 oz In2: 1.83 floor
+        self.assertTrue(any('0.700 mm wide' in i and 'In2.Cu' in i and 'floor 1.83' in i for i in inner), inner)
+        self.assertFalse(any('0.700 mm wide' in i and 'B.Cu' in i for i in inner), inner)   # 0.68 on B.Cu holds
+        via = self.u9_issues(self.u9_in(via=True), [entry])
+        self.assertTrue(any('2 via(s) on the path; at most 0' in i for i in via), via)
+        s = self.u9_in()
+        s.board.Remove(next(t for t in s.board.GetTracks() if t.GetStart() == Six.P(3, 10)))
+        self.assertTrue(any('no BAT_IN copper path' in i for i in self.u9_issues(s, [entry])))
+
+    def test_single_open_taps_map_u1_pins_to_balls(self):
+        taps = r11.single_open_taps_r11()
+        self.assertEqual(len(taps), len(r10.SINGLE_OPEN_TAPS))
+        labels = {lab for _, tap, src, _ in taps for lab in (tap,) + src}
+        self.assertFalse([lab for lab in labels if re.fullmatch(r'U1\.\d+', lab)])    # no LQFP pin number is left
+        self.assertTrue({'U1.G3', 'U1.D5', 'U1.F8', 'U1.E7'} <= labels)               # PA4, BOOT0, VCAP1, VCAP2
+        self.assertIn(('ACT_GATE', 'Q120.4', ('R121.1',)), [t[:3] for t in taps])
+        self.assertIn(('ACT_GATE', 'Q121.4', ('R121.1',)), [t[:3] for t in taps])
+        for tap in ('R85.2', 'R7.2', 'R8.2', 'U10.2'):
+            self.assertIn(tap, [t[1] for t in taps])
+        with self.assertRaises(ValueError):
+            r11.single_open_taps_r11({'28': 'G3'})                    # a U1 pin without a ball: fail, never drop
+        b = r11.lqfp_balls()
+        self.assertEqual((b['28'], b['94'], b['48'], b['73']), ('G3', 'D5', 'F8', 'E7'))
+
+    def test_single_via_tap_and_route_check_parallel_pair_agree(self):
+        """O-C2-5: Q120.4 -> R121.1 on one ACT_GATE barrel fails K-power's single-via-open taps; a second barrel beside
+        it passes K-power, and passes route_check r11 only when the gate data list the pair."""
+        def build(second):
+            s = Six()
+            s.part('Q120', 5, 5, [('4', 'ACT_GATE', (0, 0), 'smd')])
+            s.part('R121', 15, 5, [('1', 'ACT_GATE', (0, 0), 'smdb')])
+            s.track((5, 5), (7, 5), 'ACT_GATE', width=0.3); s.via(7, 5, 'ACT_GATE')
+            s.track((7, 5), (15, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3)
+            s.via(7, 6.2, 'GND')
+            if second:
+                s.via(7.75, 5.75, 'ACT_GATE')
+                s.track((7.75, 5.75), (7, 5), 'ACT_GATE', width=0.3)
+                s.track((7.75, 5.75), (7.75, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3)
+            return s
+        taps = [t for t in r11.single_open_taps_r11() if t[1] == 'Q120.4']
+
+        def single(s, exceptions=()):
+            return r10.single_via_opens(s.board, taps=taps, exceptions=list(exceptions))[0]
+        one = build(False)
+        self.assertTrue(any('hangs on one via' in i for i in single(one)))          # the seeded single-via tap fails
+        exc = [('Q120.4', 'via ACT_GATE (7.00, 5.00)', 'test')]
+        self.assertEqual(single(one, exc), [])                                       # ... unless an exact exception
+        two = build(True)
+        self.assertEqual(single(two), [])
+        self.assertTrue(any('stale SINGLE_OPEN_EXCEPTIONS' in i for i in single(two, exc)))
+        self.addCleanup(rc.set_profile, 'r8')
+        pair = {'net': 'ACT_GATE', 'vias': [[7, 5], [7.75, 5.75]], 'reason': 'test'}
+        for pairs, want in (([], {'track_loop', 'extra_vias'}), ([pair], set())):
+            rc.set_profile('r11', gate_data={'parallel_vias': pairs})
+            got = {d['cat'] for d in rc.scan(two.board) if d['net'] == 'ACT_GATE' and rc.gated(d)}
+            self.assertEqual(got & {'track_loop', 'extra_vias', 'parallel_via'}, want)
+
+    def test_rule_selection_fails_closed(self):
+        with self.assertRaises(ValueError):
+            r11.selected_rules(set())
+        with self.assertRaises(ValueError):
+            r11.selected_rules({'P-11'})                                 # a dropped R10 rule is not an R11 id
+        self.assertLess(r11.STAGES['functional'], r11.STAGES['full'])
+        s = Six()
+        rep = s.run({'S-1'}, port_pin={})                                # no ball for PC0: the rule cannot run
+        self.assertFalse(rep['ok'])
+        self.assertIn('could not run', rep['issues'][0])
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11Fixes(unittest.TestCase):
+    """The stage B follow-up: the R11 pin table's balls, the sense-node exemption on them, S-3c, the wire pads."""
+
+    def test_pin_table_reads_r11_balls_and_skips_comments(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / 'pin_table.tsv'
+            p.write_text('# comment line\npin\tport\tr11_ball\tr11_net\n15\tPC0\tF1\tPYRO1_CONT\n-\tVREF+\t-\t-\n')
+            self.assertEqual(r11.pin_table(p), {'PC0': 'F1'})              # the ball, not the LQFP pin 15
+            p.write_text('pin\tport\n15\tPC0\n')
+            with self.assertRaises(ValueError):
+                r11.pin_table(p)                                          # no r11_ball column: fail, never guess
+        table = r11.pin_table()
+        self.assertEqual((table['PC0'], table['PC5'], table['PC1']), ('F1', 'H4', 'F2'))
+
+    def board(self, adc_ball='F1'):
+        s = Six()
+        s.part('U1', 23, 25, [('F1', 'PYRO1_CONT' if adc_ball == 'F1' else 'SIGNAL', (0, 0), 'smd'),
+                              ('H4', 'ARM1_SENSE', (1, 0), 'smd'), ('E5', '3V3', (2, 0), 'smd'),
+                              ('E6', 'GND', (3, 0), 'smd')] +
+               ([] if adc_ball == 'F1' else [(adc_ball, 'PYRO1_CONT', (4, 0), 'smd')]))
+        return s
+
+    # K-loader (gate_C2.md section 5): R11's own LOADER_R11 on U1's balls
+    @staticmethod
+    def pin_nets():
+        import csv
+        with r11.R11_PIN_TABLE.open() as f:
+            rows = csv.DictReader((line for line in f if not line.startswith('#')), delimiter='\t')
+            return {r['port']: r['r11_net'] for r in rows if r.get('port')}
+
+    def loader_board(self, nets=None):
+        """U1 with every LOADER_H74X ball of the R11 pin table, on `nets` (default: LOADER_R11's nets; others NC), and
+        every recorded member pad with its recorded value."""
+        balls = r11.pin_table()
+        nets = {p: e['net'] for p, e in r11.LOADER_R11.items()} if nets is None else nets
+        s = Six()
+        s.part('U1', 23, 25, [(balls[p], nets.get(p), (0.1 * k, 0), 'smd')
+                              for k, p in enumerate(sorted(q for q in r10.LOADER_H74X if q in balls))])
+        parts = {}
+        for e in r11.LOADER_R11.values():
+            for pad, value in (e['members'] or {}).items():
+                ref, num = pad.split('.')
+                parts.setdefault(ref, (value, []))[1].append((num, e['net']))
+        for k, (ref, (value, pads)) in enumerate(sorted(parts.items())):
+            f = s.part(ref, 5 + k, 45, [(num, net, (0.5 * j, 0), 'smd') for j, (num, net) in enumerate(pads)])
+            f.SetValue(value)
+        return s, balls
+
+    def loader_issues(self, s, balls, allowances=None):
+        return r11.loader_pins_r11(s.board, balls, allowances)[0]
+
+    def test_k_loader_entries_cover_the_r11_pin_tables_loader_nets(self):
+        """The passing real map: LOADER_R11 is exactly the loader ports that carry a net in pin_table.tsv's r11_net,
+        each with that net, R10's AN2606 citation, a decision heading and a case section; the board built from it
+        passes."""
+        nets = self.pin_nets()
+        carried = {p: n for p, n in nets.items() if p in r10.LOADER_H74X and n not in ('', 'NC', '-')}
+        self.assertEqual({p: e['net'] for p, e in r11.LOADER_R11.items()}, carried)
+        self.assertEqual(r11.loader_entry_issues(r11.LOADER_R11), [])
+        self.assertEqual({p: (e['net'], e['decision'], e['case']) for p, e in r11.LOADER_R11.items()
+                          if p in ('PB9', 'PA15', 'PB10', 'PB11', 'PB6')},
+                         {'PB9': ('CAM_MCU_TX', 'D-R11-49', '8.4'), 'PA15': ('SERVO2_MCU', 'D-R11-49', '8.4'),
+                          'PB10': ('I2C1_SCL', 'D-R11-41', '7'), 'PB11': ('I2C1_SDA', 'D-R11-41', '7'),
+                          'PB6': ('QSPI_NCS', 'D-R11-01', r11.R10_CASE)})
+        self.assertTrue(all(e['an2606'] == r11.LOADER_AN2606 for e in r11.LOADER_R11.values()))
+        self.assertEqual(set(r11.LOADER_R11) - set(r10.LOADER_H74X), set())
+        s, balls = self.loader_board()
+        self.assertEqual(self.loader_issues(s, balls), [])
+        self.assertEqual(s.run({'K-loader'}, port_pin=balls)['issues'], [])
+        self.assertIn('PI0', r10.LOADER_H74X)                  # the set is R10's LOADER_H74X, unchanged
+        self.assertNotIn('PI0', balls)
+
+    def test_k_loader_fails_a_loader_net_with_no_entry(self):
+        s, balls = self.loader_board()
+        s.board.FindFootprintByReference('U1').FindPadByNumber(balls['PA9']).SetNet(s.net('GPS_TX_WIRE'))
+        issues = self.loader_issues(s, balls)
+        self.assertEqual(len(issues), 1)
+        self.assertIn('PA9', issues[0]); self.assertIn('no LOADER_R11 entry', issues[0])
+        self.assertIn('loader drives this pin', issues[0])
+        s, balls = self.loader_board()
+        less = {p: e for p, e in r11.LOADER_R11.items() if p != 'PA15'}
+        self.assertTrue(any('PA15' in i and 'no LOADER_R11 entry' in i for i in self.loader_issues(s, balls, less)))
+
+    def test_k_loader_fails_an_entry_whose_pin_now_carries_another_net(self):
+        nets = {p: e['net'] for p, e in r11.LOADER_R11.items()}
+        nets['PB9'] = 'I2C1_SDA'                               # R10's old PB9 net back on the ball
+        s, balls = self.loader_board(nets)
+        issues = self.loader_issues(s, balls)
+        self.assertTrue(any('PB9' in i and 'carries I2C1_SDA' in i and 'entry is for CAM_MCU_TX' in i for i in issues))
+        s, balls = self.loader_board()                         # a new member on a pinned net
+        s.part('R999', 40, 45, [('1', 'SERVO2_MCU', (0, 0), 'smd')]).SetValue('10k')
+        self.assertTrue(any('PA15' in i and 'members differ' in i for i in self.loader_issues(s, balls)))
+
+    def test_k_loader_fails_a_stale_entry_for_an_nc_pin(self):
+        s, balls = self.loader_board()
+        stale = dict(r11.LOADER_R11, PA2=dict(r11.LOADER_R11['PA15'], net='SERVO3_MCU'))
+        issues = self.loader_issues(s, balls, stale)
+        self.assertTrue(any(i.startswith('stale LOADER_R11 entry PA2') for i in issues))
+        nets = {p: e['net'] for p, e in r11.LOADER_R11.items() if p != 'PB10'}
+        s, balls = self.loader_board(nets)                    # PB10's ball made NC: its entry is stale
+        self.assertTrue(any(i.startswith('stale LOADER_R11 entry PB10') for i in self.loader_issues(s, balls)))
+
+    def test_k_loader_entries_need_provenance(self):
+        bad = dict(r11.LOADER_R11)
+        bad['PB9'] = dict(bad['PB9'], decision='D-R11-999')
+        bad['PB10'] = dict(bad['PB10'], case='9.9')
+        bad['PB11'] = dict(bad['PB11'], an2606='AN2606 Rev 70')
+        bad['PA15'] = dict(bad['PA15'], case=r11.R10_CASE)    # R10 had no PA15 allowance
+        bad['PD0'] = dict(bad['PA15'])                         # not a loader pin
+        bad['PA4'] = dict(bad['PA4'], reason=' ')
+        issues = r11.loader_entry_issues(bad)
+        for frag in ('PB9: decision D-R11-999', 'PB10: case section 9.9', 'PB11: AN2606 citation',
+                     "PA15: names R10's case", 'PD0: not a loader pin', "PA4: missing ['reason']"):
+            self.assertTrue(any(frag in i for i in issues), frag)
+
+    def test_s2_exempts_the_sense_nodes_only_on_their_own_balls(self):
+        ties = [i for i in failing(self.board().run({'S-2'}, port_pin={'PC0': 'F1', 'PC5': 'H4', 'PC1': 'F2'}), 'S-2')
+                if 'U1 has pads' in i]
+        self.assertEqual(ties, [])
+        ties = [i for i in failing(self.board('G1').run({'S-2'}, port_pin={'PC0': 'F1', 'PC5': 'H4', 'PC1': 'F2'}),
+                                   'S-2') if 'U1 has pads' in i and 'PYRO1_CONT' in i]
+        self.assertTrue(ties)                                            # PYRO1_CONT on a second ball is a tie
+
+    def test_s3c_is_full_stage_only_and_holds_the_copper_rule(self):
+        self.assertIn('S-3c', r11.STAGES['full'])
+        self.assertNotIn('S-3c', r11.STAGES['placement'])
+        rep = Six().run({'S-3c'})
+        self.assertTrue(failing(rep, 'S-3c'))                            # no load switch / no copper: fails
+
+    def test_wire_pads_must_be_off_the_jlc_upload_and_fitted(self):
+        def issues(attrs):
+            s = Six()
+            for ref, nets in r11.WIRE_PADS.items():
+                f = s.part(ref, 5, 10 if ref == 'J1' else 30,
+                           [(n, net, (0, 3 * i), 'pth') for i, (n, net) in enumerate(sorted(nets.items()))])
+                f.SetAttributes(attrs)
+            ctx = r11.make_ctx(s.board, data={})
+            return r11.wire_pad_population(ctx)
+        off = pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES
+        self.assertEqual(issues(off), [])
+        self.assertEqual(len(issues(pcbnew.FP_EXCLUDE_FROM_BOM)), 2)     # still in the position file
+        self.assertEqual(len(issues(off | pcbnew.FP_DNP)), 2)
+        with tempfile.TemporaryDirectory() as d:
+            bom = Path(d) / 'bom.csv'
+            bom.write_text('Designator,Qty\nJ121,1\n')
+            s = Six()
+            ctx = r11.make_ctx(s.board, data={}); ctx.bom = bom
+            self.assertTrue(any('J121 are in the JLC upload' in i for i in r11.wire_pad_population(ctx)))
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11Fit(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+        self.folder = Path(self.temp.name)
+
+    def test_gh_envelope_follows_the_mouth_and_must_face_its_edge(self):
+        s = Six()
+        f = s.gh('J410', 44.5, 25, ['PORT_4V8', 'GND', 'GPS_TX_WIRE', 'GPS_RX_WIRE'], mouth=(1, 0))
+        n = fc.gh_circuits(f)
+        self.assertEqual(n, 4)
+        header, mated, mouth, problems = fc.gh_envelope(f, n, (0, 0, 46, 50))
+        self.assertEqual((mouth, problems), ((1.0, 0.0), []))
+        g = fc.GH_DRAWING
+        self.assertAlmostEqual(mated[2] - mated[0], g['housing_length'] + fc.GH_WIRE_STRAIGHT, places=6)
+        self.assertAlmostEqual(mated[3] - mated[1], 1.25 * 3 + g['header_extra_width'], places=6)
+        self.assertAlmostEqual(mated[5], g['header_height'], places=6)
+        self.assertLess(fc.margin(mated, 24.9, 23.0, 0.3), 0)            # a plug straight out of the long edge
+        s = Six()
+        f = s.gh('J420', 30, 25, ['PORT_4V8', 'GND', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE'], mouth=(1, 0))
+        self.assertTrue(fc.gh_envelope(f, 4, (0, 0, 46, 50))[3])        # mid-board, facing no edge
+        s = Six()
+        f = s.gh('J400', 23, 1.5, ['BAT_IN', 'GND'], mouth=(0, -1))      # aft short edge: the plug leaves axially
+        _, mated, _, problems = fc.gh_envelope(f, 2, (0, 0, 46, 50))
+        self.assertEqual(problems, [])
+        self.assertGreater(fc.margin(mated, 24.9, 23.0, 0.3), 0)
+
+    def test_r11_profile_requires_six_layers_ports_wire_pads_and_corner_supports(self):
+        s = Six()
+        for x, y in ((4, 4), (42, 4), (4, 46), (42, 46)):
+            s.hole(x, y)
+        rep = fc.check_board(s.board, self.folder, profile='r11')
+        text = '\n'.join(rep['issues'])
+        for ref in sorted(fc.R11_MATED_REFS):
+            self.assertIn(f'{ref}: required R11 mated envelope missing', text)
+        for ref in sorted(fc.WIRE_PAD_REFS):
+            self.assertIn(f'{ref}: required R11 wire-pad footprint missing', text)
+        self.assertNotIn('corner', text)
+        b4 = pcbnew.BOARD(); b4.SetCopperLayerCount(4)
+        for a, c in (((0, 0), (46, 0)), ((46, 0), (46, 50)), ((46, 50), (0, 50)), ((0, 50), (0, 0))):
+            e = pcbnew.PCB_SHAPE(b4); e.SetShape(pcbnew.SHAPE_T_SEGMENT); e.SetLayer(pcbnew.Edge_Cuts)
+            e.SetStart(Six.P(*a)); e.SetEnd(Six.P(*c)); b4.Add(e)
+        self.assertTrue(any('six-layer' in i for i in fc.check_board(b4, self.folder, profile='r11')['issues']))
+
+    def test_wire_pad_allocation_meets_other_bodies(self):
+        s = Six()
+        s.part('J1', 3, 25, [('1', 'BAT_IN', (0, 0), 'pth'), ('2', 'GND', (0, 3), 'pth')])
+        boxes = fc.wire_pad_boxes(s.board.FindFootprintByReference('J1'))
+        self.assertEqual(len(boxes), 2)
+        label, above, below = boxes[0]
+        self.assertAlmostEqual(above[5], fc.WIRE_ALLOWANCE['above'])
+        self.assertAlmostEqual(below[4], -fc.BOARD_T - fc.WIRE_ALLOWANCE['tail'])
+        rep = fc.check_board(s.board, self.folder, profile='r11')
+        self.assertIn('J1.1 wire', rep['wire_pads'])
+
+
+R11_PROJECT = Path(__file__).resolve().parents[1] / 'm3_design' / 'r11'
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11KRules(unittest.TestCase):
+    """D-R11-40: K-rules holds R11's own DRU (SHA-256 pinned) and floors from JLC's six-layer capability page, and its
+    later-rule test respects each rule's condition."""
+
+    def setUp(self):
+        self.dru = (R11_PROJECT / 'm3.kicad_dru').read_text()
+        self.pro = (R11_PROJECT / 'm3.kicad_pro').read_text()
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+
+    def k_rules(self, dru=None, pro=None, pin_own=False, board=None):
+        folder = Path(self.temp.name)
+        dru = self.dru if dru is None else dru
+        (folder / 'm3.kicad_dru').write_text(dru)
+        (folder / 'm3.kicad_pro').write_text(self.pro if pro is None else pro)
+        ctx = r11.make_ctx(Six().board if board is None else board, data={}, board_path=folder / 'm3.kicad_pcb')
+        sha = __import__('hashlib').sha256(dru.encode('utf-8')).hexdigest() if pin_own else None
+        return r11.k_rules(ctx, dru_sha=sha)[0]
+
+    def test_the_project_rules_pass(self):
+        self.assertEqual(self.k_rules(), [])
+
+    def test_hash_mismatch_fails(self):
+        issues = self.k_rules(self.dru + '\n# a comment only\n')
+        self.assertEqual(len(issues), 1, issues)
+        self.assertIn('is not the pinned', issues[0])
+
+    def test_a_looser_dru_fails_even_when_re_pinned(self):
+        looser = self.dru.replace('(constraint clearance (min 0.1mm))', '(constraint clearance (min 0.08mm))')
+        self.assertNotEqual(looser, self.dru)
+        self.assertTrue(any('is not the pinned' in i for i in self.k_rules(looser)))
+        issues = self.k_rules(looser, pin_own=True)
+        self.assertTrue(any('below the 0.1 mm floor' in i for i in issues), issues)
+        self.assertTrue(any("below JLC's 0.09 mm" in i for i in issues), issues)
+        via = self.dru.replace('(constraint via_diameter (min 0.25mm))', '(constraint via_diameter (min 0.2mm))')
+        self.assertTrue(any('via_diameter min 0.2 mm is below' in i for i in self.k_rules(via, pin_own=True)))
+
+    def test_a_rule_below_the_jlc_floor_fails(self):
+        for rule, want in (('(rule "seed" (condition "A.Type == \'Via\'") (constraint hole_to_hole (min 0.15mm)))',
+                            'below the 0.2 mm floor'),
+                           ('(rule "seed" (constraint hole_size (min 0.12mm)))', 'below the 0.15 mm floor'),
+                           ('(rule "seed" (constraint track_width (min 0.09mm)))', 'below the 0.1 mm floor')):
+            with self.subTest(rule=rule):
+                issues = self.k_rules(self.dru + rule + '\n', pin_own=True)
+                self.assertTrue(any(want in i for i in issues), issues)
+        for key, value in (('"min_clearance": 0.1', '"min_clearance": 0.08'),
+                           ('"min_via_diameter": 0.25', '"min_via_diameter": 0.2'),
+                           ('"min_hole_to_hole": 0.2', '"min_hole_to_hole": 0.15')):
+            with self.subTest(pro=key):
+                self.assertIn(key, self.pro)
+                issues = self.k_rules(pro=self.pro.replace(key, value))
+                self.assertTrue(any('.kicad_pro design rule' in i for i in issues), issues)
+        import json
+        project = json.loads(self.pro)
+        project['net_settings']['classes'][0]['via_drill'] = 0.1
+        self.assertTrue(any('via_drill 0.1, floor 0.15' in i for i in self.k_rules(pro=json.dumps(project))))
+        project = json.loads(self.pro)
+        project['net_settings']['classes'][0]['clearance'] = 0.09
+        self.assertTrue(any('clearance 0.09, floor 0.1' in i for i in self.k_rules(pro=json.dumps(project))))
+
+    def test_a_via_via_condition_rule_is_evaluated_only_for_vias(self):
+        pad_pad = "A.Type == 'Pad' && B.Type == 'Pad'"
+        via_via = "A.Type == 'Via' && B.Type == 'Via'"
+        self.assertFalse(r11.conditions_meet(pad_pad, via_via))
+        self.assertFalse(r11.conditions_meet(pad_pad, "A.Type == 'Via'"))          # either order: never a pad pair
+        self.assertTrue(r11.conditions_meet(pad_pad, None))
+        self.assertTrue(r11.conditions_meet(pad_pad, "B.Type == 'Pad'"))
+        self.assertTrue(r11.conditions_meet(pad_pad, "A.Pad_Type == 'Through-hole'"))
+        self.assertTrue(r11.conditions_meet(pad_pad, "A.Type == 'Via' || B.Type == 'Pad'"))   # '||': no facts
+        self.assertTrue(r11.conditions_meet(None, via_via))
+        self.assertTrue(r11.conditions_meet("A.Type == 'Via'", "B.Type == 'Via' && A.Type == 'Pad'"))  # swapped
+        # the project's 0.2 mm via-via rule follows the 0.45 mm pad hole-to-hole rule and cannot override it ...
+        issues, _ = r11.jlc_table_r11(self.dru)
+        self.assertEqual(issues, [])
+        self.assertTrue(any(' follows "JLC pad hole to hole"' in i for i in r10.jlc_hole_table(self.dru)[0]))
+        # ... while a later 0.2 mm hole-to-hole rule that can match a pad pair still fails
+        for cond in (None, "A.Type == 'Pad'", "A.Type == 'Via' || B.Type == 'Via'"):
+            with self.subTest(cond=cond):
+                c = '' if cond is None else f' (condition "{cond}")'
+                text = self.dru + f'(rule "seed"{c} (constraint hole_to_hole (min 0.2mm)))\n'
+                issues, _ = r11.jlc_table_r11(text)
+                self.assertTrue(any('"seed"' in i and 'follows "JLC pad hole to hole"' in i for i in issues), issues)
+        # and a via-via rule is still held to JLC's 0.2 mm via figure
+        text = self.dru.replace("(constraint hole_to_hole (min 0.2mm))", "(constraint hole_to_hole (min 0.18mm))")
+        self.assertTrue(r11.jlc_table_r11(text)[0])
+
+    def test_pth_hole_to_inner_copper_stays_at_jlcs_0_3_mm(self):
+        """R21-GATE-02 on R11's four inner layers: a PTH hole wall 0.2 mm from foreign In3 copper fails."""
+        for x, bad in ((10.75, True), (10.95, False)):         # hole wall at 10.5; 0.1 mm track: 0.2 / 0.4 mm gap
+            with self.subTest(x=x):
+                s = Six()
+                s.part('J1', 10, 10, [('1', 'BAT_IN', (0, 0), 'pth')])
+                s.track((x, 5), (x, 15), 'SIGNAL', pcbnew.In3_Cu, width=0.1)
+                issues = [i for i in self.k_rules(board=s.board) if 'inner-layer PTH' in i]
+                self.assertEqual(bool(issues), bad, issues)
+
+
+def real_board():
+    path = os.environ.get('R11_BOARD')
+    if path and Path(path).is_file():
+        return Path(path)
+    return None
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11Legends(unittest.TestCase):
+    """D-R11-64: K-legends' R11 data: J9's six GH contacts, R11's revision, the word span on the pin-row axis."""
+
+    def text(self, s, words, x, y, layer=None, angle=0):
+        t = pcbnew.PCB_TEXT(s.board); t.SetText(words); t.SetLayer(pcbnew.F_SilkS if layer is None else layer)
+        t.SetTextSize(s.P(1.0, 1.0)); t.SetTextThickness(pcbnew.FromMM(0.15)); t.SetTextAngleDegrees(angle)
+        t.SetPosition(s.P(x, y)); s.board.Add(t)
+        return t
+
+    def test_j9_legends_name_r11s_six_contacts(self):
+        pins = dict(r11.TERMINAL_PINS_R11)
+        self.assertEqual(pins['J9'], (('1', '5V4'), ('2', '5V4'), ('3', 'GND'), ('4', 'GND'), ('5', 'RXI'), ('6', 'TXO')))
+        self.assertEqual({k: v for k, v in pins.items() if k != 'J9'},
+                         {k: v for k, v in r10.TERMINAL_PINS_R10 if k != 'J9'})
+        s = Six()
+        s.gh('J9', 30.0, 4.0, ['CAM_5V', 'CAM_5V', 'GND', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE'], mouth=(0, -1))
+        x3 = s.board.FindFootprintByReference('J9').FindPadByNumber('3').GetPosition()
+        self.text(s, '3:RXI', pcbnew.ToMM(x3.x), pcbnew.ToMM(x3.y) + 3.0, angle=90)   # R10's J9 pin 3 word
+        with r10.patched(r10, TERMINAL_PINS_R10=r11.TERMINAL_PINS_R11):
+            issues, _ = r10.terminal_legends(s.board)
+        self.assertTrue(any('J9.3' in i and 'conflicting' in i for i in issues), issues)
+
+    def test_revision_legend_is_r11s_alone(self):
+        s = Six()
+        self.text(s, r11.REVISION, 20.0, 25.0, pcbnew.B_SilkS)
+        self.assertEqual(r11.pinned_texts_r11(s.board), [])
+        self.text(s, 'M3-ASSY-R10', 20.0, 30.0, pcbnew.B_SilkS)
+        self.assertTrue(any('only M3-ASSY-R11' in i for i in r11.pinned_texts_r11(s.board)))
+        s2 = Six()
+        self.text(s2, r11.REVISION, 20.0, 25.0)                      # on the top: the pinned text is the bottom's
+        self.assertTrue(any('missing on B.Silkscreen' in i for i in r11.pinned_texts_r11(s2.board)))
+
+    def test_word_span_follows_the_pin_row_axis(self):
+        s = Six()
+        f = s.gh('J410', 23.0, 46.0, ['PORT_4V8', 'GND', 'GPS_TX_WIRE', 'GPS_RX_WIRE'], mouth=(0, 1))
+        yard = pcbnew.SHAPE_POLY_SET(); yard.NewOutline()
+        for x, y in ((18.5, 43.5), (27.5, 43.5), (27.5, 49.5), (18.5, 49.5)):
+            yard.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+        for a, c in zip(((18.5, 43.5), (27.5, 43.5), (27.5, 49.5), (18.5, 49.5)),
+                        ((27.5, 43.5), (27.5, 49.5), (18.5, 49.5), (18.5, 43.5))):
+            e = pcbnew.PCB_SHAPE(f); e.SetShape(pcbnew.SHAPE_T_SEGMENT); e.SetLayer(pcbnew.F_CrtYd)
+            e.SetStart(s.P(*a)); e.SetEnd(s.P(*c)); e.SetWidth(pcbnew.FromMM(0.05)); f.Add(e)
+        f.BuildCourtyardCaches()
+        t = self.text(s, 'GPS', 23.0, 41.0)                          # behind the row, centred along x
+        issues, ev = r11.word_spans_r11(s.board)
+        self.assertEqual((issues, ev['GPS']['axis']), ([], 'x'))
+        t.SetPosition(s.P(17.5, 46.0))                               # beside the row: inside R10's y-span, not x's
+        issues, _ = r11.word_spans_r11(s.board)
+        self.assertTrue(issues and 'along the pin row (x' in issues[0], issues)
+
+    def test_r11_legend_set_waives_only_absent_optional_legends(self):
+        """D-R11-83: pin 1 and the last pin of each GH port, every pyro / battery / arming legend and the safety words
+        stay required; an absent optional legend is waived, a drawn wrong one is not."""
+        for ref in r11.PROTECTED_LEGENDS_R11:
+            self.assertFalse(any(k[0] == ref for k in r11.OPTIONAL_PINS_R11), ref)
+        for ref, pins in r11.TERMINAL_PINS_R11:
+            if ref in r11.GH_PORTS_R11:
+                self.assertNotIn((ref, pins[0][0]), r11.OPTIONAL_PINS_R11)
+                self.assertNotIn((ref, pins[-1][0]), r11.OPTIONAL_PINS_R11)
+        self.assertFalse({'IGN', 'BAT', 'SWITCH'} & r11.OPTIONAL_WORDS_R11)
+        s = Six()
+        absent = ['J122.2: 0 legends "2:S2" nearest it, expected one',
+                  "J420: word legend 'RADIO' appears 0 times on silkscreen, expected once",
+                  'J2.4: silkscreen must identify SWCLK exactly once (R10 port table)',
+                  "J122: silkscreen must identify 'SERVO + FROM HARNESS' exactly once"]
+        required = ['J122.1: 0 legends "1:S1" nearest it, expected one',
+                    'J122.5: 0 legends "5:GND" nearest it, expected one',
+                    'J121.1: 0 legends "1:E1-" nearest it, expected one',
+                    'J400.2: 0 legends "2:SW" nearest it, expected one',
+                    "J400: word legend 'SWITCH' appears 0 times on silkscreen, expected once",
+                    'J2.1: silkscreen must identify 3V3 exactly once (R10 port table)',
+                    'J122.2: 2 legends "2:S2" nearest it, expected one',
+                    "J420: word legend 'RADIO' appears 2 times on silkscreen, expected once"]
+        kept, waived = r11.r11_legend_set(s.board, absent + required)
+        self.assertEqual((kept, sorted(waived)), (required, sorted(absent)))
+        R11Legends.text(self, s, 'J2 4:SWCLK', 20.0, 20.0)           # drawn: the port-table finding is not an absence
+        kept, _ = r11.r11_legend_set(s.board, ['J2.4: silkscreen must identify SWCLK exactly once (R10 port table)'])
+        self.assertEqual(len(kept), 1)
+
+    def test_exti_lines_are_distinct(self):
+        """D-R11-81: two interrupt nets on one EXTI line number fail (PA5 and PD5 were both line 5)."""
+        s = Six()
+        nets = (('H3', 'BAT_FAULT_N'), ('C6', 'IMU_INT1'), ('G3', 'LOGIC_SOURCE_ST'), ('F9', 'VBUS_SENSE'),
+                ('H9', 'USB_FAULT_N'), ('A2', 'CAM_FAULT_N'), ('B6', 'SIGNAL'))
+        u1 = s.part('U1', 23.0, 25.0, [(ball, net, (k * 0.8, 0), 'smd') for k, (ball, net) in enumerate(nets)])
+        table = {'PA5': 'H3', 'PD6': 'C6', 'PA4': 'G3', 'PC8': 'F9', 'PD10': 'H9', 'PC13': 'A2', 'PD5': 'B6'}
+        issues, ev = r11.exti_lines(s.board, table)
+        self.assertEqual(issues, [], ev)
+        self.assertEqual(ev['EXTI6'], ['IMU_INT1 PD6 (C6)'])
+        u1.FindPadByNumber('C6').SetNet(s.net('SIGNAL'))
+        u1.FindPadByNumber('B6').SetNet(s.net('IMU_INT1'))                 # D-R11-49's PD5: line 5 with PA5
+        issues, _ = r11.exti_lines(s.board, table)
+        self.assertTrue(any('EXTI line 5 shared' in i for i in issues), issues)
+        u1.FindPadByNumber('B6').SetNet(s.net('SIGNAL'))                   # the net on no ball
+        self.assertTrue(any('IMU_INT1: on U1 balls []' in i for i in r11.exti_lines(s.board, table)[0]))
+
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11RealBoard(unittest.TestCase):
+    """Seeds on temporary copies of the R11 board (R11_BOARD); skipped without it unless R11_BOARD_REQUIRED=1."""
+
+    def setUp(self):
+        self.path = real_board()
+        if self.path is None:
+            if os.environ.get('R11_BOARD_REQUIRED') == '1':
+                self.fail('R11_BOARD_REQUIRED=1 but R11_BOARD names no board: the real-board seeds may not be skipped')
+            self.skipTest('R11_BOARD not set (no R11 board yet)')
+        self.temp = tempfile.TemporaryDirectory(); self.addCleanup(self.temp.cleanup)
+        self.copy = Path(self.temp.name) / 'r11'
+        shutil.copytree(self.path.parent, self.copy, ignore=shutil.ignore_patterns('fab', '*.lck', '__pycache__'))
+        self.board = pcbnew.LoadBoard(str(self.copy / self.path.name))
+
+    def run_rules(self, only):
+        return r11.check_board(self.board, self.copy, self.copy / self.path.name, only=set(only))
+
+    def test_board_is_r11_and_six_layers(self):
+        self.assertEqual(self.board.GetTitleBlock().GetRevision(), r11.REVISION)
+        self.assertEqual(self.board.GetCopperLayerCount(), 6)
+
+    def test_safety_rules_hold_and_catch_a_seeded_in3_track_at_a_pyro_barrel(self):
+        self.assertEqual(self.run_rules({'S-1', 'S-2', 'S-3', 'S-5', 'S-8', 'W-1', 'W-2'})['issues'], [])
+        vias = [t for t in self.board.GetTracks() if t.GetClass() == 'PCB_VIA' and t.GetNetname() in r10.BARREL_NETS]
+        pads = [p for f in self.board.GetFootprints() for p in f.Pads()
+                if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH and p.GetNetname() in r10.BARREL_NETS]
+        at = (vias[0] if vias else pads[0]).GetPosition()
+        t = pcbnew.PCB_TRACK(self.board)
+        t.SetStart(pcbnew.VECTOR2I(at.x + pcbnew.FromMM(0.7), at.y - pcbnew.FromMM(2)))
+        t.SetEnd(pcbnew.VECTOR2I(at.x + pcbnew.FromMM(0.7), at.y + pcbnew.FromMM(2)))
+        t.SetWidth(pcbnew.FromMM(0.1)); t.SetLayer(pcbnew.In3_Cu)
+        t.SetNet(self.board.FindNet('3V3'))                           # foreign, non-GND copper on In3
+        self.board.Add(t)
+        self.assertTrue(self.run_rules({'S-8'})['issues'])
+
+    def test_placement_stage_passes_and_catches_seeded_placement_faults(self):
+        full = r11.check_board(self.board, self.copy, self.copy / self.path.name, stage='placement')
+        self.assertEqual(full['issues'], [])
+        j1 = self.board.FindFootprintByReference('J1')
+        j1.SetAttributes(j1.GetAttributes() & ~pcbnew.FP_EXCLUDE_FROM_POS_FILES)
+        self.assertTrue(self.run_rules({'S-4'})['issues'])
+        hole = next(d for d in self.board.GetDrawings() if d.GetLayer() == pcbnew.Edge_Cuts
+                    and d.GetShape() == pcbnew.SHAPE_T_CIRCLE)
+        hole.Move(pcbnew.VECTOR2I(pcbnew.FromMM(0.05), 0))
+        self.assertTrue(self.run_rules({'M-3'})['issues'])
+        u1 = self.board.FindFootprintByReference('U1')
+        ball = r11.pin_table()['PC0']
+        spare = next(p for p in u1.Pads() if p.GetNumber() != ball and p.GetNetname().startswith('unconnected'))
+        spare.SetNet(self.board.FindNet('PYRO1_CONT'))
+        self.assertTrue(self.run_rules({'S-2'})['issues'])
+
+    def test_a_swapped_pyro_wire_pad_fails(self):
+        j121 = self.board.FindFootprintByReference('J121')
+        a, b = j121.FindPadByNumber('1'), j121.FindPadByNumber('2')
+        na, nb = a.GetNet(), b.GetNet()
+        a.SetNet(nb); b.SetNet(na)
+        self.assertTrue(self.run_rules({'W-1'})['issues'])
+
+    def test_k_loader_holds_on_the_real_board(self):
+        """gate_C2.md section 5: LOADER_R11 covers every loader ball's net on the R11 board, with recorded members."""
+        self.assertEqual(self.run_rules({'K-loader'})['issues'], [])
+
+    def test_k_rules_hold_on_the_real_board(self):
+        """D-R11-40: R11's own K-rules (pinned DRU, JLC six-layer floors) hold on the R11 board and project."""
+        self.assertEqual(self.run_rules({'K-rules'})['issues'], [])
+
+    def test_gap3_vippo_holds_and_catches_seeds(self):
+        """D-R11-80: exactly two filled / capped 0.5 / 0.3 GND vias at U401.11's local (+-0.3, 0); any change fails."""
+        issues, ev, allowed = r11.thermal_vias_r11(self.board)
+        self.assertEqual((issues, len(allowed)), ([], 2), ev)
+        self.assertEqual(self.run_rules({'K-copper'})['issues'], [])
+        vias = [v for v in self.board.GetTracks() if v.GetClass() == 'PCB_VIA'
+                and any(math.dist((pcbnew.ToMM(v.GetPosition().x), pcbnew.ToMM(v.GetPosition().y)), c) < 1e-3
+                        for c in r10.vippo_centres(self.board.FindFootprintByReference('U401')))]
+        self.assertEqual(len(vias), 2)
+        vias[0].SetFillingMode(pcbnew.FILLING_MODE_NOT_FILLED)
+        self.assertTrue(r11.thermal_vias_r11(self.board)[0])
+        vias[0].SetFillingMode(pcbnew.FILLING_MODE_FILLED); vias[0].SetCappingMode(pcbnew.CAPPING_MODE_FROM_BOARD)
+        self.assertTrue(r11.thermal_vias_r11(self.board)[0])
+        vias[0].SetCappingMode(pcbnew.CAPPING_MODE_CAPPED)
+        vias[1].Move(pcbnew.VECTOR2I(pcbnew.FromMM(0.05), 0))
+        self.assertTrue(any('K-copper' in i for i in self.run_rules({'K-copper'})['issues']))
+
+    def test_exti_holds_on_the_real_board(self):
+        self.assertEqual(self.run_rules({'K-exti'})['issues'], [])
+        u1 = self.board.FindFootprintByReference('U1')
+        u1.FindPadByNumber(r11.pin_table()['PD5']).SetNet(self.board.FindNet('IMU_INT1'))
+        self.assertTrue(self.run_rules({'K-exti'})['issues'])
+
+    def test_r11_legend_set_on_the_real_board(self):
+        """D-R11-83: K-legends holds; removing the arming word or a pyro pin legend fails; a wrong middle-contact
+        legend fails though middle contacts are optional."""
+        self.assertEqual(self.run_rules({'K-legends'})['issues'], [])
+        texts = [d for d in self.board.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT)]
+        switch = next(t for t in texts if t.GetText() == 'SWITCH')
+        switch.SetVisible(False)
+        self.assertTrue(any("'SWITCH'" in i for i in self.run_rules({'K-legends'})['issues']))
+        switch.SetVisible(True)
+        e1 = next(t for t in texts if t.GetText() == '1:E1-')
+        e1.SetVisible(False)
+        self.assertTrue(any('J121.1' in i for i in self.run_rules({'K-legends'})['issues']))
+        e1.SetVisible(True)
+        pad = self.board.FindFootprintByReference('J410').FindPadByNumber('2').GetPosition()
+        t = pcbnew.PCB_TEXT(self.board); t.SetText('2:TXO'); t.SetLayer(pcbnew.F_SilkS)
+        t.SetTextSize(pcbnew.VECTOR2I(pcbnew.FromMM(1.0), pcbnew.FromMM(1.0))); t.SetPosition(pad)
+        self.board.Add(t)
+        self.assertTrue(any('J410.2' in i for i in self.run_rules({'K-legends'})['issues']))
+
+    def test_route_check_r11_is_clean(self):
+        rc.set_profile('r11'); self.addCleanup(rc.set_profile, 'r8')
+        failures, _, stale = rc.evaluate(rc.scan(self.board))
+        self.assertEqual((failures, stale), ([], []))
+
+
+if __name__ == '__main__':
+    unittest.main()

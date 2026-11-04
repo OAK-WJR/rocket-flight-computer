@@ -1,5 +1,16 @@
 # Rocket Flight Computer (M3 single board)
 
+
+> **Integrated development line (2026-11-04 UTC).** This tree includes both the R10
+> project at `m3_design/assembly_review/` and the compact R11 candidate at
+> `m3_design/r11/`. The R10 sensor/voltage/QSPI bench image and saved-evidence
+> diagnostics are retained; they are bound to R10 and must not be used as R11
+> firmware. The standalone SD transport is not yet linked into either image.
+> R11 pin mapping, harness changes and first-article qualification remain open.
+> The current owner budget is **US$200 total for two usable boards**; no quote has
+> demonstrated that ceiling. See [integration and budget status](docs/INTEGRATION_2026-11-04.md).
+
+
 Flight computer for an amateur high-power rocket: 2S LiPo, STM32H743VIT6, IMU (LSM6DSV320X), barometer (MS5611), QSPI flight log, USB, a RunCam camera interface, an on-board GNSS (u-blox MAX-F10S) and LoRa radio (EBYTE E22-900MM22S), four roll-control servos and one recovery pyro channel with a complete arming break (the backup is an isolated commercial altimeter). The goal is **one 46 mm-wide, four-layer board that fits the main-section bay** (it fits the Ø50.8 mm coupler bore along its whole length; REQUIREMENTS P1/P2).
 
 > **Current status: M3-ASSY-R9 (owner-accepted 2026-10-25) is the current CAD candidate and the board to order; M3-ASSY-R8 (owner-accepted 2026-10-20) is the fallback.** R9 is R8's circuit (one pyro channel, fifteen schematic sheets, the BOM R8's line for line but three footprint fields) laid out again from a clean sheet at 46 × 102 mm (the B-spine: RF strip aft, the CH1 pyro column as a dead end on the west edge, all power in the east column), built reproducibly by `m3_design/r9_build.sh` from R8's committed sources and judged by a rule-based gate (`tools/check_r9.py`) in place of R8's hash-asserted copper; every safety and RF qualification was re-derived on the current board (`4f841a0e…`, made by review pass 1's fix pass; step 10's board was `fc3d5b34…`). Two consecutive independent review passes found no confirmed Critical or Major (pass 1's one Major was confirmed as Minor; pass 2: 0 Critical, 0 Major, 32 Minor, recorded), and the owner accepted R9's deviation list on 2026-10-25 with the board kept at 102 mm; before an order, U4 must be in JLC stock or consigned, JLC must accept the four panel tabs and the cost and stock run must be fresh ([docs/ORDERING.md](docs/ORDERING.md)). Neither board has been built or measured, and no firmware exists for R2–R9 (the R1-bound v0.8.1 must not run on them). Status, what was verified and the open items: [STATUS.md](STATUS.md); the R9 design record: [docs/M3_R9.md](docs/M3_R9.md); validation, requalification and the deviation list: [docs/R9_VALIDATION.md](docs/R9_VALIDATION.md); R8's: [docs/M3_R8.md](docs/M3_R8.md), [docs/R8_VALIDATION.md](docs/R8_VALIDATION.md).

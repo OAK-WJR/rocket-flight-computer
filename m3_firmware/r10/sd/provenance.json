@@ -1,6 +1,6 @@
 {
-  "schema": "r10-sd-metadata-provenance/v1",
-  "reviewed_utc_date": "2026-11-03",
+  "schema": "r10-sd-metadata-provenance/v2",
+  "reviewed_utc_date": "2026-11-04",
   "sources": [
     {
       "publisher": "SD Association",
@@ -44,9 +44,41 @@
       "part": "472192001",
       "url": "https://www.molex.com/en-us/products/part-detail/472192001",
       "drawing": "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf"
+    },
+    {
+      "publisher": "STMicroelectronics",
+      "title": "RM0433 Rev8 January2023",
+      "url": "https://www.st.com/resource/en/reference_manual/rm0433-stm32h742-stm32h743753-and-stm32h750-value-line-advanced-armbased-32bit-mcus-stmicroelectronics.pdf",
+      "reviewed_document_sha256": "9ba54135736a47a302cdc28fdc7ca8f23c6eed5a646fa0a639af6ed2ad71336e",
+      "reviewed_pages": [
+        413,
+        2173,
+        2174,
+        2178,
+        2179,
+        2180,
+        2191,
+        2220,
+        2222
+      ],
+      "visually_reviewed_pages": [
+        2179,
+        2222
+      ]
+    },
+    {
+      "publisher": "STMicroelectronics",
+      "title": "ES0392 Rev16 October2026",
+      "url": "https://www.st.com/resource/en/errata_sheet/es0392-stm32h742x743xig-st32h750xb-and-stm32h753xi-device-errata-stmicroelectronics.pdf",
+      "sections": [
+        "2.22.2",
+        "2.22.4",
+        "2.22.5",
+        "2.22.6"
+      ]
     }
   ],
-  "scope": "Source-bound codec, fixed command frames and portable normalized metadata query; no native transport, target IO or image link.",
+  "scope": "Source-bound metadata codec, one-shot query, bounded wire parser and native SPI3 diagnostic transport; not linked into the image and never run on hardware.",
   "diagnostic_policies": {
     "nominal_ocr_voltage_overlap_mask": "0x00300000",
     "ocr_policy": "Require overlap with3.2-3.4V nominal window; not a measured-rail or full-tolerance acceptance test.",
@@ -62,14 +94,35 @@
       "pending_ACMD41_clock_gap": 25,
       "total": 5000
     },
-    "query_deadlines": "Engineering bench policies, checked at subsequent polls; cannot preempt a callback which never returns. Native finite register/wire timing budgets remain unimplemented."
+    "query_deadlines": "Engineering bench policies checked at subsequent polls. Cannot preempt a callback that never returns. The native port uses finite MMIO polling budgets, not measured wall-clock execution limits."
   },
-  "native_adapter_implemented": false,
+  "native_adapter_implemented": true,
   "image_linked": false,
   "hardware_tested": false,
   "open_items": [
-    "Native bounded SPI3 transport and register/pin/clock provenance are unimplemented; portable query exists and is tested only against a normalized host model.",
-    "Actual SPI/card behavior, physical ownership, clock/CS timing, power/retention, latency/endurance/power loss and logger integration remain unqualified.",
-    "No connection or protocol command was sent to a real card. No media block read, write, erase, lock or format path exists in this codec."
-  ]
+    "Image scheduling, global clock/ownership policy, capture record and host report integration are unimplemented. The current ABI5 image does not initialize SPI3 or send these commands.",
+    "Actual card electrical behavior, SCK/CS timing and post-EOT guard, execution time, physical ownership, card insertion/retention, power-loss/endurance and logging throughput remain unqualified.",
+    "No connection or protocol command was sent to a real card. No media block read, write, erase, lock or format path is provided."
+  ],
+  "pinned_sources": {
+    "m3_firmware/vendor/device/Include/stm32h743xx.h": "9a4ea0860707868a1cc562140ba214d535fb5a64fde91b451b2767276eef7e03"
+  },
+  "native_policies": {
+    "clock": "Require HSI64 system/HCLK and CKPER=HSI/SPI123SEL=CKPER. Do not write shared clock selectors or reset SPI1. Nominal SPI3=64MHz/256=250kHz; actual clock/timing unmeasured.",
+    "ownership": "Only when query cold-start declaration is exactly1, and SPI3 enable/reset are clear. This software precondition is not an inter-core lock or proof of exclusive physical ownership. Global clock-policy integration remains open. Setup/cleanup RCC and GPIO read-modify-write updates require serialization against concurrent register mutations, even by users of other peripherals.",
+    "gpio": "PD0 CS preloaded high before output; PC10/11/12 AF6. Preserve other GPIO/RCC fields. Release parks only the three SPI pins analog/no-pull and retains PD0 high. GPIOC/D clocks remain enabled.",
+    "transfer": "1..16 bytes; byte TXDR/RXDR; finite combined TXP/RXP/EOT polling budget. Continuous software CS across chunks. Disable/re-enable for each chunk with AFCNTR, drain RX, check late status before clearing flags.",
+    "bounds": {
+      "native_default_poll_iterations": 65536,
+      "maximum_configurable_poll_iterations": 1000000,
+      "cleanup_suspend_poll_iterations": 128,
+      "post_EOT_delay_loop_iterations": 512,
+      "R1_prefix_bytes": 16,
+      "data_token_prefix_bytes": 16,
+      "response_bytes_per_poll": 16
+    },
+    "bound_status": "Iteration/byte limits and512-loop post-EOT guard are engineering policies, not measured timing or proof of SD/silicon conformance.",
+    "evidence": "Retain full primary and cleanup port errors, register observations, bootstrap receive bytes, wire byte totals and64-byte TX/RX prefixes. Query io_detail is a truncated layered summary; retain wire.detail and native.detail separately when adding capture serialization.",
+    "cleanup": "Release only resources claimed by this port; CS high, bounded suspend, reset/readback only SPI3, disable/readback its clock, park only its SPI pins. Failed cleanup keeps ownership nonzero and prevents valid completion."
+  }
 }

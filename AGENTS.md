@@ -6,7 +6,7 @@ This file is for anyone — person or AI coding assistant — picking up this re
 
 The deliverable is **one** board (the M1/M2 two-board scheme was abandoned; see `docs/HISTORY.md`) with every function in the original requirements.
 
-**Which board.** R9 (46 × 102 mm, owner-accepted 2026-10-25; package bound to `4f841a0e…`, $109.38 per board at the 2026-10-26 run) is the accepted board to order after a fresh cost and stock run. R8 (46 × 118 mm, accepted 2026-10-20, package `cc044ea0…`) is its fallback. Their per-block history is in `docs/M3_R9.md`, `docs/M3_R8.md` and `docs/M3_R7.md`. **M3-ASSY-R10 is a CAD candidate on branch `m3-assy-r10`: not accepted, nothing ordered.** The table below describes R10 only. Decision IDs such as D-R15-01 are in `m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md`.
+**Which board.** R9 (46 × 102 mm, owner-accepted 2026-10-25; package bound to `4f841a0e…`, $109.38 per board at the 2026-10-26 run) is the accepted board to order after a fresh cost and stock run. R8 (46 × 118 mm, accepted 2026-10-20, package `cc044ea0…`) is its fallback. Their per-block history is in `docs/M3_R9.md`, `docs/M3_R8.md` and `docs/M3_R7.md`. **M3-ASSY-R10 is a CAD candidate on branch `m3-assy-r10`: not accepted, nothing ordered.** The table below describes R10 only. Decision IDs such as D-R15-01 are in `m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md`. **M3-ASSY-R11 is a CAD candidate on branch `m3-assy-r11`: not accepted, nothing ordered.** It is R10's circuit on a 46 × 50 mm six-layer board; its compact table and status paragraph follow R10's below, and its decision IDs (D-R11-01 …) are in `m3_design/r11/design/R11_DECISIONS.md`.
 
 | Block | R10 design (CAD candidate) | Where to read more |
 |---|---|---|
@@ -35,6 +35,21 @@ Current placement: `m3_design/r10_place.tsv` (generated into the board). `m3_des
 
 
 Current development checkpoint: [2026-11-03 design review](docs/R10_REVIEW_2026-11-03.md). The feature branch `r10/offline-diagnostics` carries the `6d23d1e5…` BAT_OVLO cleanup candidate and sensor bench diagnostics. Its complete board gate passed at 19:02:58 UTC on 2026-11-03 with unchanged source inputs and PCB bytes; the inherited review history and supplier figures above describe the earlier baseline. No R10 manufacturing or flight acceptance is implied.
+
+### R11 (CAD candidate on `m3-assy-r11`; not accepted, nothing ordered)
+
+R11 keeps R10's netlist, part values and every §2 rule (D-R11-01); the package, case sizes, connectors, stackup, outline, placement and copper are new. The full state is in `docs/M3_R11.md` "Current state"; the owner list is `docs/R11_VALIDATION.md`; the harness pin map and per-flight procedure are in `docs/R11_VEHICLE_HANDOFF.md`.
+
+| Block | R11 design (CAD candidate) | Where to read more |
+|---|---|---|
+| Board | 46 × 50 × 1.6 mm, six layers (JLC06161H-3313: F / In1 GND / In2 power / In3 signal / In4 GND / B, 0.5 oz inner); 0.1 mm track and clearance, through vias only; four corner M3 supports (3.5,3.5), (42.5,3.5), (3.5,46.5), (42.5,46.5), nylon hardware (D-R11-02, -03, -10, -15). | `docs/M3_R11.md`; stageB.md |
+| MCU | STM32H743VIH6 TFBGA-100 (C964146) at F(24,28). Pin map: column `r11_net` of `m3_design/r11/design/pin_table.tsv`; moved functions in D-R11-41, -49, -81 (camera UART4 PB9 / PB8, servos TIM4 / TIM2 / TIM5, U5 on I2C2 PB10 / PB11, IMU_CS PE3, IMU_INT1 PD6 EXTI6, CAM_5V_SENSE PC2_C, BUZZ_DRV PE8). PE4, PC1, PC0, PC5 and the GPS / radio / AUX UARTs are unchanged. | `docs/M3_R11.md` "Firmware"; `r11_binding_note.json` (record only) |
+| Connectors | Latching JST-GH: J410 / J420 / J440 GH-4 (forward edge; 1 4V8, 2 GND, 3 TXO, 4 RXI), J9 camera GH-6 (1–2 5V4, 3–4 GND, 5 RXI, 6 TXO), J122 servo GH-5, J400 switch GH-2 (aft edge). J1 battery and J121 pyro are plated AWG 20 wire pads on the west edge; the e-match connects only at the bay's field terminal on a permanent pigtail (D-R11-05, -13). | `docs/R11_VEHICLE_HANDOFF.md` |
+| Power and pyro | R10's circuit. U9's EN chain has no via (D-R11-25); the fire path is F.Cu with no series via. Fire loop 4.620493 Ω, 1.278004 A at four stalls (Calculation / Inference); hot-plug 2304 / 2304 required cases pass after C80 moved beside C88 (Simulation / Inference, D-R11-79); EN / chatter and hold-up figures equal R10's; U401's thermal figure is an Inference (D-R11-80). | `docs/M3_R11.md` "Power", "CH1 pyro" |
+| Deviations | PE4's TFBGA neighbours (3V3 D2 land 0.200 mm, D-R11-23; IMU_CS ball B3 0.400 mm, stage E), nine single-via exceptions, two route_check allowlist entries, the R11 legend set (D-R11-83, pending), 0.5 oz inner copper, JLC DFM unqueried. | `docs/R11_VALIDATION.md` |
+| Manufacturing and cost | `m3_design/r11_fab.sh`: JLC BOM 75 lines, 204 placed parts, CPL 80 top + 119 bottom, manifest bound. $79.79 per board at 5 boards (2026-11-03T23:01Z) against the $84.41 cap; U9, U4 and U2 short at JLC. | `docs/M3_R11.md` "Cost and stock" |
+
+**R11 status (2026-11-03).** PCB `5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63`, 46 × 50 × 1.6 mm, six layers; not accepted, nothing ordered. Stages A–D of `m3_design/r11/design/r11_plan.md` are done (stage records `stageA.md` … `stageD2.md` in `m3_design/r11/design/`): the board is built twice by `m3_design/r11_build.sh` with the same hash, and stageD2.md records DRC / unconnected / parity / ERC 0, check_r11 every rule OK, route_check r11 0 failing with 2 allowlisted, the fab manifest OK and `tools/check.sh` exit 0. The stage E records are `docs/M3_R11.md`, `docs/R11_VALIDATION.md` and `docs/R11_VEHICLE_HANDOFF.md`. No review round (stage F) has run; it follows D-R11-09: ten lenses and a triage per round until two consecutive full rounds find zero verified real errors. No firmware, physical, electrical or JLC DFM test has been done.
 
 ## 2. Safety constraints that must never be violated
 
@@ -68,7 +83,11 @@ Current development checkpoint: [2026-11-03 design review](docs/R10_REVIEW_2026-
 ```bash
 tools/check.sh                                   # board gate
 m3_design/r10_fab.sh                             # export Gerber zip + JLC BOM/CPL into m3_design/assembly_review/fab/, content checks, manifest binding
+m3_design/r11_build.sh                           # R11: build m3_design/r11/ (stages A-D, then r11_fab.sh); deterministic, no autorouting
+m3_design/r11_fab.sh                             # R11 fab package into m3_design/r11/fab/ (FAB_NET=1 adds JLC cost and stock for 5 boards)
 KICAD_CLI=/path/to/kicad-cli tools/check.sh      # specify kicad-cli on non-macOS systems
 kicad-cli pcb render --side top -o top.png m3_design/assembly_review/m3.kicad_pcb
 kicad-cli pcb export gerbers -o gerber/ m3_design/assembly_review/m3.kicad_pcb
 ```
+
+`tools/check.sh` runs R10's gate on R10's board and, while `m3_design/r11/m3.kicad_pcb` is tracked, the R11 gate profile on it (D-R11-08): DRC / parity / ERC on `m3_design/r11/`, `m3_design/r11_sch_check.py`, metadata / models, silkscreen, `fit_check --profile r11`, `tools/check_r11.py`, `route_check --profile r11` (ALLOWLIST_R11) and the R11 fab manifest (`tools/fab_manifest_r11.py`), then `tools/test_r11_check.py` with `R11_BOARD_REQUIRED`.

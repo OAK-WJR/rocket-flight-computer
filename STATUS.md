@@ -4,24 +4,47 @@
 
 Last updated 2026-11-03 (R10 diagnostic/gate entries; CAD candidate evidence as of 2026-11-02; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
+## R11 candidate: M3-ASSY-R11 (R10's circuit on a compact six-layer board, 46 × 50 mm; CAD candidate, NOT accepted)
+
+**Status (2026-11-03).** Branch `m3-assy-r11` (cut from `m3-assy-r10` at `deb179e`); the R11 KiCad project is `m3_design/r11/`, built by `m3_design/r11_build.sh`, and R10's `m3_design/assembly_review/` stays the frozen R10 record. PCB `5f1a7e1d…` (full hash and metrics in [docs/M3_R11.md, "Current state"](docs/M3_R11.md#current-state)), 46 × 50 × 1.6 mm, six layers. Not accepted, nothing ordered; R9 stays the accepted board. No review round has run on R11 yet. What the owner must accept or do: [docs/R11_VALIDATION.md](docs/R11_VALIDATION.md). Harness pin map and per-flight procedure: [docs/R11_VEHICLE_HANDOFF.md](docs/R11_VEHICLE_HANDOFF.md).
+
+| Kind | Verified (with its record) | Not verified |
+|---|---|---|
+| *Software tests and CAD gate* | Board built twice with the same SHA-256; DRC 0 violations, 0 unconnected, 0 schematic parity, ERC 0; `r11_sch_check` OK (strict ERC, 670 pins / 216 parts against R10's contract, seeded faults); metadata / 3D audit OK; `tools/check_r11.py` every rule OK (K-legends with the R11 legend set, K-copper GAP-3, K-exti, K-reference, K-power, S-1 … S-9); `route_check --profile r11` 0 failing, 2 allowlisted, 0 stale; R11 fab manifest and content checks OK; `tools/test_r11_check.py` 48 tests OK with `R11_BOARD_REQUIRED=1`; `tools/check.sh` exit 0 with the R11 board staged (stageD2.md §1, §8, Measured). | The supervisor's final gate run on this tree is recorded by the supervisor, not here. No review round (stage F). |
+| *Simulation and calculation* | Hot-plug: R10's model on R11's copper, 2304 / 2304 required cases pass, steepest fall 8.663 V/µs (Simulation / Inference, D-R11-79). Fire budget 4.620493 Ω, 1.278004 A at four stalls; guard 34.853 ms < 36 ms; EN / chatter and hold-up equal to R10's; rail DC solves and IPC-2152 widths (Calculation / Inference; stageD_analysis.md, stageD2.md §4). | The plate model (no r11 profile); U401's thermal figure (Inference, D-R11-80); plane current capacity in the 0.16 mm necks; signal integrity. |
+| *Datasheet reads* | Stage A: the TFBGA-100 ball map and land (DS12110 Rev 8). Stage E: PC2_C is a TT_a pad with a 4.0 V absolute maximum (DS12110 Rev 8 Table 119 p. 211, read from the R10 review text extract; ST's PDF did not download), and the SYSCFG_EXTICR layout (one port per line) from ST's CMSIS header (`docs/M3_R11.md` "Sources"). | RM0433 was not read (SYSCFG_PMCR.PC2SO, USB regulator bypass, VREFBUF on TFBGA-100); DS12110 was not re-fetched from ST. |
+| *Physical, electrical and firmware tests* | None. | No board exists; no firmware (the binding note is a record only); JLC DFM not queried (0.1 mm rules, plane necks, short-edge rails, VIPPO, X-ray of U1); no harness, fit, thermal or vibration test. |
+
+Cost: $79.79 per board (parts + feeder fees, 5 boards, 2026-11-03T23:01Z) against the $84.41 cap; stock short on U9, U4 and U2 (stageD2.md §8).
+
+## Combined R10/R11 development checkpoint (2026-11-04 UTC)
+
+R11 hardware/layout history and the R10 diagnostic development line are being
+integrated with normal merge ancestry. The R10 PCB remains `6d23d1e5…` and R11
+remains `5f1a7e1d…`; neither is manufactured or qualified. R10 bench firmware,
+source-bound SD transport and host diagnostics are retained. R11 changes the MCU
+package and multiple peripheral pin assignments: no R11 image or firmware
+qualification is implied. The owner's **US$200 total for two usable boards** is
+an unmet purchasing ceiling; the cost screen and assembly alternatives are in
+[the integration record](docs/INTEGRATION_2026-11-04.md). The complete combined gate
+must pass before the merge commit. No payment or order has been made.
+
 ## R10 candidate: M3-ASSY-R10 (leaner AVA-informed board, 46 × 90 mm; CAD candidate, NOT accepted)
 
-**R10 microSD metadata diagnostic core (2026-11-03 UTC).**
-The [standalone microSD module](m3_firmware/r10/sd/README.md) provides fixed
-initialization/register frames, CRC7/CRC16 and CID/CSD/OCR decoding, plus a
-one-shot query over a normalized callback interface. It retains partial bytes,
-counts, command times and primary/cleanup errors. Completion is accepted only
-after a subsequent poll observes cleanup time; a reproduced delayed-cleanup
-defect is covered by executable regressions. The source contract checks J430,
-its pull-ups/bypass capacitors, 30 endpoints and four reviewed MCU pins.
-The targeted suites pass 23 codec/source tests and 21 actual-C query tests;
-two mutation tests reject eight regressions that compile and then fail runtime
-assertions. The 13 gate-shell tests require all four new SD stages and stop
-after a failing stage. The complete repository gate is required before commit.
-This is not a native card driver: SPI3, capture/host integration and logging
-remain open. It is not linked into the bench image and adds no physical access,
-media read/write/erase path or hardware/card qualification. PCB, fabrication
-outputs, ABI5 and image build inputs remain unchanged.
+**R10 microSD diagnostic transport (2026-11-04 UTC).**
+The [standalone microSD module](m3_firmware/r10/sd/README.md) now includes a
+bounded byte parser and native H743 SPI3 port alongside its codec/query. It
+retains partial packets, wire prefixes/counts, register snapshots and separate
+primary/cleanup failures. Reviewed source binding covers J430, 30 endpoints,
+four pins and the pinned ST register header. Targeted suites pass 26 codec/source,
+21 query, 12 wire and 14 native-MMIO-model tests; four mutation methods reject
+18 compiled regressions at runtime. The Arm bridge and all five C units compile
+with the pinned Cortex-M7 toolchain. The 13 gate-shell tests require all eight SD
+stages and enforce the checked repository for source-aware tests. The complete
+repository gate is required before commit. These are software checks only:
+shared clock/ownership integration, capture/reporting, image scheduling and
+physical card/timing/power-loss/logging tests remain open. No hardware was
+accessed. PCB, fabrication files, ABI5 and image build inputs remain unchanged.
 
 **Purchasable pilot and two-correction-round budget (2026-11-03 UTC).**
 The [ordering assessment](docs/ORDERING.md#pilot-procurement-and-rework-budget-2026-11-03)

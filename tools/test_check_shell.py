@@ -30,22 +30,31 @@ import os, pathlib, sys
 stage = pathlib.Path(__file__).stem
 if pathlib.Path(__file__).parent.name == 'sd':
     stage = 'sd_' + stage
+if os.environ.get('EXPECTED_R10_REPOSITORY') and os.environ.get('R10_REPOSITORY') != os.environ['EXPECTED_R10_REPOSITORY']:
+    sys.exit('source-aware test inherited the wrong repository: ' + stage)
+r11 = '--profile' in sys.argv and sys.argv[sys.argv.index('--profile') + 1] == 'r11' or \\
+    any('r11' in pathlib.Path(a).parts for a in sys.argv[1:])
+label = stage + ('@r11' if r11 else '')
+if stage == 'test_r11_check' and os.environ.get('R11_BOARD'):     # the R11 section hands its board to the self-test
+    label += '+R11_BOARD' + ('+required' if os.environ.get('R11_BOARD_REQUIRED') == '1' else '')
 with open(os.environ['GATE_LOG'], 'a') as log:
-    log.write(stage + '\\n')
+    log.write(label + '\\n')
 if os.environ.get('EXPECTED_KICAD_CLI') and os.environ.get('KICAD_CLI') != os.environ['EXPECTED_KICAD_CLI']:
     sys.exit('selected CLI not inherited by ' + stage + ': ' + repr(os.environ.get('KICAD_CLI')))
 if stage == 'r10_parts' and ('--check' not in sys.argv or '--board' not in sys.argv):
     sys.exit(17)
-if stage == 'fab_manifest' and not (pathlib.Path(sys.argv[1]).parent / 'fab/m3_fab_manifest.json').is_file():
+if stage.startswith('fab_manifest') and not (pathlib.Path(sys.argv[1]).parent / 'fab/m3_fab_manifest.json').is_file():
     sys.exit(19)
-if stage == 'fab_manifest' and '--content' not in sys.argv:      # R18-GATE-04: the binding alone is not enough
+if stage.startswith('fab_manifest') and '--content' not in sys.argv:      # R18-GATE-04: the binding alone is not enough
     sys.exit(23)
-sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
+if stage == 'fit_check' and r11 and sys.argv[sys.argv.index('--profile') + 1] != 'r11':
+    sys.exit(29)
+sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
 '''
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
                      'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
                      'm3_design/check_actuators.py', 'm3_design/r10_parts.py', 'm3_design/r10_sch_check.py',
-                     'tools/check_r10_diagnostic_profile.py'):
+                     'tools/check_r10_diagnostic_profile.py', 'tools/check_r11.py', 'm3_design/r11_sch_check.py'):
             (self.root / path).write_text(stub)
         (self.root / 'diagnostics').mkdir()
         (self.root / 'm3_firmware/r10').mkdir(parents=True)
@@ -54,26 +63,35 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
         (self.root / 'm3_firmware/r10/voltage').mkdir()
         (self.root / 'm3_firmware/r10/flash').mkdir()
         (self.root / 'm3_firmware/r10/sd').mkdir()
-        for path in ('tools/fab_manifest.py', 'tools/test_check_shell.py', 'tools/test_schematic_repro.py',
+        for path in ('tools/fab_manifest.py', 'tools/fab_manifest_r11.py', 'tools/test_r11_check.py', 'tools/test_check_shell.py', 'tools/test_schematic_repro.py',
                      'diagnostics/test_r10_offline.py', 'diagnostics/test_r10_swd.py', 'diagnostics/test_r10_firmware.py', 'diagnostics/test_r10_findings.py', 'm3_firmware/r10/test_r10.py', 'm3_firmware/r10/imu/test_imu_core.py', 'm3_firmware/r10/baro/test_baro.py', 'm3_firmware/r10/voltage/test_voltage.py', 'tools/test_procurement.py',
                      'm3_firmware/r10/flash/test_flash_ro.py', 'm3_firmware/r10/flash/test_qspi.py',
                      'm3_firmware/r10/flash/test_verify_flash.py', 'm3_firmware/r10/flash/test_mutations.py', 'm3_firmware/r10/flash/test_flash_frame.py',
                      'm3_firmware/r10/sd/verify.py', 'm3_firmware/r10/sd/test_metadata.py',
                      'm3_firmware/r10/sd/test_query.py', 'm3_firmware/r10/sd/test_mutations.py',
+                     'm3_firmware/r10/sd/test_wire.py', 'm3_firmware/r10/sd/test_spi3.py',
+                     'm3_firmware/r10/sd/test_transport_mutations.py', 'm3_firmware/r10/sd/test_native_build.py',
                      'tools/test_fab_validation.py', 'tools/test_fit_check.py', 'tools/test_paste_check.py',
                      'tools/test_r10_parts.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
             (self.root / path).write_text(stub)
         self.log = self.root / 'gate.log'
         self.env = dict(os.environ, KICAD_CLI=str(self.cli), KICAD_PY=sys.executable, NUMPY_PY=sys.executable,
-                        GATE_LOG=str(self.log), TMPDIR=str(self.root))
+                        GATE_LOG=str(self.log), TMPDIR=str(self.root),
+                        EXPECTED_R10_REPOSITORY=str(self.root), R10_REPOSITORY="/unrelated-inherited-tree")
         self.env.pop('R10_SKIP_FAB_MANIFEST', None)
+        for key in ('R11_BOARD', 'R11_BOARD_REQUIRED'):
+            self.env.pop(key, None)
         (self.root / 'board.kicad_pcb').write_text('board copy\n')
 
     SELFTESTS = ['test_check_shell', 'test_schematic_repro', 'test_r10_offline', 'test_r10_swd', 'test_r10_firmware', 'test_r10_findings', 'test_r10', 'test_imu_core', 'test_baro', 'test_voltage', 'test_flash_ro', 'test_qspi', 'test_verify_flash', 'test_mutations', 'test_flash_frame',
                  'sd_verify', 'sd_test_metadata', 'sd_test_query', 'sd_test_mutations',
+                 'sd_test_wire', 'sd_test_spi3', 'sd_test_transport_mutations', 'sd_test_native_build',
                  'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
-                 'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check']
+                 'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check', 'test_r11_check']
     CONTRACTS = ['r10_sch_check', 'check_r10_diagnostic_profile', 'verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
+    R11_CONTRACTS = ['r11_sch_check@r11', 'verify_board@r11', 'silk_check@r11', 'fit_check@r11', 'check_r11@r11',
+                     'route_check@r11']
+    R11_TEXT = '(kicad_pcb (title_block (title "M3") (rev "M3-ASSY-R11")))\n'
 
     def run_gate(self, board=None):
         return subprocess.run(['bash', str(self.root / 'tools/check.sh'), str(board or self.root / 'board.kicad_pcb')],
@@ -236,6 +254,126 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') == stage else 0)
                 self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + ['fab_manifest'])
         self.assertNotIn('R10_SKIP_FAB_MANIFEST', (Path(__file__).with_name('check.sh')).read_text())
 
+
+    # ---- R11 section (D-R11-08) ----------------------------------------------------------------------------------------
+    def r11_board(self, manifest=True, track=True):
+        """The repository R11 board of the temporary tree, tracked by a git index there unless told otherwise."""
+        board = self.root / 'm3_design/r11/m3.kicad_pcb'
+        (board.parent / 'fab').mkdir(parents=True, exist_ok=True)
+        board.write_text(self.R11_TEXT)
+        if manifest:
+            (board.parent / 'fab/m3_fab_manifest.json').write_text('{}')
+        if track:
+            subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+            subprocess.run(['git', '-C', str(self.root), 'add', 'm3_design/r11/m3.kicad_pcb'], check=True)
+        return board
+
+    def selftests_r11(self, required=True):
+        return self.SELFTESTS[:-1] + ['test_r11_check+R11_BOARD' + ('+required' if required else '')]
+
+    def test_r11_section_runs_after_r10_when_the_board_is_tracked(self):
+        self.r11_board()
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(),
+                         self.CONTRACTS + self.R11_CONTRACTS + ['fab_manifest_r11@r11'] + self.selftests_r11())
+        self.assertIn('== R11 gate:', result.stdout)
+
+    def test_an_untracked_r11_board_does_not_run_the_r11_section(self):
+        self.r11_board(track=False)
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + self.SELFTESTS)
+
+    def test_a_stale_r11_board_variable_is_not_handed_to_the_selftest(self):
+        self.env.update(R11_BOARD=str(self.root / 'board.kicad_pcb'), R11_BOARD_REQUIRED='1')
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines()[-1], 'test_r11_check')
+
+    def test_each_r11_stage_failure_fails_the_gate(self):
+        self.r11_board()
+        for stage in self.R11_CONTRACTS + ['fab_manifest_r11@r11']:
+            with self.subTest(stage=stage):
+                self.log.unlink(missing_ok=True)
+                self.env['FAIL_STAGE'] = stage
+                result = self.run_gate()
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(self.log.read_text().splitlines()[-1], stage)
+
+    def test_r11_schematic_contract_is_required_while_the_board_exists(self):
+        self.r11_board()
+        (self.root / 'm3_design/r11_sch_check.py').unlink()
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('r11_sch_check.py missing', result.stdout)
+        self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS)
+
+    def test_r11_repository_package_is_required(self):
+        self.r11_board(manifest=False)
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines()[-1], 'fab_manifest_r11@r11')
+        self.assertIn('R11 fab package unbound', result.stdout)
+
+    def test_r11_package_needs_its_content_checks(self):
+        self.r11_board()
+        script = self.root / 'tools/check.sh'
+        script.write_text(script.read_text().replace('"$CANON11" --content', '"$CANON11"'))
+        self.assertNotEqual(self.run_gate().returncode, 0)
+        self.assertEqual(self.log.read_text().splitlines()[-1], 'fab_manifest_r11@r11')
+
+    def test_r11_fit_must_use_the_r11_profile(self):
+        self.r11_board()
+        script = self.root / 'tools/check.sh'
+        script.write_text(script.read_text().replace('"$R11" --profile r11 --report "$O11/fit.json"',
+                                                     '"$R11" --profile r10 --report "$O11/fit.json"'))
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_an_explicit_r11_board_runs_the_r11_section_alone(self):
+        copy = self.root / 'copy/r11/m3.kicad_pcb'
+        (copy.parent / 'fab').mkdir(parents=True)
+        copy.write_text(self.R11_TEXT)
+        (copy.parent / 'fab/m3_fab_manifest.json').write_text('{}')
+        result = self.run_gate(copy)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(), self.R11_CONTRACTS + self.selftests_r11())
+        self.assertIn('R11 fab manifest: not checked (board copy)', result.stdout)
+        self.log.unlink()
+        self.env['FAIL_STAGE'] = 'check_r11@r11'
+        self.assertNotEqual(self.run_gate(copy).returncode, 0)
+        self.assertEqual(self.log.read_text().splitlines()[-1], 'check_r11@r11')
+
+    def test_a_tracked_but_missing_r11_board_fails(self):
+        board = self.r11_board()
+        board.unlink()
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('R11 board tracked but missing', result.stderr)
+
+
+    def test_a_parse_error_anywhere_fails_before_any_stage(self):
+        """A syntax error late in check.sh must not let the earlier stages run and the EXIT trap end with status 0."""
+        script = self.root / 'tools/check.sh'
+        text = script.read_text()
+        marker = 'selftest python3 "$ROOT/tools/test_check_shell.py"'
+        self.assertIn(marker, text)
+        script.write_text(text.replace(marker, 'if ) then\n' + marker))
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('does not parse', result.stderr)
+        self.assertFalse(self.log.exists())
+
+    def test_the_exit_trap_keeps_a_failing_status(self):
+        """With the parse self-check removed, a late failure still exits non-zero through the EXIT trap."""
+        script = self.root / 'tools/check.sh'
+        text = script.read_text().replace('bash -n "$0" ||', 'true ||')
+        script.write_text(text)
+        self.env['FAIL_STAGE'] = 'test_r11_check'
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertIn('reports:', result.stdout)
 
 if __name__ == '__main__':
     unittest.main()

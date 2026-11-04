@@ -1,0 +1,286 @@
+{
+ "imu": {
+  "basis": "stageB.md section 6 (D-R11-11): R10 axis map kept, roll = -gyro_Y",
+  "lever_mm": 0.0,
+  "rotation": 180.0,
+  "side": "B",
+  "tol_mm": 0.05
+ },
+ "parallel_vias": [
+  {
+   "net": "VLOGIC",
+   "reason": "D-R11-26: C84 hold-up / VLOGIC trunk side change beside U11.1 (C84.1 F.Cu to U11.1 / U11.8 B.Cu): two 0.6 / 0.3 mm barrels joined on F.Cu and B.Cu, so one open barrel does not stop U2 (D-R19-09, K-power count 2)",
+   "vias": [
+    [
+     14.2,
+     35.65
+    ],
+    [
+     14.2,
+     36.45
+    ]
+   ]
+  },
+  {
+   "net": "VLOGIC",
+   "reason": "D-R11-26: R60.1 (PA6's VLOGIC sense divider top, B.Cu) from U2.2 (F.Cu): two 0.45 / 0.25 mm barrels joined on F.Cu and B.Cu (SINGLE_OPEN_TAPS VLOGIC R60.1)",
+   "vias": [
+    [
+     23.6,
+     38.45
+    ],
+    [
+     24.3,
+     38.45
+    ]
+   ]
+  },
+  {
+   "net": "CAM_5V",
+   "reason": "D-R11-26: CAM_5V from C431.1 (F.Cu) to its B.Cu run to J9.1 / J9.2 (1.249 A): two 0.6 / 0.3 mm barrels joined on F.Cu and B.Cu",
+   "vias": [
+    [
+     26.1,
+     7.85
+    ],
+    [
+     26.9,
+     7.85
+    ]
+   ]
+  },
+  {
+   "net": "ACT_GATE",
+   "reason": "D-R11-29 (R10 D-R24-02): Q120's gate island (F.Cu) to the B.Cu trunk to R121.1 by two barrels joined on both layers, so one open barrel leaves Q120.4 on R121 (SINGLE_OPEN_TAPS Q120.4); each barrel keeps a 1.3 mm S-8 keep-out on In1..In4",
+   "vias": [
+    [
+     14.6,
+     15.9
+    ],
+    [
+     14.6,
+     15.1
+    ]
+   ]
+  },
+  {
+   "net": "ACT_GATE",
+   "reason": "D-R11-29 (R10 D-R24-02): Q121's gate island (F.Cu) to the B.Cu trunk by two barrels joined on both layers (SINGLE_OPEN_TAPS Q121.4); the second barrel's ring is 1.10 mm from In3 I2C1_SDA (y 23.0), S-8 1.0 mm",
+   "vias": [
+    [
+     13.95,
+     21.0
+    ],
+    [
+     13.95,
+     21.65
+    ]
+   ]
+  },
+  {
+   "net": "VCAP1",
+   "reason": "D-R11-34 (O-C2-12): U1.F8 (VCAP1) dog-bone NW plus a second barrel at its NE site, joined on F.Cu through the ball and on B.Cu, so one open barrel leaves C19 on VCAP1 (SINGLE_OPEN_TAPS VCAP1 U1.F8)",
+   "vias": [
+    [
+     25.6,
+     28.0
+    ],
+    [
+     26.4,
+     28.0
+    ]
+   ]
+  }
+ ],
+ "power_narrow": [
+  {
+   "layer": "B.Cu",
+   "max_len_mm": 2.0,
+   "net": "BAT_IN",
+   "pad": "U9.5",
+   "reason": "D-R11-25: U9's 0.30 mm IN bar to C88.1 at the bar width (2.0 mm, bar centre to C88.1, Measured on the drawing)",
+   "width_mm": 0.3
+  },
+  {
+   "layer": "B.Cu",
+   "max_len_mm": 1.5,
+   "net": "RAW_PROTECTED",
+   "pad": "U9.6",
+   "reason": "D-R11-25: U9's 0.30 mm OUT bar entry, bar centre to the 0.7 mm run (1.5 mm)",
+   "width_mm": 0.3
+  },
+  {
+   "layer": "F.Cu",
+   "max_len_mm": 0.5,
+   "net": "PORT_5V3",
+   "pad": "U401.9",
+   "reason": "D-R11-26: U401.9 to U401.10 IN pin link at the 0.5 mm DSK pitch (0.25 mm pads)",
+   "width_mm": 0.25
+  }
+ ],
+ "short_edge_basis": "D-R11-12: the JLC assembly panel carries 5 mm rails on both short edges, so the board short edges are not conveyor edges; courtyards hold >= 0.5 mm there",
+ "short_edge_queries": {
+  "C411": [
+   "forward",
+   1.005
+  ],
+  "C421": [
+   "forward",
+   1.005
+  ],
+  "C445": [
+   "forward",
+   1.005
+  ],
+  "D400": [
+   "aft",
+   1.305
+  ],
+  "D401": [
+   "aft",
+   1.305
+  ],
+  "D410": [
+   "forward",
+   1.905
+  ],
+  "D411": [
+   "forward",
+   1.905
+  ],
+  "D420": [
+   "forward",
+   1.905
+  ],
+  "D421": [
+   "forward",
+   1.905
+  ],
+  "D440": [
+   "forward",
+   1.905
+  ],
+  "D441": [
+   "forward",
+   1.905
+  ],
+  "J122": [
+   "aft",
+   0.555
+  ],
+  "J400": [
+   "aft",
+   0.555
+  ],
+  "J410": [
+   "forward",
+   0.555
+  ],
+  "J420": [
+   "forward",
+   0.555
+  ],
+  "J440": [
+   "forward",
+   0.555
+  ],
+  "J9": [
+   "aft",
+   0.555
+  ],
+  "R100": [
+   "aft",
+   1.085
+  ],
+  "R101": [
+   "aft",
+   1.085
+  ],
+  "R150": [
+   "aft",
+   1.475
+  ],
+  "R151": [
+   "aft",
+   1.475
+  ],
+  "R152": [
+   "aft",
+   1.475
+  ],
+  "R153": [
+   "aft",
+   1.475
+  ],
+  "TP74": [
+   "aft",
+   1.955
+  ]
+ },
+ "single_open_exceptions": [
+  [
+   "U1.G3",
+   "via LOGIC_SOURCE_ST (21.60, 28.80)",
+   "D-R11-45: PA4's dog-bone at G3's north-west interstitial site; G3's other three sites carry the escape vias of H3 / H4 and the B.Cu run of LOGIC itself, so a second barrel has no site under the TFBGA (stageC1b.md section 5). Open, U11's ST status reads floating at PA4 (firmware treats ST as advisory, Inference)"
+  ],
+  [
+   "U1.D5",
+   "via BOOT0 (23.20, 27.20)",
+   "D-R11-45 / -49: BOOT0's dog-bone at D5's south-west interstitial site; the D-R11-45 site (27.20, 26.40) now carries SD_MOSI's GND partner. D5's other sites are closed (Measured on the board): north-west (23.20, 26.40) by the GND dog-bone, north-east (24.00, 26.40) by C20.2 (B.Cu, to y 26.30) and QSPI_NCS's In3 run (x 24.25), south-east (24.00, 27.20) by C20.1. R5's end has a second barrel (28.30, 33.10). Open, R5 no longer holds BOOT0 low (BOOT0 has no internal pull-down; ROM-loader boot possible, as R10's R23-MCU-02 single point)"
+  ],
+  [
+   "U1.E7",
+   "via VCAP2 (24.80, 27.20)",
+   "D-R11-34 / -45: VCAP2's dog-bone; E7's other sites are closed by C20's pads ((24.0, 27.2), (24.0, 28.0) at 0.2 mm hole clearance) and the F6 / F7 3V3 dog-bone (24.8, 28.0) (Calculation on the placed pads)"
+  ],
+  [
+   "U1.G3",
+   "via LOGIC_SOURCE_ST (14.65, 39.90)",
+   "D-R11-48: PA4's In3-to-B.Cu via south of L1. Measured on the board: I2C1_SCL / I2C1_SDA vias at (14.20, 39.55) / (14.20, 40.45) (0.57 mm), the 3V3 via (14.82, 40.90), R86.1 (B.Cu, 15.09-15.65 x 39.53-40.07), C85.2 and LOGIC_ILIM's B.Cu run to the north-east and VLOGIC's F.Cu run leave no second barrel site that joins both the In3 run and the B.Cu run (a trial at (16.05, 38.50) shorted LOGIC_ILIM and C85.2). Open, U11's ST reads floating at PA4 (advisory, Inference)"
+  ],
+  [
+   "R86.2",
+   "via GND (16.40, 39.00)",
+   "D-R11-58 (stageC4.md section 5): C85.2 / R86.2 share one via in the pocket bounded by LOGIC_ILIM (B.Cu x 15.85), USB_LIMITED (B.Cu x 17.6), U11's south row and R86 / R91; the drafting aid found no legal second via site in x 15.3-17.5, y 36.6-40.2 (F.Cu VLOGIC trunk and C6.1, In3 I2C1_SDA, hole clearance 0.25 mm; Measured on the scratch board). Open, U11's current-limit pin loses its resistor to GND (its limit then follows U11's open-ILIM behaviour, not re-read from the data sheet in this pass: Inference)"
+  ],
+  [
+   "R88.2",
+   "via GND (18.95, 32.47)",
+   "D-R11-58: R88.2's stub leaves north-east to its via; every other legal via site within 1.2 mm (Measured: (18.95, 33.2-33.4), (19.35-19.45, 32.9-32.95), (18.25, 32.45)) joins the pad or the via at 45 or 90 degrees (route_check acute / right angle), and the 3V3 B.Cu trunk (y 31.7) and USB_OVLO (y 33.43) close the rest. Open, U11's USB over-voltage divider reads high and U11 blocks USB power (fail-safe direction, Inference)"
+  ],
+  [
+   "R430.2",
+   "via GND (22.15, 9.75)",
+   "D-R11-58: R430.2 (F.Cu) reaches U402.2 only through the planes; the one legal site beside it, (24.70, 11.55), is its own via (shared with C93.2); no direct F.Cu run passes U402's east pads (0.35 mm gaps). Measured on the scratch board"
+  ],
+  [
+   "R430.2",
+   "via GND (24.70, 11.55)",
+   "D-R11-58: as the entry above; (24.70, 11.55) is the only legal via site within 1.5 mm of R430.2 (drafting aid scan, Measured). Open, U402's ILIM resistor loses GND (behaviour not re-read from the data sheet in this pass: Inference)"
+  ],
+  [
+   "U402.2",
+   "via GND (22.15, 9.75)",
+   "D-R11-58: U402.2 / C430.2 / C92.2 share one via; the drafting aid found no legal second site in x 18.4-20.4, y 8.6-10.4 or x 20.0-23.2, y 8.6-11.0 (U402's pads, CAM_5V_SENSE, servo In3 runs, BAT_IN vias; Measured). U402.2 carries U402's quiescent current only; the camera's return is J9.3 / J9.4 (Inference from the circuit)"
+  ]
+ ],
+ "supports": [
+  [
+   3.5,
+   3.5
+  ],
+  [
+   42.5,
+   3.5
+  ],
+  [
+   3.5,
+   46.5
+  ],
+  [
+   42.5,
+   46.5
+  ]
+ ],
+ "supports_basis": "D-R11-10: four corner M3 supports, nylon hardware (check_r11 M-3 pins them within 0.01 mm)"
+}

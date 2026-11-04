@@ -1,0 +1,1367 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r2_actuators")
+	(uuid 09986bc4-c797-5903-8d56-80a25ac9c1eb)
+	(paper "A3")
+	(title_block
+		(title "13 | Servo outputs")
+		(date "2026-09-25")
+		(rev "M3-ASSY-R11")
+		(company "Single-board M3 candidate; actuator merge, not bench-verified"))
+	(lib_symbols
+				(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:SRV05_4"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "SRV05_4"
+				(at 0 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "4-line rail clamp (1/3/4/6 IO, 2 GND, 5 VCC)"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "SRV05_4_0_1"
+				(rectangle
+					(start -5.08 7.62)
+					(end 5.08 -7.62)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "SRV05_4_1_1"
+				(pin passive line
+					(at -10.16 5.08 0)
+					(length 5.08)
+					(name "IO1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -10.16 2.54 0)
+					(length 5.08)
+					(name "IO2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -10.16 0 0)
+					(length 5.08)
+					(name "IO3"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -10.16 -2.54 0)
+					(length 5.08)
+					(name "IO4"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 12.7 270)
+					(length 5.08)
+					(name "VCC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 -12.7 90)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))		(symbol "M3:ServoTerminal"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "ServoTerminal"
+				(at 0 -12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "JST SM05B-GHS-TB (D-R11-05); four servo signals and GND only"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "servo terminal"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_GH_SM05B_GHS_TB"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "ServoTerminal_0_1"
+				(rectangle
+					(start -10.16 10.16)
+					(end 10.16 -10.16)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "ServoTerminal_1_1"
+				(pin passive line
+					(at -15.24 5.08 0)
+					(length 5.08)
+					(name "SERVO1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 2.54 0)
+					(length 5.08)
+					(name "SERVO2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 0 0)
+					(length 5.08)
+					(name "SERVO3"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -2.54 0)
+					(length 5.08)
+					(name "SERVO4"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -5.08 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+)
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9a6f217f-f08c-5e2c-a632-c64cab7d1016)
+		(property "Reference" "R154"
+			(at 161.29 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 161.29 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 157.48 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R154")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 46.99)
+			(xy 157.48 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fc34f340-2080-5397-8aad-c7ef58b5cb20))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 157.48 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid c54c1926-1c37-53c7-9c55-021e81affd26))
+	(wire
+		(pts
+			(xy 157.48 54.61)
+			(xy 157.48 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cb27b966-5db7-5f8c-9a4a-ed9d8435c927))
+	(global_label "GND"
+		(shape passive)
+		(at 157.48 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5bb14e6f-856f-5888-97f9-bae519c3e481))
+	(symbol
+		(lib_id "M3:R")
+		(at 274.32 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7ff6c836-53d4-5af0-9be9-debb16af28ed)
+		(property "Reference" "R155"
+			(at 278.13 41.91 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 278.13 59.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 274.32 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R155")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 274.32 46.99)
+			(xy 274.32 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 413fb90c-33bd-507c-a520-84e2d6aaed18))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 274.32 41.91 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid d3f74d75-681f-59ec-8f05-153c00352088))
+	(wire
+		(pts
+			(xy 274.32 54.61)
+			(xy 274.32 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid de5774d3-873c-53df-987a-a574aa08b7b0))
+	(global_label "GND"
+		(shape passive)
+		(at 274.32 59.69 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2b6bae0f-0884-5618-8ad5-a0408130f84c))
+	(symbol
+		(lib_id "M3:R")
+		(at 40.64 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a7658dcd-1866-5155-8a0d-3aa5455ab0a8)
+		(property "Reference" "R156"
+			(at 44.45 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 44.45 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 40.64 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R156")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 40.64 110.49)
+			(xy 40.64 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6cbc1cf2-eccc-5b65-b11c-bca221f57942))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 40.64 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid bfa84acb-a300-5d75-a0b7-3c5197be817f))
+	(wire
+		(pts
+			(xy 40.64 118.11)
+			(xy 40.64 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5a7b4acb-2b78-5108-a6cd-2699a85c3270))
+	(global_label "GND"
+		(shape passive)
+		(at 40.64 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7f4d5570-f7a8-58f2-b5b9-c0b07ee013b3))
+	(symbol
+		(lib_id "M3:R")
+		(at 157.48 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid afde7621-984c-58b1-a910-df7dcd1ce260)
+		(property "Reference" "R157"
+			(at 161.29 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 161.29 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C25744"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 157.48 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R157")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 157.48 110.49)
+			(xy 157.48 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 66189f2d-9b1b-5650-8155-2ed70661094a))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 157.48 105.41 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 6e3a995b-e94b-5cfe-8003-9a0ab569a794))
+	(wire
+		(pts
+			(xy 157.48 118.11)
+			(xy 157.48 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8e3888da-e831-5e71-8bb3-e1cae94b91c0))
+	(global_label "GND"
+		(shape passive)
+		(at 157.48 123.19 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b81272c2-35ce-5de0-b874-1906dd3709fa))
+	(symbol
+		(lib_id "M3:SRV05_4")
+		(at 215.9 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4fddcc2f-dfb5-5cfb-abc1-33e41c053bae)
+		(property "Reference" "D121"
+			(at 219.71 105.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "SRV05-4"
+			(at 219.71 123.19 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "LCSC" "C13612"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer" "SEMTECH"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Manufacturer Part" "SRV05-4.TCT"
+			(at 215.9 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "D121")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 205.74 109.22)
+			(xy 200.66 109.22))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 854d5b9e-bd84-525e-b3f7-f040aa0aed66))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 200.66 109.22 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9ab922de-7ac2-5492-8fe7-a5fbd00470f0))
+	(wire
+		(pts
+			(xy 205.74 111.76)
+			(xy 200.66 111.76))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7e776a82-09b2-5a1f-ad36-3c8f2950fa7a))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 200.66 111.76 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b9e53217-d3ea-5ddc-b4bc-a81ff2c136f6))
+	(wire
+		(pts
+			(xy 205.74 114.3)
+			(xy 200.66 114.3))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3c815252-e463-5743-ab2b-744e0e5d23bb))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 200.66 114.3 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1fbb3084-8a95-5477-af52-f2b75bbfc15a))
+	(wire
+		(pts
+			(xy 205.74 116.84)
+			(xy 200.66 116.84))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1122d899-2332-5030-959a-346a5984b902))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 200.66 116.84 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bd64ebe5-eb3a-5f05-a316-85387e72caee))
+	(wire
+		(pts
+			(xy 215.9 101.6)
+			(xy 215.9 96.52))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0c13f317-4fbe-5f80-b477-ee51430e7891))
+	(global_label "3V3"
+		(shape passive)
+		(at 215.9 96.52 90)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 728ae3f3-ce10-58eb-a8ac-7e5b6bc2a082))
+	(wire
+		(pts
+			(xy 215.9 127)
+			(xy 215.9 132.08))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 564dcd72-2ed9-5902-bbb5-f04c9c10558c))
+	(global_label "GND"
+		(shape passive)
+		(at 215.9 132.08 270)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1a568775-e9ba-5d76-997e-9dfaa096171f))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a0e85516-460d-5a2b-970e-e10a33d89c40)
+		(property "Reference" "R150"
+			(at 101.6 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 101.6 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 99.06 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R150")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 46.99)
+			(xy 99.06 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d042c92f-c387-5854-b09f-a964c7b72184))
+	(global_label "SERVO1_MCU"
+		(shape passive)
+		(at 99.06 41.91 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 17164d23-227f-5890-ac40-8ddadd17bb35))
+	(wire
+		(pts
+			(xy 99.06 54.61)
+			(xy 99.06 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 34227d94-c777-5b41-bf47-426e8b71cf55))
+	(global_label "SERVO1_OUT"
+		(shape passive)
+		(at 99.06 59.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c1afbd25-89aa-544b-b786-9b032d2755be))
+	(symbol
+		(lib_id "M3:R")
+		(at 215.9 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 8b9abd3c-8933-5279-80b4-36cb9ec23d12)
+		(property "Reference" "R151"
+			(at 218.44 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 218.44 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 215.9 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R151")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 215.9 46.99)
+			(xy 215.9 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 131c147d-81b2-53c1-b2cc-47393aec0259))
+	(global_label "SERVO2_MCU"
+		(shape passive)
+		(at 215.9 41.91 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e1f3fd13-3ec6-570e-9eee-c40a21b0cb0c))
+	(wire
+		(pts
+			(xy 215.9 54.61)
+			(xy 215.9 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 48451752-5348-59a3-a181-40519fe04310))
+	(global_label "SERVO2_OUT"
+		(shape passive)
+		(at 215.9 59.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0e7d4c6e-e0a8-577b-897e-c1364a1dd3c2))
+	(symbol
+		(lib_id "M3:R")
+		(at 332.74 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e6c07d33-44f7-5ff0-b126-3c2578a07b7c)
+		(property "Reference" "R152"
+			(at 335.28 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 335.28 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 332.74 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R152")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 332.74 46.99)
+			(xy 332.74 41.91))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 02d8025c-3a8f-5ee7-8528-cb6707abab4b))
+	(global_label "SERVO3_MCU"
+		(shape passive)
+		(at 332.74 41.91 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e1f8dad0-e3ff-515d-9a30-69dc5c7a0a8a))
+	(wire
+		(pts
+			(xy 332.74 54.61)
+			(xy 332.74 59.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e6cdc8cb-ef5b-529d-ae8d-a39427a277e7))
+	(global_label "SERVO3_OUT"
+		(shape passive)
+		(at 332.74 59.69 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 878a3ef7-4b17-5301-a906-cd88649a4dd7))
+	(symbol
+		(lib_id "M3:R")
+		(at 99.06 114.3 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4853c618-40f5-5386-8b42-c7f87a4b1e03)
+		(property "Reference" "R153"
+			(at 101.6 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 0603"
+			(at 101.6 115.57 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21190"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF1001T5E"
+			(at 99.06 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "R153")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 99.06 110.49)
+			(xy 99.06 105.41))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4953303d-15a5-59c6-af72-a0cbf33244ed))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 99.06 105.41 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ec456446-55cc-5109-9e57-b0e9fbfee031))
+	(wire
+		(pts
+			(xy 99.06 118.11)
+			(xy 99.06 123.19))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bb133b59-5776-5f05-b6ac-a59d0c4c9303))
+	(global_label "SERVO4_OUT"
+		(shape passive)
+		(at 99.06 123.19 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1e2ef9f0-fb22-5acd-9a6c-5b4894831dbc))
+	(symbol
+		(lib_id "M3:ServoTerminal")
+		(at 40.64 50.8 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 91e60751-8f2e-5a17-bb30-10efcf7de97b)
+		(property "Reference" "J122"
+			(at 43.18 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "SM05B-GHS-TB"
+			(at 43.18 52.07 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GH_SM05B_GHS_TB"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_JST-SM05B-GHS-TB-LF-SN_C189896.pdf"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C189896"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "JST"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "SM05B-GHS-TB(LF)(SN)"
+			(at 40.64 50.8 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/dee26ed0-15d7-53d0-b75e-1223265de7e9"
+					(reference "J122")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 25.4 45.72)
+			(xy 20.32 45.72))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0b16d315-0b18-5ae7-b184-f22b0c50c798))
+	(global_label "SERVO1_OUT"
+		(shape passive)
+		(at 20.32 45.72 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a877dcd6-d39b-591a-ab0b-e276309b28c9))
+	(wire
+		(pts
+			(xy 25.4 48.26)
+			(xy 20.32 48.26))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b2d7a022-9f40-5b62-ac8d-b55e460f28be))
+	(global_label "SERVO2_OUT"
+		(shape passive)
+		(at 20.32 48.26 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7157c3ab-ccf9-5493-a89f-5b9623d5d0dc))
+	(wire
+		(pts
+			(xy 25.4 50.8)
+			(xy 20.32 50.8))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8e191751-f6b6-5be5-a1ef-15ced7b0d0f8))
+	(global_label "SERVO3_OUT"
+		(shape passive)
+		(at 20.32 50.8 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0b6e9ba0-b6a0-566f-9be4-aceba8e1a151))
+	(wire
+		(pts
+			(xy 25.4 53.34)
+			(xy 20.32 53.34))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 27dbb376-7c8e-5239-98f2-47dc58fd9479))
+	(global_label "SERVO4_OUT"
+		(shape passive)
+		(at 20.32 53.34 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 353d4a2c-c57d-50cf-8e20-ca49ea9e08b4))
+	(wire
+		(pts
+			(xy 25.4 55.88)
+			(xy 20.32 55.88))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0fdd4742-6339-56b1-9082-09750e67b2f3))
+	(global_label "GND"
+		(shape passive)
+		(at 20.32 55.88 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6dd2e64a-5753-5793-9ef4-d8648eacac28))
+	(text "Each servo power AND motor return run directly to the pack in the harness. Board GND is signal reference; residual shared return must satisfy the harness calculation."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ff683912-b0cc-56c1-a4c0-4ec29bf9c282))
+	(text "Keep four1k series resistors,10k pull-downs andSRV05-4 clamp. Board cannot cut servo power. Command neutral<=50ms after reset; bench servo/harness failsafe."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 5b80fd05-489b-5c3a-9bf1-324ebc99cf26))
+	(text "R11 (D-R11-05): J122 is a latching JST GH SM05B-GHS-TB: pins 1-4 SERVO1-4_OUT, pin 5 GND signal reference. No servo positive connection on board."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 221c9c61-a07d-5dfb-a561-e21a74271634))
+	(text "J122 JST SM05B-GHS-TB (C189896); signal only, AWG 30-26 GH crimps (JST eGH p2). Servo power and motor return stay in the pack-star harness."
+		(at 20.32 30.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 01709003-b9e4-58f3-a847-df9d70909665))
+	(sheet_instances
+		(path "/"
+			(page "13"))))

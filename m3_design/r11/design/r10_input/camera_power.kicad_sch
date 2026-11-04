@@ -1,0 +1,3734 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r10")
+	(uuid 5fe62d29-5f56-5202-9e1e-56e4f8398e97)
+	(paper "A1")
+	(title_block (title "05 | Regulated camera and GPS / radio / AUX port supplies") (date "2026-10-26") (rev "M3-ASSY-R10"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0402_DNP C0603 C0805 C_0603_1608Metric C_1206_3216Metric M3_GRM32_1210"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:CameraBuck"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "CameraBuck_0_1"
+				(rectangle
+					(start -17.78 5.08)
+					(end 17.78 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraBuck_1_1"
+				(pin input line
+					(at -22.86 2.54 0)
+					(length 5.08)
+					(name "FB"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -22.86 0.0 0)
+					(length 5.08)
+					(name "EN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -22.86 -2.54 0)
+					(length 5.08)
+					(name "IN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at 22.86 2.54 180)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin output line
+					(at 22.86 0.0 180)
+					(length 5.08)
+					(name "SW"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 22.86 -2.54 180)
+					(length 5.08)
+					(name "BST"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_AP63200_TSOT26"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:L"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "L"
+				(at -1.27 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "L"
+				(at 1.905 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Inductor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "inductor choke coil reactor magnetic"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "L_0_1"
+				(arc
+					(start 0 2.54)
+					(mid 0.6323 1.905)
+					(end 0 1.27)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(arc
+					(start 0 1.27)
+					(mid 0.6323 0.635)
+					(end 0 0)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(arc
+					(start 0 0)
+					(mid 0.6323 -0.635)
+					(end 0 -1.27)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(arc
+					(start 0 -1.27)
+					(mid 0.6323 -1.905)
+					(end 0 -2.54)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "L_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name "2"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "IND-SMD_L4.0-W4.0 M3_SRP5030TA M3_LQG15_0402"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:PortLDO"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U"
+				(at 0 12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "PortLDO"
+				(at 0 -12.7 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "TPS7A9101DSKR adjustable LDO; DSK thermal pad 11 to GND"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "LDO regulator"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_TPS7A91_DSK10"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "PortLDO_0_1"
+				(rectangle
+					(start -10.16 10.16)
+					(end 10.16 -10.16)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "PortLDO_1_1"
+				(pin power_in line
+					(at -15.24 7.62 0)
+					(length 5.08)
+					(name "IN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "9"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -15.24 5.08 0)
+					(length 5.08)
+					(name "IN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "10"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -15.24 2.54 0)
+					(length 5.08)
+					(name "EN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "7"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -15.24 0 0)
+					(length 5.08)
+					(name "SS_CTRL"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -15.24 -2.54 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -15.24 -5.08 0)
+					(length 5.08)
+					(name "PAD"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "11"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_out line
+					(at 15.24 7.62 180)
+					(length 5.08)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 15.24 5.08 180)
+					(length 5.08)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at 15.24 2.54 180)
+					(length 5.08)
+					(name "FB"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 15.24 0 180)
+					(length 5.08)
+					(name "NR_SS"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "8"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin open_collector line
+					(at 15.24 -2.54 180)
+					(length 5.08)
+					(name "PG"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "R0402 R0805 R_0603_1608Metric R2512 M3_R2512_UR"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:USBCurrentLimit"
+			(pin_names
+				(offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(symbol "USBCurrentLimit_0_1"
+				(rectangle
+					(start -20.32 5.08)
+					(end 20.32 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "USBCurrentLimit_1_1"
+				(pin power_in line
+					(at -25.4 2.54 0)
+					(length 5.08)
+					(name "IN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin input line
+					(at -25.4 0.0 0)
+					(length 5.08)
+					(name "EN"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_in line
+					(at -25.4 -2.54 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin power_out line
+					(at 25.4 2.54 180)
+					(length 5.08)
+					(name "OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 25.4 0.0 180)
+					(length 5.08)
+					(name "ILIM"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin open_collector line
+					(at 25.4 -2.54 180)
+					(length 5.08)
+					(name "FAULT_N"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(property "ki_fp_filters" "M3_TPS2553_DBV"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+	)
+	(symbol
+		(lib_id "M3:CameraBuck")
+		(at 86.36 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 030aef1f-a373-5e9c-b0a1-a3e0ce5a9f06)
+		(property "Reference" "U400"
+			(at 88.9 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AP63201WU-7"
+			(at 88.9 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_AP63200_TSOT26"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.diodes.com/assets/Datasheets/AP63200-AP63201-AP63203-AP63205.pdf"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C2071044"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Diodes Incorporated"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "AP63201WU-7"
+			(at 86.36 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "U400")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 63.5 86.36)
+			(xy 58.42 86.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fdcf0070-e53c-5c56-b03e-5f67bca90e79))
+	(global_label "PORT_FB"
+		(shape passive)
+		(at 58.42 86.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f2a031ae-999a-5789-839d-0fdf39d140d9))
+	(wire
+		(pts
+			(xy 63.5 88.9)
+			(xy 58.42 88.9))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f88fce00-20cd-5a71-a910-4442709f9f24))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 58.42 88.9 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f362f56c-d7b2-5d8e-b2b6-6c69a6d91c87))
+	(wire
+		(pts
+			(xy 63.5 91.44)
+			(xy 58.42 91.44))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 88d72bdd-d162-5d0c-b8d6-ad8a517e2fa3))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 58.42 91.44 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 896011b8-f60e-5713-9a6e-5b86b770a092))
+	(wire
+		(pts
+			(xy 109.22 86.36)
+			(xy 114.3 86.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b6e8f4cb-bd36-51f6-882f-0a9f309339f2))
+	(global_label "GND"
+		(shape passive)
+		(at 114.3 86.36 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 9dd50511-feff-5f33-bebc-06d6fe1a845f))
+	(wire
+		(pts
+			(xy 109.22 88.9)
+			(xy 114.3 88.9))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d23c31f2-eb54-5154-8ec8-704536fa79e3))
+	(global_label "PORT_SW"
+		(shape passive)
+		(at 114.3 88.9 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ff4962bc-2391-596a-8c00-9291436ac5ef))
+	(wire
+		(pts
+			(xy 109.22 91.44)
+			(xy 114.3 91.44))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c88811f3-5765-5e87-b585-37128fecc3a7))
+	(global_label "PORT_BST"
+		(shape passive)
+		(at 114.3 91.44 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid b33d5b57-6b0e-59f4-a09e-74bae60498de))
+	(symbol
+		(lib_id "M3:PortLDO")
+		(at 226.06 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d68fb2df-d42f-5871-a5a8-ebc329eb651e)
+		(property "Reference" "U401"
+			(at 228.6 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "TPS7A9101DSKR"
+			(at 228.6 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TPS7A91_DSK10"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tps7a91.pdf"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C2878140"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Texas Instruments"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "TPS7A9101DSKR"
+			(at 226.06 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "U401")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 241.3 81.28)
+			(xy 246.38 81.28))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f6aedad6-566b-5dc9-b9e1-1da432a932a7))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 246.38 81.28 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 64ed3dc3-7f7e-5b5f-b078-9393e71d2aac))
+	(wire
+		(pts
+			(xy 241.3 83.82)
+			(xy 246.38 83.82))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c349c9c2-7334-504a-a656-3c83b6845a0e))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 246.38 83.82 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 9d491644-9eb3-53b1-804d-0916517f4928))
+	(wire
+		(pts
+			(xy 241.3 86.36)
+			(xy 246.38 86.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d0e62371-0881-515d-9cd7-2e457d83f06c))
+	(global_label "PORT_LDO_FB"
+		(shape passive)
+		(at 246.38 86.36 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 4f996007-55da-5750-8305-a5e7bb43be4a))
+	(wire
+		(pts
+			(xy 210.82 91.44)
+			(xy 205.74 91.44))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c25ac4df-8fa5-54ae-9f0a-1b003e2c4466))
+	(global_label "GND"
+		(shape passive)
+		(at 205.74 91.44 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8b8977ae-26a6-5ef5-b426-0654d93f9cd1))
+	(no_connect
+		(at 241.3 91.44)
+		(uuid f6eebe93-46fd-53b3-b801-f45662ec142f))
+	(wire
+		(pts
+			(xy 210.82 88.9)
+			(xy 205.74 88.9))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 987fed0d-4b23-5b43-8668-71303e35eaae))
+	(global_label "GND"
+		(shape passive)
+		(at 205.74 88.9 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ac6d93b2-b72c-5537-858b-9e658a705e38))
+	(wire
+		(pts
+			(xy 210.82 86.36)
+			(xy 205.74 86.36))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ca952423-74f2-51e7-81db-bb4f908358fe))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 205.74 86.36 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 16a63e53-b101-53ac-82ad-5e52b96dce8e))
+	(wire
+		(pts
+			(xy 241.3 88.9)
+			(xy 246.38 88.9))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ff858794-868f-52ec-b22b-cd8244c136b3))
+	(global_label "PORT_LDO_SS"
+		(shape passive)
+		(at 246.38 88.9 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 0b7e14d4-0f3f-514b-8d27-6297d9fe7ce5))
+	(wire
+		(pts
+			(xy 210.82 81.28)
+			(xy 205.74 81.28))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 173f6b0c-7b35-5552-b955-aabf4db6d6c3))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 205.74 81.28 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6287e9c3-43ff-5bd3-ad8f-eaa437d9771a))
+	(wire
+		(pts
+			(xy 210.82 83.82)
+			(xy 205.74 83.82))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5c076643-9430-5fc9-be9c-6073e5e5cb15))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 205.74 83.82 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6c090735-564a-5d90-820f-9bd88d588b9e))
+	(wire
+		(pts
+			(xy 210.82 93.98)
+			(xy 205.74 93.98))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 429dc0a1-059e-5085-8c03-8206976d2f18))
+	(global_label "GND"
+		(shape passive)
+		(at 205.74 93.98 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b18eec38-6636-571e-9149-c96aa7c042a1))
+	(symbol
+		(lib_id "M3:L")
+		(at 365.76 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 452c3974-f76a-59f3-8b8b-4dbc5e17ef4b)
+		(property "Reference" "L400"
+			(at 368.3 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "6.8uH"
+			(at 368.3 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_SRP5030TA"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.bourns.com/docs/product-datasheets/srp5030t.pdf"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C1329837"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Bourns"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "SRP5030T-6R8M"
+			(at 365.76 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "L400")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 365.76 85.09)
+			(xy 365.76 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6420e440-93cb-5576-b531-56222899c62b))
+	(global_label "PORT_SW"
+		(shape passive)
+		(at 365.76 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 54136af1-f091-50e1-99ac-d63c1eaef5be))
+	(wire
+		(pts
+			(xy 365.76 92.71)
+			(xy 365.76 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ae8f9b75-6e31-5950-8843-a2f77bed2a84))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 365.76 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8f764fe8-23a9-58b5-8f67-f5a3756cc8ec))
+	(symbol
+		(lib_id "M3:R")
+		(at 505.46 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 11d24290-2ee3-55c7-9914-0f14501ec39c)
+		(property "Reference" "R400"
+			(at 508 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "56.2k 0.1%"
+			(at 508 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C705784.html"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C705784"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "RT0603BRD0756K2L"
+			(at 505.46 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R400")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 85.09)
+			(xy 505.46 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c365b235-aad4-5b9c-a76e-50370a6adebf))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 505.46 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 62806d0c-f5e5-5ff1-b0fd-e9eefd92ccf5))
+	(wire
+		(pts
+			(xy 505.46 92.71)
+			(xy 505.46 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid de914f7b-d101-516d-96ab-cefb71797514))
+	(global_label "PORT_FB_TOP"
+		(shape passive)
+		(at 505.46 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6d5a8884-2014-5b62-a25a-18880a9905f5))
+	(symbol
+		(lib_id "M3:R")
+		(at 645.16 88.9 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e4bd0f0e-4a27-5fc3-9ce7-f721c6ecaef7)
+		(property "Reference" "R404"
+			(at 647.7 87.63 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k 1%"
+			(at 647.7 90.17 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C22975.html"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C22975"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF2001T5E"
+			(at 645.16 88.9 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R404")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 85.09)
+			(xy 645.16 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e7a22b6a-903e-57dd-b757-9a8d92fb79bd))
+	(global_label "PORT_FB_TOP"
+		(shape passive)
+		(at 645.16 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 900051bc-3e24-59f9-a2f9-bb64e3e33156))
+	(wire
+		(pts
+			(xy 645.16 92.71)
+			(xy 645.16 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e88b4a2f-8da6-57d1-8d42-78aa91c363bf))
+	(global_label "PORT_FB"
+		(shape passive)
+		(at 645.16 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3855f207-4ea3-508c-a5ce-1203ba825fce))
+	(symbol
+		(lib_id "M3:R")
+		(at 86.36 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9c2a54d7-20cf-5d8d-92df-77ef3e19bfbe)
+		(property "Reference" "R401"
+			(at 88.9 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 88.9 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C95204.html"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 86.36 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R401")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 133.35)
+			(xy 86.36 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3a85fdb1-9c06-5d67-9336-65b0737e52a4))
+	(global_label "PORT_FB"
+		(shape passive)
+		(at 86.36 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f70870ff-9d11-5f68-825c-97abe126c327))
+	(wire
+		(pts
+			(xy 86.36 140.97)
+			(xy 86.36 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 59933ea9-19f6-53b6-a6a4-c77540bf6aa1))
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7eb239f0-1f6a-50de-8c69-a1d9a7966176))
+	(symbol
+		(lib_id "M3:R")
+		(at 226.06 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 6763c68c-87c4-568b-86f9-086be756ff64)
+		(property "Reference" "R402"
+			(at 228.6 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "49.9k 0.1%"
+			(at 228.6 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C705780.html"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C705780"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "RT0603BRD0749K9L"
+			(at 226.06 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R402")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 226.06 133.35)
+			(xy 226.06 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 627a8e90-1cc3-5b7b-8554-1a39a85a17e7))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 226.06 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid bf34a3b0-85cc-54ba-964e-e10c1a98973e))
+	(wire
+		(pts
+			(xy 226.06 140.97)
+			(xy 226.06 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5a7fdca5-1707-556b-9114-9b382d78fa76))
+	(global_label "PORT_LDO_FB"
+		(shape passive)
+		(at 226.06 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 75503883-c53b-51ff-af4f-335f35f8de66))
+	(symbol
+		(lib_id "M3:R")
+		(at 365.76 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f105cc99-822f-5ca0-9f1b-7ce26c265f83)
+		(property "Reference" "R403"
+			(at 368.3 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 0.1%"
+			(at 368.3 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C95204.html"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C95204"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "RT0603BRD0710KL"
+			(at 365.76 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R403")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 365.76 133.35)
+			(xy 365.76 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2a174d59-ba1c-5de9-9c67-bd21d515ee87))
+	(global_label "PORT_LDO_FB"
+		(shape passive)
+		(at 365.76 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fc8c242b-76f1-56ec-8220-745b6319204d))
+	(wire
+		(pts
+			(xy 365.76 140.97)
+			(xy 365.76 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4eb7bc1e-d4f1-5b3a-b79b-dc9cdd682d7d))
+	(global_label "GND"
+		(shape passive)
+		(at 365.76 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f7f534ad-94f7-501e-8bc8-6765949be55d))
+	(symbol
+		(lib_id "M3:C")
+		(at 505.46 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f1b72fad-dc07-5577-a314-a05b5a405f84)
+		(property "Reference" "C400"
+			(at 508 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 508 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 505.46 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C400")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 133.35)
+			(xy 505.46 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 67c8c107-b0ee-5ae7-a9ad-f318837d223f))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 505.46 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 95267f80-e74e-51b8-8d1e-8fc4ce0f4362))
+	(wire
+		(pts
+			(xy 505.46 140.97)
+			(xy 505.46 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ab462996-e25a-58bb-b7bb-802cc6972f1e))
+	(global_label "GND"
+		(shape passive)
+		(at 505.46 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cf56c68f-13a2-537c-b372-8d185099fc43))
+	(symbol
+		(lib_id "M3:C")
+		(at 645.16 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e6dc93f9-85fb-5561-837b-790782a0b591)
+		(property "Reference" "C401"
+			(at 647.7 135.89 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 647.7 138.43 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 645.16 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C401")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 133.35)
+			(xy 645.16 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d8563ffe-b98b-5169-8265-255c34b0ba21))
+	(global_label "RAW_PROTECTED"
+		(shape passive)
+		(at 645.16 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 117930fd-e1bf-569a-8645-25c00ccde685))
+	(wire
+		(pts
+			(xy 645.16 140.97)
+			(xy 645.16 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a14559b0-2406-5f46-964e-06eaf1b86f24))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 89fa2f11-50ad-5e5e-84e5-4e3a7b6b8f9b))
+	(symbol
+		(lib_id "M3:C")
+		(at 86.36 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d0b6ce5f-0270-504d-8de7-41a57057e45f)
+		(property "Reference" "C403"
+			(at 88.9 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 88.9 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 86.36 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C403")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 181.61)
+			(xy 86.36 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 918ad636-d9fb-5551-bef9-6995b0bf6d7b))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 86.36 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 12dba813-f9b9-5e85-bb3b-e5dc03133b51))
+	(wire
+		(pts
+			(xy 86.36 189.23)
+			(xy 86.36 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1ac81b45-29d9-56d1-94f5-2f1e4f8f3622))
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2993f2e9-da06-54c9-90af-22808d32bfa0))
+	(symbol
+		(lib_id "M3:C")
+		(at 226.06 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f9a0e4fa-2320-5a78-9f83-65a8142ff913)
+		(property "Reference" "C404"
+			(at 228.6 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 228.6 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 226.06 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C404")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 226.06 181.61)
+			(xy 226.06 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e93edbfa-ff21-5a3e-b8ce-2b2c77138638))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 226.06 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cc8e59fc-0574-5351-bd71-9f3705a9b913))
+	(wire
+		(pts
+			(xy 226.06 189.23)
+			(xy 226.06 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1b5242a5-efc7-5bd1-995f-8a326c91384b))
+	(global_label "GND"
+		(shape passive)
+		(at 226.06 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9dc5be14-e0ec-5a16-975f-cdb3aaef2cc9))
+	(symbol
+		(lib_id "M3:C")
+		(at 365.76 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid be318690-0c37-5a91-986d-02554e60c68f)
+		(property "Reference" "C405"
+			(at 368.3 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 368.3 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 365.76 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C405")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 365.76 181.61)
+			(xy 365.76 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bc33c8a6-ed9c-5251-8376-ca587e0eccdf))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 365.76 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2daefbea-b34f-5b6b-bb9d-ead4fa38840b))
+	(wire
+		(pts
+			(xy 365.76 189.23)
+			(xy 365.76 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a1737117-992e-56ff-b6b7-4d82097d4930))
+	(global_label "GND"
+		(shape passive)
+		(at 365.76 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4aeb87ef-b8e3-5b00-a9ca-30ee21cfb5d9))
+	(symbol
+		(lib_id "M3:C")
+		(at 505.46 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 56a84dd7-fee0-5dcf-a0d1-4499089f1656)
+		(property "Reference" "C406"
+			(at 508 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 508 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 505.46 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C406")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 181.61)
+			(xy 505.46 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid eb91625f-d2d6-5c0d-be99-ce2830a62080))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 505.46 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 30227a81-6a7c-5fe5-8264-52e4b86754d9))
+	(wire
+		(pts
+			(xy 505.46 189.23)
+			(xy 505.46 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6af3cd2f-7541-5f99-8bfb-881b0da10617))
+	(global_label "GND"
+		(shape passive)
+		(at 505.46 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7a314337-4cdf-56ab-af90-12038d1c56f1))
+	(symbol
+		(lib_id "M3:C")
+		(at 645.16 185.42 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 74bf2544-3ecc-5e96-9908-780b14c7aeef)
+		(property "Reference" "C407"
+			(at 647.7 184.15 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 647.7 186.69 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 645.16 185.42 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C407")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 181.61)
+			(xy 645.16 176.53))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1af74d1d-47d7-5e41-a035-5cc6d90c2d1a))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 645.16 176.53 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6e1226b8-e26f-5408-8b7b-606b523f7607))
+	(wire
+		(pts
+			(xy 645.16 189.23)
+			(xy 645.16 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e881fd3c-a7f3-5f27-b5aa-50032fbdf59e))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 194.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 47da2b82-91d5-5c38-901e-641ca6764172))
+	(symbol
+		(lib_id "M3:C")
+		(at 86.36 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 036f03e7-0cd8-512b-ba55-d8928b3a7d3d)
+		(property "Reference" "C402"
+			(at 88.9 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 88.9 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 86.36 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C402")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 229.87)
+			(xy 86.36 224.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cf3e34c7-36c6-5494-badb-73cc85e14fd2))
+	(global_label "PORT_BST"
+		(shape passive)
+		(at 86.36 224.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fe7d6faa-219f-526b-8cae-18c7e1f7a713))
+	(wire
+		(pts
+			(xy 86.36 237.49)
+			(xy 86.36 242.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6dd54f68-2477-5d65-aa9b-3ff38ce89632))
+	(global_label "PORT_SW"
+		(shape passive)
+		(at 86.36 242.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fc28c4bb-f1a8-5f34-8a17-8ebe7eacbd90))
+	(symbol
+		(lib_id "M3:C")
+		(at 226.06 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 70e6ba77-f802-52eb-a9e0-2cdb398680b8)
+		(property "Reference" "C408"
+			(at 228.6 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10nF 50V X7R 10%"
+			(at 228.6 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C15195.html"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15195"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B103KB5NNNC"
+			(at 226.06 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C408")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 226.06 229.87)
+			(xy 226.06 224.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bc7fc590-ad20-514c-a52f-142a36b551e9))
+	(global_label "PORT_LDO_SS"
+		(shape passive)
+		(at 226.06 224.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f9848a64-2de6-5284-962e-f0cc932c170f))
+	(wire
+		(pts
+			(xy 226.06 237.49)
+			(xy 226.06 242.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 097ebfd3-2079-506e-9ed4-6bd3a8b01b16))
+	(global_label "GND"
+		(shape passive)
+		(at 226.06 242.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e8794675-5fca-5136-afdd-ed001f2906e0))
+	(symbol
+		(lib_id "M3:USBCurrentLimit")
+		(at 365.76 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid b2025aaf-edf5-5457-abcd-2902158b1740)
+		(property "Reference" "U402"
+			(at 368.3 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "TPS2553DBVR"
+			(at 368.3 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TPS2553_DBV"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/tps2553.pdf"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C55266"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Texas Instruments"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "TPS2553DBVR"
+			(at 365.76 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "U402")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 340.36 231.14)
+			(xy 335.28 231.14))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 517c485f-7097-5bef-b315-48d97c041ef7))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 335.28 231.14 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 79e0ee9b-98dc-5d84-8d21-7077cbfce06b))
+	(wire
+		(pts
+			(xy 340.36 236.22)
+			(xy 335.28 236.22))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a3ea338f-7edc-513b-81e9-b21e7ea97a5a))
+	(global_label "GND"
+		(shape passive)
+		(at 335.28 236.22 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6761d7a8-5c5a-52e8-9bfc-2a0fa8bb32c0))
+	(wire
+		(pts
+			(xy 340.36 233.68)
+			(xy 335.28 233.68))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 10e9dd08-5faf-5aa1-887e-f1b993f260c1))
+	(global_label "CAM_PWR_EN"
+		(shape passive)
+		(at 335.28 233.68 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d99194c1-b2b0-582d-aaa4-e97150db8a53))
+	(wire
+		(pts
+			(xy 391.16 236.22)
+			(xy 396.24 236.22))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6918f053-1755-5cdd-9a94-6c0aaacecd0a))
+	(global_label "CAM_FAULT_N"
+		(shape passive)
+		(at 396.24 236.22 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 774edf27-594b-5fec-8859-1e5b3c4f968b))
+	(wire
+		(pts
+			(xy 391.16 233.68)
+			(xy 396.24 233.68))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 16338bdc-4aa4-5953-9258-cd6fedc25520))
+	(global_label "CAM_ILIM"
+		(shape passive)
+		(at 396.24 233.68 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid cf69f932-e408-53c4-9597-0a33edc23904))
+	(wire
+		(pts
+			(xy 391.16 231.14)
+			(xy 396.24 231.14))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 22cc5d2a-5ddd-5a38-b627-d3ca9ed814f2))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 396.24 231.14 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 3bfd54e2-a27a-5e10-8900-39d538f1bb77))
+	(symbol
+		(lib_id "M3:R")
+		(at 505.46 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 84ca6385-a91e-58f2-a1cb-43be49fe1251)
+		(property "Reference" "R430"
+			(at 508 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22.6k 1%"
+			(at 508 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 505.46 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C2999509.html"
+			(at 505.46 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C2999509"
+			(at 505.46 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "FOJAN"
+			(at 505.46 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "FRC0603F2262TS"
+			(at 505.46 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R430")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 229.87)
+			(xy 505.46 224.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9c5c047c-8b1f-5e5d-b629-572639c211d3))
+	(global_label "CAM_ILIM"
+		(shape passive)
+		(at 505.46 224.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1a295dc5-620c-5bf7-bcea-1ce5e5aaf575))
+	(wire
+		(pts
+			(xy 505.46 237.49)
+			(xy 505.46 242.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cf340c6b-2625-5e02-b6ed-7626c959715c))
+	(global_label "GND"
+		(shape passive)
+		(at 505.46 242.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9d3c2f80-c7da-5a21-b6db-7c0517ea74fc))
+	(symbol
+		(lib_id "M3:R")
+		(at 645.16 233.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 42814a6d-5017-5329-bcef-b011147bfa3a)
+		(property "Reference" "R431"
+			(at 647.7 232.41 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100k 1%"
+			(at 647.7 234.95 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 645.16 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C14675.html"
+			(at 645.16 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14675"
+			(at 645.16 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 645.16 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "RC0603FR-07100KL"
+			(at 645.16 233.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R431")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 229.87)
+			(xy 645.16 224.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3a4e1182-d69b-5b8e-92c3-e9c232957511))
+	(global_label "CAM_PWR_EN"
+		(shape passive)
+		(at 645.16 224.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid de9e93a9-4738-5974-9431-b1461a925eb6))
+	(wire
+		(pts
+			(xy 645.16 237.49)
+			(xy 645.16 242.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ba52cb29-bf0a-5fb9-a6f8-29a27d8221a9))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 242.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b9baf528-1b17-5abc-8f01-c5e8b26c3b2a))
+	(symbol
+		(lib_id "M3:R")
+		(at 86.36 281.94 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid b74e0ed9-da7d-5f0d-94cd-e1b8c40114b7)
+		(property "Reference" "R432"
+			(at 88.9 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 1%"
+			(at 88.9 283.21 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 86.36 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
+			(at 86.36 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 86.36 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 86.36 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 86.36 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R432")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 278.13)
+			(xy 86.36 273.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e7bfbc03-e423-5335-9a80-24f147f089cd))
+	(global_label "CAM_FAULT_N"
+		(shape passive)
+		(at 86.36 273.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f58b9dde-c0b6-5a41-82d4-a6f70ac43d3d))
+	(wire
+		(pts
+			(xy 86.36 285.75)
+			(xy 86.36 290.83))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2d9913b8-7d14-5236-a69c-f5c535dd1997))
+	(global_label "3V3"
+		(shape passive)
+		(at 86.36 290.83 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ff752570-b278-5301-97f8-32332c83c9d6))
+	(symbol
+		(lib_id "M3:C")
+		(at 226.06 281.94 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid dcc4e7b1-4767-5869-82c2-a3b14180219e)
+		(property "Reference" "C430"
+			(at 228.6 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 228.6 283.21 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 226.06 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
+			(at 226.06 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 226.06 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 226.06 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 226.06 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C430")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 226.06 278.13)
+			(xy 226.06 273.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 545ed971-a2c4-5f97-b738-3e3d78539db2))
+	(global_label "PORT_5V3"
+		(shape passive)
+		(at 226.06 273.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c632c225-9747-5bcf-bbea-570c6aad5e1d))
+	(wire
+		(pts
+			(xy 226.06 285.75)
+			(xy 226.06 290.83))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6ad397e4-443b-51ef-b6f1-0e36539bc0da))
+	(global_label "GND"
+		(shape passive)
+		(at 226.06 290.83 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1392c011-9dc3-5b2d-894f-8a9d0f01ee67))
+	(symbol
+		(lib_id "M3:C")
+		(at 365.76 281.94 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 8c19cbf7-cffa-5604-b7ab-d1f5a0bc865d)
+		(property "Reference" "C431"
+			(at 368.3 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 368.3 283.21 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 365.76 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 365.76 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 365.76 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 365.76 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 365.76 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C431")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 365.76 278.13)
+			(xy 365.76 273.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4ee659f0-8d6e-52fb-a667-859698624740))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 365.76 273.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid aeae49eb-8c54-59df-b67e-d8035582e93b))
+	(wire
+		(pts
+			(xy 365.76 285.75)
+			(xy 365.76 290.83))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 85240934-35a7-5b74-81d7-309cfa286bc2))
+	(global_label "GND"
+		(shape passive)
+		(at 365.76 290.83 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 854be9b9-f9e9-5d82-be1a-be8326dea477))
+	(symbol
+		(lib_id "M3:C")
+		(at 505.46 281.94 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9c4f7dc0-c828-5379-8f87-f954338eff06)
+		(property "Reference" "C410"
+			(at 508 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 508 283.21 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 505.46 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
+			(at 505.46 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 505.46 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 505.46 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 505.46 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C410")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 278.13)
+			(xy 505.46 273.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d86d60d6-6adc-52ed-b67a-70f1f5f87c19))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 505.46 273.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b6e9354d-3b6a-51c8-8493-1cd19a8b9fee))
+	(wire
+		(pts
+			(xy 505.46 285.75)
+			(xy 505.46 290.83))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bdae056e-c742-5d08-b1c6-1cea767d7b3b))
+	(global_label "GND"
+		(shape passive)
+		(at 505.46 290.83 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 33d2cbec-51a9-5533-8cc4-88d2dc40b0f5))
+	(symbol
+		(lib_id "M3:C")
+		(at 645.16 281.94 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid fb77e7e3-e3ea-5425-9447-d9b310d5fd07)
+		(property "Reference" "C411"
+			(at 647.7 280.67 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 647.7 283.21 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 645.16 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 645.16 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 645.16 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 645.16 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 645.16 281.94 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C411")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 278.13)
+			(xy 645.16 273.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 96709eb0-da6e-5261-8563-1f628456d288))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 645.16 273.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6d076b9f-8ece-5b6d-8554-2708b3f364e1))
+	(wire
+		(pts
+			(xy 645.16 285.75)
+			(xy 645.16 290.83))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ca5ba86b-0e5d-5eec-8ba1-ece49f29a2bf))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 290.83 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a2f2916c-f09e-5bc2-b735-2042c5b27081))
+	(symbol
+		(lib_id "M3:C")
+		(at 86.36 330.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f36a35d9-41c9-5042-8f56-276c1d489899)
+		(property "Reference" "C420"
+			(at 88.9 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 88.9 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 86.36 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
+			(at 86.36 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 86.36 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 86.36 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 86.36 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C420")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 326.39)
+			(xy 86.36 321.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9c9c4d91-196e-56b9-9ebd-694077cd38c4))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 86.36 321.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 34e0bc93-7f93-5534-a726-57788f9cd2f9))
+	(wire
+		(pts
+			(xy 86.36 334.01)
+			(xy 86.36 339.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3637c72f-04f1-5a13-81d7-5897d43860e7))
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 339.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 14197b50-e1a1-5dba-8992-a1204f119a8a))
+	(symbol
+		(lib_id "M3:C")
+		(at 226.06 330.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 712ef58b-08e8-50bc-9a50-f6ea27d1a8cf)
+		(property "Reference" "C421"
+			(at 228.6 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 228.6 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 226.06 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 226.06 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 226.06 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 226.06 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 226.06 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C421")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 226.06 326.39)
+			(xy 226.06 321.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e9f0986c-fe8d-541e-bd74-7dd4d8a78888))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 226.06 321.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6aad553f-ae46-5286-9cdb-eca72f7904fe))
+	(wire
+		(pts
+			(xy 226.06 334.01)
+			(xy 226.06 339.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e876a096-8a24-57c6-9197-7f6a1691f794))
+	(global_label "GND"
+		(shape passive)
+		(at 226.06 339.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fd93780e-f124-5433-a869-bbcb89646b93))
+	(symbol
+		(lib_id "M3:R")
+		(at 365.76 330.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 221a49d2-7539-5f6f-bf54-8ac3c2a710ff)
+		(property "Reference" "R405"
+			(at 368.3 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "820R 1%"
+			(at 368.3 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R_0603_1608Metric"
+			(at 365.76 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C23253.html"
+			(at 365.76 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C23253"
+			(at 365.76 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL"
+			(at 365.76 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0603WAF8200T5E"
+			(at 365.76 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "R405")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 365.76 326.39)
+			(xy 365.76 321.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bc70eb49-7b79-5cd2-83ca-eff5f4e498e3))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 365.76 321.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 91be0825-4270-5802-a2c3-d08fb47d5ba4))
+	(wire
+		(pts
+			(xy 365.76 334.01)
+			(xy 365.76 339.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid dc88e074-e39e-5269-b723-d9c447117ca1))
+	(global_label "GND"
+		(shape passive)
+		(at 365.76 339.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f82fd7fe-1376-55cd-9b1e-62898abce50f))
+	(symbol
+		(lib_id "M3:C")
+		(at 505.46 330.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d78b8c53-3c97-58a7-865a-041103de242d)
+		(property "Reference" "C444"
+			(at 508 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100nF 50V X7R 10%"
+			(at 508 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C_0603_1608Metric"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C14663.html"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C14663"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "YAGEO"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CC0603KRX7R9BB104"
+			(at 505.46 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C444")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 505.46 326.39)
+			(xy 505.46 321.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b3b209c2-a1cf-5d3b-bd87-b7f881306367))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 505.46 321.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 73fcf3bf-ee35-55b1-b97b-292970b2ab48))
+	(wire
+		(pts
+			(xy 505.46 334.01)
+			(xy 505.46 339.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6156ae5f-1281-5c04-acf2-7618214489fb))
+	(global_label "GND"
+		(shape passive)
+		(at 505.46 339.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 853823b4-c665-5d5c-ac22-cf2efe8c79a1))
+	(symbol
+		(lib_id "M3:C")
+		(at 645.16 330.2 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 610e879a-275d-5c94-bc19-e6fc9f0b26d9)
+		(property "Reference" "C445"
+			(at 647.7 328.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "22uF 25V X7R 10%"
+			(at 647.7 331.47 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GRM32_1210"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C21397.html"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C21397"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Murata"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GRM32ER71E226KE15L"
+			(at 645.16 330.2 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/60dd1974-7d11-571e-8043-304f52487d73"
+					(reference "C445")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 645.16 326.39)
+			(xy 645.16 321.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e34ad26a-3121-5666-a656-22f6af02e9ee))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 645.16 321.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 851b1134-2945-5b10-8a48-50bf7b8e7c05))
+	(wire
+		(pts
+			(xy 645.16 334.01)
+			(xy 645.16 339.09))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 39e73af5-4e57-5a9b-afe3-33f13846a236))
+	(global_label "GND"
+		(shape passive)
+		(at 645.16 339.09 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 305b1a74-8aad-59ac-b482-c96da97079c6))
+	(text "R10 owner always-on ports: RAW_PROTECTED -> AP63201 5.456V -> retained camera TPS2553; TPS7A91 4.792V directly feeds J410 GPS, J420 radio and J440 AUX (D-R19-14: AUX up to 100mA beyond GPS 150mA + radio 300mA, U401 thermal floor)."
+		(at 20.32 15.24 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 253b1320-acec-55d9-8cdc-2e7acc132aa9))
+	(text "Camera U402 remains: its disabled reverse blocking separates CAM_5V from PORT_5V3. Enabled reverse blocking has a threshold and delay; no self-powered camera when the e-match is connected."
+		(at 20.32 20.32 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 2ba75920-67bd-5285-98cb-da128c83589a))
+	(text "GPS/radio/AUX switches and translators are removed. The shared LDO current limit/thermal shutdown protect a cable short; no individual fault or power-cycle GPIO remains. R405 sets the LDO minimum load."
+		(at 20.32 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 5932a333-be27-53af-811f-fae85fa8d05d))
+	(text "F6: GPS/radio/AUX loads cannot be shed by firmware. Stop SD/QSPI writes and UART activity, disable camera OE/EN, lower MCU clock, extinguish LEDs/buzzer; retain sensors, state and safety. Ports-on hold-up is conditional, not guaranteed."
+		(at 20.32 30.48 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 365af88f-faac-57a8-aa1f-a701fd2c900f))
+	(sheet_instances (path "/" (page "05"))))

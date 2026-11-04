@@ -16,13 +16,18 @@ def _fit(layer):
     return FIT['external' if layer in ('F.Cu', 'B.Cu') else 'internal']
 
 
-def ipc_dt(width_mm, layer, amps=AMPS):
-    """Temperature rise (C) of a conductor width_mm wide on `layer` carrying `amps`."""
-    k, a, b, c = _fit(layer)
-    return k * amps ** a * (width_mm / 0.0254) ** b * TH_MIL[layer] ** c
+def _th_mil(layer, th_mm):
+    return TH_MIL[layer] if th_mm is None else th_mm / 0.0254
 
 
-def ipc_width(dt, layer, amps=AMPS):
-    """Width (mm) on `layer` that rises dt C at `amps`."""
+def ipc_dt(width_mm, layer, amps=AMPS, th_mm=None):
+    """Temperature rise (C) of a conductor width_mm wide on `layer` carrying `amps`; `th_mm` overrides the R7-R10
+    copper thickness of TH_MIL (an R11 board's own stack-up: tools/check_r11.py CU_MM_R11)."""
     k, a, b, c = _fit(layer)
-    return (dt / (k * amps ** a * TH_MIL[layer] ** c)) ** (1 / b) * 0.0254
+    return k * amps ** a * (width_mm / 0.0254) ** b * _th_mil(layer, th_mm) ** c
+
+
+def ipc_width(dt, layer, amps=AMPS, th_mm=None):
+    """Width (mm) on `layer` that rises dt C at `amps` (`th_mm` as ipc_dt)."""
+    k, a, b, c = _fit(layer)
+    return (dt / (k * amps ** a * _th_mil(layer, th_mm) ** c)) ** (1 / b) * 0.0254

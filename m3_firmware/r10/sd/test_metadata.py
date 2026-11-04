@@ -242,12 +242,33 @@ class SourceBinding(unittest.TestCase):
         ref,pin=endpoint.split('.')
         return next(n for n in self.tree.findall('./nets/net/node') if n.get('ref')==ref and n.get('pin')==pin)
 
-    def test_exact_current_source_and_no_card_detect_or_native_driver_claim(self):
+    def test_exact_current_source_native_adapter_and_no_hardware_claim(self):
         result=verify.verify();self.assertEqual((result['endpoints'],result['pins']),(30,4))
         self.assertFalse(result['independent_card_detect']);self.assertFalse(result['hardware_tested'])
-        self.assertFalse(result['native_adapter_implemented'])
+        self.assertTrue(result['native_adapter_implemented'])
+        self.assertTrue(result['native_register_sources_verified'])
         p=json.loads((HERE/'provenance.json').read_text())
         self.assertFalse(p['image_linked']);self.assertFalse(p['hardware_tested'])
+
+    def test_native_register_source_cannot_be_omitted_or_substituted(self):
+        p=json.loads((HERE/'provenance.json').read_text())
+        for value in ({},{next(iter(verify.REGISTER_SOURCES)):'0'*64}):
+            changed=copy.deepcopy(p);changed['pinned_sources']=value
+            with self.assertRaises(ValueError):verify.verify_native_sources(verify.ROOT,changed)
+
+    def test_native_scope_does_not_silently_claim_image_or_hardware_acceptance(self):
+        p=json.loads((HERE/'provenance.json').read_text())
+        for key,value in (('schema','unreviewed'),('image_linked',True),('hardware_tested',True),
+                          ('native_adapter_implemented',False)):
+            changed=copy.deepcopy(p);changed[key]=value
+            with self.assertRaises(ValueError):verify.verify_native_sources(verify.ROOT,changed)
+
+    def test_changed_native_header_bytes_are_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root=Path(directory)
+            for name in verify.REGISTER_SOURCES:
+                p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('unreviewed header')
+            with self.assertRaises(ValueError):verify.verify_native_sources(root)
 
     def test_swapped_data_or_supply_is_rejected(self):
         for endpoint in ('J430.3','J430.4','J430.6','R460.2','C461.1'):

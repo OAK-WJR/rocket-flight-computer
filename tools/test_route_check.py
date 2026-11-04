@@ -1239,5 +1239,262 @@ class R10AuditScope(unittest.TestCase):
                 board.Remove(duplicate)
 
 
+
+@unittest.skipUnless(pcbnew, 'KiCad Python required')
+class R11SixLayer(unittest.TestCase):
+    """D-R11-08: route_check profile r11 on synthetic six-layer boards (test_r11_check.Six): R10's classes and rules on
+    every layer of the F / In1 / In2 / In3 / In4 / B stack."""
+
+    @classmethod
+    def setUpClass(cls):
+        global Six
+        from test_r11_check import Six                            # noqa: E402 (the shared six-layer board builder)
+
+    def setUp(self):
+        rc.set_profile('r11', gate_data={}); self.addCleanup(rc.set_profile, 'r8')
+
+    def scan(self, s, cat):
+        return [d for d in rc.scan(s.board) if d['cat'] == cat]
+
+    def test_profile_reads_r10_classes_and_starts_empty(self):
+        # D-R11-61: r11's allowlist is ALLOWLIST_R11 (forced findings only); leftovers and parallel vias start empty
+        self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES, rc.PARALLEL_VIAS),
+                         (rc.ALLOWLIST_R11, [], rc.ROUTE_FIGURES_R11, []))
+        rc.set_profile('r10')
+        self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES), ([], [], {}))   # R10's gate unchanged
+        rc.set_profile('r11', gate_data={})
+        for net in ('USB_DP', 'GPS_TX_WIRE', 'PYRO1_GATE', 'BAT_SW_RETURN', 'SD_SCK', '3V3'):
+            rc.set_profile('r10'); want = rc.net_class(net)
+            rc.set_profile('r11')
+            self.assertEqual(rc.net_class(net), want)
+        self.assertFalse(rc.return_required('BAT_SW_RETURN'))             # AUD-2's slow list, read from R10's
+        self.assertEqual(rc.cu_layers(Six().board), rc.CU6)
+        b4 = pcbnew.BOARD(); b4.SetCopperLayerCount(4)
+        self.assertEqual(rc.cu_layers(b4), rc.CU4)                        # R7-R10 boards keep their four layers
+
+    # --- D-R11-61: the r11 allowlist, its measured figures and the six-layer GND via audit -----------------------
+    def test_r11_allowlist_entries_carry_measured_reasons(self):
+        self.assertEqual(sorted((e[0], e[1]) for e in rc.ALLOWLIST_R11),
+                         [('critical_via_no_gnd', 'SD_MOSI'), ('extra_vias', 'CAM_RX_BUFFER')])
+        for e in rc.ALLOWLIST_R11:
+            self.assertTrue(e[4].startswith('D-R11-61') and len(e[4]) > 100, e[:4])
+        for e in rc.ALLOWLIST_R11:                                  # every measured category quotes its figures
+            if e[0] in rc.MEASURED_CATS:
+                self.assertIn(e[1], rc.ROUTE_FIGURES_R11)
+
+    def test_r11_allowlist_matches_goes_stale_and_checks_figures(self):
+        d = dict(cat='extra_vias', net='CAM_RX_BUFFER', cls='uart', layer='net', x=31.6, y=1.57, len_mm=19.2, vias=4)
+        failures, allowed, stale = rc.evaluate([d])
+        self.assertEqual((failures, len(allowed)), ([], 1))
+        self.assertEqual([e[1] for e in stale], ['SD_MOSI'])        # the no-GND entry matched nothing: stale
+        self.assertEqual(rc.measured_check(allowed), [])
+        moved = dict(d, len_mm=18.0, vias=3)                         # a redrawn route: the entry is out of date
+        _, allowed, _ = rc.evaluate([moved])
+        self.assertEqual(len(rc.measured_check(allowed)), 1)
+        other = dict(d, x=31.0)                                      # 0.6 mm away: not this entry, so it fails
+        failures, allowed, _ = rc.evaluate([other])
+        self.assertEqual((len(failures), allowed), (1, []))
+        rc.set_profile('r10')                                        # the r10 profile allows nothing
+        failures, allowed, stale = rc.evaluate([d])
+        self.assertEqual((len(failures), allowed, stale), (1, [], []))
+
+    def test_r11_no_gnd_audit_uses_the_six_layer_search(self):
+        s = Six()
+        s.track((3, 20), (5, 20), 'SD_MOSI', width=0.1)
+        s.track((5, 20), (7, 20), 'SD_MOSI', pcbnew.B_Cu, width=0.1)
+        s.via(5, 20, 'SD_MOSI', d=0.4, drill=0.2)
+        d = dict(cat='critical_via_no_gnd', net='SD_MOSI', layer='via', x=5.0, y=20.0)
+        hit = rc.nognd_audit(s.board, [d])                           # open board: a legal spot, so the entry is stale
+        self.assertEqual(len(hit), 1)
+        self.assertLessEqual(hit[0][1][2], rc.GND_REACH)
+        # In3 copper of another net over the whole reach blocks every spot on the six-layer stack (R7's four-layer
+        # search would not see In3); a via keep-out on In4 alone does too
+        for blocker in ('in3', 'in4_keepout'):
+            with self.subTest(blocker=blocker):
+                t = Six()
+                t.track((3, 20), (5, 20), 'SD_MOSI', width=0.1)
+                t.track((5, 20), (7, 20), 'SD_MOSI', pcbnew.B_Cu, width=0.1)
+                t.via(5, 20, 'SD_MOSI', d=0.4, drill=0.2)
+                if blocker == 'in3':
+                    for k in range(-9, 10):
+                        t.track((2.5, 20 + 0.2 * k), (7.5, 20 + 0.2 * k), 'SD_CS', pcbnew.In3_Cu, width=0.1)
+                else:
+                    z = pcbnew.ZONE(t.board); z.SetIsRuleArea(True)
+                    ls = pcbnew.LSET(); ls.AddLayer(pcbnew.In4_Cu); z.SetLayerSet(ls)
+                    z.SetDoNotAllowVias(True); z.SetDoNotAllowTracks(False); z.SetDoNotAllowZoneFills(False)
+                    z.SetDoNotAllowPads(False); z.SetDoNotAllowFootprints(False)
+                    o = z.Outline(); o.NewOutline()
+                    for x, y in ((2, 17), (8, 17), (8, 23), (2, 23)):
+                        o.Append(pcbnew.FromMM(x), pcbnew.FromMM(y))
+                    t.board.Add(z)
+                self.assertEqual(rc.nognd_audit(t.board, [d]), [])
+
+    def test_r11_gnd_spot_rules(self):
+        import r11_gnd_spots as g
+        s = Six()
+        s.track((10, 10), (20, 10), 'SD_CS', pcbnew.In3_Cu, width=0.1)
+        s.via(30, 10, 'SD_SCK', d=0.4, drill=0.2)
+        s.part('J1', 30, 30, [('1', 'BAT_IN', (0, 0), 'pth')])
+        s.part('R1', 15, 30, [('1', 'GND', (0, 0), 'smd')])
+        s.part('TP1', 15, 40, [('1', 'SD_MISO', (0, 0), 'smd')])
+        s.via(10, 40, 'ACT_DRV', d=0.6, drill=0.3)
+        sites = g.Sites(s.board, (0, 0, 46, 50))
+        # copper clearance 0.1 mm or hole clearance 0.25 mm, whichever is larger (0.4 / 0.2 via: hole 0.35 mm reach)
+        self.assertIsNotNone(sites.why((15, 10.39), 0.4, 0.2))
+        self.assertIsNone(sites.why((15, 10.41), 0.4, 0.2))
+        # hole to hole 0.2 mm from any via, whatever its net
+        self.assertIsNotNone(sites.why((30.0, 10.39), 0.25, 0.15))
+        self.assertIsNone(sites.why((30.0, 10.61), 0.4, 0.2))
+        # a PTH hole of another net: 0.55 mm to the via's inner ring (hole 0.5 + 0.55 + 0.2 = 1.25 mm)
+        self.assertIsNotNone(sites.why((31.24, 30), 0.4, 0.2))
+        self.assertIsNone(sites.why((31.26, 30), 0.4, 0.2))
+        # no hole in an SMD pad, even a GND one; a bare test pad keeps 1.0 mm
+        self.assertEqual(sites.why((15, 30.5), 0.4, 0.2), 'hole in an SMD pad')
+        self.assertIsNotNone(sites.why((15.3 + 0.2 + 0.95, 40), 0.4, 0.2))
+        self.assertIsNone(sites.why((15.3 + 0.2 + 1.05, 40), 0.4, 0.2))
+        # S-8: GND keeps 1.0 mm from an ACT_DRV barrel; the board edge 0.5 mm
+        self.assertTrue(sites.why((11.45, 40), 0.4, 0.2).startswith('S-8'))   # ring 0.3 + 1.0 + 0.2
+        self.assertIsNone(sites.why((11.55, 40), 0.4, 0.2))
+        self.assertEqual(sites.why((0.65, 25), 0.4, 0.2), 'board edge')
+        self.assertIsNone(sites.why((0.75, 25), 0.4, 0.2))
+
+    def test_layer_change_to_in3_or_in4_needs_a_gnd_via(self):
+        for layer in (pcbnew.In3_Cu, pcbnew.In4_Cu):
+            with self.subTest(layer=layer):
+                s = Six()
+                s.part('A1', 5, 5, [('1', 'USB_DP', (0, 0), 'smd')])
+                s.part('A2', 20, 5, [('1', 'USB_DP', (0, 0), 'smd')])
+                s.track((5, 5), (10, 5), 'USB_DP')
+                s.via(10, 5, 'USB_DP')
+                s.track((10, 5), (15, 5), 'USB_DP', layer)
+                s.via(15, 5, 'USB_DP')
+                s.track((15, 5), (20, 5), 'USB_DP')
+                hits = self.scan(s, 'critical_via_no_gnd')
+                self.assertEqual(len(hits), 2)
+                self.assertTrue(all(rc.gated(d) for d in hits))
+                s.via(10, 6.2, 'GND'); s.via(15, 6.2, 'GND')
+                self.assertEqual(self.scan(s, 'critical_via_no_gnd'), [])
+
+    def test_plated_pad_layer_change_through_in3(self):
+        s = Six()
+        s.part('J9', 10, 10, [('5', 'CAM_RX_WIRE', (0, 0), 'pth')])
+        s.part('U1', 20, 10, [('1', 'CAM_RX_WIRE', (0, 0), 'smd')])
+        s.part('D1', 0.5, 10, [('1', 'CAM_RX_WIRE', (0, 0), 'smd')])
+        s.track((10, 10), (20, 10), 'CAM_RX_WIRE')
+        s.track((10, 10), (0.5, 10), 'CAM_RX_WIRE', pcbnew.In3_Cu)
+        self.assertEqual([n for n, _, _, lays in rc.pad_layer_changes(s.board)], ['J9.5'])
+        self.assertEqual(rc.pad_layer_changes(s.board)[0][3], sorted([pcbnew.F_Cu, pcbnew.In3_Cu]))
+
+    def test_right_angle_and_off_angle_on_in3_and_in4(self):
+        for layer in (pcbnew.In3_Cu, pcbnew.In4_Cu):
+            with self.subTest(layer=layer):
+                s = Six()
+                s.part('A1', 5, 5, [('1', 'SIGNAL', (0, 0), 'smd')])
+                s.part('A2', 15, 10, [('1', 'SIGNAL', (0, 0), 'smd')])
+                s.via(5, 5, 'SIGNAL'); s.via(15, 10, 'SIGNAL')
+                s.track((5, 5), (15, 5), 'SIGNAL', layer); s.track((15, 5), (15, 10), 'SIGNAL', layer)
+                self.assertTrue(self.scan(s, 'right_angle'))
+                s.track((20, 20), (25, 20.3), 'SIGNAL', layer)
+                self.assertTrue(self.scan(s, 'off_angle'))
+
+    def test_dangling_via_counts_inner_layers(self):
+        s = Six()
+        s.part('A1', 5, 5, [('1', 'SIGNAL', (0, 0), 'smd')])
+        s.part('A2', 15, 5, [('1', 'SIGNAL', (0, 0), 'smd')])
+        s.track((5, 5), (10, 5), 'SIGNAL'); s.via(10, 5, 'SIGNAL')
+        s.track((10, 5), (15, 5), 'SIGNAL', pcbnew.In3_Cu)               # joins F.Cu and In3 at the via: not dangling
+        self.assertEqual([d for d in self.scan(s, 'dangling_via') if d['net'] == 'SIGNAL'], [])
+
+    def gate_board(self, second=True):
+        """ACT_GATE between two pads: F.Cu, a barrel at (7, 5), B.Cu under an OTHER track (a needed hop), a barrel at
+        (13, 5), F.Cu; with `second` a second barrel at (7.75, 5.75) beside the first, joined on F.Cu and B.Cu."""
+        s = Six()
+        s.part('A1', 5, 5, [('1', 'ACT_GATE', (0, 0), 'smd')])
+        s.part('A2', 15, 5, [('1', 'ACT_GATE', (0, 0), 'smd')])
+        s.track((5, 5), (7, 5), 'ACT_GATE', width=0.3); s.via(7, 5, 'ACT_GATE', d=0.6)
+        s.track((7, 5), (13, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3); s.via(13, 5, 'ACT_GATE', d=0.6)
+        s.track((13, 5), (15, 5), 'ACT_GATE', width=0.3)
+        s.track((10, 2), (10, 8), 'OTHER')                             # the B.Cu run passes under it: a needed hop
+        for xy in ((7, 6.2), (13, 6.2)):
+            s.via(*xy, 'GND')                                          # GND partners within 1.5 mm
+        if second:
+            s.via(7.75, 5.75, 'ACT_GATE', d=0.6)
+            s.track((7.75, 5.75), (7, 5), 'ACT_GATE', width=0.3)
+            s.track((7.75, 5.75), (7.75, 5), 'ACT_GATE', pcbnew.B_Cu, 0.3)
+        return s
+
+    def gate_hits(self, s, pairs):
+        rc.set_profile('r11', gate_data={'parallel_vias': pairs})
+        hits = [d for d in rc.scan(s.board) if d['net'] == 'ACT_GATE' and d['cat'] in ('track_loop', 'parallel_via',
+                                                                                       'extra_vias')]
+        self.assertTrue(all(rc.gated(d) for d in hits))
+        return sorted((d['cat'], d.get('problem', '')[:5]) for d in hits)
+
+    def test_o_c2_5_listed_parallel_pair_passes_unlisted_fails(self):
+        """O-C2-5: a second barrel beside a single-via tap passes route_check r11 only as a listed pair from the gate
+        data; unlisted it is a track_loop and an extra via (both gated)."""
+        pair = {'net': 'ACT_GATE', 'vias': [[7, 5], [7.75, 5.75]], 'reason': 'test: second ACT_GATE barrel'}
+        s = self.gate_board()
+        self.assertEqual(self.gate_hits(s, []), [('extra_vias', ''), ('extra_vias', ''), ('track_loop', '')])
+        self.assertEqual(self.gate_hits(s, [pair]), [])
+        self.assertEqual(rc.PARALLEL_VIAS, [('ACT_GATE', (7.75, 5.75), 'test: second ACT_GATE barrel')])
+        # either order names the same pair: the barrel left out of the loop search is the second one named
+        self.assertEqual(self.gate_hits(s, [dict(pair, vias=[[7.75, 5.75], [7, 5]])]), [])
+        # a pair on another net does not cover this one
+        self.assertEqual(self.gate_hits(s, [dict(pair, net='OTHER')]),
+                         [('extra_vias', ''), ('extra_vias', ''), ('track_loop', '')])
+        self.assertEqual(self.gate_hits(self.gate_board(second=False), []), [])        # one barrel: clean
+
+    def test_o_c2_5_stale_and_series_pairs_fail(self):
+        s = self.gate_board()
+        pair = {'net': 'ACT_GATE', 'vias': [[7, 5], [7.75, 5.75]], 'reason': 'test'}
+        # stale: the first barrel moved away (no via at the named spot), the second gone, or a net with no copper
+        self.assertIn(('parallel_via', 'stale'), self.gate_hits(s, [dict(pair, vias=[[6, 5], [7.75, 5.75]])]))
+        self.assertIn(('parallel_via', 'stale'), self.gate_hits(self.gate_board(second=False), [pair]))
+        rc.set_profile('r11', gate_data={'parallel_vias': [dict(pair, net='NO_COPPER')]})
+        stale = [d for d in rc.scan(s.board) if d['cat'] == 'parallel_via']
+        self.assertEqual([(d['net'], d['problem'][:5]) for d in stale], [('NO_COPPER', 'stale')])
+        self.assertTrue(rc.gated(stale[0]))
+        # two barrels in series (the run's two layer changes) are not a pair: the second named one fails as not
+        # parallel, and the real second barrel's loop still fails
+        hits = self.gate_hits(s, [dict(pair, vias=[[7, 5], [13, 5]])])
+        self.assertIn(('parallel_via', 'not p'), hits)
+        self.assertIn(('track_loop', ''), hits)
+        # the first barrel named must be redundant too: (13, 5) is not, though (7.75, 5.75) beside (7, 5) is
+        rc.set_profile('r11', gate_data={'parallel_vias': [dict(pair, vias=[[13, 5], [7.75, 5.75]])]})
+        bad = [d for d in rc.scan(s.board) if d['cat'] == 'parallel_via']
+        self.assertEqual([((d['x'], d['y']), d['problem'][:40]) for d in bad],
+                         [((13.0, 5.0), 'not parallel: without the first barrel o')])
+
+    def test_o_c2_5_gate_data_schema(self):
+        self.assertEqual(rc.load_parallel_pairs({}), [])               # no key: an empty list
+        ok = {'net': 'GND', 'vias': [[1, 2], [1.6, 2]], 'reason': 'R7.2 second GND barrel'}
+        self.assertEqual(rc.load_parallel_pairs({'parallel_vias': [ok]}), [('GND', (1.0, 2.0), (1.6, 2.0), ok['reason'])])
+        for bad in ({'parallel_vias': {}}, {'parallel_vias': [dict(ok, reason=' ')]},
+                    {'parallel_vias': [dict(ok, vias=[[1, 2]])]}, {'parallel_vias': [dict(ok, vias=[[1, 2], [1, 2]])]},
+                    {'parallel_vias': [dict(ok, extra=1)]}, {'parallel_vias': [dict(ok, net='')]},
+                    {'parallel_vias': [dict(ok, vias=[[1, 2], [1, True]])]}):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                rc.load_parallel_pairs(bad)
+        import json
+        import tempfile
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d) / 'gate.json'
+            self.assertEqual(rc.read_gate_data(path), {})              # no file: no pairs
+            path.write_text(json.dumps({'parallel_vias': [ok]}))
+            rc.set_profile('r11', gate_data=rc.read_gate_data(path))
+            self.assertEqual(rc.PARALLEL_VIAS, [('GND', (1.6, 2.0), ok['reason'])])
+        rc.set_profile('r10')
+        self.assertEqual(rc.PARALLEL_PAIRS, [])                        # r10 keeps its own frozen list
+        self.assertEqual(rc.PARALLEL_VIAS, rc.PARALLEL_VIAS_R10)
+
+    def test_reference_pairs_follow_the_r11_stack(self):
+        pairs = rc.ref_pairs()
+        self.assertEqual(pairs[pcbnew.In3_Cu], {pcbnew.In2_Cu, pcbnew.In4_Cu})
+        self.assertEqual(pairs[pcbnew.B_Cu], {pcbnew.In4_Cu})
+        rc.set_profile('r10')
+        self.assertEqual(rc.ref_pairs(), {pcbnew.B_Cu: {pcbnew.In2_Cu}, pcbnew.In2_Cu: {pcbnew.B_Cu}})
+
+
 if __name__ == '__main__':
     unittest.main()

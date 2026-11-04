@@ -2,14 +2,35 @@
 import csv
 import hashlib
 import io
+import json
+import os
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
-ROOT=Path(__file__).resolve().parents[3]
+ROOT=Path(os.environ.get('R10_REPOSITORY',str(Path(__file__).resolve().parents[3])))
 NETLIST='m3_design/assembly_review/schematic.net.xml'
 PIN_TABLE='m3_design/assembly_review/sources/r10_design/pin_table.tsv'
 NET_SHA='6ee0a063d14a3b9b977b09e0315df1d758ef13a4118d436b55443befd1b55bc4'
 PIN_SHA='b94133e61d553f5febb07c7c97977cd8b124634c6c19d0a2ce5b7fead304564a'
+REGISTER_SOURCES={
+    'm3_firmware/vendor/device/Include/stm32h743xx.h':
+        '9a4ea0860707868a1cc562140ba214d535fb5a64fde91b451b2767276eef7e03',
+}
+
+
+def verify_native_sources(root=ROOT,provenance=None):
+    if provenance is None:
+        provenance=json.loads(Path(__file__).with_name('provenance.json').read_text())
+    if (provenance.get('schema')!='r10-sd-metadata-provenance/v2' or
+            provenance.get('pinned_sources')!=REGISTER_SOURCES or
+            provenance.get('native_adapter_implemented') is not True or
+            provenance.get('image_linked') is not False or
+            provenance.get('hardware_tested') is not False):
+        raise ValueError('Missing reviewed SPI3 register sources or incorrect implementation scope')
+    for name,digest in REGISTER_SOURCES.items():
+        if hashlib.sha256((Path(root)/name).read_bytes()).hexdigest()!=digest:
+            raise ValueError('Reviewed SPI3 register reference changed: '+name)
+    return True
 ENDPOINTS={
     'SD_CS':{'J430.2':'CD_DAT3_CS_2','R460.1':None,'U1.81':'PD0_81'},
     'SD_SCK':{'J430.5':'CLK_5','U1.78':'PC10_78'},
@@ -71,7 +92,7 @@ def contract(tree,rows):
             raise ValueError('Reviewed SD CS/detect contract changed')
     if actual_pins!=PINS:raise ValueError('Reviewed SD GPIO or alternate-function map changed')
     return dict(endpoints=len(actual),pins=len(actual_pins),socket='472192001',
-                independent_card_detect=False,native_adapter_implemented=False,hardware_tested=False)
+                independent_card_detect=False,hardware_tested=False)
 
 
 def verify(root=ROOT):
@@ -79,8 +100,11 @@ def verify(root=ROOT):
     for p,digest in ((NETLIST,NET_SHA),(PIN_TABLE,PIN_SHA)):
         if hashlib.sha256((root/p).read_bytes()).hexdigest()!=digest:
             raise ValueError('Reviewed SD input changed: '+p)
-    return contract(ET.fromstring((root/NETLIST).read_bytes()),
+    verify_native_sources(root)
+    result=contract(ET.fromstring((root/NETLIST).read_bytes()),
                     csv.DictReader(io.StringIO((root/PIN_TABLE).read_text()),delimiter='\t'))
+    result.update(native_adapter_implemented=True,native_register_sources_verified=True,image_linked=False)
+    return result
 
 
 if __name__=='__main__':
