@@ -2,7 +2,7 @@
 """Routing hygiene gate: the clean-routing rules of AGENTS.md §3 and the owner's acceptance list, on every track and
 via of the board (the review pass-2 geometry scan, sources/r7_review/pass2_routing_geometry.md §2, made a gate).
 
-usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r11|r10|r9|r8|r7]
+usage: <KiCad python3> -I tools/route_check.py [board.kicad_pcb] [--report out.json] [--list] [--profile r12|r11|r10|r9|r8|r7]
 exit 0 = no failing instance and no stale allowlist entry (see GATE below)
 
 Profiles: r8 (default, M3-ASSY-R8): ALLOWLIST holds A8 (R8_DECISIONS D9) and the antenna-bias limiter's two
@@ -30,6 +30,9 @@ measured reason, D-R11-61), ROUTE_FIGURES is ROUTE_FIGURES_R11 and LEFTOVERS sta
 critical_via_no_gnd is re-measured by tools/r11_gnd_spots.gnd_spots (the six-layer R11 rules), not R7's search, and
 PARALLEL_VIAS holds only the pairs the R11 gate data list (R11_DATA key 'parallel_vias', O-C2-5; schema at
 load_parallel_pairs; a missing key or file is an empty list; --gate-data names another file).
+r12 (M3-ASSY-R12, r12_plan.md; the R12 gate in tools/check.sh once the R12 board is tracked): every r10 rule on R12's
+four-layer one-sided board, ALLOWLIST / LEFTOVERS / ROUTE_FIGURES / PARALLEL_VIAS empty (R12 adds an entry only with its
+measured reason, as R10 and R11 did).
 Every layer-dependent test walks the board's own copper stack (cu_layers: F, In1..In4, B on a six-layer board; the
 R7-R10 four-layer set otherwise, so their verdicts are unchanged), so a layer change through In3 or In4 is one, and the
 strict redraw's reference test pairs each layer with its neighbours in the R11 stack (REF_PAIRS_R11).
@@ -333,8 +336,8 @@ ROUTE_FIGURES = {'GNSS_LNA_EN': (7.65, 1), 'GNSS_VCC_RF': (6.2, 1)}         # D5
 
 # Profiles: r8 (default) = the lists above and the keep-out-aware detour baseline (D10); r7 = the R7 record's lists
 # (route_lists_r7.py) and the plain baseline, which reproduces the owner-accepted R7 verdict on board c872a3d3...
-PROFILES = ('r11', 'r10', 'r9', 'r8', 'r7')
-R10_LIKE = ('r10', 'r11')        # r11 runs every r10 rule (D-R11-08)
+PROFILES = ('r12', 'r11', 'r10', 'r9', 'r8', 'r7')
+R10_LIKE = ('r10', 'r11', 'r12')  # r11 runs every r10 rule (D-R11-08); r12 too, on R10's four-layer stack (r12_plan)
 PROFILE = 'r8'
 # D-R19-09 (R19-PWR-01), profile r10 only: a second via beside a supply's single-via layer change on a net without a pour
 # closes one deliberate loop (the two barrels join the same two copper pieces). (net, (x, y) mm of the added via, measured
@@ -460,7 +463,8 @@ def set_profile(name, gate_data=None):
     elif name == 'r8':
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = _R8_LISTS
         KEEPOUT_BASELINE = True
-    elif name in ('r9', 'r10'):                                           # r9_plan.md section 2: no exception of any kind
+    elif name in ('r9', 'r10', 'r12'):                                    # r9_plan.md section 2: no exception of any kind
+        # (r12, r12_plan.md section 4: the R10 rules and empty lists until a forced finding is recorded with its reason)
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = [], [], {}
         KEEPOUT_BASELINE = True
     elif name == 'r11':                                                   # D-R11-61: the forced findings only

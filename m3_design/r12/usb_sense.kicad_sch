@@ -1,0 +1,301 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r12_sch")
+	(uuid 145334d3-2267-5da7-adcb-1f0b9a896d9f)
+	(paper "A3")
+	(title_block
+		(title "10 | USB cable presence")
+		(date "2026-11-04")
+		(rev "M3-ASSY-R12")
+		(company "M3-ASSY-R12 stage A schematic; not reviewed, not ordered"))
+	(lib_symbols
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_R2512_UR R0402 R2512 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+	)
+	(text "M3-ASSY-R12 (10 | USB cable presence): drawn from R11 0b26da5 with circuit.json (R12_DECISIONS.md); every pin reaches a global label."
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 1b72f3df-91fb-59d0-82a5-3c120baa0c3e))
+	(symbol
+		(lib_id "M3:R")
+		(at 48.26 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 30d53ef3-74be-5893-870a-cbbf3bc81736)
+		(property "Reference" "R9"
+			(at 48.26 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k"
+			(at 48.26 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C11702"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1001TCE"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/145334d3-2267-5da7-adcb-1f0b9a896d9f"
+					(reference "R9")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 67.31)
+			(xy 48.26 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3e15b3df-2df1-522e-b94a-361d5ef5fa81))
+	(global_label "VBUS"
+		(shape passive)
+		(at 48.26 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e4334257-a197-5ab6-98b5-d1ef8cb0a7e2))
+	(wire
+		(pts
+			(xy 48.26 74.93)
+			(xy 48.26 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1c425bc5-886b-5450-8991-2164262afcca))
+	(global_label "VBUS_SENSE"
+		(shape passive)
+		(at 48.26 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 906e27fe-9281-5b6d-9ad1-88f7f88b0f86))
+	(symbol
+		(lib_id "M3:R")
+		(at 91.44 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a76c49f0-dfe2-53d2-8b32-0be36525dc73)
+		(property "Reference" "R110"
+			(at 91.44 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k 1%"
+			(at 91.44 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 91.44 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C11702"
+			(at 91.44 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 91.44 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1001TCE"
+			(at 91.44 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 91.44 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/145334d3-2267-5da7-adcb-1f0b9a896d9f"
+					(reference "R110")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 91.44 67.31)
+			(xy 91.44 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid cc127471-fd4c-58c7-bb87-372b02f5acf1))
+	(global_label "VBUS_SENSE"
+		(shape passive)
+		(at 91.44 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 59fa95e7-1984-5e4f-ac3e-0a869c6466a2))
+	(wire
+		(pts
+			(xy 91.44 74.93)
+			(xy 91.44 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 334a8a0b-ab22-589c-8aaa-d18e7c23f6a1))
+	(global_label "GND"
+		(shape passive)
+		(at 91.44 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8349f686-e0f8-5e53-b6d9-5abea3086611))
+	(sheet_instances
+		(path "/"
+			(page "10"))))

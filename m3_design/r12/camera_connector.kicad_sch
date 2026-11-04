@@ -1,0 +1,448 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r12_sch")
+	(uuid 2e5d78f9-c446-5798-99c0-7be8d70abb74)
+	(paper "A3")
+	(title_block
+		(title "06 | Camera terminal")
+		(date "2026-11-04")
+		(rev "M3-ASSY-R12")
+		(company "M3-ASSY-R12 stage A schematic; not reviewed, not ordered"))
+	(lib_symbols
+		(symbol "M3:CameraGH6"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "CameraGH6"
+				(at 0 -11.43 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "JST SM06B-GHS-TB camera port (D-R11-05): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "camera port UART"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_GHC_6P"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "CameraGH6_0_1"
+				(rectangle
+					(start -10.16 8.89)
+					(end 10.16 -8.89)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "CameraGH6_1_1"
+				(pin passive line
+					(at -15.24 6.35 0)
+					(length 5.08)
+					(name "5V OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 3.81 0)
+					(length 5.08)
+					(name "5V OUT"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 1.27 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -1.27 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -3.81 0)
+					(length 5.08)
+					(name "RX FROM CAMERA TX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -15.24 -6.35 0)
+					(length 5.08)
+					(name "TX TO CAMERA RX"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+	)
+	(text "M3-ASSY-R12 (06 | Camera terminal): drawn from R11 0b26da5 with circuit.json (R12_DECISIONS.md); every pin reaches a global label."
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid dc99c6c6-b3b4-5645-9f50-2e2277075d1f))
+	(symbol
+		(lib_id "M3:CameraGH6")
+		(at 63.5 73.66 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid b6f6b65b-6422-59ed-a36f-61c755cad28e)
+		(property "Reference" "J9"
+			(at 63.5 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "GH1.25-6PWT"
+			(at 63.5 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_GHC_6P"
+			(at 63.5 73.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C52037408"
+			(at 63.5 73.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "XUNPU"
+			(at 63.5 73.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "GH1.25-6PWT"
+			(at 63.5 73.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 63.5 73.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/2e5d78f9-c446-5798-99c0-7be8d70abb74"
+					(reference "J9")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 67.31)
+			(xy 43.18 67.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5c23046a-e6b9-5eb4-a54e-f7c9361b20d0))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 43.18 67.31 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3d68ceae-be19-5cd8-9f8a-0a83c2ff3cb3))
+	(wire
+		(pts
+			(xy 48.26 69.85)
+			(xy 43.18 69.85))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid e8e71ff4-e1a2-5687-bbe0-8aab31468bff))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 43.18 69.85 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 61715113-474b-55d3-b331-36bf4f86c017))
+	(wire
+		(pts
+			(xy 48.26 72.39)
+			(xy 43.18 72.39))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0bfbc4cf-e973-5927-a4a5-f04d9b115786))
+	(global_label "GND"
+		(shape passive)
+		(at 43.18 72.39 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 80ea53c2-b260-569b-828d-faa51196a527))
+	(wire
+		(pts
+			(xy 48.26 74.93)
+			(xy 43.18 74.93))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3ca2d660-9c41-5fad-a308-1c2eac94d474))
+	(global_label "GND"
+		(shape passive)
+		(at 43.18 74.93 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 00417a0d-32a0-5b49-841b-211c15b383c6))
+	(wire
+		(pts
+			(xy 48.26 77.47)
+			(xy 43.18 77.47))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ed4f4cce-305a-5f7a-8d21-af5bef4da007))
+	(global_label "CAM_RX_WIRE"
+		(shape passive)
+		(at 43.18 77.47 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 96734675-608c-55c5-8416-debb3b86fede))
+	(wire
+		(pts
+			(xy 48.26 80.01)
+			(xy 43.18 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8d9ded84-fe74-5b6d-b69f-7162b547209e))
+	(global_label "CAM_TX_WIRE"
+		(shape passive)
+		(at 43.18 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2a2742c0-dc35-5181-a2bd-83f85bcb48ac))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 86.36 68.58 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 23ad869d-0790-54a5-9615-a6d981a68968)
+		(property "Reference" "TP74"
+			(at 86.36 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "GND"
+			(at 86.36 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 86.36 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" ""
+			(at 86.36 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 86.36 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/2e5d78f9-c446-5798-99c0-7be8d70abb74"
+					(reference "TP74")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 68.58)
+			(xy 86.36 73.66))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a7ae25d5-a026-5846-9a49-225000128fa3))
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 73.66 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fa8ed845-724b-5475-9e4e-bb7d0ddf2a01))
+	(sheet_instances
+		(path "/"
+			(page "6"))))

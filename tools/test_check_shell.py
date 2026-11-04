@@ -30,9 +30,13 @@ import os, pathlib, sys
 stage = pathlib.Path(__file__).stem
 r11 = '--profile' in sys.argv and sys.argv[sys.argv.index('--profile') + 1] == 'r11' or \\
     any('r11' in pathlib.Path(a).parts for a in sys.argv[1:])
-label = stage + ('@r11' if r11 else '')
+r12 = '--profile' in sys.argv and sys.argv[sys.argv.index('--profile') + 1] == 'r12' or \\
+    any('r12' in pathlib.Path(a).parts for a in sys.argv[1:])
+label = stage + ('@r12' if r12 else '@r11' if r11 else '')
 if stage == 'test_r11_check' and os.environ.get('R11_BOARD'):     # the R11 section hands its board to the self-test
     label += '+R11_BOARD' + ('+required' if os.environ.get('R11_BOARD_REQUIRED') == '1' else '')
+if stage == 'test_r12_check' and os.environ.get('R12_BOARD'):     # the R12 section hands its board to the self-test
+    label += '+R12_BOARD' + ('+required' if os.environ.get('R12_BOARD_REQUIRED') == '1' else '')
 with open(os.environ['GATE_LOG'], 'a') as log:
     log.write(label + '\\n')
 if stage == 'r10_parts' and ('--check' not in sys.argv or '--board' not in sys.argv):
@@ -43,14 +47,18 @@ if stage.startswith('fab_manifest') and '--content' not in sys.argv:      # R18-
     sys.exit(23)
 if stage == 'fit_check' and r11 and sys.argv[sys.argv.index('--profile') + 1] != 'r11':
     sys.exit(29)
+if stage == 'fit_check' and r12 and sys.argv[sys.argv.index('--profile') + 1] != 'r12':
+    sys.exit(31)
 sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
 '''
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
                      'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
                      'm3_design/check_actuators.py', 'm3_design/r10_parts.py', 'm3_design/r10_sch_check.py',
-                     'tools/check_r11.py', 'm3_design/r11_sch_check.py'):
+                     'tools/check_r11.py', 'm3_design/r11_sch_check.py', 'tools/check_r12.py',
+                     'm3_design/r12_sch_check.py', 'm3_design/r12_parts.py'):
             (self.root / path).write_text(stub)
         for path in ('tools/fab_manifest.py', 'tools/fab_manifest_r11.py', 'tools/test_r11_check.py',
+                     'tools/fab_manifest_r12.py', 'tools/test_r12_check.py',
                      'tools/test_check_shell.py', 'tools/test_procurement.py',
                      'tools/test_fab_validation.py', 'tools/test_fit_check.py', 'tools/test_paste_check.py',
                      'tools/test_r10_parts.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
@@ -59,16 +67,20 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
         self.env = dict(os.environ, KICAD_CLI=str(self.cli), KICAD_PY=sys.executable, NUMPY_PY=sys.executable,
                         GATE_LOG=str(self.log), TMPDIR=str(self.root))
         self.env.pop('R10_SKIP_FAB_MANIFEST', None)
-        for key in ('R11_BOARD', 'R11_BOARD_REQUIRED'):
+        for key in ('R11_BOARD', 'R11_BOARD_REQUIRED', 'R12_BOARD', 'R12_BOARD_REQUIRED'):
             self.env.pop(key, None)
         (self.root / 'board.kicad_pcb').write_text('board copy\n')
 
     SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
-                 'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check', 'test_r11_check']
+                 'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check', 'test_r11_check',
+                 'test_r12_check']
     CONTRACTS = ['r10_sch_check', 'verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
     R11_CONTRACTS = ['r11_sch_check@r11', 'verify_board@r11', 'silk_check@r11', 'fit_check@r11', 'check_r11@r11',
                      'route_check@r11']
     R11_TEXT = '(kicad_pcb (title_block (title "M3") (rev "M3-ASSY-R11")))\n'
+    R12_CONTRACTS = ['r12_sch_check@r12', 'r12_parts', 'verify_board@r12', 'silk_check@r12', 'fit_check@r12',
+                     'check_r12@r12', 'route_check@r12']
+    R12_TEXT = '(kicad_pcb (title_block (title "M3") (rev "M3-ASSY-R12")))\n'
 
     def run_gate(self, board=None):
         return subprocess.run(['bash', str(self.root / 'tools/check.sh'), str(board or self.root / 'board.kicad_pcb')],
@@ -221,7 +233,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
         return board
 
     def selftests_r11(self, required=True):
-        return self.SELFTESTS[:-1] + ['test_r11_check+R11_BOARD' + ('+required' if required else '')]
+        return self.SELFTESTS[:-2] + ['test_r11_check+R11_BOARD' + ('+required' if required else ''), 'test_r12_check']
 
     def test_r11_section_runs_after_r10_when_the_board_is_tracked(self):
         self.r11_board()
@@ -241,7 +253,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
         self.env.update(R11_BOARD=str(self.root / 'board.kicad_pcb'), R11_BOARD_REQUIRED='1')
         result = self.run_gate()
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
-        self.assertEqual(self.log.read_text().splitlines()[-1], 'test_r11_check')
+        self.assertEqual(self.log.read_text().splitlines()[-2:], ['test_r11_check', 'test_r12_check'])
 
     def test_each_r11_stage_failure_fails_the_gate(self):
         self.r11_board()
@@ -304,6 +316,94 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
         self.assertNotEqual(result.returncode, 0)
         self.assertIn('R11 board tracked but missing', result.stderr)
 
+
+    # ---- R12 section (r12_plan.md section 4) ------------------------------------------------------------------------
+    def r12_board(self, manifest=True, track=True):
+        board = self.root / 'm3_design/r12/m3.kicad_pcb'
+        (board.parent / 'fab').mkdir(parents=True, exist_ok=True)
+        board.write_text(self.R12_TEXT)
+        if manifest:
+            (board.parent / 'fab/m3_fab_manifest.json').write_text('{}')
+        if track:
+            subprocess.run(['git', 'init', '-q', str(self.root)], check=True)
+            subprocess.run(['git', '-C', str(self.root), 'add', 'm3_design/r12/m3.kicad_pcb'], check=True)
+        return board
+
+    def selftests_r12(self, required=True):
+        return self.SELFTESTS[:-1] + ['test_r12_check+R12_BOARD' + ('+required' if required else '')]
+
+    def test_r12_section_runs_after_r10_when_the_board_is_tracked(self):
+        self.r12_board()
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(),
+                         self.CONTRACTS + self.R12_CONTRACTS + ['fab_manifest_r12@r12'] + self.selftests_r12())
+        self.assertIn('== R12 gate:', result.stdout)
+
+    def test_r11_and_r12_sections_both_run_when_both_boards_are_tracked(self):
+        self.r11_board()
+        self.r12_board()
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(),
+                         self.CONTRACTS + self.R11_CONTRACTS + ['fab_manifest_r11@r11'] + self.R12_CONTRACTS +
+                         ['fab_manifest_r12@r12'] + self.SELFTESTS[:-2] +
+                         ['test_r11_check+R11_BOARD+required', 'test_r12_check+R12_BOARD+required'])
+
+    def test_an_untracked_r12_board_does_not_run_the_r12_section(self):
+        self.r12_board(track=False)
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + self.SELFTESTS)
+
+    def test_each_r12_stage_failure_fails_the_gate(self):
+        self.r12_board()
+        for stage in self.R12_CONTRACTS + ['fab_manifest_r12@r12']:
+            with self.subTest(stage=stage):
+                self.log.unlink(missing_ok=True)
+                self.env['FAIL_STAGE'] = stage
+                result = self.run_gate()
+                self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+                self.assertEqual(self.log.read_text().splitlines()[-1], stage)
+
+    def test_r12_schematic_contract_is_required_while_the_board_exists(self):
+        self.r12_board()
+        (self.root / 'm3_design/r12_sch_check.py').unlink()
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('r12_sch_check.py missing', result.stdout)
+        self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS)
+
+    def test_r12_fab_package_tool_is_required_while_the_board_is_tracked(self):
+        self.r12_board()
+        (self.root / 'tools/fab_manifest_r12.py').unlink()
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('fab_manifest_r12.py missing', result.stdout)
+
+    def test_r12_fit_must_use_the_r12_profile(self):
+        self.r12_board()
+        script = self.root / 'tools/check.sh'
+        script.write_text(script.read_text().replace('"$R12" --profile r12 --report "$O12/fit.json"',
+                                                     '"$R12" --profile r11 --report "$O12/fit.json"'))
+        self.assertNotEqual(self.run_gate().returncode, 0)
+
+    def test_an_explicit_r12_board_runs_the_r12_section_alone(self):
+        copy = self.root / 'copy/r12/m3.kicad_pcb'
+        (copy.parent / 'fab').mkdir(parents=True)
+        copy.write_text(self.R12_TEXT)
+        (copy.parent / 'fab/m3_fab_manifest.json').write_text('{}')
+        result = self.run_gate(copy)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(self.log.read_text().splitlines(), self.R12_CONTRACTS + self.selftests_r12())
+        self.assertIn('R12 fab manifest: not checked (board copy)', result.stdout)
+
+    def test_a_tracked_but_missing_r12_board_fails(self):
+        board = self.r12_board()
+        board.unlink()
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn('R12 board tracked but missing', result.stderr)
 
     def test_a_parse_error_anywhere_fails_before_any_stage(self):
         """A syntax error late in check.sh must not let the earlier stages run and the EXIT trap end with status 0."""

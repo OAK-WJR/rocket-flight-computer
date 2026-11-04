@@ -1,0 +1,781 @@
+{
+ "revision": "M3-ASSY-R12",
+ "status": "frozen",
+ "stage": "A",
+ "basis": "R11 netlist at 0b26da5 (r11_input/schematic.net.xml, manifest.json); R12_DECISIONS.md D-R12-xx; catalog fields as JLC lists them (tools/jlc_stock.lookup, 2026-11-04 UTC)",
+ "catalog": {
+  "C11702": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF1001TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010216_UNI-ROYAL-Uniroyal-Elec-0402WGF1001TCE_C11702.pdf",
+   "footprint": "rocket:R0402",
+   "source": "basic 1k"
+  },
+  "C12891": {
+   "Manufacturer": "Samsung Electro-Mechanics",
+   "Manufacturer Part": "CL31A226KAHNNNE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL31A226KAHNNNE_C12891.pdf",
+   "footprint": "rocket:C_1206_3216Metric",
+   "source": "D-R12-17: 22 uF 25 V X5R 1206 basic"
+  },
+  "C15127": {
+   "Manufacturer": "Alpha & Omega Semicon",
+   "Manufacturer Part": "AO3401A",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2412061733_Alpha---Omega-Semicon-AO3401A_C15127.pdf",
+   "footprint": "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "source": "D-R12-10: pyro bus load switch, AOS AO3401A datasheet"
+  },
+  "C1538": {
+   "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+   "Manufacturer Part": "0402B472K500NT",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402B472K500NT_C1538.pdf",
+   "footprint": "rocket:C0402",
+   "source": "D-R12-09: U9 dVdt 4.7 nF X7R basic"
+  },
+  "C1549": {
+   "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
+   "Manufacturer Part": "0402CG180J500NT",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG180J500NT_C1549.pdf",
+   "footprint": "rocket:C0402",
+   "source": "D-R12-14: HSE load capacitors 18 pF C0G for the 12 pF crystal"
+  },
+  "C15849": {
+   "Manufacturer": "Samsung Electro-Mechanics",
+   "Manufacturer Part": "CL10A105KB8NNNC",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10A105KB8NNNC_C15849.pdf",
+   "footprint": "rocket:C0603",
+   "source": "D-R12-17: 1 uF 50 V X5R 0603 basic"
+  },
+  "C20917": {
+   "Manufacturer": "Alpha & Omega Semicon",
+   "Manufacturer Part": "AO3400A",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_1811081213_Alpha---Omega-Semicon-AO3400A_C20917.pdf",
+   "footprint": "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "source": "D-R12-10: fire FET, AOS AO3400A datasheet"
+  },
+  "C23024": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0603WAF3003T5E",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010116_UNI-ROYAL-Uniroyal-Elec-0603WAF3003T5E_C23024.pdf",
+   "footprint": "rocket:R_0603_1608Metric",
+   "source": "D-R12-09: 300k 0603 basic (EN chain, value kept)"
+  },
+  "C23178": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0603WAF4703T5E",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010116_UNI-ROYAL-Uniroyal-Elec-0603WAF4703T5E_C23178.pdf",
+   "footprint": "rocket:R_0603_1608Metric",
+   "source": "D-R12-09: 470k 0603 basic (EN chain, values kept)"
+  },
+  "C25741": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF1003TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF1003TCE_C25741.pdf",
+   "footprint": "rocket:R0402",
+   "source": "basic 100k"
+  },
+  "C25744": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF1002TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf",
+   "footprint": "rocket:R0402",
+   "source": "basic 10k"
+  },
+  "C25765": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF2002TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF2002TCE_C25765.pdf",
+   "footprint": "rocket:R0402",
+   "source": "D-R12-06: 3V3 FB bottom 20k basic"
+  },
+  "C25779": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF3302TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF3302TCE_C25779.pdf",
+   "footprint": "rocket:R0402",
+   "source": "basic 33k"
+  },
+  "C25792": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF4702TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf",
+   "footprint": "rocket:R0402",
+   "source": "D-R12-06: 3V3 FB top 47k basic"
+  },
+  "C25794": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF5102TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF5102TCE_C25794.pdf",
+   "footprint": "rocket:R0402",
+   "source": "basic 51k"
+  },
+  "C25867": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF1501TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF1501TCE_C25867.pdf",
+   "footprint": "rocket:R0402",
+   "source": "D-R12-09: ILIM 2 x 1.5k basic"
+  },
+  "C25900": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF4701TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf",
+   "footprint": "rocket:R0402",
+   "source": "basic 4.7k"
+  },
+  "C26083": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF1004TCE",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010030_UNI-ROYAL-Uniroyal-Elec-0402WGF1004TCE_C26083.pdf",
+   "footprint": "rocket:R0402",
+   "source": "D-R12-09: OVLO top 1M basic"
+  },
+  "C2841056": {
+   "Manufacturer": "Texas Instruments",
+   "Manufacturer Part": "LMR50410XDBVR",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2303132130_Texas-Instruments-LMR50410XDBVR_C2841056.pdf",
+   "footprint": "rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+   "source": "D-R12-06: 3V3 buck, TI SLUSDW3A (4-36 V, 1 A, VFB 0.99-1.01 V)"
+  },
+  "C307331": {
+   "Manufacturer": "Samsung Electro-Mechanics",
+   "Manufacturer Part": "CL05B104KB54PNC",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL05B104KB54PNC_C307331.pdf",
+   "footprint": "rocket:C0402",
+   "source": "D-R12-17: 100 nF 50 V X7R 0402 basic"
+  },
+  "C3263277": {
+   "Manufacturer": "STMicroelectronics",
+   "Manufacturer Part": "LPS28DFWTR",
+   "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2211080600_STMicroelectronics-LPS28DFWTR_C3263277.pdf",
+   "footprint": "rocket:M3_LPS28DFW_CCLGA7",
+   "source": "D-R12-13: barometer, ST DS13317 Rev 1 (260-4060 hPa, J-STD-020)"
+  },
+  "C3662799": {
+   "Manufacturer": "Texas Instruments",
+   "Manufacturer Part": "TPS259470ARPWR",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2410121729_Texas-Instruments-TPS259470ARPWR_C3662799.pdf",
+   "footprint": "rocket:M3_TPS25947_RPW",
+   "source": "D-R12-09: TPS25947 auto-retry variant, TI SLVSFC9C device table (fault response only differs)"
+  },
+  "C37704": {
+   "Manufacturer": "Nexperia",
+   "Manufacturer Part": "BAT54C,215",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2407241028_Nexperia-BAT54C-215_C37704.pdf",
+   "footprint": "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
+   "source": "D-R12-11: cold pull-up diode BAT54C (one diode used)"
+  },
+  "C468250": {
+   "Manufacturer": "Texas Instruments",
+   "Manufacturer Part": "TPS563208DDCR",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2004061031_Texas-Instruments-TPS563208DDCR_C468250.pdf",
+   "footprint": "rocket:M3_TSOT23_6_DDC",
+   "source": "D-R12-07 / -08: port and camera bucks, TI SLVSD90B (4.5-17 V, 3 A, FCCM, VFB 0.749-0.787 V)"
+  },
+  "C52037406": {
+   "Manufacturer": "XUNPU",
+   "Manufacturer Part": "GH1.25-4PWT",
+   "Datasheet": "",
+   "footprint": "rocket:M3_GHC_4P",
+   "source": "D-R12-15: GH-1.25 clone 4P (EasyEDA land of C52037406)"
+  },
+  "C52037408": {
+   "Manufacturer": "XUNPU",
+   "Manufacturer Part": "GH1.25-6PWT",
+   "Datasheet": "",
+   "footprint": "rocket:M3_GHC_6P",
+   "source": "D-R12-15: GH-1.25 clone 6P (EasyEDA land of C52037408)"
+  },
+  "C57269": {
+   "Manufacturer": "Sunlord",
+   "Manufacturer Part": "SWPA4030S4R7MT",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2310251551_Sunlord-SWPA4030S4R7MT_C57269.pdf",
+   "footprint": "rocket:IND-SMD_L4.0-W4.0",
+   "source": "D-R12-06 / -07 / -08: 4.7 uH SWPA4030 for all three bucks"
+  },
+  "C78399": {
+   "Manufacturer": "Brightking",
+   "Manufacturer Part": "SMAJ12CA/TR13",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Brightking-SMAJ12CA-TR13_C78399.pdf",
+   "footprint": "rocket:D_SMA",
+   "source": "D-R12-09: SMAJ12CA 400 W TVS"
+  },
+  "C8678": {
+   "Manufacturer": "MDD(Microdiode Semiconductor)",
+   "Manufacturer Part": "SS34",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2407101107_MDD-Microdiode-Semiconductor-SS34_C8678.pdf",
+   "footprint": "rocket:D_SMA",
+   "source": "D-R12-04 / -09: SS34 3 A Schottky"
+  },
+  "C9006": {
+   "Manufacturer": "YXC Crystal Oscillators",
+   "Manufacturer Part": "X322525MOB4SI",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2403291504_YXC-Crystal-Oscillators-X322525MOB4SI_C9006.pdf",
+   "footprint": "rocket:CRYSTAL-SMD_4P-L3.2-W2.5-BL",
+   "source": "D-R12-14: 25 MHz 12 pF crystal, YXC YSX321SL sheet (ESR 50 ohm max, C0 3 pF max)"
+  },
+  "C96256": {
+   "Manufacturer": "Jiangsu Huaneng Elec",
+   "Manufacturer Part": "QMB-09B-03",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2104011834_Jiangsu-Huaneng-Elec-QMB-09B-03_C96256.pdf",
+   "footprint": "rocket:M3_BUZ_TH_D9_P4",
+   "source": "D-R12-16: passive 9 mm THT buzzer, owner-fitted (Huawha QMB-09B-03 spec 2019-12-3)"
+  }
+ },
+ "deleted": {
+  "C100": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "C11": "D-R12-17: second 22 uF on 3V3A deleted (C10 22 uF + C22 1 uF + 100 nF remain behind R164)",
+  "C401": "D-R12-07: one 22 uF input cap per buck (TI SLVSD90B section 7.2.2.4: > 10 uF)",
+  "C403": "D-R12-07: PORT_5V3 (LDO input) bulk deleted with the LDO",
+  "C404": "D-R12-07: PORT_5V3 (LDO input) bulk deleted with the LDO",
+  "C405": "D-R12-07: PORT_5V3 (LDO input) bulk deleted with the LDO",
+  "C408": "D-R12-07: port LDO deleted; the port buck makes PORT_4V8 directly",
+  "C411": "D-R12-07: per-port 22 uF deleted to keep PORT_4V8 within TI Table 7-2 (20-68 uF); 100 nF per port kept",
+  "C421": "D-R12-07: per-port 22 uF deleted to keep PORT_4V8 within TI Table 7-2 (20-68 uF); 100 nF per port kept",
+  "C430": "D-R12-07: PORT_5V3 (LDO input) bulk deleted with the LDO",
+  "C445": "D-R12-07: per-port 22 uF deleted to keep PORT_4V8 within TI Table 7-2 (20-68 uF); 100 nF per port kept",
+  "C7": "D-R12-17: second 22 uF on VLOGIC deleted (C84 470 uF + C6 22 uF + C99 100 nF remain)",
+  "C85": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "C86": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "C9": "D-R12-17: second 22 uF on 3V3 deleted (TI SLUSDW3A Table 9-1: 22 uF; C8 + C23 + C461 remain)",
+  "C90": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "C91": "D-R12-08: camera 1 uF output cap folded into the camera buck output caps C431 / C434",
+  "C92": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "C93": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "C98": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "D4": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "D400": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "D401": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "D410": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "D411": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "D420": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "D421": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "D440": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "D441": "D-R12-18: port / camera UART ESD clamps deleted (1 kOhm series kept)",
+  "R102": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "R103": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "R402": "D-R12-07: port LDO deleted; the port buck makes PORT_4V8 directly",
+  "R403": "D-R12-07: port LDO deleted; the port buck makes PORT_4V8 directly",
+  "R405": "D-R12-07: port LDO deleted; the port buck makes PORT_4V8 directly",
+  "R430": "D-R12-08: camera load switch deleted; the camera buck U403 EN is the switch",
+  "R432": "D-R12-08: camera load switch deleted; the camera buck U403 EN is the switch",
+  "R64": "D-R12-13: LPS28DFW SA0 tied to GND directly (no MS5611 SDO pull-down)",
+  "R85": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "R86": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "R87": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "R88": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "R90": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "R91": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "TP82": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "U10": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "U11": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
+  "U12": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "U13": "D-R12-08: camera UART isolator and its 3.3 V LDO deleted (1 kOhm series, firmware parks the pins)",
+  "U401": "D-R12-07: port LDO deleted; the port buck makes PORT_4V8 directly",
+  "U402": "D-R12-08: camera load switch deleted; the camera buck U403 EN is the switch"
+ },
+ "parts": {
+  "C10": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C120": {
+   "lcsc": "C15849",
+   "value": "1uF 50V X5R 10%",
+   "why": "D-R12-17: 1 uF 25 V X7R extended -> 1 uF 50 V X5R basic"
+  },
+  "C128": {
+   "lcsc": "C307331",
+   "value": "100nF 50V X7R 10%",
+   "why": "D-R12-17: 100 nF 0603 automotive extended -> 0402 basic"
+  },
+  "C25": {
+   "lcsc": "C1549",
+   "value": "18pF 50V C0G 5%",
+   "why": "D-R12-14: HSE load caps 10 pF -> 18 pF for the 12 pF crystal"
+  },
+  "C26": {
+   "lcsc": "C1549",
+   "value": "18pF 50V C0G 5%",
+   "why": "D-R12-14: HSE load caps 10 pF -> 18 pF for the 12 pF crystal"
+  },
+  "C400": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C406": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C407": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C431": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C461": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C6": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C8": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C81": {
+   "lcsc": "C1538",
+   "value": "4.7nF 50V X7R 10%",
+   "why": "D-R12-09: U9 dVdt 4.7 nF C0G 0603 -> X7R 0402 basic"
+  },
+  "C82": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "why": "D-R12-17: 22 uF 1210 X7R / 0805 X5R -> 1206 X5R basic C12891"
+  },
+  "C97": {
+   "lcsc": "C15849",
+   "value": "1uF 50V X5R 10%",
+   "why": "D-R12-17: 1 uF 25 V X7R extended -> 1 uF 50 V X5R basic"
+  },
+  "D120": {
+   "lcsc": "C37704",
+   "value": "BAT54C",
+   "why": "D-R12-11: BAT54A -> BAT54C (preferred); A1 3V3 to K PYRO1_COLD, A2 unused",
+   "lib": "M3:BAT54C",
+   "nets": {
+    "1": "3V3",
+    "2": null,
+    "3": "PYRO1_COLD"
+   }
+  },
+  "D8": {
+   "lcsc": "C78399",
+   "value": "SMAJ12CA",
+   "why": "D-R12-09: SMBJ12CA 600 W -> SMAJ12CA 400 W, same 12 V / 19.9 V class"
+  },
+  "D9": {
+   "lcsc": "C8678",
+   "value": "SS34",
+   "why": "D-R12-09: B340A -> SS34 basic (40 V 3 A Schottky)"
+  },
+  "J122": {
+   "lcsc": "C52037408",
+   "value": "GH1.25-6PWT",
+   "why": "D-R12-15: JST SM05B -> GH-1.25 clone 6P (pin 6 unused, shares J9's code)",
+   "lib": "M3:ServoGH6",
+   "nets": {
+    "1": "SERVO1_OUT",
+    "2": "SERVO2_OUT",
+    "3": "SERVO3_OUT",
+    "4": "SERVO4_OUT",
+    "5": "GND",
+    "6": null
+   }
+  },
+  "J400": {
+   "lcsc": "C52037406",
+   "value": "GH1.25-4PWT",
+   "why": "D-R12-15: JST SM02B -> GH-1.25 clone 4P (pins 3-4 unused, shares the port code)",
+   "lib": "M3:SwitchGH4",
+   "nets": {
+    "1": "BAT_SW_SOURCE",
+    "2": "BAT_SW_RETURN",
+    "3": null,
+    "4": null
+   }
+  },
+  "J410": {
+   "lcsc": "C52037406",
+   "value": "GH1.25-4PWT",
+   "why": "D-R12-15: JST SM04B -> GH-1.25 clone 4P (same pin order)"
+  },
+  "J420": {
+   "lcsc": "C52037406",
+   "value": "GH1.25-4PWT",
+   "why": "D-R12-15: JST SM04B -> GH-1.25 clone 4P (same pin order)"
+  },
+  "J440": {
+   "lcsc": "C52037406",
+   "value": "GH1.25-4PWT",
+   "why": "D-R12-15: JST SM04B -> GH-1.25 clone 4P (same pin order)"
+  },
+  "J9": {
+   "lcsc": "C52037408",
+   "value": "GH1.25-6PWT",
+   "why": "D-R12-15: JST SM06B -> GH-1.25 clone 6P (same pin order)"
+  },
+  "L400": {
+   "lcsc": "C57269",
+   "value": "4.7uH",
+   "why": "D-R12-07: SRP5030 6.8 uH -> SWPA4030 4.7 uH (TI Table 7-2: 3.3-4.7 uH at 5 V)",
+   "nets": {
+    "1": "PORT_SW",
+    "2": "PORT_4V8"
+   }
+  },
+  "LS120": {
+   "lcsc": "C96256",
+   "value": "QMB-09B-03",
+   "why": "D-R12-16: MLT-5020 (250 C reflow limit) -> QMB-09B-03 THT, owner-fitted",
+   "lib": "M3:Buzzer_THT2",
+   "nets": {
+    "1": "3V3",
+    "2": "BUZZ_OUT"
+   }
+  },
+  "Q120": {
+   "lcsc": "C15127",
+   "value": "AO3401A",
+   "why": "D-R12-10: AONR21357 -> AO3401A basic (back-to-back with Q121)",
+   "lib": "M3:PMOS_SOT23",
+   "nets": {
+    "1": "ACT_GATE",
+    "2": "ACT_FET_S",
+    "3": "BAT_IN"
+   }
+  },
+  "Q121": {
+   "lcsc": "C15127",
+   "value": "AO3401A",
+   "why": "D-R12-10: AONR21357 -> AO3401A basic",
+   "lib": "M3:PMOS_SOT23",
+   "nets": {
+    "1": "ACT_GATE",
+    "2": "ACT_FET_S",
+    "3": "RAW_ACT"
+   }
+  },
+  "Q124": {
+   "lcsc": "C20917",
+   "value": "AO3400A",
+   "why": "D-R12-10: AON7524 -> AO3400A basic (gate network R126 / R127 / R128 / C126 unchanged)",
+   "lib": "M3:NMOS_SOT23",
+   "nets": {
+    "1": "PYRO1_GATE",
+    "2": "GND",
+    "3": "PYRO1_OUT"
+   }
+  },
+  "R165": {
+   "lcsc": "C23178",
+   "value": "470k 1%",
+   "why": "D-R12-09: 470k 0402 preferred -> 0603 basic, value unchanged (F6 network)"
+  },
+  "R400": {
+   "lcsc": "C25794",
+   "value": "51k 1%",
+   "why": "D-R12-07: port FB top 51k + R404 1k (0.1 % 56.2k deleted)",
+   "nets": {
+    "1": "PORT_4V8",
+    "2": "PORT_FB_TOP"
+   }
+  },
+  "R401": {
+   "lcsc": "C25744",
+   "value": "10k 1%",
+   "why": "D-R12-07: port FB bottom 10k 1 % (0.1 % deleted)"
+  },
+  "R404": {
+   "lcsc": "C11702",
+   "value": "1k 1%",
+   "why": "D-R12-07: port FB top series 1k"
+  },
+  "R80": {
+   "lcsc": "C23178",
+   "value": "470k 1%",
+   "why": "D-R12-09: 470k 0402 preferred -> 0603 basic, value unchanged (F6 network)"
+  },
+  "R81": {
+   "lcsc": "C23024",
+   "value": "300k 1%",
+   "why": "D-R12-09: 300k 0402 preferred -> 0603 basic, value unchanged (F6 network)"
+  },
+  "R82": {
+   "lcsc": "C26083",
+   "value": "1M 1%",
+   "why": "D-R12-09: OVLO top 2M 0.1 % -> 1M 1 % basic"
+  },
+  "R83": {
+   "lcsc": "C25741",
+   "value": "100k 1%",
+   "why": "D-R12-09: OVLO bottom 280k 0.1 % -> 100k + R93 33k 1 % basic",
+   "nets": {
+    "1": "BAT_OVLO",
+    "2": "BAT_OVLO_B"
+   }
+  },
+  "R84": {
+   "lcsc": "C25867",
+   "value": "1.5k 1%",
+   "why": "D-R12-09: ILIM 750R 0.1 % -> 1.5k || 1.5k (R94) 1 % basic"
+  },
+  "U2": {
+   "lcsc": "C2841056",
+   "value": "LMR50410XDBVR",
+   "why": "D-R12-06: AP63203 (no JLC stock) -> LMR50410 (VIN 4-36 V runs from USB through D6)",
+   "lib": "M3:LMR50410",
+   "nets": {
+    "1": "BST",
+    "2": "GND",
+    "3": "FB_3V3",
+    "4": "VLOGIC",
+    "5": "VLOGIC",
+    "6": "SW_NODE"
+   }
+  },
+  "U400": {
+   "lcsc": "C468250",
+   "value": "TPS563208DDCR",
+   "why": "D-R12-07: port buck makes PORT_4V8 directly (LDO deleted)",
+   "lib": "M3:TPS563208",
+   "nets": {
+    "1": "GND",
+    "2": "PORT_SW",
+    "3": "RAW_PROTECTED",
+    "4": "PORT_FB",
+    "5": "RAW_PROTECTED",
+    "6": "PORT_BST"
+   }
+  },
+  "U5": {
+   "lcsc": "C3263277",
+   "value": "LPS28DFWTR",
+   "why": "D-R12-13: MS5611 (250 C reflow limit) -> LPS28DFW (J-STD-020); SA0 to GND, INT_DRDY NC",
+   "lib": "M3:LPS28DFW",
+   "nets": {
+    "1": "I2C1_SDA",
+    "2": "GND",
+    "3": "I2C1_SCL",
+    "4": null,
+    "5": "GND",
+    "6": "3V3A",
+    "7": "GND"
+   }
+  },
+  "U9": {
+   "lcsc": "C3662799",
+   "value": "TPS259470ARPWR",
+   "why": "D-R12-09: TPS259470L (no stock) -> TPS259470A (auto-retry), same land and pins"
+  },
+  "Y1": {
+   "lcsc": "C9006",
+   "value": "25MHz CL12pF",
+   "why": "D-R12-14: NX3225GA 8 pF -> X322525MOB4SI 12 pF basic, same land"
+  }
+ },
+ "added_parts": {
+  "C432": {
+   "lcsc": "C307331",
+   "value": "100nF 50V X7R 10%",
+   "lib": "M3:C",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_BST",
+    "2": "CAM_SW"
+   },
+   "why": "D-R12-08: camera buck bootstrap (TI SLVSD90B Figure 7-1 C7 0.1 uF)"
+  },
+  "C433": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "lib": "M3:C",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "RAW_PROTECTED",
+    "2": "GND"
+   },
+   "why": "D-R12-08: camera buck input (> 10 uF, SLVSD90B 7.2.2.4)"
+  },
+  "C434": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "lib": "M3:C",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_5V",
+    "2": "GND"
+   },
+   "why": "D-R12-08: camera buck output, with C431 (Table 7-2: 20-68 uF)"
+  },
+  "D5": {
+   "lcsc": "C8678",
+   "value": "SS34",
+   "lib": "M3:Schottky",
+   "sheet": "logic_power_path.kicad_sch",
+   "nets": {
+    "1": "VLOGIC",
+    "2": "RAW_PROTECTED"
+   },
+   "why": "D-R12-04: battery leg of the VLOGIC diode-OR (C84 hold-up stays on VLOGIC, isolated from the port and camera bucks)"
+  },
+  "D6": {
+   "lcsc": "C8678",
+   "value": "SS34",
+   "lib": "M3:Schottky",
+   "sheet": "logic_power_path.kicad_sch",
+   "nets": {
+    "1": "VLOGIC",
+    "2": "VBUS"
+   },
+   "why": "D-R12-04: USB leg of the VLOGIC diode-OR; blocks VLOGIC from VBUS when the battery path is on"
+  },
+  "L401": {
+   "lcsc": "C57269",
+   "value": "4.7uH",
+   "lib": "M3:L",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_SW",
+    "2": "CAM_5V"
+   },
+   "why": "D-R12-08: camera buck inductor"
+  },
+  "R111": {
+   "lcsc": "C25900",
+   "value": "4.7k 1%",
+   "lib": "M3:R",
+   "sheet": "diagnostics.kicad_sch",
+   "nets": {
+    "1": "PORT_4V8",
+    "2": "PORT_SENSE"
+   },
+   "why": "D-R12-05: PORT_4V8 presence on PA4 (replaces U11 ST), top"
+  },
+  "R112": {
+   "lcsc": "C25744",
+   "value": "10k 1%",
+   "lib": "M3:R",
+   "sheet": "diagnostics.kicad_sch",
+   "nets": {
+    "1": "PORT_SENSE",
+    "2": "GND"
+   },
+   "why": "D-R12-05: PORT_4V8 presence on PA4, bottom"
+  },
+  "R14": {
+   "lcsc": "C25792",
+   "value": "47k 1%",
+   "lib": "M3:R",
+   "sheet": "m3.kicad_sch",
+   "nets": {
+    "1": "3V3",
+    "2": "FB_3V3"
+   },
+   "why": "D-R12-06: 3V3 FB top (U2 LMR50410)"
+  },
+  "R15": {
+   "lcsc": "C25765",
+   "value": "20k 1%",
+   "lib": "M3:R",
+   "sheet": "m3.kicad_sch",
+   "nets": {
+    "1": "FB_3V3",
+    "2": "GND"
+   },
+   "why": "D-R12-06: 3V3 FB bottom"
+  },
+  "R433": {
+   "lcsc": "C25794",
+   "value": "51k 1%",
+   "lib": "M3:R",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_5V",
+    "2": "CAM_FB_TOP"
+   },
+   "why": "D-R12-08: camera FB top 51k"
+  },
+  "R434": {
+   "lcsc": "C25744",
+   "value": "10k 1%",
+   "lib": "M3:R",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_FB_TOP",
+    "2": "CAM_FB"
+   },
+   "why": "D-R12-08: camera FB top series 10k"
+  },
+  "R435": {
+   "lcsc": "C25744",
+   "value": "10k 1%",
+   "lib": "M3:R",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_FB",
+    "2": "GND"
+   },
+   "why": "D-R12-08: camera FB bottom 10k"
+  },
+  "R93": {
+   "lcsc": "C25779",
+   "value": "33k 1%",
+   "lib": "M3:R",
+   "sheet": "battery_entry.kicad_sch",
+   "nets": {
+    "1": "BAT_OVLO_B",
+    "2": "GND"
+   },
+   "why": "D-R12-09: OVLO bottom series 33k (R83 100k + R93 33k)"
+  },
+  "R94": {
+   "lcsc": "C25867",
+   "value": "1.5k 1%",
+   "lib": "M3:R",
+   "sheet": "battery_entry.kicad_sch",
+   "nets": {
+    "1": "BAT_ILIM",
+    "2": "GND"
+   },
+   "why": "D-R12-09: ILIM second 1.5k in parallel with R84 (750 ohm)"
+  },
+  "U403": {
+   "lcsc": "C468250",
+   "value": "TPS563208DDCR",
+   "lib": "M3:TPS563208",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "GND",
+    "2": "CAM_SW",
+    "3": "RAW_PROTECTED",
+    "4": "CAM_FB",
+    "5": "CAM_PWR_EN",
+    "6": "CAM_BST"
+   },
+   "why": "D-R12-08: camera buck; EN is the MCU camera switch CAM_PWR_EN with R431 100k pull-down (off in reset)"
+  }
+ },
+ "net_changes": {
+  "R100": {
+   "2": "CAM_MCU_RX"
+  },
+  "R101": {
+   "1": "CAM_MCU_TX"
+  }
+ },
+ "net_changes_note": "D-R12-08: with U12 deleted, R100 / R101 join the camera wires to the MCU UART pins directly",
+ "u1_repin_note": "r12_sch.R12_REPIN (keyed by R11 net): USB_FAULT_N, CAM_FAULT_N, CAM_UART_OE -> NC; LOGIC_SOURCE_ST -> PORT_SENSE",
+ "owner_fit": {
+  "C84": "R11 / R10 GAP-4: polymer bulk, hand-fitted after reflow (no maker reflow profile)",
+  "LS120": "D-R12-16: THT buzzer rated 250 C peak (spec item 9); hand-fitted after reflow"
+ },
+ "assembly": {
+  "tier": "JLC Economic PCBA",
+  "sides": 1,
+  "reflow": "255 +/- 5 C (JLC capabilities page)",
+  "note": "every footprint on F (D-R12-01); owner_fit parts are on the owner BOM, not the JLC BOM / CPL"
+ }
+}

@@ -1,0 +1,8 @@
+(fp_lib_table
+	(version 7)
+	(lib
+		(name "rocket")
+		(type "KiCad")
+		(uri "${KIPRJMOD}/kilib/rocket.pretty")
+		(options "")
+		(descr "M3 pinned footprints")))

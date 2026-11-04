@@ -1,0 +1,3 @@
+#VRML V2.0 utf8
+# LPS28DFW envelope 2.95 x 2.95 x 2.1 mm (DS13317 Figure 19 maxima). NOT a maker model.
+Transform { translation 0.000000 0.000000 0.413386 children [ Shape { appearance Appearance { material Material { diffuseColor .6 .6 .6 } } geometry Box { size 1.161417 1.161417 0.826772 } } ] }

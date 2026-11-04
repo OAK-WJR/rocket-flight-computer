@@ -1,0 +1,1810 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r12_sch")
+	(uuid 080bb313-26e3-5c59-82c5-5cf79449a64c)
+	(paper "A3")
+	(title_block
+		(title "04 | Voltage diagnosis, port sense and indicators")
+		(date "2026-11-04")
+		(rev "M3-ASSY-R12")
+		(company "M3-ASSY-R12 stage A schematic; not reviewed, not ordered"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0603 C_1206_3216Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:LED_A1"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "LED"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Light emitting diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "LED diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "LED_A1_0_1"
+				(polyline
+					(pts
+						(xy -3.048 -0.762)
+						(xy -4.572 -2.286)
+						(xy -3.81 -2.286)
+						(xy -4.572 -2.286)
+						(xy -4.572 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.778 -0.762)
+						(xy -3.302 -2.286)
+						(xy -2.54 -2.286)
+						(xy -3.302 -2.286)
+						(xy -3.302 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 0)
+						(xy 1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 -1.27)
+						(xy -1.27 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 -1.27)
+						(xy 1.27 1.27)
+						(xy -1.27 0)
+						(xy 1.27 -1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "LED_A1_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_KT0805Y_A1"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:LED_K1"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 1.016)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "D"
+				(at 0 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "LED"
+				(at 0 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Light emitting diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Sim.Pins" "1=K 2=A"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "LED diode"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "LED_K1_0_1"
+				(polyline
+					(pts
+						(xy -3.048 -0.762)
+						(xy -4.572 -2.286)
+						(xy -3.81 -2.286)
+						(xy -4.572 -2.286)
+						(xy -4.572 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.778 -0.762)
+						(xy -3.302 -2.286)
+						(xy -2.54 -2.286)
+						(xy -3.302 -2.286)
+						(xy -3.302 -1.524))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 0)
+						(xy 1.27 0))
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -1.27 -1.27)
+						(xy -1.27 1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy 1.27 -1.27)
+						(xy 1.27 1.27)
+						(xy -1.27 0)
+						(xy 1.27 -1.27))
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "LED_K1_1_1"
+				(pin passive line
+					(at -3.81 0 0)
+					(length 2.54)
+					(name "K"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 3.81 0 180)
+					(length 2.54)
+					(name "A"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_NCD0805R1_K1"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_R2512_UR R0402 R2512 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+	)
+	(text "M3-ASSY-R12 (04 | Voltage diagnosis, port sense and indicators): drawn from R11 0b26da5 with circuit.json (R12_DECISIONS.md); every pin reaches a global label."
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 03beb526-c331-5382-8c2a-90cf12d85645))
+	(symbol
+		(lib_id "M3:C")
+		(at 48.26 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid c68b9f68-7bdd-5f4c-b5d8-8a805f47217d)
+		(property "Reference" "C60"
+			(at 48.26 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10nF 50V X7R 10%"
+			(at 48.26 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15195"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B103KB5NNNC"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C15195.html"
+			(at 48.26 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "C60")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 67.31)
+			(xy 48.26 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 802f4eb4-91c8-59a3-8df5-fbee687c89ec))
+	(global_label "VLOGIC_SENSE"
+		(shape passive)
+		(at 48.26 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 85b426b5-4056-507a-b978-97255a1392c3))
+	(wire
+		(pts
+			(xy 48.26 74.93)
+			(xy 48.26 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 408996d3-6c0b-5019-86c3-2526a1887296))
+	(global_label "GND"
+		(shape passive)
+		(at 48.26 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 40ea2515-ce01-5a44-b754-021194186124))
+	(symbol
+		(lib_id "M3:C")
+		(at 96.52 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid af204b68-4d2d-507d-853e-c161af9c1719)
+		(property "Reference" "C94"
+			(at 96.52 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10nF 50V X7R 10%"
+			(at 96.52 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 96.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15195"
+			(at 96.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 96.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B103KB5NNNC"
+			(at 96.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C15195.html"
+			(at 96.52 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "C94")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 96.52 67.31)
+			(xy 96.52 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a6112a84-f0d0-5e11-9ff6-ab84a6564dd1))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 96.52 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 850f79f0-432d-5e07-b9ae-42be1a173c28))
+	(wire
+		(pts
+			(xy 96.52 74.93)
+			(xy 96.52 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fb0fb3a3-5903-5403-ba2c-e2587526b8f3))
+	(global_label "GND"
+		(shape passive)
+		(at 96.52 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2a425124-7ec3-5e98-a08b-530decfd270d))
+	(symbol
+		(lib_id "M3:LED_K1")
+		(at 144.78 68.58 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid cf1b4d28-ce0d-5e65-a02c-78d61a131683)
+		(property "Reference" "LED1"
+			(at 144.78 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "RED"
+			(at 144.78 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_NCD0805R1_K1"
+			(at 144.78 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C84256"
+			(at 144.78 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "NATIONSTAR"
+			(at 144.78 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "NCD0805R1"
+			(at 144.78 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/e3e35db60c068efe42b02d21fe498cf3.pdf?productCode=C84256"
+			(at 144.78 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "LED1")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 140.97 68.58)
+			(xy 135.89 68.58))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ee2019e5-6e23-5cd1-9ce1-8781f9cbab92))
+	(global_label "GND"
+		(shape passive)
+		(at 135.89 68.58 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a50b1043-b374-5930-953f-b261b32be7c5))
+	(wire
+		(pts
+			(xy 148.59 68.58)
+			(xy 153.67 68.58))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 19c3ce5f-33df-5c29-b121-c7c46dba4e4d))
+	(global_label "LED_RED_A"
+		(shape passive)
+		(at 153.67 68.58 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid ae8dfa43-2c6d-5e6b-b472-1ff9a6ad04aa))
+	(symbol
+		(lib_id "M3:LED_A1")
+		(at 193.04 68.58 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid e7bfec05-fc5f-598e-904c-e6c069edcc04)
+		(property "Reference" "LED2"
+			(at 193.04 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "YEL"
+			(at 193.04 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_KT0805Y_A1"
+			(at 193.04 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C2296"
+			(at 193.04 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Hubei KENTO Elec"
+			(at 193.04 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "KT-0805Y"
+			(at 193.04 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/3f6a14f9ea2fc39f6e05d2ab0fa53e2b.pdf?productCode=C2296"
+			(at 193.04 68.58 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "LED2")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 196.85 68.58)
+			(xy 201.93 68.58))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid eef89a53-961c-56fb-8450-411f195edee7))
+	(global_label "LED_YEL_A"
+		(shape passive)
+		(at 201.93 68.58 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 98b6ef8d-b08b-5919-87a2-294898b4a1db))
+	(wire
+		(pts
+			(xy 189.23 68.58)
+			(xy 184.15 68.58))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a30c563e-7b0f-5102-872c-93e3cabdada6))
+	(global_label "GND"
+		(shape passive)
+		(at 184.15 68.58 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8a6757a2-cc15-5459-9720-c979c7c9696d))
+	(symbol
+		(lib_id "M3:R")
+		(at 238.76 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid edd11996-35e7-5d7d-b81d-6b514751842c)
+		(property "Reference" "R32"
+			(at 238.76 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "220R"
+			(at 238.76 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 238.76 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25091"
+			(at 238.76 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 238.76 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2200TCE"
+			(at 238.76 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2205311900_UNI-ROYAL-Uniroyal-Elec-0402WGF2200TCE_C25091.pdf"
+			(at 238.76 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R32")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 238.76 67.31)
+			(xy 238.76 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c8623d4d-e935-5258-9f11-4b8407b6c5f9))
+	(global_label "LED_RED"
+		(shape passive)
+		(at 238.76 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 4ea35cdc-6639-5e91-a9f7-03a431dd95c8))
+	(wire
+		(pts
+			(xy 238.76 74.93)
+			(xy 238.76 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7259f935-d213-5047-82e0-f32d88e95a14))
+	(global_label "LED_RED_A"
+		(shape passive)
+		(at 238.76 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 0b3d71aa-8c7d-5d36-b201-da3220041a67))
+	(symbol
+		(lib_id "M3:R")
+		(at 279.4 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 1262a216-927f-5b4a-ac8b-667c56e697a4)
+		(property "Reference" "R33"
+			(at 279.4 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "220R"
+			(at 279.4 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 279.4 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25091"
+			(at 279.4 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 279.4 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2200TCE"
+			(at 279.4 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2205311900_UNI-ROYAL-Uniroyal-Elec-0402WGF2200TCE_C25091.pdf"
+			(at 279.4 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R33")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 279.4 67.31)
+			(xy 279.4 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c734fc36-9f73-5755-b88f-518f798f7556))
+	(global_label "LED_YEL"
+		(shape passive)
+		(at 279.4 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid eaf173e7-9888-5c9d-b2a9-38801953cabe))
+	(wire
+		(pts
+			(xy 279.4 74.93)
+			(xy 279.4 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 9b7a74c1-2563-5f6b-baf3-f07da7375a3f))
+	(global_label "LED_YEL_A"
+		(shape passive)
+		(at 279.4 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 59e93cea-a20f-5ca3-a808-49bbbda2137e))
+	(symbol
+		(lib_id "M3:R")
+		(at 322.58 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid db98ed5f-7b20-5072-8934-1bb58ad0be4a)
+		(property "Reference" "R60"
+			(at 322.58 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100k"
+			(at 322.58 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 322.58 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25741"
+			(at 322.58 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 322.58 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1003TCE"
+			(at 322.58 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 322.58 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R60")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 322.58 67.31)
+			(xy 322.58 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a6b222bc-f0f1-581d-a10c-615d723b2eeb))
+	(global_label "VLOGIC"
+		(shape passive)
+		(at 322.58 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1f1c8fcc-e118-5443-963a-a32f25d87052))
+	(wire
+		(pts
+			(xy 322.58 74.93)
+			(xy 322.58 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 72f70417-45b8-55b5-9de5-bb18b273df92))
+	(global_label "VLOGIC_SENSE"
+		(shape passive)
+		(at 322.58 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 558498f4-001a-5b6a-bf31-634e67713152))
+	(symbol
+		(lib_id "M3:R")
+		(at 370.84 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a7fab2aa-d797-53b6-a886-0521bb3ce20c)
+		(property "Reference" "R61"
+			(at 370.84 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 370.84 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 370.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 370.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 370.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 370.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 370.84 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R61")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 370.84 67.31)
+			(xy 370.84 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid fcdb533b-bfce-54a6-b020-b065d7835eba))
+	(global_label "VLOGIC_SENSE"
+		(shape passive)
+		(at 370.84 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 963ecc44-235e-5f1d-bc69-6e6d56142a63))
+	(wire
+		(pts
+			(xy 370.84 74.93)
+			(xy 370.84 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2547d1a4-597d-56dd-9797-3061efc16e6c))
+	(global_label "GND"
+		(shape passive)
+		(at 370.84 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f0ebe8f1-86ba-5760-8171-98fd1da53b70))
+	(symbol
+		(lib_id "M3:R")
+		(at 48.26 106.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 99333737-01cb-5957-b82b-44eaa5b5adf1)
+		(property "Reference" "R104"
+			(at 48.26 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 48.26 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 48.26 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 48.26 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 48.26 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 48.26 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 48.26 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R104")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 102.87)
+			(xy 48.26 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f0f95897-93c3-5cd8-a97e-0be2083f627e))
+	(global_label "CAM_5V"
+		(shape passive)
+		(at 48.26 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9d23348c-4a64-59b9-a66a-c87e34361961))
+	(wire
+		(pts
+			(xy 48.26 110.49)
+			(xy 48.26 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6bc06c7c-20a5-564d-bce4-2fc7f5878f92))
+	(global_label "CAM_5V_DIV"
+		(shape passive)
+		(at 48.26 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a5d1602b-b6b4-55aa-abba-9796a562ec5c))
+	(symbol
+		(lib_id "M3:R")
+		(at 91.44 106.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 757b327f-f0f9-5ab2-95d3-171af0da46eb)
+		(property "Reference" "R105"
+			(at 91.44 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 91.44 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 91.44 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 91.44 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 91.44 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 91.44 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 91.44 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R105")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 91.44 102.87)
+			(xy 91.44 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7ed11266-cd3e-5fd2-86d8-5f58c90aea71))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 91.44 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 54e34524-b977-550c-9aeb-78e04090730f))
+	(wire
+		(pts
+			(xy 91.44 110.49)
+			(xy 91.44 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 53d91c1a-3c4c-519e-ab1c-7aae50658e39))
+	(global_label "GND"
+		(shape passive)
+		(at 91.44 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6db7c035-73de-57da-9907-eaf1b0a8d7b5))
+	(symbol
+		(lib_id "M3:R")
+		(at 139.7 106.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 24b0919a-2e9f-5dff-9afe-14865240c5c0)
+		(property "Reference" "R106"
+			(at 139.7 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 139.7 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 139.7 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 139.7 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 139.7 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 139.7 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 139.7 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R106")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 139.7 102.87)
+			(xy 139.7 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 050a1ac5-7b27-58ba-a557-716fa048bf3c))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 139.7 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 63afab0d-6fda-50a8-a6c9-a44fc99e6c1a))
+	(wire
+		(pts
+			(xy 139.7 110.49)
+			(xy 139.7 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8e480be8-0bb8-5acd-8835-f9443ea25aad))
+	(global_label "GND"
+		(shape passive)
+		(at 139.7 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 913a03eb-666f-521e-bafc-b41a3bc08b67))
+	(symbol
+		(lib_id "M3:R")
+		(at 187.96 106.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 8067bd6b-bd81-5735-bca7-2bebb5ea9004)
+		(property "Reference" "R107"
+			(at 187.96 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 187.96 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 187.96 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 187.96 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 187.96 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 187.96 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 187.96 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R107")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 187.96 102.87)
+			(xy 187.96 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 772108b4-f509-564b-a473-3c0ee6d63b9d))
+	(global_label "CAM_5V_DIV"
+		(shape passive)
+		(at 187.96 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a6d59d3e-f60f-51bc-8b09-eae6919b5e48))
+	(wire
+		(pts
+			(xy 187.96 110.49)
+			(xy 187.96 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 0608b20c-e4d2-5bd3-9e58-984b29acd70c))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 187.96 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 3f952a13-47e3-5a78-897f-9c910e80da30))
+	(symbol
+		(lib_id "M3:R")
+		(at 231.14 106.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 03c432c3-d495-5f77-b0f9-cb1ae235dc2e)
+		(property "Reference" "R111"
+			(at 231.14 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "4.7k 1%"
+			(at 231.14 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 231.14 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25900"
+			(at 231.14 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 231.14 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF4701TCE"
+			(at 231.14 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf"
+			(at 231.14 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R111")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 231.14 102.87)
+			(xy 231.14 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 20ea4075-77cb-5365-9d5f-a21bfd44da83))
+	(global_label "PORT_4V8"
+		(shape passive)
+		(at 231.14 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid e0f4d4bc-64d5-5607-9bf7-09a0daca8f48))
+	(wire
+		(pts
+			(xy 231.14 110.49)
+			(xy 231.14 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2b262e8b-6f5a-52b0-b49f-979d9475b6e4))
+	(global_label "PORT_SENSE"
+		(shape passive)
+		(at 231.14 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 81451660-849f-55e0-8440-da7bb76d6f51))
+	(symbol
+		(lib_id "M3:R")
+		(at 274.32 106.68 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 55ea2937-225a-5821-80ad-3de454d79fc5)
+		(property "Reference" "R112"
+			(at 274.32 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k 1%"
+			(at 274.32 101.6 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 274.32 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 274.32 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 274.32 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 274.32 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf"
+			(at 274.32 106.68 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/080bb313-26e3-5c59-82c5-5cf79449a64c"
+					(reference "R112")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 274.32 102.87)
+			(xy 274.32 97.79))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b96ad0c1-7631-53bc-8ec6-8667b0784e00))
+	(global_label "PORT_SENSE"
+		(shape passive)
+		(at 274.32 97.79 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a5f0067c-3b60-5d7f-bcc4-d8ae08dc85ab))
+	(wire
+		(pts
+			(xy 274.32 110.49)
+			(xy 274.32 115.57))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b352ac0f-292b-5ef0-ad36-ee2f99427607))
+	(global_label "GND"
+		(shape passive)
+		(at 274.32 115.57 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 47f633aa-28fb-55ba-913c-b37ab692127f))
+	(sheet_instances
+		(path "/"
+			(page "4"))))

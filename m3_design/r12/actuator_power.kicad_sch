@@ -1,0 +1,1495 @@
+(kicad_sch
+	(version 20250114)
+	(generator "m3_r12_sch")
+	(uuid eee36e3d-26cd-558b-9404-f17584a2ea6e)
+	(paper "A3")
+	(title_block
+		(title "11 | Pyro bus load switch")
+		(date "2026-11-04")
+		(rev "M3-ASSY-R12")
+		(company "M3-ASSY-R12 stage A schematic; not reviewed, not ordered"))
+	(lib_symbols
+		(symbol "M3:C"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.254))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "C"
+				(at 0.635 2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Value" "C"
+				(at 0.635 -2.54 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(justify left)))
+			(property "Footprint" ""
+				(at 0.9652 -3.81 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Unpolarized capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "cap capacitor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "C_0_1"
+				(polyline
+					(pts
+						(xy -2.032 0.762)
+						(xy 2.032 0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none)))
+				(polyline
+					(pts
+						(xy -2.032 -0.762)
+						(xy 2.032 -0.762))
+					(stroke
+						(width 0.508)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "C_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 2.794)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "C0402 C0603 C_1206_3216Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:NMOS_SOT23"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 0 7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "NMOS_SOT23"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "N-MOSFET SOT-23 (1 G, 2 S, 3 D)"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "NMOS_SOT23_0_1"
+				(rectangle
+					(start -5.08 5.08)
+					(end 5.08 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "NMOS_SOT23_1_1"
+				(pin passive line
+					(at -10.16 0 0)
+					(length 5.08)
+					(name "G"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 -10.16 90)
+					(length 5.08)
+					(name "S"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 10.16 270)
+					(length 5.08)
+					(name "D"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+		(symbol "M3:PMOS_SOT23"
+			(pin_names
+				(offset 0.508))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "Q"
+				(at 0 7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "PMOS_SOT23"
+				(at 0 -7.62 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "P-MOSFET SOT-23 (1 G, 2 S, 3 D)"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "PMOS_SOT23_0_1"
+				(rectangle
+					(start -5.08 5.08)
+					(end 5.08 -5.08)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "PMOS_SOT23_1_1"
+				(pin passive line
+					(at -10.16 0 0)
+					(length 5.08)
+					(name "G"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 10.16 270)
+					(length 5.08)
+					(name "S"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 0 -10.16 90)
+					(length 5.08)
+					(name "D"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+		(symbol "M3:R"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "R"
+				(at 2.032 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "R"
+				(at 0 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at -1.778 0 90)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "R res resistor"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "R_0_1"
+				(rectangle
+					(start -1.016 -2.54)
+					(end 1.016 2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "R_1_1"
+				(pin passive line
+					(at 0 3.81 270)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)))))
+				(pin passive line
+					(at 0 -3.81 90)
+					(length 1.27)
+					(name ""
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_R2512_UR R0402 R2512 R_0603_1608Metric"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+		(symbol "M3:TestPoint"
+			(pin_numbers
+				(hide yes))
+			(pin_names
+				(offset 0.762)
+				(hide yes))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "TP"
+				(at 0 6.858 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "TestPoint"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 5.08 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "test point"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "test point tp"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "TestPoint_0_1"
+				(circle
+					(center 0 3.302)
+					(radius 0.762)
+					(stroke
+						(width 0)
+						(type default))
+					(fill
+						(type none))))
+			(symbol "TestPoint_1_1"
+				(pin passive line
+					(at 0 0 90)
+					(length 2.54)
+					(name "1"
+						(effects
+							(font
+								(size 1.27 1.27))))
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27))))))
+			(embedded_fonts no)
+			(property "ki_fp_filters" "M3_TestPad_1.5"
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27))
+					(hide yes))))
+	)
+	(text "M3-ASSY-R12 (11 | Pyro bus load switch): drawn from R11 0b26da5 with circuit.json (R12_DECISIONS.md); every pin reaches a global label."
+		(at 25.4 25.4 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 6055c5bd-7790-5086-bdb2-9dc49127529d))
+	(symbol
+		(lib_id "M3:C")
+		(at 45.72 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 24af9e86-d87b-5e36-bc25-49ca65cd86d4)
+		(property "Reference" "C120"
+			(at 45.72 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1uF 50V X5R 10%"
+			(at 45.72 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0603"
+			(at 45.72 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15849"
+			(at 45.72 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 45.72 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL10A105KB8NNNC"
+			(at 45.72 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10A105KB8NNNC_C15849.pdf"
+			(at 45.72 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "C120")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 45.72 67.31)
+			(xy 45.72 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 570485de-00f9-5e0a-985f-41a2f58ca0b1))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 45.72 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 955f44de-37fd-5d84-ac13-fe8f16bc93d2))
+	(wire
+		(pts
+			(xy 45.72 74.93)
+			(xy 45.72 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3f6e1979-e3ac-5bb9-be7b-d91d94582282))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 45.72 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 405c3139-056e-5051-8ce7-4cb1d9679ce5))
+	(symbol
+		(lib_id "M3:C")
+		(at 83.82 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 623cb3a4-c9a8-5317-9c8d-17fe038a4be9)
+		(property "Reference" "C123"
+			(at 83.82 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10nF 50V X7R 10%"
+			(at 83.82 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:C0402"
+			(at 83.82 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15195"
+			(at 83.82 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Samsung Electro-Mechanics"
+			(at 83.82 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "CL05B103KB5NNNC"
+			(at 83.82 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C15195.html"
+			(at 83.82 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "C123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 83.82 67.31)
+			(xy 83.82 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 035e9940-a77d-5da1-8e1c-012679c4e960))
+	(global_label "ACT_EN"
+		(shape passive)
+		(at 83.82 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 123e61d2-1a69-51e3-8c41-6d7799f1874f))
+	(wire
+		(pts
+			(xy 83.82 74.93)
+			(xy 83.82 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f3f1883e-ff86-5b9e-a3ae-4f93c8178fe1))
+	(global_label "GND"
+		(shape passive)
+		(at 83.82 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 1b964496-ea13-57c3-bcc3-d0dbc498b540))
+	(symbol
+		(lib_id "M3:PMOS_SOT23")
+		(at 132.08 78.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 9736f919-601e-5995-8534-489784e0b409)
+		(property "Reference" "Q120"
+			(at 132.08 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AO3401A"
+			(at 132.08 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 132.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15127"
+			(at 132.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Alpha & Omega Semicon"
+			(at 132.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "AO3401A"
+			(at 132.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2412061733_Alpha---Omega-Semicon-AO3401A_C15127.pdf"
+			(at 132.08 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "Q120")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 121.92 78.74)
+			(xy 116.84 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid bf8f74b9-399c-595f-9e4e-19f3894aa282))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 116.84 78.74 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 41cac205-7a69-5a7d-b1ac-214938aa0fb7))
+	(wire
+		(pts
+			(xy 132.08 68.58)
+			(xy 132.08 63.5))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid caa5f58b-3f51-5474-bcdc-b4ed6bad8708))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 132.08 63.5 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid beaac24c-d4d2-5b96-b3a0-09d03c4f3d00))
+	(wire
+		(pts
+			(xy 132.08 88.9)
+			(xy 132.08 93.98))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 46d75cca-2294-51fe-8b0a-b69813051560))
+	(global_label "BAT_IN"
+		(shape passive)
+		(at 132.08 93.98 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b0c4eba2-ea73-54f5-9d11-d58e0fe5478e))
+	(symbol
+		(lib_id "M3:PMOS_SOT23")
+		(at 182.88 78.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4907023b-8dfa-5ad3-9f36-3d4a69f90290)
+		(property "Reference" "Q121"
+			(at 182.88 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AO3401A"
+			(at 182.88 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 182.88 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C15127"
+			(at 182.88 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Alpha & Omega Semicon"
+			(at 182.88 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "AO3401A"
+			(at 182.88 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2412061733_Alpha---Omega-Semicon-AO3401A_C15127.pdf"
+			(at 182.88 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "Q121")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 172.72 78.74)
+			(xy 167.64 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid ce75a67d-99e8-5468-9218-f78964fe0d4e))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 167.64 78.74 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6962a23e-30d7-554c-a2d9-827b14cf25e0))
+	(wire
+		(pts
+			(xy 182.88 68.58)
+			(xy 182.88 63.5))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7becf69b-c8d7-5889-a607-7d7b4ab7df32))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 182.88 63.5 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c809254e-c520-55f6-900a-d0f0786173cf))
+	(wire
+		(pts
+			(xy 182.88 88.9)
+			(xy 182.88 93.98))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f34b3bad-7d9f-547b-a197-ef697a3f6731))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 182.88 93.98 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 160b44f5-4888-570a-ba9e-09d11e3ba60b))
+	(symbol
+		(lib_id "M3:NMOS_SOT23")
+		(at 233.68 78.74 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 96570bf9-4c06-54e3-ba2e-9339097867a9)
+		(property "Reference" "Q122"
+			(at 233.68 64.77 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "AO3400A"
+			(at 233.68 67.31 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 233.68 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C20917"
+			(at 233.68 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Alpha & Omega Semicon"
+			(at 233.68 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "AO3400A"
+			(at 233.68 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 233.68 78.74 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "Q122")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 223.52 78.74)
+			(xy 218.44 78.74))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6fa01668-2c0e-5eee-a6ec-bfef9e6bc335))
+	(global_label "ACT_EN"
+		(shape passive)
+		(at 218.44 78.74 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 86888e55-329d-5bd7-aad7-b1d053df0251))
+	(wire
+		(pts
+			(xy 233.68 88.9)
+			(xy 233.68 93.98))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b2c13d3d-1c49-5a8e-bff4-3a952ca398ad))
+	(global_label "GND"
+		(shape passive)
+		(at 233.68 93.98 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid c50495fb-5ee0-5a1b-a08f-9087b86f3bf8))
+	(wire
+		(pts
+			(xy 233.68 68.58)
+			(xy 233.68 63.5))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 49ed1d1d-69c8-5203-8b69-46d7ac9d83d5))
+	(global_label "ACT_DRV"
+		(shape passive)
+		(at 233.68 63.5 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 7d229c83-0b82-5a14-9bb2-c5336a791c41))
+	(symbol
+		(lib_id "M3:R")
+		(at 271.78 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid adc1af26-4854-5aaf-9cc7-33af3688a440)
+		(property "Reference" "R119"
+			(at 271.78 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100k"
+			(at 271.78 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 271.78 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25741"
+			(at 271.78 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 271.78 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1003TCE"
+			(at 271.78 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 271.78 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "R119")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 271.78 67.31)
+			(xy 271.78 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 34bb5a76-7856-5aba-ba88-fcf6965d5717))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 271.78 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f6d635f2-bd83-535f-b179-7100295404c7))
+	(wire
+		(pts
+			(xy 271.78 74.93)
+			(xy 271.78 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1675cb6b-e40f-5826-83aa-ad42c7bc02b9))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 271.78 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid a9800fb2-ec98-5a33-aa98-46bffd92ddda))
+	(symbol
+		(lib_id "M3:R")
+		(at 314.96 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid d1a2ff76-ff34-504d-b5b8-a9d4f1a33f8c)
+		(property "Reference" "R120"
+			(at 314.96 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "100k"
+			(at 314.96 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 314.96 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25741"
+			(at 314.96 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 314.96 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1003TCE"
+			(at 314.96 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 314.96 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "R120")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 314.96 67.31)
+			(xy 314.96 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid d57cb2d7-42a1-54fa-a0f2-9e71f850c025))
+	(global_label "ACT_FET_S"
+		(shape passive)
+		(at 314.96 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid b5fb6ac0-78e6-5c6e-a666-f1c05cf7bc4e))
+	(wire
+		(pts
+			(xy 314.96 74.93)
+			(xy 314.96 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1de51c48-4f91-56ec-9474-a9340e50b632))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 314.96 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid d5eb9d72-577e-5567-8049-b6e6e6a6aed6))
+	(symbol
+		(lib_id "M3:R")
+		(at 353.06 71.12 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 16fab8ea-d633-5183-b8e7-d5613e59d941)
+		(property "Reference" "R121"
+			(at 353.06 63.5 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "10k"
+			(at 353.06 66.04 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 353.06 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25744"
+			(at 353.06 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 353.06 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1002TCE"
+			(at 353.06 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 353.06 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "R121")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 353.06 67.31)
+			(xy 353.06 62.23))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3fba1a0f-ebce-5a30-ba35-144e20859804))
+	(global_label "ACT_GATE"
+		(shape passive)
+		(at 353.06 62.23 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 08be7458-89d0-5dd2-a608-81b6565c6bd8))
+	(wire
+		(pts
+			(xy 353.06 74.93)
+			(xy 353.06 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3d9b868a-1d73-525e-861c-edc9563b5aeb))
+	(global_label "ACT_DRV"
+		(shape passive)
+		(at 353.06 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ff070690-65f3-548e-8f9c-38782a6e2ff6))
+	(symbol
+		(lib_id "M3:R")
+		(at 48.26 116.84 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid f148b2c0-ceeb-5b81-b84b-628656f58fe1)
+		(property "Reference" "R122"
+			(at 48.26 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "1k"
+			(at 48.26 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 48.26 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C11702"
+			(at 48.26 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 48.26 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF1001TCE"
+			(at 48.26 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/product-detail/C11702.html"
+			(at 48.26 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "R122")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 48.26 113.03)
+			(xy 48.26 107.95))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6554983d-f783-54a2-a2f1-ac1483c5463b))
+	(global_label "ACT_EN_MCU"
+		(shape passive)
+		(at 48.26 107.95 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid faad75cc-fb82-51d8-9502-86d71b43aa72))
+	(wire
+		(pts
+			(xy 48.26 120.65)
+			(xy 48.26 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 51c041cf-4929-506e-a108-52f3679f7593))
+	(global_label "ACT_EN"
+		(shape passive)
+		(at 48.26 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 9258d1c9-f11c-5935-b473-07321dd1773e))
+	(symbol
+		(lib_id "M3:R")
+		(at 86.36 116.84 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid ef0c3f02-706e-59a1-ac9a-5c0797d914ad)
+		(property "Reference" "R123"
+			(at 86.36 109.22 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 86.36 111.76 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 86.36 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 86.36 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 86.36 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 86.36 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 86.36 116.84 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "R123")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 86.36 113.03)
+			(xy 86.36 107.95))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 28fd58e4-d5ec-5335-abc3-234fe9b7cae7))
+	(global_label "ACT_EN"
+		(shape passive)
+		(at 86.36 107.95 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6590eed1-9c8a-534c-bc05-7ab2f63d9dab))
+	(wire
+		(pts
+			(xy 86.36 120.65)
+			(xy 86.36 125.73))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 90e4f8eb-1f00-55bf-ad5c-fd393502faa9))
+	(global_label "GND"
+		(shape passive)
+		(at 86.36 125.73 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid cb06b22b-a698-5a6e-a2da-c7b903fe0075))
+	(symbol
+		(lib_id "M3:TestPoint")
+		(at 121.92 114.3 0)
+		(unit 1)
+		(in_bom no)
+		(on_board yes)
+		(dnp no)
+		(uuid 9148322d-5927-5e48-8963-669d9dbddb47)
+		(property "Reference" "TP120"
+			(at 121.92 110.49 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "RAW_ACT"
+			(at 121.92 113.03 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:M3_TestPad_1.5"
+			(at 121.92 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" ""
+			(at 121.92 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 121.92 114.3 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/eee36e3d-26cd-558b-9404-f17584a2ea6e"
+					(reference "TP120")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 121.92 114.3)
+			(xy 121.92 119.38))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid c39978cd-4425-512e-bf01-381eac997a93))
+	(global_label "RAW_ACT"
+		(shape passive)
+		(at 121.92 119.38 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 57e094d8-1d91-59d8-9af2-8daa97e4b413))
+	(sheet_instances
+		(path "/"
+			(page "11"))))

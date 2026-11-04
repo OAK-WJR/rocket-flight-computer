@@ -16,6 +16,13 @@
 # R11 schematic contract fails), metadata / models, silkscreen, fit_check --profile r11, tools/check_r11.py,
 # route_check --profile r11 and the R11 fab package (tools/fab_manifest_r11.py --content on the repository R11 board);
 # its self-test (tools/test_r11_check.py) then must not skip its real-board tests (R11_BOARD_REQUIRED).
+# R12 (M3-ASSY-R12, m3_design/r12/design/r12_plan.md section 4): when m3_design/r12/m3.kicad_pcb is tracked by git, the
+# R12 section runs on it after R10's and R11's; a board passed explicitly whose title-block revision is M3-ASSY-R12 runs
+# the R12 section alone. R12 section: DRC / parity / ERC on m3_design/r12/, m3_design/r12_sch_check.py (required), the
+# R12 library check (m3_design/r12_parts.py --check), metadata / models, silkscreen, fit_check --profile r12,
+# tools/check_r12.py, route_check --profile r12 and the R12 fab package (tools/fab_manifest_r12.py --content on the
+# repository R12 board, required once the board is tracked); its self-test (tools/test_r12_check.py) then must not skip
+# its real-board tests (R12_BOARD_REQUIRED). Until the R12 board is tracked only tools/test_r12_check.py runs.
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
 # Fail closed on a parse error: bash reads a script as it runs, so a syntax error late in the file would otherwise let
@@ -24,6 +31,7 @@ bash -n "$0" || { echo "check.sh does not parse: refusing to run" >&2; exit 2; }
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 CANON="$ROOT/m3_design/assembly_review/m3.kicad_pcb"
 CANON11="$ROOT/m3_design/r11/m3.kicad_pcb"
+CANON12="$ROOT/m3_design/r12/m3.kicad_pcb"
 BOARD="${1:-$CANON}"
 [[ -f "$BOARD" ]] || { echo "board not found: $BOARD" >&2; exit 1; }
 BOARD="$(cd "$(dirname "$BOARD")" && pwd)/$(basename "$BOARD")"   # absolute: the audit step runs in quality_audit/
@@ -31,13 +39,23 @@ revision() {          # the title-block revision of a saved board
   python3 -c 'import re, sys; m = re.search(r"\(title_block\b.*?\(rev\s+\"([^\"]*)\"", open(sys.argv[1], errors="ignore").read(), re.S); print(m.group(1) if m else "")' "$1"
 }
 unset R11_BOARD R11_BOARD_REQUIRED   # set below only when the R11 section has run on a board
+unset R12_BOARD R12_BOARD_REQUIRED   # set below only when the R12 section has run on a board
 R11=""                # the R11 board the R11 section checks, if any
+R12=""                # the R12 board the R12 section checks, if any
 R10_RUN=1
-if [[ "$(revision "$BOARD")" == "M3-ASSY-R11" ]]; then
+if [[ "$(revision "$BOARD")" == "M3-ASSY-R12" ]]; then
+  R12="$BOARD"; R10_RUN=0
+elif [[ "$(revision "$BOARD")" == "M3-ASSY-R11" ]]; then
   R11="$BOARD"; R10_RUN=0
-elif git -C "$ROOT" ls-files --error-unmatch "m3_design/r11/m3.kicad_pcb" >/dev/null 2>&1; then
-  [[ -f "$CANON11" ]] || { echo "R11 board tracked but missing: $CANON11" >&2; exit 1; }
-  R11="$CANON11"
+else
+  if git -C "$ROOT" ls-files --error-unmatch "m3_design/r11/m3.kicad_pcb" >/dev/null 2>&1; then
+    [[ -f "$CANON11" ]] || { echo "R11 board tracked but missing: $CANON11" >&2; exit 1; }
+    R11="$CANON11"
+  fi
+  if git -C "$ROOT" ls-files --error-unmatch "m3_design/r12/m3.kicad_pcb" >/dev/null 2>&1; then
+    [[ -f "$CANON12" ]] || { echo "R12 board tracked but missing: $CANON12" >&2; exit 1; }
+    R12="$CANON12"
+  fi
 fi
 CLI="${KICAD_CLI:-$(command -v kicad-cli || true)}"
 if [[ -z "$CLI" ]]; then
@@ -129,6 +147,36 @@ if [[ -n "$R11" ]]; then
   fi
   export R11_BOARD="$R11" R11_BOARD_REQUIRED=1
 fi
+# ---- R12 section (r12_plan.md section 4) ------------------------------------------------------------------------------
+if [[ -n "$R12" ]]; then
+  echo "== R12 gate: $R12"
+  O12="$OUT/r12"; mkdir -p "$O12"
+  drc_erc "$R12" "$O12"
+  [[ -f "$ROOT/m3_design/r12_sch_check.py" ]] \
+    || { echo "R12 schematic contract FAILED: m3_design/r12_sch_check.py missing while the R12 board exists"; exit 1; }
+  KICAD_CLI="$CLI" "$KICAD_PY" -I -B "$ROOT/m3_design/r12_sch_check.py" --project "$(dirname "$R12")" \
+    --json "$O12/sch_check.json" > "$O12/sch_check.txt" 2>&1 \
+    && echo "R12 schematic contract and sheet replay (r12_sch_check): OK" \
+    || { echo "R12 schematic contract / sheet replay FAILED: see $O12/sch_check.json"; exit 1; }
+  "$KICAD_PY" -I -B "$ROOT/m3_design/r12_parts.py" --check
+  (cd "$ROOT/quality_audit" && python3 verify_board.py "$R12" --cli "$CLI" --output "$O12/audit.json" >/dev/null) \
+    && echo "R12 metadata / 3D model audit: OK" || { echo "R12 metadata / 3D model audit FAILED: see $O12/audit.json"; exit 1; }
+  python3 "$ROOT/tools/silk_check.py" "$R12" --cli "$CLI"
+  "$KICAD_PY" -I "$ROOT/tools/fit_check.py" "$R12" --profile r12 --report "$O12/fit.json"
+  "$KICAD_PY" -I "$ROOT/tools/check_r12.py" "$R12" --fit "$O12/fit.json" --report "$O12/r12.json"
+  "$KICAD_PY" -I "$ROOT/tools/route_check.py" "$R12" --profile r12 --report "$O12/route.json" \
+    | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }
+  M12="$(dirname "$R12")/fab/m3_fab_manifest.json"
+  if [[ "$R12" -ef "$CANON12" ]]; then
+    [[ -f "$ROOT/tools/fab_manifest_r12.py" ]] \
+      || { echo "R12 fab package FAILED: tools/fab_manifest_r12.py missing while the R12 board is tracked"; exit 1; }
+    python3 "$ROOT/tools/fab_manifest_r12.py" "$CANON12" --content \
+      || { echo "R12 fab package unbound, bound to a different board or failing its content checks"; exit 1; }
+  elif [[ -f "$M12" ]]; then
+    echo "R12 fab manifest: not checked (board copy)"
+  fi
+  export R12_BOARD="$R12" R12_BOARD_REQUIRED=1
+fi
 # Gate self-tests (R4-GATE-02): a weakened gate fails here. Seeded faults on synthetic boards and on a temporary copy of
 # the R10 board (R10_BOARD, set here to the checked board); about 2 minutes.
 if (( R10_RUN )); then export R10_BOARD="$BOARD"; else export R10_BOARD="$CANON"; fi
@@ -147,3 +195,4 @@ selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
 selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics Plate   # Plate: R18-MEC-01 strain table
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r11_check.py"    # D-R11-08: R11 rules; real-board seeds when R11_BOARD is set
+selftest "$KICAD_PY" -I "$ROOT/tools/test_r12_check.py"    # R12 gate skeleton, schematic contract, windows; board seeds later

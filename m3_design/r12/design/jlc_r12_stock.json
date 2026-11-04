@@ -1,0 +1,2770 @@
+{
+ "checked_utc": "2026-11-04T02:42:47Z",
+ "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
+ "boards": 5,
+ "rule": "orderable = min(stockCount, canPresaleNumber) (R20-BOM-01, Inference)",
+ "parts": {
+  "C11702": {
+   "refs": [
+    "R9",
+    "R100",
+    "R101",
+    "R110",
+    "R122",
+    "R127",
+    "R162",
+    "R404",
+    "R440",
+    "R441",
+    "R450",
+    "R451",
+    "R470",
+    "R471"
+   ],
+   "qty_per_board": 14,
+   "owner_fit": false,
+   "joints_per_board": 28,
+   "stockCount": 21105402,
+   "canPresaleNumber": 17985806,
+   "orderable": 17985806,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF1001TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0013
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0009
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0008
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0008
+    }
+   ]
+  },
+  "C12891": {
+   "refs": [
+    "C6",
+    "C8",
+    "C10",
+    "C82",
+    "C89",
+    "C95",
+    "C400",
+    "C406",
+    "C407",
+    "C431",
+    "C433",
+    "C434",
+    "C461"
+   ],
+   "qty_per_board": 13,
+   "owner_fit": false,
+   "joints_per_board": 26,
+   "stockCount": 1656061,
+   "canPresaleNumber": 1236127,
+   "orderable": 1236127,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL31A226KAHNNNE",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 199,
+     "productPrice": 0.1198
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 599,
+     "productPrice": 0.0976
+    },
+    {
+     "startNumber": 600,
+     "endNumber": 1999,
+     "productPrice": 0.0863
+    },
+    {
+     "startNumber": 2000,
+     "endNumber": 9999,
+     "productPrice": 0.0771
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 19999,
+     "productPrice": 0.0739
+    },
+    {
+     "startNumber": 20000,
+     "endNumber": -1,
+     "productPrice": 0.0716
+    }
+   ]
+  },
+  "C13585": {
+   "refs": [
+    "C80",
+    "C96"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 3039893,
+   "canPresaleNumber": 2137385,
+   "orderable": 2137385,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL31A106KBHNNNE",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 99,
+     "productPrice": 0.1413
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 299,
+     "productPrice": 0.1142
+    },
+    {
+     "startNumber": 300,
+     "endNumber": 1999,
+     "productPrice": 0.1003
+    },
+    {
+     "startNumber": 2000,
+     "endNumber": 3999,
+     "productPrice": 0.0888
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": 9999,
+     "productPrice": 0.0848
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": -1,
+     "productPrice": 0.0821
+    }
+   ]
+  },
+  "C13612": {
+   "refs": [
+    "D121"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 69968,
+   "canPresaleNumber": 68885,
+   "orderable": 68885,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "SRV05-4.TCT",
+   "jlc_brand": "SEMTECH",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1631
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1298
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1155
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0978
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0899
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0852
+    }
+   ]
+  },
+  "C15127": {
+   "refs": [
+    "Q120",
+    "Q121"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 1672590,
+   "canPresaleNumber": 1543369,
+   "orderable": 1543369,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "AO3401A",
+   "jlc_brand": "Alpha & Omega Semicon",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.0962
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0784
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0693
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0619
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0593
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0575
+    }
+   ]
+  },
+  "C15195": {
+   "refs": [
+    "C60",
+    "C94",
+    "C123",
+    "C127",
+    "C129"
+   ],
+   "qty_per_board": 5,
+   "owner_fit": false,
+   "joints_per_board": 10,
+   "stockCount": 5693032,
+   "canPresaleNumber": 4637972,
+   "orderable": 4637972,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL05B103KB5NNNC",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0039
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.003
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0025
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0022
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.002
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.002
+    }
+   ]
+  },
+  "C1538": {
+   "refs": [
+    "C81"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 1035239,
+   "canPresaleNumber": 925761,
+   "orderable": 925761,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402B472K500NT",
+   "jlc_brand": "FH (Guangdong Fenghua Advanced Tech)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0038
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0029
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0024
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0019
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0016
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0016
+    }
+   ]
+  },
+  "C1549": {
+   "refs": [
+    "C25",
+    "C26"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 1237467,
+   "canPresaleNumber": 1112629,
+   "orderable": 1112629,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402CG180J500NT",
+   "jlc_brand": "FH (Guangdong Fenghua Advanced Tech)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0018
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0014
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0008
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0008
+    }
+   ]
+  },
+  "C15849": {
+   "refs": [
+    "C22",
+    "C97",
+    "C120"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 12262563,
+   "canPresaleNumber": 9212011,
+   "orderable": 9212011,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL10A105KB8NNNC",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 499,
+     "productPrice": 0.0145
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 1499,
+     "productPrice": 0.0112
+    },
+    {
+     "startNumber": 1500,
+     "endNumber": 3999,
+     "productPrice": 0.0097
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": 23999,
+     "productPrice": 0.0086
+    },
+    {
+     "startNumber": 24000,
+     "endNumber": 47999,
+     "productPrice": 0.0082
+    },
+    {
+     "startNumber": 48000,
+     "endNumber": -1,
+     "productPrice": 0.0079
+    }
+   ]
+  },
+  "C164170": {
+   "refs": [
+    "J430"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 12,
+   "stockCount": 6679,
+   "canPresaleNumber": 6277,
+   "orderable": 6277,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "472192001",
+   "jlc_brand": "MOLEX",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.7299
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.6036
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.5413
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.4789
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 799,
+     "productPrice": 0.4412
+    },
+    {
+     "startNumber": 800,
+     "endNumber": -1,
+     "productPrice": 0.4232
+    }
+   ]
+  },
+  "C165948": {
+   "refs": [
+    "J3"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 16,
+   "stockCount": 167040,
+   "canPresaleNumber": 154343,
+   "orderable": 154343,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "TYPE-C-31-M-12",
+   "jlc_brand": "Korean Hroparts Elec",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1873
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.148
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 999,
+     "productPrice": 0.1286
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 1999,
+     "productPrice": 0.1044
+    },
+    {
+     "startNumber": 2000,
+     "endNumber": 4999,
+     "productPrice": 0.0996
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": -1,
+     "productPrice": 0.0968
+    }
+   ]
+  },
+  "C168925": {
+   "refs": [
+    "R166"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 1579,
+   "canPresaleNumber": 1579,
+   "orderable": 1579,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "25121WF360LT4E",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 199,
+     "productPrice": 0.0386
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 599,
+     "productPrice": 0.0302
+    },
+    {
+     "startNumber": 600,
+     "endNumber": 3999,
+     "productPrice": 0.0256
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": 7999,
+     "productPrice": 0.0215
+    },
+    {
+     "startNumber": 8000,
+     "endNumber": 19999,
+     "productPrice": 0.0191
+    },
+    {
+     "startNumber": 20000,
+     "endNumber": -1,
+     "productPrice": 0.0178
+    }
+   ]
+  },
+  "C191023": {
+   "refs": [
+    "D123"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 3115663,
+   "canPresaleNumber": 2845202,
+   "orderable": 2845202,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "1N5819WS",
+   "jlc_brand": "Guangdong Hottech",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 499,
+     "productPrice": 0.0124
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0105
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.01
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": 23999,
+     "productPrice": 0.0093
+    },
+    {
+     "startNumber": 24000,
+     "endNumber": 50999,
+     "productPrice": 0.0091
+    },
+    {
+     "startNumber": 51000,
+     "endNumber": -1,
+     "productPrice": 0.0089
+    }
+   ]
+  },
+  "C19666": {
+   "refs": [
+    "C23",
+    "C28"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 4093640,
+   "canPresaleNumber": 3324347,
+   "orderable": 3324347,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL10A475KO8NNNC",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 99,
+     "productPrice": 0.0151
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 299,
+     "productPrice": 0.0114
+    },
+    {
+     "startNumber": 300,
+     "endNumber": 999,
+     "productPrice": 0.0097
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 3999,
+     "productPrice": 0.0084
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": 7999,
+     "productPrice": 0.0079
+    },
+    {
+     "startNumber": 8000,
+     "endNumber": -1,
+     "productPrice": 0.0076
+    }
+   ]
+  },
+  "C20917": {
+   "refs": [
+    "Q122",
+    "Q123",
+    "Q124"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 9,
+   "stockCount": 909062,
+   "canPresaleNumber": 757104,
+   "orderable": 757104,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "AO3400A",
+   "jlc_brand": "Alpha & Omega Semicon",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.0891
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0719
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.063
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0556
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0532
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0514
+    }
+   ]
+  },
+  "C21120": {
+   "refs": [
+    "C87",
+    "C126"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 928053,
+   "canPresaleNumber": 757236,
+   "orderable": 757236,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL10B224KA8NNNC",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 499,
+     "productPrice": 0.0093
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 1499,
+     "productPrice": 0.0074
+    },
+    {
+     "startNumber": 1500,
+     "endNumber": 3999,
+     "productPrice": 0.0064
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": 23999,
+     "productPrice": 0.0051
+    },
+    {
+     "startNumber": 24000,
+     "endNumber": 47999,
+     "productPrice": 0.0045
+    },
+    {
+     "startNumber": 48000,
+     "endNumber": -1,
+     "productPrice": 0.0042
+    }
+   ]
+  },
+  "C21190": {
+   "refs": [
+    "R150",
+    "R151",
+    "R152",
+    "R153"
+   ],
+   "qty_per_board": 4,
+   "owner_fit": false,
+   "joints_per_board": 8,
+   "stockCount": 29040136,
+   "canPresaleNumber": 22415859,
+   "orderable": 22415859,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0603WAF1001T5E",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0017
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 4999,
+     "productPrice": 0.0014
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": 9999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0009
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0009
+    }
+   ]
+  },
+  "C22939": {
+   "refs": [
+    "R164"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 253919,
+   "canPresaleNumber": 168152,
+   "orderable": 168152,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0603WAF220KT5E",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0027
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 4999,
+     "productPrice": 0.0021
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": 9999,
+     "productPrice": 0.0018
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0016
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0014
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0014
+    }
+   ]
+  },
+  "C2296": {
+   "refs": [
+    "LED2"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 593190,
+   "canPresaleNumber": 526051,
+   "orderable": 526051,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "KT-0805Y",
+   "jlc_brand": "Hubei KENTO Elec",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 499,
+     "productPrice": 0.0149
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0118
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0092
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": 23999,
+     "productPrice": 0.0082
+    },
+    {
+     "startNumber": 24000,
+     "endNumber": 50999,
+     "productPrice": 0.0073
+    },
+    {
+     "startNumber": 51000,
+     "endNumber": -1,
+     "productPrice": 0.0068
+    }
+   ]
+  },
+  "C22978": {
+   "refs": [
+    "R92"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 4983397,
+   "canPresaleNumber": 4396160,
+   "orderable": 4396160,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0603WAF3301T5E",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0022
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 4999,
+     "productPrice": 0.0017
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": 9999,
+     "productPrice": 0.0014
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0011
+    }
+   ]
+  },
+  "C23024": {
+   "refs": [
+    "R81"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 506611,
+   "canPresaleNumber": 420271,
+   "orderable": 420271,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0603WAF3003T5E",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0038
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 4999,
+     "productPrice": 0.003
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": 9999,
+     "productPrice": 0.0025
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.002
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0017
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0017
+    }
+   ]
+  },
+  "C23178": {
+   "refs": [
+    "R80",
+    "R165"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 973475,
+   "canPresaleNumber": 823308,
+   "orderable": 823308,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0603WAF4703T5E",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.003
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 4999,
+     "productPrice": 0.0023
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": 9999,
+     "productPrice": 0.002
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0017
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0014
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0014
+    }
+   ]
+  },
+  "C23630": {
+   "refs": [
+    "C19",
+    "C20"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 2639192,
+   "canPresaleNumber": 2068886,
+   "orderable": 2068886,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL10A225KO8NNNC",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 499,
+     "productPrice": 0.0119
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 1499,
+     "productPrice": 0.0089
+    },
+    {
+     "startNumber": 1500,
+     "endNumber": 3999,
+     "productPrice": 0.0076
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": 23999,
+     "productPrice": 0.0066
+    },
+    {
+     "startNumber": 24000,
+     "endNumber": 47999,
+     "productPrice": 0.0062
+    },
+    {
+     "startNumber": 48000,
+     "endNumber": -1,
+     "productPrice": 0.0059
+    }
+   ]
+  },
+  "C25091": {
+   "refs": [
+    "R32",
+    "R33",
+    "R126"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 1940018,
+   "canPresaleNumber": 1740558,
+   "orderable": 1740558,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF2200TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0018
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0014
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0009
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0009
+    }
+   ]
+  },
+  "C25741": {
+   "refs": [
+    "R60",
+    "R83",
+    "R119",
+    "R120",
+    "R431"
+   ],
+   "qty_per_board": 5,
+   "owner_fit": false,
+   "joints_per_board": 10,
+   "stockCount": 7538774,
+   "canPresaleNumber": 5797505,
+   "orderable": 5797505,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF1003TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0013
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0008
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0008
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0007
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0007
+    }
+   ]
+  },
+  "C25744": {
+   "refs": [
+    "R5",
+    "R10",
+    "R11",
+    "R61",
+    "R89",
+    "R112",
+    "R121",
+    "R128",
+    "R131",
+    "R154",
+    "R155",
+    "R156",
+    "R157",
+    "R163",
+    "R167",
+    "R401",
+    "R434",
+    "R435",
+    "R460",
+    "R461",
+    "R462",
+    "R463",
+    "R464"
+   ],
+   "qty_per_board": 23,
+   "owner_fit": false,
+   "joints_per_board": 46,
+   "stockCount": 15598817,
+   "canPresaleNumber": 10242831,
+   "orderable": 10242831,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF1002TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0028
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0021
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0018
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0016
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0015
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0015
+    }
+   ]
+  },
+  "C25765": {
+   "refs": [
+    "R15"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 2673150,
+   "canPresaleNumber": 2250827,
+   "orderable": 2250827,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF2002TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0009
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0007
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0007
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0006
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0006
+    }
+   ]
+  },
+  "C25779": {
+   "refs": [
+    "R93"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 2327186,
+   "canPresaleNumber": 2156968,
+   "orderable": 2156968,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF3302TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0019
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0015
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.001
+    }
+   ]
+  },
+  "C25792": {
+   "refs": [
+    "R14"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 6669058,
+   "canPresaleNumber": 6151544,
+   "orderable": 6151544,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF4702TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0019
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0015
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.001
+    }
+   ]
+  },
+  "C25794": {
+   "refs": [
+    "R400",
+    "R433"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 1148138,
+   "canPresaleNumber": 954411,
+   "orderable": 954411,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF5102TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0019
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0015
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.001
+    }
+   ]
+  },
+  "C25867": {
+   "refs": [
+    "R84",
+    "R94"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 1472379,
+   "canPresaleNumber": 1230761,
+   "orderable": 1230761,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF1501TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0029
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0023
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0019
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0018
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0013
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0013
+    }
+   ]
+  },
+  "C25900": {
+   "refs": [
+    "R12",
+    "R13",
+    "R111"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 14051864,
+   "canPresaleNumber": 12072451,
+   "orderable": 12072451,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF4701TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.002
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0015
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0013
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.001
+    }
+   ]
+  },
+  "C25905": {
+   "refs": [
+    "R7",
+    "R8",
+    "R104",
+    "R107",
+    "R129",
+    "R132",
+    "R173",
+    "R175"
+   ],
+   "qty_per_board": 8,
+   "owner_fit": false,
+   "joints_per_board": 16,
+   "stockCount": 4797288,
+   "canPresaleNumber": 4016803,
+   "orderable": 4016803,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF5101TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0023
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0017
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0015
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0013
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0012
+    }
+   ]
+  },
+  "C26083": {
+   "refs": [
+    "R82"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 2705375,
+   "canPresaleNumber": 2243102,
+   "orderable": 2243102,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF1004TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0015
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.001
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0009
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0007
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0007
+    }
+   ]
+  },
+  "C2841056": {
+   "refs": [
+    "U2"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 26557,
+   "canPresaleNumber": 26280,
+   "orderable": 26280,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "LMR50410XDBVR",
+   "jlc_brand": "Texas Instruments",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.3335
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.2584
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.2262
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.186
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.1681
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.1573
+    }
+   ]
+  },
+  "C3013496": {
+   "refs": [
+    "R134"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 2222,
+   "canPresaleNumber": 2149,
+   "orderable": 2149,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "CRM2512-FX-2R00ELF",
+   "jlc_brand": "BOURNS",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 0.5577
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 0.4429
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.3937
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.333
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.3051
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.2887
+    }
+   ]
+  },
+  "C307331": {
+   "refs": [
+    "C5",
+    "C13",
+    "C14",
+    "C15",
+    "C16",
+    "C17",
+    "C18",
+    "C21",
+    "C24",
+    "C29",
+    "C30",
+    "C31",
+    "C32",
+    "C83",
+    "C88",
+    "C99",
+    "C128",
+    "C402",
+    "C410",
+    "C420",
+    "C432",
+    "C444",
+    "C460"
+   ],
+   "qty_per_board": 23,
+   "owner_fit": false,
+   "joints_per_board": 46,
+   "stockCount": 23327637,
+   "canPresaleNumber": 18225873,
+   "orderable": 18225873,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "CL05B104KB54PNC",
+   "jlc_brand": "Samsung Electro-Mechanics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.009
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0067
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0057
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0049
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 99999,
+     "productPrice": 0.0046
+    },
+    {
+     "startNumber": 100000,
+     "endNumber": -1,
+     "productPrice": 0.0044
+    }
+   ]
+  },
+  "C3263277": {
+   "refs": [
+    "U5"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 7,
+   "stockCount": 367,
+   "canPresaleNumber": 324,
+   "orderable": 324,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "LPS28DFWTR",
+   "jlc_brand": "STMicroelectronics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 6.6979
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 5.8204
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 5.2989
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 4.7725
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 4.5298
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 4.4199
+    }
+   ]
+  },
+  "C3662799": {
+   "refs": [
+    "U9"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 14,
+   "stockCount": 2047,
+   "canPresaleNumber": 2131,
+   "orderable": 2047,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "TPS259470ARPWR",
+   "jlc_brand": "Texas Instruments",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 1.294
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 1.0693
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 0.9463
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 0.8069
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 0.7446
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 0.7167
+    }
+   ]
+  },
+  "C37704": {
+   "refs": [
+    "D120"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 3,
+   "stockCount": 440094,
+   "canPresaleNumber": 418070,
+   "orderable": 418070,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": true,
+   "jlc_model": "BAT54C,215",
+   "jlc_brand": "Nexperia",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 499,
+     "productPrice": 0.0152
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0115
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0099
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": 23999,
+     "productPrice": 0.0086
+    },
+    {
+     "startNumber": 24000,
+     "endNumber": 50999,
+     "productPrice": 0.0082
+    },
+    {
+     "startNumber": 51000,
+     "endNumber": -1,
+     "productPrice": 0.0078
+    }
+   ]
+  },
+  "C4109": {
+   "refs": [
+    "R105",
+    "R106",
+    "R123",
+    "R130",
+    "R133",
+    "R178",
+    "R180"
+   ],
+   "qty_per_board": 7,
+   "owner_fit": false,
+   "joints_per_board": 14,
+   "stockCount": 10678430,
+   "canPresaleNumber": 10112952,
+   "orderable": 10112952,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "0402WGF2001TCE",
+   "jlc_brand": "UNI-ROYAL(Uniroyal Elec)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 999,
+     "productPrice": 0.0019
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 2999,
+     "productPrice": 0.0014
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 9999,
+     "productPrice": 0.0012
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 49999,
+     "productPrice": 0.0011
+    },
+    {
+     "startNumber": 50000,
+     "endNumber": 50199,
+     "productPrice": 0.0009
+    },
+    {
+     "startNumber": 50200,
+     "endNumber": -1,
+     "productPrice": 0.0009
+    }
+   ]
+  },
+  "C46550466": {
+   "refs": [
+    "C84"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": true,
+   "joints_per_board": 2,
+   "stockCount": 110787,
+   "canPresaleNumber": 109984,
+   "orderable": 109984,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "MA25V470M8x10",
+   "jlc_brand": "jieerrui",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.2031
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1792
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.169
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2499,
+     "productPrice": 0.1458
+    },
+    {
+     "startNumber": 2500,
+     "endNumber": 4999,
+     "productPrice": 0.1401
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": -1,
+     "productPrice": 0.1368
+    }
+   ]
+  },
+  "C468250": {
+   "refs": [
+    "U400",
+    "U403"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 12,
+   "stockCount": 17432,
+   "canPresaleNumber": 17048,
+   "orderable": 17048,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "TPS563208DDCR",
+   "jlc_brand": "Texas Instruments",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1457
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1155
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1004
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0891
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0711
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0665
+    }
+   ]
+  },
+  "C51931514": {
+   "refs": [
+    "U4"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 14,
+   "stockCount": 4,
+   "canPresaleNumber": -3,
+   "orderable": -3,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "ISM6HG256XTR",
+   "jlc_brand": "STMicroelectronics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 14.337
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 11,
+     "productPrice": 13.9106
+    },
+    {
+     "startNumber": 12,
+     "endNumber": 13,
+     "productPrice": 13.9106
+    },
+    {
+     "startNumber": 14,
+     "endNumber": 15,
+     "productPrice": 13.9106
+    },
+    {
+     "startNumber": 16,
+     "endNumber": 17,
+     "productPrice": 13.9106
+    },
+    {
+     "startNumber": 18,
+     "endNumber": -1,
+     "productPrice": 13.9106
+    }
+   ]
+  },
+  "C52037406": {
+   "refs": [
+    "J400",
+    "J410",
+    "J420",
+    "J440"
+   ],
+   "qty_per_board": 4,
+   "owner_fit": false,
+   "joints_per_board": 24,
+   "stockCount": 4537,
+   "canPresaleNumber": 4489,
+   "orderable": 4489,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "GH1.25-4PWT",
+   "jlc_brand": "XUNPU",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1124
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0896
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 1499,
+     "productPrice": 0.0783
+    },
+    {
+     "startNumber": 1500,
+     "endNumber": 2999,
+     "productPrice": 0.0699
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 4499,
+     "productPrice": 0.063
+    },
+    {
+     "startNumber": 4500,
+     "endNumber": -1,
+     "productPrice": 0.0596
+    }
+   ]
+  },
+  "C52037408": {
+   "refs": [
+    "J9",
+    "J122"
+   ],
+   "qty_per_board": 2,
+   "owner_fit": false,
+   "joints_per_board": 16,
+   "stockCount": 2645,
+   "canPresaleNumber": 2622,
+   "orderable": 2622,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "GH1.25-6PWT",
+   "jlc_brand": "XUNPU",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1393
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1109
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 1499,
+     "productPrice": 0.0966
+    },
+    {
+     "startNumber": 1500,
+     "endNumber": 2999,
+     "productPrice": 0.086
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 4499,
+     "productPrice": 0.0775
+    },
+    {
+     "startNumber": 4500,
+     "endNumber": -1,
+     "productPrice": 0.0732
+    }
+   ]
+  },
+  "C535146": {
+   "refs": [
+    "D402"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 191,
+   "canPresaleNumber": 184,
+   "orderable": 184,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "ESD103-B1-02EL E6327",
+   "jlc_brand": "Infineon Technologies",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.2305
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.1809
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.1596
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2499,
+     "productPrice": 0.1272
+    },
+    {
+     "startNumber": 2500,
+     "endNumber": 4999,
+     "productPrice": 0.1153
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": -1,
+     "productPrice": 0.1083
+    }
+   ]
+  },
+  "C57269": {
+   "refs": [
+    "L1",
+    "L400",
+    "L401"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 36639,
+   "canPresaleNumber": 35785,
+   "orderable": 35785,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "SWPA4030S4R7MT",
+   "jlc_brand": "Sunlord",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 99,
+     "productPrice": 0.0571
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 299,
+     "productPrice": 0.0468
+    },
+    {
+     "startNumber": 300,
+     "endNumber": 1999,
+     "productPrice": 0.0415
+    },
+    {
+     "startNumber": 2000,
+     "endNumber": 3999,
+     "productPrice": 0.034
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": 9999,
+     "productPrice": 0.0309
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": -1,
+     "productPrice": 0.0292
+    }
+   ]
+  },
+  "C78399": {
+   "refs": [
+    "D8"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 207651,
+   "canPresaleNumber": 204573,
+   "orderable": 204573,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "SMAJ12CA/TR13",
+   "jlc_brand": "Brightking",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 99,
+     "productPrice": 0.0456
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 299,
+     "productPrice": 0.0368
+    },
+    {
+     "startNumber": 300,
+     "endNumber": 999,
+     "productPrice": 0.0324
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": 4999,
+     "productPrice": 0.0291
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": 9999,
+     "productPrice": 0.0245
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": -1,
+     "productPrice": 0.0232
+    }
+   ]
+  },
+  "C84256": {
+   "refs": [
+    "LED1"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 2,
+   "stockCount": 2308662,
+   "canPresaleNumber": 1951250,
+   "orderable": 1951250,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "NCD0805R1",
+   "jlc_brand": "Foshan NationStar Optoelectronics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 499,
+     "productPrice": 0.0135
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0106
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0089
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": 23999,
+     "productPrice": 0.008
+    },
+    {
+     "startNumber": 24000,
+     "endNumber": 50999,
+     "productPrice": 0.0076
+    },
+    {
+     "startNumber": 51000,
+     "endNumber": -1,
+     "productPrice": 0.0073
+    }
+   ]
+  },
+  "C8678": {
+   "refs": [
+    "D5",
+    "D6",
+    "D9"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 6,
+   "stockCount": 3161153,
+   "canPresaleNumber": 2932575,
+   "orderable": 2932575,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "SS34",
+   "jlc_brand": "MDD(Microdiode Semiconductor)",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 199,
+     "productPrice": 0.0351
+    },
+    {
+     "startNumber": 200,
+     "endNumber": 599,
+     "productPrice": 0.0283
+    },
+    {
+     "startNumber": 600,
+     "endNumber": 4999,
+     "productPrice": 0.0251
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": 9999,
+     "productPrice": 0.0171
+    },
+    {
+     "startNumber": 10000,
+     "endNumber": 19999,
+     "productPrice": 0.0162
+    },
+    {
+     "startNumber": 20000,
+     "endNumber": -1,
+     "productPrice": 0.0155
+    }
+   ]
+  },
+  "C9006": {
+   "refs": [
+    "Y1"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 4,
+   "stockCount": 366296,
+   "canPresaleNumber": 324157,
+   "orderable": 324157,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "X322525MOB4SI",
+   "jlc_brand": "YXC Crystal Oscillators",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.0953
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0763
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0665
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2999,
+     "productPrice": 0.0584
+    },
+    {
+     "startNumber": 3000,
+     "endNumber": 5999,
+     "productPrice": 0.0501
+    },
+    {
+     "startNumber": 6000,
+     "endNumber": -1,
+     "productPrice": 0.0483
+    }
+   ]
+  },
+  "C96256": {
+   "refs": [
+    "LS120"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": true,
+   "joints_per_board": 2,
+   "stockCount": 107339,
+   "canPresaleNumber": 106292,
+   "orderable": 106292,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "QMB-09B-03",
+   "jlc_brand": "Jiangsu Huaneng Elec",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.1183
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0948
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0771
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 2499,
+     "productPrice": 0.0671
+    },
+    {
+     "startNumber": 2500,
+     "endNumber": 4999,
+     "productPrice": 0.0637
+    },
+    {
+     "startNumber": 5000,
+     "endNumber": -1,
+     "productPrice": 0.0614
+    }
+   ]
+  },
+  "C964146": {
+   "refs": [
+    "U1"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 100,
+   "stockCount": 4221,
+   "canPresaleNumber": 3913,
+   "orderable": 3913,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "STM32H743VIH6",
+   "jlc_brand": "STMicroelectronics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 8.8446
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 7.8196
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 7.1636
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 101,
+     "productPrice": 6.5306
+    },
+    {
+     "startNumber": 102,
+     "endNumber": 103,
+     "productPrice": 6.5306
+    },
+    {
+     "startNumber": 104,
+     "endNumber": -1,
+     "productPrice": 6.5306
+    }
+   ]
+  },
+  "C97521": {
+   "refs": [
+    "U3"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 8,
+   "stockCount": 74513,
+   "canPresaleNumber": 55152,
+   "orderable": 55152,
+   "min_purchase": 1,
+   "library_type": "base",
+   "preferred": false,
+   "jlc_model": "W25Q128JVSIQ",
+   "jlc_brand": "Winbond Elec",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 2.4617
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 2.1321
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 1.8975
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 1.6843
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 1.5859
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 1.5466
+    }
+   ]
+  }
+ },
+ "failures": [
+  "C51931514 (U4): orderable -3 < 5 for 5 boards"
+ ]
+}

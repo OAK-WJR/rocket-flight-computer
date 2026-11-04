@@ -1,0 +1,267 @@
+{
+ "crystal": {
+  "gm_crit_mA_per_V_at_CL12": 1.11,
+  "gm_crit_range_mA_per_V": [
+   0.967,
+   1.426
+  ],
+  "label": "Calculation (Datasheet ESR / C0 maxima); stray capacitance Inference",
+  "limit_mA_per_V": 1.5,
+  "ok": true
+ },
+ "fire": {
+  "basis": "R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference",
+  "floor_A": 1.125,
+  "four_stall_A": 1.2473,
+  "four_stall_margin_pct": 10.9,
+  "four_stall_ok": true,
+  "gate": {
+   "note": "Q120 / Q121 VGS = -V_BAT x (R119 || R120) / ((R119 || R120) + R121) (R11 network). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is only enabled in flight (Inference that no such transient occurs there)",
+   "q120_q121_vgs_V": {
+    "12.6V_3S": -10.5,
+    "19.9V_TVS_clamp": -16.58,
+    "5.72V_four_stall": -4.77,
+    "8.4V": -7.0
+   },
+   "q120_rds_row": "VGS -4.5 V (|VGS| >= 4.5 V down to a 5.4 V pack)",
+   "q120_vgs_abs_max_V": 12,
+   "q124_tau_us": 48.4,
+   "q124_vgs_min_V": 3.153,
+   "q124_vgs_th_max_V": 1.45
+  },
+  "label": "Calculation on Datasheet limits; copper, pack, loads and hot factors Inference",
+  "pfet_hot_ohm": 0.0735,
+  "q124_hot_ohm": 0.0574,
+  "r11_branch_ohm": 4.4705,
+  "r11_other_W": 13.064,
+  "r12_branch_ohm": 4.5866,
+  "r12_other_W": 12.962,
+  "shorted": {
+   "match_and_leads_shorted": {
+    "BAT_IN_V": 5.5337,
+    "Q120_I2R_W": 0.43,
+    "Q124_I2R_W": 0.336,
+    "fire_A": 2.42
+   },
+   "match_shorted": {
+    "BAT_IN_V": 5.576,
+    "Q120_I2R_W": 0.342,
+    "Q124_I2R_W": 0.267,
+    "fire_A": 2.1557
+   }
+  },
+  "stalls": {
+   "0": {
+    "BAT_IN_V": 6.8925,
+    "fire_A": 1.5027
+   },
+   "1": {
+    "BAT_IN_V": 6.6016,
+    "fire_A": 1.4393
+   },
+   "2": {
+    "BAT_IN_V": 6.3095,
+    "fire_A": 1.3756
+   },
+   "3": {
+    "BAT_IN_V": 6.0161,
+    "fire_A": 1.3117
+   },
+   "4": {
+    "BAT_IN_V": 5.7211,
+    "fire_A": 1.2473
+   }
+  }
+ },
+ "holdup": {
+  "from_battery_break_ms": [
+   2.289,
+   6.263
+  ],
+  "from_pa6_trip_ms": [
+   0.607,
+   2.098
+  ],
+  "label": "Calculation / Inference",
+  "note": "R11 back-fed the port and camera bucks from C84 through U11 (case c 0.46-0.54 ms); R12 does not, so the ports and camera drop with RAW_PROTECTED and the logic keeps C84 (Calculation / Inference: constant-power loads, no credit for C6 / C99)",
+  "r11_case_c_ms": [
+   0.464,
+   0.539
+  ]
+ },
+ "rails": {
+  "3V3 (U2 LMR50410, R14 47k / R15 20k)": {
+   "drift": {
+    "inside_limits": true,
+    "margin_high_V": 0.1359,
+    "margin_low_V": 0.2401,
+    "max_V": 3.4641,
+    "min_V": 3.2401
+   },
+   "initial": {
+    "inside_limits": true,
+    "margin_high_V": 0.1686,
+    "margin_low_V": 0.2704,
+    "max_V": 3.4314,
+    "min_V": 3.2704
+   },
+   "label": "Calculation (Datasheet VFB, 1 % resistors); drift case Inference",
+   "limits_V": [
+    3.0,
+    3.6
+   ],
+   "limits_basis": "STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; ISM6HG256X / LPS28DFW <= 3.6 V",
+   "nominal_V": 3.35,
+   "source": "TI SLUSDW3A section 7.5 VFB 0.99-1.01 V; ILKG-FB 0.2 nA typ (neglected)"
+  },
+  "CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)": {
+   "drift": {
+    "inside_limits": true,
+    "margin_high_V": 14.243,
+    "margin_low_V": 0.1616,
+    "max_V": 5.757,
+    "min_V": 5.1616
+   },
+   "initial": {
+    "inside_limits": true,
+    "margin_high_V": 14.3092,
+    "margin_low_V": 0.2213,
+    "max_V": 5.6908,
+    "min_V": 5.2213
+   },
+   "label": "Calculation (Datasheet VFB, 1 % resistors); drift case Inference",
+   "limits_V": [
+    5.0,
+    20.0
+   ],
+   "limits_basis": "RunCam Split 4 manual \"DC 5-20V\" (as quoted in the R10 records); harness drop at 1 A comes off the lower end",
+   "nominal_V": 5.4528,
+   "source": "TI SLVSD90B section 5.5"
+  },
+  "PORT_4V8 (U400 TPS563208, R400 51k + R404 1k / R401 10k)": {
+   "drift": {
+    "inside_limits": false,
+    "margin_high_V": -0.0237,
+    "margin_low_V": 0.0106,
+    "max_V": 5.0237,
+    "min_V": 4.5106
+   },
+   "initial": {
+    "inside_limits": true,
+    "margin_high_V": 0.0327,
+    "margin_low_V": 0.0614,
+    "max_V": 4.9673,
+    "min_V": 4.5614
+   },
+   "label": "Calculation (Datasheet VFB, 1 % resistors); drift case Inference",
+   "limits_V": [
+    4.5,
+    5.0
+   ],
+   "limits_basis": "project module ranges: MicoAir LR900 4.5-5 V, HGLRC M100 Mini 3.3-5 V (r10_plan O5, parts_qualification R8-MCU-02); Inference until bench-confirmed",
+   "nominal_V": 4.7616,
+   "source": "TI SLVSD90B section 5.5 VFB 0.749-0.787 V continuous mode (TPS563208 is FCCM), TJ -40 to 125 C; IVFB +/-0.1 uA"
+  }
+ },
+ "resistor_cases": {
+  "drift": "+/-1.67 % independent",
+  "initial": "+/-1.00 % independent"
+ },
+ "sense": {
+  "PORT_SENSE_limits": "PA4 (TT_a): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; at most VDD + 0.3 = 3.52 V at the 3V3 minimum 3.22 V (DS12110 I/O limits as R10 used them)",
+  "PORT_SENSE_ok": true,
+  "drift": {
+   "CAM_5V_SENSE_V": [
+    0.445,
+    0.531
+   ],
+   "PORT_SENSE_V": [
+    3.035,
+    3.454
+   ],
+   "VLOGIC_SENSE_ratio": [
+    0.08819,
+    0.09371
+   ]
+  },
+  "initial": {
+   "CAM_5V_SENSE_V": [
+    0.457,
+    0.518
+   ],
+   "PORT_SENSE_V": [
+    3.083,
+    3.401
+   ],
+   "VLOGIC_SENSE_ratio": [
+    0.08927,
+    0.09258
+   ]
+  },
+  "label": "Calculation (1 % resistors, rail windows above)"
+ },
+ "status": "R12 stage A (no board): Calculation / Inference as labelled; no measurement",
+ "u9": {
+  "drift": {
+   "ilim_A": [
+    3.895,
+    4.922
+   ],
+   "ovlo_falling_V": [
+    8.802,
+    9.894
+   ],
+   "ovlo_rising_V": [
+    9.687,
+    10.833
+   ]
+  },
+  "en_chain": {
+   "carried": "R80 / R165 470k, R81 300k, C87 220 nF, D402 unchanged in value (0603 basic cases); U9 A and L share the EN / UVLO limits, so R11 / R10 F6 figures (turn-on 30-130 ms; single drop-out 10.3 ms at 6.0 V, 8.1 ms at 5.71 V; D-R24-19) carry over as Calculation / Inference; stage D re-runs them with R12 tolerances",
+   "closed_en_at_8V4_V": 2.032,
+   "en_abs_max_ok_at_19V9": true,
+   "turn_on_min_bat_V": 5.055
+  },
+  "ilim_basis": "Datasheet ILIM at exactly 750 ohm, scaled 1/R for the 1 % pair (Inference: TI gives no RILM sensitivity formula in section 6.5)",
+  "initial": {
+   "ilim_A": [
+    3.921,
+    4.889
+   ],
+   "ovlo_falling_V": [
+    8.907,
+    9.777
+   ],
+   "ovlo_rising_V": [
+    9.803,
+    10.705
+   ]
+  },
+  "label": "Calculation on Datasheet limits; ILIM scaling and drift case Inference",
+  "ovlo_check": "2S full charge 8.4 V stays below the lowest falling threshold (no OVLO hysteresis on a full pack); a 3S pack above the highest rising threshold is cut off (F9 \"wrong 3S\")",
+  "ovlo_check_ok": true,
+  "ovlo_nominal_V": 10.223,
+  "ovlo_pin_V_at_8V4": 0.986,
+  "ovlo_pin_roc": "VOVLO 0.5-1.5 V recommended (SLVSFC9C section 6.3): 0.676 V at the 5.71 V four-stall point"
+ },
+ "vlogic": {
+  "basis": "U9 RON 0.04 ohm at 1.5 A (Inference); SS34 VF Inference; LMR50410 VIN_UVLO rising 3.55-4.0 V, VIN 4-36 V (SLUSDW3A 7.3 / 7.5); PA6 window as R10 / R11 (firmware). USB host port 4.75-5.25 V at the connector (USB 2.0); a bus-powered hub's low-power port may give 4.40 V, below the LMR50410 floor through D6 (bench rule: a host or powered-hub port, O-R12-03)",
+  "battery_2s_min_6V_V": 5.49,
+  "battery_four_stall_V": 5.203,
+  "label": "Calculation / Inference (diode drop)",
+  "lmr50410_roc_min_V": 4.0,
+  "lmr50410_uvlo_rising_max_V": 4.0,
+  "pa6_below_battery_min": true,
+  "pa6_margin_V": 0.033,
+  "pa6_trip_window_V": [
+   4.84,
+   5.17
+  ],
+  "usb_low_power_port_V": 3.95,
+  "usb_only_V": [
+   4.3,
+   5.0
+  ],
+  "usb_only_ok": true
+ }
+}

@@ -1,0 +1,169 @@
+(footprint "M3_NCD0805R1_K1"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "RED; status")
+	(property "Reference" "REF**"
+		(at -2.7 4.7 90)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "ebd17aa4-75a0-4765-8d80-044bfb7255e2")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "M3_NCD0805R1_K1"
+		(at 0 4 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "2cec19a7-b0c1-465a-bf6f-75162a2e9f85")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/e3e35db60c068efe42b02d21fe498cf3.pdf?productCode=C84256"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e02d14c2-ca08-483d-af09-0f5e7e654026")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "941a87f5-38fe-41b6-a763-6cd416405c61")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "LCSC Part" "C84256"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7aa10f35-b5a4-42a9-9255-b9d33da12eb9")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "LCSC" "C84256"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1aa5448c-610e-45ca-a5c0-8cc4f55a3590")
+		(effects
+			(font
+				(size 1.27 1.27)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer" "NATIONSTAR"
+		(at 0 0 90)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "223c8a6e-d10e-4825-9ee7-f643d21041b5")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Manufacturer Part" "NCD0805R1"
+		(at 0 0 90)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "2a1dad2d-884b-49cf-b2a4-73d94c3b37a1")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.75 -0.7)
+		(end -1.75 0.7)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.SilkS")
+		(uuid "b7867c11-58fe-5314-b3d5-f49f5b5865b8")
+	)
+	(fp_rect
+		(start -1.5 -0.9)
+		(end 1.5 0.9)
+		(stroke
+			(width 0.05)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.CrtYd")
+		(uuid "ead5bdf8-e57c-52d6-bdf1-d92132dbf071")
+	)
+	(fp_line
+		(start -0.7 -0.55)
+		(end -0.7 0.55)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "8c2b3e55-d864-5a8c-857e-c119c193acfb")
+	)
+	(fp_rect
+		(start -1.05 -0.65)
+		(end 1.05 0.65)
+		(stroke
+			(width 0.1)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "58b01271-86b9-53a4-ada7-86e0cc8aab8d")
+	)
+	(pad "1" smd rect
+		(at -0.85 0)
+		(size 0.8 1.2)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "fc644722-162b-4baa-bc03-f1f8547226af")
+	)
+	(pad "2" smd rect
+		(at 0.85 0)
+		(size 0.8 1.2)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "9406208c-0e20-446c-9b94-5e48b326254d")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/kilib/rocket.3dshapes/M3_NCD0805R1_K1.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
