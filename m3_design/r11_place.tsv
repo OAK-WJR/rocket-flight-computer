@@ -24,7 +24,7 @@ C20	24	26.55	90	B	VCAP2 under the ball field, north (D-R11-17: VCAP2 pad (24, 27
 C21	18.85	22.1	270	F	VDDA decoupling (3V3A); D-R11-43: out of the ball field, on F.Cu north-west of U1 over the In2 3V3A strip (its own via); D-R11-49: 0.15 mm west, so its GND via (19.45, 22.52) clears its pad and CAM_5V_SENSE's In3 run leaves the field north
 C22	16.4	32.6	0	B	3V3A
 C23	25.6	34	0	B	3V3 bulk
-C24	19.0	28.9	270	B	NRST cap; D-R11-27: north of H1 so H1's 3V3A link to R164.2 runs west on B.Cu
+C24	19.0	29.02	90	B	NRST cap; D-R11-27: north of H1 so H1's 3V3A link to R164.2 runs west on B.Cu; D-R11-85: turned, GND pad north
 C25	16.6	23.4	0	B	HSE load cap
 C26	16.6	28.6	0	B	HSE load cap
 C28	37.25	33.1	270	F	VBUS; D-R11-20: on F at J3.A4B9, east of U3
@@ -118,8 +118,10 @@ R100	31.6	2	90	B	camera RX series
 R101	32.8	2	90	B	camera TX series
 R102	19.6	14.6	90	B	CAM_UART_OE pull-down
 R103	19.6	11.6	270	B	CAM_IO_3V3 load; C4: rotated so R103.2 (GND) faces its via (stageC4.md)
-R104	28	12.4	0	F	CAM_5V sense
-R105	19.6	8.6	90	B	CAM_5V sense
+R104	28.1	12	0	F	CAM_5V sense top leg (5.1k; D-R11-86: 0.4 mm north and 0.1 mm east for R107)
+R105	19.6	8.6	90	B	CAM_5V sense bottom leg (2k; D-R11-86: one of two in parallel)
+R106	16.4	20.7	90	B	CAM_5V sense bottom leg (2k), D-R11-86: in parallel with R105, on the sense run west of U1
+R107	26.25	12.85	180	F	CAM_5V sense top leg (5.1k), D-R11-86: in series with R104, on the run west of it
 R11	19.8	19.6	90	B	IMU_CS pull-up
 R110	30.8	36.8	0	B	USB support
 R119	12.95	22.02	180	F	Q121 local gate bias (D-R18-02 on R11); D-R11-21: under Q121.4 / Q121.3

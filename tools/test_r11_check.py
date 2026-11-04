@@ -485,8 +485,9 @@ class R11Fixes(unittest.TestCase):
         self.assertEqual({p: e['net'] for p, e in r11.LOADER_R11.items()}, carried)
         self.assertEqual(r11.loader_entry_issues(r11.LOADER_R11), [])
         self.assertEqual({p: (e['net'], e['decision'], e['case']) for p, e in r11.LOADER_R11.items()
-                          if p in ('PB9', 'PA15', 'PB10', 'PB11', 'PB6')},
-                         {'PB9': ('CAM_MCU_TX', 'D-R11-49', '8.4'), 'PA15': ('SERVO2_MCU', 'D-R11-49', '8.4'),
+                          if p in ('PB9', 'PA2', 'PA15', 'PB10', 'PB11', 'PB6')},
+                         {'PB9': ('IMU_CS', 'D-R11-85', '9'), 'PA2': ('SERVO4_MCU', 'D-R11-85', '9'),
+                          'PA15': ('SERVO2_MCU', 'D-R11-49', '8.4'),
                           'PB10': ('I2C1_SCL', 'D-R11-41', '7'), 'PB11': ('I2C1_SDA', 'D-R11-41', '7'),
                           'PB6': ('QSPI_NCS', 'D-R11-01', r11.R10_CASE)})
         self.assertTrue(all(e['an2606'] == r11.LOADER_AN2606 for e in r11.LOADER_R11.values()))
@@ -513,16 +514,16 @@ class R11Fixes(unittest.TestCase):
         nets['PB9'] = 'I2C1_SDA'                               # R10's old PB9 net back on the ball
         s, balls = self.loader_board(nets)
         issues = self.loader_issues(s, balls)
-        self.assertTrue(any('PB9' in i and 'carries I2C1_SDA' in i and 'entry is for CAM_MCU_TX' in i for i in issues))
+        self.assertTrue(any('PB9' in i and 'carries I2C1_SDA' in i and 'entry is for IMU_CS' in i for i in issues))
         s, balls = self.loader_board()                         # a new member on a pinned net
         s.part('R999', 40, 45, [('1', 'SERVO2_MCU', (0, 0), 'smd')]).SetValue('10k')
         self.assertTrue(any('PA15' in i and 'members differ' in i for i in self.loader_issues(s, balls)))
 
     def test_k_loader_fails_a_stale_entry_for_an_nc_pin(self):
         s, balls = self.loader_board()
-        stale = dict(r11.LOADER_R11, PA2=dict(r11.LOADER_R11['PA15'], net='SERVO3_MCU'))
+        stale = dict(r11.LOADER_R11, PA3=dict(r11.LOADER_R11['PA15'], net='SERVO4_MCU'))   # PA3 is NC (D-R11-85)
         issues = self.loader_issues(s, balls, stale)
-        self.assertTrue(any(i.startswith('stale LOADER_R11 entry PA2') for i in issues))
+        self.assertTrue(any(i.startswith('stale LOADER_R11 entry PA3') for i in issues))
         nets = {p: e['net'] for p, e in r11.LOADER_R11.items() if p != 'PB10'}
         s, balls = self.loader_board(nets)                    # PB10's ball made NC: its entry is stale
         self.assertTrue(any(i.startswith('stale LOADER_R11 entry PB10') for i in self.loader_issues(s, balls)))
@@ -818,6 +819,29 @@ class R11Legends(unittest.TestCase):
         kept, _ = r11.r11_legend_set(s.board, ['J2.4: silkscreen must identify SWCLK exactly once (R10 port table)'])
         self.assertEqual(len(kept), 1)
 
+    def test_gate_neighbours_are_inert(self):
+        """D-R11-85: a driven net on a ball next to PE4 (C3) or PC1 (F2) fails; NC, GND, D-R11-23's 3V3 pair and the
+        recorded inert nets pass, and only next to their own guard."""
+        s = Six()
+        nets = {'C3': 'PYRO1_GATE_N', 'B2': '3V3', 'D2': '3V3', 'C2': 'GND', 'F2': 'ACT_EN_MCU', 'G1': 'GND',
+                'E1': 'NRST', 'E2': 'CAM_5V_SENSE', 'F1': 'PYRO1_CONT', 'G3': 'LOGIC_SOURCE_ST', 'B3': None,
+                'B4': None, 'G2': None}
+        pads = [(ball, net, (k * 0.8, 0), 'smd') for k, (ball, net) in enumerate(nets.items())]
+        u1 = s.part('U1', 20.0, 25.0, pads)
+        issues, ev = r11.gate_neighbours(s.board)
+        self.assertEqual(issues, [], ev)
+        for ball, net in (('B3', 'IMU_CS'), ('B4', 'CAM_MCU_RX'), ('G2', 'SERVO3_MCU'), ('D3', '3V3')):
+            with self.subTest(ball=ball, net=net):
+                pad = u1.FindPadByNumber(ball)
+                if pad is None:
+                    pad = pcbnew.PAD(u1); pad.SetNumber(ball); u1.Add(pad)
+                pad.SetNet(s.net(net))
+                self.assertTrue(any(f'neighbour {ball} carries {net}' in i for i in r11.gate_neighbours(s.board)[0]))
+                pad.SetNet(s.net('GND'))
+        u1.FindPadByNumber('E1').SetNet(s.net('LOGIC_SOURCE_ST'))
+        u1.FindPadByNumber('B3').SetNet(s.net('NRST'))                     # inert next to PC1, not next to PE4
+        self.assertTrue(any('neighbour B3 carries NRST' in i for i in r11.gate_neighbours(s.board)[0]))
+
     def test_exti_lines_are_distinct(self):
         """D-R11-81: two interrupt nets on one EXTI line number fail (PA5 and PD5 were both line 5)."""
         s = Six()
@@ -919,6 +943,12 @@ class R11RealBoard(unittest.TestCase):
         vias[0].SetCappingMode(pcbnew.CAPPING_MODE_CAPPED)
         vias[1].Move(pcbnew.VECTOR2I(pcbnew.FromMM(0.05), 0))
         self.assertTrue(any('K-copper' in i for i in self.run_rules({'K-copper'})['issues']))
+
+    def test_gate_neighbours_hold_on_the_real_board(self):
+        self.assertEqual(self.run_rules({'K-neighbours'})['issues'], [])
+        u1 = self.board.FindFootprintByReference('U1')
+        u1.FindPadByNumber('B3').SetNet(self.board.FindNet('IMU_CS'))       # D-R11-49's PE3 / IMU_CS next to PE4
+        self.assertTrue(self.run_rules({'K-neighbours'})['issues'])
 
     def test_exti_holds_on_the_real_board(self):
         self.assertEqual(self.run_rules({'K-exti'})['issues'], [])

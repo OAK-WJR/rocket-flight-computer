@@ -32,7 +32,7 @@ RAIL_FANOUT = (
     ('3V3', ('K1',), (20.0, 32.0)),
     ('GND', ('C2',), (20.8, 25.6)),
     ('GND', ('E4',), (22.4, 28.0)),
-    ('GND', ('G1',), (20.0, 29.6)),
+    ('GND', ('G1',), (20.8, 28.8)),          # D-R11-85: G2's old SERVO3 via site (SERVO4_MCU takes (20.0, 29.6))
     ('GND', ('J1',), (20.0, 31.2)),
     ('3V3A', ('H1',), (20.0, 30.4)),
 )
@@ -84,6 +84,8 @@ def rails(d):
             stub(d, net, b, via, PWR)
     for net, via in RAIL_VIAS:
         d.via(net, via)
+    # D-R11-85: CAM_MCU_RX's In3-to-F.Cu via (23.2, 24.8) partner, the only legal GND site (r11_gnd_spots): DRU floor via
+    d.via('GND', (22.4, 24.75), (0.3, 0.15))
     for net, layer, width, pts in RAIL_TRACKS:
         d.track(net, layer, width, pts)
 

@@ -421,7 +421,7 @@
    "pads_easyeda": 2,
    "pads_matched": 2,
    "status": "OK",
-   "via": "same footprint as C23253 (EasyEDA has no entry for C21190)"
+   "via": "same footprint as C705780 (EasyEDA has no entry for C21190)"
   },
   "C21397|M3_GRM32_1210": {
    "footprint": "M3_GRM32_1210",
@@ -982,7 +982,7 @@
    "pads_easyeda": 2,
    "pads_matched": 2,
    "status": "OK",
-   "via": "same footprint as C25744 (EasyEDA has no entry for C705636)"
+   "via": "same footprint as C190095 (EasyEDA has no entry for C705636)"
   },
   "C705755|R_0603_1608Metric": {
    "footprint": "R_0603_1608Metric",

@@ -8,7 +8,7 @@
 #
 #   jlc_orient_r11.py   placement corrections (tools/jlc_corrections_r11.json) by matching every LCSC footprint's pads to
 #                       ours (tools/jlc_easyeda/pads_r11.json); fails on any part it cannot match ("CHECK: none")
-#   export_fab_r11.py   Gerber zip (15 layers: six copper, PTH / NPTH drill, job file), the JLC BOM (one line per LCSC
+#   export_fab_r11.py   Gerber zip (16 files: six copper, both paste / silk / mask, Edge.Cuts, PTH / NPTH drill, job file), the JLC BOM (one line per LCSC
 #                       code), the CPL and the assembly drawings into m3_design/r11/fab, unbound (--pending)
 #   fab_manifest_r11.py --bind   the content checks on the exported package, then the manifest binding it to the CAD and
 #                       export inputs (the board's SHA-256), written only when every check passes:

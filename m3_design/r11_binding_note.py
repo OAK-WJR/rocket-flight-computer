@@ -26,29 +26,30 @@ R10_NOTE = HERE / 'assembly_review/sources/r10_design/r10_binding_note.json'
 OUT = DESIGN / 'r11_binding_note.json'
 
 # (R10 obligation index, what changes on R11). Pin facts from pin_table.tsv / D-R11-41 / D-R11-49; EXTI line = pin
-# number (RM0433 SYSCFG_EXTICRx selects one port per line; RM0433 could not be fetched from ST in D-R11-81's session:
-# Inference). D-R11-81 gives every interrupt net its own line number, so the map holds under either reading.
+# number (SYSCFG_EXTICRx selects one port per line: the field layout is checked against ST's CMSIS header stm32h743xx.h,
+# cmsis-device-h7 commit 8f922cdc; RM0433 itself not read: Inference). Every interrupt net has its own line number.
 R11_DELTAS = (
-    (3, 'Camera UART is UART4 AF8: CAM_MCU_TX PB9 (ball A4), CAM_MCU_RX PB8 (ball B4), no flow control (D-R11-49), not '
-        'UART7 PE8 / PE7. PB9 is a ROM-loader pin (I2C1_SDA, open drain): stageC1b.md section 8.4 case; drive PB9 '
-        'push-pull only after the UART4 binding.'),
+    (3, 'Camera UART is USART2 AF7: CAM_MCU_TX PD5 (ball B6), CAM_MCU_RX PD6 (ball C6), no flow control (D-R11-85; was '
+        'UART4 PB9 / PB8, D-R11-49, and UART7 PE8 / PE7 on R10). PD5 / PD6 are not ROM-loader pins.'),
     (4, 'PE11 / PE12 (loader SPI4) are NC on R11. Camera EN is PC14 (CAM_PWR_EN, ball A1), held low by R431 100 k while '
         'PC14 is an input; camera OE is PC15 (ball B1), held low by R102 10 k. New loader members: PA15 (SPI3_NSS) '
-        'carries SERVO2_MCU (R155 holds it low) and PB9 carries CAM_MCU_TX (stageC1b.md section 8.4).'),
+        'carries SERVO2_MCU (R155 holds it low), PB9 (I2C1_SDA) carries IMU_CS (R11 holds it high) and PA2 (USART2_TX) '
+        'carries SERVO4_MCU (stageC1b.md sections 8.4 and 9).'),
     (5, 'EXTI map on R11: CAM_FAULT_N PC13 (EXTI13, EXTI15_10), USB_FAULT_N PD10 (EXTI10, EXTI15_10), LOGIC_SOURCE_ST PA4 '
-        '(EXTI4), BAT_FAULT_N PA5 (EXTI5), IMU_INT1 PD6 (EXTI6, ball C6; D-R11-81), VBUS_SENSE PC8 (EXTI8). Every '
-        'interrupt net has its own line number (4, 5, 6, 8, 10, 13), so each SYSCFG_EXTICR field selects one port '
-        '(PA for 4 / 5, PD for 6 / 10, PC for 8 / 13); lines 5 / 6 / 8 share the EXTI9_5 vector and 10 / 13 the '
-        'EXTI15_10 vector, so each handler checks its pending bit. IMU_INT1 is no longer on EXTI1 (R10) and no longer '
-        'on PD5 (D-R11-49), which shared line 5 with PA5 (D-R11-77, closed by D-R11-81). PC13 is used on R11 (it was '
-        'NC); PD5 is NC.'),
-    (6, 'PE3 carries IMU_CS on R11 (ball B3), so it is no longer an analog sentinel; the sentinels are PE5 / PE6 / PC4. '
-        'PA15 carries SERVO2_MCU (TIM2_CH1 AF1): it resets as JTDI with its internal pull-up, which against R155 '
-        '10 k gives at most 0.83 V on the line until firmware selects TIM2 (stageC1b.md section 8.4, Calculation with '
-        'a 30 k minimum pull-up, Inference); configure PA15 early, as R10 required for the no-net PA15.'),
-    (8, 'Servo timers on R11: SERVO1 PB7 TIM4_CH2 AF2 (ball A5), SERVO2 PA15 TIM2_CH1 AF1 (A8), SERVO3 PA0 TIM5_CH1 AF2 '
-        '(G2), SERVO4 PA1 TIM5_CH2 AF2 (H2): three timers, so the neutral-first-pulse and 50 ms rules apply to each '
-        'timer start.'),
+        '(EXTI4), BAT_FAULT_N PA5 (EXTI5), IMU_INT1 PD3 (EXTI3, ball C7; D-R11-85), VBUS_SENSE PC8 (EXTI8). Every '
+        'interrupt net has its own line number (3, 4, 5, 8, 10, 13), so each SYSCFG_EXTICR field selects one port '
+        '(PD for 3 / 10, PA for 4 / 5, PC for 8 / 13; the EXTICR field layout checked against ST\'s CMSIS header '
+        'stm32h743xx.h, cmsis-device-h7 commit 8f922cdc; RM0433 not read: Inference); EXTI3 has its own vector, 5 / 8 '
+        'share EXTI9_5 and 10 / 13 EXTI15_10, so each shared handler checks its pending bit. IMU_INT1 was PE1 / EXTI1 on '
+        'R10, PD5 (D-R11-49, line 5 shared with PA5) and PD6 (D-R11-81). PC13 is used on R11 (it was NC); PD5 / PD6 '
+        'carry the camera UART.'),
+    (6, 'PE3 is NC again on R11 (ball B3, PE4\'s neighbour, D-R11-85), so it is again an analog sentinel with PE5 / PE6 / '
+        'PC4; never drive it. PA15 carries SERVO2_MCU (TIM2_CH1 AF1): it resets as JTDI with its internal pull-up, which '
+        'against R155 10 k gives at most 0.83 V on the line until firmware selects TIM2 (stageC1b.md section 8.4, '
+        'Calculation with a 30 k minimum pull-up, Inference); configure PA15 early, as R10 required for the no-net PA15.'),
+    (8, 'Servo timers on R11: SERVO1 PB7 TIM4_CH2 AF2 (ball A5), SERVO2 PA15 TIM2_CH1 AF1 (A8), SERVO3 PA1 TIM5_CH2 AF2 '
+        '(H2), SERVO4 PA2 TIM5_CH3 AF2 (J2) (D-R11-85; PA0 / G2, PC1\'s neighbour, is NC): three timers, so the '
+        'neutral-first-pulse and 50 ms rules apply to each timer start.'),
     (10, 'R11 connectors (D-R11-05): J122 / J400 / J410 / J420 / J440 / J9 are latching JST GH (J9 six-pin: 1-2 CAM_5V, '
          '3-4 GND, 5 RXI, 6 TXO); J1 (battery) and J121 (igniter) are hand-soldered AWG 20 wire pads. The DB125 text '
          'is R10 only.'),
@@ -56,30 +57,33 @@ R11_DELTAS = (
          'CAM_PWR_EN (U402 EN, R431 100 k; at most 0.04 mA, Calculation in pin_table.tsv), still a VBAT-domain pin at '
          '3 mA / 2 MHz.'),
     (19, 'Buzzer on PE8, not PC14. PC13 carries CAM_FAULT_N (input). PE0 and PE10 stay NC.'),
-    (20, 'Camera start-up: RX PB8 pull-up and TX PB9 idle high before OE (PC15) goes high.'),
-    (21, 'CAM_5V_SENSE is PC2_C (ball E2), ADC3_INP0 (the analog-only _C pad), not PB1 ADC12_INP5; ADC3 also carries the '
-         'VBAT/4 bridge reading. PB1 carries LED_RED.'),
+    (20, 'Camera start-up: RX PD6 pull-up and TX PD5 idle high before OE (PC15) goes high.'),
+    (21, 'CAM_5V_SENSE is PC2_C (ball E2), ADC3_INP0, a TT_a pad (DS12110 Rev 8 Table 9 p. 67), not PB1 ADC12_INP5; ADC3 '
+         'also carries the VBAT/4 bridge reading. PB1 carries LED_RED.'),
     (24, 'LEDs: LED_RED PB1 (ball K4), LED_YEL PD2 (ball B7).'),
     (27, 'LSE: PC14 (OSC32_IN) now drives CAM_PWR_EN; keep RCC_BDCR.LSEON = 0 as on R10.'),
-    (29, 'CAM_5V_SENSE moved to PC2_C, an analog-only switch pad. Single fault R105 open: the pin is pulled to CAM_5V '
-         '(nominal 5.456 V) through R104 10 kOhm, as R10\'s PB1 case, which R10 recorded above its 4.0 V TT_u limit with '
-         'no firmware mitigation. The PC2_C absolute maximum was not read from DS12110 in D-R11-81\'s session (ST\'s PDF '
-         'could not be fetched); taking it as R10\'s 4.0 V class is an Inference, under which the fault exceeds it as on '
-         'R10 (injection through 10 kOhm at most about 0.2 mA, Inference). Owner item, no design change (D-R11-81).'),
-    (30, 'PE3 is IMU_CS: synchronous trace (TRACED0 on PE3) would also drive the IMU chip select; the trace prohibition '
-         'stands. The lock list is unchanged (PC1, PE4).'),
-    (38, 'Rule 3 on R11: QSPI_IO2 is PE2 (ball A3) and PE4 is ball C3, with PE3 / IMU_CS (B3) between them; a BGA '
-         'bridge cannot be seen, so the visual "U1 pins 1-5" inspection becomes X-ray of U1, and the U3.3-to-R127.1 '
-         'meter check stays. The cold-screen toggle list is the buzzer PE8 (not PC14) and the servo PWM.'),
+    (29, 'CAM_5V_SENSE on PC2_C, a TT_a pad: absolute maximum 4.0 V (DS12110 Rev 8 Table 119 p. 211) and 0 mA injection '
+         '(Table 156 p. 244). D-R11-86 makes the divider single-fault tolerant: R104 + R107 (5.1k + 5.1k) in series on '
+         'top, R105 || R106 (2k || 2k) below, so one open or shorted resistor leaves the pin at most CAM_5V x 2k / 12.2k '
+         '= 0.94 V at 5.6 V (Calculation); a shorted R105 / R106 / C94 or an open R104 / R107 reads 0 V. Firmware: the '
+         'scale is CAM_5V = PC2_C x 11.2 (ratio 1k / 11.2k = 0.08929), not x 11; R10\'s camera thresholds stay in volts '
+         'of CAM_5V and convert with the new ratio; a reading near 2x the expected value (one bottom resistor open) or '
+         'near 0 V with the camera on (one top resistor open) is a sense fault, not a supply fault.'),
+    (30, 'PE3 is NC on R11 (D-R11-85); IMU_CS is PB9 (ball A4). The trace prohibition stands (TRACED0 on PE3 would only '
+         'drive an NC pin). The lock list is unchanged (PC1, PE4).'),
+    (38, 'Rule 3 on R11: QSPI_IO2 is PE2 (ball A3) and PE4 is ball C3; B3 (PE3), B4, C4, D3, D4 are NC, C2 GND and B2 / '
+         'D2 3V3 (D-R11-23), so no driven signal can bridge to PE4 (check_r11 K-neighbours, D-R11-85). A BGA bridge cannot '
+         'be seen, so the visual "U1 pins 1-5" inspection becomes X-ray of U1, and the U3.3-to-R127.1 meter check stays. '
+         'The cold-screen toggle list is the buzzer PE8 (not PC14) and the servo PWM.'),
     (39, 'The R10 second-barrel coordinates are R10 records; R11 gate barrels are in the R11 board and S-8 data.'),
     (40, 'The R91.1 / U1.28 second vias are R10 records. On R11 PA4 (LOGIC_SOURCE_ST, ball G3) has two single-via '
          'points, its dog-bone (21.60, 28.80) and its In3-to-B.Cu via (14.65, 39.90) (D-R11-45, D-R11-48, '
          'single_open_exceptions): an open leaves PA4 floating, so rule 5 (PC1 only while PA4 reads low) stays an '
          'extra barrier, not a guarantee.'),
-    (42, 'EXTI5 is BAT_FAULT_N\'s alone on R11 (IMU_INT1 is on EXTI6, D-R11-81); rule 7 stands as R10.'),
+    (42, 'EXTI5 is BAT_FAULT_N\'s alone on R11 (IMU_INT1 is on EXTI3, D-R11-85); rule 7 stands as R10.'),
     (46, 'U5 (MS5611) is on I2C2, PB10 SCL (ball J7) / PB11 SDA (ball K7), AF4 (D-R11-41; the nets keep the names '
-         'I2C1_SCL / I2C1_SDA); PB10 / PB11 are loader USART3 pins (stageC1b.md section 7). IMU_CS is PE3 (ball B3). '
-         'CAM_5V scale: PC2_C = CAM_5V / 11.'),
+         'I2C1_SCL / I2C1_SDA); PB10 / PB11 are loader USART3 pins (stageC1b.md section 7). IMU_CS is PB9 (ball A4). '
+         'CAM_5V scale: PC2_C = CAM_5V / 11.2 (D-R11-86).'),
 )
 
 
@@ -168,9 +172,12 @@ def generate(board_path, stage_d=None):
         'r11_firmware_rules': [
             'An R11 binding changes the TIM, UART, ADC and EXTI assignments together (stageC1b.md section 8.2); R10 '
             'firmware cannot run on R11.',
-            'EXTI lines on R11 (D-R11-81): 4 PA4 LOGIC_SOURCE_ST, 5 PA5 BAT_FAULT_N, 6 PD6 IMU_INT1, 8 PC8 VBUS_SENSE, '
-            '10 PD10 USB_FAULT_N, 13 PC13 CAM_FAULT_N; one port per line in SYSCFG_EXTICR (Inference on RM0433, not '
-            're-read: ST\'s PDF could not be fetched in that session).'],
+            'EXTI lines on R11 (D-R11-85): 3 PD3 IMU_INT1, 4 PA4 LOGIC_SOURCE_ST, 5 PA5 BAT_FAULT_N, 8 PC8 VBUS_SENSE, '
+            '10 PD10 USB_FAULT_N, 13 PC13 CAM_FAULT_N; one port per line in SYSCFG_EXTICR (field layout from ST\'s CMSIS '
+            'stm32h743xx.h, cmsis-device-h7 commit 8f922cdc; RM0433 not read: Inference).',
+            'Gate-drive neighbours (D-R11-85): every ball round PE4 is NC, GND or the D-R11-23 3V3 pair; round PC1 they are '
+            'NC, GND or NRST / PC0 / PC2_C / PA4, none of which can drive ACT_EN above about 0.5 V if bridged; never drive '
+            'an NC ball next to PE4 or PC1 (PE3, PB8, PE1, PE5, PE0, PE6, PC3_C, PA0).'],
         'physical_tests': 'not performed',
     }
     if stage_d:

@@ -1,12 +1,12 @@
 # R11 vehicle integration handoff
 
-**Status.** PCB `5f1a7e1d…` (M3-ASSY-R11), 46 × 50 × 1.6 mm, six layers, branch `m3-assy-r11`; a CAD candidate, not
+**Status.** PCB `3bb83272…` (M3-ASSY-R11), 46 × 50 × 1.6 mm, six layers, branch `m3-assy-r11`; a CAD candidate, not
 accepted, nothing ordered, no physical fit claimed. R9 stays the accepted board. The full state is in
 [M3_R11.md, "Current state"](M3_R11.md#current-state); what the owner must accept is in
 [R11_VALIDATION.md](R11_VALIDATION.md). The parent `../../docs/VEHICLE.md` is separately owned and is not edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 50), top face = F. Pad
-positions below were read from the board file (Measured, pcbnew on `5f1a7e1d…`).
+positions below were read from the board file (Measured, pcbnew on `3bb83272…`).
 
 ## Harness pin map
 
@@ -153,11 +153,11 @@ both on the top face (Measured pad positions).
 
 J2 (TC2030, top) is the SWD port; program with the e-match disconnected. Future programming must record and read back
 BOOT_ADD0 and the boot settings, then verify reset reaches the application. With BOOT0 high the ROM loader runs, and
-its pins on R11 include PB9 (camera TX), PA15 (servo 2, held low by R155) and PB10 / PB11 (U5's I2C) (stageC1b.md §8.4;
-Inference). Keep R10's dummy-load / no-e-match, before-IWDG, PC1 / PE4 locked-low, camera EN / OE low and SD_CS high
+its pins on R11 include PB9 (IMU_CS, held high by R11), PA2 (servo 4), PA15 (servo 2, held low by R155) and PB10 / PB11
+(U5's I2C) (stageC1b.md §8.4, §9, D-R11-85; Inference). Keep R10's dummy-load / no-e-match, before-IWDG, PC1 / PE4 locked-low, camera EN / OE low and SD_CS high
 service procedure.
 
 ## Cost
 
-$79.79 per board (parts + feeder fees, 5 boards, 2026-11-03T23:01:53Z) against the $84.41 cap; U9, U4 and U2 short at
+$79.80 per board (parts + feeder fees, 5 boards, 2026-11-04T01:15:03Z) against the $84.41 cap; U9, U4 and U2 short at
 JLC. See [M3_R11.md, "Cost and stock"](M3_R11.md#cost-and-stock).

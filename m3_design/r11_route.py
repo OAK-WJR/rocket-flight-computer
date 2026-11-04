@@ -33,7 +33,8 @@ WIDTHS = (0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.7, 1.0, 1.5, 2.0)
 SIGNAL_VIA = (0.4, 0.2)          # stageB.md section 10: dog-bone / signal via, 0.10 mm annular ring
 POWER_VIA = (0.45, 0.25)         # power and GND stitching
 BIG_VIA = (0.6, 0.3)             # high-current power
-VIA_SIZES = (SIGNAL_VIA, POWER_VIA, BIG_VIA)
+FLOOR_VIA = (0.3, 0.15)          # D-R11-85: the DRU floor via (m3.kicad_dru, D-R11-15), one GND partner in the ball field
+VIA_SIZES = (SIGNAL_VIA, POWER_VIA, BIG_VIA, FLOOR_VIA)
 EPS = 1e-6
 KIID_BASE = 11110
 

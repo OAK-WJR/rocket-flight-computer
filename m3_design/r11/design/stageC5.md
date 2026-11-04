@@ -73,8 +73,8 @@ check_r11 (full) on a zone-filled copy with its fit report:
 * S-8 OK: 8 barrels, 24 inner rings. ACT_DRV's barrel to the nearest foreign inner copper 1.069 mm (In1 GND, G_Q122's
   ring; was 1.10 mm to In2 3V3A). Board minimum unchanged: 1.01 mm (ACT_GATE (14.60, 15.90) to BAT_FAULT_N on In1).
   PTH hole wall to foreign inner copper still 0.55 mm minimum.
-* PYRO1_GATE / PYRO1_GATE_N to 3V3 / 3V3A: the same minimum as before on every layer (0.386 mm on F.Cu, the D-R11-23
-  lane at U1's C2 / D2 balls; no gate-net or 3V3 copper changed).
+* PYRO1_GATE / PYRO1_GATE_N to 3V3 / 3V3A: the same minimum as before on every layer (0.200 mm on F.Cu, PE4's lane to D2's land, D-R11-23; 0.386 mm is the C3 escape stub, corrected
+  by D-R11-87; no gate-net or 3V3 copper changed).
 * route_check `--profile r11`: 3 failing (SD_MOSI critical_via_no_gnd and extra_vias, CAM_RX_BUFFER extra_vias, same
   coordinates and figures), 0 allowlisted; non-critical leftovers 25 (was 27: NRST's tiny_jog (18.85, 28.5) and detour
   are gone); no new instance in any category, INFO included.
@@ -135,7 +135,7 @@ x 29.15 (copper gaps).
 route_check failures), `r11_escape_check` OK (69 rows; F N exits 9, In3 N 6); SHA-256
 `b7e2decb49bce5b24d124e24dd886d38a8e634ad7c2d203885f7125a6771bbb5` both times. On a zone-filled copy: DRC 0, unconnected
 0; check_r11 every rule OK except K-legends (stage D), K-reference OK; S-8 minimum 1.01 mm, ACT_DRV 1.069 mm
-(unchanged); PYRO1_GATE / _N to 3V3 / 3V3A minimum unchanged (0.386 mm, D-R11-23). route_check `--profile r11`: 0
+(unchanged); PYRO1_GATE / _N to 3V3 / 3V3A minimum unchanged (0.200 mm, D-R11-23; was misquoted as 0.386 mm, D-R11-87). route_check `--profile r11`: 0
 failing, 2 allowlisted, 0 stale, 0 out of date, 25 unrecorded non-critical leftovers; its full `--list` output differs
 from `4e552ef4…`'s only by the removed `extra_vias SD_MOSI` instance (every category, INFO included). SD_MOSI 22.65 mm,
 3 vias; SD_SCK 15.53 mm, SD_MISO 23.85 mm (lengths Measured). `tools/test_route_check.py` (85 tests) and

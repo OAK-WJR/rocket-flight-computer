@@ -1275,9 +1275,10 @@ class R11SixLayer(unittest.TestCase):
     # --- D-R11-61: the r11 allowlist, its measured figures and the six-layer GND via audit -----------------------
     def test_r11_allowlist_entries_carry_measured_reasons(self):
         self.assertEqual(sorted((e[0], e[1]) for e in rc.ALLOWLIST_R11),
-                         [('critical_via_no_gnd', 'SD_MOSI'), ('extra_vias', 'CAM_RX_BUFFER')])
+                         [('critical_via_no_gnd', 'CAM_MCU_RX'), ('critical_via_no_gnd', 'SD_MOSI'),
+                          ('extra_vias', 'CAM_RX_BUFFER')])               # D-R11-85 added CAM_MCU_RX's C6 via
         for e in rc.ALLOWLIST_R11:
-            self.assertTrue(e[4].startswith('D-R11-61') and len(e[4]) > 100, e[:4])
+            self.assertTrue(e[4].startswith(('D-R11-61', 'D-R11-85')) and len(e[4]) > 100, e[:4])
         for e in rc.ALLOWLIST_R11:                                  # every measured category quotes its figures
             if e[0] in rc.MEASURED_CATS:
                 self.assertIn(e[1], rc.ROUTE_FIGURES_R11)
@@ -1286,7 +1287,7 @@ class R11SixLayer(unittest.TestCase):
         d = dict(cat='extra_vias', net='CAM_RX_BUFFER', cls='uart', layer='net', x=31.6, y=1.57, len_mm=19.2, vias=4)
         failures, allowed, stale = rc.evaluate([d])
         self.assertEqual((failures, len(allowed)), ([], 1))
-        self.assertEqual([e[1] for e in stale], ['SD_MOSI'])        # the no-GND entry matched nothing: stale
+        self.assertEqual(sorted(e[1] for e in stale), ['CAM_MCU_RX', 'SD_MOSI'])   # the no-GND entries matched nothing: stale
         self.assertEqual(rc.measured_check(allowed), [])
         moved = dict(d, len_mm=18.0, vias=3)                         # a redrawn route: the entry is out of date
         _, allowed, _ = rc.evaluate([moved])

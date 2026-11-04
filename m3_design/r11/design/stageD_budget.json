@@ -1,8 +1,8 @@
 {
-  "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+  "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
   "dc_solves": {
     "BAT_IN_J1_to_Q120": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 28578,
       "cg_iterations": 1654,
       "grid_mm": 0.1,
@@ -18,7 +18,7 @@
       ]
     },
     "BAT_IN_J1_to_U9": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 28578,
       "cg_iterations": 1677,
       "grid_mm": 0.1,
@@ -34,7 +34,7 @@
       ]
     },
     "GND_Q124_to_J1": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 75113,
       "cg_iterations": 1663,
       "grid_mm": 0.1,
@@ -50,7 +50,7 @@
       ]
     },
     "PORT_4V8_U401_to_J410": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 34606,
       "cg_iterations": 1957,
       "grid_mm": 0.1,
@@ -66,7 +66,7 @@
       ]
     },
     "PORT_4V8_U401_to_J420": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 34606,
       "cg_iterations": 1953,
       "grid_mm": 0.1,
@@ -82,7 +82,7 @@
       ]
     },
     "PORT_4V8_U401_to_J440": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 34606,
       "cg_iterations": 1926,
       "grid_mm": 0.1,
@@ -98,7 +98,7 @@
       ]
     },
     "PORT_5V3_L400_to_U401": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 18642,
       "cg_iterations": 1350,
       "grid_mm": 0.1,
@@ -114,7 +114,7 @@
       ]
     },
     "PORT_5V3_L400_to_U402": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 18642,
       "cg_iterations": 1329,
       "grid_mm": 0.1,
@@ -130,7 +130,7 @@
       ]
     },
     "RAW_PROTECTED_U9_to_U11": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 50761,
       "cg_iterations": 2435,
       "grid_mm": 0.1,
@@ -146,7 +146,7 @@
       ]
     },
     "RAW_PROTECTED_U9_to_U400": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 50761,
       "cg_iterations": 2391,
       "grid_mm": 0.1,
@@ -162,7 +162,7 @@
       ]
     },
     "USB_LIMITED_U10_to_U11": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 1497,
       "cg_iterations": 530,
       "grid_mm": 0.1,
@@ -178,7 +178,7 @@
       ]
     },
     "VLOGIC_U11_to_U2": {
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "cells": 3108,
       "cg_iterations": 596,
       "grid_mm": 0.1,
@@ -561,7 +561,7 @@
       },
       "Q124_hot_R_inference_ohm": 0.008235999999999999,
       "R134_hot_max_ohm": 2.02909,
-      "board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+      "board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
       "copper_20C_by_net_ohm": {
         "ACT_FET_S": 0.006344967874291371,
         "BAT_IN": 0.0038168789085799115,
@@ -1461,7 +1461,7 @@
       ]
     }
   },
-  "source_board_sha256": "5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63",
+  "source_board_sha256": "3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5",
   "stackup": {
     "B.Cu": {
       "depth_mm": 1.5209000000000001,

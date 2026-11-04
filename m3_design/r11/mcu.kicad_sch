@@ -4204,9 +4204,6 @@
 		(at 119.38 179.07)
 		(uuid 5cb26fcd-de6e-5a8c-ab56-732a3114b3fc))
 	(no_connect
-		(at 63.5 163.83)
-		(uuid 5a48ee28-6f18-54f9-ab66-fc9b38253a5d))
-	(no_connect
 		(at 63.5 166.37)
 		(uuid f958b8e9-9fcc-54c2-ab9c-6bb1df92b823))
 	(no_connect
@@ -4421,38 +4418,12 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid b6ece243-0a73-506a-a9b9-70b63c83bb56))
-	(wire
-		(pts
-			(xy 63.5 72.39)
-			(xy 58.42 72.39))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 7700a0af-ef87-5299-97e4-5da80d6aac0b))
-	(global_label "IMU_CS"
-		(shape passive)
-		(at 58.42 72.39 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid a7f589c4-1a78-545e-90c9-2b7ba9c0f307))
-	(wire
-		(pts
-			(xy 119.38 85.09)
-			(xy 124.46 85.09))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 34af0b49-741a-5eab-86f5-d494247d93fb))
-	(global_label "SERVO3_MCU"
-		(shape passive)
-		(at 124.46 85.09 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid f0848bd8-ac97-5ac4-89ba-a3fbdcffc3dc))
+	(no_connect
+		(at 63.5 72.39)
+		(uuid ad23cb7f-9b33-5b8f-9bdb-74fcb5daedfe))
+	(no_connect
+		(at 119.38 85.09)
+		(uuid fbb8c621-f695-5397-9b9d-7da7c2ba16d3))
 	(wire
 		(pts
 			(xy 119.38 87.63)
@@ -4461,7 +4432,7 @@
 			(width 0)
 			(type default))
 		(uuid 5473bbdb-e29d-5f06-ab84-8791a8c3bbdb))
-	(global_label "SERVO4_MCU"
+	(global_label "SERVO3_MCU"
 		(shape passive)
 		(at 124.46 87.63 180)
 		(effects
@@ -4469,9 +4440,22 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 67ddf1f7-465d-5ac7-bab8-8692e3d50db6))
-	(no_connect
-		(at 119.38 90.17)
-		(uuid 23b22607-0547-581e-ad1b-f5bb593ff40c))
+	(wire
+		(pts
+			(xy 119.38 90.17)
+			(xy 124.46 90.17))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1cb599fd-7511-5a85-a46b-9997cadb629a))
+	(global_label "SERVO4_MCU"
+		(shape passive)
+		(at 124.46 90.17 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 047273f7-5cf2-56c7-a261-d1f8bf882530))
 	(no_connect
 		(at 119.38 92.71)
 		(uuid 0a88d091-4b3f-5efc-83e0-3b2e4b4b237a))
@@ -4631,9 +4615,38 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 99fae504-baba-5657-9e6d-8a6eec614fbb))
-	(no_connect
-		(at 119.38 184.15)
-		(uuid 8abba072-59ba-5649-95ce-ba6fad985f17))
+	(wire
+		(pts
+			(xy 63.5 163.83)
+			(xy 58.42 163.83))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 2ae8d1b1-fbc6-5293-8dcd-898c85d90d3c))
+	(global_label "IMU_INT1"
+		(shape passive)
+		(at 58.42 163.83 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 94110be5-e04b-5301-9935-adc7a7b1236e))
+	(wire
+		(pts
+			(xy 119.38 184.15)
+			(xy 124.46 184.15))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 48802d86-f345-5c6a-95f2-82f81d76de32))
+	(global_label "CAM_MCU_TX"
+		(shape passive)
+		(at 124.46 184.15 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 2aaefa39-c2c0-5e2c-9313-d244b4c22dba))
 	(wire
 		(pts
 			(xy 119.38 186.69)
@@ -4642,7 +4655,7 @@
 			(width 0)
 			(type default))
 		(uuid f324d0fa-30f9-5d26-ac81-fb2f9fccef93))
-	(global_label "IMU_INT1"
+	(global_label "CAM_MCU_RX"
 		(shape passive)
 		(at 124.46 186.69 180)
 		(effects
@@ -4685,22 +4698,9 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 806f15b5-8c58-5beb-a61b-dff977d4195f))
-	(wire
-		(pts
-			(xy 63.5 184.15)
-			(xy 58.42 184.15))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 1dc79ca0-8bfb-50d1-ab4b-02fdc2439be3))
-	(global_label "CAM_MCU_RX"
-		(shape passive)
-		(at 58.42 184.15 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 64d188ae-6424-5dce-a310-feb4a421f285))
+	(no_connect
+		(at 63.5 184.15)
+		(uuid 0099bb81-ea2d-5a24-9616-5c74577af394))
 	(wire
 		(pts
 			(xy 63.5 186.69)
@@ -4709,7 +4709,7 @@
 			(width 0)
 			(type default))
 		(uuid dfb17e65-72f2-5c24-b5e2-9267c44105ca))
-	(global_label "CAM_MCU_TX"
+	(global_label "IMU_CS"
 		(shape passive)
 		(at 58.42 186.69 0)
 		(effects

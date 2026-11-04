@@ -202,6 +202,8 @@ ring) before the pours; the rule areas keep the pours out (Inference until poure
 
 ## D-R11-23 PE4's gate-net spacing at the TFBGA (owner deviation; corrected in stage C2b)
 
+**Scope (D-R11-85):** this exception covers the 3V3 balls B2 / D2 only; PE4's other neighbours are NC or GND since D-R11-85 (B3 / PE3 carried IMU_CS from D-R11-49 to D-R11-85).
+
 What the package forces: ball C3 (PE4, PYRO1_GATE_N) is 0.731 mm edge to edge from the 3V3 balls B2 and D2 (0.8 mm pitch,
 0.40 mm lands, diagonal neighbours: Calculation on DS12110 Rev 8's TFBGA-100 pitch and stage A's land). What the routing
 forces on this board (Inference from the copper, not a package fact): C3's two east interstitial sites (22.4, 25.6) /
@@ -275,6 +277,8 @@ routed board: J121's barrels have no foreign inner copper within 1.0 mm (nearest
 **Why:** a 2.5 mm ring on four inner layers only brought foreign copper nearer to PYRO1_OUT / PYRO1_IGN.
 
 ## D-R11-29 Second barrels on single-via taps (O-C2-5)
+
+**Superseded in part** by D-R11-45, D-R11-48 and D-R11-58: `single_open_exceptions` is no longer empty (the recorded single-via entries are there).
 
 Q120's and Q121's ACT_GATE islands each get a second barrel joined to the first on F.Cu and B.Cu ((14.6, 15.1), (13.95,
 21.65)), each with its S-8 keep-out (the second Q121 barrel 1.100 mm from In3 I2C1_SDA, Measured, against 1.0 mm); U10.2,
@@ -396,6 +400,8 @@ pins (USART3; K-loader, stageC1b.md O-C1b-2).
 
 ## D-R11-42 BUZZ_DRV moves from PC14 (A1) to PB15 (G10) — firmware binding item
 
+**Superseded** by D-R11-49: BUZZ_DRV is on PE8 (ball J5); PB15 is NC.
+
 PB15 is a general-purpose I/O (DS12110 Rev 8 Table 9 p. 75); a push-pull output needs no alternate function, and it is not
 limited to PC14's 3 mA / 2 MHz RTC-domain drive (Inference: R162 1 kOhm keeps the gate current as R10 computed). A1 is
 NC. **Why:** R162 / Q123 lie south-east (44.4, 39.0); from the north-west corner ball the line had to cross the whole
@@ -446,6 +452,8 @@ over the In2 3V3 strip north-west of U4. R89.2 taps BAT_FAULT_N's In3 run by a v
 reaches R11.2's 3V3 by an In3 hop. **Why:** R89.1 needs 3V3, and the BAT_IN region has none.
 
 ## D-R11-48 PA4's south via stays a single point
+
+**Superseded in part** by D-R11-49: BUZZ_DRV is on PE8, not PB15 (the PA4 single point stands).
 
 PA4's In3-to-B.Cu via (14.65, 39.90) has no second-barrel site: a trial at (16.05, 38.50) shorted LOGIC_ILIM's B.Cu run
 and C85.2 (DRC, Measured), and the via's own surroundings (I2C vias 0.57 mm away, the 3V3 via, R86.1) leave none
@@ -828,6 +836,8 @@ R11). The 100 mA AUX allowance rests on that Inference until a first-article the
 
 ## D-R11-81 IMU_INT1 to PD6 (ball C6, EXTI6) (closes D-R11-77)
 
+**Superseded** by D-R11-85 (IMU_INT1 is on PD3, ball C7, EXTI3; PD6 carries CAM_MCU_RX) and, for PC2_C, by D-R11-86. **Sources corrected (D-R11-87):** DS12110 Rev 8 gives PC2_C as a TT_a pad (Table 9 p. 67) with a 4.0 V absolute maximum (Table 119 p. 211) and 0 mA injection (Table 156 p. 244), so the R105-open fault broke the limit (fixed by D-R11-86); the SYSCFG_EXTICR field layout is checked against ST's CMSIS header stm32h743xx.h (cmsis-device-h7 commit 8f922cdc); RM0433 is still unread (Inference). The text below is the record of this decision as made.
+
 Interrupt nets on R11 (R10 firmware obligation 5 and rule 7): LOGIC_SOURCE_ST PA4 (line 4), BAT_FAULT_N PA5 (5),
 VBUS_SENSE PC8 (8), USB_FAULT_N PD10 (10), CAM_FAULT_N PC13 (13) and IMU_INT1, which D-R11-49 put on PD5 (line 5, shared
 with PA5). IMU_INT1 moves to PD6 (ball C6, DS12110 Rev 8 Table 9 p. 83, a general-purpose I/O, not a ROM-loader pin per
@@ -884,4 +894,85 @@ Board `5f1a7e1dfcae95a3ebe06801cc74dc366aa83f477b416e25e72649f4365d2b63` (46 × 
 `m3_design/r11_build.sh` from the final tree with the same SHA-256 (Measured); `r11_legends.tsv` refrozen (aid run twice, byte-identical).
 The board and `m3_design/r11/fab/` are staged (closes D-R11-71) and `tools/check.sh` runs the R11 section on them.
 Cost and stock re-run (live JLC, 5 boards, 2026-11-03T23:01Z): $79.79 per board against the $84.41 cap; stock short
-on U9, U4 and U2 as D-R11-69. stageD2.md has every figure.
+on U9, U4 and U2, the same lines as D-R11-69 but not the same figures: U2 C780769 was stock 86 / orderable −360 at
+2026-11-03T20:47:10Z (D-R11-69) and 66 / −2866 at 2026-11-03T23:01:04Z (this run). stageD2.md has every figure.
+
+## D-R11-85 Gate-drive ball neighbours: B3, B4 and G2 freed; IMU_CS, camera UART, IMU_INT1, servos 3 / 4 re-pinned
+
+**Finding (stage E docs lane):** ball B3 (PE3, IMU_CS, push-pull, idle high since D-R11-49) is 0.400 mm land to land from
+C3 (PE4, the fire command) and 0.550 mm from PE4's track; a C3-B3 bridge is R10's rule-3 driver fight (R10 kept PE3 an
+undriven sentinel). Audit of all eight balls round C3 and round F2 (PC1, bus enable), before → after (Measured on the
+pin table and board; check_r11 K-neighbours evidence):
+
+| Guard | Ball | Before | After | Why it may stay |
+|---|---|---|---|---|
+| C3 PE4 | B2, D2 | 3V3 | 3V3 | D-R11-23 owner deviation (0.731 mm diagonal; the supply balls cannot move) |
+| C3 PE4 | B3 | IMU_CS (push-pull high) | **NC** | re-pinned |
+| C3 PE4 | B4 | CAM_MCU_RX (U12 push-pull high) | **NC** | re-pinned |
+| C3 PE4 | C2 | GND | GND | — |
+| C3 PE4 | C4, D3, D4 | NC | NC | — |
+| F2 PC1 | G2 | SERVO3_MCU (TIM PWM push-pull) | **NC** | re-pinned |
+| F2 PC1 | G1 | GND | GND | — |
+| F2 PC1 | E3, F3 | NC | NC | — |
+| F2 PC1 | G3 | LOGIC_SOURCE_ST | same | U11 ST open drain, R91 10k pull-up, no push-pull high; low whenever the battery path is selected (the only state with pyro-bus energy); on USB the 10k against R122 + R123 (3k) gives ACT_EN ≤ 0.51 V (Calculation) |
+| F2 PC1 | E1 | NRST | same | fixed ball; open drain with the internal ≥ 30k pull-up only (Inference), ACT_EN ≤ 0.20 V (Calculation); held low by PC1 it resets the MCU (all outputs off) |
+| F2 PC1 | F1 | PYRO1_CONT | same | fixed ball (R10's LQFP neighbour of PC1 too); passive divider ≤ pack / 11.2 = 0.75 V through about 0.9k, ACT_EN ≤ 0.38 V (Calculation / Inference) |
+| F2 PC1 | E2 | CAM_5V_SENSE | same | passive divider (D-R11-86), ≤ 0.94 V on one resistor fault through about 0.9k, ACT_EN ≤ 0.40 V (Calculation / Inference) |
+
+The four F2 nets that stay are not "idle low" in the strict sense except LOGIC_SOURCE_ST; each has no push-pull high
+state and keeps Q122's gate below the AO3400A's 0.65 V minimum threshold (Inference: AOS AO3400A datasheet, not re-read
+here) by the figures above. They are named in check_r11.NEIGHBOUR_INERT with these arguments, for owner acceptance.
+**Re-pins** (DS12110 Rev 8 Table 9; AF Tables 10 / 13): IMU_CS PE3 → **PB9 (A4)**, up the old camera-TX lane x 22.8 to
+its via (21.75, 18.85); camera UART UART4 PB9 / PB8 → **USART2 AF7: TX PD5 (B6)**, In3 under row A to (21.6, 24.0) and the
+F.Cu lane x 21.6, **RX PD6 (C6)**, In3 to (23.2, 24.8) and the lane x 23.2; IMU_INT1 PD6 → **PD3 (C7, EXTI3)**, its
+D-R11-81 In3 run unchanged; SERVO3_MCU PA0 → **PA1 (H2, TIM5_CH2)** on H2's escape, SERVO4_MCU PA1 → **PA2 (J2, TIM5_CH3)**
+by one In3 diagonal through G1's old via site (G1's GND via moved to G2's old site (20.8, 28.8)); C24 turned and 0.12 mm
+south (GND pad to the HSE_OUT partner via (19.0, 27.5), C26.2 into it) and BAT_FAULT_N's In3 drop 0.1 mm east (19.6, 29.85)
+to make that diagonal. EXTI lines 3, 4, 5, 8, 10, 13, one net each (K-exti). Loader: PB9 now IMU_CS and PA2 SERVO4_MCU
+(LOADER_R11, stageC1b.md section 9). GND partners: CAM_MCU_TX's vias have (24.8, 24.0) and (20.75, 23.05); CAM_MCU_RX's
+(23.2, 24.8) gets a 0.3 / 0.15 mm DRU-floor GND via at (22.4, 24.75) (the only legal site, r11_gnd_spots; R11's via set
+gains FLOOR_VIA); its dog-bone (24.8, 26.4) has no legal GND site within 1.5 mm (r11_gnd_spots, every DRU size), so it is
+a route_check r11 allowlist entry (the third), re-audited by nognd_audit. **New rule** check_r11 K-neighbours (seeded
+tests, synthetic and real board). **Supersedes** D-R11-23's statement that only the 3V3 balls B2 / D2 neighbour PE4: B3
+(PE3) was a driven neighbour from D-R11-49 to this decision; now it is NC, and D-R11-23's exception covers B2 / D2 only.
+Updated: `r11_sch.py` R11_REPIN, `pin_table.tsv`, `r11_fanout.tsv`, `r11_escape.py`, `r11_route_core.py`,
+`r11_route_ground.py`, `r11_place.tsv`, the binding note.
+
+## D-R11-86 PC2_C single-fault protection: a four-resistor CAM_5V sense divider
+
+DS12110 Rev 8 gives PC2_C as a TT_a pad (Table 9 p. 67), 4.0 V absolute maximum (Table 119 p. 211) and 0 mA injection
+(Table 156 p. 244); with R105 open, CAM_5V (≈ 5.4 V) reached it through R104 10k. Now: **R104 5.1k + R107 5.1k in series
+(net CAM_5V_DIV between) over R105 2k ∥ R106 2k**, C94 10 nF unchanged; ratio 1k / 11.2k = 0.08929 (was 1 / 11). Single
+faults (Calculation, nominal values): R105 or R106 open → 2k / 12.2k = 0.1639 × CAM_5V; R104 or R107 shorted → 1k / 6.1k
+= 0.1639 × CAM_5V; any other open or short reads 0 V. At CAM_5V 5.6 V the pin stays ≤ 0.92 V; at U400's failure level
+(RAW_PROTECTED 9.77 V, a second fault) ≤ 1.60 V; at D8's 19.9 V clamp ≤ 3.26 V; never above 3.6 V and never above VDDA, so
+no injection (Calculation; 1 % tolerance and the TT_a leakage not included). Firmware: CAM_5V = PC2_C × 11.2; R10's camera
+thresholds are in CAM_5V volts and convert with the new ratio; a reading near 2× expected (a bottom resistor open) or near
+0 V with the camera on (a top resistor open) is a sense fault. Parts: C25905 (0402WGF5101TCE, R10's 5.1k line) and C4109
+(0402WGF2001TCE, R10's 2k line); no new BOM code. Placement: R104 F (28.1, 12.0) (0.4 mm north), **R107 F (26.25, 12.85)**
+on the run west of R104, **R106 B (16.4, 20.7)** on the sense run west of U1 (GND to R92.2), R105 and C94 unchanged. This is
+R11's only netlist change against R10 (D-R11-01): circuit.json `added_parts` / `net_changes`, generated by `r11_sch.py`
+and checked by `r11_sch_check.py` (218 parts).
+
+## D-R11-87 Record fixes from the stage E review
+
+stageC5.md lines 76 and 138: the PYRO1_GATE / _N to 3V3 minimum is 0.200 mm (PE4's lane to D2's land, D-R11-23), not
+0.386 mm (the C3 escape stub). stageC1b.md section 8.2: IMU_INT1 is PD3 / EXTI3 (D-R11-85), not PD5 / EXTI5. D-R11-84's
+stock line: the shortage set is D-R11-69's (U9, U4, U2) but the U2 figures differ (stock 86 / orderable −360 at
+2026-11-03T20:47:10Z; 66 / −2866 at 23:01:04Z). `r11_fab.sh`'s header: the Gerber zip holds 16 files. D-R11-29
+(single_open_exceptions empty) is superseded by D-R11-45 / -48 / -58 (the recorded single-via entries); D-R11-42 and
+D-R11-48's BUZZ_DRV on PB15 are superseded by D-R11-49 (BUZZ_DRV on PE8). D-R11-81's sources: DS12110 Rev 8 PC2_C TT_a,
+Table 9 p. 67, Table 119 p. 211 (4.0 V), Table 156 p. 244 (0 mA injection), as the stage E lane read them; the
+SYSCFG_EXTICR field layout is checked against ST's CMSIS header stm32h743xx.h (cmsis-device-h7 commit 8f922cdc); RM0433
+itself is still unread, so the rest stays Inference.
+
+## D-R11-88 Stage E fix pass: board, gate and package
+
+Board `3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5`, built twice by `m3_design/r11_build.sh` to the
+same hash with the legends refrozen (Measured); DRC / unconnected / parity / ERC 0, check_r11 every rule OK (K-neighbours
+added), route_check r11 0 failing / 3 allowlisted / 0 stale, `tools/test_r11_check.py` 50 tests OK (Measured). Hot-plug
+2304 / 2304 required cases pass with figures identical to D-R11-79's (Simulation / Inference); `stageD_budget.json`
+unchanged (Calculation / Inference). `FAB_NET=1 m3_design/r11_fab.sh`: 206 placed parts, BOM 75 lines, CPL 81 top + 120
+bottom; cost 2026-11-04T01:15:03Z $79.80 per board (parts $56.85 + 75 × $1.53 / 5) against the $84.41 cap; stock
+2026-11-04T01:13:45Z short on U9 C3662793 (18 / −94), U4 C51931514 (4 / −3) and U2 C780769 (56 / −2876), stock /
+orderable, the orderable field an Inference (R20-BOM-01). Record: stageD3.md.

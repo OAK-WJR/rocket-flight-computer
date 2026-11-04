@@ -9,7 +9,7 @@ ball	net	family	state	path	via_x	via_y	exit	layer	slot	target	tx	ty	note
 A1	CAM_PWR_EN	signals	routed	F	-	-	N	F	20.18	R431.1	22.17	12.4	D-R11-49: re-pinned (was NC)
 A2	CAM_FAULT_N	signals	routed	F-In3	21.2	23.6	N	In3	21.42	R432.1	23.97	12.4	D-R11-49: re-pinned (was NC)
 A3	QSPI_IO2	core	routed	F-B	22.0	23.6	E	B	24.42	U3.3	32.83	34.03	D-R11-49: re-routed
-A4	CAM_MCU_TX	signals	routed	F	-	-	N	F	22.8	U12.5	21.05	15.35	D-R11-49: re-pinned (was NC)
+A4	IMU_CS	core	routed	F	-	-	N	F	22.8	U4.12	22.5	19.54	D-R11-85: re-pinned from B3 (PE3, PE4's neighbour) to A4 (PB9), up the lane x 22.8
 A5	SERVO1_MCU	servo	routed	F-B	23.6	23.6	N	B	24.07	D121.1	23.85	6.85	D-R11-49: re-pinned (was IMU_CS)
 A6	SPI1_MISO	core	routed	F	-	-	N	F	24.4	U4.1	24.21	19.75	D-R11-49: re-routed
 A7	SPI1_SCK	core	routed	F-In3	25.2	23.6	N	In3	24.98	U4.13	23	19.54	
@@ -18,9 +18,8 @@ A9	SWCLK	core	routed	F-B	26.8	23.6	E	B	23.6	J2.4	32.9	38.965
 A10	SWDIO	core	routed	F-B	28.0	24.0	E	B	24	J2.2	31.63	38.965	
 B1	CAM_UART_OE	signals	routed	F-In3	19.9	24.0	N	In3	19.9	U12.6	21.05	14.85	D-R11-49: re-pinned (was NC)
 B2	3V3	core	routed	F-plane	20.8	24.8	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-B3	IMU_CS	core	routed	F	-	-	N	F	21.6	U4.12	22.5	19.54	D-R11-49: re-pinned (was NC)
-B4	CAM_MCU_RX	signals	routed	F	23.2	17.3	N	F	23.2	U12.4	24.15	15.35	D-R11-49: re-pinned (was NC)
 B5	QSPI_NCS	core	routed	F	23.2	25.6	E	F	32.4	U3.1	30.3	34.03	D-R11-49: routed (was open)
+B6	CAM_MCU_TX	signals	routed	F-In3	24.8	24.8	N	F	21.6	U12.5	21.05	15.35	D-R11-85: re-pinned to B6 (PD5, USART2_TX); In3 under row A to (21.6, 24.0), F.Cu lane x 21.6
 B7	LED_YEL	status	routed	F	-	-	N	F	25.6	R33.1	25.57	22.4	D-R11-49: re-pinned (was NC)
 B8	SD_MISO	sd	routed	F	-	-	N	F	26.42	R462.1	29.13	15.8	
 B9	SD_SCK	sd	routed	F	29.5	23.15	E	F	24.03	J430.5	36.305	13.05	
@@ -29,14 +28,15 @@ C1	HSE_IN	core	routed	F-B	20.0	25.6	W	B	26	Y1.1	15.5	25.15
 C2	GND	core	routed	F-plane	20.8	25.6	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 C3	PYRO1_GATE_N	pyro	routed	F	-	-	W	F	26.35	R126.1	11.83	28	
 C5	SPI1_MOSI	core	routed	F	24.0	18.7	N	F	24	U4.14	23.5	19.54	
-C6	IMU_INT1	core	routed	F-In3	24.8	25.6	N	In3	25.6	U4.4	24.21	21.25	D-R11-81: re-pinned from B6 (PD5, EXTI5 shared with PA5) to C6 (PD6, EXTI6)
+C6	CAM_MCU_RX	signals	routed	F-In3	24.8	26.4	N	F	23.2	U12.4	24.15	15.35	D-R11-85: re-pinned from B4 (PB8, PE4's neighbour) to C6 (PD6, USART2_RX); In3 to (23.2, 24.8), F.Cu lane x 23.2
+C7	IMU_INT1	core	routed	F-In3	24.8	25.6	N	In3	25.6	U4.4	24.21	21.25	D-R11-85: re-pinned from C6 (PD6) to C7 (PD3, EXTI3)
 C8	SD_MOSI	sd	routed	F	-	-	N	F	27.25	R461.1	29.13	16.7	D-R11-63: F.Cu north between A9 / A10 (was F-In3 via 27.2, 25.6)
 C10	USB_DM	usb	routed	F	-	-	E	F	25.6	J3.A7	39.12	29.75	
 D1	HSE_OUT	core	routed	F-B	20.0	27.2	W	B	26.85	Y1.3	17.7	26.85	
 D2	3V3	core	routed	F-plane	20.8	27.2	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 D5	BOOT0	core	routed	F-In3	23.2	27.2	S	In3	27.27	R5.1	27.97	33.9	D-R11-49: re-routed
 D8	SD_CS	sd	routed	F-In3	27.2	27.2	E	In3	25.78	R460.1	29.13	17.6	
-E1	NRST	core	routed	F-B	19.55	27.6	W	B	27.77	C24.1	19	28.48	
+E1	NRST	core	routed	F-B	19.55	27.6	W	B	29.06	C24.1	19	29.44	D-R11-85: C24 turned and 0.12 mm south
 E2	CAM_5V_SENSE	signals	routed	F-In3	21.6	28.0	N	In3	19.45	R105.1	19.6	9.03	D-R11-49: re-pinned (was NC)
 E4	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 E5	GND	core	routed	F-plane	22.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
@@ -52,17 +52,17 @@ F7	3V3	core	routed	F-plane	24.8	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 p
 F8	VCAP1	core	routed	F-plane	26.4	28.0	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
 F9	VBUS_SENSE	usb	routed	F-B	27.2	28.0	S	B	27.2	R110.1	30.37	36.8	
 F10	AUX_TX_MCU	ports	routed	F	29.4	27.95	E	F	27.95	R471.1	34.225	44.83	
-G1	GND	core	routed	F-plane	20.0	29.6	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-G2	SERVO3_MCU	servo	routed	F-In3	20.8	28.8	W	In3	25.98	R152.1	19.2	3.825	D-R11-49: re-pinned (was SERVO1_MCU)
+G1	GND	core	routed	F-plane	20.8	28.8	P	-	-	-	-	-	rail: dog-bone via to In1-In4 GND (D-R11-85: G2's old SERVO3 via site)
 G3	LOGIC_SOURCE_ST	power	routed	F-In3	21.6	28.8	S	In3	21.2	U11.9	16.55	36.45	
 G5	QSPI_CLK	core	routed	F	-	-	E	F	28.8	U3.6	32.83	26.97	
 G9	QSPI_IO0	core	routed	F	-	-	E	F	29.6	U3.5	34.1	26.97	
 H1	3V3A	core	routed	F-plane	20.0	30.4	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
-H2	SERVO4_MCU	servo	routed	F-In3	20.8	29.6	W	In3	28.78	R153.1	17.4	3.825	D-R11-49: re-pinned (was SERVO2_MCU)
-H3	BAT_FAULT_N	power	routed	F-In3	21.6	29.6	W	In3	29.73	U9.4	12.225	11.475	
+H2	SERVO3_MCU	servo	routed	F-In3	20.8	29.6	W	In3	25.98	R152.1	19.2	3.825	D-R11-85: re-pinned from G2 (PA0, PC1's neighbour) to H2 (PA1)
+H3	BAT_FAULT_N	power	routed	F-In3	21.6	29.6	W	In3	29.63	U9.4	12.225	11.475	D-R11-85: In3 drop 0.1 mm east, (19.6, 29.85)	
 H4	ARM1_SENSE	pyro	routed	F-In3	22.4	30.4	W	In3	30.78	C129.1	9.45	22.82	
 H9	USB_FAULT_N	usb	routed	F-In3	24.8	29.6	E	In3	26.93	U10.4	35.85	26.4	D-R11-49: re-pinned (was NC)
 J1	GND	core	routed	F-plane	20.0	31.2	P	-	-	-	-	-	rail: dog-bone via to its In2 plane / In1-In4 GND / bottom capacitor
+J2	SERVO4_MCU	servo	routed	F-In3	20.8	30.4	W	In3	28.98	R153.1	17.4	3.825	D-R11-85: re-pinned from H2 to J2 (PA2), In3 through G1's old via site
 J3	VLOGIC_SENSE	power	routed	F-B	21.6	32.6	S	B	22.52	R60.2	26.03	35.6	
 J5	BUZZ_DRV	status	routed	F	23.9	32.75	S	F	23.77	R162.1	44.4	39.03	D-R11-49: re-pinned (was CAM_MCU_TX)
 J7	I2C1_SCL	core	routed	F-In3	24.8	31.2	S	In3	20.8	R12.1	13	39.43	

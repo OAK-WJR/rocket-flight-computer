@@ -387,6 +387,12 @@ ALLOWLIST_R11 = [
      'C400 / C404 pads, the SD_MOSI / SD_CS runs at y 16.75 / 17.45) or B.Cu copper (J430.10, SD_SCK / SD_CS runs). '
      'Nearest GND via 2.242 mm. The junction cannot move: a 3-via alternative tree drawn by the gate lane put it at '
      '(29.6, 17.0) and found no GND site there either (2.343 mm)'),
+    ('critical_via_no_gnd', 'CAM_MCU_RX', 'via', (24.8, 26.4),
+     'D-R11-85: the dog-bone of ball C6 (PD6, USART2_RX), the camera RX line re-pinned off PE4\'s neighbour B4. '
+     'r11_gnd_spots on a 0.025 mm grid within 1.5 mm (diameter / drill 0.45 / 0.25, 0.4 / 0.2 and the DRU floor '
+     '0.3 / 0.15, 0.25 / 0.15 mm) finds no legal GND via site: the interstitials round it are the ball field\'s '
+     '(IMU_INT1 (24.8, 25.6), VCAP2 (24.8, 27.2)) and B.Cu holds C20 (VCAP2) and the C14 / C16 3V3 strap at x 25.45. '
+     'Nearest GND via (23.2, 26.4), 1.6 mm. C6\'s other dog-bone sites carry SPI1_MOSI (F.Cu), C20 and IMU_INT1'),
     ('extra_vias', 'CAM_RX_BUFFER', 'net', (31.6, 1.57),
      'D-R11-61: U12.1 and R100.2 are both B.Cu pads (need 0, allowed 2). A grid router (0.05 mm, every other net fixed, '
      'clearances relaxed by 0.035 mm, 0.4 / 0.2 and 0.25 / 0.15 mm vias, F / In3 / B) finds 2 vias only with an In3 run '

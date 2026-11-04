@@ -203,13 +203,18 @@ EXTI line 5, and R10's rule 7 rate-limits an EXTI5 interrupt on PA5. SYSCFG_EXTI
 is the one that wants an interrupt), or a re-map in a later layout pass. Other R11 binding facts: camera UART4 PB9 /
 PB8 AF8, servos on TIM4_CH2 / TIM2_CH1 / TIM5_CH1 / TIM5_CH2, CAM_5V_SENSE on PC2_C (ADC3_INP0; its single-fault
 voltage limit must be re-read for the _C analog pad), U5 on I2C2 PB10 / PB11, buzzer PE8.
+**Superseded (D-R11-81, -85, -86, -87):** IMU_INT1 is on PD3 (EXTI3); the camera UART is USART2 on PD5 / PD6; servos 3 /
+4 are TIM5_CH2 / CH3 on PA1 / PA2; PC2_C is a TT_a pad, 4.0 V absolute maximum (DS12110 Rev 8 Table 119 p. 211), 0 mA
+injection (Table 156 p. 244), protected by the four-resistor divider of D-R11-86; the EXTICR layout is checked against
+ST's CMSIS stm32h743xx.h (cmsis-device-h7 8f922cdc), RM0433 still unread.
 
 ## 9. What fails a limit (design issues reported, not fixed)
 
 1. **Hot-plug falling slew at U9 IN:** 576 / 2304 required cases (all 0.1 µH harness corners), up to 15.04 V/µs
    against 10 V/µs (Simulation / Inference). R10 passed (8.995).
 2. **U401 thermal floor not established:** no thermal via in U401's pad (R10's GAP-3 basis had two) (Inference).
-3. **EXTI line 5 shared** by BAT_FAULT_N (PA5) and IMU_INT1 (PD5) (Inference on RM0433).
+3. **EXTI line 5 shared** by BAT_FAULT_N (PA5) and IMU_INT1 (PD5) (Inference on RM0433). Closed by D-R11-81 / -85
+   (IMU_INT1 on PD3, EXTI3).
 
 Everything else re-run here passes its R10 limit: fire floor 1.125 A at four stalls (1.278004 A), watchdog guard
 34.853 < 36 ms, GND return 2.47 mΩ < 5 mΩ allowance, EN / chatter and hold-up identical, K-power IPC widths.

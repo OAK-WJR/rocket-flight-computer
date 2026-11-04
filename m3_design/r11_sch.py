@@ -91,36 +91,39 @@ NC_MODE = 'NC (firmware: analog, never driven)'
 R11_REPIN = {
     # D-R11-49 (escape-first, stageC1b.md section 8): every movable function re-assigned by board side
     # aft (north) row A / B: camera UART on UART4 (PB9 / PB8, F.Cu lanes x 22.8 / 23.2), servos 1 / 2 on TIM4 / TIM2
-    '96': ('CAM_MCU_TX', 'AF8 UART4_TX',
-           'R11 D-R11-49: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB9 AF8 UART4_TX); was PE8 '
-           'UART7_TX (ball J5); a ROM-loader pin (I2C1_SDA), allowance case in stageC1b.md section 8'),
-    '95': ('CAM_MCU_RX', 'AF8 UART4_RX',
-           'R11 D-R11-49: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB8 AF8 UART4_RX); was PE7 '
-           'UART7_RX (ball H5)'),
+    # D-R11-85: PE4's (C3) and PC1's (F2) ball neighbours carry no net that can raise the fire or bus-enable gate when
+    # bridged: B3 (PE3) and B4 (PB8) by C3, and G2 (PA0) by F2, are NC; IMU_CS, the camera UART and servos 3 / 4 move
+    '2': ('NC', NC_MODE, 'R11 D-R11-85: PE3 (ball B3, PE4\'s neighbour) freed: IMU_CS moved to PB9 (ball A4)'),
+    '95': ('NC', NC_MODE, 'R11 D-R11-85: PB8 (ball B4, PE4\'s neighbour) freed: CAM_MCU_RX moved to PD6 (ball C6)'),
+    '96': ('IMU_CS', 'GPIO output push-pull; initialise high before output mode',
+           'R11 D-R11-85: DS12110 Rev 8 Table 9 p. 87 (PB9, a general-purpose I/O); was PE3 (ball B3, PE4\'s '
+           'neighbour) and PB7 (R10); a ROM-loader pin (I2C1_SDA), allowance case in stageC1b.md section 9'),
+    '86': ('CAM_MCU_TX', 'AF7 USART2_TX',
+           'R11 D-R11-85: DS12110 Rev 8 Table 13 p. 93 (Port D alternate functions: PD5 AF7 USART2_TX); was PB9 '
+           'UART4_TX (ball A4) and PE8 UART7_TX (R10)'),
+    '87': ('CAM_MCU_RX', 'AF7 USART2_RX',
+           'R11 D-R11-85: DS12110 Rev 8 Table 13 p. 93 (Port D alternate functions: PD6 AF7 USART2_RX); was PB8 '
+           'UART4_RX (ball B4, PE4\'s neighbour) and PE7 UART7_RX (R10)'),
+    '84': ('IMU_INT1', 'GPIO in, internal pull-down, EXTI3 data-ready interrupt (U4 INT1 push-pull, active high)',
+           'R11 D-R11-85: DS12110 Rev 8 Table 9 p. 83 (PD3, a general-purpose I/O; EXTI line 3, used by no other '
+           'interrupt net); was PD6 (ball C6, D-R11-81), PD5 (ball B6, D-R11-49) and PE1 (ball C4, R10)'),
+    '22': ('NC', NC_MODE, 'R11 D-R11-85: PA0 (ball G2, PC1\'s neighbour) freed: SERVO3_MCU moved to PA1 (ball H2)'),
+    '23': ('SERVO3_MCU', 'AF2 TIM5_CH2 (servo PWM, 50-400 Hz)',
+           'R11 D-R11-85: DS12110 Rev 8 Table 10 p. 89 (Port A alternate functions: PA1 AF2 TIM5_CH2); was PA0 '
+           '(ball G2, PC1\'s neighbour, D-R11-49) and PA2 (R10)'),
+    '24': ('SERVO4_MCU', 'AF2 TIM5_CH3 (servo PWM, 50-400 Hz)',
+           'R11 D-R11-85: DS12110 Rev 8 Table 10 p. 89 (Port A alternate functions: PA2 AF2 TIM5_CH3); was PA1 '
+           '(ball H2, D-R11-49) and PA3 (R10); a ROM-loader pin (USART2_TX), allowance case in stageC1b.md section 9'),
     '93': ('SERVO1_MCU', 'AF2 TIM4_CH2 (servo PWM, 50-400 Hz)',
            'R11 D-R11-49: DS12110 Rev 8 Table 11 p. 91 (Port B alternate functions: PB7 AF2 TIM4_CH2); was PA0 '
            '(ball G2); R10 IMU_CS moved to PE3 (ball B3)'),
     '77': ('SERVO2_MCU', 'AF1 TIM2_CH1 (servo PWM, 50-400 Hz)',
            'R11 D-R11-49: DS12110 Rev 8 Table 10 p. 91 (Port A alternate functions: PA15 AF1 TIM2_CH1); was PA1 '
            '(ball H2); a ROM-loader pin (SPI3_NSS), allowance case in stageC1b.md section 8'),
-    '2': ('IMU_CS', 'GPIO output push-pull; initialise high before output mode',
-          'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 64 (PE3, a general-purpose I/O); was PB7 (ball A5)'),
     # D-R11-81: IMU_INT1 on PD6 (ball C6, EXTI line 6), not PD5 (B6, EXTI line 5): SYSCFG_EXTICR selects one port per
     # EXTI line (RM0433), and line 5 is BAT_FAULT_N's (PA5, R10 firmware rule 7)
-    '87': ('IMU_INT1', 'GPIO in, internal pull-down, EXTI6 data-ready interrupt (U4 INT1 push-pull, active high)',
-           'R11 D-R11-81: DS12110 Rev 8 Table 9 p. 83 (PD6, a general-purpose I/O; EXTI line 6, used by no other '
-           'interrupt net); was PD5 (ball B6, D-R11-49, EXTI line 5 shared with BAT_FAULT_N on PA5) and PE1 (ball C4, '
-           'R10); R10 USB_FAULT_N moved to PD10 (ball H9)'),
-    '86': ('NC', NC_MODE, 'R11 D-R11-81: PD5 freed (IMU_INT1 moved to PD6, ball C6; R10 LED_RED moved to PB1, ball K4)'),
     '98': ('NC', NC_MODE, 'R11 D-R11-49: PE1 freed (IMU_INT1 moved to PD5, ball B6; D-R11-81: then to PD6, ball C6)'),
-    '24': ('NC', NC_MODE, 'R11 D-R11-49: PA2 freed (SERVO3_MCU moved to PA0, ball G2); a ROM-loader pin left unconnected'),
     '25': ('NC', NC_MODE, 'R11 D-R11-49: PA3 freed (SERVO4_MCU moved to PA1, ball H2); a ROM-loader pin left unconnected'),
-    '22': ('SERVO3_MCU', 'AF2 TIM5_CH1 (servo PWM, 50-400 Hz)',
-           'R11 D-R11-49: DS12110 Rev 8 Table 10 p. 89 (Port A alternate functions: PA0 AF2 TIM5_CH1); was PA2 '
-           '(ball J2, a ROM-loader pin)'),
-    '23': ('SERVO4_MCU', 'AF2 TIM5_CH2 (servo PWM, 50-400 Hz)',
-           'R11 D-R11-49: DS12110 Rev 8 Table 10 p. 89 (Port A alternate functions: PA1 AF2 TIM5_CH2); was PA3 '
-           '(ball K2, a ROM-loader pin)'),
     '39': ('NC', NC_MODE, 'R11 D-R11-49: PE9 freed (CAM_UART_OE moved to PC15, ball B1)'),
     '38': ('BUZZ_DRV', 'GPIO out (push-pull; initialise low before output mode)',
            'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 71 (PE8, a general-purpose I/O); was PC14 (R10) and PB15 (ball '
@@ -145,11 +148,12 @@ R11_REPIN = {
           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 64 (PC13, a general-purpose I/O); was PE12 (ball J6, a ROM-loader '
           'pin)'),
     '17': ('CAM_5V_SENSE', 'ADC (ADC3_INP0, PC2_C analog pad)',
-           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 67 (PC2_C: ANA pad, ADC3_INP0) and note 6 p. 88; was PB1 '
-           '(ball K4, ADC12_INP5)'),
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 67 (PC2_C: TT_a pad, ADC3_INP0) and note 6 p. 88; was PB1 '
+           '(ball K4, ADC12_INP5); D-R11-86: absolute maximum 4.0 V (Table 119 p. 211), 0 mA injection (Table 156 '
+           'p. 244), so the divider is single-fault tolerant (R104 + R107 over R105 || R106, CAM_5V / 11.2)'),
     '57': ('USB_FAULT_N', 'GPIO in',
-           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 75 (PD10, a general-purpose I/O); was PD6 (ball C6, now IMU_INT1, '
-           'D-R11-81)'),
+           'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 75 (PD10, a general-purpose I/O); was PD6 (ball C6, now CAM_MCU_RX, '
+           'D-R11-85)'),
     '35': ('LED_RED', 'GPIO out',
            'R11 D-R11-49: DS12110 Rev 8 Table 9 p. 70 (PB1, a general-purpose I/O); was PD5 (ball B6); LED1 / R32 '
            'moved forward beside the ports; R10 CAM_5V_SENSE moved to PC2_C (ball E2)'),
@@ -404,6 +408,27 @@ def replace_symbol(text, ref, spec, nets, library, path):
     return text.replace('(uuid ' + uid(ref) + ')', '(uuid ' + old_uuid + ')')
 
 
+def added_spec(data, entry):
+    """set_symbol-form spec of a circuit.json added part (D-R11-86)."""
+    cat = data['catalog'][entry['lcsc']]
+    return {'lib': entry['lib'], 'in_bom': True, 'in_pos_files': True,
+            'props': {'Value': entry['value'], 'Footprint': cat['footprint'], 'Datasheet': cat['Datasheet'],
+                      'LCSC': entry['lcsc'], 'Manufacturer': cat['Manufacturer'],
+                      'Manufacturer Part': cat['Manufacturer Part']}}
+
+
+def add_symbol(text, ref, spec, nets, library, path, x, y):
+    """D-R11-86: draw a new symbol at (x, y) with one 5.08 mm wire and global label per pin (sch._sym), its UUID in
+    R11's namespace."""
+    assert instance(text, ref) is None, f'{ref} already on the sheet'
+    fields = {k: v for k, v in spec['props'].items() if k not in ('Value', 'Footprint') and v is not None}
+    sch.RF_PARTS = {ref: (spec['lib'], spec['props']['Value'], spec['props']['Footprint'], fields, dict(nets), 'fit')}
+    sch.FLAGS = {}
+    text = embed(text, library, spec['lib'].split(':')[1])
+    body = sch._sym(library, ref, x, y, path)
+    return sch.insert(text, body.replace('(uuid ' + sch.uid(ref) + ')', '(uuid ' + uid(ref + ':r11:add') + ')'))
+
+
 def sheet_path(name):
     text = (INPUT / 'm3.kicad_sch').read_text()
     for m in re.finditer(r'\(sheet\n', text):
@@ -471,7 +496,11 @@ NOTES = {
         'R8: PE8/pin38 UART7_TX': ('R8: PE8 (ball J5) UART7_TX and PE7 (ball H5) UART7_RX use AF7, no flow control (never '
                                    'AF7 on PE9 or PE10); off the ROM loader\'s USART3. R10: PE9 (ball K5) CAM_UART_OE '
                                    'drives OE as a GPIO; R102 10k holds it low (R19-MCU-03).')},
-    'diagnostics.kicad_sch': {'CAM_5V_SENSE = CAM_5V x 1k/11k': None},
+    'diagnostics.kicad_sch': {'CAM_5V_SENSE = CAM_5V x 1k/11k': ('R11 D-R11-86: CAM_5V_SENSE = CAM_5V x 1k / 11.2k: '
+        'R104 + R107 (5.1k + 5.1k) in series over R105 || R106 (2k || 2k), C94 10 nF; one open or shorted resistor '
+        'leaves PC2_C (TT_a, 4.0 V absolute maximum, DS12110 Rev 8 Table 119 p. 211) at most 0.94 V at 5.6 V.\\n'
+        'Nominal 5.456 V reads 0.487 V; a failed U400 (RAW_PROTECTED, 9.77 V) reads 0.87 V (1.60 V with one resistor '
+        'fault); D8\'s 19.9 V clamp 1.78 V (3.26 V). Calculation, 1 % parts not included.')},
     'usb_sense.kicad_sch': {'PC8 / U1 pin65 (R8)': ('PC8 / U1 ball F9 (R8) is a regular FT_h GPIO input (EXTI8). PA9 '
                                                      'remains NC. D+/D- are unchanged.')},
 }
@@ -528,6 +557,15 @@ def transform(text, name, library, data, nets):
             text = rewire(text, 'U1', PDR_ON, PDR_ON_NET, library)
             for pin, (net, _, _) in sorted(R11_REPIN.items()):
                 text = repin(text, BALL[pin], None if net == 'NC' else net, library)
+    # D-R11-86: R11's only netlist additions (circuit.json added_parts / net_changes): new symbols with their nets, and
+    # the R10 pins whose net changes
+    for ref, pins in sorted(data.get('net_changes', {}).items()):
+        if instance(text, ref) is not None:
+            for pin, net in sorted(pins.items()):
+                text = rewire(text, ref, pin, net, library)
+    for ref, entry in sorted(data.get('added_parts', {}).items()):
+        if entry['sheet'] == name:
+            text = add_symbol(text, ref, added_spec(data, entry), entry['nets'], library, path, *entry['at'])
     text = notes(text, name)
     for prefix in ('M3:',):
         for sym in sorted(set(re.findall(r'\t\t\(symbol "M3:([^"]+)"\n', text))):

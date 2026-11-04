@@ -1163,7 +1163,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 104.14 201.93 0)
 			(effects
 				(font
@@ -1183,7 +1183,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
 			(at 101.60 200.66 0)
 			(hide yes)
 			(effects
@@ -1197,7 +1197,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
+		(property "Manufacturer Part" "0402WGF5101TCE"
 			(at 101.60 200.66 0)
 			(hide yes)
 			(effects
@@ -1225,22 +1225,6 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 66704d59-b67b-4c73-a230-699fdd5c0830))
-	(wire
-		(pts
-			(xy 101.6 204.47)
-			(xy 101.6 209.55))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 534b453e-956a-4389-9593-83da8c39f028))
-	(global_label "CAM_5V_SENSE"
-		(shape passive)
-		(at 101.6 209.55 270)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 95c822b5-62dc-463c-94df-67b649593e60))
 	(symbol
 		(lib_id "M3:R")
 		(at 121.92 200.66 0)
@@ -1255,7 +1239,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k"
+		(property "Value" "2k"
 			(at 124.46 201.93 0)
 			(effects
 				(font
@@ -1275,7 +1259,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C11702"
+		(property "LCSC" "C4109"
 			(at 121.92 200.66 0)
 			(hide yes)
 			(effects
@@ -1289,7 +1273,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1001TCE"
+		(property "Manufacturer Part" "0402WGF2001TCE"
 			(at 121.92 200.66 0)
 			(hide yes)
 			(effects
@@ -1425,7 +1409,207 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid df9168b9-92cf-4df0-9678-30c01a143634))
-	(text "CAM_5V_SENSE = CAM_5V x 1k/11k -> PB1 (ball K4, ADC12_INP5, TT_u 4.0 V max).\nNominal 5.456 V (PORT_5V3 via U402) reads 0.496 V; a failed U400 passes RAW_PROTECTED (held under U9's OVLO, 9.77 V nominal) and reads about 0.89 V; even D8's 19.9 V clamp would read 1.81 V.\nLets a battery-powered self-test check the camera supply (U400 buck, U402 switch) without a meter; on USB-only power PORT_5V3 and CAM_5V are off."
+	(wire
+		(pts
+			(xy 101.6 204.47)
+			(xy 101.6 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 3fef4186-ef75-57c6-82fb-6e3535fdf367))
+	(global_label "CAM_5V_DIV"
+		(shape passive)
+		(at 101.6 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid ed70d634-5ccc-52da-9765-161dfca0c8a3))
+	(symbol
+		(lib_id "M3:R")
+		(at 162.56 200.66 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 743f0a64-396f-5eac-a32b-26839d70b497)
+		(property "Reference" "R106"
+			(at 165.1 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "2k"
+			(at 165.1 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 162.56 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 162.56 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C4109"
+			(at 162.56 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 162.56 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF2001TCE"
+			(at 162.56 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R106")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 162.56 196.85)
+			(xy 162.56 191.77))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b6af0851-7975-5712-b448-f679424be555))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 162.56 191.77 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6a6fea5a-96ca-5c68-8e93-00bfcbd23b6f))
+	(wire
+		(pts
+			(xy 162.56 204.47)
+			(xy 162.56 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 4fe0cba5-44eb-5c9b-9f6d-ad36ba1ad33c))
+	(global_label "GND"
+		(shape passive)
+		(at 162.56 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 06c2563c-bf89-52c0-8aff-023aaf145ef0))
+	(symbol
+		(lib_id "M3:R")
+		(at 182.88 200.66 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 7f0c69c4-9239-58f0-bdc7-2247a5ad45dd)
+		(property "Reference" "R107"
+			(at 185.42 199.39 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 185.42 201.93 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 182.88 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 182.88 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 182.88 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 182.88 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 182.88 200.66 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/6007a7db-6a58-5660-8beb-956dea045ff8/0e505cf1-213a-5be0-ba23-0f8cc47b8f19"
+					(reference "R107")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 182.88 196.85)
+			(xy 182.88 191.77))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid a0da93b9-9cec-533c-a7de-675b13527d1d))
+	(global_label "CAM_5V_DIV"
+		(shape passive)
+		(at 182.88 191.77 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 786e985c-6a53-502c-a964-7d7187b3db58))
+	(wire
+		(pts
+			(xy 182.88 204.47)
+			(xy 182.88 209.55))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7f868df6-7c7f-5775-87b1-52e88cadcea5))
+	(global_label "CAM_5V_SENSE"
+		(shape passive)
+		(at 182.88 209.55 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 8f214cc1-3bb7-5ef6-8d33-007cf7132679))
+	(text "R11 D-R11-86: CAM_5V_SENSE = CAM_5V x 1k / 11.2k: R104 + R107 (5.1k + 5.1k) in series over R105 || R106 (2k || 2k), C94 10 nF; one open or shorted resistor leaves PC2_C (TT_a, 4.0 V absolute maximum, DS12110 Rev 8 Table 119 p. 211) at most 0.94 V at 5.6 V.\nNominal 5.456 V reads 0.487 V; a failed U400 (RAW_PROTECTED, 9.77 V) reads 0.87 V (1.60 V with one resistor fault); D8's 19.9 V clamp 1.78 V (3.26 V). Calculation, 1 % parts not included."
 		(at 96.52 217.17 0)
 		(effects
 			(font

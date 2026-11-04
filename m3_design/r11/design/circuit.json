@@ -150,6 +150,13 @@
       "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2203091604_STMicroelectronics-STM32H743VIH6_C964146.pdf",
       "footprint": "rocket:M3_TFBGA100_8x8_P0.8",
       "source": "JLC/LCSC listing 2026-11-02: -40℃~+85℃ 1.62V~3.6V 1MB 2MB 32 Bit 480MHz 82 ARM Cortex-M7 Built-in FLASH TFBGA-100 Microcontrollers (MCU/MPU/SOC) ROHS"
+    },
+    "C25905": {
+      "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+      "Manufacturer Part": "0402WGF5101TCE",
+      "Datasheet": "",
+      "footprint": "rocket:R0402",
+      "source": "R10 line (R132, R173, R175)"
     }
   },
   "parts": {
@@ -760,6 +767,26 @@
       },
       "why": "D-R11-04: TFBGA-100; balls in pin_table.tsv",
       "lib": "M3:MCU_TFBGA100"
+    },
+    "R104": {
+      "lcsc": "C25905",
+      "value": "5.1k",
+      "r10": {
+        "footprint": "rocket:R0402",
+        "lcsc": "C25744",
+        "value": "10k"
+      },
+      "why": "D-R11-86: the CAM_5V sense top leg is two 5.1k in series (R104, R107), so one shorted resistor leaves the pin at most 0.94 V"
+    },
+    "R105": {
+      "lcsc": "C4109",
+      "value": "2k",
+      "r10": {
+        "footprint": "rocket:R0402",
+        "lcsc": "C11702",
+        "value": "1k"
+      },
+      "why": "D-R11-86: the CAM_5V sense bottom leg is two 2k in parallel (R105, R106), so one open resistor leaves the pin at most 0.94 V"
     }
   },
   "pin_maps": {
@@ -796,5 +823,43 @@
     }
   },
   "mechanical": [],
-  "mechanical_note": "No mechanical-only footprint is added to the schematic in stage A; mounting holes and tooling holes are board items (stage B)."
+  "mechanical_note": "No mechanical-only footprint is added to the schematic in stage A; mounting holes and tooling holes are board items (stage B).",
+  "added_parts": {
+    "R106": {
+      "lcsc": "C4109",
+      "value": "2k",
+      "lib": "M3:R",
+      "sheet": "diagnostics.kicad_sch",
+      "at": [
+        162.56,
+        200.66
+      ],
+      "nets": {
+        "1": "CAM_5V_SENSE",
+        "2": "GND"
+      },
+      "why": "D-R11-86: second bottom-leg resistor in parallel with R105 (PC2_C single-fault protection)"
+    },
+    "R107": {
+      "lcsc": "C25905",
+      "value": "5.1k",
+      "lib": "M3:R",
+      "sheet": "diagnostics.kicad_sch",
+      "at": [
+        182.88,
+        200.66
+      ],
+      "nets": {
+        "1": "CAM_5V_DIV",
+        "2": "CAM_5V_SENSE"
+      },
+      "why": "D-R11-86: second top-leg resistor in series with R104 (PC2_C single-fault protection)"
+    }
+  },
+  "net_changes": {
+    "R104": {
+      "2": "CAM_5V_DIV"
+    }
+  },
+  "net_changes_note": "D-R11-86: R11 adds R106 / R107 and the net CAM_5V_DIV to R10 netlist (the only R11 netlist change); ratio CAM_5V_SENSE = CAM_5V x 1k / 11.2k"
 }

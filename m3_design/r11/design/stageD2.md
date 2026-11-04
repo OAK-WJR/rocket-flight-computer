@@ -73,10 +73,11 @@ Q124 → J1.2 2.470 → 2.503 (inside the 5 mΩ allowance); RAW_PROTECTED U9 →
 
 EXTI lines (Measured by check_r11 K-exti on the board): 4 LOGIC_SOURCE_ST PA4 (G3), 5 BAT_FAULT_N PA5 (H3),
 6 IMU_INT1 PD6 (C6), 8 VBUS_SENSE PC8 (F9), 10 USB_FAULT_N PD10 (H9), 13 CAM_FAULT_N PC13 (A2). PD5 (B6) is NC.
-RM0433 (SYSCFG_EXTICR) and DS12110 (the PC2_C pad's absolute maximum) could not be read from ST in this session: the
-PDF downloads were refused from this environment. Both stay Inference; the re-pin does not depend on RM0433's wording
-(every interrupt net has its own line number). CAM_5V_SENSE's single fault (R105 open: CAM_5V through R104 10 kΩ onto
-PC2_C) is R10's accepted PB1 case; no design change (D-R11-81).
+**Corrected (D-R11-87):** DS12110 Rev 8 gives PC2_C as a TT_a pad (Table 9 p. 67), 4.0 V absolute maximum (Table 119
+p. 211) and 0 mA injection (Table 156 p. 244), so the R105-open fault (CAM_5V through R104 10 kΩ) broke the limit; it is
+fixed by D-R11-86 (stageD3.md). The SYSCFG_EXTICR field layout is checked against ST's CMSIS header stm32h743xx.h
+(cmsis-device-h7 commit 8f922cdc); RM0433 is still unread (Inference). The EXTI map above was superseded by D-R11-85
+(IMU_INT1 on PD3, EXTI3; PD5 / PD6 carry the camera UART).
 
 ## 6. Silkscreen and the R11 harness pin map (D-R11-82, D-R11-83)
 
@@ -137,6 +138,6 @@ with its content checks; test_r11_check 48 tests OK with R11_BOARD_REQUIRED. R10
 
 ## 9. Open
 
-* Owner: accept the R11 legend set (D-R11-83); read DS12110's Pxy_C absolute maximum and RM0433's SYSCFG_EXTICR
-  (D-R11-81); U401's thermal figure is an Inference until a first-article test (D-R11-80); stock (section 8).
+* Owner: accept the R11 legend set (D-R11-83); RM0433's SYSCFG_EXTICR stays unread (D-R11-87; the PC2_C limit is
+  now sourced and fixed, D-R11-86); U401's thermal figure is an Inference until a first-article test (D-R11-80); stock (section 8).
 * Not run: the plate model, JLC DFM on the panel, first-article checks, firmware.

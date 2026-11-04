@@ -69,6 +69,8 @@ Rules (R10's id where it is R10's rule):
              R10's single-via-open taps with U1's LQFP pins mapped to R11 balls (single_open_taps_r11, O-C2-5),
              exceptions only from R11_DATA 'single_open_exceptions' (none by default). Schemas: gate_C2.md
   K-ports    port ESD clamps on the wire side, <= 4.5 mm of track from the pin (J9's UART pins 5 / 6 on R11)
+  K-neighbours  every ball round PE4 (PYRO1_GATE_N) and PC1 (ACT_EN_MCU) NC, GND, D-R11-23's 3V3 pair or a recorded
+             inert net (NEIGHBOUR_INERT, argued per net; D-R11-85)
   K-exti     the EXTI_NETS_R11 interrupt nets each on one U1 ball, no two on the same EXTI line number (D-R11-81)
   K-loader   ROM-loader pins: LOADER_R11 (R11's own list, keyed by port pin, on U1's balls from the R11 pin table;
              check_r10.LOADER_H74X's pin set; gate_C2.md section 5): no net without an entry, no entry for another
@@ -1293,12 +1295,16 @@ def _loader_r10(port):
 
 LOADER_R11 = {
     **{port: _loader_r10(port) for port in ('PA4', 'PA5', 'PA6', 'PC10', 'PC11', 'PC12', 'PA11', 'PA12', 'PB6')},
-    'PB9': dict(net='CAM_MCU_TX', members={'U12.5': 'TXU0202DCUR'}, decision='D-R11-49', case='8.4',
+    'PB9': dict(net='IMU_CS', members={'R11.1': '10k', 'U4.12': 'ISM6HG256X'}, decision='D-R11-85', case='9',
                 an2606=LOADER_AN2606,
-                reason='I2C1_SDA open drain, no pull: the loader leaves PB9 released into U12\'s CMOS input; U12 is '
-                       'disabled (OE low by R102 10k while PC15 is an input) and the camera unpowered (U402 EN low by '
-                       'R431 100k while PC14 is an input), so nothing reaches J9; the I2C1 slave needs SCL edges on '
-                       'PB6 (QSPI_NCS, held high by R10 10k) and no board device is an I2C master (Inference)'),
+                reason='I2C1_SDA open drain, no pull: the loader leaves PB9 released; R11 10k holds IMU_CS high, so U4 '
+                       'stays deselected; the I2C1 slave needs SCL edges on PB6 (QSPI_NCS, held high by R10 10k) and no '
+                       'board device is an I2C master, so the loader never drives PB9 low (Inference)'),
+    'PA2': dict(net='SERVO4_MCU', members={'R153.1': '1k 0603', 'R157.1': '10k', 'D121.6': 'SRV05-4'},
+                decision='D-R11-85', case='9', an2606=LOADER_AN2606,
+                reason='USART2_TX drives the servo-4 signal push-pull, idle high, through R153 1k against R157 10k: R10\'s '
+                       'PA2 allowance (LOADER_R10, servo 3 there) on servo 4: a servo never sends 0x7F, servo power is '
+                       'off the board, so a byte at most twitches an unpowered or harness-powered servo on the bench'),
     'PA15': dict(net='SERVO2_MCU', members={'R151.1': '1k 0603', 'R155.1': '10k', 'D121.3': 'SRV05-4'},
                  decision='D-R11-49', case='8.4', an2606=LOADER_AN2606,
                  reason='SPI3_NSS: a loader input, no pull, never driven; R155 10k holds it low, so the servo sees a '
@@ -1431,6 +1437,76 @@ def exti_lines(board, port_ball):
     return issues, {f'EXTI{line}': who for line, who in sorted(lines.items())}
 
 
+# D-R11-85: the ball neighbours of the fire command (PE4, PYRO1_GATE_N) and the pyro-bus enable (PC1, ACT_EN_MCU). A
+# solder bridge from a neighbour that can drive high is R10's rule-3 driver fight on a gate drive. Every one of the eight
+# balls round each guarded ball must be NC, GND, a NEIGHBOUR_EXCEPTIONS entry (that guard, that ball, that net) or a
+# NEIGHBOUR_INERT net with its measured argument. Anything else fails, whichever ball the guarded net sits on.
+NEIGHBOUR_GUARDS = ('PYRO1_GATE_N', 'ACT_EN_MCU')
+NEIGHBOUR_EXCEPTIONS = {
+    ('PYRO1_GATE_N', 'B2', '3V3'): 'D-R11-23 (owner deviation): ball C3 diagonal to the 3V3 balls B2 / D2, 0.731 mm',
+    ('PYRO1_GATE_N', 'D2', '3V3'): 'D-R11-23 (owner deviation): ball C3 diagonal to the 3V3 balls B2 / D2, 0.731 mm',
+}
+NEIGHBOUR_INERT = {
+    ('ACT_EN_MCU', 'LOGIC_SOURCE_ST'): 'D-R11-85: U11 ST open drain with R91 10k pull-up, no push-pull high; low whenever '
+                                       'the battery path is selected (the only state with pyro-bus energy); on USB the '
+                                       '10k against R122 + R123 (3k) holds ACT_EN <= 0.51 V (Calculation)',
+    ('ACT_EN_MCU', 'NRST'): 'D-R11-85: fixed ball; open-drain reset with the internal >= 30k pull-up only (Inference), so '
+                            'ACT_EN <= 0.20 V (Calculation); a bridge held low by PC1 holds the MCU in reset (outputs off)',
+    ('ACT_EN_MCU', 'PYRO1_CONT'): 'D-R11-85: fixed ball (R10 LQFP neighbour of PC1 too); a passive divider output, <= '
+                                  'pack / 11.2 (0.75 V) through about 0.9k, so ACT_EN <= 0.38 V (Calculation / Inference)',
+    ('ACT_EN_MCU', 'CAM_5V_SENSE'): 'D-R11-85 / -86: a passive divider output, CAM_5V / 11.2 (0.50 V; 0.94 V on one '
+                                    'resistor fault) through about 0.9k, so ACT_EN <= 0.63 x 0.94 x 0.67 = 0.40 V '
+                                    '(Calculation / Inference)',
+}
+
+
+def ball_neighbours(ball):
+    rows = 'ABCDEFGHJK'
+    r, c = rows.index(ball[0]), int(ball[1:])
+    return [f'{rows[r + dr]}{c + dc}' for dr in (-1, 0, 1) for dc in (-1, 0, 1)
+            if (dr or dc) and 0 <= r + dr < len(rows) and 1 <= c + dc <= 10]
+
+
+def gate_neighbours(board, guards=NEIGHBOUR_GUARDS, exceptions=None, inert=None):
+    """(issues, evidence): every ball round each guarded net's U1 ball is NC, GND, an exception or an inert net."""
+    exceptions = NEIGHBOUR_EXCEPTIONS if exceptions is None else exceptions
+    inert = NEIGHBOUR_INERT if inert is None else inert
+    u1 = board.FindFootprintByReference('U1')
+    if u1 is None:
+        return ['U1 missing'], {}
+    net_of = {p.GetNumber(): p.GetNetname() for p in u1.Pads()}
+    issues, ev = [], {}
+    for guard in guards:
+        balls_ = sorted(b for b, n in net_of.items() if n == guard)
+        if len(balls_) != 1:
+            issues.append(f'{guard}: on U1 balls {balls_}, expected exactly one')
+            continue
+        row = ev.setdefault(f'{guard} ({balls_[0]})', {})
+        for nb in ball_neighbours(balls_[0]):
+            net = net_of.get(nb, '')
+            if not r10.real_net(net):
+                row[nb] = 'NC'
+            elif net == 'GND':
+                row[nb] = 'GND'
+            elif (guard, nb, net) in exceptions:
+                row[nb] = f'{net}: exception'
+            elif (guard, net) in inert:
+                row[nb] = f'{net}: inert'
+            else:
+                row[nb] = f'{net}: FAIL'
+                issues.append(f'{guard} ball {balls_[0]}: neighbour {nb} carries {net}, which can raise the gate if '
+                              'bridged (R10 rule 3 driver fight); it must be NC, GND or a recorded exception / inert net')
+    used = {(g, n) for g, n in inert}
+    present = {(g, n) for g in guards for n in set(net_of.values())}
+    issues += [f'stale NEIGHBOUR_INERT entry {k}' for k in sorted(used) if k not in present]
+    return issues, ev
+
+
+def k_neighbours(ctx):
+    issues, ev = gate_neighbours(ctx.board)
+    return [f'K-neighbours: {i}' for i in issues], ev
+
+
 def k_exti(ctx):
     issues, ev = exti_lines(ctx.board, balls(ctx))
     return [f'K-exti: {i}' for i in issues], ev
@@ -1470,8 +1546,9 @@ RULES = [
     ('K-ports', 'port ESD clamps on the wire side', lambda c, s: k_ports(c)),
     ('K-loader', 'ROM-loader pins on U1\'s balls', lambda c, s: k_loader(c)),
     ('K-exti', 'interrupt nets on distinct EXTI lines (D-R11-81)', lambda c, s: k_exti(c)),
+    ('K-neighbours', 'PE4 / PC1 ball neighbours cannot raise their gate if bridged (D-R11-85)', lambda c, s: k_neighbours(c)),
 ]
-STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'W-1', 'W-2', 'K-loader', 'K-exti'}}
+STAGES = {'functional': {'S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'W-1', 'W-2', 'K-loader', 'K-exti', 'K-neighbours'}}
 STAGES['placement'] = STAGES['functional'] | {'LC-1', 'M-1', 'M-3', 'M-5', 'M-6', 'M-7', 'M-8', 'K-lands'}
 STAGES['full'] = {rid for rid, _, _ in RULES}
 

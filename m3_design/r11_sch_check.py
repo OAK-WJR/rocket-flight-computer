@@ -124,6 +124,18 @@ def expected():
         else:
             pins[ref, pin] = net
     pins['U1', gen.PDR_ON] = gen.PDR_ON_NET
+    # D-R11-86: R11's only netlist additions (circuit.json added_parts / net_changes)
+    for ref, changes in data.get('net_changes', {}).items():
+        for pin, net in changes.items():
+            assert (ref, pin) in pins, f'net_changes names {ref}.{pin}, not an R10 pin'
+            pins[ref, pin] = net
+    for ref, entry in data.get('added_parts', {}).items():
+        assert ref not in parts, f'added part {ref} is an R10 reference'
+        s = gen.added_spec(data, entry)
+        parts[ref] = {'lib': s['lib'], 'value': s['props']['Value'], 'footprint': s['props']['Footprint'],
+                      'flags': set(), 'fields': {k: s['props'][k] or '' for k in ('LCSC', 'Manufacturer', 'Manufacturer Part')}}
+        for pin, net in entry['nets'].items():
+            pins[ref, pin] = net
     return parts, pins
 
 

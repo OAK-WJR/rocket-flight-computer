@@ -234,9 +234,10 @@ The source of truth is `pin_table.tsv` column `r11_net` with the "R11 mode:" tex
 `r11_sch.R11_REPIN` (the citation for each row is there).
 
 Summary:
-* camera UART on UART4 AF8: PB9 TX / PB8 RX;
-* SERVO1 TIM4_CH2 (PB7), SERVO2 TIM2_CH1 (PA15), SERVO3 / SERVO4 TIM5_CH1 / CH2 (PA0 / PA1);
-* IMU_CS PE3, IMU_INT1 PD5 (EXTI5);
+* camera UART on UART4 AF8: PB9 TX / PB8 RX (D-R11-85: now USART2 AF7, PD5 TX / PD6 RX);
+* SERVO1 TIM4_CH2 (PB7), SERVO2 TIM2_CH1 (PA15), SERVO3 / SERVO4 TIM5_CH1 / CH2 (PA0 / PA1) (D-R11-85: now TIM5_CH2 /
+  CH3 on PA1 / PA2);
+* IMU_CS PE3, IMU_INT1 PD5 (EXTI5) (D-R11-81 / -85: now IMU_CS PB9, IMU_INT1 PD3, EXTI3);
 * camera control: CAM_UART_OE PC15, CAM_PWR_EN PC14, CAM_FAULT_N PC13;
 * CAM_5V_SENSE PC2_C (ADC3_INP0);
 * LED_RED PB1, LED_YEL PD2, USB_FAULT_N PD10, BUZZ_DRV PE8.
@@ -378,3 +379,20 @@ pre-flight item.
 * `tools/check_r11.py` (full) on a zone-filled copy of the built board with its `fit_check --profile r11` report.
 * `r11_escape_check --board`.
 * Not run: tools/check.sh (not this lane), signal integrity, JLC DFM, any electrical test.
+
+## 9. Gate-drive neighbour re-pin (D-R11-85, 2026-11-03)
+
+PE4 (fire, ball C3) and PC1 (bus enable, ball F2) may have no driven neighbour (check_r11 K-neighbours). B3 (PE3) and
+B4 (PB8) by C3, and G2 (PA0) by F2, are NC; IMU_CS moves to PB9 (A4), the camera UART to USART2 (TX PD5 / B6, RX PD6 /
+C6), IMU_INT1 to PD3 (C7, EXTI3), SERVO3_MCU to PA1 (H2, TIM5_CH2) and SERVO4_MCU to PA2 (J2, TIM5_CH3). Two ROM-loader
+pins change net. K-loader cases (R3-MCU-01 / R17-MCU-02 form; Inference unless labelled):
+
+* **PB9 (I2C1_SDA, open drain) carries IMU_CS** (members R11.1 10k, U4.12). The loader never drives PB9 low without an
+  I2C1 frame, and a frame needs SCL edges on PB6 (QSPI_NCS, held high by R10 10k) from a master the board does not have;
+  released, PB9 sits at the R11 pull-up level, so U4 stays deselected. Worst case a stray low would select U4, whose SPI1
+  lines the loader leaves as inputs: U4 sees no clock and stays idle.
+* **PA2 (USART2_TX, push-pull, idle high) carries SERVO4_MCU** (members R153.1 1k, R157.1 10k, D121.6). R10's PA2
+  allowance (LOADER_R10, servo 3 there) applies to servo 4: the line idles high through R153 1k against R157 10k, a
+  servo never sends the 0x7F sync, and servo power is off the board, so a byte at most twitches an unpowered or
+  harness-powered servo on the bench. Record and read back the user-flash boot configuration before flight (R10).
+* PE3, PB8 and PA0 become NC; PD3, PD5, PD6 and PA1 are not loader pins.
