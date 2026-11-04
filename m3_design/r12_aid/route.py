@@ -6,7 +6,9 @@ the build never searches; this aid's output is reviewed and frozen (as R11's r11
 usage: python3 m3_design/r12_aid/route.py GEOMETRY.json PLAN.json OUT.tsv --lib astar.so [--report R.json]
 needs numpy and the compiled astar.c (cc -O2 -shared -fPIC -o astar.so astar.c); GEOMETRY.json from export.py.
 
-Model: F.Cu and B.Cu are routed; In1 (GND) and In2 (3V3) are planes reached by vias. Clearances are exact distances
+Model: F.Cu, B.Cu and In2 are routed (D-R12-34: In2 is a mixed layer, the 3V3 pour filling round its low- and
+medium-speed signal tracks); In1 (GND) is a plane reached by vias, In2's 3V3 pour and islands too. An In2 track keeps
+out of the islands, the S-8 keep-outs and the masks the plan gives, 0.55 mm + clearance from every plated hole. Clearances are exact distances
 from grid nodes to pad polygons, track capsules and via discs (KiCad DRC is the judge afterwards): 0.1 mm copper,
 test pads 1.0 mm, Tag-Connect pads 0.508 mm, copper to the board edge 0.5 mm, a via hole 0.2 mm from foreign copper
 (D-R12-23), via holes 0.25 mm apart. Segments are 0 / 45 / 90 degrees, bends 45 degrees, a middle segment at least
@@ -30,7 +32,12 @@ VIA_PAD = 0.30              # via centre to any pad copper (V-2 hole off SMD pad
 VIA_VIA = 0.60              # via centre to via centre (hole to hole 0.25 + 0.3, rings apart)
 EDGE = 0.5                  # copper to board edge (project min_copper_edge_clearance)
 RMAX = 2.5                  # field update radius
-LAYERS = ('F', 'B')
+LAYERS = ('F', 'B', 'In2')        # index order: the C search's layer numbers (0 F, 1 B, 2 In2)
+NL = len(LAYERS)
+IN2_COST = float(os.environ.get('R12_IN2', 1.4))   # In2 a little dearer than F / B (D-R12-34)
+IN2_ISLAND = 0.35           # In2 track edge to an island outline (pour clearance 0.2 + fill margin)
+IN2_PTH = 0.55              # In2 track edge to a plated hole wall (JLC inner PTH rule, D-R21-01 lineage)
+S8_TRACK = 1.85             # In2 track edge to J121's barrel centres (hole 0.65 + S-8 1.0 + 0.2 margin)
 # search costs (stage C cleanup run, D-R12-33): a turn costs TURN grid steps and a via VIA_COST; overridable by the
 # environment for drafting experiments (R12_TURN, R12_VIA)
 TURN = float(os.environ.get('R12_TURN', 2.0))
@@ -75,9 +82,14 @@ class Board:
             poly = [tuple(float(v) for v in q.split(',')) for q in pts.split()]
             self.island[net] = self.poly_sdist(X, Y, poly)
         self.s8 = np.zeros(X.shape, bool)
+        self.in2_block = np.zeros(X.shape, bool)      # In2 track nodes closed for every net (D-R12-34)
         for p in self.pads:
             if p['ref'] == 'J121':
                 self.s8 |= np.hypot(X - p['x'], Y - p['y']) < 2.1
+                self.in2_block |= np.hypot(X - p['x'], Y - p['y']) < S8_TRACK + 0.5 + CLR    # + the widest In2 half-width
+        self.novia |= self.s8          # no via ring of any net on In1 / In2 within S-8 reach of the pyro barrels
+        for sd in self.island.values():
+            self.in2_block |= sd < IN2_ISLAND + 0.25
 
     def region_ok(self, net):
         if net == 'GND':
@@ -153,13 +165,13 @@ class Board:
         # board edge and mounting holes: global obstacles (net -1)
         X, Y = np.meshgrid(self.xs, self.ys)
         de = np.minimum.reduce([X, self.W - X, Y, self.L - Y]) - (EDGE - CLR)
-        for li in range(2):
+        for li in range(NL):
             self.merge(li, (slice(None), slice(None)), de.astype(np.float32), -1)
         self.edge = np.minimum.reduce([X, self.W - X, Y, self.L - Y])
         for hx, hy, r in g['holes']:
             sl, X, Y = self.region(hx - r, hy - r, hx + r, hy + r)
             d = np.hypot(X - hx, Y - hy) - r - (EDGE - CLR)
-            for li in range(2):
+            for li in range(NL):
                 self.merge(li, sl, d.astype(np.float32), -1)
             self.novia[sl] |= np.hypot(X - hx, Y - hy) < r + 0.8
         for f in g['fps']:
@@ -170,7 +182,7 @@ class Board:
                         r = p['drill'] / 2
                         sl, X, Y = self.region(p['x'] - r, p['y'] - r, p['x'] + r, p['y'] + r)
                         d = np.hypot(X - p['x'], Y - p['y']) - r - 0.15     # general copper-to-hole 0.25 mm
-                        for li in range(2):
+                        for li in range(NL):
                             self.merge(li, sl, d.astype(np.float32), -1)
                         self.padany[sl] = np.minimum(self.padany[sl], d + 0.1)
                     continue
@@ -197,6 +209,7 @@ class Board:
                     else:
                         dh, r = np.hypot(X - p['x'], Y - p['y']), p['drill'] / 2
                     self.novia[sl] |= dh < r + 0.55 + VIA_D / 2 + 0.03   # JLC inner PTH hole rule
+                    self.merge(2, sl, (dh - r - IN2_PTH + CLR).astype(np.float32), -1)   # In2 tracks: same rule
                 lays = [ln for ln in LAYERS if ln in p['layers']]
                 ins = {}
                 minor = min(max(xs_) - min(xs_), max(ys_) - min(ys_))
@@ -241,7 +254,7 @@ class Board:
         sl, X, Y = self.region(x, y, x, y)
         dd = np.hypot(X - x, Y - y)
         d = (dd - VIA_R_KEEP).astype(np.float32)
-        for li in range(2):
+        for li in range(NL):
             self.merge(li, sl, d, self.nid(net))
         self.viad[sl] = np.minimum(self.viad[sl], dd)
         if record:
@@ -250,11 +263,11 @@ class Board:
 
     # ---------------- rip-up support (drafting): the fixed copper is in the snapshot, routed copper is re-merged
     def snapshot(self):
-        self.snap = [a.copy() for a in self.dA + self.dB + self.nA + self.nB] + [self.viad.copy()]
+        self.snap = [a.copy() for a in self.dA + self.dB + self.nA + self.nB] + [self.viad.copy()]   # 4 x NL + 1
         self.nfixed = (len(self.tracks), len(self.vias))
 
     def foreign_base(self, li, k):
-        dA, dB, nA = self.snap[li], self.snap[2 + li], self.snap[4 + li]
+        dA, dB, nA = self.snap[li], self.snap[NL + li], self.snap[2 * NL + li]
         return np.where(nA != k, dA, dB)
 
     def remove_units(self, units):
@@ -264,9 +277,9 @@ class Board:
         self.tracks, self.tunit = [t for t, _ in keep_t], [u for _, u in keep_t]
         self.vias, self.vunit = [v for v, _ in keep_v], [u for _, u in keep_v]
         s = self.snap
-        self.dA, self.dB = [s[0].copy(), s[1].copy()], [s[2].copy(), s[3].copy()]
-        self.nA, self.nB = [s[4].copy(), s[5].copy()], [s[6].copy(), s[7].copy()]
-        self.viad = s[8].copy()
+        self.dA, self.dB = [a.copy() for a in s[0:NL]], [a.copy() for a in s[NL:2 * NL]]
+        self.nA, self.nB = [a.copy() for a in s[2 * NL:3 * NL]], [a.copy() for a in s[3 * NL:4 * NL]]
+        self.viad = s[4 * NL].copy()
         for (net, layer, w, a, b), u in zip(self.tracks, self.tunit):
             if u != 'fixed':
                 self.add_track(net, layer, w, a, b, record=False)
@@ -279,13 +292,17 @@ class Board:
         return np.where(self.nA[li] != k, self.dA[li], self.dB[li])
 
     def via_ok_base(self, k):
-        return ((self.foreign_base(0, k) >= VIA_FOREIGN) & (self.foreign_base(1, k) >= VIA_FOREIGN)
-                & (self.padany >= VIA_PAD) & (self.snap[8] >= VIA_VIA) & (~self.novia)
+        ok = self.foreign_base(0, k) >= VIA_FOREIGN
+        for li in range(1, NL):
+            ok &= self.foreign_base(li, k) >= VIA_FOREIGN
+        return (ok & (self.padany >= VIA_PAD) & (self.snap[4 * NL] >= VIA_VIA) & (~self.novia)
                 & (self.edge >= EDGE + VIA_D / 2 + 0.1))
 
     def via_ok(self, k):
-        return ((self.foreign(0, k) >= VIA_FOREIGN) & (self.foreign(1, k) >= VIA_FOREIGN) & (self.padany >= VIA_PAD)
-                & (self.viad >= VIA_VIA) & (~self.novia) & (self.edge >= EDGE + VIA_D / 2 + 0.1))
+        ok = self.foreign(0, k) >= VIA_FOREIGN
+        for li in range(1, NL):
+            ok &= self.foreign(li, k) >= VIA_FOREIGN
+        return (ok & (self.padany >= VIA_PAD) & (self.viad >= VIA_VIA) & (~self.novia) & (self.edge >= EDGE + VIA_D / 2 + 0.1))
 
 
 class Router:
@@ -304,7 +321,7 @@ class Router:
         b = self.b
         js, is_ = sl
         X, Y = np.meshgrid(b.xs[is_], b.ys[js])
-        out = [np.zeros(X.shape, bool), np.zeros(X.shape, bool)]
+        out = [np.zeros(X.shape, bool) for _ in range(NL)]
         for (n, layer, w, a, bb) in b.tracks:
             if n != net:
                 continue
@@ -326,12 +343,37 @@ class Router:
                             free[j - js.start, i - is_.start] = True
         for (l, i, j, m) in self.terms.get(net, []):
             free |= np.hypot(X - i * G, Y - j * G) < h + 0.6
-        for li in range(2):
+        for li in range(NL):
             out[li] &= ~free
         return out
 
+    def ref_block(self, net, h, sl):
+        """D-R12-34: a fast net's B.Cu track has In2 (3V3) as its reference, so no In2 track runs under it, and a fast
+        net's B.Cu search keeps off the In2 tracks; self.fast(net) names the fast nets (set by the plan)."""
+        b = self.b
+        js, is_ = sl
+        X, Y = np.meshgrid(b.xs[is_], b.ys[js])
+        out = [np.zeros(X.shape, bool) for _ in range(NL)]
+        fast = getattr(self, 'fast', lambda n: False)
+        me_fast = fast(net)
+        for (n, layer, w, a, bb) in b.tracks:
+            if n == net:
+                continue
+            if layer == 'B' and fast(n):
+                li = 2
+            elif layer == 'In2' and me_fast:
+                li = 1
+            else:
+                continue
+            if max(a[0], bb[0]) < X[0, 0] - 2 or min(a[0], bb[0]) > X[0, -1] + 2 or \
+                    max(a[1], bb[1]) < Y[0, 0] - 2 or min(a[1], bb[1]) > Y[-1, 0] + 2:
+                continue
+            out[li] |= b.seg_dist(X, Y, a, bb) < w / 2 + h + 0.2
+        return out
+
     def search(self, net, w, starts, goals, window, layers=('F', 'B'), vias=True, via_cost=None, turn=None,
-               avoid=None, maxexp=int(os.environ.get("R12_MAXEXP", 3_000_000)), goal_via=False, maxvia=2, noown=False, extra_block=None, via_block=None, base=False):
+               avoid=None, maxexp=int(os.environ.get("R12_MAXEXP", 3_000_000)), goal_via=False, maxvia=2, noown=False, extra_block=None, via_block=None, base=False,
+               in2_cost=None):
         """starts: [(layer, ix, iy)]; goals: [(layer, ix, iy, dirmask)]; window: (i0, j0, i1, j1) node bounds.
         goal_via: any via-legal node is a goal (plane fan-out); the path then ends in a new via."""
         turn = TURN if turn is None else turn
@@ -344,27 +386,33 @@ class Router:
         i1, j1 = min(b.NX, i1), min(b.NY, j1)
         sl = (slice(j0, j1), slice(i0, i1))
         Wn, Hn = i1 - i0, j1 - j0
-        own = self.own_block(net, h, sl) if not noown else [np.zeros((Hn, Wn), bool)] * 2
-        blocked = np.zeros((2, Hn, Wn), np.uint8)
-        for li in range(2):
+        own = self.own_block(net, h, sl) if not noown else [np.zeros((Hn, Wn), bool)] * NL
+        rb = self.ref_block(net, h, sl)
+        blocked = np.zeros((NL, Hn, Wn), np.uint8)
+        for li in range(NL):
+            if LAYERS[li] not in layers:
+                blocked[li] = 1
+                continue
             fo = b.foreign_base(li, k) if base else b.foreign(li, k)
-            blocked[li] = (fo[sl] < h + CLR + EPS) | own[li]
-            if extra_block is not None:
+            blocked[li] = (fo[sl] < h + CLR + EPS) | own[li] | rb[li]
+            if li == 2:
+                blocked[li] |= b.in2_block[sl]
+            if extra_block is not None and li < len(extra_block):
                 blocked[li] |= extra_block[li][sl]
         vok = (b.via_ok_base(k) if base else b.via_ok(k))[sl] if (vias or goal_via) else np.zeros((Hn, Wn), bool)
         if via_block is not None:
             vok = vok & ~via_block[sl]
-        goal = np.zeros((2, Hn, Wn), np.uint16)
+        goal = np.zeros((NL, Hn, Wn), np.uint16)
         gc = []
         for (l, i, j, m) in goals:
             if i0 <= i < i1 and j0 <= j < j1:
                 goal[l, j - j0, i - i0] |= m
                 gc.append((i - i0, j - j0))
         if goal_via:
-            for l in (0, 1):
+            for l in range(NL):
                 if LAYERS[l] in layers:
                     goal[l][vok & (blocked[l] == 0)] = 255
-            jj, ii = np.nonzero(goal[0] | goal[1])
+            jj, ii = np.nonzero(np.bitwise_or.reduce(goal, axis=0))
             if len(ii):
                 step = max(1, len(ii) // 300)
                 gc += [(float(i), float(j)) for i, j in zip(ii[::step], jj[::step])]
@@ -394,7 +442,7 @@ class Router:
                 gx, gy, gr = [cx], [cy], [r]
         if not vias:
             vok = np.zeros_like(vok)
-        av = avoid[sl].astype(np.uint8) if avoid is not None else np.zeros((2, Hn, Wn), np.uint8)
+        av = avoid[sl].astype(np.uint8) if avoid is not None else np.zeros((NL, Hn, Wn), np.uint8)
         end_l = max(w, 0.2) + 0.005
         mid_l = max(0.5, w + 0.05)
         es, ed = int(end_l / G) + 1, int(end_l / (G * math.sqrt(2))) + 1
@@ -402,7 +450,7 @@ class Router:
         rm = max(es, ed, ms, md)
         params = np.array([1.0, 1.41421356, turn, via_cost, 1.0, 1.0, ms, md, es, ed, 0.2,
                            1 if 'F' in layers else 0, 1 if 'B' in layers else 0, rm, maxvia if vias else 0,
-                           self.hweight, 4], np.float32)
+                           self.hweight, 4, IN2_COST if in2_cost is None else in2_cost, 1 if 'In2' in layers else 0, NL], np.float32)
         sarr = np.array(st, np.int32).ravel()
         out = np.zeros(3 * 200000, np.int32)
         fl = lambda a: a.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
@@ -481,17 +529,20 @@ class Router:
         for (n, x, y) in self.b.vias:
             if n == net:
                 i, j = int(round(x / G)), int(round(y / G))
-                out += [(0, i, j, 255), (1, i, j, 255)]
+                out += [(li, i, j, 255) for li in range(NL)]
         return out
 
 
-def blockers(b, net, w, path):
-    """Routing units whose (non-fixed) copper lies within clearance of a base-mode path."""
+def blockers(b, net, w, path, end_via=False):
+    """Routing units whose (non-fixed) copper lies within clearance of a base-mode path (end_via: the path ends in a
+    new via, a plane fan-out, whose ring is on every layer)."""
     out = set()
-    pts = {0: [], 1: []}
+    pts = {li: [] for li in range(NL)}
     for (l, i, j) in path:
         pts[l].append((i * G, j * G))
     vias_on_path = [(path[q][1] * G, path[q][2] * G) for q in range(1, len(path)) if path[q][0] != path[q - 1][0]]
+    if end_via:
+        vias_on_path.append((path[-1][1] * G, path[-1][2] * G))
     P = {l: np.array(v) if v else np.zeros((0, 2)) for l, v in pts.items()}
     allp = np.array([(i * G, j * G) for (_, i, j) in path])
     for (n, layer, tw, a, c), u in zip(b.tracks, b.tunit):
@@ -500,6 +551,10 @@ def blockers(b, net, w, path):
         li = LAYERS.index(layer)
         Q = P[li]
         if len(Q) == 0:
+            if vias_on_path:
+                V = np.array(vias_on_path)
+                if (Board.seg_dist(V[:, 0], V[:, 1], a, c) < VIA_FOREIGN + tw / 2).any():
+                    out.add(u)
             continue
         if min(a[0], c[0]) - 2 > Q[:, 0].max() or max(a[0], c[0]) + 2 < Q[:, 0].min() or \
                 min(a[1], c[1]) - 2 > Q[:, 1].max() or max(a[1], c[1]) + 2 < Q[:, 1].min():

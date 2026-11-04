@@ -44,7 +44,8 @@ def main():
     zones = [dict(name=z.GetZoneName(), rule=z.GetIsRuleArea(), layers=[LN[l] for l in LN if z.IsOnLayer(l)],
                   net=z.GetNetname(), outline=poly(z.Outline()),
                   notracks=bool(z.GetIsRuleArea() and z.GetDoNotAllowTracks()),
-                  novias=bool(z.GetIsRuleArea() and z.GetDoNotAllowVias())) for z in b.Zones()]
+                  novias=bool(z.GetIsRuleArea() and z.GetDoNotAllowVias()))
+             for z in list(b.Zones()) + [fz for f in b.GetFootprints() for fz in f.Zones()]]   # J2's keep-out too
     holes = [(mm(d.GetCenter().x), mm(d.GetCenter().y), mm(d.GetRadius())) for d in b.GetDrawings()
              if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE]
     bb = b.GetBoardEdgesBoundingBox()

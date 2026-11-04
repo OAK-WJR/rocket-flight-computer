@@ -26,6 +26,11 @@ WIDTH = {'BAT_IN': 0.8, 'RAW_PROTECTED': 0.8, 'BAT_DAMP': 0.8, 'RAW_ACT': 0.8, '
          'PORT_4V8': 0.5, 'VBUS': 0.5, '3V3A': 0.3, 'VCAP1': 0.2, 'VCAP2': 0.2, 'BST': 0.3, 'PORT_BST': 0.3,
          'CAM_BST': 0.3}
 FANOUT_W = 0.3
+# D-R12-34: a long slow net (pads more than IN2_SPAN mm apart) prefers In2 (cost IN2_PREF per step against F / B's 1.0),
+# so the long aft-to-U1 runs leave F / B to the fast interfaces
+IN2_SPAN = float(os.environ.get('R12_IN2_SPAN', 6.0))
+IN2_PREF = float(os.environ.get('R12_IN2_PREF', 0.7))
+IN2_CORE = float(os.environ.get('R12_IN2_CORE', 5.0))   # half-size of U1's In2 3V3 core (D-R12-34)
 # route_check extra_vias: a net without a pour may use at most 2 vias (every R12 pad is on F, so it needs none)
 VIA_BUDGET = 2
 # the fire path stays on F.Cu with no series via (stage A constraint; S-8 needs no pyro barrel there)
@@ -68,11 +73,30 @@ def critical(net):
     return net.startswith(CRITICAL_PARTNER) and net not in SLOW
 
 
+# D-R12-34: In2 is a mixed layer (3V3 pour + low / medium-speed signals). The fast interfaces stay on F / B; so do the
+# power nets (their own widths), the plane nets and the fire path. A fast net's B.Cu track keeps In2 under it free.
+FAST = re.compile(r'^(HSE_|USB_D[PM]$|QSPI_|SPI1_|IMU_CS$|SD_)')
+
+
+def fast(net):
+    return bool(FAST.match(net))
+
+
+# The fast SPI / QSPI / microSD / IMU nets may use In2 too (it lies over In1's unbroken GND; D-R12-34), at In2's full
+# cost and never preferred; the crystal and USB data stay on F / B.
+IN2_DENY = re.compile(r'^(HSE_|USB_D[PM]$)')
+
+
+def in2_ok(net):
+    return not IN2_DENY.match(net) and net not in WIDTH and net not in PLANES and net not in F_ONLY
+
+
 class Plan:
     def __init__(self, geo, lib, length):
         self.b = R.Board(geo, length)
         self.b.load_planes(PLANES_TSV)
         self.r = R.Router(self.b, lib)
+        self.r.fast = fast
         self.by_net = {}
         for p in self.b.pads:
             if not p['net'].startswith('~'):
@@ -94,6 +118,8 @@ class Plan:
         X, Y = np.meshgrid(b.xs, b.ys)
         self.X, self.Y = X, Y
         self.bga = (np.abs(X - cx) <= 4.0 + 1e-6) & (np.abs(Y - cy) <= 4.0 + 1e-6)
+        # D-R12-34: In2 keeps a 3V3 pour core under U1 and 1 mm round the ball field (its supply-ball dog-bones)
+        self.core = (np.abs(X - cx) <= IN2_CORE + 1e-6) & (np.abs(Y - cy) <= IN2_CORE + 1e-6)
         self.ring = {}
         for p in u1:
             r, c = 'ABCDEFGHJK'.index(p['num'][0]), int(p['num'][1:]) - 1
@@ -229,7 +255,7 @@ class Plan:
         belongs to the dog-bone escapes, and no other net enters the field."""
         import numpy as np
         none = np.zeros(self.bga.shape, bool)
-        return [self.bga, none if net in self.dogbone_nets else self.bga]
+        return [self.bga, none if net in self.dogbone_nets else self.bga, self.core]
 
     def width(self, net, touches_u1):
         if net in WIDTH:
@@ -316,13 +342,15 @@ class Plan:
                     if vn == net and any(math.hypot(vx - q['x'], vy - q['y']) < 3.0 for q in p['group']):
                         i, j = int(round(vx / R.G)), int(round(vy / R.G))
                         starts += [(0, i, j), (1, i, j)]
-            layers = ('F',) if net in F_ONLY else ('F', 'B')
+            layers = ('F',) if net in F_ONLY else ('F', 'B', 'In2') if in2_ok(net) else ('F', 'B')
+            span = max((math.hypot(a['x'] - c['x'], a['y'] - c['y']) for a in pads for c in pads), default=0)
+            ic = IN2_PREF if 'In2' in layers and span > IN2_SPAN and not fast(net) else None
             ok = False
             for margin in (4.0, 10.0, 30.0):
                 win = R.window_of([(0, n[1], n[2]) for n in starts] + [(0, g[1], g[2]) for g in goals
                                   if math.hypot(g[1] * R.G - p['x'], g[2] * R.G - p['y']) < dist(p) + 3], margin)
                 used = sum(1 for v in self.b.vias if v[0] == net)
-                path = self.r.search(net, w, starts, goals, win, layers=layers, maxexp=maxexp,
+                path = self.r.search(net, w, starts, goals, win, layers=layers, maxexp=maxexp, in2_cost=ic,
                                      maxvia=max(0, (VIA_BUDGET if crit_class(net) else 6) - used), extra_block=self.masks(net))
                 if path:
                     self.r.commit(net, w, path)
@@ -330,7 +358,8 @@ class Plan:
                     break
             if not ok:
                 maxvia = max(0, (VIA_BUDGET if crit_class(net) else 6) - sum(1 for v in self.b.vias if v[0] == net))
-                ok = self.ripup(net, w, starts, goals, layers=layers, maxvia=maxvia, extra_block=self.masks(net))
+                ok = self.ripup(net, w, starts, goals, layers=layers, maxvia=maxvia, extra_block=self.masks(net),
+                                in2_cost=ic)
             if not ok:
                 self.fail.append((net, p['ref'] + '.' + p['num'], [f'status {self.r.last_status}']))
                 print('  FAIL', net, p['ref'], p['num'], self.r.last_status, flush=True)
@@ -342,7 +371,7 @@ class Plan:
                     connected.append(q)
 
     def ripup(self, net, w, starts, goals, layers, maxvia, extra_block=None, via_block=None, goal_via=False,
-              vias=True):
+              vias=True, in2_cost=None):
         """A connection that fails among the routed copper: find a path against the fixed copper only, rip the units
         whose copper it crosses (never the fixed fan-out), re-route this connection, and queue the ripped units."""
         if self.rips >= self.max_rips:
@@ -350,10 +379,10 @@ class Plan:
         win = R.window_of([(0, n[1], n[2]) for n in starts] + [(0, g[1], g[2]) for g in goals], 12.0) if goals else \
             R.window_of([(0, n[1], n[2]) for n in starts], 6.0)
         path = self.r.search(net, w, starts, goals, win, layers=layers, maxvia=maxvia, extra_block=extra_block,
-                             via_block=via_block, goal_via=goal_via, vias=vias, base=True)
+                             via_block=via_block, goal_via=goal_via, vias=vias, base=True, in2_cost=in2_cost)
         if not path:
             return False
-        bl = R.blockers(self.b, net, w, path) - {self.b.unit}
+        bl = R.blockers(self.b, net, w, path, end_via=goal_via) - {self.b.unit}
         bl = {u for u in bl if self.ripped.get(u, 0) < 4 and (u, self.b.unit) not in self.rip_pairs}
         if not bl or len(bl) > 6:
             return False
@@ -366,7 +395,7 @@ class Plan:
             self.unrouted(u)
         print(f'   rip {sorted(bl)} for {net}', flush=True)
         path = self.r.search(net, w, starts, goals, win, layers=layers, maxvia=maxvia, extra_block=extra_block,
-                             via_block=via_block, goal_via=goal_via, vias=vias)
+                             via_block=via_block, goal_via=goal_via, vias=vias, in2_cost=in2_cost)
         if not path:
             return False
         end_via = goal_via and not any(v[0] == net and abs(v[1] - path[-1][1] * R.G) < 1e-6
@@ -505,8 +534,10 @@ class Plan:
                                 math.hypot(q['x'] - p['x'], q['y'] - p['y']) < 2.5:
                             goals += self.r.pad_nodes(q, layers=('F',))
                 path = None
-                for margin, lay, mv in ((3.0, ('F',), 0), (6.0, ('F',), 0), (8.0, ('F', 'B'), 1),
-                                        (70.0, ('F', 'B'), 1)):
+                tiers = ((3.0, ('F',), 0), (6.0, ('F',), 0), (8.0, ('F', 'B'), 1), (70.0, ('F', 'B'), 1))
+                if net == '3V3A':        # D-R12-34: the H1 cluster reaches the 3V3A island over In2 (it is 15 mm away)
+                    tiers += ((30.0, ('F', 'B', 'In2'), 2),)
+                for margin, lay, mv in tiers:
                     win = R.window_of([(0, s[1], s[2]) for s in starts], margin)
                     path = self.r.search(net, w, starts, goals, win, layers=lay, vias=mv > 0, goal_via=True,
                                          extra_block=eb if eb is not None else self.masks(net), via_block=vb,
@@ -665,6 +696,9 @@ def main():
         if b_:
             pl.join('GND', a_, b_)
     pl.join('VLOGIC', ('U2', '4'), ('U2', '5'), w=0.4)
+    # D-R12-34: the servo pull-down block's GND pads in pairs (1.0 mm apart, one fan-out per pair)
+    pl.join('GND', ('R154', '2'), ('R155', '2'))
+    pl.join('GND', ('R156', '2'), ('R157', '2'))
     pl.join('CAM_5V', ('J9', '1'), ('J9', '2'), w=0.5)
     pl.usb()
     pl.bga_setup()
@@ -696,6 +730,13 @@ def main():
         f.startswith(f'fan:{n}:') and tuple(f.split(':')[2].split('.')) in CLUSTERS[n] for n in CLUSTERS)]
     rest = sorted((n for n in pl.by_net if n not in PLANES and n not in POWER_ORDER and n not in rings), key=mst)
     short = [n for n in rest if mst(n) < 4.0]
+    # D-R12-34: the long slow nets go first after the dog-bone escapes, so they take In2 before F / B fill up
+    longslow = [n for n in order + rest if n not in pl.dogbone_nets and in2_ok(n) and not fast(n)
+                and mst(n) > IN2_SPAN]
+    order = [n for n in order if n in pl.dogbone_nets] + longslow + [n for n in order if n not in pl.dogbone_nets
+                                                                     and n not in longslow]
+    rest = [n for n in rest if n not in longslow]
+    short = [n for n in short if n not in longslow]
     pl.queue = order + short + fans + power + [n for n in rest if n not in short]
     done = 0
     for npass in range(a.passes):

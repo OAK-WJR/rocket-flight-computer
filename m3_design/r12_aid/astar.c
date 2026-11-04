@@ -1,4 +1,5 @@
-/* R12 routing drafting aid (D-R12-26): octilinear A* on a two-layer grid (F / B) with through vias.
+/* R12 routing drafting aid (D-R12-26): octilinear A* on a grid of up to three signal layers (F / B / In2, D-R12-34) joined by
+ * through vias.
  * Not part of the build: its output is frozen into m3_design/r12_routes.tsv, which r12_route.py replays.
  *
  * State: (layer, x, y, dir, run, first, nvia). dir 0..7 = E, NE, N, NW, W, SW, S, SE (grid y grows south); run = steps
@@ -57,20 +58,22 @@ static int32_t tfind(int64_t key, int create) {
     }
 }
 
-/* blocked[l*H*W + y*W + x]: node closed on layer l; viaok[y*W+x]: a via may sit here; goal[l*H*W+...]: low byte = the
+/* Layers: 0 F, 1 B, 2 In2 (params[19] = NL, 2 or 3); a through via joins every allowed layer at its node.
+ * blocked[l*H*W + y*W + x]: node closed on layer l; viaok[y*W+x]: a via may sit here; goal[l*H*W+...]: low byte = the
  * arrival directions that end the search there after an end-length segment (255 = any), high byte = arrival
  * directions that need a middle-length segment (a 45-degree bend onto a fixed escape stub); avoid[l*H*W+...]: extra cost units.
  * params: [step, diag, turn, via, cost_F, cost_B, mid_s, mid_d, end_s, end_d, avoid_pen, allowF, allowB, RM, maxvia,
- *          heuristic weight]
+ *          heuristic weight, VMIN, cost_In2, allowIn2, NL]
  * out: (layer, x, y) triples from goal back to start; returns count, -1 no path, -2 memory, -3 table full, -4 expansion limit. */
 int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint16_t *goal, const uint8_t *avoid,
           int ns, const int *starts, int ng, const float *gcx, const float *gcy, const float *gr,
           const float *params, int maxout, int *out, long maxexp) {
     const float STEP = params[0], DIAG = params[1], TURN = params[2], VIA = params[3];
-    const float LC[2] = {params[4], params[5]};
+    const int NL = (int)params[19];
+    const float LC[3] = {params[4], params[5], params[17]};
     const int MID[2] = {(int)params[6], (int)params[7]}, END[2] = {(int)params[8], (int)params[9]};
     const float AP = params[10];
-    const int allow[2] = {(int)params[11], (int)params[12]};
+    const int allow[3] = {(int)params[11], (int)params[12], NL > 2 ? (int)params[18] : 0};
     const int RM = (int)params[13], MAXV = (int)params[14];
     const float HW = params[15];                         /* heuristic weight (weighted A*: a drafting aid) */
     const int VMIN = (int)params[16];                    /* steps before a via: vias of one path stay apart */
@@ -80,7 +83,8 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
     if (!T) return -2;
     for (int64_t i = 0; i < TCAP; i++) T[i].key = -1;
     heap h = {0};
-    float minlc = LC[0] < LC[1] ? LC[0] : LC[1];
+    float minlc = 1e30f;
+    for (int q = 0; q < NL; q++) if (allow[q] && LC[q] < minlc) minlc = LC[q];
     int status = -1;
 #define KEY(l, x, y, d, r, f, v) ((int64_t)((((((((int64_t)(l) * H + (y)) * W + (x)) * 8 + (d)) * (RM + 1) + (r)) * 3 + (f)) * 3 + (v))))
 #define HEUR(x, y) ({ float best = 1e30f; for (int k = 0; k < ng; k++) { float ax = fabsf((x) - gcx[k]), ay = fabsf((y) - gcy[k]); \
@@ -144,8 +148,8 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
             }
         }
         if (r > 0 && v < MAXV && viaok[(long)y * W + x] && r >= END[d & 1] && (f != 2 || r >= VMIN)) {
-            int ol = 1 - l;
-            if (allow[ol] && !blocked[(long)ol * NODES + (long)y * W + x]) {
+            for (int ol = 0; ol < NL; ol++) {
+                if (ol == l || !allow[ol] || blocked[(long)ol * NODES + (long)y * W + x]) continue;
                 int32_t ne = tfind(KEY(ol, x, y, 0, 0, 2, v + 1), 1);
                 if (ne < 0) { status = -3; goto done; }
                 float ng2 = gs + VIA;

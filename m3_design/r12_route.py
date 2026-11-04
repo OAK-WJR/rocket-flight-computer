@@ -4,11 +4,12 @@ of m3_design/r12_routes.tsv (an explicit table; the build never searches, D-R12-
 
 usage: <KiCad python3> -I -B m3_design/r12_route.py [--board m3_design/r12/m3.kicad_pcb] [--routes m3_design/r12_routes.tsv]
 
-Copper (D-R12-22): F.Cu parts and signals; In1.Cu one GND plane; In2.Cu the 3V3 plane with the RAW_PROTECTED, 3V3A and
-PORT_4V8 islands of m3_design/r12_planes.tsv; B.Cu signals under a GND pour
+Copper (D-R12-22, -34): F.Cu parts and signals; In1.Cu one unbroken GND plane; In2.Cu a mixed layer: the 3V3 pour with
+the RAW_PROTECTED, 3V3A and PORT_4V8 islands of m3_design/r12_planes.tsv, filling round In2's low / medium-speed signal
+tracks (minimum pour width 0.25 mm); B.Cu signals under a GND pour
 (minimum width 0.5 mm, so no sliver or finger can form, route_check pour rules). Every via is a 0.3 / 0.45 mm through
 via (D-R12-03). Pyro barrels keep foreign inner copper away (S-8, stageC.md section 5): rule areas on In1 / In2 round
-J121's barrels. Each segment is checked octilinear and non-zero, each via against the one R12 size; a via is never
+J121's barrels, which also keep out every track and via on those layers (D-R12-34). Each segment is checked octilinear and non-zero, each via against the one R12 size; a via is never
 placed twice. The zones are filled with KiCad's filler and the board saved; a rebuild is byte-identical.
 """
 import argparse
@@ -98,8 +99,8 @@ def keepout(board, name, layers, cx, cy, r):
         ls.AddLayer(LAYERS[l])
     z.SetLayerSet(ls)
     z.SetZoneName(name)
-    z.SetDoNotAllowTracks(False)
-    z.SetDoNotAllowVias(False)
+    z.SetDoNotAllowTracks(True)       # D-R12-34: In2 carries signal tracks; none may enter S-8's reach
+    z.SetDoNotAllowVias(True)
     z.SetDoNotAllowPads(False)
     z.SetDoNotAllowZoneFills(True)
     z.SetDoNotAllowFootprints(False)

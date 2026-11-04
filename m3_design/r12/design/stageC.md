@@ -1,4 +1,4 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-33)
+# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-34)
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
 but the board is not routed.** The drafting router's best run on the stage B placement (`9881aaa3…`) leaves 36
@@ -76,12 +76,41 @@ search is now congestion-bound in three areas, not placement-bound at one part:
 Is the TFBGA routable? The ball fan-out still completes in every run (39 stubs, 43 dog-bones), and no unrouted
 connection is a U1 escape, so D-R12-02 stands (Inference: an incomplete search is not proof either way).
 
+### 4.1 Three signal layers (D-R12-34)
+
+In2 is now a mixed layer (3V3 pour and islands plus low / medium-speed signals; In1 one unbroken GND plane). The aid
+routes F / B / In2 with through vias (`astar.c` takes up to three layers; `route.py` models In2's obstacles: islands,
+U1's 3V3 core, S-8 reach of J121, plated-hole walls, and the fast-net reference rule; `plan.py` `in2_ok`, `fast`,
+the long-slow-first order, the In2 preference and the 3V3A cluster's In2 tier). `export.py` now also exports footprint
+rule areas (J2's Tag-Connect keep-out: earlier drafts put a 3V3 track in it, DRC items_not_allowed). C24 moved (stub
+pocket). The S-8 rule areas forbid tracks and vias on In1 / In2.
+
+Runs on the D-R12-34 placement (`PYTHONHASHSEED=0`, about 20–30 min each; scratch, not frozen):
+
+| Run | Settings | Aid failures (unrouted units incl. fan-outs / partners) | DRC unconnected | route_check failing (dead_copper + dangling_via) |
+|---|---|---|---|---|
+| a3 | 6 passes, MAXEXP 4M, core 5.0 | 17 (14 + 3 partners) | 22 | 60 (23) |
+| a4 | 8 passes, MAXEXP 8M, core 5.0 | 15 | 23 | 61 (25) |
+| a5 | fast nets may use In2 (unpreferred) | 22 | — | — |
+| a6 / a8 | core 4.5, blockers see a fan-out's end via | 16 / 20 | 23 / 27 | 51 / 56 |
+
+The 3V3 pour is not yet guarded by the aid: in a2 it is one piece (40 of 40 3V3 vias in one fill outline; opened by
+0.5 mm, a 1.0 mm neck, 37 of 40 stay joined, the other three local fan-outs), but in a4 In2 tracks cut off a 16.7 mm²
+piece holding one 3V3 via (one of a4's DRC unconnected items; 35 of 40 vias in the 1.0 mm-neck piece). The aid needs a
+3V3-connectivity term (or a post-pass that moves the offending In2 run) before a table is frozen. In2 carries 60–90 tracks per
+draft (servos, port UARTs, BAT_FAULT_N, sense lines, LEDs, SWD), so its capacity is not the limit: the rip-up search
+itself plateaus at 15–22 failures, and the failing set moves between runs. Persistent ones: the R401.2 GND fan-out
+(boxed in by U400's FB network), the 3V3A H1 cluster (C21 / C22, 15 mm from its island), U3's QSPI_NCS / IO2, the
+microSD resistors (SD_CS / MOSI / MISO), I2C1 to U5, NRST / SWCLK to J2, and one or two of the servo / port UARTs.
+
 ## 5. What stage C still needs
 
-1. Finish the search: a negotiated-congestion (PathFinder-style) cost in `r12_aid` instead of rip-up alone, or pin the
-   long aft-to-U1 nets by hand first (servo, camera UART, CAM_5V_SENSE, VLOGIC_SENSE, PYRO1_CONT, ACT_EN_MCU on B.Cu in
-   assigned lanes), then let the search fill the rest. A further placement option is a channel through the aft power
-   band (move C82 / D9 / TP81 east or west of the servo lanes).
+1. Finish the search: with three signal layers the limit is the rip-up search, not capacity. Next: a negotiated-
+   congestion (PathFinder) cost in `astar.c` (a per-node history cost on each layer, every net re-routed each
+   iteration with sharing allowed and penalised, until no node is shared), instead of rip-up. Local fixes the drafts
+   point at: R401.2 GND (join it to C94.2 or move R401 so its GND pad faces a free via site), the 3V3A cluster (route
+   C22.1 to the island over In2 as a normal 0.3 mm net, or give H1's 3V3A a small In2 island under C21 / C22), and the
+   J2 / U3 / microSD pockets.
 2. Run `--clean` on the completed draft until no staircase / detour / loop finding is left, then the partner-via pass,
    then hand fixes for singles.
 3. Freeze `m3_design/r12_routes.tsv`, run `r12_build.sh` to DRC 0 / unconnected 0 / parity 0, fit_check r12, route_check

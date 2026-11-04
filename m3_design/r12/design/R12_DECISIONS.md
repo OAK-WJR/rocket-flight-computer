@@ -317,6 +317,40 @@ the circular model let a via sit 0.46 mm from a slot, under JLC's 0.55 mm inner 
 complete: drafts leave 11–22 connections unrouted depending on the run (best 11, stageC.md §4), so no copper table is frozen.
 AGENTS §2: no circuit, gate network or fire-path part moved; the pyro cell, J121 and J1's keep-clear are unchanged.
 
+**D-R12-34 In2 becomes a mixed layer: 3V3 pour plus signal routing (owner's supervisor decision, 2026-11-04).** With
+only F and B for signals, every draft stalled at 11–22 unrouted connections (stageC.md §4). In1 stays one solid,
+unbroken GND plane under the whole board. In2 keeps the 3V3 pour with its RAW_PROTECTED, 3V3A and PORT_4V8 islands
+(`r12_planes.tsv`, unchanged shapes) and now also carries low- and medium-speed signal tracks, the 3V3 pour filling
+round them (zone clearance 0.2 mm, minimum fill width 0.25 mm):
+- **Which nets may use In2** (`r12_aid/plan.py` `in2_ok`): every signal net except the fast interfaces (HSE, USB data,
+  QSPI, SPI1, IMU_CS, microSD: regex `FAST`), the power nets with their own widths, the plane nets and the fire path
+  (F.Cu, no via, unchanged). Servos, sense dividers, LEDs, port and camera UARTs, pyro control and sense, I2C,
+  BAT_FAULT_N, PORT_SENSE, SWD / NRST may.
+- **Where:** no In2 track inside an island (0.5 mm from its outline), under U1's 3V3 core (a 10 × 10 mm square round
+  the ball field, `IN2_CORE` 5 mm half-size: the supply-ball dog-bones), within 2.35 mm of J121's barrel centres (S-8:
+  pyro barrels ≥ 1 mm from foreign inner copper; In2 tracks count as inner copper), or nearer than 0.55 mm + clearance
+  to any plated hole wall (JLC inner PTH rule). No via of any net within 2.1 mm of J121's barrels. The S-8 rule areas
+  in `r12_route.py` now also forbid tracks and vias on their layers, so KiCad's DRC enforces it.
+- **Reference:** a fast net's B.Cu track has In2 3V3 as its reference, so no In2 track runs under one and a fast net's
+  B.Cu search keeps off In2 tracks (`Router.ref_block`). In2 tracks are referenced to In1 GND and to the B.Cu GND pour.
+- **Costs:** In2 costs 1.4 per step against F / B's 1.0 (`R12_IN2`), but a slow net whose pads are more than 6 mm apart
+  prefers it (0.7, `R12_IN2_SPAN`, `R12_IN2_PREF`), and those long slow nets are routed first after the dog-bone
+  escapes, so the long aft-to-U1 runs leave F / B to the fast interfaces. A through via joins all three signal layers;
+  vias to In2 are layer changes for the GND partner-via rule.
+- **3V3 current path:** the 3V3 load is bounded by U2 (LMR50410, 1 A). IPC-2152 sizing for 1 A on 0.5 oz inner copper at a
+  10 °C rise needs about 0.75 mm (Inference: a chart reading, not a calculation from the standard's tables); the check
+  (scratch `plane3v3.py`, to become a check_r12 K-plane rule in stage D) requires the 3V3 fill opened by 0.5 mm, a
+  1.0 mm neck, to keep U2's output vias and U1's core in one piece.
+- **Placement:** C24 (NRST 100 nF) moves from (17.6, 44.6) rotation 90 to (16.6, 45.0) rotation 0: its pads sat in
+  front of U1's F1 / F2 stubs (PYRO1_CONT, ACT_EN_MCU), which then could not leave westward in any draft.
+- **Gate:** route_check's r10 rules already judge In2 copper (R10 routed on In2); check_r12's K-region / K-reference
+  ports (stage D) must read In2 as a signal layer: K-region checks a slow / port net's In2 run sits over one In2
+  reference and K-reference samples B.Cu fast tracks against the In2 3V3 fill.
+**Result (2026-11-04):** In2 carries 60–90 tracks per draft (the 3V3 pour one piece in a2, but one 3V3 via cut off in
+a4: the aid needs a pour-connectivity guard), but the rip-up search
+still plateaus at 15–22 failed units (best a4: 15, 23 DRC unconnected; stageC.md §4.1), so no copper table is frozen.
+Next: a negotiated-congestion search (stageC.md §5).
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 | Code | Part (JLC model) | Refs | Qty | Library | Unit $ (2 b / 5 b) | Stock / orderable |
@@ -425,7 +459,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-11 | Firmware: LPS28DFW driver, PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face; pass 2, D-R12-33); routing incomplete: 11 connections unrouted in the best draft (stageC.md §4–5) | C |
+| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face; pass 2, D-R12-33); routing incomplete: with In2 as a third signal layer (D-R12-34) the best draft still leaves 15 units unrouted (stageC.md §4.1, §5) | C |
 | O-R12-15 | R12 IMU axis map (U4 on the top face, rotation 180): derive from the ISM6HG256X orientation figure, bench-check | D / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
