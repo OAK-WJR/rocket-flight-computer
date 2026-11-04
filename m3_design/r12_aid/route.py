@@ -66,6 +66,7 @@ class Board:
         self.tunit, self.vunit = [], []   # the routing unit that drew each (rip-up)
         self.unit = 'fixed'
         self.inside = {}            # pad key -> {layer: [(ix, iy)]}
+        self.soft = False           # negotiated congestion (D-R12-35): routed copper is recorded, not merged
         self._load()
 
     def load_planes(self, path):
@@ -243,6 +244,10 @@ class Board:
     # ---------------- copper
     def add_track(self, net, layer, w, a, b, record=True):
         li = LAYERS.index(layer)
+        if record and self.soft and self.unit != 'fixed':
+            self.tracks.append((net, layer, w, a, b))
+            self.tunit.append(self.unit)
+            return
         sl, X, Y = self.region(min(a[0], b[0]), min(a[1], b[1]), max(a[0], b[0]), max(a[1], b[1]))
         d = (self.seg_dist(X, Y, a, b) - w / 2).astype(np.float32)
         self.merge(li, sl, d, self.nid(net))
@@ -251,6 +256,10 @@ class Board:
             self.tunit.append(self.unit)
 
     def add_via(self, net, x, y, record=True):
+        if record and self.soft and self.unit != 'fixed':
+            self.vias.append((net, x, y))
+            self.vunit.append(self.unit)
+            return
         sl, X, Y = self.region(x, y, x, y)
         dd = np.hypot(X - x, Y - y)
         d = (dd - VIA_R_KEEP).astype(np.float32)
@@ -288,6 +297,20 @@ class Board:
                 self.add_via(net, x, y, record=False)
         return removed
 
+    def soft_remove(self, units):
+        """Negotiated mode: drop the units' recorded copper (the fields hold only the fixed copper)."""
+        keep_t = [(t, u) for t, u in zip(self.tracks, self.tunit) if u not in units]
+        keep_v = [(v, u) for v, u in zip(self.vias, self.vunit) if u not in units]
+        n = len(self.tracks) - len(keep_t) + len(self.vias) - len(keep_v)
+        self.tracks, self.tunit = [t for t, _ in keep_t], [u for _, u in keep_t]
+        self.vias, self.vunit = [v for v, _ in keep_v], [u for _, u in keep_v]
+        return n
+
+    def harden(self):
+        """Leave negotiated mode: merge every routed unit into the clearance fields again."""
+        self.soft = False
+        self.remove_units(set())
+
     def foreign(self, li, k):
         return np.where(self.nA[li] != k, self.dA[li], self.dB[li])
 
@@ -313,7 +336,7 @@ class Router:
         self.fail = []
         self.log = []
         self.terms = {}
-        self.hweight = 1.3
+        self.hweight = float(os.environ.get('R12_HW', 1.3))
 
     def own_block(self, net, h, sl):
         """Nodes too close to this net's own tracks (no side-by-side copper, no crossing), except near own pads /
@@ -322,9 +345,11 @@ class Router:
         js, is_ = sl
         X, Y = np.meshgrid(b.xs[is_], b.ys[js])
         out = [np.zeros(X.shape, bool) for _ in range(NL)]
-        for (n, layer, w, a, bb) in b.tracks:
+        for (n, layer, w, a, bb), u in zip(b.tracks, b.tunit):
             if n != net:
                 continue
+            if u == 'fixed' and self.pad_link(net, a, bb):
+                continue      # a fixed pad-to-pad link (joined pads, D-R12-35): a fan-out may leave its pads sideways
             if max(a[0], bb[0]) < X[0, 0] - 2 or min(a[0], bb[0]) > X[0, -1] + 2 or \
                     max(a[1], bb[1]) < Y[0, 0] - 2 or min(a[1], bb[1]) > Y[-1, 0] + 2:
                 continue
@@ -346,6 +371,19 @@ class Router:
         for li in range(NL):
             out[li] &= ~free
         return out
+
+    def pad_link(self, net, a, c):
+        """True when both ends of a track lie inside pads of its own net (a same-part link such as U4 GND 2-3)."""
+        cache = self.__dict__.setdefault('_links', {})
+        key = (net, a, c)
+        if key in getattr(self, 'links', ()):
+            return True
+        if key not in cache:
+            def inpad(pt):
+                return any(p['net'] == net and Board.poly_sdist(np.array([pt[0]]), np.array([pt[1]]), p['poly'])[0] < 0
+                           for p in self.b.pads if abs(p['x'] - pt[0]) < 2 and abs(p['y'] - pt[1]) < 2)
+            cache[key] = inpad(a) and inpad(c)
+        return cache[key]
 
     def ref_block(self, net, h, sl):
         """D-R12-34: a fast net's B.Cu track has In2 (3V3) as its reference, so no In2 track runs under it, and a fast
@@ -371,9 +409,83 @@ class Router:
             out[li] |= b.seg_dist(X, Y, a, bb) < w / 2 + h + 0.2
         return out
 
+    # ---------------- negotiated congestion (PathFinder, D-R12-35)
+    def pf_setup(self, pres=0.5, hist_inc=0.4, pres_mult=1.6, via_w=4.0):
+        """Enter negotiated mode: every search sees only the fixed copper as hard obstacles; another unit's copper costs
+        pres x (number of units it conflicts with) per node plus the node's history cost (both in grid steps)."""
+        b = self.b
+        self.pf = dict(pres=pres, hist_inc=hist_inc, pres_mult=pres_mult, via_w=via_w,
+                       hist=np.zeros((NL, b.NY, b.NX), np.float32), hvia=np.zeros((b.NY, b.NX), np.float32))
+        b.soft = True
+
+    def congestion(self, net, h, sl):
+        """Per window node: the number of other units (other nets; vias of any net) whose routed copper a track of
+        half-width h centred there (per layer), or a via there, would conflict with. Uses the rules of the hard mode
+        (clearance, via keep, via spacing and the fast-net In2 reference rule)."""
+        b = self.b
+        js, is_ = sl
+        x0, x1, y0, y1 = b.xs[is_.start], b.xs[is_.stop - 1], b.ys[js.start], b.ys[js.stop - 1]
+        Hn, Wn = js.stop - js.start, is_.stop - is_.start
+        fast = getattr(self, 'fast', lambda n: False)
+        me_fast = fast(net)
+        per = {}
+        def acc(u):
+            if u not in per:
+                per[u] = (np.zeros((NL, Hn, Wn), bool), np.zeros((Hn, Wn), bool))
+            return per[u]
+        R_ = 1.0
+        for (n, layer, w, a, c), u in zip(b.tracks, b.tunit):
+            if u == 'fixed' or n == net:
+                continue
+            if max(a[0], c[0]) < x0 - R_ or min(a[0], c[0]) > x1 + R_ or max(a[1], c[1]) < y0 - R_ or \
+                    min(a[1], c[1]) > y1 + R_:
+                continue
+            reach = w / 2 + max(h + CLR + EPS, VIA_FOREIGN, h + 0.2)
+            i0 = max(is_.start, int(math.floor((min(a[0], c[0]) - reach) / G)))
+            i1 = min(is_.stop, int(math.ceil((max(a[0], c[0]) + reach) / G)) + 1)
+            j0 = max(js.start, int(math.floor((min(a[1], c[1]) - reach) / G)))
+            j1 = min(js.stop, int(math.ceil((max(a[1], c[1]) + reach) / G)) + 1)
+            if i0 >= i1 or j0 >= j1:
+                continue
+            X, Y = np.meshgrid(b.xs[i0:i1], b.ys[j0:j1])
+            d = b.seg_dist(X, Y, a, c)
+            m, vm = acc(u)
+            ss = (slice(j0 - js.start, j1 - js.start), slice(i0 - is_.start, i1 - is_.start))
+            li = LAYERS.index(layer)
+            m[li][ss] |= d < w / 2 + h + CLR + EPS
+            vm[ss] |= d < w / 2 + VIA_FOREIGN
+            if layer == 'B' and fast(n):
+                m[2][ss] |= d < w / 2 + h + 0.2
+            elif layer == 'In2' and me_fast:
+                m[1][ss] |= d < w / 2 + h + 0.2
+        for (n, x, y), u in zip(b.vias, b.vunit):
+            if u == 'fixed':
+                continue
+            if x < x0 - R_ or x > x1 + R_ or y < y0 - R_ or y > y1 + R_:
+                continue
+            reach = max(VIA_R_KEEP + h + CLR + EPS, VIA_VIA)
+            i0, i1 = max(is_.start, int(math.floor((x - reach) / G))), min(is_.stop, int(math.ceil((x + reach) / G)) + 1)
+            j0, j1 = max(js.start, int(math.floor((y - reach) / G))), min(js.stop, int(math.ceil((y + reach) / G)) + 1)
+            if i0 >= i1 or j0 >= j1:
+                continue
+            X, Y = np.meshgrid(b.xs[i0:i1], b.ys[j0:j1])
+            d = np.hypot(X - x, Y - y)
+            m, vm = acc(u)
+            ss = (slice(j0 - js.start, j1 - js.start), slice(i0 - is_.start, i1 - is_.start))
+            if n != net:
+                for li in range(NL):
+                    m[li][ss] |= d < VIA_R_KEEP + h + CLR + EPS
+            vm[ss] |= (d < VIA_VIA - 1e-6) & ((d > 1e-6) | (n != net))
+        cnt = np.zeros((NL, Hn, Wn), np.float32)
+        vcnt = np.zeros((Hn, Wn), np.float32)
+        for m, vm in per.values():
+            cnt += m
+            vcnt += vm
+        return cnt, vcnt
+
     def search(self, net, w, starts, goals, window, layers=('F', 'B'), vias=True, via_cost=None, turn=None,
                avoid=None, maxexp=int(os.environ.get("R12_MAXEXP", 3_000_000)), goal_via=False, maxvia=2, noown=False, extra_block=None, via_block=None, base=False,
-               in2_cost=None):
+               in2_cost=None, goal_mask=None):
         """starts: [(layer, ix, iy)]; goals: [(layer, ix, iy, dirmask)]; window: (i0, j0, i1, j1) node bounds.
         goal_via: any via-legal node is a goal (plane fan-out); the path then ends in a new via."""
         turn = TURN if turn is None else turn
@@ -386,8 +498,11 @@ class Router:
         i1, j1 = min(b.NX, i1), min(b.NY, j1)
         sl = (slice(j0, j1), slice(i0, i1))
         Wn, Hn = i1 - i0, j1 - j0
+        pf = getattr(self, 'pf', None)
+        if pf:
+            base = True                   # negotiated mode: only the fixed copper is a hard obstacle
         own = self.own_block(net, h, sl) if not noown else [np.zeros((Hn, Wn), bool)] * NL
-        rb = self.ref_block(net, h, sl)
+        rb = self.ref_block(net, h, sl) if not pf else [np.zeros((Hn, Wn), bool)] * NL
         blocked = np.zeros((NL, Hn, Wn), np.uint8)
         for li in range(NL):
             if LAYERS[li] not in layers:
@@ -402,6 +517,12 @@ class Router:
         vok = (b.via_ok_base(k) if base else b.via_ok(k))[sl] if (vias or goal_via) else np.zeros((Hn, Wn), bool)
         if via_block is not None:
             vok = vok & ~via_block[sl]
+        if pf:                            # own net's routed vias: hole spacing (the fields hold only fixed vias)
+            X, Y = np.meshgrid(b.xs[sl[1]], b.ys[sl[0]])
+            for (n, x, y) in b.vias:
+                if n == net and i0 * G - 1 <= x <= i1 * G + 1 and j0 * G - 1 <= y <= j1 * G + 1:
+                    d = np.hypot(X - x, Y - y)
+                    vok &= ~((d < VIA_VIA - 1e-6) & (d > 1e-6))
         goal = np.zeros((NL, Hn, Wn), np.uint16)
         gc = []
         for (l, i, j, m) in goals:
@@ -411,7 +532,7 @@ class Router:
         if goal_via:
             for l in range(NL):
                 if LAYERS[l] in layers:
-                    goal[l][vok & (blocked[l] == 0)] = 255
+                    goal[l][vok & (blocked[l] == 0) & (goal_mask[sl] if goal_mask is not None else True)] = 255
             jj, ii = np.nonzero(np.bitwise_or.reduce(goal, axis=0))
             if len(ii):
                 step = max(1, len(ii) // 300)
@@ -442,7 +563,16 @@ class Router:
                 gx, gy, gr = [cx], [cy], [r]
         if not vias:
             vok = np.zeros_like(vok)
-        av = avoid[sl].astype(np.uint8) if avoid is not None else np.zeros((NL, Hn, Wn), np.uint8)
+        if pf:
+            cnt, vcnt = self.congestion(net, h, sl)
+            ncost = (pf['pres'] * cnt + pf['hist'][:, sl[0], sl[1]]).astype(np.float32)
+            vcost = (pf['via_w'] * pf['pres'] * vcnt + pf['hvia'][sl]).astype(np.float32)
+            for (l, i, j, m) in goals:          # an existing own via or pad as the goal: no new via to pay for
+                if i0 <= i < i1 and j0 <= j < j1:
+                    vcost[j - j0, i - i0] = 0
+            self.last_cost = (ncost, vcost)
+        else:
+            ncost = vcost = None
         end_l = max(w, 0.2) + 0.005
         mid_l = max(0.5, w + 0.05)
         es, ed = int(end_l / G) + 1, int(end_l / (G * math.sqrt(2))) + 1
@@ -450,22 +580,52 @@ class Router:
         rm = max(es, ed, ms, md)
         params = np.array([1.0, 1.41421356, turn, via_cost, 1.0, 1.0, ms, md, es, ed, 0.2,
                            1 if 'F' in layers else 0, 1 if 'B' in layers else 0, rm, maxvia if vias else 0,
-                           self.hweight, 4, IN2_COST if in2_cost is None else in2_cost, 1 if 'In2' in layers else 0, NL], np.float32)
+                           self.hweight, 4, IN2_COST if in2_cost is None else in2_cost, 1 if 'In2' in layers else 0, NL,
+                           1 if goal_via else 0], np.float32)
         sarr = np.array(st, np.int32).ravel()
         out = np.zeros(3 * 200000, np.int32)
         fl = lambda a: a.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
-        n = self.lib.astar(ctypes.c_int(Wn), ctypes.c_int(Hn),
+        for vmin in (4, 7):
+            for hw in ((self.hweight, self.hweight * 2.5, self.hweight * 6) if pf else (self.hweight,)):
+                # negotiated mode: an expansion-limit stop (-4) retries greedier (a heavier heuristic weight), so a
+                # congested connection still gets a path to negotiate with instead of dropping out (D-R12-35)
+                params[15] = hw
+                params[16] = vmin
+                n = self._call(Wn, Hn, blocked, vok, goal, ncost, vcost, st, sarr, gx, gy, gr, params, out, fl, maxexp)
+                if n != -4:
+                    break
+            if n == -4 and pf:
+                params[15] = self.hweight * 2.5
+                n = self._call(Wn, Hn, blocked, vok, goal, ncost, vcost, st, sarr, gx, gy, gr, params, out, fl,
+                               int(maxexp * 2.5))
+            if n == -4 and pf:
+                # last resort: the congestion costs capped per node, so the search stays tractable and the
+                # connection still takes part in the negotiation (it may share nodes this iteration)
+                nc, vc = np.minimum(ncost, 3.0).astype(np.float32), np.minimum(vcost, 6.0).astype(np.float32)
+                params[15] = self.hweight * 2.5
+                n = self._call(Wn, Hn, blocked, vok, goal, nc, vc, st, sarr, gx, gy, gr, params, out, fl, maxexp)
+            if n <= 0:
+                self.last_status = n
+                return None
+            path = self._finish(n, out, i0, j0, goal_via)
+            if path is not None or not pf:
+                return path
+            # -5 (two vias of the path closer than VIA_VIA): once more with a longer straight run after each via
+        return None
+
+    def _call(self, Wn, Hn, blocked, vok, goal, ncost, vcost, st, sarr, gx, gy, gr, params, out, fl, maxexp):
+        return self.lib.astar(ctypes.c_int(Wn), ctypes.c_int(Hn),
                            np.ascontiguousarray(blocked).ctypes.data_as(ctypes.POINTER(ctypes.c_uint8)),
                            np.ascontiguousarray(vok.astype(np.uint8)).ctypes.data_as(ctypes.POINTER(ctypes.c_uint8)),
                            np.ascontiguousarray(goal).ctypes.data_as(ctypes.POINTER(ctypes.c_uint16)),
-                           np.ascontiguousarray(av).ctypes.data_as(ctypes.POINTER(ctypes.c_uint8)),
+                           None if ncost is None else np.ascontiguousarray(ncost).ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
+                           None if vcost is None else np.ascontiguousarray(vcost).ctypes.data_as(ctypes.POINTER(ctypes.c_float)),
                            ctypes.c_int(len(st)), sarr.ctypes.data_as(ctypes.POINTER(ctypes.c_int)),
                            ctypes.c_int(len(gx)), fl(np.array(gx, np.float32)), fl(np.array(gy, np.float32)),
                            fl(np.array(gr, np.float32)), fl(params), ctypes.c_int(200000),
                            out.ctypes.data_as(ctypes.POINTER(ctypes.c_int)), ctypes.c_long(maxexp))
-        if n <= 0:
-            self.last_status = n
-            return None
+
+    def _finish(self, n, out, i0, j0, goal_via):
         self.last_status = n
         path = [(int(out[3 * q]), int(out[3 * q + 1]) + i0, int(out[3 * q + 2]) + j0) for q in range(n)][::-1]
         # a path's own vias: no two closer than VIA_VIA (hole to hole), none on another via
@@ -581,3 +741,83 @@ def window_of(nodes, margin):
     j = [n[2] for n in nodes]
     m = int(margin / G)
     return min(i) - m, min(j) - m, max(i) + m + 1, max(j) + m + 1
+
+
+def _seg_seg(a0, a1, B0, B1):
+    """Distance from segment a0-a1 to each segment B0[i]-B1[i] (arrays n x 2), and a point near the closest pair."""
+    def pseg(p, s0, s1):
+        d = s1 - s0
+        ll = (d * d).sum(-1)
+        ll = np.where(ll == 0, 1e-12, ll)
+        t = np.clip(((p - s0) * d).sum(-1) / ll, 0, 1)
+        q = s0 + t[..., None] * d
+        return np.hypot(*(p - q).T), q
+    a0, a1 = np.asarray(a0, float), np.asarray(a1, float)
+    d1, q1 = pseg(a0[None], B0, B1)
+    d2, q2 = pseg(a1[None], B0, B1)
+    d3, q3 = pseg(B0, a0[None], a1[None])
+    d4, q4 = pseg(B1, a0[None], a1[None])
+    D = np.stack([d1, d2, d3, d4])
+    P = np.stack([q1, q2, q3, q4])
+    k = D.argmin(0)
+    d = D[k, np.arange(len(k))]
+    p = P[k, np.arange(len(k))]
+    cr = lambda o, p_, q: (p_[..., 0] - o[..., 0]) * (q[..., 1] - o[..., 1]) - (p_[..., 1] - o[..., 1]) * (q[..., 0] - o[..., 0])
+    o1, o2 = cr(a0[None], a1[None], B0), cr(a0[None], a1[None], B1)
+    o3, o4 = cr(B0, B1, a0[None]), cr(B0, B1, a1[None])
+    x = (o1 * o2 < 0) & (o3 * o4 < 0)
+    d = np.where(x, 0.0, d)
+    return d, p
+
+
+def conflicts(b, fast=lambda n: False):
+    """Negotiated mode, after an iteration: every pair of routed units (not the fixed copper) whose copper breaks a
+    rule of the search: track-track clearance on one layer (other nets), the fast-net In2 reference rule, track to a
+    via (other nets), via to via spacing (any net, not the same via). Returns [(unit, unit, layer, x, y)]."""
+    out = []
+    T = [(t, u) for t, u in zip(b.tracks, b.tunit) if u != 'fixed']
+    V = [(v, u) for v, u in zip(b.vias, b.vunit) if u != 'fixed']
+    if T:
+        A0 = np.array([t[3] for t, _ in T], float)
+        A1 = np.array([t[4] for t, _ in T], float)
+        Wd = np.array([t[2] for t, _ in T], float)
+        Ly = np.array([LAYERS.index(t[1]) for t, _ in T])
+        Nt = [t[0] for t, _ in T]
+        Ut = [u for _, u in T]
+        lo, hi = np.minimum(A0, A1), np.maximum(A0, A1)
+        Fa = np.array([fast(n) for n in Nt])
+        for i, ((n, layer, w, a, c), u) in enumerate(T):
+            li = Ly[i]
+            near = (lo[:, 0] <= hi[i, 0] + 1.2) & (hi[:, 0] >= lo[i, 0] - 1.2) & (lo[:, 1] <= hi[i, 1] + 1.2) & \
+                (hi[:, 1] >= lo[i, 1] - 1.2)
+            near[:i + 1] = False
+            idx = np.nonzero(near)[0]
+            idx = [k for k in idx if Nt[k] != n and Ut[k] != u]
+            if not idx:
+                continue
+            idx = np.array(idx)
+            d, p = _seg_seg(a, c, A0[idx], A1[idx])
+            same = Ly[idx] == li
+            lim = np.where(same, Wd[idx] / 2 + w / 2 + CLR - 1e-4, -1.0)
+            ref = ((Ly[idx] == 2) & (li == 1) & fast(n)) | ((Ly[idx] == 1) & Fa[idx] & (li == 2))
+            lim = np.where(ref, np.maximum(lim, Wd[idx] / 2 + w / 2 + 0.2 - 1e-4), lim)
+            for k in np.nonzero(d < lim)[0]:
+                out.append((u, Ut[idx[k]], LAYERS[li] if same[k] else 'ref', float(p[k][0]), float(p[k][1])))
+        if V:
+            for (n, x, y), u in V:
+                near = (lo[:, 0] <= x + 1) & (hi[:, 0] >= x - 1) & (lo[:, 1] <= y + 1) & (hi[:, 1] >= y - 1)
+                idx = [k for k in np.nonzero(near)[0] if Nt[k] != n and Ut[k] != u]
+                if not idx:
+                    continue
+                idx = np.array(idx)
+                d = np.array([Board.seg_dist(np.array(x), np.array(y), tuple(A0[k]), tuple(A1[k])) for k in idx])
+                for k in np.nonzero(d < Wd[idx] / 2 + VIA_FOREIGN - 1e-4)[0]:
+                    out.append((u, Ut[idx[k]], 'via', x, y))
+    for i, ((n, x, y), u) in enumerate(V):
+        for (n2, x2, y2), u2 in V[i + 1:]:
+            if u2 == u:
+                continue
+            d = math.hypot(x - x2, y - y2)
+            if (d < VIA_VIA - 1e-4) and (d > 1e-6 or n != n2):
+                out.append((u, u2, 'via', x, y))
+    return out

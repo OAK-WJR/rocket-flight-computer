@@ -8,6 +8,11 @@
  * minimum before a turn (route_check short_segment / tiny_jog). Turns are +-45 degrees only (no 90-degree bend, no
  * acute angle). nvia counts the vias of this path (route_check extra_vias: a net's vias are budgeted by the caller).
  * Visited states live in an open-addressing hash table (the window is too large for dense arrays).
+ * Negotiated congestion (PathFinder, D-R12-35): ncost[l*H*W+...] is a per-node, per-layer cost added on entering the
+ * node (present use x present factor + history, computed by route.py from the other units' copper), vcost[y*W+x] the
+ * same for a via at the node; with goal_via (params[20]) the end via pays vcost too (a "paid" state bit, so the search
+ * still stops at the cheapest goal). Both may be NULL. label4() labels 4-connected components of a mask (the 3V3 pour
+ * guard, D-R12-36).
  *
  * build: cc -O2 -shared -fPIC -o astar.so astar.c
  */
@@ -61,18 +66,18 @@ static int32_t tfind(int64_t key, int create) {
 /* Layers: 0 F, 1 B, 2 In2 (params[19] = NL, 2 or 3); a through via joins every allowed layer at its node.
  * blocked[l*H*W + y*W + x]: node closed on layer l; viaok[y*W+x]: a via may sit here; goal[l*H*W+...]: low byte = the
  * arrival directions that end the search there after an end-length segment (255 = any), high byte = arrival
- * directions that need a middle-length segment (a 45-degree bend onto a fixed escape stub); avoid[l*H*W+...]: extra cost units.
- * params: [step, diag, turn, via, cost_F, cost_B, mid_s, mid_d, end_s, end_d, avoid_pen, allowF, allowB, RM, maxvia,
- *          heuristic weight, VMIN, cost_In2, allowIn2, NL]
+ * directions that need a middle-length segment (a 45-degree bend onto a fixed escape stub); ncost / vcost: congestion costs.
+ * params: [step, diag, turn, via, cost_F, cost_B, mid_s, mid_d, end_s, end_d, unused, allowF, allowB, RM, maxvia,
+ *          heuristic weight, VMIN, cost_In2, allowIn2, NL, goal_via]
  * out: (layer, x, y) triples from goal back to start; returns count, -1 no path, -2 memory, -3 table full, -4 expansion limit. */
-int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint16_t *goal, const uint8_t *avoid,
+int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint16_t *goal, const float *ncost, const float *vcost,
           int ns, const int *starts, int ng, const float *gcx, const float *gcy, const float *gr,
           const float *params, int maxout, int *out, long maxexp) {
     const float STEP = params[0], DIAG = params[1], TURN = params[2], VIA = params[3];
     const int NL = (int)params[19];
     const float LC[3] = {params[4], params[5], params[17]};
     const int MID[2] = {(int)params[6], (int)params[7]}, END[2] = {(int)params[8], (int)params[9]};
-    const float AP = params[10];
+    const int GV = (int)params[20];
     const int allow[3] = {(int)params[11], (int)params[12], NL > 2 ? (int)params[18] : 0};
     const int RM = (int)params[13], MAXV = (int)params[14];
     const float HW = params[15];                         /* heuristic weight (weighted A*: a drafting aid) */
@@ -86,14 +91,14 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
     float minlc = 1e30f;
     for (int q = 0; q < NL; q++) if (allow[q] && LC[q] < minlc) minlc = LC[q];
     int status = -1;
-#define KEY(l, x, y, d, r, f, v) ((int64_t)((((((((int64_t)(l) * H + (y)) * W + (x)) * 8 + (d)) * (RM + 1) + (r)) * 3 + (f)) * 3 + (v))))
+#define KEY(l, x, y, d, r, f, v, p) ((((((((((int64_t)(l) * H + (y)) * W + (x)) * 8 + (d)) * (RM + 1) + (r)) * 3 + (f)) * 3 + (v)) * 2 + (p))))
 #define HEUR(x, y) ({ float best = 1e30f; for (int k = 0; k < ng; k++) { float ax = fabsf((x) - gcx[k]), ay = fabsf((y) - gcy[k]); \
         float mn = ax < ay ? ax : ay, mx = ax < ay ? ay : ax; float o = (mx - mn) * STEP + mn * DIAG - gr[k] * DIAG; \
         if (o < best) best = o; } (best < 0 ? 0 : best) * minlc * HW; })
     for (int i = 0; i < ns; i++) {
         int l = starts[3 * i], x = starts[3 * i + 1], y = starts[3 * i + 2];
         if (!allow[l]) continue;
-        int32_t e = tfind(KEY(l, x, y, 0, 0, 1, 0), 1);
+        int32_t e = tfind(KEY(l, x, y, 0, 0, 1, 0, 0), 1);
         if (e < 0) { status = -3; goto done; }
         T[e].g = 0; T[e].parent = -1;
         hpush(&h, HEUR((float)x, (float)y), e);
@@ -107,15 +112,25 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
         T[e].closed = 1;
         if (++expanded > maxexp) { status = -4; break; }
         int64_t t = T[e].key;
-        int v = t % 3; t /= 3; int f = t % 3; t /= 3; int r = t % (RM + 1); t /= RM + 1; int d = t % 8; t /= 8;
+        int p = (int)(t % 2); t /= 2; int v = t % 3; t /= 3; int f = t % 3; t /= 3; int r = t % (RM + 1); t /= RM + 1; int d = t % 8; t /= 8;
         int x = t % W; t /= W; int y = t % H; t /= H; int l = (int)t;
         long node = (long)l * NODES + (long)y * W + x;
         float gs = T[e].g;
+        if (p) { found = e; break; }                       /* a goal whose end via has paid its congestion cost */
         if (r > 0) {
-            int gm = goal[node];
-            if ((gm & (1 << d)) && (r >= END[d & 1] || (f == 1 && T[e].parent >= 0)) && (f != 2 || r >= VMIN)) {
-                found = e; break; }
-            if (((gm >> 8) & (1 << d)) && r >= MID[d & 1]) { found = e; break; }
+            int gm = goal[node], hit = 0;
+            if ((gm & (1 << d)) && (r >= END[d & 1] || (f == 1 && T[e].parent >= 0)) && (f != 2 || r >= VMIN)) hit = 1;
+            if (((gm >> 8) & (1 << d)) && r >= MID[d & 1]) hit = 1;
+            if (hit) {
+                float gc = (GV && vcost) ? vcost[(long)y * W + x] : 0.0f;
+                if (gc <= 0.0f) { found = e; break; }
+                int32_t ne = tfind(KEY(l, x, y, d, r, f, v, 1), 1);
+                if (ne < 0) { status = -3; goto done; }
+                if (!T[ne].closed && gs + gc < T[ne].g) {
+                    T[ne].g = gs + gc; T[ne].parent = T[e].parent;
+                    if (hpush(&h, gs + gc, ne)) { status = -2; goto done; }
+                }
+            }
         }
         for (int nd = 0; nd < 8; nd++) {
             int turn = 0;
@@ -137,8 +152,8 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
             if (r == 0) { nr = 1; nf = f; }
             else if (turn) { nr = 1; nf = 0; }
             else { nr = r + 1 > RM ? RM : r + 1; nf = f; }
-            float c = ((nd & 1) ? DIAG : STEP) * LC[l] + (turn ? TURN : 0) + (avoid ? avoid[nn] * AP : 0);
-            int32_t ne = tfind(KEY(l, nx, ny, nd, nr, nf, v), 1);
+            float c = ((nd & 1) ? DIAG : STEP) * LC[l] + (turn ? TURN : 0) + (ncost ? ncost[nn] : 0);
+            int32_t ne = tfind(KEY(l, nx, ny, nd, nr, nf, v, 0), 1);
             if (ne < 0) { status = -3; goto done; }
             if (T[ne].closed) continue;
             float ng2 = gs + c;
@@ -150,9 +165,9 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
         if (r > 0 && v < MAXV && viaok[(long)y * W + x] && r >= END[d & 1] && (f != 2 || r >= VMIN)) {
             for (int ol = 0; ol < NL; ol++) {
                 if (ol == l || !allow[ol] || blocked[(long)ol * NODES + (long)y * W + x]) continue;
-                int32_t ne = tfind(KEY(ol, x, y, 0, 0, 2, v + 1), 1);
+                int32_t ne = tfind(KEY(ol, x, y, 0, 0, 2, v + 1, 0), 1);
                 if (ne < 0) { status = -3; goto done; }
-                float ng2 = gs + VIA;
+                float ng2 = gs + VIA + (vcost ? vcost[(long)y * W + x] : 0.0f);
                 if (!T[ne].closed && ng2 < T[ne].g) {
                     T[ne].g = ng2; T[ne].parent = e;
                     if (hpush(&h, ng2 + HEUR((float)x, (float)y), ne)) { status = -2; goto done; }
@@ -165,7 +180,7 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
         int32_t e = found;
         while (e >= 0 && n < maxout) {
             int64_t t = T[e].key;
-            t /= 3; t /= 3; t /= RM + 1; t /= 8;
+            t /= 2; t /= 3; t /= 3; t /= RM + 1; t /= 8;
             int x = t % W; t /= W; int y = t % H; t /= H; int l = (int)t;
             out[3 * n] = l; out[3 * n + 1] = x; out[3 * n + 2] = y; n++;
             e = T[e].parent;
@@ -175,4 +190,29 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
 done:
     free(T); T = NULL; free(h.a);
     return status;
+}
+
+/* 4-connected component labels of mask (1 = member) into lab (0 = not a member, else 1..n); returns n or -2. */
+int label4(int W, int H, const uint8_t *mask, int32_t *lab) {
+    long N = (long)W * H;
+    int32_t *st = malloc(sizeof(int32_t) * N);
+    if (!st) return -2;
+    for (long i = 0; i < N; i++) lab[i] = 0;
+    int n = 0;
+    for (long i = 0; i < N; i++) {
+        if (!mask[i] || lab[i]) continue;
+        n++; long sp = 0; st[sp++] = (int32_t)i; lab[i] = n;
+        while (sp) {
+            long q = st[--sp]; int x = (int)(q % W), y = (int)(q / W);
+            const int ox[4] = {1, -1, 0, 0}, oy[4] = {0, 0, 1, -1};
+            for (int k = 0; k < 4; k++) {
+                int nx = x + ox[k], ny = y + oy[k];
+                if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+                long r = (long)ny * W + nx;
+                if (mask[r] && !lab[r]) { lab[r] = n; st[sp++] = (int32_t)r; }
+            }
+        }
+    }
+    free(st);
+    return n;
 }

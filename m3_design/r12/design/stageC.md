@@ -1,4 +1,4 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-34)
+# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-38)
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
 but the board is not routed.** The drafting router's best run on the stage B placement (`9881aaa3…`) leaves 36
@@ -12,7 +12,7 @@ placed board with no copper. Decisions D-R12-22, -23, -26, -27 and -28 are in `R
 |---|---|
 | `m3_design/r12_route.py` (build) | Replays `m3_design/r12_routes.tsv` (every track and via, checked octilinear / non-zero, widths from one set, the one 0.45 / 0.3 mm via, no via twice), draws the planes of `m3_design/r12_planes.tsv`, a B.Cu GND pour (minimum width 0.5 mm, so no pour sliver or finger can form) and the S-8 keep-outs round J121's barrels on In1 / In2, then fills the zones. No search. |
 | `m3_design/r12_planes.tsv` (build input) | In1 one GND plane; In2 the 3V3 plane with three islands at priority 1: RAW_PROTECTED under the aft power cells, 3V3A under the IMU / baro, PORT_4V8 under the forward GH row (D-R12-22). |
-| `m3_design/r12_aid/` (drafting aid, not run by the build, D-R12-26) | `export.py` (KiCad Python: the placed board's pads, rule areas and holes to JSON); `astar.c` (octilinear A* on F / B with through vias: 45-degree turns only, middle segments ≥ 0.5 mm and end segments longer than max(width, 0.2 mm), so no right angle, acute angle, short segment or tiny jog by construction; a per-path via budget); `route.py` (exact clearance fields from pad polygons, track capsules and via discs at 0.1 mm nodes; rip-up support); `plan.py` (the plan: widths, the U9 necks, the U1 fan-out, plane / island fan-outs, partner GND vias, rip-up and reroute, and the TSV writer). Needs numpy and a C compiler. Its output is reviewed and frozen into `m3_design/r12_routes.tsv`; the build replays only the table. |
+| `m3_design/r12_aid/` (drafting aid, not run by the build, D-R12-26) | `export.py` (KiCad Python: the placed board's pads, rule areas and holes to JSON); `astar.c` (octilinear A* on F / B with through vias: 45-degree turns only, middle segments ≥ 0.5 mm and end segments longer than max(width, 0.2 mm), so no right angle, acute angle, short segment or tiny jog by construction; a per-path via budget); `route.py` (exact clearance fields from pad polygons, track capsules and via discs at 0.1 mm nodes; rip-up support); `plan.py` (the plan: widths, the U9 necks, the U1 fan-out, plane / island fan-outs, partner GND vias, rip-up and reroute, and the TSV writer). Since D-R12-35 / -36 it also negotiates congestion (`plan.py --pf N`: per-node present and history costs in `astar.c`, every unit re-routed each iteration, `--save-state` / `--load-state`) and guards the In2 3V3 pour (`Plan.pour3v3`, `label4()`). Needs numpy and a C compiler. Its output is reviewed and frozen into `m3_design/r12_routes.tsv`; the build replays only the table. |
 | `m3_design/r12_build.sh` | Stage A, stage B (fit_check, placed DRC, check_r12 placement), and — once `r12_routes.tsv` exists — stage C (replay, DRC with parity and zero unconnected, fit_check, route_check r12, check_r12 copper). |
 
 ## 2. Design rules the aid enforces (all from the gate, D-R12-03 / -23)
@@ -103,7 +103,44 @@ itself plateaus at 15–22 failures, and the failing set moves between runs. Per
 (boxed in by U400's FB network), the 3V3A H1 cluster (C21 / C22, 15 mm from its island), U3's QSPI_NCS / IO2, the
 microSD resistors (SD_CS / MOSI / MISO), I2C1 to U5, NRST / SWCLK to J2, and one or two of the servo / port UARTs.
 
+### 4.2 Negotiated congestion and the pour guard (D-R12-35 … D-R12-38)
+
+The rip-up search is replaced by negotiated congestion (`plan.py --pf N`, D-R12-35) with a 3V3 pour guard (D-R12-36),
+the R401 / C94 GND link and the cluster fan-out order (D-R12-37) and stub-tip vias at U1 (D-R12-38). An iteration
+takes 20–60 s, so 40–100 iterations fit in 20–40 min. Runs on the D-R12-34 placement (`PYTHONHASHSEED=0`; scratch,
+not frozen; "conflicts" are pairs of routed units breaking a clearance / via / reference rule, `route.conflicts`):
+
+| Runs | Settings (beyond HW 1.6, MAXEXP 4M) | Best PF iteration | After the hard finish | DRC unconnected (other DRC) | route_check failing |
+|---|---|---|---|---|---|
+| p5 | pres ×1.6 to 15, every unit every iteration | 19 conflicts, 1 fail | (no finish) | 5 (16 crossings) | 76 |
+| v1 … v4 | pres to 100–200, incremental after 10, In2 core 0.05–5 mm | 8–14 conflicts | — | — | — |
+| x1 / x2 / x3 | + tip vias; core 0.05 / 5.0 / 0.05 (turn 3) | 18 / 11 / 16 (score) | 7 / 12 / 3 fails, 10 / 1 / 24 isolated 3V3 vias | 15 / 18 / 11 | 76 / 80 / 84 |
+| y1 / y2 / y3 | turn 3, core 4.2 / 4.5 / 4.2, finish 8 passes | 22–24 conflicts | 16 / 12 / 11 fails, 7 / 9 / 13 isolated | 26 / 20 / 21 | — / 75 / 80 |
+
+What this shows:
+- The negotiation removes about 95 % of the sharing (≈ 300 → 8–20 conflicts) and keeps the 3V3 pour whole (0 isolated
+  vias at most best iterations), but it does not reach zero: it oscillates among 10–25 units.
+- The residue is local: U1's west side (x 14–20, y 35–48: the H1 3V3A cluster's run to its island past the crystal,
+  SERVO3 / SERVO4, CAM_5V_SENSE, NRST, the C24 GND fan-out), the dog-bone escapes on B under U1 (VCAP2, QSPI_*, SD_*),
+  the I2C / SD resistors north-east of U1 and the long PORT_4V8 cluster run.
+- Opening In2 under U1 (core < 4.5 mm) adds capacity but cuts the supply-ball dog-bones out of the pour (10–24 isolated
+  3V3 vias after the finish); the core must stay at about 5 mm.
+- The hard finish (old rip-up on the few conflicting units) does not close the gap and ignores the pour guard; it should
+  be replaced by more negotiation or local placement changes.
+
 ## 5. What stage C still needs
+
+1. Capacity at U1's west side (the inference from §4.2: the search, not only its tuning, is short of room there). The
+   most direct candidates: move C21 / C22 (3V3A at H1) to the east or south of U1 toward the 3V3A island, or extend the
+   3V3A island with an In2 arm to H1 (planes change); give C24 and the crystal network a little room; a second look at
+   the PORT_4V8 cluster's 60 mm run (L400 aft to the forward island).
+2. Then re-run the negotiation to zero conflicts (`--pf 60`, `R12_PF_PMAX=200`, `R12_PF_FULL=10`, core 5.0, turn 3),
+   `--clean` on the completed draft until no staircase / detour / loop finding is left, the partner-via pass (12–20
+   partners fail today for lack of room) and hand fixes for singles.
+3. Freeze `m3_design/r12_routes.tsv`, run `r12_build.sh` to DRC 0 / unconnected 0 / parity 0, fit_check r12, route_check
+   r12 0 failing, check_r12 copper; confirm the pour with `plane3v3.py`; then stage D.
+
+## 6. Older plan (kept for the record)
 
 1. Finish the search: with three signal layers the limit is the rip-up search, not capacity. Next: a negotiated-
    congestion (PathFinder) cost in `astar.c` (a per-node history cost on each layer, every net re-routed each

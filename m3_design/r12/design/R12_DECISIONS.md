@@ -351,6 +351,49 @@ a4: the aid needs a pour-connectivity guard), but the rip-up search
 still plateaus at 15–22 failed units (best a4: 15, 23 DRC unconnected; stageC.md §4.1), so no copper table is frozen.
 Next: a negotiated-congestion search (stageC.md §5).
 
+**D-R12-35 Negotiated congestion (PathFinder) replaces the rip-up search in the drafting aid (2026-11-04).** `astar.c`
+now takes a per-node, per-layer float cost (`ncost`) and a per-node via cost (`vcost`) instead of the unused `avoid`
+array; with `goal_via` the end via pays its congestion cost too (a "paid" state bit). `route.py` gains a negotiated mode
+(`Router.pf_setup`, `Board.soft`): routed copper is recorded but not merged, every search sees only the fixed copper
+(U1 fan-out, necks, links) as hard obstacles, and another unit's copper costs `pres × (units it conflicts with) +
+history` per node, using the hard mode's own rules (clearance, via keep and via spacing, the fast-net In2 reference
+rule; `Router.congestion`). `route.conflicts()` checks every pair of routed units exactly (segment geometry) after
+each iteration; the history grows by `R12_PF_HIST` on every conflicting spot and `pres` by ×1.6 up to `R12_PF_PMAX`.
+`plan.py --pf N` runs it: the first `R12_PF_FULL` iterations re-route every unit in the fixed order (deterministic,
+PYTHONHASHSEED=0), later ones only the units in conflict, failed or cutting the pour; the best iteration is kept
+(`--save-state` / `--load-state` pickle it), then `finish()` re-routes the still-conflicting units against all other
+copper with the old rip-up search. An expansion-limit stop retries with a heavier heuristic weight, a larger budget,
+and last with the costs capped; a path whose own vias end up closer than 0.6 mm retries with a longer straight run
+after each via. Side fixes found on the way: `own_block` no longer walls a fan-out in behind a fixed pad-to-pad link of
+its own net (the U4 GND 2–3 / 6–7 and R154–R157 pairs could not fan out on an empty board), and a cluster lead may join
+its tree from its own fan-out vias.
+**Result (2026-11-04, scratch drafts r1 … x3):** the full-board negotiation converges from about 300 conflicts to
+8–20 and then oscillates; no setting tried (present-factor cap 15–1000, history 0.3–1.5, turn cost 2–4, In2 core
+0.05–5.0 mm, incremental after 8–10 iterations, 40–120 iterations) reached zero, and the hard-mode finish leaves 8
+connections. The residual conflicts sit in one place: U1's west side (x 14–20, y 35–48: the H1 3V3A cluster's run to
+its island, SERVO3 / SERVO4, CAM_5V_SENSE, NRST, the C24 GND fan-out, the crystal) plus a few under U1 on B
+(dog-bone escapes of VCAP2 / QSPI / SD). See stageC.md §4.2.
+
+**D-R12-36 3V3 In2 pour guard (2026-11-04).** In negotiated mode the aid models the In2 3V3 fill on the 0.1 mm grid
+(`Plan.pour3v3`: the fill keeps 0.2 mm from foreign copper, the islands, the board edge and the S-8 keep-outs), opens it
+by 0.5 mm (a 1.0 mm neck, D-R12-34's IPC-2152 figure) and labels the pieces (`label4()` in `astar.c`); every 3V3 via
+must lie in the piece holding most of them. Inside U1's 10 × 10 mm box (`core_guard`), where the supply-ball dog-bones
+sit at 0.8 mm pitch and no 1 mm neck can exist between antipads, the plain fill (0.25 mm minimum width) counts instead,
+and the box joins the rest through 1 mm necks. Each isolated via adds history cost on the In2 tracks and vias that
+bound its piece (`Plan.plane_penalty`), and their units count as conflicting, so the negotiation moves them. The
+check is an Inference until `plane3v3.py` (KiCad's real fill) or check_r12's K-plane rule (stage D) confirms it on the
+frozen board.
+
+**D-R12-37 Local fixes (2026-11-04).** (a) R401's GND pad (boxed in by the port buck's feedback divider R404 / R400 and
+U400) is joined on F.Cu to C94.2 (GND, 2.4 mm away) and shares C94.2's fan-out (`plan.py`, a fixed `join`). (b) The
+3V3A H1 cluster and the PORT_4V8 cluster fan their lead pad out first and then join the tree (the old order boxed the
+lead pad in behind the cluster's own tracks); the 3V3A lead's In2 tier may place its intermediate vias in the 3V3 pour
+and only the end via in the island (`goal_mask`). No part moved; no pyro, gate-network or fire-path part touched.
+
+**D-R12-38 U1 stub-tip vias (2026-11-04).** A ring-1 / ring-2 escape stub may now also be reached from B or In2 through
+a via at its tip, 0.8 mm outside the ball field (a dog-bone at the stub end), where the via is legal; the stub itself is
+unchanged. It adds one via to that connection (route_check extra_vias still budgets two per critical net).
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 | Code | Part (JLC model) | Refs | Qty | Library | Unit $ (2 b / 5 b) | Stock / orderable |
@@ -459,7 +502,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-11 | Firmware: LPS28DFW driver, PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face; pass 2, D-R12-33); routing incomplete: with In2 as a third signal layer (D-R12-34) the best draft still leaves 15 units unrouted (stageC.md §4.1, §5) | C |
+| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face; pass 2, D-R12-33); routing incomplete: with In2 as a third signal layer (D-R12-34) and negotiated congestion (D-R12-35 … -38) the best draft still leaves 8–20 conflicting units round U1's west side and under U1 (stageC.md §4.2, §5) | C |
 | O-R12-15 | R12 IMU axis map (U4 on the top face, rotation 180): derive from the ISM6HG256X orientation figure, bench-check | D / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |

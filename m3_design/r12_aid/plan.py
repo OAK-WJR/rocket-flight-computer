@@ -5,6 +5,8 @@ and the driver that runs route.py's search over it and writes m3_design/r12_rout
 usage: python3 m3_design/r12_aid/plan.py GEOMETRY.json OUT.tsv --lib astar.so --length 90 [--report R.json]
 """
 import argparse
+import ctypes
+import pickle
 import json
 import math
 import os
@@ -120,6 +122,8 @@ class Plan:
         self.bga = (np.abs(X - cx) <= 4.0 + 1e-6) & (np.abs(Y - cy) <= 4.0 + 1e-6)
         # D-R12-34: In2 keeps a 3V3 pour core under U1 and 1 mm round the ball field (its supply-ball dog-bones)
         self.core = (np.abs(X - cx) <= IN2_CORE + 1e-6) & (np.abs(Y - cy) <= IN2_CORE + 1e-6)
+        # the pour guard's U1 box (D-R12-36): the ball field plus 1 mm, whatever In2 routing may enter
+        self.core_guard = (np.abs(X - cx) <= 5.0 + 1e-6) & (np.abs(Y - cy) <= 5.0 + 1e-6)
         self.ring = {}
         for p in u1:
             r, c = 'ABCDEFGHJK'.index(p['num'][0]), int(p['num'][1:]) - 1
@@ -293,6 +297,7 @@ class Plan:
                 self.terms.setdefault(net, [])
                 if not any(q[:3] == (0, i, j) for q in self.terms[net]):
                     self.terms[net].append((0, i, j, m))
+                self.__dict__.setdefault('tipvia', {})[net] = (i, j)
             connected.extend(u1)
             u1 = []
         if self.terms.get(net) or connected:
@@ -332,11 +337,24 @@ class Plan:
                 goals += self.r.pad_nodes(c)
             goals += self.r.via_nodes(net)
             goals += self.terms.get(net, [])
+            # D-R12-38: a U1 escape stub may also be reached from B / In2 through a via at its tip (a dog-bone at the
+            # stub end), where the via is legal; the path then gets its F node at the tip (a via) in tip_fix()
+            tip = getattr(self, 'tipvia', {}).get(net)
+            if tip and os.environ.get('R12_TIPVIA', '1') == '1' and net not in F_ONLY:
+                ti, tj = tip
+                vok = (self.b.via_ok_base(self.b.nid(net)) if self.r.__dict__.get('pf') else self.b.via_ok(self.b.nid(net)))
+                if vok[tj, ti] and not self.bga[tj, ti]:
+                    goals = goals + [(1, ti, tj, 255), (2, ti, tj, 255)]
             nearest = min(connected, key=lambda c: math.hypot(p['x'] - c['x'], p['y'] - c['y'])) if connected else p
             w = limit_w(p, w0)
             if connected and nearest['ref'] not in ('U9', 'U1'):
                 w = min(w, limit_w(nearest, w0))
             starts = [n[:3] for n in self.r.pad_nodes(p)]
+            if p.get('cl_lead'):      # D-R12-37: a cluster lead already fanned out may also join from its fan-out vias
+                for (vn, vx, vy), vu in zip(self.b.vias, self.b.vunit):
+                    if vn == net and vu == self.b.unit:
+                        i, j = int(round(vx / R.G)), int(round(vy / R.G))
+                        starts += [(0, i, j), (1, i, j)]
             if p.get('group'):        # a linked group (USB pin pairs): its link vias are terminals too
                 for (vn, vx, vy) in self.b.vias:
                     if vn == net and any(math.hypot(vx - q['x'], vy - q['y']) < 3.0 for q in p['group']):
@@ -353,6 +371,8 @@ class Plan:
                 path = self.r.search(net, w, starts, goals, win, layers=layers, maxexp=maxexp, in2_cost=ic,
                                      maxvia=max(0, (VIA_BUDGET if crit_class(net) else 6) - used), extra_block=self.masks(net))
                 if path:
+                    if tip and path[-1][0] != 0 and (path[-1][1], path[-1][2]) == tip:
+                        path = path + [(0, tip[0], tip[1])]
                     self.r.commit(net, w, path)
                     ok = True
                     break
@@ -398,6 +418,9 @@ class Plan:
                              via_block=via_block, goal_via=goal_via, vias=vias, in2_cost=in2_cost)
         if not path:
             return False
+        tip = getattr(self, 'tipvia', {}).get(net)
+        if tip and not goal_via and path[-1][0] != 0 and (path[-1][1], path[-1][2]) == tip:
+            path = path + [(0, tip[0], tip[1])]       # D-R12-38: the dog-bone via at the stub tip
         end_via = goal_via and not any(v[0] == net and abs(v[1] - path[-1][1] * R.G) < 1e-6
                                        and abs(v[2] - path[-1][2] * R.G) < 1e-6 for v in self.b.vias) \
             and not self.on_pad(net, path[-1])
@@ -422,17 +445,20 @@ class Plan:
         elif u.startswith('cluster:'):
             net = u.split(':', 1)[1]
             sub = CLUSTERS[net]
-            self.connect_tree(net, subset=sub)
             pads = [p for p in self.by_net[net] if (p['ref'], p['num']) in sub]
-            for p in pads[1:]:
-                p['fanned'] = True
             lead = next(p for p in pads if p['ref'] != 'U1')
-            for p in pads:
-                if p['ref'] == 'U1':
-                    p['fanned'] = True
-            self.b.unit = u
+            # D-R12-37: the lead's plane fan-out first, then the cluster joins it on F (fanning out last left the
+            # lead pad boxed in by the cluster's own tracks)
             lead['fanned'] = False
             self.fanout_pad(net, lead)
+            self.b.unit = u
+            lead['cl_lead'] = True
+            try:
+                self.connect_tree(net, subset=sub)
+            finally:
+                lead['cl_lead'] = False
+            for p in pads:
+                p['fanned'] = True
         else:
             self.connect_tree(u)
 
@@ -479,7 +505,9 @@ class Plan:
             self.fail.append((net, f'join {a} {b_}'))
             print('  FAIL join', net, a, b_)
             return
+        n0 = len(self.b.tracks)
         self.r.commit(net, w, path)
+        self.r.__dict__.setdefault('links', set()).update((t[0], t[3], t[4]) for t in self.b.tracks[n0:])
         self.link(pa, pb)
 
     def fanout(self, net, refs=None):
@@ -539,9 +567,13 @@ class Plan:
                     tiers += ((30.0, ('F', 'B', 'In2'), 2),)
                 for margin, lay, mv in tiers:
                     win = R.window_of([(0, s[1], s[2]) for s in starts], margin)
+                    vb_, gm = vb, None
+                    if 'In2' in lay:      # D-R12-37: the run's own vias may sit in the 3V3 pour; only the end via in the island
+                        vb_ = (vb & ~self.b.region_ok('~any')) | self.bga
+                        gm = self.b.region_ok(net) & ~self.bga
                     path = self.r.search(net, w, starts, goals, win, layers=lay, vias=mv > 0, goal_via=True,
-                                         extra_block=eb if eb is not None else self.masks(net), via_block=vb,
-                                         maxvia=mv)
+                                         extra_block=eb if eb is not None else self.masks(net), via_block=vb_,
+                                         maxvia=mv, goal_mask=gm)
                     if path:
                         break
                 if not path:
@@ -556,6 +588,190 @@ class Plan:
                             for v in self.b.vias) or self.on_pad(net, end)
                 self.r.commit(net, w, path, end_via=not exist)
             p['fanned'] = True
+
+    # ---------------- negotiated congestion (PathFinder, D-R12-35) and the 3V3 pour guard (D-R12-36)
+    def pf_remove(self, u, hard=False):
+        """Rip one unit's copper (negotiated mode; hard: rebuild the fields) and reset the fan-out flags it owned."""
+        b = self.b
+        if hard:
+            n0 = len(b.tracks) + len(b.vias)
+            b.remove_units({u})
+            had = len(b.tracks) + len(b.vias) < n0
+        else:
+            had = b.soft_remove({u}) > 0
+        if u.startswith('fan:'):
+            _, net, key = u.split(':', 2)
+            p = next(p for p in self.by_net[net] if f"{p['ref']}.{p['num']}" == key)
+            group = p.get('group') or [p]
+            owned = set(b.tunit) | set(b.vunit)
+            others = any(f"fan:{net}:{q['ref']}.{q['num']}" in owned for q in group if q is not p)
+            if had or not others:
+                for q in group:
+                    if not (q['ref'] == 'U9' and q['num'] in ('5', '6')):
+                        q['fanned'] = False
+        elif u.startswith('cluster:'):
+            n_ = u.split(':')[1]
+            for p in self.by_net[n_]:
+                if (p['ref'], p['num']) in CLUSTERS[n_]:
+                    p['fanned'] = False
+
+    def pour3v3(self, neck=1.0):
+        """D-R12-36: a raster model of the In2 3V3 fill (0.1 mm grid): the fill keeps 0.2 mm from foreign copper, the
+        islands, the board edge and the S-8 keep-outs; opened by neck / 2 (a neck of `neck` mm), every 3V3 via must sit in
+        the piece that holds most of them. Returns (isolated vias, {via: eroded component node mask})."""
+        import numpy as np
+        b = self.b
+        k = b.nid('3V3')
+        D = b.foreign_base(2, k) - 0.2
+        for sd in b.island.values():
+            D = np.minimum(D, sd - 0.2)
+        for p in b.pads:
+            if p['ref'] == 'J121':
+                D = np.minimum(D, np.hypot(self.X - p['x'], self.Y - p['y']) - 1.75)
+        D = D.astype(np.float32)
+        for (n, layer, w, a, c), u in zip(b.tracks, b.tunit):
+            if layer != 'In2' or n == '3V3' or u == 'fixed':
+                continue
+            sl, X, Y = b.region(min(a[0], c[0]), min(a[1], c[1]), max(a[0], c[0]), max(a[1], c[1]))
+            D[sl] = np.minimum(D[sl], b.seg_dist(X, Y, a, c) - w / 2 - 0.2)
+        for (n, x, y), u in zip(b.vias, b.vunit):
+            if n == '3V3' or u == 'fixed':
+                continue
+            sl, X, Y = b.region(x, y, x, y)
+            D[sl] = np.minimum(D[sl], np.hypot(X - x, Y - y) - R.VIA_D / 2 - 0.2)
+        # U1's core (the supply-ball dog-bones at 0.8 mm pitch) cannot hold a 1 mm neck between its antipads: there the
+        # plain fill (0.25 mm minimum width) counts, and the core joins the rest through 1 mm necks
+        er = np.ascontiguousarray(((D >= neck / 2 - 1e-4) | (self.core_guard & (D >= 0.125))).astype(np.uint8))
+        lab = np.zeros(er.shape, np.int32)
+        self.r.lib.label4.restype = ctypes.c_int
+        self.r.lib.label4(ctypes.c_int(b.NX), ctypes.c_int(b.NY), er.ctypes.data_as(ctypes.POINTER(ctypes.c_uint8)),
+                          lab.ctypes.data_as(ctypes.POINTER(ctypes.c_int32)))
+        vs = [(x, y) for (n, x, y) in b.vias if n == '3V3']
+        comps = []
+        for x, y in vs:
+            sl, X, Y = b.region(x, y, x, y)
+            m = np.hypot(X - x, Y - y) <= neck / 2 + 0.05
+            comps.append(set(np.unique(lab[sl][m & (lab[sl] > 0)]).tolist()))
+        from collections import Counter
+        cnt = Counter(c for cs in comps for c in cs)
+        main = cnt.most_common(1)[0][0] if cnt else 0
+        iso = [(v, cs) for v, cs in zip(vs, comps) if main not in cs]
+        return iso, lab, D
+
+    def plane_penalty(self, iso, lab):
+        """Units whose In2 tracks or vias bound an isolated 3V3 via's piece of fill: their nodes get history cost on In2
+        (the isolated via's own spot too), and they count as conflicting this iteration."""
+        import numpy as np
+        b = self.b
+        pf = self.r.pf
+        bad = set()
+        for (x, y), cs in iso:
+            sl, X, Y = b.region(x, y, x, y)
+            reg = np.zeros(lab.shape, bool)
+            for c in cs:
+                reg |= lab == c
+            if not cs:
+                reg[sl] |= np.hypot(X - x, Y - y) <= 0.6
+            jj, ii = np.nonzero(reg)
+            if len(ii) > 40000:          # a large piece: only its part near the via
+                keep = np.hypot(ii * R.G - x, jj * R.G - y) < 4.0
+                ii, jj = ii[keep], jj[keep]
+            P = np.stack([ii * R.G, jj * R.G], 1)
+            j0, j1 = jj.min() if len(jj) else 0, jj.max() if len(jj) else 0
+            for (n, layer, w, a, c), u in zip(b.tracks, b.tunit):
+                if layer != 'In2' or n == '3V3' or u == 'fixed':
+                    continue
+                d = b.seg_dist(P[:, 0], P[:, 1], a, c)
+                if len(d) and d.min() < w / 2 + 0.2 + 0.5 + 0.25:
+                    bad.add(u)
+                    sl2, X2, Y2 = b.region(min(a[0], c[0]), min(a[1], c[1]), max(a[0], c[0]), max(a[1], c[1]))
+                    pf['hist'][2][sl2] += pf['plane_inc'] * (b.seg_dist(X2, Y2, a, c) < w / 2 + 0.3)
+            for (n, vx, vy), u in zip(b.vias, b.vunit):
+                if n == '3V3' or u == 'fixed':
+                    continue
+                if len(P) and np.hypot(P[:, 0] - vx, P[:, 1] - vy).min() < R.VIA_D / 2 + 0.2 + 0.5 + 0.25:
+                    bad.add(u)
+                    sl2, X2, Y2 = b.region(vx, vy, vx, vy)
+                    pf['hvia'][sl2] += pf['plane_inc'] * (np.hypot(X2 - vx, Y2 - vy) < 0.4)
+            pf['hvia'][sl] += pf['plane_inc'] * (np.hypot(X - x, Y - y) < 0.4)
+            for u, uu in zip(b.vunit, b.vias):
+                if uu[0] == '3V3' and abs(uu[1] - x) < 1e-6 and abs(uu[2] - y) < 1e-6 and u != 'fixed':
+                    bad.add(u)
+        return bad
+
+    def negotiate(self, units, iters, t0):
+        import numpy as np
+        b, pf = self.b, None
+        self.r.pf_setup(pres=float(os.environ.get('R12_PF_PRES', 0.5)),
+                        hist_inc=float(os.environ.get('R12_PF_HIST', 0.4)),
+                        pres_mult=float(os.environ.get('R12_PF_MULT', 1.6)))
+        pf = self.r.pf
+        pf['plane_inc'] = float(os.environ.get('R12_PF_PLANE', 1.0))
+        self.max_rips = 0
+        best = None
+        full = int(os.environ.get('R12_PF_FULL', iters))    # iterations that re-route every unit; later ones only
+        todo = list(units)                                   # the units in conflict, failed or cutting the pour
+        for it in range(iters):
+            self.fail = []
+            for u in (units if it < full else [u for u in units if u in todo]):
+                self.pf_remove(u)
+                self.b.unit = u
+                self.queue = []
+                self.run_unit(u)
+            cf = R.conflicts(b, fast)
+            iso, lab, _ = self.pour3v3()
+            bad = {x for c in cf for x in c[:2]}
+            pbad = self.plane_penalty(iso, lab) if iso else set()
+            for (u1, u2, layer, x, y) in cf:
+                sl, X, Y = b.region(x, y, x, y)
+                disc = np.hypot(X - x, Y - y) < 0.35
+                if layer == 'via':
+                    pf['hvia'][sl] += pf['hist_inc'] * disc
+                    for li in range(R.NL):
+                        pf['hist'][li][sl] += pf['hist_inc'] * disc
+                elif layer == 'ref':
+                    pf['hist'][1][sl] += pf['hist_inc'] * disc
+                    pf['hist'][2][sl] += pf['hist_inc'] * disc
+                else:
+                    pf['hist'][R.LAYERS.index(layer)][sl] += pf['hist_inc'] * disc
+            score = len(cf) + len(self.fail) * 3 + len(iso)
+            todo = set(bad) | set(pbad)
+            for f in self.fail:
+                net_, what = f[0], f[1]
+                if what.endswith(' fanout'):
+                    todo.add(f'fan:{net_}:{what.split()[0]}')
+                todo.add(net_)
+                todo.add(f'cluster:{net_}')
+            print(f'pf {it}: conflicts {len(cf)} (units {len(bad)}), fails {len(self.fail)}, isolated 3V3 vias '
+                  f'{len(iso)} (units {len(pbad)}), pres {pf["pres"]:.2f}, {round(time.time() - t0)} s', flush=True)
+            if self.fail:
+                print('   fails:', [f[:2] for f in self.fail][:12], flush=True)
+            if len(cf) + len(iso) <= 6 and cf + [i[0] for i in iso]:
+                print('   left:', [(c[0], c[1], c[2], round(c[3], 2), round(c[4], 2)) for c in cf][:6],
+                      [i[0] for i in iso][:6], flush=True)
+            if best is None or score < best[0]:
+                best = (score, it, self.state())
+                if os.environ.get('R12_PF_DUMP'):
+                    pickle.dump(best[2], open(os.environ['R12_PF_DUMP'], 'wb'))
+            if not cf and not self.fail and not iso:
+                break
+            pf['pres'] = min(pf['pres'] * pf['pres_mult'], float(os.environ.get('R12_PF_PMAX', 40.0)))
+        if best[1] != it:
+            print(f'pf: restoring the best iteration {best[1]} (score {best[0]})', flush=True)
+            self.load_state(best[2])
+        return best
+
+    def state(self):
+        b = self.b
+        return dict(tracks=list(b.tracks), tunit=list(b.tunit), vias=list(b.vias), vunit=list(b.vunit),
+                    fanned={p['key']: bool(p.get('fanned')) for p in b.pads}, fail=list(self.fail))
+
+    def load_state(self, st):
+        b = self.b
+        b.tracks, b.tunit, b.vias, b.vunit = list(st['tracks']), list(st['tunit']), list(st['vias']), list(st['vunit'])
+        for p in b.pads:
+            p['fanned'] = st['fanned'].get(p['key'], False)
+        self.fail = list(st['fail'])
 
     def clean(self, rep, turn):
         """Clean-up pass (stage C, D-R12-33): every unit with a route_check hygiene finding in an earlier draft is
@@ -671,6 +887,29 @@ def write_tsv(b, out):
     Path(out).write_text('\n'.join(lines) + '\n')
 
 
+def finish(pl):
+    # D-R12-35 finish: the units still in conflict (or failed) are ripped and re-routed against all the other
+    # copper as hard obstacles, with the rip-up search (a few units, so it no longer stalls)
+    bad = []
+    for c in R.conflicts(pl.b, fast):
+        for u in c[:2]:
+            if u not in bad and u != 'fixed':
+                bad.append(u)
+    for f in pl.fail:
+        u = f'fan:{f[0]}:{f[1].split()[0]}' if f[1].endswith(' fanout') else f[0]
+        if f[0] in CLUSTERS and any(tuple(f[1].split()[0].split('.')) == q for q in CLUSTERS[f[0]]):
+            u = f'cluster:{f[0]}'
+        if u not in bad:
+            bad.append(u)
+    print('finish: re-routing', len(bad), 'units hard:', bad[:20], flush=True)
+    pl.fail = []
+    for u in bad:
+        pl.pf_remove(u, hard=True)
+    pl.queue = list(bad)
+    pl.ripped, pl.rip_pairs, pl.rips, pl.max_rips = {}, set(), 0, 300
+    return int(os.environ.get('R12_FINISH_PASSES', 4))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('geo')
@@ -684,6 +923,10 @@ def main():
     ap.add_argument('--clean', default='', help='route_check --report JSON of an earlier draft: re-route the units it '
                     'flags (hygiene findings) once more with a higher turn cost, keeping the old copper if that fails')
     ap.add_argument('--clean-turn', type=float, default=8.0)
+    ap.add_argument('--pf', type=int, default=0, help='negotiated congestion (PathFinder, D-R12-35): at most this '
+                    'many iterations, every unit re-routed in each, instead of the rip-up passes')
+    ap.add_argument('--save-state', default='', help='pickle the routed units after the search (before --clean)')
+    ap.add_argument('--load-state', default='', help='skip the search: load a --save-state pickle')
     a = ap.parse_args()
     geo = json.load(open(a.geo))
     pl = Plan(geo, a.lib, a.length)
@@ -700,6 +943,9 @@ def main():
     pl.join('GND', ('R154', '2'), ('R155', '2'))
     pl.join('GND', ('R156', '2'), ('R157', '2'))
     pl.join('CAM_5V', ('J9', '1'), ('J9', '2'), w=0.5)
+    # D-R12-37: R401's GND pad is boxed in by the port buck's feedback divider (R404 / R400 / U400): it shares C94.2's
+    # GND fan-out through a short F.Cu link
+    pl.join('GND', ('R401', '2'), ('C94', '2'), w=0.2)
     pl.usb()
     pl.bga_setup()
     pl.escapes()
@@ -739,6 +985,23 @@ def main():
     short = [n for n in short if n not in longslow]
     pl.queue = order + short + fans + power + [n for n in rest if n not in short]
     done = 0
+    if a.load_state:
+        pl.load_state(pickle.load(open(a.load_state, 'rb')))
+        pl.queue = []
+        a.passes = 0
+        if os.environ.get('R12_FINISH'):
+            pl.b.harden()
+            a.passes = finish(pl)
+    elif a.pf:
+        units = list(pl.queue)
+        pl.queue = []
+        pl.negotiate(units, a.pf, t0)
+        a.passes = 0
+        pl.r.pf = None
+        pl.b.harden()
+        if a.save_state:
+            pickle.dump(pl.state(), open(a.save_state, 'wb'))
+        a.passes = finish(pl)
     for npass in range(a.passes):
         while pl.queue:
             u = pl.queue.pop(0)
@@ -772,6 +1035,13 @@ def main():
                         p['fanned'] = False
             pl.unrouted(u)
         pl.ripped, pl.rip_pairs, pl.rips = {}, set(), 0
+    iso, _, _ = pl.pour3v3()
+    print('after search: conflicts', len(R.conflicts(pl.b, fast)), 'fails', len(pl.fail), 'isolated 3V3 vias', len(iso),
+          [v for v, _ in iso][:8], flush=True)
+    if a.save_state:
+        pickle.dump(pl.state(), open(a.save_state + ('.fin' if (a.pf or a.load_state) else ''), 'wb'))
+    if a.load_state:
+        pl.b.harden()
     if a.clean:
         pl.clean(json.load(open(a.clean)), a.clean_turn)
     pl.b.unit = 'partner'
