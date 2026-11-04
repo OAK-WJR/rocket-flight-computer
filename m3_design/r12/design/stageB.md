@@ -1,4 +1,4 @@
-# R12 stage B: board, stack-up and placement (2026-11-04)
+# R12 stage B: board, stack-up and placement (2026-11-04; connectors updated for D-R12-29 … -31)
 
 Stage B of `r12_plan.md` §4. `m3_design/r12_pcb.py` builds `m3_design/r12/m3.kicad_pcb` from the stage-A netlist and
 `m3_design/r12_place.tsv`; `m3_design/r12_build.sh` runs it after stage A, then `fit_check --profile r12`, a native
@@ -48,15 +48,15 @@ fit_check: nearest top hardware clearance J1.2's wire allocation 3.850 mm (≥ 3
 
 | Where | Parts | Reason |
 |---|---|---|
-| Aft edge (y 0), mouths aft | J400 (x 11.0), J122 (21.6), J9 (33.5) | switch beside the power entry; servo leads from the fin can; camera beside its buck |
-| Forward edge (y 100), mouths forward | J420 radio (11.5), J410 GPS (23.0), J440 AUX (34.5) | U1's UART balls are on rows J / K and column 10 |
-| West edge | J1 battery pads (2.3, 14.7), J121 pyro pads (2.3, 37.0) | pack leads arrive from aft along x = 0; the pyro cell beside J121 |
+| Aft edge (y 0), mouths aft | SH 1.0 ports (D-R12-31): J400 (x 11.0), J122 (21.6), J9 (33.5) | switch beside the power entry; servo leads from the fin can; camera beside its buck |
+| Forward edge (y 100), mouths forward | SH 1.0 ports: J420 radio (11.5), J410 GPS SH-6 (23.0), J440 AUX (34.5), in the MicoAir H743's pin order | U1's UART balls are on rows J / K and column 10 |
+| West edge | J1 battery pads (3.5, 15.3), 5.0 mm pitch, with a 10 × 8.2 mm keep-clear for a later terminal (D-R12-30); J121 DB125-2 screw terminal (7.4, 37.0), wires west, wire room 5.00 mm ≥ 4.95 (D-R12-29) | pack leads arrive from aft along x = 0; the pyro cell beside J121 |
 | East edge | J3 USB-C (41.4, 44.0) | U1's USB balls B10 / C10 face east |
 | Aft-west | J1 ladder (D8, C80, C96), U9 + EN / OVLO / ILIM / dVdt, damper R166 / C89 / C95 | the power front end in one block (AVA-style) |
 | Aft-middle / east | RAW cluster (C82, C97, R92, D9, TP81, D5), servo network (R150–R157, D121) at J122, camera / port / 3V3 buck cells (U403, U400, U2) in a column | one power end; each buck cell VIN cap – IC – inductor – output cap in a line |
 | West, y 25–50 | pyro cell: Q120 / Q121 load switch, R134, Q124, gate networks, cold / continuity / arm banks, TP120 / TP122 | the fire path short and on F (J121 at its edge) |
 | Centre | U1 (23.0, 44.0, rotation 0), Y1 west, decoupling at the four corners of a 6.5 mm fan-out ring | column 1 west (HSE, pyro), row A aft (IMU, servos), column 10 east (USB, SD, QSPI) |
-| Aft of U1 | U4 IMU (23.0, 34.6, rotation 180) on the roll axis, U5 baro (29.0, 32.0), 3V3A parts | sensors together over the 3V3A island |
+| Aft of U1 | U4 IMU (23.0, 31.6, rotation 180) on the roll axis (moved 3 mm aft in stage C, D-R12-32), U5 baro (29.0, 32.0), 3V3A parts | sensors together over the 3V3A island |
 | South-east of U1 | U3 QSPI flash (34.0, 57.0), D6, C84 hold-up (owner-fitted) | |
 | Forward-middle | J430 microSD (20.0, 68.0, rotation 180, contacts toward U1), pull-ups | |
 | Forward | LS120 buzzer (owner-fitted THT), LEDs, J2 Tag-Connect, test pads, port R / C at the GH row | |
@@ -67,7 +67,7 @@ every plated pin ≥ 3.5 mm.
 
 ## 6. IMU (D-R12-25)
 
-U4 at (23.0, 34.6), rotation 180, top face: lever arm to the roll axis x = 23 mm is 0.000 mm (`r12_gate_data.json`
+U4 at (23.0, 31.6), rotation 180, top face: lever arm to the roll axis x = 23 mm is 0.000 mm (`r12_gate_data.json`
 imu). The axis map changes from R11 (U4 was on the bottom, roll = −gyro_Y, D-R11-11) because the part moved to the top
 face; the R12 map is **not derived in this stage**: it needs the ISM6HG256X datasheet orientation figure against the
 top-face 180° placement, then a bench check (open item for stage D; firmware must not reuse R11's map). The IMU body keeps R10's two rule areas (body: no via, no pour; pad-ring interior: no track) on F.Cu.

@@ -240,6 +240,49 @@ port / 3V3 buck cells in a column), the pyro cell west beside J121, the IMU on t
 the flash south-east of U1, the microSD forward of U1 with its contacts toward it, the hold-up C84 and the USB diode
 D6 east, the buzzer, LEDs and Tag-Connect forward (stageB.md §5).
 
+**D-R12-29 J121 pyro: R10's DB125-2 screw terminal (owner decision, 2026-11-03).** J121 is the black DORABO
+DB125-3.5-2P-BK-S (LCSC C52993880), with R10's land and model `M3_DB125_2P_BK` copied verbatim (`r12_parts.R10_REUSE`).
+Pin 1 PYRO1_OUT (E1−), pin 2 PYRO1_IGN (E1+). Pad 1 carries no unconnected inner rings, as on R10. The S-8 keep-outs on
+In1 / In2 round both barrels are kept (`r12_route.S8_KEEPOUT`). Placement: (7.4, 37.0), rotation 270, wires leave west.
+The face sits 3.35 mm in from the edge, so the R10 bare-bore wire-room rule passes: 5.00 mm against the 4.95 mm floor
+(fit_check r12 now checks J121 as a terminal; Calculation on CAD envelopes). Assembly: JLC-fitted THT. Economic PCBA
+takes THT parts (cost_study.md §1.1: about $0.016 per manual joint plus $3.58 hand-soldering labour per order, Live
+2026-11-04). The part is Extended (feeder fee); stage D reruns the cost. It is not owner-fitted.
+
+**D-R12-30 J1 battery: soldered pigtail pads ready for a 5.0 mm terminal (owner decision, 2026-11-03).** The two plated
+pads become `M3_WIREPAD_2P_P5`: 1.40 mm finished holes, 2.60 mm lands, 5.00 mm pitch. Pin 1 BAT_IN, pin 2 GND. A tinned
+16–20 AWG lead fits, and so do the pins of a later 5.0 mm two-position screw terminal, with no board change (hole size
+for both is an Inference). The courtyard is a 10 × 8.2 mm keep-clear for that future body, its wire side at the west
+edge. Placement: (3.5, 15.3), rotation 90. No terminal is placed or on the BOM. Because the keep-clear moved the entry
+ladder, D8, C96, C80, TP80, C88 and R167 moved (stageB.md §5); C96's BAT_IN pad now lies on U9.5's bar line.
+
+**D-R12-31 Ports: JST SH 1.0 mm clones (owner decision, 2026-11-03).** Reason (owner): the vehicle's primary flight
+computer, the MicoAir H743, uses SH 1.0 ports, and one module harness should plug into either board.
+- **Retention (owner deviation):** the owner accepts SH's friction-only retention, which R11 D-R11-05 had rejected.
+  The per-flight procedure gains a retention step (an adhesive / RTV dab or a tie on each plug); see O-R12-18.
+- **Parts:** Megastar ZX-SH1.0-4PWT (C7430446) for J400, J420 and J440; ZX-SH1.0-6PWT (C7430448) for J410, J9 and J122.
+  Both are Extended, 1 A per contact, with 189 k / 94 k in stock (JLC listing, Live 2026-11-04). It is still two codes.
+- **Land:** JST's SMnnB-SRSS-TB land as KiCad's library draws it from JST eSH.pdf. JLCEDA's land returned HTTP 403.
+  That the clone takes the JST land is an Inference.
+- **Pin orders.** J420 / J440 copy the H743 telemetry UART port: 1 GND, 2 5 V (PORT_4V8), 3 TX, 4 RX. J410 is SH-6 and
+  copies the H743 GPS port: 1 GND, 2 5 V, 3 TX, 4 RX, 5 SCL, 6 SDA; the I2C pins are NC on R12. Source: the
+  MicoAir743v2 port image on ardupilot.org (common-MicoAir743v2.html, read 2026-11-03). The image lists the pins in this
+  order but does not mark which end is pin 1, and the owner's board may be the v1. The order is an Inference until a
+  real H743 lead is checked (O-R12-19).
+- **Unchanged orders:** camera J9 keeps its order (two contacts each for CAM_5V and GND: 1 A per contact, against R10's
+  1 A camera load); servo J122 keeps 1–4 SERVO1–4, 5 GND, 6 NC; switch J400 uses pins 1–2 of a 4P body.
+- **Fit:** fit_check models the SH header and plug from the listing and JST's family dimensions (Inference). The mouths
+  sit 1.1 mm inside their short edge. This supersedes D-R12-15's GH clones.
+
+**D-R12-32 Stage C changes.** The IMU moved 3 mm aft, to (23.0, 31.6), for room for U1's A-row fan-out (its 3V3A parts
+followed). D6 is rotated so its VBUS pad faces J3. The drafting aid gained:
+- a straight run of at least 0.4 mm after every via, so two vias of one path stay apart (hole to hole);
+- a check that rejects any path whose own vias are closer than 0.6 mm;
+- NPTH holes kept 0.25 mm from copper (the general hole rule);
+- joins to an own via from any side;
+- linked pin groups that fan out once;
+- repeated passes over the failed connections with rip-up.
+
 **AGENTS §2 check.** §2.1: J400 is still the only switch and still drives U9 EN through R80 / R165 / R81 / C87 with
 D402. §2.2: RAW_ACT still comes only through Q120 / Q121 from BAT_IN; R134 2 Ω kept. §2.3: firmware rules unchanged
 (new rules added: PA4 polarity, camera UART parking, LPS28DFW driver). §2.4: all three gate networks unchanged in value
@@ -358,6 +401,9 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-15 | R12 IMU axis map (U4 on the top face, rotation 180): derive from the ISM6HG256X orientation figure, bench-check | D / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
+| O-R12-18 | SH plug retention: a per-flight adhesive / RTV or tie step on every SH plug (owner deviation, D-R12-31) | procedure / owner |
+| O-R12-19 | SH pin orders against a real MicoAir H743 lead (pin-1 end not marked in the source image; v1 / v2) (D-R12-31) | bench |
+| O-R12-20 | J121 DB125 on JLC Economic as THT, and the J1 5.0 mm-terminal hole fit: confirm on the order page / with a sample terminal (D-R12-29, -30) | order / bench |
 
 ## 5. Files (stage A)
 

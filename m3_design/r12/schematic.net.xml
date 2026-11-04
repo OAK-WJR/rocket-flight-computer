@@ -2805,24 +2805,25 @@
       </units>
     </comp>
     <comp ref="J9">
-      <value>GH1.25-6PWT</value>
-      <footprint>rocket:M3_GHC_6P</footprint>
+      <value>ZX-SH1.0-6PWT</value>
+      <footprint>rocket:M3_SHC_6P</footprint>
+      <datasheet>https://jlcpcb.com/partdetail/C7430448</datasheet>
       <fields>
-        <field name="LCSC">C52037408</field>
-        <field name="Manufacturer">XUNPU</field>
-        <field name="Manufacturer Part">GH1.25-6PWT</field>
-        <field name="Footprint">rocket:M3_GHC_6P</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C7430448</field>
+        <field name="Manufacturer">Megastar</field>
+        <field name="Manufacturer Part">ZX-SH1.0-6PWT</field>
+        <field name="Footprint">rocket:M3_SHC_6P</field>
+        <field name="Datasheet">https://jlcpcb.com/partdetail/C7430448</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="CameraGH6" description="JST SM06B-GHS-TB camera port (D-R11-05): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)"/>
-      <property name="LCSC" value="C52037408"/>
-      <property name="Manufacturer" value="XUNPU"/>
-      <property name="Manufacturer Part" value="GH1.25-6PWT"/>
+      <property name="LCSC" value="C7430448"/>
+      <property name="Manufacturer" value="Megastar"/>
+      <property name="Manufacturer Part" value="ZX-SH1.0-6PWT"/>
       <property name="Sheetname" value="06 | Camera terminal"/>
       <property name="Sheetfile" value="camera_connector.kicad_sch"/>
       <property name="ki_keywords" value="camera port UART"/>
-      <property name="ki_fp_filters" value="M3_GHC_6P"/>
+      <property name="ki_fp_filters" value="M3_SHC_6P"/>
       <sheetpath names="/06 | Camera terminal/" tstamps="/2e5d78f9-c446-5798-99c0-7be8d70abb74/"/>
       <tstamps>b6f6b65b-6422-59ed-a36f-61c755cad28e</tstamps>
       <units>
@@ -3201,11 +3202,11 @@
       </units>
     </comp>
     <comp ref="J1">
-      <value>AWG20 wire pads</value>
-      <footprint>rocket:M3_WIREPAD_2P_AWG20</footprint>
+      <value>Battery wire pads 5.0 mm</value>
+      <footprint>rocket:M3_WIREPAD_2P_P5</footprint>
       <fields>
         <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_WIREPAD_2P_AWG20</field>
+        <field name="Footprint">rocket:M3_WIREPAD_2P_P5</field>
         <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
@@ -3227,24 +3228,25 @@
       </units>
     </comp>
     <comp ref="J400">
-      <value>GH1.25-4PWT</value>
-      <footprint>rocket:M3_GHC_4P</footprint>
+      <value>ZX-SH1.0-4PWT</value>
+      <footprint>rocket:M3_SHC_4P</footprint>
+      <datasheet>https://jlcpcb.com/partdetail/C7430446</datasheet>
       <fields>
-        <field name="LCSC">C52037406</field>
-        <field name="Manufacturer">XUNPU</field>
-        <field name="Manufacturer Part">GH1.25-4PWT</field>
-        <field name="Footprint">rocket:M3_GHC_4P</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C7430446</field>
+        <field name="Manufacturer">Megastar</field>
+        <field name="Manufacturer Part">ZX-SH1.0-4PWT</field>
+        <field name="Footprint">rocket:M3_SHC_4P</field>
+        <field name="Datasheet">https://jlcpcb.com/partdetail/C7430446</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="SwitchGH4" description="GH-1.25 clone 4-pin external switch port (D-R12-15): 1 SW SOURCE, 2 SW RETURN, 3-4 unused"/>
-      <property name="LCSC" value="C52037406"/>
-      <property name="Manufacturer" value="XUNPU"/>
-      <property name="Manufacturer Part" value="GH1.25-4PWT"/>
+      <property name="LCSC" value="C7430446"/>
+      <property name="Manufacturer" value="Megastar"/>
+      <property name="Manufacturer Part" value="ZX-SH1.0-4PWT"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="connector switch"/>
-      <property name="ki_fp_filters" value="M3_GHC_4P"/>
+      <property name="ki_fp_filters" value="M3_SHC_4P"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>d71243c6-d463-53e4-beda-cfffb691c785</tstamps>
       <units>
@@ -4558,20 +4560,23 @@
       </units>
     </comp>
     <comp ref="J121">
-      <value>AWG20 wire pads</value>
-      <footprint>rocket:M3_WIREPAD_2P_AWG20</footprint>
+      <value>DB125-3.5-2P-BK-S</value>
+      <footprint>rocket:M3_DB125_2P_BK</footprint>
+      <datasheet>https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf</datasheet>
       <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_WIREPAD_2P_AWG20</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C52993880</field>
+        <field name="Manufacturer">DORABO</field>
+        <field name="Manufacturer Part">DB125-3.5-2P-BK-S</field>
+        <field name="Footprint">rocket:M3_DB125_2P_BK</field>
+        <field name="Datasheet">https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Conn_1x2" description="2-position connector"/>
-      <property name="LCSC" value=""/>
+      <property name="LCSC" value="C52993880"/>
+      <property name="Manufacturer" value="DORABO"/>
+      <property name="Manufacturer Part" value="DB125-3.5-2P-BK-S"/>
       <property name="Sheetname" value="12 | Pyro channel"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="exclude_from_pos_files"/>
       <sheetpath names="/12 | Pyro channel/" tstamps="/b1b684fa-f1b4-588e-bcca-603fd244a6ad/"/>
       <tstamps>c48e1346-d9da-56cd-a8bf-cb505c58d449</tstamps>
       <units>
@@ -5063,24 +5068,25 @@
       </units>
     </comp>
     <comp ref="J122">
-      <value>GH1.25-6PWT</value>
-      <footprint>rocket:M3_GHC_6P</footprint>
+      <value>ZX-SH1.0-6PWT</value>
+      <footprint>rocket:M3_SHC_6P</footprint>
+      <datasheet>https://jlcpcb.com/partdetail/C7430448</datasheet>
       <fields>
-        <field name="LCSC">C52037408</field>
-        <field name="Manufacturer">XUNPU</field>
-        <field name="Manufacturer Part">GH1.25-6PWT</field>
-        <field name="Footprint">rocket:M3_GHC_6P</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C7430448</field>
+        <field name="Manufacturer">Megastar</field>
+        <field name="Manufacturer Part">ZX-SH1.0-6PWT</field>
+        <field name="Footprint">rocket:M3_SHC_6P</field>
+        <field name="Datasheet">https://jlcpcb.com/partdetail/C7430448</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="ServoGH6" description="GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused"/>
-      <property name="LCSC" value="C52037408"/>
-      <property name="Manufacturer" value="XUNPU"/>
-      <property name="Manufacturer Part" value="GH1.25-6PWT"/>
+      <property name="LCSC" value="C7430448"/>
+      <property name="Manufacturer" value="Megastar"/>
+      <property name="Manufacturer Part" value="ZX-SH1.0-6PWT"/>
       <property name="Sheetname" value="13 | Servo outputs"/>
       <property name="Sheetfile" value="servos.kicad_sch"/>
       <property name="ki_keywords" value="connector servo"/>
-      <property name="ki_fp_filters" value="M3_GHC_6P"/>
+      <property name="ki_fp_filters" value="M3_SHC_6P"/>
       <sheetpath names="/13 | Servo outputs/" tstamps="/79f117bd-85c3-595f-b275-e2874e125dae/"/>
       <tstamps>e0df665c-9fe5-50e0-9899-422ec2490980</tstamps>
       <units>
@@ -5550,24 +5556,25 @@
       </units>
     </comp>
     <comp ref="J410">
-      <value>GH1.25-4PWT</value>
-      <footprint>rocket:M3_GHC_4P</footprint>
+      <value>ZX-SH1.0-6PWT</value>
+      <footprint>rocket:M3_SHC_6P</footprint>
+      <datasheet>https://jlcpcb.com/partdetail/C7430448</datasheet>
       <fields>
-        <field name="LCSC">C52037406</field>
-        <field name="Manufacturer">XUNPU</field>
-        <field name="Manufacturer Part">GH1.25-4PWT</field>
-        <field name="Footprint">rocket:M3_GHC_4P</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C7430448</field>
+        <field name="Manufacturer">Megastar</field>
+        <field name="Manufacturer Part">ZX-SH1.0-6PWT</field>
+        <field name="Footprint">rocket:M3_SHC_6P</field>
+        <field name="Datasheet">https://jlcpcb.com/partdetail/C7430448</field>
         <field name="Description"/>
       </fields>
-      <libsource lib="M3" part="PortTerminal" description="GH-1.25 clone 4-pin always-on port (D-R19-14, D-R12-15): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"/>
-      <property name="LCSC" value="C52037406"/>
-      <property name="Manufacturer" value="XUNPU"/>
-      <property name="Manufacturer Part" value="GH1.25-4PWT"/>
+      <libsource lib="M3" part="ServoGH6" description="GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused"/>
+      <property name="LCSC" value="C7430448"/>
+      <property name="Manufacturer" value="Megastar"/>
+      <property name="Manufacturer Part" value="ZX-SH1.0-6PWT"/>
       <property name="Sheetname" value="15 | GPS / radio / AUX ports and microSD"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
-      <property name="ki_keywords" value="port terminal UART"/>
-      <property name="ki_fp_filters" value="M3_GHC_4P"/>
+      <property name="ki_keywords" value="connector servo"/>
+      <property name="ki_fp_filters" value="M3_SHC_6P"/>
       <sheetpath names="/15 | GPS / radio / AUX ports and microSD/" tstamps="/5d7bfdd2-34c3-5a78-ab7a-671df4c38d3a/"/>
       <tstamps>4a207a44-c50f-59c3-b514-192880e0489a</tstamps>
       <units>
@@ -5577,29 +5584,32 @@
             <pin num="2"/>
             <pin num="3"/>
             <pin num="4"/>
+            <pin num="5"/>
+            <pin num="6"/>
           </pins>
         </unit>
       </units>
     </comp>
     <comp ref="J420">
-      <value>GH1.25-4PWT</value>
-      <footprint>rocket:M3_GHC_4P</footprint>
+      <value>ZX-SH1.0-4PWT</value>
+      <footprint>rocket:M3_SHC_4P</footprint>
+      <datasheet>https://jlcpcb.com/partdetail/C7430446</datasheet>
       <fields>
-        <field name="LCSC">C52037406</field>
-        <field name="Manufacturer">XUNPU</field>
-        <field name="Manufacturer Part">GH1.25-4PWT</field>
-        <field name="Footprint">rocket:M3_GHC_4P</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C7430446</field>
+        <field name="Manufacturer">Megastar</field>
+        <field name="Manufacturer Part">ZX-SH1.0-4PWT</field>
+        <field name="Footprint">rocket:M3_SHC_4P</field>
+        <field name="Datasheet">https://jlcpcb.com/partdetail/C7430446</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="PortTerminal" description="GH-1.25 clone 4-pin always-on port (D-R19-14, D-R12-15): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"/>
-      <property name="LCSC" value="C52037406"/>
-      <property name="Manufacturer" value="XUNPU"/>
-      <property name="Manufacturer Part" value="GH1.25-4PWT"/>
+      <property name="LCSC" value="C7430446"/>
+      <property name="Manufacturer" value="Megastar"/>
+      <property name="Manufacturer Part" value="ZX-SH1.0-4PWT"/>
       <property name="Sheetname" value="15 | GPS / radio / AUX ports and microSD"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
       <property name="ki_keywords" value="port terminal UART"/>
-      <property name="ki_fp_filters" value="M3_GHC_4P"/>
+      <property name="ki_fp_filters" value="M3_SHC_4P"/>
       <sheetpath names="/15 | GPS / radio / AUX ports and microSD/" tstamps="/5d7bfdd2-34c3-5a78-ab7a-671df4c38d3a/"/>
       <tstamps>7dc3dfe3-ba5f-588b-86d8-0f20c20dd9e4</tstamps>
       <units>
@@ -5655,24 +5665,25 @@
       </units>
     </comp>
     <comp ref="J440">
-      <value>GH1.25-4PWT</value>
-      <footprint>rocket:M3_GHC_4P</footprint>
+      <value>ZX-SH1.0-4PWT</value>
+      <footprint>rocket:M3_SHC_4P</footprint>
+      <datasheet>https://jlcpcb.com/partdetail/C7430446</datasheet>
       <fields>
-        <field name="LCSC">C52037406</field>
-        <field name="Manufacturer">XUNPU</field>
-        <field name="Manufacturer Part">GH1.25-4PWT</field>
-        <field name="Footprint">rocket:M3_GHC_4P</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C7430446</field>
+        <field name="Manufacturer">Megastar</field>
+        <field name="Manufacturer Part">ZX-SH1.0-4PWT</field>
+        <field name="Footprint">rocket:M3_SHC_4P</field>
+        <field name="Datasheet">https://jlcpcb.com/partdetail/C7430446</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="PortTerminal" description="GH-1.25 clone 4-pin always-on port (D-R19-14, D-R12-15): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"/>
-      <property name="LCSC" value="C52037406"/>
-      <property name="Manufacturer" value="XUNPU"/>
-      <property name="Manufacturer Part" value="GH1.25-4PWT"/>
+      <property name="LCSC" value="C7430446"/>
+      <property name="Manufacturer" value="Megastar"/>
+      <property name="Manufacturer Part" value="ZX-SH1.0-4PWT"/>
       <property name="Sheetname" value="15 | GPS / radio / AUX ports and microSD"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
       <property name="ki_keywords" value="port terminal UART"/>
-      <property name="ki_fp_filters" value="M3_GHC_4P"/>
+      <property name="ki_fp_filters" value="M3_SHC_4P"/>
       <sheetpath names="/15 | GPS / radio / AUX ports and microSD/" tstamps="/5d7bfdd2-34c3-5a78-ab7a-671df4c38d3a/"/>
       <tstamps>c23f1645-279e-5225-9fdf-6a33a8b2f09e</tstamps>
       <units>
@@ -6099,7 +6110,7 @@
     <libpart lib="M3" part="CameraGH6">
       <description>JST SM06B-GHS-TB camera port (D-R11-05): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)</description>
       <footprints>
-        <fp>M3_GHC_6P</fp>
+        <fp>M3_SHC_6P</fp>
       </footprints>
       <fields>
         <field name="Reference">J</field>
@@ -6541,7 +6552,7 @@
     <libpart lib="M3" part="PortTerminal">
       <description>GH-1.25 clone 4-pin always-on port (D-R19-14, D-R12-15): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI</description>
       <footprints>
-        <fp>M3_GHC_4P</fp>
+        <fp>M3_SHC_4P</fp>
       </footprints>
       <fields>
         <field name="Reference">J</field>
@@ -6615,7 +6626,7 @@
     <libpart lib="M3" part="ServoGH6">
       <description>GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused</description>
       <footprints>
-        <fp>M3_GHC_6P</fp>
+        <fp>M3_SHC_6P</fp>
       </footprints>
       <fields>
         <field name="Reference">J</field>
@@ -6636,7 +6647,7 @@
     <libpart lib="M3" part="SwitchGH4">
       <description>GH-1.25 clone 4-pin external switch port (D-R12-15): 1 SW SOURCE, 2 SW RETURN, 3-4 unused</description>
       <footprints>
-        <fp>M3_GHC_4P</fp>
+        <fp>M3_SHC_4P</fp>
       </footprints>
       <fields>
         <field name="Reference">J</field>
@@ -7068,14 +7079,14 @@
       <node ref="J3" pin="4" pinfunction="SHELL_4_4" pintype="passive"/>
       <node ref="J3" pin="A1B12" pinfunction="GND_A1B12" pintype="passive"/>
       <node ref="J3" pin="B1A12" pinfunction="GND_B1A12" pintype="passive"/>
-      <node ref="J410" pin="2" pinfunction="GND_2" pintype="passive"/>
-      <node ref="J420" pin="2" pinfunction="GND_2" pintype="passive"/>
+      <node ref="J410" pin="1" pinfunction="SERVO1_1" pintype="passive"/>
+      <node ref="J420" pin="1" pinfunction="4V8_1" pintype="passive"/>
       <node ref="J430" pin="10" pinfunction="G3_10" pintype="passive"/>
       <node ref="J430" pin="11" pinfunction="G4_11" pintype="passive"/>
       <node ref="J430" pin="12" pinfunction="G1_12" pintype="passive"/>
       <node ref="J430" pin="6" pinfunction="VSS_6" pintype="power_in"/>
       <node ref="J430" pin="9" pinfunction="G2_9" pintype="passive"/>
-      <node ref="J440" pin="2" pinfunction="GND_2" pintype="passive"/>
+      <node ref="J440" pin="1" pinfunction="4V8_1" pintype="passive"/>
       <node ref="J9" pin="3" pinfunction="GND_3" pintype="passive"/>
       <node ref="J9" pin="4" pinfunction="GND_4" pintype="passive"/>
       <node ref="LED1" pin="1" pinfunction="K_1" pintype="passive"/>
@@ -7142,7 +7153,7 @@
       <node ref="U1" pin="J9" pinfunction="PD9_J9" pintype="bidirectional"/>
     </net>
     <net code="46" name="GPS_RX_WIRE" class="Default">
-      <node ref="J410" pin="4" pinfunction="RXI_4" pintype="passive"/>
+      <node ref="J410" pin="4" pinfunction="SERVO4_4" pintype="passive"/>
       <node ref="R440" pin="1" pintype="passive"/>
     </net>
     <net code="47" name="GPS_TX_MCU" class="Default">
@@ -7150,7 +7161,7 @@
       <node ref="U1" pin="K9" pinfunction="PD8_K9" pintype="bidirectional"/>
     </net>
     <net code="48" name="GPS_TX_WIRE" class="Default">
-      <node ref="J410" pin="3" pinfunction="TXO_3" pintype="passive"/>
+      <node ref="J410" pin="3" pinfunction="SERVO3_3" pintype="passive"/>
       <node ref="R441" pin="2" pintype="passive"/>
     </net>
     <net code="49" name="HSE_IN" class="Default">
@@ -7209,9 +7220,9 @@
       <node ref="C410" pin="1" pintype="passive"/>
       <node ref="C420" pin="1" pintype="passive"/>
       <node ref="C444" pin="1" pintype="passive"/>
-      <node ref="J410" pin="1" pinfunction="4V8_1" pintype="passive"/>
-      <node ref="J420" pin="1" pinfunction="4V8_1" pintype="passive"/>
-      <node ref="J440" pin="1" pinfunction="4V8_1" pintype="passive"/>
+      <node ref="J410" pin="2" pinfunction="SERVO2_2" pintype="passive"/>
+      <node ref="J420" pin="2" pinfunction="GND_2" pintype="passive"/>
+      <node ref="J440" pin="2" pinfunction="GND_2" pintype="passive"/>
       <node ref="L400" pin="2" pinfunction="2_2" pintype="passive"/>
       <node ref="R111" pin="1" pintype="passive"/>
       <node ref="R400" pin="1" pintype="passive"/>
@@ -7499,124 +7510,130 @@
     <net code="119" name="unconnected-(J400-NC-Pad4)" class="Default">
       <node ref="J400" pin="4" pinfunction="NC_4" pintype="passive+no_connect"/>
     </net>
-    <net code="120" name="unconnected-(U1-PA0-PadG2)" class="Default">
+    <net code="120" name="unconnected-(J410-GND-Pad5)" class="Default">
+      <node ref="J410" pin="5" pinfunction="GND_5" pintype="passive+no_connect"/>
+    </net>
+    <net code="121" name="unconnected-(J410-NC-Pad6)" class="Default">
+      <node ref="J410" pin="6" pinfunction="NC_6" pintype="passive+no_connect"/>
+    </net>
+    <net code="122" name="unconnected-(U1-PA0-PadG2)" class="Default">
       <node ref="U1" pin="G2" pinfunction="PA0_G2" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="121" name="unconnected-(U1-PA3-PadK2)" class="Default">
+    <net code="123" name="unconnected-(U1-PA3-PadK2)" class="Default">
       <node ref="U1" pin="K2" pinfunction="PA3_K2" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="122" name="unconnected-(U1-PA7-PadK3)" class="Default">
+    <net code="124" name="unconnected-(U1-PA7-PadK3)" class="Default">
       <node ref="U1" pin="K3" pinfunction="PA7_K3" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="123" name="unconnected-(U1-PA8-PadD9)" class="Default">
+    <net code="125" name="unconnected-(U1-PA8-PadD9)" class="Default">
       <node ref="U1" pin="D9" pinfunction="PA8_D9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="124" name="unconnected-(U1-PA9-PadC9)" class="Default">
+    <net code="126" name="unconnected-(U1-PA9-PadC9)" class="Default">
       <node ref="U1" pin="C9" pinfunction="PA9_C9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="125" name="unconnected-(U1-PA10-PadD10)" class="Default">
+    <net code="127" name="unconnected-(U1-PA10-PadD10)" class="Default">
       <node ref="U1" pin="D10" pinfunction="PA10_D10" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="126" name="unconnected-(U1-PB0-PadJ4)" class="Default">
+    <net code="128" name="unconnected-(U1-PB0-PadJ4)" class="Default">
       <node ref="U1" pin="J4" pinfunction="PB0_J4" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="127" name="unconnected-(U1-PB8-PadB4)" class="Default">
+    <net code="129" name="unconnected-(U1-PB8-PadB4)" class="Default">
       <node ref="U1" pin="B4" pinfunction="PB8_B4" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="128" name="unconnected-(U1-PB14-PadH10)" class="Default">
+    <net code="130" name="unconnected-(U1-PB14-PadH10)" class="Default">
       <node ref="U1" pin="H10" pinfunction="PB14_H10" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="129" name="unconnected-(U1-PB15-PadG10)" class="Default">
+    <net code="131" name="unconnected-(U1-PB15-PadG10)" class="Default">
       <node ref="U1" pin="G10" pinfunction="PB15_G10" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="130" name="unconnected-(U1-PC3_C-PadF3)" class="Default">
+    <net code="132" name="unconnected-(U1-PC3_C-PadF3)" class="Default">
       <node ref="U1" pin="F3" pinfunction="PC3_C_F3" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="131" name="unconnected-(U1-PC4-PadG4)" class="Default">
+    <net code="133" name="unconnected-(U1-PC4-PadG4)" class="Default">
       <node ref="U1" pin="G4" pinfunction="PC4_G4" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="132" name="unconnected-(U1-PC9-PadE9)" class="Default">
+    <net code="134" name="unconnected-(U1-PC9-PadE9)" class="Default">
       <node ref="U1" pin="E9" pinfunction="PC9_E9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="133" name="unconnected-(U1-PC13-PadA2)" class="Default">
+    <net code="135" name="unconnected-(U1-PC13-PadA2)" class="Default">
       <node ref="U1" pin="A2" pinfunction="PC13_A2" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="134" name="unconnected-(U1-PC15-PadB1)" class="Default">
+    <net code="136" name="unconnected-(U1-PC15-PadB1)" class="Default">
       <node ref="U1" pin="B1" pinfunction="PC15_B1" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="135" name="unconnected-(U1-PD1-PadE8)" class="Default">
+    <net code="137" name="unconnected-(U1-PD1-PadE8)" class="Default">
       <node ref="U1" pin="E8" pinfunction="PD1_E8" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="136" name="unconnected-(U1-PD4-PadD7)" class="Default">
+    <net code="138" name="unconnected-(U1-PD4-PadD7)" class="Default">
       <node ref="U1" pin="D7" pinfunction="PD4_D7" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="137" name="unconnected-(U1-PD7-PadD6)" class="Default">
+    <net code="139" name="unconnected-(U1-PD7-PadD6)" class="Default">
       <node ref="U1" pin="D6" pinfunction="PD7_D6" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="138" name="unconnected-(U1-PD10-PadH9)" class="Default">
+    <net code="140" name="unconnected-(U1-PD10-PadH9)" class="Default">
       <node ref="U1" pin="H9" pinfunction="PD10_H9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="139" name="unconnected-(U1-PD14-PadH8)" class="Default">
+    <net code="141" name="unconnected-(U1-PD14-PadH8)" class="Default">
       <node ref="U1" pin="H8" pinfunction="PD14_H8" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="140" name="unconnected-(U1-PD15-PadG8)" class="Default">
+    <net code="142" name="unconnected-(U1-PD15-PadG8)" class="Default">
       <node ref="U1" pin="G8" pinfunction="PD15_G8" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="141" name="unconnected-(U1-PE0-PadD4)" class="Default">
+    <net code="143" name="unconnected-(U1-PE0-PadD4)" class="Default">
       <node ref="U1" pin="D4" pinfunction="PE0_D4" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="142" name="unconnected-(U1-PE1-PadC4)" class="Default">
+    <net code="144" name="unconnected-(U1-PE1-PadC4)" class="Default">
       <node ref="U1" pin="C4" pinfunction="PE1_C4" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="143" name="unconnected-(U1-PE3-PadB3)" class="Default">
+    <net code="145" name="unconnected-(U1-PE3-PadB3)" class="Default">
       <node ref="U1" pin="B3" pinfunction="PE3_B3" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="144" name="unconnected-(U1-PE5-PadD3)" class="Default">
+    <net code="146" name="unconnected-(U1-PE5-PadD3)" class="Default">
       <node ref="U1" pin="D3" pinfunction="PE5_D3" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="145" name="unconnected-(U1-PE6-PadE3)" class="Default">
+    <net code="147" name="unconnected-(U1-PE6-PadE3)" class="Default">
       <node ref="U1" pin="E3" pinfunction="PE6_E3" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="146" name="unconnected-(U1-PE7-PadH5)" class="Default">
+    <net code="148" name="unconnected-(U1-PE7-PadH5)" class="Default">
       <node ref="U1" pin="H5" pinfunction="PE7_H5" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="147" name="unconnected-(U1-PE9-PadK5)" class="Default">
+    <net code="149" name="unconnected-(U1-PE9-PadK5)" class="Default">
       <node ref="U1" pin="K5" pinfunction="PE9_K5" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="148" name="unconnected-(U1-PE10-PadG6)" class="Default">
+    <net code="150" name="unconnected-(U1-PE10-PadG6)" class="Default">
       <node ref="U1" pin="G6" pinfunction="PE10_G6" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="149" name="unconnected-(U1-PE11-PadH6)" class="Default">
+    <net code="151" name="unconnected-(U1-PE11-PadH6)" class="Default">
       <node ref="U1" pin="H6" pinfunction="PE11_H6" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="150" name="unconnected-(U1-PE12-PadJ6)" class="Default">
+    <net code="152" name="unconnected-(U1-PE12-PadJ6)" class="Default">
       <node ref="U1" pin="J6" pinfunction="PE12_J6" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="151" name="unconnected-(U1-PE13-PadK6)" class="Default">
+    <net code="153" name="unconnected-(U1-PE13-PadK6)" class="Default">
       <node ref="U1" pin="K6" pinfunction="PE13_K6" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="152" name="unconnected-(U1-PE14-PadG7)" class="Default">
+    <net code="154" name="unconnected-(U1-PE14-PadG7)" class="Default">
       <node ref="U1" pin="G7" pinfunction="PE14_G7" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="153" name="unconnected-(U1-PE15-PadH7)" class="Default">
+    <net code="155" name="unconnected-(U1-PE15-PadH7)" class="Default">
       <node ref="U1" pin="H7" pinfunction="PE15_H7" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="154" name="unconnected-(U4-INT2/FSYNC/CLKIN-Pad9)" class="Default">
+    <net code="156" name="unconnected-(U4-INT2/FSYNC/CLKIN-Pad9)" class="Default">
       <node ref="U4" pin="9" pinfunction="INT2/FSYNC/CLKIN_9" pintype="bidirectional+no_connect"/>
     </net>
-    <net code="155" name="unconnected-(U4-RESV_10-Pad10)" class="Default">
+    <net code="157" name="unconnected-(U4-RESV_10-Pad10)" class="Default">
       <node ref="U4" pin="10" pinfunction="RESV_10_10" pintype="passive+no_connect"/>
     </net>
-    <net code="156" name="unconnected-(U4-RESV_11-Pad11)" class="Default">
+    <net code="158" name="unconnected-(U4-RESV_11-Pad11)" class="Default">
       <node ref="U4" pin="11" pinfunction="RESV_11_11" pintype="passive+no_connect"/>
     </net>
-    <net code="157" name="unconnected-(U5-INT_DRDY-Pad4)" class="Default">
+    <net code="159" name="unconnected-(U5-INT_DRDY-Pad4)" class="Default">
       <node ref="U5" pin="4" pinfunction="INT_DRDY_4" pintype="output+no_connect"/>
     </net>
-    <net code="158" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
+    <net code="160" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
       <node ref="U9" pin="3" pinfunction="AUXOFF_3" pintype="open_collector+no_connect"/>
     </net>
-    <net code="159" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
+    <net code="161" name="unconnected-(U9-ITIMER-Pad10)" class="Default">
       <node ref="U9" pin="10" pinfunction="ITIMER_10" pintype="passive+no_connect"/>
     </net>
   </nets>

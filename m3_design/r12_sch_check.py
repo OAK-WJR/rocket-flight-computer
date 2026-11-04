@@ -68,9 +68,11 @@ SAFETY = {
     ('J122', '5'): 'GND', ('J122', '6'): None,
     ('R154', '2'): 'GND', ('R155', '2'): 'GND', ('R156', '2'): 'GND', ('R157', '2'): 'GND',
     # F10 ports: identical, 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI, 1 kOhm series
-    ('J410', '1'): 'PORT_4V8', ('J410', '2'): 'GND', ('J410', '3'): 'GPS_TX_WIRE', ('J410', '4'): 'GPS_RX_WIRE',
-    ('J420', '1'): 'PORT_4V8', ('J420', '2'): 'GND', ('J420', '3'): 'RADIO_TX_WIRE', ('J420', '4'): 'RADIO_RX_WIRE',
-    ('J440', '1'): 'PORT_4V8', ('J440', '2'): 'GND', ('J440', '3'): 'AUX_TX_WIRE', ('J440', '4'): 'AUX_RX_WIRE',
+    # D-R12-31 (owner 2026-11-03): SH 1.0 ports in the MicoAir H743's pin order (GND, 5V, TX, RX[, SCL, SDA])
+    ('J410', '1'): 'GND', ('J410', '2'): 'PORT_4V8', ('J410', '3'): 'GPS_TX_WIRE', ('J410', '4'): 'GPS_RX_WIRE',
+    ('J410', '5'): None, ('J410', '6'): None,
+    ('J420', '1'): 'GND', ('J420', '2'): 'PORT_4V8', ('J420', '3'): 'RADIO_TX_WIRE', ('J420', '4'): 'RADIO_RX_WIRE',
+    ('J440', '1'): 'GND', ('J440', '2'): 'PORT_4V8', ('J440', '3'): 'AUX_TX_WIRE', ('J440', '4'): 'AUX_RX_WIRE',
     ('R440', '2'): 'GPS_RX_MCU', ('R441', '1'): 'GPS_TX_MCU', ('R450', '2'): 'RADIO_RX_MCU', ('R451', '1'): 'RADIO_TX_MCU',
     ('R470', '2'): 'AUX_RX_MCU', ('R471', '1'): 'AUX_TX_MCU',
     # camera: J9 1-2 CAM_5V, 3-4 GND, 5 board RX, 6 board TX; the buck EN is the MCU switch with its pull-down
@@ -87,7 +89,7 @@ SAFETY = {
 REQUIRED_PARTS = ('Q120', 'Q121', 'Q122', 'Q124', 'R119', 'R120', 'C120', 'R121', 'R122', 'R123', 'C123', 'R126', 'R127',
                   'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', 'R156',
                   'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6')
-WIRE_PADS = ('J1', 'J121')
+WIRE_PADS = ('J1',)                # D-R12-29: J121 is a JLC-fitted DB125 screw terminal again (owner, 2026-11-03)
 
 
 def read_netlist(path):

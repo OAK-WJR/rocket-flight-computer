@@ -1,4 +1,4 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete
+# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-29 … -32)
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
 but the board is not routed.** The drafting router's best run on the stage B placement (`9881aaa3…`) leaves 36
@@ -42,18 +42,32 @@ elsewhere, each limited to 0.8 × the smaller pad dimension at its ends (IPC-215
 * **Same-part links on F:** LPS28DFW pad 7 → pad 5 (D-R12-25), U4 GND 2–3 and 6–7, J9 GND 3–4, U2 VIN 4–5, J9 CAM_5V
   1–2.
 
-## 4. Draft result (best run, not frozen)
+## 4. Draft result (latest run, 2026-11-03/04, not frozen)
 
-`plan.py` on the stage B board: 960 tracks, 351 vias, 42 connections the search could not complete (36 unconnected
-items after DRC), DRC 2 hole_clearance + 3 hole_to_hole (aid defects: two vias of one path too close; a via against a
-plated pad hole), route_check r12 78 failing (38 dead_copper and 7 dangling_via from the incomplete nets, 8 staircase,
-6 detour, 5 tiny_jog, 3 track_loop, 3 extra_vias, 3 acute_angle, 2 pour_net_hop, 2 critical_via_no_gnd, 1 local_bump).
-Draft table and renders: scratchpad only (`r12_draft_routes.tsv`, `r12_draft_copper.png`).
+On the placement with the owner's connector changes (D-R12-29 J121 DB125 terminal, D-R12-30 J1 5.0 mm pads, D-R12-31
+SH 1.0 ports) and the IMU moved aft (D-R12-32), with three rip-up passes:
+- **Search:** 24 connections left unrouted (28 unconnected items after DRC).
+- **DRC:** no clearance or hole violation remains; only dangling copper from the unfinished nets.
+- **route_check r12:** about 90 findings. 43 are dead_copper and 6 dangling_via from the unfinished nets. The rest are
+  16 staircase, 4 track_loop, 4 fold_back, 3 extra_vias, 3 detour, 3 acute_angle, 2 collinear_overlap and 6 single
+  others.
+- The best runs over the session sit between 21 and 31 unrouted connections; the count no longer falls with rip-up alone.
 
-Unfinished connections by area (last run): QSPI into U3 (CLK, IO2, NCS); IMU SPI / INT1 and two U4 GND fan-outs; SD
-(CS, MISO); port UARTs at the resistors (AUX, GPS, radio); USB VBUS (A4B9, R9); servo 1 / 2 at D121 / R151; pyro
-control (ACT_EN, ACT_EN_MCU, PYRO1_GATE_N at R126); NRST (C24, J2), SWCLK; CAM_5V_SENSE, CAM_MCU_RX; VCAP2; BAT_IN to R82;
-PORT_SENSE; LED_YEL; I2C SDA at R13; C21 (3V3A) and C406 (PORT_4V8) island fan-outs.
+Unrouted at the last run, by area:
+- QSPI into U3: CLK, IO2, NCS.
+- IMU MOSI.
+- SD: CS, MISO, MOSI.
+- Port UARTs at the series resistors: AUX, radio.
+- Servo 2–4: at D121, R156 and R157.
+- Pyro control: ACT_EN_MCU, PYRO1_CONT (R129).
+- NRST at J2; BOOT0; CAM_5V_SENSE; CAM_MCU_RX / TX; LED_YEL; PORT_SENSE; VCAP2; VLOGIC_SENSE; I2C1_SDA at U5;
+  BAT_FAULT_N at U9.4.
+- Fan-outs: C21 (3V3A), C24 and R401 (GND), R400 (PORT_4V8).
+- USB_DP partner GND via.
+
+Is the TFBGA routable? The ball fan-out itself completes every time: 39 stubs and 43 dog-bones, every dog-bone net
+leaves the field on B.Cu, and no unrouted connection is a U1 escape. The failures are F.Cu congestion round U3, J430,
+the IMU and the resistor rows. So there is no evidence that the package needs changing (R12_DECISIONS D-R12-02 stands).
 
 ## 5. What stage C still needs
 

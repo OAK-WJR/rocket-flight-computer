@@ -180,6 +180,9 @@ def model(data=None):
             p['footprint'] = data['catalog'][e['lcsc']]['footprint']
         p['value'] = e.get('value', p['value'])
         p['lib'] = e.get('lib', p['lib'])
+        p['footprint'] = e.get('footprint', p['footprint'])          # D-R12-30: a land change with no BOM code
+        if 'flags' in e:
+            p['flags'] = list(e['flags'])
         if 'nets' in e:
             pins = {k: v for k, v in pins.items() if k[0] != ref}
             pins.update({(ref, n): net for n, net in e['nets'].items()})

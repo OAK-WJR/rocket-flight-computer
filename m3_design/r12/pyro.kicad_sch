@@ -1006,9 +1006,8 @@
 		(lib_id "M3:Conn_1x2")
 		(at 287.02 71.12 0)
 		(unit 1)
-		(in_bom no)
+		(in_bom yes)
 		(on_board yes)
-		(in_pos_files no)
 		(dnp no)
 		(uuid c48e1346-d9da-56cd-a8bf-cb505c58d449)
 		(property "Reference" "J121"
@@ -1017,27 +1016,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "AWG20 wire pads"
+		(property "Value" "DB125-3.5-2P-BK-S"
 			(at 287.02 68.58 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_WIREPAD_2P_AWG20"
+		(property "Footprint" "rocket:M3_DB125_2P_BK"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" ""
+		(property "LCSC" "C52993880"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Manufacturer" "DORABO"
+			(at 287.02 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "DB125-3.5-2P-BK-S"
+			(at 287.02 71.12 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects

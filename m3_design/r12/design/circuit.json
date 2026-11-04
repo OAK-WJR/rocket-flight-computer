@@ -172,20 +172,6 @@
    "footprint": "rocket:M3_TSOT23_6_DDC",
    "source": "D-R12-07 / -08: port and camera bucks, TI SLVSD90B (4.5-17 V, 3 A, FCCM, VFB 0.749-0.787 V)"
   },
-  "C52037406": {
-   "Manufacturer": "XUNPU",
-   "Manufacturer Part": "GH1.25-4PWT",
-   "Datasheet": "",
-   "footprint": "rocket:M3_GHC_4P",
-   "source": "D-R12-15: GH-1.25 clone 4P (EasyEDA land of C52037406)"
-  },
-  "C52037408": {
-   "Manufacturer": "XUNPU",
-   "Manufacturer Part": "GH1.25-6PWT",
-   "Datasheet": "",
-   "footprint": "rocket:M3_GHC_6P",
-   "source": "D-R12-15: GH-1.25 clone 6P (EasyEDA land of C52037408)"
-  },
   "C57269": {
    "Manufacturer": "Sunlord",
    "Manufacturer Part": "SWPA4030S4R7MT",
@@ -220,6 +206,27 @@
    "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2104011834_Jiangsu-Huaneng-Elec-QMB-09B-03_C96256.pdf",
    "footprint": "rocket:M3_BUZ_TH_D9_P4",
    "source": "D-R12-16: passive 9 mm THT buzzer, owner-fitted (Huawha QMB-09B-03 spec 2019-12-3)"
+  },
+  "C52993880": {
+   "Manufacturer": "DORABO",
+   "Manufacturer Part": "DB125-3.5-2P-BK-S",
+   "Datasheet": "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf",
+   "footprint": "rocket:M3_DB125_2P_BK",
+   "source": "D-R12-29 (owner 2026-11-03): R10's black DB125 3.5 mm 2P screw terminal, R10's land and model"
+  },
+  "C7430446": {
+   "Manufacturer": "Megastar",
+   "Manufacturer Part": "ZX-SH1.0-4PWT",
+   "Datasheet": "https://jlcpcb.com/partdetail/C7430446",
+   "footprint": "rocket:M3_SHC_4P",
+   "source": "D-R12-31 (owner 2026-11-03): JST SH 1.0 mm side-entry clone 4P, 1 A per contact (JLC listing, Live 2026-11-04)"
+  },
+  "C7430448": {
+   "Manufacturer": "Megastar",
+   "Manufacturer Part": "ZX-SH1.0-6PWT",
+   "Datasheet": "https://jlcpcb.com/partdetail/C7430448",
+   "footprint": "rocket:M3_SHC_6P",
+   "source": "D-R12-31 (owner 2026-11-03): JST SH 1.0 mm side-entry clone 6P, 1 A per contact (JLC listing, Live 2026-11-04)"
   }
  },
  "deleted": {
@@ -372,9 +379,9 @@
    "why": "D-R12-09: B340A -> SS34 basic (40 V 3 A Schottky)"
   },
   "J122": {
-   "lcsc": "C52037408",
-   "value": "GH1.25-6PWT",
-   "why": "D-R12-15: JST SM05B -> GH-1.25 clone 6P (pin 6 unused, shares J9's code)",
+   "lcsc": "C7430448",
+   "value": "ZX-SH1.0-6PWT",
+   "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; servo order kept, pin 6 unused",
    "lib": "M3:ServoGH6",
    "nets": {
     "1": "SERVO1_OUT",
@@ -386,9 +393,9 @@
    }
   },
   "J400": {
-   "lcsc": "C52037406",
-   "value": "GH1.25-4PWT",
-   "why": "D-R12-15: JST SM02B -> GH-1.25 clone 4P (pins 3-4 unused, shares the port code)",
+   "lcsc": "C7430446",
+   "value": "ZX-SH1.0-4PWT",
+   "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; switch on pins 1-2, shares the 4P code",
    "lib": "M3:SwitchGH4",
    "nets": {
     "1": "BAT_SW_SOURCE",
@@ -398,24 +405,45 @@
    }
   },
   "J410": {
-   "lcsc": "C52037406",
-   "value": "GH1.25-4PWT",
-   "why": "D-R12-15: JST SM04B -> GH-1.25 clone 4P (same pin order)"
+   "lcsc": "C7430448",
+   "value": "ZX-SH1.0-6PWT",
+   "lib": "M3:ServoGH6",
+   "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; H743 GPS port order GND / 5V / TX / RX / SCL / SDA (ardupilot.org MicoAir743v2 image; I2C pins NC on R12)",
+   "nets": {
+    "1": "GND",
+    "2": "PORT_4V8",
+    "3": "GPS_TX_WIRE",
+    "4": "GPS_RX_WIRE",
+    "5": null,
+    "6": null
+   }
   },
   "J420": {
-   "lcsc": "C52037406",
-   "value": "GH1.25-4PWT",
-   "why": "D-R12-15: JST SM04B -> GH-1.25 clone 4P (same pin order)"
+   "lcsc": "C7430446",
+   "value": "ZX-SH1.0-4PWT",
+   "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; H743 telemetry port order GND / 5V / TX / RX",
+   "nets": {
+    "1": "GND",
+    "2": "PORT_4V8",
+    "3": "RADIO_TX_WIRE",
+    "4": "RADIO_RX_WIRE"
+   }
   },
   "J440": {
-   "lcsc": "C52037406",
-   "value": "GH1.25-4PWT",
-   "why": "D-R12-15: JST SM04B -> GH-1.25 clone 4P (same pin order)"
+   "lcsc": "C7430446",
+   "value": "ZX-SH1.0-4PWT",
+   "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; H743 telemetry port order GND / 5V / TX / RX",
+   "nets": {
+    "1": "GND",
+    "2": "PORT_4V8",
+    "3": "AUX_TX_WIRE",
+    "4": "AUX_RX_WIRE"
+   }
   },
   "J9": {
-   "lcsc": "C52037408",
-   "value": "GH1.25-6PWT",
-   "why": "D-R12-15: JST SM06B -> GH-1.25 clone 6P (same pin order)"
+   "lcsc": "C7430448",
+   "value": "ZX-SH1.0-6PWT",
+   "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; camera order kept (two contacts each for CAM_5V and GND, 1 A per contact)"
   },
   "L400": {
    "lcsc": "C57269",
@@ -574,6 +602,17 @@
    "lcsc": "C9006",
    "value": "25MHz CL12pF",
    "why": "D-R12-14: NX3225GA 8 pF -> X322525MOB4SI 12 pF basic, same land"
+  },
+  "J121": {
+   "lcsc": "C52993880",
+   "value": "DB125-3.5-2P-BK-S",
+   "flags": [],
+   "why": "D-R12-29 (owner 2026-11-03): pyro terminal back to R10's DB125-2 screw terminal; pin 1 PYRO1_OUT (E1-), pin 2 PYRO1_IGN (E1+); JLC-assembled THT"
+  },
+  "J1": {
+   "value": "Battery wire pads 5.0 mm",
+   "footprint": "rocket:M3_WIREPAD_2P_P5",
+   "why": "D-R12-30 (owner 2026-11-03): soldered pack pigtail on two plated holes at 5.0 mm pitch, so a 5.0 mm 2P screw terminal fits later with no board change; pin 1 / 2 = BAT_IN / GND; no part on the BOM"
   }
  },
  "added_parts": {

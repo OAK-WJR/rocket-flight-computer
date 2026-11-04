@@ -690,7 +690,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_GHC_4P"
+			(property "ki_fp_filters" "M3_SHC_4P"
 				(at 0 0 0)
 				(hide yes)
 				(effects
@@ -1991,13 +1991,13 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "AWG20 wire pads"
+		(property "Value" "Battery wire pads 5.0 mm"
 			(at 165.1 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_WIREPAD_2P_AWG20"
+		(property "Footprint" "rocket:M3_WIREPAD_2P_P5"
 			(at 165.1 101.6 0)
 			(hide yes)
 			(effects
@@ -2069,41 +2069,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "GH1.25-4PWT"
+		(property "Value" "ZX-SH1.0-4PWT"
 			(at 210.82 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_GHC_4P"
+		(property "Footprint" "rocket:M3_SHC_4P"
 			(at 210.82 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C52037406"
+		(property "LCSC" "C7430446"
 			(at 210.82 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "XUNPU"
+		(property "Manufacturer" "Megastar"
 			(at 210.82 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "GH1.25-4PWT"
+		(property "Manufacturer Part" "ZX-SH1.0-4PWT"
 			(at 210.82 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430446"
 			(at 210.82 106.68 0)
 			(hide yes)
 			(effects

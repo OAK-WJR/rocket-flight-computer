@@ -164,7 +164,7 @@ class Board:
                     if p['attr'] == 'npth':     # a plain hole: copper >= 0.2 mm from its edge (JLC NPTH to track)
                         r = p['drill'] / 2
                         sl, X, Y = self.region(p['x'] - r, p['y'] - r, p['x'] + r, p['y'] + r)
-                        d = np.hypot(X - p['x'], Y - p['y']) - r - 0.1
+                        d = np.hypot(X - p['x'], Y - p['y']) - r - 0.15     # general copper-to-hole 0.25 mm
                         for li in range(2):
                             self.merge(li, sl, d.astype(np.float32), -1)
                         self.padany[sl] = np.minimum(self.padany[sl], d + 0.1)
@@ -304,9 +304,10 @@ class Router:
             d = b.seg_dist(X, Y, a, bb)
             out[LAYERS.index(layer)] |= d < w / 2 + h + CLR - EPS
         free = np.zeros(X.shape, bool)
+        wmax = max([w for (n, _, w, _, _) in b.tracks if n == net] or [0.1])
         for (n, x, y) in b.vias:
-            if n == net:
-                free |= np.hypot(X - x, Y - y) < 0.2
+            if n == net:          # a branch may join an own via from any side
+                free |= np.hypot(X - x, Y - y) < max(0.2, wmax / 2 + h + CLR + 0.01)
         for p in b.pads:
             if p['net'] == net:
                 for ln, nodes in b.inside[p['key']].items():
@@ -389,7 +390,7 @@ class Router:
         rm = max(es, ed, ms, md)
         params = np.array([1.0, 1.41421356, turn, via_cost, 1.0, 1.0, ms, md, es, ed, 0.2,
                            1 if 'F' in layers else 0, 1 if 'B' in layers else 0, rm, maxvia if vias else 0,
-                           self.hweight, 6], np.float32)
+                           self.hweight, 4], np.float32)
         sarr = np.array(st, np.int32).ravel()
         out = np.zeros(3 * 200000, np.int32)
         fl = lambda a: a.ctypes.data_as(ctypes.POINTER(ctypes.c_float))
@@ -407,6 +408,15 @@ class Router:
             return None
         self.last_status = n
         path = [(int(out[3 * q]), int(out[3 * q + 1]) + i0, int(out[3 * q + 2]) + j0) for q in range(n)][::-1]
+        # a path's own vias: no two closer than VIA_VIA (hole to hole), none on another via
+        vs = [(path[q][1] * G, path[q][2] * G) for q in range(1, len(path)) if path[q][0] != path[q - 1][0]]
+        if goal_via:
+            vs.append((path[-1][1] * G, path[-1][2] * G))
+        for a in range(len(vs)):
+            for c in range(a + 1, len(vs)):
+                if 1e-6 < math.hypot(vs[a][0] - vs[c][0], vs[a][1] - vs[c][1]) < VIA_VIA - 1e-6:
+                    self.last_status = -5
+                    return None
         return path
 
     def commit(self, net, w, path, end_via=False):

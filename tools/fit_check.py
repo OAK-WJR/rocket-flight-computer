@@ -135,11 +135,23 @@ R11_MAX_LENGTH = 56.0           # mm, D-R11-02 ceiling
 # footprint is an issue) and the GH-1.25 clone headers (Manufacturer Part GH1.25-nPWT, D-R12-15), whose mated envelope
 # uses JST's GH drawing (GH_DRAWING) as the clone's (Inference: no maker mating drawing for the clone).
 GH_CLONE_PART = re.compile(r'^GH1\.25-(\d)PWT')
+# D-R12-31 (owner 2026-11-03): R12's ports are JST SH 1.0 mm clones (Megastar ZX-SH1.0-nPWT). Envelope from JST's SH
+# drawing family as the clone listing gives it (Inference: no maker mating drawing): header width (n - 1) + 3.35 mm
+# (JLC listing 6.35 / 8.35 mm), depth 4.3 mm, height 3.15 mm; housing SHR width (n - 1) + 3.0 mm, length 4.25 mm, height
+# 2.95 mm (Inference); contacts 0.25 mm behind the rear wall, mouth 4.55 mm ahead of the contact row (land y -2.0 to the
+# body front); 3 mm of straight wire beyond the plug, as for GH.
+SH_CLONE_PART = re.compile(r'^ZX-SH1\.0-(\d)PWT')
+SH_DRAWING = dict(source='JLC listing (C7430446 / C7430448) and JST eSH family dimensions; Inference', pitch=1.0,
+                  header_extra_width=3.35, header_depth=4.3, header_height=3.15, housing_extra_width=1.0,
+                  housing_length=4.25, housing_height=2.95, pad_behind_rear=0.25, mouth_ahead_of_pads=4.55)
 R12_MAX_LENGTH = 100.0
 R11_CFG = dict(name='r11', layers=6, max_length=R11_MAX_LENGTH, gh_refs=R11_GH_REFS, mated_refs=R11_MATED_REFS,
                clones=False, one_side=False, ref='D-R11-02', layer_ref='D-R11-03')
 R12_CFG = dict(name='r12', layers=4, max_length=R12_MAX_LENGTH, gh_refs=R11_GH_REFS, mated_refs=R11_MATED_REFS,
-               clones=True, one_side=True, ref='r12_plan', layer_ref='D-R12-03')
+               clones=True, one_side=True, ref='r12_plan', layer_ref='D-R12-03', wire_pads={'J1'}, terminals={'J121'})
+# D-R12-29 (owner, 2026-11-03): R12's J121 is R10's DB125-2 screw terminal again; its bare-bore wire room (R10's P-11 /
+# R18-MEC-03 floor) is checked as R10 does
+R12_TERMINAL_ROOM = 4.95
 BORE_R, WIRE_Z = 25.4, 5.0                             # the coupler bore's wall; wire height above the top face
 
 
@@ -455,14 +467,15 @@ def gh_circuits(f, clones=False):
     """The circuit count of a side-entry JST GH header (Manufacturer Part SMnnB-GHS-TB), or with clones=True (profile
     r12) of a GH-1.25 clone (GH1.25-nPWT), else None."""
     part = f.GetFieldText('Manufacturer Part') if f.HasField('Manufacturer Part') else ''
-    m = GH_PART.match(part or '') or (GH_CLONE_PART.match(part or '') if clones else None)
+    m = GH_PART.match(part or '') or (GH_CLONE_PART.match(part or '') if clones else None) \
+        or (SH_CLONE_PART.match(part or '') if clones else None)
     return int(m.group(1)) if m else None
 
 
-def gh_envelope(f, n, outline):
+def gh_envelope(f, n, outline, g=None):
     """(header box, mated box, mouth unit vector, problems) of a side-entry GH header, in board mm. The mouth points
     from the contact pad row (the numbered pads) to the two fixing tabs (the unnumbered / MP pads)."""
-    g = GH_DRAWING
+    g = g or GH_DRAWING
     sig = [p for p in f.Pads() if p.GetNumber().isdigit()]
     tabs = [p for p in f.Pads() if not p.GetNumber().isdigit()]
     if len(sig) != n or len(tabs) != 2:
@@ -479,7 +492,8 @@ def gh_envelope(f, n, outline):
     if abs(ux) > 1e-6 and abs(uy) > 1e-6:
         return None, None, None, [f'{f.GetReference()}: GH header mouth not along a board axis']
     vx, vy = -uy, ux
-    half = max((n - 1) * 1.25 + g['header_extra_width'], (n + 1) * g['housing_extra_width']) / 2
+    pitch = g.get('pitch', 1.25)
+    half = max((n - 1) * pitch + g['header_extra_width'], (n + 1) * g['housing_extra_width']) / 2
     rear = -g['pad_behind_rear']
     mouth = g['mouth_ahead_of_pads']
     tip = mouth + g['housing_length'] + GH_WIRE_STRAIGHT
@@ -662,7 +676,7 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
         top_pads.extend((ref + '.' + p.GetNumber(), p) for p in f.Pads()
                         if p.GetAttribute() != pcbnew.PAD_ATTRIB_NPTH
                         and p.IsOnLayer(pcbnew.F_Cu) and p.IsOnLayer(pcbnew.F_Mask) and not p.IsTented(pcbnew.F_Cu))
-        if ref in WIRE_PAD_REFS:
+        if ref in cfg.get('wire_pads', WIRE_PAD_REFS):
             boxes = wire_pad_boxes(f)
             if not boxes:
                 issues.append(f'{ref}: wire-pad footprint has no plated wire pad')
@@ -703,7 +717,8 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
             if ref not in cfg['gh_refs']:
                 issues.append(f'{ref}: GH mated envelope is not reviewed for this reference')
                 continue
-            header, mb, mouth, probs = gh_envelope(f, n, outline)
+            sh = bool(SH_CLONE_PART.match(f.GetFieldText('Manufacturer Part') if f.HasField('Manufacturer Part') else ''))
+            header, mb, mouth, probs = gh_envelope(f, n, outline, SH_DRAWING if sh else None)
             issues.extend(probs)
             if mb is None:
                 continue
@@ -728,7 +743,7 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
                           f'SMnnB-GHS-TB)')
     missing = cfg['mated_refs'] - {ref for ref, _ in mating}
     issues.extend(f'{ref}: required R11 mated envelope missing' for ref in sorted(missing))
-    missing_wires = WIRE_PAD_REFS - {w.split('.')[0] for w in wires}
+    missing_wires = cfg.get('wire_pads', WIRE_PAD_REFS) - {w.split('.')[0] for w in wires}
     issues.extend(f'{ref}: required R11 wire-pad footprint missing' for ref in sorted(missing_wires))
     for index, (ref, box) in enumerate(mating):
         for other, body in bodies:
@@ -745,6 +760,12 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
                 continue
             if any(box_overlap(m, body) for m in mine):
                 issues.append(f'{label} allocation intersects {other}')
+    rooms = {}
+    if cfg.get('terminals'):
+        rooms = {r: v for r, v in wire_rooms(b, rows, 'r10', axis_x, tol).items() if r in cfg['terminals']}
+        issues.extend(f'{r}: bare-bore wire room {lo:.3f} mm < {R12_TERMINAL_ROOM} mm' for r, (lo, hi) in rooms.items()
+                      if lo < R12_TERMINAL_ROOM - 1e-9)
+        issues.extend(f'{r}: screw terminal missing' for r in sorted(cfg['terminals'] - set(rooms)))
     width, length = outline[2] - outline[0], outline[3] - outline[1]
     if abs(width - 46.0) > 0.01:
         issues.append(f"board width {width:g} mm; P1 / {cfg['ref']} require 46 mm")
@@ -756,7 +777,7 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
     issues.extend(top_issues)
     issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
     return dict(profile=cfg['name'], rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
-                nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS, wire_room_mm={},
+                nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS, wire_room_mm=rooms,
                 gh_ports=gh, gh_drawing=GH_DRAWING, gh_wire_straight_mm=GH_WIRE_STRAIGHT,
                 wire_pads=sorted(wires), wire_allowance=dict(WIRE_ALLOWANCE, od=WIRE_OD, basis='Inference'),
                 outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded), ok=not issues)

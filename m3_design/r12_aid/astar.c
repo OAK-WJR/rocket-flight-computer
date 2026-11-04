@@ -109,7 +109,8 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
         float gs = T[e].g;
         if (r > 0) {
             int gm = goal[node];
-            if ((gm & (1 << d)) && (r >= END[d & 1] || (f && T[e].parent >= 0))) { found = e; break; }
+            if ((gm & (1 << d)) && (r >= END[d & 1] || (f == 1 && T[e].parent >= 0)) && (f != 2 || r >= VMIN)) {
+                found = e; break; }
             if (((gm >> 8) & (1 << d)) && r >= MID[d & 1]) { found = e; break; }
         }
         for (int nd = 0; nd < 8; nd++) {
@@ -120,6 +121,7 @@ int astar(int W, int H, const uint8_t *blocked, const uint8_t *viaok, const uint
                 else if (diff == 1 || diff == 7) turn = 1;
                 else continue;
                 if (turn && r < (f ? END[d & 1] : MID[d & 1])) continue;
+                if (turn && f == 2 && r < VMIN) continue;      /* leave a via straight for VMIN steps */
             }
             int nx = x + DX[nd], ny = y + DY[nd];
             if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;

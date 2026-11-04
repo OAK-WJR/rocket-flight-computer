@@ -7,7 +7,7 @@ ref	x	y	rot	side	basis
 C5	32.9	24.6	0	F	BST
 C6	37.3	28	0	F	U2 VIN
 C8	42.6	24	270	F	3V3 out
-C10	21	31.2	0	F	3V3A bulk
+C10	21.6	35.4	0	F	3V3A bulk
 C13	17.2	38.2	0	F	3V3 (NW corner of U1)
 C14	28.8	38.2	0	F	3V3 (NE corner)
 C15	16.8	50	0	F	3V3 (SW corner)
@@ -24,29 +24,29 @@ C25	14.6	39.5	0	F	HSE load
 C26	14.6	45.3	0	F	HSE load
 C28	35.2	39.6	90	F	VBUS
 C29	37	50.4	90	F	flash 3V3
-C30	24.6	32.4	0	F	IMU 3V3A
-C31	20.2	35.6	90	F	IMU 3V3A
+C30	25.8	31.6	90	F	IMU 3V3A
+C31	19.8	32.6	90	F	IMU 3V3A
 C32	29	29	0	F	baro 3V3A
 C60	27.4	27.6	90	F	VLOGIC sense
-C80	10.2	14.7	90	F	BAT_IN bulk
+C80	3.4	22.8	90	F	BAT_IN bulk
 C81	15.9	17.8	270	F	dVdt
 C82	21.2	15.6	0	F	RAW bulk at U9.6 (neck ends in its pad)
 C83	33.9	39.2	90	F	VBUS
 C84	40	67.5	0	F	VLOGIC hold-up, owner-fitted
 C87	19	9.2	90	F	EN timing
-C88	15.1	12.8	90	F	U9 BAT_IN decoupling
+C88	13.8	16.6	0	F	U9 BAT_IN decoupling
 C89	10	19.6	270	F	damper C
 C94	29	21.6	0	F	sense
 C95	12.6	19.6	270	F	damper C
-C96	12.8	14.7	90	F	BAT_IN bulk
+C96	13.6	13.625	90	F	BAT_IN bulk; its BAT_IN pad on the U9.5 bar line (y 15.1)
 C97	20.2	18.4	90	F	RAW
 C99	35.4	30.2	0	F	U2 VIN
-C120	7.2	31.6	0	F	gate-source
+C120	7.2	31.3	0	F	gate-source
 C123	18.6	26.4	0	F	gate C
-C126	10.6	41	0	F	gate C
+C126	10.6	41.8	0	F	gate C
 C127	12.6	50	0	F	cont
 C128	4.4	44.6	90	F	OUT cap
-C129	18	36	90	F	arm
+C129	18.6	36	90	F	arm
 C400	36.2	19.3	270	F	port VIN
 C402	32.4	22	0	F	port BST
 C406	44	19.3	270	F	PORT_4V8 out
@@ -61,24 +61,24 @@ C444	34.5	92.8	0	F	J440 100 nF
 C460	36.6	36.4	90	F	3V3
 C461	33.4	36	0	F	3V3 bulk
 D5	25	24.8	180	F	RAW -> VLOGIC diode-OR (D-R12-04)
-D6	41.2	53.6	0	F	VBUS -> VLOGIC diode-OR
-D8	7	14.7	90	F	BAT_IN TVS at the entry
+D6	41.2	53.6	180	F	VBUS -> VLOGIC diode-OR, VBUS pad west toward J3
+D8	10.4	13.7	90	F	BAT_IN TVS at the entry
 D9	25.4	19	90	F	RAW reverse clamp
 D120	9.6	47.4	0	F	cold
 D121	28	10.2	0	F	servo clamp (SRV05-4)
 D123	16	87	0	F	buzzer flyback
 D402	11.6	7.8	270	F	J400.2 ESD clamp at the port
-J1	2.3	14.7	90	F	battery wire pads, west edge (pack leads arrive from aft along x = 0)
+J1	3.5	15.3	90	F	battery pigtail pads, 5.0 mm pitch, wire side west; courtyard = the keep-clear for a later 5.0 mm terminal (D-R12-30)
 J2	38.6	80	0	F	SWD Tag-Connect
 J3	41.4	44	90	F	USB-C mouth at the east edge (as R10 / R11 J3)
-J9	33.5	3.85	180	F	camera GH port, aft edge, east beside the camera buck
-J121	2.3	37	90	F	pyro wire pads, west edge; pigtail to the bay terminal
-J122	21.6	3.85	180	F	servo GH port, aft edge, middle
-J400	11	3.85	180	F	switch / arming GH port, aft edge, west beside the power entry (D-R12-24)
-J410	23	96.15	0	F	GPS GH port, forward edge, middle
-J420	11.5	96.15	0	F	radio GH port, forward edge, west (U1 J8 / K8 column 8 is west of the GPS pair)
+J9	33.5	3.65	180	F	camera SH port, aft edge, east beside the camera buck
+J121	7.4	37	270	F	pyro DB125-2 screw terminal, wires leave west, face 3.35 mm in for the 4.95 mm wire room; pin 1 OUT (E1-) north, pin 2 IGN (E1+) south (D-R12-29)
+J122	21.6	3.65	180	F	servo SH port, aft edge, middle
+J400	11	3.65	180	F	switch / arming SH port, aft edge, west beside the power entry
+J410	23	96.35	0	F	GPS SH-6 port (H743 GPS order), forward edge, middle
+J420	11.5	96.35	0	F	radio SH port, forward edge, west
 J430	20	68	180	F	microSD forward of U1, contacts toward U1; hinge opened with the board unbolted, as R10
-J440	34.5	96.15	0	F	AUX GH port, forward edge, east (U1 E10 / F10 on the east column)
+J440	34.5	96.35	0	F	AUX SH port, forward edge, east
 L1	37.6	24	0	F	3V3 inductor
 L400	40.1	19.3	0	F	port inductor
 L401	40.1	13.9	0	F	camera inductor
@@ -89,13 +89,13 @@ Q120	5	29	0	F	bus load switch
 Q121	9.6	29	180	F	bus load switch
 Q122	14.4	27.6	0	F	bus driver
 Q123	16	84	0	F	buzzer driver
-Q124	7.2	41.6	0	F	fire FET
+Q124	7.5	42.9	0	F	fire FET
 R5	27	36.6	0	F	BOOT0 pull-down
 R7	36.5	39.2	90	F	CC1
 R8	37.5	39.2	90	F	CC2
 R9	32.9	39.2	90	F	VBUS sense
 R10	29	54.4	0	F	NCS pull-up
-R11	18.6	33.6	180	F	IMU_CS pull-up, 3V3 pad west of the 3V3A island
+R11	18.6	30	180	F	IMU_CS pull-up
 R12	32.6	33.2	0	F	SCL pull-up
 R13	32.6	34.2	0	F	SDA pull-up
 R14	33.4	30	0	F	3V3 FB top
@@ -127,15 +127,15 @@ R120	6.4	26.4	0	F	gate
 R121	10.6	26.4	0	F	gate series
 R122	18.6	27.6	0	F	gate series
 R123	18.6	28.8	0	F	gate pull-down
-R126	10.6	43.4	0	F	gate series
-R127	10.6	44.4	0	F	gate
-R128	10.6	42.4	0	F	gate pull-down
+R126	10.6	44.2	0	F	gate series
+R127	10.6	45.2	0	F	gate
+R128	10.6	43.2	0	F	gate pull-down
 R129	12.6	47	0	F	cont
 R130	12.6	48	0	F	cont
 R131	6.6	46.6	90	F	cold
-R132	16	33.6	90	F	arm
-R133	16	36	90	F	arm
-R134	12.6	34.7	90	F	2 ohm series
+R132	16.6	33.6	90	F	arm
+R133	16.6	36	90	F	arm
+R134	13.9	34.7	90	F	2 ohm series
 R150	25.4	8.4	90	F	servo 1k series at the port
 R151	23.8	8.4	90	F	servo 1k series at the port
 R152	22.2	8.4	90	F	servo 1k series at the port
@@ -147,13 +147,13 @@ R157	20.6	11	270	F	servo pull-down
 R162	18.6	84	90	F	buzzer gate
 R163	19.6	84	90	F	buzzer gate pull-down
 R164	25	28.6	0	F	3V3 -> 3V3A at the island edge
-R165	16.7	7.4	0	F	EN chain: J400.2 to EN
+R165	16.7	7.5	0	F	EN chain: J400.2 to EN
 R166	10.7	23.9	0	F	damper R
-R167	14.6	17.4	90	F	BAT_IN bleed
+R167	10.4	9.6	0	F	BAT_IN bleed
 R173	12.6	46	0	F	cont
-R175	17	33.6	90	F	arm
+R175	17.6	33.6	90	F	arm
 R178	12.6	49	0	F	cont
-R180	17	36	90	F	arm
+R180	17.6	36	90	F	arm
 R400	29.85	20.4	0	F	port FB top
 R401	29.85	19.4	0	F	port FB bottom
 R404	29.85	18.4	0	F	port FB
@@ -173,16 +173,16 @@ R464	20.4	61.3	90	F	SD pull-up beside the contacts
 R470	32.9	91.8	90	F	port UART 1k series
 R471	36.1	91.8	90	F	port UART 1k series
 TP74	43.6	82.6	0	F	GND probe
-TP80	5.4	20.6	0	F	BAT_IN probe
+TP80	2	27.8	0	F	BAT_IN probe
 TP81	22.2	21.4	0	F	RAW probe
 TP83	39.6	31.4	0	F	VLOGIC probe
 TP88	23	84	0	F	GND probe
-TP120	16.6	30.8	0	F	RAW_ACT probe
+TP120	2	31.4	0	F	RAW_ACT probe
 TP122	3.4	50.4	0	F	gate probe
 U1	23	44	0	F	MCU centre; column 1 west (HSE, pyro), row A aft (IMU, servo), column 10 east (USB, SD)
 U2	32.9	27	270	F	3V3 buck
 U3	34	57	0	F	QSPI flash south-east of U1, clear on all sides
-U4	23	34.6	180	F	IMU on the roll axis (x 23), aft of U1
+U4	23	31.6	180	F	IMU on the roll axis (x 23), 6 mm aft of U1 for the A-row fan-out
 U5	29	32	0	F	baro north-east of the IMU, its east pins clear
 U9	17	15.35	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east
 U400	32.9	19.3	90	F	port buck

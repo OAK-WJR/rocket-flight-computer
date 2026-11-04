@@ -345,7 +345,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_GHC_4P"
+			(property "ki_fp_filters" "M3_SHC_4P"
 				(at 0 0 0)
 				(hide yes)
 				(effects
@@ -501,6 +501,129 @@
 					(font
 						(size 1.27 1.27))
 					(hide yes))))
+		(symbol "M3:ServoGH6"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "ServoGH6"
+				(at 0 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "connector servo"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_SHC_6P"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "ServoGH6_0_1"
+				(rectangle
+					(start -7.62 7.62)
+					(end 7.62 -7.62)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "ServoGH6_1_1"
+				(pin passive line
+					(at -12.7 6.35 0)
+					(length 5.08)
+					(name "SERVO1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 3.81 0)
+					(length 5.08)
+					(name "SERVO2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 1.27 0)
+					(length 5.08)
+					(name "SERVO3"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -1.27 0)
+					(length 5.08)
+					(name "SERVO4"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -3.81 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -6.35 0)
+					(length 5.08)
+					(name "NC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
 	)
 	(text "M3-ASSY-R12 (15 | GPS / radio / AUX ports and microSD): drawn from R11 0b26da5 with circuit.json (R12_DECISIONS.md); every pin reaches a global label."
 		(at 25.4 25.4 0)
@@ -694,55 +817,55 @@
 			(justify right))
 		(uuid 35fecd97-62ce-5dbd-9d27-bbb6e56d9d4c))
 	(symbol
-		(lib_id "M3:PortTerminal")
-		(at 127 71.12 0)
+		(lib_id "M3:ServoGH6")
+		(at 124.46 73.66 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 4a207a44-c50f-59c3-b514-192880e0489a)
 		(property "Reference" "J410"
-			(at 127 63.5 0)
+			(at 124.46 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "GH1.25-4PWT"
-			(at 127 66.04 0)
+		(property "Value" "ZX-SH1.0-6PWT"
+			(at 124.46 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_GHC_4P"
-			(at 127 71.12 0)
+		(property "Footprint" "rocket:M3_SHC_6P"
+			(at 124.46 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C52037406"
-			(at 127 71.12 0)
+		(property "LCSC" "C7430448"
+			(at 124.46 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "XUNPU"
-			(at 127 71.12 0)
+		(property "Manufacturer" "Megastar"
+			(at 124.46 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "GH1.25-4PWT"
-			(at 127 71.12 0)
+		(property "Manufacturer Part" "ZX-SH1.0-6PWT"
+			(at 124.46 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
-			(at 127 71.12 0)
+		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430448"
+			(at 124.46 73.66 0)
 			(hide yes)
 			(effects
 				(font
@@ -761,7 +884,7 @@
 			(width 0)
 			(type default))
 		(uuid dee1ca19-d8ca-5c03-8823-a6dae553466e))
-	(global_label "PORT_4V8"
+	(global_label "GND"
 		(shape passive)
 		(at 106.68 67.31 0)
 		(effects
@@ -777,7 +900,7 @@
 			(width 0)
 			(type default))
 		(uuid f7e7dd81-499d-55b2-9b72-1c3b49238fac))
-	(global_label "GND"
+	(global_label "PORT_4V8"
 		(shape passive)
 		(at 106.68 69.85 0)
 		(effects
@@ -817,6 +940,12 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid b0f6e238-dca4-5bf4-a2b4-ac3dfc3fc97b))
+	(no_connect
+		(at 111.76 77.47)
+		(uuid 77643869-02b5-5c57-8450-45e27f953e64))
+	(no_connect
+		(at 111.76 80.01)
+		(uuid c486ed5d-1555-500c-b5a4-672428c9c6db))
 	(symbol
 		(lib_id "M3:PortTerminal")
 		(at 172.72 71.12 0)
@@ -831,41 +960,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "GH1.25-4PWT"
+		(property "Value" "ZX-SH1.0-4PWT"
 			(at 172.72 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_GHC_4P"
+		(property "Footprint" "rocket:M3_SHC_4P"
 			(at 172.72 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C52037406"
+		(property "LCSC" "C7430446"
 			(at 172.72 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "XUNPU"
+		(property "Manufacturer" "Megastar"
 			(at 172.72 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "GH1.25-4PWT"
+		(property "Manufacturer Part" "ZX-SH1.0-4PWT"
 			(at 172.72 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430446"
 			(at 172.72 71.12 0)
 			(hide yes)
 			(effects
@@ -885,7 +1014,7 @@
 			(width 0)
 			(type default))
 		(uuid b57e90ac-279b-5175-a6be-0b85e90b1f65))
-	(global_label "PORT_4V8"
+	(global_label "GND"
 		(shape passive)
 		(at 152.4 67.31 0)
 		(effects
@@ -901,7 +1030,7 @@
 			(width 0)
 			(type default))
 		(uuid 8b4c36a1-3826-5e68-801a-78dc0f80d953))
-	(global_label "GND"
+	(global_label "PORT_4V8"
 		(shape passive)
 		(at 152.4 69.85 0)
 		(effects
@@ -1207,41 +1336,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "GH1.25-4PWT"
+		(property "Value" "ZX-SH1.0-4PWT"
 			(at 287.02 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_GHC_4P"
+		(property "Footprint" "rocket:M3_SHC_4P"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C52037406"
+		(property "LCSC" "C7430446"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "XUNPU"
+		(property "Manufacturer" "Megastar"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "GH1.25-4PWT"
+		(property "Manufacturer Part" "ZX-SH1.0-4PWT"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430446"
 			(at 287.02 71.12 0)
 			(hide yes)
 			(effects
@@ -1261,7 +1390,7 @@
 			(width 0)
 			(type default))
 		(uuid ff360c8a-7deb-5644-8a75-f8ede5e33dd1))
-	(global_label "PORT_4V8"
+	(global_label "GND"
 		(shape passive)
 		(at 266.7 67.31 0)
 		(effects
@@ -1277,7 +1406,7 @@
 			(width 0)
 			(type default))
 		(uuid 42ce9598-a915-50fe-a6e4-954317cef0ae))
-	(global_label "GND"
+	(global_label "PORT_4V8"
 		(shape passive)
 		(at 266.7 69.85 0)
 		(effects

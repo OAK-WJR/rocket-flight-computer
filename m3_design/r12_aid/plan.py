@@ -20,7 +20,7 @@ PLANES_TSV = Path(__file__).resolve().parents[1] / 'r12_planes.tsv'
 CLUSTERS = {'3V3A': (('U1', 'H1'), ('C21', '1'), ('C22', '1')), 'PORT_4V8': (('L400', '2'), ('C406', '1'), ('R400', '1'))}
 # widths (mm): fire path and battery copper per IPC-2152 on 1 oz outer copper (stageC.md section 3), signals 0.1 at
 # U1 (the 0.8 mm-pitch channel width), 0.2 elsewhere
-WIDTH = {'BAT_IN': 1.0, 'RAW_PROTECTED': 0.8, 'BAT_DAMP': 0.8, 'RAW_ACT': 0.8, 'ACT_FET_S': 0.8, 'PYRO1_IGN': 0.8,
+WIDTH = {'BAT_IN': 0.8, 'RAW_PROTECTED': 0.8, 'BAT_DAMP': 0.8, 'RAW_ACT': 0.8, 'ACT_FET_S': 0.8, 'PYRO1_IGN': 0.8,
          'PYRO1_OUT': 0.8, 'VLOGIC': 0.5, 'CAM_5V': 0.6, 'CAM_SW': 0.8, 'PORT_SW': 0.8, 'SW_NODE': 0.8,
          'PORT_4V8': 0.5, 'VBUS': 0.5, '3V3A': 0.3, 'VCAP1': 0.2, 'VCAP2': 0.2, 'BST': 0.3, 'PORT_BST': 0.3,
          'CAM_BST': 0.3}
@@ -449,7 +449,6 @@ class Plan:
             print('  FAIL join', net, a, b_)
             return
         self.r.commit(net, w, path)
-        pa['fanned'] = True
         self.link(pa, pb)
 
     def fanout(self, net, refs=None):
@@ -459,6 +458,22 @@ class Plan:
             self.fanout_pad(net, p)
 
     def fanout_pad(self, net, p):
+        """A linked group (joined pads) needs one fan-out: try its members in turn."""
+        group = p.get('group') or [p]
+        if any(q.get('fanned') for q in group):
+            p['fanned'] = True
+            return
+        for q in sorted(group, key=lambda q: (q is not p, -q['minor'])):
+            nf = len(self.fail)
+            self.fanout_one(net, q)
+            if len(self.fail) == nf:
+                for q2 in group:
+                    q2['fanned'] = True
+                return
+            if q is not group[-1] and len(group) > 1:
+                self.fail = self.fail[:nf]
+
+    def fanout_one(self, net, p):
         if True:
             if p['attr'] == 'pth' or p.get('fanned'):
                 return
@@ -557,6 +572,7 @@ def main():
     ap.add_argument('--report')
     ap.add_argument('--stop', default='')
     ap.add_argument('--debug', default='')
+    ap.add_argument('--passes', type=int, default=3)
     a = ap.parse_args()
     geo = json.load(open(a.geo))
     pl = Plan(geo, a.lib, a.length)
@@ -602,12 +618,39 @@ def main():
     short = [n for n in rest if mst(n) < 4.0]
     pl.queue = order + short + fans + power + [n for n in rest if n not in short]
     done = 0
-    while pl.queue:
-        u = pl.queue.pop(0)
-        pl.run_unit(u)
-        done += 1
-        if done % 50 == 0:
-            print('units', done, 'queue', len(pl.queue), 'rips', pl.rips, round(time.time() - t0, 1), flush=True)
+    for npass in range(a.passes):
+        while pl.queue:
+            u = pl.queue.pop(0)
+            pl.run_unit(u)
+            done += 1
+            if done % 100 == 0:
+                print('units', done, 'queue', len(pl.queue), 'rips', pl.rips, round(time.time() - t0, 1), flush=True)
+        units = []
+        for f in pl.fail:
+            net, what = f[0], f[1]
+            if what.endswith(' fanout'):
+                u = f'fan:{net}:{what.split()[0]}'
+            elif net in CLUSTERS and any(tuple(what.split('.')) == q for q in CLUSTERS[net]):
+                u = f'cluster:{net}'
+            elif what.startswith(('join', 'partner')):
+                continue
+            else:
+                u = net
+            if u not in units:
+                units.append(u)
+        print(f'pass {npass}: {len(pl.fail)} failures, {len(units)} units to retry', flush=True)
+        if not units or npass == a.passes - 1:
+            break
+        pl.fail = []
+        pl.b.remove_units(set(units))
+        for u in units:
+            if u.startswith('cluster:'):
+                n_ = u.split(':')[1]
+                for p in pl.by_net[n_]:
+                    if (p['ref'], p['num']) in CLUSTERS[n_]:
+                        p['fanned'] = False
+            pl.unrouted(u)
+        pl.ripped, pl.rip_pairs, pl.rips = {}, set(), 0
     pl.b.unit = 'partner'
     n = pl.partners()
     print('partners', n, 'fails', len(pl.fail))

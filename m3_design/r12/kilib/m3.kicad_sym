@@ -7418,7 +7418,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "ki_fp_filters" "M3_GHC_4P"
+		(property "ki_fp_filters" "M3_SHC_4P"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -8640,7 +8640,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "ki_fp_filters" "M3_GHC_6P"
+		(property "ki_fp_filters" "M3_SHC_6P"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -9312,7 +9312,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "ki_fp_filters" "M3_GHC_6P"
+		(property "ki_fp_filters" "M3_SHC_6P"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -9435,7 +9435,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "ki_fp_filters" "M3_GHC_4P"
+		(property "ki_fp_filters" "M3_SHC_4P"
 			(at 0 0 0)
 			(hide yes)
 			(effects

@@ -65,17 +65,19 @@ def _pad_extents(pads):
 
 
 # ---------------------------------------------------------------------------------------------------------------------
-# GH-1.25 clone headers (D-R12-15). XUNPU GH1.25-4PWT (C52037406) and GH1.25-6PWT (C52037408): JLC lists no maker PDF
-# (dataManualUrl empty), so the land is the JLCEDA official one, EASYEDA.format(code), read 2026-11-04 (10 mil units,
-# origin at the record's head): numbered contacts 0.6 x 1.7 at 1.25 pitch, two unnumbered fixing tabs. Body from the JLC
-# listing attributes: width 8.25 / 10.75 mm, depth 4.05 mm, height 4.25 mm; the body depth is placed as R11's JST GH land
-# (contacts behind the rear wall, mouth to +y; Inference: no maker drawing). Mating with JST GH housings is an Inference
-# (open item O-R12-04).
+# SH-1.0 clone headers (D-R12-31, owner 2026-11-03: the MicoAir H743's port family, so one module lead fits both boards;
+# R11's D-R11-05 rejected SH for its friction-only retention, which the owner now accepts with a retention step per flight).
+# Megastar ZX-SH1.0-4PWT (C7430446) and ZX-SH1.0-6PWT (C7430448), side entry, 1 A per contact (JLC listing, Live
+# 2026-11-04). JLCEDA's land could not be fetched (HTTP 403, 2026-11-04), so the land is JST's own SMnnB-SRSS-TB land as
+# KiCad's library draws it from JST eSH.pdf (Connector_JST JST_SH_SM0nB-SRSS-TB_1x0n-1MP_P1.00mm_Horizontal): contacts
+# 0.6 x 1.55 at 1.0 mm, y -2.0; two fixing tabs 1.2 x 1.8 at x +-(n / 2 + 0.8), y +1.875 (Datasheet via KiCad; that the
+# clone takes the JST land is an Inference, as for the GH clones). Body from the JLC listing: width 6.35 / 8.35 mm,
+# depth 4.3 mm, height 3.15 mm; contacts behind the rear wall, mouth to +y. Mating with JST SH housings: O-R12-04.
 GHC = {
-    4: dict(code='C52037406', name='M3_GHC_4P', y_sig=-1.575, tab=(3.725, 1.575, 1.0, 2.8), width=8.25),
-    6: dict(code='C52037408', name='M3_GHC_6P', y_sig=-1.6, tab=(4.975, 1.6, 1.3, 2.7), width=10.75),
+    4: dict(code='C7430446', name='M3_SHC_4P', y_sig=-2.0, tab=(2.8, 1.875, 1.2, 1.8), width=6.35),
+    6: dict(code='C7430448', name='M3_SHC_6P', y_sig=-2.0, tab=(3.8, 1.875, 1.2, 1.8), width=8.35),
 }
-GHC_PITCH, GHC_W, GHC_L, GHC_DEPTH, GHC_HEIGHT = 1.25, 0.6, 1.7, 4.05, 4.25
+GHC_PITCH, GHC_W, GHC_L, GHC_DEPTH, GHC_HEIGHT = 1.0, 0.6, 1.55, 4.3, 3.15
 
 
 def ghc_pads(n):
@@ -102,8 +104,8 @@ def ghc(n):
     body += _circle((pads[0][1], c['y_sig'] - GHC_L / 2 - .45), .12, 'F.SilkS', .15)
     for num, x, y, w, h in pads + tabs:
         body += _rpad(num, x, y, w, h)
-    return c['name'], make_fp(c['name'], f'XUNPU GH1.25-{n}PWT side-entry GH-1.25 clone ({c["code"]}); land from '
-                              f'{EASYEDA.format(c["code"])} (contacts 0.6 x 1.7 at 1.25, two fixing tabs); top side only',
+    return c['name'], make_fp(c['name'], f'Megastar ZX-SH1.0-{n}PWT side-entry SH-1.0 clone ({c["code"]}); JST '
+                              f'SM0{n}B-SRSS-TB land (contacts 0.6 x 1.55 at 1.0, two fixing tabs); top side only',
                               body, c['y_sig'] - GHC_L / 2 - 1.4, c['name'] + '.wrl')
 
 
@@ -168,9 +170,36 @@ def ddc6():
                          '(https://easyeda.com/api/products/C468250/components); top side only', body, -2.4, name + '.wrl')
 
 
+# D-R12-30 (owner, 2026-11-03): J1 stays soldered pack wire pads, drawn as two plated holes at 5.0 mm pitch so a 5.0 mm
+# two-position screw terminal fits later with no board change. Hole 1.40 mm finished: a tinned 16-20 AWG conductor
+# (about 1.3-0.8 mm, Inference: typical bundle sizes) and a 5.0 mm terminal pin (about 1.0-1.2 mm, Inference) both go in;
+# land 2.6 mm (0.6 mm ring against JLC's 0.15 mm minimum; 2.4 mm copper gap). The courtyard is the 10 x 8.2 mm keep-clear
+# for a future terminal body, its wire side at -y (the board edge after rotation 90).
+BAT_HOLE, BAT_PAD, BAT_PITCH = 1.40, 2.60, 5.00
+BAT_KEEP = (-5.0, -3.2, 5.0, 5.0)
+
+
+def batpads():
+    name = 'M3_WIREPAD_2P_P5'
+    x = BAT_PITCH / 2
+    body = _circle((-x, 0), BAT_HOLE / 2 + .25, 'F.Fab', .1) + _circle((x, 0), BAT_HOLE / 2 + .25, 'F.Fab', .1)
+    body += _rect(BAT_KEEP[:2], BAT_KEEP[2:], 'F.Fab', .1)
+    body += _rect(BAT_KEEP[:2], BAT_KEEP[2:], 'F.CrtYd', .05)
+    for num, px in (('1', -x), ('2', x)):
+        body += (f'\t(pad "{num}" thru_hole circle\n\t\t(at {g(px)} 0)\n\t\t(size {g(BAT_PAD)} {g(BAT_PAD)})\n'
+                 f'\t\t(drill {g(BAT_HOLE)})\n\t\t(layers "*.Cu" "*.Mask")\n'
+                 '\t\t(remove_unused_layers yes)\n\t\t(keep_end_layers yes))\n')
+    return name, make_fp(name, 'Battery pigtail pads: two plated 1.40 mm holes, 2.60 mm land, 5.00 mm pitch (a later 5.0 mm '
+                         'screw terminal fits); hand-soldered, no paste, not in the JLC BOM or CPL (D-R12-30)',
+                         body, -3.8, None, attr='through_hole exclude_from_pos_files exclude_from_bom')
+
+
+R10_REUSE = ('M3_DB125_2P_BK',)       # D-R12-29: R10's verified DB125-2 (black) land and model, copied verbatim
+
+
 def footprints():
     out = {}
-    for maker in (lambda: ghc(4), lambda: ghc(6), lps28dfw, buzzer, ddc6):
+    for maker in (lambda: ghc(4), lambda: ghc(6), lps28dfw, buzzer, ddc6, batpads):
         name, text = maker()
         out[name] = text
     return out
@@ -179,7 +208,7 @@ def footprints():
 PCB, BLACK, IVORY, GREY = '.06 .25 .10', '.12 .12 .12', '.92 .89 .78', '.6 .6 .6'
 MODELS = {
     **{GHC[n]['name'] + '.wrl': (
-        f'# XUNPU GH1.25-{n}PWT envelope: {GHC[n]["width"]} x {GHC_DEPTH} x {GHC_HEIGHT} mm (JLC listing). NOT a maker '
+        f'# Megastar ZX-SH1.0-{n}PWT envelope: {GHC[n]["width"]} x {GHC_DEPTH} x {GHC_HEIGHT} mm (JLC listing). NOT a maker '
         'model.\n', [(0, sum(ghc_body_y(n)) / 2, 0, GHC[n]['width'], GHC_DEPTH, GHC_HEIGHT, IVORY)]) for n in GHC},
     'M3_LPS28DFW_CCLGA7.wrl': ('# LPS28DFW envelope 2.95 x 2.95 x 2.1 mm (DS13317 Figure 19 maxima). NOT a maker model.\n',
                                [(0, 0, 0, 2.95, 2.95, LPS_H, GREY)]),
@@ -290,7 +319,13 @@ def generated():
         files[SHAPES / name] = model_text(name)
     copied = {}
     pinned = json.loads((r12.INPUT / 'manifest.json').read_text())['library']
-    for name in sorted(set(r12_footprints().values()) - set(new)):
+    r10 = HERE / 'assembly_review/kilib'
+    for name in R10_REUSE:
+        src = r10 / 'rocket.pretty' / (name + '.kicad_mod')
+        copied[PRETTY / src.name] = src
+        for model in re.findall(r'\(model "\$\{KIPRJMOD\}/kilib/([^"]+)"', src.read_text()):
+            copied[LIB / model] = r10 / model
+    for name in sorted(set(r12_footprints().values()) - set(new) - set(R10_REUSE)):
         src = r12.R11 / 'kilib/rocket.pretty' / (name + '.kicad_mod')
         assert str(src.relative_to(r12.ROOT_DIR)) in pinned, f'{name}: not a pinned R11 land'
         copied[PRETTY / src.name] = src
@@ -357,7 +392,8 @@ def geometry_checks():
         sig = [pads[str(i)] for i in range(1, n + 1)]
         tabs = [v for k, v in pads.items() if k.startswith('tab')]
         assert len(pads) == n + 2 and len(tabs) == 2
-        assert all(round(b[0] - a[0], 4) == 1.25 and a[2:] == [.6, 1.7] and a[1] == c['y_sig'] for a, b in zip(sig, sig[1:]))
+        assert all(round(b[0] - a[0], 4) == GHC_PITCH and a[2:] == [GHC_W, GHC_L] and a[1] == c['y_sig']
+                   for a, b in zip(sig, sig[1:]))
         assert sorted(abs(t[0]) for t in tabs) == [c['tab'][0]] * 2 and all(t[2:] == list(c['tab'][2:]) for t in tabs)
     lps = result['M3_LPS28DFW_CCLGA7']
     assert {k: v for k, v in lps.items()} == {n: [x, y, w, h] for n, x, y, w, h in LPS_PADS}

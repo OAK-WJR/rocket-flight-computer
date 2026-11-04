@@ -49,7 +49,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_GHC_6P"
+			(property "ki_fp_filters" "M3_SHC_6P"
 				(at 0 0 0)
 				(hide yes)
 				(effects
@@ -239,41 +239,41 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "GH1.25-6PWT"
+		(property "Value" "ZX-SH1.0-6PWT"
 			(at 63.5 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_GHC_6P"
+		(property "Footprint" "rocket:M3_SHC_6P"
 			(at 63.5 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C52037408"
+		(property "LCSC" "C7430448"
 			(at 63.5 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "XUNPU"
+		(property "Manufacturer" "Megastar"
 			(at 63.5 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "GH1.25-6PWT"
+		(property "Manufacturer Part" "ZX-SH1.0-6PWT"
 			(at 63.5 73.66 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430448"
 			(at 63.5 73.66 0)
 			(hide yes)
 			(effects
