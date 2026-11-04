@@ -138,20 +138,20 @@
    "nominal_V": 5.4528,
    "source": "TI SLVSD90B section 5.5"
   },
-  "PORT_4V8 (U400 TPS563208, R400 51k + R404 1k / R401 10k)": {
+  "PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)": {
    "drift": {
     "inside_limits": false,
-    "margin_high_V": -0.0237,
-    "margin_low_V": 0.0106,
-    "max_V": 5.0237,
-    "min_V": 4.5106
+    "margin_high_V": 0.0007,
+    "margin_low_V": -0.0111,
+    "max_V": 4.9993,
+    "min_V": 4.4889
    },
    "initial": {
     "inside_limits": true,
-    "margin_high_V": 0.0327,
-    "margin_low_V": 0.0614,
-    "max_V": 4.9673,
-    "min_V": 4.5614
+    "margin_high_V": 0.0568,
+    "margin_low_V": 0.0394,
+    "max_V": 4.9432,
+    "min_V": 4.5394
    },
    "label": "Calculation (Datasheet VFB, 1 % resistors); drift case Inference",
    "limits_V": [
@@ -159,7 +159,7 @@
     5.0
    ],
    "limits_basis": "project module ranges: MicoAir LR900 4.5-5 V, HGLRC M100 Mini 3.3-5 V (r10_plan O5, parts_qualification R8-MCU-02); Inference until bench-confirmed",
-   "nominal_V": 4.7616,
+   "nominal_V": 4.7386,
    "source": "TI SLVSD90B section 5.5 VFB 0.749-0.787 V continuous mode (TPS563208 is FCCM), TJ -40 to 125 C; IVFB +/-0.1 uA"
   }
  },
@@ -176,8 +176,8 @@
     0.531
    ],
    "PORT_SENSE_V": [
-    3.035,
-    3.454
+    3.021,
+    3.437
    ],
    "VLOGIC_SENSE_ratio": [
     0.08819,
@@ -190,8 +190,8 @@
     0.518
    ],
    "PORT_SENSE_V": [
-    3.083,
-    3.401
+    3.068,
+    3.384
    ],
    "VLOGIC_SENSE_ratio": [
     0.08927,
@@ -253,6 +253,18 @@
   "lmr50410_uvlo_rising_max_V": 4.0,
   "pa6_below_battery_min": true,
   "pa6_margin_V": 0.033,
+  "pa6_retuned_margins_V": {
+   "above_u9_turn_off_through_d5": 0.07,
+   "below_four_stall": 0.253
+  },
+  "pa6_retuned_threshold_V": [
+   0.42,
+   0.45
+  ],
+  "pa6_retuned_window_V": [
+   4.62,
+   4.95
+  ],
   "pa6_trip_window_V": [
    4.84,
    5.17

@@ -1,0 +1,54 @@
+{
+ "imu": {
+  "basis": "stageB.md section 6 (D-R12-25): roll axis x = 23 mm, U4 on the top face",
+  "lever_mm": 0.0,
+  "rotation": 180.0,
+  "side": "F",
+  "tol_mm": 0.05
+ },
+ "short_edge_basis": "as D-R11-12: the JLC assembly panel carries 5 mm rails on both short edges, so the board short edges are not conveyor edges; courtyards hold >= 0.5 mm there",
+ "short_edge_queries": {
+  "J122": [
+   "aft",
+   0.605
+  ],
+  "J400": [
+   "aft",
+   0.58
+  ],
+  "J410": [
+   "forward",
+   0.58
+  ],
+  "J420": [
+   "forward",
+   0.58
+  ],
+  "J440": [
+   "forward",
+   0.58
+  ],
+  "J9": [
+   "aft",
+   0.605
+  ]
+ },
+ "supports": [
+  [
+   3.0,
+   5.9
+  ],
+  [
+   3.5,
+   94.1
+  ],
+  [
+   42.5,
+   94.1
+  ],
+  [
+   43.0,
+   5.9
+  ]
+ ]
+}

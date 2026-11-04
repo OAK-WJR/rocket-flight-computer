@@ -414,7 +414,7 @@ def sheet_text(lt, name, title, page, parts, pins, flags=()):
 # cost study's live quote (cost_study.md section 2.1) found no surcharge at a 0.3 mm via drill and a 0.45 mm pad and a
 # surcharge below 0.3 mm (+$16.88 at 0.25 mm on 4 layers): R12's via floor is 0.3 / 0.45 mm (D-R12-03), no via in pad.
 R12_FLOOR = {'clearance': 0.1, 'track_width': 0.1, 'via_hole': 0.3, 'via_diameter': 0.45, 'via_hole_to_hole': 0.25,
-             'pth_annular': 0.15}
+             'pth_annular': 0.15, 'via_hole_clearance': 0.2}
 KEEP_RULES = ('General copper to hole clearance', 'HRO M-12 internal SMD lands to locating holes',
               'Small GND pad thermal relief', 'Tag-Connect contact to foreign copper', 'R9 bare test pads to foreign copper',
               'JLC inner-layer PTH pad hole to copper', 'JLC outer-layer PTH hole to track', 'JLC pad hole to hole')
@@ -429,6 +429,12 @@ R12_RULES = (
      'D-R12-03: 0.45 mm via pad'),
     ('R12 board floor: via hole to hole', f'hole_to_hole (min {R12_FLOOR["via_hole_to_hole"]}mm)',
      "A.Type == 'Via' && B.Type == 'Via'", 'JLC 0.2 mm, plus 0.05 mm'),
+    # D-R12-23: JLC lists 'via hole to track 0.2 mm' (capabilities page, read 2026-11-04); with R10's general 0.25 mm a
+    # 0.3 mm via at a TFBGA-100 interstitial site (0.566 mm from four 0.40 mm balls) keeps only 0.216 mm, so the via hole
+    # takes JLC's figure against tracks, SMD pads, vias and pours; plated pad holes keep the PTH rules above
+    ('R12 via hole to copper', f'hole_clearance (min {R12_FLOOR["via_hole_clearance"]}mm)',
+     "(A.Type == 'Via' && (B.Type != 'Pad' || B.Pad_Type == 'SMD')) || "
+     "(B.Type == 'Via' && (A.Type != 'Pad' || A.Pad_Type == 'SMD'))", 'JLC via hole to track 0.2 mm'),
     ('R12 board floor: PTH pad annular ring', f'annular_width (min {R12_FLOOR["pth_annular"]}mm)',
      "A.Type == 'Pad' && A.Pad_Type == 'Through-hole'", 'JLC 0.15 mm minimum, 0.20 recommended'),
 )

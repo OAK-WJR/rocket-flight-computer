@@ -2519,21 +2519,21 @@
       </units>
     </comp>
     <comp ref="R400">
-      <value>51k 1%</value>
+      <value>47k 1%</value>
       <footprint>rocket:R0402</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF5102TCE_C25794.pdf</datasheet>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf</datasheet>
       <fields>
-        <field name="LCSC">C25794</field>
+        <field name="LCSC">C25792</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF5102TCE</field>
+        <field name="Manufacturer Part">0402WGF4702TCE</field>
         <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF5102TCE_C25794.pdf</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25794"/>
+      <property name="LCSC" value="C25792"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF5102TCE"/>
+      <property name="Manufacturer Part" value="0402WGF4702TCE"/>
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -2581,21 +2581,21 @@
       </units>
     </comp>
     <comp ref="R404">
-      <value>1k 1%</value>
+      <value>4.7k 1%</value>
       <footprint>rocket:R0402</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2206010216_UNI-ROYAL-Uniroyal-Elec-0402WGF1001TCE_C11702.pdf</datasheet>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf</datasheet>
       <fields>
-        <field name="LCSC">C11702</field>
+        <field name="LCSC">C25900</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF1001TCE</field>
+        <field name="Manufacturer Part">0402WGF4701TCE</field>
         <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010216_UNI-ROYAL-Uniroyal-Elec-0402WGF1001TCE_C11702.pdf</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C11702"/>
+      <property name="LCSC" value="C25900"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
+      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>

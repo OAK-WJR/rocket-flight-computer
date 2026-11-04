@@ -37,8 +37,8 @@ def rails():
             src='TI SLUSDW3A section 7.5 VFB 0.99-1.01 V; ILKG-FB 0.2 nA typ (neglected)',
             limits=(3.0, 3.6), why='STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) and VDD <= 3.6 V; '
                                   'W25Q128 / microSD 2.7-3.6 V; ISM6HG256X / LPS28DFW <= 3.6 V'),
-        'PORT_4V8 (U400 TPS563208, R400 51k + R404 1k / R401 10k)': dict(
-            vref=(0.749, 0.787), top=52e3, bot=10e3, leak=0.1e-6,
+        'PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)': dict(
+            vref=(0.749, 0.787), top=51.7e3, bot=10e3, leak=0.1e-6,
             src='TI SLVSD90B section 5.5 VFB 0.749-0.787 V continuous mode (TPS563208 is FCCM), TJ -40 to 125 C; '
                 'IVFB +/-0.1 uA',
             limits=(4.5, 5.0), why='project module ranges: MicoAir LR900 4.5-5 V, HGLRC M100 Mini 3.3-5 V '
@@ -100,7 +100,7 @@ def sense():
     for case, tol in TOL.items():
         r = {}
         # PA4 PORT_SENSE = PORT_4V8 x R112 / (R111 + R112), R111 4.7k, R112 10k
-        p = rails()['PORT_4V8 (U400 TPS563208, R400 51k + R404 1k / R401 10k)'][case]
+        p = rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)'][case]
         lo = p['min_V'] * 10e3 * (1 - tol) / (10e3 * (1 - tol) + 4.7e3 * (1 + tol))
         hi = p['max_V'] * 10e3 * (1 + tol) / (10e3 * (1 + tol) + 4.7e3 * (1 - tol))
         r['PORT_SENSE_V'] = [round(lo, 3), round(hi, 3)]
@@ -138,6 +138,15 @@ def vlogic():
     out['usb_only_ok'] = out['usb_only_V'][0] >= 4.0
     out['pa6_below_battery_min'] = out['battery_four_stall_V'] > out['pa6_trip_window_V'][1]
     out['pa6_margin_V'] = round(out['battery_four_stall_V'] - out['pa6_trip_window_V'][1], 3)
+    # D-R12-21 (O-R12-07): no E24 pair moves R60 / R61's 1 / 11 toward the needed 0.092-0.097 (every E24 ratio near it
+    # is 1 / 11 or >= 0.0979), so the divider stays and the firmware PA6 threshold moves down by about the D5 drop:
+    # PA6 0.42-0.45 V gives VLOGIC 4.62-4.95 V, above the U9 turn-off corner seen through D5 (BAT_IN 4.80 V less VF
+    # 0.25 V = 4.55 V) and below the four-stall VLOGIC (Calculation / Inference, firmware rule)
+    out['pa6_retuned_threshold_V'] = [0.42, 0.45]
+    out['pa6_retuned_window_V'] = [round(0.42 * 11, 3), round(0.45 * 11, 3)]
+    out['pa6_retuned_margins_V'] = dict(
+        above_u9_turn_off_through_d5=round(0.42 * 11 - (4.80 - vf[0]), 3),
+        below_four_stall=round(out['battery_four_stall_V'] - 0.45 * 11, 3))
     out['label'] = 'Calculation / Inference (diode drop)'
     return out
 

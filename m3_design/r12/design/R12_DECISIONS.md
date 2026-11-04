@@ -194,6 +194,52 @@ R12 section (runs once `m3_design/r12/m3.kicad_pcb` is tracked; requires `tools/
 `tools/test_r12_check.py` (always runs), `tools/test_check_shell.py` R12 cases. R10's and R11's gates are unchanged in
 behaviour (one more self-test at the end of the run).
 
+**D-R12-21 Stage A margin items (stage B, 2026-11-04).** (a) O-R12-05: the port buck divider becomes R400 47k (C25792)
++ R404 4.7k (C25900) / R401 10k (all Basic, already on the BOM): PORT_4V8 **4.539–4.943 V** initial and **4.489–4.999 V**
+with the independent 100 ppm/K drift bound, so the worst corner is ≤ 5.0 V; the drift-bound minimum is 11 mV under the
+LR900's 4.5 V (Calculation, `r12_windows.json`). No E24 pair holds both ends in the drift bound (it needs a 0.516 V
+window against 0.5 V); the over-voltage end was chosen because it is the abs-max side (Inference). (b) O-R12-07: no
+E24 ratio sits between 1 / 11 and 0.0979, so R60 / R61 stay; the firmware PA6 threshold moves to 0.42–0.45 V (VLOGIC
+4.62–4.95 V): 70 mV above U9's turn-off corner seen through D5 and 253 mV under the four-stall VLOGIC (Calculation /
+Inference, `r12_windows.json` vlogic.pa6_retuned_*); a firmware rule, no part changes.
+
+**D-R12-22 Copper layers.** In1.Cu one GND plane; In2.Cu the 3V3 plane with three islands (priority 1) in
+`m3_design/r12_planes.tsv`: RAW_PROTECTED under the aft buck cells (the RAW fan-out lands there instead of a 1 A track
+tree), 3V3A under U4 / U5 (eleven 3V3A pads, one island), PORT_4V8 under the forward GH row (the port rail reaches all
+three ports and its bulk cap). F.Cu parts and signals; B.Cu signals under a GND pour of minimum width 0.5 mm. A B.Cu
+critical signal crossing an island edge changes reference plane: the K-region rule (PENDING in check_r12) will count it
+in stage D.
+
+**D-R12-23 Via hole clearance 0.2 mm.** A 0.3 / 0.45 mm via at a TFBGA-100 interstitial site keeps 0.216 mm from the
+balls' copper to its hole, under R10's general 0.25 mm; JLC lists "via hole to track 0.2 mm" (capabilities page, read
+2026-11-04, Datasheet), so `r12_sch.dru()` adds rule "R12 via hole to copper" (vias against tracks, SMD pads, vias and
+pours; plated pad holes keep the PTH rules). D-R12-02's escape table assumed copper clearance only.
+
+**D-R12-24 Outline 46 × 100 mm and supports.** 100 mm is JLC's four-layer price step; 90 mm was placed first and could
+not be routed one-sided under the R12 gate (stageB.md §1). Supports (3.0, 5.9), (43.0, 5.9), (3.5, 94.1), (42.5, 94.1):
+the aft pair 3.0 mm in so the aft GH row clears both washers (stageB.md §4). GH rows: aft J400 / J122 / J9, forward
+J420 / J410 / J440; J1 and J121 wire pads on the west edge, J3 on the east edge.
+
+**D-R12-25 Sensor rule areas on F.** U4 keeps R10's body (no via, no pour) and pad-ring (no track) areas, now on F.Cu;
+U5 keeps only its body area: R10's no-track band between the baro pad rows fitted the MS5611, and the LPS28DFW's centre
+GND pad 7 (PAD2LID, DS13317 §5) can only join its GND pad 5 across it (a fixed 0.3 mm F.Cu link). The R12 IMU axis map
+is not derived yet (U4 moved to the top face; stageB.md §6).
+
+**D-R12-26 Routing method.** As R11 (D-R11-07): the build never searches. A drafting aid (`m3_design/r12_aid/`: an
+octilinear A* in C with numpy clearance fields, rip-up and reroute) writes `m3_design/r12_routes.tsv`, which is
+reviewed and frozen; `r12_route.py` only replays it. The aid builds the route_check rules into the search (45-degree
+bends only, middle segments ≥ 0.5 mm, end segments longer than the width and 0.2 mm, ≤ 2 vias on a critical net without
+a pour, plane vias inside their own island). Not complete at this stage (stageC.md).
+
+**D-R12-27 U1 fan-out.** U1 at (23.0, 44.0), rotation 0 (R11's ball map: column 1 west, row A aft, column 10 east).
+Ring-1 / ring-2 signal balls leave on F.Cu by fixed stubs (one channel per ring-2 stub), every other used ball by a
+dog-bone via at an interstitial site; decoupling sits at the four corners of a 6.5 mm fan-out ring (stageC.md §3).
+
+**D-R12-28 Block placement.** Power at the aft end (entry ladder, U9 and its networks, damper, RAW cluster, camera /
+port / 3V3 buck cells in a column), the pyro cell west beside J121, the IMU on the roll axis aft of U1 with the baro,
+the flash south-east of U1, the microSD forward of U1 with its contacts toward it, the hold-up C84 and the USB diode
+D6 east, the buzzer, LEDs and Tag-Connect forward (stageB.md §5).
+
 **AGENTS §2 check.** §2.1: J400 is still the only switch and still drives U9 EN through R80 / R165 / R81 / C87 with
 D402. §2.2: RAW_ACT still comes only through Q120 / Q121 from BAT_IN; R134 2 Ω kept. §2.3: firmware rules unchanged
 (new rules added: PA4 polarity, camera UART parking, LPS28DFW driver). §2.4: all three gate networks unchanged in value
@@ -308,7 +354,10 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-11 | Firmware: LPS28DFW driver, PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: escape per D-R12-02, ≤ 100 mm placement (1995 mm² of courtyards, 43 % of one face) | B / C |
+| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face); routing incomplete (stageC.md §4–5) | C |
+| O-R12-15 | R12 IMU axis map (U4 on the top face, rotation 180): derive from the ISM6HG256X orientation figure, bench-check | D / firmware |
+| O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
+| O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
 
 ## 5. Files (stage A)
 

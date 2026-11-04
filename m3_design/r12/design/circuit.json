@@ -475,9 +475,9 @@
    "why": "D-R12-09: 470k 0402 preferred -> 0603 basic, value unchanged (F6 network)"
   },
   "R400": {
-   "lcsc": "C25794",
-   "value": "51k 1%",
-   "why": "D-R12-07: port FB top 51k + R404 1k (0.1 % 56.2k deleted)",
+   "lcsc": "C25792",
+   "value": "47k 1%",
+   "why": "D-R12-07 / D-R12-21: port FB top 47k + R404 4.7k (0.1 % 56.2k deleted; O-R12-05 drift corner <= 5.0 V)",
    "nets": {
     "1": "PORT_4V8",
     "2": "PORT_FB_TOP"
@@ -489,9 +489,9 @@
    "why": "D-R12-07: port FB bottom 10k 1 % (0.1 % deleted)"
   },
   "R404": {
-   "lcsc": "C11702",
-   "value": "1k 1%",
-   "why": "D-R12-07: port FB top series 1k"
+   "lcsc": "C25900",
+   "value": "4.7k 1%",
+   "why": "D-R12-07 / D-R12-21: port FB top series 4.7k"
   },
   "R80": {
    "lcsc": "C23178",

@@ -66,3 +66,10 @@ gate, R11's (its board is tracked) and, once `m3_design/r12/m3.kicad_pcb` is tra
 
 Done: everything in the stage A row. Not done: any board, placement, copper, fab package, hot-plug or fire re-run on
 R12 copper, firmware. Open items: `R12_DECISIONS.md` §4.
+
+## 6. Stage B / C status (2026-11-04)
+
+Stage B done: `r12_pcb.py`, `r12_place.tsv` (46 × 100 mm, D-R12-24), `r12_build.sh`; fit_check r12, placed DRC with
+parity (0 violations) and check_r12 placement pass; the placed board builds byte-identically (`9881aaa3…`). Stage C in
+progress: infrastructure (`r12_route.py`, `r12_planes.tsv`, the drafting aid `r12_aid/`) written, routing not complete
+and no copper table frozen (stageC.md). Stage A margin items D-R12-21 applied (port divider, PA6 threshold).
