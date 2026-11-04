@@ -7,6 +7,7 @@ usage: python3 m3_design/r12_aid/plan.py GEOMETRY.json OUT.tsv --lib astar.so --
 import argparse
 import json
 import math
+import os
 import sys
 import time
 from pathlib import Path
@@ -246,7 +247,8 @@ class Plan:
                 (x, y), m = term
                 self.terms.setdefault(net, []).append((0, int(round(x / R.G)), int(round(y / R.G)), m))
 
-    def connect_tree(self, net, maxexp=3_000_000, subset=None):
+    def connect_tree(self, net, maxexp=None, subset=None):
+        maxexp = maxexp or int(os.environ.get("R12_MAXEXP", 3_000_000))
         pads = [p for p in self.by_net.get(net, []) if subset is None or (p['ref'], p['num']) in subset]
         if len(pads) < 2 and not self.terms.get(net):
             return
@@ -524,6 +526,81 @@ class Plan:
                 self.r.commit(net, w, path, end_via=not exist)
             p['fanned'] = True
 
+    def clean(self, rep, turn):
+        """Clean-up pass (stage C, D-R12-33): every unit with a route_check hygiene finding in an earlier draft is
+        ripped and re-routed alone with a higher turn cost and no rip-up of others; if it no longer completes, its
+        old copper is put back unchanged."""
+        b = self.b
+        cats = {'staircase', 'tiny_jog', 'fold_back', 'acute_angle', 'track_loop', 'detour', 'collinear_overlap',
+                'extra_bends', 'local_bump', 'short_segment', 'chain_detour', 'extra_vias', 'pour_net_hop', 'jog'}
+        units = []
+        for f in rep.get('failures', []):
+            if f.get('cat') not in cats:
+                continue
+            net = f['net']
+            if net in PLANES:
+                x, y = f.get('x'), f.get('y')
+                if x is None:
+                    continue
+                best = None
+                for u in set(b.tunit) | set(b.vunit):
+                    if not u.startswith(f'fan:{net}:') and u != f'cluster:{net}':
+                        continue
+                    pts = [t[3] for t, uu in zip(b.tracks, b.tunit) if uu == u] + \
+                          [t[4] for t, uu in zip(b.tracks, b.tunit) if uu == u]
+                    if pts:
+                        d = min(math.hypot(px - x, py - y) for px, py in pts)
+                        if d < 0.5 and (best is None or d < best[0]):
+                            best = (d, u)
+                if best:
+                    u = best[1]
+                else:
+                    continue
+            else:
+                u = net
+            if u not in units and u in set(b.tunit):
+                units.append(u)
+        old_turn, old_max = R.TURN, self.max_rips
+        self.max_rips = self.rips
+        kept = 0
+        for u in units:
+            saved_t = [(t, uu) for t, uu in zip(b.tracks, b.tunit) if uu == u]
+            saved_v = [(v, uu) for v, uu in zip(b.vias, b.vunit) if uu == u]
+            nfail = len(self.fail)
+            b.remove_units({u})
+            if u.startswith('fan:') or u.startswith('cluster:'):
+                self.unrouted(u)
+                self.queue.pop(0)
+                if u.startswith('cluster:'):
+                    n_ = u.split(':')[1]
+                    for p in self.by_net[n_]:
+                        if (p['ref'], p['num']) in CLUSTERS[n_]:
+                            p['fanned'] = False
+            R.TURN = turn
+            try:
+                self.run_unit(u)
+            finally:
+                R.TURN = old_turn
+            if len(self.fail) > nfail or self.queue:
+                self.queue = []
+                del self.fail[nfail:]
+                b.remove_units({u})
+                b.unit = u
+                for (net, layer, w, a_, c_), _ in saved_t:
+                    b.add_track(net, layer, w, a_, c_)
+                for (net, x, y), _ in saved_v:
+                    b.add_via(net, x, y)
+                if u.startswith('fan:'):
+                    _, n_, key = u.split(':', 2)
+                    for p in self.by_net.get(n_, []):
+                        if f"{p['ref']}.{p['num']}" == key:
+                            p['fanned'] = True
+                print('  clean: kept old copper of', u, flush=True)
+            else:
+                kept += 1
+        self.max_rips = old_max
+        print('clean:', kept, 'of', len(units), 'units re-routed', flush=True)
+
     def partners(self):
         """A GND via within 1.5 mm of every layer change of a critical signal net (AGENTS section 3)."""
         import numpy as np
@@ -573,6 +650,9 @@ def main():
     ap.add_argument('--stop', default='')
     ap.add_argument('--debug', default='')
     ap.add_argument('--passes', type=int, default=3)
+    ap.add_argument('--clean', default='', help='route_check --report JSON of an earlier draft: re-route the units it '
+                    'flags (hygiene findings) once more with a higher turn cost, keeping the old copper if that fails')
+    ap.add_argument('--clean-turn', type=float, default=8.0)
     a = ap.parse_args()
     geo = json.load(open(a.geo))
     pl = Plan(geo, a.lib, a.length)
@@ -651,6 +731,8 @@ def main():
                         p['fanned'] = False
             pl.unrouted(u)
         pl.ripped, pl.rip_pairs, pl.rips = {}, set(), 0
+    if a.clean:
+        pl.clean(json.load(open(a.clean)), a.clean_turn)
     pl.b.unit = 'partner'
     n = pl.partners()
     print('partners', n, 'fails', len(pl.fail))

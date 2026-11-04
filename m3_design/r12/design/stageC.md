@@ -1,4 +1,4 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-29 … -32)
+# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-33)
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
 but the board is not routed.** The drafting router's best run on the stage B placement (`9881aaa3…`) leaves 36
@@ -42,39 +42,47 @@ elsewhere, each limited to 0.8 × the smaller pad dimension at its ends (IPC-215
 * **Same-part links on F:** LPS28DFW pad 7 → pad 5 (D-R12-25), U4 GND 2–3 and 6–7, J9 GND 3–4, U2 VIN 4–5, J9 CAM_5V
   1–2.
 
-## 4. Draft result (latest run, 2026-11-03/04, not frozen)
+## 4. Draft result (latest runs, 2026-11-04, not frozen)
 
-On the placement with the owner's connector changes (D-R12-29 J121 DB125 terminal, D-R12-30 J1 5.0 mm pads, D-R12-31
-SH 1.0 ports) and the IMU moved aft (D-R12-32), with three rip-up passes:
-- **Search:** 24 connections left unrouted (28 unconnected items after DRC).
-- **DRC:** no clearance or hole violation remains; only dangling copper from the unfinished nets.
-- **route_check r12:** about 90 findings. 43 are dead_copper and 6 dangling_via from the unfinished nets. The rest are
-  16 staircase, 4 track_loop, 4 fold_back, 3 extra_vias, 3 detour, 3 acute_angle, 2 collinear_overlap and 6 single
-  others.
-- The best runs over the session sit between 21 and 31 unrouted connections; the count no longer falls with rip-up alone.
+**Placement pass 2 (D-R12-33)** moved U3 (rotated, IO0 / CLK / IO3 toward U1), the servo series resistors (in line
+with J122's pins, two staggered rows) and pull-downs (2 × 2 block beside D121), the port series resistors and 100 nF
+(behind their SH pins, 1.0 mm pitch), the SD pull-ups (on their contacts' x), C10 / R164 (off U4's south band, 3V3A
+island extended aft) and LED2 / R33 (aft-east). It passes stage B (fit_check, placed DRC 0 / parity 0, check_r12
+placement). The aid now runs with turn cost 2 / via cost 8, a larger search budget, up to 8 rip-up passes, a
+`--clean` pass and slot-aware plated-hole keep-outs (D-R12-33).
 
-Unrouted at the last run, by area:
-- QSPI into U3: CLK, IO2, NCS.
-- IMU MOSI.
-- SD: CS, MISO, MOSI.
-- Port UARTs at the series resistors: AUX, radio.
-- Servo 2–4: at D121, R156 and R157.
-- Pyro control: ACT_EN_MCU, PYRO1_CONT (R129).
-- NRST at J2; BOOT0; CAM_5V_SENSE; CAM_MCU_RX / TX; LED_YEL; PORT_SENSE; VCAP2; VLOGIC_SENSE; I2C1_SDA at U5;
-  BAT_FAULT_N at U9.4.
-- Fan-outs: C21 (3V3A), C24 and R401 (GND), R400 (PORT_4V8).
-- USB_DP partner GND via.
+Runs on that placement (`PYTHONHASHSEED=0`; each about 15 min):
 
-Is the TFBGA routable? The ball fan-out itself completes every time: 39 stubs and 43 dog-bones, every dog-bone net
-leaves the field on B.Cu, and no unrouted connection is a U1 escape. The failures are F.Cu congestion round U3, J430,
-the IMU and the resistor rows. So there is no evidence that the package needs changing (R12_DECISIONS D-R12-02 stands).
+| Run | Passes / clean | Unrouted after search | DRC unconnected | DRC violations other than dangling | route_check failing (of which dead_copper + dangling_via) |
+|---|---|---|---|---|---|
+| p4 | 6 / no | 22 | 25 | 4 hole_clearance (J3 slot, fixed since) | 61 (28) |
+| p5 (best) | 6 / yes (p4's report) | 11 | 17 | 4 hole_clearance (J3 slot, fixed since) | 55 (20) |
+| p6 | 8 / yes (p5's report) | 17 | 23 | 0 | 78 (34) |
+
+For comparison, the stage B placement's best draft: 24 unrouted, 28 unconnected, about 90 route_check findings.
+p5's hygiene findings apart from the unfinished nets: 13 staircase, 6 detour, 5 extra_vias, 3 track_loop, 2 fold_back,
+2 acute_angle and 6 single others. The `--clean` pass re-routes about two thirds of the flagged units with fewer bends
+and keeps the old copper of the rest.
+
+Unrouted in p5: QSPI_NCS (U3.1), SD_CS (R460), SD_MISO (R462), PYRO1_CONT (R129), ACT_EN_MCU (R122), CAM_5V_SENSE
+(C94), SERVO3_MCU (R152), LED_YEL (R33), and three plane fan-outs (C21 3V3A, C24 and R401 GND). The set changes from run
+to run (p6 left VLOGIC_SENSE, I2C1_SCL, GPS_TX / RADIO_RX at the port resistors and C97 / C22 instead): the rip-up
+search is now congestion-bound in three areas, not placement-bound at one part:
+- the band between the aft power cells and U1 (y 14–40), which every aft-side signal (servos, camera UART, sense
+  dividers, pyro control) must cross to reach the west or south side of U1;
+- U1's east side (QSPI, SD, USB, I2C to the baro, LED_YEL);
+- the pyro cell's control nets (R122, R129) into U1's west column.
+
+Is the TFBGA routable? The ball fan-out still completes in every run (39 stubs, 43 dog-bones), and no unrouted
+connection is a U1 escape, so D-R12-02 stands (Inference: an incomplete search is not proof either way).
 
 ## 5. What stage C still needs
 
-1. Raise the router's completion: per-area placement fixes round U3 (rotate or give its south row a free side), the
-   IMU (move the east-side pins' neighbours), J3 / VBUS, D121; longer rip-up chains; a second pass over the failures.
-2. Fix the aid's two DRC defects (minimum spacing between a path's own vias; the PTH-hole via rule at J3's shell).
-3. A clean-up pass for route_check: re-route each connection with a higher turn cost to remove staircases, jogs and
-   local bumps; add partner GND vias where the 1.5 mm rule still fails.
-4. Freeze `m3_design/r12_routes.tsv`, run `r12_build.sh` to DRC 0 / unconnected 0 / parity 0, fit_check r12, route_check
+1. Finish the search: a negotiated-congestion (PathFinder-style) cost in `r12_aid` instead of rip-up alone, or pin the
+   long aft-to-U1 nets by hand first (servo, camera UART, CAM_5V_SENSE, VLOGIC_SENSE, PYRO1_CONT, ACT_EN_MCU on B.Cu in
+   assigned lanes), then let the search fill the rest. A further placement option is a channel through the aft power
+   band (move C82 / D9 / TP81 east or west of the servo lanes).
+2. Run `--clean` on the completed draft until no staircase / detour / loop finding is left, then the partner-via pass,
+   then hand fixes for singles.
+3. Freeze `m3_design/r12_routes.tsv`, run `r12_build.sh` to DRC 0 / unconnected 0 / parity 0, fit_check r12, route_check
    r12 0 failing, check_r12 copper; then stage D.

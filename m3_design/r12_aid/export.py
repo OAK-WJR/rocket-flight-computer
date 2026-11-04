@@ -29,9 +29,14 @@ def main():
                 p.GetAttribute(), 'conn')
             shape = p.GetEffectivePolygon(pcbnew.F_Cu if p.IsOnLayer(pcbnew.F_Cu) else pcbnew.B_Cu)
             lc = p.GetLocalClearance()
+            hole = None
+            if attr == 'pth':                  # the plated hole as a segment (a slot's two centres, or one point) + width
+                hs = p.GetEffectiveHoleShape()
+                sg = hs.GetSeg()
+                hole = [mm(sg.A.x), mm(sg.A.y), mm(sg.B.x), mm(sg.B.y), mm(hs.GetWidth())]
             pads.append(dict(num=p.GetNumber(), net=p.GetNetname(), x=mm(p.GetPosition().x), y=mm(p.GetPosition().y),
                              attr=attr, layers=lay, drill=mm(p.GetDrillSize().x), poly=poly(shape) if lay else [],
-                             clr=mm(lc) if lc else 0.0))
+                             clr=mm(lc) if lc else 0.0, hole=hole))
         cb = f.GetCourtyard(pcbnew.F_CrtYd).BBox()
         fps.append(dict(ref=f.GetReference(), x=mm(f.GetPosition().x), y=mm(f.GetPosition().y),
                         rot=f.GetOrientationDegrees(), pads=pads,

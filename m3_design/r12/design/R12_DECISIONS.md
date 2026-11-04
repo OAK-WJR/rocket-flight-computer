@@ -289,6 +289,34 @@ D402. §2.2: RAW_ACT still comes only through Q120 / Q121 from BAT_IN; R134 2 Ω
 and topology; the R12 schematic contract checks them by net (`r12_sch_check.SAFETY`, 37 seeds). §2.5: labels as above.
 No owner question is needed.
 
+**D-R12-33 Stage C placement pass 2 and router clean-up (2026-11-04).** Placement changes in `m3_design/r12_place.tsv`,
+each to open a routing channel the stage C drafts kept failing in (stageC.md §4):
+- **U3 (QSPI flash)** to (34.5, 52.6), rotation 90: pins 5–8 (IO0, CLK, IO3, 3V3) now form the column facing U1, IO0
+  aft, in U1's G9 / J10 order. C19 (VCAP1) to (27.3, 51.0), C16 to (25.0, 51.6), R10 (NCS pull-up) to U3 pin 1 at
+  (36.5, 57.0), C29 to U3 pin 8 at (31.0, 56.9), D6 forward to (41.2, 59.0), C23 aft to (34.0, 43.0). U3 keeps clear of
+  J3's courtyard (it cannot sit at y 50.5 there).
+- **Servo network:** the four 0603 series resistors sit in line with their J122 pins at 1.0 mm pitch in two staggered
+  rows (R153 / R151 at y 9.0 on pins 4 / 2, R152 / R150 at y 12.1 on pins 3 / 1), so each pin runs straight into its
+  resistor and the other row's track passes between two resistors (0.43 mm pad clearance). An in-line 0402 pull-down
+  cannot follow at 1.0 mm pitch, so the pull-downs form a 2 × 2 block beside D121 ((25.9 / 28.0, 12.75 / 13.75)), their
+  GND pads facing each other.
+- **Port series resistors** directly behind their SH pins at 1.0 mm pitch, the wire pad toward the pin (TX resistors
+  rotation 270, RX 90; pins 3 TX / 4 RX per D-R12-31), each port's 100 nF behind pins 1–2 (GND / PORT_4V8), y 92.2.
+- **SD pull-ups** each on its J430 contact's x (R464 DAT2 16.8, R460 CS 17.89, R461 MOSI 19.0, R462 MISO 23.39, R463 DAT1
+  24.5).
+- **IMU south band:** C10 (3V3A bulk) moves from U4's south side to its aft side, (21.9, 27.95); R164 to (25.2, 28.2),
+  rotation 270 (3V3 pad aft). The 3V3A island in `r12_planes.tsv` gains the strip x 19–24.3, y 27–29.4 under C10; R164's
+  3V3 pad stays outside it.
+- **LED2 / R33 (yellow)** to the free aft-east corner (43.3, 30.0 / 33.5): LED_YEL leaves U1 at B7 on the aft side.
+Drafting aid (not run by the build): turn cost 2 and via cost 8 (were 1 / 5; `R12_TURN`, `R12_VIA`), the search budget
+`R12_MAXEXP`, a `--clean` pass that re-routes every unit an earlier draft's route_check report flags with a higher turn
+cost and keeps the old copper if it no longer completes, and slot-aware plated-hole via keep-outs (J3's shell slots:
+the circular model let a via sit 0.46 mm from a slot, under JLC's 0.55 mm inner PTH rule). Runs need
+`PYTHONHASHSEED=0` to be repeatable (the aid iterates Python sets).
+**Result:** the placement passes stage B (fit_check, placed DRC 0 / parity 0, check_r12 placement). Routing is still not
+complete: drafts leave 11–22 connections unrouted depending on the run (best 11, stageC.md §4), so no copper table is frozen.
+AGENTS §2: no circuit, gate network or fire-path part moved; the pyro cell, J121 and J1's keep-clear are unchanged.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 | Code | Part (JLC model) | Refs | Qty | Library | Unit $ (2 b / 5 b) | Stock / orderable |
@@ -397,7 +425,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-11 | Firmware: LPS28DFW driver, PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face); routing incomplete (stageC.md §4–5) | C |
+| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face; pass 2, D-R12-33); routing incomplete: 11 connections unrouted in the best draft (stageC.md §4–5) | C |
 | O-R12-15 | R12 IMU axis map (U4 on the top face, rotation 180): derive from the ISM6HG256X orientation figure, bench-check | D / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |

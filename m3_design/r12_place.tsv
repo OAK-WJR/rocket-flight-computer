@@ -7,23 +7,23 @@ ref	x	y	rot	side	basis
 C5	32.9	24.6	0	F	BST
 C6	37.3	28	0	F	U2 VIN
 C8	42.6	24	270	F	3V3 out
-C10	21.6	35.4	0	F	3V3A bulk
+C10	21.9	27.95	0	F	3V3A bulk aft of U4, off its south band (D-R12-33)
 C13	17.2	38.2	0	F	3V3 (NW corner of U1)
 C14	28.8	38.2	0	F	3V3 (NE corner)
 C15	16.8	50	0	F	3V3 (SW corner)
-C16	27.6	51.4	0	F	3V3 (SE corner)
+C16	25	51.6	0	F	3V3 (SE corner)
 C17	16	51.8	0	F	3V3 (SW corner)
 C18	18.4	51.4	0	F	3V3 (SW corner)
-C19	29.4	50.2	90	F	VCAP1 (SE corner)
+C19	27.3	51	90	F	VCAP1 (SE corner)
 C20	30.6	38.8	90	F	VCAP2
 C21	16	48	0	F	3V3A at H1
 C22	16	46.6	0	F	3V3A at H1
-C23	35	45.4	0	F	3V3 bulk
+C23	34	43	0	F	3V3 bulk
 C24	17.6	44.6	90	F	NRST
 C25	14.6	39.5	0	F	HSE load
 C26	14.6	45.3	0	F	HSE load
 C28	35.2	39.6	90	F	VBUS
-C29	37	50.4	90	F	flash 3V3
+C29	31	56.9	270	F	flash 3V3 at U3 pin 8
 C30	25.8	31.6	90	F	IMU 3V3A
 C31	19.8	32.6	90	F	IMU 3V3A
 C32	29	29	0	F	baro 3V3A
@@ -51,17 +51,17 @@ C400	36.2	19.3	270	F	port VIN
 C402	32.4	22	0	F	port BST
 C406	44	19.3	270	F	PORT_4V8 out
 C407	31	89.2	0	F	PORT_4V8 bulk at the ports
-C410	23	92.8	0	F	J410 100 nF
-C420	11.5	92.8	0	F	J420 100 nF
+C410	21	92.2	180	F	J410 100 nF
+C420	10.5	92.2	180	F	J420 100 nF
 C431	36	9.4	0	F	CAM_5V out at J9
 C432	32.4	16.4	0	F	camera BST
 C433	36.2	13.9	270	F	camera VIN
 C434	44	13.9	270	F	CAM_5V out
-C444	34.5	92.8	0	F	J440 100 nF
+C444	33.5	92.2	180	F	J440 100 nF
 C460	36.6	36.4	90	F	3V3
 C461	33.4	36	0	F	3V3 bulk
 D5	25	24.8	180	F	RAW -> VLOGIC diode-OR (D-R12-04)
-D6	41.2	53.6	180	F	VBUS -> VLOGIC diode-OR, VBUS pad west toward J3
+D6	41.2	59	180	F	VBUS -> VLOGIC diode-OR, VBUS pad west toward J3
 D8	10.4	13.7	90	F	BAT_IN TVS at the entry
 D9	25.4	19	90	F	RAW reverse clamp
 D120	9.6	47.4	0	F	cold
@@ -83,7 +83,7 @@ L1	37.6	24	0	F	3V3 inductor
 L400	40.1	19.3	0	F	port inductor
 L401	40.1	13.9	0	F	camera inductor
 LED1	36	75.6	0	F	red LED
-LED2	40.4	75.6	0	F	yellow LED
+LED2	43.3	30	90	F	yellow LED aft-east: LED_YEL leaves U1 at B7 on the aft side (D-R12-33)
 LS120	8.5	85	0	F	buzzer, owner-fitted THT
 Q120	5	29	0	F	bus load switch
 Q121	9.6	29	180	F	bus load switch
@@ -94,14 +94,14 @@ R5	27	36.6	0	F	BOOT0 pull-down
 R7	36.5	39.2	90	F	CC1
 R8	37.5	39.2	90	F	CC2
 R9	32.9	39.2	90	F	VBUS sense
-R10	29	54.4	0	F	NCS pull-up
+R10	36.5	57	270	F	NCS pull-up at U3 pin 1
 R11	18.6	30	180	F	IMU_CS pull-up
 R12	32.6	33.2	0	F	SCL pull-up
 R13	32.6	34.2	0	F	SDA pull-up
 R14	33.4	30	0	F	3V3 FB top
 R15	33.4	31	0	F	3V3 FB bottom
 R32	36	73.6	0	F	red LED series
-R33	40.4	73.6	0	F	yellow LED series
+R33	43.3	33.5	90	F	yellow LED series R (D-R12-33)
 R60	29.4	27.6	90	F	VLOGIC sense
 R61	28.4	27.6	90	F	VLOGIC sense
 R80	14.4	9.2	90	F	EN chain: BAT_IN to J400.1
@@ -136,17 +136,17 @@ R131	6.6	46.6	90	F	cold
 R132	16.6	33.6	90	F	arm
 R133	16.6	36	90	F	arm
 R134	13.9	34.7	90	F	2 ohm series
-R150	25.4	8.4	90	F	servo 1k series at the port
-R151	23.8	8.4	90	F	servo 1k series at the port
-R152	22.2	8.4	90	F	servo 1k series at the port
-R153	20.6	8.4	90	F	servo 1k series at the port
-R154	25.4	11	270	F	servo pull-down
-R155	23.8	11	270	F	servo pull-down
-R156	22.2	11	270	F	servo pull-down
-R157	20.6	11	270	F	servo pull-down
+R150	24.1	12.1	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R151	23.1	9	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R152	22.1	12.1	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R153	21.1	9	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R154	25.9	12.75	0	F	servo pull-down beside D121
+R155	25.9	13.75	0	F	servo pull-down beside D121
+R156	28	12.75	180	F	servo pull-down beside D121
+R157	28	13.75	180	F	servo pull-down beside D121
 R162	18.6	84	90	F	buzzer gate
 R163	19.6	84	90	F	buzzer gate pull-down
-R164	25	28.6	0	F	3V3 -> 3V3A at the island edge
+R164	25.2	28.2	270	F	3V3 -> 3V3A at the island edge
 R165	16.7	7.5	0	F	EN chain: J400.2 to EN
 R166	10.7	23.9	0	F	damper R
 R167	10.4	9.6	0	F	BAT_IN bleed
@@ -161,17 +161,17 @@ R431	30.7	11.2	0	F	camera EN pull-down (off in reset)
 R433	30.7	10.2	0	F	camera FB top
 R434	32.7	10.2	0	F	camera FB
 R435	32.7	11.2	0	F	camera FB bottom
-R440	21.4	91.8	90	F	port UART 1k series
-R441	24.6	91.8	90	F	port UART 1k series
-R450	9.9	91.8	90	F	port UART 1k series
-R451	13.1	91.8	90	F	port UART 1k series
-R460	15.6	61.3	90	F	SD pull-up beside the contacts
-R461	16.8	61.3	90	F	SD pull-up beside the contacts
-R462	18	61.3	90	F	SD pull-up beside the contacts
-R463	19.2	61.3	90	F	SD pull-up beside the contacts
-R464	20.4	61.3	90	F	SD pull-up beside the contacts
-R470	32.9	91.8	90	F	port UART 1k series
-R471	36.1	91.8	90	F	port UART 1k series
+R440	23.5	92.2	90	F	port UART 1k series behind its pin (D-R12-33)
+R441	22.5	92.2	270	F	port UART 1k series behind its pin (D-R12-33)
+R450	13	92.2	90	F	port UART 1k series behind its pin (D-R12-33)
+R451	12	92.2	270	F	port UART 1k series behind its pin (D-R12-33)
+R460	17.89	61.3	90	F	SD pull-up in line with its contact (D-R12-33)
+R461	19	61.3	90	F	SD pull-up in line with its contact (D-R12-33)
+R462	23.39	61.3	90	F	SD pull-up in line with its contact (D-R12-33)
+R463	24.5	61.3	90	F	SD pull-up in line with its contact (D-R12-33)
+R464	16.8	61.3	90	F	SD pull-up in line with its contact (D-R12-33)
+R470	36	92.2	90	F	port UART 1k series behind its pin (D-R12-33)
+R471	35	92.2	270	F	port UART 1k series behind its pin (D-R12-33)
 TP74	43.6	82.6	0	F	GND probe
 TP80	2	27.8	0	F	BAT_IN probe
 TP81	22.2	21.4	0	F	RAW probe
@@ -181,7 +181,7 @@ TP120	2	31.4	0	F	RAW_ACT probe
 TP122	3.4	50.4	0	F	gate probe
 U1	23	44	0	F	MCU centre; column 1 west (HSE, pyro), row A aft (IMU, servo), column 10 east (USB, SD)
 U2	32.9	27	270	F	3V3 buck
-U3	34	57	0	F	QSPI flash south-east of U1, clear on all sides
+U3	34.5	52.6	90	F	QSPI flash east of U1, rotated so IO0 / CLK / IO3 face U1 (D-R12-33)
 U4	23	31.6	180	F	IMU on the roll axis (x 23), 6 mm aft of U1 for the A-row fan-out
 U5	29	32	0	F	baro north-east of the IMU, its east pins clear
 U9	17	15.35	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east

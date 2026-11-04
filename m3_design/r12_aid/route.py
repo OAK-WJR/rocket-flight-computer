@@ -16,6 +16,7 @@ import argparse
 import ctypes
 import json
 import math
+import os
 from pathlib import Path
 
 import numpy as np
@@ -30,6 +31,10 @@ VIA_VIA = 0.60              # via centre to via centre (hole to hole 0.25 + 0.3,
 EDGE = 0.5                  # copper to board edge (project min_copper_edge_clearance)
 RMAX = 2.5                  # field update radius
 LAYERS = ('F', 'B')
+# search costs (stage C cleanup run, D-R12-33): a turn costs TURN grid steps and a via VIA_COST; overridable by the
+# environment for drafting experiments (R12_TURN, R12_VIA)
+TURN = float(os.environ.get('R12_TURN', 2.0))
+VIA_COST = float(os.environ.get('R12_VIA', 8.0))
 
 
 class Board:
@@ -185,8 +190,13 @@ class Board:
                         self.merge(li, sl, sd - extra, k)
                 self.padany[sl] = np.minimum(self.padany[sl], sd)
                 if p['attr'] == 'pth':     # PTH hole: vias keep the 0.45 mm pad-hole rule's spirit (0.6 centre)
-                    hx, hy, r = p['x'], p['y'], p['drill'] / 2
-                    self.novia[sl] |= np.hypot(X - hx, Y - hy) < r + 0.55 + VIA_D / 2 + 0.03   # JLC inner PTH hole rule
+                    if p.get('hole'):          # slot-aware (J3's shell slots): distance to the hole's centre segment
+                        ax, ay, bx, by, hw = p['hole']
+                        dh, r = self.seg_dist(X, Y, (ax, ay), (bx, by)), hw / 2 + 0.2   # + 0.2: KiCad's DRC measured 0.14 mm
+                        # less than this segment model at J3 (draft p5), so the slot model keeps a margin
+                    else:
+                        dh, r = np.hypot(X - p['x'], Y - p['y']), p['drill'] / 2
+                    self.novia[sl] |= dh < r + 0.55 + VIA_D / 2 + 0.03   # JLC inner PTH hole rule
                 lays = [ln for ln in LAYERS if ln in p['layers']]
                 ins = {}
                 minor = min(max(xs_) - min(xs_), max(ys_) - min(ys_))
@@ -320,10 +330,12 @@ class Router:
             out[li] &= ~free
         return out
 
-    def search(self, net, w, starts, goals, window, layers=('F', 'B'), vias=True, via_cost=5.0, turn=1.0,
-               avoid=None, maxexp=3_000_000, goal_via=False, maxvia=2, noown=False, extra_block=None, via_block=None, base=False):
+    def search(self, net, w, starts, goals, window, layers=('F', 'B'), vias=True, via_cost=None, turn=None,
+               avoid=None, maxexp=int(os.environ.get("R12_MAXEXP", 3_000_000)), goal_via=False, maxvia=2, noown=False, extra_block=None, via_block=None, base=False):
         """starts: [(layer, ix, iy)]; goals: [(layer, ix, iy, dirmask)]; window: (i0, j0, i1, j1) node bounds.
         goal_via: any via-legal node is a goal (plane fan-out); the path then ends in a new via."""
+        turn = TURN if turn is None else turn
+        via_cost = VIA_COST if via_cost is None else via_cost
         b = self.b
         k = b.nid(net)
         h = w / 2
