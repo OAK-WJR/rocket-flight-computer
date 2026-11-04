@@ -1,10 +1,10 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-38)
+# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-45)
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
-but the board is not routed.** The drafting router's best run on the stage B placement (`9881aaa3…`) leaves 36
-unconnected items, a few clearance faults of its own and 78 route_check findings, so no copper table is frozen:
-`m3_design/r12_routes.tsv` does not exist, `r12_build.sh` stops after stage B, and `m3_design/r12/m3.kicad_pcb` is the
-placed board with no copper. Decisions D-R12-22, -23, -26, -27 and -28 are in `R12_DECISIONS.md`.
+but the board is not routed.** On the D-R12-44 placement the best draft (h1, §4.3) leaves 7 unconnected items and
+44 route_check findings (two DRC track_not_centered_on_via, no clearance violation), so no copper table is frozen: `m3_design/r12_routes.tsv` does not
+exist, `r12_build.sh` stops after stage B, and `m3_design/r12/m3.kicad_pcb` is the placed board with no copper.
+Decisions D-R12-22 … -45 are in `R12_DECISIONS.md`.
 
 ## 1. Infrastructure
 
@@ -37,8 +37,11 @@ elsewhere, each limited to 0.8 × the smaller pad dimension at its ends (IPC-215
 * **U9 necks.** BAT_IN enters pin 5's 0.3 mm bar through a 0.3 mm neck from (14.9, 15.1) (the 1.0 mm trunk ends
   there; the narrow part runs straight into the pad within 1 mm, route_check neck rule); RAW_PROTECTED leaves pin 6's
   bar straight into C82.1.
-* **J3 pin pairs.** DP (B6 / A6) and DM (A7 / B7) interleave at 0.5 mm, so each pair is linked on B.Cu through two
-  vias just west of the pads (staggered at x 38.0 / 37.4), VBUS (B4A9 / A4B9) through two vias at x 36.6.
+* **J3 pin pairs.** DP (B6 / A6) and DM (A7 / B7) interleave at 0.5 mm: DP is linked on B.Cu through two vias just
+  west of the pads (x 38.0), DM on F.Cu round those vias (to x 37.4 and back, D-R12-40), VBUS (B4A9 / A4B9) through two
+  vias at x 36.6.
+* **U1 B lanes (D-R12-43).** The 13 signal dog-bones leave on fixed B.Cu lanes to 0.8 mm past the outer ball row.
+* **Hand copper (D-R12-41).** `r12_aid/hand_fixed.tsv`: PYRO1_OUT.
 * **Same-part links on F:** LPS28DFW pad 7 → pad 5 (D-R12-25), U4 GND 2–3 and 6–7, J9 GND 3–4, U2 VIN 4–5, J9 CAM_5V
   1–2.
 
@@ -128,17 +131,54 @@ What this shows:
 - The hard finish (old rip-up on the few conflicting units) does not close the gap and ignores the pour guard; it should
   be replaced by more negotiation or local placement changes.
 
+### 4.3 U1 forward, fixed B lanes, hand copper (D-R12-39 … D-R12-45)
+
+The U1 cluster moved 10 mm forward into the empty forward band (D-R12-44; stage B passes: `r12_build.sh` stage A / B,
+placed DRC 0 / parity 0, fit_check r12, check_r12 placement, placed board `72b47aee…`). The aid gained fixed B.Cu lanes
+for U1's 13 signal dog-bones (D-R12-43), the J3 DM link on F and the start / goal fix that had left USB_DP / USB_DM
+unrouted in every earlier draft (D-R12-40), hand-drawn PYRO1_OUT (D-R12-41, `r12_aid/hand_fixed.tsv`), partner-aware vias
+(D-R12-42), an adaptive first window and a focus mode for the negotiation (D-R12-39), and pour repair plus
+`r12_aid/prune.py` (D-R12-45). Runs on this placement (`PYTHONHASHSEED=0`, `R12_HW=1.6 R12_MAXEXP=4000000
+R12_PF_FULL=10`, 4 in parallel, 45–60 min each; scratch, not frozen):
+
+| Run | Settings | Best PF score | After finish | Best draft after clean + partners + prune: DRC (unconnected) | route_check failing |
+|---|---|---|---|---|---|
+| a1 / a2 | old aid, turn 3 / 2, cap 200 / 100 | 18 | 11 / 13 fails | 19 / 18 unconnected | 77 / 61 (pruned) |
+| c1 | + window 1.5, USB / hand fixes | 16 | 10 fails | 14 (pruned) | 35 (pruned) |
+| f1 … f4 | + B lanes; turn 2–2.5, window 1.5–3, cap 30–50, f2 focus | 13 / 18 / **8** / 26 | f3: 3 fails | f3 → cl1: 9 unconnected; → h1: **7 unconnected** | 40 / 44 |
+
+cl1 (f3's finish, pour repaired, `--clean` with turn 2.5, partners, `prune.py --loops`): 0 clearance violations, 9
+unconnected items, route_check 40 (14 staircase, 5 tiny_jog, 5 local_bump, 3 chain_detour, 3 extra_vias, 3 dead_copper,
+2 critical_via_no_gnd, singles). h1 (cl1, then a greedy hard re-route of the failures: `R12_HW=3`, 15 M expansions,
+20 rip-ups; partners; prune) joined the PORT_4V8 cluster and the R154.2 / R156.2 GND pair and leaves **7 unconnected**:
+SD_SCK (J430.5 – U1.B9), LED_YEL (U1.B7 – R33.1), SERVO3_MCU (R152.1 – U1.H2), RADIO_TX_MCU (R451.1 – U1.J8), the 3V3A
+cluster (C21.1 – C22.1: its B run ends 0.22 mm off the island via at (28.5, 29.9), DRC track_not_centered_on_via × 2) and
+two dead GND fan-outs at (13.8, 49.0) and (21.0, 17.9); route_check 44. The 3V3 pour is whole in the aid's model except
+one fan-out via at (25.5, 28.1). Hard-mode re-routes of the four signal nets stop at the A* expansion limit: their U1
+stub tips (or, for SERVO3, R152.1 in the servo pocket) are walled in by neighbours' copper. The drafts are in scratch
+only (not reproducible from the repository without the run settings above).
+
+What the drafts show:
+- Moving U1 forward cleared its flanks; the residue now sits at U1's stub tips (adjacent tips 0.4–0.8 mm apart cannot
+  all take a via, so the last nets in cannot reach their tip) and in the aft power pocket (the servo network R150–R157 /
+  D121, whose four nets cross each other between the series resistors, the pull-down block and D121; the PORT_4V8
+  cluster at L400 / R400).
+- The negotiation removes all but 8–20 conflicts and then oscillates whatever the settings; the hard finish turns those
+  into 3–13 failures.
+
 ## 5. What stage C still needs
 
-1. Capacity at U1's west side (the inference from §4.2: the search, not only its tuning, is short of room there). The
-   most direct candidates: move C21 / C22 (3V3A at H1) to the east or south of U1 toward the 3V3A island, or extend the
-   3V3A island with an In2 arm to H1 (planes change); give C24 and the crystal network a little room; a second look at
-   the PORT_4V8 cluster's 60 mm run (L400 aft to the forward island).
-2. Then re-run the negotiation to zero conflicts (`--pf 60`, `R12_PF_PMAX=200`, `R12_PF_FULL=10`, core 5.0, turn 3),
-   `--clean` on the completed draft until no staircase / detour / loop finding is left, the partner-via pass (12–20
-   partners fail today for lack of room) and hand fixes for singles.
-3. Freeze `m3_design/r12_routes.tsv`, run `r12_build.sh` to DRC 0 / unconnected 0 / parity 0, fit_check r12, route_check
-   r12 0 failing, check_r12 copper; confirm the pour with `plane3v3.py`; then stage D.
+1. **Servo pocket (placement):** move the pull-downs R154–R157 and D121 out of the aft pocket into the open band the
+   servo nets cross on their way (y 38–47), so each servo net is a plain line U1 → clamp / pull-down → series R → J122.
+   (Inference: D121 behind the 1 kΩ series resistors protects the MCU pins as well near U1 as near J122.)
+2. **U1 stub tips:** stagger the fan-out (alternate stub lengths, 0.8 / 1.5 mm past the outer row) so adjacent tips
+   can both take a via, or make the slow west / north nets' tip vias fixed copper (they need no partner).
+3. **3V3A at H1:** H1's decoupling link to C21 / C22 runs west across the stub corridor that SERVO3 / SERVO4 and the
+   west-side nets use; take H1 to its caps through a tip via and B, or give 3V3A a fixed In2 feed from C21 / C22 to the
+   island (`hand_fixed.tsv`).
+4. Then re-run (`--pf 60`, f3's settings), finish, `fix` the leftovers, `--clean`, partners, `prune.py --loops`, hand
+   rows for the last few, freeze `m3_design/r12_routes.tsv`, run `r12_build.sh` to DRC 0 / unconnected 0 / parity 0,
+   fit_check r12, route_check r12 0 failing, check_r12 copper, and confirm the pour with KiCad's fill.
 
 ## 6. Older plan (kept for the record)
 

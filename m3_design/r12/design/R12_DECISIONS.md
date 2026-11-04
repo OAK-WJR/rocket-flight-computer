@@ -394,6 +394,69 @@ and only the end via in the island (`goal_mask`). No part moved; no pyro, gate-n
 a via at its tip, 0.8 mm outside the ball field (a dog-bone at the stub end), where the via is legal; the stub itself is
 unchanged. It adds one via to that connection (route_check extra_vias still budgets two per critical net).
 
+**D-R12-39 Negotiation: adaptive first window and focus mode (drafting aid, 2026-11-04).** In negotiated mode a path
+always exists inside the first search window (another unit's copper only costs), so a unit could never detour more than
+4 mm round congestion. A unit now gets `R12_PF_WIN` mm more first-window margin per iteration it has spent in conflict
+(up to 16 mm). `R12_PF_FOCUS=N` adds a focus mode: after N iterations without a better score, every unit not in
+conflict is frozen (merged into the base fields as a hard obstacle, `route.Board.freeze`) and only the conflicting units
+negotiate; a unit that then finds no path thaws the frozen units with copper within 2 mm of its failing pad. `plan.py
+--save-final` pickles the state after clean and partners. **Result:** neither converges to zero. Best run (f3: turn 2.5,
+window 1.5 mm, present-factor cap 50, history 0.6, 60 iterations) reached 8 conflicts (iteration 42) and then oscillated
+between 8 and 13; focus mode (f2) plateaued at 12-18.
+
+**D-R12-40 J3 pin-pair links and a search fix (drafting aid, 2026-11-04).** (a) USB_DM's A7 / B7 link is now on F.Cu,
+round USB_DP's two link vias (39.12 -> 37.75, 45 degrees to x 37.4, 0.3 mm straight, back), so DM has no via at J3:
+route_check flagged the old B link as a needless hop (extra_vias). DP keeps its B link (its F stubs cross DM's row). DM
+starts from the link's straight middle (`usb_starts`; the link does not wall in its own starts). (b) Bug: a linked group's
+link vias were both starts and goals of its own search, so USB_DP / USB_DM were joined to themselves and never routed to
+U1 in any earlier draft (each draft's DRC "unconnected" list included them); a goal at a start node is now dropped. This
+also stops a cluster lead joining its own fan-out via as a zero-length path.
+
+**D-R12-41 Hand-drawn fixed copper (2026-11-04).** `m3_design/r12_aid/hand_fixed.tsv` (r12_routes.tsv columns) is fixed
+copper drawn before any search; its nets are complete and are not searched (`plan.py HAND_TSV`, `Plan.hand`). First entry:
+PYRO1_OUT, the fire path (F.Cu, no via, AGENTS section 2): J121.1 round J121.2's west side to Q124.3 (0.8 mm, a 0.5 mm
+pad-entry neck reaching Q124.3's copper 0.81 mm from the width change), Q124.3 -> C128.1 -> R131.1 at 0.4 mm (0402 pad
+limit), and the 0.2 mm continuity-sense branch R131.1 -> R173.1 under D120 and up the 0.7 mm gap between D120 and the
+R129 / R130 / R178 column. About 26 mm of copper against the net's 20.04 mm octilinear MST (route_check detour limit
+1.6 x); every searched draft drew this net with three parallel runs (detour ratio 2.48). Clearances to J121.2, Q124's
+other pads, C128.2, R131.2, D120 and the R129 column were computed by hand from the placed pads (Calculation; KiCad DRC
+re-checks them on the frozen board). Nothing moved in the pyro cell; no gate-network part, no via.
+
+**D-R12-42 Partner-aware vias outside the negotiation (drafting aid, 2026-11-04).** In hard mode (finish, clean,
+hand-driven re-routes) a critical net (AGENTS section 3 partner list) may place a via only where a legal GND via site
+lies within 1.0 mm in x and in y (so within 1.41 mm, inside the 1.5 mm rule): `Plan.partner_block`, a box filter of the
+GND via-legal mask; `R12_PARTNER_BLOCK=0` turns it off. The partner pass failed 4-18 times per draft before.
+
+**D-R12-43 Fixed B.Cu escapes for U1's signal dog-bones (drafting aid, 2026-11-04).** Most residual conflicts of the
+D-R12-35 drafts were under U1 on B (BOOT0, VCAP1 / VCAP2, SD_CS / SD_MOSI, SPI1_MOSI, CAM_MCU_RX). Under the ball field
+B.Cu is a grid of lanes along the ball rows and columns, 0.4 mm from the interstitial via sites on either side (one
+0.1 mm track per lane, 0.125 mm to the via rings). `Plan.b_lanes` gives each of the 13 signal dog-bones (ARM1_SENSE,
+BAT_FAULT_N, BOOT0, CAM_MCU_RX, IMU_INT1, PORT_SENSE, PYRO1_GATE_N, QSPI_CLK, SD_CS, SD_MOSI, SPI1_MOSI, VCAP1, VCAP2) a
+diagonal from its via to one of its four lane crossings and a straight run along that lane to 0.8 mm past the outer ball
+row, crossings exclusive (so no two escapes touch), toward the net's other pads; the lane end on B is the net's terminal
+and B under the field is closed to every search. VCAP1 / VCAP2 are 0.1 mm there (a 0.2 mm track does not fit a lane):
+adequate for the VCAP pins' decoupling current is an Inference, not checked against ST's AN4938 / DS12110 guidance.
+**Result:** the under-U1 B conflicts are gone from every later draft (f1-f4, g1).
+
+**D-R12-44 Placement: the U1 cluster 10 mm forward (2026-11-04).** The board's forward 40 % (y 58-88) was nearly empty
+while every draft's conflicts sat round U1 (y 39-49), whose west flank faced the pyro cell (x <= 13.5 up to y 51.5). In
+`m3_design/r12_place.tsv`: U1 to (23, 54) with its decoupling (C13-C22, C24, C26), R5, R89, U3 and its C29 / R10, the SD
+pull-ups R460-R464 and J430 (20, 78), all +10 mm; Y1 (14.6, 52.5) and C25 (14.6, 49.6) (C127's courtyard); D6 (41.2,
+57.6); C84 (40, 74.5); J2 (38.6, 84); LED1 / R32 (30.5, 75.6 / 73.6); LS120 (7.2, 85); the buzzer driver Q123 / R162 /
+R163 / D123 / TP88 to the free west-forward area (6-10.5, 74-77.5). The outline, the supports, every connector, U4 / U5
+(roll axis unchanged) and the whole pyro cell (J121, Q120-Q124, R134, their gate R / C) are unchanged. `r12_pcb.py`'s
+legality checks pass (courtyards, edges, washer / standoff radii). **Result:** the U1 flanks open, but the residual
+conflicts move to the U1 stub tips (adjacent tips 0.4-0.8 mm apart cannot all take a via) and to the aft power pocket
+(servo network, PORT_4V8 cluster): the best negotiation reached 8 conflicts (D-R12-39), against 15-20 before.
+
+**D-R12-45 Pour repair and dead-copper pruning (drafting aid, 2026-11-04).** `Plan.no_in2` routes listed nets without
+In2. A hard-mode re-route (the finish) ignores the D-R12-36 pour guard and cut U2's 3V3 output region off the pour in
+f3 (15 isolated 3V3 vias: CAM_5V_SENSE and LED_YEL In2 runs closed the gaps between the RAW_PROTECTED island, the 3V3A
+island and the east edge); re-routing the In2 culprits without In2 restores it (0-1 isolated). `m3_design/r12_aid/prune.py`
+drops dead copper of non-plane nets (track ends touching nothing, vias with copper on fewer than two layers) and, with
+`--loops`, the longest segments whose removal leaves every pad group joined (route_check track_loop); on the c1 draft it
+cut route_check from 52 to 35 findings.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 | Code | Part (JLC model) | Refs | Qty | Library | Unit $ (2 b / 5 b) | Stock / orderable |

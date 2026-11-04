@@ -19,6 +19,9 @@ import route as R  # noqa: E402
 
 PLANES = {'GND': 'In1', '3V3': 'In2', 'RAW_PROTECTED': 'In2', '3V3A': 'In2', 'PORT_4V8': 'In2'}
 PLANES_TSV = Path(__file__).resolve().parents[1] / 'r12_planes.tsv'
+# D-R12-41: hand-drawn copper, fixed before any search (same columns as r12_routes.tsv); a net listed here is complete
+# and is not searched
+HAND_TSV = Path(__file__).resolve().parent / 'hand_fixed.tsv'
 # plane-net pads joined on F first, then one of them taken to the island (D-R12-22)
 CLUSTERS = {'3V3A': (('U1', 'H1'), ('C21', '1'), ('C22', '1')), 'PORT_4V8': (('L400', '2'), ('C406', '1'), ('R400', '1'))}
 # widths (mm): fire path and battery copper per IPC-2152 on 1 oz outer copper (stageC.md section 3), signals 0.1 at
@@ -230,7 +233,62 @@ class Plan:
             if not plane(p['net']) or p['net'] in ('VCAP1', 'VCAP2', '3V3A'):
                 self.u1term[p['net']] = (v, None)
                 self.dogbone_nets.add(p['net'])
-        print('escapes:', stubs, 'stubs,', len(used_sites), 'sites', flush=True)
+        lanes = self.b_lanes(used_sites, pos, target, DIR) if os.environ.get('R12_BLANES', '1') == '1' else 0
+        print('escapes:', stubs, 'stubs,', len(used_sites), 'sites,', lanes, 'B lanes', flush=True)
+
+    def b_lanes(self, used_sites, pos, target, DIR):
+        """D-R12-43: deterministic B.Cu escapes for U1's signal dog-bones. Under the ball field B.Cu is a grid of lanes
+        along the ball rows and columns, 0.4 mm from the interstitial via sites on either side (one 0.1 mm track per
+        lane: 0.125 mm to the via rings). Each signal dog-bone via goes diagonally (0.566 mm) to one of its four lane
+        crossings and straight along that lane to 0.8 mm past the outer ball row; crossings are exclusive, so no two
+        escapes touch. The lane end on B is the net's terminal (u1term, layer B) and B under the field is closed to
+        every search. A net with no free lane keeps the old free B escape."""
+        nets = sorted(self.dogbone_nets, key=lambda n: n)
+        site = {}
+        for n in nets:
+            (vx, vy), d = self.u1term[n]
+            if d is not None:
+                continue
+            cx, cy = self.u1c
+            site[n] = (round((vy - cy) / 0.8 + 5.5, 3), round((vx - cx) / 0.8 + 5.5, 3))
+        occ = set()
+        self.u1term_layer = getattr(self, 'u1term_layer', {})
+        done = 0
+        # inner sites first (fewer free lanes), then by name (deterministic)
+        ring = lambda s: min(s[0] - 1, s[1] - 1, 10 - s[0], 10 - s[1])
+        for n in sorted(site, key=lambda n: (-ring(site[n]), n)):
+            r0, c0 = site[n]
+            tx, ty = target(n)
+            vx, vy = pos(r0, c0)
+            best = None
+            for cr in (r0 - 0.5, r0 + 0.5):
+                for cc in (c0 - 0.5, c0 + 0.5):
+                    for dr, dc, s in ((-1, 0, 'N'), (1, 0, 'S'), (0, -1, 'W'), (0, 1, 'E')):
+                        path = [(cr, cc)]
+                        r, c = cr, cc
+                        while 1 <= r <= 10 and 1 <= c <= 10:
+                            r, c = r + dr, c + dc
+                            path.append((r, c))
+                        if any(q in occ for q in path):
+                            continue
+                        ex, ey = pos(r, c)
+                        L = abs(r - cr) + abs(c - cc)
+                        gain = (ex - vx) * (tx - vx) + (ey - vy) * (ty - vy)
+                        key = (-gain / max(1e-6, math.hypot(tx - vx, ty - vy)) + 0.3 * L, s, cr, cc)
+                        if best is None or key < best[0]:
+                            best = (key, path, (cr, cc), (r, c), s)
+            if best is None:
+                continue
+            _, path, corner, end, s = best
+            occ.update(path)
+            pts = [pos(r0, c0), pos(*corner), pos(*end)]
+            self.fixed(n, 'B', 0.1, pts)
+            self.u1term[n] = (pos(*end), DIR[s])
+            self.u1term_layer[n] = 1
+            self.reserve_b = getattr(self, 'reserve_b', set()) | {n}
+            done += 1
+        self.lane_nets = set(self.u1term_layer)
+        return done
 
     def reserve(self, net, e, d, length=1.0):
         """Keep the first `length` mm past a stub end clear of other nets (drafting only: the corridor counts as the
@@ -259,9 +317,12 @@ class Plan:
         belongs to the dog-bone escapes, and no other net enters the field."""
         import numpy as np
         none = np.zeros(self.bga.shape, bool)
-        return [self.bga, none if net in self.dogbone_nets else self.bga, self.core]
+        return [self.bga, none if net in self.dogbone_nets and net not in getattr(self, 'lane_nets', ()) else self.bga,
+                self.core]
 
     def width(self, net, touches_u1):
+        if net in getattr(self, 'lane_nets', ()):
+            return 0.1                                  # D-R12-43: a B lane is 0.1 mm; no neck at its end
         if net in WIDTH:
             return WIDTH[net]
         return 0.1 if touches_u1 else 0.2
@@ -295,9 +356,11 @@ class Plan:
                 inward = (d + 4) % 8
                 m = (1 << inward) | (((1 << ((inward + 1) % 8)) | (1 << ((inward + 7) % 8))) << 8)
                 self.terms.setdefault(net, [])
-                if not any(q[:3] == (0, i, j) for q in self.terms[net]):
-                    self.terms[net].append((0, i, j, m))
-                self.__dict__.setdefault('tipvia', {})[net] = (i, j)
+                tl = getattr(self, 'u1term_layer', {}).get(net, 0)     # D-R12-43: a B.Cu lane end is on layer 1
+                if not any(q[:3] == (tl, i, j) for q in self.terms[net]):
+                    self.terms[net].append((tl, i, j, m))
+                if tl == 0:
+                    self.__dict__.setdefault('tipvia', {})[net] = (i, j)
             connected.extend(u1)
             u1 = []
         if self.terms.get(net) or connected:
@@ -355,21 +418,31 @@ class Plan:
                     if vn == net and vu == self.b.unit:
                         i, j = int(round(vx / R.G)), int(round(vy / R.G))
                         starts += [(0, i, j), (1, i, j)]
+            starts += [q for q in getattr(self, 'usb_starts', {}).get(net, []) if p.get('group')]
             if p.get('group'):        # a linked group (USB pin pairs): its link vias are terminals too
                 for (vn, vx, vy) in self.b.vias:
                     if vn == net and any(math.hypot(vx - q['x'], vy - q['y']) < 3.0 for q in p['group']):
                         i, j = int(round(vx / R.G)), int(round(vy / R.G))
                         starts += [(0, i, j), (1, i, j)]
-            layers = ('F',) if net in F_ONLY else ('F', 'B', 'In2') if in2_ok(net) else ('F', 'B')
+            sset = {q[1:3] for q in starts}          # D-R12-40: never a goal at a start (a linked group's vias)
+            goals = [g for g in goals if g[1:3] not in sset]
+            layers = ('F',) if net in F_ONLY else ('F', 'B', 'In2') if in2_ok(net) and net not in \
+                getattr(self, 'no_in2', ()) else ('F', 'B')        # no_in2: D-R12-45 pour repair
             span = max((math.hypot(a['x'] - c['x'], a['y'] - c['y']) for a in pads for c in pads), default=0)
             ic = IN2_PREF if 'In2' in layers and span > IN2_SPAN and not fast(net) else None
             ok = False
-            for margin in (4.0, 10.0, 30.0):
+            # D-R12-39: in negotiated mode a path always exists inside the first window (other units' copper only
+            # costs), so a unit that keeps conflicting gets a wider first window (R12_PF_WIN mm per conflicting
+            # iteration, up to 16 mm) and can detour round the congestion instead of sharing it
+            k_ = getattr(self, 'pf_hits', {}).get(self.b.unit, 0) if self.r.__dict__.get('pf') else 0
+            m0 = min(4.0 + float(os.environ.get('R12_PF_WIN', 0.0)) * k_, 16.0)
+            for margin in sorted({m0, max(m0, 10.0), 30.0}):
                 win = R.window_of([(0, n[1], n[2]) for n in starts] + [(0, g[1], g[2]) for g in goals
                                   if math.hypot(g[1] * R.G - p['x'], g[2] * R.G - p['y']) < dist(p) + 3], margin)
                 used = sum(1 for v in self.b.vias if v[0] == net)
                 path = self.r.search(net, w, starts, goals, win, layers=layers, maxexp=maxexp, in2_cost=ic,
-                                     maxvia=max(0, (VIA_BUDGET if crit_class(net) else 6) - used), extra_block=self.masks(net))
+                                     maxvia=max(0, (VIA_BUDGET if crit_class(net) else 6) - used), extra_block=self.masks(net),
+                                     via_block=self.partner_block(net))
                 if path:
                     if tip and path[-1][0] != 0 and (path[-1][1], path[-1][2]) == tip:
                         path = path + [(0, tip[0], tip[1])]
@@ -463,21 +536,51 @@ class Plan:
             self.connect_tree(u)
 
     def usb(self):
-        """J3's pin pairs (USB-C rows A / B, rotated 90): DP B6 / A6 and DM A7 / B7 are interleaved at 0.5 mm, so each
-        pair is linked on B.Cu through two vias just west of the pads (staggered 0.6 mm), and VBUS B4A9 / A4B9 through
-        two vias further west; the rest of each net is routed on F (stageC.md section 4)."""
+        """J3's pin pairs (USB-C rows A / B, rotated 90): DP B6 / A6 and DM A7 / B7 are interleaved at 0.5 mm. DP is
+        linked on B.Cu through two vias just west of its pads (its F stubs cross DM's row); DM is linked on F.Cu round
+        those vias (D-R12-40: on B its link was a needless hop, route_check extra_vias), VBUS B4A9 / A4B9 through two
+        vias further west; the rest of each net is routed by the search (stageC.md section 3). The link's on-grid
+        nodes are the search's starts (usb_starts): J3's pads sit on a 0.25 mm offset the 0.1 mm grid cannot reach."""
         pads = {p['num']: p for p in self.b.pads if p['ref'] == 'J3'}
-        X1, X2, XV = 38.0, 37.4, 36.6
-        for net, (pa, xa), (pb, xb) in (('USB_DP', ('B6', X1), ('A6', X1)), ('USB_DM', ('A7', X2), ('B7', X2)),
-                                        ('VBUS', ('B4A9', XV), ('A4B9', XV))):
+        X1, XV = 38.0, 36.6
+        self.usb_starts = {}
+        for net, (pa, xa), (pb, xb) in (('USB_DP', ('B6', X1), ('A6', X1)), ('VBUS', ('B4A9', XV), ('A4B9', XV))):
             w = 0.1 if net != 'VBUS' else 0.5
             ya, yb = pads[pa]['y'], pads[pb]['y']
             self.fixed(net, 'F', w, [(round(pads[pa]['x'], 3), ya), (xa, ya)])
             self.fixed(net, 'F', w, [(round(pads[pb]['x'], 3), yb), (xb, yb)])
-            self.fixed(net, 'B', w if net != 'VBUS' else 0.5, [(xa, ya), (xb, yb)])
+            self.fixed(net, 'B', w, [(xa, ya), (xb, yb)])
             self.b.add_via(net, xa, ya)
             self.b.add_via(net, xb, yb)
             self.link(pads[pa], pads[pb])
+        pa, pb = pads['A7'], pads['B7']
+        xp, ya, yb = round(pa['x'], 3), pa['y'], pb['y']           # ya < yb, 1.0 mm apart, DP's vias between
+        pts = [(xp, ya), (37.75, ya), (37.4, round(ya + 0.35, 3)), (37.4, round(yb - 0.35, 3)), (37.75, yb), (xp, yb)]
+        self.fixed('USB_DM', 'F', 0.1, pts)
+        self.link(pa, pb)
+        i = int(round(37.4 / R.G))
+        j0, j1 = int(math.ceil((ya + 0.35) / R.G - 1e-6)), int(math.floor((yb - 0.35) / R.G + 1e-6))
+        self.usb_starts['USB_DM'] = [(0, i, j) for j in range(j0, j1 + 1)]
+        # the link's straight middle does not wall in its own starts (route.own_block)
+        self.r.__dict__.setdefault('links', set()).update(('USB_DM', a_, c_) for a_, c_ in zip(pts, pts[1:]))
+
+    def hand(self, path):
+        """D-R12-41: hand-drawn copper (explicit rows, reviewed by hand) is fixed copper; its nets are complete."""
+        import csv
+        nets = set()
+        if not Path(path).exists():
+            return nets
+        for r in csv.DictReader((l for l in open(path) if not l.startswith('#')), delimiter='\t'):
+            if r['kind'] == 'track':
+                self.b.add_track(r['net'], r['layer'], float(r['width']), (float(r['x0']), float(r['y0'])),
+                                 (float(r['x1']), float(r['y1'])))
+            else:
+                self.b.add_via(r['net'], float(r['x0']), float(r['y0']))
+            nets.add(r['net'])
+        for n in nets:
+            for p in self.by_net.get(n, []):
+                p['fanned'] = True
+        return nets
 
     def on_pad(self, net, node):
         l, i, j = node
@@ -711,6 +814,8 @@ class Plan:
         best = None
         full = int(os.environ.get('R12_PF_FULL', iters))    # iterations that re-route every unit; later ones only
         todo = list(units)                                   # the units in conflict, failed or cutting the pour
+        focus_after = int(os.environ.get('R12_PF_FOCUS', 0))    # D-R12-39: stagnation iterations before focus mode
+        since_best, focused = 0, False
         for it in range(iters):
             self.fail = []
             for u in (units if it < full else [u for u in units if u in todo]):
@@ -735,6 +840,9 @@ class Plan:
                 else:
                     pf['hist'][R.LAYERS.index(layer)][sl] += pf['hist_inc'] * disc
             score = len(cf) + len(self.fail) * 3 + len(iso)
+            self.__dict__.setdefault('pf_hits', {})
+            for u in set(bad) | set(pbad):
+                self.pf_hits[u] = self.pf_hits.get(u, 0) + 1
             todo = set(bad) | set(pbad)
             for f in self.fail:
                 net_, what = f[0], f[1]
@@ -751,11 +859,44 @@ class Plan:
                       [i[0] for i in iso][:6], flush=True)
             if best is None or score < best[0]:
                 best = (score, it, self.state())
+                since_best = 0
+            else:
+                since_best += 1
                 if os.environ.get('R12_PF_DUMP'):
                     pickle.dump(best[2], open(os.environ['R12_PF_DUMP'], 'wb'))
             if not cf and not self.fail and not iso:
                 break
             pf['pres'] = min(pf['pres'] * pf['pres_mult'], float(os.environ.get('R12_PF_PMAX', 40.0)))
+            # D-R12-39 focus mode: once the negotiation stagnates, every unit not in conflict is frozen (a hard obstacle)
+            # and only the conflicting units negotiate among themselves; a unit that then finds no path at all thaws the
+            # frozen units with copper within 2 mm of its failing pad
+            if focus_after and it >= full and (focused or since_best >= focus_after):
+                if not focused:
+                    if best[1] != it:
+                        self.load_state(best[2])
+                        cf = R.conflicts(b, fast)
+                        todo = {x for c in cf for x in c[:2]}
+                    focused = True
+                    print(f'   focus: freezing {len(set(units) - set(todo))} units, {len(todo)} negotiate', flush=True)
+                thaw = set()
+                for f in self.fail:
+                    pad = next((q for q in self.by_net.get(f[0], []) if f"{q['ref']}.{q['num']}" == f[1].split()[0]),
+                               None)
+                    if pad is None:
+                        continue
+                    for (n, layer, w, a_, c_), u in zip(b.tracks, b.tunit):
+                        if u in getattr(b, 'frozen', set()) and R.Board.seg_dist(
+                                np.array(pad['x']), np.array(pad['y']), a_, c_) < 2.0 + w / 2:
+                            thaw.add(u)
+                    for (n, x, y), u in zip(b.vias, b.vunit):
+                        if u in getattr(b, 'frozen', set()) and math.hypot(x - pad['x'], y - pad['y']) < 2.2:
+                            thaw.add(u)
+                if thaw:
+                    print(f'   focus: thawing {sorted(thaw)[:10]}', flush=True)
+                todo = set(todo) | thaw
+                self.b.freeze(set(u for u in set(b.tunit) | set(b.vunit) if u != 'fixed') - set(todo))
+        if focused:
+            self.b.freeze(set())
         if best[1] != it:
             print(f'pf: restoring the best iteration {best[1]} (score {best[0]})', flush=True)
             self.load_state(best[2])
@@ -848,6 +989,21 @@ class Plan:
         self.max_rips = old_max
         print('clean:', kept, 'of', len(units), 'units re-routed', flush=True)
 
+    def partner_block(self, net):
+        """D-R12-42: outside the negotiation, a critical net may place a via only where a GND partner via could still
+        go (a legal GND via site within 1.0 mm in x and y, so within 1.41 mm: AGENTS section 3's 1.5 mm rule)."""
+        import numpy as np
+        if self.r.__dict__.get('pf') or not critical(net) or os.environ.get('R12_PARTNER_BLOCK', '1') != '1':
+            return None
+        ok = self.b.via_ok(self.b.nid('GND')).astype(np.int32)
+        r = int(round(1.0 / R.G))
+        c = np.pad(ok, r).cumsum(0).cumsum(1)
+        c = np.pad(c, ((1, 0), (1, 0)))
+        H, W = ok.shape
+        n = 2 * r + 1
+        box = c[n:n + H, n:n + W] - c[0:H, n:n + W] - c[n:n + H, 0:W] + c[0:H, 0:W]
+        return box == 0
+
     def partners(self):
         """A GND via within 1.5 mm of every layer change of a critical signal net (AGENTS section 3)."""
         import numpy as np
@@ -927,6 +1083,7 @@ def main():
                     'many iterations, every unit re-routed in each, instead of the rip-up passes')
     ap.add_argument('--save-state', default='', help='pickle the routed units after the search (before --clean)')
     ap.add_argument('--load-state', default='', help='skip the search: load a --save-state pickle')
+    ap.add_argument('--save-final', default='', help='pickle the routed units after clean and partners')
     a = ap.parse_args()
     geo = json.load(open(a.geo))
     pl = Plan(geo, a.lib, a.length)
@@ -947,6 +1104,7 @@ def main():
     # GND fan-out through a short F.Cu link
     pl.join('GND', ('R401', '2'), ('C94', '2'), w=0.2)
     pl.usb()
+    hand = pl.hand(HAND_TSV)
     pl.bga_setup()
     pl.escapes()
     pl.b.snapshot()
@@ -983,7 +1141,7 @@ def main():
                                                                      and n not in longslow]
     rest = [n for n in rest if n not in longslow]
     short = [n for n in short if n not in longslow]
-    pl.queue = order + short + fans + power + [n for n in rest if n not in short]
+    pl.queue = [u for u in order + short + fans + power + [n for n in rest if n not in short] if u not in hand]
     done = 0
     if a.load_state:
         pl.load_state(pickle.load(open(a.load_state, 'rb')))
@@ -1048,6 +1206,8 @@ def main():
     n = pl.partners()
     print('partners', n, 'fails', len(pl.fail))
     write_tsv(pl.b, a.out)
+    if a.save_final:
+        pickle.dump(pl.state(), open(a.save_final, 'wb'))
     if a.report:
         json.dump(dict(fail=pl.fail, tracks=len(pl.b.tracks), vias=len(pl.b.vias)), open(a.report, 'w'), indent=1)
 

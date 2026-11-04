@@ -275,6 +275,24 @@ class Board:
         self.snap = [a.copy() for a in self.dA + self.dB + self.nA + self.nB] + [self.viad.copy()]   # 4 x NL + 1
         self.nfixed = (len(self.tracks), len(self.vias))
 
+    def freeze(self, units):
+        """Focus mode (D-R12-39): these routed units become hard obstacles for the negotiation (merged into the base
+        fields, skipped by congestion() and conflicts()); freeze(set()) restores the fixed-copper base."""
+        if not hasattr(self, 'snap0'):
+            self.snap0 = [a.copy() for a in self.snap]
+        self.frozen = set(units)
+        s = self.snap0
+        self.dA, self.dB = [a.copy() for a in s[0:NL]], [a.copy() for a in s[NL:2 * NL]]
+        self.nA, self.nB = [a.copy() for a in s[2 * NL:3 * NL]], [a.copy() for a in s[3 * NL:4 * NL]]
+        self.viad = s[4 * NL].copy()
+        for (net, layer, w, a, b), u in zip(self.tracks, self.tunit):
+            if u in self.frozen:
+                self.add_track(net, layer, w, a, b, record=False)
+        for (net, x, y), u in zip(self.vias, self.vunit):
+            if u in self.frozen:
+                self.add_via(net, x, y, record=False)
+        self.snap = [a.copy() for a in self.dA + self.dB + self.nA + self.nB] + [self.viad.copy()]
+
     def foreign_base(self, li, k):
         dA, dB, nA = self.snap[li], self.snap[NL + li], self.snap[2 * NL + li]
         return np.where(nA != k, dA, dB)
@@ -434,8 +452,9 @@ class Router:
                 per[u] = (np.zeros((NL, Hn, Wn), bool), np.zeros((Hn, Wn), bool))
             return per[u]
         R_ = 1.0
+        fz = getattr(b, 'frozen', set())
         for (n, layer, w, a, c), u in zip(b.tracks, b.tunit):
-            if u == 'fixed' or n == net:
+            if u == 'fixed' or u in fz or n == net:
                 continue
             if max(a[0], c[0]) < x0 - R_ or min(a[0], c[0]) > x1 + R_ or max(a[1], c[1]) < y0 - R_ or \
                     min(a[1], c[1]) > y1 + R_:
@@ -459,7 +478,7 @@ class Router:
             elif layer == 'In2' and me_fast:
                 m[1][ss] |= d < w / 2 + h + 0.2
         for (n, x, y), u in zip(b.vias, b.vunit):
-            if u == 'fixed':
+            if u == 'fixed' or u in fz:
                 continue
             if x < x0 - R_ or x > x1 + R_ or y < y0 - R_ or y > y1 + R_:
                 continue
@@ -775,8 +794,9 @@ def conflicts(b, fast=lambda n: False):
     rule of the search: track-track clearance on one layer (other nets), the fast-net In2 reference rule, track to a
     via (other nets), via to via spacing (any net, not the same via). Returns [(unit, unit, layer, x, y)]."""
     out = []
-    T = [(t, u) for t, u in zip(b.tracks, b.tunit) if u != 'fixed']
-    V = [(v, u) for v, u in zip(b.vias, b.vunit) if u != 'fixed']
+    fz = getattr(b, 'frozen', set())
+    T = [(t, u) for t, u in zip(b.tracks, b.tunit) if u != 'fixed' and u not in fz]
+    V = [(v, u) for v, u in zip(b.vias, b.vunit) if u != 'fixed' and u not in fz]
     if T:
         A0 = np.array([t[3] for t, _ in T], float)
         A1 = np.array([t[4] for t, _ in T], float)

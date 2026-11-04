@@ -1,0 +1,21 @@
+# R12 hand-drawn copper (D-R12-41), fixed before the drafting aid's search (plan.py HAND_TSV); same columns as
+# m3_design/r12_routes.tsv. A net listed here is complete and the aid does not search it.
+# PYRO1_OUT (fire path, F.Cu, no via): J121.1 round J121.2's west side to Q124.3 (0.8 mm trunk, 0.5 mm pad-entry neck),
+# Q124.3 -> C128.1 -> R131.1 (0.4 mm, the 0402 pads' limit), and the continuity-sense branch R131.1 -> R173.1 (0.2 mm,
+# a sense tap) under D120 and up the gap between D120 and the R129 / R130 / R178 column.
+kind	net	layer	width	x0	y0	x1	y1
+track	PYRO1_OUT	F	0.8	7.4	35.25	5.6	37.05
+track	PYRO1_OUT	F	0.8	5.6	37.05	5.6	42
+track	PYRO1_OUT	F	0.5	5.6	42	6.5	42.9
+track	PYRO1_OUT	F	0.4	6.5	42.9	6.5	43.6
+track	PYRO1_OUT	F	0.4	6.5	43.6	5.1	45
+track	PYRO1_OUT	F	0.4	5.1	45	4.4	45
+track	PYRO1_OUT	F	0.4	4.4	45	4.4	46.2
+track	PYRO1_OUT	F	0.4	4.4	46.2	5.2	47
+track	PYRO1_OUT	F	0.4	5.2	47	6.6	47
+track	PYRO1_OUT	F	0.2	6.6	47	6.6	48.6
+track	PYRO1_OUT	F	0.2	6.6	48.6	7.3	49.3
+track	PYRO1_OUT	F	0.2	7.3	49.3	11	49.3
+track	PYRO1_OUT	F	0.2	11	49.3	11.5	48.8
+track	PYRO1_OUT	F	0.2	11.5	48.8	11.5	46.7
+track	PYRO1_OUT	F	0.2	11.5	46.7	12	46.2
