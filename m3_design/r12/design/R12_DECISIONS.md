@@ -457,6 +457,37 @@ drops dead copper of non-plane nets (track ends touching nothing, vias with copp
 `--loops`, the longest segments whose removal leaves every pad group joined (route_check track_loop); on the c1 draft it
 cut route_check from 52 to 35 findings.
 
+**D-R12-46 3V3A: a fixed feed from H1 to the island (2026-11-04).** Every searched draft joined the H1 cluster (U1.H1,
+C21, C22) to the 3V3A island by a long F.Cu run (h1: about 150 mm round the west, forward and east edges; route_check
+chain_detour 152 mm against 32 mm). 3V3A is now complete hand copper in `r12_aid/hand_fixed.tsv`: the nine island fan-outs
+of the h1 draft (C10 two vias, R164, C30, C32, U5.6, U4.5, U4.8, C31), a via at H1's stub tip (18.6, 56.0), an In2 0.3 mm
+feed from it straight aft along x 19.0 into the island at (19.5, 36.5) (about 19.6 mm), and H1 -> C22.1 -> C21.1 on F.Cu
+(0.3 mm, between C24 and C22 at y 55.6). The feed keeps the west-side U1 nets (servos, pyro sense / enable, NRST) west of
+it on In2. Clearances were computed from the placed pads; KiCad DRC on this copper alone (with PYRO1_OUT) shows no
+clearance violation (scratch check). `plan.py` drops a hand net's `cluster:` and `fan:` units from the queue.
+
+**D-R12-47 Seed copper: fixed stub-tip vias (drafting aid, 2026-11-04).** `r12_aid/hand_seed.tsv` (`plan.py
+HAND_SEED_TSV`, `R12_HAND_SEED` to override) is fixed copper drawn before the search like `hand_fixed.tsv`, but its nets
+are still searched. Entries: SERVO3_MCU and SERVO4_MCU leave their stub tips diagonally to vias at (18.2, 55.2) /
+(18.2, 56.8) (the 3V3A tip via of D-R12-46 sits between their tips, so neither can take a via at its own tip, and on F.Cu
+the tips are walled in by C24 / C22 and the other west stubs); LED_YEL takes a via at its tip (24.6, 49.6), among the
+north SPI1 / servo stubs. None is a critical net (no GND partner). This is §5 item 2's second option (fixed tip vias
+for slow nets). The stagger (alternate stub lengths) was not adopted: on the west side the long tips would reach x 17.8,
+0.5 mm from C24 / C22, and close the F.Cu corridor (x 17.3-18.4) the west nets use.
+
+**D-R12-48 Servo pocket not moved; routing still unfinished (2026-11-04).** §5 item 1 (D121 and R154-R157 into the band
+y 38-47) was laid out (D121 rotated 90 at (21.5, 42), the pull-downs on the lines' x) and dropped before any run: that
+band is the corridor of U1's north-side fan-out to U4 (SPI1_SCK / MISO / MOSI, IMU_CS, IMU_INT1) and to the west; in the
+h1 draft it is full of routing, and the parts would sit across the SPI1 runs. Runs on the D-R12-44 placement with
+D-R12-46 / -47 (`--pf 60`, f3's settings; scratch r12c7, not frozen): v1 (S3 / S4 seeds) / v2 (+ LED_YEL) / v3 (v1, turn
+2.0) / v4 (v2, turn 2.0, window 2.5) reached 15 / 7 / 12 / 9 conflicts; after the finish, `--clean`, partners and prune:
+13 / 14 / 22 / 10 DRC unconnected, route_check 49 / 27 / 41 / 64 (v3 without the clean pass). Hard finishing of the leftovers (rip-up with up to 25
+units per connection) and a local negotiation (the units within 2 mm of the failing connections, everything else
+frozen, 40 iterations) both made things worse (12-32 unconnected): every leftover crosses 10-18 routed units on its
+shortest path. The best draft is still the h1 lineage: h1 + the H1 cluster re-routed In2-first and its two dead GND
+fan-outs re-done (h2), then SD_SCK routed with the partner block off and four vias allowed (h5): 4 unconnected
+(the 3V3A C21.1-C22.1 link, LED_YEL, SERVO3_MCU, RADIO_TX_MCU) and one dangling GND via; route_check 47. Not frozen.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 | Code | Part (JLC model) | Refs | Qty | Library | Unit $ (2 b / 5 b) | Stock / orderable |

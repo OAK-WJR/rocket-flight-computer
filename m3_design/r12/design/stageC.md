@@ -1,10 +1,10 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-45)
+# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-48)
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
-but the board is not routed.** On the D-R12-44 placement the best draft (h1, §4.3) leaves 7 unconnected items and
-44 route_check findings (two DRC track_not_centered_on_via, no clearance violation), so no copper table is frozen: `m3_design/r12_routes.tsv` does not
+but the board is not routed.** On the D-R12-44 placement the best draft (h5, §4.4) leaves 4 unconnected items, one
+dangling GND via and 47 route_check findings (no clearance violation), so no copper table is frozen: `m3_design/r12_routes.tsv` does not
 exist, `r12_build.sh` stops after stage B, and `m3_design/r12/m3.kicad_pcb` is the placed board with no copper.
-Decisions D-R12-22 … -45 are in `R12_DECISIONS.md`.
+Decisions D-R12-22 … -48 are in `R12_DECISIONS.md`.
 
 ## 1. Infrastructure
 
@@ -41,7 +41,10 @@ elsewhere, each limited to 0.8 × the smaller pad dimension at its ends (IPC-215
   west of the pads (x 38.0), DM on F.Cu round those vias (to x 37.4 and back, D-R12-40), VBUS (B4A9 / A4B9) through two
   vias at x 36.6.
 * **U1 B lanes (D-R12-43).** The 13 signal dog-bones leave on fixed B.Cu lanes to 0.8 mm past the outer ball row.
-* **Hand copper (D-R12-41).** `r12_aid/hand_fixed.tsv`: PYRO1_OUT.
+* **Hand copper (D-R12-41, -46).** `r12_aid/hand_fixed.tsv`: PYRO1_OUT; 3V3A complete (island fan-outs, H1 tip via, an
+  In2 feed along x 19.0 into the island, H1 -> C22.1 -> C21.1 on F).
+* **Seed copper (D-R12-47).** `r12_aid/hand_seed.tsv`: stub-tip vias for SERVO3_MCU, SERVO4_MCU and LED_YEL (their
+  nets are still searched).
 * **Same-part links on F:** LPS28DFW pad 7 → pad 5 (D-R12-25), U4 GND 2–3 and 6–7, J9 GND 3–4, U2 VIN 4–5, J9 CAM_5V
   1–2.
 
@@ -166,8 +169,38 @@ What the drafts show:
 - The negotiation removes all but 8–20 conflicts and then oscillates whatever the settings; the hard finish turns those
   into 3–13 failures.
 
+### 4.4 3V3A feed, seed vias, finishing attempts (D-R12-46 … D-R12-48)
+
+Runs on the D-R12-44 placement with the 3V3A hand feed and seed vias (`--pf 60`, `R12_HW=1.6 R12_MAXEXP=4000000
+R12_PF_FULL=10 R12_PF_PMAX=50 R12_PF_HIST=0.6`; scratch `r12c7`, not frozen):
+
+| Run | Seeds / settings | Best PF conflicts | After finish, clean, partners, prune: DRC unconnected | route_check failing |
+|---|---|---|---|---|
+| v1 | S3 / S4; turn 2.5, window 1.5 | 15 | 13 | 49 |
+| v2 | + LED_YEL; turn 2.5, window 1.5 | 7 | 14 | 27 |
+| v3 | S3 / S4; turn 2.0, window 1.5 | 12 | 22 (no clean) | 41 |
+| v4 | + LED_YEL; turn 2.0, window 2.5 (the repository's aid inputs now) | 9 | 10 | 64 |
+
+None beats the h1 lineage. Finishing by search does not converge: a hard re-route of v4's leftovers with rip-up
+(up to 25 units per connection) gave 12-32 unconnected, and a local negotiation (units within 2 mm of the failing
+connections, the rest frozen, 40 iterations) stalled at 18+ conflicts and gave 16. Each leftover's shortest path against
+the fixed copper crosses 10-18 routed units (LED_YEL: CC1 / CC2, I2C1, IMU_INT1, SD_MISO, SERVO2, VBUS, VBUS_SENSE,
+VLOGIC; RADIO_TX_MCU: the GPS / radio UARTs, I2C1, NRST, SD_MISO / SD_MOSI; SERVO3_MCU: 18 units west of U1).
+
+Best draft, h1 lineage (scratch `r12c7/h5`: `st.pkl`, `raw.tsv`, `ev/routes.tsv` pruned): h1, then the H1 cluster
+re-routed with the In2 tier first and the two dead GND fan-outs re-done (h2: 5 unconnected, route_check 41), then
+SD_SCK routed with the partner block off and a four-via budget (h5). **4 unconnected**: the 3V3A C21.1-C22.1 link
+(SERVO4_MCU's F.Cu run at y 57.4 passes between C22 and C21), LED_YEL (R33.1), SERVO3_MCU (R152.1), RADIO_TX_MCU
+(R451.1); one dangling GND via at (27.8, 52.6); route_check 47 (15 staircase, 9 local_bump, 7 tiny_jog, 4 extra_vias,
+3 chain_detour, 2 critical_via_no_gnd (QSPI_NCS), singles). Moving CAM_MCU_RX's B escape one diagonal aft (s = 73.6)
+frees LED_YEL's tip via at (24.6, 49.6), but LED_YEL then still finds no path to R33.1.
+
 ## 5. What stage C still needs
 
+0. **Status of the items below (D-R12-46 … -48):** item 1 was dropped (the band is the U1-north fan-out corridor);
+   item 2 was done as fixed tip vias (`hand_seed.tsv`); item 3 was done (`hand_fixed.tsv`); item 4 was run (§4.4) and
+   does not finish. What is left is the hand route of the four leftovers of h5, each of which needs 10-18 routed units
+   moved, then the hygiene clean, the freeze and the build checks.
 1. **Servo pocket (placement):** move the pull-downs R154–R157 and D121 out of the aft pocket into the open band the
    servo nets cross on their way (y 38–47), so each servo net is a plain line U1 → clamp / pull-down → series R → J122.
    (Inference: D121 behind the 1 kΩ series resistors protects the MCU pins as well near U1 as near J122.)

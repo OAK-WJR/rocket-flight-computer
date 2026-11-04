@@ -22,6 +22,8 @@ PLANES_TSV = Path(__file__).resolve().parents[1] / 'r12_planes.tsv'
 # D-R12-41: hand-drawn copper, fixed before any search (same columns as r12_routes.tsv); a net listed here is complete
 # and is not searched
 HAND_TSV = Path(__file__).resolve().parent / 'hand_fixed.tsv'
+# D-R12-47: seed copper (U1 stub-tip vias), fixed before the search like HAND_TSV, but its nets are still searched
+HAND_SEED_TSV = Path(os.environ.get('R12_HAND_SEED', Path(__file__).resolve().parent / 'hand_seed.tsv'))
 # plane-net pads joined on F first, then one of them taken to the island (D-R12-22)
 CLUSTERS = {'3V3A': (('U1', 'H1'), ('C21', '1'), ('C22', '1')), 'PORT_4V8': (('L400', '2'), ('C406', '1'), ('R400', '1'))}
 # widths (mm): fire path and battery copper per IPC-2152 on 1 oz outer copper (stageC.md section 3), signals 0.1 at
@@ -564,8 +566,9 @@ class Plan:
         # the link's straight middle does not wall in its own starts (route.own_block)
         self.r.__dict__.setdefault('links', set()).update(('USB_DM', a_, c_) for a_, c_ in zip(pts, pts[1:]))
 
-    def hand(self, path):
-        """D-R12-41: hand-drawn copper (explicit rows, reviewed by hand) is fixed copper; its nets are complete."""
+    def hand(self, path, complete=True):
+        """D-R12-41: hand-drawn copper (explicit rows, reviewed by hand) is fixed copper; its nets are complete
+        (complete=False, D-R12-47: seed copper, the nets are still searched)."""
         import csv
         nets = set()
         if not Path(path).exists():
@@ -577,6 +580,8 @@ class Plan:
             else:
                 self.b.add_via(r['net'], float(r['x0']), float(r['y0']))
             nets.add(r['net'])
+        if not complete:
+            return set()
         for n in nets:
             for p in self.by_net.get(n, []):
                 p['fanned'] = True
@@ -1105,6 +1110,7 @@ def main():
     pl.join('GND', ('R401', '2'), ('C94', '2'), w=0.2)
     pl.usb()
     hand = pl.hand(HAND_TSV)
+    pl.hand(HAND_SEED_TSV, complete=False)
     pl.bga_setup()
     pl.escapes()
     pl.b.snapshot()
@@ -1141,7 +1147,8 @@ def main():
                                                                      and n not in longslow]
     rest = [n for n in rest if n not in longslow]
     short = [n for n in short if n not in longslow]
-    pl.queue = [u for u in order + short + fans + power + [n for n in rest if n not in short] if u not in hand]
+    pl.queue = [u for u in order + short + fans + power + [n for n in rest if n not in short] if u not in hand
+                and not (u.startswith(('cluster:', 'fan:')) and u.split(':')[1] in hand)]   # D-R12-47
     done = 0
     if a.load_state:
         pl.load_state(pickle.load(open(a.load_state, 'rb')))

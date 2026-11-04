@@ -1,0 +1,10 @@
+# R12 seed copper (D-R12-47), fixed before the drafting aid's search (plan.py HAND_SEED_TSV); same columns as
+# m3_design/r12_routes.tsv. Unlike hand_fixed.tsv its nets are still searched: U1 stub-tip vias for slow nets whose stub
+# tips are walled in on F.Cu: SERVO3_MCU / SERVO4_MCU either side of the 3V3A tip via (D-R12-46), LED_YEL among the
+# north SPI1 stubs. Not critical nets (no GND partner needed).
+kind	net	layer	width	x0	y0	x1	y1
+track	SERVO3_MCU	F	0.1	18.6	55.6	18.2	55.2
+via	SERVO3_MCU	-	0.45	18.2	55.2		
+track	SERVO4_MCU	F	0.1	18.6	56.4	18.2	56.8
+via	SERVO4_MCU	-	0.45	18.2	56.8		
+via	LED_YEL	-	0.45	24.6	49.6		
