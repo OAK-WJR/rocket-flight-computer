@@ -102,7 +102,7 @@ What is not done:
 - Servo stall current through the board (about 7.7 A with all four stalled) is an estimate, not a measurement.
 - Fit in the sled and airframe, the arming plug hardware and the external power switch are still open (`STATUS.md`, `docs/R2_VERIFICATION.md` §4).
 
-Other branches: `m3-assy-r10` holds the later redesigns R3 to R10 (Oct 2026), committed by a collaborator; each earlier revision is in its history. They are not part of the R2 design described here.
+Other branches: `m3-assy-r11` is the development line. It holds the later redesigns R3 to R10 (Oct 2026) and the compact R11 candidate (Nov 2026), committed by a collaborator, and the R10 bench diagnostics; each earlier revision is in its history. They are not part of the R2 design described here.
 
 ## Credits
 
