@@ -35,8 +35,10 @@ def rails():
         '3V3 (U2 LMR50410, R14 47k / R15 20k)': dict(
             vref=(0.99, 1.01), top=47e3, bot=20e3, leak=0.0,
             src='TI SLUSDW3A section 7.5 VFB 0.99-1.01 V; ILKG-FB 0.2 nA typ (neglected)',
-            limits=(3.0, 3.6), why='STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) and VDD <= 3.6 V; '
-                                  'W25Q128 / microSD 2.7-3.6 V; ISM6HG256X / LPS28DFW <= 3.6 V'),
+            limits=(3.135, 3.6), why='U6 FXLS90322 VCC_BUF >= 3.135 V (NXP FXLS9xxx0 Rev 6 item 10502, D-R12-51; the '
+                                    'tightest low end); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) '
+                                    'and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; LSM6DSVE 1.71-3.6 V (JLC / LCSC '
+                                    'listing, D-R12-50); MS5607 1.8-3.6 V (TE MS5607-02BA03, D-R12-52)'),
         'PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)': dict(
             vref=(0.749, 0.787), top=51.7e3, bot=10e3, leak=0.1e-6,
             src='TI SLVSD90B section 5.5 VFB 0.749-0.787 V continuous mode (TPS563208 is FCCM), TJ -40 to 125 C; '

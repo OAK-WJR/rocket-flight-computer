@@ -4395,9 +4395,22 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 0977e1b4-be50-544f-ab6f-f13d99e1a768))
-	(no_connect
-		(at 274.32 194.31)
-		(uuid 7a2750fa-4667-5740-9152-7f8d1a817d7d))
+	(wire
+		(pts
+			(xy 274.32 194.31)
+			(xy 279.4 194.31))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid b9086b3a-17cb-52b5-b380-1733b526bf2f))
+	(global_label "HG_CS"
+		(shape passive)
+		(at 279.4 194.31 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 644bb2f5-a0df-5611-853b-a81288c608b4))
 	(wire
 		(pts
 			(xy 218.44 173.99)

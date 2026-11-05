@@ -10,6 +10,25 @@ on Top), plus the two owner-fitted lines C84 and LS120 (`jlc_r12_stock.json`). N
 D-R12-29 / -31 (J121 DB125 C52993880; SH 1.0 ports C7430446 / C7430448), which `jlc_r12_stock.json` still lists as the
 GH clones.
 
+## Resolution (2026-11-04, after this audit; R12_DECISIONS D-R12-49 … -54)
+
+The owner chose "go fully Economic" and **accepts parts rated to a 250 °C peak on Economic's 255 ± 5 °C reflow** (owner
+deviation, D-R12-49, owner acceptance A-9; the effect of the 5–10 °C over-peak on each part is an **Inference**). JLC's
+"Standard Only" flag remains a hard rule. Item by item:
+
+| Item | Audit verdict | Resolution |
+|---|---|---|
+| U4 ISM6HG256XTR (§3.1) | FAIL: Standard Only | **Resolved**, D-R12-50: LSM6DSVETR (C41785564) on the same land and nets (pin map from JLCEDA C41785564; ST datasheet for the "E" variant not found: Inference); plus D-R12-51 below for F2 |
+| F2 high-g channel (§3.5.1) | – | **Resolved**, D-R12-51: new U6 FXLS90322AESR2 (C5190712), XY medium-g (±150 g max; NXP part page), SPI on SPI1 with HG_CS on PA10, C33 100 nF; NXP part page: MSL 3, 260 °C / 40 s. The listing's "±500 g, XYZ" is wrong for this part number |
+| U5 LPS28DFWTR (§3.2) | FAIL: Standard Only | **Resolved**, D-R12-52: MS5607-02BA03 (C97627, Economic) on R11's MS5611 land; 250 °C / 40 s accepted under D-R12-49. The KP215F1701 analog route of §3.5.3 was not taken |
+| D5 / D6 / D9 SS34 (§3.3) | FAIL: 250 °C | **Resolved by acceptance** (D-R12-49): SS34 kept; B340A not adopted |
+| D121 SRV05-4 (§3.4) | UNVERIFIED | **Kept** (Economic-flagged; D-R12-49); ProTek swap not made |
+| J430 472192001 (§3.4) | UNVERIFIED (250 °C, Inference) | **Kept** (D-R12-49); microSD stays |
+| Other UNVERIFIED lines (§3.4) | UNVERIFIED | unchanged; all are JLC-flagged Economic; O-R12-02 |
+
+New cost (Live 2026-11-04T23:25:09Z, `r12_cost.json`): 2 boards $159.92 ($79.96 per board), 5 boards $260.08 ($52.02
+per board); every JLC-placed line is Economic-flagged.
+
 ## 0. Answer in short
 
 | Verdict | Lines |

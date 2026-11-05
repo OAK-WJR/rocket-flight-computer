@@ -1,5 +1,5 @@
 {
- "checked_utc": "2026-11-04T02:42:47Z",
+ "checked_utc": "2026-11-04T23:25:09Z",
  "tier": "JLC Economic PCBA, one side",
  "basis": {
   "fixed_usd": 9.709999999999999,
@@ -11,36 +11,36 @@
  },
  "orders": {
   "2": {
-   "jlc_parts_usd": 80.38,
-   "extended_codes": 16,
+   "jlc_parts_usd": 64.9,
+   "extended_codes": 18,
    "preferred_extended_codes": 1,
-   "feeder_usd": 52.19,
-   "feeder_usd_if_preferred_free": 49.12,
+   "feeder_usd": 58.33,
+   "feeder_usd_if_preferred_free": 55.26,
    "fixed_usd": 9.709999999999999,
-   "smt_joints": 1110,
-   "joints_usd": 1.78,
+   "smt_joints": 1174,
+   "joints_usd": 1.88,
    "pcb_usd": 25.1,
    "owner_parts_usd": 0.64,
-   "total_usd": 169.15,
-   "total_usd_if_preferred_free": 166.08,
-   "per_board_usd": 84.58,
-   "m3_metric_per_board_usd": 66.28
+   "total_usd": 159.92,
+   "total_usd_if_preferred_free": 156.85,
+   "per_board_usd": 79.96,
+   "m3_metric_per_board_usd": 61.61
   },
   "5": {
-   "jlc_parts_usd": 200.94,
-   "extended_codes": 16,
+   "jlc_parts_usd": 162.25,
+   "extended_codes": 18,
    "preferred_extended_codes": 1,
-   "feeder_usd": 52.19,
-   "feeder_usd_if_preferred_free": 49.12,
+   "feeder_usd": 58.33,
+   "feeder_usd_if_preferred_free": 55.26,
    "fixed_usd": 9.709999999999999,
-   "smt_joints": 2775,
-   "joints_usd": 4.44,
+   "smt_joints": 2935,
+   "joints_usd": 4.7,
    "pcb_usd": 25.1,
    "owner_parts_usd": 1.61,
-   "total_usd": 292.38,
-   "total_usd_if_preferred_free": 289.31,
-   "per_board_usd": 58.48,
-   "m3_metric_per_board_usd": 50.63
+   "total_usd": 260.08,
+   "total_usd_if_preferred_free": 257.01,
+   "per_board_usd": 52.02,
+   "m3_metric_per_board_usd": 44.12
   }
  }
 }

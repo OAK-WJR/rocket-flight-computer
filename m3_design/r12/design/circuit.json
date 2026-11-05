@@ -144,13 +144,6 @@
    "footprint": "rocket:C0402",
    "source": "D-R12-17: 100 nF 50 V X7R 0402 basic"
   },
-  "C3263277": {
-   "Manufacturer": "STMicroelectronics",
-   "Manufacturer Part": "LPS28DFWTR",
-   "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2211080600_STMicroelectronics-LPS28DFWTR_C3263277.pdf",
-   "footprint": "rocket:M3_LPS28DFW_CCLGA7",
-   "source": "D-R12-13: barometer, ST DS13317 Rev 1 (260-4060 hPa, J-STD-020)"
-  },
   "C3662799": {
    "Manufacturer": "Texas Instruments",
    "Manufacturer Part": "TPS259470ARPWR",
@@ -227,6 +220,27 @@
    "Datasheet": "https://jlcpcb.com/partdetail/C7430448",
    "footprint": "rocket:M3_SHC_6P",
    "source": "D-R12-31 (owner 2026-11-03): JST SH 1.0 mm side-entry clone 6P, 1 A per contact (JLC listing, Live 2026-11-04)"
+  },
+  "C41785564": {
+   "Manufacturer": "STMicroelectronics",
+   "Manufacturer Part": "LSM6DSVETR",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2412041127_STMicroelectronics-LSM6DSVETR_C41785564.pdf",
+   "footprint": "rocket:LGA-14_L3.0-W2.5-P0.50-TL",
+   "source": "D-R12-50: 6-axis IMU, JLC Economic; +-16 g / +-4000 dps (JLC / LCSC listing); pin map JLCEDA C41785564"
+  },
+  "C5190712": {
+   "Manufacturer": "NXP Semicon",
+   "Manufacturer Part": "FXLS90322AESR2",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2405281435_NXP-Semicon-FXLS90322AESR2_C5190712.pdf",
+   "footprint": "rocket:M3_FXLS_HLQFN16",
+   "source": "D-R12-51: dual-axis (X / Y) medium-g accelerometer, SPI, HLQFN-16 4 x 4 (NXP FXLS9xxx0 Rev 6; part page)"
+  },
+  "C97627": {
+   "Manufacturer": "TE Connectivity",
+   "Manufacturer Part": "MS560702BA03-50",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2010281834_TE-Connectivity-MS560702BA03-50_C97627.pdf",
+   "footprint": "rocket:SENSORS-SMD_MS5611-01BA03",
+   "source": "D-R12-52: barometer 10-1200 mbar, I2C (TE MS5607-02BA03 06/2017), R11's MS5611 land"
   }
  },
  "deleted": {
@@ -266,7 +280,7 @@
   "R405": "D-R12-07: port LDO deleted; the port buck makes PORT_4V8 directly",
   "R430": "D-R12-08: camera load switch deleted; the camera buck U403 EN is the switch",
   "R432": "D-R12-08: camera load switch deleted; the camera buck U403 EN is the switch",
-  "R64": "D-R12-13: LPS28DFW SA0 tied to GND directly (no MS5611 SDO pull-down)",
+  "R64": "D-R12-13: LPS28DFW SA0 tied to GND directly (no MS5611 SDO pull-down); D-R12-52: the MS5607 runs I2C with SDO NC (TE MS5607-02BA03, I2C uses SDA only), so R64 stays deleted",
   "R85": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
   "R86": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
   "R87": "D-R12-04: USB current limiter U10, source mux U11 and USB ESD D4 replaced by the D5 / D6 diode-OR",
@@ -579,18 +593,19 @@
    }
   },
   "U5": {
-   "lcsc": "C3263277",
-   "value": "LPS28DFWTR",
-   "why": "D-R12-13: MS5611 (250 C reflow limit) -> LPS28DFW (J-STD-020); SA0 to GND, INT_DRDY NC",
-   "lib": "M3:LPS28DFW",
+   "lcsc": "C97627",
+   "value": "MS5607-02BA03",
+   "lib": "M3:Barometer",
+   "why": "D-R12-52 (supersedes D-R12-13): LPS28DFW is JLC Standard Only -> MS5607-02BA03 (Economic; 250 C peak, owner-accepted D-R12-49); R11's MS5611 wiring: PS high (I2C), CSB to GND (address 0x77), SDO NC",
    "nets": {
-    "1": "I2C1_SDA",
-    "2": "GND",
-    "3": "I2C1_SCL",
-    "4": null,
+    "1": "3V3A",
+    "2": "3V3A",
+    "3": "GND",
+    "4": "GND",
     "5": "GND",
-    "6": "3V3A",
-    "7": "GND"
+    "6": null,
+    "7": "I2C1_SDA",
+    "8": "I2C1_SCL"
    }
   },
   "U9": {
@@ -613,6 +628,11 @@
    "value": "Battery wire pads 5.0 mm",
    "footprint": "rocket:M3_WIREPAD_2P_P5",
    "why": "D-R12-30 (owner 2026-11-03): soldered pack pigtail on two plated holes at 5.0 mm pitch, so a 5.0 mm 2P screw terminal fits later with no board change; pin 1 / 2 = BAT_IN / GND; no part on the BOM"
+  },
+  "U4": {
+   "lcsc": "C41785564",
+   "value": "LSM6DSVETR",
+   "why": "D-R12-50: ISM6HG256X is JLC Standard Only -> LSM6DSVE (Economic) on the same land and nets; low-g and gyro channel (F1)"
   }
  },
  "added_parts": {
@@ -795,6 +815,43 @@
     "6": "CAM_BST"
    },
    "why": "D-R12-08: camera buck; EN is the MCU camera switch CAM_PWR_EN with R431 100k pull-down (off in reset)"
+  },
+  "U6": {
+   "lcsc": "C5190712",
+   "value": "FXLS90322AESR2",
+   "lib": "M3:FXLS9xxxx",
+   "sheet": "sensors.kicad_sch",
+   "nets": {
+    "1": "3V3",
+    "2": null,
+    "3": null,
+    "4": null,
+    "5": null,
+    "6": null,
+    "7": "GND",
+    "8": "HG_CS",
+    "9": "SPI1_SCK",
+    "10": "SPI1_MOSI",
+    "11": "SPI1_MISO",
+    "12": null,
+    "13": "3V3",
+    "14": "GND",
+    "15": "3V3",
+    "16": "3V3",
+    "17": "GND"
+   },
+   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10); TEST / n.c. / PCM0 unterminated as NXP recommends"
+  },
+  "C33": {
+   "lcsc": "C307331",
+   "value": "100nF 50V X7R 10%",
+   "lib": "M3:C",
+   "sheet": "sensors.kicad_sch",
+   "nets": {
+    "1": "3V3",
+    "2": "GND"
+   },
+   "why": "D-R12-51: U6 VCC decoupling, NXP Table 6 C1 0.1 uF X7R >= 10 V"
   }
  },
  "net_changes": {

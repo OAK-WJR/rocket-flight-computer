@@ -137,7 +137,7 @@ Extended on Economic is an Inference; R12's totals are given both ways.
 functions free their balls: USB_FAULT_N (PD10), CAM_FAULT_N (PC13), CAM_UART_OE (PC15) → NC (analog, never driven);
 LOGIC_SOURCE_ST (PA4) → PORT_SENSE (D-R12-05). `pin_table.tsv` columns r12_net / r12_mode / r12_source.
 
-**D-R12-13 Barometer: MS5611 (250 °C reflow limit, cannot see Economic's 255 °C) → LPS28DFWTR (C3263277, Extended
+**D-R12-13 (superseded by D-R12-52: LPS28DFW is JLC Standard Only) Barometer: MS5611 (250 °C reflow limit, cannot see Economic's 255 °C) → LPS28DFWTR (C3263277, Extended
 $6.6979, 367 / 324, Live).** F3 (readings to ≥ 300 hPa) kept: 260–1260 hPa in mode 1 (DS13317 Rev 1 p. 1, §3, Datasheet);
 supply 1.7–3.6 V on 3V3A; I²C on R11's I2C1 nets (same pull-ups R12 / R13); SA0 to GND (R64 deleted); INT_DRDY NC;
 PAD2LID soldered to GND as DS13317 §5 recommends; "qualified for soldering heat resistance according to JEDEC
@@ -488,7 +488,94 @@ shortest path. The best draft is still the h1 lineage: h1 + the H1 cluster re-ro
 fan-outs re-done (h2), then SD_SCK routed with the partner block off and four vias allowed (h5): 4 unconnected
 (the 3V3A C21.1-C22.1 link, LED_YEL, SERVO3_MCU, RADIO_TX_MCU) and one dangling GND via; route_check 47. Not frozen.
 
+**D-R12-49 Owner: 250 °C-rated parts accepted on Economic's 255 ± 5 °C reflow; "go fully Economic" (owner, 2026-11-04).**
+Owner instruction (via the supervisor): every JLC-placed part must be allowed on JLC Economic PCBA, and parts whose maker
+rating is a 250 °C peak are accepted on Economic's 255 ± 5 °C profile (an owner deviation; JLC's "Standard Only" flag is a
+separate rule and still applies). Kept as they are, so `economic_parts.md` §3.3 / §3.4 swaps are **not** made: D5 / D6 /
+D9 SS34 (MDD maker rating 250 °C, Datasheet), D121 Semtech SRV05-4 (no maker figure found) and J430 Molex 472192001
+(250 °C search-reported, Inference). The barometer goes back to the MS5607 family (D-R12-52), which is rated 250 °C,
+40 s max (TE MS5607-02BA03, 06/2017, "Maximum Soldering Temperature", Datasheet). What a 5–10 °C over-peak does to each
+of these parts (package, sensor offset, contact plating) is an **Inference** not checked with any maker; TE gives a
++0.4 mbar reflow impact with 7 days' recovery at its own profile (Datasheet), not at 255–260 °C. Owner acceptance row A-9.
+Changes that remain: U4 (JLC "Standard Only", D-R12-50 / -51) and U5 (LPS28DFW, "Standard Only", D-R12-52).
+
+**D-R12-50 U4: ISM6HG256XTR → ST LSM6DSVETR (C41785564), same land and nets.** ISM6HG256XTR is JLC "Standard Only" and
+unorderable (−3, `economic_parts.md` §3.1). LSM6DSVETR is JLC Economic, Extended, 502 in stock / 430 orderable, $6.1927
+(Live 2026-11-04T23:25:09Z). Range: ±2 / 4 / 8 / 16 g, ±125 … ±4000 dps, 1.71–3.6 V, SPI / I²C / I3C (JLC listing and the
+LCSC page https://www.lcsc.com/product-detail/C41785564.html, whose description is ST's LSM6DSV text word for word). F1
+(±4000 dps) is met; the accelerometer is the low-g channel only (F2 moves to U6, D-R12-51). Pins: JLCEDA's C41785564
+symbol (https://easyeda.com/api/products/C41785564/components, read 2026-11-04) gives 1 SDO/SA0, 2 SDX, 3 SCX, 4 INT1,
+5 VDD_IO, 6 / 7 GND, 8 VDD, 9 INT2, 10 OCS_AUX, 11 SDO_AUX, 12 CS, 13 SCL, 14 SDA, the ISM6HG256X's functions pin for pin
+(its JLCEDA symbol, C51931514), and its package name LGA-14_L3.0-W2.5-P0.50-TL is exactly U4's existing land: **land and
+nets kept** (SDX / SCX to GND, INT2 / OCS_AUX / SDO_AUX NC, as R10 / R11 wired the ISM6HG256X). Not read: an ST datasheet
+for the "E" variant (st.com has no LSM6DSVE page or datasheet, 404 on 2026-11-04; the LCSC PDF is empty), so the
+identity LSM6DSVE = LSM6DSV (DS13510) pin map, axis frame and register set is an **Inference**; so is its reflow rating
+(JLC flags it Economic, MSL 3). Firmware: an LSM6DSV-family driver (Inference, close to the ISM6HG256X's low-g / gyro
+registers; the high-g block is gone).
+
+**D-R12-51 New high-g accelerometer U6: NXP FXLS90322AESR2 (C5190712) on the IMU SPI bus, chip select HG_CS on PA10.**
+F2 (≥ ±64 g axial against the 37 g flight peak) moves to U6. JLC Economic (MSL 3), Extended, 1348 / 1348, $2.8717 (Live).
+Confirmed: (a) **axes and range**: NXP's part page (https://www.nxp.com/part/FXLS90322AES, read 2026-11-04) calls it an
+"XY Dual-Axis Medium-g Inertial Sensor", Active; distributor and NXP-community text give medium-g ranges ±15.5 … ±150 g
+(search summaries, Inference until the dual-channel datasheet FXLS9xxxx Rev 7 is read: nxp.com served "not found" to
+the browser and refused scripted access). The JLC listing's "±500 g, XYZ" is wrong for this part number (it is the
+family's high-g ceiling). ±150 g ≥ ±64 g: F2 met, with the user range set in firmware. (b) **SPI without DSI3 / PSI5**:
+FXLS9xxx0 Rev 6 (LCSC copy for C5190712, the single-channel sheet) Table 84 / 85: FXLS90xxx parts ship with COMMTYPE 000
+(DSI3 or 32-bit SPI); with VCC on pins 1 / 13 / 15 / 16 (Figure 5, Table 9) the part runs SPI (Datasheet for the
+single-channel sheet; that the dual-channel part matches is an Inference). I²C is not available on COMMTYPE 000, so U6
+stays on SPI. SPI: 32-bit frames with CRC, SCLK period ≥ 88 ns (≤ 11.3 MHz), POR to first command 0.4–0.7 ms (Rev 6
+items 10794, 10937). (c) **Supply**: VCC_BUF 3.135–5.25 V, ≤ 6.0 mA in SPI (items 10501 / 10502 / 10510). U6 is on 3V3,
+whose budget window is 3.240–3.464 V (drift case, `r12_windows.json`; the 3V3 lower limit is now 3.135 V): 105 mV over
+U6's floor at the regulator; copper drop and load steps at U6 are an **Inference** (6 mA). (d) **Land**: Rev 6 Figure 110
+/ 111 (drawing 98ASA00761D rev F, SOT1688-1(SC)), new footprint `M3_FXLS_HLQFN16` (pads 0.5 × 0.85 at 1.975, die pad
+2.6, mask +0.05, paste −0.3 on the die pad). (e) **Pins and decoupling**: Table 9 / Figure 9: 1, 13, 15, 16 VCC; 7, 14
+and the die pad 17 VSS; 8 SS_B (internal pull-up); 9 SCLK, 10 MOSI (internal pull-downs); 11 MISO; 2 n.c., 3–6 TEST and
+12 PCM0 / ARM0 unterminated (NXP's recommendation); one 0.1 µF X7R ≥ 10 V at VCC (Table 6 C1): **C33** (C307331, 100 nF
+50 V X7R 0402, Basic). (f) **Reflow**: NXP part page: MSL 3, peak package body 260 °C for 40 s (Datasheet-class maker
+page). Chip select: **PA10 (ball D10, R11 NC)** as `HG_CS`, a push-pull GPIO; at reset it is analog and SS_B's internal
+pull-up holds U6 deselected, and the H74x loader's USART1_RX pull-up on PA10 (AN2606) does the same; D10 is on the outer
+ring (east column) and is not a neighbour of PE4 (C3) or PC1 (F2). No interrupt: the FXLS has no data-ready pin (PCM0 /
+ARM0 is a PCM / arming output), so firmware polls at its sample rate. Not taken: ADXL375 / KX134 / H3LIS331DL (JLC
+Standard Only), FXLS93230 (PSI5 only), ADXL1005 (5 in stock, $62). Remaining Inference: dual-channel pin-out and axis
+frame (single-channel sheet), the 3V3 drop at U6, firmware CRC / frame handling.
+
+**D-R12-52 U5: LPS28DFWTR → TE MS5607-02BA03 (C97627) on R11's MS5611 land and wiring (supersedes D-R12-13).**
+LPS28DFW is JLC "Standard Only" (`economic_parts.md` §3.2); the owner's 250 °C acceptance (D-R12-49) allows the MS5607,
+which is JLC Economic, Extended, 3645 / 3540, $4.3854 (Live). TE MS5607-02BA03 datasheet (06/2017, LCSC copy
+https://www.lcsc.com/datasheet/lcsc_datasheet_2010281834_TE-Connectivity-MS560702BA03-50_C97627.pdf): operating range
+10–1200 mbar, full accuracy 300–1100 mbar, VDD 1.8–3.6 V, peak supply current 1.4 mA, max soldering 250 °C / 40 s. F3
+(≥ 300 hPa readings) kept, and the 260 hPa / 10 km margin is inside the extended (linear) range, at reduced accuracy
+(Datasheet). Pins (Datasheet "Pin configuration"): 1 VDD, 2 PS (high = I²C), 3 GND, 4 / 5 CSB, 6 SDO, 7 SDI/SDA, 8 SCLK,
+the MS5611-01BA03's order, so R11's land `SENSORS-SMD_MS5611-01BA03` and symbol `M3:Barometer` are reused (copied from
+R11's pinned kilib); the land's 1.25 mm pitch and 2.2 mm row spacing match JLCEDA's C97627 land (pads 0.7 × 1.2 there,
+0.6 × 1.1 on R11's). Wiring, R11's: VDD and PS on 3V3A (I²C), CSB to GND ("do not leave unconnected"; address 0x77),
+SDO NC (I²C uses SDA only, Datasheet table "Pin PS / Mode / Pins used"), SDA / SCL on I2C1 with R12 / R13; 100 nF C32
+at VDD ("a 100 nF ceramic capacitor must be placed as close as possible", Datasheet). Nothing of the LPS28DFW is left:
+its land, model and symbol are deleted from the R12 library; it had no extra parts (R64 was already deleted). R10's
+`BARO_no_inter_row_tracks` rule area is drawn again (TE pad layout: "do not route tracks between pads"). The 250 °C
+rating is the D-R12-49 deviation.
+
+**D-R12-53 Placement for D-R12-50 … -52.** U4 unchanged (23.0, 31.6, 180). **U5** (29.0, 32.0) now rotation 180 so SDA /
+SCL (pins 7 / 8) face R12 / R13 and U1, VDD / PS next to C32; its 5.5 × 4.6 mm courtyard needed **R12 / R13** 0.2 mm east
+(x 32.8). **U6** at (27.5, 40.5), rotation 180, between U4 and U1 east of the roll axis: the free block x 25–31, y 38–43
+on the IMU SPI1 path, clear of U1's west and aft fan-out (U1 courtyard starts at y ≈ 49.5); after rotation SS_B / SCLK /
+MOSI / MISO (pins 8–11) sit on the west and aft-west edge facing the SPI1 runs (x 21–24). **C33** at (30.7, 42.0),
+rotation 90, by U6's VCC corner (pins 1, 13–16). All on F; placed-board DRC, fit_check r12 and check_r12 placement pass.
+
+**D-R12-54 IMU axis maps on the top face (closes O-R12-15 as a calculation; bench check stays).** U4 (top, rotation 180):
+R11's signed frame (D-R11-11: bottom, rotation 180 after the flip, +X_imu → −x_board, +Y_imu → −y_board) gives the
+footprint frame +X_imu = −x_fp, +Y_imu = +y_fp; on the top at rotation 180 this is **+X_imu → +x_board (east), +Y_imu →
+−y_board (aft), +Z_imu out of the top face** (right-handed). Roll about +y_board (forward) reads **−gyro_Y**; forward
+thrust reads **−a_Y**; lever arm x = 0.000 mm (Calculation from R11's frame; that the LSM6DSVE uses the ISM6HG256X / LSM6DSV
+family frame is an Inference). U6 (top, rotation 180): FXLS9xxx0 Rev 6 Figure 8 / Table 8 give +X = −x_fp (towards pins
+1–4) and +Y = −y_fp (towards pins 13–16) for the single-channel parts; rotated 180 on the top: **channel 0 (X) → +x_board
+(east, lateral), channel 1 (Y) → +y_board (forward, the rocket axis)**: forward thrust reads +a on channel 1 (Inference:
+read from the figure, and the dual-channel part's frame is assumed equal). Both signs need a 1 g bench check before
+flight; firmware must not reuse R11's map without it.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
+
+Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.
 
 | Code | Part (JLC model) | Refs | Qty | Library | Unit $ (2 b / 5 b) | Stock / orderable |
 |---|---|---|---|---|---|---|
@@ -573,18 +660,20 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | A-1 | M1: Standard PCBA, 1 oz inner copper | Economic PCBA, one side, 0.5 oz inner | D-R12-01 / -03 |
 | A-2 | F9 / F11: "U10 USB limiter / U11 source selection … stay" | diode-OR D5 / D6; USB limit, USB OVLO and USB ESD gone | D-R12-04 |
 | A-3 | F10: "each 1 kΩ plus ground-only ESD" | 1 kΩ only | D-R12-18 |
-| A-4 | F3 names the MS5611 | LPS28DFW (260 hPa floor) | D-R12-13 |
+| A-4 | F3 names the MS5611 | MS5607-02BA03 (10–1200 mbar; full accuracy from 300 mbar) | D-R12-52 (D-R12-13 superseded) |
 | A-5 | F10 / R10: camera via U402 limiter and U12 / U13 isolation | camera buck EN switch, 1 kΩ series, CAM_FAULT_N gone | D-R12-08 |
 | A-6 | F10 / P2: JST GH (R11) | XUNPU GH-1.25 clones (mating Inference) | D-R12-15 |
 | A-7 | F11: LS120 MLT-5020 | QMB-09B-03 THT, owner-fitted | D-R12-16 |
 | A-8 | PORT_4V8 within 4.5–5.0 V at every corner | inside at initial tolerance; 24 mV over 5.0 V in the independent-drift bound | D-R12-07, O-R12-05 |
+| A-9 | Economic reflow 255 ± 5 °C vs makers' 250 °C peak (SS34 D5 / D6 / D9, MS5607 U5; J430 and SRV05-4 by Inference) | accepted by the owner (2026-11-04); effect on each part is an Inference | D-R12-49 |
+| A-10 | F1 / F2 name one IMU (ISM6HG256X: low-g, high-g and gyro) | LSM6DSVE (low-g, ±4000 dps) plus FXLS90322 (XY medium-g, ±150 g max) | D-R12-50, -51 |
 
 ## 4. Open items
 
 | ID | Item | Stage |
 |---|---|---|
-| O-R12-01 | U4 ISM6HG256X: −3 orderable (Live): consign or wait (ORDERING §8.1) | order |
-| O-R12-02 | Economic reflow 255 ± 5 °C: maker ratings not read for the GH clones, 472192001, TYPE-C-31-M-12, SWPA4030, the LEDs, SRV05-4, SMAJ12CA, SS34, AO3400A / AO3401A, BAT54C, ESD103, the TI and ST ICs (J-STD-020 260 °C class is an Inference except LPS28DFW, Datasheet) | before order |
+| O-R12-01 | ~~U4 ISM6HG256X: −3 orderable~~ closed by D-R12-50 (LSM6DSVE, 430 orderable) | order |
+| O-R12-02 | Economic reflow 255 ± 5 °C: maker ratings not read for the GH clones, 472192001, TYPE-C-31-M-12, SWPA4030, the LEDs, SRV05-4, SMAJ12CA, SS34, AO3400A / AO3401A, BAT54C, ESD103, the TI and ST ICs (J-STD-020 260 °C class is an Inference); D-R12-49: 250 °C-rated parts are owner-accepted (A-9); FXLS90322 260 °C / 40 s (NXP part page); LSM6DSVE unread | before order |
 | O-R12-03 | USB-only bench power needs ≥ 4.45 V at J3 (host or powered-hub port), D-R12-04 | records / ORDERING |
 | O-R12-04 | GH clone mating and latch retention with JST GH housings: sample check | bench |
 | O-R12-05 | PORT_4V8 drift corner (A-8): bench-measure over temperature or confirm the modules' true maximum | bench / owner |
@@ -593,16 +682,18 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-08 | Hot-plug (2304 cases), F6 EN timing, hold-up and fire budget re-run on R12 copper with the new parts (C81 X7R, SMAJ12CA, 1206 X5R, AO340x); keep or drop R166 / C89 / C95 | D |
 | O-R12-09 | HSE crystal gm_crit 1.43 / 1.5 mA/V at the high stray corner: cold start-up and drive-level bench check | bench |
 | O-R12-10 | Q120 / Q121 VGS > 12 V only above 14.4 V on the pack with the bus enabled: owner acceptance or a flight-pack transient measurement | owner / bench |
-| O-R12-11 | Firmware: LPS28DFW driver, PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
+| O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
 | O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face; pass 2, D-R12-33); routing incomplete: with In2 as a third signal layer (D-R12-34) and negotiated congestion (D-R12-35 … -38) the best draft still leaves 8–20 conflicting units round U1's west side and under U1 (stageC.md §4.2, §5) | C |
-| O-R12-15 | R12 IMU axis map (U4 on the top face, rotation 180): derive from the ISM6HG256X orientation figure, bench-check | D / firmware |
+| O-R12-15 | R12 axis maps derived (D-R12-54: U4 roll = −gyro_Y, thrust −a_Y; U6 channel 1 axial, +a forward): 1 g / rotation bench sign check | bench / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
 | O-R12-18 | SH plug retention: a per-flight adhesive / RTV or tie step on every SH plug (owner deviation, D-R12-31) | procedure / owner |
 | O-R12-19 | SH pin orders against a real MicoAir H743 lead (pin-1 end not marked in the source image; v1 / v2) (D-R12-31) | bench |
 | O-R12-20 | J121 DB125 on JLC Economic as THT, and the J1 5.0 mm-terminal hole fit: confirm on the order page / with a sample terminal (D-R12-29, -30) | order / bench |
+| O-R12-21 | FXLS90322 dual-channel datasheet (FXLS9xxxx Rev 7) not read: confirm pin-out, axis frame, medium-g range codes; LSM6DSVE datasheet not found at ST (D-R12-50, -51) | records / bench |
+| O-R12-22 | U6 VCC ≥ 3.135 V at the part: 3V3 regulator window 3.240 V low (105 mV margin); check the copper drop on R12 copper (D-R12-51) | C / D |
 
 ## 5. Files (stage A)
 

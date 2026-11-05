@@ -11,7 +11,7 @@ and models from R11's kilib, only those R12 uses) plus the R12 parts (R12_DECISI
 from the maker's drawing or the LCSC / JLCEDA official land (https://easyeda.com/api/products/<code>/components, the
 library JLC's own CPL uses), with the URL noted below. Every R12 land is a top-side land (D-R12-01, one assembled side):
 SMD pads on F.Cu / F.Paste / F.Mask only, or plated through-holes.
-Symbols: R11's library with the R12 symbols added (LMR50410, TPS563208, LPS28DFW, Buzzer_THT2, BAT54C, ServoGH6,
+Symbols: R11's library with the R12 symbols added (LMR50410, TPS563208, FXLS9xxxx, Buzzer_THT2, BAT54C, ServoGH6,
 SwitchGH4) and every used symbol's ki_fp_filters set to exactly the R12 footprints it carries (ERC footprint_filter).
 """
 import argparse
@@ -109,29 +109,41 @@ def ghc(n):
                               body, c['y_sig'] - GHC_L / 2 - 1.4, c['name'] + '.wrl')
 
 
-# LPS28DFW CCLGA-7L 2.8 x 2.8 mm (D-R12-13). Pin functions and the bottom-view arrangement: ST DS13317 Rev 1 Figure 3 /
-# Table 1 p. 3 (https://www.st.com/resource/en/datasheet/lps28dfw.pdf); outline 2.8 +/- 0.15 x 2.8 +/- 0.15 x 2.1 max
-# (Figure 19 p. 42). ST gives no land in the datasheet (TN0018, not read); the land is JLCEDA's for C3263277
-# (EASYEDA.format('C3263277'), read 2026-11-04): pins 1 / 4 0.35 x 1.4 on the x axis, 2 / 3 and 5 / 6 0.9 x 0.35, pin 7
-# (PAD2LID, soldered to GND as DS13317 section 5 recommends) 0.9 x 0.9 central. The order 1-2-3-4-5-6 runs the opposite
-# way round the top view to DS13317's bottom view, as a mirror requires (checked, Inference on JLCEDA's rotation).
-LPS_PADS = (('1', -1.125, 0.0, 0.35, 1.4), ('2', -0.575, 1.125, 0.9, 0.35), ('3', 0.575, 1.125, 0.9, 0.35),
-            ('4', 1.125, 0.0, 0.35, 1.4), ('5', 0.575, -1.125, 0.9, 0.35), ('6', -0.575, -1.125, 0.9, 0.35),
-            ('7', 0.0, 0.0, 0.9, 0.9))
-LPS_BODY, LPS_H = 2.8, 2.1
+# NXP FXLS90322AESR2 HLQFN-16 4 x 4 x 1.45 mm, 0.8 mm pitch (D-R12-51). Land: NXP FXLS9xxx0 Rev 6 (8 February 2021; the
+# LCSC copy for C5190712, https://www.lcsc.com/datasheet/lcsc_datasheet_2405281435_NXP-Semicon-FXLS90322AESR2_C5190712.pdf)
+# Figure 111 (drawing 98ASA00761D rev F, SOT1688-1(SC)): I/O pads 0.5 x 0.85 at 0.8 mm pitch centred 1.975 mm from the
+# package centre, die attach pad 2.6 x 2.6; Figure 110 mask openings 0.6 x 0.95 and 2.7 x 2.7 (mask margin 0.05). Pins:
+# Figure 9 transparent top view: 1-4 down the west side from the pin-1 corner, 5-8 along the south side, 9-12 up the east
+# side, 13-16 along the north side; 17 the die attach pad (to VSS, Table 9). JLCEDA C5190712 places its I/O pads 0.1 mm
+# further out (0.5 x 0.95 at 2.075); NXP's drawing is used. That the dual-channel FXLS9xxxx (FXLS90322) has the same
+# package and SPI pin-out as this single-channel sheet is an Inference (the figure itself is labelled FXLS9xxxx; JLCEDA's
+# C5190712 symbol gives the same pin names). Paste on the die pad 2.0 x 2.0 (paste margin -0.3, about 59 %, Inference).
+FX_C, FX_W, FX_L, FX_EP, FX_BODY, FX_H = 1.975, 0.5, 0.85, 2.6, 4.0, 1.45
 
 
-def lps28dfw():
-    name = 'M3_LPS28DFW_CCLGA7'
-    h = LPS_BODY / 2
-    body = _rect((-h, -h), (h, h), 'F.Fab', .1) + _line((-h, -.6), (-.6, -h), 'F.Fab', .1)
-    body += _courtyard([(-h - .15, -h - .15), (h + .15, h + .15)])
-    body += _circle((-h - .45, 0), .12, 'F.SilkS', .15)
-    for num, x, y, w, hh in LPS_PADS:
-        body += _rpad(num, x, y, w, hh)
-    return name, make_fp(name, 'ST LPS28DFW CCLGA-7L 2.8 x 2.8 mm; pins DS13317 Rev 1 Table 1; land JLCEDA C3263277 '
-                         '(https://easyeda.com/api/products/C3263277/components); top side only', body, -2.6,
-                         name + '.wrl')
+def fx_pads():
+    pads = []
+    for i, o in enumerate((-1.2, -0.4, 0.4, 1.2)):
+        pads += [(str(1 + i), -FX_C, o, FX_L, FX_W), (str(5 + i), o, FX_C, FX_W, FX_L),
+                 (str(9 + i), FX_C, -o, FX_L, FX_W), (str(13 + i), -o, -FX_C, FX_W, FX_L)]
+    return tuple(sorted(pads, key=lambda p: int(p[0]))) + (('17', 0.0, 0.0, FX_EP, FX_EP),)
+
+
+FX_PADS = fx_pads()
+
+
+def fxls():
+    name = 'M3_FXLS_HLQFN16'
+    h = FX_BODY / 2
+    body = _rect((-h, -h), (h, h), 'F.Fab', .1) + _line((-h, -1.2), (-1.2, -h), 'F.Fab', .1)
+    body += _courtyard(_pad_extents(FX_PADS) + [(-h, -h), (h, h)])
+    body += _circle((-h - .45, -h - .1), .12, 'F.SilkS', .15)
+    for num, x, y, w, hh in FX_PADS:
+        pad = _rpad(num, x, y, w, hh)
+        extra = '\t\t(solder_mask_margin 0.05)\n' + ('\t\t(solder_paste_margin -0.3)\n' if num == '17' else '')
+        body += pad[:-2] + '\n' + extra.rstrip('\n') + ')\n'
+    return name, make_fp(name, 'NXP FXLS90322 HLQFN-16 4 x 4 mm, 0.8 mm pitch (SOT1688-1(SC)); land FXLS9xxx0 Rev 6 '
+                         'Figure 110 / 111; pins Figure 9; top side only', body, -h - 1.0, name + '.wrl')
 
 
 # QMB-09B-03 9 mm passive magnetic buzzer, THT (D-R12-16): Huawha product specification QMB-09B-03 (2019-12-3, LCSC
@@ -199,7 +211,7 @@ R10_REUSE = ('M3_DB125_2P_BK',)       # D-R12-29: R10's verified DB125-2 (black)
 
 def footprints():
     out = {}
-    for maker in (lambda: ghc(4), lambda: ghc(6), lps28dfw, buzzer, ddc6, batpads):
+    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, batpads):
         name, text = maker()
         out[name] = text
     return out
@@ -210,8 +222,8 @@ MODELS = {
     **{GHC[n]['name'] + '.wrl': (
         f'# Megastar ZX-SH1.0-{n}PWT envelope: {GHC[n]["width"]} x {GHC_DEPTH} x {GHC_HEIGHT} mm (JLC listing). NOT a maker '
         'model.\n', [(0, sum(ghc_body_y(n)) / 2, 0, GHC[n]['width'], GHC_DEPTH, GHC_HEIGHT, IVORY)]) for n in GHC},
-    'M3_LPS28DFW_CCLGA7.wrl': ('# LPS28DFW envelope 2.95 x 2.95 x 2.1 mm (DS13317 Figure 19 maxima). NOT a maker model.\n',
-                               [(0, 0, 0, 2.95, 2.95, LPS_H, GREY)]),
+    'M3_FXLS_HLQFN16.wrl': ('# FXLS90322 HLQFN-16 envelope 4.0 x 4.0 x 1.45 mm (FXLS9xxx0 Rev 6 Table 1). NOT a maker '
+                            'model.\n', [(0, 0, 0, FX_BODY, FX_BODY, FX_H, GREY)]),
     'M3_BUZ_TH_D9_P4.wrl': ('# QMB-09B-03 envelope 9.3 x 9.3 x 5.7 mm (spec item 4, +0.3 tolerance). NOT a maker model.\n',
                             [(0, 0, 0, 9.3, 9.3, 5.7, BLACK)]),
     'M3_TSOT23_6_DDC.wrl': ('# TI DDC envelope 2.9 x 1.6 x 1.1 mm. NOT a maker model.\n', [(0, 0, 0, 2.9, 1.6, 1.1, BLACK)]),
@@ -244,11 +256,15 @@ NEW_SYMBOLS = (
      '3 VIN, 4 VFB, 5 EN, 6 VBST', 'buck regulator', 7.62, 5.08,
      [P(2.54, '3', 'VIN', 'power_in'), P(0, '5', 'EN', 'input'), P(-2.54, '1', 'GND', 'power_in')],
      [P(2.54, '2', 'SW', 'output'), P(0, '6', 'VBST'), P(-2.54, '4', 'VFB', 'input')]),
-    ('LPS28DFW', 'U', 'ST LPS28DFW barometer, CCLGA-7L (DS13317 Rev 1 Table 1): 1 SDA, 2 SA0, 3 SCL, 4 INT_DRDY, 5 GND, '
-     '6 VDD, 7 PAD2LID', 'pressure barometer I2C', 7.62, 6.35,
-     [P(3.81, '6', 'VDD', 'power_in'), P(1.27, '2', 'SA0', 'input'), P(-1.27, '5', 'GND', 'power_in'),
-      P(-3.81, '7', 'PAD2LID')],
-     [P(3.81, '1', 'SDA', 'bidirectional'), P(1.27, '3', 'SCL', 'input'), P(-1.27, '4', 'INT_DRDY', 'output')]),
+    ('FXLS9xxxx', 'U', 'NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 '
+     'VCC, 2 n.c., 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)',
+     'accelerometer high-g SPI', 7.62, 12.7,
+     [P(10.16, '1', 'VCC', 'power_in'), P(7.62, '13', 'VCC', 'power_in'), P(5.08, '15', 'VCC', 'power_in'),
+      P(2.54, '16', 'VCC', 'power_in'), P(0, '7', 'VSS', 'power_in'), P(-2.54, '14', 'VSS', 'power_in'),
+      P(-5.08, '17', 'PAD', 'power_in'), P(-7.62, '2', 'n.c.'), P(-10.16, '12', 'PCM0/ARM0', 'output')],
+     [P(10.16, '8', 'SS_B', 'input'), P(7.62, '9', 'SCLK', 'input'), P(5.08, '10', 'MOSI', 'input'),
+      P(2.54, '11', 'MISO', 'passive'), P(-2.54, '3', 'TEST0'), P(-5.08, '4', 'TEST1'), P(-7.62, '5', 'TEST2'),
+      P(-10.16, '6', 'TEST3')]),
     ('Buzzer_THT2', 'LS', 'Two-pin THT magnetic buzzer (QMB-09B-03): 1 (+), 2 (-)', 'buzzer transducer', 5.08, 2.54,
      [P(0, '1', '+')], [P(0, '2', '-')]),
     ('BAT54C', 'D', 'Nexperia BAT54C dual Schottky, common cathode (pinning Table 2): 1 A1, 2 A2, 3 K', 'diode schottky',
@@ -395,8 +411,9 @@ def geometry_checks():
         assert all(round(b[0] - a[0], 4) == GHC_PITCH and a[2:] == [GHC_W, GHC_L] and a[1] == c['y_sig']
                    for a, b in zip(sig, sig[1:]))
         assert sorted(abs(t[0]) for t in tabs) == [c['tab'][0]] * 2 and all(t[2:] == list(c['tab'][2:]) for t in tabs)
-    lps = result['M3_LPS28DFW_CCLGA7']
-    assert {k: v for k, v in lps.items()} == {n: [x, y, w, h] for n, x, y, w, h in LPS_PADS}
+    fx = result['M3_FXLS_HLQFN16']
+    assert fx == {n: [x, y, w, h] for n, x, y, w, h in FX_PADS}
+    assert len(fx) == 17 and fx['1'] == [-1.975, -1.2, .85, .5] and fx['17'] == [0, 0, 2.6, 2.6]
     buz = result['M3_BUZ_TH_D9_P4']
     assert buz == {'1': [-2.0, 0, 1.8, 1.8], '2': [2.0, 0, 1.8, 1.8]}
     ddc = result['M3_TSOT23_6_DDC']

@@ -94,23 +94,23 @@
    "drift": {
     "inside_limits": true,
     "margin_high_V": 0.1359,
-    "margin_low_V": 0.2401,
+    "margin_low_V": 0.1051,
     "max_V": 3.4641,
     "min_V": 3.2401
    },
    "initial": {
     "inside_limits": true,
     "margin_high_V": 0.1686,
-    "margin_low_V": 0.2704,
+    "margin_low_V": 0.1354,
     "max_V": 3.4314,
     "min_V": 3.2704
    },
    "label": "Calculation (Datasheet VFB, 1 % resistors); drift case Inference",
    "limits_V": [
-    3.0,
+    3.135,
     3.6
    ],
-   "limits_basis": "STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; ISM6HG256X / LPS28DFW <= 3.6 V",
+   "limits_basis": "U6 FXLS90322 VCC_BUF >= 3.135 V (NXP FXLS9xxx0 Rev 6 item 10502, D-R12-51; the tightest low end); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; LSM6DSVE 1.71-3.6 V (JLC / LCSC listing, D-R12-50); MS5607 1.8-3.6 V (TE MS5607-02BA03, D-R12-52)",
    "nominal_V": 3.35,
    "source": "TI SLUSDW3A section 7.5 VFB 0.99-1.01 V; ILKG-FB 0.2 nA typ (neglected)"
   },

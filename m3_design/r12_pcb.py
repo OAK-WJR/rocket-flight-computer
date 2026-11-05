@@ -12,10 +12,10 @@ usage: <KiCad python3> -I -B m3_design/r12_pcb.py [--project m3_design/r12] [--p
 3. Outline and holes from the table's '@' rows: one 46 x L rectangle from (0, 0) and the M3 supports as 3.2 mm
    Edge.Cuts circles (fit_check --profile r12: one support within 6 mm of each corner on both axes).
 4. Every part placed from r12_place.tsv (each reference exactly once; side F only, D-R12-01: JLC Economic PCBA
-   assembles one face; rotation in KiCad degrees). The sensor rule areas (R10's IMU_body / IMU_no_internal_tracks and
-   BARO_body) are derived from U4 / U5's placed courtyard and pads, on F.Cu (their side). R10's
-   BARO_no_inter_row_tracks is not drawn: it fitted the MS5611; the LPS28DFW's centre GND pad 7 (PAD2LID) can only be
-   joined to its GND pads 2 / 5 between the rows (D-R12-25).
+   assembles one face; rotation in KiCad degrees). The sensor rule areas (R10's IMU_body / IMU_no_internal_tracks,
+   BARO_body and BARO_no_inter_row_tracks) are derived from U4 / U5's placed courtyard and pads, on F.Cu (their side);
+   the baro band between the pad rows is back with the MS5607 (D-R12-52: TE's pad layout "do not route tracks between
+   pads"; D-R12-25 had dropped it for the LPS28DFW).
 5. No copper but the footprints' own: no track, via or zone (stage C draws copper from r12_routes.tsv).
 6. Title block M3-ASSY-R12; the gate data (r12/design/r12_gate_data.json: imu, supports, short_edge_queries) is
    rewritten from the placed board, keeping any other key.
@@ -254,7 +254,7 @@ def sensor_areas(board):
     """R10's sensor rule areas, re-derived for the placed U4 / U5 on F.Cu (their side on R12): the body (courtyard
     less 0.25 mm: no via, no pour; tracks allowed) and, for U4, the pad-ring interior: no track, no via (D-R12-25)."""
     out = {}
-    for ref, body_name, inner_name in (('U4', 'IMU_body', 'IMU_no_internal_tracks'), ('U5', 'BARO_body', None)):
+    for ref, body_name, inner_name in (('U4', 'IMU_body', 'IMU_no_internal_tracks'), ('U5', 'BARO_body', 'BARO_no_inter_row_tracks')):
         f = board.FindFootprintByReference(ref)
         assert not f.IsFlipped(), f'{ref} must be on the top (R12 one side)'
         x0, y0, x1, y1 = box(f)

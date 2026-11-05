@@ -1,5 +1,5 @@
 {
- "checked_utc": "2026-11-04T02:42:47Z",
+ "checked_utc": "2026-11-04T23:25:09Z",
  "source": "https://jlcpcb.com/api/overseas-pcb-order/v1/shoppingCart/smtGood/selectSmtComponentList",
  "boards": 5,
  "rule": "orderable = min(stockCount, canPresaleNumber) (R20-BOM-01, Inference)",
@@ -13,7 +13,6 @@
     "R122",
     "R127",
     "R162",
-    "R404",
     "R440",
     "R441",
     "R450",
@@ -21,12 +20,12 @@
     "R470",
     "R471"
    ],
-   "qty_per_board": 14,
+   "qty_per_board": 13,
    "owner_fit": false,
-   "joints_per_board": 28,
-   "stockCount": 21105402,
-   "canPresaleNumber": 17985806,
-   "orderable": 17985806,
+   "joints_per_board": 26,
+   "stockCount": 20410409,
+   "canPresaleNumber": 17302886,
+   "orderable": 17302886,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -84,9 +83,9 @@
    "qty_per_board": 13,
    "owner_fit": false,
    "joints_per_board": 26,
-   "stockCount": 1656061,
-   "canPresaleNumber": 1236127,
-   "orderable": 1236127,
+   "stockCount": 1628382,
+   "canPresaleNumber": 1210936,
+   "orderable": 1210936,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -96,32 +95,32 @@
     {
      "startNumber": 1,
      "endNumber": 199,
-     "productPrice": 0.1198
+     "productPrice": 0.1175
     },
     {
      "startNumber": 200,
      "endNumber": 599,
-     "productPrice": 0.0976
+     "productPrice": 0.0958
     },
     {
      "startNumber": 600,
      "endNumber": 1999,
-     "productPrice": 0.0863
+     "productPrice": 0.0847
     },
     {
      "startNumber": 2000,
      "endNumber": 9999,
-     "productPrice": 0.0771
+     "productPrice": 0.0757
     },
     {
      "startNumber": 10000,
      "endNumber": 19999,
-     "productPrice": 0.0739
+     "productPrice": 0.0724
     },
     {
      "startNumber": 20000,
      "endNumber": -1,
-     "productPrice": 0.0716
+     "productPrice": 0.0702
     }
    ]
   },
@@ -133,9 +132,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 3039893,
-   "canPresaleNumber": 2137385,
-   "orderable": 2137385,
+   "stockCount": 3975723,
+   "canPresaleNumber": 3060683,
+   "orderable": 3060683,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -145,32 +144,32 @@
     {
      "startNumber": 1,
      "endNumber": 99,
-     "productPrice": 0.1413
+     "productPrice": 0.1298
     },
     {
      "startNumber": 100,
      "endNumber": 299,
-     "productPrice": 0.1142
+     "productPrice": 0.1048
     },
     {
      "startNumber": 300,
      "endNumber": 1999,
-     "productPrice": 0.1003
+     "productPrice": 0.0922
     },
     {
      "startNumber": 2000,
      "endNumber": 3999,
-     "productPrice": 0.0888
+     "productPrice": 0.0817
     },
     {
      "startNumber": 4000,
      "endNumber": 9999,
-     "productPrice": 0.0848
+     "productPrice": 0.078
     },
     {
      "startNumber": 10000,
      "endNumber": -1,
-     "productPrice": 0.0821
+     "productPrice": 0.0755
     }
    ]
   },
@@ -181,9 +180,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 6,
-   "stockCount": 69968,
-   "canPresaleNumber": 68885,
-   "orderable": 68885,
+   "stockCount": 68559,
+   "canPresaleNumber": 67505,
+   "orderable": 67505,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -230,9 +229,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 6,
-   "stockCount": 1672590,
-   "canPresaleNumber": 1543369,
-   "orderable": 1543369,
+   "stockCount": 1637068,
+   "canPresaleNumber": 1509079,
+   "orderable": 1509079,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -282,9 +281,9 @@
    "qty_per_board": 5,
    "owner_fit": false,
    "joints_per_board": 10,
-   "stockCount": 5693032,
-   "canPresaleNumber": 4637972,
-   "orderable": 4637972,
+   "stockCount": 5274967,
+   "canPresaleNumber": 4209157,
+   "orderable": 4209157,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -330,9 +329,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 1035239,
-   "canPresaleNumber": 925761,
-   "orderable": 925761,
+   "stockCount": 1029878,
+   "canPresaleNumber": 921372,
+   "orderable": 921372,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -379,9 +378,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 1237467,
-   "canPresaleNumber": 1112629,
-   "orderable": 1112629,
+   "stockCount": 1241727,
+   "canPresaleNumber": 1117741,
+   "orderable": 1117741,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -429,9 +428,9 @@
    "qty_per_board": 3,
    "owner_fit": false,
    "joints_per_board": 6,
-   "stockCount": 12262563,
-   "canPresaleNumber": 9212011,
-   "orderable": 9212011,
+   "stockCount": 12144199,
+   "canPresaleNumber": 8951853,
+   "orderable": 8951853,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -441,32 +440,32 @@
     {
      "startNumber": 1,
      "endNumber": 499,
-     "productPrice": 0.0145
+     "productPrice": 0.014
     },
     {
      "startNumber": 500,
      "endNumber": 1499,
-     "productPrice": 0.0112
+     "productPrice": 0.0108
     },
     {
      "startNumber": 1500,
      "endNumber": 3999,
-     "productPrice": 0.0097
+     "productPrice": 0.0093
     },
     {
      "startNumber": 4000,
      "endNumber": 23999,
-     "productPrice": 0.0086
+     "productPrice": 0.0083
     },
     {
      "startNumber": 24000,
      "endNumber": 47999,
-     "productPrice": 0.0082
+     "productPrice": 0.0079
     },
     {
      "startNumber": 48000,
      "endNumber": -1,
-     "productPrice": 0.0079
+     "productPrice": 0.0076
     }
    ]
   },
@@ -477,9 +476,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 12,
-   "stockCount": 6679,
-   "canPresaleNumber": 6277,
-   "orderable": 6277,
+   "stockCount": 3320,
+   "canPresaleNumber": 3011,
+   "orderable": 3011,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -525,9 +524,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 16,
-   "stockCount": 167040,
-   "canPresaleNumber": 154343,
-   "orderable": 154343,
+   "stockCount": 156837,
+   "canPresaleNumber": 144180,
+   "orderable": 144180,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -621,9 +620,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 3115663,
-   "canPresaleNumber": 2845202,
-   "orderable": 2845202,
+   "stockCount": 3099131,
+   "canPresaleNumber": 2801671,
+   "orderable": 2801671,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -670,9 +669,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 4093640,
-   "canPresaleNumber": 3324347,
-   "orderable": 3324347,
+   "stockCount": 4231796,
+   "canPresaleNumber": 3462740,
+   "orderable": 3462740,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -720,9 +719,9 @@
    "qty_per_board": 3,
    "owner_fit": false,
    "joints_per_board": 9,
-   "stockCount": 909062,
-   "canPresaleNumber": 757104,
-   "orderable": 757104,
+   "stockCount": 940471,
+   "canPresaleNumber": 788742,
+   "orderable": 788742,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -769,9 +768,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 928053,
-   "canPresaleNumber": 757236,
-   "orderable": 757236,
+   "stockCount": 923229,
+   "canPresaleNumber": 753671,
+   "orderable": 753671,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -820,9 +819,9 @@
    "qty_per_board": 4,
    "owner_fit": false,
    "joints_per_board": 8,
-   "stockCount": 29040136,
-   "canPresaleNumber": 22415859,
-   "orderable": 22415859,
+   "stockCount": 28492249,
+   "canPresaleNumber": 21881620,
+   "orderable": 21881620,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -868,9 +867,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 253919,
-   "canPresaleNumber": 168152,
-   "orderable": 168152,
+   "stockCount": 249333,
+   "canPresaleNumber": 158707,
+   "orderable": 158707,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -916,9 +915,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 593190,
-   "canPresaleNumber": 526051,
-   "orderable": 526051,
+   "stockCount": 593202,
+   "canPresaleNumber": 526865,
+   "orderable": 526865,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -964,9 +963,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 4983397,
-   "canPresaleNumber": 4396160,
-   "orderable": 4396160,
+   "stockCount": 4907801,
+   "canPresaleNumber": 4329897,
+   "orderable": 4329897,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1012,9 +1011,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 506611,
-   "canPresaleNumber": 420271,
-   "orderable": 420271,
+   "stockCount": 503961,
+   "canPresaleNumber": 417763,
+   "orderable": 417763,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1061,9 +1060,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 973475,
-   "canPresaleNumber": 823308,
-   "orderable": 823308,
+   "stockCount": 958649,
+   "canPresaleNumber": 806469,
+   "orderable": 806469,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1110,9 +1109,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 2639192,
-   "canPresaleNumber": 2068886,
-   "orderable": 2068886,
+   "stockCount": 2414746,
+   "canPresaleNumber": 1852301,
+   "orderable": 1852301,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1160,9 +1159,9 @@
    "qty_per_board": 3,
    "owner_fit": false,
    "joints_per_board": 6,
-   "stockCount": 1940018,
-   "canPresaleNumber": 1740558,
-   "orderable": 1740558,
+   "stockCount": 1929113,
+   "canPresaleNumber": 1728203,
+   "orderable": 1728203,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1212,9 +1211,9 @@
    "qty_per_board": 5,
    "owner_fit": false,
    "joints_per_board": 10,
-   "stockCount": 7538774,
-   "canPresaleNumber": 5797505,
-   "orderable": 5797505,
+   "stockCount": 7313062,
+   "canPresaleNumber": 5551603,
+   "orderable": 5551603,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1282,9 +1281,9 @@
    "qty_per_board": 23,
    "owner_fit": false,
    "joints_per_board": 46,
-   "stockCount": 15598817,
-   "canPresaleNumber": 10242831,
-   "orderable": 10242831,
+   "stockCount": 15336400,
+   "canPresaleNumber": 9969753,
+   "orderable": 9969753,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1330,9 +1329,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 2673150,
-   "canPresaleNumber": 2250827,
-   "orderable": 2250827,
+   "stockCount": 2639682,
+   "canPresaleNumber": 2217259,
+   "orderable": 2217259,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1378,9 +1377,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 2327186,
-   "canPresaleNumber": 2156968,
-   "orderable": 2156968,
+   "stockCount": 2305280,
+   "canPresaleNumber": 2129344,
+   "orderable": 2129344,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1421,14 +1420,15 @@
   },
   "C25792": {
    "refs": [
-    "R14"
+    "R14",
+    "R400"
    ],
-   "qty_per_board": 1,
+   "qty_per_board": 2,
    "owner_fit": false,
-   "joints_per_board": 2,
-   "stockCount": 6669058,
-   "canPresaleNumber": 6151544,
-   "orderable": 6151544,
+   "joints_per_board": 4,
+   "stockCount": 6635735,
+   "canPresaleNumber": 6101894,
+   "orderable": 6101894,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1469,15 +1469,14 @@
   },
   "C25794": {
    "refs": [
-    "R400",
     "R433"
    ],
-   "qty_per_board": 2,
+   "qty_per_board": 1,
    "owner_fit": false,
-   "joints_per_board": 4,
-   "stockCount": 1148138,
-   "canPresaleNumber": 954411,
-   "orderable": 954411,
+   "joints_per_board": 2,
+   "stockCount": 1141629,
+   "canPresaleNumber": 945953,
+   "orderable": 945953,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1524,9 +1523,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 1472379,
-   "canPresaleNumber": 1230761,
-   "orderable": 1230761,
+   "stockCount": 1478055,
+   "canPresaleNumber": 1239581,
+   "orderable": 1239581,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1569,14 +1568,15 @@
    "refs": [
     "R12",
     "R13",
-    "R111"
+    "R111",
+    "R404"
    ],
-   "qty_per_board": 3,
+   "qty_per_board": 4,
    "owner_fit": false,
-   "joints_per_board": 6,
-   "stockCount": 14051864,
-   "canPresaleNumber": 12072451,
-   "orderable": 12072451,
+   "joints_per_board": 8,
+   "stockCount": 13802237,
+   "canPresaleNumber": 11829649,
+   "orderable": 11829649,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1629,9 +1629,9 @@
    "qty_per_board": 8,
    "owner_fit": false,
    "joints_per_board": 16,
-   "stockCount": 4797288,
-   "canPresaleNumber": 4016803,
-   "orderable": 4016803,
+   "stockCount": 4747224,
+   "canPresaleNumber": 3970913,
+   "orderable": 3970913,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1677,9 +1677,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 2705375,
-   "canPresaleNumber": 2243102,
-   "orderable": 2243102,
+   "stockCount": 2861625,
+   "canPresaleNumber": 2395270,
+   "orderable": 2395270,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1725,9 +1725,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 6,
-   "stockCount": 26557,
-   "canPresaleNumber": 26280,
-   "orderable": 26280,
+   "stockCount": 26542,
+   "canPresaleNumber": 26277,
+   "orderable": 26277,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -1773,9 +1773,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 2222,
-   "canPresaleNumber": 2149,
-   "orderable": 2149,
+   "stockCount": 2124,
+   "canPresaleNumber": 2051,
+   "orderable": 2051,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -1829,6 +1829,7 @@
     "C30",
     "C31",
     "C32",
+    "C33",
     "C83",
     "C88",
     "C99",
@@ -1840,12 +1841,12 @@
     "C444",
     "C460"
    ],
-   "qty_per_board": 23,
+   "qty_per_board": 24,
    "owner_fit": false,
-   "joints_per_board": 46,
-   "stockCount": 23327637,
-   "canPresaleNumber": 18225873,
-   "orderable": 18225873,
+   "joints_per_board": 48,
+   "stockCount": 23166007,
+   "canPresaleNumber": 18095626,
+   "orderable": 18095626,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -1884,54 +1885,6 @@
     }
    ]
   },
-  "C3263277": {
-   "refs": [
-    "U5"
-   ],
-   "qty_per_board": 1,
-   "owner_fit": false,
-   "joints_per_board": 7,
-   "stockCount": 367,
-   "canPresaleNumber": 324,
-   "orderable": 324,
-   "min_purchase": 1,
-   "library_type": "expand",
-   "preferred": false,
-   "jlc_model": "LPS28DFWTR",
-   "jlc_brand": "STMicroelectronics",
-   "prices": [
-    {
-     "startNumber": 1,
-     "endNumber": 9,
-     "productPrice": 6.6979
-    },
-    {
-     "startNumber": 10,
-     "endNumber": 29,
-     "productPrice": 5.8204
-    },
-    {
-     "startNumber": 30,
-     "endNumber": 99,
-     "productPrice": 5.2989
-    },
-    {
-     "startNumber": 100,
-     "endNumber": 499,
-     "productPrice": 4.7725
-    },
-    {
-     "startNumber": 500,
-     "endNumber": 999,
-     "productPrice": 4.5298
-    },
-    {
-     "startNumber": 1000,
-     "endNumber": -1,
-     "productPrice": 4.4199
-    }
-   ]
-  },
   "C3662799": {
    "refs": [
     "U9"
@@ -1939,9 +1892,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 14,
-   "stockCount": 2047,
-   "canPresaleNumber": 2131,
-   "orderable": 2047,
+   "stockCount": 1869,
+   "canPresaleNumber": 1989,
+   "orderable": 1869,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -1987,9 +1940,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 3,
-   "stockCount": 440094,
-   "canPresaleNumber": 418070,
-   "orderable": 418070,
+   "stockCount": 427625,
+   "canPresaleNumber": 405318,
+   "orderable": 405318,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": true,
@@ -1999,7 +1952,7 @@
     {
      "startNumber": 1,
      "endNumber": 499,
-     "productPrice": 0.0152
+     "productPrice": 0.0151
     },
     {
      "startNumber": 500,
@@ -2009,7 +1962,7 @@
     {
      "startNumber": 3000,
      "endNumber": 5999,
-     "productPrice": 0.0099
+     "productPrice": 0.0098
     },
     {
      "startNumber": 6000,
@@ -2019,7 +1972,7 @@
     {
      "startNumber": 24000,
      "endNumber": 50999,
-     "productPrice": 0.0082
+     "productPrice": 0.0081
     },
     {
      "startNumber": 51000,
@@ -2041,9 +1994,9 @@
    "qty_per_board": 7,
    "owner_fit": false,
    "joints_per_board": 14,
-   "stockCount": 10678430,
-   "canPresaleNumber": 10112952,
-   "orderable": 10112952,
+   "stockCount": 10660706,
+   "canPresaleNumber": 10100601,
+   "orderable": 10100601,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -2082,6 +2035,54 @@
     }
    ]
   },
+  "C41785564": {
+   "refs": [
+    "U4"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 14,
+   "stockCount": 502,
+   "canPresaleNumber": 430,
+   "orderable": 430,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "LSM6DSVETR",
+   "jlc_brand": "STMicroelectronics",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 6.1927
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 5.3678
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 4.8774
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 4.3805
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 4.1526
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 4.0492
+    }
+   ]
+  },
   "C46550466": {
    "refs": [
     "C84"
@@ -2089,9 +2090,9 @@
    "qty_per_board": 1,
    "owner_fit": true,
    "joints_per_board": 2,
-   "stockCount": 110787,
-   "canPresaleNumber": 109984,
-   "orderable": 109984,
+   "stockCount": 110751,
+   "canPresaleNumber": 109959,
+   "orderable": 109959,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -2138,9 +2139,9 @@
    "qty_per_board": 2,
    "owner_fit": false,
    "joints_per_board": 12,
-   "stockCount": 17432,
-   "canPresaleNumber": 17048,
-   "orderable": 17048,
+   "stockCount": 17382,
+   "canPresaleNumber": 17094,
+   "orderable": 17094,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -2150,180 +2151,128 @@
     {
      "startNumber": 1,
      "endNumber": 49,
-     "productPrice": 0.1457
+     "productPrice": 0.1301
     },
     {
      "startNumber": 50,
      "endNumber": 149,
-     "productPrice": 0.1155
+     "productPrice": 0.0999
     },
     {
      "startNumber": 150,
      "endNumber": 499,
-     "productPrice": 0.1004
+     "productPrice": 0.085
     },
     {
      "startNumber": 500,
      "endNumber": 2999,
-     "productPrice": 0.0891
+     "productPrice": 0.0737
     },
     {
      "startNumber": 3000,
      "endNumber": 5999,
-     "productPrice": 0.0711
+     "productPrice": 0.0555
     },
     {
      "startNumber": 6000,
      "endNumber": -1,
-     "productPrice": 0.0665
+     "productPrice": 0.0511
     }
    ]
   },
-  "C51931514": {
+  "C5190712": {
    "refs": [
-    "U4"
+    "U6"
    ],
    "qty_per_board": 1,
    "owner_fit": false,
-   "joints_per_board": 14,
-   "stockCount": 4,
-   "canPresaleNumber": -3,
-   "orderable": -3,
+   "joints_per_board": 17,
+   "stockCount": 1348,
+   "canPresaleNumber": 1348,
+   "orderable": 1348,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
-   "jlc_model": "ISM6HG256XTR",
-   "jlc_brand": "STMicroelectronics",
+   "jlc_model": "FXLS90322AESR2",
+   "jlc_brand": "NXP Semicon",
    "prices": [
     {
      "startNumber": 1,
      "endNumber": 9,
-     "productPrice": 14.337
+     "productPrice": 2.8717
     },
     {
      "startNumber": 10,
-     "endNumber": 11,
-     "productPrice": 13.9106
+     "endNumber": 29,
+     "productPrice": 2.7175
     },
     {
-     "startNumber": 12,
-     "endNumber": 13,
-     "productPrice": 13.9106
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 2.6257
     },
     {
-     "startNumber": 14,
-     "endNumber": 15,
-     "productPrice": 13.9106
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 2.5339
     },
     {
-     "startNumber": 16,
-     "endNumber": 17,
-     "productPrice": 13.9106
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 2.4912
     },
     {
-     "startNumber": 18,
+     "startNumber": 1000,
      "endNumber": -1,
-     "productPrice": 13.9106
+     "productPrice": 2.4715
     }
    ]
   },
-  "C52037406": {
+  "C52993880": {
    "refs": [
-    "J400",
-    "J410",
-    "J420",
-    "J440"
+    "J121"
    ],
-   "qty_per_board": 4,
+   "qty_per_board": 1,
    "owner_fit": false,
-   "joints_per_board": 24,
-   "stockCount": 4537,
-   "canPresaleNumber": 4489,
-   "orderable": 4489,
+   "joints_per_board": 2,
+   "stockCount": 186,
+   "canPresaleNumber": 154,
+   "orderable": 154,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
-   "jlc_model": "GH1.25-4PWT",
-   "jlc_brand": "XUNPU",
+   "jlc_model": "DB125-3.5-2P-BK-S",
+   "jlc_brand": "DORABO",
    "prices": [
     {
      "startNumber": 1,
      "endNumber": 49,
-     "productPrice": 0.1124
+     "productPrice": 0.1978
     },
     {
      "startNumber": 50,
      "endNumber": 149,
-     "productPrice": 0.0896
+     "productPrice": 0.1565
     },
     {
      "startNumber": 150,
-     "endNumber": 1499,
-     "productPrice": 0.0783
+     "endNumber": 999,
+     "productPrice": 0.1388
     },
     {
-     "startNumber": 1500,
-     "endNumber": 2999,
-     "productPrice": 0.0699
+     "startNumber": 1000,
+     "endNumber": 1999,
+     "productPrice": 0.1167
     },
     {
-     "startNumber": 3000,
-     "endNumber": 4499,
-     "productPrice": 0.063
+     "startNumber": 2000,
+     "endNumber": 4999,
+     "productPrice": 0.1068
     },
     {
-     "startNumber": 4500,
+     "startNumber": 5000,
      "endNumber": -1,
-     "productPrice": 0.0596
-    }
-   ]
-  },
-  "C52037408": {
-   "refs": [
-    "J9",
-    "J122"
-   ],
-   "qty_per_board": 2,
-   "owner_fit": false,
-   "joints_per_board": 16,
-   "stockCount": 2645,
-   "canPresaleNumber": 2622,
-   "orderable": 2622,
-   "min_purchase": 1,
-   "library_type": "expand",
-   "preferred": false,
-   "jlc_model": "GH1.25-6PWT",
-   "jlc_brand": "XUNPU",
-   "prices": [
-    {
-     "startNumber": 1,
-     "endNumber": 49,
-     "productPrice": 0.1393
-    },
-    {
-     "startNumber": 50,
-     "endNumber": 149,
-     "productPrice": 0.1109
-    },
-    {
-     "startNumber": 150,
-     "endNumber": 1499,
-     "productPrice": 0.0966
-    },
-    {
-     "startNumber": 1500,
-     "endNumber": 2999,
-     "productPrice": 0.086
-    },
-    {
-     "startNumber": 3000,
-     "endNumber": 4499,
-     "productPrice": 0.0775
-    },
-    {
-     "startNumber": 4500,
-     "endNumber": -1,
-     "productPrice": 0.0732
+     "productPrice": 0.1009
     }
    ]
   },
@@ -2334,9 +2283,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 191,
-   "canPresaleNumber": 184,
-   "orderable": 184,
+   "stockCount": 186,
+   "canPresaleNumber": 179,
+   "orderable": 179,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -2384,9 +2333,9 @@
    "qty_per_board": 3,
    "owner_fit": false,
    "joints_per_board": 6,
-   "stockCount": 36639,
-   "canPresaleNumber": 35785,
-   "orderable": 35785,
+   "stockCount": 35354,
+   "canPresaleNumber": 34508,
+   "orderable": 34508,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -2425,6 +2374,106 @@
     }
    ]
   },
+  "C7430446": {
+   "refs": [
+    "J400",
+    "J420",
+    "J440"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 18,
+   "stockCount": 266943,
+   "canPresaleNumber": 262818,
+   "orderable": 262818,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "ZX-SH1.0-4PWT",
+   "jlc_brand": "Megastar",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.0676
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0583
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0534
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 1999,
+     "productPrice": 0.0494
+    },
+    {
+     "startNumber": 2000,
+     "endNumber": 3999,
+     "productPrice": 0.045
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": -1,
+     "productPrice": 0.044
+    }
+   ]
+  },
+  "C7430448": {
+   "refs": [
+    "J9",
+    "J122",
+    "J410"
+   ],
+   "qty_per_board": 3,
+   "owner_fit": false,
+   "joints_per_board": 24,
+   "stockCount": 91293,
+   "canPresaleNumber": 89478,
+   "orderable": 89478,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "ZX-SH1.0-6PWT",
+   "jlc_brand": "Megastar",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 49,
+     "productPrice": 0.0832
+    },
+    {
+     "startNumber": 50,
+     "endNumber": 149,
+     "productPrice": 0.0714
+    },
+    {
+     "startNumber": 150,
+     "endNumber": 499,
+     "productPrice": 0.0652
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 1999,
+     "productPrice": 0.0602
+    },
+    {
+     "startNumber": 2000,
+     "endNumber": 3999,
+     "productPrice": 0.0561
+    },
+    {
+     "startNumber": 4000,
+     "endNumber": -1,
+     "productPrice": 0.055
+    }
+   ]
+  },
   "C78399": {
    "refs": [
     "D8"
@@ -2432,9 +2481,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 207651,
-   "canPresaleNumber": 204573,
-   "orderable": 204573,
+   "stockCount": 207467,
+   "canPresaleNumber": 201535,
+   "orderable": 201535,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -2480,9 +2529,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 2,
-   "stockCount": 2308662,
-   "canPresaleNumber": 1951250,
-   "orderable": 1951250,
+   "stockCount": 2233986,
+   "canPresaleNumber": 1876149,
+   "orderable": 1876149,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -2530,9 +2579,9 @@
    "qty_per_board": 3,
    "owner_fit": false,
    "joints_per_board": 6,
-   "stockCount": 3161153,
-   "canPresaleNumber": 2932575,
-   "orderable": 2932575,
+   "stockCount": 3118990,
+   "canPresaleNumber": 2889888,
+   "orderable": 2889888,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -2578,9 +2627,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 4,
-   "stockCount": 366296,
-   "canPresaleNumber": 324157,
-   "orderable": 324157,
+   "stockCount": 360833,
+   "canPresaleNumber": 319072,
+   "orderable": 319072,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -2626,9 +2675,9 @@
    "qty_per_board": 1,
    "owner_fit": true,
    "joints_per_board": 2,
-   "stockCount": 107339,
-   "canPresaleNumber": 106292,
-   "orderable": 106292,
+   "stockCount": 94784,
+   "canPresaleNumber": 93737,
+   "orderable": 93737,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -2674,9 +2723,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 100,
-   "stockCount": 4221,
-   "canPresaleNumber": 3913,
-   "orderable": 3913,
+   "stockCount": 4108,
+   "canPresaleNumber": 3804,
+   "orderable": 3804,
    "min_purchase": 1,
    "library_type": "expand",
    "preferred": false,
@@ -2722,9 +2771,9 @@
    "qty_per_board": 1,
    "owner_fit": false,
    "joints_per_board": 8,
-   "stockCount": 74513,
-   "canPresaleNumber": 55152,
-   "orderable": 55152,
+   "stockCount": 71335,
+   "canPresaleNumber": 51990,
+   "orderable": 51990,
    "min_purchase": 1,
    "library_type": "base",
    "preferred": false,
@@ -2762,9 +2811,55 @@
      "productPrice": 1.5466
     }
    ]
+  },
+  "C97627": {
+   "refs": [
+    "U5"
+   ],
+   "qty_per_board": 1,
+   "owner_fit": false,
+   "joints_per_board": 16,
+   "stockCount": 3645,
+   "canPresaleNumber": 3540,
+   "orderable": 3540,
+   "min_purchase": 1,
+   "library_type": "expand",
+   "preferred": false,
+   "jlc_model": "MS560702BA03-50",
+   "jlc_brand": "TE Connectivity",
+   "prices": [
+    {
+     "startNumber": 1,
+     "endNumber": 9,
+     "productPrice": 4.3854
+    },
+    {
+     "startNumber": 10,
+     "endNumber": 29,
+     "productPrice": 3.8836
+    },
+    {
+     "startNumber": 30,
+     "endNumber": 99,
+     "productPrice": 3.5851
+    },
+    {
+     "startNumber": 100,
+     "endNumber": 499,
+     "productPrice": 3.1177
+    },
+    {
+     "startNumber": 500,
+     "endNumber": 999,
+     "productPrice": 2.9799
+    },
+    {
+     "startNumber": 1000,
+     "endNumber": -1,
+     "productPrice": 2.916
+    }
+   ]
   }
  },
- "failures": [
-  "C51931514 (U4): orderable -3 < 5 for 5 boards"
- ]
+ "failures": []
 }

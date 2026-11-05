@@ -76,6 +76,14 @@ R12_REPIN = {
                         'PA4 reads high"'),
 }
 
+# D-R12-51: U1 balls R12 gives a function that R11 left NC, keyed by ball (each NC in R11)
+R12_NEW_PINS = {
+    'D10': ('HG_CS', 'GPIO out (push-pull, initialise high before output mode); analog at reset: U6 SS_B internal '
+                     'pull-up (NXP FXLS9xxx0 Rev 6 Table 9) holds the high-g accelerometer deselected',
+            'D-R12-51: PA10 (outer ring, east column) is U6 FXLS90322 SS_B on the IMU SPI1 bus; not a PE4 (C3) or '
+            'PC1 (F2) neighbour; loader USART1_RX input with pull-up (AN2606), which leaves U6 deselected'),
+}
+
 
 def uid(key):
     return str(uuid.uuid5(NS, key))
@@ -203,6 +211,9 @@ def model(data=None):
             new = R12_REPIN[net][0]
             pins[ref, pin] = None if new == 'NC' else new
     assert set(seen) == set(R12_REPIN), f'U1 re-pin nets not found: {sorted(set(R12_REPIN) - set(seen))}'
+    for ball, (net, _, _) in R12_NEW_PINS.items():
+        assert pins.get(('U1', ball), 'missing') is None, f'U1.{ball} is not an R11 NC ball'
+        pins['U1', ball] = net
     for p in parts.values():
         p['flags'] = sorted(p['flags'])
     return parts, pins
@@ -229,6 +240,10 @@ def pin_rows():
         net = row['r11_net']
         if net in R12_REPIN:
             r12, mode, why = R12_REPIN[net]
+            new.update(r12_net=r12, r12_mode=mode, r12_source=why)
+        elif row['r11_ball'] in R12_NEW_PINS:
+            assert net == 'NC', row
+            r12, mode, why = R12_NEW_PINS[row['r11_ball']]
             new.update(r12_net=r12, r12_mode=mode, r12_source=why)
         else:
             new.update(r12_net=net, r12_mode='as R11', r12_source='R11 (unchanged)')

@@ -231,7 +231,7 @@ def seeds(parts, pins):
         'value changed': lambda p, n: p['R82'].__setitem__('value', '2M 0.1%'),
         'wire pads in the BOM': lambda p, n: p['J1']['flags'].remove('exclude_from_bom'),
         'owner-fitted buzzer removed': pop('LS120'),
-        'barometer SA0 floating': lambda p, n: n.update({('U5', '2'): None}),
+        'barometer PS (I2C select) floating': lambda p, n: n.update({('U5', '2'): None}),
     }
     out = {}
     for label, mutate in mutations.items():

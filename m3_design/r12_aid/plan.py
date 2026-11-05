@@ -602,7 +602,7 @@ class Plan:
             q['group'] = g
 
     def join(self, net, a, b_, w=0.3):
-        """A same-net link on F between two pads of one part (LPS28DFW pad 7 to pad 5, D-R12-25)."""
+        """A same-net link on F between two pads of one part (MS5607 pad 3 to pad 4, D-R12-52)."""
         pa = next(p for p in self.by_net[net] if (p['ref'], p['num']) == a)
         pb = next(p for p in self.by_net[net] if (p['ref'], p['num']) == b_)
         starts = [q[:3] for q in self.r.pad_nodes(pa, layers=('F',))]
@@ -1095,7 +1095,7 @@ def main():
     pl.r.debug, pl.r.debug_out = a.debug, a.out + '.npz'
     t0 = time.time()
     pl.necks()
-    pl.join('GND', ('U5', '7'), ('U5', '5'))
+    pl.join('GND', ('U5', '3'), ('U5', '4'))       # D-R12-52: MS5607 GND / CSB, same row (no track between the rows)
     for a_, b_ in ((('U4', '2'), ('U4', '3')), (('U4', '6'), ('U4', '7')), (('J9', '3'), ('J9', '4')),
                    (('J122', '5'), None)):
         if b_:

@@ -27,6 +27,7 @@ C29	31	66.9	270	F	flash 3V3 at U3 pin 8; D-R12-44: moved with the U1 cluster 10 
 C30	25.8	31.6	90	F	IMU 3V3A
 C31	19.8	32.6	90	F	IMU 3V3A
 C32	29	29	0	F	baro 3V3A
+C33	30.7	42	90	F	D-R12-53: U6 VCC decoupling beside its pin 1 / 13-16 corner
 C60	27.4	27.6	90	F	VLOGIC sense
 C80	3.4	22.8	90	F	BAT_IN bulk
 C81	15.9	17.8	270	F	dVdt
@@ -96,8 +97,8 @@ R8	37.5	39.2	90	F	CC2
 R9	32.9	39.2	90	F	VBUS sense
 R10	36.5	67	270	F	NCS pull-up at U3 pin 1; D-R12-44: moved with the U1 cluster 10 mm forward
 R11	18.6	30	180	F	IMU_CS pull-up
-R12	32.6	33.2	0	F	SCL pull-up
-R13	32.6	34.2	0	F	SDA pull-up
+R12	32.8	33.2	0	F	SCL pull-up; D-R12-53: 0.2 mm east, clear of the MS5607 courtyard
+R13	32.8	34.2	0	F	SDA pull-up; D-R12-53: 0.2 mm east, clear of the MS5607 courtyard
 R14	33.4	30	0	F	3V3 FB top
 R15	33.4	31	0	F	3V3 FB bottom
 R32	30.5	73.6	0	F	red LED series; D-R12-44: re-placed after U1 moved forward
@@ -182,8 +183,9 @@ TP122	3.4	50.4	0	F	gate probe
 U1	23	54	0	F	MCU centre; column 1 west (HSE, pyro), row A aft (IMU, servo), column 10 east (USB, SD); D-R12-44: moved with the U1 cluster 10 mm forward
 U2	32.9	27	270	F	3V3 buck
 U3	34.5	62.6	90	F	QSPI flash east of U1, rotated so IO0 / CLK / IO3 face U1 (D-R12-33); D-R12-44: moved with the U1 cluster 10 mm forward
-U4	23	31.6	180	F	IMU on the roll axis (x 23), 6 mm aft of U1 for the A-row fan-out
-U5	29	32	0	F	baro north-east of the IMU, its east pins clear
+U4	23	31.6	180	F	IMU on the roll axis (x 23), 6 mm aft of U1 for the A-row fan-out; D-R12-50: LSM6DSVE on the same land
+U5	29	32	180	F	baro north-east of the IMU; D-R12-53: MS5607 (5 x 3) rotated 180 so SDA / SCL face R12 / R13 and U1, VDD / PS next to C32
+U6	27.5	40.5	180	F	D-R12-53: high-g accelerometer between U4 and U1 on the IMU SPI1 path; SPI pins face west to the bus; channel 1 (Y) along the rocket axis
 U9	17	15.35	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east
 U400	32.9	19.3	90	F	port buck
 U403	32.9	13.9	90	F	camera buck

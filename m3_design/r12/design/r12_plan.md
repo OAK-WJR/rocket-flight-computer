@@ -73,3 +73,14 @@ Stage B done: `r12_pcb.py`, `r12_place.tsv` (46 × 100 mm, D-R12-24), `r12_build
 parity (0 violations) and check_r12 placement pass; the placed board builds byte-identically (`9881aaa3…`). Stage C in
 progress: infrastructure (`r12_route.py`, `r12_planes.tsv`, the drafting aid `r12_aid/`) written, routing not complete
 and no copper table frozen (stageC.md). Stage A margin items D-R12-21 applied (port divider, PA6 threshold).
+
+## 7. Economic parts pass (2026-11-04, D-R12-49 … -54)
+
+Owner: "go fully Economic" (every JLC-placed part allowed on Economic PCBA); parts rated to a 250 °C peak are accepted on
+Economic's 255 ± 5 °C (D-R12-49, owner acceptance A-9). U4 ISM6HG256X (Standard Only) → LSM6DSVE on the same land
+(D-R12-50); new U6 FXLS90322 XY medium-g accelerometer for F2 on the IMU SPI1 bus with chip select HG_CS on PA10, plus
+C33 (D-R12-51); U5 LPS28DFW (Standard Only) → MS5607-02BA03 on R11's MS5611 land (D-R12-52); placement D-R12-53; axis maps
+D-R12-54. SS34, SRV05-4 and the microSD socket stay. 186 parts, 57 codes (stock run 2026-11-04T23:25:09Z):
+**2 boards $159.92 ($79.96 per board), 5 boards $260.08 ($52.02 per board)**, M3 metric $44.12 per board at 5 boards
+(`r12_cost.json`). Stage B rebuilt and passes (placed DRC, fit_check r12, check_r12 placement); routing restarts on the
+new placement: new net HG_CS (U1.D10 to U6.8), U6 on SPI1 and 3V3, U5 rotated 180 with its inter-row no-track band, R12 / R13 0.2 mm east, U6 / C33 at x 25–31, y 38–43.
