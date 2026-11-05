@@ -9,7 +9,8 @@ the RAW_PROTECTED, 3V3A and PORT_4V8 islands of m3_design/r12_planes.tsv, fillin
 tracks (minimum pour width 0.25 mm); B.Cu signals under a GND pour
 (minimum width 0.5 mm, so no sliver or finger can form, route_check pour rules). Every via is a 0.3 / 0.45 mm through
 via (D-R12-03). Pyro barrels keep foreign inner copper away (S-8, stageC.md section 5): rule areas on In1 / In2 round
-J121's barrels, which also keep out every track and via on those layers (D-R12-34). Each segment is checked octilinear and non-zero, each via against the one R12 size; a via is never
+J121's barrels, which also keep out every track and via on those layers (D-R12-34), and fill-only rule areas round every
+via of an S-8 barrel net (D-R12-67A). Each segment is checked octilinear and non-zero, each via against the one R12 size; a via is never
 placed twice. The zones are filled with KiCad's filler and the board saved; a rebuild is byte-identical.
 """
 import argparse
@@ -29,11 +30,20 @@ VIA = (0.45, 0.3)
 WIDTHS = (0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.8, 1.0)
 KIID_SEED = 12212
 MM = pcbnew.FromMM
-# S-8 (R10 check_r10, R11 D-R11-23 lineage): a pyro barrel keeps >= 1 mm to foreign inner copper; J121.2 (PYRO1_IGN)
-# on both planes, J121.1 (PYRO1_OUT) on In2 only (GND is not foreign at PYRO1_OUT, D-R19-01). Radius from the barrel
-# centre: hole 0.65 + 1.0 + 0.1 mm fill tolerance.
-S8_KEEPOUT = (('J121', '2', ('In1', 'In2')), ('J121', '1', ('In2',)))
-S8_R = 1.75
+# S-8 (R10 check_r10, R11 D-R11-23 lineage; check_r12 S-8): every plated barrel of a pyro / arming net, and the inner
+# ring it keeps, stays >= 1 mm from foreign In1 / In2 copper; GND is foreign only round the GND-hazard nets (D-R19-01).
+# D-R12-67A: J121's two barrels keep tracks, vias and fills out on both inner layers (PYRO1_OUT is a GND-hazard net, so
+# In1 too). Radius from the barrel centre: the 1.9 mm inner ring's 0.95 + 1.0 + 0.05 mm fill tolerance, over
+# cos(pi / 16) for the 16-gon's flats.
+S8_KEEPOUT = (('J121', '2', ('In1', 'In2')), ('J121', '1', ('In1', 'In2')))
+S8_R = 2.05
+# D-R12-67A: every via of an S-8 barrel net opens the inner fills round it (fills only: its own tracks may pass, and
+# check_r12 S-8 holds foreign tracks and vias off): In2 always, In1 as well for the GND-hazard nets. Radius: the
+# 0.225 mm via ring + 1.0 + 0.05 mm, over cos(pi / 16). The nets are check_r10.BARREL_NETS / BARREL_GND_HAZARD.
+BARREL_NETS = ('RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE', 'ACT_GATE', 'ACT_DRV', 'BAT_ENABLE', 'BAT_SW_RETURN',
+               'ACT_EN', 'ACT_EN_MCU', 'PYRO1_GATE_N')
+BARREL_GND_HAZARD = ('ACT_GATE', 'ACT_DRV', 'PYRO1_OUT')
+S8_VIA_R = 1.35
 
 
 def V(x, y):
@@ -91,7 +101,7 @@ def zone(board, net, layer, pts, name, min_w, clearance, priority=0):
     return z
 
 
-def keepout(board, name, layers, cx, cy, r):
+def keepout(board, name, layers, cx, cy, r, fills_only=False):
     z = pcbnew.ZONE(board)
     z.SetIsRuleArea(True)
     ls = pcbnew.LSET()
@@ -99,8 +109,8 @@ def keepout(board, name, layers, cx, cy, r):
         ls.AddLayer(LAYERS[l])
     z.SetLayerSet(ls)
     z.SetZoneName(name)
-    z.SetDoNotAllowTracks(True)       # D-R12-34: In2 carries signal tracks; none may enter S-8's reach
-    z.SetDoNotAllowVias(True)
+    z.SetDoNotAllowTracks(not fills_only)   # D-R12-34: In2 carries signal tracks; none may enter S-8's reach
+    z.SetDoNotAllowVias(not fills_only)
     z.SetDoNotAllowPads(False)
     z.SetDoNotAllowZoneFills(True)
     z.SetDoNotAllowFootprints(False)
@@ -151,11 +161,15 @@ def build(board_path, routes):
         p = next(p for p in fps[ref].Pads() if p.GetNumber() == num)
         c = p.GetPosition()
         keepout(board, f'S8_{ref}_{num}', layers, pcbnew.ToMM(c.x), pcbnew.ToMM(c.y), S8_R)
+    voids = sorted((net, x, y) for net, x, y in vias if net in BARREL_NETS)
+    for net, x, y in voids:
+        keepout(board, f'S8_via_{net}_{x:g}_{y:g}', ('In1', 'In2') if net in BARREL_GND_HAZARD else ('In2',), x, y,
+                S8_VIA_R, fills_only=True)
     filler = pcbnew.ZONE_FILLER(board)
     filler.Fill(board.Zones())
     assert pcbnew.SaveBoard(str(board_path), board, True), 'save failed'
     print(f'r12_route: {len(tracks)} tracks, {len(vias)} vias, {len(board.Zones())} zones and rule areas, '
-          f'{len(S8_KEEPOUT)} S-8 keep-outs')
+          f'{len(S8_KEEPOUT)} S-8 keep-outs, {len(voids)} S-8 via fill voids')
 
 
 def main():

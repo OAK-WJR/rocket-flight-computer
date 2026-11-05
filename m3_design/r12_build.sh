@@ -14,7 +14,8 @@
 #   check_r12 --stage placement.
 # Stage C (copper): r12_route.py replays r12_routes.tsv (tracks, vias) and draws the planes of r12_planes.tsv, the B.Cu
 #   GND pour and the S-8 keep-outs, fills the zones; then native DRC with schematic parity (no violation, no unconnected
-#   item, no parity issue), route_check --profile r12 and check_r12 --stage copper.
+#   item, no parity issue), route_check --profile r12 and check_r12 --stage copper (R12_ROUTE_HYGIENE=report, pass 1:
+#   route_check hygiene and check_r12's K-reference / K-region / K-plane are reported, not fatal; strict: fatal).
 # Stage D (post, fab) hooks run when their scripts exist.
 set -euo pipefail
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
@@ -79,8 +80,13 @@ if ! "$KICAD_PY" -I -B tools/route_check.py "$D/m3.kicad_pcb" --profile r12 --re
 else
   tail -1 "$T/route.txt"
 fi
+# D-R12-67A: in pass 1 check_r12's signal-reference rules (K-reference, K-region, K-plane) are reported, not fatal;
+# R12_ROUTE_HYGIENE=strict (pass 2's default) makes them fatal. Every other copper rule (S-, M-, W-, LC-, V-, K-inner,
+# K-copper, K-fill ...) is fatal in both tiers; check_r12 refuses to make an S- / M- / W- / LC- rule advisory.
+ADVISORY=K-reference,K-region,K-plane
+[[ "${R12_ROUTE_HYGIENE:-report}" == strict ]] && ADVISORY=
 "$KICAD_PY" -I -B tools/check_r12.py "$D/m3.kicad_pcb" --stage copper --fit "$T/fit.json" --report "$T/r12.json" \
-  || { echo "check_r12 (copper): FAIL"; exit 1; }
+  --advisory "$ADVISORY" || { echo "check_r12 (copper): FAIL"; exit 1; }
 
 # --- stage D hooks ---------------------------------------------------------------------------------------------------
 if [[ -f m3_design/r12_post.py ]]; then

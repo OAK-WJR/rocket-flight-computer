@@ -43,7 +43,11 @@ VIA_BUDGET = 2
 # D-R12-65A: outer-ring U1 balls that leave by a dog-bone via and a fixed B.Cu lane (plan.py escapes / b_lanes)
 FORCE_DOGBONE = ('A3',)
 # D-R12-65A: U1 signal dog-bones that take no fixed B lane (their via is the terminal; B under the field stays open to them)
-NO_LANE = ('IMU_INT1',)
+NO_LANE = ('IMU_INT1', 'QSPI_IO2')   # D-R12-67A: QSPI_IO2 keeps its frozen free B escape (C3's old lane is open now)
+# D-R12-67A: U1 balls whose escape is hand copper (hand_fixed.tsv), not a dog-bone: PE4 (C3, PYRO1_GATE_N) leaves the
+# ball field on F.Cu, because an S-8 barrel cannot keep 1 mm from the neighbouring dog-bone rings. Value: the interstitial
+# sites (row, column, 1-based, .5 between balls) its route crosses, closed to dog-bones
+NO_ESCAPE = {'C3': ((2.5, 2.5), (2.5, 1.5))}
 # the fire path stays on F.Cu with no series via (stage A constraint; S-8 needs no pyro barrel there)
 F_ONLY = {'BAT_IN', 'PYRO1_OUT', 'PYRO1_IGN', 'RAW_ACT', 'ACT_FET_S'}
 POWER_ORDER = ('BAT_IN', 'PYRO1_OUT', 'PYRO1_IGN', 'RAW_ACT', 'ACT_FET_S', 'RAW_PROTECTED', 'SW_NODE', 'PORT_SW',
@@ -93,13 +97,13 @@ def fast(net):
     return bool(FAST.match(net))
 
 
-# The fast SPI / QSPI / microSD / IMU nets may use In2 too (it lies over In1's unbroken GND; D-R12-34), at In2's full
-# cost and never preferred; the crystal and USB data stay on F / B.
-IN2_DENY = re.compile(r'^(HSE_|USB_D[PM]$)')
+# D-R12-67A: check_r12 K-inner keeps every fast interface off In2 (its FAST set: crystal, USB data, QSPI, SPIn, microSD
+# and every *_CS chip select); D-R12-34's "fast nets may use In2 at full cost" is withdrawn.
+IN2_DENY = re.compile(r'^(HSE_|USB_D[PM]$|QSPI_|SPI\d+_|SD_)|_CS$')
 
 
 def in2_ok(net):
-    return not IN2_DENY.match(net) and net not in WIDTH and net not in PLANES and net not in F_ONLY
+    return not IN2_DENY.search(net) and net not in WIDTH and net not in PLANES and net not in F_ONLY
 
 
 class Plan:
@@ -152,6 +156,8 @@ class Plan:
         rows = 'ABCDEFGHJK'
         pos = lambda r, c: (round(cx + (c - 5.5) * 0.8, 4), round(cy + (r - 5.5) * 0.8, 4))   # r, c 1-based, may be .5
         used_sites, used_ch = set(), set()
+        for sites in NO_ESCAPE.values():           # D-R12-67A: hand escapes keep their sites
+            used_sites.update(sites)
         self.u1term = {}
         self.dogbone_nets = set()
 
@@ -165,7 +171,7 @@ class Plan:
         DIR = {'E': 0, 'N': 2, 'W': 4, 'S': 6}            # astar dir of the outward heading
         balls = []
         for num, p in u1.items():
-            if p['net'].startswith('~'):
+            if p['net'].startswith('~') or num in NO_ESCAPE:
                 continue
             r, c = rows.index(num[0]) + 1, int(num[1:])
             ring = min(r - 1, c - 1, 10 - r, 10 - c)
@@ -1081,12 +1087,12 @@ def finish(pl):
 
 def u6_joins(pl):
     """D-R12-55A: U6 (FXLS90322) same-part links on F: the die pad to its GND pins 7 and 14 (one GND fan-out for the
-    three), VCC pins 15 -> 16 -> 1 and 16 -> C33.1 (one 3V3 fan-out for the four; pin 13 sits beyond GND pin 14 and fans
-    out alone)."""
+    three), VCC pins 15 -> 16 -> C33.1 and 1 -> C33.1 (one 3V3 fan-out for the four; pin 13 sits beyond GND pin 14 and
+    fans out alone). D-R12-67A: pin 1 joins C33.1 outside the pad ring (check_r12 M-7), not 16 -> 1 across the corner."""
     pl.join('GND', ('U6', '17'), ('U6', '7'))
     pl.join('GND', ('U6', '17'), ('U6', '14'))
     pl.join('3V3', ('U6', '15'), ('U6', '16'))
-    pl.join('3V3', ('U6', '16'), ('U6', '1'))
+    pl.join('3V3', ('U6', '1'), ('C33', '1'))
     pl.join('3V3', ('U6', '16'), ('C33', '1'))
 
 

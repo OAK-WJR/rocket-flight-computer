@@ -1,4 +1,9 @@
-# R12 stage C: copper (2026-11-05) — pass 1 FROZEN (connected, DRC clean); pass 2 (routing hygiene) open
+# R12 stage C: copper (2026-11-05) — pass 1 FROZEN on the ported check_r12 rules (D-R12-72A); pass 2 (routing hygiene) open
+
+**Update (D-R12-67A … -72A, 2026-11-05):** after `m3-assy-r12`'s ported check_r12 rules were merged, the D-R12-66A
+table failed check_r12 copper (101 findings); the copper was reworked (§4.7) and re-frozen: board `c24fcf8272de3466f357a236f6cc4b2f455686a4685495b2cdc118bfef411a53`, DRC 0 /
+0 unconnected / parity 0, check_r12 copper with every fatal rule at 0 (K-region 30, K-reference 1, K-plane 2 reported,
+not fatal in pass 1), route_check r12 89 failing. The paragraph below describes D-R12-66A.
 
 Stage C of `r12_plan.md` §4. **Status: pass 1 is done** (owner, 2026-11-04: "relax the cleanliness guidelines to get
 it working first, then get routing nice in subsequent passes"). On the D-R12-61A … -64A pin map (placed board
@@ -252,9 +257,35 @@ short_segment, collinear_overlap, crossing_without_node, right_angle, chain_deto
 vias (pass 1 allowed a third). The fire path is F.Cu with no via; S-8 keep-outs and the U4 / U5 rule areas pass DRC;
 no foreign F.Cu track enters U6's pad ring.
 
+### 4.7 Pass 1 on the ported copper rules (D-R12-67A … -72A)
+
+The merge of `m3-assy-r12` brought check_r12's ported S- / W- / LC- / M- / K- rules; on the D-R12-66A copper they
+found S-8 47, S-9 8, M-7 2, K-inner 10, K-region 32, K-reference 1, K-plane 1. Pass 1 now has two tiers (D-R12-67A):
+the build passes `check_r12 --advisory K-reference,K-region,K-plane` until `R12_ROUTE_HYGIENE=strict`; S-, M-, W-, LC-
+and every other rule stay fatal and cannot be named advisory. The copper changes, all drafted in scratch `r12ra/ps2`
+(hand edits with `edit.py`, single-net aid searches with `seg3.py`: `seg.py` plus S-8 discs round the S-8 vias and a
+no-via box on U6's body; KiCad DRC and check_r12 judged every step, `ev2.sh`):
+
+| Rule | Change | Decision |
+|---|---|---|
+| S-8 | `r12_route.py` fill voids (r 1.35 mm, In2; In1 too for GND-hazard nets) round every S-8-net via; J121 keep-outs on In1 + In2, r 2.05 mm | D-R12-68A |
+| S-8 | PYRO1_GATE_N (PE4) leaves U1 on F.Cu with no via (`hand_fixed.tsv`, `plan.py` `NO_ESCAPE`) | D-R12-68A |
+| S-8 | ACT_EN_MCU tip via kept; HSE_OUT all F.Cu, SERVO3 / PYRO1_CONT / C24.2 GND vias moved; ACT_EN_MCU aft via to (16.4, 28.2); CAM_5V_SENSE / VLOGIC_SENSE re-routed | D-R12-68A |
+| K-inner | IMU_CS joined on F.Cu; HG_CS F / B under U6; SPI1_MISO's U4 branch on B under U6 (no loop round U6); QSPI_IO2 off In2 | D-R12-69A |
+| S-9 | BAT_IN J1.1 -> C80.1 -> TP80 -> Q120.3 at 1.0 mm; ACT_FET_S loop removed, ACT_GATE re-run at R119 | D-R12-70A |
+| M-7 | U6 pin 1 -> C33.1 outside the pad ring; U6.13's via off the body | D-R12-71A |
+
+Result (D-R12-72A): 1389 tracks, 430 vias; board `c24fcf8272de3466f357a236f6cc4b2f455686a4685495b2cdc118bfef411a53` twice; DRC 0 / 0 / 0; check_r12 copper fatal rules 0;
+K-region 30, K-reference 1 (5283 loose samples), K-plane 2; route_check r12 89 failing. The aid does not yet model
+S-8 or U6's body (O-R12-24); pass 2 must add both before any re-search.
+
 ## 5. What stage C still needs
 
-0. **Pass 2 (next):** clear route_check r12 (83 failing on `da48bb99…`): `plan.py --clean` with the build's
+0. **Pass 2 (next, after D-R12-72A):** add S-8 and U6's body to the aid (O-R12-24); clear route_check r12 (89 failing on
+   `c24fcf8272de3466f357a236f6cc4b2f455686a4685495b2cdc118bfef411a53`); cut SPI1_MISO (four vias) and QSPI_IO2 (eight) back (QSPI_IO2 can take C3's freed B lane); bring
+   check_r12 K-region (30), K-reference (1) and K-plane (2: 3V3 vias at (16.7, 48.8) and (18.1, 30.6)) to 0, then set
+   `R12_ROUTE_HYGIENE=strict`. The D-R12-66A text follows.
+0. **Pass 2 (as written for D-R12-66A):** clear route_check r12 (83 failing on `da48bb99…`): `plan.py --clean` with the build's
    route.json, then hand fixes; cut QSPI_IO2 to at most two vias besides its dog-bone (it now goes round U1's west and
    north sides: a B lane for A3 or a shorter F / In2 run east of U1); add GND partner vias at the eight critical layer
    changes; then set `R12_ROUTE_HYGIENE=strict` as the build default and re-run stage D. Items 0-4 below are history.

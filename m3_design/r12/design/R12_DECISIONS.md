@@ -694,6 +694,66 @@ moved; D-R12-61A … -64A keep every PE4 / PC1 neighbour). **Pass-1 deviations f
 dog-bone and five; the pass-1 allowance was a third via), and eight critical layer changes have no GND partner within
 1.5 mm (route_check critical_via_no_gnd); every route_check finding above; the hygiene clean is pass 2.
 
+**D-R12-67A Merge of the ported copper rules; two-tier copper check for pass 1 (2026-11-05).** `m3-assy-r12` (12c66e7:
+`tools/check_r12.py` with the ported S- / W- / LC- / M- / K- rules and their review fixes, the R12 fab tooling) is
+merged into `r12-route-a`. The D-R12-66A copper failed `check_r12 --stage copper` with 101 findings: S-8 47, S-9 8,
+M-7 2, K-inner 10, K-region 32, K-reference 1, K-plane 1. `check_r12` gains `--advisory RULES`: the named rules still run
+and are printed and reported (`advisory`, `reported`), but do not fail the run. Only `ADVISABLE` = K-reference, K-region,
+K-plane (the signal-reference family) may be named; any S- / M- / W- / LC- rule (`ALWAYS_FATAL`) or any other rule is
+refused (exit 2). `r12_build.sh` passes `--advisory K-reference,K-region,K-plane` while `R12_ROUTE_HYGIENE` is `report`
+(pass 1, the default now) and nothing when it is `strict` (pass 2's default), the same switch that makes route_check's
+hygiene fatal. Every other copper rule (S-, M-, W-, LC-, V-, K-inner, K-copper, K-fill, …) is fatal in both tiers.
+Test: `tools/test_r12_check.py` `test_advisory_tier` (a K-plane split and an S-8 breach: K-plane reported only, S-8
+still fails; S-8 / M-7 / W-1 / LC-1 / K-inner / K-copper refused as advisory, also on the command line).
+
+**D-R12-68A S-8 on R12 copper (2026-11-05).** Every barrel of the eleven S-8 nets (check_r10 `BARREL_NETS`) and the
+inner ring it keeps is now >= 1 mm from foreign In1 / In2 copper (check_r12 S-8: 0 findings). (a) `r12_route.py`
+draws a fill-only rule area (fills kept out, tracks and vias allowed so its own copper may pass; S-8 holds foreign
+copper off) round every via of an S-8 net: In2 always, In1 as well for the GND-hazard nets (ACT_GATE, ACT_DRV,
+PYRO1_OUT); radius 1.35 mm (0.225 mm ring + 1.0 + 0.05 mm, over cos(pi / 16) for the 16-gon). J121's two keep-outs
+(tracks, vias and fills) now cover both inner layers and have a 2.05 mm radius (the 1.9 mm inner ring: 0.95 + 1.0 +
+0.05 mm, over cos(pi / 16)); D-R12-66A's J121.1 keep-out was In2 only, but PYRO1_OUT is a GND-hazard net, so In1 GND
+counts (it sat 0.551 mm from the barrel). The fill voids alone cleared the vias of BAT_SW_RETURN (13.4 / 15.1, 7.5),
+ACT_GATE (6.8, 30.1) / (8.6, 31.0), PYRO1_GATE (8.2, 45.6) / (4.4, 49.4) and PYRO1_GATE_N (17.6, 43.7). (b) PYRO1_GATE_N
+(PE4, U1.C3) has no via: its dog-bone among the U1 3V3 / QSPI dog-bones could not keep 1 mm, so it leaves the ball
+field on F.Cu (C3 -> (20.6, 51.6) -> west along y 51.6 between rows B and C -> south along x 18.7 -> (16.6, 44.7) ->
+R126 / R127), drawn by hand (`r12_aid/hand_fixed.tsv`; `plan.py` `NO_ESCAPE` skips C3's dog-bone and closes its two
+sites). (c) ACT_EN_MCU (PC1) keeps its stub-tip via at (18.6, 54.0); the non-GND vias within 1.46 mm moved: HSE_OUT runs
+on F.Cu from its tip to Y1 (both its vias gone, CAM_5V_SENSE's F loop that forced them is gone), SERVO3_MCU's seed via
+(18.2, 55.2) -> (18.1, 55.4) (`hand_seed.tsv`), PYRO1_CONT's via (17.6, 54.4) -> (17.1, 54.3) with C24.2's GND via
+moved to (17.6, 54.9). ACT_EN_MCU's aft via (17.1, 28.2) -> (16.4, 28.2), 1.4 mm from SERVO4_MCU's In2 run. (d)
+CAM_5V_SENSE (In2 from a via at (21.1, 41.0) to (17.5, 53.0), then F to its tip) and VLOGIC_SENSE (re-routed by the aid)
+leave the band PE4 now crosses on F. PC1, PE4, PC0, PC5 and the port UART balls are unchanged; no part moved.
+
+**D-R12-69A K-inner: fast nets off In2 (2026-11-05).** check_r12 K-inner keeps HSE_, USB_D, QSPI_, SPIn_, SD_ and every
+*_CS off In2 (D-R12-34); the D-R12-66A table had IMU_CS, HG_CS and QSPI_IO2 there (10 findings, now 0). IMU_CS: the
+R11 pull-up branch joins the U4 branch on F.Cu at (21.8, 33.4) (two vias gone). HG_CS: F.Cu from its U1 tip to a via at
+(26.6, 43.8), B.Cu under U6 between CAM_MCU_TX and CAM_MCU_RX, a via at (26.2, 37.8) and U6.8. SPI1_MISO's U4 branch
+no longer loops round U6's east and north sides on F.Cu (that loop fenced U6, so HG_CS had no F.Cu way out): F.Cu from
+U4.1 to a via at (28.2, 37.7), B.Cu under U6 and a via at (25.5, 43.9) into the U6.11 / U1 branch (four vias on the
+net, two more than before; route_check extra_vias, pass 2). QSPI_IO2's In2 run north of U1 is B.Cu / F.Cu with two more vias ((29.0, 65.5),
+(33.4, 64.2); eight on the net, pass 2). CAM_MCU_TX, CAM_MCU_RX and LED_YEL are unchanged. `plan.py` `IN2_DENY` now equals check_r12's FAST set
+(D-R12-34's "fast nets may use In2 at full cost" is withdrawn) and `NO_LANE` adds QSPI_IO2 (it keeps its frozen free B
+escape; C3's old B lane is open to it in pass 2).
+
+**D-R12-70A S-9: the battery feed at 1.0 mm (2026-11-05).** The BAT_IN path J1.1 -> C80.1 -> TP80 -> Q120.3 (D-R2-02,
+check_r10 S-9 `FIRE_TERMINALS` J1 -> Q120) is 1.0 mm throughout (it had 0.8 / 0.5 mm runs): up x 5.0 east of C80.2
+(0.2 mm to its pad), into C80.1, along x 2.6 into TP80 and to Q120.3 at y 29.0 (S-9: 0 findings). To make room,
+ACT_FET_S's 0.4 mm loop round R166 / Q122 (R119.2 -> Q121.2) is gone: R119.2 joins R120.1 directly at y 26.4 and
+ACT_GATE leaves R119.1 north along y 25.7. ACT_FET_S's fire path Q120.2 -> C120.1 -> Q121.2 (0.5 mm) is unchanged.
+
+**D-R12-71A M-7: U6 (2026-11-05).** VCC pin 1 joins C33.1 outside U6's pad ring ((29.7, 41.8) -> (30.4, 42.5) ->
+(30.8, 42.5); `plan.py` `u6_joins`: 1 -> C33.1 replaces 16 -> 1 across the corner), and pin 13's 3V3 via moves from
+(25.8, 43.1) to (25.8, 43.25), clear of the body (M-7: 0 findings).
+
+**D-R12-72A Stage C pass 1 re-frozen on the ported rules (2026-11-05).** `m3_design/r12_routes.tsv` (1389 tracks, 430
+vias) replays to board `c24fcf8272de3466f357a236f6cc4b2f455686a4685495b2cdc118bfef411a53` (`r12_build.sh` twice, same hash): KiCad DRC 0 violations, 0 unconnected, parity 0;
+fit_check r12 OK; check_r12 copper OK with S-, M-, W-, LC-, V-, K-inner, K-copper and K-fill at 0; reported, not fatal
+(D-R12-67A): K-region 30, K-reference 1 (5283 critical samples without reference copper, from 8875), K-plane 2 (3V3
+In2 vias at (16.7, 48.8) and (18.1, 30.6) joined through necks under 1.0 mm; one more than D-R12-66A); route_check r12
+89 failing (pass-1 hygiene, report only). The drafting was hand edits plus single-net aid searches with scratch
+S-8 / U6 masks (scratch `r12ra/ps2`); the aid itself does not model S-8 yet (O-R12-24).
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.
@@ -806,7 +866,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: placement done (stage B, 46 × 100 mm); routing pass 1 frozen (D-R12-66A: `r12_routes.tsv`, DRC 0 / unconnected 0 / parity 0); pass 2, the routing hygiene clean (route_check r12: 83 failing, QSPI_IO2's six vias, eight critical layer changes without a GND partner), is open (stageC.md §4.6, §5) | C |
+| O-R12-14 | Board: placement done (stage B, 46 × 100 mm); routing pass 1 frozen (D-R12-66A) and re-frozen on the ported check_r12 rules (D-R12-72A: `r12_routes.tsv`, DRC 0 / unconnected 0 / parity 0, S- / M- / W- / LC- / K-inner 0); pass 2 is open: route_check r12 hygiene (89 failing), QSPI_IO2's vias, the critical layer changes without a GND partner, SPI1_MISO's four vias, and check_r12 K-region 30 / K-reference 1 / K-plane 2 made fatal (`R12_ROUTE_HYGIENE=strict`) (stageC.md §4.7, §5) | C |
 | O-R12-15 | R12 axis maps derived (D-R12-54: U4 roll = −gyro_Y, thrust −a_Y; U6 channel 1 axial, +a forward): 1 g / rotation bench sign check | bench / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
@@ -816,6 +876,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-21 | FXLS90322 dual-channel datasheet (FXLS9xxxx Rev 7) not read: confirm pin-out, axis frame, medium-g range codes; LSM6DSVE datasheet not found at ST (D-R12-50, -51) | records / bench |
 | O-R12-22 | U6 VCC ≥ 3.135 V at the part: 3V3 regulator window 3.240 V low (105 mV margin); check the copper drop on R12 copper (D-R12-51) | C / D |
 | O-R12-23 | Re-read DS12110 Rev 8 Tables 10-14 (and AN2606's H74x loader pins) for the D-R12-61A … -64A re-pins: PB10 QUADSPI_BK1_NCS, PA8 / PC9 I2C3, PE12-PE14 SPI4 and their AF numbers (read from KiCad's ST symbol only) | records / firmware |
+| O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways) or M-7's U6 body: pass 2 searches must add it (D-R12-72A used scratch masks) | C |
 
 ## 5. Files (stage A)
 
