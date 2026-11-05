@@ -31,8 +31,8 @@ critical_via_no_gnd is re-measured by tools/r11_gnd_spots.gnd_spots (the six-lay
 PARALLEL_VIAS holds only the pairs the R11 gate data list (R11_DATA key 'parallel_vias', O-C2-5; schema at
 load_parallel_pairs; a missing key or file is an empty list; --gate-data names another file).
 r12 (M3-ASSY-R12, r12_plan.md; the R12 gate in tools/check.sh once the R12 board is tracked): every r10 rule on R12's
-four-layer one-sided board, ALLOWLIST / LEFTOVERS / ROUTE_FIGURES / PARALLEL_VIAS empty (R12 adds an entry only with its
-measured reason, as R10 and R11 did).
+four-layer one-sided board, LEFTOVERS / PARALLEL_VIAS empty; ALLOWLIST is ALLOWLIST_R12 and ROUTE_FIGURES is
+ROUTE_FIGURES_R12 (the forced findings, each with its measured reason and route figures, D-R12-75A).
 Every layer-dependent test walks the board's own copper stack (cu_layers: F, In1..In4, B on a six-layer board; the
 R7-R10 four-layer set otherwise, so their verdicts are unchanged), so a layer change through In3 or In4 is one, and the
 strict redraw's reference test pairs each layer with its neighbours in the R11 stack (REF_PAIRS_R11).
@@ -403,6 +403,34 @@ ALLOWLIST_R11 = [
      'one In2 plane net its minimum is 3 vias, still above the 2 allowed, so the finding is forced'),
 ]
 ROUTE_FIGURES_R11 = {'CAM_RX_BUFFER': (19.2, 4)}      # D-R11-61: route_check on board 4e552ef4..., zone-filled
+# Profile r12 (D-R12-75A, stage C pass 2): the forced findings of the R12 board, each with its measured reason, as R10 and
+# R11 recorded theirs. measured_check fails an entry when the net's route length or via count differs from
+# ROUTE_FIGURES_R12 (route_check --routes on the frozen board), and a stale entry fails the gate.
+ALLOWLIST_R12 = [
+    ('extra_vias', 'SPI1_SCK', 'net', (24.2, 50.4),
+     'D-R12-75A: SPI1 joins U4 (IMU), U6 (high-g) and U1 on a one-sided board where every pad is on F.Cu, and the three '
+     'pin orders cross: U4\'s north face west to east SCK (23.0), MOSI (23.5), MISO (24.21, east face); U6\'s west face '
+     'north to south SCK (39.3), MOSI (40.1), MISO (40.9); U1\'s A row west to east MISO (A6, 23.4), SCK (A7, 24.2), with '
+     'MOSI on ball C5\'s fixed dog-bone (B.Cu, one via). Read round the region the terminals interleave (SCK4 MOSI4 MISO4 '
+     'SCK6 MOSI6 MISO6 SCK1 MISO1), so no one-layer drawing joins them: SCK must cross MOSI between U4 and U6 and cross '
+     'MISO between U6 and U1. MOSI (dog-bone + one via) and MISO (one B.Cu hop under U6, (28.2, 37.7) / (25.5, 43.9)) are '
+     'at the two vias route_check allows, so SCK carries both crossings: a B.Cu hop under MOSI at U6 ((23.8, 38.0) / '
+     '(24.7, 38.9)) and a B.Cu run from that hop to a via at (24.2, 46.3) east of MISO\'s F.Cu lane, 3 vias. Every via has '
+     'a GND via within 1.5 mm; the route is 19.34 mm against a 19.43 mm octilinear MST (ratio 0.99). Clearing it needs U6 '
+     'rotated so its SPI pins mirror U4\'s (an IMU axis-map change), not routing',
+     dict(len_mm=19.34, vias=3)),
+    ('extra_vias', 'USB_DP', 'net', (39.12, 44.25),
+     'D-R12-75A: J3 (USB-C) interleaves the pair at 0.5 mm (A6 DP 44.25, A7 DM 43.75, B6 DP 43.25, B7 DM 44.75), so one '
+     'of DP / DM links its two pins on B.Cu through two vias west of the pads ((38.0, 43.25) / (38.0, 44.25), D-R12-40) '
+     'and the other loops round them on F.Cu. Between J3 and U1 both run on B.Cu for the stretch where F.Cu carries '
+     'I2C1_SCL / I2C1_SDA / VBUS_SENSE / SWCLK from U1\'s east column (D9, E9, D10, A9) north to U5, R9 and J2, which a '
+     'pair leaving B10 / C10 eastward must cross; DM uses two vias for that ((34.2, 46.1) / (28.3, 49.6)), DP joins its '
+     'B.Cu link directly and surfaces once at B10\'s stub ((27.4, 51.2)): 3 vias on the net, the fewest the J3 link and '
+     'the crossing allow for the pair (swapping the link onto DM moves the third via to DM). 19.22 mm against a 16.4 mm '
+     'MST (ratio 1.17); every via has a GND via within 1.5 mm',
+     dict(len_mm=19.22, vias=3)),
+]
+ROUTE_FIGURES_R12 = {'SPI1_SCK': (19.34, 3), 'USB_DP': (19.22, 3)}   # D-R12-75A: route_check on the frozen R12 board
 R11_DATA = Path(__file__).resolve().parents[1] / 'm3_design/r11/design/r11_gate_data.json'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
@@ -463,9 +491,11 @@ def set_profile(name, gate_data=None):
     elif name == 'r8':
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = _R8_LISTS
         KEEPOUT_BASELINE = True
-    elif name in ('r9', 'r10', 'r12'):                                    # r9_plan.md section 2: no exception of any kind
-        # (r12, r12_plan.md section 4: the R10 rules and empty lists until a forced finding is recorded with its reason)
+    elif name in ('r9', 'r10'):                                           # r9_plan.md section 2: no exception of any kind
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = [], [], {}
+        KEEPOUT_BASELINE = True
+    elif name == 'r12':                     # D-R12-75A: the R10 rules and the forced findings only, each measured
+        ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = list(ALLOWLIST_R12), [], dict(ROUTE_FIGURES_R12)
         KEEPOUT_BASELINE = True
     elif name == 'r11':                                                   # D-R11-61: the forced findings only
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = list(ALLOWLIST_R11), [], dict(ROUTE_FIGURES_R11)

@@ -158,7 +158,13 @@ class Profiles(unittest.TestCase):
         rc.set_profile('r12')
         try:
             self.assertIn('r12', rc.R10_LIKE)
-            self.assertEqual((rc.ALLOWLIST, rc.LEFTOVERS, rc.ROUTE_FIGURES, rc.PARALLEL_VIAS), ([], [], {}, []))
+            self.assertEqual((rc.LEFTOVERS, rc.PARALLEL_VIAS), ([], []))
+            # D-R12-75A: only the recorded forced findings, each with a reason and the measured route figures
+            self.assertEqual((rc.ALLOWLIST, rc.ROUTE_FIGURES), (rc.ALLOWLIST_R12, rc.ROUTE_FIGURES_R12))
+            for e in rc.ALLOWLIST:
+                self.assertTrue(e[4].startswith('D-R12-'), e[:4])
+                if e[0] in ('detour', 'extra_vias'):
+                    self.assertEqual((e[5]['len_mm'], e[5]['vias']), rc.ROUTE_FIGURES[e[1]], e[:4])
         finally:
             rc.set_profile('r8')
 

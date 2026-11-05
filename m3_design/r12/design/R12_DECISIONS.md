@@ -754,6 +754,61 @@ In2 vias at (16.7, 48.8) and (18.1, 30.6) joined through necks under 1.0 mm; one
 89 failing (pass-1 hygiene, report only). The drafting was hand edits plus single-net aid searches with scratch
 S-8 / U6 masks (scratch `r12ra/ps2`); the aid itself does not model S-8 yet (O-R12-24).
 
+**D-R12-73A S-8 keep-outs at J121 measured from what each barrel keeps (2026-11-05).** J121.1 (PYRO1_OUT) already has no
+inner ring (the R10 DB125 land's `remove_unused_layers` on pad 1, D-R20-05), so its keep-out (tracks, vias, fills; In1 +
+In2, PYRO1_OUT being a GND-hazard net) is sized from the 1.30 mm barrel wall: 16-gon vertices at 1.72 mm, flats 1.687 mm,
+1.037 mm beyond the wall (S-8's 1.0 mm holds) and inside check_r10's own-barrel void (wall + 1.071 = 1.721 mm), so
+PYRO1_OUT's F.Cu leaving the pad keeps its In1 reference (K-reference: the 2.05 mm keep-out left 576 PYRO1_OUT and 145
+PYRO1_IGN samples without In1). J121.2 (PYRO1_IGN) keeps its 1.9 mm ring and its 2.05 mm keep-out, on In2 only: under S-8
+GND is foreign only to the GND-hazard nets, and a PYRO1_IGN-to-GND short loads the bus through R134 rather than firing.
+`r12_route.py` `S8_KEEPOUT` now carries a radius per pad. S-8: 0 findings.
+
+**D-R12-74A Stage C pass 2: routing hygiene (2026-11-05).** The frozen table was cleaned by hand (scratch `r12ra/ps3`,
+edit files judged by KiCad DRC, check_r12 copper and route_check r12 at every step; no aid search was frozen, so the S-8 /
+U6 masks of O-R12-24 were not needed). By area: duplicate / overlapping GND and 3V3 joins (C94 / R401, U5.3-4, U6 / C33),
+the 3V3A crossing at C32, VBUS's right angle and loop at J3, USB_DM's loop round the DP link vias, USB_DP's B.Cu run
+re-laid west of CC1's via with CC1's In2 run turned east of the DP vias, BAT_IN's 1.0 mm corners (J1 -> C80 -> TP80 ->
+Q120.3, S-9 unchanged), HSE_IN all F.Cu (its two vias and the GND via between Y1's pads gone), HSE_OUT's loop and jog,
+PYRO1_OUT's sense bump round D120 (hand_fixed.tsv), ACT_EN_MCU / PYRO1_CONT jogs, BAT_FAULT_N's In2 run, ARM1_SENSE, the
+SPI1 / IMU_CS / I2C1 / SERVO staircases, CAM_MCU_TX / CAM_MCU_RX on F.Cu across the RAW_PROTECTED and 3V3A islands and on
+B.Cu only over plain 3V3 (vias (30.6, 26.75) / (30.7, 26.1) with GND (30.65, 27.4); SERVO3's loop round the board's
+north-east edge, CAM_5V_DIV, CAM_PWR_EN, I2C1_SCL's In2 run and IMU_INT1's In2 hop re-routed for them), PORT_4V8's R400.1
+feed by one via and a 0.3 mm B.Cu run teed into the x 45.2 trunk (hand_seed.tsv), the GPS / RADIO UARTs off In2 as a
+four-lane B.Cu bus (x 24.95 / 25.85 / 26.3 / 26.8, two vias each; RADIO_RX passes under RADIO_TX's stub because the R45x
+pads need the opposite order), QSPI_NCS all F.Cu, QSPI_IO0 all F.Cu, QSPI_IO2 from 8 vias / 40.9 mm to 2 vias / 23.65 mm,
+SWCLK out of the QSPI fan (B.Cu x 38.2 to J2), SWDIO's B.Cu lane, the K-reference clearances (every critical track centre
+>= 0.42 mm from foreign via centres, the In1 / In2 antipads being ~0.36 mm): CAM_MCU_TX's ring-2 via to the dog-bone site
+(23.8, 50.8), LED_YEL's to (24.6, 51.6), IMU_INT1's to (24.6, 52.4), SPI1_MISO all F.Cu from U6.11 to A6 (two vias left,
+both on its U4 branch), SD_MOSI / QSPI_CLK / QSPI_IO2 lanes inside the ball field moved off occupied interstitial sites,
+NRST's lane at y 53.45 beside ACT_EN_MCU's tip via (not moved). K-plane: R11.2's 3V3 via moved to (16.3, 31.0) out of the
+pocket closed by SERVO3 / SERVO4's In2 runs and the 3V3A feed; SERVO3 / SERVO4 bend at y 28.8 / 29.0. GND / 3V3 vias
+moved, added or removed (partners kept within 1.5 mm of every critical layer change): listed in stageC.md §4.8. Fixed
+aid inputs updated to the frozen copper: hand_fixed.tsv (PYRO1_OUT branch, C32's 3V3A diagonal), hand_seed.tsv (SERVO4's
+tip via (17.5, 57.5), LED_YEL's via (24.6, 51.6), PORT_4V8's trunk split at (45.2, 21.5)); VCAP2's E7 B lane now ends at
+(27.0, 52.8) and RADIO_TX uses a dog-bone at (25.4, 57.2) (plan.py's generated fan-out; the frozen table supersedes it).
+
+**D-R12-75A route_check R12 allowlist: two forced extra_vias (2026-11-05).** `tools/route_check.py` `ALLOWLIST_R12` /
+`ROUTE_FIGURES_R12` (profile r12 now reads them; measured_check fails an entry whose route length or via count changes,
+and a stale entry fails). SPI1_SCK, 3 vias, 19.34 mm (MST 19.43): the three SPI1 pin orders interleave round the
+U4 / U6 / U1 region (U4 north face SCK, MOSI, MISO; U6 west face SCK, MOSI, MISO top to bottom; U1 A row MISO, SCK with
+MOSI on C5's dog-bone), so SCK must cross MOSI at U6 and MISO toward U1 while MOSI (dog-bone + one) and MISO (one hop
+under U6) sit at the two vias allowed; clearing it needs U6 rotated (an axis-map change). USB_DP, 3 vias, 19.22 mm (MST
+16.4): J3's 0.5 mm interleave forces one of the pair to link its pins on B.Cu through two vias (D-R12-40), and both run
+on B.Cu past the I2C1 / VBUS_SENSE / SWCLK F.Cu fan east of U1, so DP surfaces once more at B10 (DM has two vias).
+`tools/test_r12_check.py` `test_route_profile_r12` checks the profile carries exactly these entries, each with a
+D-R12 reason and route figures equal to ROUTE_FIGURES_R12. Non-critical hygiene leftovers stay informational on the
+R10-like profiles (audit 2 item 7): 13, located in stageC.md §4.8.
+
+**D-R12-76A `R12_ROUTE_HYGIENE=strict` is the build default (2026-11-05).** `r12_build.sh` fails on any route_check r12
+failure and passes no `--advisory` to check_r12 (K-reference, K-region, K-plane fatal); only `R12_ROUTE_HYGIENE=report`
+restores pass 1's reporting tier (any other value is strict). Both tiers pass on the frozen board.
+
+**D-R12-77A Stage C pass 2 frozen (2026-11-05).** `m3_design/r12_routes.tsv` (1204 tracks, 414 vias) replays to board
+`e2b005b57919a9eb6c5bb635c1d7ad4ff186fa91efc4ef8fa12f0e8cf2e017f6` (`r12_build.sh` twice with the strict default, and once with
+`report`, same hash, exit 0): KiCad DRC 0 violations, 0 unconnected, parity 0; fit_check r12 OK; check_r12 copper OK in
+every tier (S-, M-, W-, LC-, V-, K-inner, K-copper, K-fill, K-reference 0 loose samples, K-region 0, K-plane 0); route_check
+r12 0 failing, 2 allowlisted (D-R12-75A), 13 non-critical leftovers (informational); `tools/check.sh` exit 0.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.
@@ -866,7 +921,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: placement done (stage B, 46 × 100 mm); routing pass 1 frozen (D-R12-66A) and re-frozen on the ported check_r12 rules (D-R12-72A: `r12_routes.tsv`, DRC 0 / unconnected 0 / parity 0, S- / M- / W- / LC- / K-inner 0); pass 2 is open: route_check r12 hygiene (89 failing), QSPI_IO2's vias, the critical layer changes without a GND partner, SPI1_MISO's four vias, and check_r12 K-region 30 / K-reference 1 / K-plane 2 made fatal (`R12_ROUTE_HYGIENE=strict`) (stageC.md §4.7, §5) | C |
+| O-R12-14 | Board: placement done (stage B, 46 × 100 mm); routing pass 2 frozen (D-R12-77A: `r12_routes.tsv`, board `e2b005b5…`, DRC 0 / unconnected 0 / parity 0, route_check r12 0 failing with 2 allowlisted, check_r12 copper 0 in every tier, `R12_ROUTE_HYGIENE=strict` the default); stage D (post, legends, fab, IPC-2152 sizing) is next (stageC.md §5) | D |
 | O-R12-15 | R12 axis maps derived (D-R12-54: U4 roll = −gyro_Y, thrust −a_Y; U6 channel 1 axial, +a forward): 1 g / rotation bench sign check | bench / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
@@ -876,7 +931,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-21 | FXLS90322 dual-channel datasheet (FXLS9xxxx Rev 7) not read: confirm pin-out, axis frame, medium-g range codes; LSM6DSVE datasheet not found at ST (D-R12-50, -51) | records / bench |
 | O-R12-22 | U6 VCC ≥ 3.135 V at the part: 3V3 regulator window 3.240 V low (105 mV margin); check the copper drop on R12 copper (D-R12-51) | C / D |
 | O-R12-23 | Re-read DS12110 Rev 8 Tables 10-14 (and AN2606's H74x loader pins) for the D-R12-61A … -64A re-pins: PB10 QUADSPI_BK1_NCS, PA8 / PC9 I2C3, PE12-PE14 SPI4 and their AF numbers (read from KiCad's ST symbol only) | records / firmware |
-| O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways) or M-7's U6 body: pass 2 searches must add it (D-R12-72A used scratch masks) | C |
+| O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways), M-7's U6 body, the In2 regions K-region needs or the 0.42 mm via clearance K-reference needs: any future search must add them (pass 2, D-R12-74A, was drawn by hand; scratch masks in `r12ra/ps3/fA/seg4.py`) | C |
 
 ## 5. Files (stage A)
 

@@ -1,4 +1,11 @@
-# R12 stage C: copper (2026-11-05) — pass 1 FROZEN on the ported check_r12 rules (D-R12-72A); pass 2 (routing hygiene) open
+# R12 stage C: copper (2026-11-05) — pass 2 FROZEN (D-R12-77A): routing hygiene and signal reference clean, strict by default
+
+**Update (D-R12-73A … -77A, 2026-11-05): pass 2 frozen.** `m3_design/r12_routes.tsv` (1204 tracks, 414 vias) builds board
+`e2b005b57919a9eb6c5bb635c1d7ad4ff186fa91efc4ef8fa12f0e8cf2e017f6` twice with the same hash under the new strict default
+(`R12_ROUTE_HYGIENE=strict`, D-R12-76A; `report` gives the same board): DRC 0 / 0 unconnected / parity 0; check_r12 copper
+0 findings in every tier (K-reference, K-region, K-plane included); route_check r12 0 failing, 2 allowlisted with measured
+reasons (D-R12-75A), 13 non-critical leftovers (informational); `tools/check.sh` exit 0. §4.8 has the pass; the text
+below describes pass 1.
 
 **Update (D-R12-67A … -72A, 2026-11-05):** after `m3-assy-r12`'s ported check_r12 rules were merged, the D-R12-66A
 table failed check_r12 copper (101 findings); the copper was reworked (§4.7) and re-frozen: board `c24fcf8272de3466f357a236f6cc4b2f455686a4685495b2cdc118bfef411a53`, DRC 0 /
@@ -279,7 +286,47 @@ Result (D-R12-72A): 1389 tracks, 430 vias; board `c24fcf8272de3466f357a236f6cc4b
 K-region 30, K-reference 1 (5283 loose samples), K-plane 2; route_check r12 89 failing. The aid does not yet model
 S-8 or U6's body (O-R12-24); pass 2 must add both before any re-search.
 
+### 4.8 Pass 2: routing hygiene and the signal reference (D-R12-73A … -77A)
+
+Drawn by hand in scratch `r12ra/ps3` (edit files applied with `edit.py`; every step judged by KiCad DRC, check_r12 copper
+and route_check r12 through `ev2.sh`; region passes run in parallel on disjoint nets and spliced). No aid search was
+frozen, so O-R12-24's S-8 / U6 masks were not needed (the aid still lacks them, and the K-region / K-reference models).
+
+| Step | route_check r12 failing | K-region / K-reference loose / K-plane |
+|---|---|---|
+| D-R12-72A table | 89 | 30 / 5283 / 2 |
+| local joins, J3, BAT_IN, HSE, PYRO1_OUT bump, J121 keep-outs (D-R12-73A) | 66 | 30 / 4553 / 2 |
+| SPI1 / I2C1 / IMU_CS / VCAP2 / SD / AUX / SWDIO clean-up, BAT_FAULT_N In2, ARM1_SENSE, CC1 east | 22 | 27 / ~1900 / 1 |
+| GPS / RADIO UARTs off In2 (four-lane B.Cu bus), QSPI_NCS on F | 16 | 21 / ~1900 / 1 |
+| QSPI fan, QSPI_IO2 2 vias, SWCLK out of the fan (checkpoint `65d10fe`) | 6 | 14 / 1110 / 1 |
+| CAM_MCU_TX / _RX F across islands, B over plain 3V3; PORT_4V8 B feed; R11.2's 3V3 via | 3 | 0 / 340 / 0 |
+| fan-out clearances >= 0.42 mm, SPI1_MISO all F to U1, allowlist (D-R12-75A) | 0 (2 allowlisted) | 0 / 0 / 0 |
+
+Rules learnt (for the aid, O-R12-24): a critical B.Cu run must sit over one In2 rail with no In2 signal or island border
+within 0.15 mm of its edges (lone foreign via holes are exempt, merged holes are not); the In1 / In2 antipad round a
+foreign via is ~0.36 mm (hole 0.15 + 0.2), so a critical 0.1 mm track centre needs >= 0.42 mm from foreign via centres —
+inside the ball field that means lanes whose neighbouring interstitial sites are empty, and no ring-2 tip via between two
+ring-1 stubs; a 3V3 landing must not sit in a pocket closed by In2 signal runs and the 3V3A feed.
+
+GND vias removed: (16.8, 51.9) (22.2, 49.4) (23, 53.2) (24.8, 47.5) (25.2, 64.4) (26.2, 50.8) (26.2, 56.4) (26.4, 61.9)
+(26.4, 76.7) (26.5, 80.6) (26.6, 80) (26.8, 58.4) (27.2, 54.8) (27.3, 76.7) (27.7, 50) (30.9, 27.1) (30.9, 59.1)
+(31.1, 55.5) (31.1, 67.9); added: (20.95, 49.4) (23.6, 45.6) (23.9, 39.3) (24.6, 54.8) (25.4, 58) (25.4, 64.4) (26.1, 44.9)
+(26.2, 54.8) (26.9, 80.6) (27.6, 50) (27.9, 57.15) (28.1, 75.4) (28.1, 76.2) (28.4, 62) (29.4, 54.5) (30.65, 27.4)
+(30.7, 55) (31.35, 58.4) (31.6, 67.9) (32.8, 64.15). 3V3 vias removed: (18.1, 30.6) (24.6, 54) (25.1, 70.8) (30.2, 42.9)
+(30.9, 65.9); added: (16.3, 31) (25.4, 70.8) (28.7, 43.45) (31.6, 66) (U1.F7 now shares F6's 3V3 via (23.8, 54.0), as E5 / E6
+share their GND via; U2.2's and C29's decoupling vias moved with short F.Cu stubs). Every critical layer change keeps a
+GND via within 1.5 mm (route_check critical_via_no_gnd 0).
+
+Non-critical leftovers (route_check, informational on the R10-like profiles, audit 2 item 7): tiny_jog SERVO1_MCU
+(22.95, 48.2), SERVO3_MCU (18.3, 55.6); extra_vias BAT_FAULT_N (14.4, 62.57), BUZZ_DRV (8.6, 77.93), CAM_5V_SENSE
+(28.58, 21.6), I2C1_SCL (32.37, 33.2), IMU_INT1 (24.2, 52), SERVO1_MCU (27.05, 11.35), SERVO2_MCU (28.95, 11.35),
+SERVO3_MCU (28.95, 9.05), SERVO4_MCU (27.05, 9.05), VLOGIC_SENSE (27.4, 28.02); detour LED_RED (30.07, 73.6) (round the
+GPS / RADIO bus: NRST's F.Cu run blocks a shorter crossing).
+
 ## 5. What stage C still needs
+
+0. **Stage C is done (D-R12-77A).** Next is stage D (r12_post, legends, fab package, IPC-2152 sizing of the power
+   copper, hot-plug / EN / hold-up re-runs on R12 copper, O-R12-08 / -22). Items below are history.
 
 0. **Pass 2 (next, after D-R12-72A):** add S-8 and U6's body to the aid (O-R12-24); clear route_check r12 (89 failing on
    `c24fcf8272de3466f357a236f6cc4b2f455686a4685495b2cdc118bfef411a53`); cut SPI1_MISO (four vias) and QSPI_IO2 (eight) back (QSPI_IO2 can take C3's freed B lane); bring
