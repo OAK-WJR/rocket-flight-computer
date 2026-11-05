@@ -32,11 +32,14 @@ KIID_SEED = 12212
 MM = pcbnew.FromMM
 # S-8 (R10 check_r10, R11 D-R11-23 lineage; check_r12 S-8): every plated barrel of a pyro / arming net, and the inner
 # ring it keeps, stays >= 1 mm from foreign In1 / In2 copper; GND is foreign only round the GND-hazard nets (D-R19-01).
-# D-R12-67A: J121's two barrels keep tracks, vias and fills out on both inner layers (PYRO1_OUT is a GND-hazard net, so
-# In1 too). Radius from the barrel centre: the 1.9 mm inner ring's 0.95 + 1.0 + 0.05 mm fill tolerance, over
-# cos(pi / 16) for the 16-gon's flats.
-S8_KEEPOUT = (('J121', '2', ('In1', 'In2')), ('J121', '1', ('In1', 'In2')))
-S8_R = 2.05
+# D-R12-67A: J121's two barrels keep tracks, vias and fills out of the inner layers; radius from the barrel centre to
+# the 16-gon's vertices (its flats are cos(pi / 16) = 0.981 of it). D-R12-73A: J121.1 (PYRO1_OUT, a GND-hazard net)
+# keeps no inner ring (the R10 land's remove_unused_layers, D-R20-05), so S-8 is measured from its 1.30 mm barrel wall:
+# vertices at 1.72 mm (flats 1.687, 1.037 beyond the wall: S-8's 1.0 mm holds) and no further than check_r10's own
+# barrel void (wall + 1.071 = 1.721 mm), so PYRO1_OUT's tracks leaving the pad keep their In1 reference (K-reference);
+# it opens In1 and In2. J121.2 (PYRO1_IGN) keeps its 1.9 mm inner ring: 0.95 + 1.0 + 0.05 mm fill tolerance to the
+# flats, on In2 only (GND is not foreign to PYRO1_IGN under S-8: a short to GND only loads the bus through R134).
+S8_KEEPOUT = (('J121', '2', ('In2',), 2.05), ('J121', '1', ('In1', 'In2'), 1.72))
 # D-R12-67A: every via of an S-8 barrel net opens the inner fills round it (fills only: its own tracks may pass, and
 # check_r12 S-8 holds foreign tracks and vias off): In2 always, In1 as well for the GND-hazard nets. Radius: the
 # 0.225 mm via ring + 1.0 + 0.05 mm, over cos(pi / 16). The nets are check_r10.BARREL_NETS / BARREL_GND_HAZARD.
@@ -157,10 +160,10 @@ def build(board_path, routes):
         zone(board, net, layer, pts, f'{net}_{layer}', 0.25, 0.2, prio)
     zone(board, 'GND', 'B', rect, 'GND_pour_B', 0.5, 0.2)
     fps = {f.GetReference(): f for f in board.GetFootprints()}
-    for ref, num, layers in S8_KEEPOUT:
+    for ref, num, layers, radius in S8_KEEPOUT:
         p = next(p for p in fps[ref].Pads() if p.GetNumber() == num)
         c = p.GetPosition()
-        keepout(board, f'S8_{ref}_{num}', layers, pcbnew.ToMM(c.x), pcbnew.ToMM(c.y), S8_R)
+        keepout(board, f'S8_{ref}_{num}', layers, pcbnew.ToMM(c.x), pcbnew.ToMM(c.y), radius)
     voids = sorted((net, x, y) for net, x, y in vias if net in BARREL_NETS)
     for net, x, y in voids:
         keepout(board, f'S8_via_{net}_{x:g}_{y:g}', ('In1', 'In2') if net in BARREL_GND_HAZARD else ('In2',), x, y,
