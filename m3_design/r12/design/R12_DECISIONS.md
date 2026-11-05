@@ -622,6 +622,17 @@ east of x 44 in the drafts) and a via 0.6 mm inside the island at (44.8, 89.0). 
 pads are still searched and reach it. KiCad DRC on the attempt-A draft with it: no violation, PORT_4V8 joined. B.Cu
 under it is GND pour on a board whose In1 is a solid GND plane (the cut is 0.5 mm wide along the edge).
 
+**D-R12-60A Stage C pass 1 (connect first, hygiene later; owner, 2026-11-04): stalled at 6 unconnected.** From the o9
+draft (D-R12-58A), each leftover was re-routed alone after ripping one or two of the routed nets its path against the
+fixed copper crosses, those nets re-routed after it, every variant judged by KiCad DRC (8 in parallel, best kept; via
+budget 6, partner block off, hygiene not judged). SD_MISO joined (BOOT0 re-routed round it); the best draft has 6 DRC
+unconnected, no DRC violation (scratch `r12ra/BEST6.tsv`). Left: CAM_MCU_TX, HG_CS, QSPI_IO2, QSPI_NCS, SERVO2_MCU,
+VBUS_SENSE. Every further single or pair swap leaves 6 or more, and each of the six alone stops at the search's expansion
+limit even with a 12x heuristic weight and In2 at F / B cost: their U1 stub tips sit in the A-row bundle (12 F.Cu tips
+and 7 B.Cu lane ends within x 19.4-25.8) and the east column, where every corridor out is taken. Finishing them needs a
+change of the fan-out itself (stub / lane assignment at the A row and column 10, or a DS12110-checked pin swap to a ball
+facing its pads), not more re-routing. No table is frozen.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.

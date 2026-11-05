@@ -229,6 +229,8 @@ Findings for the next pass:
 
 ## 5. What stage C still needs
 
+0. **Pass 1 (D-R12-60A):** blocker swaps reach 6 unconnected (CAM_MCU_TX, HG_CS, QSPI_IO2, QSPI_NCS, SERVO2_MCU,
+   VBUS_SENSE); the U1 A-row / column-10 fan-out must change to finish.
 0. **Attempt A (D-R12-58A):** the hand finish was not reached; the leftovers above, then the hygiene clean (about 90
    findings on the best draft), the freeze and the build checks remain.
 0. **Status of the items below (D-R12-46 … -48):** item 1 was dropped (the band is the U1-north fan-out corridor);
