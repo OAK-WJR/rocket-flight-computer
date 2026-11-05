@@ -1,28 +1,43 @@
 #!/usr/bin/env python3
-"""R12 native-CAD contract skeleton (M3-ASSY-R12, r12_plan.md section 4): the rules the low-cost, one-sided, four-layer
-board must meet, keyed by net, reference and pad number. Stage A wrote it before any R12 board exists; the R10 / R11
-safety rules (check_r10 S-1 ... S-9 and the K-rules) are ported in stages B-D and are listed as PENDING until then, so
-the 'full' stage cannot pass on an R12 board before they are.
+"""R12 native-CAD contract: R10/R11 safety rules on the one-sided, four-layer R12 board.
 
-usage: <KiCad python3> -I tools/check_r12.py [board.kicad_pcb] [--report out.json] [--fit FIT.json]
-       [--stage placement|copper|full] [--only L-1,F-1]
-exit 0 = every selected rule holds
+usage: <KiCad python3> -I -B tools/check_r12.py [board.kicad_pcb] [--report out.json] [--fit FIT.json]
+       [--stage placement|copper|full] [--only S-1,M-3] [--bom BOM.csv] [--cpl CPL.csv]
+exit 0 = every selected rule holds; no pending ports remain.
 
-Rules:
-  L-1  four copper layers (D-R12-03), 1.6 mm board
-  M-1  outline one rectangle from (0, 0), 46 mm wide, at most R12_MAX_LENGTH (100 mm, the JLC 4-layer price step,
-       cost_study.md section 2.1)
-  F-1  one assembled side (D-R12-01): no footprint flipped; no SMD pad on a B.* layer; the JLC Economic PCBA tier
-  N-1  the board's parts equal the R12 schematic (m3_design/r12/schematic.net.xml): references, footprints, LCSC /
-       Manufacturer / Manufacturer Part; title-block revision M3-ASSY-R12
-  V-1  every via a 0.3 mm drill / >= 0.45 mm through via (D-R12-03: no small-hole surcharge, no blind or micro via)
-  V-2  no via in or touching a soldered SMD pad (no VIPPO on R12: U401 and its GAP-3 vias are deleted, D-R12-07)
-  K-rules  m3.kicad_dru is r12_sch.dru()'s text; the project floors are r12_sch.R12_FLOOR
-  M-5  fit_check --profile r12 clean and bound to this board (when --fit is given)
-  PENDING (stage B-D ports, each fails 'full' until implemented): S-1 ... S-9, W-1, W-2, LC-1, M-3, M-6, M-7, M-8,
-       K-legends, K-copper, K-inner, K-reference, K-region, K-plane, K-fill
+L-1 / M-1: four layers, 1.6 mm, rectangular 46 x <= 100 mm outline (D-R12-03 / -24).
+F-1 / M-6: every part on F; bottom assembly is prohibited (D-R12-01).
+N-1: native parts and identities match the R12 schematic; revision M3-ASSY-R12.
+V-1 / V-2: through vias 0.3 / >= 0.45 mm; no via in a soldered pad (D-R12-03 / -07).
+S-1 / S-2: RAW_ACT behind Q120/Q121 only; no unnamed armed-side parts or copper bypass.
+S-3: every pyro/load-switch gate defined off; local gate-source bias joined on the FET's layer.
+S-4: fitted population, schematic flags, MPN values and optional BOM/CPL identities; J1 excluded,
+     C84/LS120 owner-fitted; J121 assembled (D-R12-04..19 / -29 / -30).
+S-5: protected J400 contacts, 470k resistors, D402 clamp and no switch bypass.
+S-6 / S-7: external ports separated from safety copper; servo signals and GND only, sixth pin NC.
+S-8: barrel wall AND retained inner ring >= 1 mm from foreign In1/In2 copper, including In2 signals;
+     GND counts on ACT_GATE, ACT_DRV and PYRO1_OUT (D-R12-34, inherited R10 hazard policy).
+S-9: actual fire-path copper >= 0.5 mm; battery feed >= 1 mm; no inherited narrow-track exceptions.
+W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
+LC-1: local clearance >= 0.10 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
+M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
+M-7: recorded top IMU pose; no via/fill under sensor bodies, no IMU interior track (D-R12-25).
+M-8: courtyard short-edge clearance >= 2.5 mm except exact R12 recorded edge queries.
+K-legends: R10's identity, mask, designator and Fab checks with R12 revision and connector pin words;
+           no R11 optional-legend exemptions (D-R12-29..31).
+K-copper: via/pad, overlap joints, thermals, paste and pour debris; no VIPPO exemption (D-R12-07).
+K-inner: In1 GND only; In2 mixed rail/signal copper, fast interfaces excluded (D-R12-34).
+K-reference / K-region: F over In1 GND; In2 over In1 and B GND; B over In2 rail fill, each B chain over one rail.
+K-plane: In2 power fills one piece or two >= 0.5 mm outer links; neck checks retained.
+K-fill: saved fill geometry agrees with native refill of a copy.
+K-rules: DRU text and project floors agree with the R12 generator.
+
+Placement remains the stage-B gate. Copper checks safety/routing; full also checks the final legends (stage D).
+R12 pin lookup uses its pin table and net names; no U4/U5 pad numbers or R10 layout coordinates are inherited.
 """
 import argparse
+import csv
+import re
 import hashlib
 import json
 import sys
@@ -30,16 +45,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'm3_design'))
+sys.path.insert(0, str(ROOT / 'tools'))
+import check_r10 as r10
+import check_r11 as r11
 REVISION = 'M3-ASSY-R12'
 R12_DIR = ROOT / 'm3_design/r12'
 R12_MAX_LENGTH = 100.0
 WIDTH = 46.0
 VIA_DRILL, VIA_DIAMETER = 0.3, 0.45
-PENDING = ('S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'S-8', 'S-9', 'W-1', 'W-2', 'LC-1', 'M-3', 'M-6', 'M-7',
-           'M-8', 'K-legends', 'K-copper', 'K-inner', 'K-reference', 'K-region', 'K-plane', 'K-fill')
+PENDING = ()
+IMPLEMENTED = ('S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'S-8', 'S-9', 'W-1', 'W-2', 'LC-1',
+               'M-3', 'M-6', 'M-7', 'M-8', 'K-legends', 'K-copper', 'K-inner', 'K-reference', 'K-region', 'K-plane', 'K-fill')
 STAGES = {'placement': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5'),
-          'copper': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5', 'V-1', 'V-2')}
-STAGES['full'] = STAGES['copper'] + PENDING
+          'copper': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5', 'V-1', 'V-2')
+                    + tuple(r for r in IMPLEMENTED if r != 'K-legends')}
+STAGES['full'] = STAGES['copper'] + ('K-legends',) + PENDING
 TITLES = {'L-1': 'four copper layers, 1.6 mm', 'M-1': f'outline 46 x <= {R12_MAX_LENGTH:g} mm from (0, 0)',
           'F-1': 'one assembled side (no flipped footprint, no bottom SMD pad)', 'N-1': 'parts equal the R12 schematic',
           'V-1': 'through vias 0.3 / >= 0.45 mm only', 'V-2': 'no via in a soldered SMD pad',
@@ -197,7 +217,399 @@ def m5(ctx):
     return out
 
 
+# R10/R11 checks retain their algorithms; only R12 contracts and geometry change.
+def native(ctx):
+    """Lazily share the proven checker's geometry/context without importing another revision's gate data."""
+    if '_native' not in ctx:
+        import check_r9 as r9
+        import fit_check as fc
+        class Context(r9.Ctx):
+            def fit(self):
+                if self.fit_report is None:
+                    self.fit_report = fc.check_board(self.board, self.folder, profile='r12')
+                return self.fit_report
+        p = ctx['path']
+        dru = p.with_suffix('.kicad_dru')
+        c = Context(ctx['board'], p.parent, p, ctx.get('fit'),
+                    dru=dru.read_text() if dru.is_file() else None)
+        c.bom, c.cpl, c._reach = ctx.get('bom'), ctx.get('cpl'), None
+        c.text = p.read_text() if p.is_file() else None
+        c.data = ctx.get('data')
+        if c.data is None:
+            c.data = json.loads((R12_DIR / 'design/r12_gate_data.json').read_text())
+        import r12_sch
+        c.port_pin = {r['port']: r['r11_ball'] for r in r12_sch.read_pin_table()}
+        c._balls = None
+        ctx['_native'] = c
+    return ctx['_native']
+
+
+def ported(fn):
+    def run(ctx):
+        issues, evidence = fn(native(ctx))
+        ctx.setdefault('evidence', {})[fn.__name__] = evidence
+        return issues
+    return run
+
+
+# D-R12-10: AO3401A / AO3400A SOT-23, G=1 S=2 D=3. These are expected roles,
+# never inferred from the board being checked (a swapped gate must fail).
+FET_ROLES = {'G': ('1',), 'S': ('2',), 'D': ('3',)}
+INNER = ('In1.Cu', 'In2.Cu')
+REF_PLANES = ('GND', '3V3', '3V3A', 'PORT_4V8', 'RAW_PROTECTED')  # PORT_5V3 deleted, D-R12-07
+FAST = re.compile(r'^(HSE_|USB_D[PM]$|QSPI_|SPI\d+_|SD_)|_CS$')  # D-R12-34, including new sensor chip selects
+SH_PORTS = {
+    'J410': dict(zip(map(str, range(1, 7)), ('GND', 'PORT_4V8', 'GPS_TX_WIRE', 'GPS_RX_WIRE', None, None))),
+    'J420': dict(zip(map(str, range(1, 5)), ('GND', 'PORT_4V8', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE'))),
+    'J440': dict(zip(map(str, range(1, 5)), ('GND', 'PORT_4V8', 'AUX_TX_WIRE', 'AUX_RX_WIRE'))),
+    'J9': dict(zip(map(str, range(1, 7)), ('CAM_5V', 'CAM_5V', 'GND', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE'))),
+    'J122': dict(zip(map(str, range(1, 7)), (*r10.SERVO_TERMINAL, None))),
+    'J400': {'1': 'BAT_SW_SOURCE', '2': 'BAT_SW_RETURN', '3': None, '4': None},
+}
+WIRE_PADS = {'J1': {'1': 'BAT_IN', '2': 'GND'}}  # D-R12-30; J121 is fitted DB125 (D-R12-29).
+
+
+def s1(c):
+    return r11.s1(c)
+
+
+def s2(c):
+    with r10.patched(r10, PFET_ROLES=FET_ROLES):
+        return r11.s2(c)
+
+
+def s3(c):
+    with r10.patched(r10, PFET_ROLES=FET_ROLES, NFET_ROLES=FET_ROLES):
+        # Keep the same-layer gate-bias check: it must fail on unrouted copper.
+        return r11.s3(c, copper=True)
+
+
+def s4(c):
+    """Required population from the R12 source contract; owner-fit parts and J1 stay off JLC uploads.
+
+    D-R12-04..19 delete/re-source parts; D-R12-16 makes LS120 owner-fitted, D-R12-29 restores J121 to PCBA.
+    R10's flag, schematic hierarchy, MPN value and assembly identity checks remain intact.
+    """
+    import r12_sch
+    import export_fab
+    parts, _ = r12_sch.model(r12_sch.circuit())
+    required = frozenset(ref for ref, part in parts.items() if 'exclude_from_bom' not in part['flags'])
+    manual = r12_sch.circuit()['owner_fit']
+    bp, pop = r10.board_population, r10.population
+    with r10.patched(r10, REQUIRED_FITTED=required,
+                     board_population=lambda b: bp(b, required),
+                     population=lambda text, schematic=False: pop(text, required, schematic)), \
+            r10.patched(export_fab, MANUAL_FIT=manual), r10.patched(r11, WIRE_PADS=WIRE_PADS):
+        issues, ev = r10.s4(c)
+        issues += r11.wire_pad_population(c)
+    # R10's owner BOM comparison omits excluded parts from its identity map. Check them explicitly here.
+    if c.bom:
+        owner = Path(c.bom).with_name(Path(c.bom).name.replace('_bom_jlc', '_bom_owner'))
+        rows = list(csv.DictReader(owner.read_text().splitlines())) if owner.is_file() else []
+        listed = {ref.strip(): row for row in rows for ref in row.get('Designator', '').split(',')}
+        for ref in manual:
+            f, row = c.fps.get(ref), listed.get(ref, {})
+            if f is not None:
+                want = {'LCSC Part #': f.GetFieldText('LCSC'),
+                        'Manufacturer Part': f.GetFieldText('Manufacturer Part'),
+                        'Footprint': str(f.GetFPID().GetLibItemName())}
+                if any(row.get(k) != v for k, v in want.items()):
+                    issues.append(f'S-4: owner BOM {ref} differs from its native identity')
+    return issues, ev
+
+
+def connector(c, ref, want, rid, tabs=True):
+    """NC contacts may carry KiCad's unconnected names, but never a real net (D-R12-31)."""
+    f = c.fps.get(ref)
+    expected = dict(want)
+    if f:
+        for p in f.Pads():
+            if p.GetNumber() in want and want[p.GetNumber()] is None:
+                expected[p.GetNumber()] = p.GetNetname() if not r10.real_net(p.GetNetname()) else ''
+    return r11.connector_pads(c, ref, expected, rid, tabs=tabs)
+
+
+def s5(c):
+    # D-R12-31: four-contact body, only 1/2 wired. Preserve S-5's entire resistor/clamp/bypass test.
+    issues, ev = r10.s5(c)
+    issues = [i for i in issues if i != 'S-5: J400 must have exactly two switch contacts']
+    found, ev['contacts'] = connector(c, 'J400', SH_PORTS['J400'], 'S-5')
+    return issues + found, ev
+
+
+def s7(c):
+    return connector(c, 'J122', SH_PORTS['J122'], 'S-7')
+
+
+def s8(c):
+    # D-R12-34: In2 is signal-carrying copper, not exempt. Include rings, tracks, pads, fills and drawings.
+    return r11.s8(c, layers=INNER)
+
+
+def fire_terminals(c):
+    # D-R12-10: resolve each current-path terminal by its intended net on its reference, not old package pads.
+    refs = {'PYRO1_IGN': ('R134', 'J121'), 'PYRO1_OUT': ('J121', 'Q124'),
+            'RAW_ACT': ('Q121', 'R134'), 'ACT_FET_S': ('Q120', 'Q121'), 'BAT_IN': ('J1', 'Q120')}
+    return {net: tuple({ref: tuple(p.GetNumber() for p in c.fps[ref].Pads() if p.GetNetname() == net)
+                               if ref in c.fps else ()} for ref in ends) for net, ends in refs.items()}
+
+
+def s9(c):
+    with r10.patched(r10, FIRE_TERMINALS=fire_terminals(c)):
+        return r10.s9(c, narrow=[])  # No R10 coordinate exceptions apply to the new SOT-23 paths.
+
+
+def w1(c):
+    import pcbnew
+    issues, ev = [], {}
+    for ref, want in {**WIRE_PADS, 'J121': {'1': 'PYRO1_OUT', '2': 'PYRO1_IGN'}}.items():
+        found, ev[ref] = connector(c, ref, want, 'W-1', tabs=False)
+        issues += found
+        f = c.fps.get(ref)
+        if f:
+            for p in f.Pads():
+                if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
+                    issues.append(f'W-1: {ref}.{p.GetNumber()} must be plated through-hole')
+            if ref == 'J121' and f.GetFieldText('Manufacturer Part') != 'DB125-3.5-2P-BK-S':
+                issues.append('W-1: J121 must be the DB125-3.5-2P-BK-S (D-R12-29)')
+    return issues, ev
+
+
+def w2(c):
+    issues, ev = [], {}
+    for ref, want in SH_PORTS.items():
+        found, ev[ref] = connector(c, ref, want, 'W-2')
+        issues += found
+        f = c.fps.get(ref)
+        if f and f.GetFieldText('Manufacturer Part') != f'ZX-SH1.0-{len(want)}PWT':
+            issues.append(f'W-2: {ref} must be ZX-SH1.0-{len(want)}PWT (D-R12-31)')
+    return issues, ev
+
+
+def lc1(c):
+    # D-R12-03: 0.10 mm floor; the SWD and probe-specific floors from R10 remain stricter.
+    issues, ev = [], []
+    for f in c.board.GetFootprints():
+        ref = f.GetReference()
+        floor = .508 if ref == 'J2' else 1.0 if ref.startswith('TP') else .10
+        for label, item in [(ref, f)] + [(f'{ref}.{p.GetNumber()}', p) for p in f.Pads()]:
+            value = item.GetLocalClearance()
+            if value is not None:
+                ev.append((label, mm(value), floor))
+                if mm(value) < floor - 1e-9:
+                    issues.append(f'LC-1: {label} local clearance {mm(value):g} below {floor:g} mm')
+    return issues, dict(overrides=ev)
+
+
+def m3(c):
+    # D-R12-24 pins R12's supports in its own gate data; corner support and centre tolerances unchanged.
+    issues, ev = r11.m3(c)
+    import pcbnew
+    for d in c.board.GetDrawings():
+        if d.GetLayer() == pcbnew.Edge_Cuts and d.GetShape() == pcbnew.SHAPE_T_CIRCLE:
+            if abs(mm(d.GetRadius()) - 1.6) > .01:
+                issues.append('M-3: support diameter must be 3.2 mm')
+    return [i.replace('R11_DATA', 'R12 gate data').replace('D-R11-10', 'D-R12-24') for i in issues], ev
+
+
+def m6(c):
+    # D-R12-01: one assembled face is stricter than R10's bottom-side spacing allowances.
+    return f1({'board': c.board}), {}
+
+
+def m7(c):
+    """D-R12-25: sensors on F, geometry from their lands, never from numbered sensor pins."""
+    import pcbnew
+    import check_r9 as r9
+    issues, ev = [], {}
+    imu = c.data.get('imu', {})
+    f = c.fps.get('U4')
+    if not f or not {'rotation', 'lever_mm'} <= imu.keys():
+        issues.append('M-7: U4 or its recorded rotation / lever arm missing')
+    else:
+        if f.IsFlipped() or abs((f.GetOrientationDegrees() - imu['rotation'] + 180) % 360 - 180) > .01:
+            issues.append('M-7: U4 differs from its recorded top-side rotation (D-R12-25)')
+        if abs(mm(f.GetPosition().x) - WIDTH / 2 - imu['lever_mm']) > imu.get('tol_mm', .05):
+            issues.append('M-7: U4 differs from its recorded roll-axis lever arm')
+    # Include added accelerometers by function, independent of their reference or pin numbering.
+    sensors = {ref for ref, fp in c.fps.items() if ref.startswith('U') and ref != 'U1'
+               and any(re.match(r'^(IMU_|HIGH_?G_|ACCEL_|HG_)', p.GetNetname()) for p in fp.Pads())} | {'U4', 'U5'}
+    for ref in sorted(sensors):
+        f = c.fps.get(ref)
+        if f is None:
+            issues.append(f'M-7: {ref} missing')
+            continue
+        body, inner = r9.mems_regions(f)
+        bp, ip = r9.rect_poly(*body), r9.rect_poly(*inner)
+        ev[ref] = dict(body=body, interior=inner)
+        if f.IsFlipped():
+            issues.append(f'M-7: {ref} must be on F (D-R12-25)')
+        for t in c.board.GetTracks():
+            if not t.IsOnLayer(pcbnew.F_Cu):
+                continue
+            if t.GetClass() == 'PCB_VIA':
+                if pcbnew.SHAPE.Collide(bp, t.GetEffectiveShape(pcbnew.F_Cu), 0):
+                    issues.append(f'M-7: via under {ref}')
+            # D-R12-25 removes only U5's pad-interior track ban (its centre GND land needs a link).
+            elif ref != 'U5' and pcbnew.SHAPE.Collide(ip, t.GetEffectiveShape(pcbnew.F_Cu), 0):
+                issues.append(f'M-7: track inside {ref} pad-ring interior')
+        for z in c.board.Zones():
+            if z.GetIsRuleArea() or not z.IsOnLayer(pcbnew.F_Cu) or not z.HasFilledPolysForLayer(pcbnew.F_Cu):
+                continue
+            poly = pcbnew.SHAPE_POLY_SET(z.GetFilledPolysList(pcbnew.F_Cu))
+            poly.BooleanIntersection(bp)
+            if poly.Area() / 1e12 > r10.EPS:
+                issues.append(f'M-7: fill under {ref}')
+    return issues, ev
+
+
+def m8(c):
+    # R12's recorded connector edge queries only, never R10's coordinate exemptions (D-R12-24 / -31).
+    return r10.m8(c, queries=c.data.get('short_edge_queries', {}))
+
+
+TERMINAL_PINS = tuple((ref, tuple((pin, word) for pin, word in zip(want, words))) for ref, want, words in (
+    ('J1', WIRE_PADS['J1'], ('BAT+', 'GND')),
+    ('J121', {'1': '', '2': ''}, ('E1-', 'E1+')),
+    ('J400', SH_PORTS['J400'], ('SW', 'SW', 'NC', 'NC')),
+    ('J122', SH_PORTS['J122'], ('S1', 'S2', 'S3', 'S4', 'GND', 'NC')),
+    ('J410', SH_PORTS['J410'], ('GND', '4V8', 'TXO', 'RXI', 'NC', 'NC')),
+    ('J420', SH_PORTS['J420'], ('GND', '4V8', 'TXO', 'RXI')),
+    ('J440', SH_PORTS['J440'], ('GND', '4V8', 'TXO', 'RXI')),
+    ('J9', SH_PORTS['J9'], ('5V4', '5V4', 'GND', 'GND', 'RXI', 'TXO'))))
+
+
+def k_legends(c):
+    # D-R12-29..31: DB125 / SH contact words. No R11 optional-legend exemptions on R12.
+    pinned = (('B.Silkscreen', REVISION),)
+    words, base = r10.word_legends, r10.pinned_texts
+    def revision(board):
+        out = [i for i in base(board, pinned=pinned) if not i.startswith('revision legends ')]
+        names = {t.GetText() for t in r10.legend_items(board) if hasattr(t, 'GetText')
+                 and re.fullmatch(r'M3-ASSY-R\d+', t.GetText())}
+        return out + ([f'revision legends {sorted(names)}: only {REVISION} allowed'] if names != {REVISION} else [])
+    with r10.patched(r10, TERMINAL_PINS_R10=TERMINAL_PINS, PINNED_TEXTS=pinned, pinned_texts=revision,
+                     word_legends=lambda b, **kw: words(b, spans={}, **kw)):
+        issues, ev = r10.k_legends(c)
+        found, ev['word_spans'] = r11.word_spans_r11(c.board)
+    return issues + found, ev
+
+
+def k_copper(c):
+    import check_r9 as r9
+    # D-R12-03 / -07: no VIPPO exception; U401 is deleted.
+    issues, ev = r9.k_copper(c)
+    found, ev['pour_pieces'] = r10.pour_debris(c.board)
+    return issues + found, ev
+
+
+def k_inner(c):
+    import pcbnew
+    issues = []
+    routed = {t.m_Uuid.AsString() for t in c.board.GetTracks()}
+    def bad(layer, net):
+        return (layer == pcbnew.In1_Cu and net != 'GND') or (layer == pcbnew.In2_Cu
+                and (bool(FAST.search(net)) or net in r10.FIRE_ONLY or not r10.real_net(net)))
+    for t in c.board.GetTracks():
+        if t.GetClass() != 'PCB_VIA' and bad(t.GetLayer(), t.GetNetname()):
+            issues.append(f'K-inner: {t.GetNetname()} track on {c.board.GetLayerName(t.GetLayer())}')
+    for key, layer, shape, box, pad, net, label in r10.copper_nodes(c.board):
+        if pad is None and key not in routed and bad(layer, net):
+            issues.append(f'K-inner: {label} on {c.board.GetLayerName(layer)}')
+    return issues, {}  # D-R12-34 permits slower signals on In2; In1 is GND only.
+
+
+def reference_names():
+    """R10's named interfaces minus nets deliberately deleted in R12 (D-R12-04 / -08 / -12).
+
+    Resolve the expected names from the source contract, not the board under test. This retains the stale-name
+    check while accommodating sensor changes and their new SPI chip selects without numbered sensor pins.
+    """
+    import critical_reference as cr
+    import r12_sch
+    _, pins = r12_sch.model(r12_sch.circuit())
+    names = set(filter(None, pins.values()))
+    listed = set().union(*map(set, cr.r10_names().values()))
+    return (listed & names) | {n for n in names if FAST.search(n)}
+
+
+def reference_nets(board):
+    import critical_reference as cr
+    named = reference_names() | r10.signal_critical_nets(board)
+    return {n for n in named if not cr.r10_slow_return_net(n)}
+
+
+def k_reference(c):
+    import pcbnew
+    import critical_reference as cr
+    # D-R12-34: In2 sees both In1 GND and the nearer B GND pour (0.2104 mm versus the 1.065 mm core).
+    # B signals reference only In2 rail pours, never its signal copper.
+
+    refs = {pcbnew.F_Cu: (pcbnew.In1_Cu, ('GND',)), pcbnew.In2_Cu: (pcbnew.In1_Cu, ('GND',)),
+            pcbnew.B_Cu: (pcbnew.In2_Cu, REF_PLANES)}
+    nets = reference_nets(c.board)
+    samples, fill = cr.samples(c.board, nets, refs), cr.fills(c.board, refs)
+    own, voids = r10.own_antipads(c.board), r10.own_barrel_voids(c.board)
+    empty = pcbnew.SHAPE_POLY_SET()
+    loose = [s for s in samples if not cr.inside(fill.get(s[1], empty), s[2], s[3])
+             and not r10.in_own_antipad(own, s[0], s[2], s[3])
+             and not r10.in_own_antipad(voids, s[0], s[2], s[3])]
+    lower_refs = {pcbnew.In2_Cu: (pcbnew.B_Cu, ('GND',))}
+    lower_samples = cr.samples(c.board, nets, lower_refs)
+    lower_fill = cr.fills(c.board, lower_refs)
+    loose += [s for s in lower_samples if not cr.inside(lower_fill.get(s[1], empty), s[2], s[3])
+              and not r10.in_own_antipad(own, s[0], s[2], s[3])
+              and not r10.in_own_antipad(voids, s[0], s[2], s[3])]
+    samples += lower_samples
+    issues = ['K-reference: no critical routed-reference samples (unrouted board)'] if not samples else []
+    missing = reference_names() - {str(n) for n in c.board.GetNetsByName().keys()}
+    issues += [f'K-reference: named interface net {n} absent from the board' for n in sorted(missing)]
+    if loose:
+        issues.append(f'K-reference: {len(loose)} critical samples lack reference copper, e.g. {loose[:3]}')
+    return issues, dict(samples=len(samples), loose=len(loose))
+
+
+def k_region(c):
+    # D-R12-34 does not waive B.Cu's single reference region. Signal fills cannot masquerade as planes.
+    with r10.patched(r10, return_path_nets=reference_nets):
+        issues, ev = r10.k_region(c)
+    import pcbnew
+    for z in c.board.Zones():
+        if not z.GetIsRuleArea() and z.IsOnLayer(pcbnew.In2_Cu) and z.GetNetname() not in REF_PLANES:
+            issues.append(f'K-region: non-plane In2 fill {z.GetNetname()} is not a reference region')
+    return issues, ev
+
+
+def k_plane(c):
+    # R10's links / neck checks, without R10's panel tab coordinates, on R12's sole mixed power layer.
+    with r10.patched(r11, PLANE_LAYERS_R11=('In2.Cu',)):
+        return r11.k_plane(c)
+
+
+PORTED = {
+    'S-1': s1, 'S-2': s2, 'S-3': s3, 'S-4': s4, 'S-5': s5, 'S-6': r10.s6, 'S-7': s7, 'S-8': s8, 'S-9': s9,
+    'W-1': w1, 'W-2': w2, 'LC-1': lc1, 'M-3': m3, 'M-6': m6, 'M-7': m7, 'M-8': m8,
+    'K-legends': k_legends, 'K-copper': k_copper, 'K-inner': k_inner, 'K-reference': k_reference,
+    'K-region': k_region, 'K-plane': k_plane, 'K-fill': r10.k_fill,
+}
+
+
 RULES = {'L-1': l1, 'M-1': m1, 'F-1': f1, 'N-1': n1, 'V-1': v1, 'V-2': v2, 'K-rules': k_rules, 'M-5': m5}
+
+RULES.update({rid: ported(fn) for rid, fn in PORTED.items()})
+TITLES.update({
+    'S-1': 'RAW_ACT armed-side parts and no bypass', 'S-2': 'pyro feed through Q120/Q121 only',
+    'S-3': 'gates defined off, local bias on the FET layer', 'S-4': 'fitted population and assembly identities',
+    'S-5': 'protected switch contacts, clamp and no bypass', 'S-6': 'ports separated from safety copper',
+    'S-7': 'servo signals, GND and NC only', 'S-8': 'foreign In1/In2 copper >= 1 mm from barrels and rings',
+    'S-9': 'fire and battery current-path widths', 'W-1': 'battery wire pads and DB125 pyro terminal',
+    'W-2': 'SH connector identities and pin maps', 'LC-1': 'local clearance floors',
+    'M-3': 'recorded M3 supports', 'M-6': 'no bottom assembly', 'M-7': 'sensor pose and copper exclusions',
+    'M-8': 'courtyard short-edge clearances', 'K-legends': 'R12 legends, designators and Fab references',
+    'K-copper': 'via/pad, joints, thermal, paste and pour hygiene', 'K-inner': 'In1 GND, In2 mixed copper',
+    'K-reference': 'critical reference coverage', 'K-region': 'one In2 rail region per B signal chain',
+    'K-plane': 'In2 fill connectivity and necks', 'K-fill': 'saved fills agree with native refill',
+})
 
 
 def selected_rules(only=None, stage='full'):
@@ -210,20 +622,25 @@ def selected_rules(only=None, stage='full'):
     return names
 
 
-def check_board(board, path, fit=None, only=None, stage='full', sha=None, netlist=None):
-    ctx = dict(board=board, path=Path(path), fit=fit, sha=sha, netlist=netlist or R12_DIR / 'schematic.net.xml')
+def check_board(board, path, fit=None, only=None, stage='full', sha=None, netlist=None, data=None, bom=None, cpl=None):
+    ctx = dict(board=board, path=Path(path), fit=fit, sha=sha, netlist=netlist or R12_DIR / 'schematic.net.xml',
+               data=data, bom=bom, cpl=cpl)
     rules, issues = {}, []
     for rid in selected_rules(only, stage):
         if rid in PENDING:
             found = [f'{rid}: not ported to R12 yet (r12_plan.md stages B-D)']
             title = 'pending port'
         else:
-            found = RULES[rid](ctx)
+            try:
+                found = RULES[rid](ctx)
+            except Exception as error:
+                found = [f'check could not run: {type(error).__name__}: {error}']
             title = TITLES[rid]
+        found = [i.removeprefix(rid + ': ') for i in found]
         rules[rid] = dict(title=title, ok=not found, issues=found)
         issues += [f'{rid}: {i}' for i in found] if rid not in PENDING else found
     return dict(rules=rules, issues=issues, failing=[r for r, v in rules.items() if not v['ok']], ok=not issues,
-                stage=stage)
+                stage=stage, evidence=ctx.get('evidence', {}))
 
 
 def file_sha(p):
@@ -236,6 +653,8 @@ def main():
     ap.add_argument('--report', type=Path)
     ap.add_argument('--fit', type=Path)
     ap.add_argument('--only')
+    ap.add_argument('--bom', type=Path)
+    ap.add_argument('--cpl', type=Path)
     ap.add_argument('--stage', choices=tuple(STAGES), default='full')
     a = ap.parse_args()
     only = {r.strip() for r in a.only.split(',')} if a.only else None
@@ -248,7 +667,7 @@ def main():
     sha = file_sha(bp)
     fit = json.loads(a.fit.read_text()) if a.fit else None
     board = pcbnew.LoadBoard(str(bp))
-    report = check_board(board, bp, fit=fit, only=only, stage=a.stage, sha=sha)
+    report = check_board(board, bp, fit=fit, only=only, stage=a.stage, sha=sha, bom=a.bom, cpl=a.cpl)
     if file_sha(bp) != sha:
         report['issues'].append('board changed during check')
         report['ok'] = False
