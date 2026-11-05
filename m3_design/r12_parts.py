@@ -157,6 +157,10 @@ def buzzer():
     name = 'M3_BUZ_TH_D9_P4'
     body = _circle((0, 0), BUZ_D / 2, 'F.Fab', .1) + _circle((0, 0), BUZ_D / 2 + .25, 'F.CrtYd', .05)
     body += _line((-2.0, -2.2), (-2.0, -1.4), 'F.SilkS', .15) + _line((-2.4, -1.8), (-1.6, -1.8), 'F.SilkS', .15)
+    # D-R12-82: the polarity on F.Fab as R10's LS120 land carries it (check_r10.FAB_TEXT_ALLOWED: '+' / '-'), so the
+    # owner's fitting drawing shows which hole takes the (+) lead (pin 1 = (+) remains an Inference, D-R12-16)
+    body += ''.join(f'\t(fp_text user "{t}" (at {g(x)} 1.6) (layer "F.Fab") (effects (font (size 0.8 0.8) '
+                    f'(thickness 0.10))))\n' for t, x in (('+', -BUZ_PITCH / 2), ('-', BUZ_PITCH / 2)))
     for num, x in (('1', -BUZ_PITCH / 2), ('2', BUZ_PITCH / 2)):
         body += (f'\t(pad "{num}" thru_hole {"rect" if num == "1" else "circle"}\n\t\t(at {g(x)} 0)\n'
                  f'\t\t(size {g(BUZ_PAD)} {g(BUZ_PAD)})\n\t\t(drill {g(BUZ_HOLE)})\n\t\t(layers "*.Cu" "*.Mask")\n'

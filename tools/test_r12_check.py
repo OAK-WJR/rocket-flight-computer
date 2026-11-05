@@ -598,10 +598,21 @@ class PortedRules(unittest.TestCase):
             for word, subject in r10.WORD_LEGENDS_R10.items():
                 if subject == ref:
                     s.text(word, x + 5 * (len(contacts) - 1) / 2, y - 3)
-        s.text(r10.SERVO_HARNESS_NOTE, 30, 150)
+        note = s.text(r10.SERVO_HARNESS_NOTE, 30, 150)
         s.text(r12.REVISION, 30, 160, pcbnew.B_SilkS)
         self.assert_rule(s, 'K-legends')
         labels[0].SetText('1:WRONG'); self.assert_rule(s, 'K-legends', False)
+        labels[0].SetText(f'{pins["J1"][0][0]}:{pins["J1"][0][1]}'); self.assert_rule(s, 'K-legends')
+        # D-R12-81: an absent harness note is waived; a conflicting or duplicated one still fails; a contact legend
+        # is never waived
+        note.SetText('SERVO FROM HARNESS'); self.assert_rule(s, 'K-legends', False)
+        s.board.Remove(note); self.assert_rule(s, 'K-legends')
+        twice = [s.text(r10.SERVO_HARNESS_NOTE, 30, 150), s.text(r10.SERVO_HARNESS_NOTE, 90, 150)]
+        self.assert_rule(s, 'K-legends', False)
+        for t in twice:
+            s.board.Remove(t)
+        self.assert_rule(s, 'K-legends')
+        s.board.Remove(labels[1]); self.assert_rule(s, 'K-legends', False)
 
     def test_every_pending_rule_is_registered(self):
         self.assertNotIn('K-legends', r12.STAGES['copper'])  # r12_build runs routing before stage-D post.

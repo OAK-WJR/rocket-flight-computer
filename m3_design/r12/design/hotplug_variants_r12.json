@@ -1,0 +1,659 @@
+{
+ "note": "tools/r12_hotplug.py variant runs on the D-R12-78 / -79 board (three damper capacitors C89 / C95 / C79; 2304 required corners each; R10 model, corners and limits): evidence for D-R12-09 keep-or-drop; Simulation / Inference, not gate evidence. Command per row: <python3 with numpy> -I tools/r12_hotplug.py [--variant V] [--no-clamp-all] [--rdamp-scale K] [--damper-scale K] --output OUT.json. two_dampers_equivalent scales the three damper capacitors to 2 x 22 uF in total (the pre-C79 capacitance on the new copper).",
+ "runs": {
+  "no_clamp_all": {
+   "by_harness_uH": {
+    "0.1": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 9.250934019653378,
+     "minimum_V": -14.255192115421885
+    },
+    "0.5": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 3.814154183335638,
+     "minimum_V": -14.146582942647594
+    },
+    "1": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 2.307721271667784,
+     "minimum_V": -13.388273430224697
+    },
+    "2": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 1.362275119316081,
+     "minimum_V": -12.691521219220268
+    }
+   },
+   "cases": 2304,
+   "damper_energy_J": 0.004186036838434494,
+   "damper_peak_W": 642.9510922927949,
+   "damper_scale": 1.0,
+   "failing_by_metric": {
+    "falling_V_per_us": 0,
+    "maximum_V": 0,
+    "minimum_V": 0,
+    "rising_V_per_us": 0
+   },
+   "failing_cases": 0,
+   "inputs_sha256": "1741a9c3929d48e8c846ffadd4b2701c21af4e8775fee03db0f641a962aaa063",
+   "label": "Simulation / Inference (R10 model, corners and limits; a variant run, not gate evidence)",
+   "limits": {
+    "falling_V_per_us": 10.0,
+    "maximum_V": 28.0,
+    "minimum_V": -15.0,
+    "rising_V_per_us": 100.0
+   },
+   "model_sha256": "9acbaf4f9a8bfb321161c671379f251eeda7847645188c02c90b0cd19305cb41",
+   "no_clamp_all": true,
+   "rdamp_scale": 1.0,
+   "variant": "as_built",
+   "worst": {
+    "falling_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3825072,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 1000.0
+     },
+     "value": 9.250934019653378
+    },
+    "maximum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3378672,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 1000.0
+     },
+     "value": 2.0
+    },
+    "minimum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3825072,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 1000.0
+     },
+     "value": -14.255192115421885
+    },
+    "rising_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3825072,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 1000.0
+     },
+     "value": 5.402237292358336
+    }
+   }
+  },
+  "no_damper": {
+   "by_harness_uH": {
+    "0.1": {
+     "cases": 576,
+     "failing": 288,
+     "falling_V_per_us": 16.659210474865738,
+     "minimum_V": -19.36954200189687
+    },
+    "0.5": {
+     "cases": 576,
+     "failing": 480,
+     "falling_V_per_us": 10.599419095528082,
+     "minimum_V": -20.263860101563584
+    },
+    "1": {
+     "cases": 576,
+     "failing": 576,
+     "falling_V_per_us": 8.003544648629735,
+     "minimum_V": -19.938036212526765
+    },
+    "2": {
+     "cases": 576,
+     "failing": 576,
+     "falling_V_per_us": 5.909219605515935,
+     "minimum_V": -19.332227832958267
+    }
+   },
+   "cases": 2304,
+   "damper_energy_J": 1.4370746855244843e-13,
+   "damper_peak_W": 2.4043190668943655e-06,
+   "damper_scale": 1.0,
+   "failing_by_metric": {
+    "falling_V_per_us": 384,
+    "maximum_V": 0,
+    "minimum_V": 1920,
+    "rising_V_per_us": 0
+   },
+   "failing_cases": 1920,
+   "inputs_sha256": "1741a9c3929d48e8c846ffadd4b2701c21af4e8775fee03db0f641a962aaa063",
+   "label": "Simulation / Inference (R10 model, corners and limits; a variant run, not gate evidence)",
+   "limits": {
+    "falling_V_per_us": 10.0,
+    "maximum_V": 28.0,
+    "minimum_V": -15.0,
+    "rising_V_per_us": 100.0
+   },
+   "model_sha256": "9acbaf4f9a8bfb321161c671379f251eeda7847645188c02c90b0cd19305cb41",
+   "no_clamp_all": false,
+   "rdamp_scale": 1.0,
+   "variant": "no_damper",
+   "worst": {
+    "falling_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3825072,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": 16.659210474865738
+    },
+    "maximum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3378672,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 12.4
+     },
+     "value": 2.0
+    },
+    "minimum_V": {
+     "corner": {
+      "bulk": "high",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "high",
+      "lh_uH": 0.5,
+      "rdamp_ohm": 0.3378672,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": -20.263860101563584
+    },
+    "rising_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3825072,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": 9.704183145492706
+    }
+   }
+  },
+  "r166_shorted": {
+   "by_harness_uH": {
+    "0.1": {
+     "cases": 576,
+     "failing": 16,
+     "falling_V_per_us": 4.6965695284937325,
+     "minimum_V": -15.176993815754855
+    },
+    "0.5": {
+     "cases": 576,
+     "failing": 288,
+     "falling_V_per_us": 4.806441876649358,
+     "minimum_V": -20.352311682375515
+    },
+    "1": {
+     "cases": 576,
+     "failing": 336,
+     "falling_V_per_us": 4.009539986697063,
+     "minimum_V": -20.825036425789197
+    },
+    "2": {
+     "cases": 576,
+     "failing": 524,
+     "falling_V_per_us": 3.1383175207349012,
+     "minimum_V": -20.773042723121662
+    }
+   },
+   "cases": 2304,
+   "damper_energy_J": 8.64562702803087e-05,
+   "damper_peak_W": 19.42255703214341,
+   "damper_scale": 1.0,
+   "failing_by_metric": {
+    "falling_V_per_us": 0,
+    "maximum_V": 0,
+    "minimum_V": 1164,
+    "rising_V_per_us": 0
+   },
+   "failing_cases": 1164,
+   "inputs_sha256": "1741a9c3929d48e8c846ffadd4b2701c21af4e8775fee03db0f641a962aaa063",
+   "label": "Simulation / Inference (R10 model, corners and limits; a variant run, not gate evidence)",
+   "limits": {
+    "falling_V_per_us": 10.0,
+    "maximum_V": 28.0,
+    "minimum_V": -15.0,
+    "rising_V_per_us": 100.0
+   },
+   "model_sha256": "9acbaf4f9a8bfb321161c671379f251eeda7847645188c02c90b0cd19305cb41",
+   "no_clamp_all": false,
+   "rdamp_scale": 1.0,
+   "variant": "r166_shorted",
+   "worst": {
+    "falling_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.5,
+      "rdamp_ohm": 0.001,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": 4.806441876649358
+    },
+    "maximum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.001,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 12.4
+     },
+     "value": 2.0
+    },
+    "minimum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 1.0,
+      "rdamp_ohm": 0.001,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": -20.825036425789197
+    },
+    "rising_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.001,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": 3.184574369072379
+    }
+   }
+  },
+  "rdamp_x0.75": {
+   "by_harness_uH": {
+    "0.1": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 8.109172738913095,
+     "minimum_V": -12.999085459062737
+    },
+    "0.5": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 3.1338173959984945,
+     "minimum_V": -12.806690679390181
+    },
+    "1": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 1.8977018262646972,
+     "minimum_V": -12.282690584290842
+    },
+    "2": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 1.1322793985550916,
+     "minimum_V": -13.962360552711752
+    }
+   },
+   "cases": 2304,
+   "damper_energy_J": 0.004035588616552875,
+   "damper_peak_W": 689.8141932068669,
+   "damper_scale": 1.0,
+   "failing_by_metric": {
+    "falling_V_per_us": 0,
+    "maximum_V": 0,
+    "minimum_V": 0,
+    "rising_V_per_us": 0
+   },
+   "failing_cases": 0,
+   "inputs_sha256": "1741a9c3929d48e8c846ffadd4b2701c21af4e8775fee03db0f641a962aaa063",
+   "label": "Simulation / Inference (R10 model, corners and limits; a variant run, not gate evidence)",
+   "limits": {
+    "falling_V_per_us": 10.0,
+    "maximum_V": 28.0,
+    "minimum_V": -15.0,
+    "rising_V_per_us": 100.0
+   },
+   "model_sha256": "9acbaf4f9a8bfb321161c671379f251eeda7847645188c02c90b0cd19305cb41",
+   "no_clamp_all": false,
+   "rdamp_scale": 0.75,
+   "variant": "as_built",
+   "worst": {
+    "falling_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.2868804,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 12.4
+     },
+     "value": 8.109172738913095
+    },
+    "maximum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.2534004,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 12.4
+     },
+     "value": 2.0
+    },
+    "minimum_V": {
+     "corner": {
+      "bulk": "high",
+      "bypass": "high",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 2.0,
+      "rdamp_ohm": 0.2534004,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": -13.962360552711752
+    },
+    "rising_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.2868804,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": 4.211687677187824
+    }
+   }
+  },
+  "rdamp_x1.3": {
+   "by_harness_uH": {
+    "0.1": {
+     "cases": 576,
+     "failing": 64,
+     "falling_V_per_us": 10.153175820009075,
+     "minimum_V": -15.348593743411383
+    },
+    "0.5": {
+     "cases": 576,
+     "failing": 48,
+     "falling_V_per_us": 4.460863782549395,
+     "minimum_V": -15.476002009565748
+    },
+    "1": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 2.779180585206653,
+     "minimum_V": -14.66389885406754
+    },
+    "2": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 1.63106791984724,
+     "minimum_V": -13.640972994788193
+    }
+   },
+   "cases": 2304,
+   "damper_energy_J": 0.004284849019155155,
+   "damper_peak_W": 586.4637896538325,
+   "damper_scale": 1.0,
+   "failing_by_metric": {
+    "falling_V_per_us": 48,
+    "maximum_V": 0,
+    "minimum_V": 96,
+    "rising_V_per_us": 0
+   },
+   "failing_cases": 112,
+   "inputs_sha256": "1741a9c3929d48e8c846ffadd4b2701c21af4e8775fee03db0f641a962aaa063",
+   "label": "Simulation / Inference (R10 model, corners and limits; a variant run, not gate evidence)",
+   "limits": {
+    "falling_V_per_us": 10.0,
+    "maximum_V": 28.0,
+    "minimum_V": -15.0,
+    "rising_V_per_us": 100.0
+   },
+   "model_sha256": "9acbaf4f9a8bfb321161c671379f251eeda7847645188c02c90b0cd19305cb41",
+   "no_clamp_all": false,
+   "rdamp_scale": 1.3,
+   "variant": "as_built",
+   "worst": {
+    "falling_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.49725936,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 14.7
+     },
+     "value": 10.153175820009075
+    },
+    "maximum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.43922736,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 12.4
+     },
+     "value": 2.0
+    },
+    "minimum_V": {
+     "corner": {
+      "bulk": "high",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.5,
+      "rdamp_ohm": 0.49725936,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": -15.476002009565748
+    },
+    "rising_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.49725936,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": 6.515812334010995
+    }
+   }
+  },
+  "two_dampers_equivalent_x0.6667": {
+   "by_harness_uH": {
+    "0.1": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 9.333646378169467,
+     "minimum_V": -14.374002215166898
+    },
+    "0.5": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 3.939034312844036,
+     "minimum_V": -14.568608045048519
+    },
+    "1": {
+     "cases": 576,
+     "failing": 0,
+     "falling_V_per_us": 2.4257445662128063,
+     "minimum_V": -14.087324160274298
+    },
+    "2": {
+     "cases": 576,
+     "failing": 8,
+     "falling_V_per_us": 1.4751004343533936,
+     "minimum_V": -15.081283199364183
+    }
+   },
+   "cases": 2304,
+   "damper_energy_J": 0.0030502289229068533,
+   "damper_peak_W": 620.0978394121739,
+   "damper_scale": 0.6667,
+   "failing_by_metric": {
+    "falling_V_per_us": 0,
+    "maximum_V": 0,
+    "minimum_V": 8,
+    "rising_V_per_us": 0
+   },
+   "failing_cases": 8,
+   "inputs_sha256": "1741a9c3929d48e8c846ffadd4b2701c21af4e8775fee03db0f641a962aaa063",
+   "label": "Simulation / Inference (R10 model, corners and limits; a variant run, not gate evidence)",
+   "limits": {
+    "falling_V_per_us": 10.0,
+    "maximum_V": 28.0,
+    "minimum_V": -15.0,
+    "rising_V_per_us": 100.0
+   },
+   "model_sha256": "9acbaf4f9a8bfb321161c671379f251eeda7847645188c02c90b0cd19305cb41",
+   "no_clamp_all": false,
+   "rdamp_scale": 1.0,
+   "variant": "as_built",
+   "worst": {
+    "falling_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3825072,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 12.4
+     },
+     "value": 9.333646378169467
+    },
+    "maximum_V": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3378672,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 12.4
+     },
+     "value": 2.0
+    },
+    "minimum_V": {
+     "corner": {
+      "bulk": "high",
+      "bypass": "high",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 2.0,
+      "rdamp_ohm": 0.3378672,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": -15.081283199364183
+    },
+    "rising_V_per_us": {
+     "corner": {
+      "bulk": "low",
+      "bypass": "low",
+      "copper_r_scale": 0.75,
+      "damper": "low",
+      "lh_uH": 0.1,
+      "rdamp_ohm": 0.3825072,
+      "reference": "near",
+      "rh_ohm": 0.03,
+      "vbr_V": 15.6
+     },
+     "value": 5.424627378625146
+    }
+   }
+  }
+ }
+}

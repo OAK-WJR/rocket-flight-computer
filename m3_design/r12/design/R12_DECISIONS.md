@@ -809,6 +809,55 @@ restores pass 1's reporting tier (any other value is strict). Both tiers pass on
 every tier (S-, M-, W-, LC-, V-, K-inner, K-copper, K-fill, K-reference 0 loose samples, K-region 0, K-plane 0); route_check
 r12 0 failing, 2 allowlisted (D-R12-75A), 13 non-critical leftovers (informational); `tools/check.sh` exit 0.
 
+**D-R12-78 Third damper capacitor C79 (stage D, 2026-11-05).** R10's hot-plug model (2304 required corners, limits
+unchanged) on the frozen stage C copper failed 8 / 2304 cases, minimum U9 IN −15.097 V against −15.0 V, all at the 2 µH
+harness corner with high bulk and low damper capacitance (Simulation / Inference; `stageD_analysis.md` §8). C79, a third
+CL31A226KAHNNNE 22 µF 1206 (C12891, Basic, already on the BOM: no new code or feeder fee, about $0.12 per board, Live),
+sits in parallel with C89 / C95 between BAT_IN and BAT_DAMP at (16.4, 21.075), rotation 270: BAT_IN from C95.1 by
+0.8 mm F.Cu, BAT_DAMP to C95.2 by 0.8 mm. `tools/r12_hotplug.py` models C79 as C89 / C95 are modelled, by asserted
+string replacements on R10's model and solver source (neither R10 file is edited). Result on the final board: stageD.md
+§3. R166 0.36 Ω and the damper stay (D-R12-09 decided: keep; R166 shorted fails 1164 / 2304, no damper 1920 / 2304,
+the pre-C79 44 µF 8 / 2304; Simulation / Inference). Schematic: `circuit.json` added_parts C79, battery_entry sheet;
+r12_sch_check 37 / 37 seeds, 187 parts.
+
+**D-R12-79 C88 on the U9 feed (stage D).** R10's C88-topology check (every feed to U9.5 passes C88.1) failed: C88 hung on
+a stub off C96.1. C88 moves to (14.3, 16.92), rotation 270, pad 1 north; the feed is C96.1 → 0.4 mm → C88.1 → 0.4 mm
+(E, NE, N, NE, E) → U9.5, 3.03 mm and 3.72 mΩ, 0.99 nH (R10's local-path bounds 4 mm, 5 mΩ, 2.6 nH; Calculation from the
+extractor). Its GND via moves to (14.95, 17.34). To pass a 0.4 mm run under U9.4 the BAT_FAULT_N escape via moves 0.1 mm
+north to (15.5, 14.5) (In2 run re-drawn at 45°). The C95.1 → C96.1 run widens from 0.4 to 0.8 mm. Open (Inference, an
+IPC-2152 upper bound with no plane credit): the 0.4 mm C96.1 → C88.1 → U9.5 run rises about 55 °C at R10's 2.9 A design
+current (about 36 °C at the 2.34 A fire-time current), over the 30 °C basis (stageD.md §4).
+
+**D-R12-80 Post stage, legend table and the copper it needed (stage D).** `m3_design/r12_post.py` (r11_post's apply and
+contract with R12's revision, KIID seed 12120, table and gate data, gated by check_r12 K-legends / K-fill; no open rows
+allowed) applies the frozen table `m3_design/r12_legends.tsv`, drafted once by `m3_design/r12_legends_aid.py` (R11's
+search helpers in R12's order: every contact legend first, then J122's note, the revision, SHOWN_REFS, words, J2's rows,
+pin-1 dots, designators, Fab references; two aid runs write the same file). At the SH ports' 1.0 mm pitch two neighbours'
+1.0 mm legends cannot share a face side by side (ink about 1.15 mm plus the 0.155 mm gap), so each contact's legend
+goes on the bottom face (no parts there, D-R12-01) along its own column, alternately outward (ink ends at the pad centre
+line) and inward (ink starts 0.2 mm past it), both alternations tried; the aid's ownership margin is 0.05 mm (the gate's
+0.01 mm; R11's aid 0.1 mm). All 30 SH contact legends, J1, J121 and every word, SWD row and SHOWN_REFS designator are
+placed; 111 designators shown (35 on the bottom), 76 hidden on F.Fab. Copper moved to clear legend columns (each step
+DRC 0, route_check r12 0 failing, check_r12 copper 0): J410 / J420 pin 2 reach PORT_4V8 through their 100 nF pad and its
+via (outward vias at (21.6, 95.5) / (11.1, 95.5) removed); J122.5's GND via to (19.9, 7.0); J122's SERVO3_OUT hop 0.05 mm
+west to x 22.05; J9's CAM_5V via 0.6 mm west to (33.0, 8.8); D402 1.0 mm west to (10.6, 7.8) so J400's footprint pin-1
+mark stays nearest its own pad 1 (r10_post pin-1 ownership, 0.5 mm).
+
+**D-R12-81 J122's harness note optional on R12 (owner acceptance pending).** `SERVO + FROM HARNESS` is 18.9 mm of ink at
+1.0 mm; no free strip exists for it within the 6 mm legend reach of J122 on either face with J122 the nearest subject
+(Measured by a probe on the drafted board: 0 free positions at 0° or 90°, F or B). check_r12 K-legends waives exactly
+its absence (`OPTIONAL_NOTES`, after R11's D-R11-83); drawn, it is checked as on R10, and a conflicting `SERVO …`
+legend still fails (`tools/test_r12_check.py`). No contact, word, SWD row, revision or SHOWN_REFS legend is optional.
+The harness rule it states (servo power from the pack harness) is in `docs/R12_VEHICLE_HANDOFF.md`.
+
+**D-R12-82 Buzzer polarity on F.Fab.** check_r10's Fab-text rule allows LS120 exactly '+' and '-' besides its Fab
+reference (R10's MLT-5020 land carries them); R12's QMB-09B-03 land had none and failed it. `r12_parts.buzzer()` now draws
+'+' at pad 1 and '-' at pad 2 on F.Fab (0.8 mm), so the owner's fitting drawing shows the (+) hole (pin 1 = (+) stays an
+Inference, D-R12-16).
+
+**AGENTS §2 check (D-R12-78 … -82).** §2.1 / §2.2: J400, U9's EN chain, RAW_ACT behind Q120 / Q121 unchanged (D402 moved,
+same nets; S-5 OK). §2.3: no firmware change. §2.4: no gate network changed (S-3 OK). §2.5: labels as above.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.
@@ -915,13 +964,13 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-05 | PORT_4V8 drift corner (A-8): bench-measure over temperature or confirm the modules' true maximum | bench / owner |
 | O-R12-06 | LMR50410 with 4.7 µH (TI table 10 µH): load-step and stability check | bench |
 | O-R12-07 | PA6 trip window 4.84–5.17 V sits 33 mV under the four-stall VLOGIC 5.20 V (SS34 VF Inference): firmware threshold recheck | D / firmware |
-| O-R12-08 | Hot-plug (2304 cases), F6 EN timing, hold-up and fire budget re-run on R12 copper with the new parts (C81 X7R, SMAJ12CA, 1206 X5R, AO340x); keep or drop R166 / C89 / C95 | D |
+| O-R12-08 | ~~Hot-plug, EN, hold-up and fire budget re-run on R12 copper; keep or drop R166~~ done in stage D (stageD.md, stageD_analysis.md): keep R166 and the damper, add C79 (D-R12-78) | D |
 | O-R12-09 | HSE crystal gm_crit 1.43 / 1.5 mA/V at the high stray corner: cold start-up and drive-level bench check | bench |
 | O-R12-10 | Q120 / Q121 VGS > 12 V only above 14.4 V on the pack with the bus enabled: owner acceptance or a flight-pack transient measurement | owner / bench |
 | O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: placement done (stage B, 46 × 100 mm); routing pass 2 frozen (D-R12-77A: `r12_routes.tsv`, board `e2b005b5…`, DRC 0 / unconnected 0 / parity 0, route_check r12 0 failing with 2 allowlisted, check_r12 copper 0 in every tier, `R12_ROUTE_HYGIENE=strict` the default); stage D (post, legends, fab, IPC-2152 sizing) is next (stageC.md §5) | D |
+| O-R12-14 | ~~Board~~ stage D done (D-R12-78 … -82): board `d776c5d7…`, post stage and legends, fab package bound, IPC-2152 figures in `stageD_analysis.md` §6; `tools/check.sh` runs the R12 section (stageD.md) | D |
 | O-R12-15 | R12 axis maps derived (D-R12-54: U4 roll = −gyro_Y, thrust −a_Y; U6 channel 1 axial, +a forward): 1 g / rotation bench sign check | bench / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
@@ -929,9 +978,12 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-19 | SH pin orders against a real MicoAir H743 lead (pin-1 end not marked in the source image; v1 / v2) (D-R12-31) | bench |
 | O-R12-20 | J121 DB125 on JLC Economic as THT, and the J1 5.0 mm-terminal hole fit: confirm on the order page / with a sample terminal (D-R12-29, -30) | order / bench |
 | O-R12-21 | FXLS90322 dual-channel datasheet (FXLS9xxxx Rev 7) not read: confirm pin-out, axis frame, medium-g range codes; LSM6DSVE datasheet not found at ST (D-R12-50, -51) | records / bench |
-| O-R12-22 | U6 VCC ≥ 3.135 V at the part: 3V3 regulator window 3.240 V low (105 mV margin); check the copper drop on R12 copper (D-R12-51) | C / D |
+| O-R12-22 | ~~U6 VCC ≥ 3.135 V at the part~~ closed as a calculation (stage D, `stageD_analysis.md` §7): 3V3 copper drop ≤ 12.6 mV at U2's 1 A rating, U6 VCC ≥ 3.258 V initial / 3.227 V drift (92 mV margin); load steps at U6 an Inference (bench) | D |
 | O-R12-23 | Re-read DS12110 Rev 8 Tables 10-14 (and AN2606's H74x loader pins) for the D-R12-61A … -64A re-pins: PB10 QUADSPI_BK1_NCS, PA8 / PC9 I2C3, PE12-PE14 SPI4 and their AF numbers (read from KiCad's ST symbol only) | records / firmware |
 | O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways), M-7's U6 body, the In2 regions K-region needs or the 0.42 mm via clearance K-reference needs: any future search must add them (pass 2, D-R12-74A, was drawn by hand; scratch masks in `r12ra/ps3/fA/seg4.py`) | C |
+| O-R12-25 | BAT_IN C96.1 → C88.1 → U9.5 is 0.4 mm for 4.13 mm (D-R12-79): IPC-2152 upper bound 55.2 °C at R10's 2.9 A design current, about 36 °C at 2.34 A, over the 30 °C basis (Inference); widen in a layout pass or accept (R12_VALIDATION row 4) | owner / layout |
+| O-R12-26 | PORT_4V8 at the ports under the 0.561 A budget: ≥ 4.497–4.500 V initial, ≥ 4.447–4.450 V drift (J420 lowest), against the LR900's 4.5 V (Calculation / Inference, `stageD_analysis.md` §6); accept, measure the module's floor, raise the setpoint or widen the 0.5 mm east-edge feed (R12_VALIDATION row 6) | owner / bench |
+| O-R12-27 | J122's harness note `SERVO + FROM HARNESS` not on the board (D-R12-81; R12_VALIDATION row 2): owner acceptance; the rule is in `docs/R12_VEHICLE_HANDOFF.md` | owner |
 
 ## 5. Files (stage A)
 

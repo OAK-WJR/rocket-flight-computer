@@ -2942,6 +2942,37 @@
         </unit>
       </units>
     </comp>
+    <comp ref="C79">
+      <value>22uF 25V X5R 10%</value>
+      <footprint>rocket:C_1206_3216Metric</footprint>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL31A226KAHNNNE_C12891.pdf</datasheet>
+      <fields>
+        <field name="LCSC">C12891</field>
+        <field name="Manufacturer">Samsung Electro-Mechanics</field>
+        <field name="Manufacturer Part">CL31A226KAHNNNE</field>
+        <field name="Footprint">rocket:C_1206_3216Metric</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL31A226KAHNNNE_C12891.pdf</field>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
+      <property name="LCSC" value="C12891"/>
+      <property name="Manufacturer" value="Samsung Electro-Mechanics"/>
+      <property name="Manufacturer Part" value="CL31A226KAHNNNE"/>
+      <property name="Sheetname" value="07 | Battery input, contact and protection"/>
+      <property name="Sheetfile" value="battery_entry.kicad_sch"/>
+      <property name="ki_keywords" value="cap capacitor"/>
+      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
+      <tstamps>30260493-0620-5097-900c-0cb5903aa13b</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
     <comp ref="C80">
       <value>10uF 50V X5R 10%</value>
       <footprint>rocket:C_1206_3216Metric</footprint>
@@ -6979,6 +7010,7 @@
       <node ref="R471" pin="2" pintype="passive"/>
     </net>
     <net code="14" name="BAT_DAMP" class="Power">
+      <node ref="C79" pin="2" pintype="passive"/>
       <node ref="C89" pin="2" pintype="passive"/>
       <node ref="C95" pin="2" pintype="passive"/>
       <node ref="R166" pin="1" pintype="passive"/>
@@ -7004,6 +7036,7 @@
       <node ref="U9" pin="9" pinfunction="ILM_9" pintype="passive"/>
     </net>
     <net code="19" name="BAT_IN" class="Power">
+      <node ref="C79" pin="1" pintype="passive"/>
       <node ref="C80" pin="1" pintype="passive"/>
       <node ref="C88" pin="1" pintype="passive"/>
       <node ref="C89" pin="1" pintype="passive"/>

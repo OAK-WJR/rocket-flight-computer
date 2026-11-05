@@ -852,6 +852,17 @@
     "2": "GND"
    },
    "why": "D-R12-51: U6 VCC decoupling, NXP Table 6 C1 0.1 uF X7R >= 10 V"
+  },
+  "C79": {
+   "lcsc": "C12891",
+   "value": "22uF 25V X5R 10%",
+   "lib": "M3:C",
+   "sheet": "battery_entry.kicad_sch",
+   "nets": {
+    "1": "BAT_IN",
+    "2": "BAT_DAMP"
+   },
+   "why": "D-R12-78: third damper capacitor in parallel with C89 / C95 (stage D hot-plug re-run on R12 copper failed 8 / 2304 cases with two; damper x 1.5 passes)"
   }
  },
  "net_changes": {

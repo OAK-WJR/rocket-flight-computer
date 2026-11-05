@@ -92,3 +92,35 @@ with SD_CS on PA7; HG_CS PC11; VBUS_SENSE PA10), two U1 escapes changed in the a
 without a B lane), and the copper frozen in `m3_design/r12_routes.tsv`: board `da48bb99…` (two builds, same hash), DRC
 0 / unconnected 0 / parity 0, check_r12 copper OK, route_check r12 83 failing (reported, not fatal, until pass 2 sets
 `R12_ROUTE_HYGIENE=strict`). Pass 2 (routing hygiene) is next (stageC.md §5).
+
+## 9. Stage D (2026-11-05, D-R12-78 … -82)
+
+Stage C pass 2 was frozen as D-R12-77A. On that copper, R10's hot-plug model failed 8 of 2304 cases, and R10's C88
+topology check failed. Stage D fixed both and finished the board.
+
+**Fixes.**
+- C79, a third 22 µF damper capacitor (D-R12-78).
+- C88 moved onto the U9 feed (D-R12-79).
+- Second vias on Q124's fire return and on U9 OUT.
+
+**Post stage, gate and parts.**
+- The build now runs a post stage: `r12_post.py` applies the frozen `r12_legends.tsv`, which `r12_legends_aid.py`
+  drafts (D-R12-80). Every SH contact carries a legend on the bottom face, and five copper items moved to make room.
+- J122's harness note is optional (D-R12-81, owner acceptance pending).
+- The buzzer land carries '+' / '-' on F.Fab (D-R12-82).
+
+**Build and gate (Measured).**
+- `r12_fab.sh` produces the package; the manifest is bound.
+- Board `d776c5d7…`: two builds gave the same hash.
+- The board and `fab/` are tracked, so `tools/check.sh` runs its R12 section: exit 0.
+
+**Analyses.** `r12_stageD.py` and `tools/r12_hotplug.py` were re-run on the final board (`stageD_analysis.md`):
+- hot-plug passes 2304 / 2304 (Simulation / Inference);
+- four-stall fire current is 1.249978 A (Calculation / Inference);
+- U6's supply closes O-R12-22 (Calculation).
+
+**Cost (Live).** Parts plus feeder: $61.88 per board at 2 boards and $44.38 at 5. All-in order totals are about $164 and
+$265 (Calculation, below the §3 targets). No part is short.
+
+**Next.** Stage E records are written (`docs/M3_R12.md`, `docs/R12_VALIDATION.md`, `docs/R12_VEHICLE_HANDOFF.md`).
+Stage F review rounds have not run. Record: `stageD.md`.

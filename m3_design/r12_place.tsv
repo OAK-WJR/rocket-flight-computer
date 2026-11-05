@@ -28,6 +28,7 @@ C30	25.8	31.6	90	F	IMU 3V3A
 C31	19.8	32.6	90	F	IMU 3V3A
 C32	29	29	0	F	baro 3V3A
 C33	30.7	42	90	F	D-R12-53: U6 VCC decoupling beside its pin 1 / 13-16 corner
+C79	16.4	21.075	270	F	D-R12-78: third damper C beside C95 (BAT_IN pad north on the C95.1 run, BAT_DAMP pad south to C95.2)
 C60	27.4	27.6	90	F	VLOGIC sense
 C80	3.4	22.8	90	F	BAT_IN bulk
 C81	15.9	17.8	270	F	dVdt
@@ -35,7 +36,7 @@ C82	21.2	15.6	0	F	RAW bulk at U9.6 (neck ends in its pad)
 C83	33.9	39.2	90	F	VBUS
 C84	40	74.5	0	F	VLOGIC hold-up, owner-fitted; D-R12-44: re-placed after U1 moved forward
 C87	19	9.2	90	F	EN timing
-C88	13.8	16.6	0	F	U9 BAT_IN decoupling
+C88	14.3	16.92	270	F	U9 BAT_IN decoupling: on the feed between C96.1 and U9.5 (D-R12-79, R10 C88 topology)
 C89	10	19.6	270	F	damper C
 C94	29	21.6	0	F	sense
 C95	12.6	19.6	270	F	damper C
@@ -68,7 +69,7 @@ D9	25.4	19	90	F	RAW reverse clamp
 D120	9.6	47.4	0	F	cold
 D121	28	10.2	0	F	servo clamp (SRV05-4)
 D123	6	74.5	0	F	buzzer flyback; D-R12-44: re-placed after U1 moved forward
-D402	11.6	7.8	270	F	J400.2 ESD clamp at the port
+D402	10.6	7.8	270	F	J400.2 ESD clamp at the port; 1.0 mm west so J400's footprint pin-1 mark stays nearest its own pad 1 (D-R12-80)
 J1	3.5	15.3	90	F	battery pigtail pads, 5.0 mm pitch, wire side west; courtyard = the keep-clear for a later 5.0 mm terminal (D-R12-30)
 J2	38.6	84	0	F	SWD Tag-Connect; D-R12-44: re-placed after U1 moved forward
 J3	41.4	44	90	F	USB-C mouth at the east edge (as R10 / R11 J3)

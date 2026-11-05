@@ -28,7 +28,7 @@ M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to
 M-7: recorded top IMU pose; no via/fill under sensor bodies, no track inside any sensor pad ring (D-R12-52).
 M-8: courtyard short-edge clearance >= 2.5 mm except exact R12 recorded edge queries.
 K-legends: R10's identity, mask, designator and Fab checks with R12 revision and connector pin words;
-           no R11 optional-legend exemptions (D-R12-29..31).
+           no R11 optional-legend exemptions (D-R12-29..31); only J122's harness note may be absent (D-R12-81).
 K-copper: via/pad, overlap joints, thermals, paste and pour debris; no VIPPO exemption (D-R12-07).
 K-inner: In1 GND only; In2 mixed rail/signal copper, fast interfaces excluded (D-R12-34).
 K-reference / K-region: F over In1 GND; In2 over In1 and B GND; B over In2 rail fill, each B chain over one rail.
@@ -497,7 +497,24 @@ def k_legends(c):
                      word_legends=lambda b, **kw: words(b, spans={}, **kw)):
         issues, ev = r10.k_legends(c)
         found, ev['word_spans'] = r11.word_spans_r11(c.board)
-    return issues + found, ev
+    issues, ev['waived'] = r12_legend_set(c.board, issues + found)
+    return issues, ev
+
+
+# D-R12-81 (owner acceptance pending): J122's harness note is the one optional legend on R12. Drawn, it is checked as on
+# R10 (exact words, once, within reach and subject-nearest; a conflicting 'SERVO ...' legend fails); absent, the absence
+# alone is waived. Its 18.9 mm ink has no free strip within the 6 mm legend reach of J122 on either face (stage D,
+# measured). Every contact legend (all 30 SH contacts, NC included), word, SWD row, revision and SHOWN_REFS designator
+# stays required.
+OPTIONAL_NOTES = frozenset({r10.SERVO_HARNESS_NOTE})
+
+
+def r12_legend_set(board, issues):
+    texts = r11._silk_texts(board)
+    waived = {f'J122: silkscreen must identify {note!r} exactly once' for note in OPTIONAL_NOTES
+              if texts.count(note) == 0}
+    kept = [i for i in issues if i not in waived]
+    return kept, sorted(set(issues) - set(kept))
 
 
 def k_copper(c):

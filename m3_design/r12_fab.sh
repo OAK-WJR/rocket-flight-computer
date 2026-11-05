@@ -25,7 +25,7 @@
 #   FAB_NET=1           jlc_stock.py and jlc_cost.py --tier economic --profile r10 (REQUIREMENTS M3's $84.41 per board)
 #                       for 2 and 5 boards
 # The Gerbers carry their creation date, so the package is not byte-reproducible; the manifest binds it instead.
-# Generated outputs (m3_design/r12/fab/) are not committed.
+# The generated package (m3_design/r12/fab/) is tracked in git, as R11's is, so tools/check.sh can verify it (stage D).
 set -euo pipefail
 cd "$(git -C "$(dirname "$0")" rev-parse --show-toplevel)"
 KICAD_PY=${KICAD_PY:-/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3}
