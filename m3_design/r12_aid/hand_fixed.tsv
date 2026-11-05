@@ -3,11 +3,13 @@
 # PYRO1_OUT (fire path, F.Cu, no via): J121.1 round J121.2's west side to Q124.3 (0.8 mm trunk, 0.5 mm pad-entry neck),
 # Q124.3 -> C128.1 -> R131.1 (0.4 mm, the 0402 pads' limit), and the continuity-sense branch R131.1 -> R173.1 (0.2 mm,
 # a sense tap) under D120 and up the gap between D120 and the R129 / R130 / R178 column.
-# 3V3A (D-R12-46), complete: the nine island fan-outs (C10 two vias, R164, C30, C32, U5.6, U4.5, U4.8, C31); H1's stub
-# tip via (18.6, 56.0) and an In2 0.3 mm feed straight aft along x 19.0 into the 3V3A island at (19.5, 36.5); H1 ->
-# C22.1 -> C21.1 on F.Cu (0.3 mm, between C24 and C22 at y 55.6). The searched drafts ran the H1 cluster to the island
-# by up to 150 mm of F.Cu round the board (route_check chain_detour). Clearances computed from the placed pads; KiCad
-# DRC on this copper alone shows no clearance violation (scratch check, 2026-11-04).
+# 3V3A (D-R12-46), complete: the island fan-outs (C10 two vias, R164, C30, U4.5, U4.8, C31); since D-R12-55A the MS5607
+# (U5.1 VDD, U5.2 PS) and its C32 take no via of their own: R164.2 -> C32.1 on F.Cu at y 29.0, C32.1 -> U5.2 on a
+# diagonal past C32.2, U5.2 -> U5.1 on F.Cu at y 30.3 (outside the no-track band between U5's rows). H1 -> C22.1 ->
+# C21.1 on F.Cu (0.3 mm, between C24 and C22 at y 55.6); since D-R12-56A the feed leaves C21.1 west to a via at
+# (14.7, 58.0) and runs on In2 (0.3 mm) along x 13.0 and y 38.0 into the island's north edge at (20.9, 36.5), west of
+# the U1 stub-tip vias and the Y1 / pyro-sense fan-outs (D-R12-46's feed along x 19.0 sat 0.4 mm from the west stub
+# tips at x 18.6, so none of them could take a via). Clearances computed from the placed pads; KiCad DRC re-checks.
 kind	net	layer	width	x0	y0	x1	y1
 track	PYRO1_OUT	F	0.8	7.4	35.25	5.6	37.05
 track	PYRO1_OUT	F	0.8	5.6	37.05	5.6	42
@@ -32,10 +34,9 @@ track	3V3A	F	0.3	25.5	29.2	25.5	29.9
 via	3V3A	-	0.45	25.5	29.9		
 track	3V3A	F	0.3	25.7	32.1	25.7	32.6
 via	3V3A	-	0.45	25.7	32.6		
-track	3V3A	F	0.3	28.5	29.1	28.5	29.9
-via	3V3A	-	0.45	28.5	29.9		
-track	3V3A	F	0.25	28.2	30.9	27.4	30.1
-via	3V3A	-	0.45	27.4	30.1		
+track	3V3A	F	0.3	25.6	29	28.58	29
+track	3V3A	F	0.2	28.5	28.95	29.55	30
+track	3V3A	F	0.3	29.63	30.3	30.88	30.3
 track	3V3A	F	0.25	23.5	30.5	23.5	29.9
 via	3V3A	-	0.45	23.5	29.9		
 track	3V3A	F	0.25	21.7	30.9	21	30.9
@@ -46,10 +47,11 @@ track	3V3A	F	0.3	18.6	56	17.5	56
 track	3V3A	F	0.3	17.5	56	17.1	55.6
 track	3V3A	F	0.3	17.1	55.6	16.2	55.6
 track	3V3A	F	0.3	16.2	55.6	15.5	56.3
-track	3V3A	F	0.3	15.3	56.6	15.3	57.3
-track	3V3A	F	0.3	15.3	57.3	15.58	57.58
-track	3V3A	F	0.3	15.58	57.58	15.58	58
-via	3V3A	-	0.45	18.6	56		
-track	3V3A	In2	0.3	18.6	56	19	55.6
-track	3V3A	In2	0.3	19	55.6	19	37
-track	3V3A	In2	0.3	19	37	19.5	36.5
+track	3V3A	F	0.3	15.5	56.8	15.5	57.9
+track	3V3A	F	0.3	15.58	58	14.7	58
+via	3V3A	-	0.45	14.7	58		
+track	3V3A	In2	0.3	14.7	58	13	56.3
+track	3V3A	In2	0.3	13	56.3	13	39
+track	3V3A	In2	0.3	13	39	14	38
+track	3V3A	In2	0.3	14	38	19.4	38
+track	3V3A	In2	0.3	19.4	38	20.9	36.5

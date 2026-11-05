@@ -573,6 +573,46 @@ family frame is an Inference). U6 (top, rotation 180): FXLS9xxx0 Rev 6 Figure 8 
 read from the figure, and the dual-channel part's frame is assumed equal). Both signs need a 1 g bench check before
 flight; firmware must not reuse R11's map without it.
 
+**D-R12-55A 3V3A at the MS5607 and C32 without vias of their own (routing attempt A, 2026-11-04).** The D-R12-46 fan-outs
+of the old U5 land (U5.6 via at (27.4, 30.1), C32 via at (28.5, 29.9)) now sit in U5's pads and in the BARO_body no-via
+area. In `r12_aid/hand_fixed.tsv` the MS5607's VDD (pad 1) and PS (pad 2) and C32 take no via: R164.2 -> C32.1 on F.Cu at
+y 29.0 (0.3 mm, 0.54 mm from C60.1 / R61.1 and 0.8 mm from U5's pads), C32.1 -> U5.2 on a 0.2 mm diagonal past C32.2
+(0.147 mm edge clearance, Calculation), U5.2 -> U5.1 on F.Cu at y 30.3 (between the pads of one row, outside the
+no-track band y 31.45-32.55). The group reaches the island through R164.2's existing via (25.5, 29.9), next to the
+3V3A source. Clearances computed from the placed pads; KiCad DRC on every attempt-A draft shows no violation on them.
+
+**D-R12-56A 3V3A feed from H1 moved west of the stub-tip column (routing attempt A, 2026-11-04).** D-R12-46's In2 feed
+along x 19.0 ran 0.4 mm from U1's west stub tips (x 18.6), so none of the west nets (HSE, NRST, ACT_EN_MCU, PYRO1_CONT,
+CAM_5V_SENSE, servos) could take a tip via (a via needs 0.5 mm to a 0.3 mm track): putting the h5 draft on the new
+placement, five west units broke against it. Now: H1 -> C22.1 on F.Cu as before; C22.1 -> C21.1 one straight 0.3 mm
+track at x 15.5 (inside both pads; the old three-segment link was a route_check tiny_jog); C21.1 west to a via at
+(14.7, 58.0); In2 0.3 mm diagonally to (13.0, 56.3), along x 13.0 to y 39.0, along y 38.0 and into the island's north
+edge at (20.9, 36.5). In the h5 draft no via of another net lies within 0.5 mm of that path, and only ACT_EN_MCU's In2
+run crosses it (re-routed by the search). The tip via (18.6, 56.0) is gone. Inference: the long In2 3V3A run (about
+33 mm) is a supply feed with tens of mA, adequate at 0.3 mm (IPC-2152 not yet checked, stage D).
+
+**D-R12-57A U6 same-part links (drafting aid, routing attempt A, 2026-11-04).** `plan.py u6_joins()`: U6's die pad 17 to
+its GND pins 7 and 14, and VCC 15 -> 16 -> 1 plus 16 -> C33.1, as same-net F.Cu links, so the die pad and the three GND
+pins share one GND fan-out and pins 1 / 15 / 16 and C33 one 3V3 fan-out (pin 13 sits beyond GND pin 14 and fans out
+alone). In every attempt-A draft U6 and C33 connect (no U6 power item unconnected).
+
+**D-R12-58A Routing attempt A on the D-R12-53 placement: not finished (2026-11-04).** Placed board `ec461057…`
+(`r12_build.sh` stage A / B pass). Runs (scratch `r12ra`, not frozen): the h5 draft ported onto the new lands with the
+changed-area nets re-routed (13-16 failures); two full negotiations (`--pf 60`, D-R12-48's settings, turn 2.0 / window
+2.5 and turn 2.5 / window 1.5): 19 and 15 DRC unconnected, route_check 41 / 45; then a greedy hill-climb (each failing
+unit re-routed with 0-30 rip-ups, kept only if failures plus isolated 3V3 vias drop, the pour repaired first): best
+12 DRC unconnected (two GND fan-out stubs; PORT_4V8's feed from the port buck to its island; SD_MISO, QSPI_NCS,
+QSPI_IO2, SERVO2_MCU, LED_YEL, VBUS_SENSE, SWDIO, CAM_MCU_TX, HG_CS), route_check 91. No table is frozen. Findings: (a)
+**SPI1 topology**: walking round the region between U1's A-row stubs, U6's west face and U4's north face, U6's pins
+(MISO 11, MOSI 10, SCK 9, north to south) and U4's (MISO 1, MOSI 14, SCK 13, east to west) come in the same rotational
+order, so at most one of the three nets can join U6 and U4 on one layer; with MOSI's B.Cu dog-bone lane and the
+MISO / SCK swap between U1's tips and U4, one SPI1 net needs three layer-changing vias (route_check extra_vias allows
+two; an allowlist entry with this reason, or a U6 rotation / position change, is needed). (b) The leftovers sit where
+D-R12-48 found them: each needs 4-17 routed units moved (blocker sets from a path against the fixed copper only), the
+U1 A-row bundle (12 F.Cu stub tips and 7 B.Cu lane ends within x 19.4-25.8) and the forward / east band between U1,
+U3 and J430. (c) PORT_4V8 needs a hand feed: no draft joins the buck cluster (C406 / L400 / R400 at y 20) to the
+forward island (y 88.4), and an In2 run would split the 3V3 pour.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.

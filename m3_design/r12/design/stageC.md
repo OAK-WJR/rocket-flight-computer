@@ -1,10 +1,11 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-48)
+# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-58A, routing attempt A)
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
-but the board is not routed.** On the D-R12-44 placement the best draft (h5, §4.4) leaves 4 unconnected items, one
-dangling GND via and 47 route_check findings (no clearance violation), so no copper table is frozen: `m3_design/r12_routes.tsv` does not
-exist, `r12_build.sh` stops after stage B, and `m3_design/r12/m3.kicad_pcb` is the placed board with no copper.
-Decisions D-R12-22 … -48 are in `R12_DECISIONS.md`.
+but the board is not routed.** On the D-R12-53 placement (Economic sensors: LSM6DSVE, FXLS90322 U6, MS5607; placed
+board `ec461057…`) routing attempt A's best draft (§4.5) leaves 12 DRC unconnected items and 91 route_check findings,
+so no copper table is frozen: `m3_design/r12_routes.tsv` does not exist, `r12_build.sh` stops after stage B, and
+`m3_design/r12/m3.kicad_pcb` is the placed board with no copper. Decisions D-R12-22 … -54 and attempt A's D-R12-55A …
+-58A are in `R12_DECISIONS.md`.
 
 ## 1. Infrastructure
 
@@ -41,12 +42,13 @@ elsewhere, each limited to 0.8 × the smaller pad dimension at its ends (IPC-215
   west of the pads (x 38.0), DM on F.Cu round those vias (to x 37.4 and back, D-R12-40), VBUS (B4A9 / A4B9) through two
   vias at x 36.6.
 * **U1 B lanes (D-R12-43).** The 13 signal dog-bones leave on fixed B.Cu lanes to 0.8 mm past the outer ball row.
-* **Hand copper (D-R12-41, -46).** `r12_aid/hand_fixed.tsv`: PYRO1_OUT; 3V3A complete (island fan-outs, H1 tip via, an
-  In2 feed along x 19.0 into the island, H1 -> C22.1 -> C21.1 on F).
+* **Hand copper (D-R12-41, -46, -55A, -56A).** `r12_aid/hand_fixed.tsv`: PYRO1_OUT; 3V3A complete (island fan-outs;
+  the MS5607 and C32 joined to R164.2's via on F.Cu, D-R12-55A; H1 -> C22.1 -> C21.1 on F, a via west of C21 and an In2
+  feed along x 13.0 / y 38.0 into the island's north edge, D-R12-56A).
 * **Seed copper (D-R12-47).** `r12_aid/hand_seed.tsv`: stub-tip vias for SERVO3_MCU, SERVO4_MCU and LED_YEL (their
   nets are still searched).
-* **Same-part links on F:** LPS28DFW pad 7 → pad 5 (D-R12-25), U4 GND 2–3 and 6–7, J9 GND 3–4, U2 VIN 4–5, J9 CAM_5V
-  1–2.
+* **Same-part links on F:** MS5607 GND 3 → 4 (D-R12-52), U6 die pad → 7 / 14 and VCC 15 → 16 → 1, 16 → C33.1
+  (D-R12-57A), U4 GND 2–3 and 6–7, J9 GND 3–4, U2 VIN 4–5, J9 CAM_5V 1–2.
 
 ## 4. Draft result (latest runs, 2026-11-04, not frozen)
 
@@ -195,8 +197,38 @@ SD_SCK routed with the partner block off and a four-via budget (h5). **4 unconne
 3 chain_detour, 2 critical_via_no_gnd (QSPI_NCS), singles). Moving CAM_MCU_RX's B escape one diagonal aft (s = 73.6)
 frees LED_YEL's tip via at (24.6, 49.6), but LED_YEL then still finds no path to R33.1.
 
+### 4.5 Routing attempt A on the Economic-sensor placement (D-R12-55A … -58A)
+
+Placed board `ec461057…` (`r12_build.sh` stage A / B: r12_sch_check, fit_check r12, placed DRC 0 / parity 0,
+check_r12 placement). Aid inputs: D-R12-55A / -56A hand copper, D-R12-57A U6 links, D-R12-47 seeds. Scratch `r12ra`,
+`PYTHONHASHSEED=0`, not frozen:
+
+| Run | What | DRC unconnected | route_check failing |
+|---|---|---|---|
+| q2 / q6 | h5 (§4.4) ported: its fixed copper replaced by the new setup's, units breaking the new lands dropped, the changed-area nets re-routed (`R12_HW=3`, 8 M expansions, via budget 3) | 16 (q2) | 51 (q2) |
+| pfA | `--pf 60`, HW 1.6, 4 M, full 10, pmax 50, hist 0.6, turn 2.0, window 2.5; finish | 19 | 41 |
+| pfB | the same with turn 2.5, window 1.5; finish | 15 (the 3V3 pour split: 17 isolated vias) | 45 |
+| hB3 | pfB, pour repaired (In2 culprits re-routed off In2), then a greedy hill-climb: each failing unit re-routed with 0 / 8 / 20 rip-ups (at most 12 units), kept only when failures + isolated 3V3 vias drop; partner block off, via budget 3 | **12** | 91 |
+
+hB3's leftovers: two GND fan-out stubs (R178.2, the via at (33.9, 38.2)); PORT_4V8 from the buck cluster to the
+forward island; SD_MISO, QSPI_NCS, QSPI_IO2, SERVO2_MCU, LED_YEL, VBUS_SENSE, SWDIO, CAM_MCU_TX, HG_CS; plus two
+hole_to_hole tip-via pairs. route_check: 31 staircase, 17 dead_copper, 12 local_bump, 10 tiny_jog, 10 extra_vias and
+singles. Each leftover's path against the fixed copper alone crosses 4-17 routed units (QSPI_IO2 12, CAM_MCU_TX 14,
+SD_CS / SD_MISO 9-17). The search has plateaued at 10-15 signal leftovers on every placement since D-R12-44.
+
+Findings for the next pass:
+- **SPI1 needs one more via than route_check allows** (D-R12-58A (a)): U6's west-face order and U4's north-face order
+  are the same rotation, so at most one SPI1 net can join U6 and U4 on one layer; one net needs three vias (an
+  extra_vias allowlist entry with that reason, or U6 rotated / moved so its SPI pins mirror U4's).
+- **PORT_4V8** needs a hand-drawn F / B feed from C406 / L400 / R400 (y 20) to the forward island (y 88.4); an In2 run
+  would split the 3V3 pour into east and west halves.
+- route_check's local_bump candidates applied mechanically (scratch `bump.py`) fix only about a third: the others make
+  right angles at their ends.
+
 ## 5. What stage C still needs
 
+0. **Attempt A (D-R12-58A):** the hand finish was not reached; the leftovers above, then the hygiene clean (about 90
+   findings on the best draft), the freeze and the build checks remain.
 0. **Status of the items below (D-R12-46 … -48):** item 1 was dropped (the band is the U1-north fan-out corridor);
    item 2 was done as fixed tip vias (`hand_seed.tsv`); item 3 was done (`hand_fixed.tsv`); item 4 was run (§4.4) and
    does not finish. What is left is the hand route of the four leftovers of h5, each of which needs 10-18 routed units

@@ -1071,6 +1071,17 @@ def finish(pl):
     return int(os.environ.get('R12_FINISH_PASSES', 4))
 
 
+def u6_joins(pl):
+    """D-R12-55A: U6 (FXLS90322) same-part links on F: the die pad to its GND pins 7 and 14 (one GND fan-out for the
+    three), VCC pins 15 -> 16 -> 1 and 16 -> C33.1 (one 3V3 fan-out for the four; pin 13 sits beyond GND pin 14 and fans
+    out alone)."""
+    pl.join('GND', ('U6', '17'), ('U6', '7'))
+    pl.join('GND', ('U6', '17'), ('U6', '14'))
+    pl.join('3V3', ('U6', '15'), ('U6', '16'))
+    pl.join('3V3', ('U6', '16'), ('U6', '1'))
+    pl.join('3V3', ('U6', '16'), ('C33', '1'))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('geo')
@@ -1096,6 +1107,7 @@ def main():
     t0 = time.time()
     pl.necks()
     pl.join('GND', ('U5', '3'), ('U5', '4'))       # D-R12-52: MS5607 GND / CSB, same row (no track between the rows)
+    u6_joins(pl)
     for a_, b_ in ((('U4', '2'), ('U4', '3')), (('U4', '6'), ('U4', '7')), (('J9', '3'), ('J9', '4')),
                    (('J122', '5'), None)):
         if b_:
