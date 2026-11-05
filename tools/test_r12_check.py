@@ -456,7 +456,7 @@ class PortedRules(unittest.TestCase):
         self.assert_rule(s, 'W-1', False)
 
     def test_lc1_local_floors(self):
-        for ref, floor in (('R1', .1), ('J2', .508), ('TP1', 1.0)):
+        for ref, floor in (('R1', .15), ('J2', .508), ('TP1', 1.0)):
             s = Four(); f = s.part(ref, 10, 10, [('1', 'GND', (0, 0), 'smd')])
             f.SetLocalClearance(mm(floor)); self.assert_rule(s, 'LC-1')
             f.FindPadByNumber('1').SetLocalClearance(mm(floor - .01)); self.assert_rule(s, 'LC-1', False)
@@ -473,14 +473,19 @@ class PortedRules(unittest.TestCase):
         f.Flip(f.GetPosition(), pcbnew.FLIP_DIRECTION_TOP_BOTTOM); self.assert_rule(s, 'M-6', False)
 
     def test_m7_sensor_geometry_without_pin_numbers(self):
-        s = Four()
-        for ref, x in (('U4', 23), ('U5', 10), ('U99', 35)):
-            f = s.part(ref, x, 40, [('A', 'IMU_CS' if ref == 'U4' else 'HG_CS' if ref == 'U99' else 'I2C1_SDA',
-                                    (-2, 0), 'smd'), ('Z', 'GND', (2, 0), 'smd')])
-            s.yard(f, x - 2, 38, x + 2, 42)
+        def board():
+            s = Four()
+            for ref, x in (('U4', 23), ('U5', 10), ('U99', 35)):
+                f = s.part(ref, x, 40, [('A', 'IMU_CS' if ref == 'U4' else 'HG_CS' if ref == 'U99' else 'I2C1_SDA',
+                                        (-2, 0), 'smd'), ('Z', 'GND', (2, 0), 'smd')])
+                s.yard(f, x - 2, 38, x + 2, 42)
+            return s
         data = {'imu': {'rotation': 0, 'lever_mm': 0}}
-        self.assert_rule(s, 'M-7', data=data)
+        s = board(); self.assert_rule(s, 'M-7', data=data)
         s.via(35, 40, 'GND'); self.assert_rule(s, 'M-7', False, data=data)
+        # D-R12-52: U5 (MS5607) has R10's pad-interior track ban again.
+        s = board(); s.track((9.5, 39.5), (10.5, 39.5), 'I2C1_SCL', pcbnew.F_Cu)
+        self.assert_rule(s, 'M-7', False, data=data)
 
     def test_m8_short_edges(self):
         s = Four(); f = s.part('R1', 10, 10, [])
@@ -524,6 +529,17 @@ class PortedRules(unittest.TestCase):
         self.assert_rule(s, 'K-plane')
         s.rect_fill('3V3', (20, 5, 30, 15), pcbnew.In2_Cu)
         self.assert_rule(s, 'K-plane', False)
+
+    def test_k_plane_neck_floor(self):
+        # D-R12-34 / -36: a 3V3 neck must be >= 1.0 mm; 1.4 mm passes, 0.6 mm fails.
+        for width, ok in ((1.4, True), (.6, False)):
+            s = Four()
+            s.rect_fill('3V3', (5, 5, 15, 15), pcbnew.In2_Cu)
+            s.rect_fill('3V3', (14.9, 10 - width / 2, 20.1, 10 + width / 2), pcbnew.In2_Cu)
+            s.rect_fill('3V3', (20, 5, 30, 15), pcbnew.In2_Cu)
+            s.via(10, 10, '3V3'); s.via(25, 10, '3V3')    # plane_necks judges pieces that hold a 3V3 landing
+            s.fill()
+            self.assert_rule(s, 'K-plane', ok)
 
     def test_k_fill_saved_geometry(self):
         s = Four(); z = s.rect_fill('3V3', (5, 5, 20, 20), pcbnew.In2_Cu)

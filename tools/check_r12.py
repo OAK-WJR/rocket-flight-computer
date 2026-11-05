@@ -19,9 +19,9 @@ S-8: barrel wall AND retained inner ring >= 1 mm from foreign In1/In2 copper, in
      GND counts on ACT_GATE, ACT_DRV and PYRO1_OUT (D-R12-34, inherited R10 hazard policy).
 S-9: actual fire-path copper >= 0.5 mm; battery feed >= 1 mm; no inherited narrow-track exceptions.
 W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
-LC-1: local clearance >= 0.10 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
+LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
-M-7: recorded top IMU pose; no via/fill under sensor bodies, no IMU interior track (D-R12-25).
+M-7: recorded top IMU pose; no via/fill under sensor bodies, no track inside any sensor pad ring (D-R12-52).
 M-8: courtyard short-edge clearance >= 2.5 mm except exact R12 recorded edge queries.
 K-legends: R10's identity, mask, designator and Fab checks with R12 revision and connector pin words;
            no R11 optional-legend exemptions (D-R12-29..31).
@@ -293,7 +293,8 @@ def s4(c):
     import r12_sch
     import export_fab
     parts, _ = r12_sch.model(r12_sch.circuit())
-    required = frozenset(ref for ref, part in parts.items() if 'exclude_from_bom' not in part['flags'])
+    # R10's SAFETY_FITTED (AGENTS §2.4 gate networks, pyro, switch chain) stays a fixed floor, independent of the source.
+    required = frozenset(ref for ref, part in parts.items() if 'exclude_from_bom' not in part['flags']) | r10.SAFETY_FITTED
     manual = r12_sch.circuit()['owner_fit']
     bp, pop = r10.board_population, r10.population
     with r10.patched(r10, REQUIRED_FITTED=required,
@@ -387,11 +388,11 @@ def w2(c):
 
 
 def lc1(c):
-    # D-R12-03: 0.10 mm floor; the SWD and probe-specific floors from R10 remain stricter.
+    # R10 / R11 local-clearance floor 0.15 mm kept (the 0.10 mm netclass, D-R12-03, is not a licence to relax it).
     issues, ev = [], []
     for f in c.board.GetFootprints():
         ref = f.GetReference()
-        floor = .508 if ref == 'J2' else 1.0 if ref.startswith('TP') else .10
+        floor = .508 if ref == 'J2' else 1.0 if ref.startswith('TP') else .15
         for label, item in [(ref, f)] + [(f'{ref}.{p.GetNumber()}', p) for p in f.Pads()]:
             value = item.GetLocalClearance()
             if value is not None:
@@ -450,8 +451,8 @@ def m7(c):
             if t.GetClass() == 'PCB_VIA':
                 if pcbnew.SHAPE.Collide(bp, t.GetEffectiveShape(pcbnew.F_Cu), 0):
                     issues.append(f'M-7: via under {ref}')
-            # D-R12-25 removes only U5's pad-interior track ban (its centre GND land needs a link).
-            elif ref != 'U5' and pcbnew.SHAPE.Collide(ip, t.GetEffectiveShape(pcbnew.F_Cu), 0):
+            # D-R12-52: U5 is the MS5607 again, so R10's pad-interior track ban applies to it too.
+            elif pcbnew.SHAPE.Collide(ip, t.GetEffectiveShape(pcbnew.F_Cu), 0):
                 issues.append(f'M-7: track inside {ref} pad-ring interior')
         for z in c.board.Zones():
             if z.GetIsRuleArea() or not z.IsOnLayer(pcbnew.F_Cu) or not z.HasFilledPolysForLayer(pcbnew.F_Cu):
@@ -581,10 +582,15 @@ def k_region(c):
 
 
 def k_plane(c):
-    # R10's links / neck checks, without R10's panel tab coordinates, on R12's sole mixed power layer.
-    with r10.patched(r11, PLANE_LAYERS_R11=('In2.Cu',)):
+    # R10's links / neck checks, without R10's panel tab coordinates, on R12's sole mixed power layer. D-R12-34 / -36:
+    # 3V3 necks must be >= 1.0 mm (IPC-2152, 1 A on 0.5 oz inner), not R10's 0.5 mm.
+    necks = r10.plane_necks
+    with r10.patched(r11, PLANE_LAYERS_R11=('In2.Cu',)), \
+            r10.patched(r10, plane_necks=lambda board, **kw: necks(board, **{**kw, 'width': PLANE_NECK_W})):
         return r11.k_plane(c)
 
+
+PLANE_NECK_W = 1.0    # mm, D-R12-34
 
 PORTED = {
     'S-1': s1, 'S-2': s2, 'S-3': s3, 'S-4': s4, 'S-5': s5, 'S-6': r10.s6, 'S-7': s7, 'S-8': s8, 'S-9': s9,
