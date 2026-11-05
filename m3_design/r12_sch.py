@@ -94,19 +94,19 @@ _DS = 'DS12110 Rev 8'
 R12_MOVES = {
     'QSPI_NCS': ('J7', 'AF9 QUADSPI_BK1_NCS',
                  f'D-R12-61A: PB6 (B5, aft) -> PB10 (J7, forward, toward U3); {_DS} Table 11 (Port B alternate functions: PB10 AF9 '
-                 'QUADSPI_BK1_NCS)'),
+                 'QUADSPI_BK1_NCS; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
     'I2C1_SCL': ('D9', 'AF4 I2C3_SCL (open drain, R12 pull-up)',
                  f'D-R12-62A: PB10 (J7, forward) -> PA8 (D9, east, toward U5); peripheral I2C3; {_DS} Table 10 '
-                 '(Port A alternate functions: PA8 AF4 I2C3_SCL)'),
+                 '(Port A alternate functions: PA8 AF4 I2C3_SCL; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
     'I2C1_SDA': ('E9', 'AF4 I2C3_SDA (open drain, R13 pull-up)',
                  f'D-R12-62A: PB11 (K7, forward) -> PC9 (E9, east, toward U5); peripheral I2C3; {_DS} Table 12 '
-                 '(Port C alternate functions: PC9 AF4 I2C3_SDA)'),
+                 '(Port C alternate functions: PC9 AF4 I2C3_SDA; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
     'SD_SCK': ('J6', 'AF5 SPI4_SCK', f'D-R12-63A: PC10 (B9, aft) -> PE12 (J6, forward, toward J430); peripheral '
-               f'SPI4; {_DS} Table 14 (Port E alternate functions: PE12 AF5 SPI4_SCK)'),
+               f'SPI4; {_DS} Table 14 (Port E alternate functions: PE12 AF5 SPI4_SCK; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
     'SD_MISO': ('K6', 'AF5 SPI4_MISO', f'D-R12-63A: PC11 (B8, aft) -> PE13 (K6, forward, toward J430); peripheral '
-                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE13 AF5 SPI4_MISO)'),
+                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE13 AF5 SPI4_MISO; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
     'SD_MOSI': ('G7', 'AF5 SPI4_MOSI', f'D-R12-63A: PC12 (C8) -> PE14 (G7, dog-bone, forward B lane); peripheral '
-                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE14 AF5 SPI4_MOSI)'),
+                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE14 AF5 SPI4_MOSI; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
     'SD_CS': ('K3', 'GPIO output push-pull; initialise high before output mode',
               f'D-R12-63A: PD0 (D8, dog-bone) -> PA7 (K3, forward ring 1, toward J430.2); plain GPIO; {_DS} Table 9 '
               'pp. 64-88 (PA7, TFBGA100 ball K3)'),
