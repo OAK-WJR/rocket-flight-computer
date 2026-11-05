@@ -40,6 +40,10 @@ IN2_PREF = float(os.environ.get('R12_IN2_PREF', 0.7))
 IN2_CORE = float(os.environ.get('R12_IN2_CORE', 5.0))   # half-size of U1's In2 3V3 core (D-R12-34)
 # route_check extra_vias: a net without a pour may use at most 2 vias (every R12 pad is on F, so it needs none)
 VIA_BUDGET = 2
+# D-R12-65A: outer-ring U1 balls that leave by a dog-bone via and a fixed B.Cu lane (plan.py escapes / b_lanes)
+FORCE_DOGBONE = ('A3',)
+# D-R12-65A: U1 signal dog-bones that take no fixed B lane (their via is the terminal; B under the field stays open to them)
+NO_LANE = ('IMU_INT1',)
 # the fire path stays on F.Cu with no series via (stage A constraint; S-8 needs no pyro barrel there)
 F_ONLY = {'BAT_IN', 'PYRO1_OUT', 'PYRO1_IGN', 'RAW_ACT', 'ACT_FET_S'}
 POWER_ORDER = ('BAT_IN', 'PYRO1_OUT', 'PYRO1_IGN', 'RAW_ACT', 'ACT_FET_S', 'RAW_PROTECTED', 'SW_NODE', 'PORT_SW',
@@ -167,6 +171,8 @@ class Plan:
             ring = min(r - 1, c - 1, 10 - r, 10 - c)
             balls.append((ring, num, r, c, p))
         plane = lambda n: n in ('GND', '3V3', 'VCAP1', 'VCAP2')
+        # D-R12-65A: listed outer-ring balls leave by a dog-bone and a B.Cu lane instead of an F.Cu stub
+        forced = set(x for x in os.environ.get('R12_DOGBONE', ','.join(FORCE_DOGBONE)).split(',') if x)
 
         def pick_side(r, c, ring, net):
             cands = [s for s, (dr, dc) in SIDES.items()
@@ -178,7 +184,7 @@ class Plan:
         stubs = 0
         # ring 1 signals: straight out
         for ring, num, r, c, p in sorted(balls):
-            if ring == 0 and not plane(p['net']):
+            if ring == 0 and not plane(p['net']) and num not in forced:
                 s = pick_side(r, c, 0, p['net'])
                 dr, dc = SIDES[s]
                 a = pos(r, c)
@@ -189,7 +195,7 @@ class Plan:
                 stubs += 1
         # ring 2 signals: diagonal to a free channel, then straight out
         for ring, num, r, c, p in sorted(balls, key=lambda x: (x[0], x[1])):
-            if ring == 1 and not plane(p['net']):
+            if ring == 1 and not plane(p['net']) and num not in forced:
                 s = pick_side(r, c, 1, p['net'])
                 dr, dc = SIDES[s]
                 tx, ty = target(p['net'])
@@ -213,7 +219,8 @@ class Plan:
                 self.reserve(p['net'], pos(*end), (dc, dr))
                 stubs += 1
         # dog-bones: inner signals first (toward their target), then the plane / VCAP balls
-        order = [x for x in balls if x[0] >= 2 and not plane(x[4]['net'])] + [x for x in balls if plane(x[4]['net'])]
+        order = [x for x in balls if x[0] >= 2 and not plane(x[4]['net'])] + [x for x in balls if plane(x[4]['net'])] \
+            + [x for x in balls if x[1] in forced and x[0] < 2 and not plane(x[4]['net'])]
         for ring, num, r, c, p in order:
             tx, ty = target(p['net'])
             bx, by = pos(r, c)
@@ -247,9 +254,10 @@ class Plan:
         every search. A net with no free lane keeps the old free B escape."""
         nets = sorted(self.dogbone_nets, key=lambda n: n)
         site = {}
+        nolane = set(x for x in os.environ.get('R12_NOLANE', ','.join(NO_LANE)).split(',') if x)
         for n in nets:
             (vx, vy), d = self.u1term[n]
-            if d is not None:
+            if d is not None or n in nolane:          # D-R12-65A: a listed dog-bone keeps the free B escape
                 continue
             cx, cy = self.u1c
             site[n] = (round((vy - cy) / 0.8 + 5.5, 3), round((vx - cx) / 0.8 + 5.5, 3))

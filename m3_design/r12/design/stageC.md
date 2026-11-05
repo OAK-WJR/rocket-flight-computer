@@ -1,12 +1,12 @@
-# R12 stage C: copper (2026-11-04) — IN PROGRESS, not complete (updated after D-R12-58A, routing attempt A)
+# R12 stage C: copper (2026-11-05) — pass 1 FROZEN (connected, DRC clean); pass 2 (routing hygiene) open
 
-Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
-but the board is not routed.** On the D-R12-53 placement (Economic sensors: LSM6DSVE, FXLS90322 U6, MS5607; placed
-board `ec461057…`) routing attempt A's best draft (§4.5) leaves 7 DRC unconnected items (no DRC violation) and 71 route_check
-findings,
-so no copper table is frozen: `m3_design/r12_routes.tsv` does not exist, `r12_build.sh` stops after stage B, and
-`m3_design/r12/m3.kicad_pcb` is the placed board with no copper. Decisions D-R12-22 … -54 and attempt A's D-R12-55A …
--58A are in `R12_DECISIONS.md`.
+Stage C of `r12_plan.md` §4. **Status: pass 1 is done** (owner, 2026-11-04: "relax the cleanliness guidelines to get
+it working first, then get routing nice in subsequent passes"). On the D-R12-61A … -64A pin map (placed board
+`3b4f64da…`) the copper table `m3_design/r12_routes.tsv` is frozen; `r12_build.sh` replays it and builds board
+`da48bb99031f30d7a79c4a985b83898543d62011ee13092409aca7f8cf395600` twice with the same hash: KiCad DRC 0 violations,
+0 unconnected, parity 0; fit_check r12 and check_r12 copper pass; route_check r12 reports **83 failing** hygiene findings,
+which pass 1 allows and pass 2 must clear (§4.6, §5). Decisions D-R12-22 … -54, attempt A's D-R12-55A … -60A and pass
+1's D-R12-61A … -66A are in `R12_DECISIONS.md`. `m3_design/r12/m3.kicad_pcb` stays untracked (built, not committed).
 
 ## 1. Infrastructure
 
@@ -227,7 +227,37 @@ Findings for the next pass:
 - route_check's local_bump candidates applied mechanically (scratch `bump.py`) fix only about a third: the others make
   right angles at their ends.
 
+### 4.6 Pass 1: U1 re-pins and the frozen table (D-R12-61A … -66A)
+
+D-R12-60A had shown that re-routing alone stalls at 6 unconnected because U1's aft rows and east column carried nets
+whose pads lie elsewhere. Nine nets moved to free balls on the side facing their pads (D-R12-61A … -64A, `r12_sch.py`
+`R12_MOVES`): QSPI_NCS PB6 → PB10 (J7); the barometer I2C to I2C3 on PA8 / PC9 (D9 / E9); the microSD to SPI4 on PE12 /
+PE13 / PE14 (J6 / K6 / G7) with SD_CS on PA7 (K3); HG_CS PA10 → PC11 (B8); VBUS_SENSE PC8 → PA10 (D10). The schematic,
+netlist and pin table are generated from that table; stage A / B pass (placed board `3b4f64da…`).
+
+Runs (scratch `r12ra/ps/`, `PYTHONHASHSEED=0`; the trial tools `trial.py`, `seg.py`, `lneg.py` are scratch only):
+
+| Run | What | Result |
+|---|---|---|
+| s1-s5 | single / grouped re-pins re-routed on BEST6 (D-R12-60A's draft) without a fresh search | 1-10 failing: the old copper was laid for the old map |
+| pBa / pBb | full `--pf 60` (turn 2.0 / window 2.5; turn 2.5 / window 1.5), VBUS_SENSE on PC10 (B9) | 12-21 conflicts at iteration ~40 (stopped) |
+| pCa / pCb | the same, VBUS_SENSE on PA10 (D10) | 3 conflicts; after the finish pCa 4 DRC unconnected, no violation |
+| sw1 | pCa, DRC-judged blocker swaps (`swap.py`) | 2 unconnected: IMU_INT1, QSPI_IO2 |
+| pDa / pDb / pCc, lnA-lnD | IMU_INT1 on PB6 (B5); turn 2.2; local negotiations of 10-26 units | 4-18 failing; not used |
+| e19 | sw1 + D-R12-65A (QSPI_IO2 by a dog-bone and free B escape; IMU_INT1 without a B lane, routed from U4.4 through a via at (24.9, 30.6); SERVO2_MCU west of the IMU through (19.5, 40.0)) | **0 unconnected, DRC clean**: frozen |
+
+The frozen table: 1423 tracks, 436 vias. route_check r12: 28 staircase, 13 local_bump, 9 tiny_jog, 8
+critical_via_no_gnd, 6 extra_vias, 5 detour, 3 acute_angle, 3 side_by_side_overlap, 2 fold_back, and one each of
+short_segment, collinear_overlap, crossing_without_node, right_angle, chain_detour and track_loop (83). QSPI_IO2 has six
+vias (pass 1 allowed a third). The fire path is F.Cu with no via; S-8 keep-outs and the U4 / U5 rule areas pass DRC;
+no foreign F.Cu track enters U6's pad ring.
+
 ## 5. What stage C still needs
+
+0. **Pass 2 (next):** clear route_check r12 (83 failing on `da48bb99…`): `plan.py --clean` with the build's
+   route.json, then hand fixes; cut QSPI_IO2 to at most two vias besides its dog-bone (it now goes round U1's west and
+   north sides: a B lane for A3 or a shorter F / In2 run east of U1); add GND partner vias at the eight critical layer
+   changes; then set `R12_ROUTE_HYGIENE=strict` as the build default and re-run stage D. Items 0-4 below are history.
 
 0. **Pass 1 (D-R12-60A):** blocker swaps reach 6 unconnected (CAM_MCU_TX, HG_CS, QSPI_IO2, QSPI_NCS, SERVO2_MCU,
    VBUS_SENSE); the U1 A-row / column-10 fan-out must change to finish.

@@ -840,7 +840,7 @@
     "16": "3V3",
     "17": "GND"
    },
-   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10); TEST / n.c. / PCM0 unterminated as NXP recommends"
+   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10 at D-R12-51, PC11 since D-R12-64A); TEST / n.c. / PCM0 unterminated as NXP recommends"
   },
   "C33": {
    "lcsc": "C307331",

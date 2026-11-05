@@ -85,6 +85,40 @@ R12_NEW_PINS = {
 }
 
 
+# D-R12-61A ... (stage C pass 1): nets moved to another U1 ball so that each leaves the ball field on the side facing its
+# pads; net -> (new ball, R12 mode, source). Balls: DS12110 Rev 8 Table 9; alternate functions: its Tables 10-14 (Port
+# A-E). Each function was read from KiCad 10's MCU_ST_STM32H7 symbol STM32H743V_G-I_Hx (pin alternates built from ST's
+# open pin data); the AF numbers are not in that symbol and st.com refused scripted access in this pass, so the
+# datasheet rows and AF numbers are an Inference until DS12110 is re-read (R12_DECISIONS.md D-R12-61A).
+_DS = 'DS12110 Rev 8'
+R12_MOVES = {
+    'QSPI_NCS': ('J7', 'AF9 QUADSPI_BK1_NCS',
+                 f'D-R12-61A: PB6 (B5, aft) -> PB10 (J7, forward, toward U3); {_DS} Table 11 (Port B alternate functions: PB10 AF9 '
+                 'QUADSPI_BK1_NCS)'),
+    'I2C1_SCL': ('D9', 'AF4 I2C3_SCL (open drain, R12 pull-up)',
+                 f'D-R12-62A: PB10 (J7, forward) -> PA8 (D9, east, toward U5); peripheral I2C3; {_DS} Table 10 '
+                 '(Port A alternate functions: PA8 AF4 I2C3_SCL)'),
+    'I2C1_SDA': ('E9', 'AF4 I2C3_SDA (open drain, R13 pull-up)',
+                 f'D-R12-62A: PB11 (K7, forward) -> PC9 (E9, east, toward U5); peripheral I2C3; {_DS} Table 12 '
+                 '(Port C alternate functions: PC9 AF4 I2C3_SDA)'),
+    'SD_SCK': ('J6', 'AF5 SPI4_SCK', f'D-R12-63A: PC10 (B9, aft) -> PE12 (J6, forward, toward J430); peripheral '
+               f'SPI4; {_DS} Table 14 (Port E alternate functions: PE12 AF5 SPI4_SCK)'),
+    'SD_MISO': ('K6', 'AF5 SPI4_MISO', f'D-R12-63A: PC11 (B8, aft) -> PE13 (K6, forward, toward J430); peripheral '
+                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE13 AF5 SPI4_MISO)'),
+    'SD_MOSI': ('G7', 'AF5 SPI4_MOSI', f'D-R12-63A: PC12 (C8) -> PE14 (G7, dog-bone, forward B lane); peripheral '
+                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE14 AF5 SPI4_MOSI)'),
+    'SD_CS': ('K3', 'GPIO output push-pull; initialise high before output mode',
+              f'D-R12-63A: PD0 (D8, dog-bone) -> PA7 (K3, forward ring 1, toward J430.2); plain GPIO; {_DS} Table 9 '
+              'pp. 64-88 (PA7, TFBGA100 ball K3)'),
+    'HG_CS': ('B8', 'GPIO out (push-pull, initialise high before output mode); analog at reset: U6 SS_B internal '
+              'pull-up (NXP FXLS9xxx0 Rev 6 Table 9) holds the high-g accelerometer deselected',
+              f'D-R12-64A: PA10 (D10, east) -> PC11 (B8, aft, toward U6); plain GPIO; {_DS} Table 9 pp. 64-88 (PC11, '
+              'TFBGA100 ball B8); not a PE4 (C3) or PC1 (F2) neighbour'),
+    'VBUS_SENSE': ('D10', 'GPIO in', f'D-R12-64A: PC8 (F9, east ring 2) -> PA10 (D10, east ring 1, the ball HG_CS left); '
+                   f'plain GPIO input; {_DS} Table 9 pp. 64-88 (PA10, TFBGA100 ball D10)'),
+}
+
+
 def uid(key):
     return str(uuid.uuid5(NS, key))
 
@@ -214,6 +248,16 @@ def model(data=None):
     for ball, (net, _, _) in R12_NEW_PINS.items():
         assert pins.get(('U1', ball), 'missing') is None, f'U1.{ball} is not an R11 NC ball'
         pins['U1', ball] = net
+    # D-R12-61A ...: stage C re-pins (every moved net leaves its ball first, then takes its new one)
+    old = {}
+    for net in R12_MOVES:
+        balls = [k[1] for k, v in pins.items() if k[0] == 'U1' and v == net]
+        assert len(balls) == 1, f'{net} on U1 balls {balls}'
+        old[net] = balls[0]
+        pins['U1', balls[0]] = None
+    for net, (ball, _, _) in R12_MOVES.items():
+        assert pins.get(('U1', ball), 'missing') is None, f'U1.{ball} is not free for {net}'
+        pins['U1', ball] = net
     for p in parts.values():
         p['flags'] = sorted(p['flags'])
     return parts, pins
@@ -235,7 +279,9 @@ def r11_pin_rows():
 
 def pin_rows():
     out = []
-    for row in r11_pin_rows():
+    rows = r11_pin_rows()
+    moved_to = {ball: net for net, (ball, _, _) in R12_MOVES.items()}
+    for row in rows:
         new = dict(row)
         net = row['r11_net']
         if net in R12_REPIN:
@@ -247,7 +293,18 @@ def pin_rows():
             new.update(r12_net=r12, r12_mode=mode, r12_source=why)
         else:
             new.update(r12_net=net, r12_mode='as R11', r12_source='R11 (unchanged)')
+        if new['r12_net'] in R12_MOVES and row['r11_ball'] != R12_MOVES[new['r12_net']][0]:
+            ball, _, why = R12_MOVES[new['r12_net']]
+            new.update(r12_net='NC', r12_mode='NC (firmware: analog, never driven)',
+                       r12_source=f"{why.split(':')[0]}: {new['r12_net']} moved to ball {ball}")
+        if row['r11_ball'] in moved_to:
+            net_ = moved_to[row['r11_ball']]
+            _, mode, why = R12_MOVES[net_]
+            new.update(r12_net=net_, r12_mode=mode, r12_source=why)
         out.append(new)
+    nets = [r['r12_net'] for r in out if r['r12_net'] not in ('NC', 'GND', '3V3', '-')]
+    dup = {n for n in nets if nets.count(n) > 1 and n not in ('3V3A',)}
+    assert not dup, f'pin table: nets on two balls {sorted(dup)}'
     return out
 
 

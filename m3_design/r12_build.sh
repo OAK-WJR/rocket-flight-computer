@@ -70,9 +70,15 @@ PY
 "$KICAD_PY" -I -B tools/fit_check.py --profile r12 --report "$T/fit.json" "$D/m3.kicad_pcb" > "$T/fit.txt" 2>&1 \
   || { echo "fit_check r12: FAIL (see $T/fit.txt)"; exit 1; }
 echo "fit_check r12: OK"
-"$KICAD_PY" -I -B tools/route_check.py "$D/m3.kicad_pcb" --profile r12 --report "$T/route.json" > "$T/route.txt" 2>&1 \
-  || { tail -5 "$T/route.txt"; echo "route_check r12: FAIL (see $T/route.txt)"; exit 1; }
-tail -1 "$T/route.txt"
+# Stage C pass 1 (D-R12-66A, owner: connect first, clean later): route_check's hygiene findings are reported, not
+# fatal, until pass 2 sets R12_ROUTE_HYGIENE=strict (the default then). DRC, parity and unconnected stay fatal above.
+if ! "$KICAD_PY" -I -B tools/route_check.py "$D/m3.kicad_pcb" --profile r12 --report "$T/route.json" > "$T/route.txt" 2>&1; then
+  tail -1 "$T/route.txt"
+  if [[ "${R12_ROUTE_HYGIENE:-report}" == strict ]]; then echo "route_check r12: FAIL (see $T/route.txt)"; exit 1; fi
+  echo "route_check r12: hygiene findings reported, not fatal in stage C pass 1 (see $T/route.txt)"
+else
+  tail -1 "$T/route.txt"
+fi
 "$KICAD_PY" -I -B tools/check_r12.py "$D/m3.kicad_pcb" --stage copper --fit "$T/fit.json" --report "$T/r12.json" \
   || { echo "check_r12 (copper): FAIL"; exit 1; }
 

@@ -3466,22 +3466,9 @@
 	(no_connect
 		(at 218.44 214.63)
 		(uuid 9baf113d-41d9-5c04-bd5a-0da1b09a5e7b))
-	(wire
-		(pts
-			(xy 218.44 207.01)
-			(xy 213.36 207.01))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 91b4a00f-00a0-5dd1-839d-b83101d5b3a3))
-	(global_label "QSPI_NCS"
-		(shape passive)
-		(at 213.36 207.01 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f8ed102a-4b91-56fd-a251-6b534504347c))
+	(no_connect
+		(at 218.44 207.01)
+		(uuid 9cae9b02-1817-5516-9200-ecb4e40a3ee3))
 	(wire
 		(pts
 			(xy 274.32 214.63)
@@ -3522,7 +3509,7 @@
 			(width 0)
 			(type default))
 		(uuid 5863824d-e41a-5350-ac98-9087eb52dc40))
-	(global_label "SD_MISO"
+	(global_label "HG_CS"
 		(shape passive)
 		(at 279.4 201.93 180)
 		(effects
@@ -3530,22 +3517,9 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 9438f86c-6d42-5efe-ac5e-b7b86893725a))
-	(wire
-		(pts
-			(xy 274.32 199.39)
-			(xy 279.4 199.39))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 659b1d88-7854-526c-845f-810b4c5f9c38))
-	(global_label "SD_SCK"
-		(shape passive)
-		(at 279.4 199.39 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 95b6ac7f-2766-5252-8b2e-abcce70130b1))
+	(no_connect
+		(at 274.32 199.39)
+		(uuid 954e3167-9eaf-5cb3-b91d-1a2ea0539da3))
 	(wire
 		(pts
 			(xy 218.44 115.57)
@@ -3645,22 +3619,9 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid d5d06b7d-4621-5e20-85e7-5b18499137f5))
-	(wire
-		(pts
-			(xy 274.32 204.47)
-			(xy 279.4 204.47))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 9e5000f4-6248-59a9-970b-f0c6dcac0a02))
-	(global_label "SD_MOSI"
-		(shape passive)
-		(at 279.4 204.47 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid ca47ccf9-2cb7-5af5-9c04-c4753da31354))
+	(no_connect
+		(at 274.32 204.47)
+		(uuid b61dea60-6533-5c45-abae-97c3a2ccbdba))
 	(no_connect
 		(at 274.32 191.77)
 		(uuid 74f6228c-afc2-5531-b0bf-2887838b656a))
@@ -3724,25 +3685,25 @@
 	(no_connect
 		(at 218.44 196.85)
 		(uuid 16bc07ef-3d7f-5857-b77c-361e2b8fd502))
+	(no_connect
+		(at 274.32 207.01)
+		(uuid 44165377-e733-5b5b-952b-581185e7cb90))
 	(wire
 		(pts
-			(xy 274.32 207.01)
-			(xy 279.4 207.01))
+			(xy 274.32 189.23)
+			(xy 279.4 189.23))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 1f8263b8-ea77-50e8-b85e-5f4bf2c7059e))
-	(global_label "SD_CS"
+		(uuid 4506cd36-8af6-59d3-824a-b84a1db44184))
+	(global_label "I2C1_SCL"
 		(shape passive)
-		(at 279.4 207.01 180)
+		(at 279.4 189.23 180)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
-		(uuid bc4132f4-d729-5854-9bec-71b1b481b5b0))
-	(no_connect
-		(at 274.32 189.23)
-		(uuid 03506b45-1e49-5da1-98af-bbebe500d005))
+		(uuid b80e00ba-e92b-5668-ba75-7e65f8fb4e3b))
 	(wire
 		(pts
 			(xy 218.44 120.65)
@@ -3845,9 +3806,22 @@
 	(no_connect
 		(at 274.32 209.55)
 		(uuid cb0e7826-31ae-5778-875b-abb48d673573))
-	(no_connect
-		(at 274.32 186.69)
-		(uuid 7a292ca8-a3b1-5ee0-91b1-9f61928ebcfd))
+	(wire
+		(pts
+			(xy 274.32 186.69)
+			(xy 279.4 186.69))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 029881ae-aed0-5589-82b0-5344644e30b4))
+	(global_label "I2C1_SDA"
+		(shape passive)
+		(at 279.4 186.69 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 376749a3-b625-5113-bb2f-cffded5c2bc4))
 	(wire
 		(pts
 			(xy 274.32 110.49)
@@ -3963,22 +3937,9 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid b6852297-6c7f-5db6-8300-215e7304765d))
-	(wire
-		(pts
-			(xy 274.32 184.15)
-			(xy 279.4 184.15))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 96417ed0-d2f2-59ff-905b-476096603e7c))
-	(global_label "VBUS_SENSE"
-		(shape passive)
-		(at 279.4 184.15 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid d7552268-2f9f-555c-9ec0-d87d330995ca))
+	(no_connect
+		(at 274.32 184.15)
+		(uuid d8fa2d70-c0ab-5558-8c27-8e21897e600f))
 	(wire
 		(pts
 			(xy 218.44 128.27)
@@ -4036,9 +3997,22 @@
 	(no_connect
 		(at 218.44 146.05)
 		(uuid 4d442391-4e8d-5bd1-a168-2c8cd1d65cee))
-	(no_connect
-		(at 274.32 158.75)
-		(uuid bf88507e-0e99-580b-807d-4ee86b0b2280))
+	(wire
+		(pts
+			(xy 274.32 158.75)
+			(xy 279.4 158.75))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 5af24fed-bbe4-574c-8a91-ef1bf22ace79))
+	(global_label "SD_MOSI"
+		(shape passive)
+		(at 279.4 158.75 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 4a38c497-0466-58e6-943b-9adbfc600509))
 	(no_connect
 		(at 218.44 168.91)
 		(uuid 5de8742a-08e6-5452-b917-b3ff94f6e2a7))
@@ -4204,9 +4178,22 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 8ab6acad-0191-5504-8caf-5cbc8dcec8d3))
-	(no_connect
-		(at 274.32 153.67)
-		(uuid fe56cf0b-3eb7-5f12-b2cc-27479f6f96e2))
+	(wire
+		(pts
+			(xy 274.32 153.67)
+			(xy 279.4 153.67))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 6e730120-d59b-5e08-91e7-e7066ad045e1))
+	(global_label "SD_SCK"
+		(shape passive)
+		(at 279.4 153.67 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid fe2037f3-14e5-5ead-b0cb-5568a5a5d1b3))
 	(wire
 		(pts
 			(xy 218.44 148.59)
@@ -4215,7 +4202,7 @@
 			(width 0)
 			(type default))
 		(uuid c64d17e5-779c-5954-a942-87ca18e120a4))
-	(global_label "I2C1_SCL"
+	(global_label "QSPI_NCS"
 		(shape passive)
 		(at 213.36 148.59 0)
 		(effects
@@ -4274,9 +4261,22 @@
 	(no_connect
 		(at 274.32 123.19)
 		(uuid 35fad404-1014-5ddd-b28f-40feb4337140))
-	(no_connect
-		(at 274.32 133.35)
-		(uuid f00338ad-3a9b-573e-b6ce-d1d6f2f83a28))
+	(wire
+		(pts
+			(xy 274.32 133.35)
+			(xy 279.4 133.35))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 46d2f398-bb89-5de4-b7cd-e840a389aa41))
+	(global_label "SD_CS"
+		(shape passive)
+		(at 279.4 133.35 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 90607957-7eb7-51ce-90ce-cb525bb03a7b))
 	(wire
 		(pts
 			(xy 274.32 143.51)
@@ -4296,25 +4296,25 @@
 	(no_connect
 		(at 274.32 148.59)
 		(uuid eab08815-d814-557b-b23a-726e33239bec))
-	(no_connect
-		(at 274.32 156.21)
-		(uuid 30dadb7a-3824-5683-b591-bc1f9d8cddc3))
 	(wire
 		(pts
-			(xy 218.44 151.13)
-			(xy 213.36 151.13))
+			(xy 274.32 156.21)
+			(xy 279.4 156.21))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 9e26bc04-3a92-5540-854d-29498c275cd6))
-	(global_label "I2C1_SDA"
+		(uuid 705d9bfc-5e17-57d6-96bd-a5a4048a5129))
+	(global_label "SD_MISO"
 		(shape passive)
-		(at 213.36 151.13 0)
+		(at 279.4 156.21 180)
 		(effects
 			(font
 				(size 1.05 1.05))
-			(justify right))
-		(uuid 173225a9-eb58-59d6-bf44-a64bdf7f6b08))
+			(justify left))
+		(uuid b3f6dc13-9df1-504e-8a7f-ef25477d4fd1))
+	(no_connect
+		(at 218.44 151.13)
+		(uuid a9af9792-dc43-543e-af64-913a938d0729))
 	(wire
 		(pts
 			(xy 274.32 163.83)
@@ -4403,7 +4403,7 @@
 			(width 0)
 			(type default))
 		(uuid b9086b3a-17cb-52b5-b380-1733b526bf2f))
-	(global_label "HG_CS"
+	(global_label "VBUS_SENSE"
 		(shape passive)
 		(at 279.4 194.31 180)
 		(effects

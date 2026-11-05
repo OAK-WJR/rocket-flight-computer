@@ -513,7 +513,7 @@ identity LSM6DSVE = LSM6DSV (DS13510) pin map, axis frame and register set is an
 (JLC flags it Economic, MSL 3). Firmware: an LSM6DSV-family driver (Inference, close to the ISM6HG256X's low-g / gyro
 registers; the high-g block is gone).
 
-**D-R12-51 New high-g accelerometer U6: NXP FXLS90322AESR2 (C5190712) on the IMU SPI bus, chip select HG_CS on PA10.**
+**D-R12-51 New high-g accelerometer U6: NXP FXLS90322AESR2 (C5190712) on the IMU SPI bus, chip select HG_CS on PA10 (moved to PC11, ball B8, by D-R12-64A).**
 F2 (≥ ±64 g axial against the 37 g flight peak) moves to U6. JLC Economic (MSL 3), Extended, 1348 / 1348, $2.8717 (Live).
 Confirmed: (a) **axes and range**: NXP's part page (https://www.nxp.com/part/FXLS90322AES, read 2026-11-04) calls it an
 "XY Dual-Axis Medium-g Inertial Sensor", Active; distributor and NXP-community text give medium-g ranges ±15.5 … ±150 g
@@ -633,6 +633,67 @@ and 7 B.Cu lane ends within x 19.4-25.8) and the east column, where every corrid
 change of the fan-out itself (stub / lane assignment at the A row and column 10, or a DS12110-checked pin swap to a ball
 facing its pads), not more re-routing. No table is frozen.
 
+**D-R12-61A … -64A U1 re-pins for the stalled fan-out (stage C pass 1, routing attempt A, 2026-11-04).** D-R12-60A
+showed that the six leftovers could not finish because U1's aft row (row A / B) and east column carried nets whose pads
+lie on the other side of the board (QSPI_NCS and the microSD bus forward-bound from the aft rows, I2C forward of U1 for
+a barometer aft of it, HG_CS / VBUS_SENSE on the crowded east column). Moved, so that every net leaves the ball field on
+the side facing its pads (`m3_design/r12_sch.py` `R12_MOVES`; the pin table, schematic and netlist are generated from it;
+every new ball was NC; none is a ball next to PE4 (C3) or PC1 (F2), and PE4, PC1, PC0, PC5 and the GPS / radio / AUX
+UARTs are unchanged):
+
+| Decision | Net | Was | Now | Function used |
+|---|---|---|---|---|
+| D-R12-61A | QSPI_NCS | PB6 (B5, aft ring 2) | **PB10 (J7, forward ring 2)** | QUADSPI_BK1_NCS (the only other BK1_NCS ball on TFBGA-100) |
+| D-R12-62A | I2C1_SCL | PB10 (J7) | **PA8 (D9, east ring 2)** | I2C3_SCL (peripheral I2C2 → I2C3; net names kept) |
+| D-R12-62A | I2C1_SDA | PB11 (K7) | **PC9 (E9, east ring 2)** | I2C3_SDA |
+| D-R12-63A | SD_SCK | PC10 (B9, aft) | **PE12 (J6, forward ring 2)** | SPI4_SCK (peripheral SPI3 → SPI4) |
+| D-R12-63A | SD_MISO | PC11 (B8, aft) | **PE13 (K6, forward ring 1)** | SPI4_MISO |
+| D-R12-63A | SD_MOSI | PC12 (C8) | **PE14 (G7, dog-bone, B lane forward)** | SPI4_MOSI |
+| D-R12-63A | SD_CS | PD0 (D8) | **PA7 (K3, forward ring 1)** | GPIO out, high before output mode |
+| D-R12-64A | HG_CS | PA10 (D10, east) | **PC11 (B8, aft ring 2)** | GPIO out, high before output mode (U6 SS_B pull-up holds it deselected at reset) |
+| D-R12-64A | VBUS_SENSE | PC8 (F9, east ring 2) | **PA10 (D10, east ring 1, the ball HG_CS left)** | GPIO in |
+
+Freed: PB6 (B5), PB11 (K7), PC10 (B9), PC12 (C8), PD0 (D8), PC8 (F9), now NC (firmware: analog). QSPI_IO2 cannot move:
+QUADSPI_BK1_IO2 exists only on PE2 (A3) in this package. SERVO2_MCU (PA15 TIM2_CH1) and CAM_MCU_TX (PD5 USART2_TX) keep
+their balls: the D-R12-66A runs routed them once the moved nets left the aft rows. VBUS_SENSE was tried on PC10 (B9) as
+well: the two negotiations with it there stalled at 12-21 conflicts, against 3 with PA10 (D-R12-66A). **Sources:** balls from DS12110 Rev 8
+Table 9 (pp. 64-88); the alternate functions (QUADSPI_BK1_NCS on PB10, I2C3_SCL / SDA on PA8 / PC9, SPI4_SCK / MISO /
+MOSI on PE12 / PE13 / PE14) were read from KiCad 10's `MCU_ST_STM32H7` symbol `STM32H743V_G-I_Hx` (pin alternates
+generated from ST's open pin data); st.com refused scripted access in this pass, so the DS12110 Tables 10-14 rows and
+the AF numbers written in the pin table (AF9 / AF4 / AF5, ST's usual mapping for these peripherals) are an **Inference**
+until the datasheet is re-read (O-R12-23). **Loader pins (Inference, AN2606 not re-read):** PA8 / PC9 (I2C3), PE12-PE14
+(SPI4) and PB10 (USART3_TX) are among the H74x system-memory boot loader's interfaces; the ROM loader runs only on a
+BOOT0 / option-byte boot, and the flash's NCS on PB10 is harmless while the loader idles (no QUADSPI command reaches the
+flash). **Firmware binding:** the barometer bus is I2C3, the microSD bus SPI4, U3's NCS PB10.
+
+**D-R12-65A Two U1 escapes changed in the drafting aid (2026-11-05).** `m3_design/r12_aid/plan.py`: (a)
+`FORCE_DOGBONE = ('A3',)`: QSPI_IO2 (A3, the only QUADSPI_BK1_IO2 ball) leaves by a dog-bone via at (21.4, 50.8) instead
+of an F.Cu stub into the aft bundle; no B lane is free for it, so it keeps the free B escape under the field and reaches
+U3.3 round the west and north sides of U1. (b) `NO_LANE = ('IMU_INT1',)`: IMU_INT1's dog-bone (C7) takes no fixed B lane:
+the lane along column 8 ended at (25.0, 49.6), the SERVO2_MCU stub tip, between the LED_YEL and HG_CS tip vias, where no
+path could leave it. (c) Hand-guided copper (scratch `seg.py`, searched with explicit waypoints, then judged by KiCad
+DRC): IMU_INT1 leaves U4.4 east on F.Cu to a via at (24.9, 30.6), outside the IMU_body no-via area, and runs B.Cu north
+to its dog-bone; SERVO2_MCU runs west of the IMU through a waypoint via at (19.5, 40.0) (it used to pass between U4 and
+C30 and walled U4.4 in). Both are in the frozen table, not in `hand_fixed.tsv`.
+
+**D-R12-66A Stage C pass 1 frozen: `m3_design/r12_routes.tsv` (2026-11-05).** Routing on the D-R12-61A … -64A pin map
+(placed board `3b4f64da…`): four full negotiations (`--pf 60`, D-R12-48's settings with turn 2.0 / 2.5 and window
+2.5 / 1.5): VBUS_SENSE on PA10 reached 3 conflicts (best D-R12-58A run: 10-17), on PC10 12-21; after the finish the
+better run (turn 2.0, window 2.5) had 4 DRC unconnected (IMU_INT1, SPI1_SCK, SERVO2_MCU, QSPI_IO2) and no violation;
+DRC-judged blocker swaps (scratch `swap.py`) took it to 2 (IMU_INT1, QSPI_IO2), and D-R12-65A to 0. Further runs with
+IMU_INT1 on PB6 (B5) and a third setting (turn 2.2) and local negotiations of 10-26 units did not do better and are not
+used. **Result** (`r12_build.sh`, twice, same hash): board `da48bb99031f30d7a79c4a985b83898543d62011ee13092409aca7f8cf395600`,
+1423 tracks, 436 vias; KiCad DRC 0 violations, 0 unconnected, parity 0; fit_check r12 OK; check_r12 copper OK (V-1,
+V-2); route_check r12 **83 failing** (28 staircase, 13 local_bump, 9 tiny_jog, 8 critical_via_no_gnd, 6 extra_vias, 5
+detour, 3 acute_angle, 3 side_by_side_overlap, 2 fold_back and singles), which the owner's pass-1 rule allows: so
+`r12_build.sh` reports route_check's findings without stopping until `R12_ROUTE_HYGIENE=strict` (pass 2). Safety checks
+on this copper: the fire path (BAT_IN, PYRO1_OUT, PYRO1_IGN, RAW_ACT, ACT_FET_S) is F.Cu with no via; the S-8 keep-outs
+are drawn by `r12_route.py` and DRC passes on them; no foreign F.Cu track enters U6's pad ring (|dx|, |dy| < 2.45 mm
+from its centre) and the U4 / U5 rule areas pass DRC; the gate networks and K-neighbours are unchanged (no gate part
+moved; D-R12-61A … -64A keep every PE4 / PC1 neighbour). **Pass-1 deviations for pass 2:** QSPI_IO2 has six vias (its
+dog-bone and five; the pass-1 allowance was a third via), and eight critical layer changes have no GND partner within
+1.5 mm (route_check critical_via_no_gnd); every route_check finding above; the hygiene clean is pass 2.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.
@@ -745,7 +806,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PA4 high = ports powered, camera UART parking while U403 is off, USB-only detection from VBUS_SENSE / PA4, U9 auto-retry | firmware |
 | O-R12-12 | Preferred Extended feeder waiver on Economic (BAT54C, $3.07): Inference | order |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
-| O-R12-14 | Board: placement done (stage B, 46 × 100 mm, 43.4 % of the top face; pass 2, D-R12-33); routing incomplete: with In2 as a third signal layer (D-R12-34) and negotiated congestion (D-R12-35 … -38) the best draft still leaves 8–20 conflicting units round U1's west side and under U1 (stageC.md §4.2, §5) | C |
+| O-R12-14 | Board: placement done (stage B, 46 × 100 mm); routing pass 1 frozen (D-R12-66A: `r12_routes.tsv`, DRC 0 / unconnected 0 / parity 0); pass 2, the routing hygiene clean (route_check r12: 83 failing, QSPI_IO2's six vias, eight critical layer changes without a GND partner), is open (stageC.md §4.6, §5) | C |
 | O-R12-15 | R12 axis maps derived (D-R12-54: U4 roll = −gyro_Y, thrust −a_Y; U6 channel 1 axial, +a forward): 1 g / rotation bench sign check | bench / firmware |
 | O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
@@ -754,6 +815,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-20 | J121 DB125 on JLC Economic as THT, and the J1 5.0 mm-terminal hole fit: confirm on the order page / with a sample terminal (D-R12-29, -30) | order / bench |
 | O-R12-21 | FXLS90322 dual-channel datasheet (FXLS9xxxx Rev 7) not read: confirm pin-out, axis frame, medium-g range codes; LSM6DSVE datasheet not found at ST (D-R12-50, -51) | records / bench |
 | O-R12-22 | U6 VCC ≥ 3.135 V at the part: 3V3 regulator window 3.240 V low (105 mV margin); check the copper drop on R12 copper (D-R12-51) | C / D |
+| O-R12-23 | Re-read DS12110 Rev 8 Tables 10-14 (and AN2606's H74x loader pins) for the D-R12-61A … -64A re-pins: PB10 QUADSPI_BK1_NCS, PA8 / PC9 I2C3, PE12-PE14 SPI4 and their AF numbers (read from KiCad's ST symbol only) | records / firmware |
 
 ## 5. Files (stage A)
 
