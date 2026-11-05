@@ -600,9 +600,11 @@ alone). In every attempt-A draft U6 and C33 connect (no U6 power item unconnecte
 (`r12_build.sh` stage A / B pass). Runs (scratch `r12ra`, not frozen): the h5 draft ported onto the new lands with the
 changed-area nets re-routed (13-16 failures); two full negotiations (`--pf 60`, D-R12-48's settings, turn 2.0 / window
 2.5 and turn 2.5 / window 1.5): 19 and 15 DRC unconnected, route_check 41 / 45; then a greedy hill-climb (each failing
-unit re-routed with 0-30 rip-ups, kept only if failures plus isolated 3V3 vias drop, the pour repaired first): best
-12 DRC unconnected (two GND fan-out stubs; PORT_4V8's feed from the port buck to its island; SD_MISO, QSPI_NCS,
-QSPI_IO2, SERVO2_MCU, LED_YEL, VBUS_SENSE, SWDIO, CAM_MCU_TX, HG_CS), route_check 91. No table is frozen. Findings: (a)
+unit re-routed with 0-30 rip-ups, kept only if failures plus isolated 3V3 vias drop, the pour repaired first): 12 DRC
+unconnected; then the D-R12-59A PORT_4V8 feed, single-net re-routes (LED_YEL, SWDIO) and hand fixes (two GND fan-out
+stubs joined to a neighbour's pad, two tip-via pairs 0.2 mm apart redrawn on F.Cu) and `prune.py --loops`: best draft
+**7 DRC unconnected, no DRC violation, route_check 71** (31 staircase, 12 local_bump, 11 tiny_jog, 8 extra_vias and
+singles). Unrouted: SERVO2_MCU, QSPI_NCS, QSPI_IO2, SD_MISO, VBUS_SENSE, CAM_MCU_TX, HG_CS. No table is frozen. Findings: (a)
 **SPI1 topology**: walking round the region between U1's A-row stubs, U6's west face and U4's north face, U6's pins
 (MISO 11, MOSI 10, SCK 9, north to south) and U4's (MISO 1, MOSI 14, SCK 13, east to west) come in the same rotational
 order, so at most one of the three nets can join U6 and U4 on one layer; with MOSI's B.Cu dog-bone lane and the
@@ -610,8 +612,15 @@ MISO / SCK swap between U1's tips and U4, one SPI1 net needs three layer-changin
 two; an allowlist entry with this reason, or a U6 rotation / position change, is needed). (b) The leftovers sit where
 D-R12-48 found them: each needs 4-17 routed units moved (blocker sets from a path against the fixed copper only), the
 U1 A-row bundle (12 F.Cu stub tips and 7 B.Cu lane ends within x 19.4-25.8) and the forward / east band between U1,
-U3 and J430. (c) PORT_4V8 needs a hand feed: no draft joins the buck cluster (C406 / L400 / R400 at y 20) to the
-forward island (y 88.4), and an In2 run would split the 3V3 pour.
+U3 and J430. (c) PORT_4V8 needed a hand feed (D-R12-59A): no draft joined the buck cluster to the forward island.
+
+**D-R12-59A PORT_4V8 feed along the east edge (seed copper, routing attempt A, 2026-11-04).** No search joined the port
+buck's output (C406 / L400 / R400, y 17-21) to the PORT_4V8 island (y >= 88.4), and an In2 run would split the 3V3 pour
+into east and west halves. `r12_aid/hand_seed.tsv`: C406.1 north to a via at (44.6, 16.6) (0.65 mm from C406.1 and
+C434.2), a 0.5 mm B.Cu run along x 45.2 (0.55 mm from the board edge, 0.44 mm from J3's shell pads, no other B copper
+east of x 44 in the drafts) and a via 0.6 mm inside the island at (44.8, 89.0). Seed copper: L400 / R400 and the island
+pads are still searched and reach it. KiCad DRC on the attempt-A draft with it: no violation, PORT_4V8 joined. B.Cu
+under it is GND pour on a board whose In1 is a solid GND plane (the cut is 0.5 mm wide along the edge).
 
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 

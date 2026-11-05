@@ -2,7 +2,8 @@
 
 Stage C of `r12_plan.md` §4. **Status: the copper infrastructure is written and the plane / island scheme is fixed,
 but the board is not routed.** On the D-R12-53 placement (Economic sensors: LSM6DSVE, FXLS90322 U6, MS5607; placed
-board `ec461057…`) routing attempt A's best draft (§4.5) leaves 12 DRC unconnected items and 91 route_check findings,
+board `ec461057…`) routing attempt A's best draft (§4.5) leaves 7 DRC unconnected items (no DRC violation) and 71 route_check
+findings,
 so no copper table is frozen: `m3_design/r12_routes.tsv` does not exist, `r12_build.sh` stops after stage B, and
 `m3_design/r12/m3.kicad_pcb` is the placed board with no copper. Decisions D-R12-22 … -54 and attempt A's D-R12-55A …
 -58A are in `R12_DECISIONS.md`.
@@ -200,7 +201,8 @@ frees LED_YEL's tip via at (24.6, 49.6), but LED_YEL then still finds no path to
 ### 4.5 Routing attempt A on the Economic-sensor placement (D-R12-55A … -58A)
 
 Placed board `ec461057…` (`r12_build.sh` stage A / B: r12_sch_check, fit_check r12, placed DRC 0 / parity 0,
-check_r12 placement). Aid inputs: D-R12-55A / -56A hand copper, D-R12-57A U6 links, D-R12-47 seeds. Scratch `r12ra`,
+check_r12 placement). Aid inputs: D-R12-55A / -56A hand copper, D-R12-57A U6 links, D-R12-47 seeds (D-R12-59A's PORT_4V8 seed came after
+these runs). Scratch `r12ra`,
 `PYTHONHASHSEED=0`, not frozen:
 
 | Run | What | DRC unconnected | route_check failing |
@@ -210,10 +212,10 @@ check_r12 placement). Aid inputs: D-R12-55A / -56A hand copper, D-R12-57A U6 lin
 | pfB | the same with turn 2.5, window 1.5; finish | 15 (the 3V3 pour split: 17 isolated vias) | 45 |
 | hB3 | pfB, pour repaired (In2 culprits re-routed off In2), then a greedy hill-climb: each failing unit re-routed with 0 / 8 / 20 rip-ups (at most 12 units), kept only when failures + isolated 3V3 vias drop; partner block off, via budget 3 | **12** | 91 |
 
-hB3's leftovers: two GND fan-out stubs (R178.2, the via at (33.9, 38.2)); PORT_4V8 from the buck cluster to the
-forward island; SD_MISO, QSPI_NCS, QSPI_IO2, SERVO2_MCU, LED_YEL, VBUS_SENSE, SWDIO, CAM_MCU_TX, HG_CS; plus two
-hole_to_hole tip-via pairs. route_check: 31 staircase, 17 dead_copper, 12 local_bump, 10 tiny_jog, 10 extra_vias and
-singles. Each leftover's path against the fixed copper alone crosses 4-17 routed units (QSPI_IO2 12, CAM_MCU_TX 14,
+| o9 | hB3 + D-R12-59A's PORT_4V8 feed, LED_YEL / SWDIO re-routed alone, two GND stubs and two 0.2 mm tip-via pairs redrawn by hand, `prune.py --loops` | **7**, no violation | 71 |
+
+o9's leftovers: SERVO2_MCU, QSPI_NCS, QSPI_IO2, SD_MISO, VBUS_SENSE, CAM_MCU_TX, HG_CS; route_check: 31 staircase,
+12 local_bump, 11 tiny_jog, 8 extra_vias, 2 chain_detour, 2 critical_via_no_gnd and singles. Each leftover's path against the fixed copper alone crosses 4-17 routed units (QSPI_IO2 12, CAM_MCU_TX 14,
 SD_CS / SD_MISO 9-17). The search has plateaued at 10-15 signal leftovers on every placement since D-R12-44.
 
 Findings for the next pass:
