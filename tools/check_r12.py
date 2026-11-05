@@ -16,7 +16,7 @@ V-1 / V-2: through vias 0.3 / >= 0.45 mm; no via in a soldered pad (D-R12-03 / -
 S-1 / S-2: RAW_ACT behind Q120/Q121 only; no unnamed armed-side parts or copper bypass.
 S-3: every pyro/load-switch gate defined off; local gate-source bias joined on the FET's layer.
 S-4: fitted population, schematic flags, MPN values and optional BOM/CPL identities; J1 excluded,
-     C84/LS120 owner-fitted; J121 assembled (D-R12-04..19 / -29 / -30).
+     every other part JLC-assembled, none owner-fitted (J121 / LS120 THT, C84 SMT; D-R12-04..19 / -29 / -30 / -85).
 S-5: protected J400 contacts, 470k resistors, D402 clamp and no switch bypass.
 S-6 / S-7: external ports separated from safety copper; servo signals and GND only, sixth pin NC.
 S-8: barrel wall AND retained inner ring >= 1 mm from foreign In1/In2 copper, including In2 signals;
@@ -289,9 +289,11 @@ def s3(c):
 
 
 def s4(c):
-    """Required population from the R12 source contract; owner-fit parts and J1 stay off JLC uploads.
+    """Required population from the R12 source contract; every part JLC-assembled, J1 (wire pads) off JLC uploads.
 
-    D-R12-04..19 delete/re-source parts; D-R12-16 makes LS120 owner-fitted, D-R12-29 restores J121 to PCBA.
+    D-R12-04..19 delete/re-source parts; D-R12-29 restores J121 to PCBA; D-R12-85 (owner 2026-11-05: "I want
+    everything to be asssembled by jlc") puts C84 and LS120 on the JLC BOM / CPL, so circuit.json's owner_fit must be
+    empty: a part listed there fails here, and R10's owner-BOM identity check below still runs for any that appears.
     R10's flag, schematic hierarchy, MPN value and assembly identity checks remain intact.
     """
     import r12_sch
@@ -300,6 +302,8 @@ def s4(c):
     # R10's SAFETY_FITTED (AGENTS §2.4 gate networks, pyro, switch chain) stays a fixed floor, independent of the source.
     required = frozenset(ref for ref, part in parts.items() if 'exclude_from_bom' not in part['flags']) | r10.SAFETY_FITTED
     manual = r12_sch.circuit()['owner_fit']
+    owner_issues = [f'S-4: {ref} is owner-fitted (circuit.json owner_fit); D-R12-85 requires every part JLC-assembled'
+                    for ref in sorted(manual)]
     bp, pop = r10.board_population, r10.population
     with r10.patched(r10, REQUIRED_FITTED=required,
                      board_population=lambda b: bp(b, required),
@@ -307,6 +311,7 @@ def s4(c):
             r10.patched(export_fab, MANUAL_FIT=manual), r10.patched(r11, WIRE_PADS=WIRE_PADS):
         issues, ev = r10.s4(c)
         issues += r11.wire_pad_population(c)
+    issues += owner_issues
     # R10's owner BOM comparison omits excluded parts from its identity map. Check them explicitly here.
     if c.bom:
         owner = Path(c.bom).with_name(Path(c.bom).name.replace('_bom_jlc', '_bom_owner'))

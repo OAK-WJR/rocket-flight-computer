@@ -137,7 +137,7 @@ def other_load_w():
     0.45 V x 0.3 A, R92 bleed at 7.4 V (Inference: allocations, efficiency, diode drop)."""
     rails = r12_budget.rails()
     cam = rails['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)']['initial']['max_V']
-    port = rails['PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)']['initial']['max_V']
+    port = rails['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)']['initial']['max_V']
     parts = dict(camera_W=cam * 1.0 / .80, ports_W=port * .561 / .80, logic_W=1.4, microsd_write_W=3.3 * .2 / .80,
                  d5_W=.45 * .3, r92_W=PACK_V ** 2 / (3300 * .98))
     return sum(parts.values()), dict(parts, camera_V=cam, port_V=port)
@@ -326,13 +326,14 @@ def power_paths(board):
     """R12's rail paths by function (R10 K-power basis): (name, net, start pads, end pads or None = the path's vias,
     design current A, basis)."""
     p = lambda ref, net: {ref: pads_on(board, ref, net)}         # noqa: E731
-    port_in = 1.9 * 4.943 / (.80 * FOUR_STALL_VIN)
+    port_v = r12_budget.rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)']['initial']['max_V']
+    port_in = 1.9 * port_v / (.80 * FOUR_STALL_VIN)
     cam_in = 1.249 * 5.691 / (.80 * FOUR_STALL_VIN)
     rows = [
         ('U9 IN', 'BAT_IN', p('J1', 'BAT_IN'), p('U9', 'BAT_IN'), 2.9, 'R10 U9 IN'),
         ('U9 OUT', 'RAW_PROTECTED', p('U9', 'RAW_PROTECTED'), None, 2.9, 'R10 U9 OUT'),
         ('U400 IN', 'RAW_PROTECTED', p('U400', 'RAW_PROTECTED'), None, port_in,
-         'port 1.9 A at 4.943 V / 0.80 from 5.71 V (Inference)'),
+         f'port 1.9 A at {port_v:.3f} V / 0.80 from 5.71 V (Inference)'),
         ('U403 IN', 'RAW_PROTECTED', p('U403', 'RAW_PROTECTED'), None, cam_in,
          'camera 1.249 A at 5.691 V / 0.80 from 5.71 V (Inference)'),
         ('D5 IN', 'RAW_PROTECTED', p('D5', 'RAW_PROTECTED'), None, 1.294, 'R10 VLOGIC 1.294 A'),
@@ -469,8 +470,9 @@ def port_supply(solves):
     regulation point to port k is at most R(L400.2 -> port k) x I (Calculation on CAD copper at 20 C; an upper bound:
     the trunk from L400 to the sense tap, about 8 mOhm, is counted). I: the always-on budget 0.561 A (GPS 0.15 + radio
     0.30 + AUX 0.10 + 0.011 A, R10 D-R28-01) and R10's 1.9 A design current. Port window (r12_windows, D-R12-21):
-    4.539-4.943 V initial, 4.489-4.999 V drift; module floor 4.5 V (MicoAir LR900, project records)."""
-    rails = r12_budget.rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)']
+    r12_windows' rows (D-R12-83: 4.603-4.938 V initial, 4.571-4.972 V drift); module floor 4.5 V (MicoAir LR900-F, project
+    records; MicoAir's page gives '5V DC' with no range, so the floor is an Inference)."""
+    rails = r12_budget.rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)']
     out = dict(R_L400_to_R400_ohm=solves['PORT_4V8_L400_to_R400']['resistance_ohm'], floor_V=4.5,
                window_initial_V=[rails['initial']['min_V'], rails['initial']['max_V']],
                window_drift_V=[rails['drift']['min_V'], rails['drift']['max_V']])
@@ -484,8 +486,18 @@ def port_supply(solves):
                               margin_initial_V=rails['initial']['min_V'] - drop - 4.5,
                               margin_drift_V=rails['drift']['min_V'] - drop - 4.5)
         out[port] = row
+    # D-R12-83: the ceiling side. With no port load there is no copper drop, so each port can sit at the regulator's
+    # maximum; it must stay at or under the 5.0 V top (HGLRC M100 Mini 3.3-5 V, hglrc.com; the LR900-F's 5.0 V top is
+    # the project record, an Inference).
+    out['ceiling_V'] = 5.0
+    out['max_no_load_initial_V'] = rails['initial']['max_V']
+    out['max_no_load_drift_V'] = rails['drift']['max_V']
+    out['all_ports_inside_4V5_5V0_at_0A561'] = all(
+        min(out[p]['budget_0A561']['min_initial_V'], out[p]['budget_0A561']['min_drift_V']) >= 4.5
+        for p in ('J410', 'J420', 'J440')) and rails['drift']['max_V'] <= 5.0 and rails['initial']['max_V'] <= 5.0
     out['label'] = ('Calculation on CAD copper and the r12_windows PORT_4V8 window (upper bound on the drop); the 4.5 V '
-                    'module floor and the load allocation are Inference; harness drop not included')
+                    'module floor, the LR900-F 5.0 V top and the load allocation are Inference; harness drop not '
+                    'included')
     return out
 
 

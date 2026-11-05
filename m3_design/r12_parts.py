@@ -148,8 +148,9 @@ def fxls():
 
 # QMB-09B-03 9 mm passive magnetic buzzer, THT (D-R12-16): Huawha product specification QMB-09B-03 (2019-12-3, LCSC
 # C96256 PDF) item 4 dimension drawing: body 9.0 x 5.5 mm, two 0.6 +/- 0.05 mm pins at 4.0 mm, (+) and (-) marked. Land
-# JLCEDA C96256 "BUZ-TH_BD9.0-P4.00-D0.6-FD": 1.0 mm finished hole, 1.8 mm pad, 4.0 mm pitch; pin 1 (+) (Inference:
-# JLCEDA's numbering, check the (+) mark when fitting). Owner-fitted by hand after reflow: no paste.
+# JLCEDA C96256 "BUZ-TH_BD9.0-P4.00-D0.6-FD": 1.0 mm finished hole, 1.8 mm pad, 4.0 mm pitch; pin 1 (+): JLCEDA's
+# footprint prints its '+' beside pad 1 (read 2026-11-05) and the maker drawing marks the (+) lead. JLC THT assembly
+# (hand-soldered after reflow, D-R12-85): no paste; the CPL puts JLCEDA's pad 1 on ours (jlc_orient_r12).
 BUZ_PITCH, BUZ_HOLE, BUZ_PAD, BUZ_D, BUZ_H = 4.0, 1.0, 1.8, 9.0, 5.5
 
 
@@ -158,7 +159,7 @@ def buzzer():
     body = _circle((0, 0), BUZ_D / 2, 'F.Fab', .1) + _circle((0, 0), BUZ_D / 2 + .25, 'F.CrtYd', .05)
     body += _line((-2.0, -2.2), (-2.0, -1.4), 'F.SilkS', .15) + _line((-2.4, -1.8), (-1.6, -1.8), 'F.SilkS', .15)
     # D-R12-82: the polarity on F.Fab as R10's LS120 land carries it (check_r10.FAB_TEXT_ALLOWED: '+' / '-'), so the
-    # owner's fitting drawing shows which hole takes the (+) lead (pin 1 = (+) remains an Inference, D-R12-16)
+    # assembly drawing shows which hole takes the (+) lead (pin 1 = (+), JLCEDA's '+' at pad 1, D-R12-85)
     body += ''.join(f'\t(fp_text user "{t}" (at {g(x)} 1.6) (layer "F.Fab") (effects (font (size 0.8 0.8) '
                     f'(thickness 0.10))))\n' for t, x in (('+', -BUZ_PITCH / 2), ('-', BUZ_PITCH / 2)))
     for num, x in (('1', -BUZ_PITCH / 2), ('2', BUZ_PITCH / 2)):
@@ -166,7 +167,7 @@ def buzzer():
                  f'\t\t(size {g(BUZ_PAD)} {g(BUZ_PAD)})\n\t\t(drill {g(BUZ_HOLE)})\n\t\t(layers "*.Cu" "*.Mask")\n'
                  '\t\t(remove_unused_layers yes)\n\t\t(keep_end_layers yes))\n')
     return name, make_fp(name, 'Huawha QMB-09B-03 9 mm THT buzzer, pins 4.0 mm, hole 1.0 mm, pad 1.8 mm; land JLCEDA '
-                         'C96256; owner-fitted (no paste)', body, -5.6, name + '.wrl', attr='through_hole')
+                         'C96256; JLC THT assembly (no paste)', body, -5.6, name + '.wrl', attr='through_hole')
 
 
 # TPS563208DDCR SOT-23-THIN-6 (DDC) (D-R12-07 / -08): JLCEDA C468250 "TSOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL", read
@@ -213,9 +214,30 @@ def batpads():
 R10_REUSE = ('M3_DB125_2P_BK',)       # D-R12-29: R10's verified DB125-2 (black) land and model, copied verbatim
 
 
+# C84 hold-up capacitor, JLC-placed (D-R12-85, owner 2026-11-05: every part JLC-assembled): Honor Elec HV1E477M0810PZ
+# (C5246546), 470 uF 25 V conductive polymer, D8 x L10.5 mm. Honor CDHV specification (LCSC C5246546 PDF): dimension
+# table 8 x 10.5: A = B 8.3, C 2.9, P 3.1, W 0.8-1.1 mm, L 10.5; item 14 lead-free reflow: peak 255 C for 5 s, 230-255 C
+# <= 30 s (Datasheet). The copper is R11's M3_MA_8x10 land unchanged (3.5 x 1.7 mm pads at +/-3.25 mm: the same 8.3 mm
+# base and 3.1 mm terminal gap, Datasheet for both makers), so C84's copper and routing do not move; JLCEDA's land for
+# C5246546 ("CAP-SMD_BD8.0-L8.3-W8.3-LS9.3-FD-2", 4.0 x 1.6 mm at +/-3.5 mm, read 2026-11-05) matches it within
+# jlc_orient's two-pad tolerance. Pad 1 is the anode (+), as JLCEDA's pad 1. Paste on both pads (JLC reflow).
+CAP_D8_PAD, CAP_D8_X, CAP_D8_BASE = (3.5, 1.7), 3.25, 8.3
+
+
+def cap_d8():
+    name = 'M3_CAP_D8_SMD'
+    h = CAP_D8_BASE / 2
+    body = _rect((-h, -h), (h, h), 'F.Fab', .1) + _circle((0, 0), 4.0, 'F.Fab', .1)
+    body += _rect((-5.25, -4.5), (5.25, 4.5), 'F.CrtYd', .05)
+    body += _line((-4.5, -2.2), (-4.5, -1.2), 'F.SilkS', .15) + _line((-5.0, -1.7), (-4.0, -1.7), 'F.SilkS', .15)
+    body += _rpad('1', -CAP_D8_X, 0, *CAP_D8_PAD) + _rpad('2', CAP_D8_X, 0, *CAP_D8_PAD)
+    return name, make_fp(name, 'Honor Elec HV1E477M0810PZ 470 uF 25 V polymer, D8 x 10.5 mm; pad 1 (+) left; R11 M3_MA_8x10 '
+                         'copper with paste (JLC-placed, D-R12-85)', body, -5.4, name + '.wrl')
+
+
 def footprints():
     out = {}
-    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, batpads):
+    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, batpads, cap_d8):
         name, text = maker()
         out[name] = text
     return out
@@ -231,6 +253,9 @@ MODELS = {
     'M3_BUZ_TH_D9_P4.wrl': ('# QMB-09B-03 envelope 9.3 x 9.3 x 5.7 mm (spec item 4, +0.3 tolerance). NOT a maker model.\n',
                             [(0, 0, 0, 9.3, 9.3, 5.7, BLACK)]),
     'M3_TSOT23_6_DDC.wrl': ('# TI DDC envelope 2.9 x 1.6 x 1.1 mm. NOT a maker model.\n', [(0, 0, 0, 2.9, 1.6, 1.1, BLACK)]),
+    # base 8.3 + 0.2, height 10.5 + 0.5 + 0.3 mm (R10's M3_MA_8x10 allowances applied to the Honor L 10.5; Inference)
+    'M3_CAP_D8_SMD.wrl': ('# HV1E477M0810PZ envelope 8.5 x 8.5 x 11.3 mm (Honor CDHV dimension table, R10 allowances). NOT a '
+                          'maker model.\n', [(0, 0, 0, 8.5, 8.5, 11.3, GREY)]),
 }
 
 
@@ -491,7 +516,8 @@ def stock():
     cost = dict(checked_utc=now, tier='JLC Economic PCBA, one side', basis=dict(
         fixed_usd=ECON_FIXED, feeder_usd_per_extended_code=FEEDER, joint_usd=JOINT, pcb_5pcs_usd=PCB_5,
         source='https://jlcpcb.com/help/article/pcb-assembly-price (cost study 2026-11-04); PCB quote: cost_study.md 2.1',
-        excluded='shipping, tax, attrition, owner hand-fit (C84, LS120), C84 / LS120 bought from LCSC by the owner'),
+        excluded='shipping, tax, attrition; THT hand-soldering ($0.0164 per joint + $3.58 per order, J121 and LS120) is '
+                 'counted in stageD.md, not here; no owner-fitted parts since D-R12-85'),
         orders={})
     for boards in BOARDS:
         parts_usd = owner_usd = 0.0

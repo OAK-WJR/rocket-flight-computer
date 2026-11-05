@@ -1,8 +1,8 @@
-(footprint "M3_MA_8x10"
+(footprint "M3_CAP_D8_SMD"
 	(version 20260206)
-	(generator "m3_r10_parts")
+	(generator "m3_r12_parts")
 	(layer "F.Cu")
-	(descr "jieerrui MA25V470M8x10; positive pad1 left; derived land; hand-fitted after reflow, no paste aperture")
+	(descr "Honor Elec HV1E477M0810PZ 470 uF 25 V polymer, D8 x 10.5 mm; pad 1 (+) left; R11 M3_MA_8x10 copper with paste (JLC-placed, D-R12-85)")
 	(attr smd)
 	(property "Reference" "REF**"
 		(at 0 -5.4 0)
@@ -11,7 +11,7 @@
 			(font
 				(size 1 1)
 				(thickness 0.15))))
-	(property "Value" "M3_MA_8x10"
+	(property "Value" "M3_CAP_D8_SMD"
 		(at 0 5.4 0)
 		(layer "F.Fab")
 		(effects
@@ -42,14 +42,6 @@
 			(type solid))
 		(fill none)
 		(layer "F.CrtYd"))
-	(pad "1" smd rect
-		(at -3.25 0)
-		(size 3.5 1.7)
-		(layers "F.Cu" "F.Mask"))
-	(pad "2" smd rect
-		(at 3.25 0)
-		(size 3.5 1.7)
-		(layers "F.Cu" "F.Mask"))
 	(fp_line
 		(start -4.5 -2.2)
 		(end -4.5 -1.2)
@@ -64,7 +56,15 @@
 			(width 0.15)
 			(type solid))
 		(layer "F.SilkS"))
-	(model "${KIPRJMOD}/kilib/rocket.3dshapes/M3_MA_8x10.wrl"
+	(pad "1" smd rect
+		(at -3.25 0)
+		(size 3.5 1.7)
+		(layers "F.Cu" "F.Mask" "F.Paste"))
+	(pad "2" smd rect
+		(at 3.25 0)
+		(size 3.5 1.7)
+		(layers "F.Cu" "F.Mask" "F.Paste"))
+	(model "${KIPRJMOD}/kilib/rocket.3dshapes/M3_CAP_D8_SMD.wrl"
 		(offset
 			(xyz 0 0 0))
 		(scale

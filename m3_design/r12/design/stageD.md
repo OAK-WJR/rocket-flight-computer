@@ -1,5 +1,8 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
+**Superseded by §7 (branch `r12-port-fix`, D-R12-83 … -85): board `d6e4f7ee…`.** §1–§6 record the stage D board
+`d776c5d7…` as it was.
+
 Follows stageC.md (pass 2 frozen, D-R12-77A, board `e2b005b5…`). Decisions D-R12-78 … D-R12-82 are in
 `R12_DECISIONS.md`. Branch `r12-stage-d`; nothing is ordered. Labels (AGENTS §2.5): **Measured** = read from the CAD or
 a tool run on it; **Calculation** = arithmetic on CAD copper and datasheet values; **Simulation** = the numerical
@@ -133,8 +136,75 @@ to the board instead.
 
 * Owner acceptance: `docs/R12_VALIDATION.md` (A-1 … A-10, the allowlist, D-R12-81, SH retention, the port voltage,
   the U9 feed width).
-* O-R12-25 (U9 feed 0.4 mm IPC flag), O-R12-26 (PORT_4V8 at the ports under load), O-R12-27 (J122's note).
+* ~~O-R12-25 (U9 feed 0.4 mm IPC flag), O-R12-26 (PORT_4V8 at the ports under load)~~ closed in §7; O-R12-27 (J122's
+  note).
 * Stage E records are written (`docs/M3_R12.md`, `docs/R12_VALIDATION.md`, `docs/R12_VEHICLE_HANDOFF.md`); no review
   round (stage F) has run; no firmware, physical, electrical or JLC DFM test.
 * After any copper or placement change: rerun `m3_design/r12_legends_aid.py` on the routed board (r12_post fails closed
   when an applied item no longer matches), then `m3_design/r12_stageD.py` and `tools/r12_hotplug.py` on a filled copy.
+
+## 7. Port-fix pass (branch `r12-port-fix`, D-R12-83 … -85, 2026-11-05)
+
+Three changes, each recorded in `R12_DECISIONS.md`:
+
+* **D-R12-83, PORT_4V8 setpoint (O-R12-16, -26).** R401 → 10k 0.1 % 25 ppm/K (YAGEO RT0402BRD0710KL, C190095, the one
+  new Extended code), R404 4.7k → 5.1k (C25905, already on the BOM). No 1 % pair and no feed width could hold
+  4.5–5.0 V at the drift corner. Window 4.603–4.938 V initial, 4.571–4.972 V drift; ports ≥ 4.561 / 4.529 V under
+  0.561 A (Calculation; the LR900-F's limits an Inference).
+* **D-R12-84, U9 feed and output (O-R12-25).** U9 0.3 mm east, C88 on the bar line between C96 and U9; the feed is
+  0.8 mm except U9.5's 1.3 mm 0.4 mm pin entry; U9 OUT 0.8 mm into C82.1, 0.45 mm via stubs. U9's EN, OVLO, FAULT_N,
+  DVDT, GND and ILIM copper redrawn 0.3 mm east on the same topology. The legend aid was re-run on the routed board:
+  only U9's designator, pin-1 dot and Fab text and C88's Fab text moved (Measured, `diff`).
+* **D-R12-85, everything JLC-assembled (owner).** C84 → Honor HV1E477M0810PZ (C5246546, reflow-rated 255 °C peak,
+  new land `M3_CAP_D8_SMD` = R11's copper plus paste); LS120 to the JLC BOM / CPL as THT; circuit.json owner_fit empty,
+  check_r12 S-4 refuses any owner-fitted part, no owner BOM is written.
+
+**Result (Measured).** `m3_design/r12_build.sh` twice: PCB `d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64`
+both times, exit 0. KiCad DRC 0 violations, 0 unconnected, 0 parity; r12_sch_check OK (187 parts); fit_check r12 OK;
+check_r12 every rule OK in the strict tier (S-1 … S-9, K-legends, K-reference, K-region, K-plane, K-fill); route_check
+r12 0 failing, 2 allowlisted, 13 non-critical leftovers (the same 13); 1208 tracks, 414 vias. Fab: JLC BOM 58 lines,
+178 JLC parts = 178 CPL rows (176 SMT, 2 THT: J121, LS120), all Top, every row rebuilt from JLC's footprint (worst
+residual 0.491 mm, LS120 0.0 mm, C84 0.25 mm), no owner BOM; F paste 579 flashes on 579 pasted pads of 176 parts;
+manifest bound. `tools/test_r12_check.py` 50 OK (`R12_BOARD_REQUIRED=1`), `tools/test_r12_fab.py` 15 OK,
+`tools/test_r12_stageD.py` 4 OK. Analyses re-run: `stageD_analysis.md` §10.
+
+**Cost and stock (Live, `fab/cost_check_2.json` / `_5.json` 2026-11-05T19:19:44Z / 19:21:01Z, stock 19:19:05Z /
+19:20:23Z, Economic one-sided).** 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards
+(orderable = min(stock, canPresaleNumber), an Inference about JLC's field). Parts $32.74 per board (C84 and LS120 now
+included in the JLC order; they were priced before too), feeder 22 charged codes × $3.07 = $67.54 per order (+3 codes:
+C190095, C5246546, C96256). REQUIREMENTS M3 metric (parts + feeder per board): **$66.51 at 2 boards, $46.25 at 5
+boards** against the $84.41 cap (was $61.88 / $44.38).
+
+All-in (Calculation on the Live figures; setup / stencil $9.71; SMT joints $0.0016 × 579 pasted pads per board; THT
+joints $0.0164 × 4 per board (J121, LS120) plus $3.58 hand-soldering labour per order; bare PCB $25.10 for 5 pcs;
+cost_study.md's figures, Live 2026-11-04; shipping, tax and attrition excluded):
+
+| Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | **Total** | Per board |
+|---|---|---|---|---|---|---|---|---|
+| 2 boards | $65.48 | $67.54 | $9.71 | $1.85 | $3.71 | $25.10 | **$173.39** | $86.70 |
+| 5 boards | $163.70 | $67.54 | $9.71 | $4.63 | $3.91 | $25.10 | **$274.59** | $54.92 |
+
+Was $164.08 / $265.10 plus about $0.40 per board of owner-bought parts. The r12_plan targets were ≤ $170 / ≤ $295: the
+2-board order is now $3.39 over its target (the two owner-directed feeder fees, $6.14, are more than all of it).
+
+**Hashes (Measured, SHA-256).**
+
+| File | SHA-256 |
+|---|---|
+| m3_design/r12/m3.kicad_pcb | d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64 |
+| m3_design/r12_legends.tsv | b0dbc38a39f7d79657907d5efce884b8441fc2208a922cbd145aa1dd9630d4d4 |
+| m3_design/r12_routes.tsv | 98d767faa2b4b1ae5c38ee651b28ee73607bfea470aa1ad12590f25e446fe3d9 |
+| m3_design/r12_place.tsv | ef911fe28e8ad4518d1dffb9e4c0feca745c29fd73b65b36a9432acf6614df51 |
+| m3_design/r12/fab/m3_bom_jlc.csv | c884fbd7092a1a0dd5a5de12c1351aa6f5dbb543efd94797198455d1c1562493 |
+| m3_design/r12/fab/m3_cpl_jlc.csv | f3b98fe7a4db0d1a0b59d6e336ca9b2c78be88a8b21aafed747af03b0f953239 |
+| m3_design/r12/fab/m3_fab_manifest.json | 41e7bbd141a6af39c1532515e1cc2c4e37a86cd9c010102e3fd856f35ad43c6c |
+| m3_design/r12/fab/m3_gerber.zip | 4f5c58cb975bd5a613124e2dc9b0ff0700ef345d47659ed143a1d4bfa2d9cfea |
+| m3_design/r12/fab/m3_assembly_top.pdf | 952374b5eaa7133c99532c5b08bfc7bc90173a55bd8e248346b52edf4a675500 |
+| m3_design/r12/fab/m3_assembly_bottom.pdf | fd6fd6d394f36c2611441a56701d4af5e6a8d20184841c7994bbe0429341a450 |
+| m3_design/r12/fab/cost_check_2.json | 89cb7e8555bb9f3730799eb15ad3c2dabebfff78c57fd1fa974eb73ca15b4566 |
+| m3_design/r12/fab/cost_check_5.json | ba43e8d90448f94633c7e0c9f1c6c1df1648fcfc1987879654f4fcbc5db749da |
+| m3_design/r12/fab/stock_check_2.json | bb7595ee6bc6052a8c707e79fcd5252a440e529fdb9e8570c8ecee131121c16f |
+| m3_design/r12/fab/stock_check_5.json | 57d8e580236ca2e772f861743cb9e05d67b566b9d8700a5ae8d9c85c1e35d94d |
+
+`m3_design/r12/fab/m3_bom_owner.csv` is deleted (no owner-fitted parts). The cost and stock files bind the BOM / CPL
+hashes above (their `inputs_sha256`).

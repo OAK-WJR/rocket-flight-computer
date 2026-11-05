@@ -20,12 +20,16 @@ HERE = Path(__file__).resolve().parent
 OUT = HERE / 'r12/design/r12_windows.json'
 R11_BUDGET = HERE / 'r11/design/stageD_budget.json'
 TOL = {'initial': 0.01, 'drift': 0.01 + 100e-6 * 67}
+# D-R12-83: R401 is a 0.1 % 25 ppm/K thin-film part (YAGEO RT0402BRD0710KL, C190095: JLC listing / YAGEO RT datasheet)
+TOL_PRECISE = {'initial': 0.001, 'drift': 0.001 + 25e-6 * 67}
 
 
-def divider(vref, top, bot, tol, leak=0.0):
-    """(min, max) of vref x (1 + top / bot) with each resistor at its worst end; leak = FB pin current bound (A)."""
-    lo = vref[0] * (1 + top * (1 - tol) / (bot * (1 + tol))) - leak * top * (1 + tol)
-    hi = vref[1] * (1 + top * (1 + tol) / (bot * (1 - tol))) + leak * top * (1 + tol)
+def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
+    """(min, max) of vref x (1 + top / bot) with each resistor at its worst end; leak = FB pin current bound (A);
+    tol_bot = the bottom resistor's own tolerance when it differs from the top's (D-R12-83)."""
+    tb = tol if tol_bot is None else tol_bot
+    lo = vref[0] * (1 + top * (1 - tol) / (bot * (1 + tb))) - leak * top * (1 + tol)
+    hi = vref[1] * (1 + top * (1 + tol) / (bot * (1 - tb))) + leak * top * (1 + tol)
     return round(lo, 4), round(hi, 4)
 
 
@@ -39,12 +43,15 @@ def rails():
                                     'tightest low end); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) '
                                     'and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; LSM6DSVE 1.71-3.6 V (JLC / LCSC '
                                     'listing, D-R12-50); MS5607 1.8-3.6 V (TE MS5607-02BA03, D-R12-52)'),
-        'PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)': dict(
-            vref=(0.749, 0.787), top=51.7e3, bot=10e3, leak=0.1e-6,
+        'PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)': dict(
+            vref=(0.749, 0.787), top=52.1e3, bot=10e3, leak=0.1e-6, precise_bot=True,
             src='TI SLVSD90B section 5.5 VFB 0.749-0.787 V continuous mode (TPS563208 is FCCM), TJ -40 to 125 C; '
-                'IVFB +/-0.1 uA',
-            limits=(4.5, 5.0), why='project module ranges: MicoAir LR900 4.5-5 V, HGLRC M100 Mini 3.3-5 V '
-                                  '(r10_plan O5, parts_qualification R8-MCU-02); Inference until bench-confirmed'),
+                'IVFB +/-0.1 uA; R401 0.1 % 25 ppm/K (D-R12-83)',
+            limits=(4.5, 5.0), why='HGLRC M100 Mini 3.3-5 V (hglrc.com product page, read 2026-11-05: the 5.0 V top); '
+                                  'MicoAir LR900-F "5V DC (from USB or JST-GH)" with no range (micoair.com product '
+                                  'page, read 2026-11-05), so its 4.5 V floor and 5.0 V top stay the project records\' '
+                                  'Inference (r10_plan O5, parts_qualification R8-MCU-02) until bench-confirmed. The '
+                                  'floor applies at the port pins after the copper drop (r12_stageD port_supply)'),
         'CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)': dict(
             vref=(0.749, 0.787), top=61e3, bot=10e3, leak=0.1e-6, src='TI SLVSD90B section 5.5',
             limits=(5.0, 20.0), why='RunCam Split 4 manual "DC 5-20V" (as quoted in the R10 records); harness drop at '
@@ -53,11 +60,13 @@ def rails():
     for name, s in specs.items():
         row = dict(source=s['src'], limits_V=s['limits'], limits_basis=s['why'])
         for case, tol in TOL.items():
-            lo, hi = divider(s['vref'], s['top'], s['bot'], tol, s['leak'])
+            lo, hi = divider(s['vref'], s['top'], s['bot'], tol, s['leak'],
+                             TOL_PRECISE[case] if s.get('precise_bot') else None)
             row[case] = dict(min_V=lo, max_V=hi, inside_limits=lo >= s['limits'][0] and hi <= s['limits'][1],
                              margin_low_V=round(lo - s['limits'][0], 4), margin_high_V=round(s['limits'][1] - hi, 4))
         row['nominal_V'] = round((s['vref'][0] + s['vref'][1]) / 2 * (1 + s['top'] / s['bot']), 4)
-        row['label'] = 'Calculation (Datasheet VFB, 1 % resistors); drift case Inference'
+        row['label'] = ('Calculation (Datasheet VFB, ' + ('1 % top, 0.1 % bottom' if s.get('precise_bot') else '1 %')
+                        + ' resistors); drift case Inference')
         out[name] = row
     return out
 
@@ -102,7 +111,7 @@ def sense():
     for case, tol in TOL.items():
         r = {}
         # PA4 PORT_SENSE = PORT_4V8 x R112 / (R111 + R112), R111 4.7k, R112 10k
-        p = rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 4.7k / R401 10k)'][case]
+        p = rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)'][case]
         lo = p['min_V'] * 10e3 * (1 - tol) / (10e3 * (1 - tol) + 4.7e3 * (1 + tol))
         hi = p['max_V'] * 10e3 * (1 + tol) / (10e3 * (1 + tol) + 4.7e3 * (1 - tol))
         r['PORT_SENSE_V'] = [round(lo, 3), round(hi, 3)]

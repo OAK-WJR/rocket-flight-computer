@@ -60,15 +60,16 @@ procedure are in `docs/R12_VEHICLE_HANDOFF.md`.
 |---|---|---|
 | Board | 46 × 100 × 1.6 mm, four layers (F / In1 GND / In2 3V3 plus islands and signals / B), 0.5 oz inner, ENIG. Every part on F for JLC Economic PCBA (255 ± 5 °C reflow; 250 °C-rated parts owner-accepted, A-9). 0.10 mm track and clearance, 0.3 / 0.45 mm through vias only, no VIPPO. Four M3 supports (D-R12-01, -03, -24). | `docs/M3_R12.md` |
 | MCU | STM32H743VIH6 TFBGA-100, R11's ball map. Re-pins (D-R12-61A … -64A): barometer I2C3 PA8 / PC9; microSD SPI4 PE12–PE14, CS PA7; QSPI_NCS PB10; HG_CS PC11 (U6); VBUS_SENSE PA10. AF numbers are an Inference until DS12110 is re-read (O-R12-23). PE4, PC1, PC0, PC5 and the port UARTs are unchanged. | `docs/M3_R12.md` "Firmware" |
-| Parts | USB path: diode-OR D5 / D6. PORT_4V8 from the U400 buck; camera switched by the U403 buck's EN. U9 TPS259470A (auto-retry). AO3401A / AO3400A pyro FETs with unchanged gate networks. U4 LSM6DSVE plus U6 FXLS90322 high-g. U5 MS5607. Port UART ESD deleted (D402 kept). Buzzer QMB-09B-03 THT, owner-fitted with C84. | `R12_DECISIONS.md` §1, §3 |
-| Connectors | SH 1.0 mm clone ports in the MicoAir H743 orders (friction retention, owner deviation). J121 is a DB125-2 screw terminal (JLC THT). J1 is 5.0 mm wire pads. | `docs/R12_VEHICLE_HANDOFF.md` |
-| Power and pyro | Fire loop 4.726699 Ω, 1.249978 A at four stalls (Calculation / Inference). Hot-plug 2304 / 2304 pass with C79, minimum −14.255 V (Simulation / Inference). Keep R166 (D-R12-09). Open items: PORT_4V8 at the ports under load, and the 0.4 mm U9 feed's IPC flag. | `docs/M3_R12.md` "Power", "CH1 pyro" |
-| Manufacturing and cost | `m3_design/r12_fab.sh`: JLC BOM 55 lines, 176 JLC parts, owner BOM C84 + LS120, manifest bound. $61.88 / $44.38 per board (parts + feeder) at 2 / 5 boards against the $84.41 cap (Live 2026-11-05). No part short. | `docs/M3_R12.md` "Cost and stock" |
+| Parts | USB path: diode-OR D5 / D6. PORT_4V8 from the U400 buck; camera switched by the U403 buck's EN. U9 TPS259470A (auto-retry). AO3401A / AO3400A pyro FETs with unchanged gate networks. U4 LSM6DSVE plus U6 FXLS90322 high-g. U5 MS5607. Port UART ESD deleted (D402 kept). Buzzer QMB-09B-03 THT; every part JLC-assembled, none owner-fitted (D-R12-85: C84 is the reflow-rated Honor HV1E477M0810PZ, LS120 JLC THT). PORT_4V8 divider R400 47k + R404 5.1k over R401 10k 0.1 % (D-R12-83). | `R12_DECISIONS.md` §1, §3 |
+| Connectors | SH 1.0 mm clone ports in the MicoAir H743 orders (friction retention, owner deviation). J121 is a DB125-2 screw terminal (JLC THT). J1 is 5.0 mm wire pads. PORT_4V8 at the ports ≥ 4.529 V (0.561 A budget) and ≤ 4.972 V (no load) at the drift corner (D-R12-83; Calculation / Inference: the LR900-F's 4.5–5.0 V is a project record). | `docs/R12_VEHICLE_HANDOFF.md` |
+| Power and pyro | Fire loop 4.726699 Ω, 1.250000 A at four stalls (Calculation / Inference). Hot-plug 2304 / 2304 pass with C79, minimum −14.255 V (Simulation / Inference). Keep R166 (D-R12-09). U9 0.3 mm east with C88 on the bar line: the U9 feed is 0.8 mm except its pin entry (D-R12-84). | `docs/M3_R12.md` "Power", "CH1 pyro" |
+| Manufacturing and cost | `m3_design/r12_fab.sh`: JLC BOM 58 lines, 178 JLC parts (J121 and LS120 THT), no owner BOM (D-R12-85), manifest bound. $66.51 / $46.25 per board (parts + feeder) at 2 / 5 boards against the $84.41 cap; all-in $173.39 / $274.59 (Live 2026-11-05T19:19Z, Calculation). No part short. | `docs/M3_R12.md` "Cost and stock" |
 
-**R12 status (2026-11-05).** PCB `d776c5d7181e10f0ea3d16960050b63b5c5e7d61bb26074c4ea3b204b71b7161`; not accepted,
-nothing ordered.
+**R12 status (2026-11-05).** PCB `d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64` (branch `r12-port-fix`);
+not accepted, nothing ordered.
 
-- Stages A–D of `m3_design/r12/design/r12_plan.md` are done; the records are `stageB.md`, `stageC.md` and `stageD.md`.
+- Stages A–D of `m3_design/r12/design/r12_plan.md` are done; the records are `stageB.md`, `stageC.md` and `stageD.md`
+  (§7: the port-fix pass, D-R12-83 … -85, which closed O-R12-16, -25 and -26).
 - `m3_design/r12_build.sh` gives the same hash on two builds, and `stageD.md` records the checks:
   - DRC, unconnected and parity: 0.
   - check_r12: every rule OK.

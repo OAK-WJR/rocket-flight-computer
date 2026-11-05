@@ -6,9 +6,10 @@ binding (tools/fab_manifest_r12.py: the export record carries R12's input hashes
 bound fab inputs, so it is not edited; its source is executed with exactly the replacements below, each asserted to
 occur as counted.
 
-Owner-fitted parts (m3_design/r12/design/circuit.json "owner_fit", read through m3_design/r12_parts.py bom_lines(): C84,
-LS120 at the time of writing) replace R10's MANUAL_FIT: they leave the JLC BOM and CPL for the owner BOM, with their
-circuit.json note in its Assembly column. Parts excluded from the BOM on the board (wire pads, test pads, the TC2030
+Owner-fitted parts (m3_design/r12/design/circuit.json "owner_fit", read through m3_design/r12_parts.py bom_lines())
+replace R10's MANUAL_FIT: a part listed there would leave the JLC BOM and CPL for an owner BOM. Since D-R12-85 (owner
+2026-11-05: every part JLC-assembled) the list is empty, so no owner BOM is written; C84 is placed (SMT) and LS120 /
+J121 are JLC THT assembly. Parts excluded from the BOM on the board (wire pads, test pads, the TC2030
 footprint) are in no BOM or CPL. Runs under KiCad's Python (r12_parts.bom_lines() reads the lands with pcbnew).
 
 usage: <KiCad python3> -I tools/export_fab_r12.py m3_design/r12/m3.kicad_pcb --out m3_design/r12/fab --pending RECORD

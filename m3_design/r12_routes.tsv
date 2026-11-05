@@ -1,7 +1,8 @@
 # M3-ASSY-R12 copper table (stage C, D-R12-26): written by the drafting aid m3_design/r12_aid/plan.py and frozen here;
 # m3_design/r12_route.py replays it (no search in the build). Coordinates in mm, board frame (x east, y forward from the aft edge).
 kind	net	layer	width	x0	y0	x1	y1
-track	RAW_PROTECTED	F	0.3	17	15.6	19.4	15.6
+track	RAW_PROTECTED	F	0.3	17.3	15.6	18.9	15.6
+track	RAW_PROTECTED	F	0.8	18.9	15.6	19.725	15.6
 track	GND	F	0.3	28.3	30.9	27.2	30.9
 track	GND	F	0.3	27.1	39.4	27.1	38.8
 track	GND	F	0.3	27.1	41.6	27.1	42.2
@@ -168,9 +169,9 @@ track	CC1	F	0.2	36.6	40.1	36.6	39.7
 track	BAT_ENABLE	F	0.2	19	10.1	19	11.2
 track	BAT_ENABLE	F	0.2	17.7	7.8	17.7	8.7
 track	BAT_ENABLE	F	0.2	17.7	8.7	18.7	9.7
-track	BAT_ENABLE	F	0.2	17.7	14.3	17.7	12.6
-track	BAT_ENABLE	F	0.2	17.7	12.6	18.7	11.6
-track	BAT_ENABLE	F	0.2	17.7	14.6	17.7	14.5
+track	BAT_ENABLE	F	0.2	18.0	14.3	18.0	12.3
+track	BAT_ENABLE	F	0.2	18.0	12.3	18.7	11.6
+track	BAT_ENABLE	F	0.2	18.0	14.6	18.0	14.5
 track	CAM_5V_DIV	F	0.2	28.9	7.7	29.4	8.2
 track	CAM_5V_DIV	B	0.2	29.4	8.2	29.4	14.5
 track	BUZZ_OUT	F	0.2	5.3	77.6	5.3	81.1
@@ -223,9 +224,9 @@ track	CAM_FB_TOP	F	0.2	31.2	10.2	32.2	10.2
 track	BAT_OVLO_B	F	0.2	17	11.3	16.2	10.5
 track	PYRO1_CONT_MID	F	0.2	13	46.1	12.2	46.9
 track	ARM1_SENSE_MID	F	0.2	16.7	33.2	17.5	34
-track	BAT_DVDT	F	0.2	16.3	16.4	15.9	16.8
-track	BAT_DVDT	F	0.2	15.9	16.8	15.9	17.3
-track	BAT_DVDT	F	0.2	16.3	16.1	16.3	16.2
+track	BAT_DVDT	F	0.2	16.6	16.4	15.9	17.1
+track	BAT_DVDT	F	0.2	15.9	17.1	15.9	17.38
+track	BAT_DVDT	F	0.2	16.6	16.1	16.6	16.2
 track	CAM_BST	F	0.3	31.9	16.3	31.9	14.9
 track	GPS_TX_WIRE	F	0.2	22.5	92.7	22.5	93.8
 track	GPS_RX_WIRE	F	0.2	23.5	92.7	23.5	93.8
@@ -251,8 +252,8 @@ track	PORT_FB_TOP	B	0.2	29.9	21	29.9	20
 track	PORT_FB_TOP	B	0.2	29.9	20	28.8	18.9
 track	PORT_FB_TOP	F	0.2	28.8	18.9	29.3	18.4
 track	BAT_ILIM	F	0.2	18.6	17.4	17.8	17.4
-track	BAT_ILIM	F	0.2	17.2	16.4	17.2	16.9
-track	BAT_ILIM	F	0.2	17.2	16.9	17.6	17.3
+track	BAT_ILIM	F	0.2	17.5	16.4	17.5	17.1
+track	BAT_ILIM	F	0.2	17.5	17.1	17.7	17.3
 track	PYRO1_COLD	F	0.2	6.7	46.3	7.5	46.3
 track	PYRO1_COLD	F	0.2	7.5	46.3	8.5	47.3
 track	SERVO2_OUT	F	0.2	23.1	6.2	23.1	8
@@ -273,8 +274,8 @@ track	BAT_SW_SOURCE	F	0.2	13.3	6.9	14	6.9
 track	BAT_SW_SOURCE	F	0.2	14	6.9	14.5	7.4
 track	BAT_SW_SOURCE	F	0.2	14.5	7.4	14.5	8.2
 track	BAT_OVLO	F	0.2	16.2	11.5	17	12.3
-track	BAT_OVLO	F	0.2	17.2	14.3	17.2	12.7
-track	BAT_OVLO	F	0.2	17.2	12.7	17	12.5
+track	BAT_OVLO	F	0.2	17.5	14.3	17.5	12.87
+track	BAT_OVLO	F	0.2	17.5	12.87	17.03	12.4
 track	BUZZ_G	F	0.2	8.5	77.1	7.3	78.3
 track	BUZZ_G	F	0.2	9.5	77.9	8.7	77.1
 track	GND	F	0.25	24.3	31.8	24.6	31.5
@@ -353,8 +354,8 @@ track	GND	F	0.3	33	92.1	32.5	92.1
 track	GND	F	0.3	33.8	38.7	33	37.9
 track	GND	F	0.3	25.9	31.1	25.9	30.6
 track	GND	F	0.3	30.7	16.1	30.7	15.5
-track	GND	F	0.2	16.8	16.4	16.8	16.7
-track	GND	F	0.2	16.8	16.7	16.6	16.9
+track	GND	F	0.2	17.1	16.4	17.1	16.7
+track	GND	F	0.2	17.1	16.7	16.9	16.9
 track	GND	F	0.3	8.2	42.1	8.2	42.6
 track	GND	F	0.3	33.9	5.1	33.9	4.5
 track	GND	F	0.3	27.5	46.7	27.5	47.3
@@ -444,7 +445,7 @@ track	RAW_PROTECTED	F	0.3	36	18.2	36	18.7
 track	RAW_PROTECTED	F	0.3	36.6	17.4	36.6	16.9
 track	RAW_PROTECTED	F	0.3	21.7	22	21.7	22.5
 track	RAW_PROTECTED	F	0.3	21.8	20.8	21.8	20.3
-track	RAW_PROTECTED	F	0.3	20.1	16.2	20.6	16.2
+track	RAW_PROTECTED	F	0.45	20.1	16.2	20.6	16.2
 track	PORT_4V8	F	0.3	33.9	93.8	33.9	93.2
 track	PORT_4V8	F	0.3	21.5	92.1	21.5	91.6
 track	PORT_4V8	F	0.3	33.9	92.1	33.9	91.6
@@ -546,7 +547,7 @@ track	BAT_FAULT_N	In2	0.1	15.2	57.8	14.1	56.7
 track	BAT_FAULT_N	B	0.1	16.4	50.2	17.8	48.8
 track	BAT_FAULT_N	B	0.1	17.8	48.8	19.4	48.8
 track	BAT_FAULT_N	B	0.1	19.4	48.8	20.2	49.6
-track	BAT_FAULT_N	In2	0.1	16.1	17.2	15.1	18.2
+track	BAT_FAULT_N	In2	0.1	16.4	16.9	15.1	18.2
 track	BAT_FAULT_N	In2	0.1	15.1	18.2	15.1	19.8
 track	BAT_FAULT_N	In2	0.1	15.1	19.8	14.3	20.6
 track	BAT_FAULT_N	In2	0.1	14.3	20.6	14.3	22.9
@@ -905,7 +906,7 @@ via	GND	-	0.45	32.5	92.1
 via	GND	-	0.45	33	37.9		
 via	GND	-	0.45	25.9	30.6		
 via	GND	-	0.45	30.7	15.5		
-via	GND	-	0.45	16.6	16.9		
+via	GND	-	0.45	16.9	16.9		
 via	GND	-	0.45	8.2	42.6		
 via	GND	-	0.45	33.9	4.5		
 via	GND	-	0.45	27.5	47.3		
@@ -1590,23 +1591,19 @@ track	SERVO2_MCU	In2	0.1	19.7	45.7	20.95	45.7
 track	ARM1_SENSE	B	0.1	19.9	38.7	19.9	45.3
 track	ARM1_SENSE	B	0.1	19.9	45.3	21.0	46.4
 track	ARM1_SENSE	B	0.1	21.0	46.4	21.0	48.8
-track	RAW_PROTECTED	F	0.3	20.1	15.0	20.6	15.0
+track	RAW_PROTECTED	F	0.45	20.1	15.0	20.6	15.0
 via	RAW_PROTECTED	-	0.45	20.6	15.0		
 track	GND	F	0.3	8.7	42.1	9.2	42.6
 via	GND	-	0.45	9.2	42.6		
-track	BAT_FAULT_N	F	0.1	16.3	14.5	15.5	14.5
-via	BAT_FAULT_N	-	0.45	15.5	14.5		
-track	BAT_FAULT_N	In2	0.1	15.5	14.5	16.1	15.1
-track	BAT_FAULT_N	In2	0.1	16.1	15.1	16.1	17.2
-track	BAT_IN	F	0.4	14.3	15.4	14.3	16.5
-track	BAT_IN	F	0.4	14.3	16.5	14.8	16.5
-track	BAT_IN	F	0.4	14.8	16.5	15.2	16.1
-track	BAT_IN	F	0.4	15.2	16.1	15.2	15.5
-track	BAT_IN	F	0.4	15.2	15.5	15.6	15.1
-track	BAT_IN	F	0.4	15.6	15.1	16.4	15.1
+track	BAT_FAULT_N	F	0.1	16.6	14.5	15.8	14.5
+via	BAT_FAULT_N	-	0.45	15.8	14.5		
+track	BAT_FAULT_N	In2	0.1	15.8	14.5	16.4	15.1
+track	BAT_FAULT_N	In2	0.1	16.4	15.1	16.4	16.9
+track	BAT_IN	F	0.8	14.0	15.1	15.3	15.1
+track	BAT_IN	F	0.4	15.3	15.1	16.6	15.1
 track	BAT_IN	F	0.8	12.9	17.7	12.9	15.5
-track	GND	F	0.3	14.3	17.34	14.95	17.34
-via	GND	-	0.45	14.95	17.34		
+track	GND	F	0.3	15.3	15.94	15.3	16.75
+via	GND	-	0.45	15.3	16.75		
 track	BAT_IN	F	0.8	13.2	18.4	14.4	19.6
 track	BAT_IN	F	0.8	14.4	19.6	16.4	19.6
 track	BAT_DAMP	F	0.8	16.4	22.55	14.85	21.0

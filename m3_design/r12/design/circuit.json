@@ -198,7 +198,7 @@
    "Manufacturer Part": "QMB-09B-03",
    "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2104011834_Jiangsu-Huaneng-Elec-QMB-09B-03_C96256.pdf",
    "footprint": "rocket:M3_BUZ_TH_D9_P4",
-   "source": "D-R12-16: passive 9 mm THT buzzer, owner-fitted (Huawha QMB-09B-03 spec 2019-12-3)"
+   "source": "D-R12-16 / D-R12-85: passive 9 mm THT buzzer, JLC THT assembly (Huawha QMB-09B-03 spec 2019-12-3)"
   },
   "C52993880": {
    "Manufacturer": "DORABO",
@@ -241,6 +241,27 @@
    "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2010281834_TE-Connectivity-MS560702BA03-50_C97627.pdf",
    "footprint": "rocket:SENSORS-SMD_MS5611-01BA03",
    "source": "D-R12-52: barometer 10-1200 mbar, I2C (TE MS5607-02BA03 06/2017), R11's MS5611 land"
+  },
+  "C190095": {
+   "Manufacturer": "YAGEO",
+   "Manufacturer Part": "RT0402BRD0710KL",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf",
+   "footprint": "rocket:R0402",
+   "source": "D-R12-83: 10k 0.1 % 25 ppm/K thin film, port FB bottom (JLC Extended, Economic-flagged, Live 2026-11-05)"
+  },
+  "C5246546": {
+   "Manufacturer": "Honor Elec",
+   "Manufacturer Part": "HV1E477M0810PZ",
+   "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2211031900_Honor-Elec-HV1E477M0810PZ_C5246546.pdf",
+   "footprint": "rocket:M3_CAP_D8_SMD",
+   "source": "D-R12-85: 470 uF 25 V polymer, D8 x 10.5, maker reflow profile 255 C peak 5 s (HV series spec item 14); JLC-placed"
+  },
+  "C25905": {
+   "Manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+   "Manufacturer Part": "0402WGF5101TCE",
+   "Datasheet": "",
+   "footprint": "rocket:R0402",
+   "source": "basic 5.1k (R11's line, as R7 / R8 / R104 carry it)"
   }
  },
  "deleted": {
@@ -471,7 +492,7 @@
   "LS120": {
    "lcsc": "C96256",
    "value": "QMB-09B-03",
-   "why": "D-R12-16: MLT-5020 (250 C reflow limit) -> QMB-09B-03 THT, owner-fitted",
+   "why": "D-R12-16 / D-R12-85: MLT-5020 (250 C reflow limit) -> QMB-09B-03 THT, JLC THT assembly (hand-soldered, no reflow)",
    "lib": "M3:Buzzer_THT2",
    "nets": {
     "1": "3V3",
@@ -519,21 +540,21 @@
   "R400": {
    "lcsc": "C25792",
    "value": "47k 1%",
-   "why": "D-R12-07 / D-R12-21: port FB top 47k + R404 4.7k (0.1 % 56.2k deleted; O-R12-05 drift corner <= 5.0 V)",
+   "why": "D-R12-07 / -21 / -83: port FB top 47k + R404 5.1k over R401 10k 0.1 %",
    "nets": {
     "1": "PORT_4V8",
     "2": "PORT_FB_TOP"
    }
   },
   "R401": {
-   "lcsc": "C25744",
-   "value": "10k 1%",
-   "why": "D-R12-07: port FB bottom 10k 1 % (0.1 % deleted)"
+   "lcsc": "C190095",
+   "value": "10k 0.1%",
+   "why": "D-R12-83: port FB bottom 10k 0.1 % 25 ppm/K (one precision part: no 1 % pair holds 4.5-5.0 V at the ports in the drift bound)"
   },
   "R404": {
-   "lcsc": "C25900",
-   "value": "4.7k 1%",
-   "why": "D-R12-07 / D-R12-21: port FB top series 4.7k"
+   "lcsc": "C25905",
+   "value": "5.1k",
+   "why": "D-R12-83: port FB top series 5.1k (R400 47k + 5.1k = 52.1k)"
   },
   "R80": {
    "lcsc": "C23178",
@@ -633,6 +654,11 @@
    "lcsc": "C41785564",
    "value": "LSM6DSVETR",
    "why": "D-R12-50: ISM6HG256X is JLC Standard Only -> LSM6DSVE (Economic) on the same land and nets; low-g and gyro channel (F1)"
+  },
+  "C84": {
+   "lcsc": "C5246546",
+   "value": "470uF 25V polymer",
+   "why": "D-R12-85: MA25V470M8x10 (no maker reflow rating) -> Honor HV1E477M0810PZ (255 C peak), JLC-placed with paste"
   }
  },
  "added_parts": {
@@ -875,14 +901,11 @@
  },
  "net_changes_note": "D-R12-08: with U12 deleted, R100 / R101 join the camera wires to the MCU UART pins directly",
  "u1_repin_note": "r12_sch.R12_REPIN (keyed by R11 net): USB_FAULT_N, CAM_FAULT_N, CAM_UART_OE -> NC; LOGIC_SOURCE_ST -> PORT_SENSE",
- "owner_fit": {
-  "C84": "R11 / R10 GAP-4: polymer bulk, hand-fitted after reflow (no maker reflow profile)",
-  "LS120": "D-R12-16: THT buzzer rated 250 C peak (spec item 9); hand-fitted after reflow"
- },
+ "owner_fit": {},
  "assembly": {
   "tier": "JLC Economic PCBA",
   "sides": 1,
   "reflow": "255 +/- 5 C (JLC capabilities page)",
-  "note": "every footprint on F (D-R12-01); owner_fit parts are on the owner BOM, not the JLC BOM / CPL"
+  "note": "every footprint on F (D-R12-01); every part JLC-assembled, none owner-fitted (D-R12-85, owner 2026-11-05)"
  }
 }

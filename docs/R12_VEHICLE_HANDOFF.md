@@ -1,13 +1,14 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `d776c5d7…` (M3-ASSY-R12), 46 × 100 × 1.6 mm, four layers, every part on the top face. Branch
-`r12-stage-d`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
+**Status.** PCB `d6e4f7ee…` (M3-ASSY-R12), 46 × 100 × 1.6 mm, four layers, every part on the top face and assembled by
+JLC. Branch `r12-port-fix`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 100), top face = F. Pad
-positions below were read from the board file (Measured, pcbnew on `d776c5d7…`).
+positions below were read from the board file (Measured, pcbnew on `d776c5d7…`; D-R12-84 moved only U9 and C88, which
+no harness position below uses).
 
 ## Harness pin map
 
@@ -49,10 +50,11 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   against SH's 1 A rating (JLC listing, Live 2026-11-04).
 - **J410, J420 and J440 carry the same supply and UART pin order.** The firmware port map defaults to GPS J410, radio
   J420, AUX spare. A device on these ports must drive its TX high at no more than 3.6 V.
-  - Under the 0.561 A budget the port pins can sit 2–3 mV under the LR900's 4.5 V floor at the initial tolerance, and
-    about 50 mV under at the drift corner (Calculation / Inference; R12_VALIDATION row 6).
+  - Under the 0.561 A budget the port pins stay at or above 4.529 V at the drift corner and at or below 4.972 V with no
+    load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
+    page gives only "5V DC") and the M100 Mini's 3.3–5 V.
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
-    4.54–4.94 V at the regulator (Calculation).
+    4.60–4.94 V at room temperature (initial tolerance, Calculation).
 - **Servo power from the harness (`SERVO + FROM HARNESS`).** J122 carries signals only: SERVO1–4 and one shared signal
   GND. Servo motor power and return run in the pack-star harness, never through the board (REQUIREMENTS F4). R12's
   board does not print this note (D-R12-81, owner acceptance pending), so label the harness itself.
@@ -131,10 +133,12 @@ adapted to R12. Run it in order and stop at the first failure.
 - **One-sided board.** No parts on the bottom face; the bottom carries contact legends and designators only.
 - **SH plugs on the short edges only.** The mouths sit 1.1 mm inside their edge (fit_check r12, CAD envelopes;
   Inference on the clone dimensions).
-- **Owner-fitted parts** (hand-soldered after delivery; no JLC reflow):
-  - C84, 470 µF polymer, at (40.0, 74.5).
-  - LS120 (QMB-09B-03 THT buzzer) at (7.2, 85.0). Fit its (+) lead in pad 1 (5.2, 85.0), marked `+` on the assembly
-    drawing. That pin 1 is (+) is an Inference: check the part's mark (D-R12-16, -82).
+- **Every part is JLC-assembled (D-R12-85, owner 2026-11-05).** Nothing is fitted by hand after delivery:
+  - C84 (Honor HV1E477M0810PZ, 470 µF 25 V polymer) at (40.0, 74.5) is placed and reflowed by JLC.
+  - LS120 (QMB-09B-03 THT buzzer) at (7.2, 85.0) and J121 are JLC THT assembly (hand-soldered by JLC after reflow).
+    LS120's (+) lead goes in pad 1 (5.2, 85.0): JLC's own footprint prints its `+` beside pad 1 and the CPL puts that
+    pad on ours (jlc_orient_r12, residual 0.0 mm, Measured), and the maker drawing marks the (+) lead (Datasheet). At
+    incoming inspection, check the buzzer's `+` mark sits at pad 1.
 - **microSD** J430 on the top face at (20.0, 78.0). Open the hinge only with the board off and its sources
   disconnected.
 - **U5 barometer** (MS5607) on the top face at (29.0, 32.0). Keep its port open and vented, under an opaque cover that

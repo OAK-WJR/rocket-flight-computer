@@ -7,14 +7,15 @@ R12 is one-sided JLC Economic PCBA (D-R12-01): every placed part on F, four copp
 under KiCad's Python (KICAD_PY, else KiCad's default macOS location) by --content and --bind:
   BOM / CPL (--verify-cpl): the JLC BOM's and the CPL's designator sets are equal, with no duplicate; they are exactly
     the parts m3_design/r12_parts.py bom_lines() puts in the JLC BOM (LCSC code, not owner-fitted, not excluded from
-    the BOM), with the board's LCSC codes; the owner BOM is exactly the owner-fitted parts; every board part out of
+    the BOM), with the board's LCSC codes; the owner BOM is exactly the owner-fitted parts (none since D-R12-85, so
+    no owner BOM may exist); every board part out of
     the BOM is in neither; every CPL row is on the Top layer; then tools/jlc_orient_r12.py --verify-cpl rebuilds every
     CPL row from JLC's own footprint and compares it with our pads (rotation and offset corrections).
   Gerber / paste (--paste): the zip holds exactly F / In1 / In2 / B copper, both masks, F paste, both silks, Edge.Cuts,
     PTH and NPTH drills and the job file; tools/paste_check.py's rules on F paste; the paste counts: one flash per
     pasted pad, and only parts in the CPL carry paste.
 The binding (tools/fab_manifest.py) hashes the board (its SHA-256), project, schematics, library, the R12 export tools
-and data, m3_design/r12_parts.py and design/circuit.json against the five outputs and the owner BOM.
+and data, m3_design/r12_parts.py and design/circuit.json against the five outputs (and an owner BOM if one existed).
 
 usage: python3 tools/fab_manifest_r12.py [board]                   verify the binding (hashes only)
        python3 tools/fab_manifest_r12.py [board] --content         verify the binding, then run the content checks

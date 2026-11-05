@@ -7,7 +7,8 @@ R12 reads its own pad file (tools/jlc_easyeda/pads_r12.json) and writes its own 
 pads to ours (rotation 0 / 90 / 180 / 270 and offset; jlc_orient.py's docstring), so the CPL puts JLC's footprint on
 our copper. The R10 source is executed with exactly the replacements in REPLACE, each asserted to occur as counted, so
 an upstream edit fails here instead of being silently skipped. The owner-fitted parts (m3_design/r12/design/circuit.json
-"owner_fit", read through m3_design/r12_parts.py bom_lines()) replace R10's MANUAL_FIT: they are in no CPL.
+"owner_fit", read through m3_design/r12_parts.py bom_lines()) replace R10's MANUAL_FIT: they would be in no CPL. Since
+D-R12-85 the list is empty: every part, C84 and the THT LS120 / J121 included, is in the CPL and matched here.
 
 The only hard-coded placement data is R12_MECHANICAL below, the per-footprint table of the mechanical tab numbers JLC's
 footprint carries and ours leaves unnumbered. R10's own tables in jlc_orient.py (ONLY, OFFSET, BODY, PAD_TOLERANCE,

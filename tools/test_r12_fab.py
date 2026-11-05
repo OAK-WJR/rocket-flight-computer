@@ -166,12 +166,40 @@ class Package(unittest.TestCase):
         self.assertNotEqual(code, 0)
         self.assertIn('rotation differs', text)
 
-    def test_owner_part_in_jlc_bom(self):
+    def test_no_owner_bom(self):
+        """D-R12-85: every part is JLC-assembled, so the export writes no owner BOM; C84 (SMT) and LS120 (THT) are on
+        the JLC BOM and in the CPL."""
+        stem = BOARD.stem
+        self.assertFalse((self.out / f'{stem}_bom_owner.csv').exists())
+        with open(self.out / f'{stem}_bom_jlc.csv', newline='') as source:
+            rows = {row['Designator']: row for row in csv.DictReader(source)}
+        self.assertEqual(rows['C84']['Assembly'], 'SMT')
+        self.assertEqual(rows['LS120']['Assembly'], 'THT (JLC THT assembly)')
+        with open(self.out / f'{stem}_cpl_jlc.csv', newline='') as source:
+            cpl = {row['Designator'] for row in csv.DictReader(source)}
+        self.assertLessEqual({'C84', 'LS120', 'J121'}, cpl)
+
+    def test_owner_bom_refused(self):
+        """A part moved from the JLC BOM / CPL to an owner BOM fails: the owner BOM must be r12_parts' (empty) set."""
         out = self.copy()
         stem = BOARD.stem
-        with open(out / f'{stem}_bom_owner.csv', newline='') as source:
-            owner = list(csv.reader(source))[1:]
-        self.rewrite(out / f'{stem}_bom_jlc.csv', lambda rows: rows + [owner[0][:6] + ['SMT']])
+        with open(out / f'{stem}_bom_jlc.csv', newline='') as source:
+            rows = list(csv.reader(source))
+        moved = [r for r in rows[1:] if r[1] == 'LS120']
+        self.rewrite(out / f'{stem}_bom_jlc.csv', lambda rows: [r for r in rows if r[1] != 'LS120'])
+        self.rewrite(out / f'{stem}_cpl_jlc.csv', lambda rows: [r for r in rows if r[0] != 'LS120'])
+        with open(out / f'{stem}_bom_owner.csv', 'w', newline='') as sink:
+            csv.writer(sink).writerows([rows[0]] + moved)
+        code, text = self.check(out, '--verify-cpl')
+        self.assertNotEqual(code, 0)
+        self.assertIn("is not r12_parts' owner-fitted set", text)
+
+    def test_out_of_bom_part_in_jlc_bom(self):
+        """A part excluded from the BOM on the board (J1's wire pads) in the JLC BOM / CPL fails."""
+        out = self.copy()
+        stem = BOARD.stem
+        self.rewrite(out / f'{stem}_bom_jlc.csv', lambda rows: rows + [['wire pads', 'J1', 'M3_WIREPAD_2P_P5', '', '', '1',
+                                                                        'THT (JLC THT assembly)']])
         code, text = self.check(out, '--verify-cpl')
         self.assertNotEqual(code, 0)
         self.assertIn('owner-fitted or out-of-BOM parts', text)

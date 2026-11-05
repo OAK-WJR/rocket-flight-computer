@@ -36,7 +36,7 @@ C82	21.2	15.6	0	F	RAW bulk at U9.6 (neck ends in its pad)
 C83	33.9	39.2	90	F	VBUS
 C84	40	74.5	0	F	VLOGIC hold-up, owner-fitted; D-R12-44: re-placed after U1 moved forward
 C87	19	9.2	90	F	EN timing
-C88	14.3	16.92	270	F	U9 BAT_IN decoupling: on the feed between C96.1 and U9.5 (D-R12-79, R10 C88 topology)
+C88	15.3	15.52	270	F	U9 BAT_IN decoupling: on the feed between C96.1 and U9.5 (D-R12-79, R10 C88 topology); D-R12-84: pad 1 on the y 15.1 line between C96.1 and U9.5, the 0.8 mm feed passing straight through it
 C89	10	19.6	270	F	damper C
 C94	29	21.6	0	F	sense
 C95	12.6	19.6	270	F	damper C
@@ -187,7 +187,7 @@ U3	34.5	62.6	90	F	QSPI flash east of U1, rotated so IO0 / CLK / IO3 face U1 (D-R
 U4	23	31.6	180	F	IMU on the roll axis (x 23), 6 mm aft of U1 for the A-row fan-out; D-R12-50: LSM6DSVE on the same land
 U5	29	32	180	F	baro north-east of the IMU; D-R12-53: MS5607 (5 x 3) rotated 180 so SDA / SCL face R12 / R13 and U1, VDD / PS next to C32
 U6	27.5	40.5	180	F	D-R12-53: high-g accelerometer between U4 and U1 on the IMU SPI1 path; SPI pins face west to the bus; channel 1 (Y) along the rocket axis
-U9	17	15.35	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east
+U9	17.3	15.35	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east; 0.3 mm east for C88 between C96 and U9 (D-R12-84)
 U400	32.9	19.3	90	F	port buck
 U403	32.9	13.9	90	F	camera buck
 Y1	14.6	52.5	180	F	HSE: HSE_IN pad NE (C1 stub), HSE_OUT pad SW (D1 stub under it); D-R12-44: re-placed after U1 moved forward

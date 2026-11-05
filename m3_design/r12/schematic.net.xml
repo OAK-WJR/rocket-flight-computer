@@ -2627,21 +2627,21 @@
       </units>
     </comp>
     <comp ref="R401">
-      <value>10k 1%</value>
+      <value>10k 0.1%</value>
       <footprint>rocket:R0402</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf</datasheet>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf</datasheet>
       <fields>
-        <field name="LCSC">C25744</field>
-        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF1002TCE</field>
+        <field name="LCSC">C190095</field>
+        <field name="Manufacturer">YAGEO</field>
+        <field name="Manufacturer Part">RT0402BRD0710KL</field>
         <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25744"/>
-      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
+      <property name="LCSC" value="C190095"/>
+      <property name="Manufacturer" value="YAGEO"/>
+      <property name="Manufacturer Part" value="RT0402BRD0710KL"/>
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -2658,21 +2658,20 @@
       </units>
     </comp>
     <comp ref="R404">
-      <value>4.7k 1%</value>
+      <value>5.1k</value>
       <footprint>rocket:R0402</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf</datasheet>
       <fields>
-        <field name="LCSC">C25900</field>
+        <field name="LCSC">C25905</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF4701TCE</field>
+        <field name="Manufacturer Part">0402WGF5101TCE</field>
         <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf</field>
+        <field name="Datasheet"/>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25900"/>
+      <property name="LCSC" value="C25905"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF4701TCE"/>
+      <property name="Manufacturer Part" value="0402WGF5101TCE"/>
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -3886,24 +3885,24 @@
     </comp>
     <comp ref="C84">
       <value>470uF 25V polymer</value>
-      <footprint>rocket:M3_MA_8x10</footprint>
-      <datasheet>https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf</datasheet>
+      <footprint>rocket:M3_CAP_D8_SMD</footprint>
+      <datasheet>https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2211031900_Honor-Elec-HV1E477M0810PZ_C5246546.pdf</datasheet>
       <fields>
-        <field name="LCSC">C46550466</field>
-        <field name="Manufacturer">jieerrui</field>
-        <field name="Manufacturer Part">MA25V470M8x10</field>
-        <field name="Footprint">rocket:M3_MA_8x10</field>
-        <field name="Datasheet">https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf</field>
+        <field name="LCSC">C5246546</field>
+        <field name="Manufacturer">Honor Elec</field>
+        <field name="Manufacturer Part">HV1E477M0810PZ</field>
+        <field name="Footprint">rocket:M3_CAP_D8_SMD</field>
+        <field name="Datasheet">https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2211031900_Honor-Elec-HV1E477M0810PZ_C5246546.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="PolarCap" description="Polarized capacitor"/>
-      <property name="LCSC" value="C46550466"/>
-      <property name="Manufacturer" value="jieerrui"/>
-      <property name="Manufacturer Part" value="MA25V470M8x10"/>
+      <property name="LCSC" value="C5246546"/>
+      <property name="Manufacturer" value="Honor Elec"/>
+      <property name="Manufacturer Part" value="HV1E477M0810PZ"/>
       <property name="Sheetname" value="08 | Logic diode-OR and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="M3_MA_8x10"/>
+      <property name="ki_fp_filters" value="M3_CAP_D8_SMD"/>
       <sheetpath names="/08 | Logic diode-OR and hold-up/" tstamps="/71cc8d22-5cff-5ad1-8b75-8ead7903cac9/"/>
       <tstamps>775a4126-ead0-565e-828e-8e78bdd8d673</tstamps>
       <units>
@@ -6675,7 +6674,7 @@
     <libpart lib="M3" part="PolarCap">
       <description>Polarized capacitor</description>
       <footprints>
-        <fp>M3_MA_8x10</fp>
+        <fp>M3_CAP_D8_SMD</fp>
       </footprints>
       <fields>
         <field name="Reference">C</field>

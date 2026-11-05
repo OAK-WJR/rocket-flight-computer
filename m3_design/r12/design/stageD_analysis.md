@@ -1,6 +1,14 @@
 # R12 stage D: electrical analyses on R12's copper (2026-11-05)
 
-Board: the final stage D board `d776c5d7181e10f0ea3d16960050b63b5c5e7d61bb26074c4ea3b204b71b7161` (`m3_design/r12_build.sh`,
+**Re-run on `r12-port-fix` (D-R12-83 … -85).** Board `d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64`
+(two builds, same hash): PORT_4V8 divider R400 47k + R404 5.1k over R401 10k 0.1 % (D-R12-83), U9 0.3 mm east and C88
+on the bar line with a 0.8 mm feed (D-R12-84), C84 the reflow-rated Honor HV1E477M0810PZ and nothing owner-fitted
+(D-R12-85). `stageD_budget.json` and the hot-plug files were re-run on it (the saved fill already matched a native
+refill: the refilled copy has the board's own hash); the hot-plug electrical SHA is `15c76382…`. Every table below
+gives this board's figures where they changed (marked **port-fix**); the rest are unchanged. §10 lists the changes. The
+text that follows this paragraph describes the stage D board as it was.
+
+Stage D board (superseded): the final stage D board `d776c5d7181e10f0ea3d16960050b63b5c5e7d61bb26074c4ea3b204b71b7161` (`m3_design/r12_build.sh`,
 two builds, same hash; stageD.md), analysed through a copy refilled with `pcbnew.ZONE_FILLER` (`75557a54…`). It carries
 the stage D fix pass (D-R12-78: C79, a third 22 µF damper capacitor; D-R12-79: the U9 feed through C88; the copper fixes
 in §9) and D-R12-80's legend-column copper moves: J410 / J420 pin 2 reach PORT_4V8 through their 100 nF pad (C410 /
@@ -46,12 +54,12 @@ The fix pass did not touch the fire paths.
 | ACT_FET_S | 6.456 × 0.5, 6.345 mΩ | 6.160 × 0.5, 6.054 mΩ |
 | BAT_IN (J1 → Q120) | 7.767 × 1.0, 3.817 mΩ | 12.405 × 1.0, 6.096 mΩ |
 | Copper 20 / 70 °C | 31.899 / 38.167 mΩ | **23.610 / 28.249 mΩ** |
-| GND fire return Q124 → J1.2 (DC solve, window x 0–14.5, y 6.8–48.0) | 2.503 mΩ | **2.575 mΩ** on the final board (2.594 on the fix-pass board, 3.248 before the second via), inside the 5 mΩ allowance (the loop keeps 5 mΩ) |
+| GND fire return Q124 → J1.2 (DC solve, window x 0–14.5, y 6.8–48.0) | 2.503 mΩ | **2.594 mΩ** port-fix (C88's old GND via gone from the window); 2.575 mΩ on the stage D final board (2.594 on the fix-pass board, 3.248 before the second via), inside the 5 mΩ allowance (the loop keeps 5 mΩ) |
 | FETs hot (D-R12-10, Inference) | 2 × 40 + 8.2 mΩ | 2 × 73.5 mΩ (AO3401A 60 mΩ × 1.225) + 57.4 mΩ (AO3400A 48 mΩ × 1.195) |
-| Converter load during the fire | 13.07 W | 12.957 W (camera 1 A at 5.691 V and ports 0.561 A at 4.943 V over 0.80, logic 1.4 W, microSD 0.825 W, D5, R92) |
+| Converter load during the fire | 13.07 W | 12.953 W port-fix (camera 1 A at 5.691 V and ports 0.561 A at 4.938 V over 0.80, logic 1.4 W, microSD 0.825 W, D5, R92; was 12.957 W at 4.943 V) |
 | **Total loop** | 4.620493 Ω | **4.726699 Ω** |
-| Fire current idle / 1 / 2 / 3 / 4 stalls (7.4 V) | 1.539955 … 1.278004 A | **1.505915 / 1.442356 / 1.378542 / 1.314433 / 1.249978 A** |
-| Four-stall BAT_IN | 5.7133 V | **5.7208 V** |
+| Fire current idle / 1 / 2 / 3 / 4 stalls (7.4 V) | 1.539955 … 1.278004 A | **1.505934 / 1.442375 / 1.378562 / 1.314454 / 1.250000 A** port-fix (stage D: … 1.249978 A) |
+| Four-stall BAT_IN | 5.7133 V | **5.7209 V** port-fix (5.7208 V) |
 | MJG J-Tek floor 1.125 A | pass (1.136×) | **pass, 1.111× (+11.1 %)**; D-R12-10's placeholder on R11 copper was 1.2473 A |
 
 **Shorted match (Calculation / Inference):** match shorted 2.608 A idle / 2.164 A at four stalls; match and leads
@@ -131,9 +139,9 @@ design currents by function.
 
 | Path (A) | Series R | Widths: length, rise | Vias |
 |---|---|---|---|
-| U9 IN BAT_IN J1 → U9.5 (2.9) | 10.23 mΩ | 0.8 mm 8.39 mm 24.9 °C; **0.4 mm C96.1 → C88.1 → U9.5 4.13 mm 55.2 °C** (D-R12-79's route) | 0 |
-| U9 OUT RAW_PROTECTED (2.9) | 5.57 mΩ | 0.3 mm 3.4 mm drawn (1.2 mm outside U9's 0.3 mm pin bar to the first via) 76.8 °C | **2** (20.6, 15.0) / (20.6, 16.2) |
-| U400 IN (2.06, port 1.9 A at 4.943 V / 0.80 from 5.71 V) | 1.64 mΩ | 0.3 mm pin entry 1.0 mm 38.6 °C | 2 |
+| U9 IN BAT_IN J1 → U9.5 (2.9) | **7.55 mΩ port-fix** (10.23) | **port-fix: 0.8 mm 9.69 mm 24.9 °C (C96.1 → C88.1 1.3 mm included); 0.4 mm C88.1 → U9.5 1.3 mm, 55.2 °C, the pin entry (0.53 mm outside pads)**; stage D: 0.4 mm C96.1 → C88.1 → U9.5 4.13 mm 55.2 °C | 0 |
+| U9 OUT RAW_PROTECTED (2.9) | **4.22 mΩ port-fix** (5.57) | **port-fix: 0.3 mm 1.6 mm (bar to 0.4 mm past it) 76.8 °C, 0.8 mm 0.82 mm 24.9 °C into C82.1, 0.45 mm via stubs 1.0 mm 48.2 °C (each carries about half): only pin-entry lengths over 30 °C**; stage D: 0.3 mm 3.4 mm | **2** (20.6, 15.0) / (20.6, 16.2) |
+| U400 IN (2.05, port 1.9 A at 4.938 V / 0.80 from 5.71 V) | 1.64 mΩ | 0.3 mm pin entry 1.0 mm 38.5 °C | 2 |
 | U403 IN (1.56) | 0.82 mΩ | 0.3 mm 0.5 mm 22.1 °C | 1 |
 | D5 IN (1.294) | 1.64 mΩ | 0.3 mm 1.0 mm 15.3 °C | 2 |
 | VLOGIC D5 → U2 (1.294) | 9.87 mΩ | 0.4 mm F 3.92 + B 4.11 mm 11.0 °C | 2 |
@@ -143,12 +151,18 @@ design currents by function.
 | CAM_5V L401 → J9 (1.249) | 9.34 mΩ | 0.6 / 0.5 / 0.45 mm, ≤ 8.9 °C | 0 |
 | U2 OUT 3V3 (2.0) | 1.64 mΩ | 0.3 mm pin entry 1.0 mm 36.5 °C | 2 |
 
-DC solves (all four layers, 0.1 mm grid, filled zones; Calculation): BAT_IN J1 → U9.5 11.133 mΩ, J1 → Q120 5.414;
-RAW_PROTECTED U9 → U400 8.104, → U403 8.957, → D5 7.553 (final board); VLOGIC D5 → U2 13.873, C84 → U2 47.816, D6 → U2 30.509;
-PORT_4V8 L400 → J410 73.613, → J420 74.827, → J440 69.574, → R400 36.975 (final board); CAM_5V L401 → J9 9.506; 3V3
-L1 → U6 7.205, L1 → R14 5.441, R14 → U6 8.709 (final board); GND Q124 → J1.2 2.575 mΩ (final board).
+DC solves (all four layers, 0.1 mm grid, filled zones; Calculation), **port-fix**: BAT_IN J1 → U9.5 8.193 mΩ (11.133),
+J1 → Q120 5.414; RAW_PROTECTED U9 → U400 5.791, → U403 7.445, → D5 5.328 (8.104 / 8.957 / 7.553: U9 0.3 mm nearer);
+VLOGIC D5 → U2 13.873, C84 → U2 47.816, D6 → U2 30.509; PORT_4V8 L400 → J410 73.564, → J420 74.769, → J440 69.569,
+→ R400 36.975; CAM_5V L401 → J9 9.506; 3V3 L1 → U6 6.762, L1 → R14 5.347, R14 → U6 8.022 (the moved vias change the In2
+3V3 pour); GND Q124 → J1.2 2.594 mΩ.
 
-**Port supply (Calculation; the 4.5 V module floor and the load allocation are Inference).** U400 regulates at R400.1,
+**Port supply, port-fix (D-R12-83; Calculation; the LR900-F's 4.5 V floor and 5.0 V top and the load allocation are
+Inference).** Regulator window 4.603–4.938 V initial, 4.571–4.972 V drift (R401 0.1 % 25 ppm/K). At the 0.561 A budget,
+same bound: J410 ≥ 4.562 / 4.529 V, **J420 ≥ 4.561 / 4.529 V (+61 / +29 mV over 4.5 V)**, J440 ≥ 4.564 / 4.532 V
+(initial / drift); no-load top 4.938 / 4.972 V, ≤ 5.0 V (the HGLRC M100 Mini's 3.3–5 V, hglrc.com, read 2026-11-05).
+`port_supply.all_ports_inside_4V5_5V0_at_0A561` is true. At R10's 1.9 A design current (not the budget) J420 is
+4.461 / 4.429 V. **O-R12-16 and O-R12-26 are closed.** Stage D's figures, superseded: U400 regulates at R400.1,
 whose sense stub joins the east-edge trunk 5 mm from L400; the ports are 70 mm forward. Bound (maximum principle: no
 node lies outside the source-sink potentials; mutual ≤ driving-point resistance): drop to port k ≤ R(L400 → port k) ×
 I. At the always-on budget 0.561 A (final board): ≤ 42.0 mV at J420 → **4.497 V initial (2.6 mV under the LR900's 4.5 V),
@@ -163,7 +177,7 @@ with R10's 0.15 Ω harness and 0.05 V transient allowances the drift corner is 4
 
 U2 regulates at R14.1. Bound on R14.1 → U6 VCC (pins 1, 13, 15, 16): (R(L1 → U6) + R(L1 → R14)) × I_3V3 =
 (7.205 + 5.441) mΩ × I (final board). At U2's 1 A rating: 12.6 mV → **VCC ≥ 3.258 V initial / 3.227 V drift, margin
-123 / 92 mV over 3.135 V**; at a 0.5 A 3V3 allocation 6.3 mV (99 mV drift margin); U6's own 6 mA through R14 → U6
+123 / 92 mV over 3.135 V** (port-fix: (6.762 + 5.347) mΩ, 12.1 mV → ≥ 3.258 / 3.228 V, margin 123 / 93 mV); at a 0.5 A 3V3 allocation 6.3 mV (99 mV drift margin); U6's own 6 mA through R14 → U6
 (8.7 mΩ) 0.05 mV.
 O-R12-22 closes as a calculation; load steps at U6 are an Inference (bench).
 
@@ -178,16 +192,17 @@ F.Cu track (no pour), so R10's four-layer extractor applies; R80's BAT_IN pad jo
 BAT_IN / BAT_DAMP pad is an ideal join). C79 is modelled exactly as C89 / C95 (same maker C(V) curve, factors and
 'damper' corner; the R10 sources are executed with asserted replacements: three damper rows, CMAX 7). D8 SMAJ12CA keeps
 R10's TVS model (its 0.2 Ω slope is stiffer than SMAJ12CA's 0.26 Ω, Inference; the no-clamp run bounds it).
-Network (12 edges): J1.1 → C80 (6.97 mm × 1.0); J1.1 → C89.1 (4.99 mm × 0.8) → D8 / C95.1 → C96.1 (2.2 mm × 0.8) →
-C88.1 (1.1 mm × 0.4) → U9.5 (3.03 mm × 0.4, 3.72 mΩ, 0.99 nH); C95.1 → C79.1 (3.70 mm × 0.8) and C95.2 → C79.2 (3.84 mm
+Network (12 edges; port-fix): J1.1 → C80 (6.97 mm × 1.0); J1.1 → C89.1 (4.99 mm × 0.8) → D8 / C95.1 → C96.1 (2.2 mm ×
+0.8) → C88.1 (1.3 mm × 0.8) → U9.5 (1.3 mm × 0.4, 1.60 mΩ, 0.42 nH; stage D: C88.1 1.1 mm × 0.4, then 3.03 mm × 0.4,
+3.72 mΩ, 0.99 nH); C95.1 → C79.1 (3.70 mm × 0.8) and C95.2 → C79.2 (3.84 mm
 × 0.8); R167 10.1 mm × 0.4 off C96.1 through R80.1.
 
-| Figure (limit) | R11 `3bb83272…` | R12 before the fixes (`e2b005b5…`) | **R12 now (`5a301b1b…`)** |
+| Figure (limit) | R11 `3bb83272…` | R12 before the fixes (`e2b005b5…`) | **R12 stage D (`5a301b1b…`); port-fix (`d6e4f7ee…`) where it differs** |
 |---|---|---|---|
 | Required cases failing | 0 / 2304 | 8 / 2304 | **0 / 2304** |
 | Minimum U9 IN (≥ −15.0 V) | −14.630 V | −15.097 V | **−14.255 V** (0.1 µH) |
 | Minimum by harness 0.1 / 0.5 / 1 / 2 µH | — | −14.347 / −14.554 / −14.081 / −15.097 V | −14.255 / −14.147 / −13.388 / −12.692 V |
-| Steepest fall (≤ 10 V/µs) | 8.663 | 9.286 | **9.251 V/µs** (0.1 µH) |
+| Steepest fall (≤ 10 V/µs) | 8.663 | 9.286 | **9.251 V/µs** (0.1 µH); port-fix 9.254 V/µs |
 | Steepest rise (≤ 100 V/µs) | 4.899 | 5.387 | 5.402 V/µs |
 | R166 damper peak / energy | 547.4 W / 2.925 mJ | 618.7 W / 3.053 mJ | 643.0 W / 4.186 mJ |
 | C88 topology (feed passes C88 before U9; local path ≤ 4 mm, 5 mΩ, 2.6 nH) | pass | fail | **pass** |
@@ -227,12 +242,12 @@ Fixed by the stage D fix pass (D-R12-78 / -79 and the copper changes; Measured o
 D-R12-80 (legend columns) then moved five copper items (header); the re-run on the final board changed only the figures
 marked "final board" above, none across a limit except PORT_4V8 at the ports, already under 4.5 V (item 7).
 
-Still open:
-6. **BAT_IN C96.1 → C88.1 → U9.5 at 0.4 mm for 4.13 mm** (D-R12-79's route): 55.2 °C at R10's 2.9 A design current,
+Still open at stage D (6 and 7 closed on `r12-port-fix`, §10):
+6. **(closed by D-R12-84) BAT_IN C96.1 → C88.1 → U9.5 at 0.4 mm for 4.13 mm** (D-R12-79's route): 55.2 °C at R10's 2.9 A design current,
    about 36 °C at the 2.34 A fire-time converter current (IPC upper bound, no plane credit; Inference), above the 30 °C
    basis and longer than the 2 mm pin-entry class. Its 3.7 mΩ is inside R10's C88 local-path bound (5 mΩ). A 0.6 mm
    run, if it fits, would bring the 2.9 A rise to about 35 °C (Calculation on the IPC fit).
-7. **PORT_4V8 at the ports (final board):** 4.497–4.500 V initial bound and 4.447–4.450 V drift at the 0.561 A budget
+7. **(closed by D-R12-83) PORT_4V8 at the ports (final board):** 4.497–4.500 V initial bound and 4.447–4.450 V drift at the 0.561 A budget
    (J420 lowest), against the LR900's 4.5 V (Calculation / Inference); the 75 mm east-edge feed (0.5 mm B.Cu) is about
    70–75 mΩ. Owner item (O-R12-16, O-R12-26).
 8. **PA6 during a fire into a shorted match:** VLOGIC can reach the trip band (§5; firmware, O-R12-07).
@@ -240,3 +255,28 @@ Still open:
 Everything else re-run here passes: fire floor at four stalls 1.249978 A (+11.1 %), GND return 2.575 mΩ < 5 mΩ, watchdog
 guard 34.853 < 36 ms, EN / chatter (7 ms line holds to 5.647 V), hold-up 2.2–6.1 ms from a break, U6 ≥ 3.227 V (final
 board), the hot-plug model and all its checks (re-run on the final board: 0 / 2304, −14.255 V, 9.251 V/µs).
+
+## 10. Port-fix re-run (D-R12-83 … -85, board `d6e4f7ee…`)
+
+Every analysis above was re-run once on `d6e4f7ee…` (`stageD_budget.json`, about 9.5 min; hot-plug inputs electrical SHA
+`15c76382…`, the 2304-case results and the six variants re-run on them). What changed:
+
+| Item | Stage D (`d776c5d7…`) | Port-fix (`d6e4f7ee…`) | Label |
+|---|---|---|---|
+| PORT_4V8 window at the regulator | 4.539–4.943 V initial, 4.489–4.999 V drift | **4.603–4.938 V, 4.571–4.972 V** | Calculation; drift Inference |
+| Ports under 0.561 A (J420 lowest) | ≥ 4.497 / 4.447 V | **≥ 4.561 / 4.529 V** (J410 4.562 / 4.529, J440 4.564 / 4.532) | Calculation / Inference |
+| Ports at no load (ceiling 5.0 V) | ≤ 4.943 / 4.999 V | **≤ 4.938 / 4.972 V** | Calculation / Inference |
+| PA4 PORT_SENSE | 3.07–3.38 V initial, 3.02–3.44 V drift | 3.11–3.38 V, 3.08–3.42 V | Calculation |
+| U9 IN path (2.9 A) | 0.4 mm 4.13 mm at 55.2 °C (not pin-entry class) | **0.8 mm everywhere (24.9 °C) but the 1.3 mm 0.4 mm pin entry**; 7.55 mΩ | Calculation / Inference (IPC upper bound) |
+| U9 OUT path (2.9 A) | 0.3 mm 3.4 mm, 76.8 °C | 0.3 mm 1.6 mm (pin entry), 0.8 mm 0.82 mm 24.9 °C, 0.45 mm via stubs 1.0 mm; 4.22 mΩ | Calculation / Inference |
+| C88 local path | 3.03 mm, 3.72 mΩ, 0.99 nH | 1.3 mm, 1.60 mΩ, 0.42 nH | Calculation (extractor) |
+| Hot-plug | 0 / 2304, −14.255 V, 9.251 V/µs | 0 / 2304, −14.255 V, 9.254 V/µs, rise 5.402 V/µs, R166 643.0 W / 4.186 mJ; every check passes; variants unchanged (R166 shorted 1164, no damper 1920, × 1.3 112, 2/3 damper 8 failing) | Simulation / Inference |
+| Fire, four stalls | 1.249978 A at 5.7208 V | 1.250000 A at 5.7209 V (+11.1 %); loop 4.726699 Ω unchanged | Calculation / Inference |
+| GND return Q124 → J1.2 | 2.575 mΩ | 2.594 mΩ (< 5 mΩ) | Calculation |
+| BAT_IN J1 → U9.5 / RAW U9 → U400 / U403 / D5 | 11.133 / 8.104 / 8.957 / 7.553 mΩ | 8.193 / 5.791 / 7.445 / 5.328 mΩ | Calculation |
+| PA6 margin, match and leads shorted (×11 / with tolerance) | −0.005 / −0.096 V | +0.007 / −0.084 V (match shorted +0.051 / −0.040; healthy +0.200 / +0.109) | Calculation / Inference |
+| U6 VCC at U2's 1 A | ≥ 3.258 / 3.227 V | ≥ 3.258 / 3.228 V | Calculation |
+| EN single drop-out / bench-rule limit | 8.13 / 7.56 ms | 8.13 / 7.56 ms | Calculation / Inference |
+| Hold-up | 2.23–6.12 ms from a break | unchanged (C84's 470 µF ±20 % and 300.8 µF allowance kept) | Calculation / Inference |
+
+Still open: item 8 (PA6 during a fire into a shorted match, firmware O-R12-07).

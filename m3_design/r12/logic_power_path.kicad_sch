@@ -233,7 +233,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "M3_MA_8x10"
+			(property "ki_fp_filters" "M3_CAP_D8_SMD"
 				(at 0 0 0)
 				(effects
 					(font
@@ -565,35 +565,35 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_MA_8x10"
+		(property "Footprint" "rocket:M3_CAP_D8_SMD"
 			(at 73.66 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C46550466"
+		(property "LCSC" "C5246546"
 			(at 73.66 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "jieerrui"
+		(property "Manufacturer" "Honor Elec"
 			(at 73.66 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "MA25V470M8x10"
+		(property "Manufacturer Part" "HV1E477M0810PZ"
 			(at 73.66 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20260306/24758A4FC016E80367B87853635CDCC1.pdf"
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2211031900_Honor-Elec-HV1E477M0810PZ_C5246546.pdf"
 			(at 73.66 71.12 0)
 			(hide yes)
 			(effects

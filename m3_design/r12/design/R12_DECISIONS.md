@@ -162,7 +162,7 @@ housing. Lands from JLCEDA (no maker PDF on JLC): contacts 0.6 × 1.7 mm at 1.25
 (6P) — the same contact and tab geometry as JST eGH p. 2 within 0.1 / 0.3 mm on the tabs. Mating with JST GH housings
 and latch retention are Inferences (O-R12-04). AVA: one connector family per job.
 
-**D-R12-16 Owner-fitted parts.** LS120 MLT-5020 (250 °C peak, cannot see Economic reflow) → QMB-09B-03 (C96256, $0.1183)
+**D-R12-16 Owner-fitted parts (superseded by D-R12-85: every part JLC-assembled).** LS120 MLT-5020 (250 °C peak, cannot see Economic reflow) → QMB-09B-03 (C96256, $0.1183)
 THT 9 mm passive magnetic buzzer: 3 V o-p rated, 16 Ω, 2.7 kHz, ≤ 50 mA, −20…+70 °C (the same +70 °C limit as LS120, so
 REQUIREMENTS F11 / owner row 36 stand), but its own reflow test peaks at 250 °C (Huawha spec 2019-12-3 items 1–9,
 Datasheet). It is hand-fitted by the owner after delivery with C84, so JLC charges neither its $3.07 feeder nor the
@@ -858,6 +858,74 @@ Inference, D-R12-16).
 **AGENTS §2 check (D-R12-78 … -82).** §2.1 / §2.2: J400, U9's EN chain, RAW_ACT behind Q120 / Q121 unchanged (D402 moved,
 same nets; S-5 OK). §2.3: no firmware change. §2.4: no gate network changed (S-3 OK). §2.5: labels as above.
 
+**D-R12-83 PORT_4V8 setpoint: R401 becomes a 0.1 % 25 ppm/K part, R404 5.1k (O-R12-16, O-R12-26; branch `r12-port-fix`).**
+The port devices' supply limits: HGLRC M100 Mini (GPS) "Input: 3.3V-5V" (hglrc.com product page, read 2026-11-05: the
+5.0 V top, Datasheet-class maker page); MicoAir LR900-F (radio) "Supply Voltage: 5V DC (from USB or JST-GH)" with no
+range (micoair.com/radio_telemetry_lr900f, read 2026-11-05), so its 4.5 V floor and 5.0 V top stay the project
+records' figures, an **Inference** until bench-confirmed; AUX up to 100 mA at the same rail and limits. The floor applies
+at the port pins under the 0.561 A always-on budget (GPS 0.15 + radio 0.30 + AUX 0.10 + 0.011 A), the top at no load.
+Why the old divider could not be fixed by copper or by a 1 % pair (Calculation, TI SLVSD90B VFB 0.749-0.787 V, IVFB
+±0.1 µA, each resistor at its worst end, drift = tolerance + 100 ppm/K × 67 K): the drift-bound window of any 1 %
+pair spans (1.0167 / 0.9833)² = 1.0691 in its ratio term, while 4.5-5.0 V allows 1.0689 even with zero copper drop
+and zero FB leakage, so no setpoint and no feed width meets both ends at the drift corner (D-R12-21 found the same:
+0.516 V needed against 0.5 V). One precision resistor is the cheapest fix: R401 (bottom) → YAGEO RT0402BRD0710KL
+10k ±0.1 % ±25 ppm/K (C190095, JLC Extended $0.0254, Economic-flagged: componentProductType 0 as every Economic line;
+1 621 115 in stock, Live 2026-11-05); JLC's Basic library has no 0.1 % or 0.5 % resistor (Live search). Top: R400 47k +
+R404 **5.1k** (C25905, Basic, already on the BOM: R7 / R8 / …) = 52.1k. Window (Calculation; the drift case Inference):
+**4.603-4.938 V initial, 4.571-4.972 V drift** (was 4.539-4.943 / 4.489-4.999), nominal 4.769 V (was 4.739 V). At
+the ports, with the unchanged east-edge copper (DC solves L400 → J410 / J420 / J440 73.6 / 74.8 / 69.6 mΩ, an upper
+bound on the drop): J420 ≥ **4.561 V initial / 4.529 V drift** (+61 / +29 mV over 4.5 V), J410 4.562 / 4.529 V, J440
+4.564 / 4.532 V; no-load top 4.938 / 4.972 V (−62 / −28 mV under 5.0 V). Widening the feed was not needed and would not
+by itself have helped (the drift window alone is too wide). PA4 PORT_SENSE becomes 3.11-3.38 V initial, 3.08-3.42 V
+drift (VIH 2.39 V, ≤ 3.52 V; Calculation). The camera rail (U403, CAM_5V) and the "device TX ≤ 3.6 V" UART rule are
+untouched. Cost: one Extended code, +$3.07 feeder per order and $0.03 of part (Live). Net names unchanged.
+
+**D-R12-84 U9 feed and output copper (O-R12-25).** The 0.4 mm C96.1 → C88.1 → U9.5 run (4.13 mm, IPC-2152 upper
+bound 55.2 °C at R10's 2.9 A) could not be widened where it was: route_check's short_segment (a segment shorter than
+its own width) and neck_down rules, the 0.7 mm corridor between U9.4's and U9.6's pad corners and C96.1's corner left
+no legal 0.8 mm path (0.7 mm is not an R12 width; 0.6 mm rises 34.6 °C at 2.9 A, Calculation on the IPC fit). U9 moves **0.3 mm east to (17.3, 15.35)**
+(courtyard 0.06 mm from C82's), which opens 1.01 mm between C96's and U9's courtyards, and C88 moves into it at
+(15.3, 15.52), rotation 270, pad 1 on the y 15.1 bar line. The feed is now straight: C96.1 → **0.8 mm, 1.3 mm** → C88.1
+→ 0.4 mm, 1.3 mm → U9.5 (its last 0.53 mm outside pads, the pin-entry class: U9.5's bar is 0.3 mm wide and the
+corridor between U9.4 and U9.6 takes at most 0.5 mm). U9's connections were redrawn 0.3 mm east (EN, OVLO, FAULT_N
+and its In2 run with the via at (15.8, 14.5), DVDT, GND via (16.9, 16.9), ILIM), C88.2's GND via is at (15.3, 16.75).
+U9 OUT: the 0.3 mm bar track ends 0.4 mm past the bar at (18.9, 15.6) and continues 0.8 mm into C82.1; the two
+C82.1 → In2 via stubs are 0.45 mm (each carries about half the current). IPC-2152 (no plane credit, upper bound;
+Inference) at 2.9 A: every U9 IN segment is 0.8 mm (24.9 °C) except the 1.3 mm pin entry; U9 OUT has only pin-entry
+lengths over 30 °C. C88 local path (Simulation input): 1.3 mm, 1.60 mΩ, 0.42 nH (R10 bounds 4 mm, 5 mΩ, 2.6 nH; was
+3.03 mm, 3.72 mΩ, 0.99 nH). Hot-plug re-run: 0 / 2304, minimum −14.255 V, steepest fall 9.254 V/µs, every check
+passes (Simulation / Inference). Legends: r12_legends_aid re-run on the routed board; only U9's designator, pin-1 dot
+and Fab text and C88's Fab text moved.
+
+**D-R12-85 Every part JLC-assembled (owner, 2026-11-05: "I want everything to be asssembled by jlc").** circuit.json's
+owner_fit is empty and check_r12 S-4 now fails any part listed there (`tools/test_r12_check.py`
+test_s4_owner_fit_refused); the export writes no owner BOM, and fab_manifest_r12 still requires the owner BOM to be
+exactly r12_parts' (empty) owner set (`tools/test_r12_fab.py` test_no_owner_bom, test_owner_bom_refused,
+test_out_of_bom_part_in_jlc_bom replace test_owner_part_in_jlc_bom).
+* **LS120** (QMB-09B-03, C96256, Extended, Economic-flagged, 91 050 orderable, Live) moves to the JLC BOM / CPL as THT,
+  as J121: BOM Assembly "THT (JLC THT assembly)", no paste, hand-soldered by JLC after reflow. CPL rotation 0: JLCEDA's
+  "BUZ-TH_BD9.0-P4.00-D0.6-FD" matches our land with residual 0.0 mm (next best 2.83 mm), and JLCEDA prints its '+'
+  beside pad 1, which is our pin 1 (+, net 3V3); the maker drawing marks the (+) lead (Huawha spec item 4, Datasheet).
+  Pin 1 = (+) is no longer only an Inference.
+* **C84**: MA25V470M8x10 (C46550466) has no maker reflow rating (its 4-page MA series sheet, JLC mirror, read
+  2026-11-05, has none), so it is replaced by **Honor Elec HV1E477M0810PZ (C5246546)**: 470 µF ±20 % 25 V conductive
+  polymer, D8 × 10.5 mm, ESR ≤ 30 mΩ, 2.8 A ripple, −55…+105 °C; lead-free reflow peak 255 °C for 5 s, 230-255 °C ≤ 30 s
+  (Honor CDHV specification items 1, 9, 14, Datasheet). Economic's 255 ± 5 °C can be 5 °C over that peak: inside the
+  owner's A-9 acceptance of 250 °C-rated parts (effect an Inference). Economic-flagged, Extended $0.28, 3964 orderable
+  (Live 2026-11-05). Same 8.3 mm base and 3.1 mm terminal gap as MA, so R11's copper land is kept in a new footprint
+  `M3_CAP_D8_SMD` with paste on both pads (`r12_parts.cap_d8`); its envelope model is 8.5 × 8.5 × 11.3 mm (L 10.5 plus
+  R10's allowances, Inference; fit_check r12 OK). JLCEDA's land (4.0 × 1.6 mm at ±3.5 mm) matches within the two-pad
+  tolerance (residual 0.25 mm, rotation 0). The value, tolerance and voltage are unchanged, so hold-up keeps its 300.8 µF
+  allowance and figures, and the hot-plug wrapper gives it R10's doubled C84 envelope in the retained-output bound
+  (`tools/r12_hotplug.py`: C84_PARTS; 5.585 V at 1419.8 µF, unchanged). Ripple need: hold-up bulk, far below 2.8 A.
+* **Cost:** two more charged Extended codes (+$6.14 per order); the THT labour ($3.58 per order) was already charged for
+  J121, and LS120 adds two THT joints ($0.0164 each).
+
+**AGENTS §2 check (D-R12-83 … -85).** §2.1 / §2.2: J400, U9's EN chain (R81 / C87 at U9's end, BAT_ENABLE redrawn 0.3 mm
+east on the same topology), RAW_ACT behind Q120 / Q121 unchanged (S-5 OK). §2.3: no firmware change (PA4 still reads
+high with the ports on). §2.4: no gate network changed (S-3 OK). §2.5: labels as above; the LR900-F floor and top are
+labelled Inference.
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history.
@@ -948,8 +1016,8 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | A-4 | F3 names the MS5611 | MS5607-02BA03 (10–1200 mbar; full accuracy from 300 mbar) | D-R12-52 (D-R12-13 superseded) |
 | A-5 | F10 / R10: camera via U402 limiter and U12 / U13 isolation | camera buck EN switch, 1 kΩ series, CAM_FAULT_N gone | D-R12-08 |
 | A-6 | F10 / P2: JST GH (R11) | XUNPU GH-1.25 clones (mating Inference) | D-R12-15 |
-| A-7 | F11: LS120 MLT-5020 | QMB-09B-03 THT, owner-fitted | D-R12-16 |
-| A-8 | PORT_4V8 within 4.5–5.0 V at every corner | inside at initial tolerance; 24 mV over 5.0 V in the independent-drift bound | D-R12-07, O-R12-05 |
+| A-7 | F11: LS120 MLT-5020 | QMB-09B-03 THT, JLC THT assembly (none owner-fitted) | D-R12-16, -85 |
+| A-8 | PORT_4V8 within 4.5–5.0 V at every corner | inside at every corner since D-R12-83: 4.603–4.938 V initial, 4.571–4.972 V drift at the regulator, ≥ 4.529 V at the ports under 0.561 A (the LR900-F limits an Inference) | D-R12-07, -21, -83 |
 | A-9 | Economic reflow 255 ± 5 °C vs makers' 250 °C peak (SS34 D5 / D6 / D9, MS5607 U5; J430 and SRV05-4 by Inference) | accepted by the owner (2026-11-04); effect on each part is an Inference | D-R12-49 |
 | A-10 | F1 / F2 name one IMU (ISM6HG256X: low-g, high-g and gyro) | LSM6DSVE (low-g, ±4000 dps) plus FXLS90322 (XY medium-g, ±150 g max) | D-R12-50, -51 |
 
@@ -958,10 +1026,10 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | ID | Item | Stage |
 |---|---|---|
 | O-R12-01 | ~~U4 ISM6HG256X: −3 orderable~~ closed by D-R12-50 (LSM6DSVE, 430 orderable) | order |
-| O-R12-02 | Economic reflow 255 ± 5 °C: maker ratings not read for the GH clones, 472192001, TYPE-C-31-M-12, SWPA4030, the LEDs, SRV05-4, SMAJ12CA, SS34, AO3400A / AO3401A, BAT54C, ESD103, the TI and ST ICs (J-STD-020 260 °C class is an Inference); D-R12-49: 250 °C-rated parts are owner-accepted (A-9); FXLS90322 260 °C / 40 s (NXP part page); LSM6DSVE unread | before order |
+| O-R12-02 | Economic reflow 255 ± 5 °C (C84's C5246546 rated 255 °C peak, D-R12-85; C190095 YAGEO RT unread): maker ratings not read for the GH clones, 472192001, TYPE-C-31-M-12, SWPA4030, the LEDs, SRV05-4, SMAJ12CA, SS34, AO3400A / AO3401A, BAT54C, ESD103, the TI and ST ICs (J-STD-020 260 °C class is an Inference); D-R12-49: 250 °C-rated parts are owner-accepted (A-9); FXLS90322 260 °C / 40 s (NXP part page); LSM6DSVE unread | before order |
 | O-R12-03 | USB-only bench power needs ≥ 4.45 V at J3 (host or powered-hub port), D-R12-04 | records / ORDERING |
 | O-R12-04 | GH clone mating and latch retention with JST GH housings: sample check | bench |
-| O-R12-05 | PORT_4V8 drift corner (A-8): bench-measure over temperature or confirm the modules' true maximum | bench / owner |
+| O-R12-05 | ~~PORT_4V8 drift corner (A-8)~~ closed as a calculation by D-R12-83 (drift top 4.972 V ≤ 5.0 V); the LR900-F's real range stays a bench item | bench |
 | O-R12-06 | LMR50410 with 4.7 µH (TI table 10 µH): load-step and stability check | bench |
 | O-R12-07 | PA6 trip window 4.84–5.17 V sits 33 mV under the four-stall VLOGIC 5.20 V (SS34 VF Inference): firmware threshold recheck | D / firmware |
 | O-R12-08 | ~~Hot-plug, EN, hold-up and fire budget re-run on R12 copper; keep or drop R166~~ done in stage D (stageD.md, stageD_analysis.md): keep R166 and the damper, add C79 (D-R12-78) | D |
@@ -972,17 +1040,17 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
 | O-R12-14 | ~~Board~~ stage D done (D-R12-78 … -82): board `d776c5d7…`, post stage and legends, fab package bound, IPC-2152 figures in `stageD_analysis.md` §6; `tools/check.sh` runs the R12 section (stageD.md) | D |
 | O-R12-15 | R12 axis maps derived (D-R12-54: U4 roll = −gyro_Y, thrust −a_Y; U6 channel 1 axial, +a forward): 1 g / rotation bench sign check | bench / firmware |
-| O-R12-16 | PORT_4V8 drift-bound minimum 4.489 V, 11 mV under the LR900's 4.5 V (D-R12-21) | bench / owner |
+| O-R12-16 | ~~PORT_4V8 drift-bound minimum 4.489 V~~ closed by D-R12-83: drift minimum 4.571 V at the regulator, 4.529 V at J420 under 0.561 A (Calculation / Inference) | closed |
 | O-R12-17 | Firmware PA6 threshold 0.42–0.45 V (D-R12-21) | firmware |
 | O-R12-18 | SH plug retention: a per-flight adhesive / RTV or tie step on every SH plug (owner deviation, D-R12-31) | procedure / owner |
 | O-R12-19 | SH pin orders against a real MicoAir H743 lead (pin-1 end not marked in the source image; v1 / v2) (D-R12-31) | bench |
-| O-R12-20 | J121 DB125 on JLC Economic as THT, and the J1 5.0 mm-terminal hole fit: confirm on the order page / with a sample terminal (D-R12-29, -30) | order / bench |
+| O-R12-20 | J121 DB125 and LS120 QMB-09B-03 on JLC Economic as THT (D-R12-85), and the J1 5.0 mm-terminal hole fit: confirm on the order page / with a sample terminal (D-R12-29, -30) | order / bench |
 | O-R12-21 | FXLS90322 dual-channel datasheet (FXLS9xxxx Rev 7) not read: confirm pin-out, axis frame, medium-g range codes; LSM6DSVE datasheet not found at ST (D-R12-50, -51) | records / bench |
 | O-R12-22 | ~~U6 VCC ≥ 3.135 V at the part~~ closed as a calculation (stage D, `stageD_analysis.md` §7): 3V3 copper drop ≤ 12.6 mV at U2's 1 A rating, U6 VCC ≥ 3.258 V initial / 3.227 V drift (92 mV margin); load steps at U6 an Inference (bench) | D |
 | O-R12-23 | Re-read DS12110 Rev 8 Tables 10-14 (and AN2606's H74x loader pins) for the D-R12-61A … -64A re-pins: PB10 QUADSPI_BK1_NCS, PA8 / PC9 I2C3, PE12-PE14 SPI4 and their AF numbers (read from KiCad's ST symbol only) | records / firmware |
 | O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways), M-7's U6 body, the In2 regions K-region needs or the 0.42 mm via clearance K-reference needs: any future search must add them (pass 2, D-R12-74A, was drawn by hand; scratch masks in `r12ra/ps3/fA/seg4.py`) | C |
-| O-R12-25 | BAT_IN C96.1 → C88.1 → U9.5 is 0.4 mm for 4.13 mm (D-R12-79): IPC-2152 upper bound 55.2 °C at R10's 2.9 A design current, about 36 °C at 2.34 A, over the 30 °C basis (Inference); widen in a layout pass or accept (R12_VALIDATION row 4) | owner / layout |
-| O-R12-26 | PORT_4V8 at the ports under the 0.561 A budget: ≥ 4.497–4.500 V initial, ≥ 4.447–4.450 V drift (J420 lowest), against the LR900's 4.5 V (Calculation / Inference, `stageD_analysis.md` §6); accept, measure the module's floor, raise the setpoint or widen the 0.5 mm east-edge feed (R12_VALIDATION row 6) | owner / bench |
+| O-R12-25 | ~~BAT_IN C96.1 → C88.1 → U9.5 0.4 mm for 4.13 mm~~ closed by D-R12-84: the feed is 0.8 mm (24.9 °C at 2.9 A, IPC-2152 upper bound, Inference) except U9.5's 1.3 mm 0.4 mm pin entry; U9 OUT has only pin-entry lengths over 30 °C | closed |
+| O-R12-26 | ~~PORT_4V8 at the ports under the 0.561 A budget below 4.5 V~~ closed by D-R12-83: J410 / J420 / J440 ≥ 4.562 / 4.561 / 4.564 V initial and 4.529 / 4.529 / 4.532 V drift; no-load top 4.972 V (Calculation; the LR900-F's 4.5–5.0 V an Inference, so a bench read of the module's floor stays useful) | closed |
 | O-R12-27 | J122's harness note `SERVO + FROM HARNESS` not on the board (D-R12-81; R12_VALIDATION row 2): owner acceptance; the rule is in `docs/R12_VEHICLE_HANDOFF.md` | owner |
 
 ## 5. Files (stage A)

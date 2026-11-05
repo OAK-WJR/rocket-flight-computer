@@ -2,7 +2,7 @@
 	(version 20260206)
 	(generator "m3_r12_parts")
 	(layer "F.Cu")
-	(descr "Huawha QMB-09B-03 9 mm THT buzzer, pins 4.0 mm, hole 1.0 mm, pad 1.8 mm; land JLCEDA C96256; owner-fitted (no paste)")
+	(descr "Huawha QMB-09B-03 9 mm THT buzzer, pins 4.0 mm, hole 1.0 mm, pad 1.8 mm; land JLCEDA C96256; JLC THT assembly (no paste)")
 	(attr through_hole)
 	(property "Reference" "REF**"
 		(at 0 -5.6 0)

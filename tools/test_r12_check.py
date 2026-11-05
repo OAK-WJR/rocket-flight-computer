@@ -193,7 +193,7 @@ class Schematic(unittest.TestCase):
     def test_one_side_and_economic(self):
         data = r12_sch.circuit()
         self.assertEqual(data['assembly']['sides'], 1)
-        self.assertEqual(set(data['owner_fit']), {'C84', 'LS120'})
+        self.assertEqual(data['owner_fit'], {})          # D-R12-85: every part JLC-assembled (owner 2026-11-05)
 
 
 @unittest.skipUnless(pcbnew, 'KiCad python required')
@@ -369,7 +369,8 @@ class PortedRules(unittest.TestCase):
         self.assertIn(rid, rep['rules'])
         return rep
 
-    def test_s4_population_and_assembly(self):
+    @staticmethod
+    def populated():
         s = Four()
         parts, _ = r12_sch.model(r12_sch.circuit())
         for i, (ref, part) in enumerate(parts.items()):
@@ -380,6 +381,21 @@ class PortedRules(unittest.TestCase):
                 f.SetField(k, v)
             if 'exclude_from_bom' in part['flags']:
                 f.SetAttributes(f.GetAttributes() | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
+        return s, parts
+
+    def test_s4_owner_fit_refused(self):
+        """D-R12-85: a part named in circuit.json owner_fit (hand-fitted, off the JLC BOM) fails S-4."""
+        s, _ = self.populated()
+        real = r12_sch.circuit
+        try:
+            r12_sch.circuit = lambda: dict(real(), owner_fit={'LS120': 'hand-fitted after reflow'})
+            rep = self.assert_rule(s, 'S-4', False)
+        finally:
+            r12_sch.circuit = real
+        self.assertTrue(any('LS120 is owner-fitted' in i for i in rep['issues']), rep['issues'])
+
+    def test_s4_population_and_assembly(self):
+        s, parts = self.populated()
         self.assert_rule(s, 'S-4')
         f = s.board.FindFootprintByReference('R128')
         old = f.GetAttributes(); f.SetAttributes(old | pcbnew.FP_DNP)

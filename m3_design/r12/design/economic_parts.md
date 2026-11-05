@@ -36,7 +36,7 @@ per board); every JLC-placed line is Economic-flagged.
 | OK | 36 |
 | FAIL | 3: **U4** ISM6HG256XTR and **U5** LPS28DFWTR (JLC marks both "Standard Only"), **D5 / D6 / D9** SS34 (maker rating 250 °C) |
 | UNVERIFIED | 15 (no maker peak-reflow figure found; all are JLC-flagged "Economic and Standard") |
-| N/A (owner-fitted, never reflowed) | 2: C84, LS120 |
+| N/A (owner-fitted, never reflowed) | 2: C84, LS120 (superseded by D-R12-85: both now JLC-assembled, see the resolution note below the parts table) |
 
 **Why the owner's "some parts are not Economic-compatible" is true:** every JLC part page carries a "PCBA Type" field.
 For 52 of the 54 JLC lines it reads "Economic and Standard"; for **U4 (C51931514)** and **U5 (C3263277)** it reads
@@ -145,8 +145,17 @@ Samsung (Datasheet, Samsung MLCC general spec served for every CL code): "Pb-fre
 | C7430446 | Megastar ZX-SH1.0-4PWT | J400 J420 J440 | SH 1.0, OK | Not found (one-page drawing, 2306191203_Megastar-ZX-SH1-0-4PWT_C7430446) | E | UNVERIFIED |
 | C7430448 | Megastar ZX-SH1.0-6PWT | J9 J122 J410 | SH 1.0, OK | Not found (2306191203_Megastar-ZX-SH1-0-6PWT_C7430448) | E | UNVERIFIED |
 | C52993880 | DORABO DB125-3.5-2P-BK-S | J121 | THT (JLC "Wave Soldering", hand-soldered on Economic) | Not reflowed; no datasheet at JLC. Reflow limit does not apply | E | OK (THT); stock 186 (Live) |
-| C46550466 | MA25V470M8x10 | C84 | owner-fitted | not reflowed (R10 GAP-4) | E | N/A |
-| C96256 | QMB-09B-03 | LS120 | owner-fitted THT | 250 °C (D-R12-16) but not reflowed | E | N/A |
+| C46550466 | MA25V470M8x10 | C84 | owner-fitted | not reflowed (R10 GAP-4) | E | N/A (superseded, D-R12-85) |
+| C96256 | QMB-09B-03 | LS120 | owner-fitted THT | 250 °C (D-R12-16) but not reflowed | E | N/A (superseded, D-R12-85) |
+
+**D-R12-85 (owner, 2026-11-05: "I want everything to be asssembled by jlc").** No part is owner-fitted any more:
+
+| Code | Part | Refs | Assembly | Maker reflow rating | JLC PCBA type (Live 2026-11-05) | Verdict |
+|---|---|---|---|---|---|---|
+| C5246546 | Honor Elec HV1E477M0810PZ, 470 µF 25 V polymer, D8 × 10.5 (replaces C46550466) | C84 | SMT, reflowed | Peak 255 °C for 5 s, 230–255 °C ≤ 30 s (Honor CDHV specification item 14, LCSC C5246546 PDF, Datasheet); the 255 ± 5 °C upper end is 5 °C over it, inside the owner's A-9 acceptance of 250 °C-rated parts | Economic and Standard (componentProductType 0, the value every Economic line shows; Standard-only U4 / U5 read 2) | OK under A-9 |
+| C46550466 | jieerrui MA25V470M8x10 (dropped) | — | — | No reflow figure in its 4-page MA series sheet (JLC mirror, Datasheet read 2026-11-05) | Economic and Standard | not usable: no published rating |
+| C96256 | QMB-09B-03 | LS120 | JLC THT assembly (hand-soldered after reflow, as J121) | Not reflowed; the Huawha sheet's solderability test is a 255 ± 5 °C dip for 3 s (item 8) | Economic and Standard | OK (THT) |
+| C190095 | YAGEO RT0402BRD0710KL 10k 0.1 % 25 ppm/K (D-R12-83) | R401 | SMT | Not read (YAGEO RT series; O-R12-02 class, Inference) | Economic and Standard | UNVERIFIED (as the other unread lines) |
 
 Pyro / gate / fire-path lines (J121, Q120–Q124, R134 and their gate R / C, D402): J121, R134 and every gate R / C
 (R119, R120, R122, R123, R126, C120, C123, C126 …) are OK. Q120–Q124 (AOS) and D402 (Infineon) are UNVERIFIED only

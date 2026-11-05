@@ -4375,7 +4375,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "M3_MA_8x10"
+		(property "ki_fp_filters" "M3_CAP_D8_SMD"
 			(at 0 0 0)
 			(effects
 				(font

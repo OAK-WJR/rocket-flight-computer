@@ -198,6 +198,22 @@
    "pads_matched": 2,
    "status": "OK"
   },
+  "C190095|R0402": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
   "C191023|SOD-323_L1.8-W1.3-LS2.5-RD": {
    "footprint": "SOD-323_L1.8-W1.3-LS2.5-RD",
    "easyeda": "SOD-323_L1.8-W1.3-LS2.5-RD",
@@ -663,22 +679,6 @@
    "pads_matched": 14,
    "status": "OK"
   },
-  "C46550466|M3_MA_8x10": {
-   "footprint": "M3_MA_8x10",
-   "easyeda": "CAP-SMD_BD8.0-L8.3-W8.3-LS9.0-FD_H10.5",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    -0.0,
-    0.0
-   ],
-   "residual_mm": 0.045,
-   "next_best_mm": 4.628,
-   "pads_ours": 2,
-   "pads_easyeda": 2,
-   "pads_matched": 2,
-   "status": "OK"
-  },
   "C468250|M3_TSOT23_6_DDC": {
    "footprint": "M3_TSOT23_6_DDC",
    "easyeda": "TSOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
@@ -709,6 +709,22 @@
    "pads_ours": 17,
    "pads_easyeda": 17,
    "pads_matched": 17,
+   "status": "OK"
+  },
+  "C5246546|M3_CAP_D8_SMD": {
+   "footprint": "M3_CAP_D8_SMD",
+   "easyeda": "CAP-SMD_BD8.0-L8.3-W8.3-LS9.3-FD-2",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.25,
+   "next_best_mm": 4.776,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
    "status": "OK"
   },
   "C52993880|M3_DB125_2P_BK": {

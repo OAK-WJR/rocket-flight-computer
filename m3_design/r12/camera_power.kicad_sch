@@ -1768,7 +1768,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 1%"
+		(property "Value" "10k 0.1%"
 			(at 238.76 101.6 0)
 			(effects
 				(font
@@ -1781,28 +1781,28 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C190095"
 			(at 238.76 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+		(property "Manufacturer" "YAGEO"
 			(at 238.76 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
+		(property "Manufacturer Part" "RT0402BRD0710KL"
 			(at 238.76 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf"
 			(at 238.76 106.68 0)
 			(hide yes)
 			(effects
@@ -1860,7 +1860,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "4.7k 1%"
+		(property "Value" "5.1k"
 			(at 279.4 101.6 0)
 			(effects
 				(font
@@ -1873,7 +1873,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25900"
+		(property "LCSC" "C25905"
 			(at 279.4 106.68 0)
 			(hide yes)
 			(effects
@@ -1887,14 +1887,14 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF4701TCE"
+		(property "Manufacturer Part" "0402WGF5101TCE"
 			(at 279.4 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf"
+		(property "Datasheet" ""
 			(at 279.4 106.68 0)
 			(hide yes)
 			(effects
