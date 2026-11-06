@@ -66,7 +66,7 @@ escape	J9	GPS_RX_MCU	F->B	-	23.5,88.0	channel x 25.4 forward to via (25.4,59.4);
 escape	J10	QSPI_IO3	F	-	-	east stub along y 56.8, forward along x 30.2 (between C19 and U3's west pads), 45 deg into pin 7 west end
 escape	K1	3V3	F->via	provisional	-	short F to a 3V3 via
 escape	K3	SD_CS	F->B	-	-	forward stub to via (21.0,58.4); B west y 58.4, forward x 19.25, into the R460 / R461 gap to via (18.445,69.555); F T to R460.1 / J430.2
-escape	K4	LED_RED	B	21.4,57.2	11.7,52.8	dog-bone, B 0.1 west along y 56.8, aft along x 11.9 to the W5 hand-off
+escape	K4	LED_RED	B	21.4,57.2	11.7,52.8	dog-bone, B 0.1 west along y 56.8, aft along x 11.9, 45 deg onto W5 via (11.7,53.27)
 escape	K6	SD_MISO	F	-	-	forward stub to R462.1 and J430.7
 escape	K8	RADIO_RX_MCU	F->B	-	13.0,88.0	forward stub to via (25.0,60.2); B lane CF 25.0 forward; west at y 87.2 to via (13.0,87.2); F to W5
 escape	K9	GPS_TX_MCU	F->B	-	22.5,88.0	forward stub to via (25.8,60.2); B lane CF 25.8 forward; via, F to W5
@@ -102,10 +102,10 @@ handoffs	RADIO_TX_MCU	W3	W5	F	12.0	88.0	0.2
 handoffs	RADIO_RX_MCU	W3	W5	F	13.0	88.0	0.2
 handoffs	GPS_TX_MCU	W3	W5	F	22.5	88.0	0.2
 handoffs	GPS_RX_MCU	W3	W5	F	23.5	88.0	0.2
-handoffs	PORT_SENSE	W3	W5	F	26.5	88.0	0.2
+handoffs	PORT_SENSE	W3	W5	F	26.2	88.0	0.2
 handoffs	AUX_TX_MCU	W3	W5	F	35.0	88.0	0.2
 handoffs	AUX_RX_MCU	W3	W5	F	36.0	88.0	0.2
-handoffs	LED_RED	W3	W5	B	11.7	52.8	0.1
+handoffs	LED_RED	W3	W5	B	11.7	53.27	0.1
 handoffs	LED_YEL	W3	W5	F	11.7	55.0	0.2
 handoffs	BUZZ_DRV	W3	W5	B	11.7	60.2	0.2
 # Notes (revised after routing, commit on r12-relayout-W3). (1) Sensor bus to W4 at y 45.4, all on F, 0.1 mm, 0.4 mm pitch:
