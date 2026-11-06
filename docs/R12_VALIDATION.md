@@ -1,14 +1,15 @@
 # R12 validation: deviations for owner acceptance
 
 **Where R12 stands.** M3-ASSY-R12 is a CAD candidate on branch `m3-assy-r12` (AVA re-layout, D-R12-93 … -99),
-PCB `db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee` (hash as of `f76c684`; 46 × 90 × 1.6 mm, four
+PCB `68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f` (the AVA polish pass, D-R12-121 … -124; 46 × 90 × 1.6 mm, four
 layers, every part on the top face for JLC Economic PCBA). It is not accepted and nothing is ordered; R9 stays the accepted board and R8 its
 fallback. Stage F round 1 found verified real errors; its fix passes are recorded in STATUS.md. The AVA re-layout
 that followed was reviewed in round 2: 16 real errors (1 Major / 15 Minor), all fixed by D-R12-100 … -106;
 that board was unchanged. Round 3 found 14 real errors (2 Major / 12 Minor), all fixed by D-R12-107 … -112;
 only C25 / C26 changed on the board (18 → 15 pF). Round 4 found 8 real errors (0 Major / 8 Minor), all fixed by
-D-R12-113 … -120; only R166's footprint description changed on the board (`66323cf0…` → `db1f0999…`). No round is
-clean yet.
+D-R12-113 … -120; only R166's footprint description changed on the board (`66323cf0…` → `db1f0999…`). The AVA polish
+pass (D-R12-121 … -124) then changed signal copper only (`db1f0999…` → `68e6b650…`); no review round has seen it. No
+round is clean yet.
 The full state is stated once, in
 [M3_R12.md, "Current state"](M3_R12.md#current-state). This file lists what the owner must accept or do for R12.
 Decision IDs are in [`m3_design/r12/design/R12_DECISIONS.md`](../m3_design/r12/design/R12_DECISIONS.md); evidence labels
@@ -46,13 +47,13 @@ Answer the "Blocks order" rows before ordering.
 | 5 | PA6 can trip during a fire into a shorted match | At four stalls with the match and its leads shorted, VLOGIC's lower-bound margin to PA6's trip top is −0.019 / −0.110 V at nominal / 1 % divider ratio (match alone shorted: +0.025 / −0.066 V; healthy: +0.174 / +0.083 V; Calculation / Inference: per-branch RAW drop, pack and load model, D-R12-108). Firmware must not treat it as a battery loss | stageD_analysis.md §5; O-R12-07, -17 | No | Open |
 | 6 | ~~PORT_4V8 at the ports under load~~ | **Closed by D-R12-83**: at the 0.561 A budget the port pins are ≥ 4.596 V initial and ≥ 4.563 V at the drift corner on the 90 mm board (J420 lowest; 4.561 / 4.529 V on the 100 mm board), ≤ 4.972 V at no load (Calculation / Inference). Cost: one Extended code, +$3.07 per order. What stays: bench-read the LR900-F's real floor (row 15) | D-R12-83; O-R12-16, -26 | No | Closed (agent fix) |
 | 7 | Q120 / Q121 VGS above 12 V only on a pack above about 14.4 V with the bus on | Maximum-ratio corner: 12 / (51 / 60.8) + 0.1 = 14.41 V, assuming a 0.1 V Q122 drop (Calculation / Inference). A 3S pack is cut off by OVLO; only a transient toward the 19.9 V clamp would exceed ±12 V (Inference). The bus is on from the on-rail check until switch-off, so the case covers the pad dwell as well as flight (D-R12-115) | D-R12-10, -115; O-R12-10 | No | Open |
-| 8 | Library silkscreen near openings | Footprint graphics within JLC's 0.15 mm pad-to-silkscreen gap: D120's circle 0.10 mm from R130.1, U403 / U400 pin-1 circles 0.092 mm from C433.2 / C400.2 (Measured on `be81f40b…`, unchanged on `66323cf0…` and `db1f0999…`, with r12_post's contract; U5's outline note is gone). JLC clips silkscreen at openings (Inference). The post stage prints these; it does not draw them | stageD.md §2 | No | Open |
-| 9 | 76 hidden designators | 76 designators have no unambiguous spot and are kept on F.Fab (on `66323cf0…`, legends unchanged on `db1f0999…`; listed in stageE_relayout.md §3); they show on the assembly drawings, not on the board | D-R12-80, -99 | No | Open |
+| 8 | Library silkscreen near openings | Footprint graphics within JLC's 0.15 mm pad-to-silkscreen gap: D120's circle 0.10 mm from R130.1, U403 / U400 pin-1 circles 0.092 mm from C433.2 / C400.2 (Measured on `be81f40b…`, unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…`, with r12_post's contract; U5's outline note is gone). JLC clips silkscreen at openings (Inference). The post stage prints these; it does not draw them | stageD.md §2 | No | Open |
+| 9 | 76 hidden designators | 76 designators have no unambiguous spot and are kept on F.Fab (on `66323cf0…`, legends unchanged on `db1f0999…` and `68e6b650…`; listed in stageE_relayout.md §3); they show on the assembly drawings, not on the board | D-R12-80, -99 | No | Open |
 | 20 | PC1 (F2) keeps three inert ball neighbours | G3 is NC since D-R12-93 (PORT_SENSE moved to PD10). One solder bridge from F1 PYRO1_CONT, E2 CAM_5V_SENSE or E1 NRST to PC1 with PC1 high-Z gives Q122 at most 0.399 / 0.273 / 0.213 V (worst corner from the board's own resistors, Calculation / Inference: resistor drift and source bounds; PYRO1_CONT's figure assumes the 8.4 V pack with the bus already on) against the AO3400A's 0.65 V minimum threshold at 250 µA (Datasheet); check_r12 K-neighbours fails any above 0.45 V (the 0.20 V allowance for heat and sub-250 µA conduction is an Inference). The round-1 divider (4.7k / 10k) gave 1.00–1.12 V (Calculation / Inference: drift) and is replaced by 47k / 100k | D-R12-86, -93; R12F1-TRI-01 | No | Open |
 | 22 | The 3V3A In2 island is dropped | 3V3A (VDDA and the sensor supplies) has no In2 island: the In2 link from the VDDA end (15.5, 60.6) to the R164 / U4 F.Cu island (19.65, 36.9) takes 2 vias. R164.2 supplies U4.5 (23.5, 40.64), C10, U4.8 and C31 on that island. One F→B via (23.5, 39.95) feeds C30 and U5 / C32 through 15.66 mm of B.Cu; each branch returns to F through its own via, (25.7, 42.75) and (25.8, 29.8), respectively (Measured; row 1); the AVA re-layout needed that In2 area for the CA corridor (supervisor decision). Noise effect on the ADC and sensors is an Inference (bench) | D-R12-95 | No | Open |
-| 23 | C24 (NRST filter) at J2's end of the NRST run | C24 sits at (26.6, 45.18) beside J2, 19.54 mm of NRST copper from ball E1, including 15.68 mm on In2 (Measured, barrels excluded), because NRST's In2 lane could not reach the west pocket under the frozen PYRO1_CONT / ACT_EN_MCU runs (K-reference). That this is acceptable for a bench-only reset with the MCU's internal pull-up is an Inference; NRST is also the worst routed / MST ratio, 1.96 (Measured at `871f77a`; O-R12-30) | D-R12-98 | No | Open |
+| 23 | C24 (NRST filter) at J2's end of the NRST run | C24 sits at (26.6, 45.18) beside J2, 19.54 mm of NRST copper from ball E1, including 15.68 mm on In2 (Measured, barrels excluded), because NRST's In2 lane could not reach the west pocket under the frozen PYRO1_CONT / ACT_EN_MCU runs (K-reference). That this is acceptable for a bench-only reset with the MCU's internal pull-up is an Inference; NRST's loop round J2 is gone since the polish pass (B under J2, D-R12-122): NRST 28.20 mm, routed / MST 1.56 (was 1.96; Measured on `68e6b650…`). No 0402 site with a GND via was found near E1 (D-R12-124; O-R12-30) | D-R12-98 | No | Open |
 | 24 | Outline 46 × 90 mm | The owner's "Try 90 mm" (D-R12-99) replaces D-R12-24's 100 mm. Under the 120 mm rule (P1) and fit_check's 100 mm ceiling; the bay / sled length is not in `docs/VEHICLE.md`, so the vehicle fit is unchecked (O-R12-28). Fallback: the 100 mm re-layout on `r12-relayout-int` `4686580`, board `ef3194c0…` | D-R12-99 | Yes | Open |
-| 25 | PE4 keeps the D-R11-23 3V3-neighbour exception | B2 / D2 are diagonal 3V3 neighbours of PE4 / C3: 0.731 mm ball-to-ball. On `be81f40b…` (geometry unchanged on `66323cf0…` and `db1f0999…`), PE4's 0.1 mm PYRO1_GATE_N lane (20.6, 51.6) → (18.9, 51.6) is 0.150 mm from U1.B2's 3V3 land and 0.300 mm from its track (Measured by round-2 triage). A bridge drives Q124's gate and may fire an enabled match (Inference). This retained exception needs owner acceptance; row 17's X-ray action also stays | D-R11-23; D-R12-104; R12F2-TRI-12 | Yes | Open |
+| 25 | PE4 keeps the D-R11-23 3V3-neighbour exception | B2 / D2 are diagonal 3V3 neighbours of PE4 / C3: 0.731 mm ball-to-ball. On `be81f40b…` (geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…`: the polish pass did not touch PYRO1_GATE_N or U1.B2's copper), PE4's 0.1 mm PYRO1_GATE_N lane (20.6, 51.6) → (18.9, 51.6) is 0.150 mm from U1.B2's 3V3 land and 0.300 mm from its track (Measured by round-2 triage). A bridge drives Q124's gate and may fire an enabled match (Inference). This retained exception needs owner acceptance; row 17's X-ray action also stays | D-R11-23; D-R12-104; R12F2-TRI-12 | Yes | Open |
 
 ### Do (an order, process or bench action)
 
@@ -66,7 +67,7 @@ Answer the "Blocks order" rows before ordering.
 | 15 | Bench items | LMR50410 with 4.7 µH: load step and stability (O-R12-06). HSE crystal after C25 / C26 15 pF: gm_crit 0.726–1.244 / 1.5 mA/V (17.1 % margin; Calculation / Inference: stray, D-R12-107); the old 18 pF +5 % corner reached 1.5027 mA/V. Cold start-up, drive level and frequency (MCO) remain bench checks (O-R12-09). PORT_4V8 over temperature and the LR900-F's real supply floor (O-R12-05, D-R12-83) | R12_DECISIONS §4 | No | Open |
 | 16 | Get JLC's DFM acceptance | Not queried: 0.10 mm track and clearance, the TFBGA escape with 0.3 / 0.45 mm vias at interstitial sites (0.2 mm via hole to copper, D-R12-23), the six recorded short-edge courtyards, and the reflow class of unread parts (O-R12-02) | D-R12-03, -23, -24 | Yes | Open |
 | 17 | U1 X-ray at first article | As R11: a TFBGA bridge cannot be seen; X-ray U1 with attention to the balls around C3 (PE4) and F2 (PC1). PE4 spacing acceptance is row 25; X-ray fees are included in row 18's minimum totals | R11 row 17 | Yes | Open |
-| 18 | Re-run cost and stock on order day | Live 2026-11-06T17:54–17:56Z on `66323cf0…` (JLC BOM and CPL byte-identical on `db1f0999…`, D-R12-113): no shortfalls at 2 or 5 boards; M3 metric $65.02 / $45.68 per board; minimum all-in $173.69 / $279.93 including U1-only X-ray ($3.28 / $8.20; Calculation / Inference: 100 mm PCB quote used for 90 mm), $3.69 over the $170 target at 2 boards. Counting U1 / U4 / U5 / U6 / U9 gives $186.81 / $292.23–300.43, above $170 at 2 boards and straddling $295 at 5 boards (Calculation / Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). D120 / BAT54C Preferred Extended is exempt: 21 charged codes, $64.47 per order (D-R12-110; O-R12-12 closed). Re-run `FAB_NET=1 m3_design/r12_fab.sh` | stageE_relayout.md §5; D-R12-110 | Yes | Open |
+| 18 | Re-run cost and stock on order day | Live 2026-11-06T17:54–17:56Z on `66323cf0…` (JLC BOM and CPL byte-identical on `db1f0999…` and `68e6b650…`, D-R12-113, -121): no shortfalls at 2 or 5 boards; M3 metric $65.02 / $45.68 per board; minimum all-in $173.69 / $279.93 including U1-only X-ray ($3.28 / $8.20; Calculation / Inference: 100 mm PCB quote used for 90 mm), $3.69 over the $170 target at 2 boards. Counting U1 / U4 / U5 / U6 / U9 gives $186.81 / $292.23–300.43, above $170 at 2 boards and straddling $295 at 5 boards (Calculation / Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). D120 / BAT54C Preferred Extended is exempt: 21 charged codes, $64.47 per order (D-R12-110; O-R12-12 closed). Re-run `FAB_NET=1 m3_design/r12_fab.sh` | stageE_relayout.md §5; D-R12-110 | Yes | Open |
 | 19 | Accept the list and the agent decisions | Accept or reject the rows above and D-R12-01 … D-R12-120 | R12_DECISIONS.md | Yes | Open |
 | 21 | JLC review of U5 and Y1 | JLC's Economic order page marks U5 (MS5607-02BA03, C97627) and Y1 (X322525MOB4SI, C9006): "The processing of this component is difficult. After placing an order, it will be reviewed. If PCBA advanced option is required, additional fees will be charged." Both carry JLC's `needAuditFlag` with no listed special fee (Measured 2026-11-06T00:58Z); every brand-name barometer on JLC is flagged, so U5 stays; Y1 stays on Basic because the review happens for U5 anyway. On order day accept JLC's review result by email; if it adds a fee for Y1 larger than an Extended feeder fee, swap Y1 to YXC C5444544 (same YSX321SL sheet, land and pinout; its 12 pF load is an Inference until its LCSC listing is read, as C9006's 12 pF comes from its listing, not the sheet) | D-R12-92, -117 | Yes | Open |
 
@@ -86,24 +87,23 @@ re-run in `stageD_analysis.md`:
 
 ## M2 routing deviations
 
-Measured on the pre-fix PCB `be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8` (`871f77a`) with
-`route_check --profile r12`. Routing metrics carry unchanged to `66323cf0…` and `db1f0999…` (only C25 / C26 properties changed in round 3, and R166's footprint description in round 4). All remain deviations pending owner acceptance (row 1). Coordinates are board
+Measured on the current PCB `68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f` (the AVA polish pass,
+D-R12-121 … -124) with `route_check --profile r12`; the review-only residual count below is `be81f40b…`'s (44 on both). All remain deviations pending owner acceptance (row 1). Coordinates are board
 millimetres; `net` locations are the report's net anchors.
 
 **Critical allowlist (3, D-R12-96).** 3V3A, SPI1_MISO and QSPI_CLK; reasons and measured lengths are in row 1.
 
-**Noncritical leftovers (11).** Counted for review under M2 / audit 2 item 7, with no per-instance measured exception
-required; retained cleanup items, not owner-accepted routing. NRST's detour (ratio 1.96) is D-R12-98's C24 move (row 23).
+**Noncritical leftovers (8; 11 before the polish pass).** Counted for review under M2 / audit 2 item 7, with no
+per-instance measured exception required; retained cleanup items, not owner-accepted routing. The polish pass removed
+CC1's and LED_YEL's tiny jogs and I2C1_SDA's neck (D-R12-123); NRST's detour (ratio 1.96, its F loop round J2) became
+an `extra_vias` leftover (4 vias, ratio 1.56) when it moved under J2 on B (D-R12-122).
 
 | Category | Net | Layer / report anchor |
 |---|---|---|
-| `neck_down` | I2C1_SDA | F.Cu (19.15, 42.05) |
 | `tiny_jog` | SERVO2_MCU | B.Cu (28.6, 17.5) |
-| `tiny_jog` | CC1 | F.Cu (38.25, 46.75) |
-| `tiny_jog` | LED_YEL | F.Cu (13.5, 55.2) |
 | `extra_vias` | BAT_FAULT_N | net (20.6, 11.97) |
 | `extra_vias` | CAM_5V_SENSE | net (13.2, 57.82) |
-| `detour` | NRST | net (26.6, 45.6) |
+| `extra_vias` | NRST | net (26.6, 45.6) |
 | `extra_vias` | SERVO2_MCU | net (28.95, 11.35) |
 | `extra_vias` | SERVO3_MCU | net (28.95, 9.05) |
 | `extra_vias` | SERVO4_MCU | net (27.05, 9.05) |
@@ -115,5 +115,6 @@ pad (GND Y1.4, GND U6.17, GND R5.2, GND C31.2, GND U6.17, VBUS J3.B4A9, 3V3 R11.
 remain gated.
 
 **Information-only categories.** `route_check.py` `INFO` counts: `pad_end_offcentre` 292, `power_via_no_gnd` 12,
-`passes_through_pad` 11, `short_layer_hop` 10, `width_change_junction` 6, `u_turn` 6, `extra_bends` 3. The count alone
+`passes_through_pad` 11, `short_layer_hop` 9, `width_change_junction` 6, `u_turn` 5, `extra_bends` 3 (on `68e6b650…`;
+`short_layer_hop` 10 and `u_turn` 6 before the polish pass). The count alone
 does not establish a removable defect; they remain M2 review information, not acceptance.

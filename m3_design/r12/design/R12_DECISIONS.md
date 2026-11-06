@@ -1409,6 +1409,80 @@ two content checks and failed (1 of 15) while `check.sh` exited 0, because `chec
 any zone polygon corner and refuses any fragment point outside Edge.Cuts (four tests in `tools/test_zone_check.py`, which
 `check.sh` does not run). Only the aid tools read `zones.json`; the build, the gate and the board are unaffected.
 
+## AVA polish pass (2026-11-06, branch `r12-polish`; D-R12-121 … -124)
+
+A signal-only routing polish judged against the AVA reference (the owner judges by a render). No battery, fire-path,
+pyro gate, PE4, RAW_ACT, J121, power or placement copper changed: every frozen row is untouched and S-1 … S-9 stay OK
+(Measured). PCB `68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f` replaces `db1f0999…`; two
+`PYTHONHASHSEED=0` builds give the same hash; DRC, unconnected and parity 0; check_r12 every rule OK (K-reference,
+K-region, K-plane, K-neighbours included); route_check r12 0 failing, 3 allowlisted (entries and route figures
+unchanged), 0 stale, 8 non-critical leftovers (was 11). The JLC BOM and CPL are byte-identical (Measured), so the Live
+cost and stock of 2026-11-06T17:54–17:56Z carry over. Stage D and the hot-plug model were re-run on the new board:
+`stageD_budget.json` differs only in the board hashes, the 3V3 DC solves (+0.0015 mΩ at most; U6 VCC still ≥ 3.253 /
+3.223 V) and the order of two equidistant GND vias in the fire-return list; the fire loop, GND return, EN, hold-up,
+PA6, rail and port figures are unchanged (file comparison; Calculation / Inference as before). Hot-plug: electrical SHA
+`dfba47cd…` unchanged, inputs SHA `8cf8f9bd…` (was `1064def3…`), every row identical, 0 / 2304 required cases fail
+(Simulation / Inference). Records: `stageE_relayout.md` §2 "AVA polish pass". No physical test.
+
+**D-R12-121 Port UART B bundle at one pitch.** The four port UART lanes south of U1 run straight on B at x 24.3 / 24.8 /
+25.29 / 25.8 (RADIO_TX / RADIO_RX / GPS_TX / GPS_RX). GPS_TX's via moved from (25.65, 58.8) to (25.29, 59.41), so
+GPS_RX leaves its dog-bone (25.4, 57.2) by one 45° step to x 25.8 instead of the 0.8 mm east-and-back zig-zag round the
+old via (two bends fewer). The lane is x 25.29, not 25.3: GPS_TX's F step (25.65, 59.05) → (25.29, 59.41) is then
+0.509 mm long, clear of route_check's 0.5 mm tiny_jog limit, and the via's In2 antipad stays off GPS_RX's K-region
+samples (at x 25.3 the run had 5 samples over no In2 copper; Measured). The RADIO pair's west run is at y 78.6 / 79.1
+(was 78.6 / 79.3) with equal 0.4 mm chamfers; RADIO_RX's via (13, 79.3) → (13, 79.1). PORT_SENSE keeps x 26.45: its
+centred dog-bone (26.2, 56.4) and VCAP2's B run at x 26.9 leave no slot at 26.3. GND partners are unchanged:
+(25.225, 58.15) within 1.5 mm of all four U1-end vias, (25.95, 80.7) and (12.6, 78.0) at the port end.
+
+**D-R12-122 NRST under J2 on B.** NRST reached J2.3 (east column, middle row) by a 12.0 mm F loop round J2's north
+(y 41.6, x 30.8 … 35.0). Measured constraints: J2's TC2030 footprint keeps tracks off F over its pad field
+(32.165–33.435 × 43.73–46.27), so nothing passes between the pads; the 0.99 mm NPTH guide holes at y 42.46 / 47.54
+leave 0.38 mm to the pad rows; SWCLK and SWDIO hold the west side. NRST now leaves its F run at (30.4, 45.6) →
+(30.8, 45.2) → via (30.8, 44.85), runs 3.4 mm on B along y 44.85 under the pads, and returns through via (34.2, 44.85)
+to J2.3 (F stub ending at (33.65, 44.85), outside the keep-out). GND partners (30.25, 46.2) at 1.46 mm and
+(34.2, 43.73) at 1.12 mm. NRST copper 35.37 → 28.20 mm, routed / MST 1.96 → 1.56, vias 2 → 4. NRST is not a
+critical route_check net, so its informational `detour` leftover becomes an `extra_vias` leftover. C24 stays
+(D-R12-124).
+
+**D-R12-123 Leftover hygiene and two GND vias.** CC1's via (38.05, 46.95) → (38.05, 46.75), on the pad's line (straight
+F entry; B (38.05, 46.75) → (36.65, 46.75) → (35.5, 47.9)). LED_YEL's B run is at y 55.0 (was 55.2) with its via at
+(13.5, 55.0), so R33 is entered straight. I2C1_SDA's 0.92 mm F link from via (19.8, 42.7) is 0.15 mm, like the run it
+joins (was 0.10 mm: a neck in open copper). That removes three of the 11 leftovers (tiny_jog CC1, tiny_jog LED_YEL,
+neck_down I2C1_SDA). The free GND vias (19.6, 65.0) and (21.6, 59.6) are removed: every signal via within 1.5 mm of
+either keeps another GND via within 1.5 mm ((18.445, 65.0) for SD_CS at 0.85 mm and SD_MOSI at 1.43 mm; (20.3, 59.18)
+for SD_CS at 1.05 mm), and route_check's critical_via_no_gnd and nognd_audit stay 0 (Measured). They offset NRST's two
+new vias.
+
+**D-R12-124 Targets not reached, with the measured reason (O-R12-29, -30).** Metrics `db1f0999…` → `68e6b650…`
+(Measured, score.py and a scratch track / via count): vias 318 → 318 (GND 149 → 147, signal 100 → 102); diagonal share
+17.06 → 16.95 %; In2 track 137.4 → 137.4 mm; non-plane track 1947.6 → 1940.1 mm; tracks 1061 → 1053; worst routed /
+MST NRST 1.96 → QSPI_CLK 1.63 (then USB_DM 1.57, QSPI_IO0 1.57, NRST 1.56, CC2 1.54); most vias on one signal net 4
+(VLOGIC_SENSE, now also NRST).
+* **C24 stays beside J2.** On F between Y1 and U1's west column the NRST stub (y 53.45) has CAM_5V_SENSE's F run 0.25 mm
+  north (y 53.2), the NRST / CAM_5V_SENSE pocket vias (16.85 / 17.6, 52.9), HSE_IN / HSE_OUT, PYRO1_GATE_N at x 18.7
+  and the frozen PYRO1_CONT / ACT_EN_MCU vias (17.1, 54.3) / (18.6, 54.0) to the south: no 0402 site with its own GND
+  via on the NRST copper within 3 mm of E1 (Measured on the fragment rows). Moving it to the ball would not shorten
+  NRST (MST 18.07 → about 18.7 mm, Calculation).
+* **QSPI_CLK / QSPI_IO0** unchanged: the four QSPI lanes leave U1 at y 54.8 / 55.6 / 56.8 / 57.6 with CLK outermost, so
+  CLK cannot turn south before IO0 turns at x 32.6, and U3's pins 5 / 6 are reachable on F only from the pad row's
+  inner end (D-R12-96's allowlist reason).
+* **USB_DM / DP** unchanged: the J3 crossover (A6 / B6 DP, A7 / B7 DM) needs the DP B hop, and the west side of J3's
+  pad column holds CC1, VBUS and the C28 / C8 cluster, so the pair turns at x 41.15 / 41.55 east of the pads. Pulling it
+  0.45 mm west would save about 1 mm of 23–25 mm (Calculation); not done on the USB pair for that gain.
+* **CC2** unchanged: R7 (CC1) is north of R8 (CC2) while J3's CC1 pad is south of CC2's, so CC2 goes round CC1's via
+  (35.5, 47.9) on B. The fix is an R7 / R8 swap (placement and legends), not taken in a signal-only pass.
+* **VLOGIC_SENSE (4 vias) and In2 length.** The sense nets run on In2 because B carries the servo / camera bundle at
+  x 27.4–29.8 and In2 critical copper needs B GND under it (check_r12 K-reference's lower reference); C60 / C94 sit
+  7–9 mm west of their balls behind the C14 … C22 decoupler row. Shortening them needs C60 / C94 in U1's west pocket,
+  which has no room (above).
+* **Vias ≤ 290, GND vias ≤ 140.** 118 of the 147 GND vias end a GND track (decoupler and pad returns); the 29 free
+  ones are partners of critical layer changes or stitch the W2 power cells, and only the two above were redundant
+  (Measured by the partner scan).
+* **Diagonal share ≤ 15 %.** 101.5 mm of the 357.4 mm of diagonal copper is power copper, the frozen copper included;
+  the 255.9 mm of signal diagonals are mostly short 45° steps that route_check's tiny_jog / local_bump rules and
+  AGENTS §3's 45° bends keep (Measured lengths; that the rules forbid an orthogonal redraw is stageE_relayout.md §2's
+  finding, not re-tested here).
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history. C25 / C26 alone are updated to the round-3 C1548 read
@@ -1544,8 +1618,8 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-26 | ~~PORT_4V8 at the ports under the 0.561 A budget below 4.5 V~~ closed by D-R12-83 on the 100 mm board: J410 / J420 / J440 ≥ 4.562 / 4.561 / 4.564 V initial and 4.529 / 4.529 / 4.532 V drift (current 90 mm floor 4.563 V, stageE_relayout.md §4); no-load top 4.972 V (Calculation / Inference: drift and load budget; the LR900-F's 4.5–5.0 V an Inference, so a bench read of the module's floor stays useful) | closed |
 | O-R12-27 | J122's harness note `SERVO + FROM HARNESS` not on the board (D-R12-81; R12_VALIDATION row 2): owner acceptance; the rule is in `docs/R12_VEHICLE_HANDOFF.md` | owner |
 | O-R12-28 | Bay / sled internal length for the 90 mm board (D-R12-99): `docs/VEHICLE.md` gives no internal electronics-bay or sled length (its stack row budgets 102 mm for R9), so R10's "wholly forward of joint + 47 mm" rule is unchecked; measure it in the CAD and add it to VEHICLE.md (owned separately) | records / owner |
-| O-R12-29 | AVA re-layout targets missed (Measured on `be81f40b…` after the signal-only cleanup `871f77a`; geometry unchanged on `66323cf0…` and current `db1f0999…`): vias 318 against ≤ 290, GND vias 149 against ≤ 140, signal vias 100 against ≤ 95, diagonal share 17.1 % against ≤ 15 %, In2 track 137.4 mm against ≤ 130, worst routed / MST NRST 1.96 against ≤ 1.35, VLOGIC_SENSE 4 vias against ≤ 3 | C / review |
-| O-R12-30 | C24 (NRST filter) at J2's end of 19.54 mm of NRST copper from ball E1, including 15.68 mm on In2 (Measured, barrels excluded) (D-R12-98): acceptable for a bench-only reset with the internal pull-up is an Inference; owner acceptance (R12_VALIDATION row 23) or a respin item | owner |
+| O-R12-29 | AVA re-layout targets missed (Measured on `be81f40b…` after the signal-only cleanup `871f77a`: vias 318, GND 149, signal 100, diagonal 17.1 %, In2 137.4 mm, NRST 1.96, VLOGIC_SENSE 4 vias). After the AVA polish pass (D-R12-121 … -124), on current `68e6b650…`: vias 318 against ≤ 290, GND vias 147 against ≤ 140, signal vias 102 against ≤ 95, diagonal share 16.95 % against ≤ 15 %, In2 track 137.4 mm against ≤ 130, worst routed / MST QSPI_CLK 1.63 (allowlisted; NRST 1.56) against ≤ 1.35, VLOGIC_SENSE and NRST 4 vias against ≤ 3; the measured reason for each miss is D-R12-124 | C / review |
+| O-R12-30 | C24 (NRST filter) at J2's end of 19.54 mm of NRST copper from ball E1, including 15.68 mm on In2 (Measured, barrels excluded) (D-R12-98): acceptable for a bench-only reset with the internal pull-up is an Inference; owner acceptance (R12_VALIDATION row 23) or a respin item. The polish pass found no 0402 site with a GND via near E1 (D-R12-124) and removed NRST's loop round J2 (D-R12-122) | owner |
 | O-R12-31 | Rewritten by D-R12-102 (R12F2-TRI-06 / -07). The U400.5 → U400.3 0.25 mm, 2.24 mm stub carries only EN's µA input current (TPS563208 DDC: pin 5 EN tied to pin 3 VIN); the old 47.5 °C claim is withdrawn as a mis-attribution. The open item is the shared RAW trunk: 0.6 mm B.Cu (45.2, 16.4) → (45.2, 29.2), 12.8 mm, plus the 0.6 mm F.Cu link (44.5, 16.4) → (45.2, 16.4), 0.7 mm, carrying U400 + D5. Rise 46.1 °C at summed design inputs 3.348 A, 34.6 °C at U9's 2.9 A, 4.3 °C at the 1.018 A fire-time budget; 0.87 mm would hold 30 °C at 3.35 A (IPC-2152 upper bound, Calculation / Inference: load allocations, 80 % efficiency, D5 drop). Widen in a later copper pass or accept (stageE_relayout.md §4) | C / owner |
 
 ## 5. Files (stage A)

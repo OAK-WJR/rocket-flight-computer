@@ -1,13 +1,13 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `db1f0999…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; hash as of `f76c684`; round 3 changed only C25 / C26, D-R12-107, and round 4 only R166's footprint description, D-R12-113), 46 × 90 × 1.6 mm, four
+**Status.** PCB `68e6b650…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, and the AVA polish pass only signal copper, D-R12-121 … -124, branch `r12-polish`), 46 × 90 × 1.6 mm, four
 layers, every part on the top face and assembled by JLC. Branch `m3-assy-r12`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 90), top face = F. Positions
-below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…` and `db1f0999…`; part centres are `m3_design/r12_place.tsv`).
+below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`).
 
 ## Harness pin map
 

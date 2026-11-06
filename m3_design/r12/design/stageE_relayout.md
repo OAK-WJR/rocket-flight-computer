@@ -18,19 +18,22 @@ below is unchanged; the analyses, hot-plug run, fab package and cost were re-run
 0.36 Ω) through an R12-only override in `r12_parts.py`, so the board is now `db1f0999…`: the only change against
 `66323cf0…` is that one `descr` line (copper, placement, fields, legends and zones identical; BOM and CPL byte-identical;
 Gerbers identical except their creation date; Measured by file comparison). Stage D and the hot-plug model were re-run
-on it to bind the hash (§4 "Round 4").
+on it to bind the hash (§4 "Round 4"). **AVA polish pass (D-R12-121 … -124, branch `r12-polish`):** a signal-only
+routing polish (port UART bundle, NRST under J2, three leftover fixes, two redundant GND vias) made `68e6b650…`; its
+metrics are §2 "AVA polish pass" and the rows of §1 and §6 are that board's. The metrics paragraph and the cleanup
+paragraph of §2 keep `be81f40b…`'s figures as history.
 
 ## 1. Result
 
 | Item | Value |
 |---|---|
-| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee` (round 4, R166 footprint description; `66323cf0…` in round 3 with C25 / C26 15 pF, `be81f40b…` before), 46 × 90 × 1.6 mm, built twice by `PYTHONHASHSEED=0 m3_design/r12_build.sh` with the same hash (Measured) |
+| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f` (AVA polish pass, D-R12-121 … -124; `db1f0999…` in round 4 with R166's footprint description, `66323cf0…` in round 3 with C25 / C26 15 pF, `be81f40b…` before), 46 × 90 × 1.6 mm, built twice by `PYTHONHASHSEED=0 m3_design/r12_build.sh` with the same hash (Measured) |
 | 100 mm fallback | `ef3194c01c7d77952fd88685080caf5ba1581a37cda45f79f8f362f0a32c0a02` on `r12-relayout-int` `4686580` (gated), the same copper except the forward zone |
-| Copper | 1061 tracks, 318 vias, replayed from `m3_design/r12_routes.tsv` (Measured) |
+| Copper | 1053 tracks, 318 vias (1061 / 318 before the polish pass), replayed from `m3_design/r12_routes.tsv` (Measured) |
 | KiCad DRC | 0 violations, 0 unconnected, 0 parity (Measured) |
 | `fit_check --profile r12` | OK; board 46 × 90 mm against the 100 mm R12 ceiling |
 | `tools/check_r12.py` | every rule OK in the strict tier: S-1 … S-9, K-reference, K-region, K-plane, K-fill, K-neighbours, M-7, K-legends |
-| `route_check --profile r12` | 0 failing, 3 allowlisted (3V3A, SPI1_MISO, QSPI_CLK; D-R12-96), 0 stale, 11 non-critical leftovers (informational; listed in `docs/R12_VALIDATION.md` "M2 routing deviations") |
+| `route_check --profile r12` | 0 failing, 3 allowlisted (3V3A, SPI1_MISO, QSPI_CLK; D-R12-96), 0 stale, 8 non-critical leftovers (11 before the polish pass; informational; listed in `docs/R12_VALIDATION.md` "M2 routing deviations") |
 | Fab | JLC BOM 58 lines, 178 JLC parts = 178 CPL rows (174 rebuilt from JLC footprints, 4 placement-only), F paste 579 flashes; manifest bound, with S-4 (`check_r12.py --only S-4 --bom --cpl`) among its content checks since R12F3-TRI-03. Round 3 changed the BOM's C25 / C26 line only (C1548 0402CG150J500NT 15 pF); the CPL is byte-identical to `871f77a`'s |
 | `tools/check.sh` | exit 0 on this tree (§7) |
 
@@ -67,6 +70,34 @@ all track 2116.7 mm), 1062 → 1061 tracks; via counts, In2 length and the top f
 the ratio targets are not reachable in signal-only scope: route_check's tiny_jog and local_bump rules block trading
 signal diagonals for orthogonal runs, and only about 176 of the 360 mm of diagonal copper is signal copper (the cleanup
 agent's measurement). route_check: still 0 failing, 3 allowlisted, the same 11 leftovers.
+
+**AVA polish pass (D-R12-121 … -124, 2026-11-06, branch `r12-polish`; board `db1f0999…` → `68e6b650…`; Measured).**
+Signal copper only, edited in the zone fragments W2 / W3 / W4 and merged by `merge.py`; no frozen row, power copper or
+placement changed. Each step was checked with `zone_guard.py` and `zone_check.py` (DRC, route_check, check_r12) before
+the next. Renders: `draw.py` before / after (the owner's view).
+* **Port UART bundle (D-R12-121).** RADIO_TX / RADIO_RX / GPS_TX / GPS_RX run straight on B at x 24.3 / 24.8 / 25.29 /
+  25.8; GPS_TX's via (25.65, 58.8) → (25.29, 59.41) removes GPS_RX's 0.8 mm zig-zag; the RADIO west run is y 78.6 / 79.1.
+* **NRST under J2 (D-R12-122).** The 12.0 mm F loop round J2's north is replaced by a 3.4 mm B run under the TC2030
+  pads between vias (30.8, 44.85) and (34.2, 44.85) (the footprint keeps tracks off F between its pads). NRST 35.37 →
+  28.20 mm, routed / MST 1.96 → 1.56, vias 2 → 4.
+* **Leftovers and GND vias (D-R12-123).** CC1's and LED_YEL's tiny jogs and I2C1_SDA's neck are gone (11 → 8
+  leftovers); the redundant GND vias (19.6, 65.0) and (21.6, 59.6) are removed (every nearby signal via keeps a
+  partner within 1.5 mm).
+* **Not changed (D-R12-124):** C24's position (no 0402 site with a GND via near E1), QSPI_CLK / IO0, the USB pair, CC2,
+  VLOGIC_SENSE and the In2 sense lanes, with the measured reasons there.
+
+| Metric (plan target) | `db1f0999…` | `68e6b650…` |
+|---|---|---|
+| Vias (≤ 290) | 318 | 318 |
+| GND vias (≤ 140) | 149 | 147 |
+| Signal vias (≤ 95) | 100 | 102 |
+| Diagonal share of all track (≤ 15 %) | 17.06 % (361.2 / 2116.7 mm) | 16.95 % (357.4 / 2109.2 mm) |
+| In2 track (≤ 130 mm) | 137.4 mm | 137.4 mm |
+| Non-plane track (score.py) | 1947.6 mm | 1940.1 mm |
+| Tracks | 1061 | 1053 |
+| Worst routed / MST (≤ 1.35) | NRST 1.96, QSPI_CLK 1.63, USB_DM 1.57, QSPI_IO0 1.57, CC2 1.54 | QSPI_CLK 1.63, USB_DM 1.57, QSPI_IO0 1.57, NRST 1.56, 3V3A 1.55, CC2 1.54 |
+| Most vias on one signal net (≤ 3) | VLOGIC_SENSE 4 | VLOGIC_SENSE 4, NRST 4 |
+| route_check non-critical leftovers | 11 | 8 |
 
 ## 3. Post stage on the 90 mm board (Measured on `be81f40b…`)
 
@@ -180,6 +211,14 @@ were changed, and stage D and the hot-plug model were re-run on a zone-filled co
   the inputs' board hash and so the inputs SHA changed (`1064def3…`, was `db6e6b21…`); every row and figure is identical
   (file comparison).
 
+**AVA polish pass (D-R12-121 … -124; board `68e6b650…`).** Stage D and the hot-plug model were re-run on the rebuilt
+board (zone-filled by the build's post stage; the file's SHA-256 is the board's). Against the `db1f0999…` run,
+`stageD_budget.json` differs only in the board hashes, the three 3V3 DC solves (L1 → U6 12.5274 → 12.5286 mΩ, R14 → U6
+13.6427 → 13.6441 mΩ, L1 → R14 +0.00002 mΩ; U6 VCC ≥ 3.253 / 3.223 V at U2's 1 A, unchanged at that precision) and the
+order of two GND vias at equal distance in the fire-return list (file comparison; Calculation / Inference as before).
+Hot-plug: electrical SHA `dfba47cd…` unchanged, inputs SHA `8cf8f9bd…` (was `1064def3…`); every row and figure is
+identical (Simulation / Inference; file comparison).
+
 **Hot-plug (Simulation / Inference).** `tools/r12_hotplug.py` models BAT_IN / BAT_DAMP as an extracted copper network
 and RAW_PROTECTED as one lumped node (the retained-output inventory), so the RAW trunk has no topology to update in this
 tool. The BAT_IN / BAT_DAMP copper is frozen (D-R12-96): the 12-edge network is identical to round 1's (Measured on the
@@ -256,7 +295,7 @@ roll axis x = 0.000 mm for both (U6 was +4.5 mm). D-R12-54's axis maps are uncha
 and `build.py` carry none for R12; grep `r12_binding`: no match), so there is nothing to regenerate. `pin_table.tsv`
 column `r12_net` is the reviewed pin map.
 
-## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `66323cf0…`; the JLC BOM and CPL are byte-identical on `db1f0999…`, so the figures carry over)
+## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `66323cf0…`; the JLC BOM and CPL are byte-identical on `db1f0999…` and `68e6b650…`, so the figures carry over)
 
 `m3_design/r12/fab/cost_check_2.json` / `_5.json` 2026-11-06T17:55:07Z / 17:56:22Z; `stock_check_2.json` / `_5.json`
 17:54:30Z / 17:55:45Z. 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards (orderable =
@@ -305,14 +344,14 @@ the X-ray count on JLC's quote before ordering.
 
 | File | SHA-256 |
 |---|---|
-| m3_design/r12/m3.kicad_pcb | db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee |
+| m3_design/r12/m3.kicad_pcb | 68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f |
 | m3_design/r12_legends.tsv | 882188a1a5af503cd41aae5cf37f7695161e95ab99d856b7a80f7b931d61fc69 |
-| m3_design/r12_routes.tsv | 1faf23700fdce206be2c0779a9c64c87cb62fa36260bdc1f8c31230fac127e92 |
+| m3_design/r12_routes.tsv | eaea36b3de3cc9de89a3ee88612f1634b55f91853a9241060bde7c5170764188 |
 | m3_design/r12_place.tsv | 282d169a07f5ed799da9a87ffe0ffb5cf42555499f65f694bb3e0c76442129fa |
 | m3_design/r12/fab/m3_bom_jlc.csv | 1cb9bd250235e853dd73ff9940c7c1bbc53f3b7674bbdd121c5de651a6ea4d7f |
 | m3_design/r12/fab/m3_cpl_jlc.csv | c9a2aa28514cf4c16fe70be2da92050baa1ae44f37c9577175a7fe637e9a40e1 |
-| m3_design/r12/fab/m3_fab_manifest.json | 730f619ef800a2977610bd5b4d07b4f28285044152c9248802ea0fb3375c9ea2 |
-| m3_design/r12/fab/m3_gerber.zip | f4306259a96cdc35245e82a4c26e27aee61a457c77127b940a709cea2ffbaef6 |
+| m3_design/r12/fab/m3_fab_manifest.json | 249a336d780583b102e9700a47dfa324108e70902a7b48550e8f5f52aed9505f |
+| m3_design/r12/fab/m3_gerber.zip | 6bdf6db8197fcab0022ddaca8f0bdf367bcadd676f8986619d336a3163a1d4da |
 | m3_design/r12/fab/cost_check_2.json | 6db6c43439203205fa37eab6fc82b59fb0e82c953ea7fece7633af6a297b9828 |
 | m3_design/r12/fab/cost_check_5.json | 0d2760e94c29d50628ecd60182006255d586b98f17ca4376eb03951ba82eb722 |
 | m3_design/r12/fab/stock_check_2.json | 6d7987faa472f648f3458466cfee417476857e87b97117b16b159e0f8f1a5dda |
@@ -336,7 +375,10 @@ only that line changed); the drift bounds in `pin_table.tsv`, `circuit.json`'s p
 stage D and the hot-plug model re-run; `tools/test_r12_fab.py` (15 tests) and `tools/test_r12_stageD.py` (13 tests) now
 run in `check.sh`; `zones.json` W5 closed at y 90 and `zone_guard.py` refuses geometry outside Edge.Cuts;
 `PYTHONHASHSEED=0 tools/check.sh` with NUMPY_PY exited 0 (Measured, 2026-11-06; the only change after it was this
-sentence). Not verified: any physical, electrical or firmware test;
+sentence). AVA polish pass (D-R12-121 … -124, branch `r12-polish`): two builds gave the same board `68e6b650…`; stage D
+and the hot-plug model re-run on it; the fab package re-exported and bound; `test_r12_stageD` 13 / 13;
+`PYTHONHASHSEED=0 tools/check.sh` with NUMPY_PY exited 0 (Measured, 2026-11-06; the only change after it was this
+sentence and STATUS.md's polish paragraph). Not verified: any physical, electrical or firmware test;
 JLC DFM; the vehicle fit of the 90 mm board (O-R12-28); AN2606 (O-R12-23); two consecutive clean stage F rounds on the
 re-layout (round 2 found 16 real errors and round 3 found 14, R12F3-TRI-01 … -14). After any
 later copper change: re-run the legend aid if needed, then `m3_design/r12_stageD.py` and `tools/r12_hotplug.py`.

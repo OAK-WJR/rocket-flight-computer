@@ -72,7 +72,7 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "30874fda58b8d8097aea1ecac5b1c73e308d8042aba461e6acbe30c562663500",
     "cad/m3.kicad_dru": "e9ca90be39d84def4082f18821c9061b622d03e4060deebd4a89472a22b550f9",
-    "cad/m3.kicad_pcb": "db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee",
+    "cad/m3.kicad_pcb": "68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f",
     "cad/m3.kicad_pro": "8b6671b8e9e8a466049a6c136847edb64cd4ea25ed049602de823e27d7b3ca46",
     "cad/m3.kicad_sch": "f0853523e08eb853ce74233b888eb4d19ac9981bd1eed80435b9dd6f56a0ad95",
     "cad/mcu.kicad_sch": "d4e6d0087dd91eda81473cc9e7b4bdd475854e9999fa6ce9a24d3ad2701f66d6",
@@ -98,11 +98,11 @@
     "tools/paste_check.py": "009938355d0b37923a7fd8438b1f56a831338df9486119714839a89340d67e2f"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "fd23395e916edd00c6839b46efbf103a8ba71adf933b28332f91c7ffb64e300a",
-    "m3_assembly_top.pdf": "66fb81d1f8811e2af55c83e4ab5815a6b0e62e8d9297db0ec2199d248d254923",
+    "m3_assembly_bottom.pdf": "3fd9a9a2f6d09c15ff497b554da20bec3600da51c045e6cc1f2565f2b896fffe",
+    "m3_assembly_top.pdf": "d893b59231fb4a44376cf664b6abb78d8789e15ca1ef39bcd13032574072e52b",
     "m3_bom_jlc.csv": "1cb9bd250235e853dd73ff9940c7c1bbc53f3b7674bbdd121c5de651a6ea4d7f",
     "m3_cpl_jlc.csv": "c9a2aa28514cf4c16fe70be2da92050baa1ae44f37c9577175a7fe637e9a40e1",
-    "m3_gerber.zip": "f4306259a96cdc35245e82a4c26e27aee61a457c77127b940a709cea2ffbaef6"
+    "m3_gerber.zip": "6bdf6db8197fcab0022ddaca8f0bdf367bcadd676f8986619d336a3163a1d4da"
   },
   "schema": 1
 }

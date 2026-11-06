@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "board_sha256": "db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee",
+  "board_sha256": "68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f",
   "electrical_sha256": "dfba47cd69785bb17b11e68ac4f0ce245672ec04ef0690aba937140e4766b40d",
   "parts": {
     "C10": {
