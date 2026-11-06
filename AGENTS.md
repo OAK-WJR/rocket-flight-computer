@@ -6,7 +6,7 @@ This file is for anyone — person or AI coding assistant — picking up this re
 
 The deliverable is **one** board (the M1/M2 two-board scheme was abandoned; see `docs/HISTORY.md`) with every function in the original requirements.
 
-**Which board.** R9 (46 × 102 mm, owner-accepted 2026-10-25; package bound to `4f841a0e…`, $109.38 per board at the 2026-10-26 run) is the accepted board to order after a fresh cost and stock run. R8 (46 × 118 mm, accepted 2026-10-20, package `cc044ea0…`) is its fallback. Their per-block history is in `docs/M3_R9.md`, `docs/M3_R8.md` and `docs/M3_R7.md`. **M3-ASSY-R10 is a CAD candidate on branch `m3-assy-r10`: not accepted, nothing ordered.** The table below describes R10 only. Decision IDs such as D-R15-01 are in `m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md`. **M3-ASSY-R11 is a CAD candidate on branch `m3-assy-r11`: not accepted, nothing ordered.** It is R10's circuit on a 46 × 50 mm six-layer board; its compact table and status paragraph follow R10's below, and its decision IDs (D-R11-01 …) are in `m3_design/r11/design/R11_DECISIONS.md`. **M3-ASSY-R12 is a CAD candidate on branch `r12-port-fix` (from `m3-assy-r12`): not accepted, nothing ordered.** It is R11's circuit pruned and re-sourced on a one-sided 46 × 100 mm four-layer board for JLC Economic PCBA; its compact table and status paragraph follow R11's, and its decision IDs (D-R12-01 …) are in `m3_design/r12/design/R12_DECISIONS.md`.
+**Which board.** R9 (46 × 102 mm, owner-accepted 2026-10-25; package bound to `4f841a0e…`, $109.38 per board at the 2026-10-26 run) is the accepted board to order after a fresh cost and stock run. R8 (46 × 118 mm, accepted 2026-10-20, package `cc044ea0…`) is its fallback. Their per-block history is in `docs/M3_R9.md`, `docs/M3_R8.md` and `docs/M3_R7.md`. **M3-ASSY-R10 is a CAD candidate on branch `m3-assy-r10`: not accepted, nothing ordered.** The table below describes R10 only. Decision IDs such as D-R15-01 are in `m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md`. **M3-ASSY-R11 is a CAD candidate on branch `m3-assy-r11`: not accepted, nothing ordered.** It is R10's circuit on a 46 × 50 mm six-layer board; its compact table and status paragraph follow R10's below, and its decision IDs (D-R11-01 …) are in `m3_design/r11/design/R11_DECISIONS.md`. **M3-ASSY-R12 is a CAD candidate on branch `r12-relayout-90` (from `m3-assy-r12`): not accepted, nothing ordered.** It is R11's circuit pruned and re-sourced on a one-sided 46 × 90 mm four-layer board for JLC Economic PCBA; its compact table and status paragraph follow R11's, and its decision IDs (D-R12-01 …) are in `m3_design/r12/design/R12_DECISIONS.md`.
 
 | Block | R10 design (CAD candidate) | Where to read more |
 |---|---|---|
@@ -49,7 +49,7 @@ R11 keeps R10's netlist, part values and every §2 rule (D-R11-01), except the c
 
 **R11 status (2026-11-03).** PCB `3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5`, 46 × 50 × 1.6 mm, six layers; not accepted, nothing ordered. Stages A–D of `m3_design/r11/design/r11_plan.md` are done (stage records `stageA.md` … `stageD3.md` in `m3_design/r11/design/`): the board is built twice by `m3_design/r11_build.sh` with the same hash, and stageD3.md records (after the stage E fix pass, D-R11-85 … -88) DRC / unconnected / parity / ERC 0, check_r11 every rule OK, route_check r11 0 failing with 3 allowlisted, the fab manifest OK and `tools/check.sh` exit 0. The stage E records are `docs/M3_R11.md`, `docs/R11_VALIDATION.md` and `docs/R11_VEHICLE_HANDOFF.md`. No review round (stage F) has run; it follows D-R11-09: ten lenses and a triage per round until two consecutive full rounds find zero verified real errors. No firmware, physical, electrical or JLC DFM test has been done.
 
-### R12 (CAD candidate on `r12-port-fix`; not accepted, nothing ordered)
+### R12 (CAD candidate on `r12-relayout-90`; not accepted, nothing ordered)
 
 R12 keeps R11's net names, the R10 safety networks and every §2 rule. It deletes or re-sources every part no
 requirement needs (D-R12-04 … -19, -49 … -52) and adds C79, a third damper capacitor (D-R12-78). The full state is in
@@ -58,25 +58,22 @@ procedure are in `docs/R12_VEHICLE_HANDOFF.md`.
 
 | Block | R12 design (CAD candidate) | Where to read more |
 |---|---|---|
-| Board | 46 × 100 × 1.6 mm, four layers (F / In1 GND / In2 3V3 plus islands and signals / B), 0.5 oz inner, ENIG. Every part on F for JLC Economic PCBA (255 ± 5 °C reflow; 250 °C-rated parts owner-accepted, A-9). 0.10 mm track and clearance, 0.3 / 0.45 mm through vias only, no VIPPO. Four M3 supports (D-R12-01, -03, -24). | `docs/M3_R12.md` |
-| MCU | STM32H743VIH6 TFBGA-100, R11's ball map. Re-pins (D-R12-61A … -64A): barometer I2C3 PA8 / PC9; microSD SPI4 PE12–PE14, CS PA7; QSPI_NCS PB10; HG_CS PC11 (U6); VBUS_SENSE PA10. AF numbers are an Inference until DS12110 is re-read (O-R12-23). PE4, PC1, PC0, PC5 and the port UARTs are unchanged. | `docs/M3_R12.md` "Firmware" |
+| Board | 46 × 90 × 1.6 mm (D-R12-99, owner), four layers (F / In1 GND / In2 3V3 plus RAW and PORT_4V8 islands and signals / B; no 3V3A island, D-R12-95), 0.5 oz inner, ENIG. Every part on F for JLC Economic PCBA (255 ± 5 °C reflow; 250 °C-rated parts owner-accepted, A-9). 0.10 mm track and clearance, 0.3 / 0.45 mm through vias only, no VIPPO. Four M3 supports, forward pair (3.5, 84.1) / (42.5, 84.1). AVA re-layout: placement D-R12-94, copper routed by zone and merged from fragments (D-R12-96). | `docs/M3_R12.md`; `stageE_relayout.md` |
+| MCU | STM32H743VIH6 TFBGA-100, R11's ball map. Re-pins (D-R12-61A … -64A, -93): barometer I2C1 PB6 / PB7; microSD SPI4 PE12–PE14, CS PA7; QSPI_NCS PB10; HG_CS PD2; servos PA15 TIM2_CH1, PA10 / PA8 / PA9 TIM1_CH3 / CH1 / CH2 (set BDTR.MOE; PA15 is JTDI at reset); camera UART4 PC10 / PC11, CAM_PWR_EN PC12; PORT_SENSE PD10; BAT_FAULT_N PC13; VBUS_SENSE PC9; LED_YEL PA1. AF numbers read from DS12110 Rev 8; AN2606 not re-read (O-R12-23). PE4, PC1, PC0, PC5 and the port UARTs are unchanged. | `docs/M3_R12.md` "Firmware" |
 | Parts | USB path: diode-OR D5 / D6. PORT_4V8 from the U400 buck; camera switched by the U403 buck's EN. U9 TPS259470A (auto-retry). AO3401A / AO3400A pyro FETs with unchanged gate networks. U4 LSM6DSVE plus U6 FXLS90322 high-g. U5 MS5607. Port UART ESD deleted (D402 kept). Buzzer QMB-09B-03 THT; every part JLC-assembled, none owner-fitted (D-R12-85: C84 is the reflow-rated Honor HV1E477M0810PZ, LS120 JLC THT). PORT_4V8 divider R400 47k + R404 5.1k over R401 10k 0.1 % (D-R12-83). | `R12_DECISIONS.md` §1, §3 |
-| Connectors | SH 1.0 mm clone ports in the MicoAir H743 orders (friction retention, owner deviation). J121 is a DB125-2 screw terminal (JLC THT). J1 is 5.0 mm wire pads. PORT_4V8 at the ports ≥ 4.529 V (0.561 A budget) and ≤ 4.972 V (no load) at the drift corner (D-R12-83; Calculation / Inference: the LR900-F's 4.5–5.0 V is a project record). | `docs/R12_VEHICLE_HANDOFF.md` |
-| Power and pyro | Fire loop 4.726699 Ω, 1.250000 A at four stalls (Calculation / Inference). Hot-plug 2304 / 2304 pass with C79, minimum −14.255 V (Simulation / Inference). Keep R166 (D-R12-09). U9 0.3 mm east with C88 on the bar line: the U9 feed is 0.8 mm except its pin entry (D-R12-84). | `docs/M3_R12.md` "Power", "CH1 pyro" |
-| Manufacturing and cost | `m3_design/r12_fab.sh`: JLC BOM 58 lines, 178 JLC parts (J121 and LS120 THT), no owner BOM (D-R12-85), manifest bound. $66.51 / $46.25 per board (parts + feeder) at 2 / 5 boards against the $84.41 cap; all-in $173.39 / $274.59 (Live 2026-11-05T19:19Z, Calculation). No part short. | `docs/M3_R12.md` "Cost and stock" |
+| Connectors | SH 1.0 mm clone ports in the MicoAir H743 orders (friction retention, owner deviation). J121 is a DB125-2 screw terminal (JLC THT). J1 is 5.0 mm wire pads. PORT_4V8 at the ports ≥ 4.563 V (0.561 A budget) and ≤ 4.972 V (no load) at the drift corner (D-R12-83; Calculation / Inference: the LR900-F's 4.5–5.0 V is a project record). | `docs/R12_VEHICLE_HANDOFF.md` |
+| Power and pyro | Fire loop 4.726699 Ω, 1.250000 A at four stalls (Calculation / Inference). Hot-plug 2304 / 2304 pass with C79, minimum −14.255 V (Simulation / Inference). Keep R166 (D-R12-09). U9 feed 0.8 mm except its pin entry (D-R12-84). Battery, fire and EN copper frozen through the re-layout; the port buck and D5 hang off a 0.6 mm B RAW trunk (U9 → U400 59.6 mΩ); U6 VCC ≥ 3.223 V; PA6 can trip in a fire into a shorted match (O-R12-07) (Calculation / Inference). | `docs/M3_R12.md` "Power", "CH1 pyro" |
+| Manufacturing and cost | `m3_design/r12_fab.sh`: JLC BOM 58 lines, 178 JLC parts (J121 and LS120 THT), no owner BOM (D-R12-85), manifest bound. $66.54 / $46.28 per board (parts + feeder) at 2 / 5 boards against the $84.41 cap; all-in $173.45 / $274.74 (Live 2026-11-06T08:31Z, Calculation). No part short. | `docs/M3_R12.md` "Cost and stock" |
 
-**R12 status (2026-11-05).** PCB `f60d82390941611b6149e5501643248d274fa155887bcefd03d1ad67096b5820` (branch `m3-assy-r12`, round 1 fixes D-R12-86 … -92);
-not accepted, nothing ordered.
+**R12 status (2026-11-06).** PCB `cc5b66dbdc8e5e74f9fd8b03d07f81a63461d250915683b34833d33446aaf4d2` (as of `bce77bd`, branch
+`r12-relayout-90`: the AVA re-layout D-R12-93 … -99 after round 1's fixes D-R12-86 … -92); not accepted, nothing ordered.
 
-- Stages A–D of `m3_design/r12/design/r12_plan.md` are done; the records are `stageB.md`, `stageC.md` and `stageD.md`
-  (§7: the port-fix pass, D-R12-83 … -85, which closed O-R12-16, -25 and -26).
-- `m3_design/r12_build.sh` gives the same hash on two builds, and `stageD.md` records the checks:
-  - DRC, unconnected and parity: 0.
-  - check_r12: every rule OK.
-  - route_check r12: 0 failing, 2 allowlisted.
-  - The fab manifest is bound.
-  - `tools/check.sh` exits 0 with the R12 board tracked.
-- Stage F round 1 found verified real errors; its documentation fix pass is recorded in STATUS.md.
+- Stages A–D of `m3_design/r12/design/r12_plan.md` are done; the records are `stageB.md`, `stageC.md`, `stageD.md` and
+  `stageE_relayout.md` (the re-layout, its checks and the re-run analyses).
+- `m3_design/r12_build.sh` gives the same hash on two builds: DRC, unconnected and parity 0; check_r12 every rule OK;
+  route_check r12 0 failing, 3 allowlisted; the fab manifest is bound; `tools/check.sh` exits 0 with the R12 board tracked.
+- Stage F round 1 found verified real errors (fixed); the re-layout has not been reviewed. Its missed AVA targets are
+  O-R12-29; the 90 mm vehicle fit is unchecked (O-R12-28).
 - No firmware, physical, electrical or JLC DFM test has been done.
 
 ## 2. Safety constraints that must never be violated

@@ -1,7 +1,7 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
-**Superseded by §7 (branch `r12-port-fix`, D-R12-83 … -85): board `d6e4f7ee…`.** §1–§6 record the stage D board
-`d776c5d7…` as it was.
+**Superseded by §7 (branch `r12-port-fix`, D-R12-83 … -85): board `d6e4f7ee…`; and since the AVA re-layout by
+`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm).** §1–§6 record the stage D board `d776c5d7…` as it was.
 
 Follows stageC.md (pass 2 frozen, D-R12-77A, board `e2b005b5…`). Decisions D-R12-78 … D-R12-82 are in
 `R12_DECISIONS.md`. Branch `r12-stage-d`; nothing is ordered. Labels (AGENTS §2.5): **Measured** = read from the CAD or

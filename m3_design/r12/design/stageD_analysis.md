@@ -1,5 +1,9 @@
 # R12 stage D: electrical analyses on R12's copper (2026-11-05)
 
+**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, board `cc5b66db…`,
+2026-11-06): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
+corners and U6's supply changed. This file records the 100 mm boards as they were.
+
 **Re-run on `r12-port-fix` (D-R12-83 … -85).** Board `d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64`
 (two builds, same hash): PORT_4V8 divider R400 47k + R404 5.1k over R401 10k 0.1 % (D-R12-83), U9 0.3 mm east and C88
 on the bar line with a 0.8 mm feed (D-R12-84), C84 the reflow-rated Honor HV1E477M0810PZ and nothing owner-fitted
