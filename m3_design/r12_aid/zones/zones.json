@@ -1,5 +1,5 @@
 {
- "note": "Routing work zones for the R12 AVA re-layout (ROUTING_PLAN.md section 6). Board mm, x east, y forward from the aft edge. A zone owns every copper layer inside its polygon except where a 'strips' entry gives one layer of a rectangle to another zone. Copper may cross a zone border only at a listed hand-off point. D-R12-96: the W1 / W2 border moved from y 26.5 to y 17.0-17.6 so that the 3V3 buck cell (moved 4.6 mm aft) lies wholly in W2, as ROUTING_PLAN assigns it; RAW_PROTECTED hands off W1 -> W2 on B 0.6 mm at (45.2, 17.0).",
+ "note": "Routing work zones for the R12 AVA re-layout (ROUTING_PLAN.md section 6). Board mm, x east, y forward from the aft edge. A zone owns every copper layer inside its polygon except where a 'strips' entry gives one layer of a rectangle to another zone. Copper may cross a zone border only at a listed hand-off point. D-R12-96: the W1 / W2 border moved from y 26.5 to y 17.0-17.6 so that the 3V3 buck cell (moved 4.6 mm aft) lies wholly in W2, as ROUTING_PLAN assigns it; RAW_PROTECTED hands off W1 -> W2 on B 0.6 mm at (45.2, 17.0). R12F4-TRI-08: W5 closes at the 90 mm outline (y 90, Edge.Cuts; it ended at y 100 from the 46 x 100 mm stage), and zone_guard.py refuses any zone polygon or fragment point outside Edge.Cuts.",
  "zones": {
   "W1": {
    "name": "aft power, pyro, camera and servo cells",
@@ -279,11 +279,11 @@
     ],
     [
      46,
-     100
+     90
     ],
     [
      0,
-     100
+     90
     ]
    ]
   }

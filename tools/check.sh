@@ -22,7 +22,9 @@
 # R12 library check (m3_design/r12_parts.py --check), metadata / models, silkscreen, fit_check --profile r12,
 # tools/check_r12.py, route_check --profile r12 and the R12 fab package (tools/fab_manifest_r12.py --content on the
 # repository R12 board, required once the board is tracked); its self-test (tools/test_r12_check.py) then must not skip
-# its real-board tests (R12_BOARD_REQUIRED). Until the R12 board is tracked only tools/test_r12_check.py runs.
+# its real-board tests (R12_BOARD_REQUIRED). The R12 fab and stage D self-tests (tools/test_r12_fab.py,
+# tools/test_r12_stageD.py; R12F4-TRI-01) always run; test_r12_fab's package tests use R12_BOARD, else the repository
+# R12 board, and skip only when no R12 board exists.
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
 # Fail closed on a parse error: bash reads a script as it runs, so a syntax error late in the file would otherwise let
@@ -194,5 +196,7 @@ selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_parts.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
 selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics Plate   # Plate: R18-MEC-01 strain table
+selftest "$KICAD_PY" -I "$ROOT/tools/test_r12_fab.py"      # R12F4-TRI-01: R12 fab tooling; exports R12_BOARD when present
+selftest python3 -I "$ROOT/tools/test_r12_stageD.py"       # R12F4-TRI-01: R12 stage D / hot-plug wrappers (no pcbnew)
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r11_check.py"    # D-R11-08: R11 rules; real-board seeds when R11_BOARD is set
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r12_check.py"    # R12 gate skeleton, schematic contract, windows; board seeds later

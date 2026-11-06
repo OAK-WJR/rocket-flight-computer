@@ -79,7 +79,14 @@ class Wrappers(unittest.TestCase):
 
     def test_content_check_commands(self):
         checks = fm12.content_checks(BOARD, ROOT / 'x', 'kpy')
-        self.assertEqual([argv[-1] for _, argv in checks], ['--verify-cpl', '--paste'])
+        # R12F3-TRI-03: check_r12's S-4 (BOM / CPL identities) runs first; R12F4-TRI-01: its argv ends at --cpl <csv>
+        self.assertEqual([argv[-1] for _, argv in checks[1:]], ['--verify-cpl', '--paste'])
+        s4 = checks[0][1]
+        self.assertEqual(Path(s4[2]).name, 'check_r12.py')
+        self.assertEqual(s4[s4.index('--only') + 1], 'S-4')
+        self.assertEqual(Path(s4[s4.index('--bom') + 1]).name, f'{BOARD.stem}_bom_jlc.csv')
+        self.assertEqual(Path(s4[s4.index('--cpl') + 1]).name, f'{BOARD.stem}_cpl_jlc.csv')
+        self.assertEqual(len(checks), 3)
 
 
 @unittest.skipUnless(BOARD.exists(), f'no R12 board at {BOARD}')

@@ -213,6 +213,16 @@ def batpads():
 
 R10_REUSE = ('M3_DB125_2P_BK',)       # D-R12-29: R10's verified DB125-2 (black) land and model, copied verbatim
 
+# R12-only text overrides of copied R11 lands (R12F4-TRI-06): the copy is pinned byte for byte to R11's kilib, so a
+# correction that belongs to R12 alone is a (old, new) substitution applied to the pinned source text. R10's and R11's
+# copies are not touched. M3_R2512_UR: R11's descr names 25121WF330LT4E / C25468 (0.33 ohm); R12's R166 is
+# 25121WF360LT4E / C168925, 0.36 ohm 1 % 2512 (its Value, LCSC and Manufacturer Part fields and the JLC BOM). Copper,
+# courtyard and model are unchanged.
+R11_TEXT_OVERRIDES = {
+    'M3_R2512_UR': (' R166 (25121WF330LT4E, LCSC C25468)")',
+                    ' R166 (25121WF360LT4E, LCSC C168925, 0.36 ohm 1 %; R12 override of the R11 land text)")'),
+}
+
 
 # C84 hold-up capacitor, JLC-placed (D-R12-85, owner 2026-11-05: every part JLC-assembled): Honor Elec HV1E477M0810PZ
 # (C5246546), 470 uF 25 V conductive polymer, D8 x L10.5 mm. Honor CDHV specification (LCSC C5246546 PDF): dimension
@@ -373,7 +383,13 @@ def generated():
     for name in sorted(set(r12_footprints().values()) - set(new) - set(R10_REUSE)):
         src = r12.R11 / 'kilib/rocket.pretty' / (name + '.kicad_mod')
         assert str(src.relative_to(r12.ROOT_DIR)) in pinned, f'{name}: not a pinned R11 land'
-        copied[PRETTY / src.name] = src
+        if name in R11_TEXT_OVERRIDES:
+            before, after = R11_TEXT_OVERRIDES[name]
+            text = src.read_text()
+            assert text.count(before) == 1, f'{name}: override text not found once in the pinned R11 land'
+            files[PRETTY / src.name] = text.replace(before, after)
+        else:
+            copied[PRETTY / src.name] = src
         for model in re.findall(r'\(model "\$\{KIPRJMOD\}/kilib/([^"]+)"', src.read_text()):
             copied[LIB / model] = r12.R11 / 'kilib' / model
     return files, copied

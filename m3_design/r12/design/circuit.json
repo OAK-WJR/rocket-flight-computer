@@ -737,7 +737,7 @@
     "1": "PORT_4V8",
     "2": "PORT_SENSE"
    },
-   "why": "D-R12-05 / -86: PORT_4V8 presence on PA4 (replaces U11 ST), top; 47k so a PC1 (F2) bridge holds Q122 off"
+   "why": "D-R12-05 / -86 / -93: PORT_4V8 presence on PORT_SENSE, PD10 (U1.H9) since D-R12-93 (was PA4, G3, now NC; replaces U11 ST), top; 47k is D-R12-86's value, chosen when PA4 (G3) was a PC1 (F2) neighbour so that an F2-G3 bridge held Q122 off; PD10 is not a PE4 / PC1 neighbour, and the value is kept (same ratio, PD10 FT_h leakage in r12_windows.json)"
   },
   "R112": {
    "lcsc": "C25741",
@@ -748,7 +748,7 @@
     "1": "PORT_SENSE",
     "2": "GND"
    },
-   "why": "D-R12-05 / -86: PORT_4V8 presence on PA4, bottom"
+   "why": "D-R12-05 / -86 / -93: PORT_4V8 presence on PORT_SENSE, PD10 (U1.H9) since D-R12-93 (was PA4, G3), bottom"
   },
   "R14": {
    "lcsc": "C25792",
@@ -866,7 +866,7 @@
     "16": "3V3",
     "17": "GND"
    },
-   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10 at D-R12-51, PC11 since D-R12-64A); TEST / n.c. / PCM0 unterminated as NXP recommends"
+   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10 at D-R12-51, PC11 at D-R12-64A, PD2 (U1.B7) since D-R12-93); TEST / n.c. / PCM0 unterminated as NXP recommends"
   },
   "C33": {
    "lcsc": "C307331",

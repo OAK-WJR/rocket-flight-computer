@@ -1,5 +1,5 @@
 {
- "board_sha256": "66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f",
+ "board_sha256": "db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee",
  "dc_solves": {
   "3V3_L1_to_R14": {
    "cells": 300943,
@@ -465,11 +465,16 @@
    "q124_gate_tau_us": 48.400000000000006,
    "q124_vgs_min_V": 2.7777548359052378,
    "q124_vgs_min_basis": {
-    "label": "Calculation / Inference (VOH row applied at 0.32 mA; resistor drift)",
-    "pe4_load_mA": 0.3170352250489237,
-    "source": "DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 drift minimum (r12_windows.json); R126 220R / R128 10k 1 %",
+    "label": "Calculation / Inference (PE4 load about 3.56 mA, <= 3.87 mA with drift, within the 4 mA VOH row; resistor drift)",
+    "pe4_load_mA": 3.5571352250489237,
+    "pe4_load_max_mA": 3.867642665786741,
+    "pe4_load_parts": "R127 1k to GND, and R126 220R + R128 10k (10.22 kOhm) to GND",
+    "pe4_load_vdd_max_V": 3.4641,
+    "pe4_load_within_voh_row": true,
+    "source": "DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 drift minimum and maximum (r12_windows.json); R126 220R / R127 1k / R128 10k 1 %",
     "vdd_min_V": 3.2401,
-    "voh_drop_V": 0.4
+    "voh_drop_V": 0.4,
+    "voh_row_mA": 4.0
    },
    "q124_vgs_row_V": 2.5,
    "q124_vgs_th_max_V": 1.45
@@ -1874,7 +1879,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f",
+ "source_board_sha256": "db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,

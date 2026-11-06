@@ -109,6 +109,28 @@ class Round3Fixes(unittest.TestCase):
         self.assertAlmostEqual(g['q124_vgs_min_V'], 2.778, places=3)
         self.assertGreater(g['q124_vgs_min_V'], g['q124_vgs_row_V'])
 
+    def test_pe4_load_includes_r127_and_stays_within_the_4_mA_row(self):
+        """R12F4-TRI-02: PE4 (PYRO1_GATE_N) sources R127 1k as well as R126 220R + R128 10k."""
+        import r12_stageD
+        b = json.loads((DESIGN / 'stageD_budget.json').read_text())['fire']['gate']['q124_vgs_min_basis']
+        vdd = b['vdd_min_V']
+        self.assertAlmostEqual(b['pe4_load_mA'], (vdd / 1e3 + vdd / 10.22e3) * 1e3, places=9)
+        self.assertAlmostEqual(b['pe4_load_mA'], 3.557, places=3)
+        self.assertAlmostEqual(b['pe4_load_max_mA'], b['pe4_load_vdd_max_V'] / 983.3e-3 * (1 + 1 / 10.22), places=6)
+        self.assertAlmostEqual(b['pe4_load_max_mA'], 3.868, places=3)
+        self.assertLessEqual(b['pe4_load_max_mA'], b['voh_row_mA'])
+        self.assertEqual(b['voh_row_mA'], 4.0)
+        self.assertTrue(b['pe4_load_within_voh_row'])
+        self.assertAlmostEqual(r12_stageD.pe4_load_mA(3.3), 3.3 + 3.3 / 10.22, places=12)
+
+    def test_gate_overvoltage_note_covers_the_pad_dwell(self):
+        """R12F4-TRI-03: the bus is on from the on-rail check until switch-off, not only in flight."""
+        note = json.loads((DESIGN / 'r12_windows.json').read_text())['fire']['gate']['note']
+        self.assertNotIn('only enabled in flight', note)
+        self.assertIn('from the on-rail check until switch-off', note)
+        self.assertIn('pad or flight', note)
+        self.assertNotIn('0.32 mA', note)
+
     def test_pa6_branches_charged_at_their_shared_resistance(self):
         """R12F3-TRI-09: a branch's drop at D5 is its current times min(its own, D5's) resistance from U9."""
         import r12_stageD

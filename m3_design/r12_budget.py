@@ -237,9 +237,11 @@ def fire():
             q124_tau_us=round(220 * 220e-9 * 1e6, 1),
             note='Q120 / Q121 VGS = -V_BAT x (R119 || R120) / ((R119 || R120) + R121) (R11 network). |VGS| exceeds the '
                  'AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA '
-                 'clamp); the bus is only enabled in flight (Inference that no such transient occurs there). Q124 VGS: '
-                 'PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; applied at PE4\'s 0.32 mA, '
-                 'Inference; R12F3-TRI-06) through R126 220R / R128 10k'),
+                 'clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient '
+                 'above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V '
+                 '(DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4\'s steady load, R127 1k plus R126 220R + R128 10k, is '
+                 'about 3.6 mA (<= 3.9 mA with drift), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02) through R126 '
+                 '220R / R128 10k'),
         basis='R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), '
               'R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference',
         label='Calculation on Datasheet limits; copper, pack, loads and hot factors Inference')

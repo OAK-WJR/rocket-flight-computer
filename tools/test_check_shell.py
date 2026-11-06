@@ -58,7 +58,8 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
                      'm3_design/r12_sch_check.py', 'm3_design/r12_parts.py'):
             (self.root / path).write_text(stub)
         for path in ('tools/fab_manifest.py', 'tools/fab_manifest_r11.py', 'tools/test_r11_check.py',
-                     'tools/fab_manifest_r12.py', 'tools/test_r12_check.py',
+                     'tools/fab_manifest_r12.py', 'tools/test_r12_check.py', 'tools/test_r12_fab.py',
+                     'tools/test_r12_stageD.py',
                      'tools/test_check_shell.py', 'tools/test_procurement.py',
                      'tools/test_fab_validation.py', 'tools/test_fit_check.py', 'tools/test_paste_check.py',
                      'tools/test_r10_parts.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
@@ -72,8 +73,8 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
         (self.root / 'board.kicad_pcb').write_text('board copy\n')
 
     SELFTESTS = ['test_check_shell', 'test_procurement', 'test_fab_validation', 'test_fit_check', 'test_paste_check',
-                 'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check', 'test_r11_check',
-                 'test_r12_check']
+                 'test_r10_parts', 'test_route_check', 'test_r10_check', 'test_r10_check', 'test_r12_fab',
+                 'test_r12_stageD', 'test_r11_check', 'test_r12_check']       # R12F4-TRI-01: the last two stay last
     CONTRACTS = ['r10_sch_check', 'verify_board', 'silk_check', 'r10_parts', 'fit_check', 'check_r10', 'route_check']
     R11_CONTRACTS = ['r11_sch_check@r11', 'verify_board@r11', 'silk_check@r11', 'fit_check@r11', 'check_r11@r11',
                      'route_check@r11']

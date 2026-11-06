@@ -14,12 +14,17 @@ in §4 were run on the pre-cleanup board `cc5b66db…` and re-run on `be81f40b�
 `66323cf0…`: the only change against `be81f40b…` is those two parts' Value, Datasheet, LCSC and Manufacturer Part
 properties (8 lines; copper, placement, legends and zones identical, Measured by file comparison). Every routing metric
 below is unchanged; the analyses, hot-plug run, fab package and cost were re-run on `66323cf0…` (§4 "Round 3", §5).
+**Round 4 fix pass (R12F4-TRI-06):** R166's footprint description now names its real part (25121WF360LT4E, C168925,
+0.36 Ω) through an R12-only override in `r12_parts.py`, so the board is now `db1f0999…`: the only change against
+`66323cf0…` is that one `descr` line (copper, placement, fields, legends and zones identical; BOM and CPL byte-identical;
+Gerbers identical except their creation date; Measured by file comparison). Stage D and the hot-plug model were re-run
+on it to bind the hash (§4 "Round 4").
 
 ## 1. Result
 
 | Item | Value |
 |---|---|
-| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f` (round 3, C25 / C26 15 pF; `be81f40b…` before), 46 × 90 × 1.6 mm, built twice by `PYTHONHASHSEED=0 m3_design/r12_build.sh` with the same hash (Measured) |
+| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee` (round 4, R166 footprint description; `66323cf0…` in round 3 with C25 / C26 15 pF, `be81f40b…` before), 46 × 90 × 1.6 mm, built twice by `PYTHONHASHSEED=0 m3_design/r12_build.sh` with the same hash (Measured) |
 | 100 mm fallback | `ef3194c01c7d77952fd88685080caf5ba1581a37cda45f79f8f362f0a32c0a02` on `r12-relayout-int` `4686580` (gated), the same copper except the forward zone |
 | Copper | 1061 tracks, 318 vias, replayed from `m3_design/r12_routes.tsv` (Measured) |
 | KiCad DRC | 0 violations, 0 unconnected, 0 parity (Measured) |
@@ -142,9 +147,11 @@ U6 and IMU figure is unchanged.
   0402 land and nets: no copper change. The hot-plug inventory (`tools/r12_hotplug.py` DISCHARGE_PARTS) now names
   C1548 at 15 pF.
 * **Q124 gate (TRI-06).** PE4's VOH is guaranteed only ≥ VDD − 0.4 V (DS12110 Rev 8 Table 158 p. 247, |IIO| 4 mA at
-  1.62–3.6 V or 8 mA at 2.7–3.6 V), applied at PE4's 0.32 mA steady load (Inference: conservative there). Q124 VGS ≥
+  1.62–3.6 V or 8 mA at 2.7–3.6 V). PE4's steady load is R127 1k plus R126 220R + R128 10k: about **3.56 mA** at the
+  3V3 drift minimum, ≤ 3.87 mA at the drift maximum 3.4641 V with every resistor at its −1.67 % drift end, within the
+  4 mA row (R12F4-TRI-02; this item first gave 0.32 mA, which left out R127). Q124 VGS ≥
   (3.2401 − 0.4) V × 9.9k / (9.9k + 222.2) = **2.778 V** at the 3V3 drift minimum with R126 / R128 1 % at their worst
-  ends (was 3.170 V with VOH = VDD; Calculation / Inference: VOH row applied at 0.32 mA, drift), still above the
+  ends (was 3.170 V with VOH = VDD; Calculation / Inference: drift), still above the
   AO3400A's 2.5 V RDS(on) row (VGS(th) ≤ 1.45 V). `r12_windows.json`'s stage A placeholder: 2.761 V (from 3.222 V).
 * **PA6 corners per branch (TRI-09).** The drop to D5 charged the whole converter current (2.264 A healthy) at U9 → D5's
   23.53 mΩ, but the camera buck U403 (1.243 A at four stalls) takes RAW_PROTECTED 10.81 mΩ from U9 and shares at most
@@ -158,6 +165,20 @@ U6 and IMU figure is unchanged.
   inputs (electrical SHA `dfba47cd…`, was `c1492655…`); the retained-output inventory falls by 8.3 pF to 1419.818 µF,
   bound 5.585 V unchanged; every row, failure count, minimum and slew figure is identical (0 / 2304 fail, minimum
   −14.255 V, fall 9.254 V/µs, rise 5.402 V/µs; file comparison).
+
+**Round 4 fix pass (R12F4-TRI-02 / -03 / -06, 2026-11-06; board `db1f0999…`).** `r12_stageD.py` and `r12_budget.py`
+were changed, and stage D and the hot-plug model were re-run on a zone-filled copy of the rebuilt board. Against the
+`66323cf0…` run:
+* `stageD_budget.json` differs only in the board hashes and Q124's gate-drive basis: PE4 (PYRO1_GATE_N) sources R127 1k
+  to GND as well as R126 220R + R128 10k, so its steady load is **3.557 mA** at the 3V3 drift minimum 3.2401 V (was
+  0.317 mA, which left out R127) and **≤ 3.868 mA** at the drift maximum 3.4641 V with every resistor at its −1.67 % drift
+  end, within Table 158's 4 mA row (Calculation / Inference: drift). Q124 VGS ≥ 2.778 V is unchanged.
+* `r12_windows.json`'s gate note now scopes the |VGS| > 12 V case to the whole time the bus is on, from the on-rail
+  check until switch-off (Inference that no transient above 14.4 V occurs while it is on, pad or flight; it said "only
+  enabled in flight"), and quotes PE4's load as about 3.6 mA (≤ 3.9 mA).
+* Hot-plug (Simulation / Inference): re-extracted on `db1f0999…`; the electrical SHA is unchanged (`dfba47cd…`), only
+  the inputs' board hash and so the inputs SHA changed (`1064def3…`, was `db6e6b21…`); every row and figure is identical
+  (file comparison).
 
 **Hot-plug (Simulation / Inference).** `tools/r12_hotplug.py` models BAT_IN / BAT_DAMP as an extracted copper network
 and RAW_PROTECTED as one lumped node (the retained-output inventory), so the RAW trunk has no topology to update in this
@@ -180,7 +201,7 @@ were not re-run: they depend only on that unchanged network and the parts.
 | PA6 margin to the trip top, four stalls (× 11 / with 1 % divider; lower bounds, per-branch drop since R12F3-TRI-09): healthy | +0.200 / +0.109 V | **+0.174 / +0.083 V** (+0.158 / +0.068 V with the lumped drop) | Calculation / Inference |
 | … match shorted | +0.051 / −0.040 V | **+0.025 / −0.066 V** (lumped +0.008 / −0.083 V) | Calculation / Inference |
 | … match and leads shorted | +0.007 / −0.084 V | **−0.019 / −0.110 V** (lumped −0.036 / −0.127 V; in the band at the nominal ratio too) | Calculation / Inference |
-| Q124 VGS minimum (PE4 VOH ≥ VDD − 0.4 V, R12F3-TRI-06) | ≥ 3.17 V (VOH = VDD) | **≥ 2.778 V** (2.5 V row) | Calculation / Inference |
+| Q124 VGS minimum (PE4 VOH ≥ VDD − 0.4 V, R12F3-TRI-06; PE4 load about 3.56 mA, ≤ 3.87 mA, within the 4 mA row, R12F4-TRI-02) | ≥ 3.17 V (VOH = VDD) | **≥ 2.778 V** (2.5 V row) | Calculation / Inference |
 | PORT_4V8 L400 → J410 / J420 / J440 | 73.6 / 74.8 / 69.6 mΩ | **11.50 / 13.07 / 6.88 mΩ** | Calculation |
 | Ports under 0.561 A (J420 lowest), initial / drift | ≥ 4.561 / 4.529 V | **≥ 4.596 / 4.563 V** (J410 4.597 / 4.564, J440 4.599 / 4.567); at R10's 1.9 A design current ≥ 4.578 / 4.546 V | Calculation / Inference |
 | Ports at no load (ceiling 5.0 V) | ≤ 4.938 / 4.972 V | unchanged (regulator window) | Calculation / Inference |
@@ -235,7 +256,7 @@ roll axis x = 0.000 mm for both (U6 was +4.5 mm). D-R12-54's axis maps are uncha
 and `build.py` carry none for R12; grep `r12_binding`: no match), so there is nothing to regenerate. `pin_table.tsv`
 column `r12_net` is the reviewed pin map.
 
-## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `66323cf0…`)
+## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `66323cf0…`; the JLC BOM and CPL are byte-identical on `db1f0999…`, so the figures carry over)
 
 `m3_design/r12/fab/cost_check_2.json` / `_5.json` 2026-11-06T17:55:07Z / 17:56:22Z; `stock_check_2.json` / `_5.json`
 17:54:30Z / 17:55:45Z. 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards (orderable =
@@ -284,14 +305,14 @@ the X-ray count on JLC's quote before ordering.
 
 | File | SHA-256 |
 |---|---|
-| m3_design/r12/m3.kicad_pcb | 66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f |
+| m3_design/r12/m3.kicad_pcb | db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee |
 | m3_design/r12_legends.tsv | 882188a1a5af503cd41aae5cf37f7695161e95ab99d856b7a80f7b931d61fc69 |
 | m3_design/r12_routes.tsv | 1faf23700fdce206be2c0779a9c64c87cb62fa36260bdc1f8c31230fac127e92 |
 | m3_design/r12_place.tsv | 282d169a07f5ed799da9a87ffe0ffb5cf42555499f65f694bb3e0c76442129fa |
 | m3_design/r12/fab/m3_bom_jlc.csv | 1cb9bd250235e853dd73ff9940c7c1bbc53f3b7674bbdd121c5de651a6ea4d7f |
 | m3_design/r12/fab/m3_cpl_jlc.csv | c9a2aa28514cf4c16fe70be2da92050baa1ae44f37c9577175a7fe637e9a40e1 |
-| m3_design/r12/fab/m3_fab_manifest.json | cc142547f1423163700f58d504996194f0701d3904cd7e50319405b69c229dab |
-| m3_design/r12/fab/m3_gerber.zip | d8e1b4ed2cf2cd1213c9efe2f57d67722755863ec00d956eca45a7c7ce54e124 |
+| m3_design/r12/fab/m3_fab_manifest.json | 730f619ef800a2977610bd5b4d07b4f28285044152c9248802ea0fb3375c9ea2 |
+| m3_design/r12/fab/m3_gerber.zip | f4306259a96cdc35245e82a4c26e27aee61a457c77127b940a709cea2ffbaef6 |
 | m3_design/r12/fab/cost_check_2.json | 6db6c43439203205fa37eab6fc82b59fb0e82c953ea7fece7633af6a297b9828 |
 | m3_design/r12/fab/cost_check_5.json | 0d2760e94c29d50628ecd60182006255d586b98f17ca4376eb03951ba82eb722 |
 | m3_design/r12/fab/stock_check_2.json | 6d7987faa472f648f3458466cfee417476857e87b97117b16b159e0f8f1a5dda |
@@ -309,7 +330,13 @@ runs; the hot-plug files did not change). Round 3 fix lanes A–D (R12F3-TRI-03,
 `r12f3-AD`): C25 / C26 15 pF; two builds gave the same board `66323cf0…` (copper unchanged); stage D and the hot-plug
 model re-run on it; the fab package re-exported and re-bound with S-4 in its content checks, and priced with the
 Preferred Extended waiver (one `FAB_NET=1` run); `tools/test_r12_stageD.py` passed (11 tests) and
-`PYTHONHASHSEED=0 tools/check.sh` exited 0 (Measured, 2026-11-06). Not verified: any physical, electrical or firmware test;
+`PYTHONHASHSEED=0 tools/check.sh` exited 0 (Measured, 2026-11-06). Round 4 fix lanes A–D (R12F4-TRI-01, -02, -03,
+-04, -06, -07, -08, branch `r12f4-fix`): R166's footprint description (board `db1f0999…`, two builds with the same hash,
+only that line changed); the drift bounds in `pin_table.tsv`, `circuit.json`'s pin notes, PE4's load and the gate note;
+stage D and the hot-plug model re-run; `tools/test_r12_fab.py` (15 tests) and `tools/test_r12_stageD.py` (13 tests) now
+run in `check.sh`; `zones.json` W5 closed at y 90 and `zone_guard.py` refuses geometry outside Edge.Cuts;
+`PYTHONHASHSEED=0 tools/check.sh` with NUMPY_PY exited 0 (Measured, 2026-11-06; the only change after it was this
+sentence). Not verified: any physical, electrical or firmware test;
 JLC DFM; the vehicle fit of the 90 mm board (O-R12-28); AN2606 (O-R12-23); two consecutive clean stage F rounds on the
 re-layout (round 2 found 16 real errors and round 3 found 14, R12F3-TRI-01 … -14). After any
 later copper change: re-run the legend aid if needed, then `m3_design/r12_stageD.py` and `tools/r12_hotplug.py`.

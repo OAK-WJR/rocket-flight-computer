@@ -1,6 +1,6 @@
 # R12 stage D: electrical analyses on R12's copper (2026-11-05)
 
-**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05,
+**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` since R12F4-TRI-06,
 2026-11-06): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
@@ -77,10 +77,13 @@ Inference: the Q120 hot factor and the 0.1 V Q122 drop are Inference); −4.80 /
 four stalls |VGS| is 4.40 V (4.35 V with the leads shorted too), below the −4.5 V row, so the shorted-match FET figures
 here use an RDS(on) below the real one (a fault case; Inference). Above ±12 V only with the pack above about 14.4 V
 (maximum-ratio corner: 12 / (51 / 60.8) + 0.1 = 14.41 V, assuming a 0.1 V Q122 drop; Calculation / Inference,
-O-R12-10); time to −4.5 V after enable 27.4 / 14.7 / 11.4 ms at 6.0 / 7.4 / 8.4 V (C120 1 µF × 1.10 ×
+O-R12-10), and only while the bus is on, which is from the on-rail check until switch-off (Inference that no transient
+above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03); time to −4.5 V after enable 27.4 / 14.7 / 11.4 ms at 6.0 / 7.4 / 8.4 V (C120 1 µF × 1.10 ×
 1.15, no bias credit; inside the ≥ 100 ms enable wait). Q124 VGS ≥ 2.78 V (2.778 V) at the 3V3 drift minimum less PE4's
-VOH allowance (DS12110 Rev 8 Table 158: VOH ≥ VDD − 0.4 V at 4 / 8 mA, applied at PE4's 0.32 mA; R126 / R128 1 %;
-Calculation / Inference: VOH row applied at 0.32 mA, drift; R12F3-TRI-06, was 3.17 V with VOH = VDD), above the 2.5 V
+VOH allowance (DS12110 Rev 8 Table 158: VOH ≥ VDD − 0.4 V at 4 / 8 mA; PE4's steady load, R127 1k plus R126 220R +
+R128 10k, is about 3.56 mA, ≤ 3.87 mA at the 3V3 drift maximum with every resistor at its drift low end, within the 4 mA
+row (R12F4-TRI-02; the 0.32 mA first given here left out R127); R126 / R128 1 %; Calculation / Inference: drift;
+R12F3-TRI-06, was 3.17 V with VOH = VDD), above the 2.5 V
 RDS(on) row (VGS(th) ≤ 1.45 V); gate τ 48.4 µs. Gate copper: PYRO1_GATE_N 17.38 mm F.Cu, no via; PYRO1_GATE 7.20 mm F + 5.37 mm In2,
 two vias; microstrip L ≤ 10.2 / 7.3 nH, negligible against the 48 µs gate time constant.
 
