@@ -1,13 +1,13 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `be81f40b…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; hash as of `871f77a`), 46 × 90 × 1.6 mm, four
+**Status.** PCB `66323cf0…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; hash as of `5b1f006`; round 3 changed only C25 / C26, D-R12-107), 46 × 90 × 1.6 mm, four
 layers, every part on the top face and assembled by JLC. Branch `m3-assy-r12`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 90), top face = F. Positions
-below were read from the board file (Measured, pcbnew on `be81f40b…`; part centres are `m3_design/r12_place.tsv`).
+below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`; part centres are `m3_design/r12_place.tsv`).
 
 ## Harness pin map
 
@@ -46,7 +46,7 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   different:** pin 5 is board RXI and pin 6 board TXO. `5V4` is the camera supply from U403 (5.22–5.69 V initial,
   Calculation, conditional on U403 VIN ≥ VO / 0.75; low-input dropout estimate in M3_R12 "Power").
 - **J9 needs both supply contacts and both GND contacts wired**, so the 1 A camera allowance is 0.5 A per contact
-  against SH's 1 A rating (JLC listing, Live 2026-11-04).
+  (Calculation / Inference: load allocation and equal current sharing) against SH's 1 A rating (JLC listing, Live 2026-11-04).
 - **J410, J420 and J440 carry the same supply and UART pin order.** The firmware port map defaults to GPS J410, radio
   J420, AUX spare. A device on these ports must drive its TX high at no more than 3.6 V.
   - Under the 0.561 A budget the port pins stay at or above 4.563 V at the drift corner and at or below 4.972 V with no
@@ -100,7 +100,7 @@ adapted to R12. Run it in order and stop at the first failure.
      (top, (22.2, 21.4)) and 3V3 at J2 pad 1 (33.435, 46.27) both read below 0.3 V.
    - Measure J121.2 (IGN) to GND with a floating meter: it must read below 0.1 V.
    - If the board is on, or J121.2 reads above 0.1 V, do not fit the e-match.
-3. **Closed-switch check with a dummy load.** Fit a 1–2 Ω dummy in J121, then close J400.
+3. **Closed-switch check with a dummy load.** Fit a 2 Ω dummy in J121, then close J400.
    - The board powers up, the passive screen passes and firmware raises PC1.
    - Confirm the powered BUS / CONT readings.
    - Confirm PD10 (PORT_SENSE) reads **high** (ports powered) and PA6 = VLOGIC / 11.
@@ -144,7 +144,7 @@ adapted to R12. Run it in order and stop at the first failure.
   does not press on it (R10's cover rule).
 - **IMU.** U4 at (23.0, 41.6), rotation 180, on the roll axis (x = 23; lever arm x = 0, unchanged): roll = −gyro_Y,
   thrust −a_Y. U6 at (23.0, 34.4), rotation 180, is now on the roll axis too (x = 0); its axial channel is channel 1.
-  The axis maps are D-R12-54's (both rotations unchanged). A bench sign check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
+  The axis maps are D-R12-54's (Calculation / Inference: both rotations unchanged; inherited axis frames). A bench sign check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
 - **LEDs.** LED1 red (8.0, 52.8) and LED2 yellow (8.0, 55.0), top face, west bay.
 - **Length.** R12 is 90 mm (D-R12-99), 40 mm longer than R11. `docs/VEHICLE.md` gives no internal bay or sled length (its
   stack row still budgets 102 mm for R9), so the fit could not be checked: check it against the bay and coupler and
@@ -159,12 +159,19 @@ PA7, PA8–PA10, PA15, PC9–PC12, PD2): AN2606's H74x list must be re-read for 
 is at J2's end of the NRST run (26.6, 45.18) (D-R12-98). R10's dummy-load / no-e-match service procedure
 applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 
+For the separate first-article dummy-fire check, use the fixed 2 Ω dummy / 0.3 Ω total leads and 7.4 V / 0.15 Ω
+source with the budget converter loads and no servo stalls. Reject BAT_IN − RAW_ACT above **0.4 V**, overriding
+R10 rule 4's 0.2 V line (D-R12-109). The healthy budget current is 1.505934 A, with a drop bound of 0.264 V
+including both hot FETs and conservatively all fire copper (Calculation / Inference: 70 °C hot factors, pack,
+loads and copper model); the body-diode case is 0.7–1.0 V (Inference). Qualify the line on the first article;
+see [M3_R12 firmware](M3_R12.md#firmware). The per-flight closed-switch check does not command a fire.
+
 ## Cost
 
-M3 metric (parts + feeder per board): $66.55 at 2 boards and $46.29 at 5 boards, against the $84.41 cap (Live
-2026-11-06T10:07:00Z / 10:08:18Z). Minimum all-in $176.75 / $282.99 including U1-only X-ray ($3.28 / $8.20;
-Calculation / Inference: 100 mm PCB quote used for 90 mm), $6.75 over the $170 target at 2 boards.
-Counting U1 / U4 / U5 / U6 / U9 gives $189.87 / $295.29–303.49, above both $170 / $295 targets (Calculation /
+M3 metric (parts + feeder per board): $65.02 at 2 boards and $45.68 at 5 boards, against the $84.41 cap (Live
+2026-11-06T17:55:07Z / 17:56:22Z). Minimum all-in $173.69 / $279.93 including U1-only X-ray ($3.28 / $8.20;
+Calculation / Inference: 100 mm PCB quote used for 90 mm), $3.69 over the $170 target at 2 boards.
+Counting U1 / U4 / U5 / U6 / U9 gives $186.81 / $292.23–300.43, above $170 at 2 boards and straddling $295 at 5 boards (Calculation /
 Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and
 tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). No part is short or thin. See [M3_R12.md,
 "Cost and stock"](M3_R12.md#cost-and-stock).

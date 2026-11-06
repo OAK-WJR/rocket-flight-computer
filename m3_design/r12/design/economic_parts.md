@@ -19,7 +19,7 @@ deviation, D-R12-49, owner acceptance A-9; the effect of the 5–10 °C over-pea
 | Item | Audit verdict | Resolution |
 |---|---|---|
 | U4 ISM6HG256XTR (§3.1) | FAIL: Standard Only | **Resolved**, D-R12-50: LSM6DSVETR (C41785564) on the same land and nets (pin map from JLCEDA C41785564; ST datasheet for the "E" variant not found: Inference); plus D-R12-51 below for F2 |
-| F2 high-g channel (§3.5.1) | – | **Resolved**, D-R12-51: new U6 FXLS90322AESR2 (C5190712), XY medium-g (±150 g max; NXP part page), SPI on SPI1 with HG_CS on PA10, C33 100 nF; NXP part page: MSL 3, 260 °C / 40 s. The listing's "±500 g, XYZ" is wrong for this part number |
+| F2 high-g channel (§3.5.1) | – | **Resolved**, D-R12-51: new U6 FXLS90322AESR2 (C5190712), XY medium-g (±150 g maximum; search summaries, Inference until FXLS9xxxx Rev 7 is read; O-R12-21), SPI on SPI1 with HG_CS on PA10, C33 100 nF; NXP part page: MSL 3, 260 °C / 40 s. The listing's "±500 g, XYZ" is wrong for this part number |
 | U5 LPS28DFWTR (§3.2) | FAIL: Standard Only | **Resolved**, D-R12-52: MS5607-02BA03 (C97627, Economic) on R11's MS5611 land; 250 °C / 40 s accepted under D-R12-49. The KP215F1701 analog route of §3.5.3 was not taken |
 | D5 / D6 / D9 SS34 (§3.3) | FAIL: 250 °C | **Resolved by acceptance** (D-R12-49): SS34 kept; B340A not adopted |
 | D121 SRV05-4 (§3.4) | UNVERIFIED | **Kept** (Economic-flagged; D-R12-49); ProTek swap not made |
@@ -114,7 +114,7 @@ Samsung (Datasheet, Samsung MLCC general spec served for every CL code): "Pb-fre
 | C23630 | CL10A225KO8NNNC 2.2 µF 0603 | C19 C20 | 2304140030_…_C23630 | OK |
 | C307331 | CL05B104KB54PNC 100 nF 0402 | C5 C13–C18 C21 C24 C29–C32 C83 C88 C99 C128 C402 C410 C420 C432 C444 C460 | 2304140030_…_C307331 | OK |
 | C1538 | FH 0402B472K500NT 4.7 nF | C81 | 2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402B472K500NT_C1538 | OK |
-| C1549 | FH 0402CG180J500NT 18 pF C0G | C25 C26 | 2304140030_…-0402CG180J500NT_C1549 | OK |
+| C1548 | FH 0402CG150J500NT 15 pF C0G ±5 % (D-R12-107) | C25 C26 | 2304140030_…-0402CG150J500NT_C1548 (byte-identical to C1549 sheet; 265 ± 5 °C soldering heat) | OK |
 
 ### 2.3 Semiconductors, magnetics, connectors
 
@@ -164,7 +164,8 @@ because their makers' datasheets give no reflow figure; no swap is proposed for 
 ## 3. Alternatives for every FAIL and UNVERIFIED line
 
 Prices: JLC tier price at the order quantity (2 boards / 5 boards), Live 2026-11-04T22Z. Feeder fee $3.07 per Extended
-code per order on Economic; Basic free; Preferred Extended free is an **Inference** (O-R12-12).
+code per order on Economic; Basic free; Preferred Extended is free ([JLC PCBA FAQ 7](https://jlcpcb.com/help/article/pcb-assembly-faqs), read 2026-11-06;
+O-R12-12 closed, applied in `jlc_cost.py` by D-R12-110).
 
 ### 3.1 U4 ISM6HG256XTR (FAIL: Standard Only, and unorderable)
 
@@ -322,7 +323,8 @@ fail on their 250 °C rating, and the undocumented Tokmas clones.
   **Inference** (genuine Bosch / Infineon listings are S, Tokmas clones of the same packages are E).
 - JLC's PCBA FAQ (Live, jlcpcb.com/help/article/pcb-assembly-faqs, FAQ 7): Preferred Extended parts "are exempt from
   the Feeders Loading fee for Economic PCB assembly". This confirms the waiver that O-R12-12 and §4 treated as an
-  Inference, so §4's "if waived" rows apply.
+  Inference, so §4's historical "if waived" rows apply. `jlc_cost.py` now applies the waiver on Economic
+  (D-R12-110): D120 / C37704 is exempt, 21 charged codes × $3.07 = $64.47 per order; O-R12-12 is closed.
 - **"Bake Components" and consignment:** JLC's consignment terms mention baking moisture-sensitive parts (about 48 h
   after arrival), a per-piece consignment fee and manual handling (search summary of
   jlcpcb.com/help/article/consignment-part-terms-conditions, not read on the page itself: **Inference**). No JLC page
@@ -357,9 +359,9 @@ feeder is $3.07 per code per order.
 | Change | 2 boards | 5 boards |
 |---|---|---|
 | D5/D6/D9 → B340A-E3/61T (+$0.0606 × 3 per board, +$3.07 feeder) | +$3.43 | +$3.98 |
-| D121 → ProTek (+$0.0718 per board; Semtech's $3.07 feeder dropped if Preferred is waived, Inference) | −$2.93 | −$2.71 |
+| D121 → ProTek (+$0.0718 per board; Semtech's $3.07 feeder dropped: Preferred is exempt, FAQ 7 / D-R12-110) | −$2.93 | −$2.71 |
 | **Recommended drop-ins, net** | **+$0.50 ($0.25 per board)** | **+$1.27 ($0.25 per board)** |
-| same, if JLC charges the Preferred feeder | +$3.57 ($1.79 per board) | +$4.34 ($0.87 per board) |
+| historical counterfactual, charging the now-exempt Preferred feeder | +$3.57 ($1.79 per board) | +$4.34 ($0.87 per board) |
 | U4 off the JLC order (option 3.1-1) | −$31.74 | −$74.76 (owner buys ISM6HG256X elsewhere) |
 | U5 off the JLC order (option 3.2-1) | −$16.47 | −$36.56 (owner buys LPS28DFW elsewhere) |
 | U5 → Tokmas BMP388 (option 3.2-2) | −$10.23 | −$25.57 |

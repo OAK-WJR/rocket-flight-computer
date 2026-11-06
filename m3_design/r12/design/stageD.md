@@ -96,7 +96,7 @@ per board**, feeder 19 charged codes × $3.07 = $58.33 per order. REQUIREMENTS M
 `fab/stock_check_2.json` / `_5.json`): 57 unique codes (21 Extended / 36 Basic), **none short and none thin** at 2 or 5
 boards (orderable = min(stock, canPresaleNumber), an Inference about JLC's field).
 
-All-in order totals (Calculation on the Live parts and feeder figures; setup / stencil $9.71 from the cost tool; SMT
+All-in order totals (Calculation / Inference: U1-only X-ray count; Live parts and feeder figures; setup / stencil $9.71 from the cost tool; SMT
 joints $0.0016 each counted as the 577 pasted pads per board, manual THT joints $0.0164 × 2 for J121 plus $3.58
 hand-soldering labour per order, and the bare PCB $25.10 for 5 pcs 4L 46 × 100 mm ENIG are cost_study.md's figures,
 Live 2026-11-04; shipping, tax and attrition excluded). Round-2 correction D-R12-105 adds minimum U1-only
@@ -109,7 +109,7 @@ X-ray $3.28 / $8.20 at 2 / 5 boards using JLC's 2026-11-06 fee schedule; the dat
 
 Counting U1 / U4 / U5 / U6 / U9 gives $180.48 / $285.60–293.80 with these dated inputs
 (Calculation / Inference: qualifying count and tier); confirm the quote, including possible D402 / Y1 fees.
-Owner-fitted C84 + LS120 from LCSC add about $0.40 per board (cost tool's JLC prices as the LCSC estimate). Prices and
+Owner-fitted C84 + LS120 from LCSC add about $0.40 per board (cost tool's JLC prices as the LCSC estimate, Inference). Prices and
 stock move daily; re-run `FAB_NET=1 m3_design/r12_fab.sh` before ordering.
 
 ## 5. Hashes (Measured, SHA-256)
@@ -172,6 +172,9 @@ F paste 579 flashes on 579 pasted pads of 176 parts;
 manifest bound. `tools/test_r12_check.py` 50 OK (`R12_BOARD_REQUIRED=1`), `tools/test_r12_fab.py` 15 OK,
 `tools/test_r12_stageD.py` 4 OK. Analyses re-run: `stageD_analysis.md` §10.
 
+**Historical cost and stock (current cost: [stageE_relayout.md §5](stageE_relayout.md),
+D-R12-110; Preferred Extended waiver now applied).**
+
 **Cost and stock (Live, `fab/cost_check_2.json` / `_5.json` 2026-11-05T19:19:44Z / 19:21:01Z, stock 19:19:05Z /
 19:20:23Z, Economic one-sided).** 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards
 (orderable = min(stock, canPresaleNumber), an Inference about JLC's field). Parts $32.74 per board (C84 and LS120 now
@@ -179,7 +182,7 @@ included in the JLC order; they were priced before too), feeder 22 charged codes
 C190095, C5246546, C96256). REQUIREMENTS M3 metric (parts + feeder per board): **$66.51 at 2 boards, $46.25 at 5
 boards** against the $84.41 cap (was $61.88 / $44.38).
 
-All-in (Calculation on the Live figures; setup / stencil $9.71; SMT joints $0.0016 × 579 pasted pads per board; THT
+All-in (Calculation / Inference: U1-only X-ray count; Live figures; setup / stencil $9.71; SMT joints $0.0016 × 579 pasted pads per board; THT
 joints $0.0164 × 4 per board (J121, LS120) plus $3.58 hand-soldering labour per order; bare PCB $25.10 for 5 pcs;
 cost_study.md's figures, Live 2026-11-04; shipping, tax and attrition excluded). Round-2 correction D-R12-105 adds minimum U1-only
 X-ray $3.28 / $8.20 at 2 / 5 boards using JLC's 2026-11-06 fee schedule; the dated parts / feeder inputs stay:
@@ -194,13 +197,12 @@ The r12_plan targets were ≤ $170 / ≤ $295: with U1-only X-ray, this dated 2-
 Counting U1 / U4 / U5 / U6 / U9 gives $189.79 / $295.09–303.29, above both targets (Calculation / Inference:
 qualifying count and fee tier); confirm JLC's quote, including possible D402 / Y1 fees.
 
-**Current 90 mm board cost (D-R12-105).** The 2026-11-06 parts prices give minimum all-in $176.75 / $282.99
-including U1-only X-ray ($3.28 / $8.20; Calculation / Inference: 100 mm PCB quote used for 90 mm), $6.75 over
-the $170 target at 2 boards.
-Counting U1 / U4 / U5 / U6 / U9 gives $189.87 / $295.29–303.49, above both $170 / $295 targets (Calculation /
-Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and
-tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). See `docs/M3_R12.md` "Cost and stock" and
-[JLC PCBA price page](https://jlcpcb.com/help/article/pcb-assembly-price) (read 2026-11-06 in lane A's hand-off).
+**Current 90 mm board cost (D-R12-110).** See [stageE_relayout.md §5](stageE_relayout.md)
+and [M3_R12 "Cost and stock"](../../../docs/M3_R12.md#cost-and-stock): the 2026-11-06T17:55–17:56Z run applies
+the Preferred Extended waiver and C25 / C26 change. Parts + feeder $65.02 / $45.68 per board; minimum all-in
+$173.69 / $279.93 with U1-only X-ray, $3.69 over the two-board target. Five X-ray parts give $186.81 /
+$292.23–300.43, straddling $295 at five boards (Calculation / Inference: 100 mm PCB quote used for 90 mm,
+qualifying X-ray count and tier). Confirm JLC's count and tier, including D402 / Y1, before ordering.
 
 **Hashes (Measured, SHA-256).**
 
