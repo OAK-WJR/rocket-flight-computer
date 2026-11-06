@@ -1,12 +1,12 @@
 {
- "board_sha256": "cc5b66dbdc8e5e74f9fd8b03d07f81a63461d250915683b34833d33446aaf4d2",
+ "board_sha256": "be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8",
  "dc_solves": {
   "3V3_L1_to_R14": {
-   "cells": 300945,
-   "cg_iterations": 4632,
+   "cells": 300943,
+   "cg_iterations": 4634,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.0048515155989338745,
+   "resistance_ohm": 0.004851515306605717,
    "sink": "R14:1",
    "source": "L1:2",
    "window_mm": [
@@ -17,11 +17,11 @@
    ]
   },
   "3V3_L1_to_U6": {
-   "cells": 300945,
-   "cg_iterations": 4352,
+   "cells": 300943,
+   "cg_iterations": 4380,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.012528685818364317,
+   "resistance_ohm": 0.012527356144119841,
    "sink": "U6:1,13,15,16",
    "source": "L1:2",
    "window_mm": [
@@ -32,11 +32,11 @@
    ]
   },
   "3V3_R14_to_U6": {
-   "cells": 300945,
-   "cg_iterations": 4552,
+   "cells": 300943,
+   "cg_iterations": 4557,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.013643946288088276,
+   "resistance_ohm": 0.013642697435758655,
    "sink": "U6:1,13,15,16",
    "source": "R14:1",
    "window_mm": [
@@ -167,11 +167,11 @@
    ]
   },
   "RAW_PROTECTED_U9_to_D5": {
-   "cells": 42772,
-   "cg_iterations": 2421,
+   "cells": 42769,
+   "cg_iterations": 2429,
    "grid_mm": 0.1,
    "net": "RAW_PROTECTED",
-   "resistance_ohm": 0.02345590508348431,
+   "resistance_ohm": 0.023533239516799684,
    "sink": "D5:2",
    "source": "U9:6",
    "window_mm": [
@@ -182,11 +182,11 @@
    ]
   },
   "RAW_PROTECTED_U9_to_U400": {
-   "cells": 42772,
-   "cg_iterations": 2371,
+   "cells": 42769,
+   "cg_iterations": 2380,
    "grid_mm": 0.1,
    "net": "RAW_PROTECTED",
-   "resistance_ohm": 0.059550597049140355,
+   "resistance_ohm": 0.05962793148227756,
    "sink": "U400:3,5",
    "source": "U9:6",
    "window_mm": [
@@ -197,11 +197,11 @@
    ]
   },
   "RAW_PROTECTED_U9_to_U403": {
-   "cells": 42772,
-   "cg_iterations": 2545,
+   "cells": 42769,
+   "cg_iterations": 2544,
    "grid_mm": 0.1,
    "net": "RAW_PROTECTED",
-   "resistance_ohm": 0.010737265758551317,
+   "resistance_ohm": 0.010814598554334882,
    "sink": "U403:3",
    "source": "U9:6",
    "window_mm": [
@@ -803,11 +803,11 @@
   ],
   "vias_within_2mm": [
    [
-    8.2,
+    9.2,
     42.6
    ],
    [
-    9.2,
+    8.2,
     42.6
    ]
   ]
@@ -840,7 +840,7 @@
    "length_mm_by_layer": {
     "F.Cu": 17.384062043356593
    },
-   "microstrip_L_nH_upper": 10.234475554031585,
+   "microstrip_L_nH_upper": 10.234475554031587,
    "vias": 0
   }
  },
@@ -927,37 +927,37 @@
  "pa6_corners": {
   "healthy": {
    "BAT_IN_V": 5.720875496037573,
-   "U9_and_copper_drop_V": 0.1622257775846757,
+   "U9_and_copper_drop_V": 0.1624008753484375,
    "VLOGIC_V": [
-    5.108649718452897,
-    5.308649718452897
+    5.108474620689136,
+    5.308474620689136
    ],
    "converter_A": 2.2641630158163526,
-   "margin_to_nominal_trip_top_V": 0.15864971845289677,
-   "margin_to_tolerance_trip_top_V": 0.06774062754380594
+   "margin_to_nominal_trip_top_V": 0.15847462068913565,
+   "margin_to_tolerance_trip_top_V": 0.06756552978004482
   },
   "label": "Calculation / Inference (U9 RON, SS34 VF and the load allocations are Inference)",
   "match_and_leads_shorted": {
    "BAT_IN_V": 5.532304203836373,
-   "U9_and_copper_drop_V": 0.16775532248682942,
+   "U9_and_copper_drop_V": 0.16793638854343224,
    "VLOGIC_V": [
-    4.914548881349543,
-    5.114548881349543
+    4.91436781529294,
+    5.11436781529294
    ],
    "converter_A": 2.341338118615397,
-   "margin_to_nominal_trip_top_V": -0.03545111865045758,
-   "margin_to_tolerance_trip_top_V": -0.1263602095595484
+   "margin_to_nominal_trip_top_V": -0.03563218470705998,
+   "margin_to_tolerance_trip_top_V": -0.1265412756161508
   },
   "match_shorted": {
    "BAT_IN_V": 5.574945568590383,
-   "U9_and_copper_drop_V": 0.16647220396888554,
+   "U9_and_copper_drop_V": 0.16665188509649323,
    "VLOGIC_V": [
-    4.958473364621497,
-    5.158473364621497
+    4.95829368349389,
+    5.15829368349389
    ],
    "converter_A": 2.3234298087494065,
-   "margin_to_nominal_trip_top_V": 0.008473364621496948,
-   "margin_to_tolerance_trip_top_V": -0.08243572628759388
+   "margin_to_nominal_trip_top_V": 0.008293683493890036,
+   "margin_to_tolerance_trip_top_V": -0.08261540741520079
   },
   "u9_turn_off_through_d5_V": 4.55,
   "window": {
@@ -1646,7 +1646,7 @@
    "vias": []
   }
  },
- "source_board_sha256": "cc5b66dbdc8e5e74f9fd8b03d07f81a63461d250915683b34833d33446aaf4d2",
+ "source_board_sha256": "be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,
@@ -1669,33 +1669,33 @@
  "u6_supply": {
   "0V5_allocation": {
    "I_A": 0.5,
-   "drop_V": 0.008690100708649095,
-   "margin_drift_V": 0.09640989929135113,
-   "margin_initial_V": 0.12670989929135112,
-   "min_VCC_drift_V": 3.231409899291351,
-   "min_VCC_initial_V": 3.261709899291351
+   "drop_V": 0.008689435725362779,
+   "margin_drift_V": 0.09641056427463734,
+   "margin_initial_V": 0.12671056427463734,
+   "min_VCC_drift_V": 3.231410564274637,
+   "min_VCC_initial_V": 3.261710564274637
   },
   "1A_rating_bound": {
    "I_A": 1.0,
-   "drop_V": 0.01738020141729819,
-   "margin_drift_V": 0.08771979858270207,
-   "margin_initial_V": 0.11801979858270206,
-   "min_VCC_drift_V": 3.222719798582702,
-   "min_VCC_initial_V": 3.253019798582702
+   "drop_V": 0.017378871450725558,
+   "margin_drift_V": 0.0877211285492745,
+   "margin_initial_V": 0.11802112854927449,
+   "min_VCC_drift_V": 3.2227211285492743,
+   "min_VCC_initial_V": 3.2530211285492743
   },
-  "R_L1_to_R14_ohm": 0.0048515155989338745,
-  "R_L1_to_U6_ohm": 0.012528685818364317,
-  "R_R14_to_U6_direct_ohm": 0.013643946288088276,
+  "R_L1_to_R14_ohm": 0.004851515306605717,
+  "R_L1_to_U6_ohm": 0.012527356144119841,
+  "R_R14_to_U6_direct_ohm": 0.013642697435758655,
   "floor_V": 3.135,
   "label": "Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window; load currents Inference",
   "u6_max_A": 0.006,
   "u6_only_6mA": {
    "I_A": 0.006,
-   "drop_V": 8.186367772852965e-05,
-   "margin_drift_V": 0.10501813632227153,
-   "margin_initial_V": 0.13531813632227152,
-   "min_VCC_drift_V": 3.2400181363222713,
-   "min_VCC_initial_V": 3.2703181363222713
+   "drop_V": 8.185618461455193e-05,
+   "margin_drift_V": 0.10501814381538566,
+   "margin_initial_V": 0.13531814381538565,
+   "min_VCC_drift_V": 3.2400181438153854,
+   "min_VCC_initial_V": 3.2703181438153854
   }
  }
 }

@@ -1,13 +1,13 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `cc5b66db…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; hash as of `bce77bd`), 46 × 90 × 1.6 mm, four
+**Status.** PCB `be81f40b…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; hash as of `871f77a`), 46 × 90 × 1.6 mm, four
 layers, every part on the top face and assembled by JLC. Branch `r12-relayout-90`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 90), top face = F. Positions
-below were read from the board file (Measured, pcbnew on `cc5b66db…`; part centres are `m3_design/r12_place.tsv`).
+below were read from the board file (Measured, pcbnew on `be81f40b…`; part centres are `m3_design/r12_place.tsv`).
 
 ## Harness pin map
 
@@ -161,7 +161,7 @@ applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 
 ## Cost
 
-M3 metric (parts + feeder per board): $66.54 at 2 boards and $46.28 at 5 boards, against the $84.41 cap (Live
-2026-11-06T08:31:32Z / 08:33:18Z). All-in $173.45 for 2 boards and $274.74 for 5 (Calculation; the bare-PCB figure is
-the 46 × 100 mm quote, an Inference for 90 mm); the 2-board total is $3.45 over the $170 target. No part is short or
+M3 metric (parts + feeder per board): $66.55 at 2 boards and $46.29 at 5 boards, against the $84.41 cap (Live
+2026-11-06T10:07:00Z / 10:08:18Z). All-in $173.47 for 2 boards and $274.79 for 5 (Calculation; the bare-PCB figure is
+the 46 × 100 mm quote, an Inference for 90 mm); the 2-board total is $3.47 over the $170 target. No part is short or
 thin. See [M3_R12.md, "Cost and stock"](M3_R12.md#cost-and-stock).
