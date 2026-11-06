@@ -131,7 +131,7 @@ Samsung (Datasheet, Samsung MLCC general spec served for every CL code): "Pb-fre
 | C15127 | AO3401A | Q120 Q121 | SOT-23, OK | None in AOS datasheet (2412061733_…_C15127; aosmd.com AO3401A.pdf read) | E | UNVERIFIED |
 | C37704 | BAT54C,215 (Nexperia) | D120 | SOT-23, OK | None in datasheet (2407241028_Nexperia-BAT54C-215_C37704); nexperia.com returned 403 | E, Preferred | UNVERIFIED |
 | C535146 | ESD103-B1-02EL E6327 | D402 | TSLP-2-20 1.0 × 0.6 (0402 size), OK | None in Infineon Rev 1.3 (2304140030_…_C535146) | E | UNVERIFIED |
-| C13612 | SRV05-4.TCT (Semtech) | D121 | SOT-23-6, OK | None in Semtech datasheet (1809212114_SEMTECH-SRV05-4-TCT_C13612) | E | UNVERIFIED |
+| C13612 | SRV05-4.TCT (Semtech) | D121 | SOT-23-6, OK | TL **260 °C / 10 s**, lead-soldering figure only; does not establish body reflow at 255 ± 5 °C (Semtech datasheet, 1809212114_SEMTECH-SRV05-4-TCT_C13612) | E | UNVERIFIED |
 | C78399 | SMAJ12CA (Brightking) | D8 | SMA, OK | "Peak temperature (TP) 260 °C"; MSL 1 per J-STD-020 (2304140030_Brightking-SMAJ12CA-TR13_C78399) | E | OK |
 | C8678 | SS34 (MDD) | D5 D6 D9 | SMA, OK | "High temperature soldering guaranteed: **250 °C / 10 s** at terminals" (2407101107_MDD-Microdiode-Semiconductor-SS34_C8678) | E | **FAIL** (250 °C < 255 ± 5 °C) |
 | C191023 | 1N5819WS (Hottech) | D123 | SOD-323, OK | None (2409300937_Guangdong-Hottech-1N5819WS_C191023) | E | UNVERIFIED |

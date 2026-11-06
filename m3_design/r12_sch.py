@@ -71,8 +71,8 @@ R12_REPIN = {
     'CAM_FAULT_N': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-07: U402 deleted (camera buck EN is the switch)'),
     'CAM_UART_OE': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-07: U12 deleted (1 kOhm series only)'),
     'LOGIC_SOURCE_ST': ('PORT_SENSE', 'GPIO in, no pull (high = PORT_4V8 present: the battery path is on)',
-                        'D-R12-05: U11 deleted; PA4 now reads PORT_4V8 through R111 4.7k / R112 10k (3.09-3.40 V '
-                        'high, Calculation); the R10 rule "port UARTs only while PA4 reads low" becomes "only while '
+                        'D-R12-05: U11 deleted; PA4 now reads PORT_4V8 through R111 4.7k / R112 10k: 3.11-3.38 V '
+                        'initial, 3.08-3.42 V drift (Calculation; drift Inference, D-R12-83); the R10 rule "port UARTs only while PA4 reads low" becomes "only while '
                         'PA4 reads high"'),
 }
 

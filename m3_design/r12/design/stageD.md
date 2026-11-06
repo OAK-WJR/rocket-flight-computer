@@ -37,9 +37,9 @@ exit 0 (Measured, 2026-11-05). `tools/test_r12_check.py`: 49 tests OK (one skipp
   revision, the SHOWN_REFS designators, the connector words, J2's SWD rows, pin-1 dots, the other designators and the
   Fab references. Two aid runs on the final routed board wrote the same file byte for byte (Measured, `cmp`).
 * **SH contacts.** At 1.0 mm pitch a 1.0 mm legend's ink (about 1.15 mm wide at 90°, Measured from the font) plus the
-  0.155 mm silkscreen gap exceeds the pitch, so neighbours cannot share a face side by side. Each contact's legend sits
-  on the bottom face (no parts there) in its own column, alternately outward (ink ends at the pad centre line) and
-  inward (ink starts 0.2 mm past it); both alternations are tried per port and the one with fewer misses kept
+  0.155 mm silkscreen gap exceeds the pitch, so neighbours cannot share a face side by side. The contact legends sit
+  on the bottom face (no parts there), except J400's `1:SW` and `4:NC` on the top face. Each follows its own column,
+  alternately outward (ink ends at the pad centre line) and inward (ink starts 0.2 mm past it); both alternations are tried per port and the one with fewer misses kept
   (J122 alternation 1, the others 0; no misses). The aid's ownership margin is 0.05 mm (gate 0.01 mm).
 * **`m3_design/r12_post.py`** is `r11_post`'s apply and contract with R12's revision, KIID seed 12120, table and gate
   data, gated by `check_r12 --only K-legends,K-fill`; it refuses a table with an open row.
@@ -76,10 +76,10 @@ Headline figures (labels as given; details and inputs in `stageD_analysis.md`):
 | GND fire return Q124 → J1.2 (Calculation, DC solve) | 2.575 mΩ, two vias, inside the 5 mΩ allowance |
 | Hot-plug (Simulation / Inference) | 0 / 2304 required cases fail; minimum U9 IN −14.255 V (≥ −15.0); steepest fall 9.251 V/µs (≤ 10); C88 topology, cold limit, convergence, no-clamp and local-path checks pass; electrical SHA `db6dfd75…` |
 | D-R12-09 keep or drop R166 (Simulation / Inference) | keep: R166 shorted fails 1164 / 2304, no damper 1920 / 2304, the pre-C79 44 µF 8 / 2304 |
-| EN / chatter (Calculation / Inference) | single drop-out trip 8.13 ms at 5.7208 V; bench-rule worst-corner limit 7.56 ms; turn-on nominal 88 / 56 / 45 ms (R10's 30–130 ms window kept) |
+| EN / chatter (Calculation / Inference) | single drop-out trip 8.13 ms at 5.7208 V; bench-rule worst-corner limit 7.56 ms; turn-on nominal 88 / 56 / 45 ms (R12 bound 27–114 ms) |
 | Hold-up (Calculation / Inference) | battery break 2.23–6.12 ms unshed, 6.68–11.43 ms shed; PA6 trip 0.47–1.72 ms |
 | PA6 window (Calculation / Inference) | 4.62–4.95 V (4.54–5.04 V with 1 % resistors); a four-stall fire into a shorted match can reach it (firmware, O-R12-07) |
-| U6 VCC (O-R12-22; Calculation) | ≥ 3.258 V initial / 3.227 V drift at U2's 1 A, margin 123 / 92 mV over 3.135 V: closed as a calculation |
+| U6 VCC (O-R12-22; Calculation / Inference: drift case and load currents Inference) | ≥ 3.258 V initial / 3.227 V drift at U2's 1 A, margin 123 / 92 mV over 3.135 V: closed as a calculation |
 | PORT_4V8 at the ports, 0.561 A (Calculation / Inference) | 4.497–4.500 V initial, 4.447–4.450 V drift (J420 lowest) against the LR900's 4.5 V: owner item (O-R12-26) |
 | IPC-2152 worst (Inference, upper bound) | U9.6 pin entry 0.3 mm 76.8 °C at 2.9 A (pin-entry class, two vias now); the 0.4 mm C96.1 → C88.1 → U9.5 run, 4.13 mm, 55.2 °C at 2.9 A, about 36 °C at 2.34 A (O-R12-25) |
 
@@ -163,8 +163,9 @@ Three changes, each recorded in `R12_DECISIONS.md`:
 both times, exit 0. KiCad DRC 0 violations, 0 unconnected, 0 parity; r12_sch_check OK (187 parts); fit_check r12 OK;
 check_r12 every rule OK in the strict tier (S-1 … S-9, K-legends, K-reference, K-region, K-plane, K-fill); route_check
 r12 0 failing, 2 allowlisted, 13 non-critical leftovers (the same 13); 1208 tracks, 414 vias. Fab: JLC BOM 58 lines,
-178 JLC parts = 178 CPL rows (176 SMT, 2 THT: J121, LS120), all Top, every row rebuilt from JLC's footprint (worst
-residual 0.491 mm, LS120 0.0 mm, C84 0.25 mm), no owner BOM; F paste 579 flashes on 579 pasted pads of 176 parts;
+178 JLC parts = 178 CPL rows (176 SMT, 2 THT: J121, LS120), all Top: 174 rebuilt from JLC footprints,
+4 placement-only (R150–R153); worst residual 0.491 mm, LS120 0.0 mm, C84 0.25 mm; no owner BOM;
+F paste 579 flashes on 579 pasted pads of 176 parts;
 manifest bound. `tools/test_r12_check.py` 50 OK (`R12_BOARD_REQUIRED=1`), `tools/test_r12_fab.py` 15 OK,
 `tools/test_r12_stageD.py` 4 OK. Analyses re-run: `stageD_analysis.md` §10.
 

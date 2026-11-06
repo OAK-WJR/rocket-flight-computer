@@ -6,7 +6,7 @@ This file is for anyone — person or AI coding assistant — picking up this re
 
 The deliverable is **one** board (the M1/M2 two-board scheme was abandoned; see `docs/HISTORY.md`) with every function in the original requirements.
 
-**Which board.** R9 (46 × 102 mm, owner-accepted 2026-10-25; package bound to `4f841a0e…`, $109.38 per board at the 2026-10-26 run) is the accepted board to order after a fresh cost and stock run. R8 (46 × 118 mm, accepted 2026-10-20, package `cc044ea0…`) is its fallback. Their per-block history is in `docs/M3_R9.md`, `docs/M3_R8.md` and `docs/M3_R7.md`. **M3-ASSY-R10 is a CAD candidate on branch `m3-assy-r10`: not accepted, nothing ordered.** The table below describes R10 only. Decision IDs such as D-R15-01 are in `m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md`. **M3-ASSY-R11 is a CAD candidate on branch `m3-assy-r11`: not accepted, nothing ordered.** It is R10's circuit on a 46 × 50 mm six-layer board; its compact table and status paragraph follow R10's below, and its decision IDs (D-R11-01 …) are in `m3_design/r11/design/R11_DECISIONS.md`. **M3-ASSY-R12 is a CAD candidate on branch `r12-stage-d` (from `m3-assy-r12`): not accepted, nothing ordered.** It is R11's circuit pruned and re-sourced on a one-sided 46 × 100 mm four-layer board for JLC Economic PCBA; its compact table and status paragraph follow R11's, and its decision IDs (D-R12-01 …) are in `m3_design/r12/design/R12_DECISIONS.md`.
+**Which board.** R9 (46 × 102 mm, owner-accepted 2026-10-25; package bound to `4f841a0e…`, $109.38 per board at the 2026-10-26 run) is the accepted board to order after a fresh cost and stock run. R8 (46 × 118 mm, accepted 2026-10-20, package `cc044ea0…`) is its fallback. Their per-block history is in `docs/M3_R9.md`, `docs/M3_R8.md` and `docs/M3_R7.md`. **M3-ASSY-R10 is a CAD candidate on branch `m3-assy-r10`: not accepted, nothing ordered.** The table below describes R10 only. Decision IDs such as D-R15-01 are in `m3_design/assembly_review/sources/r10_design/R10_DECISIONS.md`. **M3-ASSY-R11 is a CAD candidate on branch `m3-assy-r11`: not accepted, nothing ordered.** It is R10's circuit on a 46 × 50 mm six-layer board; its compact table and status paragraph follow R10's below, and its decision IDs (D-R11-01 …) are in `m3_design/r11/design/R11_DECISIONS.md`. **M3-ASSY-R12 is a CAD candidate on branch `r12-port-fix` (from `m3-assy-r12`): not accepted, nothing ordered.** It is R11's circuit pruned and re-sourced on a one-sided 46 × 100 mm four-layer board for JLC Economic PCBA; its compact table and status paragraph follow R11's, and its decision IDs (D-R12-01 …) are in `m3_design/r12/design/R12_DECISIONS.md`.
 
 | Block | R10 design (CAD candidate) | Where to read more |
 |---|---|---|
@@ -49,7 +49,7 @@ R11 keeps R10's netlist, part values and every §2 rule (D-R11-01), except the c
 
 **R11 status (2026-11-03).** PCB `3bb832721a77c50900bd5133f57c63a35c81c908ade76626a12e9a42580cefc5`, 46 × 50 × 1.6 mm, six layers; not accepted, nothing ordered. Stages A–D of `m3_design/r11/design/r11_plan.md` are done (stage records `stageA.md` … `stageD3.md` in `m3_design/r11/design/`): the board is built twice by `m3_design/r11_build.sh` with the same hash, and stageD3.md records (after the stage E fix pass, D-R11-85 … -88) DRC / unconnected / parity / ERC 0, check_r11 every rule OK, route_check r11 0 failing with 3 allowlisted, the fab manifest OK and `tools/check.sh` exit 0. The stage E records are `docs/M3_R11.md`, `docs/R11_VALIDATION.md` and `docs/R11_VEHICLE_HANDOFF.md`. No review round (stage F) has run; it follows D-R11-09: ten lenses and a triage per round until two consecutive full rounds find zero verified real errors. No firmware, physical, electrical or JLC DFM test has been done.
 
-### R12 (CAD candidate on `r12-stage-d`; not accepted, nothing ordered)
+### R12 (CAD candidate on `r12-port-fix`; not accepted, nothing ordered)
 
 R12 keeps R11's net names, the R10 safety networks and every §2 rule. It deletes or re-sources every part no
 requirement needs (D-R12-04 … -19, -49 … -52) and adds C79, a third damper capacitor (D-R12-78). The full state is in
@@ -76,7 +76,7 @@ not accepted, nothing ordered.
   - route_check r12: 0 failing, 2 allowlisted.
   - The fab manifest is bound.
   - `tools/check.sh` exits 0 with the R12 board tracked.
-- No review round (stage F) has run.
+- Stage F round 1 found verified real errors; its documentation fix pass is recorded in STATUS.md.
 - No firmware, physical, electrical or JLC DFM test has been done.
 
 ## 2. Safety constraints that must never be violated

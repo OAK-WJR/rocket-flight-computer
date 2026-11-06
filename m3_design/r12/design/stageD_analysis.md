@@ -65,8 +65,9 @@ The fix pass did not touch the fire paths.
 **Shorted match (Calculation / Inference):** match shorted 2.608 A idle / 2.164 A at four stalls; match and leads
 shorted 2.929 / 2.430 A. Dissipation at the worst (match and leads shorted, idle): Q120 / Q121 0.631 W each, Q124
 0.492 W, R134 17.4 W, for ≤ 36 ms (the watchdog guard). Gate drive: Q120 / Q121 VGS −4.65 V at the four-stall 5.72 V
-(≥ the −4.5 V RDS(on) row), −4.88 / −6.04 / −6.87 V at 6.0 / 7.4 / 8.4 V; above ±12 V only with the pack above 14.60 V
-(O-R12-10, unchanged); time to −4.5 V after enable 27.4 / 14.7 / 11.4 ms at 6.0 / 7.4 / 8.4 V (C120 1 µF × 1.10 ×
+(≥ the −4.5 V RDS(on) row), −4.88 / −6.04 / −6.87 V at 6.0 / 7.4 / 8.4 V; above ±12 V only with the pack above about 14.4 V
+(maximum-ratio corner: 12 / (51 / 60.8) + 0.1 = 14.41 V, assuming a 0.1 V Q122 drop; Calculation / Inference,
+O-R12-10); time to −4.5 V after enable 27.4 / 14.7 / 11.4 ms at 6.0 / 7.4 / 8.4 V (C120 1 µF × 1.10 ×
 1.15, no bias credit; inside the ≥ 100 ms enable wait). Q124 VGS ≥ 3.17 V at the 3V3 drift minimum (≥ the 2.5 V row,
 VGS(th) ≤ 1.45 V); gate τ 48.4 µs. Gate copper: PYRO1_GATE_N 17.38 mm F.Cu, no via; PYRO1_GATE 7.20 mm F + 5.37 mm In2,
 two vias; microstrip L ≤ 10.2 / 7.3 nH, negligible against the 48 µs gate time constant.
@@ -98,8 +99,8 @@ moves (5.7208 V). Unchanged by the fix pass.
 The J400 bench rule (D-R25-01: total open time < 7 ms in every sliding 100 ms window, U9 on for the whole run at the
 four-stall BAT_IN) stands; its worst-corner limit on R12 is 7.56 ms, 0.56 ms over the 7 ms line. Turn-on (EN rising
 1.183–1.223 V, unloaded pack 6.0–8.4 V): nominal 88 / 56 / 45 ms at 6.0 / 7.4 / 8.4 V; the bound computed here is
-27–114 ms (C87 220 nF × 0.72 × 0.9 … × 1.1, 1 % resistors, leakages); R10's quoted 30–130 ms envelope still contains
-the nominal values and is kept as the documented window.
+27–114 ms (C87 220 nF × 0.72 × 0.9 … × 1.1, 1 % resistors, leakages; Calculation / Inference),
+which replaces the R10 window for R12.
 
 ## 4. Hold-up (Calculation / Inference: constant-power allocations, D5 VF 0.25–0.45 V, C84 300.8 µF allowance, 3.8 V end)
 
@@ -170,10 +171,21 @@ I. At the always-on budget 0.561 A (final board): ≤ 42.0 mV at J420 → **4.49
 At R10's 1.9 A: 4.40 / 4.35 V. The copper adds 36–41 mV to O-R12-16's drift-bound shortfall (was 11 mV); harness drop
 not included. Owner item.
 
-**CAM_5V:** 9.5 mΩ, 9.5 mV at 1 A: 5.212 V initial / 5.152 V drift at J9 before the harness (camera 5.0 V minimum;
+**CAM_5V (Calculation; drift and harness Inference):** only while U403 VIN ≥ VO / 0.75 (TI SLVSD90B §7.3).
+9.5 mΩ, 9.5 mV at 1 A: 5.212 V initial / 5.152 V drift at J9 before the harness (camera 5.0 V minimum;
 with R10's 0.15 Ω harness and 0.05 V transient allowances the drift corner is 4.95 V, Inference).
 
-## 7. U6 (FXLS90322) supply, O-R12-22 (Calculation on CAD copper; load currents Inference)
+**Four-stall dropout (R12F1-TRI-17, Calculation / Inference).** TI SLVSD90B §6.4.1 allows frequency foldback
+below 7 V to about 200 kHz; minimum off-time is 220 ns typical / 310 ns maximum (§5.5). The corresponding duty
+ceilings are about 95.6 / 93.8 %. U403 VIN ≈ 5.720875 − 0.121180 = 5.599695 V (`stageD_budget.json`, healthy
+four-stall case). Even the initial 5.221 V floor needs about 93.2 % lossless or 94.9 % with the typical 95 mΩ
+high-side switch at 1 A: it is not a supported minimum at this input. An optimistic estimate at the camera pins,
+using R10's allowances above, is D × (5.599695 − 1 × 0.095) − 1 × 0.009506 − 1 × 0.15 − 0.05 ≈ **4.95 / 5.05 V**
+for maximum / typical off-time. This omits low-side, inductor and contact losses and uses an approximate foldback
+frequency and typical switch resistance: it is not a guaranteed window or proof of camera failure. Measure the
+camera supply under the actual load, harness and low-input transients. Source: [TI SLVSD90B](https://www.ti.com/lit/ds/symlink/tps563208.pdf).
+
+## 7. U6 (FXLS90322) supply, O-R12-22 (Calculation / Inference: drift case and load currents Inference)
 
 U2 regulates at R14.1. Bound on R14.1 → U6 VCC (pins 1, 13, 15, 16): (R(L1 → U6) + R(L1 → R14)) × I_3V3 =
 (7.205 + 5.441) mΩ × I (final board). At U2's 1 A rating: 12.6 mV → **VCC ≥ 3.258 V initial / 3.227 V drift, margin
@@ -266,7 +278,7 @@ Every analysis above was re-run once on `d6e4f7ee…` (`stageD_budget.json`, abo
 | PORT_4V8 window at the regulator | 4.539–4.943 V initial, 4.489–4.999 V drift | **4.603–4.938 V, 4.571–4.972 V** | Calculation; drift Inference |
 | Ports under 0.561 A (J420 lowest) | ≥ 4.497 / 4.447 V | **≥ 4.561 / 4.529 V** (J410 4.562 / 4.529, J440 4.564 / 4.532) | Calculation / Inference |
 | Ports at no load (ceiling 5.0 V) | ≤ 4.943 / 4.999 V | **≤ 4.938 / 4.972 V** | Calculation / Inference |
-| PA4 PORT_SENSE | 3.07–3.38 V initial, 3.02–3.44 V drift | 3.11–3.38 V, 3.08–3.42 V | Calculation |
+| PA4 PORT_SENSE | 3.07–3.38 V initial, 3.02–3.44 V drift | 3.11–3.38 V, 3.08–3.42 V | Calculation; drift Inference |
 | U9 IN path (2.9 A) | 0.4 mm 4.13 mm at 55.2 °C (not pin-entry class) | **0.8 mm everywhere (24.9 °C) but the 1.3 mm 0.4 mm pin entry**; 7.55 mΩ | Calculation / Inference (IPC upper bound) |
 | U9 OUT path (2.9 A) | 0.3 mm 3.4 mm, 76.8 °C | 0.3 mm 1.6 mm (pin entry), 0.8 mm 0.82 mm 24.9 °C, 0.45 mm via stubs 1.0 mm; 4.22 mΩ | Calculation / Inference |
 | C88 local path | 3.03 mm, 3.72 mΩ, 0.99 nH | 1.3 mm, 1.60 mΩ, 0.42 nH | Calculation (extractor) |
@@ -275,7 +287,7 @@ Every analysis above was re-run once on `d6e4f7ee…` (`stageD_budget.json`, abo
 | GND return Q124 → J1.2 | 2.575 mΩ | 2.594 mΩ (< 5 mΩ) | Calculation |
 | BAT_IN J1 → U9.5 / RAW U9 → U400 / U403 / D5 | 11.133 / 8.104 / 8.957 / 7.553 mΩ | 8.193 / 5.791 / 7.445 / 5.328 mΩ | Calculation |
 | PA6 margin, match and leads shorted (×11 / with tolerance) | −0.005 / −0.096 V | +0.007 / −0.084 V (match shorted +0.051 / −0.040; healthy +0.200 / +0.109) | Calculation / Inference |
-| U6 VCC at U2's 1 A | ≥ 3.258 / 3.227 V | ≥ 3.258 / 3.228 V | Calculation |
+| U6 VCC at U2's 1 A | ≥ 3.258 / 3.227 V | ≥ 3.258 / 3.228 V | Calculation / Inference: drift case and load currents Inference |
 | EN single drop-out / bench-rule limit | 8.13 / 7.56 ms | 8.13 / 7.56 ms | Calculation / Inference |
 | Hold-up | 2.23–6.12 ms from a break | unchanged (C84's 470 µF ±20 % and 300.8 µF allowance kept) | Calculation / Inference |
 
