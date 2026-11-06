@@ -1,14 +1,13 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `f60d8239…` (M3-ASSY-R12), 46 × 100 × 1.6 mm, four layers, every part on the top face and assembled by
-JLC. Branch `r12-port-fix`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
+**Status.** PCB `cc5b66db…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; hash as of `bce77bd`), 46 × 90 × 1.6 mm, four
+layers, every part on the top face and assembled by JLC. Branch `r12-relayout-90`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
-All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 100), top face = F. Pad
-positions below were read from the board file (Measured, pcbnew on `d776c5d7…`; D-R12-84 moved only U9 and C88, which
-no harness position below uses).
+All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 90), top face = F. Positions
+below were read from the board file (Measured, pcbnew on `cc5b66db…`; part centres are `m3_design/r12_place.tsv`).
 
 ## Harness pin map
 
@@ -28,7 +27,7 @@ the v1, so the pin orders are an **Inference** until a real H743 lead is checked
 | J420 radio by default, SH-4 | forward, mouth forward; pin 1 at x 10.0 | GND | 4V8 (PORT_4V8) | board TXO (to module RX) | board RXI (from module TX) | — | — |
 | J410 GPS by default, SH-6 | forward; pin 1 at x 20.5 | GND | 4V8 | board TXO | board RXI | NC (the H743's SCL) | NC (SDA) |
 | J440 AUX spare, SH-4 | forward; pin 1 at x 33.0 | GND | 4V8 | board TXO | board RXI | — | — |
-| J2 SWD, TC2030 pads (top, centre (38.6, 84.0)) | — | 3V3 (37.33, 84.635) | SWDIO (37.33, 83.365) | NRST (38.6, 84.635) | SWCLK (38.6, 83.365) | GND (39.87, 84.635) | NC |
+| J2 SWD, TC2030 pads (top, centre (32.8, 45.0), rotation 90) | — | 3V3 (33.435, 46.27) | SWDIO (32.165, 46.27) | NRST (33.435, 45.0) | SWCLK (32.165, 45.0) | GND (33.435, 43.73) | NC (32.165, 43.73) |
 
 Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
 
@@ -50,7 +49,7 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   against SH's 1 A rating (JLC listing, Live 2026-11-04).
 - **J410, J420 and J440 carry the same supply and UART pin order.** The firmware port map defaults to GPS J410, radio
   J420, AUX spare. A device on these ports must drive its TX high at no more than 3.6 V.
-  - Under the 0.561 A budget the port pins stay at or above 4.529 V at the drift corner and at or below 4.972 V with no
+  - Under the 0.561 A budget the port pins stay at or above 4.563 V at the drift corner and at or below 4.972 V with no
     load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
     page gives only "5V DC") and the M100 Mini's 3.3–5 V.
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
@@ -69,7 +68,7 @@ the rail: on last, off first.
 
 - Connect the e-match only with no USB and no self-powered module (GPS, radio, AUX or camera) attached.
 - USB bench work needs the pack or the e-match disconnected.
-- The ports are fed from the battery path, so they are off on USB-only power. PA4 reads low then.
+- The ports are fed from the battery path, so they are off on USB-only power. PD10 (PORT_SENSE) reads low then.
 - USB-only power needs at least 4.45 V at J3 (a host port or a powered hub, O-R12-03).
 
 Further rules:
@@ -98,13 +97,13 @@ adapted to R12. Run it in order and stop at the first failure.
    with the grounded airframe before it meets the screw.
 2. **Board off with J400 open, before any e-match.** With the pack connected and J400 open:
    - Confirm the board is off: no telemetry and no buzzer. With access, also check that RAW_PROTECTED at TP81
-     (top, (22.2, 21.4)) and 3V3 at J2 pad 1 (37.33, 84.635) both read below 0.3 V.
+     (top, (22.2, 21.4)) and 3V3 at J2 pad 1 (33.435, 46.27) both read below 0.3 V.
    - Measure J121.2 (IGN) to GND with a floating meter: it must read below 0.1 V.
    - If the board is on, or J121.2 reads above 0.1 V, do not fit the e-match.
 3. **Closed-switch check with a dummy load.** Fit a 1–2 Ω dummy in J121, then close J400.
    - The board powers up, the passive screen passes and firmware raises PC1.
    - Confirm the powered BUS / CONT readings.
-   - Confirm PA4 reads **high** (ports powered) and PA6 = VLOGIC / 11.
+   - Confirm PD10 (PORT_SENSE) reads **high** (ports powered) and PA6 = VLOGIC / 11.
    - Open J400. Within 1 s the board must be off and J121.2 below 0.1 V. Only then remove the dummy.
 4. **Igniter resistance.** With J400 open, and no USB and no self-powered module attached, fit the e-match in J121.
    Measure across it on a meter whose test current is under 40 mA: about 1–2 Ω plus leads, not about 0 Ω and not open.
@@ -127,38 +126,42 @@ adapted to R12. Run it in order and stop at the first failure.
 
 ## Board, supports and fit
 
-- **Supports.** Four M3 supports, at (3.0, 5.9), (43.0, 5.9), (3.5, 94.1) and (42.5, 94.1) (D-R12-24). Use **nylon (or
+- **Supports.** Four M3 supports, at (3.0, 5.9), (43.0, 5.9), (3.5, 84.1) and (42.5, 84.1) (D-R12-24, -99). Use **nylon (or
   otherwise insulated) screws, nuts and washers at all four**. The aft pair is 3.0 mm in, so the aft SH row clears both
   washers.
 - **One-sided board.** No parts on the bottom face; the bottom carries contact legends and designators only.
 - **SH plugs on the short edges only.** The mouths sit 1.1 mm inside their edge (fit_check r12, CAD envelopes;
   Inference on the clone dimensions).
 - **Every part is JLC-assembled (D-R12-85, owner 2026-11-05).** Nothing is fitted by hand after delivery:
-  - C84 (Honor HV1E477M0810PZ, 470 µF 25 V polymer) at (40.0, 74.5) is placed and reflowed by JLC.
-  - LS120 (QMB-09B-03 THT buzzer) at (7.2, 85.0) and J121 are JLC THT assembly (hand-soldered by JLC after reflow).
-    LS120's (+) lead goes in pad 1 (5.2, 85.0): JLC's own footprint prints its `+` beside pad 1 and the CPL puts that
+  - C84 (Honor HV1E477M0810PZ, 470 µF 25 V polymer) at (36.0, 31.2), beside U2, is placed and reflowed by JLC.
+  - LS120 (QMB-09B-03 THT buzzer) at (7.2, 67.4) and J121 are JLC THT assembly (hand-soldered by JLC after reflow).
+    LS120's (+) lead goes in pad 1 (5.2, 67.4): JLC's own footprint prints its `+` beside pad 1 and the CPL puts that
     pad on ours (jlc_orient_r12, residual 0.0 mm, Measured), and the maker drawing marks the (+) lead (Datasheet). At
     incoming inspection, check the buzzer's `+` mark sits at pad 1.
-- **microSD** J430 on the top face at (20.0, 78.0). Open the hinge only with the board off and its sources
+- **microSD** J430 on the top face at (20.0, 69.0), rotation 180. Open the hinge only with the board off and its sources
   disconnected.
-- **U5 barometer** (MS5607) on the top face at (29.0, 32.0). Keep its port open and vented, under an opaque cover that
+- **U5 barometer** (MS5607) on the top face at (23.0, 28.4), rotation 180. Keep its port open and vented, under an opaque cover that
   does not press on it (R10's cover rule).
-- **IMU.** U4 at (23.0, 31.6) on the roll axis (x = 23): roll = −gyro_Y, thrust −a_Y. U6's axial channel is channel 1.
-  A bench sign check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
-- **Length.** R12 is 100 mm, 50 mm longer than R11. Check it against the bay and coupler (`docs/VEHICLE.md`, separately
-  owned) and keep R10's rule that the board sits wholly forward of joint + 47 mm. Real wires, plugs, sled and stack are
+- **IMU.** U4 at (23.0, 41.6), rotation 180, on the roll axis (x = 23; lever arm x = 0, unchanged): roll = −gyro_Y,
+  thrust −a_Y. U6 at (23.0, 34.4), rotation 180, is now on the roll axis too (x = 0); its axial channel is channel 1.
+  The axis maps are D-R12-54's (both rotations unchanged). A bench sign check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
+- **LEDs.** LED1 red (8.0, 52.8) and LED2 yellow (8.0, 55.0), top face, west bay.
+- **Length.** R12 is 90 mm (D-R12-99), 40 mm longer than R11. `docs/VEHICLE.md` gives no internal bay or sled length (its
+  stack row still budgets 102 mm for R9), so the fit could not be checked: check it against the bay and coupler and
+  keep R10's rule that the board sits wholly forward of joint + 47 mm (O-R12-28). Real wires, plugs, sled and stack are
   unverified.
 
 ## Boot and programming
 
-J2 (TC2030, top, (38.6, 84.0)) is the SWD port. Program with the e-match disconnected, and record and read back
-BOOT_ADD0 and the boot settings. The ROM loader's pins on R12 include the moved functions (PB10, PA8 / PC9, PE12–PE14,
-PA7, PC11): AN2606's H74x list must be re-read for them (O-R12-23). R10's dummy-load / no-e-match service procedure
+J2 (TC2030, top, (32.8, 45.0)) is the SWD port. Program with the e-match disconnected, and record and read back
+BOOT_ADD0 and the boot settings. The ROM loader's pins on R12 include the moved functions (PB10, PB6 / PB7, PE12–PE14,
+PA7, PA8–PA10, PA15, PC9–PC12, PD2): AN2606's H74x list must be re-read for them (O-R12-23). NRST's filter capacitor C24
+is at J2's end of the NRST run (26.6, 45.18) (D-R12-98). R10's dummy-load / no-e-match service procedure
 applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 
 ## Cost
 
-M3 metric (parts + feeder per board): $66.51 at 2 boards and $46.25 at 5 boards, against the $84.41 cap (Live
-2026-11-05T19:19–19:21Z). All-in $173.39 for 2 boards and $274.59 for 5 (Calculation); the 2-board total is $3.39
-over the $170 target. No part is short. See
-[M3_R12.md, "Cost and stock"](M3_R12.md#cost-and-stock).
+M3 metric (parts + feeder per board): $66.54 at 2 boards and $46.28 at 5 boards, against the $84.41 cap (Live
+2026-11-06T08:31:32Z / 08:33:18Z). All-in $173.45 for 2 boards and $274.74 for 5 (Calculation; the bare-PCB figure is
+the 46 × 100 mm quote, an Inference for 90 mm); the 2-board total is $3.45 over the $170 target. No part is short or
+thin. See [M3_R12.md, "Cost and stock"](M3_R12.md#cost-and-stock).

@@ -54,6 +54,13 @@ PFET_HOT, Q124_HOT = .060 * 1.225, .048 * 1.195
 # Design currents (R10's K-power basis by function, REQUIREMENTS F4 / F9): U9 path 2.9 A, port rail 1.9 A per port,
 # camera 1.249 A, VLOGIC 1.294 A, 3V3 2.0 A; the shorted-igniter bound 4.2 A (8.4 V / R134 2 ohm, R10 FIRE_NARROW basis)
 SHORT_A = 4.2
+# D-R12-95 (90 mm re-layout): the In2 RAW_PROTECTED island's west piece (U9 / C82 / D9) and east piece (camera buck,
+# trunk vias) join only at y 0-7.6 under J122 / J9, aft of every RAW_PROTECTED terminal box; the port buck's VIN is
+# reached by the 0.6 mm B.Cu trunk along x 45.2 from (45.2, 16.4) to (45.2, 73.1). Solve RAW_PROTECTED on the whole board.
+# The In2 3V3 plane is one filled outline, but inside the L1 / U6 box (+ 6 mm, and + 12 mm) the RAW island, the 3V3A
+# sensor copper and the In2 signal lanes leave L1's and U6's copper in separate pieces (Measured: the box solve finds two
+# components), so 3V3 is solved on the whole board too.
+FULL_BOARD_NETS = ('RAW_PROTECTED', '3V3')
 FOUR_STALL_VIN = 5.71                                             # buck input at the four-stall point (checked below)
 
 
@@ -297,7 +304,8 @@ def en_figures(four):
 def dc(board_path, net, src, snk, margin=4.0, full_width=True):
     """tools/r11_dc_net.solve on R12's four copper layers. Window: the terminals' box plus `margin` along y and, for a
     track-routed net, the full board width (a feed may detour sideways); for the plane nets (GND, 3V3) the box plus
-    `margin` both ways. Copper outside the window is dropped, so R is an upper bound (Calculation)."""
+    `margin` both ways; for FULL_BOARD_NETS the whole board. Copper outside the window is dropped, so R is an upper
+    bound (Calculation)."""
     import pcbnew
     import r11_hotplug
     import r11_dc_net
@@ -314,6 +322,8 @@ def dc(board_path, net, src, snk, margin=4.0, full_width=True):
                       pcbnew.ToMM(bb.GetBottom()))
     window = (x0 if full_width else max(x0, min(xs) - margin), max(y0, min(ys) - margin),
               x1 if full_width else min(x1, max(xs) + margin), min(y1, max(ys) + margin))
+    if net in FULL_BOARD_NETS:
+        window = (x0, y0, x1, y1)
     window = tuple(round(v, 1) for v in window)
     r = r11_dc_net.solve(board_path, net, src, snk, grid=0.1, window=window)
     r.pop('board_sha256', None)
@@ -467,12 +477,14 @@ def u6_supply(solves):
 
 
 def port_supply(solves):
-    """PORT_4V8 at each port's pin 2. U400 regulates at R400.1 (its feedback divider top), whose 0.3 mm B.Cu sense stub
-    joins the east-edge trunk at (45.2, 21.5), 5 mm from L400; the ports sit on the forward edge. Every node potential
+    """PORT_4V8 at each port's pin 2. U400 regulates at R400.1 (its feedback divider top), whose 0.15 mm F.Cu sense
+    run joins the 1.0 mm feed at (39.4, 79.3), 3.2 mm from L400.2 (90 mm re-layout, D-R12-94 / -99; stage D's sense
+    stub joined a 75 mm east-edge trunk); the feed drops through C406's two vias into the forward In2 PORT_4V8 island
+    (y 80.7-89.5) under the port row, and each port's pin 2 rises through its own via. Every node potential
     of a resistive network lies between the source's and the sinks' (maximum principle), and a mutual resistance from
     L400.2 is at most either driving-point resistance, so with the three ports drawing I in all the drop from the
     regulation point to port k is at most R(L400.2 -> port k) x I (Calculation on CAD copper at 20 C; an upper bound:
-    the trunk from L400 to the sense tap, about 8 mOhm, is counted). I: the always-on budget 0.561 A (GPS 0.15 + radio
+    the feed from L400.2 to the sense tap is counted). I: the always-on budget 0.561 A (GPS 0.15 + radio
     0.30 + AUX 0.10 + 0.011 A, R10 D-R28-01) and R10's 1.9 A design current. Port window (r12_windows, D-R12-21):
     r12_windows' rows (D-R12-83: 4.603-4.938 V initial, 4.571-4.972 V drift); module floor 4.5 V (MicoAir LR900-F, project
     records; MicoAir's page gives '5V DC' with no range, so the floor is an Inference)."""

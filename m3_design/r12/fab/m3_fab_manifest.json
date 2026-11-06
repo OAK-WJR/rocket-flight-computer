@@ -97,11 +97,11 @@
     "tools/paste_check.py": "009938355d0b37923a7fd8438b1f56a831338df9486119714839a89340d67e2f"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "5eee82914f7cbe2481531d689e3da14cdc49343dffa5f2b592875d394743e7b1",
-    "m3_assembly_top.pdf": "03aae81353cb43b76236df326219adadc70c9d7b1d5ce7727cb84630d4e904af",
+    "m3_assembly_bottom.pdf": "9daeab4a5b5fca4a095ec1f075d5417e495fed50bd510a60727e202f98b74486",
+    "m3_assembly_top.pdf": "bdd92afb1154c7012ee2f6189cc31d0a7b38a76f22551154a0a73d718a5a2c13",
     "m3_bom_jlc.csv": "1dc4be76ea1e8650ceac6da423585439f51d4ad01f321a283d65393fa8eb44c2",
     "m3_cpl_jlc.csv": "c9a2aa28514cf4c16fe70be2da92050baa1ae44f37c9577175a7fe637e9a40e1",
-    "m3_gerber.zip": "555ebe55b9b602ecc12ef6d39c2f658ebad72ec183811c5ebdfeaef8fd1bdf40"
+    "m3_gerber.zip": "cf90dee67a512f9cc85eb7bac941b2ebcf33d678c7c53563b738ea81d39bd879"
   },
   "schema": 1
 }
