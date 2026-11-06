@@ -63,7 +63,7 @@ procedure are in `docs/R12_VEHICLE_HANDOFF.md`.
 | Parts | USB path: diode-OR D5 / D6. PORT_4V8 from the U400 buck; camera switched by the U403 buck's EN. U9 TPS259470A (auto-retry). AO3401A / AO3400A pyro FETs with unchanged gate networks. U4 LSM6DSVE plus U6 FXLS90322 high-g. U5 MS5607. Port UART ESD deleted (D402 kept). Buzzer QMB-09B-03 THT; every part JLC-assembled, none owner-fitted (D-R12-85: C84 is the reflow-rated Honor HV1E477M0810PZ, LS120 JLC THT). PORT_4V8 divider R400 47k + R404 5.1k over R401 10k 0.1 % (D-R12-83). | `R12_DECISIONS.md` §1, §3 |
 | Connectors | SH 1.0 mm clone ports in the MicoAir H743 orders (friction retention, owner deviation). J121 is a DB125-2 screw terminal (JLC THT). J1 is 5.0 mm wire pads. PORT_4V8 at the ports ≥ 4.563 V (0.561 A budget) and ≤ 4.972 V (no load) at the drift corner (D-R12-83; Calculation / Inference: the LR900-F's 4.5–5.0 V is a project record). | `docs/R12_VEHICLE_HANDOFF.md` |
 | Power and pyro | Fire loop 4.726699 Ω, 1.250000 A at four stalls (Calculation / Inference). Hot-plug 2304 / 2304 pass with C79, minimum −14.255 V (Simulation / Inference). Keep R166 (D-R12-09). U9 feed 0.8 mm except its pin entry (D-R12-84). Battery, fire and EN copper frozen through the re-layout; the port buck and D5 hang off a 0.6 mm B RAW trunk (U9 → U400 59.6 mΩ); U6 VCC ≥ 3.223 V; PA6 can trip in a fire into a shorted match (O-R12-07) (Calculation / Inference). | `docs/M3_R12.md` "Power", "CH1 pyro" |
-| Manufacturing and cost | `m3_design/r12_fab.sh`: JLC BOM 58 lines, 178 JLC parts (J121 and LS120 THT), no owner BOM (D-R12-85), manifest bound. $66.55 / $46.29 per board (parts + feeder) at 2 / 5 boards against the $84.41 cap; all-in $173.47 / $274.79 (Live 2026-11-06T10:07Z, Calculation). No part short. | `docs/M3_R12.md` "Cost and stock" |
+| Manufacturing and cost | `m3_design/r12_fab.sh`: JLC BOM 58 lines, 178 JLC parts (J121 and LS120 THT), no owner BOM (D-R12-85), manifest bound. $66.55 / $46.29 per board (parts + feeder) at 2 / 5 boards against the $84.41 cap; minimum all-in $176.75 / $282.99 including U1-only X-ray ($3.28 / $8.20; Calculation / Inference: 100 mm PCB quote used for 90 mm), $6.75 over the $170 target at 2 boards (parts Live 2026-11-06T10:07Z). Counting U1 / U4 / U5 / U6 / U9 gives $189.87 / $295.29–303.49, above both $170 / $295 targets (Calculation / Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). No part short. | `docs/M3_R12.md` "Cost and stock" |
 
 **R12 status (2026-11-06).** PCB `be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8` (as of `871f77a`, branch
 `r12-relayout-90`: the AVA re-layout D-R12-93 … -99 after round 1's fixes D-R12-86 … -92); not accepted, nothing ordered.
@@ -72,7 +72,8 @@ procedure are in `docs/R12_VEHICLE_HANDOFF.md`.
   `stageE_relayout.md` (the re-layout, its checks and the re-run analyses).
 - `m3_design/r12_build.sh` gives the same hash on two builds: DRC, unconnected and parity 0; check_r12 every rule OK;
   route_check r12 0 failing, 3 allowlisted; the fab manifest is bound; `tools/check.sh` exits 0 with the R12 board tracked.
-- Stage F round 1 found verified real errors (fixed); the re-layout has not been reviewed. Its missed AVA targets are
+- Stage F round 2 reviewed the re-layout and found 16 real errors (1 Major / 15 Minor), all fixed by
+  D-R12-100 … -106 without changing `be81f40b…`; the round is not clean. Missed AVA targets remain
   O-R12-29; the 90 mm vehicle fit is unchecked (O-R12-28).
 - No firmware, physical, electrical or JLC DFM test has been done.
 

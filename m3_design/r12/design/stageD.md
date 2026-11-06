@@ -99,13 +99,16 @@ boards (orderable = min(stock, canPresaleNumber), an Inference about JLC's field
 All-in order totals (Calculation on the Live parts and feeder figures; setup / stencil $9.71 from the cost tool; SMT
 joints $0.0016 each counted as the 577 pasted pads per board, manual THT joints $0.0164 × 2 for J121 plus $3.58
 hand-soldering labour per order, and the bare PCB $25.10 for 5 pcs 4L 46 × 100 mm ENIG are cost_study.md's figures,
-Live 2026-11-04; shipping, tax and attrition excluded):
+Live 2026-11-04; shipping, tax and attrition excluded). Round-2 correction D-R12-105 adds minimum U1-only
+X-ray $3.28 / $8.20 at 2 / 5 boards using JLC's 2026-11-06 fee schedule; the dated parts / feeder inputs stay:
 
-| Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | **Total** | Per board |
-|---|---|---|---|---|---|---|---|---|
-| 2 boards | $65.44 | $58.33 | $9.71 | $1.85 | $3.65 | $25.10 | **$164.08** | $82.04 |
-| 5 boards | $163.60 | $58.33 | $9.71 | $4.62 | $3.74 | $25.10 | **$265.10** | $53.02 |
+| Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | X-ray (U1 only) | **Total** | Per board |
+|---|---|---|---|---|---|---|---|---|---|
+| 2 boards | $65.44 | $58.33 | $9.71 | $1.85 | $3.65 | $25.10 | $3.28 | **$167.36** | $83.68 |
+| 5 boards | $163.60 | $58.33 | $9.71 | $4.62 | $3.74 | $25.10 | $8.20 | **$273.30** | $54.66 |
 
+Counting U1 / U4 / U5 / U6 / U9 gives $180.48 / $285.60–293.80 with these dated inputs
+(Calculation / Inference: qualifying count and tier); confirm the quote, including possible D402 / Y1 fees.
 Owner-fitted C84 + LS120 from LCSC add about $0.40 per board (cost tool's JLC prices as the LCSC estimate). Prices and
 stock move daily; re-run `FAB_NET=1 m3_design/r12_fab.sh` before ordering.
 
@@ -150,7 +153,7 @@ Three changes, each recorded in `R12_DECISIONS.md`:
 * **D-R12-83, PORT_4V8 setpoint (O-R12-16, -26).** R401 → 10k 0.1 % 25 ppm/K (YAGEO RT0402BRD0710KL, C190095, the one
   new Extended code), R404 4.7k → 5.1k (C25905, already on the BOM). No 1 % pair and no feed width could hold
   4.5–5.0 V at the drift corner. Window 4.603–4.938 V initial, 4.571–4.972 V drift; ports ≥ 4.561 / 4.529 V under
-  0.561 A (Calculation; the LR900-F's limits an Inference).
+  0.561 A (Calculation / Inference: drift and load budget; the LR900-F's limits also an Inference).
 * **D-R12-84, U9 feed and output (O-R12-25).** U9 0.3 mm east, C88 on the bar line between C96 and U9; the feed is
   0.8 mm except U9.5's 1.3 mm 0.4 mm pin entry; U9 OUT 0.8 mm into C82.1, 0.45 mm via stubs. U9's EN, OVLO, FAULT_N,
   DVDT, GND and ILIM copper redrawn 0.3 mm east on the same topology. The legend aid was re-run on the routed board:
@@ -178,15 +181,26 @@ boards** against the $84.41 cap (was $61.88 / $44.38).
 
 All-in (Calculation on the Live figures; setup / stencil $9.71; SMT joints $0.0016 × 579 pasted pads per board; THT
 joints $0.0164 × 4 per board (J121, LS120) plus $3.58 hand-soldering labour per order; bare PCB $25.10 for 5 pcs;
-cost_study.md's figures, Live 2026-11-04; shipping, tax and attrition excluded):
+cost_study.md's figures, Live 2026-11-04; shipping, tax and attrition excluded). Round-2 correction D-R12-105 adds minimum U1-only
+X-ray $3.28 / $8.20 at 2 / 5 boards using JLC's 2026-11-06 fee schedule; the dated parts / feeder inputs stay:
 
-| Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | **Total** | Per board |
-|---|---|---|---|---|---|---|---|---|
-| 2 boards | $65.48 | $67.54 | $9.71 | $1.85 | $3.71 | $25.10 | **$173.39** | $86.70 |
-| 5 boards | $163.70 | $67.54 | $9.71 | $4.63 | $3.91 | $25.10 | **$274.59** | $54.92 |
+| Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | X-ray (U1 only) | **Total** | Per board |
+|---|---|---|---|---|---|---|---|---|---|
+| 2 boards | $65.48 | $67.54 | $9.71 | $1.85 | $3.71 | $25.10 | $3.28 | **$176.67** | $88.34 |
+| 5 boards | $163.70 | $67.54 | $9.71 | $4.63 | $3.91 | $25.10 | $8.20 | **$282.79** | $56.56 |
 
-Was $164.08 / $265.10 plus about $0.40 per board of owner-bought parts. The r12_plan targets were ≤ $170 / ≤ $295: the
-2-board order is now $3.39 over its target (the two owner-directed feeder fees, $6.14, are more than all of it).
+Before X-ray, the preceding stage's subtotals were $164.08 / $265.10 plus about $0.40 per board of owner-bought parts.
+The r12_plan targets were ≤ $170 / ≤ $295: with U1-only X-ray, this dated 2-board order is $6.67 over.
+Counting U1 / U4 / U5 / U6 / U9 gives $189.79 / $295.09–303.29, above both targets (Calculation / Inference:
+qualifying count and fee tier); confirm JLC's quote, including possible D402 / Y1 fees.
+
+**Current 90 mm board cost (D-R12-105).** The 2026-11-06 parts prices give minimum all-in $176.75 / $282.99
+including U1-only X-ray ($3.28 / $8.20; Calculation / Inference: 100 mm PCB quote used for 90 mm), $6.75 over
+the $170 target at 2 boards.
+Counting U1 / U4 / U5 / U6 / U9 gives $189.87 / $295.29–303.49, above both $170 / $295 targets (Calculation /
+Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and
+tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). See `docs/M3_R12.md` "Cost and stock" and
+[JLC PCBA price page](https://jlcpcb.com/help/article/pcb-assembly-price) (read 2026-11-06 in lane A's hand-off).
 
 **Hashes (Measured, SHA-256).**
 

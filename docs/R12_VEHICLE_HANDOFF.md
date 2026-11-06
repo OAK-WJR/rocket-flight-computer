@@ -117,7 +117,7 @@ adapted to R12. Run it in order and stop at the first failure.
 ## Battery
 
 - **J1** pads 1 BAT_IN (3.5, 17.8) and 2 GND (3.5, 12.8), on the west edge. The leads carry the fire pulse (about 4.2 A
-  into a shorted igniter, R10 figure), so use 16–20 AWG soldered, tied to the sled near the pads.
+  into a shorted igniter, R10 figure, Calculation / Inference), so use 16–20 AWG soldered, tied to the sled near the pads.
 - **No battery-lead fuse** (R10 OQ-6).
 - **Hot-plug.** The installed harness must measure ≥ 0.03 Ω and 0.1–2 µH, the hot-plug model's domain. On R12, with
   C79, every required case passes (Simulation / Inference, D-R12-78).
@@ -162,6 +162,9 @@ applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 ## Cost
 
 M3 metric (parts + feeder per board): $66.55 at 2 boards and $46.29 at 5 boards, against the $84.41 cap (Live
-2026-11-06T10:07:00Z / 10:08:18Z). All-in $173.47 for 2 boards and $274.79 for 5 (Calculation; the bare-PCB figure is
-the 46 × 100 mm quote, an Inference for 90 mm); the 2-board total is $3.47 over the $170 target. No part is short or
-thin. See [M3_R12.md, "Cost and stock"](M3_R12.md#cost-and-stock).
+2026-11-06T10:07:00Z / 10:08:18Z). Minimum all-in $176.75 / $282.99 including U1-only X-ray ($3.28 / $8.20;
+Calculation / Inference: 100 mm PCB quote used for 90 mm), $6.75 over the $170 target at 2 boards.
+Counting U1 / U4 / U5 / U6 / U9 gives $189.87 / $295.29–303.49, above both $170 / $295 targets (Calculation /
+Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and
+tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). No part is short or thin. See [M3_R12.md,
+"Cost and stock"](M3_R12.md#cost-and-stock).
