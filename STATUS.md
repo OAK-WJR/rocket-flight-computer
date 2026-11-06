@@ -6,7 +6,7 @@ Last updated 2026-11-06 (R12; R11 candidate sections below; R10 candidate sectio
 
 ## R12 candidate: M3-ASSY-R12 (R11's circuit pruned and re-sourced, one-sided four-layer board for JLC Economic, 46 × 90 mm; CAD candidate, NOT accepted)
 
-**Status (2026-11-06).** Branch `r12-relayout-90` (the AVA re-layout D-R12-93 … -99 on `m3-assy-r12`; records on `r12-relayout-docs`); the R12 KiCad project is `m3_design/r12/`, built by `m3_design/r12_build.sh` (stages A–D: schematic, placement, copper `r12_routes.tsv` merged from the zone fragments, post stage from `r12_legends.tsv`, fab package). PCB `be81f40b…` as of `871f77a` (full hash and metrics in [docs/M3_R12.md, "Current state"](docs/M3_R12.md#current-state)), 46 × 90 × 1.6 mm, four layers, every part on the top face. Not accepted, nothing ordered; R9 stays the accepted board. Stage F rounds 1 and 2 found verified real errors; their fix passes are recorded below. What the owner must accept or do: [docs/R12_VALIDATION.md](docs/R12_VALIDATION.md). Harness pin map and per-flight procedure: [docs/R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md).
+**Status (2026-11-06).** Branch `m3-assy-r12` (the AVA re-layout D-R12-93 … -99 and round 2's fixes D-R12-100 … -106); the R12 KiCad project is `m3_design/r12/`, built by `m3_design/r12_build.sh` (stages A–D: schematic, placement, copper `r12_routes.tsv` merged from the zone fragments, post stage from `r12_legends.tsv`, fab package). PCB `be81f40b…` as of `871f77a` (full hash and metrics in [docs/M3_R12.md, "Current state"](docs/M3_R12.md#current-state)), 46 × 90 × 1.6 mm, four layers, every part on the top face. Not accepted, nothing ordered; R9 stays the accepted board. Stage F rounds 1 and 2 found verified real errors; their fix passes are recorded below. What the owner must accept or do: [docs/R12_VALIDATION.md](docs/R12_VALIDATION.md). Harness pin map and per-flight procedure: [docs/R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md).
 
 | Kind | Verified (with its record) | Not verified |
 |---|---|---|
@@ -26,7 +26,7 @@ and the board hash. Software tests, KiCad DRC and `tools/check.sh`: not run by D
 Simulation: not re-run by D; corrected analysis is lane A's. Physical tests: none. Two consecutive clean rounds
 are still required; owner acceptance and qualification items remain open.
 
-**AVA re-layout records and analyses (2026-11-06, branch `r12-relayout-docs`, D-R12-93 … -99).** Verified: the board
+**AVA re-layout records and analyses (2026-11-06, D-R12-93 … -99, merged into `m3-assy-r12`).** Verified: the board
 `be81f40b…` (`871f77a`) built twice with one hash, DRC / unconnected / parity 0, check_r12 every rule OK, route_check r12
 0 failing with 3 allowlisted (Measured, stageE_relayout.md §1); `m3_design/r12_stageD.py` re-run with RAW_PROTECTED and
 3V3 solved on the whole board (script inputs changed for the new copper) and `tools/r12_hotplug.py` re-extracted and

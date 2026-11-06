@@ -1,6 +1,6 @@
 # R12 validation: deviations for owner acceptance
 
-**Where R12 stands.** M3-ASSY-R12 is a CAD candidate on branch `r12-relayout-90` (AVA re-layout, D-R12-93 … -99),
+**Where R12 stands.** M3-ASSY-R12 is a CAD candidate on branch `m3-assy-r12` (AVA re-layout, D-R12-93 … -99),
 PCB `be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8` (hash as of `871f77a`; 46 × 90 × 1.6 mm, four
 layers, every part on the top face for JLC Economic PCBA). It is not accepted and nothing is ordered; R9 stays the accepted board and R8 its
 fallback. Stage F round 1 found verified real errors; its fix passes are recorded in STATUS.md. The AVA re-layout

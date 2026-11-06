@@ -1,7 +1,7 @@
 # R12 vehicle integration handoff
 
 **Status.** PCB `be81f40b…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; hash as of `871f77a`), 46 × 90 × 1.6 mm, four
-layers, every part on the top face and assembled by JLC. Branch `r12-relayout-90`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
+layers, every part on the top face and assembled by JLC. Branch `m3-assy-r12`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
