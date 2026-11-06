@@ -90,9 +90,11 @@ track	GND	F	0.6	41.125	83.1	40	83.1
 via	GND	-	0.45	40	83.1		
 # PORT_4V8 output: L400.2 -> C406.1 -> forward 1.0 mm, west of TP74 (1.0 mm TP rule), 0.8 mm neck to two island vias
 track	PORT_4V8	F	1	44	81.2	44	82.6
-track	PORT_4V8	F	0.8	44.075	83.1	44.075	84.9
-track	PORT_4V8	F	0.8	44.075	84.9	41.8	87.175
-track	PORT_4V8	F	0.8	41.8	87.175	41.8	89
+track	PORT_4V8	F	0.8	44.075	83.1	44.075	85
+track	PORT_4V8	F	0.8	44.075	85	43.475	85.6
+track	PORT_4V8	F	0.8	43.475	85.6	42.4	85.6
+track	PORT_4V8	F	0.8	42.4	85.6	41.8	86.2
+track	PORT_4V8	F	0.8	41.8	86.2	41.8	89
 track	PORT_4V8	F	0.8	41.8	89	41.8	89.85
 via	PORT_4V8	-	0.45	41.8	89		
 via	PORT_4V8	-	0.45	41.8	89.85		
@@ -108,20 +110,16 @@ via	GND	-	0.45	45.2	78
 via	GND	-	0.45	45.2	81		
 via	GND	-	0.45	44.25	69.4		
 # --- west bay: LEDs ---
-track	LED_RED	B	0.2	11.7	52.8	11.7	53.27
 via	LED_RED	-	0.45	11.7	53.27		
 track	LED_RED	F	0.2	11.7	53.27	11.23	52.8
 track	LED_RED_A	F	0.2	10.37	52.8	8.85	52.8
 track	GND	F	0.3	7.15	52.8	6.3	52.8
 via	GND	-	0.45	6.3	52.8		
 track	LED_YEL	F	0.2	11.7	55	11.23	55
-# LED2 anode (pad 1) is on the far side from R33 (polarity request): anode lead round the aft side of LED2
-track	LED_YEL_A	F	0.2	10.37	55	10.37	54.35
-track	LED_YEL_A	F	0.2	10.37	54.35	9.87	53.85
-track	LED_YEL_A	F	0.2	9.87	53.85	8.2	53.85
-track	LED_YEL_A	F	0.2	8.2	53.85	7.05	55
-track	GND	F	0.3	8.95	55	8.95	56.2
-via	GND	-	0.45	8.95	56.2		
+# LED2 rotated 180 (D-R12-97): anode pad 1 (8.95, 55.0) faces R33.2
+track	LED_YEL_A	F	0.2	10.37	55	8.95	55
+track	GND	F	0.3	7.05	55	6.1	55
+via	GND	-	0.45	6.1	55		
 # --- buzzer cell: R162 / R163 / Q123 rows translated (0, -17.7) with their parts; BUZZ_OUT and D123 redrawn ---
 track	BUZZ_DRV	B	0.2	11.7	60.2	9.4	60.2
 track	BUZZ_DRV	B	0.2	9.4	60.2	8.6	61
@@ -133,8 +131,11 @@ track	GND	F	0.3	7.3	58.9	7.8	58.9
 via	GND	-	0.45	7.8	58.9		
 track	GND	F	0.3	9.7	59.5	10.2	59.5
 via	GND	-	0.45	10.2	59.5		
-track	BUZZ_OUT	F	0.3	5	59.8	5	59.37
-track	BUZZ_OUT	F	0.3	5	59.37	7.17	57.2
+track	BUZZ_OUT	F	0.3	5	59.8	5	58.5
+track	BUZZ_OUT	F	0.3	5	58.5	5.3	58.2
+track	BUZZ_OUT	F	0.3	5.3	58.2	6.87	58.2
+track	BUZZ_OUT	F	0.3	6.87	58.2	7.17	57.9
+track	BUZZ_OUT	F	0.3	7.17	57.9	7.17	57.2
 track	BUZZ_OUT	F	0.3	5	59.8	5	62.9
 track	BUZZ_OUT	F	0.3	5	62.9	5.3	63.2
 track	BUZZ_OUT	F	0.3	5.3	63.2	8.9	63.2
