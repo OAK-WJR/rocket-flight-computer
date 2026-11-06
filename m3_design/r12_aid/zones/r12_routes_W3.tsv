@@ -417,10 +417,6 @@ track	GND	F	0.1	15.83	46.35	15.63	46.15
 track	GND	F	0.1	15.63	46.15	14.25	46.15
 track	GND	F	0.1	14.25	46.15	14	46.4
 # D-R12-98 integration: ACT_EN_MCU B outside the NRST In2 lane (no B over NRST)
-track	ACT_EN_MCU	B	0.1	18.6	54	17.375	54
-track	ACT_EN_MCU	B	0.1	17.375	54	15.8	52.425
-track	ACT_EN_MCU	B	0.1	15.8	52.425	15.8	46.5
-track	ACT_EN_MCU	B	0.1	15.8	46.5	17.1	45.2
 # D-R12-98 integration: BAT_FAULT_N on F over the In2 lanes
 track	BAT_FAULT_N	F	0.1	20.2	50.4	20.2	46
 track	BAT_FAULT_N	F	0.1	20.2	46	19.3	45.1
@@ -472,3 +468,7 @@ via	3V3	-	0.45	17.9	51.52
 via	GND	-	0.45	17.9	49.48		
 track	3V3	F	0.2	17.9	50.92	17.9	51.52
 track	GND	F	0.2	17.9	50.08	17.9	49.48
+track	ACT_EN_MCU	B	0.1	18.6	54	17.375	54
+track	ACT_EN_MCU	B	0.1	17.375	54	16.4	53.025
+track	ACT_EN_MCU	B	0.1	16.4	53.025	16.4	45.9
+track	ACT_EN_MCU	B	0.1	16.4	45.9	17.1	45.2
