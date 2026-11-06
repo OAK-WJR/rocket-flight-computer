@@ -50,8 +50,8 @@ track	GPS_TX_MCU	F	0.2	22.5	88	22.5	91.77
 track	GPS_RX_MCU	F	0.2	23.5	88	23.5	91.77
 track	AUX_TX_MCU	F	0.2	35	88	35	91.77
 track	AUX_RX_MCU	F	0.2	36	88	36	91.77
-track	PORT_SENSE	F	0.2	26.5	88	26.5	88.67
-track	PORT_SENSE	F	0.2	26.5	88.67	26	89.17
+track	PORT_SENSE	F	0.2	26.2	88	26.2	88.97
+track	PORT_SENSE	F	0.2	26.2	88.97	26	89.17
 # --- port buck U400 cell: R12 rows rotated -90 deg about old U400 (32.9, 19.3) to (42.6, 72.0): (dx, dy) -> (-dy, dx) ---
 track	PORT_BST	F	0.3	40	71	40.4	70.6
 track	PORT_BST	F	0.3	40.4	70.6	41.6	70.6
