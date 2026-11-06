@@ -415,15 +415,15 @@ ALLOWLIST_R12 = [
      '(23.5, 39.95), C30.1 (25.7, 42.75) and the U5 / C32 group (25.8, 29.8): each of those pads sits on its own F.Cu '
      'island walled off by the SPI / I2C / IMU_CS F fan and the U4 body keep-out, so every drop needs its own via '
      '(Measured, zone_check on the merged board: 5 vias against 0 + 2 allowed; the In2 link alone takes 2, the floor W4 '
-     'measured is 4 with the link and three drops sharing none). 72.25 mm against a 48.05 mm octilinear MST',
-     dict(len_mm=72.25, vias=5)),
+     'measured is 4 with the link and three drops sharing none). 72.31 mm against a 48.05 mm octilinear MST',
+     dict(len_mm=72.31, vias=5)),
     ('extra_vias', 'SPI1_MISO', 'net', (23.4, 50.4),
      'D-R12-98 (integration): MISO leaves U1 at A6, west of SCK (A7) and MOSI (C5, channel x 24.6), but its U4 pad (U4.1, '
      '(24.21, 42.35)) is on U4\'s east face beyond SCK\'s and MOSI\'s north-face pads (U4.13 / U4.14), so MISO must cross '
-     'both of them; SCK and MOSI stay on F.Cu to U4, MISO crosses under them on B.Cu between (23.0, 44.4) and (25.05, '
-     '44.05), and its U6 branch leaves the same first via on B.Cu to U6\'s via (20.1, 35.2): 3 vias, the fewest the pin '
-     'orders allow (Measured, zone_check: route 22.28 mm against a 17.25 mm MST, ratio 1.29)',
-     dict(len_mm=22.28, vias=3)),
+     'both of them; SCK and MOSI stay on F.Cu to U4, MISO crosses under them on B.Cu between (23.0, 44.4) and (25.15, '
+     '43.95), and its U6 branch leaves the same first via on B.Cu to U6\'s via (20.1, 35.2): 3 vias, the fewest the pin '
+     'orders allow (Measured, zone_check: route 22.36 mm against a 17.25 mm MST, ratio 1.30)',
+     dict(len_mm=22.36, vias=3)),
     ('detour', 'QSPI_CLK', 'net', (22.6, 55.2),
      'D-R12-98 (integration): CLK leaves U1 at G5 (22.6, 55.2), aft of IO0 / IO3, and the only legal F.Cu entry to U3.6 is '
      'from the pad row\'s inner end: C19 / C20 leave one 0.7 mm gap west of U3, which IO3 uses, and B.Cu under the BGA '
@@ -432,7 +432,7 @@ ALLOWLIST_R12 = [
      '1.63, 0 vias)',
      dict(len_mm=19.4, vias=0)),
 ]
-ROUTE_FIGURES_R12 = {'3V3A': (72.25, 5), 'SPI1_MISO': (22.28, 3), 'QSPI_CLK': (19.4, 0)}   # D-R12-98: zone_check, merged board
+ROUTE_FIGURES_R12 = {'3V3A': (72.31, 5), 'SPI1_MISO': (22.36, 3), 'QSPI_CLK': (19.4, 0)}   # D-R12-98: zone_check, merged board
 R11_DATA = Path(__file__).resolve().parents[1] / 'm3_design/r11/design/r11_gate_data.json'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
