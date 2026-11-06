@@ -22,6 +22,9 @@ R11_BUDGET = HERE / 'r11/design/stageD_budget.json'
 TOL = {'initial': 0.01, 'drift': 0.01 + 100e-6 * 67}
 # D-R12-83: R401 is a 0.1 % 25 ppm/K thin-film part (YAGEO RT0402BRD0710KL, C190095: JLC listing / YAGEO RT datasheet)
 TOL_PRECISE = {'initial': 0.001, 'drift': 0.001 + 25e-6 * 67}
+# D-R12-86 (R12F1-TRI-01): PA4's divider at ten times D-R12-05's impedance; PA4 TT_xx input leakage (DS12110 Rev 8
+# Table 60 p. 139: +/-250 nA, 0 < VIN <= VDD)
+PORT_SENSE_TOP, PORT_SENSE_BOT, PA4_LEAK = 47e3, 100e3, 250e-9
 
 
 def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
@@ -110,10 +113,14 @@ def sense():
     out = {}
     for case, tol in TOL.items():
         r = {}
-        # PA4 PORT_SENSE = PORT_4V8 x R112 / (R111 + R112), R111 4.7k, R112 10k
+        # PA4 PORT_SENSE = PORT_4V8 x R112 / (R111 + R112), R111 47k, R112 100k (D-R12-86: ten times D-R12-05's 4.7k /
+        # 10k, same ratio), less PA4's TT_xx input leakage +/-250 nA through the divider's 32 kohm Thevenin resistance
+        # (DS12110 Rev 8 Table 60 p. 139)
         p = rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)'][case]
-        lo = p['min_V'] * 10e3 * (1 - tol) / (10e3 * (1 - tol) + 4.7e3 * (1 + tol))
-        hi = p['max_V'] * 10e3 * (1 + tol) / (10e3 * (1 + tol) + 4.7e3 * (1 - tol))
+        top, bot = PORT_SENSE_TOP, PORT_SENSE_BOT
+        rth = top * bot / (top + bot)
+        lo = p['min_V'] * bot * (1 - tol) / (bot * (1 - tol) + top * (1 + tol)) - PA4_LEAK * rth * (1 + tol)
+        hi = p['max_V'] * bot * (1 + tol) / (bot * (1 + tol) + top * (1 - tol)) + PA4_LEAK * rth * (1 + tol)
         r['PORT_SENSE_V'] = [round(lo, 3), round(hi, 3)]
         # PA6 VLOGIC_SENSE = VLOGIC x 10k / 110k
         r['VLOGIC_SENSE_ratio'] = [round(10e3 * (1 - tol) / (10e3 * (1 - tol) + 100e3 * (1 + tol)), 5),
@@ -122,11 +129,15 @@ def sense():
         c = rails()['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)'][case]
         r['CAM_5V_SENSE_V'] = [round(c['min_V'] / 11.2 * (1 - 2 * tol), 3), round(c['max_V'] / 11.2 * (1 + 2 * tol), 3)]
         out[case] = r
+    out['PORT_SENSE_divider'] = dict(R111_ohm=PORT_SENSE_TOP, R112_ohm=PORT_SENSE_BOT, pa4_leak_A=PA4_LEAK,
+                                     thevenin_ohm=round(PORT_SENSE_TOP * PORT_SENSE_BOT / (PORT_SENSE_TOP + PORT_SENSE_BOT), 1),
+                                     low_when_off_V=round(PA4_LEAK * PORT_SENSE_BOT * (1 + TOL['drift']), 3))
     out['PORT_SENSE_limits'] = ('PA4 (TT_a): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; at most VDD + 0.3 = '
-                                '3.52 V at the 3V3 minimum 3.22 V (DS12110 I/O limits as R10 used them)')
+                                '3.52 V at the 3V3 minimum 3.22 V (DS12110 I/O limits as R10 used them); with PORT_4V8 '
+                                'off, R112 holds PA4 at or below the leakage figure, under VIL 0.3 x VDD')
     out['PORT_SENSE_ok'] = all(out[c]['PORT_SENSE_V'][0] > 0.7 * 3.43 and out[c]['PORT_SENSE_V'][1] < 3.22 + 0.3
-                               for c in TOL)
-    out['label'] = 'Calculation (1 % resistors, rail windows above)'
+                               for c in TOL) and out['PORT_SENSE_divider']['low_when_off_V'] < 0.3 * 3.22
+    out['label'] = 'Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference'
     return out
 
 
@@ -241,11 +252,41 @@ def crystal():
                 label='Calculation (Datasheet ESR / C0 maxima); stray capacitance Inference')
 
 
+def cam_input():
+    """D-R12-87 (R12F1-TRI-17): the CAM_5V window above is the feedback window, valid only while U403 can regulate.
+    TI SLVSD90B section 7.3: maximum recommended duty 75 %, so the minimum recommended input is VO / 0.75; section 6.4.1:
+    below VIN 7 V the switching frequency may fall to about 200 kHz; section 5.5: tOFF(MIN) 220 typ / 310 max ns and
+    RDS(on)h 95 mOhm typ (25 C). Below VO / 0.75 the window is not claimed. At the four-stall fire point U403's input is
+    taken as the fire model's BAT_IN less U9's RON 0.04 ohm (Inference, as vlogic) at the converters' fire-time current
+    (fire 'other' / BAT_IN); the highest output U403 can then hold is D_max x (VIN - 1 A x RDS(on)h) with
+    D_max = 1 - tOFF(MIN) x 200 kHz (inductor DCR, board copper and hot RDS(on) not included: Inference)."""
+    cam = rails()['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)']
+    f = fire()
+    bat = f['stalls']['4']['BAT_IN_V']
+    vin = bat - 0.04 * f['r12_other_W'] / bat
+    rh, i_out, fsw = 0.095, 1.0, 200e3
+    dmax = {k: 1 - t * fsw for k, t in (('tOFF_typ_220ns', 220e-9), ('tOFF_max_310ns', 310e-9))}
+    held = {k: round(d * (vin - i_out * rh), 3) for k, d in dmax.items()}
+    return dict(
+        min_recommended_VIN_V={case: [round(cam[case]['min_V'] / 0.75, 3), round(cam[case]['max_V'] / 0.75, 3)]
+                               for case in TOL},
+        window_holds_for='U403 VIN >= VO / 0.75 (6.96-7.59 V initial); below it the CAM_5V window is not claimed',
+        four_stall_BAT_IN_V=bat, four_stall_U403_VIN_V=round(vin, 3),
+        four_stall_duty_needed_lossless=round(cam['initial']['min_V'] / vin, 4),
+        dmax_at_200kHz={k: round(d, 4) for k, d in dmax.items()}, four_stall_max_held_V=held,
+        four_stall_note=('at the four-stall point U403 runs past its 75 % recommended duty, at or near its minimum '
+                         'off-time limit: CAM_5V may fall below the 5.221 V window low end to about '
+                         f'{min(held.values()):.2f} V (above the camera 5.0 V minimum before harness drop); the '
+                         'camera is not shown to fail'),
+        label='Calculation / Inference (Datasheet duty, tOFF(MIN) and RDS(on)h; U9 RON, currents, DCR and copper '
+              'Inference)')
+
+
 def compute():
     return dict(
         status='R12 stage A (no board): Calculation / Inference as labelled; no measurement',
         resistor_cases={k: f'+/-{v * 100:.2f} % independent' for k, v in TOL.items()},
-        rails=rails(), u9=u9(), sense=sense(), vlogic=vlogic(), holdup=holdup(), fire=fire(), crystal=crystal())
+        rails=rails(), cam_input=cam_input(), u9=u9(), sense=sense(), vlogic=vlogic(), holdup=holdup(), fire=fire(), crystal=crystal())
 
 
 def main():

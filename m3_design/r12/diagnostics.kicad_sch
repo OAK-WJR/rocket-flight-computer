@@ -1635,7 +1635,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "4.7k 1%"
+		(property "Value" "47k 1%"
 			(at 231.14 101.6 0)
 			(effects
 				(font
@@ -1648,7 +1648,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25900"
+		(property "LCSC" "C25792"
 			(at 231.14 106.68 0)
 			(hide yes)
 			(effects
@@ -1662,14 +1662,14 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF4701TCE"
+		(property "Manufacturer Part" "0402WGF4702TCE"
 			(at 231.14 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf"
 			(at 231.14 106.68 0)
 			(hide yes)
 			(effects
@@ -1727,7 +1727,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k 1%"
+		(property "Value" "100k 1%"
 			(at 274.32 101.6 0)
 			(effects
 				(font
@@ -1740,7 +1740,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25741"
 			(at 274.32 106.68 0)
 			(hide yes)
 			(effects
@@ -1754,14 +1754,14 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
+		(property "Manufacturer Part" "0402WGF1003TCE"
 			(at 274.32 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF1003TCE_C25741.pdf"
 			(at 274.32 106.68 0)
 			(hide yes)
 			(effects

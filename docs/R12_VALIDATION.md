@@ -41,6 +41,7 @@ names the row. Only row A-9 is accepted (owner, 2026-11-04). Answer the "Blocks 
 | 7 | Q120 / Q121 VGS above 12 V only on a pack above 14.60 V with the bus on | Gate drive is −0.833 × BAT_IN. A 3S pack is cut off by OVLO; only a transient toward the 19.9 V clamp would exceed ±12 V (Inference) | D-R12-10; O-R12-10 | No | Open |
 | 8 | Library silkscreen near openings | Footprint graphics within JLC's 0.15 mm pad-to-silkscreen gap: D120's circle 0.10 mm from R130.1, U403 / U400 pin-1 circles 0.092 mm from C433.2 / C400.2, U5's outline 0.13 mm from C30.1 / .2 (Measured). JLC clips silkscreen at openings (Inference). The post stage prints these; it does not draw them | stageD.md §2 | No | Open |
 | 9 | 76 hidden designators | 76 designators have no unambiguous spot and are kept on F.Fab (listed in stageD.md §2); they show on the assembly drawings, not on the board | D-R12-80 | No | Open |
+| 20 | PC1 (F2) keeps four inert ball neighbours | One solder bridge from G3 PORT_SENSE, F1 PYRO1_CONT, E2 CAM_5V_SENSE or E1 NRST to PC1 with PC1 high-Z gives Q122 at most 0.200 / 0.399 / 0.273 / 0.213 V (worst corner from the board's own resistors, Calculation; PYRO1_CONT's figure assumes the 8.4 V pack with the bus already on) against the AO3400A's 0.65 V minimum threshold at 250 µA (Datasheet); check_r12 K-neighbours fails any above 0.45 V (the 0.20 V allowance for heat and sub-250 µA conduction is an Inference). The round-1 divider (4.7k / 10k) gave 1.00–1.12 V and is replaced by 47k / 100k | D-R12-86; R12F1-TRI-01 | No | Open |
 
 ### Do (an order, process or bench action)
 
@@ -55,7 +56,8 @@ names the row. Only row A-9 is accepted (owner, 2026-11-04). Answer the "Blocks 
 | 16 | Get JLC's DFM acceptance | Not queried: 0.10 mm track and clearance, the TFBGA escape with 0.3 / 0.45 mm vias at interstitial sites (0.2 mm via hole to copper, D-R12-23), the six recorded short-edge courtyards, and the reflow class of unread parts (O-R12-02) | D-R12-03, -23, -24 | Yes | Open |
 | 17 | U1 X-ray at first article | As R11: a TFBGA bridge cannot be seen; X-ray U1 with attention to the balls around C3 (PE4) and F2 (PC1) | R11 row 17 | Yes | Open |
 | 18 | Re-run cost and stock on order day | Live 2026-11-05T19:19–19:21Z: no shortfalls at 2 or 5 boards; M3 metric $66.51 / $46.25 per board; all-in $173.39 / $274.59 (Calculation; the 2-board total is $3.39 over r12_plan's $170 target). JLC may or may not waive the BAT54C Preferred Extended feeder fee (O-R12-12). Re-run `FAB_NET=1 m3_design/r12_fab.sh` | stageD.md §7 | Yes | Open |
-| 19 | Accept the list and the agent decisions | Accept or reject the rows above and D-R12-01 … D-R12-85 | R12_DECISIONS.md | Yes | Open |
+| 19 | Accept the list and the agent decisions | Accept or reject the rows above and D-R12-01 … D-R12-92 | R12_DECISIONS.md | Yes | Open |
+| 21 | JLC review of U5 and Y1 | JLC's Economic order page marks U5 (MS5607-02BA03, C97627) and Y1 (X322525MOB4SI, C9006): "The processing of this component is difficult. After placing an order, it will be reviewed. If PCBA advanced option is required, additional fees will be charged." Both carry JLC's `needAuditFlag` with no listed special fee (Measured 2026-11-06T00:58Z); every brand-name barometer on JLC is flagged, so U5 stays; Y1 stays on Basic because the review happens for U5 anyway. On order day accept JLC's review result by email; if it adds a fee for Y1 larger than an Extended feeder fee, swap Y1 to YXC C5444544 (same YSX321SL sheet, land, pinout and 12 pF load) | D-R12-92 | Yes | Open |
 
 ### R10 / R11 rows that carry to R12
 

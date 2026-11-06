@@ -259,7 +259,9 @@ R10_CLASSES = [
              r'BAT_SW_(SOURCE|RETURN)$)'),
     ('crystal', r'^HSE_'),
     ('usb', r'^USB_D[PM]$'),
-    ('spi', r'^(QSPI_|SPI1_|IMU_CS$)|' + _cr.R10_SD_SIGNAL.pattern),
+    # D-R12-90 (R12F1-TRI-10): HG_CS is R12's U6 FXLS90322 chip select on the IMU SPI1 bus (D-R12-51 / -64A), a
+    # critical SPI chip select (AGENTS section 3) like IMU_CS; R10 / R11 have no such net
+    ('spi', r'^(QSPI_|SPI1_|IMU_CS$|HG_CS$)|' + _cr.R10_SD_SIGNAL.pattern),
     ('uart', _cr.R10_PORT_UART.pattern),
     ('portctl', _cr.R10_PORT_CONTROL.pattern),
     ('power', r'^PORT_'),

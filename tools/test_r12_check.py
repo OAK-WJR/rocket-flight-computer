@@ -169,6 +169,105 @@ class Profiles(unittest.TestCase):
             rc.set_profile('r8')
 
 
+BOARD12 = ROOT / 'm3_design/r12/m3.kicad_pcb'
+
+
+@unittest.skipUnless(pcbnew and BOARD12.is_file(), 'KiCad python and the R12 board required')
+class Round1Fixes(unittest.TestCase):
+    """R12 review round 1 gate fixes (D-R12-86 ... -90), seeded on the committed board."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.board = pcbnew.LoadBoard(str(BOARD12))
+
+    def kn(self, board=None):
+        return r12.check_board(board or self.board, BOARD12, only={'K-neighbours'}, stage='full')
+
+    def test_k_neighbours_registered_in_every_stage(self):
+        for stage in ('placement', 'copper', 'full'):
+            self.assertIn('K-neighbours', r12.STAGES[stage], stage)
+        self.assertNotIn(('ACT_EN_MCU', 'LOGIC_SOURCE_ST'), r12.NEIGHBOUR_INERT)   # U11 deleted (D-R12-04)
+
+    def test_k_neighbours_pass_on_board_and_fail_on_round1_divider(self):
+        rep = self.kn()
+        self.assertTrue(rep['ok'], rep['issues'])
+        gates = rep['evidence']['k_neighbours']['bridged_gate_V']
+        self.assertLessEqual(gates['ACT_EN_MCU/PORT_SENSE'], 0.21)                # D-R12-86: 47k / 100k
+        self.assertEqual(set(gates), {f'ACT_EN_MCU/{n}' for n in ('PORT_SENSE', 'PYRO1_CONT', 'CAM_5V_SENSE', 'NRST')})
+        r111, r112 = (self.board.FindFootprintByReference(r) for r in ('R111', 'R112'))
+        kept = r111.GetValue(), r112.GetValue()
+        try:
+            r111.SetValue('4.7k 1%'); r112.SetValue('10k 1%')                      # the round-1 board (d6b771e)
+            rep = self.kn()
+            self.assertFalse(rep['ok'])
+            self.assertTrue(any('PORT_SENSE' in i and 'above the 0.45 V limit' in i for i in rep['issues']), rep['issues'])
+            self.assertGreater(rep['evidence']['k_neighbours']['bridged_gate_V']['ACT_EN_MCU/PORT_SENSE'], 1.0)
+        finally:
+            r111.SetValue(kept[0]); r112.SetValue(kept[1])
+
+    def test_k_neighbours_driver_or_uninert_net_fails(self):
+        u1 = self.board.FindFootprintByReference('U1')
+        g3 = next(p for p in u1.Pads() if p.GetNumber() == 'G3')
+        g2 = next(p for p in u1.Pads() if p.GetNumber() == 'G2')
+        net_g3, net_g2 = g3.GetNet(), g2.GetNet()
+        led = self.board.FindNet('HG_CS')
+        try:
+            g2.SetNet(led)                                                    # a push-pull GPIO beside PC1
+            rep = self.kn()
+            self.assertFalse(rep['ok'])
+            self.assertTrue(any('neighbour G2 carries HG_CS' in i for i in rep['issues']), rep['issues'])
+        finally:
+            g2.SetNet(net_g2)
+        r33 = self.board.FindFootprintByReference('R33')
+        pad = next(iter(r33.Pads()))
+        kept = pad.GetNet()
+        try:
+            pad.SetNet(net_g3)                                                # an unrecorded part on PORT_SENSE
+            rep = self.kn()
+            self.assertFalse(rep['ok'])
+            self.assertTrue(any('R33' in i and 'sense net' in i for i in rep['issues']), rep['issues'])
+        finally:
+            pad.SetNet(kept)
+        self.assertTrue(self.kn()['ok'])
+
+    def test_dru_unconditional_after_scoped_refused(self):
+        text = (BOARD12.with_suffix('.kicad_dru')).read_text()
+        self.assertEqual(r12.dru_order(text), [])
+        floor = text[text.index('# JLC multilayer 0.09 mm, plus 0.01 mm'):]
+        floor = floor[:floor.index('\n\n')]
+        self.assertIn('R12 board floor: copper clearance', floor)
+        late = text.replace(floor + '\n\n', '') + '\n' + floor + '\n'       # the round-1 order: floor after J2's rule
+        found = r12.dru_order(late)
+        self.assertTrue(any('R12 board floor: copper clearance' in i and 'Tag-Connect' in i for i in found), found)
+        with tempfile.TemporaryDirectory(prefix='r12-druorder-') as d:
+            path = Path(d) / 'm3.kicad_pcb'
+            (Path(d) / 'm3.kicad_dru').write_text(late)
+            shutil.copy2(ROOT / 'm3_design/r12/m3.kicad_pro', Path(d) / 'm3.kicad_pro')
+            rep = r12.check_board(self.board, path, only={'K-rules'}, stage='placement')
+            self.assertFalse(rep['ok'])
+            self.assertTrue(any('follows the scoped rule' in i for i in rep['issues']), rep['issues'])
+        gen = r12_sch.dru((r12_sch.INPUT / 'm3.kicad_dru').read_text())
+        self.assertEqual(r12.dru_order(gen), [])
+        self.assertLess(gen.index('R12 board floor: copper clearance'), gen.index('Tag-Connect contact'))
+
+    def test_route_check_hg_cs_is_spi(self):
+        rc.set_profile('r12')
+        try:
+            for net in ('HG_CS', 'IMU_CS', 'SD_CS', 'QSPI_NCS'):
+                self.assertEqual(rc.net_class(net), 'spi', net)
+                self.assertIn(rc.net_class(net), rc.SIGNAL_CRITICAL, net)
+        finally:
+            rc.set_profile('r8')
+
+    def test_fit_r12_db125_terminal_tails(self):
+        report = fc.check_board(self.board, ROOT / 'm3_design/r12', profile='r12')
+        tails = report['terminal_tails']
+        self.assertEqual((tails['count'], tails['refs'], tails['max_below_seating_mm']), (2, ['J121'], 3.8))
+        rows = {ref: box for _, ref, _, box in report['rows']}
+        self.assertAlmostEqual(rows['J121.1 terminal tail'][4], -3.8, places=6)
+        self.assertGreater(tails['minimum_bore_margin_mm'], 0)
+
+
 class Schematic(unittest.TestCase):
     """The committed R12 netlist meets the contract and every seeded fault is caught (ERC runs in the R12 gate)."""
 
@@ -229,6 +328,21 @@ class Windows(unittest.TestCase):
         self.assertTrue(self.data['sense']['PORT_SENSE_ok'])
         self.assertTrue(self.data['crystal']['ok'])
         self.assertTrue(self.data['vlogic']['usb_only_ok'])
+
+    def test_round1_labels_and_cam_input(self):
+        """D-R12-86 / -87 (R12F1-TRI-03, -17): PA4 sense labelled with its drift Inference; CAM_5V input condition."""
+        self.assertEqual(self.data['sense']['label'],
+                         'Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference')
+        self.assertEqual((self.data['sense']['PORT_SENSE_divider']['R111_ohm'],
+                          self.data['sense']['PORT_SENSE_divider']['R112_ohm']), (47e3, 100e3))
+        cam = self.data['cam_input']
+        self.assertIn('VO / 0.75', cam['window_holds_for'])
+        self.assertTrue(cam['label'].startswith('Calculation / Inference'))
+        lo, hi = cam['min_recommended_VIN_V']['initial']
+        rail = self.data['rails']['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)']['initial']
+        self.assertAlmostEqual(lo, rail['min_V'] / 0.75, places=3)
+        self.assertAlmostEqual(hi, rail['max_V'] / 0.75, places=3)
+        self.assertLess(cam['four_stall_U403_VIN_V'], lo)                 # the four-stall point is below the condition
 
     def test_divider_math(self):
         lo, hi = r12_budget.divider((1.0, 1.0), 1e3, 1e3, 0.0)

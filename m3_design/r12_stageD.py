@@ -170,13 +170,17 @@ def fire_budget(copper, gnd_return):
     r_gs_min = 50e3 * .98
     ratio = r_gs_min / (r_gs_min + 10e3 * 1.02)
     tau = (50e3 * 10e3 / 60e3) * 1.02 * (1e-6 * 1.10 * 1.15)      # C120 1 uF +10 % tolerance, +15 % temperature
+    # D-R12-91 (R12F1-TRI-19): the pack voltage above which |VGS| can exceed 12 V uses the largest ratio, 51k / 60.8k
+    # (Rgs +2 %, R121 -2 %), not the smallest one the drive-strength figures above use
+    r_gs_max = 50e3 * 1.02
+    ratio_max = r_gs_max / (r_gs_max + 10e3 * .98)
     def vgs(v):
         return (v - .1) * ratio
     gate = dict(q120_q121_vgs_V={f'{v:g}V': -vgs(v) for v in (stalls['4']['BAT_IN_V'], 6.0, 7.4, 8.4, 12.6, 19.9)},
                 q120_q121_time_to_minus_4V5_ms={f'{v:g}V': (-tau * math.log(1 - 4.5 / vgs(v)) * 1e3 if vgs(v) > 4.5
                                                             else None) for v in (6.0, 7.4, 8.4)},
                 q120_rds_row='AO3401A RDS(on) <= 60 mOhm at VGS -4.5 V (25 C)', q120_vgs_abs_max_V=12.0,
-                q120_vgs_exceeds_12V_above_pack_V=12.0 / ratio + .1,
+                q120_vgs_exceeds_12V_above_pack_V=12.0 / ratio_max + .1, q120_vgs_ratio_min_max=[ratio, ratio_max],
                 q124_vgs_min_V=3.240 * 10e3 / (10e3 + 220), q124_vgs_row_V=2.5, q124_vgs_th_max_V=1.45,
                 q124_gate_tau_us=220 * 220e-9 * 1e6,
                 basis='R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 '

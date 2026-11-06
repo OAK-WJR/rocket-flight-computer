@@ -175,7 +175,7 @@
 				)
 			)
 		)
-		(property "Value" "4.7k 1%"
+		(property "Value" "47k 1%"
 			(at 0 4 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -187,7 +187,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF4701TCE_C25900.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -209,7 +209,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C25900"
+		(property "LCSC" "C25792"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -233,7 +233,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "0402WGF4701TCE"
+		(property "Manufacturer Part" "0402WGF4702TCE"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -7163,7 +7163,7 @@
 				)
 			)
 		)
-		(property "Value" "10k 1%"
+		(property "Value" "100k 1%"
 			(at 0 4 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -7175,7 +7175,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF1003TCE_C25741.pdf"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -7197,7 +7197,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25741"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -7221,7 +7221,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "0402WGF1002TCE"
+		(property "Manufacturer Part" "0402WGF1003TCE"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)

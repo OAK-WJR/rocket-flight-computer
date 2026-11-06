@@ -729,26 +729,26 @@
    "why": "D-R12-08: camera buck inductor"
   },
   "R111": {
-   "lcsc": "C25900",
-   "value": "4.7k 1%",
+   "lcsc": "C25792",
+   "value": "47k 1%",
    "lib": "M3:R",
    "sheet": "diagnostics.kicad_sch",
    "nets": {
     "1": "PORT_4V8",
     "2": "PORT_SENSE"
    },
-   "why": "D-R12-05: PORT_4V8 presence on PA4 (replaces U11 ST), top"
+   "why": "D-R12-05 / -86: PORT_4V8 presence on PA4 (replaces U11 ST), top; 47k so a PC1 (F2) bridge holds Q122 off"
   },
   "R112": {
-   "lcsc": "C25744",
-   "value": "10k 1%",
+   "lcsc": "C25741",
+   "value": "100k 1%",
    "lib": "M3:R",
    "sheet": "diagnostics.kicad_sch",
    "nets": {
     "1": "PORT_SENSE",
     "2": "GND"
    },
-   "why": "D-R12-05: PORT_4V8 presence on PA4, bottom"
+   "why": "D-R12-05 / -86: PORT_4V8 presence on PA4, bottom"
   },
   "R14": {
    "lcsc": "C25792",

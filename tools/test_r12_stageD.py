@@ -48,6 +48,15 @@ class StageDFigures(unittest.TestCase):
         self.assertTrue(all(c['layers'] == ['F.Cu'] for c in d['fire_copper'].values()))
         self.assertGreaterEqual(f['gnd_return_used_ohm'], 0.005)
 
+    def test_vgs_12V_bound_uses_largest_ratio(self):
+        """D-R12-91 (R12F1-TRI-19): 12 / (51k / 60.8k) + 0.1 = 14.41 V, not the smallest ratio's 14.60 V."""
+        g = json.loads((DESIGN / 'stageD_budget.json').read_text())['fire']['gate']
+        lo, hi = g['q120_vgs_ratio_min_max']
+        self.assertAlmostEqual(hi, 51e3 / 60.8e3, places=9)
+        self.assertAlmostEqual(lo, 49e3 / 59.2e3, places=9)
+        self.assertAlmostEqual(g['q120_vgs_exceeds_12V_above_pack_V'], 12 / hi + .1, places=9)
+        self.assertAlmostEqual(g['q120_vgs_exceeds_12V_above_pack_V'], 14.406, places=2)
+
 
 if __name__ == '__main__':
     unittest.main()

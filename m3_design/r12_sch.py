@@ -71,9 +71,9 @@ R12_REPIN = {
     'CAM_FAULT_N': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-07: U402 deleted (camera buck EN is the switch)'),
     'CAM_UART_OE': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-07: U12 deleted (1 kOhm series only)'),
     'LOGIC_SOURCE_ST': ('PORT_SENSE', 'GPIO in, no pull (high = PORT_4V8 present: the battery path is on)',
-                        'D-R12-05: U11 deleted; PA4 now reads PORT_4V8 through R111 4.7k / R112 10k (3.09-3.40 V '
-                        'high, Calculation); the R10 rule "port UARTs only while PA4 reads low" becomes "only while '
-                        'PA4 reads high"'),
+                        'D-R12-05 / -86: U11 deleted; PA4 now reads PORT_4V8 through R111 47k / R112 100k (3.10-3.39 V '
+                        'high initial, 3.07-3.43 V drift, with PA4 leakage; Calculation; drift Inference); the R10 rule '
+                        '"port UARTs only while PA4 reads low" becomes "only while PA4 reads high"'),
 }
 
 # D-R12-51: U1 balls R12 gives a function that R11 left NC, keyed by ball (each NC in R11)
@@ -515,8 +515,15 @@ R12_RULES = (
 )
 
 
+def dru_conditional(rule_text):
+    """True when a DRU rule is scoped by a condition or a layer clause (KiCad applies the last matching rule, so an
+    unconditional floor written after a scoped rule of the same constraint silently replaces it: R12F1-TRI-11)."""
+    return '(condition ' in rule_text or re.search(r'^\s*\(layer ', rule_text, re.M) is not None
+
+
 def dru(text):
-    """R11's (R10's) DRU rules kept by name, then the R12 floors."""
+    """R11's (R10's) DRU rules kept by name and the R12 floors; every unconditional rule first (D-R12-88), then the
+    scoped ones, each group in its listed order, so no unconditional floor follows (and overrides) a scoped rule."""
     rules = []
     for m in re.finditer(r'\(rule "([^"]+)"', text):
         if m.group(1) in KEEP_RULES:
@@ -525,6 +532,7 @@ def dru(text):
     for name, constraint, condition, why in R12_RULES:
         rules.append(f'# {why} (https://jlcpcb.com/capabilities/pcb-capabilities)\n(rule "{name}"\n' +
                      (f'  (condition "{condition}")\n' if condition else '') + f'  (constraint {constraint}))')
+    rules = [r for r in rules if not dru_conditional(r)] + [r for r in rules if dru_conditional(r)]
     return ('(version 1)\n# M3-ASSY-R12 (D-R12-03): four layers at JLCPCB, one assembled side, 0.3 / 0.45 mm vias only. '
             'R10 / R11 rules kept by name;\n# the R12 floors follow JLC\'s multilayer capability and the cost study\'s '
             'no-surcharge via. Net classes and board setup are stage B\'s.\n' + '\n\n'.join(rules) + '\n')

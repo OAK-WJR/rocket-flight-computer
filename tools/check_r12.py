@@ -34,7 +34,9 @@ K-inner: In1 GND only; In2 mixed rail/signal copper, fast interfaces excluded (D
 K-reference / K-region: F over In1 GND; In2 over In1 and B GND; B over In2 rail fill, each B chain over one rail.
 K-plane: In2 power fills one piece or two >= 0.5 mm outer links; neck checks retained.
 K-fill: saved fill geometry agrees with native refill of a copy.
-K-rules: DRU text and project floors agree with the R12 generator.
+K-rules: DRU text and project floors agree with the R12 generator; no unconditional rule after a scoped one (D-R12-88).
+K-neighbours: every ball round PE4 / PC1 is NC, GND, the D-R11-23 3V3 pair or an inert net whose one-bridge gate voltage,
+              computed from the board's own resistors, stays <= 0.45 V (D-R11-85, D-R12-86).
 
 Placement remains the stage-B gate. Copper checks safety/routing; full also checks the final legends (stage D).
 R12 pin lookup uses its pin table and net names; no U4/U5 pad numbers or R10 layout coordinates are inherited.
@@ -59,8 +61,9 @@ WIDTH = 46.0
 VIA_DRILL, VIA_DIAMETER = 0.3, 0.45
 PENDING = ()
 IMPLEMENTED = ('S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'S-8', 'S-9', 'W-1', 'W-2', 'LC-1',
-               'M-3', 'M-6', 'M-7', 'M-8', 'K-legends', 'K-copper', 'K-inner', 'K-reference', 'K-region', 'K-plane', 'K-fill')
-STAGES = {'placement': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5'),
+               'M-3', 'M-6', 'M-7', 'M-8', 'K-legends', 'K-copper', 'K-inner', 'K-reference', 'K-region', 'K-plane', 'K-fill',
+               'K-neighbours')
+STAGES = {'placement': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5', 'K-neighbours'),
           'copper': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5', 'V-1', 'V-2')
                     + tuple(r for r in IMPLEMENTED if r != 'K-legends')}
 STAGES['full'] = STAGES['copper'] + ('K-legends',) + PENDING
@@ -188,6 +191,25 @@ def v2(ctx):
     return out
 
 
+def dru_order(text):
+    """D-R12-88 (R12F1-TRI-11): KiCad applies the last matching custom rule, so an unconditional rule written after a
+    scoped (condition or layer) rule with the same constraint type replaces it for every item: the scoped rule is dead.
+    Refuse that order in the DRU itself, whatever the generator says."""
+    import r12_sch
+    out, scoped = [], {}
+    for m in re.finditer(r'\(rule "([^"]+)"', text):
+        body = text[m.start():r12_sch.sch.close_paren(text, m.start())]
+        kinds = set(re.findall(r'\(constraint (\w+)', body))
+        if r12_sch.dru_conditional(body):
+            for k in kinds:
+                scoped.setdefault(k, m.group(1))
+        else:
+            for k in sorted(kinds & set(scoped)):
+                out.append(f'unconditional rule "{m.group(1)}" ({k}) follows the scoped rule "{scoped[k]}", which it '
+                           'overrides (KiCad applies the last matching rule): put unconditional floors first')
+    return out
+
+
 def k_rules(ctx):
     import r12_sch
     out = []
@@ -195,6 +217,8 @@ def k_rules(ctx):
     want = r12_sch.dru((r12_sch.INPUT / 'm3.kicad_dru').read_text())
     if not dru.exists() or dru.read_text() != want:
         out.append('m3.kicad_dru differs from r12_sch.dru() (regenerate with m3_design/r12_sch.py)')
+    if dru.exists():
+        out += dru_order(dru.read_text())
     pro = ctx['path'].with_suffix('.kicad_pro')
     if pro.exists():
         rules = json.loads(pro.read_text())['board']['design_settings']['rules']
@@ -618,6 +642,150 @@ def k_plane(c):
 
 PLANE_NECK_W = 1.0    # mm, D-R12-34
 
+# D-R12-86 (R12F1-TRI-01): K-neighbours, ported from R11 (D-R11-85). Every ball round PE4 (PYRO1_GATE_N, C3) and PC1
+# (ACT_EN_MCU, F2) is NC, GND, D-R11-23's 3V3 pair, or an inert net. R12 changes the inert argument from R11's text
+# to a computation on the board's own parts: for each inert net the worst-corner gate voltage that one solder bridge
+# to the guarded ball can put on the guarded FET (with the guard pin high-Z: reset, boot or MCU unpowered) is computed
+# from the source bound, the divider resistors and the guard's series / pull-down resistors, each read from the board
+# (value, and 1 % or 5 % from the UNI-ROYAL MPN, plus 100 ppm/K over 67 K), and must stay at or below GATE_LIMIT_V.
+# R11's LOGIC_SOURCE_ST entry is dropped (U11 is deleted, D-R12-04); its ball G3 carries PORT_SENSE, which is driven
+# HIGH whenever the battery path is on, so the old open-drain argument does not carry over.
+# AO3400A VGS(th) 0.65 / 1.05 / 1.45 V at ID 250 uA, TJ 25 C (AOS AO3400A Rev 3.1 p. 2, Datasheet). The limit keeps a
+# 0.20 V allowance below the 0.65 V minimum for the threshold's fall to the bay's +70 C and for the < 250 uA drain current
+# that already starts Q120 / Q121 through ACT_GATE's 50 kohm pull-up (Inference: AOS gives no VGS(th)-temperature curve).
+GATE_LIMIT_V = 0.45
+NEIGHBOUR_EXCEPTIONS = dict(r11.NEIGHBOUR_EXCEPTIONS)       # D-R11-23 owner deviation: C3 diagonal to 3V3 B2 / D2
+# guard net -> (series resistor from the guard to the gate, gate net, pull-down from the gate to GND, FET)
+GUARD_LOAD = {'ACT_EN_MCU': ('R122', 'ACT_EN', 'R123', 'Q122')}
+PACK_MAX_V = 8.4                                           # 2S full charge (REQUIREMENTS F9; r12_budget u9)
+NRST_RPU_MIN = 30e3                                        # DS12110 Rev 8 Table 65 p. 146: RPU 30 / 40 / 50 kohm
+# (guard, net) -> source bound, divider chain (top: series from the source net to the sense net; bottom: in parallel
+# from the sense net to GND) and the argument. 'rail' bounds come from r12_windows.json's drift maximum.
+NEIGHBOUR_INERT = {
+    ('ACT_EN_MCU', 'PORT_SENSE'): dict(
+        source='PORT_4V8', vmax=('rail', 'PORT_4V8 ('), top=('R111',), bottom=('R112',),
+        why='D-R12-86: PA4 reads PORT_4V8 through R111 47k / R112 100k (32 kohm Thevenin); high whenever the battery '
+            'path is on, so a bridge to F2 with PC1 high-Z gives at most the computed gate voltage (R12F1-TRI-01: '
+            '1.05-1.12 V with D-R12-05\'s 4.7k / 10k)'),
+    ('ACT_EN_MCU', 'PYRO1_CONT'): dict(
+        source='PYRO1_OUT', vmax=('fixed', PACK_MAX_V), top=('R173', 'R129'), bottom=('R130', 'R178'),
+        why='D-R11-85 (fixed ball, R10\'s LQFP neighbour of PC1 too): passive 10.2k / 1k divider of PYRO1_OUT. With the '
+            'bus off PYRO1_OUT is held near 1.6 V by the cold pull-up (R131 10k from 3V3 through D120), so the pack '
+            'bound applies only to a bus already on (Calculation / Inference)'),
+    ('ACT_EN_MCU', 'CAM_5V_SENSE'): dict(
+        source='CAM_5V', vmax=('rail', 'CAM_5V ('), top=('R104', 'R107'), bottom=('R105', 'R106'),
+        why='D-R11-85 / -86: passive 10.2k / 1k divider of CAM_5V (Calculation / Inference)'),
+    ('ACT_EN_MCU', 'NRST'): dict(
+        source='3V3', vmax=('rail', '3V3 ('), pullup_min=NRST_RPU_MIN, also=('J2',),
+        why='D-R11-85 (fixed ball): open-drain reset, only the internal >= 30 kohm pull-up to VDD (DS12110 Table 65); '
+            'a bridge held low by PC1 holds the MCU in reset (outputs off); J2.3 is the SWD probe\'s reset, attached '
+            'on the bench only'),
+}
+
+
+def resistor(board, ref):
+    """(ohms, tolerance, pad nets) of a fitted resistor; tolerance from the UNI-ROYAL WG MPN letter (F 1 %, J 5 %),
+    otherwise 5 %, each plus 100 ppm/K over 67 K (r12_budget's drift case)."""
+    f = board.FindFootprintByReference(ref)
+    if f is None:
+        return None
+    ohms = r10.parse_value(f.GetValue(), 'R')
+    mpn = {field.GetName(): field.GetText().strip() for field in f.GetFields()}.get('Manufacturer Part', '')
+    m = re.match(r'^\d{4}WG([FJ])', mpn or '')
+    tol = {'F': 0.01, 'J': 0.05}[m.group(1)] if m else 0.05
+    return ohms, tol + 100e-6 * 67, {p.GetNumber(): p.GetNetname() for p in f.Pads()}
+
+
+def bridged_gate(board, guard, net, entry, rails):
+    """(worst gate V, issues): one bridge from `net` to the guard pin, guard high-Z, every resistor at its worst end."""
+    import itertools
+    issues = []
+    series, gate_net, pulldown, _fet = GUARD_LOAD[guard]
+    load = {r: resistor(board, r) for r in (series, pulldown)}
+    if None in load.values() or any(v[0] is None for v in load.values()):
+        return None, [f'{guard}: load resistors {series} / {pulldown} missing or unreadable']
+    if sorted(load[series][2].values()) != sorted((guard, gate_net)) or \
+            sorted(load[pulldown][2].values()) != sorted((gate_net, 'GND')):
+        return None, [f'{guard}: {series} must join {guard} to {gate_net} and {pulldown} {gate_net} to GND']
+    kind, bound = entry['vmax']
+    if kind == 'rail':
+        name = next((k for k in rails if k.startswith(bound)), None)
+        if name is None:
+            return None, [f'{net}: rail {bound!r} not in r12_windows.json']
+        vmax = rails[name]['drift']['max_V']
+    else:
+        vmax = bound
+    if 'pullup_min' in entry:
+        sources = [(entry['pullup_min'], 0.0)]           # an exact minimum: no tolerance on top of it
+        tops, bots = [[(entry['pullup_min'], 0.0)]], []
+    else:
+        parts = {r: resistor(board, r) for r in entry['top'] + entry['bottom']}
+        if any(v is None or v[0] is None for v in parts.values()):
+            return None, [f'{net}: divider part missing or unreadable ({sorted(k for k, v in parts.items() if not v)})']
+        # top: a series chain from the source net to the sense net; bottom: each from the sense net to GND
+        at = entry['source']
+        for r in entry['top']:
+            nets = list(parts[r][2].values())
+            if at not in nets or len(nets) != 2:
+                return None, [f'{net}: {r} does not continue the divider chain from {at}']
+            at = nets[1] if nets[0] == at else nets[0]
+        if at != net:
+            issues.append(f'{net}: divider top {"+".join(entry["top"])} ends on {at}, not {net}')
+        for r in entry['bottom']:
+            if sorted(parts[r][2].values()) != sorted((net, 'GND')):
+                issues.append(f'{net}: {r} is not from {net} to GND')
+        tops = [[parts[r][:2] for r in entry['top']]]
+        bots = [parts[r][:2] for r in entry['bottom']]
+    # anything else on the sense net (a driver) would void the argument: only U1, the divider and capacitors to GND
+    allowed = set(entry.get('top', ())[-1:]) | set(entry.get('bottom', ())) | set(entry.get('also', ())) | {'U1'}
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if p.GetNetname() == net and f.GetReference() not in allowed:
+                other = {q.GetNetname() for q in f.Pads()} - {net}
+                if not (f.GetReference().startswith('C') and other == {'GND'}):
+                    issues.append(f'{net}: {f.GetReference()}.{p.GetNumber()} on the sense net is not a recorded '
+                                  'divider part or a capacitor to GND')
+    terms = tops[0] + bots + [load[series][:2], load[pulldown][:2]]
+    worst = 0.0
+    for signs in itertools.product((-1, 1), repeat=len(terms)):
+        val = [r * (1 + s * t) for (r, t), s in zip(terms, signs)]
+        n_top = len(tops[0])
+        top = sum(val[:n_top])
+        bots_v = val[n_top:n_top + len(bots)]
+        rs, rp = val[-2], val[-1]
+        if bots_v:
+            bot = 1 / sum(1 / b for b in bots_v)
+            vth, rth = vmax * bot / (top + bot), top * bot / (top + bot)
+        else:
+            vth, rth = vmax, top
+        worst = max(worst, vth * rp / (rth + rs + rp))
+    return worst, issues
+
+
+def k_neighbours(c):
+    """(issues, evidence): the D-R11-85 ball rule with R12's inert table and a board-value gate computation."""
+    issues, ev = r11.gate_neighbours(c.board, exceptions=NEIGHBOUR_EXCEPTIONS,
+                                     inert={k: v['why'] for k, v in NEIGHBOUR_INERT.items()})
+    rails = json.loads((R12_DIR / 'design/r12_windows.json').read_text())['rails']
+    gates = {}
+    for (guard, net), entry in sorted(NEIGHBOUR_INERT.items()):
+        if guard not in GUARD_LOAD:
+            issues.append(f'{guard}: no gate load model for inert neighbour {net}')
+            continue
+        if not any(p.GetNetname() == net for f in c.board.GetFootprints() for p in f.Pads()):
+            continue                                     # stale entries are reported by gate_neighbours
+        v, found = bridged_gate(c.board, guard, net, entry, rails)
+        issues += found
+        if v is None:
+            continue
+        gates[f'{guard}/{net}'] = round(v, 4)
+        if v > GATE_LIMIT_V:
+            issues.append(f'{guard} bridged to {net}: Q122 gate up to {v:.3f} V with the guard high-Z, above the '
+                          f'{GATE_LIMIT_V} V limit (AO3400A VGS(th) min 0.65 V less 0.20 V allowance; D-R12-86)')
+    ev = dict(balls=ev, bridged_gate_V=gates, limit_V=GATE_LIMIT_V)
+    return issues, ev
+
+
 # D-R12-67A: stage C pass 1 may report these signal-reference rules without failing (r12_build.sh, R12_ROUTE_HYGIENE).
 # Nothing else may be made advisory; the S- / M- / W- / LC- families never relax (AGENTS section 2).
 ADVISABLE = ('K-reference', 'K-region', 'K-plane')
@@ -627,7 +795,7 @@ PORTED = {
     'S-1': s1, 'S-2': s2, 'S-3': s3, 'S-4': s4, 'S-5': s5, 'S-6': r10.s6, 'S-7': s7, 'S-8': s8, 'S-9': s9,
     'W-1': w1, 'W-2': w2, 'LC-1': lc1, 'M-3': m3, 'M-6': m6, 'M-7': m7, 'M-8': m8,
     'K-legends': k_legends, 'K-copper': k_copper, 'K-inner': k_inner, 'K-reference': k_reference,
-    'K-region': k_region, 'K-plane': k_plane, 'K-fill': r10.k_fill,
+    'K-region': k_region, 'K-plane': k_plane, 'K-fill': r10.k_fill, 'K-neighbours': k_neighbours,
 }
 
 
@@ -646,6 +814,7 @@ TITLES.update({
     'K-copper': 'via/pad, joints, thermal, paste and pour hygiene', 'K-inner': 'In1 GND, In2 mixed copper',
     'K-reference': 'critical reference coverage', 'K-region': 'one In2 rail region per B signal chain',
     'K-plane': 'In2 fill connectivity and necks', 'K-fill': 'saved fills agree with native refill',
+    'K-neighbours': 'PE4 / PC1 ball neighbours cannot raise their gate if bridged (D-R11-85, D-R12-86)',
 })
 
 

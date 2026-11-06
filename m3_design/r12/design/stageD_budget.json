@@ -1,5 +1,5 @@
 {
- "board_sha256": "d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64",
+ "board_sha256": "f60d82390941611b6149e5501643248d274fa155887bcefd03d1ad67096b5820",
  "dc_solves": {
   "3V3_L1_to_R14": {
    "cells": 23447,
@@ -426,7 +426,11 @@
    },
    "q120_rds_row": "AO3401A RDS(on) <= 60 mOhm at VGS -4.5 V (25 C)",
    "q120_vgs_abs_max_V": 12.0,
-   "q120_vgs_exceeds_12V_above_pack_V": 14.597959183673469,
+   "q120_vgs_exceeds_12V_above_pack_V": 14.405882352941177,
+   "q120_vgs_ratio_min_max": [
+    0.8277027027027027,
+    0.8388157894736842
+   ],
    "q124_gate_tau_us": 48.400000000000006,
    "q124_vgs_min_V": 3.170254403131116,
    "q124_vgs_row_V": 2.5,
@@ -1646,7 +1650,7 @@
    ]
   }
  },
- "source_board_sha256": "d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64",
+ "source_board_sha256": "f60d82390941611b6149e5501643248d274fa155887bcefd03d1ad67096b5820",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,

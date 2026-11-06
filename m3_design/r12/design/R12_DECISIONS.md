@@ -54,8 +54,8 @@ inrush / fault current limit toward the host, USB over-voltage lockout, the USB 
 Inference), the USB_FAULT_N / LOGIC_SOURCE_ST flags. AVA: three bare micro-USB ports (Inference). Saves about $1.7 of
 parts per board and the TPS2121, USBLC6 and 0.1 % codes (cost_study §3 #17, #49–51, #69–70, Live).
 
-**D-R12-05 PA4 port sense.** LOGIC_SOURCE_ST (U11 ST) is replaced by PORT_SENSE = PORT_4V8 × R112 10k / (R111 4.7k +
-R112 10k) on PA4 (both Basic): 3.08–3.40 V with PORT_4V8 on (initial), 3.04–3.45 V (drift), above VIH 2.40 V and below
+**D-R12-05 PA4 port sense.** (Values superseded by D-R12-86: R111 47k / R112 100k, same ratio.) LOGIC_SOURCE_ST (U11
+ST) is replaced by PORT_SENSE = PORT_4V8 × R112 10k / (R111 4.7k + R112 10k) on PA4 (both Basic): 3.08–3.40 V with PORT_4V8 on (initial), 3.04–3.45 V (drift), above VIH 2.40 V and below
 VDD + 0.3 V = 3.54 V (Calculation, `r12_windows.json` sense). R10's firmware rule "enable the port UARTs only while PA4
 reads low" becomes "only while PA4 reads high" (the ports are powered exactly when PORT_4V8 is up). F10 / F12 functions
 kept; the sense is the rail itself instead of the mux's selection.
@@ -133,7 +133,9 @@ drive: Q120 / Q121 VGS = −0.833 × V_BAT: −4.77 V at the four-stall point (�
 the same single diode from 3V3 to PYRO1_COLD as R11 (cold screen function kept). JLC's free feeder for Preferred
 Extended on Economic is an Inference; R12's totals are given both ways.
 
-**D-R12-12 U1 re-pins.** R11's ball map kept (D-R11-49 escape map and D-R11-85 fire-pin neighbours included). Deleted
+**D-R12-12 U1 re-pins.** R11's ball map kept (D-R11-49 escape map and D-R11-85's ball assignments; **correction
+(D-R12-86):** D-R11-85's inert argument for G3 did not carry over: G3 (PA4) became PORT_SENSE, driven high whenever the
+battery path is on, and check_r12 did not run K-neighbours until D-R12-86). Deleted
 functions free their balls: USB_FAULT_N (PD10), CAM_FAULT_N (PC13), CAM_UART_OE (PC15) → NC (analog, never driven);
 LOGIC_SOURCE_ST (PA4) → PORT_SENSE (D-R12-05). `pin_table.tsv` columns r12_net / r12_mode / r12_source.
 
@@ -689,8 +691,10 @@ detour, 3 acute_angle, 3 side_by_side_overlap, 2 fold_back and singles), which t
 `r12_build.sh` reports route_check's findings without stopping until `R12_ROUTE_HYGIENE=strict` (pass 2). Safety checks
 on this copper: the fire path (BAT_IN, PYRO1_OUT, PYRO1_IGN, RAW_ACT, ACT_FET_S) is F.Cu with no via; the S-8 keep-outs
 are drawn by `r12_route.py` and DRC passes on them; no foreign F.Cu track enters U6's pad ring (|dx|, |dy| < 2.45 mm
-from its centre) and the U4 / U5 rule areas pass DRC; the gate networks and K-neighbours are unchanged (no gate part
-moved; D-R12-61A … -64A keep every PE4 / PC1 neighbour). **Pass-1 deviations for pass 2:** QSPI_IO2 has six vias (its
+from its centre) and the U4 / U5 rule areas pass DRC; the gate networks are unchanged (no gate part moved) and
+D-R12-61A … -64A put no moved net on a PE4 / PC1 neighbour ball. **Correction (D-R12-86):** "K-neighbours are unchanged"
+was wrong: check_r12 did not run K-neighbours, and F2's neighbour G3 carried PORT_SENSE (D-R12-05), which is not inert
+(one F2-G3 bridge gave Q122 1.00-1.12 V). **Pass-1 deviations for pass 2:** QSPI_IO2 has six vias (its
 dog-bone and five; the pass-1 allowance was a third via), and eight critical layer changes have no GND partner within
 1.5 mm (route_check critical_via_no_gnd); every route_check finding above; the hygiene clean is pass 2.
 
@@ -925,6 +929,123 @@ test_out_of_bom_part_in_jlc_bom replace test_owner_part_in_jlc_bom).
 east on the same topology), RAW_ACT behind Q120 / Q121 unchanged (S-5 OK). §2.3: no firmware change (PA4 still reads
 high with the ports on). §2.4: no gate network changed (S-3 OK). §2.5: labels as above; the LR900-F floor and top are
 labelled Inference.
+
+**D-R12-86 PA4 sense divider ×10 and K-neighbours on R12 (review round 1, R12F1-TRI-01, Major).** U1.G3 (PA4,
+PORT_SENSE) is diagonal to F2 (PC1, ACT_EN_MCU). D-R11-85 let G3 stay as LOGIC_SOURCE_ST because U11's ST was open drain
+and low on the battery path; R12's PORT_SENSE is driven **high** exactly then. One F2-G3 bridge with PC1 high-Z (reset,
+boot, MCU unpowered) gave Q122 (AO3400A, VGS(th) 0.65 / 1.05 / 1.45 V at 250 µA, AOS Rev 3.1 p. 2, Datasheet)
+1.05 V nominal, **1.00-1.12 V** over PORT_4V8 and 1 % + drift (Calculation), enough to enable RAW_ACT (Inference).
+* **Options.** (a) Move PORT_SENSE to a ball not next to C3 / F2: G3 becomes NC, but the frozen copper
+  (`r12_routes.tsv`) must be redrawn round U1's escape. (b) Keep the ball and raise the divider ten times: no copper
+  change. **Chosen: (b)**, because no copper changes and the bridged gate stays far below the limit even with a second
+  fault (R112 open).
+* **Change.** R111 4.7k → **47k** (C25792) and R112 10k → **100k** (C25741). Both are Basic 1 % UNI-ROYAL parts already on
+  the BOM, so there is no new code, and C25900 / C25744 stay for their other parts. The ratio is the same (100 / 147 =
+  10 / 14.7). Thevenin 3.2 kΩ → **32.0 kΩ**.
+* **Bridged gate.** The worst corner with PORT_4V8 at the drift top 4.972 V, every resistor at 1 % + 100 ppm/K × 67 K
+  and R122 / R123 included: **≤ 0.200 V** (0.186 V nominal), and 0.205 V with R112 open (Calculation).
+* **PA4 still reads high.** TT_xx input leakage is ±250 nA (DS12110 Rev 8 Table 60 p. 139, Datasheet), which moves PA4
+  by ≤ 8 mV. PA4 reads **3.103-3.388 V initial, 3.068-3.426 V drift** (was 3.111-3.380 / 3.076-3.418). That is above
+  VIH 2.40 V and below VDD + 0.3 = 3.52 V (`r12_windows.json` sense; Calculation; drift Inference). With PORT_4V8 off,
+  R112 holds PA4 ≤ 0.025 V. The higher impedance only slows PA4's edge (32 kΩ × about 10 pF is about 0.3 µs,
+  Inference), which firmware's PA4 deglitch covers.
+* **Gate rule: check_r12 K-neighbours**, run in the placement, copper and full stages.
+  * It runs R11's ball rule (`check_r11.gate_neighbours`) with an R12 table. R11's LOGIC_SOURCE_ST entry is dropped.
+  * For each inert net it computes the one-bridge gate voltage from the board's own resistors: each value is read, its
+    tolerance comes from the UNI-ROYAL MPN letter, and drift is added. The source bounds are `r12_windows.json`'s drift
+    tops, the 8.4 V pack, and NRST's 30 kΩ minimum pull-up (DS12110 Table 65). Every chain's topology is verified, and
+    any other part on a sense net fails.
+  * **GATE_LIMIT_V 0.45 V** is the 0.65 V minimum less a 0.20 V allowance for the threshold's fall at +70 °C and for
+    sub-250 µA conduction (Inference: AOS gives no VGS(th)-temperature curve).
+* **Figures on board `f60d8239…`:**
+
+| Neighbour of F2 | Bridged gate (worst corner) |
+|---|---|
+| PORT_SENSE | 0.1998 V |
+| PYRO1_CONT (pack 8.4 V, bus already on; with the bus off its source is about 1.6 V) | 0.399 V |
+| CAM_5V_SENSE | 0.273 V |
+| NRST | 0.213 V |
+
+  C3's neighbours are unchanged: B2 / D2 3V3 (D-R11-23), C2 GND, the rest NC.
+* **Proof the rule works.** On the round-1 board `d6e4f7ee…`, K-neighbours fails with "Q122 gate up to 1.122 V"
+  (Measured, `check_r12 --only K-neighbours`). `tools/test_r12_check.py` Round1Fixes covers three cases: setting the
+  committed board back to 4.7k / 10k fails (> 1.0 V); a push-pull net on G2 fails; an unrecorded part on PORT_SENSE fails.
+* **Corrections.** D-R12-05's values, D-R12-12's "D-R11-85 neighbours included" and D-R12-66A's "K-neighbours are
+  unchanged" are corrected in place.
+* **Not addressed here (observation for the next round, Inference).** PA4 is TT_a with 0 mA injection allowed (DS12110
+  Table 22 p. 107). If PORT_4V8 rises before 3V3, PA4 sees up to 3.4 V with VDD low. The ×10 impedance cuts that
+  current to ≤ about 0.1 mA, but does not make it zero.
+
+**D-R12-87 Generator labels and the CAM_5V input condition (R12F1-TRI-03, -17, generator parts).**
+* **PA4 sense label (`r12_budget.py` sense).** Now "Calculation (1 % resistors, rail windows above; DS12110 leakage);
+  drift Inference".
+* **New `cam_input` block in `r12_windows.json`.** The CAM_5V window (5.221-5.691 V initial) holds only while U403's VIN
+  ≥ VO / 0.75 = **6.96-7.59 V initial / 6.88-7.68 V drift**. The source is TI SLVSD90B §7.3: maximum recommended duty 75 %.
+* **Four-stall fire point.** U403's VIN is about 5.63 V: BAT_IN 5.721 V less U9's 0.04 Ω RON at the fire-time converter
+  current (Inference). Holding 5.221 V would take 92.7 % duty lossless. U403's highest held output is D_max × (VIN −
+  1 A × RDS(on)h 95 mΩ):
+  * 5.29 V at tOFF(MIN) 220 ns typical;
+  * **5.19 V** at 310 ns maximum, with fsw ≥ about 200 kHz (§5.5, §6.4.1).
+* **Result.** CAM_5V may fall below its window low end to about 5.19 V. That is still above the camera's 5.0 V minimum
+  before harness drop (Calculation / Inference: inductor DCR, copper and hot RDS(on) not included). The camera is not
+  shown to fail.
+* **Not edited here.** D-R12-08's margin text is the docs lane's.
+
+**D-R12-88 DRU rule order (R12F1-TRI-11).** `r12_sch.dru()` now writes every unconditional rule first, then the scoped
+(condition or layer) rules, each group in its listed order.
+* **What was wrong.** KiCad applies the last matching rule. The unconditional 0.1 mm "R12 board floor: copper clearance"
+  had followed "Tag-Connect contact to foreign copper" (0.508 mm) and the TP 1.0 mm rule, so both were dead.
+* **New check.** check_r12 K-rules gains `dru_order`, which refuses an unconditional rule written after a scoped rule
+  with the same constraint type. It fails the round-1 DRU and passes the regenerated one (test_dru_unconditional_after_scoped_refused).
+* **DRC.** KiCad DRC on the rebuilt board: 0 violations, 0 unconnected, parity 0. The J2 0.508 mm rule is now live and holds.
+
+**D-R12-89 fit_check r12: J121's DB125 tails (R12F1-TRI-12).** Profile r12 gives J121's two plated pins R10's
+3.8 mm below-seating tail (`R10_TERMINAL_TAIL_MM`, Inference: copper-pad AABB transversely). It checks them against the
+bore and every other body, and reports them (`terminal_tails`).
+* **Report change.** The deepest bottom part is now "J121.1 terminal tail (z −3.80 mm)", replacing J1.1 wire −3.10 mm.
+* **Margins.** Tail bore margin 7.56 mm. The worst bottom margin is unchanged: 3.53 mm, J1.1 wire.
+* **Wording fix.** The printed "five-support geometry" now reads "support geometry" outside r9 / r10.
+* **Test.** test_fit_r12_db125_terminal_tails.
+
+**D-R12-90 route_check: HG_CS is an SPI chip select (R12F1-TRI-10).** The r10 / r11 / r12 'spi' class adds `HG_CS$`.
+* **Effect.** U6's chip select is now critical: partner-via and critical hygiene apply. R10 and R11 have no such net.
+* **Result.** route_check r12 on the rebuilt board: 0 failing, 2 allowlisted. HG_CS's layer changes keep GND partners at
+  1.404 / 1.208 mm.
+* **Test.** test_route_check_hg_cs_is_spi.
+
+**D-R12-91 Stage D: the 12 V VGS bound uses the largest gate ratio (R12F1-TRI-19, generator part).**
+`r12_stageD.py` now uses 51k / 60.8k = 0.8388 (Rgs + 2 %, R121 − 2 %) for `q120_vgs_exceeds_12V_above_pack_V`, which is
+12 / 0.8388 + 0.1 = **14.41 V** (was 14.60 V on the smallest ratio). It also records `q120_vgs_ratio_min_max`. The
+drive-strength figures keep the smallest ratio. Test: test_vgs_12V_bound_uses_largest_ratio. The docs' "14.60 V" text is
+the docs lane's.
+
+**D-R12-92 JLC "difficult to process" flag on U5 and Y1: parts kept, order-day owner item.**
+* **The flag.** JLC's Economic order page shows, for U5 (MS5607-02BA03, C97627) and Y1 (X322525MOB4SI, C9006): "The
+  processing of this component is difficult. After placing an order, it will be reviewed. If PCBA advanced option is
+  required, additional fees will be charged."
+* **Cause (Measured, JLC endpoint `…/smtComponentShopCart/getComponentDetail?componentCode=`, 2026-11-06T00:58Z).**
+  * Both parts carry `needAuditFlag: true`. Their specialComponentFee is 0, with no order instruction, so there is no
+    stated fee and no stated reason.
+  * The part pages show "Assembly Difficulty: High".
+  * The controls are not flagged: C1549, C25744, and YXC C9002 / C13738 of Y1's own series.
+* **Why U5 stays.** Every brand-name MEMS barometer checked on JLC carries the flag: MS5611, MS5637, BMP388/58x, DPS368,
+  ICP-10111/20100, LPS28DFW and others. A plausible reason is TE's 250 °C maximum soldering temperature and the no-clean,
+  no-wash rule (MS5607 datasheet, Inference). The unflagged ones are Tokmas / WF clones on other lands with unverified
+  resolution. None meets the swap condition, so U5 stays.
+* **Why Y1 stays.**
+  * YXC C5444544 (XL2EL89COI-111YLC-25M) is not flagged. It has the same YSX321SL sheet: 25 MHz, CL 12 pF, ESR ≤ 50 Ω,
+    C0 ≤ 3 pF, same 3225 land and pinout, so C25 / C26 and D-R12-14's gm_crit 0.97-1.43 mA/V would be unchanged.
+  * But it is Extended, which adds a $3.07 feeder fee per order (JLC Economic, jlc_cost).
+  * U5's flag puts the order through JLC's review anyway, so the swap removes no review step. That would be cost grown
+    without need, so Y1 stays on Basic C9006.
+  * C5444544 is recorded as the drop-in if JLC's review charges more than that fee for Y1.
+* **Owner item.** R12_VALIDATION row 21 records this as an order-day item.
+
+**AGENTS §2 check (D-R12-86 … -92).**
+* §2.1 / §2.2: J400, U9, the EN chain and RAW_ACT behind Q120 / Q121 are unchanged (S-1 / S-2 / S-5 OK).
+* §2.3: no firmware rule changes; PA4 still reads high with the ports on.
+* §2.4: no gate network changed (S-3 OK). PC1's ball neighbours are now gated (K-neighbours).
+* §2.5: labels as above.
 
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 

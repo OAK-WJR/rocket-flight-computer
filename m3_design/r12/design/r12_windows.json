@@ -1,4 +1,30 @@
 {
+ "cam_input": {
+  "dmax_at_200kHz": {
+   "tOFF_max_310ns": 0.938,
+   "tOFF_typ_220ns": 0.956
+  },
+  "four_stall_BAT_IN_V": 5.7211,
+  "four_stall_U403_VIN_V": 5.63,
+  "four_stall_duty_needed_lossless": 0.9273,
+  "four_stall_max_held_V": {
+   "tOFF_max_310ns": 5.192,
+   "tOFF_typ_220ns": 5.292
+  },
+  "four_stall_note": "at the four-stall point U403 runs past its 75 % recommended duty, at or near its minimum off-time limit: CAM_5V may fall below the 5.221 V window low end to about 5.19 V (above the camera 5.0 V minimum before harness drop); the camera is not shown to fail",
+  "label": "Calculation / Inference (Datasheet duty, tOFF(MIN) and RDS(on)h; U9 RON, currents, DCR and copper Inference)",
+  "min_recommended_VIN_V": {
+   "drift": [
+    6.882,
+    7.676
+   ],
+   "initial": [
+    6.962,
+    7.588
+   ]
+  },
+  "window_holds_for": "U403 VIN >= VO / 0.75 (6.96-7.59 V initial); below it the CAM_5V window is not claimed"
+ },
  "crystal": {
   "gm_crit_mA_per_V_at_CL12": 1.11,
   "gm_crit_range_mA_per_V": [
@@ -168,7 +194,14 @@
   "initial": "+/-1.00 % independent"
  },
  "sense": {
-  "PORT_SENSE_limits": "PA4 (TT_a): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; at most VDD + 0.3 = 3.52 V at the 3V3 minimum 3.22 V (DS12110 I/O limits as R10 used them)",
+  "PORT_SENSE_divider": {
+   "R111_ohm": 47000.0,
+   "R112_ohm": 100000.0,
+   "low_when_off_V": 0.025,
+   "pa4_leak_A": 2.5e-07,
+   "thevenin_ohm": 31972.8
+  },
+  "PORT_SENSE_limits": "PA4 (TT_a): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; at most VDD + 0.3 = 3.52 V at the 3V3 minimum 3.22 V (DS12110 I/O limits as R10 used them); with PORT_4V8 off, R112 holds PA4 at or below the leakage figure, under VIL 0.3 x VDD",
   "PORT_SENSE_ok": true,
   "drift": {
    "CAM_5V_SENSE_V": [
@@ -176,8 +209,8 @@
     0.531
    ],
    "PORT_SENSE_V": [
-    3.076,
-    3.418
+    3.068,
+    3.426
    ],
    "VLOGIC_SENSE_ratio": [
     0.08819,
@@ -190,15 +223,15 @@
     0.518
    ],
    "PORT_SENSE_V": [
-    3.111,
-    3.38
+    3.103,
+    3.388
    ],
    "VLOGIC_SENSE_ratio": [
     0.08927,
     0.09258
    ]
   },
-  "label": "Calculation (1 % resistors, rail windows above)"
+  "label": "Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference"
  },
  "status": "R12 stage A (no board): Calculation / Inference as labelled; no measurement",
  "u9": {

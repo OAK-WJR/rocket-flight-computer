@@ -661,7 +661,7 @@ def corner_supports(holes, outline, bottom_boxes):
 def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
     """Profile r11 (and r12 with R12_CFG): see the module docstring."""
     rows, bodies, mating, bottom, issues, excluded, top_bodies, top_pads = [], [], [], [], [], [], [], []
-    gh, wires = {}, []
+    gh, wires, tails = {}, [], []
     if not all(math.isfinite(v) for v in (radius, axis_x, tol)) or radius <= 0 or tol < 0:
         raise ValueError('finite positive bore radius, finite axis and nonnegative sled tolerance required')
     if abs(mm(b.GetDesignSettings().GetBoardThickness()) - BOARD_T) > 0.01:
@@ -710,6 +710,17 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
             top_bodies.append((ref, box))
             bottom.extend((ref + '.' + p.GetNumber() + ' pin', pad_box(p)) for p in f.Pads()
                           if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)
+        # D-R12-89 (R12F1-TRI-12): R12's J121 is R10's DB125-2 (D-R12-29), so its terminal tails get R10's 3.8 mm
+        # below-seating allowance (R10_TERMINAL_TAIL_MM, an Inference) instead of the 1.6 mm pad box alone
+        if fp_name(f).startswith('M3_DB125_') and ref in cfg.get('terminals', ()):
+            for p in f.Pads():
+                if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
+                    continue
+                tail = terminal_tail_box(f, p)
+                label = ref + '.' + p.GetNumber() + ' terminal tail'
+                tails.append((ref, label, tail))
+                rows.append((margin(tail, radius, axis_x, tol), label, 'F' if f.IsFlipped() else 'B', tail))
+                (top_bodies if f.IsFlipped() else bottom).append((label, tail))
         if cfg['one_side'] and f.IsFlipped():
             issues.append(f'{ref}: on the bottom side; {cfg["name"].upper()} assembles one side (D-R12-01)')
         n = gh_circuits(f, cfg['clones'])
@@ -752,6 +763,10 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
         for other, other_box in mating[index + 1:]:
             if box_overlap(box, other_box):
                 issues.append(f'{ref} and {other} mated envelopes intersect')
+    for ref, label, tail in tails:
+        for other, body in bodies:
+            if other != ref and other.split('.')[0].split(' ')[0] != ref and box_overlap(tail, body):
+                issues.append(f'{label} intersects {other} model box')
     for label in wires:
         ref = label.split('.')[0]
         mine = [bx for lb, bx in bodies if lb == label]
@@ -780,7 +795,14 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
                 nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS, wire_room_mm=rooms,
                 gh_ports=gh, gh_drawing=GH_DRAWING, gh_wire_straight_mm=GH_WIRE_STRAIGHT,
                 wire_pads=sorted(wires), wire_allowance=dict(WIRE_ALLOWANCE, od=WIRE_OD, basis='Inference'),
-                outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded), ok=not issues)
+                outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded),
+                terminal_tails=dict(count=len(tails), refs=sorted({r for r, _, _ in tails}),
+                                    max_below_seating_mm=R10_TERMINAL_TAIL_MM,
+                                    transverse_allocation='Inference: native copper-pad AABB, not a pin/solder model',
+                                    minimum_bore_margin_mm=min((margin(box, radius, axis_x, tol) for _, _, box in tails),
+                                                               default=None),
+                                    max_projection_below_board_mm=R10_TERMINAL_TAIL_MM - BOARD_T),
+                ok=not issues)
 
 
 def wire_rooms(b, rows, profile, axis_x, tol):
@@ -837,7 +859,7 @@ def main():
     if bot:
         print(f'  deepest bottom part: {min(bot, key=lambda r: r[3][4])[1]} '
               f'(z {min(r[3][4] for r in bot):.2f} mm), worst bottom margin {bot[0][0]:.2f} mm ({bot[0][1]})')
-    print('  five-support geometry:', report['supports'])
+    print(('  five-support' if a.profile in ('r9', 'r10') else '  support') + ' geometry:', report['supports'])
     print(f"  board: {report['width_mm']:g} x {report['length_mm']:g} mm; "
           + (f"{R11_MAX_LENGTH:g} mm ceiling (D-R11-02)" if a.profile == 'r11' else
              f"{R12_MAX_LENGTH:g} mm ceiling (r12_plan)" if a.profile == 'r12' else '120 mm maximum (P1)'))

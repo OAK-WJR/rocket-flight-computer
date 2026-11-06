@@ -1,6 +1,6 @@
 {
   "schema": 3,
-  "inputs_sha256": "f325330627dbe8b25a19e3185796a20b799df3d0fc25332c3cc57bd9e5ecb522",
+  "inputs_sha256": "4b9c5fdcfac5a28686f867766949cd4f29a5f295e6a80d27ad0d29c2e6af763e",
   "model_sha256": "630cd901a402844ce78aa12cf1154eb347e852648af05d2da2ea8af4db877247",
   "limits": {
     "minimum_V": -15.0,
@@ -48512,7 +48512,7 @@
   "component_issues": [],
   "topology_issues": [],
   "retained_output": {
-    "capacitance_F": 0.0014198187356799998,
+    "capacitance_F": 0.00141981873568,
     "inventory_F": {
       "C10": 3.0359999999999997e-05,
       "C120": 1.38e-06,
