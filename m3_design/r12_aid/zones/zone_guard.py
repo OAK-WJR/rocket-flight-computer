@@ -27,7 +27,10 @@ def ok(Z, zone, layer, x, y):
     for s in Z['strips']:
         x0, y0, x1, y1 = s['rect']
         if x0 - 1e-6 <= x <= x1 + 1e-6 and y0 - 1e-6 <= y <= y1 + 1e-6 and s['layer'] == layer:
-            return s['owner'] == zone
+            on_border = min(abs(x - x0), abs(x - x1), abs(y - y0), abs(y - y1)) <= 1e-6
+            # D-R12-96: a point on a strip's border is a hand-off point: it belongs to the strip owner and to the zone
+            # whose polygon holds it
+            return s['owner'] == zone or (on_border and owns_poly)
     return owns_poly
 
 

@@ -85,7 +85,7 @@ L1	37.6	19.4	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as 
 L400	42.6	79.2	270	F	D-R12-94 (AVA re-layout): Z5 port inductor, cell-relative position kept
 L401	40.1	13.9	0	F	camera inductor
 LED1	8	52.8	0	F	D-R12-94 (AVA re-layout): Z6 red LED in the west bay (K4 -> B -> here)
-LED2	8	55	0	F	D-R12-94 (AVA re-layout): Z6 yellow LED in the west bay (H2 straight west on F at y 56.0)
+LED2	8	55	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED in the west bay (H2 straight west on F at y 56.0); D-R12-97: rotated 180 so its anode pad faces R33 (W5-REQ-1, Measured on the placed pads)
 LS120	7.2	67.4	0	F	D-R12-94 (AVA re-layout): Z6 buzzer in the empty west bay
 Q120	5	29	0	F	bus load switch
 Q121	9.6	29	180	F	bus load switch
@@ -120,7 +120,7 @@ R101	30.4	8	90	F	camera TX series at the port
 R104	28.6	7.6	0	F	CAM_5V sense top beside R433
 R105	29.8	16.6	90	F	sense
 R106	30.8	16.6	90	F	sense
-R107	28.8	16.6	90	F	sense
+R107	28.8	16.6	270	F	sense; D-R12-97: rotated 180 (pads swap: SENSE north beside R105.1, DIV south) so CAM_5V_DIV need not cross the sense run (W1 request; the old orientation forced a 2.59x detour, Measured)
 R110	36.6	43	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
 R111	26	89.6	90	F	PORT_SENSE top at the ports
 R112	27	89.6	90	F	PORT_SENSE bottom

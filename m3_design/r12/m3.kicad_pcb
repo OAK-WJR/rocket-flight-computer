@@ -7598,9 +7598,9 @@
 	(footprint "rocket:R0402"
 		(layer "F.Cu")
 		(uuid "38358f54-6a4a-4679-8bba-cc1639de6d96")
-		(at 28.8 16.6 90)
+		(at 28.8 16.6 -90)
 		(property "Reference" "R107"
-			(at 0 4.245 90)
+			(at 0 4.245 270)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(hide yes)
@@ -7613,7 +7613,7 @@
 			)
 		)
 		(property "Value" "5.1k"
-			(at 0 4 90)
+			(at 0 4 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "484b0032-a8d9-4358-a095-d6da98749415")
@@ -7625,7 +7625,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 0 0 90)
+			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c737113d-11bc-4241-8310-1e8e341609dd")
@@ -7636,7 +7636,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 90)
+			(at 0 0 270)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "8a177710-7b85-41ff-834c-c4f4c0a1987b")
@@ -7647,7 +7647,7 @@
 			)
 		)
 		(property "LCSC" "C25905"
-			(at 0 0 90)
+			(at 0 0 270)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "0d1cb19e-5d09-4475-9bf9-18b52ece0c64")
@@ -7658,7 +7658,7 @@
 			)
 		)
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 0 0 90)
+			(at 0 0 270)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "a42fe6f3-ceca-457c-80fa-d9e530edf872")
@@ -7669,7 +7669,7 @@
 			)
 		)
 		(property "Manufacturer Part" "0402WGF5101TCE"
-			(at 0 0 90)
+			(at 0 0 270)
 			(layer "F.SilkS")
 			(hide yes)
 			(uuid "46f42fee-dda3-4f8c-8206-99c7a66a65d5")
@@ -7694,44 +7694,14 @@
 			(uuid "f57285ee-0def-4f79-9000-acc8bdb21ff6")
 		)
 		(fp_line
-			(start 0.94 -0.5)
-			(end 0.23 -0.5)
+			(start -0.94 0.5)
+			(end -0.94 -0.5)
 			(stroke
 				(width 0.15)
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "d322e712-7011-4949-8739-984ba70e3d4c")
-		)
-		(fp_line
-			(start -0.94 -0.5)
-			(end -0.23 -0.5)
-			(stroke
-				(width 0.15)
-				(type solid)
-			)
-			(layer "F.Fab")
-			(uuid "6d64513d-7a5a-43c9-8fb1-b2580f8e2afd")
-		)
-		(fp_line
-			(start 0.94 0.5)
-			(end 0.94 -0.5)
-			(stroke
-				(width 0.15)
-				(type solid)
-			)
-			(layer "F.Fab")
-			(uuid "264e729e-e1b8-40da-aebe-ccf3f345bf91")
-		)
-		(fp_line
-			(start 0.23 0.5)
-			(end 0.94 0.5)
-			(stroke
-				(width 0.15)
-				(type solid)
-			)
-			(layer "F.Fab")
-			(uuid "798bb88e-2a5a-41a9-af93-64b06b653405")
+			(uuid "93f66d3e-a25a-408d-8269-cb108bd8e265")
 		)
 		(fp_line
 			(start -0.23 0.5)
@@ -7744,14 +7714,44 @@
 			(uuid "4d35498d-26bc-4ae3-b152-58c7459300c6")
 		)
 		(fp_line
-			(start -0.94 0.5)
-			(end -0.94 -0.5)
+			(start 0.23 0.5)
+			(end 0.94 0.5)
 			(stroke
 				(width 0.15)
 				(type solid)
 			)
 			(layer "F.Fab")
-			(uuid "93f66d3e-a25a-408d-8269-cb108bd8e265")
+			(uuid "798bb88e-2a5a-41a9-af93-64b06b653405")
+		)
+		(fp_line
+			(start 0.94 0.5)
+			(end 0.94 -0.5)
+			(stroke
+				(width 0.15)
+				(type solid)
+			)
+			(layer "F.Fab")
+			(uuid "264e729e-e1b8-40da-aebe-ccf3f345bf91")
+		)
+		(fp_line
+			(start -0.94 -0.5)
+			(end -0.23 -0.5)
+			(stroke
+				(width 0.15)
+				(type solid)
+			)
+			(layer "F.Fab")
+			(uuid "6d64513d-7a5a-43c9-8fb1-b2580f8e2afd")
+		)
+		(fp_line
+			(start 0.94 -0.5)
+			(end 0.23 -0.5)
+			(stroke
+				(width 0.15)
+				(type solid)
+			)
+			(layer "F.Fab")
+			(uuid "d322e712-7011-4949-8739-984ba70e3d4c")
 		)
 		(fp_circle
 			(center -0.5 0.25)
@@ -7765,7 +7765,7 @@
 			(uuid "650b51d0-f229-4cba-b5af-af46316e1e26")
 		)
 		(fp_text user "${REFERENCE}"
-			(at 0 0 90)
+			(at 0 0 270)
 			(layer "F.Fab")
 			(uuid "e2ee555b-3488-443b-a6b1-dbce89b4f511")
 			(effects
@@ -7776,14 +7776,14 @@
 			)
 		)
 		(pad "1" smd rect
-			(at -0.43 0 90)
+			(at -0.43 0 270)
 			(size 0.566 0.54)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(net "CAM_5V_DIV")
 			(uuid "ed3012bf-46b4-40e4-923e-4a416e169e85")
 		)
 		(pad "2" smd rect
-			(at 0.43 0 90)
+			(at 0.43 0 270)
 			(size 0.566 0.54)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(net "CAM_5V_SENSE")
@@ -19047,10 +19047,10 @@
 	(footprint "rocket:M3_KT0805Y_A1"
 		(layer "F.Cu")
 		(uuid "82819602-1513-4946-8cb7-5ee2ca9e9f24")
-		(at 8 55)
+		(at 8 55 180)
 		(descr "YEL; diagnostic status indicator")
 		(property "Reference" "LED2"
-			(at 5.35 -5.2 270)
+			(at 5.35 -5.2 90)
 			(unlocked yes)
 			(layer "F.SilkS")
 			(hide yes)
@@ -19063,7 +19063,7 @@
 			)
 		)
 		(property "Value" "YEL"
-			(at 0 4 0)
+			(at 0 4 180)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "ace40981-a5c6-4ef5-88d7-1638871a7fdc")
@@ -19075,7 +19075,7 @@
 			)
 		)
 		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/3f6a14f9ea2fc39f6e05d2ab0fa53e2b.pdf?productCode=C2296"
-			(at 0 0 0)
+			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "c98798ab-b268-45cc-84ee-7be36d3a674a")
@@ -19086,7 +19086,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 0 0 0)
+			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "61a3fede-c16f-413d-9190-00daacfcfee4")
@@ -19097,7 +19097,7 @@
 			)
 		)
 		(property "LCSC Part" "C2296"
-			(at 0 0 0)
+			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "7ae5ce58-4c56-4b73-b591-cdd0d9352cc3")
@@ -19109,7 +19109,7 @@
 			)
 		)
 		(property "LCSC" "C2296"
-			(at 0 0 0)
+			(at 0 0 180)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "5a69ca1c-884e-4b4d-b81b-9d3e3262ec0e")
@@ -19121,7 +19121,7 @@
 			)
 		)
 		(property "Manufacturer" "Hubei KENTO Elec"
-			(at 0 0 270)
+			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "f4f7628f-b4ce-4e22-8efd-6a0e044fe19b")
@@ -19133,7 +19133,7 @@
 			)
 		)
 		(property "Manufacturer Part" "KT-0805Y"
-			(at 0 0 270)
+			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
 			(uuid "3c7fa88c-3506-4e1c-9022-345ff2c65ecc")
@@ -19190,14 +19190,14 @@
 			(uuid "c41624dc-1ce3-425c-b432-b401ed2ea996")
 		)
 		(pad "1" smd rect
-			(at -0.95 0)
+			(at -0.95 0 180)
 			(size 1 1.4)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(net "LED_YEL_A")
 			(uuid "2e51aa63-5dfd-43f8-9256-e35e705f2328")
 		)
 		(pad "2" smd rect
-			(at 0.95 0)
+			(at 0.95 0 180)
 			(size 1 1.4)
 			(layers "F.Cu" "F.Mask" "F.Paste")
 			(net "GND")
