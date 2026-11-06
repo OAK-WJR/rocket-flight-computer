@@ -3,9 +3,11 @@
 # vertices in order; r12_route.py draws them and the drafting aid (r12_aid/plan.py) lands each rail's vias inside its own
 # island. A pad of another rail inside an island reaches its own plane by a track out of the island.
 # D-R12-95 (AVA re-layout): the 3V3A island is dropped (3V3A is local F copper in the sensor stack plus the In2 link to H1);
-# the RAW island leaves a 3V3 pocket (x 26.0-32.2, y 8.0-16.8) under the CA bus and the camera UART lanes, joined along the aft edge.
+# the RAW island leaves a 3V3 pocket (x 26.15-32.2, y 7.6-16.8) under the CA bus and the camera UART lanes; its west piece
+# (U9 / C82 / D9 / TP81) and east piece (camera buck VIN, CR trunk vias) join through the aft band y 0-7.6 under J122 / J9
+# (SMD only); x < 21.3 below y 14.4 stays 3V3 for R89's 3V3 via (W1, D-R12-96).
 net	layer	priority	points
 GND	In1	0	0,0 46,0 46,L 0,L
 3V3	In2	0	0,0 46,0 46,L 0,L
-RAW_PROTECTED	In2	1	19.8,7.2 45.5,7.2 45.5,16.8 32.2,16.8 32.2,8.0 26.0,8.0 26.0,22.8 19.8,22.8
+RAW_PROTECTED	In2	1	21.3,0 46,0 46,16.8 32.2,16.8 32.2,7.6 26.15,7.6 26.15,23.4 19.8,23.4 19.8,14.4 21.3,14.4
 PORT_4V8	In2	1	0.5,88.4 45.5,88.4 45.5,99.5 0.5,99.5
