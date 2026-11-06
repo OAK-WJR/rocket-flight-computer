@@ -65,8 +65,8 @@ procedure are in `docs/R12_VEHICLE_HANDOFF.md`.
 | Power and pyro | Fire loop 4.726699 Ω, 1.250000 A at four stalls (Calculation / Inference). Hot-plug 2304 / 2304 pass with C79, minimum −14.255 V (Simulation / Inference). Keep R166 (D-R12-09). U9 feed 0.8 mm except its pin entry (D-R12-84). Battery, fire and EN copper frozen through the re-layout; the port buck and D5 hang off a 0.6 mm B RAW trunk (U9 → U400 59.6 mΩ); U6 VCC ≥ 3.223 V; PA6 can trip in a fire into a shorted match (O-R12-07) (Calculation / Inference). | `docs/M3_R12.md` "Power", "CH1 pyro" |
 | Manufacturing and cost | `m3_design/r12_fab.sh`: JLC BOM 58 lines, 178 JLC parts (J121 and LS120 THT), no owner BOM (D-R12-85), manifest bound. $65.02 / $45.68 per board (parts + feeder) at 2 / 5 boards against the $84.41 cap; minimum all-in $173.69 / $279.93 including U1-only X-ray ($3.28 / $8.20; Calculation / Inference: 100 mm PCB quote used for 90 mm), $3.69 over the $170 target at 2 boards (parts Live 2026-11-06T17:55Z). Counting U1 / U4 / U5 / U6 / U9 gives $186.81 / $292.23–300.43, above $170 at 2 boards and straddling $295 at 5 boards (Calculation / Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). No part short. | `docs/M3_R12.md` "Cost and stock" |
 
-**R12 status (2026-11-06).** PCB `66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f` (as of `5b1f006`, branch
-`m3-assy-r12`: the AVA re-layout D-R12-93 … -99 after round 1's fixes D-R12-86 … -92, and round 2 / 3 fixes D-R12-100 … -112); not accepted, nothing ordered.
+**R12 status (2026-11-06).** PCB `db1f09992fc257b85eeaa6c2f22c04455e17dadec1d4ac732a9f955305dd45ee` (as of `f76c684`, branch
+`m3-assy-r12`: the AVA re-layout D-R12-93 … -99 after round 1's fixes D-R12-86 … -92, and round 2 / 3 / 4 fixes D-R12-100 … -120); not accepted, nothing ordered.
 
 - Stages A–D of `m3_design/r12/design/r12_plan.md` are done; the records are `stageB.md`, `stageC.md`, `stageD.md` and
   `stageE_relayout.md` (the re-layout, its checks and the re-run analyses).
@@ -74,7 +74,9 @@ procedure are in `docs/R12_VEHICLE_HANDOFF.md`.
   route_check r12 0 failing, 3 allowlisted; the fab manifest is bound; `tools/check.sh` exits 0 with the R12 board tracked.
 - Stage F round 2 reviewed the re-layout and found 16 real errors (1 Major / 15 Minor), all fixed by
   D-R12-100 … -106 without changing `be81f40b…`; the round is not clean. Round 3 found 14 real errors (2 Major / 12 Minor), all fixed by D-R12-107 … -112;
-  only C25 / C26 changed on the board (18 → 15 pF), yielding `66323cf0…`. Round 3 is not clean. Missed AVA targets remain
+  only C25 / C26 changed on the board (18 → 15 pF), yielding `66323cf0…`. Round 3 is not clean. Round 4 found 8 real errors
+  (0 Major / 8 Minor), all fixed by D-R12-113 … -120; only R166's footprint description changed on the board, yielding
+  `db1f0999…`, and `check.sh` now runs the R12 fab and stage D self-tests. Round 4 is not clean. Missed AVA targets remain
   O-R12-29; the 90 mm vehicle fit is unchecked (O-R12-28).
 - No firmware, physical, electrical or JLC DFM test has been done.
 
