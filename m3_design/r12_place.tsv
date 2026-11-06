@@ -8,7 +8,7 @@ C5	32.9	20	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a 
 C6	37.3	23.4	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
 C8	42.6	19.4	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
 C10	23	38.5	0	F	D-R12-94 (AVA re-layout): Z3 3V3A bulk between U4 and U6
-C13	17.8	50.6	90	F	D-R12-94 (AVA re-layout): Z4 NW pocket: 3V3 for B2 / D2 (2.4 mm from B2, was 4.6)
+C13	17.9	50.5	90	F	D-R12-98 (integration): moved 0.1 mm east (U1 courtyard limit) and 0.1 mm aft from (17.8, 50.6) (its 3V3 via at (17.9, 51.52) keeps 0.48 mm from HSE_IN, K-reference) so its 3V3 / GND vias sit straight on its axis at x 17.9, east of the CAM_5V_SENSE In2 lane (x 17.35) and PYRO1_GATE_N F (x 18.7) (Measured: the old vias at x 17.2 lay 0.3 mm from the NRST In2 lane); D-R12-94 (AVA re-layout): Z4 NW pocket: 3V3 for B2 / D2
 C14	13.6	60	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
 C15	19.6	59.6	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3 at K1 (forward-face cols 1-2 carry no signal)
 C16	17	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
@@ -19,7 +19,7 @@ C20	27.8	60.2	90	F	D-R12-94 (AVA re-layout): Z4 SE pocket: VCAP2, E7 dog-bone ->
 C21	18	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A for H1
 C22	17	60.6	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A bulk
 C23	13.6	63	0	F	D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
-C24	16.6	55	0	F	NRST (D-R12-34: west of U1 F1 / F2 stub ends); D-R12-44: moved with the U1 cluster 10 mm forward
+C24	26.6	45.18	90	F	D-R12-98 (integration): NRST capacitor moved from the U1 west pocket (16.6, 55) onto the NRST F run beside J2 (pad 1 on the run at (26.6, 45.6)); Measured: the pocket holds only the NRST and CAM_5V_SENSE In2 vias and the NRST GND partner, and C24 there forced NRST's In2 lane under the PYRO1_CONT and ACT_EN_MCU B runs (K-reference); was D-R12-34 / -44
 C25	14.6	49.6	0	F	HSE load; D-R12-44: re-placed after U1 moved forward
 C26	14.6	55.3	0	F	HSE load; D-R12-44: moved with the U1 cluster 10 mm forward
 C28	36.6	45.9	90	F	D-R12-94 (AVA re-layout): Z2 VBUS cap beside J3
