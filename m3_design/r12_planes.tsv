@@ -10,4 +10,6 @@ net	layer	priority	points
 GND	In1	0	0,0 46,0 46,L 0,L
 3V3	In2	0	0,0 46,0 46,L 0,L
 RAW_PROTECTED	In2	1	21.3,0 46,0 46,16.8 32.2,16.8 32.2,7.6 26.15,7.6 26.15,23.4 19.8,23.4 19.8,14.4 21.3,14.4
-PORT_4V8	In2	1	0.5,88.4 45.5,88.4 45.5,99.5 0.5,99.5
+# D-R12-99 (90 mm outline): the PORT_4V8 island moves with the port row; it starts at y 80.7, forward of the
+# port-UART B lanes and their vias (y <= 80.0), so their B chains stay over the 3V3 sheet.
+PORT_4V8	In2	1	0.5,80.7 45.5,80.7 45.5,89.5 0.5,89.5
