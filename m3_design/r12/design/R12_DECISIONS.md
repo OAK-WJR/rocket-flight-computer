@@ -89,9 +89,13 @@ avoid the LDO's code, VIPPO and $0.81.
 (TPS70933), C90, C91, C92, C93, C100, R102, R103. Added U403 (EN = CAM_PWR_EN, PC14, with R431 100k pull-down: off in
 reset, F6 / F11 function kept; TPS563208 EN VENL 0.8 V, REN 0.6–2.4 MΩ, Datasheet), L401 4.7 µH, C432 100 nF bootstrap,
 C433 22 µF input, C434 22 µF output (with C431), R433 51k + R434 10k / R435 10k: CAM_5V **5.221–5.691 V** initial, 5.162–
-5.757 V drift (Calculation), above the RunCam 5 V minimum by 0.22 V for the harness at 1 A (R10's conditional camera
-minimum was 5.03 V at 1 A; the harness drop is an Inference). R100 / R101 now join the camera wires to PD6 / PD5 directly (1 kΩ series, as the
-ports; PD5 / PD6 are 5 V-tolerant FT pins, R11 pin table). New firmware rule: keep PD5 / PD6 analog while U403 is off
+5.757 V drift (Calculation; drift Inference), conditional on U403 VIN ≥ VO / 0.75 (TI SLVSD90B §7.3;
+6.96–7.59 V for the initial window, Calculation). The 0.22 V initial margin over the RunCam 5 V minimum
+is at the regulator under that input condition, before PCB and harness loss; it is not guaranteed over the
+2S range. At four stalls U403 sees about 5.60 V; the optimistic camera-pin estimate is about 4.95 / 5.05 V
+at maximum / typical off-time with the 1 A load and R10 harness / transient allowances (Calculation / Inference;
+stageD_analysis.md §6). Camera dropout and harness behaviour need bench qualification. R100 / R101 now join the
+camera wires to PD6 / PD5 directly (1 kΩ series, as the ports; PD5 / PD6 are 5 V-tolerant FT pins, R11 pin table). New firmware rule: keep PD5 / PD6 analog while U403 is off
 (no drive into an unpowered camera). Lost: CAM_FAULT_N, the camera current limit at ~1.1 A (the buck's 3.3–5.1 A valley
 limit and hiccup contain a short; a 3–5 A overload short of a hard short could reach U9's 3.9 A limit, Inference) and
 the camera UART isolation. CAM_5V_SENSE (PC2_C, D-R11-86 divider) kept: 0.46–0.52 V (Calculation). AVA: camera switched
@@ -246,7 +250,7 @@ D6 east, the buzzer, LEDs and Tag-Connect forward (stageB.md §5).
 DB125-3.5-2P-BK-S (LCSC C52993880), with R10's land and model `M3_DB125_2P_BK` copied verbatim (`r12_parts.R10_REUSE`).
 Pin 1 PYRO1_OUT (E1−), pin 2 PYRO1_IGN (E1+). Pad 1 carries no unconnected inner rings, as on R10. The S-8 keep-outs on
 In1 / In2 round both barrels are kept (`r12_route.S8_KEEPOUT`). Placement: (7.4, 37.0), rotation 270, wires leave west.
-The face sits 3.35 mm in from the edge, so the R10 bare-bore wire-room rule passes: 5.00 mm against the 4.95 mm floor
+The face sits 3.40 mm in from the edge, so the R10 bare-bore wire-room rule passes: 5.00 mm against the 4.95 mm floor
 (fit_check r12 now checks J121 as a terminal; Calculation on CAD envelopes). Assembly: JLC-fitted THT. Economic PCBA
 takes THT parts (cost_study.md §1.1: about $0.016 per manual joint plus $3.58 hand-soldering labour per order, Live
 2026-11-04). The part is Extended (feeder fee); stage D reruns the cost. It is not owner-fitted.
@@ -494,8 +498,8 @@ fan-outs re-done (h2), then SD_SCK routed with the partner block off and four vi
 Owner instruction (via the supervisor): every JLC-placed part must be allowed on JLC Economic PCBA, and parts whose maker
 rating is a 250 °C peak are accepted on Economic's 255 ± 5 °C profile (an owner deviation; JLC's "Standard Only" flag is a
 separate rule and still applies). Kept as they are, so `economic_parts.md` §3.3 / §3.4 swaps are **not** made: D5 / D6 /
-D9 SS34 (MDD maker rating 250 °C, Datasheet), D121 Semtech SRV05-4 (no maker figure found) and J430 Molex 472192001
-(250 °C search-reported, Inference). The barometer goes back to the MS5607 family (D-R12-52), which is rated 250 °C,
+D9 SS34 (MDD maker rating 250 °C, Datasheet), D121 Semtech SRV05-4 (TL 260 °C / 10 s lead soldering; body reflow
+unverified) and J430 Molex 472192001 (250 °C search-reported, Inference). The barometer goes back to the MS5607 family (D-R12-52), which is rated 250 °C,
 40 s max (TE MS5607-02BA03, 06/2017, "Maximum Soldering Temperature", Datasheet). What a 5–10 °C over-peak does to each
 of these parts (package, sensor offset, contact plating) is an **Inference** not checked with any maker; TE gives a
 +0.4 mbar reflow impact with 7 days' recovery at its own profile (Datasheet), not at 255–260 °C. Owner acceptance row A-9.
@@ -837,9 +841,9 @@ contract with R12's revision, KIID seed 12120, table and gate data, gated by che
 allowed) applies the frozen table `m3_design/r12_legends.tsv`, drafted once by `m3_design/r12_legends_aid.py` (R11's
 search helpers in R12's order: every contact legend first, then J122's note, the revision, SHOWN_REFS, words, J2's rows,
 pin-1 dots, designators, Fab references; two aid runs write the same file). At the SH ports' 1.0 mm pitch two neighbours'
-1.0 mm legends cannot share a face side by side (ink about 1.15 mm plus the 0.155 mm gap), so each contact's legend
-goes on the bottom face (no parts there, D-R12-01) along its own column, alternately outward (ink ends at the pad centre
-line) and inward (ink starts 0.2 mm past it), both alternations tried; the aid's ownership margin is 0.05 mm (the gate's
+1.0 mm legends cannot share a face side by side (ink about 1.15 mm plus the 0.155 mm gap), so the contact legends
+go on the bottom face (no parts there, D-R12-01), except J400's `1:SW` and `4:NC` on the top face. Each follows its
+own column, alternately outward (ink ends at the pad centre line) and inward (ink starts 0.2 mm past it), both alternations tried; the aid's ownership margin is 0.05 mm (the gate's
 0.01 mm; R11's aid 0.1 mm). All 30 SH contact legends, J1, J121 and every word, SWD row and SHOWN_REFS designator are
 placed; 111 designators shown (35 on the bottom), 76 hidden on F.Fab. Copper moved to clear legend columns (each step
 DRC 0, route_check r12 0 failing, check_r12 copper 0): J410 / J420 pin 2 reach PORT_4V8 through their 100 nF pad and its
@@ -881,7 +885,7 @@ the ports, with the unchanged east-edge copper (DC solves L400 → J410 / J420 /
 bound on the drop): J420 ≥ **4.561 V initial / 4.529 V drift** (+61 / +29 mV over 4.5 V), J410 4.562 / 4.529 V, J440
 4.564 / 4.532 V; no-load top 4.938 / 4.972 V (−62 / −28 mV under 5.0 V). Widening the feed was not needed and would not
 by itself have helped (the drift window alone is too wide). PA4 PORT_SENSE becomes 3.11-3.38 V initial, 3.08-3.42 V
-drift (VIH 2.39 V, ≤ 3.52 V; Calculation). The camera rail (U403, CAM_5V) and the "device TX ≤ 3.6 V" UART rule are
+drift (VIH 2.39 V, ≤ 3.52 V; Calculation; drift Inference). The camera rail (U403, CAM_5V) and the "device TX ≤ 3.6 V" UART rule are
 untouched. Cost: one Extended code, +$3.07 feeder per order and $0.03 of part (Live). Net names unchanged.
 
 **D-R12-84 U9 feed and output copper (O-R12-25).** The 0.4 mm C96.1 → C88.1 → U9.5 run (4.13 mm, IPC-2152 upper
@@ -1136,7 +1140,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | A-3 | F10: "each 1 kΩ plus ground-only ESD" | 1 kΩ only | D-R12-18 |
 | A-4 | F3 names the MS5611 | MS5607-02BA03 (10–1200 mbar; full accuracy from 300 mbar) | D-R12-52 (D-R12-13 superseded) |
 | A-5 | F10 / R10: camera via U402 limiter and U12 / U13 isolation | camera buck EN switch, 1 kΩ series, CAM_FAULT_N gone | D-R12-08 |
-| A-6 | F10 / P2: JST GH (R11) | XUNPU GH-1.25 clones (mating Inference) | D-R12-15 |
+| A-6 | F10 / P2: JST GH (R11) | Megastar SH 1.0 clones, friction retention owner-accepted (D-R12-31), mating Inference (O-R12-04) | D-R12-15, -31 |
 | A-7 | F11: LS120 MLT-5020 | QMB-09B-03 THT, JLC THT assembly (none owner-fitted) | D-R12-16, -85 |
 | A-8 | PORT_4V8 within 4.5–5.0 V at every corner | inside at every corner since D-R12-83: 4.603–4.938 V initial, 4.571–4.972 V drift at the regulator, ≥ 4.529 V at the ports under 0.561 A (the LR900-F limits an Inference) | D-R12-07, -21, -83 |
 | A-9 | Economic reflow 255 ± 5 °C vs makers' 250 °C peak (SS34 D5 / D6 / D9, MS5607 U5; J430 and SRV05-4 by Inference) | accepted by the owner (2026-11-04); effect on each part is an Inference | D-R12-49 |

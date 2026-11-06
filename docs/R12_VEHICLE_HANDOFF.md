@@ -1,6 +1,6 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `d6e4f7ee…` (M3-ASSY-R12), 46 × 100 × 1.6 mm, four layers, every part on the top face and assembled by
+**Status.** PCB `f60d8239…` (M3-ASSY-R12), 46 × 100 × 1.6 mm, four layers, every part on the top face and assembled by
 JLC. Branch `r12-port-fix`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
@@ -35,7 +35,7 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
 - **Pyro terminal J121.** A black DORABO DB125-3.5-2P screw terminal at (7.4, 37.0); the wires leave west (D-R12-29).
   - Pin 1 (7.4, 35.25) is PYRO1_OUT, `E1−` (the side Q124 switches to GND).
   - Pin 2 (7.4, 38.75) is PYRO1_IGN, `E1+` (fed through R134 from the bus).
-  - Its face is 3.35 mm in from the edge, giving 5.00 mm of bare-bore wire room against R10's 4.95 mm floor
+  - Its face is 3.40 mm in from the edge, giving 5.00 mm of bare-bore wire room against R10's 4.95 mm floor
     (Calculation on CAD envelopes).
 - **Battery pads J1** (`M3_WIREPAD_2P_P5`: 1.40 mm holes, 2.60 mm lands, 5.00 mm pitch; D-R12-30).
   - Pad 1 BAT_IN (3.5, 17.8), pad 2 GND (3.5, 12.8), legends `1:BAT+` / `2:GND`.
@@ -45,7 +45,7 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
 - **Directions.** On J410, J420 and J440, pin 3 "board TXO" is driven by the board (PD8, PB13, PC6): wire the module's
   RX to it. Pin 4 "board RXI" is received by the board (PD9, PB12, PC7): wire the module's TX to it. **J9 is
   different:** pin 5 is board RXI and pin 6 board TXO. `5V4` is the camera supply from U403 (5.22–5.69 V initial,
-  Calculation).
+  Calculation, conditional on U403 VIN ≥ VO / 0.75; low-input dropout estimate in M3_R12 "Power").
 - **J9 needs both supply contacts and both GND contacts wired**, so the 1 A camera allowance is 0.5 A per contact
   against SH's 1 A rating (JLC listing, Live 2026-11-04).
 - **J410, J420 and J440 carry the same supply and UART pin order.** The firmware port map defaults to GPS J410, radio
@@ -85,8 +85,8 @@ Further rules:
 
 ## Pyro and per-flight checks
 
-The e-match connects at J121's screw terminal: `E1+` to pin 2 (IGN), `E1−` to pin 1 (OUT). The match plus its leads
-must stay inside the fire budget's ≤ 0.3 Ω lead allowance. At four stalls the fire current is 1.250 A against the
+The e-match connects at J121's screw terminal: `E1+` to pin 2 (IGN), `E1−` to pin 1 (OUT). The match must be ≤ 2 Ω and its
+leads ≤ 0.3 Ω (the fire budget's separate allowances). At four stalls the fire current is 1.250 A against the
 MJG J-Tek 1.125 A floor (Calculation / Inference).
 
 **Per-flight checklist.** This is R10's list ([ORDERING §8.3](ORDERING.md#83-after-delivery-probes-coating-staking-and-bench-gates))
@@ -158,6 +158,7 @@ applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 
 ## Cost
 
-M3 metric (parts + feeder per board): $61.88 at 2 boards and $44.38 at 5 boards, against the $84.41 cap (Live
-2026-11-05). All-in about $164 for 2 boards and $265 for 5 (Calculation). No part is short. See
+M3 metric (parts + feeder per board): $66.51 at 2 boards and $46.25 at 5 boards, against the $84.41 cap (Live
+2026-11-05T19:19–19:21Z). All-in $173.39 for 2 boards and $274.59 for 5 (Calculation); the 2-board total is $3.39
+over the $170 target. No part is short. See
 [M3_R12.md, "Cost and stock"](M3_R12.md#cost-and-stock).
