@@ -173,7 +173,11 @@ def fire_budget(copper, gnd_return):
             shorts[f'{label}_{n}_stalls'] = dict(BAT_IN_V=v, fire_A=i, Q120_I2R_W=i * i * PFET_HOT,
                                                  Q121_I2R_W=i * i * PFET_HOT, Q124_I2R_W=i * i * Q124_HOT,
                                                  R134_W=i * i * R134_HOT)
-    # Q120 / Q121 gate: VGS = -(V_BAT - Q122 drop 0.1 V) x Rgs / (Rgs + R121), Rgs = R119 || R120 = 50k (1 %), R121 10k
+    # Q120 / Q121 gate: the R119 || R120 / R121 divider hangs on ACT_FET_S (the common sources of Q120 / Q121; Q120's
+    # drain is BAT_IN, R119 / R120 / C120 sit between ACT_FET_S and ACT_GATE, netlist), so
+    # VGS = -(V_ACT_FET_S - Q122 drop 0.1 V) x Rgs / (Rgs + R121), Rgs = R119 || R120 = 50k (1 %), R121 10k.
+    # During a fire V_ACT_FET_S = BAT_IN - I_fire x RDS(Q120) (R12F2-TRI-08: the stage D / E figures took BAT_IN itself);
+    # with the bus on and no fire, Q120 carries only the sense banks' sub-mA current, so V_ACT_FET_S = BAT_IN.
     r_gs_min = 50e3 * .98
     ratio = r_gs_min / (r_gs_min + 10e3 * 1.02)
     tau = (50e3 * 10e3 / 60e3) * 1.02 * (1e-6 * 1.10 * 1.15)      # C120 1 uF +10 % tolerance, +15 % temperature
@@ -181,18 +185,34 @@ def fire_budget(copper, gnd_return):
     # (Rgs +2 %, R121 -2 %), not the smallest one the drive-strength figures above use
     r_gs_max = 50e3 * 1.02
     ratio_max = r_gs_max / (r_gs_max + 10e3 * .98)
-    def vgs(v):
-        return (v - .1) * ratio
-    gate = dict(q120_q121_vgs_V={f'{v:g}V': -vgs(v) for v in (stalls['4']['BAT_IN_V'], 6.0, 7.4, 8.4, 12.6, 19.9)},
+    def vgs(v, amps=0.0):
+        return (v - amps * PFET_HOT - .1) * ratio
+
+    def during_fire(v, amps):
+        return dict(BAT_IN_V=v, fire_A=amps, Q120_drop_V=amps * PFET_HOT, ACT_FET_S_V=v - amps * PFET_HOT,
+                    vgs_V=-vgs(v, amps), margin_to_minus_4V5_row_V=vgs(v, amps) - 4.5)
+    four = stalls['4']
+    gate = dict(q120_q121_vgs_four_stall_fire=during_fire(four['BAT_IN_V'], four['fire_A']),
+                # at a given BAT_IN v the fire current is v / rest (loaded()'s relation)
+                q120_q121_vgs_during_fire_V={f'{v:g}V': -vgs(v, v / rest) for v in (6.0, 7.4, 8.4)},
+                q120_q121_vgs_shorted_four_stall={k: during_fire(shorts[f'{k}_4_stalls']['BAT_IN_V'],
+                                                                 shorts[f'{k}_4_stalls']['fire_A'])
+                                                  for k in ('match_shorted', 'match_and_leads_shorted')},
+                q120_q121_vgs_bus_on_no_fire_V={f'{v:g}V': -vgs(v) for v in (6.0, 7.4, 8.4, 12.6, 19.9)},
                 q120_q121_time_to_minus_4V5_ms={f'{v:g}V': (-tau * math.log(1 - 4.5 / vgs(v)) * 1e3 if vgs(v) > 4.5
                                                             else None) for v in (6.0, 7.4, 8.4)},
+                q120_vgs_note=('during a fire ACT_FET_S = BAT_IN - I_fire x 73.5 mOhm (Q120 hot, the -4.5 V row x 1.225; '
+                               'R12F2-TRI-08); the enable time and the 12 V corner have no fire current (bus on, before '
+                               'the fire). A shorted match takes |VGS| below the -4.5 V row, where RDS(on) is above the '
+                               'row value used here (Inference; a fault case, not the fire budget)'),
                 q120_rds_row='AO3401A RDS(on) <= 60 mOhm at VGS -4.5 V (25 C)', q120_vgs_abs_max_V=12.0,
                 q120_vgs_exceeds_12V_above_pack_V=12.0 / ratio_max + .1, q120_vgs_ratio_min_max=[ratio, ratio_max],
                 q124_vgs_min_V=3.240 * 10e3 / (10e3 + 220), q124_vgs_row_V=2.5, q124_vgs_th_max_V=1.45,
                 q124_gate_tau_us=220 * 220e-9 * 1e6,
                 basis='R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 '
                       '220 nF (values unchanged from R10 / R11); AO3401A / AO3400A datasheet rows (D-R12-10); C120 '
-                      'tolerance and temperature factors as R10 (no bias credit), Inference')
+                      'tolerance and temperature factors as R10 (no bias credit); Q122 drop 0.1 V and the Q120 hot '
+                      'factor, Inference')
     return dict(
         status='Calculation on R12 CAD copper with R10 GAP-1 pack model; Inference: FET hot factors, pack, harness, '
                'match, converter load allocations',
@@ -336,19 +356,34 @@ def spec(board, ref, net):
     return f'{ref}:' + ','.join(pads_on(board, ref, net))
 
 
+# TI TPS563208 SOT-23-6 (DDC) pinout: 1 GND, 2 SW, 3 VIN, 4 VFB, 5 EN, 6 VBST. On R12 U400's EN is tied to VIN (both
+# RAW_PROTECTED): the 0.25 mm F.Cu stub U400.5 -> U400.3 carries only EN's input current (uA), so the load-current paths
+# start at VIN alone (R12F2-TRI-06; U403's EN is CAM_PWR_EN, another net).
+BUCK_VIN = ('3',)
+# R12F2-TRI-07: RAW_PROTECTED's load branches end where their copper joins the In2 RAW_PROTECTED island (a via whose In2
+# pad touches that fill): the current enters there. Ending at every via instead (check_r10.path_graph's end=None) made
+# each branch take the whole B.Cu trunk, including copper that carries only the other branch's current.
+PLANE_END = {'RAW_PROTECTED': 'In2.Cu'}
+
+
 def power_paths(board):
-    """R12's rail paths by function (R10 K-power basis): (name, net, start pads, end pads or None = the path's vias,
-    design current A, basis)."""
+    """R12's rail paths by function (R10 K-power basis): (name, net, start pads, end pads or None = the path's vias
+    (on a PLANE_END net: the vias joined to that net's inner fill), design current A, basis). rail_paths adds the
+    RAW_PROTECTED loads' budget currents (raw_budget_currents)."""
     p = lambda ref, net: {ref: pads_on(board, ref, net)}         # noqa: E731
     port_v = r12_budget.rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)']['initial']['max_V']
     port_in = 1.9 * port_v / (.80 * FOUR_STALL_VIN)
     cam_in = 1.249 * 5.691 / (.80 * FOUR_STALL_VIN)
+    for ref in ('U400', 'U403'):
+        if not set(BUCK_VIN) <= set(pads_on(board, ref, 'RAW_PROTECTED')):
+            raise ValueError(f'{ref} VIN (pin 3) is not on RAW_PROTECTED')
     rows = [
         ('U9 IN', 'BAT_IN', p('J1', 'BAT_IN'), p('U9', 'BAT_IN'), 2.9, 'R10 U9 IN'),
         ('U9 OUT', 'RAW_PROTECTED', p('U9', 'RAW_PROTECTED'), None, 2.9, 'R10 U9 OUT'),
-        ('U400 IN', 'RAW_PROTECTED', p('U400', 'RAW_PROTECTED'), None, port_in,
-         f'port 1.9 A at {port_v:.3f} V / 0.80 from 5.71 V (Inference)'),
-        ('U403 IN', 'RAW_PROTECTED', p('U403', 'RAW_PROTECTED'), None, cam_in,
+        ('U400 IN', 'RAW_PROTECTED', {'U400': BUCK_VIN}, None, port_in,
+         f'port 1.9 A at {port_v:.3f} V / 0.80 from 5.71 V (Inference); VIN pin 3 only, the EN stub excluded '
+         '(R12F2-TRI-06)'),
+        ('U403 IN', 'RAW_PROTECTED', {'U403': BUCK_VIN}, None, cam_in,
          'camera 1.249 A at 5.691 V / 0.80 from 5.71 V (Inference)'),
         ('D5 IN', 'RAW_PROTECTED', p('D5', 'RAW_PROTECTED'), None, 1.294, 'R10 VLOGIC 1.294 A'),
         ('VLOGIC D5 to U2', 'VLOGIC', p('D5', 'VLOGIC'), p('U2', 'VLOGIC'), 1.294, 'R10 VLOGIC trunk'),
@@ -363,13 +398,95 @@ def power_paths(board):
     return rows
 
 
-def rail_paths(board, stack):
+def plane_path_graph(board, net, start, layer):
+    """check_r10.path_graph with the path's end at the vias of `net` whose `layer` pad touches the net's fill on that
+    layer (check_r10.plane_via): the copper on simple paths from the start pads to the inner island. Returns
+    (segments, joined, vias on the path, pad labels on the path)."""
+    import check_r10
+    pads, vias, edges = check_r10.track_graph(board, net)
+    first = {'P' + lab for lab, ref, num, _ in pads if num in start.get(ref, ())}
+    lid = board.GetLayerID(layer)
+    last = {'V' + v.m_Uuid.AsString() for v in vias if check_r10.plane_via(board, v, lid, net)}
+    kept, joined = check_r10.simple_path_edges(edges, first, last)
+    on = {x for a, b, _ in kept.values() for x in (a, b) if isinstance(x, str)}
+    tracks = {e[2].m_Uuid.AsString(): e[2] for e in kept.values()}
+    return (list(tracks.values()), joined, [v for v in vias if 'V' + v.m_Uuid.AsString() in on],
+            sorted(n[1:] for n in on if n.startswith('P')))
+
+
+def raw_budget_currents(fire):
+    """RAW_PROTECTED branch currents at the board's own budget during the fire: the fire budget's other_load_parts at
+    the four-stall BAT_IN (RAW_PROTECTED taken as BAT_IN, U9's drop ignored, which understates the currents by about
+    1 %): U400 the ports' input power, U403 the camera's, D5 logic + microSD write + D5's own drop (Calculation /
+    Inference: the allocations, the 80 % efficiency and D5's drop are Inference)."""
+    parts, v = fire['other_load_parts'], fire['four_stall_BAT_IN_V']
+    return {'U400 IN': parts['ports_W'] / v, 'U403 IN': parts['camera_W'] / v,
+            'D5 IN': (parts['logic_W'] + parts['microsd_write_W'] + parts['d5_W']) / v}
+
+
+# the net's source path current: on RAW_PROTECTED every load current comes through U9's path (R10's 2.9 A)
+SOURCE_A = {'RAW_PROTECTED': 2.9}
+
+
+def shared_copper(found, raw_budget):
+    """R12F2-TRI-07: a track on more than one load path of a net carries the sum of their currents. For each group of
+    such tracks (same paths, layer and width): length, the summed design current and its IPC-2152 rise, the same capped
+    at the net's source current (SOURCE_A: the summed design inputs exceed U9's own 2.9 A path rating), and the summed
+    budget current and its rise. U9 OUT (the source path) shares no track with the load paths: they meet only through
+    the In2 island. IPC rise: long-conductor fit, no plane credit, an upper bound (Calculation on CAD widths /
+    Inference)."""
+    import pcbnew
+    mm = pcbnew.ToMM
+    owners = {}
+    for name, (net, amps, segs, board, stack) in found.items():
+        for t in segs:
+            owners.setdefault(t.m_Uuid.AsString(), (t, net, board, stack, []))[4].append(name)
+    groups = {}
+    for t, net, board, stack, names in owners.values():
+        if len(names) < 2:
+            continue
+        lay = board.GetLayerName(t.GetLayer())
+        w = round(mm(t.GetWidth()), 4)
+        key = (net, tuple(sorted(names)), lay, w)
+        g = groups.setdefault(key, dict(net=net, paths=list(key[1]), layer=lay, width_mm=w, th_mm=stack[lay][0],
+                                        length_mm=0.0, R_series_ohm=0.0, tracks=[]))
+        g['length_mm'] += mm(t.GetLength())
+        g['R_series_ohm'] += seg_r(mm(t.GetLength()), w, stack[lay][0])
+        g['tracks'].append([[round(mm(t.GetStart().x), 3), round(mm(t.GetStart().y), 3)],
+                            [round(mm(t.GetEnd().x), 3), round(mm(t.GetEnd().y), 3)]])
+    out = []
+    for key in sorted(groups):
+        g = groups[key]
+        g['tracks'].sort()
+        design = sum(found[n][1] for n in g['paths'])
+        g['design_A_sum'] = design
+        g['ipc_rise_design_sum_C'] = ipc2152.ipc_dt(g['width_mm'], g['layer'], design, th_mm=g['th_mm'])
+        g['ipc_width_for_30C_at_design_sum_mm'] = ipc2152.ipc_width(30.0, g['layer'], design, th_mm=g['th_mm'])
+        cap = SOURCE_A.get(g['net'])
+        if cap is not None and design > cap:
+            g['design_A_capped_at_source'] = cap
+            g['ipc_rise_capped_C'] = ipc2152.ipc_dt(g['width_mm'], g['layer'], cap, th_mm=g['th_mm'])
+        if all(n in raw_budget for n in g['paths']):
+            g['budget_A_sum'] = sum(raw_budget[n] for n in g['paths'])
+            g['ipc_rise_budget_C'] = ipc2152.ipc_dt(g['width_mm'], g['layer'], g['budget_A_sum'], th_mm=g['th_mm'])
+        g['label'] = ('Calculation on CAD widths; the rise is the IPC-2152 long-conductor fit with no plane credit, an '
+                      'upper bound (Inference); design currents R10 K-power basis, budget currents Inference')
+        out.append(g)
+    return out
+
+
+def rail_paths(board, stack, fire=None):
     import pcbnew
     import check_r10
     mm = pcbnew.ToMM
-    out = {}
+    out, found = {}, {}
+    raw_budget = raw_budget_currents(fire) if fire else {}
     for name, net, start, end, amps, basis in power_paths(board):
-        segs, joined, vias, on = check_r10.path_graph(board, net, start, end)
+        if end is None and net in PLANE_END:
+            segs, joined, vias, on = plane_path_graph(board, net, start, PLANE_END[net])
+        else:
+            segs, joined, vias, on = check_r10.path_graph(board, net, start, end)
+        found[name] = (net, amps, segs, board, stack)
         key = lambda t: (t.GetLayer(), t.GetStart().x, t.GetStart().y, t.GetEnd().x, t.GetEnd().y, t.GetWidth())  # noqa: E731
         segs = sorted(segs, key=key)
         vias = sorted(vias, key=lambda v: (v.GetPosition().x, v.GetPosition().y))
@@ -390,11 +507,27 @@ def rail_paths(board, stack):
         over = [dict(layer=lay, width_mm=float(k), length_mm=v['length_mm'], rise_C=v['ipc_rise_C'])
                 for lay, q in per.items() for k, v in q['by_width_mm'].items() if v['ipc_rise_C'] > 30.0]
         out[name] = dict(net=net, amps=amps, basis=basis, joined=joined, pads=on, layers=per,
+                         end=(f'vias joined to the {PLANE_END[net]} fill' if end is None and net in PLANE_END
+                              else 'the path vias' if end is None else 'named pads'),
                          vias=[[round(mm(v.GetPosition().x), 3), round(mm(v.GetPosition().y), 3),
                                 round(mm(v.GetDrillValue()), 3)] for v in vias],
                          R_tracks_series_ohm=sum(q['R_series_ohm'] for q in per.values()),
                          over_30C=over, over_30C_all_short_entries=all(o['length_mm'] <= 2.0 for o in over))
-    return out
+        if name in raw_budget:
+            out[name]['budget_A'] = raw_budget[name]
+    shared = shared_copper(found, raw_budget)
+    for g in shared:
+        for name in g['paths']:
+            r = out[name]
+            r.setdefault('shared_tracks', []).append(
+                dict(layer=g['layer'], width_mm=g['width_mm'], length_mm=g['length_mm'], with_paths=g['paths'],
+                     design_A_sum=g['design_A_sum'], rise_design_sum_C=g['ipc_rise_design_sum_C']))
+            if g['ipc_rise_design_sum_C'] > 30.0:
+                r['over_30C'].append(dict(layer=g['layer'], width_mm=g['width_mm'], length_mm=g['length_mm'],
+                                          rise_C=g['ipc_rise_design_sum_C'], amps=g['design_A_sum'],
+                                          shared_with=g['paths']))
+                r['over_30C_all_short_entries'] = all(o['length_mm'] <= 2.0 for o in r['over_30C'])
+    return out, shared
 
 
 def fire_return(board, stack):
@@ -537,7 +670,8 @@ def main():
     S = {}
     jobs = [('BAT_IN_J1_to_U9', 'BAT_IN', spec(board, 'J1', 'BAT_IN'), spec(board, 'U9', 'BAT_IN')),
             ('BAT_IN_J1_to_Q120', 'BAT_IN', spec(board, 'J1', 'BAT_IN'), spec(board, 'Q120', 'BAT_IN')),
-            ('RAW_PROTECTED_U9_to_U400', 'RAW_PROTECTED', spec(board, 'U9', 'RAW_PROTECTED'), spec(board, 'U400', 'RAW_PROTECTED')),
+            ('RAW_PROTECTED_U9_to_U400', 'RAW_PROTECTED', spec(board, 'U9', 'RAW_PROTECTED'),
+             'U400:' + ','.join(BUCK_VIN)),                       # VIN only (R12F2-TRI-06)
             ('RAW_PROTECTED_U9_to_U403', 'RAW_PROTECTED', spec(board, 'U9', 'RAW_PROTECTED'), spec(board, 'U403', 'RAW_PROTECTED')),
             ('RAW_PROTECTED_U9_to_D5', 'RAW_PROTECTED', spec(board, 'U9', 'RAW_PROTECTED'), spec(board, 'D5', 'RAW_PROTECTED')),
             ('VLOGIC_D5_to_U2', 'VLOGIC', spec(board, 'D5', 'VLOGIC'), spec(board, 'U2', 'VLOGIC')),
@@ -560,6 +694,7 @@ def main():
     gnd = S['GND_Q124_to_J1']['resistance_ohm'] if 'GND_Q124_to_J1' in S else None
     fire = fire_budget(copper, gnd)
     four = fire['four_stall_BAT_IN_V']
+    rails, shared = rail_paths(board, stack, fire)
     out = dict(
         status='Calculation on R12 CAD copper with R10 component tolerances; Inference where labelled; no physical test',
         board_sha256=before, source_board_sha256=sha(a.source_board) if a.source_board else None,
@@ -573,7 +708,10 @@ def main():
         holdup=holdup(four),
         pa6_corners=pa6_corners(fire, S['BAT_IN_J1_to_U9']['resistance_ohm'],
                                 S['RAW_PROTECTED_U9_to_D5']['resistance_ohm']),
-        rails=rail_paths(board, stack),
+        rails=rails,
+        rails_shared=dict(groups=shared, raw_budget_A=raw_budget_currents(fire), source_A=SOURCE_A,
+                          note=('tracks on more than one load path, rated at the summed current (R12F2-TRI-07); each '
+                                "path's own by_width_mm figures are at its own current")),
         dc_solves=S,
         u6_supply=u6_supply(S) if '3V3_L1_to_U6' in S else None,
         port_supply=port_supply(S),

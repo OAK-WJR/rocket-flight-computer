@@ -187,7 +187,7 @@
    "grid_mm": 0.1,
    "net": "RAW_PROTECTED",
    "resistance_ohm": 0.05962793148227756,
-   "sink": "U400:3,5",
+   "sink": "U400:3",
    "source": "U9:6",
    "window_mm": [
     -0.0,
@@ -410,23 +410,54 @@
   "four_stall_BAT_IN_V": 5.720875496037573,
   "four_stall_ok": true,
   "gate": {
-   "basis": "R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 220 nF (values unchanged from R10 / R11); AO3401A / AO3400A datasheet rows (D-R12-10); C120 tolerance and temperature factors as R10 (no bias credit), Inference",
+   "basis": "R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 220 nF (values unchanged from R10 / R11); AO3401A / AO3400A datasheet rows (D-R12-10); C120 tolerance and temperature factors as R10 (no bias credit); Q122 drop 0.1 V and the Q120 hot factor, Inference",
    "q120_q121_time_to_minus_4V5_ms": {
     "6V": 27.358744058061966,
     "7.4V": 14.683010340285184,
     "8.4V": 11.443808609465718
    },
-   "q120_q121_vgs_V": {
+   "q120_q121_vgs_bus_on_no_fire_V": {
     "12.6V": -10.346283783783784,
     "19.9V": -16.388513513513512,
-    "5.72088V": -4.652413839625694,
     "6V": -4.8834459459459465,
     "7.4V": -6.042229729729731,
     "8.4V": -6.869932432432433
    },
+   "q120_q121_vgs_during_fire_V": {
+    "6V": -4.803690453849972,
+    "7.4V": -5.943864622811361,
+    "8.4V": -6.7582747434980694
+   },
+   "q120_q121_vgs_four_stall_fire": {
+    "ACT_FET_S_V": 5.629000470758486,
+    "BAT_IN_V": 5.720875496037573,
+    "Q120_drop_V": 0.09187502527908757,
+    "fire_A": 1.2500003439331644,
+    "margin_to_minus_4V5_row_V": 0.0763686328913149,
+    "vgs_V": -4.576368632891315
+   },
+   "q120_q121_vgs_shorted_four_stall": {
+    "match_and_leads_shorted": {
+     "ACT_FET_S_V": 5.353701615434427,
+     "BAT_IN_V": 5.532304203836373,
+     "Q120_drop_V": 0.17860258840194576,
+     "fire_A": 2.4299671891421193,
+     "margin_to_minus_4V5_row_V": -0.15149697371136917,
+     "vgs_V": -4.348503026288631
+    },
+    "match_shorted": {
+     "ACT_FET_S_V": 5.4159209881427515,
+     "BAT_IN_V": 5.574945568590383,
+     "Q120_drop_V": 0.1590245804476318,
+     "fire_A": 2.163599733981385,
+     "margin_to_minus_4V5_row_V": -0.0999978307602225,
+     "vgs_V": -4.4000021692397775
+    }
+   },
    "q120_rds_row": "AO3401A RDS(on) <= 60 mOhm at VGS -4.5 V (25 C)",
    "q120_vgs_abs_max_V": 12.0,
    "q120_vgs_exceeds_12V_above_pack_V": 14.405882352941177,
+   "q120_vgs_note": "during a fire ACT_FET_S = BAT_IN - I_fire x 73.5 mOhm (Q120 hot, the -4.5 V row x 1.225; R12F2-TRI-08); the enable time and the 12 V corner have no fire current (bus on, before the fire). A shorted match takes |VGS| below the -4.5 V row, where RDS(on) is above the row value used here (Inference; a fault case, not the fire budget)",
    "q120_vgs_ratio_min_max": [
     0.8277027027027027,
     0.8388157894736842
@@ -1058,6 +1089,7 @@
    "R_tracks_series_ohm": 0,
    "amps": 1.294,
    "basis": "R10 C84 hold-up",
+   "end": "named pads",
    "joined": false,
    "layers": {},
    "net": "VLOGIC",
@@ -1070,6 +1102,7 @@
    "R_tracks_series_ohm": 0.009340913073025299,
    "amps": 1.249,
    "basis": "R10 camera",
+   "end": "named pads",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1106,44 +1139,92 @@
    "vias": []
   },
   "D5 IN": {
-   "R_tracks_series_ohm": 0.05053523891428571,
+   "R_tracks_series_ohm": 0.012367619866666665,
    "amps": 1.294,
    "basis": "R10 VLOGIC 1.294 A",
+   "budget_A": 0.4125242721388705,
+   "end": "vias joined to the In2.Cu fill",
    "joined": true,
    "layers": {
     "B.Cu": {
-     "R_series_ohm": 0.047177143676190476,
+     "R_series_ohm": 0.010483810342857142,
      "by_width_mm": {
       "0.600": {
        "ipc_rise_C": 6.892282832991464,
-       "length_mm": 57.600001
+       "length_mm": 12.800001
       }
      },
      "ipc_width_for_30C_mm": 0.1669972689550926,
-     "length_mm": 57.600001,
+     "length_mm": 12.800001,
      "min_width_mm": 0.6,
      "th_mm": 0.035
     },
     "F.Cu": {
-     "R_series_ohm": 0.003358095238095238,
+     "R_series_ohm": 0.0018838095238095237,
      "by_width_mm": {
       "0.600": {
        "ipc_rise_C": 6.892282832991464,
-       "length_mm": 4.1
+       "length_mm": 2.3
       }
      },
      "ipc_width_for_30C_mm": 0.1669972689550926,
-     "length_mm": 4.1,
+     "length_mm": 2.3,
      "min_width_mm": 0.6,
      "th_mm": 0.035
     }
    },
    "net": "RAW_PROTECTED",
-   "over_30C": [],
-   "over_30C_all_short_entries": true,
+   "over_30C": [
+    {
+     "amps": 3.347771891418564,
+     "layer": "B.Cu",
+     "length_mm": 12.800001,
+     "rise_C": 46.13242193457375,
+     "shared_with": [
+      "D5 IN",
+      "U400 IN"
+     ],
+     "width_mm": 0.6
+    },
+    {
+     "amps": 3.347771891418564,
+     "layer": "F.Cu",
+     "length_mm": 0.7,
+     "rise_C": 46.13242193457375,
+     "shared_with": [
+      "D5 IN",
+      "U400 IN"
+     ],
+     "width_mm": 0.6
+    }
+   ],
+   "over_30C_all_short_entries": false,
    "pads": [
-    "C400.1",
     "D5.2"
+   ],
+   "shared_tracks": [
+    {
+     "design_A_sum": 3.347771891418564,
+     "layer": "B.Cu",
+     "length_mm": 12.800001,
+     "rise_design_sum_C": 46.13242193457375,
+     "width_mm": 0.6,
+     "with_paths": [
+      "D5 IN",
+      "U400 IN"
+     ]
+    },
+    {
+     "design_A_sum": 3.347771891418564,
+     "layer": "F.Cu",
+     "length_mm": 0.7,
+     "rise_design_sum_C": 46.13242193457375,
+     "width_mm": 0.6,
+     "with_paths": [
+      "D5 IN",
+      "U400 IN"
+     ]
+    }
    ],
    "vias": [
     [
@@ -1160,16 +1241,6 @@
      45.2,
      29.2,
      0.3
-    ],
-    [
-     45.2,
-     73.1,
-     0.3
-    ],
-    [
-     45.2,
-     74.0,
-     0.3
     ]
    ]
   },
@@ -1177,6 +1248,7 @@
    "R_tracks_series_ohm": 0.0031123809523809524,
    "amps": 1.9,
    "basis": "R10 port feed",
+   "end": "the path vias",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1219,6 +1291,7 @@
    "R_tracks_series_ohm": 0.0031123809523809524,
    "amps": 1.9,
    "basis": "R10 port feed",
+   "end": "the path vias",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1261,6 +1334,7 @@
    "R_tracks_series_ohm": 0.000982857142857143,
    "amps": 1.9,
    "basis": "R10 port feed",
+   "end": "the path vias",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1302,6 +1376,7 @@
    "R_tracks_series_ohm": 0.005086285714285713,
    "amps": 2.0,
    "basis": "R10 3V3 (U2 LMR50410 is a 1 A part)",
+   "end": "the path vias",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1348,9 +1423,11 @@
    ]
   },
   "U400 IN": {
-   "R_tracks_series_ohm": 0.05478151506009635,
+   "R_tracks_series_ohm": 0.05037142939047619,
    "amps": 2.053771891418564,
-   "basis": "port 1.9 A at 4.938 V / 0.80 from 5.71 V (Inference)",
+   "basis": "port 1.9 A at 4.938 V / 0.80 from 5.71 V (Inference); VIN pin 3 only, the EN stub excluded (R12F2-TRI-06)",
+   "budget_A": 0.6052503899793416,
+   "end": "vias joined to the In2.Cu fill",
    "joined": true,
    "layers": {
     "B.Cu": {
@@ -1367,37 +1444,72 @@
      "th_mm": 0.035
     },
     "F.Cu": {
-     "R_series_ohm": 0.007604371383905872,
+     "R_series_ohm": 0.0031942857142857146,
      "by_width_mm": {
-      "0.250": {
-       "ipc_rise_C": 47.5162192475997,
-       "length_mm": 2.2435028842544407
-      },
       "0.600": {
        "ipc_rise_C": 17.361967926768394,
        "length_mm": 3.8999999999999995
       }
      },
      "ipc_width_for_30C_mm": 0.3729152257264765,
-     "length_mm": 6.143502884254441,
-     "min_width_mm": 0.25,
+     "length_mm": 3.8999999999999995,
+     "min_width_mm": 0.6,
      "th_mm": 0.035
     }
    },
    "net": "RAW_PROTECTED",
    "over_30C": [
     {
+     "amps": 3.347771891418564,
+     "layer": "B.Cu",
+     "length_mm": 12.800001,
+     "rise_C": 46.13242193457375,
+     "shared_with": [
+      "D5 IN",
+      "U400 IN"
+     ],
+     "width_mm": 0.6
+    },
+    {
+     "amps": 3.347771891418564,
      "layer": "F.Cu",
-     "length_mm": 2.2435028842544407,
-     "rise_C": 47.5162192475997,
-     "width_mm": 0.25
+     "length_mm": 0.7,
+     "rise_C": 46.13242193457375,
+     "shared_with": [
+      "D5 IN",
+      "U400 IN"
+     ],
+     "width_mm": 0.6
     }
    ],
    "over_30C_all_short_entries": false,
    "pads": [
     "C400.1",
-    "U400.3",
-    "U400.5"
+    "U400.3"
+   ],
+   "shared_tracks": [
+    {
+     "design_A_sum": 3.347771891418564,
+     "layer": "B.Cu",
+     "length_mm": 12.800001,
+     "rise_design_sum_C": 46.13242193457375,
+     "width_mm": 0.6,
+     "with_paths": [
+      "D5 IN",
+      "U400 IN"
+     ]
+    },
+    {
+     "design_A_sum": 3.347771891418564,
+     "layer": "F.Cu",
+     "length_mm": 0.7,
+     "rise_design_sum_C": 46.13242193457375,
+     "width_mm": 0.6,
+     "with_paths": [
+      "D5 IN",
+      "U400 IN"
+     ]
+    }
    ],
    "vias": [
     [
@@ -1431,6 +1543,7 @@
    "R_tracks_series_ohm": 0.003992857142857142,
    "amps": 1.9,
    "basis": "R10 port rail",
+   "end": "the path vias",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1475,6 +1588,8 @@
    "R_tracks_series_ohm": 0.0008190476190476191,
    "amps": 1.5560549474605954,
    "basis": "camera 1.249 A at 5.691 V / 0.80 from 5.71 V (Inference)",
+   "budget_A": 1.243428563499939,
+   "end": "vias joined to the In2.Cu fill",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1509,6 +1624,7 @@
    "R_tracks_series_ohm": 0.0075495404032490014,
    "amps": 2.9,
    "basis": "R10 U9 IN",
+   "end": "named pads",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1553,6 +1669,7 @@
    "R_tracks_series_ohm": 0.004219801587301586,
    "amps": 2.9,
    "basis": "R10 U9 OUT",
+   "end": "vias joined to the In2.Cu fill",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1614,6 +1731,7 @@
    "R_tracks_series_ohm": 0.00941516068636974,
    "amps": 1.294,
    "basis": "R10 VLOGIC trunk",
+   "end": "named pads",
    "joined": true,
    "layers": {
     "F.Cu": {
@@ -1644,6 +1762,93 @@
     "U2.5"
    ],
    "vias": []
+  }
+ },
+ "rails_shared": {
+  "groups": [
+   {
+    "R_series_ohm": 0.010483810342857142,
+    "budget_A_sum": 1.017774662118212,
+    "design_A_capped_at_source": 2.9,
+    "design_A_sum": 3.347771891418564,
+    "ipc_rise_budget_C": 4.263809646013432,
+    "ipc_rise_capped_C": 34.6170881571217,
+    "ipc_rise_design_sum_C": 46.13242193457375,
+    "ipc_width_for_30C_at_design_sum_mm": 0.8722880979256081,
+    "label": "Calculation on CAD widths; the rise is the IPC-2152 long-conductor fit with no plane credit, an upper bound (Inference); design currents R10 K-power basis, budget currents Inference",
+    "layer": "B.Cu",
+    "length_mm": 12.800001,
+    "net": "RAW_PROTECTED",
+    "paths": [
+     "D5 IN",
+     "U400 IN"
+    ],
+    "th_mm": 0.035,
+    "tracks": [
+     [
+      [
+       45.2,
+       16.4
+      ],
+      [
+       45.2,
+       17.0
+      ]
+     ],
+     [
+      [
+       45.2,
+       17.0
+      ],
+      [
+       45.2,
+       29.2
+      ]
+     ]
+    ],
+    "width_mm": 0.6
+   },
+   {
+    "R_series_ohm": 0.0005733333333333334,
+    "budget_A_sum": 1.017774662118212,
+    "design_A_capped_at_source": 2.9,
+    "design_A_sum": 3.347771891418564,
+    "ipc_rise_budget_C": 4.263809646013432,
+    "ipc_rise_capped_C": 34.6170881571217,
+    "ipc_rise_design_sum_C": 46.13242193457375,
+    "ipc_width_for_30C_at_design_sum_mm": 0.8722880979256081,
+    "label": "Calculation on CAD widths; the rise is the IPC-2152 long-conductor fit with no plane credit, an upper bound (Inference); design currents R10 K-power basis, budget currents Inference",
+    "layer": "F.Cu",
+    "length_mm": 0.7,
+    "net": "RAW_PROTECTED",
+    "paths": [
+     "D5 IN",
+     "U400 IN"
+    ],
+    "th_mm": 0.035,
+    "tracks": [
+     [
+      [
+       44.5,
+       16.4
+      ],
+      [
+       45.2,
+       16.4
+      ]
+     ]
+    ],
+    "width_mm": 0.6
+   }
+  ],
+  "note": "tracks on more than one load path, rated at the summed current (R12F2-TRI-07); each path's own by_width_mm figures are at its own current",
+  "raw_budget_A": {
+   "D5 IN": 0.4125242721388705,
+   "U400 IN": 0.6052503899793416,
+   "U403 IN": 1.243428563499939
+  },
+  "source_A": {
+   "RAW_PROTECTED": 2.9
   }
  },
  "source_board_sha256": "be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8",

@@ -94,6 +94,28 @@ electrical SHA `c1492655…` and every hot-plug figure are identical (Measured, 
   (39.4, 79.3), 3.2 mm from L400.2, and the feed drops through C406's vias into the forward In2 PORT_4V8 island.
 * Everything else reads the board as before (fire paths, terminals, rails, gate copper, IMU placement).
 
+**Round 2 fix pass (R12F2-TRI-06 / -07 / -08, 2026-11-06; script changes, the board is unchanged).** `r12_stageD.py`
+was changed and re-run on the same zone-filled copy of `be81f40b…` (its SHA-256 equals the board's):
+* **U400 IN starts at VIN only (TRI-06).** TPS563208 (DDC) pin 3 is VIN and pin 5 is EN; on R12 EN is tied to VIN, and
+  the 0.25 mm F.Cu stub U400.5 → U400.3 ((42.6, 69.3) → (42.6, 70.2) → (43.55, 71.15), 2.24 mm) ends at the VIN pad's
+  edge and carries only EN's µA input current. Stage D started the path at both pins, so it rated the stub at the
+  2.05 A port-buck input and added its 4.41 mΩ to the path's series copper. The path and the U9 → U400 DC solve now use
+  pin 3 alone (the solve is unchanged at 59.63 mΩ: the two pins were one sink).
+* **RAW_PROTECTED load paths end at the In2 island (TRI-07).** A load path now ends at the vias whose In2 pad touches
+  the RAW_PROTECTED fill, (44.5, 16.4) and (45.2, 16.4) for the trunk, where the current enters; ending at every via made
+  both U400 IN and D5 IN take the whole 57.6 mm trunk. A track on more than one load path is rated at the summed current
+  (`stageD_budget.json` `rails_shared`), with the RAW budget currents at the four-stall fire point beside it.
+* **Q120 / Q121 VGS from ACT_FET_S (TRI-08).** The gate divider (R119 / R120 / C120) hangs on ACT_FET_S, the common
+  source node, which sits I_fire × RDS(Q120) below BAT_IN during the fire. At four stalls: 1.250 A × 73.5 mΩ = 91.9 mV,
+  ACT_FET_S 5.629 V, **VGS −4.576 V** (was −4.652 V from BAT_IN), **0.076 V** beyond the AO3401A's −4.5 V RDS(on) row
+  (was 0.152 V); during a fire at BAT_IN 6.0 / 7.4 / 8.4 V −4.80 / −5.94 / −6.76 V; with the bus on before the fire
+  (no fire current) −4.88 / −6.04 / −6.87 V, and the enable times 27.4 / 14.7 / 11.4 ms and the 14.41 V ±12 V corner
+  are unchanged. With a shorted match at four stalls |VGS| is 4.40 V (4.35 V with the leads shorted too), below the
+  −4.5 V row, so the shorted-match FET figures use an RDS(on) under the real one (a fault case, not the fire budget).
+  Calculation / Inference: the Q120 hot factor (60 mΩ × 1.225) and the 0.1 V Q122 drop are Inference. No fire-current
+  figure changes (the loop already counts Q120 / Q121 at 73.5 mΩ each).
+* Every other figure in `stageD_budget.json` is unchanged (file comparison).
+
 **Hot-plug (Simulation / Inference).** `tools/r12_hotplug.py` models BAT_IN / BAT_DAMP as an extracted copper network
 and RAW_PROTECTED as one lumped node (the retained-output inventory), so the RAW trunk has no topology to update in this
 tool. The BAT_IN / BAT_DAMP copper is frozen (D-R12-96): the 12-edge network is identical to round 1's (Measured on the
@@ -142,12 +164,22 @@ Inference).** Paths over 30 °C at R10's design currents:
   (each stub carries about half): unchanged frozen pin-entry copper.
 * J410 / J420 / J440 pin-2 feeds 0.3 mm, 1.9 / 1.9 / 0.6 mm, 33.0 °C at the 1.9 A design current (negligible at the
   0.561 A budget): unchanged port-cell copper.
-* **New: U400 IN, the 0.25 mm F.Cu link U400.5 → U400.3 (42.6, 69.3) → (43.55, 71.15), 2.24 mm, 47.5 °C at R10's
-  2.05 A port-buck design input**. It is longer than the 2 mm pin-entry class. At the 0.561 A port budget the buck draws
-  about 0.6 A from 5.71 V (Calculation / Inference: 80 % efficiency), where the fit gives a few °C. Recorded as
-  O-R12-31; not a gate rule.
-* The RAW trunk itself (0.6 mm B.Cu, 57.6 mm) is 17.4 °C at 2.05 A and 6.9 °C at D5's 1.294 A; its 54.8 mΩ series
-  copper drops about 0.12 V at 2.05 A and about 35 mV at the budget's 0.6 A (Calculation / Inference).
+* **The shared RAW trunk (R12F2-TRI-07, O-R12-31):** the 0.6 mm B.Cu run (45.2, 16.4) → (45.2, 29.2), 12.8 mm, and
+  the 0.6 mm F.Cu link (44.5, 16.4) → (45.2, 16.4), 0.7 mm, carry U400's and D5's currents together. At the summed
+  design inputs, 2.054 + 1.294 = 3.348 A, the rise is **46.1 °C**; at U9's own 2.9 A path current, which the sum
+  exceeds, 34.6 °C; at the board's fire-time budget, 0.605 A (ports 3.463 W) + 0.413 A (logic 1.4 W, microSD 0.825 W,
+  D5 0.135 W) = 1.018 A at the four-stall 5.721 V, **4.3 °C** (IPC-2152 upper bound; Calculation / Inference: the
+  load allocations, 80 % efficiency and D5's drop are Inference). 0.87 mm would hold 30 °C at 3.35 A. The F link
+  joins two In2-joined vias, so the island carries part of its current in parallel. 30 °C is this list's threshold, not
+  a gate rule: widen in a later copper pass or accept (O-R12-31); no copper change here.
+* **Withdrawn (R12F2-TRI-06):** stage E's "U400 IN 0.25 mm F.Cu link U400.5 → U400.3, 2.24 mm, 47.5 °C at 2.05 A" was a
+  mis-attribution: that link is the EN-to-VIN stub (above), which carries no load current.
+* The rest of the trunk, (45.2, 29.2) → (45.2, 74.0), and U400.3's 0.6 mm feed through C400.1 carry U400's current
+  alone: 17.4 °C at 2.05 A. U400 IN's series copper from VIN to the In2 drop is **50.37 mΩ** (was 54.8 mΩ with the
+  stub's 4.41 mΩ; the parallel C400 links are summed in series, an upper bound); with D5's current in the shared
+  11.06 mΩ it drops about 0.12 V at the design inputs and about 35 mV at the budget (Calculation / Inference). D5 IN
+  is now D5.2 → (45.2, 29.2) → the shared trunk: 12.37 mΩ (stage E's 50.5 mΩ took the trunk to C400 as well), 6.9 °C
+  on its own 1.294 A.
 * Everything else is under 30 °C: VLOGIC D5 → U2 1.0 mm 3.8 °C, U2 OUT 0.6 mm 16.5 °C at 2.0 A, U400 OUT 0.8 / 1.0 mm
   10.7 / 8.3 °C at 1.9 A, CAM_5V ≤ 8.9 °C.
 
@@ -167,14 +199,35 @@ order. **REQUIREMENTS M3 metric: $66.55 at 2 boards, $46.29 at 5 boards** agains
 
 All-in (Calculation on the Live figures; setup / stencil $9.71; SMT joints $0.0016 × 579 pasted pads per board; THT
 $0.0164 × 4 joints per board plus $3.58 labour per order; bare PCB $25.10, the 46 × 100 mm quote of cost_study.md, Live
-2026-11-04: that 90 mm costs no more is an Inference; shipping, tax and attrition excluded):
+2026-11-04: that 90 mm costs no more is an Inference; X-ray below; shipping, tax and attrition excluded):
 
-| Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | **Total** | Per board |
-|---|---|---|---|---|---|---|---|---|
-| 2 boards | $65.56 | $67.54 | $9.71 | $1.85 | $3.71 | $25.10 | **$173.47** | $86.74 |
-| 5 boards | $163.90 | $67.54 | $9.71 | $4.63 | $3.91 | $25.10 | **$274.79** | $54.96 |
+| Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | X-ray, U1 only | **Total** | Per board |
+|---|---|---|---|---|---|---|---|---|---|
+| 2 boards | $65.56 | $67.54 | $9.71 | $1.85 | $3.71 | $25.10 | $3.28 | **$176.75** | $88.38 |
+| 5 boards | $163.90 | $67.54 | $9.71 | $4.63 | $3.91 | $25.10 | $8.20 | **$282.99** | $56.60 |
 
-Was $173.39 / $274.59 (2026-11-05): JLC price movement only, the BOM is unchanged.
+Was $173.39 / $274.59 (2026-11-05) and $173.47 / $274.79 before the X-ray line (R12F2-TRI-13): JLC price movement and
+the X-ray fee only, the BOM is unchanged.
+
+**X-ray inspection (R12F2-TRI-13; JLC PCBA price page https://jlcpcb.com/help/article/pcb-assembly-price, read
+2026-11-06).** "X-ray inspection is required for components such as BGA, QFN, and other leadless packages" whose joints
+are not visible after SMT, charged per component piece: $1.64 / pc for 1–10 pcs, $0.82 / pc for 11–50 pcs, the same for
+Economic and Standard PCBA, no waiver listed. Which R12 parts JLC counts is decided on its quote:
+
+* **Certain (BGA, named by JLC): U1** STM32H743VIH6 TFBGA-100, 1 per board: 2 / 5 pcs, **$3.28 / $8.20** per order
+  (Calculation), the line in the table above.
+* **Probable (leadless ICs with joints under the body; that JLC counts them is an Inference): U4** LSM6DSVE LGA-14,
+  **U5** MS5607 (8 pads under the body), **U6** FXLS90322 HLQFN-16, **U9** TPS259470A VQFN-HR (RPW). With U1 that is 5
+  per board: 10 pcs, **$16.40** at 2 boards (total $189.87, $94.94 per board); 25 pcs at 5 boards, **$20.50** if the
+  11–50 price applies to all 25 or **$28.70** if the first 10 are at $1.64 (how JLC applies its tiers is an Inference;
+  total $295.29–303.49, $59.06–60.70 per board).
+* **Possible (Inference): D402** ESD103 TSLP-2 and **Y1** 3225 ceramic crystal, also leadless with pads under the body:
+  7 per board, at most $22.96 / $57.40 per order with every piece at $1.64.
+
+Against the plan's targets (≤ $170 at 2 boards, ≤ $295 at 5; `docs/M3_R12.md` "Cost and stock"): the 2-board order is at
+least **$6.75** over with U1 alone (was quoted as $3.47 over) and $19.87 over with the five probable parts; the
+5-board order stays under $295 with U1 alone ($282.99) and reaches $295.29–303.49 with the five (Calculation; the count
+is an Inference until JLC's quote). Confirm the X-ray count on JLC's quote before ordering.
 
 ## 6. Hashes (Measured, SHA-256; final board)
 
@@ -197,6 +250,10 @@ The Gerbers and assembly PDFs carry their creation date, so they change on every
 
 ## 7. Gate and what is not verified
 
-`PYTHONHASHSEED=0 tools/check.sh` on this tree (NUMPY_PY with numpy, so the hot-plug numerics self-tests ran): **exit 0** (Measured, 2026-11-06; the only change after it was this sentence). Not verified: any physical, electrical or firmware test;
+`PYTHONHASHSEED=0 tools/check.sh` on this tree (NUMPY_PY with numpy, so the hot-plug numerics self-tests ran): **exit 0** (Measured, 2026-11-06; the only change after it was this sentence). Round 2 fix lanes A / B (R12F2-TRI-03,
+-06, -07, -08, -10, -11, -13, branch `r12f2-AB`): two builds gave the same board `be81f40b…` and unchanged schematic and
+netlist hashes, `tools/test_r12_stageD.py` passed (8 tests) and `PYTHONHASHSEED=0 tools/check.sh` exited 0 (Measured,
+2026-11-06; no numpy interpreter, so the hot-plug numerics self-tests skipped, as did 6 tests in each of two self-test
+runs; the hot-plug files did not change). Not verified: any physical, electrical or firmware test;
 JLC DFM; the vehicle fit of the 90 mm board (O-R12-28); AN2606 (O-R12-23); a stage F review of the re-layout. After any
 later copper change: re-run the legend aid if needed, then `m3_design/r12_stageD.py` and `tools/r12_hotplug.py`.
