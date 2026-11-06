@@ -409,30 +409,30 @@ ROUTE_FIGURES_R11 = {'CAM_RX_BUFFER': (19.2, 4)}      # D-R11-61: route_check on
 # R11 recorded theirs. measured_check fails an entry when the net's route length or via count differs from
 # ROUTE_FIGURES_R12 (route_check --routes on the frozen board), and a stale entry fails the gate.
 ALLOWLIST_R12 = [
-    ('extra_vias', 'SPI1_SCK', 'net', (24.2, 50.4),
-     'D-R12-75A: SPI1 joins U4 (IMU), U6 (high-g) and U1 on a one-sided board where every pad is on F.Cu, and the three '
-     'pin orders cross: U4\'s north face west to east SCK (23.0), MOSI (23.5), MISO (24.21, east face); U6\'s west face '
-     'north to south SCK (39.3), MOSI (40.1), MISO (40.9); U1\'s A row west to east MISO (A6, 23.4), SCK (A7, 24.2), with '
-     'MOSI on ball C5\'s fixed dog-bone (B.Cu, one via). Read round the region the terminals interleave (SCK4 MOSI4 MISO4 '
-     'SCK6 MOSI6 MISO6 SCK1 MISO1), so no one-layer drawing joins them: SCK must cross MOSI between U4 and U6 and cross '
-     'MISO between U6 and U1. MOSI (dog-bone + one via) and MISO (one B.Cu hop under U6, (28.2, 37.7) / (25.5, 43.9)) are '
-     'at the two vias route_check allows, so SCK carries both crossings: a B.Cu hop under MOSI at U6 ((23.8, 38.0) / '
-     '(24.7, 38.9)) and a B.Cu run from that hop to a via at (24.2, 46.3) east of MISO\'s F.Cu lane, 3 vias. Every via has '
-     'a GND via within 1.5 mm; the route is 19.34 mm against a 19.43 mm octilinear MST (ratio 0.99). Clearing it needs U6 '
-     'rotated so its SPI pins mirror U4\'s (an IMU axis-map change), not routing',
-     dict(len_mm=19.34, vias=3)),
-    ('extra_vias', 'USB_DP', 'net', (39.12, 44.25),
-     'D-R12-75A: J3 (USB-C) interleaves the pair at 0.5 mm (A6 DP 44.25, A7 DM 43.75, B6 DP 43.25, B7 DM 44.75), so one '
-     'of DP / DM links its two pins on B.Cu through two vias west of the pads ((38.0, 43.25) / (38.0, 44.25), D-R12-40) '
-     'and the other loops round them on F.Cu. Between J3 and U1 both run on B.Cu for the stretch where F.Cu carries '
-     'I2C1_SCL / I2C1_SDA / VBUS_SENSE / SWCLK from U1\'s east column (D9, E9, D10, A9) north to U5, R9 and J2, which a '
-     'pair leaving B10 / C10 eastward must cross; DM uses two vias for that ((34.2, 46.1) / (28.3, 49.6)), DP joins its '
-     'B.Cu link directly and surfaces once at B10\'s stub ((27.4, 51.2)): 3 vias on the net, the fewest the J3 link and '
-     'the crossing allow for the pair (swapping the link onto DM moves the third via to DM). 19.22 mm against a 16.4 mm '
-     'MST (ratio 1.17); every via has a GND via within 1.5 mm',
-     dict(len_mm=19.22, vias=3)),
+    ('extra_vias', '3V3A', 'net', (21.525, 38.5),
+     'D-R12-98 (integration, AVA re-layout): 3V3A (the sensor analog rail) joins its F.Cu pads through the named In2 link '
+     'LA (ROUTING_PLAN 4) from the LDO end at (15.5, 60.6) to (19.65, 36.9) aft of U4, and then drops once each to U4.5 '
+     '(23.5, 39.95), C30.1 (25.7, 42.75) and the U5 / C32 group (25.8, 29.8): each of those pads sits on its own F.Cu '
+     'island walled off by the SPI / I2C / IMU_CS F fan and the U4 body keep-out, so every drop needs its own via '
+     '(Measured, zone_check on the merged board: 5 vias against 0 + 2 allowed; the In2 link alone takes 2, the floor W4 '
+     'measured is 4 with the link and three drops sharing none). 72.25 mm against a 48.05 mm octilinear MST',
+     dict(len_mm=72.25, vias=5)),
+    ('extra_vias', 'SPI1_MISO', 'net', (23.4, 50.4),
+     'D-R12-98 (integration): MISO leaves U1 at A6, west of SCK (A7) and MOSI (C5, channel x 24.6), but its U4 pad (U4.1, '
+     '(24.21, 42.35)) is on U4\'s east face beyond SCK\'s and MOSI\'s north-face pads (U4.13 / U4.14), so MISO must cross '
+     'both of them; SCK and MOSI stay on F.Cu to U4, MISO crosses under them on B.Cu between (23.0, 44.4) and (25.05, '
+     '44.05), and its U6 branch leaves the same first via on B.Cu to U6\'s via (20.1, 35.2): 3 vias, the fewest the pin '
+     'orders allow (Measured, zone_check: route 22.28 mm against a 17.25 mm MST, ratio 1.29)',
+     dict(len_mm=22.28, vias=3)),
+    ('detour', 'QSPI_CLK', 'net', (22.6, 55.2),
+     'D-R12-98 (integration): CLK leaves U1 at G5 (22.6, 55.2), aft of IO0 / IO3, and the only legal F.Cu entry to U3.6 is '
+     'from the pad row\'s inner end: C19 / C20 leave one 0.7 mm gap west of U3, which IO3 uses, and B.Cu under the BGA '
+     'carries the QSPI_IO2 / VCAP lanes (no via spot 0.47 mm clear of them, K-reference), so CLK runs east along the '
+     'interstitial row y 54.8 and turns forward east of IO0 / IO3 (Measured, zone_check: 19.4 mm against 11.87 mm, ratio '
+     '1.63, 0 vias)',
+     dict(len_mm=19.4, vias=0)),
 ]
-ROUTE_FIGURES_R12 = {'SPI1_SCK': (19.34, 3), 'USB_DP': (19.22, 3)}   # D-R12-75A: route_check on the frozen R12 board
+ROUTE_FIGURES_R12 = {'3V3A': (72.25, 5), 'SPI1_MISO': (22.28, 3), 'QSPI_CLK': (19.4, 0)}   # D-R12-98: zone_check, merged board
 R11_DATA = Path(__file__).resolve().parents[1] / 'm3_design/r11/design/r11_gate_data.json'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
