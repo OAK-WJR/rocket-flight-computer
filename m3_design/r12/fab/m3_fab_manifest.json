@@ -72,10 +72,10 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "30874fda58b8d8097aea1ecac5b1c73e308d8042aba461e6acbe30c562663500",
     "cad/m3.kicad_dru": "e9ca90be39d84def4082f18821c9061b622d03e4060deebd4a89472a22b550f9",
-    "cad/m3.kicad_pcb": "f60d82390941611b6149e5501643248d274fa155887bcefd03d1ad67096b5820",
+    "cad/m3.kicad_pcb": "ef3194c01c7d77952fd88685080caf5ba1581a37cda45f79f8f362f0a32c0a02",
     "cad/m3.kicad_pro": "8b6671b8e9e8a466049a6c136847edb64cd4ea25ed049602de823e27d7b3ca46",
     "cad/m3.kicad_sch": "f0853523e08eb853ce74233b888eb4d19ac9981bd1eed80435b9dd6f56a0ad95",
-    "cad/mcu.kicad_sch": "5706350fb7d9651c294e166ca5e0e533b18bf8d86d43e1f9963dbf7eb27ce90c",
+    "cad/mcu.kicad_sch": "60502e9cb10385b1d555407c7de578b5419352cfd411835424e120237237d8f4",
     "cad/pullpin_buzzer.kicad_sch": "4fabd812bc9e894df3f3b329b7ff5b57148a0ef4b042187b06e0f0a65d19126b",
     "cad/pyro.kicad_sch": "f2fb3e792d4d36a8ce968624996674e002800d1f3d97168795c7d07e5e4b16fe",
     "cad/sensors.kicad_sch": "71fa8bf48f2884780c916c90a4bacbe6a0e8599bf01ea976ea91afc00826ba70",
@@ -97,11 +97,11 @@
     "tools/paste_check.py": "009938355d0b37923a7fd8438b1f56a831338df9486119714839a89340d67e2f"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "9102eac6afddb83c40fabe5a24bf23e861608c6cc48a0ffb97ed83ab5a5f1e72",
-    "m3_assembly_top.pdf": "f51b400d6ac2ae1226e6259c1d1e922c54b94ab95118d8e6988a8ac604060627",
+    "m3_assembly_bottom.pdf": "491cb0f09f46554c17cba6ae1964fd2b7c0111a4337c54e55e86f1fe8ea641ab",
+    "m3_assembly_top.pdf": "fb9b5d2db418869c2c4755465b1fe8394feabd63b4b83bdf524b54949414e756",
     "m3_bom_jlc.csv": "1dc4be76ea1e8650ceac6da423585439f51d4ad01f321a283d65393fa8eb44c2",
-    "m3_cpl_jlc.csv": "f3b98fe7a4db0d1a0b59d6e336ca9b2c78be88a8b21aafed747af03b0f953239",
-    "m3_gerber.zip": "f3c3a8ec871f60b2f1d8c82cf891f83ab4ab323f66a452794a73956fc0557332"
+    "m3_cpl_jlc.csv": "ef8a03ab4a1026f6162b28c8f14a6ad1c3cda56b5bbbebbf51b3e893f5e77c28",
+    "m3_gerber.zip": "6137f4c8d43c3541f480478a8fceb60133430cf5df041a67eeb314b3b4aa2ac4"
   },
   "schema": 1
 }
