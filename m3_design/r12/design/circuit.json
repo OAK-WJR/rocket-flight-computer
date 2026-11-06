@@ -32,12 +32,12 @@
    "footprint": "rocket:C0402",
    "source": "D-R12-09: U9 dVdt 4.7 nF X7R basic"
   },
-  "C1549": {
+  "C1548": {
    "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
-   "Manufacturer Part": "0402CG180J500NT",
-   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG180J500NT_C1549.pdf",
+   "Manufacturer Part": "0402CG150J500NT",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG150J500NT_C1548.pdf",
    "footprint": "rocket:C0402",
-   "source": "D-R12-14: HSE load capacitors 18 pF C0G for the 12 pF crystal"
+   "source": "R12F3-TRI-05 (D-R12-14 amended): HSE load capacitors 15 pF C0G for the 12 pF crystal, gm_crit margin at +5 % / 5 pF stray"
   },
   "C15849": {
    "Manufacturer": "Samsung Electro-Mechanics",
@@ -333,14 +333,14 @@
    "why": "D-R12-17: 100 nF 0603 automotive extended -> 0402 basic"
   },
   "C25": {
-   "lcsc": "C1549",
-   "value": "18pF 50V C0G 5%",
-   "why": "D-R12-14: HSE load caps 10 pF -> 18 pF for the 12 pF crystal"
+   "lcsc": "C1548",
+   "value": "15pF 50V C0G 5%",
+   "why": "D-R12-14 / R12F3-TRI-05: HSE load caps 10 pF -> 15 pF for the 12 pF crystal (18 pF +5 % at 5 pF stray exceeded Gm_critmax)"
   },
   "C26": {
-   "lcsc": "C1549",
-   "value": "18pF 50V C0G 5%",
-   "why": "D-R12-14: HSE load caps 10 pF -> 18 pF for the 12 pF crystal"
+   "lcsc": "C1548",
+   "value": "15pF 50V C0G 5%",
+   "why": "D-R12-14 / R12F3-TRI-05: HSE load caps 10 pF -> 15 pF for the 12 pF crystal (18 pF +5 % at 5 pF stray exceeded Gm_critmax)"
   },
   "C400": {
    "lcsc": "C12891",

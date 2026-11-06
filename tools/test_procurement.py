@@ -126,6 +126,22 @@ class ProcurementValidation(unittest.TestCase):
             jlc_cost.cost_report(self.parts(), 5, 'economic', 2, fetch=fetch)
         fetch.assert_not_called()
 
+    def test_economic_exempts_preferred_extended_codes_from_the_feeder_fee(self):
+        """R12F3-TRI-08: JLC PCBA FAQ 7, Preferred Extended parts carry no Economic feeder fee; Standard charges every
+        code, Preferred or not, so R9 / R10 / R11 (Standard) figures do not move."""
+        self.bom([('C100', 'R1'), ('C200', 'R2'), ('C300', 'R3')])
+        (self.folder / 'm3_cpl_jlc.csv').write_text('Designator,Layer\nR1,Top\nR2,Top\nR3,Top\n')
+        items = {'C100': dict(self.item, preferredComponentFlag=True), 'C200': dict(self.item),
+                 'C300': dict(self.item, componentLibraryType='base')}
+        econ = jlc_cost.cost_report(self.parts(), 5, 'economic', 1, fetch=items.get)
+        self.assertEqual((econ['charged_codes'], econ['preferred_extended_fee_exempt']), (1, ['C100']))
+        self.assertEqual(econ['extended_codes'], ['C100', 'C200'])
+        self.assertAlmostEqual(econ['feeder_fee_usd_per_order'], 3.07)
+        std = jlc_cost.cost_report(self.parts(), 5, 'standard', 1, fetch=items.get)
+        self.assertEqual((std['charged_codes'], std['preferred_extended_fee_exempt']), (3, []))
+        items['C100'] = dict(self.item, preferredComponentFlag=None)      # unknown flag: charged
+        self.assertEqual(jlc_cost.cost_report(self.parts(), 5, 'economic', 1, fetch=items.get)['charged_codes'], 2)
+
     def test_duplicate_designator_is_not_double_purchased(self):
         self.bom([('C100', 'R1'), ('C200', 'R1')])
         with self.assertRaisesRegex(ValueError, 'duplicate BOM'):

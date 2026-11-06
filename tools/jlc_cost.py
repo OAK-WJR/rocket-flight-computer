@@ -8,7 +8,9 @@ order needs (qty x boards, at that price break), binds fab/cost_check.json to BO
 and exits 1 if a target is missed or supplier pricing is unknown. REQUIREMENTS M3 counts what the
 owner pays for parts: placed-quantity part prices plus JLC's per-part feeder fee for the tier ordered
 (jlcpcb.com/help/article/pcb-assembly-price, updated 2026-09-09): Standard PCBA $1.53 per unique LCSC code, Basic or
-Extended; Economic PCBA $3.07 per unique Extended code. The order uses Standard (validation pass 6: Economic's
+Extended; Economic PCBA $3.07 per unique Extended code, except JLC Preferred Extended parts (preferredComponentFlag),
+which "are exempt from the Feeders Loading fee for Economic PCB assembly" (JLC PCBA FAQ 7, fetched 2026-11-06;
+R12F3-TRI-08); Standard keeps its fee on every code. The order uses Standard (validation pass 6: Economic's
 255 +/- 5 C reflow exceeds retained parts' 250 C limits); Standard's larger fixed fees are reported, not gated: setup
 and stencil are charged per assembled side (setup $25.56 / $51.12 and stencil $8.21 / $16.42 single / double side;
 fetched 2026-10-10), the fixture $16.42 either way, plus a $14.93 handling fee JLC may add. The side count comes from
@@ -82,10 +84,15 @@ def cost_report(parts, boards, tier, sides, fee=None, max_total=126.41, max_exte
     subtotal = sum(line['line_usd_per_board'] for line in lines)
     ordered = sum(line['order_usd_per_board'] for line in lines)
     extended = sorted(line['lcsc'] for line in lines if line['library'] == 'expand' and not line['owner_fitted'])
-    charged = extended if tier == 'economic' else sorted(line['lcsc'] for line in lines if not line['owner_fitted'])
+    # Economic: Basic codes and Preferred Extended codes carry no feeder fee (JLC PCBA FAQ 7); Standard: every code.
+    exempt = sorted(line['lcsc'] for line in lines
+                    if line['library'] == 'expand' and line['preferred'] is True and not line['owner_fitted'])
+    charged = (sorted(set(extended) - set(exempt)) if tier == 'economic'
+               else sorted(line['lcsc'] for line in lines if not line['owner_fitted']))
     total = subtotal + len(charged) * fee / boards
     fixed = (25.56 + 8.21) * sides + 16.42 if tier == 'standard' else 8.18 + 1.53
     return dict(boards=boards, tier=tier, sides=sides, fee_usd_per_code=fee, charged_codes=len(charged),
+        preferred_extended_fee_exempt=exempt if tier == 'economic' else [],
         fixed_fees_usd_per_order=round(fixed, 2), handling_fee_may_apply_usd=14.93 if tier == 'standard' else 0.0,
         parts_usd_per_board=round(subtotal, 2), feeder_fee_usd_per_order=round(len(charged) * fee, 2),
         total_usd_per_board=round(total, 2), order_usd_per_board_with_min_purchase=round(ordered, 2),

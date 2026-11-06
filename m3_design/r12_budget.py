@@ -233,25 +233,56 @@ def fire():
             q120_q121_vgs_V={'5.72V_four_stall': vgs_p(5.72), '8.4V': vgs_p(8.4), '12.6V_3S': vgs_p(12.6),
                              '19.9V_TVS_clamp': vgs_p(19.9)},
             q120_vgs_abs_max_V=12, q120_rds_row='VGS -4.5 V (|VGS| >= 4.5 V down to a 5.4 V pack)',
-            q124_vgs_min_V=round(3.222 * 10e3 / (10e3 + 220), 3), q124_vgs_th_max_V=1.45,
+            q124_vgs_min_V=round((3.222 - .4) * 10e3 / (10e3 + 220), 3), q124_vgs_th_max_V=1.45,
             q124_tau_us=round(220 * 220e-9 * 1e6, 1),
             note='Q120 / Q121 VGS = -V_BAT x (R119 || R120) / ((R119 || R120) + R121) (R11 network). |VGS| exceeds the '
                  'AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA '
-                 'clamp); the bus is only enabled in flight (Inference that no such transient occurs there)'),
+                 'clamp); the bus is only enabled in flight (Inference that no such transient occurs there). Q124 VGS: '
+                 'PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; applied at PE4\'s 0.32 mA, '
+                 'Inference; R12F3-TRI-06) through R126 220R / R128 10k'),
         basis='R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), '
               'R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference',
         label='Calculation on Datasheet limits; copper, pack, loads and hot factors Inference')
 
 
 def crystal():
-    """ST AN2867: gm_crit = 4 ESR (2 pi f)^2 (C0 + CL)^2 against Gm_critmax 1.5 mA/V (DS12110 Rev 8 Table 141 p. 234,
-    as the R10 records cite it). YXC YSX321SL sheet (LCSC's PDF for C9006): ESR <= 50 ohm (16-31 MHz), C0 <= 3 pF,
-    CL 12 pF specified; the circuit's load with C25 / C26 18 pF is 9 pF + stray 2-5 pF (Inference) = 11-14 pF."""
-    f, esr, c0 = 25e6, 50.0, 3e-12
+    """ST AN2867: gm_crit = 4 ESR (2 pi f)^2 (C0 + CL)^2 must stay below Gm_critmax 1.5 mA/V (DS12110 Rev 8 Table 141
+    p. 234: 'Maximum critical crystal gm', startup, max). YXC YSX321SL sheet (LCSC's PDF for C9006, Datasheet): ESR <=
+    50 ohm (16-31 MHz), C0 <= 3 pF, CL 12 pF (the C9006 listing: 12PF +/-10PPM, +/-20PPM over -40...85 C), drive level
+    10-200 uW max; no motional capacitance C1 is given. The circuit's load CL = C25 x C26 / (C25 + C26) + Cs, with C25 /
+    C26 read from circuit.json (value and tolerance, each at its own worst end) and Cs the stray (pin + board)
+    capacitance 2-5 pF (AN2867's typical range; Inference). R12F3-TRI-05: the range now includes the capacitors'
+    tolerance; with 18 pF +/-5 % the +5 % / 5 pF corner gave 1.5027 mA/V, above 1.5, so C25 / C26 became 15 pF.
+    The frequency offset from CL 12 pF is the pulling estimate (C1 / 2) (1 / (C0 + CL) - 1 / (C0 + 12 pF)) with C1 <=
+    10 fF and C0 0.5-3 pF (Inference: C1 and the C0 minimum are not on the sheet), added to the sheet's +/-10 ppm
+    tolerance, +/-20 ppm over temperature and 5 years of +/-3 ppm / year ageing, against USB full speed's +/-2500 ppm
+    (USB 2.0 section 7.1.11, 12 Mb/s +/-0.25 %)."""
+    import re
+    parts = json.loads((HERE / 'r12/design/circuit.json').read_text())['parts']
+    caps = []
+    for ref in ('C25', 'C26'):
+        m = re.fullmatch(r'([\d.]+)pF \S+ C0G (\d+)%', parts[ref]['value'])
+        caps.append((float(m[1]) * 1e-12, float(m[2]) / 100))
+    f, esr, c0, cl_spec = 25e6, 50.0, 3e-12, 12e-12
     g = lambda cl: 4 * esr * (2 * math.pi * f) ** 2 * (c0 + cl) ** 2 * 1e3
-    return dict(gm_crit_mA_per_V_at_CL12=round(g(12e-12), 3), gm_crit_range_mA_per_V=[round(g(11e-12), 3),
-                round(g(14e-12), 3)], limit_mA_per_V=1.5, ok=g(14e-12) < 1.5,
-                label='Calculation (Datasheet ESR / C0 maxima); stray capacitance Inference')
+    series = lambda a, b: a * b / (a + b)
+    cl_lo = series(*(c * (1 - t) for c, t in caps)) + 2e-12
+    cl_hi = series(*(c * (1 + t) for c, t in caps)) + 5e-12
+    cl_nom = series(*(c for c, _ in caps)) + 3.5e-12
+    pull = lambda cl, c0x: 10e-15 / 2 * (1 / (c0x + cl) - 1 / (c0x + cl_spec)) * 1e6
+    pulls = [pull(cl, c0x) for cl in (cl_lo, cl_hi) for c0x in (0.5e-12, 3e-12)]
+    total = max(abs(p) for p in pulls) + 10 + 20 + 5 * 3
+    gm = [g(cl_lo), g(cl_hi)]
+    return dict(C25_C26_pF=[round(c * 1e12, 3) for c, _ in caps], C25_C26_tolerance=[t for _, t in caps],
+                stray_pF=[2.0, 5.0], circuit_CL_pF=[round(cl_lo * 1e12, 3), round(cl_nom * 1e12, 3),
+                                                    round(cl_hi * 1e12, 3)],
+                gm_crit_mA_per_V_at_CL12=round(g(12e-12), 3), gm_crit_range_mA_per_V=[round(v, 4) for v in gm],
+                limit_mA_per_V=1.5, ok=gm[1] < 1.5, margin_pct=round((1 - gm[1] / 1.5) * 100, 1),
+                gm_crit_18pF_5pct_corner_mA_per_V=round(g(series(18.9e-12, 18.9e-12) + 5e-12), 4),
+                pulling_ppm_range=[round(min(pulls), 1), round(max(pulls), 1)], total_offset_ppm_bound=round(total, 1),
+                usb_fs_limit_ppm=2500,
+                label='Calculation (Datasheet ESR / C0 maxima, C25 / C26 tolerance); stray capacitance Inference; '
+                      'pulling: Inference (C1 <= 10 fF and C0 0.5-3 pF assumed, not on the YSX321SL sheet)')
 
 
 def cam_input():

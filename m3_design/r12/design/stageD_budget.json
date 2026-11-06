@@ -1,5 +1,5 @@
 {
- "board_sha256": "be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8",
+ "board_sha256": "66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f",
  "dc_solves": {
   "3V3_L1_to_R14": {
    "cells": 300943,
@@ -463,7 +463,14 @@
     0.8388157894736842
    ],
    "q124_gate_tau_us": 48.400000000000006,
-   "q124_vgs_min_V": 3.170254403131116,
+   "q124_vgs_min_V": 2.7777548359052378,
+   "q124_vgs_min_basis": {
+    "label": "Calculation / Inference (VOH row applied at 0.32 mA; resistor drift)",
+    "pe4_load_mA": 0.3170352250489237,
+    "source": "DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 drift minimum (r12_windows.json); R126 220R / R128 10k 1 %",
+    "vdd_min_V": 3.2401,
+    "voh_drop_V": 0.4
+   },
    "q124_vgs_row_V": 2.5,
    "q124_vgs_th_max_V": 1.45
   },
@@ -956,39 +963,55 @@
   "roll_axis_x_mm": 23.0
  },
  "pa6_corners": {
+  "branch_shared_ohm": {
+   "D5 (logic, microSD, D5) and R92": 0.023533239516799684,
+   "U400 (ports)": 0.023533239516799684,
+   "U403 (camera)": 0.010814598554334882
+  },
   "healthy": {
    "BAT_IN_V": 5.720875496037573,
-   "U9_and_copper_drop_V": 0.1624008753484375,
+   "RAW_PROTECTED_drop_at_D5_V": 0.03746836909465665,
+   "U9_and_copper_drop_V": 0.14658615388680843,
    "VLOGIC_V": [
-    5.108474620689136,
-    5.308474620689136
+    5.124289342150765,
+    5.324289342150765
    ],
    "converter_A": 2.2641630158163526,
-   "margin_to_nominal_trip_top_V": 0.15847462068913565,
-   "margin_to_tolerance_trip_top_V": 0.06756552978004482
+   "lumped_drop_V_superseded": 0.1624008753484375,
+   "margin_to_nominal_trip_top_V": 0.17428934215076453,
+   "margin_to_tolerance_trip_top_V": 0.0833802512416737
   },
-  "label": "Calculation / Inference (U9 RON, SS34 VF and the load allocations are Inference)",
+  "label": "Calculation / Inference (DC-solve upper bounds, mutual resistance bounded by the smaller point resistance; U9 RON, SS34 VF and the load allocations are Inference); the drop is an upper bound, the margins lower bounds",
   "match_and_leads_shorted": {
    "BAT_IN_V": 5.532304203836373,
-   "U9_and_copper_drop_V": 0.16793638854343224,
+   "RAW_PROTECTED_drop_at_D5_V": 0.03874549676452546,
+   "U9_and_copper_drop_V": 0.1515826145727684,
    "VLOGIC_V": [
-    4.91436781529294,
-    5.11436781529294
+    4.930721589263604,
+    5.130721589263604
    ],
    "converter_A": 2.341338118615397,
-   "margin_to_nominal_trip_top_V": -0.03563218470705998,
-   "margin_to_tolerance_trip_top_V": -0.1265412756161508
+   "lumped_drop_V_superseded": 0.16793638854343224,
+   "margin_to_nominal_trip_top_V": -0.019278410736395912,
+   "margin_to_tolerance_trip_top_V": -0.11018750164548674
   },
   "match_shorted": {
    "BAT_IN_V": 5.574945568590383,
-   "U9_and_copper_drop_V": 0.16665188509649323,
+   "RAW_PROTECTED_drop_at_D5_V": 0.038449142147285814,
+   "U9_and_copper_drop_V": 0.1504231970540072,
    "VLOGIC_V": [
-    4.95829368349389,
-    5.15829368349389
+    4.974522371536376,
+    5.174522371536376
    ],
    "converter_A": 2.3234298087494065,
-   "margin_to_nominal_trip_top_V": 0.008293683493890036,
-   "margin_to_tolerance_trip_top_V": -0.08261540741520079
+   "lumped_drop_V_superseded": 0.16665188509649323,
+   "margin_to_nominal_trip_top_V": 0.024522371536376042,
+   "margin_to_tolerance_trip_top_V": -0.06638671937271479
+  },
+  "raw_point_ohm": {
+   "D5": 0.023533239516799684,
+   "U400": 0.05962793148227756,
+   "U403": 0.010814598554334882
   },
   "u9_turn_off_through_d5_V": 4.55,
   "window": {
@@ -1851,7 +1874,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8",
+ "source_board_sha256": "66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,

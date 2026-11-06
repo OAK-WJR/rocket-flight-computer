@@ -1,7 +1,7 @@
 {
   "schema": 3,
-  "inputs_sha256": "5eed7b420eaeeedd920e12565bf7164dad8829c6139277a0a66927fddb375f54",
-  "model_sha256": "630cd901a402844ce78aa12cf1154eb347e852648af05d2da2ea8af4db877247",
+  "inputs_sha256": "db6e6b212e30fb3b446cd859d8069d903a2808d2bdbd2b6523ab83e3b2d8b330",
+  "model_sha256": "3a353ec5d36595ad008ae346cddd07e3c26d4ee0af3cfeda7c4bbce4f1ce6819",
   "limits": {
     "minimum_V": -15.0,
     "maximum_V": 28.0,
@@ -48512,7 +48512,7 @@
   "component_issues": [],
   "topology_issues": [],
   "retained_output": {
-    "capacitance_F": 0.00141981873568,
+    "capacitance_F": 0.0014198187274,
     "inventory_F": {
       "C10": 3.0359999999999997e-05,
       "C120": 1.38e-06,
@@ -48533,8 +48533,8 @@
       "C22": 1.38e-06,
       "C23": 6.485999999999999e-06,
       "C24": 1.38e-07,
-      "C25": 2.4839999999999998e-11,
-      "C26": 2.4839999999999998e-11,
+      "C25": 2.0699999999999997e-11,
+      "C26": 2.0699999999999997e-11,
       "C28": 6.485999999999999e-06,
       "C29": 1.38e-07,
       "C30": 1.38e-07,
@@ -48576,7 +48576,7 @@
     "R92_max_ohm": 3354.6645,
     "initial_V": 8.5,
     "time_s": 2.0,
-    "output_bound_V": 5.585445008324083,
+    "output_bound_V": 5.585444994646694,
     "cold_input_minimum_V": -15.0,
     "inference": "All board capacitors share one 8.5V node: C84 twice nominal, others +20% tolerance and +15% temperature. No operating-load or divider-discharge credit; no U11 reverse-blocking credit. Capacitor sharing and the doubled C84 envelope are inference, requiring bench verification."
   },

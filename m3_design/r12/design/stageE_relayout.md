@@ -10,20 +10,23 @@ its UTC timestamp. No physical test was run. Coordinates are board mm (x east, y
 **Board hash and routing metrics.** Every board hash and routing metric in this file is the final board's
 (`be81f40b…`), built after the signal-only AVA cleanup `871f77a` (no power, pyro or placement change; §2). The analyses
 in §4 were run on the pre-cleanup board `cc5b66db…` and re-run on `be81f40b…`; the recorded files and figures are
-`be81f40b…`'s (§4).
+`be81f40b…`'s (§4). **Round 3 fix pass (R12F3-TRI-05):** C25 / C26 became 15 pF (C1548), so the board is now
+`66323cf0…`: the only change against `be81f40b…` is those two parts' Value, Datasheet, LCSC and Manufacturer Part
+properties (8 lines; copper, placement, legends and zones identical, Measured by file comparison). Every routing metric
+below is unchanged; the analyses, hot-plug run, fab package and cost were re-run on `66323cf0…` (§4 "Round 3", §5).
 
 ## 1. Result
 
 | Item | Value |
 |---|---|
-| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8`, 46 × 90 × 1.6 mm, built twice by `m3_design/r12_build.sh` with the same hash (Measured) |
+| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f` (round 3, C25 / C26 15 pF; `be81f40b…` before), 46 × 90 × 1.6 mm, built twice by `PYTHONHASHSEED=0 m3_design/r12_build.sh` with the same hash (Measured) |
 | 100 mm fallback | `ef3194c01c7d77952fd88685080caf5ba1581a37cda45f79f8f362f0a32c0a02` on `r12-relayout-int` `4686580` (gated), the same copper except the forward zone |
 | Copper | 1061 tracks, 318 vias, replayed from `m3_design/r12_routes.tsv` (Measured) |
 | KiCad DRC | 0 violations, 0 unconnected, 0 parity (Measured) |
 | `fit_check --profile r12` | OK; board 46 × 90 mm against the 100 mm R12 ceiling |
 | `tools/check_r12.py` | every rule OK in the strict tier: S-1 … S-9, K-reference, K-region, K-plane, K-fill, K-neighbours, M-7, K-legends |
 | `route_check --profile r12` | 0 failing, 3 allowlisted (3V3A, SPI1_MISO, QSPI_CLK; D-R12-96), 0 stale, 11 non-critical leftovers (informational; listed in `docs/R12_VALIDATION.md` "M2 routing deviations") |
-| Fab | JLC BOM 58 lines, 178 JLC parts = 178 CPL rows (174 rebuilt from JLC footprints, 4 placement-only), F paste 579 flashes; manifest bound. The BOM and CPL are byte-identical to `871f77a`'s; the Gerbers and PDFs differ only by export timestamps |
+| Fab | JLC BOM 58 lines, 178 JLC parts = 178 CPL rows (174 rebuilt from JLC footprints, 4 placement-only), F paste 579 flashes; manifest bound, with S-4 (`check_r12.py --only S-4 --bom --cpl`) among its content checks since R12F3-TRI-03. Round 3 changed the BOM's C25 / C26 line only (C1548 0402CG150J500NT 15 pF); the CPL is byte-identical to `871f77a`'s |
 | `tools/check.sh` | exit 0 on this tree (§7) |
 
 ## 2. How the copper is built now (D-R12-96)
@@ -116,6 +119,46 @@ was changed and re-run on the same zone-filled copy of `be81f40b…` (its SHA-25
   figure changes (the loop already counts Q120 / Q121 at 73.5 mΩ each).
 * Every other figure in `stageD_budget.json` is unchanged (file comparison).
 
+**Round 3 fix pass (R12F3-TRI-05 / -06 / -09, 2026-11-06; C25 / C26 15 pF, board `66323cf0…`).** `r12_budget.py` and
+`r12_stageD.py` were changed; the board was rebuilt twice (same hash), and stage D and the hot-plug model were re-run on a
+zone-filled copy whose SHA-256 equals the board's. Against the `be81f40b…` run, `stageD_budget.json` differs only in the
+board hashes, Q124's gate bound and the PA6 corners (file comparison); every fire, EN, hold-up, rail, DC-solve, port,
+U6 and IMU figure is unchanged.
+* **HSE load capacitors 18 pF → 15 pF (TRI-05; design decision, cost-neutral).** AN2867: gm_crit = 4·ESR·(2πf)²·(C0 +
+  CL)² against DS12110 Rev 8 Table 141's Gm_critmax 1.5 mA/V (startup, max). Y1 X322525MOB4SI (C9006), YXC YSX321SL
+  sheet (LCSC's PDF, Datasheet): CL 12 pF (the C9006 listing: 12 pF, ±10 ppm, ±20 ppm over −40 … 85 °C), ESR ≤ 50 Ω
+  (16–31 MHz), C0 ≤ 3 pF, drive level 10–200 µW; no motional capacitance is given. Circuit CL = C25·C26 / (C25 + C26) +
+  stray 2–5 pF (AN2867's typical range, Inference). With 18 pF ±5 % (0402CG180**J**) CL was 10.55–14.45 pF and gm_crit
+  **0.906–1.5027 mA/V: the +5 % / 5 pF corner exceeded 1.5** (the old "0.97–1.43, ok" took the nominal 18 pF only).
+  With **15 pF ±5 % (C1548 FH 0402CG150J500NT, C0G)** CL is 9.125 / 11.0 / 12.875 pF (low / nominal 3.5 pF stray / high)
+  and gm_crit **0.726–1.244 mA/V, 17.1 % under 1.5** (Calculation on the Datasheet maxima; stray Inference).
+  Frequency: the load moves at most −2.9 / +0.9 pF from the crystal's 12 pF; with an assumed motional capacitance ≤ 10 fF
+  and C0 0.5–3 pF (Inference: neither is on the sheet) the pulling is −26 … +120 ppm; with the ±10 ppm tolerance, ±20 ppm
+  over temperature and 5 years at ±3 ppm / year the total stays under ±165 ppm against USB full speed's ±2500 ppm
+  (12 Mb/s ±0.25 %) and far inside UART baud tolerance (Calculation / Inference). Drive level falls with the lower load.
+  C1548 is JLC Basic, "Economic and Standard", 1.22 M in stock (Live 2026-11-06); its LCSC datasheet is byte-identical
+  to C1549's (FH 0402CG series: C0G 0 ± 30 ppm/°C, resistance to soldering heat 265 ± 5 °C), so economic_parts' "OK"
+  carries over. Price $0.0026 vs $0.0018 each (+$0.0016 per board; the parts total stays $32.78 per board). Same
+  0402 land and nets: no copper change. The hot-plug inventory (`tools/r12_hotplug.py` DISCHARGE_PARTS) now names
+  C1548 at 15 pF.
+* **Q124 gate (TRI-06).** PE4's VOH is guaranteed only ≥ VDD − 0.4 V (DS12110 Rev 8 Table 158 p. 247, |IIO| 4 mA at
+  1.62–3.6 V or 8 mA at 2.7–3.6 V), applied at PE4's 0.32 mA steady load (Inference: conservative there). Q124 VGS ≥
+  (3.2401 − 0.4) V × 9.9k / (9.9k + 222.2) = **2.778 V** at the 3V3 drift minimum with R126 / R128 1 % at their worst
+  ends (was 3.170 V with VOH = VDD; Calculation / Inference: VOH row applied at 0.32 mA, drift), still above the
+  AO3400A's 2.5 V RDS(on) row (VGS(th) ≤ 1.45 V). `r12_windows.json`'s stage A placeholder: 2.761 V (from 3.222 V).
+* **PA6 corners per branch (TRI-09).** The drop to D5 charged the whole converter current (2.264 A healthy) at U9 → D5's
+  23.53 mΩ, but the camera buck U403 (1.243 A at four stalls) takes RAW_PROTECTED 10.81 mΩ from U9 and shares at most
+  that much with D5's path. Each branch is now charged at min(its own, D5's) resistance from U9.6 (the mutual
+  resistance of two sinks fed from one node is at most the smaller point resistance: maximum principle and
+  reciprocity): U403 10.81 mΩ, U400 23.53 mΩ (its own is 59.63 mΩ), D5 + R92 23.53 mΩ. The RAW drop at D5 is 37.5 /
+  38.4 / 38.7 mV (healthy / match shorted / match and leads shorted), so the whole drop is 15.8 / 16.2 / 16.4 mV smaller
+  than the lumped figure, and is an upper bound (the margins below are lower bounds; Calculation on the DC solves /
+  Inference: U9 RON, SS34 VF, load allocations).
+* **Hot-plug (Simulation / Inference).** Re-extracted and re-run on `66323cf0…`: only C25 / C26's identity changed in the
+  inputs (electrical SHA `dfba47cd…`, was `c1492655…`); the retained-output inventory falls by 8.3 pF to 1419.818 µF,
+  bound 5.585 V unchanged; every row, failure count, minimum and slew figure is identical (0 / 2304 fail, minimum
+  −14.255 V, fall 9.254 V/µs, rise 5.402 V/µs; file comparison).
+
 **Hot-plug (Simulation / Inference).** `tools/r12_hotplug.py` models BAT_IN / BAT_DAMP as an extracted copper network
 and RAW_PROTECTED as one lumped node (the retained-output inventory), so the RAW trunk has no topology to update in this
 tool. The BAT_IN / BAT_DAMP copper is frozen (D-R12-96): the 12-edge network is identical to round 1's (Measured on the
@@ -134,9 +177,10 @@ were not re-run: they depend only on that unchanged network and the parts.
 | C84 → U2 copper (DC solve, not in the hold-up model) | 47.8 mΩ | **4.14 mΩ** (C84 beside U2, D-R12-94) | Calculation |
 | RAW_PROTECTED U9 → U400 / U403 / D5 | 5.79 / 7.45 / 5.33 mΩ | **59.63 / 10.81 / 23.53 mΩ** (the port buck and D5 hang off the B trunk) | Calculation |
 | VLOGIC D5 → U2 / D6 → U2 | 13.87 / 30.51 mΩ | **6.43 / 8.47 mΩ** | Calculation |
-| PA6 margin to the trip top, four stalls (× 11 / with 1 % divider): healthy | +0.200 / +0.109 V | **+0.158 / +0.068 V** | Calculation / Inference |
-| … match shorted | +0.051 / −0.040 V | **+0.008 / −0.083 V** | Calculation / Inference |
-| … match and leads shorted | +0.007 / −0.084 V | **−0.036 / −0.127 V** (now in the band at the nominal ratio too) | Calculation / Inference |
+| PA6 margin to the trip top, four stalls (× 11 / with 1 % divider; lower bounds, per-branch drop since R12F3-TRI-09): healthy | +0.200 / +0.109 V | **+0.174 / +0.083 V** (+0.158 / +0.068 V with the lumped drop) | Calculation / Inference |
+| … match shorted | +0.051 / −0.040 V | **+0.025 / −0.066 V** (lumped +0.008 / −0.083 V) | Calculation / Inference |
+| … match and leads shorted | +0.007 / −0.084 V | **−0.019 / −0.110 V** (lumped −0.036 / −0.127 V; in the band at the nominal ratio too) | Calculation / Inference |
+| Q124 VGS minimum (PE4 VOH ≥ VDD − 0.4 V, R12F3-TRI-06) | ≥ 3.17 V (VOH = VDD) | **≥ 2.778 V** (2.5 V row) | Calculation / Inference |
 | PORT_4V8 L400 → J410 / J420 / J440 | 73.6 / 74.8 / 69.6 mΩ | **11.50 / 13.07 / 6.88 mΩ** | Calculation |
 | Ports under 0.561 A (J420 lowest), initial / drift | ≥ 4.561 / 4.529 V | **≥ 4.596 / 4.563 V** (J410 4.597 / 4.564, J440 4.599 / 4.567); at R10's 1.9 A design current ≥ 4.578 / 4.546 V | Calculation / Inference |
 | Ports at no load (ceiling 5.0 V) | ≤ 4.938 / 4.972 V | unchanged (regulator window) | Calculation / Inference |
@@ -153,9 +197,10 @@ under 4.5 V before any copper drop. The integrator's estimate (Calculation / Inf
 J410 12.6, J440 8.6 mΩ) agrees with the DC solve to within 1.7 mΩ.
 
 **PA6 during a fire (O-R12-07).** D5 now takes RAW_PROTECTED from the trunk via (45.2, 29.2), 23.5 mΩ from U9, so at
-four stalls VLOGIC sits about 41 mV lower than before. A fire into a shorted match with shorted leads can now reach
-PA6's trip band at the nominal divider ratio too (−0.036 V), and with the 1 % divider a match short alone does
-(−0.083 V). Not a fire-path hazard (the fire current is unchanged); the firmware rule stands: a PA6 trip during the
+four stalls VLOGIC sits lower than before (about 26 mV with the per-branch drop of R12F3-TRI-09; the lumped figure was
+41 mV). A fire into a shorted match with shorted leads can now reach PA6's trip band at the nominal divider ratio too
+(−0.019 V), and with the 1 % divider a match short alone does (−0.066 V); healthy +0.174 / +0.083 V (lower bounds,
+Calculation / Inference). Not a fire-path hazard (the fire current is unchanged); the firmware rule stands: a PA6 trip during the
 20 ms pulse is logged, not treated as a battery loss.
 
 **IPC-2152 (Calculation on CAD widths; the rise is the long-conductor fit with no plane credit, an upper bound,
@@ -190,12 +235,16 @@ roll axis x = 0.000 mm for both (U6 was +4.5 mm). D-R12-54's axis maps are uncha
 and `build.py` carry none for R12; grep `r12_binding`: no match), so there is nothing to regenerate. `pin_table.tsv`
 column `r12_net` is the reviewed pin map.
 
-## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `be81f40b…`)
+## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `66323cf0…`)
 
-`m3_design/r12/fab/cost_check_2.json` / `_5.json` 2026-11-06T10:07:00Z / 10:08:18Z; `stock_check_2.json` / `_5.json`
-10:06:21Z / 10:07:40Z. 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards (orderable =
-min(stock, canPresaleNumber), an Inference about JLC's field). Parts $32.78 per board; feeder 22 × $3.07 = $67.54 per
-order. **REQUIREMENTS M3 metric: $66.55 at 2 boards, $46.29 at 5 boards** against the $84.41 cap.
+`m3_design/r12/fab/cost_check_2.json` / `_5.json` 2026-11-06T17:55:07Z / 17:56:22Z; `stock_check_2.json` / `_5.json`
+17:54:30Z / 17:55:45Z. 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards (orderable =
+min(stock, canPresaleNumber), an Inference about JLC's field). Parts $32.78 per board. Feeder **21 × $3.07 = $64.47** per
+order: `tools/jlc_cost.py` now exempts JLC Preferred Extended codes on Economic PCBA (R12F3-TRI-08; JLC PCBA FAQ 7,
+fetched 2026-11-06: Preferred Extended parts "are exempt from the Feeders Loading fee for Economic PCB assembly"); the one
+such code is D120's BAT54C C37704 (`preferredComponentFlag` true, Live), so 22 → 21 charged codes (the old run charged
+it: $67.54). **REQUIREMENTS M3 metric: $65.02 at 2 boards, $45.68 at 5 boards** against the $84.41 cap (was $66.55 /
+$46.29).
 
 All-in (Calculation on the Live figures; setup / stencil $9.71; SMT joints $0.0016 × 579 pasted pads per board; THT
 $0.0164 × 4 joints per board plus $3.58 labour per order; bare PCB $25.10, the 46 × 100 mm quote of cost_study.md, Live
@@ -203,11 +252,12 @@ $0.0164 × 4 joints per board plus $3.58 labour per order; bare PCB $25.10, the 
 
 | Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | X-ray, U1 only | **Total** | Per board |
 |---|---|---|---|---|---|---|---|---|---|
-| 2 boards | $65.56 | $67.54 | $9.71 | $1.85 | $3.71 | $25.10 | $3.28 | **$176.75** | $88.38 |
-| 5 boards | $163.90 | $67.54 | $9.71 | $4.63 | $3.91 | $25.10 | $8.20 | **$282.99** | $56.60 |
+| 2 boards | $65.57 | $64.47 | $9.71 | $1.85 | $3.71 | $25.10 | $3.28 | **$173.69** | $86.84 |
+| 5 boards | $163.91 | $64.47 | $9.71 | $4.63 | $3.91 | $25.10 | $8.20 | **$279.93** | $55.99 |
 
-Was $173.39 / $274.59 (2026-11-05) and $173.47 / $274.79 before the X-ray line (R12F2-TRI-13): JLC price movement and
-the X-ray fee only, the BOM is unchanged.
+Was $176.75 / $282.99 (2026-11-06T10:07Z, 22 charged codes), $173.39 / $274.59 (2026-11-05) and $173.47 / $274.79
+before the X-ray line (R12F2-TRI-13): JLC price movement, the X-ray fee and the Preferred Extended waiver; the only BOM
+change is C25 / C26 (C1548, +$0.0016 per board).
 
 **X-ray inspection (R12F2-TRI-13; JLC PCBA price page https://jlcpcb.com/help/article/pcb-assembly-price, read
 2026-11-06).** "X-ray inspection is required for components such as BGA, QFN, and other leadless packages" whose joints
@@ -218,33 +268,34 @@ Economic and Standard PCBA, no waiver listed. Which R12 parts JLC counts is deci
   (Calculation), the line in the table above.
 * **Probable (leadless ICs with joints under the body; that JLC counts them is an Inference): U4** LSM6DSVE LGA-14,
   **U5** MS5607 (8 pads under the body), **U6** FXLS90322 HLQFN-16, **U9** TPS259470A VQFN-HR (RPW). With U1 that is 5
-  per board: 10 pcs, **$16.40** at 2 boards (total $189.87, $94.94 per board); 25 pcs at 5 boards, **$20.50** if the
+  per board: 10 pcs, **$16.40** at 2 boards (total $186.81, $93.40 per board); 25 pcs at 5 boards, **$20.50** if the
   11–50 price applies to all 25 or **$28.70** if the first 10 are at $1.64 (how JLC applies its tiers is an Inference;
-  total $295.29–303.49, $59.06–60.70 per board).
+  total $292.23–300.43, $58.45–60.09 per board).
 * **Possible (Inference): D402** ESD103 TSLP-2 and **Y1** 3225 ceramic crystal, also leadless with pads under the body:
   7 per board, at most $22.96 / $57.40 per order with every piece at $1.64.
 
 Against the plan's targets (≤ $170 at 2 boards, ≤ $295 at 5; `docs/M3_R12.md` "Cost and stock"): the 2-board order is at
-least **$6.75** over with U1 alone (was quoted as $3.47 over) and $19.87 over with the five probable parts; the
-5-board order stays under $295 with U1 alone ($282.99) and reaches $295.29–303.49 with the five (Calculation; the count
-is an Inference until JLC's quote). Confirm the X-ray count on JLC's quote before ordering.
+least **$3.69** over with U1 alone (was $6.75 before the waiver) and $16.81 over with the five probable parts; the
+5-board order stays under $295 with U1 alone ($279.93) and is $292.23–300.43 with the five, so under $295 at the low
+tier reading and over it at the high one (Calculation; the count and tier are Inferences until JLC's quote). Confirm
+the X-ray count on JLC's quote before ordering.
 
 ## 6. Hashes (Measured, SHA-256; final board)
 
 | File | SHA-256 |
 |---|---|
-| m3_design/r12/m3.kicad_pcb | be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8 |
+| m3_design/r12/m3.kicad_pcb | 66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f |
 | m3_design/r12_legends.tsv | 882188a1a5af503cd41aae5cf37f7695161e95ab99d856b7a80f7b931d61fc69 |
 | m3_design/r12_routes.tsv | 1faf23700fdce206be2c0779a9c64c87cb62fa36260bdc1f8c31230fac127e92 |
 | m3_design/r12_place.tsv | 282d169a07f5ed799da9a87ffe0ffb5cf42555499f65f694bb3e0c76442129fa |
-| m3_design/r12/fab/m3_bom_jlc.csv | 1dc4be76ea1e8650ceac6da423585439f51d4ad01f321a283d65393fa8eb44c2 |
+| m3_design/r12/fab/m3_bom_jlc.csv | 1cb9bd250235e853dd73ff9940c7c1bbc53f3b7674bbdd121c5de651a6ea4d7f |
 | m3_design/r12/fab/m3_cpl_jlc.csv | c9a2aa28514cf4c16fe70be2da92050baa1ae44f37c9577175a7fe637e9a40e1 |
-| m3_design/r12/fab/m3_fab_manifest.json | b225ac70cea8bb8c218a2bf3d8d27809d8cf30c715d629906ef7d550d674345f |
-| m3_design/r12/fab/m3_gerber.zip | 889a38ed582f14fe2a200bd961bbb5a9eedc660e922f5d4b0f2abd1aa7ecaf7c |
-| m3_design/r12/fab/cost_check_2.json | 573c9b78387a501144605bbb5fbbbc9dcf9f2035ad008cd8d9b8cf71e2a0297a |
-| m3_design/r12/fab/cost_check_5.json | fbbbf0fa947b0535483020a6ca76dd04f57153ad0287a250faf71691a8a8fb4f |
-| m3_design/r12/fab/stock_check_2.json | 88aecb3ee80a0a032ab4596fbb74c5e03d7472a013b6ead68e6007256a635535 |
-| m3_design/r12/fab/stock_check_5.json | c561d4ea0a91d58a070b97da350c013dd3c98b52350c088e017df963badbb2e9 |
+| m3_design/r12/fab/m3_fab_manifest.json | cc142547f1423163700f58d504996194f0701d3904cd7e50319405b69c229dab |
+| m3_design/r12/fab/m3_gerber.zip | d8e1b4ed2cf2cd1213c9efe2f57d67722755863ec00d956eca45a7c7ce54e124 |
+| m3_design/r12/fab/cost_check_2.json | 6db6c43439203205fa37eab6fc82b59fb0e82c953ea7fece7633af6a297b9828 |
+| m3_design/r12/fab/cost_check_5.json | 0d2760e94c29d50628ecd60182006255d586b98f17ca4376eb03951ba82eb722 |
+| m3_design/r12/fab/stock_check_2.json | 6d7987faa472f648f3458466cfee417476857e87b97117b16b159e0f8f1a5dda |
+| m3_design/r12/fab/stock_check_5.json | 700d9a86cd596ef2896630a56ca215487fcaade222e4fea2a0aea169060bdb05 |
 
 The Gerbers and assembly PDFs carry their creation date, so they change on every export; the manifest binds them.
 
@@ -254,6 +305,11 @@ The Gerbers and assembly PDFs carry their creation date, so they change on every
 -06, -07, -08, -10, -11, -13, branch `r12f2-AB`): two builds gave the same board `be81f40b…` and unchanged schematic and
 netlist hashes, `tools/test_r12_stageD.py` passed (8 tests) and `PYTHONHASHSEED=0 tools/check.sh` exited 0 (Measured,
 2026-11-06; no numpy interpreter, so the hot-plug numerics self-tests skipped, as did 6 tests in each of two self-test
-runs; the hot-plug files did not change). Not verified: any physical, electrical or firmware test;
-JLC DFM; the vehicle fit of the 90 mm board (O-R12-28); AN2606 (O-R12-23); a stage F review of the re-layout. After any
+runs; the hot-plug files did not change). Round 3 fix lanes A–D (R12F3-TRI-03, -04, -05, -06, -08, -09, -13, branch
+`r12f3-AD`): C25 / C26 15 pF; two builds gave the same board `66323cf0…` (copper unchanged); stage D and the hot-plug
+model re-run on it; the fab package re-exported and re-bound with S-4 in its content checks, and priced with the
+Preferred Extended waiver (one `FAB_NET=1` run); `tools/test_r12_stageD.py` passed (11 tests) and
+`PYTHONHASHSEED=0 tools/check.sh` exited 0 (Measured, 2026-11-06). Not verified: any physical, electrical or firmware test;
+JLC DFM; the vehicle fit of the 90 mm board (O-R12-28); AN2606 (O-R12-23); two consecutive clean stage F rounds on the
+re-layout (round 2 found 16 real errors and round 3 found 14, R12F3-TRI-01 … -14). After any
 later copper change: re-run the legend aid if needed, then `m3_design/r12_stageD.py` and `tools/r12_hotplug.py`.

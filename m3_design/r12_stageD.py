@@ -150,6 +150,11 @@ def other_load_w():
     return sum(parts.values()), dict(parts, camera_V=cam, port_V=port)
 
 
+# R12F3-TRI-06: Q124's gate drive from PE4 (DS12110 Rev 8 Table 158 VOH allowance; 3V3 drift minimum)
+VOH_DROP = 0.4
+Q124_VDD_MIN = r12_budget.rails()['3V3 (U2 LMR50410, R14 47k / R15 20k)']['drift']['min_V']
+
+
 def loaded(rest, other, stalls, open_v=PACK_V):
     a, b = 1 + PACK_R / rest, open_v - PACK_R * STALL_A * stalls
     v = (b + math.sqrt(b * b - 4 * a * PACK_R * other)) / (2 * a)
@@ -207,7 +212,17 @@ def fire_budget(copper, gnd_return):
                                'row value used here (Inference; a fault case, not the fire budget)'),
                 q120_rds_row='AO3401A RDS(on) <= 60 mOhm at VGS -4.5 V (25 C)', q120_vgs_abs_max_V=12.0,
                 q120_vgs_exceeds_12V_above_pack_V=12.0 / ratio_max + .1, q120_vgs_ratio_min_max=[ratio, ratio_max],
-                q124_vgs_min_V=3.240 * 10e3 / (10e3 + 220), q124_vgs_row_V=2.5, q124_vgs_th_max_V=1.45,
+                # R12F3-TRI-06: PE4 drives Q124's gate through R126 220R into R128 10k; DS12110 Rev 8 Table 158
+                # guarantees only VOH >= VDD - 0.4 V (|IIO| 4 mA, 1.62-3.6 V; 8 mA, 2.7-3.6 V), applied here at PE4's
+                # 0.32 mA steady load (Inference: the 4 mA row is conservative there); VDD = the 3V3 drift minimum,
+                # R126 / R128 1 % at their worst ends
+                q124_vgs_min_V=(Q124_VDD_MIN - VOH_DROP) * 10e3 * .99 / (10e3 * .99 + 220 * 1.01),
+                q124_vgs_min_basis=dict(vdd_min_V=Q124_VDD_MIN, voh_drop_V=VOH_DROP,
+                                        pe4_load_mA=Q124_VDD_MIN / 10.22e3 * 1e3,
+                                        source='DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 '
+                                               'drift minimum (r12_windows.json); R126 220R / R128 10k 1 %',
+                                        label='Calculation / Inference (VOH row applied at 0.32 mA; resistor drift)'),
+                q124_vgs_row_V=2.5, q124_vgs_th_max_V=1.45,
                 q124_gate_tau_us=220 * 220e-9 * 1e6,
                 basis='R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 '
                       '220 nF (values unchanged from R10 / R11); AO3401A / AO3400A datasheet rows (D-R12-10); C120 '
@@ -266,11 +281,22 @@ def pa6_window():
                 with_divider_tolerance_V=[.42 / hi_ratio, .45 / lo_ratio], ratio=[lo_ratio, hi_ratio])
 
 
-def pa6_corners(fire, u9_feed_ohm, raw_d5_ohm):
-    """VLOGIC during the fire at the healthy / match-shorted / match-and-leads-shorted four-stall points: BAT_IN less
-    U9 (0.04 ohm, Inference) and its copper (DC solves J1 -> U9.5 and U9.6 -> D5.2) at the converter current, less D5
-    (SS34 VF 0.25-0.45 V, Inference); against the PA6 trip window (O-R12-07)."""
-    other = fire['other_converter_load_W']
+def pa6_corners(fire, u9_feed_ohm, raw_ohm):
+    """VLOGIC during the fire at the healthy / match-shorted / match-and-leads-shorted four-stall points, against the
+    PA6 trip window (O-R12-07): BAT_IN less U9's RON (0.04 ohm, Inference) and the J1 -> U9.5 copper at the whole
+    converter current, less the RAW_PROTECTED drop at D5.2, less D5 (SS34 VF 0.25-0.45 V, Inference).
+    R12F3-TRI-09: each RAW_PROTECTED branch is charged at its own share of the U9.6 -> D5.2 resistance, not all at
+    U9 -> D5's: in a resistive network fed from U9.6, the drop a current into sink b causes at sink a (the mutual
+    resistance) is at most the smaller of the two sinks' own resistances to U9.6 (maximum principle and reciprocity),
+    so U403 (camera) is charged at min(R(U9 -> U403), R(U9 -> D5)), U400 (ports) at min(R(U9 -> U400), R(U9 -> D5)),
+    and D5's own load and R92's bleed at R(U9 -> D5) (dc_solves, each an upper bound). The drop is therefore an upper
+    bound and the margins lower bounds (Calculation on the DC solves; the allocations Inference)."""
+    other, parts = fire['other_converter_load_W'], fire['other_load_parts']
+    r_d5 = raw_ohm['D5']
+    shared = {'U403 (camera)': (parts['camera_W'], min(raw_ohm['U403'], r_d5)),
+              'U400 (ports)': (parts['ports_W'], min(raw_ohm['U400'], r_d5)),
+              'D5 (logic, microSD, D5) and R92': (parts['logic_W'] + parts['microsd_write_W'] + parts['d5_W']
+                                                   + parts['r92_W'], r_d5)}
     win = pa6_window()
     out = {}
     cases = {'healthy': fire['stalls']['4'], 'match_shorted': fire['shorted']['match_shorted_4_stalls'],
@@ -278,14 +304,21 @@ def pa6_corners(fire, u9_feed_ohm, raw_d5_ohm):
     for name, c in cases.items():
         v = c['BAT_IN_V']
         i = other / v
-        drop = i * (.04 + u9_feed_ohm + raw_d5_ohm)
+        raw_drop = sum(w / v * r for w, r in shared.values())
+        drop = i * (.04 + u9_feed_ohm) + raw_drop
+        lumped = i * (.04 + u9_feed_ohm + r_d5)
         vl = [v - drop - .45, v - drop - .25]
-        out[name] = dict(BAT_IN_V=v, converter_A=i, U9_and_copper_drop_V=drop, VLOGIC_V=vl,
+        out[name] = dict(BAT_IN_V=v, converter_A=i, U9_and_copper_drop_V=drop, RAW_PROTECTED_drop_at_D5_V=raw_drop,
+                         lumped_drop_V_superseded=lumped, VLOGIC_V=vl,
                          margin_to_nominal_trip_top_V=vl[0] - win['nominal_ratio_V'][1],
                          margin_to_tolerance_trip_top_V=vl[0] - win['with_divider_tolerance_V'][1])
+    out['branch_shared_ohm'] = {k: r for k, (_, r) in shared.items()}
+    out['raw_point_ohm'] = dict(raw_ohm)
     out['window'] = win
     out['u9_turn_off_through_d5_V'] = 4.80 - .25
-    out['label'] = 'Calculation / Inference (U9 RON, SS34 VF and the load allocations are Inference)'
+    out['label'] = ('Calculation / Inference (DC-solve upper bounds, mutual resistance bounded by the smaller point '
+                    'resistance; U9 RON, SS34 VF and the load allocations are Inference); the drop is an upper bound, '
+                    'the margins lower bounds')
     return out
 
 
@@ -707,7 +740,7 @@ def main():
         en=en_figures(four),
         holdup=holdup(four),
         pa6_corners=pa6_corners(fire, S['BAT_IN_J1_to_U9']['resistance_ohm'],
-                                S['RAW_PROTECTED_U9_to_D5']['resistance_ohm']),
+                                {k: S[f'RAW_PROTECTED_U9_to_{k}']['resistance_ohm'] for k in ('D5', 'U400', 'U403')}),
         rails=rails,
         rails_shared=dict(groups=shared, raw_budget_A=raw_budget_currents(fire), source_A=SOURCE_A,
                           note=('tracks on more than one load path, rated at the summed current (R12F2-TRI-07); each '

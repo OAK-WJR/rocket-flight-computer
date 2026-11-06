@@ -118,7 +118,7 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C1549|C0402": {
+  "C1548|C0402": {
    "footprint": "C0402",
    "easyeda": "C0402",
    "easyeda_proxy": null,

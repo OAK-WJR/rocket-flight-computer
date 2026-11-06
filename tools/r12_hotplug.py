@@ -14,7 +14,7 @@ curves, the convergence, sensitivity, no-clamp, retained-output and C88-topology
     U9 is TPS259470ARPWR (C3662799): the A variant shares the L variant's EC table and pin-out (TI SLVSFC9C device
     table; only the fault response, auto-retry vs latch-off, differs), so the OUT net role check accepts it.
     C80 / C96 / C89 / C95 / C88 / R166 / R92 are R10's codes. R12's discharge inventory adds C1538 (4.7 nF 0402 X7R, C81)
-    and C1549 (18 pF C0G, C25 / C26), each by its datasheet nominal, and C84's JLC-placed polymer C5246546
+    and C1548 (15 pF C0G, C25 / C26; R12F3-TRI-05), each by its datasheet nominal, and C84's JLC-placed polymer C5246546
     (HV1E477M0810PZ, D-R12-85), which takes R10's doubled 470 uF C84 envelope as MA25V470M8x10 did.
   * C79 (D-R12-78): a third damper capacitor, CL31A226KAHNNNE 22 uF (C12891), BAT_IN to BAT_DAMP beside C89 / C95,
     with their maker C(V) curve, tolerance / temperature factors and 'damper' corner. R10's model hard-codes two damper
@@ -109,7 +109,7 @@ MODEL_PARTS = dict(base.MODEL_PARTS, C79=base.MODEL_PARTS['C89'],
                    D8=('SMAJ12CA', 'C78399', 'SMAJ12CA/TR13', ('BAT_IN', 'GND')),
                    R167=('10k 1%', 'C25744', '0402WGF1002TCE', ('BAT_IN', 'GND')))
 DISCHARGE_PARTS = dict(base.DISCHARGE_PARTS, **{'0402B472K500NT': (.0047, 'C1538'),
-                                                '0402CG180J500NT': (.000018, 'C1549'),
+                                                '0402CG150J500NT': (.000015, 'C1548'),
                                                 'HV1E477M0810PZ': (470., 'C5246546')})
 U9_PARTS = ('TPS259470ARPWR',)
 _ORIGINAL_COMPONENT_ISSUES = base.component_issues

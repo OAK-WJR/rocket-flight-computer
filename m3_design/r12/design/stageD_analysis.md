@@ -1,6 +1,6 @@
 # R12 stage D: electrical analyses on R12's copper (2026-11-05)
 
-**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, board `be81f40b…`,
+**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05,
 2026-11-06): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
@@ -78,8 +78,10 @@ four stalls |VGS| is 4.40 V (4.35 V with the leads shorted too), below the −4.
 here use an RDS(on) below the real one (a fault case; Inference). Above ±12 V only with the pack above about 14.4 V
 (maximum-ratio corner: 12 / (51 / 60.8) + 0.1 = 14.41 V, assuming a 0.1 V Q122 drop; Calculation / Inference,
 O-R12-10); time to −4.5 V after enable 27.4 / 14.7 / 11.4 ms at 6.0 / 7.4 / 8.4 V (C120 1 µF × 1.10 ×
-1.15, no bias credit; inside the ≥ 100 ms enable wait). Q124 VGS ≥ 3.17 V at the 3V3 drift minimum (≥ the 2.5 V row,
-VGS(th) ≤ 1.45 V); gate τ 48.4 µs. Gate copper: PYRO1_GATE_N 17.38 mm F.Cu, no via; PYRO1_GATE 7.20 mm F + 5.37 mm In2,
+1.15, no bias credit; inside the ≥ 100 ms enable wait). Q124 VGS ≥ 2.78 V (2.778 V) at the 3V3 drift minimum less PE4's
+VOH allowance (DS12110 Rev 8 Table 158: VOH ≥ VDD − 0.4 V at 4 / 8 mA, applied at PE4's 0.32 mA; R126 / R128 1 %;
+Calculation / Inference: VOH row applied at 0.32 mA, drift; R12F3-TRI-06, was 3.17 V with VOH = VDD), above the 2.5 V
+RDS(on) row (VGS(th) ≤ 1.45 V); gate τ 48.4 µs. Gate copper: PYRO1_GATE_N 17.38 mm F.Cu, no via; PYRO1_GATE 7.20 mm F + 5.37 mm In2,
 two vias; microstrip L ≤ 10.2 / 7.3 nH, negligible against the 48 µs gate time constant.
 
 **Watchdog guard (carried, identical inputs; Calculation on allocations / Inference):** 28.571–32.653 ms + 0.2 + 0.5
@@ -138,6 +140,10 @@ its copper (J1 → U9.5 11.13 mΩ, U9.6 → D5 7.38 mΩ) at the 2.26–2.34 A co
 | Healthy match | 5.721 V | 5.138–5.338 V | +0.188 / +0.097 V |
 | Match shorted | 5.575 V | 4.989–5.189 V | +0.039 / **−0.052 V** |
 | Match and leads shorted | 5.532 V | 4.945–5.145 V | **−0.005 / −0.096 V** |
+
+(R12F3-TRI-09: this table charges the whole converter current at U9.6 → D5's resistance, including the camera buck's
+share, which leaves the RAW island nearer U9; so the drop is an upper bound and the margins lower bounds. The current
+board's figures, with each branch at its shared resistance, are in `stageE_relayout.md` §4.)
 
 So with D5 at its 0.45 V corner, a fire into a shorted match at four stalls can take VLOGIC into PA6's trip band
 (firmware rule 8's load shed during a fire). Not a fire-path hazard (the fire current is unchanged), but the firmware

@@ -26,14 +26,39 @@
   "window_holds_for": "U403 VIN >= VO / 0.75 (6.96-7.59 V initial); below it the CAM_5V window is not claimed"
  },
  "crystal": {
+  "C25_C26_pF": [
+   15.0,
+   15.0
+  ],
+  "C25_C26_tolerance": [
+   0.05,
+   0.05
+  ],
+  "circuit_CL_pF": [
+   9.125,
+   11.0,
+   12.875
+  ],
+  "gm_crit_18pF_5pct_corner_mA_per_V": 1.5027,
   "gm_crit_mA_per_V_at_CL12": 1.11,
   "gm_crit_range_mA_per_V": [
-   0.967,
-   1.426
+   0.7255,
+   1.2436
   ],
-  "label": "Calculation (Datasheet ESR / C0 maxima); stray capacitance Inference",
+  "label": "Calculation (Datasheet ESR / C0 maxima, C25 / C26 tolerance); stray capacitance Inference; pulling: Inference (C1 <= 10 fF and C0 0.5-3 pF assumed, not on the YSX321SL sheet)",
   "limit_mA_per_V": 1.5,
-  "ok": true
+  "margin_pct": 17.1,
+  "ok": true,
+  "pulling_ppm_range": [
+   -26.2,
+   119.5
+  ],
+  "stray_pF": [
+   2.0,
+   5.0
+  ],
+  "total_offset_ppm_bound": 164.5,
+  "usb_fs_limit_ppm": 2500
  },
  "fire": {
   "basis": "R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference",
@@ -42,7 +67,7 @@
   "four_stall_margin_pct": 10.9,
   "four_stall_ok": true,
   "gate": {
-   "note": "Q120 / Q121 VGS = -V_BAT x (R119 || R120) / ((R119 || R120) + R121) (R11 network). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is only enabled in flight (Inference that no such transient occurs there)",
+   "note": "Q120 / Q121 VGS = -V_BAT x (R119 || R120) / ((R119 || R120) + R121) (R11 network). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is only enabled in flight (Inference that no such transient occurs there). Q124 VGS: PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; applied at PE4's 0.32 mA, Inference; R12F3-TRI-06) through R126 220R / R128 10k",
    "q120_q121_vgs_V": {
     "12.6V_3S": -10.5,
     "19.9V_TVS_clamp": -16.58,
@@ -52,7 +77,7 @@
    "q120_rds_row": "VGS -4.5 V (|VGS| >= 4.5 V down to a 5.4 V pack)",
    "q120_vgs_abs_max_V": 12,
    "q124_tau_us": 48.4,
-   "q124_vgs_min_V": 3.153,
+   "q124_vgs_min_V": 2.761,
    "q124_vgs_th_max_V": 1.45
   },
   "label": "Calculation on Datasheet limits; copper, pack, loads and hot factors Inference",

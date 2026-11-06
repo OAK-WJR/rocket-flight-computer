@@ -1050,21 +1050,21 @@
       </units>
     </comp>
     <comp ref="C25">
-      <value>18pF 50V C0G 5%</value>
+      <value>15pF 50V C0G 5%</value>
       <footprint>rocket:C0402</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG180J500NT_C1549.pdf</datasheet>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG150J500NT_C1548.pdf</datasheet>
       <fields>
-        <field name="LCSC">C1549</field>
+        <field name="LCSC">C1548</field>
         <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
-        <field name="Manufacturer Part">0402CG180J500NT</field>
+        <field name="Manufacturer Part">0402CG150J500NT</field>
         <field name="Footprint">rocket:C0402</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG180J500NT_C1549.pdf</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG150J500NT_C1548.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C1549"/>
+      <property name="LCSC" value="C1548"/>
       <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
-      <property name="Manufacturer Part" value="0402CG180J500NT"/>
+      <property name="Manufacturer Part" value="0402CG150J500NT"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
@@ -1081,21 +1081,21 @@
       </units>
     </comp>
     <comp ref="C26">
-      <value>18pF 50V C0G 5%</value>
+      <value>15pF 50V C0G 5%</value>
       <footprint>rocket:C0402</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG180J500NT_C1549.pdf</datasheet>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG150J500NT_C1548.pdf</datasheet>
       <fields>
-        <field name="LCSC">C1549</field>
+        <field name="LCSC">C1548</field>
         <field name="Manufacturer">FH (Guangdong Fenghua Advanced Tech)</field>
-        <field name="Manufacturer Part">0402CG180J500NT</field>
+        <field name="Manufacturer Part">0402CG150J500NT</field>
         <field name="Footprint">rocket:C0402</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG180J500NT_C1549.pdf</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_FH--Guangdong-Fenghua-Advanced-Tech-0402CG150J500NT_C1548.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="C" description="Unpolarized capacitor"/>
-      <property name="LCSC" value="C1549"/>
+      <property name="LCSC" value="C1548"/>
       <property name="Manufacturer" value="FH (Guangdong Fenghua Advanced Tech)"/>
-      <property name="Manufacturer Part" value="0402CG180J500NT"/>
+      <property name="Manufacturer Part" value="0402CG150J500NT"/>
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>

@@ -96,5 +96,43 @@ class StageDFigures(unittest.TestCase):
                             for o in rails['U400 IN']['over_30C']))
 
 
+class Round3Fixes(unittest.TestCase):
+    """R12 review round 3 (R12F3-TRI-06 / -09) in the stage D record and its pure functions."""
+
+    def test_q124_vgs_from_voh_minimum(self):
+        """R12F3-TRI-06: PE4's VOH is only guaranteed >= VDD - 0.4 V (DS12110 Rev 8 Table 158)."""
+        g = json.loads((DESIGN / 'stageD_budget.json').read_text())['fire']['gate']
+        b = g['q124_vgs_min_basis']
+        self.assertEqual(b['voh_drop_V'], 0.4)
+        want = (b['vdd_min_V'] - 0.4) * 9.9e3 / (9.9e3 + 222.2)
+        self.assertAlmostEqual(g['q124_vgs_min_V'], want, places=9)
+        self.assertAlmostEqual(g['q124_vgs_min_V'], 2.778, places=3)
+        self.assertGreater(g['q124_vgs_min_V'], g['q124_vgs_row_V'])
+
+    def test_pa6_branches_charged_at_their_shared_resistance(self):
+        """R12F3-TRI-09: a branch's drop at D5 is its current times min(its own, D5's) resistance from U9."""
+        import r12_stageD
+        fire = dict(other_converter_load_W=10.0,
+                    other_load_parts=dict(camera_W=6.0, ports_W=3.0, logic_W=0.5, microsd_write_W=0.3, d5_W=0.1,
+                                          r92_W=0.1),
+                    stalls={'4': dict(BAT_IN_V=5.0)},
+                    shorted={'match_shorted_4_stalls': dict(BAT_IN_V=5.0),
+                             'match_and_leads_shorted_4_stalls': dict(BAT_IN_V=5.0)})
+        out = r12_stageD.pa6_corners(fire, 0.01, dict(D5=0.02, U400=0.05, U403=0.01))
+        h = out['healthy']
+        raw = (6.0 * 0.01 + 3.0 * 0.02 + 1.0 * 0.02) / 5.0
+        self.assertAlmostEqual(h['RAW_PROTECTED_drop_at_D5_V'], raw, places=12)
+        self.assertAlmostEqual(h['U9_and_copper_drop_V'], 2.0 * 0.05 + raw, places=12)
+        self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'], 6.0 / 5.0 * 0.01, places=12)
+
+    def test_pa6_record_uses_branch_shares(self):
+        d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+        p, s = d['pa6_corners'], d['dc_solves']
+        self.assertAlmostEqual(p['branch_shared_ohm']['U403 (camera)'],
+                               min(s['RAW_PROTECTED_U9_to_U403']['resistance_ohm'],
+                                   s['RAW_PROTECTED_U9_to_D5']['resistance_ohm']), places=12)
+        self.assertGreater(p['healthy']['lumped_drop_V_superseded'] - p['healthy']['U9_and_copper_drop_V'], 0.015)
+        self.assertIn('upper bound', p['label'])
+
 if __name__ == '__main__':
     unittest.main()

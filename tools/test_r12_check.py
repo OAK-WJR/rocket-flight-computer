@@ -269,6 +269,50 @@ class Round1Fixes(unittest.TestCase):
         self.assertGreater(tails['minimum_bore_margin_mm'], 0)
 
 
+@unittest.skipUnless(pcbnew and BOARD12.is_file() and (BOARD12.parent / 'fab/m3_bom_jlc.csv').is_file(),
+                     'KiCad python, the R12 board and its fab package required')
+class FabContent(unittest.TestCase):
+    """R12F3-TRI-03: the R12 package's content checks run S-4 on the exported BOM / CPL (quantity, Manufacturer Part and
+    Footprint against the board's native parts), as R10's and R11's packages do; seeded on a copy of the package."""
+
+    def s4(self, out):
+        import fab_manifest_r12 as fm12
+        checks = fm12.content_checks(BOARD12, out, sys.executable)
+        label, argv = checks[0]
+        self.assertEqual(label, 'S-4 BOM / CPL identities')
+        self.assertTrue(argv[2].endswith('check_r12.py'))
+        self.assertEqual(argv[4:6], ['--only', 'S-4'])
+        self.assertIn('--bom', argv)
+        self.assertIn('--cpl', argv)
+        return subprocess.run(argv, capture_output=True, text=True, timeout=600)
+
+    def test_s4_bound_and_run_on_the_package(self):
+        import fab_manifest_r12 as fm12
+        self.assertIn('tools/check_r12.py', fm12.R12_INPUTS)
+        fab = BOARD12.parent / 'fab'
+        ok = self.s4(fab)
+        self.assertEqual(ok.returncode, 0, ok.stdout[-2000:] + ok.stderr[-2000:])
+        import csv
+        with tempfile.TemporaryDirectory(prefix='r12-fabmut-') as d:
+            out = Path(d)
+            shutil.copy2(fab / 'm3_cpl_jlc.csv', out / 'm3_cpl_jlc.csv')
+            with (fab / 'm3_bom_jlc.csv').open(newline='') as src:
+                reader = csv.DictReader(src)
+                fields, rows = reader.fieldnames, list(reader)
+            row = next(r for r in rows if r['Designator'] == 'Q122,Q123,Q124')
+            row.update({'Footprint': 'R0402', 'Manufacturer Part': 'AO3401A', 'Qty': '0'})
+            with (out / 'm3_bom_jlc.csv').open('w', newline='') as dst:
+                w = csv.DictWriter(dst, fieldnames=fields)
+                w.writeheader()
+                w.writerows(rows)
+            bad = self.s4(out)
+        self.assertNotEqual(bad.returncode, 0)
+        text = bad.stdout
+        for want in ("Qty '0' must be a positive integer", "Q124 Manufacturer Part 'AO3401A' differs",
+                     "Q122 Footprint 'R0402' differs"):
+            self.assertIn(want, text)
+
+
 class Schematic(unittest.TestCase):
     """The committed R12 netlist meets the contract and every seeded fault is caught (ERC runs in the R12 gate)."""
 
@@ -329,6 +373,17 @@ class Windows(unittest.TestCase):
         self.assertTrue(self.data['sense']['PORT_SENSE_ok'])
         self.assertTrue(self.data['crystal']['ok'])
         self.assertTrue(self.data['vlogic']['usb_only_ok'])
+
+    def test_crystal_range_includes_capacitor_tolerance(self):
+        """R12F3-TRI-05: the gm_crit range spans C25 / C26's tolerance and 2-5 pF stray; 18 pF +5 % at 5 pF stray gave
+        1.5027 mA/V, above DS12110's 1.5 mA/V Gm_critmax, so C25 / C26 are 15 pF."""
+        x = self.data['crystal']
+        self.assertEqual(x['C25_C26_pF'], [15.0, 15.0])
+        self.assertEqual(x['C25_C26_tolerance'], [0.05, 0.05])
+        self.assertEqual(x['circuit_CL_pF'], [9.125, 11.0, 12.875])
+        self.assertLess(x['gm_crit_range_mA_per_V'][1], 1.5)
+        self.assertGreater(x['gm_crit_18pF_5pct_corner_mA_per_V'], 1.5)
+        self.assertLess(x['total_offset_ppm_bound'], x['usb_fs_limit_ppm'] / 10)
 
     def test_round1_labels_and_cam_input(self):
         """D-R12-86 / -87 (R12F1-TRI-03, -17): PA4 sense labelled with its drift Inference; CAM_5V input condition."""

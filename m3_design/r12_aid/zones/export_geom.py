@@ -2,6 +2,8 @@
 """D-R12-96: dump the placed R12 board's geometry as JSON for zone routers that cannot run KiCad: every pad (ref, number,
 net, centre, size, shape, rotation, copper layers, drill), every footprint courtyard (bounding box), the rule areas,
 the outline, the via and width rules, and the zone polygons. Board mm, x east, y forward from the aft edge.
+The outline ('board': x0 / y0 / x1 / y1, w, l) is read from the board's Edge.Cuts segments and rectangles (the support
+circles excluded), never a constant (R12F3-TRI-04: the 90 mm board was exported as 46 x 100 mm).
 
 usage: <KiCad python3> -I -B m3_design/r12_aid/zones/export_geom.py BOARD OUT.json
 """
@@ -13,6 +15,21 @@ import pcbnew
 
 HERE = Path(__file__).resolve().parent
 mm = pcbnew.ToMM
+
+
+def outline(b):
+    """The Edge.Cuts outline's bounding box from its segment and rectangle end points (support circles excluded)."""
+    xs, ys = [], []
+    for d in b.GetDrawings():
+        if d.GetLayer() != pcbnew.Edge_Cuts or d.GetShape() not in (pcbnew.SHAPE_T_SEGMENT, pcbnew.SHAPE_T_RECT):
+            continue
+        for p in (d.GetStart(), d.GetEnd()):
+            xs.append(mm(p.x))
+            ys.append(mm(p.y))
+    if not xs:
+        raise SystemExit('export_geom: no Edge.Cuts segment or rectangle on the board')
+    x0, y0, x1, y1 = (round(v, 4) for v in (min(xs), min(ys), max(xs), max(ys)))
+    return dict(x0=x0, y0=y0, x1=x1, y1=y1, w=round(x1 - x0, 4), l=round(y1 - y0, 4))
 
 
 def main(board_path, out):
@@ -44,7 +61,7 @@ def main(board_path, out):
             pts = [(round(mm(o.CVertex(i).x), 4), round(mm(o.CVertex(i).y), 4)) for i in range(o.TotalVertices())]
             areas.append(dict(name=z.GetZoneName(), layers=[names[l] for l in names if z.GetLayerSet().Contains(l)],
                               no_tracks=z.GetDoNotAllowTracks(), no_vias=z.GetDoNotAllowVias(), points=pts))
-    d = dict(note=__doc__.split('\n')[0], board=dict(w=46, l=100),
+    d = dict(note=__doc__.split('\n')[0], board=outline(b),
              rules=dict(via_pad=0.45, via_drill=0.3, min_track=0.1, min_clearance=0.1, board_floor_clearance=0.1,
                         widths=[0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.6, 0.8, 1.0], angles='0/45/90 only'),
              parts=parts, pads=pads, rule_areas=areas, zones=json.loads((HERE / 'zones.json').read_text()))

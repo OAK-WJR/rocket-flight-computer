@@ -5,6 +5,10 @@ separate file because tools/fab_manifest.py's own SHA-256 is one of the inputs R
 
 R12 is one-sided JLC Economic PCBA (D-R12-01): every placed part on F, four copper layers. The content checks, each run
 under KiCad's Python (KICAD_PY, else KiCad's default macOS location) by --content and --bind:
+  S-4 (tools/check_r12.py --only S-4 --bom --cpl, as R10's and R11's packages run check_r10 / check_r11; R12F3-TRI-03):
+    every required-fitted part in the JLC BOM and the CPL with its native identity: BOM quantity, LCSC code, Manufacturer
+    Part and Footprint against the board's part fields, and the owner BOM's identities. check_r12.py is therefore
+    bound among the package inputs, as check_r11.py is in R11's.
   BOM / CPL (--verify-cpl): the JLC BOM's and the CPL's designator sets are equal, with no duplicate; they are exactly
     the parts m3_design/r12_parts.py bom_lines() puts in the JLC BOM (LCSC code, not owner-fitted, not excluded from
     the BOM), with the board's LCSC codes; the owner BOM is exactly the owner-fitted parts (none since D-R12-85, so
@@ -15,7 +19,8 @@ under KiCad's Python (KICAD_PY, else KiCad's default macOS location) by --conten
     PTH and NPTH drills and the job file; tools/paste_check.py's rules on F paste; the paste counts: one flash per
     pasted pad, and only parts in the CPL carry paste.
 The binding (tools/fab_manifest.py) hashes the board (its SHA-256), project, schematics, library, the R12 export tools
-and data, m3_design/r12_parts.py and design/circuit.json against the five outputs (and an owner BOM if one existed).
+and data, tools/check_r12.py, m3_design/r12_parts.py and design/circuit.json against the five outputs (and an owner BOM
+if one existed).
 
 usage: python3 tools/fab_manifest_r12.py [board]                   verify the binding (hashes only)
        python3 tools/fab_manifest_r12.py [board] --content         verify the binding, then run the content checks
@@ -40,6 +45,7 @@ R12_BOARD = ROOT / 'm3_design/r12/m3.kicad_pcb'
 _base_inputs = fm.input_hashes
 R10_ONLY = ('tools/jlc_corrections.json', 'tools/jlc_easyeda/pads.json')     # R10's data: not an R12 input
 R12_INPUTS = ('tools/export_fab_r12.py', 'tools/jlc_orient_r12.py', 'tools/fab_manifest_r12.py', 'tools/paste_check.py',
+              'tools/check_r12.py',
               'tools/jlc_corrections_r12.json', 'tools/jlc_easyeda/pads_r12.json', 'm3_design/r12_parts.py',
               'm3_design/r12/design/circuit.json')
 # the Gerber zip (kicad-cli --no-protel-ext; tools/export_fab.py): file name suffixes after "<board stem>-"
@@ -57,7 +63,11 @@ def input_hashes(board):
 def content_checks(board, out, kicad_py):
     this = str(Path(__file__).resolve())
     common = [kicad_py, '-I', this, str(board), '--out', str(out)]
-    return [('BOM / CPL inventory, CPL rebuilt from JLC footprints', common + ['--verify-cpl']),
+    stem = Path(board).stem
+    return [('S-4 BOM / CPL identities', [kicad_py, '-I', str(ROOT / 'tools/check_r12.py'), str(board), '--only', 'S-4',
+                                          '--bom', str(Path(out) / f'{stem}_bom_jlc.csv'),
+                                          '--cpl', str(Path(out) / f'{stem}_cpl_jlc.csv')]),
+            ('BOM / CPL inventory, CPL rebuilt from JLC footprints', common + ['--verify-cpl']),
             ('Gerber layers and paste openings', common + ['--paste'])]
 
 

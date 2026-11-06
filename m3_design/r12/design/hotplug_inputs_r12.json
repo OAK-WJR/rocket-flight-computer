@@ -1,7 +1,7 @@
 {
   "schema": 3,
-  "board_sha256": "be81f40be9d5b5ea60b3f1484324dab4dc999446dd75f493dd41e7f6982ddae8",
-  "electrical_sha256": "c14926550c70d3c30e35f9876f2d6103b1321cdfb8f912a5968914fc1346e170",
+  "board_sha256": "66323cf0e78768beb9934cae316490ce357ee6216851843619e62da47105ad2f",
+  "electrical_sha256": "dfba47cd69785bb17b11e68ac4f0ce245672ec04ef0690aba937140e4766b40d",
   "parts": {
     "C10": {
       "value": "22uF 25V X5R 10%",
@@ -783,12 +783,12 @@
       ]
     },
     "C25": {
-      "value": "18pF 50V C0G 5%",
+      "value": "15pF 50V C0G 5%",
       "footprint": "C0402",
       "fields": {
-        "LCSC": "C1549",
+        "LCSC": "C1548",
         "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
-        "Manufacturer Part": "0402CG180J500NT"
+        "Manufacturer Part": "0402CG150J500NT"
       },
       "pads": [
         {
@@ -824,12 +824,12 @@
       ]
     },
     "C26": {
-      "value": "18pF 50V C0G 5%",
+      "value": "15pF 50V C0G 5%",
       "footprint": "C0402",
       "fields": {
-        "LCSC": "C1549",
+        "LCSC": "C1548",
         "Manufacturer": "FH (Guangdong Fenghua Advanced Tech)",
-        "Manufacturer Part": "0402CG180J500NT"
+        "Manufacturer Part": "0402CG150J500NT"
       },
       "pads": [
         {
