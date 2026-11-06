@@ -10,6 +10,7 @@ zones of their two ends; items whose two ends are in different zones are expecte
 """
 import argparse
 import json
+import math
 import os
 import shutil
 import subprocess
@@ -30,6 +31,17 @@ Z = json.loads((HERE / 'zones.json').read_text())
 
 def zones_of(x, y):
     return sorted(z for z, d in Z['zones'].items() if zone_guard.inside(d['polygon'], x, y)) or ['outside']
+
+
+def route_zones(finding):
+    """Prefer route_check's x/y; skip labels such as at='free' when trying older coordinate fields."""
+    for xy in ((finding.get('x'), finding.get('y')), *(finding.get(k) for k in ('at', 'xy', 'pos'))):
+        if isinstance(xy, dict):
+            xy = (xy.get('x'), xy.get('y'))
+        if (isinstance(xy, (list, tuple)) and len(xy) >= 2
+                and all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in xy[:2])):
+            return zones_of(*xy[:2])
+    return ['?']
 
 
 def run(cmd, **kw):
@@ -94,8 +106,7 @@ def main():
             fails = rep.get('failures') or rep.get('failing') or []
             for f in fails:
                 txt = json.dumps(f)
-                xy = f.get('at') or f.get('xy') or f.get('pos')
-                zs = zones_of(*xy[:2]) if isinstance(xy, (list, tuple)) and len(xy) >= 2 else ['?']
+                zs = route_zones(f)
                 if not a.zone or a.zone in zs:
                     lines.append(f"ROUTE {'/'.join(zs)} {txt[:400]}")
                 for z in zs:
