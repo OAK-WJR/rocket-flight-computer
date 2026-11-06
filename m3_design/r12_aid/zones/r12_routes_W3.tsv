@@ -18,9 +18,6 @@ via	CAM_PWR_EN	-	0.45	25.4	52.4
 via	SERVO2_MCU	-	0.45	27.4	52.6		
 via	VBUS_SENSE	-	0.45	30.6	53		
 # east: AUX lane CX, QSPI (tight quadrant fallback b, CLK F only)
-via	AUX_RX_MCU	-	0.45	41.4	53.6		
-via	AUX_TX_MCU	-	0.45	40.6	54.4		
-via	GND	-	0.45	42.2	53.6		
 via	GND	-	0.45	40	55.2		
 via	QSPI_IO1	-	0.45	29.6	57.6		
 via	QSPI_IO1	-	0.45	37	63.23		
@@ -153,8 +150,6 @@ track	VBUS_SENSE	F	0.1	26.2	53.2	30.4	53.2
 track	VBUS_SENSE	F	0.1	30.4	53.2	30.6	53
 track	VBUS_SENSE	B	0.15	30.6	53	30.6	52.2
 track	VBUS_SENSE	B	0.15	30.6	52.2	30.8	52
-track	AUX_RX_MCU	F	0.2	26.6	53.6	41.4	53.6
-track	AUX_TX_MCU	F	0.2	26.6	54.4	40.6	54.4
 track	QSPI_CLK	F	0.1	22.6	55.2	23	54.8
 track	QSPI_CLK	F	0.1	23	54.8	33	54.8
 track	QSPI_CLK	F	0.1	33	54.8	33.4	55.2
@@ -217,19 +212,9 @@ track	GPS_RX_MCU	F	0.1	25.8	56.8	25.4	57.2
 track	PORT_SENSE	F	0.1	25.8	56	26.2	56.4
 # D-R12-99 (90 mm outline): CX turns west at y 66.4 / 66.8 (forward of U3, aft of the port buck) and runs north at
 # the series-resistor x (35 / 36) to vias at y 80.0; F tails to R471 / R470.
-track	AUX_RX_MCU	B	0.2	41.4	53.6	41.4	66
-track	AUX_RX_MCU	B	0.2	41.4	66	40.6	66.8
-track	AUX_RX_MCU	B	0.2	40.6	66.8	36.4	66.8
-track	AUX_RX_MCU	B	0.2	36.4	66.8	36	67.2
-track	AUX_RX_MCU	B	0.2	36	67.2	36	80
 via	AUX_RX_MCU	-	0.45	36	80		
 track	AUX_RX_MCU	F	0.2	36	80	36	81.77
 via	GND	-	0.45	35.5	79.2		
-track	AUX_TX_MCU	B	0.2	40.6	54.4	40.6	66
-track	AUX_TX_MCU	B	0.2	40.6	66	40.2	66.4
-track	AUX_TX_MCU	B	0.2	40.2	66.4	35.4	66.4
-track	AUX_TX_MCU	B	0.2	35.4	66.4	35	66.8
-track	AUX_TX_MCU	B	0.2	35	66.8	35	79.7
 via	AUX_TX_MCU	-	0.45	35	79.7		
 track	AUX_TX_MCU	F	0.2	35	79.7	35	81.77
 track	SD_CS	F	0.1	21	57.6	21	58.4
@@ -451,10 +436,6 @@ track	GPS_TX_MCU	F	0.1	25.65	57.75	25.65	58.8
 via	GPS_TX_MCU	-	0.45	25.65	58.8		
 track	PORT_SENSE	B	0.1	26.2	56.4	26.45	56.65
 via	GND	-	0.45	25.225	58.15		
-track	GPS_TX_MCU	B	0.1	25.65	58.8	25.29	59.16
-track	GPS_TX_MCU	B	0.1	25.29	59.16	25.29	79.4
-via	GPS_TX_MCU	-	0.45	25.29	79.4		
-track	GPS_TX_MCU	F	0.2	25.29	79.4	22.9	79.4
 track	GPS_TX_MCU	F	0.2	22.9	79.4	22.5	79.8
 track	GPS_TX_MCU	F	0.2	22.5	79.8	22.5	81.77
 track	PORT_SENSE	B	0.1	26.45	56.65	26.45	79.42
@@ -501,3 +482,23 @@ track	I2C1_SCL	F	0.1	22.6	48.2	22.6	45.4
 track	SPI1_MISO	F	0.1	23.4	50.4	23.4	48.6
 track	SPI1_MISO	F	0.1	23.4	48.6	23	48.2
 track	SPI1_MISO	F	0.1	23	48.2	23	45.4
+# AVA pass: AUX pair dives beside U3 (x 37.9 / 38.9), one GND partner (37.9, 52.95); B lanes 1.0 mm pitch turn together at y 65.4 / 66.4
+via	AUX_RX_MCU	-	0.45	38.9	53.6		
+via	AUX_TX_MCU	-	0.45	37.9	54.4		
+via	GND	-	0.45	37.9	52.95		
+track	AUX_RX_MCU	F	0.2	26.6	53.6	38.9	53.6
+track	AUX_TX_MCU	F	0.2	26.6	54.4	37.9	54.4
+track	AUX_RX_MCU	B	0.2	38.9	53.6	38.9	65.4
+track	AUX_RX_MCU	B	0.2	38.9	65.4	37.9	66.4
+track	AUX_RX_MCU	B	0.2	37.9	66.4	36.4	66.4
+track	AUX_RX_MCU	B	0.2	36.4	66.4	36	66.8
+track	AUX_RX_MCU	B	0.2	36	66.8	36	80
+track	AUX_TX_MCU	B	0.2	37.9	54.4	37.9	65
+track	AUX_TX_MCU	B	0.2	37.9	65	37.5	65.4
+track	AUX_TX_MCU	B	0.2	37.5	65.4	36	65.4
+track	AUX_TX_MCU	B	0.2	36	65.4	35	66.4
+track	AUX_TX_MCU	B	0.2	35	66.4	35	79.7
+track	GPS_TX_MCU	B	0.1	25.65	58.8	25.29	59.16
+track	GPS_TX_MCU	B	0.1	25.29	59.16	25.29	79.4
+via	GPS_TX_MCU	-	0.45	25.29	79.4		
+track	GPS_TX_MCU	F	0.2	25.29	79.4	22.9	79.4
