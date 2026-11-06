@@ -1,0 +1,122 @@
+# R12 AVA re-layout, zone W3 (U1 escape), phase 1a (D-R12-96). Board mm, x east, y forward. U1 at (23, 54), rotation 0;
+# ball (col c, row r) at x = 19.4 + 0.8 (c - 1), y = 50.4 + 0.8 r (rows A..K = 0..9). Dog-bone vias sit at interstitial
+# sites (ball +- 0.4, +- 0.4), 0.3 / 0.45 mm. Section "escape": every connected ball. Section "handoffs": every W3 border
+# crossing (ROUTING_PLAN section 6 table plus the new W3 -> W4 sensor-bus hand-offs at y 45.4); the neighbouring zone's
+# copper starts exactly there, on that layer and width. Tight forward-east quadrant: fallback (b), see the note at the end.
+section	ball	net	layer_at_exit	dogbone_via	exit_xy	direction
+escape	A2	BAT_FAULT_N	F->B	-	20.2,48.8	aft stub to via (20.2,48.8); B to (19.2,47.8), aft along x 19.2 to the W1 hand-off
+escape	A3	QSPI_IO2	B	21.4,50.8	40.0,53.6	under-lane LQ: B along x 21.8 to 53.2, east along the E-row line y 53.6 to x 36.6, forward along x 37.0 to a via (37.0,61.97) under U3, F east into pin 3 inner end
+escape	A4	IMU_CS	F	-	21.8,45.4	aft stub, straight aft to W4
+escape	A5	I2C1_SDA	F	-	22.6,45.4	aft stub, straight aft on F to W4 (no via: a B lane would cross the critical NRST In2 lane, K-reference)
+escape	A6	SPI1_MISO	F	-	23.4,45.4	aft stub, straight aft to W4
+escape	A7	SPI1_SCK	F	-	24.2,45.4	aft stub, straight aft to W4
+escape	A8	SERVO1_MCU	F->B	-	27.4,45.4	aft stub to via (25.0,47.6); B 0.15 east along y 47.6, aft on CA lane 27.4
+escape	A9	SWCLK	F	-	30.4,47.4	aft stub along x 25.8 to y 47.8, 45 deg to y 47.4, east to W2
+escape	A10	SWDIO	F	-	30.4,48.2	aft stub along x 26.6 to y 49.0, east along y 48.6, 45 deg into the hand-off
+escape	B2	3V3	F->via	provisional	-	short F to a 3V3 via west of the field (In2 plane)
+escape	B5	I2C1_SCL	F	-	23.0,45.4	channel x 23.0 aft, straight on F to W4
+escape	B7	HG_CS	F	-	23.8,45.4	channel x 23.8 aft, straight to W4
+escape	B8	CAM_MCU_RX	F->B	-	29.8,45.4	channel x 25.4 aft to y 47.2, east along y 46.8 to via (30.0,46.8); B to CA lane 29.8
+escape	B9	CAM_MCU_TX	F->B	-	29.4,45.4	channel x 26.2 aft to y 48.4, east along y 48.0 to via (29.6,48.0); B 45 deg to CA lane 29.4
+escape	B10	USB_DP	F	-	30.4,50.8	east stub, 45 deg to y 50.8, east to W2 (0.2)
+escape	C1	HSE_IN	F	-	-	frozen R12 copper to Y1.1 / C25.1 (reused verbatim)
+escape	C2	GND	F->via	provisional	-	dog-bone / short F to a GND via (In1)
+escape	C3	PYRO1_GATE_N	F	-	-	frozen R12 copper (D-R12-68A), verbatim
+escape	C5	SPI1_MOSI	F	-	24.6,45.4	F between rows B and C (y 51.6) east to x 24.4, 45 deg into channel x 24.6, aft to W4
+escape	C7	IMU_INT1	B->F	23.8,52.4	25.0,45.4	dog-bone, B aft along x 24.2, 45 deg to via (25.0,46.95), F aft to W4 (east of MOSI)
+escape	C8	CAM_PWR_EN	B	25.4,52.4	28.2,45.4	dog-bone, B east along y 52.0, aft on CA lane 28.2
+escape	C9	SERVO4_MCU	B	25.4,51.6	27.8,45.4	dog-bone, B east along y 51.6, aft on CA lane 27.8
+escape	C10	USB_DM	F	-	30.4,51.2	east stub along y 52.0, 45 deg to y 51.2, east to W2 (0.2)
+escape	D1	HSE_OUT	F	-	-	frozen R12 copper to Y1.3 / C26.1
+escape	D2	3V3	F->via	provisional	-	short F to a 3V3 via (In2 plane)
+escape	D5	BOOT0	B	23.0,52.4	-	dog-bone, B aft along x 23.4, west along y 49.8, 45 deg to via (17.8,48.2); F to R5.1
+escape	D9	SERVO3_MCU	B	25.4,53.2	29.0,45.4	dog-bone, B east along y 53.2, aft on CA lane 29.0
+escape	D10	SERVO2_MCU	F->B	-	28.6,45.4	F to via (27.4,52.6); B east along y 52.6, aft on CA lane 28.6
+escape	E1	NRST	F	-	-	F to C24.1, via (14.55,54.5), In2 lane LI (x 14.55 aft, y 45.6 east) to via (25.6,45.6), F east to W2 (30.4,45.6)
+escape	E2	CAM_5V_SENSE	F->In2	-	-	R12's F stub (channel y 53.2) to via (17.5,53.0), In2 lane LI to W4 (26.6,45.4); C94 joined on In2
+escape	E4	GND	via	provisional	-	dog-bone to In1
+escape	E5	GND	via	provisional	-	dog-bone to In1
+escape	E6	GND	via	provisional	-	dog-bone to In1
+escape	E7	VCAP2	B	24.6,54.0	-	dog-bone; B 0.2 along the G-row line y 55.2 east, forward along x 26.9 to a via (27.8,61.85) at C20.1's forward end
+escape	E9	VBUS_SENSE	F->B	-	30.8,52.0	channel y 53.2 east to via (30.6,53.0); B to W2
+escape	E10	AUX_RX_MCU	F->B	-	36.0,88.0	east stub along y 53.6 to via (41.4,53.6); B lane x 41.4; west along y 87.0 to via (36.0,87.3); B lane CX forward, F at the forward end to W5
+escape	F1	PYRO1_CONT	F	-	-	frozen R12 copper (reused verbatim)
+escape	F2	ACT_EN_MCU	F	-	-	frozen R12 copper incl. the stub-tip via (18.6,54.0) (reused verbatim)
+escape	F4	3V3	via	provisional	-	dog-bone to In2 3V3
+escape	F5	3V3	via	provisional	-	dog-bone to In2 3V3
+escape	F6	3V3	via	provisional	-	dog-bone to In2 3V3
+escape	F7	3V3	via	provisional	-	dog-bone to In2 3V3
+escape	F8	VCAP1	B	25.4,54.0	-	dog-bone; B along the F-row line y 54.4 east, forward along x 28.6 to a via (29.4,61.85) at C19.1's forward end
+escape	F10	AUX_TX_MCU	F->B	-	35.0,88.0	east stub along y 54.4 to via (40.6,54.4); B lane x 41.0; west along y 86.6 to via (35.0,86.6), F at the forward end to W5
+escape	G1	GND	F	-	-	F to C24.2 and its GND via (provisional)
+escape	G5	QSPI_CLK	F	-	-	F only (fallback b, no via): channel y 54.8 east, forward along x 33.4 under U3, 45 deg, west into pin 6 inner end
+escape	G7	SD_MOSI	B	23.8,55.6	-	dog-bone, B forward x 23.4, west along y 60.6, forward x 19.6 to via (19.6,69.6), F T to R461.1 / J430.3
+escape	G9	QSPI_IO0	F	-	-	channel y 55.6 east, forward along x 33.0 under U3, 45 deg into pin 5
+escape	H1	3V3A	F	-	-	F west y 56.0, forward x 17.5 between C16 / C21 to C21.1 and C22.1, via (15.5,60.6), LA In2 x 12.85 aft to (19.05,38.0)
+escape	H2	LED_YEL	B	20.6,55.6	11.7,55.0	dog-bone, B west along y 55.2 to via (13.5,55.2), F to the W5 hand-off
+escape	H4	ARM1_SENSE	F->B	-	12.8,50.5	channel y 56.4 west to via (18.4,56.4), B west y 56.4, aft x 13.0 to the W1 hand-off
+escape	H9	PORT_SENSE	B	26.2,56.4	26.5,88.0	dog-bone, B forward on CF lane 26.2, F at the forward end to W5
+escape	J1	GND	F->via	provisional	-	west stub to a GND via
+escape	J3	VLOGIC_SENSE	B	19.8,57.2	-	F channel y 57.2 to site via (19.8,57.2), B west y 57.2 to via (12.2,58.6) at C60.1; In2 via (15.5,57.2) to lane LI
+escape	J5	BUZZ_DRV	F->B	-	11.7,60.2	channel x 22.2 forward, F west along y 61.3 to via (12.0,61.0), B to the W5 hand-off
+escape	J6	SD_SCK	F	-	-	channel x 23.0 forward to J430.5 (x 21.195)
+escape	J7	QSPI_NCS	F	-	-	channel x 23.8 forward, east forward of U3 to R10.1 and U3.1
+escape	J8	RADIO_TX_MCU	F->B	-	12.0,88.0	channel x 24.6 forward to via (24.6,59.4); B 0.1 lane CF 24.6 forward; west at y 86.6 to via (12.0,86.6); F to W5
+escape	J9	GPS_RX_MCU	F->B	-	23.5,88.0	channel x 25.4 forward to via (25.4,59.4); B lane CF 25.4 forward; via, F to W5
+escape	J10	QSPI_IO3	F	-	-	east stub along y 56.8, forward along x 30.2 (between C19 and U3's west pads), 45 deg into pin 7 west end
+escape	K1	3V3	F->via	provisional	-	short F to a 3V3 via
+escape	K3	SD_CS	F->B	-	-	forward stub to via (21.0,58.4); B west y 58.4, forward x 19.25, into the R460 / R461 gap to via (18.445,69.555); F T to R460.1 / J430.2
+escape	K4	LED_RED	B	21.4,57.2	11.7,52.8	dog-bone, B 0.1 west along y 56.8, aft along x 11.9 to the W5 hand-off
+escape	K6	SD_MISO	F	-	-	forward stub to R462.1 and J430.7
+escape	K8	RADIO_RX_MCU	F->B	-	13.0,88.0	forward stub to via (25.0,60.2); B lane CF 25.0 forward; west at y 87.2 to via (13.0,87.2); F to W5
+escape	K9	GPS_TX_MCU	F->B	-	22.5,88.0	forward stub to via (25.8,60.2); B lane CF 25.8 forward; via, F to W5
+escape	K10	QSPI_IO1	F->B	-	-	east stub along y 57.6 to via (29.6,57.6); B east along y 57.6, forward along x 36.2 to a via (37.0,63.23) under U3, F into pin 2 inner end
+section	net	from_zone	to_zone	layer	x	y	width
+handoffs	IMU_CS	W3	W4	F	21.8	45.4	0.1
+handoffs	I2C1_SDA	W3	W4	F	22.6	45.4	0.1
+handoffs	I2C1_SCL	W3	W4	F	23.0	45.4	0.1
+handoffs	SPI1_MISO	W3	W4	F	23.4	45.4	0.1
+handoffs	HG_CS	W3	W4	F	23.8	45.4	0.1
+handoffs	SPI1_SCK	W3	W4	F	24.2	45.4	0.1
+handoffs	IMU_INT1	W3	W4	F	25.0	45.4	0.1
+handoffs	SPI1_MOSI	W3	W4	F	24.6	45.4	0.1
+handoffs	SERVO1_MCU	W3	W4	B	27.4	45.4	0.15
+handoffs	SERVO4_MCU	W3	W4	B	27.8	45.4	0.15
+handoffs	CAM_PWR_EN	W3	W4	B	28.2	45.4	0.15
+handoffs	SERVO2_MCU	W3	W4	B	28.6	45.4	0.15
+handoffs	SERVO3_MCU	W3	W4	B	29.0	45.4	0.15
+handoffs	CAM_MCU_TX	W3	W4	B	29.4	45.4	0.15
+handoffs	CAM_MCU_RX	W3	W4	B	29.8	45.4	0.15
+handoffs	VLOGIC_SENSE	W4	W3	In2	26.2	45.4	0.15
+handoffs	CAM_5V_SENSE	W4	W3	In2	26.6	45.4	0.15
+handoffs	3V3A	W3	W4	In2	19.05	38.0	0.3
+handoffs	BAT_FAULT_N	W3	W1	B	19.2	46.0	0.2
+handoffs	ARM1_SENSE	W3	W1	B	12.8	50.5	0.2
+handoffs	USB_DP	W3	W2	F	30.4	50.8	0.2
+handoffs	USB_DM	W3	W2	F	30.4	51.2	0.2
+handoffs	SWCLK	W3	W2	F	30.4	47.4	0.15
+handoffs	SWDIO	W3	W2	F	30.4	48.2	0.15
+handoffs	NRST	W3	W2	F	30.4	45.6	0.15
+handoffs	VBUS_SENSE	W3	W2	B	30.8	52.0	0.15
+handoffs	RADIO_TX_MCU	W3	W5	F	12.0	88.0	0.2
+handoffs	RADIO_RX_MCU	W3	W5	F	13.0	88.0	0.2
+handoffs	GPS_TX_MCU	W3	W5	F	22.5	88.0	0.2
+handoffs	GPS_RX_MCU	W3	W5	F	23.5	88.0	0.2
+handoffs	PORT_SENSE	W3	W5	F	26.5	88.0	0.2
+handoffs	AUX_TX_MCU	W3	W5	F	35.0	88.0	0.2
+handoffs	AUX_RX_MCU	W3	W5	F	36.0	88.0	0.2
+handoffs	LED_RED	W3	W5	B	11.7	52.8	0.1
+handoffs	LED_YEL	W3	W5	F	11.7	55.0	0.2
+handoffs	BUZZ_DRV	W3	W5	B	11.7	60.2	0.2
+# Notes (revised after routing, commit on r12-relayout-W3). (1) Sensor bus to W4 at y 45.4, all on F, 0.1 mm, 0.4 mm pitch:
+# IMU_CS 21.8, I2C1_SDA 22.6, I2C1_SCL 23.0, SPI1_MISO 23.4, HG_CS 23.8, SPI1_SCK 24.2, SPI1_MOSI 24.6, IMU_INT1 25.0. No B lane
+# crosses the LI band: a B track over the critical NRST In2 lane removes its B GND reference (check_r12 K-reference). SCK and MOSI
+# are adjacent and in U4's pin order; MISO / HG_CS / I2C sit between IMU_CS and SCK (ring 1 fixes A4 < A5 < A6 < A7); W4 takes the
+# I2C pair, MISO and HG_CS to B aft of the LI band (vias at y <= 45.0) as ROUTING_PLAN section 2 intended; INT1 is east of MOSI for
+# U4.4 on U4's east side. (2) Widths changed from the plan table: CA lanes 0.15 (a 0.2 lane cannot pass a via at 0.4 mm and keep the
+# 0.2 mm via-hole clearance; route_check fails a width change at a free node), LED_RED 0.1 (passes vias at 0.4 mm).
+# (3) Tight quadrant: fallback (b) in a no-via form: QSPI_CLK stays on F (channel y 54.8 between rows F and G), so the VCAP B paths
+# cross under it with no CLK via; QSPI_IO0 enters U3.5 from its inner end, CLK U3.6 from its inner end, IO3 uses the 0.7 mm gap
+# between C19 and U3's west pads; IO1 / IO2 reach U3's east pins through vias under U3's body. C19 / C20 do not move.
+# (4) CX AUX lanes at x 41.0 (TX) / 41.4 (RX) inside strip CX; their forward vias sit west of x 38.8 (W3 polygon) at (35.0, 86.6) /
+# (36.0, 87.3), so the B runs west along y 86.6 / 87.0 cross x 38.8 - 40.2 (W5's B area) between the strip and the W3 polygon.
