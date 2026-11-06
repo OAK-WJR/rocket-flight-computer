@@ -68,8 +68,14 @@ The fix pass did not touch the fire paths.
 
 **Shorted match (Calculation / Inference):** match shorted 2.608 A idle / 2.164 A at four stalls; match and leads
 shorted 2.929 / 2.430 A. Dissipation at the worst (match and leads shorted, idle): Q120 / Q121 0.631 W each, Q124
-0.492 W, R134 17.4 W, for ≤ 36 ms (the watchdog guard). Gate drive: Q120 / Q121 VGS −4.65 V at the four-stall 5.72 V
-(≥ the −4.5 V RDS(on) row), −4.88 / −6.04 / −6.87 V at 6.0 / 7.4 / 8.4 V; above ±12 V only with the pack above about 14.4 V
+0.492 W, R134 17.4 W, for ≤ 36 ms (the watchdog guard). Gate drive (corrected by R12F2-TRI-08, 2026-11-06: the gate
+divider hangs on ACT_FET_S, the common source node, which sits I_fire × RDS(Q120) below BAT_IN during the fire; the
+−4.65 V first quoted here took BAT_IN itself): Q120 / Q121 VGS **−4.576 V** at the four-stall point (BAT_IN 5.7209 V,
+1.250 A × 73.5 mΩ = 91.9 mV across Q120, ACT_FET_S 5.629 V), 0.076 V beyond the −4.5 V RDS(on) row (Calculation /
+Inference: the Q120 hot factor and the 0.1 V Q122 drop are Inference); −4.80 / −5.94 / −6.76 V during a fire at BAT_IN
+6.0 / 7.4 / 8.4 V; with the bus on before the fire (no fire current) −4.88 / −6.04 / −6.87 V. With a shorted match at
+four stalls |VGS| is 4.40 V (4.35 V with the leads shorted too), below the −4.5 V row, so the shorted-match FET figures
+here use an RDS(on) below the real one (a fault case; Inference). Above ±12 V only with the pack above about 14.4 V
 (maximum-ratio corner: 12 / (51 / 60.8) + 0.1 = 14.41 V, assuming a 0.1 V Q122 drop; Calculation / Inference,
 O-R12-10); time to −4.5 V after enable 27.4 / 14.7 / 11.4 ms at 6.0 / 7.4 / 8.4 V (C120 1 µF × 1.10 ×
 1.15, no bias credit; inside the ≥ 100 ms enable wait). Q124 VGS ≥ 3.17 V at the 3V3 drift minimum (≥ the 2.5 V row,
@@ -140,7 +146,10 @@ must not treat a PA6 trip during the 20 ms pulse as a battery loss (firmware ite
 ## 6. Rails: resistance and IPC-2152 (Calculation on CAD widths; IPC rise is the long-conductor fit, no plane credit: an upper bound, Inference)
 
 Paths are `check_r10.path_graph` between R12's terminals (end = the path's first vias where none is named), at R10's
-design currents by function.
+design currents by function. Since R12F2-TRI-06 / -07 (2026-11-06, the 90 mm board; `stageE_relayout.md` §4) the
+RAW_PROTECTED load paths end at the vias joined to the In2 RAW_PROTECTED island, U400 IN starts at VIN (pin 3) only (its
+EN pin 5 is tied to VIN by a stub that carries no load current), and a track on more than one load path is rated at the
+summed current (`stageD_budget.json` `rails_shared`). The 100 mm figures below predate that and are kept as recorded.
 
 | Path (A) | Series R | Widths: length, rise | Vias |
 |---|---|---|---|

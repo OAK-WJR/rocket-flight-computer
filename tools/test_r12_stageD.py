@@ -57,6 +57,44 @@ class StageDFigures(unittest.TestCase):
         self.assertAlmostEqual(g['q120_vgs_exceeds_12V_above_pack_V'], 12 / hi + .1, places=9)
         self.assertAlmostEqual(g['q120_vgs_exceeds_12V_above_pack_V'], 14.406, places=2)
 
+    def test_vgs_during_fire_from_act_fet_s(self):
+        """R12F2-TRI-08: the gate divider hangs on ACT_FET_S = BAT_IN - I_fire x RDS(Q120 hot), not on BAT_IN."""
+        f = json.loads((DESIGN / 'stageD_budget.json').read_text())['fire']
+        g, lo = f['gate'], f['gate']['q120_vgs_ratio_min_max'][0]
+        four = g['q120_q121_vgs_four_stall_fire']
+        self.assertAlmostEqual(four['BAT_IN_V'], f['four_stall_BAT_IN_V'], places=9)
+        self.assertAlmostEqual(four['fire_A'], f['four_stall_A'], places=9)
+        self.assertAlmostEqual(four['Q120_drop_V'], f['four_stall_A'] * f['pfet_hot_ohm'], places=9)
+        want = -(f['four_stall_BAT_IN_V'] - f['four_stall_A'] * f['pfet_hot_ohm'] - .1) * lo
+        self.assertAlmostEqual(four['vgs_V'], want, places=9)
+        self.assertAlmostEqual(four['vgs_V'], -4.576, places=3)
+        self.assertNotIn('q120_q121_vgs_V', g)          # the BAT_IN-based figure (-4.652 V) is gone
+
+    def test_u400_in_excludes_en_stub(self):
+        """R12F2-TRI-06: U400.5 (EN, tied to VIN) carries no load current; U400 IN starts at VIN (pin 3) only."""
+        d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+        r = d['rails']['U400 IN']
+        self.assertNotIn('U400.5', r['pads'])
+        self.assertIn('U400.3', r['pads'])
+        self.assertNotIn('0.250', r['layers'].get('F.Cu', {}).get('by_width_mm', {}))
+        self.assertEqual(d['dc_solves']['RAW_PROTECTED_U9_to_U400']['sink'], 'U400:3')
+
+    def test_shared_raw_trunk_at_summed_current(self):
+        """R12F2-TRI-07: the B.Cu trunk (45.2, 16.4) -> (45.2, 29.2) feeds both U400 and D5 and is rated at the sum."""
+        d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+        rails = d['rails']
+        trunk = [g for g in d['rails_shared']['groups'] if g['layer'] == 'B.Cu' and g['width_mm'] == 0.6]
+        self.assertEqual(len(trunk), 1)
+        g = trunk[0]
+        self.assertEqual(g['paths'], ['D5 IN', 'U400 IN'])
+        self.assertAlmostEqual(g['length_mm'], 12.8, places=3)
+        self.assertAlmostEqual(g['design_A_sum'], rails['D5 IN']['amps'] + rails['U400 IN']['amps'], places=9)
+        self.assertAlmostEqual(g['ipc_rise_design_sum_C'], 46.13, places=1)
+        self.assertAlmostEqual(g['budget_A_sum'], rails['D5 IN']['budget_A'] + rails['U400 IN']['budget_A'], places=9)
+        self.assertLess(g['ipc_rise_budget_C'], 5.0)
+        self.assertTrue(any(o.get('shared_with') == g['paths'] and o['layer'] == 'B.Cu'
+                            for o in rails['U400 IN']['over_30C']))
+
 
 if __name__ == '__main__':
     unittest.main()
