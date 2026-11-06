@@ -73,7 +73,8 @@ R12_REPIN = {
     'LOGIC_SOURCE_ST': ('PORT_SENSE', 'GPIO in, no pull (high = PORT_4V8 present: the battery path is on)',
                         'D-R12-05 / -86: U11 deleted; PA4 now reads PORT_4V8 through R111 47k / R112 100k (3.10-3.39 V '
                         'high initial, 3.07-3.43 V drift, with PA4 leakage; Calculation; drift Inference); the R10 rule '
-                        '"port UARTs only while PA4 reads low" becomes "only while PA4 reads high"'),
+                        '"port UARTs only while PA4 reads low" becomes "only while PA4 reads high" (D-R12-93: PD10 reads high; '
+                        'PORT_SENSE moves to H9 through R12_MOVES)'),
 }
 
 # D-R12-51: U1 balls R12 gives a function that R11 left NC, keyed by ball (each NC in R11)
@@ -89,33 +90,81 @@ R12_NEW_PINS = {
 # pads; net -> (new ball, R12 mode, source). Balls: DS12110 Rev 8 Table 9; alternate functions: its Tables 10-14 (Port
 # A-E). Each function was read from KiCad 10's MCU_ST_STM32H7 symbol STM32H743V_G-I_Hx (pin alternates built from ST's
 # open pin data); the AF numbers are not in that symbol and st.com refused scripted access in this pass, so the
-# datasheet rows and AF numbers are an Inference until DS12110 is re-read (R12_DECISIONS.md D-R12-61A).
+# datasheet rows and AF numbers were an Inference until D-R12-93 read them from the DS12110 Rev 8 PDF text (Tables 9-14).
 _DS = 'DS12110 Rev 8'
 R12_MOVES = {
     'QSPI_NCS': ('J7', 'AF9 QUADSPI_BK1_NCS',
-                 f'D-R12-61A: PB6 (B5, aft) -> PB10 (J7, forward, toward U3); {_DS} Table 11 (Port B alternate functions: PB10 AF9 '
-                 'QUADSPI_BK1_NCS; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
-    'I2C1_SCL': ('D9', 'AF4 I2C3_SCL (open drain, R12 pull-up)',
-                 f'D-R12-62A: PB10 (J7, forward) -> PA8 (D9, east, toward U5); peripheral I2C3; {_DS} Table 10 '
-                 '(Port A alternate functions: PA8 AF4 I2C3_SCL; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
-    'I2C1_SDA': ('E9', 'AF4 I2C3_SDA (open drain, R13 pull-up)',
-                 f'D-R12-62A: PB11 (K7, forward) -> PC9 (E9, east, toward U5); peripheral I2C3; {_DS} Table 12 '
-                 '(Port C alternate functions: PC9 AF4 I2C3_SDA; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
+                 f'D-R12-61A: PB6 (B5, aft) -> PB10 (J7, forward, toward U3); {_DS} Table 11 pp. 90-91 (Port B alternate functions: PB10 AF9 '
+                 'QUADSPI_BK1_NCS; AF number confirmed from the Rev 8 PDF text in D-R12-93)'),
     'SD_SCK': ('J6', 'AF5 SPI4_SCK', f'D-R12-63A: PC10 (B9, aft) -> PE12 (J6, forward, toward J430); peripheral '
-               f'SPI4; {_DS} Table 14 (Port E alternate functions: PE12 AF5 SPI4_SCK; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
+               f'SPI4; {_DS} Table 14 pp. 95-96 (Port E alternate functions: PE12 AF5 SPI4_SCK; AF number confirmed from the Rev 8 PDF text in D-R12-93)'),
     'SD_MISO': ('K6', 'AF5 SPI4_MISO', f'D-R12-63A: PC11 (B8, aft) -> PE13 (K6, forward, toward J430); peripheral '
-                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE13 AF5 SPI4_MISO; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
+                f'SPI4; {_DS} Table 14 pp. 95-96 (Port E alternate functions: PE13 AF5 SPI4_MISO; AF number confirmed from the Rev 8 PDF text in D-R12-93)'),
     'SD_MOSI': ('G7', 'AF5 SPI4_MOSI', f'D-R12-63A: PC12 (C8) -> PE14 (G7, dog-bone, forward B lane); peripheral '
-                f'SPI4; {_DS} Table 14 (Port E alternate functions: PE14 AF5 SPI4_MOSI; function read from KiCad\'s ST symbol, AF number an Inference until DS12110 is re-read, O-R12-23)'),
+                f'SPI4; {_DS} Table 14 pp. 95-96 (Port E alternate functions: PE14 AF5 SPI4_MOSI; AF number confirmed from the Rev 8 PDF text in D-R12-93)'),
     'SD_CS': ('K3', 'GPIO output push-pull; initialise high before output mode',
               f'D-R12-63A: PD0 (D8, dog-bone) -> PA7 (K3, forward ring 1, toward J430.2); plain GPIO; {_DS} Table 9 '
               'pp. 64-88 (PA7, TFBGA100 ball K3)'),
-    'HG_CS': ('B8', 'GPIO out (push-pull, initialise high before output mode); analog at reset: U6 SS_B internal '
+    # D-R12-93 (AVA re-layout): every function below read from DS12110 Rev 8 Tables 9-14 (pdftotext of the Rev 8 PDF);
+    # ROM-loader roles from the pin table's AN2606 Rev 64 Table 119 column (read in R11, not re-read here).
+    'I2C1_SCL': ('B5', 'AF4 I2C1_SCL (open drain, R12 pull-up)',
+                 f'D-R12-62A: PB10 (J7) -> PA8 (D9, I2C3); D-R12-93: PA8 (D9) -> PB6 (B5, aft, straight to U5 on the axis); '
+                 f'peripheral I2C3 -> I2C1; {_DS} Table 11 pp. 90-91 (Port B alternate functions: PB6 AF4 I2C1_SCL); '
+                 f'ball B5 = PB6, {_DS} Table 9 p. 86'),
+    'I2C1_SDA': ('A5', 'AF4 I2C1_SDA (open drain, R13 pull-up)',
+                 f'D-R12-62A: PB11 (K7) -> PC9 (E9, I2C3); D-R12-93: PC9 (E9) -> PB7 (A5, aft); peripheral I2C3 -> I2C1; '
+                 f'{_DS} Table 11 pp. 90-91 (PB7 AF4 I2C1_SDA); ball A5 = PB7, {_DS} Table 9 p. 86'),
+    'HG_CS': ('B7', 'GPIO out (push-pull, initialise high before output mode); analog at reset: U6 SS_B internal '
               'pull-up (NXP FXLS9xxx0 Rev 6 Table 9) holds the high-g accelerometer deselected',
-              f'D-R12-64A: PA10 (D10, east) -> PC11 (B8, aft, toward U6); plain GPIO; {_DS} Table 9 pp. 64-88 (PC11, '
-              'TFBGA100 ball B8); not a PE4 (C3) or PC1 (F2) neighbour'),
-    'VBUS_SENSE': ('D10', 'GPIO in', f'D-R12-64A: PC8 (F9, east ring 2) -> PA10 (D10, east ring 1, the ball HG_CS left); '
-                   f'plain GPIO input; {_DS} Table 9 pp. 64-88 (PA10, TFBGA100 ball D10)'),
+              f'D-R12-64A: PA10 (D10) -> PC11 (B8); D-R12-93: PC11 (B8) -> PD2 (B7, aft sensor group, toward U6); plain '
+              f'GPIO; {_DS} Table 9 p. 83 (PD2, TFBGA100 ball B7); not a PE4 (C3) or PC1 (F2) neighbour; PD2 is not an H74x '
+              'loader pin (AN2606 Rev 64 Table 119)'),
+    'VBUS_SENSE': ('E9', 'GPIO in',
+                   f'D-R12-64A: PC8 (F9) -> PA10 (D10); D-R12-93: PA10 (D10) -> PC9 (E9, east, toward R9 / R110); plain '
+                   f'GPIO input; {_DS} Table 9 p. 79 (PC9, TFBGA100 ball E9); loader I2C3_SDA open drain, not driven (AN2606 '
+                   'Rev 64 Table 119 p. 278): the divider sets the level'),
+    'SERVO1_MCU': ('A8', 'AF1 TIM2_CH1 (50 Hz PWM); reset: JTDI with the internal pull-up (RM0433 debug pins)',
+                   f'D-R12-93: PB7 (A5) -> PA15 (A8, aft-east, toward the CA bus and D121.1); {_DS} Table 10 p. 90 '
+                   '(PA15 AF1 TIM2_CH1 / TIM2_ETR, AF0 JTDI; Table 9 p. 82: ball A8 = PA15 (JTDI)); loader SPI3_NSS slave input, no pull (AN2606 Rev 64 Table 119 '
+                   'p. 279); at reset the JTDI pull-up (30-50 kohm) against the servo-cell 10 kohm pull-down holds a '
+                   'steady level under 0.83 V, no pulse (Calculation; as R12 accepted for SERVO2 on this ball)'),
+    'SERVO2_MCU': ('D10', 'AF1 TIM1_CH3 (50 Hz PWM; TIM1 is an advanced timer: set BDTR.MOE)',
+                   f'D-R12-93: PA15 (A8) -> PA10 (D10, east ring 1); {_DS} Table 10 p. 89 (PA10 AF1 TIM1_CH3); loader '
+                   'USART1_RX input with pull-up (AN2606 Rev 64 Table 119 p. 277): the 30-50 kohm pull-up against the '
+                   'servo-cell 10 kohm pull-down holds at most 0.83 V, no pulse (Calculation, R11 PA3 figure)'),
+    'SERVO3_MCU': ('D9', 'AF1 TIM1_CH1 (50 Hz PWM; TIM1: set BDTR.MOE)',
+                   f'D-R12-93: PA1 (H2, west face) -> PA8 (D9, east ring 2); {_DS} Table 10 p. 89 (PA8 AF1 TIM1_CH1, AF0 '
+                   'MCO1: keep MCO1 off); loader I2C3_SCL open drain, not driven (AN2606 Rev 64 Table 119 p. 278)'),
+    'SERVO4_MCU': ('C9', 'AF1 TIM1_CH2 (50 Hz PWM; TIM1: set BDTR.MOE)',
+                   f'D-R12-93: PA2 (J2, west face) -> PA9 (C9, aft-east ring 2); {_DS} Table 10 p. 89 (PA9 AF1 '
+                   'TIM1_CH2); loader USART1_TX may drive a steady high (AN2606 Rev 64 Table 119 p. 277) [LOADER-DRIVEN]: '
+                   'it reaches the servo through the 1 kohm series resistor as a level, not a pulse train; the same '
+                   'allowance R11 accepted for SERVO4 on PA2 (USART2_TX), which this map frees'),
+    'CAM_MCU_TX': ('B9', 'AF8 UART4_TX',
+                   f'D-R12-93: PD5 (B6, USART2) -> PC10 (B9, aft-east, toward R101); peripheral USART2 -> UART4; {_DS} '
+                   'Table 12 p. 92 (Port C alternate functions: PC10 AF8 UART4_TX); loader SPI3_SCK slave input, not '
+                   'driven (AN2606 Rev 64 Table 119 p. 279)'),
+    'CAM_MCU_RX': ('B8', 'AF8 UART4_RX',
+                   f'D-R12-93: PD6 (C6, USART2) -> PC11 (B8, aft-east, toward R100); peripheral USART2 -> UART4; {_DS} '
+                   'Table 12 p. 92 (PC11 AF8 UART4_RX); loader SPI3_MISO slave output push-pull (AN2606 Rev 64 Table 119 '
+                   'p. 279) [LOADER-DRIVEN]: the camera is unpowered in the loader (PC12 CAM_PWR_EN is an undriven input '
+                   'and R431 holds the buck EN low) and R100 1 kohm limits any fight to 3.3 mA (Calculation)'),
+    'CAM_PWR_EN': ('C8', 'GPIO out (push-pull; R431 pull-down holds the camera buck off in reset)',
+                   f'D-R12-93: PC14 (A1, aft-west corner) -> PC12 (C8, aft-east, toward U403.5); plain GPIO; {_DS} Table '
+                   '9 p. 82 (PC12, TFBGA100 ball C8); loader SPI3_MOSI slave input, no pull (AN2606 Rev 64 Table 119 p. 279): '
+                   'not driven, so R431 keeps the camera off'),
+    'LED_YEL': ('H2', 'GPIO out',
+                f'D-R12-93: PD2 (B7) -> PA1 (H2, west face, straight to R33 in the west bay); plain GPIO; {_DS} Table 9 '
+                '(PA1, TFBGA100 ball H2); not an H74x loader pin (AN2606 Rev 64 Table 119)'),
+    'BAT_FAULT_N': ('A2', 'GPIO in, EXTI13 (open drain U9 FLT with R89 pull-up)',
+                    f'D-R12-93: PA5 (H3, forward-west) -> PC13 (A2, aft-west, toward R89 / U9); plain GPIO input; '
+                    f'{_DS} Table 9 p. 64 (PC13, TFBGA100 ball A2, FT; a VBAT-domain pin whose 2 MHz / 3 mA output '
+                    'limits do not apply to an input, DS12110 Table 9 note); not an H74x loader pin (AN2606 Rev 64 '
+                    'Table 119)'),
+    'PORT_SENSE': ('H9', 'GPIO in, no pull (high = PORT_4V8 present: the battery path is on)',
+                   f'D-R12-93: PA4 (G3, a PC1 F2 neighbour) -> PD10 (H9, forward-east, beside the port UART balls); plain '
+                   f'GPIO input; {_DS} Table 9 p. 75 (PD10, TFBGA100 ball H9, FT_h); not an H74x loader pin (AN2606 Rev 64 '
+                   'Table 119); G3 is now NC, so K-neighbours no longer needs an inert argument for it'),
 }
 
 

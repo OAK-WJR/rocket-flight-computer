@@ -4,54 +4,54 @@ ref	x	y	rot	side	basis
 @M3	43	5.9	0	F	D-R12-24: corner support, nylon M3 hardware; aft corner: 3.0 mm in so the aft GH row clears both washers
 @M3	3.5	94.1	0	F	D-R12-24: corner support, nylon M3 hardware; forward corner
 @M3	42.5	94.1	0	F	D-R12-24: corner support, nylon M3 hardware; forward corner
-C5	32.9	24.6	0	F	BST
-C6	37.3	28	0	F	U2 VIN
-C8	42.6	24	270	F	3V3 out
-C10	21.9	27.95	0	F	3V3A bulk aft of U4, off its south band (D-R12-33)
-C13	17.2	48.2	0	F	3V3 (NW corner of U1); D-R12-44: moved with the U1 cluster 10 mm forward
-C14	28.8	48.2	0	F	3V3 (NE corner); D-R12-44: moved with the U1 cluster 10 mm forward
-C15	16.8	60	0	F	3V3 (SW corner); D-R12-44: moved with the U1 cluster 10 mm forward
-C16	25	61.6	0	F	3V3 (SE corner); D-R12-44: moved with the U1 cluster 10 mm forward
-C17	16	61.8	0	F	3V3 (SW corner); D-R12-44: moved with the U1 cluster 10 mm forward
-C18	18.4	61.4	0	F	3V3 (SW corner); D-R12-44: moved with the U1 cluster 10 mm forward
-C19	27.3	61	90	F	VCAP1 (SE corner); D-R12-44: moved with the U1 cluster 10 mm forward
-C20	30.6	48.8	90	F	VCAP2; D-R12-44: moved with the U1 cluster 10 mm forward
-C21	16	58	0	F	3V3A at H1; D-R12-44: moved with the U1 cluster 10 mm forward
-C22	16	56.6	0	F	3V3A at H1; D-R12-44: moved with the U1 cluster 10 mm forward
-C23	34	43	0	F	3V3 bulk
+C5	32.9	20	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+C6	37.3	23.4	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+C8	42.6	19.4	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+C10	23	38.5	0	F	D-R12-94 (AVA re-layout): Z3 3V3A bulk between U4 and U6
+C13	17.8	50.6	90	F	D-R12-94 (AVA re-layout): Z4 NW pocket: 3V3 for B2 / D2 (2.4 mm from B2, was 4.6)
+C14	13.6	60	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C15	19.6	59.6	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3 at K1 (forward-face cols 1-2 carry no signal)
+C16	17	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C17	16	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C18	15	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C19	29.4	60.2	90	F	D-R12-94 (AVA re-layout): Z4 SE pocket (inside the QSPI fan): VCAP1, F8 dog-bone -> B -> here
+C20	27.8	60.2	90	F	D-R12-94 (AVA re-layout): Z4 SE pocket: VCAP2, E7 dog-bone -> B -> here
+C21	18	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A for H1
+C22	17	60.6	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A bulk
+C23	13.6	63	0	F	D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
 C24	16.6	55	0	F	NRST (D-R12-34: west of U1 F1 / F2 stub ends); D-R12-44: moved with the U1 cluster 10 mm forward
 C25	14.6	49.6	0	F	HSE load; D-R12-44: re-placed after U1 moved forward
 C26	14.6	55.3	0	F	HSE load; D-R12-44: moved with the U1 cluster 10 mm forward
-C28	35.2	39.6	90	F	VBUS
-C29	31	66.9	270	F	flash 3V3 at U3 pin 8; D-R12-44: moved with the U1 cluster 10 mm forward
-C30	25.8	31.6	90	F	IMU 3V3A
-C31	19.8	32.6	90	F	IMU 3V3A
-C32	29	29	0	F	baro 3V3A
-C33	30.7	42	90	F	D-R12-53: U6 VCC decoupling beside its pin 1 / 13-16 corner
+C28	36.6	45.9	90	F	D-R12-94 (AVA re-layout): Z2 VBUS cap beside J3
+C29	31.7	66.9	270	F	D-R12-94 (AVA re-layout): Z5 flash 3V3 at U3 pin 8 (follows U3)
+C30	25.9	41.6	90	F	D-R12-94 (AVA re-layout): Z3 IMU 3V3A decoupling east of U4
+C31	20.1	41.6	90	F	D-R12-94 (AVA re-layout): Z3 IMU 3V3A decoupling west of U4
+C32	26.4	28.4	90	F	D-R12-94 (AVA re-layout): Z3 baro decoupling, west of the aft corridor
+C33	26.3	34.4	90	F	D-R12-94 (AVA re-layout): Z3 U6 decoupling
 C79	16.4	21.075	270	F	D-R12-78: third damper C beside C95 (BAT_IN pad north on the C95.1 run, BAT_DAMP pad south to C95.2)
-C60	27.4	27.6	90	F	VLOGIC sense
+C60	12.2	57.4	90	F	D-R12-94 (AVA re-layout): Z4 VLOGIC_SENSE filter cap at the ADC ball (J3)
 C80	3.4	22.8	90	F	BAT_IN bulk
 C81	15.9	17.8	270	F	dVdt
 C82	21.2	15.6	0	F	RAW bulk at U9.6 (neck ends in its pad)
-C83	33.9	39.2	90	F	VBUS
-C84	40	74.5	0	F	VLOGIC hold-up, owner-fitted; D-R12-44: re-placed after U1 moved forward
+C83	36.6	44	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
+C84	36	31.2	180	F	D-R12-94 (AVA re-layout): Z2 VLOGIC hold-up beside U2 input (was 47.6 mm away at the forward-east corner)
 C87	19	9.2	90	F	EN timing
 C88	15.3	15.52	270	F	U9 BAT_IN decoupling: on the feed between C96.1 and U9.5 (D-R12-79, R10 C88 topology); D-R12-84: pad 1 on the y 15.1 line between C96.1 and U9.5, the 0.8 mm feed passing straight through it
 C89	10	19.6	270	F	damper C
-C94	29	21.6	0	F	sense
+C94	13.2	57.4	90	F	D-R12-94 (AVA re-layout): Z4 CAM_5V_SENSE filter cap at the ADC ball (E2)
 C95	12.6	19.6	270	F	damper C
 C96	13.6	13.625	90	F	BAT_IN bulk; its BAT_IN pad on the U9.5 bar line (y 15.1)
 C97	20.2	18.4	90	F	RAW
-C99	35.4	30.2	0	F	U2 VIN
+C99	35.4	25.6	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
 C120	7.2	31.3	0	F	gate-source
 C123	18.6	26.4	0	F	gate C
 C126	10.6	41.8	0	F	gate C
 C127	12.6	50	0	F	cont
 C128	4.4	44.6	90	F	OUT cap
 C129	18.6	36	90	F	arm
-C400	36.2	19.3	270	F	port VIN
-C402	32.4	22	0	F	port BST
-C406	44	19.3	270	F	PORT_4V8 out
+C400	42.6	75.3	180	F	D-R12-94 (AVA re-layout): Z5 port buck VIN cap, cell-relative position kept
+C402	39.9	71.5	270	F	D-R12-94 (AVA re-layout): Z5 port BST, cell-relative position kept
+C406	42.6	83.1	180	F	D-R12-94 (AVA re-layout): Z5 PORT_4V8 out cap, 11 mm from J440 pin 2 (was 75 mm)
 C407	31	89.2	0	F	PORT_4V8 bulk at the ports
 C410	21	92.2	180	F	J410 100 nF
 C420	10.5	92.2	180	F	J420 100 nF
@@ -60,58 +60,58 @@ C432	32.4	16.4	0	F	camera BST
 C433	36.2	13.9	270	F	camera VIN
 C434	44	13.9	270	F	CAM_5V out
 C444	33.5	92.2	180	F	J440 100 nF
-C460	36.6	36.4	90	F	3V3
-C461	33.4	36	0	F	3V3 bulk
-D5	25	24.8	180	F	RAW -> VLOGIC diode-OR (D-R12-04)
-D6	41.2	57.6	180	F	VBUS -> VLOGIC diode-OR, VBUS pad west toward J3; D-R12-44: re-placed after U1 moved forward
+C460	17.4	63.2	0	F	D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
+C461	14.6	65.4	0	F	D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
+D5	43.6	31.2	90	F	D-R12-94 (AVA re-layout): Z2 RAW -> VLOGIC OR-ing on the east edge: anode taps the RAW trunk, cathode into C84
+D6	40.6	37.7	180	F	D-R12-94 (AVA re-layout): Z2 VBUS -> VLOGIC OR-ing diode between J3 and C84
 D8	10.4	13.7	90	F	BAT_IN TVS at the entry
 D9	25.4	19	90	F	RAW reverse clamp
 D120	9.6	47.4	0	F	cold
 D121	28	10.2	0	F	servo clamp (SRV05-4)
-D123	6	74.5	0	F	buzzer flyback; D-R12-44: re-placed after U1 moved forward
+D123	6	57.2	0	F	D-R12-94 (AVA re-layout): Z6 buzzer flyback
 D402	10.6	7.8	270	F	J400.2 ESD clamp at the port; 1.0 mm west so J400's footprint pin-1 mark stays nearest its own pad 1 (D-R12-80)
 J1	3.5	15.3	90	F	battery pigtail pads, 5.0 mm pitch, wire side west; courtyard = the keep-clear for a later 5.0 mm terminal (D-R12-30)
-J2	38.6	84	0	F	SWD Tag-Connect; D-R12-44: re-placed after U1 moved forward
-J3	41.4	44	90	F	USB-C mouth at the east edge (as R10 / R11 J3)
+J2	32.8	45	90	F	D-R12-94 (AVA re-layout): Z4 SWD Tag-Connect aft-east of U1 beside the aft corridor, 7 mm from A9 / A10 (was 35)
+J3	41.4	45.5	90	F	D-R12-94 (AVA re-layout): Z2 USB-C mouth at the east edge, 1.5 mm forward for D6
 J9	33.5	3.65	180	F	camera SH port, aft edge, east beside the camera buck
 J121	7.4	37	270	F	pyro DB125-2 screw terminal, wires leave west, face 3.35 mm in for the 4.95 mm wire room; pin 1 OUT (E1-) north, pin 2 IGN (E1+) south (D-R12-29)
 J122	21.6	3.65	180	F	servo SH port, aft edge, middle
 J400	11	3.65	180	F	switch / arming SH port, aft edge, west beside the power entry
 J410	23	96.35	0	F	GPS SH-6 port (H743 GPS order), forward edge, middle
 J420	11.5	96.35	0	F	radio SH port, forward edge, west
-J430	20	78	180	F	microSD forward of U1, contacts toward U1; hinge opened with the board unbolted, as R10; D-R12-44: moved with the U1 cluster 10 mm forward
+J430	20	74.4	180	F	D-R12-94 (AVA re-layout): Z6 microSD 3.6 mm nearer U1; the port UART bus passes under it on B.Cu
 J440	34.5	96.35	0	F	AUX SH port, forward edge, east
-L1	37.6	24	0	F	3V3 inductor
-L400	40.1	19.3	0	F	port inductor
+L1	37.6	19.4	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+L400	42.6	79.2	270	F	D-R12-94 (AVA re-layout): Z5 port inductor, cell-relative position kept
 L401	40.1	13.9	0	F	camera inductor
-LED1	30.5	75.6	0	F	red LED; D-R12-44: re-placed after U1 moved forward
-LED2	43.3	30	90	F	yellow LED aft-east: LED_YEL leaves U1 at B7 on the aft side (D-R12-33)
-LS120	7.2	85	0	F	buzzer, owner-fitted THT; D-R12-44: re-placed after U1 moved forward
+LED1	8	52.8	0	F	D-R12-94 (AVA re-layout): Z6 red LED in the west bay (K4 -> B -> here)
+LED2	8	55	0	F	D-R12-94 (AVA re-layout): Z6 yellow LED in the west bay (H2 straight west on F at y 56.0)
+LS120	7.2	67.4	0	F	D-R12-94 (AVA re-layout): Z6 buzzer in the empty west bay
 Q120	5	29	0	F	bus load switch
 Q121	9.6	29	180	F	bus load switch
 Q122	14.4	27.6	0	F	bus driver
-Q123	6	77.5	0	F	buzzer driver; D-R12-44: re-placed after U1 moved forward
+Q123	6	59.8	0	F	D-R12-94 (AVA re-layout): Z6 buzzer driver
 Q124	7.5	42.9	0	F	fire FET
-R5	27	46.6	0	F	BOOT0 pull-down; D-R12-44: moved with the U1 cluster 10 mm forward
-R7	36.5	39.2	90	F	CC1
-R8	37.5	39.2	90	F	CC2
-R9	32.9	39.2	90	F	VBUS sense
-R10	36.5	67	270	F	NCS pull-up at U3 pin 1; D-R12-44: moved with the U1 cluster 10 mm forward
-R11	18.6	30	180	F	IMU_CS pull-up
-R12	32.8	33.2	0	F	SCL pull-up; D-R12-53: 0.2 mm east, clear of the MS5607 courtyard
-R13	32.8	34.2	0	F	SDA pull-up; D-R12-53: 0.2 mm east, clear of the MS5607 courtyard
-R14	33.4	30	0	F	3V3 FB top
-R15	33.4	31	0	F	3V3 FB bottom
-R32	30.5	73.6	0	F	red LED series; D-R12-44: re-placed after U1 moved forward
-R33	43.3	33.5	90	F	yellow LED series R (D-R12-33)
-R60	29.4	27.6	90	F	VLOGIC sense
-R61	28.4	27.6	90	F	VLOGIC sense
+R5	15.4	46.6	0	F	D-R12-94 (AVA re-layout): Z4 BOOT0 pull-down in the NW pocket (D5 dog-bone -> B)
+R7	36.6	47.9	0	F	D-R12-94 (AVA re-layout): Z2 CC1 beside J3
+R8	36.6	48.9	0	F	D-R12-94 (AVA re-layout): Z2 CC2 beside J3
+R9	36.6	42	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
+R10	37.2	67	270	F	D-R12-94 (AVA re-layout): Z5 NCS pull-up at U3 pin 1 (follows U3)
+R11	20.1	44.4	90	F	D-R12-94 (AVA re-layout): Z3 IMU_CS pull-up beside the A4 escape
+R12	19.6	32.5	90	F	D-R12-94 (AVA re-layout): Z3 SCL pull-up at U5
+R13	19.6	30.6	90	F	D-R12-94 (AVA re-layout): Z3 SDA pull-up at U5
+R14	32.2	25.6	90	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+R15	31.2	25.6	90	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+R32	10.8	52.8	180	F	D-R12-94 (AVA re-layout): Z6 red LED series R
+R33	10.8	55	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED series R
+R60	31	37.2	90	F	D-R12-94 (AVA re-layout): Z2 VLOGIC sense top at D5 / C84
+R61	32	37.2	90	F	D-R12-94 (AVA re-layout): Z2 VLOGIC sense bottom
 R80	14.4	9.2	90	F	EN chain: BAT_IN to J400.1
 R81	19	12.2	270	F	EN chain to GND
 R82	16.6	12.4	0	F	OVLO top
 R83	16.6	11.4	0	F	OVLO
 R84	17.7	17.8	270	F	ILIM
-R89	14.4	63	90	F	FAULT pull-up; D-R12-44: moved with the U1 cluster 10 mm forward
+R89	20.6	12.4	90	F	D-R12-94 (AVA re-layout): Z1 BAT_FAULT_N pull-up at U9 (A2 escape lands here)
 R92	21.8	18.4	90	F	RAW bleed
 R93	16.6	10.4	0	F	OVLO bottom
 R94	18.7	17.8	270	F	ILIM
@@ -121,7 +121,7 @@ R104	28.6	7.6	0	F	CAM_5V sense top beside R433
 R105	29.8	16.6	90	F	sense
 R106	30.8	16.6	90	F	sense
 R107	28.8	16.6	90	F	sense
-R110	31.9	39.2	90	F	VBUS sense
+R110	36.6	43	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
 R111	26	89.6	90	F	PORT_SENSE top at the ports
 R112	27	89.6	90	F	PORT_SENSE bottom
 R119	4.4	26.4	0	F	gate
@@ -146,9 +146,9 @@ R154	25.9	12.75	0	F	servo pull-down beside D121
 R155	25.9	13.75	0	F	servo pull-down beside D121
 R156	28	12.75	180	F	servo pull-down beside D121
 R157	28	13.75	180	F	servo pull-down beside D121
-R162	8.6	77.5	90	F	buzzer gate; D-R12-44: re-placed after U1 moved forward
-R163	9.6	77.5	90	F	buzzer gate pull-down; D-R12-44: re-placed after U1 moved forward
-R164	25.2	28.2	270	F	3V3 -> 3V3A at the island edge
+R162	8.6	59.8	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate R
+R163	9.6	59.8	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate pull-down
+R164	19.85	38.6	90	F	D-R12-94 (AVA re-layout): Z3 3V3 -> 3V3A feed at the west side of the stack
 R165	16.7	7.5	0	F	EN chain: J400.2 to EN
 R166	10.7	23.9	0	F	damper R
 R167	10.4	9.6	0	F	BAT_IN bleed
@@ -156,9 +156,9 @@ R173	12.6	46	0	F	cont
 R175	17.6	33.6	90	F	arm
 R178	12.6	49	0	F	cont
 R180	17.6	36	90	F	arm
-R400	29.85	20.4	0	F	port FB top
-R401	29.85	19.4	0	F	port FB bottom
-R404	29.85	18.4	0	F	port FB
+R400	41.5	68.95	270	F	D-R12-94 (AVA re-layout): Z5 port FB top, cell-relative position kept
+R401	42.5	68.95	270	F	D-R12-94 (AVA re-layout): Z5 port FB bottom (0.1 %), cell-relative position kept
+R404	43.5	68.95	270	F	D-R12-94 (AVA re-layout): Z5 port FB, cell-relative position kept
 R431	30.7	11.2	0	F	camera EN pull-down (off in reset)
 R433	30.7	10.2	0	F	camera FB top
 R434	32.7	10.2	0	F	camera FB
@@ -167,27 +167,27 @@ R440	23.5	92.2	90	F	port UART 1k series behind its pin (D-R12-33)
 R441	22.5	92.2	270	F	port UART 1k series behind its pin (D-R12-33)
 R450	13	92.2	90	F	port UART 1k series behind its pin (D-R12-33)
 R451	12	92.2	270	F	port UART 1k series behind its pin (D-R12-33)
-R460	17.89	71.3	90	F	SD pull-up in line with its contact (D-R12-33); D-R12-44: moved with the U1 cluster 10 mm forward
-R461	19	71.3	90	F	SD pull-up in line with its contact (D-R12-33); D-R12-44: moved with the U1 cluster 10 mm forward
-R462	23.39	71.3	90	F	SD pull-up in line with its contact (D-R12-33); D-R12-44: moved with the U1 cluster 10 mm forward
-R463	24.5	71.3	90	F	SD pull-up in line with its contact (D-R12-33); D-R12-44: moved with the U1 cluster 10 mm forward
-R464	16.8	71.3	90	F	SD pull-up in line with its contact (D-R12-33); D-R12-44: moved with the U1 cluster 10 mm forward
+R460	17.89	67.7	90	F	D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R461	19	67.7	90	F	D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R462	23.39	67.7	90	F	D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R463	24.5	67.7	90	F	D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R464	16.8	67.7	90	F	D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
 R470	36	92.2	90	F	port UART 1k series behind its pin (D-R12-33)
 R471	35	92.2	270	F	port UART 1k series behind its pin (D-R12-33)
-TP74	43.6	82.6	0	F	GND probe
+TP74	44	88.6	0	F	D-R12-94 (AVA re-layout): Z5 GND probe beside C406, clear of the AUX hand-off at y 88
 TP80	2	27.8	0	F	BAT_IN probe
 TP81	22.2	21.4	0	F	RAW probe
-TP83	39.6	31.4	0	F	VLOGIC probe
-TP88	10.5	74	0	F	GND probe; D-R12-44: re-placed after U1 moved forward
+TP83	34.4	38	0	F	D-R12-94 (AVA re-layout): Z2 VLOGIC probe between C84 / D6
+TP88	10.6	73.4	0	F	D-R12-94 (AVA re-layout): Z6 GND probe
 TP120	2	31.4	0	F	RAW_ACT probe
 TP122	3.4	50.4	0	F	gate probe
 U1	23	54	0	F	MCU centre; column 1 west (HSE, pyro), row A aft (IMU, servo), column 10 east (USB, SD); D-R12-44: moved with the U1 cluster 10 mm forward
-U2	32.9	27	270	F	3V3 buck
-U3	34.5	62.6	90	F	QSPI flash east of U1, rotated so IO0 / CLK / IO3 face U1 (D-R12-33); D-R12-44: moved with the U1 cluster 10 mm forward
-U4	23	31.6	180	F	IMU on the roll axis (x 23), 6 mm aft of U1 for the A-row fan-out; D-R12-50: LSM6DSVE on the same land
-U5	29	32	180	F	baro north-east of the IMU; D-R12-53: MS5607 (5 x 3) rotated 180 so SDA / SCL face R12 / R13 and U1, VDD / PS next to C32
-U6	27.5	40.5	180	F	D-R12-53: high-g accelerometer between U4 and U1 on the IMU SPI1 path; SPI pins face west to the bus; channel 1 (Y) along the rocket axis
+U2	32.9	22.4	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+U3	35.2	62.6	90	F	D-R12-94 (AVA re-layout): Z5 QSPI flash 0.7 mm east of R12, IO0 / CLK / IO3 pins facing U1 SE corner
+U4	23	41.6	180	F	D-R12-94 (AVA re-layout): Z3 IMU on the roll axis, 6.1 mm aft of the U1 courtyard (was 16 mm)
+U5	23	28.4	180	F	D-R12-94 (AVA re-layout): Z3 baro at the aft end of the axis stack; I2C1 B5 / A5 run straight aft past U4 / U6
+U6	23	34.4	180	F	D-R12-94 (AVA re-layout): Z3 high-g accel on the axis aft of U4, same SPI1 trunk
 U9	17.3	15.35	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east; 0.3 mm east for C88 between C96 and U9 (D-R12-84)
-U400	32.9	19.3	90	F	port buck
+U400	42.6	72	0	F	D-R12-94 (AVA re-layout): Z5 port buck beside the ports (R12 cell rotated -90 deg as a block)
 U403	32.9	13.9	90	F	camera buck
 Y1	14.6	52.5	180	F	HSE: HSE_IN pad NE (C1 stub), HSE_OUT pad SW (D1 stub under it); D-R12-44: re-placed after U1 moved forward

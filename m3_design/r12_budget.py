@@ -23,8 +23,10 @@ TOL = {'initial': 0.01, 'drift': 0.01 + 100e-6 * 67}
 # D-R12-83: R401 is a 0.1 % 25 ppm/K thin-film part (YAGEO RT0402BRD0710KL, C190095: JLC listing / YAGEO RT datasheet)
 TOL_PRECISE = {'initial': 0.001, 'drift': 0.001 + 25e-6 * 67}
 # D-R12-86 (R12F1-TRI-01): PA4's divider at ten times D-R12-05's impedance; PA4 TT_xx input leakage (DS12110 Rev 8
-# Table 60 p. 139: +/-250 nA, 0 < VIN <= VDD)
-PORT_SENSE_TOP, PORT_SENSE_BOT, PA4_LEAK = 47e3, 100e3, 250e-9
+# Table 60 p. 139: +/-250 nA, 0 < VIN <= VDD). D-R12-93 moves PORT_SENSE from PA4 (TT_a) to PD10 (H9, FT_h; DS12110 Rev 8
+# Table 9 p. 75): FT_xx input leakage +/-350 nA for 0 < VIN <= VDD (Table 60 p. 139); above VDD an FT pin may sink up to
+# 1.5 uA, which only lowers the reading (Inference)
+PORT_SENSE_TOP, PORT_SENSE_BOT, PD10_LEAK = 47e3, 100e3, 350e-9
 
 
 def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
@@ -113,14 +115,14 @@ def sense():
     out = {}
     for case, tol in TOL.items():
         r = {}
-        # PA4 PORT_SENSE = PORT_4V8 x R112 / (R111 + R112), R111 47k, R112 100k (D-R12-86: ten times D-R12-05's 4.7k /
-        # 10k, same ratio), less PA4's TT_xx input leakage +/-250 nA through the divider's 32 kohm Thevenin resistance
+        # PD10 PORT_SENSE = PORT_4V8 x R112 / (R111 + R112), R111 47k, R112 100k (D-R12-86: ten times D-R12-05's 4.7k /
+        # 10k, same ratio), less PD10's FT_xx input leakage +/-350 nA through the divider's 32 kohm Thevenin resistance
         # (DS12110 Rev 8 Table 60 p. 139)
         p = rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)'][case]
         top, bot = PORT_SENSE_TOP, PORT_SENSE_BOT
         rth = top * bot / (top + bot)
-        lo = p['min_V'] * bot * (1 - tol) / (bot * (1 - tol) + top * (1 + tol)) - PA4_LEAK * rth * (1 + tol)
-        hi = p['max_V'] * bot * (1 + tol) / (bot * (1 + tol) + top * (1 - tol)) + PA4_LEAK * rth * (1 + tol)
+        lo = p['min_V'] * bot * (1 - tol) / (bot * (1 - tol) + top * (1 + tol)) - PD10_LEAK * rth * (1 + tol)
+        hi = p['max_V'] * bot * (1 + tol) / (bot * (1 + tol) + top * (1 - tol)) + PD10_LEAK * rth * (1 + tol)
         r['PORT_SENSE_V'] = [round(lo, 3), round(hi, 3)]
         # PA6 VLOGIC_SENSE = VLOGIC x 10k / 110k
         r['VLOGIC_SENSE_ratio'] = [round(10e3 * (1 - tol) / (10e3 * (1 - tol) + 100e3 * (1 + tol)), 5),
@@ -129,12 +131,12 @@ def sense():
         c = rails()['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)'][case]
         r['CAM_5V_SENSE_V'] = [round(c['min_V'] / 11.2 * (1 - 2 * tol), 3), round(c['max_V'] / 11.2 * (1 + 2 * tol), 3)]
         out[case] = r
-    out['PORT_SENSE_divider'] = dict(R111_ohm=PORT_SENSE_TOP, R112_ohm=PORT_SENSE_BOT, pa4_leak_A=PA4_LEAK,
+    out['PORT_SENSE_divider'] = dict(R111_ohm=PORT_SENSE_TOP, R112_ohm=PORT_SENSE_BOT, pd10_leak_A=PD10_LEAK,
                                      thevenin_ohm=round(PORT_SENSE_TOP * PORT_SENSE_BOT / (PORT_SENSE_TOP + PORT_SENSE_BOT), 1),
-                                     low_when_off_V=round(PA4_LEAK * PORT_SENSE_BOT * (1 + TOL['drift']), 3))
-    out['PORT_SENSE_limits'] = ('PA4 (TT_a): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; at most VDD + 0.3 = '
-                                '3.52 V at the 3V3 minimum 3.22 V (DS12110 I/O limits as R10 used them); with PORT_4V8 '
-                                'off, R112 holds PA4 at or below the leakage figure, under VIL 0.3 x VDD')
+                                     low_when_off_V=round(PD10_LEAK * PORT_SENSE_BOT * (1 + TOL['drift']), 3))
+    out['PORT_SENSE_limits'] = ('PD10 (FT_h, D-R12-93): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; R10\'s TT_a ceiling VDD + 0.3 = '
+                                '3.52 V at the 3V3 minimum 3.22 V kept as a margin (FT_h tolerates 5.5 V, DS12110 Table 60); with PORT_4V8 '
+                                'off, R112 holds PD10 at or below the leakage figure, under VIL 0.3 x VDD')
     out['PORT_SENSE_ok'] = all(out[c]['PORT_SENSE_V'][0] > 0.7 * 3.43 and out[c]['PORT_SENSE_V'][1] < 3.22 + 0.3
                                for c in TOL) and out['PORT_SENSE_divider']['low_when_off_V'] < 0.3 * 3.22
     out['label'] = 'Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference'

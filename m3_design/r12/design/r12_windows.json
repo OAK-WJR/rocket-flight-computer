@@ -197,11 +197,11 @@
   "PORT_SENSE_divider": {
    "R111_ohm": 47000.0,
    "R112_ohm": 100000.0,
-   "low_when_off_V": 0.025,
-   "pa4_leak_A": 2.5e-07,
+   "low_when_off_V": 0.036,
+   "pd10_leak_A": 3.5e-07,
    "thevenin_ohm": 31972.8
   },
-  "PORT_SENSE_limits": "PA4 (TT_a): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; at most VDD + 0.3 = 3.52 V at the 3V3 minimum 3.22 V (DS12110 I/O limits as R10 used them); with PORT_4V8 off, R112 holds PA4 at or below the leakage figure, under VIL 0.3 x VDD",
+  "PORT_SENSE_limits": "PD10 (FT_h, D-R12-93): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; R10's TT_a ceiling VDD + 0.3 = 3.52 V at the 3V3 minimum 3.22 V kept as a margin (FT_h tolerates 5.5 V, DS12110 Table 60); with PORT_4V8 off, R112 holds PD10 at or below the leakage figure, under VIL 0.3 x VDD",
   "PORT_SENSE_ok": true,
   "drift": {
    "CAM_5V_SENSE_V": [
@@ -209,8 +209,8 @@
     0.531
    ],
    "PORT_SENSE_V": [
-    3.068,
-    3.426
+    3.064,
+    3.43
    ],
    "VLOGIC_SENSE_ratio": [
     0.08819,
@@ -223,8 +223,8 @@
     0.518
    ],
    "PORT_SENSE_V": [
-    3.103,
-    3.388
+    3.1,
+    3.392
    ],
    "VLOGIC_SENSE_ratio": [
     0.08927,

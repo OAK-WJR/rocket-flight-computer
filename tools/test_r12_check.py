@@ -188,22 +188,23 @@ class Round1Fixes(unittest.TestCase):
             self.assertIn('K-neighbours', r12.STAGES[stage], stage)
         self.assertNotIn(('ACT_EN_MCU', 'LOGIC_SOURCE_ST'), r12.NEIGHBOUR_INERT)   # U11 deleted (D-R12-04)
 
-    def test_k_neighbours_pass_on_board_and_fail_on_round1_divider(self):
+    def test_k_neighbours_pass_on_board_and_fail_on_port_sense_at_g3(self):
         rep = self.kn()
         self.assertTrue(rep['ok'], rep['issues'])
         gates = rep['evidence']['k_neighbours']['bridged_gate_V']
-        self.assertLessEqual(gates['ACT_EN_MCU/PORT_SENSE'], 0.21)                # D-R12-86: 47k / 100k
-        self.assertEqual(set(gates), {f'ACT_EN_MCU/{n}' for n in ('PORT_SENSE', 'PYRO1_CONT', 'CAM_5V_SENSE', 'NRST')})
-        r111, r112 = (self.board.FindFootprintByReference(r) for r in ('R111', 'R112'))
-        kept = r111.GetValue(), r112.GetValue()
+        # D-R12-93: PORT_SENSE left G3 for PD10 (H9); its D-R12-86 inert entry is gone, so PORT_SENSE back on G3 fails
+        self.assertEqual(set(gates), {f'ACT_EN_MCU/{n}' for n in ('PYRO1_CONT', 'CAM_5V_SENSE', 'NRST')})
+        self.assertNotIn(('ACT_EN_MCU', 'PORT_SENSE'), r12.NEIGHBOUR_INERT)
+        u1 = self.board.FindFootprintByReference('U1')
+        g3 = next(p for p in u1.Pads() if p.GetNumber() == 'G3')
+        kept = g3.GetNet()
         try:
-            r111.SetValue('4.7k 1%'); r112.SetValue('10k 1%')                      # the round-1 board (d6b771e)
+            g3.SetNet(self.board.FindNet('PORT_SENSE'))
             rep = self.kn()
             self.assertFalse(rep['ok'])
-            self.assertTrue(any('PORT_SENSE' in i and 'above the 0.45 V limit' in i for i in rep['issues']), rep['issues'])
-            self.assertGreater(rep['evidence']['k_neighbours']['bridged_gate_V']['ACT_EN_MCU/PORT_SENSE'], 1.0)
+            self.assertTrue(any('G3' in i and 'PORT_SENSE' in i for i in rep['issues']), rep['issues'])
         finally:
-            r111.SetValue(kept[0]); r112.SetValue(kept[1])
+            g3.SetNet(kept)
 
     def test_k_neighbours_driver_or_uninert_net_fails(self):
         u1 = self.board.FindFootprintByReference('U1')
@@ -222,7 +223,7 @@ class Round1Fixes(unittest.TestCase):
         pad = next(iter(r33.Pads()))
         kept = pad.GetNet()
         try:
-            pad.SetNet(net_g3)                                                # an unrecorded part on PORT_SENSE
+            pad.SetNet(next(p for p in u1.Pads() if p.GetNumber() == 'E2').GetNet())   # an unrecorded part on CAM_5V_SENSE
             rep = self.kn()
             self.assertFalse(rep['ok'])
             self.assertTrue(any('R33' in i and 'sense net' in i for i in rep['issues']), rep['issues'])

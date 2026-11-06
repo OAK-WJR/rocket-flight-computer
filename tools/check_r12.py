@@ -650,6 +650,7 @@ PLANE_NECK_W = 1.0    # mm, D-R12-34
 # (value, and 1 % or 5 % from the UNI-ROYAL MPN, plus 100 ppm/K over 67 K), and must stay at or below GATE_LIMIT_V.
 # R11's LOGIC_SOURCE_ST entry is dropped (U11 is deleted, D-R12-04); its ball G3 carries PORT_SENSE, which is driven
 # HIGH whenever the battery path is on, so the old open-drain argument does not carry over.
+# D-R12-93: PORT_SENSE moves to PD10 (H9) and G3 is NC, so its D-R12-86 inert entry is dropped (a stale entry fails).
 # AO3400A VGS(th) 0.65 / 1.05 / 1.45 V at ID 250 uA, TJ 25 C (AOS AO3400A Rev 3.1 p. 2, Datasheet). The limit keeps a
 # 0.20 V allowance below the 0.65 V minimum for the threshold's fall to the bay's +70 C and for the < 250 uA drain current
 # that already starts Q120 / Q121 through ACT_GATE's 50 kohm pull-up (Inference: AOS gives no VGS(th)-temperature curve).
@@ -662,11 +663,6 @@ NRST_RPU_MIN = 30e3                                        # DS12110 Rev 8 Table
 # (guard, net) -> source bound, divider chain (top: series from the source net to the sense net; bottom: in parallel
 # from the sense net to GND) and the argument. 'rail' bounds come from r12_windows.json's drift maximum.
 NEIGHBOUR_INERT = {
-    ('ACT_EN_MCU', 'PORT_SENSE'): dict(
-        source='PORT_4V8', vmax=('rail', 'PORT_4V8 ('), top=('R111',), bottom=('R112',),
-        why='D-R12-86: PA4 reads PORT_4V8 through R111 47k / R112 100k (32 kohm Thevenin); high whenever the battery '
-            'path is on, so a bridge to F2 with PC1 high-Z gives at most the computed gate voltage (R12F1-TRI-01: '
-            '1.05-1.12 V with D-R12-05\'s 4.7k / 10k)'),
     ('ACT_EN_MCU', 'PYRO1_CONT'): dict(
         source='PYRO1_OUT', vmax=('fixed', PACK_MAX_V), top=('R173', 'R129'), bottom=('R130', 'R178'),
         why='D-R11-85 (fixed ball, R10\'s LQFP neighbour of PC1 too): passive 10.2k / 1k divider of PYRO1_OUT. With the '
