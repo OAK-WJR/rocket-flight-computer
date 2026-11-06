@@ -152,6 +152,9 @@ R12_CFG = dict(name='r12', layers=4, max_length=R12_MAX_LENGTH, gh_refs=R11_GH_R
 # D-R12-29 (owner, 2026-11-03): R12's J121 is R10's DB125-2 screw terminal again; its bare-bore wire room (R10's P-11 /
 # R18-MEC-03 floor) is checked as R10 does
 R12_TERMINAL_ROOM = 4.95
+# QMB-09B-03 item 4, p5: 4.0 +/- 0.3 mm leads, seated flush on the 1.6 mm board.
+R12_BUZZER_TAIL_MM = 2.7       # maximum projection below the board (4.3 - 1.6 mm)
+R12_BUZZER_DRAWING = 'https://www.lcsc.com/datasheet/lcsc_datasheet_2104011834_Jiangsu-Huaneng-Elec-QMB-09B-03_C96256.pdf'
 BORE_R, WIRE_Z = 25.4, 5.0                             # the coupler bore's wall; wire height above the top face
 
 
@@ -661,7 +664,7 @@ def corner_supports(holes, outline, bottom_boxes):
 def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
     """Profile r11 (and r12 with R12_CFG): see the module docstring."""
     rows, bodies, mating, bottom, issues, excluded, top_bodies, top_pads = [], [], [], [], [], [], [], []
-    gh, wires, tails = {}, [], []
+    gh, wires, tails, lead_tails = {}, [], [], []
     if not all(math.isfinite(v) for v in (radius, axis_x, tol)) or radius <= 0 or tol < 0:
         raise ValueError('finite positive bore radius, finite axis and nonnegative sled tolerance required')
     if abs(mm(b.GetDesignSettings().GetBoardThickness()) - BOARD_T) > 0.01:
@@ -721,6 +724,17 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
                 tails.append((ref, label, tail))
                 rows.append((margin(tail, radius, axis_x, tol), label, 'F' if f.IsFlipped() else 'B', tail))
                 (top_bodies if f.IsFlipped() else bottom).append((label, tail))
+        if cfg['name'] == 'r12' and ref == 'LS120':
+            for p in f.Pads():
+                if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
+                    continue
+                # Inference: native copper-pad AABB conservatively bounds the lead transversely, as for J121.
+                z = (0., R12_BUZZER_TAIL_MM) if f.IsFlipped() else (-BOARD_T - R12_BUZZER_TAIL_MM, -BOARD_T)
+                tail = (*pad_box(p)[:4], *z)
+                label = ref + '.' + p.GetNumber() + ' lead tail'
+                lead_tails.append((ref, label, tail))
+                rows.append((margin(tail, radius, axis_x, tol), label, 'F' if f.IsFlipped() else 'B', tail))
+                (top_bodies if f.IsFlipped() else bottom).append((label, tail))
         if cfg['one_side'] and f.IsFlipped():
             issues.append(f'{ref}: on the bottom side; {cfg["name"].upper()} assembles one side (D-R12-01)')
         n = gh_circuits(f, cfg['clones'])
@@ -763,7 +777,7 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
         for other, other_box in mating[index + 1:]:
             if box_overlap(box, other_box):
                 issues.append(f'{ref} and {other} mated envelopes intersect')
-    for ref, label, tail in tails:
+    for ref, label, tail in tails + lead_tails:
         for other, body in bodies:
             if other != ref and other.split('.')[0].split(' ')[0] != ref and box_overlap(tail, body):
                 issues.append(f'{label} intersects {other} model box')
@@ -791,9 +805,10 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
     nearest_top, top_issues = top_support_check(supports, top_bodies, top_pads)
     issues.extend(top_issues)
     issues.extend(f'{ref}: outside bore by {-mgn:.3f} mm' for mgn, ref, _, _ in rows if mgn < 0)
-    return dict(profile=cfg['name'], rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
+    report = dict(profile=cfg['name'], rows=sorted(rows), issues=issues, supports=supports, nearest_support=nearest,
                 nearest_top_support=nearest_top, top_hardware_radius_mm=TOP_HARDWARE_RADIUS, wire_room_mm=rooms,
-                gh_ports=gh, gh_drawing=GH_DRAWING, gh_wire_straight_mm=GH_WIRE_STRAIGHT,
+                gh_ports=gh, gh_drawing=SH_DRAWING if cfg['name'] == 'r12' else GH_DRAWING,
+                gh_wire_straight_mm=GH_WIRE_STRAIGHT,
                 wire_pads=sorted(wires), wire_allowance=dict(WIRE_ALLOWANCE, od=WIRE_OD, basis='Inference'),
                 outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded),
                 terminal_tails=dict(count=len(tails), refs=sorted({r for r, _, _ in tails}),
@@ -803,6 +818,14 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
                                                                default=None),
                                     max_projection_below_board_mm=R10_TERMINAL_TAIL_MM - BOARD_T),
                 ok=not issues)
+    if cfg['name'] == 'r12':
+        report['lead_tails'] = dict(count=len(lead_tails), refs=sorted({r for r, _, _ in lead_tails}),
+                                  max_projection_below_board_mm=R12_BUZZER_TAIL_MM,
+                                  transverse_allocation='Inference: native copper-pad AABB, not a pin/solder model',
+                                  minimum_bore_margin_mm=min((margin(box, radius, axis_x, tol)
+                                                             for _, _, box in lead_tails), default=None),
+                                  source=R12_BUZZER_DRAWING, page=5, item=4)
+    return report
 
 
 def wire_rooms(b, rows, profile, axis_x, tol):

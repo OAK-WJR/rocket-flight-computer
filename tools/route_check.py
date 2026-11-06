@@ -411,11 +411,12 @@ ROUTE_FIGURES_R11 = {'CAM_RX_BUFFER': (19.2, 4)}      # D-R11-61: route_check on
 ALLOWLIST_R12 = [
     ('extra_vias', '3V3A', 'net', (21.525, 38.5),
      'D-R12-98 (integration, AVA re-layout): 3V3A (the sensor analog rail) joins its F.Cu pads through the named In2 link '
-     'LA (ROUTING_PLAN 4) from the LDO end at (15.5, 60.6) to (19.65, 36.9) aft of U4, and then drops once each to U4.5 '
-     '(23.5, 39.95), C30.1 (25.7, 42.75) and the U5 / C32 group (25.8, 29.8): each of those pads sits on its own F.Cu '
-     'island walled off by the SPI / I2C / IMU_CS F fan and the U4 body keep-out, so every drop needs its own via '
-     '(Measured, zone_check on the merged board: 5 vias against 0 + 2 allowed; the In2 link alone takes 2, the floor W4 '
-     'measured is 4 with the link and three drops sharing none). 72.31 mm against a 48.05 mm octilinear MST',
+     'LA (ROUTING_PLAN 4) from the VDDA end at (15.5, 60.6) to the R164 / U4 F.Cu island at (19.65, 36.9). '
+     'R164.2 supplies this island, including U4.5 (23.5, 40.64), C10, U4.8 and C31. One F-to-B via at '
+     '(23.5, 39.95) feeds the B.Cu branches to C30 and U5 / C32, each returning to F.Cu through its own via '
+     'at (25.7, 42.75) and (25.8, 29.8), respectively (Measured: 15.66 mm of B.Cu). '
+     'Measured on the merged board: 5 vias against 0 + 2 allowed (2 for the In2 link, 3 for the B.Cu branches); '
+     '72.31 mm against a 48.05 mm octilinear MST',
      dict(len_mm=72.31, vias=5)),
     ('extra_vias', 'SPI1_MISO', 'net', (23.4, 50.4),
      'D-R12-98 (integration): MISO leaves U1 at A6, west of SCK (A7) and MOSI (C5, channel x 24.6), but its U4 pad (U4.1, '

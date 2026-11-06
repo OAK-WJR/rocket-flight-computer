@@ -1,10 +1,14 @@
 """Native geometry regressions for missing models, mated envelopes and five-point support."""
 import math
+import importlib.util
 import os
 from pathlib import Path
+import sys
 import tempfile
+from types import SimpleNamespace
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
+from contextlib import ExitStack
 
 try:
     import pcbnew
@@ -13,6 +17,86 @@ except ImportError:
 
 if pcbnew:
     import fit_check as fit
+
+
+class R12TailReports(unittest.TestCase):
+    """Exercise tail checks and reports with millimetre geometry, without requiring KiCad."""
+
+    def setUp(self):
+        api = SimpleNamespace(ToMM=float, PAD_ATTRIB_PTH=1, PAD_ATTRIB_NPTH=2, FP_DNP=4, F_Cu=0, F_Mask=1)
+        spec = importlib.util.spec_from_file_location('fit_check_unit', Path(__file__).with_name('fit_check.py'))
+        self.fit = importlib.util.module_from_spec(spec)
+        with patch.dict(sys.modules, pcbnew=api):
+            spec.loader.exec_module(self.fit)
+        self.parts = []
+        self.boxes = {'LS120': (2.55, 62.75, 11.85, 72.05, 0., 5.7),
+                      'J121': (3., 10., 12., 18., 0., 8.9)}
+        for ref in self.boxes:
+            part = Mock()
+            part.GetReference.return_value = ref
+            part.IsFlipped.return_value = False
+            part.GetAttributes.return_value = 0
+            part.HasField.return_value = False
+            pads = []
+            for n in ('1', '2'):
+                pad = Mock()
+                pad.GetNumber.return_value = n
+                pad.GetAttribute.return_value = api.PAD_ATTRIB_PTH
+                pad.IsOnLayer.return_value = False
+                pad.box = (4.3 + 4 * (int(n) - 1), 66.5, 6.1 + 4 * (int(n) - 1), 68.3, -1.6, 0.)
+                pads.append(pad)
+            part.Pads.return_value = pads
+            self.parts.append(part)
+        self.board = Mock()
+        self.board.GetFootprints.return_value = self.parts
+        self.board.GetDesignSettings.return_value.GetBoardThickness.return_value = 1.6
+        self.holes = [(3.5, 3.5), (42.5, 3.5), (3.5, 86.5), (42.5, 86.5)]
+        stack = ExitStack()
+        self.addCleanup(stack.close)
+        for name, kwargs in {
+            'board_geometry': dict(side_effect=lambda b: (self.holes, (0., 0., 46., 90.))),
+            'board_feature': dict(return_value=False),
+            'model_box': dict(side_effect=lambda f, p: self.boxes[f.GetReference()]),
+            'pad_box': dict(side_effect=lambda p: p.box),
+            'fp_name': dict(side_effect=lambda f: 'M3_DB125_2P' if f.GetReference() == 'J121' else 'buzzer'),
+            'top_support_check': dict(return_value=(None, [])),
+            'wire_rooms': dict(return_value={'J121': (5., 5.)}),
+        }.items():
+            stack.enter_context(patch.object(self.fit, name, **kwargs))
+
+    def report(self, cfg=None, radius=24.9):
+        cfg = cfg or self.fit.R12_CFG
+        self.board.GetCopperLayerCount.return_value = cfg['layers']
+        return self.fit.check_board_r11(self.board, Path('.'), radius, 23., .3, cfg)
+
+    def test_r12_reports_both_tail_types_and_sh_drawing(self):
+        report = self.report()
+        self.assertEqual(report['gh_drawing'], self.fit.SH_DRAWING)
+        self.assertEqual(report['lead_tails']['count'], 2)
+        self.assertEqual(report['lead_tails']['refs'], ['LS120'])
+        self.assertEqual(report['lead_tails']['max_projection_below_board_mm'], 2.7)
+        self.assertEqual(report['terminal_tails']['refs'], ['J121'])
+        rows = {label: box for _, label, _, box in report['rows']}
+        self.assertAlmostEqual(rows['LS120.1 lead tail'][4], -4.3)
+        self.assertAlmostEqual(rows['LS120.1 lead tail'][5], -1.6)
+        self.assertAlmostEqual(rows['J121.1 terminal tail'][4], -3.8)
+        self.assertGreater(report['lead_tails']['minimum_bore_margin_mm'], 0)
+
+    def test_seeded_obstacle_below_pad_and_terminal_depth_hits_buzzer_tail(self):
+        self.assertFalse(any('lead tail intersects' in s for s in self.report()['issues']))
+        self.boxes['J121'] = (4.5, 66.7, 5.9, 68.1, -4.2, -3.9)
+        self.assertIn('LS120.1 lead tail intersects J121 model box', self.report()['issues'])
+
+    def test_tail_is_checked_against_bore_and_supports(self):
+        self.assertTrue(any('LS120.1 lead tail: outside bore' in s for s in self.report(radius=18.9)['issues']))
+        self.holes.append((5.2, 67.4))
+        self.assertTrue(any('LS120.1 lead tail bottom/pin envelope' in s for s in self.report()['issues']))
+
+    def test_r11_keeps_gh_drawing_and_has_no_buzzer_tail_report(self):
+        report = self.report(self.fit.R11_CFG)
+        self.assertEqual(report['gh_drawing'], self.fit.GH_DRAWING)
+        self.assertNotIn('lead_tails', report)
+        self.assertFalse(any('lead tail' in row[1] for row in report['rows']))
 
 
 @unittest.skipUnless(pcbnew, 'KiCad Python required')
@@ -114,6 +198,27 @@ class FitValidation(unittest.TestCase):
         self.assertIn('J1.1 terminal tail intersects U2 model box', report['issues'])
         self.assertEqual(report['terminal_tails']['count'], 1)
         self.assertAlmostEqual(report['terminal_tails']['nominal_4mm_standoff_plate_clearance_mm'], 1.8)
+
+    def test_r12_buzzer_tail_detects_a_bottom_body_collision(self):
+        self.board.SetCopperLayerCount(4)
+        buzzer = self.add_part('LS120', 23, 40, footprint='M3_BUZ_TH_D9_P4')
+        for n, x in (('1', 21), ('2', 25)):
+            pin = pcbnew.PAD(buzzer)
+            pin.SetNumber(n); pin.SetAttribute(pcbnew.PAD_ATTRIB_PTH)
+            pin.SetSize(self.point(1.8, 1.8)); pin.SetDrillSize(self.point(1, 1))
+            pin.SetShape(pcbnew.PAD_SHAPE_CIRCLE)
+            pin.SetLayerSet(pcbnew.LSET.AllCuMask())
+            buzzer.Add(pin); pin.SetPosition(self.point(x, 40))
+        obstacle = self.add_part('U2', 30, 40)
+        obstacle.Flip(obstacle.GetPosition(), pcbnew.FLIP_DIRECTION_LEFT_RIGHT)
+        report = fit.check_board(self.board, self.folder, profile='r12')
+        self.assertFalse(any('lead tail intersects' in s for s in report['issues']))
+        self.assertEqual(report['lead_tails']['count'], 2)
+        tail = next(box for _, label, _, box in report['rows'] if label == 'LS120.1 lead tail')
+        self.assertAlmostEqual(tail[4], -4.3)
+        obstacle.Move(self.point(-9, 0))
+        report = fit.check_board(self.board, self.folder, profile='r12')
+        self.assertIn('LS120.1 lead tail intersects U2 model box', report['issues'])
 
     def test_width_and_length_are_measured_from_outline(self):
         for drawing in self.board.GetDrawings():
