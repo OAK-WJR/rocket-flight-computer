@@ -67,16 +67,16 @@ def polygon_issues(Z, zone, box):
 
 
 def check(Z, zone, rows, box):
-    """[(line number, row)] of fragment rows outside the zone or the board; rows are the fragment's text lines."""
+    """[(line number, row)] of fragment rows outside the zone or the board, one entry per distinct row (R12F6-TRI-17: a
+    track with both ends outside was listed, and counted, twice); rows are the fragment's text lines."""
     bad = []
     for n, line in enumerate(rows, 1):
         if line.startswith(('#', 'kind')) or not line.strip():
             continue
         r = line.rstrip('\n').split('\t')
         if r[0] == 'track':
-            for x, y in ((float(r[4]), float(r[5])), (float(r[6]), float(r[7]))):
-                if not ok(Z, zone, r[2], x, y, box):
-                    bad.append((n, line.strip()))
+            if not all(ok(Z, zone, r[2], x, y, box) for x, y in ((float(r[4]), float(r[5])), (float(r[6]), float(r[7])))):
+                bad.append((n, line.strip()))
         elif r[0] == 'via':
             x, y = float(r[4]), float(r[5])
             if not all(ok(Z, zone, L, x, y, box) for L in ('F', 'In1', 'In2', 'B')):

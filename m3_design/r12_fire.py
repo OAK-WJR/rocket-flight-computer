@@ -175,8 +175,8 @@ WHY = {
     'D-R11-23': 'PE4\'s lane between U1\'s balls against 3V3 (U1.B2 / D2 and their dog-bones): fire-capable, the '
                 'recorded D-R11-23 deviation (R12_VALIDATION row 25), unavoidable in the TFBGA-100 escape',
     'HSE_IN': 'HSE_IN has no DC drive: Y1, C25 15 pF to GND and only OSC_OUT\'s internal feedback resistor (about '
-              '200 kohm, DS12110 typical: Inference); with PE4 high-Z that is <= 3.3 V x 0.95 k / 201 k = 16 mV, and '
-              'HSE is off in reset (Calculation / Inference)',
+              '200 kohm, DS12110 typical: Inference); with PE4 high-Z that is <= 3.516 V (the 3V3 window maximum, R12F6-TRI-03) x '
+              '0.95 k / 201 k = 17 mV, and HSE is off in reset (Calculation / Inference)',
     'HSE_OUT': 'OSC_OUT drives against PE4: while PE4 drives low (V_OL <= 0.4 V at 8 mA, DS12110) the gate stays <= '
                '0.39 V, below AO3400A V_GS(th) min 0.65 V, if OSC_OUT sources <= 8 mA (Inference, not '
                'characterised); HSE is off in reset. Depends on R12 firmware rule 3 (PE4 driven low before HSE is '

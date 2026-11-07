@@ -49,6 +49,11 @@ class ZoneGuardOutline(unittest.TestCase):
                 'track\tGND\tF\t0.2\t5\t80\t6\t80\n']
         self.assertEqual(sorted({n for n, _ in zone_guard.check(self.Z, 'W5', rows, self.box)}), [1, 2])
 
+    def test_a_row_is_counted_once(self):
+        """R12F6-TRI-17: a track with both ends outside the zone is one row, not two."""
+        rows = ['track\tGND\tF\t0.2\t23\t95\t24\t95\n', 'track\tGND\tF\t0.2\t5\t80\t6\t80\n']
+        self.assertEqual(zone_guard.check(self.Z, 'W5', rows, self.box), [(1, rows[0].strip())])
+
     def test_polygon_beyond_the_outline_is_reported(self):
         Z = json.loads(json.dumps(self.Z))
         Z['zones']['W5']['polygon'][-2:] = [[46, 100], [0, 100]]

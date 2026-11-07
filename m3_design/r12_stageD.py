@@ -241,9 +241,9 @@ def fire_budget(copper, gnd_return):
                 q120_vgs_exceeds_12V_above_pack_V=12.0 / ratio_max + .1, q120_vgs_ratio_min_max=[ratio, ratio_max],
                 # R12F3-TRI-06: PE4 drives Q124's gate through R126 220R into R128 10k; DS12110 Rev 8 Table 158
                 # guarantees only VOH >= VDD - 0.4 V (|IIO| 4 mA, 1.62-3.6 V; 8 mA, 2.7-3.6 V). R12F4-TRI-02: PE4's
-                # steady load includes R127 1k (about 3.56 mA at the 3V3 drift minimum, <= 3.87 mA at the drift maximum
-                # with every resistor at its drift low end), within the 4 mA row; VDD = the 3V3 drift minimum, R126 /
-                # R128 at their drift ends (+/-1.67 %, r12_budget TOL['drift']; R12F5-TRI-05)
+                # steady load includes R127 1k (about 3.54 mA at the 3V3 drift minimum, <= 3.93 mA at the drift maximum
+                # with every resistor at its drift low end; R12F6-TRI-03's PFM window), within the 4 mA row; VDD = the 3V3
+                # drift minimum, R126 / R128 at their drift ends (+/-1.67 %, r12_budget TOL['drift']; R12F5-TRI-05)
                 q124_vgs_min_V=(Q124_VDD_MIN - VOH_DROP) * 10e3 * (1 - TD) / (10e3 * (1 - TD) + 220 * (1 + TD)),
                 q124_vgs_min_basis=dict(vdd_min_V=Q124_VDD_MIN, voh_drop_V=VOH_DROP,
                                         pe4_load_mA=pe4_load_mA(Q124_VDD_MIN),
@@ -254,10 +254,12 @@ def fire_budget(copper, gnd_return):
                                         pe4_load_parts='R127 1k to GND, and R126 220R + R128 10k (10.22 kOhm) to GND',
                                         resistor_tolerance=TD,
                                         source='DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 '
-                                               'drift minimum and maximum (r12_windows.json); R126 220R / R127 1k / '
-                                               'R128 10k 1 % + 100 ppm/K over 67 K (the drift case)',
-                                        label='Calculation / Inference (PE4 load about 3.56 mA, <= 3.87 mA with drift, '
-                                              'within the 4 mA VOH row; resistor drift)'),
+                                               'drift minimum and maximum (r12_windows.json: the SLUSDW3A section 7.8 '
+                                               'PFM band, R12F6-TRI-03); R126 220R / R127 1k / R128 10k 1 % + 100 '
+                                               'ppm/K over 67 K (the drift case)',
+                                        label=(f'Calculation / Inference (PE4 load about {pe4_load_mA(Q124_VDD_MIN):.2f} '
+                                               f'mA, <= {pe4_load_mA(Q124_VDD_MAX, TD):.2f} mA with drift, within the '
+                                               '4 mA VOH row; the 3V3 PFM band at R12\'s VIN and resistor drift)')),
                 q124_vgs_row_V=2.5, q124_vgs_th_max_V=1.45,
                 q124_gate_tau_us=220 * 220e-9 * 1e6,
                 basis='R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 '
@@ -674,7 +676,9 @@ def u6_supply(solves):
         out[label] = dict(I_A=amps, drop_V=drop,
                           min_VCC_initial_V=rails['initial']['min_V'] - drop, margin_initial_V=rails['initial']['min_V'] - drop - 3.135,
                           min_VCC_drift_V=rails['drift']['min_V'] - drop, margin_drift_V=rails['drift']['min_V'] - drop - 3.135)
-    out['label'] = 'Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window; load currents Inference'
+    out['window_basis'] = rails['source']
+    out['label'] = ('Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window (SLUSDW3A section 7.8 '
+                    'PFM band, R12F6-TRI-03); the band at R12\'s VIN, the drift case and load currents Inference')
     return out
 
 

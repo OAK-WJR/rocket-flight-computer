@@ -1,12 +1,12 @@
 {
- "board_sha256": "3f9579fac2bee1eb195d6a1b2efc709d79634e8856da898f0ef62ed1cd7099d5",
+ "board_sha256": "6a1c99e01d7c786fc35b3e8085ec0b0a4b0371c95d059b108671d93fd9ac554a",
  "dc_solves": {
   "3V3_L1_to_R14": {
-   "cells": 302195,
-   "cg_iterations": 4612,
+   "cells": 301735,
+   "cg_iterations": 4613,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.004851530320236313,
+   "resistance_ohm": 0.004851530320233664,
    "sink": "R14:1",
    "source": "L1:2",
    "window_mm": [
@@ -17,11 +17,11 @@
    ]
   },
   "3V3_L1_to_U6": {
-   "cells": 302195,
-   "cg_iterations": 4453,
+   "cells": 301735,
+   "cg_iterations": 4450,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.01204690418173584,
+   "resistance_ohm": 0.012048331304768772,
    "sink": "U6:1,13,15,16",
    "source": "L1:2",
    "window_mm": [
@@ -32,11 +32,11 @@
    ]
   },
   "3V3_R14_to_U6": {
-   "cells": 302195,
-   "cg_iterations": 4518,
+   "cells": 301735,
+   "cg_iterations": 4514,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.013162386438122274,
+   "resistance_ohm": 0.013163813560973533,
    "sink": "U6:1,13,15,16",
    "source": "R14:1",
    "window_mm": [
@@ -92,11 +92,11 @@
    ]
   },
   "GND_Q124_to_J1": {
-   "cells": 113142,
-   "cg_iterations": 2200,
+   "cells": 111590,
+   "cg_iterations": 2222,
    "grid_mm": 0.1,
    "net": "GND",
-   "resistance_ohm": 0.0026066707398533923,
+   "resistance_ohm": 0.00267189697286664,
    "sink": "J1:2",
    "source": "Q124:2",
    "window_mm": [
@@ -493,24 +493,24 @@
     0.8388157894736842
    ],
    "q124_gate_tau_us": 48.400000000000006,
-   "q124_vgs_min_V": 2.776932343635679,
+   "q124_vgs_min_V": 2.7608971017654547,
    "q124_vgs_min_basis": {
-    "label": "Calculation / Inference (PE4 load about 3.56 mA, <= 3.87 mA with drift, within the 4 mA VOH row; resistor drift)",
-    "pe4_load_mA": 3.5571352250489237,
-    "pe4_load_max_mA": 3.867642665786741,
+    "label": "Calculation / Inference (PE4 load about 3.54 mA, <= 3.93 mA with drift, within the 4 mA VOH row; the 3V3 PFM band at R12's VIN and resistor drift)",
+    "pe4_load_mA": 3.539130528375734,
+    "pe4_load_max_mA": 3.9251420443520293,
     "pe4_load_parts": "R127 1k to GND, and R126 220R + R128 10k (10.22 kOhm) to GND",
-    "pe4_load_vdd_max_V": 3.4641,
+    "pe4_load_vdd_max_V": 3.5156,
     "pe4_load_within_voh_row": true,
     "resistor_tolerance": 0.0167,
-    "source": "DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 drift minimum and maximum (r12_windows.json); R126 220R / R127 1k / R128 10k 1 % + 100 ppm/K over 67 K (the drift case)",
-    "vdd_min_V": 3.2401,
+    "source": "DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 drift minimum and maximum (r12_windows.json: the SLUSDW3A section 7.8 PFM band, R12F6-TRI-03); R126 220R / R127 1k / R128 10k 1 % + 100 ppm/K over 67 K (the drift case)",
+    "vdd_min_V": 3.2237,
     "voh_drop_V": 0.4,
     "voh_row_mA": 4.0
    },
    "q124_vgs_row_V": 2.5,
    "q124_vgs_th_max_V": 1.45
   },
-  "gnd_return_dc_ohm": 0.0026066707398533923,
+  "gnd_return_dc_ohm": 0.00267189697286664,
   "gnd_return_used_ohm": 0.005,
   "leads_ohm": 0.3,
   "match_ohm": 2.0,
@@ -896,10 +896,10 @@
   },
   "ACT_GATE": {
    "length_mm_by_layer": {
-    "F.Cu": 11.261017305526641,
+    "F.Cu": 11.540306627407988,
     "In2.Cu": 2.1727922061357856
    },
-   "microstrip_L_nH_upper": 6.743207532405718,
+   "microstrip_L_nH_upper": 6.869820085690858,
    "vias": 2
   },
   "PYRO1_GATE": {
@@ -2018,7 +2018,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "3f9579fac2bee1eb195d6a1b2efc709d79634e8856da898f0ef62ed1cd7099d5",
+ "source_board_sha256": "6a1c99e01d7c786fc35b3e8085ec0b0a4b0371c95d059b108671d93fd9ac554a",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,
@@ -2041,33 +2041,34 @@
  "u6_supply": {
   "0V5_allocation": {
    "I_A": 0.5,
-   "drop_V": 0.008449217250986078,
-   "margin_drift_V": 0.09665078274901395,
-   "margin_initial_V": 0.12695078274901395,
-   "min_VCC_drift_V": 3.2316507827490137,
-   "min_VCC_initial_V": 3.2619507827490137
+   "drop_V": 0.008449930812501217,
+   "margin_drift_V": 0.08025006918749922,
+   "margin_initial_V": 0.110450069187499,
+   "min_VCC_drift_V": 3.215250069187499,
+   "min_VCC_initial_V": 3.245450069187499
   },
   "1A_rating_bound": {
    "I_A": 1.0,
-   "drop_V": 0.016898434501972155,
-   "margin_drift_V": 0.08820156549802816,
-   "margin_initial_V": 0.11850156549802815,
-   "min_VCC_drift_V": 3.223201565498028,
-   "min_VCC_initial_V": 3.253501565498028
+   "drop_V": 0.016899861625002434,
+   "margin_drift_V": 0.07180013837499777,
+   "margin_initial_V": 0.10200013837499755,
+   "min_VCC_drift_V": 3.2068001383749976,
+   "min_VCC_initial_V": 3.2370001383749973
   },
-  "R_L1_to_R14_ohm": 0.004851530320236313,
-  "R_L1_to_U6_ohm": 0.01204690418173584,
-  "R_R14_to_U6_direct_ohm": 0.013162386438122274,
+  "R_L1_to_R14_ohm": 0.004851530320233664,
+  "R_L1_to_U6_ohm": 0.012048331304768772,
+  "R_R14_to_U6_direct_ohm": 0.013163813560973533,
   "floor_V": 3.135,
-  "label": "Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window; load currents Inference",
+  "label": "Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window (SLUSDW3A section 7.8 PFM band, R12F6-TRI-03); the band at R12's VIN, the drift case and load currents Inference",
   "u6_max_A": 0.006,
   "u6_only_6mA": {
    "I_A": 0.006,
-   "drop_V": 7.897431862873365e-05,
-   "margin_drift_V": 0.1050210256813715,
-   "margin_initial_V": 0.1353210256813715,
-   "min_VCC_drift_V": 3.2400210256813713,
-   "min_VCC_initial_V": 3.2703210256813713
-  }
+   "drop_V": 7.89828813658412e-05,
+   "margin_drift_V": 0.08862101711863435,
+   "margin_initial_V": 0.11882101711863413,
+   "min_VCC_drift_V": 3.223621017118634,
+   "min_VCC_initial_V": 3.253821017118634
+  },
+  "window_basis": "TI SLUSDW3A section 7.8 PFM output regulation -1.5 % ... +2.5 % (U2 LMR50410XDBVR is the PFM variant; typical components over TJ -40 ... 150 C, VIN 24 V, IOUT 0 A to full load, not production tested), taken as an effective VFB 0.985-1.025 V about the 1.000 V nominal; it contains section 7.5's VFB 0.99-1.01 V (R12F6-TRI-03); ILKG-FB 0.2 nA typ (neglected)"
  }
 }

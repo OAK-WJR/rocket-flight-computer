@@ -127,17 +127,19 @@ R12_MOVES = {
                    f'D-R12-93: PB7 (A5) -> PA15 (A8, aft-east, toward the CA bus and D121.1); {_DS} Table 10 p. 90 '
                    '(PA15 AF1 TIM2_CH1 / TIM2_ETR, AF0 JTDI; Table 9 p. 82: ball A8 = PA15 (JTDI)); loader SPI3_NSS slave input, no pull (AN2606 Rev 64 Table 119 '
                    'p. 279); at reset the JTDI pull-up (30-50 kohm, DS12110 RPU) against the servo-cell 10 kohm 1 % '
-                   'pull-down (R154-R157) holds a steady level of at most 0.864 V at the 3V3 initial maximum 3.4314 V '
-                   '(3.4314 x 10.1k / 40.1k) and 0.877 V at the drift maximum 3.4641 V (r12_windows.json) with the '
-                   'pull-down at its drift end (3.4641 x 10.167k / 40.167k; +/-1.67 % per resistor, r12_budget.py TOL '
-                   'drift), no pulse (Calculation; drift case Inference; as R12 accepted for SERVO2 on this ball)'),
+                   'pull-down (R154-R157) holds a steady level of at most 0.877 V at the 3V3 initial maximum 3.4824 V '
+                   '(3.4824 x 10.1k / 40.1k) and 0.890 V at the drift maximum 3.5156 V (r12_windows.json: SLUSDW3A 7.8 '
+                   'PFM band, R12F6-TRI-03) with the pull-down at its drift end (3.5156 x 10.167k / 40.167k; +/-1.67 % '
+                   'per resistor, r12_budget.py TOL drift), no pulse (Calculation; the PFM band at R12\'s VIN and the '
+                   'drift case Inference; as R12 accepted for SERVO2 on this ball)'),
     'SERVO2_MCU': ('D10', 'AF1 TIM1_CH3 (333 Hz PWM, REQUIREMENTS F4; TIM1 is an advanced timer: set BDTR.MOE)',
                    f'D-R12-93: PA15 (A8) -> PA10 (D10, east ring 1); {_DS} Table 10 p. 89 (PA10 AF1 TIM1_CH3); loader '
                    'USART1_RX input with pull-up (AN2606 Rev 64 Table 119 p. 277): the 30-50 kohm pull-up (DS12110 RPU) '
-                   'against the servo-cell 10 kohm 1 % pull-down holds at most 0.864 V at the 3V3 initial maximum 3.4314 V '
-                   '(3.4314 x 10.1k / 40.1k) and 0.877 V at the drift maximum 3.4641 V (r12_windows.json) with the '
-                   'pull-down at its drift end (3.4641 x 10.167k / 40.167k; +/-1.67 % per resistor, r12_budget.py TOL '
-                   'drift), no pulse (Calculation; drift case Inference; R11 PA3 method)'),
+                   'against the servo-cell 10 kohm 1 % pull-down holds at most 0.877 V at the 3V3 initial maximum 3.4824 V '
+                   '(3.4824 x 10.1k / 40.1k) and 0.890 V at the drift maximum 3.5156 V (r12_windows.json: SLUSDW3A 7.8 '
+                   'PFM band, R12F6-TRI-03) with the pull-down at its drift end (3.5156 x 10.167k / 40.167k; +/-1.67 % '
+                   'per resistor, r12_budget.py TOL drift), no pulse (Calculation; the PFM band at R12\'s VIN and the '
+                   'drift case Inference; R11 PA3 method)'),
     'SERVO3_MCU': ('D9', 'AF1 TIM1_CH1 (333 Hz PWM, REQUIREMENTS F4; TIM1: set BDTR.MOE)',
                    f'D-R12-93: PA1 (H2, west face) -> PA8 (D9, east ring 2); {_DS} Table 10 p. 89 (PA8 AF1 TIM1_CH1, AF0 '
                    'MCO1: keep MCO1 off); loader I2C3_SCL open drain, not driven (AN2606 Rev 64 Table 119 p. 278)'),
@@ -154,10 +156,11 @@ R12_MOVES = {
                    f'D-R12-93: PD6 (C6, USART2) -> PC11 (B8, aft-east, toward R100); peripheral USART2 -> UART4; {_DS} '
                    'Table 12 p. 92 (PC11 AF8 UART4_RX); loader SPI3_MISO slave output push-pull (AN2606 Rev 64 Table 119 '
                    'p. 279) [LOADER-DRIVEN]: the camera is unpowered in the loader (PC12 CAM_PWR_EN is an undriven input '
-                   'and R431 holds the buck EN low) and R100 1 kohm 1 % limits any fight to at most 3.47 mA (resistor-only bound, '
-                   '3.4314 V / 990 ohm at the 3V3 initial maximum; 3.52 mA at the drift maximum 3.4641 V, r12_windows.json, '
-                   'with R100 at its drift low end, 3.4641 V / 983.3 ohm, +/-1.67 % per resistor, r12_budget.py TOL drift; '
-                   'Calculation; drift case Inference)'),
+                   'and R431 holds the buck EN low) and R100 1 kohm 1 % limits any fight to at most 3.52 mA (resistor-only bound, '
+                   '3.4824 V / 990 ohm at the 3V3 initial maximum; 3.58 mA at the drift maximum 3.5156 V, r12_windows.json '
+                   '(SLUSDW3A 7.8 PFM band, R12F6-TRI-03), with R100 at its drift low end, 3.5156 V / 983.3 ohm, +/-1.67 % '
+                   'per resistor, r12_budget.py TOL drift; Calculation; the PFM band at R12\'s VIN and the drift case '
+                   'Inference)'),
     'CAM_PWR_EN': ('C8', 'GPIO out (push-pull; R431 pull-down holds the camera buck off in reset)',
                    f'D-R12-93: PC14 (A1, aft-west corner) -> PC12 (C8, aft-east, toward U403.5); plain GPIO; {_DS} Table '
                    '9 p. 82 (PC12, TFBGA100 ball C8); loader SPI3_MOSI slave input, no pull (AN2606 Rev 64 Table 119 p. 279): '
