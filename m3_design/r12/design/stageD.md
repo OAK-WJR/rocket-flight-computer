@@ -1,7 +1,8 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
 **Superseded by §7 (branch `r12-port-fix`, D-R12-83 … -85): board `d6e4f7ee…`; and since the AVA re-layout by
-`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm).** §1–§6 record the stage D board `d776c5d7…` as it was.
+`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm; current board `6e874d4e…` since round 5, D-R12-125 … -133).** §1–§6
+record the stage D board `d776c5d7…` as it was.
 
 Follows stageC.md (pass 2 frozen, D-R12-77A, board `e2b005b5…`). Decisions D-R12-78 … D-R12-82 are in
 `R12_DECISIONS.md`. Branch `r12-stage-d`; nothing is ordered. Labels (AGENTS §2.5): **Measured** = read from the CAD or
@@ -201,8 +202,8 @@ qualifying count and fee tier); confirm JLC's quote, including possible D402 / Y
 and [M3_R12 "Cost and stock"](../../../docs/M3_R12.md#cost-and-stock): the 2026-11-06T17:55–17:56Z run applies
 the Preferred Extended waiver and C25 / C26 change. Parts + feeder $65.02 / $45.68 per board; minimum all-in
 $173.69 / $279.93 with U1-only X-ray, $3.69 over the two-board target. Five X-ray parts give $186.81 /
-$292.23–300.43, straddling $295 at five boards (Calculation / Inference: 100 mm PCB quote used for 90 mm,
-qualifying X-ray count and tier). Confirm JLC's count and tier, including D402 / Y1, before ordering.
+$292.23–300.43, straddling $295 at five boards (Calculation / Inference: qualifying X-ray count and tier; the bare PCB
+is cost_study.md §2.1's Live 46 × 90 ENIG 0.5 oz quote, $25.10, R12F5-TRI-22). Confirm JLC's count and tier, including D402 / Y1, before ordering.
 
 **Hashes (Measured, SHA-256).**
 

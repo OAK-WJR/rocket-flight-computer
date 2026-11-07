@@ -1,13 +1,13 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `68e6b650…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, and the AVA polish pass only signal copper, D-R12-121 … -124, branch `r12-polish`), 46 × 90 × 1.6 mm, four
+**Status.** PCB `6e874d4e…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, the AVA polish pass only signal copper, D-R12-121 … -124, and round 5's fix pass the fire-net copper, five pyro-cell parts, U6's lands and the J121 pours, D-R12-125 … -133), 46 × 90 × 1.6 mm, four
 layers, every part on the top face and assembled by JLC. Branch `m3-assy-r12`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 90), top face = F. Positions
-below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`).
+below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`). Round 5 moved five small pyro-cell parts and nothing this file positions otherwise (Measured on `6e874d4e…`, D-R12-125): TP122 (the PYRO1_GATE probe) to (14.8, 42.4), D120 to (6.6, 49.2) rotation 270, R131 turned to rotation 270 at (6.6, 46.6), R173 to (12.6, 46.1) and C13 to (17.4, 50.0) rotation 0.
 
 ## Harness pin map
 
@@ -51,7 +51,10 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   J420, AUX spare. A device on these ports must drive its TX high at no more than 3.6 V.
   - Under the 0.561 A budget the port pins stay at or above 4.563 V at the drift corner and at or below 4.972 V with no
     load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
-    page gives only "5V DC") and the M100 Mini's 3.3–5 V.
+    page gives only "5V DC") and the M100 Mini's 3.3–5 V. That holds while U400's input is at least VO / 0.75, about
+    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.55 V) or on a 6.0 V pack
+    (about 5.49 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
+    15).
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
     4.60–4.94 V at room temperature (initial tolerance, Calculation).
 - **Servo power from the harness (`SERVO + FROM HARNESS`).** J122 carries signals only: SERVO1–4 and one shared signal
@@ -129,7 +132,8 @@ adapted to R12. Run it in order and stop at the first failure.
 - **Supports.** Four M3 supports, at (3.0, 5.9), (43.0, 5.9), (3.5, 84.1) and (42.5, 84.1) (D-R12-24, -99). Use **nylon (or
   otherwise insulated) screws, nuts and washers at all four**. The aft pair is 3.0 mm in, so the aft SH row clears both
   washers.
-- **One-sided board.** No parts on the bottom face; the bottom carries contact legends and designators only.
+- **One-sided board.** No parts on the bottom face; the bottom carries contact legends, designators and the revision
+  legend `M3-ASSY-R12` only.
 - **SH plugs on the short edges only.** The mouths sit 1.1 mm inside their edge (fit_check r12, CAD envelopes;
   Inference on the clone dimensions).
 - **Every part is JLC-assembled (D-R12-85, owner 2026-11-05).** Nothing is fitted by hand after delivery:
@@ -154,14 +158,15 @@ adapted to R12. Run it in order and stop at the first failure.
 ## Boot and programming
 
 J2 (TC2030, top, (32.8, 45.0)) is the SWD port. Program with the e-match disconnected, and record and read back
-BOOT_ADD0 and the boot settings. The ROM loader's pins on R12 include the moved functions (PB10, PB6 / PB7, PE12–PE14,
-PA7, PA8–PA10, PA15, PC9–PC12, PD2): AN2606's H74x list must be re-read for them (O-R12-23). NRST's filter capacitor C24
+BOOT_ADD0 and the boot settings. Among R12's moved functions, the ROM loader's pins are PB10, PB6, PE12–PE14, PA7,
+PA8–PA10, PA15 and PC9–PC12 (`pin_table.tsv`'s AN2606 Rev 64 Table 119 column, read in R11: Inference); PB7 and PD2
+are not H74x loader pins there. AN2606's H74x list must be re-read for them (O-R12-23). NRST's filter capacitor C24
 is at J2's end of the NRST run (26.6, 45.18) (D-R12-98). R10's dummy-load / no-e-match service procedure
 applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 
 For the separate first-article dummy-fire check, use the fixed 2 Ω dummy / 0.3 Ω total leads and 7.4 V / 0.15 Ω
 source with the budget converter loads and no servo stalls. Reject BAT_IN − RAW_ACT above **0.4 V**, overriding
-R10 rule 4's 0.2 V line (D-R12-109). The healthy budget current is 1.505934 A, with a drop bound of 0.264 V
+R10 rule 4's 0.2 V line (D-R12-109). The healthy budget current is 1.505875 A, with a drop bound of 0.264 V
 including both hot FETs and conservatively all fire copper (Calculation / Inference: 70 °C hot factors, pack,
 loads and copper model); the body-diode case is 0.7–1.0 V (Inference). Qualify the line on the first article;
 see [M3_R12 firmware](M3_R12.md#firmware). The per-flight closed-switch check does not command a fire.
@@ -170,8 +175,8 @@ see [M3_R12 firmware](M3_R12.md#firmware). The per-flight closed-switch check do
 
 M3 metric (parts + feeder per board): $65.02 at 2 boards and $45.68 at 5 boards, against the $84.41 cap (Live
 2026-11-06T17:55:07Z / 17:56:22Z). Minimum all-in $173.69 / $279.93 including U1-only X-ray ($3.28 / $8.20;
-Calculation / Inference: 100 mm PCB quote used for 90 mm), $3.69 over the $170 target at 2 boards.
+Calculation / Inference: X-ray count; the bare PCB is the Live 46 × 90 quote, $25.10), $3.69 over the $170 target at 2 boards.
 Counting U1 / U4 / U5 / U6 / U9 gives $186.81 / $292.23–300.43, above $170 at 2 boards and straddling $295 at 5 boards (Calculation /
-Inference: qualifying count and fee tier; bare PCB is the 100 mm quote used for 90 mm). Confirm the count and
+Inference: qualifying count and fee tier). Confirm the count and
 tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). No part is short or thin. See [M3_R12.md,
 "Cost and stock"](M3_R12.md#cost-and-stock).
