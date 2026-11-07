@@ -573,6 +573,60 @@ R12_RULES = (
 )
 
 
+# R12F5-TRI-06: JLC lists "SMD pad to pad clearance (different nets) 0.15mm" (capabilities page, read 2026-11-06 by the
+# round 5 mfg lens). Written before R11's scoped rules, so the Tag-Connect (0.508) and bare test pad (1.0) rules that
+# follow it still win for their pads (KiCad applies the last matching rule).
+R12_EARLY_RULES = (
+    ('R12 JLC SMD pad to pad (different nets)', 'clearance (min 0.15mm)',
+     "A.Type == 'Pad' && B.Type == 'Pad' && A.Pad_Type == 'SMD' && B.Pad_Type == 'SMD'",
+     'JLC SMD pad to pad clearance (different nets) 0.15 mm (https://jlcpcb.com/capabilities/pcb-capabilities)'),
+)
+# R12F5-TRI-01 / tools/check_r12.py S-10: R10's fire-net copper gaps (D-R26-02 / -04) and D-R11-23 as DRC clearance
+# rules, so DRC holds them and every pour pulls back on refill. The sets are check_r12's S10_* (test_r12_check binds
+# them): Q124's gate nets keep 1.06 mm (>= R10's 1.0585) from every net except GND, the gate pair, NC pins and the
+# inert nets; PYRO1_OUT keeps 1.04 mm from the low rails, 0.25 mm from GND copper and 0.5 mm from GND fills (the
+# GND rules leave the bare test pad and Tag-Connect rules alone). Then the two exceptions, each at its floor: PE4's lane
+# at U1.B2 / D2 inside U1's courtyard (D-R11-23, D-R12-104) and Q124's own gate / drain lands. Written after R11's
+# scoped rules so these, the last to match, govern their pairs.
+FIRE_GATES = ('PYRO1_GATE', 'PYRO1_GATE_N')
+FIRE_GATE_INERT = ('GND', 'HSE_IN', 'HSE_OUT', 'BOOT0', 'BAT_FAULT_N', 'QSPI_IO2')
+FIRE_OUT_RAILS = ('3V3', '3V3A', 'VCAP1', 'VCAP2', 'PORT_4V8', 'PORT_SW', 'CAM_5V', 'CAM_SW', 'VBUS', 'SW_NODE')
+FIRE_GATE_MM, FIRE_OUT_RAIL_MM, FIRE_OUT_GND_MM, FIRE_OUT_GND_FILL_MM = 1.06, 1.04, 0.25, 0.5
+FIRE_LANE_MM, FIRE_Q124_MM = 0.15, 1.0
+
+
+def _any(side, nets):
+    return '(' + ' || '.join(f"{side}.NetName == '{n}'" for n in nets) + ')'
+
+
+def _none(side, nets):
+    return ' && '.join(f"{side}.NetName != '{n}'" for n in nets)
+
+
+_NOT_PROBE = "!A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && " \
+             "!B.memberOfFootprint('J2')"
+FIRE_RULES = (
+    ('S-10 Q124 gate nets to raising copper', f'clearance (min {FIRE_GATE_MM}mm)',
+     f"{_any('A', FIRE_GATES)} && {_none('B', FIRE_GATES + FIRE_GATE_INERT)} && B.NetName != '' && "
+     "B.NetName != 'unconnected-*'",
+     'R10 D-R26-04 (1.0585 mm), every net that can raise the gate (check_r12 S-10)'),
+    ('S-10 PYRO1_OUT to low rails', f'clearance (min {FIRE_OUT_RAIL_MM}mm)',
+     f"A.NetName == 'PYRO1_OUT' && {_any('B', FIRE_OUT_RAILS)}", 'R10 D-R26-02 (1.040 mm; check_r12 S-10)'),
+    ('S-10 PYRO1_OUT to GND', f'clearance (min {FIRE_OUT_GND_MM}mm)',
+     f"A.NetName == 'PYRO1_OUT' && B.NetName == 'GND' && {_NOT_PROBE}",
+     'R10 row 1 surface pairs 0.177 / 0.180 mm, R12 0.25 mm (check_r12 S-10)'),
+    ('S-10 PYRO1_OUT to GND fills', f'clearance (min {FIRE_OUT_GND_FILL_MM}mm)',
+     f"A.NetName == 'PYRO1_OUT' && B.NetName == 'GND' && B.Type == 'Zone' && {_NOT_PROBE}",
+     'R12F5-TRI-01: J121.1 sat 0.101 mm from GND_pour_B (check_r12 S-10)'),
+    ('S-10 exception: PE4 lane at U1.B2 / D2', f'clearance (min {FIRE_LANE_MM}mm)',
+     "A.NetName == 'PYRO1_GATE_N' && B.NetName == '3V3' && A.intersectsCourtyard('U1') && B.intersectsCourtyard('U1')",
+     'D-R11-23 / D-R12-104 (R12_VALIDATION row 25): the recorded 0.150 mm floor (check_r12 S-10)'),
+    ('S-10 exception: Q124 gate and drain lands', f'clearance (min {FIRE_Q124_MM}mm)',
+     "A.NetName == 'PYRO1_GATE' && B.NetName == 'PYRO1_OUT' && A.memberOfFootprint('Q124') && "
+     "B.memberOfFootprint('Q124')", 'the AO3400A SOT-23 land itself, 1.044 mm (check_r12 S-10)'),
+)
+
+
 def dru_conditional(rule_text):
     """True when a DRU rule is scoped by a condition or a layer clause (KiCad applies the last matching rule, so an
     unconditional floor written after a scoped rule of the same constraint silently replaces it: R12F1-TRI-11)."""
@@ -587,10 +641,15 @@ def dru(text):
         if m.group(1) in KEEP_RULES:
             rules.append(text[m.start():sch.close_paren(text, m.start())])
     assert len(rules) == len(KEEP_RULES), 'R11 DRU rule set changed'
-    for name, constraint, condition, why in R12_RULES:
-        rules.append(f'# {why} (https://jlcpcb.com/capabilities/pcb-capabilities)\n(rule "{name}"\n' +
-                     (f'  (condition "{condition}")\n' if condition else '') + f'  (constraint {constraint}))')
-    rules = [r for r in rules if not dru_conditional(r)] + [r for r in rules if dru_conditional(r)]
+    def text(name, constraint, condition, why):
+        return (f'# {why}\n(rule "{name}"\n' + (f'  (condition "{condition}")\n' if condition else '') +
+                f'  (constraint {constraint}))')
+    r12 = [text(name, c, cond, f'{why} (https://jlcpcb.com/capabilities/pcb-capabilities)')
+           for name, c, cond, why in R12_RULES]
+    # unconditional floors first (D-R12-88); then the generic JLC pad rule, R11's scoped rules, the S-10 fire rules
+    # (R12F5-TRI-01) and R12's scoped rules: KiCad applies the last matching rule, so the specific follow the generic
+    rules = [r for r in rules + r12 if not dru_conditional(r)] + [text(*r) for r in R12_EARLY_RULES] + \
+        [r for r in rules if dru_conditional(r)] + [text(*r) for r in FIRE_RULES] + [r for r in r12 if dru_conditional(r)]
     return ('(version 1)\n# M3-ASSY-R12 (D-R12-03): four layers at JLCPCB, one assembled side, 0.3 / 0.45 mm vias only. '
             'R10 / R11 rules kept by name;\n# the R12 floors follow JLC\'s multilayer capability and the cost study\'s '
             'no-surcharge via. Net classes and board setup are stage B\'s.\n' + '\n\n'.join(rules) + '\n')

@@ -106,6 +106,25 @@ class PasteCheck(unittest.TestCase):
         layers['F'] = layers['F'].replace(',0*%', ',0*1,0,0.2,0,0*%', 1)
         self.assertIn('differs from native paste geometry', '\n'.join(gate.check(self.board, layers)[0]))
 
+    def test_chamfered_land_outline_passes_and_plain_or_margined_fails(self):
+        # R12F5-TRI-06: R12's U6 corner lands, 0.85 x 0.5 with one 0.143 mm corner cut (NXP's chamfered land), plot as
+        # a five-corner outline at their own size (Gerber Y = -KiCad Y: KiCad's top-right corner is Gerber's +x / +y)
+        p = next(iter(self.fp('U6', [(1, 1)]).Pads()))
+        p.SetSize(pcbnew.VECTOR2I(pcbnew.FromMM(.85), pcbnew.FromMM(.5)))
+        p.SetShape(pcbnew.PAD_SHAPE_CHAMFERED_RECT)
+        p.SetRoundRectRadiusRatio(0)
+        p.SetChamferRectRatio(.286)
+        p.SetChamferPositions(2)                          # RECT_CHAMFER_TOP_RIGHT (not exported to Python)
+        macro = ('%AMCut*4,1,5,-0.425,-0.25,0.425,-0.25,0.425,0.107,0.282,0.25,-0.425,0.25,-0.425,-0.25,0*%\n')
+        layers = self.gerber(('U6', 1, 1))
+        layers['F'] = layers['F'].replace('%ADD10R,0.5X0.5*%', macro + '%ADD10Cut*%')
+        self.assertEqual(gate.check(self.board, layers)[0], [])
+        plain = self.gerber(('U6', 1, 1))
+        plain['F'] = plain['F'].replace('0.5X0.5', '0.85X0.5')
+        self.assertIn('differs from native paste geometry', '\n'.join(gate.check(self.board, plain)[0]))
+        p.SetLocalSolderPasteMargin(pcbnew.FromMM(-.05))
+        self.assertTrue(gate.check(self.board, layers)[0])
+
     @staticmethod
     def rounded_macro(radius, x, y, rotation=0):
         macro = ('%AMRounded*\n'

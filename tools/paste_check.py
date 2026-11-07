@@ -276,6 +276,11 @@ def expected_paste(pad, layer):
     elif shape == pcbnew.PAD_SHAPE_RECT and margin.x > 0:
         copy.SetShape(layer, pcbnew.PAD_SHAPE_ROUNDRECT)
         copy.SetRoundRectCornerRadius(layer, margin.x)
+    elif shape == pcbnew.PAD_SHAPE_CHAMFERED_RECT:
+        # R12F5-TRI-06 (R12's U6 corner lands, NXP's chamfered land): plotted at the pad's own outline; a paste margin
+        # on a chamfered pad is not a reviewed geometry, so it fails closed
+        if margin.x or margin.y:
+            raise ValueError('chamfered paste pad with a paste margin (not reviewed)')
     elif shape not in (pcbnew.PAD_SHAPE_CIRCLE, pcbnew.PAD_SHAPE_OVAL,
                         pcbnew.PAD_SHAPE_RECT, pcbnew.PAD_SHAPE_ROUNDRECT):
         raise ValueError('unsupported native paste pad shape')

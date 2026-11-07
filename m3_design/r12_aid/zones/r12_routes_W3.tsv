@@ -372,10 +372,6 @@ track	ARM1_SENSE	B	0.2	13	56	13	40.75
 track	HSE_OUT	F	0.1	19.4	52.8	19.02	52.42
 track	HSE_OUT	F	0.1	19.02	52.42	15.08	52.42
 track	HSE_OUT	F	0.1	15.08	52.42	14	53.5
-via	3V3	-	0.45	17.9	51.52		
-via	GND	-	0.45	17.9	49.48		
-track	3V3	F	0.2	17.9	50.92	17.9	51.52
-track	GND	F	0.2	17.9	50.08	17.9	49.48
 track	ACT_EN_MCU	B	0.1	18.6	54	17.375	54
 track	ACT_EN_MCU	B	0.1	17.375	54	16.4	53.025
 track	ACT_EN_MCU	B	0.1	16.4	53.025	16.4	45.9
@@ -426,9 +422,6 @@ track	GPS_RX_MCU	F	0.2	25.8	80	23.9	80
 track	GPS_RX_MCU	F	0.2	23.9	80	23.5	80.4
 track	GPS_RX_MCU	F	0.2	23.5	80.4	23.5	81.77
 via	GND	-	0.45	25.95	80.7		
-track	GPS_TX_MCU	F	0.1	25.8	57.6	25.65	57.75
-track	GPS_TX_MCU	F	0.1	25.65	57.75	25.65	59.05
-track	GPS_TX_MCU	F	0.1	25.65	59.05	25.29	59.41
 via	GPS_TX_MCU	-	0.45	25.29	59.41		
 track	PORT_SENSE	B	0.1	26.2	56.4	26.45	56.65
 via	GND	-	0.45	25.225	58.15		
@@ -497,3 +490,15 @@ track	AUX_TX_MCU	B	0.2	35	66.4	35	79.7
 track	GPS_TX_MCU	B	0.1	25.29	59.41	25.29	79.4
 via	GPS_TX_MCU	-	0.45	25.29	79.4		
 track	GPS_TX_MCU	F	0.2	25.29	79.4	22.9	79.4
+# R12F5-TRI-01 (S-10, lane P): C13 turned to 0 degrees at (17.4, 50.0), GND pad toward PE4's lane, its 3V3 via west of
+# the VLOGIC_SENSE In2 lane at (15.05, 50.45), where In2's 3V3 joins the main sheet (the strip between the VLOGIC_SENSE
+# and NRST lanes is closed): C13.1 and the via keep >= 1.06 mm from PYRO1_GATE_N (0.48 / 0.53 mm).
+via	3V3	-	0.45	15.05	50.45		
+via	GND	-	0.45	17.82	49.2		
+track	3V3	F	0.2	16.98	50	16.53	50.45
+track	3V3	F	0.2	16.53	50.45	15.05	50.45
+track	GND	F	0.2	17.82	50	17.82	49.2
+# R12F5-TRI-21: GPS_TX_MCU leaves K9 straight aft, then one 45-degree step to its via (the 0.15 mm jog had no purpose
+# since D-R12-121 moved the via).
+track	GPS_TX_MCU	F	0.1	25.8	57.6	25.8	58.9
+track	GPS_TX_MCU	F	0.1	25.8	58.9	25.29	59.41

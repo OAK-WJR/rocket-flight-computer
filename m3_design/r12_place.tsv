@@ -8,7 +8,7 @@ C5	32.9	20	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a 
 C6	37.3	23.4	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
 C8	42.6	19.4	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
 C10	23	38.5	0	F	D-R12-94 (AVA re-layout): Z3 3V3A bulk between U4 and U6
-C13	17.9	50.5	90	F	D-R12-98 (integration): moved 0.1 mm east (U1 courtyard limit) and 0.1 mm aft from (17.8, 50.6) (its 3V3 via at (17.9, 51.52) keeps 0.48 mm from HSE_IN, K-reference) so its 3V3 / GND vias sit straight on its axis at x 17.9, east of the CAM_5V_SENSE In2 lane (x 17.35) and PYRO1_GATE_N F (x 18.7) (Measured: the old vias at x 17.2 lay 0.3 mm from the NRST In2 lane); D-R12-94 (AVA re-layout): Z4 NW pocket: 3V3 for B2 / D2
+C13	17.4	50	0	F	R12F5-TRI-01 (S-10): turned to 0 degrees and moved 0.5 mm west and 0.5 mm aft (clear of Y1's courtyard) so its 3V3 pad and via keep >= 1.06 mm from PE4's lane at x 18.7 (C13.1 sat 0.48 mm, its via 0.53 mm); GND pad toward the lane; D-R12-98 (integration): moved 0.1 mm east (U1 courtyard limit) and 0.1 mm aft from (17.8, 50.6) (its 3V3 via at (17.9, 51.52) keeps 0.48 mm from HSE_IN, K-reference) so its 3V3 / GND vias sit straight on its axis at x 17.9, east of the CAM_5V_SENSE In2 lane (x 17.35) and PYRO1_GATE_N F (x 18.7) (Measured: the old vias at x 17.2 lay 0.3 mm from the NRST In2 lane); D-R12-94 (AVA re-layout): Z4 NW pocket: 3V3 for B2 / D2
 C14	13.6	60	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
 C15	19.6	59.6	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3 at K1 (forward-face cols 1-2 carry no signal)
 C16	17	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
@@ -66,7 +66,7 @@ D5	43.6	31.2	90	F	D-R12-94 (AVA re-layout): Z2 RAW -> VLOGIC OR-ing on the east 
 D6	40.6	37.7	180	F	D-R12-94 (AVA re-layout): Z2 VBUS -> VLOGIC OR-ing diode between J3 and C84
 D8	10.4	13.7	90	F	BAT_IN TVS at the entry
 D9	25.4	19	90	F	RAW reverse clamp
-D120	9.6	47.4	0	F	cold
+D120	6.6	49.2	270	F	R12F5-TRI-01 (S-10): moved from (9.6, 47.4) rot 0 to below R131, cathode (COLD) north, so its 3V3 anode is >= 1.04 mm from every PYRO1_OUT copper (D120.1 sat 0.13 mm from the OUT run); was: cold
 D121	28	10.2	0	F	servo clamp (SRV05-4)
 D123	6	57.2	0	F	D-R12-94 (AVA re-layout): Z6 buzzer flyback
 D402	10.6	7.8	270	F	J400.2 ESD clamp at the port; 1.0 mm west so J400's footprint pin-1 mark stays nearest its own pad 1 (D-R12-80)
@@ -134,7 +134,7 @@ R127	10.6	45.2	0	F	gate
 R128	10.6	43.2	0	F	gate pull-down
 R129	12.6	47	0	F	cont
 R130	12.6	48	0	F	cont
-R131	6.6	46.6	90	F	cold
+R131	6.6	46.6	270	F	R12F5-TRI-01 (S-10): turned 180 degrees so PYRO1_OUT (pin 1) faces the OUT run north and PYRO1_COLD (pin 2) faces D120 south; was: cold
 R132	16.6	33.6	90	F	arm
 R133	16.6	36	90	F	arm
 R134	13.9	34.7	90	F	2 ohm series
@@ -152,7 +152,7 @@ R164	19.85	38.6	90	F	D-R12-94 (AVA re-layout): Z3 3V3 -> 3V3A feed at the west s
 R165	16.7	7.5	0	F	EN chain: J400.2 to EN
 R166	10.7	23.9	0	F	damper R
 R167	10.4	9.6	0	F	BAT_IN bleed
-R173	12.6	46	0	F	cont
+R173	12.6	46.1	0	F	R12F5-TRI-01 (S-10): 0.1 mm forward so R173.1 (PYRO1_OUT) and R173.2 (PYRO1_CONT_MID) keep 1.08 mm from PE4's lane at y 44.7 (0.98 mm); was: cont
 R175	17.6	33.6	90	F	arm
 R178	12.6	49	0	F	cont
 R180	17.6	36	90	F	arm
@@ -180,7 +180,7 @@ TP81	22.2	21.4	0	F	RAW probe
 TP83	34.4	38	0	F	D-R12-94 (AVA re-layout): Z2 VLOGIC probe between C84 / D6
 TP88	10.6	73.4	0	F	D-R12-94 (AVA re-layout): Z6 GND probe
 TP120	2	31.4	0	F	RAW_ACT probe
-TP122	3.4	50.4	0	F	gate probe
+TP122	14.8	42.4	0	F	R12F5-TRI-01 (S-10): gate probe moved from (3.4, 50.4) onto F beside R126 so PYRO1_GATE needs no via and no In2 run (it ran 0.10 mm from the In2 3V3 fill); 1.0 mm from foreign copper; was: gate probe
 U1	23	54	0	F	MCU centre; column 1 west (HSE, pyro), row A aft (IMU, servo), column 10 east (USB, SD); D-R12-44: moved with the U1 cluster 10 mm forward
 U2	32.9	22.4	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
 U3	35.2	62.6	90	F	D-R12-94 (AVA re-layout): Z5 QSPI flash 0.7 mm east of R12, IO0 / CLK / IO3 pins facing U1 SE corner

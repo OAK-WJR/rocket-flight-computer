@@ -12,6 +12,11 @@
 (rule "R12 board floor: track width"
   (constraint track_width (min 0.1mm)))
 
+# JLC SMD pad to pad clearance (different nets) 0.15 mm (https://jlcpcb.com/capabilities/pcb-capabilities)
+(rule "R12 JLC SMD pad to pad (different nets)"
+  (condition "A.Type == 'Pad' && B.Type == 'Pad' && A.Pad_Type == 'SMD' && B.Pad_Type == 'SMD'")
+  (constraint clearance (min 0.15mm)))
+
 (rule "HRO M-12 internal SMD lands to locating holes"
   (condition "A.memberOfFootprint('J3') && B.memberOfFootprint('J3') && ((A.Pad_Type == 'NPTH, mechanical' && B.Pad_Type == 'SMD') || (B.Pad_Type == 'NPTH, mechanical' && A.Pad_Type == 'SMD'))")
   (constraint hole_clearance (min 0.20mm)))
@@ -42,6 +47,36 @@
 (rule "JLC pad hole to hole"
   (condition "A.Type == 'Pad' && B.Type == 'Pad'")
   (constraint hole_to_hole (min 0.45mm)))
+
+# R10 D-R26-04 (1.0585 mm), every net that can raise the gate (check_r12 S-10)
+(rule "S-10 Q124 gate nets to raising copper"
+  (condition "(A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'GND' && B.NetName != 'HSE_IN' && B.NetName != 'HSE_OUT' && B.NetName != 'BOOT0' && B.NetName != 'BAT_FAULT_N' && B.NetName != 'QSPI_IO2' && B.NetName != '' && B.NetName != 'unconnected-*'")
+  (constraint clearance (min 1.06mm)))
+
+# R10 D-R26-02 (1.040 mm; check_r12 S-10)
+(rule "S-10 PYRO1_OUT to low rails"
+  (condition "A.NetName == 'PYRO1_OUT' && (B.NetName == '3V3' || B.NetName == '3V3A' || B.NetName == 'VCAP1' || B.NetName == 'VCAP2' || B.NetName == 'PORT_4V8' || B.NetName == 'PORT_SW' || B.NetName == 'CAM_5V' || B.NetName == 'CAM_SW' || B.NetName == 'VBUS' || B.NetName == 'SW_NODE')")
+  (constraint clearance (min 1.04mm)))
+
+# R10 row 1 surface pairs 0.177 / 0.180 mm, R12 0.25 mm (check_r12 S-10)
+(rule "S-10 PYRO1_OUT to GND"
+  (condition "A.NetName == 'PYRO1_OUT' && B.NetName == 'GND' && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
+  (constraint clearance (min 0.25mm)))
+
+# R12F5-TRI-01: J121.1 sat 0.101 mm from GND_pour_B (check_r12 S-10)
+(rule "S-10 PYRO1_OUT to GND fills"
+  (condition "A.NetName == 'PYRO1_OUT' && B.NetName == 'GND' && B.Type == 'Zone' && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
+  (constraint clearance (min 0.5mm)))
+
+# D-R11-23 / D-R12-104 (R12_VALIDATION row 25): the recorded 0.150 mm floor (check_r12 S-10)
+(rule "S-10 exception: PE4 lane at U1.B2 / D2"
+  (condition "A.NetName == 'PYRO1_GATE_N' && B.NetName == '3V3' && A.intersectsCourtyard('U1') && B.intersectsCourtyard('U1')")
+  (constraint clearance (min 0.15mm)))
+
+# the AO3400A SOT-23 land itself, 1.044 mm (check_r12 S-10)
+(rule "S-10 exception: Q124 gate and drain lands"
+  (condition "A.NetName == 'PYRO1_GATE' && B.NetName == 'PYRO1_OUT' && A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')")
+  (constraint clearance (min 1.0mm)))
 
 # D-R12-03: 0.3 mm drill, no small-hole surcharge (cost_study.md section 2.1) (https://jlcpcb.com/capabilities/pcb-capabilities)
 (rule "R12 board floor: via drill"

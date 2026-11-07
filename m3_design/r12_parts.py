@@ -119,6 +119,19 @@ def ghc(n):
 # package and SPI pin-out as this single-channel sheet is an Inference (the figure itself is labelled FXLS9xxxx; JLCEDA's
 # C5190712 symbol gives the same pin names). Paste on the die pad 2.0 x 2.0 (paste margin -0.3, about 59 %, Inference).
 FX_C, FX_W, FX_L, FX_EP, FX_BODY, FX_H = 1.975, 0.5, 0.85, 2.6, 4.0, 1.45
+# R12F5-TRI-06: drawn as plain rectangles, the corner lands of two sides meet corner to corner at sqrt(0.1^2 + 0.1^2) =
+# 0.141 mm (U6.4 / .5, .8 / .9, .12 / .13, .16 / .1), under JLC's 0.15 mm SMD pad-to-pad (different nets), with a 0.041 mm
+# mask web at the 0.05 mm margin (JLC soldermask bridge 0.10 mm; https://jlcpcb.com/capabilities/pcb-capabilities, read
+# 2026-11-06 by the round 5 mfg lens). NXP's own land is not plain: Figures 110 / 111 (same sheet) draw those eight lands
+# and their mask openings with the corner that faces the other side cut at 45 degrees; Figure 104 (98ASA00761D rev F,
+# package outline) marks "(8X 0.143)" at the eight corner terminals, read here as their own corner cut (Inference). The
+# land cut is not dimensioned; it scales to about 0.14 mm on Figure 111 (Inference), so R12 cuts 0.143 mm. Size and position stay NXP's
+# (0.5 x 0.85 at 1.975). Corner gap 0.141 + 2 x 0.143 / sqrt(2) = 0.344 mm, mask web 0.344 - 2 x 0.05 = 0.244 mm
+# (Calculation); the cut removes 0.0102 mm2 (2.4 %) of each 0.425 mm2 land, where the terminal is cut too (Figure 104:
+# terminals 0.35-0.45 x 0.40-0.50 mm).
+FX_CHAMFER = 0.143
+FX_CHAMFER_AT = {'1': 'top_right', '4': 'bottom_right', '5': 'top_left', '8': 'top_right', '9': 'bottom_left',
+                 '12': 'top_left', '13': 'bottom_right', '16': 'bottom_left'}
 
 
 def fx_pads():
@@ -139,8 +152,11 @@ def fxls():
     body += _courtyard(_pad_extents(FX_PADS) + [(-h, -h), (h, h)])
     body += _circle((-h - .45, -h - .1), .12, 'F.SilkS', .15)
     for num, x, y, w, hh in FX_PADS:
-        pad = _rpad(num, x, y, w, hh)
+        pad = _rpad(num, x, y, w, hh, shape='roundrect' if num in FX_CHAMFER_AT else 'rect')
         extra = '\t\t(solder_mask_margin 0.05)\n' + ('\t\t(solder_paste_margin -0.3)\n' if num == '17' else '')
+        if num in FX_CHAMFER_AT:
+            extra += (f'\t\t(roundrect_rratio 0)\n\t\t(chamfer_ratio {g(FX_CHAMFER / min(w, hh))})\n'
+                      f'\t\t(chamfer {FX_CHAMFER_AT[num]})\n')
         body += pad[:-2] + '\n' + extra.rstrip('\n') + ')\n'
     return name, make_fp(name, 'NXP FXLS90322 HLQFN-16 4 x 4 mm, 0.8 mm pitch (SOT1688-1(SC)); land FXLS9xxx0 Rev 6 '
                          'Figure 110 / 111; pins Figure 9; top side only', body, -h - 1.0, name + '.wrl')
@@ -459,6 +475,10 @@ def geometry_checks():
     fx = result['M3_FXLS_HLQFN16']
     assert fx == {n: [x, y, w, h] for n, x, y, w, h in FX_PADS}
     assert len(fx) == 17 and fx['1'] == [-1.975, -1.2, .85, .5] and fx['17'] == [0, 0, 2.6, 2.6]
+    # R12F5-TRI-06: chamfered corner lands keep >= 0.2 mm corner to corner (JLC 0.15 mm pad to pad, 0.10 mm mask web)
+    fx_text = (LIB / 'rocket.pretty/M3_FXLS_HLQFN16.kicad_mod').read_text()
+    assert len(re.findall(r'\(chamfer (top|bottom)_(left|right)\)', fx_text)) == len(FX_CHAMFER_AT) == 8
+    assert math.sqrt(2) * (FX_C - FX_L / 2 - 1.2 - FX_W / 2 + FX_CHAMFER) >= 0.2
     buz = result['M3_BUZ_TH_D9_P4']
     assert buz == {'1': [-2.0, 0, 1.8, 1.8], '2': [2.0, 0, 1.8, 1.8]}
     ddc = result['M3_TSOT23_6_DDC']

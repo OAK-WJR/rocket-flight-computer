@@ -67,7 +67,7 @@ SAFETY = {
     ('J122', '1'): 'SERVO1_OUT', ('J122', '2'): 'SERVO2_OUT', ('J122', '3'): 'SERVO3_OUT', ('J122', '4'): 'SERVO4_OUT',
     ('J122', '5'): 'GND', ('J122', '6'): None,
     ('R154', '2'): 'GND', ('R155', '2'): 'GND', ('R156', '2'): 'GND', ('R157', '2'): 'GND',
-    # F10 ports: identical, 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI, 1 kOhm series
+    # F10 ports: identical, 1 GND, 2 PORT_4V8, 3 TX wire (board TXO), 4 RX wire (board RXI), 1 kOhm series
     # D-R12-31 (owner 2026-11-03): SH 1.0 ports in the MicoAir H743's pin order (GND, 5V, TX, RX[, SCL, SDA])
     ('J410', '1'): 'GND', ('J410', '2'): 'PORT_4V8', ('J410', '3'): 'GPS_TX_WIRE', ('J410', '4'): 'GPS_RX_WIRE',
     ('J410', '5'): None, ('J410', '6'): None,
@@ -79,7 +79,7 @@ SAFETY = {
     ('J9', '1'): 'CAM_5V', ('J9', '2'): 'CAM_5V', ('J9', '3'): 'GND', ('J9', '4'): 'GND', ('J9', '5'): 'CAM_RX_WIRE',
     ('J9', '6'): 'CAM_TX_WIRE', ('U403', '5'): 'CAM_PWR_EN', ('R431', '1'): 'CAM_PWR_EN', ('R431', '2'): 'GND',
     ('R100', '1'): 'CAM_RX_WIRE', ('R100', '2'): 'CAM_MCU_RX', ('R101', '1'): 'CAM_MCU_TX', ('R101', '2'): 'CAM_TX_WIRE',
-    # D-R12-04: the VLOGIC diode-OR; D-R12-05: PA4 port sense
+    # D-R12-04: the VLOGIC diode-OR; D-R12-05: port sense (PD10 / H9 since D-R12-93)
     ('D5', '1'): 'VLOGIC', ('D5', '2'): 'RAW_PROTECTED', ('D6', '1'): 'VLOGIC', ('D6', '2'): 'VBUS',
     ('R111', '1'): 'PORT_4V8', ('R111', '2'): 'PORT_SENSE', ('R112', '1'): 'PORT_SENSE', ('R112', '2'): 'GND',
     # R11 package ties
@@ -230,7 +230,7 @@ def seeds(parts, pins):
         'code on two footprints': lambda p, n: p['C10'].__setitem__('footprint', 'rocket:C0805'),
         'value changed': lambda p, n: p['R82'].__setitem__('value', '2M 0.1%'),
         'wire pads in the BOM': lambda p, n: p['J1']['flags'].remove('exclude_from_bom'),
-        'owner-fitted buzzer removed': pop('LS120'),
+        'buzzer (LS120, JLC-assembled THT) removed': pop('LS120'),
         'barometer PS (I2C select) floating': lambda p, n: n.update({('U5', '2'): None}),
     }
     out = {}

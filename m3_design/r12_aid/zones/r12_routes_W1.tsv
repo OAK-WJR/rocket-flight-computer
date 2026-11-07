@@ -8,9 +8,6 @@ track	PYRO1_OUT	F	0.5	5.6	42	6.5	42.9
 track	PYRO1_OUT	F	0.4	6.5	42.9	6.5	43.6
 track	PYRO1_OUT	F	0.4	6.5	43.6	5.1	45
 track	PYRO1_OUT	F	0.4	5.1	45	4.4	45
-track	PYRO1_OUT	F	0.4	4.4	45	4.4	46.2
-track	PYRO1_OUT	F	0.4	4.4	46.2	5.2	47
-track	PYRO1_OUT	F	0.4	5.2	47	6.6	47
 track	PYRO1_OUT	F	0.2	11.5	46.7	12	46.2
 track	GND	F	0.3	33.9	5.9	33.1	5.9
 track	CAM_5V	F	0.5	35.9	5.2	35.1	5.2
@@ -23,9 +20,6 @@ track	BAT_ENABLE	F	0.2	17.7	8.7	18.7	9.7
 track	BAT_ENABLE	F	0.2	18.0	14.3	18.0	12.3
 track	BAT_ENABLE	F	0.2	18.0	12.3	18.7	11.6
 track	BAT_ENABLE	F	0.2	18.0	14.6	18.0	14.5
-track	PYRO1_GATE	F	0.2	8.2	44	8.2	45.6
-track	PYRO1_GATE	In2	0.2	8.2	45.6	4.4	49.4
-track	PYRO1_GATE	F	0.2	4.4	49.4	4	49.8
 track	PYRO1_GATE	F	0.2	10.1	43.3	9.2	43.3
 track	PYRO1_GATE	F	0.2	9.2	43.3	8.8	43.7
 track	PYRO1_GATE	F	0.2	11	44.1	10.5	43.6
@@ -45,7 +39,7 @@ track	ACT_GATE	F	0.2	5.8	25.7	6.3	25.7
 track	ACT_GATE	F	0.2	6.3	25.7	6.9	26.3
 track	CAM_FB_TOP	F	0.2	31.2	10.2	32.2	10.2
 track	BAT_OVLO_B	F	0.2	17	11.3	16.2	10.5
-track	PYRO1_CONT_MID	F	0.2	13	46.1	12.2	46.9
+track	PYRO1_CONT_MID	F	0.2	13.05	46.1	12.15	47
 track	ARM1_SENSE_MID	F	0.2	16.7	33.2	17.5	34
 track	BAT_DVDT	F	0.2	16.6	16.4	15.9	17.1
 track	BAT_DVDT	F	0.2	15.9	17.1	15.9	17.38
@@ -58,8 +52,6 @@ track	CAM_TX_WIRE	F	0.2	31	7	31	6.2
 track	BAT_ILIM	F	0.2	18.6	17.4	17.8	17.4
 track	BAT_ILIM	F	0.2	17.5	16.4	17.5	17.1
 track	BAT_ILIM	F	0.2	17.5	17.1	17.7	17.3
-track	PYRO1_COLD	F	0.2	6.7	46.3	7.5	46.3
-track	PYRO1_COLD	F	0.2	7.5	46.3	8.5	47.3
 track	SERVO2_OUT	F	0.2	23.1	6.2	23.1	8
 track	SERVO4_OUT	F	0.2	21.1	6.2	21.1	8
 track	ACT_DRV	F	0.2	11.1	26.5	12.2	27.6
@@ -109,7 +101,6 @@ track	GND	F	0.3	2.9	20.9	2.9	20.4
 track	GND	F	0.3	19	28.7	19.5	28.2
 track	GND	F	0.3	12.9	12	12.4	12
 track	GND	F	0.3	12.9	12.5	12.5	12.9
-track	3V3	F	0.3	10.3	48.3	9.8	48.3
 track	RAW_PROTECTED	F	0.3	20.5	19.3	21	19.3
 track	RAW_PROTECTED	F	0.3	36.1	12.8	36.1	13.3
 track	RAW_PROTECTED	F	0.3	35.5	12.2	35	12.2
@@ -180,8 +171,6 @@ track	GND	F	0.3	11.5	41.5	11.9	41.1
 track	3V3	F	0.3	28.1	8.7	27.6	8.2
 via	BAT_SW_RETURN	-	0.45	13.4	7.5		
 via	BAT_SW_RETURN	-	0.45	15.1	7.5		
-via	PYRO1_GATE	-	0.45	8.2	45.6		
-via	PYRO1_GATE	-	0.45	4.4	49.4		
 via	ACT_GATE	-	0.45	6.8	30.1		
 via	ACT_GATE	-	0.45	8.6	31		
 via	CAM_5V	-	0.45	30.3	6.9		
@@ -196,10 +185,6 @@ track	BAT_IN	F	1.0	5.0	23.3	3.7	24.6
 track	BAT_IN	F	1.0	3.7	24.6	2.6	25.7
 track	BAT_IN	F	1.0	2.6	25.7	2.6	27.6
 track	BAT_IN	F	1.0	2.6	27.6	4.0	29.0
-track	PYRO1_OUT	F	0.2	6.6	47.0	8.55	48.95
-track	PYRO1_OUT	F	0.2	8.55	48.95	11.15	48.95
-track	PYRO1_OUT	F	0.2	11.15	48.95	11.5	48.6
-track	PYRO1_OUT	F	0.2	11.5	48.6	11.5	46.7
 track	RAW_PROTECTED	F	0.45	20.1	15.0	20.6	15.0
 track	GND	F	0.3	8.7	42.1	9.2	42.6
 track	BAT_IN	F	0.8	14.0	15.1	15.3	15.1
@@ -255,7 +240,6 @@ via	GND	-	0.45	2.9	20.4
 via	GND	-	0.45	19.5	28.2		
 via	GND	-	0.45	12.4	12		
 via	GND	-	0.45	12.5	12.9		
-via	3V3	-	0.45	9.8	48.3		
 via	RAW_PROTECTED	-	0.45	21	19.3		
 via	RAW_PROTECTED	-	0.45	36.1	13.3		
 via	RAW_PROTECTED	-	0.45	35	12.2		
@@ -344,8 +328,6 @@ via	CAM_MCU_TX	-	0.45	30.4	9.05
 track	CAM_MCU_TX	F	0.2	30.4	9.05	30.4	8.43
 track	CAM_MCU_RX	B	0.15	29.8	17.5	29.8	16.8
 track	CAM_MCU_RX	B	0.15	29.8	16.8	31.6	15.0
-via	GND	-	0.45	9.4	45.6		
-via	GND	-	0.45	4.4	48.2		
 track	GND	F	0.2	28.0	11.35	28.0	12.32
 track	GND	F	0.2	28.0	12.32	27.57	12.75
 track	GND	F	0.3	27.6	12.8	27.6	13.3
@@ -416,3 +398,20 @@ track	SERVO3_MCU	B	0.15	22.6	8	22.6	13.25
 track	SERVO3_MCU	B	0.15	22.6	13.25	22.1	13.75
 via	SERVO3_MCU	-	0.45	22.1	13.75		
 track	SERVO3_MCU	F	0.15	22.1	13.75	22.1	12.925
+# R12F5-TRI-01 (S-10, lane P): the pyro cold / gate cell re-laid so the gate nets keep >= 1.06 mm from every raising
+# net and PYRO1_OUT >= 1.04 mm from 3V3 (R10 D-R26-02 / -04). PYRO1_GATE leaves In2: TP122 sits on F beside R126 (no
+# via; the In2 run was 0.10 mm from the 3V3 fill, the via 0.665 mm from PYRO1_COLD) and the two GND partner vias go with
+# the gate vias. R131 turned (OUT north, COLD south); D120 below it with its 3V3 anode and via south, away from the OUT
+# run, which now goes north of D120 at y 46.2 / 46.7 to R173 (moved 0.1 mm forward, clear of PE4 at y 44.7); R173 / R129's
+# CONT_MID link redrawn on the 45-degree line midway between R173.1 and R129.2 (0.131 mm from each).
+track	PYRO1_OUT	F	0.4	4.4	45	4.4	45.4
+track	PYRO1_OUT	F	0.4	4.4	45.4	5.2	46.2
+track	PYRO1_OUT	F	0.4	5.2	46.2	6.6	46.2
+track	PYRO1_OUT	F	0.2	6.6	46.2	8.6	46.2
+track	PYRO1_OUT	F	0.2	8.6	46.2	9.1	46.7
+track	PYRO1_OUT	F	0.2	9.1	46.7	11.5	46.7
+track	PYRO1_COLD	F	0.2	6.6	47.03	6.6	48.2
+track	3V3	F	0.3	5.65	50.2	5.65	51.2
+via	3V3	-	0.45	5.65	51.2		
+track	PYRO1_GATE	F	0.2	11.03	44.2	13	44.2
+track	PYRO1_GATE	F	0.2	13	44.2	14.8	42.4

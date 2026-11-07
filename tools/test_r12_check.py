@@ -103,7 +103,7 @@ class Synthetic(unittest.TestCase):
     def test_netlist_parity_and_revision(self):
         b, _ = self.board()
         report = r12.check_board(b, ROOT / 'm3_design/r12/m3.kicad_pcb', only={'N-1'}, stage='placement')
-        self.assertFalse(report['ok'])                       # one part on the board, 184 in the schematic
+        self.assertFalse(report['ok'])                       # one part on the board, 187 in the schematic
         self.assertTrue(any('not on the board' in i for i in report['issues']))
         b.GetTitleBlock().SetRevision('M3-ASSY-R11')
         report = r12.check_board(b, ROOT / 'm3_design/r12/m3.kicad_pcb', only={'N-1'}, stage='placement')
@@ -239,7 +239,9 @@ class Round1Fixes(unittest.TestCase):
         self.assertIn('R12 board floor: copper clearance', floor)
         late = text.replace(floor + '\n\n', '') + '\n' + floor + '\n'       # the round-1 order: floor after J2's rule
         found = r12.dru_order(late)
-        self.assertTrue(any('R12 board floor: copper clearance' in i and 'Tag-Connect' in i for i in found), found)
+        # the first scoped clearance rule is the JLC SMD pad rule since R12F5-TRI-06 (Tag-Connect's before it)
+        self.assertTrue(any('R12 board floor: copper clearance' in i and 'R12 JLC SMD pad to pad' in i for i in found),
+                        found)
         with tempfile.TemporaryDirectory(prefix='r12-druorder-') as d:
             path = Path(d) / 'm3.kicad_pcb'
             (Path(d) / 'm3.kicad_dru').write_text(late)
@@ -267,6 +269,126 @@ class Round1Fixes(unittest.TestCase):
         rows = {ref: box for _, ref, _, box in report['rows']}
         self.assertAlmostEqual(rows['J121.1 terminal tail'][4], -3.8, places=6)
         self.assertGreater(tails['minimum_bore_margin_mm'], 0)
+
+
+@unittest.skipUnless(pcbnew and BOARD12.is_file(), 'KiCad python and the R12 board required')
+class FireGaps(unittest.TestCase):
+    """R12F5-TRI-01: S-10 carries R10's fire-net copper gaps (D-R26-02 / -04) and D-R11-23 to R12 on every layer, fills and
+    barrels included. The committed board passes; one planted 0.1 mm bridge-risk item per protected net fails it."""
+
+    def setUp(self):
+        self.board = pcbnew.LoadBoard(str(BOARD12))
+
+    def s10(self):
+        return r12.check_board(self.board, BOARD12, only={'S-10'}, stage='copper')
+
+    def track(self, net, a, b, layer=None, width=0.2):
+        t = pcbnew.PCB_TRACK(self.board)
+        t.SetStart(pcbnew.VECTOR2I(mm(a[0]), mm(a[1]))); t.SetEnd(pcbnew.VECTOR2I(mm(b[0]), mm(b[1])))
+        t.SetWidth(mm(width)); t.SetLayer(pcbnew.F_Cu if layer is None else layer)
+        t.SetNet(self.board.FindNet(net)); self.board.Add(t)
+        return t
+
+    def planted(self, net, a, b, layer=None, width=0.2, want=None):
+        self.track(net, a, b, layer, width)
+        rep = self.s10()
+        self.assertFalse(rep['ok'])
+        hits = [i for i in rep['issues'] if want in i]
+        self.assertTrue(hits, rep['issues'])
+        return hits
+
+    def test_committed_board_passes_with_recorded_exceptions(self):
+        rep = self.s10()
+        self.assertTrue(rep['ok'], rep['issues'])
+        ev = rep['evidence']['s10']['exceptions']
+        kept = [e['pair'] for e in ev]
+        self.assertIn('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 U1.B2 on F.Cu: 0.1500 mm', kept)
+        self.assertIn('PYRO1_GATE Q124.1 to PYRO1_OUT Q124.3 on F.Cu: 1.0441 mm', kept)
+        self.assertEqual({e['exception'] for e in ev}, {r12.S10_LANE['why'], r12.S10_Q124['why']})
+        self.assertTrue(all(p.startswith('PYRO1_GATE_N ') and ' to 3V3 ' in p for p, e in zip(kept, ev)
+                            if e['exception'] == r12.S10_LANE['why']), kept)
+
+    def test_gate_net_bridge_risks_fail(self):
+        # PYRO1_GATE: a 3V3 track 0.1 mm east of TP122 (14.8, 42.4), 1.5 mm square
+        hit = self.planted('3V3', (15.75, 41.8), (15.75, 43.0), want='PYRO1_GATE TP122.1 to 3V3')
+        self.assertTrue(any('0.1000 mm' in h for h in hit), hit)
+
+    def test_gate_n_bridge_to_cold_and_ign_fail(self):
+        # PYRO1_GATE_N: R127.1 (10.17, 45.2), pad bottom 45.47; PYRO1_COLD raises the gate as 3V3 does (through D120)
+        self.planted('PYRO1_COLD', (9.9, 45.67), (10.4, 45.67), want='PYRO1_GATE_N R127.1 to PYRO1_COLD')
+        self.setUp()
+        self.planted('PYRO1_IGN', (9.9, 45.67), (10.4, 45.67), want='PYRO1_GATE_N R127.1 to PYRO1_IGN')
+
+    def test_inert_net_is_not_a_finding(self):
+        # HSE_IN is one of S10_GATE_INERT (no DC drive): 0.1 mm from R127.1 is not an S-10 finding
+        self.track('HSE_IN', (9.9, 45.67), (10.4, 45.67))
+        rep = self.s10()
+        self.assertFalse(any('HSE_IN' in i for i in rep['issues']), rep['issues'])
+
+    def test_out_bridge_risks_fail(self):
+        # PYRO1_OUT: J121.1 (7.4, 35.25), 1.9 mm round land: a 3V3 track 0.1 mm east, a GND track 0.1 mm west
+        self.planted('3V3', (8.55, 35.0), (8.55, 35.5), want='PYRO1_OUT J121.1 to 3V3')
+        self.setUp()
+        self.planted('GND', (6.25, 34.9), (6.25, 35.25), want='PYRO1_OUT J121.1 to GND')
+
+    def test_out_gnd_fill_and_inner_barrel_fail(self):
+        z = pcbnew.ZONE(self.board); z.SetNet(self.board.FindNet('GND')); z.SetLayer(pcbnew.B_Cu)
+        o = z.Outline(); o.NewOutline()
+        for x, y in ((8.65, 35.0), (9.5, 35.0), (9.5, 35.5), (8.65, 35.5)):
+            o.Append(mm(x), mm(y))
+        z.SetFilledPolysList(pcbnew.B_Cu, pcbnew.SHAPE_POLY_SET(o)); z.SetIsFilled(True); self.board.Add(z)
+        rep = self.s10()
+        self.assertTrue(any('PYRO1_OUT J121.1 to GND fill' in i and 'below 0.5 mm' in i for i in rep['issues']),
+                        rep['issues'])
+        self.setUp()
+        # In2: a 3V3 track 0.1 mm from J121.1's 1.3 mm barrel wall (no inner ring)
+        self.planted('3V3', (8.225, 35.0), (8.225, 35.5), pcbnew.In2_Cu, 0.15, want='PYRO1_OUT J121.1 barrel to 3V3')
+
+    def test_lane_exception_keeps_its_floor(self):
+        # inside U1's courtyard the D-R11-23 lane is excepted only down to 0.150 mm: 3V3 0.1 mm south of the lane fails
+        hit = self.planted('3V3', (19.0, 51.8), (19.3, 51.8), width=0.1, want='floor of its exception')
+        self.assertTrue(any('PYRO1_GATE_N' in h for h in hit), hit)
+
+    def test_dru_carries_s10_sets(self):
+        """The DRU generator's fire rules name check_r12's S-10 sets and hold at least its limits (r12_sch FIRE_*)."""
+        self.assertEqual(set(r12_sch.FIRE_GATES), set(r12.S10_GATES))
+        self.assertEqual(set(r12_sch.FIRE_GATE_INERT), set(r12.S10_GATE_INERT))
+        self.assertEqual(set(r12_sch.FIRE_OUT_RAILS), set(r12.S10_OUT_RAILS))
+        self.assertGreaterEqual(r12_sch.FIRE_GATE_MM, r12.S10_GATE_MIN)
+        self.assertGreaterEqual(r12_sch.FIRE_OUT_RAIL_MM, r12.S10_OUT_RAIL_MIN)
+        self.assertGreaterEqual(r12_sch.FIRE_OUT_GND_MM, r12.S10_OUT_GND_MIN)
+        self.assertGreaterEqual(r12_sch.FIRE_OUT_GND_FILL_MM, r12.S10_OUT_GND_FILL_MIN)
+        self.assertEqual((r12_sch.FIRE_LANE_MM, r12_sch.FIRE_Q124_MM), (r12.S10_LANE['floor'], r12.S10_Q124['floor']))
+        gen = r12_sch.dru((r12_sch.INPUT / 'm3.kicad_dru').read_text())
+        names = [n for n, *_ in r12_sch.FIRE_RULES]
+        at = [gen.index(f'(rule "{n}"') for n in names]
+        self.assertEqual(at, sorted(at))                                   # exceptions follow the general rules
+        self.assertGreater(at[0], gen.index('R9 bare test pads to foreign copper'))
+        self.assertLess(gen.index('R12 JLC SMD pad to pad'), gen.index('Tag-Connect contact'))
+
+    def test_u6_corner_lands_clear_jlc_limits(self):
+        """R12F5-TRI-06: U6's corner lands (NXP's chamfered land) keep >= 0.15 mm pad to pad and >= 0.10 mm mask web."""
+        f = self.board.FindFootprintByReference('U6')
+        pads = {p.GetNumber(): p for p in f.Pads()}
+
+        def gap(a, b):
+            lo, hi = 0, mm(0.5)
+            while hi - lo > 100:
+                mid = (lo + hi) // 2
+                lo, hi = (lo, mid) if a.Collide(b, mid) else (mid, hi)
+            return hi / 1e6
+
+        def mask(p):
+            s = pcbnew.SHAPE_POLY_SET()
+            p.TransformShapeToPolygon(s, pcbnew.F_Mask, p.GetSolderMaskExpansion(pcbnew.F_Mask), mm(0.001),
+                                      pcbnew.ERROR_OUTSIDE)
+            return s
+        for a, b in (('4', '5'), ('8', '9'), ('12', '13'), ('16', '1')):
+            with self.subTest(pair=(a, b)):
+                pa, pb = pads[a], pads[b]
+                self.assertGreaterEqual(gap(pa.GetEffectiveShape(pcbnew.F_Cu), pb.GetEffectiveShape(pcbnew.F_Cu)), 0.15)
+                self.assertGreaterEqual(gap(mask(pa), mask(pb)), 0.10)
+        self.assertIn('R12 JLC SMD pad to pad (different nets)', BOARD12.with_suffix('.kicad_dru').read_text())
 
 
 @unittest.skipUnless(pcbnew and BOARD12.is_file() and (BOARD12.parent / 'fab/m3_bom_jlc.csv').is_file(),
