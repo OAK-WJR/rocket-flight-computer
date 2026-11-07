@@ -37,7 +37,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Description" "JST SM06B-GHS-TB camera port (D-R11-05): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)"
+			(property "Description" "Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) camera port (D-R12-31): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)"
 				(at 0 0 0)
 				(hide yes)
 				(effects

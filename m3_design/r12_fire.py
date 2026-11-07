@@ -1,4 +1,5 @@
-"""M3-ASSY-R12 S-10: the fire-net copper gaps (R12F5-TRI-01, tightened after the round 5 verifier, lane P2).
+"""M3-ASSY-R12 S-10: the fire-net copper gaps (R12F5-TRI-01, tightened after the round 5 verifier, lane P2; the
+fire-state class review and the NC-ball scope of round 6, R12F6-TRI-01 / -02).
 
 One definition, read by tools/check_r12.py (S-10 measures the board: tracks, vias, flashed pads, unflashed plated
 barrels and every zone fill, on every copper layer, protected-net fills included) and by m3_design/r12_sch.py
@@ -7,12 +8,18 @@ refill). Pure data and text, no pcbnew.
 
 Fault model (R10 D-R26-02 / -04, AGENTS section 2.1): the bus is live from the on-rail check, so one bridge (solder, or
 a later CAF / dendrite path) that raises Q124's gate, or that lets PYRO1_OUT sink current, fires an enabled match.
+R12F6-TRI-01: a class is "not a path" only if it holds in every state: bus off, bus on with Q124 off, and a commanded
+fire, while Q124 holds PYRO1_OUT near GND (about 0.05 V) and a bridge to PYRO1_OUT is a bridge to GND. fire_state_guard()
+checks that last state on the netlist: every not-a-path net reaches every source (rail, MCU pin, IC or connector) only
+through at least FIRE_SERIES_MIN of resistors.
 
 Default-deny: every foreign net counts against a protected net unless it is classed here with a calculated reason.
   * Q124's gate nets (PYRO1_GATE, PE4's PYRO1_GATE_N): GATE_MIN from every net except GND (holds the gate off), the
     gate pair itself and U1's NC balls (U1 pads whose net is unconnected-*: analog in reset, kept analog by firmware;
     every one within GATE_MIN is listed in S-10's evidence). Other parts' NC or unused pads, and copper with no net,
-    count as foreign copper.
+    count as foreign copper. The NC-ball exemption is the gate nets' only (R12F6-TRI-02): its reason covers raising a
+    gate, not sinking PYRO1_OUT's current or taking PYRO1_IGN's bus voltage, so an NC ball counts against
+    PYRO1_OUT and PYRO1_IGN like any other net.
   * PYRO1_OUT: OUT_MIN from every net (3V3 / 3V3A as R10, every other rail, VLOGIC, MCU-pin nets and the low-side
     sinks ACT_DRV / BUZZ_OUT included) except GND (GND_MIN copper, FILL_MIN fills: R10 row 1 kept surface GND pairs
     near 0.18 mm), the pyro-network nets of NOT_A_PATH and the gate nets (their own, stricter, rule).
@@ -37,24 +44,46 @@ IGN_MIN = 0.25         # mm, PYRO1_IGN to foreign copper (destructive, not a mat
 DRU_GATE_MM = 1.06     # the DRU's gate figure (GATE_MIN rounded up to 10 um)
 REACH = GATE_MIN + 0.01
 
-# (protected net, foreign net): why one bridge between them is not a fire (or R134-overload) path. Calculations use the
-# board's values (netlist): R126 220, R127 1k, R128 10k, R131 10k, R173 / R129 5.1k, R130 / R178 2k, D120 BAT54C.
+# (protected net, foreign net): why one bridge between them is not a fire (or R134-overload) path, in every state (bus
+# off; bus on, Q124 off; a commanded fire, Q124 on). Calculations use the board's values (netlist): R126 220, R127 1k,
+# R128 10k, R136 / R131 / R173 / R129 5.1k, R130 / R178 2k, D120 BAT54C; 3V3 at most 3.516 V (U2 LMR50410XDBVR PFM
+# band, SLUSDW3A section 7.8, R12F6-TRI-03); resistors at their drift ends (1 % + 100 ppm/K over 67 K: +/-1.67 %).
 NOT_A_PATH = {
-    ('PYRO1_GATE', 'GND'): 'GND holds the gate off',
-    ('PYRO1_GATE_N', 'GND'): 'GND holds the gate off',
-    ('PYRO1_GATE', 'PYRO1_GATE_N'): 'the gate pair: a bridge only shorts R126 (220 ohm); PE4 still sets the gate',
-    ('PYRO1_GATE_N', 'PYRO1_GATE'): 'the gate pair: a bridge only shorts R126 (220 ohm); PE4 still sets the gate',
+    ('PYRO1_GATE', 'GND'): 'GND holds the gate off (in a commanded fire PE4 then drives R126 220 ohm into GND, <= 17 mA, '
+                           'and the fire fails: a hold-off, outside the unwanted-fire model)',
+    ('PYRO1_GATE_N', 'GND'): 'GND holds the gate off (in a commanded fire PE4 then drives the bridge directly, above its '
+                             'per-pin rating (Inference on damage), and the fire fails: a hold-off; 3V3 is not '
+                             'collapsed)',
+    ('PYRO1_GATE', 'PYRO1_GATE_N'): 'the gate pair: a bridge only shorts R126 (220 ohm); PE4 still sets the gate (in a '
+                                    'fire it charges C126 220 nF directly: a transient, no sustained path)',
+    ('PYRO1_GATE_N', 'PYRO1_GATE'): 'the gate pair: a bridge only shorts R126 (220 ohm); PE4 still sets the gate (in a '
+                                    'fire it charges C126 220 nF directly: a transient, no sustained path)',
     (OUT, IGN): 'the match\'s own terminals: a bridge shorts the match; with Q124 off no current flows, with Q124 on '
                 'R134 limits it (the designed shorted-igniter case)',
-    (OUT, 'PYRO1_COLD'): 'shorts R131 only: with the bus on PYRO1_OUT sits above 3V3, so D120 is reverse biased '
-                         '(leakage only); with it off 3V3 reaches the match through D120 and then >= 10.2 kohm to GND '
-                         'on either side: < 1 mA (Calculation)',
-    (OUT, 'PYRO1_CONT_MID'): 'shorts R173 only: PYRO1_OUT then reaches PC0 through R129 5.1 kohm into R130 || R178 '
-                             '1 kohm: <= 1.4 mA, PC0 <= 1.38 V at 8.4 V (Calculation)',
+    (OUT, 'PYRO1_COLD'): 'shorts R131 only (R12F6-TRI-01): R136 5.1 kohm stays between 3V3 and the bridge. Bus on, Q124 '
+                         'off: PYRO1_OUT sits above 3V3, so D120 is reverse biased (leakage only). Commanded fire, '
+                         'Q124 on (PYRO1_OUT near GND): 3V3 -> R136 -> D120 -> bridge -> Q124 passes <= 3.516 V / '
+                         '5.015 kohm = 0.71 mA (D120 V_F taken as 0), not U2\'s current limit. Bus off: 3V3 reaches the '
+                         'match through R136 and D120, then R173 + R129 + R130 || R178 (11.2 kohm) to GND: <= 0.71 mA '
+                         '(Calculation)',
+    (OUT, 'PYRO1_CONT_MID'): 'shorts R173 only: bus on, Q124 off, PYRO1_OUT reaches PC0 through R129 5.1 kohm into '
+                             'R130 || R178 1 kohm: <= 1.41 mA, PC0 <= 1.42 V at 8.4 V (Calculation: 1.400 V with 1 % '
+                             'parts, 1.416 V at the +/-1.67 % drift ends; R12F6-TRI-05). Commanded fire, Q124 on: '
+                             'PYRO1_OUT is near GND, so PC0 reads near 0 V through R129 (no source on the node). Bus '
+                             'off: the cold pull-up meets R129 + R130 || R178 (6.1 kohm) instead of 11.2 kohm, < 0.71 mA '
+                             '(Calculation)',
     (IGN, OUT): 'the match\'s own terminals (see PYRO1_OUT)',
-    (IGN, 'RAW_ACT'): 'R134\'s own other end: a bridge only shorts R134; current flows only while Q124 conducts',
+    (IGN, 'RAW_ACT'): 'R134\'s own other end: a bridge only shorts R134; current flows only while Q124 conducts, and '
+                      'then the match and the loop copper limit it (about 3.1 A at 8.4 V, under U9\'s 3.92 A ILIM '
+                      'minimum: round 6 triage, Calculation / Inference on the match resistance)',
 }
-U1_NC = 'U1'          # only U1's NC balls are exempt (GPIOs, analog in reset (DS12110), kept analog by firmware)
+U1_NC = 'U1'          # only U1's NC balls are exempt (GPIOs, analog in reset (DS12110), kept analog by firmware), and
+#                       only against the gate nets (R12F6-TRI-02)
+# R12F6-TRI-01: PYRO1_COLD_PU (R136 to D120's anode) is not classed out. A bridge from it to PYRO1_OUT bypasses D120 and
+# R131 and leaves R136: <= 3.516 V / 5.015 kohm = 0.71 mA with Q124 on, and (8.4 - 3.22) V / 5.015 kohm <= 1.04 mA
+# through the match into 3V3 with the bus on and Q124 off (3V3 at its drift minimum; Calculation), so it would qualify; it
+# stays under default-deny (OUT_MIN, as every net) because the board keeps it 3.27 mm from PYRO1_OUT (Measured) and that
+# keeps the record strict.
 
 
 def u1_nc(owner, net):
@@ -83,7 +112,8 @@ def pair_limit(net_a, owner_a, net_b, owner_b, fill):
     for pn, fn, fo in ((net_a, net_b, owner_b), (net_b, net_a, owner_a)):
         if pn not in PROTECTED:
             continue
-        lim, cls = (None, 'U1 NC ball') if u1_nc(fo, fn) else one_way(pn, fn, fill)
+        nc = pn in GATES and u1_nc(fo, fn)              # R12F6-TRI-02: the NC-ball exemption is the gate nets' only
+        lim, cls = (None, 'U1 NC ball') if nc else one_way(pn, fn, fill)
         if best[2] is None or (lim is not None and (best[0] is None or lim > best[0])):
             best = (lim, cls, pn)
     return best
@@ -107,8 +137,9 @@ WHY = {
     'BOOT0': 'BOOT0 is an input-only pin held by R5 10 kohm to GND and not on J2: no source can raise PE4 '
              '(Calculation)',
     'BAT_FAULT_N': 'U9 open-drain FLT with R89 10 kohm to 3V3, read by PC13 (ball A2, an input): with PE4 high-Z the '
-                   'gate is <= 3.38 V x 0.952 k / 10.85 k x 10 / 10.22 = 0.29 V, below AO3400A V_GS(th) min 0.65 V '
-                   '(Calculation: 3V3 +2.5 %, R89 -1 %, R127 +5 %); firmware never makes PC13 an output',
+                   'gate is <= 3.516 V x 0.952 k / 10.85 k x 10 / 10.22 = 0.302 V, below AO3400A V_GS(th) min 0.65 V '
+                   '(Calculation: 3V3 at its window maximum 3.516 V (SLUSDW3A section 7.8 PFM band, R12F6-TRI-03 / '
+                   '-04), R89 -1 %, R127 +5 %); firmware never makes PC13 an output',
     'Q124': 'the AO3400A SOT-23\'s own gate (pin 1) and drain (pin 3) lands',
     'PYRO1_CONT': 'PYRO1_CONT is PC0\'s pin: a bridge puts PYRO1_OUT on PC0, whose input clamp then passes bus current '
                   'through the match into 3V3 (fire-capable or logic-destroying; Inference): the 0402 continuity '
@@ -272,9 +303,9 @@ def dru_rules(exceptions=None, nets=None):
          f'R10 D-R26-04 ({GATE_MIN} mm), default-deny: every net but GND, the gate pair and U1 NC balls '
          '(check_r12 S-10, m3_design/r12_fire.py)', None),
         ('S-10 PYRO1_OUT to every net', f'clearance (min {OUT_MIN:.2f}mm)',
-         f"A.NetName == '{OUT}' && {_not('B', out_x)} && {NOT_U1_NC}",
+         f"A.NetName == '{OUT}' && {_not('B', out_x)}",
          f'R10 D-R26-02 ({OUT_MIN:.3f} mm), default-deny: every net but GND, the gate nets (their own rule) and '
-         'PYRO1_IGN / _COLD / _CONT_MID (check_r12 S-10)', None),
+         'PYRO1_IGN / _COLD / _CONT_MID; U1 NC balls count (R12F6-TRI-02; check_r12 S-10)', None),
         ('S-10 PYRO1_OUT to GND', f'clearance (min {GND_MIN}mm)',
          f"A.NetName == '{OUT}' && B.NetName == 'GND' && {NOT_PROBE}",
          'R10 row 1 surface pairs 0.177 / 0.180 mm, R12 0.25 mm (check_r12 S-10)', None),
@@ -282,8 +313,9 @@ def dru_rules(exceptions=None, nets=None):
          f"A.NetName == '{OUT}' && B.NetName == 'GND' && {EITHER_FILL} && {NOT_PROBE}",
          'R12F5-TRI-01: J121.1 sat 0.101 mm from GND_pour_B (check_r12 S-10)', None),
         ('S-10 PYRO1_IGN to every net', f'clearance (min {IGN_MIN}mm)',
-         f"A.NetName == '{IGN}' && {_not('B', ign_x)} && {NOT_U1_NC} && {NOT_PROBE}",
-         'R134 overload: J121.2 sat 0.100 mm from GND_pour_B (round 5 verifier; check_r12 S-10)', None),
+         f"A.NetName == '{IGN}' && {_not('B', ign_x)} && {NOT_PROBE}",
+         'R134 overload: J121.2 sat 0.100 mm from GND_pour_B (round 5 verifier); U1 NC balls count (R12F6-TRI-02; '
+         'check_r12 S-10)', None),
         ('S-10 PYRO1_IGN to fills', f'clearance (min {FILL_MIN}mm)',
          f"A.NetName == '{IGN}' && {_not('B', ign_x)} && {EITHER_FILL} && {NOT_PROBE}",
          'R134 overload: every pour >= 0.5 mm from J121.2 (check_r12 S-10)', None),
@@ -345,3 +377,110 @@ def guard(classes, not_a_path=None):
         if hit:
             bad.append(f'{p} / {f} is classed "not a path", but the netlist marks {f} as {" / ".join(hit)}')
     return bad
+
+
+# ---- the commanded-fire state (R12F6-TRI-01) -------------------------------------------------------------------------
+# While Q124 conducts, PYRO1_OUT is GND, so a bridge from PYRO1_OUT to a not-a-path net f joins f to GND. f must then
+# reach every source only through resistors: at least FIRE_SERIES_MIN (R136 / R129 5.1 kohm; 3.516 V / 5.015 kohm =
+# 0.71 mA, under BAT54C I_F 200 mA and negligible on 3V3). Round 6 found the cold pull-up's D120 anode on 3V3 itself:
+# a bridge across R131 put 3V3 through D120 into Q124 with no resistor (U2's 1.075-1.6 A current limit).
+FIRE_SERIES_MIN = 5.0e3     # ohm, nominal
+COLD = 'PYRO1_COLD'
+_PASS_REFS = re.compile(r'^(R|D|L|FB)\d+$')      # resistors (their value), diodes / inductors / beads (0 ohm, both ways)
+_SOURCE_REFS = re.compile(r'^(U|Q|J|Y|LS|SW|K|BT)\d+$')
+
+
+def ohms(value):
+    """A resistor Value's first token ('5.1k', '10k 1%', '2R', '4k7', '220') in ohms; None if unreadable."""
+    m = re.fullmatch(r'(\d+(?:\.\d+)?)([RrkKmM]?)(\d*)', (value or '').split()[0] if (value or '').split() else '')
+    if not m:
+        return None
+    mult = {'': 1, 'R': 1, 'r': 1, 'k': 1e3, 'K': 1e3, 'M': 1e6, 'm': 1e-3}[m[2]]
+    return float(m[1] + ('.' + m[3] if m[3] else '')) * mult if m[2] or not m[3] else None
+
+
+def read_netlist(path):
+    """({ref: value}, {ref: {pin: net}}) from a KiCad XML netlist."""
+    import xml.etree.ElementTree as ET
+    root = ET.parse(path).getroot()
+    values = {c.get('ref'): (c.findtext('value') or '') for c in root.findall('./components/comp')}
+    pins = {}
+    for n in root.findall('./nets/net'):
+        for p in n.findall('node'):
+            pins.setdefault(p.get('ref'), {})[p.get('pin')] = n.get('name')
+    return values, pins
+
+
+def series_to_sources(path, start, classes=None, stop=(OUT, 'GND')):
+    """{source net: least series resistance (ohm)} from net `start` through resistors (their value; unreadable: 0) and
+    diodes / inductors (0 ohm, either direction: conservative), never entering `stop` and not walking on past a source.
+    A source is a net the netlist marks as supply, open-drain or MCU (netlist_classes), or one with a pin of an IC,
+    transistor, connector, crystal or buzzer."""
+    import heapq
+    values, pins = read_netlist(path)
+    classes = netlist_classes(path) if classes is None else classes
+    marked = set(classes.get('supply', ())) | set(classes.get('open_drain', ())) | set(classes.get('mcu', ()))
+    edges, source = {}, set(marked)
+    for ref, pp in pins.items():
+        nets = sorted({n for n in pp.values() if n and not n.startswith('unconnected-')})
+        if _SOURCE_REFS.match(ref):
+            source.update(nets)
+        if not _PASS_REFS.match(ref) or len(nets) < 2:
+            continue
+        w = 0.0
+        if ref.startswith('R'):
+            w = ohms(values.get(ref)) or 0.0
+        for a in nets:
+            for b in nets:
+                if a != b:
+                    edges.setdefault(a, []).append((b, w))
+    best, heap, out = {start: 0.0}, [(0.0, start)], {}
+    while heap:
+        d, n = heapq.heappop(heap)
+        if d > best.get(n, float('inf')):
+            continue
+        if n in source and n not in stop:
+            out[n] = min(out.get(n, float('inf')), d)
+            if n != start:
+                continue                                 # the nearest source on a path is the one that counts
+        for m, w in edges.get(n, ()):
+            if m in stop or d + w >= best.get(m, float('inf')):
+                continue
+            best[m] = d + w
+            heapq.heappush(heap, (d + w, m))
+    return out
+
+
+def fire_state_guard(path, not_a_path=None, classes=None):
+    """(issues, evidence): every NOT_A_PATH (PYRO1_OUT, f) class holds with Q124 conducting (f reaches no source through
+    less than FIRE_SERIES_MIN), and the cold pull-up diode's anode is never on 3V3 or another source itself."""
+    classes = netlist_classes(path) if classes is None else classes
+    issues, ev = [], {}
+    for (p, f) in sorted(NOT_A_PATH if not_a_path is None else not_a_path):
+        if p != OUT or f == 'GND' or f in PROTECTED:
+            continue
+        reach = series_to_sources(path, f, classes)
+        ev[f] = {n: round(r, 1) for n, r in sorted(reach.items(), key=lambda kv: (kv[1], kv[0]))[:4]}
+        low = sorted((r, n) for n, r in reach.items() if r < FIRE_SERIES_MIN)
+        for r, n in low:
+            issues.append(f'{OUT} / {f} is classed "not a path", but with Q124 conducting a bridge joins {n} to GND '
+                          f'through only {r:g} ohm (fire-state guard, >= {FIRE_SERIES_MIN:g} ohm; R12F6-TRI-01)')
+    values, pins = read_netlist(path)
+    sources = set(classes.get('supply', ())) | set(classes.get('mcu', ())) | {'3V3', '3V3A'}
+    diodes = sorted(ref for ref, pp in pins.items() if ref.startswith('D') and COLD in pp.values())
+    if not diodes:
+        issues.append(f'no cold pull-up diode on {COLD} (R12F6-TRI-01 guard)')
+    for ref in diodes:
+        for pin, net in sorted(pins[ref].items()):
+            if net == COLD or not net or net.startswith('unconnected-'):
+                continue
+            ev[f'{ref}.{pin}'] = net
+            if net in sources:
+                issues.append(f'{ref}.{pin} (the cold pull-up diode\'s anode) is on {net} itself: it must reach 3V3 '
+                              f'only through a resistor (R136; R12F6-TRI-01)')
+                continue
+            r = series_to_sources(path, net, classes, stop=(OUT, 'GND', COLD)).get('3V3')
+            if r is not None and r < FIRE_SERIES_MIN:
+                issues.append(f'{ref}.{pin} ({net}) reaches 3V3 through only {r:g} ohm (>= {FIRE_SERIES_MIN:g} ohm, '
+                              'R12F6-TRI-01)')
+    return issues, ev

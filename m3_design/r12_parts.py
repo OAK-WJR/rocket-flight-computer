@@ -12,7 +12,8 @@ from the maker's drawing or the LCSC / JLCEDA official land (https://easyeda.com
 library JLC's own CPL uses), with the URL noted below. Every R12 land is a top-side land (D-R12-01, one assembled side):
 SMD pads on F.Cu / F.Paste / F.Mask only, or plated through-holes.
 Symbols: R11's library with the R12 symbols added (LMR50410, TPS563208, FXLS9xxxx, Buzzer_THT2, BAT54C, ServoGH6,
-SwitchGH4) and every used symbol's ki_fp_filters set to exactly the R12 footprints it carries (ERC footprint_filter).
+SwitchGH4, PortSH4, PortSH6) and every used symbol's ki_fp_filters set to exactly the R12 footprints it carries (ERC
+footprint_filter).
 """
 import argparse
 import datetime
@@ -324,17 +325,31 @@ NEW_SYMBOLS = (
      [P(0, '1', '+')], [P(0, '2', '-')]),
     ('BAT54C', 'D', 'Nexperia BAT54C dual Schottky, common cathode (pinning Table 2): 1 A1, 2 A2, 3 K', 'diode schottky',
      5.08, 2.54, [P(1.27, '1', 'A1'), P(-1.27, '2', 'A2')], [P(0, '3', 'K')]),
-    ('ServoGH6', 'J', 'GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused', 'connector servo',
+    ('ServoGH6', 'J', 'Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) 6-pin servo port (D-R12-31): 1-4 SERVO1-4, 5 GND, '
+     '6 unused', 'connector servo',
      7.62, 7.62, [P(6.35, '1', 'SERVO1'), P(3.81, '2', 'SERVO2'), P(1.27, '3', 'SERVO3'), P(-1.27, '4', 'SERVO4'),
                   P(-3.81, '5', 'GND'), P(-6.35, '6', 'NC')], []),
-    ('SwitchGH4', 'J', 'GH-1.25 clone 4-pin external switch port (D-R12-15): 1 SW SOURCE, 2 SW RETURN, 3-4 unused',
+    ('SwitchGH4', 'J', 'Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) 4-pin external switch port (D-R12-31): '
+     '1 SW SOURCE, 2 SW RETURN, 3-4 unused',
      'connector switch', 7.62, 5.08, [P(3.81, '1', 'SW SOURCE'), P(1.27, '2', 'SW RETURN'), P(-1.27, '3', 'NC'),
                                       P(-3.81, '4', 'NC')], []),
+    # R12F6-TRI-09: the GPS / radio / AUX ports in D-R12-31's MicoAir H743 order. R11's PortTerminal names pin 1 4V8 and
+    # pin 2 GND (R10 / R11's JST order); on R12 pin 1 is GND and pin 2 PORT_4V8, so the ports take their own symbols
+    # (r12_sch_check PORT_PIN_NAMES: every pin name agrees with its net).
+    ('PortSH4', 'J', 'Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) always-on port (D-R19-14, D-R12-31, MicoAir H743 '
+     'order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI', 'connector port uart', 7.62, 5.08,
+     [P(3.81, '1', 'GND'), P(1.27, '2', '4V8'), P(-1.27, '3', 'TXO'), P(-3.81, '4', 'RXI')], []),
+    ('PortSH6', 'J', 'Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) always-on GPS port (D-R19-14, D-R12-31, MicoAir H743 '
+     'GPS order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI, 5-6 unused (the H743\'s I2C pins, NC on R12)',
+     'connector port uart gps', 7.62, 7.62,
+     [P(6.35, '1', 'GND'), P(3.81, '2', '4V8'), P(1.27, '3', 'TXO'), P(-1.27, '4', 'RXI'), P(-3.81, '5', 'NC'),
+      P(-6.35, '6', 'NC')], []),
 )
-TEXTS = {   # symbol: (R11 Description, R12 Description)
-    'PortTerminal': ('JST SM04B-GHS-TB always-on port (D-R19-14, D-R11-05): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI',
-                     'GH-1.25 clone 4-pin always-on port (D-R19-14, D-R12-15): 1 PORT_4V8, 2 GND, 3 board TXO, '
-                     '4 board RXI'),
+TEXTS = {   # symbol: (R11 Description, R12 Description); R11's PortTerminal is no longer used (R12F6-TRI-09)
+    'CameraGH6': ('JST SM06B-GHS-TB camera port (D-R11-05): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX '
+                  '(camera RX)',
+                  'Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) camera port (D-R12-31): 1-2 CAM_5V, 3-4 GND, 5 board '
+                  'RX (camera TX), 6 board TX (camera RX)'),
 }
 
 

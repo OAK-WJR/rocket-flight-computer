@@ -68,8 +68,8 @@ SHEET_FILES = tuple(s for s, _ in SHEETS)
 # D-R12-12: U1 functions R12 deletes or replaces, keyed by their R11 net (each appears on exactly one U1 ball)
 R12_REPIN = {
     'USB_FAULT_N': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-04: U10 deleted (USB diode-OR)'),
-    'CAM_FAULT_N': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-07: U402 deleted (camera buck EN is the switch)'),
-    'CAM_UART_OE': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-07: U12 deleted (1 kOhm series only)'),
+    'CAM_FAULT_N': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-08: U402 deleted (camera buck EN is the switch)'),
+    'CAM_UART_OE': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-08: U12 deleted (1 kOhm series only)'),
     'LOGIC_SOURCE_ST': ('PORT_SENSE', 'GPIO in, no pull (high = PORT_4V8 present: the battery path is on)',
                         'D-R12-05 / -86: U11 deleted; PA4 now reads PORT_4V8 through R111 47k / R112 100k (3.10-3.39 V '
                         'high initial, 3.07-3.43 V drift, with PA4 leakage; Calculation; drift Inference); the R10 rule '

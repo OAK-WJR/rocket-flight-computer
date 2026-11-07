@@ -243,7 +243,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Description" "GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused"
+			(property "Description" "Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) 6-pin servo port (D-R12-31): 1-4 SERVO1-4, 5 GND, 6 unused"
 				(at 0 0 0)
 				(hide yes)
 				(effects

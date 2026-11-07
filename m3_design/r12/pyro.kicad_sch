@@ -909,54 +909,54 @@
 		(uuid a6f83f42-d73f-57d4-b39c-db8c6cb26093))
 	(symbol
 		(lib_id "M3:BAT54C")
-		(at 228.6 71.12 0)
+		(at 231.14 71.12 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 6b791c9f-fc80-58af-b3bc-f486e7ded41a)
 		(property "Reference" "D120"
-			(at 228.6 66.04 0)
+			(at 231.14 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "BAT54C"
-			(at 228.6 68.58 0)
+			(at 231.14 68.58 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
-			(at 228.6 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C37704"
-			(at 228.6 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Nexperia"
-			(at 228.6 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "BAT54C,215"
-			(at 228.6 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2407241028_Nexperia-BAT54C-215_C37704.pdf"
-			(at 228.6 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
@@ -969,34 +969,34 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 218.44 69.85)
-			(xy 213.36 69.85))
+			(xy 220.98 69.85)
+			(xy 215.9 69.85))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 6657a1e2-6199-5e33-9bf2-36ff41d412a2))
-	(global_label "3V3"
+	(global_label "PYRO1_COLD_PU"
 		(shape passive)
-		(at 213.36 69.85 0)
+		(at 215.9 69.85 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 9c29cad7-314a-5722-9a7a-a51b3112cfa9))
 	(no_connect
-		(at 218.44 72.39)
+		(at 220.98 72.39)
 		(uuid 64e8e253-3eff-59a6-ab59-2c98573d8939))
 	(wire
 		(pts
-			(xy 238.76 71.12)
-			(xy 243.84 71.12))
+			(xy 241.3 71.12)
+			(xy 246.38 71.12))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 4ac230f1-6db5-5d6a-9ef2-50e596e89b6a))
 	(global_label "PYRO1_COLD"
 		(shape passive)
-		(at 243.84 71.12 180)
+		(at 246.38 71.12 180)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1004,54 +1004,54 @@
 		(uuid aaffb5b6-64a8-5d1b-863c-2dfaa1bb4f56))
 	(symbol
 		(lib_id "M3:Conn_1x2")
-		(at 287.02 71.12 0)
+		(at 294.64 71.12 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid c48e1346-d9da-56cd-a8bf-cb505c58d449)
 		(property "Reference" "J121"
-			(at 287.02 66.04 0)
+			(at 294.64 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "DB125-3.5-2P-BK-S"
-			(at 287.02 68.58 0)
+			(at 294.64 68.58 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_DB125_2P_BK"
-			(at 287.02 71.12 0)
+			(at 294.64 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C52993880"
-			(at 287.02 71.12 0)
+			(at 294.64 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "DORABO"
-			(at 287.02 71.12 0)
+			(at 294.64 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "DB125-3.5-2P-BK-S"
-			(at 287.02 71.12 0)
+			(at 294.64 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://atta.szlcsc.com/upload/public/pdf/source/20251124/8C215F69B14C8E54AE0F8E5023D4AE9F.pdf"
-			(at 287.02 71.12 0)
+			(at 294.64 71.12 0)
 			(hide yes)
 			(effects
 				(font
@@ -1064,15 +1064,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 279.4 69.85)
-			(xy 274.32 69.85))
+			(xy 287.02 69.85)
+			(xy 281.94 69.85))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 2e2a8134-029a-5a11-922f-cb9d73fdcba9))
 	(global_label "PYRO1_OUT"
 		(shape passive)
-		(at 274.32 69.85 0)
+		(at 281.94 69.85 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1080,15 +1080,15 @@
 		(uuid 6bdec5d5-1ba0-5aae-9470-c517af228ebb))
 	(wire
 		(pts
-			(xy 279.4 72.39)
-			(xy 274.32 72.39))
+			(xy 287.02 72.39)
+			(xy 281.94 72.39))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 426e89da-3a5d-57bd-9618-9cb5b6622115))
 	(global_label "PYRO1_IGN"
 		(shape passive)
-		(at 274.32 72.39 0)
+		(at 281.94 72.39 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1096,54 +1096,54 @@
 		(uuid 8d2dd9b8-e343-5158-907c-0f13441e8703))
 	(symbol
 		(lib_id "M3:NMOS_SOT23")
-		(at 332.74 78.74 0)
+		(at 337.82 78.74 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid f0dfd7e1-67e8-55af-96ad-41dd7c3a8197)
 		(property "Reference" "Q124"
-			(at 332.74 64.77 0)
+			(at 337.82 64.77 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "AO3400A"
-			(at 332.74 67.31 0)
+			(at 337.82 67.31 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
-			(at 332.74 78.74 0)
+			(at 337.82 78.74 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C20917"
-			(at 332.74 78.74 0)
+			(at 337.82 78.74 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Alpha & Omega Semicon"
-			(at 332.74 78.74 0)
+			(at 337.82 78.74 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "AO3400A"
-			(at 332.74 78.74 0)
+			(at 337.82 78.74 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_1811081213_Alpha---Omega-Semicon-AO3400A_C20917.pdf"
-			(at 332.74 78.74 0)
+			(at 337.82 78.74 0)
 			(hide yes)
 			(effects
 				(font
@@ -1156,15 +1156,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 322.58 78.74)
-			(xy 317.5 78.74))
+			(xy 327.66 78.74)
+			(xy 322.58 78.74))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid c8c27ea3-1296-5674-9f3c-6ae188744d96))
 	(global_label "PYRO1_GATE"
 		(shape passive)
-		(at 317.5 78.74 0)
+		(at 322.58 78.74 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1172,15 +1172,15 @@
 		(uuid 89a52984-e6f9-508b-b1c9-9a8d0674e943))
 	(wire
 		(pts
-			(xy 332.74 88.9)
-			(xy 332.74 93.98))
+			(xy 337.82 88.9)
+			(xy 337.82 93.98))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 526ec4e7-8256-58c0-8279-fd81c3675d02))
 	(global_label "GND"
 		(shape passive)
-		(at 332.74 93.98 0)
+		(at 337.82 93.98 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1188,15 +1188,15 @@
 		(uuid a1f7dd8c-17cc-586a-aa00-73315929950b))
 	(wire
 		(pts
-			(xy 332.74 68.58)
-			(xy 332.74 63.5))
+			(xy 337.82 68.58)
+			(xy 337.82 63.5))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 224e49fd-151e-53dd-a024-fc05fee6c469))
 	(global_label "PYRO1_OUT"
 		(shape passive)
-		(at 332.74 63.5 0)
+		(at 337.82 63.5 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1676,7 +1676,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "5.1k"
 			(at 279.4 111.76 0)
 			(effects
 				(font
@@ -1689,7 +1689,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C25905"
 			(at 279.4 116.84 0)
 			(hide yes)
 			(effects
@@ -1703,7 +1703,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
+		(property "Manufacturer Part" "0402WGF5101TCE"
 			(at 279.4 116.84 0)
 			(hide yes)
 			(effects
@@ -2037,8 +2037,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid 95612aeb-93e9-58fc-9d84-084363c57a3c)
-		(property "Reference" "R173"
+		(uuid 7a5ca2c5-3b98-5461-9602-d8b3d1cc1352)
+		(property "Reference" "R136"
 			(at 91.44 144.78 0)
 			(effects
 				(font
@@ -2088,7 +2088,7 @@
 		(instances
 			(project "m3"
 				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/b1b684fa-f1b4-588e-bcca-603fd244a6ad"
-					(reference "R173")
+					(reference "R136")
 					(unit 1)))))
 	(wire
 		(pts
@@ -2097,15 +2097,15 @@
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 8204e94a-adcb-5919-910f-31b5f5a3bcea))
-	(global_label "PYRO1_OUT"
+		(uuid 37cb0eb6-86de-5a0f-946e-4555fabb0d87))
+	(global_label "3V3"
 		(shape passive)
 		(at 91.44 143.51 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 7f50e17e-f276-566a-8ee0-67c2463e111d))
+		(uuid 3048f645-bc43-5f2a-b444-223b27c5d73f))
 	(wire
 		(pts
 			(xy 91.44 156.21)
@@ -2113,15 +2113,15 @@
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 4fc95b93-ebce-5f57-ab6c-1c7ba4290640))
-	(global_label "PYRO1_CONT_MID"
+		(uuid 2e718136-067d-59ef-9d67-6a285702e810))
+	(global_label "PYRO1_COLD_PU"
 		(shape passive)
 		(at 91.44 161.29 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 5756d3ed-9528-5ce8-b867-9cb6492f02c2))
+		(uuid 237b3b5e-8d3b-50da-86e8-553870cb5f19))
 	(symbol
 		(lib_id "M3:R")
 		(at 142.24 152.4 0)
@@ -2129,8 +2129,8 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid 256a35db-71af-5c8c-adcb-a2c2b1257892)
-		(property "Reference" "R175"
+		(uuid 95612aeb-93e9-58fc-9d84-084363c57a3c)
+		(property "Reference" "R173"
 			(at 142.24 144.78 0)
 			(effects
 				(font
@@ -2180,7 +2180,7 @@
 		(instances
 			(project "m3"
 				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/b1b684fa-f1b4-588e-bcca-603fd244a6ad"
-					(reference "R175")
+					(reference "R173")
 					(unit 1)))))
 	(wire
 		(pts
@@ -2189,15 +2189,15 @@
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 8068bfa7-25a4-5ba2-ab8f-d6c01ffdbd0a))
-	(global_label "ARM1_SENSE_MID"
+		(uuid 8204e94a-adcb-5919-910f-31b5f5a3bcea))
+	(global_label "PYRO1_OUT"
 		(shape passive)
 		(at 142.24 143.51 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
-		(uuid 2e29bac3-4c60-5c5a-a50d-d1e4777b72b0))
+		(uuid 7f50e17e-f276-566a-8ee0-67c2463e111d))
 	(wire
 		(pts
 			(xy 142.24 156.21)
@@ -2205,10 +2205,102 @@
 		(stroke
 			(width 0)
 			(type default))
+		(uuid 4fc95b93-ebce-5f57-ab6c-1c7ba4290640))
+	(global_label "PYRO1_CONT_MID"
+		(shape passive)
+		(at 142.24 161.29 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 5756d3ed-9528-5ce8-b867-9cb6492f02c2))
+	(symbol
+		(lib_id "M3:R")
+		(at 193.04 152.4 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 256a35db-71af-5c8c-adcb-a2c2b1257892)
+		(property "Reference" "R175"
+			(at 193.04 144.78 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 193.04 147.32 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 193.04 152.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 193.04 152.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 193.04 152.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 193.04 152.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 193.04 152.4 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/b1b684fa-f1b4-588e-bcca-603fd244a6ad"
+					(reference "R175")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 193.04 148.59)
+			(xy 193.04 143.51))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 8068bfa7-25a4-5ba2-ab8f-d6c01ffdbd0a))
+	(global_label "ARM1_SENSE_MID"
+		(shape passive)
+		(at 193.04 143.51 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2e29bac3-4c60-5c5a-a50d-d1e4777b72b0))
+	(wire
+		(pts
+			(xy 193.04 156.21)
+			(xy 193.04 161.29))
+		(stroke
+			(width 0)
+			(type default))
 		(uuid 203f696c-fa7c-5e3a-ac58-a0346b25a656))
 	(global_label "ARM1_SENSE"
 		(shape passive)
-		(at 142.24 161.29 0)
+		(at 193.04 161.29 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2216,54 +2308,54 @@
 		(uuid 41b56d0a-8a23-5dfa-8639-38ce65557c83))
 	(symbol
 		(lib_id "M3:R")
-		(at 190.5 152.4 0)
+		(at 238.76 152.4 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 70ad980b-dc7e-5c5d-a2d4-8c203bb295dd)
 		(property "Reference" "R178"
-			(at 190.5 144.78 0)
+			(at 238.76 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "2k"
-			(at 190.5 147.32 0)
+			(at 238.76 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 190.5 152.4 0)
+			(at 238.76 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C4109"
-			(at 190.5 152.4 0)
+			(at 238.76 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 190.5 152.4 0)
+			(at 238.76 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF2001TCE"
-			(at 190.5 152.4 0)
+			(at 238.76 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 190.5 152.4 0)
+			(at 238.76 152.4 0)
 			(hide yes)
 			(effects
 				(font
@@ -2276,15 +2368,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 190.5 148.59)
-			(xy 190.5 143.51))
+			(xy 238.76 148.59)
+			(xy 238.76 143.51))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 132272bb-0530-5da5-9cbb-03459c7d8eac))
 	(global_label "PYRO1_CONT"
 		(shape passive)
-		(at 190.5 143.51 0)
+		(at 238.76 143.51 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2292,15 +2384,15 @@
 		(uuid 9438a31c-33e3-5ce1-a91e-aa3044a85a7a))
 	(wire
 		(pts
-			(xy 190.5 156.21)
-			(xy 190.5 161.29))
+			(xy 238.76 156.21)
+			(xy 238.76 161.29))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 6fb936a1-42db-5fed-bd78-7431470c149d))
 	(global_label "GND"
 		(shape passive)
-		(at 190.5 161.29 0)
+		(at 238.76 161.29 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2308,54 +2400,54 @@
 		(uuid 0a9c3ca2-e2dc-54f3-af71-8356709160ab))
 	(symbol
 		(lib_id "M3:R")
-		(at 233.68 152.4 0)
+		(at 284.48 152.4 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 872b3ffa-e0b7-5484-8137-b9979af7cda0)
 		(property "Reference" "R180"
-			(at 233.68 144.78 0)
+			(at 284.48 144.78 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "2k"
-			(at 233.68 147.32 0)
+			(at 284.48 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 233.68 152.4 0)
+			(at 284.48 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C4109"
-			(at 233.68 152.4 0)
+			(at 284.48 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 233.68 152.4 0)
+			(at 284.48 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF2001TCE"
-			(at 233.68 152.4 0)
+			(at 284.48 152.4 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 233.68 152.4 0)
+			(at 284.48 152.4 0)
 			(hide yes)
 			(effects
 				(font
@@ -2368,15 +2460,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 233.68 148.59)
-			(xy 233.68 143.51))
+			(xy 284.48 148.59)
+			(xy 284.48 143.51))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid ca02bf35-a407-587f-9077-9620fd1855b3))
 	(global_label "ARM1_SENSE"
 		(shape passive)
-		(at 233.68 143.51 0)
+		(at 284.48 143.51 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2384,15 +2476,15 @@
 		(uuid f5464633-2797-52e6-876c-023ffb7617f7))
 	(wire
 		(pts
-			(xy 233.68 156.21)
-			(xy 233.68 161.29))
+			(xy 284.48 156.21)
+			(xy 284.48 161.29))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 32a014ab-c63d-5f50-9f31-f7b47cd820d3))
 	(global_label "GND"
 		(shape passive)
-		(at 233.68 161.29 0)
+		(at 284.48 161.29 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2400,40 +2492,40 @@
 		(uuid 72d2fa9a-d61e-5d2d-ac25-9571af3493f7))
 	(symbol
 		(lib_id "M3:TestPoint")
-		(at 276.86 147.32 0)
+		(at 327.66 147.32 0)
 		(unit 1)
 		(in_bom no)
 		(on_board yes)
 		(dnp no)
 		(uuid a4ddc29e-c8d8-54fc-a2d8-81e9cf720aea)
 		(property "Reference" "TP122"
-			(at 276.86 143.51 0)
+			(at 327.66 143.51 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "PYRO1_GATE"
-			(at 276.86 146.05 0)
+			(at 327.66 146.05 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_TestPad_1.5"
-			(at 276.86 147.32 0)
+			(at 327.66 147.32 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" ""
-			(at 276.86 147.32 0)
+			(at 327.66 147.32 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 276.86 147.32 0)
+			(at 327.66 147.32 0)
 			(hide yes)
 			(effects
 				(font
@@ -2446,15 +2538,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 276.86 147.32)
-			(xy 276.86 152.4))
+			(xy 327.66 147.32)
+			(xy 327.66 152.4))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 721e1540-d713-59c5-ad95-f3717f1ee3c1))
 	(global_label "PYRO1_GATE"
 		(shape passive)
-		(at 276.86 152.4 0)
+		(at 327.66 152.4 0)
 		(effects
 			(font
 				(size 1.05 1.05))

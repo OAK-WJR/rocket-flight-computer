@@ -395,10 +395,10 @@
   "D120": {
    "lcsc": "C37704",
    "value": "BAT54C",
-   "why": "D-R12-11: BAT54A -> BAT54C (preferred); A1 3V3 to K PYRO1_COLD, A2 unused",
+   "why": "D-R12-11: BAT54A -> BAT54C (preferred); A1 to K PYRO1_COLD, A2 unused. R12F6-TRI-01: A1 is on PYRO1_COLD_PU, fed from 3V3 through R136 5.1k, so no single bridge (R131's own lands included) joins 3V3 to PYRO1_OUT through D120 without a resistor while Q124 conducts",
    "lib": "M3:BAT54C",
    "nets": {
-    "1": "3V3",
+    "1": "PYRO1_COLD_PU",
     "2": null,
     "3": "PYRO1_COLD"
    }
@@ -442,7 +442,7 @@
   "J410": {
    "lcsc": "C7430448",
    "value": "ZX-SH1.0-6PWT",
-   "lib": "M3:ServoGH6",
+   "lib": "M3:PortSH6",
    "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; H743 GPS port order GND / 5V / TX / RX / SCL / SDA (ardupilot.org MicoAir743v2 image; I2C pins NC on R12)",
    "nets": {
     "1": "GND",
@@ -456,6 +456,7 @@
   "J420": {
    "lcsc": "C7430446",
    "value": "ZX-SH1.0-4PWT",
+   "lib": "M3:PortSH4",
    "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; H743 telemetry port order GND / 5V / TX / RX",
    "nets": {
     "1": "GND",
@@ -467,6 +468,7 @@
   "J440": {
    "lcsc": "C7430446",
    "value": "ZX-SH1.0-4PWT",
+   "lib": "M3:PortSH4",
    "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; H743 telemetry port order GND / 5V / TX / RX",
    "nets": {
     "1": "GND",
@@ -659,6 +661,11 @@
    "lcsc": "C5246546",
    "value": "470uF 25V polymer",
    "why": "D-R12-85: MA25V470M8x10 (no maker reflow rating) -> Honor HV1E477M0810PZ (255 C peak), JLC-placed with paste"
+  },
+  "R131": {
+   "lcsc": "C25905",
+   "value": "5.1k",
+   "why": "R12F6-TRI-01: 10k -> 5.1k (C25905, the R173 / R129 line); with R136 5.1k the cold pull-up keeps 10.2 kohm from 3V3 to PYRO1_OUT and at least 5.1 kohm with either resistor or D120 bridged"
   }
  },
  "added_parts": {
@@ -889,6 +896,17 @@
     "2": "BAT_DAMP"
    },
    "why": "D-R12-78: third damper capacitor in parallel with C89 / C95 (stage D hot-plug re-run on R12 copper failed 8 / 2304 cases with two; damper x 1.5 passes)"
+  },
+  "R136": {
+   "lcsc": "C25905",
+   "value": "5.1k",
+   "lib": "M3:R",
+   "sheet": "pyro.kicad_sch",
+   "nets": {
+    "1": "3V3",
+    "2": "PYRO1_COLD_PU"
+   },
+   "why": "R12F6-TRI-01: series resistor between 3V3 and D120's anode (A1): a bridge across R131 during a commanded fire (Q124 holding PYRO1_OUT near GND) passes <= 0.71 mA through R136 instead of U2's 1-1.6 A current limit through D120"
   }
  },
  "net_changes": {

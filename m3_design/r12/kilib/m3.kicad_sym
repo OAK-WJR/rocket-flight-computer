@@ -7406,7 +7406,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Description" "GH-1.25 clone 4-pin always-on port (D-R19-14, D-R12-15): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"
+		(property "Description" "JST SM04B-GHS-TB always-on port (D-R19-14, D-R11-05): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -7418,7 +7418,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "ki_fp_filters" "M3_SHC_4P"
+		(property "ki_fp_filters" "M3_GH_SM04B_GHS_TB"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -8628,7 +8628,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Description" "JST SM06B-GHS-TB camera port (D-R11-05): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)"
+		(property "Description" "Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) camera port (D-R12-31): 1-2 CAM_5V, 3-4 GND, 5 board RX (camera TX), 6 board TX (camera RX)"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -9410,7 +9410,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Description" "GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused"
+		(property "Description" "Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) 6-pin servo port (D-R12-31): 1-4 SERVO1-4, 5 GND, 6 unused"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -9533,7 +9533,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Description" "GH-1.25 clone 4-pin external switch port (D-R12-15): 1 SW SOURCE, 2 SW RETURN, 3-4 unused"
+		(property "Description" "Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) 4-pin external switch port (D-R12-31): 1 SW SOURCE, 2 SW RETURN, 3-4 unused"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -9602,6 +9602,230 @@
 						(font
 							(size 1.05 1.05))))
 				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+	(symbol "PortSH4"
+		(pin_names
+			(offset 1.016))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "PortSH4"
+			(at 0 -7.62 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) always-on port (D-R19-14, D-R12-31, MicoAir H743 order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "connector port uart"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_fp_filters" "M3_SHC_4P"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "PortSH4_0_1"
+			(rectangle
+				(start -7.62 5.08)
+				(end 7.62 -5.08)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "PortSH4_1_1"
+			(pin passive line
+				(at -12.7 3.81 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 1.27 0)
+				(length 5.08)
+				(name "4V8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 -1.27 0)
+				(length 5.08)
+				(name "TXO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 -3.81 0)
+				(length 5.08)
+				(name "RXI"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
+	(symbol "PortSH6"
+		(pin_names
+			(offset 1.016))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "PortSH6"
+			(at 0 -10.16 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) always-on GPS port (D-R19-14, D-R12-31, MicoAir H743 GPS order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI, 5-6 unused (the H743's I2C pins, NC on R12)"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "connector port uart gps"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_fp_filters" "M3_SHC_6P"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "PortSH6_0_1"
+			(rectangle
+				(start -7.62 7.62)
+				(end 7.62 -7.62)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "PortSH6_1_1"
+			(pin passive line
+				(at -12.7 6.35 0)
+				(length 5.08)
+				(name "GND"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 3.81 0)
+				(length 5.08)
+				(name "4V8"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 1.27 0)
+				(length 5.08)
+				(name "TXO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 -1.27 0)
+				(length 5.08)
+				(name "RXI"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 -3.81 0)
+				(length 5.08)
+				(name "NC"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -12.7 -6.35 0)
+				(length 5.08)
+				(name "NC"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
 					(effects
 						(font
 							(size 1.05 1.05))))))

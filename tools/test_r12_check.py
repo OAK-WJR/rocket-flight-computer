@@ -309,8 +309,20 @@ class FireGaps(unittest.TestCase):
         z.SetFilledPolysList(layer, pcbnew.SHAPE_POLY_SET(o)); z.SetIsFilled(True); self.board.Add(z)
         return z
 
-    def drc_s10(self):
-        """kicad-cli DRC of the planted board with the committed DRU: the S-10 rule violations."""
+    STRIP = """import pcbnew, sys
+x0, y0, x1, y1 = map(float, sys.argv[2:6])
+b = pcbnew.LoadBoard(sys.argv[1])
+for t in list(b.GetTracks()):
+    at = t.GetPosition() if t.GetClass() == 'PCB_VIA' else t.GetStart()
+    if t.GetNetname() != sys.argv[6] and x0 < pcbnew.ToMM(at.x) < x1 and y0 < pcbnew.ToMM(at.y) < y1:
+        b.Remove(t)
+pcbnew.SaveBoard(sys.argv[1], b)
+"""
+
+    def drc_s10(self, strip=None):
+        """kicad-cli DRC of the planted board with the committed DRU: the S-10 rule violations. strip (x0, y0, x1, y1,
+        net): first remove, in a separate KiCad python process on the saved copy, every track and via of another net
+        that starts inside the box."""
         if not Path(self.CLI).exists():
             self.skipTest('kicad-cli unavailable')
         with tempfile.TemporaryDirectory(prefix='r12-s10-') as d:
@@ -318,6 +330,9 @@ class FireGaps(unittest.TestCase):
             for name in ('m3.kicad_dru', 'm3.kicad_pro'):
                 shutil.copy2(BOARD12.with_name(name), Path(d) / name)
             pcbnew.SaveBoard(str(path), self.board)
+            if strip:
+                subprocess.run([sys.executable, '-I', '-c', self.STRIP, str(path), *map(str, strip)], check=True,
+                               capture_output=True, timeout=300)
             subprocess.run([self.CLI, 'pcb', 'drc', '--format', 'json', '--severity-error', '-o', str(Path(d) / 'd.json'),
                             str(path)], capture_output=True, timeout=300, check=True)
             found = json.loads((Path(d) / 'd.json').read_text())['violations']
@@ -456,6 +471,124 @@ class FireGaps(unittest.TestCase):
         finally:
             fire.NOT_A_PATH.clear(); fire.NOT_A_PATH.update(kept)
 
+    # ---- R12F6-TRI-02: the U1 NC-ball exemption is the gate nets' only -------------------------------------------
+    def test_r12f6_tri02_nc_ball_counts_against_out_and_ign(self):
+        """A U1 NC ball is foreign copper to PYRO1_OUT (1.04 mm) and PYRO1_IGN (0.25 mm), exempt only for the gate nets;
+        a PYRO1_OUT track 0.38 mm (the gate lens's plant) and a PYRO1_IGN track 0.20 mm from U1.A1 (PC14, NC) fail
+        S-10 and DRC. (0.38 mm is above IGN's own 0.25 mm limit, so IGN is planted below that limit.)"""
+        nc = 'unconnected-(U1-PE3-PadB3)'
+        self.assertEqual(fire.pair_limit(fire.OUT, None, nc, 'U1', False)[:2], (fire.OUT_MIN, 'out'))
+        self.assertEqual(fire.pair_limit(fire.IGN, None, nc, 'U1', False)[:2], (fire.IGN_MIN, 'ign'))
+        self.assertEqual(fire.pair_limit(fire.IGN, None, nc, 'U1', True)[:2], (fire.FILL_MIN, 'ign'))
+        for gate in fire.GATES:
+            self.assertEqual(fire.pair_limit(gate, None, nc, 'U1', False)[:2], (None, 'U1 NC ball'))
+        rules = {r[0]: r[2] for r in fire.dru_rules()}
+        for name in ('S-10 PYRO1_OUT to every net', 'S-10 PYRO1_IGN to every net', 'S-10 PYRO1_IGN to fills'):
+            self.assertNotIn("unconnected-*", rules[name], name)
+        self.assertIn(fire.NOT_U1_NC, rules['S-10 Q124 gate nets to every raising net'])
+        # U1.A1 (19.4, 50.4), 0.4 mm land: 0.1 mm tracks north of it
+        for net, y, gap, lim, rule in ((fire.OUT, 49.77, '0.38', 'below 1.04 mm', "'S-10 PYRO1_OUT to every net'"),
+                                       (fire.IGN, 49.95, '0.20', 'below 0.25 mm', "'S-10 PYRO1_IGN to every net'")):
+            with self.subTest(net=net):
+                self.setUp()
+                self.track(net, (19.3, y), (19.5, y), width=0.1)
+                self.planted((f'{net} track (19.3, {y:g})-(19.5, {y:g}) to unconnected-(U1-PC14-PadA1) U1.A1',
+                              ': ' + gap, lim))
+                # KiCad reports at most one clearance violation for a track against several items of one footprint or
+                # net (lane P2's DRC quirk), so the DRC probe strips the other nets' tracks and vias round U1's A1
+                # corner first (on the saved copy): U1's pads stay, and the NC ball must then be reported.
+                found = self.drc_s10(strip=(17, 47, 23, 51, net))
+                self.assertTrue([v for v in found if rule in v and 'U1-PC14-PadA1' in v and net in v], found)
+
+    # ---- R12F6-TRI-01: the cold pull-up through R136, and the commanded-fire state -------------------------------
+    def netlist(self, mutate):
+        """A temporary copy of the committed netlist with mutate(root) applied (the board stays the committed one)."""
+        import xml.etree.ElementTree as ET
+        tree = ET.parse(BOARD12.with_name('schematic.net.xml'))
+        mutate(tree.getroot())
+        d = tempfile.mkdtemp(prefix='r12-net-')
+        self.addCleanup(shutil.rmtree, d, True)
+        path = Path(d) / 'schematic.net.xml'
+        tree.write(path)
+        return path
+
+    @staticmethod
+    def move_node(root, ref, pin, net):
+        node = parent = None
+        for n in root.findall('./nets/net'):
+            for x in n.findall('node'):
+                if (x.get('ref'), x.get('pin')) == (ref, pin):
+                    node, parent = x, n
+        parent.remove(node)
+        next(n for n in root.findall('./nets/net') if n.get('name') == net).append(node)
+
+    @staticmethod
+    def set_value(root, ref, value):
+        next(c for c in root.findall('./components/comp') if c.get('ref') == ref).find('value').text = value
+
+    def s10_netlist(self, path):
+        return r12.check_board(self.board, BOARD12, only={'S-10'}, stage='copper', netlist=path)
+
+    def test_r12f6_tri01_cold_pullup_holds_in_the_fire_state(self):
+        """The committed netlist: 3V3 -> R136 5.1k -> D120.1 (PYRO1_COLD_PU) -> PYRO1_COLD -> R131 5.1k -> PYRO1_OUT, so
+        a bridge across R131 while Q124 conducts meets R136; CONT_MID meets R129; each class reason covers Q124 on."""
+        parts, pins = r12_sch_check.read_netlist(BOARD12.with_name('schematic.net.xml'))
+        self.assertEqual((pins['R136', '1'], pins['R136', '2'], pins['D120', '1'], pins['D120', '3'], pins['R131', '2'],
+                          pins['R131', '1']), ('3V3', 'PYRO1_COLD_PU', 'PYRO1_COLD_PU', 'PYRO1_COLD', 'PYRO1_COLD',
+                                               'PYRO1_OUT'))
+        self.assertEqual((parts['R131']['value'], parts['R136']['value']), ('5.1k', '5.1k'))
+        ev = self.s10()['evidence']['s10']['fire_state']
+        self.assertEqual(ev['series_ohm']['PYRO1_COLD'], {'3V3': 5100.0})
+        self.assertEqual(ev['series_ohm']['PYRO1_CONT_MID'], {'PYRO1_CONT': 5100.0})
+        self.assertEqual(ev['series_ohm']['D120.1'], 'PYRO1_COLD_PU')
+        for (p, f), why in fire.NOT_A_PATH.items():
+            if p == fire.OUT and f not in ('GND',) + fire.PROTECTED:
+                self.assertIn('Q124 on', why, f)
+        self.assertNotIn((fire.OUT, 'PYRO1_COLD_PU'), fire.NOT_A_PATH)     # held at OUT_MIN like every net
+
+    def test_r12f6_tri01_anode_on_3v3_fails(self):
+        """D120's anode planted back on 3V3 (round 6's circuit): S-10's netlist guard fails twice (the anode itself, and
+        the PYRO1_COLD class at 0 ohm in the fire state), and S-2 refuses D120 as an unnamed armed-side supply tie."""
+        path = self.netlist(lambda root: self.move_node(root, 'D120', '1', '3V3'))
+        rep = self.s10_netlist(path)
+        self.assertFalse(rep['ok'])
+        self.assertTrue([i for i in rep['issues'] if "D120.1 (the cold pull-up diode's anode) is on 3V3 itself" in i],
+                        rep['issues'])
+        self.assertTrue([i for i in rep['issues'] if 'PYRO1_OUT / PYRO1_COLD is classed "not a path"' in i
+                         and 'joins 3V3 to GND through only 0 ohm' in i], rep['issues'])
+        for pad in self.board.FindFootprintByReference('D120').Pads():
+            if pad.GetNumber() == '1':
+                pad.SetNet(self.board.FindNet('3V3'))
+        s2 = r12.check_board(self.board, BOARD12, only={'S-2'}, stage='copper')
+        self.assertTrue([i for i in s2['issues'] if 'D120 has pads on the armed / RAW_ACT side net PYRO1_COLD and on the '
+                         'supply 3V3' in i], s2['issues'])
+
+    def test_r12f6_tri01_series_resistor_bypassed_or_too_small_fails(self):
+        for value, ohm in (('0', '0'), ('1k', '1000')):
+            with self.subTest(value=value):
+                path = self.netlist(lambda root: self.set_value(root, 'R136', value))
+                rep = self.s10_netlist(path)
+                self.assertTrue([i for i in rep['issues'] if 'PYRO1_COLD' in i and f'through only {ohm} ohm' in i],
+                                rep['issues'])
+
+    def test_r12f6_tri01_new_class_must_hold_with_q124_on(self):
+        """A planted not-a-path class the older guard passes (LED_RED_A is no rail, sink or MCU pin) fails the fire-state
+        guard: PE4's neighbour LED_RED reaches it through R32 220 ohm."""
+        kept = dict(fire.NOT_A_PATH)
+        try:
+            fire.NOT_A_PATH[(fire.OUT, 'LED_RED_A')] = 'planted'
+            self.assertEqual(fire.guard(fire.netlist_classes(BOARD12.with_name('schematic.net.xml'))), [])
+            self.planted(('PYRO1_OUT / LED_RED_A is classed "not a path"', 'joins LED_RED to GND through only 220 ohm'))
+        finally:
+            fire.NOT_A_PATH.clear(); fire.NOT_A_PATH.update(kept)
+        self.assertTrue(self.s10()['ok'])
+
+    def test_r12f6_tri01_cold_pullup_node_held_from_out(self):
+        """PYRO1_COLD_PU is not classed out: its copper 0.2 mm from J121.1 fails S-10 and DRC like any net."""
+        self.track('PYRO1_COLD_PU', (8.65, 35.0), (8.65, 35.5))
+        self.planted(('PYRO1_OUT J121.1 to PYRO1_COLD_PU', ': 0.20', 'below 1.04 mm'),
+                     drc=("'S-10 PYRO1_OUT to every net'", 'PYRO1_COLD_PU'))
+
     def test_dru_is_generated_from_s10(self):
         """The DRU's S-10 rules are r12_fire.dru_rules(), in order after R11's scoped rules, with general limits at least
         S-10's; each exception names its two items and its floor (kicad-cli matches them: the build's DRC is 0)."""
@@ -559,6 +692,29 @@ class Schematic(unittest.TestCase):
         seeded = r12_sch_check.seeds(self.parts, self.pins)
         self.assertTrue(all(seeded.values()), [k for k, v in seeded.items() if not v])
         self.assertTrue(r12_sch_check.side_seed(ROOT / 'm3_design/r12'))
+
+    def test_r12f6_tri09_port_pin_names(self):
+        """R12F6-TRI-09 (R10 test_r27_port_terminal_pin_names, ported): the SH ports' pin names are D-R12-31's order
+        (1 GND, 2 4V8, 3 TXO, 4 RXI; J410 5-6 NC) on their own symbols, each name on the net it names; R11's
+        PortTerminal names, the servo symbol on J410 and the other seeded name faults are caught."""
+        names = r12_sch_check.read_pin_names(ROOT / 'm3_design/r12/schematic.net.xml')
+        self.assertEqual(r12_sch_check.terminal_pin_issues(names), [])
+        seeded = r12_sch_check.name_seeds(names)
+        self.assertEqual(len(seeded), 5)
+        self.assertTrue(all(seeded.values()), seeded)
+        data = r12_sch.circuit()
+        self.assertEqual({ref: data['parts'][ref]['lib'] for ref in ('J410', 'J420', 'J440')},
+                         {'J410': 'M3:PortSH6', 'J420': 'M3:PortSH4', 'J440': 'M3:PortSH4'})
+        self.assertEqual({names['J410', p][0] for p in '56'}, {'NC'})
+        lib = (ROOT / 'm3_design/r12/kilib/m3.kicad_sym').read_text()
+        sheets = ''.join((ROOT / 'm3_design/r12' / s).read_text() for s in r12_sch.SHEET_FILES)
+        for name in ('PortSH4', 'PortSH6', 'ServoGH6', 'SwitchGH4', 'CameraGH6'):
+            s = lib.index(f'\t(symbol "{name}"\n')
+            descr = lib[s:lib.index('(property "ki_keywords"', s)]
+            self.assertIn('ZX-SH1.0', descr, name)
+        self.assertNotIn('GH-1.25', sheets)
+        self.assertNotIn('SM06B-GHS', sheets)
+        self.assertNotIn('SM04B-GHS', sheets)
 
     def test_pin_table_current(self):
         self.assertEqual((r12_sch.DESIGN / 'pin_table.tsv').read_text(), r12_sch.pin_table_text())

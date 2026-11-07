@@ -8,7 +8,9 @@ Checks (D-R12-01: R11's circuit pruned and re-sourced, every AGENTS section 2 ru
   * U1's balls against pin_table.tsv r12_net, the package supply balls and R11's PDR_ON / VDDLDO / VDD33USB ties;
   * the AGENTS section 2 contracts by net: the pyro bus behind the Q120 / Q121 load switch, every pyro gate network
     (series resistor, pull-down, gate-source capacitor), PE4 / PC1 on their balls, the single J400 switch chain with
-    D402, the pyro wire pads, servo pull-downs and clamp, the ports, the camera switch default off;
+    D402, the pyro wire pads, servo pull-downs and clamp, the ports, the camera switch default off, the cold pull-up's
+    series resistor R136 (R12F6-TRI-01);
+  * every external connector's pin names and the net each name allows (R12F6-TRI-09, R10 D-R27-03);
   * part identity: LCSC / Manufacturer / Manufacturer Part agree with circuit.json's catalog (or R11's line), one
     footprint and one part number per code, every BOM part has a code, every footprint in the project kilib and a
     top-side land (D-R12-01, one assembled side);
@@ -55,7 +57,10 @@ SAFETY = {
     ('U1', 'C3'): 'PYRO1_GATE_N', ('U1', 'F2'): 'ACT_EN_MCU',
     # continuity / bus sense (F8; never in the fire path)
     ('R173', '1'): 'PYRO1_OUT', ('R131', '1'): 'PYRO1_OUT', ('R131', '2'): 'PYRO1_COLD',
-    ('D120', '1'): '3V3', ('D120', '2'): None, ('D120', '3'): 'PYRO1_COLD',
+    # R12F6-TRI-01: the cold pull-up is 3V3 -> R136 -> D120 A1 (PYRO1_COLD_PU) -> K (PYRO1_COLD) -> R131 -> PYRO1_OUT,
+    # so a bridge across R131 while Q124 conducts is held by R136 (D120's anode is never on 3V3 itself)
+    ('R136', '1'): '3V3', ('R136', '2'): 'PYRO1_COLD_PU',
+    ('D120', '1'): 'PYRO1_COLD_PU', ('D120', '2'): None, ('D120', '3'): 'PYRO1_COLD',
     # 2.1 / F8 / F9: one external switch J400 drives U9 EN; D402 clamps J400.2 ahead of R165
     ('J400', '1'): 'BAT_SW_SOURCE', ('J400', '2'): 'BAT_SW_RETURN', ('J400', '3'): None, ('J400', '4'): None,
     ('R80', '1'): 'BAT_IN', ('R80', '2'): 'BAT_SW_SOURCE', ('R165', '1'): 'BAT_SW_RETURN', ('R165', '2'): 'BAT_ENABLE',
@@ -88,8 +93,78 @@ SAFETY = {
 }
 REQUIRED_PARTS = ('Q120', 'Q121', 'Q122', 'Q124', 'R119', 'R120', 'C120', 'R121', 'R122', 'R123', 'C123', 'R126', 'R127',
                   'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', 'R156',
-                  'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6')
+                  'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6',
+                  'R131', 'R136', 'D120')
 WIRE_PADS = ('J1',)                # D-R12-29: J121 is a JLC-fitted DB125 screw terminal again (owner, 2026-11-03)
+
+# R12F6-TRI-09 (R10's D-R27-03 / test_r27_port_terminal_pin_names, ported): every external connector's pin names, as
+# the netlist gives them (pinfunction less its _<pin> suffix), and each name's net. D-R12-31 puts the ports in the
+# MicoAir H743 order (1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI; the GPS port's 5-6 NC), so a symbol carrying R10 /
+# R11's port names (1 4V8, 2 GND) or the servo symbol's names on a port fails here.
+PORT_PIN_NAMES = {'1': 'GND', '2': '4V8', '3': 'TXO', '4': 'RXI'}
+GPS_PIN_NAMES = {**PORT_PIN_NAMES, '5': 'NC', '6': 'NC'}
+CAMERA_PIN_NAMES = {'1': '5V_OUT', '2': '5V_OUT', '3': 'GND', '4': 'GND', '5': 'RX_FROM_CAMERA_TX',
+                    '6': 'TX_TO_CAMERA_RX'}
+SERVO_PIN_NAMES = {'1': 'SERVO1', '2': 'SERVO2', '3': 'SERVO3', '4': 'SERVO4', '5': 'GND', '6': 'NC'}
+SWITCH_PIN_NAMES = {'1': 'SW_SOURCE', '2': 'SW_RETURN', '3': 'NC', '4': 'NC'}
+TERMINAL_PIN_NAMES = {'J410': GPS_PIN_NAMES, 'J420': PORT_PIN_NAMES, 'J440': PORT_PIN_NAMES, 'J9': CAMERA_PIN_NAMES,
+                      'J122': SERVO_PIN_NAMES, 'J400': SWITCH_PIN_NAMES}
+# pin name -> the net that name allows (a regex); NC: no connection (KiCad's unconnected-(...) net or none)
+NAME_NETS = {'GND': r'GND', '4V8': r'PORT_4V8', 'TXO': r'(GPS|RADIO|AUX)_TX_WIRE', 'RXI': r'(GPS|RADIO|AUX)_RX_WIRE',
+             'NC': r'(unconnected-\(.*\))?', '5V_OUT': r'CAM_5V', 'RX_FROM_CAMERA_TX': r'CAM_RX_WIRE',
+             'TX_TO_CAMERA_RX': r'CAM_TX_WIRE', 'SERVO1': r'SERVO1_OUT', 'SERVO2': r'SERVO2_OUT',
+             'SERVO3': r'SERVO3_OUT', 'SERVO4': r'SERVO4_OUT', 'SW_SOURCE': r'BAT_SW_SOURCE',
+             'SW_RETURN': r'BAT_SW_RETURN'}
+
+
+def read_pin_names(path):
+    """{(ref, pin): (pin name, net)} from a netlist export (R10 r10_sch_check.read_pin_names, with the net)."""
+    import xml.etree.ElementTree as ET
+    names = {}
+    for net in ET.parse(path).getroot().findall('./nets/net'):
+        for node in net.findall('node'):
+            function, suffix = node.get('pinfunction') or '', '_' + node.get('pin')
+            name = function[:-len(suffix)] if function.endswith(suffix) else function
+            names[node.get('ref'), node.get('pin')] = (name, net.get('name'))
+    return names
+
+
+def terminal_pin_issues(names):
+    """Each external connector's pin names are TERMINAL_PIN_NAMES's, and each name's net is the one it names."""
+    issues = []
+    for ref, want in TERMINAL_PIN_NAMES.items():
+        got = {pin: names.get((ref, pin), (None, None))[0] for pin in want}
+        if got != want:
+            issues.append(f'{ref}: pin names {got}, expected {want} (REQUIREMENTS F10, D-R12-31, R12F6-TRI-09)')
+        for pin in sorted(want):
+            name, net = names.get((ref, pin), (None, None))
+            if name in NAME_NETS and not re.fullmatch(NAME_NETS[name], net or ''):
+                issues.append(f'{ref}.{pin}: pin named {name} is on net {net!r} (R12F6-TRI-09)')
+        extra = sorted(p for (r, p) in names if r == ref and p not in want)
+        if extra:
+            issues.append(f'{ref}: pins {extra} not in its pin-name table')
+    return issues
+
+
+def name_seeds(names):
+    """Seeded pin-name faults (in memory); each must be caught."""
+    def put(ref, table):
+        return lambda m: m.update({(ref, p): (v, m[ref, p][1]) for p, v in table.items() if (ref, p) in m})
+    r11_port = {'1': '4V8', '2': 'GND', '3': 'TXO', '4': 'RXI'}
+    servo4 = {'1': 'SERVO1', '2': 'SERVO2', '3': 'SERVO3', '4': 'SERVO4', '5': 'GND', '6': 'NC'}
+    mutations = {
+        'ports keep R11\'s PortTerminal names (1 4V8, 2 GND)': put('J420', r11_port),
+        'GPS port on the servo symbol': put('J410', servo4),
+        'port TXO / RXI names swapped': put('J440', {'3': 'RXI', '4': 'TXO'}),
+        'camera terminal given the port names': put('J9', PORT_PIN_NAMES),
+        'port pin 1 net moved to PORT_4V8 under its GND name': lambda m: m.update({('J420', '1'): ('GND', 'PORT_4V8')}),
+    }
+    results = {}
+    for label, mutate in mutations.items():
+        mutant = dict(names)
+        mutate(mutant)
+        results[label] = bool(terminal_pin_issues(mutant))
+    return results
 
 
 def read_netlist(path):
@@ -232,6 +307,8 @@ def seeds(parts, pins):
         'wire pads in the BOM': lambda p, n: p['J1']['flags'].remove('exclude_from_bom'),
         'buzzer (LS120, JLC-assembled THT) removed': pop('LS120'),
         'barometer PS (I2C select) floating': lambda p, n: n.update({('U5', '2'): None}),
+        'cold pull-up anode on 3V3 (R136 bypassed, R12F6-TRI-01)': lambda p, n: n.update({('D120', '1'): '3V3'}),
+        'cold pull-up series resistor removed': pop('R136'),
     }
     out = {}
     for label, mutate in mutations.items():
@@ -264,7 +341,10 @@ def check(project):
         issues.append('pin_table.tsv differs from r12_sch.pin_table_text()')
     parts, pins = read_netlist(project / 'schematic.net.xml')
     issues += contract(parts, pins, project)
+    names = read_pin_names(project / 'schematic.net.xml')
+    issues += terminal_pin_issues(names)
     seeded = seeds(parts, pins)
+    seeded.update({f'pin names: {k}': v for k, v in name_seeds(names).items()})
     seeded['bottom-side SMD land'] = side_seed(project)
     issues += [f'seed survived: {name}' for name, caught in seeded.items() if not caught]
     if (project / 'm3.kicad_dru').read_text() != gen.dru((gen.INPUT / 'm3.kicad_dru').read_text()):
@@ -297,6 +377,7 @@ def check(project):
         gen.sch.export_netlist(fresh)
         p2, n2 = read_netlist(fresh / 'schematic.net.xml')
         issues += ['fresh schematic export: ' + i for i in contract(p2, n2)]
+        issues += ['fresh schematic export: ' + i for i in terminal_pin_issues(read_pin_names(fresh / 'schematic.net.xml'))]
     return {'ok': not issues, 'issues': issues, 'components': len(parts), 'pins': len(pins),
             'erc_violations': len(violations), 'seeded_faults': seeded,
             'netlist_sha256': hashlib.sha256((project / 'schematic.net.xml').read_bytes()).hexdigest(),

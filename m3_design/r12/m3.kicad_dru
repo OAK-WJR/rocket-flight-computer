@@ -53,9 +53,9 @@
   (condition "(A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'GND' && !(B.memberOfFootprint('U1') && B.NetName == 'unconnected-*')")
   (constraint clearance (min 1.06mm)))
 
-# R10 D-R26-02 (1.040 mm), default-deny: every net but GND, the gate nets (their own rule) and PYRO1_IGN / _COLD / _CONT_MID (check_r12 S-10)
+# R10 D-R26-02 (1.040 mm), default-deny: every net but GND, the gate nets (their own rule) and PYRO1_IGN / _COLD / _CONT_MID; U1 NC balls count (R12F6-TRI-02; check_r12 S-10)
 (rule "S-10 PYRO1_OUT to every net"
-  (condition "A.NetName == 'PYRO1_OUT' && B.NetName != 'PYRO1_OUT' && B.NetName != 'GND' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO1_COLD' && B.NetName != 'PYRO1_CONT_MID' && B.NetName != 'PYRO1_IGN' && !(B.memberOfFootprint('U1') && B.NetName == 'unconnected-*')")
+  (condition "A.NetName == 'PYRO1_OUT' && B.NetName != 'PYRO1_OUT' && B.NetName != 'GND' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO1_COLD' && B.NetName != 'PYRO1_CONT_MID' && B.NetName != 'PYRO1_IGN'")
   (constraint clearance (min 1.04mm)))
 
 # R10 row 1 surface pairs 0.177 / 0.180 mm, R12 0.25 mm (check_r12 S-10)
@@ -68,9 +68,9 @@
   (condition "A.NetName == 'PYRO1_OUT' && B.NetName == 'GND' && (A.Type == 'Zone' || B.Type == 'Zone') && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
   (constraint clearance (min 0.5mm)))
 
-# R134 overload: J121.2 sat 0.100 mm from GND_pour_B (round 5 verifier; check_r12 S-10)
+# R134 overload: J121.2 sat 0.100 mm from GND_pour_B (round 5 verifier); U1 NC balls count (R12F6-TRI-02; check_r12 S-10)
 (rule "S-10 PYRO1_IGN to every net"
-  (condition "A.NetName == 'PYRO1_IGN' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO1_OUT' && B.NetName != 'RAW_ACT' && !(B.memberOfFootprint('U1') && B.NetName == 'unconnected-*') && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
+  (condition "A.NetName == 'PYRO1_IGN' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO1_OUT' && B.NetName != 'RAW_ACT' && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
   (constraint clearance (min 0.25mm)))
 
 # R134 overload: every pour >= 0.5 mm from J121.2 (check_r12 S-10)

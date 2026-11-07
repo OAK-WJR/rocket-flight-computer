@@ -305,19 +305,19 @@
 							(font
 								(size 1.05 1.05))))))
 			(embedded_fonts no))
-		(symbol "M3:PortTerminal"
+		(symbol "M3:PortSH4"
 			(pin_names
 				(offset 1.016))
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "J"
-				(at 0 8.89 0)
+				(at 0 7.62 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Value" "PortTerminal"
-				(at 0 -8.89 0)
+			(property "Value" "PortSH4"
+				(at 0 -7.62 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
@@ -333,13 +333,13 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Description" "GH-1.25 clone 4-pin always-on port (D-R19-14, D-R12-15): 1 PORT_4V8, 2 GND, 3 board TXO, 4 board RXI"
+			(property "Description" "Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) always-on port (D-R19-14, D-R12-31, MicoAir H743 order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI"
 				(at 0 0 0)
 				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_keywords" "port terminal UART"
+			(property "ki_keywords" "connector port uart"
 				(at 0 0 0)
 				(hide yes)
 				(effects
@@ -351,20 +351,20 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(symbol "PortTerminal_0_1"
+			(symbol "PortSH4_0_1"
 				(rectangle
-					(start -10.16 6.35)
-					(end 10.16 -6.35)
+					(start -7.62 5.08)
+					(end 7.62 -5.08)
 					(stroke
 						(width 0.254)
 						(type default))
 					(fill
 						(type background))))
-			(symbol "PortTerminal_1_1"
+			(symbol "PortSH4_1_1"
 				(pin passive line
-					(at -15.24 3.81 0)
+					(at -12.7 3.81 0)
 					(length 5.08)
-					(name "4V8"
+					(name "GND"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -373,9 +373,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -15.24 1.27 0)
+					(at -12.7 1.27 0)
 					(length 5.08)
-					(name "GND"
+					(name "4V8"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -384,7 +384,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -15.24 -1.27 0)
+					(at -12.7 -1.27 0)
 					(length 5.08)
 					(name "TXO"
 						(effects
@@ -395,13 +395,136 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -15.24 -3.81 0)
+					(at -12.7 -3.81 0)
 					(length 5.08)
 					(name "RXI"
 						(effects
 							(font
 								(size 1.05 1.05))))
 					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
+		(symbol "M3:PortSH6"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "J"
+				(at 0 10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "PortSH6"
+				(at 0 -10.16 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) always-on GPS port (D-R19-14, D-R12-31, MicoAir H743 GPS order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI, 5-6 unused (the H743's I2C pins, NC on R12)"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "connector port uart gps"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "M3_SHC_6P"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "PortSH6_0_1"
+				(rectangle
+					(start -7.62 7.62)
+					(end 7.62 -7.62)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "PortSH6_1_1"
+				(pin passive line
+					(at -12.7 6.35 0)
+					(length 5.08)
+					(name "GND"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 3.81 0)
+					(length 5.08)
+					(name "4V8"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 1.27 0)
+					(length 5.08)
+					(name "TXO"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -1.27 0)
+					(length 5.08)
+					(name "RXI"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "4"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -3.81 0)
+					(length 5.08)
+					(name "NC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "5"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -6.35 0)
+					(length 5.08)
+					(name "NC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "6"
 						(effects
 							(font
 								(size 1.05 1.05))))))
@@ -501,129 +624,6 @@
 					(font
 						(size 1.27 1.27))
 					(hide yes))))
-		(symbol "M3:ServoGH6"
-			(pin_names
-				(offset 1.016))
-			(exclude_from_sim no)
-			(in_bom yes)
-			(on_board yes)
-			(property "Reference" "J"
-				(at 0 10.16 0)
-				(effects
-					(font
-						(size 1.27 1.27))))
-			(property "Value" "ServoGH6"
-				(at 0 -10.16 0)
-				(effects
-					(font
-						(size 1.27 1.27))))
-			(property "Footprint" ""
-				(at 0 0 0)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27))))
-			(property "Datasheet" ""
-				(at 0 0 0)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27))))
-			(property "Description" "GH-1.25 clone 6-pin servo port (D-R12-15): 1-4 SERVO1-4, 5 GND, 6 unused"
-				(at 0 0 0)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27))))
-			(property "ki_keywords" "connector servo"
-				(at 0 0 0)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_SHC_6P"
-				(at 0 0 0)
-				(hide yes)
-				(effects
-					(font
-						(size 1.27 1.27))))
-			(symbol "ServoGH6_0_1"
-				(rectangle
-					(start -7.62 7.62)
-					(end 7.62 -7.62)
-					(stroke
-						(width 0.254)
-						(type default))
-					(fill
-						(type background))))
-			(symbol "ServoGH6_1_1"
-				(pin passive line
-					(at -12.7 6.35 0)
-					(length 5.08)
-					(name "SERVO1"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "1"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 3.81 0)
-					(length 5.08)
-					(name "SERVO2"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "2"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 1.27 0)
-					(length 5.08)
-					(name "SERVO3"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "3"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 -1.27 0)
-					(length 5.08)
-					(name "SERVO4"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "4"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 -3.81 0)
-					(length 5.08)
-					(name "GND"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "5"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 -6.35 0)
-					(length 5.08)
-					(name "NC"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "6"
-						(effects
-							(font
-								(size 1.05 1.05))))))
-			(embedded_fonts no))
 	)
 	(text "M3-ASSY-R12 (15 | GPS / radio / AUX ports and microSD): drawn from R11 0b26da5 with circuit.json (R12_DECISIONS.md); every pin reaches a global label."
 		(at 25.4 25.4 0)
@@ -817,7 +817,7 @@
 			(justify right))
 		(uuid 35fecd97-62ce-5dbd-9d27-bbb6e56d9d4c))
 	(symbol
-		(lib_id "M3:ServoGH6")
+		(lib_id "M3:PortSH6")
 		(at 124.46 73.66 0)
 		(unit 1)
 		(in_bom yes)
@@ -947,55 +947,55 @@
 		(at 111.76 80.01)
 		(uuid c486ed5d-1555-500c-b5a4-672428c9c6db))
 	(symbol
-		(lib_id "M3:PortTerminal")
-		(at 172.72 71.12 0)
+		(lib_id "M3:PortSH4")
+		(at 170.18 71.12 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 7dc3dfe3-ba5f-588b-86d8-0f20c20dd9e4)
 		(property "Reference" "J420"
-			(at 172.72 63.5 0)
+			(at 170.18 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "ZX-SH1.0-4PWT"
-			(at 172.72 66.04 0)
+			(at 170.18 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_SHC_4P"
-			(at 172.72 71.12 0)
+			(at 170.18 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C7430446"
-			(at 172.72 71.12 0)
+			(at 170.18 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Megastar"
-			(at 172.72 71.12 0)
+			(at 170.18 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "ZX-SH1.0-4PWT"
-			(at 172.72 71.12 0)
+			(at 170.18 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430446"
-			(at 172.72 71.12 0)
+			(at 170.18 71.12 0)
 			(hide yes)
 			(effects
 				(font
@@ -1323,55 +1323,55 @@
 			(justify left))
 		(uuid 93414233-eb86-505d-baaf-7de198dde0ea))
 	(symbol
-		(lib_id "M3:PortTerminal")
-		(at 287.02 71.12 0)
+		(lib_id "M3:PortSH4")
+		(at 284.48 71.12 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid c23f1645-279e-5225-9fdf-6a33a8b2f09e)
 		(property "Reference" "J440"
-			(at 287.02 63.5 0)
+			(at 284.48 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "ZX-SH1.0-4PWT"
-			(at 287.02 66.04 0)
+			(at 284.48 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_SHC_4P"
-			(at 287.02 71.12 0)
+			(at 284.48 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C7430446"
-			(at 287.02 71.12 0)
+			(at 284.48 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Megastar"
-			(at 287.02 71.12 0)
+			(at 284.48 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "ZX-SH1.0-4PWT"
-			(at 287.02 71.12 0)
+			(at 284.48 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430446"
-			(at 287.02 71.12 0)
+			(at 284.48 71.12 0)
 			(hide yes)
 			(effects
 				(font

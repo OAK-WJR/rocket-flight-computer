@@ -25,7 +25,9 @@ S-9: actual fire-path copper >= 0.5 mm; battery feed >= 1 mm; no inherited narro
 S-10: on every copper layer, fills (protected-net fills too) and barrels included, default-deny (m3_design/r12_fire.py):
       Q124's gate nets >= 1.0585 mm from every net but GND, the gate pair and U1's NC balls; PYRO1_OUT >= 1.040 mm
       from every net but GND (0.25 / 0.5 mm copper / fills) and three pyro-network nets; PYRO1_IGN >= 0.25 / 0.5 mm;
-      only measured item pairs, each with its own floor and reason, are excepted (R12F5-TRI-01, verifier lane P2).
+      U1's NC balls count against PYRO1_OUT and PYRO1_IGN (R12F6-TRI-02); only measured item pairs, each with its own
+      floor and reason, are excepted (R12F5-TRI-01, verifier lane P2); a netlist guard holds every not-a-path class in
+      the commanded-fire state and keeps the cold pull-up diode's anode off 3V3 (R12F6-TRI-01).
 W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
@@ -302,12 +304,22 @@ SH_PORTS = {
 WIRE_PADS = {'J1': {'1': 'BAT_IN', '2': 'GND'}}  # D-R12-30; J121 is fitted DB125 (D-R12-29).
 
 
+# R12F6-TRI-01: the cold pull-up is 3V3 -> R136 -> D120 (PYRO1_COLD_PU) -> PYRO1_COLD -> R131 -> PYRO1_OUT. R136 is the
+# one named tie from the armed-side sense chain to a supply; D120 no longer touches 3V3, so R10's (D120, PYRO1_COLD,
+# 3V3) tie is dropped and a D120 anode back on 3V3 fails S-1 / S-2 as an unnamed tie (and S-10's fire-state guard).
+SUPPLY_TIES = {k: v for k, v in r10.SUPPLY_TIES.items() if k[0] != 'D120'}
+SUPPLY_TIES[('R136', 'PYRO1_COLD_PU', '3V3')] = ('cold pull-up series resistor R136 (R12F6-TRI-01): the continuity '
+                                                 'cold-side bias (H-1) from 3V3 through R136, D120 and R131')
+ARMED_NET_PARTS = dict(r10.ARMED_NET_PARTS, PYRO1_COLD_PU={'D120', 'R136'})
+
+
 def s1(c):
-    return r11.s1(c)
+    with r10.patched(r10, SUPPLY_TIES=SUPPLY_TIES, ARMED_NET_PARTS=ARMED_NET_PARTS):
+        return r11.s1(c)
 
 
 def s2(c):
-    with r10.patched(r10, PFET_ROLES=FET_ROLES):
+    with r10.patched(r10, PFET_ROLES=FET_ROLES, SUPPLY_TIES=SUPPLY_TIES, ARMED_NET_PARTS=ARMED_NET_PARTS):
         return r11.s2(c)
 
 
@@ -671,8 +683,8 @@ NEIGHBOUR_INERT = {
     ('ACT_EN_MCU', 'PYRO1_CONT'): dict(
         source='PYRO1_OUT', vmax=('fixed', PACK_MAX_V), top=('R173', 'R129'), bottom=('R130', 'R178'),
         why='D-R11-85 (fixed ball, R10\'s LQFP neighbour of PC1 too): passive 10.2k / 1k divider of PYRO1_OUT. With the '
-            'bus off PYRO1_OUT is held near 1.6 V by the cold pull-up (R131 10k from 3V3 through D120), so the pack '
-            'bound applies only to a bus already on (Calculation / Inference)'),
+            'bus off PYRO1_OUT is held near 1.6 V by the cold pull-up (R136 5.1k, D120 and R131 5.1k from 3V3, '
+            'R12F6-TRI-01), so the pack bound applies only to a bus already on (Calculation / Inference)'),
     ('ACT_EN_MCU', 'CAM_5V_SENSE'): dict(
         source='CAM_5V', vmax=('rail', 'CAM_5V ('), top=('R104', 'R107'), bottom=('R105', 'R106'),
         why='D-R11-85 / -86: passive 10.2k / 1k divider of CAM_5V (Calculation / Inference)'),
@@ -925,7 +937,10 @@ def s10(c, exceptions=None, not_a_path=None):
     netlist = getattr(c, 'netlist', None) or R12_DIR / 'schematic.net.xml'
     classes = fire.netlist_classes(netlist)
     issues += [f'S-10: {m}' for m in fire.guard(classes, not_a_path)]
+    fired, fire_ev = fire.fire_state_guard(netlist, not_a_path, classes)     # R12F6-TRI-01: the commanded-fire state
+    issues += [f'S-10: {m}' for m in fired]
     return issues, dict(exceptions=kept, u1_nc_balls=nc, owner_pairs=owner, netlist_classes=classes,
+                        fire_state=dict(series_ohm=fire_ev, min_ohm=fire.FIRE_SERIES_MIN),
                         not_a_path={f'{p} / {f}': why for (p, f), why in fire.NOT_A_PATH.items()},
                         limits=dict(gate=fire.GATE_MIN, out=fire.OUT_MIN, out_gnd=fire.GND_MIN, fill=fire.FILL_MIN,
                                     ign=fire.IGN_MIN))

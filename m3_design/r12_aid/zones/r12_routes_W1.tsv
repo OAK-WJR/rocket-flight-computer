@@ -411,7 +411,10 @@ track	PYRO1_OUT	F	0.2	6.6	46.2	8.6	46.2
 track	PYRO1_OUT	F	0.2	8.6	46.2	9.1	46.7
 track	PYRO1_OUT	F	0.2	9.1	46.7	11.5	46.7
 track	PYRO1_COLD	F	0.2	6.6	47.03	6.6	48.2
-track	3V3	F	0.3	5.65	50.2	5.65	51.2
-via	3V3	-	0.45	5.65	51.2		
+# R12F6-TRI-01: D120.1 (A1) is PYRO1_COLD_PU, fed from 3V3 through R136 (4.1, 50.2) rot 0 directly west; R136.1's own
+# 3V3 via drops to the In2 3V3 plane (was D120.1 straight to the 3V3 via at (5.65, 51.2)).
+track	PYRO1_COLD_PU	F	0.2	5.65	50.2	4.53	50.2
+track	3V3	F	0.3	3.67	50.2	2.65	50.2
+via	3V3	-	0.45	2.65	50.2		
 track	PYRO1_GATE	F	0.2	11.03	44.2	13	44.2
 track	PYRO1_GATE	F	0.2	13	44.2	14.8	42.4

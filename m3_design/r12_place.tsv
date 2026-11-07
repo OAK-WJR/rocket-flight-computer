@@ -66,7 +66,7 @@ D5	43.6	31.2	90	F	D-R12-94 (AVA re-layout): Z2 RAW -> VLOGIC OR-ing on the east 
 D6	40.6	37.7	180	F	D-R12-94 (AVA re-layout): Z2 VBUS -> VLOGIC OR-ing diode between J3 and C84
 D8	10.4	13.7	90	F	BAT_IN TVS at the entry
 D9	25.4	19	90	F	RAW reverse clamp
-D120	6.6	49.2	270	F	R12F5-TRI-01 (S-10): moved from (9.6, 47.4) rot 0 to below R131, cathode (COLD) north, so its 3V3 anode is >= 1.04 mm from every PYRO1_OUT copper (D120.1 sat 0.13 mm from the OUT run); was: cold
+D120	6.6	49.2	270	F	R12F5-TRI-01 (S-10): moved from (9.6, 47.4) rot 0 to below R131, cathode (COLD) north, so its 3V3 anode is >= 1.04 mm from every PYRO1_OUT copper (D120.1 sat 0.13 mm from the OUT run); was: cold; R12F6-TRI-01: the anode is PYRO1_COLD_PU, fed from 3V3 through R136 south of it
 D121	28	10.2	0	F	servo clamp (SRV05-4)
 D123	6	57.2	0	F	D-R12-94 (AVA re-layout): Z6 buzzer flyback
 D402	10.6	7.8	270	F	J400.2 ESD clamp at the port; 1.0 mm west so J400's footprint pin-1 mark stays nearest its own pad 1 (D-R12-80)
@@ -134,10 +134,11 @@ R127	10.6	45.2	0	F	gate
 R128	10.6	43.2	0	F	gate pull-down
 R129	12.6	47	0	F	cont
 R130	12.6	48	0	F	cont
-R131	6.6	46.6	270	F	R12F5-TRI-01 (S-10): turned 180 degrees so PYRO1_OUT (pin 1) faces the OUT run north and PYRO1_COLD (pin 2) faces D120 south; was: cold
+R131	6.6	46.6	270	F	R12F5-TRI-01 (S-10): turned 180 degrees so PYRO1_OUT (pin 1) faces the OUT run north and PYRO1_COLD (pin 2) faces D120 south; was: cold; R12F6-TRI-01: 10k -> 5.1k (same land)
 R132	16.6	33.6	90	F	arm
 R133	16.6	36	90	F	arm
 R134	13.9	34.7	90	F	2 ohm series
+R136	4.1	50.2	0	F	R12F6-TRI-01: cold pull-up series resistor 3V3 -> R136 -> D120.1 (PYRO1_COLD_PU); in line west of D120.1 (pad 2 east to the anode, pad 1 west to its own 3V3 via; south of D120.1 is D120's pin-1 dot), courtyard 0.13 mm clear of D120's, more than 3.5 mm from every PYRO1_OUT item
 R150	24.1	12.1	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
 R151	23.1	9	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
 R152	22.1	12.1	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
