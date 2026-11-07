@@ -22,9 +22,10 @@ S-6 / S-7: external ports separated from safety copper; servo signals and GND on
 S-8: barrel wall AND retained inner ring >= 1 mm from foreign In1/In2 copper, including In2 signals;
      GND counts on ACT_GATE, ACT_DRV and PYRO1_OUT (D-R12-34, inherited R10 hazard policy).
 S-9: actual fire-path copper >= 0.5 mm; battery feed >= 1 mm; no inherited narrow-track exceptions.
-S-10: on every copper layer, fills and barrels included, Q124's gate nets >= 1.0585 mm from every net that can raise
-      the gate and PYRO1_OUT >= 1.040 mm from the low rails, >= 0.25 / 0.5 mm from GND copper / fills; only the PE4
-      lane at U1.B2 / D2 (D-R11-23) and Q124's own land pair are excepted, each with a floor (R12F5-TRI-01).
+S-10: on every copper layer, fills (protected-net fills too) and barrels included, default-deny (m3_design/r12_fire.py):
+      Q124's gate nets >= 1.0585 mm from every net but GND, the gate pair and U1's NC balls; PYRO1_OUT >= 1.040 mm
+      from every net but GND (0.25 / 0.5 mm copper / fills) and three pyro-network nets; PYRO1_IGN >= 0.25 / 0.5 mm;
+      only measured item pairs, each with its own floor and reason, are excepted (R12F5-TRI-01, verifier lane P2).
 W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
@@ -266,6 +267,7 @@ def native(ctx):
         c.bom, c.cpl, c._reach = ctx.get('bom'), ctx.get('cpl'), None
         c.text = p.read_text() if p.is_file() else None
         c.data = ctx.get('data')
+        c.netlist = ctx.get('netlist')
         if c.data is None:
             c.data = json.loads((R12_DIR / 'design/r12_gate_data.json').read_text())
         import r12_sch
@@ -785,58 +787,21 @@ def k_neighbours(c):
     return issues, ev
 
 
-# S-10 (R12F5-TRI-01): R10's fire-net copper gaps (D-R26-02 / -04, gated in R10 by test_r10_check.test_r26_*) and
-# D-R11-23 as one rule on every copper layer: tracks, vias and pads where they are flashed, plated barrels (via and pad
-# hole walls) where they are not, and every zone fill. One solder bridge, or a later CAF / dendrite path, from a gate net
-# to copper that can raise it turns Q124 on, and one from PYRO1_OUT to a low rail or GND passes bus current through the
-# match; the bus is live from the on-rail check (AGENTS section 2.1), so either fires an enabled match.
-#  * Q124's gate nets (PYRO1_GATE and PE4's PYRO1_GATE_N) keep S10_GATE_MIN from every net except GND (holds the gate
-#    off), the gate pair itself, NC pins and the nets of S10_GATE_INERT (each with the triage's reason: one bridge cannot
-#    raise the gate); so the pyro-side nets (PYRO1_OUT / _IGN / _COLD / _CONT / _CONT_MID), every rail and every new net
-#    count by default.
-#  * PYRO1_OUT keeps S10_OUT_RAIL_MIN from the low-voltage rails S10_OUT_RAILS (3V3 / 3V3A as R10, and the other rails
-#    below the bus), S10_OUT_GND_MIN from GND copper and S10_OUT_GND_FILL_MIN from GND fills (R10 row 1 recorded the
-#    surface pairs at 0.177 / 0.180 mm; R12 keeps more).
-#  * Exceptions, each with a floor it must still keep: the PE4 lane at U1.B2 / D2 (D-R11-23, D-R12-104, R12_VALIDATION
-#    row 25: PE4's copper inside U1's courtyard against 3V3 copper inside it, floor 0.150 mm, the recorded figure) and
-#    Q124's own SOT-23 gate-to-drain land pair (Q124.1 / Q124.3, 1.044 mm, floor 1.0 mm).
-# The DRU carries the same sets as clearance rules (m3_design/r12_sch.py FIRE_RULES), so DRC holds them and the pours
+# S-10 (R12F5-TRI-01, tightened by the round 5 verifier's lane P2): R10's fire-net copper gaps (D-R26-02 / -04, gated in
+# R10 by test_r10_check.test_r26_*) and D-R11-23 as one rule on every copper layer: tracks, vias and pads where they are
+# flashed, plated barrels (via and pad hole walls) where they are not, and every zone fill, protected-net fills
+# included. One solder bridge, or a later CAF / dendrite path, from a gate net to copper that can raise it turns Q124 on,
+# and one from PYRO1_OUT to a net that can sink current passes bus current through the match; the bus is live from the
+# on-rail check (AGENTS section 2.1), so either fires an enabled match. PYRO1_IGN is held too (R134 overload).
+# The classes, limits and measured exceptions are m3_design/r12_fire.py's (default-deny: a net counts unless classed
+# there with a calculated reason; only U1's NC balls are exempt as NC; every exception is one item pair with its own
+# floor). The DRU carries the same definition (r12_sch.dru() from r12_fire.dru_rules()), so DRC holds it and the pours
 # pull back on refill; this rule measures the board itself, and K-rules binds the DRU to the generator.
-S10_GATES = ('PYRO1_GATE', 'PYRO1_GATE_N')
-S10_GATE_MIN = 1.0585        # mm, R10 D-R26-04 (Q124's gate nets from 3V3 / 3V3A), widened to every raising net
-S10_GATE_INERT = {
-    'GND': 'holds the gate off',
-    'HSE_IN': 'the crystal node: no DC drive (R12F5 triage)',
-    'HSE_OUT': 'the crystal node: no DC drive (R12F5 triage)',
-    'BOOT0': 'held low by R5 10k (R12F5 triage)',
-    'BAT_FAULT_N': 'a 10k pull-up against R127 1k: about 0.3 V on PE4 (R12F5 triage)',
-    'QSPI_IO2': 'MCU-driven; R10\'s QSPI_IO2 / PE4 firmware rule (R12F5 triage)',
-}
-S10_OUT = 'PYRO1_OUT'
-S10_OUT_RAILS = ('3V3', '3V3A', 'VCAP1', 'VCAP2', 'PORT_4V8', 'PORT_SW', 'CAM_5V', 'CAM_SW', 'VBUS', 'SW_NODE')
-S10_OUT_RAIL_MIN = 1.040     # mm, R10 D-R26-02
-S10_OUT_GND_MIN = 0.25       # mm, above R10 row 1's 0.177 / 0.180 mm surface pairs
-S10_OUT_GND_FILL_MIN = 0.5   # mm, GND fills (J121.1 sat 0.101 mm from GND_pour_B on 68e6b650)
-S10_LANE = dict(ref='U1', a='PYRO1_GATE_N', b='3V3', floor=0.150,
-                why='D-R11-23 / D-R12-104 (R12_VALIDATION row 25): PE4 (C3) and its lane inside U1\'s courtyard '
-                    'against U1.B2 / D2 and their dog-bones')
-S10_Q124 = dict(ref='Q124', pads=('1', '3'), floor=1.0, why='Q124\'s own SOT-23 gate / drain lands')
+import r12_fire as fire
 
-
-def s10_gate_raises(net):
-    """True when a bridge from Q124's gate nets to `net` can raise the gate (S-10's default: every net counts)."""
-    return bool(net) and net not in S10_GATES and net not in S10_GATE_INERT and not net.startswith('unconnected-')
-
-
-def s10_limit(na, nb, b_fill):
-    """S-10's minimum gap (mm) between copper of nets na and nb (b_fill: the nb item is a zone fill), or None."""
-    if na in S10_GATES and s10_gate_raises(nb):
-        return S10_GATE_MIN
-    if na == S10_OUT and nb in S10_OUT_RAILS:
-        return S10_OUT_RAIL_MIN
-    if na == S10_OUT and nb == 'GND':
-        return S10_OUT_GND_FILL_MIN if b_fill else S10_OUT_GND_MIN
-    return None
+S10_GATES, S10_OUT, S10_IGN = fire.GATES, fire.OUT, fire.IGN
+S10_GATE_MIN, S10_OUT_MIN, S10_GND_MIN, S10_FILL_MIN, S10_IGN_MIN = (fire.GATE_MIN, fire.OUT_MIN, fire.GND_MIN,
+                                                                      fire.FILL_MIN, fire.IGN_MIN)
 
 
 def copper_items(board):
@@ -894,25 +859,17 @@ def shape_gap(a, b, reach):
 
 
 def fire_gaps(board, items=None):
-    """S-10's measured pairs: [(gap, limit, net_a, label_a, net_b, label_b, layer name, exception or None)] for every
-    pair of a protected net's item and a foreign item on one layer nearer than its S-10 limit."""
+    """S-10's measured pairs: [dict(gap, limit, cls, net_a, a, net_b, b, layer)] for every pair of copper items on one
+    layer, one of them on a protected net (r12_fire.PROTECTED), nearer than GATE_MIN plus 10 um. limit is None when the
+    pair is not a path (cls says why); a is the item of the first protected net of the pair (r12_fire priority)."""
     import pcbnew
     items = copper_items(board) if items is None else items
-    u1 = board.FindFootprintByReference(S10_LANE['ref'])
-    yard = u1.GetCourtyard(pcbnew.F_CrtYd) if u1 else None
-    in_yard = {}
-
-    def inside(i, item):
-        if yard is None or not yard.OutlineCount():
-            return False
-        if i not in in_yard:
-            in_yard[i] = item[5] == S10_LANE['ref'] or bool(yard.Collide(item[3], 0))
-        return in_yard[i]
     boxes = [it[3].BBox() for it in items]
-    reach = pcbnew.FromMM(max(S10_GATE_MIN, S10_OUT_RAIL_MIN, S10_OUT_GND_FILL_MIN) + 0.01)
-    out = []
+    reach = pcbnew.FromMM(fire.REACH)
+    rank = {n: i for i, n in enumerate(fire.PROTECTED)}
+    seen, out = set(), []
     for i, a in enumerate(items):
-        if a[4] or (a[0] not in S10_GATES and a[0] != S10_OUT):
+        if a[0] not in rank:
             continue
         box = boxes[i]
         grown = pcbnew.BOX2I(box.GetPosition() - pcbnew.VECTOR2I(reach, reach),
@@ -920,35 +877,58 @@ def fire_gaps(board, items=None):
         for j, b in enumerate(items):
             if b[1] != a[1] or b[0] == a[0] or not grown.Intersects(boxes[j]):
                 continue
-            limit = s10_limit(a[0], b[0], b[4])
-            if limit is None:
+            key = (min(i, j), max(i, j))
+            if key in seen:
                 continue
-            gap = shape_gap(a[3], b[3], limit)
+            seen.add(key)
+            limit, cls, pn = fire.pair_limit(a[0], a[5], b[0], b[5], a[4] or b[4])
+            gap = shape_gap(a[3], b[3], fire.REACH)
             if gap is None:
                 continue
-            exception = None
-            if a[0] == S10_LANE['a'] and b[0] == S10_LANE['b'] and inside(i, a) and inside(j, b):
-                exception = S10_LANE
-            elif (a[5], b[5]) == (S10_Q124['ref'],) * 2 and {a[6], b[6]} == set(S10_Q124['pads']):
-                exception = S10_Q124
-            out.append((round(gap, 4), limit, a[0], a[2], b[0], b[2], board.GetLayerName(a[1]), exception))
-    return sorted(out, key=lambda r: (r[0], r[2], r[3], r[4], r[5]))
+            p, q = (a, b) if pn == a[0] else (b, a)
+            out.append(dict(gap=round(gap, 4), limit=limit, cls=cls, net_a=p[0], a=p[2], net_b=q[0], b=q[2],
+                            layer=board.GetLayerName(a[1])))
+    return sorted(out, key=lambda r: (r['gap'], r['net_a'], r['a'], r['net_b'], r['b']))
 
 
-def s10(c):
-    """S-10: Q124's gate nets and PYRO1_OUT keep their R10 gaps on every layer, fills included (R12F5-TRI-01)."""
-    issues, kept = [], []
-    for gap, limit, na, la, nb, lb, layer, exception in fire_gaps(c.board):
-        where = f'{na} {la} to {nb} {lb} on {layer}: {gap:.4f} mm'
-        if exception is None:
-            issues.append(f'S-10: {where}, below {limit:g} mm')
-        elif gap < exception['floor'] - 5e-4:
-            issues.append(f'S-10: {where}, below the {exception["floor"]:g} mm floor of its exception '
-                          f'({exception["why"]})')
+def s10(c, exceptions=None, not_a_path=None):
+    """S-10: Q124's gate nets, PYRO1_OUT and PYRO1_IGN keep their limits on every layer, fills included; only the
+    measured item-pair exceptions of r12_fire, each above its floor, are allowed below a limit (R12F5-TRI-01)."""
+    table = fire.exception_index(exceptions)
+    issues, kept, nc, owner, used = [], [], [], [], set()
+    for r in fire_gaps(c.board):
+        where = f'{r["net_a"]} {r["a"]} to {r["net_b"]} {r["b"]} on {r["layer"]}: {r["gap"]:.4f} mm'
+        if r['limit'] is None:
+            if r['cls'] == 'U1 NC ball' and r['gap'] < fire.GATE_MIN:
+                nc.append(where)
+            continue
+        if r['net_a'] == fire.OUT and r['net_b'] == 'GND' and r['gap'] < fire.OUT_MIN:
+            owner.append(where)                    # fire-capable, under R10's 1.040 mm: R10 row 1's owner list
+        if r['net_a'] == fire.IGN and r['gap'] < fire.OUT_MIN:
+            owner.append(where)                    # R134 overload (destructive, not a match fire)
+        if r['gap'] >= r['limit'] - 5e-5:
+            continue
+        hit = table.get((r['a'], r['b'], r['layer']))
+        if hit is None:
+            issues.append(f'S-10: {where}, below {r["limit"]:g} mm ({r["cls"]})')
+            continue
+        used.add((r['a'], r['b'], r['layer']))
+        floor, key = hit
+        if r['gap'] < floor - 5e-5:
+            issues.append(f'S-10: {where}, below the {floor:.3f} mm floor of its exception ({key}: {fire.WHY[key]})')
         else:
-            kept.append(dict(pair=where, exception=exception['why']))
-    return issues, dict(exceptions=kept, gate_min=S10_GATE_MIN, out_rail_min=S10_OUT_RAIL_MIN,
-                        out_gnd_min=S10_OUT_GND_MIN, out_gnd_fill_min=S10_OUT_GND_FILL_MIN)
+            kept.append(dict(pair=where, floor=floor, exception=key))
+    for (a, b, layer), (floor, key) in sorted(table.items()):
+        if (a, b, layer) not in used:
+            issues.append(f'S-10: exception {a} to {b} on {layer} ({key}, floor {floor:.3f} mm) is not on the board '
+                          'below its limit: a stale entry (update m3_design/r12_fire.py)')
+    netlist = getattr(c, 'netlist', None) or R12_DIR / 'schematic.net.xml'
+    classes = fire.netlist_classes(netlist)
+    issues += [f'S-10: {m}' for m in fire.guard(classes, not_a_path)]
+    return issues, dict(exceptions=kept, u1_nc_balls=nc, owner_pairs=owner, netlist_classes=classes,
+                        not_a_path={f'{p} / {f}': why for (p, f), why in fire.NOT_A_PATH.items()},
+                        limits=dict(gate=fire.GATE_MIN, out=fire.OUT_MIN, out_gnd=fire.GND_MIN, fill=fire.FILL_MIN,
+                                    ign=fire.IGN_MIN))
 
 
 # D-R12-67A: stage C pass 1 may report these signal-reference rules without failing (r12_build.sh, R12_ROUTE_HYGIENE).
@@ -973,7 +953,7 @@ TITLES.update({
     'S-5': 'protected switch contacts, clamp and no bypass', 'S-6': 'ports separated from safety copper',
     'S-7': 'servo signals, GND and NC only', 'S-8': 'foreign In1/In2 copper >= 1 mm from barrels and rings',
     'S-9': 'fire and battery current-path widths',
-    'S-10': 'fire-net copper gaps on every layer, fills included (R10 D-R26-02 / -04)', 'W-1': 'battery wire pads and DB125 pyro terminal',
+    'S-10': 'fire-net copper gaps on every layer, fills included, default-deny with item-pair exceptions (R10 D-R26-02 / -04)', 'W-1': 'battery wire pads and DB125 pyro terminal',
     'W-2': 'SH connector identities and pin maps', 'LC-1': 'local clearance floors',
     'M-3': 'recorded M3 supports', 'M-6': 'no bottom assembly', 'M-7': 'sensor pose and copper exclusions',
     'M-8': 'courtyard short-edge clearances', 'K-legends': 'R12 legends, designators and Fab references',

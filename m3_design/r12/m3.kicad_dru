@@ -48,14 +48,14 @@
   (condition "A.Type == 'Pad' && B.Type == 'Pad'")
   (constraint hole_to_hole (min 0.45mm)))
 
-# R10 D-R26-04 (1.0585 mm), every net that can raise the gate (check_r12 S-10)
-(rule "S-10 Q124 gate nets to raising copper"
-  (condition "(A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'GND' && B.NetName != 'HSE_IN' && B.NetName != 'HSE_OUT' && B.NetName != 'BOOT0' && B.NetName != 'BAT_FAULT_N' && B.NetName != 'QSPI_IO2' && B.NetName != '' && B.NetName != 'unconnected-*'")
+# R10 D-R26-04 (1.0585 mm), default-deny: every net but GND, the gate pair and U1 NC balls (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 Q124 gate nets to every raising net"
+  (condition "(A.NetName == 'PYRO1_GATE' || A.NetName == 'PYRO1_GATE_N') && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'GND' && !(B.memberOfFootprint('U1') && B.NetName == 'unconnected-*')")
   (constraint clearance (min 1.06mm)))
 
-# R10 D-R26-02 (1.040 mm; check_r12 S-10)
-(rule "S-10 PYRO1_OUT to low rails"
-  (condition "A.NetName == 'PYRO1_OUT' && (B.NetName == '3V3' || B.NetName == '3V3A' || B.NetName == 'VCAP1' || B.NetName == 'VCAP2' || B.NetName == 'PORT_4V8' || B.NetName == 'PORT_SW' || B.NetName == 'CAM_5V' || B.NetName == 'CAM_SW' || B.NetName == 'VBUS' || B.NetName == 'SW_NODE')")
+# R10 D-R26-02 (1.040 mm), default-deny: every net but GND, the gate nets (their own rule) and PYRO1_IGN / _COLD / _CONT_MID (check_r12 S-10)
+(rule "S-10 PYRO1_OUT to every net"
+  (condition "A.NetName == 'PYRO1_OUT' && B.NetName != 'PYRO1_OUT' && B.NetName != 'GND' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO1_COLD' && B.NetName != 'PYRO1_CONT_MID' && B.NetName != 'PYRO1_IGN' && !(B.memberOfFootprint('U1') && B.NetName == 'unconnected-*')")
   (constraint clearance (min 1.04mm)))
 
 # R10 row 1 surface pairs 0.177 / 0.180 mm, R12 0.25 mm (check_r12 S-10)
@@ -65,18 +65,324 @@
 
 # R12F5-TRI-01: J121.1 sat 0.101 mm from GND_pour_B (check_r12 S-10)
 (rule "S-10 PYRO1_OUT to GND fills"
-  (condition "A.NetName == 'PYRO1_OUT' && B.NetName == 'GND' && B.Type == 'Zone' && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
+  (condition "A.NetName == 'PYRO1_OUT' && B.NetName == 'GND' && (A.Type == 'Zone' || B.Type == 'Zone') && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
   (constraint clearance (min 0.5mm)))
 
-# D-R11-23 / D-R12-104 (R12_VALIDATION row 25): the recorded 0.150 mm floor (check_r12 S-10)
-(rule "S-10 exception: PE4 lane at U1.B2 / D2"
-  (condition "A.NetName == 'PYRO1_GATE_N' && B.NetName == '3V3' && A.intersectsCourtyard('U1') && B.intersectsCourtyard('U1')")
-  (constraint clearance (min 0.15mm)))
+# R134 overload: J121.2 sat 0.100 mm from GND_pour_B (round 5 verifier; check_r12 S-10)
+(rule "S-10 PYRO1_IGN to every net"
+  (condition "A.NetName == 'PYRO1_IGN' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO1_OUT' && B.NetName != 'RAW_ACT' && !(B.memberOfFootprint('U1') && B.NetName == 'unconnected-*') && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
+  (constraint clearance (min 0.25mm)))
 
-# the AO3400A SOT-23 land itself, 1.044 mm (check_r12 S-10)
-(rule "S-10 exception: Q124 gate and drain lands"
-  (condition "A.NetName == 'PYRO1_GATE' && B.NetName == 'PYRO1_OUT' && A.memberOfFootprint('Q124') && B.memberOfFootprint('Q124')")
-  (constraint clearance (min 1.0mm)))
+# R134 overload: every pour >= 0.5 mm from J121.2 (check_r12 S-10)
+(rule "S-10 PYRO1_IGN to fills"
+  (condition "A.NetName == 'PYRO1_IGN' && B.NetName != 'PYRO1_IGN' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'PYRO1_OUT' && B.NetName != 'RAW_ACT' && (A.Type == 'Zone' || B.Type == 'Zone') && !A.memberOfFootprint('TP*') && !B.memberOfFootprint('TP*') && !A.memberOfFootprint('J2') && !B.memberOfFootprint('J2')")
+  (constraint clearance (min 0.5mm)))
+
+# measured floor 0.731 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): U1.C3 to U1.B2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.memberOfFootprint('U1') && A.Pad_Number == 'C3' && B.NetName == '3V3' && B.memberOfFootprint('U1') && B.Pad_Number == 'B2'")
+  (constraint clearance (min 0.731mm)))
+
+# measured floor 0.731 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): U1.C3 to U1.D2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.memberOfFootprint('U1') && A.Pad_Number == 'C3' && B.NetName == '3V3' && B.memberOfFootprint('U1') && B.Pad_Number == 'D2'")
+  (constraint clearance (min 0.731mm)))
+
+# measured floor 0.881 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): U1.C3 to track (20.2, 51.2)-(19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.memberOfFootprint('U1') && A.Pad_Number == 'C3' && B.NetName == '3V3' && B.Type == 'Track' && B.Start_X == 20.2mm && B.Start_Y == 51.2mm && B.End_X == 19.8mm && B.End_Y == 50.8mm")
+  (constraint clearance (min 0.881mm)))
+
+# measured floor 0.881 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): U1.C3 to track (20.2, 52.8)-(20.6, 53.2) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.memberOfFootprint('U1') && A.Pad_Number == 'C3' && B.NetName == '3V3' && B.Type == 'Track' && B.Start_X == 20.2mm && B.Start_Y == 52.8mm && B.End_X == 20.6mm && B.End_Y == 53.2mm")
+  (constraint clearance (min 0.881mm)))
+
+# measured floor 0.839 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): U1.C3 to via (20.6, 53.2) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.memberOfFootprint('U1') && A.Pad_Number == 'C3' && B.NetName == '3V3' && B.Type == 'Via' && B.Position_X == 20.6mm && B.Position_Y == 53.2mm")
+  (constraint clearance (min 0.839mm)))
+
+# measured floor 1.000 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (18.7, 51.4)-(18.7, 46.8) to track (20.2, 51.2)-(19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == '3V3' && B.Type == 'Track' && B.Start_X == 20.2mm && B.Start_Y == 51.2mm && B.End_X == 19.8mm && B.End_Y == 50.8mm")
+  (constraint clearance (min 1.000mm)))
+
+# measured floor 0.825 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (18.7, 51.4)-(18.7, 46.8) to via (19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == '3V3' && B.Type == 'Via' && B.Position_X == 19.8mm && B.Position_Y == 50.8mm")
+  (constraint clearance (min 0.825mm)))
+
+# measured floor 0.929 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (18.9, 51.6)-(18.7, 51.4) to via (19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.9mm && A.Start_Y == 51.6mm && A.End_X == 18.7mm && A.End_Y == 51.4mm && B.NetName == '3V3' && B.Type == 'Via' && B.Position_X == 19.8mm && B.Position_Y == 50.8mm")
+  (constraint clearance (min 0.929mm)))
+
+# measured floor 0.150 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (20.6, 51.6)-(18.9, 51.6) to U1.B2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.memberOfFootprint('U1') && B.Pad_Number == 'B2'")
+  (constraint clearance (min 0.150mm)))
+
+# measured floor 0.950 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (20.6, 51.6)-(18.9, 51.6) to U1.D2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.memberOfFootprint('U1') && B.Pad_Number == 'D2'")
+  (constraint clearance (min 0.950mm)))
+
+# measured floor 0.300 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (20.6, 51.6)-(18.9, 51.6) to track (20.2, 51.2)-(19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.Type == 'Track' && B.Start_X == 20.2mm && B.Start_Y == 51.2mm && B.End_X == 19.8mm && B.End_Y == 50.8mm")
+  (constraint clearance (min 0.300mm)))
+
+# measured floor 0.525 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (20.6, 51.6)-(18.9, 51.6) to via (19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.Type == 'Via' && B.Position_X == 19.8mm && B.Position_Y == 50.8mm")
+  (constraint clearance (min 0.525mm)))
+
+# measured floor 0.315 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (21, 52)-(20.6, 51.6) to U1.B2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.memberOfFootprint('U1') && B.Pad_Number == 'B2'")
+  (constraint clearance (min 0.315mm)))
+
+# measured floor 0.881 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (21, 52)-(20.6, 51.6) to U1.D2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.memberOfFootprint('U1') && B.Pad_Number == 'D2'")
+  (constraint clearance (min 0.881mm)))
+
+# measured floor 0.465 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (21, 52)-(20.6, 51.6) to track (20.2, 51.2)-(19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.Type == 'Track' && B.Start_X == 20.2mm && B.Start_Y == 51.2mm && B.End_X == 19.8mm && B.End_Y == 50.8mm")
+  (constraint clearance (min 0.465mm)))
+
+# measured floor 1.031 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (21, 52)-(20.6, 51.6) to track (20.2, 52.8)-(20.6, 53.2) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.Type == 'Track' && B.Start_X == 20.2mm && B.Start_Y == 52.8mm && B.End_X == 20.6mm && B.End_Y == 53.2mm")
+  (constraint clearance (min 1.031mm)))
+
+# measured floor 0.856 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (21, 52)-(20.6, 51.6) to via (19.8, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.Type == 'Via' && B.Position_X == 19.8mm && B.Position_Y == 50.8mm")
+  (constraint clearance (min 0.856mm)))
+
+# measured floor 0.989 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (D-R11-23): track (21, 52)-(20.6, 51.6) to via (20.6, 53.2) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == '3V3' && B.Type == 'Via' && B.Position_X == 20.6mm && B.Position_Y == 53.2mm")
+  (constraint clearance (min 0.989mm)))
+
+# measured floor 0.672 mm, reason HSE_IN (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_IN): track (18.7, 51.4)-(18.7, 46.8) to U1.C1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == 'HSE_IN' && B.memberOfFootprint('U1') && B.Pad_Number == 'C1'")
+  (constraint clearance (min 0.672mm)))
+
+# measured floor 0.500 mm, reason HSE_IN (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_IN): track (18.7, 51.4)-(18.7, 46.8) to track (19.4, 52)-(16.2, 52) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == 'HSE_IN' && B.Type == 'Track' && B.Start_X == 19.4mm && B.Start_Y == 52mm && B.End_X == 16.2mm && B.End_Y == 52mm")
+  (constraint clearance (min 0.500mm)))
+
+# measured floor 0.390 mm, reason HSE_IN (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_IN): track (18.9, 51.6)-(18.7, 51.4) to U1.C1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.9mm && A.Start_Y == 51.6mm && A.End_X == 18.7mm && A.End_Y == 51.4mm && B.NetName == 'HSE_IN' && B.memberOfFootprint('U1') && B.Pad_Number == 'C1'")
+  (constraint clearance (min 0.390mm)))
+
+# measured floor 0.300 mm, reason HSE_IN (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_IN): track (18.9, 51.6)-(18.7, 51.4) to track (19.4, 52)-(16.2, 52) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.9mm && A.Start_Y == 51.6mm && A.End_X == 18.7mm && A.End_Y == 51.4mm && B.NetName == 'HSE_IN' && B.Type == 'Track' && B.Start_X == 19.4mm && B.Start_Y == 52mm && B.End_X == 16.2mm && B.End_Y == 52mm")
+  (constraint clearance (min 0.300mm)))
+
+# measured floor 0.150 mm, reason HSE_IN (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_IN): track (20.6, 51.6)-(18.9, 51.6) to U1.C1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'HSE_IN' && B.memberOfFootprint('U1') && B.Pad_Number == 'C1'")
+  (constraint clearance (min 0.150mm)))
+
+# measured floor 0.300 mm, reason HSE_IN (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_IN): track (20.6, 51.6)-(18.9, 51.6) to track (19.4, 52)-(16.2, 52) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'HSE_IN' && B.Type == 'Track' && B.Start_X == 19.4mm && B.Start_Y == 52mm && B.End_X == 16.2mm && B.End_Y == 52mm")
+  (constraint clearance (min 0.300mm)))
+
+# measured floor 1.015 mm, reason HSE_IN (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_IN): track (21, 52)-(20.6, 51.6) to U1.C1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == 'HSE_IN' && B.memberOfFootprint('U1') && B.Pad_Number == 'C1'")
+  (constraint clearance (min 1.015mm)))
+
+# measured floor 0.464 mm, reason PYRO1_CONT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (PYRO1_CONT): R173.1 to R129.2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_OUT' && A.memberOfFootprint('R173') && A.Pad_Number == '1' && B.NetName == 'PYRO1_CONT' && B.memberOfFootprint('R129') && B.Pad_Number == '2'")
+  (constraint clearance (min 0.464mm)))
+
+# measured floor 0.806 mm, reason PYRO1_CONT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (PYRO1_CONT): R173.1 to track (12.9, 47.1)-(12.1, 47.9) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_OUT' && A.memberOfFootprint('R173') && A.Pad_Number == '1' && B.NetName == 'PYRO1_CONT' && B.Type == 'Track' && B.Start_X == 12.9mm && B.Start_Y == 47.1mm && B.End_X == 12.1mm && B.End_Y == 47.9mm")
+  (constraint clearance (min 0.806mm)))
+
+# measured floor 0.816 mm, reason PYRO1_CONT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (PYRO1_CONT): track (11.5, 46.7)-(12, 46.2) to R129.2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_OUT' && A.Type == 'Track' && A.Start_X == 11.5mm && A.Start_Y == 46.7mm && A.End_X == 12mm && A.End_Y == 46.2mm && B.NetName == 'PYRO1_CONT' && B.memberOfFootprint('R129') && B.Pad_Number == '2'")
+  (constraint clearance (min 0.816mm)))
+
+# measured floor 1.000 mm, reason PYRO1_CONT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (PYRO1_CONT): track (11.5, 46.7)-(12, 46.2) to R130.1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_OUT' && A.Type == 'Track' && A.Start_X == 11.5mm && A.Start_Y == 46.7mm && A.End_X == 12mm && A.End_Y == 46.2mm && B.NetName == 'PYRO1_CONT' && B.memberOfFootprint('R130') && B.Pad_Number == '1'")
+  (constraint clearance (min 1.000mm)))
+
+# measured floor 1.000 mm, reason PYRO1_CONT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (PYRO1_CONT): track (9.1, 46.7)-(11.5, 46.7) to R130.1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_OUT' && A.Type == 'Track' && A.Start_X == 9.1mm && A.Start_Y == 46.7mm && A.End_X == 11.5mm && A.End_Y == 46.7mm && B.NetName == 'PYRO1_CONT' && B.memberOfFootprint('R130') && B.Pad_Number == '1'")
+  (constraint clearance (min 1.000mm)))
+
+# measured floor 0.800 mm, reason BOOT0 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (BOOT0): track (18.7, 51.4)-(18.7, 46.8) to track (17.8, 48.2)-(16.7, 47.1) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == 'BOOT0' && B.Type == 'Track' && B.Start_X == 17.8mm && B.Start_Y == 48.2mm && B.End_X == 16.7mm && B.End_Y == 47.1mm")
+  (constraint clearance (min 0.800mm)))
+
+# measured floor 0.625 mm, reason BOOT0 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (BOOT0): track (18.7, 51.4)-(18.7, 46.8) to via (17.8, 48.2) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == 'BOOT0' && B.Type == 'Via' && B.Position_X == 17.8mm && B.Position_Y == 48.2mm")
+  (constraint clearance (min 0.625mm)))
+
+# measured floor 0.920 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (18.7, 51.4)-(18.7, 46.8) to track (19.02, 52.42)-(15.08, 52.42) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == 'HSE_OUT' && B.Type == 'Track' && B.Start_X == 19.02mm && B.Start_Y == 52.42mm && B.End_X == 15.08mm && B.End_Y == 52.42mm")
+  (constraint clearance (min 0.920mm)))
+
+# measured floor 0.969 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (18.7, 51.4)-(18.7, 46.8) to track (19.4, 52.8)-(19.02, 52.42) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.7mm && A.Start_Y == 51.4mm && A.End_X == 18.7mm && A.End_Y == 46.8mm && B.NetName == 'HSE_OUT' && B.Type == 'Track' && B.Start_X == 19.4mm && B.Start_Y == 52.8mm && B.End_X == 19.02mm && B.End_Y == 52.42mm")
+  (constraint clearance (min 0.969mm)))
+
+# measured floor 1.050 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (18.9, 51.6)-(18.7, 51.4) to U1.D1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.9mm && A.Start_Y == 51.6mm && A.End_X == 18.7mm && A.End_Y == 51.4mm && B.NetName == 'HSE_OUT' && B.memberOfFootprint('U1') && B.Pad_Number == 'D1'")
+  (constraint clearance (min 1.050mm)))
+
+# measured floor 0.720 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (18.9, 51.6)-(18.7, 51.4) to track (19.02, 52.42)-(15.08, 52.42) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.9mm && A.Start_Y == 51.6mm && A.End_X == 18.7mm && A.End_Y == 51.4mm && B.NetName == 'HSE_OUT' && B.Type == 'Track' && B.Start_X == 19.02mm && B.Start_Y == 52.42mm && B.End_X == 15.08mm && B.End_Y == 52.42mm")
+  (constraint clearance (min 0.720mm)))
+
+# measured floor 0.728 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (18.9, 51.6)-(18.7, 51.4) to track (19.4, 52.8)-(19.02, 52.42) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 18.9mm && A.Start_Y == 51.6mm && A.End_X == 18.7mm && A.End_Y == 51.4mm && B.NetName == 'HSE_OUT' && B.Type == 'Track' && B.Start_X == 19.4mm && B.Start_Y == 52.8mm && B.End_X == 19.02mm && B.End_Y == 52.42mm")
+  (constraint clearance (min 0.728mm)))
+
+# measured floor 0.950 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (20.6, 51.6)-(18.9, 51.6) to U1.D1 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'HSE_OUT' && B.memberOfFootprint('U1') && B.Pad_Number == 'D1'")
+  (constraint clearance (min 0.950mm)))
+
+# measured floor 0.720 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (20.6, 51.6)-(18.9, 51.6) to track (19.02, 52.42)-(15.08, 52.42) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'HSE_OUT' && B.Type == 'Track' && B.Start_X == 19.02mm && B.Start_Y == 52.42mm && B.End_X == 15.08mm && B.End_Y == 52.42mm")
+  (constraint clearance (min 0.720mm)))
+
+# measured floor 0.720 mm, reason HSE_OUT (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (HSE_OUT): track (20.6, 51.6)-(18.9, 51.6) to track (19.4, 52.8)-(19.02, 52.42) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'HSE_OUT' && B.Type == 'Track' && B.Start_X == 19.4mm && B.Start_Y == 52.8mm && B.End_X == 19.02mm && B.End_Y == 52.42mm")
+  (constraint clearance (min 0.720mm)))
+
+# measured floor 1.015 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): U1.C3 to track (21, 50.4)-(21.4, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.memberOfFootprint('U1') && A.Pad_Number == 'C3' && B.NetName == 'QSPI_IO2' && B.Type == 'Track' && B.Start_X == 21mm && B.Start_Y == 50.4mm && B.End_X == 21.4mm && B.End_Y == 50.8mm")
+  (constraint clearance (min 1.015mm)))
+
+# measured floor 0.839 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): U1.C3 to via (21.4, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.memberOfFootprint('U1') && A.Pad_Number == 'C3' && B.NetName == 'QSPI_IO2' && B.Type == 'Via' && B.Position_X == 21.4mm && B.Position_Y == 50.8mm")
+  (constraint clearance (min 0.839mm)))
+
+# measured floor 1.015 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): track (20.6, 51.6)-(18.9, 51.6) to U1.A3 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'QSPI_IO2' && B.memberOfFootprint('U1') && B.Pad_Number == 'A3'")
+  (constraint clearance (min 1.015mm)))
+
+# measured floor 1.031 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): track (20.6, 51.6)-(18.9, 51.6) to track (21, 50.4)-(21.4, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'QSPI_IO2' && B.Type == 'Track' && B.Start_X == 21mm && B.Start_Y == 50.4mm && B.End_X == 21.4mm && B.End_Y == 50.8mm")
+  (constraint clearance (min 1.031mm)))
+
+# measured floor 0.856 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): track (20.6, 51.6)-(18.9, 51.6) to via (21.4, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'QSPI_IO2' && B.Type == 'Via' && B.Position_X == 21.4mm && B.Position_Y == 50.8mm")
+  (constraint clearance (min 0.856mm)))
+
+# measured floor 1.015 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): track (21, 52)-(20.6, 51.6) to U1.A3 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == 'QSPI_IO2' && B.memberOfFootprint('U1') && B.Pad_Number == 'A3'")
+  (constraint clearance (min 1.015mm)))
+
+# measured floor 1.031 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): track (21, 52)-(20.6, 51.6) to track (21, 50.4)-(21.4, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == 'QSPI_IO2' && B.Type == 'Track' && B.Start_X == 21mm && B.Start_Y == 50.4mm && B.End_X == 21.4mm && B.End_Y == 50.8mm")
+  (constraint clearance (min 1.031mm)))
+
+# measured floor 0.856 mm, reason QSPI_IO2 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (QSPI_IO2): track (21, 52)-(20.6, 51.6) to via (21.4, 50.8) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == 'QSPI_IO2' && B.Type == 'Via' && B.Position_X == 21.4mm && B.Position_Y == 50.8mm")
+  (constraint clearance (min 0.856mm)))
+
+# measured floor 0.950 mm, reason BAT_FAULT_N (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (BAT_FAULT_N): track (20.6, 51.6)-(18.9, 51.6) to U1.A2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 20.6mm && A.Start_Y == 51.6mm && A.End_X == 18.9mm && A.End_Y == 51.6mm && B.NetName == 'BAT_FAULT_N' && B.memberOfFootprint('U1') && B.Pad_Number == 'A2'")
+  (constraint clearance (min 0.950mm)))
+
+# measured floor 1.015 mm, reason BAT_FAULT_N (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (BAT_FAULT_N): track (21, 52)-(20.6, 51.6) to U1.A2 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE_N' && A.Type == 'Track' && A.Start_X == 21mm && A.Start_Y == 52mm && A.End_X == 20.6mm && A.End_Y == 51.6mm && B.NetName == 'BAT_FAULT_N' && B.memberOfFootprint('U1') && B.Pad_Number == 'A2'")
+  (constraint clearance (min 1.015mm)))
+
+# measured floor 1.044 mm, reason Q124 (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (Q124): Q124.1 to Q124.3 on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'PYRO1_GATE' && A.memberOfFootprint('Q124') && A.Pad_Number == '1' && B.NetName == 'PYRO1_OUT' && B.memberOfFootprint('Q124') && B.Pad_Number == '3'")
+  (constraint clearance (min 1.044mm)))
 
 # D-R12-03: 0.3 mm drill, no small-hole surcharge (cost_study.md section 2.1) (https://jlcpcb.com/capabilities/pcb-capabilities)
 (rule "R12 board floor: via drill"

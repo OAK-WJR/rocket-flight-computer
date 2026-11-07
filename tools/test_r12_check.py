@@ -21,6 +21,7 @@ if pcbnew:
     import check_r12 as r12
     import fit_check as fc
     import route_check as rc
+import r12_fire as fire
 import r12_sch
 import r12_sch_check
 import r12_budget
@@ -273,8 +274,12 @@ class Round1Fixes(unittest.TestCase):
 
 @unittest.skipUnless(pcbnew and BOARD12.is_file(), 'KiCad python and the R12 board required')
 class FireGaps(unittest.TestCase):
-    """R12F5-TRI-01: S-10 carries R10's fire-net copper gaps (D-R26-02 / -04) and D-R11-23 to R12 on every layer, fills and
-    barrels included. The committed board passes; one planted 0.1 mm bridge-risk item per protected net fails it."""
+    """R12F5-TRI-01 (tightened by the round 5 verifier, lane P2): S-10 carries R10's fire-net copper gaps (D-R26-02 / -04)
+    and D-R11-23 to R12 on every layer, fills and barrels included, default-deny, with item-pair exceptions at their
+    floors (m3_design/r12_fire.py). The committed board passes; each planted bridge-risk item fails S-10, and DRC with
+    the committed DRU fails it too (the DRU is generated from the same definition)."""
+
+    CLI = os.environ.get('KICAD_CLI') or '/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
 
     def setUp(self):
         self.board = pcbnew.LoadBoard(str(BOARD12))
@@ -286,85 +291,190 @@ class FireGaps(unittest.TestCase):
         t = pcbnew.PCB_TRACK(self.board)
         t.SetStart(pcbnew.VECTOR2I(mm(a[0]), mm(a[1]))); t.SetEnd(pcbnew.VECTOR2I(mm(b[0]), mm(b[1])))
         t.SetWidth(mm(width)); t.SetLayer(pcbnew.F_Cu if layer is None else layer)
-        t.SetNet(self.board.FindNet(net)); self.board.Add(t)
+        if net:
+            t.SetNet(self.board.FindNet(net) or self.add_net(net))
+        self.board.Add(t)
         return t
 
-    def planted(self, net, a, b, layer=None, width=0.2, want=None):
-        self.track(net, a, b, layer, width)
+    def add_net(self, name):
+        n = pcbnew.NETINFO_ITEM(self.board, name)
+        self.board.Add(n)
+        return n
+
+    def zone(self, net, pts, layer):
+        z = pcbnew.ZONE(self.board); z.SetNet(self.board.FindNet(net)); z.SetLayer(layer)
+        o = z.Outline(); o.NewOutline()
+        for x, y in pts:
+            o.Append(mm(x), mm(y))
+        z.SetFilledPolysList(layer, pcbnew.SHAPE_POLY_SET(o)); z.SetIsFilled(True); self.board.Add(z)
+        return z
+
+    def drc_s10(self):
+        """kicad-cli DRC of the planted board with the committed DRU: the S-10 rule violations."""
+        if not Path(self.CLI).exists():
+            self.skipTest('kicad-cli unavailable')
+        with tempfile.TemporaryDirectory(prefix='r12-s10-') as d:
+            path = Path(d) / 'm3.kicad_pcb'
+            for name in ('m3.kicad_dru', 'm3.kicad_pro'):
+                shutil.copy2(BOARD12.with_name(name), Path(d) / name)
+            pcbnew.SaveBoard(str(path), self.board)
+            subprocess.run([self.CLI, 'pcb', 'drc', '--format', 'json', '--severity-error', '-o', str(Path(d) / 'd.json'),
+                            str(path)], capture_output=True, timeout=300, check=True)
+            found = json.loads((Path(d) / 'd.json').read_text())['violations']
+        return [v['description'] + ' | ' + ' / '.join(i['description'] for i in v['items']) for v in found
+                if "rule 'S-10" in v['description']]
+
+    def planted(self, want, drc=None):
+        """S-10 fails with an issue containing every string of want; DRC reports an S-10 violation naming drc."""
         rep = self.s10()
         self.assertFalse(rep['ok'])
-        hits = [i for i in rep['issues'] if want in i]
+        hits = [i for i in rep['issues'] if all(w in i for w in want)]
         self.assertTrue(hits, rep['issues'])
+        if drc is not None:
+            found = self.drc_s10()
+            self.assertTrue([v for v in found if all(w in v for w in drc)], found)
         return hits
 
     def test_committed_board_passes_with_recorded_exceptions(self):
         rep = self.s10()
         self.assertTrue(rep['ok'], rep['issues'])
-        ev = rep['evidence']['s10']['exceptions']
-        kept = [e['pair'] for e in ev]
-        self.assertIn('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 U1.B2 on F.Cu: 0.1500 mm', kept)
-        self.assertIn('PYRO1_GATE Q124.1 to PYRO1_OUT Q124.3 on F.Cu: 1.0441 mm', kept)
-        self.assertEqual({e['exception'] for e in ev}, {r12.S10_LANE['why'], r12.S10_Q124['why']})
-        self.assertTrue(all(p.startswith('PYRO1_GATE_N ') and ' to 3V3 ' in p for p, e in zip(kept, ev)
-                            if e['exception'] == r12.S10_LANE['why']), kept)
+        ev = rep['evidence']['s10']
+        kept = {e['pair'] for e in ev['exceptions']}
+        for pair in ('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 U1.B2 on F.Cu: 0.150',
+                     'PYRO1_GATE Q124.1 to PYRO1_OUT Q124.3 on F.Cu: 1.04'):
+            self.assertTrue([k for k in kept if k.startswith(pair)], pair)
+        self.assertEqual(len(kept), sum(len(v) for v in fire.EXCEPTIONS.values()))       # no stale, none extra
+        self.assertEqual(set(fire.EXCEPTIONS), set(fire.WHY))
+        self.assertTrue(ev['u1_nc_balls'])
+        self.assertTrue(all(' U1.' in p and 'unconnected-(U1-' in p for p in ev['u1_nc_balls']))
+        self.assertIn('ACT_DRV', ev['netlist_classes']['sink'])
+        self.assertIn('BUZZ_OUT', ev['netlist_classes']['sink'])
+        self.assertIn('VLOGIC', ev['netlist_classes']['supply'])
+        self.assertIn('PYRO1_CONT', ev['netlist_classes']['mcu'])
 
-    def test_gate_net_bridge_risks_fail(self):
-        # PYRO1_GATE: a 3V3 track 0.1 mm east of TP122 (14.8, 42.4), 1.5 mm square
-        hit = self.planted('3V3', (15.75, 41.8), (15.75, 43.0), want='PYRO1_GATE TP122.1 to 3V3')
-        self.assertTrue(any('0.1000 mm' in h for h in hit), hit)
+    def test_verifier_A_B_J_low_side_sinks_and_vlogic_near_out_fail(self):
+        # J121.1 (7.4, 35.25), 1.9 mm land: a 0.2 mm track 0.2 mm east (round 5 verifier cases A, B, J)
+        for net in ('ACT_DRV', 'BUZZ_OUT', 'VLOGIC'):
+            with self.subTest(net=net):
+                self.setUp()
+                self.track(net, (8.65, 35.0), (8.65, 35.5))
+                self.planted(('PYRO1_OUT J121.1 to ' + net, ': 0.20', 'below 1.04 mm'),
+                             drc=("'S-10 PYRO1_OUT to every net'", net))
 
-    def test_gate_n_bridge_to_cold_and_ign_fail(self):
-        # PYRO1_GATE_N: R127.1 (10.17, 45.2), pad bottom 45.47; PYRO1_COLD raises the gate as 3V3 does (through D120)
-        self.planted('PYRO1_COLD', (9.9, 45.67), (10.4, 45.67), want='PYRO1_GATE_N R127.1 to PYRO1_COLD')
+    def test_verifier_C_D_G_bridges_to_the_gate_track_fail(self):
+        # PYRO1_GATE track (11.03, 44.2)-(13, 44.2), 0.2 mm wide (cases C, D: formerly the blanket-inert nets; G)
+        for net, gap in (('QSPI_IO2', '0.10'), ('HSE_OUT', '0.10'), ('ACT_EN_MCU', '0.20')):
+            with self.subTest(net=net):
+                self.setUp()
+                y = 43.95 if gap == '0.10' else 43.85
+                self.track(net, (12.0, y), (12.8, y), width=0.1)
+                self.planted(('PYRO1_GATE track (11.03, 44.2)-(13, 44.2) to ' + net, ': ' + gap, 'below 1.0585'),
+                             drc=("'S-10 Q124 gate nets to every raising net'", net))
+
+    def test_verifier_E_new_3v3_near_the_pe4_lane_inside_u1_fails(self):
+        # the D-R11-23 exception names its item pairs: a new 3V3 track 0.15 mm south of the lane (as near as U1.B2,
+        # the excepted pair's floor) is not excepted (the verifier planted 0.2 mm, touching HSE_IN)
+        self.track('3V3', (18.95, 51.85), (19.1, 51.85), width=0.1)
+        self.planted(('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 track (18.95, 51.85)-(19.1, 51.85)',
+                      ': 0.15', 'below 1.0585'), drc=("'S-10 Q124 gate nets to every raising net'", '[3V3]'))
+
+    def test_verifier_F_protected_net_fill_is_measured(self):
+        # a PYRO1_OUT fill on In2 over a 3V3 track: S-10 measures protected-net fills too (was one-directional)
+        self.zone('PYRO1_OUT', [(30, 90), (31, 90), (31, 91), (30, 91)], pcbnew.In2_Cu)
+        self.track('3V3', (30.5, 89.5), (30.5, 91.5), pcbnew.In2_Cu)
+        self.planted(('PYRO1_OUT fill PYRO1_OUT to 3V3 track (30.5, 89.5)-(30.5, 91.5)', ': 0.0000 mm'),
+                     drc=("'S-10 PYRO1_OUT to every net'", 'Zone [PYRO1_OUT]'))
+
+    def test_verifier_G_H_I_still_fail(self):
+        self.track('VCAP1', (8.75, 35.0), (8.75, 35.5))                               # H: 0.3 mm from J121.1
+        self.planted(('PYRO1_OUT J121.1 to VCAP1', ': 0.30'), drc=("'S-10 PYRO1_OUT to every net'", 'VCAP1'))
         self.setUp()
-        self.planted('PYRO1_IGN', (9.9, 45.67), (10.4, 45.67), want='PYRO1_GATE_N R127.1 to PYRO1_IGN')
+        self.track('PORT_4V8', (8.65, 35.0), (8.65, 35.5), pcbnew.In2_Cu)            # I: In2, near J121.1's barrel
+        self.planted(('PYRO1_OUT J121.1 barrel to PORT_4V8', 'In2.Cu'),
+                     drc=("'S-10 PYRO1_OUT to every net'", 'PORT_4V8'))
 
-    def test_inert_net_is_not_a_finding(self):
-        # HSE_IN is one of S10_GATE_INERT (no DC drive): 0.1 mm from R127.1 is not an S-10 finding
-        self.track('HSE_IN', (9.9, 45.67), (10.4, 45.67))
-        rep = self.s10()
-        self.assertFalse(any('HSE_IN' in i for i in rep['issues']), rep['issues'])
-
-    def test_out_bridge_risks_fail(self):
-        # PYRO1_OUT: J121.1 (7.4, 35.25), 1.9 mm round land: a 3V3 track 0.1 mm east, a GND track 0.1 mm west
-        self.planted('3V3', (8.55, 35.0), (8.55, 35.5), want='PYRO1_OUT J121.1 to 3V3')
+    def test_out_to_gnd_copper_and_fill(self):
+        self.track('GND', (6.25, 34.9), (6.25, 35.25))                                # 0.1 mm west of J121.1
+        self.planted(('PYRO1_OUT J121.1 to GND', 'below 0.25 mm'), drc=("'S-10 PYRO1_OUT to GND'",))
         self.setUp()
-        self.planted('GND', (6.25, 34.9), (6.25, 35.25), want='PYRO1_OUT J121.1 to GND')
+        self.zone('GND', [(8.65, 35.0), (9.5, 35.0), (9.5, 35.5), (8.65, 35.5)], pcbnew.B_Cu)
+        self.planted(('PYRO1_OUT J121.1 to GND fill', 'below 0.5 mm'), drc=("'S-10 PYRO1_OUT to GND fills'",))
 
-    def test_out_gnd_fill_and_inner_barrel_fail(self):
-        z = pcbnew.ZONE(self.board); z.SetNet(self.board.FindNet('GND')); z.SetLayer(pcbnew.B_Cu)
-        o = z.Outline(); o.NewOutline()
-        for x, y in ((8.65, 35.0), (9.5, 35.0), (9.5, 35.5), (8.65, 35.5)):
-            o.Append(mm(x), mm(y))
-        z.SetFilledPolysList(pcbnew.B_Cu, pcbnew.SHAPE_POLY_SET(o)); z.SetIsFilled(True); self.board.Add(z)
-        rep = self.s10()
-        self.assertTrue(any('PYRO1_OUT J121.1 to GND fill' in i and 'below 0.5 mm' in i for i in rep['issues']),
-                        rep['issues'])
+    def test_ign_to_gnd_copper_and_fill_fail(self):
+        # J121.2 (7.4, 38.75), 1.9 mm land, is RAW_ACT through R134 2 ohm: a GND bridge overloads R134 (verifier)
+        self.track('GND', (7.2, 40.0), (7.6, 40.0))                                   # 0.2 mm south of J121.2
+        self.planted(('PYRO1_IGN J121.2 to GND track (7.2, 40)-(7.6, 40)', ': 0.20', 'below 0.25 mm'),
+                     drc=("'S-10 PYRO1_IGN to every net'", 'GND'))
         self.setUp()
-        # In2: a 3V3 track 0.1 mm from J121.1's 1.3 mm barrel wall (no inner ring)
-        self.planted('3V3', (8.225, 35.0), (8.225, 35.5), pcbnew.In2_Cu, 0.15, want='PYRO1_OUT J121.1 barrel to 3V3')
+        self.zone('GND', [(7.0, 40.0), (7.8, 40.0), (7.8, 40.4), (7.0, 40.4)], pcbnew.F_Cu)   # a fill 0.3 mm away
+        self.planted(('PYRO1_IGN J121.2 to GND fill', ': 0.30', 'below 0.5 mm'),
+                     drc=("'S-10 PYRO1_IGN to fills'", 'GND'))
 
-    def test_lane_exception_keeps_its_floor(self):
-        # inside U1's courtyard the D-R11-23 lane is excepted only down to 0.150 mm: 3V3 0.1 mm south of the lane fails
-        hit = self.planted('3V3', (19.0, 51.8), (19.3, 51.8), width=0.1, want='floor of its exception')
-        self.assertTrue(any('PYRO1_GATE_N' in h for h in hit), hit)
+    def test_ign_pours_pulled_back(self):
+        # J121.2 sat 0.100 mm from GND_pour_B (B) and 0.25 mm from GND_In1: every fill now keeps 0.5 mm
+        near = [r for r in r12.fire_gaps(self.board) if r['a'] == 'J121.2' and r['b'].startswith('fill ')]
+        self.assertTrue(all(r['gap'] >= fire.FILL_MIN - 5e-4 for r in near), near)
 
-    def test_dru_carries_s10_sets(self):
-        """The DRU generator's fire rules name check_r12's S-10 sets and hold at least its limits (r12_sch FIRE_*)."""
-        self.assertEqual(set(r12_sch.FIRE_GATES), set(r12.S10_GATES))
-        self.assertEqual(set(r12_sch.FIRE_GATE_INERT), set(r12.S10_GATE_INERT))
-        self.assertEqual(set(r12_sch.FIRE_OUT_RAILS), set(r12.S10_OUT_RAILS))
-        self.assertGreaterEqual(r12_sch.FIRE_GATE_MM, r12.S10_GATE_MIN)
-        self.assertGreaterEqual(r12_sch.FIRE_OUT_RAIL_MM, r12.S10_OUT_RAIL_MIN)
-        self.assertGreaterEqual(r12_sch.FIRE_OUT_GND_MM, r12.S10_OUT_GND_MIN)
-        self.assertGreaterEqual(r12_sch.FIRE_OUT_GND_FILL_MM, r12.S10_OUT_GND_FILL_MIN)
-        self.assertEqual((r12_sch.FIRE_LANE_MM, r12_sch.FIRE_Q124_MM), (r12.S10_LANE['floor'], r12.S10_Q124['floor']))
-        gen = r12_sch.dru((r12_sch.INPUT / 'm3.kicad_dru').read_text())
-        names = [n for n, *_ in r12_sch.FIRE_RULES]
-        at = [gen.index(f'(rule "{n}"') for n in names]
-        self.assertEqual(at, sorted(at))                                   # exceptions follow the general rules
-        self.assertGreater(at[0], gen.index('R9 bare test pads to foreign copper'))
-        self.assertLess(gen.index('R12 JLC SMD pad to pad'), gen.index('Tag-Connect contact'))
+    def test_nc_exemption_is_u1_balls_only(self):
+        # another part's NC pad net, copper with no net and a U1 NC net on a track all count as foreign copper
+        for net in ('unconnected-(D120-A2-Pad2)', '', 'unconnected-(U1-PC15-PadB1)'):
+            with self.subTest(net=net):
+                self.setUp()
+                self.track(net, (12.0, 43.85), (12.8, 43.85), width=0.1)
+                self.planted(('PYRO1_GATE track (11.03, 44.2)-(13, 44.2) to', ': 0.20', 'below 1.0585'))
+                if net:
+                    found = self.drc_s10()
+                    self.assertTrue([v for v in found if "'S-10 Q124 gate nets to every raising net'" in v], found)
+
+    def test_exception_floor_and_stale_entries(self):
+        key = 'D-R11-23'
+        kept = fire.EXCEPTIONS[key]
+        try:
+            fire.EXCEPTIONS[key] = tuple((a, b, layer, 0.2 if b == 'U1.B2' and floor < 0.2 else floor)
+                                         for a, b, layer, floor in kept)
+            self.planted(('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 U1.B2', 'below the 0.200 mm floor'))
+            fire.EXCEPTIONS[key] = kept + (('U1.C3', 'via (1, 1)', 'F.Cu', 0.5),)
+            self.planted(('exception U1.C3 to via (1, 1) on F.Cu', 'stale entry'))
+        finally:
+            fire.EXCEPTIONS[key] = kept
+        self.assertTrue(self.s10()['ok'])
+
+    def test_moved_excepted_item_is_not_excepted(self):
+        # B2's dog-bone via (19.8, 50.8) moved 0.1 mm toward the lane: a new item (fails its limit), the old pair stale
+        for t in self.board.GetTracks():
+            if t.GetClass() == 'PCB_VIA' and t.GetPosition() == pcbnew.VECTOR2I(mm(19.8), mm(50.8)):
+                t.SetPosition(pcbnew.VECTOR2I(mm(19.8), mm(50.9)))
+        hits = self.planted(('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 via (19.8, 50.9)', 'below 1.0585'))
+        self.assertTrue(hits)
+        self.assertTrue(any('via (19.8, 50.8)' in i and 'stale' in i for i in self.s10()['issues']))
+
+    def test_netlist_guard_refuses_classing_a_sink_out(self):
+        kept = dict(fire.NOT_A_PATH)
+        try:
+            fire.NOT_A_PATH[(fire.OUT, 'ACT_DRV')] = 'planted'
+            self.planted(('PYRO1_OUT / ACT_DRV is classed "not a path"', 'sink'))
+        finally:
+            fire.NOT_A_PATH.clear(); fire.NOT_A_PATH.update(kept)
+
+    def test_dru_is_generated_from_s10(self):
+        """The DRU's S-10 rules are r12_fire.dru_rules(), in order after R11's scoped rules, with general limits at least
+        S-10's; each exception names its two items and its floor (kicad-cli matches them: the build's DRC is 0)."""
+        text = BOARD12.with_suffix('.kicad_dru').read_text()
+        rules = fire.dru_rules()
+        at = [text.index(f'(rule "{r[0]}"') for r in rules]
+        self.assertEqual(at, sorted(at))
+        self.assertGreater(at[0], text.index('R9 bare test pads to foreign copper'))
+        for r in rules:
+            self.assertIn(fire.dru_text(r), text)
+        self.assertGreaterEqual(fire.DRU_GATE_MM, fire.GATE_MIN)
+        self.assertEqual(len(rules), 6 + sum(len(v) for v in fire.EXCEPTIONS.values()))
+        for key, pairs in fire.EXCEPTIONS.items():
+            for a, b, layer, floor in pairs:
+                self.assertIn(f'(rule "S-10 exception ({key}): {a} to {b} on {layer}"\n  (layer "{layer}")', text)
+                self.assertLess(floor, fire.GATE_MIN)
+        self.assertLess(text.index('R12 JLC SMD pad to pad'), text.index('Tag-Connect contact'))
+        self.assertIs(r12.fire, fire)
+        self.assertEqual(r12_sch.FIRE_RULES, tuple(rules))
 
     def test_u6_corner_lands_clear_jlc_limits(self):
         """R12F5-TRI-06: U6's corner lands (NXP's chamfered land) keep >= 0.15 mm pad to pad and >= 0.10 mm mask web."""

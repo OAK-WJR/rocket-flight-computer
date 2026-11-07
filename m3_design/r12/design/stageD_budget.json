@@ -1,5 +1,5 @@
 {
- "board_sha256": "14b82d39f0232f6f2a0bd3ef5fe15c6bd47b64255facfb7b2e860cdbefd310c1",
+ "board_sha256": "6e874d4e96ba3c6ab5d2a4163769c80aea6ba87002a4dd5c38eb85e7d93ca067",
  "dc_solves": {
   "3V3_L1_to_R14": {
    "cells": 302216,
@@ -92,11 +92,11 @@
    ]
   },
   "GND_Q124_to_J1": {
-   "cells": 113668,
-   "cg_iterations": 2195,
+   "cells": 113142,
+   "cg_iterations": 2200,
    "grid_mm": 0.1,
    "net": "GND",
-   "resistance_ohm": 0.002594355805967373,
+   "resistance_ohm": 0.0026066707398533923,
    "sink": "J1:2",
    "source": "Q124:2",
    "window_mm": [
@@ -288,13 +288,13 @@
     "v_bat": 5.71
    },
    "5.721V": {
-    "en_at_7ms_open_per_100ms_V": 1.1311016470200101,
-    "en_closed_V": 1.334927428853626,
-    "periodic_100ms_trip_open_ms": 7.5604537219668995,
-    "single_dropout_trip_ms": 8.129845855688346,
+    "en_at_7ms_open_per_100ms_V": 1.131103227160309,
+    "en_closed_V": 1.3349292829469557,
+    "periodic_100ms_trip_open_ms": 7.560511940504647,
+    "single_dropout_trip_ms": 8.129909086437497,
     "tau_closed_ms": 35.8346703465982,
     "tau_open_ms": 47.044799999999995,
-    "v_bat": 5.720875496037573
+    "v_bat": 5.72088327698682
    },
    "5.73V": {
     "en_at_7ms_open_per_100ms_V": 1.1329546338423673,
@@ -333,7 +333,7 @@
     "v_bat": 8.4
    }
   },
-  "four_stall_BAT_IN_V": 5.720875496037573,
+  "four_stall_BAT_IN_V": 5.72088327698682,
   "label": "Calculation / Inference (C87 X7R bias allowance, leakages at their datasheet bounds)",
   "seven_ms_line_holds_down_to_V": 5.646511751832437,
   "single_10ms_dropout_needs_pack_V": 5.955645244737468,
@@ -349,8 +349,8 @@
  },
  "fire": {
   "R134_hot_ohm": 2.02909,
-  "copper_20C_ohm": 0.023609809918232583,
-  "copper_70C_ohm": 0.028249137567165284,
+  "copper_20C_ohm": 0.023764329367389675,
+  "copper_70C_ohm": 0.028434020088081744,
   "copper_by_net": {
    "ACT_FET_S": {
     "R_20C_mohm": 6.054201437936471,
@@ -383,11 +383,11 @@
     ]
    },
    "PYRO1_OUT": {
-    "R_20C_mohm": 5.855403335854565,
+    "R_20C_mohm": 6.009922785011662,
     "layers": [
      "F.Cu"
     ],
-    "length_mm": 8.7684,
+    "length_mm": 8.8926,
     "widths_mm": [
      0.5,
      0.8
@@ -404,10 +404,10 @@
     ]
    }
   },
-  "fire_branch_without_pack_ohm": 4.576699137567165,
+  "fire_branch_without_pack_ohm": 4.576884020088082,
   "floor_A": 1.125,
-  "four_stall_A": 1.2500003439331644,
-  "four_stall_BAT_IN_V": 5.720875496037573,
+  "four_stall_A": 1.2499515504167662,
+  "four_stall_BAT_IN_V": 5.72088327698682,
   "four_stall_ok": true,
   "gate": {
    "basis": "R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 220 nF (values unchanged from R10 / R11); AO3401A / AO3400A datasheet rows (D-R12-10); C120 tolerance and temperature factors as R10 (no bias credit); Q122 drop 0.1 V and the Q120 hot factor, Inference",
@@ -425,63 +425,63 @@
    },
    "q120_q121_vgs_during_fire_V": {
     "6V": {
-     "Q120": -4.795775351755792,
-     "Q121": -4.786278744962004
+     "Q120": -4.7957788931958625,
+     "Q121": -4.786282670016035
     },
     "7.4V": {
-     "Q120": -5.934102663561874,
-     "Q121": -5.9223901818495355
+     "Q120": -5.934107031337961,
+     "Q121": -5.922395022749506
     },
     "8.4V": {
-     "Q120": -6.747193600566218,
-     "Q121": -6.733898351054915
+     "Q120": -6.7471985585823155,
+     "Q121": -6.733903846130556
     }
    },
    "q120_q121_vgs_four_stall_fire": {
-    "ACT_FET_S_copper_drop_V": 0.009054817517014683,
-    "BAT_IN_V": 5.720875496037573,
-    "BAT_IN_copper_drop_V": 0.009117869953258842,
-    "Q120_drop_V": 0.09187502527908757,
-    "Q120_source_V": 5.6198826008052265,
-    "Q121_source_V": 5.610827783288212,
-    "fire_A": 1.2500003439331644,
+    "ACT_FET_S_copper_drop_V": 0.009054464064002335,
+    "BAT_IN_V": 5.72088327698682,
+    "BAT_IN_copper_drop_V": 0.009117514039007107,
+    "Q120_drop_V": 0.09187143895563231,
+    "Q120_source_V": 5.61989432399218,
+    "Q121_source_V": 5.610839859928178,
+    "fire_A": 1.2499515504167662,
     "margin_to_minus_4V5_row_V": {
-     "Q120": 0.0688217472881103,
-     "Q121": 0.059766929771095434
+     "Q120": 0.06883145060163631,
+     "Q121": 0.05977698653763408
     },
-    "vgs_Q120_V": -4.56882174728811,
-    "vgs_Q121_V": -4.559766929771095
+    "vgs_Q120_V": -4.568831450601636,
+    "vgs_Q121_V": -4.559776986537634
    },
    "q120_q121_vgs_shorted_four_stall": {
     "match_and_leads_shorted": {
-     "ACT_FET_S_copper_drop_V": 0.017602322732793947,
-     "BAT_IN_V": 5.532304203836373,
-     "BAT_IN_copper_drop_V": 0.017724894980083644,
-     "Q120_drop_V": 0.17860258840194576,
-     "Q120_source_V": 5.335976720454343,
-     "Q121_source_V": 5.3183743977215485,
-     "fire_A": 2.4299671891421193,
+     "ACT_FET_S_copper_drop_V": 0.017600987364406243,
+     "BAT_IN_V": 5.532333729958293,
+     "BAT_IN_copper_drop_V": 0.01772355031297402,
+     "Q120_drop_V": 0.17858903903950452,
+     "Q120_source_V": 5.336021140605815,
+     "Q121_source_V": 5.318420153241409,
+     "fire_A": 2.4297828440748916,
      "margin_to_minus_4V5_row_V": {
-      "Q120": -0.16616791719150648,
-      "Q121": -0.18377023992430086
+      "Q120": -0.16613115051207838,
+      "Q121": -0.18373213787648446
      },
-     "vgs_Q120_V": -4.3338320828084935,
-     "vgs_Q121_V": -4.316229760075699
+     "vgs_Q120_V": -4.333868849487922,
+     "vgs_Q121_V": -4.3162678621235155
     },
     "match_shorted": {
-     "ACT_FET_S_copper_drop_V": 0.01567279630453482,
-     "BAT_IN_V": 5.574945568590383,
-     "BAT_IN_copper_drop_V": 0.015781932461934177,
-     "Q120_drop_V": 0.1590245804476318,
-     "Q120_source_V": 5.4001390556808175,
-     "Q121_source_V": 5.384466259376283,
-     "fire_A": 2.163599733981385,
+     "ACT_FET_S_copper_drop_V": 0.015671737573689195,
+     "BAT_IN_V": 5.574968953868334,
+     "BAT_IN_copper_drop_V": 0.015780866358708158,
+     "Q120_drop_V": 0.15901383799776764,
+     "Q120_source_V": 5.400174249511858,
+     "Q121_source_V": 5.384502511938169,
+     "fire_A": 2.1634535782009205,
      "margin_to_minus_4V5_row_V": {
-      "Q120": -0.11306057891283672,
-      "Q121": -0.12873337521737138
+      "Q120": -0.11303144888376604,
+      "Q121": -0.1287031864574555
      },
-     "vgs_Q120_V": -4.386939421087163,
-     "vgs_Q121_V": -4.371266624782629
+     "vgs_Q120_V": -4.386968551116234,
+     "vgs_Q121_V": -4.3712968135425445
     }
    },
    "q120_rds_row": "AO3401A RDS(on) <= 60 mOhm at VGS -4.5 V (25 C)",
@@ -510,7 +510,7 @@
    "q124_vgs_row_V": 2.5,
    "q124_vgs_th_max_V": 1.45
   },
-  "gnd_return_dc_ohm": 0.002594355805967373,
+  "gnd_return_dc_ohm": 0.0026066707398533923,
   "gnd_return_used_ohm": 0.005,
   "leads_ohm": 0.3,
   "match_ohm": 2.0,
@@ -530,36 +530,36 @@
   "r12_budget_placeholder_four_stall_A": 1.2473,
   "shorted": {
    "match_and_leads_shorted_0_stalls": {
-    "BAT_IN_V": 6.669267528867352,
-    "Q120_I2R_W": 0.630713796237135,
-    "Q121_I2R_W": 0.630713796237135,
-    "Q124_I2R_W": 0.4922141952675111,
-    "R134_W": 17.41190553478651,
-    "fire_A": 2.929358305987675
+    "BAT_IN_V": 6.669302433566443,
+    "Q120_I2R_W": 0.6306179735630291,
+    "Q121_I2R_W": 0.6306179735630291,
+    "Q124_I2R_W": 0.49213941447041293,
+    "R134_W": 17.40926019016336,
+    "fire_A": 2.929135772716451
    },
    "match_and_leads_shorted_4_stalls": {
-    "BAT_IN_V": 5.532304203836373,
-    "Q120_I2R_W": 0.43399842971258296,
-    "Q121_I2R_W": 0.43399842971258296,
-    "Q124_I2R_W": 0.338695917392024,
-    "R134_W": 11.981249982932042,
-    "fire_A": 2.4299671891421193
+    "BAT_IN_V": 5.532333729958293,
+    "Q120_I2R_W": 0.4339325831980092,
+    "Q121_I2R_W": 0.4339325831980092,
+    "Q124_I2R_W": 0.338644530234528,
+    "R134_W": 11.979432180153042,
+    "fire_A": 2.4297828440748916
    },
    "match_shorted_0_stalls": {
-    "BAT_IN_V": 6.71967737828502,
-    "Q120_I2R_W": 0.49986963934026635,
-    "Q121_I2R_W": 0.49986963934026635,
-    "Q124_I2R_W": 0.3901023471096283,
-    "R134_W": 13.799734510053622,
-    "fire_A": 2.6078626256030493
+    "BAT_IN_V": 6.719705024367926,
+    "Q120_I2R_W": 0.4998020266195043,
+    "Q121_I2R_W": 0.4998020266195043,
+    "Q124_I2R_W": 0.390049581590405,
+    "R134_W": 13.797867948209117,
+    "fire_A": 2.6076862489675556
    },
    "match_shorted_4_stalls": {
-    "BAT_IN_V": 5.574945568590383,
-    "Q120_I2R_W": 0.3440655399529975,
-    "Q121_I2R_W": 0.3440655399529975,
-    "Q124_I2R_W": 0.26851155607760463,
-    "R134_W": 9.498502672969085,
-    "fire_A": 2.163599733981385
+    "BAT_IN_V": 5.574968953868334,
+    "Q120_I2R_W": 0.34401905679973194,
+    "Q121_I2R_W": 0.34401905679973194,
+    "Q124_I2R_W": 0.26847528024534184,
+    "R134_W": 9.497219428051267,
+    "fire_A": 2.1634535782009205
    }
   },
   "shorted_igniter_guard": {
@@ -580,34 +580,34 @@
   },
   "stalls": {
    "0": {
-    "BAT_IN_V": 6.892204644435118,
-    "fire_A": 1.5059335204845485,
-    "margin_pct": 33.86075737640431
+    "BAT_IN_V": 6.892213844007547,
+    "fire_A": 1.5058746985410627,
+    "margin_pct": 33.85552875920557
    },
    "1": {
-    "BAT_IN_V": 6.601316209776102,
-    "fire_A": 1.4423749543836437,
-    "margin_pct": 28.211107056323883
+    "BAT_IN_V": 6.6013250539267,
+    "fire_A": 1.442318622222736,
+    "margin_pct": 28.206099753132087
    },
    "2": {
-    "BAT_IN_V": 6.309263881949693,
-    "fire_A": 1.378562079853802,
-    "margin_pct": 22.538851542560188
+    "BAT_IN_V": 6.309272371102091,
+    "fire_A": 1.3785082478407809,
+    "margin_pct": 22.53406647473608
    },
    "3": {
-    "BAT_IN_V": 6.0158607849080505,
-    "fire_A": 1.314454064836322,
-    "margin_pct": 16.84036131878419
+    "BAT_IN_V": 6.01586891960534,
+    "fire_A": 1.3144027450120015,
+    "margin_pct": 16.835799556622355
    },
    "4": {
-    "BAT_IN_V": 5.720875496037573,
-    "fire_A": 1.2500003439331644,
-    "margin_pct": 11.111141682947956
+    "BAT_IN_V": 5.72088327698682,
+    "fire_A": 1.2499515504167662,
+    "margin_pct": 11.106804481490329
    }
   },
   "status": "Calculation on R12 CAD copper with R10 GAP-1 pack model; Inference: FET hot factors, pack, harness, match, converter load allocations",
   "terminal_allowance_ohm": 0.01,
-  "total_loop_ohm": 4.726699137567166
+  "total_loop_ohm": 4.726884020088082
  },
  "fire_adiabatic": {
   "0.5mm_35um_20ms": 5.743970315398886,
@@ -783,32 +783,32 @@
    ]
   },
   "PYRO1_OUT": {
-   "R_20C_ohm": 0.005855403335854565,
+   "R_20C_ohm": 0.0060099227850116625,
    "layers": [
     "F.Cu"
    ],
-   "length_mm": 8.7684,
+   "length_mm": 8.8926,
    "segments": [
     {
-     "R_20C_ohm": 0.003040714285714285,
+     "R_20C_ohm": 0.0028564285714285714,
      "layer": "F.Cu",
-     "length_mm": 4.95,
+     "length_mm": 4.65,
      "pad_entry": false,
      "th_mm": 0.035,
      "width_mm": 0.8
     },
     {
-     "R_20C_ohm": 0.001250972911173458,
+     "R_20C_ohm": 0.001459468396369034,
      "layer": "F.Cu",
-     "length_mm": 1.2728,
+     "length_mm": 1.4849,
      "pad_entry": false,
      "th_mm": 0.035,
      "width_mm": 0.5
     },
     {
-     "R_20C_ohm": 0.0015637161389668224,
+     "R_20C_ohm": 0.0016940258172140569,
      "layer": "F.Cu",
-     "length_mm": 2.5456,
+     "length_mm": 2.7577,
      "pad_entry": false,
      "th_mm": 0.035,
      "width_mm": 0.8
@@ -1004,44 +1004,44 @@
    "U403 (camera)": 0.010814598554334882
   },
   "healthy": {
-   "BAT_IN_V": 5.720875496037573,
-   "RAW_PROTECTED_drop_at_D5_V": 0.03746836909465665,
-   "U9_and_copper_drop_V": 0.14658615388680843,
+   "BAT_IN_V": 5.72088327698682,
+   "RAW_PROTECTED_drop_at_D5_V": 0.03746831813408568,
+   "U9_and_copper_drop_V": 0.14658595451559803,
    "VLOGIC_V": [
-    5.124289342150765,
-    5.324289342150765
+    5.124297322471222,
+    5.324297322471222
    ],
-   "converter_A": 2.2641630158163526,
-   "lumped_drop_V_superseded": 0.1624008753484375,
-   "margin_to_nominal_trip_top_V": 0.17428934215076453,
-   "margin_to_tolerance_trip_top_V": 0.0833802512416737
+   "converter_A": 2.2641599363377725,
+   "lumped_drop_V_superseded": 0.16240065446769106,
+   "margin_to_nominal_trip_top_V": 0.17429732247122143,
+   "margin_to_tolerance_trip_top_V": 0.0833882315621306
   },
   "label": "Calculation / Inference (DC-solve upper bounds, mutual resistance bounded by the smaller point resistance; U9 RON, SS34 VF and the load allocations are Inference); the drop is an upper bound, the margins lower bounds",
   "match_and_leads_shorted": {
-   "BAT_IN_V": 5.532304203836373,
-   "RAW_PROTECTED_drop_at_D5_V": 0.03874549676452546,
-   "U9_and_copper_drop_V": 0.1515826145727684,
+   "BAT_IN_V": 5.532333729958293,
+   "RAW_PROTECTED_drop_at_D5_V": 0.0387452899794114,
+   "U9_and_copper_drop_V": 0.15158180557479803,
    "VLOGIC_V": [
-    4.930721589263604,
-    5.130721589263604
+    4.930751924383495,
+    5.130751924383495
    ],
-   "converter_A": 2.341338118615397,
-   "lumped_drop_V_superseded": 0.16793638854343224,
-   "margin_to_nominal_trip_top_V": -0.019278410736395912,
-   "margin_to_tolerance_trip_top_V": -0.11018750164548674
+   "converter_A": 2.341325622869818,
+   "lumped_drop_V_superseded": 0.16793549226520227,
+   "margin_to_nominal_trip_top_V": -0.01924807561650521,
+   "margin_to_tolerance_trip_top_V": -0.11015716652559604
   },
   "match_shorted": {
-   "BAT_IN_V": 5.574945568590383,
-   "RAW_PROTECTED_drop_at_D5_V": 0.038449142147285814,
-   "U9_and_copper_drop_V": 0.1504231970540072,
+   "BAT_IN_V": 5.574968953868334,
+   "RAW_PROTECTED_drop_at_D5_V": 0.03844898086497491,
+   "U9_and_copper_drop_V": 0.15042256607501833,
    "VLOGIC_V": [
-    4.974522371536376,
-    5.174522371536376
+    4.974546387793315,
+    5.174546387793315
    ],
-   "converter_A": 2.3234298087494065,
-   "lumped_drop_V_superseded": 0.16665188509649323,
-   "margin_to_nominal_trip_top_V": 0.024522371536376042,
-   "margin_to_tolerance_trip_top_V": -0.06638671937271479
+   "converter_A": 2.3234200626768584,
+   "lumped_drop_V_superseded": 0.16665118604315565,
+   "margin_to_nominal_trip_top_V": 0.02454638779331475,
+   "margin_to_tolerance_trip_top_V": -0.06636270311577608
   },
   "raw_point_ohm": {
    "D5": 0.023533239516799684,
@@ -1185,19 +1185,19 @@
     "U403 (camera)": 0.010814598554334882
    },
    "four_stall_fire": {
-    "BAT_IN_V": 5.720875496037573,
+    "BAT_IN_V": 5.72088327698682,
     "I_out_A": 0.561,
-    "VIN_V": 5.5524,
+    "VIN_V": 5.5525,
     "below_VO_over_0V75": true,
     "below_recommended_duty": false,
-    "converter_A": 2.2641630158163526,
+    "converter_A": 2.2641599363377725,
     "dmax": {
      "200kHz_tOFF_max_310ns": 0.938,
      "200kHz_tOFF_typ_220ns": 0.956,
      "580kHz_tOFF_max_310ns": 0.8202,
      "580kHz_tOFF_typ_220ns": 0.8724
     },
-    "drop_to_U400_VIN_V": 0.1684324802750981,
+    "drop_to_U400_VIN_V": 0.1684322511907912,
     "duty_needed": {
      "drift": [
       0.8311,
@@ -1309,7 +1309,7 @@
    "R_tracks_series_ohm": 0.012367619866666665,
    "amps": 1.294,
    "basis": "R10 VLOGIC 1.294 A",
-   "budget_A": 0.4125242721388705,
+   "budget_A": 0.4125237110663456,
    "end": "vias joined to the In2.Cu fill",
    "joined": true,
    "layers": {
@@ -1593,7 +1593,7 @@
    "R_tracks_series_ohm": 0.05037142939047619,
    "amps": 2.053771891418564,
    "basis": "port 1.9 A at 4.938 V / 0.80 from 5.71 V (Inference); VIN pin 3 only, the EN stub excluded (R12F2-TRI-06)",
-   "budget_A": 0.6052503899793416,
+   "budget_A": 0.6052495667808356,
    "end": "vias joined to the In2.Cu fill",
    "joined": true,
    "layers": {
@@ -1755,7 +1755,7 @@
    "R_tracks_series_ohm": 0.0008190476190476191,
    "amps": 1.5560549474605954,
    "basis": "camera 1.249 A at 5.691 V / 0.80 from 5.71 V (Inference)",
-   "budget_A": 1.243428563499939,
+   "budget_A": 1.2434268723179875,
    "end": "vias joined to the In2.Cu fill",
    "joined": true,
    "layers": {
@@ -1935,10 +1935,10 @@
   "groups": [
    {
     "R_series_ohm": 0.010483810342857142,
-    "budget_A_sum": 1.017774662118212,
+    "budget_A_sum": 1.0177732778471813,
     "design_A_capped_at_source": 2.9,
     "design_A_sum": 3.347771891418564,
-    "ipc_rise_budget_C": 4.263809646013432,
+    "ipc_rise_budget_C": 4.263798047642243,
     "ipc_rise_capped_C": 34.6170881571217,
     "ipc_rise_design_sum_C": 46.13242193457375,
     "ipc_width_for_30C_at_design_sum_mm": 0.8722880979256081,
@@ -1977,10 +1977,10 @@
    },
    {
     "R_series_ohm": 0.0005733333333333334,
-    "budget_A_sum": 1.017774662118212,
+    "budget_A_sum": 1.0177732778471813,
     "design_A_capped_at_source": 2.9,
     "design_A_sum": 3.347771891418564,
-    "ipc_rise_budget_C": 4.263809646013432,
+    "ipc_rise_budget_C": 4.263798047642243,
     "ipc_rise_capped_C": 34.6170881571217,
     "ipc_rise_design_sum_C": 46.13242193457375,
     "ipc_width_for_30C_at_design_sum_mm": 0.8722880979256081,
@@ -2010,15 +2010,15 @@
   ],
   "note": "tracks on more than one load path, rated at the summed current (R12F2-TRI-07); each path's own by_width_mm figures are at its own current",
   "raw_budget_A": {
-   "D5 IN": 0.4125242721388705,
-   "U400 IN": 0.6052503899793416,
-   "U403 IN": 1.243428563499939
+   "D5 IN": 0.4125237110663456,
+   "U400 IN": 0.6052495667808356,
+   "U403 IN": 1.2434268723179875
   },
   "source_A": {
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "14b82d39f0232f6f2a0bd3ef5fe15c6bd47b64255facfb7b2e860cdbefd310c1",
+ "source_board_sha256": "6e874d4e96ba3c6ab5d2a4163769c80aea6ba87002a4dd5c38eb85e7d93ca067",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,

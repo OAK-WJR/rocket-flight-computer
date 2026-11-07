@@ -45,7 +45,7 @@ R12_BOARD = ROOT / 'm3_design/r12/m3.kicad_pcb'
 _base_inputs = fm.input_hashes
 R10_ONLY = ('tools/jlc_corrections.json', 'tools/jlc_easyeda/pads.json')     # R10's data: not an R12 input
 R12_INPUTS = ('tools/export_fab_r12.py', 'tools/jlc_orient_r12.py', 'tools/fab_manifest_r12.py', 'tools/paste_check.py',
-              'tools/check_r12.py',
+              'tools/check_r12.py', 'm3_design/r12_fire.py',
               'tools/jlc_corrections_r12.json', 'tools/jlc_easyeda/pads_r12.json', 'm3_design/r12_parts.py',
               'm3_design/r12/design/circuit.json')
 # the Gerber zip (kicad-cli --no-protel-ext; tools/export_fab.py): file name suffixes after "<board stem>-"
