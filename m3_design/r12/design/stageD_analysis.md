@@ -1,7 +1,7 @@
 # R12 stage D: electrical analyses on R12's copper (2026-11-05)
 
 **Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` since R12F4-TRI-06, `68e6b650…` since the AVA polish pass D-R12-121 … -124,
-2026-11-06): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
+`14b82d39…` since the round-5 fix pass R12F5-TRI-01 / -06 / -21, 2026-11-06): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
 **Re-run on `r12-port-fix` (D-R12-83 … -85).** Board `d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64`
@@ -70,19 +70,26 @@ The fix pass did not touch the fire paths.
 shorted 2.929 / 2.430 A. Dissipation at the worst (match and leads shorted, idle): Q120 / Q121 0.631 W each, Q124
 0.492 W, R134 17.4 W, for ≤ 36 ms (the watchdog guard). Gate drive (corrected by R12F2-TRI-08, 2026-11-06: the gate
 divider hangs on ACT_FET_S, the common source node, which sits I_fire × RDS(Q120) below BAT_IN during the fire; the
-−4.65 V first quoted here took BAT_IN itself): Q120 / Q121 VGS **−4.576 V** at the four-stall point (BAT_IN 5.7209 V,
-1.250 A × 73.5 mΩ = 91.9 mV across Q120, ACT_FET_S 5.629 V), 0.076 V beyond the −4.5 V RDS(on) row (Calculation /
-Inference: the Q120 hot factor and the 0.1 V Q122 drop are Inference); −4.80 / −5.94 / −6.76 V during a fire at BAT_IN
-6.0 / 7.4 / 8.4 V; with the bus on before the fire (no fire current) −4.88 / −6.04 / −6.87 V. With a shorted match at
-four stalls |VGS| is 4.40 V (4.35 V with the leads shorted too), below the −4.5 V row, so the shorted-match FET figures
+−4.65 V first quoted here took BAT_IN itself; corrected again by R12F5-TRI-03, 2026-11-06: BAT_IN_V is J1's terminal,
+so the fire current also crosses the J1 → Q120 BAT_IN copper (6.096 mΩ at 20 °C) before Q120, and R119 / R120 tap
+ACT_FET_S at Q120's source by a stub that carries no current while the fire current runs the ACT_FET_S copper
+(6.054 mΩ) on to Q121's source; copper at 70 °C, × 1.1965): at the four-stall point (BAT_IN 5.7209 V, 1.250 A) Q120's
+source is 5.6199 V (9.1 mV of BAT_IN copper, 91.9 mV across Q120) and Q121's 5.6108 V, so **Q120 VGS −4.569 V and Q121
+VGS −4.560 V**, 0.069 / 0.060 V beyond the −4.5 V RDS(on) row (the single-node figure first given here, −4.576 V /
+0.076 V, left out both copper drops; Calculation / Inference: the Q120 hot factor and the 0.1 V Q122 drop are
+Inference); during a fire at BAT_IN 6.0 / 7.4 / 8.4 V Q120 −4.80 / −5.93 / −6.75 V and Q121 −4.79 / −5.92 / −6.73 V;
+with the bus on before the fire (no fire current, no copper drop) −4.88 / −6.04 / −6.87 V. With a shorted match at
+four stalls |VGS| is 4.39 / 4.37 V (Q120 / Q121; 4.33 / 4.32 V with the leads shorted too), below the −4.5 V row, so the shorted-match FET figures
 here use an RDS(on) below the real one (a fault case; Inference). Above ±12 V only with the pack above about 14.4 V
 (maximum-ratio corner: 12 / (51 / 60.8) + 0.1 = 14.41 V, assuming a 0.1 V Q122 drop; Calculation / Inference,
 O-R12-10), and only while the bus is on, which is from the on-rail check until switch-off (Inference that no transient
 above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03); time to −4.5 V after enable 27.4 / 14.7 / 11.4 ms at 6.0 / 7.4 / 8.4 V (C120 1 µF × 1.10 ×
-1.15, no bias credit; inside the ≥ 100 ms enable wait). Q124 VGS ≥ 2.78 V (2.778 V) at the 3V3 drift minimum less PE4's
+1.15, no bias credit; inside the ≥ 100 ms enable wait). Q124 VGS ≥ 2.78 V (2.777 V; R12F5-TRI-05: 2.778 V took R126 /
+R128 at their 1 % ends, not the drift case's ±1.67 %) at the 3V3 drift minimum less PE4's
 VOH allowance (DS12110 Rev 8 Table 158: VOH ≥ VDD − 0.4 V at 4 / 8 mA; PE4's steady load, R127 1k plus R126 220R +
 R128 10k, is about 3.56 mA, ≤ 3.87 mA at the 3V3 drift maximum with every resistor at its drift low end, within the 4 mA
-row (R12F4-TRI-02; the 0.32 mA first given here left out R127); R126 / R128 1 %; Calculation / Inference: drift;
+row (R12F4-TRI-02; the 0.32 mA first given here left out R127); R126 / R128 at their drift ends (1 % + 100 ppm/K over
+67 K); Calculation / Inference: drift;
 R12F3-TRI-06, was 3.17 V with VOH = VDD), above the 2.5 V
 RDS(on) row (VGS(th) ≤ 1.45 V); gate τ 48.4 µs. Gate copper: PYRO1_GATE_N 17.38 mm F.Cu, no via; PYRO1_GATE 7.20 mm F + 5.37 mm In2,
 two vias; microstrip L ≤ 10.2 / 7.3 nH, negligible against the 48 µs gate time constant.

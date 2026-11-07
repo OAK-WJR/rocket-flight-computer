@@ -24,9 +24,17 @@ TOL = {'initial': 0.01, 'drift': 0.01 + 100e-6 * 67}
 TOL_PRECISE = {'initial': 0.001, 'drift': 0.001 + 25e-6 * 67}
 # D-R12-86 (R12F1-TRI-01): PA4's divider at ten times D-R12-05's impedance; PA4 TT_xx input leakage (DS12110 Rev 8
 # Table 60 p. 139: +/-250 nA, 0 < VIN <= VDD). D-R12-93 moves PORT_SENSE from PA4 (TT_a) to PD10 (H9, FT_h; DS12110 Rev 8
-# Table 9 p. 75): FT_xx input leakage +/-350 nA for 0 < VIN <= VDD (Table 60 p. 139); above VDD an FT pin may sink up to
-# 1.5 uA, which only lowers the reading (Inference)
-PORT_SENSE_TOP, PORT_SENSE_BOT, PD10_LEAK = 47e3, 100e3, 350e-9
+# Table 9 p. 75). R12F5-TRI-16: FT_h is an FT_xx pin (Table 60 note 5: all FT_xx except FT_lu, FT_u and PC3), whose input
+# leakage is +/-250 nA for 0 < VIN <= VDD, the same as PA4's TT_xx (Table 60 p. 139; the +/-350 nA row is FT_u only);
+# above VDD an FT_xx pin may sink up to 1.5 uA, which only lowers the reading (Inference)
+PORT_SENSE_TOP, PORT_SENSE_BOT, PD10_LEAK = 47e3, 100e3, 250e-9
+# R12F5-TRI-02: TPS563208 (U400 PORT_4V8, U403 CAM_5V) headroom. TI SLVSD90B section 7.3: maximum recommended duty 75 %,
+# minimum recommended input VO / 0.75; section 5.5: tOFF(MIN) 220 typ / 310 max ns, RDS(on)h 95 mOhm typ (25 C), Fsw
+# 580 kHz (VIN 12 V); section 6.4.1: below VIN 7 V (with VFB under the reference) the frequency may drop smoothly to a
+# minimum of about 200 kHz to extend TON
+BUCK_DUTY_REC, BUCK_TOFF_S, BUCK_RDSH, BUCK_FSW, BUCK_FSW_FOLDBACK = 0.75, (220e-9, 310e-9), 0.095, 580e3, 200e3
+PORT_RAIL = 'PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)'
+PORT_BUDGET_A = 0.561                                         # always-on port budget (R10 D-R28-01; Inference)
 
 
 def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
@@ -56,7 +64,8 @@ def rails():
                                   'MicoAir LR900-F "5V DC (from USB or JST-GH)" with no range (micoair.com product '
                                   'page, read 2026-11-05), so its 4.5 V floor and 5.0 V top stay the project records\' '
                                   'Inference (r10_plan O5, parts_qualification R8-MCU-02) until bench-confirmed. The '
-                                  'floor applies at the port pins after the copper drop (r12_stageD port_supply)'),
+                                  'floor applies at the port pins after the copper drop (r12_stageD port_supply). '
+                                  'The window holds only while U400 VIN >= VO / 0.75 (R12F5-TRI-02; port_input)'),
         'CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)': dict(
             vref=(0.749, 0.787), top=61e3, bot=10e3, leak=0.1e-6, src='TI SLVSD90B section 5.5',
             limits=(5.0, 20.0), why='RunCam Split 4 manual "DC 5-20V" (as quoted in the R10 records); harness drop at '
@@ -116,8 +125,8 @@ def sense():
     for case, tol in TOL.items():
         r = {}
         # PD10 PORT_SENSE = PORT_4V8 x R112 / (R111 + R112), R111 47k, R112 100k (D-R12-86: ten times D-R12-05's 4.7k /
-        # 10k, same ratio), less PD10's FT_xx input leakage +/-350 nA through the divider's 32 kohm Thevenin resistance
-        # (DS12110 Rev 8 Table 60 p. 139)
+        # 10k, same ratio), less PD10's FT_xx input leakage +/-250 nA through the divider's 32 kohm Thevenin resistance
+        # (DS12110 Rev 8 Table 60 p. 139; R12F5-TRI-16)
         p = rails()['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)'][case]
         top, bot = PORT_SENSE_TOP, PORT_SENSE_BOT
         rth = top * bot / (top + bot)
@@ -134,11 +143,21 @@ def sense():
     out['PORT_SENSE_divider'] = dict(R111_ohm=PORT_SENSE_TOP, R112_ohm=PORT_SENSE_BOT, pd10_leak_A=PD10_LEAK,
                                      thevenin_ohm=round(PORT_SENSE_TOP * PORT_SENSE_BOT / (PORT_SENSE_TOP + PORT_SENSE_BOT), 1),
                                      low_when_off_V=round(PD10_LEAK * PORT_SENSE_BOT * (1 + TOL['drift']), 3))
-    out['PORT_SENSE_limits'] = ('PD10 (FT_h, D-R12-93): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; R10\'s TT_a ceiling VDD + 0.3 = '
-                                '3.52 V at the 3V3 minimum 3.22 V kept as a margin (FT_h tolerates 5.5 V, DS12110 Table 60); with PORT_4V8 '
-                                'off, R112 holds PD10 at or below the leakage figure, under VIL 0.3 x VDD')
-    out['PORT_SENSE_ok'] = all(out[c]['PORT_SENSE_V'][0] > 0.7 * 3.43 and out[c]['PORT_SENSE_V'][1] < 3.22 + 0.3
-                               for c in TOL) and out['PORT_SENSE_divider']['low_when_off_V'] < 0.3 * 3.22
+    # R12F5-TRI-17: the VIH / VIL / ceiling checks use this file's own 3V3 window in each resistor case (VDD at its
+    # maximum for VIH, at its minimum for the ceiling and VIL), not hard-coded 3.43 / 3.22 V
+    v33 = rails()['3V3 (U2 LMR50410, R14 47k / R15 20k)']
+    lim = {c: dict(vdd_V=[v33[c]['min_V'], v33[c]['max_V']], vih_V=round(0.7 * v33[c]['max_V'], 4),
+                   ceiling_V=round(v33[c]['min_V'] + 0.3, 4), vil_V=round(0.3 * v33[c]['min_V'], 4)) for c in TOL}
+    out['PORT_SENSE_thresholds'] = lim
+    out['PORT_SENSE_limits'] = (
+        'PD10 (FT_h, D-R12-93): VIH 0.7 x VDD at the 3V3 maximum = '
+        + ' / '.join(f"{lim[c]['vih_V']:.3f} V ({c}, VDD {lim[c]['vdd_V'][1]:.4f} V)" for c in TOL)
+        + "; R10's TT_a ceiling VDD + 0.3 at the 3V3 minimum = "
+        + ' / '.join(f"{lim[c]['ceiling_V']:.3f} V ({c})" for c in TOL)
+        + ' kept as a margin (FT_h tolerates 5.5 V, DS12110 Table 60); with PORT_4V8 off, R112 holds PD10 at or below '
+          'the leakage figure, under VIL 0.3 x VDD at the 3V3 minimum')
+    out['PORT_SENSE_ok'] = all(out[c]['PORT_SENSE_V'][0] > lim[c]['vih_V'] and out[c]['PORT_SENSE_V'][1] < lim[c]['ceiling_V']
+                               and out['PORT_SENSE_divider']['low_when_off_V'] < lim[c]['vil_V'] for c in TOL)
     out['label'] = 'Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference'
     return out
 
@@ -223,25 +242,48 @@ def fire():
         v = (b + math.sqrt(b * b - 4 * a * .15 * other)) / (2 * a)
         shorts[label] = dict(BAT_IN_V=round(v, 4), fire_A=round(v / r, 4),
                              Q120_I2R_W=round((v / r) ** 2 * pfet, 3), Q124_I2R_W=round((v / r) ** 2 * q124, 3))
-    vgs_p = lambda vbat: round(-vbat * 50e3 / (50e3 + 10e3), 2)
+    # R12F5-TRI-04 (D-R12-10): the R119 || R120 / R121 divider hangs on ACT_FET_S, which sits I_fire x RDS(Q120 hot)
+    # below BAT_IN during a fire (R12F2-TRI-08), less Q122's 0.1 V drop (Inference); drive strength at the smallest
+    # ratio 49k / 59.2k (Rgs -2 %, R121 +2 %), the +/-12 V corner at the largest 51k / 60.8k (D-R12-91). Stage A has no
+    # board copper; r12_stageD adds the J1 -> Q120 and Q120 -> Q121 copper drops (R12F5-TRI-03)
+    r_min, r_max = 49e3 / 59.2e3, 51e3 / 60.8e3
+    def vgs_p(vbat, amps=0.0, ratio=r_min):
+        return round(-(vbat - amps * pfet - .1) * ratio, 3)
+    four = cases['4']
+    # |VGS| >= 4.5 V down to this BAT_IN: with the bus on (no fire current) and during a fire at the four-stall current
+    pack_bus_on = 4.5 / r_min + .1
+    pack_fire = pack_bus_on + four['fire_A'] * pfet
+    # R12F5-TRI-05: Q124 VGS from the 3V3 drift minimum less PE4's VOH allowance, R126 / R128 at their drift ends
+    v33_min = rails()['3V3 (U2 LMR50410, R14 47k / R15 20k)']['drift']['min_V']
+    td = TOL['drift']
     return dict(
         r11_branch_ohm=round(rest11, 4), r11_other_W=round(other11, 3), r12_branch_ohm=round(rest, 4),
         r12_other_W=round(other, 3), pfet_hot_ohm=round(pfet, 4), q124_hot_ohm=round(q124, 4),
         stalls=cases, four_stall_A=cases['4']['fire_A'], floor_A=1.125, four_stall_ok=cases['4']['fire_A'] >= 1.125,
         four_stall_margin_pct=round((cases['4']['fire_A'] / 1.125 - 1) * 100, 1), shorted=shorts,
         gate=dict(
-            q120_q121_vgs_V={'5.72V_four_stall': vgs_p(5.72), '8.4V': vgs_p(8.4), '12.6V_3S': vgs_p(12.6),
-                             '19.9V_TVS_clamp': vgs_p(19.9)},
-            q120_vgs_abs_max_V=12, q120_rds_row='VGS -4.5 V (|VGS| >= 4.5 V down to a 5.4 V pack)',
-            q124_vgs_min_V=round((3.222 - .4) * 10e3 / (10e3 + 220), 3), q124_vgs_th_max_V=1.45,
+            q120_q121_vgs_V={'four_stall_fire': vgs_p(four['BAT_IN_V'], four['fire_A']),
+                             '8.4V_bus_on': vgs_p(8.4), '12.6V_3S_bus_on_max_ratio': vgs_p(12.6, ratio=r_max),
+                             '19.9V_TVS_clamp_bus_on_max_ratio': vgs_p(19.9, ratio=r_max)},
+            q120_q121_vgs_basis=('stage A (no board copper): VGS = -(BAT_IN - I_fire x RDS(Q120 hot) - 0.1 V) x Rgs / '
+                                 '(Rgs + R121), ACT_FET_S basis (R12F2-TRI-08, R12F5-TRI-04); the four-stall point is '
+                                 'this file\'s stage A fire model; r12_stageD (stageD_budget.json fire.gate) gives the '
+                                 'board figures with the copper drops, per FET'),
+            q120_vgs_abs_max_V=12,
+            q120_rds_row=(f'VGS -4.5 V (|VGS| >= 4.5 V down to BAT_IN {pack_bus_on:.2f} V with the bus on and '
+                          f'{pack_fire:.2f} V during a {four["fire_A"]:.2f} A fire; stage A, no copper)'),
+            q120_vgs_4V5_min_bat_V=dict(bus_on=round(pack_bus_on, 3), four_stall_fire=round(pack_fire, 3)),
+            q124_vgs_min_V=round((v33_min - .4) * 10e3 * (1 - td) / (10e3 * (1 - td) + 220 * (1 + td)), 3),
+            q124_vgs_th_max_V=1.45,
             q124_tau_us=round(220 * 220e-9 * 1e6, 1),
-            note='Q120 / Q121 VGS = -V_BAT x (R119 || R120) / ((R119 || R120) + R121) (R11 network). |VGS| exceeds the '
+            note='Q120 / Q121 VGS = -(V_ACT_FET_S - 0.1 V) x (R119 || R120) / ((R119 || R120) + R121), V_ACT_FET_S = BAT_IN '
+                 'less Q120\'s drop during a fire (Q122 drop 0.1 V and the Q120 hot factor Inference). |VGS| exceeds the '
                  'AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA '
                  'clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient '
                  'above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V '
                  '(DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4\'s steady load, R127 1k plus R126 220R + R128 10k, is '
                  'about 3.6 mA (<= 3.9 mA with drift), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02) through R126 '
-                 '220R / R128 10k'),
+                 '220R / R128 10k, at the 3V3 drift minimum with R126 / R128 at their drift ends (R12F5-TRI-05)'),
         basis='R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), '
               'R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference',
         label='Calculation on Datasheet limits; copper, pack, loads and hot factors Inference')
@@ -317,11 +359,62 @@ def cam_input():
               'Inference)')
 
 
+def buck_headroom(vin, row, i_out):
+    """R12F5-TRI-02: can a TPS563208 hold the rail window `row` (r12_budget.rails row) from input `vin` at output current
+    `i_out`? Duty needed = VO / (VIN - i_out x RDS(on)h) at each window end; the off-time duty ceiling is
+    1 - tOFF(MIN) x f at the nominal 580 kHz and at the about 200 kHz foldback floor below 7 V; the highest output the
+    buck can then hold is D_max x (VIN - i_out x RDS(on)h). Inductor DCR, the low-side switch, hot RDS(on) and the exact
+    foldback frequency are not modelled (Inference): an estimate, not a guaranteed window."""
+    v = vin - i_out * BUCK_RDSH
+    dmax = {f'{f / 1e3:.0f}kHz_tOFF_{"typ" if t < 300e-9 else "max"}_{t * 1e9:.0f}ns': 1 - t * f
+            for f in (BUCK_FSW, BUCK_FSW_FOLDBACK) for t in BUCK_TOFF_S}
+    held = {k: round(d * v, 3) for k, d in dmax.items()}
+    top = max(row[c]['max_V'] for c in TOL)
+    return dict(
+        VIN_V=round(vin, 4), I_out_A=i_out,
+        duty_needed={c: [round(row[c]['min_V'] / v, 4), round(row[c]['max_V'] / v, 4)] for c in TOL},
+        duty_needed_lossless={c: [round(row[c]['min_V'] / vin, 4), round(row[c]['max_V'] / vin, 4)] for c in TOL},
+        below_recommended_duty=all(row[c]['max_V'] / vin <= BUCK_DUTY_REC for c in TOL),
+        dmax={k: round(d, 4) for k, d in dmax.items()}, max_held_V=held,
+        window_top_V=top, holds_window_top_at_580kHz=min(held[k] for k in held if k.startswith('580')) >= top,
+        holds_window_top_with_foldback=min(held[k] for k in held if k.startswith('200')) >= top)
+
+
+def port_input():
+    """R12F5-TRI-02: the PORT_4V8 window is the feedback window, valid only while U400 can regulate (as D-R12-87 for
+    U403): U400 VIN >= VO / 0.75 (TI SLVSD90B section 7.3). Stage A (no board): U400's input is BAT_IN less U9's RON
+    0.04 ohm at the converter current (Inference, as vlogic / cam_input), at the four-stall fire point of fire() and on a
+    6.0 V open-circuit pack (R10 pack model 0.15 ohm, no fire, no stall, the same converter load); the ports draw the
+    0.561 A budget (Inference). r12_stageD (stageD_budget.json port_supply.u400_input) repeats it with the board copper."""
+    port = rails()[PORT_RAIL]
+    f = fire()
+    other = f['r12_other_W']
+    pack6 = (6.0 + math.sqrt(36.0 - 4 * .15 * other)) / 2
+    pts = {'four_stall_fire': f['stalls']['4']['BAT_IN_V'], '6V0_pack_converters_only': pack6}
+    out = dict(
+        min_recommended_VIN_V={c: [round(port[c]['min_V'] / BUCK_DUTY_REC, 3), round(port[c]['max_V'] / BUCK_DUTY_REC, 3)]
+                               for c in TOL},
+        window_holds_for=('U400 VIN >= VO / 0.75 ('
+                          + ', '.join(f"{port[c]['min_V'] / BUCK_DUTY_REC:.2f}-{port[c]['max_V'] / BUCK_DUTY_REC:.2f} V {c}"
+                                      for c in TOL)
+                          + '); below it the PORT_4V8 window is not claimed, and the headroom estimate below applies'))
+    for name, bat in pts.items():
+        vin = bat - 0.04 * other / bat
+        out[name] = dict(BAT_IN_V=round(bat, 4), **buck_headroom(vin, port, PORT_BUDGET_A))
+    out['note'] = ('below about 6.1-6.6 V U400 runs past its 75 % recommended duty; at the nominal 580 kHz its minimum '
+                   'off-time would cap the output under the window, but below VIN 7 V the frequency may fold back to '
+                   'about 200 kHz (SLVSD90B 6.4.1), which leaves room for the window top: regulation should hold '
+                   '(Inference; bench item)')
+    out['label'] = ('Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and foldback floor; U9 RON, pack model, '
+                    'converter load, DCR and copper Inference)')
+    return out
+
+
 def compute():
     return dict(
         status='R12 stage A (no board): Calculation / Inference as labelled; no measurement',
         resistor_cases={k: f'+/-{v * 100:.2f} % independent' for k, v in TOL.items()},
-        rails=rails(), cam_input=cam_input(), u9=u9(), sense=sense(), vlogic=vlogic(), holdup=holdup(), fire=fire(), crystal=crystal())
+        rails=rails(), cam_input=cam_input(), port_input=port_input(), u9=u9(), sense=sense(), vlogic=vlogic(), holdup=holdup(), fire=fire(), crystal=crystal())
 
 
 def main():

@@ -48,8 +48,13 @@ paragraph of §2 keep `be81f40b…`'s figures as history.
 * **Frozen sources.** The stage C copper is kept as `r12_aid/r12_routes_f1.tsv`. The battery entry, the bus switch and
   fire path, the camera-buck internals, SERVOn_OUT, PE4's gate run, PYRO1_CONT, HSE and the port-cell internals were
   reused verbatim (S-3 / S-8 / S-9 = 0, Measured); D-R12-96 lists the runs that were redrawn.
-* **Tools (not run by the build).** `zone_check.py` (a fragment stays inside its zone and hand-offs meet),
-  `zone_guard.py` (reports frozen rows outside their zone: 6–7 frozen pyro rows sit outside W1, exempt by the plan),
+* **Tools (not run by the build).** `zone_check.py` (builds a scratch board from the fragments and sorts its DRC /
+  parity, route_check and check_r12 findings into zones by position through `zone_guard.inside`; it does not test
+  containment), `zone_guard.py` (lists each fragment row with a track end or via outside its zone's polygon and owned
+  strips, or outside the board outline; on the committed fragments, with W3 / W5 brought to the 90 mm layout by
+  R12F5-TRI-13, Measured: W1 6 rows at its W3 border, x 12.2–18.7, y 44.7–50.7 (three GND vias and a GND stub,
+  PYRO1_CONT, PE4's PYRO1_GATE_N run); W3 8 rows of U1's aft escape that cross into W1 / W4 near y 45 (the ARM1_SENSE
+  and ACT_EN_MCU B lanes, BAT_FAULT_N's via and B stub, a GND stub); W2, W4 and W5 none),
   `export_geom.py` (pads and keep-outs for drafting), `kref.py` (K-reference diagnostic), `draw.py` (renders),
   `score.py` (the plan's metrics), `escape_W3.tsv` (U1's escape and the zone hand-offs).
 * **Joins.** 21 of route_check's 31 review-only collinear nodes are at the zone joins y 17.5 and y 45.4, where two

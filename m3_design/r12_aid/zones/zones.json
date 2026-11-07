@@ -1,5 +1,5 @@
 {
- "note": "Routing work zones for the R12 AVA re-layout (ROUTING_PLAN.md section 6). Board mm, x east, y forward from the aft edge. A zone owns every copper layer inside its polygon except where a 'strips' entry gives one layer of a rectangle to another zone. Copper may cross a zone border only at a listed hand-off point. D-R12-96: the W1 / W2 border moved from y 26.5 to y 17.0-17.6 so that the 3V3 buck cell (moved 4.6 mm aft) lies wholly in W2, as ROUTING_PLAN assigns it; RAW_PROTECTED hands off W1 -> W2 on B 0.6 mm at (45.2, 17.0). R12F4-TRI-08: W5 closes at the 90 mm outline (y 90, Edge.Cuts; it ended at y 100 from the 46 x 100 mm stage), and zone_guard.py refuses any zone polygon or fragment point outside Edge.Cuts.",
+ "note": "Routing work zones for the R12 AVA re-layout (ROUTING_PLAN.md section 6). Board mm, x east, y forward from the aft edge. A zone owns every copper layer inside its polygon except where a 'strips' entry gives one layer of a rectangle to another zone. Copper may cross a zone border only at a listed hand-off point. D-R12-96: the W1 / W2 border moved from y 26.5 to y 17.0-17.6 so that the 3V3 buck cell (moved 4.6 mm aft) lies wholly in W2, as ROUTING_PLAN assigns it; RAW_PROTECTED hands off W1 -> W2 on B 0.6 mm at (45.2, 17.0). R12F4-TRI-08: W5 closes at the 90 mm outline (y 90, Edge.Cuts; it ended at y 100 from the 46 x 100 mm stage), and zone_guard.py refuses any zone polygon or fragment point outside Edge.Cuts. R12F5-TRI-13: W3 / W5 brought to the 90 mm layout (D-R12-99 moved the port row and its 1 k / 100 nF cells 10 mm aft, the microSD block 5.4 mm aft and the port buck cell 1.5 mm aft): W3 keeps U1's escape, the microSD block (the old W5 notch at x 11.7-19, y 61.5-66.8), QSPI and the port UART B lanes up to y 80 with F fingers to the 1 k series pads at y 81.77 (x 11.7-13.4, 22.1-26.2, 34.6-36.4) and PORT_SENSE to R111.1 (27.2, 80.17); W5 takes the port row forward of y 80, the port buck cell (x >= 39.2 from y 66.3, x >= 37.0 from y 68.6), the 3V3 bulk pocket C461 / C23 / C460 / TP74 (x 28.5-34.6, y 68.6-80) and the west bay x < 11.7. Strip CR ends at the trunk hand-off y 73.1; strip CX (a B AUX lane under the 100 mm port buck) is gone: the AUX lanes run at x 35 / 36 inside W3.",
  "zones": {
   "W1": {
    "name": "aft power, pyro, camera and servo cells",
@@ -139,35 +139,83 @@
     ],
     [
      44.6,
-     68.0
+     66.3
     ],
     [
-     38.8,
-     68.0
+     39.2,
+     66.3
     ],
     [
-     38.8,
-     88.0
+     39.2,
+     68.6
     ],
     [
-     12.0,
-     88.0
+     37.0,
+     68.6
     ],
     [
-     12.0,
-     66.8
+     37.0,
+     80.0
     ],
     [
-     19.0,
-     66.8
+     36.4,
+     80.0
     ],
     [
-     19.0,
-     61.5
+     36.4,
+     82.4
+    ],
+    [
+     34.6,
+     82.4
+    ],
+    [
+     34.6,
+     68.6
+    ],
+    [
+     28.5,
+     68.6
+    ],
+    [
+     28.5,
+     80.0
+    ],
+    [
+     27.2,
+     80.0
+    ],
+    [
+     27.2,
+     80.17
+    ],
+    [
+     26.2,
+     80.17
+    ],
+    [
+     26.2,
+     82.4
+    ],
+    [
+     22.1,
+     82.4
+    ],
+    [
+     22.1,
+     80.0
+    ],
+    [
+     13.4,
+     80.0
+    ],
+    [
+     13.4,
+     82.4
     ],
     [
      11.7,
-     61.5
+     82.4
     ],
     [
      11.7,
@@ -239,43 +287,91 @@
     ],
     [
      11.7,
-     61.5
+     82.4
     ],
     [
-     19.0,
-     61.5
+     13.4,
+     82.4
     ],
     [
-     19.0,
-     66.8
+     13.4,
+     80.0
     ],
     [
-     12.0,
-     66.8
+     22.1,
+     80.0
     ],
     [
-     12.0,
-     88.0
+     22.1,
+     82.4
     ],
     [
-     38.8,
-     88.0
+     26.2,
+     82.4
     ],
     [
-     38.8,
-     68.0
+     26.2,
+     80.17
+    ],
+    [
+     27.2,
+     80.17
+    ],
+    [
+     27.2,
+     80.0
+    ],
+    [
+     28.5,
+     80.0
+    ],
+    [
+     28.5,
+     68.6
+    ],
+    [
+     34.6,
+     68.6
+    ],
+    [
+     34.6,
+     82.4
+    ],
+    [
+     36.4,
+     82.4
+    ],
+    [
+     36.4,
+     80.0
+    ],
+    [
+     37.0,
+     80.0
+    ],
+    [
+     37.0,
+     68.6
+    ],
+    [
+     39.2,
+     68.6
+    ],
+    [
+     39.2,
+     66.3
     ],
     [
      44.6,
-     68.0
+     66.3
     ],
     [
      44.6,
-     74.0
+     73.1
     ],
     [
      46,
-     74.0
+     73.1
     ],
     [
      46,
@@ -296,22 +392,10 @@
     44.6,
     52.0,
     46.0,
-    74.6
+    73.1
    ],
    "owner": "W2",
-   "what": "RAW_PROTECTED trunk, B.Cu 0.6 mm at x 45.2 (inside W3 / W5 polygons, B only)"
-  },
-  {
-   "id": "CX",
-   "layer": "B",
-   "rect": [
-    40.2,
-    68.0,
-    41.6,
-    88.0
-   ],
-   "owner": "W3",
-   "what": "AUX lane, B.Cu, under the W5 port buck (B only)"
+   "what": "RAW_PROTECTED trunk, B.Cu 0.6 mm at x 45.2 up to its W5 hand-off at (45.2, 73.1) (inside the W3 / W5 polygons, B only)"
   },
   {
    "id": "LB",

@@ -67,17 +67,22 @@
   "four_stall_margin_pct": 10.9,
   "four_stall_ok": true,
   "gate": {
-   "note": "Q120 / Q121 VGS = -V_BAT x (R119 || R120) / ((R119 || R120) + R121) (R11 network). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4's steady load, R127 1k plus R126 220R + R128 10k, is about 3.6 mA (<= 3.9 mA with drift), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02) through R126 220R / R128 10k",
+   "note": "Q120 / Q121 VGS = -(V_ACT_FET_S - 0.1 V) x (R119 || R120) / ((R119 || R120) + R121), V_ACT_FET_S = BAT_IN less Q120's drop during a fire (Q122 drop 0.1 V and the Q120 hot factor Inference). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4's steady load, R127 1k plus R126 220R + R128 10k, is about 3.6 mA (<= 3.9 mA with drift), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02) through R126 220R / R128 10k, at the 3V3 drift minimum with R126 / R128 at their drift ends (R12F5-TRI-05)",
    "q120_q121_vgs_V": {
-    "12.6V_3S": -10.5,
-    "19.9V_TVS_clamp": -16.58,
-    "5.72V_four_stall": -4.77,
-    "8.4V": -7.0
+    "12.6V_3S_bus_on_max_ratio": -10.485,
+    "19.9V_TVS_clamp_bus_on_max_ratio": -16.609,
+    "8.4V_bus_on": -6.87,
+    "four_stall_fire": -4.577
    },
-   "q120_rds_row": "VGS -4.5 V (|VGS| >= 4.5 V down to a 5.4 V pack)",
+   "q120_q121_vgs_basis": "stage A (no board copper): VGS = -(BAT_IN - I_fire x RDS(Q120 hot) - 0.1 V) x Rgs / (Rgs + R121), ACT_FET_S basis (R12F2-TRI-08, R12F5-TRI-04); the four-stall point is this file's stage A fire model; r12_stageD (stageD_budget.json fire.gate) gives the board figures with the copper drops, per FET",
+   "q120_rds_row": "VGS -4.5 V (|VGS| >= 4.5 V down to BAT_IN 5.54 V with the bus on and 5.63 V during a 1.25 A fire; stage A, no copper)",
+   "q120_vgs_4V5_min_bat_V": {
+    "bus_on": 5.537,
+    "four_stall_fire": 5.628
+   },
    "q120_vgs_abs_max_V": 12,
    "q124_tau_us": 48.4,
-   "q124_vgs_min_V": 2.761,
+   "q124_vgs_min_V": 2.777,
    "q124_vgs_th_max_V": 1.45
   },
   "label": "Calculation on Datasheet limits; copper, pack, loads and hot factors Inference",
@@ -139,6 +144,103 @@
    0.464,
    0.539
   ]
+ },
+ "port_input": {
+  "6V0_pack_converters_only": {
+   "BAT_IN_V": 5.6563,
+   "I_out_A": 0.561,
+   "VIN_V": 5.5646,
+   "below_recommended_duty": false,
+   "dmax": {
+    "200kHz_tOFF_max_310ns": 0.938,
+    "200kHz_tOFF_typ_220ns": 0.956,
+    "580kHz_tOFF_max_310ns": 0.8202,
+    "580kHz_tOFF_typ_220ns": 0.8724
+   },
+   "duty_needed": {
+    "drift": [
+     0.8293,
+     0.9022
+    ],
+    "initial": [
+     0.8352,
+     0.8959
+    ]
+   },
+   "duty_needed_lossless": {
+    "drift": [
+     0.8214,
+     0.8935
+    ],
+    "initial": [
+     0.8272,
+     0.8873
+    ]
+   },
+   "holds_window_top_at_580kHz": false,
+   "holds_window_top_with_foldback": true,
+   "max_held_V": {
+    "200kHz_tOFF_max_310ns": 5.17,
+    "200kHz_tOFF_typ_220ns": 5.269,
+    "580kHz_tOFF_max_310ns": 4.52,
+    "580kHz_tOFF_typ_220ns": 4.808
+   },
+   "window_top_V": 4.9722
+  },
+  "four_stall_fire": {
+   "BAT_IN_V": 5.7211,
+   "I_out_A": 0.561,
+   "VIN_V": 5.6305,
+   "below_recommended_duty": false,
+   "dmax": {
+    "200kHz_tOFF_max_310ns": 0.938,
+    "200kHz_tOFF_typ_220ns": 0.956,
+    "580kHz_tOFF_max_310ns": 0.8202,
+    "580kHz_tOFF_typ_220ns": 0.8724
+   },
+   "duty_needed": {
+    "drift": [
+     0.8195,
+     0.8915
+    ],
+    "initial": [
+     0.8253,
+     0.8853
+    ]
+   },
+   "duty_needed_lossless": {
+    "drift": [
+     0.8118,
+     0.8831
+    ],
+    "initial": [
+     0.8175,
+     0.877
+    ]
+   },
+   "holds_window_top_at_580kHz": false,
+   "holds_window_top_with_foldback": true,
+   "max_held_V": {
+    "200kHz_tOFF_max_310ns": 5.231,
+    "200kHz_tOFF_typ_220ns": 5.332,
+    "580kHz_tOFF_max_310ns": 4.574,
+    "580kHz_tOFF_typ_220ns": 4.866
+   },
+   "window_top_V": 4.9722
+  },
+  "label": "Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and foldback floor; U9 RON, pack model, converter load, DCR and copper Inference)",
+  "min_recommended_VIN_V": {
+   "drift": [
+    6.094,
+    6.63
+   ],
+   "initial": [
+    6.137,
+    6.584
+   ]
+  },
+  "note": "below about 6.1-6.6 V U400 runs past its 75 % recommended duty; at the nominal 580 kHz its minimum off-time would cap the output under the window, but below VIN 7 V the frequency may fold back to about 200 kHz (SLVSD90B 6.4.1), which leaves room for the window top: regulation should hold (Inference; bench item)",
+  "window_holds_for": "U400 VIN >= VO / 0.75 (6.14-6.58 V initial, 6.09-6.63 V drift); below it the PORT_4V8 window is not claimed, and the headroom estimate below applies"
  },
  "rails": {
   "3V3 (U2 LMR50410, R14 47k / R15 20k)": {
@@ -209,7 +311,7 @@
     4.5,
     5.0
    ],
-   "limits_basis": "HGLRC M100 Mini 3.3-5 V (hglrc.com product page, read 2026-11-05: the 5.0 V top); MicoAir LR900-F \"5V DC (from USB or JST-GH)\" with no range (micoair.com product page, read 2026-11-05), so its 4.5 V floor and 5.0 V top stay the project records' Inference (r10_plan O5, parts_qualification R8-MCU-02) until bench-confirmed. The floor applies at the port pins after the copper drop (r12_stageD port_supply)",
+   "limits_basis": "HGLRC M100 Mini 3.3-5 V (hglrc.com product page, read 2026-11-05: the 5.0 V top); MicoAir LR900-F \"5V DC (from USB or JST-GH)\" with no range (micoair.com product page, read 2026-11-05), so its 4.5 V floor and 5.0 V top stay the project records' Inference (r10_plan O5, parts_qualification R8-MCU-02) until bench-confirmed. The floor applies at the port pins after the copper drop (r12_stageD port_supply). The window holds only while U400 VIN >= VO / 0.75 (R12F5-TRI-02; port_input)",
    "nominal_V": 4.7693,
    "source": "TI SLVSD90B section 5.5 VFB 0.749-0.787 V continuous mode (TPS563208 is FCCM), TJ -40 to 125 C; IVFB +/-0.1 uA; R401 0.1 % 25 ppm/K (D-R12-83)"
   }
@@ -222,20 +324,40 @@
   "PORT_SENSE_divider": {
    "R111_ohm": 47000.0,
    "R112_ohm": 100000.0,
-   "low_when_off_V": 0.036,
-   "pd10_leak_A": 3.5e-07,
+   "low_when_off_V": 0.025,
+   "pd10_leak_A": 2.5e-07,
    "thevenin_ohm": 31972.8
   },
-  "PORT_SENSE_limits": "PD10 (FT_h, D-R12-93): VIH 0.7 x VDD = 2.39 V at the 3V3 maximum 3.43 V; R10's TT_a ceiling VDD + 0.3 = 3.52 V at the 3V3 minimum 3.22 V kept as a margin (FT_h tolerates 5.5 V, DS12110 Table 60); with PORT_4V8 off, R112 holds PD10 at or below the leakage figure, under VIL 0.3 x VDD",
+  "PORT_SENSE_limits": "PD10 (FT_h, D-R12-93): VIH 0.7 x VDD at the 3V3 maximum = 2.402 V (initial, VDD 3.4314 V) / 2.425 V (drift, VDD 3.4641 V); R10's TT_a ceiling VDD + 0.3 at the 3V3 minimum = 3.570 V (initial) / 3.540 V (drift) kept as a margin (FT_h tolerates 5.5 V, DS12110 Table 60); with PORT_4V8 off, R112 holds PD10 at or below the leakage figure, under VIL 0.3 x VDD at the 3V3 minimum",
   "PORT_SENSE_ok": true,
+  "PORT_SENSE_thresholds": {
+   "drift": {
+    "ceiling_V": 3.5401,
+    "vdd_V": [
+     3.2401,
+     3.4641
+    ],
+    "vih_V": 2.4249,
+    "vil_V": 0.972
+   },
+   "initial": {
+    "ceiling_V": 3.5704,
+    "vdd_V": [
+     3.2704,
+     3.4314
+    ],
+    "vih_V": 2.402,
+    "vil_V": 0.9811
+   }
+  },
   "drift": {
    "CAM_5V_SENSE_V": [
     0.445,
     0.531
    ],
    "PORT_SENSE_V": [
-    3.064,
-    3.43
+    3.068,
+    3.426
    ],
    "VLOGIC_SENSE_ratio": [
     0.08819,
@@ -248,8 +370,8 @@
     0.518
    ],
    "PORT_SENSE_V": [
-    3.1,
-    3.392
+    3.103,
+    3.388
    ],
    "VLOGIC_SENSE_ratio": [
     0.08927,

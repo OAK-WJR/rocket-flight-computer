@@ -159,6 +159,7 @@ Q124_VDD_MIN = r12_budget.rails()['3V3 (U2 LMR50410, R14 47k / R15 20k)']['drift
 # row, the current at which VOH >= VDD - 0.4 V is guaranteed.
 Q124_VDD_MAX = r12_budget.rails()['3V3 (U2 LMR50410, R14 47k / R15 20k)']['drift']['max_V']
 VOH_ROW_MA = 4.0
+TD = r12_budget.TOL['drift']
 
 
 def pe4_load_mA(vdd, low=0.0):
@@ -194,6 +195,14 @@ def fire_budget(copper, gnd_return):
     # VGS = -(V_ACT_FET_S - Q122 drop 0.1 V) x Rgs / (Rgs + R121), Rgs = R119 || R120 = 50k (1 %), R121 10k.
     # During a fire V_ACT_FET_S = BAT_IN - I_fire x RDS(Q120) (R12F2-TRI-08: the stage D / E figures took BAT_IN itself);
     # with the bus on and no fire, Q120 carries only the sense banks' sub-mA current, so V_ACT_FET_S = BAT_IN.
+    # R12F5-TRI-03: BAT_IN_V is J1's terminal (loaded()), and the fire current also crosses the J1 -> Q120 BAT_IN copper
+    # before Q120's drain; R119 / R120 tap ACT_FET_S at Q120's source pad through a stub that carries no current, while
+    # the fire current runs the ACT_FET_S copper on to Q121's source. So Q120's source is BAT_IN - I x (R_BAT_IN copper
+    # + RDS(Q120)), the gate sits (Q120 source - 0.1 V) x ratio below it, and Q121's |VGS| is smaller by I x the
+    # ACT_FET_S copper (each at 70 C, the loop's copper factor; check_r10.fire_path's per-net copper).
+    hot_cu = 1 + TCR * (70 - 20)
+    r_batin = copper['BAT_IN']['R_20C_ohm'] * hot_cu
+    r_fets = copper['ACT_FET_S']['R_20C_ohm'] * hot_cu
     r_gs_min = 50e3 * .98
     ratio = r_gs_min / (r_gs_min + 10e3 * 1.02)
     tau = (50e3 * 10e3 / 60e3) * 1.02 * (1e-6 * 1.10 * 1.15)      # C120 1 uF +10 % tolerance, +15 % temperature
@@ -202,23 +211,30 @@ def fire_budget(copper, gnd_return):
     r_gs_max = 50e3 * 1.02
     ratio_max = r_gs_max / (r_gs_max + 10e3 * .98)
     def vgs(v, amps=0.0):
-        return (v - amps * PFET_HOT - .1) * ratio
+        """|VGS| of Q120 (the divider's own FET); Q121's is smaller by amps x r_fets."""
+        return (v - amps * (r_batin + PFET_HOT) - .1) * ratio
 
     def during_fire(v, amps):
-        return dict(BAT_IN_V=v, fire_A=amps, Q120_drop_V=amps * PFET_HOT, ACT_FET_S_V=v - amps * PFET_HOT,
-                    vgs_V=-vgs(v, amps), margin_to_minus_4V5_row_V=vgs(v, amps) - 4.5)
+        s120 = v - amps * (r_batin + PFET_HOT)
+        q120, q121 = vgs(v, amps), vgs(v, amps) - amps * r_fets
+        return dict(BAT_IN_V=v, fire_A=amps, BAT_IN_copper_drop_V=amps * r_batin, Q120_drop_V=amps * PFET_HOT,
+                    Q120_source_V=s120, ACT_FET_S_copper_drop_V=amps * r_fets, Q121_source_V=s120 - amps * r_fets,
+                    vgs_Q120_V=-q120, vgs_Q121_V=-q121,
+                    margin_to_minus_4V5_row_V=dict(Q120=q120 - 4.5, Q121=q121 - 4.5))
     four = stalls['4']
     gate = dict(q120_q121_vgs_four_stall_fire=during_fire(four['BAT_IN_V'], four['fire_A']),
                 # at a given BAT_IN v the fire current is v / rest (loaded()'s relation)
-                q120_q121_vgs_during_fire_V={f'{v:g}V': -vgs(v, v / rest) for v in (6.0, 7.4, 8.4)},
+                q120_q121_vgs_during_fire_V={f'{v:g}V': dict(Q120=-vgs(v, v / rest), Q121=-vgs(v, v / rest) + v / rest * r_fets)
+                                             for v in (6.0, 7.4, 8.4)},
                 q120_q121_vgs_shorted_four_stall={k: during_fire(shorts[f'{k}_4_stalls']['BAT_IN_V'],
                                                                  shorts[f'{k}_4_stalls']['fire_A'])
                                                   for k in ('match_shorted', 'match_and_leads_shorted')},
                 q120_q121_vgs_bus_on_no_fire_V={f'{v:g}V': -vgs(v) for v in (6.0, 7.4, 8.4, 12.6, 19.9)},
                 q120_q121_time_to_minus_4V5_ms={f'{v:g}V': (-tau * math.log(1 - 4.5 / vgs(v)) * 1e3 if vgs(v) > 4.5
                                                             else None) for v in (6.0, 7.4, 8.4)},
-                q120_vgs_note=('during a fire ACT_FET_S = BAT_IN - I_fire x 73.5 mOhm (Q120 hot, the -4.5 V row x 1.225; '
-                               'R12F2-TRI-08); the enable time and the 12 V corner have no fire current (bus on, before '
+                q120_vgs_note=('during a fire Q120\'s source = BAT_IN - I_fire x (J1 -> Q120 copper + 73.5 mOhm) (Q120 hot, '
+                               'the -4.5 V row x 1.225; R12F2-TRI-08), and Q121\'s source sits a further I_fire x the '
+                               'ACT_FET_S copper lower (copper at 70 C; R12F5-TRI-03); the enable time and the 12 V corner have no fire current (bus on, before '
                                'the fire). A shorted match takes |VGS| below the -4.5 V row, where RDS(on) is above the '
                                'row value used here (Inference; a fault case, not the fire budget)'),
                 q120_rds_row='AO3401A RDS(on) <= 60 mOhm at VGS -4.5 V (25 C)', q120_vgs_abs_max_V=12.0,
@@ -227,8 +243,8 @@ def fire_budget(copper, gnd_return):
                 # guarantees only VOH >= VDD - 0.4 V (|IIO| 4 mA, 1.62-3.6 V; 8 mA, 2.7-3.6 V). R12F4-TRI-02: PE4's
                 # steady load includes R127 1k (about 3.56 mA at the 3V3 drift minimum, <= 3.87 mA at the drift maximum
                 # with every resistor at its drift low end), within the 4 mA row; VDD = the 3V3 drift minimum, R126 /
-                # R128 1 % at their worst ends
-                q124_vgs_min_V=(Q124_VDD_MIN - VOH_DROP) * 10e3 * .99 / (10e3 * .99 + 220 * 1.01),
+                # R128 at their drift ends (+/-1.67 %, r12_budget TOL['drift']; R12F5-TRI-05)
+                q124_vgs_min_V=(Q124_VDD_MIN - VOH_DROP) * 10e3 * (1 - TD) / (10e3 * (1 - TD) + 220 * (1 + TD)),
                 q124_vgs_min_basis=dict(vdd_min_V=Q124_VDD_MIN, voh_drop_V=VOH_DROP,
                                         pe4_load_mA=pe4_load_mA(Q124_VDD_MIN),
                                         pe4_load_max_mA=pe4_load_mA(Q124_VDD_MAX, r12_budget.TOL['drift']),
@@ -236,9 +252,10 @@ def fire_budget(copper, gnd_return):
                                         pe4_load_within_voh_row=pe4_load_mA(Q124_VDD_MAX,
                                                                             r12_budget.TOL['drift']) <= VOH_ROW_MA,
                                         pe4_load_parts='R127 1k to GND, and R126 220R + R128 10k (10.22 kOhm) to GND',
+                                        resistor_tolerance=TD,
                                         source='DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 '
                                                'drift minimum and maximum (r12_windows.json); R126 220R / R127 1k / '
-                                               'R128 10k 1 %',
+                                               'R128 10k 1 % + 100 ppm/K over 67 K (the drift case)',
                                         label='Calculation / Inference (PE4 load about 3.56 mA, <= 3.87 mA with drift, '
                                               'within the 4 mA VOH row; resistor drift)'),
                 q124_vgs_row_V=2.5, q124_vgs_th_max_V=1.45,
@@ -661,7 +678,7 @@ def u6_supply(solves):
     return out
 
 
-def port_supply(solves):
+def port_supply(solves, fire=None):
     """PORT_4V8 at each port's pin 2. U400 regulates at R400.1 (its feedback divider top), whose 0.15 mm F.Cu sense
     run joins the 1.0 mm feed at (39.4, 79.3), 3.2 mm from L400.2 (90 mm re-layout, D-R12-94 / -99; stage D's sense
     stub joined a 75 mm east-edge trunk); the feed drops through C406's two vias into the forward In2 PORT_4V8 island
@@ -696,9 +713,47 @@ def port_supply(solves):
     out['all_ports_inside_4V5_5V0_at_0A561'] = all(
         min(out[p]['budget_0A561']['min_initial_V'], out[p]['budget_0A561']['min_drift_V']) >= 4.5
         for p in ('J410', 'J420', 'J440')) and rails['drift']['max_V'] <= 5.0 and rails['initial']['max_V'] <= 5.0
+    out['window_holds_for'] = ('U400 VIN >= VO / 0.75 (TI SLVSD90B 7.3; R12F5-TRI-02): every window figure above '
+                               'assumes U400 regulates; u400_input gives its input and headroom at the four-stall point '
+                               'and on a 6.0 V pack')
+    if fire is not None:
+        out['u400_input'] = u400_input(fire, solves)
     out['label'] = ('Calculation on CAD copper and the r12_windows PORT_4V8 window (upper bound on the drop); the 4.5 V '
                     'module floor, the LR900-F 5.0 V top and the load allocation are Inference; harness drop not '
-                    'included')
+                    'included; valid while U400 VIN >= VO / 0.75')
+    return out
+
+
+def u400_input(fire, solves):
+    """R12F5-TRI-02: U400's input (VIN, pin 3) against the TPS563208's VO / 0.75 condition, and its duty headroom
+    (r12_budget.buck_headroom: tOFF(MIN) at 580 kHz and at the about 200 kHz foldback floor below VIN 7 V). U400 VIN =
+    BAT_IN less U9's RON (0.04 ohm, Inference) and the J1 -> U9.5 copper at the whole converter current, less the
+    RAW_PROTECTED drop at U400.3, each branch charged at min(its own, U400's) resistance from U9.6 (the mutual-resistance
+    bound of pa6_corners; an upper bound on the drop). Points: the four-stall fire point (healthy match) and a 6.0 V
+    open-circuit pack under the converter load alone (R10 pack model 0.15 ohm; no fire, no stall). Ports at the 0.561 A
+    budget (Inference). Calculation / Inference."""
+    port = r12_budget.rails()[r12_budget.PORT_RAIL]
+    other, parts = fire['other_converter_load_W'], fire['other_load_parts']
+    r_u9 = solves['BAT_IN_J1_to_U9']['resistance_ohm']
+    r_u400 = solves['RAW_PROTECTED_U9_to_U400']['resistance_ohm']
+    shares = {'U400 (ports)': (parts['ports_W'], r_u400),
+              'U403 (camera)': (parts['camera_W'], min(solves['RAW_PROTECTED_U9_to_U403']['resistance_ohm'], r_u400)),
+              'D5 (logic, microSD, D5) and R92': (parts['logic_W'] + parts['microsd_write_W'] + parts['d5_W']
+                                                   + parts['r92_W'],
+                                                   min(solves['RAW_PROTECTED_U9_to_D5']['resistance_ohm'], r_u400))}
+    pack6 = (6.0 + math.sqrt(36.0 - 4 * PACK_R * other)) / 2
+    out = dict(min_recommended_VIN_V={c: [port[c]['min_V'] / .75, port[c]['max_V'] / .75] for c in r12_budget.TOL},
+               branch_shared_ohm={k: r for k, (_, r) in shares.items()}, J1_to_U9_ohm=r_u9, u9_ron_ohm=.04)
+    for name, bat in (('four_stall_fire', fire['four_stall_BAT_IN_V']), ('6V0_pack_converters_only', pack6)):
+        i = other / bat
+        drop = i * (.04 + r_u9) + sum(w / bat * r for w, r in shares.values())
+        vin = bat - drop
+        out[name] = dict(BAT_IN_V=bat, converter_A=i, drop_to_U400_VIN_V=drop,
+                         below_VO_over_0V75=vin < min(port[c]['min_V'] for c in r12_budget.TOL) / .75,
+                         **r12_budget.buck_headroom(vin, port, r12_budget.PORT_BUDGET_A))
+    out['label'] = ('Calculation / Inference (DC-solve upper bounds on the drop; U9 RON, the pack model, converter '
+                    'allocations, the foldback frequency, DCR and hot RDS(on) Inference): an estimate, not a '
+                    'guaranteed window')
     return out
 
 
@@ -766,7 +821,7 @@ def main():
                                 "path's own by_width_mm figures are at its own current")),
         dc_solves=S,
         u6_supply=u6_supply(S) if '3V3_L1_to_U6' in S else None,
-        port_supply=port_supply(S),
+        port_supply=port_supply(S, fire),
         gate=gate_copper(board, stack),
         imu=imu(board))
     if sha(board_path) != before:

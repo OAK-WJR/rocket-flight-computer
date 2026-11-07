@@ -58,17 +58,45 @@ class StageDFigures(unittest.TestCase):
         self.assertAlmostEqual(g['q120_vgs_exceeds_12V_above_pack_V'], 14.406, places=2)
 
     def test_vgs_during_fire_from_act_fet_s(self):
-        """R12F2-TRI-08: the gate divider hangs on ACT_FET_S = BAT_IN - I_fire x RDS(Q120 hot), not on BAT_IN."""
-        f = json.loads((DESIGN / 'stageD_budget.json').read_text())['fire']
+        """R12F2-TRI-08: the gate divider hangs on ACT_FET_S = BAT_IN - I_fire x RDS(Q120 hot), not on BAT_IN.
+        R12F5-TRI-03: and the fire current crosses the J1 -> Q120 BAT_IN copper first, while Q121's source sits a further
+        I x the ACT_FET_S copper below the divider's tap at Q120's source (copper at 70 C)."""
+        d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+        f = d['fire']
         g, lo = f['gate'], f['gate']['q120_vgs_ratio_min_max'][0]
+        hot = 1 + .00393 * 50
+        r_bat = d['fire_copper']['BAT_IN']['R_20C_ohm'] * hot
+        r_fets = d['fire_copper']['ACT_FET_S']['R_20C_ohm'] * hot
         four = g['q120_q121_vgs_four_stall_fire']
+        i = f['four_stall_A']
         self.assertAlmostEqual(four['BAT_IN_V'], f['four_stall_BAT_IN_V'], places=9)
-        self.assertAlmostEqual(four['fire_A'], f['four_stall_A'], places=9)
-        self.assertAlmostEqual(four['Q120_drop_V'], f['four_stall_A'] * f['pfet_hot_ohm'], places=9)
-        want = -(f['four_stall_BAT_IN_V'] - f['four_stall_A'] * f['pfet_hot_ohm'] - .1) * lo
-        self.assertAlmostEqual(four['vgs_V'], want, places=9)
-        self.assertAlmostEqual(four['vgs_V'], -4.576, places=3)
+        self.assertAlmostEqual(four['fire_A'], i, places=9)
+        self.assertAlmostEqual(four['Q120_drop_V'], i * f['pfet_hot_ohm'], places=9)
+        self.assertAlmostEqual(four['BAT_IN_copper_drop_V'], i * r_bat, places=9)
+        self.assertAlmostEqual(four['ACT_FET_S_copper_drop_V'], i * r_fets, places=9)
+        want = -(f['four_stall_BAT_IN_V'] - i * (r_bat + f['pfet_hot_ohm']) - .1) * lo
+        self.assertAlmostEqual(four['vgs_Q120_V'], want, places=9)
+        self.assertAlmostEqual(four['vgs_Q121_V'], want + i * r_fets, places=9)
+        self.assertLess(four['vgs_Q120_V'], four['vgs_Q121_V'])
+        self.assertLess(four['vgs_Q121_V'], -4.5)
+        self.assertAlmostEqual(four['margin_to_minus_4V5_row_V']['Q121'], -four['vgs_Q121_V'] - 4.5, places=9)
+        self.assertNotIn('vgs_V', four)                 # the single-node figure (-4.576 V) is gone
         self.assertNotIn('q120_q121_vgs_V', g)          # the BAT_IN-based figure (-4.652 V) is gone
+
+    def test_u400_input_condition_and_headroom(self):
+        """R12F5-TRI-02: the PORT_4V8 window holds only while U400 VIN >= VO / 0.75; the four-stall and 6.0 V-pack
+        points are below it, and the estimate rests on the 200 kHz foldback (SLVSD90B 6.4.1)."""
+        p = json.loads((DESIGN / 'stageD_budget.json').read_text())['port_supply']
+        self.assertIn('VO / 0.75', p['window_holds_for'])
+        u = p['u400_input']
+        self.assertTrue(u['label'].startswith('Calculation / Inference'))
+        for name in ('four_stall_fire', '6V0_pack_converters_only'):
+            c = u[name]
+            self.assertTrue(c['below_VO_over_0V75'])
+            self.assertAlmostEqual(c['VIN_V'], round(c['BAT_IN_V'] - c['drop_to_U400_VIN_V'], 4), places=4)
+            self.assertFalse(c['holds_window_top_at_580kHz'])
+            self.assertTrue(c['holds_window_top_with_foldback'])
+            self.assertAlmostEqual(c['dmax']['200kHz_tOFF_max_310ns'], 1 - 310e-9 * 200e3, places=4)
 
     def test_u400_in_excludes_en_stub(self):
         """R12F2-TRI-06: U400.5 (EN, tied to VIN) carries no load current; U400 IN starts at VIN (pin 3) only."""
@@ -104,9 +132,12 @@ class Round3Fixes(unittest.TestCase):
         g = json.loads((DESIGN / 'stageD_budget.json').read_text())['fire']['gate']
         b = g['q124_vgs_min_basis']
         self.assertEqual(b['voh_drop_V'], 0.4)
-        want = (b['vdd_min_V'] - 0.4) * 9.9e3 / (9.9e3 + 222.2)
+        # R12F5-TRI-05: R126 / R128 at the drift ends (+/-1.67 %), as the 3V3 drift minimum
+        td = 0.01 + 100e-6 * 67
+        self.assertAlmostEqual(b['resistor_tolerance'], td, places=12)
+        want = (b['vdd_min_V'] - 0.4) * 10e3 * (1 - td) / (10e3 * (1 - td) + 220 * (1 + td))
         self.assertAlmostEqual(g['q124_vgs_min_V'], want, places=9)
-        self.assertAlmostEqual(g['q124_vgs_min_V'], 2.778, places=3)
+        self.assertAlmostEqual(g['q124_vgs_min_V'], 2.777, places=3)
         self.assertGreater(g['q124_vgs_min_V'], g['q124_vgs_row_V'])
 
     def test_pe4_load_includes_r127_and_stays_within_the_4_mA_row(self):
@@ -155,6 +186,62 @@ class Round3Fixes(unittest.TestCase):
                                    s['RAW_PROTECTED_U9_to_D5']['resistance_ohm']), places=12)
         self.assertGreater(p['healthy']['lumped_drop_V_superseded'] - p['healthy']['U9_and_copper_drop_V'], 0.015)
         self.assertIn('upper bound', p['label'])
+
+
+class Round5Windows(unittest.TestCase):
+    """R12 review round 5 (R12F5-TRI-02, -04, -05, -16, -17) in r12_windows.json (stage A, no board)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.w = json.loads((DESIGN / 'r12_windows.json').read_text())
+
+    def test_pd10_leakage_is_ft_xx(self):
+        """R12F5-TRI-16: PD10 is FT_h, an FT_xx pin: +/-250 nA (DS12110 Rev 8 Table 60); +/-350 nA is FT_u only."""
+        d = self.w['sense']['PORT_SENSE_divider']
+        self.assertEqual(d['pd10_leak_A'], 250e-9)
+        self.assertAlmostEqual(d['low_when_off_V'], round(250e-9 * 100e3 * (1 + 0.01 + 100e-6 * 67), 3), places=6)
+
+    def test_port_sense_thresholds_from_the_3v3_window(self):
+        """R12F5-TRI-17: VIH 0.7 x the 3V3 maximum and the VDD + 0.3 ceiling at its minimum, per resistor case."""
+        s, v33 = self.w['sense'], self.w['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)']
+        for case in ('initial', 'drift'):
+            t = s['PORT_SENSE_thresholds'][case]
+            self.assertAlmostEqual(t['vih_V'], round(0.7 * v33[case]['max_V'], 4), places=9)
+            self.assertAlmostEqual(t['ceiling_V'], round(v33[case]['min_V'] + 0.3, 4), places=9)
+            self.assertGreater(s[case]['PORT_SENSE_V'][0], t['vih_V'])
+            self.assertLess(s[case]['PORT_SENSE_V'][1], t['ceiling_V'])
+        self.assertAlmostEqual(s['PORT_SENSE_thresholds']['drift']['vih_V'], 2.4249, places=4)
+        self.assertNotIn('3.43 V', s['PORT_SENSE_limits'])
+        self.assertTrue(s['PORT_SENSE_ok'])
+
+    def test_q120_generator_figures_on_the_act_fet_s_basis(self):
+        """R12F5-TRI-04: no -0.833 x V_BAT figures; the -4.5 V row holds down to about 5.54 V (bus on) / 5.63 V (fire)."""
+        g = self.w['fire']['gate']
+        self.assertNotIn('5.72V_four_stall', g['q120_q121_vgs_V'])
+        self.assertNotIn('5.4 V pack', g['q120_rds_row'])
+        self.assertNotIn('-V_BAT x', g['note'])
+        lo = 49e3 / 59.2e3
+        self.assertAlmostEqual(g['q120_vgs_4V5_min_bat_V']['bus_on'], round(4.5 / lo + .1, 3), places=9)
+        self.assertAlmostEqual(g['q120_q121_vgs_V']['8.4V_bus_on'], round(-(8.4 - .1) * lo, 3), places=9)
+        self.assertLess(g['q120_q121_vgs_V']['four_stall_fire'], -4.5)
+
+    def test_q124_stage_a_bound_at_drift_ends(self):
+        """R12F5-TRI-05: the stage A placeholder uses the 3V3 drift minimum and the drift resistor ends."""
+        self.assertAlmostEqual(self.w['fire']['gate']['q124_vgs_min_V'], 2.777, places=3)
+
+    def test_port_input_condition(self):
+        """R12F5-TRI-02: PORT_4V8's window is conditioned on U400 VIN >= VO / 0.75, as D-R12-87 does for U403."""
+        u, rail = self.w['port_input'], self.w['rails']['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)']
+        self.assertIn('VO / 0.75', u['window_holds_for'])
+        self.assertIn('VO / 0.75', rail['limits_basis'])
+        for case in ('initial', 'drift'):
+            lo, hi = u['min_recommended_VIN_V'][case]
+            self.assertAlmostEqual(lo, round(rail[case]['min_V'] / .75, 3), places=9)
+            self.assertAlmostEqual(hi, round(rail[case]['max_V'] / .75, 3), places=9)
+        for name in ('four_stall_fire', '6V0_pack_converters_only'):
+            self.assertLess(u[name]['VIN_V'], u['min_recommended_VIN_V']['drift'][0])
+            self.assertTrue(u[name]['holds_window_top_with_foldback'])
+
 
 if __name__ == '__main__':
     unittest.main()

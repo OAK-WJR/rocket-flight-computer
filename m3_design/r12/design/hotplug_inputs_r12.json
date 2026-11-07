@@ -1,7 +1,7 @@
 {
   "schema": 3,
-  "board_sha256": "68e6b65091acd4c0bed89cba40308bc70f403057e98b9daf6136bdb230bd9d4f",
-  "electrical_sha256": "dfba47cd69785bb17b11e68ac4f0ce245672ec04ef0690aba937140e4766b40d",
+  "board_sha256": "14b82d39f0232f6f2a0bd3ef5fe15c6bd47b64255facfb7b2e860cdbefd310c1",
+  "electrical_sha256": "6b54be981e91402c1ad3c84ce1a0c7ee35f19add46a093363efbeea8b8de7fd0",
   "parts": {
     "C10": {
       "value": "22uF 25V X5R 10%",
@@ -303,8 +303,8 @@
           "number": "1",
           "net": "3V3",
           "xy": [
-            17.9,
-            50.92
+            16.98,
+            50.0
           ],
           "size": [
             0.5,
@@ -318,8 +318,8 @@
           "number": "2",
           "net": "GND",
           "xy": [
-            17.9,
-            50.08
+            17.82,
+            50.0
           ],
           "size": [
             0.5,
