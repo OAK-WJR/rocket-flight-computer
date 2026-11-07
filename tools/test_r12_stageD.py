@@ -302,5 +302,38 @@ class Round6Windows(unittest.TestCase):
         self.assertEqual(r12_budget.cold_screen(), self.w['cold_screen'])
 
 
+class Round7(unittest.TestCase):
+    """R12 review round 7: R12F7-TRI-17 (EN turn-on over C87's specified range) and the generator part of R12F7-TRI-02
+    (figures resting on the 3V3 window labelled Calculation / Inference)."""
+    LABEL = '3V3 window, D-R12-139'
+
+    @classmethod
+    def setUpClass(cls):
+        cls.w = json.loads((DESIGN / 'r12_windows.json').read_text())
+        cls.d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+
+    def test_en_turn_on_spans_r10_c87_range(self):
+        """R10 D-R19-10: C87 0.72 x (-10 %, X7R -15 % and bias) ... 1.265 x (+10 % x +15 %); not 0.648 ... 1.10 x."""
+        import r12_stageD
+        on = self.d['en']['turn_on']
+        self.assertEqual(on['c87_factor'], [r12_stageD.C87_LOW, r12_stageD.C87_HIGH])
+        self.assertAlmostEqual(r12_stageD.C87_LOW, 0.72, places=12)
+        self.assertAlmostEqual(r12_stageD.C87_HIGH, 1.265, places=12)
+        self.assertGreater(on['fastest_ms'], 30.0)
+        self.assertLess(on['fastest_ms'], 31.0)
+        self.assertGreater(on['slowest_ms'], 131.0)
+        self.assertLess(on['slowest_ms'], 132.0)
+        self.assertIn('Inference', on['label'])
+        self.assertEqual(r12_stageD.en_figures(self.d['en']['four_stall_BAT_IN_V'])['turn_on'], on)
+
+    def test_window_figures_carry_the_inference_label(self):
+        v33 = self.w['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)']
+        for label in (v33['label'], self.w['cold_screen']['label'], self.w['sense']['label'],
+                      self.w['fire']['gate']['note'], self.d['u6_supply']['label'],
+                      self.d['fire']['gate']['q124_vgs_min_basis']['label']):
+            self.assertIn('Calculation / Inference', label)
+            self.assertIn(self.LABEL, label)
+
+
 if __name__ == '__main__':
     unittest.main()

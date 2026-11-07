@@ -1,13 +1,13 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `f26dfef1…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, the AVA polish pass only signal copper, D-R12-121 … -124, round 5's fix pass the fire-net copper, five pyro-cell parts, U6's lands and the J121 pours, D-R12-125 … -133, and round 6's fix pass added R136, R95 and D95, changed R131 to 5.1 kΩ and moved R132, R175 and R120, D-R12-134 … -143), 46 × 90 × 1.6 mm, four
+**Status.** PCB `82eddc69…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, the AVA polish pass only signal copper, D-R12-121 … -124, round 5's fix pass the fire-net copper, five pyro-cell parts, U6's lands and the J121 pours, D-R12-125 … -133, and round 6's fix pass added R136, R95 and D95, changed R131 to 5.1 kΩ and moved R132, R175 and R120, D-R12-134 … -143, and round 7's fix pass shrank the board to 46 × 88 mm, moving the forward port row, its cells, the port buck and the forward supports aft, D-R12-144 … -151), 46 × 88 × 1.6 mm, four
 layers, every part on the top face and assembled by JLC. Branch `m3-assy-r12`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
-All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 90), top face = F. Positions
-below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`). Round 5 moved five small pyro-cell parts and nothing this file positions otherwise (Measured on `6e874d4e…`, D-R12-125): TP122 (the PYRO1_GATE probe) to (14.8, 42.4), D120 to (6.6, 49.2) rotation 270, R131 turned to rotation 270 at (6.6, 46.6), R173 to (12.6, 46.1) and C13 to (17.4, 50.0) rotation 0. Round 6 added and moved small parts only, none that this file positions otherwise (`r12_place.tsv` on `f26dfef1…`): R136 (cold pull-up series resistor) new at (4.1, 50.2) rotation 0 and R131 now 5.1 kΩ at the same place (D-R12-134); R132 to (17.17, 32.2) rotation 0, R175 turned to rotation 270 at (17.6, 33.6), R120 to (6.53, 26.95) rotation 0 (D-R12-137); R95 new at (18.15, 22.89) rotation 270 and D95 new at (20.77, 24.27) rotation 180 (D-R12-138). TP81 and TP122 did not move.
+All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 88), top face = F. Positions
+below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`). Round 5 moved five small pyro-cell parts and nothing this file positions otherwise (Measured on `6e874d4e…`, D-R12-125): TP122 (the PYRO1_GATE probe) to (14.8, 42.4), D120 to (6.6, 49.2) rotation 270, R131 turned to rotation 270 at (6.6, 46.6), R173 to (12.6, 46.1) and C13 to (17.4, 50.0) rotation 0. Round 6 added and moved small parts only, none that this file positions otherwise (`r12_place.tsv` on `f26dfef1…`): R136 (cold pull-up series resistor) new at (4.1, 50.2) rotation 0 and R131 now 5.1 kΩ at the same place (D-R12-134); R132 to (17.17, 32.2) rotation 0, R175 turned to rotation 270 at (17.6, 33.6), R120 to (6.53, 26.95) rotation 0 (D-R12-137); R95 new at (18.15, 22.89) rotation 270 and D95 new at (20.77, 24.27) rotation 180 (D-R12-138). TP81 and TP122 did not move. Round 7 (`r12_place.tsv` on `82eddc69…`, D-R12-144, -145) moved the forward port row J410 / J420 / J440 2 mm aft (y 84.35), their 1 k / 100 nF cells 1.85 mm (y 80.35), the port buck U400 / L400 / C400 / C402 / C406 / R400 / R401 / R404 2 mm, C407 to (16.75, 81.35), R111 / R112 to y 80.3, R104 0.2 mm east to (28.8, 7.6) and the forward supports to y 82.1; nothing else this file positions moved (J430, LS120, J121, J1, J2, U4, U5, U6, the LEDs).
 
 ## Harness pin map
 
@@ -53,7 +53,7 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
     load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
     page gives only "5V DC") and the M100 Mini's 3.3–5 V. That holds while U400's input is at least VO / 0.75, about
     6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.55 V) or on a 6.0 V pack
-    (about 5.49 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
+    (about 5.48 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
     15).
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
     4.60–4.94 V at room temperature (initial tolerance, Calculation).
@@ -130,7 +130,7 @@ adapted to R12. Run it in order and stop at the first failure.
 
 ## Board, supports and fit
 
-- **Supports.** Four M3 supports, at (3.0, 5.9), (43.0, 5.9), (3.5, 84.1) and (42.5, 84.1) (D-R12-24, -99). Use **nylon (or
+- **Supports.** Four M3 supports, at (3.0, 5.9), (43.0, 5.9), (3.5, 82.1) and (42.5, 82.1) (D-R12-24, -99, -144). Use **nylon (or
   otherwise insulated) screws, nuts and washers at all four**. The aft pair is 3.0 mm in, so the aft SH row clears both
   washers.
 - **One-sided board.** No parts on the bottom face; the bottom carries contact legends, designators and the revision
@@ -151,7 +151,7 @@ adapted to R12. Run it in order and stop at the first failure.
   thrust −a_Y. U6 at (23.0, 34.4), rotation 180, is now on the roll axis too (x = 0); its axial channel is channel 1.
   The axis maps are D-R12-54's (Calculation / Inference: both rotations unchanged; inherited axis frames). A bench sign check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
 - **LEDs.** LED1 red (8.0, 52.8) and LED2 yellow (8.0, 55.0), top face, west bay.
-- **Length.** R12 is 90 mm (D-R12-99), 40 mm longer than R11. `docs/VEHICLE.md` gives no internal bay or sled length (its
+- **Length.** R12 is 88 mm (D-R12-144; 90 mm under D-R12-99), 38 mm longer than R11. `docs/VEHICLE.md` gives no internal bay or sled length (its
   stack row still budgets 102 mm for R9), so the fit could not be checked: check it against the bay and coupler and
   keep R10's rule that the board sits wholly forward of joint + 47 mm (O-R12-28). Real wires, plugs, sled and stack are
   unverified.
@@ -175,8 +175,8 @@ see [M3_R12 firmware](M3_R12.md#firmware). The per-flight closed-switch check do
 ## Cost
 
 M3 metric (parts + feeder per board): $64.86 at 2 boards and $45.52 at 5 boards, against the $84.41 cap (Live
-2026-11-07T10:01:24Z / 10:03:04Z on `f26dfef1…`). Minimum all-in $173.39 / $279.19 including U1-only X-ray ($3.28 / $8.20;
-Calculation / Inference: X-ray count; the bare PCB is the Live 46 × 90 quote, $25.10), $3.39 over the $170 target at 2 boards.
+2026-11-07T14:15:13Z / 14:16:33Z on `82eddc69…`). Minimum all-in $173.39 / $279.19 including U1-only X-ray ($3.28 / $8.20;
+Calculation / Inference: X-ray count; the bare PCB is the Live 46 × 90 quote, $25.10, taken for the 88 mm board without a re-quote, an Inference), $3.39 over the $170 target at 2 boards.
 Counting U1 / U4 / U5 / U6 / U9 gives $186.51 / $291.49–299.69, above $170 at 2 boards and straddling $295 at 5 boards (Calculation /
 Inference: qualifying count and fee tier). Confirm the count and
 tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). No part is short or thin. See [M3_R12.md,

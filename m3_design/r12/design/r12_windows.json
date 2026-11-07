@@ -467,7 +467,7 @@
     0.4
    ]
   },
-  "label": "Calculation on the netlist values and the 3V3 window (R12F6-TRI-03); D120 VF (BAT54C 25 C maxima extended to -42 C), the match and leads, the R164 drop and zero leakage are Inference",
+  "label": "Calculation / Inference (3V3 window, D-R12-139): Calculation on the netlist values and the 3V3 window (R12F6-TRI-03); D120 VF (BAT54C 25 C maxima extended to -42 C), the match and leads, the R164 drop and zero leakage are Inference",
   "nominal_3V35_VF_0V25": {
    "healthy_PC0_mV": 98.11,
    "healthy_PC5_mV": 98.08,
@@ -518,7 +518,7 @@
   "four_stall_margin_pct": 10.9,
   "four_stall_ok": true,
   "gate": {
-   "note": "Q120 / Q121 VGS = -(V_ACT_FET_S - 0.1 V) x (R119 || R120) / ((R119 || R120) + R121), V_ACT_FET_S = BAT_IN less Q120's drop during a fire (Q122 drop 0.1 V and the Q120 hot factor Inference). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4's steady load, R127 1k plus R126 220R + R128 10k, is about 3.5 mA (<= 3.93 mA with drift at the 3V3 PFM-band maximum), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02, R12F6-TRI-03) through R126 220R / R128 10k, at the 3V3 drift minimum (SLUSDW3A section 7.8 PFM band) with R126 / R128 at their drift ends (R12F5-TRI-05)",
+   "note": "Q120 / Q121 VGS = -(V_ACT_FET_S - 0.1 V) x (R119 || R120) / ((R119 || R120) + R121), V_ACT_FET_S = BAT_IN less Q120's drop during a fire (Q122 drop 0.1 V and the Q120 hot factor Inference). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4's steady load, R127 1k plus R126 220R + R128 10k, is about 3.5 mA (<= 3.93 mA with drift at the 3V3 PFM-band maximum), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02, R12F6-TRI-03) through R126 220R / R128 10k, at the 3V3 drift minimum (SLUSDW3A section 7.8 PFM band) with R126 / R128 at their drift ends (R12F5-TRI-05); the Q124 VGS and PE4 load figures: Calculation / Inference (3V3 window, D-R12-139)",
    "q120_q121_vgs_V": {
     "12.6V_3S_bus_on_max_ratio": -10.485,
     "19.9V_TVS_clamp_bus_on_max_ratio": -16.609,
@@ -709,7 +709,7 @@
     "max_V": 3.4824,
     "min_V": 3.2539
    },
-   "label": "Calculation (SLUSDW3A section 7.8 PFM regulation band, the maker's typical-component system figure, as the reference band; 1 % resistors); the band at R12's VIN and its stacking with the resistor tolerance Inference; drift case Inference",
+   "label": "Calculation / Inference (3V3 window, D-R12-139): Calculation on SLUSDW3A section 7.8's PFM regulation band, the maker's typical-component system figure, as the reference band, with 1 % resistors; the band at R12's VIN and its stacking with the resistor tolerance Inference; drift case Inference",
    "limits_V": [
     3.135,
     3.6
@@ -837,7 +837,7 @@
     0.09258
    ]
   },
-  "label": "Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference"
+  "label": "Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference; the PORT_SENSE thresholds: Calculation / Inference (3V3 window, D-R12-139)"
  },
  "status": "R12 stage A (no board): Calculation / Inference as labelled; no measurement",
  "u9": {

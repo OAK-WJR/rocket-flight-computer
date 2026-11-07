@@ -96,9 +96,10 @@ def rails():
             row['nominal_V'] = round(V33_VREF_NOM * (1 + s['top'] / s['bot']), 4)
             row['vfb_section_7_5_V'] = [0.99, 1.01]
             row['pfm_regulation_band'] = list(V33_PFM_BAND)
-            row['label'] = ('Calculation (SLUSDW3A section 7.8 PFM regulation band, the maker\'s typical-component '
-                            'system figure, as the reference band; 1 % resistors); the band at R12\'s VIN and its '
-                            'stacking with the resistor tolerance Inference; drift case Inference')
+            row['label'] = ('Calculation / Inference (3V3 window, D-R12-139): Calculation on SLUSDW3A section 7.8\'s '
+                            'PFM regulation band, the maker\'s typical-component system figure, as the reference band, '
+                            'with 1 % resistors; the band at R12\'s VIN and its stacking with the resistor tolerance '
+                            'Inference; drift case Inference')
         else:
             row['nominal_V'] = round((s['vref'][0] + s['vref'][1]) / 2 * (1 + s['top'] / s['bot']), 4)
             row['label'] = ('Calculation (Datasheet VFB, ' + ('1 % top, 0.1 % bottom' if s.get('precise_bot') else '1 %')
@@ -180,7 +181,8 @@ def sense():
           'the leakage figure, under VIL 0.3 x VDD at the 3V3 minimum')
     out['PORT_SENSE_ok'] = all(out[c]['PORT_SENSE_V'][0] > lim[c]['vih_V'] and out[c]['PORT_SENSE_V'][1] < lim[c]['ceiling_V']
                                and out['PORT_SENSE_divider']['low_when_off_V'] < lim[c]['vil_V'] for c in TOL)
-    out['label'] = 'Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference'
+    out['label'] = ('Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference; the PORT_SENSE '
+                    'thresholds: Calculation / Inference (3V3 window, D-R12-139)')
     return out
 
 
@@ -306,7 +308,8 @@ def fire():
                  '(DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4\'s steady load, R127 1k plus R126 220R + R128 10k, is '
                  'about 3.5 mA (<= 3.93 mA with drift at the 3V3 PFM-band maximum), within the 4 mA row; R12F3-TRI-06, '
                  'R12F4-TRI-02, R12F6-TRI-03) through R126 220R / R128 10k, at the 3V3 drift minimum (SLUSDW3A section '
-                 '7.8 PFM band) with R126 / R128 at their drift ends (R12F5-TRI-05)'),
+                 '7.8 PFM band) with R126 / R128 at their drift ends (R12F5-TRI-05); the Q124 VGS and PE4 load figures: '
+                 'Calculation / Inference (3V3 window, D-R12-139)'),
         basis='R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), '
               'R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference',
         label='Calculation on Datasheet limits; copper, pack, loads and hot factors Inference')
@@ -534,8 +537,9 @@ def cold_screen():
                       'error assumed)')
     out['inputs'] = dict(vf_V=list(COLD_VF), match_ohm=list(COLD_MATCH), leads_ohm=list(COLD_LEADS), R134_ohm=COLD_R134,
                          resistor_cases={k: v for k, v in TOL.items()})
-    out['label'] = ('Calculation on the netlist values and the 3V3 window (R12F6-TRI-03); D120 VF (BAT54C 25 C maxima '
-                    'extended to -42 C), the match and leads, the R164 drop and zero leakage are Inference')
+    out['label'] = ('Calculation / Inference (3V3 window, D-R12-139): Calculation on the netlist values and the 3V3 '
+                    'window (R12F6-TRI-03); D120 VF (BAT54C 25 C maxima extended to -42 C), the match and leads, the '
+                    'R164 drop and zero leakage are Inference')
     return out
 
 

@@ -1,17 +1,27 @@
 # R12 stage D: electrical analyses on R12's copper (2026-11-05)
 
-**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` since R12F4-TRI-06, `68e6b650…` since the AVA polish pass D-R12-121 … -124,
+**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, 46 × 88 mm since
+D-R12-144, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` since R12F4-TRI-06, `68e6b650…` since the AVA polish pass D-R12-121 … -124,
 `14b82d39…` (lane P) and `6e874d4e…` (lane P2) in the round-5 fix pass R12F5-TRI-01 / -06 / -21, 2026-11-06, and
-`3f9579fa…` (lane P), `6a1c99e0…` (lane P3) and the current `f26dfef1…` (lane P4) in the round-6 fix pass D-R12-134 …
--143, 2026-11-07; R12F6-TRI-10): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
+`3f9579fa…` (lane P), `6a1c99e0…` (lane P3) and `f26dfef1…` (lane P4) in the round-6 fix pass D-R12-134 …
+-143, 2026-11-07; R12F6-TRI-10; and the current `82eddc69…` in the round-7 fix pass D-R12-144 … -151, 2026-11-07): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
+
+**Round 7 (D-R12-144 … -151; `stageD_budget.json` bound to `82eddc69…`, re-run by the records lane on a zone-filled
+copy with `--source-board`).** The 88 mm outline and the FMEA I-5 copper moved the RAW_PROTECTED, PORT_4V8 and 3V3
+solves, the PA6 corners and U6's supply; the fire loop, GND return, EN chatter and hold-up are unchanged (the figures
+are in `stageE_relayout.md` §4 "Round 7" and D-R12-151). Labels: every generated figure resting on the 3V3 window
+(Q124's gate drive, U6's supply, the PORT_SENSE thresholds, the cold screen) now reads "Calculation / Inference (3V3
+window, D-R12-139)" (D-R12-149, R12F7-TRI-02). The EN turn-on bound now spans C87's specified range (D-R12-150,
+R12F7-TRI-17; §3 below).
 
 **Round 6 3V3 window (R12F6-TRI-03, D-R12-139; computed on board `3f9579fa…`, re-bound to `f26dfef1…`).** `r12_budget.py` now takes the 3V3 window from TI SLUSDW3A
 §7.8's PFM output regulation band (−1.5 / +2.5 %, typical components over T_J; U2 is the PFM variant LMR50410XDBVR) with
 the 1 % divider on top: **3.254–3.482 V initial, 3.224–3.516 V drift** (was 3.270–3.431 / 3.240–3.464 V from §7.5's
 V_FB alone; Calculation; the band at R12's VIN and its stacking with the resistors are Inference). The 3V3-based figures
 in the sections below (§2 Q124 VGS and PE4's load, §7 U6 VCC, §10 PORT_SENSE) are their boards' figures on the old
-window. On `3f9579fa…`, and again on the current `f26dfef1…` (`stageD_budget.json` bound to it), stage D gives U6 VCC
+window. On `3f9579fa…`, again on `f26dfef1…` and on the current `82eddc69…` (`stageD_budget.json` bound to it; the same at three
+decimals, margins 101.8 / 71.6 mV there), stage D gives U6 VCC
 ≥ 3.237 / 3.207 V at U2's 1 A (margins 102 / 72 mV over 3.135 V), Q124 VGS ≥ 2.761 V and PE4's load ≤ 3.925 mA (inside
 the 4 mA VOH row); `r12_windows.json` gives the cold screen at 10.2 kΩ (`cold_screen`, R12F6-TRI-01, D-R12-140).
 
@@ -131,9 +141,11 @@ moves (5.7208 V). Unchanged by the fix pass.
 
 The J400 bench rule (D-R25-01: total open time < 7 ms in every sliding 100 ms window, U9 on for the whole run at the
 four-stall BAT_IN) stands; its worst-corner limit on R12 is 7.56 ms, 0.56 ms over the 7 ms line. Turn-on (EN rising
-1.183–1.223 V, unloaded pack 6.0–8.4 V): nominal 88 / 56 / 45 ms at 6.0 / 7.4 / 8.4 V; the bound computed here is
-27–114 ms (C87 220 nF × 0.72 × 0.9 … × 1.1, 1 % resistors, leakages; Calculation / Inference),
-which replaces the R10 window for R12.
+1.183–1.223 V, unloaded pack 6.0–8.4 V): nominal 88 / 56 / 45 ms at 6.0 / 7.4 / 8.4 V; the bound computed here was
+27–114 ms (C87 220 nF × 0.72 × 0.9 … × 1.1, 1 % resistors, leakages; Calculation / Inference). That C87 range counted
+−10 % twice at the fast end and left out X7R's +15 % over temperature (R12F7-TRI-17): since D-R12-150 the bound uses
+R10 D-R19-10's 0.72–1.265 × and is **30.3–131.5 ms** (Calculation / Inference: the X7R temperature and bias
+allowances), close to R10's recorded 30–130 ms.
 
 ## 4. Hold-up (Calculation / Inference: constant-power allocations, D5 VF 0.25–0.45 V, C84 300.8 µF allowance, 3.8 V end)
 

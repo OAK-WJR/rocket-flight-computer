@@ -1,8 +1,9 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
 **Superseded by §7 (branch `r12-port-fix`, D-R12-83 … -85): board `d6e4f7ee…`; and since the AVA re-layout by
-`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm; current board `f26dfef1…` since round 6, D-R12-134 … -143;
-`6e874d4e…` after round 5, D-R12-125 … -133).** §1–§6
+`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm, and 46 × 88 mm since D-R12-144; current board `82eddc69…` since
+round 7, D-R12-144 … -151; `f26dfef1…` after round 6, D-R12-134 … -143; `6e874d4e…` after round 5, D-R12-125 …
+-133).** §1–§6
 record the stage D board `d776c5d7…` as it was.
 
 Follows stageC.md (pass 2 frozen, D-R12-77A, board `e2b005b5…`). Decisions D-R12-78 … D-R12-82 are in
@@ -199,12 +200,15 @@ The r12_plan targets were ≤ $170 / ≤ $295: with U1-only X-ray, this dated 2-
 Counting U1 / U4 / U5 / U6 / U9 gives $189.79 / $295.09–303.29, above both targets (Calculation / Inference:
 qualifying count and fee tier); confirm JLC's quote, including possible D402 / Y1 fees.
 
-**Current 90 mm board cost (D-R12-110).** See [stageE_relayout.md §5](stageE_relayout.md)
-and [M3_R12 "Cost and stock"](../../../docs/M3_R12.md#cost-and-stock): the 2026-11-06T17:55–17:56Z run applies
-the Preferred Extended waiver and C25 / C26 change. Parts + feeder $65.02 / $45.68 per board; minimum all-in
-$173.69 / $279.93 with U1-only X-ray, $3.69 over the two-board target. Five X-ray parts give $186.81 /
-$292.23–300.43, straddling $295 at five boards (Calculation / Inference: qualifying X-ray count and tier; the bare PCB
-is cost_study.md §2.1's Live 46 × 90 ENIG 0.5 oz quote, $25.10, R12F5-TRI-22). Confirm JLC's count and tier, including D402 / Y1, before ordering.
+**Current board cost (D-R12-110, -151; R12F7-TRI-12: this paragraph quoted round 5's run until round 7).** See
+[stageE_relayout.md §5](stageE_relayout.md) and [M3_R12 "Cost and stock"](../../../docs/M3_R12.md#cost-and-stock): the
+Live run of 2026-11-07T14:15:13Z / 14:16:33Z on the 88 mm `82eddc69…` (`fab/cost_check_2.json` / `_5.json`, with the
+Preferred Extended waiver). Parts + feeder **$64.86 / $45.52** per board at 2 / 5 boards; minimum all-in
+**$173.39 / $279.19** with U1-only X-ray, $3.39 over the two-board target. Five X-ray parts give **$186.51 /
+$291.49–299.69**, straddling $295 at five boards (Calculation / Inference: qualifying X-ray count and tier; the bare PCB
+is cost_study.md §2.1's Live 46 × 90 ENIG 0.5 oz quote, $25.10, R12F5-TRI-22, taken for the 88 mm board without a
+re-quote, an Inference). Round 5's run (2026-11-06T17:55–17:56Z) gave $65.02 / $45.68, $173.69 / $279.93 and $186.81 /
+$292.23–300.43. Confirm JLC's count and tier, including D402 / Y1, before ordering.
 
 **Hashes (Measured, SHA-256).**
 

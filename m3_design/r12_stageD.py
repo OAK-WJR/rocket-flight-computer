@@ -8,7 +8,8 @@ R11's m3_design/r11_stageD.py adapted to R12's four-layer, one-sided board and R
     one-width formula in r10_parts.native_fire_copper is not used), R10's GAP-1 pack model (r10_parts.power_budget's
     fire_case, re-stated here) with R12's FETs and converter load (m3_design/r12_budget.py), the GND fire return by
     DC solve against R10's 5 mOhm allowance, shorted-match currents and FET dissipation, gate drive, adiabatic rise;
-  * J400 / U9 EN timing and chatter (R10's EN model, r11_stageD.en_model, unchanged values), turn-on window;
+  * J400 / U9 EN timing and chatter (R10's EN model, r11_stageD.en_model, unchanged values), turn-on window over R10's
+    C87 range 0.72-1.265 x 220 nF (D-R19-10; R12F7-TRI-17);
   * hold-up (C84 on VLOGIC behind D5, D-R12-04) from the battery break and from the PA6 trip; PA6 trip-window corners
     with the match / leads shorted (O-R12-07);
   * rail paths (check_r10.path_graph between R12's terminals): series R, IPC-2152 rise per drawn width at R10's
@@ -257,9 +258,10 @@ def fire_budget(copper, gnd_return):
                                                'drift minimum and maximum (r12_windows.json: the SLUSDW3A section 7.8 '
                                                'PFM band, R12F6-TRI-03); R126 220R / R127 1k / R128 10k 1 % + 100 '
                                                'ppm/K over 67 K (the drift case)',
-                                        label=(f'Calculation / Inference (PE4 load about {pe4_load_mA(Q124_VDD_MIN):.2f} '
-                                               f'mA, <= {pe4_load_mA(Q124_VDD_MAX, TD):.2f} mA with drift, within the '
-                                               '4 mA VOH row; the 3V3 PFM band at R12\'s VIN and resistor drift)')),
+                                        label=(f'Calculation / Inference (3V3 window, D-R12-139) (PE4 load about '
+                                               f'{pe4_load_mA(Q124_VDD_MIN):.2f} mA, <= {pe4_load_mA(Q124_VDD_MAX, TD):.2f} '
+                                               'mA with drift, within the 4 mA VOH row; the 3V3 PFM band at R12\'s VIN '
+                                               'and resistor drift)')),
                 q124_vgs_row_V=2.5, q124_vgs_th_max_V=1.45,
                 q124_gate_tau_us=220 * 220e-9 * 1e6,
                 basis='R119 / R120 100k, R121 10k, C120 1 uF 50 V X5R (C15849), R126 220R / R127 1k / R128 10k / C126 '
@@ -360,11 +362,17 @@ def pa6_corners(fire, u9_feed_ohm, raw_ohm):
     return out
 
 
+C87_LOW, C87_HIGH = .72, 1.10 * 1.15                               # R10 D-R19-10 / r11_stageD.en_model (R12F7-TRI-17)
+
+
 def en_figures(four):
     """R10's EN model (r11_stageD.en_model: R80 / R165 470k, R81 300k, C87 220 nF x 0.72, U9 0.1 uA, D402 50 nA;
     values unchanged on R12, D-R12-09), at R12's four-stall BAT_IN; the lowest pack voltage at which the J400 7 ms
     bench line holds; the single-drop-out 10 ms pack floor; the turn-on window (EN rising 1.183-1.223 V, TI SLVSFC9C
-    section 6.5) over a 6.0-8.4 V unloaded pack, C87 220 nF x 0.72 x 0.9 ... 220 nF x 1.1 (Inference: X7R bias)."""
+    section 6.5) over a 6.0-8.4 V unloaded pack, C87 220 nF x 0.72 ... 220 nF x 1.265 (R12F7-TRI-17: R10 D-R19-10's
+    range; 0.72 = -10 % tolerance, X7R -15 % over temperature and <= 6 % bias loss, 1.265 = +10 % x +15 %; the bias and
+    temperature allowances are Inference). Before round 7 the range was 0.648-1.10 x, which counted -10 % twice at the
+    fast end and left out the +15 % temperature end."""
     out = {f'{v:.4g}V': en_model(v) for v in (8.4, 7.4, 6.0, four, 5.73, 5.71, 5.65, 5.5)}
 
     def bisect(f, lo, hi):
@@ -383,8 +391,10 @@ def en_figures(four):
         return r_th * c * math.log(vc / (vc - vth)) * 1e3
     nominal = {f'{v:g}V': 2 * 470e3 * 300e3 / (2 * 470e3 + 300e3) * 220e-9 * 1e3 *
                math.log((v * 300 / 1240) / (v * 300 / 1240 - 1.2)) for v in (6.0, 7.4, 8.4)}
-    on = dict(nominal_ms=nominal, fastest_ms=turn_on(8.4, 220e-9 * .72 * .9, False),
-              slowest_ms=turn_on(6.0, 220e-9 * 1.1, True))
+    on = dict(nominal_ms=nominal, fastest_ms=turn_on(8.4, 220e-9 * C87_LOW, False),
+              slowest_ms=turn_on(6.0, 220e-9 * C87_HIGH, True), c87_factor=[C87_LOW, C87_HIGH],
+              label='Calculation / Inference (C87 0.72-1.265 x, R10 D-R19-10: X7R tolerance, temperature and bias '
+                    'allowances; 1 % resistors, SLVSFC9C EN thresholds and leakages at their datasheet bounds)')
     return dict(by_pack=out, four_stall_BAT_IN_V=four, seven_ms_line_holds_down_to_V=seven,
                 single_10ms_dropout_needs_pack_V=ten, turn_on=on,
                 bench_rule='J400 chatter (D-R25-01): total open time < 7 ms in every sliding 100 ms window, U9 on for '
@@ -677,8 +687,9 @@ def u6_supply(solves):
                           min_VCC_initial_V=rails['initial']['min_V'] - drop, margin_initial_V=rails['initial']['min_V'] - drop - 3.135,
                           min_VCC_drift_V=rails['drift']['min_V'] - drop, margin_drift_V=rails['drift']['min_V'] - drop - 3.135)
     out['window_basis'] = rails['source']
-    out['label'] = ('Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window (SLUSDW3A section 7.8 '
-                    'PFM band, R12F6-TRI-03); the band at R12\'s VIN, the drift case and load currents Inference')
+    out['label'] = ('Calculation / Inference (3V3 window, D-R12-139): Calculation on CAD copper (DC solves, 20 C) and '
+                    'the r12_windows 3V3 window (SLUSDW3A section 7.8 PFM band, R12F6-TRI-03); the band at R12\'s VIN, '
+                    'the drift case and load currents Inference')
     return out
 
 

@@ -15,7 +15,10 @@ GH clones.
 its own row in §2.3), R404 is 5.1k C25905, and C79 (D-R12-78) and C33 (D-R12-51) are on C12891 / C307331. Round 6
 (board `f26dfef1…`, D-R12-134, -138) moved R131 from C25744 10k to C25905 5.1k and added R136 (C25905), R95 (C25744)
 and D95 (C37704); the three cells below follow the JLC BOM again (still 58 lines, 181 parts). The ratings and
-verdicts are unchanged (same codes).
+verdicts are unchanged (same codes). Round 7 (board `82eddc69…`, D-R12-144 … -151) changed no BOM line. Its triage
+(R12F7-TRI-13) found that three lines this file routes to O-R12-02 were missing from that item's unread list: D123
+1N5819WS, Y1 X322525MOB4SI (no rating found, UNVERIFIED) and U3 W25Q128JVSIQ (its 260 °C class an Inference); O-R12-02
+now names them (D-R12-151).
 
 ## Resolution (2026-11-04, after this audit; R12_DECISIONS D-R12-49 … -54)
 

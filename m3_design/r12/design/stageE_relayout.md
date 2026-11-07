@@ -1,4 +1,4 @@
-# R12 AVA re-layout: placement, zone routing, the 90 mm outline and the re-run analyses (2026-11-06)
+# R12 AVA re-layout: placement, zone routing, the 90 mm (now 88 mm) outline and the re-run analyses (2026-11-06)
 
 Decisions D-R12-93 … D-R12-99 are in `R12_DECISIONS.md`. Branches: `r12-relayout-int` (the 100 mm re-layout, gated at
 `4686580`, board `ef3194c0…`), `r12-relayout-90` (the 90 mm board, `871f77a`, board `be81f40b…`) and
@@ -25,21 +25,24 @@ five pyro-cell parts, U6's corner lands, GPS_TX's pad exit and the J121 pours ch
 §4 "Round 5"). **Round 6 fix pass (D-R12-134 … -143, R12F6-TRI-01 … -17, verifier V-1 … V-5, PACK_FLT):** R136 (the
 cold pull-up's series resistor), R95 and D95 (U9's FLT to PC13) were added, R131 became 5.1 kΩ, R132 / R175 / R120
 moved, three GND vias moved and the pours pulled back from the pack-energy nets, making `f26dfef1…` (§2 "Round 6", §4
-"Round 6"); the rows of §1, §3 and §6 are that board's. The metrics paragraph and the cleanup paragraph of §2 keep
-`be81f40b…`'s figures as history.
+"Round 6"). **Round 7 fix pass (D-R12-144 … -151, R12F7-TRI-01 … -17):** the outline shrank to 46 × 88 mm (the port
+row, its cells and the port buck 1.85–2 mm aft, forward supports at y 82.1), the FMEA I-5 copper moved (the RAW_PROTECTED
+In2 island, R104, four vias, a camera UART lane), U9's two in-pad debris segments went and PYRO1_GATE got one entry into
+Q124.1, making `82eddc69…` (§2 "Round 7", §4 "Round 7"); the rows of §1, §3 and §6 are that board's. The metrics
+paragraph and the cleanup paragraph of §2 keep `be81f40b…`'s figures as history.
 
 ## 1. Result
 
 | Item | Value |
 |---|---|
-| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `f26dfef181327c27cbf6c71b1f89e8d0be83f80e665716e0be1b7e31efcd0df0` (round 6's fix pass, D-R12-134 … -143, through `3f9579fa…` (lane P) and `6a1c99e0…` (lane P3); `6e874d4e…` after round 5's fix pass, D-R12-125 … -133; `68e6b650…` after the AVA polish pass, D-R12-121 … -124; `db1f0999…` in round 4 with R166's footprint description, `66323cf0…` in round 3 with C25 / C26 15 pF, `be81f40b…` before), 46 × 90 × 1.6 mm, built three times by `PYTHONHASHSEED=0 m3_design/r12_build.sh` with the same hash (lane P4; round 5's board was also unchanged by a zone refill) (Measured) |
+| Board | `m3_design/r12/m3.kicad_pcb` SHA-256 `82eddc69c72cb0687183e8c51cb01a9290cbf4ec71b765c81ea7a093d6035af6` (round 7's fix pass, D-R12-144 … -151, lane P `bc7af8b`, 46 × 88 mm; `f26dfef1…` after round 6's fix pass, D-R12-134 … -143, through `3f9579fa…` (lane P) and `6a1c99e0…` (lane P3); `6e874d4e…` after round 5's fix pass, D-R12-125 … -133; `68e6b650…` after the AVA polish pass, D-R12-121 … -124; `db1f0999…` in round 4 with R166's footprint description, `66323cf0…` in round 3 with C25 / C26 15 pF, `be81f40b…` before), 46 × 88 × 1.6 mm (46 × 90 mm until round 7), built by `PYTHONHASHSEED=0 m3_design/r12_build.sh` with the same hash each time (twice in round 7, three times in round 6; round 5's board was also unchanged by a zone refill) (Measured) |
 | 100 mm fallback | `ef3194c01c7d77952fd88685080caf5ba1581a37cda45f79f8f362f0a32c0a02` on `r12-relayout-int` `4686580` (gated), the same copper except the forward zone |
-| Copper | 1057 tracks, 317 vias (1050 / 314 on `6e874d4e…`, 1053 / 318 on `68e6b650…`, 1061 / 318 before the polish pass), replayed from `m3_design/r12_routes.tsv` (Measured) |
+| Copper | 1048 tracks, 316 vias (1057 / 317 on `f26dfef1…`, 1050 / 314 on `6e874d4e…`, 1053 / 318 on `68e6b650…`, 1061 / 318 before the polish pass), replayed from `m3_design/r12_routes.tsv` (Measured) |
 | KiCad DRC | 0 violations, 0 unconnected, 0 parity (Measured) |
-| `fit_check --profile r12` | OK; board 46 × 90 mm against the 100 mm R12 ceiling |
-| `tools/check_r12.py` | every rule OK in the strict tier: S-1 … S-10 (S-10, the fire-net gaps, since D-R12-126; the fire-state, pack-energy and FLT guards and 168 exceptions since D-R12-135, -137, -138), K-reference, K-region, K-plane, K-fill, K-neighbours, M-7, K-legends |
-| `route_check --profile r12` | 0 failing, 3 allowlisted (3V3A, SPI1_MISO, QSPI_CLK; D-R12-96), 0 stale, 8 non-critical leftovers (11 before the polish pass; informational; listed in `docs/R12_VALIDATION.md` "M2 routing deviations") |
-| Fab | JLC BOM 58 lines, 181 JLC parts = 181 CPL rows (177 rebuilt from JLC footprints, 4 placement-only), F paste 586 flashes (178 / 174 / 579 before round 6 added R136, R95 and D95); manifest bound, with S-4 (`check_r12.py --only S-4 --bom --cpl`) among its content checks since R12F3-TRI-03. Round 3 changed the BOM's C25 / C26 line only (C1548 0402CG150J500NT 15 pF); the CPL was byte-identical to `871f77a`'s until round 5 moved the C13, D120, R131 and R173 rows (D-R12-125); round 6 changed the 10 kΩ / 5.1 kΩ / BAT54C quantities, added the R136, R95 and D95 rows and moved R120, R132 and R175 (D-R12-134, -137, -138); `m3_design/r12_fire.py` is bound since D-R12-126 |
+| `fit_check --profile r12` | OK; board 46 × 88 mm against the 100 mm R12 ceiling |
+| `tools/check_r12.py` | every rule OK in the strict tier: S-1 … S-10 (S-10, the fire-net gaps, since D-R12-126; the fire-state, pack-energy and FLT guards since D-R12-135, -137, -138, the FMEA I-5 rails since D-R12-145; 165 exceptions since D-R12-147, 168 before), K-reference, K-region, K-plane, K-fill, K-neighbours, M-7, K-legends |
+| `route_check --profile r12` | 0 failing, 3 allowlisted (3V3A, SPI1_MISO, QSPI_CLK; D-R12-96), 0 stale, `pad_debris` / `pad_slit` none (gated since D-R12-147), 8 non-critical leftovers (11 before the polish pass; informational; listed in `docs/R12_VALIDATION.md` "M2 routing deviations") |
+| Fab | JLC BOM 58 lines, 181 JLC parts = 181 CPL rows (177 rebuilt from JLC footprints, 4 placement-only), F paste 586 flashes (178 / 174 / 579 before round 6 added R136, R95 and D95); manifest bound, with S-4 (`check_r12.py --only S-4 --bom --cpl`) among its content checks since R12F3-TRI-03. Round 3 changed the BOM's C25 / C26 line only (C1548 0402CG150J500NT 15 pF); the CPL was byte-identical to `871f77a`'s until round 5 moved the C13, D120, R131 and R173 rows (D-R12-125); round 6 changed the 10 kΩ / 5.1 kΩ / BAT54C quantities, added the R136, R95 and D95 rows and moved R120, R132 and R175 (D-R12-134, -137, -138); round 7 moved the forward rows and R104 in the CPL, the BOM unchanged (D-R12-144, -145); `m3_design/r12_fire.py` is bound since D-R12-126 |
 | `tools/check.sh` | exit 0 on this tree (§7) |
 
 ## 2. How the copper is built now (D-R12-96)
@@ -62,8 +65,9 @@ moved, three GND vias moved and the pours pulled back from the pack-energy nets,
   and ACT_EN_MCU B lanes, BAT_FAULT_N's via and B stub, a GND stub); W2, W4 and W5 none),
   `export_geom.py` (pads and keep-outs for drafting), `kref.py` (K-reference diagnostic), `draw.py` (renders),
   `score.py` (the plan's metrics), `escape_W3.tsv` (U1's escape and the zone hand-offs).
-* **Joins.** 21 of route_check's 31 review-only collinear nodes are at the zone joins y 17.5 and y 45.4, where two
-  fragments meet (Measured).
+* **Joins.** 21 of route_check's 30 review-only collinear nodes are at the zone joins y 17.5 and y 45.4, where two
+  fragments meet (Measured on `82eddc69…`; this bullet said 31 until D-R12-151, R12F7-TRI-11: the count went 31 → 30 in
+  round 6).
 
 **Metrics (Measured; plan "now" → 100 mm → 90 mm, target).** Total vias 414 → 320 → **318** (≤ 290); GND vias 182 →
 150 → **149** (≤ 140); signal vias 175 → 100 → **100** (≤ 95); 3V3 vias 41 → 36 → **36**; diagonal share 36 % → 16.4 % →
@@ -137,17 +141,34 @@ net (VLOGIC_SENSE, NRST 4; U9_FLT 3) are unchanged. route_check: 0 failing, 3 al
 every other count unchanged. `zone_guard` on the committed fragments: W1 6 rows, W3 8, W2 / W4 / W5 none (D-R12-142
 counts each row once).
 
-## 3. Post stage on the 90 mm board (Measured on `f26dfef1…`)
+**Round 7 fix pass (D-R12-144 … -147, 2026-11-07; board `f26dfef1…` → `82eddc69…`, lane P `bc7af8b`; Measured).**
+`shrink88.patch` (place, routes, planes, legends; synced into the W2 / W3 / W5 fragments, `merge.py` reproduces
+`r12_routes.tsv`): 46 × 88 mm, the port row and its cells 1.85–2 mm aft, the port buck 2 mm, the PORT_4V8 In2 island
+y 80.6–87.5, the forward supports (3.5, 82.1) / (42.5, 82.1) (D-R12-144). The I-5 copper (D-R12-145): the RAW_PROTECTED
+In2 island `22.3,0 46,0 46,16.8 32.6,16.8 32.6,7.0 26.15,7.0 26.15,23.4 19.8,23.4 19.8,14.6 22.3,14.6`, C8's 3V3 via to
+(42.6, 19.0), R89's to (20.6, 13.45), R104 to (28.8, 7.6), the CAM_MCU_RX B lane to x 31.0, R431.2's GND via to (31.75,
+11.85). In W1: the two U9 in-pad rows deleted and PYRO1_GATE's R126.2 run one 45° track (11, 44.1)–(10.2, 43.3) into
+R128.1 (D-R12-147). Metrics (score.py and a track count, the records lane): vias 317 → **316** (GND 145, 3V3 37,
+signal 102); diagonal share 16.59 → **16.64 %** (347.8 / 2090.4 mm); In2 track **132.0 mm**; signal track 1918.6 mm
+(score.py); tracks 1057 → 1048; the worst routed / MST ratio (QSPI_CLK 1.63) and the most vias on one signal net
+(VLOGIC_SENSE, NRST 4) unchanged. route_check: 0 failing, 3 allowlisted, the same 8 leftovers, `pad_end_offcentre`
+276 → 267, `power_via_no_gnd` 12 → 13, the 43 review-only residuals (30 collinear, 13 in-pad) unchanged, and the new
+`pad_debris` / `pad_slit` rules clean. `space.py`: 82.1 % of 1 mm cells occupied; the east pocket (x 40.25–44.75,
+y 51.5–64.25, 57.4 mm²) stays empty for the reason in `r12_place.tsv`'s `@OUTLINE` row (D-R12-144).
 
-50 legends (every contact legend, the connector words, J2's SWD rows, the revision, pin-1 dots); 113 designators shown
-(48 on the bottom under their part) and 77 hidden, kept on F.Fab:
+## 3. Post stage on the 88 mm board (Measured on `82eddc69…`)
+
+50 legends (every contact legend, the connector words, J2's SWD rows, the revision, pin-1 dots); 112 designators shown
+(48 on the bottom under their part) and 78 hidden, kept on F.Fab:
 C13 C16 C17 C18 C21 C22 C25 C26 C81 C83 C94 C123 C126 C127 C129 C410 C420 C432 C433 C444 D121 D402 R12 R14 R61 R81
 R83 R84 R89 R92 R93 R94 R95 R100 R101 R104 R105 R106 R110 R111 R120 R122 R123 R126 R128 R129 R130 R133 R151 R153 R154
-R155 R156 R157 R162 R163 R164 R165 R167 R175 R178 R180 R400 R401 R431 R433 R434 R435 R440 R441 R460 R461 R462 R464
-R470 R471 U4. Round 6's re-drafts (`r12_legends_aid.py`, the hand-tuned C15, J2, R150, R152 and R463 rows kept) showed
+R155 R156 R157 R162 R163 R164 R165 R167 R175 R178 R180 R401 R431 R433 R434 R435 R440 R441 R450 R460 R461 R462 R464
+R470 R471 TP74 U4. Round 7's 88 mm legends (`shrink88.patch`, D-R12-144) showed R400, hid R450 and TP74, and moved
+C461's designator to B and Q122's to F (on `f26dfef1…`: 113 shown, 48 on the bottom, 77 hidden, with R400 hidden and
+R450 / TP74 shown). Round 6's re-drafts (`r12_legends_aid.py`, the hand-tuned C15, J2, R150, R152 and R463 rows kept) showed
 R136 on F at (2.83, 51.47), D120 on B under its part, C120 and R119 on B (lane P3) and D95 on F at (23.15, 24.27), hid
-R95 and C123 (C123's old spot is under R95 / D95), and moved TP81's designator to B and U5's to F (24.61, 24.74), both
-rotation 90 (D-R12-134, -137, -138; on `6e874d4e…`: 110 shown, 44 on the bottom, 77 hidden with C120 / R119 instead of
+R95 and C123 (C123's old spot is under R95 / D95), and moved TP81's designator to B (22.2, 21.4, rotation 0) and U5's to F (24.61, 24.74, rotation 90)
+(corrected by D-R12-151, R12F7-TRI-10: this said both rotation 90; D-R12-134, -137, -138; on `6e874d4e…`: 110 shown, 44 on the bottom, 77 hidden with C120 / R119 instead of
 C123 / R95). Round 5's re-draft (`r12_legends_aid.py`, the hand-tuned C15, J2, R150, R152 and R463 rows kept) hid C25,
 C126 and C127 and showed R33 and R127 (on `be81f40b…` … `68e6b650…`: 111 shown, 45 on the bottom, 76 hidden).
 Library-graphics notes (r12_post's contract): U403's and U400's pin-1 circles 0.092 mm from C433.2 / C400.2 (under
@@ -308,6 +329,26 @@ each board with `--source-board` (Calculation / Inference as before):
   figure is identical: 0 / 2304 required cases fail, minimum −14.255 V, fall 9.254 V/µs (Simulation / Inference). C81's
   inrush slope is not in this model (D-R12-143, R12F6-TRI-13).
 
+**Round 7 fix pass (D-R12-144 … -151; board `82eddc69…`).** Stage D was re-run on a zone-filled copy with
+`--source-board` by lane P and again by the records lane after its own changes (D-R12-149 labels, D-R12-150's C87
+range); `stageD_budget.json` is bound to `82eddc69…` (Calculation / Inference as before):
+* **Unchanged:** fire loop **4.726884 Ω**, four-stall **1.249952 A** at BAT_IN 5.7209 V, idle 1.505875 A, fire copper
+  23.76 / 28.43 mΩ, GND return **2.672 mΩ**, EN chatter (8.13 ms single drop-out, 7.56 ms bench limit), hold-up, the
+  shared RAW trunk run (45.2, 16.4) → (45.2, 29.2) and its IPC figures, VLOGIC D5 → U2 / D6 → U2 6.43 / 8.47 mΩ,
+  CAM_5V L401 → J9 9.51 mΩ.
+* **Moved (the 88 mm outline and the I-5 copper):** RAW_PROTECTED U9 → U400 / U403 / D5 **59.24 / 12.22 / 24.78 mΩ**
+  (was 59.63 / 10.81 / 23.53); the B trunk 55.6 mm and U400 IN series copper **48.73 mΩ** (was 57.6 mm, 50.37 mΩ);
+  PA6 corners (× 11 / 1 % divider, lower bounds) healthy **+0.171 / +0.080 V**, match shorted **+0.021 / −0.069 V**,
+  match and leads shorted **−0.022 / −0.113 V**, healthy VLOGIC 5.121–5.321 V; PORT_4V8 L400 → J410 / J420 / J440
+  **11.22 / 13.29 / 8.26 mΩ**, port pins under 0.561 A ≥ 4.596 / 4.563 V (J420 lowest; J410 4.597 / 4.564, J440
+  4.598 / 4.566); U400 VIN 5.550 V at four stalls and 5.484 V on a 6.0 V pack, held output 4.51 / 4.80 V at 580 kHz
+  (4.45 / 4.74 V) and 5.16 / 5.26 V with foldback (5.09 / 5.19 V); 3V3 L1 → U6 12.17 mΩ, L1 → R14 4.90 mΩ, R14 → U6
+  13.24 mΩ, U6 VCC at U2's 1 A ≥ 3.2368 / 3.2066 V, margin 101.8 / 71.6 mV (Calculation / Inference (3V3 window,
+  D-R12-139)); PYRO1_GATE 8.11 mm, L ≤ 3.68 nH; U2 OUT (C8's moved via) 5.25 mΩ series.
+* **EN turn-on** 30.3–131.5 ms over C87 0.72–1.265 × (was 27–114 ms; D-R12-150).
+* **Hot-plug** (lane P): electrical SHA `9750b961…` (moved pad positions), inputs bound to `82eddc69…`; every row and
+  figure identical: 0 / 2304 required cases fail, minimum −14.255 V (Simulation / Inference).
+
 **Hot-plug (Simulation / Inference).** `tools/r12_hotplug.py` models BAT_IN / BAT_DAMP as an extracted copper network
 and RAW_PROTECTED as one lumped node (the retained-output inventory), so the RAW trunk has no topology to update in this
 tool. The BAT_IN / BAT_DAMP copper is frozen (D-R12-96): the 12-edge network is identical to round 1's (Measured on the
@@ -321,7 +362,7 @@ were not re-run: they depend only on that unchanged network and the parts.
 |---|---|---|---|
 | Fire loop / four-stall current | 4.726699 Ω; 1.250000 A at BAT_IN 5.7209 V (+11.1 % over 1.125 A) | **unchanged** (fire copper frozen); 4.726884 Ω, 1.249952 A on `6e874d4e…` (round 5 moved the PYRO1_OUT trunk) | Calculation / Inference |
 | GND fire return Q124 → J1.2 (DC solve) | 2.594 mΩ | **2.585 mΩ** (< 5 mΩ allowance; the loop keeps 5 mΩ); 2.607 mΩ on `6e874d4e…` (round 5); 2.672 mΩ on `f26dfef1…` (round 6) | Calculation |
-| EN / chatter | single drop-out 8.13 ms at 5.7209 V; bench-rule worst-corner limit 7.56 ms; turn-on 27–114 ms | **unchanged** (same parts and four-stall point) | Calculation / Inference |
+| EN / chatter | single drop-out 8.13 ms at 5.7209 V; bench-rule worst-corner limit 7.56 ms; turn-on 27–114 ms | **unchanged** (same parts and four-stall point); turn-on 30.3–131.5 ms since D-R12-150 (C87 0.72–1.265 ×) | Calculation / Inference |
 | Hold-up from a battery break / from the PA6 trip | 2.23–6.12 ms unshed, 6.68–11.43 ms shed / 0.47–1.72 ms | **unchanged** (constant-power model) | Calculation / Inference |
 | C84 → U2 copper (DC solve, not in the hold-up model) | 47.8 mΩ | **4.14 mΩ** (C84 beside U2, D-R12-94) | Calculation |
 | RAW_PROTECTED U9 → U400 / U403 / D5 | 5.79 / 7.45 / 5.33 mΩ | **59.63 / 10.81 / 23.53 mΩ** (the port buck and D5 hang off the B trunk) | Calculation |
@@ -384,12 +425,12 @@ roll axis x = 0.000 mm for both (U6 was +4.5 mm). D-R12-54's axis maps are uncha
 and `build.py` carry none for R12; grep `r12_binding`: no match), so there is nothing to regenerate. `pin_table.tsv`
 column `r12_net` is the reviewed pin map.
 
-## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `f26dfef1…`, round 6's lane P4)
+## 5. Cost and stock (Live; `FAB_NET=1 m3_design/r12_fab.sh` on `82eddc69…`, round 7's lane P)
 
-`m3_design/r12/fab/cost_check_2.json` / `_5.json` 2026-11-07T10:01:24Z / 10:03:04Z; `stock_check_2.json` / `_5.json`
-10:00:44Z / 10:02:24Z. 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards (orderable =
+`m3_design/r12/fab/cost_check_2.json` / `_5.json` 2026-11-07T14:15:13Z / 14:16:33Z; `stock_check_2.json` / `_5.json`
+14:13:55Z / 14:15:53Z (round 6's lane P4 run on `f26dfef1…`: 10:01:24Z / 10:03:04Z, the same totals). 58 codes (22 Extended / 36 Basic), **none short and none thin** at 2 or 5 boards (orderable =
 min(stock, canPresaleNumber), an Inference about JLC's field). Round 6 changed quantities only (C25744 10 kΩ 21 → 21
-after R131 left and R95 joined, C25905 5.1 kΩ 9 → 11, C37704 BAT54C 1 → 2; 181 JLC parts). Parts $32.62 per board.
+after R131 left and R95 joined, C25905 5.1 kΩ 9 → 11, C37704 BAT54C 1 → 2; 181 JLC parts). Parts $32.62 per board ($32.6218 unrounded; round 7 changed no BOM line).
 Feeder **21 × $3.07 = $64.47** per order: `tools/jlc_cost.py` exempts JLC Preferred Extended codes on Economic PCBA
 (R12F3-TRI-08; JLC PCBA FAQ 7, fetched 2026-11-06: Preferred Extended parts "are exempt from the Feeders Loading fee for
 Economic PCB assembly"); the one such code is the BAT54C C37704 of D120 and D95 (`preferredComponentFlag` true, Live), so
@@ -399,14 +440,15 @@ $64.99 / $45.64).
 
 All-in (Calculation on the Live figures; setup / stencil $9.71; SMT joints $0.0016 × 586 pasted pads per board; THT
 $0.0164 × 4 joints per board plus $3.58 labour per order; bare PCB $25.10, cost_study.md §2.1's Live 4L 46 × 90 mm ENIG
-0.5 oz inner quote for 5 pcs (2026-11-04; R12F5-TRI-22); X-ray below; shipping, tax and attrition excluded):
+0.5 oz inner quote for 5 pcs (2026-11-04; R12F5-TRI-22), taken for the 88 mm board without a re-quote (Inference); X-ray below; shipping, tax and attrition excluded):
 
 | Order | JLC parts | Feeder | Setup + stencil | SMT joints | THT joints + labour | Bare PCB | X-ray, U1 only | **Total** | Per board |
 |---|---|---|---|---|---|---|---|---|---|
-| 2 boards | $65.25 | $64.47 | $9.71 | $1.88 | $3.71 | $25.10 | $3.28 | **$173.39** | $86.70 |
+| 2 boards | $65.24 | $64.47 | $9.71 | $1.88 | $3.71 | $25.10 | $3.28 | **$173.39** | $86.70 |
 | 5 boards | $163.11 | $64.47 | $9.71 | $4.69 | $3.91 | $25.10 | $8.20 | **$279.19** | $55.84 |
 
-Was $173.69 / $279.93 (round 5, 2026-11-06T17:55Z, 579 pasted pads), $176.75 / $282.99 (2026-11-06T10:07Z, 22 charged
+Recomputed by the round 7 records lane from the 14:15Z cost files (D-R12-151): unchanged at the cent from round 6's
+run. Was $173.69 / $279.93 (round 5, 2026-11-06T17:55Z, 579 pasted pads), $176.75 / $282.99 (2026-11-06T10:07Z, 22 charged
 codes), $173.39 / $274.59 (2026-11-05) and $173.47 / $274.79 before the X-ray line (R12F2-TRI-13): JLC price movement,
 the X-ray fee, the Preferred Extended waiver and round 6's three parts.
 
@@ -435,20 +477,20 @@ the X-ray count on JLC's quote before ordering.
 
 | File | SHA-256 |
 |---|---|
-| m3_design/r12/m3.kicad_pcb | f26dfef181327c27cbf6c71b1f89e8d0be83f80e665716e0be1b7e31efcd0df0 |
-| m3_design/r12/m3.kicad_dru | 94fdfa0d74b69a2270e0ff348c4ea7b306e7a37ca27bc9892d5370946e2e2846 |
-| m3_design/r12_fire.py | 406bf01328b0000f4425de228ae20a1c411518c148b3a9bf4f83f6aa22cd8557 |
-| m3_design/r12_legends.tsv | 258ce75cbe88babb35a998f3c9894e92b58446c0ae277ee140620d59468a5304 |
-| m3_design/r12_routes.tsv | 821aa2286213f61e9cac302f339eda9f321c9e85158a80349e358da933159d60 |
-| m3_design/r12_place.tsv | d0040e4d2c261c74311ba7c0b901b1b0958f3d33dbd95fa5f349f1ca9a3c2f41 |
+| m3_design/r12/m3.kicad_pcb | 82eddc69c72cb0687183e8c51cb01a9290cbf4ec71b765c81ea7a093d6035af6 |
+| m3_design/r12/m3.kicad_dru | ed232a0af786181a9f793976f504f5a76346b54f1209a359803ab9520395b452 |
+| m3_design/r12_fire.py | 528a3da0841508ad0b230193cd2f242526d1a6c315e3581412e56988207dd945 |
+| m3_design/r12_legends.tsv | 09ef51514464d48dba39d7c81a8df2c93c25a8939ce3b2d400f51324ee3d3477 |
+| m3_design/r12_routes.tsv | c38ceb4d63170babecbb16d44f925b14035a7539bdb64380a8ac255aabab4aa4 |
+| m3_design/r12_place.tsv | 287b1d3ded4ee34dc118049b6f34d7c08c7c1d8150c12d13dd120ddde313a2f5 |
 | m3_design/r12/fab/m3_bom_jlc.csv | 039747087e4d563a96709d64e1574a69917c7740334c096293da6b8a912a3093 |
-| m3_design/r12/fab/m3_cpl_jlc.csv | 6734d5c5abf9c915f9bcdb0ec73fa26fa5ccd2e9be5092e5fb69ef19d60f0453 |
-| m3_design/r12/fab/m3_fab_manifest.json | a0080b8acd6d68684fa7ece3046d650c7399d730068fd5bc87050a7340076fb9 |
-| m3_design/r12/fab/m3_gerber.zip | 86be4f6f6a9ef3ae818debdd5abe754bef5ef180a9e3ae79d6d2fc4cd7ffd651 |
-| m3_design/r12/fab/cost_check_2.json | a17f08bf4255b2e575ed59b9b8705efe25aeeb94747446ac4dcd966b7e41dcbb |
-| m3_design/r12/fab/cost_check_5.json | e3d37d1c4ff9d12329382131e673600b848ce3631e9c9136f69a029492e03b12 |
-| m3_design/r12/fab/stock_check_2.json | 3941e3e56b4e8ab1bfb8420500030f0be4e2465b5d87d43cb9d8f1177f9588a3 |
-| m3_design/r12/fab/stock_check_5.json | 439728ff813f3d72a0c0b44e341eed9b7fde0d8d86376e99d00f3048274f4c70 |
+| m3_design/r12/fab/m3_cpl_jlc.csv | a2e39ede9b212be20d5631ac82a775485336d6e6a3896607dc9f62f4bb3f7898 |
+| m3_design/r12/fab/m3_fab_manifest.json | e85a09bb131e1b3a9e83570664086c03df101867d10cf43d644a5589d543b152 |
+| m3_design/r12/fab/m3_gerber.zip | c8c34f765d14ffb8a9c0d6cb32eb4bec2e067a6dbc6d4700a7397f7da5678998 |
+| m3_design/r12/fab/cost_check_2.json | f8b4ab35670c7f92bdd134456f5509c41ed14a3ad9808b901fa73284450026d1 |
+| m3_design/r12/fab/cost_check_5.json | 3eace562eb662cd31991624964e20b6d5adf04637dbc677094bad6ec66d71da6 |
+| m3_design/r12/fab/stock_check_2.json | ac6a86eb38c9947c24082b46c9a6f2fa618e084415e99bfdec1e2415db8f5879 |
+| m3_design/r12/fab/stock_check_5.json | 1ce790a6745e2fb1dbf8a70d7a69421608c18e2068c6aae6f6059bf05217957b |
 
 The Gerbers and assembly PDFs carry their creation date, so they change on every export; the manifest binds them.
 
@@ -482,7 +524,13 @@ V-1 … V-5, PACK_FLT; branches `r12f6-P`, `r12f6-AB`, `r12f6-P3`, `r12f6-P4`): 
 route_check 0 failing, 3 allowlisted; the fab package re-exported, priced Live and bound; stage D and the hot-plug model
 re-run; `test_r12_check` 89, `test_r12_stageD` 23, `test_r12_fab` 15; `PYTHONHASHSEED=0 tools/check.sh` with NUMPY_PY
 exited 0 in each lane (twice in P3). The records lane (branch `r12f6-E`) then updated the records and ran
-`tools/check.sh` again: exit 0 (STATUS.md "Round 6 fix pass"). Not verified: any physical, electrical or firmware test;
-JLC DFM; the vehicle fit of the 90 mm board (O-R12-28); AN2606 (O-R12-23); two consecutive clean stage F rounds on the
-re-layout (round 2 found 16 real errors, round 3 14, round 4 8, round 5 22 and round 6 17, R12F6-TRI-01 … -17). After any
+`tools/check.sh` again: exit 0 (STATUS.md "Round 6 fix pass"). Round 7 fix lanes P and AE (R12F7-TRI-01 … -17;
+branches `r12f7-P`, `r12f7-AE`): two builds gave the same board `82eddc69…`; DRC / unconnected / parity / ERC 0;
+check_r12 every rule OK with S-10's I-5 classes; route_check 0 failing, 3 allowlisted, `pad_debris` / `pad_slit`
+clean; the fab package re-exported, priced Live and bound; stage D re-run (both lanes) and the hot-plug model re-run
+(lane P); `test_r12_check` 94 (no skip), `test_r12_stageD` 25, `test_r12_fab` 15, `test_route_check` 87;
+`PYTHONHASHSEED=0 tools/check.sh` with NUMPY_PY exited 0 in lane P and again after the records lane (STATUS.md
+"Round 7 fix pass"). Not verified: any physical, electrical or firmware test; JLC DFM; the vehicle fit of the 88 mm
+board (O-R12-28); AN2606 (O-R12-23); two consecutive clean stage F rounds on the re-layout (round 2 found 16 real
+errors, round 3 14, round 4 8, round 5 22, round 6 17 and round 7 17, R12F7-TRI-01 … -17). After any
 later copper change: re-run the legend aid if needed, then `m3_design/r12_stageD.py` and `tools/r12_hotplug.py`.
