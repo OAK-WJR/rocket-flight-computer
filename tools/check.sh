@@ -24,7 +24,9 @@
 # repository R12 board, required once the board is tracked); its self-test (tools/test_r12_check.py) then must not skip
 # its real-board tests (R12_BOARD_REQUIRED). The R12 fab and stage D self-tests (tools/test_r12_fab.py,
 # tools/test_r12_stageD.py; R12F4-TRI-01) always run; test_r12_fab's package tests use R12_BOARD, else the repository
-# R12 board, and skip only when no R12 board exists.
+# R12 board, and skip only when no R12 board exists. R12F7-TRI-08: the kicad-cli resolved here is exported as KICAD_CLI
+# to every self-test, and once the R12 section has run (R12_BOARD_REQUIRED) a KiCad-dependent R12 test fails, not skips,
+# when it cannot find kicad-cli.
 # Usage: tools/check.sh [path/to/board.kicad_pcb]      exit 0 = every check clean
 set -euo pipefail
 # Fail closed on a parse error: bash reads a script as it runs, so a syntax error late in the file would otherwise let
@@ -67,6 +69,7 @@ if [[ -z "$CLI" ]]; then
 fi
 CLI="$(command -v "$CLI")" || { echo 'KiCad CLI unavailable; set KICAD_CLI' >&2; exit 1; }
 CLI="$(python3 -c 'from pathlib import Path; import sys; print(Path(sys.argv[1]).resolve())' "$CLI")"
+export KICAD_CLI="$CLI"   # R12F7-TRI-08: every stage and self-test uses the CLI resolved here (PATH or an app folder too)
 if [[ -z "${KICAD_PY:-}" ]]; then
   candidate="$(dirname "$CLI")/../Frameworks/Python.framework/Versions/Current/bin/python3"
   if [[ -x "$candidate" ]]; then KICAD_PY="$candidate"; else KICAD_PY=python3; fi

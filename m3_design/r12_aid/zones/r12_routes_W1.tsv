@@ -1,5 +1,12 @@
 kind	net	layer	width	x0	y0	x1	y1
 # W1 (aft power, pyro, camera, servo cells), AVA re-layout D-R12-96. Frozen rows (verbatim from r12_aid/r12_routes_f1.tsv):
+# R12F7-TRI-01 (FMEA I-5): CAM_MCU_RX's B lane moves from x 31.6 to x 31.0 (inside the 3V3 pocket, which keeps 1.04 mm
+# from RAW_PROTECTED), R431.2's GND via from (31.0, 11.8) to (31.75, 11.85) out of its way; R89's 3V3 via (20.6, 13.55) ->
+# (20.6, 13.45) and C8's 3V3 via (44.05, 17.925) -> (42.6, 19.0) (W2) keep 1.04 mm from RAW_PROTECTED; CAM_5V's feed into
+# R104.1 follows R104 0.2 mm east (0.300 mm from D121.5's 3V3 via).
+# R12F7-TRI-06: the isolated in-pad rows BAT_ENABLE (18.0, 14.6)-(18.0, 14.5) in U9.1 and BAT_DVDT (16.6, 16.1)-(16.6, 16.2)
+# in U9.7 are deleted (they joined nothing). R12F7-TRI-07: PYRO1_GATE's run from R126.2 now ends in R128.1 on its 45-degree
+# line (no same-net slit past R128.1); Q124.1 has one entry, from R128.1 (C126.1 -> R128.1 -> Q124.1).
 track	GND	F	0.3	33.9	5.4	33.1	5.4
 track	GND	F	0.3	26.3	12.8	26.3	13.7
 track	PYRO1_OUT	F	0.8	7.4	35.25	5.45	37.2
@@ -19,13 +26,9 @@ track	BAT_ENABLE	F	0.2	17.7	7.8	17.7	8.7
 track	BAT_ENABLE	F	0.2	17.7	8.7	18.7	9.7
 track	BAT_ENABLE	F	0.2	18.0	14.3	18.0	12.3
 track	BAT_ENABLE	F	0.2	18.0	12.3	18.7	11.6
-track	BAT_ENABLE	F	0.2	18.0	14.6	18.0	14.5
 track	PYRO1_GATE	F	0.2	10.1	43.3	9.2	43.3
 track	PYRO1_GATE	F	0.2	9.2	43.3	8.8	43.7
-track	PYRO1_GATE	F	0.2	11	44.1	10.5	43.6
-track	PYRO1_GATE	F	0.2	10.5	43.6	9.5	43.6
-track	PYRO1_GATE	F	0.2	9.5	43.6	9.1	44
-track	PYRO1_GATE	F	0.2	9.1	44	8.8	44
+track	PYRO1_GATE	F	0.2	11	44.1	10.2	43.3
 track	PYRO1_GATE	F	0.2	10.1	42.1	10.1	43.1
 track	ACT_GATE	F	0.2	6.3	30.1	6.8	30.1
 track	ACT_GATE	In2	0.2	6.8	30.1	7.7	31
@@ -45,7 +48,6 @@ track	PYRO1_CONT_MID	F	0.2	13.05	46.1	12.15	47
 track	ARM1_SENSE_MID	F	0.2	17.6	32.2	17.6	33.17
 track	BAT_DVDT	F	0.2	16.6	16.4	15.9	17.1
 track	BAT_DVDT	F	0.2	15.9	17.1	15.9	17.38
-track	BAT_DVDT	F	0.2	16.6	16.1	16.6	16.2
 track	CAM_BST	F	0.3	31.9	16.3	31.9	14.9
 track	CAM_RX_WIRE	F	0.2	31.7	7.5	32	7.2
 track	CAM_RX_WIRE	F	0.2	32	7.2	32	6.2
@@ -69,7 +71,7 @@ track	BAT_OVLO	F	0.2	16.2	11.5	17	12.3
 track	BAT_OVLO	F	0.2	17.5	14.3	17.5	12.87
 track	BAT_OVLO	F	0.2	17.5	12.87	17.03	12.4
 track	GND	F	0.3	17	10.3	17	9.8
-track	GND	F	0.3	31	11.3	31	11.8
+track	GND	F	0.3	31.3	11.4	31.75	11.85
 track	GND	F	0.3	13.1	50.1	13.6	50.1
 # PACK_FLT lane (round 6 V-1 follow-up): three GND stitching vias nudged 0.05-0.08 mm away from the BAT_IN feed
 # ((11.5, 9.6) -> (11.55, 9.6), (12.2, 8.1) -> (12.12, 8.1), (15.3, 16.75) -> (15.3, 16.8)): each then keeps >= 1.04 mm
@@ -153,8 +155,8 @@ track	CAM_5V	F	0.6	39.8	11	41.1	12.3
 track	CAM_5V	F	0.45	34.9	6.2	34.9	8.7
 track	CAM_5V	F	0.4	30.2	10.1	30.7	9.6
 track	CAM_5V	F	0.4	30.7	9.6	34.1	9.6
-track	CAM_5V	F	0.4	28.1	7.5	28.7	6.9
-track	CAM_5V	F	0.4	28.7	6.9	30.3	6.9
+track	CAM_5V	F	0.4	28.3	7.5	28.9	6.9
+track	CAM_5V	F	0.4	28.9	6.9	30.3	6.9
 track	SERVO1_OUT	F	0.2	24.1	6.2	24.1	8.4
 track	SERVO1_OUT	B	0.2	24.1	8.4	24.1	10.5
 track	SERVO1_OUT	F	0.2	24.1	10.5	24.1	11.1
@@ -209,7 +211,7 @@ track	BAT_SW_RETURN	F	0.2	11.3	6.5	10.45	7.35
 track	BAT_SW_RETURN	F	0.2	10.75	7.5	13.4	7.5
 track	GND	F	0.25	10.7	8.1	12.12	8.1
 via	GND	-	0.45	17	9.8		
-via	GND	-	0.45	31	11.8		
+via	GND	-	0.45	31.75	11.85		
 via	GND	-	0.45	12.12	8.1		
 via	GND	-	0.45	13.6	50.1		
 via	GND	-	0.45	11.55	9.6		
@@ -331,7 +333,7 @@ track	CAM_MCU_TX	B	0.15	30.4	15.6	30.4	9.05
 via	CAM_MCU_TX	-	0.45	30.4	9.05		
 track	CAM_MCU_TX	F	0.2	30.4	9.05	30.4	8.43
 track	CAM_MCU_RX	B	0.15	29.8	17.5	29.8	16.8
-track	CAM_MCU_RX	B	0.15	29.8	16.8	31.6	15.0
+track	CAM_MCU_RX	B	0.15	29.8	16.8	31	15.6
 track	GND	F	0.2	28.0	11.35	28.0	12.32
 track	GND	F	0.2	28.0	12.32	27.57	12.75
 track	GND	F	0.3	27.6	12.8	27.6	13.3
@@ -341,8 +343,8 @@ track	GND	F	0.3	22.675	15.6	23.6	15.6
 via	GND	-	0.45	23.6	15.6		
 track	GND	F	0.3	18.6	35.58	18.6	34.95
 via	GND	-	0.45	18.6	34.95		
-track	3V3	F	0.3	20.6	12.83	20.6	13.55
-via	3V3	-	0.45	20.6	13.55		
+track	3V3	F	0.3	20.6	12.83	20.6	13.45
+via	3V3	-	0.45	20.6	13.45		
 # round 6 verifier V-1 follow-up (PACK_FLT): U9.4 to R89 and the trunk down to R95.1 is U9_FLT; PC13's side of R95 stays BAT_FAULT_N
 track	U9_FLT	B	0.2	18.15	15.15	16.6	13.6
 via	U9_FLT	-	0.45	16.6	13.6		
@@ -398,8 +400,7 @@ via	3V3	-	0.45	21.77	25.1
 track	ARM1_SENSE	B	0.2	13	40.75	16.6	37.15
 track	CAM_MCU_RX	F	0.2	31.6	8.43	31	9.03
 via	CAM_MCU_RX	-	0.45	31	9.03		
-track	CAM_MCU_RX	B	0.15	31	9.03	31.6	9.63
-track	CAM_MCU_RX	B	0.15	31.6	9.63	31.6	15
+track	CAM_MCU_RX	B	0.15	31	15.6	31	9.03
 via	GND	-	0.45	31	8		
 track	CAM_5V	B	0.4	30.3	6.9	31.9	6.9
 track	CAM_5V	B	0.4	31.9	6.9	33.05	8.05

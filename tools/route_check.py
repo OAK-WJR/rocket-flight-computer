@@ -77,6 +77,12 @@ pad centre, lies in the other's copper on a layer both are on). Categories (an i
                           >= 2 layers (layer 'pad', measured from the pad centre: pad_layer_changes)
     arc_segment           profile r10 (R3-GATE-01): any arc track (PCB_ARC), on any net: AGENTS.md section 3 allows
                           only 0 / 45 / 90 degree straight segments, and the heading / jog / staircase tests skip arcs
+    pad_debris            (R12F7-TRI-06) a segment of any length wholly inside one same-net pad whose two ends meet no
+                          other track end, via or passing track: it joins nothing (segment_inside_pad counts only
+                          >= 0.2 mm and short_segment exempts in-pad segments, so neither saw it)
+    pad_slit              (R12F7-TRI-07) a track whose copper passes a same-net pad it does not touch at a gap under
+                          SLIT (0.1 mm): a same-net slit below the fab's spacing (side_by_side_overlap tests track pairs
+                          only)
   hygiene categories, gated on critical nets (the signal nets above and the power rails, GND included):
     micro_segment         a segment shorter than 50 µm (zero length included)
     short_segment         a segment from 50 µm up to max(its own width, 0.2 mm) long in open routing (not wholly
@@ -273,7 +279,7 @@ SIGNAL_CRITICAL = {'rf', 'pyro', 'crystal', 'usb', 'spi', 'rfif', 'uart', 'portc
 # AUD-2 omits only the named slow-return whitelist from companion-via checks; these critical classes stay intact.
 CRITICAL = SIGNAL_CRITICAL | {'power'}
 RULE = ('off_angle', 'staircase', 'acute_angle', 'fold_back', 'dead_copper', 'pour_stub', 'dangling_via',
-        'critical_via_no_gnd', 'arc_segment', 'parallel_via', 'right_angle')
+        'critical_via_no_gnd', 'arc_segment', 'parallel_via', 'right_angle', 'pad_debris', 'pad_slit')
 HYGIENE = ('micro_segment', 'short_segment', 'tiny_jog', 'collinear_unmerged', 'duplicate_segment',
            'collinear_overlap', 'side_by_side_overlap', 'crossing_without_node', 'overlap_only_joint',
            'via_offcentre_joint', 'neck_down', 'track_loop', 'via_overlap', 'detour', 'extra_vias', 'chain_detour',
@@ -2102,6 +2108,32 @@ def scan(board, baseline_log=None):
                 if off > 0.1 and pd['size'] <= 2.0 / NM:
                     add('pad_end_offcentre', s['net'], s['layer'], p, pad=pd['name'], off_mm=round(off, 4))
 
+    def debris(s):
+        """Whether neither end of s meets another track end, a via or a track passing through (R12F7-TRI-06)."""
+        for e in (0, 1):
+            n = ends.get((s['i'], e))
+            if n is None or n['via'] or n['through'] or any(m[0]['i'] != s['i'] for m in n['m']):
+                return False
+        return True
+
+    def joins_beside(s, pd, sh, cop):
+        """Whether s touches pad pd, or its own run joins pd at one of s's ends: a track or via at either end node
+        touches the pad (a pad exit or entry leaving its own pad's edge, not a run passing a pad it does not join)."""
+        if sh.Collide(cop, 0):
+            return True
+        for e in (0, 1):
+            n = ends.get((s['i'], e))
+            if n is None:
+                continue
+            if any(q['pad'] is pd['pad'] for q in n['pads']):
+                return True
+            for o in [m[0] for m in n['m'] if m[0]['i'] != s['i']] + list(n['through']):
+                if sh.Collide(pcbnew.SHAPE_SEGMENT(P(o['a']), P(o['b']), int(o['w'])), 0):
+                    return True
+            if n['via'] and sh.Collide(pcbnew.SHAPE_CIRCLE(P(n['via']['pos']), int(n['via']['r'])), 0):
+                return True
+        return False
+
     # ---- segments ------------------------------------------------------------------------------------------------
     for s in cu.all_segs:
         if s['len'] < MICRO:
@@ -2123,6 +2155,7 @@ def scan(board, baseline_log=None):
         if d > OFF_DEG or lat > OFF_LAT:
             add('off_angle', s['net'], s['layer'], s['a'], end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)),
                 dev_deg=round(d, 3), lat_mm=round(lat, 4))
+        junk = False
         for pd in cu.pads_by_net.get(s['net'], []):
             l, t, r, b = pd['bb']
             if max(s['a'][0], s['b'][0]) < l or min(s['a'][0], s['b'][0]) > r or \
@@ -2136,6 +2169,33 @@ def scan(board, baseline_log=None):
                 add('passes_through_pad', s['net'], s['layer'], s['a'], pad=pd['name'])
             elif ina and inb and s['len'] >= 0.2:
                 add('segment_inside_pad', s['net'], s['layer'], s['a'], pad=pd['name'], len_mm=round(s['len'], 3))
+            if ina and inb and not junk and debris(s):
+                junk = True                    # once per segment (a pad number may be several pads: U9's L-shaped pins)
+                # R12F7-TRI-06: a segment wholly inside one same-net pad that shares neither end with another track,
+                # a via or a track passing through: it joins nothing (autorouter / drafting debris), at any length
+                add('pad_debris', s['net'], s['layer'], s['a'], pad=pd['name'], len_mm=round(s['len'], 4),
+                    end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)))
+        for pd in cu.pads_by_net.get(s['net'], []):
+            # R12F7-TRI-07: a track whose copper passes a same-net pad it does not touch at a gap under SLIT (a
+            # same-net slit, below the fab's spacing; track pairs are side_by_side_overlap's)
+            l, t, r, b = pd['bb']
+            g = s['w'] / 2 + SLIT / NM
+            if max(s['a'][0], s['b'][0]) + g < l or min(s['a'][0], s['b'][0]) - g > r or \
+               max(s['a'][1], s['b'][1]) + g < t or min(s['a'][1], s['b'][1]) - g > b or not pd['pad'].IsOnLayer(s['lid']):
+                continue
+            sh = pd['pad'].GetEffectiveShape(s['lid'])
+            cop = pcbnew.SHAPE_SEGMENT(P(s['a']), P(s['b']), int(s['w']))
+            if not sh.Collide(cop, int(SLIT / NM)):
+                continue
+            grp = [q for q in cu.pads_by_net[s['net']] if q['name'] == pd['name'] and q['pad'].IsOnLayer(s['lid'])]
+            if any(joins_beside(s, q, q['pad'].GetEffectiveShape(s['lid']), cop) for q in grp):
+                continue                   # one land of several pads (U9's L-shaped pins) is the same pad
+            lo, hi = 0, int(SLIT / NM)
+            while hi - lo > 10:
+                mid = (lo + hi) // 2
+                lo, hi = (lo, mid) if sh.Collide(cop, mid) else (mid, hi)
+            add('pad_slit', s['net'], s['layer'], s['a'], pad=pd['name'], gap_mm=round(mm(hi), 4),
+                end=(round(mm(s['b'][0]), 4), round(mm(s['b'][1]), 4)))
 
     # ---- pairs: duplicates, overlaps, crossings ------------------------------------------------------------------
     for (lid, net), group in cu.all_by_ln.items():

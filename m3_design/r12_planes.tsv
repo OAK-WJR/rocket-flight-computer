@@ -6,10 +6,13 @@
 # the RAW island leaves a 3V3 pocket (x 26.15-32.2, y 7.6-16.8) under the CA bus and the camera UART lanes; its west piece
 # (U9 / C82 / D9 / TP81) and east piece (camera buck VIN, CR trunk vias) join through the aft band y 0-7.6 under J122 / J9
 # (SMD only); x < 21.3 below y 14.4 stays 3V3 for R89's 3V3 via (W1, D-R12-96).
+# R12F7-TRI-01 (FMEA I-5): RAW_PROTECTED keeps PACK_MIN 1.04 mm from the 3V3 fill, so the pocket widens to x 26.15-32.6,
+# y 7.0-16.8 (the camera UART B lanes at x 29.85 / 30.4 / 31.0 keep their 3V3 reference; the aft band is y 0-7.0) and
+# R89's 3V3 corner to x < 22.3 below y 14.6 (its via (20.6, 13.45) keeps a >= 1 mm neck to the 3V3 sheet, K-plane).
 net	layer	priority	points
 GND	In1	0	0,0 46,0 46,L 0,L
 3V3	In2	0	0,0 46,0 46,L 0,L
-RAW_PROTECTED	In2	1	21.3,0 46,0 46,16.8 32.2,16.8 32.2,7.6 26.15,7.6 26.15,23.4 19.8,23.4 19.8,14.4 21.3,14.4
+RAW_PROTECTED	In2	1	22.3,0 46,0 46,16.8 32.6,16.8 32.6,7.0 26.15,7.0 26.15,23.4 19.8,23.4 19.8,14.6 22.3,14.6
 # D-R12-99 (90 mm outline): the PORT_4V8 island moves with the port row; it starts at y 80.7, forward of the
 # port-UART B lanes and their vias (y <= 80.0), so their B chains stay over the 3V3 sheet.
-PORT_4V8	In2	1	0.5,80.7 45.5,80.7 45.5,89.5 0.5,89.5
+PORT_4V8	In2	1	0.5,80.6 45.5,80.6 45.5,87.5 0.5,87.5

@@ -29,7 +29,10 @@ S-10: on every copper layer, fills (protected-net fills too) and barrels include
       floor and reason, are excepted (R12F5-TRI-01, verifier lane P2); a netlist guard holds every not-a-path class in
       the commanded-fire state and keeps the cold pull-up diode's anode off 3V3 (R12F6-TRI-01), with part classes
       default-deny (round 6 V-4); the pack-energy nets BAT_IN / ACT_FET_S / RAW_ACT (derived from the netlist) keep
-      >= 1.040 mm from every net, copper and fills, but each other, ACT_GATE and their resistors' other ends (V-1 / V-2).
+      >= 1.040 mm from every net, copper and fills, but each other, ACT_GATE and their resistors' other ends (V-1 / V-2);
+      the FMEA I-5 rails (derived from the netlist, R12F7-TRI-01) keep >= 1.040 mm (pack voltage: RAW_PROTECTED,
+      VLOGIC, the converters' switch / bootstrap nodes) or >= 0.300 mm (port voltage: CAM_5V, PORT_4V8, VBUS) from
+      3V3 / 3V3A.
 W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
@@ -808,7 +811,8 @@ def k_neighbours(c):
 # and one from PYRO1_OUT to a net that can sink current passes bus current through the match; the bus is live from the
 # on-rail check (AGENTS section 2.1), so either fires an enabled match. PYRO1_IGN is held too (R134 overload), and so
 # are the pack-energy nets BAT_IN / ACT_FET_S / RAW_ACT (round 6 verifier V-1 / V-2: an unfused pack short, or pack
-# voltage on a logic net), derived from the netlist by r12_fire.pack_nets().
+# voltage on a logic net), derived from the netlist by r12_fire.pack_nets(), and the FMEA I-5 rails above 3V3 against
+# 3V3 / 3V3A (R12F7-TRI-01), derived by r12_fire.i5_rails().
 # The classes, limits and measured exceptions are m3_design/r12_fire.py's (default-deny: a net counts unless classed
 # there with a calculated reason; only U1's NC balls are exempt as NC; every exception is one item pair with its own
 # floor). The DRU carries the same definition (r12_sch.dru() from r12_fire.dru_rules()), so DRC holds it and the pours
@@ -898,6 +902,8 @@ def fire_gaps(board, items=None):
                 continue
             seen.add(key)
             limit, cls, pn = fire.pair_limit(a[0], a[5], b[0], b[5], a[4] or b[4])
+            if cls == 'unprotected':
+                continue                          # an I-5 rail against a net other than 3V3 / 3V3A (R12F7-TRI-01)
             gap = shape_gap(a[3], b[3], fire.REACH)
             if gap is None:
                 continue
@@ -912,7 +918,8 @@ def s10(c, exceptions=None, not_a_path=None):
     measured item-pair exceptions of r12_fire, each above its floor, are allowed below a limit (R12F5-TRI-01)."""
     table = fire.exception_index(exceptions)
     issues, kept, nc, owner, used = [], [], [], [], set()
-    for r in fire_gaps(c.board):
+    fire_gaps_cache = fire_gaps(c.board)
+    for r in fire_gaps_cache:
         where = f'{r["net_a"]} {r["a"]} to {r["net_b"]} {r["b"]} on {r["layer"]}: {r["gap"]:.4f} mm'
         if r['limit'] is None:
             if r['cls'] == 'U1 NC ball' and r['gap'] < fire.GATE_MIN:
@@ -947,13 +954,22 @@ def s10(c, exceptions=None, not_a_path=None):
     issues += [f'S-10: {m}' for m in packed]
     flt, flt_ev = fire.flt_guard(netlist, classes)                         # PACK_FLT: R95 and D95 between U9 FLT and PC13
     issues += [f'S-10: {m}' for m in flt]
+    i5, i5_ev = fire.i5_guard(netlist)                                     # R12F7-TRI-01: the FMEA I-5 rails
+    issues += [f'S-10: {m}' for m in i5]
+    i5_ev['least'] = {}
+    for r in fire_gaps_cache:
+        if r['cls'] in ('i5-pack', 'i5-port'):
+            k = f'{r["net_a"]} / {r["net_b"]}'
+            if k not in i5_ev['least']:
+                i5_ev['least'][k] = f'{r["gap"]:.4f} mm, {r["a"]} to {r["b"]} on {r["layer"]}'
     return issues, dict(exceptions=kept, u1_nc_balls=nc, owner_pairs=owner, netlist_classes=classes,
                         fire_state=dict(series_ohm=fire_ev, min_ohm=fire.FIRE_SERIES_MIN),
                         pack=dict(pack_ev, min_ohm=fire.PACK_SERIES_MIN, limit=fire.PACK_MIN),
-                        pack_flt=dict(flt_ev, min_ohm=fire.PACK_SERIES_MIN),
+                        pack_flt=dict(flt_ev, min_ohm=fire.PACK_SERIES_MIN), i5=i5_ev,
                         not_a_path={f'{p} / {f}': why for (p, f), why in fire.NOT_A_PATH.items()},
                         limits=dict(gate=fire.GATE_MIN, out=fire.OUT_MIN, out_gnd=fire.GND_MIN, fill=fire.FILL_MIN,
-                                    ign=fire.IGN_MIN, pack=fire.PACK_MIN))
+                                    ign=fire.IGN_MIN, pack=fire.PACK_MIN, i5_pack=fire.PACK_MIN,
+                                    i5_port=fire.I5_PORT_MIN))
 
 
 # D-R12-67A: stage C pass 1 may report these signal-reference rules without failing (r12_build.sh, R12_ROUTE_HYGIENE).

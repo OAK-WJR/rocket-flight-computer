@@ -36,6 +36,14 @@ Default-deny: every foreign net counts against a protected net unless it is clas
     FMEA I-5 fire mechanism): PACK_MIN (R10 D-R26-02's 1.040 mm, the PYRO1_OUT figure, as the same rail-onto-logic
     mechanism) from every net, copper and fills alike, except the other pack nets, the bus switch gate ACT_GATE and the
     two resistor ends NOT_A_PATH names (each with a calculated reason, checked by pack_class_guard()).
+  * FMEA I-5 rails (R12F7-TRI-01): every rail that can sit above 3V3, derived from the netlist by i5_rails(), against
+    3V3 / 3V3A only (the MCU's supplies; U1's absolute maximum is 4.0 V). A bridge puts the rail on 3V3 and the
+    over-driven MCU may drive PE4 (and PC1) high: fire-capable once the bus is on (Inference, R10's I-5 reasoning; R12
+    has no 3V3 clamp). Pack-voltage rails (I5_PACK: U9's OUT RAW_PROTECTED, VLOGIC behind D5, and the converters'
+    switch and bootstrap nodes, which swing to their VIN) take PACK_MIN, D-R12-137's own figure for pack voltage onto
+    logic: U9's current limit (3.92-4.89 A) bounds the current of a short, not the voltage it puts on 3V3 (up to OVLO).
+    Port-voltage rails (I5_PORT: the 5.4 V camera and 4.8 V port buck outputs, USB VBUS; <= 5.76 V) take I5_PORT_MIN,
+    R10's 0.300 mm owner-row figure, with the residual exposure an owner-acceptance row.
   * U9's FLT (round 6 verifier V-1 follow-up, PACK_FLT): U9.4 sits beside U9.5 (BAT_IN) in its package, so its net
     U9_FLT reaches PC13 only through R95 10 kohm, with R89 on U9's side and D95 clamping PC13 (an FT pin) to 3V3;
     flt_guard() holds that on the netlist. The PACK_FLT pairs stay measured exceptions (U9's own pin is over-driven).
@@ -48,7 +56,11 @@ import re
 GATES = ('PYRO1_GATE', 'PYRO1_GATE_N')
 OUT, IGN = 'PYRO1_OUT', 'PYRO1_IGN'
 PACK = ('BAT_IN', 'ACT_FET_S', 'RAW_ACT')  # the pack-energy nets (pack_nets() must derive exactly these)
-PROTECTED = GATES + (OUT, IGN) + PACK      # priority order: a pair is named from the first protected net it touches
+LOGIC = ('3V3', '3V3A')                    # the MCU's supplies (FMEA I-5's victims)
+# FMEA I-5 (R12F7-TRI-01): i5_rails() must derive exactly these from the netlist (i5_guard())
+I5_PACK = ('RAW_PROTECTED', 'VLOGIC', 'BST', 'SW_NODE', 'CAM_BST', 'CAM_SW', 'PORT_BST', 'PORT_SW')
+I5_PORT = ('CAM_5V', 'PORT_4V8', 'VBUS')
+PROTECTED = GATES + (OUT, IGN) + PACK + I5_PACK + I5_PORT   # priority order: a pair is named from the first protected net
 
 GATE_MIN = 1.0585      # mm, R10 D-R26-04 (Q124's gate nets from 3V3 / 3V3A), widened to every raising net
 OUT_MIN = 1.040        # mm, R10 D-R26-02 (PYRO1_OUT from 3V3 / 3V3A), widened to every net (default-deny)
@@ -57,13 +69,16 @@ FILL_MIN = 0.5         # mm, PYRO1_OUT to GND fills; PYRO1_IGN to every fill (J1
 IGN_MIN = 0.25         # mm, PYRO1_IGN to foreign copper (destructive, not a match-fire path)
 PACK_MIN = 1.040       # mm, pack-energy nets from every net, copper and fills (R10 D-R26-02's PYRO1_OUT figure: the
 #                        same pack-voltage-onto-logic mechanism, and an unfused pack short is no less severe; round 6 V-1)
+I5_PORT_MIN = 0.300    # mm, port-voltage rails from 3V3 / 3V3A (R10 owner row 1's 0.300 mm; R12F7-TRI-01)
 DRU_GATE_MM = 1.06     # the DRU's gate figure (GATE_MIN rounded up to 10 um)
 REACH = GATE_MIN + 0.01
 
 # (protected net, foreign net): why one bridge between them is not a fire (or R134-overload) path, in every state (bus
 # off; bus on, Q124 off; a commanded fire, Q124 on). Calculations use the board's values (netlist): R126 220, R127 1k,
 # R128 10k, R136 / R131 / R173 / R129 5.1k, R130 / R178 2k, D120 BAT54C; 3V3 at most 3.516 V (U2 LMR50410XDBVR PFM
-# band, SLUSDW3A section 7.8, R12F6-TRI-03); resistors at their drift ends (1 % + 100 ppm/K over 67 K: +/-1.67 %).
+# band, SLUSDW3A section 7.8, R12F6-TRI-03; that window's application at R12's VIN is an Inference, D-R12-139, so every
+# figure resting on it is labelled "Calculation / Inference (3V3 window, D-R12-139)", R12F7-TRI-02); resistors at their
+# drift ends (1 % + 100 ppm/K over 67 K: +/-1.67 %).
 NOT_A_PATH = {
     ('PYRO1_GATE', 'GND'): 'GND holds the gate off (in a commanded fire PE4 then drives R126 220 ohm into GND, <= 17 mA, '
                            'and the fire fails: a hold-off, outside the unwanted-fire model)',
@@ -81,13 +96,13 @@ NOT_A_PATH = {
                          'Q124 on (PYRO1_OUT near GND): 3V3 -> R136 -> D120 -> bridge -> Q124 passes <= 3.516 V / '
                          '5.015 kohm = 0.71 mA (D120 V_F taken as 0), not U2\'s current limit. Bus off: 3V3 reaches the '
                          'match through R136 and D120, then R173 + R129 + R130 || R178 (11.2 kohm) to GND: <= 0.71 mA '
-                         '(Calculation)',
+                         '(Calculation / Inference (3V3 window, D-R12-139))',
     (OUT, 'PYRO1_CONT_MID'): 'shorts R173 only: bus on, Q124 off, PYRO1_OUT reaches PC0 through R129 5.1 kohm into '
                              'R130 || R178 1 kohm: <= 1.41 mA, PC0 <= 1.42 V at 8.4 V (Calculation: 1.400 V with 1 % '
                              'parts, 1.416 V at the +/-1.67 % drift ends; R12F6-TRI-05). Commanded fire, Q124 on: '
                              'PYRO1_OUT is near GND, so PC0 reads near 0 V through R129 (no source on the node). Bus '
                              'off: the cold pull-up meets R129 + R130 || R178 (6.1 kohm) instead of 11.2 kohm, < 0.71 mA '
-                             '(Calculation)',
+                             '(Calculation / Inference (3V3 window, D-R12-139))',
     (IGN, OUT): 'the match\'s own terminals (see PYRO1_OUT)',
     (IGN, 'RAW_ACT'): 'R134\'s own other end: a bridge only shorts R134. With Q124 off no current flows (the match and '
                       'Q124 block). With Q124 on, the current is limited only by the match, its leads and the loop '
@@ -119,9 +134,17 @@ NOT_A_PATH = {
                             '9.83 kohm = 0.86 mA (Calculation, R121 at its -1.67 % drift end)',
     ('ACT_FET_S', 'ACT_GATE'): 'the bus switch gate (R119 / R120 100 kohm\'s own other end): V_GS about 0 V, the bus '
                                'cannot turn on (a hold-off); Q122 sinks <= 0.86 mA through R121 10 kohm (Calculation)',
-    ('RAW_ACT', 'ACT_GATE'): 'the bus switch gate: with the bus on, Q121\'s gate meets its drain, so the bus cannot be '
-                             'held on cleanly (a hold-off); Q122 sinks <= 0.86 mA through R121 10 kohm; with the bus '
-                             'off RAW_ACT follows the gate through R119 / R120 (Calculation). Not a fire',
+    ('RAW_ACT', 'ACT_GATE'): 'the bus switch gate, not a hold-off (R12F7-TRI-04). Bus off (PC1 low, Q122 off, or J400 '
+                             'open with ACT_FET_S live through Q120\'s body diode): the bridge ties the gate node to '
+                             'RAW_ACT, which its 11.2 kohm load holds low, so the node sits near 0.18 x ACT_FET_S (R119 '
+                             '|| R120 50 kohm against the load) and Q120 / Q121 see V_GS about -0.82 x ACT_FET_S, far '
+                             'past V_GS(th) -0.5 ... -1.3 V: both turn on, Q121 settles diode-connected and the bus goes '
+                             'live (RAW_ACT about BAT_IN less 1 V) with PC1 low or J400 open (Calculation; the settling '
+                             'point Inference). Bus on: the gate meets Q121\'s drain, so the bus is not held on '
+                             'cleanly; Q122 sinks <= 0.86 mA through R121 10 kohm (Calculation). The consequence is the '
+                             'bypass classes\' (BAT_IN / ACT_FET_S to RAW_ACT: a bus live without command, the carried '
+                             'R10 row 2 latent fault the cold screen and the per-flight J121.2 < 0.1 V check see); no '
+                             'overload, and not a fire alone: Q124 with R128 still holds the match',
     ('RAW_ACT', 'ARM1_SENSE_MID'): 'R132\'s own other end: a bridge only shorts R132 (5.1 kohm); R175 5.1 kohm and R133 '
                                    '|| R180 1 kohm still divide the bus, so PC5 <= 8.4 V x 1.017 / (5.015 + 1.017) = '
                                    '1.42 V and <= 1.42 mA (Calculation at the +/-1.67 % drift ends)',
@@ -132,7 +155,8 @@ U1_NC = 'U1'          # only U1's NC balls are exempt (GPIOs, analog in reset (D
 #                       only against the gate nets (R12F6-TRI-02)
 # R12F6-TRI-01: PYRO1_COLD_PU (R136 to D120's anode) is not classed out. A bridge from it to PYRO1_OUT bypasses D120 and
 # R131 and leaves R136: <= 3.516 V / 5.015 kohm = 0.71 mA with Q124 on, and (8.4 - 3.22) V / 5.015 kohm <= 1.04 mA
-# through the match into 3V3 with the bus on and Q124 off (3V3 at its drift minimum; Calculation), so it would qualify; it
+# through the match into 3V3 with the bus on and Q124 off (3V3 at its drift minimum; Calculation / Inference (3V3 window,
+# D-R12-139)), so it would qualify; it
 # stays under default-deny (OUT_MIN, as every net) because the board keeps it 3.27 mm from PYRO1_OUT (Measured) and that
 # keeps the record strict.
 
@@ -155,6 +179,10 @@ def one_way(protected, foreign, fill):
         return (FILL_MIN if fill else IGN_MIN), 'ign'
     if protected in PACK:
         return PACK_MIN, 'pack'
+    if protected in I5_PACK:                     # R12F7-TRI-01: FMEA I-5, against the MCU's supplies only
+        return (PACK_MIN, 'i5-pack') if foreign in LOGIC else (None, 'unprotected')
+    if protected in I5_PORT:
+        return (I5_PORT_MIN, 'i5-port') if foreign in LOGIC else (None, 'unprotected')
     return None, 'unprotected'
 
 
@@ -167,7 +195,8 @@ def pair_limit(net_a, owner_a, net_b, owner_b, fill):
             continue
         nc = pn in GATES and u1_nc(fo, fn)              # R12F6-TRI-02: the NC-ball exemption is the gate nets' only
         lim, cls = (None, 'U1 NC ball') if nc else one_way(pn, fn, fill)
-        if best[2] is None or (lim is not None and (best[0] is None or lim > best[0])):
+        if best[2] is None or (lim is None and best[1] == 'unprotected') or \
+                (lim is not None and (best[0] is None or lim > best[0])):
             best = (lim, cls, pn)
     return best
 
@@ -191,11 +220,16 @@ WHY = {
              '(Calculation)',
     'BAT_FAULT_N': 'PC13 (ball A2, an input) reads U9\'s open-drain FLT through R95 10 kohm, with R89 10 kohm to 3V3 on '
                    'U9\'s side (U9_FLT) and D95 from BAT_FAULT_N to 3V3 (PACK_FLT): with PE4 high-Z the gate is <= '
-                   '3.516 V x 0.952 k / 20.75 k x 10 / 10.22 = 0.158 V (Calculation: 3V3 at its window maximum 3.516 V '
+                   '3.516 V x 0.952 k / 20.75 k x 10 / 10.22 = 0.158 V (Calculation / Inference (3V3 window, '
+                   'D-R12-139): 3V3 at its window maximum 3.516 V '
                    '(SLUSDW3A section 7.8 PFM band, R12F6-TRI-03 / -04), R89 and R95 -1 %, R127 +5 %), plus D95\'s '
                    'reverse leakage x 0.908 kohm x 10 / 10.22 (2 uA at 25 C, LCSC C37704: 1.8 mV; 0.089 V even at 100 '
                    'uA hot, Inference), below AO3400A V_GS(th) min 0.65 V; firmware never makes PC13 an output',
-    'Q124': 'the AO3400A SOT-23\'s own gate (pin 1) and drain (pin 3) lands',
+    'Q124': 'the AO3400A SOT-23\'s own gate (pin 1) and drain (pin 3) lands, unavoidable in the package (as C128\'s '
+            'own lands): fire-capable (R12F7-TRI-05). With the bus on and Q124 off, a gate-drain bridge ties the gate to '
+            'the bus-fed drain against R128 10 kohm (and R126 220 ohm into PE4); Q124 then runs diode-connected at V_GS '
+            'about 1.8-2 V and passes about 1.6-2 A through the match, above the J-Tek 1.125 A all-fire, so it fires an '
+            'enabled match (Calculation / Inference on the AO3400A transfer curve). Owner acceptance (R12_VALIDATION)',
     'PYRO1_CONT': 'PYRO1_CONT is PC0\'s pin: a bridge puts PYRO1_OUT on PC0, whose input clamp then passes bus current '
                   'through the match into 3V3 (fire-capable or logic-destroying; Inference): the 0402 continuity '
                   'divider\'s own neighbours, surface, AOI-inspectable; owner acceptance',
@@ -224,11 +258,17 @@ WHY = {
                 'U9_FLT only through R95 10 kohm, with R89 10 kohm (3V3) on U9\'s side and D95 BAT54C (A1 BAT_FAULT_N, K '
                 '3V3) clamping PC13, an FT pin with no positive injection (DS12110 Rev 8 Table 120 note 3; VIN max '
                 'Min(VDD, ...) + 4.0 V, Table 119). A bridge puts the pack on U9_FLT; then R89 and R95 + D95 each pass '
-                '<= (8.4 - 3.224) V / 9.833 kohm = 0.53 mA into 3V3 (1.05 mA together; 1.70 mA each at the SMAJ12CA\'s '
+                '<= (8.4 - 3.224) V / 9.833 kohm = 0.53 mA into 3V3 (Calculation / Inference (3V3 window, '
+                'D-R12-139); 1.05 mA '
+                'together; 1.70 mA each at the SMAJ12CA\'s '
                 '19.9 V clamp, a transient), small beside the running MCU\'s supply current (Inference), and PC13 stays '
-                '<= 3V3 + V_F(BAT54C) <= 3.516 + 0.8 = 4.32 V (V_F <= 800 mV at 100 mA, LCSC C37704; with the board off '
+                '<= 3V3 + V_F(BAT54C) <= 3.516 + 0.8 = 4.32 V (Calculation / Inference (3V3 window, '
+                'D-R12-139); V_F <= 800 mV at '
+                '100 mA, LCSC C37704; with the board off '
                 'PC13 sits V_F above the unpowered rail, under the FT pin\'s +4.0 V): no current into the pin beyond its '
-                'leakage (Calculation; resistors at the +/-1.67 % drift ends; flt_guard() checks the netlist). Not a '
+                'leakage (Calculation / Inference (3V3 window, D-R12-139); resistors at the +/-1.67 % drift '
+                'ends; flt_guard() '
+                'checks the netlist). Not a '
                 'fire and not logic-destroying. U9 itself is over-driven: U9_FLT above FLT\'s 6.5 V absolute maximum '
                 '(TI SLVSFC9C section 6.1), and with a fault asserted FLT\'s pull-down (R_FLT 12.3 ohm typical, section '
                 '6.5) sinks the pack (U9 damaged, open or short; Inference), the PACK_EN / PACK_U9 class; a shorted U9 '
@@ -371,7 +411,6 @@ EXCEPTIONS = {
     ),
     'PACK_EN': (
         ('U9.5', 'U9.1', 'F.Cu', 0.200),
-        ('U9.5', 'track (18, 14.6)-(18, 14.5)', 'F.Cu', 0.250),
         ('U9.5', 'track (18, 14.3)-(18, 12.3)', 'F.Cu', 0.550),
     ),
     'PACK_SW': (
@@ -422,8 +461,6 @@ EXCEPTIONS = {
         ('U9.5', 'U9.10', 'F.Cu', 0.700),
         ('U9.5', 'U9.7', 'F.Cu', 0.700),
         ('U9.5', 'U9.9', 'F.Cu', 0.700),
-        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (16.6, 16.1)-(16.6, 16.2)', 'F.Cu', 0.700),
-        ('U9.5', 'track (16.6, 16.1)-(16.6, 16.2)', 'F.Cu', 0.750),
         ('track (14, 15.1)-(15.3, 15.1)', 'U9.7', 'F.Cu', 0.767),
         ('track (14.6, 10.2)-(14.9, 10.5)', 'R93.1', 'F.Cu', 0.787),
         ('track (14.9, 10.5)-(14.9, 12.9)', 'R83.1', 'F.Cu', 0.787),
@@ -527,7 +564,6 @@ EXCEPTION_NETS = {
     'track (16.2, 11.5)-(17, 12.3)': 'BAT_OVLO',
     'track (16.4, 22.55)-(14.85, 21)': 'BAT_DAMP',
     'track (16.6, 14.45)-(16.6, 13.6)': 'U9_FLT',
-    'track (16.6, 16.1)-(16.6, 16.2)': 'BAT_DVDT',
     'track (16.6, 16.4)-(15.9, 17.1)': 'BAT_DVDT',
     'track (17, 11.3)-(16.2, 10.5)': 'BAT_OVLO_B',
     'track (17.3, 15.6)-(18.9, 15.6)': 'RAW_PROTECTED',
@@ -535,7 +571,6 @@ EXCEPTION_NETS = {
     'track (17.5, 14.3)-(17.5, 12.87)': 'BAT_OVLO',
     'track (17.6, 18.3)-(17.6, 18.9)': 'GND',
     'track (18, 14.3)-(18, 12.3)': 'BAT_ENABLE',
-    'track (18, 14.6)-(18, 14.5)': 'BAT_ENABLE',
     'track (18.9, 15.6)-(19.725, 15.6)': 'RAW_PROTECTED',
     'track (5, 19.3)-(5, 23.3)': 'BAT_IN',
     'track (9.9, 9.5)-(10.4, 9)': 'BAT_IN',
@@ -637,6 +672,15 @@ def dru_rules(exceptions=None, nets=None):
                       f"A.NetName == '{net}' && {_not('B', x)}",
                       f'round 6 V-1 / V-2 ({PACK_MIN:.3f} mm, R10 D-R26-02\'s figure), default-deny, fills too: every net '
                       f'but the gate nets and {" / ".join(_excluded(net))} (check_r12 S-10)', None))
+    # FMEA I-5 (R12F7-TRI-01): the rails above 3V3 (i5_rails()) against the MCU's supplies only; no general rule above
+    # matches these pairs (none of them is a gate, PYRO1_OUT, PYRO1_IGN or pack net)
+    for net in I5_PACK + I5_PORT:
+        lim, why = ((PACK_MIN, 'pack voltage behind U9, D-R12-137\'s PACK_MIN') if net in I5_PACK else
+                    (I5_PORT_MIN, 'port voltage, R10 owner row 1\'s figure'))
+        rules.append((f'S-10 {net} (I-5 rail) to 3V3 / 3V3A', f'clearance (min {lim:.2f}mm)',
+                      f"A.NetName == '{net}' && {_is('B', LOGIC)}",
+                      f'R12F7-TRI-01 FMEA I-5 ({lim:.3f} mm, {why}): a bridge puts the rail on the MCU supply '
+                      '(check_r12 S-10)', None))
     for key, pairs in exceptions.items():
         for a, b, layer, floor in pairs:
             na, nb = nets[a], nets[b]
@@ -699,7 +743,8 @@ def guard(classes, not_a_path=None):
 # ---- the commanded-fire state (R12F6-TRI-01) -------------------------------------------------------------------------
 # While Q124 conducts, PYRO1_OUT is GND, so a bridge from PYRO1_OUT to a not-a-path net f joins f to GND. f must then
 # reach every source only through resistors: at least FIRE_SERIES_MIN (R136 / R129 5.1 kohm; 3.516 V / 5.015 kohm =
-# 0.71 mA, under BAT54C I_F 200 mA and negligible on 3V3). Round 6 found the cold pull-up's D120 anode on 3V3 itself:
+# 0.71 mA, Calculation / Inference (3V3 window, D-R12-139), under BAT54C I_F 200 mA and negligible on 3V3).
+# Round 6 found the cold pull-up's D120 anode on 3V3 itself:
 # a bridge across R131 put 3V3 through D120 into Q124 with no resistor (U2's 1.075-1.6 A current limit).
 FIRE_SERIES_MIN = 5.0e3     # ohm, nominal
 COLD = 'PYRO1_COLD'
@@ -842,8 +887,11 @@ PACK_R_LIMIT = 2.0             # ohm, R134's value
 PACK_SERIES_MIN = FIRE_SERIES_MIN   # ohm: a classed-out net reaches every source only through this (<= 8.4 V / 5.015
 #                                     kohm = 1.68 mA at the -1.67 % drift end; Calculation)
 PACK_LIMITERS = {
-    'U9': 'TPS259470A eFuse: BAT_IN is its IN pin; OUT (RAW_PROTECTED) is behind its current limit and fault latch, and '
-          'its other pins are control pins, not a current path from IN',
+    'U9': 'TPS259470A eFuse: BAT_IN is its IN pin; OUT (RAW_PROTECTED) is behind its current limit (3.92-4.89 A) and '
+          'fault latch, which bound the current of a short from OUT (the unfused-pack-short half of the pack class); its '
+          'other pins are control pins, not a current path from IN. The limit does not bound the voltage: OUT still '
+          'carries the pack (up to OVLO) onto any net it is bridged to, so RAW_PROTECTED is an FMEA I-5 rail held from '
+          '3V3 / 3V3A at PACK_MIN (I5_PACK, i5_rails(); R12F7-TRI-01)',
 }
 
 
@@ -966,3 +1014,83 @@ def flt_guard(path, classes=None):
                           'cathode on 3V3): an FT pin takes no positive injection, so a BAT_IN-to-FLT bridge would leave '
                           'it at the pack voltage (PACK_FLT guard)')
     return issues, ev
+
+
+# ---- FMEA I-5: rails above 3V3 (R12F7-TRI-01) --------------------------------------------------------------------------
+# A bridge from a rail above 3V3 to 3V3 / 3V3A drives the MCU's supply over its 4.0 V absolute maximum (DS12110); an
+# over-driven MCU may drive PE4 (and PC1), which is fire-capable once the bus is on (Inference, R10 FMEA I-5). i5_rails()
+# derives the rails from the netlist, default-deny over the netlist's supply nets:
+#   * pack voltage: U9's OUT (PACK_LIMITERS: the current limit does not bound the voltage), every net a diode's anode
+#     on such a net reaches at its cathode, and a converter's switch (SW) and bootstrap (CB / VBST) nodes when its VIN
+#     is on such a net (the switch node swings to VIN, the bootstrap node sits about 5 V above it);
+#   * port voltage: every regulated rail of r12_windows.json whose drift maximum is above 3V3's, and USB VBUS (a
+#     connector pin named VBUS), carried through diodes and converters the same way (a pack-voltage net stays pack);
+#   * every other netlist supply net must be 3V3 / 3V3A, a pack-energy net (PACK, held from every net) or a named rail
+#     below 3V3 (I5_BELOW).
+I5_BELOW = {
+    'VCAP1': 'U1\'s core regulator output (about 1.2 V, DS12110): below 3V3, no I-5 route',
+    'VCAP2': 'U1\'s core regulator output (about 1.2 V, DS12110): below 3V3, no I-5 route',
+}
+I5_SWITCH_PINS = ('SW', 'CB', 'VBST', 'BST', 'BOOT')     # converter pins that follow VIN (pin-function stem)
+WINDOWS = __import__('pathlib').Path(__file__).resolve().parent / 'r12/design/r12_windows.json'
+
+
+def i5_rails(path, windows=None):
+    """({'pack': [...], 'port': [...]}, issues): the netlist nets above 3V3 that one bridge can put on 3V3 / 3V3A (see
+    above). windows: r12_windows.json's dict (default: the committed file)."""
+    import json
+    values, pins, funcs = read_netlist(path, functions=True)
+    rails = (json.loads(WINDOWS.read_text()) if windows is None else windows)['rails']
+    v33 = next((v['drift']['max_V'] for k, v in rails.items() if k.split(' (')[0] == '3V3'), None)
+    issues = [] if v33 is not None else ['r12_windows.json has no 3V3 rail (I-5 guard)']
+    nets = {n for pp in pins.values() for n in pp.values() if n and not n.startswith('unconnected-')}
+
+    def stem(ref, pin):
+        return (funcs.get(ref, {}).get(pin) or '').split('_')[0].upper()
+    pack = {pins[r][p] for r in PACK_LIMITERS for p in pins.get(r, {}) if stem(r, p) == 'OUT'}
+    if not pack:
+        issues.append('no OUT pin on a PACK_LIMITERS part (I-5 guard)')
+    port = {k.split(' (')[0] for k, v in rails.items()
+            if v33 is not None and k.split(' (')[0] in nets and k.split(' (')[0] not in LOGIC
+            and v['drift']['max_V'] > v33}
+    port |= {n for r, pp in pins.items() for p, n in pp.items() if stem(r, p) == 'VBUS' and n in nets}
+    for raised in (pack, port):
+        grow = True
+        while grow:
+            grow = False
+            for ref, pp in sorted(pins.items()):
+                if ref.startswith('D'):
+                    src = {pp[p] for p in pp if stem(ref, p).startswith('A')}
+                    dst = {pp[p] for p in pp if stem(ref, p).startswith('K')}
+                elif ref.startswith('U') and ref != 'U1' and ref not in PACK_LIMITERS:
+                    src = {pp[p] for p in pp if stem(ref, p) == 'VIN'}
+                    dst = {pp[p] for p in pp if stem(ref, p) in I5_SWITCH_PINS}
+                else:
+                    continue
+                if src & raised:
+                    new = {n for n in dst if n in nets and n != 'GND'} - raised
+                    if new:
+                        raised |= new
+                        grow = True
+    port -= pack
+    for n in sorted((pack | port) & set(LOGIC)):
+        issues.append(f'{n} is reached from a rail above 3V3 through a part (not a bridge): I-5 guard')
+    pack -= set(LOGIC) | set(PACK)
+    port -= set(LOGIC) | set(PACK)
+    classes = netlist_classes(path)
+    for n in sorted(set(classes['supply']) - pack - port - set(LOGIC) - set(PACK) - set(I5_BELOW)):
+        issues.append(f'supply net {n} is in no I-5 class (default-deny: an I-5 rail, a pack net or I5_BELOW with a '
+                      'reason)')
+    return dict(pack=sorted(pack), port=sorted(port)), issues
+
+
+def i5_guard(path, windows=None):
+    """(issues, evidence): the netlist's I-5 rails are exactly I5_PACK and I5_PORT (R12F7-TRI-01)."""
+    derived, issues = i5_rails(path, windows)
+    for cls, held in (('pack', I5_PACK), ('port', I5_PORT)):
+        for n in sorted(set(derived[cls]) - set(held)):
+            issues.append(f'{n} can sit above 3V3 ({cls} voltage, i5_rails) but S-10 does not hold it from 3V3 / 3V3A '
+                          f'(add it to r12_fire.I5_{cls.upper()})')
+        for n in sorted(set(held) - set(derived[cls])):
+            issues.append(f'{n} is held as an I-5 {cls}-voltage rail but the netlist no longer derives it')
+    return issues, dict(derived, limits=dict(pack=PACK_MIN, port=I5_PORT_MIN), victims=list(LOGIC))

@@ -272,6 +272,45 @@ class RouteCheck(unittest.TestCase):
         self.chain([(0.1, 0.1), (0.2, 0.0), (10, 0)], 'QSPI_CLK')          # the short piece lies inside A1's copper
         self.assertFalse(self.cats('short_segment'))
 
+    # --- R12F7-TRI-06 / -07: in-pad debris and same-net pad slits -----------------------------------------------------
+    def test_r12f7_pad_debris_at_any_length(self):
+        """A 0.1 mm segment wholly inside a pad, joined to nothing, is pad_debris (gated); the same piece as the end of a
+        run into the pad is not (its end meets the run)."""
+        self.pad('A1', 0, 0, 'PYRO1_COLD', size=(1.0, 1.0))
+        self.pad('A2', 10, 0, 'PYRO1_COLD')
+        self.chain([(0.3, 0), (10, 0)], 'PYRO1_COLD')
+        self.track((0, 0.1), (0, 0.2), 'PYRO1_COLD')                        # debris: 0.1 mm, inside A1, joins nothing
+        hits = self.cats('pad_debris')
+        self.assertEqual([(d['x'], d['y'], d['pad']) for d in hits], [(0.0, 0.1, 'A1.1')], hits)
+        self.assertIn('pad_debris', rc.RULE)
+        failures, _, _ = rc.evaluate(rc.scan(self.board), allowlist=[])
+        self.assertTrue([f for f in failures if f['cat'] == 'pad_debris'], failures)
+        self.setUp()
+        self.pad('A1', 0, 0, 'PYRO1_COLD', size=(1.0, 1.0))
+        self.pad('A2', 10, 0, 'PYRO1_COLD')
+        self.chain([(0, 0.1), (0, 0.2), (0.3, 0.2), (10, 0.2), (10, 0)], 'PYRO1_COLD')   # joined at (0, 0.2)
+        self.assertFalse(self.cats('pad_debris'))
+
+    def test_r12f7_pad_slit_beside_a_same_net_pad(self):
+        """A run passing a same-net pad it does not join at 0.03 mm is pad_slit (gated); the same run at 0.15 mm, a run
+        touching the pad, and a pad exit leaving along the pad's edge are not."""
+        def board(gap, join=False):
+            self.setUp()
+            self.pad('A1', 0, 0, 'PYRO1_COLD'); self.pad('A2', 10, 0, 'PYRO1_COLD')
+            self.pad('B1', 5, 0, 'PYRO1_COLD')                              # 0.6 mm pad; its edge at y 0.3
+            y = 0.3 + 0.1 + gap                                             # 0.2 mm track: copper edge at 0.3 + gap
+            if join:
+                self.chain([(0, 0), (4, 0), (5, 0), (5, y), (10, y), (10, 0)], 'PYRO1_COLD')
+            else:
+                self.chain([(0, 0), (4, 0), (4, y), (10, y), (10, 0)], 'PYRO1_COLD')
+            return self.cats('pad_slit')
+        hits = board(0.03)
+        self.assertTrue([d for d in hits if d['pad'] == 'B1.1' and abs(d['gap_mm'] - 0.03) < 0.002], hits)
+        self.assertIn('pad_slit', rc.RULE)
+        self.assertFalse(board(0.15))
+        self.assertFalse(board(-0.05))                                      # touching: the pad's copper, not a slit
+        self.assertFalse(board(0.03, join=True))                            # the run joins B1 at (5, 0): its exit
+
     def test_copper_touching_one_pour_island_is_dead(self):
         self.pad('A1', 0, 0, 'GND'); self.pad('A2', 9, 0, 'GND')
         self.zone('GND', ((-1, -1), (10, -1), (10, 6), (-1, 6)))

@@ -33,6 +33,66 @@ def mm(v):
     return pcbnew.FromMM(v)
 
 
+def kicad_cli():
+    """R12F7-TRI-08: KICAD_CLI (tools/check.sh exports the CLI it resolved), else kicad-cli on PATH, else KiCad's macOS
+    application folders; None when none exists."""
+    for c in (os.environ.get('KICAD_CLI'), shutil.which('kicad-cli'),
+              '/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli', '/Applications/KiCad.app/Contents/MacOS/kicad-cli'):
+        if c and Path(c).exists():
+            return c
+    return None
+
+
+class CliResolution(unittest.TestCase):
+    """R12F7-TRI-08: the R12 tests find kicad-cli where tools/check.sh does, and fail rather than skip under it."""
+
+    def test_resolution_order_and_check_sh_export(self):
+        import importlib
+        import test_r12_fab
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d) / 'kicad-cli'
+            fake.write_text('#!/bin/sh\n'); fake.chmod(0o755)
+            env = dict(os.environ)
+            try:
+                os.environ.pop('KICAD_CLI', None)
+                os.environ['PATH'] = d + os.pathsep + env.get('PATH', '')
+                self.assertEqual(kicad_cli(), str(fake))                # PATH, before the application folders
+                self.assertEqual(test_r12_fab.kicad_cli(), str(fake))
+                os.environ['KICAD_CLI'] = str(fake)
+                self.assertEqual(kicad_cli(), str(fake))
+                os.environ['KICAD_CLI'] = str(Path(d) / 'missing')     # a stale variable falls through to PATH
+                self.assertEqual(kicad_cli(), str(fake))
+            finally:
+                os.environ.clear(); os.environ.update(env)
+        text = (ROOT / 'tools/check.sh').read_text()
+        self.assertIn('export KICAD_CLI="$CLI"', text)
+        self.assertLess(text.index('export KICAD_CLI="$CLI"'), text.index('selftest() {'))
+        importlib.reload(test_r12_fab)
+
+    def test_missing_cli_fails_under_check_sh(self):
+        import test_r12_fab
+        saved = (test_r12_fab.KICAD_CLI, os.environ.get('R12_BOARD_REQUIRED'), test_r12_fab.BOARD)
+        try:
+            test_r12_fab.KICAD_CLI = '/nonexistent/kicad-cli'
+            test_r12_fab.BOARD = Path(__file__)                         # an existing file stands in for the board
+            os.environ.pop('R12_BOARD_REQUIRED', None)
+            with self.assertRaises(unittest.SkipTest):
+                test_r12_fab.require_kicad()
+            os.environ['R12_BOARD_REQUIRED'] = '1'
+            with self.assertRaises(AssertionError):
+                test_r12_fab.require_kicad()
+            probe = FireGaps('test_committed_board_passes_with_recorded_exceptions')
+            probe.CLI = '/nonexistent/kicad-cli'
+            with self.assertRaises(AssertionError):
+                probe.drc_s10()
+        finally:
+            test_r12_fab.KICAD_CLI, test_r12_fab.BOARD = saved[0], saved[2]
+            if saved[1] is None:
+                os.environ.pop('R12_BOARD_REQUIRED', None)
+            else:
+                os.environ['R12_BOARD_REQUIRED'] = saved[1]
+
+
 @unittest.skipUnless(pcbnew, 'KiCad python required')
 class Synthetic(unittest.TestCase):
     """check_r12 rules on a small board: a clean board passes, each seeded fault fails its rule."""
@@ -279,7 +339,7 @@ class FireGaps(unittest.TestCase):
     floors (m3_design/r12_fire.py). The committed board passes; each planted bridge-risk item fails S-10, and DRC with
     the committed DRU fails it too (the DRU is generated from the same definition)."""
 
-    CLI = os.environ.get('KICAD_CLI') or '/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
+    CLI = kicad_cli() or os.environ.get('KICAD_CLI') or 'kicad-cli'     # R12F7-TRI-08
 
     def setUp(self):
         self.board = pcbnew.LoadBoard(str(BOARD12))
@@ -336,6 +396,8 @@ pcbnew.SaveBoard(sys.argv[1], b)
         every other pad inside the box that is on none of the nets joins the first of them, so the named pads are the
         only foreign pads left there."""
         if not Path(self.CLI).exists():
+            if os.environ.get('R12_BOARD_REQUIRED') == '1':              # R12F7-TRI-08: under check.sh, fail
+                self.fail(f'kicad-cli unavailable ({self.CLI}) while R12_BOARD_REQUIRED=1')
             self.skipTest('kicad-cli unavailable')
         with tempfile.TemporaryDirectory(prefix='r12-s10-') as d:
             path = Path(d) / 'm3.kicad_pcb'
@@ -819,6 +881,95 @@ pcbnew.SaveBoard(sys.argv[1], b)
                 issues, _ = fire.fire_state_guard(self.netlist(mutate))
                 self.assertTrue([i for i in issues if f'PYRO1_OUT / {cls} is classed "not a path"' in i], issues)
 
+    # ---- R12F7-TRI-01: the FMEA I-5 rails above 3V3 against 3V3 / 3V3A --------------------------------------------
+    def test_r12f7_tri01_i5_rails_derived_and_held(self):
+        """i5_rails() derives the pack-voltage rails (U9's OUT, VLOGIC behind D5, the converters' SW / bootstrap nodes)
+        and the port-voltage rails (CAM_5V, PORT_4V8 above 3V3's window, USB VBUS) from the netlist; each is held from
+        3V3 / 3V3A only (PACK_MIN / I5_PORT_MIN), and the DRU carries one rule per rail; the committed board clears
+        every one with no exception."""
+        net = BOARD12.with_name('schematic.net.xml')
+        derived, issues = fire.i5_rails(net)
+        self.assertEqual(issues, [])
+        self.assertEqual((derived['pack'], derived['port']), (sorted(fire.I5_PACK), sorted(fire.I5_PORT)))
+        self.assertEqual(fire.i5_guard(net)[0], [])
+        self.assertEqual((fire.PACK_MIN, fire.I5_PORT_MIN), (1.040, 0.300))
+        for rail in fire.I5_PACK:
+            for v in fire.LOGIC:
+                self.assertEqual(fire.pair_limit(rail, None, v, None, True)[:3], (fire.PACK_MIN, 'i5-pack', rail))
+                self.assertEqual(fire.pair_limit(v, None, rail, None, False)[:3], (fire.PACK_MIN, 'i5-pack', rail))
+            self.assertEqual(fire.pair_limit(rail, None, 'GND', None, False)[0], None)
+        for rail in fire.I5_PORT:
+            self.assertEqual(fire.pair_limit(rail, None, '3V3', None, False)[:2], (fire.I5_PORT_MIN, 'i5-port'))
+            self.assertEqual(fire.pair_limit(rail, None, 'SERVO1_MCU', None, False)[0], None)
+        # the stricter classes still win: PYRO1_OUT against VLOGIC, BAT_IN against RAW_PROTECTED
+        self.assertEqual(fire.pair_limit('VLOGIC', None, fire.OUT, None, False)[1:], ('out', fire.OUT))
+        self.assertEqual(fire.pair_limit('RAW_PROTECTED', None, 'BAT_IN', None, False)[1:], ('pack', 'BAT_IN'))
+        for rail in fire.I5_PACK + fire.I5_PORT:
+            rule = next(r for r in fire.dru_rules() if r[0] == f'S-10 {rail} (I-5 rail) to 3V3 / 3V3A')
+            lim = fire.PACK_MIN if rail in fire.I5_PACK else fire.I5_PORT_MIN
+            self.assertEqual(rule[1], f'clearance (min {lim:.2f}mm)')
+            self.assertEqual(rule[2], f"A.NetName == '{rail}' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+        self.assertFalse([1 for k, v in fire.EXCEPTIONS.items() for a, b, *_ in v
+                          if fire.EXCEPTION_NETS[a] in fire.I5_PACK + fire.I5_PORT and fire.EXCEPTION_NETS[b] in fire.LOGIC])
+        ev = self.s10()['evidence']['s10']['i5']
+        self.assertEqual(ev['pack'], sorted(fire.I5_PACK))
+        least = {k: float(v.split(' mm')[0]) for k, v in ev['least'].items()}
+        self.assertIn('RAW_PROTECTED / 3V3', least)
+        for k, g in least.items():
+            lim = fire.PACK_MIN if k.split(' / ')[0] in fire.I5_PACK else fire.I5_PORT_MIN
+            self.assertGreaterEqual(g, lim - 5e-5, k)
+
+    def test_r12f7_tri01_i5_plants_fail(self):
+        """A 3V3 track 0.50 mm from RAW_PROTECTED's east via / feed (F) fails S-10 (i5-pack) and DRC; one 0.20 mm from
+        R104.1 (CAM_5V) fails S-10 (i5-port) and DRC; a 3V3 In2 track 0.20 mm from a PORT_4V8 fill fails S-10."""
+        self.track('3V3', (45.5, 17.2), (45.5, 17.6), width=0.1)
+        self.planted(('RAW_PROTECTED', 'to 3V3 track (45.5, 17.2)-(45.5, 17.6)', 'below 1.04 mm (i5-pack)'))
+        found = self.drc_s10(strip=(43.0, 15.5, 46.0, 18.5, 'RAW_PROTECTED,3V3'))
+        self.assertTrue([v for v in found if "'S-10 RAW_PROTECTED (I-5 rail) to 3V3 / 3V3A'" in v], found)
+        self.setUp()
+        self.track('3V3', (28.3, 8.12), (28.6, 8.12), width=0.1)
+        self.planted(('CAM_5V R104.1 to 3V3 track (28.3, 8.12)-(28.6, 8.12)', ': 0.20', 'below 0.3 mm (i5-port)'))
+        found = self.drc_s10(strip=(27.0, 6.5, 30.0, 9.5, 'CAM_5V,3V3'))
+        self.assertTrue([v for v in found if "'S-10 CAM_5V (I-5 rail) to 3V3 / 3V3A'" in v], found)
+        self.setUp()
+        self.zone('PORT_4V8', [(30, 95), (31, 95), (31, 96), (30, 96)], pcbnew.In2_Cu)
+        self.track('3V3', (31.25, 95.0), (31.25, 96.0), pcbnew.In2_Cu, width=0.1)
+        self.planted(('PORT_4V8 fill PORT_4V8 to 3V3 track (31.25, 95)-(31.25, 96) on In2.Cu: 0.20', '(i5-port)'))
+
+    def test_r12f7_tri01_i5_netlist_guard_default_deny(self):
+        """A rail a diode or a converter carries above 3V3, or a new supply net in no class, fails the I-5 guard."""
+        import xml.etree.ElementTree as ET
+
+        def add(root, ref, value, nodes):
+            comp = ET.SubElement(root.find('components'), 'comp', ref=ref)
+            ET.SubElement(comp, 'value').text = value
+            for pin, net, fn, kind in nodes:
+                n = next((x for x in root.findall('./nets/net') if x.get('name') == net), None)
+                if n is None:
+                    n = ET.SubElement(root.find('nets'), 'net', name=net, code='9999')
+                ET.SubElement(n, 'node', ref=ref, pin=pin, pinfunction=fn, pintype=kind)
+        cases = (
+            ('diode off RAW_PROTECTED', lambda r: add(r, 'D98', 'SS34', (('1', 'NEW_RAIL', 'K', 'passive'),
+                                                                         ('2', 'RAW_PROTECTED', 'A', 'passive'))),
+             'NEW_RAIL can sit above 3V3 (pack voltage'),
+            ('converter on VLOGIC', lambda r: add(r, 'U98', 'BUCK', (('1', 'VLOGIC', 'VIN', 'power_in'),
+                                                                    ('2', 'NEW_SW', 'SW', 'output'),
+                                                                    ('3', 'GND', 'GND', 'power_in'))),
+             'NEW_SW can sit above 3V3 (pack voltage'),
+            ('unclassed supply', lambda r: add(r, 'U97', 'LDO', (('1', 'NEW_LDO_OUT', 'VOUT', 'power_out'),
+                                                                ('2', 'GND', 'GND', 'power_in'))),
+             'supply net NEW_LDO_OUT is in no I-5 class'),
+        )
+        for name, mutate, want in cases:
+            with self.subTest(case=name):
+                issues = fire.i5_guard(self.netlist(mutate))[0]
+                self.assertTrue([i for i in issues if want in i], issues)
+        # a rail in the windows above 3V3 is port voltage; dropping CAM_5V's window drops it from the derivation
+        w = json.loads(fire.WINDOWS.read_text())
+        w['rails'] = {k: v for k, v in w['rails'].items() if not k.startswith('CAM_5V')}
+        self.assertTrue([i for i in fire.i5_guard(BOARD12.with_name('schematic.net.xml'), w)[0]
+                         if 'CAM_5V is held as an I-5 port-voltage rail' in i])
+
     def test_dru_is_generated_from_s10(self):
         """The DRU's S-10 rules are r12_fire.dru_rules(), in order after R11's scoped rules, with general limits at least
         S-10's; each exception names its two items and its floor (kicad-cli matches them: the build's DRC is 0)."""
@@ -830,7 +981,8 @@ pcbnew.SaveBoard(sys.argv[1], b)
         for r in rules:
             self.assertIn(fire.dru_text(r), text)
         self.assertGreaterEqual(fire.DRU_GATE_MM, fire.GATE_MIN)
-        self.assertEqual(len(rules), 6 + len(fire.PACK) + sum(len(v) for v in fire.EXCEPTIONS.values()))
+        self.assertEqual(len(rules), 6 + len(fire.PACK) + len(fire.I5_PACK) + len(fire.I5_PORT) +
+                         sum(len(v) for v in fire.EXCEPTIONS.values()))
         for key, pairs in fire.EXCEPTIONS.items():
             for a, b, layer, floor in pairs:
                 self.assertIn(f'(rule "S-10 exception ({key}): {a} to {b} on {layer}"\n  (layer "{layer}")', text)

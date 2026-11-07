@@ -210,11 +210,11 @@ track	GPS_RX_MCU	F	0.1	25.8	56.8	25.4	57.2
 track	PORT_SENSE	F	0.1	25.8	56	26.2	56.4
 # D-R12-99 (90 mm outline): CX turns west at y 66.4 / 66.8 (forward of U3, aft of the port buck) and runs north at
 # the series-resistor x (35 / 36) to vias at y 80.0; F tails to R471 / R470.
-via	AUX_RX_MCU	-	0.45	36	80		
-track	AUX_RX_MCU	F	0.2	36	80	36	81.77
-via	GND	-	0.45	35.5	79.2		
-via	AUX_TX_MCU	-	0.45	35	79.7		
-track	AUX_TX_MCU	F	0.2	35	79.7	35	81.77
+via	AUX_RX_MCU	-	0.45	36	78.4		
+track	AUX_RX_MCU	F	0.2	36	78.4	36	79.92
+via	GND	-	0.45	35.5	77.55		
+via	AUX_TX_MCU	-	0.45	35	78.1		
+track	AUX_TX_MCU	F	0.2	35	78.1	35	79.92
 track	SD_CS	F	0.1	21	57.6	21	58.4
 track	SD_CS	B	0.1	21	58.4	19.85	58.4
 track	SD_CS	B	0.1	19.85	58.4	19.25	59
@@ -404,7 +404,7 @@ track	RADIO_TX_MCU	B	0.1	24.3	57.5	24.3	78.2
 track	RADIO_TX_MCU	B	0.1	24.3	78.2	23.9	78.6
 track	RADIO_TX_MCU	B	0.1	23.9	78.6	12	78.6
 via	RADIO_TX_MCU	-	0.45	12	78.6		
-track	RADIO_TX_MCU	F	0.2	12	78.6	12	81.77
+track	RADIO_TX_MCU	F	0.2	12	78.6	12	79.92
 track	RADIO_RX_MCU	F	0.1	25	57.6	24.8	57.8
 track	RADIO_RX_MCU	F	0.1	24.8	57.8	24.8	58.8
 via	RADIO_RX_MCU	-	0.45	24.8	58.8		
@@ -412,24 +412,21 @@ track	RADIO_RX_MCU	B	0.1	24.8	58.8	24.8	78.7
 track	RADIO_RX_MCU	B	0.1	24.8	78.7	24.4	79.1
 track	RADIO_RX_MCU	B	0.1	24.4	79.1	13	79.1
 via	RADIO_RX_MCU	-	0.45	13	79.1		
-track	RADIO_RX_MCU	F	0.2	13	79.1	13	81.77
+track	RADIO_RX_MCU	F	0.2	13	79.1	13	79.92
 via	GND	-	0.45	12.6	78		
 via	GPS_RX_MCU	-	0.45	25.4	57.2		
 track	GPS_RX_MCU	B	0.1	25.4	57.2	25.8	57.6
 track	GPS_RX_MCU	B	0.1	25.8	57.6	25.8	80
 via	GPS_RX_MCU	-	0.45	25.8	80		
-track	GPS_RX_MCU	F	0.2	25.8	80	23.9	80
-track	GPS_RX_MCU	F	0.2	23.9	80	23.5	80.4
-track	GPS_RX_MCU	F	0.2	23.5	80.4	23.5	81.77
+track	GPS_RX_MCU	F	0.2	25.8	80	23.5	80
 via	GND	-	0.45	25.95	80.7		
 via	GPS_TX_MCU	-	0.45	25.29	59.41		
 track	PORT_SENSE	B	0.1	26.2	56.4	26.45	56.65
 via	GND	-	0.45	25.225	58.15		
-track	GPS_TX_MCU	F	0.2	22.9	79.4	22.5	79.8
-track	GPS_TX_MCU	F	0.2	22.5	79.8	22.5	81.77
-track	PORT_SENSE	B	0.1	26.45	56.65	26.45	79.42
-via	PORT_SENSE	-	0.45	26.45	79.42		
-track	PORT_SENSE	F	0.1	26.45	79.42	27.2	80.17
+track	GPS_TX_MCU	F	0.2	23.02	79.4	22.5	79.92
+track	PORT_SENSE	B	0.1	26.45	56.65	26.45	79.12
+via	PORT_SENSE	-	0.45	26.45	79.12		
+track	PORT_SENSE	F	0.1	26.45	79.12	27.2	79.87
 via	3V3	-	0.45	23.85	61.2		
 track	3V3	F	0.3	23.39	61.87	23.85	61.87
 track	3V3	F	0.3	23.85	61.87	24.5	61.87
@@ -481,15 +478,15 @@ track	AUX_RX_MCU	B	0.2	38.9	53.6	38.9	65.4
 track	AUX_RX_MCU	B	0.2	38.9	65.4	37.9	66.4
 track	AUX_RX_MCU	B	0.2	37.9	66.4	36.4	66.4
 track	AUX_RX_MCU	B	0.2	36.4	66.4	36	66.8
-track	AUX_RX_MCU	B	0.2	36	66.8	36	80
+track	AUX_RX_MCU	B	0.2	36	66.8	36	78.4
 track	AUX_TX_MCU	B	0.2	37.9	54.4	37.9	65
 track	AUX_TX_MCU	B	0.2	37.9	65	37.5	65.4
 track	AUX_TX_MCU	B	0.2	37.5	65.4	36	65.4
 track	AUX_TX_MCU	B	0.2	36	65.4	35	66.4
-track	AUX_TX_MCU	B	0.2	35	66.4	35	79.7
+track	AUX_TX_MCU	B	0.2	35	66.4	35	78.1
 track	GPS_TX_MCU	B	0.1	25.29	59.41	25.29	79.4
 via	GPS_TX_MCU	-	0.45	25.29	79.4		
-track	GPS_TX_MCU	F	0.2	25.29	79.4	22.9	79.4
+track	GPS_TX_MCU	F	0.2	25.29	79.4	23.02	79.4
 # R12F5-TRI-01 (S-10, lane P): C13 turned to 0 degrees at (17.4, 50.0), GND pad toward PE4's lane, its 3V3 via west of
 # the VLOGIC_SENSE In2 lane at (15.05, 50.45), where In2's 3V3 joins the main sheet (the strip between the VLOGIC_SENSE
 # and NRST lanes is closed): C13.1 and the via keep >= 1.06 mm from PYRO1_GATE_N (0.48 / 0.53 mm).

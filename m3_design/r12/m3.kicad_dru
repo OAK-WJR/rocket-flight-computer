@@ -93,6 +93,61 @@
   (condition "A.NetName == 'RAW_ACT' && B.NetName != 'RAW_ACT' && B.NetName != 'PYRO1_GATE' && B.NetName != 'PYRO1_GATE_N' && B.NetName != 'ACT_FET_S' && B.NetName != 'ACT_GATE' && B.NetName != 'ARM1_SENSE_MID' && B.NetName != 'BAT_IN' && B.NetName != 'PYRO1_IGN'")
   (constraint clearance (min 1.04mm)))
 
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 RAW_PROTECTED (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'RAW_PROTECTED' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 VLOGIC (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'VLOGIC' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 BST (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'BST' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 SW_NODE (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'SW_NODE' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 CAM_BST (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'CAM_BST' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 CAM_SW (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'CAM_SW' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 PORT_BST (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'PORT_BST' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (1.040 mm, pack voltage behind U9, D-R12-137's PACK_MIN): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 PORT_SW (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'PORT_SW' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 1.04mm)))
+
+# R12F7-TRI-01 FMEA I-5 (0.300 mm, port voltage, R10 owner row 1's figure): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 CAM_5V (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'CAM_5V' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 0.30mm)))
+
+# R12F7-TRI-01 FMEA I-5 (0.300 mm, port voltage, R10 owner row 1's figure): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 PORT_4V8 (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'PORT_4V8' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 0.30mm)))
+
+# R12F7-TRI-01 FMEA I-5 (0.300 mm, port voltage, R10 owner row 1's figure): a bridge puts the rail on the MCU supply (check_r12 S-10)
+(rule "S-10 VBUS (I-5 rail) to 3V3 / 3V3A"
+  (condition "A.NetName == 'VBUS' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+  (constraint clearance (min 0.30mm)))
+
 # measured floor 0.731 mm, reason D-R11-23 (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (D-R11-23): U1.C3 to U1.B2 on F.Cu"
   (layer "F.Cu")
@@ -735,12 +790,6 @@
   (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'BAT_ENABLE' && B.memberOfFootprint('U9') && B.Pad_Number == '1'")
   (constraint clearance (min 0.200mm)))
 
-# measured floor 0.250 mm, reason PACK_EN (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_EN): U9.5 to track (18, 14.6)-(18, 14.5) on F.Cu"
-  (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'BAT_ENABLE' && B.Type == 'Track' && B.Start_X >= 17.9995mm && B.Start_X <= 18.0005mm && B.Start_Y >= 14.5995mm && B.Start_Y <= 14.6005mm && B.End_X >= 17.9995mm && B.End_X <= 18.0005mm && B.End_Y >= 14.4995mm && B.End_Y <= 14.5005mm")
-  (constraint clearance (min 0.250mm)))
-
 # measured floor 0.550 mm, reason PACK_EN (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_EN): U9.5 to track (18, 14.3)-(18, 12.3) on F.Cu"
   (layer "F.Cu")
@@ -992,18 +1041,6 @@
   (layer "F.Cu")
   (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'BAT_ILIM' && B.memberOfFootprint('U9') && B.Pad_Number == '9'")
   (constraint clearance (min 0.700mm)))
-
-# measured floor 0.700 mm, reason PACK_U9 (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_U9): track (15.3, 15.1)-(16.6, 15.1) to track (16.6, 16.1)-(16.6, 16.2) on F.Cu"
-  (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 15.2995mm && A.Start_X <= 15.3005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 16.5995mm && A.End_X <= 16.6005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'BAT_DVDT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 16.0995mm && B.Start_Y <= 16.1005mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 16.1995mm && B.End_Y <= 16.2005mm")
-  (constraint clearance (min 0.700mm)))
-
-# measured floor 0.750 mm, reason PACK_U9 (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_U9): U9.5 to track (16.6, 16.1)-(16.6, 16.2) on F.Cu"
-  (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'BAT_DVDT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 16.0995mm && B.Start_Y <= 16.1005mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 16.1995mm && B.End_Y <= 16.2005mm")
-  (constraint clearance (min 0.750mm)))
 
 # measured floor 0.767 mm, reason PACK_U9 (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_U9): track (14, 15.1)-(15.3, 15.1) to U9.7 on F.Cu"

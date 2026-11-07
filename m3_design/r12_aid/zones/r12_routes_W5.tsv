@@ -1,71 +1,70 @@
 kind	net	layer	width	x0	y0	x1	y1
 # W5 zone (R12 AVA re-layout, D-R12-96): ports, port buck, PORT_4V8 feed, buzzer, LEDs, west-bay bulk caps.
 # --- frozen port-cell rows (r12_routes_f1.tsv, cells moved 10 mm aft with the port row, D-R12-99): *_WIRE, PORT_4V8 pin-2 / cap links, GND vias ---
-track	GPS_TX_WIRE	F	0.2	22.5	82.7	22.5	83.8
-track	GPS_RX_WIRE	F	0.2	23.5	82.7	23.5	83.8
-track	RADIO_TX_WIRE	F	0.2	12	82.7	12	83.8
-track	RADIO_RX_WIRE	F	0.2	13	82.7	13	83.8
-track	AUX_TX_WIRE	F	0.2	35	82.7	35	83.8
-track	AUX_RX_WIRE	F	0.2	36	82.7	36	83.8
-track	PORT_4V8	F	0.3	33.9	83.8	33.9	83.2
-via	PORT_4V8	-	0.45	33.9	83.2		
-track	PORT_4V8	F	0.3	33.9	82.1	33.9	81.6
-via	PORT_4V8	-	0.45	33.9	81.6		
-track	PORT_4V8	F	0.3	21.5	83.7	21.5	82.3
-track	PORT_4V8	F	0.3	21.5	82.1	21.5	81.6
-via	PORT_4V8	-	0.45	21.5	81.6		
-track	PORT_4V8	F	0.3	11	83.7	11	82.3
-track	PORT_4V8	F	0.3	11	82.1	11	81.6
-via	PORT_4V8	-	0.45	11	81.6		
-track	GND	F	0.3	20.4	84.8	19.9	84.8
-via	GND	-	0.45	19.9	84.8		
-track	GND	F	0.3	20.6	82.1	20.6	81.6
-via	GND	-	0.45	20.6	81.6		
-track	GND	F	0.3	9.9	84.8	9.4	84.8
-via	GND	-	0.45	9.4	84.8		
-track	GND	F	0.3	10.1	82.1	10.1	81.6
-via	GND	-	0.45	10.1	81.6		
-track	GND	F	0.3	32.9	84.3	32.4	84.3
-via	GND	-	0.45	32.4	84.3		
-track	GND	F	0.3	33	82.1	32.5	82.1
-via	GND	-	0.45	32.5	82.1		
+track	GPS_TX_WIRE	F	0.2	22.5	80.85	22.5	81.8
+track	GPS_RX_WIRE	F	0.2	23.5	80.85	23.5	81.8
+track	RADIO_TX_WIRE	F	0.2	12	80.85	12	81.8
+track	RADIO_RX_WIRE	F	0.2	13	80.85	13	81.8
+track	AUX_TX_WIRE	F	0.2	35	80.85	35	81.8
+track	AUX_RX_WIRE	F	0.2	36	80.85	36	81.8
+track	PORT_4V8	F	0.3	33.9	81.8	33.9	81.2
+via	PORT_4V8	-	0.45	33.9	81.2		
+track	PORT_4V8	F	0.3	33.9	80.45	33.9	81.2
+track	PORT_4V8	F	0.3	21.5	81.7	21.5	81.05
+track	PORT_4V8	F	0.3	21.5	81.05	21.5	80.45
+via	PORT_4V8	-	0.45	21.5	81.05		
+track	PORT_4V8	F	0.3	11	81.7	11	81.05
+track	PORT_4V8	F	0.3	11	81.05	11	80.45
+via	PORT_4V8	-	0.45	11	81.05		
+track	GND	F	0.3	20.4	82.8	19.9	82.8
+via	GND	-	0.45	19.9	82.8		
+track	GND	F	0.3	20.6	80.25	20.6	79.75
+via	GND	-	0.45	20.6	79.75		
+track	GND	F	0.3	9.9	82.8	9.4	82.8
+via	GND	-	0.45	9.4	82.8		
+track	GND	F	0.3	10.1	80.25	10.1	79.75
+via	GND	-	0.45	10.1	79.75		
+track	GND	F	0.3	32.9	82.3	32.4	82.3
+via	GND	-	0.45	32.4	82.3		
+track	GND	F	0.3	33	80.25	32.5	80.25
+via	GND	-	0.45	32.5	80.25		
+track	PORT_BST	F	0.3	40	67.5	40.4	67.1
+track	PORT_BST	F	0.3	40.4	67.1	41.6	67.1
+track	PORT_SW	F	0.4	40	68.4	41.7	68.4
+track	PORT_SW	F	0.4	41.7	68.4	42.6	69.3
+track	PORT_SW	F	0.4	42.6	70.1	42.6	73.5
+track	PORT_FB	F	0.2	42.6	65.1	43.4	65.9
+track	PORT_FB	F	0.2	43.6	66	43.6	66.9
+track	PORT_FB_TOP	F	0.15	41.5	65.88	41.8	65.88
+track	PORT_FB_TOP	F	0.15	41.8	65.88	42	65.68
+track	PORT_FB_TOP	F	0.15	42	65.68	42	64.7
+track	PORT_FB_TOP	F	0.15	42	64.7	42.15	64.55
+track	PORT_FB_TOP	F	0.15	42.15	64.55	43.03	64.55
+track	PORT_FB_TOP	F	0.15	43.03	64.55	43.5	65.02
+track	GND	F	0.15	42.5	65.88	42.5	66.2
+track	GND	F	0.15	42.5	66.2	42.25	66.45
+track	GND	F	0.15	42.25	66.45	40	66.45
+via	GND	-	0.45	40	66.45		
+track	RAW_PROTECTED	F	0.25	42.6	67.3	42.6	68.2
+track	RAW_PROTECTED	F	0.25	42.6	68.2	43.55	69.15
+track	RAW_PROTECTED	B	0.6	45.2	71.1	45.2	72
+via	RAW_PROTECTED	-	0.45	45.2	71.1		
+via	RAW_PROTECTED	-	0.45	45.2	72		
+track	RAW_PROTECTED	F	0.6	45.2	71.1	44.3	71.1
+track	RAW_PROTECTED	F	0.6	45.2	72	44.3	72
+track	RAW_PROTECTED	F	0.6	43.55	69.7	43.55	71.1
+track	GND	F	0.4	41.65	69.7	41.65	71.1
+track	GND	F	0.6	41.125	71.8	40	71.8
+via	GND	-	0.45	40	71.8		
+via	GND	-	0.45	45.2	74.5		
+via	GND	-	0.45	45.2	77.5		
+via	GND	-	0.45	44.25	65.9		
 # --- port buck U400 cell: R12 rows rotated -90 deg about old U400 (32.9, 19.3) to (42.6, 72.0): (dx, dy) -> (-dy, dx) --- D-R12-99: the whole cell then 1.5 mm aft.
-track	PORT_BST	F	0.3	40	69.5	40.4	69.1
-track	PORT_BST	F	0.3	40.4	69.1	41.6	69.1
-track	PORT_SW	F	0.4	40	70.4	41.7	70.4
-track	PORT_SW	F	0.4	41.7	70.4	42.6	71.3
-track	PORT_SW	F	0.4	42.6	72.1	42.6	75.5
-track	PORT_FB	F	0.2	42.6	67.1	43.4	67.9
-track	PORT_FB	F	0.2	43.6	68	43.6	68.9
 # --- port buck, new: FB_TOP R400.2 -> R404.1 on F round the aft side of R401 (B is W3 AUX lane CX) ---
-track	PORT_FB_TOP	F	0.15	41.5	67.88	41.8	67.88
-track	PORT_FB_TOP	F	0.15	41.8	67.88	42	67.68
-track	PORT_FB_TOP	F	0.15	42	67.68	42	66.7
-track	PORT_FB_TOP	F	0.15	42	66.7	42.15	66.55
-track	PORT_FB_TOP	F	0.15	42.15	66.55	43.03	66.55
-track	PORT_FB_TOP	F	0.15	43.03	66.55	43.5	67.02
 # R401.2 GND forward of the resistor row (between it and U400 pins 4-6), west to a GND via clear of CX
-track	GND	F	0.15	42.5	67.88	42.5	68.2
-track	GND	F	0.15	42.5	68.2	42.25	68.45
-track	GND	F	0.15	42.25	68.45	40	68.45
-via	GND	-	0.45	40	68.45		
 # EN (U400.5) to VIN (U400.3) through the gap between the pin rows, east of the SW diagonal
-track	RAW_PROTECTED	F	0.25	42.6	69.3	42.6	70.2
-track	RAW_PROTECTED	F	0.25	42.6	70.2	43.55	71.15
 # RAW_PROTECTED: W2 B trunk ends at (45.2, 73.1) (D-R12-99); two vias, F 0.6 to C400.1, VIN pin 3 straight into C400.1
-track	RAW_PROTECTED	B	0.6	45.2	73.1	45.2	74
-via	RAW_PROTECTED	-	0.45	45.2	73.1		
-via	RAW_PROTECTED	-	0.45	45.2	74		
-track	RAW_PROTECTED	F	0.6	45.2	73.1	44.3	73.1
-track	RAW_PROTECTED	F	0.6	45.2	74	44.3	74
-track	RAW_PROTECTED	F	0.6	43.55	71.7	43.55	73.1
 # power GND: U400.1 straight to C400.2; C400.2 to a GND via; B pour stitching round the switch cell
-track	GND	F	0.4	41.65	71.7	41.65	73.1
-track	GND	F	0.6	41.125	73.8	40	73.8
-via	GND	-	0.45	40	73.8		
-via	GND	-	0.45	45.2	76.5		
-via	GND	-	0.45	45.2	79.5		
-via	GND	-	0.45	44.25	67.9		
 # --- west bay: LEDs ---
 via	LED_RED	-	0.45	11.7	53.27		
 track	LED_RED	F	0.2	11.7	53.27	11.23	52.8
@@ -103,29 +102,29 @@ via	3V3	-	0.45	4	57.2
 track	GND	F	0.3	10.6	73.4	10.6	72.25
 via	GND	-	0.45	10.6	72.25		
 # --- D-R12-99 (90 mm outline): C406 west of L400 (rot 90), PORT_4V8 feed / sense / island vias, TP74 ---
-track	PORT_4V8	F	1	37.6	79.3	39.4	79.3
-track	PORT_4V8	F	1	39.4	79.3	42.6	79.3
-track	PORT_4V8	F	0.8	37.6	79.3	37.6	81
+track	PORT_4V8	F	1	37.6	77.3	39.4	77.3
+track	PORT_4V8	F	1	39.4	77.3	42.6	77.3
+track	PORT_4V8	F	0.8	37.6	77.3	37.6	81
 track	PORT_4V8	F	0.8	37.6	81	37.6	81.8
 via	PORT_4V8	-	0.45	37.6	81		
 via	PORT_4V8	-	0.45	37.6	81.8		
-track	PORT_4V8	F	0.15	41.5	67.02	39.6	67.02
-track	PORT_4V8	F	0.15	39.6	67.02	39.4	67.22
-track	PORT_4V8	F	0.15	39.4	67.22	39.4	79.3
-track	GND	F	0.6	37.6	76.35	37.6	75.1
-via	GND	-	0.45	37.6	75.1		
+track	PORT_4V8	F	0.15	41.5	65.02	39.6	65.02
+track	PORT_4V8	F	0.15	39.6	65.02	39.4	65.22
+track	PORT_4V8	F	0.15	39.4	65.22	39.4	77.3
+track	GND	F	0.6	37.6	74.35	37.6	73.1
+via	GND	-	0.45	37.6	73.1		
 track	GND	F	0.3	31	79.5	31	78
 via	GND	-	0.45	31	78		
 # C407 between J420 and J410; R111 / R112 PORT_SENSE divider beside the PORT_SENSE riser
-track	PORT_4V8	F	0.3	16.75	83.475	16.75	84.7
-via	PORT_4V8	-	0.45	16.75	84.7		
-track	GND	F	0.3	16.75	80.525	18.1	80.525
-via	GND	-	0.45	18.1	80.525		
-track	PORT_SENSE	F	0.1	28.1	80.9	27.3	80.1
-track	PORT_4V8	F	0.3	27.2	81.03	27.2	81.7
-via	PORT_4V8	-	0.45	27.2	81.7		
-track	GND	F	0.3	28.2	80.17	28.8	80.17
-via	GND	-	0.45	28.8	80.17		
+track	PORT_4V8	F	0.3	16.75	82.825	16.75	84.05
+via	PORT_4V8	-	0.45	16.75	84.05		
+track	GND	F	0.3	16.75	79.875	18.1	79.875
+via	GND	-	0.45	18.1	79.875		
+track	PORT_SENSE	F	0.1	28.1	80.6	27.3	79.8
+track	PORT_4V8	F	0.3	27.2	80.73	27.2	81.4
+via	PORT_4V8	-	0.45	27.2	81.4		
+track	GND	F	0.3	28.2	79.87	28.8	79.87
+via	GND	-	0.45	28.8	79.87		
 # 3V3 bulk caps C461 / C23 / C460 east of J430: 3V3 west, GND east, vias clear of the AUX lanes (x 35 / 36)
 track	3V3	F	0.5	30.025	70	29	70
 via	3V3	-	0.45	29	70		

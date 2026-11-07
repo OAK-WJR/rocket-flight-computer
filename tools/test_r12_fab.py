@@ -1,7 +1,8 @@
 """Tests for the R12 fab package tooling (m3_design/r12_fab.sh, tools/export_fab_r12.py, tools/jlc_orient_r12.py,
 tools/fab_manifest_r12.py). The wrapper and data tests always run; the package tests export the R12 board (R12_BOARD,
 else m3_design/r12/m3.kicad_pcb) into a temporary folder, bind it, and seed faults into copies. They skip cleanly when
-the R12 board is absent or KiCad's Python / kicad-cli is unavailable.
+the R12 board is absent, or KiCad's Python / kicad-cli is unavailable outside tools/check.sh; under check.sh's R12
+section (R12_BOARD_REQUIRED=1) a missing KiCad fails them (R12F7-TRI-08).
 
 usage: <KiCad python3> tools/test_r12_fab.py        (KICAD_PY / KICAD_CLI override KiCad's default macOS location)
 """
@@ -22,9 +23,20 @@ import export_fab_r12                                            # noqa: E402
 import fab_manifest_r12 as fm12                                  # noqa: E402
 import jlc_orient_r12                                            # noqa: E402
 
+
+def kicad_cli():
+    """R12F7-TRI-08: KICAD_CLI (tools/check.sh exports the CLI it resolved), else kicad-cli on PATH, else KiCad's macOS
+    application folders; None when none exists."""
+    for c in (os.environ.get('KICAD_CLI'), shutil.which('kicad-cli'),
+              '/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli', '/Applications/KiCad.app/Contents/MacOS/kicad-cli'):
+        if c and Path(c).exists():
+            return c
+    return None
+
+
 KICAD_PY = os.environ.get('KICAD_PY') or \
     '/Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3'
-KICAD_CLI = os.environ.get('KICAD_CLI') or '/Applications/KiCad/KiCad.app/Contents/MacOS/kicad-cli'
+KICAD_CLI = kicad_cli() or os.environ.get('KICAD_CLI') or 'kicad-cli'
 BOARD = Path(os.environ.get('R12_BOARD') or ROOT / 'm3_design/r12/m3.kicad_pcb')
 TOOL = str(ROOT / 'tools/fab_manifest_r12.py')
 NOISE = ('Debug: Adding duplicate', 'create wxApp', 'Fontconfig', 'stdpbase')
@@ -89,13 +101,24 @@ class Wrappers(unittest.TestCase):
         self.assertEqual(len(checks), 3)
 
 
+def require_kicad():
+    """R12F7-TRI-08: skip when KiCad Python or kicad-cli is missing, but fail under tools/check.sh once its R12 section
+    has run on a board that exists (R12_BOARD_REQUIRED=1): a missing CLI must not turn the package tests into skips."""
+    if Path(KICAD_PY).exists() and Path(KICAD_CLI).exists():
+        return
+    why = f'KiCad Python ({KICAD_PY}) / kicad-cli ({KICAD_CLI}) unavailable'
+    if os.environ.get('R12_BOARD_REQUIRED') == '1' and BOARD.exists():
+        raise AssertionError(why + ' while R12_BOARD_REQUIRED=1 and the R12 board exists')
+    raise unittest.SkipTest(why)
+
+
 @unittest.skipUnless(BOARD.exists(), f'no R12 board at {BOARD}')
-@unittest.skipUnless(Path(KICAD_PY).exists() and Path(KICAD_CLI).exists(), 'KiCad Python / kicad-cli unavailable')
 class Package(unittest.TestCase):
     """Export and bind the R12 board's package into a temporary folder, then seed faults into copies of it."""
 
     @classmethod
     def setUpClass(cls):
+        require_kicad()
         cls.tmp = Path(tempfile.mkdtemp(prefix='r12fab_'))
         cls.out = cls.tmp / 'fab'
         record = cls.tmp / 'export.json'

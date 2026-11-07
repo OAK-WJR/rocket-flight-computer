@@ -39,6 +39,9 @@ if stage == 'test_r12_check' and os.environ.get('R12_BOARD'):     # the R12 sect
     label += '+R12_BOARD' + ('+required' if os.environ.get('R12_BOARD_REQUIRED') == '1' else '')
 with open(os.environ['GATE_LOG'], 'a') as log:
     log.write(label + '\\n')
+if os.environ.get('CLI_LOG'):                                     # R12F7-TRI-08: the CLI each stage was handed
+    with open(os.environ['CLI_LOG'], 'a') as log:
+        log.write(stage + ' ' + os.environ.get('KICAD_CLI', '') + '\\n')
 if stage == 'r10_parts' and ('--check' not in sys.argv or '--board' not in sys.argv):
     sys.exit(17)
 if stage.startswith('fab_manifest') and not (pathlib.Path(sys.argv[1]).parent / 'fab/m3_fab_manifest.json').is_file():
@@ -332,6 +335,21 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
 
     def selftests_r12(self, required=True):
         return self.SELFTESTS[:-1] + ['test_r12_check+R12_BOARD' + ('+required' if required else '')]
+
+    def test_r12f7_tri08_resolved_cli_is_exported_to_every_selftest(self):
+        """With KICAD_CLI unset, check.sh finds kicad-cli on PATH and hands that path to every self-test."""
+        bindir = self.root / 'bin'
+        bindir.mkdir()
+        self.cli.rename(bindir / 'kicad-cli')
+        cli_log = self.root / 'cli.log'
+        self.env.pop('KICAD_CLI', None)
+        self.env.update(PATH=str(bindir) + os.pathsep + self.env.get('PATH', ''), CLI_LOG=str(cli_log))
+        result = self.run_gate()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        seen = dict(line.split(' ', 1) for line in cli_log.read_text().splitlines())
+        want = str((bindir / 'kicad-cli').resolve())
+        for stage in set(self.SELFTESTS):
+            self.assertEqual(seen.get(stage), want, (stage, seen))
 
     def test_r12_section_runs_after_r10_when_the_board_is_tracked(self):
         self.r12_board()
