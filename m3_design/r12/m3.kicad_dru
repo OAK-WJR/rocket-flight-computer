@@ -412,9 +412,9 @@
   (constraint clearance (min 0.137mm)))
 
 # measured floor 0.175 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to via (11.5, 9.6) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to via (11.55, 9.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 11.4995mm && B.Position_X <= 11.5005mm && B.Position_Y >= 9.5995mm && B.Position_Y <= 9.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 11.5495mm && B.Position_X <= 11.5505mm && B.Position_Y >= 9.5995mm && B.Position_Y <= 9.6005mm")
   (constraint clearance (min 0.175mm)))
 
 # measured floor 0.190 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -442,9 +442,9 @@
   (constraint clearance (min 0.200mm)))
 
 # measured floor 0.250 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to track (10.9, 9.6)-(11.5, 9.6) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to track (10.9, 9.6)-(11.55, 9.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.8995mm && B.Start_X <= 10.9005mm && B.Start_Y >= 9.5995mm && B.Start_Y <= 9.6005mm && B.End_X >= 11.4995mm && B.End_X <= 11.5005mm && B.End_Y >= 9.5995mm && B.End_Y <= 9.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.8995mm && B.Start_X <= 10.9005mm && B.Start_Y >= 9.5995mm && B.Start_Y <= 9.6005mm && B.End_X >= 11.5495mm && B.End_X <= 11.5505mm && B.End_Y >= 9.5995mm && B.End_Y <= 9.6005mm")
   (constraint clearance (min 0.250mm)))
 
 # measured floor 0.265 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -454,9 +454,9 @@
   (constraint clearance (min 0.265mm)))
 
 # measured floor 0.290 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (14, 15.1)-(15.3, 15.1) to track (15.3, 15.94)-(15.3, 16.75) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (14, 15.1)-(15.3, 15.1) to track (15.3, 15.94)-(15.3, 16.8) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.9995mm && A.Start_X <= 14.0005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 15.2995mm && A.End_X <= 15.3005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7495mm && B.End_Y <= 16.7505mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.9995mm && A.Start_X <= 14.0005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 15.2995mm && A.End_X <= 15.3005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7995mm && B.End_Y <= 16.8005mm")
   (constraint clearance (min 0.290mm)))
 
 # measured floor 0.294 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -484,33 +484,33 @@
   (constraint clearance (min 0.390mm)))
 
 # measured floor 0.427 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (9.9, 9.5)-(10.4, 9) to track (10.9, 9.6)-(11.5, 9.6) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (9.9, 9.5)-(10.4, 9) to track (10.9, 9.6)-(11.55, 9.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 9.8995mm && A.Start_X <= 9.9005mm && A.Start_Y >= 9.4995mm && A.Start_Y <= 9.5005mm && A.End_X >= 10.3995mm && A.End_X <= 10.4005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.8995mm && B.Start_X <= 10.9005mm && B.Start_Y >= 9.5995mm && B.Start_Y <= 9.6005mm && B.End_X >= 11.4995mm && B.End_X <= 11.5005mm && B.End_Y >= 9.5995mm && B.End_Y <= 9.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 9.8995mm && A.Start_X <= 9.9005mm && A.Start_Y >= 9.4995mm && A.Start_Y <= 9.5005mm && A.End_X >= 10.3995mm && A.End_X <= 10.4005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.8995mm && B.Start_X <= 10.9005mm && B.Start_Y >= 9.5995mm && B.Start_Y <= 9.6005mm && B.End_X >= 11.5495mm && B.End_X <= 11.5505mm && B.End_Y >= 9.5995mm && B.End_Y <= 9.6005mm")
   (constraint clearance (min 0.427mm)))
 
 # measured floor 0.440 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): C88.1 to track (15.3, 15.94)-(15.3, 16.75) on F.Cu"
+(rule "S-10 exception (PACK_GND): C88.1 to track (15.3, 15.94)-(15.3, 16.8) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C88') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7495mm && B.End_Y <= 16.7505mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C88') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7995mm && B.End_Y <= 16.8005mm")
   (constraint clearance (min 0.440mm)))
 
 # measured floor 0.475 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to via (12.2, 8.1) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to via (12.12, 8.1) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 12.1995mm && B.Position_X <= 12.2005mm && B.Position_Y >= 8.0995mm && B.Position_Y <= 8.1005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 12.1195mm && B.Position_X <= 12.1205mm && B.Position_Y >= 8.0995mm && B.Position_Y <= 8.1005mm")
   (constraint clearance (min 0.475mm)))
 
 # measured floor 0.490 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (15.3, 15.1)-(16.6, 15.1) to track (15.3, 15.94)-(15.3, 16.75) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (15.3, 15.1)-(16.6, 15.1) to track (15.3, 15.94)-(15.3, 16.8) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 15.2995mm && A.Start_X <= 15.3005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 16.5995mm && A.End_X <= 16.6005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7495mm && B.End_Y <= 16.7505mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 15.2995mm && A.Start_X <= 15.3005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 16.5995mm && A.End_X <= 16.6005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7995mm && B.End_Y <= 16.8005mm")
   (constraint clearance (min 0.490mm)))
 
 # measured floor 0.497 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): R167.1 to track (10.9, 9.6)-(11.5, 9.6) on F.Cu"
+(rule "S-10 exception (PACK_GND): R167.1 to track (10.9, 9.6)-(11.55, 9.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('R167') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.8995mm && B.Start_X <= 10.9005mm && B.Start_Y >= 9.5995mm && B.Start_Y <= 9.6005mm && B.End_X >= 11.4995mm && B.End_X <= 11.5005mm && B.End_Y >= 9.5995mm && B.End_Y <= 9.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('R167') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.8995mm && B.Start_X <= 10.9005mm && B.Start_Y >= 9.5995mm && B.Start_Y <= 9.6005mm && B.End_X >= 11.5495mm && B.End_X <= 11.5505mm && B.End_Y >= 9.5995mm && B.End_Y <= 9.6005mm")
   (constraint clearance (min 0.497mm)))
 
 # measured floor 0.500 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -538,9 +538,9 @@
   (constraint clearance (min 0.573mm)))
 
 # measured floor 0.575 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to track (10.7, 8.1)-(12.2, 8.1) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (10.4, 9)-(13.3, 9) to track (10.7, 8.1)-(12.12, 8.1) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.6995mm && B.Start_X <= 10.7005mm && B.Start_Y >= 8.0995mm && B.Start_Y <= 8.1005mm && B.End_X >= 12.1995mm && B.End_X <= 12.2005mm && B.End_Y >= 8.0995mm && B.End_Y <= 8.1005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 10.3995mm && A.Start_X <= 10.4005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 13.2995mm && A.End_X <= 13.3005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.6995mm && B.Start_X <= 10.7005mm && B.Start_Y >= 8.0995mm && B.Start_Y <= 8.1005mm && B.End_X >= 12.1195mm && B.End_X <= 12.1205mm && B.End_Y >= 8.0995mm && B.End_Y <= 8.1005mm")
   (constraint clearance (min 0.575mm)))
 
 # measured floor 0.580 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -580,9 +580,9 @@
   (constraint clearance (min 0.601mm)))
 
 # measured floor 0.623 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (9.9, 9.5)-(10.4, 9) to track (10.7, 8.1)-(12.2, 8.1) on F.Cu"
+(rule "S-10 exception (PACK_GND): track (9.9, 9.5)-(10.4, 9) to track (10.7, 8.1)-(12.12, 8.1) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 9.8995mm && A.Start_X <= 9.9005mm && A.Start_Y >= 9.4995mm && A.Start_Y <= 9.5005mm && A.End_X >= 10.3995mm && A.End_X <= 10.4005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.6995mm && B.Start_X <= 10.7005mm && B.Start_Y >= 8.0995mm && B.Start_Y <= 8.1005mm && B.End_X >= 12.1995mm && B.End_X <= 12.2005mm && B.End_Y >= 8.0995mm && B.End_Y <= 8.1005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 9.8995mm && A.Start_X <= 9.9005mm && A.Start_Y >= 9.4995mm && A.Start_Y <= 9.5005mm && A.End_X >= 10.3995mm && A.End_X <= 10.4005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.6995mm && B.Start_X <= 10.7005mm && B.Start_Y >= 8.0995mm && B.Start_Y <= 8.1005mm && B.End_X >= 12.1195mm && B.End_X <= 12.1205mm && B.End_Y >= 8.0995mm && B.End_Y <= 8.1005mm")
   (constraint clearance (min 0.623mm)))
 
 # measured floor 0.670 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -646,9 +646,9 @@
   (constraint clearance (min 0.764mm)))
 
 # measured floor 0.769 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): C96.1 to track (15.3, 15.94)-(15.3, 16.75) on F.Cu"
+(rule "S-10 exception (PACK_GND): C96.1 to track (15.3, 15.94)-(15.3, 16.8) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C96') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7495mm && B.End_Y <= 16.7505mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C96') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7995mm && B.End_Y <= 16.8005mm")
   (constraint clearance (min 0.769mm)))
 
 # measured floor 0.778 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -656,12 +656,6 @@
   (layer "F.Cu")
   (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 14.3995mm && A.Start_X <= 14.4005mm && A.Start_Y >= 19.5995mm && A.Start_Y <= 19.6005mm && A.End_X >= 16.3995mm && A.End_X <= 16.4005mm && A.End_Y >= 19.5995mm && A.End_Y <= 19.6005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 16.4995mm && B.Position_X <= 16.5005mm && B.Position_Y >= 18.1995mm && B.Position_Y <= 18.2005mm")
   (constraint clearance (min 0.778mm)))
-
-# measured floor 0.828 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (9.9, 9.5)-(10.4, 9) to via (11.5, 9.6) on F.Cu"
-  (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 9.8995mm && A.Start_X <= 9.9005mm && A.Start_Y >= 9.4995mm && A.Start_Y <= 9.5005mm && A.End_X >= 10.3995mm && A.End_X <= 10.4005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 11.4995mm && B.Position_X <= 11.5005mm && B.Position_Y >= 9.5995mm && B.Position_Y <= 9.6005mm")
-  (constraint clearance (min 0.828mm)))
 
 # measured floor 0.839 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_GND): track (14.4, 19.6)-(16.4, 19.6) to track (17.6, 18.3)-(17.6, 18.9) on F.Cu"
@@ -675,6 +669,12 @@
   (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 14.3995mm && A.Start_X <= 14.4005mm && A.Start_Y >= 19.5995mm && A.Start_Y <= 19.6005mm && A.End_X >= 16.3995mm && A.End_X <= 16.4005mm && A.End_Y >= 19.5995mm && A.End_Y <= 19.6005mm && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.9995mm && B.Start_X <= 16.0005mm && B.Start_Y >= 18.1995mm && B.Start_Y <= 18.2005mm && B.End_X >= 16.4995mm && B.End_X <= 16.5005mm && B.End_Y >= 18.1995mm && B.End_Y <= 18.2005mm")
   (constraint clearance (min 0.850mm)))
 
+# measured floor 0.872 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
+(rule "S-10 exception (PACK_GND): track (9.9, 9.5)-(10.4, 9) to via (11.55, 9.6) on F.Cu"
+  (layer "F.Cu")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 9.8995mm && A.Start_X <= 9.9005mm && A.Start_Y >= 9.4995mm && A.Start_Y <= 9.5005mm && A.End_X >= 10.3995mm && A.End_X <= 10.4005mm && A.End_Y >= 8.9995mm && A.End_Y <= 9.0005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 11.5495mm && B.Position_X <= 11.5505mm && B.Position_Y >= 9.5995mm && B.Position_Y <= 9.6005mm")
+  (constraint clearance (min 0.872mm)))
+
 # measured floor 0.875 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_GND): track (16.1, 12.5)-(14.6, 14) to C96.2 on F.Cu"
   (layer "F.Cu")
@@ -682,9 +682,9 @@
   (constraint clearance (min 0.875mm)))
 
 # measured floor 0.906 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): U9.5 to track (15.3, 15.94)-(15.3, 16.75) on F.Cu"
+(rule "S-10 exception (PACK_GND): U9.5 to track (15.3, 15.94)-(15.3, 16.8) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7495mm && B.End_Y <= 16.7505mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 15.2995mm && B.Start_X <= 15.3005mm && B.Start_Y >= 15.9395mm && B.Start_Y <= 15.9405mm && B.End_X >= 15.2995mm && B.End_X <= 15.3005mm && B.End_Y >= 16.7995mm && B.End_Y <= 16.8005mm")
   (constraint clearance (min 0.906mm)))
 
 # measured floor 0.925 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
@@ -711,29 +711,11 @@
   (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 14.3995mm && A.Start_X <= 14.4005mm && A.Start_Y >= 19.5995mm && A.Start_Y <= 19.6005mm && A.End_X >= 16.3995mm && A.End_X <= 16.4005mm && A.End_Y >= 19.5995mm && A.End_Y <= 19.6005mm && B.NetName == 'BAT_DAMP' && B.memberOfFootprint('C95') && B.Pad_Number == '2'")
   (constraint clearance (min 0.976mm)))
 
-# measured floor 0.996 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (13.3, 9)-(14.1, 9.8) to via (12.2, 8.1) on F.Cu"
-  (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.2995mm && A.Start_X <= 13.3005mm && A.Start_Y >= 8.9995mm && A.Start_Y <= 9.0005mm && A.End_X >= 14.0995mm && A.End_X <= 14.1005mm && A.End_Y >= 9.7995mm && A.End_Y <= 9.8005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 12.1995mm && B.Position_X <= 12.2005mm && B.Position_Y >= 8.0995mm && B.Position_Y <= 8.1005mm")
-  (constraint clearance (min 0.996mm)))
-
 # measured floor 1.000 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_GND): D8.1 to track (10.8, 12.8)-(10.8, 13.3) on F.Cu"
   (layer "F.Cu")
   (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('D8') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Track' && B.Start_X >= 10.7995mm && B.Start_X <= 10.8005mm && B.Start_Y >= 12.7995mm && B.Start_Y <= 12.8005mm && B.End_X >= 10.7995mm && B.End_X <= 10.8005mm && B.End_Y >= 13.2995mm && B.End_Y <= 13.3005mm")
   (constraint clearance (min 1.000mm)))
-
-# measured floor 1.022 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): R167.1 to via (11.5, 9.6) on F.Cu"
-  (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('R167') && A.Pad_Number == '1' && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 11.4995mm && B.Position_X <= 11.5005mm && B.Position_Y >= 9.5995mm && B.Position_Y <= 9.6005mm")
-  (constraint clearance (min 1.022mm)))
-
-# measured floor 1.025 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (PACK_GND): track (14, 15.1)-(15.3, 15.1) to via (15.3, 16.75) on F.Cu"
-  (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.9995mm && A.Start_X <= 14.0005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 15.2995mm && A.End_X <= 15.3005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'GND' && B.Type == 'Via' && B.Position_X >= 15.2995mm && B.Position_X <= 15.3005mm && B.Position_Y >= 16.7495mm && B.Position_Y <= 16.7505mm")
-  (constraint clearance (min 1.025mm)))
 
 # measured floor 1.025 mm, reason PACK_GND (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_GND): track (14.6, 10.2)-(14.9, 10.5) to C96.2 on F.Cu"
@@ -786,73 +768,73 @@
 # measured floor 0.150 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): track (15.3, 15.1)-(16.6, 15.1) to U9.4 on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 15.2995mm && A.Start_X <= 15.3005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 16.5995mm && A.End_X <= 16.6005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'BAT_FAULT_N' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 15.2995mm && A.Start_X <= 15.3005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 16.5995mm && A.End_X <= 16.6005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'U9_FLT' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
   (constraint clearance (min 0.150mm)))
 
 # measured floor 0.200 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): U9.5 to U9.4 on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'BAT_FAULT_N' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'U9_FLT' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
   (constraint clearance (min 0.200mm)))
 
 # measured floor 0.350 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): track (15.3, 15.1)-(16.6, 15.1) to track (16.6, 14.45)-(16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 15.2995mm && A.Start_X <= 15.3005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 16.5995mm && A.End_X <= 16.6005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'BAT_FAULT_N' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 15.2995mm && A.Start_X <= 15.3005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 16.5995mm && A.End_X <= 16.6005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'U9_FLT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
   (constraint clearance (min 0.350mm)))
 
 # measured floor 0.400 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): U9.5 to track (16.6, 14.45)-(16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'BAT_FAULT_N' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('U9') && A.Pad_Number == '5' && B.NetName == 'U9_FLT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
   (constraint clearance (min 0.400mm)))
 
 # measured floor 0.473 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): track (14, 15.1)-(15.3, 15.1) to U9.4 on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.9995mm && A.Start_X <= 14.0005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 15.2995mm && A.End_X <= 15.3005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'BAT_FAULT_N' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.9995mm && A.Start_X <= 14.0005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 15.2995mm && A.End_X <= 15.3005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'U9_FLT' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
   (constraint clearance (min 0.473mm)))
 
 # measured floor 0.539 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): C88.1 to U9.4 on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C88') && A.Pad_Number == '1' && B.NetName == 'BAT_FAULT_N' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C88') && A.Pad_Number == '1' && B.NetName == 'U9_FLT' && B.memberOfFootprint('U9') && B.Pad_Number == '4'")
   (constraint clearance (min 0.539mm)))
 
 # measured floor 0.706 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): track (16.1, 12.5)-(14.6, 14) to via (16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 16.0995mm && A.Start_X <= 16.1005mm && A.Start_Y >= 12.4995mm && A.Start_Y <= 12.5005mm && A.End_X >= 14.5995mm && A.End_X <= 14.6005mm && A.End_Y >= 13.9995mm && A.End_Y <= 14.0005mm && B.NetName == 'BAT_FAULT_N' && B.Type == 'Via' && B.Position_X >= 16.5995mm && B.Position_X <= 16.6005mm && B.Position_Y >= 13.5995mm && B.Position_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 16.0995mm && A.Start_X <= 16.1005mm && A.Start_Y >= 12.4995mm && A.Start_Y <= 12.5005mm && A.End_X >= 14.5995mm && A.End_X <= 14.6005mm && A.End_Y >= 13.9995mm && A.End_Y <= 14.0005mm && B.NetName == 'U9_FLT' && B.Type == 'Via' && B.Position_X >= 16.5995mm && B.Position_X <= 16.6005mm && B.Position_Y >= 13.5995mm && B.Position_Y <= 13.6005mm")
   (constraint clearance (min 0.706mm)))
 
 # measured floor 0.716 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): R82.1 to via (16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('R82') && A.Pad_Number == '1' && B.NetName == 'BAT_FAULT_N' && B.Type == 'Via' && B.Position_X >= 16.5995mm && B.Position_X <= 16.6005mm && B.Position_Y >= 13.5995mm && B.Position_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('R82') && A.Pad_Number == '1' && B.NetName == 'U9_FLT' && B.Type == 'Via' && B.Position_X >= 16.5995mm && B.Position_X <= 16.6005mm && B.Position_Y >= 13.5995mm && B.Position_Y <= 13.6005mm")
   (constraint clearance (min 0.716mm)))
 
 # measured floor 0.831 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): track (16.1, 12.5)-(14.6, 14) to track (16.6, 14.45)-(16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 16.0995mm && A.Start_X <= 16.1005mm && A.Start_Y >= 12.4995mm && A.Start_Y <= 12.5005mm && A.End_X >= 14.5995mm && A.End_X <= 14.6005mm && A.End_Y >= 13.9995mm && A.End_Y <= 14.0005mm && B.NetName == 'BAT_FAULT_N' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 16.0995mm && A.Start_X <= 16.1005mm && A.Start_Y >= 12.4995mm && A.Start_Y <= 12.5005mm && A.End_X >= 14.5995mm && A.End_X <= 14.6005mm && A.End_Y >= 13.9995mm && A.End_Y <= 14.0005mm && B.NetName == 'U9_FLT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
   (constraint clearance (min 0.831mm)))
 
 # measured floor 0.841 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): R82.1 to track (16.6, 14.45)-(16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('R82') && A.Pad_Number == '1' && B.NetName == 'BAT_FAULT_N' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('R82') && A.Pad_Number == '1' && B.NetName == 'U9_FLT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
   (constraint clearance (min 0.841mm)))
 
 # measured floor 0.953 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): track (14, 15.1)-(15.3, 15.1) to track (16.6, 14.45)-(16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.9995mm && A.Start_X <= 14.0005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 15.2995mm && A.End_X <= 15.3005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'BAT_FAULT_N' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.Type == 'Track' && A.Start_X >= 13.9995mm && A.Start_X <= 14.0005mm && A.Start_Y >= 15.0995mm && A.Start_Y <= 15.1005mm && A.End_X >= 15.2995mm && A.End_X <= 15.3005mm && A.End_Y >= 15.0995mm && A.End_Y <= 15.1005mm && B.NetName == 'U9_FLT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
   (constraint clearance (min 0.953mm)))
 
 # measured floor 1.005 mm, reason PACK_FLT (check_r12 S-10, m3_design/r12_fire.py)
 (rule "S-10 exception (PACK_FLT): C88.1 to track (16.6, 14.45)-(16.6, 13.6) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C88') && A.Pad_Number == '1' && B.NetName == 'BAT_FAULT_N' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
+  (condition "A.NetName == 'BAT_IN' && A.memberOfFootprint('C88') && A.Pad_Number == '1' && B.NetName == 'U9_FLT' && B.Type == 'Track' && B.Start_X >= 16.5995mm && B.Start_X <= 16.6005mm && B.Start_Y >= 14.4495mm && B.Start_Y <= 14.4505mm && B.End_X >= 16.5995mm && B.End_X <= 16.6005mm && B.End_Y >= 13.5995mm && B.End_Y <= 13.6005mm")
   (constraint clearance (min 1.005mm)))
 
 # measured floor 0.131 mm, reason PACK_OUT (check_r12 S-10, m3_design/r12_fire.py)

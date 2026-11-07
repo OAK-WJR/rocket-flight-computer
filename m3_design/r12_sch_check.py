@@ -9,7 +9,7 @@ Checks (D-R12-01: R11's circuit pruned and re-sourced, every AGENTS section 2 ru
   * the AGENTS section 2 contracts by net: the pyro bus behind the Q120 / Q121 load switch, every pyro gate network
     (series resistor, pull-down, gate-source capacitor), PE4 / PC1 on their balls, the single J400 switch chain with
     D402, the pyro wire pads, servo pull-downs and clamp, the ports, the camera switch default off, the cold pull-up's
-    series resistor R136 (R12F6-TRI-01);
+    series resistor R136 (R12F6-TRI-01), U9 FLT's series resistor R95 and PC13 clamp D95 (PACK_FLT);
   * every external connector's pin names and the net each name allows (R12F6-TRI-09, R10 D-R27-03);
   * part identity: LCSC / Manufacturer / Manufacturer Part agree with circuit.json's catalog (or R11's line), one
     footprint and one part number per code, every BOM part has a code, every footprint in the project kilib and a
@@ -61,6 +61,11 @@ SAFETY = {
     # so a bridge across R131 while Q124 conducts is held by R136 (D120's anode is never on 3V3 itself)
     ('R136', '1'): '3V3', ('R136', '2'): 'PYRO1_COLD_PU',
     ('D120', '1'): 'PYRO1_COLD_PU', ('D120', '2'): None, ('D120', '3'): 'PYRO1_COLD',
+    # round 6 verifier V-1 follow-up (PACK_FLT): U9's FLT (U9.4, beside U9.5 BAT_IN) reaches PC13 only through R95 10k,
+    # with R89's pull-up on U9's side and D95 clamping PC13 (an FT pin, no positive injection) to 3V3
+    ('U9', '4'): 'U9_FLT', ('R89', '1'): '3V3', ('R89', '2'): 'U9_FLT', ('R95', '1'): 'U9_FLT',
+    ('R95', '2'): 'BAT_FAULT_N', ('D95', '1'): 'BAT_FAULT_N', ('D95', '2'): None, ('D95', '3'): '3V3',
+    ('U1', 'A2'): 'BAT_FAULT_N',
     # 2.1 / F8 / F9: one external switch J400 drives U9 EN; D402 clamps J400.2 ahead of R165
     ('J400', '1'): 'BAT_SW_SOURCE', ('J400', '2'): 'BAT_SW_RETURN', ('J400', '3'): None, ('J400', '4'): None,
     ('R80', '1'): 'BAT_IN', ('R80', '2'): 'BAT_SW_SOURCE', ('R165', '1'): 'BAT_SW_RETURN', ('R165', '2'): 'BAT_ENABLE',
@@ -94,7 +99,7 @@ SAFETY = {
 REQUIRED_PARTS = ('Q120', 'Q121', 'Q122', 'Q124', 'R119', 'R120', 'C120', 'R121', 'R122', 'R123', 'C123', 'R126', 'R127',
                   'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', 'R156',
                   'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6',
-                  'R131', 'R136', 'D120')
+                  'R131', 'R136', 'D120', 'R89', 'R95', 'D95')
 WIRE_PADS = ('J1',)                # D-R12-29: J121 is a JLC-fitted DB125 screw terminal again (owner, 2026-11-03)
 
 # R12F6-TRI-09 (R10's D-R27-03 / test_r27_port_terminal_pin_names, ported): every external connector's pin names, as
@@ -309,6 +314,11 @@ def seeds(parts, pins):
         'barometer PS (I2C select) floating': lambda p, n: n.update({('U5', '2'): None}),
         'cold pull-up anode on 3V3 (R136 bypassed, R12F6-TRI-01)': lambda p, n: n.update({('D120', '1'): '3V3'}),
         'cold pull-up series resistor removed': pop('R136'),
+        'PC13 straight on U9 FLT (R95 bypassed, PACK_FLT)': lambda p, n: n.update({('U1', 'A2'): 'U9_FLT'}),
+        'FLT series resistor removed (PACK_FLT)': pop('R95'),
+        'PC13 clamp removed (PACK_FLT)': pop('D95'),
+        'PC13 clamp reversed (PACK_FLT)': lambda p, n: n.update({('D95', '1'): '3V3', ('D95', '3'): 'BAT_FAULT_N'}),
+        'FLT pull-up moved to PC13 (PACK_FLT)': lambda p, n: n.update({('R89', '2'): 'BAT_FAULT_N'}),
     }
     out = {}
     for label, mutate in mutations.items():

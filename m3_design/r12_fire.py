@@ -36,6 +36,9 @@ Default-deny: every foreign net counts against a protected net unless it is clas
     FMEA I-5 fire mechanism): PACK_MIN (R10 D-R26-02's 1.040 mm, the PYRO1_OUT figure, as the same rail-onto-logic
     mechanism) from every net, copper and fills alike, except the other pack nets, the bus switch gate ACT_GATE and the
     two resistor ends NOT_A_PATH names (each with a calculated reason, checked by pack_class_guard()).
+  * U9's FLT (round 6 verifier V-1 follow-up, PACK_FLT): U9.4 sits beside U9.5 (BAT_IN) in its package, so its net
+    U9_FLT reaches PC13 only through R95 10 kohm, with R89 on U9's side and D95 clamping PC13 (an FT pin) to 3V3;
+    flt_guard() holds that on the netlist. The PACK_FLT pairs stay measured exceptions (U9's own pin is over-driven).
   * Measured exceptions (EXCEPTIONS): named item pairs, each with a floor at its measured gap (rounded down to 1 um)
     and a reason. A new item, or an excepted item that moves, is not excepted. A table pair missing from the board is a
     stale entry and fails S-10 too, so the record stays exact.
@@ -186,10 +189,12 @@ WHY = {
                 'refusal) and the first-article X-ray / meter test',
     'BOOT0': 'BOOT0 is an input-only pin held by R5 10 kohm to GND and not on J2: no source can raise PE4 '
              '(Calculation)',
-    'BAT_FAULT_N': 'U9 open-drain FLT with R89 10 kohm to 3V3, read by PC13 (ball A2, an input): with PE4 high-Z the '
-                   'gate is <= 3.516 V x 0.952 k / 10.85 k x 10 / 10.22 = 0.302 V, below AO3400A V_GS(th) min 0.65 V '
-                   '(Calculation: 3V3 at its window maximum 3.516 V (SLUSDW3A section 7.8 PFM band, R12F6-TRI-03 / '
-                   '-04), R89 -1 %, R127 +5 %); firmware never makes PC13 an output',
+    'BAT_FAULT_N': 'PC13 (ball A2, an input) reads U9\'s open-drain FLT through R95 10 kohm, with R89 10 kohm to 3V3 on '
+                   'U9\'s side (U9_FLT) and D95 from BAT_FAULT_N to 3V3 (PACK_FLT): with PE4 high-Z the gate is <= '
+                   '3.516 V x 0.952 k / 20.75 k x 10 / 10.22 = 0.158 V (Calculation: 3V3 at its window maximum 3.516 V '
+                   '(SLUSDW3A section 7.8 PFM band, R12F6-TRI-03 / -04), R89 and R95 -1 %, R127 +5 %), plus D95\'s '
+                   'reverse leakage x 0.908 kohm x 10 / 10.22 (2 uA at 25 C, LCSC C37704: 1.8 mV; 0.089 V even at 100 '
+                   'uA hot, Inference), below AO3400A V_GS(th) min 0.65 V; firmware never makes PC13 an output',
     'Q124': 'the AO3400A SOT-23\'s own gate (pin 1) and drain (pin 3) lands',
     'PYRO1_CONT': 'PYRO1_CONT is PC0\'s pin: a bridge puts PYRO1_OUT on PC0, whose input clamp then passes bus current '
                   'through the match into 3V3 (fire-capable or logic-destroying; Inference): the 0402 continuity '
@@ -214,47 +219,20 @@ WHY = {
                '305 k) = 3.34 V, under EN\'s 6.5 V (Calculation: R165 470 kohm, R81 300 kohm at the +/-1.67 % drift '
                'ends); J400\'s contact and its harness lead then carry the pack with no limit, so a chafe of that lead '
                'to GND shorts the pack (as PACK_GND)',
-    'PACK_FLT': 'BAT_IN to U9\'s FLT (BAT_FAULT_N), which PC13 (U1.A2) reads directly with R89 10 kohm to 3V3: U9.5 to '
-                'U9.4 (the package\'s own lands, 0.200 mm) and the BAT_IN fan-in under U9.4\'s corner. A bridge puts '
-                'the pack on PC13 with no series resistor and back-drives 3V3 through the pin\'s clamp and R89: '
-                'logic-destroying, and the FMEA I-5 mechanism (an MCU on an over-voltage rail can drive PE4), so '
-                'fire-capable (Inference). Own lands unavoidable in the TPS259470A; a series resistor between U9.4 and '
-                'PC13 would bound it (respin item)',
-    'PACK_OUT': 'BAT_IN to U9\'s OUT (RAW_PROTECTED): U9.5 to U9.6 (own lands, 0.200 mm) and the OUT fan-out beside the IN '
-                'bar. A bridge bypasses U9: the logic converters are fed from the pack with no current limit, OVLO or '
-                'fault latch (no overload by itself; a later downstream fault is then unlimited). Not a fire',
-    'PACK_U9': 'BAT_IN to U9\'s analog control pins and their dividers: OVLO (U9.2; R82 1 Mohm\'s own lands; R83), '
-               'BAT_OVLO_B (the R83 / R93 node), dVdt (U9.7, C81), ILIM (U9.9, R84 / R94) and the no-connect AUXOFF / '
-               'ITIMER pins (U9.3, U9.10). A bridge drives a high-impedance U9 input to the pack: OVLO / OVLO_B trip '
-               'U9\'s over-voltage turn-off (the board goes dark; in flight a brown-out reset), and dVdt / ILIM / '
-               'AUXOFF / ITIMER may be over-driven (U9 damaged, open or short; Inference: the pins\' absolute maxima '
-               'were not re-read). Not a fire (a shorted U9 is the PACK_OUT case)',
-    # round 6 verifier V-1 / V-2: BAT_IN pairs under PACK_MIN, all in the pack-entry cell (J1, U9, its input capacitors
-    # and dividers); each key names the consequence of one bridge. A part's own lands are unavoidable; the rest needs a
-    # re-layout of the pack-entry cell (respin item). Every one is an owner-acceptance item (R12_VALIDATION).
-    'PACK_GND': 'BAT_IN (the pack) to GND, or to BAT_DAMP (R166 0.36 ohm to GND): parts\' own lands (C80, C88, C96, '
-                'R167, D8, C79 to BAT_DAMP, U9.5 to U9.8) and the input decoupling\'s GND returns beside the BAT_IN '
-                'trunk. A bridge is an unfused pack short (tens of amps; through R166 about 23 A into a 2512 that opens; '
-                'Calculation / Inference on pack ESR): BAT_IN collapses, the logic browns out once C84\'s hold-up is '
-                'spent (in flight a reset, the tab to neutral, recovery on the Blue Jay) and there is no bus, so it is '
-                'not a fire path. BAT_IN is live whenever the pack is connected, so a pre-existing bridge shows at the '
-                'first pack connection (no power-up, the harness heats)',
-    'PACK_EN': 'BAT_IN to U9\'s EN/UVLO (BAT_ENABLE): U9.5 to U9.1, the TPS259470A RPW package\'s own lands (R10 had the '
-               'same pair). A bridge holds U9 on with J400 open, so J400 cannot turn the board off, and puts up to 8.4 V '
-               'on EN (above its 6.5 V absolute maximum in TI SLVSFC9C, R10\'s citation; Inference for this variant): '
-               'the per-flight switch-off check sees it (FMEA H-6). Not a fire by itself: PC1 and PE4 still hold the '
-               'bus and the match',
-    'PACK_SW': 'BAT_IN beside R80.2 (BAT_SW_SOURCE, J400.1\'s side of R80 470 kohm) and R80\'s own lands: a bridge only '
-               'shorts R80. J400 still switches EN, which with J400 closed then sits at <= 8.4 V x 305 k / (462 k + '
-               '305 k) = 3.34 V, under EN\'s 6.5 V (Calculation: R165 470 kohm, R81 300 kohm at the +/-1.67 % drift '
-               'ends); J400\'s contact and its harness lead then carry the pack with no limit, so a chafe of that lead '
-               'to GND shorts the pack (as PACK_GND)',
-    'PACK_FLT': 'BAT_IN to U9\'s FLT (BAT_FAULT_N), which PC13 (U1.A2) reads directly with R89 10 kohm to 3V3: U9.5 to '
-                'U9.4 (the package\'s own lands, 0.200 mm) and the BAT_IN fan-in under U9.4\'s corner. A bridge puts '
-                'the pack on PC13 with no series resistor and back-drives 3V3 through the pin\'s clamp and R89: '
-                'logic-destroying, and the FMEA I-5 mechanism (an MCU on an over-voltage rail can drive PE4), so '
-                'fire-capable (Inference). Own lands unavoidable in the TPS259470A; a series resistor between U9.4 and '
-                'PC13 would bound it (respin item)',
+    'PACK_FLT': 'BAT_IN to U9\'s FLT (U9_FLT): U9.5 to U9.4 (the TPS259470A RPW package\'s own lands, 0.200 mm) and the '
+                'BAT_IN fan-in under U9.4\'s corner. Round 6 verifier V-1 follow-up: PC13 (U1.A2, BAT_FAULT_N) now reads '
+                'U9_FLT only through R95 10 kohm, with R89 10 kohm (3V3) on U9\'s side and D95 BAT54C (A1 BAT_FAULT_N, K '
+                '3V3) clamping PC13, an FT pin with no positive injection (DS12110 Rev 8 Table 120 note 3; VIN max '
+                'Min(VDD, ...) + 4.0 V, Table 119). A bridge puts the pack on U9_FLT; then R89 and R95 + D95 each pass '
+                '<= (8.4 - 3.224) V / 9.833 kohm = 0.53 mA into 3V3 (1.05 mA together; 1.70 mA each at the SMAJ12CA\'s '
+                '19.9 V clamp, a transient), small beside the running MCU\'s supply current (Inference), and PC13 stays '
+                '<= 3V3 + V_F(BAT54C) <= 3.516 + 0.8 = 4.32 V (V_F <= 800 mV at 100 mA, LCSC C37704; with the board off '
+                'PC13 sits V_F above the unpowered rail, under the FT pin\'s +4.0 V): no current into the pin beyond its '
+                'leakage (Calculation; resistors at the +/-1.67 % drift ends; flt_guard() checks the netlist). Not a '
+                'fire and not logic-destroying. U9 itself is over-driven: U9_FLT above FLT\'s 6.5 V absolute maximum '
+                '(TI SLVSFC9C section 6.1), and with a fault asserted FLT\'s pull-down (R_FLT 12.3 ohm typical, section '
+                '6.5) sinks the pack (U9 damaged, open or short; Inference), the PACK_EN / PACK_U9 class; a shorted U9 '
+                'is the PACK_OUT case. Owner acceptance (U9\'s own pin, as PACK_U9)',
     'PACK_OUT': 'BAT_IN to U9\'s OUT (RAW_PROTECTED): U9.5 to U9.6 (own lands, 0.200 mm) and the OUT fan-out beside the IN '
                 'bar. A bridge bypasses U9: the logic converters are fed from the pack with no current limit, OVLO or '
                 'fault latch (no overload by itself; a later downstream fault is then unlimited). Not a fire',
@@ -337,35 +315,35 @@ EXCEPTIONS = {
     'PACK_GND': (
         ('track (10.4, 9)-(13.3, 9)', 'R167.2', 'F.Cu', 0.130),
         ('track (9.9, 9.5)-(10.4, 9)', 'R167.2', 'F.Cu', 0.137),
-        ('track (10.4, 9)-(13.3, 9)', 'via (11.5, 9.6)', 'F.Cu', 0.175),
+        ('track (10.4, 9)-(13.3, 9)', 'via (11.55, 9.6)', 'F.Cu', 0.175),
         ('C79.1', 'via (17.6, 18.9)', 'F.Cu', 0.190),
         ('track (14, 15.1)-(15.3, 15.1)', 'C88.2', 'F.Cu', 0.190),
         ('track (14.9, 10.5)-(14.9, 12.9)', 'C96.2', 'F.Cu', 0.200),
         ('track (5, 19.3)-(5, 23.3)', 'C80.2', 'F.Cu', 0.200),
-        ('track (10.4, 9)-(13.3, 9)', 'track (10.9, 9.6)-(11.5, 9.6)', 'F.Cu', 0.250),
+        ('track (10.4, 9)-(13.3, 9)', 'track (10.9, 9.6)-(11.55, 9.6)', 'F.Cu', 0.250),
         ('C79.1', 'track (17.6, 18.3)-(17.6, 18.9)', 'F.Cu', 0.265),
-        ('track (14, 15.1)-(15.3, 15.1)', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.290),
+        ('track (14, 15.1)-(15.3, 15.1)', 'track (15.3, 15.94)-(15.3, 16.8)', 'F.Cu', 0.290),
         ('R167.1', 'R167.2', 'F.Cu', 0.294),
         ('track (14.9, 12.9)-(13.1, 14.7)', 'C96.2', 'F.Cu', 0.310),
         ('C88.1', 'C88.2', 'F.Cu', 0.340),
         ('track (15.3, 15.1)-(16.6, 15.1)', 'C88.2', 'F.Cu', 0.390),
-        ('track (9.9, 9.5)-(10.4, 9)', 'track (10.9, 9.6)-(11.5, 9.6)', 'F.Cu', 0.427),
-        ('C88.1', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.440),
-        ('track (10.4, 9)-(13.3, 9)', 'via (12.2, 8.1)', 'F.Cu', 0.475),
-        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.490),
-        ('R167.1', 'track (10.9, 9.6)-(11.5, 9.6)', 'F.Cu', 0.497),
+        ('track (9.9, 9.5)-(10.4, 9)', 'track (10.9, 9.6)-(11.55, 9.6)', 'F.Cu', 0.427),
+        ('C88.1', 'track (15.3, 15.94)-(15.3, 16.8)', 'F.Cu', 0.440),
+        ('track (10.4, 9)-(13.3, 9)', 'via (12.12, 8.1)', 'F.Cu', 0.475),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (15.3, 15.94)-(15.3, 16.8)', 'F.Cu', 0.490),
+        ('R167.1', 'track (10.9, 9.6)-(11.55, 9.6)', 'F.Cu', 0.497),
         ('track (10.4, 9)-(13.3, 9)', 'D402.2', 'F.Cu', 0.500),
         ('track (9.9, 9.5)-(10.4, 9)', 'D402.2', 'F.Cu', 0.500),
         ('C79.1', 'C81.2', 'F.Cu', 0.555),
         ('C96.1', 'C88.2', 'F.Cu', 0.573),
-        ('track (10.4, 9)-(13.3, 9)', 'track (10.7, 8.1)-(12.2, 8.1)', 'F.Cu', 0.575),
+        ('track (10.4, 9)-(13.3, 9)', 'track (10.7, 8.1)-(12.12, 8.1)', 'F.Cu', 0.575),
         ('R167.1', 'D8.2', 'F.Cu', 0.580),
         ('C79.1', 'via (16.5, 18.2)', 'F.Cu', 0.600),
         ('track (13.2, 18.4)-(14.4, 19.6)', 'track (14.85, 21)-(13.2, 21)', 'F.Cu', 0.600),
         ('track (14.4, 19.6)-(16.4, 19.6)', 'track (14.85, 21)-(13.2, 21)', 'F.Cu', 0.600),
         ('track (14.4, 19.6)-(16.4, 19.6)', 'track (16.4, 22.55)-(14.85, 21)', 'F.Cu', 0.600),
         ('C79.1', 'R84.2', 'F.Cu', 0.601),
-        ('track (9.9, 9.5)-(10.4, 9)', 'track (10.7, 8.1)-(12.2, 8.1)', 'F.Cu', 0.623),
+        ('track (9.9, 9.5)-(10.4, 9)', 'track (10.7, 8.1)-(12.12, 8.1)', 'F.Cu', 0.623),
         ('track (13.2, 18.4)-(14.4, 19.6)', 'track (16.4, 22.55)-(14.85, 21)', 'F.Cu', 0.670),
         ('C79.1', 'track (16, 18.2)-(16.5, 18.2)', 'F.Cu', 0.675),
         ('U9.5', 'C88.2', 'F.Cu', 0.688),
@@ -376,21 +354,18 @@ EXCEPTIONS = {
         ('C79.1', 'track (14.85, 21)-(13.2, 21)', 'F.Cu', 0.752),
         ('C79.1', 'track (16.4, 22.55)-(14.85, 21)', 'F.Cu', 0.752),
         ('track (14.4, 19.6)-(16.4, 19.6)', 'via (17.6, 18.9)', 'F.Cu', 0.764),
-        ('C96.1', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.769),
+        ('C96.1', 'track (15.3, 15.94)-(15.3, 16.8)', 'F.Cu', 0.769),
         ('track (14.4, 19.6)-(16.4, 19.6)', 'via (16.5, 18.2)', 'F.Cu', 0.778),
-        ('track (9.9, 9.5)-(10.4, 9)', 'via (11.5, 9.6)', 'F.Cu', 0.828),
         ('track (14.4, 19.6)-(16.4, 19.6)', 'track (17.6, 18.3)-(17.6, 18.9)', 'F.Cu', 0.839),
         ('track (14.4, 19.6)-(16.4, 19.6)', 'track (16, 18.2)-(16.5, 18.2)', 'F.Cu', 0.850),
+        ('track (9.9, 9.5)-(10.4, 9)', 'via (11.55, 9.6)', 'F.Cu', 0.872),
         ('track (16.1, 12.5)-(14.6, 14)', 'C96.2', 'F.Cu', 0.875),
-        ('U9.5', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.906),
+        ('U9.5', 'track (15.3, 15.94)-(15.3, 16.8)', 'F.Cu', 0.906),
         ('D8.1', 'via (10.8, 13.3)', 'F.Cu', 0.925),
         ('track (14.6, 14.5)-(14.3, 14.8)', 'C88.2', 'F.Cu', 0.951),
         ('track (13.2, 18.4)-(14.4, 19.6)', 'C95.2', 'F.Cu', 0.976),
         ('track (14.4, 19.6)-(16.4, 19.6)', 'C95.2', 'F.Cu', 0.976),
-        ('track (13.3, 9)-(14.1, 9.8)', 'via (12.2, 8.1)', 'F.Cu', 0.996),
         ('D8.1', 'track (10.8, 12.8)-(10.8, 13.3)', 'F.Cu', 1.000),
-        ('R167.1', 'via (11.5, 9.6)', 'F.Cu', 1.022),
-        ('track (14, 15.1)-(15.3, 15.1)', 'via (15.3, 16.75)', 'F.Cu', 1.025),
         ('track (14.6, 10.2)-(14.9, 10.5)', 'C96.2', 'F.Cu', 1.025),
         ('R167.1', 'D402.2', 'F.Cu', 1.031),
     ),
@@ -526,16 +501,16 @@ EXCEPTION_NETS = {
     'U9.10': 'unconnected-(U9-ITIMER-Pad10)',
     'U9.2': 'BAT_OVLO',
     'U9.3': 'unconnected-(U9-AUXOFF-Pad3)',
-    'U9.4': 'BAT_FAULT_N',
+    'U9.4': 'U9_FLT',
     'U9.5': 'BAT_IN',
     'U9.6': 'RAW_PROTECTED',
     'U9.7': 'BAT_DVDT',
     'U9.8': 'GND',
     'U9.9': 'BAT_ILIM',
     'track (10.4, 9)-(13.3, 9)': 'BAT_IN',
-    'track (10.7, 8.1)-(12.2, 8.1)': 'GND',
+    'track (10.7, 8.1)-(12.12, 8.1)': 'GND',
     'track (10.8, 12.8)-(10.8, 13.3)': 'GND',
-    'track (10.9, 9.6)-(11.5, 9.6)': 'GND',
+    'track (10.9, 9.6)-(11.55, 9.6)': 'GND',
     'track (13.2, 18.4)-(14.4, 19.6)': 'BAT_IN',
     'track (13.3, 9)-(14.1, 9.8)': 'BAT_IN',
     'track (14, 15.1)-(15.3, 15.1)': 'BAT_IN',
@@ -546,12 +521,12 @@ EXCEPTION_NETS = {
     'track (14.9, 10.5)-(14.9, 12.9)': 'BAT_IN',
     'track (14.9, 12.9)-(13.1, 14.7)': 'BAT_IN',
     'track (15.3, 15.1)-(16.6, 15.1)': 'BAT_IN',
-    'track (15.3, 15.94)-(15.3, 16.75)': 'GND',
+    'track (15.3, 15.94)-(15.3, 16.8)': 'GND',
     'track (16, 18.2)-(16.5, 18.2)': 'GND',
     'track (16.1, 12.5)-(14.6, 14)': 'BAT_IN',
     'track (16.2, 11.5)-(17, 12.3)': 'BAT_OVLO',
     'track (16.4, 22.55)-(14.85, 21)': 'BAT_DAMP',
-    'track (16.6, 14.45)-(16.6, 13.6)': 'BAT_FAULT_N',
+    'track (16.6, 14.45)-(16.6, 13.6)': 'U9_FLT',
     'track (16.6, 16.1)-(16.6, 16.2)': 'BAT_DVDT',
     'track (16.6, 16.4)-(15.9, 17.1)': 'BAT_DVDT',
     'track (17, 11.3)-(16.2, 10.5)': 'BAT_OVLO_B',
@@ -565,11 +540,10 @@ EXCEPTION_NETS = {
     'track (5, 19.3)-(5, 23.3)': 'BAT_IN',
     'track (9.9, 9.5)-(10.4, 9)': 'BAT_IN',
     'via (10.8, 13.3)': 'GND',
-    'via (11.5, 9.6)': 'GND',
-    'via (12.2, 8.1)': 'GND',
-    'via (15.3, 16.75)': 'GND',
+    'via (11.55, 9.6)': 'GND',
+    'via (12.12, 8.1)': 'GND',
     'via (16.5, 18.2)': 'GND',
-    'via (16.6, 13.6)': 'BAT_FAULT_N',
+    'via (16.6, 13.6)': 'U9_FLT',
     'via (17.6, 18.9)': 'GND',
     # ---- end pack-energy items
 }
@@ -936,4 +910,59 @@ def pack_guard(path, classes=None, not_a_path=None):
             if r < PACK_SERIES_MIN:
                 issues.append(f'{p} / {f} is classed "not a path", but a bridge puts the pack on {n} through only '
                               f'{r:g} ohm (pack guard, >= {PACK_SERIES_MIN:g} ohm; round 6 V-1)')
+    return issues, ev
+
+
+# ---- U9's FLT and PC13 (round 6 verifier V-1 follow-up, PACK_FLT) ---------------------------------------------------
+# U9.4 (FLT) sits 0.200 mm from U9.5 (BAT_IN) in the TPS259470A package, so the PACK_FLT pairs stay measured exceptions
+# (U9's own pin is over-driven: owner acceptance, as PACK_U9). What makes them neither logic-destroying nor fire-capable
+# is the netlist: the net on U9.4 carries no MCU pin and reaches every MCU-pin net and 3V3 only through at least
+# PACK_SERIES_MIN (R95 to PC13, R89 to 3V3), and every MCU-pin net it reaches has a diode clamp to 3V3 (PC13 is an FT
+# pin: no positive injection, so a series resistor alone would leave it at the pack voltage). flt_guard() checks that.
+FLT_PIN = ('U9', '4')          # TPS259470A FLT (open drain)
+FLT_CLAMP_RAIL = '3V3'
+
+
+def flt_guard(path, classes=None):
+    """(issues, evidence): U9's FLT net is no MCU-pin net, reaches every MCU-pin net and 3V3 only through at least
+    PACK_SERIES_MIN of resistors (diodes count 0 ohm, MOSFET gates insulated, GND and the pack nets not crossed), and
+    each MCU-pin net it reaches carries a diode whose anode is on that net and whose cathode is on FLT_CLAMP_RAIL."""
+    classes = netlist_classes(path) if classes is None else classes
+    values, pins, funcs = read_netlist(path, functions=True)
+    ref, pin = FLT_PIN
+    flt = pins.get(ref, {}).get(pin)
+    if not flt or flt.startswith('unconnected-'):
+        return [f'{ref}.{pin} (FLT) is not on a net (PACK_FLT guard)'], {}
+    issues, ev = [], {'flt_net': flt}
+    mcu = set(classes.get('mcu', ()))
+    if flt in mcu:
+        issues.append(f'{ref}.{pin} (FLT, beside U9.5 BAT_IN) is on {flt}, an MCU-pin net: the pack reaches the MCU with '
+                      'no series resistor (PACK_FLT)')
+    reach = series_to_sources(path, flt, classes, stop=PACK + ('GND',), insulated_gates=True)
+    ev['series_ohm'] = {n: round(r, 1) for n, r in sorted(reach.items(), key=lambda kv: (kv[1], kv[0])) if n != flt}
+    for n, r in sorted(reach.items(), key=lambda kv: (kv[1], kv[0])):
+        if n == flt:
+            continue
+        if (n in mcu or n == FLT_CLAMP_RAIL) and r < PACK_SERIES_MIN:
+            issues.append(f'{flt} (U9 FLT, beside BAT_IN) reaches {n} through only {r:g} ohm (PACK_FLT guard, >= '
+                          f'{PACK_SERIES_MIN:g} ohm)')
+    rails = set(classes.get('supply', ())) | {FLT_CLAMP_RAIL, '3V3A'}
+    reached_mcu = sorted(n for n in reach if n in mcu and n != flt and n not in rails)     # MCU signal pins only
+    if not reached_mcu:
+        issues.append(f'{flt} (U9 FLT) reaches no MCU pin: PC13 cannot read the fault (PACK_FLT guard)')
+    for m in reached_mcu:
+        clamps = []
+        for d, pp in sorted(pins.items()):
+            if not _PASS.match(d) or not d.startswith('D'):
+                continue
+            fn = funcs.get(d, {})
+            anodes = {p for p, f in fn.items() if f.split('_')[0].startswith('A')}
+            cathodes = {p for p, f in fn.items() if f.split('_')[0].startswith('K')}
+            if any(pp.get(p) == m for p in anodes) and any(pp.get(p) == FLT_CLAMP_RAIL for p in cathodes):
+                clamps.append(d)
+        ev[f'clamp {m}'] = clamps
+        if not clamps:
+            issues.append(f'{m} (an MCU pin reached from U9 FLT) has no diode clamp to {FLT_CLAMP_RAIL} (anode on {m}, '
+                          'cathode on 3V3): an FT pin takes no positive injection, so a BAT_IN-to-FLT bridge would leave '
+                          'it at the pack voltage (PACK_FLT guard)')
     return issues, ev

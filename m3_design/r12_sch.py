@@ -168,11 +168,14 @@ R12_MOVES = {
     'LED_YEL': ('H2', 'GPIO out',
                 f'D-R12-93: PD2 (B7) -> PA1 (H2, west face, straight to R33 in the west bay); plain GPIO; {_DS} Table 9 '
                 '(PA1, TFBGA100 ball H2); not an H74x loader pin (AN2606 Rev 64 Table 119)'),
-    'BAT_FAULT_N': ('A2', 'GPIO in, EXTI13 (open drain U9 FLT with R89 pull-up)',
+    'BAT_FAULT_N': ('A2', 'GPIO in, EXTI13, no pull (U9 FLT open drain through R95 10k; R89 10k pull-up on U9_FLT; '
+                    'D95 BAT54C clamp to 3V3)',
                     f'D-R12-93: PA5 (H3, forward-west) -> PC13 (A2, aft-west, toward R89 / U9); plain GPIO input; '
                     f'{_DS} Table 9 p. 64 (PC13, TFBGA100 ball A2, FT; a VBAT-domain pin whose 2 MHz / 3 mA output '
                     'limits do not apply to an input, DS12110 Table 9 note); not an H74x loader pin (AN2606 Rev 64 '
-                    'Table 119)'),
+                    'Table 119); round 6 verifier V-1 follow-up (PACK_FLT): U9.4 is 0.200 mm from U9.5 (BAT_IN), so '
+                    'PC13 reads U9_FLT through R95 10k with D95 clamping it to 3V3 + V_F (FT: no positive injection, '
+                    'DS12110 Rev 8 Table 120 note 3)'),
     'PORT_SENSE': ('H9', 'GPIO in, no pull (high = PORT_4V8 present: the battery path is on)',
                    f'D-R12-93: PA4 (G3, a PC1 F2 neighbour) -> PD10 (H9, forward-east, beside the port UART balls); plain '
                    f'GPIO input; {_DS} Table 9 p. 75 (PD10, TFBGA100 ball H9, FT_h); not an H74x loader pin (AN2606 Rev 64 '

@@ -945,9 +945,12 @@ def s10(c, exceptions=None, not_a_path=None):
     issues += [f'S-10: {m}' for m in fired]
     packed, pack_ev = fire.pack_guard(netlist, classes, not_a_path)          # round 6 V-1 / V-2: the pack-energy nets
     issues += [f'S-10: {m}' for m in packed]
+    flt, flt_ev = fire.flt_guard(netlist, classes)                         # PACK_FLT: R95 and D95 between U9 FLT and PC13
+    issues += [f'S-10: {m}' for m in flt]
     return issues, dict(exceptions=kept, u1_nc_balls=nc, owner_pairs=owner, netlist_classes=classes,
                         fire_state=dict(series_ohm=fire_ev, min_ohm=fire.FIRE_SERIES_MIN),
                         pack=dict(pack_ev, min_ohm=fire.PACK_SERIES_MIN, limit=fire.PACK_MIN),
+                        pack_flt=dict(flt_ev, min_ohm=fire.PACK_SERIES_MIN),
                         not_a_path={f'{p} / {f}': why for (p, f), why in fire.NOT_A_PATH.items()},
                         limits=dict(gate=fire.GATE_MIN, out=fire.OUT_MIN, out_gnd=fire.GND_MIN, fill=fire.FILL_MIN,
                                     ign=fire.IGN_MIN, pack=fire.PACK_MIN))

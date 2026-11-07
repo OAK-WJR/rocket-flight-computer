@@ -1,7 +1,7 @@
 {
   "schema": 3,
-  "board_sha256": "6a1c99e01d7c786fc35b3e8085ec0b0a4b0371c95d059b108671d93fd9ac554a",
-  "electrical_sha256": "6b54be981e91402c1ad3c84ce1a0c7ee35f19add46a093363efbeea8b8de7fd0",
+  "board_sha256": "f26dfef181327c27cbf6c71b1f89e8d0be83f80e665716e0be1b7e31efcd0df0",
+  "electrical_sha256": "3a599c52c4fa6f29806a18c6e77996f2a8c34ed9abbf4524eed7aaef79f25109",
   "parts": {
     "C10": {
       "value": "22uF 25V X5R 10%",
@@ -2879,7 +2879,7 @@
         },
         {
           "number": "4",
-          "net": "BAT_FAULT_N",
+          "net": "U9_FLT",
           "xy": [
             16.6,
             14.45
@@ -2894,7 +2894,7 @@
         },
         {
           "number": "4",
-          "net": "BAT_FAULT_N",
+          "net": "U9_FLT",
           "xy": [
             16.425,
             14.625

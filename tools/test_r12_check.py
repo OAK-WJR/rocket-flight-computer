@@ -710,6 +710,63 @@ pcbnew.SaveBoard(sys.argv[1], b)
                 self.assertTrue([i for i in fire.pack_guard(net, not_a_path={('RAW_ACT', f): 'planted'})[0]
                                  if f'RAW_ACT / {f} is classed' in i and want in i])
 
+    # ---- round 6 verifier V-1 follow-up: PACK_FLT (R95 and D95 between U9's FLT and PC13) -------------------------
+    def test_round6_pack_flt_series_resistor_and_clamp(self):
+        """The committed netlist: U9.4 (FLT, beside U9.5 BAT_IN) is U9_FLT with R89 10k to 3V3; PC13 (U1.A2, BAT_FAULT_N)
+        reads it through R95 10k and D95 (A1 BAT_FAULT_N, K 3V3) clamps PC13; flt_guard() passes and S-10 records it.
+        The PACK_FLT pairs stay measured exceptions on U9_FLT's items (U9's own pin is over-driven)."""
+        net = BOARD12.with_name('schematic.net.xml')
+        parts, pins = r12_sch_check.read_netlist(net)
+        self.assertEqual((pins['U9', '4'], pins['R89', '2'], pins['R89', '1'], pins['R95', '1'], pins['R95', '2'],
+                          pins['D95', '1'], pins['D95', '3'], pins['U1', 'A2']),
+                         ('U9_FLT', 'U9_FLT', '3V3', 'U9_FLT', 'BAT_FAULT_N', 'BAT_FAULT_N', '3V3', 'BAT_FAULT_N'))
+        self.assertEqual((parts['R95']['value'], parts['D95']['value']), ('10k', 'BAT54C'))
+        issues, ev = fire.flt_guard(net)
+        self.assertEqual(issues, [])
+        self.assertEqual(ev['series_ohm'], {'3V3': 10000.0, 'BAT_FAULT_N': 10000.0})
+        self.assertEqual(ev['clamp BAT_FAULT_N'], ['D95'])
+        rep = self.s10()
+        self.assertTrue(rep['ok'], rep['issues'])
+        self.assertEqual(rep['evidence']['s10']['pack_flt']['flt_net'], 'U9_FLT')
+        flt_items = {b for a, b, *_ in fire.EXCEPTIONS['PACK_FLT']}
+        self.assertEqual({fire.EXCEPTION_NETS[b] for b in flt_items}, {'U9_FLT'})
+        self.assertNotIn('BAT_FAULT_N', {fire.EXCEPTION_NETS[b] for k, v in fire.EXCEPTIONS.items()
+                                         if k.startswith('PACK_') for _, b, *_ in v})
+        for w in ('R95', 'D95', 'no positive injection', 'Owner acceptance', '6.5 V'):
+            self.assertIn(w, fire.WHY['PACK_FLT'])
+        self.assertIn('0.158 V', fire.WHY['BAT_FAULT_N'])
+
+    def test_round6_pack_flt_planted_netlists_fail(self):
+        """Planted: R95 removed (PC13 on U9_FLT), R95 0 ohm, R95 1k, D95 removed, D95 reversed, D95's cathode on a
+        non-rail net: each fails flt_guard() and S-10."""
+        def drop(root, ref):
+            root.find('components').remove(next(c for c in root.findall('./components/comp') if c.get('ref') == ref))
+            for n in root.findall('./nets/net'):
+                for x in list(n.findall('node')):
+                    if x.get('ref') == ref:
+                        n.remove(x)
+
+        def swap_d95(root):
+            self.move_node(root, 'D95', '1', '3V3')
+            self.move_node(root, 'D95', '3', 'BAT_FAULT_N')
+        cases = (
+            ('R95 removed', lambda r: (drop(r, 'R95'), self.move_node(r, 'U1', 'A2', 'U9_FLT')),
+             'is on U9_FLT, an MCU-pin net'),
+            ('R95 0 ohm', lambda r: self.set_value(r, 'R95', '0R'), 'reaches BAT_FAULT_N through only 0 ohm'),
+            ('R95 1k', lambda r: self.set_value(r, 'R95', '1k'), 'reaches BAT_FAULT_N through only 1000 ohm'),
+            ('R89 1k', lambda r: self.set_value(r, 'R89', '1k'), 'reaches 3V3 through only 1000 ohm'),
+            ('D95 removed', lambda r: drop(r, 'D95'), 'has no diode clamp to 3V3'),
+            ('D95 reversed', swap_d95, 'has no diode clamp to 3V3'),
+            ('D95 cathode off the rail', lambda r: self.move_node(r, 'D95', '3', 'GND'), 'has no diode clamp to 3V3'),
+        )
+        for name, mutate, want in cases:
+            with self.subTest(case=name):
+                path = self.netlist(mutate)
+                self.assertTrue([i for i in fire.flt_guard(path)[0] if want in i], fire.flt_guard(path)[0])
+                rep = self.s10_netlist(path)
+                self.assertFalse(rep['ok'])
+                self.assertTrue([i for i in rep['issues'] if 'PACK_FLT' in i or want in i], rep['issues'])
+
     def test_round6_v3_ign_raw_act_reason(self):
         why = fire.NOT_A_PATH[(fire.IGN, 'RAW_ACT')]
         self.assertNotIn('ILIM', why)

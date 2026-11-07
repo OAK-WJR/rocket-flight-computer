@@ -907,6 +907,29 @@
     "2": "PYRO1_COLD_PU"
    },
    "why": "R12F6-TRI-01: series resistor between 3V3 and D120's anode (A1): a bridge across R131 during a commanded fire (Q124 holding PYRO1_OUT near GND) passes <= 0.71 mA through R136 instead of U2's 1-1.6 A current limit through D120"
+  },
+  "R95": {
+   "lcsc": "C25744",
+   "value": "10k",
+   "lib": "M3:R",
+   "sheet": "battery_entry.kicad_sch",
+   "nets": {
+    "1": "U9_FLT",
+    "2": "BAT_FAULT_N"
+   },
+   "why": "R12 round 6 verifier V-1 follow-up (PACK_FLT): series resistor between U9's FLT pin (net U9_FLT, with R89's 10k pull-up) and PC13 (BAT_FAULT_N). U9.4 sits 0.200 mm from U9.5 (BAT_IN) in the TPS259470A package, so one bridge puts the pack on U9_FLT; R95 then passes at most (8.4 - 3.224) V / 9.833 kohm = 0.53 mA into D95 and 3V3 (1.70 mA at the SMAJ12CA's 19.9 V clamp), never the pack straight onto PC13. FLT low: R89 sinks into U9 and no DC flows in R95, so PC13 reads U9.4's level plus R95 x (D95 reverse + PC13 leakage) (Calculation; drift ends +/-1.67 %)"
+  },
+  "D95": {
+   "lcsc": "C37704",
+   "value": "BAT54C",
+   "lib": "M3:BAT54C",
+   "sheet": "battery_entry.kicad_sch",
+   "nets": {
+    "1": "BAT_FAULT_N",
+    "2": null,
+    "3": "3V3"
+   },
+   "why": "R12 round 6 verifier V-1 follow-up (PACK_FLT): PC13 is an FT pin with no positive injection (DS12110 Rev 8 Table 120 note 3) and VIN max Min(VDD, ...) + 4.0 V, so a series resistor alone would leave the pin at the pack voltage; D95 (A1 on BAT_FAULT_N, K on 3V3, A2 unused, as D120) clamps PC13 at 3V3 + V_F <= 3.516 + 0.8 = 4.32 V (V_F <= 800 mV at 100 mA, LCSC C37704 listing) with R95's current, and at V_F above the rail with the board off. Normal levels: zero bias with PC13 high, 3V3 reverse bias with FLT low"
   }
  },
  "net_changes": {
@@ -915,6 +938,12 @@
   },
   "R101": {
    "1": "CAM_MCU_TX"
+  },
+  "U9": {
+   "4": "U9_FLT"
+  },
+  "R89": {
+   "2": "U9_FLT"
   }
  },
  "net_changes_note": "D-R12-08: with U12 deleted, R100 / R101 join the camera wires to the MCU UART pins directly",
