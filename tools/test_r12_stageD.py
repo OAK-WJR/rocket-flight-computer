@@ -137,7 +137,7 @@ class Round3Fixes(unittest.TestCase):
         self.assertAlmostEqual(b['resistor_tolerance'], td, places=12)
         want = (b['vdd_min_V'] - 0.4) * 10e3 * (1 - td) / (10e3 * (1 - td) + 220 * (1 + td))
         self.assertAlmostEqual(g['q124_vgs_min_V'], want, places=9)
-        self.assertAlmostEqual(g['q124_vgs_min_V'], 2.777, places=3)
+        self.assertAlmostEqual(g['q124_vgs_min_V'], 2.761, places=3)      # R12F6-TRI-03: 3V3 drift minimum 3.2237 V
         self.assertGreater(g['q124_vgs_min_V'], g['q124_vgs_row_V'])
 
     def test_pe4_load_includes_r127_and_stays_within_the_4_mA_row(self):
@@ -146,9 +146,10 @@ class Round3Fixes(unittest.TestCase):
         b = json.loads((DESIGN / 'stageD_budget.json').read_text())['fire']['gate']['q124_vgs_min_basis']
         vdd = b['vdd_min_V']
         self.assertAlmostEqual(b['pe4_load_mA'], (vdd / 1e3 + vdd / 10.22e3) * 1e3, places=9)
-        self.assertAlmostEqual(b['pe4_load_mA'], 3.557, places=3)
+        self.assertAlmostEqual(b['pe4_load_mA'], 3.539, places=3)         # R12F6-TRI-03 (was 3.557 mA)
         self.assertAlmostEqual(b['pe4_load_max_mA'], b['pe4_load_vdd_max_V'] / 983.3e-3 * (1 + 1 / 10.22), places=6)
-        self.assertAlmostEqual(b['pe4_load_max_mA'], 3.868, places=3)
+        self.assertAlmostEqual(b['pe4_load_max_mA'], 3.925, places=3)     # R12F6-TRI-03 (was 3.868 mA)
+        self.assertIn(f"{b['pe4_load_max_mA']:.2f} mA", b['label'])
         self.assertLessEqual(b['pe4_load_max_mA'], b['voh_row_mA'])
         self.assertEqual(b['voh_row_mA'], 4.0)
         self.assertTrue(b['pe4_load_within_voh_row'])
@@ -210,7 +211,7 @@ class Round5Windows(unittest.TestCase):
             self.assertAlmostEqual(t['ceiling_V'], round(v33[case]['min_V'] + 0.3, 4), places=9)
             self.assertGreater(s[case]['PORT_SENSE_V'][0], t['vih_V'])
             self.assertLess(s[case]['PORT_SENSE_V'][1], t['ceiling_V'])
-        self.assertAlmostEqual(s['PORT_SENSE_thresholds']['drift']['vih_V'], 2.4249, places=4)
+        self.assertAlmostEqual(s['PORT_SENSE_thresholds']['drift']['vih_V'], 2.4609, places=4)   # R12F6-TRI-03
         self.assertNotIn('3.43 V', s['PORT_SENSE_limits'])
         self.assertTrue(s['PORT_SENSE_ok'])
 
@@ -227,7 +228,7 @@ class Round5Windows(unittest.TestCase):
 
     def test_q124_stage_a_bound_at_drift_ends(self):
         """R12F5-TRI-05: the stage A placeholder uses the 3V3 drift minimum and the drift resistor ends."""
-        self.assertAlmostEqual(self.w['fire']['gate']['q124_vgs_min_V'], 2.777, places=3)
+        self.assertAlmostEqual(self.w['fire']['gate']['q124_vgs_min_V'], 2.761, places=3)
 
     def test_port_input_condition(self):
         """R12F5-TRI-02: PORT_4V8's window is conditioned on U400 VIN >= VO / 0.75, as D-R12-87 does for U403."""
@@ -241,6 +242,64 @@ class Round5Windows(unittest.TestCase):
         for name in ('four_stall_fire', '6V0_pack_converters_only'):
             self.assertLess(u[name]['VIN_V'], u['min_recommended_VIN_V']['drift'][0])
             self.assertTrue(u[name]['holds_window_top_with_foldback'])
+
+
+
+class Round6Windows(unittest.TestCase):
+    """R12 review round 6 (R12F6-TRI-03 3V3 PFM band; R12F6-TRI-01 cold screen at 10.2 kohm) in r12_windows.json and
+    stageD_budget.json."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.w = json.loads((DESIGN / 'r12_windows.json').read_text())
+        cls.d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+
+    def test_3v3_window_is_the_pfm_band(self):
+        """U2 LMR50410XDBVR (PFM): SLUSDW3A section 7.8 -1.5 / +2.5 % about 1.000 V, then the 1 % divider."""
+        r = self.w['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)']
+        self.assertEqual(r['pfm_regulation_band'], [-0.015, 0.025])
+        self.assertIn('section 7.8', r['source'])
+        self.assertIn('Inference', r['label'])
+        for case, tol, lo, hi in (('initial', .01, 3.2539, 3.4824), ('drift', .01 + 100e-6 * 67, 3.2237, 3.5156)):
+            self.assertAlmostEqual(r[case]['min_V'], round(.985 * (1 + 47 * (1 - tol) / (20 * (1 + tol))), 4), places=9)
+            self.assertAlmostEqual(r[case]['max_V'], round(1.025 * (1 + 47 * (1 + tol) / (20 * (1 - tol))), 4), places=9)
+            self.assertEqual((r[case]['min_V'], r[case]['max_V']), (lo, hi))
+            self.assertTrue(r[case]['inside_limits'])
+        self.assertLess(r['drift']['max_V'], 3.6)
+        self.assertGreater(r['drift']['min_V'], 3.135)
+
+    def test_stage_d_follows_the_window(self):
+        u6, g = self.d['u6_supply'], self.d['fire']['gate']
+        v33 = self.w['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)']
+        self.assertAlmostEqual(u6['1A_rating_bound']['min_VCC_drift_V'],
+                               v33['drift']['min_V'] - u6['1A_rating_bound']['drop_V'], places=9)
+        self.assertGreater(u6['1A_rating_bound']['margin_drift_V'], 0.07)
+        self.assertEqual(g['q124_vgs_min_basis']['vdd_min_V'], v33['drift']['min_V'])
+        self.assertEqual(g['q124_vgs_min_basis']['pe4_load_vdd_max_V'], v33['drift']['max_V'])
+
+    def test_cold_screen_topology_and_margins(self):
+        c = self.w['cold_screen']
+        self.assertIn('R136 5.1k', c['topology'])
+        self.assertIn('Inference', c['label'])
+        self.assertEqual(c['inputs']['vf_V'], [0.0, 0.4])
+        for case in ('initial', 'drift'):
+            m, k = c[case]['margins_mV'], c[case]['cases']
+            self.assertEqual(c[case]['vdd_V'], [self.w['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)'][case][x]
+                                                for x in ('min_V', 'max_V')])
+            for key in ('open_PC0_above_healthy_mV', 'healthy_PC5_above_open_mV',
+                        'R131_bridged_healthy_PC0_above_healthy_mV', 'R173_bridged_healthy_PC0_above_healthy_mV'):
+                self.assertGreater(m[key], 5.0, (case, key))
+            self.assertEqual(k['open']['PC5_mV'], [0.0, 0.0])
+            self.assertEqual(k['R131_bridged_no_match']['PC5_mV'], [0.0, 0.0])
+            self.assertEqual(k['R173_bridged_no_match']['PC5_mV'], [0.0, 0.0])
+            self.assertLessEqual(m['shorted_vs_healthy_band_edges_mV'], 0.01)
+
+    def test_cold_screen_nominal(self):
+        """Lane P's check at 3.3 V / VF 0.25 V: open PC0 0.1425 V; the generator's nominal is 3.35 V."""
+        import r12_budget
+        n = self.w['cold_screen']['nominal_3V35_VF_0V25']
+        self.assertAlmostEqual(n['open_PC0_mV'], (3.35 - .25) * 1e3 / 21.4, places=2)
+        self.assertEqual(r12_budget.cold_screen(), self.w['cold_screen'])
 
 
 if __name__ == '__main__':

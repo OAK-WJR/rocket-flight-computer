@@ -493,17 +493,17 @@
     0.8388157894736842
    ],
    "q124_gate_tau_us": 48.400000000000006,
-   "q124_vgs_min_V": 2.776932343635679,
+   "q124_vgs_min_V": 2.7608971017654547,
    "q124_vgs_min_basis": {
-    "label": "Calculation / Inference (PE4 load about 3.56 mA, <= 3.87 mA with drift, within the 4 mA VOH row; resistor drift)",
-    "pe4_load_mA": 3.5571352250489237,
-    "pe4_load_max_mA": 3.867642665786741,
+    "label": "Calculation / Inference (PE4 load about 3.54 mA, <= 3.93 mA with drift, within the 4 mA VOH row; the 3V3 PFM band at R12's VIN and resistor drift)",
+    "pe4_load_mA": 3.539130528375734,
+    "pe4_load_max_mA": 3.9251420443520293,
     "pe4_load_parts": "R127 1k to GND, and R126 220R + R128 10k (10.22 kOhm) to GND",
-    "pe4_load_vdd_max_V": 3.4641,
+    "pe4_load_vdd_max_V": 3.5156,
     "pe4_load_within_voh_row": true,
     "resistor_tolerance": 0.0167,
-    "source": "DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 drift minimum and maximum (r12_windows.json); R126 220R / R127 1k / R128 10k 1 % + 100 ppm/K over 67 K (the drift case)",
-    "vdd_min_V": 3.2401,
+    "source": "DS12110 Rev 8 Table 158 p. 247 (VOH VDD - 0.4 V at 4 / 8 mA); 3V3 drift minimum and maximum (r12_windows.json: the SLUSDW3A section 7.8 PFM band, R12F6-TRI-03); R126 220R / R127 1k / R128 10k 1 % + 100 ppm/K over 67 K (the drift case)",
+    "vdd_min_V": 3.2237,
     "voh_drop_V": 0.4,
     "voh_row_mA": 4.0
    },
@@ -2042,32 +2042,33 @@
   "0V5_allocation": {
    "I_A": 0.5,
    "drop_V": 0.008449217250986078,
-   "margin_drift_V": 0.09665078274901395,
-   "margin_initial_V": 0.12695078274901395,
-   "min_VCC_drift_V": 3.2316507827490137,
-   "min_VCC_initial_V": 3.2619507827490137
+   "margin_drift_V": 0.08025078274901398,
+   "margin_initial_V": 0.11045078274901377,
+   "min_VCC_drift_V": 3.2152507827490138,
+   "min_VCC_initial_V": 3.2454507827490136
   },
   "1A_rating_bound": {
    "I_A": 1.0,
    "drop_V": 0.016898434501972155,
-   "margin_drift_V": 0.08820156549802816,
-   "margin_initial_V": 0.11850156549802815,
-   "min_VCC_drift_V": 3.223201565498028,
-   "min_VCC_initial_V": 3.253501565498028
+   "margin_drift_V": 0.07180156549802819,
+   "margin_initial_V": 0.10200156549802797,
+   "min_VCC_drift_V": 3.206801565498028,
+   "min_VCC_initial_V": 3.2370015654980278
   },
   "R_L1_to_R14_ohm": 0.004851530320236313,
   "R_L1_to_U6_ohm": 0.01204690418173584,
   "R_R14_to_U6_direct_ohm": 0.013162386438122274,
   "floor_V": 3.135,
-  "label": "Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window; load currents Inference",
+  "label": "Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window (SLUSDW3A section 7.8 PFM band, R12F6-TRI-03); the band at R12's VIN, the drift case and load currents Inference",
   "u6_max_A": 0.006,
   "u6_only_6mA": {
    "I_A": 0.006,
    "drop_V": 7.897431862873365e-05,
-   "margin_drift_V": 0.1050210256813715,
-   "margin_initial_V": 0.1353210256813715,
-   "min_VCC_drift_V": 3.2400210256813713,
-   "min_VCC_initial_V": 3.2703210256813713
-  }
+   "margin_drift_V": 0.08862102568137153,
+   "margin_initial_V": 0.11882102568137132,
+   "min_VCC_drift_V": 3.2236210256813713,
+   "min_VCC_initial_V": 3.253821025681371
+  },
+  "window_basis": "TI SLUSDW3A section 7.8 PFM output regulation -1.5 % ... +2.5 % (U2 LMR50410XDBVR is the PFM variant; typical components over TJ -40 ... 150 C, VIN 24 V, IOUT 0 A to full load, not production tested), taken as an effective VFB 0.985-1.025 V about the 1.000 V nominal; it contains section 7.5's VFB 0.99-1.01 V (R12F6-TRI-03); ILKG-FB 0.2 nA typ (neglected)"
  }
 }

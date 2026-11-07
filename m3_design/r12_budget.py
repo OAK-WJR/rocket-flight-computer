@@ -35,6 +35,16 @@ PORT_SENSE_TOP, PORT_SENSE_BOT, PD10_LEAK = 47e3, 100e3, 250e-9
 BUCK_DUTY_REC, BUCK_TOFF_S, BUCK_RDSH, BUCK_FSW, BUCK_FSW_FOLDBACK = 0.75, (220e-9, 310e-9), 0.095, 580e3, 200e3
 PORT_RAIL = 'PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)'
 PORT_BUDGET_A = 0.561                                         # always-on port budget (R10 D-R28-01; Inference)
+V33_RAIL = '3V3 (U2 LMR50410, R14 47k / R15 20k)'
+# R12F6-TRI-03: U2 is LMR50410XDBVR, the PFM variant (TI SLUSDW3A section 5 orderable table: XDBVR PFM, XFDBVR FPWM).
+# SLUSDW3A section 7.8 (System Characteristics) gives the adjustable output's regulation as -1.5 % ... +2.5 % in PFM
+# operation (+/-1.5 % FPWM): deviation from the nominal output at VIN 24 V, IOUT 0 A to full load, with typical (nominal)
+# components over TJ -40 ... 150 C, not production tested. It contains section 7.5's VFB 0.99-1.01 V, so the window
+# takes it as an effective reference band about the 1.000 V nominal (0.985-1.025 V) with the 1 % divider on top. The
+# band is the maker's typical-component system figure (Datasheet); its use at R12's VIN (about 5 V, not 24 V) and its
+# stacking with the resistor tolerance are Inference.
+V33_PFM_BAND = (-0.015, 0.025)
+V33_VREF_NOM = 1.0
 
 
 def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
@@ -49,9 +59,13 @@ def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
 def rails():
     out = {}
     specs = {
-        '3V3 (U2 LMR50410, R14 47k / R15 20k)': dict(
-            vref=(0.99, 1.01), top=47e3, bot=20e3, leak=0.0,
-            src='TI SLUSDW3A section 7.5 VFB 0.99-1.01 V; ILKG-FB 0.2 nA typ (neglected)',
+        V33_RAIL: dict(
+            vref=(round(V33_VREF_NOM * (1 + V33_PFM_BAND[0]), 4), round(V33_VREF_NOM * (1 + V33_PFM_BAND[1]), 4)),
+            top=47e3, bot=20e3, leak=0.0, pfm_band=True,
+            src='TI SLUSDW3A section 7.8 PFM output regulation -1.5 % ... +2.5 % (U2 LMR50410XDBVR is the PFM variant; '
+                'typical components over TJ -40 ... 150 C, VIN 24 V, IOUT 0 A to full load, not production tested), '
+                'taken as an effective VFB 0.985-1.025 V about the 1.000 V nominal; it contains section 7.5\'s VFB '
+                '0.99-1.01 V (R12F6-TRI-03); ILKG-FB 0.2 nA typ (neglected)',
             limits=(3.135, 3.6), why='U6 FXLS90322 VCC_BUF >= 3.135 V (NXP FXLS9xxx0 Rev 6 item 10502, D-R12-51; the '
                                     'tightest low end); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) '
                                     'and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; LSM6DSVE 1.71-3.6 V (JLC / LCSC '
@@ -78,9 +92,17 @@ def rails():
                              TOL_PRECISE[case] if s.get('precise_bot') else None)
             row[case] = dict(min_V=lo, max_V=hi, inside_limits=lo >= s['limits'][0] and hi <= s['limits'][1],
                              margin_low_V=round(lo - s['limits'][0], 4), margin_high_V=round(s['limits'][1] - hi, 4))
-        row['nominal_V'] = round((s['vref'][0] + s['vref'][1]) / 2 * (1 + s['top'] / s['bot']), 4)
-        row['label'] = ('Calculation (Datasheet VFB, ' + ('1 % top, 0.1 % bottom' if s.get('precise_bot') else '1 %')
-                        + ' resistors); drift case Inference')
+        if s.get('pfm_band'):
+            row['nominal_V'] = round(V33_VREF_NOM * (1 + s['top'] / s['bot']), 4)
+            row['vfb_section_7_5_V'] = [0.99, 1.01]
+            row['pfm_regulation_band'] = list(V33_PFM_BAND)
+            row['label'] = ('Calculation (SLUSDW3A section 7.8 PFM regulation band, the maker\'s typical-component '
+                            'system figure, as the reference band; 1 % resistors); the band at R12\'s VIN and its '
+                            'stacking with the resistor tolerance Inference; drift case Inference')
+        else:
+            row['nominal_V'] = round((s['vref'][0] + s['vref'][1]) / 2 * (1 + s['top'] / s['bot']), 4)
+            row['label'] = ('Calculation (Datasheet VFB, ' + ('1 % top, 0.1 % bottom' if s.get('precise_bot') else '1 %')
+                            + ' resistors); drift case Inference')
         out[name] = row
     return out
 
@@ -282,8 +304,9 @@ def fire():
                  'clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient '
                  'above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V '
                  '(DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4\'s steady load, R127 1k plus R126 220R + R128 10k, is '
-                 'about 3.6 mA (<= 3.9 mA with drift), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02) through R126 '
-                 '220R / R128 10k, at the 3V3 drift minimum with R126 / R128 at their drift ends (R12F5-TRI-05)'),
+                 'about 3.5 mA (<= 3.93 mA with drift at the 3V3 PFM-band maximum), within the 4 mA row; R12F3-TRI-06, '
+                 'R12F4-TRI-02, R12F6-TRI-03) through R126 220R / R128 10k, at the 3V3 drift minimum (SLUSDW3A section '
+                 '7.8 PFM band) with R126 / R128 at their drift ends (R12F5-TRI-05)'),
         basis='R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), '
               'R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference',
         label='Calculation on Datasheet limits; copper, pack, loads and hot factors Inference')
@@ -410,11 +433,118 @@ def port_input():
     return out
 
 
+# R12F6-TRI-01: the cold pull-up is 3V3 -> R136 5.1k -> PYRO1_COLD_PU -> D120 (BAT54C A1 -> K) -> PYRO1_COLD -> R131 5.1k
+# -> PYRO1_OUT (10.2 kohm, was D120 + R131 10k); the netlist values (schematic.net.xml): PYRO1_OUT -> R173 5.1k ->
+# PYRO1_CONT_MID -> R129 5.1k -> PYRO1_CONT (PC0) with R130 / R178 2k each to GND; RAW_ACT -> R132 5.1k -> ARM1_SENSE_MID
+# -> R175 5.1k -> ARM1_SENSE (PC5) with R133 / R180 2k each to GND; a fitted match joins PYRO1_OUT to RAW_ACT through
+# J121 and R134 2R.
+COLD_PULL = (('R136', 5.1e3), ('R131', 5.1e3))
+COLD_CONT_TOP, COLD_CONT_BOT = (('R173', 5.1e3), ('R129', 5.1e3)), (('R130', 2e3), ('R178', 2e3))
+COLD_BUS_TOP, COLD_BUS_BOT = (('R132', 5.1e3), ('R175', 5.1e3)), (('R133', 2e3), ('R180', 2e3))
+COLD_R134 = 2.0
+# D120 BAT54C VF (Nexperia BAT54 series, 1 July 2022, Table 7, 25 C, pulsed): <= 240 mV at 0.1 mA, <= 320 mV at 1 mA; no
+# minimum and no temperature curve. At the screen's 0.13-0.23 mA the 25 C maximum is about 0.26 V (log interpolation)
+# and the -42 C end adds about 2 mV/K x 67 K: VF 0-0.40 V (Inference; the zero end is a bound)
+COLD_VF = (0.0, 0.40)
+# MJG J-Tek match 1-2 ohm and leads 0-0.3 ohm (R10's cold-screen and fire models; Inference)
+COLD_MATCH, COLD_LEADS = (1.0, 2.0), (0.0, 0.3)
+
+
+def cold_screen():
+    """R12F6-TRI-01 / -03: the passive cold screen at 10.2 kohm (R10 r10_parts.passive_cold_screen's network with R12's
+    parts). State: bus off (PC1 low, Q120 / Q121 off), PE4 low (Q124 off), so PYRO1_OUT is fed only by the cold pull-up
+    and RAW_ACT only through a fitted match. Readings: PC0 = PYRO1_CONT, PC5 = ARM1_SENSE, in mV and as a fraction of
+    VDDA (VREF+ = VDDA = 3V3A, fed from 3V3 through R164 2.2R, whose drop is neglected: Inference). Bands: every corner
+    of the 3V3 window (rails(), per resistor case), D120 VF 0-0.40 V, each series pair and parallel pair at its own
+    worst end (resistor case tolerance; the readings are monotonic in each element, so the corners bound them), R134
+    2R at the same tolerance, match 1-2 ohm, leads 0-0.3 ohm. Cases: open (no match), healthy match, shorted match
+    (0 ohm), J121 to GND, R131 bridged (the same DC network as R136 bridged: one 5.1k pull), R173 bridged (the same as R129
+    bridged: one 5.1k divider top), each with and without a match. Zero leakage, ADC offset and reference error.
+    Calculation on the netlist values; VF, the match and the R164 drop Inference."""
+    import itertools
+
+    def node(v, vf, rp, rct, rcb, rbt, rbb, link):
+        gc, gb, src = 1 / (rct + rcb), 1 / (rbt + rbb), (v - vf) / rp
+        if link is None:
+            vp, va = src / (1 / rp + gc), 0.0
+        else:
+            gl = 1 / link
+            det = (1 / rp + gc + gl) * (gb + gl) - gl * gl
+            vp, va = src * (gb + gl) / det, src * gl / det
+        return vp * rcb / (rct + rcb), va * rbb / (rbt + rbb), vp, (v - vf - vp) / rp
+
+    def series(pairs):
+        return sum(r for _, r in pairs)
+
+    def parallel(pairs):
+        return 1 / sum(1 / r for _, r in pairs)
+    v33 = rails()[V33_RAIL]
+    faults = {'open': dict(match=None), 'healthy': dict(match=COLD_MATCH), 'shorted_match': dict(match=(0.0, 0.0)),
+              'R131_bridged_no_match': dict(match=None, pull=COLD_PULL[:1]),
+              'R131_bridged_healthy': dict(match=COLD_MATCH, pull=COLD_PULL[:1]),
+              'R173_bridged_no_match': dict(match=None, cont_top=COLD_CONT_TOP[1:]),
+              'R173_bridged_healthy': dict(match=COLD_MATCH, cont_top=COLD_CONT_TOP[1:])}
+    out = {}
+    for case, tol in TOL.items():
+        vwin = (v33[case]['min_V'], v33[case]['max_V'])
+        rows = {}
+        for name, f in faults.items():
+            nom = (series(f.get('pull', COLD_PULL)), series(f.get('cont_top', COLD_CONT_TOP)), parallel(COLD_CONT_BOT),
+                   series(COLD_BUS_TOP), parallel(COLD_BUS_BOT))
+            vals = []
+            for v, vf, *k in itertools.product(vwin, COLD_VF, *[(1 - tol, 1 + tol)] * 6):
+                links = [None] if f['match'] is None else [
+                    COLD_R134 * k[5] + m + lead for m in sorted(set(f['match'])) for lead in COLD_LEADS]
+                for link in links:
+                    pc0, pc5, vp, i = node(v, vf, *(r * x for r, x in zip(nom, k[:5])), link)
+                    vals.append((pc0, pc5, vp, i, pc0 / v, pc5 / v))
+            rng = lambda j, scale, nd: [round(min(x[j] for x in vals) * scale, nd), round(max(x[j] for x in vals) * scale, nd)]
+            rows[name] = dict(PC0_mV=rng(0, 1e3, 2), PC5_mV=rng(1, 1e3, 2), PYRO1_OUT_mV=rng(2, 1e3, 1),
+                              pull_up_mA=rng(3, 1e3, 4), PC0_of_VDDA=rng(4, 1, 5), PC5_of_VDDA=rng(5, 1, 5))
+        rows['J121_to_GND'] = dict(PC0_mV=[0.0, 0.0], PC5_mV=[0.0, 0.0],
+                                   note='either terminal to GND holds PYRO1_OUT (directly, or through the match and '
+                                        'R134 from RAW_ACT) and both readings at 0')
+        h, o = rows['healthy'], rows['open']
+        m = dict(
+            open_PC0_above_healthy_mV=round(o['PC0_mV'][0] - h['PC0_mV'][1], 2),
+            healthy_PC5_above_open_mV=round(h['PC5_mV'][0] - o['PC5_mV'][1], 2),
+            R131_bridged_healthy_PC0_above_healthy_mV=round(rows['R131_bridged_healthy']['PC0_mV'][0] - h['PC0_mV'][1], 2),
+            R131_bridged_healthy_PC5_above_healthy_mV=round(rows['R131_bridged_healthy']['PC5_mV'][0] - h['PC5_mV'][1], 2),
+            R131_bridged_no_match_PC0_above_open_mV=round(rows['R131_bridged_no_match']['PC0_mV'][0] - o['PC0_mV'][1], 2),
+            R173_bridged_healthy_PC0_above_healthy_mV=round(rows['R173_bridged_healthy']['PC0_mV'][0] - h['PC0_mV'][1], 2),
+            R173_bridged_no_match_PC0_above_open_mV=round(rows['R173_bridged_no_match']['PC0_mV'][0] - o['PC0_mV'][1], 2),
+            shorted_vs_healthy_band_edges_mV=round(max(abs(rows['shorted_match'][c][j] - h[c][j])
+                                                       for c in ('PC0_mV', 'PC5_mV') for j in (0, 1)), 2))
+        out[case] = dict(vdd_V=list(vwin), cases=rows, margins_mV=m)
+    nominal = node(3.35, 0.25, series(COLD_PULL), series(COLD_CONT_TOP), parallel(COLD_CONT_BOT), series(COLD_BUS_TOP),
+                   parallel(COLD_BUS_BOT), None)
+    nominal_h = node(3.35, 0.25, series(COLD_PULL), series(COLD_CONT_TOP), parallel(COLD_CONT_BOT),
+                     series(COLD_BUS_TOP), parallel(COLD_BUS_BOT), COLD_R134 + 1.5)
+    out['nominal_3V35_VF_0V25'] = dict(open_PC0_mV=round(nominal[0] * 1e3, 2), healthy_PC0_mV=round(nominal_h[0] * 1e3, 2),
+                                       healthy_PC5_mV=round(nominal_h[1] * 1e3, 2))
+    out['topology'] = ('3V3 -> R136 5.1k -> D120 (BAT54C A1 -> K) -> R131 5.1k -> PYRO1_OUT (10.2 kohm, R12F6-TRI-01); '
+                       'PYRO1_OUT -> R173 5.1k + R129 5.1k -> PC0 over R130 || R178 (2k || 2k); RAW_ACT -> R132 5.1k + '
+                       'R175 5.1k -> PC5 over R133 || R180; a match joins PYRO1_OUT to RAW_ACT through R134 2R')
+    out['reading'] = ('healthy needs PC5 well above 0 and PC0 inside the healthy band; open reads PC5 0; a bridge across '
+                      'R131 (or R136) or R173 (or R129) with a match fitted reads above the healthy PC0 band in every '
+                      'corner (margins above), so the screen refuses it; without a match every case reads PC5 0 and is '
+                      'refused as open. A shorted match reads as a healthy one (band edges differ by about 0.01 mV): the '
+                      'screen cannot see it, and R134 limits that case in a fire. A J121 terminal to GND reads 0 / 0. '
+                      'Firmware thresholds are not set here: bench the bands (zero leakage, ADC offset and reference '
+                      'error assumed)')
+    out['inputs'] = dict(vf_V=list(COLD_VF), match_ohm=list(COLD_MATCH), leads_ohm=list(COLD_LEADS), R134_ohm=COLD_R134,
+                         resistor_cases={k: v for k, v in TOL.items()})
+    out['label'] = ('Calculation on the netlist values and the 3V3 window (R12F6-TRI-03); D120 VF (BAT54C 25 C maxima '
+                    'extended to -42 C), the match and leads, the R164 drop and zero leakage are Inference')
+    return out
+
+
 def compute():
     return dict(
         status='R12 stage A (no board): Calculation / Inference as labelled; no measurement',
         resistor_cases={k: f'+/-{v * 100:.2f} % independent' for k, v in TOL.items()},
-        rails=rails(), cam_input=cam_input(), port_input=port_input(), u9=u9(), sense=sense(), vlogic=vlogic(), holdup=holdup(), fire=fire(), crystal=crystal())
+        rails=rails(), cam_input=cam_input(), port_input=port_input(), u9=u9(), sense=sense(), vlogic=vlogic(), holdup=holdup(), fire=fire(), crystal=crystal(),
+        cold_screen=cold_screen())
 
 
 def main():

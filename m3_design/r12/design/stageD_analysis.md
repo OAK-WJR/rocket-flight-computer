@@ -4,6 +4,15 @@
 `14b82d39…` since the round-5 fix pass R12F5-TRI-01 / -06 / -21, 2026-11-06): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
+**Round 6 3V3 window (R12F6-TRI-03, board `3f9579fa…`).** `r12_budget.py` now takes the 3V3 window from TI SLUSDW3A
+§7.8's PFM output regulation band (−1.5 / +2.5 %, typical components over T_J; U2 is the PFM variant LMR50410XDBVR) with
+the 1 % divider on top: **3.254–3.482 V initial, 3.224–3.516 V drift** (was 3.270–3.431 / 3.240–3.464 V from §7.5's
+V_FB alone; Calculation; the band at R12's VIN and its stacking with the resistors are Inference). The 3V3-based figures
+in the sections below (§2 Q124 VGS and PE4's load, §7 U6 VCC, §10 PORT_SENSE) are their boards' figures on the old
+window. On `3f9579fa…`, `stageD_budget.json` gives U6 VCC ≥ 3.237 / 3.207 V at U2's 1 A (margins 102 / 72 mV over
+3.135 V), Q124 VGS ≥ 2.761 V and PE4's load ≤ 3.925 mA (inside the 4 mA VOH row); `r12_windows.json` gives the cold
+screen at 10.2 kΩ (`cold_screen`, R12F6-TRI-01).
+
 **Re-run on `r12-port-fix` (D-R12-83 … -85).** Board `d6e4f7ee0fc3c5d72176493717eb692316e84a21ac892437b56f649e8e76fc64`
 (two builds, same hash): PORT_4V8 divider R400 47k + R404 5.1k over R401 10k 0.1 % (D-R12-83), U9 0.3 mm east and C88
 on the bar line with a 0.8 mm feed (D-R12-84), C84 the reflow-rated Honor HV1E477M0810PZ and nothing owner-fitted
