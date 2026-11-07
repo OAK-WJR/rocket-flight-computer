@@ -125,7 +125,7 @@ R110	36.6	43	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
 R111	27.2	80.6	90	F	D-R12-99 (90 mm outline): PORT_SENSE top between J430 and J410, at the PORT_SENSE B lane; PORT_SENSE top at the ports
 R112	28.2	80.6	90	F	D-R12-99 (90 mm outline): PORT_SENSE bottom beside R111; PORT_SENSE bottom
 R119	4.4	26.4	0	F	gate
-R120	6.4	26.4	0	F	gate
+R120	6.53	26.95	0	F	gate; round 6 V-1 (pack energy): 0.55 mm aft so ACT_FET_S keeps >= 1.04 mm from R166.1 (BAT_DAMP, 0.36 ohm to GND); was F(6.4, 26.4), 0.772 mm
 R121	10.6	26.4	0	F	gate series
 R122	18.6	27.6	0	F	gate series
 R123	18.6	28.8	0	F	gate pull-down
@@ -135,7 +135,7 @@ R128	10.6	43.2	0	F	gate pull-down
 R129	12.6	47	0	F	cont
 R130	12.6	48	0	F	cont
 R131	6.6	46.6	270	F	R12F5-TRI-01 (S-10): turned 180 degrees so PYRO1_OUT (pin 1) faces the OUT run north and PYRO1_COLD (pin 2) faces D120 south; was: cold; R12F6-TRI-01: 10k -> 5.1k (same land)
-R132	16.6	33.6	90	F	arm
+R132	17.17	32.2	0	F	arm; round 6 V-1 / V-2 (pack energy): turned to run east, RAW_ACT (pin 1) beside R134.2 and >= 1.04 mm from ARM1_SENSE, 3V3 and GND; was F(16.6, 33.6) rot 90 (R132.1 0.546 mm from R175.2, 0.792 mm from a GND via)
 R133	16.6	36	90	F	arm
 R134	13.9	34.7	90	F	2 ohm series
 R136	4.1	50.2	0	F	R12F6-TRI-01: cold pull-up series resistor 3V3 -> R136 -> D120.1 (PYRO1_COLD_PU); in line west of D120.1 (pad 2 east to the anode, pad 1 west to its own 3V3 via; south of D120.1 is D120's pin-1 dot), courtyard 0.13 mm clear of D120's, more than 3.5 mm from every PYRO1_OUT item
@@ -154,7 +154,7 @@ R165	16.7	7.5	0	F	EN chain: J400.2 to EN
 R166	10.7	23.9	0	F	damper R
 R167	10.4	9.6	0	F	BAT_IN bleed
 R173	12.6	46.1	0	F	R12F5-TRI-01 (S-10): 0.1 mm forward so R173.1 (PYRO1_OUT) and R173.2 (PYRO1_CONT_MID) keep 1.08 mm from PE4's lane at y 44.7 (0.98 mm); was: cont
-R175	17.6	33.6	90	F	arm
+R175	17.6	33.6	270	F	arm; round 6 V-2: turned 180 degrees, ARM1_SENSE_MID (pin 1) north to R132.2, ARM1_SENSE (pin 2) south, away from RAW_ACT
 R178	12.6	49	0	F	cont
 R180	17.6	36	90	F	arm
 R400	41.5	67.45	270	F	D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port FB top, cell-relative position kept

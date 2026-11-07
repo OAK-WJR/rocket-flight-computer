@@ -26,6 +26,16 @@ Default-deny: every foreign net counts against a protected net unless it is clas
   * PYRO1_IGN (J121.2, RAW_ACT through R134 2 ohm): not a match-fire path, but a bridge to any lower net drives bus
     current through R134 (about 3.7 A, 27 W into the 2 W part with GND; Calculation): IGN_MIN copper, FILL_MIN fills,
     from every net but the match (PYRO1_OUT) and R134's own other end (RAW_ACT).
+  * Pack-energy nets (PACK, round 6 verifier V-1 / V-2): every net that carries the pack's current with no
+    current-limiting element, derived from the netlist by pack_nets() (default-deny: from the battery pad J1.1 through
+    every part but capacitors, test points, resistors of at least PACK_R_LIMIT, MOSFET gates and the named limiter U9;
+    an unclassified part on a pack net fails S-10): BAT_IN (the pack itself), ACT_FET_S (through Q120's channel or
+    body diode, live even with J400 open) and RAW_ACT (through Q121 with the bus on). A bridge from one of them to GND
+    (or to BAT_DAMP, 0.36 ohm to GND) shorts the unfused pack (R10 recorded about 23 A for RAW_ACT to GND, D-R21-05),
+    and one to a logic or MCU-pin net puts up to 8.4 V on a 3.3 V pin and the 3V3 rail (logic-destroying, and the
+    FMEA I-5 fire mechanism): PACK_MIN (R10 D-R26-02's 1.040 mm, the PYRO1_OUT figure, as the same rail-onto-logic
+    mechanism) from every net, copper and fills alike, except the other pack nets, the bus switch gate ACT_GATE and the
+    two resistor ends NOT_A_PATH names (each with a calculated reason, checked by pack_class_guard()).
   * Measured exceptions (EXCEPTIONS): named item pairs, each with a floor at its measured gap (rounded down to 1 um)
     and a reason. A new item, or an excepted item that moves, is not excepted. A table pair missing from the board is a
     stale entry and fails S-10 too, so the record stays exact.
@@ -34,13 +44,16 @@ import re
 
 GATES = ('PYRO1_GATE', 'PYRO1_GATE_N')
 OUT, IGN = 'PYRO1_OUT', 'PYRO1_IGN'
-PROTECTED = GATES + (OUT, IGN)             # priority order: a pair is named from the first protected net it touches
+PACK = ('BAT_IN', 'ACT_FET_S', 'RAW_ACT')  # the pack-energy nets (pack_nets() must derive exactly these)
+PROTECTED = GATES + (OUT, IGN) + PACK      # priority order: a pair is named from the first protected net it touches
 
 GATE_MIN = 1.0585      # mm, R10 D-R26-04 (Q124's gate nets from 3V3 / 3V3A), widened to every raising net
 OUT_MIN = 1.040        # mm, R10 D-R26-02 (PYRO1_OUT from 3V3 / 3V3A), widened to every net (default-deny)
 GND_MIN = 0.25         # mm, PYRO1_OUT to GND copper (R10 row 1: 0.177 / 0.180 mm surface pairs)
 FILL_MIN = 0.5         # mm, PYRO1_OUT to GND fills; PYRO1_IGN to every fill (J121.1 / J121.2 sat 0.10 mm from GND_pour_B)
 IGN_MIN = 0.25         # mm, PYRO1_IGN to foreign copper (destructive, not a match-fire path)
+PACK_MIN = 1.040       # mm, pack-energy nets from every net, copper and fills (R10 D-R26-02's PYRO1_OUT figure: the
+#                        same pack-voltage-onto-logic mechanism, and an unfused pack short is no less severe; round 6 V-1)
 DRU_GATE_MM = 1.06     # the DRU's gate figure (GATE_MIN rounded up to 10 um)
 REACH = GATE_MIN + 0.01
 
@@ -73,9 +86,44 @@ NOT_A_PATH = {
                              'off: the cold pull-up meets R129 + R130 || R178 (6.1 kohm) instead of 11.2 kohm, < 0.71 mA '
                              '(Calculation)',
     (IGN, OUT): 'the match\'s own terminals (see PYRO1_OUT)',
-    (IGN, 'RAW_ACT'): 'R134\'s own other end: a bridge only shorts R134; current flows only while Q124 conducts, and '
-                      'then the match and the loop copper limit it (about 3.1 A at 8.4 V, under U9\'s 3.92 A ILIM '
-                      'minimum: round 6 triage, Calculation / Inference on the match resistance)',
+    (IGN, 'RAW_ACT'): 'R134\'s own other end: a bridge only shorts R134. With Q124 off no current flows (the match and '
+                      'Q124 block). With Q124 on, the current is limited only by the match, its leads and the loop '
+                      '(the pack, Q120 / Q121 and the copper): about 3.1 A at 8.4 V with a sound match (round 6 triage, '
+                      'Calculation / Inference on the match and loop resistance), and more into a match that shorts '
+                      'after firing (R10 records about 12 A, Inference). U9 is not in this path: the bus is taken '
+                      'from BAT_IN, U9\'s input (round 6 verifier V-3), so nothing on the board limits it; the pack '
+                      'sags under the pulse while the logic sits behind U9 and C84 (Inference on pack ESR). Not an '
+                      'unwanted fire (current flows only while PE4 commands Q124 on) and not a pack-energy pair '
+                      '(the match stays in series); the bypass removes R134\'s shorted-match limit, as R10 recorded',
+    # Pack-energy nets (round 6 verifier V-1 / V-2): the pairs below carry no overload in any state. pack_class_guard()
+    # checks each foreign net on the netlist: it is no supply, MCU, open-drain or sink net, and it reaches every source
+    # (rail, MCU pin, IC or transistor pin; GND counts) only through at least PACK_SERIES_MIN.
+    ('BAT_IN', 'ACT_FET_S'): 'Q120\'s own channel: both nets are the pack (ACT_FET_S through Q120\'s body diode even '
+                             'with J400 open), so a bridge carries no current beyond the load Q120 itself carries; it '
+                             'only takes Q120\'s on-resistance out of the bus path. Not a fire: Q121 still switches the '
+                             'bus, and Q124 with R128 still holds the match',
+    ('BAT_IN', 'RAW_ACT'): 'bypasses Q120 / Q121: the bus is then live from the pack even with J400 open or PC1 low (no '
+                           'overload: both sides are the pack). Not a fire alone: Q124 with R128 still holds the match '
+                           '(the cold screen reads the bus live and refuses; FMEA H-6)',
+    ('ACT_FET_S', 'BAT_IN'): 'Q120\'s own channel (see BAT_IN)',
+    ('ACT_FET_S', 'RAW_ACT'): 'Q121\'s own channel: bypasses Q121, so the bus is live from the pack through Q120\'s '
+                              'body diode even with J400 open (no overload: both sides are the pack). Not a fire alone: '
+                              'Q124 with R128 still holds the match',
+    ('RAW_ACT', 'BAT_IN'): 'bypasses Q120 / Q121 (see BAT_IN)',
+    ('RAW_ACT', 'ACT_FET_S'): 'Q121\'s own channel (see ACT_FET_S)',
+    ('BAT_IN', 'ACT_GATE'): 'the bus switch gate: a bridge sets Q120 / Q121 V_GS to about 0 V, so the bus cannot turn '
+                            'on (a hold-off), and Q122 then sinks the pack only through R121 10 kohm: <= 8.4 V / '
+                            '9.83 kohm = 0.86 mA (Calculation, R121 at its -1.67 % drift end)',
+    ('ACT_FET_S', 'ACT_GATE'): 'the bus switch gate (R119 / R120 100 kohm\'s own other end): V_GS about 0 V, the bus '
+                               'cannot turn on (a hold-off); Q122 sinks <= 0.86 mA through R121 10 kohm (Calculation)',
+    ('RAW_ACT', 'ACT_GATE'): 'the bus switch gate: with the bus on, Q121\'s gate meets its drain, so the bus cannot be '
+                             'held on cleanly (a hold-off); Q122 sinks <= 0.86 mA through R121 10 kohm; with the bus '
+                             'off RAW_ACT follows the gate through R119 / R120 (Calculation). Not a fire',
+    ('RAW_ACT', 'ARM1_SENSE_MID'): 'R132\'s own other end: a bridge only shorts R132 (5.1 kohm); R175 5.1 kohm and R133 '
+                                   '|| R180 1 kohm still divide the bus, so PC5 <= 8.4 V x 1.017 / (5.015 + 1.017) = '
+                                   '1.42 V and <= 1.42 mA (Calculation at the +/-1.67 % drift ends)',
+    ('RAW_ACT', IGN): 'R134\'s own other end: PYRO1_IGN\'s class (IGN_MIN) holds the pair; a bridge only shorts R134 '
+                      '(see PYRO1_IGN)',
 }
 U1_NC = 'U1'          # only U1's NC balls are exempt (GPIOs, analog in reset (DS12110), kept analog by firmware), and
 #                       only against the gate nets (R12F6-TRI-02)
@@ -102,6 +150,8 @@ def one_way(protected, foreign, fill):
         return OUT_MIN, 'out'
     if protected == IGN:
         return (FILL_MIN if fill else IGN_MIN), 'ign'
+    if protected in PACK:
+        return PACK_MIN, 'pack'
     return None, 'unprotected'
 
 
@@ -144,6 +194,76 @@ WHY = {
     'PYRO1_CONT': 'PYRO1_CONT is PC0\'s pin: a bridge puts PYRO1_OUT on PC0, whose input clamp then passes bus current '
                   'through the match into 3V3 (fire-capable or logic-destroying; Inference): the 0402 continuity '
                   'divider\'s own neighbours, surface, AOI-inspectable; owner acceptance',
+    # round 6 verifier V-1 / V-2: BAT_IN pairs under PACK_MIN, all in the pack-entry cell (J1, U9, its input capacitors
+    # and dividers); each key names the consequence of one bridge. A part's own lands are unavoidable; the rest needs a
+    # re-layout of the pack-entry cell (respin item). Every one is an owner-acceptance item (R12_VALIDATION).
+    'PACK_GND': 'BAT_IN (the pack) to GND, or to BAT_DAMP (R166 0.36 ohm to GND): parts\' own lands (C80, C88, C96, '
+                'R167, D8, C79 to BAT_DAMP, U9.5 to U9.8) and the input decoupling\'s GND returns beside the BAT_IN '
+                'trunk. A bridge is an unfused pack short (tens of amps; through R166 about 23 A into a 2512 that opens; '
+                'Calculation / Inference on pack ESR): BAT_IN collapses, the logic browns out once C84\'s hold-up is '
+                'spent (in flight a reset, the tab to neutral, recovery on the Blue Jay) and there is no bus, so it is '
+                'not a fire path. BAT_IN is live whenever the pack is connected, so a pre-existing bridge shows at the '
+                'first pack connection (no power-up, the harness heats)',
+    'PACK_EN': 'BAT_IN to U9\'s EN/UVLO (BAT_ENABLE): U9.5 to U9.1, the TPS259470A RPW package\'s own lands (R10 had the '
+               'same pair). A bridge holds U9 on with J400 open, so J400 cannot turn the board off, and puts up to 8.4 V '
+               'on EN (above its 6.5 V absolute maximum in TI SLVSFC9C, R10\'s citation; Inference for this variant): '
+               'the per-flight switch-off check sees it (FMEA H-6). Not a fire by itself: PC1 and PE4 still hold the '
+               'bus and the match',
+    'PACK_SW': 'BAT_IN beside R80.2 (BAT_SW_SOURCE, J400.1\'s side of R80 470 kohm) and R80\'s own lands: a bridge only '
+               'shorts R80. J400 still switches EN, which with J400 closed then sits at <= 8.4 V x 305 k / (462 k + '
+               '305 k) = 3.34 V, under EN\'s 6.5 V (Calculation: R165 470 kohm, R81 300 kohm at the +/-1.67 % drift '
+               'ends); J400\'s contact and its harness lead then carry the pack with no limit, so a chafe of that lead '
+               'to GND shorts the pack (as PACK_GND)',
+    'PACK_FLT': 'BAT_IN to U9\'s FLT (BAT_FAULT_N), which PC13 (U1.A2) reads directly with R89 10 kohm to 3V3: U9.5 to '
+                'U9.4 (the package\'s own lands, 0.200 mm) and the BAT_IN fan-in under U9.4\'s corner. A bridge puts '
+                'the pack on PC13 with no series resistor and back-drives 3V3 through the pin\'s clamp and R89: '
+                'logic-destroying, and the FMEA I-5 mechanism (an MCU on an over-voltage rail can drive PE4), so '
+                'fire-capable (Inference). Own lands unavoidable in the TPS259470A; a series resistor between U9.4 and '
+                'PC13 would bound it (respin item)',
+    'PACK_OUT': 'BAT_IN to U9\'s OUT (RAW_PROTECTED): U9.5 to U9.6 (own lands, 0.200 mm) and the OUT fan-out beside the IN '
+                'bar. A bridge bypasses U9: the logic converters are fed from the pack with no current limit, OVLO or '
+                'fault latch (no overload by itself; a later downstream fault is then unlimited). Not a fire',
+    'PACK_U9': 'BAT_IN to U9\'s analog control pins and their dividers: OVLO (U9.2; R82 1 Mohm\'s own lands; R83), '
+               'BAT_OVLO_B (the R83 / R93 node), dVdt (U9.7, C81), ILIM (U9.9, R84 / R94) and the no-connect AUXOFF / '
+               'ITIMER pins (U9.3, U9.10). A bridge drives a high-impedance U9 input to the pack: OVLO / OVLO_B trip '
+               'U9\'s over-voltage turn-off (the board goes dark; in flight a brown-out reset), and dVdt / ILIM / '
+               'AUXOFF / ITIMER may be over-driven (U9 damaged, open or short; Inference: the pins\' absolute maxima '
+               'were not re-read). Not a fire (a shorted U9 is the PACK_OUT case)',
+    # round 6 verifier V-1 / V-2: BAT_IN pairs under PACK_MIN, all in the pack-entry cell (J1, U9, its input capacitors
+    # and dividers); each key names the consequence of one bridge. A part's own lands are unavoidable; the rest needs a
+    # re-layout of the pack-entry cell (respin item). Every one is an owner-acceptance item (R12_VALIDATION).
+    'PACK_GND': 'BAT_IN (the pack) to GND, or to BAT_DAMP (R166 0.36 ohm to GND): parts\' own lands (C80, C88, C96, '
+                'R167, D8, C79 to BAT_DAMP, U9.5 to U9.8) and the input decoupling\'s GND returns beside the BAT_IN '
+                'trunk. A bridge is an unfused pack short (tens of amps; through R166 about 23 A into a 2512 that opens; '
+                'Calculation / Inference on pack ESR): BAT_IN collapses, the logic browns out once C84\'s hold-up is '
+                'spent (in flight a reset, the tab to neutral, recovery on the Blue Jay) and there is no bus, so it is '
+                'not a fire path. BAT_IN is live whenever the pack is connected, so a pre-existing bridge shows at the '
+                'first pack connection (no power-up, the harness heats)',
+    'PACK_EN': 'BAT_IN to U9\'s EN/UVLO (BAT_ENABLE): U9.5 to U9.1, the TPS259470A RPW package\'s own lands (R10 had the '
+               'same pair). A bridge holds U9 on with J400 open, so J400 cannot turn the board off, and puts up to 8.4 V '
+               'on EN (above its 6.5 V absolute maximum in TI SLVSFC9C, R10\'s citation; Inference for this variant): '
+               'the per-flight switch-off check sees it (FMEA H-6). Not a fire by itself: PC1 and PE4 still hold the '
+               'bus and the match',
+    'PACK_SW': 'BAT_IN beside R80.2 (BAT_SW_SOURCE, J400.1\'s side of R80 470 kohm) and R80\'s own lands: a bridge only '
+               'shorts R80. J400 still switches EN, which with J400 closed then sits at <= 8.4 V x 305 k / (462 k + '
+               '305 k) = 3.34 V, under EN\'s 6.5 V (Calculation: R165 470 kohm, R81 300 kohm at the +/-1.67 % drift '
+               'ends); J400\'s contact and its harness lead then carry the pack with no limit, so a chafe of that lead '
+               'to GND shorts the pack (as PACK_GND)',
+    'PACK_FLT': 'BAT_IN to U9\'s FLT (BAT_FAULT_N), which PC13 (U1.A2) reads directly with R89 10 kohm to 3V3: U9.5 to '
+                'U9.4 (the package\'s own lands, 0.200 mm) and the BAT_IN fan-in under U9.4\'s corner. A bridge puts '
+                'the pack on PC13 with no series resistor and back-drives 3V3 through the pin\'s clamp and R89: '
+                'logic-destroying, and the FMEA I-5 mechanism (an MCU on an over-voltage rail can drive PE4), so '
+                'fire-capable (Inference). Own lands unavoidable in the TPS259470A; a series resistor between U9.4 and '
+                'PC13 would bound it (respin item)',
+    'PACK_OUT': 'BAT_IN to U9\'s OUT (RAW_PROTECTED): U9.5 to U9.6 (own lands, 0.200 mm) and the OUT fan-out beside the IN '
+                'bar. A bridge bypasses U9: the logic converters are fed from the pack with no current limit, OVLO or '
+                'fault latch (no overload by itself; a later downstream fault is then unlimited). Not a fire',
+    'PACK_U9': 'BAT_IN to U9\'s analog control pins and their dividers: OVLO (U9.2; R82 1 Mohm\'s own lands; R83), '
+               'BAT_OVLO_B (the R83 / R93 node), dVdt (U9.7, C81), ILIM (U9.9, R84 / R94) and the no-connect AUXOFF / '
+               'ITIMER pins (U9.3, U9.10). A bridge drives a high-impedance U9 input to the pack: OVLO / OVLO_B trip '
+               'U9\'s over-voltage turn-off (the board goes dark; in flight a brown-out reset), and dVdt / ILIM / '
+               'AUXOFF / ITIMER may be over-driven (U9 damaged, open or short; Inference: the pins\' absolute maxima '
+               'were not re-read). Not a fire (a shorted U9 is the PACK_OUT case)',
 }
 EXCEPTIONS = {
     'D-R11-23': (
@@ -213,6 +333,140 @@ EXCEPTIONS = {
     'Q124': (
         ('Q124.1', 'Q124.3', 'F.Cu', 1.044),
     ),
+    # ---- pack-energy exceptions (generated from the board by the round 6 lane P3 scan; floors measured)
+    'PACK_GND': (
+        ('track (10.4, 9)-(13.3, 9)', 'R167.2', 'F.Cu', 0.130),
+        ('track (9.9, 9.5)-(10.4, 9)', 'R167.2', 'F.Cu', 0.137),
+        ('track (10.4, 9)-(13.3, 9)', 'via (11.5, 9.6)', 'F.Cu', 0.175),
+        ('C79.1', 'via (17.6, 18.9)', 'F.Cu', 0.190),
+        ('track (14, 15.1)-(15.3, 15.1)', 'C88.2', 'F.Cu', 0.190),
+        ('track (14.9, 10.5)-(14.9, 12.9)', 'C96.2', 'F.Cu', 0.200),
+        ('track (5, 19.3)-(5, 23.3)', 'C80.2', 'F.Cu', 0.200),
+        ('track (10.4, 9)-(13.3, 9)', 'track (10.9, 9.6)-(11.5, 9.6)', 'F.Cu', 0.250),
+        ('C79.1', 'track (17.6, 18.3)-(17.6, 18.9)', 'F.Cu', 0.265),
+        ('track (14, 15.1)-(15.3, 15.1)', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.290),
+        ('R167.1', 'R167.2', 'F.Cu', 0.294),
+        ('track (14.9, 12.9)-(13.1, 14.7)', 'C96.2', 'F.Cu', 0.310),
+        ('C88.1', 'C88.2', 'F.Cu', 0.340),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'C88.2', 'F.Cu', 0.390),
+        ('track (9.9, 9.5)-(10.4, 9)', 'track (10.9, 9.6)-(11.5, 9.6)', 'F.Cu', 0.427),
+        ('C88.1', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.440),
+        ('track (10.4, 9)-(13.3, 9)', 'via (12.2, 8.1)', 'F.Cu', 0.475),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.490),
+        ('R167.1', 'track (10.9, 9.6)-(11.5, 9.6)', 'F.Cu', 0.497),
+        ('track (10.4, 9)-(13.3, 9)', 'D402.2', 'F.Cu', 0.500),
+        ('track (9.9, 9.5)-(10.4, 9)', 'D402.2', 'F.Cu', 0.500),
+        ('C79.1', 'C81.2', 'F.Cu', 0.555),
+        ('C96.1', 'C88.2', 'F.Cu', 0.573),
+        ('track (10.4, 9)-(13.3, 9)', 'track (10.7, 8.1)-(12.2, 8.1)', 'F.Cu', 0.575),
+        ('R167.1', 'D8.2', 'F.Cu', 0.580),
+        ('C79.1', 'via (16.5, 18.2)', 'F.Cu', 0.600),
+        ('track (13.2, 18.4)-(14.4, 19.6)', 'track (14.85, 21)-(13.2, 21)', 'F.Cu', 0.600),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'track (14.85, 21)-(13.2, 21)', 'F.Cu', 0.600),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'track (16.4, 22.55)-(14.85, 21)', 'F.Cu', 0.600),
+        ('C79.1', 'R84.2', 'F.Cu', 0.601),
+        ('track (9.9, 9.5)-(10.4, 9)', 'track (10.7, 8.1)-(12.2, 8.1)', 'F.Cu', 0.623),
+        ('track (13.2, 18.4)-(14.4, 19.6)', 'track (16.4, 22.55)-(14.85, 21)', 'F.Cu', 0.670),
+        ('C79.1', 'track (16, 18.2)-(16.5, 18.2)', 'F.Cu', 0.675),
+        ('U9.5', 'C88.2', 'F.Cu', 0.688),
+        ('U9.5', 'U9.8', 'F.Cu', 0.700),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'U9.8', 'F.Cu', 0.719),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'C81.2', 'F.Cu', 0.730),
+        ('track (9.9, 9.5)-(10.4, 9)', 'D8.2', 'F.Cu', 0.750),
+        ('C79.1', 'track (14.85, 21)-(13.2, 21)', 'F.Cu', 0.752),
+        ('C79.1', 'track (16.4, 22.55)-(14.85, 21)', 'F.Cu', 0.752),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'via (17.6, 18.9)', 'F.Cu', 0.764),
+        ('C96.1', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.769),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'via (16.5, 18.2)', 'F.Cu', 0.778),
+        ('track (9.9, 9.5)-(10.4, 9)', 'via (11.5, 9.6)', 'F.Cu', 0.828),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'track (17.6, 18.3)-(17.6, 18.9)', 'F.Cu', 0.839),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'track (16, 18.2)-(16.5, 18.2)', 'F.Cu', 0.850),
+        ('track (16.1, 12.5)-(14.6, 14)', 'C96.2', 'F.Cu', 0.875),
+        ('U9.5', 'track (15.3, 15.94)-(15.3, 16.75)', 'F.Cu', 0.906),
+        ('D8.1', 'via (10.8, 13.3)', 'F.Cu', 0.925),
+        ('track (14.6, 14.5)-(14.3, 14.8)', 'C88.2', 'F.Cu', 0.951),
+        ('track (13.2, 18.4)-(14.4, 19.6)', 'C95.2', 'F.Cu', 0.976),
+        ('track (14.4, 19.6)-(16.4, 19.6)', 'C95.2', 'F.Cu', 0.976),
+        ('track (13.3, 9)-(14.1, 9.8)', 'via (12.2, 8.1)', 'F.Cu', 0.996),
+        ('D8.1', 'track (10.8, 12.8)-(10.8, 13.3)', 'F.Cu', 1.000),
+        ('R167.1', 'via (11.5, 9.6)', 'F.Cu', 1.022),
+        ('track (14, 15.1)-(15.3, 15.1)', 'via (15.3, 16.75)', 'F.Cu', 1.025),
+        ('track (14.6, 10.2)-(14.9, 10.5)', 'C96.2', 'F.Cu', 1.025),
+        ('R167.1', 'D402.2', 'F.Cu', 1.031),
+    ),
+    'PACK_EN': (
+        ('U9.5', 'U9.1', 'F.Cu', 0.200),
+        ('U9.5', 'track (18, 14.6)-(18, 14.5)', 'F.Cu', 0.250),
+        ('U9.5', 'track (18, 14.3)-(18, 12.3)', 'F.Cu', 0.550),
+    ),
+    'PACK_SW': (
+        ('track (13.3, 9)-(14.1, 9.8)', 'R80.2', 'F.Cu', 0.483),
+        ('track (10.4, 9)-(13.3, 9)', 'R80.2', 'F.Cu', 0.528),
+        ('R80.1', 'R80.2', 'F.Cu', 0.850),
+    ),
+    'PACK_FLT': (
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'U9.4', 'F.Cu', 0.150),
+        ('U9.5', 'U9.4', 'F.Cu', 0.200),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (16.6, 14.45)-(16.6, 13.6)', 'F.Cu', 0.350),
+        ('U9.5', 'track (16.6, 14.45)-(16.6, 13.6)', 'F.Cu', 0.400),
+        ('track (14, 15.1)-(15.3, 15.1)', 'U9.4', 'F.Cu', 0.473),
+        ('C88.1', 'U9.4', 'F.Cu', 0.539),
+        ('track (16.1, 12.5)-(14.6, 14)', 'via (16.6, 13.6)', 'F.Cu', 0.706),
+        ('R82.1', 'via (16.6, 13.6)', 'F.Cu', 0.716),
+        ('track (16.1, 12.5)-(14.6, 14)', 'track (16.6, 14.45)-(16.6, 13.6)', 'F.Cu', 0.831),
+        ('R82.1', 'track (16.6, 14.45)-(16.6, 13.6)', 'F.Cu', 0.841),
+        ('track (14, 15.1)-(15.3, 15.1)', 'track (16.6, 14.45)-(16.6, 13.6)', 'F.Cu', 0.953),
+        ('C88.1', 'track (16.6, 14.45)-(16.6, 13.6)', 'F.Cu', 1.005),
+    ),
+    'PACK_OUT': (
+        ('U9.5', 'track (18.9, 15.6)-(19.725, 15.6)', 'F.Cu', 0.131),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'U9.6', 'F.Cu', 0.150),
+        ('U9.5', 'U9.6', 'F.Cu', 0.200),
+        ('U9.5', 'track (17.3, 15.6)-(18.9, 15.6)', 'F.Cu', 0.200),
+        ('track (14, 15.1)-(15.3, 15.1)', 'U9.6', 'F.Cu', 0.473),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (17.3, 15.6)-(18.9, 15.6)', 'F.Cu', 0.510),
+        ('C88.1', 'U9.6', 'F.Cu', 0.539),
+        ('U9.5', 'C82.1', 'F.Cu', 0.650),
+    ),
+    'PACK_U9': (
+        ('R82.1', 'track (16.2, 11.5)-(17, 12.3)', 'F.Cu', 0.166),
+        ('U9.5', 'U9.2', 'F.Cu', 0.200),
+        ('U9.5', 'U9.3', 'F.Cu', 0.200),
+        ('R82.1', 'R82.2', 'F.Cu', 0.294),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'U9.3', 'F.Cu', 0.295),
+        ('track (16.1, 12.5)-(14.6, 14)', 'R82.2', 'F.Cu', 0.447),
+        ('R82.1', 'R83.1', 'F.Cu', 0.460),
+        ('R82.1', 'track (17.5, 12.87)-(17.03, 12.4)', 'F.Cu', 0.477),
+        ('track (16.1, 12.5)-(14.6, 14)', 'track (16.2, 11.5)-(17, 12.3)', 'F.Cu', 0.477),
+        ('R82.1', 'R83.2', 'F.Cu', 0.546),
+        ('U9.5', 'track (17.5, 14.3)-(17.5, 12.87)', 'F.Cu', 0.550),
+        ('track (16.1, 12.5)-(14.6, 14)', 'R83.1', 'F.Cu', 0.630),
+        ('track (16.1, 12.5)-(14.6, 14)', 'track (17.5, 12.87)-(17.03, 12.4)', 'F.Cu', 0.635),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'U9.7', 'F.Cu', 0.650),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'U9.2', 'F.Cu', 0.673),
+        ('U9.5', 'U9.10', 'F.Cu', 0.700),
+        ('U9.5', 'U9.7', 'F.Cu', 0.700),
+        ('U9.5', 'U9.9', 'F.Cu', 0.700),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (16.6, 16.1)-(16.6, 16.2)', 'F.Cu', 0.700),
+        ('U9.5', 'track (16.6, 16.1)-(16.6, 16.2)', 'F.Cu', 0.750),
+        ('track (14, 15.1)-(15.3, 15.1)', 'U9.7', 'F.Cu', 0.767),
+        ('track (14.6, 10.2)-(14.9, 10.5)', 'R93.1', 'F.Cu', 0.787),
+        ('track (14.9, 10.5)-(14.9, 12.9)', 'R83.1', 'F.Cu', 0.787),
+        ('track (14.9, 10.5)-(14.9, 12.9)', 'R93.1', 'F.Cu', 0.787),
+        ('C88.1', 'U9.7', 'F.Cu', 0.800),
+        ('track (16.1, 12.5)-(14.6, 14)', 'R83.2', 'F.Cu', 0.852),
+        ('R82.1', 'track (17, 11.3)-(16.2, 10.5)', 'F.Cu', 0.894),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (17.5, 14.3)-(17.5, 12.87)', 'F.Cu', 0.904),
+        ('R82.1', 'track (17.5, 14.3)-(17.5, 12.87)', 'F.Cu', 0.966),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'U9.9', 'F.Cu', 0.967),
+        ('track (14.6, 10.2)-(14.9, 10.5)', 'R83.1', 'F.Cu', 0.970),
+        ('track (14.6, 10.2)-(14.9, 10.5)', 'track (17, 11.3)-(16.2, 10.5)', 'F.Cu', 1.000),
+        ('track (14.9, 10.5)-(14.9, 12.9)', 'track (16.2, 11.5)-(17, 12.3)', 'F.Cu', 1.000),
+        ('track (14.9, 10.5)-(14.9, 12.9)', 'track (17, 11.3)-(16.2, 10.5)', 'F.Cu', 1.000),
+        ('track (15.3, 15.1)-(16.6, 15.1)', 'track (16.6, 16.4)-(15.9, 17.1)', 'F.Cu', 1.000),
+        ('R80.1', 'R93.1', 'F.Cu', 1.012),
+    ),
+    # ---- end pack-energy exceptions
 }
 EXCEPTION_NETS = {
     'Q124.1': 'PYRO1_GATE',
@@ -245,6 +499,79 @@ EXCEPTION_NETS = {
     'via (19.8, 50.8)': '3V3',
     'via (20.6, 53.2)': '3V3',
     'via (21.4, 50.8)': 'QSPI_IO2',
+    # ---- pack-energy items (generated with the exceptions above)
+    'C79.1': 'BAT_IN',
+    'C80.2': 'GND',
+    'C81.2': 'GND',
+    'C82.1': 'RAW_PROTECTED',
+    'C88.1': 'BAT_IN',
+    'C88.2': 'GND',
+    'C95.2': 'BAT_DAMP',
+    'C96.1': 'BAT_IN',
+    'C96.2': 'GND',
+    'D402.2': 'GND',
+    'D8.1': 'BAT_IN',
+    'D8.2': 'GND',
+    'R167.1': 'BAT_IN',
+    'R167.2': 'GND',
+    'R80.1': 'BAT_IN',
+    'R80.2': 'BAT_SW_SOURCE',
+    'R82.1': 'BAT_IN',
+    'R82.2': 'BAT_OVLO',
+    'R83.1': 'BAT_OVLO',
+    'R83.2': 'BAT_OVLO_B',
+    'R84.2': 'GND',
+    'R93.1': 'BAT_OVLO_B',
+    'U9.1': 'BAT_ENABLE',
+    'U9.10': 'unconnected-(U9-ITIMER-Pad10)',
+    'U9.2': 'BAT_OVLO',
+    'U9.3': 'unconnected-(U9-AUXOFF-Pad3)',
+    'U9.4': 'BAT_FAULT_N',
+    'U9.5': 'BAT_IN',
+    'U9.6': 'RAW_PROTECTED',
+    'U9.7': 'BAT_DVDT',
+    'U9.8': 'GND',
+    'U9.9': 'BAT_ILIM',
+    'track (10.4, 9)-(13.3, 9)': 'BAT_IN',
+    'track (10.7, 8.1)-(12.2, 8.1)': 'GND',
+    'track (10.8, 12.8)-(10.8, 13.3)': 'GND',
+    'track (10.9, 9.6)-(11.5, 9.6)': 'GND',
+    'track (13.2, 18.4)-(14.4, 19.6)': 'BAT_IN',
+    'track (13.3, 9)-(14.1, 9.8)': 'BAT_IN',
+    'track (14, 15.1)-(15.3, 15.1)': 'BAT_IN',
+    'track (14.4, 19.6)-(16.4, 19.6)': 'BAT_IN',
+    'track (14.6, 10.2)-(14.9, 10.5)': 'BAT_IN',
+    'track (14.6, 14.5)-(14.3, 14.8)': 'BAT_IN',
+    'track (14.85, 21)-(13.2, 21)': 'BAT_DAMP',
+    'track (14.9, 10.5)-(14.9, 12.9)': 'BAT_IN',
+    'track (14.9, 12.9)-(13.1, 14.7)': 'BAT_IN',
+    'track (15.3, 15.1)-(16.6, 15.1)': 'BAT_IN',
+    'track (15.3, 15.94)-(15.3, 16.75)': 'GND',
+    'track (16, 18.2)-(16.5, 18.2)': 'GND',
+    'track (16.1, 12.5)-(14.6, 14)': 'BAT_IN',
+    'track (16.2, 11.5)-(17, 12.3)': 'BAT_OVLO',
+    'track (16.4, 22.55)-(14.85, 21)': 'BAT_DAMP',
+    'track (16.6, 14.45)-(16.6, 13.6)': 'BAT_FAULT_N',
+    'track (16.6, 16.1)-(16.6, 16.2)': 'BAT_DVDT',
+    'track (16.6, 16.4)-(15.9, 17.1)': 'BAT_DVDT',
+    'track (17, 11.3)-(16.2, 10.5)': 'BAT_OVLO_B',
+    'track (17.3, 15.6)-(18.9, 15.6)': 'RAW_PROTECTED',
+    'track (17.5, 12.87)-(17.03, 12.4)': 'BAT_OVLO',
+    'track (17.5, 14.3)-(17.5, 12.87)': 'BAT_OVLO',
+    'track (17.6, 18.3)-(17.6, 18.9)': 'GND',
+    'track (18, 14.3)-(18, 12.3)': 'BAT_ENABLE',
+    'track (18, 14.6)-(18, 14.5)': 'BAT_ENABLE',
+    'track (18.9, 15.6)-(19.725, 15.6)': 'RAW_PROTECTED',
+    'track (5, 19.3)-(5, 23.3)': 'BAT_IN',
+    'track (9.9, 9.5)-(10.4, 9)': 'BAT_IN',
+    'via (10.8, 13.3)': 'GND',
+    'via (11.5, 9.6)': 'GND',
+    'via (12.2, 8.1)': 'GND',
+    'via (15.3, 16.75)': 'GND',
+    'via (16.5, 18.2)': 'GND',
+    'via (16.6, 13.6)': 'BAT_FAULT_N',
+    'via (17.6, 18.9)': 'GND',
+    # ---- end pack-energy items
 }
 
 
@@ -273,16 +600,24 @@ def _excluded(protected):
     return tuple(sorted({f for (p, f) in NOT_A_PATH if p == protected}))
 
 
+def _at(side, prop, value):
+    """A coordinate test within 0.5 um: check_r12 labels print 6 significant digits, and the board can hold a routed
+    coordinate 1 nm off its table value (16.4 mm is stored as 16.399999 mm), which an exact '==' never matches."""
+    v = float(value)
+    return f"{side}.{prop} >= {v - 0.0005:.4f}mm && {side}.{prop} <= {v + 0.0005:.4f}mm"
+
+
 def item_condition(side, label, net):
-    """A DRU condition naming one copper item by its check_r12 label (a pad, a via or a track)."""
+    """A DRU condition naming one copper item by its check_r12 label (a pad, a via or a track). A pad label names every
+    pad of that number on the footprint (U9's L-shaped pins are two pads each): its pairs share one floor, their least."""
     cond = f"{side}.NetName == '{net}'"
     m = re.fullmatch(r'via \(([-\d.]+), ([-\d.]+)\)', label)
     if m:
-        return cond + f" && {side}.Type == 'Via' && {side}.Position_X == {m[1]}mm && {side}.Position_Y == {m[2]}mm"
+        return cond + f" && {side}.Type == 'Via' && {_at(side, 'Position_X', m[1])} && {_at(side, 'Position_Y', m[2])}"
     m = re.fullmatch(r'track \(([-\d.]+), ([-\d.]+)\)-\(([-\d.]+), ([-\d.]+)\)', label)
     if m:
-        return cond + (f" && {side}.Type == 'Track' && {side}.Start_X == {m[1]}mm && {side}.Start_Y == {m[2]}mm && "
-                       f"{side}.End_X == {m[3]}mm && {side}.End_Y == {m[4]}mm")
+        return cond + (f" && {side}.Type == 'Track' && {_at(side, 'Start_X', m[1])} && {_at(side, 'Start_Y', m[2])} && "
+                       f"{_at(side, 'End_X', m[3])} && {_at(side, 'End_Y', m[4])}")
     m = re.fullmatch(r'([A-Z]+\d+)\.(\w+)', label)
     if m:
         return cond + f" && {side}.memberOfFootprint('{m[1]}') && {side}.Pad_Number == '{m[2]}'"
@@ -320,6 +655,14 @@ def dru_rules(exceptions=None, nets=None):
          f"A.NetName == '{IGN}' && {_not('B', ign_x)} && {EITHER_FILL} && {NOT_PROBE}",
          'R134 overload: every pour >= 0.5 mm from J121.2 (check_r12 S-10)', None),
     ]
+    # the pack-energy nets (round 6 verifier V-1 / V-2), after the PYRO1_IGN rules so a pack net's 1.04 mm wins over
+    # IGN's 0.25 mm against it; the gate nets keep their own, stricter, rule (excluded here)
+    for net in PACK:
+        x = (net,) + GATES + _excluded(net)
+        rules.append((f'S-10 {net} (pack energy) to every net', f'clearance (min {PACK_MIN:.2f}mm)',
+                      f"A.NetName == '{net}' && {_not('B', x)}",
+                      f'round 6 V-1 / V-2 ({PACK_MIN:.3f} mm, R10 D-R26-02\'s figure), default-deny, fills too: every net '
+                      f'but the gate nets and {" / ".join(_excluded(net))} (check_r12 S-10)', None))
     for key, pairs in exceptions.items():
         for a, b, layer, floor in pairs:
             na, nb = nets[a], nets[b]
@@ -386,8 +729,16 @@ def guard(classes, not_a_path=None):
 # a bridge across R131 put 3V3 through D120 into Q124 with no resistor (U2's 1.075-1.6 A current limit).
 FIRE_SERIES_MIN = 5.0e3     # ohm, nominal
 COLD = 'PYRO1_COLD'
-_PASS_REFS = re.compile(r'^(R|D|L|FB)\d+$')      # resistors (their value), diodes / inductors / beads (0 ohm, both ways)
-_SOURCE_REFS = re.compile(r'^(U|Q|J|Y|LS|SW|K|BT)\d+$')
+# Part classes of the netlist walks, default-deny (round 6 verifier V-4): a capacitor (C<n>, two pins) carries no DC and a
+# one-pin test point or hole (TP / H / MH / FID) carries nothing; a resistor (R<n>, two pins) counts at its value only
+# when the value parses; diodes, inductors and beads (D / L / FB, any pin count) and every other two-pin part (fuses F,
+# jumpers JP, LEDs, an unparsed resistor, any unknown prefix) count as 0 ohm, either way; every other part (ICs,
+# transistors, connectors, crystals, buzzers, resistor arrays, unknown multi-pin parts) is a source on every pin.
+_CAP = re.compile(r'^C\d+$')
+_INERT = re.compile(r'^(TP|H|MH|FID)\d+$')
+_RES = re.compile(r'^R\d+$')
+_PASS = re.compile(r'^(D|L|FB)\d+$')
+_FET = re.compile(r'^Q\d+$')
 
 
 def ohms(value):
@@ -399,37 +750,56 @@ def ohms(value):
     return float(m[1] + ('.' + m[3] if m[3] else '')) * mult if m[2] or not m[3] else None
 
 
-def read_netlist(path):
-    """({ref: value}, {ref: {pin: net}}) from a KiCad XML netlist."""
+def part_kind(ref, value, pins):
+    """'cap', 'inert', 'res' (a parsed value), 'pass' (0 ohm between all its nets) or 'source' (default-deny)."""
+    if _CAP.match(ref) and len(pins) == 2:
+        return 'cap'
+    if _INERT.match(ref) and len(pins) == 1:
+        return 'inert'
+    if _RES.match(ref) and len(pins) == 2 and ohms(value) is not None:
+        return 'res'
+    if _PASS.match(ref) or len(pins) == 2:
+        return 'pass'
+    return 'source'
+
+
+def read_netlist(path, functions=False):
+    """({ref: value}, {ref: {pin: net}}[, {ref: {pin: pinfunction}}]) from a KiCad XML netlist."""
     import xml.etree.ElementTree as ET
     root = ET.parse(path).getroot()
     values = {c.get('ref'): (c.findtext('value') or '') for c in root.findall('./components/comp')}
-    pins = {}
+    pins, funcs = {}, {}
     for n in root.findall('./nets/net'):
         for p in n.findall('node'):
             pins.setdefault(p.get('ref'), {})[p.get('pin')] = n.get('name')
-    return values, pins
+            funcs.setdefault(p.get('ref'), {})[p.get('pin')] = p.get('pinfunction') or ''
+    return (values, pins, funcs) if functions else (values, pins)
 
 
-def series_to_sources(path, start, classes=None, stop=(OUT, 'GND')):
-    """{source net: least series resistance (ohm)} from net `start` through resistors (their value; unreadable: 0) and
-    diodes / inductors (0 ohm, either direction: conservative), never entering `stop` and not walking on past a source.
-    A source is a net the netlist marks as supply, open-drain or MCU (netlist_classes), or one with a pin of an IC,
-    transistor, connector, crystal or buzzer."""
+def _gate(funcs, ref, pin):
+    """A MOSFET's insulated gate: a Q<n> pin whose pinfunction is G (G_1 ...)."""
+    return bool(_FET.match(ref)) and re.match(r'^G(_|$)', funcs.get(ref, {}).get(pin, '')) is not None
+
+
+def series_to_sources(path, start, classes=None, stop=(OUT, 'GND'), sinks=(), insulated_gates=False):
+    """{source net: least series resistance (ohm)} from net `start`, walking the part classes of part_kind() (a resistor
+    at its value, a 0-ohm part either way), never entering `stop` and not walking on past a source. A source is a net
+    the netlist marks as supply, open-drain or MCU (netlist_classes), a net in `sinks`, or one with a pin of a 'source'
+    part (insulated_gates: a MOSFET's gate pin does not make its net a source; its drain and source pins do)."""
     import heapq
-    values, pins = read_netlist(path)
+    values, pins, funcs = read_netlist(path, functions=True)
     classes = netlist_classes(path) if classes is None else classes
     marked = set(classes.get('supply', ())) | set(classes.get('open_drain', ())) | set(classes.get('mcu', ()))
-    edges, source = {}, set(marked)
+    edges, source = {}, set(marked) | set(sinks)
     for ref, pp in pins.items():
-        nets = sorted({n for n in pp.values() if n and not n.startswith('unconnected-')})
-        if _SOURCE_REFS.match(ref):
-            source.update(nets)
-        if not _PASS_REFS.match(ref) or len(nets) < 2:
+        kind = part_kind(ref, values.get(ref), pp)
+        if kind == 'source':
+            source.update(n for pin, n in pp.items() if n and not n.startswith('unconnected-')
+                          and not (insulated_gates and _gate(funcs, ref, pin)))
+        if kind not in ('res', 'pass'):
             continue
-        w = 0.0
-        if ref.startswith('R'):
-            w = ohms(values.get(ref)) or 0.0
+        nets = sorted({n for n in pp.values() if n and not n.startswith('unconnected-')})
+        w = ohms(values.get(ref)) if kind == 'res' else 0.0
         for a in nets:
             for b in nets:
                 if a != b:
@@ -483,4 +853,87 @@ def fire_state_guard(path, not_a_path=None, classes=None):
             if r is not None and r < FIRE_SERIES_MIN:
                 issues.append(f'{ref}.{pin} ({net}) reaches 3V3 through only {r:g} ohm (>= {FIRE_SERIES_MIN:g} ohm, '
                               'R12F6-TRI-01)')
+    return issues, ev
+
+
+# ---- the pack-energy nets (round 6 verifier V-1 / V-2) ----------------------------------------------------------------
+# pack_nets() derives them, default-deny: from the battery pad PACK_SOURCE through every part that can carry the pack's
+# current unlimited. It does not cross a capacitor, a one-pin test point, a resistor of at least PACK_R_LIMIT (R134 2 ohm:
+# PYRO1_IGN behind it has its own class; every other resistor on a pack net is >= 5.1 kohm), a MOSFET's insulated gate,
+# GND (the return) or a named limiter (PACK_LIMITERS). A transistor conducts drain to source either way (channel or body
+# diode); a diode, inductor or any other two-pin part conducts at 0 ohm either way; any other part on a pack net (an IC
+# or connector not named here, a resistor array, an unknown multi-pin part) is a finding.
+PACK_SOURCE = ('J1', '1')      # the battery wire pad (BAT_IN); J1.2 is GND
+PACK_R_LIMIT = 2.0             # ohm, R134's value
+PACK_SERIES_MIN = FIRE_SERIES_MIN   # ohm: a classed-out net reaches every source only through this (<= 8.4 V / 5.015
+#                                     kohm = 1.68 mA at the -1.67 % drift end; Calculation)
+PACK_LIMITERS = {
+    'U9': 'TPS259470A eFuse: BAT_IN is its IN pin; OUT (RAW_PROTECTED) is behind its current limit and fault latch, and '
+          'its other pins are control pins, not a current path from IN',
+}
+
+
+def pack_nets(path):
+    """(sorted pack-energy nets, issues): the nets the pack reaches with no current-limiting element (see above)."""
+    values, pins, funcs = read_netlist(path, functions=True)
+    on = {}
+    for ref, pp in pins.items():
+        for pin, net in pp.items():
+            on.setdefault(net, []).append((ref, pin))
+    ref0, pin0 = PACK_SOURCE
+    start = pins.get(ref0, {}).get(pin0)
+    if not start:
+        return [], [f'pack source {ref0}.{pin0} not in the netlist']
+    seen, todo, issues = {start}, [start], []
+    while todo:
+        net = todo.pop()
+        for ref, pin in sorted(set(on.get(net, ()))):
+            if ref == ref0 or ref in PACK_LIMITERS:
+                continue
+            pp = pins[ref]
+            kind = part_kind(ref, values.get(ref), pp)
+            if kind in ('cap', 'inert') or (kind == 'res' and ohms(values.get(ref)) >= PACK_R_LIMIT):
+                continue
+            if _FET.match(ref):
+                f = {p: (funcs[ref].get(p) or '')[:1] for p in pp}
+                if sorted(f.values()) != ['D', 'G', 'S']:
+                    issues.append(f'{ref} on pack net {net} has pin functions {f}: not a classified MOSFET')
+                    continue
+                if f[pin] == 'G':
+                    continue                              # an insulated gate carries no current
+                join = [pp[p] for p in pp if f[p] in ('D', 'S')]
+            elif kind in ('res', 'pass'):
+                join = list(pp.values())
+            else:
+                issues.append(f'{ref} ({values.get(ref)}) on pack net {net} is not a classified part (default-deny: '
+                              'name it in PACK_LIMITERS with a reason, or class it)')
+                continue
+            for m in join:
+                if m and m != 'GND' and not m.startswith('unconnected-') and m not in seen:
+                    seen.add(m)
+                    todo.append(m)
+    return sorted(seen), issues
+
+
+def pack_guard(path, classes=None, not_a_path=None):
+    """(issues, evidence): the netlist's pack-energy nets are exactly PACK, and every pack not-a-path class's foreign
+    net (other than a protected net, held by its own class) reaches every source, GND included, only through at least
+    PACK_SERIES_MIN (MOSFET gates insulated)."""
+    classes = netlist_classes(path) if classes is None else classes
+    derived, issues = pack_nets(path)
+    for n in sorted(set(derived) - set(PACK)):
+        issues.append(f'{n} carries the pack\'s current with no limiting element (pack_nets) but S-10 does not hold it '
+                      '(add it to r12_fire.PACK)')
+    for n in sorted(set(PACK) - set(derived)):
+        issues.append(f'{n} is held as a pack-energy net but the netlist no longer reaches it from the pack')
+    ev = {'pack_nets': derived}
+    for (p, f) in sorted(NOT_A_PATH if not_a_path is None else not_a_path):
+        if p not in PACK or f in PROTECTED:
+            continue
+        reach = series_to_sources(path, f, classes, stop=PACK, sinks=('GND',), insulated_gates=True)
+        ev[f'{p} / {f}'] = {n: round(r, 1) for n, r in sorted(reach.items(), key=lambda kv: (kv[1], kv[0]))[:4]}
+        for n, r in sorted(reach.items(), key=lambda kv: (kv[1], kv[0])):
+            if r < PACK_SERIES_MIN:
+                issues.append(f'{p} / {f} is classed "not a path", but a bridge puts the pack on {n} through only '
+                              f'{r:g} ohm (pack guard, >= {PACK_SERIES_MIN:g} ohm; round 6 V-1)')
     return issues, ev

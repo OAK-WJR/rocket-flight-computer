@@ -311,18 +311,30 @@ class FireGaps(unittest.TestCase):
 
     STRIP = """import pcbnew, sys
 x0, y0, x1, y1 = map(float, sys.argv[2:6])
+keep = sys.argv[6].split(',')
 b = pcbnew.LoadBoard(sys.argv[1])
+inside = lambda at: x0 < pcbnew.ToMM(at.x) < x1 and y0 < pcbnew.ToMM(at.y) < y1
+if len(sys.argv) > 7:
+    for f in b.Footprints():
+        for p in f.Pads():
+            if (f.GetReference() + '.' + p.GetNumber() not in sys.argv[7].split(',') and p.GetNetname() not in keep
+                    and inside(p.GetPosition())):
+                p.SetNet(b.FindNet(keep[0]))
 for t in list(b.GetTracks()):
     at = t.GetPosition() if t.GetClass() == 'PCB_VIA' else t.GetStart()
-    if t.GetNetname() != sys.argv[6] and x0 < pcbnew.ToMM(at.x) < x1 and y0 < pcbnew.ToMM(at.y) < y1:
+    if t.GetNetname() not in keep and inside(at):
         b.Remove(t)
 pcbnew.SaveBoard(sys.argv[1], b)
 """
 
-    def drc_s10(self, strip=None):
+    def drc_s10(self, strip=None, pads=None):
         """kicad-cli DRC of the planted board with the committed DRU: the S-10 rule violations. strip (x0, y0, x1, y1,
-        net): first remove, in a separate KiCad python process on the saved copy, every track and via of another net
-        that starts inside the box."""
+        nets): first remove, in a separate KiCad python process on the saved copy, every track and via that starts
+        inside the box and is on none of the comma-separated nets. KiCad reports at most one clearance violation per
+        track against several neighbours, and which one varies from run to run (round 6 verifier V-5), so a DRC probe
+        strips every other candidate first and asserts on the one rule left. pads (comma-separated REF.PAD): with strip,
+        every other pad inside the box that is on none of the nets joins the first of them, so the named pads are the
+        only foreign pads left there."""
         if not Path(self.CLI).exists():
             self.skipTest('kicad-cli unavailable')
         with tempfile.TemporaryDirectory(prefix='r12-s10-') as d:
@@ -331,8 +343,8 @@ pcbnew.SaveBoard(sys.argv[1], b)
                 shutil.copy2(BOARD12.with_name(name), Path(d) / name)
             pcbnew.SaveBoard(str(path), self.board)
             if strip:
-                subprocess.run([sys.executable, '-I', '-c', self.STRIP, str(path), *map(str, strip)], check=True,
-                               capture_output=True, timeout=300)
+                subprocess.run([sys.executable, '-I', '-c', self.STRIP, str(path), *map(str, strip)] +
+                               ([pads] if pads else []), check=True, capture_output=True, timeout=300)
             subprocess.run([self.CLI, 'pcb', 'drc', '--format', 'json', '--severity-error', '-o', str(Path(d) / 'd.json'),
                             str(path)], capture_output=True, timeout=300, check=True)
             found = json.loads((Path(d) / 'd.json').read_text())['violations']
@@ -358,7 +370,9 @@ pcbnew.SaveBoard(sys.argv[1], b)
         for pair in ('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 U1.B2 on F.Cu: 0.150',
                      'PYRO1_GATE Q124.1 to PYRO1_OUT Q124.3 on F.Cu: 1.04'):
             self.assertTrue([k for k in kept if k.startswith(pair)], pair)
-        self.assertEqual(len(kept), sum(len(v) for v in fire.EXCEPTIONS.values()))       # no stale, none extra
+        # no stale, none extra (a pad label names every pad of its number: U9's L-shaped pins are two pads each)
+        self.assertEqual(len({(e['exception'], e['pair'].rsplit(': ', 1)[0]) for e in ev['exceptions']}),
+                         sum(len(v) for v in fire.EXCEPTIONS.values()))
         self.assertEqual(set(fire.EXCEPTIONS), set(fire.WHY))
         self.assertTrue(ev['u1_nc_balls'])
         self.assertTrue(all(' U1.' in p and 'unconnected-(U1-' in p for p in ev['u1_nc_balls']))
@@ -388,10 +402,21 @@ pcbnew.SaveBoard(sys.argv[1], b)
 
     def test_verifier_E_new_3v3_near_the_pe4_lane_inside_u1_fails(self):
         # the D-R11-23 exception names its item pairs: a new 3V3 track 0.15 mm south of the lane (as near as U1.B2,
-        # the excepted pair's floor) is not excepted (the verifier planted 0.2 mm, touching HSE_IN)
-        self.track('3V3', (18.95, 51.85), (19.1, 51.85), width=0.1)
-        self.planted(('PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 track (18.95, 51.85)-(19.1, 51.85)',
-                      ': 0.15', 'below 1.0585'), drc=("'S-10 Q124 gate nets to every raising net'", '[3V3]'))
+        # the excepted pair's floor) is not excepted. Round 6 V-5: the plant sits between balls C1 (HSE_IN) and C2
+        # (GND), >= 0.13 mm from both and from every other item but the lane, so no board-floor violation competes
+        # with S-10's; S-10's own measurement is asserted, and the DRC probe strips the other nets' tracks and vias
+        # near U1's corner first, so the gate rule is the only rule the plant can break (stable: tools/check.sh).
+        self.track('3V3', (19.75, 51.85), (19.85, 51.85), width=0.1)
+        rep = self.s10()
+        hit = [r for r in r12.fire_gaps(self.board) if r['b'] == 'track (19.75, 51.85)-(19.85, 51.85)']
+        self.assertEqual({(r['net_a'], r['a']) for r in hit if r['gap'] < 0.2},
+                         {('PYRO1_GATE_N', 'track (20.6, 51.6)-(18.9, 51.6)')})
+        self.assertTrue(all(r['gap'] >= 0.13 for r in hit if r['net_a'] != 'PYRO1_GATE_N'), hit)
+        self.assertTrue([i for i in rep['issues'] if 'PYRO1_GATE_N track (20.6, 51.6)-(18.9, 51.6) to 3V3 track '
+                         '(19.75, 51.85)-(19.85, 51.85) on F.Cu: 0.15' in i and 'below 1.0585' in i], rep['issues'])
+        found = self.drc_s10(strip=(17.5, 50.0, 22.5, 54.0, 'PYRO1_GATE_N,3V3'))
+        self.assertTrue([v for v in found if "'S-10 Q124 gate nets to every raising net'" in v and '[3V3]' in v],
+                        found)
 
     def test_verifier_F_protected_net_fill_is_measured(self):
         # a PYRO1_OUT fill on In2 over a 3V3 track: S-10 measures protected-net fills too (was one-directional)
@@ -495,9 +520,10 @@ pcbnew.SaveBoard(sys.argv[1], b)
                 self.planted((f'{net} track (19.3, {y:g})-(19.5, {y:g}) to unconnected-(U1-PC14-PadA1) U1.A1',
                               ': ' + gap, lim))
                 # KiCad reports at most one clearance violation for a track against several items of one footprint or
-                # net (lane P2's DRC quirk), so the DRC probe strips the other nets' tracks and vias round U1's A1
-                # corner first (on the saved copy): U1's pads stay, and the NC ball must then be reported.
-                found = self.drc_s10(strip=(17, 47, 23, 51, net))
+                # net, and which one varies (lane P2's DRC quirk; round 6 V-5): the DRC probe strips the other nets'
+                # tracks and vias round U1's A1 corner first, and joins U1's other pads there (A2, BAT_FAULT_N, is
+                # 0.69 mm from the OUT plant) to the plant's net, so the NC ball is the only candidate left.
+                found = self.drc_s10(strip=(17, 47, 23, 51, net), pads='U1.A1')
                 self.assertTrue([v for v in found if rule in v and 'U1-PC14-PadA1' in v and net in v], found)
 
     # ---- R12F6-TRI-01: the cold pull-up through R136, and the commanded-fire state -------------------------------
@@ -589,6 +615,153 @@ pcbnew.SaveBoard(sys.argv[1], b)
         self.planted(('PYRO1_OUT J121.1 to PYRO1_COLD_PU', ': 0.20', 'below 1.04 mm'),
                      drc=("'S-10 PYRO1_OUT to every net'", 'PYRO1_COLD_PU'))
 
+    # ---- round 6 verifier V-1 / V-2: the pack-energy nets ---------------------------------------------------------
+    def test_round6_v1_pack_nets_derived_and_held(self):
+        """pack_nets() derives BAT_IN / ACT_FET_S / RAW_ACT from the netlist (J1.1 through Q120 / Q121, stopping at U9,
+        capacitors, R134 and every larger resistor); each is held at PACK_MIN from every net, fills included, but the
+        classed nets; the DRU carries one rule per pack net, after PYRO1_IGN's so 1.04 mm wins over IGN's 0.25 mm."""
+        net = BOARD12.with_name('schematic.net.xml')
+        self.assertEqual(fire.pack_nets(net), (sorted(fire.PACK), []))
+        self.assertEqual(fire.pack_guard(net)[0], [])
+        self.assertEqual(fire.PACK_MIN, fire.OUT_MIN)
+        for p in fire.PACK:
+            for f, fill in (('GND', False), ('GND', True), ('BAT_DAMP', False), ('3V3', True), ('ARM1_SENSE', False),
+                            ('BAT_FAULT_N', False), ('PYRO1_CONT', False)):
+                self.assertEqual(fire.pair_limit(p, None, f, None, fill)[:2], (fire.PACK_MIN, 'pack'), (p, f))
+            self.assertEqual(fire.pair_limit(p, None, 'ACT_GATE', None, False)[:2], (None, 'not a path'))
+        self.assertEqual(fire.pair_limit('RAW_ACT', None, 'ARM1_SENSE_MID', None, False)[0], None)
+        self.assertEqual(fire.pair_limit('BAT_IN', None, 'ARM1_SENSE_MID', None, False)[0], fire.PACK_MIN)
+        self.assertEqual(fire.pair_limit(fire.IGN, None, 'BAT_IN', None, False)[:3], (fire.PACK_MIN, 'pack', 'BAT_IN'))
+        self.assertEqual(fire.pair_limit(fire.GATES[0], None, 'BAT_IN', None, False)[0], fire.GATE_MIN)
+        names = [r[0] for r in fire.dru_rules()]
+        for p in fire.PACK:
+            rule = next(r for r in fire.dru_rules() if r[0] == f'S-10 {p} (pack energy) to every net')
+            self.assertGreater(names.index(rule[0]), names.index('S-10 PYRO1_IGN to fills'))
+            self.assertIn("B.NetName != 'PYRO1_GATE'", rule[2])
+            self.assertNotIn("B.NetName != 'GND'", rule[2])
+            self.assertEqual(rule[1], 'clearance (min 1.04mm)')
+        ev = self.s10()['evidence']['s10']['pack']
+        self.assertEqual(ev['pack_nets'], sorted(fire.PACK))
+        self.assertEqual(ev['RAW_ACT / ARM1_SENSE_MID'], {'ARM1_SENSE': 5100.0})
+        self.assertEqual(ev['BAT_IN / ACT_GATE'], {'ACT_DRV': 10000.0})
+
+    def test_round6_v1_v2_verifier_pairs_cleared(self):
+        """The verifier's pairs (RAW_ACT to GND 0.792 mm and to ARM1_SENSE 0.546 mm at R132.1, ACT_FET_S to BAT_DAMP
+        0.772 mm at R120.1 / R166.1) are gone: RAW_ACT and ACT_FET_S keep PACK_MIN from every unclassed net, with no
+        exception; the only pack exceptions are BAT_IN's, in the pack-entry cell (keys PACK_*)."""
+        gaps = r12.fire_gaps(self.board)
+        for p, f in (('RAW_ACT', 'GND'), ('RAW_ACT', 'ARM1_SENSE'), ('ACT_FET_S', 'BAT_DAMP'), ('ACT_FET_S', 'GND'),
+                     ('RAW_ACT', '3V3'), ('BAT_IN', '3V3')):
+            near = [r for r in gaps if {r['net_a'], r['net_b']} == {p, f}]
+            self.assertTrue(all(r['gap'] >= fire.PACK_MIN - 5e-5 for r in near), (p, f, near))
+        pack_items = {a for k, v in fire.EXCEPTIONS.items() if k.startswith('PACK_') for a, *_ in v}
+        self.assertEqual({fire.EXCEPTION_NETS[a] for a in pack_items}, {'BAT_IN'})
+        self.assertFalse([1 for k, v in fire.EXCEPTIONS.items() if not k.startswith('PACK_')
+                          for a, b, *_ in v if fire.EXCEPTION_NETS[a] in fire.PACK or fire.EXCEPTION_NETS[b] in fire.PACK])
+        self.assertEqual({k for k in fire.EXCEPTIONS if k.startswith('PACK_')},
+                         {'PACK_GND', 'PACK_EN', 'PACK_SW', 'PACK_FLT', 'PACK_OUT', 'PACK_U9'})
+
+    def test_round6_v1_raw_act_plants_fail(self):
+        """New copper near the moved R132.1 (RAW_ACT, F(16.74, 32.2), pad y 31.917-32.483): a GND or ARM1_SENSE track
+        0.5 mm south fails S-10 (pack class) and DRC; a BAT_DAMP track 0.5 mm from Q121.2 (ACT_FET_S) fails S-10."""
+        for net in ('GND', 'ARM1_SENSE'):
+            with self.subTest(net=net):
+                self.setUp()
+                self.track(net, (16.6, 33.033), (16.9, 33.033), width=0.1)
+                self.planted(('RAW_ACT R132.1 to ' + net + ' track (16.6, 33.033)-(16.9, 33.033)', ': 0.51',
+                              'below 1.04 mm (pack)'))
+                found = self.drc_s10(strip=(14.5, 30.5, 19.0, 34.0, 'RAW_ACT,' + net))
+                self.assertTrue([v for v in found if "'S-10 RAW_ACT (pack energy) to every net'" in v and net in v],
+                                found)
+        self.setUp()
+        self.track('BAT_DAMP', (9.65, 29.7), (9.65, 30.2), width=0.1)          # Q121.2 (ACT_FET_S) pad x <= 9.1
+        self.planted(('ACT_FET_S Q121.2 to BAT_DAMP track (9.65, 29.7)-(9.65, 30.2)', ': 0.50', 'below 1.04 mm (pack)'))
+
+    def test_round6_v1_pack_netlist_guard(self):
+        """pack_nets() is default-deny: a 0-ohm part off a pack net makes a new pack net, an unclassified IC or a
+        lower R134 makes S-10 fail; a pack not-a-path class onto an MCU pin or a low-resistance net fails the guard."""
+        import xml.etree.ElementTree as ET
+
+        def add(root, ref, value, nodes):
+            comp = ET.SubElement(root.find('components'), 'comp', ref=ref)
+            ET.SubElement(comp, 'value').text = value
+            for pin, net, fn in nodes:
+                n = next((x for x in root.findall('./nets/net') if x.get('name') == net), None)
+                if n is None:
+                    n = ET.SubElement(root.find('nets'), 'net', name=net, code='9999')
+                ET.SubElement(n, 'node', ref=ref, pin=pin, pinfunction=fn, pintype='passive')
+        cases = (
+            ('0R off RAW_ACT', lambda r: add(r, 'R998', '0R', (('1', 'RAW_ACT', ''), ('2', 'NEW_NET', '')))),
+            ('fuse off BAT_IN', lambda r: add(r, 'F1', '2A', (('1', 'BAT_IN', ''), ('2', 'NEW_NET', '')))),
+            ('IC on BAT_IN', lambda r: add(r, 'U99', 'LDO', (('1', 'BAT_IN', 'VIN'), ('2', 'NEW_NET', 'VOUT'),
+                                                             ('3', 'GND', 'GND')))),
+            ('R134 1 ohm', lambda r: self.set_value(r, 'R134', '1R')),
+        )
+        for name, mutate in cases:
+            with self.subTest(case=name):
+                rep = self.s10_netlist(self.netlist(mutate))
+                self.assertFalse(rep['ok'])
+                want = 'is not a classified part' if name.startswith('IC') else 'carries the pack\'s current'
+                self.assertTrue([i for i in rep['issues'] if want in i], rep['issues'])
+        net = BOARD12.with_name('schematic.net.xml')
+        for f, want in (('ARM1_SENSE', 'through only 0 ohm'), ('LED_RED_A', 'through only 220 ohm'),
+                        ('ACT_DRV', 'through only 0 ohm')):
+            with self.subTest(cls=f):
+                self.assertTrue([i for i in fire.pack_guard(net, not_a_path={('RAW_ACT', f): 'planted'})[0]
+                                 if f'RAW_ACT / {f} is classed' in i and want in i])
+
+    def test_round6_v3_ign_raw_act_reason(self):
+        why = fire.NOT_A_PATH[(fire.IGN, 'RAW_ACT')]
+        self.assertNotIn('ILIM', why)
+        self.assertIn('U9 is not in this path', why)
+        self.assertIn('Inference', why)
+
+    # ---- round 6 verifier V-4: the fire-state guard is default-deny on part type ---------------------------------
+    def test_round6_v4_part_classes_default_deny(self):
+        """The verifier's planted netlists, each recreating R12F6-TRI-01's unlimited path with a part prefix the old
+        walk ignored, now fail the fire-state guard: a fuse, LED or solder jumper in place of / across R136, a 0-ohm
+        resistor array across R136, an LED from 3V3 to PYRO1_COLD, an oscillator output on PYRO1_COLD_PU and an IC
+        output on PYRO1_CONT_MID."""
+        import xml.etree.ElementTree as ET
+        self.assertEqual(fire.part_kind('C9', '1uF', {'1': 'A', '2': 'B'}), 'cap')
+        self.assertEqual(fire.part_kind('TP9', '', {'1': 'A'}), 'inert')
+        self.assertEqual(fire.part_kind('R9', '5.1k', {'1': 'A', '2': 'B'}), 'res')
+        for ref, value in (('R9', 'bad'), ('F9', '1A'), ('JP9', ''), ('LED9', 'RED'), ('X9', '?'), ('FB9', '')):
+            self.assertEqual(fire.part_kind(ref, value, {'1': 'A', '2': 'B'}), 'pass', ref)
+        self.assertEqual(fire.part_kind('D9', 'BAT54C', {'1': 'A', '2': 'B', '3': 'C'}), 'pass')
+        for ref in ('RN9', 'X9', 'IC9', 'U9', 'Q9'):
+            self.assertEqual(fire.part_kind(ref, '0R', {'1': 'A', '2': 'B', '3': 'C', '4': 'D'}), 'source', ref)
+        self.assertEqual(fire.part_kind('X9', 'OSC', {'1': 'A'}), 'source')
+
+        def comp(root, ref, value, nodes, drop=()):
+            for c in list(root.find('components')):
+                if c.get('ref') in drop:
+                    root.find('components').remove(c)
+            for n in root.findall('./nets/net'):
+                for x in list(n):
+                    if x.get('ref') in drop:
+                        n.remove(x)
+            c = ET.SubElement(root.find('components'), 'comp', ref=ref)
+            ET.SubElement(c, 'value').text = value
+            for pin, net, kind in nodes:
+                n = next(x for x in root.findall('./nets/net') if x.get('name') == net)
+                ET.SubElement(n, 'node', ref=ref, pin=pin, pintype=kind)
+        P, C, CM = 'PYRO1_COLD_PU', 'PYRO1_COLD', 'PYRO1_CONT_MID'
+        cases = (
+            ('F1 for R136', lambda r: comp(r, 'F1', '0.5A', (('1', '3V3', 'passive'), ('2', P, 'passive')), ('R136',)), C),
+            ('LED9 for R136', lambda r: comp(r, 'LED9', 'RED', (('2', '3V3', 'passive'), ('1', P, 'passive')), ('R136',)), C),
+            ('JP1 across R136', lambda r: comp(r, 'JP1', 'SolderJumper', (('1', '3V3', 'passive'), ('2', P, 'passive'))), C),
+            ('RN1 0R array', lambda r: comp(r, 'RN1', '0R', (('1', '3V3', 'passive'), ('8', P, 'passive'),
+                                                             ('2', 'GND', 'passive'), ('7', 'GND', 'passive'))), C),
+            ('LED9 3V3 to COLD', lambda r: comp(r, 'LED9', 'RED', (('2', '3V3', 'passive'), ('1', C, 'passive'))), C),
+            ('X1 on COLD_PU', lambda r: comp(r, 'X1', 'OSC', (('3', P, 'output'),)), C),
+            ('IC1 on CONT_MID', lambda r: comp(r, 'IC1', 'buffer', (('4', CM, 'output'),)), CM),
+        )
+        for name, mutate, cls in cases:
+            with self.subTest(case=name):
+                issues, _ = fire.fire_state_guard(self.netlist(mutate))
+                self.assertTrue([i for i in issues if f'PYRO1_OUT / {cls} is classed "not a path"' in i], issues)
+
     def test_dru_is_generated_from_s10(self):
         """The DRU's S-10 rules are r12_fire.dru_rules(), in order after R11's scoped rules, with general limits at least
         S-10's; each exception names its two items and its floor (kicad-cli matches them: the build's DRC is 0)."""
@@ -600,7 +773,7 @@ pcbnew.SaveBoard(sys.argv[1], b)
         for r in rules:
             self.assertIn(fire.dru_text(r), text)
         self.assertGreaterEqual(fire.DRU_GATE_MM, fire.GATE_MIN)
-        self.assertEqual(len(rules), 6 + sum(len(v) for v in fire.EXCEPTIONS.values()))
+        self.assertEqual(len(rules), 6 + len(fire.PACK) + sum(len(v) for v in fire.EXCEPTIONS.values()))
         for key, pairs in fire.EXCEPTIONS.items():
             for a, b, layer, floor in pairs:
                 self.assertIn(f'(rule "S-10 exception ({key}): {a} to {b} on {layer}"\n  (layer "{layer}")', text)
