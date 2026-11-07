@@ -1,7 +1,8 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
 **Superseded by §7 (branch `r12-port-fix`, D-R12-83 … -85): board `d6e4f7ee…`; and since the AVA re-layout by
-`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm; current board `6e874d4e…` since round 5, D-R12-125 … -133).** §1–§6
+`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm; current board `f26dfef1…` since round 6, D-R12-134 … -143;
+`6e874d4e…` after round 5, D-R12-125 … -133).** §1–§6
 record the stage D board `d776c5d7…` as it was.
 
 Follows stageC.md (pass 2 frozen, D-R12-77A, board `e2b005b5…`). Decisions D-R12-78 … D-R12-82 are in

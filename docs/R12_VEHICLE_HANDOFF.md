@@ -1,13 +1,13 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `6e874d4e…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, the AVA polish pass only signal copper, D-R12-121 … -124, and round 5's fix pass the fire-net copper, five pyro-cell parts, U6's lands and the J121 pours, D-R12-125 … -133), 46 × 90 × 1.6 mm, four
+**Status.** PCB `f26dfef1…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, the AVA polish pass only signal copper, D-R12-121 … -124, round 5's fix pass the fire-net copper, five pyro-cell parts, U6's lands and the J121 pours, D-R12-125 … -133, and round 6's fix pass added R136, R95 and D95, changed R131 to 5.1 kΩ and moved R132, R175 and R120, D-R12-134 … -143), 46 × 90 × 1.6 mm, four
 layers, every part on the top face and assembled by JLC. Branch `m3-assy-r12`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
 edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 90), top face = F. Positions
-below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`). Round 5 moved five small pyro-cell parts and nothing this file positions otherwise (Measured on `6e874d4e…`, D-R12-125): TP122 (the PYRO1_GATE probe) to (14.8, 42.4), D120 to (6.6, 49.2) rotation 270, R131 turned to rotation 270 at (6.6, 46.6), R173 to (12.6, 46.1) and C13 to (17.4, 50.0) rotation 0.
+below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`). Round 5 moved five small pyro-cell parts and nothing this file positions otherwise (Measured on `6e874d4e…`, D-R12-125): TP122 (the PYRO1_GATE probe) to (14.8, 42.4), D120 to (6.6, 49.2) rotation 270, R131 turned to rotation 270 at (6.6, 46.6), R173 to (12.6, 46.1) and C13 to (17.4, 50.0) rotation 0. Round 6 added and moved small parts only, none that this file positions otherwise (`r12_place.tsv` on `f26dfef1…`): R136 (cold pull-up series resistor) new at (4.1, 50.2) rotation 0 and R131 now 5.1 kΩ at the same place (D-R12-134); R132 to (17.17, 32.2) rotation 0, R175 turned to rotation 270 at (17.6, 33.6), R120 to (6.53, 26.95) rotation 0 (D-R12-137); R95 new at (18.15, 22.89) rotation 270 and D95 new at (20.77, 24.27) rotation 180 (D-R12-138). TP81 and TP122 did not move.
 
 ## Harness pin map
 
@@ -104,7 +104,8 @@ adapted to R12. Run it in order and stop at the first failure.
    - Measure J121.2 (IGN) to GND with a floating meter: it must read below 0.1 V.
    - If the board is on, or J121.2 reads above 0.1 V, do not fit the e-match.
 3. **Closed-switch check with a dummy load.** Fit a 2 Ω dummy in J121, then close J400.
-   - The board powers up, the passive screen passes and firmware raises PC1.
+   - The board powers up, the passive screen passes (PC0 and PC5 both in their healthy bands, D-R12-140, [M3_R12
+     "Firmware"](M3_R12.md#firmware)) and firmware raises PC1.
    - Confirm the powered BUS / CONT readings.
    - Confirm PD10 (PORT_SENSE) reads **high** (ports powered) and PA6 = VLOGIC / 11.
    - Open J400. Within 1 s the board must be off and J121.2 below 0.1 V. Only then remove the dummy.
@@ -173,10 +174,10 @@ see [M3_R12 firmware](M3_R12.md#firmware). The per-flight closed-switch check do
 
 ## Cost
 
-M3 metric (parts + feeder per board): $65.02 at 2 boards and $45.68 at 5 boards, against the $84.41 cap (Live
-2026-11-06T17:55:07Z / 17:56:22Z). Minimum all-in $173.69 / $279.93 including U1-only X-ray ($3.28 / $8.20;
-Calculation / Inference: X-ray count; the bare PCB is the Live 46 × 90 quote, $25.10), $3.69 over the $170 target at 2 boards.
-Counting U1 / U4 / U5 / U6 / U9 gives $186.81 / $292.23–300.43, above $170 at 2 boards and straddling $295 at 5 boards (Calculation /
+M3 metric (parts + feeder per board): $64.86 at 2 boards and $45.52 at 5 boards, against the $84.41 cap (Live
+2026-11-07T10:01:24Z / 10:03:04Z on `f26dfef1…`). Minimum all-in $173.39 / $279.19 including U1-only X-ray ($3.28 / $8.20;
+Calculation / Inference: X-ray count; the bare PCB is the Live 46 × 90 quote, $25.10), $3.39 over the $170 target at 2 boards.
+Counting U1 / U4 / U5 / U6 / U9 gives $186.51 / $291.49–299.69, above $170 at 2 boards and straddling $295 at 5 boards (Calculation /
 Inference: qualifying count and fee tier). Confirm the count and
 tier, including possible D402 / Y1 fees, on JLC's quote (D-R12-105). No part is short or thin. See [M3_R12.md,
 "Cost and stock"](M3_R12.md#cost-and-stock).

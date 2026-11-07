@@ -46,7 +46,8 @@ net classes (Default 0.10 / 0.10 mm, 0.45 / 0.30 mm via; Power 0.30 mm) are gene
 C85, C86, C98, TP82 (nets USB_LIMITED, USB_ILIM, LOGIC_ILIM, LOGIC_SS, USB_OVLO, USB_FAULT_N, LOGIC_SOURCE_ST). Added D5
 (RAW_PROTECTED → VLOGIC) and D6 (VBUS → VLOGIC), both SS34 (C8678 Basic $0.0351, 40 V 3 A, VF 0.55 V at 3 A, Live
 listing). Function kept: bench power and log download over USB-C (F11), battery priority (the higher source wins:
-VLOGIC ≥ 5.2 V on the pack against ≤ 5.0 V on USB, Calculation / Inference), no back-feed into the host (D6) and C84
+VLOGIC ≥ 5.2 V on the pack against ≤ 5.0 V on USB, Calculation / Inference; 5.2 V is stage A's R11-copper 5.203 V:
+stage D on the 90 mm board gives 5.124–5.324 V at four stalls, R12F6-TRI-11 / D-R12-143), no back-feed into the host (D6) and C84
 hold-up isolated from the port and camera bucks (D5; better than R11, where C84 back-fed them through U11). USB-only
 VLOGIC is 4.30–5.00 V from a USB 2.0 host port (4.75–5.25 V, VF 0.25–0.45 V Inference), above the LMR50410's 4.0 V floor
 (D-R12-06); a bus-powered hub's 4.40 V low-power port gives 3.95 V, below it (bench rule O-R12-03). Lost margins: USB
@@ -65,7 +66,9 @@ kept; the sense is the rail itself instead of the mux's selection.
 4.3 V, TI SLVSD90B §5.3 / §5.5, Datasheet). LMR50410: VIN 4–36 V, UVLO rising 3.55–4.0 V, VFB 0.99–1.01 V, 1 A, EN tied
 to VIN allowed (TI SLUSDW3A §6, §7.3, §7.5, Datasheet); SOT-23-6 on R11's land (JLCEDA land of C2841056 0.532 × 1.072 mm
 at ±1.149 mm, checked in `r12_parts.geometry_checks`). Feedback R14 47k / R15 20k (Basic): 3V3 = 3.270–3.431 V initial,
-3.240–3.464 V drift, inside 3.0–3.6 V (VDD33USB, flash, card, sensors; Calculation / Inference: drift). Inductor: SWPA4030 4.7 µH, the code
+3.240–3.464 V drift from §7.5's V_FB alone; since D-R12-139 (R12F6-TRI-03) the window uses §7.8's PFM regulation band
+(U2 is the PFM variant): **3.254–3.482 V initial, 3.224–3.516 V drift**, inside 3.0–3.6 V (VDD33USB, flash, card,
+sensors; Calculation / Inference: the band at R12's VIN, its stacking and drift). Inductor: SWPA4030 4.7 µH, the code
 the two TPS563208 bucks use, instead of TI Table 9-1's 10 µH: ripple ratio K = 0.61 at 8.4 V in, at the top of TI's
 20–60 % range (SLUSDW3A eq. 9, Calculation); 0.77 only in the wrong-3S band; loop behaviour with 4.7 µH is an Inference
 (bench load step, O-R12-06). Output C8 22 µF (Table 9-1: 22 µF) plus C23, C461 and the decoupling. Input C6 22 µF + C99.
@@ -113,8 +116,10 @@ IOVLKG ±0.1 µA, Datasheet). The study's 12.5–14.0 V proposal is not taken (i
 1/R scaling). EN chain (F6): R80 / R165 470k and R81 300k keep their values in 0603 Basic cases (C23178, C23024); C87
 220 nF and D402 unchanged; EN = 2.03 V at 8.4 V and ≤ 6.5 V up to the 19.9 V clamp (Calculation); R10 / R11's F6
 timing figures carry over (same values and EN limits) until stage D re-runs them. C81 dVdt 4.7 nF C0G 0603 (C85980
-Extended) → 0402 X7R Basic (C1538): ±10 % plus bias shifts the inrush slope, re-checked in the stage D hot-plug run
-(Inference). D8 SMBJ12CA 600 W → SMAJ12CA/TR13 (C78399, Extended $0.0456): same 12 V standoff / 19.9 V clamp, 400 W
+Extended) → 0402 X7R Basic (C1538): ±10 % plus bias shifts the inrush slope (Inference; not re-checked: the stage D hot-plug
+model is a reverse hot-plug transient with no dVdt / U9 start-up model and carries C81 only in its discharge
+inventory, so this record's earlier "re-checked in the stage D hot-plug run" was false, R12F6-TRI-13 / D-R12-143;
+bench item, R12_VALIDATION row 15). D8 SMBJ12CA 600 W → SMAJ12CA/TR13 (C78399, Extended $0.0456): same 12 V standoff / 19.9 V clamp, 400 W
 (Live listing); the hot-plug model's surge is re-run in stage D (Inference that the pack transient is under 400 W). D9
 B340A → SS34 (Basic). **R166 0.36 Ω and the C89 / C95 damper are kept** (the hot-plug figures depend on them; the
 stage D re-run decides; AVA has none, Inference).
@@ -136,8 +141,9 @@ transient toward the 19.9 V clamp.
 The bus is enabled from the on-rail check until switch-off (Inference that no transient above 14.4 V occurs while it is
 on, pad or flight; O-R12-10, D-R12-115). Q124 VGS ≥ 2.777 V in stage D and in the stage A placeholder after subtracting the DS12110 Rev 8
 Table 158 VOH allowance, with R126 / R128 at their ±1.67 % drift ends (Calculation / Inference: drift; D-R12-108,
-corrected from 2.778 / 2.761 V by D-R12-131). PE4's steady load, R127 1k plus R126 220R + R128 10k,
-is about 3.6 mA (≤ 3.9 mA), within Table 158's 4 mA row (Calculation / Inference: drift; D-R12-114).
+corrected from 2.778 / 2.761 V by D-R12-131; **2.761 V** on the PFM 3V3 window since D-R12-139). PE4's steady load,
+R127 1k plus R126 220R + R128 10k, is about 3.5 mA (≤ 3.93 mA on the PFM window, D-R12-139; was ≤ 3.9 mA), within Table
+158's 4 mA row (Calculation / Inference: drift; D-R12-114).
 Both clear the 2.5 V RDS(on) row; VGS(th) ≤ 1.45 V (Datasheet). Nominal gate τ = 48 µs (Calculation).
 
 **D-R12-11 D120 BAT54A (C8591 Extended) → BAT54C,215 (C37704, Preferred Extended $0.0152).** Same 30 V / 2 µA class
@@ -545,7 +551,7 @@ FXLS9xxx0 Rev 6 (LCSC copy for C5190712, the single-channel sheet) Table 84 / 85
 single-channel sheet; that the dual-channel part matches is an Inference). I²C is not available on COMMTYPE 000, so U6
 stays on SPI. SPI: 32-bit frames with CRC, SCLK period ≥ 88 ns (≤ 11.3 MHz), POR to first command 0.4–0.7 ms (Rev 6
 items 10794, 10937). (c) **Supply**: VCC_BUF 3.135–5.25 V, ≤ 6.0 mA in SPI (items 10501 / 10502 / 10510). U6 is on 3V3,
-whose budget window is 3.240–3.464 V (drift case, Calculation / Inference, `r12_windows.json`; the 3V3 lower limit is now 3.135 V): 105 mV over
+whose budget window is 3.240–3.464 V (drift case, Calculation / Inference, `r12_windows.json`; the 3V3 lower limit is now 3.135 V; 3.224–3.516 V on the PFM band since D-R12-139, 89 mV over U6's floor): 105 mV over
 U6's floor at the regulator; copper drop and load steps at U6 are an **Inference** (6 mA). (d) **Land**: Rev 6 Figure 110
 / 111 (drawing 98ASA00761D rev F, SOT1688-1(SC)), new footprint `M3_FXLS_HLQFN16` (pads 0.5 × 0.85 at 1.975, die pad
 2.6, mask +0.05, paste −0.3 on the die pad; since D-R12-129 the eight corner lands carry NXP's 0.143 mm inner-corner
@@ -901,8 +907,8 @@ bound on the drop): J420 ≥ **4.561 V initial / 4.529 V drift** (+61 / +29 mV o
 4.564 / 4.532 V; no-load top 4.938 / 4.972 V (−62 / −28 mV under 5.0 V). Widening the feed was not needed and would not
 by itself have helped (the drift window alone is too wide). PA4 PORT_SENSE becomes 3.11-3.38 V initial, 3.08-3.42 V
 drift (VIH 2.39 V, ≤ 3.52 V, as first written; Calculation / Inference: drift. Corrected by D-R12-131: VIH 0.7 × the
-3V3 maximum is 2.402 V initial / 2.425 V drift, the ceiling VDD + 0.3 at the 3V3 minimum 3.570 / 3.540 V; PORT_SENSE is
-on PD10 since D-R12-93). The camera rail (U403, CAM_5V) and the "device TX ≤ 3.6 V" UART rule are
+3V3 maximum is 2.402 V initial / 2.425 V drift, the ceiling VDD + 0.3 at the 3V3 minimum 3.570 / 3.540 V; on the PFM
+window since D-R12-139: 2.438 / 2.461 V and 3.554 / 3.524 V; PORT_SENSE is on PD10 since D-R12-93). The camera rail (U403, CAM_5V) and the "device TX ≤ 3.6 V" UART rule are
 untouched. Cost: one Extended code, +$3.07 feeder per order and $0.03 of part (Live). Net names unchanged.
 
 **D-R12-84 U9 feed and output copper (O-R12-25).** The 0.4 mm C96.1 → C88.1 → U9.5 run (4.13 mm, IPC-2152 upper
@@ -985,7 +991,7 @@ boot, MCU unpowered) gave Q122 (AO3400A, VGS(th) 0.65 / 1.05 / 1.45 V at 250 µA
 | PORT_SENSE | 0.1998 V |
 | PYRO1_CONT (pack 8.4 V, bus already on; with the bus off its source is about 1.6 V) | 0.399 V |
 | CAM_5V_SENSE | 0.273 V |
-| NRST | 0.213 V |
+| NRST | 0.213 V (0.2165 V on the PFM 3V3 window, D-R12-139) |
 
   C3's neighbour net identities are unchanged: B2 / D2 3V3 (D-R11-23), C2 GND, the rest NC.
   The spacing is not unchanged: on `be81f40b…` the PE4 lane is 0.150 mm from U1.B2's 3V3 land
@@ -1085,15 +1091,15 @@ unchanged. The plan and its reasons are the layout scratch notes `CRITIQUE.md`, 
 
 | Net | Was | Now | Peripheral / note |
 |---|---|---|---|
-| SERVO1_MCU | PB7 A5 | PA15 A8 | AF1 TIM2_CH1. PA15 is JTDI at reset with its pull-up; against the 10 k servo pull-down the line reaches at most 0.864 V initial / 0.877 V drift (Calculation / Inference: drift, ±1.67 % per resistor; D-R12-116). Firmware releases JTAG and keeps SWD |
-| SERVO2_MCU | PA15 A8 | PA10 D10 | AF1 TIM1_CH3; USART1_RX pull-up against the 10 kΩ 1 % pull-down gives the same 0.864 V initial / 0.877 V drift bound (Calculation / Inference: drift; D-R12-116) |
+| SERVO1_MCU | PB7 A5 | PA15 A8 | AF1 TIM2_CH1. PA15 is JTDI at reset with its pull-up; against the 10 k servo pull-down the line reaches at most 0.864 V initial / 0.877 V drift (Calculation / Inference: drift, ±1.67 % per resistor; D-R12-116; 0.877 / 0.890 V on the PFM 3V3 window, D-R12-139). Firmware releases JTAG and keeps SWD |
+| SERVO2_MCU | PA15 A8 | PA10 D10 | AF1 TIM1_CH3; USART1_RX pull-up against the 10 kΩ 1 % pull-down gives the same 0.864 V initial / 0.877 V drift bound (Calculation / Inference: drift; D-R12-116; 0.877 / 0.890 V on the PFM window, D-R12-139) |
 | SERVO3_MCU | PA1 H2 | PA8 D9 | AF1 TIM1_CH1; keep MCO1 off |
 | SERVO4_MCU | PA2 J2 | PA9 C9 | AF1 TIM1_CH2. The loader's USART1_TX may hold a steady high: a level, not pulses (the allowance R11 took for PA2) |
 | I2C1_SCL | PA8 D9 | PB6 B5 | AF4 I2C1_SCL (was I2C3) |
 | I2C1_SDA | PC9 E9 | PB7 A5 | AF4 I2C1_SDA |
 | VBUS_SENSE | PA10 D10 | PC9 E9 | GPIO input |
 | CAM_MCU_TX | PD5 B6 | PC10 B9 | AF8 UART4_TX (was USART2) |
-| CAM_MCU_RX | PD6 C6 | PC11 B8 | AF8 UART4_RX. The loader's SPI3_MISO may drive it; the camera is unpowered in the loader and R100 1 kΩ 1 % feeds J9.5, the camera's TX output, with a resistor-only bound ≤ 3.47 mA initial / 3.52 mA drift (3.4641 V / 983.3 Ω; Calculation / Inference: drift; D-R12-116) |
+| CAM_MCU_RX | PD6 C6 | PC11 B8 | AF8 UART4_RX. The loader's SPI3_MISO may drive it; the camera is unpowered in the loader and R100 1 kΩ 1 % feeds J9.5, the camera's TX output, with a resistor-only bound ≤ 3.47 mA initial / 3.52 mA drift (3.4641 V / 983.3 Ω; Calculation / Inference: drift; D-R12-116; 3.52 / 3.58 mA on the PFM window, D-R12-139) |
 | HG_CS | PC11 B8 | PD2 B7 | GPIO, initialise high |
 | CAM_PWR_EN | PC14 A1 | PC12 C8 | GPIO. A loader SPI3_MOSI input; R431 keeps the camera off |
 | LED_YEL | PD2 B7 | PA1 H2 | GPIO |
@@ -1109,11 +1115,11 @@ unchanged. The plan and its reasons are the layout scratch notes `CRITIQUE.md`, 
   from `pin_table.tsv`'s AN2606 Rev 64 Table 119 column (read in R11): Inference. O-R12-23's AN2606 half stays open.
 * **K-neighbours.** G3, PC1's neighbour, is now NC, so D-R12-86's PORT_SENSE inert entry is dropped (check_r12
   `NEIGHBOUR_INERT`, test updated). PC1's bridged-gate set is now PYRO1_CONT / CAM_5V_SENSE / NRST (0.399 / 0.273 /
-  0.213 V, D-R12-86's figures; Calculation / Inference: resistor drift and source bounds).
+  0.213 V, D-R12-86's figures; NRST 0.2165 V on the PFM window, D-R12-139; Calculation / Inference: resistor drift and source bounds).
 * **Budget (`r12_budget.py`; corrected by D-R12-131, R12F5-TRI-16 / -17).** PD10 is FT_h, and DS12110 Rev 8 Table 60
   p. 139 gives FT_xx ±250 nA (±350 nA is FT_u only), the same as PA4's: PORT_SENSE 3.103–3.388 V initial,
-  3.068–3.426 V drift, 0.025 V or less with PORT_4V8 off, against VIH 2.402 / 2.425 V (Calculation / Inference: drift;
-  this bullet first gave ±350 nA and 3.100–3.392 / 3.064–3.430 / 0.036 V). PD10 is 5 V tolerant, so D-R12-86's PA4 injection observation no longer applies.
+  3.068–3.426 V drift, 0.025 V or less with PORT_4V8 off, against VIH 2.402 / 2.425 V (2.438 / 2.461 V on the PFM
+  window, D-R12-139) (Calculation / Inference: drift; this bullet first gave ±350 nA and 3.100–3.392 / 3.064–3.430 / 0.036 V). PD10 is 5 V tolerant, so D-R12-86's PA4 injection observation no longer applies.
 * **Firmware** (docs/M3_R12.md "Firmware"): TIM1 is an advanced timer, so set BDTR.MOE; PA15 is JTDI at reset; PORT_SENSE
   reads on PD10 ("PA4 high" becomes "PD10 high").
 
@@ -1270,6 +1276,7 @@ are unchanged. No cost-tool output is represented as including this separately c
   (3.4641 × 10.167 / 40.167; Calculation / Inference: drift; corrected from 0.873 V by D-R12-116).
 * PC11 / R100 1 kΩ 1 % gives a resistor-only bound ≤ 3.47 mA initial (3.4314 / 990 Ω), 3.52 mA drift
   (3.4641 V / 983.3 Ω; Calculation / Inference: drift; corrected from 3.50 mA by D-R12-116). D-R12-93 and M3_R12 now agree with `pin_table.tsv`.
+  (Both restated on the PFM 3V3 window by D-R12-139: 0.877 / 0.890 V and 3.52 / 3.58 mA.)
 * Lane C includes LS120's 2.7 mm lead-tail projection below the PCB in fit_check and a seeded test (QMB-09B-03
   maker drawing, 4.0 ± 0.3 mm leads, 1.6 mm PCB); exports the SH drawing actually used by R12; and reads route
   coordinates from `x` / `y`, with coordinate-only fallbacks, in zone_check. No board or copper change.
@@ -1307,7 +1314,7 @@ O-R12-09 remains open for cold start-up, drive level and MCO frequency checks.
 Q124 VGS ≥ (3.2401 − 0.4) × 9.9k / 10.1222k = 2.778 V in stage D (R126 / R128 1 % worst ends),
 2.761 V in the stage A placeholder (both corrected to 2.777 V at the ±1.67 % drift ends by D-R12-131). Both clear AO3400A's 2.5 V RDS(on) row (Calculation / Inference: drift).
 PE4's steady load is about 3.6 mA (≤ 3.9 mA) with R127 1k, within the 4 mA row (D-R12-114; this record first said
-0.32 mA, which left out R127).
+0.32 mA, which left out R127). On the PFM 3V3 window (D-R12-139): Q124 VGS ≥ 2.761 V, PE4's load ≤ 3.925 mA.
 
 The PA6 calculation charges each RAW branch at min(its own resistance from U9.6, D5's): U403 10.81 mΩ,
 U400 and D5 + R92 23.53 mΩ. RAW drop at D5 is 37.5 / 38.4 / 38.7 mV for healthy / match shorted /
@@ -1321,9 +1328,10 @@ battery loss. Lanes A–D report `test_r12_stageD` 11 / 11 and `tools/check.sh` 
 **D-R12-109 R12 dummy-fire reject line (R12F3-TRI-07).** R10 rule 4's 0.2 V BAT_IN − RAW_ACT reject line
 used AONR21357; R12 uses two AO3401A, each ≤ 60 mΩ at VGS −4.5 V, 25 °C (Datasheet, D-R12-10).
 Fix the first-article test to a 2 Ω dummy plus 0.3 Ω total leads, the budget's 7.4 V / 0.15 Ω source,
-no servo stalls and the budget converter loads. `stageD_budget.json`'s idle fire current is 1.505934 A.
-At its 70 °C corner, two 73.5 mΩ FETs drop 1.505934 × 0.147 = 0.221 V; assigning all 28.25 mΩ of fire
-copper to this measurement gives an upper bound 1.505934 × (0.147 + 0.02825) = 0.264 V
+no servo stalls and the budget converter loads. `stageD_budget.json`'s idle fire current is 1.505875 A
+(this record first said 1.505934 A and 28.25 mΩ; corrected to the bound file by D-R12-143, R12F6-TRI-12).
+At its 70 °C corner, two 73.5 mΩ FETs drop 1.505875 × 0.147 = 0.221 V; assigning all 28.434 mΩ of fire
+copper to this measurement gives an upper bound 1.505875 × (0.147 + 0.028434) = 0.264 V
 (Calculation / Inference: hot factors, pack, converter loads and copper model). Reject **above 0.4 V**,
 between that bound and R10 rule 4's 0.7–1.0 V body-diode case (Inference when carried to R12; bench qualification
 required). This is a conditional first-article criterion, not a measured limit for arbitrary sources or loads.
@@ -1387,7 +1395,8 @@ R126.1 and R127.1 (netlist), so PE4 sources R127 1k to GND as well as R126 220R 
 3.2401 / 1000 + 3.2401 / 10220 = **3.557 mA** at the 3V3 drift minimum (was 0.317 mA, which left out R127), and
 **≤ 3.868 mA** at the drift maximum 3.4641 V with every resistor at its −1.67 % drift end: about 3.6 mA (≤ 3.9 mA),
 within DS12110 Rev 8 Table 158's 4 mA VOH row (Calculation / Inference: drift). Q124 VGS ≥ 2.778 V (stage D) and
-2.761 V (stage A) are unchanged by this load (both 2.777 V at the drift ends since D-R12-131). `r12_stageD.py` records `pe4_load_mA`, `pe4_load_max_mA` and the row check in
+2.761 V (stage A) are unchanged by this load (both 2.777 V at the drift ends since D-R12-131). On the PFM 3V3 window
+(D-R12-139): 3.539 mA at the drift minimum 3.2237 V, ≤ 3.925 mA at 3.5156 V, still inside the 4 mA row; Q124 ≥ 2.761 V. `r12_stageD.py` records `pe4_load_mA`, `pe4_load_max_mA` and the row check in
 `stageD_budget.json`; `test_r12_stageD` seeds both figures.
 
 **D-R12-115 The bus-on window includes the pad (R12F4-TRI-03).** Amends D-R12-10. The R12 procedure raises PC1 at the
@@ -1401,6 +1410,7 @@ case is ±1.67 % per resistor (`r12_budget.py` `TOL['drift']`), and 3.4641 V is 
 pull-up / PA10's loader USART1_RX pull-up against the 10 kΩ servo pull-down: **0.877 V** drift
 (3.4641 × 10.167 / 40.167; was 0.873 V with the 1 % end). PC11 into J9.5 through R100: **3.52 mA** drift
 (3.4641 V / 983.3 Ω; was 3.50 mA). The initial figures 0.864 V and 3.47 mA stand (Calculation / Inference: drift).
+On the PFM 3V3 window (D-R12-139) all four move: 0.877 / 0.890 V and 3.52 / 3.58 mA (initial / drift).
 `r12_sch.py` carries the new text into `pin_table.tsv`.
 
 **D-R12-117 Y1's CL source (R12F4-TRI-05).** Amends D-R12-92 and D-R12-107. YXC's YSX321SL sheet (LCSC's PDF for C9006,
@@ -1549,7 +1559,9 @@ the BGA restatement of R10 rule 3 (D-R12-127) without changing their meaning, an
 - **J121 pours.** The S-10 fill rules pull every pour ≥ 0.5 mm from J121.1 (GND_pour_B 0.101 → 0.5005 mm) and from
   J121.2 (GND_pour_B 0.100 → 0.5005 mm on B, GND_In1 0.251 → 0.5005 mm on In1).
 - **Result (Measured on `6e874d4e…`, lane P2 / verifier, two independent tools agreeing to 0.5 µm).** PYRO1_GATE has no
-  3V3, PYRO1_COLD or PYRO1_IGN copper within 1.6 mm (nearest non-GND copper: Q124.3, its own drain land, 1.044 mm).
+  3V3, PYRO1_COLD or PYRO1_IGN copper within 1.6 mm (nearest non-GND copper: PE4's PYRO1_GATE_N at R126.1, 0.167 mm
+  from the gate track (11, 44.1)–(10.5, 43.6), and R126's own lands 0.294 mm, the gate pair, not a path; then Q124.3, its
+  own drain land, 1.044 mm; corrected by D-R12-143, R12F6-TRI-06: this line first named Q124.3 as the nearest).
   PYRO1_GATE_N–3V3 outside U1's courtyard 1.420 mm (C13.1); PYRO1_GATE_N–PYRO1_OUT / CONT_MID 1.080 mm (R173).
   PYRO1_OUT–3V3 / 3V3A: none within 1.6 mm on F; J121.1's barrel 1.0405 mm from the In2 3V3 fill (to the finished
   hole, as R10; the drilled wall is probably 0.025–0.075 mm nearer, Inference). PYRO1_OUT is ≥ 1.040 mm from every net
@@ -1574,11 +1586,14 @@ clearance rules, so DRC holds the same limits and every pour pulls back on refil
   layers, protected-net fills included, both directions (the fill limit applies when either item is a fill).
 - **Q124's gate nets (PYRO1_GATE, PYRO1_GATE_N): ≥ 1.0585 mm (DRU 1.06 mm) from every net** except GND (holds the gate
   off), the gate pair itself (a bridge only shorts R126) and **U1's NC balls only** (U1 pads on `unconnected-*`; other
-  parts' NC pads, NC nets on tracks and no-net copper count). The blanket inert list is gone.
+  parts' NC pads, NC nets on tracks and no-net copper count). The blanket inert list is gone. (The code gave the NC-ball
+  exemption to PYRO1_OUT and PYRO1_IGN too; since D-R12-136, R12F6-TRI-02, it is the gate nets' only.)
 - **PYRO1_OUT: ≥ 1.040 mm from every net** (rails, VLOGIC, MCU-pin nets and the low-side sinks ACT_DRV / BUZZ_OUT
   included), except GND (≥ 0.25 mm copper, ≥ 0.5 mm fills), the gate nets (their own rule) and three not-a-path nets with
   their calculations: PYRO1_IGN (the match's own terminals), PYRO1_COLD (shorts R131 only; D120 reverse biased with the
   bus on, < 1 mA with it off) and PYRO1_CONT_MID (shorts R173 only; ≤ 1.4 mA, PC0 ≤ 1.38 V at 8.4 V) (Calculation).
+  Round 6 corrected both: the COLD reason missed the commanded-fire state (R12F6-TRI-01: an unlimited 3V3 → D120 → Q124
+  path, fixed by R136, D-R12-134 / -135), and PC0 is ≤ 1.42 V at the drift ends (R12F6-TRI-05, D-R12-139).
 - **PYRO1_IGN (new): ≥ 0.25 mm copper, ≥ 0.5 mm fills** from every net but PYRO1_OUT and RAW_ACT (R134's other end).
   Not a match-fire path, but a bridge to GND with the bus on puts about 3.7 A and 27 W through R134, a 2 W part
   (Calculation).
@@ -1587,10 +1602,12 @@ clearance rules, so DRC holds the same limits and every pour pulls back on refil
 - **51 item-pair exceptions** (`EXCEPTIONS`, reasons in `WHY`), each with a floor at its measured gap rounded down to
   1 µm: a new or moved item is not excepted, a pair below its floor fails, and a table entry no longer on the board
   fails as stale. Classes: D-R11-23 3V3 (18 pairs, floor 0.150 mm; row 25), HSE_IN (7, 0.150 mm; no DC drive, about
-  16 mV with PE4 high-Z, Calculation / Inference on the ~200 kΩ feedback resistor), HSE_OUT (8, 0.720 mm; gate ≤ 0.39 V
+  16 mV with PE4 high-Z, Calculation / Inference on the ~200 kΩ feedback resistor; 17 mV at the PFM window's 3.516 V,
+  D-R12-139), HSE_OUT (8, 0.720 mm; gate ≤ 0.39 V
   while PE4 drives low if OSC_OUT sources ≤ 8 mA, Inference; conditional on rule 3, D-R12-127), QSPI_IO2 (8, 0.839 mm;
   fire-capable, 1.19–1.98 V on the gate, Inference; conditional on rule 3), BOOT0 (2, 0.625 mm; input with R5 10 kΩ to
-  GND, Calculation), BAT_FAULT_N (2, 0.950 mm; gate ≤ 0.29 V, below V_GS(th) 0.65 V, Calculation), Q124 (1, 1.044 mm;
+  GND, Calculation), BAT_FAULT_N (2, 0.950 mm; gate ≤ 0.29 V, below V_GS(th) 0.65 V, Calculation; ≤ 0.302 V on the PFM window, R12F6-TRI-04,
+  and ≤ 0.158 V since R95, D-R12-138 / -139), Q124 (1, 1.044 mm;
   the SOT-23's own gate and drain lands) and PYRO1_CONT (5, 0.464 mm; PC0's input clamp could pass bus current through
   the match, Inference; owner row 32). U1 NC balls within 1.0585 mm of PE4's lane are listed in S-10's evidence, not
   excepted: B1 0.150, B3 0.316, C4 / D3 0.400, A1 0.450, B4 / D4 0.731 mm (PC14 / PC15 / PE0 / PE1 / PE3 / PE5 / PB8),
@@ -1651,7 +1668,9 @@ drawing marked not to scale) show. Reading 0.143 mm as the terminal cut and the 
 C5190712's 2.075 mm placement was not taken: it would leave part of a maximum-length terminal off the land. Measured:
 corner-pair gap (U6.8 / 9, 12 / 13, 4 / 5 …) 0.1414 → **0.3437 mm**, mask web 0.041 → **0.244 mm**; land 0.4148 mm²,
 covering the terminal with zero margin at the maximum terminal size and about 0.075 mm at nominal (Calculation, before
-its 0.10 mm position tolerance). No different-net SMD pair on the board is now under 0.2 mm. New DRU rule "R12 JLC SMD
+its 0.10 mm position tolerance). No different-net SMD pair on the board is now under 0.15 mm: U4's eight 0.5 mm-pitch
+pairs are at 0.150 mm and J3 / U9 at 0.200 mm (corrected by D-R12-143, R12F6-TRI-07: this line first said "under
+0.2 mm"). New DRU rule "R12 JLC SMD
 pad to pad (different nets)": 0.15 mm (JLC's limit; REQUIREMENTS M2). `tools/paste_check.py` accepts a chamfered pad
 with zero paste margin and refuses one with a margin (seeded tests).
 
@@ -1691,7 +1710,7 @@ order 1 GND / 2 PORT_4V8; PORT_SENSE on PD10 / H9; the seed "buzzer (LS120, JLC-
   3.068–3.426 V drift, ≤ 0.025 V off** (Calculation; drift Inference).
 - **PORT_SENSE thresholds from the rail window (TRI-17):** VIH 0.7 × the 3V3 maximum = **2.402 V initial (3.4314 V) /
   2.425 V drift (3.4641 V)**; ceiling VDD + 0.3 at the 3V3 minimum 3.570 / 3.540 V (was a hard-coded "2.39 V at 3.43 V");
-  the check still passes (Calculation).
+  the check still passes (Calculation). On the PFM window since D-R12-139: 2.438 / 2.461 V, ceiling 3.554 / 3.524 V.
 - Stage D and the hot-plug model re-bound (lane A on `14b82d39…`, lane P2 on `6e874d4e…`).
 
 **D-R12-132 Work zones follow the 90 mm board (R12F5-TRI-13; lane C).** `zones.json` W3 / W5 now split at the 90 mm
@@ -1719,6 +1738,325 @@ W2 / W4 / W5 none (W5 was 104). `stageE_relayout.md` §2 now says `zone_check.py
 - O-R12-02: SS34's 250 °C / 10 s rating is read (economic_parts.md §2.3) and leaves the unread list (TRI-20).
 - The bare PCB line uses the Live 4L 46 × 90 ENIG 0.5 oz inner 1.6 mm quote for 5 pcs, **$25.10** (cost_study.md
   §2.1, Live 2026-11-04); the "100 mm quote used for 90 mm" Inference is withdrawn; totals unchanged (TRI-22).
+
+## Round 6 fix pass (2026-11-07, R12F6-TRI-01 … -17, verifier V-1 … V-5, PACK_FLT; D-R12-134 … -143)
+
+Round 6's ten Opus lenses and four Astra second-opinion lenses reviewed `6e874d4e…` at `daa08ef`; the triage found
+17 real errors (1 Critical / 1 Major / 15 Minor, R12F6-TRI-01 … -17), none rejected. astra-safety-1 is the
+**Critical** one (TRI-01): during a commanded fire Q124 holds PYRO1_OUT near GND, so a bridge across R131's own lands
+(0.294 mm, Measured) made 3V3 → D120 → bridge → Q124 → GND with no resistor, limited only by U2's 1.075–1.6 A output
+limit (TI SLUSDW3A §7.5, Eq. 6): D120 (BAT54C, I_FSM 600 mA) overstressed and the logic browned out or reset during the
+wanted fire (Calculation / Inference on V_F, the logic load and the reset sequence). The (PYRO1_OUT, PYRO1_COLD) "not a
+path" reason covered only the bus-on-Q124-off and bus-off states. gate-1 was raised to **Major** (TRI-02): S-10 and the
+DRU gave U1's NC-ball exemption to PYRO1_OUT and PYRO1_IGN as well as to the gate nets. All 17 are fixed by D-R12-134 …
+-143. An independent verifier then reviewed lane P's fix ("sound with issues") and found V-1 … V-5; V-1 and V-2 (Major,
+pre-existing) and the PACK_FLT follow-up changed the board again. Round 6 is not clean.
+
+- **Lane P** (`ca42e37`): TRI-01 (R136, R131 5.1 kΩ, fire-state guard), TRI-02, TRI-04, -05, -09, -15: board
+  `3f9579fa…`.
+- **Verifier** (on `ca42e37`): the R136 fix and the NC-ball rescope hold (its own scan of 950 item pairs / 89 net pairs
+  on all four layers matched S-10's 51 exceptions); V-1 RAW_ACT / ACT_FET_S, which nothing on the board limits, were not
+  in S-10 (RAW_ACT–GND 0.792 mm at R132.1, ACT_FET_S–BAT_DAMP 0.772 mm at R120.1); V-2 RAW_ACT–ARM1_SENSE 0.546 mm
+  (R132.1–R175.2) put the bus straight on PC5 (TT_a); V-3 a false mechanism in the (PYRO1_IGN, RAW_ACT) reason; V-4 the
+  fire-state guard missed parts with unknown prefixes; V-5 a flaky S-10 DRC test (4 of 8 runs failed).
+- **Lanes A and B** (`207fda7`): TRI-03 (3V3 window), the first R12 cold-screen bands, TRI-16, -17; no board change.
+- **Lane P3** (`752073c`, merged with A / B as `5a670bb`): V-1 … V-5: board `6a1c99e0…`.
+- **Lane P4** (`3da8840`): PACK_FLT (R95 and D95): PCB
+  `f26dfef181327c27cbf6c71b1f89e8d0be83f80e665716e0be1b7e31efcd0df0` replaces `6e874d4e…`.
+
+Verified (Measured, lanes P, P3, P4 and this records lane): `PYTHONHASHSEED=0 r12_build.sh` gives the same hash three
+times (P4); DRC, unconnected, parity and ERC 0; `r12_sch_check` OK with its seeds; check_r12 every rule OK, S-10
+included; route_check r12 0 failing, 3 allowlisted, 8 non-critical leftovers; fit_check, K-legends, K-fill OK; the fab
+package re-exported and bound (JLC BOM 58 lines, 181 CPL rows); stage D and the hot-plug model re-run on `f26dfef1…`
+(2304 / 2304 required cases pass, every row identical; Simulation / Inference); `test_r12_check` 89 tests (29 of them
+`FireGaps`), `test_r12_stageD` 23 and `test_r12_fab` 15 pass; `tools/check.sh` exit 0 (lanes P, A / B, P3 twice, P4,
+and again after this records lane). No AGENTS §2 rule changes: every §2.4 gate network is unchanged, the pyro bus is
+still taken after Q120 / Q121, and R136 / D95 add series limits without changing any gate. No physical test.
+
+**D-R12-134 Cold pull-up series resistor R136; R131 5.1 kΩ (R12F6-TRI-01, circuit and copper).** Amends D-R12-125
+(D120 / R131).
+- **Circuit.** New R136 5.1 kΩ 1 % 0402 (C25905, 0402WGF5101TCE, already on the BOM): pin 1 3V3, pin 2 the new net
+  **PYRO1_COLD_PU** to D120.1 (A1). R131 10 kΩ → **5.1 kΩ** (C25905, same land). The chain is now 3V3 → R136 5.1k →
+  PYRO1_COLD_PU → D120 (A1 → K) → PYRO1_COLD → R131 5.1k → PYRO1_OUT, 10.2 kΩ in all (was D120 → R131 10k, 10 kΩ).
+  D120.2 (A2) stays NC.
+- **Placement and copper.** R136 at F(4.1, 50.2), rotation 0, west of D120.1: a 0.2 mm track D120.1 (5.65, 50.2) →
+  R136.2 (4.53, 50.2), and a 0.3 mm 3V3 track R136.1 (3.67, 50.2) → its own 3V3 via (2.65, 50.2) on the In2 3V3 plane;
+  the old D120.1 3V3 track and via (5.65, 51.2) are removed. A site south of D120 put R136.2 under D120's pin-1 dot (DRC
+  silk_over_copper), so R136 went west.
+- **Gaps (Measured on `f26dfef1…`).** PYRO1_COLD_PU is ≥ 3.266 mm from every PYRO1_OUT item (D120.1 to R131.1); R136's
+  3V3 pad ≥ 3.733 mm (R136.1 to the OUT track (5.2, 46.2)–(6.6, 46.2)); R136's own lands 0.294 mm.
+- **Every bridge, in every state (Calculation; 3V3 ≤ 3.516 V, D-R12-139; resistors at the ±1.67 % drift ends).**
+  R131's lands bridged in a commanded fire: 3V3 → R136 → D120 → bridge → Q124 passes ≤ 3.516 V / 5.015 kΩ ≈ 0.70 mA
+  (D120 V_F taken as 0; `r12_fire.py` states ≤ 0.71 mA), against U2's 1.075–1.6 A before. R136's lands bridged: R131
+  remains, the same bound. D120 bridged with the bus on (Q124 off): (8.4 − 3.224) V / 10.03 kΩ ≈ 0.52 mA back into 3V3.
+  PYRO1_COLD_PU to PYRO1_OUT: ≤ 0.70 mA in a fire, ≤ 1.04 mA into 3V3 with the bus on. D120.2 (NC, an anode onto COLD)
+  bridged to .1 or .3: harmless. The triage's sweep of the other not-a-path classes and own-land pairs with Q124
+  conducting (R173 / R129, R130 / R178 / C127, C128 the disclosed row 31 pair, Q124.1–.3, R126 a C126 transient,
+  R127 / R128 / C126 hold-offs, R134 / J121 the analysed shorted-igniter cases) found R131 the only unlimited path; it
+  is now ≤ 0.71 mA.
+- **Records.** check_r12 S-1 / S-2: R10's named supply tie (D120, PYRO1_COLD, 3V3) is replaced by (R136,
+  PYRO1_COLD_PU, 3V3), and `ARMED_NET_PARTS` gains PYRO1_COLD_PU = {D120, R136}, so a D120 anode back on 3V3 fails S-2.
+  `r12_sch_check`: contract rows R136.1 / .2 and D120.1; R131, R136 and D120 required; seeds "cold pull-up anode on 3V3"
+  and "R136 removed". K-neighbours' note names the pull-up "R136 5.1k, D120 and R131 5.1k". The cold-screen bands move
+  to 10.2 kΩ (D-R12-140).
+- **BOM / CPL.** C25744 10 kΩ 21 → 20 (R131), C25905 5.1 kΩ 9 → 11 (R131, R136); still 58 lines; CPL +1 row (R136 at
+  (4.1, −50.2), Top, 0). Legends: R136's designator on F at (2.83, 51.47); D120's on B under its part.
+- **Owner note, inherited (not audited).** The unlimited 3V3 → D120 → R131 → PYRO1_OUT path in a commanded fire was
+  inherited from earlier revisions: R4's FMEA H-1 (`docs/FMEA_REDUNDANCY.md`) added D120 for the bus-on case only, and
+  the triage found the same D120 → R131 10k → PYRO1_OUT topology in R9's and R10's netlists (BAT54A). Those boards were
+  not audited for it: the owner asked to focus on R12 only.
+
+**D-R12-135 S-10: every not-a-path class holds in the fire state; the fire-state guard; part classes default-deny
+(R12F6-TRI-01 gate, verifier V-4).** Amends D-R12-126.
+- **Fault model.** A class is "not a path" only if it holds in every state: bus off; bus on, Q124 off; and a commanded
+  fire, Q124 on, PYRO1_OUT near GND (about 0.05 V), so a bridge to PYRO1_OUT is a bridge to GND. Every NOT_A_PATH reason
+  in `m3_design/r12_fire.py` now states all three: (PYRO1_OUT, PYRO1_COLD) as D-R12-134; (PYRO1_OUT, PYRO1_CONT_MID):
+  bus on, PC0 ≤ 1.42 V and ≤ 1.41 mA (D-R12-139), in a fire PC0 reads near 0 V, bus off < 0.71 mA; the gate–GND classes
+  are hold-offs (PYRO1_GATE–GND ≤ 17 mA through R126; PYRO1_GATE_N–GND drives PE4 above its per-pin rating, Inference
+  on damage; the fire fails, 3V3 is not collapsed); the gate pair is a C126 transient; (PYRO1_IGN, RAW_ACT) is V-3's
+  corrected text (D-R12-137).
+- **`fire_state_guard()`, run in S-10.** For every (PYRO1_OUT, f) not-a-path class it walks `schematic.net.xml` from f
+  to the nearest source and fails if any source is reached through less than **FIRE_SERIES_MIN = 5 kΩ** (≤ 3.516 V /
+  5.015 kΩ ≈ 0.70 mA; ≤ 1.7 mA from 8.4 V; under BAT54C I_F 200 mA and negligible on 3V3, Calculation), or if the cold
+  pull-up diode's anode is on 3V3 or another source. Evidence on `f26dfef1…`: PYRO1_COLD reaches 3V3 through 5100 Ω,
+  PYRO1_CONT_MID reaches PYRO1_CONT through 5100 Ω, D120.1 is on PYRO1_COLD_PU. It fails on the round 6 netlist.
+- **PYRO1_COLD_PU is not classed out.** It would qualify (0.70 mA with Q124 on, ≤ 1.04 mA into 3V3 with the bus on), but
+  it stays under default-deny at OUT_MIN 1.040 mm; the board keeps it 3.266 mm away.
+- **Part classes, default-deny (V-4, `part_kind()`).** A two-pin capacitor carries no DC; a one-pin TP / H / MH / FID
+  carries nothing; a two-pin R counts at its value only if the value parses; D / L / FB parts of any pin count and every
+  other two-pin part (F, JP, LED, an unparsed R, any unknown prefix) count as 0 Ω either way; every other part is a
+  source on every pin. The verifier's seven plants that passed the old guard (F1, LED9 or JP1 in place of or across
+  R136, RN1 0R, LED9 from 3V3 to COLD, X1 on COLD_PU, IC1 on CONT_MID) now fail it. "5.1 k" with a space reads as
+  5.1 Ω (conservative).
+- **Tests (`test_r12_check.FireGaps`).** The committed chain and values; the fire-state evidence; every OUT class reason
+  states the Q124-on case; D120.1 planted on 3V3 fails S-10 twice and S-2 once; R136 at 0 Ω or 1 kΩ fails; a planted
+  (OUT, LED_RED_A) class passes the old guard but fails this one (220 Ω through R32); PYRO1_COLD_PU copper 0.2 mm from
+  J121.1 fails S-10 and DRC; the V-4 classes and plants.
+
+**D-R12-136 U1's NC-ball exemption is the gate nets' only (R12F6-TRI-02, Major).** Amends D-R12-126. The exemption's
+reason (analog in reset, kept analog by firmware rule 3) covers raising a gate, not sinking PYRO1_OUT's current or
+taking PYRO1_IGN's bus voltage. `pair_limit()` now applies it only when the protected net is PYRO1_GATE or
+PYRO1_GATE_N, and `NOT_U1_NC` is removed from the DRU rules "S-10 PYRO1_OUT to every net" and "S-10 PYRO1_IGN to every
+net" (the fill rule never had it); the DRU is regenerated. Against a U1 NC ball PYRO1_OUT now needs 1.04 mm and
+PYRO1_IGN 0.25 mm (0.5 mm fills). Tests: a PYRO1_OUT track 0.38 mm from U1.A1 fails S-10 and DRC; the IGN plant is at
+0.20 mm (deviation from the triage's 0.38 mm: IGN's own limit is 0.25 mm, so 0.38 mm is rightly allowed; the verifier
+confirmed 0.3 mm passes and 0.2 mm fails). No board pair changed: no OUT or IGN item is within reach of a U1 NC ball
+(S-10 evidence lists 21 NC-ball pairs, all PYRO1_GATE_N). KiCad reports at most one clearance violation per track per
+footprint or net, so the DRC probe strips other nets' copper round U1.A1 in a subprocess (D-R12-142 made it
+deterministic).
+
+**D-R12-137 Pack-energy nets in S-10 (verifier V-1, V-2, V-3; copper).** Amends D-R12-126.
+- **Which nets (`pack_nets()`, default-deny).** From the battery pad J1.1 through every part that can carry the pack's
+  current unlimited: it does not cross a capacitor, a one-pin test point, a resistor of at least PACK_R_LIMIT (2 Ω,
+  R134's value; PYRO1_IGN behind it has its own class), a MOSFET's insulated gate, GND, or the named limiter U9 (BAT_IN
+  is its IN pin; OUT is behind its current limit and fault latch). A transistor conducts drain to source either way
+  (channel or body diode). Result: **BAT_IN, ACT_FET_S** (through Q120's channel or body diode, live even with J400
+  open) **and RAW_ACT**. An unclassified part on a pack net, or a derived set that differs from `r12_fire.PACK`, fails
+  S-10. BAT_DAMP is not a pack net (0 V DC); it is foreign copper held at GND's limit (0.36 Ω to GND).
+- **Limit `PACK_MIN = 1.040 mm` from every net, copper and fills alike** (R10 D-R26-02's PYRO1_OUT figure): pack
+  voltage on a logic or MCU-pin net is the same rail-onto-logic, FMEA I-5 mechanism as PYRO1_OUT, and an unfused pack
+  short to GND is no less severe (R10 recorded about 23 A, D-R21-05). One generated DRU rule per pack net, placed after
+  the IGN rules so 1.04 mm wins over IGN's 0.25 mm; the gate nets keep their stricter rule. DRU item conditions now
+  match coordinates within 0.5 µm (16.4 mm is stored as 16.399999 mm).
+- **Classed out, each checked by `pack_guard()`** (the foreign net is no supply, MCU, open-drain or sink net and
+  reaches every source, GND included, only through ≥ PACK_SERIES_MIN 5 kΩ, MOSFET gates insulated; ≤ 8.4 V / 5.015 kΩ =
+  1.68 mA): the pack nets against each other (both sides are the pack; Q124 with R128 still holds the match); ACT_GATE
+  (a hold-off: Q122 sinks ≤ 8.4 V / 9.83 kΩ = 0.86 mA through R121; evidence: ACT_DRV through 10 kΩ); RAW_ACT to
+  ARM1_SENSE_MID (R132's other end: PC5 ≤ 8.4 × 1.017 / (5.015 + 1.017) = 1.42 V, ≤ 1.42 mA; evidence: ARM1_SENSE
+  through 5.1 kΩ); RAW_ACT to PYRO1_IGN (IGN's class holds it).
+- **Copper moved.** R132 to F(17.17, 32.2) rotation 0 (was F(16.6, 33.6) rotation 90), running east with RAW_ACT on pin
+  1 beside R134.2, fed by a new track (15.4, 32.2)–(16.74, 32.2). R175 turned to 270° at (17.6, 33.6): ARM1_SENSE_MID
+  north to R132.2 (a straight 0.2 mm link), ARM1_SENSE south, re-routed by a 45° diagonal down x 18.1. R120 0.55 mm aft
+  to F(6.53, 26.95) (was F(6.4, 26.4)); ACT_FET_S re-routed over a 45° step and ACT_GATE (4.0, 26.3) → (4.4, 25.9) →
+  (5.91, 25.9) → R120.2 → (7.5, 26.95) → Q121.1 (one route_check local bump gone). The 3V3 and GND pours pull back to
+  1.04 mm from all pack copper, clearing BAT_IN to the In2 3V3 fill at J1.1's barrel (0.55 mm; fire-capable through
+  I-5) and J1.1 to GND_pour_B (0.10 mm).
+- **Result (Measured on `f26dfef1…`).** RAW_ACT and ACT_FET_S are ≥ 1.040 mm from every net they are not classed out
+  from, and need no exception: RAW_ACT–ARM1_SENSE 1.313 mm (R132.1–R175.2, was 0.546 mm), ACT_FET_S–BAT_DAMP 1.207 mm
+  (R120.1–R166.1, was 0.772 mm). BAT_IN keeps 117 measured exceptions, all in the pack-entry cell (J1, U9, its input
+  capacitors and dividers), under six keys, each an owner row (R12_VALIDATION rows 34–39):
+
+  | Key | Pairs | Least gap | Foreign nets | One bridge |
+  |---|---|---|---|---|
+  | PACK_GND | 55 | 0.130 mm (BAT_IN track to R167.2) | GND (47), BAT_DAMP (8) | an unfused pack short: BAT_IN collapses, the logic browns out once C84's hold-up is spent (in flight a reset, the tab to neutral, recovery on the Blue Jay); no bus, so not a fire; a pre-existing bridge shows at first pack connection (Calculation / Inference on pack ESR) |
+  | PACK_EN | 3 | 0.200 mm (U9.5–U9.1, the package's own lands) | BAT_ENABLE | J400 can no longer turn the board off; up to 8.4 V on EN, above its 6.5 V absolute maximum (TI SLVSFC9C; Inference for this variant); the per-flight switch-off check sees it. Not a fire |
+  | PACK_SW | 3 | 0.483 mm (R80) | BAT_SW_SOURCE | shorts R80: EN ≤ 3.34 V with J400 closed (Calculation), but J400's contact and harness lead then carry the pack with no limit, so a chafe to GND is a PACK_GND short |
+  | PACK_FLT | 12 | 0.150 mm (U9.5–U9.4, own lands, and the BAT_IN fan-in) | U9_FLT | since D-R12-138 neither fire-capable nor logic-destroying; U9's FLT is over-driven (U9 damaged, open or short; Inference) |
+  | PACK_OUT | 8 | 0.131 mm (U9.5 to the RAW_PROTECTED fan-out) | RAW_PROTECTED | U9 bypassed: the logic converters fed from the pack with no limit, OVLO or fault latch; no overload by itself. Not a fire |
+  | PACK_U9 | 36 | 0.166 mm | BAT_OVLO, BAT_OVLO_B, BAT_DVDT, BAT_ILIM, U9's NC AUXOFF / ITIMER | U9 trips off (OVLO: the board goes dark) or is over-driven (Inference: the pins' absolute maxima not re-read). Not a fire |
+
+  12 of P3's 120 pairs were a part's own lands; the rest need a re-layout of the pack-entry cell (respin item,
+  O-R12-32). R10 has the same U9 IN / FLT / EN adjacencies. The exception table holds 168 entries (51 fire-net + 117
+  pack).
+- **V-3.** The (PYRO1_IGN, RAW_ACT) reason no longer cites U9's current limit: U9 is not in the bus path (the bus is
+  taken from BAT_IN, U9's input), so nothing on the board limits a bypassed-R134 current; about 3.1 A at 8.4 V with a
+  sound match (Calculation / Inference on the match and loop) and more into a match that shorts after firing (R10 about
+  12 A, Inference). Not an unwanted fire (current flows only while PE4 commands Q124 on) and not a pack-energy pair.
+- **Tests.** The pack nets derived and held, and their DRU rules; the verifier's pairs cleared with no RAW_ACT /
+  ACT_FET_S exception; RAW_ACT plants (GND, ARM1_SENSE) fail S-10 and DRC, an ACT_FET_S plant (BAT_DAMP) fails S-10; the
+  pack netlist guard fails on a 0R off RAW_ACT, a fuse off BAT_IN, an unclassified IC on BAT_IN, R134 at 1 Ω and
+  classed-out ARM1_SENSE / LED_RED_A / ACT_DRV; the V-3 text.
+- **Legends.** C120 and R119 designators now shown on B (hidden 77 → 75 at `6a1c99e0…`).
+
+**D-R12-138 U9's FLT reaches PC13 only through R95 10 kΩ with D95 clamping PC13 (PACK_FLT, verifier V-1 follow-up;
+circuit and copper).** Before, PC13 (U1.A2, BAT_FAULT_N) read U9.4 directly, and U9.4 sits 0.200 mm from U9.5 (BAT_IN)
+in the TPS259470A RPW package: one bridge put the pack straight on PC13 and back-drove 3V3 (logic-destroying, and
+fire-capable through I-5, Inference).
+- **Why a resistor alone is not enough.** PC13 is an FT pin that takes no positive injection (DS12110 Rev 8 Table 120
+  note 3; VIN max Min(VDD, …) + 4.0 V, Table 119, and only 4.0 V with the board off), so a series resistor into its
+  high impedance would still leave it at the pack voltage; no resistor-only divider keeps PC13 under about 6 V at 19.9 V
+  and still reaches VIH 0.7 VDD with FLT released (lane P4, Calculation).
+- **Circuit.** New net **U9_FLT** on U9.4 and R89.2 (R89 stays 10 kΩ to 3V3, on U9's side). **R95** 10 kΩ (C25744, on
+  the BOM) from U9_FLT (pad 1) to BAT_FAULT_N / PC13 (pad 2). **D95** BAT54C (C37704, on the BOM): A1 on BAT_FAULT_N,
+  K on 3V3, A2 unused, as D120. pin_table's PC13 row: "U9 FLT through R95 10k; R89 on U9_FLT; D95 clamp"; firmware keeps
+  PC13 an input with no pull.
+- **Placement.** R95 at F(18.15, 22.89) rotation 270, in line on the B trunk at x 18.15, vias U9_FLT (18.15, 21.65)
+  and BAT_FAULT_N (18.15, 24.1). D95 at F(20.77, 24.27) rotation 180, its own 3V3 via (21.77, 25.1) on the In2 3V3 plane.
+  Every R95 / D95 item is about 1.3 mm or more from BAT_IN (lane P4; their pads ≥ 2.15 mm, Measured). Three GND stitching
+  vias nudged off the BAT_IN feed: (11.5, 9.6) → (11.55, 9.6), (12.2, 8.1) → (12.12, 8.1), (15.3, 16.75) → (15.3, 16.8),
+  clearing three PACK_GND pairs (R167.1 to its via; tracks (13.3, 9)–(14.1, 9.8) and (14, 15.1)–(15.3, 15.1)).
+- **Calculation (resistors at the ±1.67 % drift ends, 3V3 3.224–3.516 V).** BAT_IN–U9_FLT bridged at 8.4 V: R89 and
+  R95 + D95 each pass ≤ (8.4 − 3.224) / 9.833 kΩ = 0.53 mA into 3V3 (1.05 mA together); at the SMAJ12CA's 19.9 V clamp
+  (a transient) 1.70 mA each, small beside the running MCU's supply current (Inference). PC13 ≤ 3V3 + V_F ≤ 3.516 +
+  0.8 = 4.32 V (V_F ≤ 800 mV at 100 mA, LCSC C37704 listing; the Nexperia sheet could not be opened), with no current
+  into the pin beyond its leakage; with the board off PC13 sits V_F above the unpowered rail, under the FT pin's +4.0 V.
+  FLT low: R89 sinks 0.36 mA into U9 (R_FLT 12.3 Ω typical, TI SLVSFC9C §6.5); no DC in R95; PC13 = V(FLT) + R95 × (D95
+  reverse leakage + pin leakage), and the leakage budget to VIL 0.3 VDD = 0.967 V is 94 µA (D95 ≤ 2 µA at 25 °C, LCSC;
+  hot leakage an Inference, R12_VALIDATION row 15). FLT released: PC13 ≥ 3.19 V even with 1 µA of FLT and pin leakage.
+- **Consequence now.** A BAT_IN–U9_FLT bridge is neither fire-capable nor logic-destroying; U9 itself is still
+  over-driven (FLT above its 6.5 V absolute maximum, SLVSFC9C §6.1; with a fault asserted FLT's pull-down sinks the pack:
+  U9 damaged, open or short, Inference). So the 12 PACK_FLT pairs stay measured exceptions (owner row 37), moved to
+  U9_FLT in `EXCEPTION_NETS` and the DRU.
+- **`flt_guard()`, run in S-10.** U9.4's net carries no MCU pin; it reaches every MCU-pin net and 3V3 only through
+  ≥ PACK_SERIES_MIN (5 kΩ; today 10 kΩ each); every MCU signal net it reaches has a diode with its anode on that net and
+  its cathode on 3V3. Evidence: U9_FLT → 3V3 and → BAT_FAULT_N 10 kΩ each, clamp D95. Seeds and tests: PC13 on U9_FLT,
+  R95 removed / 0 Ω / 1 kΩ, R89 1 kΩ or on PC13's side, D95 removed / reversed / cathode on GND all fail.
+- **BAT_FAULT_N gate exception (S-10).** With PE4 high-Z the gate is ≤ 3.516 V × 0.952 k / 20.75 k × 10 / 10.22 =
+  **0.158 V**, plus D95's leakage × 0.908 kΩ × 10 / 10.22 (2 µA at 25 °C: 1.8 mV; 0.089 V even at 100 µA hot, Inference),
+  below AO3400A V_GS(th) min 0.65 V (Calculation; was 0.302 V after TRI-04, D-R12-139).
+- **BOM / CPL / legends.** C37704 BAT54C 1 → 2 (D95, D120), C25744 10 kΩ 20 → 21 (R95): still 58 lines, no new code or
+  feeder fee; CPL 179 → 181 rows (D95 (20.77, −24.27) Top 180, R95 (18.15, −22.89) Top 270). D95's designator on F at
+  (23.15, 24.27); R95 and C123 hidden (C123's old spot is under R95 / D95): hidden 75 → **77**; TP81's designator to B,
+  U5's to F (24.61, 24.74), both rotation 90. A duplicated WHY block (the PACK_* texts defined twice) was removed.
+
+**D-R12-139 3V3 window on the PFM band and every figure restated on it (R12F6-TRI-03, -04, -05).** Amends D-R12-06,
+-51, -93, -108, -114, -116, -126, -131.
+- **Window.** U2 is LMR50410XDBVR, the PFM variant; TI SLUSDW3A §7.8 gives output regulation −1.5 % … +2.5 % in PFM
+  (typical components over T_J −40 … 150 °C, VIN 24 V, IOUT 0 A to full load; not production tested). `r12_budget.py`
+  takes it as an effective V_FB 0.985–1.025 V (it contains §7.5's 0.99–1.01 V) with the 1 % divider on top: **3.2539–
+  3.4824 V initial, 3.2237–3.5156 V drift** (was 3.2704–3.4314 / 3.2401–3.4641 V); nominal 3.35 V; 88.7 mV over U6's
+  3.135 V and 84.4 mV under the 3.6 V ceiling at the drift corner (Calculation; the band at R12's ~5 V VIN, its stacking
+  with the resistors and the drift case are Inference). **Keep XDBVR**: the FPWM LMR50410XFDBVR (C5219371, same land) is
+  +$0.82 per board with 471 orderable (Live 2026-11-06), and its ±1.5 % is still wider than V_FB's ±1 %.
+- **Restated (Calculation / Inference: drift).** U6 VCC at U2's 1 A ≥ **3.2370 / 3.2068 V** initial / drift, margin
+  102.0 / 71.8 mV (0.5 A: 3.2455 / 3.2153 V; U6 alone at 6 mA 3.2538 / 3.2236 V; copper (12.05 + 4.85) mΩ, stage D).
+  Q124 VGS ≥ **2.761 V** ((3.2237 − 0.4) × 9833 / (9833 + 223.67)). PE4's load 3.539 mA at the drift minimum, ≤
+  **3.925 mA** at 3.5156 V with every resistor −1.67 %, inside the 4 mA VOH row. PORT_SENSE: VIH 0.7 × the 3V3 maximum
+  **2.438 / 2.461 V**, ceiling VDD + 0.3 at the minimum 3.554 / 3.524 V, VIL 0.976 / 0.967 V; the PORT_SENSE bands
+  (3.103–3.388 / 3.068–3.426 V) still pass. K-neighbours reads the window at run time: NRST's bridged gate 0.2133 →
+  **0.2165 V** against 0.45 V (CAM_5V_SENSE 0.2735 V, PYRO1_CONT 0.399 V unchanged). PA15 (JTDI) / PA10 (USART1_RX)
+  reset pull-up against the 10 kΩ servo pull-down: **0.877 V** initial (3.4824 × 10.1 / 40.1), **0.890 V** drift
+  (3.5156 × 10.167 / 40.167). R100 camera-RX fight: **3.52 mA** initial (3.4824 V / 990 Ω), **3.58 mA** drift
+  (3.5156 V / 983.3 Ω). HSE_IN reason: ≤ 3.516 V × 0.95 k / 201 k = **17 mV** (16.6 mV; was 16 mV at 3.3 V).
+  The 3V3 maximum 3.516 V stays under 3.6 V. stage D's `other_converter_load` uses a nominal 3.3 V allocation, so the
+  fire budget does not move.
+- **TRI-04.** The BAT_FAULT_N bound "≤ 3.38 V × 0.952 k / 10.85 k × 10 / 10.22 = 0.29 V" used 3.3 V + 2.5 %, not R12's
+  3V3; on the window maximum it is ≤ **0.302 V** (lane P), and since D-R12-138 (R95) ≤ 0.158 V.
+- **TRI-05.** "PC0 ≤ 1.38 V at 8.4 V" was the nominal 8.4 × 1k / 6.1k; with R129 / R130 / R178 1 % it is 1.400 V, at
+  the ±1.67 % drift ends **1.416 V**: the reason now says PC0 ≤ 1.42 V and ≤ 1.41 mA.
+- Stage D and `r12_windows.json` regenerated (lane A); `circuit.json`'s U2 text ("VFB 0.99–1.01 V") is the datasheet
+  line, not a window claim, and stays. `r12_sch.py`'s servo pull-up and R100 notes were updated and `pin_table.tsv`
+  regenerated (sheets and netlist byte-identical).
+
+**D-R12-140 Cold-screen bands at 10.2 kΩ (new; R12F6-TRI-01 consequence, lane A; `r12_windows.json` `cold_screen`,
+`r12_budget.cold_screen()`).** R10's passive-screen model with R12's netlist values, the first cold-screen band set on
+record for R12 (R11's was 10 kΩ with 3V3 ±5 %). Pull-up 3V3 → R136 5.1k → D120 → R131 5.1k → PYRO1_OUT; PC0 reads
+PYRO1_OUT through R173 + R129 (5.1k each) over R130 ∥ R178 (2k ∥ 2k); PC5 reads RAW_ACT through R132 + R175 over R133
+∥ R180; a fitted match joins the two through R134 2 Ω. State: bus off, PE4 low; zero leakage, ADC offset and reference
+error. Corners: the 3V3 window per resistor case, D120 V_F 0–0.40 V (Inference: BAT54C ≤ 240 mV at 0.1 mA and ≤ 320 mV
+at 1 mA at 25 °C, about 0.26 V at 0.2 mA, plus about 2 mV/K over 67 K), match 1–2 Ω, leads 0–0.3 Ω, each resistor pair
+at its tolerance end. Calculation on the netlist values; V_F, the match and leads are Inference.
+
+| Case | PC0 initial (mV) | PC5 initial (mV) | PC0 drift (mV) | PC5 drift (mV) |
+|---|---|---|---|---|
+| Open (no match) | 130.84–165.86 | 0 | 127.81–169.59 | 0 |
+| Healthy match | 88.06–113.03 | 88.03–112.99 | 85.66–116.04 | 85.63–116.01 |
+| Shorted match | as healthy (edges ≤ 0.01 mV apart) | | | |
+| J121 to GND | 0 | 0 | 0 | 0 |
+| R131 (≡ R136) bridged, no match | 171.83–217.69 | 0 | 167.88–222.54 | 0 |
+| R131 bridged, match fitted | 130.28–166.59 | 130.23–166.54 | 126.88–170.82 | 126.84–170.77 |
+| R173 (≡ R129) bridged, no match | 171.83–217.69 | 0 | 167.88–222.54 | 0 |
+| R173 bridged, match fitted | 127.57–163.11 | 69.13–89.22 | 124.25–167.24 | 67.12–91.77 |
+
+Margins (initial / drift): open PC0 above healthy 17.81 / 11.77 mV; healthy PC5 above open 88.03 / 85.63 mV; R131
+bridged with a match, PC0 and PC5 above healthy 17.25 / 10.84 mV and 17.24 / 10.83 mV; R173 bridged with a match, PC0
+above healthy 14.54 / 8.21 mV; R131 or R173 bridged with no match against the open band +5.97 / **−1.71 mV** (they
+overlap at the drift corners, but PC5 reads 0, so the screen refuses them as "open" anyway). Nominal (3.35 V, V_F 0.25
+V): open PC0 144.86 mV, healthy PC0 98.11 / PC5 98.08 mV. **Firmware (M3_R12 "Firmware"):** band PC5 as well as PC0,
+and refuse unless both read in the healthy band: with a match fitted and R131 (or R136) bridged, PC0 reads like a
+healthy board with no match (126.88–170.82 against the open band's 127.81–169.59 mV at drift), and only PC5 tells them
+apart (the verifier: the margin to a healthy fitted board shrinks from about 185 to 33 ADC counts against the 10 kΩ
+design). A shorted match cannot be told from a healthy one at DC, as before (R134 limits it in a fire). The bands are
+ratiometric to VDDA (`PC0_of_VDDA` / `PC5_of_VDDA` in the JSON).
+
+**D-R12-141 Port symbols and the pin-name check (R12F6-TRI-09); the R12_REPIN citation (R12F6-TRI-15).** New symbols
+`M3:PortSH4` (J420, J440) and `M3:PortSH6` (J410) with pins 1 GND, 2 4V8, 3 TXO, 4 RXI (5 / 6 NC on the 6-pin), so the
+netlist pin functions now agree with the nets, the pads, the legends and D-R12-31's order (J420.1 / J440.1 were named
+`4V8_1` on GND, J410's pins `SERVO1_1` … on the port nets). R11's PortTerminal symbol is no longer used. The ServoGH6,
+SwitchGH4 and CameraGH6 descriptions name the fitted Megastar ZX-SH1.0-4PWT / -6PWT clones (C7430446 / C7430448); no
+"GH-1.25" or "SM0xB-GHS" text is left in the sheets. `r12_sch_check` ports R10's R27-TRI-07 check: `read_pin_names`,
+`terminal_pin_issues` (each pin name of J410, J420, J440, J9, J122 and J400 against its net, on the committed netlist and
+on a fresh export) and five seeds; a test covers it. TRI-15: `r12_sch.py`'s R12_REPIN notes for CAM_FAULT_N and
+CAM_UART_OE cite D-R12-08 (U12 / U402 deleted), not D-R12-07; `pin_table.tsv` regenerated (the PC15 row).
+
+**D-R12-142 Gate determinism and gate / aid text (verifier V-5, R12F6-TRI-16, -17).**
+- **V-5.** `FireGaps.test_verifier_E_new_3v3_near_the_pe4_lane_inside_u1_fails` failed in 4 of 8 runs (KiCad DRC
+  reported 1, 5 and 1 violations on three runs of the same planted board). The plant moves between balls C1 and C2,
+  where no board-floor violation competes with S-10's; the test asserts S-10's own measurement (the lane is the only item
+  within 0.2 mm, every other item ≥ 0.13 mm) and its DRC probe strips the other nets' tracks first. The TRI-02 NC-ball
+  probe had the same flaw (U1.A2 sat 0.69 mm from the OUT plant): its strip now joins U1's other pads in the box to the
+  plant's net. Evidence: test_verifier_E 12 / 12 runs OK (seeds 1–12), the TRI-02 test plus the RAW_ACT plants 10 / 10,
+  `FireGaps` 4 / 4 (seeds 0–3), `check.sh` exit 0 twice (lane P3). DRC still failed the planted board on every run, so
+  the gate itself was never weakened.
+- **TRI-16.** The ALLOWLIST_R12 SPI1_MISO reason says "south-face pads (U4.13 / U4.14, the +y face: north is −y,
+  D-R12-122)"; figures and matching unchanged.
+- **TRI-17.** `zone_guard.check()` lists each fragment row once: W3 reports **8 rows** (12 before, both track ends
+  counted), W1 6 (new test `test_a_row_is_counted_once`). On the final round 6 fragments (R136, R95 / D95 and their
+  vias): W1 6, W3 8, W2 / W4 / W5 none (Measured by this records lane).
+
+**D-R12-143 Record corrections (R12F6-TRI-06, -07, -08, -10 … -14).**
+- **TRI-06 (S-10 summaries complete).** PYRO1_GATE's nearest non-GND copper is PE4's PYRO1_GATE_N: R126.1 is 0.167 mm
+  from the gate track (11, 44.1)–(10.5, 43.6) and R126's own lands 0.294 mm (the gate pair, not a path); then Q124.3
+  (1.044 mm, excepted). Every S-10 summary (D-R12-125, R12_VALIDATION, M3_R12, AGENTS) now names every exempt class:
+  GND (OUT's own limits), the gate pair, U1's NC balls (gate nets only; PE4's lane 0.150 mm from U1.B1), the three
+  PYRO1_OUT not-a-path nets (OUT–CONT_MID 0.195 mm, OUT–COLD 0.294 mm, OUT–IGN 0.600 mm), the pack classes, and 168
+  measured exceptions (51 fire-net, 117 pack).
+- **TRI-07.** D-R12-129 / R12_VALIDATION row 16 said no different-net SMD pair is under 0.2 mm: U4 (LGA-14, 0.35 mm
+  lands at 0.5 mm pitch) has eight pairs at **0.150 mm** (U4.1 SPI1_MISO–U4.2 GND, U4.12 IMU_CS–U4.13 SPI1_SCK and six
+  more; Measured), exactly at JLC's 0.15 mm limit and the DRU rule; U6's corners 0.344 mm; J3 / U9 0.200 mm. None is
+  under 0.15 mm.
+- **TRI-08 (F5 departure, new A-14).** REQUIREMENTS F5 asks for J430's 3V3 "with local 100 nF / 22 µF bypass". J430.4
+  (3V3) at (20.095, 69.0) is 8.96 mm (pad edge) from C461.1 22 µF and 11.70 mm from C460.1 100 nF, both east of J430
+  and relabelled "3V3 bulk (plane cap)" by D-R12-94 / -99; the nearest 3V3 cap is C15.1, a U1 decoupler, 7.98 mm
+  (Measured by the triage); R10 had C460 about 3 mm away. J430.4 drops at once to a 3V3 via (20.095, 67.4) on the In2
+  3V3 plane. No local site exists: J430's courtyard spans x 12.1–27.9, y 63.3–78.9, the board is top-only, and the
+  nearest free area (the R461–R462 gap, x 19.5–22.9, y 61.4–63.3) is ≥ 5.7 mm from J430.4 and crossed by SD_SCK,
+  SD_MOSI and BUZZ_DRV. A-14 asks the owner to accept bypass through the In2 3V3 plane; a nearer cap needs the SD
+  pull-up row re-placed (not done).
+- **TRI-10.** `stageD_analysis.md`'s supersession list now ends with the round 6 boards and names `f26dfef1…` as
+  current; O-R12-29 marks each figure set with its own board and adds `f26dfef1…`'s (Measured, score.py and a track
+  count): vias 317 (GND 145, 3V3 37, signal 102), diagonal share 16.59 % (349.4 / 2106.2 mm), In2 track 132.0 mm,
+  1057 tracks.
+- **TRI-11.** D-R12-04's "VLOGIC ≥ 5.2 V on the pack" was stage A's R11-copper 5.203 V; stage D on this board gives
+  5.124–5.324 V at four stalls (`pa6_corners.healthy.VLOGIC_V`); priority over USB's ≤ 5.0 V still holds.
+- **TRI-12.** D-R12-109: the bound file's idle fire current is 1.505875 A and the 70 °C fire copper 28.434 mΩ (it said
+  1.505934 A and 28.25 mΩ); 1.505875 × 0.147 = 0.221 V and × 0.175434 = 0.264 V, so the result is unchanged.
+- **TRI-13.** D-R12-09's "C81 … re-checked in the stage D hot-plug run" was false: `tools/r12_hotplug.py` adds C81 only
+  to the discharge inventory, and the R10 model is a reverse hot-plug transient with no dVdt / U9 start-up model. C81's
+  ±10 % plus bias effect on the inrush slope is an Inference and a bench item (R12_VALIDATION row 15).
+- **TRI-14.** R12_VALIDATION row 6's closed figures (port pins ≥ 4.596 / 4.563 V) now carry their condition, U400 VIN ≥
+  VO / 0.75, and point to A-8 / row 15.
+- The acceptance range in R12_VALIDATION row 19 and M3_R12 is D-R12-01 … D-R12-143.
 
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
@@ -1824,7 +2162,8 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | A-10 | F1 / F2 name one IMU (ISM6HG256X: low-g, high-g and gyro) | LSM6DSVE (low-g, ±4000 dps) plus FXLS90322 (XY medium-g, ±150 g maximum; search summaries, Inference until FXLS9xxxx Rev 7 is read; O-R12-21) | D-R12-50, -51 |
 | A-11 | P2: five M3 supports at (4,4), (42,4), (4,44.3), (3.7,86), (42,86), "no sixth support", insulated hardware at all five | four M3 supports at (3.0, 5.9), (43.0, 5.9), (3.5, 84.1), (42.5, 84.1), nylon hardware at all four (fit_check r12, CAD envelopes) | D-R12-24, -99; D-R12-133 |
 | A-12 | F9: J1 / J400 separately labelled 2-pos DB125 terminals | J1 is plated wire pads for a 16–20 AWG lead or a later 5.0 mm terminal (D-R12-30); J400 is an SH-4 (D-R12-31) | D-R12-30, -31; D-R12-133 |
-| A-13 | F8: "Ordinary 0.15 mm board clearance applies" to the pyro channel | 0.10 mm board floor. The fire nets meet S-10's carried limits except its recorded exceptions (PE4's lane 0.150 mm from U1.B2 and from HSE_IN's U1.C1); other pyro / arming nets keep gaps of 0.10–0.15 mm, e.g. ACT_FET_S–Q120.1 0.121 mm, RAW_ACT–R132.2 0.137 mm, CONT_MID–R173.1 / R129.2 0.131 mm, ARM1_SENSE / ACT_EN_MCU / PYRO1_CONT / BAT_SW_RETURN to the B GND pour 0.1005 mm (Measured on `6e874d4e…`) | D-R12-03, -126; D-R12-133 |
+| A-13 | F8: "Ordinary 0.15 mm board clearance applies" to the pyro channel | 0.10 mm board floor. The fire nets meet S-10's carried limits except its recorded exceptions (PE4's lane 0.150 mm from U1.B2 and from HSE_IN's U1.C1); other pyro / arming nets keep gaps of 0.10–0.15 mm, e.g. ACT_FET_S–ACT_GATE 0.117 mm (R120.1 to the ACT_GATE track, classed out of the pack rule, D-R12-137), ACT_EN_MCU–PYRO1_CONT and ARM1_SENSE–3V3A / LED_RED 0.125 mm, CONT_MID–R173.1 / R129.2 0.131 mm, ARM1_SENSE / ACT_EN_MCU / PYRO1_CONT / BAT_SW_RETURN / BAT_FAULT_N / U9_FLT to the B GND pour 0.1005 mm (Measured on `f26dfef1…`; on `6e874d4e…` ACT_FET_S–Q120.1 0.121 mm and RAW_ACT–R132.2 0.137 mm, gone since the pack-energy rule, D-R12-137) | D-R12-03, -126; D-R12-133, -143 |
+| A-14 | F5: J430 "3V3 with local 100 nF / 22 µF bypass" | J430.4 (3V3) drops at once to an In2 3V3 plane via; the nearest bypass is C461 22 µF 8.96 mm and C460 100 nF 11.70 mm (pad edges) east of J430, the nearest 3V3 cap C15 (a U1 decoupler) 7.98 mm (Measured, round 6 triage); no local site on the top-only board without re-placing the SD pull-up row (R10 had C460 about 3 mm away) | D-R12-94, -99, -143 |
 
 ## 4. Open items
 
@@ -1851,16 +2190,17 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-19 | SH pin orders against a real MicoAir H743 lead (pin-1 end not marked in the source image; v1 / v2) (D-R12-31) | bench |
 | O-R12-20 | J121 DB125 and LS120 QMB-09B-03 on JLC Economic as THT (D-R12-85), and the J1 5.0 mm-terminal hole fit: confirm on the order page / with a sample terminal (D-R12-29, -30) | order / bench |
 | O-R12-21 | FXLS90322 dual-channel datasheet (FXLS9xxxx Rev 7) not read: confirm pin-out, axis frame, medium-g range codes; LSM6DSVE datasheet not found at ST (D-R12-50, -51) | records / bench |
-| O-R12-22 | ~~U6 VCC ≥ 3.135 V at the part~~ closed as a calculation (stage D, `stageD_analysis.md` §7); re-run on the 90 mm board (`stageE_relayout.md` §4): 3V3 copper drop ≤ 16.9 mV at U2's 1 A rating ((12.05 + 4.85) mΩ on `6e874d4e…`, D-R12-125; 17.4 mV before), U6 VCC ≥ 3.253 V initial / 3.223 V drift (88 mV margin; Calculation / Inference); load steps at U6 an Inference (bench) | D |
+| O-R12-22 | ~~U6 VCC ≥ 3.135 V at the part~~ closed as a calculation (stage D, `stageD_analysis.md` §7); re-run on the 90 mm board (`stageE_relayout.md` §4): 3V3 copper drop ≤ 16.9 mV at U2's 1 A rating ((12.05 + 4.85) mΩ on `6e874d4e…`, D-R12-125; 17.4 mV before), U6 VCC ≥ 3.253 V initial / 3.223 V drift (88 mV margin; Calculation / Inference); on the PFM 3V3 window (D-R12-139, `f26dfef1…`) U6 VCC ≥ 3.237 V initial / 3.207 V drift, 102 / 72 mV margin (Calculation / Inference); load steps at U6 an Inference (bench) | D |
 | O-R12-23 | ~~Re-read DS12110 Rev 8 Tables 10-14~~ DS12110 half closed by D-R12-93 (every re-pinned ball and AF number read from the Rev 8 PDF text, D-R12-61A / -63A included). Still open: re-read AN2606's H74x loader pins for the moved functions (PA7, PA8–PA10, PA15, PB6 / PB7, PB10, PC9–PC12, PD2, PE12–PE14); st.com refused the download, so the roles are R11's Rev 64 Table 119 reading (Inference) | records / firmware |
 | O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways), M-7's U6 body, the In2 regions K-region needs or the 0.42 mm via clearance K-reference needs: any future search must add them (pass 2, D-R12-74A, was drawn by hand; scratch masks in `r12ra/ps3/fA/seg4.py`) | C |
 | O-R12-25 | ~~BAT_IN C96.1 → C88.1 → U9.5 0.4 mm for 4.13 mm~~ closed by D-R12-84: the feed is 0.8 mm (24.9 °C at 2.9 A, IPC-2152 upper bound, Inference) except U9.5's 1.3 mm 0.4 mm pin entry; U9 OUT has only pin-entry lengths over 30 °C | closed |
 | O-R12-26 | ~~PORT_4V8 at the ports under the 0.561 A budget below 4.5 V~~ closed by D-R12-83 on the 100 mm board: J410 / J420 / J440 ≥ 4.562 / 4.561 / 4.564 V initial and 4.529 / 4.529 / 4.532 V drift (current 90 mm floor 4.563 V, stageE_relayout.md §4); no-load top 4.972 V (Calculation / Inference: drift and load budget; the LR900-F's 4.5–5.0 V an Inference, so a bench read of the module's floor stays useful). Every figure assumes U400 VIN ≥ VO / 0.75 (6.09–6.63 V at the drift corner); at four stalls U400 VIN is about 5.55 V and the window rests on the foldback Inference (D-R12-131, R12_VALIDATION row 15) | closed |
 | O-R12-27 | J122's harness note `SERVO + FROM HARNESS` not on the board (D-R12-81; R12_VALIDATION row 2): owner acceptance; the rule is in `docs/R12_VEHICLE_HANDOFF.md` | owner |
 | O-R12-28 | Bay / sled internal length for the 90 mm board (D-R12-99): `docs/VEHICLE.md` gives no internal electronics-bay or sled length (its stack row budgets 102 mm for R9), so R10's "wholly forward of joint + 47 mm" rule is unchecked; measure it in the CAD and add it to VEHICLE.md (owned separately) | records / owner |
-| O-R12-29 | AVA re-layout targets missed (Measured on `be81f40b…` after the signal-only cleanup `871f77a`: vias 318, GND 149, signal 100, diagonal 17.1 %, In2 137.4 mm, NRST 1.96, VLOGIC_SENSE 4 vias). After the AVA polish pass (D-R12-121 … -124), on current `68e6b650…`: vias 318 against ≤ 290, GND vias 147 against ≤ 140, signal vias 102 against ≤ 95, diagonal share 16.95 % against ≤ 15 %, In2 track 137.4 mm against ≤ 130, worst routed / MST QSPI_CLK 1.63 (allowlisted; NRST 1.56) against ≤ 1.35, VLOGIC_SENSE and NRST 4 vias against ≤ 3; the measured reason for each miss is D-R12-124. Round 5's fire-net fix (D-R12-125) on `6e874d4e…` (Measured, score.py and a track count): vias 314 (GND 145, signal 100), diagonal share 16.69 % (351.3 / 2104.1 mm), In2 track 132.0 mm, 1050 tracks; the worst ratios and most-vias nets unchanged | C / review |
+| O-R12-29 | AVA re-layout targets missed (Measured on `be81f40b…` after the signal-only cleanup `871f77a`: vias 318, GND 149, signal 100, diagonal 17.1 %, In2 137.4 mm, NRST 1.96, VLOGIC_SENSE 4 vias). After the AVA polish pass (D-R12-121 … -124), on `68e6b650…`: vias 318 against ≤ 290, GND vias 147 against ≤ 140, signal vias 102 against ≤ 95, diagonal share 16.95 % against ≤ 15 %, In2 track 137.4 mm against ≤ 130, worst routed / MST QSPI_CLK 1.63 (allowlisted; NRST 1.56) against ≤ 1.35, VLOGIC_SENSE and NRST 4 vias against ≤ 3; the measured reason for each miss is D-R12-124. Round 5's fire-net fix (D-R12-125) on `6e874d4e…` (Measured, score.py and a track count): vias 314 (GND 145, signal 100), diagonal share 16.69 % (351.3 / 2104.1 mm), In2 track 132.0 mm, 1050 tracks; the worst ratios and most-vias nets unchanged. Round 6 (D-R12-134, -137, -138) on current `f26dfef1…` (Measured, score.py and a track count): vias 317 (GND 145, 3V3 37, signal 102), diagonal share 16.59 % (349.4 / 2106.2 mm), In2 track 132.0 mm, 1057 tracks; worst routed / MST QSPI_CLK 1.63, most vias VLOGIC_SENSE and NRST 4, unchanged | C / review |
 | O-R12-30 | C24 (NRST filter) at J2's end of 19.54 mm of NRST copper from ball E1, including 15.68 mm on In2 (Measured, barrels excluded) (D-R12-98): acceptable for a bench-only reset with the internal pull-up is an Inference; owner acceptance (R12_VALIDATION row 23) or a respin item. The polish pass found no 0402 site with a GND via near E1 (D-R12-124) and removed NRST's loop round J2 (D-R12-122) | owner |
 | O-R12-31 | Rewritten by D-R12-102 (R12F2-TRI-06 / -07). The U400.5 → U400.3 0.25 mm, 2.24 mm stub carries only EN's µA input current (TPS563208 DDC: pin 5 EN tied to pin 3 VIN); the old 47.5 °C claim is withdrawn as a mis-attribution. The open item is the shared RAW trunk: 0.6 mm B.Cu (45.2, 16.4) → (45.2, 29.2), 12.8 mm, plus the 0.6 mm F.Cu link (44.5, 16.4) → (45.2, 16.4), 0.7 mm, carrying U400 + D5. Rise 46.1 °C at summed design inputs 3.348 A, 34.6 °C at U9's 2.9 A, 4.3 °C at the 1.018 A fire-time budget; 0.87 mm would hold 30 °C at 3.35 A (IPC-2152 upper bound, Calculation / Inference: load allocations, 80 % efficiency, D5 drop). Widen in a later copper pass or accept (stageE_relayout.md §4; owner row 26 of R12_VALIDATION since D-R12-133) | C / owner |
+| O-R12-32 | The pack-entry cell (J1, U9, its input capacitors and dividers) keeps 117 BAT_IN item pairs under PACK_MIN 1.040 mm (D-R12-137 / -138; keys PACK_GND 55, PACK_EN 3, PACK_SW 3, PACK_FLT 12, PACK_OUT 8, PACK_U9 36; least gap 0.130 mm). Some are a part's own lands (U9's pins, C80 / C88 / C96 / R167 / D8 / C79); the rest need a re-layout of the cell: a respin item, or owner acceptance (R12_VALIDATION rows 34–39) | C / owner |
 
 ## 5. Files (stage A)
 
