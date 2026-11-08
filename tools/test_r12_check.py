@@ -1566,7 +1566,8 @@ class Windows(unittest.TestCase):
     def test_round1_labels_and_cam_input(self):
         """D-R12-86 / -87 (R12F1-TRI-03, -17): PA4 sense labelled with its drift Inference; CAM_5V input condition."""
         self.assertEqual(self.data['sense']['label'],
-                         'Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference; the PORT_SENSE '
+                         'Calculation (1 % resistors, R60 / R61 0.1 % (PA6_TOL, R12F9-TRI-04), rail windows above; '
+                         'DS12110 leakage); drift Inference; the PORT_SENSE '
                          'thresholds: Calculation / Inference (3V3 window, D-R12-139)')   # R12F7-TRI-02 (D-R12-149)
         self.assertEqual((self.data['sense']['PORT_SENSE_divider']['R111_ohm'],
                           self.data['sense']['PORT_SENSE_divider']['R112_ohm']), (47e3, 100e3))

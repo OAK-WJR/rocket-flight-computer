@@ -1955,20 +1955,21 @@
       </units>
     </comp>
     <comp ref="R60">
-      <value>100k</value>
+      <value>100k 0.1%</value>
       <footprint>rocket:R0402</footprint>
+      <datasheet>https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2103261932_YAGEO-RT0402BRD07100KL_C852472.pdf</datasheet>
       <fields>
-        <field name="LCSC">C25741</field>
-        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF1003TCE</field>
+        <field name="LCSC">C852472</field>
+        <field name="Manufacturer">YAGEO</field>
+        <field name="Manufacturer Part">RT0402BRD07100KL</field>
         <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet"/>
+        <field name="Datasheet">https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2103261932_YAGEO-RT0402BRD07100KL_C852472.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25741"/>
-      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF1003TCE"/>
+      <property name="LCSC" value="C852472"/>
+      <property name="Manufacturer" value="YAGEO"/>
+      <property name="Manufacturer Part" value="RT0402BRD07100KL"/>
       <property name="Sheetname" value="04 | Voltage diagnosis, port sense and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -1985,20 +1986,21 @@
       </units>
     </comp>
     <comp ref="R61">
-      <value>10k</value>
+      <value>10k 0.1%</value>
       <footprint>rocket:R0402</footprint>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf</datasheet>
       <fields>
-        <field name="LCSC">C25744</field>
-        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF1002TCE</field>
+        <field name="LCSC">C190095</field>
+        <field name="Manufacturer">YAGEO</field>
+        <field name="Manufacturer Part">RT0402BRD0710KL</field>
         <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet"/>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C25744"/>
-      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
+      <property name="LCSC" value="C190095"/>
+      <property name="Manufacturer" value="YAGEO"/>
+      <property name="Manufacturer Part" value="RT0402BRD0710KL"/>
       <property name="Sheetname" value="04 | Voltage diagnosis, port sense and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>

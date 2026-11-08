@@ -587,16 +587,16 @@
   ],
   "from_pa6_trip_ms": {
    "drift": [
-    0.382,
-    1.98
+    0.487,
+    1.853
    ],
    "initial": [
-    0.415,
-    1.873
+    0.496,
+    1.827
    ],
    "nominal_ratio": [
-    0.467,
-    1.718
+    0.501,
+    1.811
    ]
   },
   "label": "Calculation / Inference",
@@ -789,6 +789,11 @@
   "drift": "+/-1.67 % independent",
   "initial": "+/-1.00 % independent"
  },
+ "resistor_cases_precise": {
+  "drift": "+/-0.268 % independent",
+  "initial": "+/-0.100 % independent",
+  "parts": "R401 (D-R12-83); R60 / R61 (R12F9-TRI-04, PA6_TOL)"
+ },
  "sense": {
   "PORT_SENSE_divider": {
    "R111_ohm": 47000.0,
@@ -829,8 +834,8 @@
     3.426
    ],
    "VLOGIC_SENSE_ratio": [
-    0.08819,
-    0.09371
+    0.09047,
+    0.09135
    ]
   },
   "initial": {
@@ -843,11 +848,11 @@
     3.388
    ],
    "VLOGIC_SENSE_ratio": [
-    0.08927,
-    0.09258
+    0.09074,
+    0.09107
    ]
   },
-  "label": "Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference; the PORT_SENSE thresholds: Calculation / Inference (3V3 window, D-R12-139)"
+  "label": "Calculation (1 % resistors, R60 / R61 0.1 % (PA6_TOL, R12F9-TRI-04), rail windows above; DS12110 leakage); drift Inference; the PORT_SENSE thresholds: Calculation / Inference (3V3 window, D-R12-139)"
  },
  "status": "R12 stage A (no board): Calculation / Inference as labelled; no measurement",
  "u9": {
@@ -918,43 +923,43 @@
   "lmr50410_uvlo_rising_max_V": 4.0,
   "pa6_retuned_margins_V": {
    "drift": {
-    "above_u9_turn_off_through_d5": -0.119,
-    "below_four_stall": 0.0931
+    "above_u9_turn_off_through_d5": 0.0513,
+    "below_four_stall": 0.1666
    },
    "initial": {
-    "above_u9_turn_off_through_d5": -0.0153,
-    "below_four_stall": 0.1551
+    "above_u9_turn_off_through_d5": 0.1144,
+    "below_four_stall": 0.1819
    },
    "nominal_ratio": {
-    "above_u9_turn_off_through_d5": 0.0679,
-    "below_four_stall": 0.246
+    "above_u9_turn_off_through_d5": 0.1229,
+    "below_four_stall": 0.191
    }
   },
-  "pa6_retuned_margins_basis": "nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21's original comparison); initial / drift: the divider and the EN chain both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)",
+  "pa6_retuned_margins_basis": "nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21's original comparison); initial / drift: the divider (0.1 %, PA6_TOL) and the EN chain (1 %) both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)",
   "pa6_retuned_threshold_V": [
-   0.42,
-   0.45
+   0.425,
+   0.455
   ],
   "pa6_retuned_window_V": [
-   4.62,
-   4.95
+   4.675,
+   5.005
   ],
   "pa6_threshold_bottom_needed_V": {
-   "drift": 0.4311,
-   "initial": 0.4214
+   "drift": 0.4203,
+   "initial": 0.4146
   },
   "pa6_trip_window_V": {
    "drift": [
-    4.482,
-    5.1029
+    4.6523,
+    5.0294
    ],
    "initial": [
-    4.5368,
-    5.0409
+    4.6665,
+    5.0141
    ],
    "nominal_ratio": [
-    4.62,
-    4.95
+    4.675,
+    5.005
    ]
   },
   "u9_turn_off_through_d5_V": {

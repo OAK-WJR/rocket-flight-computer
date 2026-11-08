@@ -8,7 +8,8 @@ Labels (AGENTS section 2.5): every figure is a Calculation on the cited Datashee
 limits (resistor temperature drift, diode forward drop at the operating current, copper, harness, loads, efficiency)
 are Inference and named in the figure's 'basis'. Two resistor cases: 'initial' = 1 % initial tolerance, each resistor
 at its own worst end; 'drift' = 1 % + 100 ppm/K over 67 K (the bay's -42 ... +70 C span from 25 C, REQUIREMENTS F1),
-also independent (a bound: two thick-film parts of one series largely track, Inference). No board exists: the fire
+also independent (a bound: two thick-film parts of one series largely track, Inference). The 0.1 % 25 ppm/K thin-film
+parts (R401, D-R12-83; R60 / R61, R12F9-TRI-04) take TOL_PRECISE instead: 0.1 %, and 0.1 % + 25 ppm/K over 67 K. No board exists: the fire
 budget takes R11's CAD copper (stageD_budget.json, 0b26da5) as a placeholder until stage D re-runs it on R12 copper.
 """
 import argparse
@@ -54,8 +55,14 @@ U9_RON = 0.045
 # the fast-discharge end (Inference)
 EN_TOP, EN_R81, EN_C87, EN_C87_LOW = 2 * 470e3, 300e3, 220e-9, 0.72
 EN_I_U9, EN_I_D402, EN_OFF_MAX = 0.1e-6, 50e-9, 1.116
-# R60 100k / R61 10k (PA6 = VLOGIC x R61 / (R60 + R61)); firmware PA6 threshold 0.42-0.45 V (D-R12-21)
-PA6_TOP, PA6_BOT, PA6_THRESHOLD = 100e3, 10e3, (0.42, 0.45)
+# R60 100k / R61 10k (PA6 = VLOGIC x R61 / (R60 + R61)). R12F9-TRI-04 (round 9 lane B, owner option (b)): R60 / R61
+# are 0.1 % 25 ppm/K thin film (YAGEO RT0402BRD07100KL C852472, RT0402BRD0710KL C190095: JLC listing 2026-11-08 / YAGEO
+# RT datasheet), so the PA6 divider takes TOL_PRECISE in each resistor case (PA6_TOL), and the firmware PA6 threshold
+# band moves from D-R12-21's 0.42-0.45 V to 0.425-0.455 V: r12_stageD.pa6_options centres the 30 mV band in the drift
+# case's room between the healthy four-stall VLOGIC (trip top below it) and U9's turn-off through D5 (trip bottom above
+# it), 0.4253-0.4553 V on the board's DC solves, rounded to the millivolt (pa6_band_derivation)
+PA6_TOP, PA6_BOT, PA6_THRESHOLD = 100e3, 10e3, (0.425, 0.455)
+PA6_TOL = TOL_PRECISE
 # SS34 (D5) VF at the logic current 0.25-0.45 V (Inference: typical curve, no maximum at that current; vlogic())
 D5_VF = (0.25, 0.45)
 
@@ -103,8 +110,9 @@ def pa6_ratio(tol):
 
 
 def pa6_trip_window(tol=None):
-    """VLOGIC trip window [lowest, highest] for the 0.42-0.45 V PA6 threshold: tol None = the nominal ratio (x 11),
-    else the divider at that tolerance (lowest = 0.42 / highest ratio, highest = 0.45 / lowest ratio)."""
+    """VLOGIC trip window [lowest, highest] for the PA6_THRESHOLD band (0.425-0.455 V): tol None = the nominal ratio
+    (x 11), else the divider at that tolerance (lowest = band bottom / highest ratio, highest = band top / lowest
+    ratio); R60 / R61 take PA6_TOL (0.1 %) in R12's resistor cases."""
     if tol is None:
         k = (PA6_TOP + PA6_BOT) / PA6_BOT
         return [PA6_THRESHOLD[0] * k, PA6_THRESHOLD[1] * k]
@@ -234,9 +242,8 @@ def sense():
         lo = p['min_V'] * bot * (1 - tol) / (bot * (1 - tol) + top * (1 + tol)) - PD10_LEAK * rth * (1 + tol)
         hi = p['max_V'] * bot * (1 + tol) / (bot * (1 + tol) + top * (1 - tol)) + PD10_LEAK * rth * (1 + tol)
         r['PORT_SENSE_V'] = [round(lo, 3), round(hi, 3)]
-        # PA6 VLOGIC_SENSE = VLOGIC x 10k / 110k
-        r['VLOGIC_SENSE_ratio'] = [round(10e3 * (1 - tol) / (10e3 * (1 - tol) + 100e3 * (1 + tol)), 5),
-                                   round(10e3 * (1 + tol) / (10e3 * (1 + tol) + 100e3 * (1 - tol)), 5)]
+        # PA6 VLOGIC_SENSE = VLOGIC x 10k / 110k (R60 / R61 0.1 % 25 ppm/K, PA6_TOL; R12F9-TRI-04)
+        r['VLOGIC_SENSE_ratio'] = [round(v, 5) for v in pa6_ratio(PA6_TOL[case])]
         # PC2_C CAM_5V_SENSE = CAM_5V x 1k / 11.2k (R104 + R107 over R105 || R106, D-R11-86)
         c = rails()['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)'][case]
         r['CAM_5V_SENSE_V'] = [round(c['min_V'] / 11.2 * (1 - 2 * tol), 3), round(c['max_V'] / 11.2 * (1 + 2 * tol), 3)]
@@ -259,7 +266,8 @@ def sense():
           'the leakage figure, under VIL 0.3 x VDD at the 3V3 minimum')
     out['PORT_SENSE_ok'] = all(out[c]['PORT_SENSE_V'][0] > lim[c]['vih_V'] and out[c]['PORT_SENSE_V'][1] < lim[c]['ceiling_V']
                                and out['PORT_SENSE_divider']['low_when_off_V'] < lim[c]['vil_V'] for c in TOL)
-    out['label'] = ('Calculation (1 % resistors, rail windows above; DS12110 leakage); drift Inference; the PORT_SENSE '
+    out['label'] = ('Calculation (1 % resistors, R60 / R61 0.1 % (PA6_TOL, R12F9-TRI-04), rail windows above; DS12110 '
+                    'leakage); drift Inference; the PORT_SENSE '
                     'thresholds: Calculation / Inference (3V3 window, D-R12-139)')
     return out
 
@@ -282,17 +290,18 @@ def vlogic():
               '(bench rule: a host or powered-hub port, O-R12-03)')
     out['usb_only_ok'] = out['usb_only_V'][0] >= 4.0
     # D-R12-21 (O-R12-07): no E24 pair moves R60 / R61's 1 / 11 toward the needed 0.092-0.097 (every E24 ratio near it
-    # is 1 / 11 or >= 0.0979), so the divider stays and the firmware PA6 threshold moves down by about the D5 drop:
-    # PA6 0.42-0.45 V gives VLOGIC 4.62-4.95 V at the nominal ratio. R12F8-TRI-06: the window and both margins are given
-    # at the nominal ratio and over both resistor cases (R60 / R61 at their own worst ends). The U9 turn-off corner is
-    # the highest BAT_IN at which U9 turns off (u9_turn_off_bat_V, the EN chain in the same resistor case; 4.80 V at 1 %),
-    # seen through D5 at its lowest VF 0.25 V (no load drop: the highest VLOGIC at turn-off); the trip bottom must lie above
-    # it for firmware to see PA6 trip before U9 turns off. It does only at the nominal ratio (Calculation / Inference:
-    # D5 VF)
+    # is 1 / 11 or >= 0.0979), so the divider stays and the firmware PA6 threshold moves down by about the D5 drop.
+    # R12F9-TRI-04 (round 9 lane B): R60 / R61 are 0.1 % 25 ppm/K (PA6_TOL) and the band is 0.425-0.455 V, VLOGIC
+    # 4.675-5.005 V at the nominal ratio. R12F8-TRI-06: the window and both margins are given at the nominal ratio and
+    # over both resistor cases (R60 / R61 at their own worst ends of PA6_TOL). The U9 turn-off corner is the highest
+    # BAT_IN at which U9 turns off (u9_turn_off_bat_V, the EN chain, still 1 % thick film, in the same resistor case;
+    # 4.80 V at 1 %), seen through D5 at its lowest VF 0.25 V (no load drop: the highest VLOGIC at turn-off); the trip
+    # bottom must lie above it for firmware to see PA6 trip before U9 turns off (Calculation / Inference: D5 VF, the
+    # drift case)
     out['pa6_retuned_threshold_V'] = list(PA6_THRESHOLD)
     out['pa6_retuned_window_V'] = [round(v, 3) for v in pa6_trip_window()]
     out['pa6_trip_window_V'] = dict(nominal_ratio=out['pa6_retuned_window_V'],
-                                    **{case: [round(v, 4) for v in pa6_trip_window(tol)] for case, tol in TOL.items()})
+                                    **{case: [round(v, 4) for v in pa6_trip_window(tol)] for case, tol in PA6_TOL.items()})
     turn_off = dict(nominal_ratio=u9_turn_off_bat_V(TOL['initial']), initial=u9_turn_off_bat_V(TOL['initial']),
                     drift=u9_turn_off_bat_V(TOL['drift']))
     out['u9_turn_off_through_d5_V'] = {k: round(v - vf[0], 4) for k, v in turn_off.items()}
@@ -301,10 +310,10 @@ def vlogic():
                 below_four_stall=round(out['battery_four_stall_V'] - out['pa6_trip_window_V'][k][1], 4))
         for k in ('nominal_ratio', 'initial', 'drift')}
     out['pa6_retuned_margins_basis'] = ('nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21\'s original '
-                                        'comparison); initial / drift: the divider and the EN chain both in that '
-                                        'resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies '
+                                        'comparison); initial / drift: the divider (0.1 %, PA6_TOL) and the EN '
+                                        'chain (1 %) both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies '
                                         'below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)')
-    out['pa6_threshold_bottom_needed_V'] = {case: round(out['u9_turn_off_through_d5_V'][case] * pa6_ratio(TOL[case])[1], 4)
+    out['pa6_threshold_bottom_needed_V'] = {case: round(out['u9_turn_off_through_d5_V'][case] * pa6_ratio(PA6_TOL[case])[1], 4)
                                             for case in TOL}
     out['label'] = 'Calculation / Inference (diode drop; resistor drift case Inference)'
     return out
@@ -313,13 +322,13 @@ def vlogic():
 def holdup():
     """C84 (470 uF, 300.8 uF low case as R11) feeds VLOGIC only (D5 blocks RAW_PROTECTED): logic 0.6-1.4 W plus the
     microSD write 3.3 V x 0.2 A / 0.80-0.85 (R10 / R11 load cases), to 3.8 V (R11's end point). R12F8-TRI-08: the PA6-trip
-    start points are R12's window (0.42-0.45 V, D-R12-21: VLOGIC 4.62-4.95 V at the nominal ratio), not R10 / R11's
-    4.84-5.17 V, at the nominal ratio and over both resistor cases; the battery break starts at 7.4 V less U9 (RON
+    start points are R12's window (R12F9-TRI-04: 0.425-0.455 V, VLOGIC 4.675-5.005 V at the nominal ratio, the divider
+    0.1 %), not R10 / R11's 4.84-5.17 V, at the nominal ratio and over both resistor cases; the battery break starts at 7.4 V less U9 (RON
     0.045 ohm at 1.5 A) and D5, as stage D does."""
     loads = (0.6 + 3.3 * .2 / .85, 1.4 + 3.3 * .2 / .80)
     def ms(c, v1, w):
         return round(.5 * c * (v1 ** 2 - 3.8 ** 2) / w * 1000, 3)
-    wins = dict(nominal_ratio=pa6_trip_window(), **{case: pa6_trip_window(tol) for case, tol in TOL.items()})
+    wins = dict(nominal_ratio=pa6_trip_window(), **{case: pa6_trip_window(tol) for case, tol in PA6_TOL.items()})
     u9 = U9_RON * 1.5
     return dict(
         from_pa6_trip_ms={k: [ms(300.8e-6, w[0], loads[1]), ms(470e-6, w[1], loads[0])] for k, w in wins.items()},
@@ -645,6 +654,8 @@ def compute():
     return dict(
         status='R12 stage A (no board): Calculation / Inference as labelled; no measurement',
         resistor_cases={k: f'+/-{v * 100:.2f} % independent' for k, v in TOL.items()},
+        resistor_cases_precise={'parts': 'R401 (D-R12-83); R60 / R61 (R12F9-TRI-04, PA6_TOL)',
+                                **{k: f'+/-{v * 100:.3f} % independent' for k, v in TOL_PRECISE.items()}},
         rails=rails(), cam_input=cam_input(), port_input=port_input(), u9=u9(), sense=sense(), vlogic=vlogic(), holdup=holdup(), fire=fire(), crystal=crystal(),
         cold_screen=cold_screen())
 

@@ -839,6 +839,22 @@
    "pads_matched": 2,
    "status": "OK"
   },
+  "C852472|R0402": {
+   "footprint": "R0402",
+   "easyeda": "R0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.003,
+   "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
   "C8678|D_SMA": {
    "footprint": "D_SMA",
    "easyeda": "SMA_L4.3-W2.6-LS5.2-RD",

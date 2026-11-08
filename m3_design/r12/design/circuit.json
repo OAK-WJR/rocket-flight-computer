@@ -249,6 +249,13 @@
    "footprint": "rocket:R0402",
    "source": "D-R12-83: 10k 0.1 % 25 ppm/K thin film, port FB bottom (JLC Extended, Economic-flagged, Live 2026-11-05)"
   },
+  "C852472": {
+   "Manufacturer": "YAGEO",
+   "Manufacturer Part": "RT0402BRD07100KL",
+   "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2103261932_YAGEO-RT0402BRD07100KL_C852472.pdf",
+   "footprint": "rocket:R0402",
+   "source": "R12F9-TRI-04 (round 9 lane B): 100k 0.1 % 25 ppm/K thin film, PA6 divider top R60 (JLC Extended, Live 2026-11-08; https://www.lcsc.com/product-detail/chip-resistor-surface-mount_yageo-rt0402brd07100kl_C852472.html)"
+  },
   "C5246546": {
    "Manufacturer": "Honor Elec",
    "Manufacturer Part": "HV1E477M0810PZ",
@@ -700,6 +707,16 @@
     "13": "GND",
     "14": "GND"
    }
+  },
+  "R60": {
+   "lcsc": "C852472",
+   "value": "100k 0.1%",
+   "why": "R12F9-TRI-04 (round 9 lane B, owner option (b)): PA6 divider top 100k 1 % -> 0.1 % 25 ppm/K thin film, so the PA6 trip window clears both the healthy four-stall VLOGIC and U9's turn-off through D5 at the drift corner with the firmware band 0.425-0.455 V"
+  },
+  "R61": {
+   "lcsc": "C190095",
+   "value": "10k 0.1%",
+   "why": "R12F9-TRI-04 (round 9 lane B, owner option (b)): PA6 divider bottom 10k 1 % -> 0.1 % 25 ppm/K thin film (R401's line), with R60"
   }
  },
  "added_parts": {

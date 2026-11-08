@@ -7,6 +7,23 @@ D-R12-144, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` 
 -143, 2026-11-07; R12F6-TRI-10; and the current `82eddc69…` in the round-7 fix pass D-R12-144 … -151, 2026-11-07): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
+**Round 9 lane B (R12F9-TRI-04, owner option (b) adopted by the orchestrator; `stageD_budget.json` re-run on board
+`86f015c2…`, which differs from `3ccb3a53…` only in R60 / R61's part fields, as-saved fills (K-fill-checked) with
+`--source-board`, both hashes `86f015c2…`).** R60 is YAGEO RT0402BRD07100KL (C852472) and R61 RT0402BRD0710KL (C190095,
+R401's line), both 0.1 % 25 ppm/K; `r12_budget.PA6_TOL` = TOL_PRECISE (0.1 %; 0.1 % + 25 ppm/K × 67 K) and the
+firmware PA6 band is **0.425–0.455 V** (was 0.42–0.45 V): `pa6_corners.owner_options.band_derivation` centres the 30 mV
+band in the 0.1 % drift case's room 0.4203–0.4603 V (top below the healthy four-stall VLOGIC, bottom above U9's turn-off
+through D5), centre 0.440 V. Trip window 4.675–5.005 / 4.667–5.014 / 4.652–5.029 V (nominal / 0.1 % / drift). Margins
+to the trip top (lower bounds): healthy **+0.084 / +0.074 / +0.059 V**; match shorted −0.067 / −0.076 / −0.092 V; match
+and leads shorted −0.111 / −0.120 / −0.136 V (a shorted match still trips PA6; firmware rule 4). Trip bottom above U9's
+turn-off through D5 **+0.123 / +0.114 / +0.051 V** (was +0.068 / −0.015 / −0.119 V). Hold-up from the PA6 trip,
+unshed 0.487–1.853 ms at drift (was 0.382–1.980 ms), shed 1.457–3.464 ms. Every DC solve, the fire loop, EN, ports, U403
+and U6 are unchanged (Calculation / Inference: DC-solve bounds, SS34 VF, allocations, 70 °C copper, the drift case).
+A native ZONE_FILLER refill of the scratch copy on this KiCad did not reproduce the saved fills (hash `b9a0b051…`) and
+moved the plane-dependent solves by up to 10 % (RAW_PROTECTED U9 → U403 15.67 → 14.09 mΩ); on that copper the
+derivation gives 0.426–0.456 V and the adopted band still clears both limits at drift (+0.063 / +0.051 V; Inference on
+fill variation). Hot-plug re-bound on `86f015c2…`: 2304 / 2304 pass, minimum −14.255 V (rows identical).
+
 **Round 9 analyses lane (R12F9-TRI-04, -05; `stageD_budget.json` re-run on board `3ccb3a53…` (46 × 85 mm, lane L),
 zone-filled scratch copy with `--source-board`, the refill reproducing the board hash).** Fire loop (4.726884 Ω,
 1.24995 A at 5.72088 V), GND return (2.670 mΩ), EN, hold-up and every earlier DC solve are unchanged from lane L's run;

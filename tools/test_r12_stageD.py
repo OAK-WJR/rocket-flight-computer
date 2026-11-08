@@ -386,28 +386,36 @@ class Round8(unittest.TestCase):
     def test_pa6_window_and_margins_in_both_cases(self):
         p = self.d['pa6_corners']
         t = p['window']['trip_V']
-        self.assertEqual(t['nominal_ratio'], [0.42 * 11, 0.45 * 11])
-        self.assertAlmostEqual(t['initial'][0], 4.5368, places=4)
-        self.assertAlmostEqual(t['drift'][0], 4.4820, places=4)
-        self.assertAlmostEqual(t['drift'][1], 5.1029, places=4)
+        # R12F9-TRI-04 (round 9 lane B): band 0.425-0.455 V, R60 / R61 0.1 % 25 ppm/K
+        self.assertEqual(p['window']['threshold_V'], [0.425, 0.455])
+        self.assertAlmostEqual(t['nominal_ratio'][0], 0.425 * 11, places=12)
+        self.assertAlmostEqual(t['nominal_ratio'][1], 0.455 * 11, places=12)
+        self.assertAlmostEqual(t['initial'][0], 4.6665, places=4)
+        self.assertAlmostEqual(t['drift'][0], 4.6523, places=4)
+        self.assertAlmostEqual(t['drift'][1], 5.0294, places=4)
+        self.assertAlmostEqual(p['window']['divider_tolerance']['initial'], 0.001, places=12)
+        self.assertAlmostEqual(p['window']['divider_tolerance']['drift'], 0.001 + 25e-6 * 67, places=12)
         self.assertAlmostEqual(p['window']['ratio']['drift'][0], self.w['sense']['drift']['VLOGIC_SENSE_ratio'][0], places=5)
         for name in ('healthy', 'match_shorted', 'match_and_leads_shorted'):
             c = p[name]
             for k, w in t.items():
                 self.assertAlmostEqual(c['margin_to_trip_top_V'][k], c['VLOGIC_V'][0] - w[1], places=12)
-        # R12F9-TRI-04: with the copper at 70 C and the VLOGIC copper to R60 the drift-case healthy margin is negative (about -14 mV)
-        self.assertLess(p['healthy']['margin_to_trip_top_V']['drift'], 0.0)
-        self.assertGreater(p['healthy']['margin_to_trip_top_V']['initial'], 0.0)
-        self.assertLess(p['match_shorted']['margin_to_trip_top_V']['initial'], 0.0)
+        # R12F9-TRI-04: with the 0.1 % divider and the 0.425-0.455 V band the healthy margin is positive in every case
+        # (about +59 mV at drift); a shorted match still trips PA6 (firmware rule 4)
+        for k in t:
+            self.assertGreater(p['healthy']['margin_to_trip_top_V'][k], 0.05)
+            self.assertLess(p['match_shorted']['margin_to_trip_top_V'][k], 0.0)
+            self.assertLess(p['match_and_leads_shorted']['margin_to_trip_top_V'][k], 0.0)
 
     def test_d_r12_21_margin_is_negative_with_tolerance(self):
-        """D-R12-21's '70 mV above U9's turn-off corner' holds only at the nominal ratio."""
+        """D-R12-21's trip bottom over U9's turn-off corner: negative with the 1 % divider at 0.42 V (round 8); with
+        R12F9-TRI-04's 0.1 % divider and 0.425 V bottom it clears in every case (+51 mV at drift)."""
         v = self.w['vlogic']
         m = v['pa6_retuned_margins_V']
         self.assertAlmostEqual(self.w['u9']['turn_off_max_bat_V']['initial'], 4.802, places=3)
-        self.assertAlmostEqual(m['nominal_ratio']['above_u9_turn_off_through_d5'], 0.068, places=3)
-        self.assertAlmostEqual(m['initial']['above_u9_turn_off_through_d5'], -0.015, places=3)
-        self.assertAlmostEqual(m['drift']['above_u9_turn_off_through_d5'], -0.119, places=3)
+        self.assertAlmostEqual(m['nominal_ratio']['above_u9_turn_off_through_d5'], 0.1229, places=4)
+        self.assertAlmostEqual(m['initial']['above_u9_turn_off_through_d5'], 0.1144, places=4)
+        self.assertAlmostEqual(m['drift']['above_u9_turn_off_through_d5'], 0.0513, places=4)
         self.assertEqual(self.d['pa6_corners']['trip_bottom_above_u9_turn_off_V'],
                          {k: x['above_u9_turn_off_through_d5'] for k, x in m.items()})
 
@@ -426,9 +434,9 @@ class Round8(unittest.TestCase):
 
     def test_holdup_from_r12_pa6_window(self):
         hw, hd = self.w['holdup'], self.d['holdup']['unshed']
-        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.467, 1.718])
-        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.415, 1.873])
-        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.382, 1.98])
+        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.501, 1.811])     # R12F9-TRI-04 band / divider
+        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.496, 1.827])
+        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.487, 1.853])
         for k in ('nominal_ratio', 'initial', 'drift'):
             self.assertEqual([round(x, 3) for x in hd['pa6_trip_ms'][k]], hw['from_pa6_trip_ms'][k])
         self.assertEqual(hd['pa6_trip_range_ms']['drift'], hd['pa6_trip_ms']['drift'])
@@ -493,23 +501,47 @@ class Round9(unittest.TestCase):
 
     def test_pa6_margins_hot(self):
         h = self.d['pa6_corners']['healthy']['margin_to_trip_top_V']
-        self.assertAlmostEqual(h['drift'], -0.0144, places=3)
-        self.assertAlmostEqual(h['initial'], 0.0476, places=3)
-        self.assertAlmostEqual(h['nominal_ratio'], 0.1385, places=3)
+        # round 9 lane B (0.1 % divider, 0.425-0.455 V band); lane A's 1 % / 0.42-0.45 V figures were -0.0144 /
+        # +0.0476 / +0.1385
+        self.assertAlmostEqual(h['drift'], 0.0591, places=3)
+        self.assertAlmostEqual(h['initial'], 0.0744, places=3)
+        self.assertAlmostEqual(h['nominal_ratio'], 0.0835, places=3)
 
     def test_pa6_owner_options(self):
         o = self.d['pa6_corners']['owner_options']
         one, tenth = o['divider_1pct']['drift'], o['divider_0p1pct']['drift']
-        self.assertAlmostEqual(one['margin_to_trip_top_V']['healthy'],
+        # the adopted divider is the 0.1 % row (round 9 lane B)
+        self.assertAlmostEqual(tenth['margin_to_trip_top_V']['healthy'],
                                self.d['pa6_corners']['healthy']['margin_to_trip_top_V']['drift'], places=12)
+        self.assertIn('divider_0p1pct', o['adopted'])
         self.assertFalse(one['present_band_fits'])            # threshold alone cannot meet both limits at drift
         self.assertTrue(tenth['present_band_fits'])
-        self.assertGreater(tenth['margin_to_trip_top_V']['healthy'], 0.1)
+        # +0.114 V with lane A's 0.42-0.45 V band (option (a)); +0.059 V with the adopted 0.425-0.455 V band
+        self.assertGreater(tenth['margin_to_trip_top_V']['healthy'], 0.05)
         for row in (o['divider_0p1pct']['initial'], tenth):
             m = row['centred_band_margins_V']
             self.assertGreater(m['healthy_to_trip_top'], 0.0)
             self.assertGreater(m['trip_bottom_above_u9_turn_off'], 0.0)
             self.assertAlmostEqual(m['healthy_to_trip_top'], m['trip_bottom_above_u9_turn_off'], delta=0.02)
+
+    def test_pa6_adopted_band(self):
+        """Round 9 lane B: the firmware band is the 0.1 % drift case's room with the 30 mV band centred, to the mV, and
+        both limits clear in both resistor cases."""
+        import r12_budget
+        b = self.d['pa6_corners']['owner_options']['band_derivation']
+        self.assertEqual(list(r12_budget.PA6_THRESHOLD), [0.425, 0.455])
+        self.assertIs(r12_budget.PA6_TOL, r12_budget.TOL_PRECISE)
+        self.assertEqual(b['band_V'], [0.425, 0.455])
+        self.assertTrue(b['equals_threshold'])
+        self.assertTrue(b['both_limits_clear'])
+        self.assertGreaterEqual(b['room_width_drift_V'], b['band_width_V'])
+        self.assertLessEqual(b['room_drift_V'][0], 0.425)
+        self.assertGreaterEqual(b['room_drift_V'][1], 0.455)
+        m = b['margins_V']['drift']
+        self.assertAlmostEqual(m['healthy_to_trip_top'], 0.0591, places=3)
+        self.assertAlmostEqual(m['trip_bottom_above_u9_turn_off'], 0.0513, places=3)
+        self.assertAlmostEqual(self.d['pa6_corners']['trip_bottom_above_u9_turn_off_V']['drift'],
+                               m['trip_bottom_above_u9_turn_off'], places=4)
 
     def test_dummy_fire_bound_at_r134_low_end(self):
         f = self.d['fire']

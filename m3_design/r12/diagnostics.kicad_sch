@@ -1083,7 +1083,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100k"
+		(property "Value" "100k 0.1%"
 			(at 322.58 66.04 0)
 			(effects
 				(font
@@ -1096,28 +1096,28 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25741"
+		(property "LCSC" "C852472"
 			(at 322.58 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+		(property "Manufacturer" "YAGEO"
 			(at 322.58 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1003TCE"
+		(property "Manufacturer Part" "RT0402BRD07100KL"
 			(at 322.58 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2103261932_YAGEO-RT0402BRD07100KL_C852472.pdf"
 			(at 322.58 71.12 0)
 			(hide yes)
 			(effects
@@ -1175,7 +1175,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "10k"
+		(property "Value" "10k 0.1%"
 			(at 370.84 66.04 0)
 			(effects
 				(font
@@ -1188,28 +1188,28 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25744"
+		(property "LCSC" "C190095"
 			(at 370.84 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+		(property "Manufacturer" "YAGEO"
 			(at 370.84 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
+		(property "Manufacturer Part" "RT0402BRD0710KL"
 			(at 370.84 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf"
 			(at 370.84 71.12 0)
 			(hide yes)
 			(effects

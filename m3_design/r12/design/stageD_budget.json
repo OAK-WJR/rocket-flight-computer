@@ -1,5 +1,5 @@
 {
- "board_sha256": "3ccb3a534129edc39b11ad16ce83842c190434cd9bd844a920c9eca3d2d8c718",
+ "board_sha256": "86f015c208c9d352eaa993db1d3a33fcfa2f46b68048b686e509749bf9488254",
  "dc_solves": {
   "3V3_L1_to_R14": {
    "cells": 272852,
@@ -1108,26 +1108,26 @@
    ],
    "pa6_trip_ms": {
     "drift": [
-     1.1422393953475782,
-     3.701152132514117
+     1.4568043870095142,
+     3.463697778964501
     ],
     "initial": [
-     1.2421961612081187,
-     3.5006552738758487
+     1.483535792670464,
+     3.4146688643301517
     ],
     "nominal_ratio": [
-     1.3961973243697479,
-     3.2108376597444095
+     1.4995764705882353,
+     3.385547114616613
     ]
    },
    "pa6_trip_range_ms": {
     "drift": [
-     1.1422393953475782,
-     3.701152132514117
+     1.4568043870095142,
+     3.463697778964501
     ],
     "initial": [
-     1.2421961612081187,
-     3.5006552738758487
+     1.483535792670464,
+     3.4146688643301517
     ]
    }
   },
@@ -1146,26 +1146,26 @@
    ],
    "pa6_trip_ms": {
     "drift": [
-     0.38181597765831976,
-     1.9802745597896045
+     0.48696551138801186,
+     1.8532263330186132
     ],
     "initial": [
-     0.4152284920892308,
-     1.8730001721763088
+     0.49590100934771136,
+     1.8269937684364745
     ],
     "nominal_ratio": [
-     0.46670640898876414,
-     1.7179353632478636
+     0.5012629213483147,
+     1.8114123878205126
     ]
    },
    "pa6_trip_range_ms": {
     "drift": [
-     0.38181597765831976,
-     1.9802745597896045
+     0.48696551138801186,
+     1.8532263330186132
     ],
     "initial": [
-     0.4152284920892308,
-     1.8730001721763088
+     0.49590100934771136,
+     1.8269937684364745
     ]
    }
   }
@@ -1221,9 +1221,9 @@
    "converter_A": 2.2641599363377725,
    "lumped_drop_V_superseded": 0.19433039198010954,
    "margin_to_trip_top_V": {
-    "drift": -0.014390602145159193,
-    "initial": 0.047552946018261544,
-    "nominal_ratio": 0.13846203692735237
+    "drift": 0.05905424608685461,
+    "initial": 0.07435292781824376,
+    "nominal_ratio": 0.08346203692735266
    }
   },
   "label": "Calculation / Inference (DC-solve upper bounds with the copper at 70 C, the fire loop's corner (R12F9-TRI-04), mutual resistance bounded by the smaller point resistance, the VLOGIC copper to R60 included; U9 RON at the SLVSFC9C maximum; SS34 VF, the load allocations, the 70 C copper temperature and the resistor drift case are Inference); the drop is an upper bound, the margins lower bounds",
@@ -1240,9 +1240,9 @@
    "converter_A": 2.341325622869818,
    "lumped_drop_V_superseded": 0.20095343917325162,
    "margin_to_trip_top_V": {
-    "drift": -0.2091763671997091,
-    "initial": -0.14723281903628838,
-    "nominal_ratio": -0.05632372812719755
+    "drift": -0.1357315189676953,
+    "initial": -0.12043283723630616,
+    "nominal_ratio": -0.11132372812719726
    }
   },
   "match_shorted": {
@@ -1258,12 +1258,39 @@
    "converter_A": 2.3234200626768584,
    "lumped_drop_V_superseded": 0.19941662435947596,
    "margin_to_trip_top_V": {
-    "drift": -0.16509393283846574,
-    "initial": -0.103150384675045,
-    "nominal_ratio": -0.012241293765954175
+    "drift": -0.09164908460645194,
+    "initial": -0.07635040287506278,
+    "nominal_ratio": -0.06724129376595389
    }
   },
   "owner_options": {
+   "adopted": "divider_0p1pct with the band_derivation band (owner option (b), round 9 lane B; R12F9-TRI-04)",
+   "band_derivation": {
+    "band_V": [
+     0.425,
+     0.455
+    ],
+    "band_width_V": 0.030000000000000027,
+    "basis": "the 0.1 % drift case: highest top = healthy four-stall VLOGIC minimum x lowest ratio; lowest bottom = U9 turn-off VLOGIC through D5 (drift EN chain) x highest ratio; the 30 mV band centred in that room, centre rounded to 1 mV (Calculation / Inference as pa6_corners)",
+    "both_limits_clear": true,
+    "centre_V": 0.44,
+    "equals_threshold": true,
+    "margins_V": {
+     "drift": {
+      "healthy_to_trip_top": 0.05905424608685461,
+      "trip_bottom_above_u9_turn_off": 0.051323160545540425
+     },
+     "initial": {
+      "healthy_to_trip_top": 0.07435292781824376,
+      "trip_bottom_above_u9_turn_off": 0.11440849150849175
+     }
+    },
+    "room_drift_V": [
+     0.4203115158859048,
+     0.46034251408653987
+    ],
+    "room_width_drift_V": 0.04003099820063505
+   },
    "divider_0p1pct": {
     "drift": {
      "centred_band_V": [
@@ -1275,9 +1302,9 @@
       "trip_bottom_above_u9_turn_off": 0.05490287676729988
      },
      "margin_to_trip_top_V": {
-      "healthy": 0.11432246356861775,
-      "match_and_leads_shorted": -0.08046330148593217,
-      "match_shorted": -0.0363808671246888
+      "healthy": 0.05905424608685461,
+      "match_and_leads_shorted": -0.1357315189676953,
+      "match_shorted": -0.09164908460645194
      },
      "present_band_V": 0.030000000000000027,
      "present_band_fits": true,
@@ -1286,10 +1313,10 @@
      "threshold_top_max_for_healthy_V": 0.46034251408653987,
      "tolerance": 0.0026750000000000003,
      "trip_V": [
-      4.597589946892064,
-      4.974139573358735
+      4.65232316054554,
+      5.029407790840498
      ],
-     "trip_bottom_above_u9_turn_off_V": -0.003410053107936406
+     "trip_bottom_above_u9_turn_off_V": 0.051323160545540425
     },
     "initial": {
      "centred_band_V": [
@@ -1301,9 +1328,9 @@
       "trip_bottom_above_u9_turn_off": 0.09424576798080153
      },
      "margin_to_trip_top_V": {
-      "healthy": 0.1294530279183439,
-      "match_and_leads_shorted": -0.06533273713620602,
-      "match_shorted": -0.02125030277496265
+      "healthy": 0.07435292781824376,
+      "match_and_leads_shorted": -0.12043283723630616,
+      "match_shorted": -0.07635040287506278
      },
      "present_band_V": 0.030000000000000027,
      "present_band_fits": true,
@@ -1312,10 +1339,10 @@
      "threshold_top_max_for_healthy_V": 0.46174707738127224,
      "tolerance": 0.001,
      "trip_V": [
-      4.611608391608392,
-      4.959009009009009
+      4.666508491508492,
+      5.014109109109109
      ],
-     "trip_bottom_above_u9_turn_off_V": 0.05950839160839205
+     "trip_bottom_above_u9_turn_off_V": 0.11440849150849175
     }
    },
    "divider_1pct": {
@@ -1329,9 +1356,9 @@
       "trip_bottom_above_u9_turn_off": -0.06625922243796278
      },
      "margin_to_trip_top_V": {
-      "healthy": -0.014390602145159193,
-      "match_and_leads_shorted": -0.2091763671997091,
-      "match_shorted": -0.16509393283846574
+      "healthy": -0.07108896480152005,
+      "match_and_leads_shorted": -0.26587472985606997,
+      "match_shorted": -0.2217922954948266
      },
      "present_band_V": 0.030000000000000027,
      "present_band_fits": false,
@@ -1340,10 +1367,10 @@
      "threshold_top_max_for_healthy_V": 0.4487309508184233,
      "tolerance": 0.0167,
      "trip_V": [
-      4.482024195928002,
-      5.102852639072512
+      4.5353816268319065,
+      5.159551001728873
      ],
-     "trip_bottom_above_u9_turn_off_V": -0.11897580407199815
+     "trip_bottom_above_u9_turn_off_V": -0.06561837316809349
     },
     "initial": {
      "centred_band_V": [
@@ -1355,9 +1382,9 @@
       "trip_bottom_above_u9_turn_off": 0.01529322307353187
      },
      "margin_to_trip_top_V": {
-      "healthy": 0.047552946018261544,
-      "match_and_leads_shorted": -0.14723281903628838,
-      "match_shorted": -0.103150384675045
+      "healthy": -0.008457154991839744,
+      "match_and_leads_shorted": -0.20324292004638966,
+      "match_shorted": -0.1591604856851463
      },
      "present_band_V": 0.030000000000000027,
      "present_band_fits": true,
@@ -1366,13 +1393,13 @@
      "threshold_top_max_for_healthy_V": 0.4542450330530279,
      "tolerance": 0.01,
      "trip_V": [
-      4.536831683168316,
-      5.040909090909091
+      4.590841584158415,
+      5.096919191919192
      ],
-     "trip_bottom_above_u9_turn_off_V": -0.015268316831684281
+     "trip_bottom_above_u9_turn_off_V": 0.03874158415841489
     }
    },
-   "label": "Calculation / Inference (as pa6_corners; the 0.1 % parts' 25 ppm/K drift case Inference); options for the owner, none adopted (O-R12-17)",
+   "label": "Calculation / Inference (as pa6_corners; the 0.1 % parts' 25 ppm/K drift case Inference); options for the owner; option (b) adopted (round 9 lane B, O-R12-17)",
    "parts_0p1pct": {
     "R60": "YAGEO RT0402BRD07100KL (C852472), 100k 0.1 % 25 ppm/K, Extended, $0.0256 (1-499)",
     "R61": "YAGEO RT0402BRD0710KL (C190095, R401's BOM line), 10k 0.1 % 25 ppm/K, Extended, $0.0246 (1-499)"
@@ -1389,11 +1416,11 @@
    "U403": 0.015665621870245994
   },
   "trip_bottom_above_u9_turn_off_V": {
-   "drift": -0.119,
-   "initial": -0.0153,
-   "nominal_ratio": 0.0679
+   "drift": 0.0513,
+   "initial": 0.1144,
+   "nominal_ratio": 0.1229
   },
-  "trip_bottom_basis": "nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21's original comparison); initial / drift: the divider and the EN chain both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)",
+  "trip_bottom_basis": "nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21's original comparison); initial / drift: the divider (0.1 %, PA6_TOL) and the EN chain (1 %) both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)",
   "u9_ron_ohm": 0.045,
   "u9_turn_off_through_d5_V": {
    "drift": 4.601,
@@ -1406,32 +1433,36 @@
   },
   "vlogic_shared_ohm": 0.0076939587051179795,
   "window": {
+   "divider_tolerance": {
+    "drift": 0.0026750000000000003,
+    "initial": 0.001
+   },
    "ratio": {
     "drift": [
-     0.08818596809054464,
-     0.09370766011963465
+     0.09046790773829097,
+     0.09135220949487173
     ],
     "initial": [
-     0.08926961226330027,
-     0.0925756186984418
+     0.09074393677899902,
+     0.09107451551269219
     ]
    },
    "threshold_V": [
-    0.42,
-    0.45
+    0.425,
+    0.455
    ],
    "trip_V": {
     "drift": [
-     4.482024195928002,
-     5.102852639072512
+     4.65232316054554,
+     5.029407790840498
     ],
     "initial": [
-     4.536831683168316,
-     5.040909090909091
+     4.666508491508492,
+     5.014109109109109
     ],
     "nominal_ratio": [
-     4.62,
-     4.95
+     4.675,
+     5.005
     ]
    }
   }
@@ -2441,7 +2472,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "3ccb3a534129edc39b11ad16ce83842c190434cd9bd844a920c9eca3d2d8c718",
+ "source_board_sha256": "86f015c208c9d352eaa993db1d3a33fcfa2f46b68048b686e509749bf9488254",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,

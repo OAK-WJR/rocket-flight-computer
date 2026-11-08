@@ -92,8 +92,8 @@ dip … solder bath 260 ± 5 °C, 10 ± 1 s" and leaching 30 s at 260 °C. JLC E
 |---|---|---|---|---|
 | C11702 | 0402WGF1001TCE 1k | R9 R100 R101 R110 R122 R127 R162 R440 R441 R450 R451 R470 R471 | 2206010216_UNI-ROYAL-Uniroyal-Elec-0402WGF1001TCE_C11702 | OK |
 | C25091 | 0402WGF2200TCE 220R | R32 R33 R126 | 2205311900_…-0402WGF2200TCE_C25091 | OK |
-| C25741 | 0402WGF1003TCE 100k | R60 R83 R112 R119 R120 (R112 since D-R12-86; R431 moved to C25792 in round 8) | 2206010100_…-0402WGF1003TCE_C25741 | OK |
-| C25744 | 0402WGF1002TCE 10k | R5 R10 R11 R61 R89 R95 R121 R128 R154–R157 R163 R167 R434 R435 R460–R464 (R401 is C190095 since D-R12-83; R131 moved to C25905 and R95 added in round 6) | 2411221126_…-0402WGF1002TCE_C25744 | OK |
+| C25741 | 0402WGF1003TCE 100k | R83 R112 R119 R120 (R112 since D-R12-86; R431 moved to C25792 in round 8; R60 moved to C852472 in round 9, R12F9-TRI-04) | 2206010100_…-0402WGF1003TCE_C25741 | OK |
+| C25744 | 0402WGF1002TCE 10k | R5 R10 R11 R89 R95 R121 R128 R154–R157 R163 R167 R434 R435 R460–R464 (R401 is C190095 since D-R12-83; R131 moved to C25905 and R95 added in round 6; R61 moved to C190095 in round 9, R12F9-TRI-04) | 2411221126_…-0402WGF1002TCE_C25744 | OK |
 | C25765 | 0402WGF2002TCE 20k | R15 | 2206010100_…_C25765 | OK |
 | C25779 | 0402WGF3302TCE 33k | R93 | 2206010100_…_C25779 | OK |
 | C25792 | 0402WGF4702TCE 47k | R14 R111 R400 R431 (R111 since D-R12-86; R431 since D-R12-153) | 2206010100_…_C25792 | OK |
@@ -168,7 +168,8 @@ Samsung (Datasheet, Samsung MLCC general spec served for every CL code): "Pb-fre
 | C5246546 | Honor Elec HV1E477M0810PZ, 470 µF 25 V polymer, D8 × 10.5 (replaces C46550466) | C84 | SMT, reflowed | Peak 255 °C for 5 s, 230–255 °C ≤ 30 s (Honor CDHV specification item 14, LCSC C5246546 PDF, Datasheet); the 255 ± 5 °C upper end is 5 °C over it, inside the owner's A-9 acceptance of 250 °C-rated parts | Economic and Standard (componentProductType 0, the value every Economic line shows; Standard-only U4 / U5 read 2) | OK under A-9 |
 | C46550466 | jieerrui MA25V470M8x10 (dropped) | — | — | No reflow figure in its 4-page MA series sheet (JLC mirror, Datasheet read 2026-11-05) | Economic and Standard | not usable: no published rating |
 | C96256 | QMB-09B-03 | LS120 | JLC THT assembly (hand-soldered after reflow, as J121) | Not reflowed; the Huawha sheet's solderability test is a 255 ± 5 °C dip for 3 s (item 8) | Economic and Standard | OK (THT) |
-| C190095 | YAGEO RT0402BRD0710KL 10k 0.1 % 25 ppm/K (D-R12-83) | R401 | SMT | Not read (YAGEO RT series; O-R12-02 class, Inference) | Economic and Standard | UNVERIFIED (as the other unread lines) |
+| C190095 | YAGEO RT0402BRD0710KL 10k 0.1 % 25 ppm/K (D-R12-83) | R401, R61 (round 9, R12F9-TRI-04) | SMT | Not read (YAGEO RT series; O-R12-02 class, Inference) | Economic and Standard | UNVERIFIED (as the other unread lines) |
+| C852472 | YAGEO RT0402BRD07100KL 100k 0.1 % 25 ppm/K, thin film, 62.5 mW, 50 V, −55 … +155 °C (JLC listing, Live 2026-11-08: [LCSC page](https://www.lcsc.com/product-detail/chip-resistor-surface-mount_yageo-rt0402brd07100kl_C852472.html), [datasheet](https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2103261932_YAGEO-RT0402BRD07100KL_C852472.pdf)); JLC Extended, 1 634 836 in stock, $0.0256 at 1–499 | R60 (round 9, R12F9-TRI-04, PA6 divider top; R61 is C190095) | SMT | Not read (YAGEO RT series, as C190095; O-R12-02 class, Inference) | Economic and Standard (componentProductType 0) | UNVERIFIED (as C190095) |
 
 Pyro / gate / fire-path lines (J121, Q120–Q124, R134 and their gate R / C, D402): J121, R134 and every gate R / C
 (R119, R120, R122, R123, R126, C120, C123, C126 …) are OK. Q120–Q124 (AOS) and D402 (Infineon) are UNVERIFIED only

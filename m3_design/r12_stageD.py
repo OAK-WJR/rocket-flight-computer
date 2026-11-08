@@ -349,13 +349,16 @@ def holdup(four_stall_bat):
 
 
 def pa6_window():
-    """PA6 = VLOGIC x R61 / (R60 + R61), R60 100k / R61 10k; firmware threshold 0.42-0.45 V (D-R12-21, O-R12-17).
+    """PA6 = VLOGIC x R61 / (R60 + R61), R60 100k / R61 10k, both 0.1 % 25 ppm/K thin film since R12F9-TRI-04 (round 9
+    lane B, owner option (b)); firmware threshold 0.425-0.455 V (D-R12-21's 0.42-0.45 V moved, O-R12-17).
     trip_V: 'nominal_ratio' is R10 / R11's method (x 11); 'initial' / 'drift' put R60 / R61 at their own worst ends of
-    R12's two resistor cases (1 %; 1 % + 100 ppm/K over 67 K, R12F8-TRI-06) (Calculation; drift Inference)."""
+    R12's two resistor cases for these parts (r12_budget.PA6_TOL: 0.1 %; 0.1 % + 25 ppm/K over 67 K) (Calculation;
+    drift Inference)."""
     return dict(threshold_V=list(r12_budget.PA6_THRESHOLD),
+                divider_tolerance=dict(r12_budget.PA6_TOL),
                 trip_V=dict(nominal_ratio=r12_budget.pa6_trip_window(),
-                            **{case: r12_budget.pa6_trip_window(tol) for case, tol in TOL.items()}),
-                ratio={case: list(r12_budget.pa6_ratio(tol)) for case, tol in TOL.items()})
+                            **{case: r12_budget.pa6_trip_window(tol) for case, tol in r12_budget.PA6_TOL.items()}),
+                ratio={case: list(r12_budget.pa6_ratio(tol)) for case, tol in r12_budget.PA6_TOL.items()})
 
 
 def pa6_corners(fire, u9_feed_ohm, raw_ohm, vlogic_ohm=None):
@@ -425,14 +428,16 @@ def pa6_corners(fire, u9_feed_ohm, raw_ohm, vlogic_ohm=None):
     return out
 
 
-# R12F9-TRI-04 owner option: R60 / R61 as 0.1 % 25 ppm/K thin film (YAGEO RT0402BRD07100KL C852472, RT0402BRD0710KL
-# C190095, already R401's line; JLC listing 2026-11-08, Extended)
+# R12F9-TRI-04 owner option (b), adopted in round 9 lane B: R60 / R61 as 0.1 % 25 ppm/K thin film (YAGEO
+# RT0402BRD07100KL C852472, RT0402BRD0710KL C190095, already R401's line; JLC listing 2026-11-08, Extended; circuit.json)
 PA6_PRECISE = dict(R60='YAGEO RT0402BRD07100KL (C852472), 100k 0.1 % 25 ppm/K, Extended, $0.0256 (1-499)',
                    R61='YAGEO RT0402BRD0710KL (C190095, R401\'s BOM line), 10k 0.1 % 25 ppm/K, Extended, $0.0246 (1-499)')
 
 
 def pa6_options(corners, u9_off_d5):
-    """R12F9-TRI-04: what each owner-level change gives the PA6 margins (nothing is adopted; O-R12-17). Two limits:
+    """R12F9-TRI-04: what each owner-level change gives the PA6 margins. Option (b) is adopted (round 9 lane B): the
+    0.1 % divider with the band the drift case's room centres (band_derivation; r12_budget.PA6_THRESHOLD is that band to
+    the millivolt), so the rows below now evaluate the adopted band 0.425-0.455 V, not D-R12-21's 0.42-0.45 V. Two limits:
     the trip top below the lowest four-stall VLOGIC (healthy / shorted cases, VLOGIC at SS34's 0.45 V) and the trip
     bottom above U9's highest turn-off VLOGIC through D5 at 0.25 V (D-R12-21; the EN chain stays 1 % in each case).
     (a) 0.1 % 25 ppm/K divider (r12_budget.TOL_PRECISE, 0.1 %; 0.1 % + 25 ppm/K x 67 K); (b) the firmware threshold
@@ -462,9 +467,29 @@ def pa6_options(corners, u9_off_d5):
             row[case]['centred_band_margins_V'] = dict(healthy_to_trip_top=vmin['healthy'] - band[1] / lo,
                                                        trip_bottom_above_u9_turn_off=band[0] / hi - u9_off_d5[case])
         out[name] = row
+    # the adopted band: the 0.1 % drift case's room, its 30 mV band centred, rounded to the millivolt; it must equal
+    # r12_budget.PA6_THRESHOLD, and both limits must clear in every case at the adopted divider
+    d = out['divider_0p1pct']['drift']
+    centre = round((d['threshold_top_max_for_healthy_V'] + d['threshold_bottom_min_for_u9_V']) / 2, 3)
+    width = thr[1] - thr[0]
+    band = [round(centre - width / 2, 4), round(centre + width / 2, 4)]
+    margins = {}
+    for case, tol in r12_budget.PA6_TOL.items():
+        lo, hi = r12_budget.pa6_ratio(tol)
+        margins[case] = dict(healthy_to_trip_top=vmin['healthy'] - band[1] / lo,
+                             trip_bottom_above_u9_turn_off=band[0] / hi - u9_off_d5[case])
+    out['band_derivation'] = dict(
+        room_drift_V=[d['threshold_bottom_min_for_u9_V'], d['threshold_top_max_for_healthy_V']],
+        room_width_drift_V=d['threshold_room_V'], band_width_V=width, centre_V=centre, band_V=band,
+        equals_threshold=[round(x, 4) for x in thr] == band,
+        margins_V=margins, both_limits_clear=all(v > 0 for m in margins.values() for v in m.values()),
+        basis='the 0.1 % drift case: highest top = healthy four-stall VLOGIC minimum x lowest ratio; lowest bottom = '
+              'U9 turn-off VLOGIC through D5 (drift EN chain) x highest ratio; the 30 mV band centred in that room, '
+              'centre rounded to 1 mV (Calculation / Inference as pa6_corners)')
+    out['adopted'] = 'divider_0p1pct with the band_derivation band (owner option (b), round 9 lane B; R12F9-TRI-04)'
     out['parts_0p1pct'] = PA6_PRECISE
     out['label'] = ('Calculation / Inference (as pa6_corners; the 0.1 % parts\' 25 ppm/K drift case Inference); options '
-                    'for the owner, none adopted (O-R12-17)')
+                    'for the owner; option (b) adopted (round 9 lane B, O-R12-17)')
     return out
 
 
