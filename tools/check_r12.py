@@ -32,9 +32,11 @@ S-10: on every copper layer, fills (protected-net fills too) and barrels include
       >= 1.040 mm from every net, copper and fills, but each other, ACT_GATE and their resistors' other ends (V-1 / V-2);
       the FMEA I-5 rails (derived from the netlist, R12F7-TRI-01) keep >= 1.040 mm (pack voltage: RAW_PROTECTED,
       VLOGIC, the converters' switch / bootstrap nodes) or >= 0.300 mm (port voltage: CAM_5V, PORT_4V8, VBUS) from
-      3V3 / 3V3A and every I-5 victim (R12F8-TRI-01: every net reaching 3V3 / 3V3A or an MCU pin through < 5 kohm,
-      derived from the netlist, default-deny; the port class less the FT-only nets of I5_PORT_FT); U403's EN reaches
-      PC12 only through R436 with D436 clamping PC12 (en_guard).
+      3V3 / 3V3A and every I-5 victim (R12F8-TRI-01 / R12F9-TRI-01: every net on or reaching 3V3 / 3V3A, an MCU pin
+      or any other IC pin through < 5 kohm, derived from the netlist, default-deny; the port class less the FT-only
+      input nets of I5_PORT_FT, their direction read from the pin map (R12F9-TRI-02); every rail less the rated IC
+      pins of I5_RATED, checked by i5_rated_guard); the pack-class I-5 DRU rules hold J2 and the test pads at 1.040 mm
+      too (R12F9-TRI-03); U403's EN reaches PC12 only through R436 with D436 clamping PC12 (en_guard).
 W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
@@ -948,6 +950,17 @@ def s10(c, exceptions=None, not_a_path=None):
             issues.append(f'S-10: {where}, below the {floor:.3f} mm floor of its exception ({key}: {fire.WHY[key]})')
         else:
             kept.append(dict(pair=where, floor=floor, exception=key))
+    probes = {}
+    for f in c.board.GetFootprints():                # R12F9-TRI-03: KiCad applies a pad's own clearance in place of the
+        if f.GetReference().startswith('TP'):        # DRU's rules, so a test pad's override carries its net's S-10 floor
+            for p in f.Pads():
+                lc, need = p.GetLocalClearance(), fire.probe_clearance(p.GetNetname())
+                have = mm(lc) if lc is not None else None
+                probes[f'{f.GetReference()}.{p.GetNumber()}'] = (p.GetNetname(), have, need)
+                if have is None or have < need - 1e-9:
+                    issues.append(f'S-10: test pad {f.GetReference()}.{p.GetNumber()} ({p.GetNetname()}) local clearance '
+                                  f'{have} mm, below its S-10 floor {need:g} mm: KiCad would apply it instead of the DRU '
+                                  'rule (R12F9-TRI-03)')
     for (a, b, layer), (floor, key) in sorted(table.items()):
         if (a, b, layer) not in used:
             issues.append(f'S-10: exception {a} to {b} on {layer} ({key}, floor {floor:.3f} mm) is not on the board '
@@ -965,13 +978,14 @@ def s10(c, exceptions=None, not_a_path=None):
     issues += [f'S-10: {m}' for m in en]
     i5, i5_ev = fire.i5_guard(netlist)                                     # R12F7-TRI-01: the FMEA I-5 rails
     issues += [f'S-10: {m}' for m in i5]
-    i5_ev['least'] = {}
+    i5_ev['least'], i5_ev['rated_least'] = {}, {}
     for r in fire_gaps_cache:
-        if r['cls'] in ('i5-pack', 'i5-port'):
+        if r['cls'] in ('i5-pack', 'i5-port', 'i5-rated'):
             k = f'{r["net_a"]} / {r["net_b"]}'
-            if k not in i5_ev['least']:
-                i5_ev['least'][k] = f'{r["gap"]:.4f} mm, {r["a"]} to {r["b"]} on {r["layer"]}'
-    return issues, dict(exceptions=kept, u1_nc_balls=nc, owner_pairs=owner, netlist_classes=classes,
+            at = i5_ev['rated_least' if r['cls'] == 'i5-rated' else 'least']
+            if k not in at:
+                at[k] = f'{r["gap"]:.4f} mm, {r["a"]} to {r["b"]} on {r["layer"]}'
+    return issues, dict(exceptions=kept, u1_nc_balls=nc, owner_pairs=owner, netlist_classes=classes, probe_pads=probes,
                         fire_state=dict(series_ohm=fire_ev, min_ohm=fire.FIRE_SERIES_MIN),
                         pack=dict(pack_ev, min_ohm=fire.PACK_SERIES_MIN, limit=fire.PACK_MIN),
                         pack_flt=dict(flt_ev, min_ohm=fire.PACK_SERIES_MIN),
@@ -1049,6 +1063,17 @@ SINGLE_OPEN_TAPS_R12 = (
     ('3V3A', 'U1.H1', ('R164.2',), "U1's VDDA (ball H1) from R164"),
     ('3V3A', 'C22.1', ('R164.2',), "VDDA's 1 uF C22"),
     ('3V3A', 'U5.1', ('R164.2',), "U5's (barometer) VDD"),
+    # R12F9-TRI-07: R164's 3V3 end (R10 row 22's sensor and ADC supply feed; one via there unpowered all of 3V3A) and
+    # the high-g sensor U6's grounds (R10 R23-GATE-07's IMU-ground tap, carried to the second inertial part)
+    ('3V3', 'R164.1', ('L1.2',), "R164's 3V3 end, the only feed of 3V3A (VDDA, U4, U5)"),
+    ('GND', 'U6.7', ('J1.2',), "U6's (high-g) ground pin 7"),
+    ('GND', 'U6.14', ('J1.2',), "U6's ground pin 14"),
+    ('GND', 'U6.17', ('J1.2',), "U6's exposed pad"),
+    # R12F9-TRI-08: PD10 PORT_SENSE, R12's power-state monitor (R10's PA4 taps, D-R22-02): it gates PC1 (firmware rule 1)
+    # and the port UARTs
+    ('PORT_SENSE', 'U1.H9', ('R111.2', 'R112.1'), "PD10's PORT_4V8 divider tap (open: PD10 floats, Inference)"),
+    ('PORT_4V8', 'R111.1', ('L400.2',), "R111, PD10's divider top (open: PD10 reads low, PC1 refused, ports off)"),
+    ('GND', 'R112.2', ('J1.2',), "R112, PD10's divider bottom (open: PD10 reads PORT_4V8 through R111)"),
 )
 # (tap pad, via label as check_r10.copper_nodes prints it, measured reason): the single points kept on purpose. An entry
 # no longer met (its pads present) fails as stale.
@@ -1082,6 +1107,12 @@ SINGLE_OPEN_EXCEPTIONS_R12 = [
      "west, CAM_5V_SENSE's In2 run at x 26.6 and a GND via east, C32's lands north; measured on the R12F8 lane P board). "
      "Open, the barometer is unpowered: no barometric gain, so the fire rule (LIFTOFF AND a barometric gain) never "
      "fires the primary (fail-safe; the Blue Jay covers recovery)"),
+    # R12F9-TRI-08: PD10's ball H9 escape
+    ('U1.H9', 'via PORT_SENSE (26.20, 56.40)',
+     "PD10's ball H9 escape: " + _DOGBONE + ". Open, PD10 is cut from the R111 / R112 divider and floats (no internal "
+     "pull): its level is undefined (Inference), so R12 firmware rule 1's PC1 and port-UART gate loses its power-state "
+     "input, with VBUS_SENSE (rule 1's cross-check) and the cold screen left; the divider's far via, R111.1's PORT_4V8 "
+     "via and R112.2's GND via each have a second barrel"),
 ]
 
 

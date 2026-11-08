@@ -34,6 +34,8 @@ from pathlib import Path
 import pcbnew
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'm3_design'))
+import r12_fire as fire                 # noqa: E402  (R12F9-TRI-03: a test pad's override carries its S-10 floor)
 PROJECT = ROOT / 'm3_design/r12'
 PLACE = ROOT / 'm3_design/r12_place.tsv'
 REV = 'M3-ASSY-R12'
@@ -178,7 +180,9 @@ def load_parts(board, project, comps, pin_nets, names):
             f.SetAttributes(f.GetAttributes() | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
         for p in f.Pads():
             if ref.startswith('TP'):
-                p.SetLocalClearance(MM(1.0))            # the DRU's TP floor, also a native-fill override (R10)
+                # the DRU's TP floor, also a native-fill override (R10); KiCad applies a pad's own clearance in place of
+                # the DRU's rules, so it carries the S-10 floor of the pad's net when that is larger (R12F9-TRI-03)
+                p.SetLocalClearance(MM(fire.probe_clearance(p.GetNetname())))
             elif ref.startswith(('R', 'C')) and p.GetNetname() == 'GND' and p.GetAttribute() == pcbnew.PAD_ATTRIB_SMD \
                     and max(mm(p.GetSize().x), mm(p.GetSize().y)) <= 2.0:
                 p.SetLocalZoneConnection(pcbnew.ZONE_CONNECTION_THERMAL)   # R10 policy; gap / spoke from the DRU

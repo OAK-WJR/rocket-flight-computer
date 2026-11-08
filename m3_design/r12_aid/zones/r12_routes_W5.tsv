@@ -33,14 +33,11 @@ track	PORT_BST	F	0.3	40.4	67.1	41.6	67.1
 track	PORT_SW	F	0.4	40	68.4	41.7	68.4
 track	PORT_SW	F	0.4	41.7	68.4	42.6	69.3
 track	PORT_SW	F	0.4	42.6	70.1	42.6	73.5
-track	PORT_FB	F	0.2	42.6	65.1	43.4	65.9
-track	PORT_FB	F	0.2	43.6	66	43.6	66.9
 track	PORT_FB_TOP	F	0.15	41.5	65.88	41.8	65.88
 track	PORT_FB_TOP	F	0.15	41.8	65.88	42	65.68
 track	PORT_FB_TOP	F	0.15	42	65.68	42	64.7
 track	PORT_FB_TOP	F	0.15	42	64.7	42.15	64.55
-track	PORT_FB_TOP	F	0.15	42.15	64.55	43.03	64.55
-track	PORT_FB_TOP	F	0.15	43.03	64.55	43.5	65.02
+track	PORT_FB_TOP	F	0.15	42.15	64.55	44.15	64.55
 track	GND	F	0.15	42.5	65.88	42.5	66.2
 track	GND	F	0.15	42.5	66.2	42.25	66.45
 via	GND	-	0.45	40	66.45		
@@ -56,7 +53,7 @@ track	GND	F	0.6	41.125	71.8	40	71.8
 via	GND	-	0.45	40	71.8		
 via	GND	-	0.45	45.2	74.5		
 via	GND	-	0.45	45.2	77.5		
-via	GND	-	0.45	44.25	65.9		
+via	GND	-	0.45	43.3	63.6		
 # --- port buck U400 cell: R12 rows rotated -90 deg about old U400 (32.9, 19.3) to (42.6, 72.0): (dx, dy) -> (-dy, dx) --- D-R12-99: the whole cell then 1.5 mm aft.
 # --- port buck, new: FB_TOP R400.2 -> R404.1 on F round the aft side of R401 (B is W3 AUX lane CX) ---
 # R401.2 GND forward of the resistor row (between it and U400 pins 4-6), west to a GND via clear of CX
@@ -121,6 +118,8 @@ via	PORT_4V8	-	0.45	27.2	81.4
 track	PORT_4V8	F	0.15	41.5	65.02	40.2	65.02
 track	PORT_4V8	F	0.15	40.2	65.02	39.4	65.82
 track	PORT_4V8	F	0.15	39.4	65.82	39.4	77.3
+track	PORT_4V8	F	0.3	27.2	81.4	26.55	81.4
+via	PORT_4V8	-	0.45	26.55	81.4		
 track	GND	F	0.3	28.2	79.87	28.8	79.87
 via	GND	-	0.45	28.8	79.87		
 # 3V3 bulk caps C461 / C23 / C460 east of J430: 3V3 west, GND east, vias clear of the AUX lanes (x 35 / 36)
@@ -142,3 +141,9 @@ via	GND	-	0.45	40.75	66.45
 track	GND	F	0.4	41.65	69.7	41.65	70.65
 via	GND	-	0.45	41.65	70.65		
 track	GND	F	0.4	41.65	70.65	41.65	71.1
+track	GND	F	0.3	28.8	79.87	28.8	79.2
+via	GND	-	0.45	28.8	79.2		
+track	PORT_FB	F	0.2	42.5	65.02	42.89	65.41
+track	PORT_FB	F	0.2	42.89	65.41	44.15	65.41
+track	PORT_FB	F	0.2	43.7	67.15	44.15	66.7
+track	PORT_FB	F	0.2	44.15	66.7	44.15	65.41

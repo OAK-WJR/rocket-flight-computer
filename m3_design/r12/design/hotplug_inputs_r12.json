@@ -1,7 +1,7 @@
 {
   "schema": 3,
-  "board_sha256": "418e5ea985402d00ba8008e9775e037321eddc48683754eba1939744d75f791e",
-  "electrical_sha256": "9750b9617bafcb5016b19718ffb150b80eda4289c7cf58ee6939e45d2a8439f4",
+  "board_sha256": "344ee9e676521cb8a84d8ff29b6563f24d9bd367e561a5542e43de74ff1034e2",
+  "electrical_sha256": "377dc9af30090a6a22b52048d37314b221b32bf59edfb6c5848435510b41aa40",
   "parts": {
     "C10": {
       "value": "22uF 25V X5R 10%",
@@ -1943,7 +1943,7 @@
           "number": "1",
           "net": "RAW_PROTECTED",
           "xy": [
-            19.725,
+            19.775,
             15.6
           ],
           "size": [
@@ -1958,7 +1958,7 @@
           "number": "2",
           "net": "GND",
           "xy": [
-            22.675,
+            22.725,
             15.6
           ],
           "size": [
@@ -2313,7 +2313,7 @@
           "net": "RAW_PROTECTED",
           "xy": [
             20.2,
-            19.1
+            19.2
           ],
           "size": [
             0.8,
@@ -2328,7 +2328,7 @@
           "net": "GND",
           "xy": [
             20.2,
-            17.7
+            17.8
           ],
           "size": [
             0.8,
@@ -2796,7 +2796,7 @@
           "net": "BAT_IN",
           "xy": [
             2.0,
-            27.8
+            27.9
           ],
           "size": [
             1.5,

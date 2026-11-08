@@ -395,6 +395,9 @@ PARALLEL_VIAS_R12 = [
     ('VCAP1', (28.6, 61.05),
      "R12F8-TRI-02: U1.F8 to C19; the barrel sits at the B.Cu lane's bend, joined to C19.1 by a 0.6 mm F.Cu stub, beside "
      "the first barrel (29.4, 61.85) on the 1.13 mm B.Cu diagonal"),
+    ('PORT_SENSE', (26.45, 78.4),
+     "R12F9-TRI-08: PD10's divider end of the B.Cu lane; the barrel sits on the lane 0.72 mm aft of the first (26.45, "
+     "79.12) and joins R111.2 by its own F.Cu run (a 1.06 mm diagonal and 0.72 mm into the pad from the north)"),
 ]
 PARALLEL_VIAS = []
 # Profile r11 (stageC2.md O-C2-5, gate_C2.md): the parallel barrels come from the R11 gate data as pairs, both barrels
