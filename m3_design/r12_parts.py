@@ -262,9 +262,87 @@ def cap_d8():
                          'copper with paste (JLC-placed, D-R12-85)', body, -5.4, name + '.wrl')
 
 
+# J430 push-pull microSD (round 9 lane L, owner decision 2026-11-07: replaces the Molex 472192001 hinge): Molex
+# 104031-0811 (LCSC C585350), 1.42 mm, shielded push-pull, 8 contacts at 1.10 mm, card-detect switch. Land, outline and
+# card from Molex sales drawing SD-104031-001 rev B2 sheet 1 (the LCSC copy for C585350,
+# https://datasheet.lcsc.com/datasheet/pdf/541e9f28cb856b9ee4390625509ae3af.pdf?productCode=C585350; series brief
+# https://static.chipdip.ru/lib/615/DOC034615058.pdf), "RECOMMENDED PCB LAYOUT" (tolerance +/-0.05), read at 600 dpi:
+# x from the socket centre, D from the product line (the card mouth, where the contact tails are) into the body.
+#   contacts 1-7: 0.85 x 1.1 mm, pin 1 centre x +3.105, pitch 1.10 ("7-1.1"), D -0.30 ... +0.80 ("8-1.1", "0.3");
+#   contact 8: 0.75 wide, x -4.92 ... -4.17 ("0.75", "4.17"), 0.25 mm from contact 7 and from G2;
+#   G1 x 4.79 ... 6.34 (1.55), D -0.30 ... 1.05 (1.35); G2 x -6.34 ... -5.17 ("1.17", "5.17"), D -0.30 ... 1.50 ("1.8");
+#   G3 / G4 1.90 x 1.35 at x -4.68 ... -2.78 / 1.29 ... 3.19 ("2-1.9", "2.78", "1.29"), D 10.40 ... 11.75 ("10.4",
+#   "2-1.35"); card-detect switch pads 1.20 x 1.00 at x 5.14 ... 6.34 ("2-5.14", "2-1.2"), D 5.90 ... 6.90 and
+#   9.60 ... 10.60 ("5.9", "9.6", "2-1.0"). G1 ... G4 are the ground (shell) pattern.
+# Body 11.95 x 11.40 mm, 1.42 mm high (sheet 1 top / front views); the inserted card (11.0 mm wide, centred 0.095 mm
+# toward contact 8) reaches 4.0 +/- 0.2 mm beyond the product line, its underside 0.62 +/- 0.20 mm and its top
+# 1.57 +/- 0.20 mm above the board (side view). Pin map (sheet 1 table): 1 DAT2, 2 CD/DAT3, 3 CMD, 4 VDD, 5 CLK, 6 VSS,
+# 7 DAT0, 8 DAT1. JLCEDA's C585350 land (read 2026-11-08) has the same shell and switch pads and 0.7 x 1.2 mm contacts
+# at a uniform 1.1 mm pitch (its contacts 1-7 sit 0.05 mm from the maker's); the maker's land is used.
+# KiCad frame: footprint origin at the socket centre, the product line (mouth) at local y = +5.70, so local
+# y = 5.70 - D; pads numbered as JLCEDA's C585350 land "SIM-SMD_8P-1040310811" (read 2026-11-08), so JLC's CPL
+# matches pad for pad: 1-8 the contacts, 9 G2, 10 G1, 11 the D 5.9-6.9 switch pad, 12 the D 9.6-10.6 switch pad,
+# 13 G4, 14 G3; the switch (11-12) is not connected (round 9 lane L). Reflow rating: not on the drawing or the brief
+# (UNVERIFIED; that it takes JLC's 255 C profile is an Inference, as for 472192001).
+SD_MOUTH = 5.70
+
+
+def _sd_y(d0, d1):
+    return round(SD_MOUTH - (d0 + d1) / 2, 4), round(d1 - d0, 4)
+
+
+SD_PADS = tuple((str(n), round(3.105 - 1.1 * (n - 1), 4), *_sd_y(-0.30, 0.80), 0.85) for n in range(1, 8)) + (
+    ('8', -4.545, *_sd_y(-0.30, 0.80), 0.75),
+    ('9', -5.755, *_sd_y(-0.30, 1.50), 1.17),       # G2
+    ('10', 5.565, *_sd_y(-0.30, 1.05), 1.55),       # G1
+    ('11', 5.74, *_sd_y(5.90, 6.90), 1.20),         # card-detect switch
+    ('12', 5.74, *_sd_y(9.60, 10.60), 1.20),
+    ('13', 2.24, *_sd_y(10.40, 11.75), 1.90),       # G4
+    ('14', -3.73, *_sd_y(10.40, 11.75), 1.90),      # G3
+)
+SD_BODY = (-5.975, -5.70, 5.975, 5.70)
+SD_CARD = (-5.595, SD_MOUTH, 5.405, SD_MOUTH + 4.0)       # card beyond the mouth, nominal
+SD_CARD_TOL, SD_CARD_TOP, SD_BODY_H = 0.2, 1.57 + 0.20, 1.42
+
+
+def sd_pads():
+    """[(num, x, y, w, h)] in the footprint frame."""
+    return [(n, x, y, w, h) for n, x, y, h, w in SD_PADS]
+
+
+def microsd():
+    name = 'M3_MICROSD_MOLEX_104031'
+    pads = sd_pads()
+    body = _rect(SD_BODY[:2], SD_BODY[2:], 'F.Fab', .1)
+    cx0, cy0, cx1, cy1 = SD_CARD
+    body += (_line((cx0, cy0), (cx0, cy1), 'F.Fab', .1) + _line((cx0, cy1), (cx1, cy1), 'F.Fab', .1)
+             + _line((cx1, cy1), (cx1, cy0), 'F.Fab', .1))
+    # courtyard 0.25 mm round the body and lands, following the body's back edge (y -5.95) except where G3 / G4 reach
+    # 0.35 mm past it (y -6.30), so the VCAP caps west of the socket keep their places (round 9 lane L)
+    ext = _pad_extents(pads)
+    x0, x1 = min(p[0] for p in ext) - .25, max(p[0] for p in ext) + .25
+    y1 = max(max(p[1] for p in ext), SD_BODY[3]) + .25
+    yb, yg = SD_BODY[1] - .25, min(p[1] for p in ext) - .25
+    g3 = [p for n, *p in pads if n == '14'][0]
+    g4 = [p for n, *p in pads if n == '13'][0]
+    poly = [(x0, yb)]
+    for x, _, w, _ in (g3, g4):
+        poly += [(x - w / 2 - .25, yb), (x - w / 2 - .25, yg), (x + w / 2 + .25, yg), (x + w / 2 + .25, yb)]
+    poly += [(x1, yb), (x1, y1), (x0, y1)]
+    poly = [(round(x, 4), round(y, 4)) for x, y in poly]
+    body += ''.join(_line(a, b, 'F.CrtYd', .05) for a, b in zip(poly, poly[1:] + poly[:1]))
+    body += _circle((3.105, 6.55), .12, 'F.SilkS', .15)        # contact 1, outside the land, on the card side
+    for num, x, y, w, h in pads:
+        body += _rpad(num, x, y, w, h)
+    return name, make_fp(name, 'Molex 104031-0811 push-pull microSD, 1.42 mm, card-detect switch (C585350); land, body '
+                         'and card from Molex SD-104031-001 sheet 1; contacts 1-8, shell 9 G2 / 10 G1 / 13 G4 / 14 G3, '
+                         'switch 11-12 (JLCEDA numbering); mouth (product line) at local +y; top side only', body, -6.9,
+                         name + '.wrl')
+
+
 def footprints():
     out = {}
-    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, batpads, cap_d8):
+    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, batpads, cap_d8, microsd):
         name, text = maker()
         out[name] = text
     return out
@@ -283,6 +361,10 @@ MODELS = {
     # base 8.3 + 0.2, height 10.5 + 0.5 + 0.3 mm (R10's M3_MA_8x10 allowances applied to the Honor L 10.5; Inference)
     'M3_CAP_D8_SMD.wrl': ('# HV1E477M0810PZ envelope 8.5 x 8.5 x 11.3 mm (Honor CDHV dimension table, R10 allowances). NOT a '
                           'maker model.\n', [(0, 0, 0, 8.5, 8.5, 11.3, GREY)]),
+    # body 11.95 x 11.40 x 1.42 mm (Molex SD-104031-001 sheet 1); the inserted card is fit_check's mated envelope
+    'M3_MICROSD_MOLEX_104031.wrl': ('# Molex 104031-0811 envelope 11.95 x 11.40 x 1.42 mm (SD-104031-001). NOT a maker '
+                                    'model.\n', [(0, 0, 0, SD_BODY[2] - SD_BODY[0], SD_BODY[3] - SD_BODY[1], SD_BODY_H,
+                                                  GREY)]),
 }
 
 
@@ -339,6 +421,15 @@ NEW_SYMBOLS = (
     ('PortSH4', 'J', 'Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) always-on port (D-R19-14, D-R12-31, MicoAir H743 '
      'order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI', 'connector port uart', 7.62, 5.08,
      [P(3.81, '1', 'GND'), P(1.27, '2', '4V8'), P(-1.27, '3', 'TXO'), P(-3.81, '4', 'RXI')], []),
+    # round 9 lane L: the Molex 104031-0811 push-pull microSD (pins: SD-104031-001 sheet 1 pin map; pad numbers as
+    # JLCEDA's C585350 land: shell 9 G2, 10 G1, 13 G4, 14 G3; 11-12 the card-detect switch, not connected)
+    ('MicroSD_PushPull', 'J', 'Molex 104031-0811 push-pull microSD with card-detect switch (C585350): 1 DAT2, 2 CD/DAT3 '
+     '(CS), 3 CMD (DI), 4 VDD, 5 CLK, 6 VSS, 7 DAT0 (DO), 8 DAT1, shell 9 G2 10 G1 13 G4 14 G3, 11-12 card-detect '
+     'switch', 'connector microsd card', 10.16, 10.16,
+     [P(8.89, '1', 'DAT2'), P(6.35, '2', 'CD_DAT3_CS'), P(3.81, '3', 'CMD_DI'), P(1.27, '4', 'VDD', 'power_in'),
+      P(-1.27, '5', 'CLK'), P(-3.81, '6', 'VSS', 'power_in'), P(-6.35, '7', 'DAT0_DO'), P(-8.89, '8', 'DAT1')],
+     [P(8.89, '9', 'G2'), P(6.35, '10', 'G1'), P(3.81, '13', 'G4'), P(1.27, '14', 'G3'), P(-3.81, '11', 'CD_A'),
+      P(-6.35, '12', 'CD_B')]),
     ('PortSH6', 'J', 'Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) always-on GPS port (D-R19-14, D-R12-31, MicoAir H743 '
      'GPS order): 1 GND, 2 PORT_4V8, 3 board TXO, 4 board RXI, 5-6 unused (the H743\'s I2C pins, NC on R12)',
      'connector port uart gps', 7.62, 7.62,
@@ -502,6 +593,10 @@ def geometry_checks():
     assert all(abs(abs(v[1]) - 1.149) < .002 and v[2:] == [.532, 1.072] for v in sot6.values())
     xtal = result['CRYSTAL-SMD_4P-L3.2-W2.5-BL']             # YXC YSX321SL suggested layout: 1.4 x 1.2, 0.8 / 0.5 gaps
     assert all(abs(abs(v[0]) - 1.1) < 1e-6 and abs(abs(v[1]) - .85) < 1e-6 and v[2:] == [1.4, 1.2] for v in xtal.values())
+    sd = result['M3_MICROSD_MOLEX_104031']             # round 9 lane L: Molex SD-104031-001 land
+    assert sd == {n: [x, y, w, h] for n, x, y, w, h in sd_pads()} and len(sd) == 14
+    assert sd['1'][:2] == [3.105, 5.45] and sd['8'] == [-4.545, 5.45, .75, 1.1] and sd['10'][2:] == [1.55, 1.35]
+    assert all(round(sd[str(n)][0] - sd[str(n + 1)][0], 4) == 1.1 for n in range(1, 7))
     bga = result['M3_TFBGA100_8x8_P0.8']
     assert len(bga) == 100 and bga['A1'] == [-3.6, -3.6, .4, .4]
     return result

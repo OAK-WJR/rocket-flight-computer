@@ -18,13 +18,7 @@ via	CAM_PWR_EN	-	0.45	25.4	52.4
 via	SERVO2_MCU	-	0.45	27.4	52.6		
 via	VBUS_SENSE	-	0.45	30.6	53		
 # east: AUX lane CX, QSPI (tight quadrant fallback b, CLK F only)
-via	GND	-	0.45	40	55.2		
-via	QSPI_IO1	-	0.45	29.6	57.6		
-via	QSPI_IO1	-	0.45	37	63.23		
-via	QSPI_IO2	-	0.45	21.4	50.8		
 via	GND	-	0.45	22.2	50.8		
-via	GND	-	0.45	36.6	60.7		
-via	GND	-	0.45	36.2	63.9		
 # VCAP1 / VCAP2 to C19 / C20 on B
 via	VCAP2	-	0.45	24.6	54		
 via	VCAP2	-	0.45	27.8	61.85		
@@ -35,23 +29,7 @@ via	GND	-	0.45	29.4	58.5
 # forward: CF port-UART bus on B under J430
 via	PORT_SENSE	-	0.45	26.2	56.4		
 # microSD: SD_CS / SD_MOSI hop on B under the pocket, SD_SCK / SD_MISO on F
-via	SD_CS	-	0.45	21	58.4		
-via	SD_CS	-	0.45	18.445	64.155		
 via	GND	-	0.45	23	55.6		
-via	SD_MOSI	-	0.45	23.8	55.6		
-via	SD_MOSI	-	0.45	19.6	64.2		
-via	GND	-	0.45	18.445	65		
-via	3V3	-	0.45	16	61.87		
-via	3V3	-	0.45	20.095	67.4		
-via	GND	-	0.45	22.295	67.4		
-via	GND	-	0.45	13.125	64.9		
-via	GND	-	0.45	26.875	64.9		
-via	GND	-	0.45	13.125	76.2		
-via	GND	-	0.45	26.875	76.2		
-via	3V3	-	0.45	30.2	64.5		
-via	3V3	-	0.45	32.5	66.48		
-via	GND	-	0.45	32.5	67.32		
-via	3V3	-	0.45	37.2	68.2		
 # west face: power dog-bones, LEDs, ARM1, VLOGIC / CAM / NRST sense, 3V3A, decouplers
 via	3V3	-	0.45	19.8	50.8		
 via	GND	-	0.45	19.8	52.4		
@@ -82,7 +60,6 @@ via	3V3	-	0.45	16.5	59.3
 via	GND	-	0.45	14.3	57.78		
 via	3V3	-	0.45	13.18	60.75		
 via	GND	-	0.45	14.02	60.75		
-via	BUZZ_DRV	-	0.45	12	61		
 via	GND	-	0.45	14	46.4		
 track	HSE_IN	F	0.1	19.4	52	16.2	52
 track	PYRO1_CONT	F	0.1	19.4	54.4	17.2	54.4
@@ -148,46 +125,8 @@ track	VBUS_SENSE	F	0.1	26.2	53.2	30.4	53.2
 track	VBUS_SENSE	F	0.1	30.4	53.2	30.6	53
 track	VBUS_SENSE	B	0.15	30.6	53	30.6	52.2
 track	VBUS_SENSE	B	0.15	30.6	52.2	30.8	52
-track	QSPI_CLK	F	0.1	22.6	55.2	23	54.8
-track	QSPI_CLK	F	0.1	23	54.8	33	54.8
-track	QSPI_CLK	F	0.1	33	54.8	33.4	55.2
-track	QSPI_CLK	F	0.1	33.4	55.2	33.4	61.57
-track	QSPI_CLK	F	0.1	33.4	61.57	33	61.97
-track	QSPI_CLK	F	0.1	33	61.97	31.67	61.97
-track	QSPI_IO0	F	0.1	25.8	55.2	26.2	55.6
-track	QSPI_IO0	F	0.1	26.2	55.6	32.6	55.6
-track	QSPI_IO0	F	0.1	32.6	55.6	33	56
-track	QSPI_IO0	F	0.1	33	56	33	59.37
-track	QSPI_IO0	F	0.1	33	59.37	31.67	60.7
-track	QSPI_IO3	F	0.1	26.6	56.8	29.8	56.8
-track	QSPI_IO3	F	0.1	29.8	56.8	30.2	57.2
-track	QSPI_IO3	F	0.1	30.2	57.2	30.2	62.93
-track	QSPI_IO3	F	0.1	30.2	62.93	30.5	63.23
-track	QSPI_IO3	F	0.1	30.5	63.23	31.67	63.23
-track	QSPI_IO1	F	0.1	26.6	57.6	29.6	57.6
-track	QSPI_IO1	B	0.1	29.6	57.6	35.8	57.6
-track	QSPI_IO1	F	0.1	37	63.23	38.73	63.23
-track	QSPI_IO2	F	0.1	21	50.4	21.4	50.8
-track	QSPI_IO2	B	0.1	21.4	50.8	21.8	51.2
-track	GND	F	0.3	38.73	60.7	36.6	60.7
-track	QSPI_NCS	F	0.1	24.2	56.8	23.8	57.2
 # D-R12-99 (90 mm outline): QSPI_NCS passes aft of the moved pull-up row (y 60.9), forward between C20 and J430
 # (x 26.6), aft of J430 (y 63.0) and up x 29.4 west of the QSPI_IO3 / 3V3 copper to its old y 65.9 run.
-track	QSPI_NCS	F	0.1	23.8	57.2	23.8	60.1
-track	QSPI_NCS	F	0.1	23.8	60.1	24.6	60.9
-track	QSPI_NCS	F	0.1	24.6	60.9	26.2	60.9
-track	QSPI_NCS	F	0.1	26.2	60.9	26.6	61.3
-track	QSPI_NCS	F	0.1	26.6	61.3	26.6	62.6
-track	QSPI_NCS	F	0.1	26.6	62.6	27	63
-track	QSPI_NCS	F	0.1	27	63	29	63
-track	QSPI_NCS	F	0.1	29	63	29.4	63.4
-track	QSPI_NCS	F	0.1	29.4	63.4	29.4	65.5
-track	QSPI_NCS	F	0.1	29.4	65.5	29.8	65.9
-track	QSPI_NCS	F	0.1	29.8	65.9	37.2	65.9
-track	QSPI_NCS	F	0.1	37.2	65.9	37.2	66.57
-track	QSPI_NCS	F	0.1	37.2	65.9	37.2	64.9
-track	QSPI_NCS	F	0.1	37.2	64.9	37.6	64.5
-track	QSPI_NCS	F	0.1	37.6	64.5	38.73	64.5
 track	VCAP2	F	0.1	24.2	53.6	24.6	54
 track	VCAP2	B	0.2	24.6	54	24.6	54.8
 track	VCAP2	B	0.2	24.6	54.8	25	55.2
@@ -209,57 +148,13 @@ via	VCAP1	-	0.45	28.6	61.05
 track	VCAP1	F	0.3	28.6	61.05	29.2	61.05
 track	GND	F	0.3	27.8	59.5	27.8	58.5
 track	GND	F	0.3	29.4	59.5	29.4	58.5
-track	RADIO_TX_MCU	F	0.1	25	56.8	24.6	57.2
-track	GPS_RX_MCU	F	0.1	25.8	56.8	25.4	57.2
 track	PORT_SENSE	F	0.1	25.8	56	26.2	56.4
 # D-R12-99 (90 mm outline): CX turns west at y 66.4 / 66.8 (forward of U3, aft of the port buck) and runs north at
 # the series-resistor x (35 / 36) to vias at y 80.0; F tails to R471 / R470.
-via	AUX_RX_MCU	-	0.45	36	78.4		
-track	AUX_RX_MCU	F	0.2	36	78.4	36	79.92
-via	GND	-	0.45	35.5	77.55		
-via	AUX_TX_MCU	-	0.45	35	78.1		
-track	AUX_TX_MCU	F	0.2	35	78.1	35	79.92
-track	SD_CS	F	0.1	21	57.6	21	58.4
-track	SD_CS	B	0.1	21	58.4	19.85	58.4
-track	SD_CS	B	0.1	19.85	58.4	19.25	59
-track	SD_CS	B	0.1	19.25	59	19.25	60.9
-track	SD_CS	B	0.1	19.25	60.9	18.445	61.705
-track	SD_CS	B	0.1	18.445	61.705	18.445	64.155
-track	SD_CS	F	0.1	18.445	64.155	17.89	64.155
-track	SD_CS	F	0.1	17.89	64.155	17.89	69
-track	SD_CS	F	0.1	17.89	64.155	17.89	62.73
-track	SD_MOSI	F	0.1	24.2	55.2	23.8	55.6
-track	SD_MOSI	B	0.1	23.8	55.6	23.4	56
-track	SD_MOSI	B	0.1	23.4	56	23.4	60.2
-track	SD_MOSI	B	0.1	23.4	60.2	23	60.6
-track	SD_MOSI	B	0.1	23	60.6	20	60.6
-track	SD_MOSI	B	0.1	20	60.6	19.6	61
-track	SD_MOSI	B	0.1	19.6	61	19.6	64.2
-track	SD_MOSI	F	0.1	19.6	64.2	19	64.2
-track	SD_MOSI	F	0.1	19	64.2	19	69
-track	SD_MOSI	F	0.1	19	64.2	19	62.73
-track	SD_MISO	F	0.1	23.4	57.6	23.4	60.9
-track	SD_MISO	F	0.1	23.4	60.9	22.9	61.4
-track	SD_MISO	F	0.1	22.9	61.4	22.9	62.24
-track	SD_MISO	F	0.1	22.9	62.24	23.39	62.73
-track	SD_MISO	F	0.1	23.39	62.73	23.39	69
-track	SD_SCK	F	0.1	23.4	56.8	23	57.2
-track	SD_SCK	F	0.1	23	57.2	23	60.5
-track	SD_SCK	F	0.1	23	60.5	21.2	62.3
-track	SD_SCK	F	0.1	21.2	62.3	21.2	69
-track	SD_DAT2	F	0.15	16.8	62.73	16.8	69
-track	SD_DAT1	F	0.15	24.5	62.73	24.5	69
-track	3V3	F	0.3	16	61.87	19	61.87
-track	3V3	F	0.3	20.095	69	20.095	67.4
-track	GND	F	0.3	22.295	69	22.295	67.4
-track	GND	F	0.4	13.125	66.4	13.125	64.9
-track	GND	F	0.4	26.875	66.4	26.875	64.9
-track	GND	F	0.4	13.125	74.7	13.125	76.2
-track	GND	F	0.4	26.875	74.7	26.875	76.2
-track	3V3	F	0.3	31.67	64.5	30.2	64.5
-track	3V3	F	0.3	31.7	66.48	32.5	66.48
-track	GND	F	0.3	31.7	67.32	32.5	67.32
-track	3V3	F	0.3	37.2	67.43	37.2	68.2
+via	AUX_RX_MCU	-	0.45	36	75.4		
+track	AUX_RX_MCU	F	0.2	36	75.4	36	76.92
+via	AUX_TX_MCU	-	0.45	35	75.1		
+track	AUX_TX_MCU	F	0.2	35	75.1	35	76.92
 track	3V3	F	0.1	20.2	51.2	19.8	50.8
 track	GND	F	0.1	20.2	52	19.8	52.4
 track	3V3	F	0.1	20.2	52.8	20.6	53.2
@@ -326,13 +221,6 @@ track	3V3	F	0.25	13.18	60	13.18	60.75
 track	GND	F	0.25	14.02	60	14.02	60.75
 track	GND	F	0.25	12.2	56.98	13.5	56.98
 track	GND	F	0.25	13.5	56.98	14.3	57.78
-track	BUZZ_DRV	F	0.15	22.6	56.8	22.2	57.2
-track	BUZZ_DRV	F	0.15	22.2	57.2	22.2	60.9
-track	BUZZ_DRV	F	0.15	22.2	60.9	21.8	61.3
-track	BUZZ_DRV	F	0.15	21.8	61.3	12.3	61.3
-track	BUZZ_DRV	F	0.15	12.3	61.3	12	61
-track	BUZZ_DRV	B	0.2	12	61	12	60.5
-track	BUZZ_DRV	B	0.2	12	60.5	11.7	60.2
 track	GND	F	0.1	15.83	46.6	15.83	46.35
 track	GND	F	0.1	15.83	46.35	15.63	46.15
 track	GND	F	0.1	15.63	46.15	14.25	46.15
@@ -386,16 +274,6 @@ track	ACT_EN_MCU	B	0.1	16.4	45.9	17.1	45.2
 # D-R12-98 integration: E4-E6 GND tie to (22.2, 50.8); IO2 lane clear of non-3V3 vias
 track	GND	F	0.15	21.8	53.6	22.2	53.2
 track	GND	F	0.15	22.2	53.2	22.2	50.8
-track	QSPI_IO2	B	0.1	21.8	51.2	21.8	53.1
-track	QSPI_IO2	B	0.1	21.8	53.1	22.2	53.5
-track	QSPI_IO2	B	0.1	22.2	53.5	36.6	53.5
-track	QSPI_IO2	B	0.1	36.6	53.5	37.1	54
-track	QSPI_IO2	B	0.1	37.1	54	37.1	61.97
-via	QSPI_IO2	-	0.45	37.1	61.97		
-track	QSPI_IO2	F	0.1	37.1	61.97	38.73	61.97
-track	QSPI_IO1	B	0.1	35.8	57.6	36.1	57.9
-track	QSPI_IO1	B	0.1	36.1	57.9	36.1	62.33
-track	QSPI_IO1	B	0.1	36.1	62.33	37	63.23
 track	SERVO3_MCU	F	0.1	25.8	52.8	26.2	52.4
 via	SERVO3_MCU	-	0.45	26.2	52.4		
 track	SERVO3_MCU	B	0.15	26.2	52.4	27	53.2
@@ -405,43 +283,29 @@ track	CAM_PWR_EN	B	0.15	25.85	51.95	27.95	51.95
 track	CAM_PWR_EN	B	0.15	27.95	51.95	28.2	51.7
 track	CAM_PWR_EN	B	0.15	28.2	51.7	28.2	45.4
 # D-R12-98 integration: port UART dives at the J8 / J9 dog-bones and two K-row vias, 0.5 mm B pitch (every lane >= 0.5 mm from a foreign via); one GND via (25.225, 58.1) partners all four
-via	RADIO_TX_MCU	-	0.45	24.6	57.2		
-track	RADIO_TX_MCU	B	0.1	24.6	57.2	24.3	57.5
-track	RADIO_TX_MCU	B	0.1	24.3	57.5	24.3	78.2
-track	RADIO_TX_MCU	B	0.1	24.3	78.2	23.9	78.6
-track	RADIO_TX_MCU	B	0.1	23.9	78.6	12	78.6
-via	RADIO_TX_MCU	-	0.45	12	78.6		
-track	RADIO_TX_MCU	F	0.2	12	78.6	12	79.92
+track	RADIO_TX_MCU	B	0.1	24.3	75.2	23.9	75.6
 track	RADIO_RX_MCU	F	0.1	25	57.6	24.8	57.8
 track	RADIO_RX_MCU	F	0.1	24.8	57.8	24.8	58.8
 via	RADIO_RX_MCU	-	0.45	24.8	58.8		
-track	RADIO_RX_MCU	B	0.1	24.8	58.8	24.8	78.7
-track	RADIO_RX_MCU	B	0.1	24.8	78.7	24.4	79.1
-track	RADIO_RX_MCU	B	0.1	24.4	79.1	13	79.1
-via	RADIO_RX_MCU	-	0.45	13	79.1		
-track	RADIO_RX_MCU	F	0.2	13	79.1	13	79.92
-via	GND	-	0.45	12.6	78		
-via	GPS_RX_MCU	-	0.45	25.4	57.2		
-track	GPS_RX_MCU	B	0.1	25.4	57.2	25.8	57.6
-track	GPS_RX_MCU	B	0.1	25.8	57.6	25.8	80
-via	GPS_RX_MCU	-	0.45	25.8	80		
-track	GPS_RX_MCU	F	0.2	25.8	80	23.5	80
-via	GND	-	0.45	25.95	80.7		
+track	RADIO_RX_MCU	B	0.1	24.8	58.8	24.8	75.7
+track	RADIO_RX_MCU	B	0.1	24.8	75.7	24.4	76.1
+track	RADIO_RX_MCU	B	0.1	24.4	76.1	13	76.1
+via	RADIO_RX_MCU	-	0.45	13	76.1		
+track	RADIO_RX_MCU	F	0.2	13	76.1	13	76.92
+via	GPS_RX_MCU	-	0.45	25.8	77		
+track	GPS_RX_MCU	F	0.2	25.8	77	23.5	77
+via	GND	-	0.45	25.95	77.7		
 via	GPS_TX_MCU	-	0.45	25.29	59.41		
 track	PORT_SENSE	B	0.1	26.2	56.4	26.45	56.65
 via	GND	-	0.45	25.225	58.15		
-track	GPS_TX_MCU	F	0.2	23.02	79.4	22.5	79.92
-via	PORT_SENSE	-	0.45	26.45	79.12		
-track	PORT_SENSE	F	0.1	26.45	79.12	27.2	79.87
-via	PORT_SENSE	-	0.45	26.45	78.4		
-track	PORT_SENSE	F	0.1	26.45	78.4	27.2	79.15
-track	PORT_SENSE	F	0.1	27.2	79.15	27.2	79.87
-track	PORT_SENSE	B	0.1	26.45	56.65	26.45	78.4
-track	PORT_SENSE	B	0.1	26.45	78.4	26.45	79.12
-via	3V3	-	0.45	23.85	61.2		
-track	3V3	F	0.3	23.39	61.87	23.85	61.87
-track	3V3	F	0.3	23.85	61.87	24.5	61.87
-track	3V3	F	0.3	23.85	61.87	23.85	61.2
+track	GPS_TX_MCU	F	0.2	23.02	76.4	22.5	76.92
+via	PORT_SENSE	-	0.45	26.45	76.12		
+track	PORT_SENSE	F	0.1	26.45	76.12	27.2	76.87
+via	PORT_SENSE	-	0.45	26.45	75.4		
+track	PORT_SENSE	F	0.1	26.45	75.4	27.2	76.15
+track	PORT_SENSE	F	0.1	27.2	76.15	27.2	76.87
+track	PORT_SENSE	B	0.1	26.45	56.65	26.45	75.4
+track	PORT_SENSE	B	0.1	26.45	75.4	26.45	76.12
 track	SERVO1_MCU	F	0.1	25	50.4	25.2	50.2
 track	SERVO1_MCU	F	0.1	25.2	50.2	25.2	47.6
 via	SERVO1_MCU	-	0.45	25.2	47.6		
@@ -480,24 +344,9 @@ track	SPI1_MISO	F	0.1	23.4	50.4	23.4	48.6
 track	SPI1_MISO	F	0.1	23.4	48.6	23	48.2
 track	SPI1_MISO	F	0.1	23	48.2	23	45.4
 # AVA pass: AUX pair dives beside U3 (x 37.9 / 38.9), one GND partner (37.9, 52.95); B lanes 1.0 mm pitch turn together at y 65.4 / 66.4
-via	AUX_RX_MCU	-	0.45	38.9	53.6		
-via	AUX_TX_MCU	-	0.45	37.9	54.4		
-via	GND	-	0.45	37.9	52.95		
-track	AUX_RX_MCU	F	0.2	26.6	53.6	38.9	53.6
-track	AUX_TX_MCU	F	0.2	26.6	54.4	37.9	54.4
-track	AUX_RX_MCU	B	0.2	38.9	53.6	38.9	65.4
-track	AUX_RX_MCU	B	0.2	38.9	65.4	37.9	66.4
-track	AUX_RX_MCU	B	0.2	37.9	66.4	36.4	66.4
-track	AUX_RX_MCU	B	0.2	36.4	66.4	36	66.8
-track	AUX_RX_MCU	B	0.2	36	66.8	36	78.4
-track	AUX_TX_MCU	B	0.2	37.9	54.4	37.9	65
-track	AUX_TX_MCU	B	0.2	37.9	65	37.5	65.4
-track	AUX_TX_MCU	B	0.2	37.5	65.4	36	65.4
-track	AUX_TX_MCU	B	0.2	36	65.4	35	66.4
-track	AUX_TX_MCU	B	0.2	35	66.4	35	78.1
-track	GPS_TX_MCU	B	0.1	25.29	59.41	25.29	79.4
-via	GPS_TX_MCU	-	0.45	25.29	79.4		
-track	GPS_TX_MCU	F	0.2	25.29	79.4	23.02	79.4
+track	GPS_TX_MCU	B	0.1	25.29	59.41	25.29	76.4
+via	GPS_TX_MCU	-	0.45	25.29	76.4		
+track	GPS_TX_MCU	F	0.2	25.29	76.4	23.02	76.4
 # R12F5-TRI-01 (S-10, lane P): C13 turned to 0 degrees at (17.4, 50.0), GND pad toward PE4's lane, its 3V3 via west of
 # the VLOGIC_SENSE In2 lane at (15.05, 50.45), where In2's 3V3 joins the main sheet (the strip between the VLOGIC_SENSE
 # and NRST lanes is closed): C13.1 and the via keep >= 1.06 mm from PYRO1_GATE_N (0.48 / 0.53 mm).
@@ -513,3 +362,168 @@ via	GND	-	0.45	14	45.75
 # since D-R12-121 moved the via).
 track	GPS_TX_MCU	F	0.1	25.8	57.6	25.8	58.9
 track	GPS_TX_MCU	F	0.1	25.8	58.9	25.29	59.41
+# --- round 9 lane L
+# QSPI to U3 (38.5, 54.45) rot 90: west pins IO0 52.545 / CLK 53.815 / IO3 55.085 / VCC 56.355 at x 34.97, east GND / IO2 / IO1 / NCS at x 42.03
+track	QSPI_CLK	F	0.1	22.6	55.2	23	54.8
+track	QSPI_CLK	F	0.1	23	54.8	32.86	54.8
+track	QSPI_CLK	F	0.1	32.86	54.8	33.845	53.815
+track	QSPI_CLK	F	0.1	33.845	53.815	34.97	53.815
+track	QSPI_IO0	F	0.1	25.8	55.2	26.2	55.6
+track	QSPI_IO0	F	0.1	26.2	55.6	32.7	55.6
+track	QSPI_IO0	F	0.1	32.7	55.6	33.85	54.45
+track	QSPI_IO0	F	0.1	33.85	54.45	36.1	54.45
+track	QSPI_IO0	F	0.1	36.1	54.45	36.3	54.25
+track	QSPI_IO0	F	0.1	36.3	54.25	36.3	53.245
+track	QSPI_IO0	F	0.1	36.3	53.245	35.6	52.545
+track	QSPI_IO3	F	0.1	26.6	56.8	32.13	56.8
+track	QSPI_IO3	F	0.1	32.13	56.8	33.845	55.085
+track	QSPI_IO3	F	0.1	33.845	55.085	34.97	55.085
+track	QSPI_IO1	F	0.1	26.6	57.6	29.4	57.6
+track	QSPI_IO1	F	0.1	29.4	57.6	29.6	57.8
+via	QSPI_IO1	-	0.45	29.6	57.8		
+track	QSPI_IO1	B	0.1	29.6	57.8	29.8	57.6
+track	QSPI_IO1	B	0.1	29.8	57.6	39.6	57.6
+track	QSPI_IO1	B	0.1	39.6	57.6	40.35	56.85
+track	QSPI_IO1	B	0.1	40.35	56.85	40.35	55.6
+via	QSPI_IO1	-	0.45	40.35	55.6		
+track	QSPI_IO1	F	0.1	40.35	55.6	40.865	55.085
+track	QSPI_IO1	F	0.1	40.865	55.085	42.03	55.085
+track	QSPI_IO2	F	0.1	21	50.4	21.4	50.8
+via	QSPI_IO2	-	0.45	21.4	50.8		
+track	QSPI_IO2	B	0.1	21.4	50.8	21.8	51.2
+track	QSPI_IO2	B	0.1	21.8	51.2	21.8	53.1
+track	QSPI_IO2	B	0.1	21.8	53.1	22.2	53.5
+track	QSPI_IO2	B	0.1	22.2	53.5	39.95	53.5
+track	QSPI_IO2	B	0.1	39.95	53.5	40.25	53.2
+via	QSPI_IO2	-	0.45	40.25	53.2		
+track	QSPI_IO2	F	0.1	40.25	53.2	40.865	53.815
+track	QSPI_IO2	F	0.1	40.865	53.815	42.03	53.815
+track	QSPI_NCS	F	0.1	24.2	56.8	24.6	57.2
+track	QSPI_NCS	F	0.1	24.6	57.2	39.75	57.2
+track	QSPI_NCS	F	0.1	39.75	57.2	40.595	56.355
+track	QSPI_NCS	F	0.1	40.595	56.355	42.03	56.355
+track	QSPI_NCS	F	0.1	37.17	57.2	37.17	58.05
+track	GND	F	0.3	42.03	52.545	40.595	52.545
+track	GND	F	0.3	40.595	52.545	40.25	52.2
+via	GND	-	0.45	40.25	52.2		
+track	3V3	F	0.3	34.97	56.355	33.25	56.355
+via	3V3	-	0.45	33.25	56.355		
+track	3V3	F	0.3	34.18	58.05	33.4	58.05
+via	3V3	-	0.45	33.4	58.05		
+track	GND	F	0.3	35.02	58.05	35.9	58.05
+via	GND	-	0.45	35.9	58.05		
+track	3V3	F	0.3	38.03	58.05	38.75	58.05
+via	3V3	-	0.45	38.75	58.05		
+# port UART dog-bones J8 / J9 moved to the H/J sites so QSPI_NCS takes the J/K channel east
+track	RADIO_TX_MCU	F	0.1	25	56.8	24.6	56.4
+via	RADIO_TX_MCU	-	0.45	24.6	56.4		
+track	RADIO_TX_MCU	B	0.1	24.6	56.4	24.3	56.7
+track	RADIO_TX_MCU	B	0.1	24.3	56.7	24.3	75.2
+track	GPS_RX_MCU	F	0.1	25.8	56.8	25.4	56.4
+via	GPS_RX_MCU	-	0.45	25.4	56.4		
+track	GPS_RX_MCU	B	0.1	25.4	56.4	25.8	56.8
+track	GPS_RX_MCU	B	0.1	25.8	56.8	25.8	77
+via	GND	-	0.45	24.6	55.6		
+# AUX: F east, B under U3, south along x 43.1 / 43.6 under the card overhang, west to the J440 hand-off vias
+track	AUX_RX_MCU	F	0.2	26.6	53.6	31.05	53.6
+track	AUX_RX_MCU	F	0.2	31.05	53.6	31.41	53.96
+via	AUX_RX_MCU	-	0.45	31.41	53.96		
+track	AUX_RX_MCU	B	0.2	31.41	53.96	41.1	53.96
+track	AUX_RX_MCU	B	0.2	41.1	53.96	41.45	54.31
+track	AUX_TX_MCU	F	0.2	26.6	54.4	29.6	54.4
+track	AUX_TX_MCU	F	0.2	29.6	54.4	29.8	54.2
+via	AUX_TX_MCU	-	0.45	29.8	54.2		
+track	AUX_TX_MCU	B	0.2	29.8	54.2	30.4	54.8
+track	AUX_TX_MCU	B	0.2	30.4	54.8	40.6	54.8
+track	AUX_TX_MCU	B	0.2	40.6	54.8	40.95	55.15
+via	GND	-	0.45	29.2	55.2		
+via	GND	-	0.45	32.1	52.7		
+# microSD J430 (36, 65.15) rot 90: contacts at x 40.90-42.00, pin n at y 62.045 + 1.1 (n - 1) (pin 8 69.695)
+track	3V3	F	0.3	41.45	65.345	40.45	65.345
+via	3V3	-	0.45	40.45	65.345		
+track	GND	F	0.3	41.45	67.545	40.45	67.545
+via	GND	-	0.45	40.45	67.545		
+track	GND	F	0.3	41.325	59.585	42.55	59.585
+via	GND	-	0.45	42.55	59.585		
+track	GND	F	0.3	41.1	70.905	42.55	70.905
+via	GND	-	0.45	42.55	70.905		
+track	GND	F	0.3	30.625	68.88	31.85	68.88
+via	GND	-	0.45	31.85	68.88		
+track	GND	F	0.3	30.625	62.91	29.4	62.91
+via	GND	-	0.45	29.4	62.91		
+via	GND	-	0.45	39.45	62.6		
+via	GND	-	0.45	33.2	64.2		
+via	GND	-	0.45	31.6	67.2		
+track	3V3	F	0.2	21.86	63.6	21.86	64.5
+via	3V3	-	0.45	21.86	64.5		
+track	SD_MOSI	F	0.1	24.2	55.2	23.8	55.6
+track	SD_MOSI	F	0.1	23.8	55.6	23.8	59.9
+track	SD_MOSI	F	0.1	23.8	59.9	25.8	61.9
+track	SD_MOSI	F	0.1	25.8	61.9	25.8	64.2
+track	SD_MOSI	F	0.1	25.8	64.2	26.2	64.6
+track	SD_MOSI	F	0.1	26.2	64.6	39.5	64.6
+track	SD_MOSI	F	0.1	39.5	64.6	39.855	64.245
+track	SD_MOSI	F	0.1	39.855	64.245	41.45	64.245
+track	3V3	F	0.2	26.66	64	26.66	63.44
+track	3V3	F	0.2	26.66	63.44	26.9	63.2
+via	3V3	-	0.45	26.9	63.2		
+track	3V3	F	0.2	23.54	62.5	23.54	63.4
+via	3V3	-	0.45	23.54	63.4		
+track	SD_DAT2	F	0.1	41.45	62.045	33.6	62.045
+track	SD_DAT2	F	0.1	33.6	62.045	31.595	64.05
+track	SD_DAT2	F	0.1	31.595	64.05	29.03	64.05
+track	3V3	F	0.2	28.17	64.05	27.3	64.05
+via	3V3	-	0.45	27.3	64.05		
+via	GND	-	0.45	10.9	76.6		
+via	GND	-	0.45	14	76.75		
+# BUZZ_DRV: B from (22.2, 60.9) west under C22 / C14 to the W5 hand-off (SD_CS crosses on F)
+track	BUZZ_DRV	F	0.15	22.6	56.8	22.2	57.2
+track	BUZZ_DRV	F	0.15	22.2	57.2	22.2	60.9
+via	BUZZ_DRV	-	0.45	22.2	60.9		
+track	BUZZ_DRV	B	0.2	22.2	60.9	21.8	61.3
+track	BUZZ_DRV	B	0.2	21.8	61.3	12.3	61.3
+track	BUZZ_DRV	B	0.2	12.3	61.3	11.2	60.2
+via	GND	-	0.45	39.5	55.9		
+track	SD_CS	F	0.1	41.45	63.145	40.45	63.145
+via	SD_CS	-	0.45	40.45	63.145		
+track	SD_CS	B	0.1	40.45	63.145	31	63.145
+track	SD_CS	B	0.1	31	63.145	30.6	63.545
+track	SD_CS	B	0.1	30.6	63.545	30.6	67.2
+via	SD_CS	-	0.45	30.6	67.2		
+track	SD_CS	F	0.1	30.6	67.2	21.4	67.2
+track	SD_CS	F	0.1	21.4	67.2	21	66.8
+track	SD_CS	F	0.1	21	66.8	21	57.6
+track	SD_MISO	F	0.1	23.4	57.6	23.4	59.9
+track	SD_MISO	F	0.1	23.4	59.9	24.4	60.9
+track	SD_MISO	F	0.1	24.4	60.9	24.4	64.8
+track	SD_MISO	F	0.1	24.4	64.8	24.8	65.2
+track	SD_MISO	F	0.1	24.8	65.2	32.4	65.2
+via	SD_MISO	-	0.45	32.4	65.2		
+track	SD_MISO	B	0.1	32.4	65.2	35.845	68.645
+track	SD_MISO	B	0.1	35.845	68.645	40.45	68.645
+via	SD_MISO	-	0.45	40.45	68.645		
+track	SD_MISO	F	0.1	40.45	68.645	41.45	68.645
+track	SD_SCK	F	0.1	23.4	56.8	23	57.2
+track	SD_SCK	F	0.1	23	57.2	23	65
+track	SD_SCK	F	0.1	23	65	23.8	65.8
+track	SD_SCK	F	0.1	23.8	65.8	39.4	65.8
+track	SD_SCK	F	0.1	39.4	65.8	40.045	66.445
+track	SD_SCK	F	0.1	40.045	66.445	41.45	66.445
+track	SD_DAT1	F	0.1	41.45	69.695	35.5	69.695
+track	SD_DAT1	F	0.1	35.5	69.695	32.205	66.4
+track	SD_DAT1	F	0.1	32.205	66.4	29.03	66.4
+track	3V3	F	0.2	28.17	66.4	27.3	66.4
+via	3V3	-	0.45	27.3	66.4		
+# --- round 9 lane L, 85 mm frame
+# AUX diagonals south-west under J430 to the J440 hand-off vias (85 mm board)
+track	AUX_TX_MCU	B	0.2	40.95	55.15	40.95	69.15
+track	AUX_TX_MCU	B	0.2	40.95	69.15	35	75.1
+track	AUX_RX_MCU	B	0.2	41.45	54.31	41.45	69.95
+track	AUX_RX_MCU	B	0.2	41.45	69.95	36	75.4
+# RADIO_TX hand-off via 0.4 mm west, clear of C406.1 (PORT_4V8, I-5 port class)
+track	RADIO_TX_MCU	B	0.1	23.9	75.6	11.6	75.6
+via	RADIO_TX_MCU	-	0.45	11.6	75.6		
+track	RADIO_TX_MCU	F	0.2	11.6	75.6	12	76
+track	RADIO_TX_MCU	F	0.2	12	76	12	76.92
+via	GND	-	0.45	34.4	75.7		
+via	GND	-	0.45	36.7	76		

@@ -36,8 +36,8 @@ class ZoneGuardOutline(unittest.TestCase):
         self.Z = json.loads((Path(zone_guard.__file__).with_name('zones.json')).read_text())
         self.box = zone_guard.outline()
 
-    def test_outline_is_the_88_mm_board(self):
-        self.assertEqual(self.box, (0.0, 0.0, 46.0, 88.0))      # R12F7-TRI-03 / R12F8-TRI-17: 46 x 88 mm
+    def test_outline_is_the_85_mm_board(self):
+        self.assertEqual(self.box, (0.0, 0.0, 46.0, 85.0))      # R12F9 lane L: 46 x 85 mm (was 88, R12F7-TRI-03)
 
     def test_w5_fragment_is_inside_its_zone(self):
         """R12F8-TRI-17: every W5 row lies inside W5 (zone_guard reported 31 rows outside after the 88 mm shrink)."""

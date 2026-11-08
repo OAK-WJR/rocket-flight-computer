@@ -9,13 +9,12 @@
  ],
  "fixed_fees_usd_per_order": 9.71,
  "handling_fee_may_apply_usd": 0.0,
- "parts_usd_per_board": 32.61,
+ "parts_usd_per_board": 32.56,
  "feeder_fee_usd_per_order": 64.47,
- "total_usd_per_board": 45.51,
- "order_usd_per_board_with_min_purchase": 32.61,
+ "total_usd_per_board": 45.45,
+ "order_usd_per_board_with_min_purchase": 32.56,
  "extended_codes": [
   "C13612",
-  "C164170",
   "C165948",
   "C168925",
   "C190095",
@@ -30,6 +29,7 @@
   "C52993880",
   "C535146",
   "C57269",
+  "C585350",
   "C7430446",
   "C7430448",
   "C78399",
@@ -52,7 +52,7 @@
    "order_usd_per_board": 0.0169,
    "library": "base",
    "preferred": false,
-   "stock": 33762078,
+   "stock": 33743725,
    "owner_fitted": false
   },
   {
@@ -69,7 +69,7 @@
    "order_usd_per_board": 1.5078,
    "library": "base",
    "preferred": false,
-   "stock": 2037166,
+   "stock": 2023036,
    "owner_fitted": false
   },
   {
@@ -86,7 +86,7 @@
    "order_usd_per_board": 0.2588,
    "library": "base",
    "preferred": false,
-   "stock": 3793680,
+   "stock": 3791740,
    "owner_fitted": false
   },
   {
@@ -103,7 +103,7 @@
    "order_usd_per_board": 0.1567,
    "library": "expand",
    "preferred": false,
-   "stock": 66821,
+   "stock": 66770,
    "owner_fitted": false
   },
   {
@@ -120,7 +120,7 @@
    "order_usd_per_board": 0.1656,
    "library": "base",
    "preferred": false,
-   "stock": 1677189,
+   "stock": 1773829,
    "owner_fitted": false
   },
   {
@@ -137,7 +137,7 @@
    "order_usd_per_board": 0.019,
    "library": "base",
    "preferred": false,
-   "stock": 5164321,
+   "stock": 5158355,
    "owner_fitted": false
   },
   {
@@ -154,7 +154,7 @@
    "order_usd_per_board": 0.0038,
    "library": "base",
    "preferred": false,
-   "stock": 999216,
+   "stock": 997270,
    "owner_fitted": false
   },
   {
@@ -171,7 +171,7 @@
    "order_usd_per_board": 0.0052,
    "library": "base",
    "preferred": false,
-   "stock": 1205831,
+   "stock": 1204627,
    "owner_fitted": false
   },
   {
@@ -188,24 +188,7 @@
    "order_usd_per_board": 0.0327,
    "library": "base",
    "preferred": false,
-   "stock": 12985161,
-   "owner_fitted": false
-  },
-  {
-   "lcsc": "C164170",
-   "refs": "J430",
-   "qty_per_board": 1,
-   "jlc_qty_per_board": 1,
-   "owner_qty_per_board": 0,
-   "assembly": "SMT",
-   "unit_usd": 0.7278,
-   "line_usd_per_board": 0.7278,
-   "min_purchase": 1,
-   "order_qty": 5,
-   "order_usd_per_board": 0.7278,
-   "library": "expand",
-   "preferred": false,
-   "stock": 3095,
+   "stock": 12936401,
    "owner_fitted": false
   },
   {
@@ -222,7 +205,7 @@
    "order_usd_per_board": 0.1868,
    "library": "expand",
    "preferred": false,
-   "stock": 320226,
+   "stock": 318194,
    "owner_fitted": false
   },
   {
@@ -256,7 +239,7 @@
    "order_usd_per_board": 0.0246,
    "library": "expand",
    "preferred": false,
-   "stock": 1559204,
+   "stock": 1558585,
    "owner_fitted": false
   },
   {
@@ -273,7 +256,7 @@
    "order_usd_per_board": 0.0124,
    "library": "base",
    "preferred": false,
-   "stock": 4375344,
+   "stock": 4373173,
    "owner_fitted": false
   },
   {
@@ -290,7 +273,7 @@
    "order_usd_per_board": 0.03,
    "library": "base",
    "preferred": false,
-   "stock": 3850340,
+   "stock": 3837747,
    "owner_fitted": false
   },
   {
@@ -307,7 +290,7 @@
    "order_usd_per_board": 0.26670000000000005,
    "library": "base",
    "preferred": false,
-   "stock": 1065729,
+   "stock": 1063139,
    "owner_fitted": false
   },
   {
@@ -324,7 +307,7 @@
    "order_usd_per_board": 0.0186,
    "library": "base",
    "preferred": false,
-   "stock": 883157,
+   "stock": 880265,
    "owner_fitted": false
   },
   {
@@ -341,7 +324,7 @@
    "order_usd_per_board": 0.006799999999999999,
    "library": "base",
    "preferred": false,
-   "stock": 27128210,
+   "stock": 27027120,
    "owner_fitted": false
   },
   {
@@ -358,7 +341,7 @@
    "order_usd_per_board": 0.0027,
    "library": "base",
    "preferred": false,
-   "stock": 235790,
+   "stock": 235545,
    "owner_fitted": false
   },
   {
@@ -375,7 +358,7 @@
    "order_usd_per_board": 0.0149,
    "library": "base",
    "preferred": false,
-   "stock": 577036,
+   "stock": 576477,
    "owner_fitted": false
   },
   {
@@ -392,7 +375,7 @@
    "order_usd_per_board": 0.0022,
    "library": "base",
    "preferred": false,
-   "stock": 4849301,
+   "stock": 4846270,
    "owner_fitted": false
   },
   {
@@ -409,7 +392,7 @@
    "order_usd_per_board": 0.0038,
    "library": "base",
    "preferred": false,
-   "stock": 491219,
+   "stock": 490275,
    "owner_fitted": false
   },
   {
@@ -426,7 +409,7 @@
    "order_usd_per_board": 0.006,
    "library": "base",
    "preferred": false,
-   "stock": 922466,
+   "stock": 919824,
    "owner_fitted": false
   },
   {
@@ -443,7 +426,7 @@
    "order_usd_per_board": 0.0236,
    "library": "base",
    "preferred": false,
-   "stock": 2325481,
+   "stock": 2317160,
    "owner_fitted": false
   },
   {
@@ -460,7 +443,7 @@
    "order_usd_per_board": 0.0054,
    "library": "base",
    "preferred": false,
-   "stock": 1864307,
+   "stock": 1861215,
    "owner_fitted": false
   },
   {
@@ -477,7 +460,7 @@
    "order_usd_per_board": 0.006,
    "library": "base",
    "preferred": false,
-   "stock": 8785414,
+   "stock": 8774135,
    "owner_fitted": false
   },
   {
@@ -494,7 +477,7 @@
    "order_usd_per_board": 0.0588,
    "library": "base",
    "preferred": false,
-   "stock": 22765871,
+   "stock": 22755830,
    "owner_fitted": false
   },
   {
@@ -511,7 +494,7 @@
    "order_usd_per_board": 0.0011,
    "library": "base",
    "preferred": false,
-   "stock": 2395692,
+   "stock": 2393028,
    "owner_fitted": false
   },
   {
@@ -528,7 +511,7 @@
    "order_usd_per_board": 0.0019,
    "library": "base",
    "preferred": false,
-   "stock": 2223563,
+   "stock": 2219773,
    "owner_fitted": false
   },
   {
@@ -545,7 +528,7 @@
    "order_usd_per_board": 0.0076,
    "library": "base",
    "preferred": false,
-   "stock": 6123973,
+   "stock": 6120252,
    "owner_fitted": false
   },
   {
@@ -562,7 +545,7 @@
    "order_usd_per_board": 0.0019,
    "library": "base",
    "preferred": false,
-   "stock": 1056947,
+   "stock": 1055622,
    "owner_fitted": false
   },
   {
@@ -579,7 +562,7 @@
    "order_usd_per_board": 0.0058,
    "library": "base",
    "preferred": false,
-   "stock": 1388505,
+   "stock": 1385570,
    "owner_fitted": false
   },
   {
@@ -596,7 +579,7 @@
    "order_usd_per_board": 0.0033999999999999994,
    "library": "base",
    "preferred": false,
-   "stock": 15759241,
+   "stock": 15735302,
    "owner_fitted": false
   },
   {
@@ -613,7 +596,7 @@
    "order_usd_per_board": 0.027600000000000003,
    "library": "base",
    "preferred": false,
-   "stock": 4533144,
+   "stock": 4522320,
    "owner_fitted": false
   },
   {
@@ -630,7 +613,7 @@
    "order_usd_per_board": 0.0012,
    "library": "base",
    "preferred": false,
-   "stock": 2739347,
+   "stock": 2735380,
    "owner_fitted": false
   },
   {
@@ -681,7 +664,7 @@
    "order_usd_per_board": 0.2136,
    "library": "base",
    "preferred": false,
-   "stock": 22290372,
+   "stock": 22256730,
    "owner_fitted": false
   },
   {
@@ -698,7 +681,7 @@
    "order_usd_per_board": 1.3101,
    "library": "expand",
    "preferred": false,
-   "stock": 3439,
+   "stock": 3976,
    "owner_fitted": false
   },
   {
@@ -715,7 +698,7 @@
    "order_usd_per_board": 0.0435,
    "library": "expand",
    "preferred": true,
-   "stock": 411535,
+   "stock": 411255,
    "owner_fitted": false
   },
   {
@@ -732,7 +715,7 @@
    "order_usd_per_board": 0.013300000000000001,
    "library": "base",
    "preferred": false,
-   "stock": 10729140,
+   "stock": 10722203,
    "owner_fitted": false
   },
   {
@@ -851,7 +834,24 @@
    "order_usd_per_board": 0.17099999999999999,
    "library": "expand",
    "preferred": false,
-   "stock": 32190,
+   "stock": 32111,
+   "owner_fitted": false
+  },
+  {
+   "lcsc": "C585350",
+   "refs": "J430",
+   "qty_per_board": 1,
+   "jlc_qty_per_board": 1,
+   "owner_qty_per_board": 0,
+   "assembly": "SMT",
+   "unit_usd": 0.6771,
+   "line_usd_per_board": 0.6771,
+   "min_purchase": 1,
+   "order_qty": 5,
+   "order_usd_per_board": 0.6771,
+   "library": "expand",
+   "preferred": false,
+   "stock": 48618,
    "owner_fitted": false
   },
   {
@@ -868,7 +868,7 @@
    "order_usd_per_board": 0.20220000000000002,
    "library": "expand",
    "preferred": false,
-   "stock": 253760,
+   "stock": 252923,
    "owner_fitted": false
   },
   {
@@ -885,7 +885,7 @@
    "order_usd_per_board": 0.24900000000000003,
    "library": "expand",
    "preferred": false,
-   "stock": 90194,
+   "stock": 89882,
    "owner_fitted": false
   },
   {
@@ -919,7 +919,7 @@
    "order_usd_per_board": 0.013500000000000002,
    "library": "base",
    "preferred": false,
-   "stock": 2022664,
+   "stock": 2015266,
    "owner_fitted": false
   },
   {
@@ -936,7 +936,7 @@
    "order_usd_per_board": 0.10500000000000001,
    "library": "base",
    "preferred": false,
-   "stock": 3053096,
+   "stock": 3045891,
    "owner_fitted": false
   },
   {
@@ -953,7 +953,7 @@
    "order_usd_per_board": 0.0951,
    "library": "base",
    "preferred": false,
-   "stock": 323879,
+   "stock": 323288,
    "owner_fitted": false
   },
   {
@@ -970,7 +970,7 @@
    "order_usd_per_board": 0.118,
    "library": "expand",
    "preferred": false,
-   "stock": 86683,
+   "stock": 86673,
    "owner_fitted": false
   },
   {
@@ -987,7 +987,7 @@
    "order_usd_per_board": 8.8201,
    "library": "expand",
    "preferred": false,
-   "stock": 4304,
+   "stock": 4299,
    "owner_fitted": false
   },
   {
@@ -1004,7 +1004,7 @@
    "order_usd_per_board": 2.3191,
    "library": "base",
    "preferred": false,
-   "stock": 69408,
+   "stock": 68609,
    "owner_fitted": false
   },
   {
@@ -1031,10 +1031,10 @@
   "max_extended": null
  },
  "ok": true,
- "checked_utc": "2026-11-07T21:55:42Z",
+ "checked_utc": "2026-11-08T12:13:52Z",
  "source": "jlcpcb.com selectSmtComponentList",
  "inputs_sha256": {
-  "m3_bom_jlc.csv": "205c4efd4776006eed8901a98fea4a61223118ca834f5c44c4946fd9c4e0a159",
-  "m3_cpl_jlc.csv": "3a000091fe163a0499fa19e08c241d44a3b8a115307f6c13d58d05a8bf435882"
+  "m3_bom_jlc.csv": "649df0632ea6abdf4ed2c6bb19486e45a2f65bcd9403a98d884c2c7c44909005",
+  "m3_cpl_jlc.csv": "429f4fdd93ec380d57a87428cdf6226cd029219c6d3c955350870bada42b5a05"
  }
 }

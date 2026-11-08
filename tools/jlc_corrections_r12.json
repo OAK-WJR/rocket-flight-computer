@@ -150,22 +150,6 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C164170|M3_MICROSD_MOLEX_472192001": {
-   "footprint": "M3_MICROSD_MOLEX_472192001",
-   "easyeda": "TF-SMD_472192001",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    0.0,
-    1.55
-   ],
-   "residual_mm": 0.005,
-   "next_best_mm": 11.362,
-   "pads_ours": 12,
-   "pads_easyeda": 12,
-   "pads_matched": 12,
-   "status": "OK"
-  },
   "C165948|USB-C_SMD-TYPE-C-31-M-12_1": {
    "footprint": "USB-C_SMD-TYPE-C-31-M-12_1",
    "easyeda": "USB-C_SMD-TYPE-C-31-M-12_1",
@@ -773,6 +757,22 @@
    "pads_ours": 2,
    "pads_easyeda": 2,
    "pads_matched": 2,
+   "status": "OK"
+  },
+  "C585350|M3_MICROSD_MOLEX_104031": {
+   "footprint": "M3_MICROSD_MOLEX_104031",
+   "easyeda": "SIM-SMD_8P-1040310811",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0075,
+    -0.0375
+   ],
+   "residual_mm": 0.079,
+   "next_best_mm": 10.889,
+   "pads_ours": 14,
+   "pads_easyeda": 14,
+   "pads_matched": 14,
    "status": "OK"
   },
   "C7430446|M3_SHC_4P": {

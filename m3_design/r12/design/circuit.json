@@ -262,6 +262,13 @@
    "Datasheet": "",
    "footprint": "rocket:R0402",
    "source": "basic 5.1k (R11's line, as R7 / R8 / R104 carry it)"
+  },
+  "C585350": {
+   "Manufacturer": "MOLEX",
+   "Manufacturer Part": "1040310811",
+   "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/541e9f28cb856b9ee4390625509ae3af.pdf?productCode=C585350",
+   "footprint": "rocket:M3_MICROSD_MOLEX_104031",
+   "source": "round 9 lane L (owner 2026-11-07): Molex 104031-0811 push-pull microSD, JLC Extended (LCSC product page 2026-11-08: 47973 in stock)"
   }
  },
  "deleted": {
@@ -671,6 +678,28 @@
    "lcsc": "C25792",
    "value": "47k 1%",
    "why": "R12F8-TRI-01: camera EN pull-down 100k -> 47k (C25792, on the BOM): with D436 on PC12, the clamp's reverse leakage in reset flows into R431 || R_EN, so the lower value keeps EN under V_ENL 0.8 V up to 16.7 uA instead of 8.2 uA; enable still 2.52 V minimum against V_ENH 1.6 V (see R436)"
+  },
+  "J430": {
+   "lcsc": "C585350",
+   "value": "104031-0811",
+   "lib": "M3:MicroSD_PushPull",
+   "why": "round 9 lane L (owner decision 2026-11-07): the hinged Molex 472192001 (C164170) is replaced by the Molex 104031-0811 push-pull socket (C585350), placed on the east side with the card mouth to the east edge; SPI4 / CS map and R460-R464 unchanged; card-detect switch (pads 11-12, JLCEDA numbering) not connected",
+   "nets": {
+    "1": "SD_DAT2",
+    "2": "SD_CS",
+    "3": "SD_MOSI",
+    "4": "3V3",
+    "5": "SD_SCK",
+    "6": "GND",
+    "7": "SD_MISO",
+    "8": "SD_DAT1",
+    "9": "GND",
+    "10": "GND",
+    "11": null,
+    "12": null,
+    "13": "GND",
+    "14": "GND"
+   }
   }
  },
  "added_parts": {

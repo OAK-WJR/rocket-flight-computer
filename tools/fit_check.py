@@ -77,7 +77,20 @@ R10_MATED = {'M3_MICROSD_MOLEX_472192001': dict(
           'Inference: common centred datum, zero seating offset and retained card-front+6.00mm/height2.10mm; '
           'card seating, hinge locking and retention under 100 g/vibration require physical qualification. '
           'Open/insertion envelope is bench-only with the board out of the bay and unpowered',
-    source='https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf')}
+    source='https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf'),
+    # R12 round 9 lane L (owner 2026-11-07): the Molex 104031-0811 push-pull socket. Footprint frame: socket centre at
+    # the origin, product line (card mouth) at local y = +5.70 (m3_design/r12_parts.SD_MOUTH). The envelope is the body
+    # (11.95 x 11.40 mm) united with the inserted card: 11.0 mm wide (-5.595 ... 5.405, centred 0.095 mm toward
+    # contact 8) and 4.0 + 0.2 mm beyond the mouth (y 9.90), up to its top 1.57 + 0.20 mm (Molex SD-104031-001
+    # sheet 1, top and side views). The card is a rigid body in flight (push-pull: friction retention, owner deviation),
+    # so the envelope must stay inside the board outline (inside_outline) and clear every other model box; insertion
+    # with the board unbolted is a bench step.
+    'M3_MICROSD_MOLEX_104031': dict(
+        refs=('J430',), box=(-5.975, -5.70, 5.975, 9.90, 0., 1.77), inside_outline=True,
+        basis='Molex SD-104031-001 sheet 1: body 11.95 x 11.40 x 1.42 mm; card 11.0 mm wide, 4.0 +/- 0.2 mm beyond '
+              'the product line, top 1.57 +/- 0.20 mm. Inference: friction retention holds the card under flight '
+              'loads; physical qualification required',
+        source='https://datasheet.lcsc.com/datasheet/pdf/541e9f28cb856b9ee4390625509ae3af.pdf?productCode=C585350')}
 # R12-GATE-01: normalized maximum envelopes, in footprint-local KiCad x/y and
 # component-side z (mm), before placement/flip. D-R11-01 / T0-1 p1 for DB125;
 # the SD entry is the existing conservative closed socket/card union above.
@@ -90,6 +103,7 @@ R10_MODEL_BOXES = {
     'M3_DB125_4P_GN': (-8.32, -4.10, 7.20, 4.00, 0., 8.90),
     'M3_DB125_5P_GN': (-10.07, -4.10, 8.95, 4.00, 0., 8.90),
     'M3_MICROSD_MOLEX_472192001': R10_MATED['M3_MICROSD_MOLEX_472192001']['box'],
+    'M3_MICROSD_MOLEX_104031': (-5.975, -5.70, 5.975, 5.70, 0., 1.42),     # body only; the card is the mated envelope
     'M3_MA_8x10': (-4.25, -4.25, 4.25, 4.25, 0., 10.80),
 }
 R10_MODEL_TOL = 2e-5  # mm; six-decimal VRML endpoint error <=1.905e-6 mm, with a numeric guard
@@ -763,6 +777,10 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
             rows.append((margin(mb, radius, axis_x, tol), ref + ' mated', side, mb))
             mating.append((ref, mb))
             (bottom if f.IsFlipped() else top_bodies).append((ref + ' mated', mb))
+            if spec.get('inside_outline'):
+                out = max(outline[0] - mb[0], mb[2] - outline[2], outline[1] - mb[1], mb[3] - outline[3])
+                if out > 1e-6:
+                    issues.append(f'{ref}: mated envelope (inserted card) {out:.3f} mm beyond the board outline')
         elif ref in cfg['mated_refs']:
             issues.append(f'{ref}: mated housing/wire envelope has not been reviewed (a GH port needs Manufacturer Part '
                           f'SMnnB-GHS-TB)')

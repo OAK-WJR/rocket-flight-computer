@@ -1,5 +1,5 @@
 {
- "checked_utc": "2026-11-04T23:25:09Z",
+ "checked_utc": "2026-11-08T10:26:34Z",
  "tier": "JLC Economic PCBA, one side",
  "basis": {
   "fixed_usd": 9.709999999999999,
@@ -7,40 +7,40 @@
   "joint_usd": 0.0016,
   "pcb_5pcs_usd": 25.1,
   "source": "https://jlcpcb.com/help/article/pcb-assembly-price (cost study 2026-11-04); PCB quote: cost_study.md 2.1",
-  "excluded": "shipping, tax, attrition, owner hand-fit (C84, LS120), C84 / LS120 bought from LCSC by the owner"
+  "excluded": "shipping, tax, attrition; THT hand-soldering ($0.0164 per joint + $3.58 per order, J121 and LS120) is counted in stageD.md, not here; no owner-fitted parts since D-R12-85"
  },
  "orders": {
   "2": {
-   "jlc_parts_usd": 64.9,
-   "extended_codes": 18,
+   "jlc_parts_usd": 65.12,
+   "extended_codes": 21,
    "preferred_extended_codes": 1,
-   "feeder_usd": 58.33,
-   "feeder_usd_if_preferred_free": 55.26,
+   "feeder_usd": 67.54,
+   "feeder_usd_if_preferred_free": 64.47,
    "fixed_usd": 9.709999999999999,
-   "smt_joints": 1174,
-   "joints_usd": 1.88,
+   "smt_joints": 1214,
+   "joints_usd": 1.94,
    "pcb_usd": 25.1,
-   "owner_parts_usd": 0.64,
-   "total_usd": 159.92,
-   "total_usd_if_preferred_free": 156.85,
-   "per_board_usd": 79.96,
-   "m3_metric_per_board_usd": 61.61
+   "owner_parts_usd": 0.0,
+   "total_usd": 169.41,
+   "total_usd_if_preferred_free": 166.34,
+   "per_board_usd": 84.71,
+   "m3_metric_per_board_usd": 66.33
   },
   "5": {
-   "jlc_parts_usd": 162.25,
-   "extended_codes": 18,
+   "jlc_parts_usd": 162.8,
+   "extended_codes": 21,
    "preferred_extended_codes": 1,
-   "feeder_usd": 58.33,
-   "feeder_usd_if_preferred_free": 55.26,
+   "feeder_usd": 67.54,
+   "feeder_usd_if_preferred_free": 64.47,
    "fixed_usd": 9.709999999999999,
-   "smt_joints": 2935,
-   "joints_usd": 4.7,
+   "smt_joints": 3035,
+   "joints_usd": 4.86,
    "pcb_usd": 25.1,
-   "owner_parts_usd": 1.61,
-   "total_usd": 260.08,
-   "total_usd_if_preferred_free": 257.01,
-   "per_board_usd": 52.02,
-   "m3_metric_per_board_usd": 44.12
+   "owner_parts_usd": 0.0,
+   "total_usd": 270.01,
+   "total_usd_if_preferred_free": 266.94,
+   "per_board_usd": 54.0,
+   "m3_metric_per_board_usd": 46.07
   }
  }
 }

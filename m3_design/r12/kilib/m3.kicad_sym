@@ -9707,6 +9707,217 @@
 						(font
 							(size 1.05 1.05))))))
 		(embedded_fonts no))
+	(symbol "MicroSD_PushPull"
+		(pin_names
+			(offset 1.016))
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(property "Reference" "J"
+			(at 0 12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Value" "MicroSD_PushPull"
+			(at 0 -12.7 0)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Footprint" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "Description" "Molex 104031-0811 push-pull microSD with card-detect switch (C585350): 1 DAT2, 2 CD/DAT3 (CS), 3 CMD (DI), 4 VDD, 5 CLK, 6 VSS, 7 DAT0 (DO), 8 DAT1, shell 9 G2 10 G1 13 G4 14 G3, 11-12 card-detect switch"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_keywords" "connector microsd card"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(property "ki_fp_filters" "M3_MICROSD_MOLEX_104031"
+			(at 0 0 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))))
+		(symbol "MicroSD_PushPull_0_1"
+			(rectangle
+				(start -10.16 10.16)
+				(end 10.16 -10.16)
+				(stroke
+					(width 0.254)
+					(type default))
+				(fill
+					(type background))))
+		(symbol "MicroSD_PushPull_1_1"
+			(pin passive line
+				(at -15.24 8.89 0)
+				(length 5.08)
+				(name "DAT2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "1"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 6.35 0)
+				(length 5.08)
+				(name "CD_DAT3_CS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "2"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 3.81 0)
+				(length 5.08)
+				(name "CMD_DI"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "3"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -15.24 1.27 0)
+				(length 5.08)
+				(name "VDD"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "4"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 -1.27 0)
+				(length 5.08)
+				(name "CLK"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "5"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin power_in line
+				(at -15.24 -3.81 0)
+				(length 5.08)
+				(name "VSS"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "6"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 -6.35 0)
+				(length 5.08)
+				(name "DAT0_DO"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "7"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at -15.24 -8.89 0)
+				(length 5.08)
+				(name "DAT1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "8"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 8.89 180)
+				(length 5.08)
+				(name "G2"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "9"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 6.35 180)
+				(length 5.08)
+				(name "G1"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "10"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 3.81 180)
+				(length 5.08)
+				(name "G4"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "13"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 1.27 180)
+				(length 5.08)
+				(name "G3"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "14"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 -3.81 180)
+				(length 5.08)
+				(name "CD_A"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "11"
+					(effects
+						(font
+							(size 1.05 1.05)))))
+			(pin passive line
+				(at 15.24 -6.35 180)
+				(length 5.08)
+				(name "CD_B"
+					(effects
+						(font
+							(size 1.05 1.05))))
+				(number "12"
+					(effects
+						(font
+							(size 1.05 1.05))))))
+		(embedded_fonts no))
 	(symbol "PortSH6"
 		(pin_names
 			(offset 1.016))

@@ -286,7 +286,7 @@ class KPower(unittest.TestCase):
         """Seeded (R12F9-TRI-07 / -08): each second barrel of R164.1's 3V3 end, U6's ground, PD10's divider end of the
         PORT_SENSE lane, R111.1's PORT_4V8 feed and R112.2's GND end removed: K-power names the tap left on one via."""
         for (x, y), taps in (((19.8, 40.2), ('R164.1',)), ((23.2, 31.6), ('U6.7', 'U6.14', 'U6.17')),
-                             ((26.45, 78.4), ('U1.H9',)), ((26.55, 81.4), ('R111.1',)), ((28.8, 79.2), ('R112.2',))):
+                             ((26.45, 75.4), ('U1.H9',)), ((26.55, 78.4), ('R111.1',)), ((28.8, 76.2), ('R112.2',))):
             with self.subTest(via=(x, y)):
                 via = self.drop_via(x, y)
                 try:

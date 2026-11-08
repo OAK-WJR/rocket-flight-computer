@@ -116,19 +116,19 @@
 					(font
 						(size 1.27 1.27))
 					(hide yes))))
-		(symbol "M3:MicroSD_Hinge"
+		(symbol "M3:MicroSD_PushPull"
 			(pin_names
 				(offset 1.016))
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "J"
-				(at 0 15.24 0)
+				(at 0 12.7 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Value" "MicroSD_Hinge"
-				(at 0 -15.24 0)
+			(property "Value" "MicroSD_PushPull"
+				(at 0 -12.7 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
@@ -144,36 +144,36 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Description" "Molex 472192001 locking hinged microSD; no card detect; G1-G4=12/9/10/11"
+			(property "Description" "Molex 104031-0811 push-pull microSD with card-detect switch (C585350): 1 DAT2, 2 CD/DAT3 (CS), 3 CMD (DI), 4 VDD, 5 CLK, 6 VSS, 7 DAT0 (DO), 8 DAT1, shell 9 G2 10 G1 13 G4 14 G3, 11-12 card-detect switch"
 				(at 0 0 0)
 				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_keywords" "microSD socket"
+			(property "ki_keywords" "connector microsd card"
 				(at 0 0 0)
 				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_MICROSD_MOLEX_472192001"
+			(property "ki_fp_filters" "M3_MICROSD_MOLEX_104031"
 				(at 0 0 0)
 				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(symbol "MicroSD_Hinge_0_1"
+			(symbol "MicroSD_PushPull_0_1"
 				(rectangle
-					(start -10.16 12.7)
-					(end 10.16 -12.7)
+					(start -10.16 10.16)
+					(end 10.16 -10.16)
 					(stroke
 						(width 0.254)
 						(type default))
 					(fill
 						(type background))))
-			(symbol "MicroSD_Hinge_1_1"
+			(symbol "MicroSD_PushPull_1_1"
 				(pin passive line
-					(at -15.24 10.16 0)
+					(at -15.24 8.89 0)
 					(length 5.08)
 					(name "DAT2"
 						(effects
@@ -184,7 +184,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -15.24 7.62 0)
+					(at -15.24 6.35 0)
 					(length 5.08)
 					(name "CD_DAT3_CS"
 						(effects
@@ -195,7 +195,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -15.24 5.08 0)
+					(at -15.24 3.81 0)
 					(length 5.08)
 					(name "CMD_DI"
 						(effects
@@ -206,7 +206,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin power_in line
-					(at -15.24 2.54 0)
+					(at -15.24 1.27 0)
 					(length 5.08)
 					(name "VDD"
 						(effects
@@ -217,7 +217,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -15.24 0 0)
+					(at -15.24 -1.27 0)
 					(length 5.08)
 					(name "CLK"
 						(effects
@@ -228,7 +228,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin power_in line
-					(at -15.24 -2.54 0)
+					(at -15.24 -3.81 0)
 					(length 5.08)
 					(name "VSS"
 						(effects
@@ -239,7 +239,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at 15.24 10.16 180)
+					(at -15.24 -6.35 0)
 					(length 5.08)
 					(name "DAT0_DO"
 						(effects
@@ -250,7 +250,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at 15.24 7.62 180)
+					(at -15.24 -8.89 0)
 					(length 5.08)
 					(name "DAT1"
 						(effects
@@ -261,7 +261,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at 15.24 5.08 180)
+					(at 15.24 8.89 180)
 					(length 5.08)
 					(name "G2"
 						(effects
@@ -272,9 +272,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at 15.24 2.54 180)
+					(at 15.24 6.35 180)
 					(length 5.08)
-					(name "G3"
+					(name "G1"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -283,9 +283,31 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at 15.24 0 180)
+					(at 15.24 3.81 180)
 					(length 5.08)
 					(name "G4"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "13"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 15.24 1.27 180)
+					(length 5.08)
+					(name "G3"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "14"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 15.24 -3.81 180)
+					(length 5.08)
+					(name "CD_A"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -294,9 +316,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at 15.24 -2.54 180)
+					(at 15.24 -6.35 180)
 					(length 5.08)
-					(name "G1"
+					(name "CD_B"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -1071,55 +1093,55 @@
 			(justify right))
 		(uuid 1deddae0-5fb1-5aaf-8739-eab67fd6c660))
 	(symbol
-		(lib_id "M3:MicroSD_Hinge")
-		(at 215.9 78.74 0)
+		(lib_id "M3:MicroSD_PushPull")
+		(at 215.9 76.2 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid d8bf9444-183c-5d36-b867-0e1d2dd98e30)
 		(property "Reference" "J430"
-			(at 215.9 64.77 0)
+			(at 215.9 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "472192001"
-			(at 215.9 67.31 0)
+		(property "Value" "104031-0811"
+			(at 215.9 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_MICROSD_MOLEX_472192001"
-			(at 215.9 78.74 0)
+		(property "Footprint" "rocket:M3_MICROSD_MOLEX_104031"
+			(at 215.9 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C164170"
-			(at 215.9 78.74 0)
+		(property "LCSC" "C585350"
+			(at 215.9 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "MOLEX"
-			(at 215.9 78.74 0)
+			(at 215.9 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "472192001"
-			(at 215.9 78.74 0)
+		(property "Manufacturer Part" "1040310811"
+			(at 215.9 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.molex.com/content/dam/molex/molex-dot-com/products/automated/en-us/salesdrawingpdf/472/47219/472192001_sd.pdf"
-			(at 215.9 78.74 0)
+		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/541e9f28cb856b9ee4390625509ae3af.pdf?productCode=C585350"
+			(at 215.9 76.2 0)
 			(hide yes)
 			(effects
 				(font
@@ -1132,15 +1154,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 200.66 68.58)
-			(xy 195.58 68.58))
+			(xy 200.66 67.31)
+			(xy 195.58 67.31))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 8775a84a-8588-5076-af03-c61cf495f593))
 	(global_label "SD_DAT2"
 		(shape passive)
-		(at 195.58 68.58 0)
+		(at 195.58 67.31 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1148,15 +1170,15 @@
 		(uuid 5724f39e-ce15-53ca-8f1d-4777aa240790))
 	(wire
 		(pts
-			(xy 200.66 71.12)
-			(xy 195.58 71.12))
+			(xy 200.66 69.85)
+			(xy 195.58 69.85))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 906863c7-8838-5c84-a1c5-203711e72019))
 	(global_label "SD_CS"
 		(shape passive)
-		(at 195.58 71.12 0)
+		(at 195.58 69.85 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1164,15 +1186,15 @@
 		(uuid 0c39eeea-f4b0-590e-9da1-0c5dfd0afe86))
 	(wire
 		(pts
-			(xy 200.66 73.66)
-			(xy 195.58 73.66))
+			(xy 200.66 72.39)
+			(xy 195.58 72.39))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid dc986193-62d2-5b14-a350-c0dd9029a1ed))
 	(global_label "SD_MOSI"
 		(shape passive)
-		(at 195.58 73.66 0)
+		(at 195.58 72.39 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1180,15 +1202,15 @@
 		(uuid ca983d26-f479-5580-b9bf-97c2e0811c9e))
 	(wire
 		(pts
-			(xy 200.66 76.2)
-			(xy 195.58 76.2))
+			(xy 200.66 74.93)
+			(xy 195.58 74.93))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 7c5621c9-1fd0-52cd-9c8c-f48d935b97a4))
 	(global_label "3V3"
 		(shape passive)
-		(at 195.58 76.2 0)
+		(at 195.58 74.93 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1196,15 +1218,15 @@
 		(uuid a01a5fe1-935c-5d5d-958f-213a85b36e38))
 	(wire
 		(pts
-			(xy 200.66 78.74)
-			(xy 195.58 78.74))
+			(xy 200.66 77.47)
+			(xy 195.58 77.47))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 64580b51-e583-5779-85b4-d15b8d5a85e5))
 	(global_label "SD_SCK"
 		(shape passive)
-		(at 195.58 78.74 0)
+		(at 195.58 77.47 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1212,15 +1234,15 @@
 		(uuid f1855783-91a5-5872-ae8b-0b4019ca065b))
 	(wire
 		(pts
-			(xy 200.66 81.28)
-			(xy 195.58 81.28))
+			(xy 200.66 80.01)
+			(xy 195.58 80.01))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid dbc67e14-afb9-5531-8d47-af9c7766215d))
 	(global_label "GND"
 		(shape passive)
-		(at 195.58 81.28 0)
+		(at 195.58 80.01 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1228,47 +1250,47 @@
 		(uuid 28387668-7909-53ec-8418-838103f86fff))
 	(wire
 		(pts
-			(xy 231.14 68.58)
-			(xy 236.22 68.58))
+			(xy 200.66 82.55)
+			(xy 195.58 82.55))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 9e1aca17-261f-50bc-9a1e-0ab4ef9535f4))
 	(global_label "SD_MISO"
 		(shape passive)
-		(at 236.22 68.58 180)
+		(at 195.58 82.55 0)
 		(effects
 			(font
 				(size 1.05 1.05))
-			(justify left))
+			(justify right))
 		(uuid 30e04ed0-fb4c-5b1f-ade7-5690a1c32a69))
 	(wire
 		(pts
-			(xy 231.14 71.12)
-			(xy 236.22 71.12))
+			(xy 200.66 85.09)
+			(xy 195.58 85.09))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid ca35cc34-3dfc-5959-8dae-ae6cf6122c12))
 	(global_label "SD_DAT1"
 		(shape passive)
-		(at 236.22 71.12 180)
+		(at 195.58 85.09 0)
 		(effects
 			(font
 				(size 1.05 1.05))
-			(justify left))
+			(justify right))
 		(uuid c5a1e9ec-84af-5c82-a474-7bae61f22264))
 	(wire
 		(pts
-			(xy 231.14 73.66)
-			(xy 236.22 73.66))
+			(xy 231.14 67.31)
+			(xy 236.22 67.31))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 532d5c00-aabf-52eb-8587-68120d46bd78))
 	(global_label "GND"
 		(shape passive)
-		(at 236.22 73.66 180)
+		(at 236.22 67.31 180)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1276,52 +1298,58 @@
 		(uuid 45be309b-7e5a-5bd6-990d-23aa50b11eb7))
 	(wire
 		(pts
-			(xy 231.14 76.2)
-			(xy 236.22 76.2))
+			(xy 231.14 69.85)
+			(xy 236.22 69.85))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 963487c2-e945-505b-8280-c49e33bde3a7))
 	(global_label "GND"
 		(shape passive)
-		(at 236.22 76.2 180)
+		(at 236.22 69.85 180)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
 		(uuid 468fe2fa-4c0c-5b72-bdb3-ea0bd1dbb20a))
+	(no_connect
+		(at 231.14 80.01)
+		(uuid d4538d65-a2bd-5329-aacc-439a23d8b699))
+	(no_connect
+		(at 231.14 82.55)
+		(uuid 54260e60-996d-563c-b620-17d1149b4c86))
 	(wire
 		(pts
-			(xy 231.14 78.74)
-			(xy 236.22 78.74))
+			(xy 231.14 72.39)
+			(xy 236.22 72.39))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 5368ef70-3a3c-5b8e-b19b-a67bdbf60090))
+		(uuid 922a25bc-f354-5e32-8dff-1c50298725d4))
 	(global_label "GND"
 		(shape passive)
-		(at 236.22 78.74 180)
+		(at 236.22 72.39 180)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
-		(uuid 007b4712-60ef-53f1-97ff-abafd73cd314))
+		(uuid e5f0ec6e-0297-5560-97d6-3adbd96e157b))
 	(wire
 		(pts
-			(xy 231.14 81.28)
-			(xy 236.22 81.28))
+			(xy 231.14 74.93)
+			(xy 236.22 74.93))
 		(stroke
 			(width 0)
 			(type default))
-		(uuid 460c7d32-973b-5610-9d99-37e9da07abe0))
+		(uuid e2a0d6e0-dc90-53a7-a100-cf9d76eaba58))
 	(global_label "GND"
 		(shape passive)
-		(at 236.22 81.28 180)
+		(at 236.22 74.93 180)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify left))
-		(uuid 93414233-eb86-505d-baaf-7de198dde0ea))
+		(uuid 1e549877-1fa0-5bb4-8d1f-8cacaafe8977))
 	(symbol
 		(lib_id "M3:PortSH4")
 		(at 284.48 71.12 0)
@@ -1632,54 +1660,54 @@
 		(uuid 4696649b-a052-5e4e-90a8-2acdf3f794b8))
 	(symbol
 		(lib_id "M3:R")
-		(at 50.8 111.76 0)
+		(at 50.8 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 3b07d972-2912-5340-82c8-e309bf32620e)
 		(property "Reference" "R450"
-			(at 50.8 104.14 0)
+			(at 50.8 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "1k 1%"
-			(at 50.8 106.68 0)
+			(at 50.8 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 50.8 111.76 0)
+			(at 50.8 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C11702"
-			(at 50.8 111.76 0)
+			(at 50.8 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 50.8 111.76 0)
+			(at 50.8 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1001TCE"
-			(at 50.8 111.76 0)
+			(at 50.8 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 50.8 111.76 0)
+			(at 50.8 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -1692,15 +1720,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 50.8 107.95)
-			(xy 50.8 102.87))
+			(xy 50.8 113.03)
+			(xy 50.8 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid b6c371e0-2607-5ef9-90a5-f92803bee044))
 	(global_label "RADIO_RX_WIRE"
 		(shape passive)
-		(at 50.8 102.87 0)
+		(at 50.8 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1708,15 +1736,15 @@
 		(uuid ee23de7b-169f-5f11-b0fc-9c14fbf30703))
 	(wire
 		(pts
-			(xy 50.8 115.57)
-			(xy 50.8 120.65))
+			(xy 50.8 120.65)
+			(xy 50.8 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 6731be19-53db-5158-9c89-6ab44e8d1c7f))
 	(global_label "RADIO_RX_MCU"
 		(shape passive)
-		(at 50.8 120.65 0)
+		(at 50.8 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1724,54 +1752,54 @@
 		(uuid 86362bb3-1f63-5252-b1cb-7e0cdf9bcc5f))
 	(symbol
 		(lib_id "M3:R")
-		(at 99.06 111.76 0)
+		(at 99.06 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 9d29b5f8-191b-53ce-82fb-3b11686f783f)
 		(property "Reference" "R451"
-			(at 99.06 104.14 0)
+			(at 99.06 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "1k 1%"
-			(at 99.06 106.68 0)
+			(at 99.06 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 99.06 111.76 0)
+			(at 99.06 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C11702"
-			(at 99.06 111.76 0)
+			(at 99.06 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 99.06 111.76 0)
+			(at 99.06 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1001TCE"
-			(at 99.06 111.76 0)
+			(at 99.06 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 99.06 111.76 0)
+			(at 99.06 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -1784,15 +1812,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 99.06 107.95)
-			(xy 99.06 102.87))
+			(xy 99.06 113.03)
+			(xy 99.06 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid cc932d3a-7473-5b85-ac86-c651612e9325))
 	(global_label "RADIO_TX_MCU"
 		(shape passive)
-		(at 99.06 102.87 0)
+		(at 99.06 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1800,15 +1828,15 @@
 		(uuid c516cccb-1463-572a-8a70-a88b2cae994d))
 	(wire
 		(pts
-			(xy 99.06 115.57)
-			(xy 99.06 120.65))
+			(xy 99.06 120.65)
+			(xy 99.06 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 09bc7e93-eee1-510e-a758-93f0f35ad0d8))
 	(global_label "RADIO_TX_WIRE"
 		(shape passive)
-		(at 99.06 120.65 0)
+		(at 99.06 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1816,54 +1844,54 @@
 		(uuid c571aaaa-775a-50d2-ac8e-ead519ecf56e))
 	(symbol
 		(lib_id "M3:R")
-		(at 139.7 111.76 0)
+		(at 139.7 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid bb24542c-3dc8-5aaf-8379-4c3c1cb558e0)
 		(property "Reference" "R460"
-			(at 139.7 104.14 0)
+			(at 139.7 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 1%"
-			(at 139.7 106.68 0)
+			(at 139.7 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 139.7 111.76 0)
+			(at 139.7 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 139.7 111.76 0)
+			(at 139.7 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 139.7 111.76 0)
+			(at 139.7 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 139.7 111.76 0)
+			(at 139.7 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 139.7 111.76 0)
+			(at 139.7 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -1876,15 +1904,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 139.7 107.95)
-			(xy 139.7 102.87))
+			(xy 139.7 113.03)
+			(xy 139.7 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid f8f1178c-0922-5ee3-80e0-9b781eb9402e))
 	(global_label "SD_CS"
 		(shape passive)
-		(at 139.7 102.87 0)
+		(at 139.7 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1892,15 +1920,15 @@
 		(uuid 52c26bb7-1c26-5e48-9c72-629ea7d30ed1))
 	(wire
 		(pts
-			(xy 139.7 115.57)
-			(xy 139.7 120.65))
+			(xy 139.7 120.65)
+			(xy 139.7 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 5e8848b5-0c9c-5dd8-9428-6fda4adf30ee))
 	(global_label "3V3"
 		(shape passive)
-		(at 139.7 120.65 0)
+		(at 139.7 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1908,54 +1936,54 @@
 		(uuid 65d2e983-ab85-570e-a8ff-ef5853e37d0b))
 	(symbol
 		(lib_id "M3:R")
-		(at 175.26 111.76 0)
+		(at 175.26 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 895002fb-9c48-5ba9-96e7-f16ac6d94ba3)
 		(property "Reference" "R461"
-			(at 175.26 104.14 0)
+			(at 175.26 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 1%"
-			(at 175.26 106.68 0)
+			(at 175.26 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 175.26 111.76 0)
+			(at 175.26 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 175.26 111.76 0)
+			(at 175.26 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 175.26 111.76 0)
+			(at 175.26 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 175.26 111.76 0)
+			(at 175.26 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 175.26 111.76 0)
+			(at 175.26 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -1968,15 +1996,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 175.26 107.95)
-			(xy 175.26 102.87))
+			(xy 175.26 113.03)
+			(xy 175.26 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 75ed413b-32fc-5748-94a2-b00d4b19859e))
 	(global_label "SD_MOSI"
 		(shape passive)
-		(at 175.26 102.87 0)
+		(at 175.26 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1984,15 +2012,15 @@
 		(uuid 70773857-8b08-54c9-a6d4-ef547c96fcf4))
 	(wire
 		(pts
-			(xy 175.26 115.57)
-			(xy 175.26 120.65))
+			(xy 175.26 120.65)
+			(xy 175.26 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 4e118f9e-b039-5754-a029-0b74fbb55a1e))
 	(global_label "3V3"
 		(shape passive)
-		(at 175.26 120.65 0)
+		(at 175.26 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2000,54 +2028,54 @@
 		(uuid a71094ba-27f7-5835-9679-06fda53906f0))
 	(symbol
 		(lib_id "M3:R")
-		(at 213.36 111.76 0)
+		(at 213.36 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 7a0641dc-1b70-5297-a95b-7d1dc4869fc9)
 		(property "Reference" "R462"
-			(at 213.36 104.14 0)
+			(at 213.36 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 1%"
-			(at 213.36 106.68 0)
+			(at 213.36 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 213.36 111.76 0)
+			(at 213.36 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 213.36 111.76 0)
+			(at 213.36 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 213.36 111.76 0)
+			(at 213.36 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 213.36 111.76 0)
+			(at 213.36 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 213.36 111.76 0)
+			(at 213.36 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -2060,15 +2088,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 213.36 107.95)
-			(xy 213.36 102.87))
+			(xy 213.36 113.03)
+			(xy 213.36 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid f001afa1-dcd8-5c44-9649-a0fbaf5fceb9))
 	(global_label "SD_MISO"
 		(shape passive)
-		(at 213.36 102.87 0)
+		(at 213.36 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2076,15 +2104,15 @@
 		(uuid 8435636b-7f0b-52d9-acfa-fe40bdefcf9e))
 	(wire
 		(pts
-			(xy 213.36 115.57)
-			(xy 213.36 120.65))
+			(xy 213.36 120.65)
+			(xy 213.36 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid aa25300f-a8a0-59e2-8ab6-4a458a22c378))
 	(global_label "3V3"
 		(shape passive)
-		(at 213.36 120.65 0)
+		(at 213.36 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2092,54 +2120,54 @@
 		(uuid f64f5f22-c282-5ac6-851c-eeadb3530155))
 	(symbol
 		(lib_id "M3:R")
-		(at 251.46 111.76 0)
+		(at 251.46 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid facd0835-d0a7-5c4b-bb5e-1b6e59cb24c3)
 		(property "Reference" "R463"
-			(at 251.46 104.14 0)
+			(at 251.46 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 1%"
-			(at 251.46 106.68 0)
+			(at 251.46 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 251.46 111.76 0)
+			(at 251.46 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 251.46 111.76 0)
+			(at 251.46 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 251.46 111.76 0)
+			(at 251.46 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 251.46 111.76 0)
+			(at 251.46 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 251.46 111.76 0)
+			(at 251.46 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -2152,15 +2180,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 251.46 107.95)
-			(xy 251.46 102.87))
+			(xy 251.46 113.03)
+			(xy 251.46 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 56997bf2-ad36-5df9-8f7a-58d59cdb3ac4))
 	(global_label "SD_DAT1"
 		(shape passive)
-		(at 251.46 102.87 0)
+		(at 251.46 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2168,15 +2196,15 @@
 		(uuid eae0b5b4-e773-56d5-8db1-bc7f764d3121))
 	(wire
 		(pts
-			(xy 251.46 115.57)
-			(xy 251.46 120.65))
+			(xy 251.46 120.65)
+			(xy 251.46 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid bc143b21-2a1d-595a-b3bf-9b6081706e65))
 	(global_label "3V3"
 		(shape passive)
-		(at 251.46 120.65 0)
+		(at 251.46 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2184,54 +2212,54 @@
 		(uuid ea488c80-c91b-5875-b5a2-fda03e75bbf4))
 	(symbol
 		(lib_id "M3:R")
-		(at 287.02 111.76 0)
+		(at 287.02 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 511de574-9c0b-506a-99f0-894355ea7fb1)
 		(property "Reference" "R464"
-			(at 287.02 104.14 0)
+			(at 287.02 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 1%"
-			(at 287.02 106.68 0)
+			(at 287.02 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 287.02 111.76 0)
+			(at 287.02 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 287.02 111.76 0)
+			(at 287.02 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 287.02 111.76 0)
+			(at 287.02 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 287.02 111.76 0)
+			(at 287.02 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 287.02 111.76 0)
+			(at 287.02 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -2244,15 +2272,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 287.02 107.95)
-			(xy 287.02 102.87))
+			(xy 287.02 113.03)
+			(xy 287.02 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid e408134c-c326-56f0-b679-b96e66bc57ee))
 	(global_label "SD_DAT2"
 		(shape passive)
-		(at 287.02 102.87 0)
+		(at 287.02 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2260,15 +2288,15 @@
 		(uuid 67b0ec73-d348-5c14-af15-f5166b1c1a04))
 	(wire
 		(pts
-			(xy 287.02 115.57)
-			(xy 287.02 120.65))
+			(xy 287.02 120.65)
+			(xy 287.02 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid c5d05e0d-9a10-50d2-9c38-90090802cf06))
 	(global_label "3V3"
 		(shape passive)
-		(at 287.02 120.65 0)
+		(at 287.02 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2276,54 +2304,54 @@
 		(uuid f10f4c2d-d7a7-53ed-a34e-0a507d77317d))
 	(symbol
 		(lib_id "M3:R")
-		(at 327.66 111.76 0)
+		(at 327.66 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid b24369b7-3807-5e7e-83ca-e7242b644443)
 		(property "Reference" "R470"
-			(at 327.66 104.14 0)
+			(at 327.66 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "1k 1%"
-			(at 327.66 106.68 0)
+			(at 327.66 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 327.66 111.76 0)
+			(at 327.66 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C11702"
-			(at 327.66 111.76 0)
+			(at 327.66 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 327.66 111.76 0)
+			(at 327.66 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1001TCE"
-			(at 327.66 111.76 0)
+			(at 327.66 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 327.66 111.76 0)
+			(at 327.66 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -2336,15 +2364,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 327.66 107.95)
-			(xy 327.66 102.87))
+			(xy 327.66 113.03)
+			(xy 327.66 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 2408a559-9474-5c7e-b262-1fbc37e0e164))
 	(global_label "AUX_RX_WIRE"
 		(shape passive)
-		(at 327.66 102.87 0)
+		(at 327.66 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2352,15 +2380,15 @@
 		(uuid 09e3355c-6f82-5409-be54-cafc723bae94))
 	(wire
 		(pts
-			(xy 327.66 115.57)
-			(xy 327.66 120.65))
+			(xy 327.66 120.65)
+			(xy 327.66 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid fc9bf413-18e2-5bf5-9db8-ee98d9e0e78c))
 	(global_label "AUX_RX_MCU"
 		(shape passive)
-		(at 327.66 120.65 0)
+		(at 327.66 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2368,54 +2396,54 @@
 		(uuid 2c831d32-be07-5230-a532-e8fce24b8474))
 	(symbol
 		(lib_id "M3:R")
-		(at 373.38 111.76 0)
+		(at 373.38 116.84 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 7e325372-4784-5169-a0a3-f2f567e70e30)
 		(property "Reference" "R471"
-			(at 373.38 104.14 0)
+			(at 373.38 109.22 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "1k 1%"
-			(at 373.38 106.68 0)
+			(at 373.38 111.76 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 373.38 111.76 0)
+			(at 373.38 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C11702"
-			(at 373.38 111.76 0)
+			(at 373.38 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 373.38 111.76 0)
+			(at 373.38 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1001TCE"
-			(at 373.38 111.76 0)
+			(at 373.38 116.84 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 373.38 111.76 0)
+			(at 373.38 116.84 0)
 			(hide yes)
 			(effects
 				(font
@@ -2428,15 +2456,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 373.38 107.95)
-			(xy 373.38 102.87))
+			(xy 373.38 113.03)
+			(xy 373.38 107.95))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 82382f6d-6eeb-5966-b7f1-e06ea9fe1b38))
 	(global_label "AUX_TX_MCU"
 		(shape passive)
-		(at 373.38 102.87 0)
+		(at 373.38 107.95 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2444,15 +2472,15 @@
 		(uuid 0c9ca460-300b-5358-8e11-2c13385a1a9a))
 	(wire
 		(pts
-			(xy 373.38 115.57)
-			(xy 373.38 120.65))
+			(xy 373.38 120.65)
+			(xy 373.38 125.73))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 06d98824-85bf-52bb-a72a-9944fe1de449))
 	(global_label "AUX_TX_WIRE"
 		(shape passive)
-		(at 373.38 120.65 0)
+		(at 373.38 125.73 0)
 		(effects
 			(font
 				(size 1.05 1.05))

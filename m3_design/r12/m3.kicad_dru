@@ -1289,27 +1289,27 @@
   (constraint clearance (min 0.400mm)))
 
 # measured floor 0.550 mm, reason I5_U400_FB (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (I5_U400_FB): track (42.6, 67.3)-(42.6, 68.2) to U400.4 on F.Cu"
+(rule "S-10 exception (I5_U400_FB): track (18.1, 64.8)-(18.1, 65.7) to U400.4 on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'RAW_PROTECTED' && A.Type == 'Track' && A.Start_X >= 42.5995mm && A.Start_X <= 42.6005mm && A.Start_Y >= 67.2995mm && A.Start_Y <= 67.3005mm && A.End_X >= 42.5995mm && A.End_X <= 42.6005mm && A.End_Y >= 68.1995mm && A.End_Y <= 68.2005mm && B.NetName == 'PORT_FB' && B.memberOfFootprint('U400') && B.Pad_Number == '4'")
+  (condition "A.NetName == 'RAW_PROTECTED' && A.Type == 'Track' && A.Start_X >= 18.0995mm && A.Start_X <= 18.1005mm && A.Start_Y >= 64.7995mm && A.Start_Y <= 64.8005mm && A.End_X >= 18.0995mm && A.End_X <= 18.1005mm && A.End_Y >= 65.6995mm && A.End_Y <= 65.7005mm && B.NetName == 'PORT_FB' && B.memberOfFootprint('U400') && B.Pad_Number == '4'")
   (constraint clearance (min 0.550mm)))
 
 # measured floor 0.564 mm, reason I5_U400_FB (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (I5_U400_FB): track (42.6, 68.2)-(43.55, 69.15) to U400.4 on F.Cu"
+(rule "S-10 exception (I5_U400_FB): track (18.1, 65.7)-(19.05, 66.65) to U400.4 on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'RAW_PROTECTED' && A.Type == 'Track' && A.Start_X >= 42.5995mm && A.Start_X <= 42.6005mm && A.Start_Y >= 68.1995mm && A.Start_Y <= 68.2005mm && A.End_X >= 43.5495mm && A.End_X <= 43.5505mm && A.End_Y >= 69.1495mm && A.End_Y <= 69.1505mm && B.NetName == 'PORT_FB' && B.memberOfFootprint('U400') && B.Pad_Number == '4'")
+  (condition "A.NetName == 'RAW_PROTECTED' && A.Type == 'Track' && A.Start_X >= 18.0995mm && A.Start_X <= 18.1005mm && A.Start_Y >= 65.6995mm && A.Start_Y <= 65.7005mm && A.End_X >= 19.0495mm && A.End_X <= 19.0505mm && A.End_Y >= 66.6495mm && A.End_Y <= 66.6505mm && B.NetName == 'PORT_FB' && B.memberOfFootprint('U400') && B.Pad_Number == '4'")
   (constraint clearance (min 0.564mm)))
 
 # measured floor 0.725 mm, reason I5_U400_FB (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (I5_U400_FB): U400.5 to track (43.7, 67.15)-(44.15, 66.7) on F.Cu"
+(rule "S-10 exception (I5_U400_FB): U400.5 to track (19.2, 64.65)-(19.65, 64.2) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'RAW_PROTECTED' && A.memberOfFootprint('U400') && A.Pad_Number == '5' && B.NetName == 'PORT_FB' && B.Type == 'Track' && B.Start_X >= 43.6995mm && B.Start_X <= 43.7005mm && B.Start_Y >= 67.1495mm && B.Start_Y <= 67.1505mm && B.End_X >= 44.1495mm && B.End_X <= 44.1505mm && B.End_Y >= 66.6995mm && B.End_Y <= 66.7005mm")
+  (condition "A.NetName == 'RAW_PROTECTED' && A.memberOfFootprint('U400') && A.Pad_Number == '5' && B.NetName == 'PORT_FB' && B.Type == 'Track' && B.Start_X >= 19.1995mm && B.Start_X <= 19.2005mm && B.Start_Y >= 64.6495mm && B.Start_Y <= 64.6505mm && B.End_X >= 19.6495mm && B.End_X <= 19.6505mm && B.End_Y >= 64.1995mm && B.End_Y <= 64.2005mm")
   (constraint clearance (min 0.725mm)))
 
 # measured floor 0.885 mm, reason I5_U400_FB (check_r12 S-10, m3_design/r12_fire.py)
-(rule "S-10 exception (I5_U400_FB): track (42.6, 67.3)-(42.6, 68.2) to track (43.7, 67.15)-(44.15, 66.7) on F.Cu"
+(rule "S-10 exception (I5_U400_FB): track (18.1, 64.8)-(18.1, 65.7) to track (19.2, 64.65)-(19.65, 64.2) on F.Cu"
   (layer "F.Cu")
-  (condition "A.NetName == 'RAW_PROTECTED' && A.Type == 'Track' && A.Start_X >= 42.5995mm && A.Start_X <= 42.6005mm && A.Start_Y >= 67.2995mm && A.Start_Y <= 67.3005mm && A.End_X >= 42.5995mm && A.End_X <= 42.6005mm && A.End_Y >= 68.1995mm && A.End_Y <= 68.2005mm && B.NetName == 'PORT_FB' && B.Type == 'Track' && B.Start_X >= 43.6995mm && B.Start_X <= 43.7005mm && B.Start_Y >= 67.1495mm && B.Start_Y <= 67.1505mm && B.End_X >= 44.1495mm && B.End_X <= 44.1505mm && B.End_Y >= 66.6995mm && B.End_Y <= 66.7005mm")
+  (condition "A.NetName == 'RAW_PROTECTED' && A.Type == 'Track' && A.Start_X >= 18.0995mm && A.Start_X <= 18.1005mm && A.Start_Y >= 64.7995mm && A.Start_Y <= 64.8005mm && A.End_X >= 18.0995mm && A.End_X <= 18.1005mm && A.End_Y >= 65.6995mm && A.End_Y <= 65.7005mm && B.NetName == 'PORT_FB' && B.Type == 'Track' && B.Start_X >= 19.1995mm && B.Start_X <= 19.2005mm && B.Start_Y >= 64.6495mm && B.Start_Y <= 64.6505mm && B.End_X >= 19.6495mm && B.End_X <= 19.6505mm && B.End_Y >= 64.1995mm && B.End_Y <= 64.2005mm")
   (constraint clearance (min 0.885mm)))
 
 # D-R12-03: 0.3 mm drill, no small-hole surcharge (cost_study.md section 2.1) (https://jlcpcb.com/capabilities/pcb-capabilities)

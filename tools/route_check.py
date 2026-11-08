@@ -395,7 +395,7 @@ PARALLEL_VIAS_R12 = [
     ('VCAP1', (28.6, 61.05),
      "R12F8-TRI-02: U1.F8 to C19; the barrel sits at the B.Cu lane's bend, joined to C19.1 by a 0.6 mm F.Cu stub, beside "
      "the first barrel (29.4, 61.85) on the 1.13 mm B.Cu diagonal"),
-    ('PORT_SENSE', (26.45, 78.4),
+    ('PORT_SENSE', (26.45, 75.4),
      "R12F9-TRI-08: PD10's divider end of the B.Cu lane; the barrel sits on the lane 0.72 mm aft of the first (26.45, "
      "79.12) and joins R111.2 by its own F.Cu run (a 1.06 mm diagonal and 0.72 mm into the pad from the north)"),
 ]
@@ -454,15 +454,8 @@ ALLOWLIST_R12 = [
      'U6\'s via (20.1, 35.2): 3 vias, the fewest the pin orders allow (Measured, zone_check: route 22.36 mm against a '
      '17.25 mm MST, ratio 1.30)',
      dict(len_mm=22.36, vias=3)),
-    ('detour', 'QSPI_CLK', 'net', (22.6, 55.2),
-     'D-R12-98 (integration): CLK leaves U1 at G5 (22.6, 55.2), aft of IO0 / IO3, and the only legal F.Cu entry to U3.6 is '
-     'from the pad row\'s inner end: C19 / C20 leave one 0.7 mm gap west of U3, which IO3 uses, and B.Cu under the BGA '
-     'carries the QSPI_IO2 / VCAP lanes (no via spot 0.47 mm clear of them, K-reference), so CLK runs east along the '
-     'interstitial row y 54.8 and turns forward east of IO0 / IO3 (Measured, zone_check: 19.4 mm against 11.87 mm, ratio '
-     '1.63, 0 vias)',
-     dict(len_mm=19.4, vias=0)),
 ]
-ROUTE_FIGURES_R12 = {'3V3A': (74.74, 5), 'SPI1_MISO': (22.36, 3), 'QSPI_CLK': (19.4, 0)}   # D-R12-98: zone_check, merged board
+ROUTE_FIGURES_R12 = {'3V3A': (74.74, 5), 'SPI1_MISO': (22.36, 3)}   # D-R12-98: zone_check, merged board; R12F9 lane L: QSPI_CLK 12.9 mm to the moved U3, no longer a detour
 R11_DATA = Path(__file__).resolve().parents[1] / 'm3_design/r11/design/r11_gate_data.json'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
