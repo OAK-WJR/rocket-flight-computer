@@ -45,6 +45,71 @@ V33_RAIL = '3V3 (U2 LMR50410, R14 47k / R15 20k)'
 # stacking with the resistor tolerance are Inference.
 V33_PFM_BAND = (-0.015, 0.025)
 V33_VREF_NOM = 1.0
+# R12F8-TRI-07: U9 TPS259470A RON, TI SLVSFC9C section 6.5: 28.2 mOhm typ (25 C), 45 mOhm max over 2.7 <= VIN <= 23 V,
+# IOUT 3 A, -40 <= TJ <= 125 C (Datasheet). Every bound below takes the maximum (it was 40 mOhm, an Inference under it).
+U9_RON = 0.045
+# R12 U9 EN chain (unchanged values): R80 / R165 470k in series from the switch, R81 300k to GND, C87 220 nF; TI SLVSFC9C
+# section 6.5: EN / UVLO rising 1.183-1.223 V, falling 1.076-1.116 V, IENLKG +/-0.1 uA; D402 (ESD103-B1-02EL) <= 50 nA
+# reverse leakage (Infineon ESD103 Rev 1.3) at J400.2. C87 x 0.72 is R10's X7R bias / temperature / tolerance allowance at
+# the fast-discharge end (Inference)
+EN_TOP, EN_R81, EN_C87, EN_C87_LOW = 2 * 470e3, 300e3, 220e-9, 0.72
+EN_I_U9, EN_I_D402, EN_OFF_MAX = 0.1e-6, 50e-9, 1.116
+# R60 100k / R61 10k (PA6 = VLOGIC x R61 / (R60 + R61)); firmware PA6 threshold 0.42-0.45 V (D-R12-21)
+PA6_TOP, PA6_BOT, PA6_THRESHOLD = 100e3, 10e3, (0.42, 0.45)
+# SS34 (D5) VF at the logic current 0.25-0.45 V (Inference: typical curve, no maximum at that current; vlogic())
+D5_VF = (0.25, 0.45)
+
+
+def en_model(v_bat, tol=0.01):
+    """R10's U9 EN model (D-R24-19, D-R26-03; r11_stageD.en_model) with the resistor tolerance as a parameter
+    (R12F8-TRI-06): R80 / R165 at +tol, R81 at -tol (the slow-trip corner: lowest closed EN, fastest open decay), C87
+    220 nF x 0.72, U9 EN leakage 0.1 uA out of the node, D402 50 nA at J400.2. tol = 0.01 reproduces r11_stageD.en_model
+    exactly. Returns the closed EN voltage, the single drop-out that trips U9 at 1.116 V, and the periodic
+    one-block-per-100-ms open time that trips it (the late-block worst train)."""
+    r_top, r81, c = EN_TOP * (1 + tol), EN_R81 * (1 - tol), EN_C87 * EN_C87_LOW
+    i_u9, i_d402, v_off = EN_I_U9, EN_I_D402, EN_OFF_MAX
+    r_th = r_top * r81 / (r_top + r81)
+    v_closed = v_bat * r81 / (r_top + r81) - i_u9 * r_th
+    r80, r_low = EN_TOP / 2 * (1 + tol), EN_TOP / 2 * (1 + tol) + r81
+    v_closed -= i_d402 * (r80 * r_low / (r80 + r_low)) * (r81 / r_low)
+    tau_o, tau_c = r81 * c, r_th * c
+    a = (i_u9 + i_d402) * r81
+    single = tau_o * math.log((v_closed + a) / (v_off + a)) if v_closed > v_off else 0.0
+
+    def bottom(t_open, period=.1):
+        x, y = math.exp(-t_open / tau_o), math.exp(-(period - t_open) / tau_c)
+        return ((v_closed * (1 - y) + a) * x - a) / (1 - x * y)
+    lo, hi = 0.0, single
+    for _ in range(80):
+        mid = (lo + hi) / 2
+        lo, hi = (mid, hi) if bottom(mid) > v_off else (lo, mid)
+    return dict(v_bat=v_bat, en_closed_V=v_closed, single_dropout_trip_ms=single * 1e3,
+                periodic_100ms_trip_open_ms=lo * 1e3, en_at_7ms_open_per_100ms_V=bottom(.007),
+                tau_open_ms=tau_o * 1e3, tau_closed_ms=tau_c * 1e3)
+
+
+def u9_turn_off_bat_V(tol):
+    """The highest BAT_IN at which U9 turns off (closed EN falls to EN falling's 1.116 V maximum) at the slow corner of
+    en_model: the closed EN is linear in BAT_IN (Calculation on SLVSFC9C limits and the resistor case)."""
+    e0, e1 = en_model(0.0, tol)['en_closed_V'], en_model(1.0, tol)['en_closed_V']
+    return (EN_OFF_MAX - e0) / (e1 - e0)
+
+
+def pa6_ratio(tol):
+    """(lowest, highest) PA6 / VLOGIC ratio with R60 / R61 each at its own worst end of tol."""
+    lo = PA6_BOT * (1 - tol) / (PA6_BOT * (1 - tol) + PA6_TOP * (1 + tol))
+    hi = PA6_BOT * (1 + tol) / (PA6_BOT * (1 + tol) + PA6_TOP * (1 - tol))
+    return lo, hi
+
+
+def pa6_trip_window(tol=None):
+    """VLOGIC trip window [lowest, highest] for the 0.42-0.45 V PA6 threshold: tol None = the nominal ratio (x 11),
+    else the divider at that tolerance (lowest = 0.42 / highest ratio, highest = 0.45 / lowest ratio)."""
+    if tol is None:
+        k = (PA6_TOP + PA6_BOT) / PA6_BOT
+        return [PA6_THRESHOLD[0] * k, PA6_THRESHOLD[1] * k]
+    lo, hi = pa6_ratio(tol)
+    return [PA6_THRESHOLD[0] / hi, PA6_THRESHOLD[1] / lo]
 
 
 def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
@@ -128,7 +193,18 @@ def u9():
                          'pack); a 3S pack above the highest rising threshold is cut off (F9 "wrong 3S")')
     out['ovlo_check_ok'] = all(out[c]['ovlo_falling_V'][0] > 8.4 for c in TOL)
     out['ovlo_pin_V_at_8V4'] = round(8.4 * bot / (top + bot), 3)
-    out['ovlo_pin_roc'] = 'VOVLO 0.5-1.5 V recommended (SLVSFC9C section 6.3): 0.676 V at the 5.71 V four-stall point'
+    # R12F8-TRI-10: OVLO pin = BAT_IN x (R83 100k + R93 33k) / (R82 1M + 133k), at the 5.71 V four-stall point; the range
+    # takes each side of the divider at its own worst end (leakage neglected)
+    v4 = 5.71
+    out['ovlo_pin_V_at_5V71'] = dict(
+        nominal=round(v4 * bot / (top + bot), 4),
+        **{case: [round(v4 * bot * (1 - tol) / (top * (1 + tol) + bot * (1 - tol)), 4),
+                  round(v4 * bot * (1 + tol) / (top * (1 - tol) + bot * (1 + tol)), 4)] for case, tol in TOL.items()})
+    out['ovlo_pin_roc'] = ('VOVLO 0.5-1.5 V recommended (SLVSFC9C section 6.3): '
+                           f"{out['ovlo_pin_V_at_5V71']['nominal']:.3f} V at the 5.71 V four-stall point "
+                           f"({out['ovlo_pin_V_at_5V71']['initial'][0]:.4f}-{out['ovlo_pin_V_at_5V71']['initial'][1]:.4f} V "
+                           'with 1 % resistors), inside the range')
+    out['ovlo_pin_roc_ok'] = all(0.5 <= x <= 1.5 for case in TOL for x in out['ovlo_pin_V_at_5V71'][case])
     out['ilim_basis'] = ('Datasheet ILIM at exactly 750 ohm, scaled 1/R for the 1 % pair (Inference: TI gives no '
                          'RILM sensitivity formula in section 6.5)')
     en = 300e3 / (470e3 + 470e3 + 300e3)
@@ -137,7 +213,9 @@ def u9():
         en_abs_max_ok_at_19V9=round(19.9 * en, 3) < 6.5,
         carried='R80 / R165 470k, R81 300k, C87 220 nF, D402 unchanged in value (0603 basic cases); U9 A and L share the '
                 'EN / UVLO limits, so R11 / R10 F6 figures (turn-on 30-130 ms; single drop-out 10.3 ms at 6.0 V, 8.1 ms '
-                'at 5.71 V; D-R24-19) carry over as Calculation / Inference; stage D re-runs them with R12 tolerances')
+                'at 5.71 V; D-R24-19) carry over as Calculation / Inference; stage D re-runs them over both resistor cases '
+                '(R12F8-TRI-06)')
+    out['turn_off_max_bat_V'] = {case: round(u9_turn_off_bat_V(tol), 4) for case, tol in TOL.items()}
     out['label'] = 'Calculation on Datasheet limits; ILIM scaling and drift case Inference'
     return out
 
@@ -189,44 +267,63 @@ def sense():
 def vlogic():
     """D-R12-04: VLOGIC = RAW_PROTECTED - D5 or VBUS - D6 (SS34). SS34 (MDD) VF 0.55 V max at 3 A (JLC listing);
     at 0.1-0.4 A it is taken as 0.25-0.45 V (Inference: typical curve, no maximum at that current)."""
-    vf = (0.25, 0.45)
+    vf = D5_VF
     usb = dict(host_V=(4.75, 5.25), low_power_port_V=4.40)
     out = dict(
-        battery_four_stall_V=round(5.713 - 0.04 * 1.5 - vf[1], 3),
-        battery_2s_min_6V_V=round(6.0 - 0.04 * 1.5 - vf[1], 3),
+        battery_four_stall_V=round(5.713 - U9_RON * 1.5 - vf[1], 3),
+        battery_2s_min_6V_V=round(6.0 - U9_RON * 1.5 - vf[1], 3),
         usb_only_V=[round(usb['host_V'][0] - vf[1], 3), round(usb['host_V'][1] - vf[0], 3)],
         usb_low_power_port_V=round(usb['low_power_port_V'] - vf[1], 3),
         lmr50410_uvlo_rising_max_V=4.0, lmr50410_roc_min_V=4.0,
-        pa6_trip_window_V=[4.84, 5.17],
-        basis='U9 RON 0.04 ohm at 1.5 A (Inference); SS34 VF Inference; LMR50410 VIN_UVLO rising 3.55-4.0 V, VIN 4-36 V '
-              '(SLUSDW3A 7.3 / 7.5); PA6 window as R10 / R11 (firmware). USB host port 4.75-5.25 V at the connector '
+        basis='U9 RON 0.045 ohm (SLVSFC9C 6.5 maximum, R12F8-TRI-07) at 1.5 A (the current Inference); SS34 VF '
+              'Inference; LMR50410 VIN_UVLO rising 3.55-4.0 V, VIN 4-36 V (SLUSDW3A 7.3 / 7.5); PA6 window R12\'s '
+              '(D-R12-21, below). USB host port 4.75-5.25 V at the connector '
               '(USB 2.0); a bus-powered hub\'s low-power port may give 4.40 V, below the LMR50410 floor through D6 '
               '(bench rule: a host or powered-hub port, O-R12-03)')
     out['usb_only_ok'] = out['usb_only_V'][0] >= 4.0
-    out['pa6_below_battery_min'] = out['battery_four_stall_V'] > out['pa6_trip_window_V'][1]
-    out['pa6_margin_V'] = round(out['battery_four_stall_V'] - out['pa6_trip_window_V'][1], 3)
     # D-R12-21 (O-R12-07): no E24 pair moves R60 / R61's 1 / 11 toward the needed 0.092-0.097 (every E24 ratio near it
     # is 1 / 11 or >= 0.0979), so the divider stays and the firmware PA6 threshold moves down by about the D5 drop:
-    # PA6 0.42-0.45 V gives VLOGIC 4.62-4.95 V, above the U9 turn-off corner seen through D5 (BAT_IN 4.80 V less VF
-    # 0.25 V = 4.55 V) and below the four-stall VLOGIC (Calculation / Inference, firmware rule)
-    out['pa6_retuned_threshold_V'] = [0.42, 0.45]
-    out['pa6_retuned_window_V'] = [round(0.42 * 11, 3), round(0.45 * 11, 3)]
-    out['pa6_retuned_margins_V'] = dict(
-        above_u9_turn_off_through_d5=round(0.42 * 11 - (4.80 - vf[0]), 3),
-        below_four_stall=round(out['battery_four_stall_V'] - 0.45 * 11, 3))
-    out['label'] = 'Calculation / Inference (diode drop)'
+    # PA6 0.42-0.45 V gives VLOGIC 4.62-4.95 V at the nominal ratio. R12F8-TRI-06: the window and both margins are given
+    # at the nominal ratio and over both resistor cases (R60 / R61 at their own worst ends). The U9 turn-off corner is
+    # the highest BAT_IN at which U9 turns off (u9_turn_off_bat_V, the EN chain in the same resistor case; 4.80 V at 1 %),
+    # seen through D5 at its lowest VF 0.25 V (no load drop: the highest VLOGIC at turn-off); the trip bottom must lie above
+    # it for firmware to see PA6 trip before U9 turns off. It does only at the nominal ratio (Calculation / Inference:
+    # D5 VF)
+    out['pa6_retuned_threshold_V'] = list(PA6_THRESHOLD)
+    out['pa6_retuned_window_V'] = [round(v, 3) for v in pa6_trip_window()]
+    out['pa6_trip_window_V'] = dict(nominal_ratio=out['pa6_retuned_window_V'],
+                                    **{case: [round(v, 4) for v in pa6_trip_window(tol)] for case, tol in TOL.items()})
+    turn_off = dict(nominal_ratio=u9_turn_off_bat_V(TOL['initial']), initial=u9_turn_off_bat_V(TOL['initial']),
+                    drift=u9_turn_off_bat_V(TOL['drift']))
+    out['u9_turn_off_through_d5_V'] = {k: round(v - vf[0], 4) for k, v in turn_off.items()}
+    out['pa6_retuned_margins_V'] = {
+        k: dict(above_u9_turn_off_through_d5=round(out['pa6_trip_window_V'][k][0] - out['u9_turn_off_through_d5_V'][k], 4),
+                below_four_stall=round(out['battery_four_stall_V'] - out['pa6_trip_window_V'][k][1], 4))
+        for k in ('nominal_ratio', 'initial', 'drift')}
+    out['pa6_retuned_margins_basis'] = ('nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21\'s original '
+                                        'comparison); initial / drift: the divider and the EN chain both in that '
+                                        'resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies '
+                                        'below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)')
+    out['pa6_threshold_bottom_needed_V'] = {case: round(out['u9_turn_off_through_d5_V'][case] * pa6_ratio(TOL[case])[1], 4)
+                                            for case in TOL}
+    out['label'] = 'Calculation / Inference (diode drop; resistor drift case Inference)'
     return out
 
 
 def holdup():
     """C84 (470 uF, 300.8 uF low case as R11) feeds VLOGIC only (D5 blocks RAW_PROTECTED): logic 0.6-1.4 W plus the
-    microSD write 3.3 V x 0.2 A / 0.80-0.85 (R10 / R11 load cases), to 3.8 V (R11's end point)."""
+    microSD write 3.3 V x 0.2 A / 0.80-0.85 (R10 / R11 load cases), to 3.8 V (R11's end point). R12F8-TRI-08: the PA6-trip
+    start points are R12's window (0.42-0.45 V, D-R12-21: VLOGIC 4.62-4.95 V at the nominal ratio), not R10 / R11's
+    4.84-5.17 V, at the nominal ratio and over both resistor cases; the battery break starts at 7.4 V less U9 (RON
+    0.045 ohm at 1.5 A) and D5, as stage D does."""
     loads = (0.6 + 3.3 * .2 / .85, 1.4 + 3.3 * .2 / .80)
     def ms(c, v1, w):
         return round(.5 * c * (v1 ** 2 - 3.8 ** 2) / w * 1000, 3)
+    wins = dict(nominal_ratio=pa6_trip_window(), **{case: pa6_trip_window(tol) for case, tol in TOL.items()})
+    u9 = U9_RON * 1.5
     return dict(
-        from_pa6_trip_ms=[ms(300.8e-6, 4.84, loads[1]), ms(470e-6, 5.17, loads[0])],
-        from_battery_break_ms=[ms(300.8e-6, 7.4 - .45, loads[1]), ms(470e-6, 7.4 - .25, loads[0])],
+        from_pa6_trip_ms={k: [ms(300.8e-6, w[0], loads[1]), ms(470e-6, w[1], loads[0])] for k, w in wins.items()},
+        from_battery_break_ms=[ms(300.8e-6, 7.4 - u9 - D5_VF[1], loads[1]), ms(470e-6, 7.4 - u9 - D5_VF[0], loads[0])],
         r11_case_c_ms=[0.464, 0.539],
         note='R11 back-fed the port and camera bucks from C84 through U11 (case c 0.46-0.54 ms); R12 does not, so the '
              'ports and camera drop with RAW_PROTECTED and the logic keeps C84 (Calculation / Inference: constant-power '
@@ -360,13 +457,14 @@ def cam_input():
     TI SLVSD90B section 7.3: maximum recommended duty 75 %, so the minimum recommended input is VO / 0.75; section 6.4.1:
     below VIN 7 V the switching frequency may fall to about 200 kHz; section 5.5: tOFF(MIN) 220 typ / 310 max ns and
     RDS(on)h 95 mOhm typ (25 C). Below VO / 0.75 the window is not claimed. At the four-stall fire point U403's input is
-    taken as the fire model's BAT_IN less U9's RON 0.04 ohm (Inference, as vlogic) at the converters' fire-time current
+    taken as the fire model's BAT_IN less U9's RON 0.045 ohm (SLVSFC9C maximum, R12F8-TRI-07) at the converters' fire-time
+    current
     (fire 'other' / BAT_IN); the highest output U403 can then hold is D_max x (VIN - 1 A x RDS(on)h) with
     D_max = 1 - tOFF(MIN) x 200 kHz (inductor DCR, board copper and hot RDS(on) not included: Inference)."""
     cam = rails()['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)']
     f = fire()
     bat = f['stalls']['4']['BAT_IN_V']
-    vin = bat - 0.04 * f['r12_other_W'] / bat
+    vin = bat - U9_RON * f['r12_other_W'] / bat
     rh, i_out, fsw = 0.095, 1.0, 200e3
     dmax = {k: 1 - t * fsw for k, t in (('tOFF_typ_220ns', 220e-9), ('tOFF_max_310ns', 310e-9))}
     held = {k: round(d * (vin - i_out * rh), 3) for k, d in dmax.items()}
@@ -381,7 +479,7 @@ def cam_input():
                          'off-time limit: CAM_5V may fall below the 5.221 V window low end to about '
                          f'{min(held.values()):.2f} V (above the camera 5.0 V minimum before harness drop); the '
                          'camera is not shown to fail'),
-        label='Calculation / Inference (Datasheet duty, tOFF(MIN) and RDS(on)h; U9 RON, currents, DCR and copper '
+        label='Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and U9 RON maximum; currents, DCR and copper '
               'Inference)')
 
 
@@ -409,7 +507,7 @@ def buck_headroom(vin, row, i_out):
 def port_input():
     """R12F5-TRI-02: the PORT_4V8 window is the feedback window, valid only while U400 can regulate (as D-R12-87 for
     U403): U400 VIN >= VO / 0.75 (TI SLVSD90B section 7.3). Stage A (no board): U400's input is BAT_IN less U9's RON
-    0.04 ohm at the converter current (Inference, as vlogic / cam_input), at the four-stall fire point of fire() and on a
+    0.045 ohm (SLVSFC9C maximum, R12F8-TRI-07) at the converter current, at the four-stall fire point of fire() and on a
     6.0 V open-circuit pack (R10 pack model 0.15 ohm, no fire, no stall, the same converter load); the ports draw the
     0.561 A budget (Inference). r12_stageD (stageD_budget.json port_supply.u400_input) repeats it with the board copper."""
     port = rails()[PORT_RAIL]
@@ -425,14 +523,14 @@ def port_input():
                                       for c in TOL)
                           + '); below it the PORT_4V8 window is not claimed, and the headroom estimate below applies'))
     for name, bat in pts.items():
-        vin = bat - 0.04 * other / bat
+        vin = bat - U9_RON * other / bat
         out[name] = dict(BAT_IN_V=round(bat, 4), **buck_headroom(vin, port, PORT_BUDGET_A))
     out['note'] = ('below about 6.1-6.6 V U400 runs past its 75 % recommended duty; at the nominal 580 kHz its minimum '
                    'off-time would cap the output under the window, but below VIN 7 V the frequency may fold back to '
                    'about 200 kHz (SLVSD90B 6.4.1), which leaves room for the window top: regulation should hold '
                    '(Inference; bench item)')
-    out['label'] = ('Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and foldback floor; U9 RON, pack model, '
-                    'converter load, DCR and copper Inference)')
+    out['label'] = ('Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h, foldback floor and U9 RON maximum; '
+                    'pack model, converter load, DCR and copper Inference)')
     return out
 
 

@@ -5,14 +5,14 @@
    "tOFF_typ_220ns": 0.956
   },
   "four_stall_BAT_IN_V": 5.7211,
-  "four_stall_U403_VIN_V": 5.63,
-  "four_stall_duty_needed_lossless": 0.9273,
+  "four_stall_U403_VIN_V": 5.619,
+  "four_stall_duty_needed_lossless": 0.9292,
   "four_stall_max_held_V": {
-   "tOFF_max_310ns": 5.192,
-   "tOFF_typ_220ns": 5.292
+   "tOFF_max_310ns": 5.182,
+   "tOFF_typ_220ns": 5.281
   },
-  "four_stall_note": "at the four-stall point U403 runs past its 75 % recommended duty, at or near its minimum off-time limit: CAM_5V may fall below the 5.221 V window low end to about 5.19 V (above the camera 5.0 V minimum before harness drop); the camera is not shown to fail",
-  "label": "Calculation / Inference (Datasheet duty, tOFF(MIN) and RDS(on)h; U9 RON, currents, DCR and copper Inference)",
+  "four_stall_note": "at the four-stall point U403 runs past its 75 % recommended duty, at or near its minimum off-time limit: CAM_5V may fall below the 5.221 V window low end to about 5.18 V (above the camera 5.0 V minimum before harness drop); the camera is not shown to fail",
+  "label": "Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and U9 RON maximum; currents, DCR and copper Inference)",
   "min_recommended_VIN_V": {
    "drift": [
     6.882,
@@ -582,13 +582,23 @@
  },
  "holdup": {
   "from_battery_break_ms": [
-   2.289,
-   6.263
+   2.226,
+   6.099
   ],
-  "from_pa6_trip_ms": [
-   0.607,
-   2.098
-  ],
+  "from_pa6_trip_ms": {
+   "drift": [
+    0.382,
+    1.98
+   ],
+   "initial": [
+    0.415,
+    1.873
+   ],
+   "nominal_ratio": [
+    0.467,
+    1.718
+   ]
+  },
   "label": "Calculation / Inference",
   "note": "R11 back-fed the port and camera bucks from C84 through U11 (case c 0.46-0.54 ms); R12 does not, so the ports and camera drop with RAW_PROTECTED and the logic keeps C84 (Calculation / Inference: constant-power loads, no credit for C6 / C99)",
   "r11_case_c_ms": [
@@ -600,7 +610,7 @@
   "6V0_pack_converters_only": {
    "BAT_IN_V": 5.6563,
    "I_out_A": 0.561,
-   "VIN_V": 5.5646,
+   "VIN_V": 5.5531,
    "below_recommended_duty": false,
    "dmax": {
     "200kHz_tOFF_max_310ns": 0.938,
@@ -610,38 +620,38 @@
    },
    "duty_needed": {
     "drift": [
-     0.8293,
-     0.9022
+     0.831,
+     0.9041
     ],
     "initial": [
-     0.8352,
-     0.8959
+     0.837,
+     0.8978
     ]
    },
    "duty_needed_lossless": {
     "drift": [
-     0.8214,
-     0.8935
+     0.8231,
+     0.8954
     ],
     "initial": [
-     0.8272,
-     0.8873
+     0.8289,
+     0.8892
     ]
    },
    "holds_window_top_at_580kHz": false,
    "holds_window_top_with_foldback": true,
    "max_held_V": {
-    "200kHz_tOFF_max_310ns": 5.17,
-    "200kHz_tOFF_typ_220ns": 5.269,
-    "580kHz_tOFF_max_310ns": 4.52,
-    "580kHz_tOFF_typ_220ns": 4.808
+    "200kHz_tOFF_max_310ns": 5.159,
+    "200kHz_tOFF_typ_220ns": 5.258,
+    "580kHz_tOFF_max_310ns": 4.511,
+    "580kHz_tOFF_typ_220ns": 4.798
    },
    "window_top_V": 4.9722
   },
   "four_stall_fire": {
    "BAT_IN_V": 5.7211,
    "I_out_A": 0.561,
-   "VIN_V": 5.6305,
+   "VIN_V": 5.6191,
    "below_recommended_duty": false,
    "dmax": {
     "200kHz_tOFF_max_310ns": 0.938,
@@ -651,35 +661,35 @@
    },
    "duty_needed": {
     "drift": [
-     0.8195,
-     0.8915
+     0.8212,
+     0.8933
     ],
     "initial": [
-     0.8253,
-     0.8853
+     0.827,
+     0.8871
     ]
    },
    "duty_needed_lossless": {
     "drift": [
-     0.8118,
-     0.8831
+     0.8134,
+     0.8849
     ],
     "initial": [
-     0.8175,
-     0.877
+     0.8192,
+     0.8787
     ]
    },
    "holds_window_top_at_580kHz": false,
    "holds_window_top_with_foldback": true,
    "max_held_V": {
-    "200kHz_tOFF_max_310ns": 5.231,
-    "200kHz_tOFF_typ_220ns": 5.332,
-    "580kHz_tOFF_max_310ns": 4.574,
-    "580kHz_tOFF_typ_220ns": 4.866
+    "200kHz_tOFF_max_310ns": 5.221,
+    "200kHz_tOFF_typ_220ns": 5.321,
+    "580kHz_tOFF_max_310ns": 4.565,
+    "580kHz_tOFF_typ_220ns": 4.856
    },
    "window_top_V": 4.9722
   },
-  "label": "Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and foldback floor; U9 RON, pack model, converter load, DCR and copper Inference)",
+  "label": "Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h, foldback floor and U9 RON maximum; pack model, converter load, DCR and copper Inference)",
   "min_recommended_VIN_V": {
    "drift": [
     6.094,
@@ -856,7 +866,7 @@
    ]
   },
   "en_chain": {
-   "carried": "R80 / R165 470k, R81 300k, C87 220 nF, D402 unchanged in value (0603 basic cases); U9 A and L share the EN / UVLO limits, so R11 / R10 F6 figures (turn-on 30-130 ms; single drop-out 10.3 ms at 6.0 V, 8.1 ms at 5.71 V; D-R24-19) carry over as Calculation / Inference; stage D re-runs them with R12 tolerances",
+   "carried": "R80 / R165 470k, R81 300k, C87 220 nF, D402 unchanged in value (0603 basic cases); U9 A and L share the EN / UVLO limits, so R11 / R10 F6 figures (turn-on 30-130 ms; single drop-out 10.3 ms at 6.0 V, 8.1 ms at 5.71 V; D-R24-19) carry over as Calculation / Inference; stage D re-runs them over both resistor cases (R12F8-TRI-06)",
    "closed_en_at_8V4_V": 2.032,
    "en_abs_max_ok_at_19V9": true,
    "turn_on_min_bat_V": 5.055
@@ -880,22 +890,47 @@
   "ovlo_check": "2S full charge 8.4 V stays below the lowest falling threshold (no OVLO hysteresis on a full pack); a 3S pack above the highest rising threshold is cut off (F9 \"wrong 3S\")",
   "ovlo_check_ok": true,
   "ovlo_nominal_V": 10.223,
+  "ovlo_pin_V_at_5V71": {
+   "drift": [
+    0.6508,
+    0.6903
+   ],
+   "initial": [
+    0.6585,
+    0.6822
+   ],
+   "nominal": 0.6703
+  },
   "ovlo_pin_V_at_8V4": 0.986,
-  "ovlo_pin_roc": "VOVLO 0.5-1.5 V recommended (SLVSFC9C section 6.3): 0.676 V at the 5.71 V four-stall point"
+  "ovlo_pin_roc": "VOVLO 0.5-1.5 V recommended (SLVSFC9C section 6.3): 0.670 V at the 5.71 V four-stall point (0.6585-0.6822 V with 1 % resistors), inside the range",
+  "ovlo_pin_roc_ok": true,
+  "turn_off_max_bat_V": {
+   "drift": 4.851,
+   "initial": 4.8021
+  }
  },
  "vlogic": {
-  "basis": "U9 RON 0.04 ohm at 1.5 A (Inference); SS34 VF Inference; LMR50410 VIN_UVLO rising 3.55-4.0 V, VIN 4-36 V (SLUSDW3A 7.3 / 7.5); PA6 window as R10 / R11 (firmware). USB host port 4.75-5.25 V at the connector (USB 2.0); a bus-powered hub's low-power port may give 4.40 V, below the LMR50410 floor through D6 (bench rule: a host or powered-hub port, O-R12-03)",
-  "battery_2s_min_6V_V": 5.49,
-  "battery_four_stall_V": 5.203,
-  "label": "Calculation / Inference (diode drop)",
+  "basis": "U9 RON 0.045 ohm (SLVSFC9C 6.5 maximum, R12F8-TRI-07) at 1.5 A (the current Inference); SS34 VF Inference; LMR50410 VIN_UVLO rising 3.55-4.0 V, VIN 4-36 V (SLUSDW3A 7.3 / 7.5); PA6 window R12's (D-R12-21, below). USB host port 4.75-5.25 V at the connector (USB 2.0); a bus-powered hub's low-power port may give 4.40 V, below the LMR50410 floor through D6 (bench rule: a host or powered-hub port, O-R12-03)",
+  "battery_2s_min_6V_V": 5.482,
+  "battery_four_stall_V": 5.196,
+  "label": "Calculation / Inference (diode drop; resistor drift case Inference)",
   "lmr50410_roc_min_V": 4.0,
   "lmr50410_uvlo_rising_max_V": 4.0,
-  "pa6_below_battery_min": true,
-  "pa6_margin_V": 0.033,
   "pa6_retuned_margins_V": {
-   "above_u9_turn_off_through_d5": 0.07,
-   "below_four_stall": 0.253
+   "drift": {
+    "above_u9_turn_off_through_d5": -0.119,
+    "below_four_stall": 0.0931
+   },
+   "initial": {
+    "above_u9_turn_off_through_d5": -0.0153,
+    "below_four_stall": 0.1551
+   },
+   "nominal_ratio": {
+    "above_u9_turn_off_through_d5": 0.0679,
+    "below_four_stall": 0.246
+   }
   },
+  "pa6_retuned_margins_basis": "nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21's original comparison); initial / drift: the divider and the EN chain both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)",
   "pa6_retuned_threshold_V": [
    0.42,
    0.45
@@ -904,10 +939,29 @@
    4.62,
    4.95
   ],
-  "pa6_trip_window_V": [
-   4.84,
-   5.17
-  ],
+  "pa6_threshold_bottom_needed_V": {
+   "drift": 0.4311,
+   "initial": 0.4214
+  },
+  "pa6_trip_window_V": {
+   "drift": [
+    4.482,
+    5.1029
+   ],
+   "initial": [
+    4.5368,
+    5.0409
+   ],
+   "nominal_ratio": [
+    4.62,
+    4.95
+   ]
+  },
+  "u9_turn_off_through_d5_V": {
+   "drift": 4.601,
+   "initial": 4.5521,
+   "nominal_ratio": 4.5521
+  },
   "usb_low_power_port_V": 3.95,
   "usb_only_V": [
    4.3,

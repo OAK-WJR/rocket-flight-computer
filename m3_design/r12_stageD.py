@@ -8,10 +8,13 @@ R11's m3_design/r11_stageD.py adapted to R12's four-layer, one-sided board and R
     one-width formula in r10_parts.native_fire_copper is not used), R10's GAP-1 pack model (r10_parts.power_budget's
     fire_case, re-stated here) with R12's FETs and converter load (m3_design/r12_budget.py), the GND fire return by
     DC solve against R10's 5 mOhm allowance, shorted-match currents and FET dissipation, gate drive, adiabatic rise;
-  * J400 / U9 EN timing and chatter (R10's EN model, r11_stageD.en_model, unchanged values), turn-on window over R10's
-    C87 range 0.72-1.265 x 220 nF (D-R19-10; R12F7-TRI-17);
+  * J400 / U9 EN timing and chatter (R10's EN model, r12_budget.en_model, unchanged values) in both of R12's resistor
+    cases (1 % and the drift bound, R12F8-TRI-06), turn-on window over R10's C87 range 0.72-1.265 x 220 nF (D-R19-10;
+    R12F7-TRI-17);
   * hold-up (C84 on VLOGIC behind D5, D-R12-04) from the battery break and from the PA6 trip; PA6 trip-window corners
-    with the match / leads shorted (O-R12-07);
+    with the match / leads shorted (O-R12-07), U9 RON at SLVSFC9C's 45 mOhm maximum (R12F8-TRI-07), the PA6 divider in
+    both resistor cases;
+  * U403 (camera buck) input and the camera-pin estimate at the four-stall point (R12F8-TRI-09);
   * rail paths (check_r10.path_graph between R12's terminals): series R, IPC-2152 rise per drawn width at R10's
     design currents (tools/ipc2152.py with th_mm); DC solves of the feeds (tools/r11_dc_net.py's method on R12's four
     layers);
@@ -37,7 +40,8 @@ sys.path.insert(0, str(HERE))
 sys.path.insert(0, str(ROOT / 'tools'))
 import ipc2152                                                    # noqa: E402
 import r12_budget                                                 # noqa: E402
-from r11_stageD import adiabatic, en_model                        # noqa: E402
+from r11_stageD import adiabatic                                  # noqa: E402
+from r12_budget import en_model                                   # noqa: E402
 
 OUT = HERE / 'r12/design/stageD_budget.json'
 RHO = 1.72e-8
@@ -63,6 +67,8 @@ SHORT_A = 4.2
 # components), so 3V3 is solved on the whole board too.
 FULL_BOARD_NETS = ('RAW_PROTECTED', '3V3')
 FOUR_STALL_VIN = 5.71                                             # buck input at the four-stall point (checked below)
+U9_RON = r12_budget.U9_RON                                        # SLVSFC9C 6.5 maximum, 45 mOhm (R12F8-TRI-07)
+TOL = r12_budget.TOL                                              # 'initial' 1 %, 'drift' 1 % + 100 ppm/K x 67 K
 
 
 def sha(path):
@@ -293,44 +299,52 @@ def holdup(four_stall_bat):
     port and camera bucks and R92 are not on it. Constant-power loads to 3.8 V (R10 / R11's end point, Inference for
     the LMR50410): unshed logic 0.6-1.4 W + microSD write 3.3 V x 0.2 A / 0.85-0.80; shed logic 0.62 W + microSD idle
     3.3 V x 0.03 A / 0.85-0.80. Start points: battery break at the 7.4 V launch floor less U9 and D5 (D5 VF 0.25-0.45 V,
-    U9 0.04 ohm x 1.5 A, Inference); PA6 trip at the window below. No credit for C6 / C99 (Inference)."""
+    Inference; U9 at SLVSFC9C's 0.045 ohm maximum x 1.5 A, the current Inference); PA6 trip at the window below, at the
+    nominal ratio and with the divider in each resistor case (R12F8-TRI-08). No credit for C6 / C99 (Inference)."""
     loads = dict(unshed=(.6 + 3.3 * .2 / .85, 1.4 + 3.3 * .2 / .80), shed=(.62 + 3.3 * .03 / .85, .62 + 3.3 * .03 / .80))
     def ms(c, v0, w, v_end=3.8):
         return .5 * c * (v0 ** 2 - v_end ** 2) / w * 1e3
     win = pa6_window()
+    u9 = U9_RON * 1.5
     out = {}
     for case, (wmin, wmax) in loads.items():
         out[case] = dict(
             load_W=[wmin, wmax],
-            battery_break_ms=[ms(300.8e-6, PACK_V - .45 - .06, wmax), ms(470e-6, PACK_V - .25 - .06, wmin)],
-            pa6_trip_nominal_ratio_ms=[ms(300.8e-6, win['nominal_ratio_V'][0], wmax),
-                                       ms(470e-6, win['nominal_ratio_V'][1], wmin)],
-            pa6_trip_with_divider_tolerance_ms=[ms(300.8e-6, win['with_divider_tolerance_V'][0], wmax),
-                                                ms(470e-6, win['with_divider_tolerance_V'][1], wmin)],
-            battery_break_to_3V5_ms=[ms(300.8e-6, PACK_V - .45 - .06, wmax, 3.5), ms(470e-6, PACK_V - .25 - .06, wmin, 3.5)])
+            battery_break_ms=[ms(300.8e-6, PACK_V - .45 - u9, wmax), ms(470e-6, PACK_V - .25 - u9, wmin)],
+            pa6_trip_ms={k: [ms(300.8e-6, w[0], wmax), ms(470e-6, w[1], wmin)] for k, w in win['trip_V'].items()},
+            battery_break_to_3V5_ms=[ms(300.8e-6, PACK_V - .45 - u9, wmax, 3.5), ms(470e-6, PACK_V - .25 - u9, wmin, 3.5)])
+        out[case]['pa6_trip_range_ms'] = {k: [min(out[case]['pa6_trip_ms'][j][0] for j in ('nominal_ratio', k)),
+                                              max(out[case]['pa6_trip_ms'][j][1] for j in ('nominal_ratio', k))]
+                                          for k in TOL}
     out['r11_case_c_ms'] = [.464, .539]
-    out['label'] = 'Calculation / Inference (constant-power allocations, D5 drop, C84 allowance, 3.8 V end point)'
+    out['label'] = ('Calculation / Inference (constant-power allocations, D5 drop, C84 allowance, 3.8 V end point; the '
+                    'drift case Inference); pa6_trip_range_ms is the range over the divider tolerance of that case')
     return out
 
 
 def pa6_window():
     """PA6 = VLOGIC x R61 / (R60 + R61), R60 100k / R61 10k; firmware threshold 0.42-0.45 V (D-R12-21, O-R12-17).
-    'nominal_ratio' is R10 / R11's method (x 11); 'with_divider_tolerance' adds the two 1 % resistors (Calculation)."""
-    lo_ratio, hi_ratio = 10e3 * .99 / (10e3 * .99 + 100e3 * 1.01), 10e3 * 1.01 / (10e3 * 1.01 + 100e3 * .99)
-    return dict(threshold_V=[.42, .45], nominal_ratio_V=[.42 * 11, .45 * 11],
-                with_divider_tolerance_V=[.42 / hi_ratio, .45 / lo_ratio], ratio=[lo_ratio, hi_ratio])
+    trip_V: 'nominal_ratio' is R10 / R11's method (x 11); 'initial' / 'drift' put R60 / R61 at their own worst ends of
+    R12's two resistor cases (1 %; 1 % + 100 ppm/K over 67 K, R12F8-TRI-06) (Calculation; drift Inference)."""
+    return dict(threshold_V=list(r12_budget.PA6_THRESHOLD),
+                trip_V=dict(nominal_ratio=r12_budget.pa6_trip_window(),
+                            **{case: r12_budget.pa6_trip_window(tol) for case, tol in TOL.items()}),
+                ratio={case: list(r12_budget.pa6_ratio(tol)) for case, tol in TOL.items()})
 
 
 def pa6_corners(fire, u9_feed_ohm, raw_ohm):
     """VLOGIC during the fire at the healthy / match-shorted / match-and-leads-shorted four-stall points, against the
-    PA6 trip window (O-R12-07): BAT_IN less U9's RON (0.04 ohm, Inference) and the J1 -> U9.5 copper at the whole
+    PA6 trip window (O-R12-07): BAT_IN less U9's RON (SLVSFC9C's 0.045 ohm maximum, R12F8-TRI-07) and the J1 -> U9.5
+    copper at the whole
     converter current, less the RAW_PROTECTED drop at D5.2, less D5 (SS34 VF 0.25-0.45 V, Inference).
     R12F3-TRI-09: each RAW_PROTECTED branch is charged at its own share of the U9.6 -> D5.2 resistance, not all at
     U9 -> D5's: in a resistive network fed from U9.6, the drop a current into sink b causes at sink a (the mutual
     resistance) is at most the smaller of the two sinks' own resistances to U9.6 (maximum principle and reciprocity),
     so U403 (camera) is charged at min(R(U9 -> U403), R(U9 -> D5)), U400 (ports) at min(R(U9 -> U400), R(U9 -> D5)),
     and D5's own load and R92's bleed at R(U9 -> D5) (dc_solves, each an upper bound). The drop is therefore an upper
-    bound and the margins lower bounds (Calculation on the DC solves; the allocations Inference)."""
+    bound, and the margins lower bounds (Calculation on the DC solves; the allocations Inference). Margins are given to
+    the trip top at the nominal ratio and in both resistor cases (R12F8-TRI-06); D-R12-21's margin of the trip bottom over
+    U9's turn-off corner seen through D5 (r12_budget.vlogic) is given in each case too."""
     other, parts = fire['other_converter_load_W'], fire['other_load_parts']
     r_d5 = raw_ohm['D5']
     shared = {'U403 (camera)': (parts['camera_W'], min(raw_ohm['U403'], r_d5)),
@@ -345,20 +359,24 @@ def pa6_corners(fire, u9_feed_ohm, raw_ohm):
         v = c['BAT_IN_V']
         i = other / v
         raw_drop = sum(w / v * r for w, r in shared.values())
-        drop = i * (.04 + u9_feed_ohm) + raw_drop
-        lumped = i * (.04 + u9_feed_ohm + r_d5)
+        drop = i * (U9_RON + u9_feed_ohm) + raw_drop
+        lumped = i * (U9_RON + u9_feed_ohm + r_d5)
         vl = [v - drop - .45, v - drop - .25]
         out[name] = dict(BAT_IN_V=v, converter_A=i, U9_and_copper_drop_V=drop, RAW_PROTECTED_drop_at_D5_V=raw_drop,
                          lumped_drop_V_superseded=lumped, VLOGIC_V=vl,
-                         margin_to_nominal_trip_top_V=vl[0] - win['nominal_ratio_V'][1],
-                         margin_to_tolerance_trip_top_V=vl[0] - win['with_divider_tolerance_V'][1])
+                         margin_to_trip_top_V={k: vl[0] - w[1] for k, w in win['trip_V'].items()})
     out['branch_shared_ohm'] = {k: r for k, (_, r) in shared.items()}
     out['raw_point_ohm'] = dict(raw_ohm)
     out['window'] = win
-    out['u9_turn_off_through_d5_V'] = 4.80 - .25
+    out['u9_ron_ohm'] = U9_RON
+    vlog = r12_budget.vlogic()
+    out['u9_turn_off_through_d5_V'] = vlog['u9_turn_off_through_d5_V']
+    out['trip_bottom_above_u9_turn_off_V'] = {k: m['above_u9_turn_off_through_d5']
+                                              for k, m in vlog['pa6_retuned_margins_V'].items()}
+    out['trip_bottom_basis'] = vlog['pa6_retuned_margins_basis']
     out['label'] = ('Calculation / Inference (DC-solve upper bounds, mutual resistance bounded by the smaller point '
-                    'resistance; U9 RON, SS34 VF and the load allocations are Inference); the drop is an upper bound, '
-                    'the margins lower bounds')
+                    'resistance; U9 RON at the SLVSFC9C maximum; SS34 VF, the load allocations and the resistor drift '
+                    'case are Inference); the drop is an upper bound, the margins lower bounds')
     return out
 
 
@@ -366,40 +384,64 @@ C87_LOW, C87_HIGH = .72, 1.10 * 1.15                               # R10 D-R19-1
 
 
 def en_figures(four):
-    """R10's EN model (r11_stageD.en_model: R80 / R165 470k, R81 300k, C87 220 nF x 0.72, U9 0.1 uA, D402 50 nA;
-    values unchanged on R12, D-R12-09), at R12's four-stall BAT_IN; the lowest pack voltage at which the J400 7 ms
+    """R10's EN model (r12_budget.en_model: R80 / R165 470k, R81 300k, C87 220 nF x 0.72, U9 0.1 uA, D402 50 nA;
+    values unchanged on R12, D-R12-09) in each of R12's resistor cases (R12F8-TRI-06: 'initial' 1 %, 'drift' 1 % +
+    100 ppm/K over 67 K, the bound; 'bound' takes the worse of the two), at R12's four-stall BAT_IN; the lowest pack
+    voltage at which the J400 7 ms
     bench line holds; the single-drop-out 10 ms pack floor; the turn-on window (EN rising 1.183-1.223 V, TI SLVSFC9C
     section 6.5) over a 6.0-8.4 V unloaded pack, C87 220 nF x 0.72 ... 220 nF x 1.265 (R12F7-TRI-17: R10 D-R19-10's
     range; 0.72 = -10 % tolerance, X7R -15 % over temperature and <= 6 % bias loss, 1.265 = +10 % x +15 %; the bias and
     temperature allowances are Inference). Before round 7 the range was 0.648-1.10 x, which counted -10 % twice at the
     fast end and left out the +15 % temperature end."""
-    out = {f'{v:.4g}V': en_model(v) for v in (8.4, 7.4, 6.0, four, 5.73, 5.71, 5.65, 5.5)}
-
     def bisect(f, lo, hi):
         for _ in range(60):
             mid = (lo + hi) / 2
             lo, hi = (lo, mid) if f(mid) else (mid, hi)
         return hi
-    seven = bisect(lambda v: en_model(v)['periodic_100ms_trip_open_ms'] >= 7.0, 5.0, 7.0)
-    ten = bisect(lambda v: en_model(v)['single_dropout_trip_ms'] >= 10.0, 5.0, 7.0)
 
-    def turn_on(v, c, r_hi):
-        r_top, r81 = 2 * 470e3 * (1.01 if r_hi else .99), 300e3 * (.99 if r_hi else 1.01)
+    def turn_on(v, c, r_hi, tol):
+        r_top, r81 = 2 * 470e3 * ((1 + tol) if r_hi else (1 - tol)), 300e3 * ((1 - tol) if r_hi else (1 + tol))
         r_th = r_top * r81 / (r_top + r81)
         vc = v * r81 / (r_top + r81) - (.1e-6 if r_hi else -.1e-6) * r_th - (50e-9 if r_hi else 0) * r_th
         vth = 1.223 if r_hi else 1.183
         return r_th * c * math.log(vc / (vc - vth)) * 1e3
     nominal = {f'{v:g}V': 2 * 470e3 * 300e3 / (2 * 470e3 + 300e3) * 220e-9 * 1e3 *
                math.log((v * 300 / 1240) / (v * 300 / 1240 - 1.2)) for v in (6.0, 7.4, 8.4)}
-    on = dict(nominal_ms=nominal, fastest_ms=turn_on(8.4, 220e-9 * C87_LOW, False),
-              slowest_ms=turn_on(6.0, 220e-9 * C87_HIGH, True), c87_factor=[C87_LOW, C87_HIGH],
-              label='Calculation / Inference (C87 0.72-1.265 x, R10 D-R19-10: X7R tolerance, temperature and bias '
-                    'allowances; 1 % resistors, SLVSFC9C EN thresholds and leakages at their datasheet bounds)')
-    return dict(by_pack=out, four_stall_BAT_IN_V=four, seven_ms_line_holds_down_to_V=seven,
-                single_10ms_dropout_needs_pack_V=ten, turn_on=on,
+    cases = {}
+    for case, tol in TOL.items():
+        m = lambda v: en_model(v, tol)                              # noqa: E731
+        at_four = m(four)
+        cases[case] = dict(
+            resistor_tolerance=tol,
+            by_pack={f'{v:.4g}V': m(v) for v in (8.4, 7.4, 6.0, four, 5.73, 5.71, 5.65, 5.5)},
+            four_stall_single_dropout_ms=at_four['single_dropout_trip_ms'],
+            four_stall_periodic_limit_ms=at_four['periodic_100ms_trip_open_ms'],
+            margin_over_7ms_line_ms=at_four['periodic_100ms_trip_open_ms'] - 7.0,
+            seven_ms_line_holds_down_to_V=bisect(lambda v: m(v)['periodic_100ms_trip_open_ms'] >= 7.0, 5.0, 7.0),
+            single_10ms_dropout_needs_pack_V=bisect(lambda v: m(v)['single_dropout_trip_ms'] >= 10.0, 5.0, 7.0),
+            turn_on=dict(nominal_ms=nominal, fastest_ms=turn_on(8.4, 220e-9 * C87_LOW, False, tol),
+                         slowest_ms=turn_on(6.0, 220e-9 * C87_HIGH, True, tol), c87_factor=[C87_LOW, C87_HIGH],
+                         label=('Calculation / Inference (C87 0.72-1.265 x, R10 D-R19-10: X7R tolerance, temperature '
+                                f'and bias allowances; resistors +/-{tol * 100:.2f} %, SLVSFC9C EN thresholds and '
+                                'leakages at their datasheet bounds)')))
+    i, d = cases['initial'], cases['drift']
+    bound = dict(
+        four_stall_single_dropout_ms=min(i['four_stall_single_dropout_ms'], d['four_stall_single_dropout_ms']),
+        four_stall_periodic_limit_ms=min(i['four_stall_periodic_limit_ms'], d['four_stall_periodic_limit_ms']),
+        margin_over_7ms_line_ms=min(i['margin_over_7ms_line_ms'], d['margin_over_7ms_line_ms']),
+        seven_ms_line_holds_down_to_V=max(i['seven_ms_line_holds_down_to_V'], d['seven_ms_line_holds_down_to_V']),
+        single_10ms_dropout_needs_pack_V=max(i['single_10ms_dropout_needs_pack_V'], d['single_10ms_dropout_needs_pack_V']),
+        single_dropout_at_6V0_ms=min(i['by_pack']['6V']['single_dropout_trip_ms'], d['by_pack']['6V']['single_dropout_trip_ms']),
+        turn_on_ms=[min(i['turn_on']['fastest_ms'], d['turn_on']['fastest_ms']),
+                    max(i['turn_on']['slowest_ms'], d['turn_on']['slowest_ms'])],
+        seven_ms_line_holds_at_four_stall=min(i['four_stall_periodic_limit_ms'], d['four_stall_periodic_limit_ms']) > 7.0,
+        note='the worse of the 1 % and drift cases (the drift case in every figure): R12\'s bound convention '
+             '(r12_budget.TOL, R12F8-TRI-06)')
+    return dict(by_case=cases, bound=bound, four_stall_BAT_IN_V=four,
                 bench_rule='J400 chatter (D-R25-01): total open time < 7 ms in every sliding 100 ms window, U9 on for '
                            'the whole run at the four-stall BAT_IN',
-                label='Calculation / Inference (C87 X7R bias allowance, leakages at their datasheet bounds)')
+                label='Calculation / Inference (C87 X7R bias allowance, leakages at their datasheet bounds; the resistor '
+                      'drift case Inference)')
 
 
 def dc(board_path, net, src, snk, margin=4.0, full_width=True):
@@ -439,7 +481,7 @@ def spec(board, ref, net):
 
 # TI TPS563208 SOT-23-6 (DDC) pinout: 1 GND, 2 SW, 3 VIN, 4 VFB, 5 EN, 6 VBST. On R12 U400's EN is tied to VIN (both
 # RAW_PROTECTED): the 0.25 mm F.Cu stub U400.5 -> U400.3 carries only EN's input current (uA), so the load-current paths
-# start at VIN alone (R12F2-TRI-06; U403's EN is CAM_PWR_EN, another net).
+# start at VIN alone (R12F2-TRI-06; U403's EN is CAM_EN, another net, driven from PC12 through R436 since R12F8).
 BUCK_VIN = ('3',)
 # R12F2-TRI-07: RAW_PROTECTED's load branches end where their copper joins the In2 RAW_PROTECTED island (a via whose In2
 # pad touches that fill): the current enters there. Ending at every via instead (check_r10.path_graph's end=None) made
@@ -742,7 +784,8 @@ def port_supply(solves, fire=None):
 def u400_input(fire, solves):
     """R12F5-TRI-02: U400's input (VIN, pin 3) against the TPS563208's VO / 0.75 condition, and its duty headroom
     (r12_budget.buck_headroom: tOFF(MIN) at 580 kHz and at the about 200 kHz foldback floor below VIN 7 V). U400 VIN =
-    BAT_IN less U9's RON (0.04 ohm, Inference) and the J1 -> U9.5 copper at the whole converter current, less the
+    BAT_IN less U9's RON (SLVSFC9C's 0.045 ohm maximum, R12F8-TRI-07) and the J1 -> U9.5 copper at the whole converter
+    current, less the
     RAW_PROTECTED drop at U400.3, each branch charged at min(its own, U400's) resistance from U9.6 (the mutual-resistance
     bound of pa6_corners; an upper bound on the drop). Points: the four-stall fire point (healthy match) and a 6.0 V
     open-circuit pack under the converter load alone (R10 pack model 0.15 ohm; no fire, no stall). Ports at the 0.561 A
@@ -758,17 +801,74 @@ def u400_input(fire, solves):
                                                    min(solves['RAW_PROTECTED_U9_to_D5']['resistance_ohm'], r_u400))}
     pack6 = (6.0 + math.sqrt(36.0 - 4 * PACK_R * other)) / 2
     out = dict(min_recommended_VIN_V={c: [port[c]['min_V'] / .75, port[c]['max_V'] / .75] for c in r12_budget.TOL},
-               branch_shared_ohm={k: r for k, (_, r) in shares.items()}, J1_to_U9_ohm=r_u9, u9_ron_ohm=.04)
+               branch_shared_ohm={k: r for k, (_, r) in shares.items()}, J1_to_U9_ohm=r_u9, u9_ron_ohm=U9_RON)
     for name, bat in (('four_stall_fire', fire['four_stall_BAT_IN_V']), ('6V0_pack_converters_only', pack6)):
         i = other / bat
-        drop = i * (.04 + r_u9) + sum(w / bat * r for w, r in shares.values())
+        drop = i * (U9_RON + r_u9) + sum(w / bat * r for w, r in shares.values())
         vin = bat - drop
         out[name] = dict(BAT_IN_V=bat, converter_A=i, drop_to_U400_VIN_V=drop,
                          below_VO_over_0V75=vin < min(port[c]['min_V'] for c in r12_budget.TOL) / .75,
                          **r12_budget.buck_headroom(vin, port, r12_budget.PORT_BUDGET_A))
-    out['label'] = ('Calculation / Inference (DC-solve upper bounds on the drop; U9 RON, the pack model, converter '
-                    'allocations, the foldback frequency, DCR and hot RDS(on) Inference): an estimate, not a '
-                    'guaranteed window')
+    out['label'] = ('Calculation / Inference (DC-solve upper bounds on the drop; U9 RON at the SLVSFC9C maximum; the '
+                    'pack model, converter allocations, the foldback frequency, DCR and hot RDS(on) Inference): an '
+                    'estimate, not a guaranteed window')
+    return out
+
+
+# R10's camera harness and transient allowances (stageD_analysis section 6 "R10's allowances"; Inference)
+CAM_HARNESS_OHM, CAM_TRANSIENT_V, CAM_I_A = 0.15, 0.05, 1.0
+
+
+def u403_input(fire, solves):
+    """R12F8-TRI-09: U403 (camera buck) input at the four-stall fire point (healthy match) on the current copper, as
+    u400_input does for U400: BAT_IN less U9's RON (0.045 ohm maximum) and the J1 -> U9.5 copper at the whole converter
+    current, less the RAW_PROTECTED drop at U403.3 with each branch charged at min(its own, U403's) resistance from U9.6
+    (the mutual-resistance bound; an upper bound on the drop). Then r12_budget.buck_headroom at the camera's 1 A, and the
+    optimistic camera-pin estimate of stageD_analysis section 6: the held output less 1 A x the L401 -> J9 copper, R10's
+    0.15 ohm harness and 0.05 V transient allowance (Calculation / Inference: low-side, inductor and contact losses, the
+    foldback frequency and typical RDS(on)h are not modelled; not a guaranteed window or proof of camera failure)."""
+    cam = r12_budget.rails()['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)']
+    other, parts = fire['other_converter_load_W'], fire['other_load_parts']
+    r_u9 = solves['BAT_IN_J1_to_U9']['resistance_ohm']
+    r_u403 = solves['RAW_PROTECTED_U9_to_U403']['resistance_ohm']
+    shares = {'U403 (camera)': (parts['camera_W'], r_u403),
+              'U400 (ports)': (parts['ports_W'], min(solves['RAW_PROTECTED_U9_to_U400']['resistance_ohm'], r_u403)),
+              'D5 (logic, microSD, D5) and R92': (parts['logic_W'] + parts['microsd_write_W'] + parts['d5_W']
+                                                   + parts['r92_W'],
+                                                   min(solves['RAW_PROTECTED_U9_to_D5']['resistance_ohm'], r_u403))}
+    bat = fire['four_stall_BAT_IN_V']
+    i = other / bat
+    drop = i * (U9_RON + r_u9) + sum(w / bat * r for w, r in shares.values())
+    vin = bat - drop
+    head = r12_budget.buck_headroom(vin, cam, CAM_I_A)
+    r_cam = solves['CAM_5V_L401_to_J9']['resistance_ohm']
+    pins = {k: v - CAM_I_A * (r_cam + CAM_HARNESS_OHM) - CAM_TRANSIENT_V for k, v in head['max_held_V'].items()
+            if k.startswith('200kHz')}
+    return dict(BAT_IN_V=bat, converter_A=i, drop_to_U403_VIN_V=drop, VIN_V=vin, u9_ron_ohm=U9_RON, J1_to_U9_ohm=r_u9,
+                branch_shared_ohm={k: r for k, (_, r) in shares.items()},
+                min_recommended_VIN_V={c: [cam[c]['min_V'] / .75, cam[c]['max_V'] / .75] for c in TOL},
+                below_VO_over_0V75=vin < min(cam[c]['min_V'] for c in TOL) / .75, headroom=head,
+                camera_pin_estimate_V=pins, camera_pin_basis=dict(L401_to_J9_ohm=r_cam, harness_ohm=CAM_HARNESS_OHM,
+                                                                  transient_V=CAM_TRANSIENT_V, I_A=CAM_I_A),
+                label=('Calculation / Inference (DC-solve upper bounds on the drop; U9 RON at the SLVSFC9C maximum; the '
+                       'pack model, converter allocations, the foldback frequency, typical RDS(on)h, harness and '
+                       'transient allowances Inference): an optimistic estimate, not a guaranteed window'))
+
+
+def u400_feed_drop(rails, shared):
+    """R12F8-TRI-09: the drop along U400 IN's series copper (In2 landing -> VIN), at its own current, plus the other
+    paths' current on the tracks it shares (rails_shared): at the design inputs and at the budget (Calculation on CAD
+    copper at 20 C; the currents Inference)."""
+    r = rails['U400 IN']
+    out = {}
+    for key, cur in (('design', lambda n: rails[n]['amps']), ('budget', lambda n: rails[n].get('budget_A'))):
+        extra = [(g['R_series_ohm'], sum(cur(n) for n in g['paths'] if n != 'U400 IN')) for g in shared
+                 if 'U400 IN' in g['paths']]
+        own = cur('U400 IN')
+        out[f'{key}_V'] = own * r['R_tracks_series_ohm'] + sum(rr * a for rr, a in extra)
+        out[f'{key}_terms'] = dict(own_A=own, R_series_ohm=r['R_tracks_series_ohm'],
+                                   shared=[dict(R_ohm=rr, other_A=a) for rr, a in extra])
+    out['label'] = 'Calculation on CAD copper (20 C); design and budget currents Inference'
     return out
 
 
@@ -830,6 +930,8 @@ def main():
         holdup=holdup(four),
         pa6_corners=pa6_corners(fire, S['BAT_IN_J1_to_U9']['resistance_ohm'],
                                 {k: S[f'RAW_PROTECTED_U9_to_{k}']['resistance_ohm'] for k in ('D5', 'U400', 'U403')}),
+        u403_input=u403_input(fire, S),
+        u400_feed_drop=u400_feed_drop(rails, shared),
         rails=rails,
         rails_shared=dict(groups=shared, raw_budget_A=raw_budget_currents(fire), source_A=SOURCE_A,
                           note=('tracks on more than one load path, rated at the summed current (R12F2-TRI-07); each '

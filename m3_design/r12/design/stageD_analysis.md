@@ -7,6 +7,39 @@ D-R12-144, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` 
 -143, 2026-11-07; R12F6-TRI-10; and the current `82eddc69…` in the round-7 fix pass D-R12-144 … -151, 2026-11-07): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
+**Round 8 analyses lane (R12F8-TRI-06 … -10; `stageD_budget.json` re-run on board `418e5ea9…`, zone-filled scratch copy
+with `--source-board`, the refill reproducing the board hash).** The fire loop (4.726884 Ω, 1.24995 A at 5.72088 V), GND
+return (2.672 mΩ) and every DC solve are unchanged from lane P's run; the figures below changed with the inputs.
+- **Resistor drift case (TRI-06).** The EN model (`r12_budget.en_model`, R10's model with the tolerance as a parameter;
+  identical to `r11_stageD.en_model` at 1 %) and the PA6 divider now run in both of R12's cases (1 %; 1 % + 100 ppm/K
+  over 67 K = ±1.67 %, the bound). EN at the four-stall 5.7209 V, 1 % / drift: single drop-out 8.13 / **7.61 ms**;
+  bench-rule worst-corner limit 7.56 / **7.08 ms** (0.56 / **0.08 ms** over the 7 ms line, which still holds); the 7 ms
+  line holds down to 5.647 / **5.710 V**; a single 10 ms drop-out needs 5.956 / **6.025 V** (10.35 / **9.81 ms** at
+  6.0 V); turn-on 30.3–131.5 / **29.9–135.9 ms** (Calculation / Inference: C87's X7R allowances, the drift case). PA6
+  trip window 4.62–4.95 V nominal ratio, 4.537–5.041 V at 1 %, **4.482–5.103 V** at drift (Calculation; drift Inference).
+- **U9 RON at 45 mΩ (TRI-07)**, TI SLVSFC9C §6.5's maximum (2.7–23 V, 3 A, −40…125 °C), in every bound
+  (`r12_budget.U9_RON`); it was 40 mΩ. Four-stall VLOGIC 5.112–5.312 V (healthy), 4.962–5.162 V (match shorted),
+  4.918–5.118 V (match and leads shorted). Margins to the PA6 trip top (nominal ratio / 1 % / drift): healthy +0.162 /
+  +0.071 / **+0.009 V**; match shorted +0.012 / −0.079 / −0.141 V; match and leads shorted −0.032 / −0.123 / −0.184 V
+  (Calculation / Inference: DC-solve upper bounds on the drop, SS34 VF, allocations, drift). U400 VIN 5.541 V at four
+  stalls (5.474 V on the 6.0 V pack).
+- **D-R12-21's margin (TRI-06).** U9's highest turn-off BAT_IN is 4.802 V at 1 % (4.851 V at drift), 4.552 / 4.601 V
+  through D5 at VF 0.25 V. The PA6 trip bottom lies **+0.068 V** above it only at the nominal ratio; with the divider
+  and EN chain in the same case it is **−0.015 V (1 %)** and **−0.119 V (drift)** below it. A PA6 threshold bottom of
+  0.4214 V (1 %) / 0.4311 V (drift) would be needed to restore it (`r12_windows.json` `vlogic`; Calculation /
+  Inference: D5 VF, drift).
+- **Hold-up from the PA6 trip (TRI-08)**, unshed + SD write: 0.467–1.718 ms nominal ratio, **0.415–1.873 ms** over the
+  1 % divider, **0.382–1.980 ms** at drift; shed + SD idle 1.40–3.21 / 1.24–3.50 / 1.14–3.70 ms. From the battery break
+  2.23–6.10 ms (U9 at 45 mΩ). `r12_budget.holdup()` now starts at R12's window (it used R10 / R11's 4.84–5.17 V:
+  0.607–2.098 ms, wrong).
+- **U403 and the camera pin (TRI-09)**, new `u403_input` (per-branch bound at U403's own resistance, 11.53 mΩ): U403 VIN
+  **5.574 V** at four stalls (drop 0.1465 V); the optimistic camera-pin estimate **4.93 / 5.03 V** (200 kHz, tOFF
+  310 / 220 ns; L401 → J9 9.51 mΩ, R10's 0.15 Ω harness and 0.05 V allowances). §6's 5.60 V and 4.95 / 5.05 V were the
+  100 mm board's lumped figures. U400 feed drop (`u400_feed_drop`, U400 IN 50.78 mΩ plus D5's current on the two shared
+  runs): **0.121 V** at the design inputs, **36.1 mV** at the budget (Calculation on CAD copper; currents Inference).
+- **OVLO pin (TRI-10)**: 5.71 V × 133 k / 1133 k = **0.670 V** (0.6585–0.6822 V at 1 %), inside SLVSFC9C's 0.5–1.5 V;
+  0.676 V matched no corner.
+
 **Round 7 (D-R12-144 … -151; `stageD_budget.json` bound to `82eddc69…`, re-run by the records lane on a zone-filled
 copy with `--source-board`).** The 88 mm outline and the FMEA I-5 copper moved the RAW_PROTECTED, PORT_4V8 and 3V3
 solves, the PA6 corners and U6's supply; the fire loop, GND return, EN chatter and hold-up are unchanged (the figures

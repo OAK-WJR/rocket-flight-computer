@@ -176,7 +176,7 @@ class Round3Fixes(unittest.TestCase):
         h = out['healthy']
         raw = (6.0 * 0.01 + 3.0 * 0.02 + 1.0 * 0.02) / 5.0
         self.assertAlmostEqual(h['RAW_PROTECTED_drop_at_D5_V'], raw, places=12)
-        self.assertAlmostEqual(h['U9_and_copper_drop_V'], 2.0 * 0.05 + raw, places=12)
+        self.assertAlmostEqual(h['U9_and_copper_drop_V'], 2.0 * (0.045 + 0.01) + raw, places=12)   # U9 RON 45 mOhm (R12F8-TRI-07)
         self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'], 6.0 / 5.0 * 0.01, places=12)
 
     def test_pa6_record_uses_branch_shares(self):
@@ -185,9 +185,15 @@ class Round3Fixes(unittest.TestCase):
         self.assertAlmostEqual(p['branch_shared_ohm']['U403 (camera)'],
                                min(s['RAW_PROTECTED_U9_to_U403']['resistance_ohm'],
                                    s['RAW_PROTECTED_U9_to_D5']['resistance_ohm']), places=12)
-        # the branch-share model stays materially below the lumped one: 16.0 mV on 82eddc69..., 14.6 mV on the R12F8 lane P
-        # board, whose RAW_PROTECTED copper (U403 VIN into C433.1, the trunk's second barrels) lowered both drops
-        self.assertGreater(p['healthy']['lumped_drop_V_superseded'] - p['healthy']['U9_and_copper_drop_V'], 0.010)
+        # R12F8 (lane A review of lane P's 0.015 -> 0.010): the gap between the lumped and branch-share drops is not a
+        # design margin but an identity of the two models, so check it exactly: the camera and port branches save
+        # their power / BAT_IN x (R(U9 -> D5) - their shared resistance); positive whenever a branch sits nearer U9
+        h, r_d5 = p['healthy'], p['raw_point_ohm']['D5']
+        f = d['fire']['other_load_parts']
+        want = sum(f[k] / h['BAT_IN_V'] * (r_d5 - p['branch_shared_ohm'][n])
+                   for k, n in (('camera_W', 'U403 (camera)'), ('ports_W', 'U400 (ports)')))
+        self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'], want, places=12)
+        self.assertGreater(want, 0.0)
         self.assertIn('upper bound', p['label'])
 
 
@@ -317,7 +323,7 @@ class Round7(unittest.TestCase):
     def test_en_turn_on_spans_r10_c87_range(self):
         """R10 D-R19-10: C87 0.72 x (-10 %, X7R -15 % and bias) ... 1.265 x (+10 % x +15 %); not 0.648 ... 1.10 x."""
         import r12_stageD
-        on = self.d['en']['turn_on']
+        on = self.d['en']['by_case']['initial']['turn_on']
         self.assertEqual(on['c87_factor'], [r12_stageD.C87_LOW, r12_stageD.C87_HIGH])
         self.assertAlmostEqual(r12_stageD.C87_LOW, 0.72, places=12)
         self.assertAlmostEqual(r12_stageD.C87_HIGH, 1.265, places=12)
@@ -326,7 +332,7 @@ class Round7(unittest.TestCase):
         self.assertGreater(on['slowest_ms'], 131.0)
         self.assertLess(on['slowest_ms'], 132.0)
         self.assertIn('Inference', on['label'])
-        self.assertEqual(r12_stageD.en_figures(self.d['en']['four_stall_BAT_IN_V'])['turn_on'], on)
+        self.assertEqual(r12_stageD.en_figures(self.d['en']['four_stall_BAT_IN_V'])['by_case']['initial']['turn_on'], on)
 
     def test_window_figures_carry_the_inference_label(self):
         v33 = self.w['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)']
@@ -335,6 +341,120 @@ class Round7(unittest.TestCase):
                       self.d['fire']['gate']['q124_vgs_min_basis']['label']):
             self.assertIn('Calculation / Inference', label)
             self.assertIn(self.LABEL, label)
+
+
+class Round8(unittest.TestCase):
+    """R12 review round 8, analyses lane: R12F8-TRI-06 (drift case in the EN model and the PA6 window), -07 (U9 RON at
+    SLVSFC9C's 45 mOhm maximum), -08 (PA6 hold-up over the divider tolerance, R12's window), -09 (U403 VIN and the
+    camera-pin estimate on the current copper; the U400 feed drop), -10 (OVLO pin)."""
+    TD = 0.01 + 100e-6 * 67
+
+    @classmethod
+    def setUpClass(cls):
+        cls.w = json.loads((DESIGN / 'r12_windows.json').read_text())
+        cls.d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+
+    def test_en_model_matches_r10_at_1pct(self):
+        import r11_stageD
+        import r12_budget
+        for v in (8.4, 6.0, 5.72, 5.5):
+            self.assertEqual(r12_budget.en_model(v), r11_stageD.en_model(v))
+            self.assertEqual(r12_budget.en_model(v, 0.01), r11_stageD.en_model(v))
+
+    def test_en_bound_is_the_drift_case(self):
+        """R12F8-TRI-06: R80 / R165 / R81 at +/-1.67 %: 7.61 ms single drop-out and 7.08 ms worst-corner limit at the
+        four-stall BAT_IN, 7 ms line to about 5.71 V, 10 ms drop-out needs about 6.02 V, turn-on about 29.9-135.9 ms."""
+        e = self.d['en']
+        i, dr, b = e['by_case']['initial'], e['by_case']['drift'], e['bound']
+        self.assertAlmostEqual(i['resistor_tolerance'], 0.01, places=12)
+        self.assertAlmostEqual(dr['resistor_tolerance'], self.TD, places=12)
+        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.56, places=2)
+        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.61, places=2)
+        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 7.08, places=2)
+        self.assertAlmostEqual(b['margin_over_7ms_line_ms'], dr['four_stall_periodic_limit_ms'] - 7.0, places=12)
+        self.assertGreater(b['margin_over_7ms_line_ms'], 0.0)
+        self.assertTrue(b['seven_ms_line_holds_at_four_stall'])
+        self.assertAlmostEqual(b['seven_ms_line_holds_down_to_V'], 5.7095, places=3)
+        self.assertLess(b['seven_ms_line_holds_down_to_V'], e['four_stall_BAT_IN_V'])
+        self.assertAlmostEqual(b['single_10ms_dropout_needs_pack_V'], 6.025, places=2)
+        self.assertAlmostEqual(b['turn_on_ms'][0], 29.94, places=1)
+        self.assertAlmostEqual(b['turn_on_ms'][1], 135.88, places=1)
+        self.assertEqual(b['turn_on_ms'], [min(i['turn_on']['fastest_ms'], dr['turn_on']['fastest_ms']),
+                                           max(i['turn_on']['slowest_ms'], dr['turn_on']['slowest_ms'])])
+
+    def test_pa6_window_and_margins_in_both_cases(self):
+        p = self.d['pa6_corners']
+        t = p['window']['trip_V']
+        self.assertEqual(t['nominal_ratio'], [0.42 * 11, 0.45 * 11])
+        self.assertAlmostEqual(t['initial'][0], 4.5368, places=4)
+        self.assertAlmostEqual(t['drift'][0], 4.4820, places=4)
+        self.assertAlmostEqual(t['drift'][1], 5.1029, places=4)
+        self.assertAlmostEqual(p['window']['ratio']['drift'][0], self.w['sense']['drift']['VLOGIC_SENSE_ratio'][0], places=5)
+        for name in ('healthy', 'match_shorted', 'match_and_leads_shorted'):
+            c = p[name]
+            for k, w in t.items():
+                self.assertAlmostEqual(c['margin_to_trip_top_V'][k], c['VLOGIC_V'][0] - w[1], places=12)
+        self.assertGreater(p['healthy']['margin_to_trip_top_V']['drift'], 0.0)
+        self.assertLess(p['match_shorted']['margin_to_trip_top_V']['initial'], 0.0)
+
+    def test_d_r12_21_margin_is_negative_with_tolerance(self):
+        """D-R12-21's '70 mV above U9's turn-off corner' holds only at the nominal ratio."""
+        v = self.w['vlogic']
+        m = v['pa6_retuned_margins_V']
+        self.assertAlmostEqual(self.w['u9']['turn_off_max_bat_V']['initial'], 4.802, places=3)
+        self.assertAlmostEqual(m['nominal_ratio']['above_u9_turn_off_through_d5'], 0.068, places=3)
+        self.assertAlmostEqual(m['initial']['above_u9_turn_off_through_d5'], -0.015, places=3)
+        self.assertAlmostEqual(m['drift']['above_u9_turn_off_through_d5'], -0.119, places=3)
+        self.assertEqual(self.d['pa6_corners']['trip_bottom_above_u9_turn_off_V'],
+                         {k: x['above_u9_turn_off_through_d5'] for k, x in m.items()})
+
+    def test_u9_ron_is_the_datasheet_maximum(self):
+        import r12_budget
+        self.assertEqual(r12_budget.U9_RON, 0.045)
+        self.assertEqual(self.d['pa6_corners']['u9_ron_ohm'], 0.045)
+        self.assertEqual(self.d['port_supply']['u400_input']['u9_ron_ohm'], 0.045)
+        self.assertEqual(self.d['u403_input']['u9_ron_ohm'], 0.045)
+        h, s = self.d['pa6_corners']['healthy'], self.d['dc_solves']
+        raw = h['RAW_PROTECTED_drop_at_D5_V']
+        self.assertAlmostEqual(h['U9_and_copper_drop_V'],
+                               h['converter_A'] * (0.045 + s['BAT_IN_J1_to_U9']['resistance_ohm']) + raw, places=12)
+        self.assertNotIn("0.04 ohm", self.w['vlogic']['basis'])
+
+    def test_holdup_from_r12_pa6_window(self):
+        hw, hd = self.w['holdup'], self.d['holdup']['unshed']
+        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.467, 1.718])
+        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.415, 1.873])
+        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.382, 1.98])
+        for k in ('nominal_ratio', 'initial', 'drift'):
+            self.assertEqual([round(x, 3) for x in hd['pa6_trip_ms'][k]], hw['from_pa6_trip_ms'][k])
+        self.assertEqual(hd['pa6_trip_range_ms']['drift'], hd['pa6_trip_ms']['drift'])
+
+    def test_u403_input_and_camera_pin(self):
+        u, s = self.d['u403_input'], self.d['dc_solves']
+        r403 = s['RAW_PROTECTED_U9_to_U403']['resistance_ohm']
+        self.assertEqual(u['branch_shared_ohm']['U403 (camera)'], r403)
+        self.assertLessEqual(u['branch_shared_ohm']['U400 (ports)'], r403)
+        self.assertAlmostEqual(u['VIN_V'], u['BAT_IN_V'] - u['drop_to_U403_VIN_V'], places=12)
+        self.assertTrue(u['below_VO_over_0V75'])
+        for k, v in u['camera_pin_estimate_V'].items():
+            self.assertAlmostEqual(v, u['headroom']['max_held_V'][k] - (s['CAM_5V_L401_to_J9']['resistance_ohm'] + .15)
+                                   - .05, places=9)
+        self.assertIn('Inference', u['label'])
+
+    def test_u400_feed_drop(self):
+        f, r = self.d['u400_feed_drop'], self.d['rails']
+        shared = [g for g in self.d['rails_shared']['groups'] if 'U400 IN' in g['paths']]
+        want = r['U400 IN']['amps'] * r['U400 IN']['R_tracks_series_ohm'] + sum(
+            g['R_series_ohm'] * sum(r[n]['amps'] for n in g['paths'] if n != 'U400 IN') for g in shared)
+        self.assertAlmostEqual(f['design_V'], want, places=12)
+        self.assertLess(f['budget_V'], f['design_V'])
+
+    def test_ovlo_pin(self):
+        o = self.w['u9']['ovlo_pin_V_at_5V71']
+        self.assertAlmostEqual(o['nominal'], round(5.71 * 133 / 1133, 4), places=9)
+        self.assertAlmostEqual(o['nominal'], 0.6703, places=4)
+        self.assertNotIn('0.676', self.w['u9']['ovlo_pin_roc'])
+        self.assertTrue(self.w['u9']['ovlo_pin_roc_ok'])
 
 
 if __name__ == '__main__':
