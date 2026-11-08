@@ -7,6 +7,29 @@ D-R12-144, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` 
 -143, 2026-11-07; R12F6-TRI-10; and the current `82eddc69…` in the round-7 fix pass D-R12-144 … -151, 2026-11-07): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
+**Round 9 analyses lane (R12F9-TRI-04, -05; `stageD_budget.json` re-run on board `3ccb3a53…` (46 × 85 mm, lane L),
+zone-filled scratch copy with `--source-board`, the refill reproducing the board hash).** Fire loop (4.726884 Ω,
+1.24995 A at 5.72088 V), GND return (2.670 mΩ), EN, hold-up and every earlier DC solve are unchanged from lane L's run;
+one solve is new, VLOGIC D5 → R60 (12.316 mΩ at 20 °C).
+- **Copper at 70 °C (TRI-04).** The four-stall BAT_IN is the fire loop's 70 °C corner, so `pa6_corners`, `u400_input`
+  and `u403_input` now take the J1 → U9, RAW_PROTECTED and CAM_5V copper at 70 °C too (`HOT_CU` = 1 + 0.00393 × 50 =
+  1.1965), and `pa6_corners` charges U2's input current (logic + microSD write, about 0.437 A) at the VLOGIC copper
+  from D5 to R60's tap, min(R(D5 → R60), R(D5 → U2)) × 1.1965 = 7.69 mΩ (3.4 mV). Margins to the PA6 trip top
+  (nominal / 1 % / drift; lower bounds): healthy **+0.138 / +0.048 / −0.014 V** (lane L: +0.154 / +0.064 / +0.002);
+  match shorted **−0.012 / −0.103 / −0.165 V**; match and leads shorted **−0.056 / −0.147 / −0.209 V**. Four-stall
+  VLOGIC 5.088–5.288 / 4.938–5.138 / 4.894–5.094 V. At drift a healthy four-stall fire can therefore sit inside the PA6
+  trip window (Calculation / Inference: DC-solve bounds, SS34 VF, allocations, the 70 °C copper temperature, drift).
+  U400 VIN at four stalls **5.507 V** (5.525 V at 20 °C), 5.440 V on the 6.0 V pack; U403 VIN **5.554 V**, camera-pin
+  estimate 4.91 / 5.01 V.
+- **PA6 owner options (`pa6_corners.owner_options`).** With R60 / R61 at 0.1 % 25 ppm/K (YAGEO RT0402BRD07100KL C852472
+  and RT0402BRD0710KL C190095) and the present 0.42–0.45 V threshold: healthy +0.130 / **+0.114 V** (1 % / drift case
+  of the parts), trip bottom above U9's turn-off +0.060 / −0.003 V; with the band moved to 0.4253–0.4553 V both
+  limits clear at drift by +0.055 V. With the 1 % divider no 30 mV band meets both limits at drift (room 17.6 mV).
+- **Dummy-fire bound (TRI-05).** New `fire.dummy_fire`: R134 at its low end at 70 °C (1.97109 Ω at 1 %, 1.9666 Ω in the
+  drift case) gives 1.5246 / **1.5260 A** and a BAT_IN − RAW_ACT bound of 0.2675 / **0.2677 V** (was 0.264 V at the
+  budget's high-end R134), under the 0.4 V reject line (Calculation / Inference: hot factors, pack, converter loads,
+  copper model, drift).
+
 **Round 8 analyses lane (R12F8-TRI-06 … -10; `stageD_budget.json` re-run on board `418e5ea9…`, zone-filled scratch copy
 with `--source-board`, the refill reproducing the board hash).** The fire loop (4.726884 Ω, 1.24995 A at 5.72088 V), GND
 return (2.672 mΩ) and every DC solve are unchanged from lane P's run; the figures below changed with the inputs.

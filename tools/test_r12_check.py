@@ -1357,7 +1357,9 @@ pcbnew.SaveBoard(sys.argv[1], b)
         xx = round(x + r + 0.70 + 0.05, 4)        # east: J2's locating holes are west and south, J2.3 1.1 mm away
         self.track('RAW_PROTECTED', (xx, y - 0.2), (xx, y + 0.2), width=0.1)
         self.planted(('RAW_PROTECTED track', 'to 3V3 J2.1 on F.Cu: 0.70', 'below 1.04 mm (i5-pack)'))
-        found = self.drc_all(strip=(x - 0.2, y - 0.8, xx + 1.5, y + 0.8, 'RAW_PROTECTED'))
+        # the strip box reaches the NRST via (34.2, 44.85), 1.00 mm from the plant: KiCad reports one clearance
+        # violation per track and picks among neighbours run to run (V-5), so that via must go too (round 9 lane A)
+        found = self.drc_all(strip=(x - 0.2, y - 1.6, xx + 1.5, y + 0.8, 'RAW_PROTECTED'))
         self.assertTrue([v for v in found if "'S-10 RAW_PROTECTED (I-5 rail) to every victim'" in v and 'J2' in v], found)
         self.setUp()
         tp = next(p for f in self.board.GetFootprints() if f.GetReference() == 'TP83' for p in f.Pads())

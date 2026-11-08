@@ -174,17 +174,18 @@ class Round3Fixes(unittest.TestCase):
                              'match_and_leads_shorted_4_stalls': dict(BAT_IN_V=5.0)})
         out = r12_stageD.pa6_corners(fire, 0.01, dict(D5=0.02, U400=0.05, U403=0.01))
         h = out['healthy']
-        raw = (6.0 * 0.01 + 3.0 * 0.02 + 1.0 * 0.02) / 5.0
+        k = 1 + 0.00393 * 50                                    # copper at 70 C (R12F9-TRI-04)
+        raw = (6.0 * 0.01 + 3.0 * 0.02 + 1.0 * 0.02) / 5.0 * k
         self.assertAlmostEqual(h['RAW_PROTECTED_drop_at_D5_V'], raw, places=12)
-        self.assertAlmostEqual(h['U9_and_copper_drop_V'], 2.0 * (0.045 + 0.01) + raw, places=12)   # U9 RON 45 mOhm (R12F8-TRI-07)
-        self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'], 6.0 / 5.0 * 0.01, places=12)
+        self.assertAlmostEqual(h['U9_and_copper_drop_V'], 2.0 * (0.045 + 0.01 * k) + raw, places=12)   # U9 RON 45 mOhm (R12F8-TRI-07)
+        self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'], 6.0 / 5.0 * 0.01 * k, places=12)
 
     def test_pa6_record_uses_branch_shares(self):
         d = json.loads((DESIGN / 'stageD_budget.json').read_text())
         p, s = d['pa6_corners'], d['dc_solves']
         self.assertAlmostEqual(p['branch_shared_ohm']['U403 (camera)'],
                                min(s['RAW_PROTECTED_U9_to_U403']['resistance_ohm'],
-                                   s['RAW_PROTECTED_U9_to_D5']['resistance_ohm']), places=12)
+                                   s['RAW_PROTECTED_U9_to_D5']['resistance_ohm']) * p['copper_factor_70C'], places=12)
         # R12F8 (lane A review of lane P's 0.015 -> 0.010): the gap between the lumped and branch-share drops is not a
         # design margin but an identity of the two models, so check it exactly: the camera and port branches save
         # their power / BAT_IN x (R(U9 -> D5) - their shared resistance); positive whenever a branch sits nearer U9
@@ -394,7 +395,9 @@ class Round8(unittest.TestCase):
             c = p[name]
             for k, w in t.items():
                 self.assertAlmostEqual(c['margin_to_trip_top_V'][k], c['VLOGIC_V'][0] - w[1], places=12)
-        self.assertGreater(p['healthy']['margin_to_trip_top_V']['drift'], 0.0)
+        # R12F9-TRI-04: with the copper at 70 C and the VLOGIC copper to R60 the drift-case healthy margin is negative (about -14 mV)
+        self.assertLess(p['healthy']['margin_to_trip_top_V']['drift'], 0.0)
+        self.assertGreater(p['healthy']['margin_to_trip_top_V']['initial'], 0.0)
         self.assertLess(p['match_shorted']['margin_to_trip_top_V']['initial'], 0.0)
 
     def test_d_r12_21_margin_is_negative_with_tolerance(self):
@@ -417,7 +420,8 @@ class Round8(unittest.TestCase):
         h, s = self.d['pa6_corners']['healthy'], self.d['dc_solves']
         raw = h['RAW_PROTECTED_drop_at_D5_V']
         self.assertAlmostEqual(h['U9_and_copper_drop_V'],
-                               h['converter_A'] * (0.045 + s['BAT_IN_J1_to_U9']['resistance_ohm']) + raw, places=12)
+                               h['converter_A'] * (0.045 + s['BAT_IN_J1_to_U9']['resistance_ohm'] * 1.1965) + raw,
+                               places=12)
         self.assertNotIn("0.04 ohm", self.w['vlogic']['basis'])
 
     def test_holdup_from_r12_pa6_window(self):
@@ -431,14 +435,14 @@ class Round8(unittest.TestCase):
 
     def test_u403_input_and_camera_pin(self):
         u, s = self.d['u403_input'], self.d['dc_solves']
-        r403 = s['RAW_PROTECTED_U9_to_U403']['resistance_ohm']
-        self.assertEqual(u['branch_shared_ohm']['U403 (camera)'], r403)
+        r403 = s['RAW_PROTECTED_U9_to_U403']['resistance_ohm'] * 1.1965     # 70 C copper (R12F9-TRI-04)
+        self.assertAlmostEqual(u['branch_shared_ohm']['U403 (camera)'], r403, places=12)
         self.assertLessEqual(u['branch_shared_ohm']['U400 (ports)'], r403)
         self.assertAlmostEqual(u['VIN_V'], u['BAT_IN_V'] - u['drop_to_U403_VIN_V'], places=12)
         self.assertTrue(u['below_VO_over_0V75'])
         for k, v in u['camera_pin_estimate_V'].items():
-            self.assertAlmostEqual(v, u['headroom']['max_held_V'][k] - (s['CAM_5V_L401_to_J9']['resistance_ohm'] + .15)
-                                   - .05, places=9)
+            self.assertAlmostEqual(v, u['headroom']['max_held_V'][k]
+                                   - (s['CAM_5V_L401_to_J9']['resistance_ohm'] * 1.1965 + .15) - .05, places=9)
         self.assertIn('Inference', u['label'])
 
     def test_u400_feed_drop(self):
@@ -455,6 +459,67 @@ class Round8(unittest.TestCase):
         self.assertAlmostEqual(o['nominal'], 0.6703, places=4)
         self.assertNotIn('0.676', self.w['u9']['ovlo_pin_roc'])
         self.assertTrue(self.w['u9']['ovlo_pin_roc_ok'])
+
+
+class Round9(unittest.TestCase):
+    """R12F9-TRI-04 (copper at 70 C in the four-stall bounds) and R12F9-TRI-05 (dummy-fire drop bound)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+
+    def test_hot_copper_factor(self):
+        import r12_stageD
+        self.assertAlmostEqual(r12_stageD.HOT_CU, 1.1965, places=12)
+        p, s = self.d['pa6_corners'], self.d['dc_solves']
+        self.assertEqual(p['copper_factor_70C'], r12_stageD.HOT_CU)
+        for k in ('D5', 'U400', 'U403'):
+            self.assertAlmostEqual(p['raw_point_ohm'][k],
+                                   s[f'RAW_PROTECTED_U9_to_{k}']['resistance_ohm'] * r12_stageD.HOT_CU, places=12)
+        self.assertAlmostEqual(p['J1_to_U9_ohm'], s['BAT_IN_J1_to_U9']['resistance_ohm'] * r12_stageD.HOT_CU, places=12)
+        u = self.d['port_supply']['u400_input']
+        self.assertAlmostEqual(u['J1_to_U9_ohm'], p['J1_to_U9_ohm'], places=12)
+        self.assertAlmostEqual(u['branch_shared_ohm']['U400 (ports)'], p['raw_point_ohm']['U400'], places=12)
+        self.assertAlmostEqual(p['vlogic_shared_ohm'], min(s['VLOGIC_D5_to_R60']['resistance_ohm'],
+                                                           s['VLOGIC_D5_to_U2']['resistance_ohm']) * r12_stageD.HOT_CU,
+                               places=12)
+        h = p['healthy']
+        self.assertAlmostEqual(h['VLOGIC_copper_drop_at_R60_V'], h['VLOGIC_A'] * p['vlogic_shared_ohm'], places=12)
+        self.assertAlmostEqual(h['VLOGIC_V'][0], h['BAT_IN_V'] - h['U9_and_copper_drop_V'] - .45
+                               - h['VLOGIC_copper_drop_at_R60_V'], places=12)
+        self.assertIn('70 C', p['label'])
+        self.assertIn('70 C', u['label'])
+        self.assertIn('70 C', self.d['u403_input']['label'])
+
+    def test_pa6_margins_hot(self):
+        h = self.d['pa6_corners']['healthy']['margin_to_trip_top_V']
+        self.assertAlmostEqual(h['drift'], -0.0144, places=3)
+        self.assertAlmostEqual(h['initial'], 0.0476, places=3)
+        self.assertAlmostEqual(h['nominal_ratio'], 0.1385, places=3)
+
+    def test_pa6_owner_options(self):
+        o = self.d['pa6_corners']['owner_options']
+        one, tenth = o['divider_1pct']['drift'], o['divider_0p1pct']['drift']
+        self.assertAlmostEqual(one['margin_to_trip_top_V']['healthy'],
+                               self.d['pa6_corners']['healthy']['margin_to_trip_top_V']['drift'], places=12)
+        self.assertFalse(one['present_band_fits'])            # threshold alone cannot meet both limits at drift
+        self.assertTrue(tenth['present_band_fits'])
+        self.assertGreater(tenth['margin_to_trip_top_V']['healthy'], 0.1)
+        for row in (o['divider_0p1pct']['initial'], tenth):
+            m = row['centred_band_margins_V']
+            self.assertGreater(m['healthy_to_trip_top'], 0.0)
+            self.assertGreater(m['trip_bottom_above_u9_turn_off'], 0.0)
+            self.assertAlmostEqual(m['healthy_to_trip_top'], m['trip_bottom_above_u9_turn_off'], delta=0.02)
+
+    def test_dummy_fire_bound_at_r134_low_end(self):
+        f = self.d['fire']
+        b = f['dummy_fire']
+        self.assertEqual(b['drop_bound_case'], 'drift_low')
+        self.assertAlmostEqual(b['by_R134']['drift_low']['R134_ohm'], 1.9666, places=4)
+        self.assertAlmostEqual(b['by_R134']['budget_hot_high']['fire_A'], f['stalls']['0']['fire_A'], places=12)
+        self.assertAlmostEqual(b['drop_bound_V'], 0.2677, places=4)
+        self.assertGreater(b['drop_bound_V'], b['by_R134']['budget_hot_high']['drop_bound_V'])
+        self.assertTrue(b['bound_below_reject'])
 
 
 if __name__ == '__main__':
