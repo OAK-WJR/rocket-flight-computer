@@ -1,6 +1,6 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `82eddc69…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, the AVA polish pass only signal copper, D-R12-121 … -124, round 5's fix pass the fire-net copper, five pyro-cell parts, U6's lands and the J121 pours, D-R12-125 … -133, and round 6's fix pass added R136, R95 and D95, changed R131 to 5.1 kΩ and moved R132, R175 and R120, D-R12-134 … -143, and round 7's fix pass shrank the board to 46 × 88 mm, moving the forward port row, its cells, the port buck and the forward supports aft, D-R12-144 … -151), 46 × 88 × 1.6 mm, four
+**Status.** PCB `418e5ea9…` (M3-ASSY-R12, AVA re-layout D-R12-93 … -99; round 3 changed only C25 / C26, D-R12-107, round 4 only R166's footprint description, D-R12-113, the AVA polish pass only signal copper, D-R12-121 … -124, round 5's fix pass the fire-net copper, five pyro-cell parts, U6's lands and the J121 pours, D-R12-125 … -133, and round 6's fix pass added R136, R95 and D95, changed R131 to 5.1 kΩ and moved R132, R175 and R120, D-R12-134 … -143, and round 7's fix pass shrank the board to 46 × 88 mm, moving the forward port row, its cells, the port buck and the forward supports aft, D-R12-144 … -151, followed by round 8's I-5 / K-power / camera EN / LS120 fixes, D-R12-152 … -160), 46 × 88 × 1.6 mm, four
 layers, every part on the top face and assembled by JLC. Branch `m3-assy-r12`. It is a CAD candidate: not accepted, nothing ordered, and no physical fit is claimed. R9 stays the
 accepted board. The full state is in [M3_R12.md, "Current state"](M3_R12.md#current-state), and what the owner must
 accept is in [R12_VALIDATION.md](R12_VALIDATION.md). The parent `../../docs/VEHICLE.md` is owned separately and is not
@@ -8,6 +8,9 @@ edited here.
 
 All coordinates are board millimetres: x east (0 … 46), y forward from the aft edge (0 … 88), top face = F. Positions
 below were read from the board file (Measured, pcbnew on `be81f40b…`, geometry unchanged on `66323cf0…`, `db1f0999…` and `68e6b650…` (no part moved in the polish pass); part centres are `m3_design/r12_place.tsv`). Round 5 moved five small pyro-cell parts and nothing this file positions otherwise (Measured on `6e874d4e…`, D-R12-125): TP122 (the PYRO1_GATE probe) to (14.8, 42.4), D120 to (6.6, 49.2) rotation 270, R131 turned to rotation 270 at (6.6, 46.6), R173 to (12.6, 46.1) and C13 to (17.4, 50.0) rotation 0. Round 6 added and moved small parts only, none that this file positions otherwise (`r12_place.tsv` on `f26dfef1…`): R136 (cold pull-up series resistor) new at (4.1, 50.2) rotation 0 and R131 now 5.1 kΩ at the same place (D-R12-134); R132 to (17.17, 32.2) rotation 0, R175 turned to rotation 270 at (17.6, 33.6), R120 to (6.53, 26.95) rotation 0 (D-R12-137); R95 new at (18.15, 22.89) rotation 270 and D95 new at (20.77, 24.27) rotation 180 (D-R12-138). TP81 and TP122 did not move. Round 7 (`r12_place.tsv` on `82eddc69…`, D-R12-144, -145) moved the forward port row J410 / J420 / J440 2 mm aft (y 84.35), their 1 k / 100 nF cells 1.85 mm (y 80.35), the port buck U400 / L400 / C400 / C402 / C406 / R400 / R401 / R404 2 mm, C407 to (16.75, 81.35), R111 / R112 to y 80.3, R104 0.2 mm east to (28.8, 7.6) and the forward supports to y 82.1; nothing else this file positions moved (J430, LS120, J121, J1, J2, U4, U5, U6, the LEDs).
+
+Round 8 (`418e5ea9…`, D-R12-152 … -160) adds R436 / D436, changes R431 to 47k, moves R106,
+reshapes I-5 copper and doubles power taps. LS120 is now **(5.8, 66.4)** (Measured); connector positions stay as above.
 
 ## Harness pin map
 
@@ -52,8 +55,8 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   - Under the 0.561 A budget the port pins stay at or above 4.563 V at the drift corner and at or below 4.972 V with no
     load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
     page gives only "5V DC") and the M100 Mini's 3.3–5 V. That holds while U400's input is at least VO / 0.75, about
-    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.55 V) or on a 6.0 V pack
-    (about 5.48 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
+    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.541 V) or on a 6.0 V pack
+    (about 5.474 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
     15).
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
     4.60–4.94 V at room temperature (initial tolerance, Calculation).
@@ -83,7 +86,13 @@ Further rules:
 - **J400 chatter** (R10's D-R25-01 rule; R12 figures in stageD_analysis.md §3). Record the contact state at
   ≥ 10 kS/s under flight-level vibration. It passes only if the total open time in every sliding 100 ms window is
   under 7 ms and U9 stays on throughout at the four-stall pack voltage of 5.72 V. The R12 worst-corner limit is
-  7.56 ms (Calculation / Inference).
+  7.08 ms at drift (0.08 ms margin over the 7 ms line; 7.56 ms at 1 %, Calculation / Inference).
+  Single drop-out immunity is 7.61 ms at drift and the 7 ms line holds to 5.710 V (D-R12-156).
+
+READY voltage is an R12 override of R10 rule 9: PA6 reads VLOGIC behind D5. Compare the corrected pack
+estimate with 7.4 V, or VLOGIC with 7.4 V minus the pad-load U9/copper and D5 drops, reserving measured
+ADC/divider error. D5 VF 0.25–0.45 V is Inference until pad-load calibration; do not label raw VLOGIC as pack
+voltage (D-R12-157; M3_R12 “Firmware”, owner row 45).
 
 ## Pyro and per-flight checks
 
@@ -139,8 +148,8 @@ adapted to R12. Run it in order and stop at the first failure.
   Inference on the clone dimensions).
 - **Every part is JLC-assembled (D-R12-85, owner 2026-11-05).** Nothing is fitted by hand after delivery:
   - C84 (Honor HV1E477M0810PZ, 470 µF 25 V polymer) at (36.0, 31.2), beside U2, is placed and reflowed by JLC.
-  - LS120 (QMB-09B-03 THT buzzer) at (7.2, 67.4) and J121 are JLC THT assembly (hand-soldered by JLC after reflow).
-    LS120's (+) lead goes in pad 1 (5.2, 67.4): JLC's own footprint prints its `+` beside pad 1 and the CPL puts that
+  - LS120 (QMB-09B-03 THT buzzer) at (5.8, 66.4) and J121 are JLC THT assembly (hand-soldered by JLC after reflow).
+    LS120's (+) lead goes in pad 1 (3.8, 66.4): JLC's own footprint prints its `+` beside pad 1 and the CPL puts that
     pad on ours (jlc_orient_r12, residual 0.0 mm, Measured), and the maker drawing marks the (+) lead (Datasheet). At
     incoming inspection, check the buzzer's `+` mark sits at pad 1.
 - **microSD** J430 on the top face at (20.0, 69.0), rotation 180. Open the hinge only with the board off and its sources

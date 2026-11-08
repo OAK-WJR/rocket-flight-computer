@@ -11,10 +11,10 @@ D-R12-29 / -31 (J121 DB125 C52993880; SH 1.0 ports C7430446 / C7430448), which `
 GH clones.
 
 **Refs (R12F5-TRI-19, D-R12-133).** The Refs cells of §2.1 / §2.2's resistor and capacitor tables were re-derived on
-2026-11-06 from the current JLC BOM `m3_design/r12/fab/m3_bom_jlc.csv` (board `6e874d4e…`): R401 is C190095 (D-R12-83,
+2026-11-06 from the then-current JLC BOM `m3_design/r12/fab/m3_bom_jlc.csv` (board `6e874d4e…`): R401 is C190095 (D-R12-83,
 its own row in §2.3), R404 is 5.1k C25905, and C79 (D-R12-78) and C33 (D-R12-51) are on C12891 / C307331. Round 6
 (board `f26dfef1…`, D-R12-134, -138) moved R131 from C25744 10k to C25905 5.1k and added R136 (C25905), R95 (C25744)
-and D95 (C37704); the three cells below follow the JLC BOM again (still 58 lines, 181 parts). The ratings and
+and D95 (C37704); the three cells below follow the JLC BOM again (then 58 lines, 181 parts; round 8 is 58 lines, 183 parts). The ratings and
 verdicts are unchanged (same codes). Round 7 (board `82eddc69…`, D-R12-144 … -151) changed no BOM line. Its triage
 (R12F7-TRI-13) found that three lines this file routes to O-R12-02 were missing from that item's unread list: D123
 1N5819WS, Y1 X322525MOB4SI (no rating found, UNVERIFIED) and U3 W25Q128JVSIQ (its 260 °C class an Inference); O-R12-02
@@ -29,7 +29,7 @@ deviation, D-R12-49, owner acceptance A-9; the effect of the 5–10 °C over-pea
 | Item | Audit verdict | Resolution |
 |---|---|---|
 | U4 ISM6HG256XTR (§3.1) | FAIL: Standard Only | **Resolved**, D-R12-50: LSM6DSVETR (C41785564) on the same land and nets (pin map from JLCEDA C41785564; ST datasheet for the "E" variant not found: Inference); plus D-R12-51 below for F2 |
-| F2 high-g channel (§3.5.1) | – | **Resolved**, D-R12-51: new U6 FXLS90322AESR2 (C5190712), XY medium-g (±150 g maximum; search summaries, Inference until FXLS9xxxx Rev 7 is read; O-R12-21), SPI on SPI1 with HG_CS on PA10, C33 100 nF; NXP part page: MSL 3, 260 °C / 40 s. The listing's "±500 g, XYZ" is wrong for this part number |
+| F2 high-g channel (§3.5.1) | – | **Resolved**, D-R12-51: new U6 FXLS90322AESR2 (C5190712), XY medium-g (±150 g maximum; search summaries, Inference until FXLS9xxxx Rev 7 is read; O-R12-21), SPI on SPI1 with HG_CS on PD2 (B7; PA10 → PC11 D-R12-64A → PD2 D-R12-93), C33 100 nF; NXP part page: MSL 3, 260 °C / 40 s. The listing's "±500 g, XYZ" is wrong for this part number |
 | U5 LPS28DFWTR (§3.2) | FAIL: Standard Only | **Resolved**, D-R12-52: MS5607-02BA03 (C97627, Economic) on R11's MS5611 land; 250 °C / 40 s accepted under D-R12-49. The KP215F1701 analog route of §3.5.3 was not taken |
 | D5 / D6 / D9 SS34 (§3.3) | FAIL: 250 °C | **Resolved by acceptance** (D-R12-49): SS34 kept; B340A not adopted |
 | D121 SRV05-4 (§3.4) | UNVERIFIED | **Kept** (Economic-flagged; D-R12-49); ProTek swap not made |
@@ -62,6 +62,9 @@ The JLC flag does not track the maker's thermal rating: MS5611 / MS5607 / HP203B
 in-stock high-g accelerometer and every genuine ST / Bosch / Infineon / TDK barometer checked is "Standard Only". This
 is the decision for the owner; §3 lists the options and what each changes.
 
+Round 8 (`418e5ea9…`, D-R12-153) adds R436 C25905 and D436 C37704 and changes R431 to 47k C25792,
+all existing BOM codes; no new reflow-rating evidence. D436 hot leakage remains unqualified (Inference).
+
 ## 1. Economic limits used (Live, JLC capabilities page, as given in the brief and cost_study §1.1)
 
 One-side placement (SMT, plus THT hand-soldered); fixed reflow 255 ± 5 °C, so a reflowed part needs a maker peak rating
@@ -89,15 +92,15 @@ dip … solder bath 260 ± 5 °C, 10 ± 1 s" and leaching 30 s at 260 °C. JLC E
 |---|---|---|---|---|
 | C11702 | 0402WGF1001TCE 1k | R9 R100 R101 R110 R122 R127 R162 R440 R441 R450 R451 R470 R471 | 2206010216_UNI-ROYAL-Uniroyal-Elec-0402WGF1001TCE_C11702 | OK |
 | C25091 | 0402WGF2200TCE 220R | R32 R33 R126 | 2205311900_…-0402WGF2200TCE_C25091 | OK |
-| C25741 | 0402WGF1003TCE 100k | R60 R83 R112 R119 R120 R431 (R112 since D-R12-86) | 2206010100_…-0402WGF1003TCE_C25741 | OK |
+| C25741 | 0402WGF1003TCE 100k | R60 R83 R112 R119 R120 (R112 since D-R12-86; R431 moved to C25792 in round 8) | 2206010100_…-0402WGF1003TCE_C25741 | OK |
 | C25744 | 0402WGF1002TCE 10k | R5 R10 R11 R61 R89 R95 R121 R128 R154–R157 R163 R167 R434 R435 R460–R464 (R401 is C190095 since D-R12-83; R131 moved to C25905 and R95 added in round 6) | 2411221126_…-0402WGF1002TCE_C25744 | OK |
 | C25765 | 0402WGF2002TCE 20k | R15 | 2206010100_…_C25765 | OK |
 | C25779 | 0402WGF3302TCE 33k | R93 | 2206010100_…_C25779 | OK |
-| C25792 | 0402WGF4702TCE 47k | R14 R111 R400 (R111 since D-R12-86) | 2206010100_…_C25792 | OK |
+| C25792 | 0402WGF4702TCE 47k | R14 R111 R400 R431 (R111 since D-R12-86; R431 since D-R12-153) | 2206010100_…_C25792 | OK |
 | C25794 | 0402WGF5102TCE 51k | R433 | 2411221126_…_C25794 | OK |
 | C25867 | 0402WGF1501TCE 1.5k | R84 R94 | 2206010045_…_C25867 | OK |
 | C25900 | 0402WGF4701TCE 4.7k | R12 R13 | 2206010045_…_C25900 | OK |
-| C25905 | 0402WGF5101TCE 5.1k | R7 R8 R104 R107 R129 R131 R132 R136 R173 R175 R404 (R404 since D-R12-83; R131 and R136 since D-R12-134) | 2206010045_…_C25905 | OK |
+| C25905 | 0402WGF5101TCE 5.1k | R7 R8 R104 R107 R129 R131 R132 R136 R173 R175 R404 R436 (R436 since D-R12-153; R404 since D-R12-83; R131 and R136 since D-R12-134) | 2206010045_…_C25905 | OK |
 | C26083 | 0402WGF1004TCE 1M | R82 | 2206010030_…_C26083 | OK |
 | C4109 | 0402WGF2001TCE 2k | R105 R106 R123 R130 R133 R178 R180 | 2206010230_…_C4109 | OK |
 | C21190 | 0603WAF1001T5E 1k | R150–R153 | 2206010130_…_C21190 | OK |
@@ -139,7 +142,7 @@ Samsung (Datasheet, Samsung MLCC general spec served for every CL code): "Pb-fre
 | C468250 | TPS563208DDCR | U400 U403 | SOT-23-6 (DDC), OK | Level-1-**260C**-UNLIM (2004061031_…_C468250) | E | OK |
 | C20917 | AO3400A | Q122 Q123 Q124 | SOT-23, OK | None in AOS datasheet (1811081213_…_C20917; also aosmd.com/res/datasheets/AO3400A.pdf read) | E | UNVERIFIED |
 | C15127 | AO3401A | Q120 Q121 | SOT-23, OK | None in AOS datasheet (2412061733_…_C15127; aosmd.com AO3401A.pdf read) | E | UNVERIFIED |
-| C37704 | BAT54C,215 (Nexperia) | D120, D95 (D95 since D-R12-138) | SOT-23, OK | None in datasheet (2407241028_Nexperia-BAT54C-215_C37704); nexperia.com returned 403 | E, Preferred | UNVERIFIED |
+| C37704 | BAT54C,215 (Nexperia) | D120, D95, D436 (D95 since D-R12-138; D436 since D-R12-153) | SOT-23, OK | None in datasheet (2407241028_Nexperia-BAT54C-215_C37704); nexperia.com returned 403 | E, Preferred | UNVERIFIED |
 | C535146 | ESD103-B1-02EL E6327 | D402 | TSLP-2-20 1.0 × 0.6 (0402 size), OK | None in Infineon Rev 1.3 (2304140030_…_C535146) | E | UNVERIFIED |
 | C13612 | SRV05-4.TCT (Semtech) | D121 | SOT-23-6, OK | TL **260 °C / 10 s**, lead-soldering figure only; does not establish body reflow at 255 ± 5 °C (Semtech datasheet, 1809212114_SEMTECH-SRV05-4-TCT_C13612) | E | UNVERIFIED |
 | C78399 | SMAJ12CA (Brightking) | D8 | SMA, OK | "Peak temperature (TP) 260 °C"; MSL 1 per J-STD-020 (2304140030_Brightking-SMAJ12CA-TR13_C78399) | E | OK |

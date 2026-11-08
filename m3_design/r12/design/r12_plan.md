@@ -78,7 +78,7 @@ and no copper table frozen (stageC.md). Stage A margin items D-R12-21 applied (p
 
 Owner: "go fully Economic" (every JLC-placed part allowed on Economic PCBA); parts rated to a 250 °C peak are accepted on
 Economic's 255 ± 5 °C (D-R12-49, owner acceptance A-9). U4 ISM6HG256X (Standard Only) → LSM6DSVE on the same land
-(D-R12-50); new U6 FXLS90322 XY medium-g accelerometer for F2 on the IMU SPI1 bus with chip select HG_CS on PA10 (PC11 since D-R12-64A), plus
+(D-R12-50); new U6 FXLS90322 XY medium-g accelerometer for F2 on the IMU SPI1 bus with chip select HG_CS on PD2 (B7; PA10 → PC11 D-R12-64A → PD2 D-R12-93), plus
 C33 (D-R12-51); U5 LPS28DFW (Standard Only) → MS5607-02BA03 on R11's MS5611 land (D-R12-52); placement D-R12-53; axis maps
 D-R12-54. SS34, SRV05-4 and the microSD socket stay. 186 parts, 57 codes (stock run 2026-11-04T23:25:09Z):
 **2 boards $159.92 ($79.96 per board), 5 boards $260.08 ($52.02 per board)**, M3 metric $44.12 per board at 5 boards
@@ -88,7 +88,7 @@ new placement: new net HG_CS (U1.D10 to U6.8), U6 on SPI1 and 3V3, U5 rotated 18
 ## 8. Stage C pass 1 (2026-11-05, D-R12-61A … -66A)
 
 Nine U1 nets re-pinned to balls facing their pads (QSPI_NCS PB10; barometer I2C3 on PA8 / PC9; microSD SPI4 on PE12-14
-with SD_CS on PA7; HG_CS PC11; VBUS_SENSE PA10), two U1 escapes changed in the aid (QSPI_IO2 by a dog-bone, IMU_INT1
+with SD_CS on PA7; HG_CS PD2 (B7; PA10 → PC11 D-R12-64A → PD2 D-R12-93); VBUS_SENSE PA10), two U1 escapes changed in the aid (QSPI_IO2 by a dog-bone, IMU_INT1
 without a B lane), and the copper frozen in `m3_design/r12_routes.tsv`: board `da48bb99…` (two builds, same hash), DRC
 0 / unconnected 0 / parity 0, check_r12 copper OK, route_check r12 83 failing (reported, not fatal, until pass 2 sets
 `R12_ROUTE_HYGIENE=strict`). Pass 2 (routing hygiene) is next (stageC.md §5).
