@@ -161,10 +161,13 @@ R12_MOVES = {
                    '(SLUSDW3A 7.8 PFM band, R12F6-TRI-03), with R100 at its drift low end, 3.5156 V / 983.3 ohm, +/-1.67 % '
                    'per resistor, r12_budget.py TOL drift; Calculation; the PFM band at R12\'s VIN and the drift case '
                    'Inference)'),
-    'CAM_PWR_EN': ('C8', 'GPIO out (push-pull; R431 pull-down holds the camera buck off in reset)',
+    'CAM_PWR_EN': ('C8', 'GPIO out (push-pull, no pull; drives U403 EN through R436 5.1k; R431 47k pull-down on the EN '
+                         'side holds the camera buck off in reset; D436 BAT54C clamps PC12 to 3V3)',
                    f'D-R12-93: PC14 (A1, aft-west corner) -> PC12 (C8, aft-east, toward U403.5); plain GPIO; {_DS} Table '
-                   '9 p. 82 (PC12, TFBGA100 ball C8); loader SPI3_MOSI slave input, no pull (AN2606 Rev 64 Table 119 p. 279): '
-                   'not driven, so R431 keeps the camera off'),
+                   '9 p. 82 (PC12, TFBGA100 ball C8, FT_h); loader SPI3_MOSI slave input, no pull (AN2606 Rev 64 Table 119 '
+                   'p. 279): not driven, so R431 keeps the camera off; R12F8-TRI-01: U403.5 (EN) is 0.400 mm from U403.6 '
+                   '(CAM_BST), so PC12 reaches EN (net CAM_EN) only through R436 5.1k with D436 clamping it to 3V3 + V_F '
+                   '(FT: no positive injection, DS12110 Rev 8 Table 21 p. 106)'),
     'LED_YEL': ('H2', 'GPIO out',
                 f'D-R12-93: PD2 (B7) -> PA1 (H2, west face, straight to R33 in the west bay); plain GPIO; {_DS} Table 9 '
                 '(PA1, TFBGA100 ball H2); not an H74x loader pin (AN2606 Rev 64 Table 119)'),

@@ -1,12 +1,12 @@
 {
- "board_sha256": "82eddc69c72cb0687183e8c51cb01a9290cbf4ec71b765c81ea7a093d6035af6",
+ "board_sha256": "418e5ea985402d00ba8008e9775e037321eddc48683754eba1939744d75f791e",
  "dc_solves": {
   "3V3_L1_to_R14": {
-   "cells": 295144,
-   "cg_iterations": 4587,
+   "cells": 286531,
+   "cg_iterations": 4616,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.0049006042505801185,
+   "resistance_ohm": 0.004057169540952156,
    "sink": "R14:1",
    "source": "L1:2",
    "window_mm": [
@@ -17,11 +17,11 @@
    ]
   },
   "3V3_L1_to_U6": {
-   "cells": 295144,
-   "cg_iterations": 4455,
+   "cells": 286531,
+   "cg_iterations": 4346,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.012169253131652413,
+   "resistance_ohm": 0.01219808977698271,
    "sink": "U6:1,13,15,16",
    "source": "L1:2",
    "window_mm": [
@@ -32,11 +32,11 @@
    ]
   },
   "3V3_R14_to_U6": {
-   "cells": 295144,
-   "cg_iterations": 4494,
+   "cells": 286531,
+   "cg_iterations": 4607,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.013237071616323771,
+   "resistance_ohm": 0.012389187076198321,
    "sink": "U6:1,13,15,16",
    "source": "R14:1",
    "window_mm": [
@@ -92,11 +92,11 @@
    ]
   },
   "GND_Q124_to_J1": {
-   "cells": 111584,
-   "cg_iterations": 2222,
+   "cells": 111620,
+   "cg_iterations": 2214,
    "grid_mm": 0.1,
    "net": "GND",
-   "resistance_ohm": 0.0026718969728677837,
+   "resistance_ohm": 0.0026718900021113364,
    "sink": "J1:2",
    "source": "Q124:2",
    "window_mm": [
@@ -152,11 +152,11 @@
    ]
   },
   "PORT_4V8_L400_to_R400": {
-   "cells": 4299,
-   "cg_iterations": 905,
+   "cells": 4287,
+   "cg_iterations": 899,
    "grid_mm": 0.1,
    "net": "PORT_4V8",
-   "resistance_ohm": 0.035525136993795295,
+   "resistance_ohm": 0.038473708422348346,
    "sink": "R400:1",
    "source": "L400:2",
    "window_mm": [
@@ -167,11 +167,11 @@
    ]
   },
   "RAW_PROTECTED_U9_to_D5": {
-   "cells": 40547,
-   "cg_iterations": 2389,
+   "cells": 47313,
+   "cg_iterations": 2468,
    "grid_mm": 0.1,
    "net": "RAW_PROTECTED",
-   "resistance_ohm": 0.024779286843046498,
+   "resistance_ohm": 0.023278543944110865,
    "sink": "D5:2",
    "source": "U9:6",
    "window_mm": [
@@ -182,11 +182,11 @@
    ]
   },
   "RAW_PROTECTED_U9_to_U400": {
-   "cells": 40547,
-   "cg_iterations": 2354,
+   "cells": 47313,
+   "cg_iterations": 2436,
    "grid_mm": 0.1,
    "net": "RAW_PROTECTED",
-   "resistance_ohm": 0.059235883570467496,
+   "resistance_ohm": 0.059240042450041434,
    "sink": "U400:3",
    "source": "U9:6",
    "window_mm": [
@@ -197,11 +197,11 @@
    ]
   },
   "RAW_PROTECTED_U9_to_U403": {
-   "cells": 40547,
-   "cg_iterations": 2510,
+   "cells": 47313,
+   "cg_iterations": 2554,
    "grid_mm": 0.1,
    "net": "RAW_PROTECTED",
-   "resistance_ohm": 0.012221593806292575,
+   "resistance_ohm": 0.01152742927081518,
    "sink": "U403:3",
    "source": "U9:6",
    "window_mm": [
@@ -242,11 +242,11 @@
    ]
   },
   "VLOGIC_D6_to_U2": {
-   "cells": 4553,
-   "cg_iterations": 592,
+   "cells": 4603,
+   "cg_iterations": 603,
    "grid_mm": 0.1,
    "net": "VLOGIC",
-   "resistance_ohm": 0.008474494822767385,
+   "resistance_ohm": 0.008474494822767386,
    "sink": "U2:4,5",
    "source": "D6:1",
    "window_mm": [
@@ -515,7 +515,7 @@
    "q124_vgs_row_V": 2.5,
    "q124_vgs_th_max_V": 1.45
   },
-  "gnd_return_dc_ohm": 0.0026718969728677837,
+  "gnd_return_dc_ohm": 0.0026718900021113364,
   "gnd_return_used_ohm": 0.005,
   "leads_ohm": 0.3,
   "match_ohm": 2.0,
@@ -916,7 +916,7 @@
   },
   "PYRO1_GATE_N": {
    "length_mm_by_layer": {
-    "F.Cu": 17.384062043356597
+    "F.Cu": 17.384062043356593
    },
    "microstrip_L_nH_upper": 10.234475554031587,
    "vias": 0
@@ -1004,54 +1004,54 @@
  },
  "pa6_corners": {
   "branch_shared_ohm": {
-   "D5 (logic, microSD, D5) and R92": 0.024779286843046498,
-   "U400 (ports)": 0.024779286843046498,
-   "U403 (camera)": 0.012221593806292575
+   "D5 (logic, microSD, D5) and R92": 0.023278543944110865,
+   "U400 (ports)": 0.023278543944110865,
+   "U403 (camera)": 0.01152742927081518
   },
   "healthy": {
    "BAT_IN_V": 5.72088327698682,
-   "RAW_PROTECTED_drop_at_D5_V": 0.040489695544827266,
-   "U9_and_copper_drop_V": 0.1496073319263396,
+   "RAW_PROTECTED_drop_at_D5_V": 0.03809469481006803,
+   "U9_and_copper_drop_V": 0.14721233119158036,
    "VLOGIC_V": [
-    5.12127594506048,
-    5.3212759450604805
+    5.123670945795239,
+    5.323670945795239
    ],
    "converter_A": 2.2641599363377725,
-   "lumped_drop_V_superseded": 0.16522190490255992,
-   "margin_to_nominal_trip_top_V": 0.17127594506048016,
-   "margin_to_tolerance_trip_top_V": 0.08036685415138933
+   "lumped_drop_V_superseded": 0.1618239829560464,
+   "margin_to_nominal_trip_top_V": 0.173670945795239,
+   "margin_to_tolerance_trip_top_V": 0.08276185488614818
   },
   "label": "Calculation / Inference (DC-solve upper bounds, mutual resistance bounded by the smaller point resistance; U9 RON, SS34 VF and the load allocations are Inference); the drop is an upper bound, the margins lower bounds",
   "match_and_leads_shorted": {
    "BAT_IN_V": 5.532333729958293,
-   "RAW_PROTECTED_drop_at_D5_V": 0.041869640090283614,
-   "U9_and_copper_drop_V": 0.15470615568567025,
+   "RAW_PROTECTED_drop_at_D5_V": 0.03939301443452106,
+   "U9_and_copper_drop_V": 0.1522295300299077,
    "VLOGIC_V": [
-    4.9276275742726225,
-    5.127627574272623
+    4.930104199928386,
+    5.130104199928386
    ],
    "converter_A": 2.341325622869818,
-   "lumped_drop_V_superseded": 0.17085289479745236,
-   "margin_to_nominal_trip_top_V": -0.02237242572737763,
-   "margin_to_tolerance_trip_top_V": -0.11328151663646846
+   "lumped_drop_V_superseded": 0.16733916699483442,
+   "margin_to_nominal_trip_top_V": -0.01989580007161429,
+   "margin_to_tolerance_trip_top_V": -0.11080489098070512
   },
   "match_shorted": {
    "BAT_IN_V": 5.574968953868334,
-   "RAW_PROTECTED_drop_at_D5_V": 0.0415494371447509,
-   "U9_and_copper_drop_V": 0.15352302235479431,
+   "RAW_PROTECTED_drop_at_D5_V": 0.03909175177192957,
+   "U9_and_copper_drop_V": 0.151065336981973,
    "VLOGIC_V": [
-    4.971445931513539,
-    5.1714459315135395
+    4.973903616886361,
+    5.173903616886361
    ],
    "converter_A": 2.3234200626768584,
-   "lumped_drop_V_superseded": 0.1695462774000024,
-   "margin_to_nominal_trip_top_V": 0.02144593151353913,
-   "margin_to_tolerance_trip_top_V": -0.0694631593955517
+   "lumped_drop_V_superseded": 0.16605942123969547,
+   "margin_to_nominal_trip_top_V": 0.023903616886360446,
+   "margin_to_tolerance_trip_top_V": -0.06700547402273038
   },
   "raw_point_ohm": {
-   "D5": 0.024779286843046498,
-   "U400": 0.059235883570467496,
-   "U403": 0.012221593806292575
+   "D5": 0.023278543944110865,
+   "U400": 0.059240042450041434,
+   "U403": 0.01152742927081518
   },
   "u9_turn_off_through_d5_V": 4.55,
   "window": {
@@ -1131,7 +1131,7 @@
     "min_initial_V": 4.587410825043611
    }
   },
-  "R_L400_to_R400_ohm": 0.035525136993795295,
+  "R_L400_to_R400_ohm": 0.038473708422348346,
   "all_ports_inside_4V5_5V0_at_0A561": true,
   "ceiling_V": 5.0,
   "floor_V": 4.5,
@@ -1142,7 +1142,7 @@
    "6V0_pack_converters_only": {
     "BAT_IN_V": 5.656511018717456,
     "I_out_A": 0.561,
-    "VIN_V": 5.4841,
+    "VIN_V": 5.4856,
     "below_VO_over_0V75": true,
     "below_recommended_duty": false,
     "converter_A": 2.2899265418836285,
@@ -1152,47 +1152,47 @@
      "580kHz_tOFF_max_310ns": 0.8202,
      "580kHz_tOFF_typ_220ns": 0.8724
     },
-    "drop_to_U400_VIN_V": 0.1724020667315685,
+    "drop_to_U400_VIN_V": 0.1709010171051032,
     "duty_needed": {
      "drift": [
-      0.8416,
-      0.9156
+      0.8414,
+      0.9153
      ],
      "initial": [
-      0.8476,
-      0.9092
+      0.8474,
+      0.9089
      ]
     },
     "duty_needed_lossless": {
      "drift": [
-      0.8334,
-      0.9067
+      0.8332,
+      0.9064
      ],
      "initial": [
-      0.8394,
-      0.9004
+      0.8391,
+      0.9001
      ]
     },
     "holds_window_top_at_580kHz": false,
     "holds_window_top_with_foldback": true,
     "max_held_V": {
-     "200kHz_tOFF_max_310ns": 5.094,
-     "200kHz_tOFF_typ_220ns": 5.192,
-     "580kHz_tOFF_max_310ns": 4.454,
-     "580kHz_tOFF_typ_220ns": 4.738
+     "200kHz_tOFF_max_310ns": 5.096,
+     "200kHz_tOFF_typ_220ns": 5.193,
+     "580kHz_tOFF_max_310ns": 4.456,
+     "580kHz_tOFF_typ_220ns": 4.739
     },
     "window_top_V": 4.9722
    },
    "J1_to_U9_ohm": 0.008193431316520708,
    "branch_shared_ohm": {
-    "D5 (logic, microSD, D5) and R92": 0.024779286843046498,
-    "U400 (ports)": 0.059235883570467496,
-    "U403 (camera)": 0.012221593806292575
+    "D5 (logic, microSD, D5) and R92": 0.023278543944110865,
+    "U400 (ports)": 0.059240042450041434,
+    "U403 (camera)": 0.01152742927081518
    },
    "four_stall_fire": {
     "BAT_IN_V": 5.72088327698682,
     "I_out_A": 0.561,
-    "VIN_V": 5.5504,
+    "VIN_V": 5.5519,
     "below_VO_over_0V75": true,
     "below_recommended_duty": false,
     "converter_A": 2.2641599363377725,
@@ -1202,34 +1202,34 @@
      "580kHz_tOFF_max_310ns": 0.8202,
      "580kHz_tOFF_typ_220ns": 0.8724
     },
-    "drop_to_U400_VIN_V": 0.17046217216835313,
+    "drop_to_U400_VIN_V": 0.1689780125830845,
     "duty_needed": {
      "drift": [
-      0.8315,
-      0.9045
+      0.8312,
+      0.9043
      ],
      "initial": [
-      0.8374,
-      0.8982
+      0.8371,
+      0.898
      ]
     },
     "duty_needed_lossless": {
      "drift": [
-      0.8235,
-      0.8958
+      0.8232,
+      0.8956
      ],
      "initial": [
-      0.8293,
-      0.8896
+      0.8291,
+      0.8894
      ]
     },
     "holds_window_top_at_580kHz": false,
     "holds_window_top_with_foldback": true,
     "max_held_V": {
-     "200kHz_tOFF_max_310ns": 5.156,
-     "200kHz_tOFF_typ_220ns": 5.255,
-     "580kHz_tOFF_max_310ns": 4.509,
-     "580kHz_tOFF_typ_220ns": 4.796
+     "200kHz_tOFF_max_310ns": 5.158,
+     "200kHz_tOFF_typ_220ns": 5.257,
+     "580kHz_tOFF_max_310ns": 4.51,
+     "580kHz_tOFF_typ_220ns": 4.797
     },
     "window_top_V": 4.9722
    },
@@ -1311,7 +1311,7 @@
    "vias": []
   },
   "D5 IN": {
-   "R_tracks_series_ohm": 0.012367619866666665,
+   "R_tracks_series_ohm": 0.013104762723809525,
    "amps": 1.294,
    "basis": "R10 VLOGIC 1.294 A",
    "budget_A": 0.4125237110663456,
@@ -1319,7 +1319,7 @@
    "joined": true,
    "layers": {
     "B.Cu": {
-     "R_series_ohm": 0.010483810342857142,
+     "R_series_ohm": 0.010483810342857143,
      "by_width_mm": {
       "0.600": {
        "ipc_rise_C": 6.892282832991464,
@@ -1332,15 +1332,15 @@
      "th_mm": 0.035
     },
     "F.Cu": {
-     "R_series_ohm": 0.0018838095238095237,
+     "R_series_ohm": 0.002620952380952381,
      "by_width_mm": {
       "0.600": {
        "ipc_rise_C": 6.892282832991464,
-       "length_mm": 2.3
+       "length_mm": 3.2
       }
      },
      "ipc_width_for_30C_mm": 0.1669972689550926,
-     "length_mm": 2.3,
+     "length_mm": 3.2,
      "min_width_mm": 0.6,
      "th_mm": 0.035
     }
@@ -1361,7 +1361,7 @@
     {
      "amps": 3.347771891418564,
      "layer": "F.Cu",
-     "length_mm": 0.7,
+     "length_mm": 3.2,
      "rise_C": 46.13242193457375,
      "shared_with": [
       "D5 IN",
@@ -1389,7 +1389,7 @@
     {
      "design_A_sum": 3.347771891418564,
      "layer": "F.Cu",
-     "length_mm": 0.7,
+     "length_mm": 3.2,
      "rise_design_sum_C": 46.13242193457375,
      "width_mm": 0.6,
      "with_paths": [
@@ -1407,6 +1407,16 @@
     [
      45.2,
      16.4,
+     0.3
+    ],
+    [
+     45.2,
+     17.0,
+     0.3
+    ],
+    [
+     45.2,
+     28.5,
      0.3
     ],
     [
@@ -1593,7 +1603,7 @@
    ]
   },
   "U400 IN": {
-   "R_tracks_series_ohm": 0.04873333415238095,
+   "R_tracks_series_ohm": 0.0507809532,
    "amps": 2.053771891418564,
    "basis": "port 1.9 A at 4.938 V / 0.80 from 5.71 V (Inference); VIN pin 3 only, the EN stub excluded (R12F2-TRI-06)",
    "budget_A": 0.6052495667808356,
@@ -1614,15 +1624,15 @@
      "th_mm": 0.035
     },
     "F.Cu": {
-     "R_series_ohm": 0.0031942857142857146,
+     "R_series_ohm": 0.005241904761904763,
      "by_width_mm": {
       "0.600": {
        "ipc_rise_C": 17.361967926768394,
-       "length_mm": 3.8999999999999995
+       "length_mm": 6.4
       }
      },
      "ipc_width_for_30C_mm": 0.3729152257264765,
-     "length_mm": 3.8999999999999995,
+     "length_mm": 6.4,
      "min_width_mm": 0.6,
      "th_mm": 0.035
     }
@@ -1643,7 +1653,7 @@
     {
      "amps": 3.347771891418564,
      "layer": "F.Cu",
-     "length_mm": 0.7,
+     "length_mm": 3.2,
      "rise_C": 46.13242193457375,
      "shared_with": [
       "D5 IN",
@@ -1655,6 +1665,7 @@
    "over_30C_all_short_entries": false,
    "pads": [
     "C400.1",
+    "D5.2",
     "U400.3"
    ],
    "shared_tracks": [
@@ -1672,7 +1683,7 @@
     {
      "design_A_sum": 3.347771891418564,
      "layer": "F.Cu",
-     "length_mm": 0.7,
+     "length_mm": 3.2,
      "rise_design_sum_C": 46.13242193457375,
      "width_mm": 0.6,
      "with_paths": [
@@ -1690,6 +1701,16 @@
     [
      45.2,
      16.4,
+     0.3
+    ],
+    [
+     45.2,
+     17.0,
+     0.3
+    ],
+    [
+     45.2,
+     28.5,
      0.3
     ],
     [
@@ -1755,7 +1776,7 @@
    ]
   },
   "U403 IN": {
-   "R_tracks_series_ohm": 0.0008190476190476191,
+   "R_tracks_series_ohm": 0.004750476190476191,
    "amps": 1.5560549474605954,
    "basis": "camera 1.249 A at 5.691 V / 0.80 from 5.71 V (Inference)",
    "budget_A": 1.2434268723179875,
@@ -1763,15 +1784,15 @@
    "joined": true,
    "layers": {
     "F.Cu": {
-     "R_series_ohm": 0.0008190476190476191,
+     "R_series_ohm": 0.004750476190476191,
      "by_width_mm": {
       "0.300": {
        "ipc_rise_C": 22.117136117588444,
-       "length_mm": 0.5
+       "length_mm": 2.9
       }
      },
      "ipc_width_for_30C_mm": 0.2301428357201464,
-     "length_mm": 0.5,
+     "length_mm": 2.9,
      "min_width_mm": 0.3,
      "th_mm": 0.035
     }
@@ -1780,12 +1801,23 @@
    "over_30C": [],
    "over_30C_all_short_entries": true,
    "pads": [
+    "C433.1",
     "U403.3"
    ],
    "vias": [
     [
      33.2,
      12.9,
+     0.3
+    ],
+    [
+     35.0,
+     12.2,
+     0.3
+    ],
+    [
+     36.1,
+     13.3,
      0.3
     ]
    ]
@@ -1937,7 +1969,7 @@
  "rails_shared": {
   "groups": [
    {
-    "R_series_ohm": 0.010483810342857142,
+    "R_series_ohm": 0.010483810342857143,
     "budget_A_sum": 1.0177732778471813,
     "design_A_capped_at_source": 2.9,
     "design_A_sum": 3.347771891418564,
@@ -1972,6 +2004,16 @@
       ],
       [
        45.2,
+       28.5
+      ]
+     ],
+     [
+      [
+       45.2,
+       28.5
+      ],
+      [
+       45.2,
        29.2
       ]
      ]
@@ -1979,7 +2021,7 @@
     "width_mm": 0.6
    },
    {
-    "R_series_ohm": 0.0005733333333333334,
+    "R_series_ohm": 0.002620952380952381,
     "budget_A_sum": 1.0177732778471813,
     "design_A_capped_at_source": 2.9,
     "design_A_sum": 3.347771891418564,
@@ -1989,7 +2031,7 @@
     "ipc_width_for_30C_at_design_sum_mm": 0.8722880979256081,
     "label": "Calculation on CAD widths; the rise is the IPC-2152 long-conductor fit with no plane credit, an upper bound (Inference); design currents R10 K-power basis, budget currents Inference",
     "layer": "F.Cu",
-    "length_mm": 0.7,
+    "length_mm": 3.2,
     "net": "RAW_PROTECTED",
     "paths": [
      "D5 IN",
@@ -1997,6 +2039,26 @@
     ],
     "th_mm": 0.035,
     "tracks": [
+     [
+      [
+       43.6,
+       29.2
+      ],
+      [
+       45.2,
+       29.2
+      ]
+     ],
+     [
+      [
+       44.3,
+       28.5
+      ],
+      [
+       45.2,
+       28.5
+      ]
+     ],
      [
       [
        44.5,
@@ -2021,7 +2083,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "82eddc69c72cb0687183e8c51cb01a9290cbf4ec71b765c81ea7a093d6035af6",
+ "source_board_sha256": "418e5ea985402d00ba8008e9775e037321eddc48683754eba1939744d75f791e",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,
@@ -2044,33 +2106,33 @@
  "u6_supply": {
   "0V5_allocation": {
    "I_A": 0.5,
-   "drop_V": 0.008534928691116266,
-   "margin_drift_V": 0.08016507130888417,
-   "margin_initial_V": 0.11036507130888396,
-   "min_VCC_drift_V": 3.215165071308884,
-   "min_VCC_initial_V": 3.2453650713088837
+   "drop_V": 0.008127629658967434,
+   "margin_drift_V": 0.0805723703410326,
+   "margin_initial_V": 0.11077237034103238,
+   "min_VCC_drift_V": 3.2155723703410324,
+   "min_VCC_initial_V": 3.245772370341032
   },
   "1A_rating_bound": {
    "I_A": 1.0,
-   "drop_V": 0.01706985738223253,
-   "margin_drift_V": 0.07163014261776768,
-   "margin_initial_V": 0.10183014261776746,
-   "min_VCC_drift_V": 3.2066301426177675,
-   "min_VCC_initial_V": 3.2368301426177672
+   "drop_V": 0.016255259317934867,
+   "margin_drift_V": 0.07244474068206541,
+   "margin_initial_V": 0.1026447406820652,
+   "min_VCC_drift_V": 3.207444740682065,
+   "min_VCC_initial_V": 3.237644740682065
   },
-  "R_L1_to_R14_ohm": 0.0049006042505801185,
-  "R_L1_to_U6_ohm": 0.012169253131652413,
-  "R_R14_to_U6_direct_ohm": 0.013237071616323771,
+  "R_L1_to_R14_ohm": 0.004057169540952156,
+  "R_L1_to_U6_ohm": 0.01219808977698271,
+  "R_R14_to_U6_direct_ohm": 0.012389187076198321,
   "floor_V": 3.135,
   "label": "Calculation / Inference (3V3 window, D-R12-139): Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window (SLUSDW3A section 7.8 PFM band, R12F6-TRI-03); the band at R12's VIN, the drift case and load currents Inference",
   "u6_max_A": 0.006,
   "u6_only_6mA": {
    "I_A": 0.006,
-   "drop_V": 7.942242969794263e-05,
-   "margin_drift_V": 0.0886205775703024,
-   "margin_initial_V": 0.11882057757030218,
-   "min_VCC_drift_V": 3.223620577570302,
-   "min_VCC_initial_V": 3.253820577570302
+   "drop_V": 7.433512245718994e-05,
+   "margin_drift_V": 0.0886256648775432,
+   "margin_initial_V": 0.11882566487754298,
+   "min_VCC_drift_V": 3.223625664877543,
+   "min_VCC_initial_V": 3.2538256648775428
   },
   "window_basis": "TI SLUSDW3A section 7.8 PFM output regulation -1.5 % ... +2.5 % (U2 LMR50410XDBVR is the PFM variant; typical components over TJ -40 ... 150 C, VIN 24 V, IOUT 0 A to full load, not production tested), taken as an effective VFB 0.985-1.025 V about the 1.000 V nominal; it contains section 7.5's VFB 0.99-1.01 V (R12F6-TRI-03); ILKG-FB 0.2 nA typ (neglected)"
  }

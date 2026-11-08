@@ -71,6 +71,7 @@ D120	6.6	49.2	270	F	R12F5-TRI-01 (S-10): moved from (9.6, 47.4) rot 0 to below R
 D121	28	10.2	0	F	servo clamp (SRV05-4)
 D123	6	57.2	0	F	D-R12-94 (AVA re-layout): Z6 buzzer flyback
 D402	10.6	7.8	270	F	J400.2 ESD clamp at the port; 1.0 mm west so J400's footprint pin-1 mark stays nearest its own pad 1 (D-R12-80)
+D436	29.15	29.25	270	F	R12F8-TRI-01 (I-5): PC12 clamp BAT54C (A1 CAM_PWR_EN on the CA lane line x 28.2, K 3V3 east to its via (30.45, 28.25) clear of the bundle, A2 unused) on the free F strip above the CA bus, 1.04 mm and more from every pack-voltage item (U2 BST, C5, C84.1)
 J1	3.5	15.3	90	F	battery pigtail pads, 5.0 mm pitch, wire side west; courtyard = the keep-clear for a later 5.0 mm terminal (D-R12-30)
 J2	32.8	45	90	F	D-R12-94 (AVA re-layout): Z4 SWD Tag-Connect aft-east of U1 beside the aft corridor, 7 mm from A9 / A10 (was 35)
 J3	41.4	45.5	90	F	D-R12-94 (AVA re-layout): Z2 USB-C mouth at the east edge, 1.5 mm forward for D6
@@ -87,7 +88,7 @@ L400	42.6	75.7	270	F	R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm o
 L401	40.1	13.9	0	F	camera inductor
 LED1	8	52.8	0	F	D-R12-94 (AVA re-layout): Z6 red LED in the west bay (K4 -> B -> here)
 LED2	8	55	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED in the west bay (H2 straight west on F at y 56.0); D-R12-97: rotated 180 so its anode pad faces R33 (W5-REQ-1, Measured on the placed pads)
-LS120	7.2	67.4	0	F	D-R12-94 (AVA re-layout): Z6 buzzer in the empty west bay
+LS120	5.8	66.4	0	F	R12F8-TRI-19: 1.4 mm west and 1.0 mm aft into the 33.8 %-occupied west strip (courtyard x 1.0-10.6, y 61.6-71.2, 0.26 mm from Q123's); pad 2 (BUZZ_OUT) at (7.8, 66.4) shortens the branch from Q123.3 by 2.40 mm (11.448 -> 9.048 mm, no via); pad 1 stays on the In2 3V3 plane; was (7.2, 67.4): D-R12-94 (AVA re-layout): Z6 buzzer in the empty west bay
 Q120	5	29	0	F	bus load switch
 Q121	9.6	29	180	F	bus load switch
 Q122	14.4	27.6	0	F	bus driver
@@ -106,7 +107,7 @@ R15	31.2	25.6	90	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft a
 R32	10.8	52.8	180	F	D-R12-94 (AVA re-layout): Z6 red LED series R
 R33	10.8	55	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED series R
 R60	31	37.2	90	F	D-R12-94 (AVA re-layout): Z2 VLOGIC sense top at D5 / C84
-R61	32	37.2	90	F	D-R12-94 (AVA re-layout): Z2 VLOGIC sense bottom
+R61	32	37.2	270	F	R12F8-TRI-01 (I-5): rotated 180 so its SENSE pad sits north beside R60.2 (straight sense link, no diagonal 0.14 mm past R60.1 VLOGIC); GND pad south to two vias east; was: D-R12-94 (AVA re-layout): Z2 VLOGIC sense bottom
 R80	14.4	9.2	90	F	EN chain: BAT_IN to J400.1
 R81	19	12.2	270	F	EN chain to GND
 R82	16.6	12.4	0	F	OVLO top
@@ -121,7 +122,7 @@ R100	31.6	8	270	F	camera RX series at the port
 R101	30.4	8	90	F	camera TX series at the port
 R104	28.8	7.6	0	F	R12F7-TRI-01 (I-5): 0.2 mm east so R104.1 (CAM_5V) keeps >= 0.300 mm from the 3V3 via (27.6, 8.2) of D121.5 (was 0.212 mm); CAM_5V sense top beside R433
 R105	29.8	16.6	90	F	sense
-R106	30.8	16.6	90	F	sense
+R106	27.8	16.6	90	F	R12F8-TRI-01 (I-5): moved from (30.8, 16.6) to west of R107 so R106.1 (CAM_5V_SENSE) keeps >= 1.04 mm from C432.1 / the CAM_BST run (was 0.66 mm); GND straight west into D9.2; was: sense
 R107	28.8	16.6	270	F	sense; D-R12-97: rotated 180 (pads swap: SENSE north beside R105.1, DIV south) so CAM_5V_DIV need not cross the sense run (W1 request; the old orientation forced a 2.59x detour, Measured)
 R110	36.6	43	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
 R111	27.2	80.3	90	F	R12F7-TRI-03 (88 mm outline): -0.3 mm in y; D-R12-99 (90 mm outline): PORT_SENSE top between J430 and J410, at the PORT_SENSE B lane; PORT_SENSE top at the ports
@@ -166,6 +167,7 @@ R431	30.7	11.2	0	F	camera EN pull-down (off in reset)
 R433	30.7	10.2	0	F	camera FB top
 R434	32.7	10.2	0	F	camera FB
 R435	32.7	11.2	0	F	camera FB bottom
+R436	28.2	26.6	90	F	R12F8-TRI-01 (I-5): U403 EN series resistor 5.1k in line with the CA bus lane x 28.2 (pad 2 CAM_EN south to its via (28.2, 25.5) and the old lane to U403.5; pad 1 CAM_PWR_EN north to D436.1 and the MCU lane via (28.2, 31.45)); SERVO4_MCU / SERVO2_MCU lanes 0.05 mm outward (27.75 / 28.65) so the vias fit the bus
 R440	23.5	80.35	90	F	R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
 R441	22.5	80.35	270	F	R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
 R450	13	80.35	90	F	R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)

@@ -219,7 +219,9 @@ class Profiles(unittest.TestCase):
         rc.set_profile('r12')
         try:
             self.assertIn('r12', rc.R10_LIKE)
-            self.assertEqual((rc.LEFTOVERS, rc.PARALLEL_VIAS), ([], []))
+            # R12F8-TRI-02 / -03: the named second barrels on nets without a pour
+            self.assertEqual((rc.LEFTOVERS, rc.PARALLEL_VIAS), ([], list(rc.PARALLEL_VIAS_R12)))
+            self.assertEqual(sorted(n for n, *_ in rc.PARALLEL_VIAS_R12), ['3V3A', '3V3A', 'VCAP1', 'VCAP2'])
             # D-R12-75A: only the recorded forced findings, each with a reason and the measured route figures
             self.assertEqual((rc.ALLOWLIST, rc.ROUTE_FIGURES), (rc.ALLOWLIST_R12, rc.ROUTE_FIGURES_R12))
             for e in rc.ALLOWLIST:
@@ -231,6 +233,57 @@ class Profiles(unittest.TestCase):
 
 
 BOARD12 = ROOT / 'm3_design/r12/m3.kicad_pcb'
+
+
+@unittest.skipUnless(pcbnew and BOARD12.is_file(), 'KiCad python and the R12 board required')
+class KPower(unittest.TestCase):
+    """R12F8-TRI-02 / -03: R10 / R11's single-via-open rule on R12 (check_r12 K-power), seeded on the committed board."""
+
+    def setUp(self):
+        self.board = pcbnew.LoadBoard(str(BOARD12))
+
+    def kpower(self, exceptions=None):
+        return r12.r10.single_via_opens(self.board, taps=r12.SINGLE_OPEN_TAPS_R12,
+                                        exceptions=r12.SINGLE_OPEN_EXCEPTIONS_R12 if exceptions is None else exceptions)
+
+    def drop_via(self, x, y):
+        via = next(t for t in self.board.GetTracks() if t.GetClass() == 'PCB_VIA'
+                   and abs(pcbnew.ToMM(t.GetPosition().x) - x) < 1e-3 and abs(pcbnew.ToMM(t.GetPosition().y) - y) < 1e-3)
+        self.board.Remove(via)
+        return via
+
+    def test_registered_and_committed_board_passes(self):
+        self.assertIn('K-power', r12.STAGES['copper'])
+        rep = r12.check_board(self.board, BOARD12, only={'K-power'}, stage='copper')
+        self.assertTrue(rep['ok'], rep['issues'])
+        taps = {t[1] for t in r12.SINGLE_OPEN_TAPS_R12}
+        for tap in ('R14.1', 'R15.2', 'U2.2', 'R81.2', 'C87.2', 'R93.2', 'R84.2', 'R94.2', 'U9.8', 'R401.2', 'U400.1',
+                    'R435.2', 'U403.1', 'R5.2', 'U1.D5', 'C19.2', 'C20.2', 'U1.F8', 'U1.E7', 'U4.6', 'U4.7', 'R61.2',
+                    'D5.2', 'D9.1', 'C97.1', 'U403.3', 'U1.H1', 'U5.1'):
+            self.assertIn(tap, taps)
+        # the single points left on purpose: the U1 dog-bones, BOOT0's far via and the two 3V3A feeds (owner rows)
+        self.assertEqual(sorted({x[1] for x in r12.SINGLE_OPEN_EXCEPTIONS_R12}),
+                         ['via 3V3A (19.65, 36.80)', 'via 3V3A (25.80, 29.80)', 'via BOOT0 (17.80, 48.20)',
+                          'via BOOT0 (23.00, 52.40)', 'via VCAP1 (25.40, 54.00)', 'via VCAP2 (24.60, 54.00)'])
+
+    def test_second_via_removed_fails(self):
+        """Seeded: R14.1's second 3V3 via (R10 R21-PWR-01's case), U9.8's second GND via and D9.1's second RAW barrel
+        each removed: K-power names the tap that is left on one via."""
+        for (x, y), tap in (((31.55, 26.8), 'R14.1'), ((17.0, 17.55), 'U9.8'), ((24.15, 22.6), 'D9.1')):
+            with self.subTest(tap=tap):
+                via = self.drop_via(x, y)
+                try:
+                    issues, _ = self.kpower()
+                finally:
+                    self.board.Add(via)
+                self.assertTrue([i for i in issues if i.startswith(f'{tap} (') and 'hangs on one via' in i], issues)
+
+    def test_exceptions_are_exact(self):
+        """A missing exception fails the tap it covered; an entry whose via is no longer a single point is stale."""
+        short = [x for x in r12.SINGLE_OPEN_EXCEPTIONS_R12 if x[1] != 'via BOOT0 (23.00, 52.40)']
+        self.assertTrue([i for i in self.kpower(short)[0] if 'opening via BOOT0 (23.00, 52.40)' in i])
+        stale = list(r12.SINGLE_OPEN_EXCEPTIONS_R12) + [('R14.1', 'via 3V3 (32.20, 26.80)', 'not a single point')]
+        self.assertTrue([i for i in self.kpower(stale)[0] if i.startswith('stale SINGLE_OPEN_EXCEPTIONS entry R14.1')])
 
 
 @unittest.skipUnless(pcbnew and BOARD12.is_file(), 'KiCad python and the R12 board required')
@@ -585,7 +638,9 @@ pcbnew.SaveBoard(sys.argv[1], b)
                 # net, and which one varies (lane P2's DRC quirk; round 6 V-5): the DRC probe strips the other nets'
                 # tracks and vias round U1's A1 corner first, and joins U1's other pads there (A2, BAT_FAULT_N, is
                 # 0.69 mm from the OUT plant) to the plant's net, so the NC ball is the only candidate left.
-                found = self.drc_s10(strip=(17, 47, 23, 51, net), pads='U1.A1')
+                # R12F8 lane P: the box reaches y 52 so PE4's lane (18.7, 51.4)-(18.7, 46.8), whose gate-rule pair with the
+                # plant KiCad reported instead once the DRU grew the I-5 victim rules, is stripped too
+                found = self.drc_s10(strip=(17, 47, 23, 52, net), pads='U1.A1')
                 self.assertTrue([v for v in found if rule in v and 'U1-PC14-PadA1' in v and net in v], found)
 
     # ---- R12F6-TRI-01: the cold pull-up through R136, and the commanded-fire state -------------------------------
@@ -789,7 +844,7 @@ pcbnew.SaveBoard(sys.argv[1], b)
         self.assertEqual(ev['clamp BAT_FAULT_N'], ['D95'])
         rep = self.s10()
         self.assertTrue(rep['ok'], rep['issues'])
-        self.assertEqual(rep['evidence']['s10']['pack_flt']['flt_net'], 'U9_FLT')
+        self.assertEqual(rep['evidence']['s10']['pack_flt']['net'], 'U9_FLT')
         flt_items = {b for a, b, *_ in fire.EXCEPTIONS['PACK_FLT']}
         self.assertEqual({fire.EXCEPTION_NETS[b] for b in flt_items}, {'U9_FLT'})
         self.assertNotIn('BAT_FAULT_N', {fire.EXCEPTION_NETS[b] for k, v in fire.EXCEPTIONS.items()
@@ -900,23 +955,41 @@ pcbnew.SaveBoard(sys.argv[1], b)
             self.assertEqual(fire.pair_limit(rail, None, 'GND', None, False)[0], None)
         for rail in fire.I5_PORT:
             self.assertEqual(fire.pair_limit(rail, None, '3V3', None, False)[:2], (fire.I5_PORT_MIN, 'i5-port'))
-            self.assertEqual(fire.pair_limit(rail, None, 'SERVO1_MCU', None, False)[0], None)
+            # R12F8-TRI-01: every victim but the FT-only nets; a non-victim stays unprotected
+            self.assertEqual(fire.pair_limit(rail, None, 'SERVO1_MCU', None, False)[:2], (fire.I5_PORT_MIN, 'i5-port'))
+            self.assertEqual(fire.pair_limit(rail, None, 'CAM_MCU_RX', None, False)[0], None)
+            self.assertEqual(fire.pair_limit(rail, None, 'CAM_EN', None, False)[0], None)
         # the stricter classes still win: PYRO1_OUT against VLOGIC, BAT_IN against RAW_PROTECTED
         self.assertEqual(fire.pair_limit('VLOGIC', None, fire.OUT, None, False)[1:], ('out', fire.OUT))
         self.assertEqual(fire.pair_limit('RAW_PROTECTED', None, 'BAT_IN', None, False)[1:], ('pack', 'BAT_IN'))
         for rail in fire.I5_PACK + fire.I5_PORT:
-            rule = next(r for r in fire.dru_rules() if r[0] == f'S-10 {rail} (I-5 rail) to 3V3 / 3V3A')
+            rule = next(r for r in fire.dru_rules() if r[0] == f'S-10 {rail} (I-5 rail) to every victim')
             lim = fire.PACK_MIN if rail in fire.I5_PACK else fire.I5_PORT_MIN
             self.assertEqual(rule[1], f'clearance (min {lim:.2f}mm)')
-            self.assertEqual(rule[2], f"A.NetName == '{rail}' && (B.NetName == '3V3' || B.NetName == '3V3A')")
+            victims = fire.i5_rule_victims(rail)
+            self.assertEqual(victims[:2], ('3V3', '3V3A'))
+            self.assertTrue(rule[2].startswith(f"A.NetName == '{rail}' && (B.NetName == '3V3' || B.NetName == '3V3A' || "))
+            self.assertTrue(rule[2].endswith(fire.NOT_PROBE))                       # R12F8-TRI-05
+            for v in ('SERVO1_MCU', 'SERVO1_OUT', 'CAM_5V_SENSE', 'QSPI_NCS', 'CAM_PWR_EN'):
+                self.assertIn(f"B.NetName == '{v}'", rule[2])
+            self.assertNotIn("B.NetName == 'CAM_EN'", rule[2])
+            for g in fire.GATES:                                                    # their own, stricter, rule
+                self.assertNotIn(f"B.NetName == '{g}'", rule[2])
+            for ft in fire.I5_PORT_FT:
+                self.assertEqual(f"B.NetName == '{ft}'" in rule[2], rail in fire.I5_PACK, (rail, ft))
         self.assertFalse([1 for k, v in fire.EXCEPTIONS.items() for a, b, *_ in v
                           if fire.EXCEPTION_NETS[a] in fire.I5_PACK + fire.I5_PORT and fire.EXCEPTION_NETS[b] in fire.LOGIC])
         ev = self.s10()['evidence']['s10']['i5']
         self.assertEqual(ev['pack'], sorted(fire.I5_PACK))
         least = {k: float(v.split(' mm')[0]) for k, v in ev['least'].items()}
         self.assertIn('RAW_PROTECTED / 3V3', least)
+        excepted = {f'{fire.EXCEPTION_NETS[a]} / {fire.EXCEPTION_NETS[b]}' for v in fire.EXCEPTIONS.values()
+                    for a, b, *_ in v}
         for k, g in least.items():
             lim = fire.PACK_MIN if k.split(' / ')[0] in fire.I5_PACK else fire.I5_PORT_MIN
+            if k in excepted:                         # R12F8-TRI-01: only PA6's divider (VLOGIC / VLOGIC_SENSE)
+                self.assertEqual(k, 'VLOGIC / VLOGIC_SENSE')
+                continue
             self.assertGreaterEqual(g, lim - 5e-5, k)
 
     def test_r12f7_tri01_i5_plants_fail(self):
@@ -925,12 +998,12 @@ pcbnew.SaveBoard(sys.argv[1], b)
         self.track('3V3', (45.5, 17.2), (45.5, 17.6), width=0.1)
         self.planted(('RAW_PROTECTED', 'to 3V3 track (45.5, 17.2)-(45.5, 17.6)', 'below 1.04 mm (i5-pack)'))
         found = self.drc_s10(strip=(43.0, 15.5, 46.0, 18.5, 'RAW_PROTECTED,3V3'))
-        self.assertTrue([v for v in found if "'S-10 RAW_PROTECTED (I-5 rail) to 3V3 / 3V3A'" in v], found)
+        self.assertTrue([v for v in found if "'S-10 RAW_PROTECTED (I-5 rail) to every victim'" in v], found)
         self.setUp()
         self.track('3V3', (28.3, 8.12), (28.6, 8.12), width=0.1)
         self.planted(('CAM_5V R104.1 to 3V3 track (28.3, 8.12)-(28.6, 8.12)', ': 0.20', 'below 0.3 mm (i5-port)'))
         found = self.drc_s10(strip=(27.0, 6.5, 30.0, 9.5, 'CAM_5V,3V3'))
-        self.assertTrue([v for v in found if "'S-10 CAM_5V (I-5 rail) to 3V3 / 3V3A'" in v], found)
+        self.assertTrue([v for v in found if "'S-10 CAM_5V (I-5 rail) to every victim'" in v], found)
         self.setUp()
         self.zone('PORT_4V8', [(30, 95), (31, 95), (31, 96), (30, 96)], pcbnew.In2_Cu)
         self.track('3V3', (31.25, 95.0), (31.25, 96.0), pcbnew.In2_Cu, width=0.1)
@@ -969,6 +1042,151 @@ pcbnew.SaveBoard(sys.argv[1], b)
         w['rails'] = {k: v for k, v in w['rails'].items() if not k.startswith('CAM_5V')}
         self.assertTrue([i for i in fire.i5_guard(BOARD12.with_name('schematic.net.xml'), w)[0]
                          if 'CAM_5V is held as an I-5 port-voltage rail' in i])
+
+    # ---- R12F8-TRI-01 / -05: the I-5 victims, the FT-only exemptions, the camera EN, NOT_PROBE ---------------------
+    def test_r12f8_tri01_victims_derived_and_held(self):
+        """i5_victims() derives the 71 victims from the netlist (D121's IO pins put SERVO1-4_MCU on 3V3 at 0 ohm, the
+        1 kohm series resistors their _OUT nets, CAM_5V_SENSE is PC2_C) and i5_guard() holds them equal to I5_VICTIMS;
+        CAM_EN (U403.5) reaches PC12 only through R436 5.1 kohm, so it is no victim; the FT-only exemptions hold."""
+        net = BOARD12.with_name('schematic.net.xml')
+        victims, _ = fire.i5_victims(net)
+        self.assertEqual(sorted(victims), sorted(fire.I5_VICTIMS))
+        self.assertEqual(len(victims), 71)
+        self.assertEqual(victims['SERVO1_OUT'], (1000.0, 'SERVO1_MCU'))
+        self.assertEqual(victims['BUZZ_OUT'], (0.0, '3V3'))
+        self.assertNotIn('CAM_EN', victims)
+        self.assertEqual(fire.i5_ft_guard(net), [])
+        self.assertEqual(fire.i5_guard(net)[0], [])
+        for rail in fire.I5_PACK:
+            self.assertEqual(fire.pair_limit(rail, None, 'SERVO2_MCU', None, True)[:2], (fire.PACK_MIN, 'i5-pack'))
+            self.assertEqual(fire.pair_limit(rail, None, 'CAM_EN', None, False)[0], None)
+
+    def test_r12f8_tri01_victim_and_ft_guards_default_deny(self):
+        """A new net reaching an MCU pin through 1 kohm, a stale victim, and an FT exemption whose net reaches a TT pin
+        or 3V3 each fail the I-5 guard."""
+        import xml.etree.ElementTree as ET
+
+        def add(root, ref, value, nodes):
+            comp = ET.SubElement(root.find('components'), 'comp', ref=ref)
+            ET.SubElement(comp, 'value').text = value
+            for pin, net in nodes:
+                n = next((x for x in root.findall('./nets/net') if x.get('name') == net), None)
+                if n is None:
+                    n = ET.SubElement(root.find('nets'), 'net', name=net, code='9999')
+                ET.SubElement(n, 'node', ref=ref, pin=pin, pinfunction='', pintype='passive')
+        cases = (
+            ('new 1k tap off PC12', lambda r: add(r, 'R998', '1k', (('1', 'CAM_PWR_EN'), ('2', 'NEW_TAP'))),
+             'NEW_TAP reaches CAM_PWR_EN through 1000 ohm'),
+            ('R436 shorted', lambda r: self.set_value(r, 'R436', '0R'), 'CAM_EN reaches CAM_PWR_EN through 0 ohm'),
+            ('servo series 1k gone', lambda r: self.set_value(r, 'R150', '10k'),
+             'SERVO1_OUT is held as an I-5 victim but the netlist no longer derives it'),
+            ('FT net onto a TT pin', lambda r: self.move_node(r, 'U1', 'E2', 'CAM_MCU_RX'),
+             'CAM_MCU_RX (FT-only, I5_PORT_FT) reaches U1.E2'),
+            ('FT net clamped to 3V3', lambda r: add(r, 'D998', 'BAT54', (('1', 'VBUS_SENSE'), ('2', '3V3'))),
+             'VBUS_SENSE (FT-only, I5_PORT_FT) reaches 3V3'),
+        )
+        for name, mutate, want in cases:
+            with self.subTest(case=name):
+                issues = fire.i5_guard(self.netlist(mutate))[0]
+                self.assertTrue([i for i in issues if want in i], issues)
+
+    def test_r12f8_tri01_victim_plants_fail(self):
+        """A RAW_PROTECTED In2 plant 0.13 mm from a SERVO1_MCU via (the round 8 servo-cell pair) and a PORT_4V8 track
+        0.13 mm from U3.1 (QSPI_NCS, W25Q128 /CS) each fail S-10 and DRC; a CAM_5V track 0.15 mm from a CAM_MCU_RX via
+        (FT-only) does not fail S-10."""
+        via = next(t for t in self.board.GetTracks() if t.GetClass() == 'PCB_VIA' and t.GetNetname() == 'SERVO1_MCU'
+                   and abs(pcbnew.ToMM(t.GetPosition().y) - 12.15) < 1e-3)
+        x, y = pcbnew.ToMM(via.GetPosition().x), pcbnew.ToMM(via.GetPosition().y)
+        self.track('RAW_PROTECTED', (x - 0.3, y + 0.43), (x + 0.3, y + 0.43), pcbnew.In2_Cu, width=0.1)
+        self.planted(('RAW_PROTECTED track', f'to SERVO1_MCU via ({x:g}, {y:g}) on In2.Cu', 'below 1.04 mm (i5-pack)'))
+        found = self.drc_s10(strip=(x - 1.5, y - 1.5, x + 1.5, y + 1.5, 'RAW_PROTECTED,SERVO1_MCU'))
+        self.assertTrue([v for v in found if "'S-10 RAW_PROTECTED (I-5 rail) to every victim'" in v], found)
+        self.setUp()
+        u3 = next(p for f in self.board.GetFootprints() if f.GetReference() == 'U3' for p in f.Pads() if p.GetNumber() == '1')
+        bb = u3.GetBoundingBox()
+        x0, y1 = pcbnew.ToMM(bb.GetRight()), pcbnew.ToMM(bb.GetBottom())
+        self.track('PORT_4V8', (x0 - 0.6, y1 + 0.205), (x0 - 0.2, y1 + 0.205), width=0.15)
+        self.planted(('PORT_4V8 track', 'to QSPI_NCS U3.1 on F.Cu', 'below 0.3 mm (i5-port)'))
+        found = self.drc_s10(strip=(x0 - 2, y1 - 1, x0 + 1, y1 + 1.5, 'PORT_4V8,QSPI_NCS'))
+        self.assertTrue([v for v in found if "'S-10 PORT_4V8 (I-5 rail) to every victim'" in v], found)
+        self.setUp()
+        rx = next(t for t in self.board.GetTracks() if t.GetClass() == 'PCB_VIA' and t.GetNetname() == 'CAM_MCU_RX')
+        x, y = pcbnew.ToMM(rx.GetPosition().x), pcbnew.ToMM(rx.GetPosition().y)
+        self.track('CAM_5V', (x - 0.3, y + 0.45), (x + 0.3, y + 0.45), pcbnew.In2_Cu, width=0.1)
+        self.assertFalse([i for i in self.s10()['issues'] if 'CAM_MCU_RX' in i and 'CAM_5V' in i])
+
+    def test_r12f8_tri05_i5_rules_leave_the_tag_connect_rule(self):
+        """R12F8-TRI-05: the I-5 DRU rules carry NOT_PROBE, so the Tag-Connect rule (0.508 mm) keeps J2: a VBUS track
+        about 0.45 mm from J2.1 (3V3) fails DRC on 'Tag-Connect contact to foreign copper' (it passed at 0.30 mm before)."""
+        for r in fire.dru_rules():
+            if '(I-5 rail)' in r[0]:
+                self.assertIn(fire.NOT_PROBE, r[2])
+        j2 = next(p for f in self.board.GetFootprints() if f.GetReference() == 'J2' for p in f.Pads() if p.GetNumber() == '1')
+        c = j2.GetPosition()
+        x, y, r = pcbnew.ToMM(c.x), pcbnew.ToMM(c.y), pcbnew.ToMM(j2.GetSize().x) / 2
+        # forward of J2.1 (+y), clear of J2.3 aft of it and of the locating hole west of the track
+        self.track('VBUS', (x + 0.25, y + r + 0.415 + 0.05), (x + 0.75, y + r + 0.415 + 0.05), width=0.1)
+        found = self.drc_all(strip=(x - 1.0, y - 0.2, x + 1.5, y + 1.5, 'VBUS,3V3'))
+        self.assertTrue([v for v in found if 'Tag-Connect contact to foreign copper' in v], found)
+
+    def drc_all(self, strip):
+        """kicad-cli DRC of the planted board (strip as drc_s10): every clearance violation."""
+        if not Path(self.CLI).exists():
+            if os.environ.get('R12_BOARD_REQUIRED') == '1':
+                self.fail(f'kicad-cli unavailable ({self.CLI}) while R12_BOARD_REQUIRED=1')
+            self.skipTest('kicad-cli unavailable')
+        with tempfile.TemporaryDirectory(prefix='r12-s10-') as d:
+            path = Path(d) / 'm3.kicad_pcb'
+            for name in ('m3.kicad_dru', 'm3.kicad_pro'):
+                shutil.copy2(BOARD12.with_name(name), Path(d) / name)
+            pcbnew.SaveBoard(str(path), self.board)
+            subprocess.run([sys.executable, '-I', '-c', self.STRIP, str(path), *map(str, strip)], check=True,
+                           capture_output=True, timeout=300)
+            subprocess.run([self.CLI, 'pcb', 'drc', '--format', 'json', '--severity-error', '-o', str(Path(d) / 'd.json'),
+                            str(path)], capture_output=True, timeout=300, check=True)
+            found = json.loads((Path(d) / 'd.json').read_text())['violations']
+        return [v['description'] + ' | ' + ' / '.join(i['description'] for i in v['items']) for v in found]
+
+    def test_r12f8_tri01_camera_en_series_resistor_and_clamp(self):
+        """The committed netlist: U403.5 (EN, beside U403.6 CAM_BST) is CAM_EN with R431 47k to GND; PC12 (U1.C8,
+        CAM_PWR_EN) reaches it through R436 5.1k and D436 (A1 CAM_PWR_EN, K 3V3) clamps PC12; en_guard() passes. Planted:
+        R436 removed (PC12 on CAM_EN), R436 1k, D436 removed / reversed / cathode off the rail: each fails en_guard() and
+        S-10."""
+        net = BOARD12.with_name('schematic.net.xml')
+        parts, pins = r12_sch_check.read_netlist(net)
+        self.assertEqual((pins['U403', '5'], pins['R431', '1'], pins['R436', '2'], pins['R436', '1'], pins['D436', '1'],
+                          pins['D436', '3'], pins['U1', 'C8']),
+                         ('CAM_EN', 'CAM_EN', 'CAM_EN', 'CAM_PWR_EN', 'CAM_PWR_EN', '3V3', 'CAM_PWR_EN'))
+        self.assertEqual((parts['R436']['value'], parts['D436']['value'], parts['R431']['value']),
+                         ('5.1k', 'BAT54C', '47k 1%'))
+        issues, ev = fire.en_guard(net)
+        self.assertEqual(issues, [])
+        self.assertEqual(ev['clamp CAM_PWR_EN'], ['D436'])
+
+        def drop(root, ref):
+            root.find('components').remove(next(c for c in root.findall('./components/comp') if c.get('ref') == ref))
+            for n in root.findall('./nets/net'):
+                for x in list(n.findall('node')):
+                    if x.get('ref') == ref:
+                        n.remove(x)
+
+        def swap(root):
+            self.move_node(root, 'D436', '1', '3V3')
+            self.move_node(root, 'D436', '3', 'CAM_PWR_EN')
+        cases = (
+            ('R436 removed', lambda r: (drop(r, 'R436'), self.move_node(r, 'U1', 'C8', 'CAM_EN')),
+             'is on CAM_EN, an MCU-pin net'),
+            ('R436 1k', lambda r: self.set_value(r, 'R436', '1k'), 'reaches CAM_PWR_EN through only 1000 ohm'),
+            ('D436 removed', lambda r: drop(r, 'D436'), 'has no diode clamp to 3V3'),
+            ('D436 reversed', swap, 'has no diode clamp to 3V3'),
+            ('D436 cathode off the rail', lambda r: self.move_node(r, 'D436', '3', 'GND'), 'has no diode clamp to 3V3'),
+        )
+        for name, mutate, want in cases:
+            with self.subTest(case=name):
+                path = self.netlist(mutate)
+                self.assertTrue([i for i in fire.en_guard(path)[0] if want in i], fire.en_guard(path)[0])
+                rep = self.s10_netlist(path)
+                self.assertFalse(rep['ok'])
 
     def test_dru_is_generated_from_s10(self):
         """The DRU's S-10 rules are r12_fire.dru_rules(), in order after R11's scoped rules, with general limits at least

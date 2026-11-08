@@ -12,7 +12,13 @@
 net	layer	priority	points
 GND	In1	0	0,0 46,0 46,L 0,L
 3V3	In2	0	0,0 46,0 46,L 0,L
-RAW_PROTECTED	In2	1	22.3,0 46,0 46,16.8 32.6,16.8 32.6,7.0 26.15,7.0 26.15,23.4 19.8,23.4 19.8,14.6 22.3,14.6
+# R12F8-TRI-01 (FMEA I-5 victims): the RAW_PROTECTED fill keeps PACK_MIN 1.04 mm from every victim, so the servo cell
+# (x 20.75-26.15, y 7.0-14.6: the SERVO*_OUT / _MCU vias, 1 kohm or 0 ohm through D121 to 3V3) leaves the island and
+# becomes 3V3; the west piece (U9 OUT, C82, D9, R92 / C97, TP81) now joins the aft band through a corridor west of
+# the cell (x 14.5-20.75 at y 7.0-11.5, x 14.5-19.3 at y 11.5-14.6; R89's 3V3 via moved east to (21.3, 12.83)),
+# where In2 carries no 3V3 user (only GND / U9_FLT vias and the BAT_SW_RETURN S-8 keep-outs). R12F8-TRI-03: the east
+# piece reaches y 17.7 at x 44-46 so the B trunk's second In2 barrel (45.2, 17.0) lands in it.
+RAW_PROTECTED	In2	1	14.5,0 46,0 46,17.7 44.0,17.7 44.0,16.8 32.6,16.8 32.6,7.0 20.75,7.0 20.75,11.5 19.3,11.5 19.3,14.6 26.15,14.6 26.15,23.4 19.8,23.4 19.8,17.0 16.6,17.0 16.6,14.6 14.5,14.6
 # D-R12-99 (90 mm outline): the PORT_4V8 island moves with the port row; it starts at y 80.7, forward of the
 # port-UART B lanes and their vias (y <= 80.0), so their B chains stay over the 3V3 sheet.
 PORT_4V8	In2	1	0.5,80.6 45.5,80.6 45.5,87.5 0.5,87.5

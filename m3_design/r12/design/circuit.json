@@ -666,6 +666,11 @@
    "lcsc": "C25905",
    "value": "5.1k",
    "why": "R12F6-TRI-01: 10k -> 5.1k (C25905, the R173 / R129 line); with R136 5.1k the cold pull-up keeps 10.2 kohm from 3V3 to PYRO1_OUT and at least 5.1 kohm with either resistor or D120 bridged"
+  },
+  "R431": {
+   "lcsc": "C25792",
+   "value": "47k 1%",
+   "why": "R12F8-TRI-01: camera EN pull-down 100k -> 47k (C25792, on the BOM): with D436 on PC12, the clamp's reverse leakage in reset flows into R431 || R_EN, so the lower value keeps EN under V_ENL 0.8 V up to 16.7 uA instead of 8.2 uA; enable still 2.52 V minimum against V_ENH 1.6 V (see R436)"
   }
  },
  "added_parts": {
@@ -844,10 +849,10 @@
     "2": "CAM_SW",
     "3": "RAW_PROTECTED",
     "4": "CAM_FB",
-    "5": "CAM_PWR_EN",
+    "5": "CAM_EN",
     "6": "CAM_BST"
    },
-   "why": "D-R12-08: camera buck; EN is the MCU camera switch CAM_PWR_EN with R431 100k pull-down (off in reset)"
+   "why": "D-R12-08: camera buck; R12F8-TRI-01: EN (U403.5, net CAM_EN, beside U403.6 CAM_BST in the SOT-23-6) has R431 47k pull-down (off in reset) and reaches the MCU camera switch CAM_PWR_EN (PC12) only through R436 5.1k, with D436 clamping PC12 to 3V3"
   },
   "U6": {
    "lcsc": "C5190712",
@@ -930,6 +935,29 @@
     "3": "3V3"
    },
    "why": "R12 round 6 verifier V-1 follow-up (PACK_FLT): PC13 is an FT pin with no positive injection (DS12110 Rev 8 Table 120 note 3) and VIN max Min(VDD, ...) + 4.0 V, so a series resistor alone would leave the pin at the pack voltage; D95 (A1 on BAT_FAULT_N, K on 3V3, A2 unused, as D120) clamps PC13 at 3V3 + V_F <= 3.516 + 0.8 = 4.32 V (V_F <= 800 mV at 100 mA, LCSC C37704 listing) with R95's current, and at V_F above the rail with the board off. Normal levels: zero bias with PC13 high, 3V3 reverse bias with FLT low"
+  },
+  "R436": {
+   "lcsc": "C25905",
+   "value": "5.1k",
+   "lib": "M3:R",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_PWR_EN",
+    "2": "CAM_EN"
+   },
+   "why": "R12F8-TRI-01: series resistor between PC12 (CAM_PWR_EN) and U403's EN (net CAM_EN). U403.5 (EN) sits 0.400 mm from U403.6 (CAM_BST, which swings to RAW_PROTECTED plus about 5 V) in the TPS563208's SOT-23-6, so one bridge puts a pack-voltage node on EN; R436 then passes at most (13.4 - 3.224) V / 5.015 kohm = 2.0 mA into D436 and 3V3, never the node straight onto PC12 (D-R12-138's R95 / D95 pattern; Calculation / Inference (3V3 window, D-R12-139): CAM_BST at OVLO 8.4 V + 5 V, R436 at its -1.67 % drift end). Enable: V_EN >= (3.2237 - 0.4) V x (R431 || R_EN) / (R431 || R_EN + R436) = 2.824 x 42.91 / (42.91 + 5.185) = 2.52 V against V_ENH 1.6 V (TI SLVSD90B section 6.5: V_ENH 1.6 V, V_ENL 0.8 V, R_EN 600-2400 kohm; DS12110 Rev 8 Table 61 V_OH >= VDD - 0.4 V at 8 mA; R431 47k and R436 5.1k at their +/-1.67 % drift ends; Calculation)"
+  },
+  "D436": {
+   "lcsc": "C37704",
+   "value": "BAT54C",
+   "lib": "M3:BAT54C",
+   "sheet": "camera_power.kicad_sch",
+   "nets": {
+    "1": "CAM_PWR_EN",
+    "2": null,
+    "3": "3V3"
+   },
+   "why": "R12F8-TRI-01: PC12 is an FT_h pin with no positive injection (DS12110 Rev 8 Table 9; Table 21 p. 106 VIN max Min(VDD, ...) + 4.0 V), so R436 alone would leave the pin at the bridged node's voltage; D436 (A1 on CAM_PWR_EN, K on 3V3, A2 unused, as D95 / D120) clamps PC12 at 3V3 + V_F <= 3.516 + 0.8 = 4.32 V with R436's current (V_F <= 800 mV at 100 mA, LCSC C37704 listing). Normal levels: zero bias with PC12 high, 3V3 reverse bias with PC12 low. In reset (PC12 analog) its reverse leakage flows through R436 into R431 || R_EN: EN stays under V_ENL 0.8 V for leakage up to 0.8 V / 47.79 kohm = 16.7 uA (2 uA max at 25 C, LCSC C37704; the hot figure is an Inference), which is why R431 is 47k, not 100k"
   }
  },
  "net_changes": {
@@ -944,6 +972,9 @@
   },
   "R89": {
    "2": "U9_FLT"
+  },
+  "R431": {
+   "1": "CAM_EN"
   }
  },
  "net_changes_note": "D-R12-08: with U12 deleted, R100 / R101 join the camera wires to the MCU UART pins directly",

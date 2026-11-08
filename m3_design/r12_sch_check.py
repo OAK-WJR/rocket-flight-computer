@@ -9,7 +9,8 @@ Checks (D-R12-01: R11's circuit pruned and re-sourced, every AGENTS section 2 ru
   * the AGENTS section 2 contracts by net: the pyro bus behind the Q120 / Q121 load switch, every pyro gate network
     (series resistor, pull-down, gate-source capacitor), PE4 / PC1 on their balls, the single J400 switch chain with
     D402, the pyro wire pads, servo pull-downs and clamp, the ports, the camera switch default off, the cold pull-up's
-    series resistor R136 (R12F6-TRI-01), U9 FLT's series resistor R95 and PC13 clamp D95 (PACK_FLT);
+    series resistor R136 (R12F6-TRI-01), U9 FLT's series resistor R95 and PC13 clamp D95 (PACK_FLT), U403 EN's series
+    resistor R436 and PC12 clamp D436 (R12F8-TRI-01);
   * every external connector's pin names and the net each name allows (R12F6-TRI-09, R10 D-R27-03);
   * part identity: LCSC / Manufacturer / Manufacturer Part agree with circuit.json's catalog (or R11's line), one
     footprint and one part number per code, every BOM part has a code, every footprint in the project kilib and a
@@ -85,9 +86,13 @@ SAFETY = {
     ('J440', '1'): 'GND', ('J440', '2'): 'PORT_4V8', ('J440', '3'): 'AUX_TX_WIRE', ('J440', '4'): 'AUX_RX_WIRE',
     ('R440', '2'): 'GPS_RX_MCU', ('R441', '1'): 'GPS_TX_MCU', ('R450', '2'): 'RADIO_RX_MCU', ('R451', '1'): 'RADIO_TX_MCU',
     ('R470', '2'): 'AUX_RX_MCU', ('R471', '1'): 'AUX_TX_MCU',
-    # camera: J9 1-2 CAM_5V, 3-4 GND, 5 board RX, 6 board TX; the buck EN is the MCU switch with its pull-down
+    # camera: J9 1-2 CAM_5V, 3-4 GND, 5 board RX, 6 board TX; the buck EN is the MCU switch with its pull-down.
+    # R12F8-TRI-01: U403.5 (EN, beside U403.6 CAM_BST) is CAM_EN, reached from PC12 (CAM_PWR_EN) only through R436 5.1k,
+    # with R431 on U403's side and D436 clamping PC12 (an FT pin, no positive injection) to 3V3
     ('J9', '1'): 'CAM_5V', ('J9', '2'): 'CAM_5V', ('J9', '3'): 'GND', ('J9', '4'): 'GND', ('J9', '5'): 'CAM_RX_WIRE',
-    ('J9', '6'): 'CAM_TX_WIRE', ('U403', '5'): 'CAM_PWR_EN', ('R431', '1'): 'CAM_PWR_EN', ('R431', '2'): 'GND',
+    ('J9', '6'): 'CAM_TX_WIRE', ('U403', '5'): 'CAM_EN', ('R431', '1'): 'CAM_EN', ('R431', '2'): 'GND',
+    ('R436', '1'): 'CAM_PWR_EN', ('R436', '2'): 'CAM_EN', ('D436', '1'): 'CAM_PWR_EN', ('D436', '2'): None,
+    ('D436', '3'): '3V3', ('U1', 'C8'): 'CAM_PWR_EN',
     ('R100', '1'): 'CAM_RX_WIRE', ('R100', '2'): 'CAM_MCU_RX', ('R101', '1'): 'CAM_MCU_TX', ('R101', '2'): 'CAM_TX_WIRE',
     # D-R12-04: the VLOGIC diode-OR; D-R12-05: port sense (PD10 / H9 since D-R12-93)
     ('D5', '1'): 'VLOGIC', ('D5', '2'): 'RAW_PROTECTED', ('D6', '1'): 'VLOGIC', ('D6', '2'): 'VBUS',
@@ -99,7 +104,7 @@ SAFETY = {
 REQUIRED_PARTS = ('Q120', 'Q121', 'Q122', 'Q124', 'R119', 'R120', 'C120', 'R121', 'R122', 'R123', 'C123', 'R126', 'R127',
                   'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', 'R156',
                   'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6',
-                  'R131', 'R136', 'D120', 'R89', 'R95', 'D95')
+                  'R131', 'R136', 'D120', 'R89', 'R95', 'D95', 'R431', 'R436', 'D436')
 WIRE_PADS = ('J1',)                # D-R12-29: J121 is a JLC-fitted DB125 screw terminal again (owner, 2026-11-03)
 
 # R12F6-TRI-09 (R10's D-R27-03 / test_r27_port_terminal_pin_names, ported): every external connector's pin names, as
@@ -297,6 +302,11 @@ def seeds(parts, pins):
         'port series resistor bypassed': lambda p, n: n.update({k: 'GPS_TX_WIRE' for k, v in list(n.items())
                                                                 if k[0] == 'U1' and v == 'GPS_TX_MCU'}),
         'camera switch pull-down removed': pop('R431'),
+        'PC12 straight on U403 EN (R436 bypassed, R12F8-TRI-01)': lambda p, n: n.update({('U1', 'C8'): 'CAM_EN'}),
+        'EN series resistor removed (R12F8-TRI-01)': pop('R436'),
+        'PC12 clamp removed (R12F8-TRI-01)': pop('D436'),
+        'PC12 clamp reversed (R12F8-TRI-01)': lambda p, n: n.update({('D436', '1'): '3V3', ('D436', '3'): 'CAM_PWR_EN'}),
+        'EN pull-down moved to PC12 (R12F8-TRI-01)': lambda p, n: n.update({('R431', '1'): 'CAM_PWR_EN'}),
         'camera buck always on': lambda p, n: n.update({('U403', '5'): 'RAW_PROTECTED'}),
         'USB leg of the diode-OR missing': pop('D6'),
         'diode-OR reversed': lambda p, n: n.update({('D5', '1'): 'RAW_PROTECTED', ('D5', '2'): 'VLOGIC'}),

@@ -9,6 +9,96 @@
 		(rev "M3-ASSY-R12")
 		(company "M3-ASSY-R12 stage A schematic; not reviewed, not ordered"))
 	(lib_symbols
+		(symbol "M3:BAT54C"
+			(pin_names
+				(offset 1.016))
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "D"
+				(at 0 5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Value" "BAT54C"
+				(at 0 -5.08 0)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Footprint" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "Description" "Nexperia BAT54C dual Schottky, common cathode (pinning Table 2): 1 A1, 2 A2, 3 K"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_keywords" "diode schottky"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(property "ki_fp_filters" "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+				(at 0 0 0)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27))))
+			(symbol "BAT54C_0_1"
+				(rectangle
+					(start -5.08 2.54)
+					(end 5.08 -2.54)
+					(stroke
+						(width 0.254)
+						(type default))
+					(fill
+						(type background))))
+			(symbol "BAT54C_1_1"
+				(pin passive line
+					(at -10.16 1.27 0)
+					(length 5.08)
+					(name "A1"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "1"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -10.16 -1.27 0)
+					(length 5.08)
+					(name "A2"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "2"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at 10.16 0 180)
+					(length 5.08)
+					(name "K"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "3"
+						(effects
+							(font
+								(size 1.05 1.05))))))
+			(embedded_fonts no))
 		(symbol "M3:C"
 			(pin_numbers
 				(hide yes))
@@ -1479,55 +1569,150 @@
 			(justify right))
 		(uuid 1464d6d9-04f0-5a5f-8351-dd4b579c19bf))
 	(symbol
+		(lib_id "M3:BAT54C")
+		(at 132.08 101.6 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid a680e366-b4e5-5052-98fd-99cf8841967b)
+		(property "Reference" "D436"
+			(at 132.08 96.52 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "BAT54C"
+			(at 132.08 99.06 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR"
+			(at 132.08 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C37704"
+			(at 132.08 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "Nexperia"
+			(at 132.08 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "BAT54C,215"
+			(at 132.08 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2407241028_Nexperia-BAT54C-215_C37704.pdf"
+			(at 132.08 101.6 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/f850ba79-6fc7-599d-bae0-187b95938f17"
+					(reference "D436")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 121.92 100.33)
+			(xy 116.84 100.33))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 95ed624d-2af9-5aaf-979d-1b416a214d89))
+	(global_label "CAM_PWR_EN"
+		(shape passive)
+		(at 116.84 100.33 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 2114807e-77ca-5e06-b850-af60045eb6fd))
+	(no_connect
+		(at 121.92 102.87)
+		(uuid 2c2a770b-1dd3-5403-9021-0291262016ff))
+	(wire
+		(pts
+			(xy 142.24 101.6)
+			(xy 147.32 101.6))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f1a5964e-8ad8-5005-b6ff-9bef0a6233cd))
+	(global_label "3V3"
+		(shape passive)
+		(at 147.32 101.6 180)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify left))
+		(uuid 0e53f129-1344-589d-b316-8bd8bde9489d))
+	(symbol
 		(lib_id "M3:L")
-		(at 119.38 106.68 0)
+		(at 182.88 106.68 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 0b9d1343-cbab-5a96-878e-d932ff0705c3)
 		(property "Reference" "L400"
-			(at 119.38 99.06 0)
+			(at 182.88 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "4.7uH"
-			(at 119.38 101.6 0)
+			(at 182.88 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:IND-SMD_L4.0-W4.0"
-			(at 119.38 106.68 0)
+			(at 182.88 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C57269"
-			(at 119.38 106.68 0)
+			(at 182.88 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Sunlord"
-			(at 119.38 106.68 0)
+			(at 182.88 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "SWPA4030S4R7MT"
-			(at 119.38 106.68 0)
+			(at 182.88 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2310251551_Sunlord-SWPA4030S4R7MT_C57269.pdf"
-			(at 119.38 106.68 0)
+			(at 182.88 106.68 0)
 			(hide yes)
 			(effects
 				(font
@@ -1540,15 +1725,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 119.38 102.87)
-			(xy 119.38 97.79))
+			(xy 182.88 102.87)
+			(xy 182.88 97.79))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid eafd2b9f-6026-53a3-a97a-d6208d1e5c8e))
 	(global_label "PORT_SW"
 		(shape passive)
-		(at 119.38 97.79 0)
+		(at 182.88 97.79 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1556,15 +1741,15 @@
 		(uuid 7dbfa04c-e54d-590e-9e19-ff1f6866a59b))
 	(wire
 		(pts
-			(xy 119.38 110.49)
-			(xy 119.38 115.57))
+			(xy 182.88 110.49)
+			(xy 182.88 115.57))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 1e5e5ba1-212d-51cf-bb3d-575236218d57))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 119.38 115.57 0)
+		(at 182.88 115.57 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1572,54 +1757,54 @@
 		(uuid de76900a-dbad-50ff-bbc6-10ca02f83b9c))
 	(symbol
 		(lib_id "M3:L")
-		(at 157.48 106.68 0)
+		(at 220.98 106.68 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 6b580abd-237b-50af-9800-709c15738351)
 		(property "Reference" "L401"
-			(at 157.48 99.06 0)
+			(at 220.98 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "4.7uH"
-			(at 157.48 101.6 0)
+			(at 220.98 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:IND-SMD_L4.0-W4.0"
-			(at 157.48 106.68 0)
+			(at 220.98 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C57269"
-			(at 157.48 106.68 0)
+			(at 220.98 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Sunlord"
-			(at 157.48 106.68 0)
+			(at 220.98 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "SWPA4030S4R7MT"
-			(at 157.48 106.68 0)
+			(at 220.98 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2310251551_Sunlord-SWPA4030S4R7MT_C57269.pdf"
-			(at 157.48 106.68 0)
+			(at 220.98 106.68 0)
 			(hide yes)
 			(effects
 				(font
@@ -1632,15 +1817,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 157.48 102.87)
-			(xy 157.48 97.79))
+			(xy 220.98 102.87)
+			(xy 220.98 97.79))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 7049f18f-b075-57ee-84c2-34adc72bc128))
 	(global_label "CAM_SW"
 		(shape passive)
-		(at 157.48 97.79 0)
+		(at 220.98 97.79 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1648,15 +1833,15 @@
 		(uuid 3e8cb296-94ed-5ea3-82e4-18931b597380))
 	(wire
 		(pts
-			(xy 157.48 110.49)
-			(xy 157.48 115.57))
+			(xy 220.98 110.49)
+			(xy 220.98 115.57))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 715e7e2b-5620-52d6-9b38-430f427e62ac))
 	(global_label "CAM_5V"
 		(shape passive)
-		(at 157.48 115.57 0)
+		(at 220.98 115.57 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1664,54 +1849,54 @@
 		(uuid 32ce5d8b-5b23-5def-b8c6-f2f54541e48d))
 	(symbol
 		(lib_id "M3:R")
-		(at 198.12 106.68 0)
+		(at 261.62 106.68 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid c1d52136-a44c-5b46-b09c-627c16e9a130)
 		(property "Reference" "R400"
-			(at 198.12 99.06 0)
+			(at 261.62 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "47k 1%"
-			(at 198.12 101.6 0)
+			(at 261.62 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 198.12 106.68 0)
+			(at 261.62 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25792"
-			(at 198.12 106.68 0)
+			(at 261.62 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 198.12 106.68 0)
+			(at 261.62 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF4702TCE"
-			(at 198.12 106.68 0)
+			(at 261.62 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf"
-			(at 198.12 106.68 0)
+			(at 261.62 106.68 0)
 			(hide yes)
 			(effects
 				(font
@@ -1724,15 +1909,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 198.12 102.87)
-			(xy 198.12 97.79))
+			(xy 261.62 102.87)
+			(xy 261.62 97.79))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 1d2b1677-b313-505f-a825-4866ee9c4cbd))
 	(global_label "PORT_4V8"
 		(shape passive)
-		(at 198.12 97.79 0)
+		(at 261.62 97.79 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1740,15 +1925,15 @@
 		(uuid b2384ce6-7099-56ce-8718-ea8d8b5416b5))
 	(wire
 		(pts
-			(xy 198.12 110.49)
-			(xy 198.12 115.57))
+			(xy 261.62 110.49)
+			(xy 261.62 115.57))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 2a4d754a-913f-5b57-a1c2-d78955e7e26e))
 	(global_label "PORT_FB_TOP"
 		(shape passive)
-		(at 198.12 115.57 0)
+		(at 261.62 115.57 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1756,54 +1941,54 @@
 		(uuid 668c2506-1222-5ab6-b565-8d640153563e))
 	(symbol
 		(lib_id "M3:R")
-		(at 238.76 106.68 0)
+		(at 302.26 106.68 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 45f5c414-00f2-5f5d-b272-69fc2e43b222)
 		(property "Reference" "R401"
-			(at 238.76 99.06 0)
+			(at 302.26 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 0.1%"
-			(at 238.76 101.6 0)
+			(at 302.26 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 238.76 106.68 0)
+			(at 302.26 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C190095"
-			(at 238.76 106.68 0)
+			(at 302.26 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "YAGEO"
-			(at 238.76 106.68 0)
+			(at 302.26 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "RT0402BRD0710KL"
-			(at 238.76 106.68 0)
+			(at 302.26 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_YAGEO-RT0402BRD0710KL_C190095.pdf"
-			(at 238.76 106.68 0)
+			(at 302.26 106.68 0)
 			(hide yes)
 			(effects
 				(font
@@ -1816,15 +2001,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 238.76 102.87)
-			(xy 238.76 97.79))
+			(xy 302.26 102.87)
+			(xy 302.26 97.79))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid f54b78bb-662f-5301-b46a-fe795fe5f16e))
 	(global_label "PORT_FB"
 		(shape passive)
-		(at 238.76 97.79 0)
+		(at 302.26 97.79 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1832,15 +2017,15 @@
 		(uuid 090b6897-2e54-5e60-ac14-79c89c401384))
 	(wire
 		(pts
-			(xy 238.76 110.49)
-			(xy 238.76 115.57))
+			(xy 302.26 110.49)
+			(xy 302.26 115.57))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid f0f738a1-1588-55d0-a77c-2020e09d72e0))
 	(global_label "GND"
 		(shape passive)
-		(at 238.76 115.57 0)
+		(at 302.26 115.57 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1848,54 +2033,54 @@
 		(uuid 51b78374-3c23-5d02-a586-a23ac8e1a1a5))
 	(symbol
 		(lib_id "M3:R")
-		(at 279.4 106.68 0)
+		(at 342.9 106.68 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 6edf2afd-b4da-5e3d-bfea-8345160b0697)
 		(property "Reference" "R404"
-			(at 279.4 99.06 0)
+			(at 342.9 99.06 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "5.1k"
-			(at 279.4 101.6 0)
+			(at 342.9 101.6 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 279.4 106.68 0)
+			(at 342.9 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25905"
-			(at 279.4 106.68 0)
+			(at 342.9 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 279.4 106.68 0)
+			(at 342.9 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF5101TCE"
-			(at 279.4 106.68 0)
+			(at 342.9 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 279.4 106.68 0)
+			(at 342.9 106.68 0)
 			(hide yes)
 			(effects
 				(font
@@ -1908,15 +2093,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 279.4 102.87)
-			(xy 279.4 97.79))
+			(xy 342.9 102.87)
+			(xy 342.9 97.79))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 00c0bc73-e126-5896-b86b-50f112541fec))
 	(global_label "PORT_FB_TOP"
 		(shape passive)
-		(at 279.4 97.79 0)
+		(at 342.9 97.79 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1924,15 +2109,15 @@
 		(uuid 8470da61-a0f6-5fe9-a5f1-19c5a9bb6bd2))
 	(wire
 		(pts
-			(xy 279.4 110.49)
-			(xy 279.4 115.57))
+			(xy 342.9 110.49)
+			(xy 342.9 115.57))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid bf879778-a277-5436-89fc-0b12d177c991))
 	(global_label "PORT_FB"
 		(shape passive)
-		(at 279.4 115.57 0)
+		(at 342.9 115.57 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1940,54 +2125,54 @@
 		(uuid 6e1daab4-8f77-5e0b-aa1f-06f2565be8cd))
 	(symbol
 		(lib_id "M3:R")
-		(at 322.58 106.68 0)
+		(at 43.18 137.16 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid fa719b2f-e6f7-5267-b514-d2dd77446925)
 		(property "Reference" "R431"
-			(at 322.58 99.06 0)
+			(at 43.18 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "100k 1%"
-			(at 322.58 101.6 0)
+		(property "Value" "47k 1%"
+			(at 43.18 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 322.58 106.68 0)
+			(at 43.18 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C25741"
-			(at 322.58 106.68 0)
+		(property "LCSC" "C25792"
+			(at 43.18 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 322.58 106.68 0)
+			(at 43.18 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "0402WGF1003TCE"
-			(at 322.58 106.68 0)
+		(property "Manufacturer Part" "0402WGF4702TCE"
+			(at 43.18 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
-			(at 322.58 106.68 0)
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010100_UNI-ROYAL-Uniroyal-Elec-0402WGF4702TCE_C25792.pdf"
+			(at 43.18 137.16 0)
 			(hide yes)
 			(effects
 				(font
@@ -2000,15 +2185,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 322.58 102.87)
-			(xy 322.58 97.79))
+			(xy 43.18 133.35)
+			(xy 43.18 128.27))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid c949c27b-650c-55f0-8a46-92b65e9e4d9a))
-	(global_label "CAM_PWR_EN"
+	(global_label "CAM_EN"
 		(shape passive)
-		(at 322.58 97.79 0)
+		(at 43.18 128.27 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2016,15 +2201,15 @@
 		(uuid d46e1176-9d9a-5ea3-9b1a-f3b40892bc6c))
 	(wire
 		(pts
-			(xy 322.58 110.49)
-			(xy 322.58 115.57))
+			(xy 43.18 140.97)
+			(xy 43.18 146.05))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 9fd9d799-6e88-5f75-9e56-4805f4a8bc69))
 	(global_label "GND"
 		(shape passive)
-		(at 322.58 115.57 0)
+		(at 43.18 146.05 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2032,54 +2217,54 @@
 		(uuid 9bbeb49c-b62c-5491-89ce-9354d9ff6108))
 	(symbol
 		(lib_id "M3:R")
-		(at 365.76 106.68 0)
+		(at 81.28 137.16 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid a8269542-3baa-5e70-ba5b-d19cd1cbaf5c)
 		(property "Reference" "R433"
-			(at 365.76 99.06 0)
+			(at 81.28 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "51k 1%"
-			(at 365.76 101.6 0)
+			(at 81.28 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 365.76 106.68 0)
+			(at 81.28 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25794"
-			(at 365.76 106.68 0)
+			(at 81.28 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 365.76 106.68 0)
+			(at 81.28 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF5102TCE"
-			(at 365.76 106.68 0)
+			(at 81.28 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF5102TCE_C25794.pdf"
-			(at 365.76 106.68 0)
+			(at 81.28 137.16 0)
 			(hide yes)
 			(effects
 				(font
@@ -2092,15 +2277,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 365.76 102.87)
-			(xy 365.76 97.79))
+			(xy 81.28 133.35)
+			(xy 81.28 128.27))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid fa2f0066-7f2a-5cac-abc1-fd077a46b06e))
 	(global_label "CAM_5V"
 		(shape passive)
-		(at 365.76 97.79 0)
+		(at 81.28 128.27 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2108,15 +2293,15 @@
 		(uuid 89a37266-2fd8-5d19-afb7-13e384cc4437))
 	(wire
 		(pts
-			(xy 365.76 110.49)
-			(xy 365.76 115.57))
+			(xy 81.28 140.97)
+			(xy 81.28 146.05))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 24abcc59-145f-525e-95cd-7acdad4cb282))
 	(global_label "CAM_FB_TOP"
 		(shape passive)
-		(at 365.76 115.57 0)
+		(at 81.28 146.05 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2124,54 +2309,54 @@
 		(uuid da35b0f7-9125-55f4-8f50-78241bae5af3))
 	(symbol
 		(lib_id "M3:R")
-		(at 48.26 137.16 0)
+		(at 124.46 137.16 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 08d169e8-6aa0-5a08-b519-e4bae23b2b5e)
 		(property "Reference" "R434"
-			(at 48.26 129.54 0)
+			(at 124.46 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 1%"
-			(at 48.26 132.08 0)
+			(at 124.46 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 48.26 137.16 0)
+			(at 124.46 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 48.26 137.16 0)
+			(at 124.46 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 48.26 137.16 0)
+			(at 124.46 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 48.26 137.16 0)
+			(at 124.46 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf"
-			(at 48.26 137.16 0)
+			(at 124.46 137.16 0)
 			(hide yes)
 			(effects
 				(font
@@ -2184,15 +2369,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 48.26 133.35)
-			(xy 48.26 128.27))
+			(xy 124.46 133.35)
+			(xy 124.46 128.27))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 3d96709a-53fd-565a-bfa8-a4dd622b3dc1))
 	(global_label "CAM_FB_TOP"
 		(shape passive)
-		(at 48.26 128.27 0)
+		(at 124.46 128.27 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2200,15 +2385,15 @@
 		(uuid 688fd690-09ad-5bba-87d8-69b0d9599527))
 	(wire
 		(pts
-			(xy 48.26 140.97)
-			(xy 48.26 146.05))
+			(xy 124.46 140.97)
+			(xy 124.46 146.05))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 9fb6ccd0-6010-5068-b61c-ce51bf096d55))
 	(global_label "CAM_FB"
 		(shape passive)
-		(at 48.26 146.05 0)
+		(at 124.46 146.05 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2216,54 +2401,54 @@
 		(uuid 2630f6dc-5f0c-5310-a7a7-9a1e1d18d029))
 	(symbol
 		(lib_id "M3:R")
-		(at 86.36 137.16 0)
+		(at 165.1 137.16 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 442d376d-d412-547d-b630-067cd7350369)
 		(property "Reference" "R435"
-			(at 86.36 129.54 0)
+			(at 165.1 129.54 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k 1%"
-			(at 86.36 132.08 0)
+			(at 165.1 132.08 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 86.36 137.16 0)
+			(at 165.1 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 86.36 137.16 0)
+			(at 165.1 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 86.36 137.16 0)
+			(at 165.1 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 86.36 137.16 0)
+			(at 165.1 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf"
-			(at 86.36 137.16 0)
+			(at 165.1 137.16 0)
 			(hide yes)
 			(effects
 				(font
@@ -2276,15 +2461,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 86.36 133.35)
-			(xy 86.36 128.27))
+			(xy 165.1 133.35)
+			(xy 165.1 128.27))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid b54f180f-7699-58fe-aee5-5300858a3f7d))
 	(global_label "CAM_FB"
 		(shape passive)
-		(at 86.36 128.27 0)
+		(at 165.1 128.27 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2292,70 +2477,162 @@
 		(uuid 2dec7321-8e89-5fd6-9227-1395432d5b64))
 	(wire
 		(pts
-			(xy 86.36 140.97)
-			(xy 86.36 146.05))
+			(xy 165.1 140.97)
+			(xy 165.1 146.05))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 4d02bf9f-d681-5d93-8fb9-8a7f55fd1ec7))
 	(global_label "GND"
 		(shape passive)
-		(at 86.36 146.05 0)
+		(at 165.1 146.05 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 14d91edb-2ccd-5d6e-a506-d5a1815ce5d2))
 	(symbol
+		(lib_id "M3:R")
+		(at 203.2 137.16 0)
+		(unit 1)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid 4af4a792-9633-58d8-902f-dc75e288da4b)
+		(property "Reference" "R436"
+			(at 203.2 129.54 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Value" "5.1k"
+			(at 203.2 132.08 0)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Footprint" "rocket:R0402"
+			(at 203.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "LCSC" "C25905"
+			(at 203.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
+			(at 203.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Manufacturer Part" "0402WGF5101TCE"
+			(at 203.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(property "Datasheet" ""
+			(at 203.2 137.16 0)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27))
+				(justify left)))
+		(instances
+			(project "m3"
+				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/f850ba79-6fc7-599d-bae0-187b95938f17"
+					(reference "R436")
+					(unit 1)))))
+	(wire
+		(pts
+			(xy 203.2 133.35)
+			(xy 203.2 128.27))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid f0455da0-cdd7-5bc4-948a-62e996ce4f0a))
+	(global_label "CAM_PWR_EN"
+		(shape passive)
+		(at 203.2 128.27 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid 6ea49e32-ec5a-5cf3-90e4-4dc96f948148))
+	(wire
+		(pts
+			(xy 203.2 140.97)
+			(xy 203.2 146.05))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 1649f881-4eee-5b81-b04d-ad5b62e87d15))
+	(global_label "CAM_EN"
+		(shape passive)
+		(at 203.2 146.05 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid fb241ae1-2b52-5eba-b9bf-05eedd55d761))
+	(symbol
 		(lib_id "M3:TPS563208")
-		(at 142.24 137.16 0)
+		(at 264.16 137.16 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 0b18e9d4-6bd1-578f-a2e0-08e2a8cc1735)
 		(property "Reference" "U400"
-			(at 142.24 130.81 0)
+			(at 264.16 130.81 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "TPS563208DDCR"
-			(at 142.24 133.35 0)
+			(at 264.16 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_TSOT23_6_DDC"
-			(at 142.24 137.16 0)
+			(at 264.16 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C468250"
-			(at 142.24 137.16 0)
+			(at 264.16 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Texas Instruments"
-			(at 142.24 137.16 0)
+			(at 264.16 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "TPS563208DDCR"
-			(at 142.24 137.16 0)
+			(at 264.16 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2004061031_Texas-Instruments-TPS563208DDCR_C468250.pdf"
-			(at 142.24 137.16 0)
+			(at 264.16 137.16 0)
 			(hide yes)
 			(effects
 				(font
@@ -2368,15 +2645,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 129.54 139.7)
-			(xy 124.46 139.7))
+			(xy 251.46 139.7)
+			(xy 246.38 139.7))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid bcef39a4-46ef-593a-a6d1-d7597ffe82d8))
 	(global_label "GND"
 		(shape passive)
-		(at 124.46 139.7 0)
+		(at 246.38 139.7 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2384,15 +2661,15 @@
 		(uuid 652c9536-7b65-52b7-991b-d1678f81c505))
 	(wire
 		(pts
-			(xy 154.94 134.62)
-			(xy 160.02 134.62))
+			(xy 276.86 134.62)
+			(xy 281.94 134.62))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid beef4c7b-04e7-5917-922c-0cc0aff97128))
 	(global_label "PORT_SW"
 		(shape passive)
-		(at 160.02 134.62 180)
+		(at 281.94 134.62 180)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2400,15 +2677,15 @@
 		(uuid 6029dffa-656b-5b44-98f9-3febb3ef00d3))
 	(wire
 		(pts
-			(xy 129.54 134.62)
-			(xy 124.46 134.62))
+			(xy 251.46 134.62)
+			(xy 246.38 134.62))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid af5fa062-1a37-5fab-949b-26d5e343f9b6))
 	(global_label "RAW_PROTECTED"
 		(shape passive)
-		(at 124.46 134.62 0)
+		(at 246.38 134.62 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2416,15 +2693,15 @@
 		(uuid 2903dfbc-e981-5fab-8b75-a5fe53838ef3))
 	(wire
 		(pts
-			(xy 154.94 139.7)
-			(xy 160.02 139.7))
+			(xy 276.86 139.7)
+			(xy 281.94 139.7))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid d63add1a-543b-5e0c-814f-27b07add2635))
 	(global_label "PORT_FB"
 		(shape passive)
-		(at 160.02 139.7 180)
+		(at 281.94 139.7 180)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2432,15 +2709,15 @@
 		(uuid 1a74f616-3fc7-5fdd-8205-1163dcdf9943))
 	(wire
 		(pts
-			(xy 129.54 137.16)
-			(xy 124.46 137.16))
+			(xy 251.46 137.16)
+			(xy 246.38 137.16))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 497c00b6-7546-54d0-a995-e0430006607d))
 	(global_label "RAW_PROTECTED"
 		(shape passive)
-		(at 124.46 137.16 0)
+		(at 246.38 137.16 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2448,15 +2725,15 @@
 		(uuid 059bc7bc-2e15-5df9-9506-4fb033b44a70))
 	(wire
 		(pts
-			(xy 154.94 137.16)
-			(xy 160.02 137.16))
+			(xy 276.86 137.16)
+			(xy 281.94 137.16))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 28a8dcc3-fd50-5ea2-a6e5-b483b4c09fb6))
 	(global_label "PORT_BST"
 		(shape passive)
-		(at 160.02 137.16 180)
+		(at 281.94 137.16 180)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2464,54 +2741,54 @@
 		(uuid 8be63a9b-b712-5937-83af-0aa0ee055594))
 	(symbol
 		(lib_id "M3:TPS563208")
-		(at 215.9 137.16 0)
+		(at 337.82 137.16 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 1826c6ce-625e-546b-b82b-cbfa7262f579)
 		(property "Reference" "U403"
-			(at 215.9 130.81 0)
+			(at 337.82 130.81 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "TPS563208DDCR"
-			(at 215.9 133.35 0)
+			(at 337.82 133.35 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:M3_TSOT23_6_DDC"
-			(at 215.9 137.16 0)
+			(at 337.82 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C468250"
-			(at 215.9 137.16 0)
+			(at 337.82 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Texas Instruments"
-			(at 215.9 137.16 0)
+			(at 337.82 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "TPS563208DDCR"
-			(at 215.9 137.16 0)
+			(at 337.82 137.16 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2004061031_Texas-Instruments-TPS563208DDCR_C468250.pdf"
-			(at 215.9 137.16 0)
+			(at 337.82 137.16 0)
 			(hide yes)
 			(effects
 				(font
@@ -2524,15 +2801,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 203.2 139.7)
-			(xy 198.12 139.7))
+			(xy 325.12 139.7)
+			(xy 320.04 139.7))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid f3b4e185-8916-5b96-a5fb-32d378a33e92))
 	(global_label "GND"
 		(shape passive)
-		(at 198.12 139.7 0)
+		(at 320.04 139.7 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2540,15 +2817,15 @@
 		(uuid 7c345705-2b33-5b1a-a36d-ab9526122eb8))
 	(wire
 		(pts
-			(xy 228.6 134.62)
-			(xy 233.68 134.62))
+			(xy 350.52 134.62)
+			(xy 355.6 134.62))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 282e417a-b6a1-5968-8144-e18474ea1274))
 	(global_label "CAM_SW"
 		(shape passive)
-		(at 233.68 134.62 180)
+		(at 355.6 134.62 180)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2556,15 +2833,15 @@
 		(uuid 8f03b40f-cb09-543a-a4c5-21328df75ba9))
 	(wire
 		(pts
-			(xy 203.2 134.62)
-			(xy 198.12 134.62))
+			(xy 325.12 134.62)
+			(xy 320.04 134.62))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 8bd8a6c7-4328-5773-bd14-673f34fc4ede))
 	(global_label "RAW_PROTECTED"
 		(shape passive)
-		(at 198.12 134.62 0)
+		(at 320.04 134.62 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2572,15 +2849,15 @@
 		(uuid fe21b1a9-0e59-5d9b-9103-c98eab086617))
 	(wire
 		(pts
-			(xy 228.6 139.7)
-			(xy 233.68 139.7))
+			(xy 350.52 139.7)
+			(xy 355.6 139.7))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid bb249742-7487-5dc2-9ddf-bdc3feaaa988))
 	(global_label "CAM_FB"
 		(shape passive)
-		(at 233.68 139.7 180)
+		(at 355.6 139.7 180)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2588,15 +2865,15 @@
 		(uuid c5f33c14-319b-5d25-b2fc-c7dc57e75441))
 	(wire
 		(pts
-			(xy 203.2 137.16)
-			(xy 198.12 137.16))
+			(xy 325.12 137.16)
+			(xy 320.04 137.16))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 441128bf-ad28-55f5-b49e-cf5029c21340))
-	(global_label "CAM_PWR_EN"
+	(global_label "CAM_EN"
 		(shape passive)
-		(at 198.12 137.16 0)
+		(at 320.04 137.16 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -2604,15 +2881,15 @@
 		(uuid 08d11c57-42f1-5dcc-bddf-3a26834909de))
 	(wire
 		(pts
-			(xy 228.6 137.16)
-			(xy 233.68 137.16))
+			(xy 350.52 137.16)
+			(xy 355.6 137.16))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid a4bbc242-0668-5ebe-991f-f3d54d404298))
 	(global_label "CAM_BST"
 		(shape passive)
-		(at 233.68 137.16 180)
+		(at 355.6 137.16 180)
 		(effects
 			(font
 				(size 1.05 1.05))

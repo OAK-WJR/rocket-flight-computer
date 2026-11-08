@@ -4,20 +4,14 @@ kind	net	layer	width	x0	y0	x1	y1
 # 3V3A U5 feed moved under U6 (B), via splits, GND / partner via moves. See the W4 report.
 # Round 2: complete W4 fragment; all coordinates in board mm.
 track	SERVO1_MCU	B	0.15	27.4	45.4	27.4	17.5
-track	SERVO4_MCU	B	0.15	27.8	45.4	27.8	17.5
-track	CAM_PWR_EN	B	0.15	28.2	45.4	28.2	17.5
-track	SERVO2_MCU	B	0.15	28.6	45.4	28.6	17.5
+track	SERVO4_MCU	B	0.15	27.75	45.4	27.75	17.5
+track	SERVO2_MCU	B	0.15	28.65	45.4	28.65	17.5
 track	SERVO3_MCU	B	0.15	29.0	45.4	29.0	17.5
 track	CAM_MCU_TX	B	0.15	29.4	45.4	29.4	17.5
 track	CAM_MCU_RX	B	0.15	29.8	45.4	29.8	17.5
-track	VLOGIC_SENSE	F	0.15	30.4	37.2	25.8	37.2
 via	VLOGIC_SENSE	-	0.45	25.8	37.2		
 track	VLOGIC_SENSE	In2	0.15	25.8	37.2	26.2	37.6
-track	CAM_5V_SENSE	In2	0.15	26.6	25.5	26.6	45.4
 track	3V3A	In2	0.3	19.05	38.0	19.65	37.4
-track	3V3A	In2	0.3	19.65	37.4	19.65	36.9
-via	3V3A	-	0.45	19.65	36.9		
-track	3V3A	F	0.3	19.65	36.9	19.65	37.75
 track	3V3A	F	0.3	19.65	37.75	20.25	37.75
 track	3V3A	F	0.3	20.25	37.75	21.0	38.5
 track	3V3A	F	0.3	21.0	38.5	22.5	38.5
@@ -85,6 +79,8 @@ via	3V3	-	0.45	20.25	31.5
 track	3V3	F	0.15	19.6	30.17	19.6	29.65
 track	3V3	F	0.15	19.6	29.65	19.85	29.4
 via	3V3	-	0.45	19.85	29.4		
+track	3V3	F	0.2	29.15	28.25	30.4	28.25
+via	3V3	-	0.45	30.4	28.25		
 track	GND	F	0.2	21.12	29.5	20.6	29.5
 track	GND	F	0.2	20.6	29.5	20.1	29.0
 track	GND	F	0.2	20.1	29.0	20.1	28.7
@@ -156,6 +152,8 @@ track	IMU_INT1	F	0.1	25.2	45.4	25.2	44.9
 track	IMU_INT1	F	0.1	25.2	44.9	26.45	43.65
 track	IMU_INT1	F	0.1	26.45	43.65	26.45	40.85
 track	VLOGIC_SENSE	In2	0.15	26.2	37.6	26.2	45.4
+track	VLOGIC_SENSE	F	0.15	30.4	36.17	26.83	36.17
+track	VLOGIC_SENSE	F	0.15	26.83	36.17	25.8	37.2
 track	HG_CS	F	0.1	23.8	45.4	23.5	45.1
 via	HG_CS	-	0.45	23.5	45.1		
 track	SPI1_MISO	F	0.1	23	45.4	23	44.4
@@ -200,5 +198,20 @@ track	HG_CS	B	0.1	23.05	42.4	23.05	32.85
 track	3V3A	B	0.3	23.5	39.95	24.95	39.95
 # D-R12-98 (integration): GND partner of the SPI / HG_CS north-block vias
 via	GND	-	0.45	23.7	44.55		
+track	GND	F	0.2	22.5	39.85	22.5	39.25
+via	GND	-	0.45	22.5	39.25		
 track	3V3A	B	0.3	24.95	39.95	25.7	40.7
 track	3V3A	B	0.3	25.7	40.7	25.7	42.75
+track	3V3A	In2	0.3	19.65	37.4	19.65	36.8
+via	3V3A	-	0.45	19.65	36.8		
+track	3V3A	F	0.3	23.5	39.95	24.95	39.95
+via	3V3A	-	0.45	24.95	39.95		
+track	3V3A	F	0.3	19.65	36.8	19.65	37.75
+track	CAM_PWR_EN	B	0.15	28.2	45.4	28.2	31.45
+via	CAM_PWR_EN	-	0.45	28.2	31.45		
+track	CAM_PWR_EN	F	0.15	28.2	31.45	28.2	30.25
+track	CAM_PWR_EN	F	0.15	28.2	30.25	28.2	27.03
+track	CAM_EN	F	0.15	28.2	26.17	28.2	25.5
+via	CAM_EN	-	0.45	28.2	25.5		
+track	CAM_EN	B	0.15	28.2	25.5	28.2	17.5
+track	CAM_5V_SENSE	In2	0.15	26.9	25.5	26.9	45.4

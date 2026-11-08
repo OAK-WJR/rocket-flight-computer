@@ -32,7 +32,9 @@ S-10: on every copper layer, fills (protected-net fills too) and barrels include
       >= 1.040 mm from every net, copper and fills, but each other, ACT_GATE and their resistors' other ends (V-1 / V-2);
       the FMEA I-5 rails (derived from the netlist, R12F7-TRI-01) keep >= 1.040 mm (pack voltage: RAW_PROTECTED,
       VLOGIC, the converters' switch / bootstrap nodes) or >= 0.300 mm (port voltage: CAM_5V, PORT_4V8, VBUS) from
-      3V3 / 3V3A.
+      3V3 / 3V3A and every I-5 victim (R12F8-TRI-01: every net reaching 3V3 / 3V3A or an MCU pin through < 5 kohm,
+      derived from the netlist, default-deny; the port class less the FT-only nets of I5_PORT_FT); U403's EN reaches
+      PC12 only through R436 with D436 clamping PC12 (en_guard).
 W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
@@ -48,6 +50,11 @@ K-fill: saved fill geometry agrees with native refill of a copy.
 K-rules: DRU text and project floors agree with the R12 generator; no unconditional rule after a scoped one (D-R12-88).
 K-neighbours: every ball round PE4 / PC1 is NC, GND, the D-R11-23 3V3 pair or an inert net whose one-bridge gate voltage,
               computed from the board's own resistors, stays <= 0.45 V (D-R11-85, D-R12-86).
+K-power: R10 / R11's single-via-open rule (R12F8-TRI-02; R10 D-R21-02 / D-R22-02 / D-R23-01 / -02 / -11, R11 O-C2-5):
+         every regulator feedback, OVLO, EN and ILIM tap, sense tap, BOOT0 / VCAP / IMU-ground tap and gate drive of
+         SINGLE_OPEN_TAPS_R12 stays joined to its source through same-net copper with any one via of its net removed
+         (check_r10.single_via_opens); a single point passes only as an exact SINGLE_OPEN_EXCEPTIONS_R12 entry with its
+         measured reason, and an entry no longer met fails as stale.
 
 Placement remains the stage-B gate. Copper checks safety/routing; full also checks the final legends (stage D).
 R12 pin lookup uses its pin table and net names; no U4/U5 pad numbers or R10 layout coordinates are inherited.
@@ -73,7 +80,7 @@ VIA_DRILL, VIA_DIAMETER = 0.3, 0.45
 PENDING = ()
 IMPLEMENTED = ('S-1', 'S-2', 'S-3', 'S-4', 'S-5', 'S-6', 'S-7', 'S-8', 'S-9', 'S-10', 'W-1', 'W-2', 'LC-1',
                'M-3', 'M-6', 'M-7', 'M-8', 'K-legends', 'K-copper', 'K-inner', 'K-reference', 'K-region', 'K-plane', 'K-fill',
-               'K-neighbours')
+               'K-neighbours', 'K-power')
 STAGES = {'placement': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5', 'K-neighbours'),
           'copper': ('L-1', 'M-1', 'F-1', 'N-1', 'K-rules', 'M-5', 'V-1', 'V-2')
                     + tuple(r for r in IMPLEMENTED if r != 'K-legends')}
@@ -954,6 +961,8 @@ def s10(c, exceptions=None, not_a_path=None):
     issues += [f'S-10: {m}' for m in packed]
     flt, flt_ev = fire.flt_guard(netlist, classes)                         # PACK_FLT: R95 and D95 between U9 FLT and PC13
     issues += [f'S-10: {m}' for m in flt]
+    en, en_ev = fire.en_guard(netlist, classes)                            # R12F8-TRI-01: R436 and D436 at U403's EN
+    issues += [f'S-10: {m}' for m in en]
     i5, i5_ev = fire.i5_guard(netlist)                                     # R12F7-TRI-01: the FMEA I-5 rails
     issues += [f'S-10: {m}' for m in i5]
     i5_ev['least'] = {}
@@ -965,7 +974,8 @@ def s10(c, exceptions=None, not_a_path=None):
     return issues, dict(exceptions=kept, u1_nc_balls=nc, owner_pairs=owner, netlist_classes=classes,
                         fire_state=dict(series_ohm=fire_ev, min_ohm=fire.FIRE_SERIES_MIN),
                         pack=dict(pack_ev, min_ohm=fire.PACK_SERIES_MIN, limit=fire.PACK_MIN),
-                        pack_flt=dict(flt_ev, min_ohm=fire.PACK_SERIES_MIN), i5=i5_ev,
+                        pack_flt=dict(flt_ev, min_ohm=fire.PACK_SERIES_MIN),
+                        cam_en=dict(en_ev, min_ohm=fire.PACK_SERIES_MIN), i5=i5_ev,
                         not_a_path={f'{p} / {f}': why for (p, f), why in fire.NOT_A_PATH.items()},
                         limits=dict(gate=fire.GATE_MIN, out=fire.OUT_MIN, out_gnd=fire.GND_MIN, fill=fire.FILL_MIN,
                                     ign=fire.IGN_MIN, pack=fire.PACK_MIN, i5_pack=fire.PACK_MIN,
@@ -977,11 +987,114 @@ def s10(c, exceptions=None, not_a_path=None):
 ADVISABLE = ('K-reference', 'K-region', 'K-plane')
 ALWAYS_FATAL = ('S-', 'M-', 'W-', 'LC-')
 
+# ---- K-power (R12F8-TRI-02): R10 / R11's single-via-open rule, ported --------------------------------------------------
+# R10's SINGLE_OPEN_TAPS (check_r10, D-R21-02 / D-R22-02 / D-R23-01 / -02 / -11) mapped by function onto R12's parts: U2
+# (the 3V3 buck, R10's R21-PWR-01 case: R14.1 on one via, open, R15 pulls FB to GND and U2 drives 3V3 toward VLOGIC), U9
+# (OVLO, EN, ILIM and GND), U400 (port buck), U403 (camera buck, EN since R12F8-TRI-01), PA6's VLOGIC sense, BOOT0, VCAP,
+# the load-switch gate drive, the IMU's power ground and the USB-C CC Rd returns. (net, tap pad, source pads, why); U1
+# pads are R12 balls (BOOT0 D5, VCAP1 F8, VCAP2 E7, PA6 J3). R10 parts R12 deletes (U10, U11, U401, U402) have no entry.
+SINGLE_OPEN_TAPS_R12 = (
+    ('3V3', 'R14.1', ('L1.2',), "U2's feedback divider top (R10 R21-PWR-01): open, R15 pulls FB to GND and U2 drives 3V3 "
+                                'toward VLOGIC'),
+    ('FB_3V3', 'U2.3', ('R14.2', 'R15.1'), "U2's FB pin"),
+    ('GND', 'R15.2', ('U2.2',), "U2's feedback divider bottom"),
+    ('GND', 'U2.2', ('J1.2',), "U2's GND pin"),
+    ('BAT_IN', 'R82.1', ('U9.5',), "U9's OVLO divider top"),
+    ('BAT_OVLO', 'U9.2', ('R82.2', 'R83.1'), "U9's OVLO pin"),
+    ('BAT_OVLO_B', 'R93.1', ('R83.2',), "U9's OVLO divider lower node"),
+    ('GND', 'R93.2', ('U9.8',), "U9's OVLO divider bottom (open: OVLO rises to BAT_IN x 1, U9 off)"),
+    ('BAT_ENABLE', 'R81.1', ('U9.1',), "U9's EN pull-down (R10 R20-SAF-01)"),
+    ('BAT_ENABLE', 'C87.1', ('U9.1',), "U9's EN filter"),
+    ('GND', 'R81.2', ('U9.8',), "U9's EN pull-down bottom (open: EN rises toward BAT_IN through R80 + R165 with J400 "
+                                'closed, above its 6.5 V absolute maximum)'),
+    ('GND', 'C87.2', ('U9.8',), "U9's EN filter bottom"),
+    ('BAT_ILIM', 'R84.1', ('U9.9',), "U9's ILIM"),
+    ('BAT_ILIM', 'R94.1', ('U9.9',), "U9's ILIM (second leg)"),
+    ('GND', 'R84.2', ('U9.8',), "U9's ILIM bottom"),
+    ('GND', 'R94.2', ('U9.8',), "U9's ILIM bottom (second leg)"),
+    ('GND', 'U9.8', ('J1.2',), "U9's only GND pin"),
+    ('PORT_4V8', 'R400.1', ('L400.2',), "U400's feedback divider top"),
+    ('PORT_FB_TOP', 'R400.2', ('R404.1',), "U400's feedback divider middle"),
+    ('PORT_FB', 'U400.4', ('R404.2', 'R401.1'), "U400's FB pin"),
+    ('GND', 'R401.2', ('U400.1',), "U400's feedback divider bottom"),
+    ('GND', 'U400.1', ('J1.2',), "U400's GND pin"),
+    ('CAM_5V', 'R433.1', ('L401.2',), "U403's feedback divider top"),
+    ('CAM_FB_TOP', 'R433.2', ('R434.1',), "U403's feedback divider middle"),
+    ('CAM_FB', 'U403.4', ('R434.2', 'R435.1'), "U403's FB pin"),
+    ('GND', 'R435.2', ('U403.1',), "U403's feedback divider bottom"),
+    ('GND', 'U403.1', ('J1.2',), "U403's GND pin"),
+    ('CAM_EN', 'R431.1', ('U403.5',), "U403's EN pull-down (camera off in reset)"),
+    ('VLOGIC', 'R60.1', ('D5.1', 'D6.1'), "R60, PA6's VLOGIC sense divider top (R10 R22-POWER-02)"),
+    ('GND', 'R61.2', ('J1.2',), "R61, PA6's VLOGIC sense divider bottom"),
+    ('BOOT0', 'U1.D5', ('R5.1',), "BOOT0's pull-down R5 (R10 R23-MCU-02)"),
+    ('GND', 'R5.2', ('J1.2',), "BOOT0's pull-down R5, GND end"),
+    ('VCAP1', 'U1.F8', ('C19.1',), "VCAP1's 2.2 uF capacitor C19 (R10 R23-MCU-02)"),
+    ('VCAP2', 'U1.E7', ('C20.1',), "VCAP2's 2.2 uF capacitor C20"),
+    ('GND', 'C19.2', ('J1.2',), "C19 (VCAP1) GND end"),
+    ('GND', 'C20.2', ('J1.2',), "C20 (VCAP2) GND end"),
+    ('ACT_GATE', 'Q120.1', ('R121.1',), "Q120's gate drive from R121 (R10 R23-SAFETY-05)"),
+    ('ACT_GATE', 'Q121.1', ('R121.1',), "Q121's gate drive from R121"),
+    ('GND', 'U4.6', ('J1.2',), "U4's (IMU) power ground pin 6 (R10 R23-GATE-07)"),
+    ('GND', 'U4.7', ('J1.2',), "U4's (IMU) ground pin 7"),
+    ('GND', 'R7.2', ('J1.2',), 'R7 (USB-C CC1 Rd) GND'),
+    ('GND', 'R8.2', ('J1.2',), 'R8 (USB-C CC2 Rd) GND'),
+    # R12F8-TRI-03 (R10 row 22's class): the supply feeds from U9's OUT and to the sensor / ADC supply
+    ('RAW_PROTECTED', 'C400.1', ('U9.6',), "U400's (port buck) input capacitor, the RAW B trunk's north end"),
+    ('RAW_PROTECTED', 'U400.3', ('U9.6',), "U400's VIN"),
+    ('RAW_PROTECTED', 'D5.2', ('U9.6',), "D5's anode: VLOGIC's only battery path"),
+    ('RAW_PROTECTED', 'D9.1', ('U9.6',), 'D9 (SS34 RAW reverse clamp), assumed by the 2304-case hot-plug result'),
+    ('RAW_PROTECTED', 'C97.1', ('U9.6',), "U9 OUT's 1 uF"),
+    ('RAW_PROTECTED', 'R92.1', ('U9.6',), 'R92, the RAW bleed'),
+    ('RAW_PROTECTED', 'U403.3', ('U9.6',), "U403's (camera buck) VIN"),
+    ('3V3A', 'U1.H1', ('R164.2',), "U1's VDDA (ball H1) from R164"),
+    ('3V3A', 'C22.1', ('R164.2',), "VDDA's 1 uF C22"),
+    ('3V3A', 'U5.1', ('R164.2',), "U5's (barometer) VDD"),
+)
+# (tap pad, via label as check_r10.copper_nodes prints it, measured reason): the single points kept on purpose. An entry
+# no longer met (its pads present) fails as stale.
+_DOGBONE = ("a dog-bone via inside U1's TFBGA-100 escape (ball pitch 0.8 mm; every neighbouring channel holds another "
+            "ball's escape), so no second barrel fits: R11 row 4's class, carried (owner row)")
+SINGLE_OPEN_EXCEPTIONS_R12 = [
+    ('U1.D5', 'via BOOT0 (23.00, 52.40)',
+     "BOOT0's ball D5 escape: " + _DOGBONE + ". Open, BOOT0 floats with no pull: a reset may start the ROM loader "
+     "instead of the firmware (no flight control, no fire: fail-safe; the Blue Jay covers recovery; Inference: DS12110 "
+     "gives BOOT0 no internal pull)"),
+    ('U1.D5', 'via BOOT0 (17.80, 48.20)',
+     "BOOT0's B-to-F via by R5: a second barrel has no legal spot (NRST's In2 run at x 16.85-16.95 west, ACT_EN_MCU's B "
+     "lane at x 16.4, PYRO1_GATE_N's F run at x 18.7 east, which holds every net but GND 1.0585 mm off; measured on the "
+     "R12F8 lane P board). Open, BOOT0 floats as at its dog-bone (fail-safe, Inference); R5.2's own GND end has two vias"),
+    ('U1.F8', 'via VCAP1 (25.40, 54.00)',
+     "VCAP1's ball F8 escape: " + _DOGBONE + ". Open, the core LDO keeps C20's 2.2 uF on VCAP2 instead of DS12110 "
+     "Rev 8's two 2.2 uF (Table 124 p. 216); its stability then is an Inference (R10's U1.48 entry); C19's own end now "
+     "has two barrels"),
+    ('U1.E7', 'via VCAP2 (24.60, 54.00)',
+     "VCAP2's ball E7 escape: " + _DOGBONE + ". Open, the core LDO keeps C19's 2.2 uF on VCAP1 only (as VCAP1's entry, "
+     "Inference); C20's own end now has two barrels"),
+    # R12F8-TRI-03: the 3V3A feeds with no legal second barrel (owner row, R10 row 22 carried)
+    ('U1.H1', 'via 3V3A (19.65, 36.80)',
+     "3V3A's F-to-In2 via at R164.2 (U4's cell): a second barrel has no legal spot (R164.2's own land and mask north, "
+     "C129.1 (ARM1_SENSE) west, I2C1_SCL's F / B runs and a GND via east, the SPI1 B lanes south; measured on the R12F8 "
+     "lane P board). Open, VDDA (U1.H1) loses 3V3A: the ADCs (PA6 VLOGIC sense, PC2_C camera sense) read garbage and "
+     "the MCU's analog domain is unpowered (DS12110 requires VDDA; behaviour not characterised: Inference)"),
+    ('C22.1', 'via 3V3A (19.65, 36.80)', "as U1.H1: the same via feeds VDDA's decoupling"),
+    ('U5.1', 'via 3V3A (25.80, 29.80)',
+     "U5's (barometer) 3V3A B-to-F via: a second barrel has no legal spot (U5's body (M-7: no via under a sensor body) "
+     "west, CAM_5V_SENSE's In2 run at x 26.6 and a GND via east, C32's lands north; measured on the R12F8 lane P board). "
+     "Open, the barometer is unpowered: no barometric gain, so the fire rule (LIFTOFF AND a barometric gain) never "
+     "fires the primary (fail-safe; the Blue Jay covers recovery)"),
+]
+
+
+def k_power(c):
+    taps, ev = r10.single_via_opens(c.board, taps=SINGLE_OPEN_TAPS_R12, exceptions=SINGLE_OPEN_EXCEPTIONS_R12)
+    return [f'K-power: {i}' for i in taps], dict(single_via_open_taps=ev, exceptions=len(SINGLE_OPEN_EXCEPTIONS_R12))
+
+
 PORTED = {
     'S-1': s1, 'S-2': s2, 'S-3': s3, 'S-4': s4, 'S-5': s5, 'S-6': r10.s6, 'S-7': s7, 'S-8': s8, 'S-9': s9,
     'S-10': s10, 'W-1': w1, 'W-2': w2, 'LC-1': lc1, 'M-3': m3, 'M-6': m6, 'M-7': m7, 'M-8': m8,
     'K-legends': k_legends, 'K-copper': k_copper, 'K-inner': k_inner, 'K-reference': k_reference,
-    'K-region': k_region, 'K-plane': k_plane, 'K-fill': r10.k_fill, 'K-neighbours': k_neighbours,
+    'K-region': k_region, 'K-plane': k_plane, 'K-fill': r10.k_fill, 'K-neighbours': k_neighbours, 'K-power': k_power,
 }
 
 
@@ -1002,6 +1115,7 @@ TITLES.update({
     'K-reference': 'critical reference coverage', 'K-region': 'one In2 rail region per B signal chain',
     'K-plane': 'In2 fill connectivity and necks', 'K-fill': 'saved fills agree with native refill',
     'K-neighbours': 'PE4 / PC1 ball neighbours cannot raise their gate if bridged (D-R11-85, D-R12-86)',
+    'K-power': 'regulator, sense and gate taps survive any one via opening (R12F8-TRI-02; R10 D-R21-02)',
 })
 
 

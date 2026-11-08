@@ -31,7 +31,7 @@ critical_via_no_gnd is re-measured by tools/r11_gnd_spots.gnd_spots (the six-lay
 PARALLEL_VIAS holds only the pairs the R11 gate data list (R11_DATA key 'parallel_vias', O-C2-5; schema at
 load_parallel_pairs; a missing key or file is an empty list; --gate-data names another file).
 r12 (M3-ASSY-R12, r12_plan.md; the R12 gate in tools/check.sh once the R12 board is tracked): every r10 rule on R12's
-four-layer one-sided board, LEFTOVERS / PARALLEL_VIAS empty; ALLOWLIST is ALLOWLIST_R12 and ROUTE_FIGURES is
+four-layer one-sided board, LEFTOVERS empty, PARALLEL_VIAS PARALLEL_VIAS_R12 (R12F8-TRI-02 / -03); ALLOWLIST is ALLOWLIST_R12 and ROUTE_FIGURES is
 ROUTE_FIGURES_R12 (the forced findings, each with its measured reason and route figures, D-R12-75A).
 Every layer-dependent test walks the board's own copper stack (cu_layers: F, In1..In4, B on a six-layer board; the
 R7-R10 four-layer set otherwise, so their verdicts are unchanged), so a layer change through In3 or In4 is one, and the
@@ -380,6 +380,22 @@ PARALLEL_VIAS_R10 = [
      "D-R24-10: U10.6's output into the In2 run toward R87.1 (U11's USB over-voltage divider); 0.6 mm east of the "
      "first barrel (16.0, 28.0), joined to it on B.Cu and In2"),
 ]
+# R12F8-TRI-02 / -03, profile r12: the second barrels on nets without a pour (each closes one deliberate loop with its
+# partner; either barrel alone carries the K-power tap). (net, (x, y) mm of the added via, measured reason).
+PARALLEL_VIAS_R12 = [
+    ('3V3A', (24.95, 39.95),
+     "R12F8-TRI-03: U5 / C30's B.Cu branches from the F-to-B via (23.5, 39.95); the barrel sits at the B.Cu bend, joined "
+     "to the first by the 1.45 mm F.Cu run along y 39.95 above the B.Cu one"),
+    ('3V3A', (14.95, 60.05),
+     "R12F8-TRI-03: VDDA's In2 link from (15.5, 60.6); the barrel sits on the In2 run 0.78 mm south-west, joined to the "
+     "first by a 0.78 mm F.Cu diagonal above the In2 one"),
+    ('VCAP2', (26.9, 60.95),
+     "R12F8-TRI-02: U1.E7 to C20; the barrel sits at the B.Cu lane's bend, joined to C20.1 by a 0.7 mm F.Cu stub, beside "
+     "the first barrel (27.8, 61.85) on the 1.27 mm B.Cu diagonal"),
+    ('VCAP1', (28.6, 61.05),
+     "R12F8-TRI-02: U1.F8 to C19; the barrel sits at the B.Cu lane's bend, joined to C19.1 by a 0.6 mm F.Cu stub, beside "
+     "the first barrel (29.4, 61.85) on the 1.13 mm B.Cu diagonal"),
+]
 PARALLEL_VIAS = []
 # Profile r11 (stageC2.md O-C2-5, gate_C2.md): the parallel barrels come from the R11 gate data as pairs, both barrels
 # named, so a pair whose first or second barrel is gone fails as stale. PARALLEL_PAIRS holds them as (net, (x, y) of
@@ -417,13 +433,16 @@ ROUTE_FIGURES_R11 = {'CAM_RX_BUFFER': (19.2, 4)}      # D-R11-61: route_check on
 ALLOWLIST_R12 = [
     ('extra_vias', '3V3A', 'net', (21.525, 38.5),
      'D-R12-98 (integration, AVA re-layout): 3V3A (the sensor analog rail) joins its F.Cu pads through the named In2 link '
-     'LA (ROUTING_PLAN 4) from the VDDA end at (15.5, 60.6) to the R164 / U4 F.Cu island at (19.65, 36.9). '
+     'LA (ROUTING_PLAN 4) from the VDDA end at (15.5, 60.6) to the R164 / U4 F.Cu island at (19.65, 36.8) (0.1 mm aft '
+     'since R12F8-TRI-03, clear of R164.2\'s mask). '
      'R164.2 supplies this island, including U4.5 (23.5, 40.64), C10, U4.8 and C31. One F-to-B via at '
      '(23.5, 39.95) feeds the B.Cu branches to C30 and U5 / C32, each returning to F.Cu through its own via '
      'at (25.7, 42.75) and (25.8, 29.8), respectively (Measured: 15.66 mm of B.Cu). '
      'Measured on the merged board: 5 vias against 0 + 2 allowed (2 for the In2 link, 3 for the B.Cu branches); '
-     '72.31 mm against a 48.05 mm octilinear MST',
-     dict(len_mm=72.31, vias=5)),
+     '72.31 mm against a 48.05 mm octilinear MST. R12F8-TRI-03 (lane P board): the second barrels (24.95, 39.95) '
+     'and (14.95, 60.05) (PARALLEL_VIAS_R12, left out of the via count) and their 1.45 / 0.78 mm F.Cu links: '
+     '74.74 mm, 5 vias',
+     dict(len_mm=74.74, vias=5)),
     ('extra_vias', 'SPI1_MISO', 'net', (23.4, 50.4),
      'D-R12-98 (integration): MISO leaves U1 at A6, west of SCK (A7) and MOSI (C5, channel x 24.6), but its U4 pad (U4.1, '
      '(24.21, 42.35)) is on U4\'s east face beyond SCK\'s and MOSI\'s south-face pads (U4.13 / U4.14, the +y face: '
@@ -440,7 +459,7 @@ ALLOWLIST_R12 = [
      '1.63, 0 vias)',
      dict(len_mm=19.4, vias=0)),
 ]
-ROUTE_FIGURES_R12 = {'3V3A': (72.31, 5), 'SPI1_MISO': (22.36, 3), 'QSPI_CLK': (19.4, 0)}   # D-R12-98: zone_check, merged board
+ROUTE_FIGURES_R12 = {'3V3A': (74.74, 5), 'SPI1_MISO': (22.36, 3), 'QSPI_CLK': (19.4, 0)}   # D-R12-98: zone_check, merged board
 R11_DATA = Path(__file__).resolve().parents[1] / 'm3_design/r11/design/r11_gate_data.json'
 KEEPOUT_BASELINE = True
 _R8_LISTS = (ALLOWLIST, LEFTOVERS, ROUTE_FIGURES)
@@ -515,7 +534,7 @@ def set_profile(name, gate_data=None):
     PROFILE = name
     global PARALLEL_VIAS, PARALLEL_PAIRS
     PARALLEL_PAIRS = load_parallel_pairs(read_gate_data() if gate_data is None else gate_data) if name == 'r11' else []
-    PARALLEL_VIAS = (list(PARALLEL_VIAS_R10) if name == 'r10' else
+    PARALLEL_VIAS = (list(PARALLEL_VIAS_R10) if name == 'r10' else list(PARALLEL_VIAS_R12) if name == 'r12' else
                      [(net, b, reason) for net, _, b, reason in PARALLEL_PAIRS])   # r11: the listed pairs (O-C2-5)
 
 
