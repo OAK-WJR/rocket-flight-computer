@@ -4,8 +4,13 @@
 D-R12-144, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` since R12F4-TRI-06, `68e6b650…` since the AVA polish pass D-R12-121 … -124,
 `14b82d39…` (lane P) and `6e874d4e…` (lane P2) in the round-5 fix pass R12F5-TRI-01 / -06 / -21, 2026-11-06, and
 `3f9579fa…` (lane P), `6a1c99e0…` (lane P3) and `f26dfef1…` (lane P4) in the round-6 fix pass D-R12-134 …
--143, 2026-11-07; R12F6-TRI-10; and the current `82eddc69…` in the round-7 fix pass D-R12-144 … -151, 2026-11-07): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
+-143, 2026-11-07; R12F6-TRI-10; and `82eddc69…` in round 7, `418e5ea9…` in round 8, and current `a02a6181…` (46 × 85 mm) after round 9, D-R12-161 … -165): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
+
+**Final round 9 binding (`6403f0a`, D-R12-165).** Current board and source SHA-256 in `stageD_budget.json`:
+`a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77`. D8/D121 part fields changed; all DC solves and lane B figures
+below are unchanged. Hot-plug electrical SHA `cda2664b…`, 2304 / 2304 pass, minimum −14.255 V
+(Simulation / Inference). Stage D uses the as-saved fills; lane B's refill caveat below still applies.
 
 **Round 9 lane B (R12F9-TRI-04, owner option (b) adopted by the orchestrator; `stageD_budget.json` re-run on board
 `86f015c2…`, which differs from `3ccb3a53…` only in R60 / R61's part fields, as-saved fills (K-fill-checked) with
@@ -93,7 +98,7 @@ R12F7-TRI-17; §3 below).
 the 1 % divider on top: **3.254–3.482 V initial, 3.224–3.516 V drift** (was 3.270–3.431 / 3.240–3.464 V from §7.5's
 V_FB alone; Calculation; the band at R12's VIN and its stacking with the resistors are Inference). The 3V3-based figures
 in the sections below (§2 Q124 VGS and PE4's load, §7 U6 VCC, §10 PORT_SENSE) are their boards' figures on the old
-window. On `3f9579fa…`, again on `f26dfef1…` and on the current `82eddc69…` (`stageD_budget.json` bound to it; the same at three
+window. On `3f9579fa…`, again on `f26dfef1…` and on `82eddc69…` (the round-7 `stageD_budget.json` was bound to it; the same at three
 decimals, margins 101.8 / 71.6 mV there), stage D gives U6 VCC
 ≥ 3.237 / 3.207 V at U2's 1 A (margins 102 / 72 mV over 3.135 V), Q124 VGS ≥ 2.761 V and PE4's load ≤ 3.925 mA (inside
 the 4 mA VOH row); `r12_windows.json` gives the cold screen at 10.2 kΩ (`cold_screen`, R12F6-TRI-01, D-R12-140).

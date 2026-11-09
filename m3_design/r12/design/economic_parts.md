@@ -33,7 +33,7 @@ deviation, D-R12-49, owner acceptance A-9; the effect of the 5–10 °C over-pea
 | U5 LPS28DFWTR (§3.2) | FAIL: Standard Only | **Resolved**, D-R12-52: MS5607-02BA03 (C97627, Economic) on R11's MS5611 land; 250 °C / 40 s accepted under D-R12-49. The KP215F1701 analog route of §3.5.3 was not taken |
 | D5 / D6 / D9 SS34 (§3.3) | FAIL: 250 °C | **Resolved by acceptance** (D-R12-49): SS34 kept; B340A not adopted |
 | D121 SRV05-4 (§3.4) | UNVERIFIED | **Kept** (Economic-flagged; D-R12-49); ProTek swap not made then. Round 9 lane S (owner-requested fee-exempt swap, 2026-11-08) made it: D121 is ProTek SRV05-4-P-T7 (C85364, Preferred Extended), §2.3 |
-| J430 472192001 (§3.4) | UNVERIFIED (250 °C, Inference) | **Kept** (D-R12-49); microSD stays |
+| J430 104031-0811 (§3.4) | UNVERIFIED | **Replaced the hinge by owner decision 2026-11-07 (D-R12-162)**: push-pull C585350, maker land SD-104031-001 rev B2; friction retention with tape backup. Reflow rating remains unread |
 | Other UNVERIFIED lines (§3.4) | UNVERIFIED | unchanged; all are JLC-flagged Economic; O-R12-02 |
 
 New cost (Live 2026-11-04T23:25:09Z, `r12_cost.json`): 2 boards $159.92 ($79.96 per board), 5 boards $260.08 ($52.02
@@ -154,7 +154,7 @@ Samsung (Datasheet, Samsung MLCC general spec served for every CL code): "Pb-fre
 | C57269 | SWPA4030S4R7MT (Sunlord) | L1 L400 L401 | 4 × 4, OK | Not found (image-only PDF, 2310251551_Sunlord-SWPA4030S4R7MT_C57269) | E | UNVERIFIED |
 | C3013496 | Bourns CRM2512-FX-2R00ELF | R134 | 2512, OK | Soldering profile "Peak 260 +5/−0 °C", MSL 1 (wmsc v2/lcsc 2206201745_BOURNS-CRM2512-FX-2R00ELF_C3013496) | E | OK |
 | C165948 | HRO TYPE-C-31-M-12 | J3 | USB-C 0.5 mm, OK | Not found (one-page drawing, 2205251630_…_C165948) | E | UNVERIFIED |
-| C164170 | Molex 472192001 microSD | J430 | 1.1 mm, OK | No datasheet at JLC/LCSC; molex.com refused. Distributor mirrors are summarised by search as "process temperature max **250 °C**, 3 s, 2 cycles" (**Inference**, not read on a Molex document) | E | UNVERIFIED (likely FAIL) |
+| C585350 | Molex 104031-0811 (1040310811), push-pull microSD | J430 | Maker land SD-104031-001 rev B2; 14 JLCEDA-numbered pads, contact pitch 1.10 mm, shell 9/10/13/14 GND, detect 11/12 NC; CPL match 14/14 (Measured, lane L) | Drawing read; no reflow rating. The old 472192001 250 °C search Inference does not establish this part's rating | E, Extended; Live 2026-11-09T00:10:43Z $0.6771 | UNVERIFIED |
 | C7430446 | Megastar ZX-SH1.0-4PWT | J400 J420 J440 | SH 1.0, OK | Not found (one-page drawing, 2306191203_Megastar-ZX-SH1-0-4PWT_C7430446) | E | UNVERIFIED |
 | C7430448 | Megastar ZX-SH1.0-6PWT | J9 J122 J410 | SH 1.0, OK | Not found (2306191203_Megastar-ZX-SH1-0-6PWT_C7430448) | E | UNVERIFIED |
 | C52993880 | DORABO DB125-3.5-2P-BK-S | J121 | THT (JLC "Wave Soldering", hand-soldered on Economic) | Not reflowed; no datasheet at JLC. Reflow limit does not apply | E | OK (THT); stock 186 (Live) |
@@ -243,7 +243,7 @@ Inference) — lower VF moves the PA6 window more.
 
 | Line | Proposal | Drop-in? |
 |---|---|---|
-| D121 SRV05-4 Semtech C13612 | **ProTek SRV05-4-P-T7, C85364** — "Solder reflow temperature 260–270 °C"; 500 W / 30 A (8/20 µs) vs Semtech 300 W / 12 A; pin configuration 1 I/O1, 2 GND, 3 I/O2, 4 I/O3, 5 REF, 6 I/O4 (Datasheet 1809192313_ProTek-Devices-SRV05-4-P-T7_C85364); SOT-23-6; JLC E, **Preferred Extended**, 14 764 / 9 422; $0.2349 at 2 and 5. That Semtech's pin order is the same is read from its pin figure (1-6 numbering); confirm on the land before swapping. Alternate: Littelfuse SRV05-4HTG-D C1975211 ($0.1699, "peak 260 +0/−5 °C", Extended) | yes |
+| Historical candidate D121 Semtech C13612 (replaced by D-R12-165) | **ProTek SRV05-4-P-T7, C85364** — "Solder reflow temperature 260–270 °C"; 500 W / 30 A (8/20 µs) vs Semtech 300 W / 12 A; pin configuration 1 I/O1, 2 GND, 3 I/O2, 4 I/O3, 5 REF, 6 I/O4 (Datasheet 1809192313_ProTek-Devices-SRV05-4-P-T7_C85364); SOT-23-6; JLC E, **Preferred Extended**, 14 764 / 9 422; $0.2349 at 2 and 5. That Semtech's pin order is the same is read from its pin figure (1-6 numbering); confirm on the land before swapping. Alternate: Littelfuse SRV05-4HTG-D C1975211 ($0.1699, "peak 260 +0/−5 °C", Extended) | yes |
 | D123 1N5819WS Hottech C191023 | No candidate with a stated rating in stock found (Vishay BAT54WS-E3-08 C917483 and Nexperia PMEG4005EJ C426868 datasheets give none). Keep; ask JLC / Hottech | – |
 | LED1 NCD0805R1 C84256 | KENTO KT-0805R C2295 (red, family of LED2 which states 260 °C; its own datasheet text is not extractable: **Inference**); Extended (+$3.07 per order). Land `M3_NCD0805R1_K1` vs `M3_KT0805Y_A1`: pin 1 polarity differs, so it needs LED2's footprint or a 180° rotation. Not recommended for cost | land / rotation |
 | Q120 Q121 AO3401A, Q122–Q124 AO3400A | **No swap (pyro / gate rule).** AOS datasheets give no reflow figure; obtain AOS's MSL / peak statement (aosmd.com product pages timed out). A third-party AO3400A sheet (GOOD-WORK) gives 260 +0/−5 °C (search summary, **Inference**, not AOS) | – |
@@ -251,7 +251,7 @@ Inference) — lower VF moves the PA6 window more.
 | D120 BAT54C Nexperia C37704 | Keep (Nexperia page 403). onsemi BAT54CLT1G C14308 is the same SOT-23 pin-out, but its datasheet also gives no figure: no gain | – |
 | U1 STM32H743VIH6, U3 W25Q128JVSIQ | No alternative; confirm on st.com / winbond.com. W25Q128 cites J-STD-20C Pb-free (260 °C class is an Inference) | – |
 | Y1 YXC, L1/L400/L401 Sunlord, J3 HRO USB-C, J400/J410/J420/J440/J9/J122 Megastar SH | No alternative found with a published rating on JLC (the LCSC copies are drawings). Ask the makers; these are JLC-flagged Economic | – |
-| J430 Molex 472192001 | Search-reported 250 °C limit (Inference). LCSC copies of the in-stock alternatives (Molex 1040310811 C585350, HRO TF-01A C91145, XKB XKTF-015-N C381082, all JLC E) are drawings with no rating either. Any of them is a **new land and placement**, not a drop-in (472192001 is a hinged socket). Options: confirm the rating on Molex PS-47219-001; or delete J430 (cost_study §1.2 lists microSD deletion, F5 secondary log) | no |
+| Historical candidate J430 Molex 472192001 (replaced by D-R12-162) | Search-reported 250 °C limit (Inference). LCSC copies of the in-stock alternatives (Molex 1040310811 C585350, HRO TF-01A C91145, XKB XKTF-015-N C381082, all JLC E) are drawings with no rating either. Any of them is a **new land and placement**, not a drop-in (472192001 is a hinged socket). Options: confirm the rating on Molex PS-47219-001; or delete J430 (cost_study §1.2 lists microSD deletion, F5 secondary log) | no |
 
 ### 3.5 Wider search for U4 and U5 within the Economic flag (follow-up, 2026-11-04T22:30–23:30Z)
 
@@ -397,3 +397,21 @@ feeder is $3.07 per code per order.
   extractable text. ST, Molex, Nexperia and AOS web pages refused or timed out from this session.
 - No JLC cart or Economic quote was run: whether JLC's cart actually refuses U4 / U5 on Economic, or offers to drop
   them, is an **Inference** from the "Standard Only" flag.
+
+## Round 9 parts record (2026-11-08, D-R12-162 / -164 / -165)
+
+Current board `a02a6181…`: J430 C585350 replaces the hinge; R60 C852472 and R61 C190095 are 0.1 %
+25 ppm/K. D8 C19077532 and D121 C85364 are Preferred fee-exempt. The §2 rows carry their sources and
+ratings. D121 leaves the A-9 / O-R12-02 reflow-Inference list: ProTek states 260–270 °C. D8's MSL is
+unstated (MSL 1 class Inference), and hongjiacheng brand-quality risk is an Inference. J430 and both
+precision resistors' reflow ratings remain UNVERIFIED. No other swap in the Basic/Preferred audit was
+adopted: D402's higher-leakage alternatives break the chatter budget, and the remaining candidates lack
+the required value, rating or same land (audit, 2026-11-08; D-R12-165).
+
+Parts + feeder **$63.41 / $44.99 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-09T00:10:43Z / 00:12:01Z on `a02a6181…`; 59 BOM lines, 183 parts, 20 charged codes).
+Minimum all-in **$170.51 / $276.59**, with U1-only X-ray; five qualifying parts give
+**$183.63 / $288.89–297.09** (Calculation / Inference: X-ray count/tier, 593 paste flashes and the
+$25.10 Live 90 mm PCB quote used for 85 mm without a re-quote). The two-board minimum is $0.51 over $170;
+the five-board range straddles $295. Stock 2026-11-09T00:10:04Z / 00:11:22Z: none short or thin.
+Confirm the quote, including D402 / Y1 X-ray fees. Arithmetic: stageE_relayout.md §5.

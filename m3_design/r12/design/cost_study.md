@@ -217,10 +217,10 @@ Decision: **K** keep, **D** delete, **M** merge into another code, **R** replace
 | 15 | C1848 | 1 µF 1206 50 V (C91 CAM_5V) | 0.062 | base | D | camera buck output caps cover it |
 | 16 | C161115 | 100 nF 0603 X7R automotive (C128 PYRO1_OUT) | 0.056 | expand | M → C307331 | 0402 50 V X7R basic; same value and rating |
 | 17 | C7519 | USBLC6-2SC6 (D4) | 0.180 | expand | D | bench-only USB; STM32 USB pins' own ESD (Inference). AVA: plain micro-USB ×3 |
-| 18 | C83849 | SMBJ12CA (D8) | 0.128 | expand | R → C78399 | SMAJ12CA/TR13 $0.046, 12 V / 19.9 V clamp, 400 W (margin cut from 600 W; Inference that the harness surge is below 400 W) |
+| 18 | C83849 | SMBJ12CA (D8), historical | 0.128 | expand | R → C19077532 (D-R12-165) | Current hongjiacheng SMAJ12CA $0.0341, Preferred fee-exempt, 12 V / 19.9 V clamp, 400 W. Hot-plug 2304/2304 unchanged (Simulation / Inference); replaces interim C78399 |
 | 19 | C85098 | B340A (D9, RAW_PROTECTED) | 0.083 | expand | R → C8678 | SS34 basic $0.035, 40 V 3 A Schottky; U9's VOUT,PLS ≥ −0.8 V (Datasheet) still needs a clamp |
 | 20 | C8591 | BAT54A (D120 cold pull-up) | 0.024 | expand | R → C37704 | BAT54C,215 Preferred Extended $0.015 (free on Economic); one diode used: pin 1 anode 3V3, pin 3 cathode PYRO1_COLD |
-| 21 | C13612 | SRV05-4 (D121) | 0.163 | expand | K | F4 names it explicitly |
+| 21 | C13612 | SRV05-4 (D121), historical | 0.163 | expand | R → C85364 (D-R12-165) | Current ProTek SRV05-4-P-T7 $0.2671, Preferred fee-exempt, same land/pin map, 260–270 °C reflow; F4 SRV05-4 retained |
 | 22 | C191023 | 1N5819WS (D123) | 0.012 | base | K (3) | + two VLOGIC diode-OR diodes (1 A, 40 V; VLOGIC load ≤ 0.37 A on USB, Calculation) |
 | 23 | C535146 | ESD103-B1-02EL ×9 | 0.231 | expand | K ×1 (D402) / D ×8 | ports keep 1 kΩ series (MCU clamp current ≤ (V_esd)/1 kΩ, Inference); D402 is required by F9's EN calculation |
 | 24 | C165948 | USB-C TYPE-C-31-M-12 (J3) | 0.187 | expand | K | C56112381 "TYPE-C 16PIN 2MD" $0.065 exists but brand/land unknown (Inference); saves only $0.12 |
@@ -228,7 +228,7 @@ Decision: **K** keep, **D** delete, **M** merge into another code, **R** replace
 | 26 | C189896 | SM05B-GHS-TB (J122) | 0.204 | expand | M → C52037408 | 6-pin body, pin 6 unused; saves a code |
 | 27 | C189893 | SM02B-GHS-TB (J400) | 0.433 | expand | M → C52037406 | 4-pin body, pins 3–4 unused (dry contact, 7 µA) |
 | 28 | C189895 | SM04B-GHS-TB ×3 | 0.654 | expand | R → C52037406 | GH1.25-4PWT $0.112, 4493 orderable |
-| 29 | C164170 | Molex 472192001 hinged microSD | 0.730 | expand | K | no cheaper hinged socket found (push-push TF-01A $0.19 risks ejection under boost, Inference). F5 allows deleting J430 + R460–R464 + C460/C461 (−$4.37 on 2 boards incl. fee) |
+| 29 | C164170 | Molex 472192001 hinged microSD, historical | 0.730 | expand | R → C585350 (D-R12-162) | Owner 2026-11-07 chose Molex 104031-0811 push-pull. The hinge's only reason was unverified push-push ejection under boost (Inference), not an F5 requirement. Current $0.6771; east–west insertion, card inside the edge, tape backup; F5 removable storage kept |
 | 30 | C57269 | SWPA4030S4R7MT 4.7 µH (L1) | 0.057 | expand | K ×3 | 3 bucks; TI Table 7-2 allows 2.2–4.7 µH (3.3 V) and 3.3–4.7 µH (5 V); Isat 2 A (listing) vs ≤ 1.3 A peak (Calculation, camera 1 A + ripple) |
 | 31 | C1329837 | SRP5030T 6.8 µH (L400) | 1.438 | expand | M → C57269 | |
 | 32 | C84256 | LED red | 0.014 | base | K | |
@@ -279,10 +279,12 @@ Decision: **K** keep, **D** delete, **M** merge into another code, **R** replace
 
 Result: 75 → 51 codes; Extended non-preferred 44 → 16; parts at 2 boards $128.94 (with min-buy) → $81.55.
 
-### 3.1 Recommended BOM (Live, 2026-11-04T01:14:47Z), Economic, 1 side
+### 3.1 Historical recommended BOM (Live, 2026-11-04T01:14:47Z), Economic, 1 side
 
-Every line with unit price at 2 and 5 boards, library and stock (columns: code, part, use, qty per board, SMT / THT,
-library, unit $ at 2 boards, unit $ at 5 boards, stock / orderable):
+Historical lines with unit price at 2 and 5 boards, library and stock (columns: code, part, use, qty per board, SMT / THT,
+library, unit $ at 2 boards, unit $ at 5 boards, stock / orderable). D8, D121 and J430 rows alone are
+updated to the current round-9 Live 2026-11-09T00:10:43Z cost / 00:10:04Z stock snapshot; original scenario
+totals below remain historical. Current totals and precision-divider additions are in §5:
 
 | Code | Part | Use | Qty | Mount | Library | Unit $ 2 b | Unit $ 5 b | Stock / orderable |
 |---|---|---|---|---|---|---|---|---|
@@ -296,16 +298,16 @@ library, unit $ at 2 boards, unit $ at 5 boards, stock / orderable):
 | C13585 | CL31A106KBHNNNE | 10uF 50V 1206 BAT_IN | 2 | smt | base | 0.1413 | 0.1413 | 3046918/2144424 |
 | C1538 | 0402B472K500NT | 4.7nF 0402 X7R U9 dVdT (C81) | 1 | smt | base | 0.0038 | 0.0038 | 1036290/926812 |
 | C21120 | CL10B224KA8NNNC | 220nF C87,C126 | 2 | smt | base | 0.0093 | 0.0093 | 928190/757393 |
-| C78399 | SMAJ12CA/TR13 | SMAJ12CA BAT_IN TVS (D8) | 1 | smt | expand | 0.0456 | 0.0456 | 207593/204515 |
+| C19077532 | hongjiacheng SMAJ12CA | D8; round 9 | 1 | smt | expand (Preferred) | 0.0341 | 0.0341 | 209512/204234 |
 | C8678 | SS34 | SS34 (D9) | 1 | smt | base | 0.0351 | 0.0351 | 3170866/2942536 |
 | C37704 | BAT54C,215 | BAT54C,215 pref-ext D120 (one diode used) | 1 | smt | expand (pref) | 0.0152 | 0.0152 | 440279/418255 |
-| C13612 | SRV05-4.TCT | SRV05-4 D121 | 1 | smt | expand | 0.1631 | 0.1631 | 70715/69632 |
+| C85364 | ProTek SRV05-4-P-T7 | D121; round 9 | 1 | smt | expand (Preferred) | 0.2671 | 0.2671 | 9319/3176 |
 | C191023 | 1N5819WS | 1N5819WS D123 + VLOGIC diode-OR x2 | 3 | smt | base | 0.0124 | 0.0124 | 3124765/2854796 |
 | C535146 | ESD103-B1-02EL E6327 | ESD103 D402 only | 1 | smt | expand | 0.2305 | 0.2305 | 191/184 |
 | C165948 | TYPE-C-31-M-12 | USB-C J3 | 1 | smt | expand | 0.1873 | 0.1873 | 167285/154583 |
 | C52037408 | GH1.25-6PWT | GH1.25-6PWT J9, J122 | 2 | smt | expand | 0.1393 | 0.1393 | 2645/2622 |
 | C52037406 | GH1.25-4PWT | GH1.25-4PWT J400,J410,J420,J440 | 4 | smt | expand | 0.1124 | 0.1124 | 4541/4493 |
-| C164170 | 472192001 | microSD hinged J430 | 1 | smt | expand | 0.7299 | 0.7299 | 6679/6277 |
+| C585350 | Molex 1040310811 | push-pull J430; round 9 | 1 | smt | expand | 0.6771 | 0.6771 | 48611/48257 |
 | C57269 | SWPA4030S4R7MT | 4.7uH L1 x3 bucks | 3 | smt | expand | 0.0571 | 0.0571 | 36675/35821 |
 | C84256 | NCD0805R1 | LED red | 1 | smt | base | 0.0135 | 0.0135 | 2356818/1999406 |
 | C2296 | KT-0805Y | LED yel | 1 | smt | base | 0.0149 | 0.0149 | 605875/538736 |
@@ -404,3 +406,21 @@ on Economic each THT joint costs $0.0164 + $3.58/order, and R10's DB125 codes ad
 - Joint fees, shipping, tax, attrition and the owner's C84 hand-fit are excluded from every total (same for both sides).
 - R11's 5-board figure: $482.91 without JLC minimum purchases, $489.13 with them.
 - No layout exists for the recommended board; the length is an area estimate, not a placement.
+
+## 5. Current round 9 parts and cost (D-R12-162 / -164 / -165)
+
+The scenario tables above are historical; the three replaced component rows explicitly carry the round-9 date.
+Current additions: R60 YAGEO RT0402BRD07100KL **C852472**, 100k 0.1 % 25 ppm/K, **$0.0256**;
+R61 RT0402BRD0710KL **C190095**, 10k 0.1 % 25 ppm/K, **$0.0246**, sharing R401's line
+(Live 2026-11-09T00:10:43Z). Both keep the 0402 land; reflow rating unread (UNVERIFIED).
+D8 / D121 are fee-exempt Preferred, on the same lands with the ratings in economic_parts §2.3.
+D8 MSL unstated (MSL 1 class Inference), hongjiacheng brand-quality risk Inference; ProTek D121 reflow
+260–270 °C removes its former reflow Inference. No other Basic/Preferred swap was adopted.
+
+Parts + feeder **$63.41 / $44.99 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-09T00:10:43Z / 00:12:01Z on `a02a6181…`; 59 BOM lines, 183 parts, 20 charged codes).
+Minimum all-in **$170.51 / $276.59**, with U1-only X-ray; five qualifying parts give
+**$183.63 / $288.89–297.09** (Calculation / Inference: X-ray count/tier, 593 paste flashes and the
+$25.10 Live 90 mm PCB quote used for 85 mm without a re-quote). The two-board minimum is $0.51 over $170;
+the five-board range straddles $295. Stock 2026-11-09T00:10:04Z / 00:11:22Z: none short or thin.
+Confirm the quote, including D402 / Y1 X-ray fees. Arithmetic: stageE_relayout.md §5.
