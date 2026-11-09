@@ -373,28 +373,28 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C13612"
+		(property "LCSC" "C85364"
 			(at 58.42 81.28 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "SEMTECH"
+		(property "Manufacturer" "ProTek Devices"
 			(at 58.42 81.28 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "SRV05-4.TCT"
+		(property "Manufacturer Part" "SRV05-4-P-T7"
 			(at 58.42 81.28 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_1809192313_ProTek-Devices-SRV05-4-P-T7_C85364.pdf"
 			(at 58.42 81.28 0)
 			(hide yes)
 			(effects

@@ -1,5 +1,5 @@
 {
- "board_sha256": "86f015c208c9d352eaa993db1d3a33fcfa2f46b68048b686e509749bf9488254",
+ "board_sha256": "a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77",
  "dc_solves": {
   "3V3_L1_to_R14": {
    "cells": 272852,
@@ -2472,7 +2472,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "86f015c208c9d352eaa993db1d3a33fcfa2f46b68048b686e509749bf9488254",
+ "source_board_sha256": "a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,

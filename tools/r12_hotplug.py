@@ -7,10 +7,13 @@ curves, the convergence, sensitivity, no-clamp, retained-output and C88-topology
   * Stack-up: R12 is four layers (F / In1 GND / In2 3V3 + islands / B, D-R12-22), so R10's own four-layer extractor
     (r10_hotplug.extract with tools/dc_solve.stackup) runs on it: R12's BAT_IN and BAT_DAMP copper is F.Cu track only
     (no pour; the extractor refuses one). Microstrip references as R10: 'near' = In1 or In2, 'gnd' = In1.
-  * Parts (R12_DECISIONS D-R12-09, -17): D8 is SMAJ12CA/TR13 (C78399, 400 W) in place of SMBJ12CA (600 W): the same
+  * Parts (R12_DECISIONS D-R12-09, -17): D8 is SMAJ12CA (400 W) in place of SMBJ12CA (600 W): the same
     12 V standoff, VBR 13.3-14.7 V and 19.9 V clamp class, so R10's soft-knee TVS model and its VBR corners are kept
     (Inference: the model's 0.2 ohm asymptotic slope is stiffer than the SMAJ12CA's (19.9 - 14.7) V / 20.1 A = 0.26 ohm;
-    the no-clamp control and the --no-clamp-all run bound the result without any clamp). R167 is the 0402 10k (C25744).
+    the no-clamp control and the --no-clamp-all run bound the result without any clamp). Since round 9 lane S the part
+    is hongjiacheng SMAJ12CA (C19077532, JLC Preferred) in place of Brightking SMAJ12CA/TR13 (C78399): its datasheet row
+    is the same figure for figure (VRWM 12 V, VBR 13.3-14.7 V at 1 mA, VC 19.9 V at 20.1 A, IR 1 uA, 400 W 10/1000 us),
+    so the model is unchanged. R167 is the 0402 10k (C25744).
     U9 is TPS259470ARPWR (C3662799): the A variant shares the L variant's EC table and pin-out (TI SLVSFC9C device
     table; only the fault response, auto-retry vs latch-off, differs), so the OUT net role check accepts it.
     C80 / C96 / C89 / C95 / C88 / R166 / R92 are R10's codes. R12's discharge inventory adds C1538 (4.7 nF 0402 X7R, C81)
@@ -106,7 +109,7 @@ base = _load()
 ROOT = HERE.parent
 DESIGN = ROOT / 'm3_design/r12/design'
 MODEL_PARTS = dict(base.MODEL_PARTS, C79=base.MODEL_PARTS['C89'],
-                   D8=('SMAJ12CA', 'C78399', 'SMAJ12CA/TR13', ('BAT_IN', 'GND')),
+                   D8=('SMAJ12CA', 'C19077532', 'SMAJ12CA', ('BAT_IN', 'GND')),
                    R167=('10k 1%', 'C25744', '0402WGF1002TCE', ('BAT_IN', 'GND')))
 DISCHARGE_PARTS = dict(base.DISCHARGE_PARTS, **{'0402B472K500NT': (.0047, 'C1538'),
                                                 '0402CG150J500NT': (.000015, 'C1548'),

@@ -1,7 +1,7 @@
 {
   "schema": 3,
-  "board_sha256": "86f015c208c9d352eaa993db1d3a33fcfa2f46b68048b686e509749bf9488254",
-  "electrical_sha256": "563123212d0c79c0a09f1596cd5d3dbb7ff47551988ee48e9e2b4f863bbd115c",
+  "board_sha256": "a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77",
+  "electrical_sha256": "cda2664bfe9253696cafb7373d941d5dde6ed9722df34ffb1e86966b45dcb26e",
   "parts": {
     "C10": {
       "value": "22uF 25V X5R 10%",
@@ -2385,9 +2385,9 @@
       "value": "SMAJ12CA",
       "footprint": "D_SMA",
       "fields": {
-        "LCSC": "C78399",
-        "Manufacturer": "Brightking",
-        "Manufacturer Part": "SMAJ12CA/TR13"
+        "LCSC": "C19077532",
+        "Manufacturer": "hongjiacheng",
+        "Manufacturer Part": "SMAJ12CA"
       },
       "pads": [
         {

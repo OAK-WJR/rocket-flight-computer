@@ -11883,7 +11883,7 @@
 				)
 			)
 		)
-		(property "Datasheet" ""
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_1809192313_ProTek-Devices-SRV05-4-P-T7_C85364.pdf"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11905,7 +11905,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C13612"
+		(property "LCSC" "C85364"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11917,7 +11917,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "SEMTECH"
+		(property "Manufacturer" "ProTek Devices"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -11929,7 +11929,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "SRV05-4.TCT"
+		(property "Manufacturer Part" "SRV05-4-P-T7"
 			(at 0 0 0)
 			(layer "F.Fab")
 			(hide yes)
@@ -26328,7 +26328,7 @@
 				)
 			)
 		)
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Brightking-SMAJ12CA-TR13_C78399.pdf"
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2403232245_hongjiacheng-SMAJ12CA_C19077532.pdf"
 			(at 0 0 90)
 			(unlocked yes)
 			(layer "F.Fab")
@@ -26354,7 +26354,7 @@
 				)
 			)
 		)
-		(property "LCSC" "C78399"
+		(property "LCSC" "C19077532"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -26366,7 +26366,7 @@
 				)
 			)
 		)
-		(property "Manufacturer" "Brightking"
+		(property "Manufacturer" "hongjiacheng"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)
@@ -26378,7 +26378,7 @@
 				)
 			)
 		)
-		(property "Manufacturer Part" "SMAJ12CA/TR13"
+		(property "Manufacturer Part" "SMAJ12CA"
 			(at 0 0 90)
 			(layer "F.Fab")
 			(hide yes)

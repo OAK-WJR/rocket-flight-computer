@@ -54,22 +54,6 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C13612|SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL": {
-   "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
-   "easyeda": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR",
-   "easyeda_proxy": null,
-   "theta": 90,
-   "offset": [
-    0.0,
-    -0.0
-   ],
-   "residual_mm": 0.2,
-   "next_best_mm": 2.309,
-   "pads_ours": 6,
-   "pads_easyeda": 6,
-   "pads_matched": 6,
-   "status": "OK"
-  },
   "C15127|SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR": {
    "footprint": "SOT-23-3_L2.9-W1.3-P1.90-LS2.4-BR",
    "easyeda": "SOT-23_L2.9-W1.3-P1.90-LS2.4-BR",
@@ -193,6 +177,22 @@
    ],
    "residual_mm": 0.003,
    "next_best_mm": 0.61,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
+  "C19077532|D_SMA": {
+   "footprint": "D_SMA",
+   "easyeda": "SMA_L4.3-W2.6-LS5.0-BI",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.2,
+   "next_best_mm": 2.973,
    "pads_ours": 2,
    "pads_easyeda": 2,
    "pads_matched": 2,
@@ -807,22 +807,6 @@
    "pads_matched": 8,
    "status": "OK"
   },
-  "C78399|D_SMA": {
-   "footprint": "D_SMA",
-   "easyeda": "SMA_L4.4-W2.6-LS5.0-BI",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    -0.0,
-    0.0
-   ],
-   "residual_mm": 0.0,
-   "next_best_mm": 2.828,
-   "pads_ours": 2,
-   "pads_easyeda": 2,
-   "pads_matched": 2,
-   "status": "OK"
-  },
   "C84256|M3_NCD0805R1_K1": {
    "footprint": "M3_NCD0805R1_K1",
    "easyeda": "LED0805-RD",
@@ -853,6 +837,22 @@
    "pads_ours": 2,
    "pads_easyeda": 2,
    "pads_matched": 2,
+   "status": "OK"
+  },
+  "C85364|SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL": {
+   "footprint": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+   "easyeda": "SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BR",
+   "easyeda_proxy": null,
+   "theta": 90,
+   "offset": [
+    0.0,
+    -0.0
+   ],
+   "residual_mm": 0.2,
+   "next_best_mm": 2.309,
+   "pads_ours": 6,
+   "pads_easyeda": 6,
+   "pads_matched": 6,
    "status": "OK"
   },
   "C8678|D_SMA": {

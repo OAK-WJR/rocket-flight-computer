@@ -1909,28 +1909,28 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C78399"
+		(property "LCSC" "C19077532"
 			(at 45.72 101.6 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer" "Brightking"
+		(property "Manufacturer" "hongjiacheng"
 			(at 45.72 101.6 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "SMAJ12CA/TR13"
+		(property "Manufacturer Part" "SMAJ12CA"
 			(at 45.72 101.6 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Brightking-SMAJ12CA-TR13_C78399.pdf"
+		(property "Datasheet" "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2403232245_hongjiacheng-SMAJ12CA_C19077532.pdf"
 			(at 45.72 101.6 0)
 			(hide yes)
 			(effects

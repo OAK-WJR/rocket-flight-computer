@@ -172,12 +172,19 @@
    "footprint": "rocket:IND-SMD_L4.0-W4.0",
    "source": "D-R12-06 / -07 / -08: 4.7 uH SWPA4030 for all three bucks"
   },
-  "C78399": {
-   "Manufacturer": "Brightking",
-   "Manufacturer Part": "SMAJ12CA/TR13",
-   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Brightking-SMAJ12CA-TR13_C78399.pdf",
+  "C19077532": {
+   "Manufacturer": "hongjiacheng",
+   "Manufacturer Part": "SMAJ12CA",
+   "Datasheet": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2403232245_hongjiacheng-SMAJ12CA_C19077532.pdf",
    "footprint": "rocket:D_SMA",
-   "source": "D-R12-09: SMAJ12CA 400 W TVS"
+   "source": "D-R12-09 / round 9 lane S: SMAJ12CA 400 W TVS, JLC Preferred Extended (fee-exempt), Live 2026-11-08; the datasheet's SMAJ12CA row (VRWM 12 V, VBR 13.3-14.7 V at 1 mA, VC 19.9 V at IPP 20.1 A, IR 1 uA, 400 W 10/1000 us, 260 C reflow) equals Brightking SMAJ12CA/TR13 (C78399) figure for figure; DO-214AC (https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_hongjiacheng-smaj12ca_C19077532.html)"
+  },
+  "C85364": {
+   "Manufacturer": "ProTek Devices",
+   "Manufacturer Part": "SRV05-4-P-T7",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_1809192313_ProTek-Devices-SRV05-4-P-T7_C85364.pdf",
+   "footprint": "rocket:SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
+   "source": "F4 SRV05-4 / round 9 lane S: ProTek SRV05-4 (05150.R16), JLC Preferred Extended (fee-exempt), Live 2026-11-08; pins 1 I/O1, 2 GND, 3 I/O2, 4 I/O3, 5 REF, 6 I/O4 as Semtech's; VWM 5 V, VBR >= 6 V, VC 12.0 V at 1 A / 15.0 V at 5 A, 500 W / 30 A 8/20 us, ESD 15 kV air / 8 kV contact, reflow 260-270 C (https://www.lcsc.com/product-detail/esd-and-surge-protection-tvs-esd_protek-devices-srv05-4-p-t7_C85364.html)"
   },
   "C8678": {
    "Manufacturer": "MDD(Microdiode Semiconductor)",
@@ -417,10 +424,15 @@
     "3": "PYRO1_COLD"
    }
   },
+  "D121": {
+   "lcsc": "C85364",
+   "value": "SRV05-4",
+   "why": "Round 9 lane S (owner-requested fee-exempt swap): Semtech SRV05-4.TCT (C13612, Extended, charged) -> ProTek SRV05-4-P-T7 (C85364, Preferred Extended), same SOT-23-6 land and pin map (pin 5 REF to 3V3, pin 2 GND, I/O1-4 on pins 1/3/4/6); equal or better clamp and surge ratings, reflow 260-270 C"
+  },
   "D8": {
-   "lcsc": "C78399",
+   "lcsc": "C19077532",
    "value": "SMAJ12CA",
-   "why": "D-R12-09: SMBJ12CA 600 W -> SMAJ12CA 400 W, same 12 V / 19.9 V class"
+   "why": "D-R12-09: SMBJ12CA 600 W -> SMAJ12CA 400 W, same 12 V / 19.9 V class. Round 9 lane S: Brightking SMAJ12CA/TR13 (C78399, Extended, charged) -> hongjiacheng SMAJ12CA (C19077532, Preferred Extended), same SMA land and the same VBR 13.3-14.7 V / VC 19.9 V / 400 W figures"
   },
   "D9": {
    "lcsc": "C8678",
