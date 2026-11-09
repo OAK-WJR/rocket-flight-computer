@@ -412,6 +412,6 @@ Parts + feeder **$63.41 / $44.99 per board at 2 / 5 boards**, against the $84.41
 2026-11-09T00:10:43Z / 00:12:01Z on `a02a6181…`; 59 BOM lines, 183 parts, 20 charged codes).
 Minimum all-in **$170.51 / $276.59**, with U1-only X-ray; five qualifying parts give
 **$183.63 / $288.89–297.09** (Calculation / Inference: X-ray count/tier, 593 paste flashes and the
-$25.10 Live 90 mm PCB quote used for 85 mm without a re-quote). The two-board minimum is $0.51 over $170;
+$25.10 Live 90 mm PCB quote used for 83 mm without a re-quote (round-10 `a1e65bb4…`, BOM and 593 paste flashes unchanged)). The two-board minimum is $0.51 over $170;
 the five-board range straddles $295. Stock 2026-11-09T00:10:04Z / 00:11:22Z: none short or thin.
 Confirm the quote, including D402 / Y1 X-ray fees. Arithmetic: stageE_relayout.md §5.

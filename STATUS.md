@@ -2,39 +2,43 @@
 
 > Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. On this branch (`m3-assy-r10`) the repository holds the M3-ASSY-R10 KiCad project (a CAD candidate, not accepted), built from the hash-pinned R9 inputs by `m3_design/r10_build.sh`; R9's project (built from the committed, owner-accepted R8 sources, commit 9c8179b, by `m3_design/r9_build.sh`) stays on branch `m3-assy-r9` (R8 came from R7 by `m3_design/r8_build.sh`, R7 from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R8's project stays on branch `m3-assy-r8` (9c8179b) and R7's on `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-11-08 (R12; R11 candidate sections below; R10 candidate section as of 2026-11-02; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
+Last updated 2026-11-09 (R12; R11 candidate sections below; R10 candidate section as of 2026-11-02; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
-## R12 candidate: M3-ASSY-R12 (one-sided four-layer Economic PCBA, 46 × 85 mm; NOT accepted)
+## R12 candidate: M3-ASSY-R12 (one-sided four-layer Economic PCBA, 46 × 83 mm; NOT accepted)
 
-**Status (2026-11-08).** PCB `ae22387d…` after round 9 (D-R12-161 … -169; full hash in
+**Status (2026-11-09).** PCB `a1e65bb4…` after round 10 fixes (D-R12-170 … -173; full hash in
 [docs/M3_R12.md](docs/M3_R12.md#current-state)). Not accepted, nothing ordered; R9 stays accepted.
 Owner items: [R12_VALIDATION.md](docs/R12_VALIDATION.md); harness: [R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md).
 
 | Kind | Verified (with its record) | Not verified |
 |---|---|---|
-| Software tests and CAD gate | Lane S `6403f0a`: two byte-identical builds, DRC / parity / unconnected 0, check_r12 all OK, route_check 0 failing / 2 allowlisted, fit / legends / fill OK, fab manifest bound. S-10 80 victims, 194 exceptions. Lane B: 39 stage-D tests. Full tools/check.sh exit 0 reported by each fix lane | Records lane static checks only; no KiCad/check.sh run. Current board has not had a review round |
-| Simulation and calculation | Hot-plug 2304 / 2304, −14.255 V minimum (Simulation / Inference). Fire loop 4.726884 Ω, four-stall 1.249952 A; return 2.672 mΩ (D-R12-169). PA6 0.1 % divider / 0.425–0.455 V band: drift VLOGIC 4.652–5.029 V, healthy margin +0.059 V, trip-bottom +0.051 V; hold-up 0.487–1.853 ms unshed. U400 VIN 5.5066 / 5.4398 V; U403 5.554 V, camera 4.91 / 5.01 V. Dummy-fire bound 0.2677 V. Calculation / Inference: 70 °C copper, pack/load, SS34 VF, drift, foldback. Ports ≥ 4.5648 V at 0.561 A while U400 VIN ≥ VO/0.75 | Native refill did not reproduce saved fills; Stage D uses as-saved fills, K-fill passes (D-R12-164). No physical confirmation; READY calibration, signal integrity and module supply range open |
+| Software tests and CAD gate | Lane P `b20de30`: two byte-identical builds, DRC / parity / unconnected 0, check_r12 all OK, route_check 0 failing / 2 allowlisted, fit / legends / fill OK, fab manifest bound. S-10 80 connected victims plus 45 unconnected IC-pin nets, 199 exceptions. Lane A `3d96eb5`: 42 stage-D tests. Full tools/check.sh exit 0 reported by each fix lane | Records lane static checks only; no KiCad/check.sh run. Current board has not had a review round |
+| Simulation and calculation | Hot-plug 2304 / 2304, −14.255 V minimum (Simulation / Inference). Fire loop 4.726884 Ω, four-stall 1.249586 A at 5.71921 V; return 2.672 mΩ (D-R12-171 / -172). PA6 0.1 % divider / 0.425–0.455 V band: drift VLOGIC 4.6274–5.0546 V, healthy margin +0.0251 V, trip-bottom +0.0264 V; hold-up 0.471–1.897 ms unshed. U400 VIN 5.4964 / 5.4157 V; U403 5.5462 V, camera 4.9016 / 4.9996 V. Dummy-fire bound 0.26770 V. Calculation / Inference: 70 °C copper, pack/load, SS34 VF, PA6 leakage in analog mode, drift, foldback. R12 chatter bench rule under 6.9 ms (D-R12-170). Ports ≥ 4.56552353384164 V at 0.561 A while U400 VIN ≥ VO/0.75 | Native refill did not reproduce saved fills; Stage D uses as-saved fills, K-fill passes (D-R12-164). No physical confirmation; READY calibration, signal integrity and module supply range open |
 | Datasheets | ProTek D121 260–270 °C reflow; hongjiacheng D8 260 (+0/−5) °C (D-R12-165). Molex 104031-0811 land drawing read | J430 reflow UNVERIFIED; AN2606, FXLS90322 dual-channel and LSM6DSVE reads open (O-R12-02 / -21 / -23) |
-| Physical, electrical, firmware | None | No firmware; JLC DFM not queried; 85 mm vehicle fit unverified |
+| Physical, electrical, firmware | None | No firmware; JLC DFM not queried; 83 mm vehicle fit unverified |
 
 Parts + feeder **$63.41 / $44.99 per board at 2 / 5 boards**, against the $84.41 cap (Live
 2026-11-09T00:10:43Z / 00:12:01Z on `a02a6181…`; 59 BOM lines, 183 parts, 20 charged codes).
 Minimum all-in **$170.51 / $276.59**, with U1-only X-ray; five qualifying parts give
 **$183.63 / $288.89–297.09** (Calculation / Inference: X-ray count/tier, 593 paste flashes and the
-$25.10 Live 90 mm PCB quote used for 85 mm without a re-quote). The two-board minimum is $0.51 over $170;
+$25.10 Live 90 mm PCB quote used for 83 mm without a re-quote). The two-board minimum is $0.51 over $170;
 the five-board range straddles $295. Stock 2026-11-09T00:10:04Z / 00:11:22Z: none short or thin.
 Confirm the quote, including D402 / Y1 X-ray fees. Arithmetic: stageE_relayout.md §5.
 
-**Round 9 fixes and owner decisions.** Round 9 reviewed `418e5ea9…` (four Opus and five Astra lenses) and found **14 real errors
+**Rounds 9–10 fixes and decisions.** Round 9 reviewed `418e5ea9…` (four Opus and five Astra lenses) and found **14 real errors
 (0 Critical / 2 Major / 12 Minor)**. D-R12-161 … -166 record the fixes: every IC pin in I-5,
 direction/rating guards, probe clearances, doubled power taps, 70 °C copper and the dummy-fire bound,
 plus the owner-requested push-pull socket / 85 mm layout, the orchestrator's 0.1 % PA6 divider and
 0.425–0.455 V band, the Preferred D8 / D121 swaps and lane C's J430 local bypass (D-R12-169).
-Current board **`ae22387d…`**, 46 × 85 mm, is unreviewed. Lane C reports two identical builds and `tools/check.sh` exit 0.
+Round 10 reviewed `ae22387d…` (four Opus and five Astra lenses) and found **16 Minor real errors,
+0 Critical / 0 Major** (R12F10-TRI-01 … -16): **CLEAN under D-R12-167, the first of the clean pair**.
+The fixes produce **`a1e65bb4…`, 46 × 83 mm** (D-R12-170 … -173). Lane P (`b20de30`) reports two
+byte-identical builds and the full gate exit 0; lane A (`3d96eb5`) reports the full gate exit 0 and
+42 stage-D tests passing. Round 11 must review the fixed board; it has not run.
 
 **Owner stop rule (2026-11-08, D-R12-167):** stop after two consecutive full rounds with zero Critical
 and zero Major real errors. Fix Minor real errors each round; they do not reset the count. This supersedes
-the zero-real-error rule for R12. Round 9 had two Majors, so rounds 10 and 11 are the first possible pair.
+the zero-real-error rule for R12. Round 10 is clean and is the first of the pair; round 11 is next on `a1e65bb4…`.
 Then obtain JLC DFM and a quote; the owner orders. The severity scale is in D-R12-167.
 Judge layout against both BPS.space AVA and LEVIA-H7 (owner, D-R12-168).
 

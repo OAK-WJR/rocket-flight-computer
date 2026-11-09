@@ -674,8 +674,9 @@ def en_figures(four):
         note='the worse of the 1 % and drift cases (the drift case in every figure): R12\'s bound convention '
              '(r12_budget.TOL, R12F8-TRI-06)')
     return dict(by_case=cases, bound=bound, four_stall_BAT_IN_V=four,
-                bench_rule='J400 chatter (D-R25-01): total open time < 7 ms in every sliding 100 ms window, U9 on for '
-                           'the whole run at the four-stall BAT_IN',
+                bench_rule='J400 chatter, R12 pass rule (D-R12-170): total open time < 6.9 ms in every sliding 100 ms '
+                           'window, U9 on for the whole run at the four-stall BAT_IN (tightened from D-R25-01\'s < 7 ms '
+                           'line to cover fire.pack_load_sensitivity)',
                 label='Calculation / Inference (C87 X7R bias allowance, leakages at their datasheet bounds; the resistor '
                       'drift case Inference)')
 

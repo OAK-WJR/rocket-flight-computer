@@ -1,13 +1,77 @@
 # R12 stage D: electrical analyses on R12's copper (2026-11-05)
 
-**Superseded for the current board by `stageE_relayout.md` §4** (the AVA re-layout, 46 × 90 mm, 46 × 88 mm since
-D-R12-144, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` since R12F4-TRI-06, `68e6b650…` since the AVA polish pass D-R12-121 … -124,
-`14b82d39…` (lane P) and `6e874d4e…` (lane P2) in the round-5 fix pass R12F5-TRI-01 / -06 / -21, 2026-11-06, and
-`3f9579fa…` (lane P), `6a1c99e0…` (lane P3) and `f26dfef1…` (lane P4) in the round-6 fix pass D-R12-134 …
--143, 2026-11-07; R12F6-TRI-10; and `82eddc69…` in round 7, `418e5ea9…` in round 8, `a02a6181…` after round 9 (D-R12-161 … -165) and current `ae22387d…` (46 × 85 mm, D-R12-169): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
-corners and U6's supply changed. This file records the 100 mm boards as they were.
+**Current board: `a1e65bb4…`, 46 × 83 mm (D-R12-170 … -173).** Current electrical figures and
+provenance are in `stageE_relayout.md` §4 and `docs/M3_R12.md` “Power”; current costs in stageE §5.
+The round-10 summary below supersedes the dated analyses that follow. Those blocks retain their own
+board hashes, inputs and former bench lines as history; the operative R12 chatter line is **under
+6.9 ms total open time in every sliding 100 ms window** (D-R12-170).
 
-**Lane C binding (D-R12-169).** Current board and source SHA-256 in `stageD_budget.json`:
+**Current round 10 (`a1e65bb4…`, 46 × 83 mm; D-R12-170 … -173).** Stage D's board and source
+SHA-256 both equal `a1e65bb4109ba5db7821cc1ec8b1ae6c3db88d5f9bd1f1700eb0cb182721e59a`, using the
+as-saved fills. Lane P re-ran the DC solves and hot-plug; lane A changed the PA6 leakage and branch-current
+model, leaving those DC solves unchanged. Hot-plug electrical SHA `ebc5fa57…`: **2304 / 2304 pass**,
+minimum **−14.255 V**, every result row unchanged (Simulation / Inference). Lane A reports 42 stage-D
+tests and the full gate passing; lane P reports two byte-identical builds (Measured, reports).
+
+- **PA6 during a fire (Calculation / Inference; D-R12-164, -172).** R60 100k / R61 10k are
+  0.1 % 25 ppm/K (C852472 / C190095); the band stays **0.425–0.455 V**. The model includes PA6's
+  ±250 nA FT_xx leakage through R60 ∥ R61 (DS12110 Rev 8 Table 60; applying the digital-input row
+  to analog mode is an Inference), U9 RON **45 mΩ** maximum, 70 °C feed/copper bounds and D5's
+  self-consistent current. SS34 VF 0.25–0.45 V, pack/load, temperature and drift remain Inference.
+  Healthy margins to the trip top, nominal / initial / drift: **+0.0497 / +0.0405 / +0.0251 V**.
+  Shorted-match / match-and-leads margins at drift: **−0.1264 / −0.1708 V**.
+  Four-stall VLOGIC ranges: healthy **5.0797–5.2797 V**, match shorted **4.9282–5.1282 V**,
+  match and leads shorted **4.8838–5.0838 V**. Trip windows, nominal / initial / drift:
+  **4.650–5.030 / 4.6415–5.0392 / 4.6274–5.0546 V**; trip bottom above U9 turn-off through D5:
+  **+0.0979 / +0.0894 / +0.0264 V**. Drift band room is **0.4226–0.4573 V (34.7 mV)**;
+  the adopted band fits. O-R12-17's trip-bottom calculation stays closed; READY calibration remains open.
+  Rule 4 logs any trip beginning during a commanded fire without battery-loss shutdown, shed,
+  state change or pulse truncation.
+
+Fire loop **4.726884 Ω**, four-stall **1.249586 A at 5.71921 V**, margin **11.07 %** over 1.125 A;
+GND return **2.672 mΩ** (Calculation / Inference: pack/load and hot factors; DC return Calculation).
+Q120 / Q121 VGS **−4.5675 / −4.5584 V**. D5 current equals U2 input current **0.4380 A**;
+D5 loss **0.1971 W**, other converter load **13.015 W**. Healthy converter current **2.3523 A**,
+BAT_IN → D5 drop **0.1861 V**, RAW share **0.0572 V** (Calculation / Inference).
+
+- **EN timing and chatter (Calculation / Inference; D-R12-150, -156, -170, -172).** At four-stall
+  BAT_IN **5.71921 V**, single drop-out immunity is **8.116 / 7.595 ms** initial / drift; the
+  worst-corner periodic limit is **7.548 / 7.072 ms**. C87's X7R allowance, leakages and drift are Inference.
+  R12's bench pass rule is **under 6.9 ms total open time in every sliding 100 ms window**, recorded at
+  **≥ 10 kS/s under flight-level vibration**, with **U9 on for the whole run at 5.72 V** (D-R12-170).
+  The retained converter-power-at-BAT_IN convention gives the figures above. Charging the pack the full
+  solver current, including U9 and copper losses, gives **5.7073 V / 1.24699 A** and an EN limit of
+  **6.984 ms** at drift (`fire.pack_load_sensitivity`, Calculation / Inference), below the former 7 ms
+  line; the 6.9 ms line covers both conventions with margin. This is a Minor stacked-corner margin,
+  with no circuit change. The JSON's `en.bench_rule` and `margin_over_7ms_line_ms` retain the old
+  7 ms comparison; D-R12-170 supersedes the procedural string.
+  Turn-on remains **30.3–131.5 ms initial / 29.9–135.9 ms drift** over C87 0.72–1.265 × 220 nF.
+
+PA6-trip hold-up unshed, nominal / initial / drift: **0.486–1.854 / 0.480–1.870 / 0.471–1.897 ms**;
+shed at drift **1.410–3.545 ms**. Battery-break unshed **2.226–6.099 ms**, unchanged
+(Calculation / Inference: constant-power loads, D5 VF, C84 allowance, 3.8 V endpoint, leakage, drift).
+
+RAW DC solves at 20 °C: U9 → U400 / D5 / U403 **74.58 / 25.93 / 15.67 mΩ** (Calculation on CAD).
+Shared B trunk budget **1.0680 A / 4.69 °C** IPC rise; U400 feed budget drop **45.78 mV**,
+design **147.49 mV** unchanged (Calculation / Inference: allocations, temperature, IPC upper bound).
+U400 VIN **5.4964 / 5.4157 V** at four stalls / 6.0 V pack; 580 kHz held outputs **4.464 / 4.749 V**
+and **4.398 / 4.678 V**, 200 kHz **5.106 / 5.204 V** and **5.030 / 5.127 V** (310 / 220 ns).
+U403 VIN **5.5462 V**, drop **0.1730 V**, camera-pin estimate **4.9016 / 4.9996 V**
+(Calculation / Inference: pack/load, 70 °C copper, foldback, DCR/hot FETs, harness/transients).
+The 75 % recommended-duty conditions remain; omitted losses can lower the camera estimate.
+
+Ports at 0.561 A, 20 °C copper: drift J410 / J420 / J440 minima **4.566698655060775 /
+4.567065345619674 / 4.56552353384164 V** (`stageD_budget.json` `port_supply`; Calculation / Inference:
+module floor, regulator drift, load; harness excluded). L400-to-port resistances **6.954 / 6.301 /
+9.049 mΩ**, sense **33.31 mΩ** (Calculation on CAD); U400 OUT F copper **5.1 mm** (Measured).
+U6 VCC drift minimum **3.20722 V** at 1 A (Calculation / Inference), L1 → U6 **12.43 mΩ**.
+Dummy-fire upper bound **0.26770 V** at R134 **1.9666 Ω**, current **1.5259032555635084 A**,
+below 0.4 V (Calculation / Inference: hot factors, pack/load, copper model, drift).
+
+**Historical analyses follow.** “Current” / “final” within a dated block means that block's board,
+not `a1e65bb4…`; those figures must not be used as the current qualification record.
+
+**Historical lane C binding (D-R12-169, `ae22387d…`).** Then-current board and source SHA-256:
 `ae22387d35308f877b4065e40b39b3c3f379acc3d500b6835b82e16c4fde9648` (as-saved fills, `--source-board` the board itself). C460 / C461 moved and two
 west-strip 3V3 vias and two GND vias went, so only plane solves moved: GND return Q124 → J1.2 **2.672 mΩ** (was 2.670),
 3V3 L1 → U6 12.326 mΩ (was 12.337), R14 → U6 12.517 mΩ (was 12.528), L1 → R14 unchanged; U6's minimum VCC stays

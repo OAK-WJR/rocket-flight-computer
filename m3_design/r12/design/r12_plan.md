@@ -56,7 +56,7 @@ at 5 boards against the $84.41 cap.
 | C. Copper by families | `r12_route*.py` (BGA escape per D-R12-02, pyro, power, ports, USB, SD, servo, signals, ground) | route_check r12 after each family; check_r12 `--stage copper` |
 | D. Post, fab and analyses | `r12_post.py`, `r12_fab.sh` (Economic BOM / CPL, owner BOM for C84 and LS120), fire budget, hot-plug and hold-up re-runs on R12 copper (keep or drop R166, D-R12-09), the R10 / R11 rules ported into check_r12 (its PENDING list) | `tools/check.sh` with the R12 section (runs once `m3_design/r12/m3.kicad_pcb` is tracked) |
 | E. Records | `docs/M3_R12.md`, REQUIREMENTS / ORDERING / AGENTS R12 rows, binding note, owner acceptance list (`R12_DECISIONS.md` §3) | review rounds |
-| F. Review | ten lenses plus triage per round until two consecutive rounds have zero verified real errors | |
+| F. Review | full review rounds plus triage until two consecutive rounds have zero Critical and zero Major real errors; fix Minors each round without resetting the count (D-R12-167). Round 10 is the first clean round; round 11 reviews `a1e65bb4…` | |
 
 Layout: the R12 KiCad project is `m3_design/r12/`; design data in `m3_design/r12/design/`. `tools/check.sh` runs R10's
 gate, R11's (its board is tracked) and, once `m3_design/r12/m3.kicad_pcb` is tracked, R12's; until then only

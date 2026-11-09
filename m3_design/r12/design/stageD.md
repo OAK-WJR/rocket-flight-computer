@@ -1,10 +1,10 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
-**Superseded by §7 (branch `r12-port-fix`, D-R12-83 … -85): board `d6e4f7ee…`; and since the AVA re-layout by
-`stageE_relayout.md` (D-R12-93 … -99, 46 × 90 mm, and 46 × 88 mm since D-R12-144; current board `418e5ea9…` since
-round 8, D-R12-152 … -160; `82eddc69…` after round 7, D-R12-144 … -151; `f26dfef1…` after round 6, D-R12-134 … -143; `6e874d4e…` after round 5, D-R12-125 …
--133).** §1–§6
-record the stage D board `d776c5d7…` as it was.
+**Historical stage D record.** §1–§6 record the 100 mm board `d776c5d7…`; §7 records
+`d6e4f7ee…`'s port-fix pass. The current board is **`a1e65bb4…`, 46 × 83 mm** (round-10 fixes,
+D-R12-170 … -173). Current checks/layout: `stageE_relayout.md` §1–§3; analyses: §4; costs: §5;
+current state: `docs/M3_R12.md`. Old “now” / “final” and bench lines below belong to their named boards.
+R12's current chatter rule is under 6.9 ms total open time in every sliding 100 ms window (D-R12-170).
 
 Follows stageC.md (pass 2 frozen, D-R12-77A, board `e2b005b5…`). Decisions D-R12-78 … D-R12-82 are in
 `R12_DECISIONS.md`. Branch `r12-stage-d`; nothing is ordered. Labels (AGENTS §2.5): **Measured** = read from the CAD or
@@ -200,11 +200,13 @@ The r12_plan targets were ≤ $170 / ≤ $295: with U1-only X-ray, this dated 2-
 Counting U1 / U4 / U5 / U6 / U9 gives $189.79 / $295.09–303.29, above both targets (Calculation / Inference:
 qualifying count and fee tier); confirm JLC's quote, including possible D402 / Y1 fees.
 
-**Current board cost (D-R12-160).** Stored Live cost runs 2026-11-07T21:54:15Z / 21:55:42Z on
-`418e5ea9…`: parts + feeder **$64.85 / $45.51** per board at 2 / 5 boards. With 591 pasted pads per board,
-minimum all-in **$173.39 / $279.17** (U1-only X-ray), $3.39 over the two-board target; five X-ray parts give
-**$186.51 / $291.47–299.67** (Calculation / Inference: qualifying count/tier and the $25.10 90 mm PCB quote
-used for 88 mm). Exact arithmetic and stock timestamps: [stageE_relayout §5](stageE_relayout.md#5-cost-and-stock-round-8-d-r12-160).
+**Current cost on `a1e65bb4…` (unchanged BOM, D-R12-173).** Stored Live runs
+`fab/cost_check_2.json` / `_5.json`, 2026-11-09T00:10:43Z / 00:12:01Z: parts + feeder
+**$63.41 / $44.99** per board at 2 / 5 boards. **593 paste flashes**; minimum all-in
+**$170.51 / $276.59** with U1-only X-ray; five qualifying parts **$183.63 / $288.89–297.09**
+(Calculation / Inference: X-ray count/tier and the **$25.10 46 × 90 mm quote reused for 83 mm**).
+The cost files retain the earlier placement's CPL hash; the BOM hash matches. Exact arithmetic and
+stock timestamps: [stageE_relayout §5](stageE_relayout.md#5-cost-and-stock-round-9-d-r12-165).
 
 **Historical port-fix hashes (Measured, SHA-256, `d6e4f7ee…`; current hashes: stageE_relayout §6).**
 
