@@ -60,9 +60,15 @@ EN_I_U9, EN_I_D402, EN_OFF_MAX = 0.1e-6, 50e-9, 1.116
 # RT datasheet), so the PA6 divider takes TOL_PRECISE in each resistor case (PA6_TOL), and the firmware PA6 threshold
 # band moves from D-R12-21's 0.42-0.45 V to 0.425-0.455 V: r12_stageD.pa6_options centres the 30 mV band in the drift
 # case's room between the healthy four-stall VLOGIC (trip top below it) and U9's turn-off through D5 (trip bottom above
-# it), 0.4253-0.4553 V on the board's DC solves, rounded to the millivolt (pa6_band_derivation)
+# it), 0.4253-0.4553 V on the board's DC solves, rounded to the millivolt (pa6_band_derivation). R12F10-TRI-08 / -09
+# (PA6's input leakage; the self-consistent stage D currents) narrow that room and move its centre to about 0.439 V;
+# the adopted band stays, inside the room, and stage D's band_derivation records both (adopted_inside_room)
 PA6_TOP, PA6_BOT, PA6_THRESHOLD = 100e3, 10e3, (0.425, 0.455)
 PA6_TOL = TOL_PRECISE
+# R12F10-TRI-08: PA6's own input leakage, as PD10_LEAK. PA6 is FT_a (DS12110 Rev 8 Table 9 p. 69), an FT_xx pin (Table 60
+# note 5), so +/-250 nA for 0 < VIN <= VDD (Table 60 p. 139), through the divider's Thevenin resistance R60 || R61 at
+# its high end (pa6_leak_V). Applying the digital-input leakage row to the pin in analog mode is an Inference.
+PA6_LEAK = 250e-9
 # SS34 (D5) VF at the logic current 0.25-0.45 V (Inference: typical curve, no maximum at that current; vlogic())
 D5_VF = (0.25, 0.45)
 
@@ -109,15 +115,25 @@ def pa6_ratio(tol):
     return lo, hi
 
 
+def pa6_leak_V(tol=None):
+    """R12F10-TRI-08: the bound on PA6's offset from its own input leakage, PA6_LEAK x R60 || R61 (tol None: nominal
+    resistors; else both at +tol, the highest Thevenin resistance; the sign is either way)."""
+    rth = PA6_TOP * PA6_BOT / (PA6_TOP + PA6_BOT)
+    return PA6_LEAK * rth * (1 + (tol or 0.0))
+
+
 def pa6_trip_window(tol=None):
     """VLOGIC trip window [lowest, highest] for the PA6_THRESHOLD band (0.425-0.455 V): tol None = the nominal ratio
     (x 11), else the divider at that tolerance (lowest = band bottom / highest ratio, highest = band top / lowest
-    ratio); R60 / R61 take PA6_TOL (0.1 %) in R12's resistor cases."""
+    ratio); R60 / R61 take PA6_TOL (0.1 %) in R12's resistor cases. R12F10-TRI-08: PA6 = VLOGIC x ratio +/- pa6_leak_V,
+    so the band widens by the leakage offset at each end (lowest = (bottom - e) / highest ratio, highest = (top + e) /
+    lowest ratio), in every case including the nominal ratio."""
     if tol is None:
-        k = (PA6_TOP + PA6_BOT) / PA6_BOT
-        return [PA6_THRESHOLD[0] * k, PA6_THRESHOLD[1] * k]
+        k, e = (PA6_TOP + PA6_BOT) / PA6_BOT, pa6_leak_V()
+        return [(PA6_THRESHOLD[0] - e) * k, (PA6_THRESHOLD[1] + e) * k]
     lo, hi = pa6_ratio(tol)
-    return [PA6_THRESHOLD[0] / hi, PA6_THRESHOLD[1] / lo]
+    e = pa6_leak_V(tol)
+    return [(PA6_THRESHOLD[0] - e) / hi, (PA6_THRESHOLD[1] + e) / lo]
 
 
 def divider(vref, top, bot, tol, leak=0.0, tol_bot=None):
@@ -292,7 +308,7 @@ def vlogic():
     # D-R12-21 (O-R12-07): no E24 pair moves R60 / R61's 1 / 11 toward the needed 0.092-0.097 (every E24 ratio near it
     # is 1 / 11 or >= 0.0979), so the divider stays and the firmware PA6 threshold moves down by about the D5 drop.
     # R12F9-TRI-04 (round 9 lane B): R60 / R61 are 0.1 % 25 ppm/K (PA6_TOL) and the band is 0.425-0.455 V, VLOGIC
-    # 4.675-5.005 V at the nominal ratio. R12F8-TRI-06: the window and both margins are given at the nominal ratio and
+    # 4.650-5.030 V at the nominal ratio with PA6's input leakage (R12F10-TRI-08; 4.675-5.005 V without). R12F8-TRI-06: the window and both margins are given at the nominal ratio and
     # over both resistor cases (R60 / R61 at their own worst ends of PA6_TOL). The U9 turn-off corner is the highest
     # BAT_IN at which U9 turns off (u9_turn_off_bat_V, the EN chain, still 1 % thick film, in the same resistor case;
     # 4.80 V at 1 %), seen through D5 at its lowest VF 0.25 V (no load drop: the highest VLOGIC at turn-off); the trip
@@ -313,16 +329,26 @@ def vlogic():
                                         'comparison); initial / drift: the divider (0.1 %, PA6_TOL) and the EN '
                                         'chain (1 %) both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies '
                                         'below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)')
-    out['pa6_threshold_bottom_needed_V'] = {case: round(out['u9_turn_off_through_d5_V'][case] * pa6_ratio(PA6_TOL[case])[1], 4)
+    out['pa6_threshold_bottom_needed_V'] = {case: round(out['u9_turn_off_through_d5_V'][case] * pa6_ratio(PA6_TOL[case])[1]
+                                                        + pa6_leak_V(PA6_TOL[case]), 4)
                                             for case in TOL}
-    out['label'] = 'Calculation / Inference (diode drop; resistor drift case Inference)'
+    # R12F10-TRI-08: PA6's FT_xx input leakage through R60 || R61 is in every window and margin above
+    out['pa6_leakage'] = dict(leak_A=PA6_LEAK, thevenin_ohm=round(PA6_TOP * PA6_BOT / (PA6_TOP + PA6_BOT), 1),
+                              offset_V={k: round(pa6_leak_V(t), 7) for k, t in
+                                        (('nominal_ratio', None), *PA6_TOL.items())},
+                              source='DS12110 Rev 8 Table 60 p. 139 (FT_xx +/-250 nA, 0 < VIN <= VDD); PA6 FT_a, Table 9 '
+                                     'p. 69', label='Calculation / Inference (the digital-input leakage row applied to '
+                                                    'PA6 in analog mode)')
+    out['label'] = ('Calculation / Inference (diode drop; resistor drift case; PA6 input leakage in analog mode, '
+                    'R12F10-TRI-08)')
     return out
 
 
 def holdup():
     """C84 (470 uF, 300.8 uF low case as R11) feeds VLOGIC only (D5 blocks RAW_PROTECTED): logic 0.6-1.4 W plus the
     microSD write 3.3 V x 0.2 A / 0.80-0.85 (R10 / R11 load cases), to 3.8 V (R11's end point). R12F8-TRI-08: the PA6-trip
-    start points are R12's window (R12F9-TRI-04: 0.425-0.455 V, VLOGIC 4.675-5.005 V at the nominal ratio, the divider
+    start points are R12's window (R12F9-TRI-04: 0.425-0.455 V, VLOGIC 4.650-5.030 V at the nominal ratio with PA6's
+    input leakage (R12F10-TRI-08), the divider
     0.1 %), not R10 / R11's 4.84-5.17 V, at the nominal ratio and over both resistor cases; the battery break starts at 7.4 V less U9 (RON
     0.045 ohm at 1.5 A) and D5, as stage D does."""
     loads = (0.6 + 3.3 * .2 / .85, 1.4 + 3.3 * .2 / .80)

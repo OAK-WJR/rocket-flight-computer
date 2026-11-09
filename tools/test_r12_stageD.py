@@ -164,21 +164,37 @@ class Round3Fixes(unittest.TestCase):
         self.assertNotIn('0.32 mA', note)
 
     def test_pa6_branches_charged_at_their_shared_resistance(self):
-        """R12F3-TRI-09: a branch's drop at D5 is its current times min(its own, D5's) resistance from U9."""
+        """R12F3-TRI-09: a branch's drop at D5 is its current times min(its own, D5's) resistance from U9.
+        R12F10-TRI-09: the currents are raw_point's self-consistent solve: each sink's node is U9's output less the
+        mutual-resistance drops, U400 / U403 draw their power at their own node, D5 carries U2's input current (U2's VIN
+        = D5's node - 0.45 V - I x R(D5 -> U2)), R92 its node / 3234 ohm, and D5's loss is 0.45 V x its current."""
         import r12_stageD
-        fire = dict(other_converter_load_W=10.0,
-                    other_load_parts=dict(camera_W=6.0, ports_W=3.0, logic_W=0.5, microsd_write_W=0.3, d5_W=0.1,
-                                          r92_W=0.1),
+        fire = dict(other_load_parts=dict(camera_W=6.0, ports_W=3.0, logic_W=0.5, microsd_write_W=0.3),
                     stalls={'4': dict(BAT_IN_V=5.0)},
                     shorted={'match_shorted_4_stalls': dict(BAT_IN_V=5.0),
                              'match_and_leads_shorted_4_stalls': dict(BAT_IN_V=5.0)})
-        out = r12_stageD.pa6_corners(fire, 0.01, dict(D5=0.02, U400=0.05, U403=0.01))
+        out = r12_stageD.pa6_corners(fire, 0.01, dict(D5=0.02, U400=0.05, U403=0.01), dict(R60=0.004, U2=0.003))
         h = out['healthy']
         k = 1 + 0.00393 * 50                                    # copper at 70 C (R12F9-TRI-04)
-        raw = (6.0 * 0.01 + 3.0 * 0.02 + 1.0 * 0.02) / 5.0 * k
+        c = h['branch_A']
+        tot = sum(c.values())
+        self.assertAlmostEqual(h['converter_A'], tot, places=12)
+        u9_out = 5.0 - tot * (0.045 + 0.01 * k)                 # U9 RON 45 mOhm (R12F8-TRI-07)
+        r = dict(U400=0.05 * k, U403=0.01 * k, D5=0.02 * k)
+        at = dict(U400='U400', U403='U403', D5='D5', R92='D5')
+        node = {n: u9_out - sum(c[j] * min(r[n], r[at[j]]) for j in c) for n in r}
+        raw = (c['U403'] * 0.01 + (c['U400'] + c['D5'] + c['R92']) * 0.02) * k
         self.assertAlmostEqual(h['RAW_PROTECTED_drop_at_D5_V'], raw, places=12)
-        self.assertAlmostEqual(h['U9_and_copper_drop_V'], 2.0 * (0.045 + 0.01 * k) + raw, places=12)   # U9 RON 45 mOhm (R12F8-TRI-07)
-        self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'], 6.0 / 5.0 * 0.01 * k, places=12)
+        self.assertAlmostEqual(h['U9_and_copper_drop_V'], 5.0 - node['D5'], places=12)
+        self.assertAlmostEqual(c['U400'], 3.0 / node['U400'], places=12)
+        self.assertAlmostEqual(c['U403'], 6.0 / node['U403'], places=12)
+        self.assertAlmostEqual(c['R92'], node['D5'] / 3234.0, places=12)
+        v_u2 = node['D5'] - 0.45 - c['D5'] * 0.003 * k
+        self.assertAlmostEqual(h['U2_VIN_V'], v_u2, places=12)
+        self.assertAlmostEqual(c['D5'], 0.8 / v_u2, places=12)              # D5's current = U2's input current
+        self.assertAlmostEqual(h['D5_loss_W'], 0.45 * c['D5'], places=12)
+        self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'],
+                               c['U403'] * (0.02 - 0.01) * k, places=12)
 
     def test_pa6_record_uses_branch_shares(self):
         d = json.loads((DESIGN / 'stageD_budget.json').read_text())
@@ -190,9 +206,8 @@ class Round3Fixes(unittest.TestCase):
         # design margin but an identity of the two models, so check it exactly: the camera and port branches save
         # their power / BAT_IN x (R(U9 -> D5) - their shared resistance); positive whenever a branch sits nearer U9
         h, r_d5 = p['healthy'], p['raw_point_ohm']['D5']
-        f = d['fire']['other_load_parts']
-        want = sum(f[k] / h['BAT_IN_V'] * (r_d5 - p['branch_shared_ohm'][n])
-                   for k, n in (('camera_W', 'U403 (camera)'), ('ports_W', 'U400 (ports)')))
+        want = sum(h['branch_A'][k] * (r_d5 - p['branch_shared_ohm'][n])
+                   for k, n in (('U403', 'U403 (camera)'), ('U400', 'U400 (ports)')))
         self.assertAlmostEqual(h['lumped_drop_V_superseded'] - h['U9_and_copper_drop_V'], want, places=12)
         self.assertGreater(want, 0.0)
         self.assertIn('upper bound', p['label'])
@@ -363,15 +378,15 @@ class Round8(unittest.TestCase):
             self.assertEqual(r12_budget.en_model(v, 0.01), r11_stageD.en_model(v))
 
     def test_en_bound_is_the_drift_case(self):
-        """R12F8-TRI-06: R80 / R165 / R81 at +/-1.67 %: 7.61 ms single drop-out and 7.08 ms worst-corner limit at the
-        four-stall BAT_IN, 7 ms line to about 5.71 V, 10 ms drop-out needs about 6.02 V, turn-on about 29.9-135.9 ms."""
+        """R12F8-TRI-06: R80 / R165 / R81 at +/-1.67 %: 7.59 ms single drop-out and 7.07 ms worst-corner limit at the
+        four-stall BAT_IN (5.7192 V since R12F10-TRI-09's D5 loss; 7.61 / 7.08 ms at 5.7209 V), 7 ms line to about 5.71 V, 10 ms drop-out needs about 6.02 V, turn-on about 29.9-135.9 ms."""
         e = self.d['en']
         i, dr, b = e['by_case']['initial'], e['by_case']['drift'], e['bound']
         self.assertAlmostEqual(i['resistor_tolerance'], 0.01, places=12)
         self.assertAlmostEqual(dr['resistor_tolerance'], self.TD, places=12)
-        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.56, places=2)
-        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.61, places=2)
-        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 7.08, places=2)
+        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.548, places=3)
+        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.595, places=3)
+        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 7.072, places=3)
         self.assertAlmostEqual(b['margin_over_7ms_line_ms'], dr['four_stall_periodic_limit_ms'] - 7.0, places=12)
         self.assertGreater(b['margin_over_7ms_line_ms'], 0.0)
         self.assertTrue(b['seven_ms_line_holds_at_four_stall'])
@@ -388,11 +403,13 @@ class Round8(unittest.TestCase):
         t = p['window']['trip_V']
         # R12F9-TRI-04 (round 9 lane B): band 0.425-0.455 V, R60 / R61 0.1 % 25 ppm/K
         self.assertEqual(p['window']['threshold_V'], [0.425, 0.455])
-        self.assertAlmostEqual(t['nominal_ratio'][0], 0.425 * 11, places=12)
-        self.assertAlmostEqual(t['nominal_ratio'][1], 0.455 * 11, places=12)
-        self.assertAlmostEqual(t['initial'][0], 4.6665, places=4)
-        self.assertAlmostEqual(t['drift'][0], 4.6523, places=4)
-        self.assertAlmostEqual(t['drift'][1], 5.0294, places=4)
+        # R12F10-TRI-08: PA6's +/-250 nA input leakage through R60 || R61 widens each end
+        e = 250e-9 * 100e3 * 10e3 / 110e3
+        self.assertAlmostEqual(t['nominal_ratio'][0], (0.425 - e) * 11, places=12)
+        self.assertAlmostEqual(t['nominal_ratio'][1], (0.455 + e) * 11, places=12)
+        self.assertAlmostEqual(t['initial'][0], 4.6415, places=4)
+        self.assertAlmostEqual(t['drift'][0], 4.6274, places=4)
+        self.assertAlmostEqual(t['drift'][1], 5.0546, places=4)
         self.assertAlmostEqual(p['window']['divider_tolerance']['initial'], 0.001, places=12)
         self.assertAlmostEqual(p['window']['divider_tolerance']['drift'], 0.001 + 25e-6 * 67, places=12)
         self.assertAlmostEqual(p['window']['ratio']['drift'][0], self.w['sense']['drift']['VLOGIC_SENSE_ratio'][0], places=5)
@@ -401,9 +418,10 @@ class Round8(unittest.TestCase):
             for k, w in t.items():
                 self.assertAlmostEqual(c['margin_to_trip_top_V'][k], c['VLOGIC_V'][0] - w[1], places=12)
         # R12F9-TRI-04: with the 0.1 % divider and the 0.425-0.455 V band the healthy margin is positive in every case
-        # (about +59 mV at drift); a shorted match still trips PA6 (firmware rule 4)
+        # (about +25 mV at drift with PA6's leakage and the self-consistent currents, R12F10-TRI-08 / -09; +59 mV
+        # without); a shorted match still trips PA6 (firmware rule 4)
         for k in t:
-            self.assertGreater(p['healthy']['margin_to_trip_top_V'][k], 0.05)
+            self.assertGreater(p['healthy']['margin_to_trip_top_V'][k], 0.02)
             self.assertLess(p['match_shorted']['margin_to_trip_top_V'][k], 0.0)
             self.assertLess(p['match_and_leads_shorted']['margin_to_trip_top_V'][k], 0.0)
 
@@ -413,9 +431,10 @@ class Round8(unittest.TestCase):
         v = self.w['vlogic']
         m = v['pa6_retuned_margins_V']
         self.assertAlmostEqual(self.w['u9']['turn_off_max_bat_V']['initial'], 4.802, places=3)
-        self.assertAlmostEqual(m['nominal_ratio']['above_u9_turn_off_through_d5'], 0.1229, places=4)
-        self.assertAlmostEqual(m['initial']['above_u9_turn_off_through_d5'], 0.1144, places=4)
-        self.assertAlmostEqual(m['drift']['above_u9_turn_off_through_d5'], 0.0513, places=4)
+        # R12F10-TRI-08: with PA6's input leakage (0.1229 / 0.1144 / 0.0513 V without)
+        self.assertAlmostEqual(m['nominal_ratio']['above_u9_turn_off_through_d5'], 0.0979, places=4)
+        self.assertAlmostEqual(m['initial']['above_u9_turn_off_through_d5'], 0.0894, places=4)
+        self.assertAlmostEqual(m['drift']['above_u9_turn_off_through_d5'], 0.0264, places=4)
         self.assertEqual(self.d['pa6_corners']['trip_bottom_above_u9_turn_off_V'],
                          {k: x['above_u9_turn_off_through_d5'] for k, x in m.items()})
 
@@ -434,9 +453,10 @@ class Round8(unittest.TestCase):
 
     def test_holdup_from_r12_pa6_window(self):
         hw, hd = self.w['holdup'], self.d['holdup']['unshed']
-        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.501, 1.811])     # R12F9-TRI-04 band / divider
-        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.496, 1.827])
-        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.487, 1.853])
+        # R12F9-TRI-04 band / divider, R12F10-TRI-08 PA6 leakage (0.501-1.811 / 0.496-1.827 / 0.487-1.853 without)
+        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.486, 1.854])
+        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.48, 1.87])
+        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.471, 1.897])
         for k in ('nominal_ratio', 'initial', 'drift'):
             self.assertEqual([round(x, 3) for x in hd['pa6_trip_ms'][k]], hw['from_pa6_trip_ms'][k])
         self.assertEqual(hd['pa6_trip_range_ms']['drift'], hd['pa6_trip_ms']['drift'])
@@ -501,11 +521,11 @@ class Round9(unittest.TestCase):
 
     def test_pa6_margins_hot(self):
         h = self.d['pa6_corners']['healthy']['margin_to_trip_top_V']
-        # round 9 lane B (0.1 % divider, 0.425-0.455 V band); lane A's 1 % / 0.42-0.45 V figures were -0.0144 /
-        # +0.0476 / +0.1385
-        self.assertAlmostEqual(h['drift'], 0.0591, places=3)
-        self.assertAlmostEqual(h['initial'], 0.0744, places=3)
-        self.assertAlmostEqual(h['nominal_ratio'], 0.0835, places=3)
+        # round 9 lane B (0.1 % divider, 0.425-0.455 V band) gave +0.0591 / +0.0744 / +0.0835; round 10 lane A adds
+        # PA6's input leakage (R12F10-TRI-08) and the self-consistent D5 current (R12F10-TRI-09)
+        self.assertAlmostEqual(h['drift'], 0.0251, places=3)
+        self.assertAlmostEqual(h['initial'], 0.0405, places=3)
+        self.assertAlmostEqual(h['nominal_ratio'], 0.0497, places=3)
 
     def test_pa6_owner_options(self):
         o = self.d['pa6_corners']['owner_options']
@@ -516,8 +536,8 @@ class Round9(unittest.TestCase):
         self.assertIn('divider_0p1pct', o['adopted'])
         self.assertFalse(one['present_band_fits'])            # threshold alone cannot meet both limits at drift
         self.assertTrue(tenth['present_band_fits'])
-        # +0.114 V with lane A's 0.42-0.45 V band (option (a)); +0.059 V with the adopted 0.425-0.455 V band
-        self.assertGreater(tenth['margin_to_trip_top_V']['healthy'], 0.05)
+        # +0.114 V with lane A's 0.42-0.45 V band (option (a)); +0.025 V with the adopted 0.425-0.455 V band (round 10)
+        self.assertGreater(tenth['margin_to_trip_top_V']['healthy'], 0.02)
         for row in (o['divider_0p1pct']['initial'], tenth):
             m = row['centred_band_margins_V']
             self.assertGreater(m['healthy_to_trip_top'], 0.0)
@@ -533,13 +553,15 @@ class Round9(unittest.TestCase):
         self.assertIs(r12_budget.PA6_TOL, r12_budget.TOL_PRECISE)
         self.assertEqual(b['band_V'], [0.425, 0.455])
         self.assertTrue(b['equals_threshold'])
+        self.assertEqual(b['adopted_band_V'], [0.425, 0.455])
+        self.assertTrue(b['adopted_inside_room'])
         self.assertTrue(b['both_limits_clear'])
         self.assertGreaterEqual(b['room_width_drift_V'], b['band_width_V'])
         self.assertLessEqual(b['room_drift_V'][0], 0.425)
         self.assertGreaterEqual(b['room_drift_V'][1], 0.455)
         m = b['margins_V']['drift']
-        self.assertAlmostEqual(m['healthy_to_trip_top'], 0.0591, places=3)
-        self.assertAlmostEqual(m['trip_bottom_above_u9_turn_off'], 0.0513, places=3)
+        self.assertAlmostEqual(m['healthy_to_trip_top'], 0.0251, places=3)          # R12F10-TRI-08 / -09
+        self.assertAlmostEqual(m['trip_bottom_above_u9_turn_off'], 0.0264, places=3)
         self.assertAlmostEqual(self.d['pa6_corners']['trip_bottom_above_u9_turn_off_V']['drift'],
                                m['trip_bottom_above_u9_turn_off'], places=4)
 
@@ -549,9 +571,69 @@ class Round9(unittest.TestCase):
         self.assertEqual(b['drop_bound_case'], 'drift_low')
         self.assertAlmostEqual(b['by_R134']['drift_low']['R134_ohm'], 1.9666, places=4)
         self.assertAlmostEqual(b['by_R134']['budget_hot_high']['fire_A'], f['stalls']['0']['fire_A'], places=12)
-        self.assertAlmostEqual(b['drop_bound_V'], 0.2677, places=4)
+        self.assertAlmostEqual(b['drop_bound_V'], 0.2677, places=3)
         self.assertGreater(b['drop_bound_V'], b['by_R134']['budget_hot_high']['drop_bound_V'])
         self.assertTrue(b['bound_below_reject'])
+
+
+class Round10(unittest.TestCase):
+    """R12F10-TRI-08 (PA6's own input leakage) and R12F10-TRI-09 (self-consistent D5 current) in the records."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+        cls.w = json.loads((DESIGN / 'r12_windows.json').read_text())
+
+    def test_pa6_leakage_in_every_window(self):
+        import r12_budget
+        self.assertEqual(r12_budget.PA6_LEAK, 250e-9)
+        for tol in (None, *r12_budget.PA6_TOL.values()):
+            e = r12_budget.pa6_leak_V(tol)
+            self.assertAlmostEqual(e, 250e-9 * 100e3 * 10e3 / 110e3 * (1 + (tol or 0)), places=15)
+            if tol is not None:
+                lo, hi = r12_budget.pa6_ratio(tol)
+                w = r12_budget.pa6_trip_window(tol)
+                self.assertAlmostEqual(w[0], (0.425 - e) / hi, places=12)
+                self.assertAlmostEqual(w[1], (0.455 + e) / lo, places=12)
+        v = self.w['vlogic']
+        self.assertIn('Table 60', v['pa6_leakage']['source'])
+        self.assertIn('Inference', v['pa6_leakage']['label'])
+        self.assertAlmostEqual(v['pa6_threshold_bottom_needed_V']['drift'], 0.4226, places=4)
+        p = self.d['pa6_corners']
+        self.assertAlmostEqual(p['window']['leakage_A'], 250e-9, places=15)
+        self.assertIn('R12F10-TRI-08', p['label'])
+        b = p['owner_options']['band_derivation']
+        self.assertAlmostEqual(b['room_drift_V'][0], 0.4226, places=4)
+        self.assertGreaterEqual(b['room_drift_V'][1], 0.455)
+
+    def test_d5_current_is_u2_input_current(self):
+        f = self.d['fire']
+        pt = f['converter_point_four_stall']
+        self.assertAlmostEqual(pt['BAT_IN_V'], f['four_stall_BAT_IN_V'], places=12)
+        self.assertAlmostEqual(pt['currents_A']['D5'], pt['U2_input_A'], places=10)
+        self.assertAlmostEqual(pt['D5_loss_W'], 0.45 * pt['currents_A']['D5'], places=12)
+        self.assertAlmostEqual(f['other_load_parts']['d5_W'], pt['D5_loss_W'], places=12)
+        self.assertNotAlmostEqual(f['other_load_parts']['d5_W'], 0.45 * 0.3, places=3)
+        h = self.d['pa6_corners']['healthy']
+        self.assertAlmostEqual(h['D5_A'], pt['currents_A']['D5'], places=10)
+        self.assertAlmostEqual(h['VLOGIC_A'], h['D5_A'], places=12)
+        self.assertAlmostEqual(h['D5_loss_W'], 0.45 * h['D5_A'], places=12)
+        raw = self.d['rails_shared']['raw_budget_A']
+        self.assertAlmostEqual(raw['D5 IN'], h['D5_A'], places=10)
+        u = self.d['port_supply']['u400_input']['four_stall_fire']
+        self.assertAlmostEqual(u['converter_A'], h['converter_A'], places=10)
+        self.assertAlmostEqual(self.d['u403_input']['converter_A'], h['converter_A'], places=10)
+
+    def test_pack_load_convention_and_sensitivity(self):
+        f = self.d['fire']
+        v, i = f['four_stall_BAT_IN_V'], f['four_stall_A']
+        conv = f['other_converter_load_W'] / v
+        self.assertAlmostEqual(v, 7.4 - 0.15 * (i + conv + 4 * 1.92), places=6)
+        s = f['pack_load_sensitivity']
+        self.assertLess(s['four_stall_BAT_IN_V'], v)
+        self.assertGreaterEqual(s['four_stall_A'], f['floor_A'])
+        self.assertIn('en_at_that_BAT_IN', s)
+        self.assertIn('Inference', s['basis'])
 
 
 if __name__ == '__main__':

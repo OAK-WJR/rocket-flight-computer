@@ -587,16 +587,16 @@
   ],
   "from_pa6_trip_ms": {
    "drift": [
-    0.487,
-    1.853
+    0.471,
+    1.897
    ],
    "initial": [
-    0.496,
-    1.827
+    0.48,
+    1.87
    ],
    "nominal_ratio": [
-    0.501,
-    1.811
+    0.486,
+    1.854
    ]
   },
   "label": "Calculation / Inference",
@@ -918,21 +918,32 @@
   "basis": "U9 RON 0.045 ohm (SLVSFC9C 6.5 maximum, R12F8-TRI-07) at 1.5 A (the current Inference); SS34 VF Inference; LMR50410 VIN_UVLO rising 3.55-4.0 V, VIN 4-36 V (SLUSDW3A 7.3 / 7.5); PA6 window R12's (D-R12-21, below). USB host port 4.75-5.25 V at the connector (USB 2.0); a bus-powered hub's low-power port may give 4.40 V, below the LMR50410 floor through D6 (bench rule: a host or powered-hub port, O-R12-03)",
   "battery_2s_min_6V_V": 5.482,
   "battery_four_stall_V": 5.196,
-  "label": "Calculation / Inference (diode drop; resistor drift case Inference)",
+  "label": "Calculation / Inference (diode drop; resistor drift case; PA6 input leakage in analog mode, R12F10-TRI-08)",
   "lmr50410_roc_min_V": 4.0,
   "lmr50410_uvlo_rising_max_V": 4.0,
+  "pa6_leakage": {
+   "label": "Calculation / Inference (the digital-input leakage row applied to PA6 in analog mode)",
+   "leak_A": 2.5e-07,
+   "offset_V": {
+    "drift": 0.0022788,
+    "initial": 0.002275,
+    "nominal_ratio": 0.0022727
+   },
+   "source": "DS12110 Rev 8 Table 60 p. 139 (FT_xx +/-250 nA, 0 < VIN <= VDD); PA6 FT_a, Table 9 p. 69",
+   "thevenin_ohm": 9090.9
+  },
   "pa6_retuned_margins_V": {
    "drift": {
-    "above_u9_turn_off_through_d5": 0.0513,
-    "below_four_stall": 0.1666
+    "above_u9_turn_off_through_d5": 0.0264,
+    "below_four_stall": 0.1414
    },
    "initial": {
-    "above_u9_turn_off_through_d5": 0.1144,
-    "below_four_stall": 0.1819
+    "above_u9_turn_off_through_d5": 0.0894,
+    "below_four_stall": 0.1568
    },
    "nominal_ratio": {
-    "above_u9_turn_off_through_d5": 0.1229,
-    "below_four_stall": 0.191
+    "above_u9_turn_off_through_d5": 0.0979,
+    "below_four_stall": 0.166
    }
   },
   "pa6_retuned_margins_basis": "nominal_ratio: the x 11 window against the 1 % EN corner (D-R12-21's original comparison); initial / drift: the divider (0.1 %, PA6_TOL) and the EN chain (1 %) both in that resistor case. Negative above_u9_turn_off_through_d5 = the trip bottom lies below the highest VLOGIC at which U9 can turn off (R12F8-TRI-06)",
@@ -941,25 +952,25 @@
    0.455
   ],
   "pa6_retuned_window_V": [
-   4.675,
-   5.005
+   4.65,
+   5.03
   ],
   "pa6_threshold_bottom_needed_V": {
-   "drift": 0.4203,
-   "initial": 0.4146
+   "drift": 0.4226,
+   "initial": 0.4169
   },
   "pa6_trip_window_V": {
    "drift": [
-    4.6523,
-    5.0294
+    4.6274,
+    5.0546
    ],
    "initial": [
-    4.6665,
-    5.0141
+    4.6415,
+    5.0392
    ],
    "nominal_ratio": [
-    4.675,
-    5.005
+    4.65,
+    5.03
    ]
   },
   "u9_turn_off_through_d5_V": {
