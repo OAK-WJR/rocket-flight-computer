@@ -6,14 +6,14 @@ Last updated 2026-11-08 (R12; R11 candidate sections below; R10 candidate sectio
 
 ## R12 candidate: M3-ASSY-R12 (one-sided four-layer Economic PCBA, 46 × 85 mm; NOT accepted)
 
-**Status (2026-11-08).** PCB `a02a6181…` after round 9 (D-R12-161 … -168; full hash in
+**Status (2026-11-08).** PCB `ae22387d…` after round 9 (D-R12-161 … -169; full hash in
 [docs/M3_R12.md](docs/M3_R12.md#current-state)). Not accepted, nothing ordered; R9 stays accepted.
 Owner items: [R12_VALIDATION.md](docs/R12_VALIDATION.md); harness: [R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md).
 
 | Kind | Verified (with its record) | Not verified |
 |---|---|---|
 | Software tests and CAD gate | Lane S `6403f0a`: two byte-identical builds, DRC / parity / unconnected 0, check_r12 all OK, route_check 0 failing / 2 allowlisted, fit / legends / fill OK, fab manifest bound. S-10 80 victims, 194 exceptions. Lane B: 39 stage-D tests. Full tools/check.sh exit 0 reported by each fix lane | Records lane static checks only; no KiCad/check.sh run. Current board has not had a review round |
-| Simulation and calculation | Hot-plug 2304 / 2304, −14.255 V minimum (Simulation / Inference). Fire loop 4.726884 Ω, four-stall 1.249952 A; return 2.670 mΩ. PA6 0.1 % divider / 0.425–0.455 V band: drift VLOGIC 4.652–5.029 V, healthy margin +0.059 V, trip-bottom +0.051 V; hold-up 0.487–1.853 ms unshed. U400 VIN 5.5066 / 5.4398 V; U403 5.554 V, camera 4.91 / 5.01 V. Dummy-fire bound 0.2677 V. Calculation / Inference: 70 °C copper, pack/load, SS34 VF, drift, foldback. Ports ≥ 4.5648 V at 0.561 A while U400 VIN ≥ VO/0.75 | Native refill did not reproduce saved fills; Stage D uses as-saved fills, K-fill passes (D-R12-164). No physical confirmation; READY calibration, signal integrity and module supply range open |
+| Simulation and calculation | Hot-plug 2304 / 2304, −14.255 V minimum (Simulation / Inference). Fire loop 4.726884 Ω, four-stall 1.249952 A; return 2.672 mΩ (D-R12-169). PA6 0.1 % divider / 0.425–0.455 V band: drift VLOGIC 4.652–5.029 V, healthy margin +0.059 V, trip-bottom +0.051 V; hold-up 0.487–1.853 ms unshed. U400 VIN 5.5066 / 5.4398 V; U403 5.554 V, camera 4.91 / 5.01 V. Dummy-fire bound 0.2677 V. Calculation / Inference: 70 °C copper, pack/load, SS34 VF, drift, foldback. Ports ≥ 4.5648 V at 0.561 A while U400 VIN ≥ VO/0.75 | Native refill did not reproduce saved fills; Stage D uses as-saved fills, K-fill passes (D-R12-164). No physical confirmation; READY calibration, signal integrity and module supply range open |
 | Datasheets | ProTek D121 260–270 °C reflow; hongjiacheng D8 260 (+0/−5) °C (D-R12-165). Molex 104031-0811 land drawing read | J430 reflow UNVERIFIED; AN2606, FXLS90322 dual-channel and LSM6DSVE reads open (O-R12-02 / -21 / -23) |
 | Physical, electrical, firmware | None | No firmware; JLC DFM not queried; 85 mm vehicle fit unverified |
 
@@ -29,8 +29,8 @@ Confirm the quote, including D402 / Y1 X-ray fees. Arithmetic: stageE_relayout.m
 (0 Critical / 2 Major / 12 Minor)**. D-R12-161 … -166 record the fixes: every IC pin in I-5,
 direction/rating guards, probe clearances, doubled power taps, 70 °C copper and the dummy-fire bound,
 plus the owner-requested push-pull socket / 85 mm layout, the orchestrator's 0.1 % PA6 divider and
-0.425–0.455 V band, and the Preferred D8 / D121 swaps. Current board **`a02a6181…`**, 46 × 85 mm,
-is unreviewed. Lane S (`6403f0a`) reports two identical builds and `tools/check.sh` exit 0.
+0.425–0.455 V band, the Preferred D8 / D121 swaps and lane C's J430 local bypass (D-R12-169).
+Current board **`ae22387d…`**, 46 × 85 mm, is unreviewed. Lane C reports two identical builds and `tools/check.sh` exit 0.
 
 **Owner stop rule (2026-11-08, D-R12-167):** stop after two consecutive full rounds with zero Critical
 and zero Major real errors. Fix Minor real errors each round; they do not reset the count. This supersedes

@@ -1,12 +1,12 @@
 {
- "board_sha256": "a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77",
+ "board_sha256": "ae22387d35308f877b4065e40b39b3c3f379acc3d500b6835b82e16c4fde9648",
  "dc_solves": {
   "3V3_L1_to_R14": {
-   "cells": 272852,
-   "cg_iterations": 4555,
+   "cells": 273090,
+   "cg_iterations": 4743,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.0040571788198001234,
+   "resistance_ohm": 0.004057178799003031,
    "sink": "R14:1",
    "source": "L1:2",
    "window_mm": [
@@ -17,11 +17,11 @@
    ]
   },
   "3V3_L1_to_U6": {
-   "cells": 272852,
-   "cg_iterations": 4446,
+   "cells": 273090,
+   "cg_iterations": 4608,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.01233745867383927,
+   "resistance_ohm": 0.012325727068243213,
    "sink": "U6:1,13,15,16",
    "source": "L1:2",
    "window_mm": [
@@ -32,11 +32,11 @@
    ]
   },
   "3V3_R14_to_U6": {
-   "cells": 272852,
-   "cg_iterations": 4506,
+   "cells": 273090,
+   "cg_iterations": 4679,
    "grid_mm": 0.1,
    "net": "3V3",
-   "resistance_ohm": 0.012528357706461046,
+   "resistance_ohm": 0.012516606535566459,
    "sink": "U6:1,13,15,16",
    "source": "R14:1",
    "window_mm": [
@@ -92,11 +92,11 @@
    ]
   },
   "GND_Q124_to_J1": {
-   "cells": 111698,
-   "cg_iterations": 2191,
+   "cells": 111620,
+   "cg_iterations": 2214,
    "grid_mm": 0.1,
    "net": "GND",
-   "resistance_ohm": 0.0026696069470390237,
+   "resistance_ohm": 0.0026718900021113364,
    "sink": "J1:2",
    "source": "Q124:2",
    "window_mm": [
@@ -680,7 +680,7 @@
    "q124_vgs_row_V": 2.5,
    "q124_vgs_th_max_V": 1.45
   },
-  "gnd_return_dc_ohm": 0.0026696069470390237,
+  "gnd_return_dc_ohm": 0.0026718900021113364,
   "gnd_return_used_ohm": 0.005,
   "leads_ohm": 0.3,
   "match_ohm": 2.0,
@@ -1047,11 +1047,11 @@
   ],
   "vias_within_2mm": [
    [
-    8.2,
+    9.2,
     42.6
    ],
    [
-    9.2,
+    8.2,
     42.6
    ]
   ]
@@ -2472,7 +2472,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77",
+ "source_board_sha256": "ae22387d35308f877b4065e40b39b3c3f379acc3d500b6835b82e16c4fde9648",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,
@@ -2604,33 +2604,33 @@
  "u6_supply": {
   "0V5_allocation": {
    "I_A": 0.5,
-   "drop_V": 0.008197318746819697,
-   "margin_drift_V": 0.08050268125318061,
-   "margin_initial_V": 0.11070268125318039,
-   "min_VCC_drift_V": 3.2155026812531804,
-   "min_VCC_initial_V": 3.24570268125318
+   "drop_V": 0.008191452933623122,
+   "margin_drift_V": 0.08050854706637711,
+   "margin_initial_V": 0.1107085470663769,
+   "min_VCC_drift_V": 3.215508547066377,
+   "min_VCC_initial_V": 3.2457085470663767
   },
   "1A_rating_bound": {
    "I_A": 1.0,
-   "drop_V": 0.016394637493639393,
-   "margin_drift_V": 0.07230536250636099,
-   "margin_initial_V": 0.10250536250636078,
-   "min_VCC_drift_V": 3.207305362506361,
-   "min_VCC_initial_V": 3.2375053625063606
+   "drop_V": 0.016382905867246243,
+   "margin_drift_V": 0.072317094132754,
+   "margin_initial_V": 0.10251709413275378,
+   "min_VCC_drift_V": 3.207317094132754,
+   "min_VCC_initial_V": 3.2375170941327536
   },
-  "R_L1_to_R14_ohm": 0.0040571788198001234,
-  "R_L1_to_U6_ohm": 0.01233745867383927,
-  "R_R14_to_U6_direct_ohm": 0.012528357706461046,
+  "R_L1_to_R14_ohm": 0.004057178799003031,
+  "R_L1_to_U6_ohm": 0.012325727068243213,
+  "R_R14_to_U6_direct_ohm": 0.012516606535566459,
   "floor_V": 3.135,
   "label": "Calculation / Inference (3V3 window, D-R12-139): Calculation on CAD copper (DC solves, 20 C) and the r12_windows 3V3 window (SLUSDW3A section 7.8 PFM band, R12F6-TRI-03); the band at R12's VIN, the drift case and load currents Inference",
   "u6_max_A": 0.006,
   "u6_only_6mA": {
    "I_A": 0.006,
-   "drop_V": 7.517014623876628e-05,
-   "margin_drift_V": 0.08862482985376152,
-   "margin_initial_V": 0.1188248298537613,
-   "min_VCC_drift_V": 3.2236248298537613,
-   "min_VCC_initial_V": 3.253824829853761
+   "drop_V": 7.509963921339876e-05,
+   "margin_drift_V": 0.08862490036078663,
+   "margin_initial_V": 0.11882490036078641,
+   "min_VCC_drift_V": 3.2236249003607864,
+   "min_VCC_initial_V": 3.253824900360786
   },
   "window_basis": "TI SLUSDW3A section 7.8 PFM output regulation -1.5 % ... +2.5 % (U2 LMR50410XDBVR is the PFM variant; typical components over TJ -40 ... 150 C, VIN 24 V, IOUT 0 A to full load, not production tested), taken as an effective VFB 0.985-1.025 V about the 1.000 V nominal; it contains section 7.5's VFB 0.99-1.01 V (R12F6-TRI-03); ILKG-FB 0.2 nA typ (neglected)"
  }

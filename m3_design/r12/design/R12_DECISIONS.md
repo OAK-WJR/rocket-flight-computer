@@ -2448,8 +2448,8 @@ Round 9 reviewed `418e5ea9…` (four Opus and five Astra lenses) and found **14 
 (0 Critical / 2 Major / 12 Minor)**. D-R12-161 … -166 record the fixes: every IC pin in I-5,
 direction/rating guards, probe clearances, doubled power taps, 70 °C copper and the dummy-fire bound,
 plus the owner-requested push-pull socket / 85 mm layout, the orchestrator's 0.1 % PA6 divider and
-0.425–0.455 V band, and the Preferred D8 / D121 swaps. Current board **`a02a6181…`**, 46 × 85 mm,
-is unreviewed. Lane S (`6403f0a`) reports two identical builds and `tools/check.sh` exit 0.
+0.425–0.455 V band, the Preferred D8 / D121 swaps and lane C's J430 local bypass (D-R12-169).
+Current board **`ae22387d…`**, 46 × 85 mm, is unreviewed. Lane C reports two identical builds and `tools/check.sh` exit 0.
 
 **Owner stop rule (2026-11-08, D-R12-167):** stop after two consecutive full rounds with zero Critical
 and zero Major real errors. Fix Minor real errors each round; they do not reset the count. This supersedes
@@ -2608,6 +2608,27 @@ specific redraw can fix against **both BPS.space AVA and LEVIA-H7**. Give both t
 and any layout lane. AVA's repository reading is `m3_design/assembly_review/sources/r10_design/AVA_LAYOUT.md`;
 LEVIA-H7 is the owner's routed STM32H7 flight-computer reference. These exemplars do not replace the gates.
 
+**D-R12-169 J430 local bypass restored (lane C; R12_VALIDATION A-14).** Lane L's east J430 left C460 (100 nF) and
+C461 (22 µF) in the west strip as plane caps, **41.92 / 39.17 mm** (pad edge) from J430.4's 3V3 pad; the nearest 3V3
+capacitor was U3's C29 at **9.24 mm** (Measured on `a02a6181…`). F5 asks for a local 100 nF / 22 µF bypass, and a card
+write draws current pulses (F5 allocates ≤ 200 mA; the edge rate is an Inference). C460 moves to **(44.13, 58.7)
+rotation 180** and C461 to **(44.55, 55.85) rotation 90**, in the east strip between U3 and the inserted card
+(the fit_check envelope covers x ≤ 45.9 for y 59.175–71.125; south of the socket the RAW_PROTECTED run takes y 71.1–72.6,
+and J430's courtyard the rest). One 0.4 mm F.Cu 3V3 run C461.1 → C460.1 → J430.4, no via in series; GND vias at
+(43.0, 58.7) and (44.55, 53.25). The strip has no 3V3 via: a 3V3 barrel there would sit within 1.04 mm of the
+B.Cu RAW_PROTECTED trunk at x 45.2 (FMEA I-5), so both caps reach the In2 plane through J430.4's existing via
+(40.45, 65.345). To fit the 1206 (pad edge 0.55 mm from the long edge), **U3 moves 0.15 mm west to (38.35, 54.45)**
+with its whole pad fan (QSPI tracks, the IO1 / IO2 vias and U3.4's GND via), so every pad entry is unchanged
+relative to U3. Same parts, values and codes: BOM unchanged; the 3V3 capacitance (C8 and C461 22 µF, C23 4.7 µF,
+nine 100 nF) is unchanged, so D-R12-06's U2 (LMR50410) output-capacitor reading stands. Pad-edge distances to
+J430.4 are now **C460 6.38 mm, C461 7.27 mm** (Measured). They exceed R10's carried 3 / 6 mm rule (check_r10
+`sd_bypass`), which R12 does not gate; A-14 is narrowed, not closed. C460's designator has no legal spot and is
+hidden (F.Fab): **107 shown / 85 hidden**. U3's pin-1 dot moves to (43.36, 55.91). Board `ae22387d…`;
+S-10's victims (80) and its 209 measured exception pairs are identical to `a02a6181…`'s; route_check's counts and
+anchors are unchanged. Stage D rebound on the as-saved board: GND return 2.672 mΩ (was 2.670), 3V3 L1 → U6
+12.326 mΩ (was 12.337), every other figure identical; hot-plug electrical SHA `8396e2da…`, 2304 / 2304, every row identical,
+minimum −14.255 V (Simulation / Inference).
+
 ## 2. Stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history. C25 / C26 alone are updated to the round-3 C1548 read
@@ -2716,7 +2737,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | A-11 | P2: five supports, no sixth, insulated hardware | Four M3 supports (3.0, 5.9), (43.0, 5.9), (3.5, 79.1), (42.5, 79.1), 46 × 85 mm; nylon hardware, CAD envelope fit only | D-R12-24, -162 |
 | A-12 | F9: J1 / J400 separately labelled 2-pos DB125 terminals | J1 is plated wire pads for a 16–20 AWG lead or a later 5.0 mm terminal (D-R12-30); J400 is an SH-4 (D-R12-31) | D-R12-30, -31; D-R12-133 |
 | A-13 | F8: "Ordinary 0.15 mm board clearance applies" to the pyro channel | 0.10 mm board floor. The fire nets meet S-10's carried limits except its recorded exceptions (PE4's lane 0.150 mm from U1.B2 and from HSE_IN's U1.C1); other pyro / arming nets keep gaps of 0.10–0.15 mm, e.g. ACT_FET_S–ACT_GATE 0.117 mm (R120.1 to the ACT_GATE track, classed out of the pack rule, D-R12-137), ACT_EN_MCU–PYRO1_CONT and ARM1_SENSE–3V3A / LED_RED 0.125 mm, CONT_MID–R173.1 / R129.2 0.131 mm, ARM1_SENSE / ACT_EN_MCU / PYRO1_CONT / BAT_SW_RETURN / BAT_FAULT_N / U9_FLT to the B GND pour 0.1005 mm (Measured on `f26dfef1…`, unchanged on `82eddc69…`). On `6e874d4e…` RAW_ACT–R132.2 was 0.137 mm, gone since the pack-energy rule (D-R12-137); ACT_FET_S track (5.1, 30.4)–(6.3, 31.6) to Q120.1 (ACT_GATE) remains at 0.121 mm, an ACT_FET_S–ACT_GATE pair classed out of the pack rule (a hold-off, V_GS ≈ 0; D-R12-146; corrected by D-R12-151, R12F7-TRI-15: this row said both were gone) | D-R12-03, -126; D-R12-133, -143, -151 |
-| A-14 | F5: J430 local 100 nF / 22 µF bypass | Current east J430.4 drops to In2 3V3; C460/C461 are plane-fed in the west strip. Old 8.96 / 11.70 / 7.98 mm distances describe `f26dfef1…` only; current bypass geometry is R12_VALIDATION A-14 | D-R12-162 |
+| A-14 | F5: J430 local 100 nF / 22 µF bypass | C460 / C461 in the east strip on one F.Cu run to J430.4 (no via in series): 6.38 / 7.27 mm pad edge (`ae22387d…`; 41.92 / 39.17 mm on `a02a6181…`). Above R10's 3 / 6 mm rule, which R12 does not gate; the courtyard, card envelope and RAW run block nearer sites | D-R12-162, -169 |
 | A-15 | F5: SPI3 PC10 / PC11 / PC12 AF6, PD0 chip select | SPI4 PE12 / PE13 / PE14 AF5, PA7 chip select; PD0 NC | D-R12-63A, -158 |
 | A-16 | F9: PD8 / PB13 / PC6 UARTs enabled only while PA4 reads low | PA4 NC; enable port UARTs only while PD10 PORT_SENSE is high, park their TX pins analog when it falls or PA6 trips | D-R12-93, -158 |
 | A-17 | F10: 1 supply, 2 GND, 3 TXO, 4 RXI; R10 camera UART7 PE8 / PE7 | J420 / J440 SH-4 and J410 SH-6: 1 GND, 2 PORT_4V8, 3 TXO, 4 RXI (J410 5–6 NC). J9 SH-6: 1–2 CAM_5V, 3–4 GND, 5 RXI, 6 TXO; camera UART4 PC10 TX / PC11 RX AF8 | D-R12-31, -93, -158 |

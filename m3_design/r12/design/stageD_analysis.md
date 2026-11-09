@@ -4,10 +4,18 @@
 D-R12-144, board `be81f40b…`, `66323cf0…` since R12F3-TRI-05, `db1f0999…` since R12F4-TRI-06, `68e6b650…` since the AVA polish pass D-R12-121 … -124,
 `14b82d39…` (lane P) and `6e874d4e…` (lane P2) in the round-5 fix pass R12F5-TRI-01 / -06 / -21, 2026-11-06, and
 `3f9579fa…` (lane P), `6a1c99e0…` (lane P3) and `f26dfef1…` (lane P4) in the round-6 fix pass D-R12-134 …
--143, 2026-11-07; R12F6-TRI-10; and `82eddc69…` in round 7, `418e5ea9…` in round 8, and current `a02a6181…` (46 × 85 mm) after round 9, D-R12-161 … -165): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
+-143, 2026-11-07; R12F6-TRI-10; and `82eddc69…` in round 7, `418e5ea9…` in round 8, `a02a6181…` after round 9 (D-R12-161 … -165) and current `ae22387d…` (46 × 85 mm, D-R12-169): the hot-plug result is unchanged; the RAW_PROTECTED, VLOGIC, PORT_4V8 and 3V3 copper figures, the PA6
 corners and U6's supply changed. This file records the 100 mm boards as they were.
 
-**Final round 9 binding (`6403f0a`, D-R12-165).** Current board and source SHA-256 in `stageD_budget.json`:
+**Lane C binding (D-R12-169).** Current board and source SHA-256 in `stageD_budget.json`:
+`ae22387d35308f877b4065e40b39b3c3f379acc3d500b6835b82e16c4fde9648` (as-saved fills, `--source-board` the board itself). C460 / C461 moved and two
+west-strip 3V3 vias and two GND vias went, so only plane solves moved: GND return Q124 → J1.2 **2.672 mΩ** (was 2.670),
+3V3 L1 → U6 12.326 mΩ (was 12.337), R14 → U6 12.517 mΩ (was 12.528), L1 → R14 unchanged; U6's minimum VCC stays
+**3.207 V** at the 1 A bound (Calculation / Inference). Every other stage D figure is identical. Hot-plug re-extracted:
+electrical SHA `8396e2da…` (C460 / C461 positions), **2304 / 2304 pass**, every row identical, minimum **−14.255 V**
+(Simulation / Inference).
+
+**Round 9 binding (`6403f0a`, D-R12-165).** Board and source SHA-256 in `stageD_budget.json`:
 `a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77`. D8/D121 part fields changed; all DC solves and lane B figures
 below are unchanged. Hot-plug electrical SHA `cda2664b…`, 2304 / 2304 pass, minimum −14.255 V
 (Simulation / Inference). Stage D uses the as-saved fills; lane B's refill caveat below still applies.

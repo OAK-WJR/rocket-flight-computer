@@ -140,15 +140,7 @@ track	PORT_4V8	F	0.8	14.9	74.8	14.9	78.2
 track	PORT_4V8	F	0.8	14.9	78.2	14.9	79
 via	PORT_4V8	-	0.45	14.9	78.2		
 via	PORT_4V8	-	0.45	14.9	79		
-# 3V3 bulk C461 (2, 53.6), C460 (2.2, 47.5), C23 (2.2, 58) in the empty west strip, rotated 90
-track	3V3	F	0.5	2	55.075	3.3	55.075
-via	3V3	-	0.45	3.3	55.075		
-track	GND	F	0.5	2	52.125	3.3	52.125
-via	GND	-	0.45	3.3	52.125		
-track	3V3	F	0.3	2.2	47.92	2.2	48.8
-via	3V3	-	0.45	2.2	48.8		
-track	GND	F	0.3	2.2	47.08	2.2	46.2
-via	GND	-	0.45	2.2	46.2		
+# 3V3 bulk C23 (2.2, 58) in the empty west strip, rotated 90
 track	3V3	F	0.3	2.2	58.7	2.2	59.6
 via	3V3	-	0.45	2.2	59.6		
 track	GND	F	0.3	2.2	57.3	2.2	56.4
@@ -156,3 +148,15 @@ via	GND	-	0.45	2.2	56.4
 # TP88 0.4 mm west and aft, 1.0 mm from C406.1 (its probe clearance)
 track	GND	F	0.3	10.2	73	10.2	71.85
 via	GND	-	0.45	10.2	71.85		
+# --- round 9 lane C (D-R12-169): J430's local bypass C461 22 uF (44.55, 55.85) rot 90 and C460 100 nF (44.13, 58.7)
+# rot 180 in the east strip between U3 and the card mouth (the strip is clear of the inserted card's envelope, y < 59.175).
+# One F 3V3 run C461.1 -> C460.1 -> J430.4 (no via in series); each cap has its own GND via. The vias stay west of
+# x 44.575 (0.1 mm to the B RAW_PROTECTED trunk at x 45.2; a 3V3 via would need 1.04 mm, FMEA I-5, so none here).
+track	3V3	F	0.4	44.55	57.325	44.55	58.7
+track	3V3	F	0.4	44.55	58.7	44.55	64.6
+track	3V3	F	0.4	44.55	64.6	43.805	65.345
+track	3V3	F	0.4	43.805	65.345	41.45	65.345
+track	GND	F	0.3	43.71	58.7	43	58.7
+via	GND	-	0.45	43	58.7		
+track	GND	F	0.4	44.55	54.375	44.55	53.25
+via	GND	-	0.45	44.55	53.25		

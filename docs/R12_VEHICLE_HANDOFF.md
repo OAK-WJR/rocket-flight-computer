@@ -1,12 +1,12 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `a02a618101d620b6c61e49899aaec8a8253afda4920581173efacc2417057c77`, 46 × 85 × 1.6 mm,
+**Status.** PCB `ae22387d35308f877b4065e40b39b3c3f379acc3d500b6835b82e16c4fde9648`, 46 × 85 × 1.6 mm,
 four layers, every part on the top face and assembled by JLC. R12 remains a CAD candidate, not accepted,
 nothing ordered; R9 stays accepted. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
 [R12_VALIDATION.md](R12_VALIDATION.md). No physical fit is claimed.
 
 Coordinates are board mm: x east (0 … 46), y forward from the aft edge (0 … 85), top face F.
-Current centres are `m3_design/r12_place.tsv` on `a02a6181…` (Measured). Round 9 places U3 under J3,
+Current centres are `m3_design/r12_place.tsv` on `ae22387d…` (Measured; D-R12-169 moved U3 0.15 mm west and C460 / C461 beside J430). Round 9 places U3 under J3,
 the push-pull J430 east below U3, and the port buck in the old J430 bay. The forward ports and supports
 move 3 mm aft; LS120 stays at (5.8, 66.4). D-R12-161 … -165 record the changes.
 

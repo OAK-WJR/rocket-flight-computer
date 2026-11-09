@@ -400,7 +400,7 @@ feeder is $3.07 per code per order.
 
 ## Round 9 parts record (2026-11-08, D-R12-162 / -164 / -165)
 
-Current board `a02a6181…`: J430 C585350 replaces the hinge; R60 C852472 and R61 C190095 are 0.1 %
+Current board `ae22387d…` (BOM unchanged since `a02a6181…`): J430 C585350 replaces the hinge; R60 C852472 and R61 C190095 are 0.1 %
 25 ppm/K. D8 C19077532 and D121 C85364 are Preferred fee-exempt. The §2 rows carry their sources and
 ratings. D121 leaves the A-9 / O-R12-02 reflow-Inference list: ProTek states 260–270 °C. D8's MSL is
 unstated (MSL 1 class Inference), and hongjiacheng brand-quality risk is an Inference. J430 and both
