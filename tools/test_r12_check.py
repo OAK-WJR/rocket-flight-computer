@@ -261,12 +261,14 @@ class KPower(unittest.TestCase):
         for tap in ('R14.1', 'R15.2', 'U2.2', 'R81.2', 'C87.2', 'R93.2', 'R84.2', 'R94.2', 'U9.8', 'R401.2', 'U400.1',
                     'R435.2', 'U403.1', 'R5.2', 'U1.D5', 'C19.2', 'C20.2', 'U1.F8', 'U1.E7', 'U4.6', 'U4.7', 'R61.2',
                     'D5.2', 'D9.1', 'C97.1', 'U403.3', 'U1.H1', 'U5.1',
-                    'R164.1', 'U6.7', 'U6.14', 'U6.17', 'U1.H9', 'R111.1', 'R112.2'):     # R12F9-TRI-07 / -08
+                    'R164.1', 'U6.7', 'U6.14', 'U6.17', 'U1.H9', 'R111.1', 'R112.2',      # R12F9-TRI-07 / -08
+                    'U5.3', 'U5.4', 'R12.2', 'R13.2', 'U1.G1', 'C30.1'):                   # R12F10-TRI-07
             self.assertIn(tap, taps)
         # the single points left on purpose: the U1 dog-bones (PD10's since R12F9-TRI-08), BOOT0's far via and the two
         # 3V3A feeds (owner rows)
         self.assertEqual(sorted({x[1] for x in r12.SINGLE_OPEN_EXCEPTIONS_R12}),
-                         ['via 3V3A (19.65, 36.80)', 'via 3V3A (25.80, 29.80)', 'via BOOT0 (17.80, 48.20)',
+                         ['via 3V3 (20.25, 31.50)', 'via 3V3A (19.65, 36.80)', 'via 3V3A (25.70, 42.75)',
+                          'via 3V3A (25.80, 29.80)', 'via BOOT0 (17.80, 48.20)',
                           'via BOOT0 (23.00, 52.40)', 'via PORT_SENSE (26.20, 56.40)', 'via VCAP1 (25.40, 54.00)',
                           'via VCAP2 (24.60, 54.00)'])
 
@@ -286,7 +288,8 @@ class KPower(unittest.TestCase):
         """Seeded (R12F9-TRI-07 / -08): each second barrel of R164.1's 3V3 end, U6's ground, PD10's divider end of the
         PORT_SENSE lane, R111.1's PORT_4V8 feed and R112.2's GND end removed: K-power names the tap left on one via."""
         for (x, y), taps in (((19.8, 40.2), ('R164.1',)), ((23.2, 31.6), ('U6.7', 'U6.14', 'U6.17')),
-                             ((26.45, 75.4), ('U1.H9',)), ((26.55, 78.4), ('R111.1',)), ((28.8, 76.2), ('R112.2',))):
+                             ((26.45, 74.12), ('U1.H9',)), ((26.55, 76.4), ('R111.1',)), ((28.8, 74.2), ('R112.2',))):
+            # R12F10-TRI-16: the port row's cells 2 mm aft (83 mm outline)
             with self.subTest(via=(x, y)):
                 via = self.drop_via(x, y)
                 try:
@@ -295,6 +298,24 @@ class KPower(unittest.TestCase):
                     self.board.Add(via)
                 for tap in taps:
                     self.assertTrue([i for i in issues if i.startswith(f'{tap} (') and 'hangs on one via' in i], issues)
+
+    def test_r12f10_tri07_second_vias_removed_fail(self):
+        """Seeded (R12F10-TRI-07): each new second barrel removed (U5's ground (20.6, 25.95), R13.2's 3V3 (18.8, 30.17),
+        U1's VSSA (18.6, 55.55)): K-power names the taps left on one via; and R12.2's / C30.1's measured exceptions
+        removed, K-power names their single vias."""
+        for (x, y), taps in (((20.6, 25.95), ('U5.3', 'U5.4')), ((18.8, 30.17), ('R13.2',)), ((18.6, 55.55), ('U1.G1',))):
+            with self.subTest(via=(x, y)):
+                via = self.drop_via(x, y)
+                try:
+                    issues, _ = self.kpower()
+                finally:
+                    self.board.Add(via)
+                for tap in taps:
+                    self.assertTrue([i for i in issues if i.startswith(f'{tap} (') and 'hangs on one via' in i], issues)
+        short = [x for x in r12.SINGLE_OPEN_EXCEPTIONS_R12 if x[0] not in ('R12.2', 'C30.1')]
+        issues = self.kpower(short)[0]
+        for tap, via in (('R12.2', 'via 3V3 (20.25, 31.50)'), ('C30.1', 'via 3V3A (25.70, 42.75)')):
+            self.assertTrue([i for i in issues if i.startswith(f'{tap} (') and via in i], issues)
 
     def test_exceptions_are_exact(self):
         """A missing exception fails the tap it covered; an entry whose via is no longer a single point is stale."""
@@ -975,7 +996,10 @@ pcbnew.SaveBoard(sys.argv[1], b)
             self.assertEqual(fire.pair_limit(rail, None, '3V3', None, False)[:2], (fire.I5_PORT_MIN, 'i5-port'))
             # R12F8-TRI-01: every victim but the FT-only nets; a non-victim stays unprotected
             self.assertEqual(fire.pair_limit(rail, None, 'SERVO1_MCU', None, False)[:2], (fire.I5_PORT_MIN, 'i5-port'))
-            self.assertEqual(fire.pair_limit(rail, None, 'CAM_MCU_RX', None, False)[0], None)
+            self.assertEqual(fire.pair_limit(rail, None, 'VBUS_SENSE', None, False)[0], None)
+            # R12F10-TRI-06: CAM_MCU_RX's loader reason covers CAM_5V only
+            self.assertEqual(fire.pair_limit(rail, None, 'CAM_MCU_RX', None, False)[0],
+                             None if rail == 'CAM_5V' else fire.I5_PORT_MIN)
             # R12F9-TRI-01: CAM_EN is an IC-pin victim, rated (I5_RATED) only above CAM_BST / CAM_SW / RAW_PROTECTED
             self.assertEqual(fire.pair_limit(rail, None, 'CAM_EN', None, False)[:2], (fire.I5_PORT_MIN, 'i5-port'))
         # the stricter classes still win: PYRO1_OUT against VLOGIC, BAT_IN against RAW_PROTECTED
@@ -996,8 +1020,8 @@ pcbnew.SaveBoard(sys.argv[1], b)
             self.assertEqual("B.NetName == 'CAM_EN'" in rule[2], rail not in fire.I5_RATED['CAM_EN'][3], rail)
             for g in fire.GATES:                                                    # their own, stricter, rule
                 self.assertNotIn(f"B.NetName == '{g}'", rule[2])
-            for ft in fire.I5_PORT_FT:
-                self.assertEqual(f"B.NetName == '{ft}'" in rule[2], rail in fire.I5_PACK, (rail, ft))
+            for ft in fire.I5_PORT_FT:                              # R12F10-TRI-06: exempt only from its loader rails
+                self.assertEqual(f"B.NetName == '{ft}'" in rule[2], rail not in fire.ft_rails(ft), (rail, ft))
         self.assertFalse([1 for k, v in fire.EXCEPTIONS.items() for a, b, *_ in v
                           if fire.EXCEPTION_NETS[a] in fire.I5_PACK + fire.I5_PORT and fire.EXCEPTION_NETS[b] in fire.LOGIC])
         ev = self.s10()['evidence']['s10']['i5']
@@ -1011,7 +1035,8 @@ pcbnew.SaveBoard(sys.argv[1], b)
             if k in excepted:                         # R12F8-TRI-01: PA6's divider; R12F9-TRI-01: U9's / U400's own pins
                 self.assertIn(k, ('VLOGIC / VLOGIC_SENSE', 'RAW_PROTECTED / BAT_ENABLE', 'RAW_PROTECTED / BAT_OVLO',
                                   'RAW_PROTECTED / U9_FLT', 'RAW_PROTECTED / BAT_DVDT', 'RAW_PROTECTED / BAT_ILIM',
-                                  'RAW_PROTECTED / PORT_FB'))
+                                  'RAW_PROTECTED / PORT_FB', 'RAW_PROTECTED / unconnected-(U9-ITIMER-Pad10)',
+                                  'RAW_PROTECTED / unconnected-(U9-AUXOFF-Pad3)'))         # R12F10-TRI-05
                 continue
             self.assertGreaterEqual(g, lim - 5e-5, k)
 
@@ -1155,8 +1180,8 @@ pcbnew.SaveBoard(sys.argv[1], b)
         found = self.drc_all(strip=(x - 1.0, y - 0.2, x + 1.5, y + 1.5, 'VBUS,3V3'))
         self.assertTrue([v for v in found if 'Tag-Connect contact to foreign copper' in v], found)
 
-    def drc_all(self, strip):
-        """kicad-cli DRC of the planted board (strip as drc_s10): every clearance violation."""
+    def drc_all(self, strip, pads=None):
+        """kicad-cli DRC of the planted board (strip and pads as drc_s10): every clearance violation."""
         if not Path(self.CLI).exists():
             if os.environ.get('R12_BOARD_REQUIRED') == '1':
                 self.fail(f'kicad-cli unavailable ({self.CLI}) while R12_BOARD_REQUIRED=1')
@@ -1166,8 +1191,8 @@ pcbnew.SaveBoard(sys.argv[1], b)
             for name in ('m3.kicad_dru', 'm3.kicad_pro'):
                 shutil.copy2(BOARD12.with_name(name), Path(d) / name)
             pcbnew.SaveBoard(str(path), self.board)
-            subprocess.run([sys.executable, '-I', '-c', self.STRIP, str(path), *map(str, strip)], check=True,
-                           capture_output=True, timeout=300)
+            subprocess.run([sys.executable, '-I', '-c', self.STRIP, str(path), *map(str, strip)] +
+                           ([pads] if pads else []), check=True, capture_output=True, timeout=300)
             subprocess.run([self.CLI, 'pcb', 'drc', '--format', 'json', '--severity-error', '-o', str(Path(d) / 'd.json'),
                             str(path)], capture_output=True, timeout=300, check=True)
             found = json.loads((Path(d) / 'd.json').read_text())['violations']
@@ -1369,14 +1394,112 @@ pcbnew.SaveBoard(sys.argv[1], b)
         self.track('3V3', (xx, y - 0.2), (xx, y + 0.2), width=0.1)
         self.planted(('VLOGIC TP83.1 to 3V3 track', ': 1.02', 'below 1.04 mm (i5-pack)'))
         found = self.drc_all(strip=(x - 1.5, y - 1.5, xx + 1.0, y + 1.5, '3V3'))
-        self.assertTrue([v for v in found if 'clearance 1.0400 mm' in v and 'TP83' in v and '3V3' in v], found)
-        self.assertEqual((fire.probe_clearance('VLOGIC'), fire.probe_clearance('PYRO1_GATE'), fire.probe_clearance('GND'),
-                          fire.probe_clearance('CAM_5V')), (fire.PACK_MIN, fire.DRU_GATE_MM, 1.0, 1.0))
+        self.assertTrue([v for v in found if 'clearance 1.0600 mm' in v and 'TP83' in v and '3V3' in v], found)
         self.setUp()
         tp = next(p for f in self.board.GetFootprints() if f.GetReference() == 'TP83' for p in f.Pads())
-        self.assertAlmostEqual(pcbnew.ToMM(tp.GetLocalClearance()), fire.PACK_MIN)
+        self.assertAlmostEqual(pcbnew.ToMM(tp.GetLocalClearance()), fire.DRU_GATE_MM)
         tp.SetLocalClearance(mm(1.0))
-        self.planted(('test pad TP83.1 (VLOGIC) local clearance 1.0 mm, below its S-10 floor 1.04 mm',))
+        self.planted(('test pad TP83.1 (VLOGIC) local clearance 1.0 mm, below its S-10 floor 1.06 mm',))
+
+    def test_r12f10_tri02_probe_clearance_is_the_largest_pair_limit(self):
+        """R12F10-TRI-02: a test pad's override replaces the DRU against every net, so it is the largest S-10 limit any
+        pair of its net can take: every net but GND sits beside the gate nets (DRU_GATE_MM), GND beside a pack-energy net
+        (PACK_MIN). Plants: a RAW_ACT track 1.020 mm from TP74 (GND; the round 10 safety lens's case, passed by the old
+        1.0 mm override) and a PYRO1_GATE_N track 1.050 mm from TP83 (VLOGIC; passed by the old 1.04 mm override) each
+        fail S-10 and DRC at the pad's override; and every TP on the board carries probe_clearance() of its net."""
+        for net in fire.PROTECTED + fire.LOGIC + fire.I5_VICTIMS + ('CAM_5V', 'SOME_OTHER_NET'):
+            with self.subTest(net=net):
+                self.assertEqual(fire.probe_clearance(net), fire.DRU_GATE_MM)
+        self.assertEqual(fire.probe_clearance('GND'), fire.PACK_MIN)
+        for f in self.board.GetFootprints():
+            if f.GetReference().startswith('TP'):
+                for p in f.Pads():
+                    self.assertAlmostEqual(pcbnew.ToMM(p.GetLocalClearance()), fire.probe_clearance(p.GetNetname()))
+        for ref, net, gap, want, rule in (('TP74', 'RAW_ACT', 1.02, 'below 1.04 mm (pack)', 'clearance 1.0400 mm'),
+                                          ('TP83', 'PYRO1_GATE_N', 1.05, 'below 1.0585 mm (gate)',
+                                           'clearance 1.0600 mm')):
+            with self.subTest(ref=ref):
+                self.setUp()
+                tp = next(p for f in self.board.GetFootprints() if f.GetReference() == ref for p in f.Pads())
+                c = tp.GetPosition()
+                x, y, r = pcbnew.ToMM(c.x), pcbnew.ToMM(c.y), pcbnew.ToMM(tp.GetSize().x) / 2
+                xx = round(x - r - gap - 0.05, 4) if ref == 'TP74' else round(x + r + gap + 0.05, 4)
+                self.track(net, (xx, y - 0.2), (xx, y + 0.2), width=0.1)
+                self.planted((f'{ref}.1', f': {gap:.2f}', want))
+                box = (min(x, xx) - 1.6, y - 1.6, max(x, xx) + 1.6, y + 1.6, net)
+                found = self.drc_all(strip=box, pads=f'{ref}.1')
+                self.assertTrue([v for v in found if rule in v and ref in v and net in v], found)
+
+    def test_r12f10_tri03_floors_are_the_measured_gaps(self):
+        """R12F10-TRI-03: every exception floor is its pair's measured gap rounded down to 1 um; U9.5-C82.1 is 0.700 (it
+        kept round 6's 0.650 after C82 moved), and a floor put back 0.05 mm below its gap fails S-10."""
+        from unittest import mock
+        self.assertIn(('U9.5', 'C82.1', 'F.Cu', 0.700), fire.EXCEPTIONS['PACK_OUT'])
+        rep = self.s10()
+        self.assertTrue(rep['ok'], rep['issues'])
+        loose = tuple((a, b, l, 0.650 if (a, b) == ('U9.5', 'C82.1') else f) for a, b, l, f in fire.EXCEPTIONS['PACK_OUT'])
+        with mock.patch.dict(fire.EXCEPTIONS, PACK_OUT=loose):
+            rep = self.s10()
+        self.assertTrue([i for i in rep['issues'] if 'exception U9.5 to C82.1 on F.Cu (PACK_OUT): floor 0.650 mm' in i
+                         and 'more than 1 um below its measured gap 0.7000 mm' in i], rep['issues'])
+
+    def test_r12f10_tri05_unconnected_ic_pins_are_i5_victims(self):
+        """R12F10-TRI-05: an unconnected IC pin is an I-5 victim (U9's AUXOFF / ITIMER beside its OUT are measured
+        exceptions under I5_U9_NC; a connector's NC contact is not an IC pin); without the exceptions S-10 fails them,
+        the DRU's I-5 rules name the wildcard, and a RAW_PROTECTED plant 0.50 mm from an unconnected U1 ball fails S-10
+        and DRC."""
+        from unittest import mock
+        self.assertEqual(fire.pair_limit('RAW_PROTECTED', 'U9', 'unconnected-(U9-ITIMER-Pad10)', 'U9', False)[:2],
+                         (fire.PACK_MIN, 'i5-pack'))
+        self.assertEqual(fire.pair_limit('VBUS', None, 'unconnected-(U1-PA0-PadA1)', 'U1', False)[:2],
+                         (fire.I5_PORT_MIN, 'i5-port'))
+        self.assertEqual(fire.pair_limit('RAW_PROTECTED', None, 'unconnected-(J410-NC-Pad5)', 'J410', False)[1],
+                         'unprotected')
+        for r in fire.dru_rules():
+            if '(I-5 rail)' in r[0]:
+                self.assertIn(f"B.NetName == '{fire.I5_NC_DRU}'", r[2], r[0])
+        with mock.patch.dict(fire.EXCEPTIONS, I5_U9_NC=()):
+            rep = self.s10()
+        for pin in ('unconnected-(U9-ITIMER-Pad10) U9.10', 'unconnected-(U9-AUXOFF-Pad3) U9.3'):
+            self.assertTrue([i for i in rep['issues'] if pin in i and '(i5-pack)' in i], rep['issues'])
+        nc = next(p for f in self.board.GetFootprints() if f.GetReference() == 'U1' for p in f.Pads()
+                  if p.GetNetname().startswith('unconnected-') and pcbnew.ToMM(p.GetPosition().y) > 57.5)
+        c = nc.GetPosition()
+        x, y = pcbnew.ToMM(c.x), pcbnew.ToMM(c.y)
+        self.track('RAW_PROTECTED', (x - 0.2, round(y + 0.2 + 0.5 + 0.05, 4)), (x + 0.2, round(y + 0.2 + 0.5 + 0.05, 4)),
+                   width=0.1)
+        self.planted((f'to {nc.GetNetname()} U1.{nc.GetNumber()}', 'below 1.04 mm (i5-pack)'))
+        found = self.drc_s10(strip=(x - 1.4, y - 1.4, x + 1.4, y + 2.2, 'RAW_PROTECTED'), pads=f'U1.{nc.GetNumber()}')
+        self.assertTrue([v for v in found if "'S-10 RAW_PROTECTED (I-5 rail) to every victim'" in v
+                         and nc.GetNetname() in v], found)
+
+    def test_r12f10_tri06_loader_exemption_is_rail_specific(self):
+        """R12F10-TRI-06: CAM_MCU_RX's loader reason covers CAM_5V only, so it is held 0.300 mm from VBUS and PORT_4V8
+        (S-10 and the DRU); i5_ft_guard() fails a loader entry whose reason does not name a rail it exempts, or a rail that
+        is no port rail; a VBUS plant 0.20 mm from CAM_MCU_RX's via fails S-10 and DRC."""
+        from unittest import mock
+        net = BOARD12.with_name('schematic.net.xml')
+        self.assertEqual(fire.pair_limit('CAM_5V', None, 'CAM_MCU_RX', None, False)[1], 'unprotected')
+        for rail in ('VBUS', 'PORT_4V8'):
+            self.assertEqual(fire.pair_limit(rail, None, 'CAM_MCU_RX', None, False)[:2], (fire.I5_PORT_MIN, 'i5-port'))
+            rule = next(r for r in fire.dru_rules() if r[0] == f'S-10 {rail} (I-5 rail) to every victim')
+            self.assertIn("B.NetName == 'CAM_MCU_RX'", rule[2])
+        rule = next(r for r in fire.dru_rules() if r[0] == 'S-10 CAM_5V (I-5 rail) to every victim')
+        self.assertNotIn("B.NetName == 'CAM_MCU_RX'", rule[2])
+        self.assertEqual(fire.ft_rails('VBUS_SENSE'), ('CAM_5V', 'PORT_4V8', 'VBUS'))
+        self.assertEqual(fire.i5_ft_guard(net), [])
+        rails, why = fire.I5_FT_LOADER['CAM_MCU_RX']
+        for bad, want in ((('CAM_5V', 'VBUS'), 'the reason does not name VBUS'), (('RAW_PROTECTED',), 'non-empty set of port rails'),
+                          ((), 'non-empty set of port rails')):
+            with self.subTest(rails=bad), mock.patch.dict(fire.I5_FT_LOADER, CAM_MCU_RX=(bad, why.replace('VBUS', 'USB'))):
+                self.assertTrue([i for i in fire.i5_ft_guard(net) if i.startswith('I5_FT_LOADER CAM_MCU_RX') and want in i])
+        via = next(t for t in self.board.GetTracks() if t.GetClass() == 'PCB_VIA' and t.GetNetname() == 'CAM_MCU_RX')
+        vx, vy = pcbnew.ToMM(via.GetPosition().x), pcbnew.ToMM(via.GetPosition().y)
+        xx = round(vx + 0.225 + 0.2 + 0.05, 4)
+        self.track('VBUS', (xx, vy - 0.2), (xx, vy + 0.2), pcbnew.B_Cu, width=0.1)
+        self.planted(('VBUS track (', 'to CAM_MCU_RX via', ': 0.2', 'below 0.3 mm (i5-port)'))
+        found = self.drc_s10(strip=(vx - 1.0, vy - 1.0, xx + 1.0, vy + 1.0, 'VBUS,CAM_MCU_RX'))
+        self.assertTrue([v for v in found if "'S-10 VBUS (I-5 rail) to every victim'" in v and 'CAM_MCU_RX' in v], found)
 
     def test_dru_is_generated_from_s10(self):
         """The DRU's S-10 rules are r12_fire.dru_rules(), in order after R11's scoped rules, with general limits at least

@@ -22,4 +22,5 @@ RAW_PROTECTED	In2	1	14.5,0 46,0 46,17.7 44.0,17.7 44.0,16.8 32.6,16.8 32.6,7.0 2
 # D-R12-99 (90 mm outline): the PORT_4V8 island moves with the port row; it starts at y 80.7, forward of the
 # port-UART B lanes and their vias (y <= 80.0), so their B chains stay over the 3V3 sheet.
 # R12F9 lane L (85 mm outline): the island moves 3 mm aft with the port row
-PORT_4V8	In2	1	0.5,77.6 45.5,77.6 45.5,84.5 0.5,84.5
+# R12F10-TRI-16 (83 mm outline): the island moves 2 mm aft with the port row
+PORT_4V8	In2	1	0.5,75.6 45.5,75.6 45.5,82.5 0.5,82.5

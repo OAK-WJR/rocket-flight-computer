@@ -71,8 +71,8 @@
     "cad/kilib/rocket.pretty/SOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL.kicad_mod": "448c89fa3a8f53810be2c986bedc11a06277204c88de6ccd372e8ce5b8c46f8f",
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "30874fda58b8d8097aea1ecac5b1c73e308d8042aba461e6acbe30c562663500",
-    "cad/m3.kicad_dru": "f95ea0eedb85ef9d766c370cdd4a5e8ca4dca9fb7ff3818a13ba9997688b20e1",
-    "cad/m3.kicad_pcb": "ae22387d35308f877b4065e40b39b3c3f379acc3d500b6835b82e16c4fde9648",
+    "cad/m3.kicad_dru": "8974a6cd6a7ec43c865b85350bb37e7f9aecc963dc2d2f6a3abf61574958c5de",
+    "cad/m3.kicad_pcb": "a1e65bb4109ba5db7821cc1ec8b1ae6c3db88d5f9bd1f1700eb0cb182721e59a",
     "cad/m3.kicad_pro": "8b6671b8e9e8a466049a6c136847edb64cd4ea25ed049602de823e27d7b3ca46",
     "cad/m3.kicad_sch": "f0853523e08eb853ce74233b888eb4d19ac9981bd1eed80435b9dd6f56a0ad95",
     "cad/mcu.kicad_sch": "d4e6d0087dd91eda81473cc9e7b4bdd475854e9999fa6ce9a24d3ad2701f66d6",
@@ -84,10 +84,10 @@
     "cad/telemetry.kicad_sch": "dbcfbb4b795608f717dcab8d3f3502c5558864d8f8ece532549c86a3bde938f6",
     "cad/usb_sense.kicad_sch": "80ce491f0f50d06763b696cc75b0bbb2057c2754dfbd2521c27a0094db92201e",
     "m3_design/r12/design/circuit.json": "1bc79c457b5346aae8543146a13ce5997b0cde1ba90d47dcbc9c51976ba9d0cf",
-    "m3_design/r12_fire.py": "71c54dd815d6778ca7851dc37999316079d4b49b699888e1d014956d8ada2a60",
+    "m3_design/r12_fire.py": "c2d2954607e29080706d06c2f45bdbea04ebf09a0fdf83a03758d9455aa85822",
     "m3_design/r12_parts.py": "35f6b4e06455002c0d3e16d658f9448cddf2c5636dc88d2d7e39e481531f0e20",
     "quality_audit/sexpr.py": "32f5b57f3716ff98a6eebd2ec125cded7a97b003e0c6bc9d062a7abfea3da64a",
-    "tools/check_r12.py": "5844fdfeff4c4e06c526160dffd27dde14c07782d119afb6861051d721acd9ba",
+    "tools/check_r12.py": "5d8a66d8661bbc9de93396f2ba1aaece306d70d8675668478caa837b3156d0ce",
     "tools/export_fab.py": "41b0a43a24f7b223136095fb9ad9f8908b4a110de8fe1f0202bbc26a887ddc0f",
     "tools/export_fab_r12.py": "4d924491150ef088ce52a33f0e3d030cd118b5f924dd1e76b63d24044d7c0e1b",
     "tools/fab_manifest.py": "b23f5e2aa2fac303a258cf46c5ed154ce35b48c5ec4a68361c01e32a85974e6c",
@@ -99,11 +99,11 @@
     "tools/paste_check.py": "a6f7b9995f2e71548b113a8e7cc3e7bddc64961193cab0a011c61ea2122bd0b6"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "88f6ac61d04aebd8314dfe77cd207a073e54459dff9927844ffcd12ff11075b4",
-    "m3_assembly_top.pdf": "4bdb8c67552963db2a2b5e2a15893dd29567ea506db79b98205d675738077550",
+    "m3_assembly_bottom.pdf": "b5a28ca56015a98e2e71d57e063dc9637932ecbdfd7bed6173a66acfc6a6b9cf",
+    "m3_assembly_top.pdf": "a97e0ae8fec600c7a7d3d247fa5684fdb6155638c868d4cc6d88ec9a8130f956",
     "m3_bom_jlc.csv": "0452b1cc5d4be49441b24dfe00f714cceff74c638261b8c64cf0fe87cd242a53",
-    "m3_cpl_jlc.csv": "9bd6046bdf860b7e4948accee4e363cac099287e3c8976d0e6323bb3e88e7614",
-    "m3_gerber.zip": "090440752f32b071d7a8260e7c40737a6141faa646286fd396414d95ee9148ef"
+    "m3_cpl_jlc.csv": "021a244e49a09a1e9ca9d217ebe494de1dccd2bb51b49e73d79bbfcaefcd0f11",
+    "m3_gerber.zip": "470727aab5cb32cec3d19cd7dd9c887828f6730e8fc605ddf97bcdd1d7848967"
   },
   "schema": 1
 }

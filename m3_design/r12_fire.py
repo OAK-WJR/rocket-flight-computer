@@ -4,7 +4,8 @@ fire-state class review and the NC-ball scope of round 6, R12F6-TRI-01 / -02).
 One definition, read by tools/check_r12.py (S-10 measures the board: tracks, vias, flashed pads, unflashed plated
 barrels and every zone fill, on every copper layer, protected-net fills included) and by m3_design/r12_sch.py
 (dru_rules(): the same classes and exceptions as DRC clearance rules, so DRC holds them too and every pour pulls back on
-refill). Pure data and text, no pcbnew.
+refill; a test pad's own clearance replaces the DRU there, so probe_clearance() sets it to the largest limit any pair
+of its net can take, R12F10-TRI-02). Pure data and text, no pcbnew.
 
 Fault model (R10 D-R26-02 / -04, AGENTS section 2.1): the bus is live from the on-rail check, so one bridge (solder, or
 a later CAF / dendrite path) that raises Q124's gate, or that lets PYRO1_OUT sink current, fires an enabled match.
@@ -41,7 +42,7 @@ Default-deny: every foreign net counts against a protected net unless it is clas
     every net that reaches them, an MCU pin or any other IC pin (U<n>) through less than PACK_SERIES_MIN (i5_victims(),
     default-deny: diodes and two-pin parts 0 ohm either way, ICs as sources, MOSFET gates insulated; D121's steering
     diodes put SERVO1-4_MCU on 3V3 with no resistor; U9's control pins, the bucks' FB / EN and U2's FB are IC-pin
-    victims). A bridge puts the rail on 3V3 or on an MCU pin, and the over-driven MCU may drive PE4 (and PC1) high:
+    victims), and every IC pin left unconnected (I5_NC_PIN, R12F10-TRI-05: U9's AUXOFF / ITIMER beside its OUT). A bridge puts the rail on 3V3 or on an MCU pin, and the over-driven MCU may drive PE4 (and PC1) high:
     fire-capable once the bus is on (Inference, R10's I-5 reasoning; R12 has no 3V3 clamp). Pack-voltage rails (I5_PACK:
     U9's OUT RAW_PROTECTED, VLOGIC behind D5, and the converters' switch and bootstrap nodes, which swing to their VIN)
     take PACK_MIN, D-R12-137's own figure for pack voltage onto logic or an MCU pin: U9's current limit (3.92-4.89 A)
@@ -49,7 +50,8 @@ Default-deny: every foreign net counts against a protected net unless it is clas
     camera and 4.8 V port buck outputs, USB VBUS; <= 5.76 V) take I5_PORT_MIN, R10's 0.300 mm owner-row figure, with
     the residual exposure an owner-acceptance row, against every victim but the FT-only nets of I5_PORT_FT (each net's
     MCU pins are FT inputs, whose VDD + 4.0 V absolute maximum is above 5.76 V; i5_guard() checks the pins and, from
-    the pin map, their direction: R12F9-TRI-02). An IC-pin victim of I5_RATED is not held against the rails its pin is
+    the pin map, their direction: R12F9-TRI-02); a net whose ball the ROM loader drives is exempt only from the port
+    rails its I5_FT_LOADER reason names (R12F10-TRI-06: CAM_MCU_RX from CAM_5V alone). An IC-pin victim of I5_RATED is not held against the rails its pin is
     rated above, where the failure is function-only (R12F9-TRI-01: U403's EN, 19 V, against CAM_BST / CAM_SW /
     RAW_PROTECTED; i5_rated_guard() checks the pin, the rating and the rail maxima).
   * The camera buck's EN (R12F8-TRI-01): U403.5 (EN) sits beside U403.6 (CAM_BST) in its package, so its net CAM_EN
@@ -58,8 +60,9 @@ Default-deny: every foreign net counts against a protected net unless it is clas
   * U9's FLT (round 6 verifier V-1 follow-up, PACK_FLT): U9.4 sits beside U9.5 (BAT_IN) in its package, so its net
     U9_FLT reaches PC13 only through R95 10 kohm, with R89 on U9's side and D95 clamping PC13 (an FT pin) to 3V3;
     flt_guard() holds that on the netlist. The PACK_FLT pairs stay measured exceptions (U9's own pin is over-driven).
-  * Measured exceptions (EXCEPTIONS): named item pairs, each with a floor at its measured gap (rounded down to 1 um)
-    and a reason. A new item, or an excepted item that moves, is not excepted. A table pair missing from the board is a
+  * Measured exceptions (EXCEPTIONS): named item pairs, each with a floor at its measured gap (rounded down to 1 um;
+    S-10 fails a floor more than 1 um below its pair's measured gap, R12F10-TRI-03) and a reason. A new item, or an
+    excepted item that moves, is not excepted. A table pair missing from the board is a
     stale entry and fails S-10 too, so the record stays exact.
 """
 import re
@@ -112,15 +115,30 @@ I5_FT_BALLS = {'B8': ('PC11', 'FT_h'), 'B9': ('PC10', 'FT_ha'), 'E9': ('PC9', 'F
 PIN_TABLE = __import__('pathlib').Path(__file__).resolve().parent / 'r12/design/pin_table.tsv'
 I5_FT_SERIES = 1.0e3       # ohm
 I5_FT_INPUT = re.compile(r'^(GPIO in\b|AF\d+ \w+_RX\b)')
+# R12F10-TRI-06: a loader reason covers only the port rails it names (rail tuple, reason); against every other port
+# rail the net is held at I5_PORT_MIN like any victim. i5_ft_guard() checks that each tuple is a non-empty set of I5_PORT
+# rails and that the reason names every one of them.
 I5_FT_LOADER = {
-    'CAM_MCU_RX': 'PC11 is SPI3_MISO for the ROM loader (push-pull, AN2606 Rev 64 Table 119 p. 279). The loader runs only '
-                  'with the firmware stopped, when PC12 (CAM_PWR_EN) is not driven high and R431 47 kohm holds U403\'s EN '
-                  'low, so CAM_5V is off and a bridge carries no port voltage (round 9 triage; Inference on the loader '
-                  'state)',
-    'VBUS_SENSE': 'PC9 is I2C3_SDA for the ROM loader (open drain, no pull, AN2606 Rev 64 Table 119 p. 278): it never '
-                  'drives high, and pulls low only to acknowledge its own address on a clocked I2C3 bus, which nothing on '
-                  'the board drives (round 9 triage; Inference)',
+    'CAM_MCU_RX': (('CAM_5V',),
+                   'PC11 is SPI3_MISO for the ROM loader (push-pull, AN2606 Rev 64 Table 119 p. 279). The loader runs '
+                   'only with the firmware stopped, when PC12 (CAM_PWR_EN) is not driven high and R431 47 kohm holds '
+                   'U403\'s EN low, so CAM_5V is off and a bridge to CAM_5V carries no port voltage (round 9 triage; '
+                   'Inference on the loader state). The reason covers CAM_5V only: VBUS is live in the USB-loader case '
+                   'and PORT_4V8 whenever the battery path is on, so CAM_MCU_RX is held 0.300 mm from both '
+                   '(R12F10-TRI-06)'),
+    'VBUS_SENSE': (('CAM_5V', 'PORT_4V8', 'VBUS'),
+                   'PC9 is I2C3_SDA for the ROM loader (open drain, no pull, AN2606 Rev 64 Table 119 p. 278): it never '
+                   'drives high, and pulls low only to acknowledge its own address on a clocked I2C3 bus, which nothing '
+                   'on the board drives (round 9 triage; Inference), so no state of the pin drives against CAM_5V, '
+                   'PORT_4V8 or VBUS'),
 }
+
+
+def ft_rails(net, loader=None):
+    """The port rails an I5_PORT_FT net is not held from: every port rail, or only those its loader reason names
+    (R12F10-TRI-06)."""
+    loader = I5_FT_LOADER if loader is None else loader
+    return tuple(loader[net][0]) if net in loader else I5_PORT
 # R12F9-TRI-01: IC-pin victims held by a netlist rating guard instead of copper, only against rails whose maximum is
 # under the pin's absolute maximum and where a bridge's failure is function-only. (pin as (ref, number, pin-function stem),
 # absolute maximum V, its source, the rails it is not held from, the failure). i5_rated_guard() checks each entry on the
@@ -147,6 +165,11 @@ I5_RAIL_MAX = {
     'PORT_BST': ('u9', 'ovlo_rising_V', 6.0),
 }
 PROTECTED = GATES + (OUT, IGN) + PACK + I5_PACK + I5_PORT   # priority order: a pair is named from the first protected net
+# R12F10-TRI-05: an IC pin left unconnected (KiCad names its net 'unconnected-(<ref>-<pin>-Pad<n>)') is an I-5 victim
+# too: a bridge from a rail over-drives the pin (U9's AUXOFF / ITIMER beside its OUT, U1's NC balls), so I-5 holds it
+# like every connected IC pin. Only U<n> parts (ICs); a connector's NC contact is no IC pin.
+I5_NC_PIN = re.compile(r'^unconnected-\(U\d+-')
+I5_NC_DRU = 'unconnected-(U*'                                # the same set as a DRU NetName wildcard
 
 GATE_MIN = 1.0585      # mm, R10 D-R26-04 (Q124's gate nets from 3V3 / 3V3A), widened to every raising net
 OUT_MIN = 1.040        # mm, R10 D-R26-02 (PYRO1_OUT from 3V3 / 3V3A), widened to every net (default-deny)
@@ -251,6 +274,11 @@ def u1_nc(owner, net):
     return owner == U1_NC and net.startswith('unconnected-')
 
 
+def i5_victim(net):
+    """An I-5 victim net: a derived victim (I5_VICTIMS) or an unconnected IC pin (R12F10-TRI-05)."""
+    return net in I5_VICTIMS or bool(I5_NC_PIN.match(net or ''))
+
+
 def one_way(protected, foreign, fill):
     """(limit mm or None, class) of foreign copper against a protected net; fill: either item is a zone fill."""
     if (protected, foreign) in NOT_A_PATH:
@@ -268,9 +296,9 @@ def one_way(protected, foreign, fill):
     if protected in I5_PACK + I5_PORT and foreign in I5_RATED and protected in I5_RATED[foreign][3]:
         return None, 'i5-rated'                  # R12F9-TRI-01: the pin is rated above this rail (i5_rated_guard())
     if protected in I5_PACK:                     # R12F7-TRI-01 / R12F8-TRI-01: FMEA I-5, against every victim
-        return (PACK_MIN, 'i5-pack') if foreign in LOGIC or foreign in I5_VICTIMS else (None, 'unprotected')
-    if protected in I5_PORT:
-        if foreign in LOGIC or (foreign in I5_VICTIMS and foreign not in I5_PORT_FT):
+        return (PACK_MIN, 'i5-pack') if foreign in LOGIC or i5_victim(foreign) else (None, 'unprotected')
+    if protected in I5_PORT:                     # R12F10-TRI-06: an FT net is exempt only from its loader's rails
+        if foreign in LOGIC or (i5_victim(foreign) and not (foreign in I5_PORT_FT and protected in ft_rails(foreign))):
             return I5_PORT_MIN, 'i5-port'
         return None, 'unprotected'
     return None, 'unprotected'
@@ -415,6 +443,14 @@ WHY = {
                   'aft, R12F9-TRI-01). A bridge puts RAW on VFB, above its 6 V absolute maximum (TI SLVSD90B section 5.1; '
                   'damage Inference): U400 stops, PORT_4V8 is lost, PD10 reads low so PC1 is refused (no primary fire), and '
                   'the GPS / radio are off (recovery on the Blue Jay). Not a fire',
+    # R12F10-TRI-05: U9's two functional pins left unconnected (AUXOFF U9.3, ITIMER U9.10), I-5 victims beside U9's OUT
+    'I5_U9_NC': 'RAW_PROTECTED (U9\'s OUT) to U9\'s unconnected AUXOFF (U9.3) and ITIMER (U9.10): U9.6 to U9.10 / U9.3, '
+                'the TPS259470A RPW package\'s own lands (0.200 / 0.700 mm), the 0.30 mm OUT bar\'s run on along y 15.6 '
+                '(0.200 / 0.705 mm) and C82.1 beside U9.10 (0.700 mm: C82 cannot move east, as I5_U9_EN). A bridge puts '
+                'RAW (up to 8.4 V, 10.8 V in the OVLO window) on AUXOFF, above its 6.5 V absolute maximum, or on ITIMER, '
+                'whose internal 15 kohm pull-up to 2.57 V it over-drives ("internally limited"; TI SLVSFC9C section 6.1): '
+                'U9 damaged or its fault-timer blanking changed (Inference), the BAT_IN-side bridges to the same pins '
+                'being PACK_U9\'s (row 39). Not a fire (a shorted U9 is the PACK_OUT case)',
 }
 EXCEPTIONS = {
     'D-R11-23': (
@@ -573,7 +609,7 @@ EXCEPTIONS = {
         ('track (14, 15.1)-(15.3, 15.1)', 'U9.6', 'F.Cu', 0.473),
         ('track (15.3, 15.1)-(16.6, 15.1)', 'track (17.3, 15.6)-(19.775, 15.6)', 'F.Cu', 0.510),
         ('C88.1', 'U9.6', 'F.Cu', 0.539),
-        ('U9.5', 'C82.1', 'F.Cu', 0.650),
+        ('U9.5', 'C82.1', 'F.Cu', 0.700),           # R12F10-TRI-03: the measured gap since D-R12-161 (was 0.650)
     ),
     'PACK_U9': (
         ('R82.1', 'track (16.2, 11.5)-(17, 12.3)', 'F.Cu', 0.166),
@@ -646,6 +682,13 @@ EXCEPTIONS = {
         ('U9.6', 'track (17.5, 16.4)-(17.5, 17.1)', 'F.Cu', 0.550),
         ('track (17.3, 15.6)-(19.775, 15.6)', 'track (17.5, 16.4)-(17.5, 17.1)', 'F.Cu', 0.550),
         ('track (17.3, 15.6)-(19.775, 15.6)', 'track (16.6, 16.4)-(15.9, 17.1)', 'F.Cu', 0.813),
+    ),
+    'I5_U9_NC': (                          # R12F10-TRI-05 (measured on the R12F10 lane P board)
+        ('U9.6', 'U9.10', 'F.Cu', 0.200),
+        ('track (17.3, 15.6)-(19.775, 15.6)', 'U9.10', 'F.Cu', 0.200),
+        ('C82.1', 'U9.10', 'F.Cu', 0.700),
+        ('U9.6', 'U9.3', 'F.Cu', 0.700),
+        ('track (17.3, 15.6)-(19.775, 15.6)', 'U9.3', 'F.Cu', 0.705),
     ),
     'I5_U400_FB': (
         ('U400.5', 'U400.4', 'F.Cu', 0.400),
@@ -887,23 +930,34 @@ def dru_rules(exceptions=None, nets=None):
 PROBE_MIN = 1.0       # mm, the bare test pads' own clearance (R9 / R10, LC-1)
 
 
+PROBE_OTHER = '(any other net)'     # a net no S-10 class names (default-deny counts it against the gate nets)
+
+
 def probe_clearance(net):
-    """A test pad's local clearance override (R12F9-TRI-03): KiCad applies a pad's own clearance in place of the DRU's
-    rules, so a TP on a net S-10 holds carries the largest S-10 limit any pair with that net can take: DRU_GATE_MM on a
-    gate net, PACK_MIN (OUT_MIN) on PYRO1_OUT, a pack-energy or pack-voltage I-5 rail, 3V3 / 3V3A or an I-5 victim; else
-    PROBE_MIN (PYRO1_IGN's, the port class's and the GND limits are below it)."""
-    if net in GATES:
-        return max(PROBE_MIN, DRU_GATE_MM)
-    if net == OUT or net in PACK or net in I5_PACK or net in LOGIC or net in I5_VICTIMS:
-        return max(PROBE_MIN, PACK_MIN, OUT_MIN)
-    return PROBE_MIN
+    """A test pad's local clearance override (R12F9-TRI-03, R12F10-TRI-02). KiCad applies a pad's own clearance in place
+    of the DRU's rules, against every net, so the override must be the largest S-10 limit of any pair the pad's net can
+    form with any other net, whichever side is protected: the maximum of pair_limit() over every protected net, 3V3 /
+    3V3A, every victim, an unconnected IC pin, GND and a net no class names, copper and fills, rounded up to 10 um (the
+    DRU's figures). Every net but GND can sit beside Q124's gate nets (GATE_MIN from every net but GND, so DRU_GATE_MM);
+    GND can sit beside a pack-energy net (PACK_MIN from every net). PROBE_MIN (LC-1) is the floor."""
+    import math
+    others = set(PROTECTED) | set(LOGIC) | set(I5_VICTIMS) | {'GND', 'unconnected-(U1-PA0-PadA1)', PROBE_OTHER}
+    worst = PROBE_MIN
+    for other in sorted(others - {net}):
+        for fill in (False, True):
+            lim = pair_limit(net, None, other, None, fill)[0]
+            if lim is not None:
+                worst = max(worst, lim)
+    return math.ceil(worst * 100 - 1e-9) / 100
 
 
 def i5_rule_victims(rail):
-    """The nets an I-5 rail is held from in the DRU (and S-10): 3V3 / 3V3A and every victim, the port rails less the
-    FT-only nets, every rail less the I5_RATED victims rated above it; the gate nets keep their own rule."""
-    return LOGIC + tuple(v for v in I5_VICTIMS if v not in GATES and (rail in I5_PACK or v not in I5_PORT_FT)
-                         and not (v in I5_RATED and rail in I5_RATED[v][3]))
+    """The nets an I-5 rail is held from in the DRU (and S-10): 3V3 / 3V3A, every victim and every unconnected IC pin
+    (I5_NC_DRU, R12F10-TRI-05), a port rail less the FT-only nets its loader reason covers (R12F10-TRI-06), every rail
+    less the I5_RATED victims rated above it; the gate nets keep their own rule."""
+    return LOGIC + tuple(v for v in I5_VICTIMS if v not in GATES
+                         and (rail in I5_PACK or v not in I5_PORT_FT or rail not in ft_rails(v))
+                         and not (v in I5_RATED and rail in I5_RATED[v][3])) + (I5_NC_DRU,)
 
 
 def dru_text(rule):
@@ -1312,7 +1366,9 @@ _IC = re.compile(r'^U\d+$')
 
 
 def ic_pin_nets(pins):
-    """Every net on a pin of an IC (a U<n> part, U1 included), unconnected pins left out (R12F9-TRI-01)."""
+    """Every connected net on a pin of an IC (a U<n> part, U1 included), the walk's sources (R12F9-TRI-01). An
+    unconnected IC pin reaches nothing, so it is no walk source; S-10 holds it as a victim by its net name (I5_NC_PIN,
+    R12F10-TRI-05)."""
     return {n for ref, pp in pins.items() if _IC.match(ref) for n in pp.values() if n and not n.startswith('unconnected-')}
 
 
@@ -1428,6 +1484,15 @@ def i5_ft_guard(path, modes=None, exempt=None):
                               f'U1 FT balls {sorted(I5_FT_BALLS)} and port connectors may sit there')
     for net in sorted(set(I5_FT_LOADER) - set(exempt)):
         issues.append(f'I5_FT_LOADER names {net}, which is no FT-only exemption (stale entry)')
+    for net, entry in sorted(I5_FT_LOADER.items()):          # R12F10-TRI-06: the reason names the rails it covers
+        rails, why = entry if isinstance(entry, tuple) and len(entry) == 2 else ((), str(entry))
+        if not rails or any(r not in I5_PORT for r in rails):
+            issues.append(f'I5_FT_LOADER {net}: its rails {tuple(rails)} must be a non-empty set of port rails {I5_PORT} '
+                          '(R12F10-TRI-06)')
+        for r in rails:
+            if not re.search(rf'\b{re.escape(r)}\b', why):
+                issues.append(f'I5_FT_LOADER {net}: the reason does not name {r}, a rail it exempts the net from '
+                              '(R12F10-TRI-06)')
     return issues
 
 
@@ -1511,4 +1576,8 @@ def i5_guard(path, windows=None):
                      rails={r: rail_max(r, w)[0] for r in e[3]}, failure=e[4]) for n, e in sorted(I5_RATED.items())}
     return issues, dict(derived, limits=dict(pack=PACK_MIN, port=I5_PORT_MIN),
                         victims=dict(logic=list(LOGIC), nets={n: f'{v[0]:g} ohm to {v[1]}' for n, v in sorted(victims.items())}),
-                        port_ft_exempt=dict(I5_PORT_FT), port_ft_loader=dict(I5_FT_LOADER), rated=rated)
+                        port_ft_exempt={n: dict(rails=list(ft_rails(n)), why=w) for n, w in sorted(I5_PORT_FT.items())},
+                        port_ft_loader={n: dict(rails=list(e[0]), why=e[1]) for n, e in sorted(I5_FT_LOADER.items())},
+                        nc_ic_pins=sorted({n for pp in read_netlist(path)[1].values() for n in pp.values()
+                                           if n and I5_NC_PIN.match(n)}),
+                        rated=rated)

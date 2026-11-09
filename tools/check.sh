@@ -201,5 +201,6 @@ selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
 selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics Plate   # Plate: R18-MEC-01 strain table
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r12_fab.py"      # R12F4-TRI-01: R12 fab tooling; exports R12_BOARD when present
 selftest python3 -I "$ROOT/tools/test_r12_stageD.py"       # R12F4-TRI-01: R12 stage D / hot-plug wrappers (no pcbnew)
+selftest python3 -I -B "$ROOT/tools/test_zone_check.py"     # R12F10-TRI-15: R12 zone fragments and outline (no pcbnew)
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r11_check.py"    # D-R11-08: R11 rules; real-board seeds when R11_BOARD is set
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r12_check.py"    # R12 gate skeleton, schematic contract, windows; board seeds later

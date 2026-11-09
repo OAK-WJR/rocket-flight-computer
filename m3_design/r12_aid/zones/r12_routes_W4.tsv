@@ -77,6 +77,9 @@ via	3V3	-	0.45	20.25	31.5
 track	3V3	F	0.15	19.6	30.17	19.6	29.65
 track	3V3	F	0.15	19.6	29.65	19.85	29.4
 via	3V3	-	0.45	19.85	29.4		
+# R12F10-TRI-07 (K-power): R13.2's (I2C1_SDA pull-up) second 3V3 via, west of the land
+track	3V3	F	0.15	19.6	30.17	18.8	30.17
+via	3V3	-	0.45	18.8	30.17		
 track	3V3	F	0.2	29.15	28.25	30.4	28.25
 via	3V3	-	0.45	30.4	28.25		
 track	3V3	F	0.2	19.8	39.4	19.8	40.2
@@ -89,6 +92,9 @@ track	GND	F	0.2	21.12	27.3	22.35	27.3
 track	GND	F	0.2	22.35	27.3	22.9	26.75
 track	GND	F	0.2	22.9	26.75	22.9	26.05
 via	GND	-	0.45	22.9	26.05		
+# R12F10-TRI-07 (K-power): U5's ground (U5.3 / U5.4, the MS5607's only GND pin and CSB) gets a second via north-west of U5.4
+track	GND	F	0.2	20.6	25.95	21.12	26.47
+via	GND	-	0.45	20.6	25.95		
 via	GND	-	0.45	26.1	30.5		
 via	GND	-	0.45	20.25	32.2		
 via	GND	-	0.45	20.1	35.9		

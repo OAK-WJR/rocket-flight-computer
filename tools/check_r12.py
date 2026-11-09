@@ -36,7 +36,10 @@ S-10: on every copper layer, fills (protected-net fills too) and barrels include
       or any other IC pin through < 5 kohm, derived from the netlist, default-deny; the port class less the FT-only
       input nets of I5_PORT_FT, their direction read from the pin map (R12F9-TRI-02); every rail less the rated IC
       pins of I5_RATED, checked by i5_rated_guard); the pack-class I-5 DRU rules hold J2 and the test pads at 1.040 mm
-      too (R12F9-TRI-03); U403's EN reaches PC12 only through R436 with D436 clamping PC12 (en_guard).
+      too (R12F9-TRI-03); U403's EN reaches PC12 only through R436 with D436 clamping PC12 (en_guard); every exception
+      floor is its measured gap rounded down to 1 um (R12F10-TRI-03); unconnected IC pins are I-5 victims and a loader
+      exemption covers only the port rails its reason names (R12F10-TRI-05 / -06); a test pad's local clearance is the
+      largest S-10 limit any pair of its net can take (R12F10-TRI-02).
 W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
@@ -926,7 +929,7 @@ def s10(c, exceptions=None, not_a_path=None):
     """S-10: Q124's gate nets, PYRO1_OUT and PYRO1_IGN keep their limits on every layer, fills included; only the
     measured item-pair exceptions of r12_fire, each above its floor, are allowed below a limit (R12F5-TRI-01)."""
     table = fire.exception_index(exceptions)
-    issues, kept, nc, owner, used = [], [], [], [], set()
+    issues, kept, nc, owner, used, least = [], [], [], [], set(), {}
     fire_gaps_cache = fire_gaps(c.board)
     for r in fire_gaps_cache:
         where = f'{r["net_a"]} {r["a"]} to {r["net_b"]} {r["b"]} on {r["layer"]}: {r["gap"]:.4f} mm'
@@ -945,6 +948,8 @@ def s10(c, exceptions=None, not_a_path=None):
             issues.append(f'S-10: {where}, below {r["limit"]:g} mm ({r["cls"]})')
             continue
         used.add((r['a'], r['b'], r['layer']))
+        k3 = (r['a'], r['b'], r['layer'])
+        least[k3] = min(least.get(k3, r['gap']), r['gap'])
         floor, key = hit
         if r['gap'] < floor - 5e-5:
             issues.append(f'S-10: {where}, below the {floor:.3f} mm floor of its exception ({key}: {fire.WHY[key]})')
@@ -961,6 +966,11 @@ def s10(c, exceptions=None, not_a_path=None):
                     issues.append(f'S-10: test pad {f.GetReference()}.{p.GetNumber()} ({p.GetNetname()}) local clearance '
                                   f'{have} mm, below its S-10 floor {need:g} mm: KiCad would apply it instead of the DRU '
                                   'rule (R12F9-TRI-03)')
+    for k3, gap in sorted(least.items()):              # R12F10-TRI-03: a floor is its pair's measured gap rounded down
+        floor, key = table[k3]                         # to 1 um, so a looser one accepts movement the record denies
+        if gap - floor > 0.001 + 5e-5:
+            issues.append(f'S-10: exception {k3[0]} to {k3[1]} on {k3[2]} ({key}): floor {floor:.3f} mm is more than 1 um '
+                          f'below its measured gap {gap:.4f} mm (set it to the gap rounded down to 1 um, R12F10-TRI-03)')
     for (a, b, layer), (floor, key) in sorted(table.items()):
         if (a, b, layer) not in used:
             issues.append(f'S-10: exception {a} to {b} on {layer} ({key}, floor {floor:.3f} mm) is not on the board '
@@ -1074,6 +1084,14 @@ SINGLE_OPEN_TAPS_R12 = (
     ('PORT_SENSE', 'U1.H9', ('R111.2', 'R112.1'), "PD10's PORT_4V8 divider tap (open: PD10 floats, Inference)"),
     ('PORT_4V8', 'R111.1', ('L400.2',), "R111, PD10's divider top (open: PD10 reads low, PC1 refused, ports off)"),
     ('GND', 'R112.2', ('J1.2',), "R112, PD10's divider bottom (open: PD10 reads PORT_4V8 through R111)"),
+    # R12F10-TRI-07: R10 row 22's taps ported by function to the rest of the barometer and the ADC supply: U5's only GND
+    # pin (U5.3; U5.4 is CSB, tied to it), the I2C1 pull-ups' 3V3 ends, U1's VSSA (ball G1) and U4's 3V3A decoupling
+    ('GND', 'U5.3', ('J1.2',), "U5's (barometer) only GND pin (open: no barometric gain, so no primary fire)"),
+    ('GND', 'U5.4', ('J1.2',), "U5's CSB, tied to GND (I2C address select)"),
+    ('3V3', 'R12.2', ('L1.2',), "R12, I2C1_SCL's pull-up 3V3 end (the barometer bus)"),
+    ('3V3', 'R13.2', ('L1.2',), "R13, I2C1_SDA's pull-up 3V3 end (the barometer bus)"),
+    ('GND', 'U1.G1', ('J1.2',), "U1's VSSA (ball G1), the ADC's ground (PA6 VLOGIC sense, PC2_C camera sense)"),
+    ('3V3A', 'C30.1', ('R164.2',), "C30, U4's (IMU) 100 nF on 3V3A"),
 )
 # (tap pad, via label as check_r10.copper_nodes prints it, measured reason): the single points kept on purpose. An entry
 # no longer met (its pads present) fails as stale.
@@ -1107,6 +1125,22 @@ SINGLE_OPEN_EXCEPTIONS_R12 = [
      "west, CAM_5V_SENSE's In2 run at x 26.6 and a GND via east, C32's lands north; measured on the R12F8 lane P board). "
      "Open, the barometer is unpowered: no barometric gain, so the fire rule (LIFTOFF AND a barometric gain) never "
      "fires the primary (fail-safe; the Blue Jay covers recovery)"),
+    # R12F10-TRI-07: R12's 3V3 end and C30's 3V3A feed
+    ('R12.2', 'via 3V3 (20.25, 31.50)',
+     "R12.2's (I2C1_SCL pull-up) 3V3 via: a second barrel has no legal spot (I2C1_SDA's F run at x 19.15 west, 0.105 mm "
+     "from the land; R13.1 (I2C1_SDA) and SDA's jog north; R12.1 (I2C1_SCL) south; I2C1_SCL's F run at x 20.7 east, with "
+     "the GND via (20.25, 32.2) beside the land, SPI1_SCK's via (20.1, 33.6)'s only GND partner within 1.5 mm (1.41 mm), "
+     "and a 3V3 via there would sit on SPI1_SCK's via; measured on the R12F10 lane P board). Open, SCL loses its 4.7 "
+     "kohm pull-up: I2C1 runs on the MCU's internal pull-up or fails (Inference), so the barometer may give no reading: "
+     "no barometric gain, so the fire rule never fires the primary (fail-safe; the Blue Jay covers recovery), as U5.1's "
+     "single 3V3A via"),
+    # C30's 3V3A feed
+    ('C30.1', 'via 3V3A (25.70, 42.75)',
+     "C30.1's B-to-F 3V3A via (U4's 100 nF): a second barrel has no legal spot (the 3V3A B run under C30 at x 25.7 and "
+     "HG_CS's B loop (25.15, 42.95)-(25.7, 43.5)-(25.7, 44.25) south, IMU_INT1's F run at x 26.45 east, C30.2's GND land "
+     "and its F link to the GND via (24.9, 41.6) north and west, SPI1_MISO's F jog (24.55, 42.35)-(25.15, 42.95) "
+     "south-west; measured on the R12F10 lane P board). Open, only C30's 100 nF is lost: U4 keeps its own 3V3A feed "
+     "through (24.95, 39.95) and C10 beside it (Inference: the IMU's noise without C30 is not characterised); not a power loss"),
     # R12F9-TRI-08: PD10's ball H9 escape
     ('U1.H9', 'via PORT_SENSE (26.20, 56.40)',
      "PD10's ball H9 escape: " + _DOGBONE + ". Open, PD10 is cut from the R111 / R112 divider and floats (no internal "

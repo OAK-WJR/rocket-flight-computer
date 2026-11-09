@@ -151,10 +151,10 @@ track	GND	F	0.3	29.4	59.5	29.4	58.5
 track	PORT_SENSE	F	0.1	25.8	56	26.2	56.4
 # D-R12-99 (90 mm outline): CX turns west at y 66.4 / 66.8 (forward of U3, aft of the port buck) and runs north at
 # the series-resistor x (35 / 36) to vias at y 80.0; F tails to R471 / R470.
-via	AUX_RX_MCU	-	0.45	36	75.4		
-track	AUX_RX_MCU	F	0.2	36	75.4	36	76.92
-via	AUX_TX_MCU	-	0.45	35	75.1		
-track	AUX_TX_MCU	F	0.2	35	75.1	35	76.92
+via	AUX_RX_MCU	-	0.45	36	74.33		
+track	AUX_RX_MCU	F	0.2	36	74.33	36	74.92
+via	AUX_TX_MCU	-	0.45	35	73.87		
+track	AUX_TX_MCU	F	0.2	35	73.87	35	74.92
 track	3V3	F	0.1	20.2	51.2	19.8	50.8
 track	GND	F	0.1	20.2	52	19.8	52.4
 track	3V3	F	0.1	20.2	52.8	20.6	53.2
@@ -235,6 +235,10 @@ via	GND	-	0.45	16.24	54.25
 track	GND	F	0.3	15.7	53.35	15.7	53.71
 track	GND	F	0.3	15.7	53.71	16.24	54.25
 track	GND	F	0.1	19.4	55.2	19.8	55.6
+# R12F10-TRI-07 (K-power): VSSA's (ball G1) second via, west of the ball outside the escape field
+track	GND	F	0.1	19.4	55.2	19.05	55.55
+track	GND	F	0.1	19.05	55.55	18.6	55.55
+via	GND	-	0.45	18.6	55.55		
 # D-R12-98 integration: NRST pocket via inside ACT_EN_MCU, In2 lane under B pour only; C24 beside J2 run
 track	NRST	F	0.1	19.4	53.6	19.25	53.45
 track	NRST	F	0.1	19.25	53.45	17.4	53.45
@@ -283,29 +287,28 @@ track	CAM_PWR_EN	B	0.15	25.85	51.95	27.95	51.95
 track	CAM_PWR_EN	B	0.15	27.95	51.95	28.2	51.7
 track	CAM_PWR_EN	B	0.15	28.2	51.7	28.2	45.4
 # D-R12-98 integration: port UART dives at the J8 / J9 dog-bones and two K-row vias, 0.5 mm B pitch (every lane >= 0.5 mm from a foreign via); one GND via (25.225, 58.1) partners all four
-track	RADIO_TX_MCU	B	0.1	24.3	75.2	23.9	75.6
+track	RADIO_TX_MCU	B	0.1	24.3	73.2	23.9	73.6
 track	RADIO_RX_MCU	F	0.1	25	57.6	24.8	57.8
 track	RADIO_RX_MCU	F	0.1	24.8	57.8	24.8	58.8
 via	RADIO_RX_MCU	-	0.45	24.8	58.8		
-track	RADIO_RX_MCU	B	0.1	24.8	58.8	24.8	75.7
-track	RADIO_RX_MCU	B	0.1	24.8	75.7	24.4	76.1
-track	RADIO_RX_MCU	B	0.1	24.4	76.1	13	76.1
-via	RADIO_RX_MCU	-	0.45	13	76.1		
-track	RADIO_RX_MCU	F	0.2	13	76.1	13	76.92
-via	GPS_RX_MCU	-	0.45	25.8	77		
-track	GPS_RX_MCU	F	0.2	25.8	77	23.5	77
-via	GND	-	0.45	25.95	77.7		
+track	RADIO_RX_MCU	B	0.1	24.8	58.8	24.8	73.7
+track	RADIO_RX_MCU	B	0.1	24.8	73.7	24.4	74.1
+track	RADIO_RX_MCU	B	0.1	24.4	74.1	13	74.1
+via	RADIO_RX_MCU	-	0.45	13	74.1		
+track	RADIO_RX_MCU	F	0.2	13	74.1	13	74.92
+via	GPS_RX_MCU	-	0.45	25.8	75		
+track	GPS_RX_MCU	F	0.2	25.8	75	23.5	75
+via	GND	-	0.45	25.95	75.7		
 via	GPS_TX_MCU	-	0.45	25.29	59.41		
 track	PORT_SENSE	B	0.1	26.2	56.4	26.45	56.65
 via	GND	-	0.45	25.225	58.15		
-track	GPS_TX_MCU	F	0.2	23.02	76.4	22.5	76.92
-via	PORT_SENSE	-	0.45	26.45	76.12		
-track	PORT_SENSE	F	0.1	26.45	76.12	27.2	76.87
-via	PORT_SENSE	-	0.45	26.45	75.4		
-track	PORT_SENSE	F	0.1	26.45	75.4	27.2	76.15
-track	PORT_SENSE	F	0.1	27.2	76.15	27.2	76.87
-track	PORT_SENSE	B	0.1	26.45	56.65	26.45	75.4
-track	PORT_SENSE	B	0.1	26.45	75.4	26.45	76.12
+track	GPS_TX_MCU	F	0.2	23.02	74.4	22.5	74.92
+via	PORT_SENSE	-	0.45	26.45	74.87		
+track	PORT_SENSE	F	0.1	26.45	74.87	27.2	74.87
+via	PORT_SENSE	-	0.45	26.45	74.12		
+track	PORT_SENSE	F	0.1	26.45	74.12	27.2	74.87
+track	PORT_SENSE	B	0.1	26.45	56.65	26.45	74.12
+track	PORT_SENSE	B	0.1	26.45	74.12	26.45	74.87
 track	SERVO1_MCU	F	0.1	25	50.4	25.2	50.2
 track	SERVO1_MCU	F	0.1	25.2	50.2	25.2	47.6
 via	SERVO1_MCU	-	0.45	25.2	47.6		
@@ -344,9 +347,9 @@ track	SPI1_MISO	F	0.1	23.4	50.4	23.4	48.6
 track	SPI1_MISO	F	0.1	23.4	48.6	23	48.2
 track	SPI1_MISO	F	0.1	23	48.2	23	45.4
 # AVA pass: AUX pair dives beside U3 (x 37.9 / 38.9), one GND partner (37.9, 52.95); B lanes 1.0 mm pitch turn together at y 65.4 / 66.4
-track	GPS_TX_MCU	B	0.1	25.29	59.41	25.29	76.4
-via	GPS_TX_MCU	-	0.45	25.29	76.4		
-track	GPS_TX_MCU	F	0.2	25.29	76.4	23.02	76.4
+track	GPS_TX_MCU	B	0.1	25.29	59.41	25.29	74.4
+via	GPS_TX_MCU	-	0.45	25.29	74.4		
+track	GPS_TX_MCU	F	0.2	25.29	74.4	23.02	74.4
 # R12F5-TRI-01 (S-10, lane P): C13 turned to 0 degrees at (17.4, 50.0), GND pad toward PE4's lane, its 3V3 via west of
 # the VLOGIC_SENSE In2 lane at (15.05, 50.45), where In2's 3V3 joins the main sheet (the strip between the VLOGIC_SENSE
 # and NRST lanes is closed): C13.1 and the via keep >= 1.06 mm from PYRO1_GATE_N (0.48 / 0.53 mm).
@@ -419,11 +422,11 @@ via	3V3	-	0.45	38.75	58.05
 track	RADIO_TX_MCU	F	0.1	25	56.8	24.6	56.4
 via	RADIO_TX_MCU	-	0.45	24.6	56.4		
 track	RADIO_TX_MCU	B	0.1	24.6	56.4	24.3	56.7
-track	RADIO_TX_MCU	B	0.1	24.3	56.7	24.3	75.2
+track	RADIO_TX_MCU	B	0.1	24.3	56.7	24.3	73.2
 track	GPS_RX_MCU	F	0.1	25.8	56.8	25.4	56.4
 via	GPS_RX_MCU	-	0.45	25.4	56.4		
 track	GPS_RX_MCU	B	0.1	25.4	56.4	25.8	56.8
-track	GPS_RX_MCU	B	0.1	25.8	56.8	25.8	77
+track	GPS_RX_MCU	B	0.1	25.8	56.8	25.8	75
 via	GND	-	0.45	24.6	55.6		
 # AUX: F east, B under U3, south along x 43.1 / 43.6 under the card overhang, west to the J440 hand-off vias
 track	AUX_RX_MCU	F	0.2	26.6	53.6	31.05	53.6
@@ -475,8 +478,8 @@ track	SD_DAT2	F	0.1	33.6	62.045	31.595	64.05
 track	SD_DAT2	F	0.1	31.595	64.05	29.03	64.05
 track	3V3	F	0.2	28.17	64.05	27.3	64.05
 via	3V3	-	0.45	27.3	64.05		
-via	GND	-	0.45	10.9	76.6		
-via	GND	-	0.45	14	76.75		
+via	GND	-	0.45	10.9	74.4		
+via	GND	-	0.45	14	74.75		
 # BUZZ_DRV: B from (22.2, 60.9) west under C22 / C14 to the W5 hand-off (SD_CS crosses on F)
 track	BUZZ_DRV	F	0.15	22.6	56.8	22.2	57.2
 track	BUZZ_DRV	F	0.15	22.2	57.2	22.2	60.9
@@ -518,13 +521,29 @@ via	3V3	-	0.45	27.3	66.4
 # --- round 9 lane L, 85 mm frame
 # AUX diagonals south-west under J430 to the J440 hand-off vias (85 mm board)
 track	AUX_TX_MCU	B	0.2	40.95	55.15	40.95	69.15
-track	AUX_TX_MCU	B	0.2	40.95	69.15	35	75.1
+# R12F10-TRI-16 (83 mm): the AUX hand-off vias re-seat >= 1.040 mm from the RAW_PROTECTED F run (edge y 72.6); TX turns
+# west aft of the RX via (0.46 mm)
+track	AUX_TX_MCU	B	0.2	40.95	69.15	36.23	73.87
+track	AUX_TX_MCU	B	0.2	36.23	73.87	35	73.87
 track	AUX_RX_MCU	B	0.2	41.45	54.31	41.45	69.95
-track	AUX_RX_MCU	B	0.2	41.45	69.95	36	75.4
+track	AUX_RX_MCU	B	0.2	41.45	69.95	37.07	74.33
+track	AUX_RX_MCU	B	0.2	37.07	74.33	36	74.33
 # RADIO_TX hand-off via 0.4 mm west, clear of C406.1 (PORT_4V8, I-5 port class)
-track	RADIO_TX_MCU	B	0.1	23.9	75.6	11.6	75.6
-via	RADIO_TX_MCU	-	0.45	11.6	75.6		
-track	RADIO_TX_MCU	F	0.2	11.6	75.6	12	76
-track	RADIO_TX_MCU	F	0.2	12	76	12	76.92
-via	GND	-	0.45	34.4	75.7		
-via	GND	-	0.45	36.7	76		
+track	RADIO_TX_MCU	B	0.1	23.9	73.6	12	73.6
+via	RADIO_TX_MCU	-	0.45	12	73.6		
+track	RADIO_TX_MCU	F	0.2	12	73.6	12	74.92
+via	GND	-	0.45	34.4	73.7		
+via	GND	-	0.45	36.8	74.9		
+# R12F10-TRI-15: lane C's rows (D-R12-169), re-owned from W5: the J430 bay east strip is W3's
+# --- round 9 lane C (D-R12-169): J430's local bypass C461 22 uF (44.55, 55.85) rot 90 and C460 100 nF (44.13, 58.7)
+# rot 180 in the east strip between U3 and the card mouth (the strip is clear of the inserted card's envelope, y < 59.175).
+# One F 3V3 run C461.1 -> C460.1 -> J430.4 (no via in series); each cap has its own GND via. The vias stay west of
+# x 44.575 (0.1 mm to the B RAW_PROTECTED trunk at x 45.2; a 3V3 via would need 1.04 mm, FMEA I-5, so none here).
+track	3V3	F	0.4	44.55	57.325	44.55	58.7
+track	3V3	F	0.4	44.55	58.7	44.55	64.6
+track	3V3	F	0.4	44.55	64.6	43.805	65.345
+track	3V3	F	0.4	43.805	65.345	41.45	65.345
+track	GND	F	0.3	43.71	58.7	43	58.7
+via	GND	-	0.45	43	58.7		
+track	GND	F	0.4	44.55	54.375	44.55	53.25
+via	GND	-	0.45	44.55	53.25		
