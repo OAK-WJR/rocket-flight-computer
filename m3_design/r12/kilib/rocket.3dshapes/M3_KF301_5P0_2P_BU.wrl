@@ -1,0 +1,4 @@
+#VRML V2.0 utf8
+# KF301-5.0-2P envelope, Kefa KF301-5.0 drawing rev A maxima (D-R12-174). NOT a maker model.
+Transform { translation 0.000000 -0.078740 2.027559 children [ Shape { appearance Appearance { material Material { diffuseColor .15 .35 .75 } } geometry Box { size 4.055118 3.149606 4.055118 } } ] }
+Transform { translation -2.198819 -1.181102 1.368110 children [ Shape { appearance Appearance { material Material { diffuseColor .15 .35 .75 } } geometry Box { size 0.342520 0.629921 2.736220 } } ] }

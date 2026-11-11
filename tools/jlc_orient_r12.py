@@ -10,8 +10,8 @@ an upstream edit fails here instead of being silently skipped. The owner-fitted 
 "owner_fit", read through m3_design/r12_parts.py bom_lines()) replace R10's MANUAL_FIT: they would be in no CPL. Since
 D-R12-85 the list is empty: every part, C84 and the THT LS120 / J121 included, is in the CPL and matched here.
 
-The only hard-coded placement data is R12_MECHANICAL below, the per-footprint table of the mechanical tab numbers JLC's
-footprint carries and ours leaves unnumbered. R10's own tables in jlc_orient.py (ONLY, OFFSET, BODY, PAD_TOLERANCE,
+The only hard-coded placement data are R12_MECHANICAL below, the per-footprint table of the mechanical tab numbers JLC's
+footprint carries and ours leaves unnumbered, and R12_BODY, the body turns pad matching cannot see (D-R12-174). R10's own tables in jlc_orient.py (ONLY, OFFSET, BODY, PAD_TOLERANCE,
 PAD_ALIAS) stay in force for the R10 footprints R12 reuses.
 
 usage: <KiCad python3> -I tools/jlc_orient_r12.py --fetch [board]   make pads_r12.json hold exactly the board's LCSC
@@ -39,9 +39,16 @@ URL = 'https://easyeda.com/api/products/{}/components'
 # https://easyeda.com/api/products/<code>/components: C7430446 ZX-SH1.0-4PWT pad 6 left, pad 5 right; C7430448
 # ZX-SH1.0-6PWT pad 8 left, pad 7 right. Matching the tabs as well as the signals fixes the body's direction.
 R12_MECHANICAL = {'M3_SHC_4P': ('6', '5'), 'M3_SHC_6P': ('8', '7')}
+# D-R12-174: R12's body corrections, added to R10's BODY (a symmetric pin row, an asymmetric body: pad matching cannot
+# see a 180 deg turn). Kefa KF301-5.0-2P (C474881): JLCEDA's footprint (https://easyeda.com/api/products/C474881/
+# components, read 2026-11-10) draws the body -4.00 / +3.70 mm about the pin row with the two wire-cage outlines on its
+# +y side, so its wire face is +y; ours (m3_design/r12_parts.py kf301()) is at local -y, toward the west edge. +180 makes
+# JLC fit J1 wire face out; JLC's pin 1 then lands on our pin 2, which a two-way screw terminal does not care about.
+R12_BODY = {'C474881': 180}
 
 REPLACE = (("ROOT / 'tools/jlc_corrections.json'", "ROOT / 'tools/jlc_corrections_r12.json'", 2),
            ("MECHANICAL = {'M3_GH_BM04B_GHS_TBT'", "MECHANICAL = {**R12_MECHANICAL, 'M3_GH_BM04B_GHS_TBT'", 1),
+           ("BODY = {'C2915641': 180}", "BODY = {'C2915641': 180, **R12_BODY}", 1),
            ("str(ROOT / 'm3_design/assembly_review/m3.kicad_pcb')", "str(ROOT / 'm3_design/r12/m3.kicad_pcb')", 1),
            ("    from export_fab import MANUAL_FIT          # D-R18-09: hand-fitted after reflow, never in the CPL\n",
             "    MANUAL_FIT = R12_OWNER_FIT                 # R12: owner-fitted after reflow, never in the CPL\n", 1))
@@ -107,5 +114,5 @@ if __name__ == '__main__':
         fetch(Path(rest[0]) if rest else BOARD)
         sys.exit(0)
     code = compile(source(), str(SOURCE), 'exec')
-    exec(code, {'__name__': '__main__', '__file__': str(SOURCE), 'R12_MECHANICAL': R12_MECHANICAL,
+    exec(code, {'__name__': '__main__', '__file__': str(SOURCE), 'R12_MECHANICAL': R12_MECHANICAL, 'R12_BODY': R12_BODY,
                 'R12_OWNER_FIT': owner_fit() if '--verify-cpl' in sys.argv else {}})

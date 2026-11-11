@@ -679,6 +679,23 @@
    "pads_matched": 6,
    "status": "OK"
   },
+  "C474881|M3_KF301_5P0_2P_BU": {
+   "footprint": "M3_KF301_5P0_2P_BU",
+   "easyeda": "CONN-TH_P5.00_KF301-5.0-2P",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 3.536,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "body_correction_deg": 180,
+   "status": "OK"
+  },
   "C5190712|M3_FXLS_HLQFN16": {
    "footprint": "M3_FXLS_HLQFN16",
    "easyeda": "QFN-16_L4.0-W4.0-P0.80-TL-EP2.6",

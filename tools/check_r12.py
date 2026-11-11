@@ -15,8 +15,8 @@ N-1: native parts and identities match the R12 schematic; revision M3-ASSY-R12.
 V-1 / V-2: through vias 0.3 / >= 0.45 mm; no via in a soldered pad (D-R12-03 / -07).
 S-1 / S-2: RAW_ACT behind Q120/Q121 only; no unnamed armed-side parts or copper bypass.
 S-3: every pyro/load-switch gate defined off; local gate-source bias joined on the FET's layer.
-S-4: fitted population, schematic flags, MPN values and optional BOM/CPL identities; J1 excluded,
-     every other part JLC-assembled, none owner-fitted (J121 / LS120 THT, C84 SMT; D-R12-04..19 / -29 / -30 / -85).
+S-4: fitted population, schematic flags, MPN values and optional BOM/CPL identities; every part JLC-assembled,
+     none owner-fitted (J1 / J121 / LS120 THT, C84 SMT; D-R12-04..19 / -29 / -85 / -174).
 S-5: protected J400 contacts, 470k resistors, D402 clamp and no switch bypass.
 S-6 / S-7: external ports separated from safety copper; servo signals and GND only, sixth pin NC.
 S-8: barrel wall AND retained inner ring >= 1 mm from foreign In1/In2 copper, including In2 signals;
@@ -40,7 +40,8 @@ S-10: on every copper layer, fills (protected-net fills too) and barrels include
       floor is its measured gap rounded down to 1 um (R12F10-TRI-03); unconnected IC pins are I-5 victims and a loader
       exemption covers only the port rails its reason names (R12F10-TRI-05 / -06); a test pad's local clearance is the
       largest S-10 limit any pair of its net can take (R12F10-TRI-02).
-W-1 / W-2: plated J1 wire pads, J121 DB125 and SH port pin maps including NC contacts (D-R12-29..31).
+W-1 / W-2: the plated J1 KF301 and J121 DB125 screw terminals and SH port pin maps including NC contacts (D-R12-29..31,
+           -174).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
 M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to the board.
 M-7: recorded top IMU pose; no via/fill under sensor bodies, no track inside any sensor pad ring (D-R12-52).
@@ -318,7 +319,11 @@ SH_PORTS = {
     'J122': dict(zip(map(str, range(1, 7)), (*r10.SERVO_TERMINAL, None))),
     'J400': {'1': 'BAT_SW_SOURCE', '2': 'BAT_SW_RETURN', '3': None, '4': None},
 }
-WIRE_PADS = {'J1': {'1': 'BAT_IN', '2': 'GND'}}  # D-R12-30; J121 is fitted DB125 (D-R12-29).
+# D-R12-174 (owner 2026-11-10): J1 is the JLC-fitted KF301-5.0-2P battery screw terminal (D-R12-30's wire pads are
+# superseded), so R12 has no wire pads; J121 is the fitted DB125 (D-R12-29). Both are W-1's plated screw terminals.
+WIRE_PADS = {}
+SCREW_TERMINALS = {'J1': ({'1': 'BAT_IN', '2': 'GND'}, 'KF301-5.0-2P', 'D-R12-174'),
+                   'J121': ({'1': 'PYRO1_OUT', '2': 'PYRO1_IGN'}, 'DB125-3.5-2P-BK-S', 'D-R12-29')}
 
 
 # R12F6-TRI-01: the cold pull-up is 3V3 -> R136 -> D120 (PYRO1_COLD_PU) -> PYRO1_COLD -> R131 -> PYRO1_OUT. R136 is the
@@ -347,7 +352,7 @@ def s3(c):
 
 
 def s4(c):
-    """Required population from the R12 source contract; every part JLC-assembled, J1 (wire pads) off JLC uploads.
+    """Required population from the R12 source contract; every part JLC-assembled (J1 too since D-R12-174).
 
     D-R12-04..19 delete/re-source parts; D-R12-29 restores J121 to PCBA; D-R12-85 (owner 2026-11-05: "I want
     everything to be asssembled by jlc") puts C84 and LS120 on the JLC BOM / CPL, so circuit.json's owner_fit must be
@@ -430,7 +435,7 @@ def s9(c):
 def w1(c):
     import pcbnew
     issues, ev = [], {}
-    for ref, want in {**WIRE_PADS, 'J121': {'1': 'PYRO1_OUT', '2': 'PYRO1_IGN'}}.items():
+    for ref, (want, mpn, why) in SCREW_TERMINALS.items():
         found, ev[ref] = connector(c, ref, want, 'W-1', tabs=False)
         issues += found
         f = c.fps.get(ref)
@@ -438,8 +443,8 @@ def w1(c):
             for p in f.Pads():
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
                     issues.append(f'W-1: {ref}.{p.GetNumber()} must be plated through-hole')
-            if ref == 'J121' and f.GetFieldText('Manufacturer Part') != 'DB125-3.5-2P-BK-S':
-                issues.append('W-1: J121 must be the DB125-3.5-2P-BK-S (D-R12-29)')
+            if f.GetFieldText('Manufacturer Part') != mpn:
+                issues.append(f'W-1: {ref} must be the {mpn} ({why})')
     return issues, ev
 
 
@@ -537,7 +542,7 @@ def m8(c):
 
 
 TERMINAL_PINS = tuple((ref, tuple((pin, word) for pin, word in zip(want, words))) for ref, want, words in (
-    ('J1', WIRE_PADS['J1'], ('BAT+', 'GND')),
+    ('J1', SCREW_TERMINALS['J1'][0], ('BAT+', 'GND')),
     ('J121', {'1': '', '2': ''}, ('E1-', 'E1+')),
     ('J400', SH_PORTS['J400'], ('SW', 'SW', 'NC', 'NC')),
     ('J122', SH_PORTS['J122'], ('S1', 'S2', 'S3', 'S4', 'GND', 'NC')),
@@ -1098,51 +1103,51 @@ SINGLE_OPEN_TAPS_R12 = (
 _DOGBONE = ("a dog-bone via inside U1's TFBGA-100 escape (ball pitch 0.8 mm; every neighbouring channel holds another "
             "ball's escape), so no second barrel fits: R11 row 4's class, carried (owner row)")
 SINGLE_OPEN_EXCEPTIONS_R12 = [
-    ('U1.D5', 'via BOOT0 (23.00, 52.40)',
+    ('U1.D5', 'via BOOT0 (23.00, 56.25)',
      "BOOT0's ball D5 escape: " + _DOGBONE + ". Open, BOOT0 floats with no pull: a reset may start the ROM loader "
      "instead of the firmware (no flight control, no fire: fail-safe; the Blue Jay covers recovery; Inference: DS12110 "
      "gives BOOT0 no internal pull)"),
-    ('U1.D5', 'via BOOT0 (17.80, 48.20)',
+    ('U1.D5', 'via BOOT0 (17.80, 52.05)',
      "BOOT0's B-to-F via by R5: a second barrel has no legal spot (NRST's In2 run at x 16.85-16.95 west, ACT_EN_MCU's B "
      "lane at x 16.4, PYRO1_GATE_N's F run at x 18.7 east, which holds every net but GND 1.0585 mm off; measured on the "
      "R12F8 lane P board). Open, BOOT0 floats as at its dog-bone (fail-safe, Inference); R5.2's own GND end has two vias"),
-    ('U1.F8', 'via VCAP1 (25.40, 54.00)',
+    ('U1.F8', 'via VCAP1 (25.40, 57.85)',
      "VCAP1's ball F8 escape: " + _DOGBONE + ". Open, the core LDO keeps C20's 2.2 uF on VCAP2 instead of DS12110 "
      "Rev 8's two 2.2 uF (Table 124 p. 216); its stability then is an Inference (R10's U1.48 entry); C19's own end now "
      "has two barrels"),
-    ('U1.E7', 'via VCAP2 (24.60, 54.00)',
+    ('U1.E7', 'via VCAP2 (24.60, 57.85)',
      "VCAP2's ball E7 escape: " + _DOGBONE + ". Open, the core LDO keeps C19's 2.2 uF on VCAP1 only (as VCAP1's entry, "
      "Inference); C20's own end now has two barrels"),
     # R12F8-TRI-03: the 3V3A feeds with no legal second barrel (owner row, R10 row 22 carried)
-    ('U1.H1', 'via 3V3A (19.65, 36.80)',
+    ('U1.H1', 'via 3V3A (19.65, 40.65)',
      "3V3A's F-to-In2 via at R164.2 (U4's cell): a second barrel has no legal spot (R164.2's own land and mask north, "
      "C129.1 (ARM1_SENSE) west, I2C1_SCL's F / B runs and a GND via east, the SPI1 B lanes south; measured on the R12F8 "
      "lane P board). Open, VDDA (U1.H1) loses 3V3A: the ADCs (PA6 VLOGIC sense, PC2_C camera sense) read garbage and "
      "the MCU's analog domain is unpowered (DS12110 requires VDDA; behaviour not characterised: Inference)"),
-    ('C22.1', 'via 3V3A (19.65, 36.80)', "as U1.H1: the same via feeds VDDA's decoupling"),
-    ('U5.1', 'via 3V3A (25.80, 29.80)',
+    ('C22.1', 'via 3V3A (19.65, 40.65)', "as U1.H1: the same via feeds VDDA's decoupling"),
+    ('U5.1', 'via 3V3A (25.80, 33.65)',
      "U5's (barometer) 3V3A B-to-F via: a second barrel has no legal spot (U5's body (M-7: no via under a sensor body) "
      "west, CAM_5V_SENSE's In2 run at x 26.6 and a GND via east, C32's lands north; measured on the R12F8 lane P board). "
      "Open, the barometer is unpowered: no barometric gain, so the fire rule (LIFTOFF AND a barometric gain) never "
      "fires the primary (fail-safe; the Blue Jay covers recovery)"),
     # R12F10-TRI-07: R12's 3V3 end and C30's 3V3A feed
-    ('R12.2', 'via 3V3 (20.25, 31.50)',
+    ('R12.2', 'via 3V3 (20.25, 35.35)',
      "R12.2's (I2C1_SCL pull-up) 3V3 via: a second barrel has no legal spot (I2C1_SDA's F run at x 19.15 west, 0.105 mm "
      "from the land; R13.1 (I2C1_SDA) and SDA's jog north; R12.1 (I2C1_SCL) south; I2C1_SCL's F run at x 20.7 east, with "
-     "the GND via (20.25, 32.2) beside the land, SPI1_SCK's via (20.1, 33.6)'s only GND partner within 1.5 mm (1.41 mm), "
+     "the GND via (20.25, 36.05) beside the land, SPI1_SCK's via (20.1, 37.45)'s only GND partner within 1.5 mm (1.41 mm), "
      "and a 3V3 via there would sit on SPI1_SCK's via; measured on the R12F10 lane P board). Open, SCL loses its 4.7 "
      "kohm pull-up: I2C1 runs on the MCU's internal pull-up or fails (Inference), so the barometer may give no reading: "
      "no barometric gain, so the fire rule never fires the primary (fail-safe; the Blue Jay covers recovery), as U5.1's "
      "single 3V3A via"),
     # C30's 3V3A feed
-    ('C30.1', 'via 3V3A (25.70, 42.75)',
+    ('C30.1', 'via 3V3A (25.70, 46.60)',
      "C30.1's B-to-F 3V3A via (U4's 100 nF): a second barrel has no legal spot (the 3V3A B run under C30 at x 25.7 and "
-     "HG_CS's B loop (25.15, 42.95)-(25.7, 43.5)-(25.7, 44.25) south, IMU_INT1's F run at x 26.45 east, C30.2's GND land "
-     "and its F link to the GND via (24.9, 41.6) north and west, SPI1_MISO's F jog (24.55, 42.35)-(25.15, 42.95) "
+     "HG_CS's B loop (25.15, 46.8)-(25.7, 47.35)-(25.7, 48.1) south, IMU_INT1's F run at x 26.45 east, C30.2's GND land "
+     "and its F link to the GND via (24.9, 45.45) north and west, SPI1_MISO's F jog (24.55, 46.2)-(25.15, 46.8) "
      "south-west; measured on the R12F10 lane P board). Open, only C30's 100 nF is lost: U4 keeps its own 3V3A feed "
-     "through (24.95, 39.95) and C10 beside it (Inference: the IMU's noise without C30 is not characterised); not a power loss"),
+     "through (24.95, 43.8) and C10 beside it (Inference: the IMU's noise without C30 is not characterised); not a power loss"),
     # R12F9-TRI-08: PD10's ball H9 escape
-    ('U1.H9', 'via PORT_SENSE (26.20, 56.40)',
+    ('U1.H9', 'via PORT_SENSE (26.20, 60.25)',
      "PD10's ball H9 escape: " + _DOGBONE + ". Open, PD10 is cut from the R111 / R112 divider and floats (no internal "
      "pull): its level is undefined (Inference), so R12 firmware rule 1's PC1 and port-UART gate loses its power-state "
      "input, with VBUS_SENSE (rule 1's cross-check) and the cold screen left; the divider's far via, R111.1's PORT_4V8 "
@@ -1172,7 +1177,7 @@ TITLES.update({
     'S-5': 'protected switch contacts, clamp and no bypass', 'S-6': 'ports separated from safety copper',
     'S-7': 'servo signals, GND and NC only', 'S-8': 'foreign In1/In2 copper >= 1 mm from barrels and rings',
     'S-9': 'fire and battery current-path widths',
-    'S-10': 'fire-net copper gaps on every layer, fills included, default-deny with item-pair exceptions (R10 D-R26-02 / -04)', 'W-1': 'battery wire pads and DB125 pyro terminal',
+    'S-10': 'fire-net copper gaps on every layer, fills included, default-deny with item-pair exceptions (R10 D-R26-02 / -04)', 'W-1': 'KF301 battery and DB125 pyro screw terminals',
     'W-2': 'SH connector identities and pin maps', 'LC-1': 'local clearance floors',
     'M-3': 'recorded M3 supports', 'M-6': 'no bottom assembly', 'M-7': 'sensor pose and copper exclusions',
     'M-8': 'courtyard short-edge clearances', 'K-legends': 'R12 legends, designators and Fab references',

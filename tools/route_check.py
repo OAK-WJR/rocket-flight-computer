@@ -383,21 +383,21 @@ PARALLEL_VIAS_R10 = [
 # R12F8-TRI-02 / -03, profile r12: the second barrels on nets without a pour (each closes one deliberate loop with its
 # partner; either barrel alone carries the K-power tap). (net, (x, y) mm of the added via, measured reason).
 PARALLEL_VIAS_R12 = [
-    ('3V3A', (24.95, 39.95),
-     "R12F8-TRI-03: U5 / C30's B.Cu branches from the F-to-B via (23.5, 39.95); the barrel sits at the B.Cu bend, joined "
-     "to the first by the 1.45 mm F.Cu run along y 39.95 above the B.Cu one"),
-    ('3V3A', (14.95, 60.05),
-     "R12F8-TRI-03: VDDA's In2 link from (15.5, 60.6); the barrel sits on the In2 run 0.78 mm south-west, joined to the "
+    ('3V3A', (24.95, 43.8),
+     "R12F8-TRI-03: U5 / C30's B.Cu branches from the F-to-B via (23.5, 43.8); the barrel sits at the B.Cu bend, joined "
+     "to the first by the 1.45 mm F.Cu run along y 43.8 above the B.Cu one"),
+    ('3V3A', (14.95, 63.9),
+     "R12F8-TRI-03: VDDA's In2 link from (15.5, 64.45); the barrel sits on the In2 run 0.78 mm south-west, joined to the "
      "first by a 0.78 mm F.Cu diagonal above the In2 one"),
-    ('VCAP2', (26.9, 60.95),
+    ('VCAP2', (26.9, 64.8),
      "R12F8-TRI-02: U1.E7 to C20; the barrel sits at the B.Cu lane's bend, joined to C20.1 by a 0.7 mm F.Cu stub, beside "
-     "the first barrel (27.8, 61.85) on the 1.27 mm B.Cu diagonal"),
-    ('VCAP1', (28.6, 61.05),
+     "the first barrel (27.8, 65.7) on the 1.27 mm B.Cu diagonal"),
+    ('VCAP1', (28.6, 64.9),
      "R12F8-TRI-02: U1.F8 to C19; the barrel sits at the B.Cu lane's bend, joined to C19.1 by a 0.6 mm F.Cu stub, beside "
-     "the first barrel (29.4, 61.85) on the 1.13 mm B.Cu diagonal"),
-    ('PORT_SENSE', (26.45, 74.12),
+     "the first barrel (29.4, 65.7) on the 1.13 mm B.Cu diagonal"),
+    ('PORT_SENSE', (26.45, 77.97),
      "R12F9-TRI-08 (R12F10-TRI-16: 83 mm, both barrels >= 1.040 mm from the RAW_PROTECTED F run): PD10's divider end of "
-     "the B.Cu lane; the barrel sits on the lane 0.75 mm aft of the first (26.45, 74.87) and joins R111.2 by its own "
+     "the B.Cu lane; the barrel sits on the lane 0.75 mm aft of the first (26.45, 78.72) and joins R111.2 by its own "
      "F.Cu run (a 1.06 mm diagonal into the pad centre; the first barrel's run is 0.75 mm straight east)"),
 ]
 PARALLEL_VIAS = []
@@ -435,24 +435,24 @@ ROUTE_FIGURES_R11 = {'CAM_RX_BUFFER': (19.2, 4)}      # D-R11-61: route_check on
 # R11 recorded theirs. measured_check fails an entry when the net's route length or via count differs from
 # ROUTE_FIGURES_R12 (route_check --routes on the frozen board), and a stale entry fails the gate.
 ALLOWLIST_R12 = [
-    ('extra_vias', '3V3A', 'net', (21.525, 38.5),
+    ('extra_vias', '3V3A', 'net', (21.525, 42.35),
      'D-R12-98 (integration, AVA re-layout): 3V3A (the sensor analog rail) joins its F.Cu pads through the named In2 link '
-     'LA (ROUTING_PLAN 4) from the VDDA end at (15.5, 60.6) to the R164 / U4 F.Cu island at (19.65, 36.8) (0.1 mm aft '
+     'LA (ROUTING_PLAN 4) from the VDDA end at (15.5, 64.45) to the R164 / U4 F.Cu island at (19.65, 40.65) (0.1 mm aft '
      'since R12F8-TRI-03, clear of R164.2\'s mask). '
-     'R164.2 supplies this island, including U4.5 (23.5, 40.64), C10, U4.8 and C31. One F-to-B via at '
-     '(23.5, 39.95) feeds the B.Cu branches to C30 and U5 / C32, each returning to F.Cu through its own via '
-     'at (25.7, 42.75) and (25.8, 29.8), respectively (Measured: 15.66 mm of B.Cu). '
+     'R164.2 supplies this island, including U4.5 (23.5, 44.49), C10, U4.8 and C31. One F-to-B via at '
+     '(23.5, 43.8) feeds the B.Cu branches to C30 and U5 / C32, each returning to F.Cu through its own via '
+     'at (25.7, 46.6) and (25.8, 33.65), respectively (Measured: 15.66 mm of B.Cu). '
      'Measured on the merged board: 5 vias against 0 + 2 allowed (2 for the In2 link, 3 for the B.Cu branches); '
-     '72.31 mm against a 48.05 mm octilinear MST. R12F8-TRI-03 (lane P board): the second barrels (24.95, 39.95) '
-     'and (14.95, 60.05) (PARALLEL_VIAS_R12, left out of the via count) and their 1.45 / 0.78 mm F.Cu links: '
+     '72.31 mm against a 48.05 mm octilinear MST. R12F8-TRI-03 (lane P board): the second barrels (24.95, 43.8) '
+     'and (14.95, 63.9) (PARALLEL_VIAS_R12, left out of the via count) and their 1.45 / 0.78 mm F.Cu links: '
      '74.74 mm, 5 vias',
      dict(len_mm=74.74, vias=5)),
-    ('extra_vias', 'SPI1_MISO', 'net', (23.4, 50.4),
+    ('extra_vias', 'SPI1_MISO', 'net', (23.4, 54.25),
      'D-R12-98 (integration): MISO leaves U1 at A6, west of SCK (A7) and MOSI (C5, channel x 24.6), but its U4 pad (U4.1, '
-     '(24.21, 42.35)) is on U4\'s east face beyond SCK\'s and MOSI\'s south-face pads (U4.13 / U4.14, the +y face: '
+     '(24.21, 46.2)) is on U4\'s east face beyond SCK\'s and MOSI\'s south-face pads (U4.13 / U4.14, the +y face: '
      'north is -y, D-R12-122), so MISO must cross both of them; SCK and MOSI stay on F.Cu to U4, MISO crosses under '
-     'them on B.Cu between (23.0, 44.4) and (25.15, 43.95), and its U6 branch leaves the same first via on B.Cu to '
-     'U6\'s via (20.1, 35.2): 3 vias, the fewest the pin orders allow (Measured, zone_check: route 22.36 mm against a '
+     'them on B.Cu between (23.0, 48.25) and (25.15, 47.8), and its U6 branch leaves the same first via on B.Cu to '
+     'U6\'s via (20.1, 39.05): 3 vias, the fewest the pin orders allow (Measured, zone_check: route 22.36 mm against a '
      '17.25 mm MST, ratio 1.30)',
      dict(len_mm=22.36, vias=3)),
 ]
@@ -2244,7 +2244,10 @@ def scan(board, baseline_log=None):
                              (dist(ai, bj) <= TOL and dist(bi, aj) <= TOL))
                         add('duplicate_segment' if dup else 'collinear_overlap', net, layer, ai,
                             end=(round(mm(bi[0]), 4), round(mm(bi[1]), 4)), other=other, overlap_mm=round(mm(ov), 4))
-                    elif TOL < off < (si['w'] + sj['w']) / 2 + SLIT / NM and ov > max(si['w'], sj['w']) / 2:
+                    # D-R12-174: 1 nm of float slack, so a slit of exactly SLIT (here RAW_PROTECTED's W2 double feed,
+                    # offset 0.7 mm for 0.6 mm tracks) reads the same wherever the pair sits on the board; the projected
+                    # offset is a float quotient (0.7 mm read 0.69999... after the board grew 3.85 mm, 0.70000... before)
+                    elif TOL < off < (si['w'] + sj['w']) / 2 + SLIT / NM - 1 and ov > max(si['w'], sj['w']) / 2:
                         add('side_by_side_overlap', net, layer, ai, end=(round(mm(bi[0]), 4), round(mm(bi[1]), 4)),
                             other=other, offset_mm=round(mm(off), 4), overlap_mm=round(mm(ov), 4))
                 else:

@@ -1,5 +1,5 @@
 {
- "note": "Routing work zones for the R12 AVA re-layout (ROUTING_PLAN.md section 6). Board mm, x east, y forward from the aft edge. A zone owns every copper layer inside its polygon except where a 'strips' entry gives one layer of a rectangle to another zone. Copper may cross a zone border only at a listed hand-off point. D-R12-96: the W1 / W2 border moved from y 26.5 to y 17.0-17.6 so that the 3V3 buck cell (moved 4.6 mm aft) lies wholly in W2, as ROUTING_PLAN assigns it; RAW_PROTECTED hands off W1 -> W2 on B 0.6 mm at (45.2, 17.0). R12F4-TRI-08: W5 closes at the 90 mm outline (y 90, Edge.Cuts; it ended at y 100 from the 46 x 100 mm stage), and zone_guard.py refuses any zone polygon or fragment point outside Edge.Cuts. R12F5-TRI-13: W3 / W5 brought to the 90 mm layout (D-R12-99 moved the port row and its 1 k / 100 nF cells 10 mm aft, the microSD block 5.4 mm aft and the port buck cell 1.5 mm aft): W3 keeps U1's escape, the microSD block (the old W5 notch at x 11.7-19, y 61.5-66.8), QSPI and the port UART B lanes up to y 80 with F fingers to the 1 k series pads at y 81.77 (x 11.7-13.4, 22.1-26.2, 34.6-36.4) and PORT_SENSE to R111.1 (27.2, 80.17); W5 takes the port row forward of y 80, the port buck cell (x >= 39.2 from y 66.3, x >= 37.0 from y 68.6), the 3V3 bulk pocket C461 / C23 / C460 / TP74 (x 28.5-34.6, y 68.6-80) and the west bay x < 11.7. Strip CR ends at the trunk hand-off y 73.1; strip CX (a B AUX lane under the 100 mm port buck) is gone: the AUX lanes run at x 35 / 36 inside W3. R12F8-TRI-17: W3 / W5 brought to the 88 mm layout (R12F7-TRI-03 moved the port row 2 mm aft, its 1 k cells 1.85 mm, the port buck cell 2 mm and R111 / R112 0.3 mm): W5 closes at y 88; the port buck cell from y 64.3 (x >= 39.2); the W3 fingers to the 1 k pads end at y 80.55 (x 11.7-13.4, 34.6-36.4) / 80.75 (x 22.1-26.2) over a y 78.15 base; PORT_SENSE's R111 notch at y 79.7 / 79.87; strip CR and the W2 -> W5 RAW hand-off at (45.2, 71.1). R12F8 lane P: the W1 / W2 notch reaches x 32.0 (R105.2's GND via (31.73, 17.6)) and W3 takes x 13.6-14.4, y 45.5-46.0 (R5.2's second GND via (14.0, 45.75)). R12F9 lane L (85 mm outline): the microSD J430 moved to the east side (W3 owns it, U3 under J3 and the SD / QSPI / AUX copper), the port buck cell moved into the old J430 bay with the RAW_PROTECTED F run south of J430 and the 3V3 bulk caps into the west strip (W5), and the port row 3 mm aft: W5 is the forward strip y >= 71.5 (x >= 24.4), the buck cell bay x 11.7-21.3 from y 61.45 with the RAW notch x 21.3-24.4 from y 68.9, the west bay x < 11.7 from y 51.5, the west strip x < 3.6 from y 45.5 and the trunk end x >= 44 from y 70.9, closing at y 85; W3's forward points moved 3 mm aft (it overlaps W5 at the port fan-out, where both own copper). R12F10-TRI-15 / -16 (83 mm outline): W5 closes at y 83; W3 owns the J430 bay east to x 44.6 up to y 71.5 (lane C's C460 / C461 3V3 run and GND vias, D-R12-169, re-owned from W5; the old port-buck notch x 39.2-44.6 from y 64.3 is gone), and its forward fingers move 2 mm aft with the port row (the AUX finger x 34.1-37.4 to y 75.55, the GPS / PORT_SENSE fingers to y 75.75 / 74.87, the radio finger x 10.6-14.4 to y 75.55 over a y 73.15 base). R12F10-TRI-07: W4 takes x 18.5-19.05, y 29.8-30.5 (R13.2's second 3V3 via (18.8, 30.17)).",
+ "note": "Routing work zones for the R12 AVA re-layout (ROUTING_PLAN.md section 6). Board mm, x east, y forward from the aft edge. A zone owns every copper layer inside its polygon except where a 'strips' entry gives one layer of a rectangle to another zone. Copper may cross a zone border only at a listed hand-off point. D-R12-96: the W1 / W2 border moved from y 26.5 to y 17.0-17.6 so that the 3V3 buck cell (moved 4.6 mm aft) lies wholly in W2, as ROUTING_PLAN assigns it; RAW_PROTECTED hands off W1 -> W2 on B 0.6 mm at (45.2, 17.0). R12F4-TRI-08: W5 closes at the 90 mm outline (y 90, Edge.Cuts; it ended at y 100 from the 46 x 100 mm stage), and zone_guard.py refuses any zone polygon or fragment point outside Edge.Cuts. R12F5-TRI-13: W3 / W5 brought to the 90 mm layout (D-R12-99 moved the port row and its 1 k / 100 nF cells 10 mm aft, the microSD block 5.4 mm aft and the port buck cell 1.5 mm aft): W3 keeps U1's escape, the microSD block (the old W5 notch at x 11.7-19, y 61.5-66.8), QSPI and the port UART B lanes up to y 80 with F fingers to the 1 k series pads at y 81.77 (x 11.7-13.4, 22.1-26.2, 34.6-36.4) and PORT_SENSE to R111.1 (27.2, 80.17); W5 takes the port row forward of y 80, the port buck cell (x >= 39.2 from y 66.3, x >= 37.0 from y 68.6), the 3V3 bulk pocket C461 / C23 / C460 / TP74 (x 28.5-34.6, y 68.6-80) and the west bay x < 11.7. Strip CR ends at the trunk hand-off y 73.1; strip CX (a B AUX lane under the 100 mm port buck) is gone: the AUX lanes run at x 35 / 36 inside W3. R12F8-TRI-17: W3 / W5 brought to the 88 mm layout (R12F7-TRI-03 moved the port row 2 mm aft, its 1 k cells 1.85 mm, the port buck cell 2 mm and R111 / R112 0.3 mm): W5 closes at y 88; the port buck cell from y 64.3 (x >= 39.2); the W3 fingers to the 1 k pads end at y 80.55 (x 11.7-13.4, 34.6-36.4) / 80.75 (x 22.1-26.2) over a y 78.15 base; PORT_SENSE's R111 notch at y 79.7 / 79.87; strip CR and the W2 -> W5 RAW hand-off at (45.2, 71.1). R12F8 lane P: the W1 / W2 notch reaches x 32.0 (R105.2's GND via (31.73, 17.6)) and W3 takes x 13.6-14.4, y 45.5-46.0 (R5.2's second GND via (14.0, 45.75)). R12F9 lane L (85 mm outline): the microSD J430 moved to the east side (W3 owns it, U3 under J3 and the SD / QSPI / AUX copper), the port buck cell moved into the old J430 bay with the RAW_PROTECTED F run south of J430 and the 3V3 bulk caps into the west strip (W5), and the port row 3 mm aft: W5 is the forward strip y >= 71.5 (x >= 24.4), the buck cell bay x 11.7-21.3 from y 61.45 with the RAW notch x 21.3-24.4 from y 68.9, the west bay x < 11.7 from y 51.5, the west strip x < 3.6 from y 45.5 and the trunk end x >= 44 from y 70.9, closing at y 85; W3's forward points moved 3 mm aft (it overlaps W5 at the port fan-out, where both own copper). R12F10-TRI-15 / -16 (83 mm outline): W5 closes at y 83; W3 owns the J430 bay east to x 44.6 up to y 71.5 (lane C's C460 / C461 3V3 run and GND vias, D-R12-169, re-owned from W5; the old port-buck notch x 39.2-44.6 from y 64.3 is gone), and its forward fingers move 2 mm aft with the port row (the AUX finger x 34.1-37.4 to y 75.55, the GPS / PORT_SENSE fingers to y 75.75 / 74.87, the radio finger x 10.6-14.4 to y 75.55 over a y 73.15 base). R12F10-TRI-07: W4 takes x 18.5-19.05, y 29.8-30.5 (R13.2's second 3V3 via (18.8, 30.17)). D-R12-174 (86.85 mm outline): every polygon and strip vertex forward of y 6.85 moved 3.85 mm forward with the board (the aft port row and D402 stay); the outline closes at y 86.85.",
  "zones": {
   "W1": {
    "name": "aft power, pyro, camera and servo cells",
@@ -15,75 +15,75 @@
     ],
     [
      46,
-     17.0
+     20.85
     ],
     [
      32.0,
-     17.0
+     20.85
     ],
     [
      32.0,
-     17.6
+     21.45
     ],
     [
      30.4,
-     17.6
+     21.45
     ],
     [
      30.4,
-     17.5
+     21.35
     ],
     [
      27.25,
-     17.5
+     21.35
     ],
     [
      27.25,
-     25.5
+     29.35
     ],
     [
      19.5,
-     25.5
+     29.35
     ],
     [
      19.5,
-     29.5
+     33.35
     ],
     [
      19.05,
-     29.5
+     33.35
     ],
     [
      19.05,
-     46.0
+     49.85
     ],
     [
      14.4,
-     46.0
+     49.85
     ],
     [
      14.4,
-     45.5
+     49.35
     ],
     [
      13.6,
-     45.5
+     49.35
     ],
     [
      13.6,
-     50.5
+     54.35
     ],
     [
      12.2,
-     50.5
+     54.35
     ],
     [
      12.2,
-     51.5
+     55.35
     ],
     [
      0,
-     51.5
+     55.35
     ]
    ]
   },
@@ -93,27 +93,27 @@
    "polygon": [
     [
      30.4,
-     17.6
+     21.45
     ],
     [
      32.0,
-     17.6
+     21.45
     ],
     [
      32.0,
-     17.0
+     20.85
     ],
     [
      46,
-     17.0
+     20.85
     ],
     [
      46,
-     52.0
+     55.85
     ],
     [
      30.4,
-     52.0
+     55.85
     ]
    ]
   },
@@ -123,123 +123,123 @@
    "polygon": [
     [
      13.6,
-     45.5
+     49.35
     ],
     [
      14.4,
-     45.5
+     49.35
     ],
     [
      14.4,
-     46.0
+     49.85
     ],
     [
      19.05,
-     46.0
+     49.85
     ],
     [
      19.05,
-     45.4
+     49.25
     ],
     [
      30.4,
-     45.4
+     49.25
     ],
     [
      30.4,
-     52.0
+     55.85
     ],
     [
      44.6,
-     52.0
+     55.85
     ],
     [
      44.6,
-     71.5
+     75.35
     ],
     [
      37.4,
-     71.5
+     75.35
     ],
     [
      37.4,
-     75.55
+     79.4
     ],
     [
      34.1,
-     75.55
+     79.4
     ],
     [
      34.1,
-     71.5
+     75.35
     ],
     [
      28.5,
-     71.5
+     75.35
     ],
     [
      28.5,
-     74.7
+     78.55
     ],
     [
      27.2,
-     74.7
+     78.55
     ],
     [
      27.2,
-     74.87
+     78.72
     ],
     [
      26.2,
-     74.87
+     78.72
     ],
     [
      26.2,
-     75.75
+     79.6
     ],
     [
      22.1,
-     75.75
+     79.6
     ],
     [
      22.1,
-     73.15
+     77.0
     ],
     [
      14.4,
-     73.15
+     77.0
     ],
     [
      14.4,
-     75.55
+     79.4
     ],
     [
      10.6,
-     75.55
+     79.4
     ],
     [
      10.6,
-     73.15
+     77.0
     ],
     [
      11.7,
-     73.15
+     77.0
     ],
     [
      11.7,
-     51.5
+     55.35
     ],
     [
      12.2,
-     51.5
+     55.35
     ],
     [
      12.2,
-     50.5
+     54.35
     ],
     [
      13.6,
-     50.5
+     54.35
     ]
    ]
   },
@@ -249,51 +249,51 @@
    "polygon": [
     [
      19.05,
-     29.5
+     33.35
     ],
     [
      19.5,
-     29.5
+     33.35
     ],
     [
      19.5,
-     25.5
+     29.35
     ],
     [
      27.25,
-     25.5
+     29.35
     ],
     [
      27.25,
-     17.5
+     21.35
     ],
     [
      30.4,
-     17.5
+     21.35
     ],
     [
      30.4,
-     45.4
+     49.25
     ],
     [
      19.05,
-     45.4
+     49.25
     ],
     [
      19.05,
-     30.5
+     34.35
     ],
     [
      18.5,
-     30.5
+     34.35
     ],
     [
      18.5,
-     29.8
+     33.65
     ],
     [
      19.05,
-     29.8
+     33.65
     ]
    ]
   },
@@ -303,59 +303,59 @@
    "polygon": [
     [
      0,
-     45.5
+     49.35
     ],
     [
      3.6,
-     45.5
+     49.35
     ],
     [
      3.6,
-     51.5
+     55.35
     ],
     [
      11.7,
-     51.5
+     55.35
     ],
     [
      11.7,
-     61.45
+     65.3
     ],
     [
      21.3,
-     61.45
+     65.3
     ],
     [
      21.3,
-     68.9
+     72.75
     ],
     [
      24.4,
-     68.9
+     72.75
     ],
     [
      24.4,
-     71.5
+     75.35
     ],
     [
      44.0,
-     71.5
+     75.35
     ],
     [
      44.0,
-     70.9
+     74.75
     ],
     [
      46,
-     70.9
+     74.75
     ],
     [
      46,
-     83
+     86.85
     ],
     [
      0,
-     83
+     86.85
     ]
    ]
   }
@@ -366,9 +366,9 @@
    "layer": "B",
    "rect": [
     44.6,
-    52.0,
+    55.85,
     46.0,
-    71.1
+    74.95
    ],
    "owner": "W2",
    "what": "RAW_PROTECTED trunk, B.Cu 0.6 mm at x 45.2 up to its W5 hand-off at (45.2, 73.1) (inside the W3 / W5 polygons, B only)"
@@ -378,9 +378,9 @@
    "layer": "B",
    "rect": [
     18.9,
-    25.5,
+    29.35,
     19.5,
-    46.0
+    49.85
    ],
    "owner": "W1",
    "what": "BAT_FAULT_N B lane at x 19.2 (inside W4, B only)"
@@ -390,9 +390,9 @@
    "layer": "In2",
    "rect": [
     12.6,
-    37.4,
+    41.25,
     19.05,
-    58.4
+    62.25
    ],
    "owner": "W3",
    "what": "3V3A In2 power track (x 13.0) and the NRST In2 lane (x 14.4 / y 45.6) where they pass inside the W1 polygon (In2 only)"

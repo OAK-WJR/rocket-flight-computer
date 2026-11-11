@@ -105,9 +105,16 @@ R10_MODEL_BOXES = {
     'M3_MICROSD_MOLEX_472192001': R10_MATED['M3_MICROSD_MOLEX_472192001']['box'],
     'M3_MICROSD_MOLEX_104031': (-5.975, -5.70, 5.975, 5.70, 0., 1.42),     # body only; the card is the mated envelope
     'M3_MA_8x10': (-4.25, -4.25, 4.25, 4.25, 0., 10.80),
+    # D-R12-174: R12's J1, Kefa KF301-5.0-2P drawing rev A maximum-tolerance union (wire face -3.80, rear +4.20, ends
+    # +/-5.15, interlock key to -6.02, height 10.30; m3_design/r12_parts.py KF_*)
+    'M3_KF301_5P0_2P_BU': (-6.02, -3.80, 5.15, 4.20, 0., 10.30),
 }
 R10_MODEL_TOL = 2e-5  # mm; six-decimal VRML endpoint error <=1.905e-6 mm, with a numeric guard
 R10_TERMINAL_TAIL_MM = 3.8  # DORABO T0-1 sheet1:3.50+/-0.30mm below seating plane
+# D-R12-174: each screw terminal's pin tail below the seating plane, by footprint-name prefix (Inference: the pin's own
+# length tolerance, the solder fillet and lead trim not modelled): DORABO DB125 3.50 +/- 0.30 (T0-1 sheet 1), Kefa
+# KF301-5.0 3.60 +/- 0.30 (drawing rev A)
+TERMINAL_TAILS = {'M3_DB125_': R10_TERMINAL_TAIL_MM, 'M3_KF301_': 3.9}
 R10_MATED_REFS = {'J430'}
 REQUIRED_MATED = {'M3_GH_BM04B_GHS_TBT', 'M3_SMA_KH_KE8_EDGE'}
 # These are bare board features, not an escape hatch for missing fitted-part geometry.
@@ -162,9 +169,10 @@ R12_MAX_LENGTH = 100.0
 R11_CFG = dict(name='r11', layers=6, max_length=R11_MAX_LENGTH, gh_refs=R11_GH_REFS, mated_refs=R11_MATED_REFS,
                clones=False, one_side=False, ref='D-R11-02', layer_ref='D-R11-03')
 R12_CFG = dict(name='r12', layers=4, max_length=R12_MAX_LENGTH, gh_refs=R11_GH_REFS, mated_refs=R11_MATED_REFS,
-               clones=True, one_side=True, ref='r12_plan', layer_ref='D-R12-03', wire_pads={'J1'}, terminals={'J121'})
+               clones=True, one_side=True, ref='r12_plan', layer_ref='D-R12-03', wire_pads=set(), terminals={'J121', 'J1'})
 # D-R12-29 (owner, 2026-11-03): R12's J121 is R10's DB125-2 screw terminal again; its bare-bore wire room (R10's P-11 /
-# R18-MEC-03 floor) is checked as R10 does
+# R18-MEC-03 floor) is checked as R10 does. D-R12-174 (owner, 2026-11-10): J1 is the KF301-5.0-2P battery screw terminal
+# (no wire pads remain on R12), checked the same way: model box, bore, pin tails and the 4.95 mm wire room
 R12_TERMINAL_ROOM = 4.95
 # QMB-09B-03 item 4, p5: 4.0 +/- 0.3 mm leads, seated flush on the 1.6 mm board.
 R12_BUZZER_TAIL_MM = 2.7       # maximum projection below the board (4.3 - 1.6 mm)
@@ -473,10 +481,16 @@ def pad_box(p):
     return mm(bounds.GetX()), mm(bounds.GetY()), mm(bounds.GetRight()), mm(bounds.GetBottom()), -BOARD_T, 0.0
 
 
+def terminal_tail_mm(f):
+    """The pin tail below the seating plane of a screw-terminal footprint (TERMINAL_TAILS), else None."""
+    return next((v for k, v in TERMINAL_TAILS.items() if fp_name(f).startswith(k)), None)
+
+
 def terminal_tail_box(f, p):
     # Inference: use the whole native copper-pad AABB transversely, larger
     # than the metal pin; solder/seating/bent-lead tolerances need inspection.
-    z = (0., R10_TERMINAL_TAIL_MM-BOARD_T) if f.IsFlipped() else (-R10_TERMINAL_TAIL_MM, -BOARD_T)
+    tail = terminal_tail_mm(f) or R10_TERMINAL_TAIL_MM
+    z = (0., tail-BOARD_T) if f.IsFlipped() else (-tail, -BOARD_T)
     return (*pad_box(p)[:4], *z)
 
 
@@ -678,7 +692,7 @@ def corner_supports(holes, outline, bottom_boxes):
 def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
     """Profile r11 (and r12 with R12_CFG): see the module docstring."""
     rows, bodies, mating, bottom, issues, excluded, top_bodies, top_pads = [], [], [], [], [], [], [], []
-    gh, wires, tails, lead_tails = {}, [], [], []
+    gh, wires, tails, lead_tails, tail_mm = {}, [], [], [], {}
     if not all(math.isfinite(v) for v in (radius, axis_x, tol)) or radius <= 0 or tol < 0:
         raise ValueError('finite positive bore radius, finite axis and nonnegative sled tolerance required')
     if abs(mm(b.GetDesignSettings().GetBoardThickness()) - BOARD_T) > 0.01:
@@ -729,13 +743,14 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
                           if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH)
         # D-R12-89 (R12F1-TRI-12): R12's J121 is R10's DB125-2 (D-R12-29), so its terminal tails get R10's 3.8 mm
         # below-seating allowance (R10_TERMINAL_TAIL_MM, an Inference) instead of the 1.6 mm pad box alone
-        if fp_name(f).startswith('M3_DB125_') and ref in cfg.get('terminals', ()):
+        if terminal_tail_mm(f) is not None and ref in cfg.get('terminals', ()):
             for p in f.Pads():
                 if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH:
                     continue
                 tail = terminal_tail_box(f, p)
                 label = ref + '.' + p.GetNumber() + ' terminal tail'
                 tails.append((ref, label, tail))
+                tail_mm[ref] = terminal_tail_mm(f)
                 rows.append((margin(tail, radius, axis_x, tol), label, 'F' if f.IsFlipped() else 'B', tail))
                 (top_bodies if f.IsFlipped() else bottom).append((label, tail))
         if cfg['name'] == 'r12' and ref == 'LS120':
@@ -830,11 +845,11 @@ def check_board_r11(b, prj, radius, axis_x, tol, cfg=R11_CFG):
                 wire_pads=sorted(wires), wire_allowance=dict(WIRE_ALLOWANCE, od=WIRE_OD, basis='Inference'),
                 outline=outline, width_mm=width, length_mm=length, excluded=sorted(excluded),
                 terminal_tails=dict(count=len(tails), refs=sorted({r for r, _, _ in tails}),
-                                    max_below_seating_mm=R10_TERMINAL_TAIL_MM,
+                                    max_below_seating_mm=dict(sorted(tail_mm.items())),
                                     transverse_allocation='Inference: native copper-pad AABB, not a pin/solder model',
                                     minimum_bore_margin_mm=min((margin(box, radius, axis_x, tol) for _, _, box in tails),
                                                                default=None),
-                                    max_projection_below_board_mm=R10_TERMINAL_TAIL_MM - BOARD_T),
+                                    max_projection_below_board_mm=max(tail_mm.values(), default=BOARD_T) - BOARD_T),
                 ok=not issues)
     if cfg['name'] == 'r12':
         report['lead_tails'] = dict(count=len(lead_tails), refs=sorted({r for r, _, _ in lead_tails}),
@@ -858,7 +873,7 @@ def wire_rooms(b, rows, profile, axis_x, tol):
         if f is None or ref in out:
             continue
         if profile == 'r10':
-            if not fp_name(f).startswith(('M3_DB125', 'M3_DB128')):
+            if not fp_name(f).startswith(('M3_DB125', 'M3_DB128', 'M3_KF301')):     # D-R12-174: R12's KF301 J1
                 continue
         elif ref not in SIDE_ENTRY or not fp_name(f).startswith('M3_DB128'):
             continue

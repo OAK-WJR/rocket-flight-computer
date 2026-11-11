@@ -1,14 +1,14 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `a1e65bb4109ba5db7821cc1ec8b1ae6c3db88d5f9bd1f1700eb0cb182721e59a`, 46 × 83 × 1.6 mm,
+**Status.** PCB `1d7562d59eaa23f337635a9d9ad6bd99c774d95a8ad62409bb6f0840d567f3d1`, 46 × 86.85 × 1.6 mm (D-R12-174),
 four layers, every part on the top face and assembled by JLC. R12 remains a CAD candidate, not accepted,
 nothing ordered; R9 stays accepted. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
 [R12_VALIDATION.md](R12_VALIDATION.md). No physical fit is claimed.
 
-Coordinates are board mm: x east (0 … 46), y forward from the aft edge (0 … 83), top face F.
-Current centres are `m3_design/r12_place.tsv` on `a1e65bb4…` (Measured; D-R12-169 moved U3 0.15 mm west and C460 / C461 beside J430). Round 9 places U3 under J3,
+Coordinates are board mm: x east (0 … 46), y forward from the aft edge (0 … 86.85), top face F.
+Current centres are `m3_design/r12_place.tsv` on `1d7562d5…` (Measured). D-R12-174 inserted 3.85 mm at the aft end (cut at y 6.85): every part forward of the cut moved 3.85 mm forward, so a position quoted for `a1e65bb4…` (46 × 83 mm) is 3.85 mm less in y; J400, J122, J9, the aft supports and D402 did not move. D-R12-169 moved U3 0.15 mm west and C460 / C461 beside J430. Round 9 places U3 under J3,
 the push-pull J430 east below U3, and the port buck in the old J430 bay. The forward ports and supports
-moved 3 mm aft in round 9 and another 2 mm aft in round 10 (ports at y 79.35, forward supports y 77.1, D-R12-171); LS120 stays at (5.8, 66.4). D-R12-161 … -165 record the changes.
+moved 3 mm aft in round 9 and another 2 mm aft in round 10 (ports at y 79.35, forward supports y 77.1, D-R12-171; y 83.2 / 80.95 since D-R12-174); LS120 stays at (5.8, 70.25). D-R12-161 … -165 record the changes.
 
 ## Harness pin map
 
@@ -28,20 +28,23 @@ the v1, so the pin orders are an **Inference** until a real H743 lead is checked
 | J420 radio by default, SH-4 | forward, mouth forward; pin 1 at x 10.0 | GND | 4V8 (PORT_4V8) | board TXO (to module RX) | board RXI (from module TX) | — | — |
 | J410 GPS by default, SH-6 | forward; pin 1 at x 20.5 | GND | 4V8 | board TXO | board RXI | NC (the H743's SCL) | NC (SDA) |
 | J440 AUX spare, SH-4 | forward; pin 1 at x 33.0 | GND | 4V8 | board TXO | board RXI | — | — |
-| J2 SWD, TC2030 pads (top, centre (32.8, 45.0), rotation 90) | — | 3V3 (33.435, 46.27) | SWDIO (32.165, 46.27) | NRST (33.435, 45.0) | SWCLK (32.165, 45.0) | GND (33.435, 43.73) | NC (32.165, 43.73) |
+| J2 SWD, TC2030 pads (top, centre (32.8, 48.85), rotation 90) | — | 3V3 (33.435, 50.12) | SWDIO (32.165, 50.12) | NRST (33.435, 48.85) | SWCLK (32.165, 48.85) | GND (33.435, 47.58) | NC (32.165, 47.58) |
 
 Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
 
-- **Pyro terminal J121.** A black DORABO DB125-3.5-2P screw terminal at (7.4, 37.0); the wires leave west (D-R12-29).
-  - Pin 1 (7.4, 35.25) is PYRO1_OUT, `E1−` (the side Q124 switches to GND).
-  - Pin 2 (7.4, 38.75) is PYRO1_IGN, `E1+` (fed through R134 from the bus).
+- **Pyro terminal J121.** A black DORABO DB125-3.5-2P screw terminal at (7.4, 40.85); the wires leave west (D-R12-29).
+  - Pin 1 (7.4, 39.1) is PYRO1_OUT, `E1−` (the side Q124 switches to GND).
+  - Pin 2 (7.4, 42.6) is PYRO1_IGN, `E1+` (fed through R134 from the bus).
   - Its face is 3.40 mm in from the edge, giving 5.00 mm of bare-bore wire room against R10's 4.95 mm floor
     (Calculation on CAD envelopes).
-- **Battery pads J1** (`M3_WIREPAD_2P_P5`: 1.40 mm holes, 2.60 mm lands, 5.00 mm pitch; D-R12-30).
-  - Pad 1 BAT_IN (3.5, 17.8), pad 2 GND (3.5, 12.8), legends `1:BAT+` / `2:GND`.
-  - They take a tinned 16–20 AWG lead, or the pins of a later 5.0 mm two-position terminal (hole fit an Inference,
-    O-R12-20).
-  - A 10 × 8.2 mm keep-clear is reserved for that terminal body.
+- **Battery terminal J1** (D-R12-174): a blue Cixi Kefa **KF301-5.0-2P** screw terminal (LCSC C474881), 5.0 mm
+  pitch, JLC THT assembly, at (7.4, 14.85), rotation 90; the wires leave **west**, as at J121.
+  - Pin 1 (7.4, 17.35) is **BAT_IN (`1:BAT+`)**, pin 2 (7.4, 12.35) is **GND (`2:GND`)**; the legends and `BAT` are on
+    the bottom face under the terminal.
+  - Its wire face is 3.60 mm in from the edge (x 3.6), giving 5.20–5.80 mm of bare-bore wire room against the 4.95 mm
+    floor (fit_check r12, Calculation on CAD envelopes; the wire face's side is an Inference from the drawing's
+    projection). Holes 1.30 mm finished for the 1.00 mm pins (Kefa drawing KF301-5.0 rev A: hole 1.20 +0.10).
+  - The strip in front of the wire face (x < 3.6, y 9.7–20.0) holds no part.
 - **Directions.** On J410, J420 and J440, pin 3 "board TXO" is driven by the board (PD8, PB13, PC6): wire the module's
   RX to it. Pin 4 "board RXI" is received by the board (PD9, PB12, PC7): wire the module's TX to it. **J9 is
   different:** pin 5 is board RXI and pin 6 board TXO. `5V4` is the camera supply from U403 (5.22–5.69 V initial,
@@ -53,8 +56,8 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   - Under the 0.561 A budget the port pins stay at or above 4.56552353384164 V at the drift corner and at or below 4.972 V with no
     load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
     page gives only "5V DC") and the M100 Mini's 3.3–5 V. That holds while U400's input is at least VO / 0.75, about
-    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.4964 V) or on a 6.0 V pack
-    (about 5.4157 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
+    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.5004 V) or on a 6.0 V pack
+    (about 5.4199 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
     15).
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
     4.60–4.94 V at room temperature (initial tolerance, Calculation).
@@ -101,8 +104,8 @@ corner, Calculation / Inference). A PA6 trip that begins during a commanded fire
 to the end of the ≤ 20 ms pulse plus its tail) is logged with its time and the PA6 reading. It is not
 treated as battery loss: no battery-loss shutdown, shed or state change follows from it, and the fire
 pulse is not cut short by it. A shorted match (or match and leads) still trips PA6 at the drift corner
-(−0.1264 / −0.1708 V below the trip top; Calculation / Inference), so this rule is required. A healthy
-four-stall fire is +0.0251 V clear of the trip top at drift (Calculation / Inference). A PA6 trip outside
+(−0.1225 / −0.1668 V below the trip top; Calculation / Inference), so this rule is required. A healthy
+four-stall fire is +0.0286 V clear of the trip top at drift (Calculation / Inference). A PA6 trip outside
 a fire pulse is battery loss as before (hold-up 0.471–1.897 ms unshed at drift, Calculation / Inference).
 Firmware and bench qualification remain open.
 
@@ -123,7 +126,7 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
    with the grounded airframe before it meets the screw.
 2. **Board off with J400 open, before any e-match.** With the pack connected and J400 open:
    - Confirm the board is off: no telemetry and no buzzer. With access, also check that RAW_PROTECTED at TP81
-     (top, (22.2, 21.4)) and 3V3 at J2 pad 1 (33.435, 46.27) both read below 0.3 V.
+     (top, (22.2, 25.25)) and 3V3 at J2 pad 1 (33.435, 50.12) both read below 0.3 V.
    - Measure J121.2 (IGN) to GND with a floating meter: it must read below 0.1 V.
    - If the board is on, or J121.2 reads above 0.1 V, do not fit the e-match.
 3. **Closed-switch check with a dummy load.** Fit a 2 Ω dummy in J121, then close J400.
@@ -143,8 +146,19 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
 
 ## Battery
 
-- **J1** pads 1 BAT_IN (3.5, 17.8) and 2 GND (3.5, 12.8), on the west edge. The leads carry the fire pulse (about 4.2 A
-  into a shorted igniter, R10 figure, Calculation / Inference), so use 16–20 AWG soldered, tied to the sled near the pads.
+- **J1** is the KF301-5.0-2P screw terminal (D-R12-174): pin 1 BAT_IN (7.4, 17.35), pin 2 GND (7.4, 12.35), wire
+  entry on the west edge. The leads carry the fire pulse (about 4.2 A into a shorted igniter, R10 figure,
+  Calculation / Inference), so use 16–20 AWG stranded wire (the terminal takes 22–14 AWG, strip 4–5 mm; Datasheet).
+  - **Ferrules.** Crimp a ferrule on each lead; do not tin the strands under the clamp (tinned wire cold-flows and
+    loosens; Inference).
+  - **Torque.** Tighten each M2.5 screw to at most **0.4 N·m** (Kefa drawing KF301-5.0 rev A; Datasheet).
+  - **Polarity.** Pack + to pin 1 (`1:BAT+`, forward), pack − to pin 2 (`2:GND`, aft). Check by meter before the
+    first connection: a reversed pack is the reverse hot-plug case the model covers (Simulation / Inference), not a
+    supported state, and the board gives no polarity indication at the terminal.
+  - **Strain relief.** Tie both leads to the sled within about 20 mm of the terminal, so no lead load reaches the
+    clamp or the solder joints, and dress them apart from the J400 pair.
+  - **Pre-flight.** Re-tighten both screws (to ≤ 0.4 N·m) and tug-test each lead at the flight-preparation check;
+    screw-terminal retention under flight vibration is unqualified (O-R12-20).
 - **No battery-lead fuse** (R10 OQ-6).
 - **Hot-plug.** The installed harness must measure ≥ 0.03 Ω and 0.1–2 µH, the hot-plug model's domain. On R12, with
   C79, every required case passes (Simulation / Inference, D-R12-78).
@@ -153,7 +167,7 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
 
 ## Board, supports and fit
 
-- **Supports.** Four M3 supports, at (3.0, 5.9), (43.0, 5.9), (3.5, 77.1) and (42.5, 77.1) (D-R12-24, -99, -144, -162, -171). Use **nylon (or
+- **Supports.** Four M3 supports, at (3.0, 5.9), (43.0, 5.9), (3.5, 80.95) and (42.5, 80.95) (D-R12-24, -99, -144, -162, -171). Use **nylon (or
   otherwise insulated) screws, nuts and washers at all four**. The aft pair is 3.0 mm in, so the aft SH row clears both
   washers.
 - **One-sided board.** No parts on the bottom face; the bottom carries contact legends, designators and the revision
@@ -161,9 +175,9 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
 - **SH plugs on the short edges only.** The mouths sit 1.1 mm inside their edge (fit_check r12, CAD envelopes;
   Inference on the clone dimensions).
 - **Every part is JLC-assembled (D-R12-85, owner 2026-11-05).** Nothing is fitted by hand after delivery:
-  - C84 (Honor HV1E477M0810PZ, 470 µF 25 V polymer) at (36.0, 31.2), beside U2, is placed and reflowed by JLC.
-  - LS120 (QMB-09B-03 THT buzzer) at (5.8, 66.4) and J121 are JLC THT assembly (hand-soldered by JLC after reflow).
-    LS120's (+) lead goes in pad 1 (3.8, 66.4): JLC's own footprint prints its `+` beside pad 1 and the CPL puts that
+  - C84 (Honor HV1E477M0810PZ, 470 µF 25 V polymer) at (36.0, 35.05), beside U2, is placed and reflowed by JLC.
+  - LS120 (QMB-09B-03 THT buzzer) at (5.8, 70.25) and J121 are JLC THT assembly (hand-soldered by JLC after reflow).
+    LS120's (+) lead goes in pad 1 (3.8, 70.25): JLC's own footprint prints its `+` beside pad 1 and the CPL puts that
     pad on ours (jlc_orient_r12, residual 0.0 mm, Measured), and the maker drawing marks the (+) lead (Datasheet). At
     incoming inspection, check the buzzer's `+` mark sits at pad 1.
 - **microSD** J430 is the Molex 104031-0811 push-pull socket (C585350) on the east side, mouth east.
@@ -171,40 +185,40 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
   Tape over the seated card as a retention backup. The inserted card stays inside the board edge
   (mated envelope x 30.30–45.90 mm, board x ≤ 46; Measured CAD envelope, installed fit unverified).
   Card-detect contacts are NC. This replaces the hinged socket by owner decision 2026-11-07 (D-R12-162).
-- **U5 barometer** (MS5607) on the top face at (23.0, 28.4), rotation 180. Keep its port open and vented, under an opaque cover that
+- **U5 barometer** (MS5607) on the top face at (23.0, 32.25), rotation 180. Keep its port open and vented, under an opaque cover that
   does not press on it (R10's cover rule).
-- **IMU.** U4 at (23.0, 41.6), rotation 180, on the roll axis (x = 23; lever arm x = 0, unchanged): roll = −gyro_Y,
-  thrust −a_Y. U6 at (23.0, 34.4), rotation 180, is now on the roll axis too (x = 0); its axial channel is channel 1.
+- **IMU.** U4 at (23.0, 45.45), rotation 180, on the roll axis (x = 23; lever arm x = 0, unchanged): roll = −gyro_Y,
+  thrust −a_Y. U6 at (23.0, 38.25), rotation 180, is now on the roll axis too (x = 0); its axial channel is channel 1.
   The axis maps are D-R12-54's (Calculation / Inference: both rotations unchanged; inherited axis frames). A bench sign check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
-- **LEDs.** LED1 red (8.0, 52.8) and LED2 yellow (8.0, 55.0), top face, west bay.
-- **Length.** R12 is 83 mm (D-R12-171; 85 mm under D-R12-162, 88 mm under D-R12-144), 33 mm longer than R11. `docs/VEHICLE.md` gives no internal bay or sled length (its
+- **LEDs.** LED1 red (8.0, 56.65) and LED2 yellow (8.0, 58.85), top face, west bay.
+- **Length.** R12 is 86.85 mm (D-R12-174: 3.85 mm added at the aft end for J1's terminal; 83 mm under D-R12-171, 85 mm under D-R12-162, 88 mm under D-R12-144), 36.85 mm longer than R11. `docs/VEHICLE.md` gives no internal bay or sled length (its
   stack row still budgets 102 mm for R9), so the fit could not be checked: check it against the bay and coupler and
   keep R10's rule that the board sits wholly forward of joint + 47 mm (O-R12-28). Real wires, plugs, sled and stack are
   unverified.
 
 ## Boot and programming
 
-J2 (TC2030, top, (32.8, 45.0)) is the SWD port. Program with the e-match disconnected, and record and read back
+J2 (TC2030, top, (32.8, 48.85)) is the SWD port. Program with the e-match disconnected, and record and read back
 BOOT_ADD0 and the boot settings. Among R12's moved functions, the ROM loader's pins are PB10, PB6, PE12–PE14, PA7,
 PA8–PA10, PA15 and PC9–PC12 (`pin_table.tsv`'s AN2606 Rev 64 Table 119 column, read in R11: Inference); PB7 and PD2
 are not H74x loader pins there. AN2606's H74x list must be re-read for them (O-R12-23). NRST's filter capacitor C24
-is at J2's end of the NRST run (26.6, 45.18) (D-R12-98). R10's dummy-load / no-e-match service procedure
+is at J2's end of the NRST run (26.6, 49.03) (D-R12-98). R10's dummy-load / no-e-match service procedure
 applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 
 For the separate first-article dummy-fire check, use the fixed 2 Ω dummy / 0.3 Ω total leads and 7.4 V / 0.15 Ω
 source with the budget converter loads and no servo stalls. Reject BAT_IN − RAW_ACT above **0.4 V**, overriding
-R10 rule 4's 0.2 V line (D-R12-109). At R134's drift low end 1.9666 Ω, current is 1.5259032555635084 A and the drop bound is
-**0.26770 V**, including both hot FETs and conservatively all 28.434 mΩ of fire copper (Calculation / Inference:
+R10 rule 4's 0.2 V line (D-R12-109). At R134's drift low end 1.9666 Ω, current is 1.52503 A and the drop bound is
+**0.27161 V** on the 86.85 mm board (D-R12-174; 1.52590 A / 0.26770 V on `a1e65bb4…`), including both hot FETs and conservatively all 31.098 mΩ of fire copper (Calculation / Inference:
 70 °C hot factors, pack, loads, copper model and drift; D-R12-163); the body-diode case is 0.7–1.0 V (Inference). Qualify the line on the first article;
 see [M3_R12 firmware](M3_R12.md#firmware). The per-flight closed-switch check does not command a fire.
 
 ## Cost
 
-Parts + feeder **$63.41 / $44.99 per board at 2 / 5 boards**, against the $84.41 cap (Live
-2026-11-09T00:10:43Z / 00:12:01Z on `a02a6181…`; 59 BOM lines, 183 parts, 20 charged codes).
-Minimum all-in **$170.51 / $276.59**, with U1-only X-ray; five qualifying parts give
-**$183.63 / $288.89–297.09** (Calculation / Inference: X-ray count/tier, 593 paste flashes and the
-$25.10 Live 90 mm PCB quote used for 83 mm without a re-quote). The two-board minimum is $0.51 over $170;
-the five-board range straddles $295. Stock 2026-11-09T00:10:04Z / 00:11:22Z: none short or thin.
+Parts + feeder **$62.52 / $43.18 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-10T20:50:00Z / 20:51:26Z on `1d7562d5…`; 60 BOM lines, 184 parts, 21 charged codes; $63.41 / $44.99 on `a1e65bb4…`).
+Minimum all-in **$168.81 / $267.74**, with U1-only X-ray; five qualifying parts give
+**$181.93 / $280.04–288.24** (Calculation / Inference: X-ray count/tier, 593 paste flashes, six THT joints and the
+$25.10 Live 90 mm PCB quote used for 86.85 mm without a re-quote). The two-board minimum is $1.19 under $170.
+Stock 2026-11-10: none short or thin.
 Confirm the quote, including D402 / Y1 X-ray fees. Arithmetic: stageE_relayout.md §5.
 See [M3_R12.md, "Cost and stock"](M3_R12.md#cost-and-stock).

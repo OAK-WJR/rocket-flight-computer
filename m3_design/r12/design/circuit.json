@@ -283,6 +283,13 @@
    "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/541e9f28cb856b9ee4390625509ae3af.pdf?productCode=C585350",
    "footprint": "rocket:M3_MICROSD_MOLEX_104031",
    "source": "round 9 lane L (owner 2026-11-07): Molex 104031-0811 push-pull microSD, JLC Extended (LCSC product page 2026-11-08: 47973 in stock)"
+  },
+  "C474881": {
+   "Manufacturer": "Cixi Kefa Elec",
+   "Manufacturer Part": "KF301-5.0-2P",
+   "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881",
+   "footprint": "rocket:M3_KF301_5P0_2P_BU",
+   "source": "D-R12-174 (owner 2026-11-10): blue 5.0 mm 2P rising-cage screw terminal for the battery, Kefa KF301-5.0 drawing rev A; JLC THT assembly"
   }
  },
  "deleted": {
@@ -674,9 +681,10 @@
    "why": "D-R12-29 (owner 2026-11-03): pyro terminal back to R10's DB125-2 screw terminal; pin 1 PYRO1_OUT (E1-), pin 2 PYRO1_IGN (E1+); JLC-assembled THT"
   },
   "J1": {
-   "value": "Battery wire pads 5.0 mm",
-   "footprint": "rocket:M3_WIREPAD_2P_P5",
-   "why": "D-R12-30 (owner 2026-11-03): soldered pack pigtail on two plated holes at 5.0 mm pitch, so a 5.0 mm 2P screw terminal fits later with no board change; pin 1 / 2 = BAT_IN / GND; no part on the BOM"
+   "lcsc": "C474881",
+   "value": "KF301-5.0-2P",
+   "flags": [],
+   "why": "D-R12-174 (owner 2026-11-10: replace the battery solder pads with screw terminals; supersedes D-R12-30's wire pads): Kefa KF301-5.0-2P blue 5.0 mm 2P screw terminal, pin 1 BAT_IN (BAT+), pin 2 GND; JLC-assembled THT; pins at x 7.4 in line with J121, wire face west"
   },
   "U4": {
    "lcsc": "C41785564",

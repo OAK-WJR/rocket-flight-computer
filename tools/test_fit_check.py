@@ -82,6 +82,33 @@ class R12TailReports(unittest.TestCase):
         self.assertAlmostEqual(rows['J121.1 terminal tail'][4], -3.8)
         self.assertGreater(report['lead_tails']['minimum_bore_margin_mm'], 0)
 
+    def test_kf301_battery_terminal_gets_its_own_tail(self):
+        """D-R12-174: J1 (KF301-5.0-2P) is a checked terminal with its 3.9 mm pin tail; J121 (DB125) keeps 3.8 mm."""
+        self.assertEqual(self.fit.R12_CFG['terminals'], {'J121', 'J1'})
+        self.assertEqual(self.fit.R12_CFG['wire_pads'], set())
+        self.assertIn('M3_KF301_5P0_2P_BU', self.fit.R10_MODEL_BOXES)
+        names = {'J121': 'M3_DB125_2P', 'J1': 'M3_KF301_5P0_2P_BU'}
+        with patch.object(self.fit, 'fp_name', side_effect=lambda f: names.get(f.GetReference(), 'buzzer')):
+            self.boxes['J1'] = (3.6, 10., 11.6, 20., 0., 10.3)
+            part = Mock()
+            part.GetReference.return_value = 'J1'
+            part.IsFlipped.return_value = False
+            part.GetAttributes.return_value = 0
+            part.HasField.return_value = False
+            pad = Mock()
+            pad.GetNumber.return_value = '1'
+            pad.GetAttribute.return_value = 1
+            pad.IsOnLayer.return_value = False
+            pad.box = (6.1, 16.05, 8.7, 18.65, -1.6, 0.)
+            part.Pads.return_value = [pad]
+            self.parts.append(part)
+            report = self.report()
+        self.assertEqual(report['terminal_tails']['refs'], ['J1', 'J121'])
+        self.assertEqual(report['terminal_tails']['max_below_seating_mm'], {'J1': 3.9, 'J121': 3.8})
+        self.assertAlmostEqual(report['terminal_tails']['max_projection_below_board_mm'], 2.3)
+        rows = {label: box for _, label, _, box in report['rows']}
+        self.assertAlmostEqual(rows['J1.1 terminal tail'][4], -3.9)
+
     def test_seeded_obstacle_below_pad_and_terminal_depth_hits_buzzer_tail(self):
         self.assertFalse(any('lead tail intersects' in s for s in self.report()['issues']))
         self.boxes['J121'] = (4.5, 66.7, 5.9, 68.1, -4.2, -3.9)

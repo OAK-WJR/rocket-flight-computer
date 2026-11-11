@@ -3406,20 +3406,23 @@
       </units>
     </comp>
     <comp ref="J1">
-      <value>Battery wire pads 5.0 mm</value>
-      <footprint>rocket:M3_WIREPAD_2P_P5</footprint>
+      <value>KF301-5.0-2P</value>
+      <footprint>rocket:M3_KF301_5P0_2P_BU</footprint>
+      <datasheet>https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881</datasheet>
       <fields>
-        <field name="LCSC"/>
-        <field name="Footprint">rocket:M3_WIREPAD_2P_P5</field>
-        <field name="Datasheet"/>
+        <field name="LCSC">C474881</field>
+        <field name="Manufacturer">Cixi Kefa Elec</field>
+        <field name="Manufacturer Part">KF301-5.0-2P</field>
+        <field name="Footprint">rocket:M3_KF301_5P0_2P_BU</field>
+        <field name="Datasheet">https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Conn_1x2" description="2-position connector"/>
-      <property name="LCSC" value=""/>
+      <property name="LCSC" value="C474881"/>
+      <property name="Manufacturer" value="Cixi Kefa Elec"/>
+      <property name="Manufacturer Part" value="KF301-5.0-2P"/>
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
-      <property name="exclude_from_bom"/>
-      <property name="exclude_from_pos_files"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>84027c97-672a-5582-9d16-9954ec0a0c33</tstamps>
       <units>

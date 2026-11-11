@@ -9,6 +9,8 @@
 # R12F7-TRI-01 (FMEA I-5): RAW_PROTECTED keeps PACK_MIN 1.04 mm from the 3V3 fill, so the pocket widens to x 26.15-32.6,
 # y 7.0-16.8 (the camera UART B lanes at x 29.85 / 30.4 / 31.0 keep their 3V3 reference; the aft band is y 0-7.0) and
 # R89's 3V3 corner to x < 22.3 below y 14.6 (its via (20.6, 13.45) keeps a >= 1 mm neck to the 3V3 sheet, K-plane).
+# D-R12-174 (86.85 mm outline): every vertex forward of y 6.85 moved 3.85 mm forward with the board, so the RAW_PROTECTED
+# island's aft band under J122 / J9 now reaches y 10.85 and its 3V3 pocket is x 26.15-32.6, y 10.85-20.65.
 net	layer	priority	points
 GND	In1	0	0,0 46,0 46,L 0,L
 3V3	In2	0	0,0 46,0 46,L 0,L
@@ -18,9 +20,9 @@ GND	In1	0	0,0 46,0 46,L 0,L
 # the cell (x 14.5-20.75 at y 7.0-11.5, x 14.5-19.3 at y 11.5-14.6; R89's 3V3 via moved east to (21.3, 12.83)),
 # where In2 carries no 3V3 user (only GND / U9_FLT vias and the BAT_SW_RETURN S-8 keep-outs). R12F8-TRI-03: the east
 # piece reaches y 17.7 at x 44-46 so the B trunk's second In2 barrel (45.2, 17.0) lands in it.
-RAW_PROTECTED	In2	1	14.5,0 46,0 46,17.7 44.0,17.7 44.0,16.8 32.6,16.8 32.6,7.0 20.75,7.0 20.75,11.5 19.3,11.5 19.3,14.6 26.15,14.6 26.15,23.4 19.8,23.4 19.8,17.0 16.6,17.0 16.6,14.6 14.5,14.6
+RAW_PROTECTED	In2	1	14.5,0 46,0 46,21.55 44.0,21.55 44.0,20.65 32.6,20.65 32.6,10.85 20.75,10.85 20.75,15.35 19.3,15.35 19.3,18.45 26.15,18.45 26.15,27.25 19.8,27.25 19.8,20.85 16.6,20.85 16.6,18.45 14.5,18.45
 # D-R12-99 (90 mm outline): the PORT_4V8 island moves with the port row; it starts at y 80.7, forward of the
 # port-UART B lanes and their vias (y <= 80.0), so their B chains stay over the 3V3 sheet.
 # R12F9 lane L (85 mm outline): the island moves 3 mm aft with the port row
 # R12F10-TRI-16 (83 mm outline): the island moves 2 mm aft with the port row
-PORT_4V8	In2	1	0.5,75.6 45.5,75.6 45.5,82.5 0.5,82.5
+PORT_4V8	In2	1	0.5,79.45 45.5,79.45 45.5,86.35 0.5,86.35

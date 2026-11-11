@@ -1,198 +1,198 @@
 ref	x	y	rot	side	basis
-@OUTLINE	46	83	0	F	R12F10-TRI-16 (83 mm outline): the port row, its 1 k / 100 nF cells, TP74 and the forward supports 2 mm aft, C406 2.5 mm aft into the empty pocket west of L400, L400 0.3 mm west, TP88 0.5 mm west; J410's courtyard 0.385 mm from L400's sets the length without moving the buck column; R12F9 lane L (85 mm outline): the microSD moved east beside U3 and the port buck into the old J430 bay, so the port row, its cells, the forward supports and the PORT_4V8 island move 3 mm aft (88 -> 85 mm); the buck cell (2.5 mm aft, its FB divider 0.22 mm from C22) and C407 (0.11 mm from L400) set the length; R12F7-TRI-03 (88 mm outline, shrink88): 46 x 88 mm; the forward slack between J430 and the port row taken up. East pocket x 40.25-44.75, y 51.5-64.25 (57.4 mm^2) stays empty: the length is set by the x 20-24 column (19.6 mm free in 15 gaps, the largest being U1 fan-out channels of 6.14 mm (U4-U1) and 4.68 mm (U1-J430), Measured), which no part in the pocket relieves; the only cell on its x span, the port buck (U400 / L400 / C400 / C402 / C406 / R400 / R401 / R404), sliding aft by d shortens the RAW_PROTECTED B trunk by d and lengthens the PORT_4V8 feed to its island (y >= 80.6) by d, no net gain; D-R12-99 (90 mm outline): D-R12-24: 46 mm wide (P1), length set by the placement (stageB.md section 1)
-@M3	3	5.9	0	F	D-R12-24: corner support, nylon M3 hardware; aft corner: 3.0 mm in so the aft GH row (J400 / J122 / J9) clears both washers
-@M3	43	5.9	0	F	D-R12-24: corner support, nylon M3 hardware; aft corner: 3.0 mm in so the aft GH row clears both washers
-@M3	3.5	77.1	0	F	R12F10-TRI-16 (83 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; R12F9 lane L (85 mm outline): forward support 3 mm aft with the outline, 5.9 mm from the forward edge; R12F7-TRI-03 (88 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; D-R12-99 (90 mm outline): forward corner support moved 10 mm aft with the outline; D-R12-24: corner support, nylon M3 hardware; forward corner
-@M3	42.5	77.1	0	F	R12F10-TRI-16 (83 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; R12F9 lane L (85 mm outline): forward support 3 mm aft with the outline, 5.9 mm from the forward edge; R12F7-TRI-03 (88 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; D-R12-99 (90 mm outline): forward corner support moved 10 mm aft with the outline; D-R12-24: corner support, nylon M3 hardware; forward corner
-C5	32.9	20	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-C6	37.3	23.4	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-C8	42.6	19.4	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-C10	23	38.5	0	F	D-R12-94 (AVA re-layout): Z3 3V3A bulk between U4 and U6
-C13	17.4	50	0	F	R12F5-TRI-01 (S-10): turned to 0 degrees and moved 0.5 mm west and 0.5 mm aft (clear of Y1's courtyard) so its 3V3 pad and via keep >= 1.06 mm from PE4's lane at x 18.7 (C13.1 sat 0.48 mm, its via 0.53 mm); GND pad toward the lane; D-R12-98 (integration): moved 0.1 mm east (U1 courtyard limit) and 0.1 mm aft from (17.8, 50.6) (its 3V3 via at (17.9, 51.52) keeps 0.48 mm from HSE_IN, K-reference) so its 3V3 / GND vias sit straight on its axis at x 17.9, east of the CAM_5V_SENSE In2 lane (x 17.35) and PYRO1_GATE_N F (x 18.7) (Measured: the old vias at x 17.2 lay 0.3 mm from the NRST In2 lane); D-R12-94 (AVA re-layout): Z4 NW pocket: 3V3 for B2 / D2
-C14	13.6	60	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
-C15	19.6	59.6	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3 at K1 (forward-face cols 1-2 carry no signal)
-C16	17	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
-C17	16	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
-C18	15	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
-C19	29.3	60.2	90	F	R12F9 lane L: 0.1 mm west (courtyard clear of J430's); D-R12-94 (AVA re-layout): Z4 SE pocket (inside the QSPI fan): VCAP1, F8 dog-bone -> B -> here
-C20	27.8	60.2	90	F	D-R12-94 (AVA re-layout): Z4 SE pocket: VCAP2, E7 dog-bone -> B -> here
-C21	18	58.2	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A for H1
-C22	17	60.6	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A bulk
-C23	2.2	58	90	F	R12F9 lane L (85 mm outline): 3V3 bulk (plane cap) in the empty west strip; D-R12-99 (90 mm outline): 3V3 bulk (plane cap) moved east of J430 (its west-bay spot is under the moved J430); D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
-C24	26.6	45.18	90	F	D-R12-98 (integration): NRST capacitor moved from the U1 west pocket (16.6, 55) onto the NRST F run beside J2 (pad 1 on the run at (26.6, 45.6)); Measured: the pocket holds only the NRST and CAM_5V_SENSE In2 vias and the NRST GND partner, and C24 there forced NRST's In2 lane under the PYRO1_CONT and ACT_EN_MCU B runs (K-reference); was D-R12-34 / -44
-C25	14.6	49.6	0	F	HSE load; D-R12-44: re-placed after U1 moved forward
-C26	14.6	55.3	0	F	HSE load; D-R12-44: moved with the U1 cluster 10 mm forward
-C28	36.6	45.9	90	F	D-R12-94 (AVA re-layout): Z2 VBUS cap beside J3
-C29	34.6	58.05	0	F	R12F9 lane L: U3 3V3 decoupling in the row between U3 and J430, 1.7 mm from U3.8; D-R12-94 (AVA re-layout): Z5 flash 3V3 at U3 pin 8 (follows U3)
-C30	25.9	41.6	90	F	D-R12-94 (AVA re-layout): Z3 IMU 3V3A decoupling east of U4
-C31	20.1	41.6	90	F	D-R12-94 (AVA re-layout): Z3 IMU 3V3A decoupling west of U4
-C32	26.4	28.4	90	F	D-R12-94 (AVA re-layout): Z3 baro decoupling, west of the aft corridor
-C33	26.3	34.4	90	F	D-R12-94 (AVA re-layout): Z3 U6 decoupling
-C79	16.4	21.075	270	F	D-R12-78: third damper C beside C95 (BAT_IN pad north on the C95.1 run, BAT_DAMP pad south to C95.2)
-C60	12.2	57.4	90	F	D-R12-94 (AVA re-layout): Z4 VLOGIC_SENSE filter cap at the ADC ball (J3)
-C80	3.4	22.8	90	F	BAT_IN bulk
-C81	15.9	17.8	270	F	dVdt
-C82	21.25	15.6	0	F	R12F9-TRI-01: 0.05 mm east (C82.1 0.73 mm from U9.1, beyond U9's own 0.700 mm OUT-to-EN land gap; D9's courtyard leaves no more); RAW bulk at U9.6 (U9's 0.30 mm OUT bar runs on into its pad)
-C83	36.6	44	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
-C84	36	31.2	180	F	D-R12-94 (AVA re-layout): Z2 VLOGIC hold-up beside U2 input (was 47.6 mm away at the forward-east corner)
-C87	19	9.2	90	F	EN timing
-C88	15.3	15.52	270	F	U9 BAT_IN decoupling: on the feed between C96.1 and U9.5 (D-R12-79, R10 C88 topology); D-R12-84: pad 1 on the y 15.1 line between C96.1 and U9.5, the 0.8 mm feed passing straight through it
-C89	10	19.6	270	F	damper C
-C94	13.2	57.4	90	F	D-R12-94 (AVA re-layout): Z4 CAM_5V_SENSE filter cap at the ADC ball (E2)
-C95	12.6	19.6	270	F	damper C
-C96	13.6	13.625	90	F	BAT_IN bulk; its BAT_IN pad on the U9.5 bar line (y 15.1)
-C97	20.2	18.5	90	F	R12F9-TRI-01: 0.1 mm forward, C97.1 (RAW_PROTECTED) >= 1.040 mm from R94.1 (BAT_ILIM) after R94's move; RAW
-C99	35.4	25.6	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-C120	7.2	31.3	0	F	gate-source
-C123	18.6	26.4	0	F	gate C
-C126	10.6	41.8	0	F	gate C
-C127	12.6	50	0	F	cont
-C128	4.4	44.6	90	F	OUT cap
-C129	18.6	36	90	F	arm
-C400	18.1	69.3	180	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block (internal copper translates) into the old J430 bay; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port buck VIN cap, cell-relative position kept
-C402	15.4	65.5	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port BST, cell-relative position kept
-C406	13.1	70.825	90	F	R12F10-TRI-16 (83 mm outline): 2.5 mm aft into the empty pocket (1.5 mm clears R450 / R451; 2.5 mm also clears the RADIO hand-off vias, now at y 73.6 / 74.1, by the port class); R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): PORT_4V8 output cap west of L400 (rotated 90, pad 1 on the L400.2 feed line), clear of the forward-east support; D-R12-94 (AVA re-layout): Z5 PORT_4V8 out cap, 11 mm from J440 pin 2 (was 75 mm)
-C407	16.75	78.35	90	F	R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.65 mm in y; D-R12-99 (90 mm outline): PORT_4V8 bulk between J420 and J410, pad 1 in the PORT_4V8 island; PORT_4V8 bulk at the ports
-C410	21	75.35	180	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); J410 100 nF
-C420	10.5	75.35	180	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); J420 100 nF
-C431	36	9.4	0	F	CAM_5V out at J9
-C432	32.4	16.4	0	F	camera BST
-C433	36.2	13.9	270	F	camera VIN
-C434	44	13.9	270	F	CAM_5V out
-C444	33.5	75.35	180	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); J440 100 nF
-C460	44.13	58.7	180	F	R12F9 lane C (D-R12-169): J430 local 100 nF bypass (F5) at the strip's card end (body clear of the inserted card, y < 59.175), 3V3 pad 1 on the C461 -> J430.4 run, GND via beside it; R12F9 lane L (85 mm outline): 3V3 bulk (plane cap) in the empty west strip; D-R12-99 (90 mm outline): 3V3 bulk (plane cap) moved east of J430 (its west-bay spot is under the moved pull-up row); D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
-C461	44.55	55.85	90	F	R12F9 lane C (D-R12-169): J430 local 22 uF bypass (F5) in the east strip between U3 and the card mouth, 3V3 pad 1 toward J430, one F run to J430.4, own GND via; R12F9 lane L (85 mm outline): 3V3 bulk (plane cap) in the empty west strip; D-R12-99 (90 mm outline): 3V3 bulk (plane cap) moved east of J430 (its west-bay spot is under the moved J430); D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
-D5	43.6	31.2	90	F	D-R12-94 (AVA re-layout): Z2 RAW -> VLOGIC OR-ing on the east edge: anode taps the RAW trunk, cathode into C84
-D6	40.6	37.7	180	F	D-R12-94 (AVA re-layout): Z2 VBUS -> VLOGIC OR-ing diode between J3 and C84
-D8	10.4	13.7	90	F	BAT_IN TVS at the entry
-D9	25.4	19	90	F	RAW reverse clamp
-D95	20.77	24.27	180	F	round 6 verifier V-1 follow-up (PACK_FLT): PC13 clamp BAT54C (A1 BAT_FAULT_N, K 3V3, A2 unused) in the free pocket east of R95 (between TP81, U5, C123 and R95), 2.62 mm east of R95 so its pin-1 dot keeps 0.15 mm from R95.2's opening, K east to its own 3V3 via south of it on the In2 3V3 plane; >= 2 mm from every BAT_IN item
-D120	6.6	49.2	270	F	R12F5-TRI-01 (S-10): moved from (9.6, 47.4) rot 0 to below R131, cathode (COLD) north, so its 3V3 anode is >= 1.04 mm from every PYRO1_OUT copper (D120.1 sat 0.13 mm from the OUT run); was: cold; R12F6-TRI-01: the anode is PYRO1_COLD_PU, fed from 3V3 through R136 south of it
-D121	28	10.2	0	F	servo clamp (SRV05-4)
-D123	6	57.2	0	F	D-R12-94 (AVA re-layout): Z6 buzzer flyback
-D402	10.6	7.8	270	F	J400.2 ESD clamp at the port; 1.0 mm west so J400's footprint pin-1 mark stays nearest its own pad 1 (D-R12-80)
-D436	29.15	29.25	270	F	R12F8-TRI-01 (I-5): PC12 clamp BAT54C (A1 CAM_PWR_EN on the CA lane line x 28.2, K 3V3 east to its via (30.45, 28.25) clear of the bundle, A2 unused) on the free F strip above the CA bus, 1.04 mm and more from every pack-voltage item (U2 BST, C5, C84.1)
-J1	3.5	15.3	90	F	battery pigtail pads, 5.0 mm pitch, wire side west; courtyard = the keep-clear for a later 5.0 mm terminal (D-R12-30)
-J2	32.8	45	90	F	D-R12-94 (AVA re-layout): Z4 SWD Tag-Connect aft-east of U1 beside the aft corridor, 7 mm from A9 / A10 (was 35)
-J3	41.4	45.5	90	F	D-R12-94 (AVA re-layout): Z2 USB-C mouth at the east edge, 1.5 mm forward for D6
+@OUTLINE	46	86.85	0	F	D-R12-174 (86.85 mm outline): 3.85 mm inserted at the aft end (cut at y 6.85; every row forward of it 3.85 mm forward, the aft port row, aft supports and D402 in place) so J1's KF301 terminal clears the aft support's washer zone and C89; R12F10-TRI-16 (83 mm outline): the port row, its 1 k / 100 nF cells, TP74 and the forward supports 2 mm aft, C406 2.5 mm aft into the empty pocket west of L400, L400 0.3 mm west, TP88 0.5 mm west; J410's courtyard 0.385 mm from L400's sets the length without moving the buck column; R12F9 lane L (85 mm outline): the microSD moved east beside U3 and the port buck into the old J430 bay, so the port row, its cells, the forward supports and the PORT_4V8 island move 3 mm aft (88 -> 85 mm); the buck cell (2.5 mm aft, its FB divider 0.22 mm from C22) and C407 (0.11 mm from L400) set the length; R12F7-TRI-03 (88 mm outline, shrink88): 46 x 88 mm; the forward slack between J430 and the port row taken up. East pocket x 40.25-44.75, y 51.5-64.25 (57.4 mm^2) stays empty: the length is set by the x 20-24 column (19.6 mm free in 15 gaps, the largest being U1 fan-out channels of 6.14 mm (U4-U1) and 4.68 mm (U1-J430), Measured), which no part in the pocket relieves; the only cell on its x span, the port buck (U400 / L400 / C400 / C402 / C406 / R400 / R401 / R404), sliding aft by d shortens the RAW_PROTECTED B trunk by d and lengthens the PORT_4V8 feed to its island (y >= 80.6) by d, no net gain; D-R12-99 (90 mm outline): D-R12-24: 46 mm wide (P1), length set by the placement (stageB.md section 1)
+@M3	3	5.9	0	F	D-R12-24: corner support, nylon M3 hardware; aft corner: 3.0 mm in so the aft GH row (J400 / J122 / J9) clears both washers; D-R12-174: stays at the aft end (the aft group)
+@M3	43	5.9	0	F	D-R12-24: corner support, nylon M3 hardware; aft corner: 3.0 mm in so the aft GH row clears both washers; D-R12-174: stays at the aft end (the aft group)
+@M3	3.5	80.95	0	F	D-R12-174 (86.85 mm outline): forward support 3.85 mm forward with the cell; R12F10-TRI-16 (83 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; R12F9 lane L (85 mm outline): forward support 3 mm aft with the outline, 5.9 mm from the forward edge; R12F7-TRI-03 (88 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; D-R12-99 (90 mm outline): forward corner support moved 10 mm aft with the outline; D-R12-24: corner support, nylon M3 hardware; forward corner
+@M3	42.5	80.95	0	F	D-R12-174 (86.85 mm outline): forward support 3.85 mm forward with the cell; R12F10-TRI-16 (83 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; R12F9 lane L (85 mm outline): forward support 3 mm aft with the outline, 5.9 mm from the forward edge; R12F7-TRI-03 (88 mm outline): forward support 2 mm aft with the outline, 5.9 mm from the forward edge; D-R12-99 (90 mm outline): forward corner support moved 10 mm aft with the outline; D-R12-24: corner support, nylon M3 hardware; forward corner
+C5	32.9	23.85	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+C6	37.3	27.25	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+C8	42.6	23.25	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+C10	23	42.35	0	F	D-R12-94 (AVA re-layout): Z3 3V3A bulk between U4 and U6
+C13	17.4	53.85	0	F	R12F5-TRI-01 (S-10): turned to 0 degrees and moved 0.5 mm west and 0.5 mm aft (clear of Y1's courtyard) so its 3V3 pad and via keep >= 1.06 mm from PE4's lane at x 18.7 (C13.1 sat 0.48 mm, its via 0.53 mm); GND pad toward the lane; D-R12-98 (integration): moved 0.1 mm east (U1 courtyard limit) and 0.1 mm aft from (17.8, 50.6) (its 3V3 via at (17.9, 51.52) keeps 0.48 mm from HSE_IN, K-reference) so its 3V3 / GND vias sit straight on its axis at x 17.9, east of the CAM_5V_SENSE In2 lane (x 17.35) and PYRO1_GATE_N F (x 18.7) (Measured: the old vias at x 17.2 lay 0.3 mm from the NRST In2 lane); D-R12-94 (AVA re-layout): Z4 NW pocket: 3V3 for B2 / D2
+C14	13.6	63.85	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C15	19.6	63.45	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3 at K1 (forward-face cols 1-2 carry no signal)
+C16	17	62.05	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C17	16	62.05	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C18	15	62.05	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3
+C19	29.3	64.05	90	F	R12F9 lane L: 0.1 mm west (courtyard clear of J430's); D-R12-94 (AVA re-layout): Z4 SE pocket (inside the QSPI fan): VCAP1, F8 dog-bone -> B -> here
+C20	27.8	64.05	90	F	D-R12-94 (AVA re-layout): Z4 SE pocket: VCAP2, E7 dog-bone -> B -> here
+C21	18	62.05	90	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A for H1
+C22	17	64.45	0	F	D-R12-94 (AVA re-layout): Z4 SW pocket: 3V3A bulk
+C23	2.2	61.85	90	F	R12F9 lane L (85 mm outline): 3V3 bulk (plane cap) in the empty west strip; D-R12-99 (90 mm outline): 3V3 bulk (plane cap) moved east of J430 (its west-bay spot is under the moved J430); D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
+C24	26.6	49.03	90	F	D-R12-98 (integration): NRST capacitor moved from the U1 west pocket (16.6, 55) onto the NRST F run beside J2 (pad 1 on the run at (26.6, 45.6)); Measured: the pocket holds only the NRST and CAM_5V_SENSE In2 vias and the NRST GND partner, and C24 there forced NRST's In2 lane under the PYRO1_CONT and ACT_EN_MCU B runs (K-reference); was D-R12-34 / -44
+C25	14.6	53.45	0	F	HSE load; D-R12-44: re-placed after U1 moved forward
+C26	14.6	59.15	0	F	HSE load; D-R12-44: moved with the U1 cluster 10 mm forward
+C28	36.6	49.75	90	F	D-R12-94 (AVA re-layout): Z2 VBUS cap beside J3
+C29	34.6	61.9	0	F	R12F9 lane L: U3 3V3 decoupling in the row between U3 and J430, 1.7 mm from U3.8; D-R12-94 (AVA re-layout): Z5 flash 3V3 at U3 pin 8 (follows U3)
+C30	25.9	45.45	90	F	D-R12-94 (AVA re-layout): Z3 IMU 3V3A decoupling east of U4
+C31	20.1	45.45	90	F	D-R12-94 (AVA re-layout): Z3 IMU 3V3A decoupling west of U4
+C32	26.4	32.25	90	F	D-R12-94 (AVA re-layout): Z3 baro decoupling, west of the aft corridor
+C33	26.3	38.25	90	F	D-R12-94 (AVA re-layout): Z3 U6 decoupling
+C79	16.4	24.925	270	F	D-R12-78: third damper C beside C95 (BAT_IN pad north on the C95.1 run, BAT_DAMP pad south to C95.2)
+C60	12.2	61.25	90	F	D-R12-94 (AVA re-layout): Z4 VLOGIC_SENSE filter cap at the ADC ball (J3)
+C80	3.4	26.65	90	F	BAT_IN bulk
+C81	15.9	21.65	270	F	dVdt
+C82	21.25	19.45	0	F	R12F9-TRI-01: 0.05 mm east (C82.1 0.73 mm from U9.1, beyond U9's own 0.700 mm OUT-to-EN land gap; D9's courtyard leaves no more); RAW bulk at U9.6 (U9's 0.30 mm OUT bar runs on into its pad)
+C83	36.6	47.85	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
+C84	36	35.05	180	F	D-R12-94 (AVA re-layout): Z2 VLOGIC hold-up beside U2 input (was 47.6 mm away at the forward-east corner)
+C87	19	13.05	90	F	EN timing
+C88	15.3	19.37	270	F	U9 BAT_IN decoupling: on the feed between C96.1 and U9.5 (D-R12-79, R10 C88 topology); D-R12-84: pad 1 on the y 15.1 line between C96.1 and U9.5, the 0.8 mm feed passing straight through it
+C89	10	23.45	270	F	damper C
+C94	13.2	61.25	90	F	D-R12-94 (AVA re-layout): Z4 CAM_5V_SENSE filter cap at the ADC ball (E2)
+C95	12.6	23.45	270	F	damper C
+C96	13.6	17.475	90	F	BAT_IN bulk; its BAT_IN pad on the U9.5 bar line (y 15.1)
+C97	20.2	22.35	90	F	R12F9-TRI-01: 0.1 mm forward, C97.1 (RAW_PROTECTED) >= 1.040 mm from R94.1 (BAT_ILIM) after R94's move; RAW
+C99	35.4	29.45	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+C120	7.2	35.15	0	F	gate-source
+C123	18.6	30.25	0	F	gate C
+C126	10.6	45.65	0	F	gate C
+C127	12.6	53.85	0	F	cont
+C128	4.4	48.45	90	F	OUT cap
+C129	18.6	39.85	90	F	arm
+C400	18.1	73.15	180	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block (internal copper translates) into the old J430 bay; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port buck VIN cap, cell-relative position kept
+C402	15.4	69.35	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port BST, cell-relative position kept
+C406	13.1	74.675	90	F	R12F10-TRI-16 (83 mm outline): 2.5 mm aft into the empty pocket (1.5 mm clears R450 / R451; 2.5 mm also clears the RADIO hand-off vias, now at y 73.6 / 74.1, by the port class); R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): PORT_4V8 output cap west of L400 (rotated 90, pad 1 on the L400.2 feed line), clear of the forward-east support; D-R12-94 (AVA re-layout): Z5 PORT_4V8 out cap, 11 mm from J440 pin 2 (was 75 mm)
+C407	16.75	82.2	90	F	R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.65 mm in y; D-R12-99 (90 mm outline): PORT_4V8 bulk between J420 and J410, pad 1 in the PORT_4V8 island; PORT_4V8 bulk at the ports
+C410	21	79.2	180	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); J410 100 nF
+C420	10.5	79.2	180	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); J420 100 nF
+C431	36	13.25	0	F	CAM_5V out at J9
+C432	32.4	20.25	0	F	camera BST
+C433	36.2	17.75	270	F	camera VIN
+C434	44	17.75	270	F	CAM_5V out
+C444	33.5	79.2	180	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); J440 100 nF
+C460	44.13	62.55	180	F	R12F9 lane C (D-R12-169): J430 local 100 nF bypass (F5) at the strip's card end (body clear of the inserted card, y < 59.175), 3V3 pad 1 on the C461 -> J430.4 run, GND via beside it; R12F9 lane L (85 mm outline): 3V3 bulk (plane cap) in the empty west strip; D-R12-99 (90 mm outline): 3V3 bulk (plane cap) moved east of J430 (its west-bay spot is under the moved pull-up row); D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
+C461	44.55	59.7	90	F	R12F9 lane C (D-R12-169): J430 local 22 uF bypass (F5) in the east strip between U3 and the card mouth, 3V3 pad 1 toward J430, one F run to J430.4, own GND via; R12F9 lane L (85 mm outline): 3V3 bulk (plane cap) in the empty west strip; D-R12-99 (90 mm outline): 3V3 bulk (plane cap) moved east of J430 (its west-bay spot is under the moved J430); D-R12-94 (AVA re-layout): Z6 3V3 bulk (plane cap) in the forward-west bay
+D5	43.6	35.05	90	F	D-R12-94 (AVA re-layout): Z2 RAW -> VLOGIC OR-ing on the east edge: anode taps the RAW trunk, cathode into C84
+D6	40.6	41.55	180	F	D-R12-94 (AVA re-layout): Z2 VBUS -> VLOGIC OR-ing diode between J3 and C84
+D8	4.6	22.05	180	F	D-R12-174: entry TVS horizontal south of J1's body (its old place is under the body): pad 1 (BAT_IN) east at (6.6, 22.05) on the J1.1 trunk where it splits east to C89.1 and south to C80 / Q120, pad 2 (GND) west with its own vias; was F(10.4, 13.7) rotation 90 (D-R12-174 board frame: the cell moved 3.85 mm forward)
+D9	25.4	22.85	90	F	RAW reverse clamp
+D95	20.77	28.12	180	F	round 6 verifier V-1 follow-up (PACK_FLT): PC13 clamp BAT54C (A1 BAT_FAULT_N, K 3V3, A2 unused) in the free pocket east of R95 (between TP81, U5, C123 and R95), 2.62 mm east of R95 so its pin-1 dot keeps 0.15 mm from R95.2's opening, K east to its own 3V3 via south of it on the In2 3V3 plane; >= 2 mm from every BAT_IN item
+D120	6.6	53.05	270	F	R12F5-TRI-01 (S-10): moved from (9.6, 47.4) rot 0 to below R131, cathode (COLD) north, so its 3V3 anode is >= 1.04 mm from every PYRO1_OUT copper (D120.1 sat 0.13 mm from the OUT run); was: cold; R12F6-TRI-01: the anode is PYRO1_COLD_PU, fed from 3V3 through R136 south of it
+D121	28	14.05	0	F	servo clamp (SRV05-4)
+D123	6	61.05	0	F	D-R12-94 (AVA re-layout): Z6 buzzer flyback
+D402	10.6	7.8	270	F	J400.2 ESD clamp at the port; 1.0 mm west so J400's footprint pin-1 mark stays nearest its own pad 1 (D-R12-80); D-R12-174: stays in the aft group with J400 (not moved by the 3.85 mm insertion)
+D436	29.15	33.1	270	F	R12F8-TRI-01 (I-5): PC12 clamp BAT54C (A1 CAM_PWR_EN on the CA lane line x 28.2, K 3V3 east to its via (30.45, 28.25) clear of the bundle, A2 unused) on the free F strip above the CA bus, 1.04 mm and more from every pack-voltage item (U2 BST, C5, C84.1)
+J1	7.4	14.85	90	F	D-R12-174 (owner 2026-11-10, 'Re-lay for terminal', 'Lengthen board ~4 mm'): battery screw terminal KF301-5.0-2P (C474881, blue), pins at x 7.4 in line with J121, wire face west (x 3.6; bare-bore wire room to the edge), pin 1 BAT_IN forward (y 17.35), pin 2 GND aft (y 12.35); body clear of the aft support's 3.8 mm washer zone; the strip west of the wire face (x < 3.6, y 9.7-20.0) is the wire exit and holds no part (Inference: KF301 wire hole about 2.9 mm above the board); was D-R12-30's wire pads at F(3.5, 15.3)
+J2	32.8	48.85	90	F	D-R12-94 (AVA re-layout): Z4 SWD Tag-Connect aft-east of U1 beside the aft corridor, 7 mm from A9 / A10 (was 35)
+J3	41.4	49.35	90	F	D-R12-94 (AVA re-layout): Z2 USB-C mouth at the east edge, 1.5 mm forward for D6
 J9	33.5	3.65	180	F	camera SH port, aft edge, east beside the camera buck
-J121	7.4	37	270	F	pyro DB125-2 screw terminal, wires leave west, face 3.35 mm in for the 4.95 mm wire room; pin 1 OUT (E1-) north, pin 2 IGN (E1+) south (D-R12-29)
+J121	7.4	40.85	270	F	pyro DB125-2 screw terminal, wires leave west, face 3.35 mm in for the 4.95 mm wire room; pin 1 OUT (E1-) north, pin 2 IGN (E1+) south (D-R12-29)
 J122	21.6	3.65	180	F	servo SH port, aft edge, middle
 J400	11	3.65	180	F	switch / arming SH port, aft edge, west beside the power entry
-J410	23	79.35	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); GPS SH-6 port (H743 GPS order), forward edge, middle
-J420	11.5	79.35	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); radio SH port, forward edge, west
-J430	36	65.15	90	F	R12F9 lane L (owner 2026-11-07): Molex 104031-0811 push-pull socket on the east side south of U3, card mouth (product line) at x 41.70 toward the east edge, the inserted card to x 45.70 (45.90 at +0.2 mm), inside the outline (fit_check mated envelope); contacts at x 40.90-42.00, y 62.05 (pin 1) ... 69.70 (pin 8); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 microSD 3.6 mm nearer U1; the port UART bus passes under it on B.Cu
-J440	34.5	79.35	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); AUX SH port, forward edge, east
-L1	37.6	19.4	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-L400	17.8	73.2	270	F	R12F10-TRI-16 (83 mm outline): 0.3 mm west so its courtyard clears C410 (moved 2 mm aft); R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port inductor, cell-relative position kept
-L401	40.1	13.9	0	F	camera inductor
-LED1	8	52.8	0	F	D-R12-94 (AVA re-layout): Z6 red LED in the west bay (K4 -> B -> here)
-LED2	8	55	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED in the west bay (H2 straight west on F at y 56.0); D-R12-97: rotated 180 so its anode pad faces R33 (W5-REQ-1, Measured on the placed pads)
-LS120	5.8	66.4	0	F	R12F8-TRI-19: 1.4 mm west and 1.0 mm aft into the 33.8 %-occupied west strip (courtyard x 1.0-10.6, y 61.6-71.2, 0.26 mm from Q123's); pad 2 (BUZZ_OUT) at (7.8, 66.4) shortens the branch from Q123.3 by 2.40 mm (11.448 -> 9.048 mm, no via); pad 1 stays on the In2 3V3 plane; was (7.2, 67.4): D-R12-94 (AVA re-layout): Z6 buzzer in the empty west bay
-Q120	5	29	0	F	bus load switch
-Q121	9.6	29	180	F	bus load switch
-Q122	14.4	27.6	0	F	bus driver
-Q123	6	59.8	0	F	D-R12-94 (AVA re-layout): Z6 buzzer driver
-Q124	7.5	42.9	0	F	fire FET
-R5	15.4	46.6	0	F	D-R12-94 (AVA re-layout): Z4 BOOT0 pull-down in the NW pocket (D5 dog-bone -> B)
-R7	36.6	47.9	0	F	D-R12-94 (AVA re-layout): Z2 CC1 beside J3
-R8	36.6	48.9	0	F	D-R12-94 (AVA re-layout): Z2 CC2 beside J3
-R9	36.6	42	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
-R10	37.6	58.05	0	F	R12F9 lane L: NCS pull-up on the NCS run along U3's south edge; D-R12-94 (AVA re-layout): Z5 NCS pull-up at U3 pin 1 (follows U3)
-R11	20.1	44.4	90	F	D-R12-94 (AVA re-layout): Z3 IMU_CS pull-up beside the A4 escape
-R12	19.6	32.5	90	F	D-R12-94 (AVA re-layout): Z3 SCL pull-up at U5
-R13	19.6	30.6	90	F	D-R12-94 (AVA re-layout): Z3 SDA pull-up at U5
-R14	32.2	25.6	90	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-R15	31.2	25.6	90	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-R32	10.8	52.8	180	F	D-R12-94 (AVA re-layout): Z6 red LED series R
-R33	10.8	55	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED series R
-R60	31	37.2	90	F	D-R12-94 (AVA re-layout): Z2 VLOGIC sense top at D5 / C84
-R61	32	37.2	270	F	R12F8-TRI-01 (I-5): rotated 180 so its SENSE pad sits north beside R60.2 (straight sense link, no diagonal 0.14 mm past R60.1 VLOGIC); GND pad south to two vias east; was: D-R12-94 (AVA re-layout): Z2 VLOGIC sense bottom
-R80	14.4	9.2	90	F	EN chain: BAT_IN to J400.1
-R81	19	12.2	270	F	EN chain to GND
-R82	16.6	12.4	0	F	OVLO top
-R83	16.6	11.4	0	F	OVLO
-R84	17.7	17.8	270	F	ILIM
-R89	20.6	12.4	90	F	D-R12-94 (AVA re-layout): Z1 BAT_FAULT_N pull-up at U9 (A2 escape lands here)
-R92	21.8	18.4	90	F	RAW bleed
-R93	16.6	10.4	0	F	OVLO bottom
-R94	18.7	18.2	270	F	R12F9-TRI-01: 0.4 mm forward, R94.1 (BAT_ILIM) >= 1.040 mm from C82.1 (RAW_PROTECTED); ILIM
-R95	18.15	22.89	270	F	round 6 verifier V-1 follow-up (PACK_FLT): U9 FLT series resistor on the BAT_FAULT_N trunk (B, x 18.15): pad 1 (U9_FLT) north to the trunk from U9 / R89, pad 2 (BAT_FAULT_N) south to the PC13 trunk and D95.1; courtyard 0.13 mm east of C79's, its vias >= 1.3 mm from every BAT_IN item
-R100	31.6	8	270	F	camera RX series at the port
-R101	30.4	8	90	F	camera TX series at the port
-R104	28.8	7.6	0	F	R12F7-TRI-01 (I-5): 0.2 mm east so R104.1 (CAM_5V) keeps >= 0.300 mm from the 3V3 via (27.6, 8.2) of D121.5 (was 0.212 mm); CAM_5V sense top beside R433
-R105	29.8	16.6	90	F	sense
-R106	27.8	16.6	90	F	R12F8-TRI-01 (I-5): moved from (30.8, 16.6) to west of R107 so R106.1 (CAM_5V_SENSE) keeps >= 1.04 mm from C432.1 / the CAM_BST run (was 0.66 mm); GND straight west into D9.2; was: sense
-R107	28.8	16.6	270	F	sense; D-R12-97: rotated 180 (pads swap: SENSE north beside R105.1, DIV south) so CAM_5V_DIV need not cross the sense run (W1 request; the old orientation forced a 2.59x detour, Measured)
-R110	36.6	43	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
-R111	27.2	75.3	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.3 mm in y; D-R12-99 (90 mm outline): PORT_SENSE top between J430 and J410, at the PORT_SENSE B lane; PORT_SENSE top at the ports
-R112	28.2	75.3	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.3 mm in y; D-R12-99 (90 mm outline): PORT_SENSE bottom beside R111; PORT_SENSE bottom
-R119	4.4	26.4	0	F	gate
-R120	6.53	26.95	0	F	gate; round 6 V-1 (pack energy): 0.55 mm aft so ACT_FET_S keeps >= 1.04 mm from R166.1 (BAT_DAMP, 0.36 ohm to GND); was F(6.4, 26.4), 0.772 mm
-R121	10.6	26.4	0	F	gate series
-R122	18.6	27.6	0	F	gate series
-R123	18.6	28.8	0	F	gate pull-down
-R126	10.6	44.2	0	F	gate series
-R127	10.6	45.2	0	F	gate
-R128	10.6	43.2	0	F	gate pull-down
-R129	12.6	47	0	F	cont
-R130	12.6	48	0	F	cont
-R131	6.6	46.6	270	F	R12F5-TRI-01 (S-10): turned 180 degrees so PYRO1_OUT (pin 1) faces the OUT run north and PYRO1_COLD (pin 2) faces D120 south; was: cold; R12F6-TRI-01: 10k -> 5.1k (same land)
-R132	17.17	32.2	0	F	arm; round 6 V-1 / V-2 (pack energy): turned to run east, RAW_ACT (pin 1) beside R134.2 and >= 1.04 mm from ARM1_SENSE, 3V3 and GND; was F(16.6, 33.6) rot 90 (R132.1 0.546 mm from R175.2, 0.792 mm from a GND via)
-R133	16.6	36	90	F	arm
-R134	13.9	34.7	90	F	2 ohm series
-R136	4.1	50.2	0	F	R12F6-TRI-01: cold pull-up series resistor 3V3 -> R136 -> D120.1 (PYRO1_COLD_PU); in line west of D120.1 (pad 2 east to the anode, pad 1 west to its own 3V3 via; south of D120.1 is D120's pin-1 dot), courtyard 0.13 mm clear of D120's, more than 3.5 mm from every PYRO1_OUT item
-R150	24.1	12.1	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
-R151	23.1	9	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
-R152	22.1	12.1	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
-R153	21.1	9	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
-R154	25.9	12.75	0	F	servo pull-down beside D121
-R155	25.9	13.75	0	F	servo pull-down beside D121
-R156	28	12.75	180	F	servo pull-down beside D121
-R157	28	13.75	180	F	servo pull-down beside D121
-R162	8.6	59.8	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate R
-R163	9.6	59.8	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate pull-down
-R164	19.85	38.6	90	F	D-R12-94 (AVA re-layout): Z3 3V3 -> 3V3A feed at the west side of the stack
-R165	16.7	7.5	0	F	EN chain: J400.2 to EN
-R166	10.7	23.9	0	F	damper R
-R167	10.4	9.6	0	F	BAT_IN bleed
-R173	12.6	46.1	0	F	R12F5-TRI-01 (S-10): 0.1 mm forward so R173.1 (PYRO1_OUT) and R173.2 (PYRO1_CONT_MID) keep 1.08 mm from PE4's lane at y 44.7 (0.98 mm); was: cont
-R175	17.6	33.6	270	F	arm; round 6 V-2: turned 180 degrees, ARM1_SENSE_MID (pin 1) north to R132.2, ARM1_SENSE (pin 2) south, away from RAW_ACT
-R178	12.6	49	0	F	cont
-R180	17.6	36	90	F	arm
-R400	17	62.95	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port FB top, cell-relative position kept
-R401	18	62.95	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port FB bottom (0.1 %), cell-relative position kept
-R404	19.65	62.48	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F9-TRI-01: 0.65 mm east and 0.47 mm aft into the empty east pocket, so PORT_FB leaves U400.4 north-east and keeps >= 1.040 mm from U400.5 (EN on RAW_PROTECTED) past its escape; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port FB, cell-relative position kept
-R431	30.7	11.2	0	F	camera EN pull-down (off in reset)
-R433	30.7	10.2	0	F	camera FB top
-R434	32.7	10.2	0	F	camera FB
-R435	32.7	11.2	0	F	camera FB bottom
-R436	28.2	26.6	90	F	R12F8-TRI-01 (I-5): U403 EN series resistor 5.1k in line with the CA bus lane x 28.2 (pad 2 CAM_EN south to its via (28.2, 25.5) and the old lane to U403.5; pad 1 CAM_PWR_EN north to D436.1 and the MCU lane via (28.2, 31.45)); SERVO4_MCU / SERVO2_MCU lanes 0.05 mm outward (27.75 / 28.65) so the vias fit the bus
-R440	23.5	75.35	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
-R441	22.5	75.35	270	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
-R450	13	75.35	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
-R451	12	75.35	270	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
-R460	21.43	63.6	0	F	R12F9 lane L: SD_CS pull-up on the CS run from U1 (pad 1 on the run); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
-R461	26.23	64	0	F	R12F9 lane L: SD_MOSI pull-up on the MOSI run (pad 1 on the run); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
-R462	23.97	62.5	180	F	R12F9 lane L: SD_MISO pull-up on the MISO run (pad 1 on the run); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
-R463	28.6	66.4	180	F	R12F9 lane L: SD_DAT1 pull-up at the end of DAT1's run west of J430; D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
-R464	28.6	64.05	180	F	R12F9 lane L: SD_DAT2 pull-up at the end of DAT2's run west of J430; D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
-R470	36	75.35	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
-R471	35	75.35	270	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
-TP74	31	74.5	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; D-R12-99 (90 mm outline): GND probe east of J430, 1.0 mm clear of the AUX and PORT_SENSE copper; D-R12-94 (AVA re-layout): Z5 GND probe beside C406, clear of the AUX hand-off at y 88
-TP80	2	28	0	F	R12F10-TRI-02: 0.1 mm forward again, so its 1.06 mm pad clearance (the largest S-10 limit any BAT_IN pair can take: the gate nets, R12F10-TRI-02) clears R119.1 (ACT_GATE); R12F9-TRI-03: 0.1 mm forward, so its 1.040 mm pad clearance (BAT_IN's S-10 floor, which KiCad applies in place of the DRU) clears R119.1 (ACT_GATE); BAT_IN probe
-TP81	22.2	21.4	0	F	RAW probe
-TP83	34.4	38	0	F	D-R12-94 (AVA re-layout): Z2 VLOGIC probe between C84 / D6
-TP88	9.7	73	0	F	R12F10-TRI-16 (83 mm outline): 0.5 mm west so its 1.040 mm pad clearance clears the RADIO_TX hand-off via (12, 73.6); R12F9 lane L (85 mm outline): 0.4 mm west and aft, its pad 1.0 mm (probe clearance) from C406.1; D-R12-94 (AVA re-layout): Z6 GND probe
-TP120	2	31.4	0	F	RAW_ACT probe
-TP122	14.8	42.4	0	F	R12F5-TRI-01 (S-10): gate probe moved from (3.4, 50.4) onto F beside R126 so PYRO1_GATE needs no via and no In2 run (it ran 0.10 mm from the In2 3V3 fill); 1.0 mm from foreign copper; was: gate probe
-U1	23	54	0	F	MCU centre; column 1 west (HSE, pyro), row A aft (IMU, servo), column 10 east (USB, SD); D-R12-44: moved with the U1 cluster 10 mm forward
-U2	32.9	22.4	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
-U3	38.35	54.45	90	F	R12F9 lane C (D-R12-169): 0.15 mm west with its pad fan, so C461 fits east of it in the strip clear of the card; R12F9 lane L: QSPI flash east of U1 under J3 (owner's empty east pocket), its west pins facing U1's east QSPI channels: QSPI_CLK 12.9 mm (was 19.4); D-R12-94 (AVA re-layout): Z5 QSPI flash 0.7 mm east of R12, IO0 / CLK / IO3 pins facing U1 SE corner
-U4	23	41.6	180	F	D-R12-94 (AVA re-layout): Z3 IMU on the roll axis, 6.1 mm aft of the U1 courtyard (was 16 mm)
-U5	23	28.4	180	F	D-R12-94 (AVA re-layout): Z3 baro at the aft end of the axis stack; I2C1 B5 / A5 run straight aft past U4 / U6
-U6	23	34.4	180	F	D-R12-94 (AVA re-layout): Z3 high-g accel on the axis aft of U4, same SPI1 trunk
-U9	17.3	15.35	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east; 0.3 mm east for C88 between C96 and U9 (D-R12-84)
-U400	18.1	66	0	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port buck beside the ports (R12 cell rotated -90 deg as a block)
-U403	32.9	13.9	90	F	camera buck
-Y1	14.6	52.5	180	F	HSE: HSE_IN pad NE (C1 stub), HSE_OUT pad SW (D1 stub under it); D-R12-44: re-placed after U1 moved forward
+J410	23	83.2	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); GPS SH-6 port (H743 GPS order), forward edge, middle
+J420	11.5	83.2	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); radio SH port, forward edge, west
+J430	36	69	90	F	R12F9 lane L (owner 2026-11-07): Molex 104031-0811 push-pull socket on the east side south of U3, card mouth (product line) at x 41.70 toward the east edge, the inserted card to x 45.70 (45.90 at +0.2 mm), inside the outline (fit_check mated envelope); contacts at x 40.90-42.00, y 62.05 (pin 1) ... 69.70 (pin 8); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 microSD 3.6 mm nearer U1; the port UART bus passes under it on B.Cu
+J440	34.5	83.2	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); AUX SH port, forward edge, east
+L1	37.6	23.25	0	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+L400	17.8	77.05	270	F	R12F10-TRI-16 (83 mm outline): 0.3 mm west so its courtyard clears C410 (moved 2 mm aft); R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port inductor, cell-relative position kept
+L401	40.1	17.75	0	F	camera inductor
+LED1	8	56.65	0	F	D-R12-94 (AVA re-layout): Z6 red LED in the west bay (K4 -> B -> here)
+LED2	8	58.85	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED in the west bay (H2 straight west on F at y 56.0); D-R12-97: rotated 180 so its anode pad faces R33 (W5-REQ-1, Measured on the placed pads)
+LS120	5.8	70.25	0	F	R12F8-TRI-19: 1.4 mm west and 1.0 mm aft into the 33.8 %-occupied west strip (courtyard x 1.0-10.6, y 61.6-71.2, 0.26 mm from Q123's); pad 2 (BUZZ_OUT) at (7.8, 66.4) shortens the branch from Q123.3 by 2.40 mm (11.448 -> 9.048 mm, no via); pad 1 stays on the In2 3V3 plane; was (7.2, 67.4): D-R12-94 (AVA re-layout): Z6 buzzer in the empty west bay
+Q120	5	32.85	0	F	bus load switch
+Q121	9.6	32.85	180	F	bus load switch
+Q122	14.4	31.45	0	F	bus driver
+Q123	6	63.65	0	F	D-R12-94 (AVA re-layout): Z6 buzzer driver
+Q124	7.5	46.75	0	F	fire FET
+R5	15.4	50.45	0	F	D-R12-94 (AVA re-layout): Z4 BOOT0 pull-down in the NW pocket (D5 dog-bone -> B)
+R7	36.6	51.75	0	F	D-R12-94 (AVA re-layout): Z2 CC1 beside J3
+R8	36.6	52.75	0	F	D-R12-94 (AVA re-layout): Z2 CC2 beside J3
+R9	36.6	45.85	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
+R10	37.6	61.9	0	F	R12F9 lane L: NCS pull-up on the NCS run along U3's south edge; D-R12-94 (AVA re-layout): Z5 NCS pull-up at U3 pin 1 (follows U3)
+R11	20.1	48.25	90	F	D-R12-94 (AVA re-layout): Z3 IMU_CS pull-up beside the A4 escape
+R12	19.6	36.35	90	F	D-R12-94 (AVA re-layout): Z3 SCL pull-up at U5
+R13	19.6	34.45	90	F	D-R12-94 (AVA re-layout): Z3 SDA pull-up at U5
+R14	32.2	29.45	90	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+R15	31.2	29.45	90	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+R32	10.8	56.65	180	F	D-R12-94 (AVA re-layout): Z6 red LED series R
+R33	10.8	58.85	180	F	D-R12-94 (AVA re-layout): Z6 yellow LED series R
+R60	31	41.05	90	F	D-R12-94 (AVA re-layout): Z2 VLOGIC sense top at D5 / C84
+R61	32	41.05	270	F	R12F8-TRI-01 (I-5): rotated 180 so its SENSE pad sits north beside R60.2 (straight sense link, no diagonal 0.14 mm past R60.1 VLOGIC); GND pad south to two vias east; was: D-R12-94 (AVA re-layout): Z2 VLOGIC sense bottom
+R80	14.4	13.05	90	F	EN chain: BAT_IN to J400.1
+R81	19	16.05	270	F	EN chain to GND
+R82	16.6	16.25	0	F	OVLO top
+R83	16.6	15.25	0	F	OVLO
+R84	17.7	21.65	270	F	ILIM
+R89	20.6	16.25	90	F	D-R12-94 (AVA re-layout): Z1 BAT_FAULT_N pull-up at U9 (A2 escape lands here)
+R92	21.8	22.25	90	F	RAW bleed
+R93	16.6	14.25	0	F	OVLO bottom
+R94	18.7	22.05	270	F	R12F9-TRI-01: 0.4 mm forward, R94.1 (BAT_ILIM) >= 1.040 mm from C82.1 (RAW_PROTECTED); ILIM
+R95	18.15	26.74	270	F	round 6 verifier V-1 follow-up (PACK_FLT): U9 FLT series resistor on the BAT_FAULT_N trunk (B, x 18.15): pad 1 (U9_FLT) north to the trunk from U9 / R89, pad 2 (BAT_FAULT_N) south to the PC13 trunk and D95.1; courtyard 0.13 mm east of C79's, its vias >= 1.3 mm from every BAT_IN item
+R100	31.6	11.85	270	F	camera RX series at the port
+R101	30.4	11.85	90	F	camera TX series at the port
+R104	28.8	11.45	0	F	R12F7-TRI-01 (I-5): 0.2 mm east so R104.1 (CAM_5V) keeps >= 0.300 mm from the 3V3 via (27.6, 8.2) of D121.5 (was 0.212 mm); CAM_5V sense top beside R433
+R105	29.8	20.45	90	F	sense
+R106	27.8	20.45	90	F	R12F8-TRI-01 (I-5): moved from (30.8, 16.6) to west of R107 so R106.1 (CAM_5V_SENSE) keeps >= 1.04 mm from C432.1 / the CAM_BST run (was 0.66 mm); GND straight west into D9.2; was: sense
+R107	28.8	20.45	270	F	sense; D-R12-97: rotated 180 (pads swap: SENSE north beside R105.1, DIV south) so CAM_5V_DIV need not cross the sense run (W1 request; the old orientation forced a 2.59x detour, Measured)
+R110	36.6	46.85	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
+R111	27.2	79.15	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.3 mm in y; D-R12-99 (90 mm outline): PORT_SENSE top between J430 and J410, at the PORT_SENSE B lane; PORT_SENSE top at the ports
+R112	28.2	79.15	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.3 mm in y; D-R12-99 (90 mm outline): PORT_SENSE bottom beside R111; PORT_SENSE bottom
+R119	4.4	30.25	0	F	gate
+R120	6.53	30.8	0	F	gate; round 6 V-1 (pack energy): 0.55 mm aft so ACT_FET_S keeps >= 1.04 mm from R166.1 (BAT_DAMP, 0.36 ohm to GND); was F(6.4, 26.4), 0.772 mm
+R121	10.6	30.25	0	F	gate series
+R122	18.6	31.45	0	F	gate series
+R123	18.6	32.65	0	F	gate pull-down
+R126	10.6	48.05	0	F	gate series
+R127	10.6	49.05	0	F	gate
+R128	10.6	47.05	0	F	gate pull-down
+R129	12.6	50.85	0	F	cont
+R130	12.6	51.85	0	F	cont
+R131	6.6	50.45	270	F	R12F5-TRI-01 (S-10): turned 180 degrees so PYRO1_OUT (pin 1) faces the OUT run north and PYRO1_COLD (pin 2) faces D120 south; was: cold; R12F6-TRI-01: 10k -> 5.1k (same land)
+R132	17.17	36.05	0	F	arm; round 6 V-1 / V-2 (pack energy): turned to run east, RAW_ACT (pin 1) beside R134.2 and >= 1.04 mm from ARM1_SENSE, 3V3 and GND; was F(16.6, 33.6) rot 90 (R132.1 0.546 mm from R175.2, 0.792 mm from a GND via)
+R133	16.6	39.85	90	F	arm
+R134	13.9	38.55	90	F	2 ohm series
+R136	4.1	54.05	0	F	R12F6-TRI-01: cold pull-up series resistor 3V3 -> R136 -> D120.1 (PYRO1_COLD_PU); in line west of D120.1 (pad 2 east to the anode, pad 1 west to its own 3V3 via; south of D120.1 is D120's pin-1 dot), courtyard 0.13 mm clear of D120's, more than 3.5 mm from every PYRO1_OUT item
+R150	24.1	15.95	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R151	23.1	12.85	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R152	22.1	15.95	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R153	21.1	12.85	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33)
+R154	25.9	16.6	0	F	servo pull-down beside D121
+R155	25.9	17.6	0	F	servo pull-down beside D121
+R156	28	16.6	180	F	servo pull-down beside D121
+R157	28	17.6	180	F	servo pull-down beside D121
+R162	8.6	63.65	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate R
+R163	9.6	63.65	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate pull-down
+R164	19.85	42.45	90	F	D-R12-94 (AVA re-layout): Z3 3V3 -> 3V3A feed at the west side of the stack
+R165	16.7	11.35	0	F	EN chain: J400.2 to EN
+R166	10.7	27.75	0	F	damper R
+R167	12.3	12.42	90	F	D-R12-174: BAT_IN bleed east of J1's rear face on R80's BAT_IN stub (pin 1 BAT_IN forward at y 12.85, pin 2 GND aft to its own via); was F(10.4, 9.6) rotation 0 (under the terminal body after the 3.85 mm shift)
+R173	12.6	49.95	0	F	R12F5-TRI-01 (S-10): 0.1 mm forward so R173.1 (PYRO1_OUT) and R173.2 (PYRO1_CONT_MID) keep 1.08 mm from PE4's lane at y 44.7 (0.98 mm); was: cont
+R175	17.6	37.45	270	F	arm; round 6 V-2: turned 180 degrees, ARM1_SENSE_MID (pin 1) north to R132.2, ARM1_SENSE (pin 2) south, away from RAW_ACT
+R178	12.6	52.85	0	F	cont
+R180	17.6	39.85	90	F	arm
+R400	17	66.8	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port FB top, cell-relative position kept
+R401	18	66.8	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port FB bottom (0.1 %), cell-relative position kept
+R404	19.65	66.33	270	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F9-TRI-01: 0.65 mm east and 0.47 mm aft into the empty east pocket, so PORT_FB leaves U400.4 north-east and keeps >= 1.040 mm from U400.5 (EN on RAW_PROTECTED) past its escape; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port FB, cell-relative position kept
+R431	30.7	15.05	0	F	camera EN pull-down (off in reset)
+R433	30.7	14.05	0	F	camera FB top
+R434	32.7	14.05	0	F	camera FB
+R435	32.7	15.05	0	F	camera FB bottom
+R436	28.2	30.45	90	F	R12F8-TRI-01 (I-5): U403 EN series resistor 5.1k in line with the CA bus lane x 28.2 (pad 2 CAM_EN south to its via (28.2, 25.5) and the old lane to U403.5; pad 1 CAM_PWR_EN north to D436.1 and the MCU lane via (28.2, 31.45)); SERVO4_MCU / SERVO2_MCU lanes 0.05 mm outward (27.75 / 28.65) so the vias fit the bus
+R440	23.5	79.2	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
+R441	22.5	79.2	270	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
+R450	13	79.2	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
+R451	12	79.2	270	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
+R460	21.43	67.45	0	F	R12F9 lane L: SD_CS pull-up on the CS run from U1 (pad 1 on the run); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R461	26.23	67.85	0	F	R12F9 lane L: SD_MOSI pull-up on the MOSI run (pad 1 on the run); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R462	23.97	66.35	180	F	R12F9 lane L: SD_MISO pull-up on the MISO run (pad 1 on the run); D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R463	28.6	70.25	180	F	R12F9 lane L: SD_DAT1 pull-up at the end of DAT1's run west of J430; D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R464	28.6	67.9	180	F	R12F9 lane L: SD_DAT2 pull-up at the end of DAT2's run west of J430; D-R12-99 (90 mm outline): microSD and its pull-up row moved 5.4 mm aft as a block (pull-ups to 0.04 mm of C22); D-R12-94 (AVA re-layout): Z6 SD pull-up in line with its contact, follows J430
+R470	36	79.2	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
+R471	35	79.2	270	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -1.85 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); port UART 1k series behind its pin (D-R12-33)
+TP74	31	78.35	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; D-R12-99 (90 mm outline): GND probe east of J430, 1.0 mm clear of the AUX and PORT_SENSE copper; D-R12-94 (AVA re-layout): Z5 GND probe beside C406, clear of the AUX hand-off at y 88
+TP80	2	31.85	0	F	R12F10-TRI-02: 0.1 mm forward again, so its 1.06 mm pad clearance (the largest S-10 limit any BAT_IN pair can take: the gate nets, R12F10-TRI-02) clears R119.1 (ACT_GATE); R12F9-TRI-03: 0.1 mm forward, so its 1.040 mm pad clearance (BAT_IN's S-10 floor, which KiCad applies in place of the DRU) clears R119.1 (ACT_GATE); BAT_IN probe
+TP81	22.2	25.25	0	F	RAW probe
+TP83	34.4	41.85	0	F	D-R12-94 (AVA re-layout): Z2 VLOGIC probe between C84 / D6
+TP88	9.7	76.85	0	F	R12F10-TRI-16 (83 mm outline): 0.5 mm west so its 1.040 mm pad clearance clears the RADIO_TX hand-off via (12, 73.6); R12F9 lane L (85 mm outline): 0.4 mm west and aft, its pad 1.0 mm (probe clearance) from C406.1; D-R12-94 (AVA re-layout): Z6 GND probe
+TP120	2	35.25	0	F	RAW_ACT probe
+TP122	14.8	46.25	0	F	R12F5-TRI-01 (S-10): gate probe moved from (3.4, 50.4) onto F beside R126 so PYRO1_GATE needs no via and no In2 run (it ran 0.10 mm from the In2 3V3 fill); 1.0 mm from foreign copper; was: gate probe
+U1	23	57.85	0	F	MCU centre; column 1 west (HSE, pyro), row A aft (IMU, servo), column 10 east (USB, SD); D-R12-44: moved with the U1 cluster 10 mm forward
+U2	32.9	26.25	270	F	D-R12-94 (AVA re-layout): Z2 3V3 buck cell moved 4.6 mm aft as a block (internal copper translates)
+U3	38.35	58.3	90	F	R12F9 lane C (D-R12-169): 0.15 mm west with its pad fan, so C461 fits east of it in the strip clear of the card; R12F9 lane L: QSPI flash east of U1 under J3 (owner's empty east pocket), its west pins facing U1's east QSPI channels: QSPI_CLK 12.9 mm (was 19.4); D-R12-94 (AVA re-layout): Z5 QSPI flash 0.7 mm east of R12, IO0 / CLK / IO3 pins facing U1 SE corner
+U4	23	45.45	180	F	D-R12-94 (AVA re-layout): Z3 IMU on the roll axis, 6.1 mm aft of the U1 courtyard (was 16 mm)
+U5	23	32.25	180	F	D-R12-94 (AVA re-layout): Z3 baro at the aft end of the axis stack; I2C1 B5 / A5 run straight aft past U4 / U6
+U6	23	38.25	180	F	D-R12-94 (AVA re-layout): Z3 high-g accel on the axis aft of U4, same SPI1 trunk
+U9	17.3	19.2	270	F	eFuse: BAT_IN bar fed from the west, RAW bar leaves east; 0.3 mm east for C88 between C96 and U9 (D-R12-84)
+U400	18.1	69.85	0	F	R12F9 lane L: port buck cell moved 24.5 mm west and 2.5 mm aft (85 mm outline) as a block; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port buck cell moved 1.5 mm aft as a block so L400.2 keeps 4.0 mm from the forward-east support; D-R12-94 (AVA re-layout): Z5 port buck beside the ports (R12 cell rotated -90 deg as a block)
+U403	32.9	17.75	90	F	camera buck
+Y1	14.6	56.35	180	F	HSE: HSE_IN pad NE (C1 stub), HSE_OUT pad SW (D1 stub under it); D-R12-44: re-placed after U1 moved forward

@@ -225,11 +225,12 @@ class Package(unittest.TestCase):
         self.assertIn("is not r12_parts' owner-fitted set", text)
 
     def test_out_of_bom_part_in_jlc_bom(self):
-        """A part excluded from the BOM on the board (J1's wire pads) in the JLC BOM / CPL fails."""
+        """A part excluded from the BOM on the board (test pad TP80; D-R12-174 fitted J1, the old wire pads) in the JLC
+        BOM / CPL fails."""
         out = self.copy()
         stem = BOARD.stem
-        self.rewrite(out / f'{stem}_bom_jlc.csv', lambda rows: rows + [['wire pads', 'J1', 'M3_WIREPAD_2P_P5', '', '', '1',
-                                                                        'THT (JLC THT assembly)']])
+        self.rewrite(out / f'{stem}_bom_jlc.csv', lambda rows: rows + [['BAT_IN', 'TP80', 'M3_TestPad_1.5', '', '', '1',
+                                                                        'SMT']])
         code, text = self.check(out, '--verify-cpl')
         self.assertNotEqual(code, 0)
         self.assertIn('owner-fitted or out-of-BOM parts', text)

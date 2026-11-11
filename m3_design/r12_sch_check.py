@@ -105,7 +105,9 @@ REQUIRED_PARTS = ('Q120', 'Q121', 'Q122', 'Q124', 'R119', 'R120', 'C120', 'R121'
                   'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', 'R156',
                   'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6',
                   'R131', 'R136', 'D120', 'R89', 'R95', 'D95', 'R431', 'R436', 'D436')
-WIRE_PADS = ('J1',)                # D-R12-29: J121 is a JLC-fitted DB125 screw terminal again (owner, 2026-11-03)
+# D-R12-174 (owner 2026-11-10): J1 is a JLC-fitted KF301-5.0-2P screw terminal, so R12 has no wire pads left (D-R12-30's
+# pads are superseded); J121 is the JLC-fitted DB125 (D-R12-29). Both terminals are fitted, in the BOM and the CPL.
+JLC_TERMINALS = {'J1': 'KF301-5.0-2P', 'J121': 'DB125-3.5-2P-BK-S'}
 
 # R12F6-TRI-09 (R10's D-R27-03 / test_r27_port_terminal_pin_names, ported): every external connector's pin names, as
 # the netlist gives them (pinfunction less its _<pin> suffix), and each name's net. D-R12-31 puts the ports in the
@@ -218,9 +220,11 @@ def contract(parts, pins, project=None):
     for ref in ('C126', 'R127', 'R128', 'R123', 'C123', 'R119', 'R120', 'C120', 'R134', 'R431'):
         if ref in parts and set(parts[ref]['flags']) & {'dnp', 'exclude_from_bom'}:
             issues.append(f'{ref}: a safety network part must be fitted (no DNP / BOM exclusion)')
-    for ref in WIRE_PADS:
-        if ref in parts and not {'exclude_from_bom', 'exclude_from_pos_files'} <= set(parts[ref]['flags']):
-            issues.append(f'{ref}: wire pads stay out of the BOM and CPL (D-R11-05)')
+    for ref, mpn in JLC_TERMINALS.items():
+        if ref in parts and set(parts[ref]['flags']) & {'dnp', 'exclude_from_bom', 'exclude_from_pos_files'}:
+            issues.append(f'{ref}: a JLC-assembled screw terminal stays in the BOM and CPL (D-R12-29, -174)')
+        if ref in parts and parts[ref]['fields'].get('Manufacturer Part') != mpn:
+            issues.append(f'{ref}: must be {mpn} (D-R12-29, -174)')
     # U1 against the pin table
     for row in gen.read_pin_table():
         if row['r11_ball'] == '-':
@@ -319,7 +323,8 @@ def seeds(parts, pins):
         'part without an LCSC code': field('C8', 'LCSC', ''),
         'code on two footprints': lambda p, n: p['C10'].__setitem__('footprint', 'rocket:C0805'),
         'value changed': lambda p, n: p['R82'].__setitem__('value', '2M 0.1%'),
-        'wire pads in the BOM': lambda p, n: p['J1']['flags'].remove('exclude_from_bom'),
+        'battery terminal out of the BOM (D-R12-174)': lambda p, n: p['J1']['flags'].append('exclude_from_bom'),
+        'battery terminal re-sourced (D-R12-174)': field('J1', 'Manufacturer Part', 'KF128-5.0-2P'),
         'buzzer (LS120, JLC-assembled THT) removed': pop('LS120'),
         'barometer PS (I2C select) floating': lambda p, n: n.update({('U5', '2'): None}),
         'cold pull-up anode on 3V3 (R136 bypassed, R12F6-TRI-01)': lambda p, n: n.update({('D120', '1'): '3V3'}),

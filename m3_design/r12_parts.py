@@ -204,28 +204,46 @@ def ddc6():
                          '(https://easyeda.com/api/products/C468250/components); top side only', body, -2.4, name + '.wrl')
 
 
-# D-R12-30 (owner, 2026-11-03): J1 stays soldered pack wire pads, drawn as two plated holes at 5.0 mm pitch so a 5.0 mm
-# two-position screw terminal fits later with no board change. Hole 1.40 mm finished: a tinned 16-20 AWG conductor
-# (about 1.3-0.8 mm, Inference: typical bundle sizes) and a 5.0 mm terminal pin (about 1.0-1.2 mm, Inference) both go in;
-# land 2.6 mm (0.6 mm ring against JLC's 0.15 mm minimum; 2.4 mm copper gap). The courtyard is the 10 x 8.2 mm keep-clear
-# for a future terminal body, its wire side at -y (the board edge after rotation 90).
-BAT_HOLE, BAT_PAD, BAT_PITCH = 1.40, 2.60, 5.00
-BAT_KEEP = (-5.0, -3.2, 5.0, 5.0)
+# D-R12-174 (owner, 2026-11-10: "replace the battery solder pads with screw terminals"; supersedes D-R12-30's wire
+# pads): J1 is a Cixi Kefa KF301-5.0-2P (LCSC C474881, blue), a 5.0 mm two-position rising-cage screw terminal, JLC THT
+# assembly (hand-soldered, as J121 and LS120, D-R12-85). Kefa drawing KF301-5.0 rev A (2021-03-13; LCSC C474881 PDF,
+# https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881): pitch 5.0, body
+# P x 5.0 = 10.0 wide, 7.60 deep, 10.0 tall; pins dia 1.00, 3.60 +/- 0.30 below the seating plane, 4.0 from the rear
+# face (3.60 from the wire face: 7.60 - 4.0); PCB hole dia 1.20 +0.10 / -0 ("PCB LAYOUT"; "PCB Hole Diameter 1.2");
+# a 0.67 mm interlock key on one end, 0.6-1.6 mm from the rear face (scaled from the top view: Inference); UL 16 A /
+# 300 V, IEC 17 A; wire 22-14 AWG, 1.5 mm2; strip 4-5 mm; M2.5 screw, 0.4 N m maximum; -30 to +120 C (Datasheet).
+# Wire face: the front view (wire cages) and the right side view in third-angle projection put the wire face 3.60 mm
+# from the pin row (Inference from the projection, the pin's 4.0 mm being dimensioned to the opposite face); the wire
+# hole is centred about 2.9 mm above the seating plane (scaled from the front view: Inference).
+# Land: finished hole 1.30 mm (the maker's 1.20 +0.10 maximum; the pin is 1.00), land 2.60 mm (0.65 mm ring), 5.00 mm
+# pitch. Local frame: pin 1 at -x, the wire face at -y (rotation 90 puts it at the board's west edge), so the key
+# (the right end seen from the wire face) is at -x. Envelopes are maximum-tolerance unions (the drawing's GB/T 14486
+# table: +/-0.20 to 6 mm, +/-0.30 over 6 to 10 mm), as R10's DB125 (T0-1 p1): wire face -3.80, rear +4.20, ends
+# +/-5.15, key to -6.02 over local y 2.2-3.8, height 10.30 (key 6.95), pin tail 3.90 below the seating plane.
+KF_PITCH, KF_HOLE, KF_PAD = 5.00, 1.30, 2.60
+KF_FRONT, KF_REAR, KF_END, KF_H = -3.80, 4.20, 5.15, 10.30
+KF_KEY = (-6.02, 2.2, -KF_END, 3.8, 6.95)        # x0, y0, x1, y1, height of the interlock key
+KF_TAIL = 3.90
 
 
-def batpads():
-    name = 'M3_WIREPAD_2P_P5'
-    x = BAT_PITCH / 2
-    body = _circle((-x, 0), BAT_HOLE / 2 + .25, 'F.Fab', .1) + _circle((x, 0), BAT_HOLE / 2 + .25, 'F.Fab', .1)
-    body += _rect(BAT_KEEP[:2], BAT_KEEP[2:], 'F.Fab', .1)
-    body += _rect(BAT_KEEP[:2], BAT_KEEP[2:], 'F.CrtYd', .05)
+def kf301():
+    name = 'M3_KF301_5P0_2P_BU'
+    x = KF_PITCH / 2
+    body = _rect((-5.0, -3.6), (5.0, 4.0), 'F.Fab', .1)                            # nominal body
+    body += _line((-1.0, -3.6), (-1.0, -5.0), 'F.Fab', .1) + _line((1.0, -3.6), (1.0, -5.0), 'F.Fab', .1)  # wire face
+    k0, ky0, k1, ky1, _ = KF_KEY
+    pts = ((-KF_END, KF_FRONT), (KF_END, KF_FRONT), (KF_END, KF_REAR), (-KF_END, KF_REAR), (-KF_END, ky1), (k0, ky1),
+           (k0, ky0), (-KF_END, ky0))
+    body += ('\t(fp_poly\n\t\t(pts\n' + ''.join(f'\t\t\t(xy {g(a)} {g(b)})\n' for a, b in pts) +
+             '\t\t)\n\t\t(stroke\n\t\t\t(width 0.05)\n\t\t\t(type solid))\n\t\t(fill no)\n\t\t(layer "F.CrtYd"))\n')
+    body += _rect((-5.15, -3.75), (5.15, 4.15), 'F.SilkS', .15)
     for num, px in (('1', -x), ('2', x)):
-        body += (f'\t(pad "{num}" thru_hole circle\n\t\t(at {g(px)} 0)\n\t\t(size {g(BAT_PAD)} {g(BAT_PAD)})\n'
-                 f'\t\t(drill {g(BAT_HOLE)})\n\t\t(layers "*.Cu" "*.Mask")\n'
+        body += (f'\t(pad "{num}" thru_hole circle\n\t\t(at {g(px)} 0)\n\t\t(size {g(KF_PAD)} {g(KF_PAD)})\n'
+                 f'\t\t(drill {g(KF_HOLE)})\n\t\t(layers "*.Cu" "*.Mask")\n'
                  '\t\t(remove_unused_layers yes)\n\t\t(keep_end_layers yes))\n')
-    return name, make_fp(name, 'Battery pigtail pads: two plated 1.40 mm holes, 2.60 mm land, 5.00 mm pitch (a later 5.0 mm '
-                         'screw terminal fits); hand-soldered, no paste, not in the JLC BOM or CPL (D-R12-30)',
-                         body, -3.8, None, attr='through_hole exclude_from_pos_files exclude_from_bom')
+    return name, make_fp(name, 'Cixi Kefa KF301-5.0-2P (C474881) 5.0 mm 2P screw terminal, blue; hole 1.30 mm (maker 1.20 '
+                         '+0.10), land 2.60 mm; pin 1 at -x; wire face -y; JLC THT assembly (no paste) (D-R12-174)',
+                         body, 5.3, name + '.wrl', attr='through_hole')
 
 
 R10_REUSE = ('M3_DB125_2P_BK',)       # D-R12-29: R10's verified DB125-2 (black) land and model, copied verbatim
@@ -342,7 +360,7 @@ def microsd():
 
 def footprints():
     out = {}
-    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, batpads, cap_d8, microsd):
+    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, kf301, cap_d8, microsd):
         name, text = maker()
         out[name] = text
     return out
@@ -358,6 +376,13 @@ MODELS = {
     'M3_BUZ_TH_D9_P4.wrl': ('# QMB-09B-03 envelope 9.3 x 9.3 x 5.7 mm (spec item 4, +0.3 tolerance). NOT a maker model.\n',
                             [(0, 0, 0, 9.3, 9.3, 5.7, BLACK)]),
     'M3_TSOT23_6_DDC.wrl': ('# TI DDC envelope 2.9 x 1.6 x 1.1 mm. NOT a maker model.\n', [(0, 0, 0, 2.9, 1.6, 1.1, BLACK)]),
+    # D-R12-174: KF301-5.0-2P maximum-tolerance union (body 10.30 x 8.00 x 10.30 mm about local y 0.2, key 0.87 x 1.6 x
+    # 6.95 mm at -x); fit_check reads the box (R12-GATE-01 envelope KF301_BOX)
+    'M3_KF301_5P0_2P_BU.wrl': ('# KF301-5.0-2P envelope, Kefa KF301-5.0 drawing rev A maxima (D-R12-174). NOT a maker '
+                               'model.\n',
+                               [(0, (KF_FRONT + KF_REAR) / 2, 0, 2 * KF_END, KF_REAR - KF_FRONT, KF_H, '.15 .35 .75'),
+                                ((KF_KEY[0] + KF_KEY[2]) / 2, (KF_KEY[1] + KF_KEY[3]) / 2, 0, KF_KEY[2] - KF_KEY[0],
+                                 KF_KEY[3] - KF_KEY[1], KF_KEY[4], '.15 .35 .75')]),
     # base 8.3 + 0.2, height 10.5 + 0.5 + 0.3 mm (R10's M3_MA_8x10 allowances applied to the Honor L 10.5; Inference)
     'M3_CAP_D8_SMD.wrl': ('# HV1E477M0810PZ envelope 8.5 x 8.5 x 11.3 mm (Honor CDHV dimension table, R10 allowances). NOT a '
                           'maker model.\n', [(0, 0, 0, 8.5, 8.5, 11.3, GREY)]),
@@ -585,6 +610,10 @@ def geometry_checks():
     fx_text = (LIB / 'rocket.pretty/M3_FXLS_HLQFN16.kicad_mod').read_text()
     assert len(re.findall(r'\(chamfer (top|bottom)_(left|right)\)', fx_text)) == len(FX_CHAMFER_AT) == 8
     assert math.sqrt(2) * (FX_C - FX_L / 2 - 1.2 - FX_W / 2 + FX_CHAMFER) >= 0.2
+    kf = result['M3_KF301_5P0_2P_BU']                  # D-R12-174: KF301 pins at 5.0 mm, 1.30 mm hole (maker 1.20 +0.10)
+    assert kf == {'1': [-2.5, 0, KF_PAD, KF_PAD], '2': [2.5, 0, KF_PAD, KF_PAD]}
+    kf_fp = pcbnew.FootprintLoad(str(PRETTY), 'M3_KF301_5P0_2P_BU')
+    assert all(abs(mm(p.GetDrillSize().x) - KF_HOLE) < 1e-6 and 1.20 <= KF_HOLE <= 1.30 for p in kf_fp.Pads())
     buz = result['M3_BUZ_TH_D9_P4']
     assert buz == {'1': [-2.0, 0, 1.8, 1.8], '2': [2.0, 0, 1.8, 1.8]}
     ddc = result['M3_TSOT23_6_DDC']
