@@ -14,8 +14,10 @@ track	PYRO1_OUT	F	0.4	5.1	48.85	4.4	48.85
 track	PYRO1_OUT	F	0.2	11.5	50.55	12	50.05
 track	GND	F	0.3	33.9	5.9	33.1	5.9
 track	CAM_5V	F	0.5	35.9	5.2	35.1	5.2
-track	BAT_SW_RETURN	B	0.2	13.4	7.5	15.1	9.2
-track	BAT_SW_RETURN	B	0.2	15.1	9.2	15.1	11.35
+track	BAT_SW_RETURN	B	0.2	13.4	7.5	13.8	7.9
+track	BAT_SW_RETURN	B	0.2	13.8	7.9	15.1	9.2
+track	BAT_SW_RETURN	B	0.2	15.1	9.2	15.1	10.8
+track	BAT_SW_RETURN	B	0.2	15.1	10.8	15.1	11.35
 track	BAT_SW_RETURN	F	0.2	15.1	11.35	15.7	11.35
 track	BAT_SW_RETURN	F	0.2	11.6	6.2	11.3	6.5
 track	BAT_ENABLE	F	0.2	19	13.95	19	15.05
@@ -31,7 +33,8 @@ track	ACT_GATE	F	0.2	6.3	33.95	6.8	33.95
 track	ACT_GATE	In2	0.2	6.8	33.95	7.7	34.85
 track	ACT_GATE	In2	0.2	7.7	34.85	8.6	34.85
 track	ACT_GATE	F	0.2	8.6	34.85	8.1	34.85
-track	ACT_GATE	F	0.2	8.7	32.05	6.8	33.95
+track	ACT_GATE	F	0.2	8.7	32.05	7.2	33.55
+track	ACT_GATE	F	0.2	7.2	33.55	6.8	33.95
 track	ACT_GATE	F	0.2	10.1	30.35	10.1	30.85
 track	ACT_GATE	F	0.2	10.1	30.85	8.9	32.05
 track	ACT_GATE	F	0.2	4.0	30.15	4.4	29.75
@@ -428,6 +431,61 @@ track	GND	F	0.3	2.6	22.05	2.6	23.5
 via	GND	-	0.45	2.6	23.5		
 track	GND	F	0.3	12.3	11.99	12.3	11.2
 via	GND	-	0.45	12.3	11.2		
+track	3V3	F	0.3	3.67	54.05	3.67	53.5
+via	3V3	-	0.45	3.67	53.5		
+track	3V3	F	0.3	21.15	16.68	21.15	17.23
+via	3V3	-	0.45	21.15	17.23		
+track	3V3	F	0.3	21.77	28.95	21.22	28.95
+via	3V3	-	0.45	21.22	28.95		
+track	ACT_EN_MCU	B	0.1	16.4	32.05	16.9	31.55
+via	ACT_EN_MCU	-	0.45	16.9	31.55		
+track	ACT_GATE	F	0.2	8.6	34.85	9.15	34.85
+track	ACT_GATE	In2	0.2	8.6	34.85	9.15	34.85
+via	ACT_GATE	-	0.45	9.15	34.85		
+track	ACT_GATE	In2	0.2	6.8	33.95	7.2	33.55
+via	ACT_GATE	-	0.45	7.2	33.55		
+track	BAT_SW_RETURN	F	0.2	13.4	7.5	13.8	7.9
+via	BAT_SW_RETURN	-	0.45	13.8	7.9		
+track	BAT_SW_RETURN	F	0.2	15.1	11.35	15.1	10.8
+via	BAT_SW_RETURN	-	0.45	15.1	10.8		
+track	GND	F	0.3	33.9	4.5	33.35	4.5
+via	GND	-	0.45	33.35	4.5		
+track	GND	F	0.3	26.33	17.6	26.33	18.15
+via	GND	-	0.45	26.33	18.15		
+track	GND	F	0.3	15.3	20.65	14.9	21.05
+via	GND	-	0.45	14.9	21.05		
+track	GND	F	0.3	19.03	32.65	19.03	33.2
+via	GND	-	0.45	19.03	33.2		
+track	GND	F	0.3	11.03	47.05	11.03	46.5
+via	GND	-	0.45	11.03	46.5		
+track	GND	F	0.3	12.3	11.2	11.75	11.2
+via	GND	-	0.45	11.75	11.2		
+track	GND	F	0.3	20	20.85	19.45	20.85
+via	GND	-	0.45	19.45	20.85		
+track	GND	F	0.25	10.6	8.125	10.6	8.625
+via	GND	-	0.45	10.6	8.625		
+track	GND	F	0.3	19.9	7	19.35	7
+via	GND	-	0.45	19.35	7		
+track	GND	F	0.3	11.03	49.05	11.03	49.6
+via	GND	-	0.45	11.03	49.6		
+track	GND	F	0.3	18.6	38.8	18.6	38.25
+via	GND	-	0.45	18.6	38.25		
+track	GND	F	0.3	15.7	29.85	15.15	29.85
+via	GND	-	0.45	15.15	29.85		
+track	GND	F	0.3	4.4	48.03	3.85	48.03
+via	GND	-	0.45	3.85	48.03		
+track	GND	F	0.3	11.9	44.95	11.9	44.4
+via	GND	-	0.45	11.9	44.4		
+track	GND	F	0.3	21.6	22.15	21.05	22.15
+via	GND	-	0.45	21.05	22.15		
+track	GND	F	0.3	13.03	51.85	13.03	52.85
+track	GND	F	0.3	13.03	52.85	13.03	53.85
+track	GND	F	0.3	16.6	39.42	17.6	39.42
+track	ACT_EN	F	0.2	16.74	33.75	16.74	32.55
+track	GND	F	0.3	17.6	33.75	17.6	34.3
+via	GND	-	0.45	17.6	34.3		
+track	GND	F	0.3	17.6	33.75	17.6	33.2
+via	GND	-	0.45	17.6	33.2		
 # --- r12_routes_W2.tsv
 track	SW_NODE	F	0.8	34.05	25.3	35.45	23.9
 track	SW_NODE	F	0.3	35.5	23.05	33.18	23.05
@@ -597,6 +655,10 @@ track	3V3	F	0.3	33.65	50.12	34.2	50.12
 via	3V3	-	0.45	34.2	50.12		
 track	3V3	F	0.3	32.2	30.65	31.55	30.65
 via	3V3	-	0.45	31.55	30.65		
+track	3V3	F	0.2	30.4	32.1	30.4	31.55
+via	3V3	-	0.45	30.4	31.55		
+track	GND	F	0.3	40.1	56.05	39.7	55.65
+via	GND	-	0.45	39.7	55.65		
 # --- r12_routes_W3.tsv
 via	ACT_EN_MCU	-	0.45	18.6	57.85		
 via	PYRO1_CONT	-	0.45	17.1	58.15		
@@ -1103,6 +1165,14 @@ track	GND	F	0.3	43.71	62.55	43	62.55
 via	GND	-	0.45	43	62.55		
 track	GND	F	0.4	44.55	58.225	44.55	57.1
 via	GND	-	0.45	44.55	57.1		
+track	3V3	F	0.3	33.25	60.2	32.85	60.6
+via	3V3	-	0.45	32.85	60.6		
+track	3V3	F	0.3	40.45	69.19	39.9	69.19
+via	3V3	-	0.45	39.9	69.19		
+track	GND	F	0.3	40.45	71.39	39.9	71.39
+via	GND	-	0.45	39.9	71.39		
+track	GND	F	0.3	18.5	64.45	18.5	63.9
+via	GND	-	0.45	18.5	63.9		
 # --- r12_routes_W4.tsv
 track	SERVO1_MCU	B	0.15	27.4	49.25	27.4	21.35
 track	SERVO4_MCU	B	0.15	27.75	49.25	27.75	21.35
@@ -1320,6 +1390,18 @@ track	CAM_EN	F	0.15	28.2	30.02	28.2	29.35
 via	CAM_EN	-	0.45	28.2	29.35		
 track	CAM_EN	B	0.15	28.2	29.35	28.2	21.35
 track	CAM_5V_SENSE	In2	0.15	26.9	29.35	26.9	49.25
+track	3V3	F	0.2	24.2	40.95	24.75	40.95
+via	3V3	-	0.45	24.75	40.95		
+track	3V3	F	0.2	22	40.95	22.4	41.35
+via	3V3	-	0.45	22.4	41.35		
+track	3V3	F	0.2	26.3	38.67	25.75	38.67
+via	3V3	-	0.45	25.75	38.67		
+track	GND	F	0.2	26.1	37	25.7	36.6
+via	GND	-	0.45	25.7	36.6		
+track	GND	F	0.3	19.5	29.75	20.05	29.75
+via	GND	-	0.45	20.05	29.75		
+track	VLOGIC_SENSE	F	0.15	25.8	41.05	26.2	41.45
+via	VLOGIC_SENSE	-	0.45	26.2	41.45		
 # --- r12_routes_W5.tsv
 track	GPS_TX_WIRE	F	0.2	22.5	79.7	22.5	80.65
 track	GPS_RX_WIRE	F	0.2	23.5	79.7	23.5	80.65
@@ -1448,3 +1530,21 @@ track	GND	F	0.3	2.2	61.15	2.2	60.25
 via	GND	-	0.45	2.2	60.25		
 track	GND	F	0.3	9.7	76.85	9.7	75.7
 via	GND	-	0.45	9.7	75.7		
+track	3V3	F	0.3	4	61.05	3.45	61.05
+via	3V3	-	0.45	3.45	61.05		
+track	GND	F	0.3	19.9	81.65	19.35	81.65
+via	GND	-	0.45	19.35	81.65		
+track	GND	F	0.3	7.8	62.75	7.8	62.2
+via	GND	-	0.45	7.8	62.2		
+track	GND	F	0.3	10.2	63.35	10.2	62.8
+via	GND	-	0.45	10.2	62.8		
+track	GND	F	0.3	9.4	81.65	8.85	81.65
+via	GND	-	0.45	8.85	81.65		
+track	GND	F	0.3	32.4	81.15	31.85	81.15
+via	GND	-	0.45	31.85	81.15		
+track	PORT_4V8	F	0.3	33.9	80.05	33.35	80.05
+via	PORT_4V8	-	0.45	33.35	80.05		
+track	PORT_4V8	F	0.3	21.5	79.9	20.95	79.9
+via	PORT_4V8	-	0.45	20.95	79.9		
+track	PORT_4V8	F	0.3	11	79.9	10.45	79.9
+via	PORT_4V8	-	0.45	10.45	79.9		

@@ -547,3 +547,16 @@ track	GND	F	0.3	43.71	62.55	43	62.55
 via	GND	-	0.45	43	62.55		
 track	GND	F	0.4	44.55	58.225	44.55	57.1
 via	GND	-	0.45	44.55	57.1		
+# --- R12F12 (round 12 final pass), lane P: single-via class (R12F12-TRI-02 / -03 / -17)
+# R12F12-TRI-02: second via (32.85, 60.6) for U3.8 3V3 (crash log)
+track	3V3	F	0.3	33.25	60.2	32.85	60.6
+via	3V3	-	0.45	32.85	60.6		
+# R12F12-TRI-02: second via (39.9, 69.19) for J430.4 / C460.1 / C461.1 3V3
+track	3V3	F	0.3	40.45	69.19	39.9	69.19
+via	3V3	-	0.45	39.9	69.19		
+# R12F12-TRI-02: second via (39.9, 71.39) for J430.6 GND
+track	GND	F	0.3	40.45	71.39	39.9	71.39
+via	GND	-	0.45	39.9	71.39		
+# R12F12-TRI-02: second via (18.5, 63.9) for C22.2 GND (VDDA 1 uF)
+track	GND	F	0.3	18.5	64.45	18.5	63.9
+via	GND	-	0.45	18.5	63.9		

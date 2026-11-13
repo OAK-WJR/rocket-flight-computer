@@ -2188,6 +2188,11 @@ def local_gate_bias(ctx, fet, roles):
     return [], found
 
 
+# The exact part set of the independent load-switch enable nets (D-R19-04). A module constant so a later revision's gate
+# can name its own set (check_r12 S-3: R12F12-TRI-04 adds a second pull-down); R10's set is unchanged.
+ACT_EN_PARTS = (('ACT_EN_MCU', {'U1', 'R122'}), ('ACT_EN', {'R122', 'R123', 'Q122', 'C123'}))
+
+
 def s3(ctx):
     issues, ev = [], {}
     found, ev['Q124'] = gate_network(ctx, 'Q124', NFET_ROLES, 'pyro FET')
@@ -2230,7 +2235,7 @@ def s3(ctx):
     for pin, net in want.items():
         if pins.get(pin) != net:
             issues.append(f'S-3: independent load-switch enable {pin} must be {net} (is {pins.get(pin)})')
-    for net, refs in (('ACT_EN_MCU', {'U1', 'R122'}), ('ACT_EN', {'R122', 'R123', 'Q122', 'C123'})):
+    for net, refs in ACT_EN_PARTS:
         if net_parts(ctx.board).get(net) != refs:
             issues.append(f'S-3: independent load-switch enable {net} must touch only {sorted(refs)}')
     # D-R18-01 (R18-MCU-01): R123 dominates a PC1 pull-up; D-R19-04: C123 10 nF (about 7 us PC1 edge with R122 || R123).

@@ -127,6 +127,7 @@ R107	28.8	20.45	270	F	sense; D-R12-97: rotated 180 (pads swap: SENSE north besid
 R110	36.6	46.85	0	F	D-R12-94 (AVA re-layout): Z2 VBUS sense / cap column beside J3
 R111	27.2	79.15	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.3 mm in y; D-R12-99 (90 mm outline): PORT_SENSE top between J430 and J410, at the PORT_SENSE B lane; PORT_SENSE top at the ports
 R112	28.2	79.15	90	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -0.3 mm in y; D-R12-99 (90 mm outline): PORT_SENSE bottom beside R111; PORT_SENSE bottom
+R118	17.17	33.75	0	F	R12F12-TRI-04: Q122's second gate pull-down (10k, ACT_EN to GND; the triage's 'R124' at (16.9, 33.75), placed 0.27 mm east so each pad takes one straight stub): pad 1 (ACT_EN, 16.74) joins the Q122.1 - R123.1 run at y 32.55 by an F stub, pad 2 (GND, 17.6) has its own via (17.6, 34.3), midway between ACT_EN_MCU's B run at x 17.1 and BAT_FAULT_N's at x 18.15 (0.225 mm each) and >= 1.04 mm from RAW_ACT (R132.1, R134.2)
 R119	4.4	30.25	0	F	gate
 R120	6.53	30.8	0	F	gate; round 6 V-1 (pack energy): 0.55 mm aft so ACT_FET_S keeps >= 1.04 mm from R166.1 (BAT_DAMP, 0.36 ohm to GND); was F(6.4, 26.4), 0.772 mm
 R121	10.6	30.25	0	F	gate series

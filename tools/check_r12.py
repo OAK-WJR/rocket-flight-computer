@@ -14,13 +14,15 @@ F-1 / M-6: every part on F; bottom assembly is prohibited (D-R12-01).
 N-1: native parts and identities match the R12 schematic; revision M3-ASSY-R12.
 V-1 / V-2: through vias 0.3 / >= 0.45 mm; no via in a soldered pad (D-R12-03 / -07).
 S-1 / S-2: RAW_ACT behind Q120/Q121 only; no unnamed armed-side parts or copper bypass.
-S-3: every pyro/load-switch gate defined off; local gate-source bias joined on the FET's layer.
+S-3: every pyro/load-switch gate defined off; local gate-source bias joined on the FET's layer; Q122's gate has two
+     pull-downs, R123 and R118, and ACT_EN touches only its named parts (R12F12-TRI-04).
 S-4: fitted population, schematic flags, MPN values and optional BOM/CPL identities; every part JLC-assembled,
      none owner-fitted (J1 / J121 / LS120 THT, C84 SMT; D-R12-04..19 / -29 / -85 / -174).
 S-5: protected J400 contacts, 470k resistors, D402 clamp and no switch bypass.
 S-6 / S-7: external ports separated from safety copper; servo signals and GND only, sixth pin NC.
 S-8: barrel wall AND retained inner ring >= 1 mm from foreign In1/In2 copper, including In2 signals;
-     GND counts on ACT_GATE, ACT_DRV and PYRO1_OUT (D-R12-34, inherited R10 hazard policy).
+     GND counts on ACT_GATE, ACT_DRV and PYRO1_OUT (D-R12-34, inherited R10 hazard policy); an inner-layer track of a
+     barrel net keeps the same 1 mm on its own layer, fills included (R12F12-TRI-03).
 S-9: actual fire-path copper >= 0.5 mm; battery feed >= 1 mm; no inherited narrow-track exceptions.
 S-10: on every copper layer, fills (protected-net fills too) and barrels included, default-deny (m3_design/r12_fire.py):
       Q124's gate nets >= 1.0585 mm from every net but GND, the gate pair and U1's NC balls; PYRO1_OUT >= 1.040 mm
@@ -40,6 +42,10 @@ S-10: on every copper layer, fills (protected-net fills too) and barrels include
       floor is its measured gap rounded down to 1 um (R12F10-TRI-03); unconnected IC pins are I-5 victims and a loader
       exemption covers only the port rails its reason names (R12F10-TRI-05 / -06); a test pad's local clearance is the
       largest S-10 limit any pair of its net can take (R12F10-TRI-02).
+      R12F12-TRI-20 / -21: a rated-pin exemption checks the rail's minimum as well as its maximum (CAM_SW is held from
+      U403's EN); the unconnected second anodes of the BAT54C clamps are victims; the feedback-divider middle nodes are
+      held from the pack-voltage rails; RAW_ACT against PYRO1_IGN is waived for the pack class only and held at
+      PYRO1_IGN's 0.25 / 0.5 mm.
 W-1 / W-2: the plated J1 KF301 and J121 DB125 screw terminals and SH port pin maps including NC contacts (D-R12-29..31,
            -174).
 LC-1: local clearance >= 0.15 mm, SWD >= 0.508 mm and probes >= 1 mm (D-R12-03).
@@ -47,8 +53,10 @@ M-3 / M-5: recorded M3 supports and corner support; optional fit report bound to
 M-7: recorded top IMU pose; no via/fill under sensor bodies, no track inside any sensor pad ring (D-R12-52).
 M-8: courtyard short-edge clearance >= 2.5 mm except exact R12 recorded edge queries.
 K-legends: R10's identity, mask, designator and Fab checks with R12 revision and connector pin words;
-           no R11 optional-legend exemptions (D-R12-29..31); only J122's harness note may be absent (D-R12-81).
-K-copper: via/pad, overlap joints, thermals, paste and pour debris; no VIPPO exemption (D-R12-07).
+           no R11 optional-legend exemptions (D-R12-29..31); only J122's harness note may be absent (D-R12-81); J1's
+           polarity words BAT+ / GND once each on the top face, each nearer its own contact (R12F12-TRI-07).
+K-copper: via/pad, overlap joints, thermals, paste and pour debris; no VIPPO exemption (D-R12-07); every plated GND
+          pad inside a GND pour keeps >= 2 thermal spokes on each GND pour layer, J1.2 four (R12F12-TRI-19).
 K-inner: In1 GND only; In2 mixed rail/signal copper, fast interfaces excluded (D-R12-34).
 K-reference / K-region: F over In1 GND; In2 over In1 and B GND; B over In2 rail fill, each B chain over one rail.
 K-plane: In2 power fills one piece or two >= 0.5 mm outer links; neck checks retained.
@@ -345,10 +353,28 @@ def s2(c):
         return r11.s2(c)
 
 
+# R12F12-TRI-04: Q122's gate (ACT_EN) has a second DC hold, R118 10 kohm to GND beside R123 2 kohm, on its own GND via
+# (the triage's 'R124': that designator is R10's removed bus-sense resistor, refused by the removed-part guards). The
+# exact part set of ACT_EN is R10's plus R118; R10's own gate keeps its set (check_r10.ACT_EN_PARTS).
+ACT_EN_PARTS = (('ACT_EN_MCU', {'U1', 'R122'}), ('ACT_EN', {'R122', 'R123', 'R118', 'Q122', 'C123'}))
+ACT_EN_HOLD2 = ('R118', 10e3)      # (second pull-down, ohm)
+
+
 def s3(c):
-    with r10.patched(r10, PFET_ROLES=FET_ROLES, NFET_ROLES=FET_ROLES):
+    with r10.patched(r10, PFET_ROLES=FET_ROLES, NFET_ROLES=FET_ROLES, ACT_EN_PARTS=ACT_EN_PARTS):
         # Keep the same-layer gate-bias check: it must fail on unrouted copper.
-        return r11.s3(c, copper=True)
+        issues, ev = r11.s3(c, copper=True)
+    ref, ohm = ACT_EN_HOLD2
+    f = c.fps.get(ref)
+    nets = sorted(p.GetNetname() for p in f.Pads()) if f is not None else None
+    got = r10.parse_value(f.GetValue(), 'R') if f is not None else None
+    ev['load_enable_hold2'] = dict(ref=ref, nets=nets, ohm=got)
+    if nets != ['ACT_EN', 'GND']:
+        issues.append(f'S-3: independent load-switch enable {ref} (second gate pull-down, R12F12-TRI-04) must join ACT_EN '
+                      f'to GND (is {nets})')
+    if got is None or abs(got - ohm) > 1e-6 * ohm:
+        issues.append(f'S-3: independent load-switch enable {ref} must be {ohm:g} ohm (R12F12-TRI-04)')
+    return sorted(set(issues)), ev
 
 
 def s4(c):
@@ -416,7 +442,41 @@ def s7(c):
 
 def s8(c):
     # D-R12-34: In2 is signal-carrying copper, not exempt. Include rings, tracks, pads, fills and drawings.
-    return r11.s8(c, layers=INNER)
+    issues, ev = r11.s8(c, layers=INNER)
+    found, ev['inner_tracks'] = s8_inner_tracks(c)
+    return issues + found, ev
+
+
+def s8_inner_tracks(c, gap=r10.BARREL_GAP, gnd_hazard=r10.BARREL_GND_HAZARD):
+    """R12F12-TRI-03 / -18: an inner-layer track of a BARREL_NETS net is S-8 copper like the barrel it leaves. Every
+    such track keeps `gap` from foreign copper on its own layer, fills included (GND counts only for the GND-hazard
+    nets, as for the barrels): ACT_GATE's In2 links at C120.2 ran 0.468 mm from the 3V3 fill while S-8 measured only
+    barrels and rings. m3_design/r12_route.py opens the fills round each end point of such a track."""
+    import pcbnew
+    import check_r8 as r8
+    inner = {c.board.GetLayerID(n) for n in INNER} & set(c.board.GetEnabledLayers().CuStack())
+    tracks = [t for t in c.board.GetTracks() if t.GetClass() != 'PCB_VIA' and t.GetLayer() in inner
+              and t.GetNetname() in r10.BARREL_NETS]
+    others = [(label, net, lay, shape) for _, lay, shape, _, pad, net, label in r10.copper_nodes(c.board)
+              if lay in inner]
+    worst = {}
+    for t in tracks:
+        lay, tnet, shape_t = t.GetLayer(), t.GetNetname(), t.GetEffectiveShape(t.GetLayer())
+        at = (f'track ({mm(t.GetStart().x):g}, {mm(t.GetStart().y):g})-({mm(t.GetEnd().x):g}, {mm(t.GetEnd().y):g}) on '
+              f'{c.board.GetLayerName(lay)}')
+        for label, net, olay, shape in others:
+            if olay != lay or net == tnet or (net == 'GND' and tnet not in gnd_hazard) \
+                    or not pcbnew.SHAPE.Collide(shape_t, shape, pcbnew.FromMM(gap) - 1):
+                continue
+            g = r8.min_gap(shape_t, shape, gap + 1)
+            g = 0.0 if g is None else g
+            key = (tnet, at, net)
+            if key not in worst or g < worst[key]:
+                worst[key] = g
+    issues = [f'S-8: {net} copper is {g:.3f} mm from the {tnet} {at} (an inner-layer track of a barrel net; minimum '
+              f'{gap} mm, R12F12-TRI-03)' for (tnet, at, net), g in sorted(worst.items())]
+    return issues, dict(tracks=len(tracks), gap_mm=gap, near={f'{k[0]} {k[1]} / {k[2]}': round(v, 3)
+                                                              for k, v in sorted(worst.items())})
 
 
 def fire_terminals(c):
@@ -552,19 +612,55 @@ TERMINAL_PINS = tuple((ref, tuple((pin, word) for pin, word in zip(want, words))
     ('J9', SH_PORTS['J9'], ('5V4', '5V4', 'GND', 'GND', 'RXI', 'TXO'))))
 
 
+# R12F12-TRI-07: J1's polarity words on the top face, where the pack leads are screwed in (the '1:BAT+' / '2:GND' contact
+# legends are on the bottom). (word, connector, its contact). K-legends allows exactly these two extra words, each once
+# on F.Silkscreen, within the 6 mm legend reach of J1 (check_r7.legend_subjects), beside J1 (check_r10.word_legends) and
+# with its ink-box centre nearer its own contact than J1's other contact by POLARITY_MARGIN: a swapped pair fails.
+POLARITY_WORDS = (('BAT+', 'J1', '1'), ('GND', 'J1', '2'))
+POLARITY_MARGIN = 1.0           # mm
+
+
+def polarity_legends(board):
+    import math
+    import pcbnew
+    issues, ev = [], {}
+    texts = [d for d in board.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT) and d.IsVisible()
+             and d.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS)]
+    for word, ref, pin in POLARITY_WORDS:
+        f = board.FindFootprintByReference(ref)
+        mine = [d for d in texts if d.GetText() == word]
+        if f is None or len(mine) != 1 or mine[0].GetLayer() != pcbnew.F_SilkS:
+            issues.append(f'K-legends: {ref}: polarity legend {word!r} must appear exactly once, on F.Silkscreen '
+                          f'(found {len(mine)}; R12F12-TRI-07)')
+            continue
+        at = mine[0].GetBoundingBox().GetCenter()
+        dist = {p.GetNumber(): math.hypot(mm(p.GetPosition().x - at.x), mm(p.GetPosition().y - at.y)) for p in f.Pads()}
+        own, other = dist.get(pin), min((d for n, d in dist.items() if n != pin), default=None)
+        ev[word] = dict(at=(round(mm(at.x), 3), round(mm(at.y), 3)), own_mm=own and round(own, 3),
+                        other_mm=other and round(other, 3))
+        if own is None or other is None or own > other - POLARITY_MARGIN:
+            issues.append(f'K-legends: {ref}: polarity legend {word!r} is not nearer contact {pin} than the other '
+                          f'contact by {POLARITY_MARGIN:g} mm (own {own}, other {other}; R12F12-TRI-07)')
+    return issues, ev
+
+
 def k_legends(c):
     # D-R12-29..31: DB125 / SH contact words. No R11 optional-legend exemptions on R12.
     pinned = (('B.Silkscreen', REVISION),)
     words, base = r10.word_legends, r10.pinned_texts
+    subjects = dict(r10.WORD_LEGENDS_R10, **{w: ref for w, ref, _ in POLARITY_WORDS})     # R12F12-TRI-07
     def revision(board):
         out = [i for i in base(board, pinned=pinned) if not i.startswith('revision legends ')]
         names = {t.GetText() for t in r10.legend_items(board) if hasattr(t, 'GetText')
                  and re.fullmatch(r'M3-ASSY-R\d+', t.GetText())}
         return out + ([f'revision legends {sorted(names)}: only {REVISION} allowed'] if names != {REVISION} else [])
     with r10.patched(r10, TERMINAL_PINS_R10=TERMINAL_PINS, PINNED_TEXTS=pinned, pinned_texts=revision,
-                     word_legends=lambda b, **kw: words(b, spans={}, **kw)):
+                     WORD_LEGENDS_R10=subjects,
+                     word_legends=lambda b, **kw: words(b, spans={}, subjects=subjects, **kw)):
         issues, ev = r10.k_legends(c)
         found, ev['word_spans'] = r11.word_spans_r11(c.board)
+    polar, ev['polarity_legends'] = polarity_legends(c.board)
+    found += polar
     issues, ev['waived'] = r12_legend_set(c.board, issues + found)
     return issues, ev
 
@@ -585,12 +681,84 @@ def r12_legend_set(board, issues):
     return kept, sorted(set(issues) - set(kept))
 
 
+# R12F12-TRI-19: every plated GND pad inside a GND pour joins it by at least GND_SPOKES_MIN thermal spokes on every layer
+# that carries one (KiCad's starved_thermal sees a pad with too few spokes on a layer only when the zone's own minimum is
+# set, and nothing saw a layer left with none: at GND_pour_B's old 0.5 mm minimum width the filler dropped every 0.3 mm
+# spoke of J1.2, the battery return, which then joined GND on In1's 0.5 oz copper alone). GND_SPOKES_PADS names the pads
+# that need more, and the layers each must be joined on: J1.2 carries the whole board's return current and keeps four on
+# In1 and four on B (a named pad whose part is on the board but which is joined on none, or not on a named layer, fails).
+GND_SPOKES_MIN = 2
+GND_SPOKES_PADS = {'J1.2': (4, ('In1.Cu', 'B.Cu'))}
+GND_SPOKE_STEP = 0.02           # mm, sampling step along the mid-gap contour
+
+
+def gnd_spokes(board, minimum=GND_SPOKES_MIN, named=None):
+    """(issues, {pad: {layer: spokes or 'solid'}}): for every plated-through GND pad and every GND zone fill whose outline
+    holds it, the number of fill arcs crossing the contour halfway across the pad's thermal gap on that layer."""
+    import math
+    import pcbnew
+    named = GND_SPOKES_PADS if named is None else named
+    issues, ev, seen = [], {}, set()
+    cu = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
+    zones = [(z, lid) for z in board.Zones() if not z.GetIsRuleArea() and z.GetNetname() == 'GND'
+             for lid in cu if z.IsOnLayer(lid) and z.HasFilledPolysForLayer(lid)]
+    step = pcbnew.FromMM(GND_SPOKE_STEP)
+    for f in board.GetFootprints():
+        for p in f.Pads():
+            if p.GetAttribute() != pcbnew.PAD_ATTRIB_PTH or p.GetNetname() != 'GND':
+                continue
+            label = f'{f.GetReference()}.{p.GetNumber()}'
+            for z, lid in zones:
+                if not p.IsOnLayer(lid) or not z.Outline().Contains(p.GetPosition()):
+                    continue
+                name = board.GetLayerName(lid)
+                seen.add(label)
+                need = max(minimum, named.get(label, (0,))[0])
+                if not p.FlashLayer(lid):
+                    issues.append(f'K-copper: {label} (GND, plated) has no land on {name} inside {z.GetZoneName()}: it '
+                                  f'joins that pour by no spoke (needs {need}; R12F12-TRI-19)')
+                    ev.setdefault(label, {})[name] = 0
+                    continue
+                ring = pcbnew.SHAPE_POLY_SET(p.GetEffectivePolygon(lid))
+                ring.Inflate(max(z.GetThermalReliefGap(p) // 2, pcbnew.FromMM(0.05)),
+                             pcbnew.CORNER_STRATEGY_ROUND_ALL_CORNERS, pcbnew.FromMM(0.002))
+                fill = z.GetFilledPolysList(lid)
+                inside = []
+                for k in range(ring.OutlineCount()):
+                    o = ring.Outline(k)
+                    n = o.PointCount()
+                    for i in range(n):
+                        a, b = o.CPoint(i), o.CPoint((i + 1) % n)
+                        m = max(1, int(math.hypot(b.x - a.x, b.y - a.y) // step))
+                        inside += [fill.Contains(pcbnew.VECTOR2I(a.x + (b.x - a.x) * j // m, a.y + (b.y - a.y) * j // m))
+                                   for j in range(m)]
+                arcs = sum(1 for i in range(len(inside)) if inside[i] and not inside[i - 1])
+                got = 'solid' if inside and all(inside) else arcs
+                ev.setdefault(label, {})[name] = got
+                if got != 'solid' and got < need:
+                    issues.append(f'K-copper: {label} (GND, plated) joins {z.GetZoneName()} on {name} by {got} thermal '
+                                  f'spoke{"" if got == 1 else "s"}, needs {need} (R12F12-TRI-19)')
+    for label, (need, layers) in sorted(named.items()):
+        if board.FindFootprintByReference(label.split('.')[0]) is None:
+            continue                                     # N-1 / S-4 hold the part itself
+        if label not in seen:
+            issues.append(f'K-copper: {label} is named in GND_SPOKES_PADS but is no plated GND pad inside a GND pour '
+                          '(stale, or its pour is gone)')
+            continue
+        for name in layers:
+            if name not in ev.get(label, {}):
+                issues.append(f'K-copper: {label} (GND, plated) joins no GND pour on {name}, needs {need} thermal spokes '
+                              'there (R12F12-TRI-19)')
+    return issues, ev
+
+
 def k_copper(c):
     import check_r9 as r9
     # D-R12-03 / -07: no VIPPO exception; U401 is deleted.
     issues, ev = r9.k_copper(c)
     found, ev['pour_pieces'] = r10.pour_debris(c.board)
-    return issues + found, ev
+    spokes, ev['gnd_spokes'] = gnd_spokes(c.board)
+    return issues + found + spokes, ev
 
 
 def k_inner(c):
@@ -696,7 +864,10 @@ PLANE_NECK_W = 1.0    # mm, D-R12-34
 GATE_LIMIT_V = 0.45
 NEIGHBOUR_EXCEPTIONS = dict(r11.NEIGHBOUR_EXCEPTIONS)       # D-R11-23 owner deviation: C3 diagonal to 3V3 B2 / D2
 # guard net -> (series resistor from the guard to the gate, gate net, pull-down from the gate to GND, FET)
-GUARD_LOAD = {'ACT_EN_MCU': ('R122', 'ACT_EN', 'R123', 'Q122')}
+# R12F12-TRI-04: the fifth field names further pull-downs from the gate to GND (R118 10 kohm). bridged_gate() checks that
+# each joins the gate net to GND and leaves it out of the divider, so the computed gate voltage is the bound with R123
+# alone (a parallel pull-down only lowers it; Calculation).
+GUARD_LOAD = {'ACT_EN_MCU': ('R122', 'ACT_EN', 'R123', 'Q122', ('R118',))}
 PACK_MAX_V = 8.4                                           # 2S full charge (REQUIREMENTS F9; r12_budget u9)
 NRST_RPU_MIN = 30e3                                        # DS12110 Rev 8 Table 65 p. 146: RPU 30 / 40 / 50 kohm
 # (guard, net) -> source bound, divider chain (top: series from the source net to the sense net; bottom: in parallel
@@ -735,10 +906,14 @@ def bridged_gate(board, guard, net, entry, rails):
     """(worst gate V, issues): one bridge from `net` to the guard pin, guard high-Z, every resistor at its worst end."""
     import itertools
     issues = []
-    series, gate_net, pulldown, _fet = GUARD_LOAD[guard]
+    series, gate_net, pulldown, _fet, more = GUARD_LOAD[guard]
     load = {r: resistor(board, r) for r in (series, pulldown)}
     if None in load.values() or any(v[0] is None for v in load.values()):
         return None, [f'{guard}: load resistors {series} / {pulldown} missing or unreadable']
+    for r in more:                                       # R12F12-TRI-04: present, gate to GND; not counted (a bound)
+        extra = resistor(board, r)
+        if extra is None or extra[0] is None or sorted(extra[2].values()) != sorted((gate_net, 'GND')):
+            return None, [f'{guard}: further pull-down {r} must join {gate_net} to GND']
     if sorted(load[series][2].values()) != sorted((guard, gate_net)) or \
             sorted(load[pulldown][2].values()) != sorted((gate_net, 'GND')):
         return None, [f'{guard}: {series} must join {guard} to {gate_net} and {pulldown} {gate_net} to GND']
@@ -1097,6 +1272,70 @@ SINGLE_OPEN_TAPS_R12 = (
     ('3V3', 'R13.2', ('L1.2',), "R13, I2C1_SDA's pull-up 3V3 end (the barometer bus)"),
     ('GND', 'U1.G1', ('J1.2',), "U1's VSSA (ball G1), the ADC's ground (PA6 VLOGIC sense, PC2_C camera sense)"),
     ('3V3A', 'C30.1', ('R164.2',), "C30, U4's (IMU) 100 nF on 3V3A"),
+    # R12F12-TRI-02 / -17 (round 12, the single-via class; round 11 TRI-01): every pad whose one via blocks or weakens the
+    # fire / arming chain, a safety gate network, or the supply or return of a required sensor, log or port. Each has a
+    # second barrel, an F link to a neighbour's via, or a measured exception below.
+    # 1. the fire / arming chain
+    ('ACT_EN_MCU', 'R122.1', ('U1.F2',), "PC1's lane to R122, the bus enable (open: the bus cannot turn on, no fire)"),
+    ('ACT_GATE', 'C120.2', ('R121.1',), "C120, the load switch's gate-source capacitor (AGENTS 2.4), on its In2 jumper"),
+    ('BAT_SW_RETURN', 'R165.1', ('J400.2',), "J400.2's return to R165 (open: EN stays low, the board cannot turn on)"),
+    ('GND', 'Q122.2', ('J1.2',), "Q122's source (open: the bus driver cannot pull ACT_DRV low, the bus stays off)"),
+    ('GND', 'R123.2', ('J1.2',), "R123, Q122's gate pull-down (AGENTS 2.4)"),
+    ('GND', 'R118.2', ('J1.2',), "R118, Q122's second gate pull-down (R12F12-TRI-04)"),
+    ('GND', 'C123.2', ('J1.2',), "C123, Q122's gate-source capacitor (AGENTS 2.4)"),
+    ('GND', 'R128.2', ('J1.2',), "R128, Q124's gate pull-down (AGENTS 2.4)"),
+    ('GND', 'C126.2', ('J1.2',), "C126, Q124's gate-source capacitor (AGENTS 2.4)"),
+    ('GND', 'R127.2', ('J1.2',), "R127, PE4's pull-down at R126's MCU end"),
+    # 2. safety gate networks: sense banks, the cold screen, clamps, U9's periphery
+    ('PYRO1_CONT', 'U1.F1', ('R130.1', 'R178.1'), "PC0's continuity lane from the R130 / R178 bank (the cold screen)"),
+    ('ARM1_SENSE', 'U1.H4', ('R133.1', 'R180.1'), "PC5's bus-sense lane from the R133 / R180 bank (the cold screen)"),
+    ('VLOGIC_SENSE', 'U1.J3', ('R60.2', 'R61.1'), "PA6's VLOGIC sense lane (the PA6 trip)"),
+    ('GND', 'R130.2', ('J1.2',), 'R130, PC0 bank bottom (open with R178: PC0 reads PYRO1_OUT undivided)'),
+    ('GND', 'R178.2', ('J1.2',), 'R178, PC0 bank bottom (second leg)'),
+    ('GND', 'C127.2', ('J1.2',), "C127, PC0's filter"),
+    ('GND', 'R133.2', ('J1.2',), 'R133, PC5 bank bottom'),
+    ('GND', 'R180.2', ('J1.2',), 'R180, PC5 bank bottom (second leg)'),
+    ('GND', 'C129.2', ('J1.2',), "C129, PC5's filter"),
+    ('GND', 'C128.2', ('J1.2',), 'C128, the 100 nF across Q124 (PYRO1_OUT to GND)'),
+    ('3V3', 'R136.1', ('L1.2',), "R136, the cold pull-up's 3V3 end (open: no continuity bias, the cold screen refuses)"),
+    ('3V3', 'R89.1', ('L1.2',), "R89, U9 FLT's pull-up"),
+    ('3V3', 'D95.3', ('L1.2',), "D95's cathode: PC13's clamp to 3V3 (PACK_FLT)"),
+    ('3V3', 'D436.3', ('L1.2',), "D436's cathode: PC12's clamp to 3V3 (CAM_EN)"),
+    ('GND', 'D402.2', ('J1.2',), "D402, J400.2's ESD clamp (S-5)"),
+    ('GND', 'D121.2', ('J1.2',), "D121's GND pin, the servo lines' clamp"),
+    ('GND', 'R154.2', ('J1.2',), 'R154, SERVO1 pull-down (the tab to neutral in reset)'),
+    ('GND', 'R155.2', ('J1.2',), 'R155, SERVO2 pull-down'),
+    ('GND', 'R156.2', ('J1.2',), 'R156, SERVO3 pull-down'),
+    ('GND', 'R157.2', ('J1.2',), 'R157, SERVO4 pull-down'),
+    ('GND', 'R431.2', ('J1.2',), "R431, U403 EN's pull-down bottom (the tapped R431.1's partner)"),
+    ('GND', 'C88.2', ('J1.2',), "C88, U9 IN's 100 nF"),
+    ('GND', 'C81.2', ('J1.2',), "C81, U9's dVdt capacitor"),
+    ('GND', 'C97.2', ('J1.2',), "C97, U9 OUT's 1 uF (the tapped C97.1's partner)"),
+    ('GND', 'R92.2', ('J1.2',), "R92, the RAW bleed (the tapped R92.1's partner)"),
+    ('GND', 'R167.2', ('J1.2',), 'R167, the BAT_IN bleed'),
+    # 3. supply or return of a required sensor, log or port
+    ('3V3', 'U6.1', ('L1.2',), "U6's (high-g) VCC pin 1, with C33.1"),
+    ('3V3', 'U6.13', ('L1.2',), "U6's VCC pin 13"),
+    ('3V3', 'U6.15', ('L1.2',), "U6's pin 15 (VCC; BUS_I in SPI wiring)"),
+    ('3V3', 'U6.16', ('L1.2',), "U6's VCC pin 16"),
+    ('GND', 'C33.2', ('J1.2',), "C33, U6's decoupling"),
+    ('3V3', 'U3.8', ('L1.2',), "U3's (QSPI flash, the crash-safe log) VCC"),
+    ('GND', 'U3.4', ('J1.2',), "U3's GND"),
+    ('3V3', 'J430.4', ('L1.2',), "J430's (microSD) VDD, with C460.1 / C461.1"),
+    ('GND', 'J430.6', ('J1.2',), "J430's VSS"),
+    ('PORT_4V8', 'J410.2', ('L400.2',), "J410's (GPS) supply contact"),
+    ('PORT_4V8', 'J420.2', ('L400.2',), "J420's (radio) supply contact"),
+    ('PORT_4V8', 'J440.2', ('L400.2',), "J440's (AUX) supply contact"),
+    ('GND', 'J410.1', ('J1.2',), "J410's GND contact"),
+    ('GND', 'J420.1', ('J1.2',), "J420's GND contact"),
+    ('GND', 'J440.1', ('J1.2',), "J440's GND contact"),
+    ('GND', 'J9.3', ('J1.2',), "J9's (camera) GND contact 3, the 1.25 A camera return"),
+    ('GND', 'J9.4', ('J1.2',), "J9's GND contact 4"),
+    ('GND', 'J122.5', ('J1.2',), "J122's GND contact, the servo signal reference"),
+    ('3V3', 'D123.1', ('L1.2',), "D123's cathode on 3V3, the buzzer's flyback clamp beside LS120's supply pin"),
+    ('GND', 'R163.2', ('J1.2',), "R163, Q123's gate pull-down"),
+    ('GND', 'Q123.2', ('J1.2',), "Q123's source, the buzzer return"),
+    ('GND', 'C22.2', ('J1.2',), "C22, VDDA's 1 uF (the tapped C22.1's partner)"),
 )
 # (tap pad, via label as check_r10.copper_nodes prints it, measured reason): the single points kept on purpose. An entry
 # no longer met (its pads present) fails as stale.
@@ -1152,6 +1391,42 @@ SINGLE_OPEN_EXCEPTIONS_R12 = [
      "pull): its level is undefined (Inference), so R12 firmware rule 1's PC1 and port-UART gate loses its power-state "
      "input, with VBUS_SENSE (rule 1's cross-check) and the cold screen left; the divider's far via, R111.1's PORT_4V8 "
      "via and R112.2's GND via each have a second barrel"),
+    # R12F12-TRI-02 / -17: the single points the round 12 pass could not double. Each spot was searched on the real
+    # geometry and the candidates built and gated on scratch boards by the round 12 triage (trials V1-V9, measured).
+    ('R122.1', 'via ACT_EN_MCU (18.60, 57.85)',
+     "PC1's ball F2 escape: " + _DOGBONE + ". Open, PC1 is cut from R122: R123 and R118 hold ACT_EN low, Q122 stays off "
+     "and the bus cannot turn on (no primary fire: fail-safe; the Blue Jay covers recovery). The lane's far via at R122 "
+     "has a second barrel"),
+    ('U1.F1', 'via PYRO1_CONT (17.10, 58.15)',
+     "PC0's ball F1 escape: " + _DOGBONE + ". Open, PC0 is cut from the continuity bank and floats (no internal pull, "
+     "Inference): the cold screen's PC0 band is not met, a ground refusal (in flight the reading is only logged, AGENTS "
+     "2.3)"),
+    ('U1.F1', 'via PYRO1_CONT (13.50, 54.55)',
+     "PYRO1_CONT's far via in the crystal cell: boxed by Y1.2, C25.1, ARM1_SENSE's B.Cu run at x 13 and hole spacing, "
+     "and any new barrel there breaks the In2 3V3 neck at via (15.05, 54.3) (K-plane; triage trials V4-V7). Open, as "
+     "the ball escape: PC0 floats and the cold screen refuses on the ground"),
+    ('U1.H4', 'via ARM1_SENSE (18.40, 60.25)',
+     "PC5's ball H4 escape: " + _DOGBONE + ". Open, PC5 is cut from the bus-sense bank and floats (Inference): the cold "
+     "screen's PC5 band is not met, a ground refusal (in flight only logged)"),
+    ('U1.H4', 'via ARM1_SENSE (16.60, 41.00)',
+     "ARM1_SENSE's far via by R133: its only free spots are 1.35 mm or more south on x 16.6, where the B.Cu link makes a "
+     "45 degree joint with the lane (route_check acute_angle; triage trial V1). Open, as the ball escape: PC5 floats and "
+     "the cold screen refuses on the ground"),
+    ('U1.J3', 'via VLOGIC_SENSE (19.80, 61.05)',
+     "PA6's ball J3 escape: " + _DOGBONE + ". Open, PA6 is cut from R60 / R61 and floats: the PA6 brown-out trip has no "
+     "input (Inference on the floating level); the far via by U6 has a second barrel"),
+    ('U1.J3', 'via VLOGIC_SENSE (15.50, 61.05)',
+     "VLOGIC_SENSE's B.Cu-to-In2 via west of the ball field: a partner needs an In2 link that cuts the In2 3V3 sheet in "
+     "two (K-plane: a 16.05 mm2 piece; triage trials V1-V2; D-R12-154 found the same). Open, as the ball escape: the PA6 "
+     "trip has no input"),
+    ('R431.2', 'via GND (31.75, 15.70)',
+     "R431.2's GND via (U403 EN's 47 kohm pull-down): U403.4, R435.1, R431.1 and hole spacing leave no spot for a second "
+     "barrel (triage spot search, measured). Open, EN floats behind R436 while PC12 is high-Z: the camera buck may run "
+     "in reset (function only: the camera is no safety function; PC12 stays behind R436 and D436)"),
+    ('C81.2', 'via GND (16.50, 22.05)',
+     "C81.2's GND via (U9's dVdt capacitor): C79.1 (BAT_IN), the BAT_IN run at y 23.45 (S-10's 1.040 mm from every net) "
+     "and hole spacing leave no spot for a second barrel (triage spot search, measured). Open, U9 ramps its output at "
+     "its default slew and the inrush into C84 meets ILIM (Inference: SLVSFC9C's dVdt pin left open); not a power loss"),
 ]
 
 

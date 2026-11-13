@@ -51,6 +51,7 @@ SAFETY = {
     ('C120', '1'): 'ACT_FET_S', ('C120', '2'): 'ACT_GATE', ('R121', '1'): 'ACT_GATE', ('R121', '2'): 'ACT_DRV',
     ('Q122', '1'): 'ACT_EN', ('Q122', '2'): 'GND', ('Q122', '3'): 'ACT_DRV',
     ('R122', '1'): 'ACT_EN_MCU', ('R122', '2'): 'ACT_EN', ('R123', '1'): 'ACT_EN', ('R123', '2'): 'GND',
+    ('R118', '1'): 'ACT_EN', ('R118', '2'): 'GND',     # R12F12-TRI-04: Q122's second gate pull-down (10k)
     ('C123', '1'): 'ACT_EN', ('C123', '2'): 'GND',
     ('Q124', '1'): 'PYRO1_GATE', ('Q124', '2'): 'GND', ('Q124', '3'): 'PYRO1_OUT',
     ('R126', '1'): 'PYRO1_GATE_N', ('R126', '2'): 'PYRO1_GATE', ('R127', '1'): 'PYRO1_GATE_N', ('R127', '2'): 'GND',
@@ -104,7 +105,8 @@ SAFETY = {
 REQUIRED_PARTS = ('Q120', 'Q121', 'Q122', 'Q124', 'R119', 'R120', 'C120', 'R121', 'R122', 'R123', 'C123', 'R126', 'R127',
                   'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', 'R156',
                   'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6',
-                  'R131', 'R136', 'D120', 'R89', 'R95', 'D95', 'R431', 'R436', 'D436')
+                  'R131', 'R136', 'D120', 'R89', 'R95', 'D95', 'R431', 'R436', 'D436',
+                  'R118')            # R12F12-TRI-04: Q122's second gate pull-down
 # D-R12-174 (owner 2026-11-10): J1 is a JLC-fitted KF301-5.0-2P screw terminal, so R12 has no wire pads left (D-R12-30's
 # pads are superseded); J121 is the JLC-fitted DB125 (D-R12-29). Both terminals are fitted, in the BOM and the CPL.
 JLC_TERMINALS = {'J1': 'KF301-5.0-2P', 'J121': 'DB125-3.5-2P-BK-S'}
@@ -217,7 +219,7 @@ def contract(parts, pins, project=None):
         issues.append(f'D-R12 deleted parts present: {sorted(set(data["deleted"]) & parts.keys())}')
     if 'PYRO1_BUS' in pins.values() or any(str(n).startswith('RAW_ACT_SENSE') for n in pins.values()):
         issues.append('single screw switch: no PYRO1_BUS or RAW_ACT_SENSE net')
-    for ref in ('C126', 'R127', 'R128', 'R123', 'C123', 'R119', 'R120', 'C120', 'R134', 'R431'):
+    for ref in ('C126', 'R127', 'R128', 'R123', 'R118', 'C123', 'R119', 'R120', 'C120', 'R134', 'R431'):
         if ref in parts and set(parts[ref]['flags']) & {'dnp', 'exclude_from_bom'}:
             issues.append(f'{ref}: a safety network part must be fitted (no DNP / BOM exclusion)')
     for ref, mpn in JLC_TERMINALS.items():
@@ -291,6 +293,8 @@ def seeds(parts, pins):
         'fire gate series resistor shorted': lambda p, n: n.update({('U1', 'C3'): 'PYRO1_GATE'}),
         'fire gate capacitor DNP': lambda p, n: p['C126']['flags'].append('dnp'),
         'bus enable pull-down removed': pop('R123'),
+        'bus enable second pull-down removed (R12F12-TRI-04)': pop('R118'),
+        'bus enable second pull-down off GND (R12F12-TRI-04)': lambda p, n: n.update({('R118', '2'): '3V3'}),
         'bus-enable gate capacitor removed': pop('C123'),
         'load-switch gate capacitor removed': pop('C120'),
         'fire command on the wrong ball': lambda p, n: n.update({('U1', 'C3'): None, ('U1', 'D3'): 'PYRO1_GATE_N'}),

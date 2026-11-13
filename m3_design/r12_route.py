@@ -7,10 +7,14 @@ usage: <KiCad python3> -I -B m3_design/r12_route.py [--board m3_design/r12/m3.ki
 Copper (D-R12-22, -34): F.Cu parts and signals; In1.Cu one unbroken GND plane; In2.Cu a mixed layer: the 3V3 pour with
 the RAW_PROTECTED, 3V3A and PORT_4V8 islands of m3_design/r12_planes.tsv, filling round In2's low / medium-speed signal
 tracks (minimum pour width 0.25 mm); B.Cu signals under a GND pour
-(minimum width 0.5 mm, so no sliver or finger can form, route_check pour rules). Every via is a 0.3 / 0.45 mm through
+(minimum width 0.25 mm since R12F12-TRI-05: at 0.5 mm the filler dropped every 0.3 mm thermal spoke that had to pass
+between two B tracks, so J1.2, the battery return, joined GND on In1 alone and J3's shell legs kept two or three B
+spokes; route_check's pour rules (slivers, fingers, pieces) and K-copper's spoke rule gate the result, not the width).
+Every via is a 0.3 / 0.45 mm through
 via (D-R12-03). Pyro barrels keep foreign inner copper away (S-8, stageC.md section 5): rule areas on In1 / In2 round
-J121's barrels, which also keep out every track and via on those layers (D-R12-34), and fill-only rule areas round every
-via of an S-8 barrel net (D-R12-67A). Each segment is checked octilinear and non-zero, each via against the one R12 size; a via is never
+J121's barrels, which also keep out every track and via on those layers (D-R12-34), fill-only rule areas round every
+via of an S-8 barrel net (D-R12-67A) and round every end point of an inner-layer track of such a net, on that track's
+layer (R12F12-TRI-03: ACT_GATE's In2 links at C120.2 ran 0.468 mm from the 3V3 fill). Each segment is checked octilinear and non-zero, each via against the one R12 size; a via is never
 placed twice. The zones are filled with KiCad's filler and the board saved; a rebuild is byte-identical.
 """
 import argparse
@@ -47,6 +51,15 @@ BARREL_NETS = ('RAW_ACT', 'PYRO1_IGN', 'PYRO1_OUT', 'PYRO1_GATE', 'ACT_GATE', 'A
                'ACT_EN', 'ACT_EN_MCU', 'PYRO1_GATE_N')
 BARREL_GND_HAZARD = ('ACT_GATE', 'ACT_DRV', 'PYRO1_OUT')
 S8_VIA_R = 1.35
+# R12F12-TRI-03: an inner-layer track of a barrel net is S-8 copper too (check_r12 S-8 measures it): a fill-only void of
+# the same radius at each of its end points, on the track's own layer. R12's inner tracks of these nets are the In2
+# links between a via and its second barrel (ACT_GATE at C120.2), at most 0.57 mm long, so the two end voids cover the
+# whole track: midway (0.285 mm from each end) the void's flats are sqrt(1.324^2 - 0.285^2) = 1.293 mm from the track's
+# axis, 1.193 mm from its 0.2 mm copper (Calculation; 1.324 = 1.35 x cos(pi / 16)). A longer inner track of a barrel
+# net would need voids along its length: check_r12 S-8 measures the filled board and fails it.
+S8_TRACK_R = S8_VIA_R
+# R12F12-TRI-05: GND_pour_B's minimum width, mm (0.5 until round 12; see the module docstring)
+GND_POUR_B_MIN_W = 0.25
 
 
 def V(x, y):
@@ -158,7 +171,7 @@ def build(board_path, routes):
     rect = [(0, 0), (w, 0), (w, length), (0, length)]
     for net, layer, prio, pts in read_planes(PLANES, length):
         zone(board, net, layer, pts, f'{net}_{layer}', 0.25, 0.2, prio)
-    zone(board, 'GND', 'B', rect, 'GND_pour_B', 0.5, 0.2)
+    zone(board, 'GND', 'B', rect, 'GND_pour_B', GND_POUR_B_MIN_W, 0.2)
     fps = {f.GetReference(): f for f in board.GetFootprints()}
     for ref, num, layers, radius in S8_KEEPOUT:
         p = next(p for p in fps[ref].Pads() if p.GetNumber() == num)
@@ -168,11 +181,15 @@ def build(board_path, routes):
     for net, x, y in voids:
         keepout(board, f'S8_via_{net}_{x:g}_{y:g}', ('In1', 'In2') if net in BARREL_GND_HAZARD else ('In2',), x, y,
                 S8_VIA_R, fills_only=True)
+    inner = sorted({(net, layer, pt) for net, layer, _, p0, p1 in tracks if net in BARREL_NETS and layer in ('In1', 'In2')
+                    for pt in (p0, p1)})
+    for net, layer, (x, y) in inner:                   # R12F12-TRI-03
+        keepout(board, f'S8_track_{net}_{layer}_{x:g}_{y:g}', (layer,), x, y, S8_TRACK_R, fills_only=True)
     filler = pcbnew.ZONE_FILLER(board)
     filler.Fill(board.Zones())
     assert pcbnew.SaveBoard(str(board_path), board, True), 'save failed'
     print(f'r12_route: {len(tracks)} tracks, {len(vias)} vias, {len(board.Zones())} zones and rule areas, '
-          f'{len(S8_KEEPOUT)} S-8 keep-outs, {len(voids)} S-8 via fill voids')
+          f'{len(S8_KEEPOUT)} S-8 keep-outs, {len(voids)} S-8 via fill voids, {len(inner)} S-8 inner-track end voids')
 
 
 def main():

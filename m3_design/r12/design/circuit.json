@@ -737,6 +737,11 @@
    "lcsc": "C190095",
    "value": "10k 0.1%",
    "why": "R12F9-TRI-04 (round 9 lane B, owner option (b)): PA6 divider bottom 10k 1 % -> 0.1 % 25 ppm/K thin film (R401's line), with R60"
+  },
+  "R110": {
+   "lcsc": "C25867",
+   "value": "1.5k 1%",
+   "why": "R12F12-TRI-06: VBUS sense divider bottom 1k -> 1.5k (the BOM's 1.5k line, R84 / R94; same 0402 land). PC9 (VBUS_SENSE) read VBUS / 2 = 2.20-2.25 V at VBUS 4.45 V, under 0.7 x VDD = 2.461 V at 3V3's 3.516 V drift maximum (the limit firmware rule 1 uses for PD10). With R9 1k over R110 1.5k it reads 0.6 x VBUS: 2.65-2.69 V at 4.45 V and high from 4.14 V; 3.30 V at VBUS 5.5 V (3.33 V at the 1 % ends), PC9 being an FT pin (DS12110 Rev 8 Table 21: VIN <= Min(VDD, ...) + 4.0 V) (Calculation / Inference (3V3 window, D-R12-139))"
   }
  },
  "added_parts": {
@@ -944,7 +949,7 @@
     "16": "3V3",
     "17": "GND"
    },
-   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10 at D-R12-51, PC11 at D-R12-64A, PD2 (U1.B7) since D-R12-93); TEST / n.c. / PCM0 unterminated as NXP recommends"
+   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10 at D-R12-51, PC11 at D-R12-64A, PD2 (U1.B7) since D-R12-93); TEST / PCM1 (pin 2) / PCM0 unterminated as NXP recommends (R12F12-TRI-38: pin 2 is PCM1 / ARM1, an output, on the dual-channel part; read through a mirror of the dual-channel sheet, so an Inference)"
   },
   "C33": {
    "lcsc": "C307331",
@@ -1024,6 +1029,17 @@
     "3": "3V3"
    },
    "why": "R12F8-TRI-01: PC12 is an FT_h pin with no positive injection (DS12110 Rev 8 Table 9; Table 21 p. 106 VIN max Min(VDD, ...) + 4.0 V), so R436 alone would leave the pin at the bridged node's voltage; D436 (A1 on CAM_PWR_EN, K on 3V3, A2 unused, as D95 / D120) clamps PC12 at 3V3 + V_F <= 3.516 + 0.8 = 4.32 V with R436's current (V_F <= 800 mV at 100 mA, LCSC C37704 listing). Normal levels: zero bias with PC12 high, 3V3 reverse bias with PC12 low. In reset (PC12 analog) its reverse leakage flows through R436 into R431 || R_EN: EN stays under V_ENL 0.8 V for leakage up to 0.8 V / 47.79 kohm = 16.7 uA (2 uA max at 25 C, LCSC C37704; the hot figure is an Inference), which is why R431 is 47k, not 100k"
+  },
+  "R118": {
+   "lcsc": "C25744",
+   "value": "10k",
+   "lib": "M3:R",
+   "sheet": "actuator_power.kicad_sch",
+   "nets": {
+    "1": "ACT_EN",
+    "2": "GND"
+   },
+   "why": "R12F12-TRI-04 (the triage's 'R124'; that designator is R10's removed RAW_ACT bus-sense resistor, which the R10 / R11 / R12 removed-part guards refuse, so the new part is R118): a second DC hold on Q122's gate (ACT_EN), in parallel with R123 2k, on its own GND via. One open joint at R123 no longer leaves the bus driver's gate on leakage while PC1 is high-Z (Q124 and Q120 / Q121 each had two holds already). Drive with PC1 high: 1k (R122) over 2k || 10k = 1.667k gives 0.625 x 3V3 = 2.06 V at 3.30 V and 2.015 V at the 3.224 V drift minimum, against AO3400A V_GS(th) <= 1.45 V; PC1 sources <= 3.516 V / 2.667 kohm = 1.32 mA (Calculation / Inference (3V3 window, D-R12-139; the AO3400A transfer curve above threshold))"
   }
  },
  "net_changes": {

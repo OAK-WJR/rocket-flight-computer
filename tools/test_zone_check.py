@@ -47,9 +47,10 @@ class ZoneGuardOutline(unittest.TestCase):
 
     def test_rows_outside_their_zone_are_the_recorded_ones(self):
         """R12F10-TRI-15: each fragment's rows outside its own zone are exactly the recorded hand-offs (W1 6, W3 9: the
-        BAT_FAULT_N / GND / ARM1_SENSE / ACT_EN_MCU / BUZZ_DRV lanes crossing into W1 / W4 / W5; W2, W4, W5 none), so a
-        fragment edit that leaves its zone fails here (lane C's C460 / C461 rows sat in W5 outside it, round 10)."""
-        want = {'W1': 6, 'W2': 0, 'W3': 9, 'W4': 0, 'W5': 0}
+        BAT_FAULT_N / GND / ARM1_SENSE / ACT_EN_MCU / BUZZ_DRV lanes crossing into W1 / W4 / W5; W2 1 since R12F12-TRI-02:
+        the 0.566 mm F stub from U3.4's GND via (40.1, 56.05) in W3 to its second via (39.7, 55.65) in W2; W4, W5 none), so
+        a fragment edit that leaves its zone fails here (lane C's C460 / C461 rows sat in W5 outside it, round 10)."""
+        want = {'W1': 6, 'W2': 1, 'W3': 9, 'W4': 0, 'W5': 0}
         for zone, n in want.items():
             with self.subTest(zone=zone):
                 frag = Path(zone_guard.__file__).with_name(f'r12_routes_{zone}.tsv').read_text().splitlines(True)

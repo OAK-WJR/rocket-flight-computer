@@ -224,3 +224,22 @@ track	CAM_EN	F	0.15	28.2	30.02	28.2	29.35
 via	CAM_EN	-	0.45	28.2	29.35		
 track	CAM_EN	B	0.15	28.2	29.35	28.2	21.35
 track	CAM_5V_SENSE	In2	0.15	26.9	29.35	26.9	49.25
+# --- R12F12 (round 12 final pass), lane P: single-via class (R12F12-TRI-02 / -03 / -17)
+# R12F12-TRI-02: second via (24.75, 40.95) for U6.15 / U6.16 3V3
+track	3V3	F	0.2	24.2	40.95	24.75	40.95
+via	3V3	-	0.45	24.75	40.95		
+# R12F12-TRI-02: second via (22.4, 41.35) for U6.13 3V3
+track	3V3	F	0.2	22	40.95	22.4	41.35
+via	3V3	-	0.45	22.4	41.35		
+# R12F12-TRI-02: second via (25.75, 38.67) for U6.1 / C33.1 3V3
+track	3V3	F	0.2	26.3	38.67	25.75	38.67
+via	3V3	-	0.45	25.75	38.67		
+# R12F12-TRI-02: second via (25.7, 36.6) for C33.2 GND
+track	GND	F	0.2	26.1	37	25.7	36.6
+via	GND	-	0.45	25.7	36.6		
+# R12F12-TRI-02: second via (20.05, 29.75) for C123.2 GND
+track	GND	F	0.3	19.5	29.75	20.05	29.75
+via	GND	-	0.45	20.05	29.75		
+# R12F12-TRI-02: second via (26.2, 41.45) for U1.J3's far VLOGIC_SENSE via (25.8, 41.05): second barrel at the In2 bend, F link
+track	VLOGIC_SENSE	F	0.15	25.8	41.05	26.2	41.45
+via	VLOGIC_SENSE	-	0.45	26.2	41.45		

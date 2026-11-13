@@ -1734,7 +1734,7 @@
         <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2405281435_NXP-Semicon-FXLS90322AESR2_C5190712.pdf</field>
         <field name="Description"/>
       </fields>
-      <libsource lib="M3" part="FXLS9xxxx" description="NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 VCC, 2 n.c., 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)"/>
+      <libsource lib="M3" part="FXLS9xxxx" description="NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 VCC, 2 PCM1/ARM1 (the dual-channel FXLS90322; n.c. on the single-channel parts; R12F12-TRI-38, Inference: read through a mirror of the dual-channel sheet), 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)"/>
       <property name="LCSC" value="C5190712"/>
       <property name="Manufacturer" value="NXP Semicon"/>
       <property name="Manufacturer Part" value="FXLS90322AESR2"/>
@@ -4285,20 +4285,21 @@
       </units>
     </comp>
     <comp ref="R110">
-      <value>1k 1%</value>
+      <value>1.5k 1%</value>
       <footprint>rocket:R0402</footprint>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF1501TCE_C25867.pdf</datasheet>
       <fields>
-        <field name="LCSC">C11702</field>
+        <field name="LCSC">C25867</field>
         <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
-        <field name="Manufacturer Part">0402WGF1001TCE</field>
+        <field name="Manufacturer Part">0402WGF1501TCE</field>
         <field name="Footprint">rocket:R0402</field>
-        <field name="Datasheet"/>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0402WGF1501TCE_C25867.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="R" description="Resistor"/>
-      <property name="LCSC" value="C11702"/>
+      <property name="LCSC" value="C25867"/>
       <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
-      <property name="Manufacturer Part" value="0402WGF1001TCE"/>
+      <property name="Manufacturer Part" value="0402WGF1501TCE"/>
       <property name="Sheetname" value="10 | USB cable presence"/>
       <property name="Sheetfile" value="usb_sense.kicad_sch"/>
       <property name="ki_keywords" value="R res resistor"/>
@@ -4460,6 +4461,37 @@
           <pins>
             <pin num="1"/>
             <pin num="3"/>
+            <pin num="2"/>
+          </pins>
+        </unit>
+      </units>
+    </comp>
+    <comp ref="R118">
+      <value>10k</value>
+      <footprint>rocket:R0402</footprint>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf</datasheet>
+      <fields>
+        <field name="LCSC">C25744</field>
+        <field name="Manufacturer">UNI-ROYAL(Uniroyal Elec)</field>
+        <field name="Manufacturer Part">0402WGF1002TCE</field>
+        <field name="Footprint">rocket:R0402</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2411221126_UNI-ROYAL-Uniroyal-Elec-0402WGF1002TCE_C25744.pdf</field>
+        <field name="Description"/>
+      </fields>
+      <libsource lib="M3" part="R" description="Resistor"/>
+      <property name="LCSC" value="C25744"/>
+      <property name="Manufacturer" value="UNI-ROYAL(Uniroyal Elec)"/>
+      <property name="Manufacturer Part" value="0402WGF1002TCE"/>
+      <property name="Sheetname" value="11 | Pyro bus load switch"/>
+      <property name="Sheetfile" value="actuator_power.kicad_sch"/>
+      <property name="ki_keywords" value="R res resistor"/>
+      <property name="ki_fp_filters" value="M3_R2512_UR R0402 R2512 R_0603_1608Metric"/>
+      <sheetpath names="/11 | Pyro bus load switch/" tstamps="/eee36e3d-26cd-558b-9404-f17584a2ea6e/"/>
+      <tstamps>a116925b-666a-519f-8f1d-b60ddd11d615</tstamps>
+      <units>
+        <unit name="A">
+          <pins>
+            <pin num="1"/>
             <pin num="2"/>
           </pins>
         </unit>
@@ -6488,7 +6520,7 @@
       </pins>
     </libpart>
     <libpart lib="M3" part="FXLS9xxxx">
-      <description>NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 VCC, 2 n.c., 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)</description>
+      <description>NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 VCC, 2 PCM1/ARM1 (the dual-channel FXLS90322; n.c. on the single-channel parts; R12F12-TRI-38, Inference: read through a mirror of the dual-channel sheet), 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)</description>
       <footprints>
         <fp>M3_FXLS_HLQFN16</fp>
       </footprints>
@@ -6497,11 +6529,11 @@
         <field name="Value">FXLS9xxxx</field>
         <field name="Footprint"/>
         <field name="Datasheet"/>
-        <field name="Description">NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 VCC, 2 n.c., 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)</field>
+        <field name="Description">NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 VCC, 2 PCM1/ARM1 (the dual-channel FXLS90322; n.c. on the single-channel parts; R12F12-TRI-38, Inference: read through a mirror of the dual-channel sheet), 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)</field>
       </fields>
       <pins>
         <pin num="1" name="VCC" type="power_in"/>
-        <pin num="2" name="n.c." type="passive"/>
+        <pin num="2" name="PCM1/ARM1" type="output"/>
         <pin num="3" name="TEST0" type="passive"/>
         <pin num="4" name="TEST1" type="passive"/>
         <pin num="5" name="TEST2" type="passive"/>
@@ -7148,6 +7180,7 @@
     <net code="4" name="ACT_EN" class="Default">
       <node ref="C123" pin="1" pintype="passive"/>
       <node ref="Q122" pin="1" pinfunction="G_1" pintype="passive"/>
+      <node ref="R118" pin="1" pintype="passive"/>
       <node ref="R122" pin="2" pintype="passive"/>
       <node ref="R123" pin="1" pintype="passive"/>
     </net>
@@ -7440,6 +7473,7 @@
       <node ref="R106" pin="2" pintype="passive"/>
       <node ref="R110" pin="2" pintype="passive"/>
       <node ref="R112" pin="2" pintype="passive"/>
+      <node ref="R118" pin="2" pintype="passive"/>
       <node ref="R123" pin="2" pintype="passive"/>
       <node ref="R127" pin="2" pintype="passive"/>
       <node ref="R128" pin="2" pintype="passive"/>
@@ -8003,20 +8037,20 @@
     <net code="167" name="unconnected-(U6-PCM0/ARM0-Pad12)" class="Default">
       <node ref="U6" pin="12" pinfunction="PCM0/ARM0_12" pintype="output+no_connect"/>
     </net>
-    <net code="168" name="unconnected-(U6-TEST0-Pad3)" class="Default">
+    <net code="168" name="unconnected-(U6-PCM1/ARM1-Pad2)" class="Default">
+      <node ref="U6" pin="2" pinfunction="PCM1/ARM1_2" pintype="output+no_connect"/>
+    </net>
+    <net code="169" name="unconnected-(U6-TEST0-Pad3)" class="Default">
       <node ref="U6" pin="3" pinfunction="TEST0_3" pintype="passive+no_connect"/>
     </net>
-    <net code="169" name="unconnected-(U6-TEST1-Pad4)" class="Default">
+    <net code="170" name="unconnected-(U6-TEST1-Pad4)" class="Default">
       <node ref="U6" pin="4" pinfunction="TEST1_4" pintype="passive+no_connect"/>
     </net>
-    <net code="170" name="unconnected-(U6-TEST2-Pad5)" class="Default">
+    <net code="171" name="unconnected-(U6-TEST2-Pad5)" class="Default">
       <node ref="U6" pin="5" pinfunction="TEST2_5" pintype="passive+no_connect"/>
     </net>
-    <net code="171" name="unconnected-(U6-TEST3-Pad6)" class="Default">
+    <net code="172" name="unconnected-(U6-TEST3-Pad6)" class="Default">
       <node ref="U6" pin="6" pinfunction="TEST3_6" pintype="passive+no_connect"/>
-    </net>
-    <net code="172" name="unconnected-(U6-n.c.-Pad2)" class="Default">
-      <node ref="U6" pin="2" pinfunction="n.c._2" pintype="passive+no_connect"/>
     </net>
     <net code="173" name="unconnected-(U9-AUXOFF-Pad3)" class="Default">
       <node ref="U9" pin="3" pinfunction="AUXOFF_3" pintype="open_collector+no_connect"/>

@@ -31,7 +31,7 @@ critical_via_no_gnd is re-measured by tools/r11_gnd_spots.gnd_spots (the six-lay
 PARALLEL_VIAS holds only the pairs the R11 gate data list (R11_DATA key 'parallel_vias', O-C2-5; schema at
 load_parallel_pairs; a missing key or file is an empty list; --gate-data names another file).
 r12 (M3-ASSY-R12, r12_plan.md; the R12 gate in tools/check.sh once the R12 board is tracked): every r10 rule on R12's
-four-layer one-sided board, LEFTOVERS empty, PARALLEL_VIAS PARALLEL_VIAS_R12 (R12F8-TRI-02 / -03); ALLOWLIST is ALLOWLIST_R12 and ROUTE_FIGURES is
+four-layer one-sided board, LEFTOVERS LEFTOVERS_R12 (R12F12-TRI-29), PARALLEL_VIAS PARALLEL_VIAS_R12 (R12F8-TRI-02 / -03); ALLOWLIST is ALLOWLIST_R12 and ROUTE_FIGURES is
 ROUTE_FIGURES_R12 (the forced findings, each with its measured reason and route figures, D-R12-75A).
 Every layer-dependent test walks the board's own copper stack (cu_layers: F, In1..In4, B on a six-layer board; the
 R7-R10 four-layer set otherwise, so their verdicts are unchanged), so a layer change through In3 or In4 is one, and the
@@ -399,6 +399,68 @@ PARALLEL_VIAS_R12 = [
      "R12F9-TRI-08 (R12F10-TRI-16: 83 mm, both barrels >= 1.040 mm from the RAW_PROTECTED F run): PD10's divider end of "
      "the B.Cu lane; the barrel sits on the lane 0.75 mm aft of the first (26.45, 78.72) and joins R111.2 by its own "
      "F.Cu run (a 1.06 mm diagonal into the pad centre; the first barrel's run is 0.75 mm straight east)"),
+    # R12F12-TRI-02 / -03 (round 12, the single-via class): second barrels on the fire / arming chain's signal vias and
+    # on PA6's sense lane. Each pair is joined on both of its layers, so either barrel alone carries the K-power tap
+    # (check_r12 SINGLE_OPEN_TAPS_R12); measured on the round 12 lane P board.
+    ('ACT_EN_MCU', (16.9, 31.55),
+     "R12F12-TRI-02: PC1's lane to R122.1; the barrel sits at the F.Cu bend, 0.707 mm north-east of the first "
+     "(16.4, 32.05), joined to it by a 0.707 mm B.Cu diagonal under the F.Cu one"),
+    ('BAT_SW_RETURN', (13.8, 7.9),
+     "R12F12-TRI-02: J400.2 / D402.1 to R165.1; the barrel sits on the B.Cu diagonal 0.566 mm from the first "
+     "(13.4, 7.5), joined to it by a 0.566 mm F.Cu diagonal above the B.Cu one"),
+    ('BAT_SW_RETURN', (15.1, 10.8),
+     "R12F12-TRI-02: R165.1's end of the B.Cu link; the barrel sits on the B.Cu run 0.55 mm aft of the first "
+     "(15.1, 11.35), joined to it by a 0.55 mm F.Cu link above the B.Cu one"),
+    ('ACT_GATE', (7.2, 33.55),
+     "R12F12-TRI-03: C120.2's In2 jumper, west end; the barrel sits on the F.Cu diagonal 0.566 mm from the first "
+     "(6.8, 33.95), joined to it by a 0.566 mm In2 diagonal under the F.Cu one"),
+    ('ACT_GATE', (9.15, 34.85),
+     "R12F12-TRI-03: C120.2's In2 jumper, east end; the barrel sits 0.55 mm east of the first (8.6, 34.85), joined to "
+     "it by 0.55 mm links on F.Cu and In2"),
+    ('VLOGIC_SENSE', (26.2, 41.45),
+     "R12F12-TRI-02: PA6's lane from R60.2 / R61.1; the barrel sits at the In2 bend 0.566 mm from the first "
+     "(25.8, 41.05), joined to it by a 0.566 mm F.Cu diagonal above the In2 one"),
+]
+# R12F12-TRI-29, profile r12: the non-critical hygiene leftovers of the R12 board, each with its measured reason (R10 audit
+# 2 keeps them informational on the R10-like profiles: an unrecorded or stale entry prints as INFO and is counted in the
+# summary line; the R12 gate self-test holds both counts at zero). Figures are route_check's on the round 12 lane P
+# board; the neighbour gaps are the round 12 copper lens's, on copper that pass did not move.
+LEFTOVERS_R12 = [
+    ('tiny_jog', 'SERVO2_MCU', 'B.Cu', (28.65, 21.35),
+     "R12F12-TRI-29: the 0.424 mm B.Cu diagonal between SERVO2_MCU's x 28.65 and x 28.95 runs (1.3 / 0.424 / 5.7 mm) "
+     "clears SERVO4_MCU's B.Cu branch (28.43, 18.45)-(28.43, 15.53): a straight trunk at x 28.65 leaves 0.07 mm of edge "
+     "gap to it, and an offset to x >= 29.05 puts SERVO2's via 0.05 mm from SERVO3_MCU's B.Cu trunk at x 29.4. Any "
+     "0.3 mm offset is a 0.424 mm diagonal, under the 0.5 mm jog limit"),
+    ('extra_vias', 'SERVO2_MCU', 'net', (28.95, 15.2),
+     "R12F12-TRI-29: 57.76 mm / 3 vias (allowed 2) for a 48.9 mm pad tree. D121.3 cannot reach R155.1 / R151.1 on F.Cu: "
+     "a west run at y 18.3-18.9 meets SERVO4_MCU's via (28.43, 18.45) or CAM_EN's via at <= 0.05 mm, and the x 28.95 "
+     "descent crosses SERVO3_MCU's F.Cu link (29.4, 16.05)-(28.85, 16.6) into R156.1"),
+    ('extra_vias', 'SERVO3_MCU', 'net', (28.95, 12.9),
+     "R12F12-TRI-29: 67.28 mm / 3 vias for a 51.46 mm pad tree. On F.Cu R152.1 (22.1, 16.775) is enclosed by "
+     "SERVO2_MCU's x 23.1 run (13.675 to 17.25) and SERVO4_MCU's y 13.05 run, which forces the B.Cu loop round y 11.45"),
+    ('extra_vias', 'SERVO4_MCU', 'net', (27.05, 12.9),
+     "R12F12-TRI-29: 52.75 mm / 3 vias for a 50.88 mm pad tree. On F.Cu R157.1 to D121.6 crosses SERVO1_MCU's link "
+     "(26.87, 15.2)-(25.47, 16.6): the pull-down columns R154-R157 do not match D121's pin columns (R155 west of D121.3, "
+     "R157 east of D121.6). Swapping R155 / R157 is an untested re-route of four servo nets, not taken (round 12 triage)"),
+    ('extra_vias', 'NRST', 'net', (26.6, 49.45),
+     "R12F12-TRI-29 (D-R12-122): 28.2 mm / 4 vias for an 18.07 mm pad tree. The DRU keeps 0.508 mm from J2's pads, so "
+     "nothing threads J2's 0.49 mm pad gaps to J2.3, the middle of its east column: the B.Cu hop under J2 is the "
+     "shortest legal path, and an In2 continuation from C24 would cross CAM_5V_SENSE's In2 run at x 26.9"),
+    ('extra_vias', 'U9_FLT', 'net', (20.6, 15.82),
+     "R12F12-TRI-29: 15.03 mm / 3 vias for a 13.82 mm pad tree. FLT is U9.4, on the far side of U9.2 / U9.3's F.Cu "
+     "escapes (BAT_OVLO, BAT_ENABLE) from R89, and R95 sits behind U9's body. The copper lens's trial redraw (R89 beside "
+     "R95) removes the third via but puts a 3V3 via inside the In2 RAW_PROTECTED island (K-plane) and R89's courtyard "
+     "on D95's: no 3V3 site fits between C79.1 (BAT_IN) and C97.1 / the RAW vias (about 2.1 mm apart; S-10 needs "
+     "2 x 1.040 mm)"),
+    ('extra_vias', 'VLOGIC_SENSE', 'net', (12.2, 61.67),
+     "R12F12-TRI-29: 48.9 mm / 4 vias (the PARALLEL_VIAS_R12 barrel (26.2, 41.45) left out) for a 34.39 mm pad tree. "
+     "With an In2 trunk the floor is 3 (ball, C60, R60), above the 2 allowed; the fourth is the B.Cu link that takes the "
+     "lane under CAM_5V_SENSE's In2 C94 branch (x 16.67, y 57.68 to 61.85), which an In2 run at y 61.05 would cross. "
+     "C60 has no site on U1.J3's F.Cu escape: the decoupling row C14-C22 fills it"),
+    ('extra_vias', 'CAM_5V_SENSE', 'net', (13.2, 61.67),
+     "R12F12-TRI-29 (D-R12-124): 60.42 mm / 3 vias for a 50.47 mm pad tree. The ball, C94 (8 mm south-west) and the "
+     "divider (35 mm aft) are far-apart F.Cu pads, so an In2 trunk needs one via at each: 3 is the floor, above the 2 "
+     "allowed. C94 has no site on the ball's F.Cu escape"),
 ]
 PARALLEL_VIAS = []
 # Profile r11 (stageC2.md O-C2-5, gate_C2.md): the parallel barrels come from the R11 gate data as pairs, both barrels
@@ -521,7 +583,7 @@ def set_profile(name, gate_data=None):
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = [], [], {}
         KEEPOUT_BASELINE = True
     elif name == 'r12':                     # D-R12-75A: the R10 rules and the forced findings only, each measured
-        ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = list(ALLOWLIST_R12), [], dict(ROUTE_FIGURES_R12)
+        ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = list(ALLOWLIST_R12), list(LEFTOVERS_R12), dict(ROUTE_FIGURES_R12)
         KEEPOUT_BASELINE = True
     elif name == 'r11':                                                   # D-R11-61: the forced findings only
         ALLOWLIST, LEFTOVERS, ROUTE_FIGURES = list(ALLOWLIST_R11), [], dict(ROUTE_FIGURES_R11)

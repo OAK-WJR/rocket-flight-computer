@@ -169,3 +169,10 @@ track	3V3	F	0.3	33.65	50.12	34.2	50.12
 via	3V3	-	0.45	34.2	50.12		
 track	3V3	F	0.3	32.2	30.65	31.55	30.65
 via	3V3	-	0.45	31.55	30.65		
+# --- R12F12 (round 12 final pass), lane P: single-via class (R12F12-TRI-02 / -03 / -17)
+# R12F12-TRI-02: second via (30.4, 31.55) for D436.3 3V3 (PC12 clamp)
+track	3V3	F	0.2	30.4	32.1	30.4	31.55
+via	3V3	-	0.45	30.4	31.55		
+# R12F12-TRI-02: second via (39.7, 55.65) for U3.4 GND (crash log) (the F stub crosses the zone border from the first via)
+track	GND	F	0.3	40.1	56.05	39.7	55.65
+via	GND	-	0.45	39.7	55.65		

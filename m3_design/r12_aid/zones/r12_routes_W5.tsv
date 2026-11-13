@@ -150,3 +150,31 @@ via	GND	-	0.45	2.2	60.25
 # TP88 0.4 mm west and aft, 1.0 mm from C406.1 (its probe clearance)
 track	GND	F	0.3	9.7	76.85	9.7	75.7
 via	GND	-	0.45	9.7	75.7		
+# --- R12F12 (round 12 final pass), lane P: single-via class (R12F12-TRI-02 / -03 / -17)
+# R12F12-TRI-02: second via (3.45, 61.05) for D123.1 3V3 (buzzer)
+track	3V3	F	0.3	4	61.05	3.45	61.05
+via	3V3	-	0.45	3.45	61.05		
+# R12F12-TRI-02: second via (19.35, 81.65) for J410.1 GND
+track	GND	F	0.3	19.9	81.65	19.35	81.65
+via	GND	-	0.45	19.35	81.65		
+# R12F12-TRI-02: second via (7.8, 62.2) for Q123.2 GND (buzzer)
+track	GND	F	0.3	7.8	62.75	7.8	62.2
+via	GND	-	0.45	7.8	62.2		
+# R12F12-TRI-02: second via (10.2, 62.8) for R163.2 GND (buzzer)
+track	GND	F	0.3	10.2	63.35	10.2	62.8
+via	GND	-	0.45	10.2	62.8		
+# R12F12-TRI-02: second via (8.85, 81.65) for J420.1 GND
+track	GND	F	0.3	9.4	81.65	8.85	81.65
+via	GND	-	0.45	8.85	81.65		
+# R12F12-TRI-02: second via (31.85, 81.15) for J440.1 GND
+track	GND	F	0.3	32.4	81.15	31.85	81.15
+via	GND	-	0.45	31.85	81.15		
+# R12F12-TRI-02: second via (33.35, 80.05) for J440.2 PORT_4V8
+track	PORT_4V8	F	0.3	33.9	80.05	33.35	80.05
+via	PORT_4V8	-	0.45	33.35	80.05		
+# R12F12-TRI-02: second via (20.95, 79.9) for J410.2 PORT_4V8
+track	PORT_4V8	F	0.3	21.5	79.9	20.95	79.9
+via	PORT_4V8	-	0.45	20.95	79.9		
+# R12F12-TRI-02: second via (10.45, 79.9) for J420.2 PORT_4V8
+track	PORT_4V8	F	0.3	11	79.9	10.45	79.9
+via	PORT_4V8	-	0.45	10.45	79.9		

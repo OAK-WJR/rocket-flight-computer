@@ -23,8 +23,10 @@ track	PYRO1_OUT	F	0.4	5.1	48.85	4.4	48.85
 track	PYRO1_OUT	F	0.2	11.5	50.55	12	50.05
 track	GND	F	0.3	33.9	5.9	33.1	5.9
 track	CAM_5V	F	0.5	35.9	5.2	35.1	5.2
-track	BAT_SW_RETURN	B	0.2	13.4	7.5	15.1	9.2
-track	BAT_SW_RETURN	B	0.2	15.1	9.2	15.1	11.35
+track	BAT_SW_RETURN	B	0.2	13.4	7.5	13.8	7.9
+track	BAT_SW_RETURN	B	0.2	13.8	7.9	15.1	9.2
+track	BAT_SW_RETURN	B	0.2	15.1	9.2	15.1	10.8
+track	BAT_SW_RETURN	B	0.2	15.1	10.8	15.1	11.35
 track	BAT_SW_RETURN	F	0.2	15.1	11.35	15.7	11.35
 track	BAT_SW_RETURN	F	0.2	11.6	6.2	11.3	6.5
 track	BAT_ENABLE	F	0.2	19	13.95	19	15.05
@@ -40,7 +42,8 @@ track	ACT_GATE	F	0.2	6.3	33.95	6.8	33.95
 track	ACT_GATE	In2	0.2	6.8	33.95	7.7	34.85
 track	ACT_GATE	In2	0.2	7.7	34.85	8.6	34.85
 track	ACT_GATE	F	0.2	8.6	34.85	8.1	34.85
-track	ACT_GATE	F	0.2	8.7	32.05	6.8	33.95
+track	ACT_GATE	F	0.2	8.7	32.05	7.2	33.55
+track	ACT_GATE	F	0.2	7.2	33.55	6.8	33.95
 track	ACT_GATE	F	0.2	10.1	30.35	10.1	30.85
 track	ACT_GATE	F	0.2	10.1	30.85	8.9	32.05
 track	ACT_GATE	F	0.2	4.0	30.15	4.4	29.75
@@ -454,3 +457,87 @@ track	GND	F	0.3	2.6	22.05	2.6	23.5
 via	GND	-	0.45	2.6	23.5		
 track	GND	F	0.3	12.3	11.99	12.3	11.2
 via	GND	-	0.45	12.3	11.2		
+# --- R12F12 (round 12 final pass), lane P: single-via class (R12F12-TRI-02 / -03 / -17)
+# R12F12-TRI-02: second via (3.67, 53.5) for R136.1 3V3 (cold pull-up)
+track	3V3	F	0.3	3.67	54.05	3.67	53.5
+via	3V3	-	0.45	3.67	53.5		
+# R12F12-TRI-02: second via (21.15, 17.23) for R89.1 3V3 (FLT pull-up)
+track	3V3	F	0.3	21.15	16.68	21.15	17.23
+via	3V3	-	0.45	21.15	17.23		
+# R12F12-TRI-02: second via (21.22, 28.95) for D95.3 3V3 (PC13 clamp)
+track	3V3	F	0.3	21.77	28.95	21.22	28.95
+via	3V3	-	0.45	21.22	28.95		
+# R12F12-TRI-02: second via (16.9, 31.55) for R122.1's far ACT_EN_MCU via (16.4, 32.05): second barrel at the F bend, B link
+track	ACT_EN_MCU	B	0.1	16.4	32.05	16.9	31.55
+via	ACT_EN_MCU	-	0.45	16.9	31.55		
+# R12F12-TRI-02: second via (9.15, 34.85) for C120.2's ACT_GATE via (8.6, 34.85): second barrel, F and In2 links (TRI-03)
+track	ACT_GATE	F	0.2	8.6	34.85	9.15	34.85
+track	ACT_GATE	In2	0.2	8.6	34.85	9.15	34.85
+via	ACT_GATE	-	0.45	9.15	34.85		
+# R12F12-TRI-02: second via (7.2, 33.55) for C120.2's ACT_GATE via (6.8, 33.95): second barrel on the F diagonal, In2 link (TRI-03)
+track	ACT_GATE	In2	0.2	6.8	33.95	7.2	33.55
+via	ACT_GATE	-	0.45	7.2	33.55		
+# R12F12-TRI-02: second via (13.8, 7.9) for R165.1's BAT_SW_RETURN via (13.4, 7.5): second barrel on the B diagonal, F link
+track	BAT_SW_RETURN	F	0.2	13.4	7.5	13.8	7.9
+via	BAT_SW_RETURN	-	0.45	13.8	7.9		
+# R12F12-TRI-02: second via (15.1, 10.8) for R165.1's BAT_SW_RETURN via (15.1, 11.35): second barrel on the B run, F link
+track	BAT_SW_RETURN	F	0.2	15.1	11.35	15.1	10.8
+via	BAT_SW_RETURN	-	0.45	15.1	10.8		
+# R12F12-TRI-02: second via (33.35, 4.5) for J9.3 / J9.4 GND (camera return)
+track	GND	F	0.3	33.9	4.5	33.35	4.5
+via	GND	-	0.45	33.35	4.5		
+# R12F12-TRI-02: second via (26.33, 18.15) for D121.2 / R154-R157.2 GND (servo pull-downs)
+track	GND	F	0.3	26.33	17.6	26.33	18.15
+via	GND	-	0.45	26.33	18.15		
+# R12F12-TRI-02: second via (14.9, 21.05) for C88.2 GND (U9 IN 100 nF)
+track	GND	F	0.3	15.3	20.65	14.9	21.05
+via	GND	-	0.45	14.9	21.05		
+# R12F12-TRI-02: second via (19.03, 33.2) for R123.2 GND
+track	GND	F	0.3	19.03	32.65	19.03	33.2
+via	GND	-	0.45	19.03	33.2		
+# R12F12-TRI-02: second via (11.03, 46.5) for R128.2 GND
+track	GND	F	0.3	11.03	47.05	11.03	46.5
+via	GND	-	0.45	11.03	46.5		
+# R12F12-TRI-02: second via (11.75, 11.2) for R167.2 GND (BAT_IN bleed)
+track	GND	F	0.3	12.3	11.2	11.75	11.2
+via	GND	-	0.45	11.75	11.2		
+# R12F12-TRI-02: second via (19.45, 20.85) for C97.2 GND
+track	GND	F	0.3	20	20.85	19.45	20.85
+via	GND	-	0.45	19.45	20.85		
+# R12F12-TRI-02: second via (10.6, 8.625) for D402.2 GND (J400 ESD clamp)
+track	GND	F	0.25	10.6	8.125	10.6	8.625
+via	GND	-	0.45	10.6	8.625		
+# R12F12-TRI-02: second via (19.35, 7) for J122.5 GND (servo signal reference)
+track	GND	F	0.3	19.9	7	19.35	7
+via	GND	-	0.45	19.35	7		
+# R12F12-TRI-02: second via (11.03, 49.6) for R127.2 GND
+track	GND	F	0.3	11.03	49.05	11.03	49.6
+via	GND	-	0.45	11.03	49.6		
+# R12F12-TRI-02: second via (18.6, 38.25) for C129.2 GND (PC5 filter)
+track	GND	F	0.3	18.6	38.8	18.6	38.25
+via	GND	-	0.45	18.6	38.25		
+# R12F12-TRI-02: second via (15.15, 29.85) for Q122.2 GND
+track	GND	F	0.3	15.7	29.85	15.15	29.85
+via	GND	-	0.45	15.15	29.85		
+# R12F12-TRI-02: second via (3.85, 48.03) for C128.2 GND (PYRO1_OUT 100 nF)
+track	GND	F	0.3	4.4	48.03	3.85	48.03
+via	GND	-	0.45	3.85	48.03		
+# R12F12-TRI-02: second via (11.9, 44.4) for C126.2 GND
+track	GND	F	0.3	11.9	44.95	11.9	44.4
+via	GND	-	0.45	11.9	44.4		
+# R12F12-TRI-02: second via (21.05, 22.15) for R92.2 GND
+track	GND	F	0.3	21.6	22.15	21.05	22.15
+via	GND	-	0.45	21.05	22.15		
+# R12F12-TRI-02: R130.2 / R178.2 / C127.2 GND (PC0 bank and filter): F link through the three pads, each then on three vias (no new barrel: one here breaks the In2 3V3 neck at via (15.05, 54.3), K-plane)
+track	GND	F	0.3	13.03	51.85	13.03	52.85
+track	GND	F	0.3	13.03	52.85	13.03	53.85
+# R12F12-TRI-02: R133.2 / R180.2 GND (PC5 bank): F link between the two pads, each then on two vias
+track	GND	F	0.3	16.6	39.42	17.6	39.42
+# R12F12-TRI-04: R118 (Q122's second gate pull-down, 10k ACT_EN to GND): pad 1's F stub north onto the Q122.1 - R123.1
+# run at y 32.55; pad 2's two GND vias (17.6, 34.3) and (17.6, 33.2), 0.55 mm south and north of the pad centre, in the
+# 0.9 mm B.Cu channel between ACT_EN_MCU's run at x 17.1 and BAT_FAULT_N's at x 18.15 (K-power tap R118.2)
+track	ACT_EN	F	0.2	16.74	33.75	16.74	32.55
+track	GND	F	0.3	17.6	33.75	17.6	34.3
+via	GND	-	0.45	17.6	34.3		
+track	GND	F	0.3	17.6	33.75	17.6	33.2
+via	GND	-	0.45	17.6	33.2		

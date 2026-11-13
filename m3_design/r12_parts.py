@@ -420,11 +420,13 @@ NEW_SYMBOLS = (
      [P(2.54, '3', 'VIN', 'power_in'), P(0, '5', 'EN', 'input'), P(-2.54, '1', 'GND', 'power_in')],
      [P(2.54, '2', 'SW', 'output'), P(0, '6', 'VBST'), P(-2.54, '4', 'VFB', 'input')]),
     ('FXLS9xxxx', 'U', 'NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 '
-     'VCC, 2 n.c., 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)',
+     'VCC, 2 PCM1/ARM1 (the dual-channel FXLS90322; n.c. on the single-channel parts; R12F12-TRI-38, Inference: read '
+     'through a mirror of the dual-channel sheet), 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, '
+     '17 die pad (VSS)',
      'accelerometer high-g SPI', 7.62, 12.7,
      [P(10.16, '1', 'VCC', 'power_in'), P(7.62, '13', 'VCC', 'power_in'), P(5.08, '15', 'VCC', 'power_in'),
       P(2.54, '16', 'VCC', 'power_in'), P(0, '7', 'VSS', 'power_in'), P(-2.54, '14', 'VSS', 'power_in'),
-      P(-5.08, '17', 'PAD', 'power_in'), P(-7.62, '2', 'n.c.'), P(-10.16, '12', 'PCM0/ARM0', 'output')],
+      P(-5.08, '17', 'PAD', 'power_in'), P(-7.62, '2', 'PCM1/ARM1', 'output'), P(-10.16, '12', 'PCM0/ARM0', 'output')],
      [P(10.16, '8', 'SS_B', 'input'), P(7.62, '9', 'SCLK', 'input'), P(5.08, '10', 'MOSI', 'input'),
       P(2.54, '11', 'MISO', 'passive'), P(-2.54, '3', 'TEST0'), P(-5.08, '4', 'TEST1'), P(-7.62, '5', 'TEST2'),
       P(-10.16, '6', 'TEST3')]),
