@@ -3,6 +3,7 @@
 
 usage: python3 -I tools/test_r12_stageD.py      (no pcbnew, no numpy)
 """
+import hashlib
 import json
 import sys
 import unittest
@@ -12,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
 sys.path.insert(0, str(ROOT / 'm3_design'))
 DESIGN = ROOT / 'm3_design/r12/design'
+# R12F12-TRI-22: the records are bound to the repository R12 board (tools/check.sh's R12 section checks the gated board
+# itself through r12_hotplug.py --gate, with pcbnew)
+BOARD = ROOT / 'm3_design/r12/m3.kicad_pcb'
 
 
 class HotplugWrapper(unittest.TestCase):
@@ -39,6 +43,89 @@ class HotplugWrapper(unittest.TestCase):
         self.assertEqual(len(res['rows']), 2304)
 
 
+class HotplugValidate(unittest.TestCase):
+    """R12F12-TRI-22: R10's validate (with R12's patches) on the committed results, and seeded failures."""
+
+    @classmethod
+    def setUpClass(cls):
+        import r12_hotplug
+        r12_hotplug.install()
+        cls.h = r12_hotplug
+        cls.inputs = json.loads((DESIGN / 'hotplug_inputs_r12.json').read_text())
+        cls.results = json.loads((DESIGN / 'hotplug_results_r12.json').read_text())
+
+    def check(self, results=None, inputs=None):
+        inputs = inputs or self.inputs
+        return self.h.validate(inputs, results or self.results, inputs['electrical_sha256'])
+
+    def mutated(self):
+        return json.loads(json.dumps(self.results))
+
+    def test_committed_results_validate(self):
+        self.assertEqual(self.check(), [])
+        self.assertTrue(self.results['passed'])
+        self.assertEqual(len(self.results['rows']), 2304)
+        self.assertEqual(self.results['failures'], [])
+
+    def test_failed_metric_row_fails(self):
+        bad = self.mutated()
+        bad['rows'][17]['minimum_V'] = -15.5
+        self.assertTrue(any(i.startswith('model fails') for i in self.check(bad)), self.check(bad))
+
+    def test_duplicated_corner_fails(self):
+        bad = self.mutated()
+        bad['rows'] = [dict(r, corner=bad['rows'][0]['corner']) for r in bad['rows']]
+        self.assertIn('missing or changed model corners', self.check(bad))
+        bad = self.mutated()
+        bad['rows'][1]['corner'] = bad['rows'][0]['corner']
+        self.assertIn('missing or changed model corners', self.check(bad))
+
+    def test_stale_inputs_or_model_fail(self):
+        bad = self.mutated()
+        bad['model_sha256'] = '0' * 64
+        self.assertIn('stale model source', self.check(bad))
+        inputs = json.loads(json.dumps(self.inputs))
+        inputs['edges'][0]['R_ohm'] *= 1.5
+        self.assertIn('stale model inputs', self.check(inputs=inputs))
+
+    def test_recomputed_floats_at_1e12(self):
+        """Retained-output floats agree at 1e-12 relative; a larger change, or a changed identity, fails."""
+        live = self.h.base.retained_output(self.inputs)
+        near = self.mutated()
+        near['retained_output'] = json.loads(json.dumps(live))
+        near['retained_output']['capacitance_F'] *= 1 + 5e-14
+        self.assertEqual(self.check(near), [])
+        far = self.mutated()
+        far['retained_output'] = json.loads(json.dumps(live))
+        far['retained_output']['capacitance_F'] *= 1 + 1e-9
+        self.assertIn('stale retained-output calculation', self.check(far))
+        ident = self.mutated()
+        ident['retained_output'] = json.loads(json.dumps(live))
+        ident['retained_output']['inference'] += ' '
+        self.assertIn('stale retained-output calculation', self.check(ident))
+        self.assertTrue(self.h.close(1.0, 1.0 + 5e-13))
+        self.assertFalse(self.h.close(1.0, 1.0 + 5e-12))
+        self.assertFalse(self.h.close(True, 1.0))
+        self.assertFalse(self.h.close('a', 'b'))
+
+    def test_records_bound_to_the_board(self):
+        board = hashlib.sha256(BOARD.read_bytes()).hexdigest()
+        self.assertEqual(self.inputs['board_sha256'], board)
+        d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+        self.assertEqual(d['board_sha256'], board)
+        self.assertEqual(d['source_board_sha256'], board)
+        self.assertEqual(self.h.stage_d_binding(board), [])
+
+    def test_stale_binding_fails(self):
+        board = hashlib.sha256(BOARD.read_bytes()).hexdigest()
+        self.assertEqual(len(self.h.stage_d_binding('0' * 64)), 3)
+        inputs = dict(self.inputs, board_sha256='0' * 64)
+        self.assertEqual(len(self.h.stage_d_binding(board, inputs=inputs)), 1)
+        d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+        d['source_board_sha256'] = '0' * 64
+        self.assertEqual(len(self.h.stage_d_binding(board, budget=d)), 1)
+
+
 class StageDFigures(unittest.TestCase):
     def test_budget_record(self):
         d = json.loads((DESIGN / 'stageD_budget.json').read_text())
@@ -60,21 +147,23 @@ class StageDFigures(unittest.TestCase):
     def test_vgs_during_fire_from_act_fet_s(self):
         """R12F2-TRI-08: the gate divider hangs on ACT_FET_S = BAT_IN - I_fire x RDS(Q120 hot), not on BAT_IN.
         R12F5-TRI-03: and the fire current crosses the J1 -> Q120 BAT_IN copper first, while Q121's source sits a further
-        I x the ACT_FET_S copper below the divider's tap at Q120's source (copper at 70 C)."""
+        I x the ACT_FET_S copper below the divider's tap at Q120's source (copper at 70 C). R12F12-TRI-30: the J1 -> Q120.3
+        term is the BAT_IN network's, and the converter current's share of that copper lowers Q120's drain too."""
         d = json.loads((DESIGN / 'stageD_budget.json').read_text())
         f = d['fire']
         g, lo = f['gate'], f['gate']['q120_vgs_ratio_min_max'][0]
         hot = 1 + .00393 * 50
-        r_bat = d['fire_copper']['BAT_IN']['R_20C_ohm'] * hot
+        z = d['bat_in_network']['Z_ohm']
+        r_bat = z['Q120']['Q120'] * hot
         r_fets = d['fire_copper']['ACT_FET_S']['R_20C_ohm'] * hot
         four = g['q120_q121_vgs_four_stall_fire']
-        i = f['four_stall_A']
+        i, ic = f['four_stall_A'], f['four_stall_converter_A']
         self.assertAlmostEqual(four['BAT_IN_V'], f['four_stall_BAT_IN_V'], places=9)
         self.assertAlmostEqual(four['fire_A'], i, places=9)
         self.assertAlmostEqual(four['Q120_drop_V'], i * f['pfet_hot_ohm'], places=9)
-        self.assertAlmostEqual(four['BAT_IN_copper_drop_V'], i * r_bat, places=9)
+        self.assertAlmostEqual(four['BAT_IN_copper_drop_V'], i * r_bat + ic * z['Q120']['U9'] * hot, places=9)
         self.assertAlmostEqual(four['ACT_FET_S_copper_drop_V'], i * r_fets, places=9)
-        want = -(f['four_stall_BAT_IN_V'] - i * (r_bat + f['pfet_hot_ohm']) - .1) * lo
+        want = -(f['four_stall_BAT_IN_V'] - ic * z['Q120']['U9'] * hot - i * (r_bat + f['pfet_hot_ohm']) - .1) * lo
         self.assertAlmostEqual(four['vgs_Q120_V'], want, places=9)
         self.assertAlmostEqual(four['vgs_Q121_V'], want + i * r_fets, places=9)
         self.assertLess(four['vgs_Q120_V'], four['vgs_Q121_V'])
@@ -108,7 +197,8 @@ class StageDFigures(unittest.TestCase):
         self.assertEqual(d['dc_solves']['RAW_PROTECTED_U9_to_U400']['sink'], 'U400:3')
 
     def test_shared_raw_trunk_at_summed_current(self):
-        """R12F2-TRI-07: the B.Cu trunk (45.2, 16.4) -> (45.2, 29.2) feeds both U400 and D5 and is rated at the sum."""
+        """R12F2-TRI-07: the 0.6 mm B.Cu RAW_PROTECTED trunk along the east edge, from U9's island to D5's branch, feeds
+        both U400 and D5 and is rated at the sum (R12F12-TRI-40: named, not by coordinates)."""
         d = json.loads((DESIGN / 'stageD_budget.json').read_text())
         rails = d['rails']
         trunk = [g for g in d['rails_shared']['groups'] if g['layer'] == 'B.Cu' and g['width_mm'] == 0.6]
@@ -295,9 +385,9 @@ class Round6Windows(unittest.TestCase):
     def test_stage_d_follows_the_window(self):
         u6, g = self.d['u6_supply'], self.d['fire']['gate']
         v33 = self.w['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)']
-        self.assertAlmostEqual(u6['1A_rating_bound']['min_VCC_drift_V'],
-                               v33['drift']['min_V'] - u6['1A_rating_bound']['drop_V'], places=9)
-        self.assertGreater(u6['1A_rating_bound']['margin_drift_V'], 0.07)
+        self.assertAlmostEqual(u6['1A_rating_bound']['min_VCC_drift_V'],                 # 70 C copper (R12F12-TRI-31)
+                               v33['drift']['min_V'] - u6['1A_rating_bound']['drop_drift_V'], places=9)
+        self.assertGreater(u6['1A_rating_bound']['margin_drift_V'], 0.06)    # 0.069 V at 70 C copper (R12F12-TRI-31)
         self.assertEqual(g['q124_vgs_min_basis']['vdd_min_V'], v33['drift']['min_V'])
         self.assertEqual(g['q124_vgs_min_basis']['pe4_load_vdd_max_V'], v33['drift']['max_V'])
 
@@ -378,20 +468,24 @@ class Round8(unittest.TestCase):
             self.assertEqual(r12_budget.en_model(v, 0.01), r11_stageD.en_model(v))
 
     def test_en_bound_is_the_drift_case(self):
-        """R12F8-TRI-06: R80 / R165 / R81 at +/-1.67 %: 7.59 ms single drop-out and 7.07 ms worst-corner limit at the
-        four-stall BAT_IN (5.7192 V since R12F10-TRI-09's D5 loss; 7.61 / 7.08 ms at 5.7209 V), 7 ms line to about 5.71 V, 10 ms drop-out needs about 6.02 V, turn-on about 29.9-135.9 ms."""
+        """R12F8-TRI-06: R80 / R165 / R81 at +/-1.67 %. R12F12-TRI-30: EN is fed from R80.1, 18.6 mV below J1 at the
+        four-stall point (5.7008 V against J1's 5.7194 V): 7.45 ms single drop-out and 6.935 ms worst-corner limit (7.60 /
+        7.073 ms when J1's voltage was used), so D-R25-01's 7 ms line no longer holds there (it holds down to about 5.71 V
+        at R80.1) and the bench rule is chatter_rule's number (Round12); 10 ms drop-out needs about 6.02 V at R80.1,
+        turn-on about 29.9-135.9 ms."""
         e = self.d['en']
         i, dr, b = e['by_case']['initial'], e['by_case']['drift'], e['bound']
         self.assertAlmostEqual(i['resistor_tolerance'], 0.01, places=12)
         self.assertAlmostEqual(dr['resistor_tolerance'], self.TD, places=12)
-        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.549, places=3)   # D-R12-174 (7.548 on a1e65bb4)
-        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.596, places=3)  # D-R12-174 (7.595)
-        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 7.073, places=3)  # D-R12-174 (7.072)
+        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.410, places=3)   # R12F12-TRI-30 (7.549 at J1)
+        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.446, places=3)  # R12F12-TRI-30 (7.596 at J1)
+        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 6.935, places=3)  # R12F12-TRI-30 (7.073 at J1)
+        self.assertAlmostEqual(e['four_stall_R80_V'], 5.7008, places=4)
         self.assertAlmostEqual(b['margin_over_7ms_line_ms'], dr['four_stall_periodic_limit_ms'] - 7.0, places=12)
-        self.assertGreater(b['margin_over_7ms_line_ms'], 0.0)
-        self.assertTrue(b['seven_ms_line_holds_at_four_stall'])
+        self.assertLess(b['margin_over_7ms_line_ms'], 0.0)
+        self.assertFalse(b['seven_ms_line_holds_at_four_stall'])
         self.assertAlmostEqual(b['seven_ms_line_holds_down_to_V'], 5.7095, places=3)
-        self.assertLess(b['seven_ms_line_holds_down_to_V'], e['four_stall_BAT_IN_V'])
+        self.assertGreater(b['seven_ms_line_holds_down_to_V'], e['four_stall_R80_V'])
         self.assertAlmostEqual(b['single_10ms_dropout_needs_pack_V'], 6.025, places=2)
         self.assertAlmostEqual(b['turn_on_ms'][0], 29.94, places=1)
         self.assertAlmostEqual(b['turn_on_ms'][1], 135.88, places=1)
@@ -444,11 +538,12 @@ class Round8(unittest.TestCase):
         self.assertEqual(self.d['pa6_corners']['u9_ron_ohm'], 0.045)
         self.assertEqual(self.d['port_supply']['u400_input']['u9_ron_ohm'], 0.045)
         self.assertEqual(self.d['u403_input']['u9_ron_ohm'], 0.045)
-        h, s = self.d['pa6_corners']['healthy'], self.d['dc_solves']
+        h, z = self.d['pa6_corners']['healthy'], self.d['bat_in_network']['Z_ohm']
         raw = h['RAW_PROTECTED_drop_at_D5_V']
         self.assertAlmostEqual(h['U9_and_copper_drop_V'],
-                               h['converter_A'] * (0.045 + s['BAT_IN_J1_to_U9']['resistance_ohm'] * 1.1965) + raw,
-                               places=12)
+                               h['converter_A'] * (0.045 + z['U9']['U9'] * 1.1965) + h['fire_A'] * z['U9']['Q120'] * 1.1965
+                               + raw, places=12)
+        self.assertAlmostEqual(h['fire_A'], self.d['fire']['four_stall_A'], places=15)
         self.assertNotIn("0.04 ohm", self.w['vlogic']['basis'])
 
     def test_holdup_from_r12_pa6_window(self):
@@ -504,7 +599,9 @@ class Round9(unittest.TestCase):
         for k in ('D5', 'U400', 'U403'):
             self.assertAlmostEqual(p['raw_point_ohm'][k],
                                    s[f'RAW_PROTECTED_U9_to_{k}']['resistance_ohm'] * r12_stageD.HOT_CU, places=12)
-        self.assertAlmostEqual(p['J1_to_U9_ohm'], s['BAT_IN_J1_to_U9']['resistance_ohm'] * r12_stageD.HOT_CU, places=12)
+        z = self.d['bat_in_network']['Z_ohm']              # R12F12-TRI-30: the BAT_IN network's J1 -> U9.5
+        self.assertAlmostEqual(p['J1_to_U9_ohm'], z['U9']['U9'] * r12_stageD.HOT_CU, places=12)
+        self.assertAlmostEqual(p['fire_coupling_at_U9_ohm'], z['U9']['Q120'] * r12_stageD.HOT_CU, places=12)
         u = self.d['port_supply']['u400_input']
         self.assertAlmostEqual(u['J1_to_U9_ohm'], p['J1_to_U9_ohm'], places=12)
         self.assertAlmostEqual(u['branch_shared_ohm']['U400 (ports)'], p['raw_point_ohm']['U400'], places=12)
@@ -524,10 +621,11 @@ class Round9(unittest.TestCase):
         # round 9 lane B (0.1 % divider, 0.425-0.455 V band) gave +0.0591 / +0.0744 / +0.0835; round 10 lane A adds
         # PA6's input leakage (R12F10-TRI-08) and the self-consistent D5 current (R12F10-TRI-09)
         # D-R12-174 (86.85 mm board): the RAW_PROTECTED island's longer aft band lowers the shared RAW copper
-        # (31.0 -> 30.0 mOhm): +0.0286 / +0.0441 / +0.0532 (+0.0251 / +0.0405 / +0.0497 on a1e65bb4)
-        self.assertAlmostEqual(h['drift'], 0.0286, places=3)
-        self.assertAlmostEqual(h['initial'], 0.0441, places=3)
-        self.assertAlmostEqual(h['nominal_ratio'], 0.0532, places=3)
+        # (31.0 -> 30.0 mOhm): +0.0286 / +0.0441 / +0.0532 (+0.0251 / +0.0405 / +0.0497 on a1e65bb4); R12F12-TRI-30:
+        # the fire current's share of the J1 -> U9.5 copper: +0.0270 / +0.0424 / +0.0516
+        self.assertAlmostEqual(h['drift'], 0.0270, places=3)
+        self.assertAlmostEqual(h['initial'], 0.0424, places=3)
+        self.assertAlmostEqual(h['nominal_ratio'], 0.0516, places=3)
 
     def test_pa6_owner_options(self):
         o = self.d['pa6_corners']['owner_options']
@@ -562,7 +660,7 @@ class Round9(unittest.TestCase):
         self.assertLessEqual(b['room_drift_V'][0], 0.425)
         self.assertGreaterEqual(b['room_drift_V'][1], 0.455)
         m = b['margins_V']['drift']
-        self.assertAlmostEqual(m['healthy_to_trip_top'], 0.0286, places=3)          # R12F10-TRI-08 / -09; D-R12-174 (0.0251)
+        self.assertAlmostEqual(m['healthy_to_trip_top'], 0.0270, places=3)          # R12F12-TRI-30 (0.0286; 0.0251)
         self.assertAlmostEqual(m['trip_bottom_above_u9_turn_off'], 0.0264, places=3)
         self.assertAlmostEqual(self.d['pa6_corners']['trip_bottom_above_u9_turn_off_V']['drift'],
                                m['trip_bottom_above_u9_turn_off'], places=4)
@@ -573,7 +671,9 @@ class Round9(unittest.TestCase):
         self.assertEqual(b['drop_bound_case'], 'drift_low')
         self.assertAlmostEqual(b['by_R134']['drift_low']['R134_ohm'], 1.9666, places=4)
         self.assertAlmostEqual(b['by_R134']['budget_hot_high']['fire_A'], f['stalls']['0']['fire_A'], places=12)
-        self.assertAlmostEqual(b['drop_bound_V'], 0.2716, places=3)    # D-R12-174: J1 -> Q120 through D8.1 (0.2677 on a1e65bb4)
+        # D-R12-174: J1 -> Q120 through D8.1 (0.2677 on a1e65bb4); R12F12-TRI-30: the network's J1 -> Q120.3 and the
+        # converter current's share of it (0.2716 before)
+        self.assertAlmostEqual(b['drop_bound_V'], 0.2732, places=3)
         self.assertGreater(b['drop_bound_V'], b['by_R134']['budget_hot_high']['drop_bound_V'])
         self.assertTrue(b['bound_below_reject'])
 
@@ -636,6 +736,170 @@ class Round10(unittest.TestCase):
         self.assertGreaterEqual(s['four_stall_A'], f['floor_A'])
         self.assertIn('en_at_that_BAT_IN', s)
         self.assertIn('Inference', s['basis'])
+
+
+class Round12(unittest.TestCase):
+    """R12 round 12 lane A: the BAT_IN network and EN at R80.1 (R12F12-TRI-30), the bench rule as a number (-23), the
+    walk and joined paths (-24), 70 C drift minima and PA6's upper end (-31), the 3V3 budget (-11), VBUS_SENSE (-06),
+    Q122's gate (-04) and D8's return (-16)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.d = json.loads((DESIGN / 'stageD_budget.json').read_text())
+
+    def seeded(self):
+        return json.loads(json.dumps(self.d))
+
+    def test_record_passes(self):
+        import r12_stageD
+        self.assertEqual(r12_stageD.record_issues(self.d), [])
+
+    def test_bench_rule_is_below_both_conventions(self):
+        import r12_stageD
+        e, f = self.d['en'], self.d['fire']
+        ch = e['chatter_rule']
+        main = e['bound']['four_stall_periodic_limit_ms']
+        sens = f['pack_load_sensitivity']['en_at_that_BAT_IN']['four_stall_periodic_limit_ms']
+        self.assertEqual(ch['limits_ms'], dict(gap1_constant_power=main, whole_current_sensitivity=sens))
+        self.assertEqual(ch['worst_limit_ms'], min(main, sens))
+        self.assertLessEqual(ch['bench_rule_ms'], min(main, sens) - 0.10 + 1e-12)
+        self.assertGreater(ch['bench_rule_ms'] + 0.1, min(main, sens) - 0.10)        # the largest such 0.1 ms step
+        self.assertEqual(ch['bench_rule_ms'], r12_stageD.bench_rule_ms(min(main, sens)))
+        self.assertIn(f"< {ch['bench_rule_ms']:.1f} ms", ch['bench_rule'])
+        self.assertEqual(r12_stageD.bench_rule_ms(6.845), 6.7)
+        self.assertEqual(r12_stageD.bench_rule_ms(6.8), 6.7)
+        self.assertEqual(r12_stageD.bench_rule_ms(6.7999), 6.6)
+        self.assertEqual(r12_stageD.bench_rule_ms(7.073), 6.9)
+
+    def test_bench_rule_seeds_fail(self):
+        """Astra power-2: a sensitivity limit of 6.0 ms must fail; so must a rule not 0.10 ms under the worst limit."""
+        import r12_stageD
+        bad = self.seeded()
+        bad['fire']['pack_load_sensitivity']['en_at_that_BAT_IN']['four_stall_periodic_limit_ms'] = 6.0
+        self.assertTrue(r12_stageD.record_issues(bad))
+        bad = self.seeded()
+        bad['en']['chatter_rule']['bench_rule_ms'] = round(bad['en']['chatter_rule']['worst_limit_ms'], 1)
+        self.assertTrue(r12_stageD.record_issues(bad))
+        bad = self.seeded()
+        bad['en']['chatter_rule']['bench_rule_ms'] -= 0.1
+        self.assertTrue(any('largest' in i for i in r12_stageD.record_issues(bad)))
+        bad = self.seeded()
+        bad['en']['bound']['four_stall_periodic_limit_ms'] = 6.5
+        self.assertTrue(r12_stageD.record_issues(bad))
+        bad = self.seeded()
+        del bad['en']['chatter_rule']
+        self.assertTrue(r12_stageD.record_issues(bad))
+
+    def test_unjoined_rail_fails(self):
+        """R12F12-TRI-24: C84's VLOGIC run crosses C84.1; the walk joins it, and a path with joined false fails."""
+        import r12_stageD
+        r = self.d['rails']['C84 hold-up']
+        self.assertTrue(r['joined'])
+        self.assertIn('C84.1', r['pads'])
+        self.assertTrue(all(x['joined'] for x in self.d['rails'].values()))
+        bad = self.seeded()
+        bad['rails']['C84 hold-up']['joined'] = False
+        self.assertIn('rail path C84 hold-up is not joined', r12_stageD.record_issues(bad))
+
+    def test_bat_in_network(self):
+        n = self.d['bat_in_network']
+        z = n['Z_ohm']
+        self.assertEqual(n['order'], ['U9', 'Q120', 'R80'])
+        self.assertLess(n['reciprocity_max_rel_asymmetry'], 1e-6)
+        for a in z:
+            for b in z:
+                self.assertAlmostEqual(z[a][b], z[b][a], delta=1e-6 * z[a][b])
+                self.assertGreater(z[a][b], 0.0)
+                self.assertLessEqual(z[a][b], min(z[a][a], z[b][b]) * (1 + 1e-6))
+        f, k = self.d['fire'], 1 + 0.00393 * 50
+        for name in ('0', '4'):
+            s = f['stalls'][name]
+            for p in ('U9', 'Q120', 'R80'):
+                self.assertAlmostEqual(s[f'{p}_V'], s['BAT_IN_V'] - k * (z[p]['U9'] * s['converter_A']
+                                                                        + z[p]['Q120'] * s['fire_A']), places=12)
+        four = f['stalls']['4']
+        self.assertAlmostEqual(four['converter_A'], f['other_converter_load_W'] / four['BAT_IN_V'], places=9)
+        self.assertAlmostEqual(f['fire_branch_without_pack_ohm'] * four['fire_A'],
+                               four['BAT_IN_V'] - k * z['Q120']['U9'] * four['converter_A'], places=12)
+        # EN at R80.1, not J1
+        self.assertEqual(self.d['en']['four_stall_R80_V'], four['R80_V'])
+        self.assertEqual(self.d['en']['four_stall_BAT_IN_V'], four['BAT_IN_V'])
+        self.assertGreater(four['BAT_IN_V'] - four['R80_V'], 0.01)
+        s = f['pack_load_sensitivity']
+        self.assertEqual(s['en_at_that_BAT_IN']['R80_V'], s['four_stall_R80_V'])
+        self.assertLess(s['four_stall_R80_V'], s['four_stall_BAT_IN_V'])
+        # the fire loop's BAT_IN term is the network's J1 -> Q120.3
+        self.assertAlmostEqual(f['bat_in_fire_term_70C_ohm'], z['Q120']['Q120'] * k, places=15)
+
+    def test_drift_minima_at_70C(self):
+        """R12F12-TRI-31: the U6 and port 'drift' minima use 70 C copper."""
+        k = 1 + 0.00393 * 50
+        u6 = self.d['u6_supply']
+        v33 = json.loads((DESIGN / 'r12_windows.json').read_text())['rails']['3V3 (U2 LMR50410, R14 47k / R15 20k)']
+        for row in ('1A_rating_bound', '0V5_allocation', 'u6_only_6mA'):
+            r = u6[row]
+            self.assertAlmostEqual(r['drop_drift_V'], r['drop_V'] * k, places=15)
+            self.assertAlmostEqual(r['min_VCC_drift_V'], v33['drift']['min_V'] - r['drop_drift_V'], places=12)
+            self.assertAlmostEqual(r['min_VCC_initial_V'], v33['initial']['min_V'] - r['drop_V'], places=12)
+        ps = self.d['port_supply']
+        for port in ('J410', 'J420', 'J440'):
+            for row in ('budget_0A561', 'design_1A9'):
+                r = ps[port][row]
+                self.assertAlmostEqual(r['drop_bound_drift_V'], r['drop_bound_V'] * k, places=15)
+                self.assertAlmostEqual(r['min_drift_V'], ps['window_drift_V'][0] - r['drop_bound_drift_V'], places=12)
+
+    def test_pa6_upper_end_at_its_own_vf(self):
+        p = self.d['pa6_corners']
+        for name in ('healthy', 'match_shorted', 'match_and_leads_shorted'):
+            c = p[name]
+            hi = c['upper_end_VF_0V25']
+            self.assertAlmostEqual(c['VLOGIC_V'][1], c['BAT_IN_V'] - hi['U9_and_copper_drop_V'] - .25
+                                   - hi['VLOGIC_copper_drop_at_R60_V'], places=12)
+            self.assertLess(hi['D5_A'], c['D5_A'])                 # a higher U2 VIN draws less current
+
+    def test_3v3_budget(self):
+        import r12_stageD
+        b = self.d['u3v3_budget']
+        lim = r12_stageD.u2_limit()
+        self.assertAlmostEqual(lim['ripple_A'], 3.35 * (8.15 - 3.35) / (8.15 * 3.76e-6 * 700e3), places=12)
+        self.assertAlmostEqual(b['u2_limit_A'], 0.875, places=3)              # triage TRI-11
+        self.assertLess(b['u2_limit_fsw_min_A'], b['u2_limit_A'])
+        self.assertTrue(b['fits_200MHz'])
+        self.assertFalse(b['fits_480MHz'])
+        c = b['cases']['200MHz_VOS3_Tj85']
+        self.assertEqual(c['MCU_A'], 0.220)                                    # DS12110 Rev 8 Table 30 / 31, rev Y
+        self.assertAlmostEqual(c['peak_A'], c['MCU_A'] + sum(b['loads_A'].values()) + b['buzzer_on_phase_A'], places=12)
+        self.assertIn('Inference', b['label'])
+        self.assertIn('DS12110 Rev 8', b['mcu_source'])
+
+    def test_vbus_sense(self):
+        v = self.d['vbus_sense']
+        self.assertTrue(v['topology_ok'])
+        self.assertAlmostEqual(v['ratio_nominal'], 0.6, places=12)
+        for case in ('initial', 'drift'):
+            c = v['cases'][case]
+            self.assertGreater(c['VBUS_SENSE_V'][0], c['vih_V'])
+            self.assertLess(c['VBUS_SENSE_V'][1], c['abs_max_V'])
+        self.assertTrue(v['ok'])
+        import r12_stageD
+        bad = self.seeded()
+        bad['vbus_sense']['topology_ok'] = False
+        self.assertTrue(r12_stageD.record_issues(bad))
+
+    def test_q122_gate(self):
+        q = self.d['q122_gate']
+        self.assertTrue(q['topology_ok'])
+        self.assertAlmostEqual(q['vgs_nominal_3V30_V'], 3.30 * (2e3 / 1.2) / (2e3 / 1.2 + 1e3), places=12)
+        self.assertGreater(q['vgs_min_V'], q['vgs_th_max_V'])
+        self.assertGreater(min(q['single_open_V'].values()), q['vgs_th_max_V'])
+        self.assertTrue(q['pc1_within_voh_row'])
+
+    def test_d8_return(self):
+        r = self.d['d8_return']
+        self.assertEqual(len(r['runs']), 2)
+        self.assertLess(r['R_20C_ohm'], 0.002)
+        self.assertLess(r['L_nH'], 1.0)
+        self.assertIn('Inference', r['label'])
 
 
 if __name__ == '__main__':

@@ -36,7 +36,9 @@ def pad_spec(board, spec):
     return pads
 
 
-def solve(board_path, net, source, sink, grid=0.1, window=None, plating=0.020):
+def mesh(board_path, net, grid=0.1, window=None, plating=0.020):
+    """The cell network of `net`'s copper (see the module docstring): returns (board, layers, idx, nbr, grid geometry).
+    solve() and solve_ports() share it."""
     import pcbnew
     mm, MM = pcbnew.ToMM, pcbnew.FromMM
     board = pcbnew.LoadBoard(str(board_path))
@@ -50,9 +52,6 @@ def solve(board_path, net, source, sink, grid=0.1, window=None, plating=0.020):
         raise ValueError('arcs are not modelled')
     vias = [t for t in board.GetTracks() if t.GetNetname() == net and t.GetClass() == 'PCB_VIA']
     pads = [p for f in board.GetFootprints() for p in f.Pads() if p.GetNetname() == net]
-    src, snk = pad_spec(board, source), pad_spec(board, sink)
-    if any(p.GetNetname() != net for p in src + snk):
-        raise ValueError('terminal pads must be on the net')
     if window is None:
         bb = board.GetBoardEdgesBoundingBox()
         window = (mm(bb.GetX()), mm(bb.GetY()), mm(bb.GetRight()), mm(bb.GetBottom()))
@@ -130,24 +129,32 @@ def solve(board_path, net, source, sink, grid=0.1, window=None, plating=0.020):
     for p in pads:
         if p.GetAttribute() == pcbnew.PAD_ATTRIB_PTH:
             barrel(mm(p.GetPosition().x), mm(p.GetPosition().y), mm(p.GetDrillSize().x), 'pad')
-    fixed = {}
-    for group, val in ((src, 1.0), (snk, 0.0)):
-        for p in group:
-            sampled = False
-            for li, (name, lid) in enumerate(layers):
-                if not p.IsOnLayer(lid):
-                    continue
-                ps = pcbnew.SHAPE_POLY_SET()
-                p.TransformShapeToPolygon(ps, lid, 0, MM(.005), pcbnew.ERROR_INSIDE)
-                for (lj, i, j), u in idx.items():
-                    if lj == li and ps.Contains(vec(*centre(i, j))):
-                        if fixed.get(u, val) != val:
-                            raise ValueError('source and sink overlap')
-                        fixed[u] = val
-                        sampled = True
-            if not sampled:
-                raise ValueError(f'terminal pad {p.GetParentFootprint().GetReference()}.{p.GetNumber()} not sampled')
-    # keep only the component joined to both terminals
+    return board, layers, idx, nbr, (centre, vec, MM)
+
+
+def terminal_cells(board, layers, idx, geometry, pads):
+    """The cells under each pad of `pads` on each of its copper layers (in idx order); a pad with none fails."""
+    import pcbnew
+    centre, vec, MM = geometry
+    cells = []
+    for p in pads:
+        sampled = False
+        for li, (name, lid) in enumerate(layers):
+            if not p.IsOnLayer(lid):
+                continue
+            ps = pcbnew.SHAPE_POLY_SET()
+            p.TransformShapeToPolygon(ps, lid, 0, MM(.005), pcbnew.ERROR_INSIDE)
+            for (lj, i, j), u in idx.items():
+                if lj == li and ps.Contains(vec(*centre(i, j))):
+                    cells.append(u)
+                    sampled = True
+        if not sampled:
+            raise ValueError(f'terminal pad {p.GetParentFootprint().GetReference()}.{p.GetNumber()} not sampled')
+    return cells
+
+
+def component(nbr, fixed):
+    """(kept cells, remapped neighbour lists, remapped fixed values): the copper joined to any fixed cell."""
     seen, todo = set(), [u for u in fixed]
     while todo:
         u = todo.pop()
@@ -158,6 +165,27 @@ def solve(board_path, net, source, sink, grid=0.1, window=None, plating=0.020):
     keep = sorted(seen)
     remap = {u: k for k, u in enumerate(keep)}
     sub = [[(remap[v], g) for v, g in nbr[u] if v in remap] for u in keep]
+    return keep, remap, sub
+
+
+def solve(board_path, net, source, sink, grid=0.1, window=None, plating=0.020):
+    board, layers, idx, nbr, geometry = mesh(board_path, net, grid, window, plating)
+    if window is None:
+        import pcbnew
+        mm = pcbnew.ToMM
+        bb = board.GetBoardEdgesBoundingBox()
+        window = (mm(bb.GetX()), mm(bb.GetY()), mm(bb.GetRight()), mm(bb.GetBottom()))
+    src, snk = pad_spec(board, source), pad_spec(board, sink)
+    if any(p.GetNetname() != net for p in src + snk):
+        raise ValueError('terminal pads must be on the net')
+    fixed = {}
+    for group, val in ((src, 1.0), (snk, 0.0)):
+        for u in terminal_cells(board, layers, idx, geometry, group):
+            if fixed.get(u, val) != val:
+                raise ValueError('source and sink overlap')
+            fixed[u] = val
+    # keep only the component joined to both terminals
+    keep, remap, sub = component(nbr, fixed)
     fixed2 = {remap[u]: val for u, val in fixed.items()}
     if not any(v == 0.0 for v in fixed2.values()) or not any(v == 1.0 for v in fixed2.values()):
         raise ValueError('terminals not connected')
@@ -167,6 +195,70 @@ def solve(board_path, net, source, sink, grid=0.1, window=None, plating=0.020):
     return dict(board_sha256=hashlib.sha256(Path(board_path).read_bytes()).hexdigest(), net=net, source=source,
                 sink=sink, grid_mm=grid, window_mm=list(window), cells=len(sub), cg_iterations=iterations,
                 resistance_ohm=1.0 / current)
+
+
+def solve_ports(board_path, net, ground, ports, grid=0.1, window=None, plating=0.020, tol=1e-11):
+    """The multiport transfer-resistance matrix of `net`'s copper (R12F12-TRI-30): `ground` and each of `ports`
+    ({name: 'REF:pads'}) is an equipotential pad set. For each port k, k at 1 V and every other terminal (ground
+    included) at 0 V gives column k of the short-circuit admittance matrix (the currents into the terminals); with the
+    ground terminal as reference, Z = Y^-1 over the ports, so V_ground - V_k = sum_j Z[k][j] x I_j for currents I_j
+    drawn out of the copper at port j and supplied at the ground terminal. Z is symmetric (reciprocity); the largest
+    relative asymmetry of the solved matrix is returned. Calculation on CAD copper (20 C), as solve()."""
+    board, layers, idx, nbr, geometry = mesh(board_path, net, grid, window, plating)
+    names = list(ports)
+    groups = {name: terminal_cells(board, layers, idx, geometry, pad_spec(board, spec)) for name, spec in ports.items()}
+    groups['__ground__'] = terminal_cells(board, layers, idx, geometry, pad_spec(board, ground))
+    owner = {}
+    for name, cells in groups.items():
+        for u in cells:
+            if owner.get(u, name) != name:
+                raise ValueError(f'terminals overlap: {owner[u]} and {name}')
+            owner[u] = name
+    keep, remap, sub = component(nbr, owner)
+    if any(not any(remap.get(u) is not None for u in cells) for cells in groups.values()):
+        raise ValueError('a terminal is not on the copper')
+    terms = {name: sorted({remap[u] for u in cells}) for name, cells in groups.items()}
+    reach = set()
+    todo = [terms['__ground__'][0]]
+    while todo:
+        u = todo.pop()
+        if u in reach:
+            continue
+        reach.add(u)
+        todo.extend(v for v, _ in sub[u])
+    if any(not set(c) & reach for c in terms.values()):
+        raise ValueError('terminals not connected')
+    Y, iterations = [], []
+    for k in names:
+        fixed = {u: (1.0 if name == k else 0.0) for name, cells in terms.items() for u in cells}
+        volts, it = solve_cg(len(sub), sub, fixed, tol=tol)
+        iterations.append(it)
+        col = []
+        for j in names:
+            cells = set(terms[j])
+            col.append(sum(g * (volts[u] - volts[v]) for u in cells for v, g in sub[u] if v not in cells))
+        Y.append(col)
+    n = len(names)
+    Y = [[Y[c][r] for c in range(n)] for r in range(n)]        # Y[r][c]: current out of port r per volt on port c
+    # Gauss-Jordan inverse (n is small)
+    a = [row[:] + [1.0 if i == j else 0.0 for j in range(n)] for i, row in enumerate(Y)]
+    for c in range(n):
+        piv = max(range(c, n), key=lambda r: abs(a[r][c]))
+        a[c], a[piv] = a[piv], a[c]
+        d = a[c][c]
+        a[c] = [x / d for x in a[c]]
+        for r in range(n):
+            if r != c:
+                f = a[r][c]
+                a[r] = [x - f * y for x, y in zip(a[r], a[c])]
+    Z = [row[n:] for row in a]
+    asym = max((abs(Z[i][j] - Z[j][i]) / max(abs(Z[i][j]), abs(Z[j][i]))
+                for i in range(n) for j in range(n) if i < j), default=0.0)
+    return dict(net=net, ground=ground, ports=dict(ports), order=names, grid_mm=grid,
+                window_mm=None if window is None else list(window), cells=len(sub), cg_iterations=iterations,
+                Z_ohm={names[i]: {names[j]: Z[i][j] for j in range(n)} for i in range(n)},
+                Y_S={names[i]: {names[j]: Y[i][j] for j in range(n)} for i in range(n)},
+                reciprocity_max_rel_asymmetry=asym)
 
 
 def main():

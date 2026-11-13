@@ -36,14 +36,26 @@ curves, the convergence, sensitivity, no-clamp, retained-output and C88-topology
     C95 / C79 removed (capacitance scaled to 1e-6 of nominal); --no-clamp-all removes D8 (VBR 1000 V) in every case;
     --rdamp-scale K scales R166 in every corner and --damper-scale K scales every damper capacitor (C89 / C95 / C79).
   * The inputs and results are R12's files in m3_design/r12/design/.
+  * Assumptions it does not model (R12F12-TRI-16): D8.2 is ideal ground. On the board D8.2 returns to the In1 GND plane
+    through two 0.3 mm F.Cu runs of 1.45 mm (centreline, 0.9 mm of each inside the pad) to two vias: about 1.3 mOhm at
+    20 C and about 0.3 nH (stage D `d8_return`, Calculation / Inference: microstrip estimate, plane spreading not
+    modelled), against the clamp's 0.26 ohm slope and the >= 0.1 uH harness, so it is left out.
+  * Gate (R12F12-TRI-22): --gate BOARD (KiCad python, run by tools/check.sh's R12 section) re-extracts the inputs from
+    the gated board, requires them to equal the committed inputs (board_sha256 and electrical_sha256 included, so a
+    stale board binding fails), runs R10's validate on the committed results with R12's patches installed (every
+    corner, metric, convergence, no-clamp and local-path check; validate() below compares the recomputed
+    retained-output floats at 1e-12 relative and every identity exactly), and requires stageD_budget.json to name the
+    same board.
 
 usage: <KiCad python3> -I tools/r12_hotplug.py --extract FILLED_BOARD.kicad_pcb [--inputs OUT.json]     (pcbnew)
+       <KiCad python3> -I tools/r12_hotplug.py --gate BOARD.kicad_pcb [--copy]                            (pcbnew)
        <python3 with numpy> -I tools/r12_hotplug.py [--inputs IN.json] [--output OUT.json]            (simulation)
        <python3 with numpy> -I tools/r12_hotplug.py --variant as_built|r166_shorted|no_damper [--no-clamp-all]
                                                    [--rdamp-scale K] [--damper-scale K] --output OUT.json
 Simulation needs a C compiler (cc), as R10's.
 """
 import json
+import math
 import sys
 import types
 from pathlib import Path
@@ -148,6 +160,71 @@ def extract(board, board_path):
         base.REFS = _REFS
 
 
+def close(saved, live, rel=1e-12):
+    """True when `saved` equals `live` with every float within `rel` relative and every other value identical."""
+    if isinstance(live, bool) or isinstance(saved, bool):
+        return saved is live
+    if isinstance(live, float) and isinstance(saved, (int, float)):
+        return math.isfinite(saved) and math.isclose(saved, live, rel_tol=rel, abs_tol=0.0)
+    if isinstance(live, dict):
+        return isinstance(saved, dict) and saved.keys() == live.keys() and all(close(saved[k], live[k], rel) for k in live)
+    if isinstance(live, list):
+        return isinstance(saved, list) and len(saved) == len(live) and all(close(a, b, rel) for a, b in zip(saved, live))
+    return type(saved) is type(live) and saved == live
+
+
+def validate(inputs, report, live_signature):
+    """R10's validate (base.validate, with install()'s patches) where the recomputed retained-output figures need only
+    agree with the saved ones at 1e-12 relative (floats) and exactly (identities); everything else is R10's check."""
+    try:
+        live = base.retained_output(inputs)
+    except (KeyError, ValueError, TypeError):
+        live = None
+    saved = report.get('retained_output')
+    if live is not None and saved != live and close(saved, live):
+        report = dict(report, retained_output=live)
+    return base.validate(inputs, report, live_signature)
+
+
+def stage_d_binding(board_sha, inputs=None, budget=None):
+    """The stage D record (board_sha256 and source_board_sha256) and the hot-plug inputs (board_sha256) must name the
+    gated board; inputs / budget default to the committed files."""
+    d = budget if budget is not None else json.loads((DESIGN / 'stageD_budget.json').read_text())
+    h = inputs if inputs is not None else json.loads((DESIGN / 'hotplug_inputs_r12.json').read_text())
+    issues = [f'stageD_budget.json {k} {d.get(k)} is not the gated board {board_sha}'
+              for k in ('board_sha256', 'source_board_sha256') if d.get(k) != board_sha]
+    if h.get('board_sha256') != board_sha:
+        issues.append(f"hotplug_inputs_r12.json board_sha256 {h.get('board_sha256')} is not the gated board {board_sha}")
+    return issues
+
+
+def gate(board_path, copy=False):
+    """R12F12-TRI-22: the R12 gate's hot-plug and stage D binding check (see the module docstring). copy: the gated
+    board is not the repository board (as tools/check.sh's fab manifest step): its electrical signature must still
+    match, but its file hash is not held to the committed records."""
+    import pcbnew
+    install()
+    inputs = json.loads(base.INPUTS.read_text())
+    result = json.loads(base.RESULTS.read_text())
+    live = base.extract(pcbnew.LoadBoard(str(board_path)), Path(board_path))
+    issues = []
+    skip = {'board_sha256'} if copy else set()
+    changed = [k for k in sorted(set(live) | set(inputs)) if k not in skip
+               and base.digest(live.get(k)) != base.digest(inputs.get(k))]
+    if changed:
+        issues.append('stale board-derived hot-plug inputs: ' + ', '.join(changed))
+    issues += validate(inputs, result, live['electrical_sha256'])
+    if copy:
+        print('R12 stage D / hot-plug board binding: not checked (board copy)')
+    else:
+        issues += stage_d_binding(live['board_sha256'])
+    for i in issues:
+        print('R12 hot-plug / stage D binding: ' + i)
+    if not issues:
+        print(f"R12 hot-plug (2304 corners, R10 validate) and stage D binding: OK (board {live['board_sha256'][:8]}...)")
+    return 1 if issues else 0
+
+
 def install():
     base.extract = extract
     base.DESIGN = DESIGN
@@ -215,6 +292,8 @@ def variant(name, no_clamp, inputs_path, output_path, rdamp_scale=1.0, damper_sc
 
 
 if __name__ == '__main__':
+    if '--gate' in sys.argv:
+        raise SystemExit(gate(sys.argv[sys.argv.index('--gate') + 1], copy='--copy' in sys.argv))
     install()
     if any(a in sys.argv for a in ('--variant', '--no-clamp-all', '--rdamp-scale', '--damper-scale')):
         import argparse

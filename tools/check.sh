@@ -171,6 +171,15 @@ if [[ -n "$R12" ]]; then
   "$KICAD_PY" -I "$ROOT/tools/check_r12.py" "$R12" --fit "$O12/fit.json" --report "$O12/r12.json"
   "$KICAD_PY" -I "$ROOT/tools/route_check.py" "$R12" --profile r12 --report "$O12/route.json" \
     | { grep -E '^(FAIL|routing hygiene: [0-9])' || true; }
+  # R12F12-TRI-22: hot-plug inputs re-extracted from this board, R10's validate on the 2304-corner results, and the
+  # stage D record bound to the repository board (a board copy: electrical signature only)
+  if [[ "$R12" -ef "$CANON12" ]]; then HPCOPY=""; else HPCOPY="--copy"; fi
+  if "$KICAD_PY" -I -B "$ROOT/tools/r12_hotplug.py" --gate "$R12" $HPCOPY > "$O12/hotplug_gate.txt" 2>&1; then
+    { grep -v 'Debug\|stdpbase' "$O12/hotplug_gate.txt" || true; }
+  else
+    { grep -v 'Debug\|stdpbase' "$O12/hotplug_gate.txt" || true; } | tail -20
+    echo "R12 hot-plug / stage D binding FAILED: see $O12/hotplug_gate.txt"; exit 1
+  fi
   M12="$(dirname "$R12")/fab/m3_fab_manifest.json"
   if [[ "$R12" -ef "$CANON12" ]]; then
     [[ -f "$ROOT/tools/fab_manifest_r12.py" ]] \
