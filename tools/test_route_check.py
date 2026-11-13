@@ -198,6 +198,37 @@ class RouteCheck(unittest.TestCase):
         self.track((5, 3), (5, -3), '3V3')
         self.assertTrue(self.cats('crossing_without_node'))
 
+    def test_slit_boundary_is_exact_wherever_the_pair_sits(self):
+        """R12F12-TRI-26: side_by_side_overlap compares the pair's offset, rounded to whole nm, with the integer
+        SLIT_NM, so two 0.6 mm tracks 0.700 mm apart (a slit of exactly SLIT, RAW_PROTECTED's W2 double feed) pass at
+        y 0, 3.85 and 50, along x or y and at 45 degrees, and 0.6995 mm apart (a 0.0995 mm slit) fail. The one named nm
+        of SLIT_GRID_NM (FromMM truncates: 33.05 mm is 33049999 nm, the W2 feed's end on the board) passes 0.699999 mm
+        and no more: 0.699998 mm fails."""
+        self.assertEqual((rc.SLIT_NM, type(rc.SLIT_NM), rc.SLIT_GRID_NM), (100000, int, 1))
+        self.assertEqual(rc.SLIT_NM, round(rc.SLIT / rc.NM))
+        self.assertEqual(pcbnew.FromMM(33.05), 33049999)
+        s2 = math.sqrt(2)
+
+        def pair(a, b, n):
+            """Two 0.6 mm 3V3 tracks: a-b and a-b shifted by the vector n (mm); the side_by_side_overlap offsets."""
+            self.board = pcbnew.BOARD(); self.setUp()
+            self.track(a, b, '3V3', 0.6)
+            self.track((a[0] + n[0], a[1] + n[1]), (b[0] + n[0], b[1] + n[1]), '3V3', 0.6)
+            return [d['offset_mm'] for d in self.cats('side_by_side_overlap')]
+        for off, fails in ((0.700, False), (0.6995, True), (0.699999, False), (0.699998, True)):
+            cases = [('x', y, (5.0, y), (15.0, y), (0.0, off)) for y in (0.0, 3.85, 50.0)]
+            cases += [('y', y, (45.2, y), (45.2, y + 12.8), (-off, 0.0)) for y in (0.0, 3.85, 20.25, 50.0)]
+            # 45 degrees: the second track is moved along x by off * sqrt 2 (FromMM rounds it to 1 nm)
+            cases += [('45', y, (5.0, y), (10.0, y + 5.0), (round(off * s2, 6), 0.0)) for y in (0.0, 3.85, 50.0)]
+            for axis, y, a, b, n in cases:
+                with self.subTest(offset=off, axis=axis, y=y):
+                    found = pair(a, b, n)
+                    if fails:
+                        self.assertEqual(len(found), 1, found)
+                        self.assertAlmostEqual(found[0], off, places=4)
+                    else:
+                        self.assertEqual(found, [])
+
     def test_overlap_only_joint_and_offcentre_via(self):
         self.two_pads('3V3')
         self.track((0, 0), (10, 0), '3V3')

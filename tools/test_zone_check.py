@@ -45,16 +45,42 @@ class ZoneGuardOutline(unittest.TestCase):
         frag = Path(zone_guard.__file__).with_name('r12_routes_W5.tsv').read_text().splitlines(True)
         self.assertEqual(zone_guard.check(self.Z, 'W5', frag, self.box), [])
 
+    # R12F10-TRI-15 / R12F12-TRI-28: the recorded hand-offs, row by row (kind, net, layer, width, end points)
+    HANDOFFS = {
+        'W1': ('track GND F 0.3 13.1 52.75 13.7 52.75', 'via GND - 0.45 13.6 53.95', 'via GND - 0.45 13.6 51.35',
+               'via GND - 0.45 13.7 52.75', 'track PYRO1_CONT F 0.1 12.2 53.95 12.8 54.55',
+               'track PYRO1_GATE_N F 0.1 18.7 50.65 16.6 48.55'),
+        'W2': ('track GND F 0.3 40.1 56.05 39.7 55.65',),
+        'W3': ('track BAT_FAULT_N F 0.1 20.2 49.85 19.3 48.95', 'via BAT_FAULT_N - 0.45 19.3 48.95',
+               'track BAT_FAULT_N B 0.2 19.3 48.95 18.15 47.8', 'track GND F 0.2 26.6 48.61 25.99 48.61',
+               'track GND F 0.2 25.99 48.61 25.75 48.85', 'track ARM1_SENSE B 0.2 13 59.85 13 44.6',
+               'track ACT_EN_MCU B 0.1 16.4 56.875 16.4 49.75', 'track ACT_EN_MCU B 0.1 16.4 49.75 17.1 49.05',
+               'track BUZZ_DRV B 0.2 12.3 65.15 11.2 64.05'),
+        'W4': (),
+        'W5': (),
+    }
+
     def test_rows_outside_their_zone_are_the_recorded_ones(self):
-        """R12F10-TRI-15: each fragment's rows outside its own zone are exactly the recorded hand-offs (W1 6, W3 9: the
-        BAT_FAULT_N / GND / ARM1_SENSE / ACT_EN_MCU / BUZZ_DRV lanes crossing into W1 / W4 / W5; W2 1 since R12F12-TRI-02:
-        the 0.566 mm F stub from U3.4's GND via (40.1, 56.05) in W3 to its second via (39.7, 55.65) in W2; W4, W5 none), so
-        a fragment edit that leaves its zone fails here (lane C's C460 / C461 rows sat in W5 outside it, round 10)."""
-        want = {'W1': 6, 'W2': 1, 'W3': 9, 'W4': 0, 'W5': 0}
-        for zone, n in want.items():
+        """R12F10-TRI-15 / R12F12-TRI-28: each fragment's rows outside its own zone are exactly the recorded hand-offs,
+        compared row by row (a count alone passes a row swapped for another): in W1 the PC0 bank's GND link and vias, a
+        PYRO1_CONT and a PYRO1_GATE_N track; in W3 the BAT_FAULT_N / GND / ARM1_SENSE / ACT_EN_MCU / BUZZ_DRV lanes
+        crossing into W1 / W4 / W5; in W2 since R12F12-TRI-02 the F stub from U3.4's first GND via (in W3) to its second
+        (in W2); W4, W5 none. A fragment edit that leaves its zone fails here (lane C's C460 / C461 rows sat in W5
+        outside it, round 10), and so does a recorded hand-off moved or replaced."""
+        self.assertEqual(sorted(self.HANDOFFS), sorted(self.Z['zones']))
+        for zone, want in self.HANDOFFS.items():
             with self.subTest(zone=zone):
                 frag = Path(zone_guard.__file__).with_name(f'r12_routes_{zone}.tsv').read_text().splitlines(True)
-                self.assertEqual(len(zone_guard.check(self.Z, zone, frag, self.box)), n)
+                rows = [' '.join(row.split('\t')).strip() for _, row in zone_guard.check(self.Z, zone, frag, self.box)]
+                self.assertEqual(sorted(rows), sorted(want))
+
+    def test_handoff_comparison_sees_a_swapped_row(self):
+        """The row comparison fails a hand-off replaced by another outside row of the same count (a count would not)."""
+        frag = Path(zone_guard.__file__).with_name('r12_routes_W2.tsv').read_text().splitlines(True)
+        moved = [r.replace('\t39.7\t55.65', '\t39.6\t55.55') for r in frag]
+        rows = [' '.join(row.split('\t')).strip() for _, row in zone_guard.check(self.Z, 'W2', moved, self.box)]
+        self.assertEqual(len(rows), len(self.HANDOFFS['W2']))
+        self.assertNotEqual(sorted(rows), sorted(self.HANDOFFS['W2']))
 
     def test_every_zone_polygon_is_on_the_board(self):
         for zone in self.Z['zones']:
