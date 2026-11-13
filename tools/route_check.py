@@ -221,6 +221,9 @@ MICRO = 0.05                     # mm
 ANG_TOL = 0.5                    # deg
 OFF_DEG, OFF_LAT = 0.1, 0.002    # off-angle limits: degrees, mm lateral
 SLIT = 0.1                       # mm: same-net slit narrower than this counts as side-by-side overlap
+SLIT_NM = 100000                 # SLIT in whole nm (R12F12-TRI-26): compared with offsets rounded to 1 nm
+SLIT_GRID_NM = 1                 # nm: pcbnew.FromMM truncates (33.05 mm -> 33049999 nm), so a generated end may sit
+                                 # 1 nm short of its design value and a design slit of exactly SLIT read 1 nm narrow
 GND_REACH = 1.5                  # mm, centre to centre (M3_R5 criterion)
 SHORT = 0.2                      # mm: short_segment below max(width, SHORT)
 DETOUR_MAX = 1.6                 # copper length / octilinear pad-to-pad distance
@@ -2257,18 +2260,18 @@ def scan(board, baseline_log=None):
             # R12F7-TRI-07: a track whose copper passes a same-net pad it does not touch at a gap under SLIT (a
             # same-net slit, below the fab's spacing; track pairs are side_by_side_overlap's)
             l, t, r, b = pd['bb']
-            g = s['w'] / 2 + SLIT / NM
+            g = s['w'] / 2 + SLIT_NM
             if max(s['a'][0], s['b'][0]) + g < l or min(s['a'][0], s['b'][0]) - g > r or \
                max(s['a'][1], s['b'][1]) + g < t or min(s['a'][1], s['b'][1]) - g > b or not pd['pad'].IsOnLayer(s['lid']):
                 continue
             sh = pd['pad'].GetEffectiveShape(s['lid'])
             cop = pcbnew.SHAPE_SEGMENT(P(s['a']), P(s['b']), int(s['w']))
-            if not sh.Collide(cop, int(SLIT / NM)):
+            if not sh.Collide(cop, SLIT_NM):
                 continue
             grp = [q for q in cu.pads_by_net[s['net']] if q['name'] == pd['name'] and q['pad'].IsOnLayer(s['lid'])]
             if any(joins_beside(s, q, q['pad'].GetEffectiveShape(s['lid']), cop) for q in grp):
                 continue                   # one land of several pads (U9's L-shaped pins) is the same pad
-            lo, hi = 0, int(SLIT / NM)
+            lo, hi = 0, SLIT_NM
             while hi - lo > 10:
                 mid = (lo + hi) // 2
                 lo, hi = (lo, mid) if sh.Collide(cop, mid) else (mid, hi)
@@ -2289,7 +2292,7 @@ def scan(board, baseline_log=None):
                 Lj = dist(aj, bj)
                 if Lj == 0:
                     continue
-                g = max(si['w'], sj['w']) + SLIT / NM
+                g = max(si['w'], sj['w']) + SLIT_NM
                 if max(ai[0], bi[0]) + g < min(aj[0], bj[0]) or max(aj[0], bj[0]) + g < min(ai[0], bi[0]) or \
                    max(ai[1], bi[1]) + g < min(aj[1], bj[1]) or max(aj[1], bj[1]) + g < min(ai[1], bi[1]):
                     continue
@@ -2306,10 +2309,13 @@ def scan(board, baseline_log=None):
                              (dist(ai, bj) <= TOL and dist(bi, aj) <= TOL))
                         add('duplicate_segment' if dup else 'collinear_overlap', net, layer, ai,
                             end=(round(mm(bi[0]), 4), round(mm(bi[1]), 4)), other=other, overlap_mm=round(mm(ov), 4))
-                    # D-R12-174: 1 nm of float slack, so a slit of exactly SLIT (here RAW_PROTECTED's W2 double feed,
-                    # offset 0.7 mm for 0.6 mm tracks) reads the same wherever the pair sits on the board; the projected
-                    # offset is a float quotient (0.7 mm read 0.69999... after the board grew 3.85 mm, 0.70000... before)
-                    elif TOL < off < (si['w'] + sj['w']) / 2 + SLIT / NM - 1 and ov > max(si['w'], sj['w']) / 2:
+                    # R12F12-TRI-26: the offset is rounded to whole nm and compared in integers, so a slit of exactly
+                    # SLIT passes wherever the pair sits, along an axis or at 45 degrees, and 0.5 um less fails. The
+                    # one named nm is SLIT_GRID_NM, the generators' FromMM truncation: RAW_PROTECTED's W2 double feed
+                    # (0.6 mm tracks at y 32.35 and 33.05 by r12_routes.tsv) is on the board at y 33.049999, a slit
+                    # of 0.099999 mm (tests: test_route_check test_slit_boundary_is_exact_wherever_the_pair_sits)
+                    elif TOL < off and 2 * round(off) < si['w'] + sj['w'] + 2 * (SLIT_NM - SLIT_GRID_NM) and \
+                            ov > max(si['w'], sj['w']) / 2:
                         add('side_by_side_overlap', net, layer, ai, end=(round(mm(bi[0]), 4), round(mm(bi[1]), 4)),
                             other=other, offset_mm=round(mm(off), 4), overlap_mm=round(mm(ov), 4))
                 else:
