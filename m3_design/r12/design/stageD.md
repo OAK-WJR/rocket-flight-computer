@@ -1,10 +1,35 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
+## Current snapshot (round 12, 2026-11-13)
+
+PCB `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770`, 46 × 86.85 × 1.6 mm. Lane P (`6d945ce`) reports two identical builds,
+full gate exit 0, 193 footprints, 185 assembled parts, 1147 tracks / 394 vias, 52 legends, 106 shown / 87 hidden
+designators (R13 and R118 newly hidden), 595 paste flashes, 60 BOM lines. S-10 has 203 exceptions;
+K-power 123 taps / 19 exceptions. Routing: zero failing, two allowlisted, eight recorded leftovers, no stale
+or unrecorded leftovers. Lane A (`a04a513`): 60 stage-D tests pass; analysis and hot-plug inputs bind to this hash.
+The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, all text (R12F12-VER-01 … -07);
+the full gate on the final tree is the commit condition.
+
+Fire loop 4.72843 Ω; four-stall fire 1.24833 A at J1 5.71941 V; EN at R80.1 5.70082 V.
+Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20405 V
+in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and SD writes in buzzer gaps.
+All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pass, minimum −14.077 V
+(Simulation / Inference). No firmware, physical, electrical or JLC DFM test has been done on this board.
+Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
+`hotplug_results_r12.json`. Earlier named-board figures below are historical and cannot qualify this board.
+
+Parts + feeder **$62.50 / $43.16 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-13T10:35:38Z / 10:37:57Z): 60 BOM lines (24 Extended / 36 Basic), 185 JLC parts, 21 charged codes,
+$30.27 parts per board and $64.47 feeder fees per order. There are 595 paste flashes and no owner BOM.
+Stock 2026-11-13T10:34:51Z / 10:36:33Z: no line short or thin at either quantity. Orderable quantity is an
+Inference about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping
+was for historical `1d7562d5…`; re-quote `c9b9f0fa…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+
+
 **Historical stage D record.** §1–§6 record the 100 mm board `d776c5d7…`; §7 records
-`d6e4f7ee…`'s port-fix pass. The current board is **`a1e65bb4…`, 46 × 83 mm** (round-10 fixes,
-D-R12-170 … -173). Current checks/layout: `stageE_relayout.md` §1–§3; analyses: §4; costs: §5;
-current state: `docs/M3_R12.md`. Old “now” / “final” and bench lines below belong to their named boards.
-R12's current chatter rule is under 6.9 ms total open time in every sliding 100 ms window (D-R12-170).
+`d6e4f7ee…`'s port-fix pass. Round-10 checks and analyses in `stageE_relayout.md` are historical.
+The current board and bench rule are in the snapshot above and `docs/M3_R12.md`.
+Old “now” / “final” and bench lines below belong to their named boards.
 
 Follows stageC.md (pass 2 frozen, D-R12-77A, board `e2b005b5…`). Decisions D-R12-78 … D-R12-82 are in
 `R12_DECISIONS.md`. Branch `r12-stage-d`; nothing is ordered. Labels (AGENTS §2.5): **Measured** = read from the CAD or
@@ -200,7 +225,7 @@ The r12_plan targets were ≤ $170 / ≤ $295: with U1-only X-ray, this dated 2-
 Counting U1 / U4 / U5 / U6 / U9 gives $189.79 / $295.09–303.29, above both targets (Calculation / Inference:
 qualifying count and fee tier); confirm JLC's quote, including possible D402 / Y1 fees.
 
-**Current cost on `a1e65bb4…` (unchanged BOM, D-R12-173).** Stored Live runs
+**Historical round-10 cost on `a1e65bb4…` (unchanged BOM, D-R12-173).** Stored Live runs
 `fab/cost_check_2.json` / `_5.json`, 2026-11-09T00:10:43Z / 00:12:01Z: parts + feeder
 **$63.41 / $44.99** per board at 2 / 5 boards. **593 paste flashes**; minimum all-in
 **$170.51 / $276.59** with U1-only X-ray; five qualifying parts **$183.63 / $288.89–297.09**
@@ -208,7 +233,7 @@ qualifying count and fee tier); confirm JLC's quote, including possible D402 / Y
 The cost files retain the earlier placement's CPL hash; the BOM hash matches. Exact arithmetic and
 stock timestamps: [stageE_relayout §5](stageE_relayout.md#5-cost-and-stock-round-9-d-r12-165).
 
-**Historical port-fix hashes (Measured, SHA-256, `d6e4f7ee…`; current hashes: stageE_relayout §6).**
+**Historical port-fix hashes (Measured, SHA-256, `d6e4f7ee…`; historical round-10 hashes: stageE_relayout §6).**
 
 | File | SHA-256 |
 |---|---|

@@ -1,5 +1,31 @@
 # R12 plan: R11's circuit, pruned and re-sourced, on a one-sided four-layer board for JLC Economic PCBA
 
+## Current snapshot (round 12, 2026-11-13)
+
+PCB `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770`, 46 × 86.85 × 1.6 mm. Lane P (`6d945ce`) reports two identical builds,
+full gate exit 0, 193 footprints, 185 assembled parts, 1147 tracks / 394 vias, 52 legends, 106 shown / 87 hidden
+designators (R13 and R118 newly hidden), 595 paste flashes, 60 BOM lines. S-10 has 203 exceptions;
+K-power 123 taps / 19 exceptions. Routing: zero failing, two allowlisted, eight recorded leftovers, no stale
+or unrecorded leftovers. Lane A (`a04a513`): 60 stage-D tests pass; analysis and hot-plug inputs bind to this hash.
+The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, all text (R12F12-VER-01 … -07);
+the full gate on the final tree is the commit condition.
+
+Fire loop 4.72843 Ω; four-stall fire 1.24833 A at J1 5.71941 V; EN at R80.1 5.70082 V.
+Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20405 V
+in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and SD writes in buzzer gaps.
+All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pass, minimum −14.077 V
+(Simulation / Inference). No firmware, physical, electrical or JLC DFM test has been done on this board.
+Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
+`hotplug_results_r12.json`. Earlier named-board figures below are historical and cannot qualify this board.
+
+Parts + feeder **$62.50 / $43.16 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-13T10:35:38Z / 10:37:57Z): 60 BOM lines (24 Extended / 36 Basic), 185 JLC parts, 21 charged codes,
+$30.27 parts per board and $64.47 feeder fees per order. There are 595 paste flashes and no owner BOM.
+Stock 2026-11-13T10:34:51Z / 10:36:33Z: no line short or thin at either quantity. Orderable quantity is an
+Inference about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping
+was for historical `1d7562d5…`; re-quote `c9b9f0fa…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+
+
 Branch `m3-assy-r12`, cut from `m3-assy-r11` at `0b26da5` (R11 tip, D-R11-85 … -88 included). Started 2026-11-04 on
 the owner's instruction (verbatim): "without sacrificing functionality, make the price as low as it can reasonably go.
 two potential levers include safety margin (absolutely minimal safety margin) and size (you can increase it up to
@@ -23,9 +49,9 @@ requirement needs deleted, every part with a cheaper equivalent re-sourced, and 
 | Outline | 46 × ≤ 100 mm (JLC's 4-layer price step: 46 × 105 costs $20 more) | 46 × 50 mm | D-R12-01; cost_study §1.4, §2.1 |
 | Vias | 0.3 mm drill / 0.45 mm pad through vias only, no via in pad | 0.25 / 0.2 mm, two VIPPO | D-R12-03 |
 | MCU | STM32H743VIH6 TFBGA-100 kept (escape count, D-R12-02) | same | D-R12-02 |
-| Parts | 184 (50 deleted, 16 added), 55 codes: 36 Basic, 16 Extended, 1 Preferred Extended, 2 owner-fitted | 218, 75 codes | D-R12-04 … -19 |
+| Parts | 193 footprints, 185 JLC-assembled parts, 60 codes: 36 Basic / 24 Extended (21 charged); no owner-fitted parts (round 12) | 218, 75 codes | D-R12-04 … -19 |
 
-The owner's 200 mm allowance is not used: R12's courtyards cover 1995 mm² (Calculation: the sum of the R12 lands'
+The owner's 200 mm allowance is not used. The historical stage-A density estimate was 1995 mm² (Calculation: the sum of the R12 lands'
 courtyard boxes), 43 % of one 46 × 100 mm face, near LEVIA-H7's 45 % two-face density (R11 records) and inside AVA's
 47.4 × 98.5 mm footprint (`reports/AVA board layout images.md` in the parent repository). A longer board adds JLC's
 $25 engineering fee (cost_study §2.1, Live).
@@ -54,9 +80,9 @@ at 5 boards against the $84.41 cap.
 | A. Parts and schematic (this stage) | `m3_design/r12_parts.py`, `r12_sch.py`, `r12_sch_check.py`, `r12_budget.py`; R11's netlist pinned in `design/r11_input/` by SHA-256; `design/circuit.json` (the R12 change list); `design/pin_table.tsv` (r12_net); `design/r12_windows.json`; `design/jlc_r12_stock.json`, `design/r12_cost.json`; `tools/check_r12.py` skeleton, `fit_check` / `route_check` profile r12, `check.sh` R12 section, `tools/test_r12_check.py` | strict ERC, exact netlist contract, AGENTS §2 net contracts, one-side lands, 37 seeded faults, deterministic replay; `tools/check.sh` exit 0 |
 | B. Board and placement | `r12_pcb.py`, `r12_place.tsv`: outline, four-layer stack-up, holes, every part on F, no copper | check_r12 `--stage placement`, fit_check r12, DRC courtyards |
 | C. Copper by families | `r12_route*.py` (BGA escape per D-R12-02, pyro, power, ports, USB, SD, servo, signals, ground) | route_check r12 after each family; check_r12 `--stage copper` |
-| D. Post, fab and analyses | `r12_post.py`, `r12_fab.sh` (Economic BOM / CPL, owner BOM for C84 and LS120), fire budget, hot-plug and hold-up re-runs on R12 copper (keep or drop R166, D-R12-09), the R10 / R11 rules ported into check_r12 (its PENDING list) | `tools/check.sh` with the R12 section (runs once `m3_design/r12/m3.kicad_pcb` is tracked) |
+| D. Post, fab and analyses | `r12_post.py`, `r12_fab.sh` (Economic BOM / CPL; every part JLC-assembled, no owner BOM), fire budget, hot-plug and hold-up re-runs on R12 copper (keep or drop R166, D-R12-09), the R10 / R11 rules ported into check_r12 (its PENDING list) | `tools/check.sh` with the R12 section (runs once `m3_design/r12/m3.kicad_pcb` is tracked) |
 | E. Records | `docs/M3_R12.md`, REQUIREMENTS / ORDERING / AGENTS R12 rows, binding note, owner acceptance list (`R12_DECISIONS.md` §3) | review rounds |
-| F. Review | full review rounds plus triage until two consecutive rounds have zero Critical and zero Major real errors; fix Minors each round without resetting the count (D-R12-167). Round 10 is the first clean round; round 11 reviews `a1e65bb4…` | |
+| F. Review | full review rounds plus triage until two consecutive rounds have zero Critical and zero Major real errors; fix Minors each round without resetting the count (D-R12-167). Rounds 10 and 11 were clean; the owner stopped the loop on 2026-11-09. Round 12 is the final pass (D-R12-175) | |
 
 Layout: the R12 KiCad project is `m3_design/r12/`; design data in `m3_design/r12/design/`. `tools/check.sh` runs R10's
 gate, R11's (its board is tracked) and, once `m3_design/r12/m3.kicad_pcb` is tracked, R12's; until then only
@@ -74,7 +100,7 @@ parity (0 violations) and check_r12 placement pass; the placed board builds byte
 progress: infrastructure (`r12_route.py`, `r12_planes.tsv`, the drafting aid `r12_aid/`) written, routing not complete
 and no copper table frozen (stageC.md). Stage A margin items D-R12-21 applied (port divider, PA6 threshold).
 
-## 7. Economic parts pass (2026-11-04, D-R12-49 … -54)
+## 7. Historical Economic parts pass (2026-11-04, D-R12-49 … -54)
 
 Owner: "go fully Economic" (every JLC-placed part allowed on Economic PCBA); parts rated to a 250 °C peak are accepted on
 Economic's 255 ± 5 °C (D-R12-49, owner acceptance A-9). U4 ISM6HG256X (Standard Only) → LSM6DSVE on the same land
@@ -93,7 +119,7 @@ without a B lane), and the copper frozen in `m3_design/r12_routes.tsv`: board `d
 0 / unconnected 0 / parity 0, check_r12 copper OK, route_check r12 83 failing (reported, not fatal, until pass 2 sets
 `R12_ROUTE_HYGIENE=strict`). Pass 2 (routing hygiene) is next (stageC.md §5).
 
-## 9. Stage D (2026-11-05, D-R12-78 … -82)
+## 9. Historical stage D (2026-11-05, D-R12-78 … -82)
 
 Stage C pass 2 was frozen as D-R12-77A. On that copper, R10's hot-plug model failed 8 of 2304 cases, and R10's C88
 topology check failed. Stage D fixed both and finished the board.
@@ -123,4 +149,5 @@ topology check failed. Stage D fixed both and finished the board.
 $265 (Calculation, below the §3 targets). No part is short.
 
 **Next.** Stage E records are written (`docs/M3_R12.md`, `docs/R12_VALIDATION.md`, `docs/R12_VEHICLE_HANDOFF.md`).
-Stage F review rounds have not run. Record: `stageD.md`.
+At that historical checkpoint stage F was pending. It later completed; rounds 10 / 11 stopped the loop,
+and round 12 is the final pass (D-R12-175). Record: `stageD.md`.

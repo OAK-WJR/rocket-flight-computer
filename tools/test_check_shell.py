@@ -52,13 +52,20 @@ if stage == 'fit_check' and r11 and sys.argv[sys.argv.index('--profile') + 1] !=
     sys.exit(29)
 if stage == 'fit_check' and r12 and sys.argv[sys.argv.index('--profile') + 1] != 'r12':
     sys.exit(31)
+if stage == 'r12_hotplug':                 # R12F12-TRI-22: gate mode, and --copy exactly when the board is a copy
+    if '--gate' not in sys.argv:
+        sys.exit(37)
+    canon = pathlib.Path(__file__).resolve().parents[1] / 'm3_design/r12/m3.kicad_pcb'
+    board = pathlib.Path(sys.argv[sys.argv.index('--gate') + 1]).resolve()
+    if ('--copy' in sys.argv) == (canon.exists() and board == canon.resolve()):
+        sys.exit(41)
 sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
 '''
         for path in ('quality_audit/verify_board.py', 'tools/silk_check.py', 'tools/fit_check.py',
                      'tools/plate_model.py', 'tools/check_r10.py', 'tools/route_check.py',
                      'm3_design/check_actuators.py', 'm3_design/r10_parts.py', 'm3_design/r10_sch_check.py',
                      'tools/check_r11.py', 'm3_design/r11_sch_check.py', 'tools/check_r12.py',
-                     'm3_design/r12_sch_check.py', 'm3_design/r12_parts.py'):
+                     'm3_design/r12_sch_check.py', 'm3_design/r12_parts.py', 'tools/r12_hotplug.py'):
             (self.root / path).write_text(stub)
         for path in ('tools/fab_manifest.py', 'tools/fab_manifest_r11.py', 'tools/test_r11_check.py',
                      'tools/fab_manifest_r12.py', 'tools/test_r12_check.py', 'tools/test_r12_fab.py',
@@ -84,7 +91,7 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
                      'route_check@r11']
     R11_TEXT = '(kicad_pcb (title_block (title "M3") (rev "M3-ASSY-R11")))\n'
     R12_CONTRACTS = ['r12_sch_check@r12', 'r12_parts', 'verify_board@r12', 'silk_check@r12', 'fit_check@r12',
-                     'check_r12@r12', 'route_check@r12']
+                     'check_r12@r12', 'route_check@r12', 'r12_hotplug@r12']      # R12F12-TRI-22
     R12_TEXT = '(kicad_pcb (title_block (title "M3") (rev "M3-ASSY-R12")))\n'
 
     def run_gate(self, board=None):
