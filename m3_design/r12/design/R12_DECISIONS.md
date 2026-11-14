@@ -3167,9 +3167,14 @@ J122 now copies the H743's 8-pin ESC port, so one SH-8 servo lead fits both boar
   Same family as the fitted 4P / 6P, so no clone substitution was needed. Land: JST SM08B-SRSS-TB as KiCad draws it,
   tabs at ±4.8 mm (`r12_parts.ghc(8)`, `M3_SHC_8P`), as for the 4P / 6P (that the clone takes the JST land is the same
   Inference as D-R12-31). JLCEDA's land CONN-SMD_8P-P1.00_MEGASTAR_ZX-SH1.0-8PWT (https://easyeda.com/api/products/C7430450/components,
-  read 2026-11-14) puts pin 1 at −x and the tabs (pads 10 left / 9 right) behind the contact row, as its 6P does; JLC's
+  read 2026-11-14) puts pin 1 at −x and the tabs (pads 10 left / 9 right) on the mouth side of the contact row, as its 6P does; JLC's
   rotation for J122 is matched on all 10 pads (residual 0.31 mm, `tools/jlc_corrections_r12.json`). C7430448 (6P)
-  stays on J410 and J9.
+  stays on J410 and J9. **Land deviation (focused review, 2026-11-14):** the maker's drawing linked from JLCEDA
+  (atta.szlcsc.com, file 1B6A23D99AB40A01DBAA7D7AE5A01F3F.pdf) and JLCEDA's land give contacts 0.50 × 1.70 mm and tabs
+  1.20 × 2.50 mm at ±4.6 mm, 3.40 mm from the contact row; `M3_SHC_8P` (JST's land) has 0.60 × 1.55 mm, 1.20 × 1.80 mm
+  at ±4.8 mm, 3.875 mm (Measured). The lands overlap on all ten pads, so no assembly defect is expected (Inference);
+  the fitted 4P / 6P carry the same difference. Kept as a recorded deviation from AGENTS §3's maker-land rule; the
+  shorter tab land matters for a friction-only connector and goes with the retention check (O-R12-04, O-R12-18).
 - **Pin map (pin 1 read as D-R12-31 reads J410 / J420).** 1 GND, 2 VBAT (NC), 3 M1 = SERVO1_OUT, 4 M2 = SERVO2_OUT,
   5 M3 = SERVO3_OUT, 6 M4 = SERVO4_OUT, 7 RX7 (ESC telemetry, NC), 8 Curr (NC). Legends `1:GND`, `2:NC`, `3:S1` …
   `6:S4`, `7:NC`, `8:NC` on the bottom face; symbol `M3:ServoSH8` (pin names GND, VBAT_NC, SERVO1–4, RX7_NC, CURR_NC).
@@ -3182,8 +3187,9 @@ J122 now copies the H743's 8-pin ESC port, so one SH-8 servo lead fits both boar
   (v2; v1 `CR4321…`). (3) The same images give the GPS port west to east `GND, 5V, TX3, RX3, SCL, SDA` with the header
   on the south edge, mouth south; the west-edge UART ports read north to south from GND; v1's east-edge UART1 / UART8
   read south to north from GND. Read from the images (not a datasheet): the tables are drawn in the headers' physical
-  order, and on every SH port of both versions GND is the contact on the left as one looks into the mouth with the top
-  face up. D-R12-31 made that contact pin 1 on J410 / J420 / J440. The ESC header is on the north edge, mouth north, so
+  order, and on the GPS, UART / TELEM and ESC ports of both versions GND is the contact on the left as one looks into
+  the mouth with the top face up (the VTX and SWD ports list their supply at that end instead, and some ports are on
+  the bottom face; R12 copies neither). D-R12-31 made that contact pin 1 on J410 / J420 / J440. The ESC header is on the north edge, mouth north, so
   its GND is the east end and the list runs pin 1 GND … pin 8 Curr. Reading the ESC list left to right as pin 1 … 8
   (D-R12-31's literal wording, "lists the pins in this order") would mirror the port and put Curr on pin 1; the
   physical reading is the one consistent with J410 / J420, and the orders are not otherwise in conflict (the order
@@ -3199,9 +3205,9 @@ J122 now copies the H743's 8-pin ESC port, so one SH-8 servo lead fits both boar
   unchanged (the M4 … M1 list order runs in the same direction as the old pins 1–4, so nothing reverses). Its west
   courtyard edge stays at x 16.905; the east edge moves 2.0 mm to 28.295, 0.51 mm from J9's (Measured). The GND
   contact is now pin 1 (x 26.1): its F.Cu link and via pair (R12F12-TRI-02) move from (19.9, 7.0) / (19.35, 7.0) to
-  (26.1, 7.45) / (26.65, 7.45), 0.45 mm forward of the pad row so the footprint's pin-1 mark (26.1, 6.875) is not on a
-  via. Pins 2, 7 and 8 carry no copper. Legends: the eight contact legends are on the bottom face in their columns
-  (alternately outward / inward, D-R12-80); J9's designator and the `CAM` word moved to the free top-face strip east
+  (26.1, 7.45) / (26.65, 7.45), 0.45 mm forward of the old y 7.0 (1.80 mm from the contact row's centre line) so the footprint's pin-1 mark (26.1, 6.875) is not on a
+  via. Pins 2, 7 and 8 carry no copper. Legends: the eight contact legends are on the bottom face beside their columns
+  (alternately outward / inward, D-R12-80; `8:NC` sits at x 17.2, 1.9 mm west of pad 8 at x 19.1); J9's designator and the `CAM` word moved to the free top-face strip east
   of J9 ((39.2, 2.6) and (39.7, 1.25)) because J122's wider body now covers their old spots; J122's Fab reference moved
   with the part. 54 legends (was 52), 106 designators shown / 87 hidden (unchanged).
 - **Gate.** `check_r12.SH_PORTS['J122']`, `TERMINAL_PINS` and the K-power tap (J122.1) follow the new map; S-7 adds
@@ -3226,7 +3232,8 @@ evidence); the other F.Cu items within 1.040 mm are GND's link (0.55 mm), SERVO1
   down and D121 (SRV05-4 I/O 1) clamps to 3V3; PA15 (TIM2_CH1) is the MCU pin. Board on: the node sits about one
   diode drop above 3V3 and R150 passes at most (8.4 − 3.224) V / 990 Ω = **5.2 mA** into the 3V3 rail through D121
   (Calculation / Inference: pack 8.4 V, 3V3 drift minimum 3.224 V, D121's drop taken as zero for the bound), with R150
-  dissipating ≤ 27 mW. The rail's own load is larger, so U2 supplies that much less and the rail does not rise
+  dissipating ≤ 27 mW while PA15 is high or released; with PA15 driven low, or the board off, R150 carries
+  ≤ 8.4 V / 990 Ω = 8.5 mA and dissipates ≤ 71 mW, inside a 0603's rating (Calculation). The rail's own load is larger, so U2 supplies that much less and the rail does not rise
   (Inference: the 3V3 load floor with the MCU running is not measured). PA15 sees about 3.5 V + one diode drop, below
   the 5.5 V class of an FT pin (Inference: DS12110's FT rating not re-read here), and sinks ≤ 8.5 mA when driven low.
   SERVO1's PWM is lost (stuck high), so that servo's command is lost: a control fault, not a logic or fire fault.
@@ -3253,8 +3260,8 @@ evidence); the other F.Cu items within 1.040 mm are GND's link (0.55 mm), SERVO1
 - Keeping J122 at (21.6, 3.65): the pins would shift 1 mm against R150–R153 and every servo run would move.
 - Refreshing `design/jlc_r12_stock.json` / `r12_cost.json` (the stage A record, 2026-11-08): left historical; the
   current cost is the fab run above.
-- This change has had no full review round: only this lane's checks, the orchestrator's gate and a focused review to
-  follow. The board stays not accepted, nothing ordered. The 2026-11-11 quote ($165.33 for two boards) was for
+- This change has had no full review round: only this lane's checks, a focused read-only review (2026-11-14:
+  0 Critical / 0 Major / 5 Minor, all text, corrected in the same commit) and the full gate. The board stays not accepted, nothing ordered. The 2026-11-11 quote ($165.33 for two boards) was for
   historical `1d7562d5…` and must be redone.
 
 ## 2. Historical stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)

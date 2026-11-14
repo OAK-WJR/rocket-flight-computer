@@ -509,7 +509,7 @@ via	GND	-	0.45	19.45	20.85
 # R12F12-TRI-02: second via (10.6, 8.625) for D402.2 GND (J400 ESD clamp)
 track	GND	F	0.25	10.6	8.125	10.6	8.625
 via	GND	-	0.45	10.6	8.625		
-# R12F12-TRI-02: second via for J122's GND contact (servo signal reference); D-R12-192: pin 1, (26.65, 7) (was J122.5,
+# R12F12-TRI-02: second via for J122's GND contact (servo signal reference); D-R12-192: pin 1, (26.65, 7.45) (was J122.5,
 # (19.35, 7))
 track	GND	F	0.3	26.1	7.45	26.65	7.45
 via	GND	-	0.45	26.65	7.45		

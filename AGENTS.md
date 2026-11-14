@@ -95,7 +95,7 @@ pad. J122 moved 1.0 mm east, so R150–R153 and the servo runs are unchanged; it
 Two identical builds; DRC / parity / unconnected / ERC 0; all 34 check_r12 rules OK; route_check 0 failing / 2
 allowlisted; fit / legends / fill OK; fab manifest bound; hot-plug (2304 / 2304, minimum −14.077 V, numerically unchanged; Simulation / Inference) and stage D re-bound to `876733fe…`.
 Parts + feeder $64.03 / $43.77 per board at 2 / 5 boards (+$1.53 / +$0.61, one more charged code). This change has
-had no full review round, only its fix lane, the orchestrator's gate and a focused review to follow. Not accepted,
+had no full review round, only its fix lane, a focused read-only review (0 Critical / 0 Major / 5 Minor, all text, corrected) and the full gate. Not accepted,
 nothing ordered.
 
 Current state: `docs/M3_R12.md`; owner actions: `docs/R12_VALIDATION.md`; harness: `docs/R12_VEHICLE_HANDOFF.md`.

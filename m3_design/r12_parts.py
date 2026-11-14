@@ -71,7 +71,9 @@ def _pad_extents(pads):
 # Megastar ZX-SH1.0-4PWT (C7430446) and ZX-SH1.0-6PWT (C7430448), side entry, 1 A per contact (JLC listing, Live
 # 2026-11-04); ZX-SH1.0-8PWT (C7430450, J122 since D-R12-192: the MicoAir H743's 8-pin ESC port order), width 10.35 mm,
 # 1 A, 50 V (JLC listing, Live 2026-11-14T00:02Z; JLCEDA's land CONN-SMD_8P-P1.00_MEGASTAR_ZX-SH1.0-8PWT puts pin 1 at
-# -x, the tabs (pads 10 left / 9 right) behind the contact row, as for the 6P). JLCEDA's land could not be fetched (HTTP 403, 2026-11-04), so the land is JST's own SMnnB-SRSS-TB land as
+# -x, the tabs (pads 10 left / 9 right) on the mouth side of the contact row, as for the 6P; read 2026-11-14, where the
+# 2026-11-04 fetch had failed with HTTP 403). The footprints keep JST's own SMnnB-SRSS-TB land (a recorded deviation from
+# the maker's land, D-R12-192: contacts 0.50 x 1.70, tabs 1.20 x 2.50 at +-4.6 for the 8P), as
 # KiCad's library draws it from JST eSH.pdf (Connector_JST JST_SH_SM0nB-SRSS-TB_1x0n-1MP_P1.00mm_Horizontal): contacts
 # 0.6 x 1.55 at 1.0 mm, y -2.0; two fixing tabs 1.2 x 1.8 at x +-(n / 2 + 0.8), y +1.875 (Datasheet via KiCad; that the
 # clone takes the JST land is an Inference, as for the GH clones). Body from the JLC listing: width 6.35 / 8.35 / 10.35 mm,

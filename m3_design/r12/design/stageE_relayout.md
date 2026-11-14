@@ -42,8 +42,8 @@ historical `1d7562d5…`; re-quote `876733fe…`, including X-ray, DFM and reflo
 | `m3_design/r12_place.tsv` | `c3311b74a656c8bdb48ef8fcde950bdb159d65a8cd75c42c46ba3c45b399458a` |
 | `m3_design/r12/fab/m3_bom_jlc.csv` | `11b352ec7136604d8aff715db49d58a1cb5e30fcfbfd3bd22aed086cc0f6ae04` |
 | `m3_design/r12/fab/m3_cpl_jlc.csv` | `66d915a35c3da0e54ff48660d7db8fc96e50fab42f1db2740fd313ca70ac234c` |
-| `m3_design/r12/fab/m3_fab_manifest.json` | `447edb8744a9451398862869890c6bb27ec317efe1afa2b2fd37c95fc5b5513b` |
-| `m3_design/r12/fab/m3_gerber.zip` | `d7a5e575efe284a69552183eb8d9a4233bf1323df6601c4b83dbfcc2883b3c48` |
+| `m3_design/r12/fab/m3_fab_manifest.json` | `ca2a062a6b90b3d373dca80f6d88113c1b815fe3bb3db2d6863ad44944196cc0` |
+| `m3_design/r12/fab/m3_gerber.zip` | `defbef9e282a3f4911b063f8350515be4931483339db407b362303c20cf78295` |
 | `m3_design/r12/fab/cost_check_2.json` | `b08fb31c36fe546fc9d60cc89126b205b0a33e60c50474aba9955293b5a3dda8` |
 | `m3_design/r12/fab/cost_check_5.json` | `1a881f24920c1fb3ed67c62ffd116db4b852e148bdb340eb3c5985516ec8ac22` |
 | `m3_design/r12/fab/stock_check_2.json` | `9b1de97a1b694874f8264ddcda875a73d818b757fa436ac9b43d3af57da2fe2b` |

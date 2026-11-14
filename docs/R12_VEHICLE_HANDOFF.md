@@ -19,7 +19,7 @@ every lead's pin identity by continuity before first power.**
 The SH contacts are numbered as on JST's SMnnB-SRSS-TB land (D-R12-31). The ports copy the MicoAir H743's SH port
 orders, so one module lead fits either board; J122 copies its 8-pin ESC port (D-R12-192), so one SH-8 servo lead fits
 both boards (signals and GND; see the VBAT rule below). No source marks a pin-1 end: MicoAir's port images and wiring
-diagrams (v1 and v2 agree) put GND at the same mouth-relative end of every port, and R12 makes that end pin 1. The
+diagrams (v1 and v2 agree) put GND at the same mouth-relative end of the GPS, UART / TELEM and ESC ports, and R12 makes that end pin 1. The
 orders stay an **Inference** until a real H743 lead is checked (O-R12-19, now covering the ESC port too).
 
 | Port | Edge, mouth | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
@@ -69,7 +69,7 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
 - **J122's VBAT position must be dead on R12 (D-R12-193).** On the H743, the ESC port's VBAT is a battery input, so a
   lead that powers an H743 through it carries the pack (up to 8.4 V) to J122.2, which sits 0.4 mm from GND (pin 1)
   and SERVO1 (pin 3). A solder or debris bridge would then short the pack through the lead's thin VBAT wire (no
-  fuse limits it; the contact is rated 1 A), or push ≤ 5.2 mA (board on) / ≤ 8.5 mA (board off, back-feeding 3V3)
+  fuse limits it; the contact is rated 1 A), or push ≤ 5.2 mA into the 3V3 clamp (board on, PA15 high) / ≤ 8.5 mA through R150 (PA15 low, or board off and back-feeding 3V3)
   into SERVO1's clamp and lose servo 1's command (Calculation / Inference). So on R12: **extract the VBAT contact from
   the lead's SH-8 housing, or cut its wire back and insulate it at both ends, joined to nothing.** A lead whose VBAT
   feeds an H743 is not plugged into R12 as is; give the H743 its own supply lead or a VBAT branch that is unplugged
@@ -137,12 +137,12 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
 0. **Plug identity and retention.**
    - **0b — plug identity:** before mating, identify every plug against its port legend. J400 takes only the switch
      lead. Give the switch and camera leads distinct tags. Repeat step 2 after any plug is moved.
-   - **0c — retention:** Seat each SH plug fully and fix it with an adhesive / RTV dab or a tie. Check each by a
-     light pull (O-R12-18).
-   - **0d — J122 VBAT dead (D-R12-193; before seating the servo lead in 0c):** confirm its VBAT position (pin 2, beside GND)
+   - **0d — J122 VBAT dead (D-R12-193; done before the retention step 0c):** confirm its VBAT position (pin 2, beside GND)
      is empty, or reads below 0.1 V to the lead's GND contact with the pack connected and every switch on. On the first
      article, and after any rework near J122, also meter J122.2 to J122.1 and to J122.3 on the unpowered board (both
      open) and inspect the J122 row at 10× for bridges or debris.
+   - **0c — retention:** Seat each SH plug fully and fix it with an adhesive / RTV dab or a tie. Check each by a
+     light pull (O-R12-18).
 1. **1a — ESD handling.** Touch the airframe or pad ground before touching J400's switch. Keep the screwdriver in contact
    with the grounded airframe before it meets the screw.
    **1b — J1 pigtail:** with the pack unplugged at its keyed connector, J400 open and no e-match in J121,
