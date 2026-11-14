@@ -228,6 +228,13 @@
    "footprint": "rocket:M3_SHC_6P",
    "source": "D-R12-31 (owner 2026-11-03): JST SH 1.0 mm side-entry clone 6P, 1 A per contact (JLC listing, Live 2026-11-04)"
   },
+  "C7430450": {
+   "Manufacturer": "Megastar",
+   "Manufacturer Part": "ZX-SH1.0-8PWT",
+   "Datasheet": "https://jlcpcb.com/partdetail/C7430450",
+   "footprint": "rocket:M3_SHC_8P",
+   "source": "D-R12-192 (owner 2026-11-13, MicoAir H743 ESC port): JST SH 1.0 mm side-entry clone 8P, 1 A per contact, 50 V, width 10.35 mm (JLC listing, Live 2026-11-14T00:02Z)"
+  },
   "C41785564": {
    "Manufacturer": "STMicroelectronics",
    "Manufacturer Part": "LSM6DSVETR",
@@ -447,17 +454,19 @@
    "why": "D-R12-09: B340A -> SS34 basic (40 V 3 A Schottky)"
   },
   "J122": {
-   "lcsc": "C7430448",
-   "value": "ZX-SH1.0-6PWT",
-   "why": "D-R12-31 (owner 2026-11-03): SH 1.0 to share the MicoAir H743 module leads; servo order kept, pin 6 unused",
-   "lib": "M3:ServoGH6",
+   "lcsc": "C7430450",
+   "value": "ZX-SH1.0-8PWT",
+   "why": "D-R12-192 (owner 2026-11-13, 'i want the servo connector to be micoair compatible'): the MicoAir H743 8-pin ESC port order, pin 1 read as D-R12-31 reads the GPS / telemetry ports: 1 GND, 2 VBAT (NC, no copper), 3-6 M1-M4 = SERVO1-4, 7 RX7 (NC), 8 Curr (NC); was D-R12-31's ZX-SH1.0-6PWT, 1-4 SERVO1-4, 5 GND, 6 NC",
+   "lib": "M3:ServoSH8",
    "nets": {
-    "1": "SERVO1_OUT",
-    "2": "SERVO2_OUT",
-    "3": "SERVO3_OUT",
-    "4": "SERVO4_OUT",
-    "5": "GND",
-    "6": null
+    "1": "GND",
+    "2": null,
+    "3": "SERVO1_OUT",
+    "4": "SERVO2_OUT",
+    "5": "SERVO3_OUT",
+    "6": "SERVO4_OUT",
+    "7": null,
+    "8": null
    }
   },
   "J400": {

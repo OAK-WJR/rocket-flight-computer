@@ -11,7 +11,7 @@ and models from R11's kilib, only those R12 uses) plus the R12 parts (R12_DECISI
 from the maker's drawing or the LCSC / JLCEDA official land (https://easyeda.com/api/products/<code>/components, the
 library JLC's own CPL uses), with the URL noted below. Every R12 land is a top-side land (D-R12-01, one assembled side):
 SMD pads on F.Cu / F.Paste / F.Mask only, or plated through-holes.
-Symbols: R11's library with the R12 symbols added (LMR50410, TPS563208, FXLS9xxxx, Buzzer_THT2, BAT54C, ServoGH6,
+Symbols: R11's library with the R12 symbols added (LMR50410, TPS563208, FXLS9xxxx, Buzzer_THT2, BAT54C, ServoSH8,
 SwitchGH4, PortSH4, PortSH6) and every used symbol's ki_fp_filters set to exactly the R12 footprints it carries (ERC
 footprint_filter).
 """
@@ -69,14 +69,17 @@ def _pad_extents(pads):
 # SH-1.0 clone headers (D-R12-31, owner 2026-11-03: the MicoAir H743's port family, so one module lead fits both boards;
 # R11's D-R11-05 rejected SH for its friction-only retention, which the owner now accepts with a retention step per flight).
 # Megastar ZX-SH1.0-4PWT (C7430446) and ZX-SH1.0-6PWT (C7430448), side entry, 1 A per contact (JLC listing, Live
-# 2026-11-04). JLCEDA's land could not be fetched (HTTP 403, 2026-11-04), so the land is JST's own SMnnB-SRSS-TB land as
+# 2026-11-04); ZX-SH1.0-8PWT (C7430450, J122 since D-R12-192: the MicoAir H743's 8-pin ESC port order), width 10.35 mm,
+# 1 A, 50 V (JLC listing, Live 2026-11-14T00:02Z; JLCEDA's land CONN-SMD_8P-P1.00_MEGASTAR_ZX-SH1.0-8PWT puts pin 1 at
+# -x, the tabs (pads 10 left / 9 right) behind the contact row, as for the 6P). JLCEDA's land could not be fetched (HTTP 403, 2026-11-04), so the land is JST's own SMnnB-SRSS-TB land as
 # KiCad's library draws it from JST eSH.pdf (Connector_JST JST_SH_SM0nB-SRSS-TB_1x0n-1MP_P1.00mm_Horizontal): contacts
 # 0.6 x 1.55 at 1.0 mm, y -2.0; two fixing tabs 1.2 x 1.8 at x +-(n / 2 + 0.8), y +1.875 (Datasheet via KiCad; that the
-# clone takes the JST land is an Inference, as for the GH clones). Body from the JLC listing: width 6.35 / 8.35 mm,
+# clone takes the JST land is an Inference, as for the GH clones). Body from the JLC listing: width 6.35 / 8.35 / 10.35 mm,
 # depth 4.3 mm, height 3.15 mm; contacts behind the rear wall, mouth to +y. Mating with JST SH housings: O-R12-04.
 GHC = {
     4: dict(code='C7430446', name='M3_SHC_4P', y_sig=-2.0, tab=(2.8, 1.875, 1.2, 1.8), width=6.35),
     6: dict(code='C7430448', name='M3_SHC_6P', y_sig=-2.0, tab=(3.8, 1.875, 1.2, 1.8), width=8.35),
+    8: dict(code='C7430450', name='M3_SHC_8P', y_sig=-2.0, tab=(4.8, 1.875, 1.2, 1.8), width=10.35),
 }
 GHC_PITCH, GHC_W, GHC_L, GHC_DEPTH, GHC_HEIGHT = 1.0, 0.6, 1.55, 4.3, 3.15
 
@@ -360,7 +363,7 @@ def microsd():
 
 def footprints():
     out = {}
-    for maker in (lambda: ghc(4), lambda: ghc(6), fxls, buzzer, ddc6, kf301, cap_d8, microsd):
+    for maker in (lambda: ghc(4), lambda: ghc(6), lambda: ghc(8), fxls, buzzer, ddc6, kf301, cap_d8, microsd):
         name, text = maker()
         out[name] = text
     return out
@@ -434,10 +437,14 @@ NEW_SYMBOLS = (
      [P(0, '1', '+')], [P(0, '2', '-')]),
     ('BAT54C', 'D', 'Nexperia BAT54C dual Schottky, common cathode (pinning Table 2): 1 A1, 2 A2, 3 K', 'diode schottky',
      5.08, 2.54, [P(1.27, '1', 'A1'), P(-1.27, '2', 'A2')], [P(0, '3', 'K')]),
-    ('ServoGH6', 'J', 'Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) 6-pin servo port (D-R12-31): 1-4 SERVO1-4, 5 GND, '
-     '6 unused', 'connector servo',
-     7.62, 7.62, [P(6.35, '1', 'SERVO1'), P(3.81, '2', 'SERVO2'), P(1.27, '3', 'SERVO3'), P(-1.27, '4', 'SERVO4'),
-                  P(-3.81, '5', 'GND'), P(-6.35, '6', 'NC')], []),
+    # D-R12-192 (owner 2026-11-13, 'micoair compatible'): the MicoAir H743's 8-pin ESC port, read pin 1 = GND as
+    # D-R12-31 reads the GPS / telemetry ports (same mouth-relative end): 1 GND, 2 VBAT, 3-6 M1-M4, 7 RX7, 8 Curr. On R12
+    # the H743's VBAT, RX7 and Curr contacts are unconnected pads (VBAT: no copper beyond the pad, check_r12 S-7).
+    ('ServoSH8', 'J', 'Megastar ZX-SH1.0-8PWT SH-1.0 clone (C7430450) 8-pin servo port in the MicoAir H743 ESC order '
+     '(D-R12-192): 1 GND, 2 VBAT (NC), 3-6 SERVO1-4 (M1-M4), 7 RX7 (NC), 8 Curr (NC)', 'connector servo',
+     7.62, 10.16, [P(8.89, '1', 'GND'), P(6.35, '2', 'VBAT_NC'), P(3.81, '3', 'SERVO1'), P(1.27, '4', 'SERVO2'),
+                   P(-1.27, '5', 'SERVO3'), P(-3.81, '6', 'SERVO4'), P(-6.35, '7', 'RX7_NC'), P(-8.89, '8', 'CURR_NC')],
+     []),
     ('SwitchGH4', 'J', 'Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) 4-pin external switch port (D-R12-31): '
      '1 SW SOURCE, 2 SW RETURN, 3-4 unused',
      'connector switch', 7.62, 5.08, [P(3.81, '1', 'SW SOURCE'), P(1.27, '2', 'SW RETURN'), P(-1.27, '3', 'NC'),

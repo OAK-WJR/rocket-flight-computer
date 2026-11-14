@@ -1,10 +1,13 @@
 # R12 AVA re-layout: placement, zone routing, the historical 90 / 83 mm outlines and the re-run analyses (2026-11-06)
 
-## Current snapshot (round 12, 2026-11-13)
+## Current snapshot (round 12, 2026-11-13; D-R12-192, 2026-11-14)
 
-PCB `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770`, 46 × 86.85 × 1.6 mm. Lane P (`6d945ce`) reports two identical builds,
+PCB `876733fe58d0f8559bf236232c32f1692e24ed0cdfaaf00bd2c94bf78918dc40` since D-R12-192 (SH-8 J122, MicoAir ESC order; two identical builds, gate steps and stage D / hot-plug
+re-bound by its fix lane; copper and placement differ from round 12's `c9b9f0fa…` only at J122), 46 × 86.85 × 1.6 mm.
+Round 12's `c9b9f0fa…`: lane P (`6d945ce`) reported two identical builds,
 full gate exit 0, 193 footprints, 185 assembled parts, 1147 tracks / 394 vias, 52 legends, 106 shown / 87 hidden
-designators (R13 and R118 newly hidden), 595 paste flashes, 60 BOM lines. S-10 has 203 exceptions;
+designators (R13 and R118 newly hidden), 595 paste flashes, 60 BOM lines (on `876733fe…`: 54 legends, 597 paste
+flashes, 61 BOM lines; tracks / vias, S-10 and K-power counts unchanged). S-10 has 203 exceptions;
 K-power 123 taps / 19 exceptions. Routing: zero failing, two allowlisted, eight recorded leftovers, no stale
 or unrecorded leftovers. Lane A (`a04a513`): 60 stage-D tests pass; analysis and hot-plug inputs bind to this hash.
 The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, all text (R12F12-VER-01 … -07);
@@ -18,35 +21,36 @@ All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pa
 Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
 `hotplug_results_r12.json`. Earlier named-board figures below are historical and cannot qualify this board.
 
-Parts + feeder **$62.50 / $43.16 per board at 2 / 5 boards**, against the $84.41 cap (Live
-2026-11-13T10:35:38Z / 10:37:57Z): 60 BOM lines (24 Extended / 36 Basic), 185 JLC parts, 21 charged codes,
-$30.27 parts per board and $64.47 feeder fees per order. There are 595 paste flashes and no owner BOM.
-Stock 2026-11-13T10:34:51Z / 10:36:33Z: no line short or thin at either quantity. Orderable quantity is an
-Inference about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping
-was for historical `1d7562d5…`; re-quote `c9b9f0fa…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+Parts + feeder **$64.03 / $43.77 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-14T00:33:48Z / 00:35:22Z, after D-R12-192's SH-8 J122): 61 BOM lines (25 Extended / 36 Basic), 185 JLC
+parts, 22 charged codes, $30.26 parts per board and $67.54 feeder fees per order (was $62.50 / $43.16 with 21 codes
+on `c9b9f0fa…`). There are 597 paste flashes and no owner BOM. Stock 2026-11-14T00:33:05Z / 00:34:34Z: no line
+short or thin at either quantity (C7430450: 56 065 in stock, 54 903 orderable). Orderable quantity is an Inference
+about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for
+historical `1d7562d5…`; re-quote `876733fe…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 
-### Current artifact hashes (Measured, SHA-256)
+### Current artifact hashes (Measured, SHA-256; re-taken on `876733fe…` by the D-R12-192 lane)
 
 | Artifact | SHA-256 |
 |---|---|
-| `m3_design/r12/m3.kicad_pcb` | `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770` |
+| `m3_design/r12/m3.kicad_pcb` | `876733fe58d0f8559bf236232c32f1692e24ed0cdfaaf00bd2c94bf78918dc40` |
 | `m3_design/r12/m3.kicad_dru` | `6e02e7ea24b8ff707dbb649024463a67300448395017ad37b17f1a8eba0b7ad1` |
 | `m3_design/r12_fire.py` | `d1099e5b30e0ef268fbaa6baf9842b323b14f1657e8508ccc3a97d6b8ccd4dbc` |
-| `m3_design/r12_legends.tsv` | `1c34f59708d99937c4d1b99d97783a26f14b6ec84c217a713583fff275f25f87` |
-| `m3_design/r12_routes.tsv` | `a525b02e4a31e1c8515ed14167587253f96c7461ae1c5aad91423a55b028a655` |
-| `m3_design/r12_place.tsv` | `40555defa29f5abafe83304df63c24f88d1dab47ad520fb2cfa9b578260885d0` |
-| `m3_design/r12/fab/m3_bom_jlc.csv` | `83c6980df88ee775a96e09f8d481d1ad0311a7c2711ed04b4274c781acc225bc` |
-| `m3_design/r12/fab/m3_cpl_jlc.csv` | `13b15d00a7d0f537609f7db9b6539a40c74caf798d08841429853488d794dd30` |
-| `m3_design/r12/fab/m3_fab_manifest.json` | `a276848bca64e797c16c6e4ecaad73531c09d41d3632722dc29b97897e139865` |
-| `m3_design/r12/fab/m3_gerber.zip` | `2396d7ab9abcea28023c583817437a3d4e9c38a4da38deb591a3288999fc76b0` |
-| `m3_design/r12/fab/cost_check_2.json` | `4a8972bf372f1cfb4d0c3e37ed27dad2162d567497e179532a727f7c92d2238f` |
-| `m3_design/r12/fab/cost_check_5.json` | `8cc52f9f8d6e9224574afdc2b8cb9292a8f238b420e0f2c20e8bdbc006df5d19` |
-| `m3_design/r12/fab/stock_check_2.json` | `d9573ef328fd387267e59c53aee46e2475404793686ad66dbe24b19816cae6ae` |
-| `m3_design/r12/fab/stock_check_5.json` | `3286819a6e9470d7c072ad74786dcb7c27fefe11648fd34e79333a360a83acdf` |
-| `m3_design/r12/design/stageD_budget.json` | `2c0c280002e3051a7ab8f341c94b10b9024003f5a74bafdd488be3d821122176` |
-| `m3_design/r12/design/hotplug_inputs_r12.json` | `1546bad6e0deb8dfcbbca60bf036c9f822ec677dd519038e9d34afd023867e90` |
-| `m3_design/r12/design/hotplug_results_r12.json` | `c0d7dc2e2896c578ef72986547b84bd47e002b2a4dc2726cb8466ac70663a70a` |
+| `m3_design/r12_legends.tsv` | `6a9a6e9a4da8b491b69414838bd3996cbc79c8f642734d06335bbe69079f7df6` |
+| `m3_design/r12_routes.tsv` | `c7f6c0557605a3889352c52c0c620828b02ffba54de40584de232123f080b33b` |
+| `m3_design/r12_place.tsv` | `c3311b74a656c8bdb48ef8fcde950bdb159d65a8cd75c42c46ba3c45b399458a` |
+| `m3_design/r12/fab/m3_bom_jlc.csv` | `11b352ec7136604d8aff715db49d58a1cb5e30fcfbfd3bd22aed086cc0f6ae04` |
+| `m3_design/r12/fab/m3_cpl_jlc.csv` | `66d915a35c3da0e54ff48660d7db8fc96e50fab42f1db2740fd313ca70ac234c` |
+| `m3_design/r12/fab/m3_fab_manifest.json` | `447edb8744a9451398862869890c6bb27ec317efe1afa2b2fd37c95fc5b5513b` |
+| `m3_design/r12/fab/m3_gerber.zip` | `d7a5e575efe284a69552183eb8d9a4233bf1323df6601c4b83dbfcc2883b3c48` |
+| `m3_design/r12/fab/cost_check_2.json` | `b08fb31c36fe546fc9d60cc89126b205b0a33e60c50474aba9955293b5a3dda8` |
+| `m3_design/r12/fab/cost_check_5.json` | `1a881f24920c1fb3ed67c62ffd116db4b852e148bdb340eb3c5985516ec8ac22` |
+| `m3_design/r12/fab/stock_check_2.json` | `9b1de97a1b694874f8264ddcda875a73d818b757fa436ac9b43d3af57da2fe2b` |
+| `m3_design/r12/fab/stock_check_5.json` | `dbd67b4cfa8e9a0d68ceae3012328febf788eb5403e554ab92b1afa90ec2ff8e` |
+| `m3_design/r12/design/stageD_budget.json` | `c5adeea98c07350d562d17a6156403130847c16ae058769d69f159117eb5ff03` |
+| `m3_design/r12/design/hotplug_inputs_r12.json` | `f967048e0c41ce30bfdbbb64b4787076b64166aa3d8c84a92513b02568065926` |
+| `m3_design/r12/design/hotplug_results_r12.json` | `0aee00c87e0897bd407b37a0bca3235044a56182177dc8343b44634b6849cce6` |
 
 These hashes describe the artifacts read by lane E. The orchestrator rechecks the final-tree gate before committing.
 

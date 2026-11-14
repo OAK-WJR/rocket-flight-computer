@@ -69,7 +69,7 @@ class Wrappers(unittest.TestCase):
         """R12_MECHANICAL's tab numbers are JLCEDA's: present in the pad file, left tab at -x, right at +x, beyond
         the signal pins' numbers, and each footprint exists in the R12 library."""
         pads = json.loads(jlc_orient_r12.PADS.read_text())
-        codes = {'M3_SHC_4P': 'C7430446', 'M3_SHC_6P': 'C7430448'}
+        codes = {'M3_SHC_4P': 'C7430446', 'M3_SHC_6P': 'C7430448', 'M3_SHC_8P': 'C7430450'}
         self.assertEqual(set(jlc_orient_r12.R12_MECHANICAL), set(codes))
         for name, (left, right) in jlc_orient_r12.R12_MECHANICAL.items():
             self.assertTrue((ROOT / f'm3_design/r12/kilib/rocket.pretty/{name}.kicad_mod').exists(), name)

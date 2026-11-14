@@ -215,19 +215,19 @@
 							(font
 								(size 1.05 1.05))))))
 			(embedded_fonts no))
-		(symbol "M3:ServoGH6"
+		(symbol "M3:ServoSH8"
 			(pin_names
 				(offset 1.016))
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "J"
-				(at 0 10.16 0)
+				(at 0 12.7 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Value" "ServoGH6"
-				(at 0 -10.16 0)
+			(property "Value" "ServoSH8"
+				(at 0 -12.7 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
@@ -243,7 +243,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Description" "Megastar ZX-SH1.0-6PWT SH-1.0 clone (C7430448) 6-pin servo port (D-R12-31): 1-4 SERVO1-4, 5 GND, 6 unused"
+			(property "Description" "Megastar ZX-SH1.0-8PWT SH-1.0 clone (C7430450) 8-pin servo port in the MicoAir H743 ESC order (D-R12-192): 1 GND, 2 VBAT (NC), 3-6 SERVO1-4 (M1-M4), 7 RX7 (NC), 8 Curr (NC)"
 				(at 0 0 0)
 				(hide yes)
 				(effects
@@ -255,26 +255,26 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_SHC_6P"
+			(property "ki_fp_filters" "M3_SHC_8P"
 				(at 0 0 0)
 				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(symbol "ServoGH6_0_1"
+			(symbol "ServoSH8_0_1"
 				(rectangle
-					(start -7.62 7.62)
-					(end 7.62 -7.62)
+					(start -7.62 10.16)
+					(end 7.62 -10.16)
 					(stroke
 						(width 0.254)
 						(type default))
 					(fill
 						(type background))))
-			(symbol "ServoGH6_1_1"
+			(symbol "ServoSH8_1_1"
 				(pin passive line
-					(at -12.7 6.35 0)
+					(at -12.7 8.89 0)
 					(length 5.08)
-					(name "SERVO1"
+					(name "GND"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -283,9 +283,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 3.81 0)
+					(at -12.7 6.35 0)
 					(length 5.08)
-					(name "SERVO2"
+					(name "VBAT_NC"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -294,9 +294,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 1.27 0)
+					(at -12.7 3.81 0)
 					(length 5.08)
-					(name "SERVO3"
+					(name "SERVO1"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -305,9 +305,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 -1.27 0)
+					(at -12.7 1.27 0)
 					(length 5.08)
-					(name "SERVO4"
+					(name "SERVO2"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -316,9 +316,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 -3.81 0)
+					(at -12.7 -1.27 0)
 					(length 5.08)
-					(name "GND"
+					(name "SERVO3"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -327,13 +327,35 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 -6.35 0)
+					(at -12.7 -3.81 0)
 					(length 5.08)
-					(name "NC"
+					(name "SERVO4"
 						(effects
 							(font
 								(size 1.05 1.05))))
 					(number "6"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -6.35 0)
+					(length 5.08)
+					(name "RX7_NC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "7"
+						(effects
+							(font
+								(size 1.05 1.05)))))
+				(pin passive line
+					(at -12.7 -8.89 0)
+					(length 5.08)
+					(name "CURR_NC"
+						(effects
+							(font
+								(size 1.05 1.05))))
+					(number "8"
 						(effects
 							(font
 								(size 1.05 1.05))))))
@@ -503,8 +525,8 @@
 			(justify right))
 		(uuid b1748709-f7c9-5631-8d52-de0ea0d4ed66))
 	(symbol
-		(lib_id "M3:ServoGH6")
-		(at 114.3 73.66 0)
+		(lib_id "M3:ServoSH8")
+		(at 114.3 76.2 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
@@ -516,42 +538,42 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "ZX-SH1.0-6PWT"
+		(property "Value" "ZX-SH1.0-8PWT"
 			(at 114.3 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_SHC_6P"
-			(at 114.3 73.66 0)
+		(property "Footprint" "rocket:M3_SHC_8P"
+			(at 114.3 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C7430448"
-			(at 114.3 73.66 0)
+		(property "LCSC" "C7430450"
+			(at 114.3 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Megastar"
-			(at 114.3 73.66 0)
+			(at 114.3 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "ZX-SH1.0-6PWT"
-			(at 114.3 73.66 0)
+		(property "Manufacturer Part" "ZX-SH1.0-8PWT"
+			(at 114.3 76.2 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430448"
-			(at 114.3 73.66 0)
+		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430450"
+			(at 114.3 76.2 0)
 			(hide yes)
 			(effects
 				(font
@@ -570,7 +592,7 @@
 			(width 0)
 			(type default))
 		(uuid 89a9f231-cb43-595c-bcb6-0d4151cf7d82))
-	(global_label "SERVO1_OUT"
+	(global_label "GND"
 		(shape passive)
 		(at 96.52 67.31 0)
 		(effects
@@ -578,22 +600,9 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 355becb0-4246-54dc-a3a0-981afa601fef))
-	(wire
-		(pts
-			(xy 101.6 69.85)
-			(xy 96.52 69.85))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 09c3f90d-cfdc-53b4-b0ad-a884af06760c))
-	(global_label "SERVO2_OUT"
-		(shape passive)
-		(at 96.52 69.85 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid deac0357-291f-5312-9b12-5cf5bef7be7a))
+	(no_connect
+		(at 101.6 69.85)
+		(uuid 7e02df2a-b7bc-54f8-9ad7-ea3a9d1eddbd))
 	(wire
 		(pts
 			(xy 101.6 72.39)
@@ -602,7 +611,7 @@
 			(width 0)
 			(type default))
 		(uuid d7faa017-9490-509f-81c4-31fd1c7562ff))
-	(global_label "SERVO3_OUT"
+	(global_label "SERVO1_OUT"
 		(shape passive)
 		(at 96.52 72.39 0)
 		(effects
@@ -618,7 +627,7 @@
 			(width 0)
 			(type default))
 		(uuid 88132795-d3de-5925-9102-68788cf97b6c))
-	(global_label "SERVO4_OUT"
+	(global_label "SERVO2_OUT"
 		(shape passive)
 		(at 96.52 74.93 0)
 		(effects
@@ -634,7 +643,7 @@
 			(width 0)
 			(type default))
 		(uuid 10322275-23d2-584e-83ee-adc5af868ffb))
-	(global_label "GND"
+	(global_label "SERVO3_OUT"
 		(shape passive)
 		(at 96.52 77.47 0)
 		(effects
@@ -642,9 +651,28 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 19bf6ec0-bdf6-5cc9-a186-0dcc0fc0b7d0))
+	(wire
+		(pts
+			(xy 101.6 80.01)
+			(xy 96.52 80.01))
+		(stroke
+			(width 0)
+			(type default))
+		(uuid 7e4d264f-5238-5418-8b4c-edb83b116ab3))
+	(global_label "SERVO4_OUT"
+		(shape passive)
+		(at 96.52 80.01 0)
+		(effects
+			(font
+				(size 1.05 1.05))
+			(justify right))
+		(uuid f4a89896-862b-590d-800d-8cda7ca67d58))
 	(no_connect
-		(at 101.6 80.01)
-		(uuid dfcdc315-79b4-590d-a0e2-ed1d0535d09c))
+		(at 101.6 82.55)
+		(uuid c02af5ce-5d2f-5840-a921-2146bcd8241f))
+	(no_connect
+		(at 101.6 85.09)
+		(uuid d86bcc59-6905-59fb-95a4-b686e5a13860))
 	(symbol
 		(lib_id "M3:R")
 		(at 144.78 71.12 0)

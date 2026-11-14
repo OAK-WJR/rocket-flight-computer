@@ -1,10 +1,13 @@
 # R12 plan: R11's circuit, pruned and re-sourced, on a one-sided four-layer board for JLC Economic PCBA
 
-## Current snapshot (round 12, 2026-11-13)
+## Current snapshot (round 12, 2026-11-13; D-R12-192, 2026-11-14)
 
-PCB `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770`, 46 × 86.85 × 1.6 mm. Lane P (`6d945ce`) reports two identical builds,
+PCB `876733fe58d0f8559bf236232c32f1692e24ed0cdfaaf00bd2c94bf78918dc40` since D-R12-192 (SH-8 J122, MicoAir ESC order; two identical builds, gate steps and stage D / hot-plug
+re-bound by its fix lane; copper and placement differ from round 12's `c9b9f0fa…` only at J122), 46 × 86.85 × 1.6 mm.
+Round 12's `c9b9f0fa…`: lane P (`6d945ce`) reported two identical builds,
 full gate exit 0, 193 footprints, 185 assembled parts, 1147 tracks / 394 vias, 52 legends, 106 shown / 87 hidden
-designators (R13 and R118 newly hidden), 595 paste flashes, 60 BOM lines. S-10 has 203 exceptions;
+designators (R13 and R118 newly hidden), 595 paste flashes, 60 BOM lines (on `876733fe…`: 54 legends, 597 paste
+flashes, 61 BOM lines; tracks / vias, S-10 and K-power counts unchanged). S-10 has 203 exceptions;
 K-power 123 taps / 19 exceptions. Routing: zero failing, two allowlisted, eight recorded leftovers, no stale
 or unrecorded leftovers. Lane A (`a04a513`): 60 stage-D tests pass; analysis and hot-plug inputs bind to this hash.
 The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, all text (R12F12-VER-01 … -07);
@@ -18,12 +21,13 @@ All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pa
 Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
 `hotplug_results_r12.json`. Earlier named-board figures below are historical and cannot qualify this board.
 
-Parts + feeder **$62.50 / $43.16 per board at 2 / 5 boards**, against the $84.41 cap (Live
-2026-11-13T10:35:38Z / 10:37:57Z): 60 BOM lines (24 Extended / 36 Basic), 185 JLC parts, 21 charged codes,
-$30.27 parts per board and $64.47 feeder fees per order. There are 595 paste flashes and no owner BOM.
-Stock 2026-11-13T10:34:51Z / 10:36:33Z: no line short or thin at either quantity. Orderable quantity is an
-Inference about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping
-was for historical `1d7562d5…`; re-quote `c9b9f0fa…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+Parts + feeder **$64.03 / $43.77 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-14T00:33:48Z / 00:35:22Z, after D-R12-192's SH-8 J122): 61 BOM lines (25 Extended / 36 Basic), 185 JLC
+parts, 22 charged codes, $30.26 parts per board and $67.54 feeder fees per order (was $62.50 / $43.16 with 21 codes
+on `c9b9f0fa…`). There are 597 paste flashes and no owner BOM. Stock 2026-11-14T00:33:05Z / 00:34:34Z: no line
+short or thin at either quantity (C7430450: 56 065 in stock, 54 903 orderable). Orderable quantity is an Inference
+about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for
+historical `1d7562d5…`; re-quote `876733fe…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 
 Branch `m3-assy-r12`, cut from `m3-assy-r11` at `0b26da5` (R11 tip, D-R11-85 … -88 included). Started 2026-11-04 on
@@ -49,7 +53,7 @@ requirement needs deleted, every part with a cheaper equivalent re-sourced, and 
 | Outline | 46 × ≤ 100 mm (JLC's 4-layer price step: 46 × 105 costs $20 more) | 46 × 50 mm | D-R12-01; cost_study §1.4, §2.1 |
 | Vias | 0.3 mm drill / 0.45 mm pad through vias only, no via in pad | 0.25 / 0.2 mm, two VIPPO | D-R12-03 |
 | MCU | STM32H743VIH6 TFBGA-100 kept (escape count, D-R12-02) | same | D-R12-02 |
-| Parts | 193 footprints, 185 JLC-assembled parts, 60 codes: 36 Basic / 24 Extended (21 charged); no owner-fitted parts (round 12) | 218, 75 codes | D-R12-04 … -19 |
+| Parts | 193 footprints, 185 JLC-assembled parts, 61 codes: 36 Basic / 25 Extended (22 charged); no owner-fitted parts (D-R12-192: J122's 8P adds C7430450; 60 / 24 / 21 in round 12) | 218, 75 codes | D-R12-04 … -19 |
 
 The owner's 200 mm allowance is not used. The historical stage-A density estimate was 1995 mm² (Calculation: the sum of the R12 lands'
 courtyard boxes), 43 % of one 46 × 100 mm face, near LEVIA-H7's 45 % two-face density (R11 records) and inside AVA's

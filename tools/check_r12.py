@@ -19,7 +19,9 @@ S-3: every pyro/load-switch gate defined off; local gate-source bias joined on t
 S-4: fitted population, schematic flags, MPN values and optional BOM/CPL identities; every part JLC-assembled,
      none owner-fitted (J1 / J121 / LS120 THT, C84 SMT; D-R12-04..19 / -29 / -85 / -174).
 S-5: protected J400 contacts, 470k resistors, D402 clamp and no switch bypass.
-S-6 / S-7: external ports separated from safety copper; servo signals and GND only, sixth pin NC.
+S-6 / S-7: external ports separated from safety copper; J122 in the MicoAir H743 ESC order (D-R12-192: 1 GND,
+     3-6 SERVO1-4, 2 / 7 / 8 NC); the H743's VBAT contact J122.2 carries no copper beyond its own pad and, on its
+     layer, only GND and SERVO1_OUT (the two analysed neighbours) come within VBAT_REACH (1.040 mm) of it.
 S-8: barrel wall AND retained inner ring >= 1 mm from foreign In1/In2 copper, including In2 signals;
      GND counts on ACT_GATE, ACT_DRV and PYRO1_OUT (D-R12-34, inherited R10 hazard policy); an inner-layer track of a
      barrel net keeps the same 1 mm on its own layer, fills included (R12F12-TRI-03).
@@ -324,7 +326,9 @@ SH_PORTS = {
     'J420': dict(zip(map(str, range(1, 5)), ('GND', 'PORT_4V8', 'RADIO_TX_WIRE', 'RADIO_RX_WIRE'))),
     'J440': dict(zip(map(str, range(1, 5)), ('GND', 'PORT_4V8', 'AUX_TX_WIRE', 'AUX_RX_WIRE'))),
     'J9': dict(zip(map(str, range(1, 7)), ('CAM_5V', 'CAM_5V', 'GND', 'GND', 'CAM_RX_WIRE', 'CAM_TX_WIRE'))),
-    'J122': dict(zip(map(str, range(1, 7)), (*r10.SERVO_TERMINAL, None))),
+    # D-R12-192 (owner 2026-11-13): the MicoAir H743 8-pin ESC port order, pin 1 read as D-R12-31 reads J410 / J420:
+    # 1 GND, 2 VBAT, 3-6 M1-M4, 7 RX7, 8 Curr; on R12 VBAT, RX7 and Curr are NC (R10's SERVO_TERMINAL nets, reordered)
+    'J122': dict(zip(map(str, range(1, 9)), (r10.SERVO_TERMINAL[4], None, *r10.SERVO_TERMINAL[:4], None, None))),
     'J400': {'1': 'BAT_SW_SOURCE', '2': 'BAT_SW_RETURN', '3': None, '4': None},
 }
 # D-R12-174 (owner 2026-11-10): J1 is the JLC-fitted KF301-5.0-2P battery screw terminal (D-R12-30's wire pads are
@@ -436,8 +440,53 @@ def s5(c):
     return issues + found, ev
 
 
+# D-R12-192: the MicoAir H743's VBAT contact. A shared H743 lead may carry the pack (up to 8.4 V) to J122.2, which R12
+# leaves unconnected (the harness rule in docs/R12_VEHICLE_HANDOFF.md forbids a live VBAT wire on R12). The SH-8 pitch
+# fixes its neighbours, J122.1 (GND) and J122.3 (SERVO1_OUT), 0.4 mm away; the bridge analysis covers exactly those two
+# (R12_DECISIONS D-R12-193). So the pad keeps no copper of its own (no track, via, fill or other pad on its net) and, on
+# its own layer, no item of any other net comes within VBAT_REACH (S-10's pack-class floor) of it.
+VBAT_PAD = ('J122', '2')
+VBAT_NEIGHBOURS = ('GND', 'SERVO1_OUT')
+VBAT_REACH = 1.040              # mm, r12_fire's pack-class limit
+
+
+def vbat_pad(c):
+    import pcbnew
+    ref, num = VBAT_PAD
+    f = c.fps.get(ref)
+    pad = f and next((p for p in f.Pads() if p.GetNumber() == num), None)
+    if pad is None:
+        return [f'S-7: {ref}.{num} (the MicoAir VBAT contact) missing'], {}
+    issues, ev = [], dict(net=pad.GetNetname(), near=[])
+    code = pad.GetNetCode()
+    if r10.real_net(pad.GetNetname()):
+        issues.append(f'S-7: {ref}.{num} (VBAT) is on {pad.GetNetname()}; it must be unconnected (D-R12-192)')
+    own = [t for t in c.board.GetTracks() if t.GetNetCode() == code and code > 0]
+    own += [z for z in c.board.Zones() if not z.GetIsRuleArea() and z.GetNetCode() == code and code > 0]
+    own += [q for g in c.board.GetFootprints() for q in g.Pads() if q.GetNetCode() == code and code > 0
+            and not (g.GetReference() == ref and q.GetNumber() == num)]
+    if own:
+        issues.append(f'S-7: {ref}.{num} (VBAT) has {len(own)} copper item(s) of its own beyond its pad (D-R12-192)')
+    lids = [lid for lid in (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu) if pad.IsOnLayer(lid)]
+    for net, lid, label, shape, _, owner, number in copper_items(c.board):
+        if lid not in lids or (owner == ref and number == num):
+            continue
+        gap = shape_gap(pad.GetEffectiveShape(lid), shape, VBAT_REACH)
+        if gap is None:
+            continue
+        ev['near'].append(dict(net=net, item=label, gap=round(gap, 4), layer=c.board.GetLayerName(lid)))
+        if net not in VBAT_NEIGHBOURS:
+            issues.append(f'S-7: {label} ({net or "no net"}) is {gap:.3f} mm from {ref}.{num} (VBAT) on '
+                          f'{c.board.GetLayerName(lid)}; only {" / ".join(VBAT_NEIGHBOURS)} may come within '
+                          f'{VBAT_REACH} mm (D-R12-192)')
+    ev['near'].sort(key=lambda r: (r['gap'], r['item']))
+    return issues, ev
+
+
 def s7(c):
-    return connector(c, 'J122', SH_PORTS['J122'], 'S-7')
+    issues, ev = connector(c, 'J122', SH_PORTS['J122'], 'S-7')
+    found, ev['vbat_pad'] = vbat_pad(c)
+    return issues + found, ev
 
 
 def s8(c):
@@ -605,7 +654,7 @@ TERMINAL_PINS = tuple((ref, tuple((pin, word) for pin, word in zip(want, words))
     ('J1', SCREW_TERMINALS['J1'][0], ('BAT+', 'GND')),
     ('J121', {'1': '', '2': ''}, ('E1-', 'E1+')),
     ('J400', SH_PORTS['J400'], ('SW', 'SW', 'NC', 'NC')),
-    ('J122', SH_PORTS['J122'], ('S1', 'S2', 'S3', 'S4', 'GND', 'NC')),
+    ('J122', SH_PORTS['J122'], ('GND', 'NC', 'S1', 'S2', 'S3', 'S4', 'NC', 'NC')),     # D-R12-192
     ('J410', SH_PORTS['J410'], ('GND', '4V8', 'TXO', 'RXI', 'NC', 'NC')),
     ('J420', SH_PORTS['J420'], ('GND', '4V8', 'TXO', 'RXI')),
     ('J440', SH_PORTS['J440'], ('GND', '4V8', 'TXO', 'RXI')),
@@ -668,7 +717,7 @@ def k_legends(c):
 # D-R12-81 (owner acceptance pending): J122's harness note is the one optional legend on R12. Drawn, it is checked as on
 # R10 (exact words, once, within reach and subject-nearest; a conflicting 'SERVO ...' legend fails); absent, the absence
 # alone is waived. Its 18.9 mm ink has no free strip within the 6 mm legend reach of J122 on either face (stage D,
-# measured). Every contact legend (all 30 SH contacts, NC included), word, SWD row, revision and SHOWN_REFS designator
+# measured). Every contact legend (all 32 SH contacts since D-R12-192, NC included), word, SWD row, revision and SHOWN_REFS designator
 # stays required.
 OPTIONAL_NOTES = frozenset({r10.SERVO_HARNESS_NOTE})
 
@@ -1331,7 +1380,7 @@ SINGLE_OPEN_TAPS_R12 = (
     ('GND', 'J440.1', ('J1.2',), "J440's GND contact"),
     ('GND', 'J9.3', ('J1.2',), "J9's (camera) GND contact 3, the 1.25 A camera return"),
     ('GND', 'J9.4', ('J1.2',), "J9's GND contact 4"),
-    ('GND', 'J122.5', ('J1.2',), "J122's GND contact, the servo signal reference"),
+    ('GND', 'J122.1', ('J1.2',), "J122's GND contact (pin 1 since D-R12-192), the servo signal reference"),
     ('3V3', 'D123.1', ('L1.2',), "D123's cathode on 3V3, the buzzer's flyback clamp beside LS120's supply pin"),
     ('GND', 'R163.2', ('J1.2',), "R163, Q123's gate pull-down"),
     ('GND', 'Q123.2', ('J1.2',), "Q123's source, the buzzer return"),
@@ -1450,7 +1499,7 @@ TITLES.update({
     'S-1': 'RAW_ACT armed-side parts and no bypass', 'S-2': 'pyro feed through Q120/Q121 only',
     'S-3': 'gates defined off, local bias on the FET layer', 'S-4': 'fitted population and assembly identities',
     'S-5': 'protected switch contacts, clamp and no bypass', 'S-6': 'ports separated from safety copper',
-    'S-7': 'servo signals, GND and NC only', 'S-8': 'foreign In1/In2 copper >= 1 mm from barrels and rings',
+    'S-7': 'servo signals, GND and NC only; VBAT contact bare', 'S-8': 'foreign In1/In2 copper >= 1 mm from barrels and rings',
     'S-9': 'fire and battery current-path widths',
     'S-10': 'fire-net copper gaps on every layer, fills included, default-deny with item-pair exceptions (R10 D-R26-02 / -04)', 'W-1': 'KF301 battery and DB125 pyro screw terminals',
     'W-2': 'SH connector identities and pin maps', 'LC-1': 'local clearance floors',

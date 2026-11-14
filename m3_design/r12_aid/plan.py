@@ -1123,7 +1123,7 @@ def main():
     pl.join('GND', ('U5', '3'), ('U5', '4'))       # D-R12-52: MS5607 GND / CSB, same row (no track between the rows)
     u6_joins(pl)
     for a_, b_ in ((('U4', '2'), ('U4', '3')), (('U4', '6'), ('U4', '7')), (('J9', '3'), ('J9', '4')),
-                   (('J122', '5'), None)):
+                   (('J122', '1'), None)):         # D-R12-192: J122's GND is pin 1 (was 5)
         if b_:
             pl.join('GND', a_, b_)
     pl.join('VLOGIC', ('U2', '4'), ('U2', '5'), w=0.4)

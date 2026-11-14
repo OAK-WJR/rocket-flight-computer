@@ -6,7 +6,7 @@ Last updated 2026-11-13 (R12; R11 candidate sections below; R10 candidate sectio
 
 ## R12 candidate: M3-ASSY-R12 (one-sided four-layer Economic PCBA, 46 × 86.85 mm; NOT accepted)
 
-**Status (2026-11-13).** PCB `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770`, 46 × 86.85 × 1.6 mm, four layers; 193 footprints, 185 JLC parts. Not accepted, nothing ordered; R9 stays accepted.
+**Status (2026-11-14).** PCB `876733fe58d0f8559bf236232c32f1692e24ed0cdfaaf00bd2c94bf78918dc40`, 46 × 86.85 × 1.6 mm, four layers; 193 footprints, 185 JLC parts (D-R12-192: J122 is an SH-8 in the MicoAir H743 ESC order; round 12 ended on `c9b9f0fa…`). Not accepted, nothing ordered; R9 stays accepted.
 
 **Round 12 final fix pass (2026-11-13; D-R12-175 … -191).** Rounds 10 and 11 were the clean pair under
 D-R12-167 (zero Critical / zero Major); round 10 had 16 Minors. Historical round 11 reviewed `a1e65bb4…`: 13 Minor, left when the owner
@@ -26,6 +26,19 @@ tool string is left (D-R12-191). The full gate on the final tree is the commit c
 nothing ordered. The 2026-11-11 quote, $165.33 for two assembled boards before shipping, was for historical
 `1d7562d5…` and must be redone. Layout is judged against AVA and LEVIA-H7 (D-R12-168).
 
+**MicoAir-compatible servo port (2026-11-14; D-R12-192 … -194).** At the owner's request (2026-11-13) J122 is a
+Megastar ZX-SH1.0-8PWT (C7430450) in the MicoAir H743's 8-pin ESC-port order, pin 1 read as D-R12-31 reads the GPS
+and telemetry ports: 1 GND, 2 VBAT (NC), 3–6 SERVO1–4 (M1–M4), 7 RX7 (NC), 8 Curr (NC). MicoAir's v1 and v2 port
+images and wiring diagrams agree; the order stays an Inference until a real lead is checked (O-R12-19). The VBAT
+contact carries no copper and must be dead on R12 (harness rule, D-R12-193, owner row 57); check_r12 S-7 holds the
+pad. J122 moved 1.0 mm east, so R150–R153 and the servo runs are unchanged; its GND via pair moved to pin 1. PCB
+`876733fe…` (was `c9b9f0fa…`): copper and placement differ only at J122 (Measured by comparing the two boards).
+Two identical builds; DRC / parity / unconnected / ERC 0; all 34 check_r12 rules OK; route_check 0 failing / 2
+allowlisted; fit / legends / fill OK; fab manifest bound; hot-plug (2304 / 2304, minimum −14.077 V, numerically unchanged; Simulation / Inference) and stage D re-bound to `876733fe…`.
+Parts + feeder $64.03 / $43.77 per board at 2 / 5 boards (+$1.53 / +$0.61, one more charged code). This change has
+had no full review round, only its fix lane, the orchestrator's gate and a focused review to follow. Not accepted,
+nothing ordered.
+
 Lane P's gate: DRC / parity / unconnected 0, all 34 check_r12 rules OK, route_check 0 failing / 2 allowlisted,
 eight recorded leftovers / zero unrecorded or stale, fit / legends / fill OK, fab manifest bound.
 S-10 has 203 exceptions; K-power 123 taps / 19 exceptions. Lane A's board-bound figures: fire loop 4.72843 Ω,
@@ -35,12 +48,13 @@ under 6.7 ms per sliding 100 ms (Calculation / Inference). Hot-plug 2304 / 2304,
 O-R12-22 remains open. R118 10k doubles Q122's DC hold; R110 is 1.5k; LS120 is at (5.8, 70.25).
 No R12 firmware binding exists. Records lane static checks only; final gate remains the orchestrator's condition.
 
-Parts + feeder **$62.50 / $43.16 per board at 2 / 5 boards**, against the $84.41 cap (Live
-2026-11-13T10:35:38Z / 10:37:57Z): 60 BOM lines (24 Extended / 36 Basic), 185 JLC parts, 21 charged codes,
-$30.27 parts per board and $64.47 feeder fees per order. There are 595 paste flashes and no owner BOM.
-Stock 2026-11-13T10:34:51Z / 10:36:33Z: no line short or thin at either quantity. Orderable quantity is an
-Inference about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping
-was for historical `1d7562d5…`; re-quote `c9b9f0fa…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+Parts + feeder **$64.03 / $43.77 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-14T00:33:48Z / 00:35:22Z, after D-R12-192's SH-8 J122): 61 BOM lines (25 Extended / 36 Basic), 185 JLC
+parts, 22 charged codes, $30.26 parts per board and $67.54 feeder fees per order (was $62.50 / $43.16 with 21 codes
+on `c9b9f0fa…`). There are 597 paste flashes and no owner BOM. Stock 2026-11-14T00:33:05Z / 00:34:34Z: no line
+short or thin at either quantity (C7430450: 56 065 in stock, 54 903 orderable). Orderable quantity is an Inference
+about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for
+historical `1d7562d5…`; re-quote `876733fe…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 Owner items: [R12_VALIDATION.md](docs/R12_VALIDATION.md); harness: [R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md); full state: [M3_R12.md](docs/M3_R12.md#current-state).
 

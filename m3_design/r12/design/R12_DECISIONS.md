@@ -300,7 +300,8 @@ ladder, D8, C96, C80, TP80, C88 and R167 moved (stageB.md §5); C96's BAT_IN pad
 computer, the MicoAir H743, uses SH 1.0 ports, and one module harness should plug into either board.
 - **Retention (owner deviation):** the owner accepts SH's friction-only retention, which R11 D-R11-05 had rejected.
   The per-flight procedure gains a retention step (an adhesive / RTV dab or a tie on each plug); see O-R12-18.
-- **Parts:** Megastar ZX-SH1.0-4PWT (C7430446) for J400, J420 and J440; ZX-SH1.0-6PWT (C7430448) for J410, J9 and J122.
+- **Parts:** Megastar ZX-SH1.0-4PWT (C7430446) for J400, J420 and J440; ZX-SH1.0-6PWT (C7430448) for J410, J9 and J122
+  (J122 is the ZX-SH1.0-8PWT C7430450 since D-R12-192).
   Both are Extended, 1 A per contact, with 189 k / 94 k in stock (JLC listing, Live 2026-11-04). It is still two codes.
 - **Land:** JST's SMnnB-SRSS-TB land as KiCad's library draws it from JST eSH.pdf. JLCEDA's land returned HTTP 403.
   That the clone takes the JST land is an Inference.
@@ -310,7 +311,8 @@ computer, the MicoAir H743, uses SH 1.0 ports, and one module harness should plu
   order but does not mark which end is pin 1, and the owner's board may be the v1. The order is an Inference until a
   real H743 lead is checked (O-R12-19).
 - **Unchanged orders:** camera J9 keeps its order (two contacts each for CAM_5V and GND: 1 A per contact, against R10's
-  1 A camera load); servo J122 keeps 1–4 SERVO1–4, 5 GND, 6 NC; switch J400 uses pins 1–2 of a 4P body.
+  1 A camera load); servo J122 keeps 1–4 SERVO1–4, 5 GND, 6 NC (superseded by D-R12-192: SH-8 in the H743 ESC order);
+  switch J400 uses pins 1–2 of a 4P body.
 - **Fit:** fit_check models the SH header and plug from the listing and JST's family dimensions (Inference). The mouths
   sit 1.1 mm inside their short edge. This supersedes D-R12-15's GH clones.
 
@@ -2892,7 +2894,8 @@ tool string is left (D-R12-191). The full gate on the final tree is the commit c
 nothing ordered. The 2026-11-11 quote, $165.33 for two assembled boards before shipping, was for historical
 `1d7562d5…` and must be redone. Layout is judged against AVA and LEVIA-H7 (D-R12-168).
 
-Current PCB SHA-256 `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770`.
+PCB SHA-256 at the end of round 12 `c9b9f0fa984123d38e96ceb578c020b1107eda4cb380008f9ef6513fb9d78770` (superseded by
+`876733fe…`, D-R12-192; this round-12 snapshot is historical).
 193 footprints, 185 JLC parts, 1147 tracks / 394 vias, 52 legends, 106 shown / 87 hidden designators,
 595 paste flashes. Lane P reports all 34 check_r12 rules OK; route_check zero failing / two allowlisted /
 eight recorded leftovers / no stale or unrecorded. Final `test_r12_check.py` count: 131 tests (lane T, `68ae31b`).
@@ -3152,6 +3155,108 @@ O-R12-23 retains physical behaviour only. Owner row 39 (PACK_U9) now cites SLVSF
 "not re-read" wording: the file is a fab-manifest input and the string reaches no output, so it was left): OVLO at 8.4 V exceeds its 6.5 V
 maximum; AUXOFF also 6.5 V, dVdt / ILIM / ITIMER internally limited. Damage is Inference.
 
+## MicoAir-compatible servo port (2026-11-14; owner request 2026-11-13; D-R12-192 … -194)
+
+**D-R12-192 J122 becomes an SH-8 in the MicoAir H743 ESC-port order (owner, 2026-11-13: "i want the servo connector
+to be micoair compatible").** The vehicle's primary flight computer is a MicoAir H743. D-R12-31 copied its GPS and
+telemetry port orders so one module lead fits either board; J122 was the exception (SH-6, 1–4 SERVO1–4, 5 GND, 6 NC).
+J122 now copies the H743's 8-pin ESC port, so one SH-8 servo lead fits both boards.
+- **Part.** Megastar ZX-SH1.0-8PWT, LCSC / JLC **C7430450**, Extended (not Preferred), side entry, 1 A per contact,
+  50 V, body 10.35 mm wide (JLC listing, Live 2026-11-14T00:02:19Z: stock 56 065, orderable 54 903, $0.0933 at 1–499;
+  https://jlcpcb.com/partdetail/C7430450, https://www.lcsc.com/product-detail/wire-to-board-connector_megastar-zx-sh1-0-8pwt_C7430450.html).
+  Same family as the fitted 4P / 6P, so no clone substitution was needed. Land: JST SM08B-SRSS-TB as KiCad draws it,
+  tabs at ±4.8 mm (`r12_parts.ghc(8)`, `M3_SHC_8P`), as for the 4P / 6P (that the clone takes the JST land is the same
+  Inference as D-R12-31). JLCEDA's land CONN-SMD_8P-P1.00_MEGASTAR_ZX-SH1.0-8PWT (https://easyeda.com/api/products/C7430450/components,
+  read 2026-11-14) puts pin 1 at −x and the tabs (pads 10 left / 9 right) behind the contact row, as its 6P does; JLC's
+  rotation for J122 is matched on all 10 pads (residual 0.31 mm, `tools/jlc_corrections_r12.json`). C7430448 (6P)
+  stays on J410 and J9.
+- **Pin map (pin 1 read as D-R12-31 reads J410 / J420).** 1 GND, 2 VBAT (NC), 3 M1 = SERVO1_OUT, 4 M2 = SERVO2_OUT,
+  5 M3 = SERVO3_OUT, 6 M4 = SERVO4_OUT, 7 RX7 (ESC telemetry, NC), 8 Curr (NC). Legends `1:GND`, `2:NC`, `3:S1` …
+  `6:S4`, `7:NC`, `8:NC` on the bottom face; symbol `M3:ServoSH8` (pin names GND, VBAT_NC, SERVO1–4, RX7_NC, CURR_NC).
+- **Sources, read 2026-11-14.** (1) ardupilot.org common-MicoAir743.html, image MicoAir743_PortsConnection.jpg (v1)
+  and common-MicoAir743v2.html, image MicoAir743v2_Ports_Connection.jpg (v2): the ESC port table reads, west to east
+  in the top view, `Curr, RX7, M4, M3, M2, M1, VBAT, GND` on **both** v1 and v2 (v1 labels the UART "UART7 SERIAL6 (AP)
+  ESC (PX4)", v2 "UART7 SERIAL7 (AP)"). (2) MicoAir's own wiring diagrams (micoair.com MicoAir743_Diagram-jpg.webp,
+  v1 user manual; MicoAir743v2_Wiring_Diagram-scaled.webp, v2 product page) draw the eight wires leaving the ESC
+  header in the same west-to-east order, and the photographed silkscreen beside the header reads `C R 4 3 2 1 V G`
+  (v2; v1 `CR4321…`). (3) The same images give the GPS port west to east `GND, 5V, TX3, RX3, SCL, SDA` with the header
+  on the south edge, mouth south; the west-edge UART ports read north to south from GND; v1's east-edge UART1 / UART8
+  read south to north from GND. Read from the images (not a datasheet): the tables are drawn in the headers' physical
+  order, and on every SH port of both versions GND is the contact on the left as one looks into the mouth with the top
+  face up. D-R12-31 made that contact pin 1 on J410 / J420 / J440. The ESC header is on the north edge, mouth north, so
+  its GND is the east end and the list runs pin 1 GND … pin 8 Curr. Reading the ESC list left to right as pin 1 … 8
+  (D-R12-31's literal wording, "lists the pins in this order") would mirror the port and put Curr on pin 1; the
+  physical reading is the one consistent with J410 / J420, and the orders are not otherwise in conflict (the order
+  given by the owner's earlier reading, `Curr, RX7, M4, M3, M2, M1, VBAT, GND`, is the image's west-to-east order).
+  v1 and v2 agree. On our footprint, pin 1 is on the left looking into the mouth with the top face up (KiCad / JST
+  land, pad 1 at −x, mouth +y), the same side as the H743's GND.
+- **What stays Inference.** That a real MicoAir lead or header has GND at this mouth-relative end (no source marks a
+  pin-1 end; O-R12-19 now covers the ESC port), that the H743 uses a JST SH-compatible right-angle header, and that
+  the clone mates with its housing (O-R12-04). If the bench check finds the H743 the other way round, J410 / J420 /
+  J440 and J122 are all mirrored together; J122 alone cannot be wrong while J410 / J420 are right.
+- **Board.** J122 moves 1.0 mm east to (22.6, 3.65), rotation 180, so its pins 3–6 (SERVO1–4) sit exactly where the
+  6P's pins 1–4 were (x 24.1, 23.1, 22.1, 21.1): R150–R153, the servo runs and the D-R12-33 staggered rows are
+  unchanged (the M4 … M1 list order runs in the same direction as the old pins 1–4, so nothing reverses). Its west
+  courtyard edge stays at x 16.905; the east edge moves 2.0 mm to 28.295, 0.51 mm from J9's (Measured). The GND
+  contact is now pin 1 (x 26.1): its F.Cu link and via pair (R12F12-TRI-02) move from (19.9, 7.0) / (19.35, 7.0) to
+  (26.1, 7.45) / (26.65, 7.45), 0.45 mm forward of the pad row so the footprint's pin-1 mark (26.1, 6.875) is not on a
+  via. Pins 2, 7 and 8 carry no copper. Legends: the eight contact legends are on the bottom face in their columns
+  (alternately outward / inward, D-R12-80); J9's designator and the `CAM` word moved to the free top-face strip east
+  of J9 ((39.2, 2.6) and (39.7, 1.25)) because J122's wider body now covers their old spots; J122's Fab reference moved
+  with the part. 54 legends (was 52), 106 designators shown / 87 hidden (unchanged).
+- **Gate.** `check_r12.SH_PORTS['J122']`, `TERMINAL_PINS` and the K-power tap (J122.1) follow the new map; S-7 adds
+  the VBAT-pad rule (D-R12-193); W-2 requires ZX-SH1.0-8PWT. `r12_sch_check` holds every J122 pin and seeds: pin 8
+  connected, VBAT on BAT_IN, VBAT on GND, M1–M4 reversed, GND on the Curr contact, and the 6-pin symbol names on J122.
+  `tools/test_r12_check.py` gains `test_r12f13_j122_micoair_esc_order` and `test_r12f13_j122_vbat_pad_bare`.
+- **Cost.** One more charged Extended code: parts + feeder **$64.03 / $43.77 per board at 2 / 5 boards** (was
+  $62.50 / $43.16; +$1.53 / +$0.61), 22 charged codes × $3.07 = $67.54 per order, $30.26 parts per board (Live
+  2026-11-14T00:33:48Z / 00:35:22Z on the final board; stock 00:33:05Z / 00:34:34Z, no line short or thin).
+
+**D-R12-193 The H743's VBAT contact on J122 (pin 2): bridge analysis and handling.** On the H743, VBAT on the ESC
+port is a battery input (VBAT range 2–6S on the v2 image), so a shared H743 lead may carry the pack to J122.2. R12
+leaves the pad unconnected (servo motor power and return stay off the board, REQUIREMENTS F4). Its neighbours are
+fixed by the SH-8 pitch: J122.1 GND and J122.3 SERVO1_OUT, each **0.400 mm** pad to pad (Measured, check_r12 S-7
+evidence); the other F.Cu items within 1.040 mm are GND's link (0.55 mm), SERVO1_OUT's run (0.60 mm) and GND's via
+(26.1, 7.45) (1.016 mm) (Measured on `876733fe…`, check_r12 S-7 evidence).
+- **VBAT–GND bridge (solder or debris at the header).** With a live VBAT wire this is a pack short through the lead's
+  VBAT wire, J122.1, its 0.3 mm link and two vias to the In1 / B GND copper and J1.2. Nothing on the board or in the
+  lead limits it but the pack, the wire and the contacts (Inference: tens of amperes for a short thin wire, far above
+  the contact's 1 A); the wire or contact overheats in the bay. A fuse at the pack end of the VBAT wire would limit it.
+- **VBAT–SERVO1_OUT bridge.** Pack voltage drives SERVO1_OUT, behind R150 1 kΩ, to SERVO1_MCU, where R154 10 kΩ pulls
+  down and D121 (SRV05-4 I/O 1) clamps to 3V3; PA15 (TIM2_CH1) is the MCU pin. Board on: the node sits about one
+  diode drop above 3V3 and R150 passes at most (8.4 − 3.224) V / 990 Ω = **5.2 mA** into the 3V3 rail through D121
+  (Calculation / Inference: pack 8.4 V, 3V3 drift minimum 3.224 V, D121's drop taken as zero for the bound), with R150
+  dissipating ≤ 27 mW. The rail's own load is larger, so U2 supplies that much less and the rail does not rise
+  (Inference: the 3V3 load floor with the MCU running is not measured). PA15 sees about 3.5 V + one diode drop, below
+  the 5.5 V class of an FT pin (Inference: DS12110's FT rating not re-read here), and sinks ≤ 8.5 mA when driven low.
+  SERVO1's PWM is lost (stuck high), so that servo's command is lost: a control fault, not a logic or fire fault.
+  Board off (J400 open, pack connected): the same path back-feeds the unpowered 3V3 rail with ≤ 8.5 mA; what that does
+  to the MCU's reset state is not modelled (Inference). It does not touch the fire path or the arming chain directly:
+  Q124 / Q122 keep their gate pull-downs, and RAW_ACT stays behind Q120 / Q121.
+- **Handling: a harness rule, no part.** Both hazards need a live VBAT wire on J122. A fuse addresses only the GND
+  short (the SERVO1 back-feed is under 10 mA). A rule removes both: **on R12 the servo lead's VBAT position is dead**
+  (contact extracted from the SH-8 housing, or the wire cut back and insulated at both ends and joined to nothing), and
+  a lead that powers an H743 through its ESC-port VBAT is not plugged into R12 as is (`docs/R12_VEHICLE_HANDOFF.md`).
+  First-article and per-flight checks: J122.2 reads open to J122.1 and to J122.3 on the unpowered board (no bridge);
+  before mating, the lead's VBAT position is empty or reads < 0.1 V to its GND contact with the pack connected and
+  every switch on; inspect the J122 row at 10×. No protection part is added: the analysis finds no path to the fire
+  net or arming chain and the rule covers the logic and harness hazards. Owner row 57 (R12_VALIDATION).
+- **Gate.** J122.2 is not added to r12_fire's S-10 classes: it is not a board net (pack voltage reaches it only through
+  a lead the rule forbids), and the pitch fixes 0.400 mm gaps that S-10's 1.040 mm pack class could only except.
+  Instead check_r12 S-7 holds the pad: no copper of its own (no track, via, fill or other pad on its net) and, on its
+  layer, no item of any net other than GND and SERVO1_OUT (the two analysed neighbours) within 1.040 mm. A later
+  layout that puts 3V3, a fire net or anything else beside it fails the gate (seeded in `test_r12f13_j122_vbat_pad_bare`).
+
+**D-R12-194 Not adopted, and what this change has not had.**
+- A series fuse, PTC or diode on J122 or a protection part on SERVO1: not needed under D-R12-193's rule.
+- Labelling contact 2 `VBAT` on the board: it would read as a live supply; the legend is `2:NC` (the handoff names it).
+- Keeping J122 at (21.6, 3.65): the pins would shift 1 mm against R150–R153 and every servo run would move.
+- Refreshing `design/jlc_r12_stock.json` / `r12_cost.json` (the stage A record, 2026-11-08): left historical; the
+  current cost is the fab run above.
+- This change has had no full review round: only this lane's checks, the orchestrator's gate and a focused review to
+  follow. The board stays not accepted, nothing ordered. The 2026-11-11 quote ($165.33 for two boards) was for
+  historical `1d7562d5…` and must be redone.
+
 ## 2. Historical stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history. C25 / C26 alone are updated to the round-3 C1548 read
@@ -3268,7 +3373,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | A-19 | F11: CAM_5V_SENSE on PB1 | PC2_C (E2) sense; PB1 (K4) LED_RED | D-R12-166 |
 | A-20 | F10: R10 EXTI lines 1 / 4 / 5 / 6 / 8 / 12 on PE1 / PA4 / PA5 / PD6 / PC8 / PE12 | R12 IMU_INT1 PD3 EXTI3, BAT_FAULT_N PC13 EXTI13, VBUS_SENSE PC9 EXTI9, PORT_SENSE PD10 EXTI10 if used; PA4 / PA5 / PD6 / PC8 / PE1 NC, PE12 SD_SCK. USB / camera fault flags removed; check every pending bit in shared vectors | D-R12-93, -173; pin_table.tsv |
 | A-21 | F10: PA2 drives loader USART2_TX / servo 3 | PA2 NC; SERVO3 PA8 TIM1_CH1, SERVO4 PA9 TIM1_CH2. Loader PA9 USART1_TX may hold SERVO4 high; PC11 SPI3_MISO may drive CAM_MCU_RX (board RX, connected to camera TX) with CAM_5V off. Loader roles are read from AN2606 Rev 71 Table 145 (D-R12-191); installed behaviour remains untested | D-R12-93, -116, -173 |
-| A-22 | F4 / F8: J122 five-position / green 5-pos DB125 | ZX-SH1.0-6PWT SH-6: pins 1–4 signals, 5 signal GND, 6 NC; motor power/return remain in the harness. TIM2 / TIM1 mapping in M3_R12; PA15 JTDI pull-up and loader cases need qualification | D-R12-31, -93, -173 |
+| A-22 | F4 / F8: J122 five-position / green 5-pos DB125 | ZX-SH1.0-8PWT SH-8 in the MicoAir H743 ESC order: 1 signal GND, 2 NC (the H743's VBAT, dead on R12, D-R12-193), 3–6 SERVO1–4 (M1–M4), 7–8 NC (RX7, Curr); motor power/return remain in the harness. TIM2 / TIM1 mapping in M3_R12; PA15 JTDI pull-up and loader cases need qualification | D-R12-31, -93, -173, -192 |
 | A-23 | F6: PA6 0.44–0.47 V and R10's under-7-ms chatter bench rule | PA6 0.425–0.455 V with 0.1 % R60 / R61; windows include ±250 nA leakage (analog-mode applicability Inference). R12 chatter: **under 6.7 ms total open time in every sliding 100 ms window**, ≥ 10 kS/s under flight-level vibration, U9 on throughout at 5.72 V. Rows 5 / 45 and M3_R12 Power give the Calculation / Inference margins and sensitivity | D-R12-164, -172, -183 |
 | A-24 | F5: Molex 472192001 hinged retaining socket | Molex 104031-0811 push-pull C585350; tape backup, card-detect NC. Local bypass deviation A-14; SPI4 mapping A-15; retention row 48 | D-R12-162, -173 |
 | A-25 | F11: PA6 telemeters pack voltage and READY compares it with 7.4 V; MS5611 TEMP | PA6 measures VLOGIC behind D5; corrected pack estimate / READY uses measured pad-load U9, copper and D5 drops and ADC/divider error (row 45; Calculation / Inference until calibrated). U5 is MS5607 (A-4), whose temperature reading and annunciation require qualification | D-R12-157, -173 |
@@ -3295,7 +3400,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-16 | **Calculation closed**, subject to U400 VIN ≥ VO / 0.75. Current minimum 4.56508 V at 0.561 A / drift with 70 °C copper; no-load maximum 4.972 V. Four-stall U400 VIN 5.4988 V rests on foldback (Calculation / Inference). Real LR900-F floor and low-input supply remain bench items, R12_VALIDATION row 15 | closed calculation / bench |
 | O-R12-17 | **Trip-bottom item closed as a calculation by D-R12-164, amended by -172**: 0.1 % divider and 0.425–0.455 V band adopted; bottom above U9 turn-off +0.0979 / +0.0894 / +0.0264 V nominal / initial / drift (Calculation / Inference: D5 VF, PA6 leakage in analog mode, self-consistent currents, drift). Firmware and bench qualification remain; rule 9 READY still needs PA6-behind-D5 correction and measured ADC/divider error (D-R12-157, owner row 45) | trip-bottom closed; READY / firmware / bench open |
 | O-R12-18 | SH plug retention: a per-flight adhesive / RTV or tie step on every SH plug (owner deviation, D-R12-31) | procedure / owner |
-| O-R12-19 | SH pin orders against a real MicoAir H743 lead (pin-1 end not marked in the source image; v1 / v2) (D-R12-31) | bench |
+| O-R12-19 | SH pin orders against a real MicoAir H743 lead, the 8-pin ESC lead on J122 included (no source marks a pin-1 end; R12 reads GND as pin 1 on every port from MicoAir's images, v1 and v2 agreeing; a mirrored result flips J410 / J420 / J440 and J122 together) (D-R12-31, -192) | bench |
 | O-R12-20 | J121 DB125, J1 KF301-5.0-2P and LS120 QMB-09B-03 on JLC Economic as THT (D-R12-85, -174): confirm on the order page, and J1's wire face out in JLC's placement preview (jlc_orient_r12 R12_BODY, theta 180). **J1 hole fit closed as a design calculation by D-R12-174:** the land is the maker's own hole, 1.30 mm finished for the 1.00 mm pin (Kefa KF301-5.0 rev A: hole 1.20 +0.10; Datasheet), and JLC fits the part. Screw retention under flight vibration and a sample fit stay bench items | order / bench |
 | O-R12-21 | NXP dual-channel FXLS9XXXX Rev 7.0 read in round 12 for supply and pin-out: pin 2 PCM1/ARM1, output, left open (Datasheet). Remaining axis-frame / medium-g range-code checks and the LSM6DSVE datasheet remain open. Supply-monitor contradiction is O-R12-22 | records / bench |
 | O-R12-22 | **Reopened, D-R12-188.** The 1 A voltage calculation gives U6 ≥ 3.20405 V at drift with 70 °C copper (Calculation / Inference), above the 3.135 V SPI floor, but NXP Rev 7.0 contradicts itself on BUS_I undervoltage in shipped COMMTYPE 000. Both readings and exact quotations are in D-R12-188. “Works at 3.3 V” is Inference, not demonstrated. Ask NXP or accept that the first two boards test it; read DEVSTAT / DEVSTAT1 at 3V3 3.22 / 3.52 V. Estimator and fire rule work without U6 | owner before order / bench |

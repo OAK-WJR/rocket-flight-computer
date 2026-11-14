@@ -729,7 +729,7 @@ class KPower(Plants, unittest.TestCase):
                     'R136.1', 'R89.1', 'D95.3', 'D436.3', 'D402.2', 'D121.2', 'R154.2', 'R155.2', 'R156.2', 'R157.2',
                     'R431.2', 'C88.2', 'C81.2', 'C97.2', 'R92.2', 'R167.2', 'U6.1', 'U6.13', 'U6.15', 'U6.16', 'C33.2',
                     'U3.8', 'U3.4', 'J430.4', 'J430.6', 'J410.2', 'J420.2', 'J440.2', 'J410.1', 'J420.1', 'J440.1',
-                    'J9.3', 'J9.4', 'J122.5', 'D123.1', 'R163.2', 'Q123.2', 'C22.2'):
+                    'J9.3', 'J9.4', 'J122.1', 'D123.1', 'R163.2', 'Q123.2', 'C22.2'):
             self.assertIn(tap, taps)
         # the single points left on purpose: the U1 dog-bones (PD10's since R12F9-TRI-08), BOOT0's far via and the two
         # 3V3A feeds (owner rows)
@@ -2422,15 +2422,20 @@ class Schematic(unittest.TestCase):
         names = r12_sch_check.read_pin_names(ROOT / 'm3_design/r12/schematic.net.xml')
         self.assertEqual(r12_sch_check.terminal_pin_issues(names), [])
         seeded = r12_sch_check.name_seeds(names)
-        self.assertEqual(len(seeded), 5)
+        self.assertEqual(len(seeded), 6)
         self.assertTrue(all(seeded.values()), seeded)
         data = r12_sch.circuit()
         self.assertEqual({ref: data['parts'][ref]['lib'] for ref in ('J410', 'J420', 'J440')},
                          {'J410': 'M3:PortSH6', 'J420': 'M3:PortSH4', 'J440': 'M3:PortSH4'})
         self.assertEqual({names['J410', p][0] for p in '56'}, {'NC'})
+        # D-R12-192: J122 in the MicoAir H743 ESC order on its own 8-pin symbol
+        self.assertEqual(data['parts']['J122']['lib'], 'M3:ServoSH8')
+        self.assertEqual({p: names['J122', p][0] for p in '12345678'},
+                         {'1': 'GND', '2': 'VBAT_NC', '3': 'SERVO1', '4': 'SERVO2', '5': 'SERVO3', '6': 'SERVO4',
+                          '7': 'RX7_NC', '8': 'CURR_NC'})
         lib = (ROOT / 'm3_design/r12/kilib/m3.kicad_sym').read_text()
         sheets = ''.join((ROOT / 'm3_design/r12' / s).read_text() for s in r12_sch.SHEET_FILES)
-        for name in ('PortSH4', 'PortSH6', 'ServoGH6', 'SwitchGH4', 'CameraGH6'):
+        for name in ('PortSH4', 'PortSH6', 'ServoSH8', 'SwitchGH4', 'CameraGH6'):
             s = lib.index(f'\t(symbol "{name}"\n')
             descr = lib[s:lib.index('(property "ki_keywords"', s)]
             self.assertIn('ZX-SH1.0', descr, name)
@@ -2731,11 +2736,80 @@ class PortedRules(unittest.TestCase):
         j410.SetField('Manufacturer Part', 'GH1.25-4PWT')
         self.assert_rule(s, 'W-2', False, want=f'W-2: J410 must be ZX-SH1.0-{len(r12.SH_PORTS["J410"])}PWT (D-R12-31)')
         j410.SetField('Manufacturer Part', f'ZX-SH1.0-{len(r12.SH_PORTS["J410"])}PWT')
-        s.board.FindFootprintByReference('J122').FindPadByNumber('6').SetNet(s.net('3V3'))
+        s.board.FindFootprintByReference('J122').FindPadByNumber('8').SetNet(s.net('3V3'))
         for rid in ('S-7', 'W-2'):
             self.assert_rule(s, rid, False)
         s.board.FindFootprintByReference('J410').FindPadByNumber('1').SetNet(s.net('PORT_4V8'))
         self.assert_rule(s, 'W-2', False)
+
+    def test_r12f13_j122_micoair_esc_order(self):
+        """D-R12-192: J122 is an SH-8 in the MicoAir H743 ESC order, pin 1 read as D-R12-31 reads the GPS / telemetry
+        ports: 1 GND, 2 VBAT (NC), 3-6 M1-M4 = SERVO1-4, 7 RX7 (NC), 8 Curr (NC). The M order reversed, GND on the
+        Curr contact, a seventh-pin signal or the 6-pin part fail S-7 / W-2; the VBAT contact on any net fails."""
+        self.assertEqual(r12.SH_PORTS['J122'], {'1': 'GND', '2': None, '3': 'SERVO1_OUT', '4': 'SERVO2_OUT',
+                                                '5': 'SERVO3_OUT', '6': 'SERVO4_OUT', '7': None, '8': None})
+        self.assertEqual(dict(r12.TERMINAL_PINS)['J122'],
+                         (('1', 'GND'), ('2', 'NC'), ('3', 'S1'), ('4', 'S2'), ('5', 'S3'), ('6', 'S4'), ('7', 'NC'),
+                          ('8', 'NC')))
+        faults = {
+            'M order reversed': {'3': 'SERVO4_OUT', '6': 'SERVO1_OUT'},
+            'R10 order (1-4 SERVO1-4, 5 GND)': {'1': 'SERVO1_OUT', '2': 'SERVO2_OUT', '3': 'SERVO3_OUT',
+                                                 '4': 'SERVO4_OUT', '5': 'GND', '6': None},
+            'GND on the Curr contact': {'1': None, '8': 'GND'},
+            'VBAT on the pack': {'2': 'BAT_IN'},
+            'VBAT on GND': {'2': 'GND'},
+            'RX7 used': {'7': 'SERVO4_OUT'},
+        }
+        for label, change in faults.items():
+            with self.subTest(label):
+                s = Four()
+                f = s.sh('J122', 10, 10)
+                self.assert_rule(s, 'S-7')
+                for n, net in change.items():
+                    pad = f.FindPadByNumber(n)
+                    pad.SetNet(s.net(net) if net else s.board.FindNet(''))
+                self.assert_rule(s, 'S-7', False)
+        s = Four()
+        s.sh('J122', 10, 10).SetField('Manufacturer Part', 'ZX-SH1.0-6PWT')
+        self.assert_rule(s, 'W-2', False, want='W-2: J122 must be ZX-SH1.0-8PWT (D-R12-31)')
+
+    def test_r12f13_j122_vbat_pad_bare(self):
+        """D-R12-192 / -193: J122.2 (the H743's VBAT) keeps no copper of its own and, on its layer, only GND and
+        SERVO1_OUT come within 1.040 mm of it (the two neighbours the bridge analysis covers)."""
+        s = Four()
+        f = s.sh('J122', 10, 10)
+        own = 'unconnected-(J122-VBAT_NC-Pad2)'
+        f.FindPadByNumber('2').SetNet(s.net(own))
+        rep = self.assert_rule(s, 'S-7')
+        near = rep['evidence']['s7']['vbat_pad']['near']
+        self.assertEqual(sorted({r['net'] for r in near}), [])      # Four.sh's 2 mm pitch: no neighbour within reach
+        x, y = 10 + 4, 10                                            # pad 2's centre (Four.sh: pad n at x + 2n)
+        # a GND or SERVO1_OUT track 0.6 mm from the pad edge passes; any other net there fails
+        for net, good in (('GND', True), ('SERVO1_OUT', True), ('3V3', False), ('SERVO2_OUT', False),
+                          ('PYRO1_OUT', False), ('RAW_PROTECTED', False)):
+            with self.subTest(net):
+                s2 = Four()
+                g = s2.sh('J122', 10, 10)
+                g.FindPadByNumber('2').SetNet(s2.net(own))
+                s2.track((x + .3 + .6 + .1, y - 2), (x + .3 + .6 + .1, y + 2), net, None, .2)
+                self.assert_rule(s2, 'S-7', good, want=None if good else '(VBAT) on F.Cu; only GND / SERVO1_OUT')
+        # beyond 1.040 mm any net passes
+        s3 = Four()
+        g = s3.sh('J122', 10, 10)
+        g.FindPadByNumber('2').SetNet(s3.net(own))
+        s3.track((x + .3 + 1.1 + .1, y - 2), (x + .3 + 1.1 + .1, y + 2), '3V3', None, .2)
+        self.assert_rule(s3, 'S-7')
+        # a track or via on the pad's own net fails, as does a pad of another part on it
+        for kind in ('track', 'via'):
+            with self.subTest(kind):
+                s4 = Four()
+                g = s4.sh('J122', 10, 10)
+                g.FindPadByNumber('2').SetNet(s4.net(own))
+                if kind == 'track':
+                    s4.track((x, y), (x, y + 3), own, None, .2)
+                else:
+                    s4.via(x, y + 3, own, d=.45)
+                self.assert_rule(s4, 'S-7', False, want='copper item(s) of its own beyond its pad')
 
     def test_s8_foreign_inner_copper_and_rings(self):
         for layer in (pcbnew.In1_Cu, pcbnew.In2_Cu):
