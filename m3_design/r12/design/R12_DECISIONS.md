@@ -3659,8 +3659,9 @@ method) and an M3_R12 "Not verified" line.
   module conducting from GND to its supply could close the EN divider, Inference; step 2 catches it); row 57 no longer
   says J122's "links and vias" are unchanged (SERVO1_OUT's run is straight F.Cu since D-R12-199; its gaps re-measured
   unchanged); M3_R12 rule 6 adds D6's hot-leakage consequence (a false VBUS high on a hot pad holds PC1 low before
-  LIFTOFF: a refusal, Inference) and the USB-only line adds D5's (RAW could reach about 3.3 V through R92 at about 1 mA,
-  near U400's UVLO, so the ports may come up on USB alone when hot; Inference, bench check). Not taken: merging
+  LIFTOFF: a refusal, Inference) and the USB-only line adds D5's (about 1.15 mA of D5 leakage through R92 would reach
+  U400's 3.8 V typical wake-up threshold, TI SLVSD90B §5.5 p. 6, so the ports may come up on USB alone when hot; Inference,
+  bench check; the first wording, "about 3.3 V at about 1 mA, near U400's UVLO", named the shutdown threshold: R12F14-VER-01). Not taken: merging
   SERVO2_MCU's collinear B.Cu segments at (29.1, 21.35): that node is the W1 / W4 zone hand-off point (zone_guard), and
   AUD-10 counts collinear nodes for review only.
 

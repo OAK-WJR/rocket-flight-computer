@@ -138,7 +138,7 @@ only validated exceptions, pins their cut sets and checks long-tail classes, and
 the 3V3 budget, with rule (g) stated both ways, which moves the fire, EN, PA6 and hold-up figures and the **J400 chatter
 bench rule from under 6.7 ms to under 6.6 ms** (U9 on at 5.71 V; D-R12-207, Calculation / Inference); R166's pulse
 endurance as owner row 60 (D-R12-208); records (D-R12-209). 1114 tracks / 386 vias; BOM / CPL unchanged. This pass
-has had only its fix lane. Not accepted, nothing ordered; the full gate on the final tree is the orchestrator's commit
+has had its fix lane and a read-only verification review (Fable 5.2, 2026-11-15: 0 Critical / 0 Major / 1 Minor, R12F14-VER-01, text, corrected). Not accepted, nothing ordered; the full gate on the final tree is the orchestrator's commit
 condition.
 
 Current state: `docs/M3_R12.md`; owner actions: `docs/R12_VALIDATION.md`; harness: `docs/R12_VEHICLE_HANDOFF.md`.

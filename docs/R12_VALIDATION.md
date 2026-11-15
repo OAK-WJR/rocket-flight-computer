@@ -71,7 +71,7 @@ with seven lenses plus a second opinion on safety and power: **0 Critical / 0 Ma
 takes only validated exceptions and pins their cut sets (row 43, D-R12-206); the hold-up and fire models take the
 worst allowed unshed load, so **the J400 chatter bench rule is now under 6.6 ms (was 6.7 ms), U9 on at 5.71 V** (A-23,
 rows 5 / 26, D-R12-207); R166's pulse endurance is new owner row 60 (D-R12-208); records corrected (D-R12-209). 1114
-tracks / 386 vias; BOM / CPL unchanged. This pass has had only its fix lane. Not accepted, nothing ordered; the full
+tracks / 386 vias; BOM / CPL unchanged. This pass has had its fix lane and a read-only verification review (Fable 5.2, 2026-11-15: 0 Critical / 0 Major / 1 Minor, R12F14-VER-01, text, corrected). Not accepted, nothing ordered; the full
 gate on the final tree is the orchestrator's commit condition.
 
 The full state is stated once, in
