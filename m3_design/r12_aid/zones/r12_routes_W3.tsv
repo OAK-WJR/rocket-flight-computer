@@ -244,7 +244,8 @@ track	GND	F	0.2	26.6	48.61	25.99	48.61
 track	GND	F	0.2	25.99	48.61	25.75	48.85
 track	VLOGIC_SENSE	In2	0.15	15.5	61.05	15.5	49.6
 track	VLOGIC_SENSE	In2	0.15	15.5	49.6	15.7	49.4
-track	CAM_5V_SENSE	In2	0.15	13.5	62.35	16.17	62.35
+track	CAM_5V_SENSE	In2	0.15	13.5	62.35	14.05	62.35
+track	CAM_5V_SENSE	In2	0.15	14.05	62.35	16.17	62.35
 track	CAM_5V_SENSE	In2	0.15	16.17	62.35	16.67	61.85
 track	CAM_5V_SENSE	F	0.1	19.8	57.05	17.9	57.05
 track	CAM_5V_SENSE	F	0.1	17.9	57.05	17.6	56.75
@@ -549,3 +550,17 @@ via	GND	-	0.45	39.9	71.39
 # R12F12-TRI-02: second via (18.5, 63.9) for C22.2 GND (VDDA 1 uF)
 track	GND	F	0.3	18.5	64.45	18.5	63.9
 via	GND	-	0.45	18.5	63.9		
+# D-R12-200 (R12F13-TRI-01): second barrel (11.65, 62.45) for C60.1's VLOGIC_SENSE via (12.2, 62.45) (PA6's 10 nF filter),
+# 0.55 mm west, joined to the first by 0.55 mm links on F.Cu and B.Cu; either barrel alone carries the K-power tap
+track	VLOGIC_SENSE	F	0.1	12.2	62.45	11.65	62.45
+track	VLOGIC_SENSE	B	0.1	12.2	62.45	11.65	62.45
+via	VLOGIC_SENSE	-	0.45	11.65	62.45		
+# D-R12-200 (R12F13-TRI-02): the C16-C18 / C60.2 / C94.2 GND row's via (14.3, 61.63) gains a second path: an F.Cu link
+# from C94.2 north to C26.2's GND via (15.02, 59.7), so either via alone keeps the row (and C26.2) on GND
+track	GND	F	0.2	13.2	60.83	13.2	60.42
+track	GND	F	0.2	13.2	60.42	13.92	59.7
+track	GND	F	0.2	13.92	59.7	15.02	59.7
+# D-R12-200 (R12F13-TRI-02): second barrel (14.05, 62.35) for C94.1's CAM_5V_SENSE via (13.5, 62.35) (PC2_C's filter),
+# on the In2 run 0.55 mm east of the first, joined to it by a 0.55 mm F.Cu link above the In2 one
+track	CAM_5V_SENSE	F	0.1	13.5	62.35	14.05	62.35
+via	CAM_5V_SENSE	-	0.45	14.05	62.35		

@@ -291,7 +291,8 @@ class Profiles(unittest.TestCase):
             self.assertTrue(all(e[4].startswith('R12F12-TRI-29') and len(e[4]) > 80 for e in rc.LEFTOVERS_R12))
             self.assertEqual(sorted(n for n, *_ in rc.PARALLEL_VIAS_R12),             # R12F9-TRI-08: PD10's divider end;
                              ['3V3A', '3V3A', 'ACT_EN_MCU', 'ACT_GATE', 'ACT_GATE', 'BAT_SW_RETURN', 'BAT_SW_RETURN',
-                              'PORT_SENSE', 'VCAP1', 'VCAP2', 'VLOGIC_SENSE'])        # R12F12-TRI-02 / -03: six more
+                              'CAM_5V_SENSE', 'PORT_SENSE', 'VCAP1', 'VCAP2', 'VLOGIC_SENSE',
+                              'VLOGIC_SENSE'])        # R12F12-TRI-02 / -03: six more; R12F13-TRI-01 / -02: C60.1, C94.1
             # D-R12-75A: only the recorded forced findings, each with a reason and the measured route figures
             self.assertEqual((rc.ALLOWLIST, rc.ROUTE_FIGURES), (rc.ALLOWLIST_R12, rc.ROUTE_FIGURES_R12))
             for e in rc.ALLOWLIST:
@@ -729,8 +730,10 @@ class KPower(Plants, unittest.TestCase):
                     'R136.1', 'R89.1', 'D95.3', 'D436.3', 'D402.2', 'D121.2', 'R154.2', 'R155.2', 'R431.2',
                     'C88.2', 'C81.2', 'C97.2', 'R92.2', 'R167.2', 'U6.1', 'U6.13', 'U6.15', 'U6.16', 'C33.2',
                     'U3.8', 'U3.4', 'J430.4', 'J430.6', 'J410.2', 'J420.2', 'J440.2', 'J410.1', 'J420.1', 'J440.1',
-                    'J9.3', 'J9.4', 'J122.1', 'D123.1', 'R163.2', 'Q123.2', 'C22.2'):
+                    'J9.3', 'J9.4', 'J122.1', 'D123.1', 'R163.2', 'Q123.2', 'C22.2',
+                    'C60.1', 'C60.2', 'C94.2'):                                            # R12F13-TRI-01 / -02
             self.assertIn(tap, taps)
+        self.assertEqual((len(r12.SINGLE_OPEN_TAPS_R12), len(r12.SINGLE_OPEN_EXCEPTIONS_R12)), (124, 20))
         # the single points left on purpose: the U1 dog-bones (PD10's since R12F9-TRI-08), BOOT0's far via and the two
         # 3V3A feeds (owner rows)
         self.assertEqual(sorted({x[1] for x in r12.SINGLE_OPEN_EXCEPTIONS_R12}),
@@ -801,6 +804,48 @@ class KPower(Plants, unittest.TestCase):
         stale = list(r12.SINGLE_OPEN_EXCEPTIONS_R12) + [('R136.1', doubled, 'has a partner now')]
         self.assertTrue([i for i in self.kpower(stale)[0] if i.startswith('stale SINGLE_OPEN_EXCEPTIONS entry R136.1')
                          and doubled in i])
+
+    def test_r12f13_c60_c94_second_vias_removed_fail(self):
+        """Seeded (R12F13-TRI-01 / -02): C60.1's second VLOGIC_SENSE barrel and the GND row's link to C26.2's via, each
+        removed (found from the graph): K-power names C60.1, C60.2 and C94.2 left on one via. C60.1's exception covers
+        only its path through U1.J3's dog-bone; without it K-power names that via."""
+        self.assert_doubled(('C60.1', 'C60.2', 'C94.2'))
+        short = [x for x in r12.SINGLE_OPEN_EXCEPTIONS_R12 if x[0] != 'C60.1']
+        self.assertTrue([i for i in self.kpower(short)[0]
+                         if i.startswith('C60.1 (') and 'opening via VLOGIC_SENSE (19.80, 61.05)' in i])
+
+    def test_r12f13_long_tail_is_complete_and_exact(self):
+        """R12F13-TRI-02: every single point of the board (any net, GND included) is a SINGLE_OPEN_EXCEPTIONS_R12 via
+        or exactly one LONG_TAIL_R12 entry with the pads it cuts off; seeded: an entry dropped, a stale entry, an entry
+        that is also an exception, wrong pads, and a second barrel removed (a new single point nobody listed)."""
+        issues, ev = r12.long_tail(self.board)
+        self.assertEqual(issues, [])
+        self.assertEqual((ev['single_points'], ev['excepted'], ev['long_tail']), (153, 18, 135))
+        self.assertEqual(ev['long_tail_by_class'], {1: 74, 2: 32, 3: 22, 4: 7})
+        rep = r12.check_board(self.board, BOARD12, only={'K-power'}, stage='copper')
+        self.assertTrue(rep['ok'], rep['issues'])
+        self.assertEqual(rep['evidence']['k_power']['long_tail']['single_points'], 153)
+        table = list(r12.LONG_TAIL_R12)
+        c24 = next(e for e in table if e[1] == ('C24.2',))
+        cut = [e for e in table if e is not c24]
+        self.assertTrue([i for i in r12.long_tail(self.board, table=cut)[0]
+                         if i.startswith(f'single point {c24[0]} cuts off C24.2: no K-power exception')])
+        fake = table + [('via GND (1.00, 1.00)', ('X1.1',), 4, 'not on the board')]
+        self.assertTrue([i for i in r12.long_tail(self.board, table=fake)[0]
+                         if i.startswith('stale LONG_TAIL_R12 entry via GND (1.00, 1.00)')])
+        both = table + [('via BOOT0 (23.00, 56.25)', ('U1.D5',), 4, 'also an exception')]
+        self.assertTrue([i for i in r12.long_tail(self.board, table=both)[0]
+                         if 'via BOOT0 (23.00, 56.25)' in i and 'exactly one' in i])
+        wrong = [e if e is not c24 else (e[0], ('C24.1',)) + tuple(e[2:]) for e in table]
+        self.assertTrue([i for i in r12.long_tail(self.board, table=wrong)[0] if 'names C24.1' in i])
+        via, partner, key = self.pairs('C60.1')[0]
+        item = next(t for t in self.board.GetTracks() if t.m_Uuid.AsString() == key)
+        self.board.Remove(item)
+        try:
+            got = r12.long_tail(self.board)[0]
+        finally:
+            self.board.Add(item)
+        self.assertTrue([i for i in got if i.startswith(f'single point {via} cuts off C60.1')], got)
 
     def test_exceptions_are_exact(self):
         """A missing exception fails the tap it covered; an entry whose via is no longer a single point is stale. The
@@ -1145,6 +1190,32 @@ class FireGaps(Plants, unittest.TestCase):
                 self.setUp()
                 self.fails_s10(self.plant_gate(net, gap), (fire.GATE_MIN, 'gate'),
                                drc="'S-10 Q124 gate nets to every raising net'")
+
+    def test_r12f13_copper_graphic_near_the_gate_run_fails(self):
+        """R12F13-TRI-04: S-10 measures copper graphics (check_r12.copper_graphics) as it measures tracks. A netless
+        0.1 mm F.Cu segment 0.20 mm north of PYRO1_GATE's run fails S-10 as a graphic exactly as the same geometry
+        does as a track (the round 13 gate lens's reproduction: before the fix the graphic passed)."""
+        plant, run, gap = self.plant_gate('ACT_EN_MCU', 0.20)
+        self.fails_s10((plant, run, gap), (fire.GATE_MIN, 'gate'))                 # the track form (control)
+        g = pcbnew.PCB_SHAPE(self.board)
+        g.SetShape(pcbnew.SHAPE_T_SEGMENT)
+        g.SetLayer(plant.GetLayer())
+        g.SetStart(plant.GetStart()); g.SetEnd(plant.GetEnd()); g.SetWidth(plant.GetWidth())
+        self.board.Remove(plant)
+        self.board.Add(g)
+        self.assertEqual(len(r12.copper_graphics(self.board)), 1)
+        self.assertAlmostEqual(r12.shape_gap(self.shape(run, pcbnew.F_Cu), g.GetEffectiveShape(pcbnew.F_Cu), 1.0),
+                               gap, delta=5e-4)
+        rep = self.s10()
+        self.assertFalse(rep['ok'])
+        hits = [i for i in rep['issues'] if 'graphic PCB_SHAPE' in i and self.label(run, pcbnew.F_Cu) in i
+                and f'{gap:.4f} mm, below {fire.GATE_MIN:g} mm (gate)' in i]
+        self.assertTrue(hits, rep['issues'])
+
+    def test_r12f13_committed_board_has_no_copper_graphics(self):
+        """R12F13-TRI-04: the committed board carries no copper drawing, copper text or footprint copper graphic, so
+        adding them to S-7 / S-10's items changes no result on it."""
+        self.assertEqual(r12.copper_graphics(self.board), [])
 
     def test_verifier_E_new_3v3_near_the_pe4_lane_inside_u1_fails(self):
         """The D-R11-23 exception names its item pairs: a new 3V3 track 0.15 mm south of PE4's lane (as near as U1.B2,
@@ -2844,6 +2915,35 @@ class PortedRules(unittest.TestCase):
                 else:
                     s4.part('R999', 30, 30, [('1', own, (0, 0), 'smd'), ('2', 'GND', (2, 0), 'smd')])
                 self.assert_rule(s4, 'S-7', False, want='copper item(s) of its own beyond its pad')
+
+    def test_r12f13_j122_pad2_copper_graphic(self):
+        """R12F13-TRI-04: S-7's J122.2 rule measures copper graphics as tracks. A netless (or 3V3) F.Cu graphic 0.6 mm
+        from the pad fails, as the same geometry does as a track; a GND graphic there passes; a graphic on the pad's
+        own net fails as own copper (the round 13 gate lens's reproduction: before the fix the graphic passed)."""
+        own = 'unconnected-(J122-5V_NC-Pad2)'
+        x, y = 10 + 4, 10                                            # pad 2's centre (Four.sh: pad n at x + 2n)
+
+        def board(net, at=x + .3 + .6 + .1, a=(-2, 2), shape=True):
+            s = Four()
+            f = s.sh('J122', 10, 10)
+            f.FindPadByNumber('2').SetNet(s.net(own))
+            if shape:
+                g = pcbnew.PCB_SHAPE(s.board)
+                g.SetShape(pcbnew.SHAPE_T_SEGMENT); g.SetLayer(pcbnew.F_Cu)
+                g.SetStart(s.P(at, y + a[0])); g.SetEnd(s.P(at, y + a[1])); g.SetWidth(mm(.2))
+                if net:
+                    g.SetNet(s.net(net))
+                s.board.Add(g)
+            else:
+                s.track((at, y + a[0]), (at, y + a[1]), net, None, .2)
+            return s
+        for net, good in (('', False), ('3V3', False), ('GND', True), ('SERVO1_OUT', True)):
+            with self.subTest(net=net or 'no net'):
+                self.assert_rule(board(net), 'S-7', good,
+                                 want=None if good else '(5 V position) on F.Cu; only GND / SERVO1_OUT')
+                self.assert_rule(board(net, shape=False), 'S-7', good)            # the track form agrees
+        self.assert_rule(board('', at=x + .3 + 1.1 + .1), 'S-7')                   # beyond 1.040 mm
+        self.assert_rule(board(own, at=x + 3, a=(0, 2)), 'S-7', False, want='copper item(s) of its own beyond its pad')
 
     def test_s8_foreign_inner_copper_and_rings(self):
         for layer in (pcbnew.In1_Cu, pcbnew.In2_Cu):

@@ -861,9 +861,22 @@ class Round12(unittest.TestCase):
         import r12_stageD
         b = self.d['u3v3_budget']
         lim = r12_stageD.u2_limit()
-        self.assertAlmostEqual(lim['ripple_A'], 3.35 * (8.15 - 3.35) / (8.15 * 3.76e-6 * 700e3), places=12)
-        self.assertAlmostEqual(b['u2_limit_A'], 0.875, places=3)              # triage TRI-11
+        v = 3.5156                                                             # 3V3 drift maximum (r12_windows)
+        self.assertEqual(lim['VOUT_V'], v)
+        self.assertAlmostEqual(lim['ripple_A'], v * (8.15 - v) / (8.15 * 3.76e-6 * 700e3), places=12)
+        self.assertAlmostEqual(b['u2_limit_A'], 0.870231, places=6)            # R12F13-TRI-05 (0.875189 at 3.35 V)
+        self.assertAlmostEqual(b['u2_limit_fsw_min_A'], 0.806936, places=6)    # R12F13-TRI-05 (0.812720 at 3.35 V)
         self.assertLess(b['u2_limit_fsw_min_A'], b['u2_limit_A'])
+        self.assertTrue(all(x['VOUT_V'] == v for x in b['u2_limit'].values()))
+        # R12F13-TRI-05: the limit is taken at the load's own VOUT corner, the buzzer's 3V3 drift maximum, and that
+        # corner is the worst over the window (the ripple rises with VOUT below VIN / 2)
+        self.assertIn(f'{v} V', b['buzzer_basis'])
+        for f in (600e3, 700e3):
+            worst = min(r12_stageD.u2_limit(fsw=f, vout=x)['IOUT_max_A'] for x in (3.224, 3.30, 3.35, 3.45, v))
+            self.assertEqual(r12_stageD.u2_limit(fsw=f)['IOUT_max_A'], worst)
+        c85 = b['cases']['200MHz_VOS3_Tj85']
+        self.assertAlmostEqual(c85['margin_peak_fsw_min_A'] * 1e3, 18.336, places=3)
+        self.assertAlmostEqual(b['cases']['200MHz_VOS3_Tj105']['margin_peak_fsw_min_A'] * 1e3, -61.664, places=3)
         self.assertTrue(b['fits_200MHz'])
         self.assertFalse(b['fits_480MHz'])
         c = b['cases']['200MHz_VOS3_Tj85']

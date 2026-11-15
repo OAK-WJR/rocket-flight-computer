@@ -70,7 +70,9 @@ K-power: R10 / R11's single-via-open rule (R12F8-TRI-02; R10 D-R21-02 / D-R22-02
          every regulator feedback, OVLO, EN and ILIM tap, sense tap, BOOT0 / VCAP / IMU-ground tap and gate drive of
          SINGLE_OPEN_TAPS_R12 stays joined to its source through same-net copper with any one via of its net removed
          (check_r10.single_via_opens); a single point passes only as an exact SINGLE_OPEN_EXCEPTIONS_R12 entry with its
-         measured reason, and an entry no longer met fails as stale.
+         measured reason, and an entry no longer met fails as stale. R12F13-TRI-02: every single point of the board
+         (any net) is the via of an exception or exactly one LONG_TAIL_R12 entry (R12_VALIDATION row 43's classes) with
+         the pads it cuts off; an unlisted, doubly listed or stale point fails.
 
 Placement remains the stage-B gate. Copper checks safety/routing; full also checks the final legends (stage D).
 R12 pin lookup uses its pin table and net names; no U4/U5 pad numbers or R10 layout coordinates are inherited.
@@ -468,6 +470,7 @@ def pad2_bare(c):
     own += [z for z in c.board.Zones() if not z.GetIsRuleArea() and z.GetNetCode() == code and code > 0]
     own += [q for g in c.board.GetFootprints() for q in g.Pads() if q.GetNetCode() == code and code > 0
             and not (g.GetReference() == ref and q.GetNumber() == num)]
+    own += [g for g, net, *_ in copper_graphics(c.board) if code > 0 and net == pad.GetNetname()]   # R12F13-TRI-04
     if own:
         issues.append(f'S-7: {ref}.{num} (5 V position) has {len(own)} copper item(s) of its own beyond its pad (D-R12-196)')
     lids = [lid for lid in (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu) if pad.IsOnLayer(lid)]
@@ -1068,8 +1071,42 @@ S10_GATE_MIN, S10_OUT_MIN, S10_GND_MIN, S10_FILL_MIN, S10_IGN_MIN = (fire.GATE_M
                                                                       fire.FILL_MIN, fire.IGN_MIN)
 
 
+def copper_graphics(board):
+    """R12F13-TRI-04: the copper that is neither a track, a via, a pad nor a board zone: board drawings and text on a
+    copper layer, and a footprint's graphics, text and zones on a copper layer. [(item, net name, layer id, label,
+    owner reference or None)]; a graphic with no net (text, an unconnected shape) has the net name ''."""
+    import pcbnew
+    cu = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
+
+    def net(g):
+        return g.GetNetname() if hasattr(g, 'GetNetname') else ''
+
+    def label(g, owner):
+        bb = g.GetBoundingBox()
+        at = (f'graphic {g.GetClass()} ({mm(bb.GetLeft()):g}, {mm(bb.GetTop()):g})-({mm(bb.GetRight()):g}, '
+              f'{mm(bb.GetBottom()):g})')
+        return at if owner is None else f'{owner} {at}'
+
+    out = []
+    groups = [(None, list(board.GetDrawings()))]
+    groups += [(f.GetReference(), list(f.GetFields()) + list(f.GraphicalItems()) + list(f.Zones()))
+               for f in board.GetFootprints()]
+    for owner, items in groups:
+        for g in items:
+            if g.GetClass() == 'ZONE' and g.GetIsRuleArea():
+                continue
+            if hasattr(g, 'IsVisible') and not g.IsVisible():        # hidden text is not plotted
+                continue
+            for lid in cu:
+                if g.IsOnLayer(lid):
+                    out.append((g, net(g), lid, label(g, owner), owner))
+    return out
+
+
 def copper_items(board):
-    """Every copper item per layer: (net, layer id, label, shape, is_fill, owner reference or None, pad number)."""
+    """Every copper item per layer: (net, layer id, label, shape, is_fill, owner reference or None, pad number).
+    R12F13-TRI-04: copper graphics (copper_graphics) are items too, so S-7 and S-10 measure a copper drawing, copper
+    text or footprint copper exactly as they measure a track of the same shape."""
     import pcbnew
     cu = (pcbnew.F_Cu, pcbnew.In1_Cu, pcbnew.In2_Cu, pcbnew.B_Cu)
     out = []
@@ -1104,6 +1141,12 @@ def copper_items(board):
                 if fill.OutlineCount():
                     out.append((z.GetNetname(), lid, f'fill {z.GetZoneName() or z.GetNetname()}', fill, True, None,
                                 None))
+    for g, net, lid, at, owner in copper_graphics(board):
+        if g.GetClass() == 'ZONE':
+            if g.HasFilledPolysForLayer(lid) and g.GetFilledPolysList(lid).OutlineCount():
+                out.append((net, lid, at, g.GetFilledPolysList(lid), True, owner, None))
+        else:
+            out.append((net, lid, at, g.GetEffectiveShape(lid), False, owner, None))
     return out
 
 
@@ -1342,6 +1385,11 @@ SINGLE_OPEN_TAPS_R12 = (
     ('PYRO1_CONT', 'U1.F1', ('R130.1', 'R178.1'), "PC0's continuity lane from the R130 / R178 bank (the cold screen)"),
     ('ARM1_SENSE', 'U1.H4', ('R133.1', 'R180.1'), "PC5's bus-sense lane from the R133 / R180 bank (the cold screen)"),
     ('VLOGIC_SENSE', 'U1.J3', ('R60.2', 'R61.1'), "PA6's VLOGIC sense lane (the PA6 trip)"),
+    ('VLOGIC_SENSE', 'C60.1', ('U1.J3',), "C60, PA6's 10 nF filter (R12F13-TRI-01: its via has a second barrel; open, PA6 "
+                                         'samples the 9.1 kohm divider unfiltered, Inference)'),
+    ('GND', 'C60.2', ('J1.2',), "C60, PA6's filter, GND end (R12F13-TRI-02: the C16-C18 / C60 / C94 row's via gains a "
+                                "link to C26.2's)"),
+    ('GND', 'C94.2', ('J1.2',), "C94, PC2_C's camera-sense filter, GND end (R12F13-TRI-02, the same row)"),
     ('GND', 'R130.2', ('J1.2',), 'R130, PC0 bank bottom (open with R178: PC0 reads PYRO1_OUT undivided)'),
     ('GND', 'R178.2', ('J1.2',), 'R178, PC0 bank bottom (second leg)'),
     ('GND', 'C127.2', ('J1.2',), "C127, PC0's filter"),
@@ -1466,6 +1514,9 @@ SINGLE_OPEN_EXCEPTIONS_R12 = [
     ('U1.J3', 'via VLOGIC_SENSE (19.80, 61.05)',
      "PA6's ball J3 escape: " + _DOGBONE + ". Open, PA6 is cut from R60 / R61 and floats: the PA6 brown-out trip has no "
      "input (Inference on the floating level); the far via by U6 has a second barrel"),
+    ('C60.1', 'via VLOGIC_SENSE (19.80, 61.05)',
+     "C60.1's way to PA6 (R12F13-TRI-01): the same ball J3 escape, " + _DOGBONE + ". Open, PA6 is cut from C60 and "
+     "the R60 / R61 divider together and floats, as U1.J3's entry; C60's own via has a second barrel"),
     ('U1.J3', 'via VLOGIC_SENSE (15.50, 61.05)',
      "VLOGIC_SENSE's B.Cu-to-In2 via west of the ball field: a partner needs an In2 link that cuts the In2 3V3 sheet in "
      "two (K-plane: a 16.05 mm2 piece; triage trials V1-V2; D-R12-154 found the same). Open, as the ball escape: the PA6 "
@@ -1481,9 +1532,245 @@ SINGLE_OPEN_EXCEPTIONS_R12 = [
 ]
 
 
+# R12F13-TRI-02 (round 13; R12_VALIDATION row 43's long-tail disposition, D-R12-176 / -200): every single point of the
+# board, every via whose removal cuts a pad off the rest of its net (any net, GND included), is either the via of a
+# SINGLE_OPEN_EXCEPTIONS_R12 entry or exactly one entry here, with the pads it cuts off (the smaller side; ties by name)
+# and its class. Classes (R12_VALIDATION row 43): 1 a series layer change on a point-to-point signal whose path already
+# has single solder joints; 2 one of several decoupling capacitors on a rail whose IC pin keeps another, and the
+# dog-bones of U1's own supply and ground balls (no second channel; in parallel inside the package, Inference); 3 a
+# pull-up whose line also has a driver or an internal pull, test-point / LED / crystal-can / shell returns and the other
+# named benign returns; 4 no legal spot and a benign loss, each with its reason. K-power fails on a single point in
+# neither list, on one in both, and on an entry that is no longer a single point (stale) or names other pads.
+_LT_D121_5 = ("D121.5 (SRV05-4 reference): no action; with its reference pin open the SRV05-4 still clamps to GND through "
+              "its own TVS (Inference from the ProTek circuit)")
+_LT_C25_2 = ("C25.2 (HSE load): any new barrel in the crystal cell breaks the In2 3V3 neck (round 12 trials V5-V7). Open: "
+             "HSE shifts or fails to start, and firmware rule 3 refuses at boot")
+_LT_C30_2 = ("C30.2 / U4.2 / U4.3: the only spots cross GND's own F track; C30.1 is a recorded exception and U4's GND pins "
+             "6 / 7 are tapped")
+_LT_C24_2 = ("C24.2 (NRST's 100 nF; R12F13-TRI-02): the one legal via column, x 27.325 east of the pad, sits at the 0.2 mm "
+             "hole-clearance floor to both CAM_5V_SENSE's In2 lane (x 26.9) and SERVO1_MCU's B.Cu trunk (x 27.75), zero "
+             "margin; within 1.5 mm of the via no other spot is legal (spot search, measured). Not taken: a drill-position "
+             "error there risks a short for a benign gain. Open: NRST loses only its filter, as NRST's C24 path")
+_LT_NRST = "NRST's C24 path: no legal spot. Open: NRST keeps its internal pull-up and loses only the filter"
+_LT_C407_1 = "C407.1: U400's second output capacitor; C406 stays"
+LONG_TAIL_R12 = (
+    # class 1
+    ('via AUX_RX_MCU (31.41, 57.81)', ('U1.E10',), 1),
+    ('via AUX_RX_MCU (36.00, 78.18)', ('U1.E10',), 1),
+    ('via AUX_TX_MCU (29.80, 58.05)', ('U1.F10',), 1),
+    ('via AUX_TX_MCU (35.00, 77.72)', ('U1.F10',), 1),
+    ('via BAT_FAULT_N (18.15, 27.95)', ('U1.A2',), 1),
+    ('via BAT_FAULT_N (19.30, 48.95)', ('U1.A2',), 1),
+    ('via BUZZ_DRV (22.20, 64.75)', ('U1.J5',), 1),
+    ('via BUZZ_DRV (8.60, 64.85)', ('U1.J5',), 1),
+    ('via CAM_5V (30.30, 10.75)', ('R104.1',), 1),
+    ('via CAM_5V (33.05, 12.65)', ('R104.1',), 1),
+    ('via CAM_5V_DIV (29.85, 13.45)', ('R107.1',), 1),
+    ('via CAM_5V_DIV (29.85, 18.97)', ('R107.1',), 1),
+    ('via CAM_5V_SENSE (17.60, 56.75)', ('U1.E2',), 1),
+    ('via CAM_5V_SENSE (26.90, 22.45)', ('C94.1', 'U1.E2'), 1),
+    ('via CAM_EN (28.20, 29.35)', ('R436.2',), 1),
+    ('via CAM_EN (28.50, 19.25)', ('R436.2',), 1),
+    ('via CAM_MCU_RX (30.00, 50.65)', ('U1.B8',), 1),
+    ('via CAM_MCU_RX (31.00, 12.88)', ('U1.B8',), 1),
+    ('via CAM_MCU_TX (29.60, 51.85)', ('U1.B9',), 1),
+    ('via CAM_MCU_TX (30.40, 12.90)', ('U1.B9',), 1),
+    ('via CAM_PWR_EN (25.40, 56.25)', ('U1.C8',), 1),
+    ('via CAM_PWR_EN (28.20, 35.30)', ('U1.C8',), 1),
+    ('via CC1 (35.50, 51.75)', ('R7.1',), 1),
+    ('via CC1 (38.05, 50.60)', ('R7.1',), 1),
+    ('via CC2 (35.50, 52.75)', ('R8.1',), 1),
+    ('via CC2 (38.20, 47.60)', ('R8.1',), 1),
+    ('via GPS_RX_MCU (25.40, 60.25)', ('U1.J9',), 1),
+    ('via GPS_RX_MCU (25.80, 78.85)', ('U1.J9',), 1),
+    ('via GPS_TX_MCU (25.29, 63.26)', ('U1.K9',), 1),
+    ('via GPS_TX_MCU (25.29, 78.25)', ('U1.K9',), 1),
+    ('via HG_CS (21.80, 35.45)', ('U6.8',), 1),
+    ('via HG_CS (23.50, 48.95)', ('U6.8',), 1),
+    ('via I2C1_SCL (20.20, 40.45)', ('U1.B5',), 1),
+    ('via I2C1_SCL (21.95, 48.10)', ('U1.B5',), 1),
+    ('via I2C1_SDA (19.80, 46.55)', ('U1.A5',), 1),
+    ('via I2C1_SDA (22.20, 48.95)', ('U1.A5',), 1),
+    ('via IMU_INT1 (23.80, 56.25)', ('U4.4',), 1),
+    ('via IMU_INT1 (25.20, 50.80)', ('U4.4',), 1),
+    ('via LED_RED (11.70, 57.12)', ('U1.K4',), 1),
+    ('via LED_RED (21.40, 61.05)', ('U1.K4',), 1),
+    ('via LED_YEL (13.50, 58.85)', ('U1.H2',), 1),
+    ('via LED_YEL (20.60, 59.45)', ('U1.H2',), 1),
+    ('via NRST (30.80, 48.70)', ('J2.3',), 1),
+    ('via NRST (34.20, 48.70)', ('J2.3',), 1),
+    ('via QSPI_IO1 (29.60, 61.65)', ('U3.2',), 1),
+    ('via QSPI_IO1 (40.20, 59.45)', ('U3.2',), 1),
+    ('via QSPI_IO2 (21.40, 54.65)', ('U3.3',), 1),
+    ('via QSPI_IO2 (40.10, 57.05)', ('U3.3',), 1),
+    ('via RADIO_RX_MCU (13.00, 77.95)', ('U1.K8',), 1),
+    ('via RADIO_RX_MCU (24.80, 62.65)', ('U1.K8',), 1),
+    ('via RADIO_TX_MCU (12.00, 77.45)', ('U1.J8',), 1),
+    ('via RADIO_TX_MCU (24.60, 60.25)', ('U1.J8',), 1),
+    ('via SD_CS (30.60, 71.05)', ('J430.2',), 1),
+    ('via SD_CS (40.45, 67.00)', ('J430.2',), 1),
+    ('via SD_MISO (32.40, 69.05)', ('J430.7',), 1),
+    ('via SD_MISO (40.45, 72.50)', ('J430.7',), 1),
+    ('via SERVO1_MCU (25.20, 51.45)', ('U1.A8',), 1),
+    ('via SERVO1_MCU (26.95, 16.00)', ('U1.A8',), 1),
+    ('via SERVO2_MCU (27.40, 56.45)', ('U1.D10',), 1),
+    ('via SERVO2_MCU (29.10, 17.90)', ('U1.D10',), 1),
+    ('via SPI1_MISO (20.10, 39.05)', ('U6.11',), 1),
+    ('via SPI1_MISO (23.00, 48.25)', ('U1.A6',), 1),
+    ('via SPI1_MISO (25.15, 47.80)', ('U4.1',), 1),
+    ('via SPI1_MOSI (20.10, 38.25)', ('U6.10',), 1),
+    ('via SPI1_MOSI (24.15, 47.30)', ('U6.10',), 1),
+    ('via SPI1_SCK (20.10, 37.45)', ('U6.9',), 1),
+    ('via SPI1_SCK (23.20, 47.10)', ('U6.9',), 1),
+    ('via U9_FLT (16.60, 17.45)', ('U9.4',), 1),
+    ('via U9_FLT (18.15, 25.50)', ('R95.1',), 1),
+    ('via U9_FLT (19.85, 15.82)', ('R89.2',), 1),
+    ('via USB_DP (40.30, 49.60)', ('U1.B10',), 1),
+    ('via USB_DP (40.70, 51.05)', ('U1.B10',), 1),
+    ('via VBUS_SENSE (30.60, 56.85)', ('U1.E9',), 1),
+    ('via VBUS_SENSE (37.03, 44.85)', ('U1.E9',), 1),
+    # class 2
+    ('via 3V3 (13.18, 64.60)', ('C14.1',), 2),
+    ('via 3V3 (15.05, 54.30)', ('C13.1',), 2),
+    ('via 3V3 (16.50, 63.15)', ('C16.1', 'C17.1', 'C18.1'), 2),
+    ('via 3V3 (19.00, 62.35)', ('U1.K1',), 2),
+    ('via 3V3 (19.80, 54.65)', ('U1.B2',), 2),
+    ('via 3V3 (2.20, 63.45)', ('C23.1',), 2),
+    ('via 3V3 (20.30, 63.87)', ('C15.1',), 2),
+    ('via 3V3 (20.60, 57.05)', ('U1.D2',), 2),
+    ('via 3V3 (21.40, 57.85)', ('U1.F4',), 2),
+    ('via 3V3 (22.20, 57.85)', ('U1.F5',), 2),
+    ('via 3V3 (23.00, 57.85)', ('U1.F6',), 2),
+    ('via 3V3 (23.80, 57.85)', ('U1.F7',), 2),
+    ('via 3V3 (33.40, 61.90)', ('C29.1',), 2),
+    ('via GND (10.10, 78.60)', ('C420.2',), 2),
+    ('via GND (13.10, 71.95)', ('C406.2',), 2),
+    ('via GND (14.02, 64.60)', ('C14.2',), 2),
+    ('via GND (17.82, 53.05)', ('C13.2',), 2),
+    ('via GND (18.10, 80.72)', ('C407.2',), 2),
+    ('via GND (18.60, 61.63)', ('C21.2', 'U1.J1'), 2),
+    ('via GND (19.58, 45.03)', ('C31.2',), 2),
+    ('via GND (19.80, 56.25)', ('U1.C2',), 2),
+    ('via GND (2.20, 60.25)', ('C23.2',), 2),
+    ('via GND (20.30, 63.03)', ('C15.2',), 2),
+    ('via GND (20.60, 78.60)', ('C410.2',), 2),
+    ('via GND (22.20, 54.65)', ('U1.E4', 'U1.E5', 'U1.E6'), 2),
+    ('via GND (25.55, 42.35)', ('C10.2',), 2),
+    ('via GND (26.15, 30.95)', ('C32.2',), 2),
+    ('via GND (32.50, 79.10)', ('C444.2',), 2),
+    ('via GND (35.82, 30.25)', ('C99.2',), 2),
+    ('via GND (35.90, 61.90)', ('C29.2',), 2),
+    ('via GND (43.00, 62.55)', ('C460.2',), 2),
+    ('via GND (44.55, 57.10)', ('C461.2',), 2),
+    # class 3
+    ('via 3V3 (20.60, 47.05)', ('R11.2',), 3),
+    ('via 3V3 (21.86, 68.35)', ('R460.2',), 3),
+    ('via 3V3 (23.54, 67.25)', ('R462.2',), 3),
+    ('via 3V3 (26.90, 67.05)', ('R461.2',), 3),
+    ('via 3V3 (27.30, 67.90)', ('R464.2',), 3),
+    ('via 3V3 (27.30, 70.25)', ('R463.2',), 3),
+    ('via 3V3 (34.20, 50.12)', ('J2.1',), 3),
+    ('via 3V3 (38.75, 61.90)', ('R10.2',), 3),
+    ('via GND (12.30, 55.50)', ('Y1.2',), 3),
+    ('via GND (16.24, 58.10)', ('Y1.4',), 3),
+    ('via GND (20.10, 32.55)', ('U5.5',), 3),
+    ('via GND (29.40, 66.76)', ('J430.13',), 3),
+    ('via GND (31.00, 79.75)', ('TP74.1',), 3),
+    ('via GND (31.73, 21.45)', ('R105.2',), 3),
+    ('via GND (31.85, 72.73)', ('J430.14',), 3),
+    ('via GND (34.20, 47.58)', ('J2.5',), 3),
+    ('via GND (37.50, 49.11)', ('C28.2', 'C83.2', 'R110.2'), 3),
+    ('via GND (42.55, 63.44)', ('J430.10',), 3),
+    ('via GND (42.55, 74.75)', ('J430.9',), 3),
+    ('via GND (6.10, 58.85)', ('LED2.2',), 3),
+    ('via GND (6.30, 56.65)', ('LED1.1',), 3),
+    ('via GND (9.70, 75.70)', ('TP88.1',), 3),
+    # class 4
+    ('via 3V3 (27.60, 12.05)', ('D121.5',), 4, _LT_D121_5),
+    ('via GND (15.02, 52.65)', ('C25.2',), 4, _LT_C25_2),
+    ('via GND (24.90, 45.45)', ('C30.2', 'U4.2', 'U4.3'), 4, _LT_C30_2),
+    ('via GND (25.75, 48.85)', ('C24.2',), 4, _LT_C24_2),
+    ('via NRST (16.85, 56.75)', ('U1.E1',), 4, _LT_NRST),
+    ('via NRST (25.75, 49.85)', ('U1.E1',), 4, _LT_NRST),
+    ('via PORT_4V8 (16.75, 84.90)', ('C407.1',), 4, _LT_C407_1),
+)
+
+
+def single_points(board, nodes=None):
+    """R12F13-TRI-02: [(net, via label, pads cut off)] for every via of every net whose removal splits the net's pads
+    into more copper pieces than the intact board has (check_r10's copper graph: pads, tracks, vias and fill pieces
+    touching on a shared layer). The pads cut off are every piece but the largest (ties: the piece whose sorted pad
+    names come first stays), as sorted names."""
+    nodes = r10.copper_nodes(board) if nodes is None else nodes
+    out = []
+    for net in sorted({n[5] for n in nodes if r10.real_net(n[5])}):
+        label, adj = r10._copper_adjacency(nodes, net)
+        pads = {n[0] for n in nodes if n[5] == net and n[4] is not None}
+
+        def pieces(skip=None):
+            seen, groups = set(), []
+            for s0 in sorted(label):
+                if s0 == skip or s0 in seen:
+                    continue
+                todo, part = [s0], set()
+                seen.add(s0)
+                while todo:
+                    k = todo.pop()
+                    if k in pads:
+                        part.add(label[k])
+                    for m in adj[k]:
+                        if m != skip and m not in seen:
+                            seen.add(m)
+                            todo.append(m)
+                if part:
+                    groups.append(sorted(part))
+            return sorted(groups, key=lambda g: (-len(g), g))
+        base = len(pieces())
+        for v in sorted(k for k, lab in label.items() if lab.startswith('via ')):
+            got = pieces(v)
+            if len(got) > base:
+                out.append((net, label[v], tuple(sorted({p for g in got[1:] for p in g}))))
+    return out
+
+
+def long_tail(board, nodes=None, table=None, exceptions=None):
+    """R12F13-TRI-02: (issues, evidence) for LONG_TAIL_R12 against the board's single points."""
+    table = LONG_TAIL_R12 if table is None else table
+    exceptions = SINGLE_OPEN_EXCEPTIONS_R12 if exceptions is None else exceptions
+    points = single_points(board, nodes)
+    excepted = {x[1] for x in exceptions}
+    listed = {}
+    issues = []
+    for e in table:
+        if e[0] in listed:
+            issues.append(f'LONG_TAIL_R12 lists {e[0]} twice')
+        listed[e[0]] = e
+    found = set()
+    for net, via, cut in points:
+        found.add(via)
+        e = listed.get(via)
+        if via in excepted:
+            if e is not None:
+                issues.append(f'{via} (cuts off {", ".join(cut)}) is both a SINGLE_OPEN_EXCEPTIONS_R12 via and a '
+                              'LONG_TAIL_R12 entry; a single point is in exactly one')
+            continue
+        if e is None:
+            issues.append(f'single point {via} cuts off {", ".join(cut)}: no K-power exception and no LONG_TAIL_R12 '
+                          'entry (R12_VALIDATION row 43)')
+        elif tuple(e[1]) != cut:
+            issues.append(f'LONG_TAIL_R12 {via} names {", ".join(e[1])}; the via cuts off {", ".join(cut)}')
+    issues += [f'stale LONG_TAIL_R12 entry {v}: not a single point on this board' for v in listed if v not in found]
+    count = {c: sum(1 for e in table if e[2] == c) for c in (1, 2, 3, 4)}
+    return issues, dict(single_points=len(points), excepted=sum(1 for p in points if p[1] in excepted),
+                        long_tail=len(table), long_tail_by_class=count)
+
+
 def k_power(c):
+    nodes = r10.copper_nodes(c.board)
     taps, ev = r10.single_via_opens(c.board, taps=SINGLE_OPEN_TAPS_R12, exceptions=SINGLE_OPEN_EXCEPTIONS_R12)
-    return [f'K-power: {i}' for i in taps], dict(single_via_open_taps=ev, exceptions=len(SINGLE_OPEN_EXCEPTIONS_R12))
+    tail, tail_ev = long_tail(c.board, nodes)
+    return ([f'K-power: {i}' for i in taps + tail],
+            dict(single_via_open_taps=ev, exceptions=len(SINGLE_OPEN_EXCEPTIONS_R12), long_tail=tail_ev))
 
 
 PORTED = {

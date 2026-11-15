@@ -423,6 +423,14 @@ PARALLEL_VIAS_R12 = [
     ('VLOGIC_SENSE', (26.2, 41.45),
      "R12F12-TRI-02: PA6's lane from R60.2 / R61.1; the barrel sits at the In2 bend 0.566 mm from the first "
      "(25.8, 41.05), joined to it by a 0.566 mm F.Cu diagonal above the In2 one"),
+    # D-R12-200 (R12F13-TRI-01): C60.1, PA6's 10 nF filter, on its own via
+    ('VLOGIC_SENSE', (11.65, 62.45),
+     "R12F13-TRI-01: C60.1's (PA6's 10 nF filter) B-to-F via; the barrel sits 0.55 mm west of the first (12.2, 62.45), "
+     "joined to it by 0.55 mm links on F.Cu and B.Cu"),
+    # D-R12-200 (R12F13-TRI-02): C94.1, PC2_C's filter, on its own via
+    ('CAM_5V_SENSE', (14.05, 62.35),
+     "R12F13-TRI-02: C94.1's (PC2_C's camera-sense filter) F-to-In2 via; the barrel sits on the In2 run 0.55 mm east "
+     "of the first (13.5, 62.35), joined to it by a 0.55 mm F.Cu link above the In2 one"),
 ]
 # R12F12-TRI-29, profile r12: the non-critical hygiene leftovers of the R12 board, each with its measured reason (R10 audit
 # 2 keeps them informational on the R10-like profiles: an unrecorded or stale entry prints as INFO and is counted in the
@@ -442,12 +450,14 @@ LEFTOVERS_R12 = [
      "on D95's: no 3V3 site fits between C79.1 (BAT_IN) and C97.1 / the RAW vias (about 2.1 mm apart; S-10 needs "
      "2 x 1.040 mm)"),
     ('extra_vias', 'VLOGIC_SENSE', 'net', (12.2, 61.67),
-     "R12F12-TRI-29: 48.9 mm / 4 vias (the PARALLEL_VIAS_R12 barrel (26.2, 41.45) left out) for a 34.39 mm pad tree. "
+     "R12F12-TRI-29: 50.0 mm / 4 vias (R12F13-TRI-01: 48.9 mm before C60.1's second barrel and its two 0.55 mm links; "
+     "the PARALLEL_VIAS_R12 barrels (26.2, 41.45) and (11.65, 62.45) left out) for a 34.39 mm pad tree. "
      "With an In2 trunk the floor is 3 (ball, C60, R60), above the 2 allowed; the fourth is the B.Cu link that takes the "
      "lane under CAM_5V_SENSE's In2 C94 branch (x 16.67, y 57.68 to 61.85), which an In2 run at y 61.05 would cross. "
      "C60 has no site on U1.J3's F.Cu escape: the decoupling row C14-C22 fills it"),
     ('extra_vias', 'CAM_5V_SENSE', 'net', (13.2, 61.67),
-     "R12F12-TRI-29 (D-R12-124): 60.42 mm / 3 vias for a 50.47 mm pad tree. The ball, C94 (8 mm south-west) and the "
+     "R12F12-TRI-29 (D-R12-124): 60.97 mm / 3 vias (R12F13-TRI-02: 60.42 mm before C94.1's second barrel (14.05, "
+     "62.35), a PARALLEL_VIAS_R12 entry left out, and its 0.55 mm F.Cu link) for a 50.47 mm pad tree. The ball, C94 (8 mm south-west) and the "
      "divider (35 mm aft) are far-apart F.Cu pads, so an In2 trunk needs one via at each: 3 is the floor, above the 2 "
      "allowed. C94 has no site on the ball's F.Cu escape"),
 ]

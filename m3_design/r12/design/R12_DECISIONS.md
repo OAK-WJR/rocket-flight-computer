@@ -10,7 +10,8 @@ measured; later Measured labels refer to CAD or tool results. No AGENTS §2 rule
 ## 1. Decisions
 
 Dated entries through D-R12-174 are historical: their board hashes, coordinates, counts, quotes and analysis
-figures belong to those decisions. D-R12-175 … -191 record the current round-12 fix pass. Live open items
+figures belong to those decisions. D-R12-175 … -191 record the round-12 fix pass, D-R12-192 … -198 the servo-port
+changes and D-R12-199 … -204 the round 13 fix pass (the current board, `5af58097…`). Live open items
 are §4; current board state is `docs/M3_R12.md`. A later amendment supersedes the earlier instruction it names.
 
 
@@ -3303,7 +3304,10 @@ power stays in the pack harness (REQUIREMENTS F4). Flight 1 flies one tab servo 
   fingers under 0.5 mm wide between the remaining trunks (route_check pour_finger, 3 instances on the first build). So
   SERVO1_MCU's trunk moved 0.35 mm east into SERVO4's old lane (x 27.75, 0.45 mm from CAM_EN / CAM_PWR_EN at x 28.2: the
   0.2 mm via-hole rule rejects x 27.8), and SERVO2_MCU's trunk 0.45 mm east to x 29.1 (0.3 mm from CAM_MCU_TX at x 29.4),
-  which leaves one pour strip of about 0.55 mm between x 28.2 and 29.1. SERVO2_MCU had three vias and a 0.424 mm B.Cu jog
+  which leaves no B.Cu GND fill between x 27.6 and 29.6 from y 20 to 51 (R12F13-TRI-12 correction: the 0.55 mm strip
+  the DRU's 0.1 mm floor would allow between x 28.2 and 29.1 is removed by the filler as an island, an Inference from
+  `GND_pour_B`'s always-remove-islands setting, since the bundle's bends and vias close it at both ends; sampled every
+  0.05 mm in y, Measured; this is also why no pour_finger remains; K-reference and K-region pass). SERVO2_MCU had three vias and a 0.424 mm B.Cu jog
   only to pass SERVO3 / SERVO4 copper (route_check leftovers, R12F12-TRI-29); it now passes CAM_EN's via (28.5, 19.25)
   and CAM_5V_DIV's via (29.85, 18.97) straight, steps to x 28.7, changes layer once at (28.7, 14.05) between D121's pin
   rows, on one 45° line from D121.3's column to y 13.675, and runs west on F.Cu 0.165 mm clear of D121's north pads to
@@ -3396,8 +3400,119 @@ the H743 too (CLAUDE.md "Avionics": our own firmware, not ArduPilot), so a UART 
   re-pack does the job); refreshing `design/jlc_r12_stock.json` / `r12_cost.json` (the stage A record, left
   historical).
 - **Flight 2.** A second control surface uses J122.4 (SERVO2). More than two surfaces need a respin (owner row 58).
-- This change has had only its fix lane and no review round. The board stays not accepted, nothing ordered; the
-  2026-11-11 quote ($165.33 for two boards, historical `1d7562d5…`) must be redone.
+- This change had only its fix lane before round 13 reviewed it (D-R12-199 … -204). The board stays not accepted,
+  nothing ordered; the 2026-11-11 quote ($165.33 for two boards, historical `1d7562d5…`) must be redone.
+
+## Round 13 fix pass (2026-11-14; R12F13-TRI-01 … -12; D-R12-199 … -204)
+
+Round 13 reviewed `96207d2e…` (commit `c59d68b`) with seven lenses (safety, power, requirements, copper, gate, build,
+records) plus a second opinion on safety and power: **0 Critical / 0 Major / 12 Minor** after triage
+(R12F13-TRI-01 … -12). This fix pass verified each finding on the board or the code before fixing it (all twelve are
+real) and produced PCB **`5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3`** (was `96207d2e…`), 46 ×
+86.85 × 1.6 mm, 189 footprints, 181 JLC parts, **1111 tracks / 385 vias** (was 1107 / 385), 50 legends, 105 shown /
+84 hidden designators, 585 paste flashes, 60 BOM lines (BOM and CPL byte-identical). Stage D re-run with
+`--source-board` on `5af58097…`: besides D-R12-202's U2 figures only the 3V3 sheet solves moved (the new C60.1 / C94.1
+barrels open the In2 3V3 sheet): L1 → U6 12.468 mΩ (12.414), U6's 1 A drift minimum **3.20400 V** (3.20406), 0.5 A
+3.21385 V (3.21388); the RAW trunk, fire loop, four-stall, EN, chatter, hold-up and PA6 figures are unchanged at their
+stated precision (Calculation / Inference). Hot-plug inputs re-extracted (electrical signature unchanged) and the 2304
+required cases re-run, numerically identical (Simulation / Inference). Not accepted, nothing ordered; the full gate on
+the final tree is the orchestrator's commit condition.
+
+**D-R12-199 SERVO1_OUT's layer hop removed (R12F13-TRI-03).** SERVO1_OUT hopped to B.Cu between (24.1, 12.25) and
+(24.1, 14.35) only to pass under SERVO2_MCU's F.Cu run along y 13.675; with SERVO3 / SERVO4 deleted the hop was needless
+(REQUIREMENTS M2; round 12's reason for the northern run was SERVO4_MCU's via (28.43, 18.45), which D-R12-195 deleted).
+The copper lens's trial (round 13 `copper/mod2b.py`, gated on a scratch copy) is adopted in `r12_routes_W1.tsv`:
+SERVO2_MCU leaves its B.Cu trunk once at **(29.1, 17.9)**, north of CAM_EN's via (28.5, 19.25), runs on F.Cu straight
+north into D121.3 (entering 0.15 mm east of the pad centre, route_check's informational pad_end_offcentre) and south of
+R155 / D121 along y 18.65 to R155.1, whose run to R151.1 is unchanged. Nearest foreign copper of the new run (Measured,
+edge to edge): R155.2's GND via (26.33, 18.15) 0.200 mm, CAM_EN's F.Cu run 0.230 mm and its via 0.318 mm (signal nets,
+function only, as the trunk's existing 0.30 mm pass); SERVO1_OUT runs straight on F.Cu from J122.3 to R150.2. Measured on `5af58097…`: SERVO1_OUT 8.750 mm /
+**0 vias** (was 2), SERVO2_MCU **54.298 mm** / 2 vias (was 57.837 mm / 2), SERVO1_MCU unchanged (45.042 mm / 2);
+SERVO2_MCU's B.Cu jog at y 18.0–18.4 and its 0.164 mm pass under D121.5 are gone; route_check's short_layer_hop
+count loses its only actuator instance. SERVO2_MCU's one layer change is now (29.1, 17.9) (long-tail class 1). This
+supersedes D-R12-195's SERVO2_MCU route at the D121 end; the rest of D-R12-195 stands.
+
+**D-R12-200 The single-via class made complete and gated (R12F13-TRI-01, -02).**
+- **C60.1 (PA6's 10 nF filter).** Its VLOGIC_SENSE via (12.2, 62.45) gains a second barrel at **(11.65, 62.45)**,
+  joined by 0.55 mm links on F.Cu and B.Cu (PARALLEL_VIAS_R12); the safety lens's spot, no foreign non-fill copper within
+  0.9 mm (Measured). K-power taps **C60.1** from U1.J3; its path to the ball still passes U1.J3's dog-bone
+  (19.80, 61.05), so that via is an exact exception for C60.1 as for U1.J3 (same consequence: PA6 floats). Seeded:
+  `test_r12f13_c60_c94_second_vias_removed_fail`.
+- **The C16–C18 / C60.2 / C94.2 GND row** hung on via (14.30, 61.63). An F.Cu link (0.2 mm) from C94.2 north to C26.2's
+  GND via (15.02, 59.70), by (13.2, 60.42) and (13.92, 59.70), 0.180 mm from C26.1 (HSE_OUT; Measured), gives the row a second via,
+  and C26.2 one too. New taps **C60.2** and **C94.2** (sense filters, as C127.2 / C129.2).
+- **C94.1 (PC2_C's camera-sense filter).** Its CAM_5V_SENSE via (13.5, 62.35) gains a second barrel at **(14.05, 62.35)**
+  on its In2 run (split there), joined by a 0.55 mm F.Cu link (PARALLEL_VIAS_R12). Not tapped (function only).
+- **Not taken, with the measured reason (spot search, `fix/spots.py`, a 0.025 mm grid: 0.1 mm copper, 0.2 mm hole to
+  copper, 0.25 mm hole to hole).** C24.2 (NRST's 100 nF, via (25.75, 48.85)): within 1.5 mm of its via no spot is legal;
+  the one legal column, x 27.325 east of the pad, sits exactly at the 0.2 mm hole-clearance floor to both CAM_5V_SENSE's
+  In2 lane (x 26.9) and SERVO1_MCU's B.Cu trunk (x 27.75). C21.2 / U1.J1 (via (18.60, 61.63)): a via fits at
+  (18.6, 62.855), but its F.Cu link passes 3V3's via (19.0, 62.35): a 0.15 mm link fails DRC at 0.175 mm hole clearance
+  (trial t6), a 0.1 mm link sits at the 0.2 mm floor. Neither is taken: a drill-position error at zero margin risks a
+  short (to SERVO1_MCU / CAM_5V_SENSE, or GND to 3V3) for a benign gain. Both stay long-tail entries (class 4 / class 2).
+- **The rule made complete and gated.** check_r12 K-power now also runs `long_tail()`: every single point of the board
+  (any net, GND included; `single_points()`, the same copper graph as the taps, the pads cut off being every piece but the
+  largest) must be the via of a `SINGLE_OPEN_EXCEPTIONS_R12` entry or **exactly one** `LONG_TAIL_R12` entry naming the
+  pads it cuts off and its class (R12_VALIDATION row 43's four classes). An unlisted, doubly listed, stale or
+  wrong-pad entry fails. On `5af58097…`: **153 single points** (159 on `96207d2e…`; gone: SERVO1_OUT ×2, SERVO2_MCU
+  (28.70, 14.05), C60.1, the GND row (14.30, 61.63), C26.2 (15.02, 59.70), C94.1; new: SERVO2_MCU (29.10, 17.90)) =
+  18 exception vias (20 exception entries) + **135 long-tail entries** (class 1: 74, class 2: 32, class 3: 22,
+  class 4: 7). Class 2 now also names C21 (VDDA keeps C22) and U1's GND-ball dog-bones C2, E4–E6 and J1 (in parallel
+  inside the package, Inference, as for the supply balls); class 4 adds C24.2. Seeded:
+  `test_r12f13_long_tail_is_complete_and_exact` (an entry dropped, a stale entry, an entry that is also an exception,
+  wrong pads, C60.1's second barrel removed). The full list is R12_VALIDATION "Row 43: long-tail list".
+- **Counts.** K-power **124 taps / 20 exceptions** (121 / 19 before). route_check: 13 parallel barrels (11 before), the
+  same four leftovers with VLOGIC_SENSE at **50.0 mm / 4 vias** (48.9 mm before) and CAM_5V_SENSE at **60.97 mm /
+  3 vias** (60.42 mm before), 0 failing, 2 allowlisted.
+
+**D-R12-201 Copper graphics are copper in S-7 and S-10 (R12F13-TRI-04).** `check_r12.copper_items()` enumerated tracks,
+vias, pads and board zones only, so S-7's J122.2 rule and S-10 passed a copper drawing they reject as a track (the gate
+lens's reproduction). New `copper_graphics()` adds board drawings and text on a copper layer and each footprint's
+visible fields, graphics and zones on a copper layer, with their net (none: ''); `copper_items()` measures them, and
+pad2_bare counts a graphic on J122.2's own net as own copper. The committed board has none
+(`test_r12f13_committed_board_has_no_copper_graphics`), so no result on it changes. Seeded:
+`test_r12f13_copper_graphic_near_the_gate_run_fails` (S-10, a netless graphic 0.20 mm from PYRO1_GATE's run fails as the
+track does) and `test_r12f13_j122_pad2_copper_graphic` (S-7: netless and 3V3 graphics fail, GND / SERVO1_OUT pass,
+beyond 1.040 mm passes, own-net graphic fails; each track form agrees).
+
+**D-R12-202 U2's current limit at the load's own VOUT corner (R12F13-TRI-05).** `r12_stageD.u2_limit()` took VOUT
+3.35 V while the buzzer load used the 3V3 drift maximum 3.5156 V. VOUT (VIN − VOUT) rises with VOUT below VIN / 2, so
+the drift maximum is both the load's corner and the worst limit over the window; `u2_limit()` now defaults to it and the
+budget passes it. Regenerated (Calculation / Inference, as before): limit **0.870231 A** at 700 kHz (0.875189) and
+**0.806936 A** at 600 kHz (0.812720); 200 MHz / 85 °C peak 0.789 A: margin **81.6 mA** at 700 kHz, **18.336 mA** at
+600 kHz (24.120); 105 °C peak 0.869 A: **+1.6 mA** at 700 kHz, **−61.664 mA** at 600 kHz (−55.880). The verdict stands:
+≤ 200 MHz, microSD writes in buzzer gaps. Seeded in `test_r12_stageD.test_3v3_budget` (the VOUT, the worst-corner
+property over five VOUTs, both limits and both margins).
+
+**D-R12-203 U2's capacitor grounds: an owner deviation and bench items (R12F13-TRI-11).** TI SLUSDW3A §11.1 item 1
+(p. 24) asks for the input capacitor close to VIN and GND and for input and output capacitor grounds on localized
+top-side copper joined to the GND pin. On R12, U2.2 (GND, (31.75, 26.25)) is on U2's west row and VIN (U2.4 / U2.5) on
+its east row; U2.2 reaches its own via (30.65, 26.25) in 1.100 mm, while C99.2 (5.177 mm from U2.2), C6.2 (7.096 mm)
+and C8.2 (10.957 mm) reach U2.2 only through their own vias and the In1 plane: via to via 5.468 / 8.132 / 11.954 mm
+(Measured, pad centres). No cheap move puts C99.2 on top-side copper with U2.2: any F.Cu path crosses VLOGIC's
+U2.4–C99.1 run and FB_3V3's run to R14 / R15, so the U2 cell would have to be re-laid. Not re-laid this round
+(an unmeasured effect). Recorded as owner row 59 (deviation); first-article bench items: SW_NODE ringing (overshoot
+and ring frequency at U2.6 with a short ground spring) and 3V3 ripple under load steps (0 → 0.8 A and the buzzer
+on-phase) (`docs/R12_VALIDATION.md` "Do"). U400 and U403 follow TI's layouts (power lens).
+
+**D-R12-204 Records (R12F13-TRI-06 … -10, -12; the servo lead tag).**
+- TRI-06: §3 A-21 copied from R12_VALIDATION's A-21 (PA8 / PA9 NC since D-R12-195); O-R12-11 BDTR.MOE for SERVO2 (PA10)
+  only.
+- TRI-07: R12_VALIDATION rows 42 / 43 / 47 give the current K-power counts (124 taps / 20 exceptions; 121 / 19 on
+  `96207d2e…`, 123 / 19 before D-R12-195).
+- TRI-08: O-R12-29's `c9b9f0fa…` and `96207d2e…` counts are labelled historical; current `5af58097…` 1111 / 385.
+- TRI-09: docs/M3_R12.md's power figures name their board (`5af58097…`), and its CH1 paragraph gives the current I-5
+  counts (76 connected victims, 47 NC IC-pin nets; 80 / 45 only as `c9b9f0fa…` history).
+- TRI-10: circuit.json's D121 note labels "an unused steering-diode pair needs no termination" an Inference (the
+  generator source; the schematic and netlist do not carry the note, so neither changed).
+- TRI-12: D-R12-195's "pour strip of about 0.55 mm" corrected (no B.Cu GND fill between x 27.6 and 29.6 from y 20 to
+  51; Measured on `5af58097…` with the copper lens's `strip.py`). stageE_relayout's stale "largest empty rectangle
+  36 mm²" is replaced by the measured aft rectangle **x 15.2–20.9, y 0–10.5, 59.85 mm²**, free of courtyards, tracks,
+  vias and pads on every layer (Measured on `5af58097…`; the copper lens's x 15.0 edge clips BAT_SW_RETURN's B.Cu run
+  at x 15.1, so its 61.95 mm² was 2.1 mm² high). It stays empty: no re-pack into it shows a ≥ 2 mm outline gain (the
+  outline is set by the forward stack); re-pack not adopted this round.
+- The servo lead and the switch lead are both two-contact SH-4 plugs on the aft edge; the handoff's lead-tag rule now
+  names the servo lead too (a swap is fail-safe, Inference: the board stays off and step 3 catches it).
 
 ## 2. Historical stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
@@ -3514,7 +3629,7 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | A-18 | F11: buzzer on PC14 | PE8 (J5) BUZZ_DRV; PC14 (A1) NC | D-R12-166 |
 | A-19 | F11: CAM_5V_SENSE on PB1 | PC2_C (E2) sense; PB1 (K4) LED_RED | D-R12-166 |
 | A-20 | F10: R10 EXTI lines 1 / 4 / 5 / 6 / 8 / 12 on PE1 / PA4 / PA5 / PD6 / PC8 / PE12 | R12 IMU_INT1 PD3 EXTI3, BAT_FAULT_N PC13 EXTI13, VBUS_SENSE PC9 EXTI9, PORT_SENSE PD10 EXTI10 if used; PA4 / PA5 / PD6 / PC8 / PE1 NC, PE12 SD_SCK. USB / camera fault flags removed; check every pending bit in shared vectors | D-R12-93, -173; pin_table.tsv |
-| A-21 | F10: PA2 drives loader USART2_TX / servo 3 | PA2 NC; SERVO3 PA8 TIM1_CH1, SERVO4 PA9 TIM1_CH2. Loader PA9 USART1_TX may hold SERVO4 high; PC11 SPI3_MISO may drive CAM_MCU_RX (board RX, connected to camera TX) with CAM_5V off. Loader roles are read from AN2606 Rev 71 Table 145 (D-R12-191); installed behaviour remains untested | D-R12-93, -116, -173 |
+| A-21 | F10: PA2 drives loader USART2_TX / servo 3 | PA2 NC; PA8 / PA9 NC since D-R12-195 (SERVO3 / SERVO4 deleted; they were PA8 TIM1_CH1 / PA9 TIM1_CH2, and loader PA9 USART1_TX could hold SERVO4 high); PC11 SPI3_MISO may drive CAM_MCU_RX (board RX, connected to camera TX) with CAM_5V off. Loader roles are read from AN2606 Rev 71 Table 145 (D-R12-191); only physical behaviour remains O-R12-23 (R12F13-TRI-06: copied from R12_VALIDATION A-21) | D-R12-93, -116, -173, -195 |
 | A-22 | F4 / F8: J122 five-position / green 5-pos DB125 | ZX-SH1.0-4PWT SH-4 in the MicoAir H743 4-pin UART order (D-R12-195): 1 signal GND, 2 NC (the H743's 5 V position, no copper: row 57), 3 SERVO1 (TX position), 4 SERVO2 (RX position, spare); SERVO3 / SERVO4 deleted (one servo on flight 1, owner 2026-11-14); motor power/return remain in the harness. TIM2 / TIM1 mapping in M3_R12; PA15 JTDI pull-up and loader cases need qualification | D-R12-31, -93, -173, -192, -195 |
 | A-23 | F6: PA6 0.44–0.47 V and R10's under-7-ms chatter bench rule | PA6 0.425–0.455 V with 0.1 % R60 / R61; windows include ±250 nA leakage (analog-mode applicability Inference). R12 chatter: **under 6.7 ms total open time in every sliding 100 ms window**, ≥ 10 kS/s under flight-level vibration, U9 on throughout at 5.72 V. Rows 5 / 45 and M3_R12 Power give the Calculation / Inference margins and sensitivity | D-R12-164, -172, -183 |
 | A-24 | F5: Molex 472192001 hinged retaining socket | Molex 104031-0811 push-pull C585350; tape backup, card-detect NC. Local bypass deviation A-14; SPI4 mapping A-15; retention row 48 | D-R12-162, -173 |
@@ -3529,12 +3644,12 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-03 | USB-only bench power needs ≥ 4.45 V at J3 (host or powered-hub port), D-R12-04 | records / ORDERING |
 | O-R12-04 | SH clone mating with JST SH housings (friction retention, D-R12-31): sample check | bench |
 | O-R12-05 | ~~PORT_4V8 drift corner (A-8)~~ closed as a calculation by D-R12-83 (drift top 4.972 V ≤ 5.0 V; Calculation / Inference); the LR900-F's real range stays a bench item | bench |
-| O-R12-06 | LMR50410 / L1 4.7 µH: load-step and stability check. Current bound 0.875 A at 700 kHz / 0.813 A at 600 kHz; firmware ≤ 200 MHz and SD writes in buzzer gaps (Calculation / Inference, D-R12-184). A verified 10 µH / Isat ≥ 1.9 A part is a respin option | bench |
+| O-R12-06 | LMR50410 / L1 4.7 µH: load-step and stability check. Current bound 0.870 A at 700 kHz / 0.807 A at 600 kHz at the 3V3 drift maximum (0.875 / 0.813 A at 3.35 V before D-R12-202); firmware ≤ 200 MHz and SD writes in buzzer gaps (Calculation / Inference, D-R12-184, -202). With U2's capacitor grounds off top-side copper (D-R12-203, owner row 59): SW_NODE ringing and 3V3 ripple under load steps on the first article. A verified 10 µH / Isat ≥ 1.9 A part is a respin option | bench |
 | O-R12-07 | R60/R61 0.1 %, PA6 0.425–0.455 V adopted. Current healthy drift margin +0.0270 V; shorted match −0.1258 V, match/leads −0.1705 V (Calculation / Inference, stageD_budget.json). Implement rule 4: trip beginning during commanded fire logged with time/reading, no battery-loss shutdown/shed/state change or pulse truncation; outside fire battery loss as before. READY / firmware / bench remain open | firmware / bench |
 | O-R12-08 | ~~Hot-plug, EN, hold-up and fire budget re-run on R12 copper; keep or drop R166~~ done in stage D (stageD.md, stageD_analysis.md): keep R166 and the damper, add C79 (D-R12-78) | D |
 | O-R12-09 | HSE crystal gm_crit 0.726–1.244 / 1.5 mA/V (17.1 % margin) after C25 / C26 15 pF (D-R12-107; Calculation / Inference: stray); old 18 pF +5 % corner 1.5027 mA/V. Cold start-up, drive level and frequency (MCO) bench check | bench |
 | O-R12-10 | Q120 / Q121 VGS > 12 V only above 14.4 V on the pack with the bus enabled, which is from the on-rail check until switch-off, pad or flight (Calculation / Inference: Q122 drop; D-R12-115): owner acceptance or a flight-pack transient measurement | owner / bench |
-| O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PD10 high = ports powered (PA4 before D-R12-93), camera UART parking while U403 is off, USB-only detection from VBUS_SENSE (PC9) / PD10, U9 auto-retry; TIM1 BDTR.MOE for SERVO2–4, JTAG released on PA15 (D-R12-93) | firmware |
+| O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PD10 high = ports powered (PA4 before D-R12-93), camera UART parking while U403 is off, USB-only detection from VBUS_SENSE (PC9) / PD10, U9 auto-retry; TIM1 BDTR.MOE for SERVO2 (PA10) only (SERVO3 / SERVO4 deleted, D-R12-195; R12F13-TRI-06), JTAG released on PA15 (D-R12-93) | firmware |
 | O-R12-12 | **Closed:** Preferred Extended is exempt on Economic ([JLC PCBA FAQ 7](https://jlcpcb.com/help/article/pcb-assembly-faqs), read 2026-11-06). D120 / C37704 excluded by `jlc_cost.py`: 21 charged codes, $64.47 per order (current BOM, Live 2026-11-13T10:35:38Z / 10:37:57Z, D-R12-175); D-R12-110 | closed |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
 | O-R12-14 | ~~Board~~ stage D done (D-R12-78 … -82): board `d776c5d7…`, post stage and legends, fab package bound, IPC-2152 figures in `stageD_analysis.md` §6; `tools/check.sh` runs the R12 section (stageD.md) | D |
@@ -3545,14 +3660,14 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 | O-R12-19 | SH pin orders against a real MicoAir H743 lead, J122's 4-pin UART-order servo lead included (no source marks a pin-1 end; R12 reads GND as pin 1 on every port from MicoAir's images, v1 and v2 agreeing; a mirrored result flips J410 / J420 / J440 and J122 together) (D-R12-31, -192, -195) | bench |
 | O-R12-20 | J121 DB125, J1 KF301-5.0-2P and LS120 QMB-09B-03 on JLC Economic as THT (D-R12-85, -174): confirm on the order page, and J1's wire face out in JLC's placement preview (jlc_orient_r12 R12_BODY, theta 180). **J1 hole fit closed as a design calculation by D-R12-174:** the land is the maker's own hole, 1.30 mm finished for the 1.00 mm pin (Kefa KF301-5.0 rev A: hole 1.20 +0.10; Datasheet), and JLC fits the part. Screw retention under flight vibration and a sample fit stay bench items | order / bench |
 | O-R12-21 | NXP dual-channel FXLS9XXXX Rev 7.0 read in round 12 for supply and pin-out: pin 2 PCM1/ARM1, output, left open (Datasheet). Remaining axis-frame / medium-g range-code checks and the LSM6DSVE datasheet remain open. Supply-monitor contradiction is O-R12-22 | records / bench |
-| O-R12-22 | **Reopened, D-R12-188.** The 1 A voltage calculation gives U6 ≥ 3.20405 V at drift (3.20406 V on `96207d2e…`, D-R12-195) with 70 °C copper (Calculation / Inference), above the 3.135 V SPI floor, but NXP Rev 7.0 contradicts itself on BUS_I undervoltage in shipped COMMTYPE 000. Both readings and exact quotations are in D-R12-188. “Works at 3.3 V” is Inference, not demonstrated. Ask NXP or accept that the first two boards test it; read DEVSTAT / DEVSTAT1 at 3V3 3.22 / 3.52 V. Estimator and fire rule work without U6 | owner before order / bench |
+| O-R12-22 | **Reopened, D-R12-188.** The 1 A voltage calculation gives U6 ≥ 3.20400 V at drift on `5af58097…` (3.20406 V on `96207d2e…`, D-R12-195; 3.20405 V before) with 70 °C copper (Calculation / Inference), above the 3.135 V SPI floor, but NXP Rev 7.0 contradicts itself on BUS_I undervoltage in shipped COMMTYPE 000. Both readings and exact quotations are in D-R12-188. “Works at 3.3 V” is Inference, not demonstrated. Ask NXP or accept that the first two boards test it; read DEVSTAT / DEVSTAT1 at 3V3 3.22 / 3.52 V. Estimator and fire rule work without U6 | owner before order / bench |
 | O-R12-23 | **Source-reading closed by round 12:** DS12110 Rev 11 Table 10 and AN2606 Rev 71 Table 145 read by the records lens, every used AF verified; loader outputs in D-R12-191 / M3_R12 Sources. Only physical loader behaviour remains unqualified | physical check |
 | O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways), M-7's U6 body, the In2 regions K-region needs or the 0.42 mm via clearance K-reference needs: any future search must add them (pass 2, D-R12-74A, was drawn by hand; scratch masks in `r12ra/ps3/fA/seg4.py`) | C |
 | O-R12-25 | ~~BAT_IN C96.1 → C88.1 → U9.5 0.4 mm for 4.13 mm~~ closed by D-R12-84: the feed is 0.8 mm (24.9 °C at 2.9 A, IPC-2152 upper bound, Inference) except U9.5's 1.3 mm 0.4 mm pin entry; round-9 U9 OUT bar is 2.475 mm at 0.30 mm (76.8 °C IPC-2152 upper bound, Calculation / Inference); its pin-entry-only classification is not carried forward | closed |
 | O-R12-26 | **Calculation closed**, subject to U400 VIN ≥ VO / 0.75. Current minimum 4.56508 V at 0.561 A / drift with 70 °C copper; no-load maximum 4.972 V. Four-stall U400 VIN 5.4988 V rests on foldback (Calculation / Inference). Real LR900-F floor and low-input supply remain bench items, R12_VALIDATION row 15 | closed calculation / bench |
 | O-R12-27 | J122's harness note `SERVO + FROM HARNESS` not on the board (D-R12-81; R12_VALIDATION row 2): owner acceptance; the rule is in `docs/R12_VEHICLE_HANDOFF.md` | owner |
 | O-R12-28 | Bay / sled internal length for the 86.85 mm board (D-R12-174; 83 mm under D-R12-171, 85 mm under D-R12-162, 88 mm under D-R12-144): `docs/VEHICLE.md` gives no internal electronics-bay or sled length (its stack row budgets 102 mm for R9), so R10's "wholly forward of joint + 47 mm" rule is unchecked; measure it in the CAD and add it to VEHICLE.md (owned separately) | records / owner |
-| O-R12-29 | AVA re-layout targets missed (Measured on `be81f40b…` after the signal-only cleanup `871f77a`: vias 318, GND 149, signal 100, diagonal 17.1 %, In2 137.4 mm, NRST 1.96, VLOGIC_SENSE 4 vias). After the AVA polish pass (D-R12-121 … -124), on `68e6b650…`: vias 318 against ≤ 290, GND vias 147 against ≤ 140, signal vias 102 against ≤ 95, diagonal share 16.95 % against ≤ 15 %, In2 track 137.4 mm against ≤ 130, worst routed / MST QSPI_CLK 1.63 (allowlisted; NRST 1.56) against ≤ 1.35, VLOGIC_SENSE and NRST 4 vias against ≤ 3; the measured reason for each miss is D-R12-124. Round 5's fire-net fix (D-R12-125) on `6e874d4e…` (Measured, score.py and a track count): vias 314 (GND 145, signal 100), diagonal share 16.69 % (351.3 / 2104.1 mm), In2 track 132.0 mm, 1050 tracks; the worst ratios and most-vias nets unchanged. Round 6 (D-R12-134, -137, -138) on `f26dfef1…` (Measured, score.py and a track count): vias 317 (GND 145, 3V3 37, signal 102), diagonal share 16.59 % (349.4 / 2106.2 mm), In2 track 132.0 mm, 1057 tracks; worst routed / MST QSPI_CLK 1.63, most vias VLOGIC_SENSE and NRST 4, unchanged. Round 7 (D-R12-144 … -147) on `82eddc69…` (Measured, score.py and a track count): vias 316 (GND 145, 3V3 37, signal 102), diagonal share 16.64 % (347.8 / 2090.4 mm), In2 track 132.0 mm, 1048 tracks. Historical `a1e65bb4…` (D-R12-171): 1093 tracks, 348 vias (162 GND); QSPI_CLK 12.79 mm / 0 vias, detour allowlist removed, two entries remain. Current `c9b9f0fa…`: 1147 tracks / 394 vias. Current M2 recount is R12_VALIDATION; layout judged against AVA and LEVIA-H7 (D-R12-168) | C / review |
+| O-R12-29 | AVA re-layout targets missed (Measured on `be81f40b…` after the signal-only cleanup `871f77a`: vias 318, GND 149, signal 100, diagonal 17.1 %, In2 137.4 mm, NRST 1.96, VLOGIC_SENSE 4 vias). After the AVA polish pass (D-R12-121 … -124), on `68e6b650…`: vias 318 against ≤ 290, GND vias 147 against ≤ 140, signal vias 102 against ≤ 95, diagonal share 16.95 % against ≤ 15 %, In2 track 137.4 mm against ≤ 130, worst routed / MST QSPI_CLK 1.63 (allowlisted; NRST 1.56) against ≤ 1.35, VLOGIC_SENSE and NRST 4 vias against ≤ 3; the measured reason for each miss is D-R12-124. Round 5's fire-net fix (D-R12-125) on `6e874d4e…` (Measured, score.py and a track count): vias 314 (GND 145, signal 100), diagonal share 16.69 % (351.3 / 2104.1 mm), In2 track 132.0 mm, 1050 tracks; the worst ratios and most-vias nets unchanged. Round 6 (D-R12-134, -137, -138) on `f26dfef1…` (Measured, score.py and a track count): vias 317 (GND 145, 3V3 37, signal 102), diagonal share 16.59 % (349.4 / 2106.2 mm), In2 track 132.0 mm, 1057 tracks; worst routed / MST QSPI_CLK 1.63, most vias VLOGIC_SENSE and NRST 4, unchanged. Round 7 (D-R12-144 … -147) on `82eddc69…` (Measured, score.py and a track count): vias 316 (GND 145, 3V3 37, signal 102), diagonal share 16.64 % (347.8 / 2090.4 mm), In2 track 132.0 mm, 1048 tracks. Historical `a1e65bb4…` (D-R12-171): 1093 tracks, 348 vias (162 GND); QSPI_CLK 12.79 mm / 0 vias, detour allowlist removed, two entries remain. Historical `c9b9f0fa…`: 1147 tracks / 394 vias; historical `96207d2e…` (D-R12-195): 1107 / 385. Current `5af58097…` (round 13 fix pass, D-R12-199 / -200): 1111 tracks / 385 vias (R12F13-TRI-08). Current M2 recount is R12_VALIDATION; layout judged against AVA and LEVIA-H7 (D-R12-168) | C / review |
 | O-R12-30 | C24 (NRST filter) at J2's end of 19.54 mm of NRST copper from ball E1, including 15.68 mm on In2 (Measured, barrels excluded) (D-R12-98): acceptable for a bench-only reset with the internal pull-up is an Inference; owner acceptance (R12_VALIDATION row 23) or a respin item. The polish pass found no 0402 site with a GND via near E1 (D-R12-124) and removed NRST's loop round J2 (D-R12-122) | owner |
 | O-R12-31 | Shared RAW trunk: 0.6 mm B (45.2, 20.25)–(45.2, 33.05), 12.8 mm, plus 3.2 mm total F shared feed, carrying U400 + D5. Rise 46.1 °C at design 3.348 A, 34.6 °C at U9 2.9 A, 4.69 °C at budget 1.06755 A; 0.87 mm would hold 30 °C at 3.35 A (IPC-2152 upper bound, Calculation / Inference). U400.5 EN stub carries only µA. Widen later or accept, R12_VALIDATION row 26 | C / owner |
 | O-R12-32 | The pack-entry cell (J1, U9, its input capacitors and dividers) keeps **105** BAT_IN item pairs under PACK_MIN 1.040 mm on `c9b9f0fa…` (keys PACK_GND 47, PACK_EN 2, PACK_SW 3, PACK_FLT 12, PACK_OUT 7, PACK_U9 34; least gap 0.150 mm). Historical `a1e65bb4…` kept 114 (D-R12-137 / -138, -147; keys PACK_GND 56, PACK_EN 2, PACK_SW 3, PACK_FLT 12, PACK_OUT 7, PACK_U9 34; least gap 0.130 mm; 117 before D-R12-147 removed U9's in-pad debris; 115 after D-R12-152 added the C79.1–GND-link 0.830 mm pair, then 114 after D-R12-161 removed the wide OUT-neck pair). Some are a part's own lands (U9's pins, C80 / C88 / C96 / R167 / D8 / C79); the rest need a re-layout of the cell: a respin item, or owner acceptance (R12_VALIDATION rows 34–39) | C / owner |

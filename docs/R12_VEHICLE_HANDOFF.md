@@ -1,14 +1,15 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `96207d2e4bddabf703ad9cd4ce656f11099b058855423c772dbea9e73e8e5d65`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195),
+**Status.** PCB `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195; round 13 fix pass D-R12-199 … -204),
 four layers, every part on the top face and assembled by JLC. R12 remains a CAD candidate, not accepted,
 nothing ordered; R9 stays accepted. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
 [R12_VALIDATION.md](R12_VALIDATION.md). No physical fit is claimed.
 
 Coordinates are board mm: x east (0 … 46), y forward from the aft edge (0 … 86.85), top face F.
-Current centres are `m3_design/r12_place.tsv` on `96207d2e…` (Measured). All positions below are on this board; figures
-labelled `c9b9f0fa…` were measured on round 12's board, whose copper and placement differ from this one only at J122 and
-the servo cells (D-R12-192, -195).
+Current centres are `m3_design/r12_place.tsv` on `5af58097…` (Measured; placement unchanged since `96207d2e…`, the round
+13 fix pass moved copper only: SERVO1_OUT / SERVO2_MCU at D121 and three second vias near C60 / C94, D-R12-199, -200).
+All positions below are on this board; figures labelled `c9b9f0fa…` were measured on round 12's board, whose copper and
+placement differ from this one only at J122, the servo cells and those vias (D-R12-192, -195, -199, -200).
 J1's terminal set the 86.85 mm outline (D-R12-174); round 12 adds R118 without moving existing parts.
 
 ## Harness pin map
@@ -142,7 +143,9 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
 
 0. **Plug identity and retention.**
    - **0b — plug identity:** before mating, identify every plug against its port legend. J400 takes only the switch
-     lead. Give the switch and camera leads distinct tags. Repeat step 2 after any plug is moved.
+     lead. Give the switch, servo and camera leads distinct tags: the switch lead (J400) and the servo lead (J122) are both
+     two-contact SH-4 plugs on the aft edge and fit either port (a swap leaves the board off, which step 3 catches;
+     Inference, D-R12-204). Repeat step 2 after any plug is moved.
    - **0d — J122 position 2 empty (D-R12-196; done before the retention step 0c):** confirm the servo lead has no contact
      in position 2 (the H743's 5 V, beside GND) and only GND and the servo signal(s) fitted. On the first
      article, and after any rework near J122, also meter J122.2 to J122.1 and to J122.3 on the unpowered board (both
@@ -282,6 +285,6 @@ Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41
 orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
 other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
 day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
-re-quote `96207d2e…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+re-quote `5af58097…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 See [M3_R12.md](M3_R12.md#cost-and-stock).

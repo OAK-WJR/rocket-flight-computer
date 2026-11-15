@@ -156,9 +156,7 @@ track	CAM_5V	F	0.6	39.8	14.85	41.1	16.15
 track	CAM_5V	F	0.45	34.9	6.2	34.9	12.55
 track	CAM_5V	F	0.4	28.3	11.35	28.9	10.75
 track	CAM_5V	F	0.4	28.9	10.75	30.3	10.75
-track	SERVO1_OUT	F	0.2	24.1	6.2	24.1	12.25
-track	SERVO1_OUT	B	0.2	24.1	12.25	24.1	14.35
-track	SERVO1_OUT	F	0.2	24.1	14.35	24.1	14.95
+track	SERVO1_OUT	F	0.2	24.1	6.2	24.1	14.95
 track	ACT_EN	F	0.2	18.1	32.55	15.7	32.55
 track	ACT_EN	F	0.2	19	31.55	18.5	32.05
 track	ACT_EN	F	0.2	18.5	32.05	18.5	32.55
@@ -180,8 +178,6 @@ via	BAT_SW_RETURN	-	0.45	15.1	11.35
 via	ACT_GATE	-	0.45	6.8	33.95		
 via	ACT_GATE	-	0.45	8.6	34.85		
 via	CAM_5V	-	0.45	30.3	10.75		
-via	SERVO1_OUT	-	0.45	24.1	12.25		
-via	SERVO1_OUT	-	0.45	24.1	14.35		
 track	ACT_FET_S	F	0.4	5.0	30.25	5.55	30.8
 track	ACT_FET_S	F	0.4	5.55	30.8	6.1	30.8
 track	BAT_IN	F	1	5	23.65	5	27.15
@@ -289,19 +285,19 @@ track	CAM_EN	F	0.15	30.0	17.75	31.7	17.75
 track	CAM_EN	F	0.15	30.0	17.75	30.0	15.05
 # D-R12-195: SERVO3 / SERVO4 deleted. Their B.Cu trunks (x 27.75 / 29.0) had filled the trunk bundle's slots; left
 # open, the GND pour made two < 0.5 mm fingers (route_check pour_finger). So SERVO1_MCU's trunk takes x 27.75 (SERVO4's
-# lane, 0.45 mm from CAM_EN / CAM_PWR_EN's x 28.2 and their vias' 0.2 mm hole rule) and SERVO2_MCU's x 29.1 (0.3 mm from CAM_MCU_TX's x 29.4), leaving one 0.55 mm
-# pour strip between x 28.2 and 29.1. SERVO2_MCU passes CAM_EN's via (28.5, 19.25) and CAM_5V_DIV's via (29.85, 18.97),
-# steps to x 28.7 and changes layer once at (28.7, 14.05) between D121's pin rows, on one 45 deg line from D121.3's
-# column (x 28.95) to y 13.675, where SERVO2_MCU runs west on F.Cu, 0.165 mm clear of D121's north pads, to R151.1
-# (the B.Cu run along y 13.675 and its second via are gone; R155.1's F.Cu run is unchanged)
-track	SERVO2_MCU	B	0.15	29.1	21.35	29.1	18.4
-track	SERVO2_MCU	B	0.15	29.1	18.4	28.7	18.0
-track	SERVO2_MCU	B	0.15	28.7	18.0	28.7	14.05
-via	SERVO2_MCU	-	0.45	28.7	14.05		
-track	SERVO2_MCU	F	0.15	28.7	14.05	28.95	14.3
-track	SERVO2_MCU	F	0.15	28.95	14.3	28.95	15.2
-track	SERVO2_MCU	F	0.15	28.7	14.05	28.325	13.675
-track	SERVO2_MCU	F	0.15	28.325	13.675	23.1	13.675
+# lane, 0.45 mm from CAM_EN / CAM_PWR_EN's x 28.2 and their vias' 0.2 mm hole rule) and SERVO2_MCU's x 29.1 (0.3 mm from
+# CAM_MCU_TX's x 29.4). The B.Cu GND pour keeps no strip between x 27.6 and 29.6 there (R12F13-TRI-12: the 0.55 mm strip
+# the DRU would allow is removed as an island).
+# D-R12-199 (R12F13-TRI-03): SERVO2_MCU leaves the B.Cu trunk once at (29.1, 17.9), north of CAM_EN's via (28.5, 19.25),
+# and runs on F.Cu straight into D121.3 and south of R155 / D121 to R155.1; SERVO1_OUT then runs straight on F.Cu from
+# J122.3 to R150.2 (its two-via B.Cu hop under SERVO2_MCU's old y 13.675 run is gone). Copper lens trial mod2b.
+track	SERVO2_MCU	B	0.15	29.1	21.35	29.1	17.9
+via	SERVO2_MCU	-	0.45	29.1	17.9		
+track	SERVO2_MCU	F	0.15	29.1	15.2	29.1	17.9
+track	SERVO2_MCU	F	0.15	29.1	17.9	28.35	18.65
+track	SERVO2_MCU	F	0.15	28.35	18.65	25.82	18.65
+track	SERVO2_MCU	F	0.15	25.82	18.65	25.47	18.3
+track	SERVO2_MCU	F	0.15	25.47	18.3	25.47	17.6
 track	SERVO2_MCU	F	0.15	23.1	13.675	23.1	17.25
 track	SERVO2_MCU	F	0.15	23.1	17.25	23.45	17.6
 track	SERVO2_MCU	F	0.15	23.45	17.6	25.47	17.6

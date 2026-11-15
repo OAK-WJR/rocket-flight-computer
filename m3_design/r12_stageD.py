@@ -1361,9 +1361,14 @@ BUDGET_3V3_A = dict(microsd_write=0.200, U3_qspi_flash=0.025, U4_U5_U6_sensors=0
 BUZZER_COIL_MIN_OHM = 11.0
 
 
-def u2_limit(vin=U2_VIN_FRESH, l=U2_L * (1 - U2_L_TOL), fsw=U2_FSW[1], vout=3.35, isc=U2_ISC_MIN):
+def u2_limit(vin=U2_VIN_FRESH, l=U2_L * (1 - U2_L_TOL), fsw=U2_FSW[1], vout=None, isc=U2_ISC_MIN):
     """IOUT max = ISC - dI / 2 with dI = VOUT (VIN - VOUT) / (VIN L fSW) when dI exceeds ISC - ILS (SLUSDW3A 8.3.5:
-    eq. 6 needs the valley limit to engage; with 4.7 uH it does not at 8.15 V)."""
+    eq. 6 needs the valley limit to engage; with 4.7 uH it does not at 8.15 V). R12F13-TRI-05: VOUT defaults to the
+    3V3 window's drift maximum, the corner the load budget takes the buzzer's on-phase current at; VOUT (VIN - VOUT)
+    rises with VOUT below VIN / 2, so that corner also gives the largest ripple and the lowest limit over the window
+    (the 3.35 V nominal gave 0.813 A at 600 kHz where the matching corner gives 0.807 A)."""
+    if vout is None:
+        vout = r12_budget.rails()[r12_budget.V33_RAIL]['drift']['max_V']
     di = vout * (vin - vout) / (vin * l * fsw)
     return dict(VIN_V=vin, L_H=l, fsw_Hz=fsw, VOUT_V=vout, ISC_min_A=isc, ripple_A=di, IOUT_max_A=isc - di / 2)
 
@@ -1379,12 +1384,13 @@ def u3v3_budget():
     the maker's rows exclude)."""
     v33_max = r12_budget.rails()[r12_budget.V33_RAIL]['drift']['max_V']
     buzz_on = v33_max / BUZZER_COIL_MIN_OHM
-    limits = {f'{int(f / 1e3)}kHz': u2_limit(fsw=f) for f in U2_FSW[:2]}
+    limits = {f'{int(f / 1e3)}kHz': u2_limit(fsw=f, vout=v33_max) for f in U2_FSW[:2]}   # R12F13-TRI-05
     limit_typ, limit_min = limits['700kHz']['IOUT_max_A'], limits['600kHz']['IOUT_max_A']
     other = sum(BUDGET_3V3_A.values())
     out = dict(u2_limit=limits, u2_limit_A=limit_typ, u2_limit_fsw_min_A=limit_min,
                u2_limit_basis=('ISC minimum 1.25 A less half the ripple at 8.15 V in, L 4.7 uH -20 %, fSW 700 kHz '
-                               '(typical) and 600 kHz (FOSC minimum), VOUT 3.35 V (R14 47k / R15 20k)'),
+                               f'(typical) and 600 kHz (FOSC minimum), VOUT {v33_max} V (the 3V3 window\'s drift '
+                               'maximum, the buzzer load\'s corner and the largest ripple over the window; R12F13-TRI-05)'),
                loads_A=dict(BUDGET_3V3_A), buzzer_on_phase_A=buzz_on, buzzer_average_A=buzz_on / 2,
                buzzer_basis=f'3V3 drift maximum {v33_max} V / 11 ohm (16 +/- 5 ohm coil), <= 50 % square wave',
                mcu_source='DS12110 Rev 8 Tables 30-32 (rev Y) and 129-131 (rev V): IDD max, Run mode, all peripherals '

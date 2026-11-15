@@ -55,7 +55,11 @@ class ZoneGuardOutline(unittest.TestCase):
                'track BAT_FAULT_N B 0.2 19.3 48.95 18.15 47.8', 'track GND F 0.2 26.6 48.61 25.99 48.61',
                'track GND F 0.2 25.99 48.61 25.75 48.85', 'track ARM1_SENSE B 0.2 13 59.85 13 44.6',
                'track ACT_EN_MCU B 0.1 16.4 56.875 16.4 49.75', 'track ACT_EN_MCU B 0.1 16.4 49.75 17.1 49.05',
-               'track BUZZ_DRV B 0.2 12.3 65.15 11.2 64.05'),
+               'track BUZZ_DRV B 0.2 12.3 65.15 11.2 64.05',
+               # R12F13-TRI-01 (D-R12-200): C60.1's second VLOGIC_SENSE barrel sits 0.05 mm west of W3's x 11.7 edge, in
+               # W5's west bay, with its two 0.55 mm links from the first barrel (12.2, 62.45)
+               'track VLOGIC_SENSE F 0.1 12.2 62.45 11.65 62.45', 'track VLOGIC_SENSE B 0.1 12.2 62.45 11.65 62.45',
+               'via VLOGIC_SENSE - 0.45 11.65 62.45'),
         'W4': (),
         'W5': (),
     }
@@ -64,7 +68,7 @@ class ZoneGuardOutline(unittest.TestCase):
         """R12F10-TRI-15 / R12F12-TRI-28: each fragment's rows outside its own zone are exactly the recorded hand-offs,
         compared row by row (a count alone passes a row swapped for another): in W1 the PC0 bank's GND link and vias, a
         PYRO1_CONT and a PYRO1_GATE_N track; in W3 the BAT_FAULT_N / GND / ARM1_SENSE / ACT_EN_MCU / BUZZ_DRV lanes
-        crossing into W1 / W4 / W5; in W2 since R12F12-TRI-02 the F stub from U3.4's first GND via (in W3) to its second
+        crossing into W1 / W4 / W5 and (R12F13-TRI-01) C60.1's second barrel and its links in W5's west bay; in W2 since R12F12-TRI-02 the F stub from U3.4's first GND via (in W3) to its second
         (in W2); W4, W5 none. A fragment edit that leaves its zone fails here (lane C's C460 / C461 rows sat in W5
         outside it, round 10), and so does a recorded hand-off moved or replaced."""
         self.assertEqual(sorted(self.HANDOFFS), sorted(self.Z['zones']))

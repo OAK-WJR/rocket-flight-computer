@@ -1,8 +1,13 @@
 # R12 AVA re-layout: placement, zone routing, the historical 90 / 83 mm outlines and the re-run analyses (2026-11-06)
 
-## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14)
+## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14)
 
-PCB `96207d2e4bddabf703ad9cd4ce656f11099b058855423c772dbea9e73e8e5d65` since D-R12-195 (single-servo SH-4 J122 in the MicoAir H743 UART order; SERVO3 / SERVO4 deleted;
+PCB `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3` since the round 13 fix pass (D-R12-199 … -204:
+round 13 reviewed `96207d2e…` with seven lenses plus a second opinion, 0 Critical / 0 Major / 12 Minor, R12F13-TRI-01
+… -12; SERVO1_OUT's hop removed, C60.1 / C94.1 second barrels and the C16–C18 / C60.2 / C94.2 GND row's link, K-power
+gating every single point; two identical builds; stage D / hot-plug re-bound; 1111 tracks / 385 vias, K-power 124 taps
+/ 20 exceptions, 153 single points = 18 exception vias + 135 `LONG_TAIL_R12` entries; legends, designators, paste,
+BOM and CPL unchanged). Before it, PCB `96207d2e…` since D-R12-195 (single-servo SH-4 J122 in the MicoAir H743 UART order; SERVO3 / SERVO4 deleted;
 SERVO1_MCU / SERVO2_MCU trunks re-laned; two identical builds, gate steps and stage D / hot-plug re-bound by its fix
 lane; 189 footprints, 181 JLC parts, 1107 tracks / 385 vias, 50 legends, 105 shown / 84 hidden designators, 585 paste
 flashes, 60 BOM lines, four recorded route leftovers, K-power 121 taps / 19 exceptions, S-10's exception table
@@ -18,8 +23,8 @@ The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, al
 the full gate on the final tree is the commit condition.
 
 Fire loop 4.72843 Ω; four-stall fire 1.24833 A at J1 5.71941 V; EN at R80.1 5.70082 V.
-Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20406 V (3.20405 V before D-R12-195)
-in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and SD writes in buzzer gaps.
+Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20400 V on `5af58097…` (3.20406 V on `96207d2e…`: the new C60.1 / C94.1 barrels open the In2 3V3 sheet, D-R12-200)
+in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and SD writes in buzzer gaps (limit 0.870 / 0.807 A at 700 / 600 kHz at the 3V3 drift maximum, D-R12-202).
 All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pass, minimum −14.077 V
 (Simulation / Inference). No firmware, physical, electrical or JLC DFM test has been done on this board.
 Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
@@ -33,32 +38,32 @@ Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41
 orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
 other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
 day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
-re-quote `96207d2e…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+re-quote `5af58097…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 
-### Current artifact hashes (Measured, SHA-256; re-taken on `96207d2e…` by the D-R12-195 lane)
+### Current artifact hashes (Measured, SHA-256; re-taken on `5af58097…` by the round 13 fix pass)
 
 | Artifact | SHA-256 |
 |---|---|
-| `m3_design/r12/m3.kicad_pcb` | `96207d2e4bddabf703ad9cd4ce656f11099b058855423c772dbea9e73e8e5d65` |
+| `m3_design/r12/m3.kicad_pcb` | `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3` |
 | `m3_design/r12/m3.kicad_dru` | `221e62f46ede9df4febddefb3404ff06823176ccb92c93af116f931ca20b16c4` |
 | `m3_design/r12_fire.py` | `90389c27f72de6cfed1686ecb4cd57f68f2ef19ee462905e9c3ce266c592f697` |
 | `m3_design/r12_legends.tsv` | `dfcb9bc3422a4b106ed3ffdfafc9ed112ae103385363c728b81e834f46385110` |
-| `m3_design/r12_routes.tsv` | `319e17c3739e3603577248bc7896d7eefd106fbe8969ca6060ee857a8e66cf6b` |
+| `m3_design/r12_routes.tsv` | `afd1b4cd670c65f2b7ecaf9af466338aaa20dbb580c36f5fab5033731336b3e0` |
 | `m3_design/r12_place.tsv` | `00f56912ef0d7698715fce98772f9fb3f76a2cc82e0a4f7219eb1599de34ef03` |
 | `m3_design/r12/fab/m3_bom_jlc.csv` | `aa51d09829905840f754cefa68d44f2a780e19b9c30aabb5fad8576618344cff` |
 | `m3_design/r12/fab/m3_cpl_jlc.csv` | `8c1b53f92296c0739e7188fba04f060900199cce4651f401240f06fd8633566f` |
-| `m3_design/r12/fab/m3_fab_manifest.json` | `05d9fbb8956b7534fcd7b9b72cc94ee83ff2c105c2d9d477ac4e03bd78e8f5c2` |
-| `m3_design/r12/fab/m3_gerber.zip` | `27358ae4ac58853d8bd047fe925e2f445f1d0c6a38875d22f685741af242350d` |
+| `m3_design/r12/fab/m3_fab_manifest.json` | `c13f52eba70d87a7faa9e603fa21c10de92e48cbed07869dbc9a8642f6746b8f` |
+| `m3_design/r12/fab/m3_gerber.zip` | `c4c8aa8150fcf9732883e2c4d0d5b697ec4377904ffc209194b6f3d72fb5552e` |
 | `m3_design/r12/fab/cost_check_2.json` | `8269a9fb2db5f1e5e0a13109815432e6b4887b63e46d554bd98e5ad95e1bc1b9` |
 | `m3_design/r12/fab/cost_check_5.json` | `c532a53c33e3cdaafebb47b891279f4462aaf993d611898b859dacc0dbec9605` |
 | `m3_design/r12/fab/stock_check_2.json` | `dba6a40a15096f29eac3fff7e05724c1015a712961d4eae60ead79944f2a2cd5` |
 | `m3_design/r12/fab/stock_check_5.json` | `549a2c164afecd73fd4e7785537991e69b1e0cd8987f7a2d38b32067cdca353e` |
-| `m3_design/r12/design/stageD_budget.json` | `af79a95f6130178829b02ccd2c9f26c7cc9849b25a8fa585927f99ef5abaa3df` |
-| `m3_design/r12/design/hotplug_inputs_r12.json` | `59fe79f80ec86023ca4dc89fda973181f51824a12ca26a28f7e787f1fddad4eb` |
-| `m3_design/r12/design/hotplug_results_r12.json` | `380f7374b0cd6434c6945a5b5a0ce594b17e5ac18a80e18b4c05b9dadebb6cde` |
+| `m3_design/r12/design/stageD_budget.json` | `2b38e756619c754802d07ec321be4344b7107ab6b678a26a3daf7f2cc848c75a` |
+| `m3_design/r12/design/hotplug_inputs_r12.json` | `2734fd7e121dbb9ac4bf0e274f9891247c8a5611175003e9765c90577ace11be` |
+| `m3_design/r12/design/hotplug_results_r12.json` | `d954c35b73efec59d3f69f0b3bd74b6a7cae1847ca09d94ede74c3721b25d070` |
 
-These hashes describe the artifacts the D-R12-195 lane committed (lane E's before). The orchestrator rechecks the final-tree gate before committing.
+These hashes describe the artifacts the round 13 fix pass committed (the D-R12-195 lane's, lane E's before); the assembly PDFs and the Gerber zip carry build timestamps, so a rebuild changes their bytes but not the bound content. The orchestrator rechecks the final-tree gate before committing.
 
 ## Historical re-layout record (through round 10)
 
@@ -250,7 +255,13 @@ R400 / R401 **0.690 mm**, R404 **0.820 mm** (Measured on `ae22387d…`). D-R12-1
 C407/L400 **0.150 mm** remains, while J410/L400 **0.425 mm** sets the new length limit. Card envelope x **30.30–45.90 mm**, inside the edge (Measured).
 RAW trunk ends at (45.2, 71.1) / (44.2, 72.1), then 1.0 mm F along y 72.1 west to C400.
 `space.py` with support-hardware zones: **90.2 %** occupied (3528 / 3910), largest empty rectangle
-**36 mm²** at x 0–2, y 33–44 (Measured, lane L). The 66.5 mm² pocket above is 88 mm-board history.
+**36 mm²** at x 0–2, y 33–44 (Measured, lane L, on the 85 mm round 9 board; historical). The 66.5 mm² pocket above is
+88 mm-board history. **Current (R12F13-TRI-12, D-R12-204):** since D-R12-195 freed J122's west end, the aft rectangle
+**x 15.2–20.9, y 0–10.5, 59.85 mm²** holds no courtyard, track, via or pad on any layer (Measured on `5af58097…`; bounded
+by BAT_SW_RETURN's B.Cu run at x 15.1, J122's courtyard at x 20.905 and R165's courtyard and BAT_SW_RETURN's via
+(15.1, 10.8) just forward of y 10.5; the round 13 copper lens's x 15.0 edge clipped that run, so its 61.95 mm² was
+high). It stays empty: no re-pack into it (for example the U9 / R80 / R165 / C87 cell) shows a ≥ 2 mm outline gain, since
+the outline length is set by the forward stack; a compactness re-pack is not adopted this round.
 
 **Round 10 layout (`a1e65bb4…`, D-R12-171; Measured, lane P).** Forward ports/cells/supports move
 another **2 mm aft**, ports **y 79.35**, supports **(3.5, 77.1) / (42.5, 77.1)**. C406 moves **2.5 mm aft**

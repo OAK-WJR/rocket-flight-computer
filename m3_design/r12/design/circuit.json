@@ -1065,7 +1065,7 @@
    "6": null
   }
  },
- "net_changes_note": "D-R12-08: with U12 deleted, R100 / R101 join the camera wires to the MCU UART pins directly; D-R12-195: D121 I/O3 (pin 4) and I/O4 (pin 6) left unconnected with SERVO3 / SERVO4 deleted (an unused steering-diode pair needs no termination; D-R12-195)",
+ "net_changes_note": "D-R12-08: with U12 deleted, R100 / R101 join the camera wires to the MCU UART pins directly; D-R12-195: D121 I/O3 (pin 4) and I/O4 (pin 6) left unconnected with SERVO3 / SERVO4 deleted (an unused steering-diode pair needs no termination: Inference from the maker's equivalent circuit, which neither SRV05-4 sheet states; D-R12-195)",
  "u1_repin_note": "r12_sch.R12_REPIN (keyed by R11 net): USB_FAULT_N, CAM_FAULT_N, CAM_UART_OE -> NC; LOGIC_SOURCE_ST -> PORT_SENSE",
  "owner_fit": {},
  "assembly": {

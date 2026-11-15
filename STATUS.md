@@ -6,7 +6,7 @@ Last updated 2026-11-14 (R12; R11 candidate sections below; R10 candidate sectio
 
 ## R12 candidate: M3-ASSY-R12 (one-sided four-layer Economic PCBA, 46 × 86.85 mm; NOT accepted)
 
-**Status (2026-11-14).** PCB `96207d2e4bddabf703ad9cd4ce656f11099b058855423c772dbea9e73e8e5d65`, 46 × 86.85 × 1.6 mm, four layers; 189 footprints, 181 JLC parts (D-R12-195: J122 is a single-servo SH-4 in the MicoAir H743 4-pin UART order, SERVO3 / SERVO4 deleted; `876733fe…` carried D-R12-192's SH-8; round 12 ended on `c9b9f0fa…`). Not accepted, nothing ordered; R9 stays accepted.
+**Status (2026-11-14).** PCB `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3` (round 13 fix pass, D-R12-199 … -204; was `96207d2e…`), 46 × 86.85 × 1.6 mm, four layers; 189 footprints, 181 JLC parts (D-R12-195: J122 is a single-servo SH-4 in the MicoAir H743 4-pin UART order, SERVO3 / SERVO4 deleted; `876733fe…` carried D-R12-192's SH-8; round 12 ended on `c9b9f0fa…`). Not accepted, nothing ordered; R9 stays accepted.
 
 **Round 12 final fix pass (2026-11-13; D-R12-175 … -191).** Rounds 10 and 11 were the clean pair under
 D-R12-167 (zero Critical / zero Major); round 10 had 16 Minors. Historical round 11 reviewed `a1e65bb4…`: 13 Minor, left when the owner
@@ -47,7 +47,7 @@ SERVO4 deleted (R152, R153, R156, R157; PA8 / PA9 NC; D121 I/O3 / I/O4 open, Inf
 circuit, and held as I-5 victims). SERVO1_MCU / SERVO2_MCU's B.Cu trunks moved into the freed lanes (no GND pour
 fingers) and SERVO2_MCU has one layer change (route leftovers 8 → 4). H743 side: UART4, PA0 TIM5_CH1 / PA1 TIM5_CH2
 (D-R12-197). Flight 2 with more than two surfaces needs a respin (owner row 58); four-stall budgets kept as a bound.
-**Verified (Measured / tool runs on `96207d2e…`):** two identical builds; DRC / parity / unconnected / ERC 0;
+**Verified on `96207d2e…` by its fix lane (Measured / tool runs; historical since round 13):** two identical builds; DRC / parity / unconnected / ERC 0;
 r12_sch_check 65 / 65 seeds; all 34 check_r12 rules OK (S-10 exception table unchanged; I-5 76 connected victims,
 47 NC IC-pin nets, four open diode pins; K-power 121 taps / 19 exceptions); route_check 0 failing / 2 allowlisted / 4
 leftovers; fit / legends / fill OK; fab manifest bound (60 lines, 181 CPL rows, 585 paste flashes); hot-plug
@@ -55,6 +55,24 @@ re-extracted (electrical signature unchanged) and re-run 2304 / 2304, numericall
 stage D re-run (RAW trunk unchanged, U6 1 A drift minimum 3.20406 V, hot-plug / stage D binding gate OK); test_check_shell 33, test_fit_check 39, test_route_check 88, test_zone_check 11,
 test_r12_fab 15, test_r12_stageD 60 and test_r12_check (134 tests: 132 pass in the full run with R12_BOARD_REQUIRED; the two count expectations (76 I-5 victims, four route leftovers) were updated and re-run, and the tests touched after the full run re-run, all pass) pass. **Not verified:** the full `tools/check.sh`
 (orchestrator), any review round, any firmware, physical, electrical or JLC DFM test.
+
+**Round 13 (2026-11-14; R12F13-TRI-01 … -12; D-R12-199 … -204).** Round 13 reviewed `96207d2e…` (commit `c59d68b`)
+with seven lenses (safety, power, requirements, copper, gate, build, records) plus a second opinion on safety and power:
+**0 Critical / 0 Major / 12 Minor** (R12F13-TRI-01 … -12). Its fix pass produced the new board hash, PCB `5af58097…`:
+SERVO1_OUT's needless two-via hop removed (D-R12-199); second barrels for C60.1 (now a K-power tap) and C94.1 and a
+second via for the C16–C18 / C60.2 / C94.2 GND row; K-power gates every single point against an exception or exactly
+one `LONG_TAIL_R12` entry (124 taps / 20 exceptions; 153 single points = 18 exception vias + 135 entries; D-R12-200);
+S-7 / S-10 measure copper graphics (D-R12-201); U2's limit at the 3V3 drift maximum, 0.870 / 0.807 A (D-R12-202);
+U2's capacitor grounds owner row 59 with bench items (D-R12-203); records and the handoff's lead-tag rule (D-R12-204).
+1111 tracks / 385 vias; BOM / CPL unchanged. **Verified (Measured / tool runs on `5af58097…`):** two identical builds; DRC / parity / unconnected / ERC 0;
+r12_sch_check 65 / 65 seeds; all 34 check_r12 rules OK (K-power 124 taps / 20 exceptions, 153 single points, 135
+long-tail entries); route_check 0 failing / 2 allowlisted / 4 leftovers; fit / silk / audit OK; fab manifest bound;
+hot-plug re-extracted and re-run 2304 / 2304, numerically identical (Simulation / Inference); stage D re-run (U6 1 A
+drift minimum 3.20400 V; binding gate OK); test_check_shell 33, test_fit_check 39, test_route_check 88,
+test_zone_check 11, test_r12_fab 15, test_r12_stageD 60 and 82 test_r12_check tests (KPower, Profiles,
+Round12Board, RealBoard, FireGaps, Round1Fixes, FabContent and the J122 / S-7 tests) pass. **Not verified:** the full `tools/check.sh` and the full
+`test_r12_check.py` (orchestrator), any firmware, physical, electrical or JLC DFM test. Not accepted, nothing ordered;
+the full gate on the final tree is the orchestrator's commit condition.
 
 Lane P's gate: DRC / parity / unconnected 0, all 34 check_r12 rules OK, route_check 0 failing / 2 allowlisted,
 eight recorded leftovers / zero unrecorded or stale, fit / legends / fill OK, fab manifest bound.
@@ -73,7 +91,7 @@ Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41
 orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
 other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
 day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
-re-quote `96207d2e…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+re-quote `5af58097…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 Owner items: [R12_VALIDATION.md](docs/R12_VALIDATION.md); harness: [R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md); full state: [M3_R12.md](docs/M3_R12.md#current-state).
 
