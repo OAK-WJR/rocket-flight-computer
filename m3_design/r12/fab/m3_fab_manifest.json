@@ -73,7 +73,7 @@
     "cad/kilib/rocket.pretty/USB-C_SMD-TYPE-C-31-M-12_1.kicad_mod": "f77f08eb642c6ec21933dc0cf3e2e4866e5b54717d8f1c237a4159bbdc6e8ce6",
     "cad/logic_power_path.kicad_sch": "30874fda58b8d8097aea1ecac5b1c73e308d8042aba461e6acbe30c562663500",
     "cad/m3.kicad_dru": "221e62f46ede9df4febddefb3404ff06823176ccb92c93af116f931ca20b16c4",
-    "cad/m3.kicad_pcb": "5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3",
+    "cad/m3.kicad_pcb": "c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1",
     "cad/m3.kicad_pro": "8b6671b8e9e8a466049a6c136847edb64cd4ea25ed049602de823e27d7b3ca46",
     "cad/m3.kicad_sch": "f0853523e08eb853ce74233b888eb4d19ac9981bd1eed80435b9dd6f56a0ad95",
     "cad/mcu.kicad_sch": "873064a4f96e220ae2e793522bb33c1826fe53b7afb8a1d1003d8dff9157b762",
@@ -88,7 +88,7 @@
     "m3_design/r12_fire.py": "90389c27f72de6cfed1686ecb4cd57f68f2ef19ee462905e9c3ce266c592f697",
     "m3_design/r12_parts.py": "b3d7cbef8984f466df71e03a12d38b262e5ab3b86f9f66c17ad42e8f4238ba5b",
     "quality_audit/sexpr.py": "32f5b57f3716ff98a6eebd2ec125cded7a97b003e0c6bc9d062a7abfea3da64a",
-    "tools/check_r12.py": "1393ce984486634beb403ed5b246bea1b9f14df9657d56acff95e11c5a4ae70e",
+    "tools/check_r12.py": "bcfc2f17d0b72f74b7bca7b389a8d94c354a28cb5a2c473647991fb00e9bafce",
     "tools/export_fab.py": "41b0a43a24f7b223136095fb9ad9f8908b4a110de8fe1f0202bbc26a887ddc0f",
     "tools/export_fab_r12.py": "4d924491150ef088ce52a33f0e3d030cd118b5f924dd1e76b63d24044d7c0e1b",
     "tools/fab_manifest.py": "b23f5e2aa2fac303a258cf46c5ed154ce35b48c5ec4a68361c01e32a85974e6c",
@@ -100,11 +100,11 @@
     "tools/paste_check.py": "a6f7b9995f2e71548b113a8e7cc3e7bddc64961193cab0a011c61ea2122bd0b6"
   },
   "outputs_sha256": {
-    "m3_assembly_bottom.pdf": "98e2647f22defb12c11d75bd3f84332a5726489434548f455463aaa443a10a19",
-    "m3_assembly_top.pdf": "4ad856bc0de4c2d287768068c32f3a077a52862fb9f8087d862402651f4a2db3",
+    "m3_assembly_bottom.pdf": "108f91ca6fd18ef7293df85ba256ee73d2b437c36121ec84b51d64cac0c49ba4",
+    "m3_assembly_top.pdf": "e79e5f4faeb5fe7090833ca18bfa5b43cae5f45ebe4285459820627826ff3fc8",
     "m3_bom_jlc.csv": "aa51d09829905840f754cefa68d44f2a780e19b9c30aabb5fad8576618344cff",
     "m3_cpl_jlc.csv": "8c1b53f92296c0739e7188fba04f060900199cce4651f401240f06fd8633566f",
-    "m3_gerber.zip": "c4c8aa8150fcf9732883e2c4d0d5b697ec4377904ffc209194b6f3d72fb5552e"
+    "m3_gerber.zip": "3d7e289d85e3b32292bb3b96bef0d7aaacc78af86f73dc9c840fd53912410a72"
   },
   "schema": 1
 }

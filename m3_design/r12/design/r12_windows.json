@@ -4,14 +4,14 @@
    "tOFF_max_310ns": 0.938,
    "tOFF_typ_220ns": 0.956
   },
-  "four_stall_BAT_IN_V": 5.7211,
-  "four_stall_U403_VIN_V": 5.619,
-  "four_stall_duty_needed_lossless": 0.9292,
+  "four_stall_BAT_IN_V": 5.716,
+  "four_stall_U403_VIN_V": 5.612,
+  "four_stall_duty_needed_lossless": 0.9303,
   "four_stall_max_held_V": {
-   "tOFF_max_310ns": 5.182,
-   "tOFF_typ_220ns": 5.281
+   "tOFF_max_310ns": 5.175,
+   "tOFF_typ_220ns": 5.275
   },
-  "four_stall_note": "at the four-stall point U403 runs past its 75 % recommended duty, at or near its minimum off-time limit: CAM_5V may fall below the 5.221 V window low end to about 5.18 V (above the camera 5.0 V minimum before harness drop); the camera is not shown to fail",
+  "four_stall_note": "at the four-stall point U403 runs past its 75 % recommended duty, at or near its minimum off-time limit: CAM_5V may fall below the 5.221 V window low end to about 5.17 V (above the camera 5.0 V minimum before harness drop); the camera is not shown to fail",
   "label": "Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and U9 RON maximum; currents, DCR and copper Inference)",
   "min_recommended_VIN_V": {
    "drift": [
@@ -514,8 +514,8 @@
  "fire": {
   "basis": "R11 CAD copper (placeholder until stage D), R10 pack model (0.15 ohm, 7.4 V open, 1.92 A per stall), R134 hot, match 2 ohm, leads 0.3 ohm; FET hot factors Inference",
   "floor_A": 1.125,
-  "four_stall_A": 1.2473,
-  "four_stall_margin_pct": 10.9,
+  "four_stall_A": 1.2462,
+  "four_stall_margin_pct": 10.8,
   "four_stall_ok": true,
   "gate": {
    "note": "Q120 / Q121 VGS = -(V_ACT_FET_S - 0.1 V) x (R119 || R120) / ((R119 || R120) + R121), V_ACT_FET_S = BAT_IN less Q120's drop during a fire (Q122 drop 0.1 V and the Q120 hot factor Inference). |VGS| exceeds the AO3401A +/-12 V only above 14.4 V pack-side with the bus enabled (a transient up to the SMAJ12CA clamp); the bus is enabled from the on-rail check until switch-off (Inference that no transient above 14.4 V occurs while it is on, pad or flight; R12F4-TRI-03). Q124 VGS: PE4 VOH >= VDD - 0.4 V (DS12110 Rev 8 Table 158, |IIO| 4 / 8 mA; PE4's steady load, R127 1k plus R126 220R + R128 10k, is about 3.5 mA (<= 3.93 mA with drift at the 3V3 PFM-band maximum), within the 4 mA row; R12F3-TRI-06, R12F4-TRI-02, R12F6-TRI-03) through R126 220R / R128 10k, at the 3V3 drift minimum (SLUSDW3A section 7.8 PFM band) with R126 / R128 at their drift ends (R12F5-TRI-05); the Q124 VGS and PE4 load figures: Calculation / Inference (3V3 window, D-R12-139)",
@@ -523,7 +523,7 @@
     "12.6V_3S_bus_on_max_ratio": -10.485,
     "19.9V_TVS_clamp_bus_on_max_ratio": -16.609,
     "8.4V_bus_on": -6.87,
-    "four_stall_fire": -4.577
+    "four_stall_fire": -4.573
    },
    "q120_q121_vgs_basis": "stage A (no board copper): VGS = -(BAT_IN - I_fire x RDS(Q120 hot) - 0.1 V) x Rgs / (Rgs + R121), ACT_FET_S basis (R12F2-TRI-08, R12F5-TRI-04); the four-stall point is this file's stage A fire model; r12_stageD (stageD_budget.json fire.gate) gives the board figures with the copper drops, per FET",
    "q120_rds_row": "VGS -4.5 V (|VGS| >= 4.5 V down to BAT_IN 5.54 V with the bus on and 5.63 V during a 1.25 A fire; stage A, no copper)",
@@ -542,60 +542,60 @@
   "r11_branch_ohm": 4.4705,
   "r11_other_W": 13.064,
   "r12_branch_ohm": 4.5866,
-  "r12_other_W": 12.962,
+  "r12_other_W": 13.149,
   "shorted": {
    "match_and_leads_shorted": {
-    "BAT_IN_V": 5.5337,
+    "BAT_IN_V": 5.5286,
     "Q120_I2R_W": 0.43,
-    "Q124_I2R_W": 0.336,
-    "fire_A": 2.42
+    "Q124_I2R_W": 0.335,
+    "fire_A": 2.4178
    },
    "match_shorted": {
-    "BAT_IN_V": 5.576,
-    "Q120_I2R_W": 0.342,
-    "Q124_I2R_W": 0.267,
-    "fire_A": 2.1557
+    "BAT_IN_V": 5.5709,
+    "Q120_I2R_W": 0.341,
+    "Q124_I2R_W": 0.266,
+    "fire_A": 2.1537
    }
   },
   "stalls": {
    "0": {
-    "BAT_IN_V": 6.8925,
-    "fire_A": 1.5027
+    "BAT_IN_V": 6.8884,
+    "fire_A": 1.5018
    },
    "1": {
-    "BAT_IN_V": 6.6016,
-    "fire_A": 1.4393
+    "BAT_IN_V": 6.5973,
+    "fire_A": 1.4384
    },
    "2": {
-    "BAT_IN_V": 6.3095,
-    "fire_A": 1.3756
+    "BAT_IN_V": 6.305,
+    "fire_A": 1.3746
    },
    "3": {
-    "BAT_IN_V": 6.0161,
-    "fire_A": 1.3117
+    "BAT_IN_V": 6.0113,
+    "fire_A": 1.3106
    },
    "4": {
-    "BAT_IN_V": 5.7211,
-    "fire_A": 1.2473
+    "BAT_IN_V": 5.716,
+    "fire_A": 1.2462
    }
   }
  },
  "holdup": {
   "from_battery_break_ms": [
-   2.226,
+   2.053,
    6.099
   ],
   "from_pa6_trip_ms": {
    "drift": [
-    0.471,
+    0.435,
     1.897
    ],
    "initial": [
-    0.48,
+    0.443,
     1.87
    ],
    "nominal_ratio": [
-    0.486,
+    0.448,
     1.854
    ]
   },
@@ -608,9 +608,9 @@
  },
  "port_input": {
   "6V0_pack_converters_only": {
-   "BAT_IN_V": 5.6563,
+   "BAT_IN_V": 5.651,
    "I_out_A": 0.561,
-   "VIN_V": 5.5531,
+   "VIN_V": 5.5463,
    "below_recommended_duty": false,
    "dmax": {
     "200kHz_tOFF_max_310ns": 0.938,
@@ -620,38 +620,38 @@
    },
    "duty_needed": {
     "drift": [
-     0.831,
-     0.9041
+     0.8321,
+     0.9052
     ],
     "initial": [
-     0.837,
-     0.8978
+     0.838,
+     0.8989
     ]
    },
    "duty_needed_lossless": {
     "drift": [
-     0.8231,
-     0.8954
+     0.8241,
+     0.8965
     ],
     "initial": [
-     0.8289,
-     0.8892
+     0.8299,
+     0.8903
     ]
    },
    "holds_window_top_at_580kHz": false,
    "holds_window_top_with_foldback": true,
    "max_held_V": {
-    "200kHz_tOFF_max_310ns": 5.159,
-    "200kHz_tOFF_typ_220ns": 5.258,
-    "580kHz_tOFF_max_310ns": 4.511,
-    "580kHz_tOFF_typ_220ns": 4.798
+    "200kHz_tOFF_max_310ns": 5.152,
+    "200kHz_tOFF_typ_220ns": 5.251,
+    "580kHz_tOFF_max_310ns": 4.505,
+    "580kHz_tOFF_typ_220ns": 4.792
    },
    "window_top_V": 4.9722
   },
   "four_stall_fire": {
-   "BAT_IN_V": 5.7211,
+   "BAT_IN_V": 5.716,
    "I_out_A": 0.561,
-   "VIN_V": 5.6191,
+   "VIN_V": 5.6125,
    "below_recommended_duty": false,
    "dmax": {
     "200kHz_tOFF_max_310ns": 0.938,
@@ -661,31 +661,31 @@
    },
    "duty_needed": {
     "drift": [
-     0.8212,
-     0.8933
+     0.8222,
+     0.8944
     ],
     "initial": [
-     0.827,
-     0.8871
+     0.828,
+     0.8882
     ]
    },
    "duty_needed_lossless": {
     "drift": [
-     0.8134,
-     0.8849
+     0.8144,
+     0.8859
     ],
     "initial": [
-     0.8192,
-     0.8787
+     0.8202,
+     0.8798
     ]
    },
    "holds_window_top_at_580kHz": false,
    "holds_window_top_with_foldback": true,
    "max_held_V": {
-    "200kHz_tOFF_max_310ns": 5.221,
-    "200kHz_tOFF_typ_220ns": 5.321,
-    "580kHz_tOFF_max_310ns": 4.565,
-    "580kHz_tOFF_typ_220ns": 4.856
+    "200kHz_tOFF_max_310ns": 5.215,
+    "200kHz_tOFF_typ_220ns": 5.315,
+    "580kHz_tOFF_max_310ns": 4.56,
+    "580kHz_tOFF_typ_220ns": 4.85
    },
    "window_top_V": 4.9722
   },

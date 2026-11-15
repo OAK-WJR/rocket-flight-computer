@@ -1,8 +1,15 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
-## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14)
+## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14; round 14 fix pass, 2026-11-15)
 
-PCB `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3` since the round 13 fix pass (D-R12-199 … -204:
+PCB `c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1` since the round 14 fix pass (D-R12-205 … -209: round 14 reviewed `5af58097…` with seven lenses plus a
+second opinion, 0 Critical / 0 Major / 12 Minor, R12F14-TRI-01 … -12; rounds 13 and 14 are the clean pair under
+D-R12-167 and the review loop stops; a second GND via for R110 / C83 / C28 and an F.Cu 3V3 strap along U1's F row;
+K-power validates its exceptions and pins their cut sets; one unshed load envelope in the hold-up and fire models,
+so the J400 chatter bench rule is **under 6.6 ms** (was 6.7); two identical builds; stage D / hot-plug re-bound;
+1114 tracks / 386 vias, K-power 128 taps / 20 exceptions, 148 single points = 18 exception vias + 130
+`LONG_TAIL_R12` entries; legends, designators, paste, BOM and CPL unchanged). Before it, PCB `5af58097…` since the
+round 13 fix pass (D-R12-199 … -204:
 round 13 reviewed `96207d2e…` with seven lenses plus a second opinion, 0 Critical / 0 Major / 12 Minor, R12F13-TRI-01
 … -12; SERVO1_OUT's hop removed, C60.1 / C94.1 second barrels and the C16–C18 / C60.2 / C94.2 GND row's link, K-power
 gating every single point; two identical builds; stage D / hot-plug re-bound; 1111 tracks / 385 vias, K-power 124 taps
@@ -22,9 +29,10 @@ or unrecorded leftovers. Lane A (`a04a513`): 60 stage-D tests pass; analysis and
 The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, all text (R12F12-VER-01 … -07);
 the full gate on the final tree is the commit condition.
 
-Fire loop 4.72843 Ω; four-stall fire 1.24833 A at J1 5.71941 V; EN at R80.1 5.70082 V.
-Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20400 V on `5af58097…` (3.20406 V on `96207d2e…`: the new C60.1 / C94.1 barrels open the In2 3V3 sheet, D-R12-200)
-in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and SD writes in buzzer gaps (limit 0.870 / 0.807 A at 700 / 600 kHz at the 3V3 drift maximum, D-R12-202).
+Fire loop 4.72843 Ω; four-stall fire 1.24711 A at J1 5.71390 V; EN at R80.1 5.69504 V (D-R12-207's unshed load; 1.24833 A /
+5.71941 / 5.70082 V before). Chatter limits 6.892 / 6.796 ms; bench rule under 6.6 ms per sliding 100 ms (6.935 / 6.843 ms
+and 6.7 ms before). U6 drift minimum 3.20400 V on the current board and `5af58097…` (3.20406 V on `96207d2e…`: the C60.1 / C94.1 barrels open the In2 3V3 sheet, D-R12-200)
+in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and no microSD write burst overlapping a beep (rule (g); limit 0.870 / 0.807 A at 700 / 600 kHz at the 3V3 drift maximum, D-R12-202).
 All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pass, minimum −14.077 V
 (Simulation / Inference). No firmware, physical, electrical or JLC DFM test has been done on this board.
 Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
@@ -38,7 +46,7 @@ Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41
 orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
 other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
 day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
-re-quote `5af58097…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+re-quote the current board, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 
 **Historical stage D record.** §1–§6 record the 100 mm board `d776c5d7…`; §7 records

@@ -344,14 +344,26 @@ def vlogic():
     return out
 
 
+# R12F14-TRI-05: U2's worst allowed unshed input power, the one envelope of the hold-up and fire models and the 3V3
+# budget: the 200 MHz MCU maximum at Tj 105 C (0.300 A, DS12110 Rev 8 Tables 30-32 rev Y) plus the other 3V3 loads with
+# the microSD writing (0.249 A), the buzzer silent (firmware rule (g): no write burst and beep overlap), at the 3V3 drift
+# maximum / 0.80. r12_stageD.unshed_load derives the same figure from its tables (test_r12_stageD pins them equal);
+# 1.4 W + 3.3 V x 0.2 A / 0.80 = 2.225 W before round 14 (Calculation / Inference: allocations, Tj, efficiency).
+UNSHED_U2_A, UNSHED_U2_EFF = 0.300 + 0.249, 0.80
+
+
+def unshed_u2_w():
+    return rails()[V33_RAIL]['drift']['max_V'] * UNSHED_U2_A / UNSHED_U2_EFF
+
+
 def holdup():
-    """C84 (470 uF, 300.8 uF low case as R11) feeds VLOGIC only (D5 blocks RAW_PROTECTED): logic 0.6-1.4 W plus the
-    microSD write 3.3 V x 0.2 A / 0.80-0.85 (R10 / R11 load cases), to 3.8 V (R11's end point). R12F8-TRI-08: the PA6-trip
+    """C84 (470 uF, 300.8 uF low case as R11) feeds VLOGIC only (D5 blocks RAW_PROTECTED): logic 0.6 W plus the
+    microSD write 3.3 V x 0.2 A / 0.85 (R10 / R11's light case) up to unshed_u2_w (R12F14-TRI-05), to 3.8 V (R11's end point). R12F8-TRI-08: the PA6-trip
     start points are R12's window (R12F9-TRI-04: 0.425-0.455 V, VLOGIC 4.650-5.030 V at the nominal ratio with PA6's
     input leakage (R12F10-TRI-08), the divider
     0.1 %), not R10 / R11's 4.84-5.17 V, at the nominal ratio and over both resistor cases; the battery break starts at 7.4 V less U9 (RON
     0.045 ohm at 1.5 A) and D5, as stage D does."""
-    loads = (0.6 + 3.3 * .2 / .85, 1.4 + 3.3 * .2 / .80)
+    loads = (0.6 + 3.3 * .2 / .85, unshed_u2_w())
     def ms(c, v1, w):
         return round(.5 * c * (v1 ** 2 - 3.8 ** 2) / w * 1000, 3)
     wins = dict(nominal_ratio=pa6_trip_window(), **{case: pa6_trip_window(tol) for case, tol in PA6_TOL.items()})
@@ -382,10 +394,11 @@ def fire():
     pfet, q124 = .060 * 1.225, .048 * 1.195
     rest = rest11 - 2 * pfet_r11 - q124_r11 + 2 * pfet + q124
     # other converter load (R11 'c' case max): camera 1 A and ports 0.561 A at the R12 bucks' maximum outputs / 0.80,
-    # logic 1.4 W + microSD write 0.825 W, D5 0.45 V x 0.3 A, R92 bleed (R11 value)
+    # U2's worst allowed unshed input (unshed_u2_w, R12F14-TRI-05; logic 1.4 W + microSD write 0.825 W before), D5
+    # 0.45 V x 0.3 A, R92 bleed (R11 value)
     cam = 5.684 * 1.0 / .80
     ports = 4.962 * .561 / .80
-    other = cam + ports + 1.4 + 3.3 * .2 / .80 + .45 * .3 + 7.4 ** 2 / (3300 * .98)
+    other = cam + ports + unshed_u2_w() + .45 * .3 + 7.4 ** 2 / (3300 * .98)
     cases = {}
     for stalls in range(5):
         a, b = 1 + .15 / rest, 7.4 - .15 * 1.92 * stalls

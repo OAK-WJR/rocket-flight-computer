@@ -1,8 +1,15 @@
 # R12 AVA re-layout: placement, zone routing, the historical 90 / 83 mm outlines and the re-run analyses (2026-11-06)
 
-## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14)
+## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14; round 14 fix pass, 2026-11-15)
 
-PCB `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3` since the round 13 fix pass (D-R12-199 … -204:
+PCB `c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1` since the round 14 fix pass (D-R12-205 … -209: round 14 reviewed `5af58097…` with seven lenses plus a
+second opinion, 0 Critical / 0 Major / 12 Minor, R12F14-TRI-01 … -12; rounds 13 and 14 are the clean pair under
+D-R12-167 and the review loop stops; a second GND via for R110 / C83 / C28 and an F.Cu 3V3 strap along U1's F row;
+K-power validates its exceptions and pins their cut sets; one unshed load envelope in the hold-up and fire models,
+so the J400 chatter bench rule is **under 6.6 ms** (was 6.7); two identical builds; stage D / hot-plug re-bound;
+1114 tracks / 386 vias, K-power 128 taps / 20 exceptions, 148 single points = 18 exception vias + 130
+`LONG_TAIL_R12` entries; legends, designators, paste, BOM and CPL unchanged). Before it, PCB `5af58097…` since the
+round 13 fix pass (D-R12-199 … -204:
 round 13 reviewed `96207d2e…` with seven lenses plus a second opinion, 0 Critical / 0 Major / 12 Minor, R12F13-TRI-01
 … -12; SERVO1_OUT's hop removed, C60.1 / C94.1 second barrels and the C16–C18 / C60.2 / C94.2 GND row's link, K-power
 gating every single point; two identical builds; stage D / hot-plug re-bound; 1111 tracks / 385 vias, K-power 124 taps
@@ -22,9 +29,10 @@ or unrecorded leftovers. Lane A (`a04a513`): 60 stage-D tests pass; analysis and
 The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, all text (R12F12-VER-01 … -07);
 the full gate on the final tree is the commit condition.
 
-Fire loop 4.72843 Ω; four-stall fire 1.24833 A at J1 5.71941 V; EN at R80.1 5.70082 V.
-Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20400 V on `5af58097…` (3.20406 V on `96207d2e…`: the new C60.1 / C94.1 barrels open the In2 3V3 sheet, D-R12-200)
-in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and SD writes in buzzer gaps (limit 0.870 / 0.807 A at 700 / 600 kHz at the 3V3 drift maximum, D-R12-202).
+Fire loop 4.72843 Ω; four-stall fire 1.24711 A at J1 5.71390 V; EN at R80.1 5.69504 V (D-R12-207's unshed load; 1.24833 A /
+5.71941 / 5.70082 V before). Chatter limits 6.892 / 6.796 ms; bench rule under 6.6 ms per sliding 100 ms (6.935 / 6.843 ms
+and 6.7 ms before). U6 drift minimum 3.20400 V on the current board and `5af58097…` (3.20406 V on `96207d2e…`: the C60.1 / C94.1 barrels open the In2 3V3 sheet, D-R12-200)
+in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and no microSD write burst overlapping a beep (rule (g); limit 0.870 / 0.807 A at 700 / 600 kHz at the 3V3 drift maximum, D-R12-202).
 All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pass, minimum −14.077 V
 (Simulation / Inference). No firmware, physical, electrical or JLC DFM test has been done on this board.
 Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
@@ -38,32 +46,32 @@ Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41
 orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
 other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
 day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
-re-quote `5af58097…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+re-quote the current board, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 
-### Current artifact hashes (Measured, SHA-256; re-taken on `5af58097…` by the round 13 fix pass)
+### Current artifact hashes (Measured, SHA-256; re-taken on `c8b0412d…` by the round 14 fix pass)
 
 | Artifact | SHA-256 |
 |---|---|
-| `m3_design/r12/m3.kicad_pcb` | `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3` |
+| `m3_design/r12/m3.kicad_pcb` | `c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1` |
 | `m3_design/r12/m3.kicad_dru` | `221e62f46ede9df4febddefb3404ff06823176ccb92c93af116f931ca20b16c4` |
 | `m3_design/r12_fire.py` | `90389c27f72de6cfed1686ecb4cd57f68f2ef19ee462905e9c3ce266c592f697` |
 | `m3_design/r12_legends.tsv` | `dfcb9bc3422a4b106ed3ffdfafc9ed112ae103385363c728b81e834f46385110` |
-| `m3_design/r12_routes.tsv` | `afd1b4cd670c65f2b7ecaf9af466338aaa20dbb580c36f5fab5033731336b3e0` |
+| `m3_design/r12_routes.tsv` | `aebad477547d648813ec53a071fe7708d82184ae74db50f6264b71a4d0761ca8` |
 | `m3_design/r12_place.tsv` | `00f56912ef0d7698715fce98772f9fb3f76a2cc82e0a4f7219eb1599de34ef03` |
 | `m3_design/r12/fab/m3_bom_jlc.csv` | `aa51d09829905840f754cefa68d44f2a780e19b9c30aabb5fad8576618344cff` |
 | `m3_design/r12/fab/m3_cpl_jlc.csv` | `8c1b53f92296c0739e7188fba04f060900199cce4651f401240f06fd8633566f` |
-| `m3_design/r12/fab/m3_fab_manifest.json` | `c13f52eba70d87a7faa9e603fa21c10de92e48cbed07869dbc9a8642f6746b8f` |
-| `m3_design/r12/fab/m3_gerber.zip` | `c4c8aa8150fcf9732883e2c4d0d5b697ec4377904ffc209194b6f3d72fb5552e` |
+| `m3_design/r12/fab/m3_fab_manifest.json` | `7e655404481d1d443b6656bedfab2be41cfdeae3c8e49e5964115833e4da3862` |
+| `m3_design/r12/fab/m3_gerber.zip` | `3d7e289d85e3b32292bb3b96bef0d7aaacc78af86f73dc9c840fd53912410a72` |
 | `m3_design/r12/fab/cost_check_2.json` | `8269a9fb2db5f1e5e0a13109815432e6b4887b63e46d554bd98e5ad95e1bc1b9` |
 | `m3_design/r12/fab/cost_check_5.json` | `c532a53c33e3cdaafebb47b891279f4462aaf993d611898b859dacc0dbec9605` |
 | `m3_design/r12/fab/stock_check_2.json` | `dba6a40a15096f29eac3fff7e05724c1015a712961d4eae60ead79944f2a2cd5` |
 | `m3_design/r12/fab/stock_check_5.json` | `549a2c164afecd73fd4e7785537991e69b1e0cd8987f7a2d38b32067cdca353e` |
-| `m3_design/r12/design/stageD_budget.json` | `2b38e756619c754802d07ec321be4344b7107ab6b678a26a3daf7f2cc848c75a` |
-| `m3_design/r12/design/hotplug_inputs_r12.json` | `2734fd7e121dbb9ac4bf0e274f9891247c8a5611175003e9765c90577ace11be` |
-| `m3_design/r12/design/hotplug_results_r12.json` | `d954c35b73efec59d3f69f0b3bd74b6a7cae1847ca09d94ede74c3721b25d070` |
+| `m3_design/r12/design/stageD_budget.json` | `7b98895e037e89932763eae66e10c421e105d66fb183ac0b59f2b350284b2c32` |
+| `m3_design/r12/design/hotplug_inputs_r12.json` | `0049475023ea8259dc1212cfb402c31edb1296800a4e0021be7c32832438819b` |
+| `m3_design/r12/design/hotplug_results_r12.json` | `a11e803948203de57902cd4186bb90c7d6dbb3c887ee97e447d6d5a4585644a9` |
 
-These hashes describe the artifacts the round 13 fix pass committed (the D-R12-195 lane's, lane E's before); the assembly PDFs and the Gerber zip carry build timestamps, so a rebuild changes their bytes but not the bound content. The orchestrator rechecks the final-tree gate before committing.
+These hashes describe the artifacts the round 14 fix pass committed (the round 13 fix pass's, the D-R12-195 lane's and lane E's before); the assembly PDFs and the Gerber zip carry build timestamps, so a rebuild changes their bytes but not the bound content. The orchestrator rechecks the final-tree gate before committing.
 
 ## Historical re-layout record (through round 10)
 

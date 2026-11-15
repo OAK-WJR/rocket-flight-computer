@@ -72,7 +72,10 @@ K-power: R10 / R11's single-via-open rule (R12F8-TRI-02; R10 D-R21-02 / D-R22-02
          (check_r10.single_via_opens); a single point passes only as an exact SINGLE_OPEN_EXCEPTIONS_R12 entry with its
          measured reason, and an entry no longer met fails as stale. R12F13-TRI-02: every single point of the board
          (any net) is the via of an exception or exactly one LONG_TAIL_R12 entry (R12_VALIDATION row 43's classes) with
-         the pads it cuts off; an unlisted, doubly listed or stale point fails.
+         the pads it cuts off; an unlisted, doubly listed or stale point fails. R12F14-TRI-03: an exception counts
+         only when its tap is a registered SINGLE_OPEN_TAPS_R12 tap on the board and the via is a single point of that
+         tap's own path, and each exception via cuts off exactly the pads EXCEPTION_CUTS_R12 pins; an entry's class
+         is 1-4, and a class 4 entry carries its reason.
 
 Placement remains the stage-B gate. Copper checks safety/routing; full also checks the final legends (stage D).
 R12 pin lookup uses its pin table and net names; no U4/U5 pad numbers or R10 layout coordinates are inherited.
@@ -1435,6 +1438,16 @@ SINGLE_OPEN_TAPS_R12 = (
     ('GND', 'R163.2', ('J1.2',), "R163, Q123's gate pull-down"),
     ('GND', 'Q123.2', ('J1.2',), "Q123's source, the buzzer return"),
     ('GND', 'C22.2', ('J1.2',), "C22, VDDA's 1 uF (the tapped C22.1's partner)"),
+    # R12F14-TRI-01 / -02 (round 14): the VBUS sense divider's bottom, and U1's single-ball supply inputs on the F row
+    # (each the only ball of its input, DS12110 Rev 8 Table 9; joined since R12F14-TRI-02 by the F.Cu strap F4-F7, so
+    # each has four dog-bone vias)
+    ('GND', 'R110.2', ('J1.2',), "R110, VBUS_SENSE's divider bottom, with C83.2 / C28.2 (open: PC9 sees about VBUS "
+                                 'through R9 on USB power-up before 3V3 rises, above the FT_fh pin\'s 4.0 V unpowered '
+                                 'limit, DS12110 Table 12; damage Inference)'),
+    ('3V3', 'U1.F7', ('L1.2',), "U1's PDR_ON (ball F7, its only ball; open, the reset supervisor's enable floats, no "
+                                'internal pull recorded: Inference)'),
+    ('3V3', 'U1.F4', ('L1.2',), "U1's VDDLDO (ball F4, its only ball; open, the core LDO loses its supply: Inference)"),
+    ('3V3', 'U1.F6', ('L1.2',), "U1's VDD33USB (ball F6, its only ball; open, USB loses its supply: Inference)"),
 )
 # (tap pad, via label as check_r10.copper_nodes prints it, measured reason): the single points kept on purpose. An entry
 # no longer met (its pads present) fails as stale.
@@ -1462,12 +1475,14 @@ SINGLE_OPEN_EXCEPTIONS_R12 = [
      "C129.1 (ARM1_SENSE) west, I2C1_SCL's F / B runs and a GND via east, the SPI1 B lanes south; measured on the R12F8 "
      "lane P board). Open, VDDA (U1.H1) loses 3V3A: the ADCs (PA6 VLOGIC sense, PC2_C camera sense) read garbage and "
      "the MCU's analog domain is unpowered (DS12110 requires VDDA; behaviour not characterised: Inference)"),
-    ('C22.1', 'via 3V3A (19.65, 40.65)', "as U1.H1: the same via feeds VDDA's decoupling"),
+    ('C22.1', 'via 3V3A (19.65, 40.65)', "as U1.H1: the same via feeds VDDA's decoupling (C22 1 uF and C21 100 nF, "
+     "which it also cuts off, EXCEPTION_CUTS_R12)"),
     ('U5.1', 'via 3V3A (25.80, 33.65)',
      "U5's (barometer) 3V3A B-to-F via: a second barrel has no legal spot (U5's body (M-7: no via under a sensor body) "
      "west, CAM_5V_SENSE's In2 run at x 26.6 and a GND via east, C32's lands north; measured on the R12F8 lane P board). "
-     "Open, the barometer is unpowered: no barometric gain, so the fire rule (LIFTOFF AND a barometric gain) never "
-     "fires the primary (fail-safe; the Blue Jay covers recovery)"),
+     "Open, the barometer is unpowered (the via also cuts off U5.2, PS, and C32's 100 nF: EXCEPTION_CUTS_R12): no "
+     "barometric gain, so the fire rule (LIFTOFF AND a barometric gain) never fires the primary (fail-safe; the Blue "
+     "Jay covers recovery)"),
     # R12F10-TRI-07: R12's 3V3 end and C30's 3V3A feed
     ('R12.2', 'via 3V3 (20.25, 35.35)',
      "R12.2's (I2C1_SCL pull-up) 3V3 via: a second barrel has no legal spot (I2C1_SDA's F run at x 19.15 west, 0.105 mm "
@@ -1536,11 +1551,14 @@ SINGLE_OPEN_EXCEPTIONS_R12 = [
 # board, every via whose removal cuts a pad off the rest of its net (any net, GND included), is either the via of a
 # SINGLE_OPEN_EXCEPTIONS_R12 entry or exactly one entry here, with the pads it cuts off (the smaller side; ties by name)
 # and its class. Classes (R12_VALIDATION row 43): 1 a series layer change on a point-to-point signal whose path already
-# has single solder joints; 2 one of several decoupling capacitors on a rail whose IC pin keeps another, and the
-# dog-bones of U1's own supply and ground balls (no second channel; in parallel inside the package, Inference); 3 a
-# pull-up whose line also has a driver or an internal pull, test-point / LED / crystal-can / shell returns and the other
-# named benign returns; 4 no legal spot and a benign loss, each with its reason. K-power fails on a single point in
-# neither list, on one in both, and on an entry that is no longer a single point (stale) or names other pads.
+# has single solder joints (or, for U9_FLT's R89.2 via, a branch to its pull-up: PC13 is logged only); 2 one of several
+# decoupling capacitors on a rail whose IC pin keeps another, and the dog-bones of U1's VDD balls D2 / K1 and its VSS
+# balls (no second channel; joined to the rail's other VDD / VSS balls inside the package, Inference; R12F14-TRI-02:
+# U1's single-ball inputs VDDLDO F4, VDD33USB F6 and PDR_ON F7 are strapped to VDD F5 and are no longer single points,
+# and VBAT B2 is class 4); 3 a pull-up whose line also has a driver or an internal pull, test-point / LED / crystal-can /
+# shell returns and the other named benign returns; 4 no legal spot and a benign loss, each with its reason. K-power
+# fails on a single point in neither list, on one in both, and on an entry that is no longer a single point (stale),
+# names other pads, has a class other than 1-4, or is class 4 without its reason.
 _LT_D121_5 = ("D121.5 (SRV05-4 reference): no action; with its reference pin open the SRV05-4 still clamps to GND through "
               "its own TVS (Inference from the ProTek circuit)")
 _LT_C25_2 = ("C25.2 (HSE load): any new barrel in the crystal cell breaks the In2 3V3 neck (round 12 trials V5-V7). Open: "
@@ -1550,9 +1568,17 @@ _LT_C30_2 = ("C30.2 / U4.2 / U4.3: the only spots cross GND's own F track; C30.1
 _LT_C24_2 = ("C24.2 (NRST's 100 nF; R12F13-TRI-02): the one legal via column, x 27.325 east of the pad, sits at the 0.2 mm "
              "hole-clearance floor to both CAM_5V_SENSE's In2 lane (x 26.9) and SERVO1_MCU's B.Cu trunk (x 27.75), zero "
              "margin; within 1.5 mm of the via no other spot is legal (spot search, measured). Not taken: a drill-position "
-             "error there risks a short for a benign gain. Open: NRST loses only its filter, as NRST's C24 path")
-_LT_NRST = "NRST's C24 path: no legal spot. Open: NRST keeps its internal pull-up and loses only the filter"
+             "error there risks a short for a benign gain. Open: C24 floats and NRST loses only its filter (the ball keeps "
+             "J2.3, the Tag-Connect reset contact)")
+_LT_NRST = ("NRST's ball E1 escape: no legal spot. Open, the ball is cut from C24 and from J2.3, the Tag-Connect reset "
+            "contact (R12F14-TRI-04, Measured: the via splits U1.E1 from C24.1 and J2.3): NRST keeps its internal "
+            "pull-up but loses its 100 nF filter and the debugger's hardware reset (SWD attach without NRST: Inference)")
 _LT_C407_1 = "C407.1: U400's second output capacitor; C406 stays"
+_LT_VBAT = ("U1.B2 (VBAT, its only ball; R12F14-TRI-02: not a VDD ball, so not class 2): its dog-bone has no second "
+            "channel, and no F link fits: PE4's lane and ball C3 pass beside the land (R12_VALIDATION row 25: a new 3V3 "
+            "item there fails S-10) and C2 is GND. Open, VBAT floats: the backup domain (RTC, LSE, backup registers / "
+            "SRAM) and the ADC's VBAT channel lose their VBAT supply (Inference: DS12110 ties VBAT to VDD when no "
+            "battery is used; behaviour with VBAT open is not characterised); no R12 firmware rule uses them")
 LONG_TAIL_R12 = (
     # class 1
     ('via AUX_RX_MCU (31.41, 57.81)', ('U1.E10',), 1),
@@ -1634,14 +1660,9 @@ LONG_TAIL_R12 = (
     ('via 3V3 (15.05, 54.30)', ('C13.1',), 2),
     ('via 3V3 (16.50, 63.15)', ('C16.1', 'C17.1', 'C18.1'), 2),
     ('via 3V3 (19.00, 62.35)', ('U1.K1',), 2),
-    ('via 3V3 (19.80, 54.65)', ('U1.B2',), 2),
     ('via 3V3 (2.20, 63.45)', ('C23.1',), 2),
     ('via 3V3 (20.30, 63.87)', ('C15.1',), 2),
     ('via 3V3 (20.60, 57.05)', ('U1.D2',), 2),
-    ('via 3V3 (21.40, 57.85)', ('U1.F4',), 2),
-    ('via 3V3 (22.20, 57.85)', ('U1.F5',), 2),
-    ('via 3V3 (23.00, 57.85)', ('U1.F6',), 2),
-    ('via 3V3 (23.80, 57.85)', ('U1.F7',), 2),
     ('via 3V3 (33.40, 61.90)', ('C29.1',), 2),
     ('via GND (10.10, 78.60)', ('C420.2',), 2),
     ('via GND (13.10, 71.95)', ('C406.2',), 2),
@@ -1679,13 +1700,13 @@ LONG_TAIL_R12 = (
     ('via GND (31.73, 21.45)', ('R105.2',), 3),
     ('via GND (31.85, 72.73)', ('J430.14',), 3),
     ('via GND (34.20, 47.58)', ('J2.5',), 3),
-    ('via GND (37.50, 49.11)', ('C28.2', 'C83.2', 'R110.2'), 3),
     ('via GND (42.55, 63.44)', ('J430.10',), 3),
     ('via GND (42.55, 74.75)', ('J430.9',), 3),
     ('via GND (6.10, 58.85)', ('LED2.2',), 3),
     ('via GND (6.30, 56.65)', ('LED1.1',), 3),
     ('via GND (9.70, 75.70)', ('TP88.1',), 3),
     # class 4
+    ('via 3V3 (19.80, 54.65)', ('U1.B2',), 4, _LT_VBAT),
     ('via 3V3 (27.60, 12.05)', ('D121.5',), 4, _LT_D121_5),
     ('via GND (15.02, 52.65)', ('C25.2',), 4, _LT_C25_2),
     ('via GND (24.90, 45.45)', ('C30.2', 'U4.2', 'U4.3'), 4, _LT_C30_2),
@@ -1694,6 +1715,31 @@ LONG_TAIL_R12 = (
     ('via NRST (25.75, 49.85)', ('U1.E1',), 4, _LT_NRST),
     ('via PORT_4V8 (16.75, 84.90)', ('C407.1',), 4, _LT_C407_1),
 )
+
+
+# R12F14-TRI-03: the pads each SINGLE_OPEN_EXCEPTIONS_R12 via cuts off (single_points' smaller side), pinned, so an
+# exception via that comes to cut off a pad its record does not name fails (the round 14 safety lens: 3V3A (19.65,
+# 40.65) also cuts C21.1, 3V3A (25.80, 33.65) also U5.2 / C32.1; both now named in their exception texts)
+EXCEPTION_CUTS_R12 = {
+    'via 3V3 (20.25, 35.35)': ('R12.2',),
+    'via 3V3A (19.65, 40.65)': ('C21.1', 'C22.1', 'U1.H1'),
+    'via 3V3A (25.70, 46.60)': ('C30.1',),
+    'via 3V3A (25.80, 33.65)': ('C32.1', 'U5.1', 'U5.2'),
+    'via ACT_EN_MCU (18.60, 57.85)': ('U1.F2',),
+    'via ARM1_SENSE (16.60, 41.00)': ('U1.H4',),
+    'via ARM1_SENSE (18.40, 60.25)': ('U1.H4',),
+    'via BOOT0 (17.80, 52.05)': ('U1.D5',),
+    'via BOOT0 (23.00, 56.25)': ('U1.D5',),
+    'via GND (16.50, 22.05)': ('C81.2',),
+    'via GND (31.75, 15.70)': ('R431.2',),
+    'via PORT_SENSE (26.20, 60.25)': ('U1.H9',),
+    'via PYRO1_CONT (13.50, 54.55)': ('U1.F1',),
+    'via PYRO1_CONT (17.10, 58.15)': ('U1.F1',),
+    'via VCAP1 (25.40, 57.85)': ('U1.F8',),
+    'via VCAP2 (24.60, 57.85)': ('U1.E7',),
+    'via VLOGIC_SENSE (15.50, 61.05)': ('R60.2', 'R61.1'),
+    'via VLOGIC_SENSE (19.80, 61.05)': ('U1.J3',),
+}
 
 
 def single_points(board, nodes=None):
@@ -1733,19 +1779,50 @@ def single_points(board, nodes=None):
     return out
 
 
-def long_tail(board, nodes=None, table=None, exceptions=None):
-    """R12F13-TRI-02: (issues, evidence) for LONG_TAIL_R12 against the board's single points."""
+def valid_exceptions(board, exceptions, taps, tap_ev):
+    """R12F14-TRI-03: (issues, vias) - the exception vias that may excuse a single point: the entry's tap is a
+    registered tap (taps), its pad is on the board, and the via is a single point of that tap's own path to its source
+    (check_r10.single_via_opens' evidence tap_ev). An entry for an unregistered or absent tap fails here (check_r10's
+    stale test skips both); an entry whose via is not on its tap's path is check_r10's stale entry and excuses nothing."""
+    registered = {t[1] for t in taps}
+    present = {f'{f.GetReference()}.{p.GetNumber()}' for f in board.GetFootprints() for p in f.Pads()}
+    issues, vias = [], set()
+    for x in exceptions:
+        tap, via = x[0], x[1]
+        if tap not in registered:
+            issues.append(f'SINGLE_OPEN_EXCEPTIONS_R12 {tap} / {via}: {tap} is not a SINGLE_OPEN_TAPS_R12 tap, so the '
+                          'entry excuses nothing (R12F14-TRI-03)')
+        elif tap not in present:
+            issues.append(f'SINGLE_OPEN_EXCEPTIONS_R12 {tap} / {via}: no pad {tap} on the board (R12F14-TRI-03)')
+        elif via in tap_ev.get(tap, {}).get('single_points', ()):
+            vias.add(via)
+    return issues, vias
+
+
+def long_tail(board, nodes=None, table=None, exceptions=None, taps=None, cuts=None, tap_ev=None):
+    """R12F13-TRI-02: (issues, evidence) for LONG_TAIL_R12 against the board's single points. R12F14-TRI-03: only a
+    validated exception (valid_exceptions) excuses a single point, its cut set must equal its EXCEPTION_CUTS_R12 pin,
+    and every entry's class is 1-4 (class 4 with its reason). tap_ev: check_r10.single_via_opens' evidence for these
+    taps and exceptions (computed when not given)."""
     table = LONG_TAIL_R12 if table is None else table
     exceptions = SINGLE_OPEN_EXCEPTIONS_R12 if exceptions is None else exceptions
+    taps = SINGLE_OPEN_TAPS_R12 if taps is None else taps
+    cuts = EXCEPTION_CUTS_R12 if cuts is None else cuts
+    if tap_ev is None:
+        tap_ev = r10.single_via_opens(board, taps=taps, exceptions=exceptions)[1]
     points = single_points(board, nodes)
-    excepted = {x[1] for x in exceptions}
+    issues, excepted = valid_exceptions(board, exceptions, taps, tap_ev)
     listed = {}
-    issues = []
     for e in table:
         if e[0] in listed:
             issues.append(f'LONG_TAIL_R12 lists {e[0]} twice')
         listed[e[0]] = e
-    found = set()
+        if len(e) < 3 or e[2] not in (1, 2, 3, 4):
+            issues.append(f'LONG_TAIL_R12 {e[0]}: class {e[2] if len(e) > 2 else None!r} is not one of row 43\'s '
+                          'classes 1-4 (R12F14-TRI-03)')
+        elif e[2] == 4 and not (len(e) > 3 and isinstance(e[3], str) and e[3].strip()):
+            issues.append(f'LONG_TAIL_R12 {e[0]}: a class 4 entry without its reason (R12F14-TRI-03)')
+    found, pinned_seen = set(), set()
     for net, via, cut in points:
         found.add(via)
         e = listed.get(via)
@@ -1753,6 +1830,14 @@ def long_tail(board, nodes=None, table=None, exceptions=None):
             if e is not None:
                 issues.append(f'{via} (cuts off {", ".join(cut)}) is both a SINGLE_OPEN_EXCEPTIONS_R12 via and a '
                               'LONG_TAIL_R12 entry; a single point is in exactly one')
+            pin = cuts.get(via)
+            pinned_seen.add(via)
+            if pin is None:
+                issues.append(f'exception via {via} cuts off {", ".join(cut)}: no EXCEPTION_CUTS_R12 pin '
+                              '(R12F14-TRI-03)')
+            elif tuple(pin) != cut:
+                issues.append(f'exception via {via} cuts off {", ".join(cut)}; EXCEPTION_CUTS_R12 pins '
+                              f'{", ".join(pin)} (its record must name every pad it cuts off; R12F14-TRI-03)')
             continue
         if e is None:
             issues.append(f'single point {via} cuts off {", ".join(cut)}: no K-power exception and no LONG_TAIL_R12 '
@@ -1760,15 +1845,17 @@ def long_tail(board, nodes=None, table=None, exceptions=None):
         elif tuple(e[1]) != cut:
             issues.append(f'LONG_TAIL_R12 {via} names {", ".join(e[1])}; the via cuts off {", ".join(cut)}')
     issues += [f'stale LONG_TAIL_R12 entry {v}: not a single point on this board' for v in listed if v not in found]
-    count = {c: sum(1 for e in table if e[2] == c) for c in (1, 2, 3, 4)}
+    issues += [f'stale EXCEPTION_CUTS_R12 pin {v}: not an exception via that is a single point on this board'
+               for v in cuts if v not in pinned_seen]
+    count = {c: sum(1 for e in table if len(e) > 2 and e[2] == c) for c in (1, 2, 3, 4)}
     return issues, dict(single_points=len(points), excepted=sum(1 for p in points if p[1] in excepted),
-                        long_tail=len(table), long_tail_by_class=count)
+                        long_tail=len(table), long_tail_by_class=count, exception_cut_pins=len(cuts))
 
 
 def k_power(c):
     nodes = r10.copper_nodes(c.board)
     taps, ev = r10.single_via_opens(c.board, taps=SINGLE_OPEN_TAPS_R12, exceptions=SINGLE_OPEN_EXCEPTIONS_R12)
-    tail, tail_ev = long_tail(c.board, nodes)
+    tail, tail_ev = long_tail(c.board, nodes, tap_ev=ev)
     return ([f'K-power: {i}' for i in taps + tail],
             dict(single_via_open_taps=ev, exceptions=len(SINGLE_OPEN_EXCEPTIONS_R12), long_tail=tail_ev))
 

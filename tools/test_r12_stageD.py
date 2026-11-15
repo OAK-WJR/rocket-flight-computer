@@ -209,7 +209,7 @@ class StageDFigures(unittest.TestCase):
         self.assertAlmostEqual(g['design_A_sum'], rails['D5 IN']['amps'] + rails['U400 IN']['amps'], places=9)
         self.assertAlmostEqual(g['ipc_rise_design_sum_C'], 46.13, places=1)
         self.assertAlmostEqual(g['budget_A_sum'], rails['D5 IN']['budget_A'] + rails['U400 IN']['budget_A'], places=9)
-        self.assertLess(g['ipc_rise_budget_C'], 5.0)
+        self.assertAlmostEqual(g['ipc_rise_budget_C'], 5.04, places=2)        # R12F14-TRI-05 (4.69 at the 2.225 W load)
         self.assertTrue(any(o.get('shared_with') == g['paths'] and o['layer'] == 'B.Cu'
                             for o in rails['U400 IN']['over_30C']))
 
@@ -468,8 +468,9 @@ class Round8(unittest.TestCase):
             self.assertEqual(r12_budget.en_model(v, 0.01), r11_stageD.en_model(v))
 
     def test_en_bound_is_the_drift_case(self):
-        """R12F8-TRI-06: R80 / R165 / R81 at +/-1.67 %. R12F12-TRI-30: EN is fed from R80.1, 18.6 mV below J1 at the
-        four-stall point (5.7008 V against J1's 5.7194 V): 7.45 ms single drop-out and 6.935 ms worst-corner limit (7.60 /
+        """R12F8-TRI-06: R80 / R165 / R81 at +/-1.67 %. R12F12-TRI-30: EN is fed from R80.1, 18.9 mV below J1 at the
+        four-stall point (5.6950 V against J1's 5.7139 V since R12F14-TRI-05's unshed load; 5.7008 / 5.7194 V before):
+        7.40 ms single drop-out and 6.892 ms worst-corner limit (7.45 / 6.935 ms before; 7.60 /
         7.073 ms when J1's voltage was used), so D-R25-01's 7 ms line no longer holds there (it holds down to about 5.71 V
         at R80.1) and the bench rule is chatter_rule's number (Round12); 10 ms drop-out needs about 6.02 V at R80.1,
         turn-on about 29.9-135.9 ms."""
@@ -477,10 +478,10 @@ class Round8(unittest.TestCase):
         i, dr, b = e['by_case']['initial'], e['by_case']['drift'], e['bound']
         self.assertAlmostEqual(i['resistor_tolerance'], 0.01, places=12)
         self.assertAlmostEqual(dr['resistor_tolerance'], self.TD, places=12)
-        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.410, places=3)   # R12F12-TRI-30 (7.549 at J1)
-        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.446, places=3)  # R12F12-TRI-30 (7.596 at J1)
-        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 6.935, places=3)  # R12F12-TRI-30 (7.073 at J1)
-        self.assertAlmostEqual(e['four_stall_R80_V'], 5.7008, places=4)
+        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.367, places=3)   # R12F14-TRI-05 (7.410; 7.549 at J1)
+        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.399, places=3)  # R12F14-TRI-05 (7.446; 7.596 at J1)
+        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 6.892, places=3)  # R12F14-TRI-05 (6.935; 7.073 at J1)
+        self.assertAlmostEqual(e['four_stall_R80_V'], 5.6950, places=4)            # R12F14-TRI-05 (5.7008)
         self.assertAlmostEqual(b['margin_over_7ms_line_ms'], dr['four_stall_periodic_limit_ms'] - 7.0, places=12)
         self.assertLess(b['margin_over_7ms_line_ms'], 0.0)
         self.assertFalse(b['seven_ms_line_holds_at_four_stall'])
@@ -513,9 +514,11 @@ class Round8(unittest.TestCase):
                 self.assertAlmostEqual(c['margin_to_trip_top_V'][k], c['VLOGIC_V'][0] - w[1], places=12)
         # R12F9-TRI-04: with the 0.1 % divider and the 0.425-0.455 V band the healthy margin is positive in every case
         # (about +25 mV at drift with PA6's leakage and the self-consistent currents, R12F10-TRI-08 / -09; +59 mV
-        # without); a shorted match still trips PA6 (firmware rule 4)
+        # without; +17.8 mV at drift since R12F14-TRI-05's worst allowed unshed load, whose exact figures
+        # test_pa6_margins_hot pins: this 20 mV sentinel sat under the old figure, the property is a positive margin);
+        # a shorted match still trips PA6 (firmware rule 4)
         for k in t:
-            self.assertGreater(p['healthy']['margin_to_trip_top_V'][k], 0.02)
+            self.assertGreater(p['healthy']['margin_to_trip_top_V'][k], 0.0)
             self.assertLess(p['match_shorted']['margin_to_trip_top_V'][k], 0.0)
             self.assertLess(p['match_and_leads_shorted']['margin_to_trip_top_V'][k], 0.0)
 
@@ -549,9 +552,12 @@ class Round8(unittest.TestCase):
     def test_holdup_from_r12_pa6_window(self):
         hw, hd = self.w['holdup'], self.d['holdup']['unshed']
         # R12F9-TRI-04 band / divider, R12F10-TRI-08 PA6 leakage (0.501-1.811 / 0.496-1.827 / 0.487-1.853 without)
-        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.486, 1.854])
-        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.48, 1.87])
-        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.471, 1.897])
+        # R12F14-TRI-05: the unshed maximum is the worst allowed unshed load, 2.4126 W (0.486 / 0.480 / 0.471 ms at the
+        # 2.225 W allocation before)
+        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.448, 1.854])
+        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.443, 1.87])
+        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.435, 1.897])
+        self.assertEqual(hw['from_battery_break_ms'], [2.053, 6.099])
         for k in ('nominal_ratio', 'initial', 'drift'):
             self.assertEqual([round(x, 3) for x in hd['pa6_trip_ms'][k]], hw['from_pa6_trip_ms'][k])
         self.assertEqual(hd['pa6_trip_range_ms']['drift'], hd['pa6_trip_ms']['drift'])
@@ -622,10 +628,11 @@ class Round9(unittest.TestCase):
         # PA6's input leakage (R12F10-TRI-08) and the self-consistent D5 current (R12F10-TRI-09)
         # D-R12-174 (86.85 mm board): the RAW_PROTECTED island's longer aft band lowers the shared RAW copper
         # (31.0 -> 30.0 mOhm): +0.0286 / +0.0441 / +0.0532 (+0.0251 / +0.0405 / +0.0497 on a1e65bb4); R12F12-TRI-30:
-        # the fire current's share of the J1 -> U9.5 copper: +0.0270 / +0.0424 / +0.0516
-        self.assertAlmostEqual(h['drift'], 0.0270, places=3)
-        self.assertAlmostEqual(h['initial'], 0.0424, places=3)
-        self.assertAlmostEqual(h['nominal_ratio'], 0.0516, places=3)
+        # the fire current's share of the J1 -> U9.5 copper: +0.0270 / +0.0424 / +0.0516; R12F14-TRI-05 (the worst
+        # allowed unshed load, 2.4126 W at U2's input): +0.0178 / +0.0332 / +0.0424
+        self.assertAlmostEqual(h['drift'], 0.0178, places=3)
+        self.assertAlmostEqual(h['initial'], 0.0332, places=3)
+        self.assertAlmostEqual(h['nominal_ratio'], 0.0424, places=3)
 
     def test_pa6_owner_options(self):
         o = self.d['pa6_corners']['owner_options']
@@ -636,8 +643,10 @@ class Round9(unittest.TestCase):
         self.assertIn('divider_0p1pct', o['adopted'])
         self.assertFalse(one['present_band_fits'])            # threshold alone cannot meet both limits at drift
         self.assertTrue(tenth['present_band_fits'])
-        # +0.114 V with lane A's 0.42-0.45 V band (option (a)); +0.025 V with the adopted 0.425-0.455 V band (round 10)
-        self.assertGreater(tenth['margin_to_trip_top_V']['healthy'], 0.02)
+        # +0.114 V with lane A's 0.42-0.45 V band (option (a)); +0.025 V with the adopted 0.425-0.455 V band (round 10);
+        # +0.0178 V since R12F14-TRI-05 (pinned in test_pa6_margins_hot)
+        self.assertGreater(tenth['margin_to_trip_top_V']['healthy'], 0.0)
+        self.assertAlmostEqual(tenth['margin_to_trip_top_V']['healthy'], 0.0178, places=3)
         for row in (o['divider_0p1pct']['initial'], tenth):
             m = row['centred_band_margins_V']
             self.assertGreater(m['healthy_to_trip_top'], 0.0)
@@ -660,7 +669,7 @@ class Round9(unittest.TestCase):
         self.assertLessEqual(b['room_drift_V'][0], 0.425)
         self.assertGreaterEqual(b['room_drift_V'][1], 0.455)
         m = b['margins_V']['drift']
-        self.assertAlmostEqual(m['healthy_to_trip_top'], 0.0270, places=3)          # R12F12-TRI-30 (0.0286; 0.0251)
+        self.assertAlmostEqual(m['healthy_to_trip_top'], 0.0178, places=3)          # R12F14-TRI-05 (0.0270; 0.0286; 0.0251)
         self.assertAlmostEqual(m['trip_bottom_above_u9_turn_off'], 0.0264, places=3)
         self.assertAlmostEqual(self.d['pa6_corners']['trip_bottom_above_u9_turn_off_V']['drift'],
                                m['trip_bottom_above_u9_turn_off'], places=4)
@@ -884,6 +893,41 @@ class Round12(unittest.TestCase):
         self.assertAlmostEqual(c['peak_A'], c['MCU_A'] + sum(b['loads_A'].values()) + b['buzzer_on_phase_A'], places=12)
         self.assertIn('Inference', b['label'])
         self.assertIn('DS12110 Rev 8', b['mcu_source'])
+
+    def test_r12f14_one_unshed_load_envelope(self):
+        """R12F14-TRI-05: the hold-up, the fire / converter model and the 3V3 budget take one unshed load: 200 MHz at
+        Tj 105 C with every 3V3 load and the microSD writing (rule (g): no write and beep overlap), 0.549 A x 3.5156 V /
+        0.80 = 2.4126 W (2.225 W before); the stage A budget takes the same figure; the beep state with its on-phase
+        first does not shorten the shortest hold-up; a record whose three figures differ is refused."""
+        import r12_budget
+        import r12_stageD
+        env = r12_stageD.unshed_load()
+        self.assertEqual(env['state'], 'write')
+        self.assertAlmostEqual(env['current_A'], 0.300 + 0.249, places=12)
+        self.assertAlmostEqual(env['states_A']['beep'], 0.300 + 0.049 + 3.5156 / 11 / 2, places=12)
+        self.assertAlmostEqual(env['total_W'], 3.5156 * 0.549 / 0.80, places=12)
+        self.assertGreater(env['total_W'], env['before_round14_W'])
+        self.assertAlmostEqual(r12_budget.unshed_u2_w(), env['total_W'], places=12)
+        d = self.d
+        self.assertAlmostEqual(d['u3v3_budget']['unshed_worst']['total_W'], env['total_W'], places=12)
+        parts = d['fire']['other_load_parts']
+        self.assertAlmostEqual(parts['logic_W'] + parts['microsd_write_W'], env['total_W'], places=12)
+        self.assertAlmostEqual(d['holdup']['unshed']['load_W'][1], env['total_W'], places=12)
+        chk = d['holdup']['unshed']['beep_state_check']
+        self.assertGreaterEqual(chk['beep_state_ms'], chk['write_state_ms'])
+        self.assertAlmostEqual(chk['write_state_ms'], d['holdup']['unshed']['pa6_trip_range_ms']['drift'][0], places=12)
+        for path in (('fire', 'other_load_parts', 'logic_W'), ('holdup', 'unshed', 'load_W')):
+            bad = json.loads(json.dumps(d))
+            node = bad
+            for k in path[:-1]:
+                node = node[k]
+            node[path[-1]] = (node[path[-1]] - 0.1 if not isinstance(node[path[-1]], list)
+                              else [node[path[-1]][0], node[path[-1]][1] - 0.1])
+            with self.subTest(seed=path):
+                self.assertTrue([i for i in r12_stageD.record_issues(bad) if 'unshed load differs' in i])
+        bad = json.loads(json.dumps(d))
+        bad['holdup']['unshed']['beep_state_check']['beep_state_ms'] = chk['write_state_ms'] - 0.01
+        self.assertTrue([i for i in r12_stageD.record_issues(bad) if 'beep state' in i])
 
     def test_vbus_sense(self):
         v = self.d['vbus_sense']

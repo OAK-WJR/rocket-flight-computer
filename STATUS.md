@@ -2,11 +2,11 @@
 
 > Repository note: the complete projects and review packages of the historical candidates (CORE / PWR / UART / USB / GNSS / PDIAG) are not included. On this branch (`m3-assy-r10`) the repository holds the M3-ASSY-R10 KiCad project (a CAD candidate, not accepted), built from the hash-pinned R9 inputs by `m3_design/r10_build.sh`; R9's project (built from the committed, owner-accepted R8 sources, commit 9c8179b, by `m3_design/r9_build.sh`) stays on branch `m3-assy-r9` (R8 came from R7 by `m3_design/r8_build.sh`, R7 from R6 by `m3_design/r7_build.sh`, R6 from R5, R5 from R4, R4 from R3), plus the R1 board under `reference/m3_assy_r1/` that the v0.8.1 firmware is bound to. R8's project stays on branch `m3-assy-r8` (9c8179b) and R7's on `m3-assy-r7` (431025d). The older candidates are mentioned below only as the evolution record.
 
-Last updated 2026-11-14 (R12; R11 candidate sections below; R10 candidate section as of 2026-11-02; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
+Last updated 2026-11-15 (R12; R11 candidate sections below; R10 candidate section as of 2026-11-02; the rest as of 2026-10-25). Governing requirements: [docs/REQUIREMENTS.md](docs/REQUIREMENTS.md). M3-ASSY-R2 was the first candidate with every hardware function in the requirements; R3 dropped the GNSS (owner decision); R4 is R3 with its validation fixes; R5 is R4's circuit on a two-sided 46 × 100 mm board; R6 has one recovery channel, a GH camera connector and external radio/GPS ports; R7 is R6 with the GNSS and radio on the board, 46 × 118 mm, owner-accepted on 2026-10-18; R8 is R7's circuit re-placed and re-routed around R7's rigid RF strip and pyro block, owner-accepted on 2026-10-20; **M3-ASSY-R9 (R8's circuit laid out again from a clean sheet, 46 × 102 mm) is the current candidate, owner-accepted on 2026-10-25, and R8 is the accepted fallback.** All are CAD designs with a manufacturing package, not measured or flown boards.
 
 ## R12 candidate: M3-ASSY-R12 (one-sided four-layer Economic PCBA, 46 × 86.85 mm; NOT accepted)
 
-**Status (2026-11-14).** PCB `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3` (round 13 fix pass, D-R12-199 … -204; was `96207d2e…`), 46 × 86.85 × 1.6 mm, four layers; 189 footprints, 181 JLC parts (D-R12-195: J122 is a single-servo SH-4 in the MicoAir H743 4-pin UART order, SERVO3 / SERVO4 deleted; `876733fe…` carried D-R12-192's SH-8; round 12 ended on `c9b9f0fa…`). Not accepted, nothing ordered; R9 stays accepted.
+**Status (2026-11-15).** PCB `c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1` (round 14 final fix pass, D-R12-205 … -209; was `5af58097…`, round 13's fix pass, D-R12-199 … -204), 46 × 86.85 × 1.6 mm, four layers; 189 footprints, 181 JLC parts (D-R12-195: J122 is a single-servo SH-4 in the MicoAir H743 4-pin UART order, SERVO3 / SERVO4 deleted; `876733fe…` carried D-R12-192's SH-8; round 12 ended on `c9b9f0fa…`). Not accepted, nothing ordered; R9 stays accepted.
 
 **Round 12 final fix pass (2026-11-13; D-R12-175 … -191).** Rounds 10 and 11 were the clean pair under
 D-R12-167 (zero Critical / zero Major); round 10 had 16 Minors. Historical round 11 reviewed `a1e65bb4…`: 13 Minor, left when the owner
@@ -74,7 +74,20 @@ Round12Board, RealBoard, FireGaps, Round1Fixes, FabContent and the J122 / S-7 te
 `test_r12_check.py` (orchestrator), any firmware, physical, electrical or JLC DFM test. Not accepted, nothing ordered;
 the full gate on the final tree is the orchestrator's commit condition.
 
-Lane P's gate: DRC / parity / unconnected 0, all 34 check_r12 rules OK, route_check 0 failing / 2 allowlisted,
+**Round 14 (2026-11-15; R12F14-TRI-01 … -12; D-R12-205 … -209).** Round 14 reviewed `5af58097…` (commit `5bcbae5`)
+with seven lenses (safety, power, requirements, copper, gate, build, records) plus a second opinion on safety and power:
+**0 Critical / 0 Major / 12 Minor** (R12F14-TRI-01 … -12). Rounds 13 and 14 are the clean pair under D-R12-167, so the
+review loop stops. The final fix pass produced PCB `c8b0412d…`: R110 / C83 / C28's second GND via and an F.Cu 3V3 strap
+along U1's F row (D-R12-205; K-power 128 taps / 20 exceptions, 148 single points = 18 exception vias + 130 entries);
+validated K-power exceptions, pinned cut sets, long-tail class checks and the NRST / J2.3 consequence (D-R12-206); one
+worst allowed unshed load (0.549 A, 2.4126 W at U2's input) in the hold-up, fire model and 3V3 budget, with rule (g)
+stated both ways: four-stall 1.24711 A at J1 5.71390 V, chatter limits 6.892 / 6.796 ms and the **J400 chatter bench
+rule under 6.6 ms (was 6.7 ms), U9 on at 5.71 V** (D-R12-207; Calculation / Inference); R166 pulse endurance as owner
+row 60 (D-R12-208); records (D-R12-209). 1114 tracks / 386 vias; BOM / CPL unchanged. **Verified (Measured / tool runs on the new board):** two identical builds; DRC / parity / unconnected / ERC 0; r12_sch_check OK; all 34 check_r12 rules OK; route_check 0 failing / 2 allowlisted / 4 leftovers; fit / silk / audit OK; fab manifest bound; hot-plug re-extracted and re-run 2304 / 2304, numerically identical (Simulation / Inference); stage D re-run (binding gate OK); test_check_shell 33, test_fit_check 39, test_route_check 88, test_zone_check 11, test_r12_fab 15, test_r12_stageD 61 and the test_r12_check KPower, Profiles, Round12Board, RealBoard, Round1Fixes, FireGaps and FabContent classes pass. **Not verified:** the full `tools/check.sh` and the full `test_r12_check.py` (orchestrator), any review of this pass, any firmware, physical, electrical or JLC DFM test. This pass has
+had only its fix lane. Not accepted, nothing ordered; the full gate on the final tree is the orchestrator's commit condition.
+
+**Historical (round 12 lanes P / A, on `c9b9f0fa…`; current counts and figures are in the round 13 and 14
+paragraphs above).** Lane P's gate: DRC / parity / unconnected 0, all 34 check_r12 rules OK, route_check 0 failing / 2 allowlisted,
 eight recorded leftovers / zero unrecorded or stale, fit / legends / fill OK, fab manifest bound.
 S-10 has 203 exceptions; K-power 123 taps / 19 exceptions. Lane A's board-bound figures: fire loop 4.72843 Ω,
 four-stall 1.24833 A at J1 5.71941 V; EN at R80.1 5.70082 V; chatter limits 6.935 / 6.843 ms and bench rule
@@ -91,7 +104,7 @@ Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41
 orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
 other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
 day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
-re-quote `5af58097…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+re-quote the current board, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 Owner items: [R12_VALIDATION.md](docs/R12_VALIDATION.md); harness: [R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md); full state: [M3_R12.md](docs/M3_R12.md#current-state).
 

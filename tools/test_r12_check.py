@@ -731,9 +731,10 @@ class KPower(Plants, unittest.TestCase):
                     'C88.2', 'C81.2', 'C97.2', 'R92.2', 'R167.2', 'U6.1', 'U6.13', 'U6.15', 'U6.16', 'C33.2',
                     'U3.8', 'U3.4', 'J430.4', 'J430.6', 'J410.2', 'J420.2', 'J440.2', 'J410.1', 'J420.1', 'J440.1',
                     'J9.3', 'J9.4', 'J122.1', 'D123.1', 'R163.2', 'Q123.2', 'C22.2',
-                    'C60.1', 'C60.2', 'C94.2'):                                            # R12F13-TRI-01 / -02
+                    'C60.1', 'C60.2', 'C94.2',                                             # R12F13-TRI-01 / -02
+                    'R110.2', 'U1.F7', 'U1.F4', 'U1.F6'):                                  # R12F14-TRI-01 / -02
             self.assertIn(tap, taps)
-        self.assertEqual((len(r12.SINGLE_OPEN_TAPS_R12), len(r12.SINGLE_OPEN_EXCEPTIONS_R12)), (124, 20))
+        self.assertEqual((len(r12.SINGLE_OPEN_TAPS_R12), len(r12.SINGLE_OPEN_EXCEPTIONS_R12)), (128, 20))
         # the single points left on purpose: the U1 dog-bones (PD10's since R12F9-TRI-08), BOOT0's far via and the two
         # 3V3A feeds (owner rows)
         self.assertEqual(sorted({x[1] for x in r12.SINGLE_OPEN_EXCEPTIONS_R12}),
@@ -820,11 +821,11 @@ class KPower(Plants, unittest.TestCase):
         that is also an exception, wrong pads, and a second barrel removed (a new single point nobody listed)."""
         issues, ev = r12.long_tail(self.board)
         self.assertEqual(issues, [])
-        self.assertEqual((ev['single_points'], ev['excepted'], ev['long_tail']), (153, 18, 135))
-        self.assertEqual(ev['long_tail_by_class'], {1: 74, 2: 32, 3: 22, 4: 7})
+        self.assertEqual((ev['single_points'], ev['excepted'], ev['long_tail']), (148, 18, 130))
+        self.assertEqual(ev['long_tail_by_class'], {1: 74, 2: 27, 3: 21, 4: 8})
         rep = r12.check_board(self.board, BOARD12, only={'K-power'}, stage='copper')
         self.assertTrue(rep['ok'], rep['issues'])
-        self.assertEqual(rep['evidence']['k_power']['long_tail']['single_points'], 153)
+        self.assertEqual(rep['evidence']['k_power']['long_tail']['single_points'], 148)
         table = list(r12.LONG_TAIL_R12)
         c24 = next(e for e in table if e[1] == ('C24.2',))
         cut = [e for e in table if e is not c24]
@@ -846,6 +847,77 @@ class KPower(Plants, unittest.TestCase):
         finally:
             self.board.Add(item)
         self.assertTrue([i for i in got if i.startswith(f'single point {via} cuts off C60.1')], got)
+
+    def test_r12f14_r110_and_f_row_second_paths(self):
+        """Seeded (R12F14-TRI-01 / -02): R110.2's second GND via (found from the graph) removed, K-power names R110.2
+        on one via; the F.Cu 3V3 strap along U1's F row removed, K-power names PDR_ON (F7), VDDLDO (F4) and VDD33USB
+        (F6) each on its one dog-bone via, and the long tail gains the four F-row dog-bones nobody lists."""
+        self.assert_doubled(('R110.2',))
+        strap = [t for t in self.board.GetTracks() if t.GetClass() == 'PCB_TRACK' and t.GetNetname() == '3V3'
+                 and t.GetLayer() == pcbnew.F_Cu and {(round(pcbnew.ToMM(q.x), 3), round(pcbnew.ToMM(q.y), 3))
+                                                      for q in (t.GetStart(), t.GetEnd())} == {(21.8, 58.25), (24.2, 58.25)}]
+        self.assertEqual(len(strap), 1)
+        self.board.Remove(strap[0])
+        try:
+            issues = self.kpower()[0]
+            tail = r12.long_tail(self.board)[0]
+        finally:
+            self.board.Add(strap[0])
+        for tap in ('U1.F7', 'U1.F4', 'U1.F6'):
+            self.assertTrue([i for i in issues if i.startswith(f'{tap} (') and 'hangs on one via' in i], (tap, issues))
+        for ball in ('U1.F4', 'U1.F5', 'U1.F6', 'U1.F7'):
+            self.assertTrue([i for i in tail if i.startswith('single point via 3V3') and i.endswith(
+                f'cuts off {ball}: no K-power exception and no LONG_TAIL_R12 entry (R12_VALIDATION row 43)')], (ball, tail))
+
+    def test_r12f14_long_tail_takes_only_validated_exceptions(self):
+        """Seeded (R12F14-TRI-03, the round 14 gate lens's GATE-01): with C94.1's second CAM_5V_SENSE barrel removed,
+        via (13.50, 62.35) is a single point; an exception naming it under an unregistered tap (X999.1, or C94.1, on
+        the board but no tap) or under a registered tap whose path it is not on (R14.1) does not excuse it, and the
+        two unregistered entries fail by themselves."""
+        via = 'via CAM_5V_SENSE (13.50, 62.35)'
+        barrel = [t for t in self.vias('CAM_5V_SENSE')
+                  if (round(pcbnew.ToMM(t.GetPosition().x), 2), round(pcbnew.ToMM(t.GetPosition().y), 2)) == (14.05, 62.35)]
+        self.assertEqual(len(barrel), 1)
+        self.board.Remove(barrel[0])
+        try:
+            plain = r12.long_tail(self.board)[0]
+            self.assertTrue([i for i in plain if i.startswith(f'single point {via} cuts off')], plain)
+            for tap in ('X999.1', 'C94.1', 'R14.1'):
+                with self.subTest(tap=tap):
+                    exc = list(r12.SINGLE_OPEN_EXCEPTIONS_R12) + [(tap, via, 'a fake exception ' * 5)]
+                    got = r12.long_tail(self.board, exceptions=exc)[0]
+                    self.assertTrue([i for i in got if i.startswith(f'single point {via} cuts off')], got)
+                    if tap != 'R14.1':
+                        self.assertTrue([i for i in got if f'{tap} / {via}' in i and 'not a SINGLE_OPEN_TAPS_R12 tap'
+                                         in i], got)
+        finally:
+            self.board.Add(barrel[0])
+        self.assertEqual(r12.long_tail(self.board)[0], [])
+
+    def test_r12f14_long_tail_classes_and_exception_cuts(self):
+        """Seeded (R12F14-TRI-03): an entry of an undefined class, a class 4 entry without its reason, an exception via
+        pinned without a pad it cuts off (C21.1 at 3V3A (19.65, 40.65)), an exception via with no pin and a stale pin
+        each fail; the committed pins equal the exception vias' measured cut sets."""
+        table = list(r12.LONG_TAIL_R12)
+        bad = table + [('via GND (1.00, 1.00)', ('X1.1',), 5)]
+        self.assertTrue([i for i in r12.long_tail(self.board, table=bad)[0] if 'class 5 is not one of' in i])
+        c25 = next(e for e in table if e[1] == ('C25.2',))
+        bare = [e if e is not c25 else e[:3] for e in table]
+        self.assertTrue([i for i in r12.long_tail(self.board, table=bare)[0]
+                         if c25[0] in i and 'class 4 entry without its reason' in i])
+        cuts = dict(r12.EXCEPTION_CUTS_R12)
+        self.assertEqual(len(cuts), 18)
+        self.assertEqual(cuts['via 3V3A (19.65, 40.65)'], ('C21.1', 'C22.1', 'U1.H1'))
+        self.assertEqual(cuts['via 3V3A (25.80, 33.65)'], ('C32.1', 'U5.1', 'U5.2'))
+        short = dict(cuts, **{'via 3V3A (19.65, 40.65)': ('C22.1', 'U1.H1')})
+        self.assertTrue([i for i in r12.long_tail(self.board, cuts=short)[0]
+                         if i.startswith('exception via via 3V3A (19.65, 40.65) cuts off C21.1, C22.1, U1.H1;')])
+        gone = {k: v for k, v in cuts.items() if k != 'via BOOT0 (23.00, 56.25)'}
+        self.assertTrue([i for i in r12.long_tail(self.board, cuts=gone)[0]
+                         if 'via BOOT0 (23.00, 56.25)' in i and 'no EXCEPTION_CUTS_R12 pin' in i])
+        extra = dict(cuts, **{'via GND (1.00, 1.00)': ('X1.1',)})
+        self.assertTrue([i for i in r12.long_tail(self.board, cuts=extra)[0]
+                         if i.startswith('stale EXCEPTION_CUTS_R12 pin via GND (1.00, 1.00)')])
 
     def test_exceptions_are_exact(self):
         """A missing exception fails the tap it covered; an entry whose via is no longer a single point is stale. The

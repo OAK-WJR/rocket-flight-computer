@@ -1,13 +1,14 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `5af580973b94e7826ac05cf206f7dfbba6c1a84cf7ac1eaafbd0d38342e53db3`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195; round 13 fix pass D-R12-199 … -204),
+**Status.** PCB `c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195; round 13 fix pass D-R12-199 … -204; round 14 final fix pass D-R12-205 … -209: the J400 chatter bench rule is now **under 6.6 ms**),
 four layers, every part on the top face and assembled by JLC. R12 remains a CAD candidate, not accepted,
 nothing ordered; R9 stays accepted. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
 [R12_VALIDATION.md](R12_VALIDATION.md). No physical fit is claimed.
 
 Coordinates are board mm: x east (0 … 46), y forward from the aft edge (0 … 86.85), top face F.
-Current centres are `m3_design/r12_place.tsv` on `5af58097…` (Measured; placement unchanged since `96207d2e…`, the round
-13 fix pass moved copper only: SERVO1_OUT / SERVO2_MCU at D121 and three second vias near C60 / C94, D-R12-199, -200).
+Current centres are `m3_design/r12_place.tsv` on `c8b0412d…` (Measured; placement unchanged since `96207d2e…`, the round
+13 fix pass moved copper only: SERVO1_OUT / SERVO2_MCU at D121 and three second vias near C60 / C94, D-R12-199, -200;
+the round 14 fix pass too: a GND via by R110 and a strap along U1's F row, D-R12-205).
 All positions below are on this board; figures labelled `c9b9f0fa…` were measured on round 12's board, whose copper and
 placement differ from this one only at J122, the servo cells and those vias (D-R12-192, -195, -199, -200).
 J1's terminal set the 86.85 mm outline (D-R12-174); round 12 adds R118 without moving existing parts.
@@ -60,8 +61,8 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   - Under the 0.561 A budget the port pins stay at or above 4.565075 V at the drift corner and at or below 4.972 V with no
     load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
     page gives only "5V DC") and the M100 Mini's 3.3–5 V. That holds while U400's input is at least VO / 0.75, about
-    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.4988 V) or on a 6.0 V pack
-    (about 5.4206 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
+    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.4898 V) or on a 6.0 V pack
+    (about 5.4108 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
     15).
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
     4.60–4.94 V at room temperature (initial tolerance, Calculation).
@@ -102,16 +103,17 @@ Further rules:
   connector. Touching the airframe or pad ground before J400 stays the second ESD layer.
 - **Dress the J400 pair** twisted, on its own ties, away from the battery leads and from J9's and J122's leads, which
   leave the same aft edge (R10's chafe rule).
-- **J400 chatter (D-R12-183; Calculation / Inference).** BAT_IN is a network with J1.1,
+- **J400 chatter (D-R12-183, -207; Calculation / Inference).** BAT_IN is a network with J1.1,
   U9.5, Q120.3 and R80.1 terminals. EN is evaluated at R80.1, not J1. At the four-stall GAP-1 point,
-  J1 is 5.71941 V and R80.1 is 5.70082 V (18.6 mV lower). Single drop-out immunity is
-  7.967 / 7.446 ms initial / drift; periodic limits are 7.410 / 6.935 ms.
-  Whole-current loading gives J1 5.70765 V, R80.1 5.68849 V, fire current 1.24573 A and the worst
-  periodic limit **6.843 ms**. The 7 ms line fails both conventions. The bench pass rule is **under 6.7 ms
-  total open time in every sliding 100 ms window**, recorded at **≥ 10 kS/s under flight-level vibration**,
-  with **U9 on throughout at 5.72 V**. This supersedes D-R12-170's historical 6.9 ms rule; the margin to
-  the worst model limit is 0.143 ms. `en.chatter_rule.bench_rule_ms` stores 6.7 and the gate checks both
-  load conventions. Turn-on is 30.3–131.5 ms initial / 29.9–135.9 ms drift over C87 0.72–1.265 × 220 nF.
+  with D-R12-207's unshed load (U2 input 2.4126 W, was 2.225 W), J1 is 5.71390 V and R80.1 is 5.69504 V (18.9 mV
+  lower). Single drop-out immunity is 7.919 / 7.399 ms initial / drift; periodic limits are 7.367 / 6.892 ms.
+  Whole-current loading gives J1 5.70169 V, R80.1 5.68223 V, fire current 1.24441 A and the worst
+  periodic limit **6.796 ms**. The 7 ms line fails both conventions. The bench pass rule is **under 6.6 ms
+  total open time in every sliding 100 ms window** (**6.7 ms before D-R12-207**: at 6.796 ms the 6.7 ms line is
+  only 0.096 ms under the limit, inside the generator's 0.10 ms allowance), recorded at **≥ 10 kS/s under
+  flight-level vibration**, with **U9 on throughout at 5.71 V** (5.72 V before; the four-stall J1). This supersedes
+  D-R12-183's 6.7 ms and D-R12-170's historical 6.9 ms rules; the margin to the worst model limit is 0.196 ms.
+  `en.chatter_rule.bench_rule_ms` stores 6.6 and the gate checks both load conventions. Turn-on is 30.3–131.5 ms initial / 29.9–135.9 ms drift over C87 0.72–1.265 × 220 nF.
   C87's X7R allowance, leakage corners, pack/load and drift are Inference.
 
 READY voltage is an R12 override of R10 rule 9: PA6 reads VLOGIC behind D5. Compare the corrected pack
@@ -125,27 +127,30 @@ corner, Calculation / Inference). A PA6 trip that begins during a commanded fire
 to the end of the ≤ 20 ms pulse plus its tail) is logged with its time and the PA6 reading. It is not
 treated as battery loss: no battery-loss shutdown, shed or state change follows from it, and the fire
 pulse is not cut short by it. A shorted match (or match and leads) still trips PA6 at the drift corner
-(−0.1258 / −0.1705 V below the trip top; Calculation / Inference), so this rule is required. A healthy
-four-stall fire is +0.0270 V clear of the trip top at drift (Calculation / Inference). A PA6 trip outside
-a fire pulse is battery loss as before (hold-up 0.471–1.897 ms unshed at drift, Calculation / Inference).
+(−0.1352 / −0.1799 V below the trip top; Calculation / Inference), so this rule is required. A healthy
+four-stall fire is +0.0178 V clear of the trip top at drift (Calculation / Inference). A PA6 trip outside
+a fire pulse is battery loss as before (hold-up 0.435–1.897 ms unshed at drift, Calculation / Inference; D-R12-207).
 Firmware and bench qualification remain open.
 
 ## Pyro and per-flight checks
 
 The e-match connects at J121's screw terminal: `E1+` to pin 2 (IGN), `E1−` to pin 1 (OUT). The match must be ≤ 2 Ω and its
-leads ≤ 0.3 Ω (the fire budget's separate allowances). At four stalls the fire current is 1.24833 A at BAT_IN 5.71941 V against the
+leads ≤ 0.3 Ω (the fire budget's separate allowances). At four stalls the fire current is 1.24711 A at BAT_IN 5.71390 V (D-R12-207) against the
 MJG J-Tek 1.125 A floor (Calculation / Inference).
 
 **Per-flight checklist.** This is R10's list ([ORDERING §8.3](ORDERING.md#83-after-delivery-probes-coating-staking-and-bench-gates))
 adapted to R12. Run it in order and stop at the first failure. Confirm the installed J400 switch/harness
-has passed the R12 chatter bench rule: under 6.7 ms total open time in every sliding 100 ms window,
-recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.72 V (D-R12-183).
+has passed the R12 chatter bench rule: **under 6.6 ms** total open time in every sliding 100 ms window (6.7 ms before
+D-R12-207), recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.71 V (D-R12-183, -207).
 
 0. **Plug identity and retention.**
    - **0b — plug identity:** before mating, identify every plug against its port legend. J400 takes only the switch
-     lead. Give the switch, servo and camera leads distinct tags: the switch lead (J400) and the servo lead (J122) are both
-     two-contact SH-4 plugs on the aft edge and fit either port (a swap leaves the board off, which step 3 catches;
-     Inference, D-R12-204). Repeat step 2 after any plug is moved.
+     lead. Give the switch, servo, camera, radio and AUX leads distinct tags: the switch lead (J400) and the servo lead
+     (J122) are both two-contact SH-4 plugs on the aft edge and fit either port (a swap leaves the board off, which step 3
+     catches; Inference, D-R12-204). The radio and AUX leads (J420 / J440) are four-contact SH-4 plugs and also fit J400:
+     there a module's GND lands on J400.1 and its supply pin on J400.2, and a module that conducts from GND to its supply
+     (a regulator's substrate diode or an input TVS; Inference) can close the EN divider and turn the board on with no
+     switch; step 2 catches it (D-R12-209). Repeat step 2 after any plug is moved.
    - **0d — J122 position 2 empty (D-R12-196; done before the retention step 0c):** confirm the servo lead has no contact
      in position 2 (the H743's 5 V, beside GND) and only GND and the servo signal(s) fitted. On the first
      article, and after any rework near J122, also meter J122.2 to J122.1 and to J122.3 on the unpowered board (both
@@ -270,8 +275,8 @@ applies: PC1 / PE4 locked low, camera EN low, SD_CS high and HG_CS high.
 
 For the separate first-article dummy-fire check, use the fixed 2 Ω dummy / 0.3 Ω total leads and 7.4 V / 0.15 Ω
 source with the budget converter loads and no servo stalls. Reject BAT_IN − RAW_ACT above **0.4 V**, overriding
-R10 rule 4's 0.2 V line (D-R12-109). At R134's drift low end 1.9666 Ω, current is 1.52468 A and the drop
-bound **0.27318 V**, including hot FETs, 29.975 mΩ loop copper and converter coupling through BAT_IN
+R10 rule 4's 0.2 V line (D-R12-109). At R134's drift low end 1.9666 Ω, current is 1.52369 A and the drop
+bound **0.27305 V** (0.27318 V before D-R12-207), including hot FETs, 29.975 mΩ loop copper and converter coupling through BAT_IN
 (Calculation / Inference; D-R12-183). The body-diode case is 0.7–1.0 V (Inference). Qualify this line on the
 first article; the per-flight closed-switch check does not command a fire.
 
@@ -285,6 +290,6 @@ Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41
 orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
 other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
 day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
-re-quote `5af58097…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+re-quote the current board, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 See [M3_R12.md](M3_R12.md#cost-and-stock).

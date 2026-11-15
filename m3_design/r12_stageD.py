@@ -158,16 +158,18 @@ def fire_copper(board, stack):
 
 def other_load_w():
     """Converter load during the fire (r12_budget.fire's 'other', from the R12 rail windows): camera 1 A and ports
-    0.561 A at their bucks' initial maximum output / 0.80, logic 1.4 W + microSD write 3.3 V x 0.2 A / 0.80 (U2's input
-    power), R92 3.3 kOhm -2 % (Inference: allocations, efficiency). R12F10-TRI-09: the stage A allocations 'D5 0.45 V x
+    0.561 A at their bucks' initial maximum output / 0.80, U2's input power at the worst allowed unshed load
+    (unshed_load: logic + microSD write, R12F14-TRI-05; 1.4 W + 3.3 V x 0.2 A / 0.80 = 2.225 W before), R92 3.3 kOhm
+    -2 % (Inference: allocations, efficiency). R12F10-TRI-09: the stage A allocations 'D5 0.45 V x
     0.3 A' allocation is gone: fire_budget charges D5's loss as SS34's 0.45 V x U2's own input current from
     raw_point's self-consistent solve at each BAT_IN. The returned total is the converters' input power plus R92's
     bleed at 7.4 V (the R10 GAP-1 constant-power convention), without D5's loss."""
     rails = r12_budget.rails()
     cam = rails['CAM_5V (U403 TPS563208, R433 51k + R434 10k / R435 10k)']['initial']['max_V']
     port = rails['PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)']['initial']['max_V']
-    parts = dict(camera_W=cam * 1.0 / .80, ports_W=port * .561 / .80, logic_W=1.4, microsd_write_W=3.3 * .2 / .80,
-                 r92_W=PACK_V ** 2 / R92_MIN)
+    u2 = unshed_load()
+    parts = dict(camera_W=cam * 1.0 / .80, ports_W=port * .561 / .80, logic_W=u2['logic_W'],
+                 microsd_write_W=u2['microsd_write_W'], r92_W=PACK_V ** 2 / R92_MIN)
     return sum(parts.values()), dict(parts, camera_V=cam, port_V=port)
 
 
@@ -494,12 +496,14 @@ def dummy_fire(rest, other, cu70, z):
 def holdup(four_stall_bat):
     """C84 (470 uF polymer, 300.8 uF allowance as R10) holds VLOGIC only; D5 blocks RAW_PROTECTED (D-R12-04), so the
     port and camera bucks and R92 are not on it. Constant-power loads to 3.8 V (R10 / R11's end point, Inference for
-    the LMR50410): unshed logic 0.6-1.4 W + microSD write 3.3 V x 0.2 A / 0.85-0.80; shed logic 0.62 W + microSD idle
+    the LMR50410): unshed logic 0.6 W + microSD write 3.3 V x 0.2 A / 0.85 up to unshed_load's worst allowed unshed
+    load (R12F14-TRI-05; 1.4 W + 3.3 V x 0.2 A / 0.80 = 2.225 W before); shed logic 0.62 W + microSD idle
     3.3 V x 0.03 A / 0.85-0.80. Start points: battery break at the 7.4 V launch floor less U9 and D5 (D5 VF 0.25-0.45 V,
     Inference; U9 at SLVSFC9C's 0.045 ohm maximum x 1.5 A, the current Inference); PA6 trip at the window below, at the
     nominal ratio and with the divider in each resistor case (R12F8-TRI-08), the window carrying PA6's +/-250 nA input
     leakage through R60 || R61 (R12F10-TRI-08, r12_budget.pa6_trip_window). No credit for C6 / C99 (Inference)."""
-    loads = dict(unshed=(.6 + 3.3 * .2 / .85, 1.4 + 3.3 * .2 / .80), shed=(.62 + 3.3 * .03 / .85, .62 + 3.3 * .03 / .80))
+    loads = dict(unshed=(.6 + 3.3 * .2 / .85, unshed_load()['total_W']),
+                 shed=(.62 + 3.3 * .03 / .85, .62 + 3.3 * .03 / .80))
     def ms(c, v0, w, v_end=3.8):
         return .5 * c * (v0 ** 2 - v_end ** 2) / w * 1e3
     win = pa6_window()
@@ -514,6 +518,27 @@ def holdup(four_stall_bat):
         out[case]['pa6_trip_range_ms'] = {k: [min(out[case]['pa6_trip_ms'][j][0] for j in ('nominal_ratio', k)),
                                               max(out[case]['pa6_trip_ms'][j][1] for j in ('nominal_ratio', k))]
                                           for k in TOL}
+    # R12F14-TRI-05: the beep state (rule (g): no write) with its buzzer on-phase first draws the energy the write
+    # state draws in the shortest hold-up no faster (constant power, 2.7 kHz, 50 % duty, on-phase first: the most
+    # energy any window that long can hold)
+    env = unshed_load()
+    v33, eff = env['VOUT_V'], env['eff']
+    p_off = v33 * env['states_A']['beep'] / eff - v33 * (v33 / BUZZER_COIL_MIN_OHM / 2) / eff
+    p_on = p_off + v33 * (v33 / BUZZER_COIL_MIN_OHM) / eff
+
+    def beep_time_ms(energy_j):
+        half, t, e, on = .5 / BUZZER_HZ, 0.0, 0.0, True
+        while True:
+            p = p_on if on else p_off
+            if e + p * half >= energy_j:
+                return (t + (energy_j - e) / p) * 1e3
+            e, t, on = e + p * half, t + half, not on
+    shortest = out['unshed']['pa6_trip_range_ms']['drift'][0]
+    out['unshed']['beep_state_check'] = dict(
+        write_state_ms=shortest, beep_state_ms=beep_time_ms(env['total_W'] * shortest * 1e-3),
+        note='time the beep state, on-phase first, takes to draw the energy the write state draws in the shortest '
+             'unshed hold-up (PA6 trip, drift); not shorter, so the write state bounds it')
+    out['unshed']['envelope'] = env['basis']
     out['r11_case_c_ms'] = [.464, .539]
     out['label'] = ('Calculation / Inference (constant-power allocations, D5 drop, C84 allowance, 3.8 V end point, PA6\'s '
                     'input leakage row in analog mode; the drift case Inference); pa6_trip_range_ms is the range over '
@@ -823,6 +848,18 @@ def record_issues(d):
             issues.append('chatter worst limit does not match the two conventions')
     except (KeyError, TypeError) as exc:
         issues.append(f'chatter bench rule missing: {exc}')
+    try:                                                            # R12F14-TRI-05: one unshed envelope
+        env = d['u3v3_budget']['unshed_worst']['total_W']
+        fire_u2 = d['fire']['other_load_parts']['logic_W'] + d['fire']['other_load_parts']['microsd_write_W']
+        hold = d['holdup']['unshed']['load_W'][1]
+        if abs(fire_u2 - env) > 1e-9 or abs(hold - env) > 1e-9:
+            issues.append(f'unshed load differs: 3V3 budget {env:.6f} W, fire model {fire_u2:.6f} W, hold-up '
+                          f'{hold:.6f} W (R12F14-TRI-05)')
+    except (KeyError, TypeError) as exc:
+        issues.append(f'unshed load envelope missing: {exc}')
+    chk = d.get('holdup', {}).get('unshed', {}).get('beep_state_check')
+    if chk and chk['beep_state_ms'] < chk['write_state_ms']:
+        issues.append('the beep state shortens the unshed hold-up below the write state (R12F14-TRI-05)')
     for name, r in d.get('rails', {}).items():
         if r.get('joined') is not True:
             issues.append(f'rail path {name} is not joined')
@@ -1361,6 +1398,43 @@ BUDGET_3V3_A = dict(microsd_write=0.200, U3_qspi_flash=0.025, U4_U5_U6_sensors=0
 BUZZER_COIL_MIN_OHM = 11.0
 
 
+# R12F14-TRI-05: the worst allowed unshed load on U2, one figure for the hold-up (holdup), the fire / converter model
+# (other_load_w) and the 3V3 budget (u3v3_budget): the 200 MHz clock limit (firmware rule (e)) at the budget's hot end
+# Tj 105 C, every BUDGET_3V3_A load with the microSD writing, and firmware rule (g): a write burst and a beep never
+# overlap, so the beep state (the same loads without the write, plus the buzzer) is the other candidate; U2's input
+# power at the 3V3 drift maximum / U2_EFF (Inference: the allocations, Tj, efficiency)
+UNSHED_TJ_C = 105
+U2_EFF = 0.80
+BUZZER_HZ = 2.7e3                                                  # firmware rule (a): about 2.7 kHz, <= 50 % duty
+
+
+def unshed_load():
+    """R12F14-TRI-05 (round 14 POWER-01 / APWR-01): U2's worst allowed unshed load. States under firmware rule (g):
+    'write' (MCU at 200 MHz / Tj UNSHED_TJ_C, the larger silicon revision, plus every BUDGET_3V3_A load, buzzer
+    silent) and 'beep' (the same without the microSD write, plus the buzzer at its <= 50 % average); holdup checks
+    that the beep state with its on-phase first does not shorten the shortest hold-up (beep_time_ms). The worst state's current x the 3V3 drift maximum / U2_EFF is U2's input power: logic_W (everything
+    but the write) + microsd_write_W. Before round 14 the hold-up and fire models took 1.4 W + 3.3 V x 0.2 A / 0.80 =
+    2.225 W, below this envelope (Calculation on the maker's MCU maxima / Inference: allocations, Tj, efficiency,
+    the buzzer frequency)."""
+    v33 = r12_budget.rails()[r12_budget.V33_RAIL]['drift']['max_V']
+    mcu = max(r[UNSHED_TJ_C] for r in MCU_IDD_MAX_MA['200MHz_VOS3'].values()) / 1e3
+    sd = BUDGET_3V3_A['microsd_write']
+    rest = sum(BUDGET_3V3_A.values()) - sd
+    buzz_on = v33 / BUZZER_COIL_MIN_OHM
+    states = dict(write=mcu + rest + sd, beep=mcu + rest + buzz_on / 2)
+    worst = max(states, key=states.get)
+    amps = states[worst]
+    return dict(state=worst, states_A=states, current_A=amps, MCU_A=mcu, Tj_C=UNSHED_TJ_C, VOUT_V=v33, eff=U2_EFF,
+                logic_W=v33 * (amps - (sd if worst == 'write' else 0.0)) / U2_EFF,
+                microsd_write_W=v33 * (sd if worst == 'write' else 0.0) / U2_EFF, total_W=v33 * amps / U2_EFF,
+                before_round14_W=1.4 + 3.3 * .2 / .80, buzzer_Hz=BUZZER_HZ,
+                basis=('200 MHz (rule (e)) at Tj %d C, the 3V3 budget\'s hot end; rule (g): no microSD write burst and '
+                       'beep overlap, so the write state (buzzer silent) and the beep state (no write) are the '
+                       'candidates; U2 input at the 3V3 drift maximum / %.2f' % (UNSHED_TJ_C, U2_EFF)),
+                label='Calculation / Inference (MCU maxima from DS12110 Rev 8; allocations, Tj, efficiency, buzzer '
+                      'frequency Inference)')
+
+
 def u2_limit(vin=U2_VIN_FRESH, l=U2_L * (1 - U2_L_TOL), fsw=U2_FSW[1], vout=None, isc=U2_ISC_MIN):
     """IOUT max = ISC - dI / 2 with dI = VOUT (VIN - VOUT) / (VIN L fSW) when dI exceeds ISC - ILS (SLUSDW3A 8.3.5:
     eq. 6 needs the valley limit to engage; with 4.7 uH it does not at 8.15 V). R12F13-TRI-05: VOUT defaults to the
@@ -1408,6 +1482,7 @@ def u3v3_budget():
     c200, c480 = out['cases'][f'200MHz_VOS3_Tj{MCU_TJ_BUDGET}'], out['cases'][f'480MHz_VOS0_Tj{MCU_TJ_BUDGET}']
     out['fits_200MHz'] = c200['fits'] and c200['fits_fsw_min']
     out['fits_480MHz'] = c480['fits']
+    out['unshed_worst'] = unshed_load()                              # R12F14-TRI-05: the hold-up / fire envelope
     out['verdict'] = (f"200 MHz: peak {c200['peak_A']:.3f} A against {limit_typ:.3f} A ({limit_min:.3f} A at FOSC "
                       f"minimum), average {c200['average_A']:.3f} A, at Tj {MCU_TJ_BUDGET} C; 480 MHz: peak "
                       f"{c480['peak_A']:.3f} A, {'fits' if c480['fits'] else 'does not fit'}")
