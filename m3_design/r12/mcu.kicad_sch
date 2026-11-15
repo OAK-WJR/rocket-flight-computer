@@ -3635,22 +3635,9 @@
 				(size 1.05 1.05))
 			(justify left))
 		(uuid ca47ccf9-2cb7-5af5-9c04-c4753da31354))
-	(wire
-		(pts
-			(xy 274.32 191.77)
-			(xy 279.4 191.77))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 8ce74f46-7609-547b-8387-1c2ea5d14599))
-	(global_label "SERVO4_MCU"
-		(shape passive)
-		(at 279.4 191.77 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid 17a8fc6d-0a15-529a-83ce-3f24658d2eb2))
+	(no_connect
+		(at 274.32 191.77)
+		(uuid 74f6228c-afc2-5531-b0bf-2887838b656a))
 	(wire
 		(pts
 			(xy 218.44 118.11)
@@ -3714,22 +3701,9 @@
 	(no_connect
 		(at 274.32 207.01)
 		(uuid 44165377-e733-5b5b-952b-581185e7cb90))
-	(wire
-		(pts
-			(xy 274.32 189.23)
-			(xy 279.4 189.23))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4506cd36-8af6-59d3-824a-b84a1db44184))
-	(global_label "SERVO3_MCU"
-		(shape passive)
-		(at 279.4 189.23 180)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify left))
-		(uuid b80e00ba-e92b-5668-ba75-7e65f8fb4e3b))
+	(no_connect
+		(at 274.32 189.23)
+		(uuid 03506b45-1e49-5da1-98af-bbebe500d005))
 	(wire
 		(pts
 			(xy 218.44 120.65)

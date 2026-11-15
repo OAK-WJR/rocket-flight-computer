@@ -75,12 +75,15 @@ SAFETY = {
     ('C87', '1'): 'BAT_ENABLE', ('C87', '2'): 'GND', ('U9', '1'): 'BAT_ENABLE', ('U9', '5'): 'BAT_IN',
     ('U9', '6'): 'RAW_PROTECTED', ('U9', '2'): 'BAT_OVLO', ('U9', '9'): 'BAT_ILIM', ('U9', '7'): 'BAT_DVDT',
     ('J1', '1'): 'BAT_IN', ('J1', '2'): 'GND',
-    # F4 / F6: servo signals, 1 k series, pull-downs, SRV05-4 clamp. D-R12-192: J122 in the MicoAir H743 ESC order,
-    # 1 GND, 2 VBAT (never connected on R12: a shared H743 lead may carry the pack there), 3-6 M1-M4 = SERVO1-4,
-    # 7 RX7 and 8 Curr unconnected
+    # F4 / F6: servo signals, 1 k series, pull-downs, SRV05-4 clamp. D-R12-195 (owner 2026-11-14, one servo on flight
+    # 1): J122 is an SH-4 in the MicoAir H743 4-pin UART order, 1 GND, 2 NC (the H743's 5 V position, never connected on
+    # R12: an H743 UART lead may carry 5 V there), 3 SERVO1 (TX position), 4 SERVO2 (RX position, the spare output);
+    # SERVO3 / SERVO4 and their cells are deleted, so D121's I/O3 / I/O4 (pins 4 / 6) are unconnected
     ('J122', '1'): 'GND', ('J122', '2'): None, ('J122', '3'): 'SERVO1_OUT', ('J122', '4'): 'SERVO2_OUT',
-    ('J122', '5'): 'SERVO3_OUT', ('J122', '6'): 'SERVO4_OUT', ('J122', '7'): None, ('J122', '8'): None,
-    ('R154', '2'): 'GND', ('R155', '2'): 'GND', ('R156', '2'): 'GND', ('R157', '2'): 'GND',
+    ('R150', '1'): 'SERVO1_MCU', ('R150', '2'): 'SERVO1_OUT', ('R151', '1'): 'SERVO2_MCU', ('R151', '2'): 'SERVO2_OUT',
+    ('R154', '1'): 'SERVO1_MCU', ('R154', '2'): 'GND', ('R155', '1'): 'SERVO2_MCU', ('R155', '2'): 'GND',
+    ('D121', '1'): 'SERVO1_MCU', ('D121', '2'): 'GND', ('D121', '3'): 'SERVO2_MCU', ('D121', '4'): None,
+    ('D121', '5'): '3V3', ('D121', '6'): None,
     # F10 ports: identical, 1 GND, 2 PORT_4V8, 3 TX wire (board TXO), 4 RX wire (board RXI), 1 kOhm series
     # D-R12-31 (owner 2026-11-03): SH 1.0 ports in the MicoAir H743's pin order (GND, 5V, TX, RX[, SCL, SDA])
     ('J410', '1'): 'GND', ('J410', '2'): 'PORT_4V8', ('J410', '3'): 'GPS_TX_WIRE', ('J410', '4'): 'GPS_RX_WIRE',
@@ -105,8 +108,7 @@ SAFETY = {
     ('U1', 'E1'): 'NRST', ('U1', 'D5'): 'BOOT0', ('U1', 'E7'): 'VCAP2', ('U1', 'F8'): 'VCAP1',
 }
 REQUIRED_PARTS = ('Q120', 'Q121', 'Q122', 'Q124', 'R119', 'R120', 'C120', 'R121', 'R122', 'R123', 'C123', 'R126', 'R127',
-                  'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R152', 'R153', 'R154', 'R155', 'R156',
-                  'R157', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6',
+                  'R128', 'C126', 'R134', 'D402', 'U9', 'D121', 'R150', 'R151', 'R154', 'R155', 'U3', 'J430', 'R460', 'R461', 'R462', 'R463', 'R464', 'C84', 'LS120', 'U4', 'U5', 'D5', 'D6',
                   'R131', 'R136', 'D120', 'R89', 'R95', 'D95', 'R431', 'R436', 'D436',
                   'R118')            # R12F12-TRI-04: Q122's second gate pull-down
 # D-R12-174 (owner 2026-11-10): J1 is a JLC-fitted KF301-5.0-2P screw terminal, so R12 has no wire pads left (D-R12-30's
@@ -121,17 +123,14 @@ PORT_PIN_NAMES = {'1': 'GND', '2': '4V8', '3': 'TXO', '4': 'RXI'}
 GPS_PIN_NAMES = {**PORT_PIN_NAMES, '5': 'NC', '6': 'NC'}
 CAMERA_PIN_NAMES = {'1': '5V_OUT', '2': '5V_OUT', '3': 'GND', '4': 'GND', '5': 'RX_FROM_CAMERA_TX',
                     '6': 'TX_TO_CAMERA_RX'}
-SERVO_PIN_NAMES = {'1': 'GND', '2': 'VBAT_NC', '3': 'SERVO1', '4': 'SERVO2', '5': 'SERVO3', '6': 'SERVO4',
-                   '7': 'RX7_NC', '8': 'CURR_NC'}           # D-R12-192: the H743 ESC port's names for its NC contacts
+SERVO_PIN_NAMES = {'1': 'GND', '2': '5V_NC', '3': 'SERVO1', '4': 'SERVO2'}   # D-R12-195: the H743 UART order
 SWITCH_PIN_NAMES = {'1': 'SW_SOURCE', '2': 'SW_RETURN', '3': 'NC', '4': 'NC'}
 TERMINAL_PIN_NAMES = {'J410': GPS_PIN_NAMES, 'J420': PORT_PIN_NAMES, 'J440': PORT_PIN_NAMES, 'J9': CAMERA_PIN_NAMES,
                       'J122': SERVO_PIN_NAMES, 'J400': SWITCH_PIN_NAMES}
 # pin name -> the net that name allows (a regex); NC: no connection (KiCad's unconnected-(...) net or none)
 NAME_NETS = {'GND': r'GND', '4V8': r'PORT_4V8', 'TXO': r'(GPS|RADIO|AUX)_TX_WIRE', 'RXI': r'(GPS|RADIO|AUX)_RX_WIRE',
-             'NC': r'(unconnected-\(.*\))?', 'VBAT_NC': r'(unconnected-\(.*\))?', 'RX7_NC': r'(unconnected-\(.*\))?',
-             'CURR_NC': r'(unconnected-\(.*\))?', '5V_OUT': r'CAM_5V', 'RX_FROM_CAMERA_TX': r'CAM_RX_WIRE',
-             'TX_TO_CAMERA_RX': r'CAM_TX_WIRE', 'SERVO1': r'SERVO1_OUT', 'SERVO2': r'SERVO2_OUT',
-             'SERVO3': r'SERVO3_OUT', 'SERVO4': r'SERVO4_OUT', 'SW_SOURCE': r'BAT_SW_SOURCE',
+             'NC': r'(unconnected-\(.*\))?', '5V_NC': r'(unconnected-\(.*\))?', '5V_OUT': r'CAM_5V', 'RX_FROM_CAMERA_TX': r'CAM_RX_WIRE',
+             'TX_TO_CAMERA_RX': r'CAM_TX_WIRE', 'SERVO1': r'SERVO1_OUT', 'SERVO2': r'SERVO2_OUT', 'SW_SOURCE': r'BAT_SW_SOURCE',
              'SW_RETURN': r'BAT_SW_RETURN'}
 
 
@@ -169,11 +168,12 @@ def name_seeds(names):
     def put(ref, table):
         return lambda m: m.update({(ref, p): (v, m[ref, p][1]) for p, v in table.items() if (ref, p) in m})
     r11_port = {'1': '4V8', '2': 'GND', '3': 'TXO', '4': 'RXI'}
-    servo6 = {'1': 'SERVO1', '2': 'SERVO2', '3': 'SERVO3', '4': 'SERVO4', '5': 'GND', '6': 'NC'}  # D-R12-31's order
+    servo8 = {'1': 'GND', '2': 'VBAT_NC', '3': 'SERVO1', '4': 'SERVO2'}  # D-R12-192's SH-8 ESC names (superseded)
     mutations = {
         'ports keep R11\'s PortTerminal names (1 4V8, 2 GND)': put('J420', r11_port),
         'GPS port on the servo symbol': put('J410', SERVO_PIN_NAMES),
-        'servo port keeps the 6-pin names (1-4 SERVO1-4, 5 GND; D-R12-192)': put('J122', servo6),
+        'servo port keeps the SH-8 ESC names (VBAT on pin 2; D-R12-195)': put('J122', servo8),
+        'servo port given the port names (pin 2 4V8; D-R12-195)': put('J122', PORT_PIN_NAMES),
         'port TXO / RXI names swapped': put('J440', {'3': 'RXI', '4': 'TXO'}),
         'camera terminal given the port names': put('J9', PORT_PIN_NAMES),
         'port pin 1 net moved to PORT_4V8 under its GND name': lambda m: m.update({('J420', '1'): ('GND', 'PORT_4V8')}),
@@ -309,14 +309,20 @@ def seeds(parts, pins):
         'second arming terminal restored': lambda p, n: p.update({'J124': copy.deepcopy(p['J400'])}),
         'separate pyro bus restored': lambda p, n: n.update({('R134', '2'): 'PYRO1_BUS'}),
         'shorted-igniter limiter removed': pop('R134'),
-        'servo pull-down removed': pop('R156'),
-        'servo pin 8 connected': lambda p, n: n.update({('J122', '8'): 'SERVO4_OUT'}),
-        'servo VBAT contact on the pack (D-R12-192)': lambda p, n: n.update({('J122', '2'): 'BAT_IN'}),
-        'servo VBAT contact on GND (D-R12-192)': lambda p, n: n.update({('J122', '2'): 'GND'}),
-        'servo M1-M4 order reversed (D-R12-192)': lambda p, n: n.update({('J122', '3'): 'SERVO4_OUT',
-                                                                         ('J122', '6'): 'SERVO1_OUT'}),
-        'servo GND on the H743 Curr contact (D-R12-192)': lambda p, n: n.update({('J122', '1'): None,
-                                                                                 ('J122', '8'): 'GND'}),
+        'servo pull-down removed': pop('R155'),
+        'servo 5 V contact on PORT_4V8 (D-R12-195)': lambda p, n: n.update({('J122', '2'): 'PORT_4V8'}),
+        'servo 5 V contact on GND (D-R12-195)': lambda p, n: n.update({('J122', '2'): 'GND'}),
+        'servo TX / RX positions swapped (D-R12-195)': lambda p, n: n.update({('J122', '3'): 'SERVO2_OUT',
+                                                                              ('J122', '4'): 'SERVO1_OUT'}),
+        'servo port mirrored, GND on pin 4 (D-R12-195)': lambda p, n: n.update({('J122', '1'): 'SERVO2_OUT',
+                                                                                ('J122', '2'): 'SERVO1_OUT',
+                                                                                ('J122', '3'): None,
+                                                                                ('J122', '4'): 'GND'}),
+        'SERVO3 cell restored (D-R12-195)': lambda p, n: (p.update({'R152': copy.deepcopy(p['R150'])}),
+                                                          n.update({('R152', '1'): 'SERVO3_MCU',
+                                                                    ('R152', '2'): 'SERVO3_OUT'})),
+        'SERVO4 back on its U1 ball (D-R12-195)': lambda p, n: n.update({('U1', 'C9'): 'SERVO4_MCU'}),
+        'D121 unused I/O tied to 3V3 (D-R12-195)': lambda p, n: n.update({('D121', '6'): '3V3'}),
         'port TX / RX swapped': lambda p, n: n.update({('J420', '3'): 'RADIO_RX_WIRE', ('J420', '4'): 'RADIO_TX_WIRE'}),
         'port series resistor bypassed': lambda p, n: n.update({k: 'GPS_TX_WIRE' for k, v in list(n.items())
                                                                 if k[0] == 'U1' and v == 'GPS_TX_MCU'}),

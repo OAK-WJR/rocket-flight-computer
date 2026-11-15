@@ -6,7 +6,7 @@ Last updated 2026-11-14 (R12; R11 candidate sections below; R10 candidate sectio
 
 ## R12 candidate: M3-ASSY-R12 (one-sided four-layer Economic PCBA, 46 × 86.85 mm; NOT accepted)
 
-**Status (2026-11-14).** PCB `876733fe58d0f8559bf236232c32f1692e24ed0cdfaaf00bd2c94bf78918dc40`, 46 × 86.85 × 1.6 mm, four layers; 193 footprints, 185 JLC parts (D-R12-192: J122 is an SH-8 in the MicoAir H743 ESC order; round 12 ended on `c9b9f0fa…`). Not accepted, nothing ordered; R9 stays accepted.
+**Status (2026-11-14).** PCB `96207d2e4bddabf703ad9cd4ce656f11099b058855423c772dbea9e73e8e5d65`, 46 × 86.85 × 1.6 mm, four layers; 189 footprints, 181 JLC parts (D-R12-195: J122 is a single-servo SH-4 in the MicoAir H743 4-pin UART order, SERVO3 / SERVO4 deleted; `876733fe…` carried D-R12-192's SH-8; round 12 ended on `c9b9f0fa…`). Not accepted, nothing ordered; R9 stays accepted.
 
 **Round 12 final fix pass (2026-11-13; D-R12-175 … -191).** Rounds 10 and 11 were the clean pair under
 D-R12-167 (zero Critical / zero Major); round 10 had 16 Minors. Historical round 11 reviewed `a1e65bb4…`: 13 Minor, left when the owner
@@ -37,7 +37,24 @@ Two identical builds; DRC / parity / unconnected / ERC 0; all 34 check_r12 rules
 allowlisted; fit / legends / fill OK; fab manifest bound; hot-plug (2304 / 2304, minimum −14.077 V, numerically unchanged; Simulation / Inference) and stage D re-bound to `876733fe…`.
 Parts + feeder $64.03 / $43.77 per board at 2 / 5 boards (+$1.53 / +$0.61, one more charged code). This change has
 had no full review round, only its fix lane, a focused read-only review (0 Critical / 0 Major / 5 Minor, all text, corrected) and the full gate. Not accepted,
-nothing ordered.
+nothing ordered. Superseded by D-R12-195 … -198.
+
+**Single-servo port (2026-11-14; D-R12-195 … -198).** Owner, 2026-11-14: "Ok lets just design for flight 1 where there
+is only one servo going into one small jst (cross compatible with micoair)". J122 is an SH-4 (ZX-SH1.0-4PWT, C7430446,
+the J420 / J440 part) at (24.6, 3.65): 1 GND, 2 NC (the H743's 5 V position; no copper, S-7; the servo lead is two
+wires with position 2 empty, D-R12-196, owner row 57), 3 SERVO1 (TX position), 4 SERVO2 (RX position, spare). SERVO3 /
+SERVO4 deleted (R152, R153, R156, R157; PA8 / PA9 NC; D121 I/O3 / I/O4 open, Inference from ProTek's equivalent
+circuit, and held as I-5 victims). SERVO1_MCU / SERVO2_MCU's B.Cu trunks moved into the freed lanes (no GND pour
+fingers) and SERVO2_MCU has one layer change (route leftovers 8 → 4). H743 side: UART4, PA0 TIM5_CH1 / PA1 TIM5_CH2
+(D-R12-197). Flight 2 with more than two surfaces needs a respin (owner row 58); four-stall budgets kept as a bound.
+**Verified (Measured / tool runs on `96207d2e…`):** two identical builds; DRC / parity / unconnected / ERC 0;
+r12_sch_check 65 / 65 seeds; all 34 check_r12 rules OK (S-10 exception table unchanged; I-5 76 connected victims,
+47 NC IC-pin nets, four open diode pins; K-power 121 taps / 19 exceptions); route_check 0 failing / 2 allowlisted / 4
+leftovers; fit / legends / fill OK; fab manifest bound (60 lines, 181 CPL rows, 585 paste flashes); hot-plug
+re-extracted (electrical signature unchanged) and re-run 2304 / 2304, numerically identical (Simulation / Inference);
+stage D re-run (RAW trunk unchanged, U6 1 A drift minimum 3.20406 V, hot-plug / stage D binding gate OK); test_check_shell 33, test_fit_check 39, test_route_check 88, test_zone_check 11,
+test_r12_fab 15, test_r12_stageD 60 and test_r12_check (134 tests: 132 pass in the full run with R12_BOARD_REQUIRED; the two count expectations (76 I-5 victims, four route leftovers) were updated and re-run, and the tests touched after the full run re-run, all pass) pass. **Not verified:** the full `tools/check.sh`
+(orchestrator), any review round, any firmware, physical, electrical or JLC DFM test.
 
 Lane P's gate: DRC / parity / unconnected 0, all 34 check_r12 rules OK, route_check 0 failing / 2 allowlisted,
 eight recorded leftovers / zero unrecorded or stale, fit / legends / fill OK, fab manifest bound.
@@ -48,13 +65,15 @@ under 6.7 ms per sliding 100 ms (Calculation / Inference). Hot-plug 2304 / 2304,
 O-R12-22 remains open. R118 10k doubles Q122's DC hold; R110 is 1.5k; LS120 is at (5.8, 70.25).
 No R12 firmware binding exists. Records lane static checks only; final gate remains the orchestrator's condition.
 
-Parts + feeder **$64.03 / $43.77 per board at 2 / 5 boards**, against the $84.41 cap (Live
-2026-11-14T00:33:48Z / 00:35:22Z, after D-R12-192's SH-8 J122): 61 BOM lines (25 Extended / 36 Basic), 185 JLC
-parts, 22 charged codes, $30.26 parts per board and $67.54 feeder fees per order (was $62.50 / $43.16 with 21 codes
-on `c9b9f0fa…`). There are 597 paste flashes and no owner BOM. Stock 2026-11-14T00:33:05Z / 00:34:34Z: no line
-short or thin at either quantity (C7430450: 56 065 in stock, 54 903 orderable). Orderable quantity is an Inference
-about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for
-historical `1d7562d5…`; re-quote `876733fe…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-15T02:20:48Z / 02:22:13Z, after D-R12-195's SH-4 J122 and the SERVO3 / SERVO4 deletion): 60 BOM lines
+(24 Extended / 36 Basic), 181 JLC parts, 21 charged codes, $30.20 parts per board and $64.47 feeder fees per order
+(was $64.03 / $43.77 with 22 codes on `876733fe…`). There are 585 paste flashes and no owner BOM. Stock
+2026-11-15T02:20:03Z / 02:21:31Z: **U9 (TPS259470ARPWR, C3662799) reads short at both quantities** (stock 175,
+orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
+other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
+day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
+re-quote `96207d2e…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 Owner items: [R12_VALIDATION.md](docs/R12_VALIDATION.md); harness: [R12_VEHICLE_HANDOFF.md](docs/R12_VEHICLE_HANDOFF.md); full state: [M3_R12.md](docs/M3_R12.md#current-state).
 

@@ -1,13 +1,14 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `876733fe58d0f8559bf236232c32f1692e24ed0cdfaaf00bd2c94bf78918dc40`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 SH-8 since D-R12-192),
+**Status.** PCB `96207d2e4bddabf703ad9cd4ce656f11099b058855423c772dbea9e73e8e5d65`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195),
 four layers, every part on the top face and assembled by JLC. R12 remains a CAD candidate, not accepted,
 nothing ordered; R9 stays accepted. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
 [R12_VALIDATION.md](R12_VALIDATION.md). No physical fit is claimed.
 
 Coordinates are board mm: x east (0 … 46), y forward from the aft edge (0 … 86.85), top face F.
-Current centres are `m3_design/r12_place.tsv` on `876733fe…` (Measured). All positions below are on this board; figures
-labelled `c9b9f0fa…` were measured on round 12's board, whose copper and placement differ only at J122 (D-R12-192).
+Current centres are `m3_design/r12_place.tsv` on `96207d2e…` (Measured). All positions below are on this board; figures
+labelled `c9b9f0fa…` were measured on round 12's board, whose copper and placement differ from this one only at J122 and
+the servo cells (D-R12-192, -195).
 J1's terminal set the 86.85 mm outline (D-R12-174); round 12 adds R118 without moving existing parts.
 
 ## Harness pin map
@@ -17,15 +18,15 @@ column. The legends sit alternately inward and outward of the pad row (D-R12-80)
 every lead's pin identity by continuity before first power.**
 
 The SH contacts are numbered as on JST's SMnnB-SRSS-TB land (D-R12-31). The ports copy the MicoAir H743's SH port
-orders, so one module lead fits either board; J122 copies its 8-pin ESC port (D-R12-192), so one SH-8 servo lead fits
-both boards (signals and GND; see the VBAT rule below). No source marks a pin-1 end: MicoAir's port images and wiring
-diagrams (v1 and v2 agree) put GND at the same mouth-relative end of the GPS, UART / TELEM and ESC ports, and R12 makes that end pin 1. The
-orders stay an **Inference** until a real H743 lead is checked (O-R12-19, now covering the ESC port too).
+orders, so one module lead fits either board; J122 copies its 4-pin UART port order (D-R12-195), so one servo lead
+(signal and GND only; see the 5 V rule below) fits both boards. No source marks a pin-1 end: MicoAir's port images and
+wiring diagrams (v1 and v2 agree) put GND at the same mouth-relative end of the GPS, UART / TELEM and ESC ports, and R12
+makes that end pin 1. The orders stay an **Inference** until a real H743 lead is checked (O-R12-19).
 
 | Port | Edge, mouth | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
 |---|---|---|---|---|---|---|---|---|---|
 | J400 switch, SH-4 | aft, mouth aft; pin 1 at x 12.5, pin 4 at x 9.5 | SW (BAT_SW_SOURCE) | SW (BAT_SW_RETURN) | NC | NC | — | — | — | — |
-| J122 servo signals, SH-8 (H743 ESC order) | aft; pin 1 at x 26.1, pin 8 at x 19.1 | GND (signal reference; H743 GND) | NC (H743 **VBAT**: must be dead on R12) | SERVO1 (S1; H743 M1) | SERVO2 (M2) | SERVO3 (M3) | SERVO4 (M4) | NC (H743 RX7, ESC telemetry) | NC (H743 Curr) |
+| J122 servo signals, SH-4 (H743 UART order) | aft; pin 1 at x 26.1, pin 4 at x 23.1 | GND (signal reference; H743 GND) | NC (H743 **5 V**: must be empty on R12) | SERVO1 (S1; H743 TX position) | SERVO2 (S2, spare; H743 RX position) | — | — | — | — |
 | J9 camera, SH-6 | aft; pin 1 at x 36.0, pin 6 at x 31.0 | CAM_5V (5V4) | CAM_5V (5V4) | GND | GND | board RXI (camera TX here) | board TXO (to camera RX) | — | — |
 | J420 radio by default, SH-4 | forward, mouth forward; pin 1 at x 10.0 | GND | 4V8 (PORT_4V8) | board TXO (to module RX) | board RXI (from module TX) | — | — | — | — |
 | J410 GPS by default, SH-6 | forward; pin 1 at x 20.5 | GND | 4V8 | board TXO | board RXI | NC (the H743's SCL) | NC (SDA) | — | — |
@@ -63,18 +64,23 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
     15).
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
     4.60–4.94 V at room temperature (initial tolerance, Calculation).
-- **Servo power from the harness (`SERVO + FROM HARNESS`).** J122 carries signals only: SERVO1–4 on pins 3–6 and one
-  shared signal GND on pin 1. Servo motor power and return run in the pack-star harness, never through the board (REQUIREMENTS F4). R12's
+- **Servo power from the harness (`SERVO + FROM HARNESS`).** J122 carries signals only: SERVO1 on pin 3, the spare
+  SERVO2 on pin 4 and the signal GND on pin 1 (D-R12-195: one servo on flight 1; SERVO3 / SERVO4 are deleted). Servo motor power and return run in the pack-star harness, never through the board (REQUIREMENTS F4). R12's
   board does not print this note (D-R12-81, owner acceptance pending), so label the harness itself.
-- **J122's VBAT position must be dead on R12 (D-R12-193).** On the H743, the ESC port's VBAT is a battery input, so a
-  lead that powers an H743 through it carries the pack (up to 8.4 V) to J122.2, which sits 0.4 mm from GND (pin 1)
-  and SERVO1 (pin 3). A solder or debris bridge would then short the pack through the lead's thin VBAT wire (no
-  fuse limits it; the contact is rated 1 A), or push ≤ 5.2 mA into the 3V3 clamp (board on, PA15 high) / ≤ 8.5 mA through R150 (PA15 low, or board off and back-feeding 3V3)
-  into SERVO1's clamp and lose servo 1's command (Calculation / Inference). So on R12: **extract the VBAT contact from
-  the lead's SH-8 housing, or cut its wire back and insulate it at both ends, joined to nothing.** A lead whose VBAT
-  feeds an H743 is not plugged into R12 as is; give the H743 its own supply lead or a VBAT branch that is unplugged
-  before the lead moves to R12. A fuse in the VBAT wire is not enough (it limits the pack short, not the SERVO1
-  back-feed). Pins 7 (RX7) and 8 (Curr) are unconnected on R12; the board receives no ESC telemetry or current.
+- **The servo lead is two wires, signal and ground; J122's position 2 is empty (D-R12-196).** J122.2 is the H743's 5 V
+  position; R12 leaves it unconnected, 0.4 mm from GND (pin 1) and SERVO1 (pin 3). A lead built for an H743 UART port
+  with its 5 V wire fitted would put the H743's 5 V there: one solder or debris bridge then shorts that 5 V through the
+  lead (limited only by the H743's BEC; Inference), or pushes ≤ 2.05 mA into SERVO1's clamp (board on) / ≤ 5.3 mA
+  through R150 (PA15 low, or board off) and loses servo 1's command (Calculation / Inference: 5.25 V assumed). So on
+  R12: **crimp only GND (position 1) and the servo signal (position 3; position 4 only for a second servo); extract
+  any 5 V contact, or cut its wire back and insulate it at both ends, joined to nothing.** The servo's own power stays
+  in the pack-star harness. D-R12-193's VBAT rule for the SH-8 is superseded.
+- **The same lead on the MicoAir H743 (D-R12-197).** Plug it into the H743's **UART4** port (west edge, GND / 5V / TX /
+  RX on v1 and v2): position 3 is PA0, which our H743 firmware drives as **TIM5_CH1** (AF2; or TIM2_CH1, AF1), and
+  position 4 is PA1, TIM5_CH2 / TIM2_CH2 for a second servo (DS12110 Rev 8 Table 10; pin map from ArduPilot's
+  MicoAir743 / MicoAir743v2 hwdef). UART1 (PA9 TIM1_CH2 / PA10 TIM1_CH3) and UART6 (PC6 / PC7, TIM3 or TIM8) also work;
+  on v2 UART5 (PB6 TIM4_CH1 / PB5 TIM3_CH2). Not UART3, UART7 or UART8. The ports' pin orders are read from MicoAir's
+  images (Inference, O-R12-19).
 - **SH harness.** These are SH 1.0 mm clones (Megastar ZX-SH1.0, D-R12-31). They have **no latch**: retention is
   friction only, accepted by the owner with the per-flight retention step below (O-R12-18). Mating with JST SH housings
   is an Inference until a sample check (O-R12-04).
@@ -137,8 +143,8 @@ recorded at ≥ 10 kS/s under flight-level vibration with U9 on throughout at 5.
 0. **Plug identity and retention.**
    - **0b — plug identity:** before mating, identify every plug against its port legend. J400 takes only the switch
      lead. Give the switch and camera leads distinct tags. Repeat step 2 after any plug is moved.
-   - **0d — J122 VBAT dead (D-R12-193; done before the retention step 0c):** confirm its VBAT position (pin 2, beside GND)
-     is empty, or reads below 0.1 V to the lead's GND contact with the pack connected and every switch on. On the first
+   - **0d — J122 position 2 empty (D-R12-196; done before the retention step 0c):** confirm the servo lead has no contact
+     in position 2 (the H743's 5 V, beside GND) and only GND and the servo signal(s) fitted. On the first
      article, and after any rework near J122, also meter J122.2 to J122.1 and to J122.3 on the unpowered board (both
      open) and inspect the J122 row at 10× for bridges or debris.
    - **0c — retention:** Seat each SH plug fully and fix it with an adhesive / RTV dab or a tie. Check each by a
@@ -253,7 +259,7 @@ J400 rules when attaching probes; these checks do not replace the cold screen.
 
 J2 (TC2030, top, (32.8, 48.85)) is the SWD port. Program with the e-match disconnected, and record and read back
 BOOT_ADD0 and the boot settings. The round-12 records lens read AN2606 Rev 71 Table 145: loader outputs
-include PA9 (SERVO4), PB10 (QSPI_NCS), PB6/PB9 (barometer SCL/IMU_CS), PA8/PC9 (SERVO3/VBUS_SENSE),
+include PA9 (NC since D-R12-195), PB10 (QSPI_NCS), PB6/PB9 (barometer SCL/IMU_CS), PA8/PC9 (NC / VBUS_SENSE),
 PA6 (VLOGIC_SENSE), PC11 (camera UART) and PE13 (SD MISO); USB uses PA11/PA12. Physical loader checks
 remain O-R12-23. NRST's filter capacitor C24
 is at J2's end of the NRST run (26.6, 49.03) (D-R12-98). R10's dummy-load / no-e-match service procedure
@@ -268,12 +274,14 @@ first article; the per-flight closed-switch check does not command a fire.
 
 ## Cost
 
-Parts + feeder **$64.03 / $43.77 per board at 2 / 5 boards**, against the $84.41 cap (Live
-2026-11-14T00:33:48Z / 00:35:22Z, after D-R12-192's SH-8 J122): 61 BOM lines (25 Extended / 36 Basic), 185 JLC
-parts, 22 charged codes, $30.26 parts per board and $67.54 feeder fees per order (was $62.50 / $43.16 with 21 codes
-on `c9b9f0fa…`). There are 597 paste flashes and no owner BOM. Stock 2026-11-14T00:33:05Z / 00:34:34Z: no line
-short or thin at either quantity (C7430450: 56 065 in stock, 54 903 orderable). Orderable quantity is an Inference
-about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for
-historical `1d7562d5…`; re-quote `876733fe…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-15T02:20:48Z / 02:22:13Z, after D-R12-195's SH-4 J122 and the SERVO3 / SERVO4 deletion): 60 BOM lines
+(24 Extended / 36 Basic), 181 JLC parts, 21 charged codes, $30.20 parts per board and $64.47 feeder fees per order
+(was $64.03 / $43.77 with 22 codes on `876733fe…`). There are 585 paste flashes and no owner BOM. Stock
+2026-11-15T02:20:03Z / 02:21:31Z: **U9 (TPS259470ARPWR, C3662799) reads short at both quantities** (stock 175,
+orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
+other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
+day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
+re-quote `96207d2e…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 See [M3_R12.md](M3_R12.md#cost-and-stock).

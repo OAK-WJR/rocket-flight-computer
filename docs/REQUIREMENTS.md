@@ -18,7 +18,7 @@ datasheet calculation, **Bench** = measured on a built board, **Flight**.
   - roll angle is integrated gyro, relative to the orientation at liftoff;
   - on a flight-computer reset, hang or brownout the tab must return to neutral quickly;
   - roll control is active during the burn as well as the coast (exact start and stop points open);
-  - flight 2's pitch/yaw surfaces are undecided, so the board's 4-servo limit becomes their constraint;
+  - flight 2's pitch/yaw surfaces are undecided, so the board's 4-servo limit becomes their constraint (R12: two outputs since D-R12-195, so more than two surfaces need a respin);
   - no in-flight tab-deflection sensing (servos are characterised on the bench, under load);
   - telemetry radio and GPS: R7–R9 carried them on the board (decision 2026-10-15; u-blox MAX-F10S and EBYTE E22-900MM22S, selection in `../../reports/Compact rocket GPS and radio.md`). **R10** (owner decisions O1 / O2, 2026-10-26; CAD candidate, not accepted) removes them and uses an external GPS (HGLRC M100 Mini) on DB125 4-position J410 and an external radio (MicoAir LR900-F) on DB125 4-position J420 (F10). The radio uplink must never arm or fire recovery;
   - **R10 single screw switch (2026-10-28):** one external screw switch on J400 powers and arms the board; J124 and its fused ARM link are removed. The pyro feed remains behind Q120 / Q121. Pad checks take place on the rail; the power switch is turned on last and off first (R10_DECISIONS "Single screw switch for power and arming");
@@ -158,3 +158,12 @@ differs. R11 is a CAD candidate: not accepted, nothing ordered. Its owner list i
 | M1 | JLC 6-layer JLC06161H-3313, 1.6 mm, ENIG, **0.5 oz inner copper** (M1's 1 oz inner is not met; owner row in R11_VALIDATION). Stock fails on U9, U4 and U2 (2026-11-03T23:01:04Z). | D-R11-03; stageD2.md §8 |
 | M2 | Design rules 0.1 mm track and clearance (JLC multilayer 0.09 mm), through vias, two VIPPO vias at U401.11 (GAP-3); route_check r11 has two allowlist entries (SD_MOSI, CAM_RX_BUFFER) and 25 unrecorded leftovers; silkscreen as F8 above. JLC DFM not queried. | D-R11-15, -61, -80, -83 |
 | M3 | Met on the 2026-11-03T23:01:53Z snapshot: $79.79 per board against $84.41. | D-R11-84; stageD2.md §8 |
+
+## R12 notes
+
+M3-ASSY-R12 (branch `m3-assy-r12`; [M3_R12.md](M3_R12.md)) is a CAD candidate: not accepted, nothing ordered. Its owner
+list is [R12_VALIDATION.md](R12_VALIDATION.md). This table records only the R12 row the owner changed on 2026-11-14.
+
+| ID | R12 status where it differs from R10 | Record |
+|---|---|---|
+| F4 | **One servo on flight 1, plus a spare second output (owner, 2026-11-14).** J122 is an SH-4 (Megastar ZX-SH1.0-4PWT) in the MicoAir H743 4-pin UART order: 1 signal GND, 2 NC (the H743's 5 V position, no copper), 3 SERVO1 (PA15 TIM2_CH1), 4 SERVO2 (PA10 TIM1_CH3, the spare, parked low unless a second surface is fitted). SERVO3 / SERVO4 and their cells are deleted. The servo lead is two wires, signal and ground; motor power and return stay in the pack-star harness. Each output keeps its 1 kΩ series resistor, pull-down and SRV05-4 clamp. Flight 2 with more than two control surfaces needs a respin. The four-stall budget is kept as a conservative bound. | D-R12-195 … -198; R12_VALIDATION rows 57, 58 |

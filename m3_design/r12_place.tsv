@@ -77,7 +77,7 @@ J2	32.8	48.85	90	F	D-R12-94 (AVA re-layout): Z4 SWD Tag-Connect aft-east of U1 b
 J3	41.4	49.35	90	F	D-R12-94 (AVA re-layout): Z2 USB-C mouth at the east edge, 1.5 mm forward for D6
 J9	33.5	3.65	180	F	camera SH port, aft edge, east beside the camera buck
 J121	7.4	40.85	270	F	pyro DB125-2 screw terminal, wires leave west, face 3.35 mm in for the 4.95 mm wire room; pin 1 OUT (E1-) north, pin 2 IGN (E1+) south (D-R12-29)
-J122	22.6	3.65	180	F	D-R12-192: SH-8 servo port in the MicoAir H743 ESC order (1 GND ... 8 Curr), 1.0 mm east so pins 3-6 (SERVO1-4) keep the 6-pin header's pins 1-4 x (24.1 ... 21.1) and R150-R153 and their runs stay; west courtyard edge unchanged (16.905), east edge 2 mm east (28.295, 0.51 mm from J9's); was (21.6, 3.65): servo SH port, aft edge, middle
+J122	24.6	3.65	180	F	D-R12-195 (owner 2026-11-14, one servo): SH-4 servo port in the MicoAir H743 4-pin UART order (1 GND, 2 NC (5 V position), 3 SERVO1 (TX), 4 SERVO2 (RX, spare)), 2.0 mm east of the SH-8 so pins 3-4 keep x 24.1 / 23.1 (R150 / R151 and their runs unchanged) and pin 1 GND keeps x 26.1 (its via pair unchanged); east courtyard edge unchanged (28.295, 0.51 mm from J9's), west edge 4.0 mm east (20.905); was (22.6, 3.65) SH-8 (D-R12-192), (21.6, 3.65) SH-6 (D-R12-31)
 J400	11	3.65	180	F	switch / arming SH port, aft edge, west beside the power entry
 J410	23	83.2	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); GPS SH-6 port (H743 GPS order), forward edge, middle
 J420	11.5	83.2	0	F	R12F10-TRI-16 (83 mm outline): -2 mm in y with the port row; R12F9 lane L (85 mm outline): -3 mm in y with the port row; R12F7-TRI-03 (88 mm outline): -2 mm in y; D-R12-99 (90 mm outline): port row and its 1 k / 100 nF cells moved 10 mm aft as a block (internal copper translates); radio SH port, forward edge, west
@@ -143,14 +143,10 @@ R132	17.17	36.05	0	F	arm; round 6 V-1 / V-2 (pack energy): turned to run east, R
 R133	16.6	39.85	90	F	arm
 R134	13.9	38.55	90	F	2 ohm series
 R136	4.1	54.05	0	F	R12F6-TRI-01: cold pull-up series resistor 3V3 -> R136 -> D120.1 (PYRO1_COLD_PU); in line west of D120.1 (pad 2 east to the anode, pad 1 west to its own 3V3 via; south of D120.1 is D120's pin-1 dot), courtyard 0.13 mm clear of D120's, more than 3.5 mm from every PYRO1_OUT item
-R150	24.1	15.95	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33; J122 pins 3-6 since D-R12-192)
-R151	23.1	12.85	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33; J122 pins 3-6 since D-R12-192)
-R152	22.1	15.95	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33; J122 pins 3-6 since D-R12-192)
-R153	21.1	12.85	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33; J122 pins 3-6 since D-R12-192)
+R150	24.1	15.95	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33; J122 pins 3-4 since D-R12-195)
+R151	23.1	12.85	90	F	servo 1k series in line with its J122 pin (staggered rows, D-R12-33; J122 pins 3-4 since D-R12-195)
 R154	25.9	16.6	0	F	servo pull-down beside D121
 R155	25.9	17.6	0	F	servo pull-down beside D121
-R156	28	16.6	180	F	servo pull-down beside D121
-R157	28	17.6	180	F	servo pull-down beside D121
 R162	8.6	63.65	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate R
 R163	9.6	63.65	90	F	D-R12-94 (AVA re-layout): Z6 buzzer gate pull-down
 R164	19.85	42.45	90	F	D-R12-94 (AVA re-layout): Z3 3V3 -> 3V3A feed at the west side of the stack

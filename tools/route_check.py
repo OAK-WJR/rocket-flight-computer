@@ -429,22 +429,8 @@ PARALLEL_VIAS_R12 = [
 # summary line; the R12 gate self-test holds both counts at zero). Figures are route_check's on the round 12 lane P
 # board; the neighbour gaps are the round 12 copper lens's, on copper that pass did not move.
 LEFTOVERS_R12 = [
-    ('tiny_jog', 'SERVO2_MCU', 'B.Cu', (28.65, 21.35),
-     "R12F12-TRI-29: the 0.424 mm B.Cu diagonal between SERVO2_MCU's x 28.65 and x 28.95 runs (1.3 / 0.424 / 5.7 mm) "
-     "clears SERVO4_MCU's B.Cu branch (28.43, 18.45)-(28.43, 15.53): a straight trunk at x 28.65 leaves 0.07 mm of edge "
-     "gap to it, and an offset to x >= 29.05 puts SERVO2's via 0.05 mm from SERVO3_MCU's B.Cu trunk at x 29.4. Any "
-     "0.3 mm offset is a 0.424 mm diagonal, under the 0.5 mm jog limit"),
-    ('extra_vias', 'SERVO2_MCU', 'net', (28.95, 15.2),
-     "R12F12-TRI-29: 57.76 mm / 3 vias (allowed 2) for a 48.9 mm pad tree. D121.3 cannot reach R155.1 / R151.1 on F.Cu: "
-     "a west run at y 18.3-18.9 meets SERVO4_MCU's via (28.43, 18.45) or CAM_EN's via at <= 0.05 mm, and the x 28.95 "
-     "descent crosses SERVO3_MCU's F.Cu link (29.4, 16.05)-(28.85, 16.6) into R156.1"),
-    ('extra_vias', 'SERVO3_MCU', 'net', (28.95, 12.9),
-     "R12F12-TRI-29: 67.28 mm / 3 vias for a 51.46 mm pad tree. On F.Cu R152.1 (22.1, 16.775) is enclosed by "
-     "SERVO2_MCU's x 23.1 run (13.675 to 17.25) and SERVO4_MCU's y 13.05 run, which forces the B.Cu loop round y 11.45"),
-    ('extra_vias', 'SERVO4_MCU', 'net', (27.05, 12.9),
-     "R12F12-TRI-29: 52.75 mm / 3 vias for a 50.88 mm pad tree. On F.Cu R157.1 to D121.6 crosses SERVO1_MCU's link "
-     "(26.87, 15.2)-(25.47, 16.6): the pull-down columns R154-R157 do not match D121's pin columns (R155 west of D121.3, "
-     "R157 east of D121.6). Swapping R155 / R157 is an untested re-route of four servo nets, not taken (round 12 triage)"),
+    # D-R12-195: SERVO2_MCU's tiny jog and extra via, and SERVO3_MCU's / SERVO4_MCU's extra vias, are gone: SERVO3 /
+    # SERVO4 are deleted and SERVO2_MCU re-routed with one layer change (R12_DECISIONS D-R12-195)
     ('extra_vias', 'NRST', 'net', (26.6, 49.45),
      "R12F12-TRI-29 (D-R12-122): 28.2 mm / 4 vias for an 18.07 mm pad tree. The DRU keeps 0.508 mm from J2's pads, so "
      "nothing threads J2's 0.49 mm pad gaps to J2.3, the middle of its east column: the B.Cu hop under J2 is the "

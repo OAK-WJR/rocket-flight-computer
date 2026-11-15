@@ -37,9 +37,9 @@ URL = 'https://easyeda.com/api/products/{}/components'
 # footprint's own frame, of the numbers JLCEDA gives the two fixing tabs of the Megastar ZX-SH1.0 side-entry headers;
 # our lands (m3_design/r12_parts.py ghc()) leave them unnumbered. Read 2026-11-04 from
 # https://easyeda.com/api/products/<code>/components: C7430446 ZX-SH1.0-4PWT pad 6 left, pad 5 right; C7430448
-# ZX-SH1.0-6PWT pad 8 left, pad 7 right; read 2026-11-14 (D-R12-192): C7430450 ZX-SH1.0-8PWT pad 10 left, pad 9 right.
+# ZX-SH1.0-6PWT pad 8 left, pad 7 right (the 8P of D-R12-192 is gone with D-R12-195's SH-4 J122).
 # Matching the tabs as well as the signals fixes the body's direction.
-R12_MECHANICAL = {'M3_SHC_4P': ('6', '5'), 'M3_SHC_6P': ('8', '7'), 'M3_SHC_8P': ('10', '9')}
+R12_MECHANICAL = {'M3_SHC_4P': ('6', '5'), 'M3_SHC_6P': ('8', '7')}
 # D-R12-174: R12's body corrections, added to R10's BODY (a symmetric pin row, an asymmetric body: pad matching cannot
 # see a 180 deg turn). Kefa KF301-5.0-2P (C474881): JLCEDA's footprint (https://easyeda.com/api/products/C474881/
 # components, read 2026-11-10) draws the body -4.00 / +3.70 mm about the pin row with the two wire-cage outlines on its

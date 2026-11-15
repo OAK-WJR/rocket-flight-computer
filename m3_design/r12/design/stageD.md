@@ -1,9 +1,13 @@
 # R12 stage D: post stage, fab package, analyses and the fixes they needed (2026-11-05)
 
-## Current snapshot (round 12, 2026-11-13; D-R12-192, 2026-11-14)
+## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14)
 
-PCB `876733fe58d0f8559bf236232c32f1692e24ed0cdfaaf00bd2c94bf78918dc40` since D-R12-192 (SH-8 J122, MicoAir ESC order; two identical builds, gate steps and stage D / hot-plug
-re-bound by its fix lane; copper and placement differ from round 12's `c9b9f0fa…` only at J122), 46 × 86.85 × 1.6 mm.
+PCB `96207d2e4bddabf703ad9cd4ce656f11099b058855423c772dbea9e73e8e5d65` since D-R12-195 (single-servo SH-4 J122 in the MicoAir H743 UART order; SERVO3 / SERVO4 deleted;
+SERVO1_MCU / SERVO2_MCU trunks re-laned; two identical builds, gate steps and stage D / hot-plug re-bound by its fix
+lane; 189 footprints, 181 JLC parts, 1107 tracks / 385 vias, 50 legends, 105 shown / 84 hidden designators, 585 paste
+flashes, 60 BOM lines, four recorded route leftovers, K-power 121 taps / 19 exceptions, S-10's exception table
+unchanged), 46 × 86.85 × 1.6 mm. `876733fe…` (D-R12-192, SH-8 J122) differed from round 12's `c9b9f0fa…` only at
+J122. The figures below for `c9b9f0fa…` describe its copper; away from J122 and the servo cells they still hold.
 Round 12's `c9b9f0fa…`: lane P (`6d945ce`) reported two identical builds,
 full gate exit 0, 193 footprints, 185 assembled parts, 1147 tracks / 394 vias, 52 legends, 106 shown / 87 hidden
 designators (R13 and R118 newly hidden), 595 paste flashes, 60 BOM lines (on `876733fe…`: 54 legends, 597 paste
@@ -14,20 +18,22 @@ The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, al
 the full gate on the final tree is the commit condition.
 
 Fire loop 4.72843 Ω; four-stall fire 1.24833 A at J1 5.71941 V; EN at R80.1 5.70082 V.
-Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20405 V
+Chatter limits 6.935 / 6.843 ms; bench rule under 6.7 ms per sliding 100 ms. U6 drift minimum 3.20406 V (3.20405 V before D-R12-195)
 in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and SD writes in buzzer gaps.
 All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pass, minimum −14.077 V
 (Simulation / Inference). No firmware, physical, electrical or JLC DFM test has been done on this board.
 Current electrical detail: [M3_R12.md](../../../docs/M3_R12.md); full numbers: `stageD_budget.json` and
 `hotplug_results_r12.json`. Earlier named-board figures below are historical and cannot qualify this board.
 
-Parts + feeder **$64.03 / $43.77 per board at 2 / 5 boards**, against the $84.41 cap (Live
-2026-11-14T00:33:48Z / 00:35:22Z, after D-R12-192's SH-8 J122): 61 BOM lines (25 Extended / 36 Basic), 185 JLC
-parts, 22 charged codes, $30.26 parts per board and $67.54 feeder fees per order (was $62.50 / $43.16 with 21 codes
-on `c9b9f0fa…`). There are 597 paste flashes and no owner BOM. Stock 2026-11-14T00:33:05Z / 00:34:34Z: no line
-short or thin at either quantity (C7430450: 56 065 in stock, 54 903 orderable). Orderable quantity is an Inference
-about JLC's field. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for
-historical `1d7562d5…`; re-quote `876733fe…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
+Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41 cap (Live
+2026-11-15T02:20:48Z / 02:22:13Z, after D-R12-195's SH-4 J122 and the SERVO3 / SERVO4 deletion): 60 BOM lines
+(24 Extended / 36 Basic), 181 JLC parts, 21 charged codes, $30.20 parts per board and $64.47 feeder fees per order
+(was $64.03 / $43.77 with 22 codes on `876733fe…`). There are 585 paste flashes and no owner BOM. Stock
+2026-11-15T02:20:03Z / 02:21:31Z: **U9 (TPS259470ARPWR, C3662799) reads short at both quantities** (stock 175,
+orderable 0 by JLC's `canPresaleNumber`, minimum purchase 7: a supplier change since 2026-11-14, not D-R12-195); no
+other line short or thin. Orderable quantity is an Inference about JLC's field: confirm U9 in the JLC cart on order
+day. The 2026-11-11 all-in quote of $165.33 for two assembled boards before shipping was for historical `1d7562d5…`;
+re-quote `96207d2e…`, including X-ray, DFM and reflow acceptance. Nothing ordered.
 
 
 **Historical stage D record.** §1–§6 record the 100 mm board `d776c5d7…`; §7 records

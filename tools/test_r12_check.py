@@ -282,12 +282,12 @@ class Profiles(unittest.TestCase):
         try:
             self.assertIn('r12', rc.R10_LIKE)
             # R12F8-TRI-02 / -03: the named second barrels on nets without a pour
-            # R12F12-TRI-29: the eight recorded leftovers, each with a reason
+            # R12F12-TRI-29: the recorded leftovers, each with a reason (four since D-R12-195 deleted SERVO3 / SERVO4
+            # and re-routed SERVO2_MCU with one layer change; eight before)
             self.assertEqual((rc.LEFTOVERS, rc.PARALLEL_VIAS), (list(rc.LEFTOVERS_R12), list(rc.PARALLEL_VIAS_R12)))
             self.assertEqual(sorted((e[0], e[1]) for e in rc.LEFTOVERS_R12),
-                             [('extra_vias', 'CAM_5V_SENSE'), ('extra_vias', 'NRST'), ('extra_vias', 'SERVO2_MCU'),
-                              ('extra_vias', 'SERVO3_MCU'), ('extra_vias', 'SERVO4_MCU'), ('extra_vias', 'U9_FLT'),
-                              ('extra_vias', 'VLOGIC_SENSE'), ('tiny_jog', 'SERVO2_MCU')])
+                             [('extra_vias', 'CAM_5V_SENSE'), ('extra_vias', 'NRST'), ('extra_vias', 'U9_FLT'),
+                              ('extra_vias', 'VLOGIC_SENSE')])
             self.assertTrue(all(e[4].startswith('R12F12-TRI-29') and len(e[4]) > 80 for e in rc.LEFTOVERS_R12))
             self.assertEqual(sorted(n for n, *_ in rc.PARALLEL_VIAS_R12),             # R12F9-TRI-08: PD10's divider end;
                              ['3V3A', '3V3A', 'ACT_EN_MCU', 'ACT_GATE', 'ACT_GATE', 'BAT_SW_RETURN', 'BAT_SW_RETURN',
@@ -726,8 +726,8 @@ class KPower(Plants, unittest.TestCase):
                     # R12F12-TRI-17: the fire / arming chain, the safety gate networks, required supplies and returns
                     'R122.1', 'C120.2', 'R165.1', 'Q122.2', 'R123.2', 'R118.2', 'C123.2', 'R128.2', 'C126.2', 'R127.2',
                     'U1.F1', 'U1.H4', 'U1.J3', 'R130.2', 'R178.2', 'C127.2', 'R133.2', 'R180.2', 'C129.2', 'C128.2',
-                    'R136.1', 'R89.1', 'D95.3', 'D436.3', 'D402.2', 'D121.2', 'R154.2', 'R155.2', 'R156.2', 'R157.2',
-                    'R431.2', 'C88.2', 'C81.2', 'C97.2', 'R92.2', 'R167.2', 'U6.1', 'U6.13', 'U6.15', 'U6.16', 'C33.2',
+                    'R136.1', 'R89.1', 'D95.3', 'D436.3', 'D402.2', 'D121.2', 'R154.2', 'R155.2', 'R431.2',
+                    'C88.2', 'C81.2', 'C97.2', 'R92.2', 'R167.2', 'U6.1', 'U6.13', 'U6.15', 'U6.16', 'C33.2',
                     'U3.8', 'U3.4', 'J430.4', 'J430.6', 'J410.2', 'J420.2', 'J440.2', 'J410.1', 'J420.1', 'J440.1',
                     'J9.3', 'J9.4', 'J122.1', 'D123.1', 'R163.2', 'Q123.2', 'C22.2'):
             self.assertIn(tap, taps)
@@ -771,8 +771,7 @@ class KPower(Plants, unittest.TestCase):
         servo pull-downs'), 3V3 (R136.1's, U6.1's), PORT_4V8 (J410.2's) and each doubled signal pair (ACT_EN_MCU, ACT_GATE
         at both ends of C120.2's jumper, BAT_SW_RETURN at both ends of its link, VLOGIC_SENSE): K-power names every tap
         left on one via. The pad-to-pad F links of the PC0 and PC5 banks removed: each bank pad is on one via again."""
-        self.assert_doubled(('Q122.2', 'R118.2', 'J9.3', 'J9.4', 'D121.2', 'R154.2', 'R155.2', 'R156.2', 'R157.2',
-                             'R136.1', 'U6.1', 'J410.2', 'R122.1', 'C120.2', 'R165.1', 'U1.J3'))
+        self.assert_doubled(('Q122.2', 'R118.2', 'J9.3', 'J9.4', 'D121.2', 'R154.2', 'R155.2', 'R136.1', 'U6.1', 'J410.2', 'R122.1', 'C120.2', 'R165.1', 'U1.J3'))
         r118 = self.pairs('R118.2')
         self.assertEqual(len({(v, p) for v, p, _ in r118} | {(p, v) for v, p, _ in r118}), 2, r118)
         for (a, b), taps in ((('R130.2', 'R178.2'), ('R130.2',)), (('R178.2', 'C127.2'), ('C127.2',)),
@@ -941,7 +940,7 @@ pcbnew.SaveBoard(sys.argv[1], b)
         self.assertTrue([i for i in rep['issues'] if "polarity legend 'GND' must appear exactly once" in i], rep['issues'])
 
     def test_tri29_route_leftovers_recorded_and_second_barrels_named(self):
-        """route_check r12 on the committed board: nothing failing, the eight non-critical leftovers each recorded, none
+        """route_check r12 on the committed board: nothing failing, the four non-critical leftovers (eight before D-R12-195) each recorded, none
         unrecorded and none stale. Seeded: an entry dropped is reported missing, an extra one stale; without ACT_GATE's
         PARALLEL_VIAS_R12 entries its second barrels fail as extra vias and loops."""
         rc.set_profile('r12')
@@ -950,7 +949,7 @@ pcbnew.SaveBoard(sys.argv[1], b)
             failures, allowed, stale = rc.evaluate(inst)
             self.assertEqual((failures, stale), ([], []))
             recorded, missing, stale_left = rc.leftover_check(inst)
-            self.assertEqual((len(recorded), missing, stale_left), (8, [], []))
+            self.assertEqual((len(recorded), missing, stale_left), (4, [], []))
             _, missing, _ = rc.leftover_check(inst, rc.LEFTOVERS[1:])
             self.assertEqual([(d['cat'], d['net']) for d in missing], [rc.LEFTOVERS[0][:2]])
             gone = ('extra_vias', 'GONE', 'net', (1.0, 1.0), 'no such net')
@@ -1655,14 +1654,15 @@ class FireGaps(Plants, unittest.TestCase):
 
     # ---- R12F8-TRI-01 / -05: the I-5 victims, the FT-only exemptions, the camera EN, NOT_PROBE ---------------------
     def test_r12f8_tri01_victims_derived_and_held(self):
-        """i5_victims() derives the victims from the netlist (D121's IO pins put SERVO1-4_MCU on 3V3 at 0 ohm, the
+        """i5_victims() derives the victims from the netlist (D121's IO pins put SERVO1-2_MCU on 3V3 at 0 ohm, the
         1 kohm series resistors their _OUT nets, CAM_5V_SENSE is PC2_C) and i5_guard() holds them equal to I5_VICTIMS;
         R12F9-TRI-01: 80 with the nine nets on a non-MCU IC pin (CAM_EN on U403.5 is one, though it reaches PC12 only
-        through R436 5.1 kohm); the FT-only exemptions hold."""
+        through R436 5.1 kohm), 76 since D-R12-195 deleted SERVO3 / SERVO4's four nets; the FT-only exemptions hold."""
         net = BOARD12.with_name('schematic.net.xml')
         victims, _ = fire.i5_victims(net)
         self.assertEqual(sorted(victims), sorted(fire.I5_VICTIMS))
-        self.assertEqual(len(victims), 80)
+        self.assertEqual(len(victims), 76)                                       # D-R12-195: 80 before
+        self.assertFalse([n for n in victims if n.startswith(('SERVO3', 'SERVO4'))])
         self.assertEqual(victims['SERVO1_OUT'], (1000.0, 'SERVO1_MCU'))
         self.assertEqual(victims['BUZZ_OUT'], (0.0, '3V3'))
         self.assertEqual(victims['CAM_EN'], (0.0, 'CAM_EN'))
@@ -1889,7 +1889,7 @@ class FireGaps(Plants, unittest.TestCase):
         """0.2 mm north of R431.1 (CAM_EN). CAM_BST is a pack-voltage rail, so the feedback top R433.2 and the servo
         lanes beside R431 (held from it at 1.04 mm) are within its reach, all farther than R431.1."""
         r = self.pad('R431', '1')
-        also = ('CAM_FB_TOP', 'SERVO3_MCU', 'SERVO2_MCU') if net == 'CAM_BST' else ()
+        also = ('CAM_FB_TOP', 'SERVO2_MCU') if net == 'CAM_BST' else ()     # SERVO3_MCU deleted (D-R12-195)
         return self.made(self.plant_beside(r, 'N', 0.2, net), r, 0.2, also_nets=also)
 
     def plant_cam_tx(self):
@@ -1917,7 +1917,7 @@ class FireGaps(Plants, unittest.TestCase):
         UART and servo lanes, all held from a pack rail: the nearest of them is farther than R433.2."""
         r = self.pad('R433', '2')
         return self.made(self.plant_beside(r, 'S', 0.2, 'RAW_PROTECTED'), r, 0.2,
-                         also_nets=('CAM_FB', 'CAM_MCU_TX', 'CAM_MCU_RX', 'SERVO3_MCU'))
+                         also_nets=('CAM_FB', 'CAM_MCU_TX', 'CAM_MCU_RX'))     # SERVO3_MCU deleted (D-R12-195)
 
     GUARDED = (('out', dict(net='ACT_DRV')), ('out', dict(net='VCAP1', gap=0.3)), ('out', dict(net='PYRO1_COLD_PU')),
                ('out_in2', {}), ('out_gnd', {}), ('out_gnd_fill', {}), ('ign_gnd', {}), ('ign_gnd_fill', {}),
@@ -2245,8 +2245,11 @@ class FireGaps(Plants, unittest.TestCase):
         net = BOARD12.with_name('schematic.net.xml')
         d95, d436, d120 = ('unconnected-(D95-A2-Pad2)', 'unconnected-(D436-A2-Pad2)', 'unconnected-(D120-A2-Pad2)')
         self.assertEqual(sorted(fire.i5_nc_pass(net)), sorted(fire.I5_NC_PASS))
-        self.assertEqual(sorted(fire.I5_NC_PASS), sorted((d95, d436)))
+        # D-R12-195: D121's I/O3 / I/O4, unconnected since SERVO3 / SERVO4 were deleted, are one diode from D121.5 (3V3)
+        d121 = ('unconnected-(D121-IO3-Pad4)', 'unconnected-(D121-IO4-Pad6)')
+        self.assertEqual(sorted(fire.I5_NC_PASS), sorted((d95, d436) + d121))
         self.assertEqual(fire.i5_nc_pass(net)[d95], ('D95', '2', '3V3'))
+        self.assertEqual({n: fire.i5_nc_pass(net)[n][:2] for n in d121}, {d121[0]: ('D121', '4'), d121[1]: ('D121', '6')})
         self.assertEqual(fire.pair_limit('RAW_PROTECTED', None, d95, 'D95', False)[:2], (fire.PACK_MIN, 'i5-pack'))
         self.assertEqual(fire.pair_limit('CAM_5V', None, d436, 'D436', True)[:2], (fire.I5_PORT_MIN, 'i5-port'))
         self.assertEqual(fire.pair_limit('RAW_PROTECTED', None, d120, 'D120', False)[1], 'unprotected')
@@ -2422,26 +2425,56 @@ class Schematic(unittest.TestCase):
         names = r12_sch_check.read_pin_names(ROOT / 'm3_design/r12/schematic.net.xml')
         self.assertEqual(r12_sch_check.terminal_pin_issues(names), [])
         seeded = r12_sch_check.name_seeds(names)
-        self.assertEqual(len(seeded), 6)
+        self.assertEqual(len(seeded), 7)
         self.assertTrue(all(seeded.values()), seeded)
         data = r12_sch.circuit()
         self.assertEqual({ref: data['parts'][ref]['lib'] for ref in ('J410', 'J420', 'J440')},
                          {'J410': 'M3:PortSH6', 'J420': 'M3:PortSH4', 'J440': 'M3:PortSH4'})
         self.assertEqual({names['J410', p][0] for p in '56'}, {'NC'})
-        # D-R12-192: J122 in the MicoAir H743 ESC order on its own 8-pin symbol
-        self.assertEqual(data['parts']['J122']['lib'], 'M3:ServoSH8')
-        self.assertEqual({p: names['J122', p][0] for p in '12345678'},
-                         {'1': 'GND', '2': 'VBAT_NC', '3': 'SERVO1', '4': 'SERVO2', '5': 'SERVO3', '6': 'SERVO4',
-                          '7': 'RX7_NC', '8': 'CURR_NC'})
+        # D-R12-195: J122 an SH-4 in the MicoAir H743 4-pin UART order on its own symbol
+        self.assertEqual(data['parts']['J122']['lib'], 'M3:ServoSH4')
+        self.assertEqual({p: names['J122', p][0] for p in '1234'},
+                         {'1': 'GND', '2': '5V_NC', '3': 'SERVO1', '4': 'SERVO2'})
+        self.assertFalse([k for k in names if k[0] == 'J122' and k[1] not in '1234'])
         lib = (ROOT / 'm3_design/r12/kilib/m3.kicad_sym').read_text()
         sheets = ''.join((ROOT / 'm3_design/r12' / s).read_text() for s in r12_sch.SHEET_FILES)
-        for name in ('PortSH4', 'PortSH6', 'ServoSH8', 'SwitchGH4', 'CameraGH6'):
+        self.assertNotIn('(symbol "ServoSH8"', lib)
+        for name in ('PortSH4', 'PortSH6', 'ServoSH4', 'SwitchGH4', 'CameraGH6'):
             s = lib.index(f'\t(symbol "{name}"\n')
             descr = lib[s:lib.index('(property "ki_keywords"', s)]
             self.assertIn('ZX-SH1.0', descr, name)
         self.assertNotIn('GH-1.25', sheets)
         self.assertNotIn('SM06B-GHS', sheets)
         self.assertNotIn('SM04B-GHS', sheets)
+
+    def test_r12f14_servo34_deleted(self):
+        """D-R12-195: SERVO3 / SERVO4 are gone from the netlist, the pin table and the board (no part, net, pad or
+        copper), D121's I/O3 / I/O4 are open, U1's PA8 (D9) / PA9 (C9) are NC; the seeded restorations are caught."""
+        gone = ('SERVO3_MCU', 'SERVO3_OUT', 'SERVO4_MCU', 'SERVO4_OUT')
+        for ref in ('R152', 'R153', 'R156', 'R157'):
+            self.assertNotIn(ref, self.parts)
+        self.assertFalse(set(gone) & set(self.pins.values()))
+        self.assertEqual((self.pins['D121', '4'], self.pins['D121', '6']), (None, None))
+        self.assertEqual((self.pins['U1', 'D9'], self.pins['U1', 'C9']), (None, None))
+        rows = {r['port']: r for r in r12_sch.read_pin_table()}
+        self.assertEqual((rows['PA8']['r12_net'], rows['PA9']['r12_net']), ('NC', 'NC'))
+        self.assertFalse([r['port'] for r in rows.values() if r['r12_net'] in gone])
+        seeded = r12_sch_check.seeds(self.parts, self.pins)
+        for label in ('SERVO3 cell restored (D-R12-195)', 'SERVO4 back on its U1 ball (D-R12-195)',
+                      'D121 unused I/O tied to 3V3 (D-R12-195)', 'servo 5 V contact on PORT_4V8 (D-R12-195)',
+                      'servo TX / RX positions swapped (D-R12-195)'):
+            self.assertTrue(seeded[label], label)
+        if pcbnew is None:
+            return
+        b = pcbnew.LoadBoard(str(BOARD12))
+        self.assertFalse([f.GetReference() for f in b.GetFootprints()
+                          if f.GetReference() in ('R152', 'R153', 'R156', 'R157')])
+        self.assertFalse([t.GetNetname() for t in b.GetTracks() if t.GetNetname() in gone])
+        self.assertFalse([n for n in gone if b.FindNet(n)])
+        j122 = b.FindFootprintByReference('J122')
+        self.assertEqual(sorted((p.GetNumber(), p.GetNetname()) for p in j122.Pads() if p.GetNumber()),
+                         [('1', 'GND'), ('2', 'unconnected-(J122-5V_NC-Pad2)'), ('3', 'SERVO1_OUT'), ('4', 'SERVO2_OUT')])
+        self.assertEqual(j122.GetFieldText('Manufacturer Part'), 'ZX-SH1.0-4PWT')
 
     def test_pin_table_current(self):
         self.assertEqual((r12_sch.DESIGN / 'pin_table.tsv').read_text(), r12_sch.pin_table_text())
@@ -2736,29 +2769,26 @@ class PortedRules(unittest.TestCase):
         j410.SetField('Manufacturer Part', 'GH1.25-4PWT')
         self.assert_rule(s, 'W-2', False, want=f'W-2: J410 must be ZX-SH1.0-{len(r12.SH_PORTS["J410"])}PWT (D-R12-31)')
         j410.SetField('Manufacturer Part', f'ZX-SH1.0-{len(r12.SH_PORTS["J410"])}PWT')
-        s.board.FindFootprintByReference('J122').FindPadByNumber('8').SetNet(s.net('3V3'))
+        s.board.FindFootprintByReference('J122').FindPadByNumber('4').SetNet(s.net('3V3'))
         for rid in ('S-7', 'W-2'):
             self.assert_rule(s, rid, False)
         s.board.FindFootprintByReference('J410').FindPadByNumber('1').SetNet(s.net('PORT_4V8'))
         self.assert_rule(s, 'W-2', False)
 
-    def test_r12f13_j122_micoair_esc_order(self):
-        """D-R12-192: J122 is an SH-8 in the MicoAir H743 ESC order, pin 1 read as D-R12-31 reads the GPS / telemetry
-        ports: 1 GND, 2 VBAT (NC), 3-6 M1-M4 = SERVO1-4, 7 RX7 (NC), 8 Curr (NC). The M order reversed, GND on the
-        Curr contact, a seventh-pin signal or the 6-pin part fail S-7 / W-2; the VBAT contact on any net fails."""
-        self.assertEqual(r12.SH_PORTS['J122'], {'1': 'GND', '2': None, '3': 'SERVO1_OUT', '4': 'SERVO2_OUT',
-                                                '5': 'SERVO3_OUT', '6': 'SERVO4_OUT', '7': None, '8': None})
-        self.assertEqual(dict(r12.TERMINAL_PINS)['J122'],
-                         (('1', 'GND'), ('2', 'NC'), ('3', 'S1'), ('4', 'S2'), ('5', 'S3'), ('6', 'S4'), ('7', 'NC'),
-                          ('8', 'NC')))
+    def test_r12f14_j122_single_servo_map(self):
+        """D-R12-195: J122 is an SH-4 in the MicoAir H743 4-pin UART order, pin 1 read as D-R12-31 reads J420 / J440:
+        1 GND, 2 NC (the H743's 5 V position), 3 SERVO1 (TX position), 4 SERVO2 (RX position, spare). TX / RX swapped,
+        the port mirrored, D-R12-192's SH-8 order, a SERVO3 / SERVO4 signal or the SH-8 part fail S-7 / W-2; the 5 V
+        contact on any net fails."""
+        self.assertEqual(r12.SH_PORTS['J122'], {'1': 'GND', '2': None, '3': 'SERVO1_OUT', '4': 'SERVO2_OUT'})
+        self.assertEqual(dict(r12.TERMINAL_PINS)['J122'], (('1', 'GND'), ('2', 'NC'), ('3', 'S1'), ('4', 'S2')))
         faults = {
-            'M order reversed': {'3': 'SERVO4_OUT', '6': 'SERVO1_OUT'},
-            'R10 order (1-4 SERVO1-4, 5 GND)': {'1': 'SERVO1_OUT', '2': 'SERVO2_OUT', '3': 'SERVO3_OUT',
-                                                 '4': 'SERVO4_OUT', '5': 'GND', '6': None},
-            'GND on the Curr contact': {'1': None, '8': 'GND'},
-            'VBAT on the pack': {'2': 'BAT_IN'},
-            'VBAT on GND': {'2': 'GND'},
-            'RX7 used': {'7': 'SERVO4_OUT'},
+            'TX / RX positions swapped': {'3': 'SERVO2_OUT', '4': 'SERVO1_OUT'},
+            'mirrored (GND on pin 4)': {'1': 'SERVO2_OUT', '2': 'SERVO1_OUT', '3': None, '4': 'GND'},
+            'R10 order (1 SERVO1, 2 SERVO2)': {'1': 'SERVO1_OUT', '2': 'SERVO2_OUT', '3': None, '4': None},
+            '5 V position on PORT_4V8': {'2': 'PORT_4V8'},
+            '5 V position on GND': {'2': 'GND'},
+            'SERVO3 on the spare position': {'4': 'SERVO3_OUT'},
         }
         for label, change in faults.items():
             with self.subTest(label):
@@ -2770,29 +2800,31 @@ class PortedRules(unittest.TestCase):
                     pad.SetNet(s.net(net) if net else s.board.FindNet(''))
                 self.assert_rule(s, 'S-7', False)
         s = Four()
-        s.sh('J122', 10, 10).SetField('Manufacturer Part', 'ZX-SH1.0-6PWT')
-        self.assert_rule(s, 'W-2', False, want='W-2: J122 must be ZX-SH1.0-8PWT (D-R12-31)')
+        s.sh('J122', 10, 10).SetField('Manufacturer Part', 'ZX-SH1.0-8PWT')
+        self.assert_rule(s, 'W-2', False, want='W-2: J122 must be ZX-SH1.0-4PWT (D-R12-31)')
 
-    def test_r12f13_j122_vbat_pad_bare(self):
-        """D-R12-192 / -193: J122.2 (the H743's VBAT) keeps no copper of its own and, on its layer, only GND and
+    def test_r12f14_j122_pad2_bare(self):
+        """D-R12-195 / -196: J122.2 (the H743's 5 V position) keeps no copper of its own and, on its layer, only GND and
         SERVO1_OUT come within 1.040 mm of it (the two neighbours the bridge analysis covers)."""
+        self.assertEqual((r12.PAD2, r12.PAD2_NEIGHBOURS, r12.PAD2_REACH), (('J122', '2'), ('GND', 'SERVO1_OUT'), 1.040))
         s = Four()
         f = s.sh('J122', 10, 10)
-        own = 'unconnected-(J122-VBAT_NC-Pad2)'
+        own = 'unconnected-(J122-5V_NC-Pad2)'
         f.FindPadByNumber('2').SetNet(s.net(own))
         rep = self.assert_rule(s, 'S-7')
-        near = rep['evidence']['s7']['vbat_pad']['near']
+        near = rep['evidence']['s7']['pad2_bare']['near']
         self.assertEqual(sorted({r['net'] for r in near}), [])      # Four.sh's 2 mm pitch: no neighbour within reach
         x, y = 10 + 4, 10                                            # pad 2's centre (Four.sh: pad n at x + 2n)
         # a GND or SERVO1_OUT track 0.6 mm from the pad edge passes; any other net there fails
         for net, good in (('GND', True), ('SERVO1_OUT', True), ('3V3', False), ('SERVO2_OUT', False),
-                          ('PYRO1_OUT', False), ('RAW_PROTECTED', False)):
+                          ('PORT_4V8', False), ('PYRO1_OUT', False), ('RAW_PROTECTED', False)):
             with self.subTest(net):
                 s2 = Four()
                 g = s2.sh('J122', 10, 10)
                 g.FindPadByNumber('2').SetNet(s2.net(own))
                 s2.track((x + .3 + .6 + .1, y - 2), (x + .3 + .6 + .1, y + 2), net, None, .2)
-                self.assert_rule(s2, 'S-7', good, want=None if good else '(VBAT) on F.Cu; only GND / SERVO1_OUT')
+                self.assert_rule(s2, 'S-7', good,
+                                 want=None if good else '(5 V position) on F.Cu; only GND / SERVO1_OUT')
         # beyond 1.040 mm any net passes
         s3 = Four()
         g = s3.sh('J122', 10, 10)
@@ -2800,15 +2832,17 @@ class PortedRules(unittest.TestCase):
         s3.track((x + .3 + 1.1 + .1, y - 2), (x + .3 + 1.1 + .1, y + 2), '3V3', None, .2)
         self.assert_rule(s3, 'S-7')
         # a track or via on the pad's own net fails, as does a pad of another part on it
-        for kind in ('track', 'via'):
+        for kind in ('track', 'via', 'pad'):
             with self.subTest(kind):
                 s4 = Four()
                 g = s4.sh('J122', 10, 10)
                 g.FindPadByNumber('2').SetNet(s4.net(own))
                 if kind == 'track':
                     s4.track((x, y), (x, y + 3), own, None, .2)
-                else:
+                elif kind == 'via':
                     s4.via(x, y + 3, own, d=.45)
+                else:
+                    s4.part('R999', 30, 30, [('1', own, (0, 0), 'smd'), ('2', 'GND', (2, 0), 'smd')])
                 self.assert_rule(s4, 'S-7', False, want='copper item(s) of its own beyond its pad')
 
     def test_s8_foreign_inner_copper_and_rings(self):

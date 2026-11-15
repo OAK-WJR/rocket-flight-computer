@@ -67,7 +67,6 @@ track	BAT_ILIM	F	0.2	17.5	20.95	17.7	21.15
 track	BAT_ILIM	F	0.2	17.8	21.25	18.3	21.25
 track	BAT_ILIM	F	0.2	18.3	21.25	18.7	21.65
 track	SERVO2_OUT	F	0.2	23.1	6.2	23.1	11.85
-track	SERVO4_OUT	F	0.2	21.1	6.2	21.1	11.85
 track	ACT_DRV	F	0.2	11.1	30.35	12.2	31.45
 track	ACT_DRV	F	0.2	12.2	31.45	13.1	31.45
 track	CAM_FB	F	0.2	33.1	14.15	32.3	14.95
@@ -200,14 +199,9 @@ track	BAT_IN	F	0.8	13.2	22.25	14.4	23.45
 track	BAT_IN	F	0.8	14.4	23.45	16.4	23.45
 track	BAT_DAMP	F	0.8	16.4	26.4	14.85	24.85
 track	BAT_DAMP	F	0.8	14.85	24.85	13.2	24.85
-# D-R12-192: J122's GND contact is pin 1 (x 26.1, the MicoAir H743 ESC order); its via pair moves with it (was pin 5,
+# D-R12-192: J122's GND contact is pin 1 (x 26.1, the MicoAir H743 ESC order; kept by D-R12-195's SH-4); its via pair moves with it (was pin 5,
 # x 19.9 / 19.35), at y 7.45 so the footprint's pin-1 mark (26.1, 6.875) stays clear of the via
 track	GND	F	0.3	26.1	6.2	26.1	7.45
-track	SERVO3_OUT	F	0.2	22.05	6.2	22.05	12.55
-via	SERVO3_OUT	-	0.45	22.05	12.55		
-track	SERVO3_OUT	B	0.2	22.05	12.55	22.05	14.35
-via	SERVO3_OUT	-	0.45	22.05	14.35		
-track	SERVO3_OUT	F	0.2	22.05	14.35	22.05	14.95
 track	BAT_SW_RETURN	F	0.2	11.3	6.5	10.45	7.35
 track	BAT_SW_RETURN	F	0.2	10.75	7.5	13.4	7.5
 track	GND	F	0.25	10.7	8.1	12.12	8.1
@@ -281,50 +275,36 @@ via	RAW_PROTECTED	-	0.45	24.15	26.45
 track	RAW_PROTECTED	F	0.3	21.8	23.075	21.8	24.15
 via	RAW_PROTECTED	-	0.45	45.2	20.85		
 track	RAW_PROTECTED	F	0.3	17.3	19.45	19.775	19.45
-track	SERVO1_MCU	B	0.15	27.4	21.35	27.4	16.45
-track	SERVO1_MCU	B	0.15	27.4	16.45	26.95	16
+track	SERVO1_MCU	B	0.15	27.75	21.35	27.75	16.8
+track	SERVO1_MCU	B	0.15	27.75	16.8	26.95	16
 via	SERVO1_MCU	-	0.45	26.95	16		
 track	SERVO1_MCU	F	0.15	26.95	16	26.95	15.2
 track	SERVO1_MCU	F	0.15	26.87	15.2	25.47	16.6
 track	SERVO1_MCU	F	0.15	25.47	16.6	24.1	16.6
-track	SERVO4_MCU	B	0.15	27.75	21.35	27.75	19.13
-track	SERVO4_MCU	B	0.15	27.75	19.13	28.43	18.45
-via	SERVO4_MCU	-	0.45	28.43	18.45		
-track	SERVO4_MCU	F	0.15	28.43	18.45	28.43	17.6
-track	SERVO4_MCU	B	0.15	28.43	18.45	28.43	15.53
-track	SERVO4_MCU	B	0.15	28.43	15.53	27.05	14.15
-via	SERVO4_MCU	-	0.45	27.05	14.15		
-track	SERVO4_MCU	F	0.15	27.05	14.15	27.05	13.05
-track	SERVO4_MCU	F	0.15	27.05	13.05	21.8	13.05
-track	SERVO4_MCU	F	0.15	21.8	13.05	21.4	13.45
 track	CAM_EN	B	0.15	28.2	21.35	28.2	19.55
 track	CAM_EN	B	0.15	28.2	19.55	28.5	19.25
 via	CAM_EN	-	0.45	28.5	19.25		
 track	CAM_EN	F	0.15	28.5	19.25	30.0	17.75
 track	CAM_EN	F	0.15	30.0	17.75	31.7	17.75
 track	CAM_EN	F	0.15	30.0	17.75	30.0	15.05
-track	SERVO2_MCU	B	0.15	28.65	21.35	28.65	20.05
-track	SERVO2_MCU	B	0.15	28.65	20.05	28.95	19.75
-track	SERVO2_MCU	B	0.15	28.95	19.75	28.95	14.05
-via	SERVO2_MCU	-	0.45	28.95	14.05		
-track	SERVO2_MCU	F	0.15	28.95	14.05	28.95	15.2
-track	SERVO2_MCU	B	0.15	28.95	14.05	28.575	13.675
-track	SERVO2_MCU	B	0.15	28.575	13.675	25.4	13.675
-via	SERVO2_MCU	-	0.45	25.4	13.675		
-track	SERVO2_MCU	F	0.15	25.4	13.675	23.1	13.675
+# D-R12-195: SERVO3 / SERVO4 deleted. Their B.Cu trunks (x 27.75 / 29.0) had filled the trunk bundle's slots; left
+# open, the GND pour made two < 0.5 mm fingers (route_check pour_finger). So SERVO1_MCU's trunk takes x 27.75 (SERVO4's
+# lane, 0.45 mm from CAM_EN / CAM_PWR_EN's x 28.2 and their vias' 0.2 mm hole rule) and SERVO2_MCU's x 29.1 (0.3 mm from CAM_MCU_TX's x 29.4), leaving one 0.55 mm
+# pour strip between x 28.2 and 29.1. SERVO2_MCU passes CAM_EN's via (28.5, 19.25) and CAM_5V_DIV's via (29.85, 18.97),
+# steps to x 28.7 and changes layer once at (28.7, 14.05) between D121's pin rows, on one 45 deg line from D121.3's
+# column (x 28.95) to y 13.675, where SERVO2_MCU runs west on F.Cu, 0.165 mm clear of D121's north pads, to R151.1
+# (the B.Cu run along y 13.675 and its second via are gone; R155.1's F.Cu run is unchanged)
+track	SERVO2_MCU	B	0.15	29.1	21.35	29.1	18.4
+track	SERVO2_MCU	B	0.15	29.1	18.4	28.7	18.0
+track	SERVO2_MCU	B	0.15	28.7	18.0	28.7	14.05
+via	SERVO2_MCU	-	0.45	28.7	14.05		
+track	SERVO2_MCU	F	0.15	28.7	14.05	28.95	14.3
+track	SERVO2_MCU	F	0.15	28.95	14.3	28.95	15.2
+track	SERVO2_MCU	F	0.15	28.7	14.05	28.325	13.675
+track	SERVO2_MCU	F	0.15	28.325	13.675	23.1	13.675
 track	SERVO2_MCU	F	0.15	23.1	13.675	23.1	17.25
 track	SERVO2_MCU	F	0.15	23.1	17.25	23.45	17.6
 track	SERVO2_MCU	F	0.15	23.45	17.6	25.47	17.6
-track	SERVO3_MCU	B	0.15	29.0	21.35	29.0	20.15
-track	SERVO3_MCU	B	0.15	29.0	20.15	29.4	19.75
-track	SERVO3_MCU	B	0.15	29.4	19.75	29.4	16.05
-via	SERVO3_MCU	-	0.45	29.4	16.05		
-track	SERVO3_MCU	F	0.15	29.4	16.05	28.85	16.6
-track	SERVO3_MCU	F	0.15	28.85	16.6	28.43	16.6
-track	SERVO3_MCU	F	0.15	29.4	16.05	29.4	13.35
-track	SERVO3_MCU	F	0.15	29.4	13.35	28.95	12.9
-track	SERVO3_MCU	B	0.15	29.4	16.05	29.4	12.05
-track	SERVO3_MCU	B	0.15	29.4	12.05	28.8	11.45
 track	CAM_MCU_TX	B	0.15	29.4	21.35	29.4	20.45
 track	CAM_MCU_TX	B	0.15	29.4	20.45	30.4	19.45
 track	CAM_MCU_TX	B	0.15	30.4	19.45	30.4	12.9
@@ -332,11 +312,9 @@ via	CAM_MCU_TX	-	0.45	30.4	12.9
 track	CAM_MCU_TX	F	0.2	30.4	12.9	30.4	12.28
 track	CAM_MCU_RX	B	0.15	29.8	21.35	29.8	20.65
 track	CAM_MCU_RX	B	0.15	29.8	20.65	31	19.45
-track	GND	F	0.2	28.0	15.2	28.0	16.17
-track	GND	F	0.2	28.0	16.17	27.57	16.6
-track	GND	F	0.3	27.6	16.65	27.6	17.15
-track	GND	F	0.3	27.6	17.15	27.6	17.55
-track	GND	F	0.3	27.6	17.15	26.9	17.15
+# D-R12-195: R156 / R157 deleted; D121.2 (GND) reaches the GND via (26.9, 17.15) in one 45 deg run (was through R156.2)
+track	GND	F	0.2	28.0	15.2	28.0	16.05
+track	GND	F	0.2	28.0	16.05	26.9	17.15
 track	GND	F	0.3	22.725	19.45	23.6	19.45
 via	GND	-	0.45	23.6	19.45		
 track	GND	F	0.3	18.6	39.43	18.6	38.8
@@ -420,13 +398,6 @@ via	CAM_5V	-	0.45	33.05	12.65
 track	CAM_5V	F	0.4	33.05	12.65	34.1	12.65
 track	CAM_5V	F	0.2	30.27	14.05	30.97	13.35
 track	CAM_5V	F	0.2	30.97	13.35	34.1	13.35
-# AVA pass: SERVO3 to R152.1 descends at x 22.6 and dives under the pad (no F run under R150 / R154)
-track	SERVO3_MCU	B	0.15	28.8	11.45	23	11.45
-track	SERVO3_MCU	B	0.15	23	11.45	22.6	11.85
-track	SERVO3_MCU	B	0.15	22.6	11.85	22.6	17.1
-track	SERVO3_MCU	B	0.15	22.6	17.1	22.1	17.6
-via	SERVO3_MCU	-	0.45	22.1	17.6		
-track	SERVO3_MCU	F	0.15	22.1	17.6	22.1	16.775
 # R12F5-TRI-01 (S-10, lane P): the pyro cold / gate cell re-laid so the gate nets keep >= 1.06 mm from every raising
 # net and PYRO1_OUT >= 1.04 mm from 3V3 (R10 D-R26-02 / -04). PYRO1_GATE leaves In2: TP122 sits on F beside R126 (no
 # via; the In2 run was 0.10 mm from the 3V3 fill, the via 0.665 mm from PYRO1_COLD) and the two GND partner vias go with
@@ -488,7 +459,7 @@ via	BAT_SW_RETURN	-	0.45	15.1	10.8
 # R12F12-TRI-02: second via (33.35, 4.5) for J9.3 / J9.4 GND (camera return)
 track	GND	F	0.3	33.9	4.5	33.35	4.5
 via	GND	-	0.45	33.35	4.5		
-# R12F12-TRI-02: second via (26.33, 18.15) for D121.2 / R154-R157.2 GND (servo pull-downs)
+# R12F12-TRI-02: second via (26.33, 18.15) for D121.2 / R154.2 / R155.2 GND (servo pull-downs; R156 / R157 deleted, D-R12-195)
 track	GND	F	0.3	26.33	17.6	26.33	18.15
 via	GND	-	0.45	26.33	18.15		
 # R12F12-TRI-02: second via (14.9, 21.05) for C88.2 GND (U9 IN 100 nF)

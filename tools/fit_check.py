@@ -158,11 +158,11 @@ R11_MAX_LENGTH = 56.0           # mm, D-R11-02 ceiling
 GH_CLONE_PART = re.compile(r'^GH1\.25-(\d)PWT')
 # D-R12-31 (owner 2026-11-03): R12's ports are JST SH 1.0 mm clones (Megastar ZX-SH1.0-nPWT). Envelope from JST's SH
 # drawing family as the clone listing gives it (Inference: no maker mating drawing): header width (n - 1) + 3.35 mm
-# (JLC listing 6.35 / 8.35 / 10.35 mm; the 8P is J122 since D-R12-192), depth 4.3 mm, height 3.15 mm; housing SHR
+# (JLC listing 6.35 / 8.35 mm; J122 is a 4P since D-R12-195, an 8P under D-R12-192), depth 4.3 mm, height 3.15 mm; housing SHR
 # width (n - 1) + 3.0 mm, length 4.25 mm, height 2.95 mm (Inference); contacts 0.25 mm behind the rear wall, mouth 4.55 mm ahead of the contact row (land y -2.0 to the
 # body front); 3 mm of straight wire beyond the plug, as for GH.
 SH_CLONE_PART = re.compile(r'^ZX-SH1\.0-(\d)PWT')
-SH_DRAWING = dict(source='JLC listing (C7430446 / C7430448 / C7430450) and JST eSH family dimensions; Inference',
+SH_DRAWING = dict(source='JLC listing (C7430446 / C7430448) and JST eSH family dimensions; Inference',
                   pitch=1.0,
                   header_extra_width=3.35, header_depth=4.3, header_height=3.15, housing_extra_width=1.0,
                   housing_length=4.25, housing_height=2.95, pad_behind_rear=0.25, mouth_ahead_of_pads=4.55)

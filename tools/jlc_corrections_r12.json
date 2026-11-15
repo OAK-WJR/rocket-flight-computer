@@ -277,7 +277,7 @@
    "pads_easyeda": 2,
    "pads_matched": 2,
    "status": "OK",
-   "via": "same footprint as C23024 (EasyEDA has no entry for C21190)"
+   "via": "same footprint as C23178 (EasyEDA has no entry for C21190)"
   },
   "C22939|R_0603_1608Metric": {
    "footprint": "R_0603_1608Metric",
@@ -822,22 +822,6 @@
    "pads_ours": 8,
    "pads_easyeda": 8,
    "pads_matched": 8,
-   "status": "OK"
-  },
-  "C7430450|M3_SHC_8P": {
-   "footprint": "M3_SHC_8P",
-   "easyeda": "CONN-SMD_8P-P1.00_MEGASTAR_ZX-SH1.0-8PWT",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    -0.0,
-    0.0625
-   ],
-   "residual_mm": 0.31,
-   "next_best_mm": 7.235,
-   "pads_ours": 10,
-   "pads_easyeda": 10,
-   "pads_matched": 10,
    "status": "OK"
   },
   "C84256|M3_NCD0805R1_K1": {

@@ -9382,19 +9382,19 @@
 						(font
 							(size 1.05 1.05))))))
 		(embedded_fonts no))
-	(symbol "ServoSH8"
+	(symbol "ServoSH4"
 		(pin_names
 			(offset 1.016))
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
 		(property "Reference" "J"
-			(at 0 12.7 0)
+			(at 0 7.62 0)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Value" "ServoSH8"
-			(at 0 -12.7 0)
+		(property "Value" "ServoSH4"
+			(at 0 -7.62 0)
 			(effects
 				(font
 					(size 1.27 1.27))))
@@ -9410,7 +9410,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "Description" "Megastar ZX-SH1.0-8PWT SH-1.0 clone (C7430450) 8-pin servo port in the MicoAir H743 ESC order (D-R12-192): 1 GND, 2 VBAT (NC), 3-6 SERVO1-4 (M1-M4), 7 RX7 (NC), 8 Curr (NC)"
+		(property "Description" "Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) servo port in the MicoAir H743 4-pin UART order (D-R12-195): 1 GND, 2 NC (the H743 5V position), 3 SERVO1 (TX position), 4 SERVO2 (RX position, spare)"
 			(at 0 0 0)
 			(hide yes)
 			(effects
@@ -9422,24 +9422,24 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "ki_fp_filters" "M3_SHC_8P"
+		(property "ki_fp_filters" "M3_SHC_4P"
 			(at 0 0 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(symbol "ServoSH8_0_1"
+		(symbol "ServoSH4_0_1"
 			(rectangle
-				(start -7.62 10.16)
-				(end 7.62 -10.16)
+				(start -7.62 5.08)
+				(end 7.62 -5.08)
 				(stroke
 					(width 0.254)
 					(type default))
 				(fill
 					(type background))))
-		(symbol "ServoSH8_1_1"
+		(symbol "ServoSH4_1_1"
 			(pin passive line
-				(at -12.7 8.89 0)
+				(at -12.7 3.81 0)
 				(length 5.08)
 				(name "GND"
 					(effects
@@ -9450,9 +9450,9 @@
 						(font
 							(size 1.05 1.05)))))
 			(pin passive line
-				(at -12.7 6.35 0)
+				(at -12.7 1.27 0)
 				(length 5.08)
-				(name "VBAT_NC"
+				(name "5V_NC"
 					(effects
 						(font
 							(size 1.05 1.05))))
@@ -9461,7 +9461,7 @@
 						(font
 							(size 1.05 1.05)))))
 			(pin passive line
-				(at -12.7 3.81 0)
+				(at -12.7 -1.27 0)
 				(length 5.08)
 				(name "SERVO1"
 					(effects
@@ -9472,57 +9472,13 @@
 						(font
 							(size 1.05 1.05)))))
 			(pin passive line
-				(at -12.7 1.27 0)
+				(at -12.7 -3.81 0)
 				(length 5.08)
 				(name "SERVO2"
 					(effects
 						(font
 							(size 1.05 1.05))))
 				(number "4"
-					(effects
-						(font
-							(size 1.05 1.05)))))
-			(pin passive line
-				(at -12.7 -1.27 0)
-				(length 5.08)
-				(name "SERVO3"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "5"
-					(effects
-						(font
-							(size 1.05 1.05)))))
-			(pin passive line
-				(at -12.7 -3.81 0)
-				(length 5.08)
-				(name "SERVO4"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "6"
-					(effects
-						(font
-							(size 1.05 1.05)))))
-			(pin passive line
-				(at -12.7 -6.35 0)
-				(length 5.08)
-				(name "RX7_NC"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "7"
-					(effects
-						(font
-							(size 1.05 1.05)))))
-			(pin passive line
-				(at -12.7 -8.89 0)
-				(length 5.08)
-				(name "CURR_NC"
-					(effects
-						(font
-							(size 1.05 1.05))))
-				(number "8"
 					(effects
 						(font
 							(size 1.05 1.05))))))

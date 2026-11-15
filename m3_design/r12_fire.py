@@ -90,7 +90,7 @@ I5_VICTIMS = (
     'IMU_INT1', 'LED_RED', 'LED_RED_A', 'LED_YEL', 'LED_YEL_A', 'NRST', 'PORT_FB', 'PORT_SENSE', 'PYRO1_CONT',
     'PYRO1_GATE', 'PYRO1_GATE_N', 'QSPI_CLK', 'QSPI_IO0', 'QSPI_IO1', 'QSPI_IO2', 'QSPI_IO3', 'QSPI_NCS',
     'RADIO_RX_MCU', 'RADIO_RX_WIRE', 'RADIO_TX_MCU', 'RADIO_TX_WIRE', 'SD_CS', 'SD_MISO', 'SD_MOSI', 'SD_SCK',
-    'SERVO1_MCU', 'SERVO1_OUT', 'SERVO2_MCU', 'SERVO2_OUT', 'SERVO3_MCU', 'SERVO3_OUT', 'SERVO4_MCU', 'SERVO4_OUT',
+    'SERVO1_MCU', 'SERVO1_OUT', 'SERVO2_MCU', 'SERVO2_OUT',   # SERVO3 / SERVO4 deleted (D-R12-195)
     'SPI1_MISO', 'SPI1_MOSI', 'SPI1_SCK', 'SWCLK', 'SWDIO', 'U9_FLT', 'USB_DM', 'USB_DP', 'VBUS_SENSE', 'VCAP1',
     'VCAP2', 'VLOGIC_SENSE')
 # FT-only victims the port class does not hold (R12F8-TRI-01). i5_guard() checks each on the netlist: every MCU pin it
@@ -188,8 +188,11 @@ I5_RAIL_MIN = {
 # from the part's other pins: a bridge from a rail onto the BAT54C clamps' unused second anodes (D95.2, D436.2) conducts
 # into their common cathode, 3V3. i5_nc_pass() derives these pins from the netlist (the part has another pin on 3V3 /
 # 3V3A or on a victim) and i5_guard() holds this tuple to it. D120.2 is not one: D120's nets (PYRO1_COLD_PU, PYRO1_COLD)
-# reach 3V3 only through R136 5.1 kohm.
-I5_NC_PASS = ('unconnected-(D436-A2-Pad2)', 'unconnected-(D95-A2-Pad2)')
+# reach 3V3 only through R136 5.1 kohm. D-R12-195: D121's I/O3 / I/O4 (pins 4 / 6), unconnected since SERVO3 / SERVO4
+# were deleted, are one steering diode from D121.5 (3V3) the same way, so they are victims too (as SERVO3_MCU /
+# SERVO4_MCU were on the same pads).
+I5_NC_PASS = ('unconnected-(D436-A2-Pad2)', 'unconnected-(D95-A2-Pad2)', 'unconnected-(D121-IO3-Pad4)',
+              'unconnected-(D121-IO4-Pad6)')
 # R12F12-TRI-21 (round 11 TRI-05): the middle node of a regulator's feedback divider reaches its VFB pin through the
 # divider's middle resistor (R404 5.1 kohm, R434 10 kohm: not under PACK_SERIES_MIN, so i5_victims() does not derive it), but
 # VFB is a 6 V pin (TI SLVSD90B section 5.1): bridged onto the node, RAW_PROTECTED at U9's OVLO drift maximum puts

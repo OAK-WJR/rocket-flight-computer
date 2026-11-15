@@ -215,19 +215,19 @@
 							(font
 								(size 1.05 1.05))))))
 			(embedded_fonts no))
-		(symbol "M3:ServoSH8"
+		(symbol "M3:ServoSH4"
 			(pin_names
 				(offset 1.016))
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(property "Reference" "J"
-				(at 0 12.7 0)
+				(at 0 7.62 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Value" "ServoSH8"
-				(at 0 -12.7 0)
+			(property "Value" "ServoSH4"
+				(at 0 -7.62 0)
 				(effects
 					(font
 						(size 1.27 1.27))))
@@ -243,7 +243,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "Description" "Megastar ZX-SH1.0-8PWT SH-1.0 clone (C7430450) 8-pin servo port in the MicoAir H743 ESC order (D-R12-192): 1 GND, 2 VBAT (NC), 3-6 SERVO1-4 (M1-M4), 7 RX7 (NC), 8 Curr (NC)"
+			(property "Description" "Megastar ZX-SH1.0-4PWT SH-1.0 clone (C7430446) servo port in the MicoAir H743 4-pin UART order (D-R12-195): 1 GND, 2 NC (the H743 5V position), 3 SERVO1 (TX position), 4 SERVO2 (RX position, spare)"
 				(at 0 0 0)
 				(hide yes)
 				(effects
@@ -255,24 +255,24 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_SHC_8P"
+			(property "ki_fp_filters" "M3_SHC_4P"
 				(at 0 0 0)
 				(hide yes)
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(symbol "ServoSH8_0_1"
+			(symbol "ServoSH4_0_1"
 				(rectangle
-					(start -7.62 10.16)
-					(end 7.62 -10.16)
+					(start -7.62 5.08)
+					(end 7.62 -5.08)
 					(stroke
 						(width 0.254)
 						(type default))
 					(fill
 						(type background))))
-			(symbol "ServoSH8_1_1"
+			(symbol "ServoSH4_1_1"
 				(pin passive line
-					(at -12.7 8.89 0)
+					(at -12.7 3.81 0)
 					(length 5.08)
 					(name "GND"
 						(effects
@@ -283,9 +283,9 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 6.35 0)
+					(at -12.7 1.27 0)
 					(length 5.08)
-					(name "VBAT_NC"
+					(name "5V_NC"
 						(effects
 							(font
 								(size 1.05 1.05))))
@@ -294,7 +294,7 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 3.81 0)
+					(at -12.7 -1.27 0)
 					(length 5.08)
 					(name "SERVO1"
 						(effects
@@ -305,57 +305,13 @@
 							(font
 								(size 1.05 1.05)))))
 				(pin passive line
-					(at -12.7 1.27 0)
+					(at -12.7 -3.81 0)
 					(length 5.08)
 					(name "SERVO2"
 						(effects
 							(font
 								(size 1.05 1.05))))
 					(number "4"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 -1.27 0)
-					(length 5.08)
-					(name "SERVO3"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "5"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 -3.81 0)
-					(length 5.08)
-					(name "SERVO4"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "6"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 -6.35 0)
-					(length 5.08)
-					(name "RX7_NC"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "7"
-						(effects
-							(font
-								(size 1.05 1.05)))))
-				(pin passive line
-					(at -12.7 -8.89 0)
-					(length 5.08)
-					(name "CURR_NC"
-						(effects
-							(font
-								(size 1.05 1.05))))
-					(number "8"
 						(effects
 							(font
 								(size 1.05 1.05))))))
@@ -476,22 +432,9 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 3ee73232-e7ea-567b-8e95-a4b6df549511))
-	(wire
-		(pts
-			(xy 48.26 81.28)
-			(xy 43.18 81.28))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid db2c117b-fceb-5c90-8141-62e93bd934f0))
-	(global_label "SERVO3_MCU"
-		(shape passive)
-		(at 43.18 81.28 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid fcabcdfa-b6b6-5276-a009-c96501cbeccd))
+	(no_connect
+		(at 48.26 81.28)
+		(uuid 9e3ca829-8569-5633-8fc0-8ae18226fc75))
 	(wire
 		(pts
 			(xy 58.42 68.58)
@@ -508,25 +451,12 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 8f657db5-bb04-5168-9cee-9c296d056728))
-	(wire
-		(pts
-			(xy 48.26 83.82)
-			(xy 43.18 83.82))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 685ef2ba-0b9f-5375-a737-38879d8f525a))
-	(global_label "SERVO4_MCU"
-		(shape passive)
-		(at 43.18 83.82 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid b1748709-f7c9-5631-8d52-de0ea0d4ed66))
+	(no_connect
+		(at 48.26 83.82)
+		(uuid 183e8a4a-bce4-58b0-ad79-4d2e44deeb01))
 	(symbol
-		(lib_id "M3:ServoSH8")
-		(at 114.3 76.2 0)
+		(lib_id "M3:ServoSH4")
+		(at 114.3 71.12 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
@@ -538,42 +468,42 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "ZX-SH1.0-8PWT"
+		(property "Value" "ZX-SH1.0-4PWT"
 			(at 114.3 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_SHC_8P"
-			(at 114.3 76.2 0)
+		(property "Footprint" "rocket:M3_SHC_4P"
+			(at 114.3 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C7430450"
-			(at 114.3 76.2 0)
+		(property "LCSC" "C7430446"
+			(at 114.3 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "Megastar"
-			(at 114.3 76.2 0)
+			(at 114.3 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "ZX-SH1.0-8PWT"
-			(at 114.3 76.2 0)
+		(property "Manufacturer Part" "ZX-SH1.0-4PWT"
+			(at 114.3 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430450"
-			(at 114.3 76.2 0)
+		(property "Datasheet" "https://jlcpcb.com/partdetail/C7430446"
+			(at 114.3 71.12 0)
 			(hide yes)
 			(effects
 				(font
@@ -635,44 +565,6 @@
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 244f8a0f-c3a6-5166-855c-1035e40b1521))
-	(wire
-		(pts
-			(xy 101.6 77.47)
-			(xy 96.52 77.47))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 10322275-23d2-584e-83ee-adc5af868ffb))
-	(global_label "SERVO3_OUT"
-		(shape passive)
-		(at 96.52 77.47 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 19bf6ec0-bdf6-5cc9-a186-0dcc0fc0b7d0))
-	(wire
-		(pts
-			(xy 101.6 80.01)
-			(xy 96.52 80.01))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 7e4d264f-5238-5418-8b4c-edb83b116ab3))
-	(global_label "SERVO4_OUT"
-		(shape passive)
-		(at 96.52 80.01 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid f4a89896-862b-590d-800d-8cda7ca67d58))
-	(no_connect
-		(at 101.6 82.55)
-		(uuid c02af5ce-5d2f-5840-a921-2146bcd8241f))
-	(no_connect
-		(at 101.6 85.09)
-		(uuid d86bcc59-6905-59fb-95a4-b686e5a13860))
 	(symbol
 		(lib_id "M3:R")
 		(at 144.78 71.12 0)
@@ -864,233 +756,49 @@
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
-		(uuid cce3829e-a3a1-5408-8f66-c6bd0237f66c)
-		(property "Reference" "R152"
+		(uuid 21e24614-c074-512b-b7e1-8924e6abc652)
+		(property "Reference" "R154"
 			(at 231.14 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "1k 0603"
+		(property "Value" "10k"
 			(at 231.14 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 231.14 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C21190"
-			(at 231.14 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 231.14 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "0603WAF1001T5E"
-			(at 231.14 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
-			(at 231.14 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/79f117bd-85c3-595f-b275-e2874e125dae"
-					(reference "R152")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 231.14 67.31)
-			(xy 231.14 62.23))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 514b3b69-e052-5792-90a9-d5a038691139))
-	(global_label "SERVO3_MCU"
-		(shape passive)
-		(at 231.14 62.23 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 117fd8db-22f8-5a68-8d20-2d158ead01ad))
-	(wire
-		(pts
-			(xy 231.14 74.93)
-			(xy 231.14 80.01))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 5bb7270b-1550-5556-b224-56304808ca31))
-	(global_label "SERVO3_OUT"
-		(shape passive)
-		(at 231.14 80.01 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid b9e80c63-bf43-55a3-af0e-da6153b904d3))
-	(symbol
-		(lib_id "M3:R")
-		(at 274.32 71.12 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 567fed6f-821a-593e-be17-2e65e1157ea3)
-		(property "Reference" "R153"
-			(at 274.32 63.5 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "1k 0603"
-			(at 274.32 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R_0603_1608Metric"
-			(at 274.32 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C21190"
-			(at 274.32 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 274.32 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "0603WAF1001T5E"
-			(at 274.32 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf"
-			(at 274.32 71.12 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/79f117bd-85c3-595f-b275-e2874e125dae"
-					(reference "R153")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 274.32 67.31)
-			(xy 274.32 62.23))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid dae324f8-5a61-56ee-8ed5-7b09b25c8da9))
-	(global_label "SERVO4_MCU"
-		(shape passive)
-		(at 274.32 62.23 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 24485fa8-71df-51e9-b3a3-e4a8b14cf3da))
-	(wire
-		(pts
-			(xy 274.32 74.93)
-			(xy 274.32 80.01))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 6a6a982e-9344-5186-8a82-a7512c195955))
-	(global_label "SERVO4_OUT"
-		(shape passive)
-		(at 274.32 80.01 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid b233014e-7290-5fae-a4f0-49f08d38cf66))
-	(symbol
-		(lib_id "M3:R")
-		(at 317.5 71.12 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 21e24614-c074-512b-b7e1-8924e6abc652)
-		(property "Reference" "R154"
-			(at 317.5 63.5 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 317.5 66.04 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 317.5 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 317.5 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 317.5 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 317.5 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 317.5 71.12 0)
+			(at 231.14 71.12 0)
 			(hide yes)
 			(effects
 				(font
@@ -1103,15 +811,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 317.5 67.31)
-			(xy 317.5 62.23))
+			(xy 231.14 67.31)
+			(xy 231.14 62.23))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 58a3267b-0f63-59ff-bcb4-e9db6034faf7))
 	(global_label "SERVO1_MCU"
 		(shape passive)
-		(at 317.5 62.23 0)
+		(at 231.14 62.23 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1119,15 +827,15 @@
 		(uuid f25721de-eab9-5706-aba1-739386967428))
 	(wire
 		(pts
-			(xy 317.5 74.93)
-			(xy 317.5 80.01))
+			(xy 231.14 74.93)
+			(xy 231.14 80.01))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 79c8c8b3-9a1b-5c38-b3de-8dd68f500b39))
 	(global_label "GND"
 		(shape passive)
-		(at 317.5 80.01 0)
+		(at 231.14 80.01 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1135,54 +843,54 @@
 		(uuid 1bdb4372-f99f-5d90-a35f-567a453c8a57))
 	(symbol
 		(lib_id "M3:R")
-		(at 360.68 71.12 0)
+		(at 274.32 71.12 0)
 		(unit 1)
 		(in_bom yes)
 		(on_board yes)
 		(dnp no)
 		(uuid 664f0ab7-66ab-5113-83ed-8c1d763dbbea)
 		(property "Reference" "R155"
-			(at 360.68 63.5 0)
+			(at 274.32 63.5 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Value" "10k"
-			(at 360.68 66.04 0)
+			(at 274.32 66.04 0)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Footprint" "rocket:R0402"
-			(at 360.68 71.12 0)
+			(at 274.32 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "LCSC" "C25744"
-			(at 360.68 71.12 0)
+			(at 274.32 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 360.68 71.12 0)
+			(at 274.32 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 360.68 71.12 0)
+			(at 274.32 71.12 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
 		(property "Datasheet" ""
-			(at 360.68 71.12 0)
+			(at 274.32 71.12 0)
 			(hide yes)
 			(effects
 				(font
@@ -1195,15 +903,15 @@
 					(unit 1)))))
 	(wire
 		(pts
-			(xy 360.68 67.31)
-			(xy 360.68 62.23))
+			(xy 274.32 67.31)
+			(xy 274.32 62.23))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid f2554e1d-49a3-581e-8a1a-b1a165dfffd8))
 	(global_label "SERVO2_MCU"
 		(shape passive)
-		(at 360.68 62.23 0)
+		(at 274.32 62.23 0)
 		(effects
 			(font
 				(size 1.05 1.05))
@@ -1211,204 +919,20 @@
 		(uuid f9099f1d-186d-59b1-942a-8b6aa85859ff))
 	(wire
 		(pts
-			(xy 360.68 74.93)
-			(xy 360.68 80.01))
+			(xy 274.32 74.93)
+			(xy 274.32 80.01))
 		(stroke
 			(width 0)
 			(type default))
 		(uuid 263fe040-c165-56b4-80a7-94cbda84dcf1))
 	(global_label "GND"
 		(shape passive)
-		(at 360.68 80.01 0)
+		(at 274.32 80.01 0)
 		(effects
 			(font
 				(size 1.05 1.05))
 			(justify right))
 		(uuid 24472bf7-e6b1-5c1d-b64c-d6914b201875))
-	(symbol
-		(lib_id "M3:R")
-		(at 48.26 121.92 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid aad5a15b-70f2-54c3-939c-b557dc3e2c6b)
-		(property "Reference" "R156"
-			(at 48.26 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 48.26 116.84 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 48.26 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C25744"
-			(at 48.26 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 48.26 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 48.26 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" ""
-			(at 48.26 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/79f117bd-85c3-595f-b275-e2874e125dae"
-					(reference "R156")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 48.26 118.11)
-			(xy 48.26 113.03))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 368c2b04-c6a4-5b58-a91c-8571b636e5d7))
-	(global_label "SERVO3_MCU"
-		(shape passive)
-		(at 48.26 113.03 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 9149815d-037b-5682-aa76-b505c16d9c81))
-	(wire
-		(pts
-			(xy 48.26 125.73)
-			(xy 48.26 130.81))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 4fff573f-e71e-522c-9895-c31270c5deb6))
-	(global_label "GND"
-		(shape passive)
-		(at 48.26 130.81 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid dff41282-9b5d-5203-a8c9-83b1d3ac054c))
-	(symbol
-		(lib_id "M3:R")
-		(at 91.44 121.92 0)
-		(unit 1)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid 5da94703-d8a4-59a4-bb9d-940fc104da6c)
-		(property "Reference" "R157"
-			(at 91.44 114.3 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Value" "10k"
-			(at 91.44 116.84 0)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Footprint" "rocket:R0402"
-			(at 91.44 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "LCSC" "C25744"
-			(at 91.44 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer" "UNI-ROYAL(Uniroyal Elec)"
-			(at 91.44 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Manufacturer Part" "0402WGF1002TCE"
-			(at 91.44 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(property "Datasheet" ""
-			(at 91.44 121.92 0)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27))
-				(justify left)))
-		(instances
-			(project "m3"
-				(path "/d2ccd1db-1a08-5c42-ba1c-8b32df90a2b9/79f117bd-85c3-595f-b275-e2874e125dae"
-					(reference "R157")
-					(unit 1)))))
-	(wire
-		(pts
-			(xy 91.44 118.11)
-			(xy 91.44 113.03))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 578fe775-413e-5ba1-863e-bf9c8898540d))
-	(global_label "SERVO4_MCU"
-		(shape passive)
-		(at 91.44 113.03 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid 93f650b7-0a50-5af9-9ccf-8d326eb1de83))
-	(wire
-		(pts
-			(xy 91.44 125.73)
-			(xy 91.44 130.81))
-		(stroke
-			(width 0)
-			(type default))
-		(uuid 35e76d85-4472-5f83-93ef-9b9349c16d4b))
-	(global_label "GND"
-		(shape passive)
-		(at 91.44 130.81 0)
-		(effects
-			(font
-				(size 1.05 1.05))
-			(justify right))
-		(uuid c1236164-5848-515f-bea6-acffb5674993))
 	(sheet_instances
 		(path "/"
 			(page "13"))))

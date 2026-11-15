@@ -75,6 +75,13 @@ R12_REPIN = {
                         'high initial, 3.07-3.43 V drift, with PA4 leakage; Calculation; drift Inference); the R10 rule '
                         '"port UARTs only while PA4 reads low" becomes "only while PA4 reads high" (D-R12-93: PD10 reads high; '
                         'PORT_SENSE moves to H9 through R12_MOVES)'),
+    # D-R12-195 (owner 2026-11-14): one servo on flight 1; J122 is an SH-4 with SERVO1 and a spare SERVO2, so SERVO3 /
+    # SERVO4 and their cells are deleted. Their R11 balls (H2 PA1, J2 PA2) are freed here; D-R12-93 had moved them to
+    # D9 (PA8) / C9 (PA9), which stay NC as in R11. H2 still takes LED_YEL through R12_MOVES.
+    'SERVO3_MCU': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-195: SERVO3 deleted (single-servo J122, owner '
+                   '2026-11-14); D-R12-93 had moved it to PA8 (D9), which stays NC'),
+    'SERVO4_MCU': ('NC', 'NC (firmware: analog, never driven)', 'D-R12-195: SERVO4 deleted (single-servo J122, owner '
+                   '2026-11-14); D-R12-93 had moved it to PA9 (C9), which stays NC'),
 }
 
 # D-R12-51: U1 balls R12 gives a function that R11 left NC, keyed by ball (each NC in R11)
@@ -127,7 +134,7 @@ R12_MOVES = {
                    f'D-R12-93: PB7 (A5) -> PA15 (A8, aft-east, toward the CA bus and D121.1); {_DS} Table 10 p. 90 '
                    '(PA15 AF1 TIM2_CH1 / TIM2_ETR, AF0 JTDI; Table 9 p. 82: ball A8 = PA15 (JTDI)); loader SPI3_NSS slave input, no pull (AN2606 Rev 64 Table 119 '
                    'p. 279); at reset the JTDI pull-up (30-50 kohm, DS12110 RPU) against the servo-cell 10 kohm 1 % '
-                   'pull-down (R154-R157) holds a steady level of at most 0.877 V at the 3V3 initial maximum 3.4824 V '
+                   'pull-down (R154 / R155; R156 / R157 deleted in D-R12-195) holds a steady level of at most 0.877 V at the 3V3 initial maximum 3.4824 V '
                    '(3.4824 x 10.1k / 40.1k) and 0.890 V at the drift maximum 3.5156 V (r12_windows.json: SLUSDW3A 7.8 '
                    'PFM band, R12F6-TRI-03) with the pull-down at its drift end (3.5156 x 10.167k / 40.167k; +/-1.67 % '
                    'per resistor, r12_budget.py TOL drift), no pulse (Calculation; the PFM band at R12\'s VIN and the '
@@ -140,14 +147,6 @@ R12_MOVES = {
                    'PFM band, R12F6-TRI-03) with the pull-down at its drift end (3.5156 x 10.167k / 40.167k; +/-1.67 % '
                    'per resistor, r12_budget.py TOL drift), no pulse (Calculation; the PFM band at R12\'s VIN and the '
                    'drift case Inference; R11 PA3 method)'),
-    'SERVO3_MCU': ('D9', 'AF1 TIM1_CH1 (333 Hz PWM, REQUIREMENTS F4; TIM1: set BDTR.MOE)',
-                   f'D-R12-93: PA1 (H2, west face) -> PA8 (D9, east ring 2); {_DS} Table 10 p. 89 (PA8 AF1 TIM1_CH1, AF0 '
-                   'MCO1: keep MCO1 off); loader I2C3_SCL open drain, not driven (AN2606 Rev 64 Table 119 p. 278)'),
-    'SERVO4_MCU': ('C9', 'AF1 TIM1_CH2 (333 Hz PWM, REQUIREMENTS F4; TIM1: set BDTR.MOE)',
-                   f'D-R12-93: PA2 (J2, west face) -> PA9 (C9, aft-east ring 2); {_DS} Table 10 p. 89 (PA9 AF1 '
-                   'TIM1_CH2); loader USART1_TX may drive a steady high (AN2606 Rev 64 Table 119 p. 277) [LOADER-DRIVEN]: '
-                   'it reaches the servo through the 1 kohm series resistor as a level, not a pulse train; the same '
-                   'allowance R11 accepted for SERVO4 on PA2 (USART2_TX), which this map frees'),
     'CAM_MCU_TX': ('B9', 'AF8 UART4_TX',
                    f'D-R12-93: PD5 (B6, USART2) -> PC10 (B9, aft-east, toward R101); peripheral USART2 -> UART4; {_DS} '
                    'Table 12 p. 92 (Port C alternate functions: PC10 AF8 UART4_TX); loader SPI3_SCK slave input, not '
