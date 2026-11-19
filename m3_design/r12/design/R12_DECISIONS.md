@@ -3665,6 +3665,59 @@ method) and an M3_R12 "Not verified" line.
   SERVO2_MCU's collinear B.Cu segments at (29.1, 21.35): that node is the W1 / W4 zone hand-off point (zone_guard), and
   AUD-10 counts collinear nodes for review only.
 
+## U9 stock check and paper fallback (2026-11-19; owner request 2026-11-18; D-R12-210)
+
+**D-R12-210 U9 stays TPS259470ARPWR; TPS259472ARPWR is a paper fallback, not adopted.** The 2026-11-16 final review
+read C3662799 at 0 in stock (orderable −181, minimum purchase 7), and on 2026-11-18 the owner asked for a substitute
+to be qualified. A read-only lookup of all 60 BOM codes on **2026-11-19T08:03:02Z** (`tools/jlc_stock.py` `lookup`;
+not a fab-script run, so `stock_check_2.json` / `_5.json` and the cost files are unchanged) reads C3662799 at
+**4965 in stock / 4757 orderable, minimum purchase 1**. Every code is orderable for 2 and for 5 boards; only C535146
+(D402) is thin at 5 boards (33 in stock, 9 orderable against 5). Orderable is an Inference about JLC's field. The
+board is therefore unchanged: PCB `c8b0412d…`, BOM and CPL as bound. Re-run stock on order day (R12_VALIDATION row 18).
+
+Fallback if C3662799 is short on order day: **TPS259472ARPWR (C3662789; 7409 / 7330 on the same lookup)**. From TI
+SLVSFC9C (May 2026) §4, Table 5-1, §6.1, §6.3, §6.5, §7.3.1, §7.3.4, §7.3.5.3 and §7.3.11 (Datasheet):
+- The same RPW package, and the same IN, OUT, EN/UVLO, DVDT, GND, ILM and ITIMER pins. The same Active Current Limit
+  response, auto-retry and input reverse polarity rating (−15 V); one electrical table covers every TPS25947xx.
+- Pin 2 is OVCSEL, not OVLO: 390 kΩ to GND selects the 13.8 V clamp (threshold 13.2 / 13.85 / 14.5 V; output while
+  clamping 13.0–14.6 V). Open selects 5.7 V and a short 3.8 V, both below a 2S pack. TI gives no resistor tolerance;
+  its Figure 6-25 uses 392 kΩ.
+- Pin 3 is PG (open-drain output) and pin 4 is PGTH (analog input, ≤ 5 V recommended, 6.5 V absolute maximum). There
+  is no FLT output.
+
+The edits are to the BOM only, with no copper change (**Calculation / Inference: not built, not gated, not reviewed**):
+- U9 → C3662789.
+- R82 (1 MΩ, BAT_IN to pin 2) not fitted; fitted, it would pull OVCSEL toward the pack.
+- R83 100 kΩ → 390 kΩ 1 % (C25782, 0402, an Extended code new to the BOM) and R93 33 kΩ → 2 kΩ (C4109, R123's code):
+  392 kΩ from pin 2 to GND. The cost was not re-run.
+- Pin 3's land has no net (PG open, as AUXOFF is now). Pin 4 keeps net U9_FLT, so PGTH sits at 3V3 through R89,
+  inside its range.
+
+What the fallback gives up:
+1. **The 3S cut-off.** OVLO rises at 9.80–10.71 V today, so a 3S pack leaves the board off. With the clamp a 3S pack
+   (12.6 V) powers the board, and a larger pack is held at 13.0–14.6 V on RAW_PROTECTED until thermal shutdown and
+   retry. The parts on RAW_PROTECTED and VLOGIC are inside their ratings at 14.6 V (25 V and 50 V capacitors,
+   TPS563208 17 V, LMR50410 36 V, SS34 40 V; Datasheet / project records); R92 3.3 kΩ dissipates 64.6 mW at 14.6 V
+   and 48.1 mW at 12.6 V (Calculation; its 62.5 mW 0402 rating is an Inference). The pyro bus is on BAT_IN, not
+   behind U9: with PC1 high, Q120 / Q121 see VGS of about pack × 50 / 60 (R119 ∥ R120 over R121; Calculation),
+   7.0 V at 8.4 V and 10.5 V at 12.6 V, and more than the ±12 V rating above 14.4 V; a 3S pack would fire at about
+   2.66 A (12.6 V over the 4.72843 Ω loop; Calculation / Inference). The fallback therefore needs a ground refusal in
+   firmware on pack voltage (no PC1 and no fire when PA6 reads above a full 2S pack plus margin), to be written as a
+   firmware rule if the fallback is used (Inference).
+2. **The fault flag.** PC13 reads high whenever 3V3 is up. Firmware rule 3 can no longer log U9 faults from
+   BAT_FAULT_N, and sees an auto-retry only as a dip on PA6 / PD10.
+
+The EN / UVLO thresholds and leakage, ILM, ITIMER, DVDT and RON rows are shared (Datasheet), so the EN / chatter,
+hold-up and fire-loop figures are expected to carry; that is an Inference until the models are re-run. To adopt the
+fallback: change the part fields in the R12 generators (U9, R82, R83, R93) and any check_r12 rule that pins them,
+build twice, re-run the fab package, the hot-plug and stage D bindings and the full gate, then a focused review (the
+board hash changes, because part fields are in the PCB file). It is not adopted because the fitted part is in stock
+and keeps both functions.
+
+Rejected: **TPS259461ARPWR** (C3662780, 1083 / 1018): the same pins and resistors, but IN's absolute minimum is
+−0.3 V (TI SLVSGA8B §6.1), so no reverse-battery protection (F6). TPS259474ARPWR (C3662807: adjustable OVLO with
+PG / PGTH, the closer part, but a circuit breaker and not a current limiter) and TPS259470LRPWR read 0 and 2 in stock.
+
 ## 2. Historical stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history. C25 / C26 alone are updated to the round-3 C1548 read
