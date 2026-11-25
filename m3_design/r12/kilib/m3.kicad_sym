@@ -2323,7 +2323,7 @@
 						(font
 							(size 1.27 1.27))))))
 		(embedded_fonts no)
-		(property "ki_fp_filters" "C0402 C0603 C_1206_3216Metric"
+		(property "ki_fp_filters" "C0402 C0402_DNP C0603 C_1206_3216Metric"
 			(at 0 0 0)
 			(effects
 				(font
@@ -9009,7 +9009,7 @@
 			(effects
 				(font
 					(size 1.27 1.27))))
-		(property "ki_fp_filters" "M3_FXLS_HLQFN16"
+		(property "ki_fp_filters" "M3_FXLS_HLQFN16_DNP"
 			(at 0 0 0)
 			(hide yes)
 			(effects

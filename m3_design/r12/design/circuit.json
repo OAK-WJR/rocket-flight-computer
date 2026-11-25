@@ -228,26 +228,12 @@
    "footprint": "rocket:M3_SHC_6P",
    "source": "D-R12-31 (owner 2026-11-03): JST SH 1.0 mm side-entry clone 6P, 1 A per contact (JLC listing, Live 2026-11-04)"
   },
-  "C41785564": {
-   "Manufacturer": "STMicroelectronics",
-   "Manufacturer Part": "LSM6DSVETR",
-   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2412041127_STMicroelectronics-LSM6DSVETR_C41785564.pdf",
-   "footprint": "rocket:LGA-14_L3.0-W2.5-P0.50-TL",
-   "source": "D-R12-50: 6-axis IMU, JLC Economic; +-16 g / +-4000 dps (JLC / LCSC listing); pin map JLCEDA C41785564"
-  },
   "C5190712": {
    "Manufacturer": "NXP Semicon",
    "Manufacturer Part": "FXLS90322AESR2",
    "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2405281435_NXP-Semicon-FXLS90322AESR2_C5190712.pdf",
    "footprint": "rocket:M3_FXLS_HLQFN16",
    "source": "D-R12-51: dual-axis (X / Y) medium-g accelerometer, SPI, HLQFN-16 4 x 4 (NXP FXLS9xxx0 Rev 6; part page)"
-  },
-  "C97627": {
-   "Manufacturer": "TE Connectivity",
-   "Manufacturer Part": "MS560702BA03-50",
-   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2010281834_TE-Connectivity-MS560702BA03-50_C97627.pdf",
-   "footprint": "rocket:SENSORS-SMD_MS5611-01BA03",
-   "source": "D-R12-52: barometer 10-1200 mbar, I2C (TE MS5607-02BA03 06/2017), R11's MS5611 land"
   },
   "C190095": {
    "Manufacturer": "YAGEO",
@@ -290,6 +276,20 @@
    "Datasheet": "https://datasheet.lcsc.com/datasheet/pdf/dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881",
    "footprint": "rocket:M3_KF301_5P0_2P_BU",
    "source": "D-R12-174 (owner 2026-11-10): blue 5.0 mm 2P rising-cage screw terminal for the battery, Kefa KF301-5.0 drawing rev A; JLC THT assembly"
+  },
+  "C51931514": {
+   "Manufacturer": "STMicroelectronics",
+   "Manufacturer Part": "ISM6HG256XTR",
+   "Datasheet": "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf",
+   "footprint": "rocket:LGA-14_L3.0-W2.5-P0.50-TL",
+   "source": "D-R12-212 (undoes D-R12-50): R10 / R11's IMU (D-R19-11), low-g +-16 g, high-g to +-256 g, +-4000 dps (ST DS15034 Rev 1); JLC Standard PCBA only"
+  },
+  "C15639": {
+   "Manufacturer": "TE Connectivity",
+   "Manufacturer Part": "MS561101BA03-50",
+   "Datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_1808280521_TE-Connectivity-MS561101BA03-50_C15639.pdf",
+   "footprint": "rocket:SENSORS-SMD_MS5611-01BA03",
+   "source": "D-R12-214 (undoes D-R12-52): R11's barometer MS5611-01BA03 (REQUIREMENTS F3) on its own land, I2C"
   }
  },
  "deleted": {
@@ -651,10 +651,10 @@
    }
   },
   "U5": {
-   "lcsc": "C97627",
-   "value": "MS5607-02BA03",
+   "lcsc": "C15639",
+   "value": "MS561101BA03",
    "lib": "M3:Barometer",
-   "why": "D-R12-52 (supersedes D-R12-13): LPS28DFW is JLC Standard Only -> MS5607-02BA03 (Economic; 250 C peak, owner-accepted D-R12-49); R11's MS5611 wiring: PS high (I2C), CSB to GND (address 0x77), SDO NC",
+   "why": "D-R12-214 (undoes D-R12-52; owner 2026-11-24: JLC Standard PCBA): back to R11's MS5611-01BA03 on R11's land and wiring: PS high (I2C), CSB to GND (address 0x77), SDO NC",
    "nets": {
     "1": "3V3A",
     "2": "3V3A",
@@ -689,9 +689,9 @@
    "why": "D-R12-174 (owner 2026-11-10: replace the battery solder pads with screw terminals; supersedes D-R12-30's wire pads): Kefa KF301-5.0-2P blue 5.0 mm 2P screw terminal, pin 1 BAT_IN (BAT+), pin 2 GND; JLC-assembled THT; pins at x 7.4 in line with J121, wire face west"
   },
   "U4": {
-   "lcsc": "C41785564",
-   "value": "LSM6DSVETR",
-   "why": "D-R12-50: ISM6HG256X is JLC Standard Only -> LSM6DSVE (Economic) on the same land and nets; low-g and gyro channel (F1)"
+   "lcsc": "C51931514",
+   "value": "ISM6HG256X",
+   "why": "D-R12-212 (undoes D-R12-50; owner 2026-11-24: JLC Standard PCBA): back to R10 / R11's ISM6HG256X on the same land and nets; gyro, low-g and high-g accelerometer in one part (F1, F2)"
   },
   "C84": {
    "lcsc": "C5246546",
@@ -929,6 +929,7 @@
   },
   "U6": {
    "lcsc": "C5190712",
+   "footprint": "rocket:M3_FXLS_HLQFN16_DNP",
    "value": "FXLS90322AESR2",
    "lib": "M3:FXLS9xxxx",
    "sheet": "sensors.kicad_sch",
@@ -951,10 +952,16 @@
     "16": "3V3",
     "17": "GND"
    },
-   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10 at D-R12-51, PC11 at D-R12-64A, PD2 (U1.B7) since D-R12-93); TEST / PCM1 (pin 2) / PCM0 unterminated as NXP recommends (R12F12-TRI-38: pin 2 is PCM1 / ARM1, an output, on the dual-channel part; read through a mirror of the dual-channel sheet, so an Inference)"
+   "why": "D-R12-51: high-g axial channel (F2) on the IMU SPI bus, own chip select HG_CS (PA10 at D-R12-51, PC11 at D-R12-64A, PD2 (U1.B7) since D-R12-93); TEST / PCM1 (pin 2) / PCM0 unterminated as NXP recommends (R12F12-TRI-38: pin 2 is PCM1 / ARM1, an output, on the dual-channel part; read through a mirror of the dual-channel sheet, so an Inference); D-R12-213 (owner 2026-11-24): not fitted (DNP, out of the BOM and CPL, no paste); land, nets and copper kept so it can be hand-fitted later as a second high-g sensor",
+   "flags": [
+    "dnp",
+    "exclude_from_bom",
+    "exclude_from_pos_files"
+   ]
   },
   "C33": {
    "lcsc": "C307331",
+   "footprint": "rocket:C0402_DNP",
    "value": "100nF 50V X7R 10%",
    "lib": "M3:C",
    "sheet": "sensors.kicad_sch",
@@ -962,7 +969,12 @@
     "1": "3V3",
     "2": "GND"
    },
-   "why": "D-R12-51: U6 VCC decoupling, NXP Table 6 C1 0.1 uF X7R >= 10 V"
+   "why": "D-R12-51: U6 VCC decoupling, NXP Table 6 C1 0.1 uF X7R >= 10 V; D-R12-213: not fitted with U6 (DNP, out of the BOM and CPL, no paste); land, nets and copper kept",
+   "flags": [
+    "dnp",
+    "exclude_from_bom",
+    "exclude_from_pos_files"
+   ]
   },
   "C79": {
    "lcsc": "C12891",
@@ -1069,9 +1081,9 @@
  "u1_repin_note": "r12_sch.R12_REPIN (keyed by R11 net): USB_FAULT_N, CAM_FAULT_N, CAM_UART_OE -> NC; LOGIC_SOURCE_ST -> PORT_SENSE",
  "owner_fit": {},
  "assembly": {
-  "tier": "JLC Economic PCBA",
+  "tier": "JLC Standard PCBA",
   "sides": 1,
-  "reflow": "255 +/- 5 C (JLC capabilities page)",
-  "note": "every footprint on F (D-R12-01); every part JLC-assembled, none owner-fitted (D-R12-85, owner 2026-11-05)"
+  "reflow": "240 +/- 5 C (JLC Standard, cost_study.md record, Live 2026-11-04)",
+  "note": "every footprint on F (D-R12-01); every fitted part JLC-assembled, none owner-fitted (D-R12-85, owner 2026-11-05); Standard since D-R12-211 (owner 2026-11-24); U6 / C33 not fitted (D-R12-213)"
  }
 }

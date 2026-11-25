@@ -1,14 +1,15 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195; round 13 fix pass D-R12-199 … -204; round 14 final fix pass D-R12-205 … -209: the J400 chatter bench rule is now **under 6.6 ms**),
-four layers, every part on the top face and assembled by JLC. R12 remains a CAD candidate, not accepted,
-nothing ordered; R9 stays accepted. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
+**Status.** PCB `0c681ad6af502e12a285aa1fbc5cbfba81d7131e18d698ab9199c8462cdde5a5`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195; round 13 fix pass D-R12-199 … -204; round 14 final fix pass D-R12-205 … -209: the J400 chatter bench rule is now **under 6.6 ms**; the Standard PCBA rebuild D-R12-211 … -219, 2026-11-24: U4 ISM6HG256X, U5 MS5611, U6 / C33 not fitted, the `RADIO` / `GPS` legends moved, copper identical to `c8b0412d…`),
+four layers, every fitted part on the top face and assembled by JLC on **Standard** PCBA (D-R12-211; Economic before). R12 remains a CAD candidate, not accepted,
+nothing ordered; R9 stays accepted. The rebuild's focused review (Fable 5.2, 2026-11-24: 0 Critical / 1 Major / 8 Minor, R12STD-REV-01 … -09) is corrected by D-R12-220 and its records pass; the Major was U4's axis map (now roll = **+gyro_Y**, see Board below); the full gate is pending. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
 [R12_VALIDATION.md](R12_VALIDATION.md). No physical fit is claimed.
 
 Coordinates are board mm: x east (0 … 46), y forward from the aft edge (0 … 86.85), top face F.
-Current centres are `m3_design/r12_place.tsv` on `c8b0412d…` (Measured; placement unchanged since `96207d2e…`, the round
+Current centres are `m3_design/r12_place.tsv` on `0c681ad6…` (Measured; placement unchanged since `96207d2e…`, the round
 13 fix pass moved copper only: SERVO1_OUT / SERVO2_MCU at D121 and three second vias near C60 / C94, D-R12-199, -200;
-the round 14 fix pass too: a GND via by R110 and a strap along U1's F row, D-R12-205).
+the round 14 fix pass too: a GND via by R110 and a strap along U1's F row, D-R12-205; the Standard rebuild changed no
+copper or placement, D-R12-211 … -219).
 All positions below are on this board; figures labelled `c9b9f0fa…` were measured on round 12's board, whose copper and
 placement differ from this one only at J122, the servo cells and those vias (D-R12-192, -195, -199, -200).
 J1's terminal set the 86.85 mm outline (D-R12-174); round 12 adds R118 without moving existing parts.
@@ -61,8 +62,8 @@ Pin data: `tools/check_r12.py` `SH_PORTS` / `TERMINAL_PINS`, D-R12-29 … -31.
   - Under the 0.561 A budget the port pins stay at or above 4.565075 V at the drift corner and at or below 4.972 V with no
     load (Calculation / Inference, D-R12-83): inside the LR900-F's 4.5–5.0 V (a project-record Inference; MicoAir's
     page gives only "5V DC") and the M100 Mini's 3.3–5 V. That holds while U400's input is at least VO / 0.75, about
-    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.4898 V) or on a 6.0 V pack
-    (about 5.4108 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
+    6.1–6.6 V (TI SLVSD90B §7.3, D-R12-131). During a four-stall fire (U400 VIN about 5.4893 V) or on a 6.0 V pack
+    (about 5.4103 V) it rests on U400's frequency foldback, an Inference (M3_R12 "Power"; bench item R12_VALIDATION row
     15).
   - Before connecting a module, read PORT_4V8 at pin 2 of each port on pack power with the e-match disconnected. Expect
     4.60–4.94 V at room temperature (initial tolerance, Calculation).
@@ -105,14 +106,16 @@ Further rules:
   leave the same aft edge (R10's chafe rule).
 - **J400 chatter (D-R12-183, -207; Calculation / Inference).** BAT_IN is a network with J1.1,
   U9.5, Q120.3 and R80.1 terminals. EN is evaluated at R80.1, not J1. At the four-stall GAP-1 point,
-  with D-R12-207's unshed load (U2 input 2.4126 W, was 2.225 W), J1 is 5.71390 V and R80.1 is 5.69504 V (18.9 mV
-  lower). Single drop-out immunity is 7.919 / 7.399 ms initial / drift; periodic limits are 7.367 / 6.892 ms.
-  Whole-current loading gives J1 5.70169 V, R80.1 5.68223 V, fire current 1.24441 A and the worst
-  periodic limit **6.796 ms**. The 7 ms line fails both conventions. The bench pass rule is **under 6.6 ms
+  with D-R12-219's unshed load (U2 input 2.4214 W; 2.4126 W under D-R12-207, 2.225 W before), J1 is 5.71364 V and R80.1 is
+  5.69476 V (18.9 mV lower; 5.71390 / 5.69504 V before D-R12-219). Single drop-out immunity is 7.917 / 7.397 ms initial /
+  drift; periodic limits are 7.365 / 6.890 ms (7.919 / 7.399 and 7.367 / 6.892 ms before D-R12-219).
+  Whole-current loading gives J1 5.70141 V, R80.1 5.68194 V, fire current 1.24435 A and the worst
+  periodic limit **6.794 ms** (6.796 ms before D-R12-219). The 7 ms line fails both conventions. The bench pass rule is **under 6.6 ms
   total open time in every sliding 100 ms window** (**6.7 ms before D-R12-207**: at 6.796 ms the 6.7 ms line is
   only 0.096 ms under the limit, inside the generator's 0.10 ms allowance), recorded at **≥ 10 kS/s under
   flight-level vibration**, with **U9 on throughout at 5.71 V** (5.72 V before; the four-stall J1). This supersedes
-  D-R12-183's 6.7 ms and D-R12-170's historical 6.9 ms rules; the margin to the worst model limit is 0.196 ms.
+  D-R12-183's 6.7 ms and D-R12-170's historical 6.9 ms rules; the margin to the worst model limit is 0.194 ms (0.196 ms
+  before D-R12-219; the rule is unchanged).
   `en.chatter_rule.bench_rule_ms` stores 6.6 and the gate checks both load conventions. Turn-on is 30.3–131.5 ms initial / 29.9–135.9 ms drift over C87 0.72–1.265 × 220 nF.
   C87's X7R allowance, leakage corners, pack/load and drift are Inference.
 
@@ -127,15 +130,15 @@ corner, Calculation / Inference). A PA6 trip that begins during a commanded fire
 to the end of the ≤ 20 ms pulse plus its tail) is logged with its time and the PA6 reading. It is not
 treated as battery loss: no battery-loss shutdown, shed or state change follows from it, and the fire
 pulse is not cut short by it. A shorted match (or match and leads) still trips PA6 at the drift corner
-(−0.1352 / −0.1799 V below the trip top; Calculation / Inference), so this rule is required. A healthy
-four-stall fire is +0.0178 V clear of the trip top at drift (Calculation / Inference). A PA6 trip outside
-a fire pulse is battery loss as before (hold-up 0.435–1.897 ms unshed at drift, Calculation / Inference; D-R12-207).
+(−0.1356 / −0.1804 V below the trip top; Calculation / Inference), so this rule is required. A healthy
+four-stall fire is +0.0174 V clear of the trip top at drift (Calculation / Inference). A PA6 trip outside
+a fire pulse is battery loss as before (hold-up 0.433–1.897 ms unshed at drift, Calculation / Inference; D-R12-207, -219).
 Firmware and bench qualification remain open.
 
 ## Pyro and per-flight checks
 
 The e-match connects at J121's screw terminal: `E1+` to pin 2 (IGN), `E1−` to pin 1 (OUT). The match must be ≤ 2 Ω and its
-leads ≤ 0.3 Ω (the fire budget's separate allowances). At four stalls the fire current is 1.24711 A at BAT_IN 5.71390 V (D-R12-207) against the
+leads ≤ 0.3 Ω (the fire budget's separate allowances). At four stalls the fire current is 1.24705 A at BAT_IN 5.71364 V (D-R12-219; 1.24711 A / 5.71390 V under D-R12-207) against the
 MJG J-Tek 1.125 A floor (Calculation / Inference).
 
 **Per-flight checklist.** This is R10's list ([ORDERING §8.3](ORDERING.md#83-after-delivery-probes-coating-staking-and-bench-gates))
@@ -199,6 +202,12 @@ D-R12-207), recorded at ≥ 10 kS/s under flight-level vibration with U9 on thro
     clamp or the solder joints, and dress them apart from the J400 pair.
   - **Pre-flight.** Follow step 1b: pack unplugged at its connector, J400 open, no e-match, insulated driver.
     Only in that state re-tighten to ≤ 0.4 N·m and tug-test. Screw retention under vibration is unqualified.
+- **Storage: unplug the pack (D-R12-216).** R167 (10 kΩ, BAT_IN to GND, the hot-plug bleed) draws about **0.84 mA**
+  from a connected 2S pack even with J400 open (8.4 V / 10 kΩ; 0.74 mA at 7.4 V; Calculation; the board's other
+  switch-open loads are microamps, Calculation / Inference). A 1500 mAh pack left connected is flat in about
+  1500 mAh / 0.84 mA ≈ 1800 h, roughly **75 days from full**, and below a safe 3.0 V per cell sooner, about a month from
+  a storage charge (Calculation / Inference on the pack's usable capacity). **Unplug the pack at its keyed connector
+  whenever the vehicle is not being prepared for flight.**
 - **No battery-lead fuse** (R10 OQ-6).
 - **Hot-plug.** The installed harness must measure ≥ 0.03 Ω and 0.1–2 µH, the hot-plug model's domain. On R12, with
   C79, every required case passes (Simulation / Inference, D-R12-78).
@@ -225,11 +234,13 @@ D-R12-207), recorded at ≥ 10 kS/s under flight-level vibration with U9 on thro
   Tape over the seated card as a retention backup. The inserted card stays inside the board edge
   (mated envelope x 30.30–45.90 mm, board x ≤ 46; Measured CAD envelope, installed fit unverified).
   Card-detect contacts are NC. This replaces the hinged socket by owner decision 2026-11-07 (D-R12-162).
-- **U5 barometer** (MS5607) on the top face at (23.0, 32.25), rotation 180. Keep its port open and vented, under an opaque cover that
+- **U5 barometer** (MS5611-01BA03 since D-R12-214; MS5607 before) on the top face at (23.0, 32.25), rotation 180. Keep its port open and vented, under an opaque cover that
   does not press on it (R10's cover rule).
-- **IMU.** U4 at (23.0, 45.45), rotation 180, on the roll axis (x = 23; lever arm x = 0, unchanged): roll = −gyro_Y,
-  thrust −a_Y. U6 at (23.0, 38.25), rotation 180, is now on the roll axis too (x = 0); its axial channel is channel 1.
-  The axis maps are D-R12-54's (Calculation / Inference: both rotations unchanged; inherited axis frames). A bench sign check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
+- **IMU.** U4 (ST ISM6HG256X since D-R12-212: gyroscope, low-g and high-g accelerometer in one part) at (23.0, 45.45),
+  rotation 180, on the roll axis (x = 23; lever arm x = 0, unchanged): +X_imu west, +Y_imu forward, roll = **+gyro_Y**,
+  thrust **+a_Y** (D-R12-220, correcting D-R12-54's −gyro_Y; Calculation from DS15034 Figure 5 and the board pads). **U6 is not fitted** (D-R12-213): its empty land at (23.0, 38.25) and C33's
+  stay for a later hand-fit of a second high-g sensor (its axial channel would be channel 1, an Inference). A bench sign
+  check is needed before flight ([M3_R12 IMU axis map](M3_R12.md#imu-axis-map)).
 - **LEDs.** LED1 red (8.0, 56.65) and LED2 yellow (8.0, 58.85), top face, west bay.
 - **Length.** R12 is 86.85 mm (D-R12-174: 3.85 mm added at the aft end for J1's terminal; 83 mm under D-R12-171, 85 mm under D-R12-162, 88 mm under D-R12-144), 36.85 mm longer than R11. `docs/VEHICLE.md` gives no internal bay or sled length (its
   stack row still budgets 102 mm for R9), so the fit could not be checked: check it against the bay and coupler and
@@ -247,7 +258,7 @@ and vias, including the switch-side layer changes near J400. The envelopes locat
 exposed joints and associated copper, not the keep-off items below.
 
 Keep coat off J1/J121 wire entries and screws, all SH mouths, J3, J430 contacts and card path, U5's port,
-and U4/U5/U6 bodies. Keep J2 clear until after the final SWD session, then protect it with polyimide and
+U4 / U5 bodies and U6 / C33's empty lands (kept solderable for a hand-fit, D-R12-213). Keep J2 clear until after the final SWD session, then protect it with polyimide and
 acrylic per P3. Keep the barometer vent open.
 
 TP122, the bare PYRO1_GATE test pad at (14.8, 46.25), lies inside the pyro envelope: leave it bare while the rest is
@@ -281,6 +292,25 @@ bound **0.27305 V** (0.27318 V before D-R12-207), including hot FETs, 29.975 mΩ
 first article; the per-flight closed-switch check does not command a fire.
 
 ## Cost
+
+**Standard PCBA (D-R12-211 … -219, 2026-11-24; current).** `FAB_NET=1 m3_design/r12_fab.sh` on `0c681ad6…`, Live
+2026-11-24T21:21:13Z / 21:22:43Z (`fab/cost_check_2.json` / `_5.json`, `jlc_cost.py --tier standard --profile r10`):
+59 BOM lines (23 Extended / 36 Basic), 179 JLC parts, 566 paste flashes, no owner BOM; parts **$38.83 per board**;
+feeder $1.53 × 59 codes = **$90.27 per order** (Standard charges every code). REQUIREMENTS M3 metric (parts + feeder)
+**$83.96 / $56.88 per board at 2 / 5 boards**, under the $84.41 cap ($0.45 under at two boards). Against the Economic
+figures ($62.44 / $43.10 per board, 2026-11-15) that is **+$21.52 / +$13.78 per board, +$43.04 / +$68.90 per order**;
+the per-board parts rose $8.63 (U4 ISM6HG256XTR $14.32 and U5 MS5611 $6.14 for the LSM6DSVE, MS5607 and FXLS90322).
+Fixed fees outside the metric: Standard one side $50.19 per order (setup $25.56, stencil $8.21, fixture $16.42; JLC may
+add a $14.93 handling fee) against Economic's $9.71, +$40.48 per order; edge rails / panel for the 46 mm board, PCB,
+joints, X-ray and shipping are not in these figures (Calculation / Inference). Stock 2026-11-24T21:20:23Z / 21:21:57Z
+(`fab/stock_check_2.json` / `_5.json`): **U4 (ISM6HG256XTR, C51931514) is short at 5 boards** (stock 5,
+`canPresaleNumber` 2, orderable 2 < 5) and thin at 2 boards (2 orderable for 2, no spare); every other line is
+orderable (U5 C15639 4299 / 4142; U9 C3662799 4421 / 4189; D402 C535146 70 / 50). The FAB_NET run exits 1 on that U4
+line at 5 boards, as expected; it is recorded, not hidden. Orderable = min(stockCount, canPresaleNumber), an
+Inference about JLC's field. On order day confirm U4 in the JLC cart, else consign franchised ISM6HG256XTR (as R10's
+records, `docs/ORDERING.md` §8.1) or order two boards. Nothing ordered.
+
+**Economic records below are history (before D-R12-211).**
 
 Parts + feeder **$62.44 / $43.10 per board at 2 / 5 boards**, against the $84.41 cap (Live
 2026-11-15T02:20:48Z / 02:22:13Z, after D-R12-195's SH-4 J122 and the SERVO3 / SERVO4 deletion): 60 BOM lines

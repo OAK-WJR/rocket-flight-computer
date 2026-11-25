@@ -3,7 +3,7 @@
 verification for m3_design/r12/m3.kicad_pcb and its package m3_design/r12/fab/, with R12's own content checks. A
 separate file because tools/fab_manifest.py's own SHA-256 is one of the inputs R10's frozen package is bound to.
 
-R12 is one-sided JLC Economic PCBA (D-R12-01): every placed part on F, four copper layers. The content checks, each run
+R12 is one-sided JLC PCBA (D-R12-01; Economic until D-R12-211, Standard since): every placed part on F, four copper layers. The content checks, each run
 under KiCad's Python (KICAD_PY, else KiCad's default macOS location) by --content and --bind:
   S-4 (tools/check_r12.py --only S-4 --bom --cpl, as R10's and R11's packages run check_r10 / check_r11; R12F3-TRI-03):
     every required-fitted part in the JLC BOM and the CPL with its native identity: BOM quantity, LCSC code, Manufacturer

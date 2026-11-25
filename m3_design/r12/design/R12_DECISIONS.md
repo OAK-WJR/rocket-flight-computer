@@ -11,8 +11,9 @@ measured; later Measured labels refer to CAD or tool results. No AGENTS §2 rule
 
 Dated entries through D-R12-174 are historical: their board hashes, coordinates, counts, quotes and analysis
 figures belong to those decisions. D-R12-175 … -191 record the round-12 fix pass, D-R12-192 … -198 the servo-port
-changes, D-R12-199 … -204 the round 13 fix pass (`5af58097…`) and D-R12-205 … -209 the round 14 final fix pass (the
-current board, `c8b0412d…`). Live open items
+changes, D-R12-199 … -204 the round 13 fix pass (`5af58097…`), D-R12-205 … -209 the round 14 final fix pass
+(`c8b0412d…`), D-R12-210 the U9 stock record, D-R12-211 … -219 the Standard PCBA rebuild and D-R12-220 its focused review fixes (the current board,
+`0c681ad6…`). Live open items
 are §4; current board state is `docs/M3_R12.md`. A later amendment supersedes the earlier instruction it names.
 
 
@@ -614,7 +615,7 @@ R11's signed frame (D-R11-11: bottom, rotation 180 after the flip, +X_imu → �
 footprint frame +X_imu = −x_fp, +Y_imu = +y_fp; on the top at rotation 180 this is **+X_imu → +x_board (east), +Y_imu →
 −y_board (aft), +Z_imu out of the top face** (right-handed). Roll about +y_board (forward) reads **−gyro_Y**; forward
 thrust reads **−a_Y**; lever arm x = 0.000 mm (Calculation / Inference from R11's frame; that the LSM6DSVE uses the ISM6HG256X / LSM6DSV
-family frame is an Inference). U6 (top, rotation 180): FXLS9xxx0 Rev 6 Figure 8 / Table 8 give +X = −x_fp (towards pins
+family frame is an Inference). **[U4 map corrected by D-R12-220 (2026-11-24): it is 180° off about Z; the board's pads and DS15034 Figure 5 give +X_imu → −x_board, +Y_imu → +y_board, roll +gyro_Y, thrust +a_Y.]** U6 (top, rotation 180): FXLS9xxx0 Rev 6 Figure 8 / Table 8 give +X = −x_fp (towards pins
 1–4) and +Y = −y_fp (towards pins 13–16) for the single-channel parts; rotated 180 on the top: **channel 0 (X) → +x_board
 (east, lateral), channel 1 (Y) → +y_board (forward, the rocket axis)**: forward thrust reads +a on channel 1 (Inference:
 read from the figure, and the dual-channel part's frame is assumed equal). Both signs need a 1 g bench check before
@@ -3718,6 +3719,194 @@ Rejected: **TPS259461ARPWR** (C3662780, 1083 / 1018): the same pins and resistor
 −0.3 V (TI SLVSGA8B §6.1), so no reverse-battery protection (F6). TPS259474ARPWR (C3662807: adjustable OVLO with
 PG / PGTH, the closer part, but a circuit breaker and not a current limiter) and TPS259470LRPWR read 0 and 2 in stock.
 
+## Standard PCBA rebuild (2026-11-24; owner decision 2026-11-24; issue #10; D-R12-211 … -219)
+
+GitHub issue OAK-WJR/rocket-flight-computer#10, an independent pre-order review of `c8b0412d…`, listed: U4 LSM6DSVETR is
+an ST part with no ST datasheet (D-R12-50's identity Inference); U6 FXLS90322 answering SPI at 3.3 V is unproven
+(O-R12-22); the `RADIO` / `GPS` legends run under the J420 / J410 housings; R167 (10 kΩ, BAT_IN to GND) drains the pack
+with J400 open and the handoff does not say so; `tools/check.sh` silently skips its numpy self-tests when numpy is not
+importable under `-I`. The owner then decided (2026-11-24, verbatim): "i mean im going to standard anyways so i don't
+really have to make these tradoeffs anymore liek the barometer", and, to the proposal "rebuild R12 for Standard with
+the single IMU, the MS5611 and the issue's small fixes": "Yes, rebuild R12". This pass is a fix lane only: no review
+round; a focused review and the full gate are pending. Not accepted, nothing ordered.
+
+**D-R12-211 Assembly tier: JLC Standard PCBA, one side (was Economic).** Every part stays on F (D-R12-01), so the
+order is Standard one-sided: setup $25.56 + stencil $8.21 + fixture $16.42 = $50.19 per order (`tools/jlc_cost.py`
+fee table, as R10 / R11 price it; JLC may add a $14.93 handling fee), against Economic's $9.71, and $1.53 feeder fee on
+every code, Basic and Extended. Economic's 255 ± 5 °C reflow no longer applies: Standard is 240 ± 5 °C
+(`cost_study.md` §1.1, Live 2026-11-04, the record this decision cites), at or below every recorded maker peak, so
+**owner deviation A-9 is withdrawn** (it stays as history) and O-R12-02's Economic reflow question closes. A-1 changes:
+R12 now meets M1's "Standard PCBA"; the one side and the 0.5 oz inner copper remain the departure. Standard takes a
+single PCB of at least 70 × 70 mm (`cost_study.md` §1.1), so the 46 mm-wide board needs JLC edge rails or a panel
+(an order-page item, Inference about how JLC applies it). `m3_design/r12_fab.sh` FAB_NET runs
+`jlc_cost.py --tier standard --profile r10` (R10 / R11's tier; Economic before); circuit.json `assembly` records the
+tier. The THT parts (J1, J121, LS120) are JLC THT assembly on Standard as R10's DB125s were. R12_VALIDATION Do row 14
+now names Standard.
+
+**D-R12-212 U4: ST ISM6HG256XTR (C51931514), undoing D-R12-50.** The same land (`LGA-14_L3.0-W2.5-P0.50-TL`) and nets;
+R10 / R11's part and fields (LCSC C51931514, Manufacturer STMicroelectronics, Manufacturer Part ISM6HG256XTR, value
+`ISM6HG256X`, datasheet https://www.st.com/resource/en/datasheet/ism6hg256x.pdf); D-R12-50 had checked that the
+LSM6DSVE's JLCEDA pin map equals the ISM6HG256X's pin for pin, so the wiring is R11's own. F1 (±4000 dps) and F2
+(high-g to ±256 g; low-g ±16 g) are both on U4 again (R10 D-R19-11, ST DS15034 Rev 1), so **owner deviation A-10 is
+withdrawn**, and the LSM6DSVE identity Inference of D-R12-50 / D-R12-54 goes with the part. Facts carried from R10 /
+R11's records for this part (their labels kept): WHO_AM_I 0x73 (DS15034 p. 66, R10 D-R19-11); use only FS_XL_HG codes
+001 / 010 and never 0x3 (reserved in DS15034 Table 150 p. 93, R10 R23-MCU-03; code 010 is 3.904 mg/LSB, so about
+±128 g, Calculation, against F2's ±64 g); SPI ≤ 10 MHz (DS15034 Rev 1 §4.4.1 Table 6); ignore the gyroscope for 40 ms
+after power-up (Table 4 Ton); INT1 push-pull active high by default (IF_CFG PP_OD = 0, H_LACTIVE = 0, DS15034 p. 60, as
+the pin table's R11 column records); IF_CFG.I2C_I3C_disable = 1 to keep the I²C block off (§5.1.1). R12's placement is D-R12-54's:
+top face, (23.0, 45.45), rotation 180; its map, as corrected by D-R12-220: +X_imu → −x_board, +Y_imu → +y_board, +Z_imu
+out of the top face; roll reads +gyro_Y, forward thrust +a_Y, lever arm x 0.000 mm (Calculation from DS15034 Figure 5 and
+the board pads; the 1 g / rotation bench sign check, O-R12-15, stays). This sentence first restated D-R12-54's wrong
+map (+x / −y, −gyro_Y; R12STD-REV-01). JLC lists it Extended, Standard-only
+(API `componentProductType` 2; reading that field as the page's PCBA Type is an Inference). JLC's CPL rotation for it is
+0 (the JLCEDA land is turned 180° from ours; `tools/jlc_corrections_r12.json`, residual 0.04 mm as R11's). Supply
+current: 0.8 mA typical with the gyroscope and both accelerometers in high-performance mode (DS15034 Rev 1 §4.2 Table
+4, IddHPC9, VDD 1.8 V; no maximum given). That did not fit the old 8 mA U4 + U5 + U6 line with U6's 6.0 mA and U5's
+1.4 mA (8.2 mA): D-R12-219.
+
+**D-R12-213 U6 (FXLS90322) and C33 not fitted.** Both are DNP, out of the BOM and out of the position files
+(circuit.json `flags`; `r12_sch.model` now honours flags and a land override on an added part). Their lands, nets
+and copper stay exactly as they were, so U6 can be hand-fitted later as a second high-g sensor. KiCad plots paste for a
+DNP footprint and DRC's `lib_footprint_mismatch` fails a pad edited on the board, so each takes a library variant
+without paste, as R7's `C0402_DNP`: `rocket:M3_FXLS_HLQFN16_DNP` and `rocket:C0402_DNP` (`r12_parts.DNP_VARIANTS`:
+the source land's text with F.Paste taken off every pad, a new name and fixed UUIDs; `geometry_checks` asserts the
+same pads, shapes, copper / mask layers, orientations, mask margins and model as the source, and no paste).
+`r12_pcb.py` sets DNP / exclude-from-BOM / exclude-from-position-files on any netlist part marked dnp and out of the
+BOM, and asserts its land is a no-paste `_DNP` land. `tools/export_fab.py` already treats a DNP part out of the BOM as
+an unfitted placeholder (no BOM, no CPL), and `paste_check` rule 3 requires its lands dry. Firmware: PD2 (`HG_CS`) is
+left analog (or driven high, never low) while U6 is absent; rule (b)'s bus order (U4 IF_CFG first, before any U6
+traffic) and the U6 parts of rule (f) apply only if U6 is fitted; the estimator and fire rule already work without U6
+(rule (f)). O-R12-21, O-R12-22 and owner row 49 now apply only if U6 is fitted. The 3V3 window keeps U6's 3.135 V
+floor and its 6.0 mA stays in the 3V3 budget (D-R12-219), so a later hand-fit is covered; the stage D U6 supply
+calculation is unchanged. The 3V3 / GND plane solves to U6's pins still run (its pads carry the nets).
+
+**D-R12-214 U5: TE MS5611-01BA03 (C15639, MS561101BA03-50), undoing D-R12-52.** The land was always R11's MS5611 land
+(`SENSORS-SMD_MS5611-01BA03`) with R11's wiring (PS high for I²C, CSB to GND for address 0x77, SDO NC), so only the
+part fields change, back to R11's (value `MS561101BA03`). F3 names the MS5611, so **owner deviation A-4 is withdrawn**.
+MS5611-01BA03 (TE datasheet 06/2017, the LCSC copy for C15639): full accuracy 450–1100 mbar and an extended (ADC linear) range of 10–1200 mbar, against the MS5607's 300–1100 mbar full-accuracy floor (D-R12-52; R12STD-REV-09). 450 mbar is about 6.35 km in the ISA (Calculation); REQUIREMENTS F3's derived envelope puts apogee at 3.5–5.3 km AGL for flight 1 and 4.8–7.6 km AGL for flight 2 from 0 / 1200 m sites, up to about 8.8 km MSL (Inference), so flight 1's highest corner (about 6.5 km MSL) and much of flight 2 read below 450 mbar, in the extended range without TE's error band (Calculation / Inference); F3 already states this and requires the bench vacuum characterisation to 300 hPa. VDD 1.8–3.6 V, peak supply current
+1.4 mA during conversion (the same figures D-R12-52 read for the MS5607). The 250 °C solder limit (D-R12-13) sits above
+Standard's 240 ± 5 °C. A-25's "MS5611 TEMP" now names the fitted part; its temperature reading and annunciation still
+need qualification. JLC CPL rotation 180 (corrections file). The r12_budget 3V3 window basis, check_r12 M-7's comment
+and the R10 pad-interior track ban (TE's "do not route tracks between pads") are unchanged in effect.
+
+**D-R12-215 `RADIO` and `GPS` legends clear of the housings.** Issue #10: their ink ended at y 82.21 / 82.33 against the
+J420 / J410 housings starting at y 81.40 (F.Fab body boxes; Measured). `m3_design/r12_legends.tsv` (the frozen table
+the post stage applies) moves them: `RADIO` stays a vertical word beside J420's pin 1, at (8.95, 79.70), 1.0 mm high
+and 0.75 mm wide (0.15 mm stroke): ink x 8.330–9.480, y 78.125–81.239, **0.161 mm** clear of J420's housing; there is
+no 4.1 mm full-width column between TP88's silkscreen (y 77.925) and the housing, and the nearest legal full-size spot
+was 4.5 mm away (offline spot search, scratch, not tracked). `GPS` moves to (22.20, 76.70), full size, vertical: ink
+x 21.580–22.730, y 75.339–78.061, **3.339 mm** clear of J410's housing, above J410's pins 2–3 and R440 / R441; no legal
+spot fits between L400's pad and the housing by pin 1. `AUX` (ink y ≤ 80.258, 1.142 mm clear of J440) was already the
+model and is unchanged (Measured on `0c681ad6…`, the text polygon's box as K-legends measures it). Both words keep
+K-legends' rules: height 1.0 mm and stroke 0.15 mm (post-stage contract), inside their connector's courtyard span along
+the pin row by 0.525 / 3.275 mm (RADIO / GPS; ≥ 0.5 mm required), their centre nearer their own connector than any other by 8.963 / 4.145 mm (≥ 1.0 mm required), ≥ 0.15 mm
+from every mask opening, outside the support hardware circles, and r12_post's ink check against the table. RADIO's
+0.75 mm character width is a choice, not a rule: it is above check_r10's 0.5 × height floor for squashed Fab text
+(the only width rule in the gates) and JLC's minimums (Inference: legibility at 0.75 mm unverified on a print). New test
+`Round12Board.test_r12_215_port_words_clear_of_bodies` holds every port word > 0.1 mm from every connector housing
+(it fails on `c8b0412d…`: −0.807 / −0.930 mm). Silkscreen is not copper: every track, via, zone outline and zone fill
+is unchanged (below).
+
+**D-R12-216 Pack storage rule (handoff).** R167 (10 kΩ, BAT_IN to GND, the hot-plug bleed) draws about 0.84 mA from a
+connected 2S pack with J400 open (8.4 V / 10 kΩ; 0.74 mA at 7.4 V; Calculation; the other BAT_IN loads with J400 open,
+the OVLO divider R82 + R83 + R93 at about 7.4 µA and U9's shutdown current, are smaller: Calculation / Inference, U9's
+shutdown current not read for this). A 1500 mAh pack connected and left would be flat in about 1500 / 0.84 ≈ 1800 h,
+about 75 days from full, and below a safe 3.0 V per cell sooner (about a month from a storage charge; Calculation /
+Inference on the pack's usable capacity). `docs/R12_VEHICLE_HANDOFF.md` "Battery" now says: unplug the pack at its keyed
+connector whenever the vehicle is not being prepared for flight. No circuit change (R167 is the hot-plug model's bleed,
+D-R12-78).
+
+**D-R12-217 `tools/check.sh` fails, not skips, without numpy.** Before the numerical self-tests (test_r10_check
+HotplugNumerics / Plate, which skip themselves when `plate_model` cannot import numpy) the gate now runs
+`"${NUMPY_PY:-python3}" -I -c 'import numpy'` and stops with "gate self-test FAILED: numpy is not importable by
+'<interpreter> -I' …: set NUMPY_PY to a python3 that has numpy". `tools/test_check_shell.py` gives its temporary gate a
+NUMPY_PY stub (numpy present unless NUMPY_MISSING) and adds `test_missing_numpy_fails_instead_of_skipping` (the gate
+exits non-zero with that message after the eight self-tests before it, none after) and
+`test_numpy_probe_runs_under_the_numerical_interpreter`.
+
+**D-R12-218 L1 stays 4.7 µH; SWPA4030S100MT is a candidate, not adopted.** Issue #10 proposed Sunlord SWPA4030S100MT
+(C38117, 10 µH, the same JLC footprint as L1; JLC listing "1.5A … 2.4A", 12,855 in stock / 11,080 orderable, Extended,
+Live 2026-11-24) for U2's ripple and current budget (O-R12-06). It is not adopted: the maker's datasheet could not be
+read (the LCSC datasheet URL returned an HTML page on 2026-11-24), so its saturation current is unverified and the
+listing's two currents cannot be assigned to Isat / Irms. Owner row 56 stays open; a verified 10 µH / Isat ≥ 1.9 A part
+remains the respin option it names.
+
+**D-R12-219 3V3 sensor allocation 8 → 10 mA (an input change; the unshed load becomes 0.551 A).** The U4 + U5 + U6 line
+of the 3V3 budget (`r12_stageD.BUDGET_3V3_A`) was 8 mA. With the fitted parts: U6 ≤ 6.0 mA (NXP FXLS9xxx0 Rev 6 item
+10510, kept although U6 is not fitted, to cover a hand-fit), U5 1.4 mA peak during conversion (TE MS5611-01BA03,
+typical), U4 0.8 mA (DS15034 Rev 1 Table 4 IddHPC9, typical at 1.8 V) = 8.2 mA, over the line (the LSM6DSVE's 0.65 mA,
+an LSM6DSV typical by Inference, had already made 8.05 mA). R10 / R11's records carry no ISM6HG256X supply figure, so
+the sheet was read here (DS15034 Rev 1, archived maker PDF). The line is now 10 mA: the 1.8 mA left covers the two
+typical-only figures at 3.3 V (Inference: no maxima published). `SENSORS_3V3_A` itemises them in stage D's
+`u3v3_budget` (`sensors_A`, `sensors_within_allocation`), and `record_issues` refuses a record whose items exceed the
+line. The worst allowed unshed load (D-R12-207) moves from 0.549 A to **0.551 A** (U2 input **2.4214 W** at the 3V3 drift
+maximum / 0.80, was 2.4126 W; `r12_budget.UNSHED_U2_A` 0.300 + 0.251), so the figures built on it move slightly and
+are re-run here (Calculation / Inference as before): four-stall fire **1.24705 A at J1 5.71364 V** (1.24711 A / 5.71390 V before), EN at R80.1 **5.69476 V** (5.69504); whole-current convention J1 5.70141 V, R80.1 5.68194 V, 1.24435 A; single drop-out 7.917 / 7.397 ms initial / drift, periodic limits 7.365 / **6.890 ms** GAP-1 and **6.794 ms** whole-current (7.367 / 6.892 / 6.796 before), so the J400 chatter bench rule **stays under 6.6 ms** (margin 0.194 ms, was 0.196); PA6 healthy margins **+0.0420 / +0.0328 / +0.0174 V** nominal / initial / drift (+0.0424 / +0.0332 / +0.0178), shorted-match / match-and-leads drift **−0.1356 / −0.1804 V** (−0.1352 / −0.1799), drift room 0.4226–0.4566 V (34.0 mV); unshed hold-up from the PA6 trip **0.433–1.897 ms** at drift (0.435 before), from a battery break 2.045–6.099 ms (2.053); U400 VIN at four stalls **5.4893 V** (5.4898), on a 6.0 V pack 5.4103 V (5.4108); the shared RAW trunk 5.05 °C at its 1.10818 A budget (5.04 °C at 1.10636 A); 3V3 budget at 200 MHz: 85 °C peak 0.7906 A, 16.3 mA under the 600 kHz bound (18.3 before), 105 °C peak 0.8706 A, 63.7 mA over the 600 kHz bound and now also 0.37 mA over the 700 kHz bound (1.6 mA under before): that case's 600 kHz check (`fits_fsw_min`) already failed and its 700 kHz check (`fits`) now fails too (margin +1.63 → −0.37 mA); `fits_200MHz`, the 85 °C case, stays true and rule (g) keeps the write and the beep apart. The fire loop (4.72843 Ω), every copper solve and U6's 1 A supply calculation (≥ 3.20400 V at drift) are unchanged.  No other input changed: the fire loop copper, the
+EN / OVLO resistors, R60 / R61, C84, the copper solves and the hot-plug model's parts and copper are as on `c8b0412d…`
+(the hot-plug inputs differ only in C33's land name; C33 stays in the retained-output inventory, which only makes that
+bound more conservative), so nothing else is recomputed.
+
+**What this pass did and did not do.**
+- PCB `0c681ad6af502e12a285aa1fbc5cbfba81d7131e18d698ab9199c8462cdde5a5` (was `c8b0412d…`): two `PYTHONHASHSEED=0`
+  builds of `m3_design/r12_build.sh` gave the same hash. **Copper identical to `c8b0412d…`** (Measured by loading both
+  boards with pcbnew): 1114 tracks, 386 vias, 27 zones with identical outlines and identical filled polygons on every
+  layer, 619 pads with identical position, size, shape, orientation, copper / mask layers and net, and 189 footprints at
+  identical positions and rotations. What differs: U4 / U5 part fields and values; U6 / C33 flags and their `_DNP`
+  lands (19 pads lose paste: U6 17, C33 2); the `RADIO` / `GPS` legends. Placement and designators are unchanged.
+- Fab package (bound): **59 BOM lines (23 Extended / 36 Basic), 179 JLC parts = 179 CPL rows**, 176 rebuilt from JLC
+  footprints (3 placement-only), no owner BOM, 10 parts out of the BOM (U6, C33 and the eight probe / TC2030 parts),
+  **566 F-paste flashes** (585 before; −17 U6, −2 C33). Was 60 / 181 / 585.
+- Cost, Standard, Live 2026-11-24T21:21:13Z / 21:22:43Z (`jlc_cost.py --tier standard --profile r10`): parts $38.83 per board, 59 charged codes × $1.53 = $90.27 per order, **$83.96 / $56.88 per board at 2 / 5 boards** (REQUIREMENTS M3 metric, under $84.41) against Economic's $62.44 / $43.10: **+$43.04 / +$68.90 per order** (+$21.52 / +$13.78 per board); fixed fees $50.19 per order on Standard against $9.71 (+$40.48), outside the metric.
+- Stock 2026-11-24T21:20:23Z / 21:21:57Z (`jlc_stock.py`): **U4 C51931514 short at 5 boards** (stock 5, canPresaleNumber 2, orderable 2 < 5) and with no spare at 2; every other line orderable (C15639 4299 / 4142; C3662799 4421 / 4189; C535146 70 / 50). `FAB_NET=1 m3_design/r12_fab.sh` exits 1 on that line at 5 boards, as expected; recorded, not hidden. Orderable is an Inference about JLC's field: confirm U4 in the cart on order day, else consign franchised ISM6HG256XTR or order two boards.
+- Hot-plug inputs re-extracted (board and electrical SHA-256 now `0c681ad6…` / `683416f4…`; only C33's land name differs)
+  and the 2304 required corners re-run: 2304 / 2304 required corners pass, minimum −14.077 V; every result identical to `c8b0412d…`'s run, only the inputs hash differs (Simulation / Inference). Stage D re-run on the board with `--source-board` (stageD_budget.json
+  bound to `0c681ad6…`; hot-plug / stage D binding gate OK, `tools/r12_hotplug.py --gate`).
+- Checks run individually: listed in `docs/M3_R12.md` "Checks". The full `tools/check.sh` is the orchestrator's.
+- No review round; a focused review and the full gate are pending. No firmware, physical, electrical or JLC DFM test.
+  Not accepted, nothing ordered.
+
+## Focused review fix pass (2026-11-24; R12STD-REV-01 … -09; D-R12-220)
+
+A focused read-only review of the Standard rebuild (Fable 5.2, 2026-11-24) found **0 Critical / 1 Major / 8 Minor**
+(R12STD-REV-01 … -09), all corrected in this pass. The board is unchanged (`0c681ad6…`). No review round; the full
+gate is pending. Not accepted, nothing ordered.
+
+**D-R12-220 U4's axis map corrected (R12STD-REV-01, Major; corrects D-R12-54 and D-R12-212's restatement).** ST
+DS15034 Rev 1 Figure 5 p. 9 (top view) puts the pin-1 dot at the (−X, +Y) corner of the top face: pins 1–4 lie along
+the −X side and pins 12–14 along the +Y side (Datasheet). On the board U4 is on F.Cu at (23.0, 45.45), rotation 180,
+with pins 1–4 at x 24.21 (east), pins 8–11 at x 21.79, pins 5–7 at y 44.49 and pins 12–14 at y 46.41 (forward)
+(Measured). So **+X_imu → −x_board (west), +Y_imu → +y_board (forward), +Z_imu out of the top face; roll about
++y_board reads +gyro_Y; forward thrust reads +a_Y**; lever arm x 0.000 mm (unchanged). The frame is right-handed
+((−x) × (+y) points out of the top face in the left-handed board frame). The same pad test on the R10 and R11 boards
+(U4 on B.Cu) gives their recorded (−x, −y), so the datasheet reading agrees with them; D-R12-54's step "+X_imu =
+−x_fp, +Y_imu = +y_fp" is the error (the library land's pad 1 is at (−1.21, −0.75)): its map was 180° off about Z.
+`m3_design/r12_stageD.py` no longer states U4's signs: `imu_axes` derives them from the board's pads (pins 1–4 side =
+−X_imu, pins 12–14 side = +Y_imu) and writes them as fields (`plus_X_imu`, `plus_Y_imu`, `roll_reads`,
+`forward_thrust_reads`) with the `axis_map` text built from them; `record_issues` refuses a record whose text
+disagrees with its signs, and `test_r12_stageD` pins the derived map and fails on a mirrored or 180°-turned land. The
+map stays subject to the 1 g / rotation bench check (O-R12-15); the high-g frame equal to the low-g one stays an
+Inference. **U6 checked the same way:** D-R12-54 reads NXP FXLS9xxx0 Rev 6 Figure 8 / Table 8 as +X toward pins 1–4
+and +Y toward pins 13–16; on the board U6's pins 1–4 are at x 24.975 (east) and pins 13–16 at y 40.225 (forward), so
+channel 0 → +x_board and channel 1 → +y_board, as stated (Measured pads; the NXP figure itself was not re-read here, so
+the map stays an Inference, and U6 is not fitted). No change to U6.
+
+**Minor findings (R12STD-REV-02 … -09), corrected in the records.** REV-02: D-R12-219's 3V3 note said `fits_200MHz`
+was false before and after; it is true before and after (the 85 °C case); the 105 °C case's `fits_fsw_min` was already
+false and its `fits` (700 kHz typical bound) flipped true → false in the rebuild (margin +1.63 → −0.37 mA). REV-03:
+M3_R12's 480 MHz / 85 °C peak is 1.010 A (1.0096), not 1.008 A. REV-04: A-8's held output is 4.459–4.742 V. REV-05:
+O-R12-21 said both that the LSM6DSVE datasheet question was closed and that it remained open; it is closed. REV-06: D8 /
+D121 were fee-exempt Preferred on Economic only; on Standard all 59 codes are charged. REV-07: `r12_plan.md`,
+`stageD_analysis.md` and `stageE_relayout.md` snapshots now name `0c681ad6…`, Standard, 240 ± 5 °C, 179 parts / 59
+codes and the current figures. REV-08: M3_R12's "What R12 changes" bullet and `tools/fab_manifest_r12.py`'s docstring
+no longer present Economic as current (the docstring is a fab-binding input, so the package was re-bound). REV-09:
+D-R12-214's MS5611 range is full accuracy 450–1100 mbar, extended 10–1200 mbar (the MS5607's full-accuracy floor was
+300 mbar), with what 450 mbar means against the recorded apogee envelope.
+
+**Assembly drawing.** `fab/m3_assembly_top.pdf` printed U6 and C33 on their empty lands like fitted parts. The R12
+export wrapper (`tools/export_fab_r12.py`, one more asserted replacement; R10's `export_fab.py` stays unedited) now
+passes `--crossout-DNP-footprints-on-fab-layers` to the drawing export, so both are crossed out with their designators
+struck through. JLC assembles from the BOM and CPL, which omit both. The package was re-exported and re-bound.
+
 ## 2. Historical stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 
 Superseded for U4 / U5 / U6 by D-R12-50 … -52 (Live 2026-11-04T23:25:09Z, `jlc_r12_stock.json`, 57 codes, 186 parts): C41785564 LSM6DSVETR U4 $6.1927 (502 / 430), C5190712 FXLS90322AESR2 U6 $2.8717 (1348 / 1348), C97627 MS560702BA03-50 U5 $4.3854 (3645 / 3540), all Extended and JLC Economic; C307331 gains C33. The ISM6HG256X and LPS28DFW rows below are history. C25 / C26 alone are updated to the round-3 C1548 read
@@ -3813,16 +4002,16 @@ LMR50410 code (+$3.07, D-R12-06), TPS563208 instead of TPS563201 (+$0.16 per boa
 
 | # | Requirement text today | R12 | Decision |
 |---|---|---|---|
-| A-1 | M1: Standard PCBA, 1 oz inner copper | Economic PCBA, one side, 0.5 oz inner | D-R12-01 / -03 |
+| A-1 | M1: Standard PCBA, 1 oz inner copper | **Standard PCBA since D-R12-211 (2026-11-24)**, one side, 0.5 oz inner (Economic PCBA until then); a 46 mm board needs edge rails or a panel on Standard (Inference) | D-R12-01 / -03, -211 |
 | A-2 | F9 / F11: "U10 USB limiter / U11 source selection … stay" | diode-OR D5 / D6; USB limit, USB OVLO and USB ESD gone | D-R12-04 |
 | A-3 | F10: "each 1 kΩ plus ground-only ESD" | 1 kΩ only | D-R12-18 |
-| A-4 | F3 names the MS5611 | MS5607-02BA03 (10–1200 mbar; full accuracy from 300 mbar) | D-R12-52 (D-R12-13 superseded) |
+| A-4 | ~~F3 names the MS5611~~ | **Withdrawn by D-R12-214:** U5 is the MS5611-01BA03 (C15639) again; was MS5607-02BA03 (10–1200 mbar; full accuracy from 300 mbar) | D-R12-52 (D-R12-13 superseded), -214 |
 | A-5 | F10 / R10: camera via U402 limiter and U12 / U13 isolation | camera buck EN switch, 1 kΩ series, CAM_FAULT_N gone. A 2–3.3 A overload is limited by neither TPS563208; U9’s 3.92–4.89 A is the bound. Inductors are 2 A rated, listed Isat 3.2 A versus the 3.3–5.1 A valley limit; row 15 requires 2.5 A for 60 s on port and camera loads with inductor temperature recorded (D-R12-190) | D-R12-08 |
 | A-6 | F10 / P2: JST GH (R11) | Megastar SH 1.0 clones, friction retention owner-accepted (D-R12-31), mating Inference (O-R12-04) | D-R12-15, -31 |
 | A-7 | F11: LS120 MLT-5020 | QMB-09B-03 THT, JLC THT assembly (none owner-fitted) | D-R12-16, -85 |
 | A-8 | PORT_4V8 within 4.5–5.0 V at every corner | inside at every tolerance and drift corner since D-R12-83 **while U400 VIN ≥ VO / 0.75 (6.14–6.58 V initial, 6.09–6.63 V drift; TI SLVSD90B §7.3, D-R12-131)**: 4.603–4.938 V initial, 4.571–4.972 V drift at the regulator, ≥ 4.565075139 V at the ports under 0.561 A on `c9b9f0fa…` (D-R12-183) (Calculation / Inference: drift and load budget; the LR900-F limits also an Inference) | D-R12-07, -21, -83 |
-| A-9 | Economic reflow 255 ± 5 °C vs makers' 250 °C peak (SS34 D5 / D6 / D9, MS5607 U5; old J430 by Inference; current 104031-0811 UNVERIFIED) | accepted by the owner (2026-11-04); effect on each part is an Inference. ProTek D121 reflow 260–270 °C is verified; its former Inference is removed | D-R12-49, -165 |
-| A-10 | F1 / F2 name one IMU (ISM6HG256X: low-g, high-g and gyro) | LSM6DSVE (low-g, ±4000 dps) plus FXLS90322 (XY medium-g, ±150 g maximum; axis / range-code qualification remains O-R12-21; supply and pin-out portions read from NXP Rev 7.0 in round 12, D-R12-188) | D-R12-50, -51 |
+| A-9 | **Withdrawn by D-R12-211 (Standard, 240 ± 5 °C).** History: Economic reflow 255 ± 5 °C vs makers' 250 °C peak (SS34 D5 / D6 / D9, MS5607 U5; old J430 by Inference; current 104031-0811 UNVERIFIED) | accepted by the owner (2026-11-04); effect on each part is an Inference. ProTek D121 reflow 260–270 °C is verified; its former Inference is removed | D-R12-49, -165, -211 |
+| A-10 | ~~F1 / F2 name one IMU (ISM6HG256X: low-g, high-g and gyro)~~ | **Withdrawn by D-R12-212 / -213:** U4 is the ISM6HG256X again and U6 is not fitted. Was LSM6DSVE (low-g, ±4000 dps) plus FXLS90322 (XY medium-g, ±150 g maximum; D-R12-188) | D-R12-50, -51, -212, -213 |
 | A-11 | P2: five supports, no sixth, insulated hardware | Four M3 supports (3.0, 5.9), (43.0, 5.9), (3.5, 80.95), (42.5, 80.95), 46 × 86.85 mm (D-R12-174; (3.5, 77.1) / (42.5, 77.1) on the 83 mm board, D-R12-171); nylon hardware, CAD envelope fit only | D-R12-24, -162, -174 |
 | A-12 | F9: J1 / J400 separately labelled 2-pos DB125 terminals | J1 is a blue Kefa KF301-5.0-2P 5.0 mm screw terminal (C474881, JLC THT), `1:BAT+` / `2:GND`, wires west (D-R12-174; plated wire pads under D-R12-30 until then); J400 is an SH-4 (D-R12-31) | D-R12-31, -174; D-R12-133 |
 | A-13 | F8: "Ordinary 0.15 mm board clearance applies" to the pyro channel | 0.10 mm board floor. The fire nets meet S-10's carried limits except its recorded exceptions (PE4's lane 0.150 mm from U1.B2 and from HSE_IN's U1.C1); other pyro / arming nets keep gaps of 0.10–0.15 mm, e.g. ACT_FET_S–ACT_GATE 0.117 mm (R120.1 to the ACT_GATE track, classed out of the pack rule, D-R12-137), ACT_EN_MCU–PYRO1_CONT and ARM1_SENSE–3V3A / LED_RED 0.125 mm, CONT_MID–R173.1 / R129.2 0.131 mm, ARM1_SENSE / ACT_EN_MCU / PYRO1_CONT / BAT_SW_RETURN / BAT_FAULT_N / U9_FLT to the B GND pour 0.1005 mm (Measured on `f26dfef1…`, unchanged on `82eddc69…`). On `6e874d4e…` RAW_ACT–R132.2 was 0.137 mm, gone since the pack-energy rule (D-R12-137); ACT_FET_S track (5.1, 30.4)–(6.3, 31.6) to Q120.1 (ACT_GATE) remains at 0.121 mm, an ACT_FET_S–ACT_GATE pair classed out of the pack rule (a hold-off, V_GS ≈ 0; D-R12-146; corrected by D-R12-151, R12F7-TRI-15: this row said both were gone) | D-R12-03, -126; D-R12-133, -143, -151 |
@@ -3838,43 +4027,43 @@ D-R12-209; historical `ae22387d…` had the same lengths, versus 41.92 / 39.17 m
 | A-22 | F4 / F8: J122 five-position / green 5-pos DB125 | ZX-SH1.0-4PWT SH-4 in the MicoAir H743 4-pin UART order (D-R12-195): 1 signal GND, 2 NC (the H743's 5 V position, no copper: row 57), 3 SERVO1 (TX position), 4 SERVO2 (RX position, spare); SERVO3 / SERVO4 deleted (one servo on flight 1, owner 2026-11-14); motor power/return remain in the harness. TIM2 / TIM1 mapping in M3_R12; PA15 JTDI pull-up and loader cases need qualification | D-R12-31, -93, -173, -192, -195 |
 | A-23 | F6: PA6 0.44–0.47 V and R10's under-7-ms chatter bench rule | PA6 0.425–0.455 V with 0.1 % R60 / R61; windows include ±250 nA leakage (analog-mode applicability Inference). R12 chatter: **under 6.6 ms total open time in every sliding 100 ms window** (6.7 ms before D-R12-207), ≥ 10 kS/s under flight-level vibration, U9 on throughout at 5.71 V (5.72 V before). Rows 5 / 45 and M3_R12 Power give the Calculation / Inference margins and sensitivity | D-R12-164, -172, -183, -207 |
 | A-24 | F5: Molex 472192001 hinged retaining socket | Molex 104031-0811 push-pull C585350; tape backup, card-detect NC. Local bypass deviation A-14; SPI4 mapping A-15; retention row 48 | D-R12-162, -173 |
-| A-25 | F11: PA6 telemeters pack voltage and READY compares it with 7.4 V; MS5611 TEMP | PA6 measures VLOGIC behind D5; corrected pack estimate / READY uses measured pad-load U9, copper and D5 drops and ADC/divider error (row 45; Calculation / Inference until calibrated). U5 is MS5607 (A-4), whose temperature reading and annunciation require qualification | D-R12-157, -173 |
+| A-25 | F11: PA6 telemeters pack voltage and READY compares it with 7.4 V; MS5611 TEMP | PA6 measures VLOGIC behind D5; corrected pack estimate / READY uses measured pad-load U9, copper and D5 drops and ADC/divider error (row 45; Calculation / Inference until calibrated). U5 is the MS5611 again (D-R12-214); its temperature reading and annunciation require qualification | D-R12-157, -173, -214 |
 
 ## 4. Open items
 
 | ID | Item | Stage |
 |---|---|---|
 | O-R12-01 | ~~U4 ISM6HG256X: −3 orderable~~ closed by D-R12-50 (LSM6DSVE, 430 orderable) | order |
-| O-R12-02 | Economic reflow 255 ± 5 °C (C84's C5246546 rated 255 °C peak, D-R12-85; C190095 / C852472 YAGEO RT unread): maker ratings not read for D123 (1N5819WS), Y1 (X322525MOB4SI: no rating found, UNVERIFIED in economic_parts.md), U3 (W25Q128JVSIQ: its 260 °C class an Inference) (added by D-R12-151, R12F7-TRI-13), the SH clones, 104031-0811, TYPE-C-31-M-12, SWPA4030, LED1 (Inference), AO3400A / AO3401A, BAT54C, ESD103 and U1 (ST, J-STD-020 260 °C class is an Inference); ProTek SRV05-4-P-T7 (260–270 °C), TI ICs, hongjiacheng SMAJ12CA (MSL unstated), LED2 and SS34 (MDD, 250 °C / 10 s) ratings are read in economic_parts.md §2 (SS34 removed from the unread list by D-R12-133); D-R12-49: 250 °C-rated parts are owner-accepted (A-9); FXLS90322 260 °C / 40 s (NXP part page); LSM6DSVE unread | before order |
+| O-R12-02 | **Closed by D-R12-211 for the Economic question:** Standard reflows at 240 ± 5 °C (`cost_study.md` §1.1), at or below every maker peak read (250–260 °C). History: Economic reflow 255 ± 5 °C (C84's C5246546 rated 255 °C peak, D-R12-85; C190095 / C852472 YAGEO RT unread): maker ratings not read for D123 (1N5819WS), Y1 (X322525MOB4SI: no rating found, UNVERIFIED in economic_parts.md), U3 (W25Q128JVSIQ: its 260 °C class an Inference) (added by D-R12-151, R12F7-TRI-13), the SH clones, 104031-0811, TYPE-C-31-M-12, SWPA4030, LED1 (Inference), AO3400A / AO3401A, BAT54C, ESD103 and U1 (ST, J-STD-020 260 °C class is an Inference); ProTek SRV05-4-P-T7 (260–270 °C), TI ICs, hongjiacheng SMAJ12CA (MSL unstated), LED2 and SS34 (MDD, 250 °C / 10 s) ratings are read in economic_parts.md §2 (SS34 removed from the unread list by D-R12-133); D-R12-49: 250 °C-rated parts are owner-accepted (A-9); FXLS90322 260 °C / 40 s (NXP part page); LSM6DSVE unread | before order |
 | O-R12-03 | USB-only bench power needs ≥ 4.45 V at J3 (host or powered-hub port), D-R12-04 | records / ORDERING |
 | O-R12-04 | SH clone mating with JST SH housings (friction retention, D-R12-31): sample check | bench |
 | O-R12-05 | ~~PORT_4V8 drift corner (A-8)~~ closed as a calculation by D-R12-83 (drift top 4.972 V ≤ 5.0 V; Calculation / Inference); the LR900-F's real range stays a bench item | bench |
-| O-R12-06 | LMR50410 / L1 4.7 µH: load-step and stability check. Current bound 0.870 A at 700 kHz / 0.807 A at 600 kHz at the 3V3 drift maximum (0.875 / 0.813 A at 3.35 V before D-R12-202); firmware ≤ 200 MHz and no microSD write burst overlapping a beep (rule (g), stated both ways by D-R12-207) (Calculation / Inference, D-R12-184, -202, -207). With U2's capacitor grounds off top-side copper (D-R12-203, owner row 59): SW_NODE ringing and 3V3 ripple under load steps on the first article. A verified 10 µH / Isat ≥ 1.9 A part is a respin option | bench |
-| O-R12-07 | R60/R61 0.1 %, PA6 0.425–0.455 V adopted. Current healthy drift margin +0.0178 V; shorted match −0.1352 V, match/leads −0.1799 V (Calculation / Inference, stageD_budget.json; +0.0270 / −0.1258 / −0.1705 V before D-R12-207's unshed load). Implement rule 4: trip beginning during commanded fire logged with time/reading, no battery-loss shutdown/shed/state change or pulse truncation; outside fire battery loss as before. READY / firmware / bench remain open | firmware / bench |
+| O-R12-06 | LMR50410 / L1 4.7 µH: load-step and stability check. Current bound 0.870 A at 700 kHz / 0.807 A at 600 kHz at the 3V3 drift maximum (0.875 / 0.813 A at 3.35 V before D-R12-202); firmware ≤ 200 MHz and no microSD write burst overlapping a beep (rule (g), stated both ways by D-R12-207) (Calculation / Inference, D-R12-184, -202, -207). With U2's capacitor grounds off top-side copper (D-R12-203, owner row 59): SW_NODE ringing and 3V3 ripple under load steps on the first article. A verified 10 µH / Isat ≥ 1.9 A part is a respin option; SWPA4030S100MT (C38117, issue #10) is a candidate, not adopted: its datasheet could not be read, so its Isat is unverified (D-R12-218) | bench |
+| O-R12-07 | R60/R61 0.1 %, PA6 0.425–0.455 V adopted. Current healthy drift margin +0.0174 V; shorted match −0.1356 V, match/leads −0.1804 V (Calculation / Inference, stageD_budget.json; +0.0178 / −0.1352 / −0.1799 V before D-R12-219's sensor line, +0.0270 / −0.1258 / −0.1705 V before D-R12-207's unshed load). Implement rule 4: trip beginning during commanded fire logged with time/reading, no battery-loss shutdown/shed/state change or pulse truncation; outside fire battery loss as before. READY / firmware / bench remain open | firmware / bench |
 | O-R12-08 | ~~Hot-plug, EN, hold-up and fire budget re-run on R12 copper; keep or drop R166~~ done in stage D (stageD.md, stageD_analysis.md): keep R166 and the damper, add C79 (D-R12-78) | D |
 | O-R12-09 | HSE crystal gm_crit 0.726–1.244 / 1.5 mA/V (17.1 % margin) after C25 / C26 15 pF (D-R12-107; Calculation / Inference: stray); old 18 pF +5 % corner 1.5027 mA/V. Cold start-up, drive level and frequency (MCO) bench check | bench |
 | O-R12-10 | Q120 / Q121 VGS > 12 V only above 14.4 V on the pack with the bus enabled, which is from the on-rail check until switch-off, pad or flight (Calculation / Inference: Q122 drop; D-R12-115): owner acceptance or a flight-pack transient measurement | owner / bench |
-| O-R12-11 | Firmware: MS5607 driver (D-R12-52), LSM6DSV-family driver for U4, FXLS90322 32-bit SPI with CRC on HG_CS (D-R12-51), PD10 high = ports powered (PA4 before D-R12-93), camera UART parking while U403 is off, USB-only detection from VBUS_SENSE (PC9) / PD10, U9 auto-retry; TIM1 BDTR.MOE for SERVO2 (PA10) only (SERVO3 / SERVO4 deleted, D-R12-195; R12F13-TRI-06), JTAG released on PA15 (D-R12-93) | firmware |
+| O-R12-11 | Firmware: MS5611 driver (U5, D-R12-214; MS5607 under D-R12-52), ISM6HG256X driver for U4 (D-R12-212; R10's FS_XL_HG 001 / 010 rule), FXLS90322 32-bit SPI with CRC on HG_CS only if U6 is hand-fitted (D-R12-51, -213; PD2 analog or high while absent), PD10 high = ports powered (PA4 before D-R12-93), camera UART parking while U403 is off, USB-only detection from VBUS_SENSE (PC9) / PD10, U9 auto-retry; TIM1 BDTR.MOE for SERVO2 (PA10) only (SERVO3 / SERVO4 deleted, D-R12-195; R12F13-TRI-06), JTAG released on PA15 (D-R12-93) | firmware |
 | O-R12-12 | **Closed:** Preferred Extended is exempt on Economic ([JLC PCBA FAQ 7](https://jlcpcb.com/help/article/pcb-assembly-faqs), read 2026-11-06). D120 / C37704 excluded by `jlc_cost.py`: 21 charged codes, $64.47 per order (current BOM, Live 2026-11-13T10:35:38Z / 10:37:57Z, D-R12-175); D-R12-110 | closed |
 | O-R12-13 | REQUIREMENTS / ORDERING / AGENTS R12 rows after owner acceptance of §3 | E |
 | O-R12-14 | ~~Board~~ stage D done (D-R12-78 … -82): board `d776c5d7…`, post stage and legends, fab package bound, IPC-2152 figures in `stageD_analysis.md` §6; `tools/check.sh` runs the R12 section (stageD.md) | D |
-| O-R12-15 | R12 axis maps derived (D-R12-54: U4 roll = −gyro_Y, thrust −a_Y; U6 channel 1 axial, +a forward): 1 g / rotation bench sign check | bench / firmware |
-| O-R12-16 | **Calculation closed**, subject to U400 VIN ≥ VO / 0.75. Current minimum 4.56508 V at 0.561 A / drift with 70 °C copper; no-load maximum 4.972 V. Four-stall U400 VIN 5.4898 V (D-R12-207; 5.4988 V before) rests on foldback (Calculation / Inference). Real LR900-F floor and low-input supply remain bench items, R12_VALIDATION row 15 | closed calculation / bench |
+| O-R12-15 | R12 axis maps derived (D-R12-220, correcting D-R12-54: U4 +X_imu → −x_board, +Y_imu → +y_board, roll = +gyro_Y, thrust +a_Y, derived from DS15034 Figure 5 and the board pads by stage D; U6 channel 1 axial, +a forward, only if U6 is hand-fitted): 1 g / rotation bench sign check | bench / firmware |
+| O-R12-16 | **Calculation closed**, subject to U400 VIN ≥ VO / 0.75. Current minimum 4.56508 V at 0.561 A / drift with 70 °C copper; no-load maximum 4.972 V. Four-stall U400 VIN 5.4893 V (D-R12-219; 5.4898 V under D-R12-207, 5.4988 V before) rests on foldback (Calculation / Inference). Real LR900-F floor and low-input supply remain bench items, R12_VALIDATION row 15 | closed calculation / bench |
 | O-R12-17 | **Trip-bottom item closed as a calculation by D-R12-164, amended by -172**: 0.1 % divider and 0.425–0.455 V band adopted; bottom above U9 turn-off +0.0979 / +0.0894 / +0.0264 V nominal / initial / drift (Calculation / Inference: D5 VF, PA6 leakage in analog mode, self-consistent currents, drift). Firmware and bench qualification remain; rule 9 READY still needs PA6-behind-D5 correction and measured ADC/divider error (D-R12-157, owner row 45) | trip-bottom closed; READY / firmware / bench open |
 | O-R12-18 | SH plug retention: a per-flight adhesive / RTV or tie step on every SH plug (owner deviation, D-R12-31) | procedure / owner |
 | O-R12-19 | SH pin orders against a real MicoAir H743 lead, J122's 4-pin UART-order servo lead included (no source marks a pin-1 end; R12 reads GND as pin 1 on every port from MicoAir's images, v1 and v2 agreeing; a mirrored result flips J410 / J420 / J440 and J122 together) (D-R12-31, -192, -195) | bench |
-| O-R12-20 | J121 DB125, J1 KF301-5.0-2P and LS120 QMB-09B-03 on JLC Economic as THT (D-R12-85, -174): confirm on the order page, and J1's wire face out in JLC's placement preview (jlc_orient_r12 R12_BODY, theta 180). **J1 hole fit closed as a design calculation by D-R12-174:** the land is the maker's own hole, 1.30 mm finished for the 1.00 mm pin (Kefa KF301-5.0 rev A: hole 1.20 +0.10; Datasheet), and JLC fits the part. Screw retention under flight vibration and a sample fit stay bench items | order / bench |
-| O-R12-21 | NXP dual-channel FXLS9XXXX Rev 7.0 read in round 12 for supply and pin-out: pin 2 PCM1/ARM1, output, left open (Datasheet). Remaining axis-frame / medium-g range-code checks and the LSM6DSVE datasheet remain open. Supply-monitor contradiction is O-R12-22 | records / bench |
-| O-R12-22 | **Reopened, D-R12-188.** The 1 A voltage calculation gives U6 ≥ 3.20400 V at drift on `c8b0412d…` and `5af58097…` (3.20406 V on `96207d2e…`, D-R12-195; 3.20405 V before) with 70 °C copper (Calculation / Inference), above the 3.135 V SPI floor, but NXP Rev 7.0 contradicts itself on BUS_I undervoltage in shipped COMMTYPE 000. Both readings and exact quotations are in D-R12-188. “Works at 3.3 V” is Inference, not demonstrated. Ask NXP or accept that the first two boards test it; read DEVSTAT / DEVSTAT1 at 3V3 3.22 / 3.52 V. Estimator and fire rule work without U6 | owner before order / bench |
+| O-R12-20 | J121 DB125, J1 KF301-5.0-2P and LS120 QMB-09B-03 on JLC Standard as THT (Economic until D-R12-211) (D-R12-85, -174): confirm on the order page, and J1's wire face out in JLC's placement preview (jlc_orient_r12 R12_BODY, theta 180). **J1 hole fit closed as a design calculation by D-R12-174:** the land is the maker's own hole, 1.30 mm finished for the 1.00 mm pin (Kefa KF301-5.0 rev A: hole 1.20 +0.10; Datasheet), and JLC fits the part. Screw retention under flight vibration and a sample fit stay bench items | order / bench |
+| O-R12-21 | **Applies only if U6 is fitted (not fitted since D-R12-213); the LSM6DSVE datasheet question closed with D-R12-212.** NXP dual-channel FXLS9XXXX Rev 7.0 read in round 12 for supply and pin-out: pin 2 PCM1/ARM1, output, left open (Datasheet). U6's remaining axis-frame / medium-g range-code checks remain open. Supply-monitor contradiction is O-R12-22 | records / bench |
+| O-R12-22 | **Applies only if U6 is fitted (not fitted since D-R12-213). Reopened, D-R12-188.** The 1 A voltage calculation gives U6 ≥ 3.20400 V at drift on `c8b0412d…` and `5af58097…` (3.20406 V on `96207d2e…`, D-R12-195; 3.20405 V before) with 70 °C copper (Calculation / Inference), above the 3.135 V SPI floor, but NXP Rev 7.0 contradicts itself on BUS_I undervoltage in shipped COMMTYPE 000. Both readings and exact quotations are in D-R12-188. “Works at 3.3 V” is Inference, not demonstrated. Ask NXP or accept that the first two boards test it; read DEVSTAT / DEVSTAT1 at 3V3 3.22 / 3.52 V. Estimator and fire rule work without U6 | owner before order / bench |
 | O-R12-23 | **Source-reading closed by round 12:** DS12110 Rev 11 Table 10 and AN2606 Rev 71 Table 145 read by the records lens, every used AF verified; loader outputs in D-R12-191 / M3_R12 Sources. Only physical loader behaviour remains unqualified | physical check |
 | O-R12-24 | The drafting aid (`r12_aid/route.py` / `plan.py`) does not model S-8 (1 mm from an S-8 barrel to foreign inner copper, both ways), M-7's U6 body, the In2 regions K-region needs or the 0.42 mm via clearance K-reference needs: any future search must add them (pass 2, D-R12-74A, was drawn by hand; scratch masks in `r12ra/ps3/fA/seg4.py`) | C |
 | O-R12-25 | ~~BAT_IN C96.1 → C88.1 → U9.5 0.4 mm for 4.13 mm~~ closed by D-R12-84: the feed is 0.8 mm (24.9 °C at 2.9 A, IPC-2152 upper bound, Inference) except U9.5's 1.3 mm 0.4 mm pin entry; round-9 U9 OUT bar is 2.475 mm at 0.30 mm (76.8 °C IPC-2152 upper bound, Calculation / Inference); its pin-entry-only classification is not carried forward | closed |
-| O-R12-26 | **Calculation closed**, subject to U400 VIN ≥ VO / 0.75. Current minimum 4.56508 V at 0.561 A / drift with 70 °C copper; no-load maximum 4.972 V. Four-stall U400 VIN 5.4898 V (D-R12-207; 5.4988 V before) rests on foldback (Calculation / Inference). Real LR900-F floor and low-input supply remain bench items, R12_VALIDATION row 15 | closed calculation / bench |
+| O-R12-26 | **Calculation closed**, subject to U400 VIN ≥ VO / 0.75. Current minimum 4.56508 V at 0.561 A / drift with 70 °C copper; no-load maximum 4.972 V. Four-stall U400 VIN 5.4893 V (D-R12-219; 5.4898 V under D-R12-207, 5.4988 V before) rests on foldback (Calculation / Inference). Real LR900-F floor and low-input supply remain bench items, R12_VALIDATION row 15 | closed calculation / bench |
 | O-R12-27 | J122's harness note `SERVO + FROM HARNESS` not on the board (D-R12-81; R12_VALIDATION row 2): owner acceptance; the rule is in `docs/R12_VEHICLE_HANDOFF.md` | owner |
 | O-R12-28 | Bay / sled internal length for the 86.85 mm board (D-R12-174; 83 mm under D-R12-171, 85 mm under D-R12-162, 88 mm under D-R12-144): `docs/VEHICLE.md` gives no internal electronics-bay or sled length (its stack row budgets 102 mm for R9), so R10's "wholly forward of joint + 47 mm" rule is unchecked; measure it in the CAD and add it to VEHICLE.md (owned separately) | records / owner |
 | O-R12-29 | AVA re-layout targets missed (Measured on `be81f40b…` after the signal-only cleanup `871f77a`: vias 318, GND 149, signal 100, diagonal 17.1 %, In2 137.4 mm, NRST 1.96, VLOGIC_SENSE 4 vias). After the AVA polish pass (D-R12-121 … -124), on `68e6b650…`: vias 318 against ≤ 290, GND vias 147 against ≤ 140, signal vias 102 against ≤ 95, diagonal share 16.95 % against ≤ 15 %, In2 track 137.4 mm against ≤ 130, worst routed / MST QSPI_CLK 1.63 (allowlisted; NRST 1.56) against ≤ 1.35, VLOGIC_SENSE and NRST 4 vias against ≤ 3; the measured reason for each miss is D-R12-124. Round 5's fire-net fix (D-R12-125) on `6e874d4e…` (Measured, score.py and a track count): vias 314 (GND 145, signal 100), diagonal share 16.69 % (351.3 / 2104.1 mm), In2 track 132.0 mm, 1050 tracks; the worst ratios and most-vias nets unchanged. Round 6 (D-R12-134, -137, -138) on `f26dfef1…` (Measured, score.py and a track count): vias 317 (GND 145, 3V3 37, signal 102), diagonal share 16.59 % (349.4 / 2106.2 mm), In2 track 132.0 mm, 1057 tracks; worst routed / MST QSPI_CLK 1.63, most vias VLOGIC_SENSE and NRST 4, unchanged. Round 7 (D-R12-144 … -147) on `82eddc69…` (Measured, score.py and a track count): vias 316 (GND 145, 3V3 37, signal 102), diagonal share 16.64 % (347.8 / 2090.4 mm), In2 track 132.0 mm, 1048 tracks. Historical `a1e65bb4…` (D-R12-171): 1093 tracks, 348 vias (162 GND); QSPI_CLK 12.79 mm / 0 vias, detour allowlist removed, two entries remain. Historical `c9b9f0fa…`: 1147 tracks / 394 vias; historical `96207d2e…` (D-R12-195): 1107 / 385. Historical `5af58097…` (round 13 fix pass, D-R12-199 / -200): 1111 tracks / 385 vias (R12F13-TRI-08). Current `c8b0412d…` (round 14 fix pass, D-R12-205): 1114 tracks / 386 vias. Current M2 recount is R12_VALIDATION; layout judged against AVA and LEVIA-H7 (D-R12-168) | C / review |
 | O-R12-30 | C24 (NRST filter) at J2's end of 19.54 mm of NRST copper from ball E1, including 15.68 mm on In2 (Measured, barrels excluded) (D-R12-98): acceptable for a bench-only reset with the internal pull-up is an Inference; owner acceptance (R12_VALIDATION row 23) or a respin item. The polish pass found no 0402 site with a GND via near E1 (D-R12-124) and removed NRST's loop round J2 (D-R12-122) | owner |
-| O-R12-31 | Shared RAW trunk: 0.6 mm B (45.2, 20.25)–(45.2, 33.05), 12.8 mm, plus 3.2 mm total F shared feed, carrying U400 + D5. Rise 46.1 °C at design 3.348 A, 34.6 °C at U9 2.9 A, 5.04 °C at budget 1.10636 A (4.69 °C at 1.06755 A before D-R12-207); 0.87 mm would hold 30 °C at 3.35 A (IPC-2152 upper bound, Calculation / Inference). U400.5 EN stub carries only µA. Widen later or accept, R12_VALIDATION row 26 | C / owner |
+| O-R12-31 | Shared RAW trunk: 0.6 mm B (45.2, 20.25)–(45.2, 33.05), 12.8 mm, plus 3.2 mm total F shared feed, carrying U400 + D5. Rise 46.1 °C at design 3.348 A, 34.6 °C at U9 2.9 A, 5.05 °C at budget 1.10818 A (5.04 °C at 1.10636 A before D-R12-219, 4.69 °C at 1.06755 A before D-R12-207); 0.87 mm would hold 30 °C at 3.35 A (IPC-2152 upper bound, Calculation / Inference). U400.5 EN stub carries only µA. Widen later or accept, R12_VALIDATION row 26 | C / owner |
 | O-R12-32 | The pack-entry cell (J1, U9, its input capacitors and dividers) keeps **105** BAT_IN item pairs under PACK_MIN 1.040 mm on `c9b9f0fa…` (keys PACK_GND 47, PACK_EN 2, PACK_SW 3, PACK_FLT 12, PACK_OUT 7, PACK_U9 34; least gap 0.150 mm). Historical `a1e65bb4…` kept 114 (D-R12-137 / -138, -147; keys PACK_GND 56, PACK_EN 2, PACK_SW 3, PACK_FLT 12, PACK_OUT 7, PACK_U9 34; least gap 0.130 mm; 117 before D-R12-147 removed U9's in-pad debris; 115 after D-R12-152 added the C79.1–GND-link 0.830 mm pair, then 114 after D-R12-161 removed the wide OUT-neck pair). Some are a part's own lands (U9's pins, C80 / C88 / C96 / R167 / D8 / C79); the rest need a re-layout of the cell: a respin item, or owner acceptance (R12_VALIDATION rows 34–39) | C / owner |
 
 ## 5. Files (stage A)

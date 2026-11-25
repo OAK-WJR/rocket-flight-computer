@@ -4,12 +4,12 @@
    "tOFF_max_310ns": 0.938,
    "tOFF_typ_220ns": 0.956
   },
-  "four_stall_BAT_IN_V": 5.716,
+  "four_stall_BAT_IN_V": 5.7158,
   "four_stall_U403_VIN_V": 5.612,
   "four_stall_duty_needed_lossless": 0.9303,
   "four_stall_max_held_V": {
    "tOFF_max_310ns": 5.175,
-   "tOFF_typ_220ns": 5.275
+   "tOFF_typ_220ns": 5.274
   },
   "four_stall_note": "at the four-stall point U403 runs past its 75 % recommended duty, at or near its minimum off-time limit: CAM_5V may fall below the 5.221 V window low end to about 5.17 V (above the camera 5.0 V minimum before harness drop); the camera is not shown to fail",
   "label": "Calculation / Inference (Datasheet duty, tOFF(MIN), RDS(on)h and U9 RON maximum; currents, DCR and copper Inference)",
@@ -523,7 +523,7 @@
     "12.6V_3S_bus_on_max_ratio": -10.485,
     "19.9V_TVS_clamp_bus_on_max_ratio": -16.609,
     "8.4V_bus_on": -6.87,
-    "four_stall_fire": -4.573
+    "four_stall_fire": -4.572
    },
    "q120_q121_vgs_basis": "stage A (no board copper): VGS = -(BAT_IN - I_fire x RDS(Q120 hot) - 0.1 V) x Rgs / (Rgs + R121), ACT_FET_S basis (R12F2-TRI-08, R12F5-TRI-04); the four-stall point is this file's stage A fire model; r12_stageD (stageD_budget.json fire.gate) gives the board figures with the copper drops, per FET",
    "q120_rds_row": "VGS -4.5 V (|VGS| >= 4.5 V down to BAT_IN 5.54 V with the bus on and 5.63 V during a 1.25 A fire; stage A, no copper)",
@@ -542,60 +542,60 @@
   "r11_branch_ohm": 4.4705,
   "r11_other_W": 13.064,
   "r12_branch_ohm": 4.5866,
-  "r12_other_W": 13.149,
+  "r12_other_W": 13.158,
   "shorted": {
    "match_and_leads_shorted": {
-    "BAT_IN_V": 5.5286,
+    "BAT_IN_V": 5.5283,
     "Q120_I2R_W": 0.43,
     "Q124_I2R_W": 0.335,
-    "fire_A": 2.4178
+    "fire_A": 2.4177
    },
    "match_shorted": {
-    "BAT_IN_V": 5.5709,
+    "BAT_IN_V": 5.5707,
     "Q120_I2R_W": 0.341,
     "Q124_I2R_W": 0.266,
-    "fire_A": 2.1537
+    "fire_A": 2.1536
    }
   },
   "stalls": {
    "0": {
-    "BAT_IN_V": 6.8884,
+    "BAT_IN_V": 6.8882,
     "fire_A": 1.5018
    },
    "1": {
-    "BAT_IN_V": 6.5973,
-    "fire_A": 1.4384
+    "BAT_IN_V": 6.5971,
+    "fire_A": 1.4383
    },
    "2": {
-    "BAT_IN_V": 6.305,
+    "BAT_IN_V": 6.3048,
     "fire_A": 1.3746
    },
    "3": {
-    "BAT_IN_V": 6.0113,
+    "BAT_IN_V": 6.0111,
     "fire_A": 1.3106
    },
    "4": {
-    "BAT_IN_V": 5.716,
+    "BAT_IN_V": 5.7158,
     "fire_A": 1.2462
    }
   }
  },
  "holdup": {
   "from_battery_break_ms": [
-   2.053,
+   2.045,
    6.099
   ],
   "from_pa6_trip_ms": {
    "drift": [
-    0.435,
+    0.433,
     1.897
    ],
    "initial": [
-    0.443,
+    0.441,
     1.87
    ],
    "nominal_ratio": [
-    0.448,
+    0.446,
     1.854
    ]
   },
@@ -608,9 +608,9 @@
  },
  "port_input": {
   "6V0_pack_converters_only": {
-   "BAT_IN_V": 5.651,
+   "BAT_IN_V": 5.6507,
    "I_out_A": 0.561,
-   "VIN_V": 5.5463,
+   "VIN_V": 5.5459,
    "below_recommended_duty": false,
    "dmax": {
     "200kHz_tOFF_max_310ns": 0.938,
@@ -625,7 +625,7 @@
     ],
     "initial": [
      0.838,
-     0.8989
+     0.899
     ]
    },
    "duty_needed_lossless": {
@@ -634,7 +634,7 @@
      0.8965
     ],
     "initial": [
-     0.8299,
+     0.83,
      0.8903
     ]
    },
@@ -649,9 +649,9 @@
    "window_top_V": 4.9722
   },
   "four_stall_fire": {
-   "BAT_IN_V": 5.716,
+   "BAT_IN_V": 5.7158,
    "I_out_A": 0.561,
-   "VIN_V": 5.6125,
+   "VIN_V": 5.6122,
    "below_recommended_duty": false,
    "dmax": {
     "200kHz_tOFF_max_310ns": 0.938,
@@ -662,17 +662,17 @@
    "duty_needed": {
     "drift": [
      0.8222,
-     0.8944
+     0.8945
     ],
     "initial": [
-     0.828,
+     0.8281,
      0.8882
     ]
    },
    "duty_needed_lossless": {
     "drift": [
      0.8144,
-     0.8859
+     0.886
     ],
     "initial": [
      0.8202,
@@ -682,9 +682,9 @@
    "holds_window_top_at_580kHz": false,
    "holds_window_top_with_foldback": true,
    "max_held_V": {
-    "200kHz_tOFF_max_310ns": 5.215,
-    "200kHz_tOFF_typ_220ns": 5.315,
-    "580kHz_tOFF_max_310ns": 4.56,
+    "200kHz_tOFF_max_310ns": 5.214,
+    "200kHz_tOFF_typ_220ns": 5.314,
+    "580kHz_tOFF_max_310ns": 4.559,
     "580kHz_tOFF_typ_220ns": 4.85
    },
    "window_top_V": 4.9722
@@ -724,7 +724,7 @@
     3.135,
     3.6
    ],
-   "limits_basis": "U6 FXLS90322 VCC_BUF >= 3.135 V (NXP FXLS9xxx0 Rev 6 item 10502, D-R12-51; the tightest low end); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; LSM6DSVE 1.71-3.6 V (JLC / LCSC listing, D-R12-50); MS5607 1.8-3.6 V (TE MS5607-02BA03, D-R12-52)",
+   "limits_basis": "U6 FXLS90322 VCC_BUF >= 3.135 V (NXP FXLS9xxx0 Rev 6 item 10502, D-R12-51; the tightest low end, kept although U6 is not fitted since D-R12-213, so a hand-fitted U6 is covered); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; ISM6HG256X 1.71-3.6 V (ST DS15034 Rev 1 Table 4, D-R12-212); MS5611 1.8-3.6 V (TE MS5611-01BA03, D-R12-214)",
    "nominal_V": 3.35,
    "pfm_regulation_band": [
     -0.015,

@@ -857,6 +857,14 @@ def record_issues(d):
                           f'{hold:.6f} W (R12F14-TRI-05)')
     except (KeyError, TypeError) as exc:
         issues.append(f'unshed load envelope missing: {exc}')
+    u4 = d.get('imu', {}).get('U4', {})                             # D-R12-220: U4's map text states its derived signs
+    if not all(u4.get(k) for k in ('plus_X_imu', 'plus_Y_imu', 'roll_reads', 'forward_thrust_reads')) or any(
+            s not in u4.get('axis_map', '') for s in (f"+X_imu -> {u4.get('plus_X_imu')}", f"+Y_imu -> {u4.get('plus_Y_imu')}",
+                                                       f"reads {u4.get('roll_reads')}", f"reads {u4.get('forward_thrust_reads')}")):
+        issues.append("U4's axis map is not derived from its pads or its text disagrees with the derived signs (D-R12-220)")
+    budget = d.get('u3v3_budget', {})                               # D-R12-219: the itemised sensors fit their line
+    if budget.get('sensors_within_allocation') is not True:
+        issues.append('U4 + U5 + U6 itemised currents exceed the 3V3 sensor allocation (D-R12-219)')
     chk = d.get('holdup', {}).get('unshed', {}).get('beep_state_check')
     if chk and chk['beep_state_ms'] < chk['write_state_ms']:
         issues.append('the beep state shortens the unshed hold-up below the write state (R12F14-TRI-05)')
@@ -1164,6 +1172,39 @@ def gate_copper(board, stack):
     return out
 
 
+# D-R12-220 (R12STD-REV-01): U4's axis signs are derived from its pads, not stated. ST DS15034 Rev 1 Figure 5 p. 9
+# (top view) puts pin 1 at the (-X, +Y) corner: pins 1-4 lie along the -X side and pins 12-14 along the +Y side. The
+# board frame is x east, y forward (the KiCad y coordinate), z up out of the top face.
+U4_MINUS_X_PINS, U4_PLUS_Y_PINS = ('1', '2', '3', '4'), ('12', '13', '14')
+
+
+def imu_axes(centre, pads, side='top'):
+    """{+X_imu, +Y_imu: board axis}, the roll and thrust readings, and the axis_map text, from U4's pad positions
+    (board mm, {number: (x, y)}) and its centre. A side whose mean offset is not along one board axis fails."""
+    def direction(numbers, sign):
+        dx = sum(pads[n][0] for n in numbers) / len(numbers) - centre[0]
+        dy = sum(pads[n][1] for n in numbers) / len(numbers) - centre[1]
+        if min(abs(dx), abs(dy)) > 1e-3 or max(abs(dx), abs(dy)) < 0.1:
+            raise ValueError(f'U4 pins {numbers} do not lie along one board axis ({dx:.3f}, {dy:.3f})')
+        axis, value = ('x', dx) if abs(dx) > abs(dy) else ('y', dy)
+        return ('+' if sign * value > 0 else '-') + axis
+    x_imu, y_imu = direction(U4_MINUS_X_PINS, -1), direction(U4_PLUS_Y_PINS, +1)
+    if x_imu[1] == y_imu[1]:
+        raise ValueError(f'U4 +X_imu {x_imu} and +Y_imu {y_imu} share a board axis')
+    imu_of = {x_imu[1]: ('X', x_imu[0]), y_imu[1]: ('Y', y_imu[0])}
+    along, sign = imu_of['y']                                     # the IMU axis that lies along the rocket axis
+    face = 'out of the top face' if side == 'top' else 'out of the bottom face'
+    out = dict(plus_X_imu=x_imu + '_board', plus_Y_imu=y_imu + '_board', plus_Z_imu=face,
+               roll_reads=f'{sign}gyro_{along}', forward_thrust_reads=f'{sign}a_{along}',
+               basis='ST DS15034 Rev 1 Figure 5 p. 9: pin 1 at the (-X, +Y) corner (top view), pins 1-4 on the -X side, '
+                     'pins 12-14 on the +Y side; signs derived from the board pads (D-R12-220)')
+    out['axis_map'] = (f"D-R12-220 (corrects D-R12-54): +X_imu -> {out['plus_X_imu']}, +Y_imu -> {out['plus_Y_imu']}, "
+                       f"+Z_imu {face}; roll about +y_board reads {out['roll_reads']}; forward thrust reads "
+                       f"{out['forward_thrust_reads']} (Calculation from DS15034 Figure 5 and the board pads; the high-g "
+                       "frame equal to the low-g one is an Inference; the 1 g / rotation bench check O-R12-15 stays)")
+    return out
+
+
 def imu(board):
     import pcbnew
     mm = pcbnew.ToMM
@@ -1177,10 +1218,13 @@ def imu(board):
                         y_mm=round(mm(f.GetPosition().y), 4),
                         pad_centre_mm=[round((min(xs) + max(xs)) / 2, 4), round((min(ys) + max(ys)) / 2, 4)],
                         lever_arm_x_mm=round(mm(f.GetPosition().x) - 23.0, 4))
-    out['U4']['axis_map'] = ('D-R12-54: +X_imu -> +x_board, +Y_imu -> -y_board, +Z_imu out of the top face; roll about '
-                             '+y_board reads -gyro_Y; forward thrust reads -a_Y (Calculation; LSM6DSVE frame Inference)')
+    u4 = fps(board)['U4']
+    pads = {p.GetNumber(): (mm(p.GetPosition().x), mm(p.GetPosition().y)) for p in u4.Pads() if p.GetNumber()}
+    out['U4'].update(imu_axes((mm(u4.GetPosition().x), mm(u4.GetPosition().y)), pads, out['U4']['side']))
     out['U6']['axis_map'] = ('D-R12-54: channel 0 (X) -> +x_board, channel 1 (Y) -> +y_board (rocket axis); forward '
-                             'thrust reads +a on channel 1 (Inference: single-channel sheet figure)')
+                             'thrust reads +a on channel 1 (Inference: single-channel sheet figure; consistent with the '
+                             'board pads, pins 1-4 east and 13-16 forward, D-R12-220); applies only if U6 is hand-fitted '
+                             '(not fitted, D-R12-213)')
     out['roll_axis_x_mm'] = 23.0
     return out
 
@@ -1394,7 +1438,12 @@ MCU_TJ_BUDGET = 85
 # the other 3V3 loads (A): microSD write (REQUIREMENTS F5), U3 QSPI flash program / erase, U4 + U5 + U6, the LEDs, the
 # pull-ups, the buzzer (QMB-09B-03 16 +/- 5 ohm coil, D-R12-16 / Huawha 2019-12-3: 3V3 maximum / 11 ohm in its on-phase,
 # half of it on average with the <= 50 % square wave of firmware rule (a); TRI-13)
-BUDGET_3V3_A = dict(microsd_write=0.200, U3_qspi_flash=0.025, U4_U5_U6_sensors=0.008, LEDs=0.012, pull_ups=0.004)
+# D-R12-219: U4 + U5 + U6 is 10 mA (8 mA before): U6 FXLS90322 <= 6.0 mA (NXP FXLS9xxx0 Rev 6 item 10510; kept although
+# U6 is not fitted, D-R12-213), U5 MS5611 1.4 mA peak during conversion (TE MS5611-01BA03, typical), U4 ISM6HG256X
+# 0.8 mA gyroscope + low-g + high-g in high-performance mode (ST DS15034 Rev 1 Table 4 IddHPC9, typical at VDD 1.8 V):
+# 8.2 mA, over the old 8 mA; the 1.8 mA left covers the two typical-only figures at 3.3 V (Inference: no maxima given)
+SENSORS_3V3_A = dict(U6_FXLS90322_max=0.0060, U5_MS5611_peak=0.0014, U4_ISM6HG256X_IddHPC9_typ=0.0008)
+BUDGET_3V3_A = dict(microsd_write=0.200, U3_qspi_flash=0.025, U4_U5_U6_sensors=0.010, LEDs=0.012, pull_ups=0.004)
 BUZZER_COIL_MIN_OHM = 11.0
 
 
@@ -1466,6 +1515,12 @@ def u3v3_budget():
                                f'(typical) and 600 kHz (FOSC minimum), VOUT {v33_max} V (the 3V3 window\'s drift '
                                'maximum, the buzzer load\'s corner and the largest ripple over the window; R12F13-TRI-05)'),
                loads_A=dict(BUDGET_3V3_A), buzzer_on_phase_A=buzz_on, buzzer_average_A=buzz_on / 2,
+               sensors_A=dict(SENSORS_3V3_A), sensors_sum_A=sum(SENSORS_3V3_A.values()),
+               sensors_within_allocation=sum(SENSORS_3V3_A.values()) <= BUDGET_3V3_A['U4_U5_U6_sensors'],
+               sensors_basis=('D-R12-219: U6 <= 6.0 mA maximum (NXP FXLS9xxx0 Rev 6 item 10510; not fitted, D-R12-213, '
+                              'kept for a hand-fit), U5 MS5611 1.4 mA peak during conversion (TE, typical), U4 '
+                              'ISM6HG256X 0.8 mA IddHPC9 (ST DS15034 Rev 1 Table 4, typical at 1.8 V); the allocation\'s '
+                              'margin over typical-only figures at 3.3 V is an Inference'),
                buzzer_basis=f'3V3 drift maximum {v33_max} V / 11 ohm (16 +/- 5 ohm coil), <= 50 % square wave',
                mcu_source='DS12110 Rev 8 Tables 30-32 (rev Y) and 129-131 (rev V): IDD max, Run mode, all peripherals '
                           'enabled, CoreMark, I/Os analog; guaranteed by characterization',

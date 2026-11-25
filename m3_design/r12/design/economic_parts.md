@@ -1,5 +1,7 @@
 # R12 BOM against JLC Economic PCBA (research lane, 2026-11-04)
 
+**Superseded by D-R12-211 (2026-11-24): R12 is ordered on JLC Standard PCBA; this Economic audit is history.**
+
 Read-only audit of every R12 BOM line against JLC Economic PCBA. Nothing in the board, schematic, `r12_parts.py`,
 `r12_place.tsv` or `R12_DECISIONS.md` was changed. Evidence labels follow AGENTS §2.5: **Live** (JLC page or API,
 2026-11-04T22:00–22:25Z), **Datasheet** (the maker datasheet LCSC/JLC serve for that code, URL given), **Inference**

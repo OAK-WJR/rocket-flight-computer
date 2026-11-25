@@ -25,7 +25,10 @@ REPLACE = (("ROOT / 'tools/jlc_corrections.json'", "ROOT / 'tools/jlc_correction
             "'F.Cu,In1.Cu,In2.Cu,B.Cu,F.Paste,F.Silkscreen,B.Silkscreen,F.Mask,B.Mask,Edge.Cuts'", 1),
            ("MANUAL_FIT = {'C84': 'manual, after both reflow passes (docs/ORDERING.md section 8.2)'}",
             "MANUAL_FIT = R12_OWNER_FIT", 1),
-           ("m3_design/r10_fab.sh", "m3_design/r12_fab.sh", 3))
+           ("m3_design/r10_fab.sh", "m3_design/r12_fab.sh", 3),
+           # D-R12-220 (review fix pass): the assembly drawings cross out DNP footprints (U6 / C33, D-R12-213) and strike
+           # out their designators, so the drawing does not show the unfitted lands as parts
+           ("'--exclude-value', '--scale', '0']", "'--exclude-value', '--scale', '0', '--crossout-DNP-footprints-on-fab-layers']", 1))
 
 
 def source():

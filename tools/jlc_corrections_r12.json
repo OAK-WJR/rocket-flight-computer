@@ -118,6 +118,22 @@
    "pads_matched": 2,
    "status": "OK"
   },
+  "C15639|SENSORS-SMD_MS5611-01BA03": {
+   "footprint": "SENSORS-SMD_MS5611-01BA03",
+   "easyeda": "SENSORS-SMD_MS5611-01BA03",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    -0.0,
+    -0.0001
+   ],
+   "residual_mm": 0.2,
+   "next_best_mm": 3.273,
+   "pads_ours": 8,
+   "pads_easyeda": 8,
+   "pads_matched": 8,
+   "status": "OK"
+  },
   "C15849|C0603": {
    "footprint": "C0603",
    "easyeda": "C0603",
@@ -277,7 +293,7 @@
    "pads_easyeda": 2,
    "pads_matched": 2,
    "status": "OK",
-   "via": "same footprint as C23178 (EasyEDA has no entry for C21190)"
+   "via": "same footprint as C22978 (EasyEDA has no entry for C21190)"
   },
   "C22939|R_0603_1608Metric": {
    "footprint": "R_0603_1608Metric",
@@ -599,6 +615,22 @@
    "pads_matched": 2,
    "status": "OK"
   },
+  "C307331|C0402_DNP": {
+   "footprint": "C0402_DNP",
+   "easyeda": "C0402",
+   "easyeda_proxy": null,
+   "theta": 0,
+   "offset": [
+    0.0,
+    0.0
+   ],
+   "residual_mm": 0.0,
+   "next_best_mm": 0.594,
+   "pads_ours": 2,
+   "pads_easyeda": 2,
+   "pads_matched": 2,
+   "status": "OK"
+  },
   "C3662799|M3_TPS25947_RPW": {
    "footprint": "M3_TPS25947_RPW",
    "easyeda": "VQFN-10_L2.0-W2.0-P0.45-TL",
@@ -647,22 +679,6 @@
    "pads_matched": 2,
    "status": "OK"
   },
-  "C41785564|LGA-14_L3.0-W2.5-P0.50-TL": {
-   "footprint": "LGA-14_L3.0-W2.5-P0.50-TL",
-   "easyeda": "LGA-14_L3.0-W2.5-P0.50-TL",
-   "easyeda_proxy": null,
-   "theta": 0,
-   "offset": [
-    0.0,
-    0.0
-   ],
-   "residual_mm": 0.052,
-   "next_best_mm": 2.064,
-   "pads_ours": 14,
-   "pads_easyeda": 14,
-   "pads_matched": 14,
-   "status": "OK"
-  },
   "C468250|M3_TSOT23_6_DDC": {
    "footprint": "M3_TSOT23_6_DDC",
    "easyeda": "TSOT-23-6_L2.9-W1.6-P0.95-LS2.8-BL",
@@ -696,8 +712,8 @@
    "body_correction_deg": 180,
    "status": "OK"
   },
-  "C5190712|M3_FXLS_HLQFN16": {
-   "footprint": "M3_FXLS_HLQFN16",
+  "C5190712|M3_FXLS_HLQFN16_DNP": {
+   "footprint": "M3_FXLS_HLQFN16_DNP",
    "easyeda": "QFN-16_L4.0-W4.0-P0.80-TL-EP2.6",
    "easyeda_proxy": null,
    "theta": 0,
@@ -710,6 +726,22 @@
    "pads_ours": 17,
    "pads_easyeda": 17,
    "pads_matched": 17,
+   "status": "OK"
+  },
+  "C51931514|LGA-14_L3.0-W2.5-P0.50-TL": {
+   "footprint": "LGA-14_L3.0-W2.5-P0.50-TL",
+   "easyeda": "LGA-14_L3.0-W2.5-P0.50-BR",
+   "easyeda_proxy": null,
+   "theta": 180,
+   "offset": [
+    -0.0,
+    0.0
+   ],
+   "residual_mm": 0.04,
+   "next_best_mm": 2.005,
+   "pads_ours": 14,
+   "pads_easyeda": 14,
+   "pads_matched": 14,
    "status": "OK"
   },
   "C5246546|M3_CAP_D8_SMD": {
@@ -947,22 +979,6 @@
    ],
    "residual_mm": 0.005,
    "next_best_mm": 5.674,
-   "pads_ours": 8,
-   "pads_easyeda": 8,
-   "pads_matched": 8,
-   "status": "OK"
-  },
-  "C97627|SENSORS-SMD_MS5611-01BA03": {
-   "footprint": "SENSORS-SMD_MS5611-01BA03",
-   "easyeda": "SENSOR-SMD_MS560702BA03-50",
-   "easyeda_proxy": null,
-   "theta": 270,
-   "offset": [
-    0.0,
-    0.0
-   ],
-   "residual_mm": 0.005,
-   "next_best_mm": 3.079,
    "pads_ours": 8,
    "pads_easyeda": 8,
    "pads_matched": 8,

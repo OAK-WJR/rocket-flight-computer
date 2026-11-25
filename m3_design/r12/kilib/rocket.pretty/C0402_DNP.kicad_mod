@@ -1,0 +1,193 @@
+(footprint "C0402_DNP"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "C0402 land with no solder paste: an unfitted (DNP) placeholder, so the stencil prints nothing on its empty pads (D-R12-213; as R7's C0402_DNP)")
+	
+	(property "Reference" "REF**"
+		(at -5.476905 0 0)
+		(unlocked yes)
+		(layer "F.SilkS")
+		(uuid "ee665dfc-fe53-5823-aba9-c178480bbcc4")
+		(effects
+			(font
+				(size 0.8 0.8)
+				(thickness 0.15)
+			)
+		)
+	)
+	(property "Value" "C0402_DNP"
+		(at 0 4 0)
+		(layer "F.Fab")
+		(uuid "df773154-1899-504e-ad21-87ded89eb142")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	
+	
+	
+	
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	
+	
+	
+	
+	(fp_line
+		(start -0.87 0.35)
+		(end -0.87 -0.35)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "a7e068e2-3af0-513a-82bf-f53faedb3a53")
+	)
+	(fp_line
+		(start -0.72 -0.5)
+		(end -0.22 -0.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "66715487-db2c-53ad-8cc1-178217317201")
+	)
+	(fp_line
+		(start -0.22 0.5)
+		(end -0.72 0.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "4953583b-ea8f-5995-93e2-7b4985771293")
+	)
+	(fp_line
+		(start 0.22 -0.5)
+		(end 0.72 -0.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "1ae47dcf-52e6-54c9-a51c-881941a6495b")
+	)
+	(fp_line
+		(start 0.72 0.5)
+		(end 0.22 0.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "7b344d1f-933e-5587-a14f-682cad3543ee")
+	)
+	(fp_line
+		(start 0.87 -0.35)
+		(end 0.87 0.35)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "41f32188-065e-58ec-bff6-4ebe72a00058")
+	)
+	(fp_arc
+		(start -0.87 -0.35)
+		(mid -0.826066 -0.456066)
+		(end -0.72 -0.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "11e0ed22-606c-5631-9678-0f8419e46bc5")
+	)
+	(fp_arc
+		(start -0.72 0.5)
+		(mid -0.826066 0.456066)
+		(end -0.87 0.35)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "01f489ae-67fc-5046-9695-a770bff72a83")
+	)
+	(fp_arc
+		(start 0.72 -0.5)
+		(mid 0.826066 -0.456066)
+		(end 0.87 -0.35)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "b697f3fd-5a88-5bf9-9281-7b2e758de562")
+	)
+	(fp_arc
+		(start 0.87 0.35)
+		(mid 0.826066 0.456066)
+		(end 0.72 0.5)
+		(stroke
+			(width 0.15)
+			(type solid)
+		)
+		(layer "F.Fab")
+		(uuid "c44a2ac0-1217-5366-bc10-0565d334dd1f")
+	)
+	(fp_circle
+		(center -0.5 0.25)
+		(end -0.47 0.25)
+		(stroke
+			(width 0.06)
+			(type solid)
+		)
+		(fill no)
+		(layer "F.Fab")
+		(uuid "596a831e-8b3e-5f31-9a53-4e50aa433b8d")
+	)
+	(fp_text user "${REFERENCE}"
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "5eb49c0f-bef0-5e3b-bb6d-5bd036970936")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.15)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at -0.42 0)
+		(size 0.5 0.54)
+		(layers "F.Cu" "F.Mask")
+		(uuid "19a07527-eefa-51aa-96a4-5e6a9a6a4107")
+	)
+	(pad "2" smd rect
+		(at 0.42 0)
+		(size 0.5 0.54)
+		(layers "F.Cu" "F.Mask")
+		(uuid "fbbad4fd-6526-562b-8970-8b262bbdf190")
+	)
+	(embedded_fonts no)
+	(model "${KIPRJMOD}/kilib/rocket.3dshapes/C0402_L1.0-W0.5-H0.5.wrl"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+
+(fp_rect (start -0.82 -0.42) (end 0.82 0.42) (stroke (width .05) (type solid)) (fill no) (layer "F.CrtYd") (uuid "70e297f1-127c-56d5-be4e-92991c916735"))
+)

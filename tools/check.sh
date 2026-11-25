@@ -207,6 +207,11 @@ selftest "$KICAD_PY" -I "$ROOT/tools/test_paste_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_parts.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_route_check.py"
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r10_check.py"
+# D-R12-217 (issue #10): the numerical self-tests skip themselves when numpy is missing, so the gate requires numpy under
+# exactly the interpreter and flags that run them; a missing numpy fails here instead of skipping silently.
+"${NUMPY_PY:-python3}" -I -c 'import numpy' >/dev/null 2>&1 \
+  || { echo "gate self-test FAILED: numpy is not importable by '${NUMPY_PY:-python3} -I' (the HotplugNumerics / Plate" \
+            "self-tests would skip): set NUMPY_PY to a python3 that has numpy"; exit 1; }
 selftest "${NUMPY_PY:-python3}" -I "$ROOT/tools/test_r10_check.py" HotplugNumerics Plate   # Plate: R18-MEC-01 strain table
 selftest "$KICAD_PY" -I "$ROOT/tools/test_r12_fab.py"      # R12F4-TRI-01: R12 fab tooling; exports R12_BOARD when present
 selftest python3 -I "$ROOT/tools/test_r12_stageD.py"       # R12F4-TRI-01: R12 stage D / hot-plug wrappers (no pcbnew)

@@ -945,6 +945,31 @@ class Round12Board(unittest.TestCase):
     def rule(self, rid, stage='copper'):
         return r12.check_board(self.board, BOARD12, only={rid}, stage=stage)
 
+    def test_r12_215_port_words_clear_of_bodies(self):
+        """D-R12-215 (issue #10): the RADIO, GPS and AUX words lie under no connector housing: each word's ink box
+        (the text polygon, as K-legends measures it) is more than 0.1 mm from every connector's F.Fab body box (the
+        J420 / J410 / J440 housings start at y 81.40), and every word is at least 1.0 mm high."""
+        mm = pcbnew.ToMM
+        bodies = {}
+        for f in self.board.GetFootprints():
+            boxes = [g.GetBoundingBox() for g in f.GraphicalItems()
+                     if g.GetLayer() == pcbnew.F_Fab and isinstance(g, pcbnew.PCB_SHAPE)]
+            if boxes and f.GetReference().startswith('J'):
+                bodies[f.GetReference()] = (min(mm(b.GetLeft()) for b in boxes), min(mm(b.GetTop()) for b in boxes),
+                                            max(mm(b.GetRight()) for b in boxes), max(mm(b.GetBottom()) for b in boxes))
+        words = {d.GetText(): d for d in self.board.GetDrawings()
+                 if isinstance(d, pcbnew.PCB_TEXT) and d.GetText() in ('RADIO', 'GPS', 'AUX')}
+        self.assertEqual(sorted(words), ['AUX', 'GPS', 'RADIO'])
+        for word, d in words.items():
+            poly = pcbnew.SHAPE_POLY_SET()
+            d.TransformShapeToPolygon(poly, d.GetLayer(), 0, pcbnew.FromMM(0.005), pcbnew.ERROR_INSIDE)
+            q = poly.BBox()
+            ink = (mm(q.GetLeft()), mm(q.GetTop()), mm(q.GetRight()), mm(q.GetBottom()))
+            self.assertGreaterEqual(mm(d.GetTextHeight()), 1.0 - 1e-6, word)
+            for ref, b in bodies.items():
+                gap = max(b[0] - ink[2], ink[0] - b[2], b[1] - ink[3], ink[1] - b[3])
+                self.assertGreater(gap, 0.1, f'{word} ink {ink} over or near {ref} body {b}')
+
     EDIT = """import pcbnew, sys
 b = pcbnew.LoadBoard(sys.argv[1])
 op, args = sys.argv[2], sys.argv[3:]
@@ -2625,10 +2650,27 @@ class Schematic(unittest.TestCase):
     def test_inputs_pinned(self):
         r12_sch.source_check()
 
-    def test_one_side_and_economic(self):
+    def test_one_side_and_standard(self):
         data = r12_sch.circuit()
         self.assertEqual(data['assembly']['sides'], 1)
+        self.assertEqual(data['assembly']['tier'], 'JLC Standard PCBA')    # D-R12-211 (owner 2026-11-24; Economic before)
         self.assertEqual(data['owner_fit'], {})          # D-R12-85: every part JLC-assembled (owner 2026-11-05)
+
+    def test_r12_211_sensor_parts(self):
+        """D-R12-212 / -214: U4 is the ISM6HG256X and U5 the MS5611 (R11's parts and fields); D-R12-213: U6 and C33
+        are unfitted placeholders (DNP, out of the BOM and position files) on no-paste _DNP lands, with their nets."""
+        parts, pins = r12_sch.model(r12_sch.circuit())
+        self.assertEqual((parts['U4']['fields']['LCSC'], parts['U4']['fields']['Manufacturer Part']),
+                         ('C51931514', 'ISM6HG256XTR'))
+        self.assertEqual((parts['U5']['fields']['LCSC'], parts['U5']['fields']['Manufacturer Part']),
+                         ('C15639', 'MS561101BA03-50'))
+        for ref, fp in (('U6', 'rocket:M3_FXLS_HLQFN16_DNP'), ('C33', 'rocket:C0402_DNP')):
+            self.assertEqual(parts[ref]['flags'], ['dnp', 'exclude_from_bom', 'exclude_from_pos_files'], ref)
+            self.assertEqual(parts[ref]['footprint'], fp)
+        self.assertEqual(pins['U6', '8'], 'HG_CS')
+        self.assertEqual((pins['C33', '1'], pins['C33', '2']), ('3V3', 'GND'))
+        fitted = [r for r, p in parts.items() if p['flags'] and r not in ('U6', 'C33')]
+        self.assertTrue(all(r.startswith('TP') or r == 'J2' for r in fitted), fitted)
 
 
 @unittest.skipUnless(pcbnew, 'KiCad python required')
@@ -3145,7 +3187,7 @@ class PortedRules(unittest.TestCase):
         data = {'imu': {'rotation': 0, 'lever_mm': 0}}
         s = board(); self.assert_rule(s, 'M-7', data=data)
         s.via(35, 40, 'GND'); self.assert_rule(s, 'M-7', False, data=data, want='M-7: via under U99')
-        # D-R12-52: U5 (MS5607) has R10's pad-interior track ban again.
+        # D-R12-52: U5 (MS5607; the MS5611 since D-R12-214) has R10's pad-interior track ban again.
         s = board(); s.track((9.5, 39.5), (10.5, 39.5), 'I2C1_SCL', pcbnew.F_Cu)
         self.assert_rule(s, 'M-7', False, data=data, want='M-7: track inside U5 pad-ring interior')
         s = board()

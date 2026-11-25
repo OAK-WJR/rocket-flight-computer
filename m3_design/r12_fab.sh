@@ -5,7 +5,8 @@
 # inputs stay unchanged; R12 runs them through its wrappers.
 #
 # usage: m3_design/r12_fab.sh               (from anywhere in the repo)
-#        FAB_NET=1 m3_design/r12_fab.sh     also stocks and prices the BOM at JLC, Economic PCBA, for 2 and 5 boards
+#        FAB_NET=1 m3_design/r12_fab.sh     also stocks and prices the BOM at JLC, Standard PCBA (D-R12-211; Economic
+#                                           before), for 2 and 5 boards
 #                                           (live public supplier data, read-only, valid 24 h; writes fab/stock_check_<n>.json
 #                                           and fab/cost_check_<n>.json)
 #
@@ -23,7 +24,8 @@
 #     --paste           the Gerber zip's file set; paste_check's rules on F paste; one flash per pasted pad, paste only
 #                       on parts in the CPL
 #   fab_manifest_r12.py the outputs still match the CAD and export inputs; tools/check.sh repeats --content
-#   FAB_NET=1           jlc_stock.py and jlc_cost.py --tier economic --profile r10 (REQUIREMENTS M3's $84.41 per board)
+#   FAB_NET=1           jlc_stock.py and jlc_cost.py --tier standard --profile r10 (REQUIREMENTS M3's $84.41 per board;
+#                       D-R12-211: Standard PCBA, one side, as R10 / R11 price it)
 #                       for 2 and 5 boards
 # The Gerbers carry their creation date, so the package is not byte-reproducible; the manifest binds it instead.
 # The generated package (m3_design/r12/fab/) is tracked in git, as R11's is, so tools/check.sh can verify it (stage D).
@@ -52,7 +54,7 @@ if [[ -n "${FAB_NET:-}" ]]; then
     # plain python3, not -I: jlc_cost imports jlc_stock from tools/
     python3 tools/jlc_stock.py --fab "$D/fab" --boards "$N" || { STATUS=1; echo "jlc_stock ($N boards): short lines above"; }
     [[ -f "$D/fab/stock_check.json" ]] && mv "$D/fab/stock_check.json" "$D/fab/stock_check_$N.json"
-    python3 tools/jlc_cost.py --tier economic --profile r10 --fab "$D/fab" --boards "$N" \
+    python3 tools/jlc_cost.py --tier standard --profile r10 --fab "$D/fab" --boards "$N" \
       || { STATUS=1; echo "jlc_cost ($N boards): \$84.41 target missed or pricing unknown (above)"; }
     [[ -f "$D/fab/cost_check.json" ]] && mv "$D/fab/cost_check.json" "$D/fab/cost_check_$N.json"
   done

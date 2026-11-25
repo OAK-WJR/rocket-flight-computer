@@ -294,7 +294,7 @@
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>c59f999d-6b4c-5f54-a5e4-68475b5d6a2e</tstamps>
       <units>
@@ -325,7 +325,7 @@
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>4854857d-bbcb-5019-b66d-13a64f981534</tstamps>
       <units>
@@ -356,7 +356,7 @@
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>743f9567-3b12-5b81-b92f-254ff6007f53</tstamps>
       <units>
@@ -387,7 +387,7 @@
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>98c00005-bfdb-58d7-8553-edbffbdfe042</tstamps>
       <units>
@@ -417,7 +417,7 @@
       <property name="Sheetname" value="m3"/>
       <property name="Sheetfile" value="m3.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/" tstamps="/"/>
       <tstamps>9a2c9f4a-3e42-5fec-a98c-25c75340b671</tstamps>
       <units>
@@ -707,7 +707,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>2ee53244-218c-5788-b562-2782ab52b381</tstamps>
       <units>
@@ -737,7 +737,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>4b09e276-97a7-51bb-8380-cc92e7b67ba0</tstamps>
       <units>
@@ -767,7 +767,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>e9174904-fb87-5281-bdab-42ffc02f41cb</tstamps>
       <units>
@@ -797,7 +797,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>9dfda6be-4c50-5b2d-b8cb-c91d6386d0e5</tstamps>
       <units>
@@ -827,7 +827,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>5c7fbf58-90bc-5756-9a0d-f712ed09587a</tstamps>
       <units>
@@ -857,7 +857,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>1429c71d-2b97-5eb6-a880-d1e2fe947301</tstamps>
       <units>
@@ -887,7 +887,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>26f93d28-03ad-5b41-ac78-d60e6ff8469a</tstamps>
       <units>
@@ -917,7 +917,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>816a5839-059d-5807-8191-d7bb038c1b1d</tstamps>
       <units>
@@ -947,7 +947,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>66ea55ad-6310-55c5-8642-8c786f13ed85</tstamps>
       <units>
@@ -977,7 +977,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>e7b4aad6-50aa-5216-aa04-1bbfff7a4f69</tstamps>
       <units>
@@ -1007,7 +1007,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>33bd9426-1991-56a9-9c79-a72ab9c1f6eb</tstamps>
       <units>
@@ -1037,7 +1037,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>de8c7307-46f0-5f46-aa54-6099c8ec2935</tstamps>
       <units>
@@ -1068,7 +1068,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>88b6e811-edb7-5ffb-83f5-263cca2d6c9f</tstamps>
       <units>
@@ -1099,7 +1099,7 @@
       <property name="Sheetname" value="02 | MCU, clock and debug"/>
       <property name="Sheetfile" value="mcu.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/02 | MCU, clock and debug/" tstamps="/7ce96c75-317e-5701-b5fd-0caa132094c9/"/>
       <tstamps>81898c68-40c9-538d-a372-c2a31ecbe522</tstamps>
       <units>
@@ -1355,7 +1355,7 @@
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/03 | QSPI log, IMU and barometer/" tstamps="/3fb26641-c8c6-5194-9da3-8e5bbba547c4/"/>
       <tstamps>440d45b4-28e1-5e3c-be87-8ae4b5f3642b</tstamps>
       <units>
@@ -1385,7 +1385,7 @@
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/03 | QSPI log, IMU and barometer/" tstamps="/3fb26641-c8c6-5194-9da3-8e5bbba547c4/"/>
       <tstamps>815a0688-0949-5fa8-9725-386adc439aa7</tstamps>
       <units>
@@ -1415,7 +1415,7 @@
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/03 | QSPI log, IMU and barometer/" tstamps="/3fb26641-c8c6-5194-9da3-8e5bbba547c4/"/>
       <tstamps>16f16ed4-8ac4-5a3b-9252-d42c2894c209</tstamps>
       <units>
@@ -1445,7 +1445,7 @@
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/03 | QSPI log, IMU and barometer/" tstamps="/3fb26641-c8c6-5194-9da3-8e5bbba547c4/"/>
       <tstamps>754ccd79-cd04-5e46-b4d4-d19045d6eba9</tstamps>
       <units>
@@ -1459,13 +1459,13 @@
     </comp>
     <comp ref="C33">
       <value>100nF 50V X7R 10%</value>
-      <footprint>rocket:C0402</footprint>
+      <footprint>rocket:C0402_DNP</footprint>
       <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL05B104KB54PNC_C307331.pdf</datasheet>
       <fields>
         <field name="LCSC">C307331</field>
         <field name="Manufacturer">Samsung Electro-Mechanics</field>
         <field name="Manufacturer Part">CL05B104KB54PNC</field>
-        <field name="Footprint">rocket:C0402</field>
+        <field name="Footprint">rocket:C0402_DNP</field>
         <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL05B104KB54PNC_C307331.pdf</field>
         <field name="Description"/>
       </fields>
@@ -1475,8 +1475,11 @@
       <property name="Manufacturer Part" value="CL05B104KB54PNC"/>
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="exclude_from_pos_files"/>
+      <property name="dnp"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/03 | QSPI log, IMU and barometer/" tstamps="/3fb26641-c8c6-5194-9da3-8e5bbba547c4/"/>
       <tstamps>13719753-0e84-510a-938e-c95feba6f54f</tstamps>
       <units>
@@ -1645,21 +1648,21 @@
       </units>
     </comp>
     <comp ref="U4">
-      <value>LSM6DSVETR</value>
+      <value>ISM6HG256X</value>
       <footprint>rocket:LGA-14_L3.0-W2.5-P0.50-TL</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2412041127_STMicroelectronics-LSM6DSVETR_C41785564.pdf</datasheet>
+      <datasheet>https://www.st.com/resource/en/datasheet/ism6hg256x.pdf</datasheet>
       <fields>
-        <field name="LCSC">C41785564</field>
+        <field name="LCSC">C51931514</field>
         <field name="Manufacturer">STMicroelectronics</field>
-        <field name="Manufacturer Part">LSM6DSVETR</field>
+        <field name="Manufacturer Part">ISM6HG256XTR</field>
         <field name="Footprint">rocket:LGA-14_L3.0-W2.5-P0.50-TL</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2412041127_STMicroelectronics-LSM6DSVETR_C41785564.pdf</field>
+        <field name="Datasheet">https://www.st.com/resource/en/datasheet/ism6hg256x.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="IMU_SPI" description=""/>
-      <property name="LCSC" value="C41785564"/>
+      <property name="LCSC" value="C51931514"/>
       <property name="Manufacturer" value="STMicroelectronics"/>
-      <property name="Manufacturer Part" value="LSM6DSVETR"/>
+      <property name="Manufacturer Part" value="ISM6HG256XTR"/>
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_fp_filters" value="LGA-14_L3.0-W2.5-P0.50-TL"/>
@@ -1687,21 +1690,21 @@
       </units>
     </comp>
     <comp ref="U5">
-      <value>MS5607-02BA03</value>
+      <value>MS561101BA03</value>
       <footprint>rocket:SENSORS-SMD_MS5611-01BA03</footprint>
-      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2010281834_TE-Connectivity-MS560702BA03-50_C97627.pdf</datasheet>
+      <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_1808280521_TE-Connectivity-MS561101BA03-50_C15639.pdf</datasheet>
       <fields>
-        <field name="LCSC">C97627</field>
+        <field name="LCSC">C15639</field>
         <field name="Manufacturer">TE Connectivity</field>
-        <field name="Manufacturer Part">MS560702BA03-50</field>
+        <field name="Manufacturer Part">MS561101BA03-50</field>
         <field name="Footprint">rocket:SENSORS-SMD_MS5611-01BA03</field>
-        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2010281834_TE-Connectivity-MS560702BA03-50_C97627.pdf</field>
+        <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_1808280521_TE-Connectivity-MS561101BA03-50_C15639.pdf</field>
         <field name="Description"/>
       </fields>
       <libsource lib="M3" part="Barometer" description=""/>
-      <property name="LCSC" value="C97627"/>
+      <property name="LCSC" value="C15639"/>
       <property name="Manufacturer" value="TE Connectivity"/>
-      <property name="Manufacturer Part" value="MS560702BA03-50"/>
+      <property name="Manufacturer Part" value="MS561101BA03-50"/>
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
       <property name="ki_fp_filters" value="SENSORS-SMD_MS5611-01BA03"/>
@@ -1724,13 +1727,13 @@
     </comp>
     <comp ref="U6">
       <value>FXLS90322AESR2</value>
-      <footprint>rocket:M3_FXLS_HLQFN16</footprint>
+      <footprint>rocket:M3_FXLS_HLQFN16_DNP</footprint>
       <datasheet>https://www.lcsc.com/datasheet/lcsc_datasheet_2405281435_NXP-Semicon-FXLS90322AESR2_C5190712.pdf</datasheet>
       <fields>
         <field name="LCSC">C5190712</field>
         <field name="Manufacturer">NXP Semicon</field>
         <field name="Manufacturer Part">FXLS90322AESR2</field>
-        <field name="Footprint">rocket:M3_FXLS_HLQFN16</field>
+        <field name="Footprint">rocket:M3_FXLS_HLQFN16_DNP</field>
         <field name="Datasheet">https://www.lcsc.com/datasheet/lcsc_datasheet_2405281435_NXP-Semicon-FXLS90322AESR2_C5190712.pdf</field>
         <field name="Description"/>
       </fields>
@@ -1740,8 +1743,11 @@
       <property name="Manufacturer Part" value="FXLS90322AESR2"/>
       <property name="Sheetname" value="03 | QSPI log, IMU and barometer"/>
       <property name="Sheetfile" value="sensors.kicad_sch"/>
+      <property name="exclude_from_bom"/>
+      <property name="exclude_from_pos_files"/>
+      <property name="dnp"/>
       <property name="ki_keywords" value="accelerometer high-g SPI"/>
-      <property name="ki_fp_filters" value="M3_FXLS_HLQFN16"/>
+      <property name="ki_fp_filters" value="M3_FXLS_HLQFN16_DNP"/>
       <sheetpath names="/03 | QSPI log, IMU and barometer/" tstamps="/3fb26641-c8c6-5194-9da3-8e5bbba547c4/"/>
       <tstamps>b715438e-b276-5b9c-9680-0e0d5e56eb81</tstamps>
       <units>
@@ -1787,7 +1793,7 @@
       <property name="Sheetname" value="04 | Voltage diagnosis, port sense and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/04 | Voltage diagnosis, port sense and indicators/" tstamps="/080bb313-26e3-5c59-82c5-5cf79449a64c/"/>
       <tstamps>c68b9f68-7bdd-5f4c-b5d8-8a805f47217d</tstamps>
       <units>
@@ -1818,7 +1824,7 @@
       <property name="Sheetname" value="04 | Voltage diagnosis, port sense and indicators"/>
       <property name="Sheetfile" value="diagnostics.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/04 | Voltage diagnosis, port sense and indicators/" tstamps="/080bb313-26e3-5c59-82c5-5cf79449a64c/"/>
       <tstamps>af204b68-4d2d-507d-853e-c161af9c1719</tstamps>
       <units>
@@ -2217,7 +2223,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>b6f9291f-34ad-5c63-b6d9-c9d80176ab6e</tstamps>
       <units>
@@ -2247,7 +2253,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>79741667-b21d-5c26-bfa2-58c513f092e6</tstamps>
       <units>
@@ -2278,7 +2284,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>a88c67aa-c17b-5c5a-8d5f-e35893f22de3</tstamps>
       <units>
@@ -2309,7 +2315,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>da7ac387-e20e-55b7-8531-a60a47f7ac43</tstamps>
       <units>
@@ -2339,7 +2345,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>9b648e55-1398-5b13-91d0-5b86a6700134</tstamps>
       <units>
@@ -2369,7 +2375,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>36755099-a9ca-5876-87b4-87722422f9a7</tstamps>
       <units>
@@ -2400,7 +2406,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>2e85c06f-822e-5450-866d-c9018ec0aa15</tstamps>
       <units>
@@ -2431,7 +2437,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>30ca2b52-0e41-51ab-a941-b5c2a8177185</tstamps>
       <units>
@@ -2462,7 +2468,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>13c6a9ec-c373-53b4-b96f-5ee1e0293d18</tstamps>
       <units>
@@ -2493,7 +2499,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>239bcbb0-a017-52c2-b77e-90b7b2b7a888</tstamps>
       <units>
@@ -2523,7 +2529,7 @@
       <property name="Sheetname" value="05 | Port buck and camera buck (TPS563208)"/>
       <property name="Sheetfile" value="camera_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/05 | Port buck and camera buck (TPS563208)/" tstamps="/f850ba79-6fc7-599d-bae0-187b95938f17/"/>
       <tstamps>bb643c85-525c-5984-8334-ba11e2952ca6</tstamps>
       <units>
@@ -3025,7 +3031,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>30260493-0620-5097-900c-0cb5903aa13b</tstamps>
       <units>
@@ -3055,7 +3061,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>a331750c-2de7-542d-aad9-fca7cca7d7d8</tstamps>
       <units>
@@ -3086,7 +3092,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>1f92d2c0-e93b-5d4e-8f17-0943b8833483</tstamps>
       <units>
@@ -3117,7 +3123,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>193752a2-f3ef-5395-9d15-2058037f91b8</tstamps>
       <units>
@@ -3148,7 +3154,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>5e0314d0-bd7b-5fbe-8563-64b4388469ae</tstamps>
       <units>
@@ -3178,7 +3184,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>57e8780c-2d40-5a20-bb0b-56ba50598d6d</tstamps>
       <units>
@@ -3208,7 +3214,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>3dded70f-b130-54e6-ab68-49925b88a4dd</tstamps>
       <units>
@@ -3238,7 +3244,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>3527cb94-ce1b-56ce-b458-470b3b2a0cf5</tstamps>
       <units>
@@ -3268,7 +3274,7 @@
       <property name="Sheetname" value="07 | Battery input, contact and protection"/>
       <property name="Sheetfile" value="battery_entry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/07 | Battery input, contact and protection/" tstamps="/779b32c3-acc9-5a3f-88fc-3172cc33b958/"/>
       <tstamps>8c9fc3de-ec14-56eb-8ca3-e20b505784f9</tstamps>
       <units>
@@ -4002,7 +4008,7 @@
       <property name="Sheetname" value="08 | Logic diode-OR and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/08 | Logic diode-OR and hold-up/" tstamps="/71cc8d22-5cff-5ad1-8b75-8ead7903cac9/"/>
       <tstamps>fe5db5aa-a9ae-5e19-85f6-aa1f49763429</tstamps>
       <units>
@@ -4064,7 +4070,7 @@
       <property name="Sheetname" value="08 | Logic diode-OR and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/08 | Logic diode-OR and hold-up/" tstamps="/71cc8d22-5cff-5ad1-8b75-8ead7903cac9/"/>
       <tstamps>04e87482-0c80-5844-afe1-9e9214e5a1b4</tstamps>
       <units>
@@ -4094,7 +4100,7 @@
       <property name="Sheetname" value="08 | Logic diode-OR and hold-up"/>
       <property name="Sheetfile" value="logic_power_path.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/08 | Logic diode-OR and hold-up/" tstamps="/71cc8d22-5cff-5ad1-8b75-8ead7903cac9/"/>
       <tstamps>db640437-692f-5e38-a137-30aeae060d56</tstamps>
       <units>
@@ -4334,7 +4340,7 @@
       <property name="Sheetname" value="11 | Pyro bus load switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/11 | Pyro bus load switch/" tstamps="/eee36e3d-26cd-558b-9404-f17584a2ea6e/"/>
       <tstamps>24af9e86-d87b-5e36-bc25-49ca65cd86d4</tstamps>
       <units>
@@ -4365,7 +4371,7 @@
       <property name="Sheetname" value="11 | Pyro bus load switch"/>
       <property name="Sheetfile" value="actuator_power.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/11 | Pyro bus load switch/" tstamps="/eee36e3d-26cd-558b-9404-f17584a2ea6e/"/>
       <tstamps>623cb3a4-c9a8-5317-9c8d-17fe038a4be9</tstamps>
       <units>
@@ -4692,7 +4698,7 @@
       <property name="Sheetname" value="12 | Pyro channel"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/12 | Pyro channel/" tstamps="/b1b684fa-f1b4-588e-bcca-603fd244a6ad/"/>
       <tstamps>1b46753a-9a13-53eb-aa1d-c7df37bdaafc</tstamps>
       <units>
@@ -4723,7 +4729,7 @@
       <property name="Sheetname" value="12 | Pyro channel"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/12 | Pyro channel/" tstamps="/b1b684fa-f1b4-588e-bcca-603fd244a6ad/"/>
       <tstamps>e5a0803a-1a97-5ea9-8fee-4eb8799ad484</tstamps>
       <units>
@@ -4754,7 +4760,7 @@
       <property name="Sheetname" value="12 | Pyro channel"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/12 | Pyro channel/" tstamps="/b1b684fa-f1b4-588e-bcca-603fd244a6ad/"/>
       <tstamps>950dfc40-2c7c-5d9c-a30d-57b2710051ef</tstamps>
       <units>
@@ -4785,7 +4791,7 @@
       <property name="Sheetname" value="12 | Pyro channel"/>
       <property name="Sheetfile" value="pyro.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/12 | Pyro channel/" tstamps="/b1b684fa-f1b4-588e-bcca-603fd244a6ad/"/>
       <tstamps>30deb353-133e-5944-a285-f94ad1c108f1</tstamps>
       <units>
@@ -5689,7 +5695,7 @@
       <property name="Sheetname" value="15 | GPS / radio / AUX ports and microSD"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/15 | GPS / radio / AUX ports and microSD/" tstamps="/5d7bfdd2-34c3-5a78-ab7a-671df4c38d3a/"/>
       <tstamps>2363ecc3-2c91-5792-876e-487329d5e512</tstamps>
       <units>
@@ -5720,7 +5726,7 @@
       <property name="Sheetname" value="15 | GPS / radio / AUX ports and microSD"/>
       <property name="Sheetfile" value="telemetry.kicad_sch"/>
       <property name="ki_keywords" value="cap capacitor"/>
-      <property name="ki_fp_filters" value="C0402 C0603 C_1206_3216Metric"/>
+      <property name="ki_fp_filters" value="C0402 C0402_DNP C0603 C_1206_3216Metric"/>
       <sheetpath names="/15 | GPS / radio / AUX ports and microSD/" tstamps="/5d7bfdd2-34c3-5a78-ab7a-671df4c38d3a/"/>
       <tstamps>181c498d-c1c1-5b15-be26-cce2050d0d3c</tstamps>
       <units>
@@ -6293,6 +6299,7 @@
       <description>Unpolarized capacitor</description>
       <footprints>
         <fp>C0402</fp>
+        <fp>C0402_DNP</fp>
         <fp>C0603</fp>
         <fp>C_1206_3216Metric</fp>
       </footprints>
@@ -6398,7 +6405,7 @@
     <libpart lib="M3" part="FXLS9xxxx">
       <description>NXP FXLS9xxxx inertial sensor, HLQFN-16, SPI mode (FXLS9xxx0 Rev 6 Figure 9 / Table 9): 1 13 15 16 VCC, 2 PCM1/ARM1 (the dual-channel FXLS90322; n.c. on the single-channel parts; R12F12-TRI-38, Inference: read through a mirror of the dual-channel sheet), 3-6 TEST0-3, 7 14 VSS, 8 SS_B, 9 SCLK, 10 MOSI, 11 MISO, 12 PCM0/ARM0, 17 die pad (VSS)</description>
       <footprints>
-        <fp>M3_FXLS_HLQFN16</fp>
+        <fp>M3_FXLS_HLQFN16_DNP</fp>
       </footprints>
       <fields>
         <field name="Reference">U</field>

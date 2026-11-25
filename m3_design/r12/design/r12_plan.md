@@ -1,8 +1,8 @@
-# R12 plan: R11's circuit, pruned and re-sourced, on a one-sided four-layer board for JLC Economic PCBA
+# R12 plan: R11's circuit, pruned and re-sourced, on a one-sided four-layer board for JLC PCBA (Economic until D-R12-211, Standard since)
 
-## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14; round 14 fix pass, 2026-11-15)
+## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14; round 14 fix pass, 2026-11-15; Standard rebuild and its review fixes, 2026-11-24)
 
-PCB `c8b0412d5a640f6083253e467e1fafdd39d045f8cbcb4274b755768d22f0d7f1` since the round 14 fix pass (D-R12-205 … -209: round 14 reviewed `5af58097…` with seven lenses plus a
+PCB `0c681ad6af502e12a285aa1fbc5cbfba81d7131e18d698ab9199c8462cdde5a5` since the Standard PCBA rebuild (D-R12-211 … -220, 2026-11-24: JLC Standard, 240 ± 5 °C; U4 ISM6HG256X, U5 MS5611, U6 / C33 not fitted; 179 JLC parts, 59 codes, all charged; copper identical); before it `c8b0412d…`, since the round 14 fix pass (D-R12-205 … -209: round 14 reviewed `5af58097…` with seven lenses plus a
 second opinion, 0 Critical / 0 Major / 12 Minor, R12F14-TRI-01 … -12; rounds 13 and 14 are the clean pair under
 D-R12-167 and the review loop stops; a second GND via for R110 / C83 / C28 and an F.Cu 3V3 strap along U1's F row;
 K-power validates its exceptions and pins their cut sets; one unshed load envelope in the hold-up and fire models,
@@ -29,9 +29,9 @@ or unrecorded leftovers. Lane A (`a04a513`): 60 stage-D tests pass; analysis and
 The verification review of the fix pass found 0 Critical / 0 Major / 7 Minor, all text (R12F12-VER-01 … -07);
 the full gate on the final tree is the commit condition.
 
-Fire loop 4.72843 Ω; four-stall fire 1.24711 A at J1 5.71390 V; EN at R80.1 5.69504 V (D-R12-207's unshed load; 1.24833 A /
-5.71941 / 5.70082 V before). Chatter limits 6.892 / 6.796 ms; bench rule under 6.6 ms per sliding 100 ms (6.935 / 6.843 ms
-and 6.7 ms before). U6 drift minimum 3.20400 V on the current board and `5af58097…` (3.20406 V on `96207d2e…`: the C60.1 / C94.1 barrels open the In2 3V3 sheet, D-R12-200)
+Fire loop 4.72843 Ω; four-stall fire 1.24705 A at J1 5.71364 V; EN at R80.1 5.69476 V (D-R12-219's unshed load, 0.551 A;
+1.24711 A / 5.71390 / 5.69504 V under D-R12-207, 1.24833 A / 5.71941 / 5.70082 V before). Chatter limits 6.890 / 6.794 ms;
+bench rule under 6.6 ms per sliding 100 ms (6.892 / 6.796 ms before D-R12-219, 6.935 / 6.843 ms and 6.7 ms before D-R12-207). U6 drift minimum 3.20400 V on the current board and `5af58097…` (3.20406 V on `96207d2e…`: the C60.1 / C94.1 barrels open the In2 3V3 sheet, D-R12-200)
 in the 1 A calculation; O-R12-22 remains open. U2 requires ≤ 200 MHz and no microSD write burst overlapping a beep (rule (g); limit 0.870 / 0.807 A at 700 / 600 kHz at the 3V3 drift maximum, D-R12-202).
 All these electrical bounds are Calculation / Inference. Hot-plug 2304 / 2304 pass, minimum −14.077 V
 (Simulation / Inference). No firmware, physical, electrical or JLC DFM test has been done on this board.
@@ -66,13 +66,13 @@ requirement needs deleted, every part with a cheaper equivalent re-sourced, and 
 
 | Item | R12 | R11 | Basis |
 |---|---|---|---|
-| Assembly | JLC **Economic** PCBA, **one side** (every footprint on F) | Standard, two sides | D-R12-01; cost_study §1 |
-| Reflow | 255 ± 5 °C (Economic, not adjustable) | 240 ± 5 °C | JLC capabilities page (cost_study §1.1) |
+| Assembly | JLC **Standard** PCBA, **one side** (every footprint on F; Economic until D-R12-211) | Standard, two sides | D-R12-01, -211; cost_study §1 |
+| Reflow | 240 ± 5 °C (Standard; Economic's 255 ± 5 °C until D-R12-211) | 240 ± 5 °C | JLC capabilities page (cost_study §1.1) |
 | Stack | 4 layers, 1.6 mm, 0.5 oz inner, ENIG | 6 layers | D-R12-03; cost_study §2.1 |
 | Outline | 46 × ≤ 100 mm (JLC's 4-layer price step: 46 × 105 costs $20 more) | 46 × 50 mm | D-R12-01; cost_study §1.4, §2.1 |
 | Vias | 0.3 mm drill / 0.45 mm pad through vias only, no via in pad | 0.25 / 0.2 mm, two VIPPO | D-R12-03 |
 | MCU | STM32H743VIH6 TFBGA-100 kept (escape count, D-R12-02) | same | D-R12-02 |
-| Parts | 189 footprints, 181 JLC-assembled parts, 60 codes: 36 Basic / 24 Extended (21 charged); no owner-fitted parts (D-R12-195: J122 an SH-4 on C7430446, SERVO3 / SERVO4 cells deleted; D-R12-192's 8P had added C7430450; 193 / 185 / 60 in round 12) | 218, 75 codes | D-R12-04 … -19 |
+| Parts | 189 footprints, 179 JLC-assembled parts, 59 codes: 36 Basic / 23 Extended, all 59 charged on Standard (D-R12-211, -213: U6 / C33 not fitted; 181 / 60 / 21 charged on Economic before); no owner-fitted parts (D-R12-195: J122 an SH-4 on C7430446, SERVO3 / SERVO4 cells deleted; D-R12-192's 8P had added C7430450; 193 / 185 / 60 in round 12) | 218, 75 codes | D-R12-04 … -19 |
 
 The owner's 200 mm allowance is not used. The historical stage-A density estimate was 1995 mm² (Calculation: the sum of the R12 lands'
 courtyard boxes), 43 % of one 46 × 100 mm face, near LEVIA-H7's 45 % two-face density (R11 records) and inside AVA's

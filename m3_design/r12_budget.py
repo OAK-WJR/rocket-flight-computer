@@ -156,9 +156,10 @@ def rails():
                 'taken as an effective VFB 0.985-1.025 V about the 1.000 V nominal; it contains section 7.5\'s VFB '
                 '0.99-1.01 V (R12F6-TRI-03); ILKG-FB 0.2 nA typ (neglected)',
             limits=(3.135, 3.6), why='U6 FXLS90322 VCC_BUF >= 3.135 V (NXP FXLS9xxx0 Rev 6 item 10502, D-R12-51; the '
-                                    'tightest low end); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) '
-                                    'and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; LSM6DSVE 1.71-3.6 V (JLC / LCSC '
-                                    'listing, D-R12-50); MS5607 1.8-3.6 V (TE MS5607-02BA03, D-R12-52)'),
+                                    'tightest low end, kept although U6 is not fitted since D-R12-213, so a hand-fitted '
+                                    'U6 is covered); STM32H743 VDD33USB 3.0-3.6 V (USB regulator bypassed, R11) '
+                                    'and VDD <= 3.6 V; W25Q128 / microSD 2.7-3.6 V; ISM6HG256X 1.71-3.6 V (ST DS15034 '
+                                    'Rev 1 Table 4, D-R12-212); MS5611 1.8-3.6 V (TE MS5611-01BA03, D-R12-214)'),
         'PORT_4V8 (U400 TPS563208, R400 47k + R404 5.1k / R401 10k 0.1 %)': dict(
             vref=(0.749, 0.787), top=52.1e3, bot=10e3, leak=0.1e-6, precise_bot=True,
             src='TI SLVSD90B section 5.5 VFB 0.749-0.787 V continuous mode (TPS563208 is FCCM), TJ -40 to 125 C; '
@@ -346,10 +347,11 @@ def vlogic():
 
 # R12F14-TRI-05: U2's worst allowed unshed input power, the one envelope of the hold-up and fire models and the 3V3
 # budget: the 200 MHz MCU maximum at Tj 105 C (0.300 A, DS12110 Rev 8 Tables 30-32 rev Y) plus the other 3V3 loads with
-# the microSD writing (0.249 A), the buzzer silent (firmware rule (g): no write burst and beep overlap), at the 3V3 drift
-# maximum / 0.80. r12_stageD.unshed_load derives the same figure from its tables (test_r12_stageD pins them equal);
+# the microSD writing (0.251 A since D-R12-219, whose U4 + U5 + U6 allocation is 10 mA; 0.249 A with 8 mA before), the
+# buzzer silent (firmware rule (g): no write burst and beep overlap), at the 3V3 drift maximum / 0.80.
+# r12_stageD.unshed_load derives the same figure from its tables (test_r12_stageD pins them equal);
 # 1.4 W + 3.3 V x 0.2 A / 0.80 = 2.225 W before round 14 (Calculation / Inference: allocations, Tj, efficiency).
-UNSHED_U2_A, UNSHED_U2_EFF = 0.300 + 0.249, 0.80
+UNSHED_U2_A, UNSHED_U2_EFF = 0.300 + 0.251, 0.80
 
 
 def unshed_u2_w():

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""Generate the M3-ASSY-R12 schematic: R11's circuit pruned and re-sourced for one-sided JLC Economic PCBA (D-R12-01).
+"""Generate the M3-ASSY-R12 schematic: R11's circuit pruned and re-sourced for one-sided JLC PCBA (D-R12-01;
+Economic until D-R12-211, Standard since).
 
 R12 starts from R11's final netlist (commit 0b26da5, D-R11-85 ... -88 included), copied into
 m3_design/r12/design/r11_input/ with a SHA-256 manifest that is checked before every generation. The change list is
@@ -121,7 +122,8 @@ R12_MOVES = {
     'I2C1_SDA': ('A5', 'AF4 I2C1_SDA (open drain, R13 pull-up)',
                  f'D-R12-62A: PB11 (K7) -> PC9 (E9, I2C3); D-R12-93: PC9 (E9) -> PB7 (A5, aft); peripheral I2C3 -> I2C1; '
                  f'{_DS} Table 11 pp. 90-91 (PB7 AF4 I2C1_SDA); ball A5 = PB7, {_DS} Table 9 p. 86'),
-    'HG_CS': ('B7', 'GPIO out (push-pull, initialise high before output mode); analog at reset: U6 SS_B internal '
+    'HG_CS': ('B7', 'D-R12-213: U6 not fitted, so analog (or driven high), never low; if U6 is hand-fitted: GPIO out '
+              '(push-pull, initialise high before output mode); analog at reset: U6 SS_B internal '
               'pull-up (NXP FXLS9xxx0 Rev 6 Table 9) holds the high-g accelerometer deselected',
               f'D-R12-64A: PA10 (D10) -> PC11 (B8); D-R12-93: PC11 (B8) -> PD2 (B7, aft sensor group, toward U6); plain '
               f'GPIO; {_DS} Table 9 p. 83 (PD2, TFBGA100 ball B7); not a PE4 (C3) or PC1 (F2) neighbour; PD2 is not an H74x '
@@ -300,8 +302,11 @@ def model(data=None):
             pins[ref, pin] = net
     for ref, e in data['added_parts'].items():
         assert ref not in parts, f'added part {ref} already exists'
-        parts[ref] = dict(lib=e['lib'], value=e['value'], footprint=data['catalog'][e['lcsc']]['footprint'],
-                          fields=catalog_fields(data, e['lcsc']), flags=[], sheet=e['sheet'])
+        # D-R12-213: an added part may carry KiCad's fitting flags (U6 / C33: dnp, out of the BOM and position files)
+        # and a land other than its catalog code's (their no-paste _DNP variants)
+        parts[ref] = dict(lib=e['lib'], value=e['value'],
+                          footprint=e.get('footprint', data['catalog'][e['lcsc']]['footprint']),     # D-R12-213: _DNP
+                          fields=catalog_fields(data, e['lcsc']), flags=list(e.get('flags', [])), sheet=e['sheet'])
         pins.update({(ref, n): net for n, net in e['nets'].items()})
     seen = {}
     for (ref, pin), net in list(pins.items()):

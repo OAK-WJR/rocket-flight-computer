@@ -248,6 +248,46 @@ class Package(unittest.TestCase):
         self.assertNotEqual(code, 0)
         self.assertIn('In2_Cu.gbr', text)
 
+    def test_unfitted_placeholders_on_board_not_in_package(self):
+        """D-R12-213: U6 (FXLS90322) and C33 are unfitted placeholders. On the board they keep their lands and nets,
+        are DNP and out of the BOM and position files, on the no-paste _DNP lands; the package has them in no BOM, no
+        CPL and no paste flash."""
+        import pcbnew
+        board = pcbnew.LoadBoard(str(BOARD))
+        nets = {'U6': {'1': '3V3', '7': 'GND', '8': 'HG_CS', '9': 'SPI1_SCK', '10': 'SPI1_MOSI', '11': 'SPI1_MISO',
+                       '13': '3V3', '14': 'GND', '15': '3V3', '16': '3V3', '17': 'GND'},
+                'C33': {'1': '3V3', '2': 'GND'}}
+        for ref, want in nets.items():
+            f = board.FindFootprintByReference(ref)
+            self.assertIsNotNone(f, ref)
+            self.assertTrue(f.IsDNP() and f.IsExcludedFromBOM() and f.IsExcludedFromPosFiles(), ref)
+            self.assertTrue(str(f.GetFPID().GetLibItemName()).endswith('_DNP'), ref)
+            pads = {p.GetNumber(): p for p in f.Pads()}
+            self.assertEqual({n: pads[n].GetNetname() for n in want}, want)
+            self.assertFalse([n for n, p in pads.items() if p.IsOnLayer(pcbnew.F_Paste)], ref)
+        stem = BOARD.stem
+        for name in ('bom_jlc', 'cpl_jlc'):
+            with open(self.out / f'{stem}_{name}.csv', newline='') as source:
+                refs = {r.strip() for row in csv.DictReader(source) for r in row['Designator'].split(',')}
+            self.assertFalse(refs & set(nets), name)
+            self.assertIn('U4', refs)
+        with zipfile.ZipFile(self.out / f'{stem}_gerber.zip') as z:
+            paste = z.read(f'{stem}-F_Paste.gbr').decode()
+        for ref in nets:
+            self.assertNotIn(f'%TO.C,{ref}*%', paste)
+        self.assertIn('%TO.C,U4*%', paste)
+
+    def test_unfitted_placeholder_in_jlc_bom_refused(self):
+        """D-R12-213: U6 put back in the JLC BOM and CPL fails the package check (it is DNP and out of the BOM)."""
+        out = self.copy()
+        stem = BOARD.stem
+        self.rewrite(out / f'{stem}_bom_jlc.csv', lambda rows: rows + [['FXLS90322AESR2', 'U6', 'M3_FXLS_HLQFN16_DNP',
+                                                                        'C5190712', 'FXLS90322AESR2', '1', 'SMT']])
+        self.rewrite(out / f'{stem}_cpl_jlc.csv', lambda rows: rows + [['U6', '23.0000mm', '-38.2500mm', 'Top', '0']])
+        code, text = self.check(out, '--verify-cpl')
+        self.assertNotEqual(code, 0)
+        self.assertIn('owner-fitted or out-of-BOM parts', text)
+
     def test_tampered_output_unbinds(self):
         out = self.copy()
         with open(out / f'{BOARD.stem}_bom_jlc.csv', 'a') as sink:

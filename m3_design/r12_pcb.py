@@ -11,11 +11,13 @@ usage: <KiCad python3> -I -B m3_design/r12_pcb.py [--project m3_design/r12] [--p
    reference, value, fields, schematic path and pad nets from the netlist; no other footprint source.
 3. Outline and holes from the table's '@' rows: one 46 x L rectangle from (0, 0) and the M3 supports as 3.2 mm
    Edge.Cuts circles (fit_check --profile r12: one support within 6 mm of each corner on both axes).
-4. Every part placed from r12_place.tsv (each reference exactly once; side F only, D-R12-01: JLC Economic PCBA
-   assembles one face; rotation in KiCad degrees). The sensor rule areas (R10's IMU_body / IMU_no_internal_tracks,
-   BARO_body and BARO_no_inter_row_tracks) are derived from U4 / U5's placed courtyard and pads, on F.Cu (their side);
-   the baro band between the pad rows is back with the MS5607 (D-R12-52: TE's pad layout "do not route tracks between
-   pads"; D-R12-25 had dropped it for the LPS28DFW).
+4. Every part placed from r12_place.tsv (each reference exactly once; side F only, D-R12-01: one assembled face, JLC
+   Economic PCBA until D-R12-211, Standard since; rotation in KiCad degrees). The sensor rule areas (R10's IMU_body /
+   IMU_no_internal_tracks, BARO_body and BARO_no_inter_row_tracks) are derived from U4 / U5's placed courtyard and pads,
+   on F.Cu (their side); the baro band between the pad rows is back with the MS5607 (D-R12-52: TE's pad layout "do not
+   route tracks between pads"; D-R12-25 had dropped it for the LPS28DFW) and stays with the MS5611 (D-R12-214).
+   An unfitted placeholder (netlist dnp and out of the BOM: U6 / C33 since D-R12-213) keeps its nets and its land's
+   copper (the library's no-paste _DNP variant) and is DNP, out of the BOM and position files.
 5. No copper but the footprints' own: no track, via or zone (stage C draws copper from r12_routes.tsv).
 6. Title block M3-ASSY-R12; the gate data (r12/design/r12_gate_data.json: imu, supports, short_edge_queries) is
    rewritten from the placed board, keeping any other key.
@@ -178,6 +180,17 @@ def load_parts(board, project, comps, pin_nets, names):
             p.SetNet(board.FindNet(net) if net else board.FindNet(0))
         if ref.startswith('TP') or ref == 'J2':      # bare probe / programming contacts: no part, no placement
             f.SetAttributes(f.GetAttributes() | pcbnew.FP_EXCLUDE_FROM_BOM | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
+        props = {e.get('name') for e in node.findall('property')}
+        if {'dnp', 'exclude_from_bom'} <= props:
+            # D-R12-213: an unfitted placeholder (U6 / C33): DNP, out of the BOM and position files; its land is the
+            # library's no-paste variant (r12_parts DNP_VARIANTS), so the stencil prints nothing on it. Nets and copper
+            # are kept.
+            assert item.endswith('_DNP') and not any(p.IsOnLayer(pcbnew.F_Paste) for p in f.Pads()), \
+                f'{ref}: an unfitted placeholder needs a no-paste _DNP land (is {item})'
+            f.SetAttributes(f.GetAttributes() | pcbnew.FP_DNP | pcbnew.FP_EXCLUDE_FROM_BOM
+                            | pcbnew.FP_EXCLUDE_FROM_POS_FILES)
+        elif 'dnp' in props:
+            raise AssertionError(f'{ref}: DNP but in the BOM (an owner-fitted part; D-R12-85 allows none)')
         for p in f.Pads():
             if ref.startswith('TP'):
                 # the DRU's TP floor, also a native-fill override (R10); KiCad applies a pad's own clearance in place of

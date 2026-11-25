@@ -5,7 +5,9 @@ usage: KiCad python3 -I -B m3_design/r12_parts.py --library-only   write kilib/ 
        KiCad python3 -I -B m3_design/r12_parts.py --check          fail if kilib/ is stale; parse every land with pcbnew
        python3 -I -B m3_design/r12_parts.py --stock                query JLC for every R12 BOM code (network): stock,
                                                                     price, library; writes design/jlc_r12_stock.json and
-                                                                    design/r12_cost.json (Economic PCBA, 2 and 5 boards)
+                                                                    design/r12_cost.json (Economic PCBA, 2 and 5 boards;
+                                                                    a stage A record: since D-R12-211 the order is
+                                                                    Standard, priced by r12_fab.sh FAB_NET=1)
 The library is R11's (hash-pinned in r11_input/manifest.json: symbols copied from r11_input/m3.kicad_sym, footprints
 and models from R11's kilib, only those R12 uses) plus the R12 parts (R12_DECISIONS D-R12-06 ... -16). New lands, each
 from the maker's drawing or the LCSC / JLCEDA official land (https://easyeda.com/api/products/<code>/components, the
@@ -370,6 +372,35 @@ def footprints():
     return out
 
 
+# D-R12-213 (owner 2026-11-24): U6 and C33 are unfitted placeholders (DNP, out of the BOM and CPL). Their lands stay so U6
+# can be hand-fitted later, but the stencil must print nothing on them (tools/paste_check.py rule 3, tools/fab_manifest_r12
+# --paste). KiCad plots paste for DNP footprints, and a pad edited on the board fails DRC lib_footprint_mismatch, so each
+# gets a library variant without paste, as R7's C0402_DNP (m3_design/r7_parts.py c0402_dnp): the source land's text with
+# F.Paste taken off every pad, a new name and fixed UUIDs. Copper, mask, courtyard, silkscreen, Fab and model are the
+# source's, byte for byte apart from those (geometry_checks compares the pads).
+DNP_VARIANTS = {'C0402_DNP': 'C0402', 'M3_FXLS_HLQFN16_DNP': 'M3_FXLS_HLQFN16'}
+DNP_NS = '0b6f3c52-8e1d-4a7a-9c43-5d2e1f7a8b21'
+
+
+def no_paste(text, src, name):
+    import uuid
+    assert text.startswith(f'(footprint "{src}"\n'), src
+    text = text.replace(f'(footprint "{src}"', f'(footprint "{name}"', 1)
+    assert text.count(f'(property "Value" "{src}"') == 1, src
+    text = text.replace(f'(property "Value" "{src}"', f'(property "Value" "{name}"')
+    pads = text.count('(pad ')
+    assert text.count('(layers "F.Cu" "F.Mask" "F.Paste")') == pads == text.count('"F.Paste"'), src
+    text = text.replace('(layers "F.Cu" "F.Mask" "F.Paste")', '(layers "F.Cu" "F.Mask")')
+    note = (f'{src} land with no solder paste: an unfitted (DNP) placeholder, so the stencil prints nothing on its '
+            'empty pads (D-R12-213; as R7\'s C0402_DNP)')
+    if '\t(descr "' in text:
+        text = re.sub(r'\t\(descr "([^"]*)"\)', lambda m: f'\t(descr "{note}. {m.group(1)}")', text, count=1)
+    else:
+        text = text.replace('\t(layer "F.Cu")\n', f'\t(layer "F.Cu")\n\t(descr "{note}")\n', 1)
+    ns, k = uuid.UUID(DNP_NS), iter(range(1, 10000))
+    return re.sub(r'\(uuid "[0-9a-f-]+"\)', lambda m: '(uuid "%s")' % uuid.uuid5(ns, f'{name}:{next(k)}'), text)
+
+
 PCB, BLACK, IVORY, GREY = '.06 .25 .10', '.12 .12 .12', '.92 .89 .78', '.6 .6 .6'
 MODELS = {
     **{GHC[n]['name'] + '.wrl': (
@@ -536,7 +567,14 @@ def generated():
         copied[PRETTY / src.name] = src
         for model in re.findall(r'\(model "\$\{KIPRJMOD\}/kilib/([^"]+)"', src.read_text()):
             copied[LIB / model] = r10 / model
-    for name in sorted(set(r12_footprints().values()) - set(new) - set(R10_REUSE)):
+    for name, base in DNP_VARIANTS.items():                       # D-R12-213: no-paste placeholders
+        if base in new:
+            text = new[base]
+        else:
+            text = (r12.R11 / 'kilib/rocket.pretty' / (base + '.kicad_mod')).read_text()
+            assert base not in R11_TEXT_OVERRIDES, base
+        files[PRETTY / (name + '.kicad_mod')] = no_paste(text, base, name)
+    for name in sorted(set(r12_footprints().values()) - set(new) - set(R10_REUSE) - set(DNP_VARIANTS)):
         src = r12.R11 / 'kilib/rocket.pretty' / (name + '.kicad_mod')
         assert str(src.relative_to(r12.ROOT_DIR)) in pinned, f'{name}: not a pinned R11 land'
         if name in R11_TEXT_OVERRIDES:
@@ -592,7 +630,7 @@ def geometry_checks():
     import pcbnew
     mm = pcbnew.ToMM
     result, issues = {}, []
-    for name in sorted(set(r12_footprints().values())):
+    for name in sorted(set(r12_footprints().values()) | set(footprints()) | set(DNP_VARIANTS)):
         fp = pcbnew.FootprintLoad(str(PRETTY), name)
         assert fp is not None, name
         issues += [f'{name}: {i}' for i in single_side_issues(fp, pcbnew)]
@@ -612,6 +650,16 @@ def geometry_checks():
         assert all(round(b[0] - a[0], 4) == GHC_PITCH and a[2:] == [GHC_W, GHC_L] and a[1] == c['y_sig']
                    for a, b in zip(sig, sig[1:]))
         assert sorted(abs(t[0]) for t in tabs) == [c['tab'][0]] * 2 and all(t[2:] == list(c['tab'][2:]) for t in tabs)
+    for name, base in DNP_VARIANTS.items():           # D-R12-213: the placeholder lands are their source's, unpasted
+        assert result[name] == result[base], name
+        v, s = pcbnew.FootprintLoad(str(PRETTY), name), pcbnew.FootprintLoad(str(PRETTY), base)
+        assert not any(p.IsOnLayer(pcbnew.F_Paste) for p in v.Pads()), name
+        assert all(p.IsOnLayer(pcbnew.F_Paste) for p in s.Pads()), base
+        def pads(fp):
+            return [(p.GetNumber(), p.GetShape(), tuple(sorted(l for l in p.GetLayerSet().Seq() if l != pcbnew.F_Paste)),
+                     round(p.GetOrientation().AsDegrees(), 6), p.GetLocalSolderMaskMargin()) for p in fp.Pads()]
+        assert pads(v) == pads(s), name
+        assert [m.m_Filename for m in v.Models()] == [m.m_Filename for m in s.Models()], name
     fx = result['M3_FXLS_HLQFN16']
     assert fx == {n: [x, y, w, h] for n, x, y, w, h in FX_PADS}
     assert len(fx) == 17 and fx['1'] == [-1.975, -1.2, .85, .5] and fx['17'] == [0, 0, 2.6, 2.6]

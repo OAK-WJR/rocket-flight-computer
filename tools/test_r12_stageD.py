@@ -209,7 +209,7 @@ class StageDFigures(unittest.TestCase):
         self.assertAlmostEqual(g['design_A_sum'], rails['D5 IN']['amps'] + rails['U400 IN']['amps'], places=9)
         self.assertAlmostEqual(g['ipc_rise_design_sum_C'], 46.13, places=1)
         self.assertAlmostEqual(g['budget_A_sum'], rails['D5 IN']['budget_A'] + rails['U400 IN']['budget_A'], places=9)
-        self.assertAlmostEqual(g['ipc_rise_budget_C'], 5.04, places=2)        # R12F14-TRI-05 (4.69 at the 2.225 W load)
+        self.assertAlmostEqual(g['ipc_rise_budget_C'], 5.05, places=2)        # D-R12-219 (5.04 at 2.4126 W; 4.69 at 2.225 W)
         self.assertTrue(any(o.get('shared_with') == g['paths'] and o['layer'] == 'B.Cu'
                             for o in rails['U400 IN']['over_30C']))
 
@@ -478,10 +478,10 @@ class Round8(unittest.TestCase):
         i, dr, b = e['by_case']['initial'], e['by_case']['drift'], e['bound']
         self.assertAlmostEqual(i['resistor_tolerance'], 0.01, places=12)
         self.assertAlmostEqual(dr['resistor_tolerance'], self.TD, places=12)
-        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.367, places=3)   # R12F14-TRI-05 (7.410; 7.549 at J1)
-        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.399, places=3)  # R12F14-TRI-05 (7.446; 7.596 at J1)
-        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 6.892, places=3)  # R12F14-TRI-05 (6.935; 7.073 at J1)
-        self.assertAlmostEqual(e['four_stall_R80_V'], 5.6950, places=4)            # R12F14-TRI-05 (5.7008)
+        self.assertAlmostEqual(i['four_stall_periodic_limit_ms'], 7.365, places=3)   # D-R12-219 (7.367; 7.410; 7.549 at J1)
+        self.assertAlmostEqual(dr['four_stall_single_dropout_ms'], 7.397, places=3)  # D-R12-219 (7.399; 7.446; 7.596 at J1)
+        self.assertAlmostEqual(dr['four_stall_periodic_limit_ms'], 6.890, places=3)  # D-R12-219 (6.892; 6.935; 7.073 at J1)
+        self.assertAlmostEqual(e['four_stall_R80_V'], 5.6948, places=4)            # D-R12-219 (5.6950; 5.7008)
         self.assertAlmostEqual(b['margin_over_7ms_line_ms'], dr['four_stall_periodic_limit_ms'] - 7.0, places=12)
         self.assertLess(b['margin_over_7ms_line_ms'], 0.0)
         self.assertFalse(b['seven_ms_line_holds_at_four_stall'])
@@ -554,10 +554,10 @@ class Round8(unittest.TestCase):
         # R12F9-TRI-04 band / divider, R12F10-TRI-08 PA6 leakage (0.501-1.811 / 0.496-1.827 / 0.487-1.853 without)
         # R12F14-TRI-05: the unshed maximum is the worst allowed unshed load, 2.4126 W (0.486 / 0.480 / 0.471 ms at the
         # 2.225 W allocation before)
-        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.448, 1.854])
-        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.443, 1.87])
-        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.435, 1.897])
-        self.assertEqual(hw['from_battery_break_ms'], [2.053, 6.099])
+        self.assertEqual(hw['from_pa6_trip_ms']['nominal_ratio'], [0.446, 1.854])   # D-R12-219 (0.448)
+        self.assertEqual(hw['from_pa6_trip_ms']['initial'], [0.441, 1.87])          # D-R12-219 (0.443)
+        self.assertEqual(hw['from_pa6_trip_ms']['drift'], [0.433, 1.897])            # D-R12-219 (0.435)
+        self.assertEqual(hw['from_battery_break_ms'], [2.045, 6.099])                # D-R12-219 (2.053)
         for k in ('nominal_ratio', 'initial', 'drift'):
             self.assertEqual([round(x, 3) for x in hd['pa6_trip_ms'][k]], hw['from_pa6_trip_ms'][k])
         self.assertEqual(hd['pa6_trip_range_ms']['drift'], hd['pa6_trip_ms']['drift'])
@@ -884,8 +884,8 @@ class Round12(unittest.TestCase):
             worst = min(r12_stageD.u2_limit(fsw=f, vout=x)['IOUT_max_A'] for x in (3.224, 3.30, 3.35, 3.45, v))
             self.assertEqual(r12_stageD.u2_limit(fsw=f)['IOUT_max_A'], worst)
         c85 = b['cases']['200MHz_VOS3_Tj85']
-        self.assertAlmostEqual(c85['margin_peak_fsw_min_A'] * 1e3, 18.336, places=3)
-        self.assertAlmostEqual(b['cases']['200MHz_VOS3_Tj105']['margin_peak_fsw_min_A'] * 1e3, -61.664, places=3)
+        self.assertAlmostEqual(c85['margin_peak_fsw_min_A'] * 1e3, 16.336, places=3)   # D-R12-219: +2 mA sensors (18.336)
+        self.assertAlmostEqual(b['cases']['200MHz_VOS3_Tj105']['margin_peak_fsw_min_A'] * 1e3, -63.664, places=3)  # (-61.664)
         self.assertTrue(b['fits_200MHz'])
         self.assertFalse(b['fits_480MHz'])
         c = b['cases']['200MHz_VOS3_Tj85']
@@ -894,18 +894,58 @@ class Round12(unittest.TestCase):
         self.assertIn('Inference', b['label'])
         self.assertIn('DS12110 Rev 8', b['mcu_source'])
 
+    def test_r12_220_u4_axis_map_from_pads(self):
+        """D-R12-220 (R12STD-REV-01): U4's signs come from its pads (DS15034 Figure 5: pins 1-4 on the -X side, pins
+        12-14 on the +Y side): on the board +X_imu -> -x_board, +Y_imu -> +y_board, roll reads +gyro_Y, thrust +a_Y. A
+        mirrored land flips the derived signs, and a record whose text disagrees with its signs is refused."""
+        import copy
+        import r12_stageD
+        u4 = self.d['imu']['U4']
+        self.assertEqual((u4['plus_X_imu'], u4['plus_Y_imu'], u4['roll_reads'], u4['forward_thrust_reads']),
+                         ('-x_board', '+y_board', '+gyro_Y', '+a_Y'))
+        self.assertIn('+X_imu -> -x_board, +Y_imu -> +y_board, +Z_imu out of the top face', u4['axis_map'])
+        # the board's own pads (rotation 180 on F at (23.0, 45.45)): pins 1-4 at x 24.21, pins 12-14 at y 46.41
+        pads = {'1': (24.21, 46.2), '2': (24.21, 45.7), '3': (24.21, 45.2), '4': (24.21, 44.7),
+                '12': (22.5, 46.41), '13': (23.0, 46.41), '14': (23.5, 46.41)}
+        got = r12_stageD.imu_axes((23.0, 45.45), pads)
+        self.assertEqual((got['plus_X_imu'], got['plus_Y_imu'], got['roll_reads']), ('-x_board', '+y_board', '+gyro_Y'))
+        mirrored = {n: (46.0 - x, y) for n, (x, y) in pads.items()}
+        self.assertEqual(r12_stageD.imu_axes((23.0, 45.45), mirrored)['plus_X_imu'], '+x_board')
+        turned = {n: (46.0 - x, 90.9 - y) for n, (x, y) in pads.items()}            # D-R12-54's (wrong) reading
+        t180 = r12_stageD.imu_axes((23.0, 45.45), turned)
+        self.assertEqual((t180['plus_X_imu'], t180['plus_Y_imu'], t180['roll_reads']), ('+x_board', '-y_board', '-gyro_Y'))
+        bad = copy.deepcopy(self.d)
+        bad['imu']['U4']['axis_map'] = bad['imu']['U4']['axis_map'].replace('reads +gyro_Y', 'reads -gyro_Y')
+        self.assertTrue([i for i in r12_stageD.record_issues(bad) if 'D-R12-220' in i])
+
+    def test_r12_219_sensor_line_covers_its_parts(self):
+        """D-R12-219: the 3V3 U4 + U5 + U6 line is 10 mA and covers its itemised parts (U6 <= 6.0 mA, U5 1.4 mA peak,
+        U4 ISM6HG256X 0.8 mA IddHPC9 = 8.2 mA); a record whose items exceed the line is refused."""
+        import copy
+        import r12_stageD
+        b = self.d['u3v3_budget']
+        self.assertEqual(b['loads_A']['U4_U5_U6_sensors'], 0.010)
+        self.assertAlmostEqual(b['sensors_sum_A'], 0.0082, places=12)
+        self.assertTrue(b['sensors_within_allocation'])
+        self.assertEqual(r12_stageD.SENSORS_3V3_A['U4_ISM6HG256X_IddHPC9_typ'], 0.0008)
+        bad = copy.deepcopy(self.d)
+        bad['u3v3_budget']['sensors_within_allocation'] = False
+        self.assertIn('U4 + U5 + U6 itemised currents exceed the 3V3 sensor allocation (D-R12-219)',
+                      r12_stageD.record_issues(bad))
+        self.assertEqual(r12_stageD.record_issues(self.d), [])
+
     def test_r12f14_one_unshed_load_envelope(self):
         """R12F14-TRI-05: the hold-up, the fire / converter model and the 3V3 budget take one unshed load: 200 MHz at
-        Tj 105 C with every 3V3 load and the microSD writing (rule (g): no write and beep overlap), 0.549 A x 3.5156 V /
-        0.80 = 2.4126 W (2.225 W before); the stage A budget takes the same figure; the beep state with its on-phase
+        Tj 105 C with every 3V3 load and the microSD writing (rule (g): no write and beep overlap), 0.551 A x 3.5156 V /
+        0.80 = 2.4214 W since D-R12-219 (0.549 A / 2.4126 W with the 8 mA sensor line; 2.225 W before round 14); the stage A budget takes the same figure; the beep state with its on-phase
         first does not shorten the shortest hold-up; a record whose three figures differ is refused."""
         import r12_budget
         import r12_stageD
         env = r12_stageD.unshed_load()
         self.assertEqual(env['state'], 'write')
-        self.assertAlmostEqual(env['current_A'], 0.300 + 0.249, places=12)
-        self.assertAlmostEqual(env['states_A']['beep'], 0.300 + 0.049 + 3.5156 / 11 / 2, places=12)
-        self.assertAlmostEqual(env['total_W'], 3.5156 * 0.549 / 0.80, places=12)
+        self.assertAlmostEqual(env['current_A'], 0.300 + 0.251, places=12)        # D-R12-219 (0.249: 8 mA sensors)
+        self.assertAlmostEqual(env['states_A']['beep'], 0.300 + 0.051 + 3.5156 / 11 / 2, places=12)
+        self.assertAlmostEqual(env['total_W'], 3.5156 * 0.551 / 0.80, places=12)
         self.assertGreater(env['total_W'], env['before_round14_W'])
         self.assertAlmostEqual(r12_budget.unshed_u2_w(), env['total_W'], places=12)
         d = self.d

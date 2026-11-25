@@ -75,7 +75,7 @@ The baro keeps only its body area: R10's no-track band between the pad rows fitt
 GND pad 7 can only join its GND pads across that band (D-R12-25).
 
 **Update (D-R12-50 … -54, 2026-11-04):** U4 is now the LSM6DSVE on the same land; its top-face map is derived in
-D-R12-54 (roll = −gyro_Y, forward thrust −a_Y; bench sign check open). U5 is the MS5607 again (D-R12-52), rotation 180,
+D-R12-54 (roll = −gyro_Y, forward thrust −a_Y; bench sign check open; **corrected by D-R12-220: roll = +gyro_Y, thrust +a_Y**). U5 is the MS5607 again (D-R12-52), rotation 180,
 so the baro gets R10's inter-row no-track band back (`BARO_no_inter_row_tracks`). New U6 FXLS90322 (27.5, 40.5, 180)
 and C33 (30.7, 42.0, 90) (D-R12-53); channel 1 of U6 lies along the rocket axis.
 

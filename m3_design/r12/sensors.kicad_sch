@@ -219,7 +219,7 @@
 							(font
 								(size 1.27 1.27))))))
 			(embedded_fonts no)
-			(property "ki_fp_filters" "C0402 C0603 C_1206_3216Metric"
+			(property "ki_fp_filters" "C0402 C0402_DNP C0603 C_1206_3216Metric"
 				(at 0 0 0)
 				(effects
 					(font
@@ -265,7 +265,7 @@
 				(effects
 					(font
 						(size 1.27 1.27))))
-			(property "ki_fp_filters" "M3_FXLS_HLQFN16"
+			(property "ki_fp_filters" "M3_FXLS_HLQFN16_DNP"
 				(at 0 0 0)
 				(hide yes)
 				(effects
@@ -1228,9 +1228,10 @@
 		(lib_id "M3:C")
 		(at 165.1 71.12 0)
 		(unit 1)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(in_pos_files no)
+		(dnp yes)
 		(uuid 13719753-0e84-510a-938e-c95feba6f54f)
 		(property "Reference" "C33"
 			(at 165.1 63.5 0)
@@ -1244,7 +1245,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:C0402"
+		(property "Footprint" "rocket:C0402_DNP"
 			(at 165.1 71.12 0)
 			(hide yes)
 			(effects
@@ -1886,7 +1887,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "LSM6DSVETR"
+		(property "Value" "ISM6HG256X"
 			(at 160.02 100.33 0)
 			(effects
 				(font
@@ -1899,7 +1900,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C41785564"
+		(property "LCSC" "C51931514"
 			(at 160.02 109.22 0)
 			(hide yes)
 			(effects
@@ -1913,14 +1914,14 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "LSM6DSVETR"
+		(property "Manufacturer Part" "ISM6HG256XTR"
 			(at 160.02 109.22 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2412041127_STMicroelectronics-LSM6DSVETR_C41785564.pdf"
+		(property "Datasheet" "https://www.st.com/resource/en/datasheet/ism6hg256x.pdf"
 			(at 160.02 109.22 0)
 			(hide yes)
 			(effects
@@ -2131,7 +2132,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Value" "MS5607-02BA03"
+		(property "Value" "MS561101BA03"
 			(at 251.46 101.6 0)
 			(effects
 				(font
@@ -2144,7 +2145,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "LCSC" "C97627"
+		(property "LCSC" "C15639"
 			(at 251.46 106.68 0)
 			(hide yes)
 			(effects
@@ -2158,14 +2159,14 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Manufacturer Part" "MS560702BA03-50"
+		(property "Manufacturer Part" "MS561101BA03-50"
 			(at 251.46 106.68 0)
 			(hide yes)
 			(effects
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_2010281834_TE-Connectivity-MS560702BA03-50_C97627.pdf"
+		(property "Datasheet" "https://www.lcsc.com/datasheet/lcsc_datasheet_1808280521_TE-Connectivity-MS561101BA03-50_C15639.pdf"
 			(at 251.46 106.68 0)
 			(hide yes)
 			(effects
@@ -2296,9 +2297,10 @@
 		(lib_id "M3:FXLS9xxxx")
 		(at 327.66 111.76 0)
 		(unit 1)
-		(in_bom yes)
+		(in_bom no)
 		(on_board yes)
-		(dnp no)
+		(in_pos_files no)
+		(dnp yes)
 		(uuid b715438e-b276-5b9c-9680-0e0d5e56eb81)
 		(property "Reference" "U6"
 			(at 327.66 97.79 0)
@@ -2312,7 +2314,7 @@
 				(font
 					(size 1.27 1.27))
 				(justify left)))
-		(property "Footprint" "rocket:M3_FXLS_HLQFN16"
+		(property "Footprint" "rocket:M3_FXLS_HLQFN16_DNP"
 			(at 327.66 111.76 0)
 			(hide yes)
 			(effects

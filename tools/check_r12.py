@@ -641,7 +641,8 @@ def m7(c):
             if t.GetClass() == 'PCB_VIA':
                 if pcbnew.SHAPE.Collide(bp, t.GetEffectiveShape(pcbnew.F_Cu), 0):
                     issues.append(f'M-7: via under {ref}')
-            # D-R12-52: U5 is the MS5607 again, so R10's pad-interior track ban applies to it too.
+            # D-R12-52: U5 is the MS5607 family again, so R10's pad-interior track ban applies to it too (the MS5611
+            # since D-R12-214, on the same land).
             elif pcbnew.SHAPE.Collide(ip, t.GetEffectiveShape(pcbnew.F_Cu), 0):
                 issues.append(f'M-7: track inside {ref} pad-ring interior')
         for z in c.board.Zones():

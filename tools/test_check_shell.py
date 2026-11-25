@@ -75,7 +75,17 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
                      'tools/test_r10_parts.py', 'tools/test_route_check.py', 'tools/test_r10_check.py'):
             (self.root / path).write_text(stub)
         self.log = self.root / 'gate.log'
-        self.env = dict(os.environ, KICAD_CLI=str(self.cli), KICAD_PY=sys.executable, NUMPY_PY=sys.executable,
+        # D-R12-217: the numpy probe check.sh runs before the numerical self-tests ('-I -c import numpy') answers by
+        # NUMPY_MISSING; every other call is the test's own Python, so the run does not depend on this host's numpy
+        self.numpy_py = self.root / 'numpy-python'
+        self.numpy_py.write_text('#!' + sys.executable + '\n' + '''
+import os, sys
+if sys.argv[1:] == ['-I', '-c', 'import numpy']:
+    sys.exit(1 if os.environ.get('NUMPY_MISSING') else 0)
+os.execv(sys.executable, [sys.executable] + sys.argv[1:])
+''')
+        self.numpy_py.chmod(0o755)
+        self.env = dict(os.environ, KICAD_CLI=str(self.cli), KICAD_PY=sys.executable, NUMPY_PY=str(self.numpy_py),
                         GATE_LOG=str(self.log), TMPDIR=str(self.root))
         self.env.pop('R10_SKIP_FAB_MANIFEST', None)
         for key in ('R11_BOARD', 'R11_BOARD_REQUIRED', 'R12_BOARD', 'R12_BOARD_REQUIRED'):
@@ -149,6 +159,21 @@ sys.exit(13 if os.environ.get('FAIL_STAGE') in (stage, label) else 0)
                 self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
                 self.assertIn('gate self-test FAILED', result.stdout)
                 self.assertEqual(self.log.read_text().splitlines()[-1], stage)
+
+    def test_missing_numpy_fails_instead_of_skipping(self):
+        """D-R12-217 (issue #10): with numpy not importable by NUMPY_PY -I the numerical self-tests would skip, so the
+        gate fails with a clear message before them; the self-tests before it ran, none after it."""
+        self.env['NUMPY_MISSING'] = '1'
+        result = self.run_gate()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn('numpy is not importable', result.stdout)
+        self.assertEqual(self.log.read_text().splitlines(), self.CONTRACTS + self.SELFTESTS[:8])
+
+    def test_numpy_probe_runs_under_the_numerical_interpreter(self):
+        """D-R12-217: the probe uses NUMPY_PY with -I, the interpreter and flags the numerical self-tests run with."""
+        text = (self.root / 'tools/check.sh').read_text()
+        self.assertIn('"${NUMPY_PY:-python3}" -I -c \'import numpy\'', text)
+        self.assertLess(text.index("-I -c 'import numpy'"), text.index('HotplugNumerics Plate'))
 
     def test_missing_board_fails_before_any_stage(self):
         result = self.run_gate(self.root / 'absent/m3.kicad_pcb')
