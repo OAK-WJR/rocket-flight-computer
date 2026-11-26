@@ -57,7 +57,7 @@
   "reciprocity_max_rel_asymmetry": 1.6890504262488475e-09,
   "window_mm": null
  },
- "board_sha256": "0c681ad6af502e12a285aa1fbc5cbfba81d7131e18d698ab9199c8462cdde5a5",
+ "board_sha256": "a9595a21953ed256c5652a7af35a12fc61a49039c90d9d8a3cdd6c84c2d4d3aa",
  "d8_return": {
   "L_nH": 0.27347046930269175,
   "R_20C_ohm": 0.0012883492058203025,
@@ -3095,7 +3095,7 @@
    "RAW_PROTECTED": 2.9
   }
  },
- "source_board_sha256": "0c681ad6af502e12a285aa1fbc5cbfba81d7131e18d698ab9199c8462cdde5a5",
+ "source_board_sha256": "a9595a21953ed256c5652a7af35a12fc61a49039c90d9d8a3cdd6c84c2d4d3aa",
  "stackup": {
   "B.Cu": {
    "depth_mm": 1.5687,

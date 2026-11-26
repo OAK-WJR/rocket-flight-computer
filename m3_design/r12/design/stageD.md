@@ -2,7 +2,7 @@
 
 ## Current snapshot (round 12, 2026-11-13; D-R12-192 and D-R12-195, 2026-11-14; round 13 fix pass, 2026-11-14; round 14 fix pass, 2026-11-15; Standard rebuild, 2026-11-24)
 
-PCB `0c681ad6af502e12a285aa1fbc5cbfba81d7131e18d698ab9199c8462cdde5a5` since the Standard PCBA rebuild (D-R12-211 … -220, 2026-11-24: JLC Standard, 240 ± 5 °C; U4 ISM6HG256X, U5 MS5611, U6 / C33 not fitted; 179 JLC parts, 59 codes, all charged; copper identical); before it `c8b0412d…`, since the round 14 fix pass (D-R12-205 … -209: round 14 reviewed `5af58097…` with seven lenses plus a
+PCB `a9595a21953ed256c5652a7af35a12fc61a49039c90d9d8a3cdd6c84c2d4d3aa` since D-R12-221 (2026-11-25: the SimpleFlight v1.0 name legends, silkscreen only; SimpleFlight v1.0 names the M3-ASSY-R12 board); before it `0c681ad6…`, since the Standard PCBA rebuild (D-R12-211 … -220, 2026-11-24: JLC Standard, 240 ± 5 °C; U4 ISM6HG256X, U5 MS5611, U6 / C33 not fitted; 179 JLC parts, 59 codes, all charged; copper identical); before it `c8b0412d…`, since the round 14 fix pass (D-R12-205 … -209: round 14 reviewed `5af58097…` with seven lenses plus a
 second opinion, 0 Critical / 0 Major / 12 Minor, R12F14-TRI-01 … -12; rounds 13 and 14 are the clean pair under
 D-R12-167 and the review loop stops; a second GND via for R110 / C83 / C28 and an F.Cu 3V3 strap along U1's F row;
 K-power validates its exceptions and pins their cut sets; one unshed load envelope in the hold-up and fire models,

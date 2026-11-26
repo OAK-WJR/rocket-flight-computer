@@ -1,6 +1,6 @@
 # R12 vehicle integration handoff
 
-**Status.** PCB `0c681ad6af502e12a285aa1fbc5cbfba81d7131e18d698ab9199c8462cdde5a5`, 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195; round 13 fix pass D-R12-199 … -204; round 14 final fix pass D-R12-205 … -209: the J400 chatter bench rule is now **under 6.6 ms**; the Standard PCBA rebuild D-R12-211 … -219, 2026-11-24: U4 ISM6HG256X, U5 MS5611, U6 / C33 not fitted, the `RADIO` / `GPS` legends moved, copper identical to `c8b0412d…`),
+**Status.** PCB `a9595a21953ed256c5652a7af35a12fc61a49039c90d9d8a3cdd6c84c2d4d3aa` (**SimpleFlight v1.0**: the M3-ASSY-R12 board, named on its silkscreen, D-R12-221, 2026-11-25; silkscreen-only change), 46 × 86.85 × 1.6 mm (D-R12-174; J122 a single-servo SH-4 since D-R12-195; round 13 fix pass D-R12-199 … -204; round 14 final fix pass D-R12-205 … -209: the J400 chatter bench rule is now **under 6.6 ms**; the Standard PCBA rebuild D-R12-211 … -219, 2026-11-24: U4 ISM6HG256X, U5 MS5611, U6 / C33 not fitted, the `RADIO` / `GPS` legends moved, copper identical to `c8b0412d…`),
 four layers, every fitted part on the top face and assembled by JLC on **Standard** PCBA (D-R12-211; Economic before). R12 remains a CAD candidate, not accepted,
 nothing ordered; R9 stays accepted. The rebuild's focused review (Fable 5.2, 2026-11-24: 0 Critical / 1 Major / 8 Minor, R12STD-REV-01 … -09) is corrected by D-R12-220 and its records pass; the Major was U4's axis map (now roll = **+gyro_Y**, see Board below); the full gate is pending. Current state: [M3_R12.md](M3_R12.md#current-state); owner items:
 [R12_VALIDATION.md](R12_VALIDATION.md). No physical fit is claimed.
@@ -293,7 +293,7 @@ first article; the per-flight closed-switch check does not command a fire.
 
 ## Cost
 
-**Standard PCBA (D-R12-211 … -219, 2026-11-24; current).** `FAB_NET=1 m3_design/r12_fab.sh` on `0c681ad6…`, Live
+**Standard PCBA (D-R12-211 … -219, 2026-11-24; current).** Taken on `0c681ad6…`; the BOM and CPL of `a9595a21…` (D-R12-221) are byte-identical, so it was not re-run. `FAB_NET=1 m3_design/r12_fab.sh` on `0c681ad6…`, Live
 2026-11-24T21:21:13Z / 21:22:43Z (`fab/cost_check_2.json` / `_5.json`, `jlc_cost.py --tier standard --profile r10`):
 59 BOM lines (23 Extended / 36 Basic), 179 JLC parts, 566 paste flashes, no owner BOM; parts **$38.83 per board**;
 feeder $1.53 × 59 codes = **$90.27 per order** (Standard charges every code). REQUIREMENTS M3 metric (parts + feeder)

@@ -12,8 +12,8 @@ measured; later Measured labels refer to CAD or tool results. No AGENTS §2 rule
 Dated entries through D-R12-174 are historical: their board hashes, coordinates, counts, quotes and analysis
 figures belong to those decisions. D-R12-175 … -191 record the round-12 fix pass, D-R12-192 … -198 the servo-port
 changes, D-R12-199 … -204 the round 13 fix pass (`5af58097…`), D-R12-205 … -209 the round 14 final fix pass
-(`c8b0412d…`), D-R12-210 the U9 stock record, D-R12-211 … -219 the Standard PCBA rebuild and D-R12-220 its focused review fixes (the current board,
-`0c681ad6…`). Live open items
+(`c8b0412d…`), D-R12-210 the U9 stock record, D-R12-211 … -219 the Standard PCBA rebuild, D-R12-220 its focused review fixes and D-R12-221 the SimpleFlight
+name legend (the current board, `a9595a21…`). Live open items
 are §4; current board state is `docs/M3_R12.md`. A later amendment supersedes the earlier instruction it names.
 
 
@@ -3906,6 +3906,37 @@ D-R12-214's MS5611 range is full accuracy 450–1100 mbar, extended 10–1200 mb
 export wrapper (`tools/export_fab_r12.py`, one more asserted replacement; R10's `export_fab.py` stays unedited) now
 passes `--crossout-DNP-footprints-on-fab-layers` to the drawing export, so both are crossed out with their designators
 struck through. JLC assembles from the BOM and CPL, which omit both. The package was re-exported and re-bound.
+
+## SimpleFlight name legend (2026-11-25; owner request 2026-11-25; D-R12-221)
+
+**D-R12-221 M3-ASSY-R12 is SimpleFlight v1.0; the name is on the silkscreen.** Owner, 2026-11-25: "Can you call this
+version of the flight computer SimpleFlight?" and "Put SimpleFlight on the silkscreen (and put a version)." The
+coordinator set the product name **SimpleFlight** and version **v1.0**: "SimpleFlight v1.0" is the M3-ASSY-R12 board,
+and the internal revision id `M3-ASSY-R12` stays in the records, the title block and on the board (no file, branch,
+directory or decision ID is renamed). This extends AGENTS §3's silkscreen list (designators, terminal / arming /
+connector legends and the revision legend) by the product name legend, for R12, on the owner's request.
+- **Bottom:** `SimpleFlight v1.0` on B.Silkscreen at (21.75, 53.50), 2.0 mm high, 2.0 mm wide, 0.30 mm stroke, mirrored
+  as bottom text: ink x 8.79–34.71, y 52.26–55.23 (`r12_legends.tsv`), about 6.3 mm forward of the `M3-ASSY-R12` legend
+  at B(19.1, 45.45), which stays. Nearest items (Measured, ink box): J2's alignment hole and its mask opening 0.366 mm,
+  the D120 designator 0.412 mm, R7's 1.17 mm; 8.78 mm from the board edge, 22.75 mm from the nearest support's 3.5 mm
+  standoff circle. The ink lies over 11 tented vias of U1's escape field (no via mask opening on R12; silkscreen on a
+  tented via is printed on mask, as the earlier legends over vias are).
+- **Top:** a legal spot exists, so `SimpleFlight` also sits on F.Silkscreen at (22.75, 9.25), 1.5 mm high, 1.5 mm wide,
+  0.25 mm stroke: ink x 15.95–29.69, y 8.31–10.56, nothing moved or hidden. Nearest items: R165's F.Fab body 0.205 mm,
+  R165's pad mask openings 0.313 mm (≥ 0.15 mm required), R101's body 0.299 mm, R104's 0.313 mm; no via under it; 8.30 mm
+  from the edge.
+- **Gate:** `tools/check_r12.py` names `PRODUCT = 'SimpleFlight'`, `VERSION = 'v1.0'`, `NAME_LEGEND` and `NAME_TEXTS`;
+  K-legends pins the revision id and both name legends (each exactly once on its face, so a missing or duplicated one
+  fails) and fails any other silkscreen text that names the product (a misspelt or wrong-version one).
+  `test_r12_check.Round12Board.test_r12_221_name_legend` seeds missing, misspelt (two kinds), duplicated, a wrong top
+  spelling and a missing revision legend. The post stage now applies 52 legends (50 before).
+- **Copper identical to `0c681ad6…`** (Measured, pcbnew comparison: 1114 tracks, 386 vias, 27 zones with identical
+  outlines and fill polygons, 619 pads with identical geometry, layers and nets, 189 footprints with identical
+  positions, attributes and lands). The fab BOM and CPL are byte-identical; the Gerbers, drawings and manifest are
+  re-exported and re-bound. PCB `a9595a21953ed256c5652a7af35a12fc61a49039c90d9d8a3cdd6c84c2d4d3aa` (two identical `PYTHONHASHSEED=0` builds).
+  Hot-plug and stage D re-bound to it. The cost and stock evidence (Live 2026-11-24) was taken on `0c681ad6…`; the BOM
+  and CPL are unchanged, so it was not re-run.
+- Silkscreen-only change, fix lane only, full gate pending; not accepted, nothing ordered.
 
 ## 2. Historical stage A BOM (Live, 2026-11-04T02:42:47Z; 55 codes, 184 parts; owner-fitted parts last)
 

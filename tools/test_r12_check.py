@@ -983,6 +983,17 @@ elif op == 'swap_text':
     texts[args[0]].SetText(args[1]); texts[args[1]].SetText(args[0])
 elif op == 'remove_text':
     b.Remove(texts[args[0]])
+elif op in ('respell', 'drop', 'duplicate'):     # D-R12-221: any face; args[0] the layer name, args[1] the text
+    item = next(d for d in b.GetDrawings() if isinstance(d, pcbnew.PCB_TEXT)
+                and b.GetLayerName(d.GetLayer()) == args[0] and d.GetText() == args[1])
+    if op == 'respell':
+        item.SetText(args[2])
+    elif op == 'drop':
+        b.Remove(item)
+    else:
+        copy = item.Duplicate()
+        copy.Move(pcbnew.VECTOR2I(0, pcbnew.FromMM(4)))
+        b.Add(copy)
 if op in ('remove_zone', 'min_width'):
     filler = pcbnew.ZONE_FILLER(b)
     filler.Fill(b.Zones())
@@ -1080,6 +1091,27 @@ pcbnew.SaveBoard(sys.argv[1], b)
         self.assertEqual(len([i for i in rep['issues'] if 'is not nearer contact' in i]), 2, rep['issues'])
         rep = self.edited('K-legends', 'full', 'remove_text', 'GND')
         self.assertTrue([i for i in rep['issues'] if "polarity legend 'GND' must appear exactly once" in i], rep['issues'])
+
+    def test_r12_221_name_legend(self):
+        """D-R12-221 (owner 2026-11-25): M3-ASSY-R12 is SimpleFlight v1.0. The board carries the revision id, the name
+        legend 'SimpleFlight v1.0' on B.Silkscreen and 'SimpleFlight' on F.Silkscreen, each exactly once. Seeded:
+        missing, misspelt or duplicated, K-legends fails."""
+        self.assertEqual((r12.PRODUCT, r12.VERSION, r12.NAME_LEGEND), ('SimpleFlight', 'v1.0', 'SimpleFlight v1.0'))
+        rep = self.edited('K-legends', 'full')
+        self.assertTrue(rep['ok'], rep['issues'])
+        rep = self.edited('K-legends', 'full', 'drop', 'B.Silkscreen', 'SimpleFlight v1.0')
+        self.assertTrue([i for i in rep['issues'] if "'SimpleFlight v1.0' missing on B.Silkscreen" in i], rep['issues'])
+        rep = self.edited('K-legends', 'full', 'respell', 'B.Silkscreen', 'SimpleFlight v1.0', 'SimpleFlite v1.0')
+        self.assertFalse(rep['ok'])
+        self.assertTrue([i for i in rep['issues'] if "'SimpleFlight v1.0' missing on B.Silkscreen" in i], rep['issues'])
+        rep = self.edited('K-legends', 'full', 'respell', 'B.Silkscreen', 'SimpleFlight v1.0', 'SimpleFlight v1.1')
+        self.assertTrue([i for i in rep['issues'] if "product legend B.Silkscreen 'SimpleFlight v1.1'" in i], rep['issues'])
+        rep = self.edited('K-legends', 'full', 'duplicate', 'B.Silkscreen', 'SimpleFlight v1.0')
+        self.assertTrue([i for i in rep['issues'] if "'SimpleFlight v1.0' missing on B.Silkscreen" in i], rep['issues'])
+        rep = self.edited('K-legends', 'full', 'respell', 'F.Silkscreen', 'SimpleFlight', 'Simpleflight')
+        self.assertTrue([i for i in rep['issues'] if "product legend F.Silkscreen 'Simpleflight'" in i], rep['issues'])
+        rep = self.edited('K-legends', 'full', 'drop', 'B.Silkscreen', 'M3-ASSY-R12')
+        self.assertFalse(rep['ok'])
 
     def test_tri29_route_leftovers_recorded_and_second_barrels_named(self):
         """route_check r12 on the committed board: nothing failing, the four non-critical leftovers (eight before D-R12-195) each recorded, none
@@ -3329,6 +3361,8 @@ class PortedRules(unittest.TestCase):
                     s.text(word, x + 5 * (len(contacts) - 1) / 2, y - 3)
         note = s.text(r10.SERVO_HARNESS_NOTE, 30, 150)
         s.text(r12.REVISION, 30, 160, pcbnew.B_SilkS)
+        s.text(r12.NAME_LEGEND, 30, 170, pcbnew.B_SilkS)                          # D-R12-221: the name legends
+        s.text(r12.PRODUCT, 30, 180)
         # R12F12-TRI-07: J1's polarity words on the top face, each beside its own contact (J1.1 at (jx, jy), J1.2 5 mm east)
         (jx, jy) = next((40 + (i % 3) * 60, 30 + (i // 3) * 40) for i, ref in enumerate(pins) if ref == 'J1')
         rep = self.assert_rule(s, 'K-legends', False)

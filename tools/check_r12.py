@@ -94,6 +94,13 @@ sys.path.insert(0, str(ROOT / 'tools'))
 import check_r10 as r10
 import check_r11 as r11
 REVISION = 'M3-ASSY-R12'
+# D-R12-221 (owner 2026-11-25: "Can you call this version of the flight computer SimpleFlight?", "Put SimpleFlight on the
+# silkscreen (and put a version)"): M3-ASSY-R12 is SimpleFlight v1.0. The board carries exactly the revision id and the
+# name legend on B.Silkscreen, and the product name alone once on F.Silkscreen; no other text names the product.
+PRODUCT = 'SimpleFlight'
+VERSION = 'v1.0'
+NAME_LEGEND = f'{PRODUCT} {VERSION}'
+NAME_TEXTS = (('B.Silkscreen', NAME_LEGEND), ('F.Silkscreen', PRODUCT))
 R12_DIR = ROOT / 'm3_design/r12'
 R12_MAX_LENGTH = 100.0
 WIDTH = 46.0
@@ -705,14 +712,22 @@ def polarity_legends(board):
 
 def k_legends(c):
     # D-R12-29..31: DB125 / SH contact words. No R11 optional-legend exemptions on R12.
-    pinned = (('B.Silkscreen', REVISION),)
+    pinned = (('B.Silkscreen', REVISION),) + NAME_TEXTS                                    # D-R12-221
     words, base = r10.word_legends, r10.pinned_texts
     subjects = dict(r10.WORD_LEGENDS_R10, **{w: ref for w, ref, _ in POLARITY_WORDS})     # R12F12-TRI-07
     def revision(board):
+        import pcbnew
         out = [i for i in base(board, pinned=pinned) if not i.startswith('revision legends ')]
         names = {t.GetText() for t in r10.legend_items(board) if hasattr(t, 'GetText')
                  and re.fullmatch(r'M3-ASSY-R\d+', t.GetText())}
-        return out + ([f'revision legends {sorted(names)}: only {REVISION} allowed'] if names != {REVISION} else [])
+        out += [f'revision legends {sorted(names)}: only {REVISION} allowed'] if names != {REVISION} else []
+        # D-R12-221: any silkscreen text naming the product must be exactly the pinned name legends (a misspelt or
+        # extra one fails; pinned_texts above fails a missing or duplicated one)
+        named = sorted((board.GetLayerName(t.GetLayer()), t.GetText()) for t in r10.legend_items(board)
+                       if hasattr(t, 'GetText') and t.GetLayer() in (pcbnew.F_SilkS, pcbnew.B_SilkS)
+                       and re.search(r'simple\s*fl[iy]ght', t.GetText(), re.I))
+        return out + [f'product legend {lay} {text!r}: only {NAME_TEXTS} allowed (D-R12-221)'
+                      for lay, text in named if (lay, text) not in NAME_TEXTS]
     with r10.patched(r10, TERMINAL_PINS_R10=TERMINAL_PINS, PINNED_TEXTS=pinned, pinned_texts=revision,
                      WORD_LEGENDS_R10=subjects,
                      word_legends=lambda b, **kw: words(b, spans={}, subjects=subjects, **kw)):
